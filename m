@@ -2,186 +2,381 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2F524571E5
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 16:43:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7204A457205
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 16:47:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235798AbhKSPqV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Nov 2021 10:46:21 -0500
-Received: from mail-dm6nam10on2047.outbound.protection.outlook.com ([40.107.93.47]:30305
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235474AbhKSPqU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Nov 2021 10:46:20 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q6hfN3/UPSx/wrdOQt9b/wMFv7znAf5BjI82pGXpyhS7C5dUaHGypdBhRdwhIEE0vpOPfORuMutGxy3E7U6TqlYLcSrTSraPGql9UYzSvePLyHipZsJpBOS2elCdjWD9IGHuTdKegnL9s6n6PWgB0Mgyr3gGxx/+hYZWSFYS582kaL41vyn14jWTrZfoSl7BIm1i8rkuwBCXjEgLAUJgIcyB/NkGCF0uUK390N4uP3JbVvpB8DKod/ij0rwnfUx+x1ZM372I7jSbox1TIuUiBmV56ujpVR1OH7lt2ZhBITt/DSzgg0m9bWH60WX9U35XQDcLyktlGhDco4HmmUsOoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oLrJtbHtjzsw1lTS8W2bBKApGBePUKm9+tkx0oIk0mU=;
- b=aoTYQ6D4RT83bgggqOe4XXa4LVKdQ8xtwnZP3OvX3H1UhGMrVLBAlv8Af7RbDAa1GBZMcTdMXfJJsaqlGK1jJsIATDWmGiYb43m6rpu48IasBh211k4gIo3bj5ycdRFLFhSWpMM/dxCvYNiOkYid8RarTY1nNuJ97Oy6q67W2FShFJdhZ/693oJoMnHytbq4zqKdEzDiFP/QGUmyvPMoocA4qssb54mWh/Ww7n7QxCpjC1TPVuusjkQLTlHzrEf3BBfJllhoIUmrGKLZhnsMgjq33etjpRjh+9Tk5/dTF1CqAJ6BcfDQ4dI47KrmMuTR4IYEmqyWuWJaebcHFy3Ndg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oLrJtbHtjzsw1lTS8W2bBKApGBePUKm9+tkx0oIk0mU=;
- b=dH5QqIvhHGQsGG8IT7TZ6V01Diw9Y5bOxuur+MZoMaA+8a8lZMj2ReQh1F8sNkRTVHuC8Lw3kfFh4dL9oVu3prc8ajH6WMYW1ZQqFcPxSWAejKw4rJW8dGzw95MkYlNwptmzUv8dlODNdJ+LIo2V3lKqS1npgGTIQx3ZAHL1eSLDRCWEw3nFScIipFhs29WDG9wTzDPQuXgoAxFsw0Qk0T/52HiPlVzRE0pvQtbU6rZXlm2wudEOBRwD0jKBfJF6/EF6i/ifZwzopVIIR4y/qF4gv8zY6i/xhnKJ4VB2p9Yp4C2T0EdmOKh8HOViy9R2c4FKPLPTeN/xGCa28pirvQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5317.namprd12.prod.outlook.com (2603:10b6:208:31f::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Fri, 19 Nov
- 2021 15:43:16 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909%7]) with mapi id 15.20.4713.022; Fri, 19 Nov 2021
- 15:43:15 +0000
-Date:   Fri, 19 Nov 2021 11:43:14 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     =?utf-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>
-Subject: Re: [PATCH 01/11] iommu: Add device dma ownership set/release
- interfaces
-Message-ID: <20211119154314.GA2105516@nvidia.com>
-References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
- <20211115020552.2378167-2-baolu.lu@linux.intel.com>
- <YZJdJH4AS+vm0j06@infradead.org>
- <cc7ce6f4-b1ec-49ef-e245-ab6c330154c2@linux.intel.com>
- <20211116134603.GA2105516@nvidia.com>
- <BN9PR11MB5433639E43C37C5D2462BD718C9B9@BN9PR11MB5433.namprd11.prod.outlook.com>
- <20211118133325.GO2105516@nvidia.com>
- <BN9PR11MB5433E5B63E575E2232DFBBE48C9C9@BN9PR11MB5433.namprd11.prod.outlook.com>
- <75100dfd-9cfe-9f3d-531d-b4d30de03e76@linux.intel.com>
- <20211119150612.jhsvsbzisvux2lga@8bytes.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211119150612.jhsvsbzisvux2lga@8bytes.org>
-X-ClientProxiedBy: MN2PR07CA0015.namprd07.prod.outlook.com
- (2603:10b6:208:1a0::25) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
-MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.162.113.129) by MN2PR07CA0015.namprd07.prod.outlook.com (2603:10b6:208:1a0::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.22 via Frontend Transport; Fri, 19 Nov 2021 15:43:15 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mo62k-00CHa4-Qs; Fri, 19 Nov 2021 11:43:14 -0400
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4c1d1091-bf1c-44e4-2771-08d9ab734d5b
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5317:
-X-Microsoft-Antispam-PRVS: <BL1PR12MB531754113FF903404F6FE028C29C9@BL1PR12MB5317.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bPNAZflQQgBXFjz0w8xG1xRFeSt1B7dZfcGQ4S5ngNdVL2BcRFDNl8Kb5MCt49DfFPQ5/M+d/DWCu5ebU/ub+YzECdUvzorvLomwhBn/LoKOKv9B1EVMdjk2oV+orKEdL7cbgL6+4NhBTvmxKK8NVaPJ9wd3b3ggjeck9ZA5jUb5mdSRLQBuyZXlcu5LbikItFTa7EkDjN3R9Sx9gE/6sepb4GCkpdoSzicKIS2Jc37nltZEngtgbMFWHBrEARogM8xi/6um7db7ZGMH92K3Ur0I6F8Sz+kQVopJe4IsxwuaUQf6p/uDjP5YwwFUGbI4mL94QCCTqFEb8HtflKw4v7lMYxZgpvl79p1u3lpo2RX5TRwYw0uTL+BZnUh3wmSlHKD5YevOt8zNy5YqOXEp4DLfkn4A0a9CCzI7Un176eTiIGGsNITJY7Iq6aguyjhhu6X8eEpWQKFEhazuXmAtMChm8V+Vsf2E2aQlbfYKLjUIASLNWWXJzsDi7QVq8GlIONUShWljSxcaLvxuF+e+Jhs3dZHPvQM2uXsiQQJWuPVHiduaW7q2VPqoR2/TrxP1uGsd0ALR9mcEpnM8Dg/Vv8NjxRttSoQHTe0svG2uPOBTbssaFKdVkR/bzzv7omculCdjUQkDSZluN7kVtBqbMg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(54906003)(6916009)(8936002)(2906002)(33656002)(2616005)(186003)(83380400001)(508600001)(4326008)(26005)(1076003)(9786002)(9746002)(8676002)(66556008)(66476007)(66946007)(7416002)(38100700002)(36756003)(426003)(66574015)(5660300002)(86362001)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UzF1cDhzcEVBQlFSbzRVT3MvS0IxNGZZNzNQeFNIdjY3dHYxbTc2OUxiTi9x?=
- =?utf-8?B?VHozdlQ5Z2xjemFqVWg2SzBuNlZYLzZncnJtY1BLcjVBbkRzUFdwRDF1OFR4?=
- =?utf-8?B?VCtqMHRMTUcrMGt6dVBxbWV0Tm80Z2lCNGlOc2hMbisrRkNpdVQ1Q1M4QzNU?=
- =?utf-8?B?MTRSaVlIbWVsSzA2cTloM2VyY1c3KzI0UThKM0RScXZsdkg0ZTc4QkEyKzlG?=
- =?utf-8?B?Z0lWRFJiczBzeE1yVE5NN1RhTlFFZGtsUnkzOGx1K2JmeXZuNExJVzd3UHBU?=
- =?utf-8?B?VzkrTlBXZGE2R1FOTFdsMWFRVXI4c3oxc1FhTE52VmVmNW1rbk9oRmxPaEJL?=
- =?utf-8?B?amhQUkhaS01LRldMRnJYeHYvRG5UTHI4SGgxek9ucHAzbktsNXVRVmp5dGRr?=
- =?utf-8?B?WFhCV2N0a296citpNjBEOGlwemhsclVkMkFRaW1kYVJWTERiaXVPRVNLQ2Zy?=
- =?utf-8?B?Qzk2c2ltcW8yVzMzZC9aQm1ha3VJS2FOblNERFhLN0Z5NUZaMHU1b2hDU25V?=
- =?utf-8?B?ODF3aUxlV0M1eUZnVXFQaGFnTE1ZaXRGR21wdTFRejlCZXhCVUtlY0hSdDRU?=
- =?utf-8?B?ekVwa3l0WCtBdjN0SC9LdUIwRVlrclhLbEduS2Iwb3V5ekNtUUdBa3YzQ2ov?=
- =?utf-8?B?Lys1RzNDUU02RkRISVR0a0tRQ2N1Um01OGEwT2tiUDBOVnZKOFVIcy9KSXhs?=
- =?utf-8?B?RG5zN0hLWUgvTGxKMUhlMnU5ZlZ3UDIza0gzWTA4TDNVWWs5T2ZCVnFjVzMw?=
- =?utf-8?B?UDZ1T094anJ1VkhQOTB6K3NPNGRpY1Q2RmppKy9TdUtiZGZrTXdKcEkvZ0Ux?=
- =?utf-8?B?RkkwbkVmS1p4U0x4VE5SVDBkdE9xMFRpM0hsdnlHMXZSdTNTY3E0aWZaNnBI?=
- =?utf-8?B?ZDloNEM2R3B0T2VTSURuN2VyYUNxS284NzgzZ3YyTmZWRitucW9XU0hUYitC?=
- =?utf-8?B?ODRFOGxFR1QxekhQaEVqTCsveHU1OFE2YkhiMHA4R3JJVTZJWDgzd1BNa3Ez?=
- =?utf-8?B?cEc3VFMyUkUwOGVjeUNJQjVQeis2S3JIK0RMZ1k0VHFXVE5BVW1LeC8zNlps?=
- =?utf-8?B?VzR4c1g3dlV3cDlPajB1QXNJUk1XalpkVmFud3E0OElIT0hXaVBZWEhqVFdH?=
- =?utf-8?B?N050S0wzdzJlZzFvb2hVcEhLK2p4cFExZDJ6RS9Qb1lubTg5Z2xBUnYwQ0Mx?=
- =?utf-8?B?YlJYRUZrZUVybGZxUnV0TW5PS0EyUlduKzJkSURCNGEyZG9KUUVVNUhNUElZ?=
- =?utf-8?B?QXBHY1BsU3F0VG1wM0l4U3pKdWk5amx5alZIdVp0UGpsdWgzR3hIVEZNZW93?=
- =?utf-8?B?c3FmUEgwaFZxWVpOSVRBOVZmUytKQ0JsRlJubXRrQ2RDL2JwZkNiRXUwcWZZ?=
- =?utf-8?B?ZllLWmhKdFBXTUdtSG05anNKVDNmeW8wbUd0cFhHYW0zQ2FnVi9PM3YvS0RB?=
- =?utf-8?B?R0tnVXBpNVJXSUJoL04wc3hvdldCUUcrVEx6QVpCUW9LalZuM0E2WjljL1V2?=
- =?utf-8?B?WkpjaWJFd3JFZDVCZ0cySEtmOUZxWExsUU9yVE1xUmROTlEzZjR4NC9pQkZD?=
- =?utf-8?B?bVMycXVDdDFYMnNyQTl3WlpGbWhlSlBFNy9LcUd3TzlVNzBBZFBuV3REWmty?=
- =?utf-8?B?YUxKdEtDQVhZNWhPaFpvcWJ5RS9KeXF5S1VxdnNZYy9Edk9IR1JpRHNjcnFF?=
- =?utf-8?B?c3lydEQ0Y1lrV1hlMHd1RDNnb09PcEtNRnBxdXJncVY2bXpRYUZNVmpVSnJl?=
- =?utf-8?B?YS8wU0k0YzJaTHJMY2ptdjlsaDJxTStPVzMzTnRNYWdpaFB3N0NNY1ZnNndJ?=
- =?utf-8?B?RTJzbVJibnZab0syclEvZlppeWtIUVJueVdmSTZ1cjU4WTBjYng0RmplRVM1?=
- =?utf-8?B?TS85VVZocXdTZ0ZpSTY4NGpRRUx3RlovbEZlT0IwbVRXOHVFcWNQWjByZEtl?=
- =?utf-8?B?T1hVQlpWYTY3WXpRVkljSm5BN1FMc2wvUUxGbEFtZ3lmWlhXS2hFSDNrbFM0?=
- =?utf-8?B?ZjJla2hqZ0FiTk0rV2FjQUhsK0JxR0Y0WUEzKzBlejhvVWplQ3BjMEFKUUND?=
- =?utf-8?B?Um1oK2ZLeDd1c1JGUFlDZjlMVWUvdmNNU1o4aUZsd21oSnNOQUs3NEJZSlgz?=
- =?utf-8?Q?SYCg=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c1d1091-bf1c-44e4-2771-08d9ab734d5b
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2021 15:43:15.8716
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /FD+S709PV/BUKHyaiX73/2a3AkJDSph6E9d78J/VnbuIwU6rQlSoz9oIkRC4Agp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5317
+        id S235964AbhKSPue (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Nov 2021 10:50:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233725AbhKSPue (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Nov 2021 10:50:34 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C57C61246;
+        Fri, 19 Nov 2021 15:47:32 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mo66s-006Zt2-0k; Fri, 19 Nov 2021 15:47:30 +0000
+Date:   Fri, 19 Nov 2021 15:47:29 +0000
+Message-ID: <875yso6tbi.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, arnd@arndb.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: Re: [PATCH v6 2/2] arm64: PCI: hv: Add support for Hyper-V vPCI
+In-Reply-To: <1637225490-2213-3-git-send-email-sunilmut@linux.microsoft.com>
+References: <1637225490-2213-1-git-send-email-sunilmut@linux.microsoft.com>
+        <1637225490-2213-3-git-send-email-sunilmut@linux.microsoft.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: sunilmut@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de, x86@kernel.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, sunilmut@microsoft.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 04:06:12PM +0100, Jörg Rödel wrote:
-
-> This change came to be because the iommu_attach/detach_device()
-> interface doesn't fit well into a world with iommu-groups. Devices
-> within a group are by definition not isolated between each other, so
-> they must all be in the same address space (== iommu_domain). So it
-> doesn't make sense to allow attaching a single device within a group to
-> a different iommu_domain.
-
-It is the same problem VFIO has. It changes the iommu_domain of a
-group while it only has a single driver bound to one device in the
-group.
-
-Robin is also right to point out there is no guarentee that a single
-device group will remain a single device group after a hot plug
-event. This is something VFIO is also able to handle today.
-
-So, I think the solution of this series applies equally well to this
-problem. Let's see it in v2.
-
-> I know that in theory it is safe to allow devices within a group to be
-> in different domains because there iommu-groups catch multiple
-> non-isolation cases:
+On Thu, 18 Nov 2021 08:51:30 +0000,
+Sunil Muthuswamy <sunilmut@linux.microsoft.com> wrote:
 > 
-> 	1) Devices behind a non-ACS capable bridge or multiple functions
-> 	   of a PCI device. Here it is safe to put the devices into
-> 	   different iommu-domains as long as all affected devices are
-> 	   controlled by the same owner.
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
 > 
-> 	2) Devices which share a single request-id and can't be
-> 	   differentiated by the IOMMU hardware. These always need to be
-> 	   in the same iommu_domain.
+> Add support for Hyper-V vPCI for arm64 by implementing the arch specific
+> interfaces. Introduce an IRQ domain and chip specific to Hyper-v vPCI that
+> is based on SPIs. The IRQ domain parents itself to the arch GIC IRQ domain
+> for basic vector management.
+> 
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> ---
+> In v2, v3, v4, v5 & v6:
+>  Changes are described in the cover letter.
+> 
+>  arch/arm64/include/asm/hyperv-tlfs.h |   9 ++
+>  drivers/pci/Kconfig                  |   2 +-
+>  drivers/pci/controller/Kconfig       |   2 +-
+>  drivers/pci/controller/pci-hyperv.c  | 204 ++++++++++++++++++++++++++-
+>  4 files changed, 214 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/asm/hyperv-tlfs.h
+> index 4d964a7f02ee..bc6c7ac934a1 100644
+> --- a/arch/arm64/include/asm/hyperv-tlfs.h
+> +++ b/arch/arm64/include/asm/hyperv-tlfs.h
+> @@ -64,6 +64,15 @@
+>  #define HV_REGISTER_STIMER0_CONFIG	0x000B0000
+>  #define HV_REGISTER_STIMER0_COUNT	0x000B0001
+>  
+> +union hv_msi_entry {
+> +	u64 as_uint64[2];
+> +	struct {
+> +		u64 address;
+> +		u32 data;
+> +		u32 reserved;
+> +	} __packed;
+> +};
+> +
+>  #include <asm-generic/hyperv-tlfs.h>
+>  
+>  #endif
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 43e615aa12ff..d98fafdd0f99 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -184,7 +184,7 @@ config PCI_LABEL
+>  
+>  config PCI_HYPERV
+>  	tristate "Hyper-V PCI Frontend"
+> -	depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+> +	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+>  	select PCI_HYPERV_INTERFACE
+>  	help
+>  	  The PCI device frontend driver allows the kernel to import arbitrary
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 93b141110537..2536abcc045a 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -281,7 +281,7 @@ config PCIE_BRCMSTB
+>  
+>  config PCI_HYPERV_INTERFACE
+>  	tristate "Hyper-V PCI Interface"
+> -	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
+> +	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
+>  	help
+>  	  The Hyper-V PCI Interface is a helper driver allows other drivers to
+>  	  have a common interface with the Hyper-V PCI frontend driver.
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index ead7d6cb6bf1..d52e23b1d14b 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -47,6 +47,8 @@
+>  #include <linux/msi.h>
+>  #include <linux/hyperv.h>
+>  #include <linux/refcount.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/acpi.h>
+>  #include <asm/mshyperv.h>
+>  
+>  /*
+> @@ -614,7 +616,202 @@ static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
+>  {
+>  	return pci_msi_prepare(domain, dev, nvec, info);
+>  }
+> -#endif /* CONFIG_X86 */
+> +#elif defined(CONFIG_ARM64)
+> +/*
+> + * SPI vectors to use for vPCI; arch SPIs range is [32, 1019], but leaving a bit
+> + * of room at the start to allow for SPIs to be specified through ACPI and
+> + * starting with a power of two to satisfy power of 2 multi-MSI requirement.
+> + */
+> +#define HV_PCI_MSI_SPI_START	64
+> +#define HV_PCI_MSI_SPI_NR	(1020 - HV_PCI_MSI_SPI_START)
+> +#define DELIVERY_MODE		0
+> +#define FLOW_HANDLER		NULL
+> +#define FLOW_NAME		NULL
+> +#define hv_msi_prepare		NULL
+> +
+> +struct hv_pci_chip_data {
+> +	DECLARE_BITMAP(spi_map, HV_PCI_MSI_SPI_NR);
+> +	struct mutex	map_lock;
+> +};
+> +
+> +/* Hyper-V vPCI MSI GIC IRQ domain */
+> +static struct irq_domain *hv_msi_gic_irq_domain;
+> +
+> +/* Hyper-V PCI MSI IRQ chip */
+> +static struct irq_chip hv_arm64_msi_irq_chip = {
+> +	.name = "MSI",
+> +	.irq_set_affinity = irq_chip_set_affinity_parent,
+> +	.irq_eoi = irq_chip_eoi_parent,
+> +	.irq_mask = irq_chip_mask_parent,
+> +	.irq_unmask = irq_chip_unmask_parent
+> +};
+> +
+> +static unsigned int hv_msi_get_int_vector(struct irq_data *irqd)
+> +{
+> +	return irqd->parent_data->hwirq;
+> +}
+> +
+> +static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> +				       struct msi_desc *msi_desc)
+> +{
+> +	msi_entry->address = ((u64)msi_desc->msg.address_hi << 32) |
+> +			      msi_desc->msg.address_lo;
+> +	msi_entry->data = msi_desc->msg.data;
+> +}
+> +
+> +static void hv_pci_vec_irq_domain_free(struct irq_domain *domain,
+> +				       unsigned int virq, unsigned int nr_irqs)
+> +{
+> +	struct hv_pci_chip_data *chip_data = domain->host_data;
+> +	struct irq_data *irqd = irq_domain_get_irq_data(domain, virq);
+> +	int first = irqd->hwirq - HV_PCI_MSI_SPI_START;
+> +
+> +	mutex_lock(&chip_data->map_lock);
+> +	bitmap_release_region(chip_data->spi_map,
+> +			      first,
+> +			      get_count_order(nr_irqs));
+> +	mutex_unlock(&chip_data->map_lock);
+> +	irq_domain_reset_irq_data(irqd);
+> +	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
+> +}
+> +
+> +static int hv_pci_vec_alloc_device_irq(struct irq_domain *domain,
+> +				       unsigned int nr_irqs,
+> +				       irq_hw_number_t *hwirq)
+> +{
+> +	struct hv_pci_chip_data *chip_data = domain->host_data;
+> +	unsigned int index;
+> +
+> +	/* Find and allocate region from the SPI bitmap */
+> +	mutex_lock(&chip_data->map_lock);
+> +	index = bitmap_find_free_region(chip_data->spi_map,
+> +					HV_PCI_MSI_SPI_NR,
+> +					get_count_order(nr_irqs));
+> +	mutex_unlock(&chip_data->map_lock);
+> +	if (index < 0)
+> +		return -ENOSPC;
+> +
+> +	*hwirq = index + HV_PCI_MSI_SPI_START;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
+> +					   unsigned int virq,
+> +					   irq_hw_number_t hwirq)
+> +{
+> +	struct irq_fwspec fwspec;
+> +
+> +	fwspec.fwnode = domain->parent->fwnode;
+> +	fwspec.param_count = 2;
+> +	fwspec.param[0] = hwirq;
+> +	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+> +
+> +	return irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
 
-> To lift the single-domain-per-group requirement the iommu core code
-> needs to learn the difference between the two cases above.
+I think you are missing the actual edge configuration here. Since the
+interrupt specifier doesn't come from either DT or ACPI, nobody will
+set the trigger type, and you have to do it yourself here. At the
+moment, you will get whatever is in the GIC configuration.
 
-We had a long talk about this a while back, nobody came with
-compelling arguments to justify doing this work. I've just been using
-it as a guidepost for building APIs. If the API can accomodate #1 then
-it is a better design than one that cannot.
+> +}
+> +
+> +static int hv_pci_vec_irq_domain_alloc(struct irq_domain *domain,
+> +				       unsigned int virq, unsigned int nr_irqs,
+> +				       void *args)
+> +{
+> +	irq_hw_number_t hwirq;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	ret = hv_pci_vec_alloc_device_irq(domain, nr_irqs, &hwirq);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		ret = hv_pci_vec_irq_gic_domain_alloc(domain, virq + i,
+> +						      hwirq + i);
+> +		if (ret)
+> +			goto free_irq;
+> +
+> +		ret = irq_domain_set_hwirq_and_chip(domain, virq + i,
+> +						    hwirq + i,
+> +						    &hv_arm64_msi_irq_chip,
+> +						    domain->host_data);
+> +		if (ret)
+> +			goto free_irq;
+> +
+> +		pr_debug("pID:%d vID:%u\n", (int)(hwirq + i), virq + i);
+> +	}
+> +
+> +	return 0;
+> +
+> +free_irq:
+> +	hv_pci_vec_irq_domain_free(domain, virq, nr_irqs);
+> +
+> +	return ret;
 
-Jason
+How about the interrupts that have already been allocated?
+
+> +}
+> +
+> +/*
+> + * Pick the first online cpu as the irq affinity that can be temporarily used
+> + * for composing MSI from the hypervisor. GIC will eventually set the right
+> + * affinity for the irq and the 'unmask' will retarget the interrupt to that
+> + * cpu.
+> + */
+> +static int hv_pci_vec_irq_domain_activate(struct irq_domain *domain,
+> +					  struct irq_data *irqd, bool reserve)
+> +{
+> +	int cpu = cpumask_first(cpu_online_mask);
+> +
+> +	irq_data_update_effective_affinity(irqd, cpumask_of(cpu));
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops hv_pci_domain_ops = {
+> +	.alloc	= hv_pci_vec_irq_domain_alloc,
+> +	.free	= hv_pci_vec_irq_domain_free,
+> +	.activate = hv_pci_vec_irq_domain_activate,
+> +};
+> +
+> +static int hv_pci_irqchip_init(void)
+> +{
+> +	static struct hv_pci_chip_data *chip_data;
+> +	struct fwnode_handle *fn = NULL;
+> +	int ret = -ENOMEM;
+> +
+> +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+> +	if (!chip_data)
+> +		return ret;
+> +
+> +	mutex_init(&chip_data->map_lock);
+> +	fn = irq_domain_alloc_named_fwnode("Hyper-V ARM64 vPCI");
+
+This will appear in debugfs. I'd rather you keep it short, sweet and
+without spaces. "hv_vpci_arm64" seems better to me.
+
+> +	if (!fn)
+> +		goto free_chip;
+> +
+> +	/*
+> +	 * IRQ domain once enabled, should not be removed since there is no
+> +	 * way to ensure that all the corresponding devices are also gone and
+> +	 * no interrupts will be generated.
+> +	 */
+> +	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
+> +							  fn, &hv_pci_domain_ops,
+> +							  chip_data);
+> +
+> +	if (!hv_msi_gic_irq_domain) {
+> +		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
+> +		goto free_chip;
+> +	}
+> +
+> +	return 0;
+> +
+> +free_chip:
+> +	kfree(chip_data);
+> +	if (fn)
+> +		irq_domain_free_fwnode(fn);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct irq_domain *hv_pci_get_root_domain(void)
+> +{
+> +	return hv_msi_gic_irq_domain;
+> +}
+> +#endif /* CONFIG_ARM64 */
+>  
+>  /**
+>   * hv_pci_generic_compl() - Invoked for a completion packet
+> @@ -1227,6 +1424,8 @@ static void hv_msi_free(struct irq_domain *domain, struct msi_domain_info *info,
+>  static void hv_irq_mask(struct irq_data *data)
+>  {
+>  	pci_msi_mask_irq(data);
+> +	if (data->parent_data->chip->irq_mask)
+> +		irq_chip_mask_parent(data);
+>  }
+>  
+>  /**
+> @@ -1343,6 +1542,8 @@ static void hv_irq_unmask(struct irq_data *data)
+>  		dev_err(&hbus->hdev->device,
+>  			"%s() failed: %#llx", __func__, res);
+>  
+> +	if (data->parent_data->chip->irq_unmask)
+> +		irq_chip_unmask_parent(data);
+>  	pci_msi_unmask_irq(data);
+>  }
+>  
+> @@ -1619,6 +1820,7 @@ static struct irq_chip hv_msi_irq_chip = {
+>  	.irq_compose_msi_msg	= hv_compose_msi_msg,
+>  	.irq_set_affinity	= irq_chip_set_affinity_parent,
+>  	.irq_ack		= irq_chip_ack_parent,
+> +	.irq_eoi		= irq_chip_eoi_parent,
+>  	.irq_mask		= hv_irq_mask,
+>  	.irq_unmask		= hv_irq_unmask,
+
+You probably want to avoid unconditionally setting callbacks that may
+have side effects on another architecture (ack on arm64, eoi on x86).
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
