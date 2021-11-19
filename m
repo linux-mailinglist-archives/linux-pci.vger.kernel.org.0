@@ -2,114 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBA8645768D
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 19:40:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 56A90457722
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 20:39:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234442AbhKSSnz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Nov 2021 13:43:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234697AbhKSSnz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Nov 2021 13:43:55 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E8AD96138D;
-        Fri, 19 Nov 2021 18:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637347251;
-        bh=y3DkpihsiL0fQSHXzb5rNT/A7Cua9WK/u4fClJT9hSg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DfQQdIGUlNgYgvl/iBBdHUO+TX6UvgX0rPS0q52rwPvgZol4xeIuqH//9OPN2soDu
-         WNHHkBWK+wprVBFv0OD9e9xDnHl/7mHeuvofZSVSnncFQ6XZEFXY0EIjl/hNF/nJDN
-         Cqqc8KdMzU7Qd+Enm7uDkDoXs5V0FPE8Z8u9RaC0rSkg8dUUg4Mp+S8s4I7PiPmDmu
-         NzdZ+0+yzU4cd7QRiFKd4HTt7xItojqSBamjjCGsTiNSQL/5PS5eOMbloRlxIuJk8d
-         53+6qirbkz/+7gB/CTzKSa5m3h+cpMVDsEriKG51mL8V4FJkIndea4ZG3xBJ9pLURK
-         HxcM/7iqKNj3A==
-Date:   Fri, 19 Nov 2021 12:40:49 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Joseph Bao <joseph.bao@intel.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>, kw@linux.com,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: pciehp: Fix infinite loop in IRQ handler upon power
- fault
-Message-ID: <20211119184049.GA1950305@bhelgaas>
+        id S236043AbhKSTmg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Nov 2021 14:42:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232664AbhKSTmZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Nov 2021 14:42:25 -0500
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F347C061574;
+        Fri, 19 Nov 2021 11:39:23 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id v1so13565041edx.2;
+        Fri, 19 Nov 2021 11:39:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2xNNoAi2GIsyk3l3UxgkgmZxFVoCKBDgvYlrq0c7iLM=;
+        b=hYo/RTI/s3eBgaG76Z307y4cq5TphEKQjsPtoqUz5gRyXBwnonIGaqckU3hcIcwAy6
+         lu/h82xAbX8SE9Pzqw1dhnzQMcNNiUt6UqqpcMffhf3akAwsZuYkm264vE8/0rWtQnXZ
+         Xik0HxKR6jt2Xrn47r5XNtiAgOC+TGJI8DZvROiGOE7lvglZC2darTl6t6dic+9u0mRN
+         3e7YVil6YBiEHT7jGdISNkL3IiaoXR9akpRQkE5Wf7+0D7cOpyMcrfPyyYQElBtu9+WJ
+         IvR/4MqHPIPOlBf4fw+yk/FSAPaLVNIYK6iBAghTZY0l5AK8UJDW+c1kkMiSSYr4T+1E
+         sZng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2xNNoAi2GIsyk3l3UxgkgmZxFVoCKBDgvYlrq0c7iLM=;
+        b=3dduz+e0kkLvvWjshshjlrleCmKWPVyj6lO/FmMVOJnn/QVTBbAsSBitp+72nbQkOr
+         KB/rUaXUyc3Hl+sgEI7ndlAA753rWi5KZcQ9G9YczdI5fWkbq9GpszvPt7xZavnqtvPl
+         Oho5WpP4IWKgfbTvE5onoKzOoiv8DWuGz4zB+1zi1ZaPi8Uuvwe6UU/1Hz4SRmCx1UF8
+         0L+eXpubr+eoCGU7+wUtwHQW6K9uZeMzWJB+ZdvuGKK+5eBbDHT8FMPZqZM7/1f6GQAL
+         20S1IIusCdpjhhm6Zvd0fchg3PfHLH77SpdLJUBahCbFmacOZYPCRuCDBeJdEfa+k61d
+         p1Mw==
+X-Gm-Message-State: AOAM531PidFn5VecY5iSF8lRRIOZ8+iAFrv9zj+G/9LwlNLWREHcbVWT
+        jLysmmKEbGPW0JYx01XaSUI=
+X-Google-Smtp-Source: ABdhPJwDat8zQQKTl+SsQGumIsyNY9OIbGFSKpXFxEiQVy3Cd+iAk+rXCsXK41mJgJHNjFSzZkRg6Q==
+X-Received: by 2002:a50:9510:: with SMTP id u16mr27810395eda.134.1637350761679;
+        Fri, 19 Nov 2021 11:39:21 -0800 (PST)
+Received: from localhost.localdomain (catv-176-63-2-222.catv.broadband.hu. [176.63.2.222])
+        by smtp.googlemail.com with ESMTPSA id sb19sm327521ejc.120.2021.11.19.11.39.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Nov 2021 11:39:21 -0800 (PST)
+From:   "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+To:     helgaas@kernel.org
+Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org, hch@lst.de
+Subject: [RFC PATCH v5 0/4] PCI/ASPM: Remove struct aspm_latency
+Date:   Fri, 19 Nov 2021 20:37:28 +0100
+Message-Id: <20211119193732.12343-1-refactormyself@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <66eaeef31d4997ceea357ad93259f290ededecfd.1637187226.git.lukas@wunner.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 17, 2021 at 11:22:09PM +0100, Lukas Wunner wrote:
-> The Power Fault Detected bit in the Slot Status register differs from
-> all other hotplug events in that it is sticky:  It can only be cleared
-> after turning off slot power.  Per PCIe r5.0, sec. 6.7.1.8:
-> 
->   If a power controller detects a main power fault on the hot-plug slot,
->   it must automatically set its internal main power fault latch [...].
->   The main power fault latch is cleared when software turns off power to
->   the hot-plug slot.
-> 
-> The stickiness used to cause interrupt storms and infinite loops which
-> were fixed in 2009 by commits 5651c48cfafe ("PCI pciehp: fix power fault
-> interrupt storm problem") and 99f0169c17f3 ("PCI: pciehp: enable
-> software notification on empty slots").
-> 
-> Unfortunately in 2020 the infinite loop issue was inadvertently
-> reintroduced by commit 8edf5332c393 ("PCI: pciehp: Fix MSI interrupt
-> race"):  The hardirq handler pciehp_isr() clears the PFD bit until
-> pciehp's power_fault_detected flag is set.  That happens in the IRQ
-> thread pciehp_ist(), which never learns of the event because the hardirq
-> handler is stuck in an infinite loop.  Fix by setting the
-> power_fault_detected flag already in the hardirq handler.
-> 
-> Fixes: 8edf5332c393 ("PCI: pciehp: Fix MSI interrupt race")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=214989
-> Link: https://lore.kernel.org/linux-pci/DM8PR11MB5702255A6A92F735D90A4446868B9@DM8PR11MB5702.namprd11.prod.outlook.com
-> Reported-by: Joseph Bao <joseph.bao@intel.com>
-> Tested-by: Joseph Bao <joseph.bao@intel.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: stable@vger.kernel.org # v4.19+
-> Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
+To validate and set link latency capability, `struct aspm_latency` and
+related members defined within `struct pcie_link_state` are used.
+However, since there are not many access to theses values, it is
+possible to directly access and compute these values.
 
-Applied to pci/hotplug for v5.17, thanks very much!
+Doing this will also reduce the dependency on `struct pcie_link_state`.
 
-> ---
->  drivers/pci/hotplug/pciehp_hpc.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 83a0fa119cae..9535c61cbff3 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -642,6 +642,8 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  	 */
->  	if (ctrl->power_fault_detected)
->  		status &= ~PCI_EXP_SLTSTA_PFD;
-> +	else if (status & PCI_EXP_SLTSTA_PFD)
-> +		ctrl->power_fault_detected = true;
->  
->  	events |= status;
->  	if (!events) {
-> @@ -651,7 +653,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  	}
->  
->  	if (status) {
-> -		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
->  
->  		/*
->  		 * In MSI mode, all event bits must be zero before the port
-> @@ -725,8 +727,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
->  	}
->  
->  	/* Check Power Fault Detected */
-> -	if ((events & PCI_EXP_SLTSTA_PFD) && !ctrl->power_fault_detected) {
-> -		ctrl->power_fault_detected = 1;
-> +	if (events & PCI_EXP_SLTSTA_PFD) {
->  		ctrl_err(ctrl, "Slot(%s): Power fault\n", slot_name(ctrl));
->  		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
->  				      PCI_EXP_SLTCTL_ATTN_IND_ON);
-> -- 
-> 2.33.0
-> 
+The series removes `struct aspm_latency` and related members within
+`struct pcie_link_state`. All latencies are now calculated when needed.
+
+
+VERSION CHANGES:
+- v2:
+»       - directly access downstream by calling `pci_function_0()`
+»         instead of using the `struct pcie_link_state`
+- v3:
+»       - rebase on Linux 5.15-rc2
+- v4
+»       - Create a seprate path to move pci_function_0() upward
+- v5
+	- shorten long lines as noted in the review
+
+MERGE NOTICE:
+These series are based on
+»       'commit fa55b7dcdc43 ("Linux 5.16-rc1")'
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+Bolarinwa O. Saheed (1):
+  PCI/ASPM: Move pci_function_0() upward
+
+Saheed O. Bolarinwa (3):
+  PCI/ASPM: Do not cache link latencies
+  PCI/ASPM: Remove struct pcie_link_state.acceptable
+  PCI/ASPM: Remove struct aspm_latency
+
+ drivers/pci/pcie/aspm.c | 95 +++++++++++++++++++----------------------
+ 1 file changed, 44 insertions(+), 51 deletions(-)
+
+-- 
+2.20.1
+
