@@ -2,129 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FC3A4577F6
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 21:55:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A1B1457849
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 22:43:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234052AbhKSU6T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Nov 2021 15:58:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35162 "EHLO mail.kernel.org"
+        id S229519AbhKSVqI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Nov 2021 16:46:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232523AbhKSU6T (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Nov 2021 15:58:19 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8EFA061A6C;
-        Fri, 19 Nov 2021 20:55:16 +0000 (UTC)
+        id S229455AbhKSVqI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Nov 2021 16:46:08 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D5DC261AFF;
+        Fri, 19 Nov 2021 21:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637355316;
-        bh=kTtViGsleJDtOwfixieIl9J0AXpWncyP+fhWRRK9k88=;
+        s=k20201202; t=1637358186;
+        bh=LK8t2KpV+SC3gzht77RJ7YzUOtHsij629DK8RvTIS1c=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cUTEFZr/VWA5wH2Ue1Fy0+pD+zyc8QHHs3VZ/N7dQYRaJTiV4mBxjuHxpd17Cl+qQ
-         28iK7TByWc6Co4JM2rY4lgk5QpEq1TKnBQxb5DFkTAuz6e4rCJrQYtpmxf4d/v582k
-         smTw1R6oUJDKkEhFm2viJZTmqi5kXEKklHuWxNATfxjqSazQbLoEv/WzRlRCGFAtb3
-         Lgzxe7bLeZxsyDc/I+6iQy6IWISuXo6ckokCb3CqnLHPp05A/52V5mDOy27Z7B5HWX
-         oYq2xKKB6ll0YB14NzZLZtBMz/ubtKI4gXDvkzaPEmbZCf7Z7AjdrkvsAYpNvjGUga
-         JVF1fcnN2WgjQ==
-Date:   Fri, 19 Nov 2021 14:55:15 -0600
+        b=dqDeAStixRThTahKNsaLwebOmGWEHs6A5/z6AOSv8flMtKnD2KcyRRoPKnPzHQszL
+         3A0/2Se4HZX6YyyCGW6WymUHBLn9eZTPohC2nmg9IA6gWr84vJNafxBGf+xnGZnD5i
+         jwb/l8nBXyPSlNiIbCLgpCXQ0QT/tJ5XRq4xy7ENdvPyzWnuoPKcMMEOiJEGd2v80q
+         6xN9B0eN/T5XvhZNtfQRdn/Ndt5yyKXxvLQxSpxgP0EzeUaVY5QCTk5rTPC1zjnnOF
+         jCMXBrFIy87ba9o1BAdUOTKtYydu1pT7RhgqiQscAAFY5VYv1qvJL37LHSkmBrwjRV
+         GF1mSw2R5OBcA==
+Date:   Fri, 19 Nov 2021 15:43:04 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-Cc:     lorenzo.pieralisi@arm.com, jonathan.derrick@linux.dev,
-        linux-pci@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH v5] PCI: vmd: Clean up domain before enumeration
-Message-ID: <20211119205515.GA1962933@bhelgaas>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI: Update BAR # and window messages
+Message-ID: <20211119214304.GA1963177@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a8b5f6d3-ff52-1bf6-994e-2aa0421c011a@linux.intel.com>
+In-Reply-To: <20211106115831.GA7452@wunner.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 01:48:59PM -0700, Patel, Nirmal wrote:
-> On 11/16/2021 3:11 PM, Nirmal Patel wrote:
-> > During VT-d pass-through, the VMD driver occasionally fails to
-> > enumerate underlying NVMe devices when repetitive reboots are
-> > performed in the guest OS. The issue can be resolved by resetting
-> > VMD root ports for proper enumeration and triggering secondary bus
-> > reset which will also propagate reset through downstream bridges.
-> >
-> > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-> > Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
-> > ---
-> > ---
-> > v4->v5: Fixing small nitpick fix.
-> > v3->v4: Using pci_reset_bus function for secondary bus reset instead of
-> >         manually triggering secondary bus reset, addressing review
-> >         comments of v3.
-> > v2->v3: Combining two functions into one, Remove redundant definations
-> >         and Formatting fixes
-> >
-> >  drivers/pci/controller/vmd.c | 37 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> > index a5987e52700e..a905fce6232f 100644
-> > --- a/drivers/pci/controller/vmd.c
-> > +++ b/drivers/pci/controller/vmd.c
-> > @@ -498,6 +498,40 @@ static inline void vmd_acpi_begin(void) { }
-> >  static inline void vmd_acpi_end(void) { }
-> >  #endif /* CONFIG_ACPI */
-> >  
-> > +static void vmd_domain_reset(struct vmd_dev *vmd)
-> > +{
-> > +	u16 bus, max_buses = resource_size(&vmd->resources[0]);
-> > +	u8 dev, functions, fn, hdr_type;
-> > +	char __iomem *base;
-> > +
-> > +	for (bus = 0; bus < max_buses; bus++) {
-> > +		for (dev = 0; dev < 32; dev++) {
-> > +			base = vmd->cfgbar + PCIE_ECAM_OFFSET(bus,
-> > +						PCI_DEVFN(dev, 0), 0);
-> > +
-> > +			hdr_type = readb(base + PCI_HEADER_TYPE) &
-> > +					 PCI_HEADER_TYPE_MASK;
-> > +
-> > +			functions = (hdr_type & 0x80) ? 8 : 1;
-> > +			for (fn = 0; fn < functions; fn++) {
-> > +				base = vmd->cfgbar + PCIE_ECAM_OFFSET(bus,
-> > +						PCI_DEVFN(dev, fn), 0);
-> > +
-> > +				hdr_type = readb(base + PCI_HEADER_TYPE) &
-> > +						PCI_HEADER_TYPE_MASK;
-> > +
-> > +				if (hdr_type != PCI_HEADER_TYPE_BRIDGE ||
-> > +				    (readw(base + PCI_CLASS_DEVICE) !=
-> > +				     PCI_CLASS_BRIDGE_PCI))
-> > +					continue;
-> > +
-> > +				memset_io(base + PCI_IO_BASE, 0,
-> > +					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
-> > +			}
+On Sat, Nov 06, 2021 at 12:58:31PM +0100, Lukas Wunner wrote:
+> On Sat, Nov 06, 2021 at 04:56:05PM +0530, Puranjay Mohan wrote:
+> > +		switch (i) {
+> > +		case 0: return "BAR 0";
+> > +		case 1: return "BAR 1";
+> > +		case 2: return "BAR 2";
+> > +		case 3: return "BAR 3";
+> > +		case 4: return "BAR 4";
+> > +		case 5: return "BAR 5";
+> > +		case PCI_ROM_RESOURCE: return "ROM";
+> > +		#ifdef CONFIG_PCI_IOV
+> > +		case PCI_IOV_RESOURCES + 0: return "VF BAR 0";
+> > +		case PCI_IOV_RESOURCES + 1: return "VF BAR 1";
+> > +		case PCI_IOV_RESOURCES + 2: return "VF BAR 2";
+> > +		case PCI_IOV_RESOURCES + 3: return "VF BAR 3";
+> > +		case PCI_IOV_RESOURCES + 4: return "VF BAR 4";
+> > +		case PCI_IOV_RESOURCES + 5: return "VF BAR 5";
+> > +		#endif
 > > +		}
-> > +	}
-> > +}
-> > +
-> >  static void vmd_attach_resources(struct vmd_dev *vmd)
-> >  {
-> >  	vmd->dev->resource[VMD_MEMBAR1].child = &vmd->resources[1];
-> > @@ -801,6 +835,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> >  	vmd_acpi_begin();
-> >  
-> >  	pci_scan_child_bus(vmd->bus);
-> > +	vmd_domain_reset(vmd);
-> > +	list_for_each_entry(child, &vmd->bus->children, node)
-> > +		pci_reset_bus(child->self);
-> >  	pci_assign_unassigned_bus_resources(vmd->bus);
-> >  
-> >  	/*
 > 
-> Hi
+> Use a static const array of char * instead of a switch/case ladder
+> to reduce LoC count and improve performance.
 > 
-> Gentle ping. Please let me know if you are okay with these changes
-> (with Jon's Reviewed-by). Thanks.
+> See pcie_to_hpx3_type[] or state_conv[] in drivers/pci/pci-acpi.c
+> for an example.
 
-This got assigned to me by mistake, so I just reassigned it to Lorenzo
-in patchwork.  There's no hurry, we're only at v5.16-rc1.  It doesn't
-appear to be a candidate for v5.16, and there's always "cc: stable" if
-appropriate.
+I tried converting this and came up with the below.  Is that the sort
+of thing you're thinking?  Gcc *does* generate slightly smaller code
+for it, but Puranjay's original source code is smaller and IMO a
+little easier to read.
 
-Bjorn
+And I just noticed that Puranjay's code nicely returns "unknown" for
+BAR 2-5 of bridges, while my code below does not.  Could be fixed, of
+course, but would take a little more code.
+
+  const char *pci_resource_name(struct pci_dev *dev, int i)
+  {
+	  static const char *bar_name[] = {
+		  "BAR 0",
+		  "BAR 1",
+		  "BAR 2",
+		  "BAR 3",
+		  "BAR 4",
+		  "BAR 5",
+		  "ROM",
+  #ifdef CONFIG_PCI_IOV
+		  "VF BAR 0",
+		  "VF BAR 1",
+		  "VF BAR 2",
+		  "VF BAR 3",
+		  "VF BAR 4",
+		  "VF BAR 5",
+  #endif
+		  "bridge I/O window",
+		  "bridge mem window",
+		  "bridge mem pref window",
+	  };
+	  static const char *cardbus_name[] = {
+		  "BAR 0",
+		  "unknown",
+		  "unknown",
+		  "unknown",
+		  "unknown",
+		  "unknown",
+		  "unknown",
+  #ifdef CONFIG_PCI_IOV
+		  "unknown",
+		  "unknown",
+		  "unknown",
+		  "unknown",
+		  "unknown",
+		  "unknown",
+  #endif
+		  "CardBus bridge I/O 0 window",
+		  "CardBus bridge I/O 1 window",
+		  "CardBus bridge mem 0 window",
+		  "CardBus bridge mem 1 window",
+	  };
+
+	  if (dev->hdr_type == PCI_HEADER_TYPE_CARDBUS &&
+	      i < ARRAY_SIZE(cardbus_name))
+		  return cardbus_name[i];
+	  else if (i < ARRAY_SIZE(bar_name))
+		  return bar_name[i];
+
+	  return "unknown";
+  }
