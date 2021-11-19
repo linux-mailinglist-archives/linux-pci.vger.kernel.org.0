@@ -2,111 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27C71456DE6
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 12:00:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5A6B456DF4
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 12:07:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234866AbhKSLD0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Nov 2021 06:03:26 -0500
-Received: from mga03.intel.com ([134.134.136.65]:65295 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232004AbhKSLDZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Nov 2021 06:03:25 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10172"; a="234344450"
-X-IronPort-AV: E=Sophos;i="5.87,247,1631602800"; 
-   d="scan'208";a="234344450"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 03:00:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,247,1631602800"; 
-   d="scan'208";a="506410953"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 19 Nov 2021 03:00:20 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D645A5B2; Fri, 19 Nov 2021 13:00:23 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 3/3] x86/quirks: Join string literals back
-Date:   Fri, 19 Nov 2021 13:00:17 +0200
-Message-Id: <20211119110017.48510-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211119110017.48510-1-andriy.shevchenko@linux.intel.com>
-References: <20211119110017.48510-1-andriy.shevchenko@linux.intel.com>
+        id S231317AbhKSLKY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Nov 2021 06:10:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229521AbhKSLKY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Nov 2021 06:10:24 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A2CCC061574;
+        Fri, 19 Nov 2021 03:07:23 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id i12so9100716pfd.6;
+        Fri, 19 Nov 2021 03:07:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ng8l4wsQzx4FyhspTcTbEghmGNKsvxAsvNHV4AmOCM4=;
+        b=kwlBwdtHtIA5uGGdZqmEgUdYyt8G1rr8m3w7P2n3XQNNdqbheivwlu3QGRD24/ffE1
+         Akfd4EtfB7NK9F668PZXMoCvZ4PCdO+BeTQZgf1dM5iq1vKym4c5LJdR32vCm+QXMqW4
+         oVin56heQxqgfVHmAt+asxQGhUIHPJZvWqOUKtVRaWrQQenAAPwBmGLKFM22PUIomwiN
+         Gge0dXF3hBHGoDSBRUyLzlPeXzaNNbeNY1RlqePbgh22zF6DShJAcfZtc7nLBUblhUCF
+         OniieqSdAtXs4GqVIQaZvweoQFu85yedOlj3FhpOcO60qYhH+/KrVKy0a0bnaFtBeo+O
+         LQHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ng8l4wsQzx4FyhspTcTbEghmGNKsvxAsvNHV4AmOCM4=;
+        b=ySdkQ6GqG8psBmIzLa+PxMJiaJr46TfsckIevy8WZ/jbYOpylhQKJzSykvEu0bIenw
+         Z5Rt9JW9ikWqZB3NAu0HkI/C5OU/UAfwCkVKfbmGEpPUKQvyfGTY1KBEt102oBKZ2u24
+         p1wjvsT7vaT8HDPma29+nkyU7axi0n3CAGxfrMwJoWgxqA2exqpQ1bnTD9t3gwCzAkdq
+         YbdQa7PtSLQVy0IlOraPEGpKRKAY8r8L8Sk3ZVManFXIIvQaeZpByXmcMEpeZEi32VrF
+         eivYjIrC9d2vMTuZRyXog+V72r/h3CbAEqaMV/QKeta5J9ke6Wyq3A/o/vjlk912MUpz
+         11BQ==
+X-Gm-Message-State: AOAM531BekhDheE18kh7+RH1XEIDfzdC5T69BByV+kQbe9TjXf1Ygu9d
+        nrFNdEFiKDDI7gztRLiUR8o=
+X-Google-Smtp-Source: ABdhPJxwBKk+vMnQ3lECFETlnGOjmmzm038+PS3pNbOX2tQZMAPHTTo4LYcoIe1EapXzblpX+a1ZuA==
+X-Received: by 2002:aa7:9d9e:0:b0:4a0:25d0:a06f with SMTP id f30-20020aa79d9e000000b004a025d0a06fmr22760213pfq.82.1637320042290;
+        Fri, 19 Nov 2021 03:07:22 -0800 (PST)
+Received: from localhost.localdomain ([2406:7400:63:2c47:da89:58f9:fd04:7bf9])
+        by smtp.gmail.com with ESMTPSA id ne7sm10515484pjb.36.2021.11.19.03.07.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Nov 2021 03:07:21 -0800 (PST)
+From:   Naveen Naidu <naveennaidu479@gmail.com>
+To:     bhelgaas@google.com
+Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, gregkh@linuxfoundation.org
+Subject: [PATCH v4 0/1] PCI: Initial KUnit test fixture for resource assignment
+Date:   Fri, 19 Nov 2021 16:37:06 +0530
+Message-Id: <cover.1637319848.git.naveennaidu479@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is no need to split string literals. Moreover, it would be simpler
-to grep for an actual code line, when debugging, by using almost any
-part of the string literal in question.
+Currently it's hard to deubg issues in the resource assignment code of
+the PCI because of the long reproduction cycles between the developer
+trying to fix the code and the user testing it due to the lack of
+hardware device with the developer [1].
 
-No functional change intended.
+[1]:
+https://lore.kernel.org/all/20210621123714.GA3286648@bjorn-Precision-5520/
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/x86/kernel/quirks.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+Bjorn, suggested that it would be really good if we could have a test
+fixture for debugging/testing resource assignment. 
 
-diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
-index 7280125aed4d..9db1702d493d 100644
---- a/arch/x86/kernel/quirks.c
-+++ b/arch/x86/kernel/quirks.c
-@@ -36,8 +36,7 @@ static void quirk_intel_irqbalance(struct pci_dev *dev)
- 	pci_bus_read_config_word(dev->bus, PCI_DEVFN(8, 0), 0x4c, &word);
- 
- 	if (!(word & (1 << 13))) {
--		dev_info(&dev->dev, "Intel E7520/7320/7525 detected; "
--			"disabling irq balancing and affinity\n");
-+		dev_info(&dev->dev, "Intel E7520/7320/7525 detected; disabling irq balancing and affinity\n");
- 		noirqdebug_setup("");
- #ifdef CONFIG_PROC_FS
- 		no_irq_affinity = 1;
-@@ -110,16 +109,14 @@ static void ich_force_enable_hpet(struct pci_dev *dev)
- 	pci_read_config_dword(dev, 0xF0, &rcba);
- 	rcba &= 0xFFFFC000;
- 	if (rcba == 0) {
--		dev_printk(KERN_DEBUG, &dev->dev, "RCBA disabled; "
--			"cannot force enable HPET\n");
-+		dev_printk(KERN_DEBUG, &dev->dev, "RCBA disabled; cannot force enable HPET\n");
- 		return;
- 	}
- 
- 	/* use bits 31:14, 16 kB aligned */
- 	rcba_base = ioremap(rcba, 0x4000);
- 	if (rcba_base == NULL) {
--		dev_printk(KERN_DEBUG, &dev->dev, "ioremap failed; "
--			"cannot force enable HPET\n");
-+		dev_printk(KERN_DEBUG, &dev->dev, "ioremap failed; cannot force enable HPET\n");
- 		return;
- 	}
- 
-@@ -149,8 +146,7 @@ static void ich_force_enable_hpet(struct pci_dev *dev)
- 	if (err) {
- 		force_hpet_address = 0;
- 		iounmap(rcba_base);
--		dev_printk(KERN_DEBUG, &dev->dev,
--			"Failed to force enable HPET\n");
-+		dev_printk(KERN_DEBUG, &dev->dev, "Failed to force enable HPET\n");
- 	} else {
- 		force_hpet_resume_type = ICH_FORCE_HPET_RESUME;
- 		hpet_dev_print_force_hpet_address(&dev->dev);
-@@ -182,8 +178,7 @@ static struct pci_dev *cached_dev;
- 
- static void hpet_print_force_info(void)
- {
--	printk(KERN_INFO "HPET not enabled in BIOS. "
--	       "You might try hpet=force boot option\n");
-+	printk(KERN_INFO "HPET not enabled in BIOS. You might try hpet=force boot option\n");
- }
- 
- static void old_ich_force_hpet_resume(void)
+The patch attached along with the cover letter is an attempt to lay the
+foundation and also have a proof of concept to show that it is possible 
+to have a test fixture to debug the resource assignment code.
+
+Since there are a lot of things which happens during the resource
+assignement phase, the first version only tests the __pci_read_base()
+function since that was the most easiest to set up.
+
+Hopefully, in the future patches I'll be able to write more KUnit tests
+for the other parts responsible during the resource assignment phase and
+get closer to the goal of having a complete test fixtures :)
+
+Thanks,
+Naveen
+
+Changelog
+=========
+v4:
+    - Fix datatypes of the global variables and the fields of data
+      structures.
+    - Fix code formatting
+v3:
+    - Rename init_registers to init_test_registers 
+v2:
+    - Add test cases to test resource assignment for Type 1 devices
+    - Fix a error (a function was not static) found by Kernel Test Robot
+
+Naveen Naidu (1):
+  [PATCH v4 1/1] PCI: Add KUnit tests for __pci_read_base()
+
+ drivers/pci/Kconfig              |   4 +
+ drivers/pci/Makefile             |   3 +
+ drivers/pci/pci-read-base-test.c | 795 +++++++++++++++++++++++++++++++
+ 3 files changed, 802 insertions(+)
+ create mode 100644 drivers/pci/pci-read-base-test.c
+
 -- 
-2.33.0
+2.25.1
 
