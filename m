@@ -2,116 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 950AB456C1C
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 10:07:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A793456C26
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Nov 2021 10:11:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230520AbhKSJJx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Nov 2021 04:09:53 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:14956 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbhKSJJx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Nov 2021 04:09:53 -0500
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HwW2004LlzZdB3;
-        Fri, 19 Nov 2021 17:04:24 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 19 Nov 2021 17:06:34 +0800
-Received: from [10.67.102.185] (10.67.102.185) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Fri, 19 Nov 2021 17:06:34 +0800
-Subject: Re: [PATCH v11 2/2] drivers/perf: hisi: Add driver for HiSilicon PCIe
- PMU
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-CC:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <zhangshaokun@hisilicon.com>
-References: <20211029093632.4350-1-liuqi115@huawei.com>
- <20211029093632.4350-3-liuqi115@huawei.com>
- <CAC52Y8Zc5oRRBDiZq+zQNGw2CbURN2SRsfW9ek_gw96qDHB1zw@mail.gmail.com>
- <acb5a232-dd09-9292-5b24-25e8e29e98e7@huawei.com>
- <YZdYcOYxta3FQFR8@rocinante>
-From:   "liuqi (BA)" <liuqi115@huawei.com>
-Message-ID: <65023305-f05b-cfc3-16bf-a27e2b6da87f@huawei.com>
-Date:   Fri, 19 Nov 2021 17:06:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S230436AbhKSJOu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Nov 2021 04:14:50 -0500
+Received: from mga11.intel.com ([192.55.52.93]:61300 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231958AbhKSJOu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Nov 2021 04:14:50 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10172"; a="231867461"
+X-IronPort-AV: E=Sophos;i="5.87,246,1631602800"; 
+   d="scan'208";a="231867461"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 01:11:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,246,1631602800"; 
+   d="scan'208";a="473482561"
+Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 19 Nov 2021 01:11:45 -0800
+Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mnzvt-0004Kx-8G; Fri, 19 Nov 2021 09:11:45 +0000
+Date:   Fri, 19 Nov 2021 17:10:58 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/errors] BUILD SUCCESS
+ c78b9a9cbde5fe07ae7c3cc3789e43349db8c437
+Message-ID: <61976a22.Aj39fKHg3N8d0b71%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <YZdYcOYxta3FQFR8@rocinante>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.102.185]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/errors
+branch HEAD: c78b9a9cbde5fe07ae7c3cc3789e43349db8c437  PCI: xgene: Use PCI_ERROR_RESPONSE to identify config read errors
 
+elapsed time: 720m
 
-On 2021/11/19 15:55, Krzysztof Wilczyński wrote:
-> Hi Qi,
-> 
-> Thank you for looking into things I've mentioned!
-> 
-> [...]
->>> Would the above "bdf" be the PCI addressing schema?  If so, then we could
->>> capitalise the acronym to keep it consistent with how it's often referred
->>> to in the PCI world.
->>>
-> [...]
->> got it, will change it to Bdf to keep the consistent, thanks.
-> 
-> Just to make sure - the "Bus, Device, Function" in the world of PCI usually
-> uses the acronym of "BDF", all uppercase letters.
-> 
+configs tested: 127
+configs skipped: 3
 
-got it, thanks.
->>> [...]
->>>> +static int __init hisi_pcie_module_init(void)
->>>> +{
->>>> +     int ret;
->>>> +
->>>> +     ret = cpuhp_setup_state_multi(CPUHP_AP_PERF_ARM_HISI_PCIE_PMU_ONLINE,
->>>> +                                   "AP_PERF_ARM_HISI_PCIE_PMU_ONLINE",
->>>> +                                   hisi_pcie_pmu_online_cpu,
->>>> +                                   hisi_pcie_pmu_offline_cpu);
->>>> +     if (ret) {
->>>> +             pr_err("Failed to setup PCIe PMU hotplug, ret = %d.\n", ret);
->>>> +             return ret;
->>>> +     }
->>>
->>> The above error message could be made to be a little more aligned in terms
->>> of format with the other messages, thus it would be as follows:
->>>
->>>     pr_err("Failed to setup PCIe PMU hotplug: %d.\n", ret);
->>>
->>> Interestingly, there would be then no need to add the final dot (period) at
->>> the end here, and that would be true everywhere else.
->>>
->>
->> thanks for your reminder , I'll fix that printout message to keep align.
-> 
-> Thank you!
-> 
-> Don't forget to drop the trailing dot after the error code (it makes it
-> easier to read or even parse in a script, etc.).
-> 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-will drop all the final dot in next version, thanks : )
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211118
+mips                 randconfig-c004-20211118
+arm                         shannon_defconfig
+sh                          landisk_defconfig
+arm                            lart_defconfig
+powerpc                      cm5200_defconfig
+m68k                          sun3x_defconfig
+m68k                           sun3_defconfig
+powerpc                 mpc836x_rdk_defconfig
+arm                  colibri_pxa300_defconfig
+arm                           h3600_defconfig
+arc                    vdk_hs38_smp_defconfig
+riscv                    nommu_virt_defconfig
+mips                   sb1250_swarm_defconfig
+powerpc                      pcm030_defconfig
+arm                     eseries_pxa_defconfig
+powerpc                     powernv_defconfig
+mips                malta_qemu_32r6_defconfig
+csky                                defconfig
+sh                           se7705_defconfig
+powerpc                 mpc8313_rdb_defconfig
+powerpc                        warp_defconfig
+sh                             shx3_defconfig
+sh                        sh7757lcr_defconfig
+mips                           ip22_defconfig
+mips                      bmips_stb_defconfig
+powerpc                  mpc885_ads_defconfig
+arm                       netwinder_defconfig
+arm                            hisi_defconfig
+arm                         lpc32xx_defconfig
+sh                        edosk7760_defconfig
+arm                      pxa255-idp_defconfig
+arm                     am200epdkit_defconfig
+sh                   sh7724_generic_defconfig
+mips                         db1xxx_defconfig
+arm                        cerfcube_defconfig
+arm                          pxa168_defconfig
+m68k                          multi_defconfig
+arm                              alldefconfig
+arm                         cm_x300_defconfig
+sh                          r7780mp_defconfig
+powerpc                      obs600_defconfig
+csky                             alldefconfig
+mips                        bcm47xx_defconfig
+arm                       spear13xx_defconfig
+arm                  randconfig-c002-20211118
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+alpha                               defconfig
+nds32                               defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a015-20211118
+x86_64               randconfig-a012-20211118
+x86_64               randconfig-a011-20211118
+x86_64               randconfig-a013-20211118
+x86_64               randconfig-a016-20211118
+x86_64               randconfig-a014-20211118
+i386                 randconfig-a016-20211118
+i386                 randconfig-a014-20211118
+i386                 randconfig-a012-20211118
+i386                 randconfig-a011-20211118
+i386                 randconfig-a013-20211118
+i386                 randconfig-a015-20211118
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-Thanks,
-Qi
+clang tested configs:
+i386                 randconfig-c001-20211118
+x86_64               randconfig-c007-20211118
+arm                  randconfig-c002-20211118
+s390                 randconfig-c005-20211118
+powerpc              randconfig-c003-20211118
+riscv                randconfig-c006-20211118
+mips                 randconfig-c004-20211118
+i386                 randconfig-a006-20211118
+i386                 randconfig-a003-20211118
+i386                 randconfig-a001-20211118
+i386                 randconfig-a005-20211118
+i386                 randconfig-a004-20211118
+i386                 randconfig-a002-20211118
+x86_64               randconfig-a005-20211118
+x86_64               randconfig-a003-20211118
+x86_64               randconfig-a001-20211118
+x86_64               randconfig-a002-20211118
+x86_64               randconfig-a006-20211118
+x86_64               randconfig-a004-20211118
+hexagon              randconfig-r045-20211118
+hexagon              randconfig-r041-20211118
 
-> Again, thank you so much for working on this driver!  An amazing work!
-> 
-> 	Krzysztof
-> .
-> 
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
