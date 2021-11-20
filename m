@@ -2,69 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6691B4579F0
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 01:03:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C97B457A03
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 01:16:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236359AbhKTAGV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Nov 2021 19:06:21 -0500
-Received: from mga12.intel.com ([192.55.52.136]:5726 "EHLO mga12.intel.com"
+        id S236461AbhKTATc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Nov 2021 19:19:32 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:59956 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236328AbhKTAGN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Nov 2021 19:06:13 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="214542422"
-X-IronPort-AV: E=Sophos;i="5.87,248,1631602800"; 
-   d="scan'208";a="214542422"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 16:03:01 -0800
-X-IronPort-AV: E=Sophos;i="5.87,248,1631602800"; 
-   d="scan'208";a="496088419"
-Received: from jfaistl-mobl1.amr.corp.intel.com (HELO bad-guy.kumite) ([10.252.139.58])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 16:03:01 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 23/23] cxl/mem: Disable switch hierarchies for now
-Date:   Fri, 19 Nov 2021 16:02:50 -0800
-Message-Id: <20211120000250.1663391-24-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.34.0
-In-Reply-To: <20211120000250.1663391-1-ben.widawsky@intel.com>
-References: <20211120000250.1663391-1-ben.widawsky@intel.com>
+        id S233135AbhKTAT3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Nov 2021 19:19:29 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D3A9C200AFE;
+        Sat, 20 Nov 2021 01:16:25 +0100 (CET)
+Received: from smtp.na-rdc02.nxp.com (usphx01srsp001v.us-phx01.nxp.com [134.27.49.11])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 98C8D200A97;
+        Sat, 20 Nov 2021 01:16:25 +0100 (CET)
+Received: from right.am.freescale.net (right.am.freescale.net [10.81.116.142])
+        by usphx01srsp001v.us-phx01.nxp.com (Postfix) with ESMTP id BECE440A85;
+        Fri, 19 Nov 2021 17:16:24 -0700 (MST)
+From:   Li Yang <leoyang.li@nxp.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Cc:     Li Yang <leoyang.li@nxp.com>
+Subject: [PATCH 0/4] layerscape-pci binding updates
+Date:   Fri, 19 Nov 2021 18:16:17 -0600
+Message-Id: <20211120001621.21246-1-leoyang.li@nxp.com>
+X-Mailer: git-send-email 2.25.1.377.g2d2118b
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Switches aren't supported by the region driver yet. If a device finds
-itself under a switch it will not bind a driver so that it cannot be
-used later for region creation/configuration.
+This series includes two binding changes from Zhiqiang's previous
+submission rebased to latest 5.16-rc1:
+[PATCHv5 0/6] PCI: layerscape: Add power management support
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/mem.c | 5 +++++
- 1 file changed, 5 insertions(+)
+They describe the hardware and are not necessarily connected with the PM
+driver changes.  The series also includes two other binding updates to
+better describe the pcie hardware.
 
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index e954144af4b8..997898e78d63 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -155,6 +155,11 @@ static int cxl_mem_probe(struct device *dev)
- 		goto out;
- 	}
- 
-+	/* FIXME: Add true switch support */
-+	dev_err(dev, "Devices behind switches are currently unsupported\n");
-+	rc = -ENODEV;
-+	goto err_out;
-+
- 	/* Walk down from the root port and add all switches */
- 	cxl_scan_ports(ctx.root_port);
- 
+Hou Zhiqiang (2):
+  dt-bindings: pci: layerscape-pci: Add a optional property big-endian
+  dt-bindings: pci: layerscape-pci: Update the description of SCFG
+    property
+
+Li Yang (1):
+  dt-bindings: pci: layerscape-pci: define aer/pme interrupts
+
+Xiaowei Bao (1):
+  dt-bindings: pci: layerscape-pci: Add EP mode compatible strings for
+    ls1028a
+
+ .../bindings/pci/layerscape-pci.txt           | 21 ++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
 -- 
-2.34.0
+2.25.1
 
