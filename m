@@ -2,107 +2,281 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2C57457D66
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 12:32:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19195457DBF
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 13:01:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbhKTLfo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 20 Nov 2021 06:35:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43068 "EHLO mail.kernel.org"
+        id S230516AbhKTMEQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 20 Nov 2021 07:04:16 -0500
+Received: from mga02.intel.com ([134.134.136.20]:9734 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229578AbhKTLfo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 20 Nov 2021 06:35:44 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E30DE60EB9;
-        Sat, 20 Nov 2021 11:32:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637407961;
-        bh=j3b8aNE9prTnXmGO7AUa+s42Q3s+fxuXLzmPQEQG9GY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rptj9VzpkG641RQMnHDy5WXM4nRa6Ed8beRpvyTJytO5FkS6WsjBln5Vo75hulJME
-         zUSaqU5HomZA7NAWNx2320TaIoZPcx/oJupPrwNc6dV7jgJBbRt8F0u+F4ddglzHUK
-         xx62jsDPg2rJ0RaZtgzYcfqfXFjU0yeW8yDv15IBxqIqTM2Gl5JG/j6VcrnzI3LRUf
-         Z9si+wRNucO/r+AXzdB9SSgHHBCH8xfCCbm/sC5MgIl1ZuVGt2vz3a+Q+IHaGebvBD
-         j2t0RTi2QhQCqyjIYxOsJxE7EoeAYWV6m7r3rTxVU6RyL7VViVzyjtyMpTtJi/F0Xc
-         I9Q1JH5iZ00/Q==
-Received: by pali.im (Postfix)
-        id 44922A3A; Sat, 20 Nov 2021 12:32:38 +0100 (CET)
-Date:   Sat, 20 Nov 2021 12:32:38 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        kernel-team@android.com, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: apple: Reset the port for 100ms on probe
-Message-ID: <20211120113238.at5pfzs2xeu4gdze@pali>
-References: <20211117160053.232158-1-maz@kernel.org>
- <20211117201245.GA1768803@bhelgaas>
- <20211117202859.2m5sqwz6xsjgldji@pali>
- <87o86h7pex.wl-maz@kernel.org>
- <20211118103156.r66aso2bklm7jnns@pali>
- <87k0h57h9x.wl-maz@kernel.org>
+        id S230381AbhKTMEP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 20 Nov 2021 07:04:15 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="221782993"
+X-IronPort-AV: E=Sophos;i="5.87,250,1631602800"; 
+   d="scan'208";a="221782993"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2021 04:01:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,250,1631602800"; 
+   d="scan'208";a="508258324"
+Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 20 Nov 2021 04:01:04 -0800
+Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1moP3H-0005kk-DT; Sat, 20 Nov 2021 12:01:03 +0000
+Date:   Sat, 20 Nov 2021 20:00:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/aspm] BUILD SUCCESS
+ fa285baf844303d119d657d4f97e0777acd51b8e
+Message-ID: <6198e356.MUxvzD9ZzdrSauB2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87k0h57h9x.wl-maz@kernel.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 18 November 2021 12:57:46 Marc Zyngier wrote:
-> On Thu, 18 Nov 2021 10:31:56 +0000,
-> Pali Rohár <pali@kernel.org> wrote:
-> > For power-on it is probably overkill, but I think that delay between
-> > flipping PERST# should be there. IIRC Compex WLE1216 wifi card needs to
-> > be at least 10-11ms in reset. Last year, during testing of this card I
-> > saw that if PERST#-based reset was shorter then card was completely
-> > undetected.
-> 
-> The only delay we really need is Tperst-clk. Random bugs on random
-> devices don't apply here, as the system is completely closed (there is
-> no slot to add anything). Once we have TB running one of these days,
-> we will see whether this still holds.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/aspm
+branch HEAD: fa285baf844303d119d657d4f97e0777acd51b8e  PCI/ASPM: Remove struct aspm_latency
 
-Ok!
+elapsed time: 726m
 
-> > > In practice, I can completely remove the initial Tpvperl delay (we
-> > > have been powered-on for a long time already, and the clock is stable
-> > > when we come back from setting it up), and cut the second one by half
-> > > without observing any ill effect (though I feel safer keeping it to
-> > > its nominal value).
-> > 
-> > My opinion is that this patch does not power on/off card in PCIe slot.
-> > And because card is powered-on for a long time (as you wrote), it means
-> > that Tpvperl delay does not apply here. That is why I think that
-> > different delay (How long should be PCIe card in Warm Reset state)
-> > should be used _between_ flipping PERST# signal.
-> 
-> My reading of the spec is that the only thing we need while #PERST is
-> asserted is Tperst-clk. The value you keep arguing about doesn't seem
-> to exist as such in the spec, because it appears to be endpoint
-> specific.
+configs tested: 218
+configs skipped: 3
 
-Well, I was not able to find it in the spec too, that is why I do not
-know...
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> > And of course after the releasing PERST# that 100ms post-PERST# delay is
-> > required.
-> 
-> That we agree on.
-> 
-> > I have an idea to move PERST# handling (with all delays) from controller
-> > drivers to pci core functions. Because basically every driver
-> > re-implements these delays in its probe function. I wrote this idea with
-> > some details in email. If you have a time, could you look at it? I
-> > summarized here also details about delays (like Tpvperl, Tperstclk, ..):
-> > https://lore.kernel.org/linux-pci/20211022183808.jdeo7vntnagqkg7g@pali/
-> 
-> That's a laudable goal. What isn't clear to me is whether you intend
-> to move the whole state machine into core code, or just have a set of
-> helpers that the driver calls into. IMO, the former is what we really
-> need, while the latter only rids us of the simple stuff.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211118
+i386                 randconfig-c001-20211119
+mips                 randconfig-c004-20211118
+arm                        spear6xx_defconfig
+powerpc                     tqm8555_defconfig
+xtensa                       common_defconfig
+sh                        dreamcast_defconfig
+powerpc                        cell_defconfig
+arm                            pleb_defconfig
+xtensa                              defconfig
+xtensa                           alldefconfig
+mips                       lemote2f_defconfig
+powerpc                      walnut_defconfig
+arm                        mvebu_v5_defconfig
+mips                         mpc30x_defconfig
+powerpc                      acadia_defconfig
+s390                          debug_defconfig
+powerpc                 mpc8540_ads_defconfig
+mips                malta_qemu_32r6_defconfig
+arm                           omap1_defconfig
+arm                         palmz72_defconfig
+arc                     nsimosci_hs_defconfig
+arm                       omap2plus_defconfig
+sh                 kfr2r09-romimage_defconfig
+m68k                         apollo_defconfig
+mips                           mtx1_defconfig
+powerpc                        icon_defconfig
+sh                           se7750_defconfig
+powerpc                   bluestone_defconfig
+mips                     loongson2k_defconfig
+arc                         haps_hs_defconfig
+m68k                       m5475evb_defconfig
+mips                         bigsur_defconfig
+powerpc                 mpc837x_mds_defconfig
+m68k                        m5272c3_defconfig
+alpha                            allyesconfig
+arc                 nsimosci_hs_smp_defconfig
+mips                           jazz_defconfig
+sh                          r7785rp_defconfig
+parisc                generic-64bit_defconfig
+sparc                       sparc32_defconfig
+xtensa                  cadence_csp_defconfig
+powerpc                      chrp32_defconfig
+powerpc                     tqm8541_defconfig
+powerpc                 mpc834x_itx_defconfig
+arm                         s5pv210_defconfig
+m68k                        stmark2_defconfig
+arm                         socfpga_defconfig
+arm64                            alldefconfig
+powerpc                     tqm8560_defconfig
+mips                   sb1250_swarm_defconfig
+sh                           se7705_defconfig
+mips                        maltaup_defconfig
+arm                      footbridge_defconfig
+arc                           tb10x_defconfig
+powerpc                     pseries_defconfig
+arc                        nsim_700_defconfig
+arm                         s3c2410_defconfig
+sh                                  defconfig
+m68k                         amcore_defconfig
+arm                     am200epdkit_defconfig
+sh                           se7343_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                      pasemi_defconfig
+powerpc                     rainier_defconfig
+sparc64                             defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                          collie_defconfig
+m68k                             alldefconfig
+arc                     haps_hs_smp_defconfig
+sh                   sh7770_generic_defconfig
+mips                       bmips_be_defconfig
+m68k                            mac_defconfig
+h8300                     edosk2674_defconfig
+arm                             mxs_defconfig
+sh                               allmodconfig
+arm                           stm32_defconfig
+arm                            hisi_defconfig
+mips                  cavium_octeon_defconfig
+m68k                        m5407c3_defconfig
+arm                        vexpress_defconfig
+parisc                              defconfig
+arm                         cm_x300_defconfig
+powerpc                     ep8248e_defconfig
+csky                                defconfig
+powerpc                      ppc40x_defconfig
+xtensa                          iss_defconfig
+microblaze                          defconfig
+parisc                           allyesconfig
+arm                           sunxi_defconfig
+m68k                          multi_defconfig
+s390                       zfcpdump_defconfig
+um                           x86_64_defconfig
+powerpc                   motionpro_defconfig
+sh                          urquell_defconfig
+mips                    maltaup_xpa_defconfig
+powerpc                     kmeter1_defconfig
+arm                         hackkit_defconfig
+arm                     eseries_pxa_defconfig
+sh                        sh7763rdp_defconfig
+mips                           rs90_defconfig
+arm                         mv78xx0_defconfig
+ia64                             alldefconfig
+sh                        sh7785lcr_defconfig
+arm                  randconfig-c002-20211118
+arm                  randconfig-c002-20211119
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a005-20211119
+x86_64               randconfig-a003-20211119
+x86_64               randconfig-a002-20211119
+x86_64               randconfig-a001-20211119
+x86_64               randconfig-a006-20211119
+x86_64               randconfig-a004-20211119
+i386                 randconfig-a006-20211119
+i386                 randconfig-a003-20211119
+i386                 randconfig-a001-20211119
+i386                 randconfig-a005-20211119
+i386                 randconfig-a004-20211119
+i386                 randconfig-a002-20211119
+x86_64               randconfig-a015-20211118
+x86_64               randconfig-a012-20211118
+x86_64               randconfig-a011-20211118
+x86_64               randconfig-a013-20211118
+x86_64               randconfig-a016-20211118
+x86_64               randconfig-a014-20211118
+i386                 randconfig-a016-20211118
+i386                 randconfig-a014-20211118
+i386                 randconfig-a012-20211118
+i386                 randconfig-a011-20211118
+i386                 randconfig-a013-20211118
+i386                 randconfig-a015-20211118
+arc                  randconfig-r043-20211120
+s390                 randconfig-r044-20211120
+riscv                randconfig-r042-20211120
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-Now I'm just collecting comments and feedbacks for this idea. I think
-that state machine in core code is what we need.
+clang tested configs:
+i386                 randconfig-c001-20211119
+x86_64               randconfig-c007-20211119
+arm                  randconfig-c002-20211119
+s390                 randconfig-c005-20211119
+powerpc              randconfig-c003-20211119
+riscv                randconfig-c006-20211119
+i386                 randconfig-c001-20211118
+x86_64               randconfig-c007-20211118
+arm                  randconfig-c002-20211118
+s390                 randconfig-c005-20211118
+powerpc              randconfig-c003-20211118
+riscv                randconfig-c006-20211118
+mips                 randconfig-c004-20211118
+x86_64               randconfig-a001-20211120
+x86_64               randconfig-a006-20211120
+x86_64               randconfig-a003-20211120
+x86_64               randconfig-a004-20211120
+x86_64               randconfig-a005-20211120
+x86_64               randconfig-a002-20211120
+i386                 randconfig-a006-20211118
+i386                 randconfig-a003-20211118
+i386                 randconfig-a001-20211118
+i386                 randconfig-a005-20211118
+i386                 randconfig-a004-20211118
+i386                 randconfig-a002-20211118
+x86_64               randconfig-a015-20211119
+x86_64               randconfig-a011-20211119
+x86_64               randconfig-a012-20211119
+x86_64               randconfig-a013-20211119
+x86_64               randconfig-a016-20211119
+x86_64               randconfig-a014-20211119
+x86_64               randconfig-a005-20211118
+x86_64               randconfig-a003-20211118
+x86_64               randconfig-a001-20211118
+x86_64               randconfig-a002-20211118
+x86_64               randconfig-a006-20211118
+x86_64               randconfig-a004-20211118
+hexagon              randconfig-r045-20211119
+hexagon              randconfig-r041-20211119
+riscv                randconfig-r042-20211119
+s390                 randconfig-r044-20211119
+hexagon              randconfig-r045-20211118
+hexagon              randconfig-r041-20211118
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
