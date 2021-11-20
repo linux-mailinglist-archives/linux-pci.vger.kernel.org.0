@@ -2,127 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF24C457D3B
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 12:20:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2C57457D66
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 12:32:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231252AbhKTLXx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 20 Nov 2021 06:23:53 -0500
-Received: from mga07.intel.com ([134.134.136.100]:55992 "EHLO mga07.intel.com"
+        id S229832AbhKTLfo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 20 Nov 2021 06:35:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231161AbhKTLXx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 20 Nov 2021 06:23:53 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="297974069"
-X-IronPort-AV: E=Sophos;i="5.87,250,1631602800"; 
-   d="scan'208";a="297974069"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2021 03:20:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,250,1631602800"; 
-   d="scan'208";a="496214393"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
-  by orsmga007.jf.intel.com with ESMTP; 20 Nov 2021 03:20:44 -0800
-Cc:     baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>
-Subject: Re: [PATCH 01/11] iommu: Add device dma ownership set/release
- interfaces
-To:     =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>
-References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
- <20211115020552.2378167-2-baolu.lu@linux.intel.com>
- <YZJdJH4AS+vm0j06@infradead.org>
- <cc7ce6f4-b1ec-49ef-e245-ab6c330154c2@linux.intel.com>
- <20211116134603.GA2105516@nvidia.com>
- <BN9PR11MB5433639E43C37C5D2462BD718C9B9@BN9PR11MB5433.namprd11.prod.outlook.com>
- <20211118133325.GO2105516@nvidia.com>
- <BN9PR11MB5433E5B63E575E2232DFBBE48C9C9@BN9PR11MB5433.namprd11.prod.outlook.com>
- <75100dfd-9cfe-9f3d-531d-b4d30de03e76@linux.intel.com>
- <20211119150612.jhsvsbzisvux2lga@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <48cf6b2b-28ee-178d-6471-460e781e7b20@linux.intel.com>
-Date:   Sat, 20 Nov 2021 19:16:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S229578AbhKTLfo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 20 Nov 2021 06:35:44 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E30DE60EB9;
+        Sat, 20 Nov 2021 11:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637407961;
+        bh=j3b8aNE9prTnXmGO7AUa+s42Q3s+fxuXLzmPQEQG9GY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rptj9VzpkG641RQMnHDy5WXM4nRa6Ed8beRpvyTJytO5FkS6WsjBln5Vo75hulJME
+         zUSaqU5HomZA7NAWNx2320TaIoZPcx/oJupPrwNc6dV7jgJBbRt8F0u+F4ddglzHUK
+         xx62jsDPg2rJ0RaZtgzYcfqfXFjU0yeW8yDv15IBxqIqTM2Gl5JG/j6VcrnzI3LRUf
+         Z9si+wRNucO/r+AXzdB9SSgHHBCH8xfCCbm/sC5MgIl1ZuVGt2vz3a+Q+IHaGebvBD
+         j2t0RTi2QhQCqyjIYxOsJxE7EoeAYWV6m7r3rTxVU6RyL7VViVzyjtyMpTtJi/F0Xc
+         I9Q1JH5iZ00/Q==
+Received: by pali.im (Postfix)
+        id 44922A3A; Sat, 20 Nov 2021 12:32:38 +0100 (CET)
+Date:   Sat, 20 Nov 2021 12:32:38 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        kernel-team@android.com, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: apple: Reset the port for 100ms on probe
+Message-ID: <20211120113238.at5pfzs2xeu4gdze@pali>
+References: <20211117160053.232158-1-maz@kernel.org>
+ <20211117201245.GA1768803@bhelgaas>
+ <20211117202859.2m5sqwz6xsjgldji@pali>
+ <87o86h7pex.wl-maz@kernel.org>
+ <20211118103156.r66aso2bklm7jnns@pali>
+ <87k0h57h9x.wl-maz@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20211119150612.jhsvsbzisvux2lga@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <87k0h57h9x.wl-maz@kernel.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Joerg,
+On Thursday 18 November 2021 12:57:46 Marc Zyngier wrote:
+> On Thu, 18 Nov 2021 10:31:56 +0000,
+> Pali Rohár <pali@kernel.org> wrote:
+> > For power-on it is probably overkill, but I think that delay between
+> > flipping PERST# should be there. IIRC Compex WLE1216 wifi card needs to
+> > be at least 10-11ms in reset. Last year, during testing of this card I
+> > saw that if PERST#-based reset was shorter then card was completely
+> > undetected.
+> 
+> The only delay we really need is Tperst-clk. Random bugs on random
+> devices don't apply here, as the system is completely closed (there is
+> no slot to add anything). Once we have TB running one of these days,
+> we will see whether this still holds.
 
-On 11/19/21 11:06 PM, Jörg Rödel wrote:
-> On Fri, Nov 19, 2021 at 07:14:10PM +0800, Lu Baolu wrote:
->> The singleton group requirement for iommu_attach/detach_device() was
->> added by below commit:
->>
->> commit 426a273834eae65abcfc7132a21a85b3151e0bce
->> Author: Joerg Roedel <jroedel@suse.de>
->> Date:   Thu May 28 18:41:30 2015 +0200
->>
->>      iommu: Limit iommu_attach/detach_device to devices with their own group
->>
->>      This patch changes the behavior of the iommu_attach_device
->>      and iommu_detach_device functions. With this change these
->>      functions only work on devices that have their own group.
->>      For all other devices the iommu_group_attach/detach
->>      functions must be used.
->>
->>      Signed-off-by: Joerg Roedel <jroedel@suse.de>
->>
->> Joerg,can you please shed some light on the background of this
->> requirement? Does above idea of transition from singleton group
->> to group with single driver bound make sense to you?
-> 
-> This change came to be because the iommu_attach/detach_device()
-> interface doesn't fit well into a world with iommu-groups. Devices
-> within a group are by definition not isolated between each other, so
-> they must all be in the same address space (== iommu_domain). So it
-> doesn't make sense to allow attaching a single device within a group to
-> a different iommu_domain.
+Ok!
 
-Thanks for the explanation. It's very helpful. There seems to be a lot
-of discussions around this, but I didn't see any meaningful reasons to
-break the assumption of "all devices in a group being in a same address
-space".
+> > > In practice, I can completely remove the initial Tpvperl delay (we
+> > > have been powered-on for a long time already, and the clock is stable
+> > > when we come back from setting it up), and cut the second one by half
+> > > without observing any ill effect (though I feel safer keeping it to
+> > > its nominal value).
+> > 
+> > My opinion is that this patch does not power on/off card in PCIe slot.
+> > And because card is powered-on for a long time (as you wrote), it means
+> > that Tpvperl delay does not apply here. That is why I think that
+> > different delay (How long should be PCIe card in Warm Reset state)
+> > should be used _between_ flipping PERST# signal.
+> 
+> My reading of the spec is that the only thing we need while #PERST is
+> asserted is Tperst-clk. The value you keep arguing about doesn't seem
+> to exist as such in the spec, because it appears to be endpoint
+> specific.
 
-Best regards,
-baolu
+Well, I was not able to find it in the spec too, that is why I do not
+know...
 
+> > And of course after the releasing PERST# that 100ms post-PERST# delay is
+> > required.
 > 
-> I know that in theory it is safe to allow devices within a group to be
-> in different domains because there iommu-groups catch multiple
-> non-isolation cases:
+> That we agree on.
 > 
-> 	1) Devices behind a non-ACS capable bridge or multiple functions
-> 	   of a PCI device. Here it is safe to put the devices into
-> 	   different iommu-domains as long as all affected devices are
-> 	   controlled by the same owner.
+> > I have an idea to move PERST# handling (with all delays) from controller
+> > drivers to pci core functions. Because basically every driver
+> > re-implements these delays in its probe function. I wrote this idea with
+> > some details in email. If you have a time, could you look at it? I
+> > summarized here also details about delays (like Tpvperl, Tperstclk, ..):
+> > https://lore.kernel.org/linux-pci/20211022183808.jdeo7vntnagqkg7g@pali/
 > 
-> 	2) Devices which share a single request-id and can't be
-> 	   differentiated by the IOMMU hardware. These always need to be
-> 	   in the same iommu_domain.
-> 
-> To lift the single-domain-per-group requirement the iommu core code
-> needs to learn the difference between the two cases above.
-> 
-> Regards,
-> 
-> 	Joerg
-> 
+> That's a laudable goal. What isn't clear to me is whether you intend
+> to move the whole state machine into core code, or just have a set of
+> helpers that the driver calls into. IMO, the former is what we really
+> need, while the latter only rids us of the simple stuff.
+
+Now I'm just collecting comments and feedbacks for this idea. I think
+that state machine in core code is what we need.
