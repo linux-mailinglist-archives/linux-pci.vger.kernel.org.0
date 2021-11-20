@@ -2,84 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 253B9457A3A
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 01:40:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3F63457A88
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 02:57:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbhKTAnT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Nov 2021 19:43:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbhKTAnT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Nov 2021 19:43:19 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D3E6C061574;
-        Fri, 19 Nov 2021 16:40:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=urZlEbTkjQhLgAccgLfTOfoJ3CLTZ0kDAX18zbfGvBo=; b=Gb0zpb7OHnaM49+RDqwwFAG9CH
-        hSttlnXFabKy4hUX08xeDIaBuS3aZCcN7IgpxAzyOwaE2/phzUSxmurvmg9TdDHGhBovEMhHyoIXc
-        P5TcOQUY7Q75Eau5Ue0BiP2tgk3Ok6lG3HNTirhW/QiDzne5vSJ9QIjKuOq+IIjOV7hw3MasKUYIv
-        2JdxzNGBSxJv6NPE+WzHi978NonHMcESimvGWXGRiSqM/YfNMZ8dU1xEyaOnbnAkmtJemhppz9ggl
-        czmL6Q8F2o2rVfBgAQYq10eyeE0tB8yT9qiSdNwuF7Z8X8HdanSQae2q52xev2a9AGXK9/5fj6dhN
-        /nj38nrA==;
-Received: from [2601:1c0:6280:3f0::aa0b]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1moEQM-00Br0C-5V; Sat, 20 Nov 2021 00:40:10 +0000
-Subject: Re: [PATCH 22/23] cxl/mem: Introduce cxl_mem driver
-To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-References: <20211120000250.1663391-1-ben.widawsky@intel.com>
- <20211120000250.1663391-23-ben.widawsky@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8eece50a-ffc6-700a-1613-4d45de37bdd2@infradead.org>
-Date:   Fri, 19 Nov 2021 16:40:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S236254AbhKTCA7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Nov 2021 21:00:59 -0500
+Received: from mga01.intel.com ([192.55.52.88]:12659 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233856AbhKTCA7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Nov 2021 21:00:59 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="258318606"
+X-IronPort-AV: E=Sophos;i="5.87,249,1631602800"; 
+   d="scan'208";a="258318606"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 17:57:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,249,1631602800"; 
+   d="scan'208";a="673415486"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 19 Nov 2021 17:57:56 -0800
+Received: from debox1-server.jf.intel.com (debox1-server.jf.intel.com [10.54.39.121])
+        by linux.intel.com (Postfix) with ESMTP id 9BD75580945;
+        Fri, 19 Nov 2021 17:57:56 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, david.e.box@linux.intel.com,
+        michael.a.bottini@linux.intel.com, rafael@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] PCI/ASPM: Add ASPM BIOS override function
+Date:   Fri, 19 Nov 2021 17:57:55 -0800
+Message-Id: <20211120015756.1396263-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20211120000250.1663391-23-ben.widawsky@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/19/21 4:02 PM, Ben Widawsky wrote:
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index 3aeb33bba5a3..f5553443ba2a 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -30,6 +30,21 @@ config CXL_PCI
->   
->   	  If unsure say 'm'.
->   
-> +config CXL_MEM
-> +	tristate "CXL.mem: Memory Devices"
-> +	default CXL_BUS
-> +        help
-> +          The CXL.mem protocol allows a device to act as a provider of
-> +	  "System RAM" and/or "Persistent Memory" that is fully coherent
-> +	  as if the memory was attached to the typical CPU memory controller.
-> +	  This is known as HDM "Host-managed Device Memory".
-> +
-> +	  Say 'y/m' to enable a driver that will attach to CXL.mem devices for
-> +	  memory expansion and control of HDM. See Chapter 9.13 in the CXL 2.0
-> +	  specification for a detailed description of HDM.
-> +
-> +	  If unsure say 'm'.
+From: Michael Bottini <michael.a.bottini@linux.intel.com>
 
-Hi Ben,
+Devices that appear under the Intel VMD host bridge are not visible to BIOS
+and therefore not programmed by BIOS with ASPM settings. For these devices,
+it is necessary for the driver to configure ASPM. Since ASPM settings are
+adjustable at runtime by module parameter, use the same mechanism to allow
+drivers to override the default (in this case never configured) BIOS policy
+to ASPM_STATE_ALL. Then, reconfigure ASPM on the link.
 
-Both patch 20 and patch 22 add a "new" CXL_MEM config symbol.
-Is one of them a typo?
+Signed-off-by: Michael Bottini <michael.a.bottini@linux.intel.com>
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/pci/pci.h       |  2 ++
+ drivers/pci/pcie/aspm.c | 18 ++++++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-thanks.
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 3d60cabde1a1..172ec914e988 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -562,11 +562,13 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+ void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+ void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
++void pcie_aspm_policy_override(struct pci_dev *dev);
+ #else
+ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
++static inline void pcie_aspm_policy_override(struct pci_dev *dev) {}
+ #endif
+ 
+ #ifdef CONFIG_PCIE_ECRC
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 52c74682601a..ccb98586bf0d 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -1140,6 +1140,24 @@ int pci_disable_link_state(struct pci_dev *pdev, int state)
+ }
+ EXPORT_SYMBOL(pci_disable_link_state);
+ 
++void pcie_aspm_policy_override(struct pci_dev *pdev)
++{
++	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
++
++	down_read(&pci_bus_sem);
++	mutex_lock(&aspm_lock);
++
++	if (link) {
++		link->aspm_default = ASPM_STATE_ALL;
++		pcie_config_aspm_link(link, policy_to_aspm_state(link));
++		pcie_set_clkpm(link, policy_to_clkpm_state(link));
++	}
++
++	mutex_unlock(&aspm_lock);
++	up_read(&pci_bus_sem);
++}
++EXPORT_SYMBOL(pcie_aspm_policy_override);
++
+ static int pcie_aspm_set_policy(const char *val,
+ 				const struct kernel_param *kp)
+ {
 -- 
-~Randy
+2.25.1
+
