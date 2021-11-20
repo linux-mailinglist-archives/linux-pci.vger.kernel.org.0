@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B31A457C18
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 08:28:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0209F457C1B
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 08:30:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236899AbhKTHb5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 20 Nov 2021 02:31:57 -0500
-Received: from mga05.intel.com ([192.55.52.43]:11419 "EHLO mga05.intel.com"
+        id S230238AbhKTHd1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 20 Nov 2021 02:33:27 -0500
+Received: from mga18.intel.com ([134.134.136.126]:21457 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232750AbhKTHb5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 20 Nov 2021 02:31:57 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="320758009"
+        id S235840AbhKTHdM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 20 Nov 2021 02:33:12 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="221421405"
 X-IronPort-AV: E=Sophos;i="5.87,250,1631602800"; 
-   d="scan'208";a="320758009"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 23:28:54 -0800
+   d="scan'208";a="221421405"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 23:29:54 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,250,1631602800"; 
-   d="scan'208";a="537353803"
+   d="scan'208";a="647422657"
 Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 19 Nov 2021 23:28:52 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 19 Nov 2021 23:29:52 -0800
 Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1moKnr-0005Vm-NB; Sat, 20 Nov 2021 07:28:51 +0000
-Date:   Sat, 20 Nov 2021 15:28:41 +0800
+        id 1moKop-0005Vy-OX; Sat, 20 Nov 2021 07:29:51 +0000
+Date:   Sat, 20 Nov 2021 15:28:52 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/hotplug] BUILD SUCCESS
- 23584c1ed3e15a6f4bfab8dc5a88d94ab929ee12
-Message-ID: <6198a3a9./bVHHfnPa08T9KtC%lkp@intel.com>
+Subject: [helgaas-pci:pci/switchtec] BUILD SUCCESS
+ b76521f6482d2a2a691e4eb1a496d55d73aea064
+Message-ID: <6198a3b4.E/Sz6YtL0Et7sH7l%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,12 +39,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
-branch HEAD: 23584c1ed3e15a6f4bfab8dc5a88d94ab929ee12  PCI: pciehp: Fix infinite loop in IRQ handler upon power fault
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/switchtec
+branch HEAD: b76521f6482d2a2a691e4eb1a496d55d73aea064  PCI/switchtec: Declare local state_names[] as static
 
-elapsed time: 724m
+elapsed time: 723m
 
-configs tested: 203
+configs tested: 204
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -182,9 +182,9 @@ sparc                               defconfig
 i386                                defconfig
 i386                              debian-10.3
 mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
 powerpc                           allnoconfig
+powerpc                          allmodconfig
+powerpc                          allyesconfig
 x86_64               randconfig-a005-20211119
 x86_64               randconfig-a003-20211119
 x86_64               randconfig-a002-20211119
@@ -209,6 +209,7 @@ i386                 randconfig-a012-20211118
 i386                 randconfig-a011-20211118
 i386                 randconfig-a013-20211118
 i386                 randconfig-a015-20211118
+arc                  randconfig-r043-20211119
 riscv                    nommu_k210_defconfig
 riscv                            allyesconfig
 riscv                    nommu_virt_defconfig
