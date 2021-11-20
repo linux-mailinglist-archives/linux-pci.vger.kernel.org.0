@@ -2,78 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1834F457C36
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 08:39:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF24C457D3B
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 12:20:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237027AbhKTHmh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 20 Nov 2021 02:42:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44046 "EHLO mail.kernel.org"
+        id S231252AbhKTLXx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 20 Nov 2021 06:23:53 -0500
+Received: from mga07.intel.com ([134.134.136.100]:55992 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236392AbhKTHmd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 20 Nov 2021 02:42:33 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2D4B960E94;
-        Sat, 20 Nov 2021 07:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637393970;
-        bh=ZyTVqjOSKrp5VXX+khXGou2v7HAND6IAqcRDKMOPn8Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:From;
-        b=ZNY8zejO7ZM9vSZU3k/3RhBSZVfY+X1xLg24jqzDlINwEMfwdsUpBy52yy39ph8U1
-         QkaFwY9aS9WTX+epYdzXdXkopMDOMC5k/M63z2LFT5JCZRmh3GqV92YIoZtqvG9MdB
-         GK7QyNq0MDqN2y5lCLEQUBZGiglKVPGjNgJAjNVnWcbYVdVGwnEBfn2Lh0Emtzd7fU
-         py4QIBzbJREgfjDafPxbqahs/TQX5uQRdLTtBH62NCYQXma+jnSEDADCW8yHP1mMfi
-         lmaDkgqZof3YJh3Sl4K+AQsiP5Q3DLStqZdCWXb5x7Egvya0m3h92NVSTyQjYVk13x
-         WJqcnz6aXuBfw==
-From:   SeongJae Park <sj@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     bpf@vger.kernel.org, axboe@kernel.dk,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, yuq825@gmail.com, robdclark@gmail.com,
-        sean@poorly.run, christian.koenig@amd.com, ray.huang@amd.com,
-        sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
-        hkelam@marvell.com, jingoohan1@gmail.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, krzysztof.kozlowski@canonical.com,
-        mani@kernel.org, pawell@cadence.com, peter.chen@kernel.org,
-        rogerq@kernel.org, a-govindraju@ti.com, gregkh@linuxfoundation.org,
-        ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, kpsingh@kernel.org, sj@kernel.org,
-        akpm@linux-foundation.org, thomas.hellstrom@linux.intel.com,
-        matthew.auld@intel.com, colin.king@intel.com, geert@linux-m68k.org,
-        linux-block@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, lima@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH bpf] treewide: add missing includes masked by cgroup -> bpf dependency
-Date:   Sat, 20 Nov 2021 07:39:19 +0000
-Message-Id: <20211120073920.16261-1-sj@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20211120035253.72074-1-kuba@kernel.org>
+        id S231161AbhKTLXx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 20 Nov 2021 06:23:53 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="297974069"
+X-IronPort-AV: E=Sophos;i="5.87,250,1631602800"; 
+   d="scan'208";a="297974069"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2021 03:20:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,250,1631602800"; 
+   d="scan'208";a="496214393"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by orsmga007.jf.intel.com with ESMTP; 20 Nov 2021 03:20:44 -0800
+Cc:     baolu.lu@linux.intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>
+Subject: Re: [PATCH 01/11] iommu: Add device dma ownership set/release
+ interfaces
+To:     =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>
+References: <20211115020552.2378167-1-baolu.lu@linux.intel.com>
+ <20211115020552.2378167-2-baolu.lu@linux.intel.com>
+ <YZJdJH4AS+vm0j06@infradead.org>
+ <cc7ce6f4-b1ec-49ef-e245-ab6c330154c2@linux.intel.com>
+ <20211116134603.GA2105516@nvidia.com>
+ <BN9PR11MB5433639E43C37C5D2462BD718C9B9@BN9PR11MB5433.namprd11.prod.outlook.com>
+ <20211118133325.GO2105516@nvidia.com>
+ <BN9PR11MB5433E5B63E575E2232DFBBE48C9C9@BN9PR11MB5433.namprd11.prod.outlook.com>
+ <75100dfd-9cfe-9f3d-531d-b4d30de03e76@linux.intel.com>
+ <20211119150612.jhsvsbzisvux2lga@8bytes.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <48cf6b2b-28ee-178d-6471-460e781e7b20@linux.intel.com>
+Date:   Sat, 20 Nov 2021 19:16:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+MIME-Version: 1.0
+In-Reply-To: <20211119150612.jhsvsbzisvux2lga@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jakub,
+Hi Joerg,
 
-On Fri, 19 Nov 2021 19:52:53 -0800 Jakub Kicinski <kuba@kernel.org> wrote:
-
-> cgroup.h (therefore swap.h, therefore half of the universe)
-> includes bpf.h which in turn includes module.h and slab.h.
-> Since we're about to get rid of that dependency we need
-> to clean things up.
+On 11/19/21 11:06 PM, Jörg Rödel wrote:
+> On Fri, Nov 19, 2021 at 07:14:10PM +0800, Lu Baolu wrote:
+>> The singleton group requirement for iommu_attach/detach_device() was
+>> added by below commit:
+>>
+>> commit 426a273834eae65abcfc7132a21a85b3151e0bce
+>> Author: Joerg Roedel <jroedel@suse.de>
+>> Date:   Thu May 28 18:41:30 2015 +0200
+>>
+>>      iommu: Limit iommu_attach/detach_device to devices with their own group
+>>
+>>      This patch changes the behavior of the iommu_attach_device
+>>      and iommu_detach_device functions. With this change these
+>>      functions only work on devices that have their own group.
+>>      For all other devices the iommu_group_attach/detach
+>>      functions must be used.
+>>
+>>      Signed-off-by: Joerg Roedel <jroedel@suse.de>
+>>
+>> Joerg,can you please shed some light on the background of this
+>> requirement? Does above idea of transition from singleton group
+>> to group with single driver bound make sense to you?
 > 
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> This change came to be because the iommu_attach/detach_device()
+> interface doesn't fit well into a world with iommu-groups. Devices
+> within a group are by definition not isolated between each other, so
+> they must all be in the same address space (== iommu_domain). So it
+> doesn't make sense to allow attaching a single device within a group to
+> a different iommu_domain.
 
-Acked-by: SeongJae Park <sj@kernel.org>
+Thanks for the explanation. It's very helpful. There seems to be a lot
+of discussions around this, but I didn't see any meaningful reasons to
+break the assumption of "all devices in a group being in a same address
+space".
 
-for DAMON part.
+Best regards,
+baolu
 
-
-Thanks,
-SJ
-
-[...]
+> 
+> I know that in theory it is safe to allow devices within a group to be
+> in different domains because there iommu-groups catch multiple
+> non-isolation cases:
+> 
+> 	1) Devices behind a non-ACS capable bridge or multiple functions
+> 	   of a PCI device. Here it is safe to put the devices into
+> 	   different iommu-domains as long as all affected devices are
+> 	   controlled by the same owner.
+> 
+> 	2) Devices which share a single request-id and can't be
+> 	   differentiated by the IOMMU hardware. These always need to be
+> 	   in the same iommu_domain.
+> 
+> To lift the single-domain-per-group requirement the iommu core code
+> needs to learn the difference between the two cases above.
+> 
+> Regards,
+> 
+> 	Joerg
+> 
