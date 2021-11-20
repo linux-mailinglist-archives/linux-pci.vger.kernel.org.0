@@ -2,68 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26BAB457E02
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 13:32:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65106457EEA
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 16:26:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237525AbhKTMft (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 20 Nov 2021 07:35:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237491AbhKTMfs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 20 Nov 2021 07:35:48 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A51C061748
-        for <linux-pci@vger.kernel.org>; Sat, 20 Nov 2021 04:32:45 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id b40so56585071lfv.10
-        for <linux-pci@vger.kernel.org>; Sat, 20 Nov 2021 04:32:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=w2dLnl5hsLVKZTBAdcVFnDnMtM7+guW1LU+8LG4nir0=;
-        b=cQ4sa0RLmxPwPFn1iQHtDPNnu3wxt85tlCuJmDnpCjgmGMxx8i/oateruVYQAvti5I
-         A5qE92dvGm+x1YP+CbK5Tq5OhtXE6vNimcHv6le77OfesyWmtCYZNXHE5+IG0f8L2bT0
-         Lci51QRfH33/4FHSDCeiE4klj7YMLnup6Z9AxKwmd8q2vBCk3OtwmaYj1bSnn6G8m6GQ
-         mxOZ3RS8pA3iEAA55aU8/EBq9h3Po0DLytgYovDVsFfbT36OHdQaUGwPLJ3lG01hFOha
-         WpkBpT9gzq2iO8UbGhiS6xFhyGI26B7QXEWnQJX1hxeVH8W2rTVUYcpRy/W1U7h8dL8Y
-         peJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=w2dLnl5hsLVKZTBAdcVFnDnMtM7+guW1LU+8LG4nir0=;
-        b=7zK674VZmqEgJ9lBQuOFhk0B28xQZTIndJz12P2C4tQs/tLdcKBNm6usSEtDiVXMue
-         JIY3ouN29XFtF5qvQxWwYrJsT3HoPhNkmvmUm5tCQIewqyJx4FVeeg/jXMQ+CqVpGq9o
-         sYg8kFwDY+rr2p8KLJQWRL7qLbD6CXoBhQPOXzP9HH9uD4BPXYIw3wL0Ui2y0yD6+cuP
-         crrvMTu0IF/Jste2upSXilpDiMIeVU7q2PS0cAQUHD15P78Alrise5gEck0vLr6Tvn6K
-         HQspLF0ko3gKJrjvhUrsBe02T0jp4geDQOXw4V5IsSs5JSkQpr/QTzEdHGlqNguKDtjN
-         eBKg==
-X-Gm-Message-State: AOAM533xhfN3vWf4XBFo/ax0FxlP0FmEBcOtnqhysbXoPW2A7ocAM0QE
-        vrubqnAxeAWwK8WMuwi17C3GHZaF/q3riuHcGxKxHHqBpN1xsQ==
-X-Google-Smtp-Source: ABdhPJx6LRHkcC/2nzZUXHHyWAv8qwOLcVanyMaZO5SAGCaEWZSePdj6KgMnXbsAIfz8H/8CWMAmDV2d6TwcaPqmMOI=
-X-Received: by 2002:a05:6000:144a:: with SMTP id v10mr18155356wrx.315.1637411552709;
- Sat, 20 Nov 2021 04:32:32 -0800 (PST)
+        id S237652AbhKTP3I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 20 Nov 2021 10:29:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230038AbhKTP3I (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 20 Nov 2021 10:29:08 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E5B5B60EB6;
+        Sat, 20 Nov 2021 15:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637421964;
+        bh=sL04+7/Tziaw15CHiE2bty/Bv6qeql7yB4oQSwHL8Rw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=N35/MX+Bk5IfQeZQiu16BeV4YuD31Ephij5WJvzDmZ2G+K+MjYa+HWqb1ahmMn5Hb
+         8nTHe95BsmdqkyFWylC9DLYJd5w68+maTSegSteQm994SJN2V2euBCo7o5awfS7MX1
+         1EqL1r1uDdGsdYVLkB0LepzAMd/DMg1DnO37cYnq/TOnx6T6gg4l1tr4VYZFrfdNBr
+         fu07uKG0PLQcKTAn5J7IOkR76pmhpIN6NdZJHm5NPKAY2SAGobyGEmgVfnmJURZZPl
+         Ncx/4o043Jc/OWEbZSwAM5dDl3KRkS71kl4wzNRFF/bIFRAmgFMC+aeEM6/O5rxXi9
+         UVuYgRSm1FojA==
+Date:   Sat, 20 Nov 2021 07:26:02 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Peter Chen <peter.chen@kernel.org>
+Cc:     bpf@vger.kernel.org, axboe@kernel.dk,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, yuq825@gmail.com, robdclark@gmail.com,
+        sean@poorly.run, christian.koenig@amd.com, ray.huang@amd.com,
+        sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
+        hkelam@marvell.com, jingoohan1@gmail.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, krzysztof.kozlowski@canonical.com,
+        mani@kernel.org, pawell@cadence.com, rogerq@kernel.org,
+        a-govindraju@ti.com, gregkh@linuxfoundation.org, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
+        kpsingh@kernel.org, sj@kernel.org, akpm@linux-foundation.org,
+        thomas.hellstrom@linux.intel.com, matthew.auld@intel.com,
+        colin.king@intel.com, geert@linux-m68k.org,
+        linux-block@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, lima@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH bpf] treewide: add missing includes masked by cgroup ->
+ bpf dependency
+Message-ID: <20211120072602.22f9e722@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20211120073011.GA36650@Peter>
+References: <20211120035253.72074-1-kuba@kernel.org>
+        <20211120073011.GA36650@Peter>
 MIME-Version: 1.0
-Received: by 2002:adf:f989:0:0:0:0:0 with HTTP; Sat, 20 Nov 2021 04:32:32
- -0800 (PST)
-Reply-To: mitchellvivian01@gamil.com
-From:   Mitchell Vivian <duplanmartine36@gmail.com>
-Date:   Sat, 20 Nov 2021 12:32:32 +0000
-Message-ID: <CAO-XXH5BAMnqsibuyWBB1vSqWFvEU_Fm4N1zBDf2pLptoHQP0A@mail.gmail.com>
-Subject: Hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello
+On Sat, 20 Nov 2021 15:30:11 +0800 Peter Chen wrote:
+> > diff --git a/drivers/usb/cdns3/host.c b/drivers/usb/cdns3/host.c
+> > index 84dadfa726aa..9643b905e2d8 100644
+> > --- a/drivers/usb/cdns3/host.c
+> > +++ b/drivers/usb/cdns3/host.c
+> > @@ -10,6 +10,7 @@
+> >   */
+> > =20
+> >  #include <linux/platform_device.h>
+> > +#include <linux/slab.h> =20
+>=20
+> Should be "#include <linux/module.h>"?
 
-My name is Miss Vivian Mitchell. I want to donate my fund $ 4.5
-million USD to you on a charity name to help the poor People.
+Why? Different files are missing different includes, this one needs
+slab.h:
 
-As soon as I read from you I will give you more details on how to
-achieve this goal and get this fund transferred into your bank
-account.
-
-Thanks have a nice day,
-Miss.vivian
+../drivers/usb/cdns3/host.c: In function =E2=80=98__cdns_host_init=E2=80=99:
+../drivers/usb/cdns3/host.c:86:2: error: implicit declaration of function =
+=E2=80=98kfree=E2=80=99; did you mean =E2=80=98vfree=E2=80=99? [-Werror=3Di=
+mplicit-function-declaration]
+  kfree(cdns->xhci_plat_data);
+  ^~~~~
+  vfree
