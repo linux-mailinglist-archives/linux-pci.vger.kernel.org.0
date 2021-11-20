@@ -2,281 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19195457DBF
-	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 13:01:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F023457DBE
+	for <lists+linux-pci@lfdr.de>; Sat, 20 Nov 2021 13:00:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230516AbhKTMEQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 20 Nov 2021 07:04:16 -0500
-Received: from mga02.intel.com ([134.134.136.20]:9734 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230381AbhKTMEP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 20 Nov 2021 07:04:15 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10173"; a="221782993"
-X-IronPort-AV: E=Sophos;i="5.87,250,1631602800"; 
-   d="scan'208";a="221782993"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2021 04:01:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,250,1631602800"; 
-   d="scan'208";a="508258324"
-Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 20 Nov 2021 04:01:04 -0800
-Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1moP3H-0005kk-DT; Sat, 20 Nov 2021 12:01:03 +0000
-Date:   Sat, 20 Nov 2021 20:00:22 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/aspm] BUILD SUCCESS
- fa285baf844303d119d657d4f97e0777acd51b8e
-Message-ID: <6198e356.MUxvzD9ZzdrSauB2%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S230245AbhKTMDm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 20 Nov 2021 07:03:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230516AbhKTMDj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 20 Nov 2021 07:03:39 -0500
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F2A4C061574
+        for <linux-pci@vger.kernel.org>; Sat, 20 Nov 2021 04:00:35 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id m27so55909775lfj.12
+        for <linux-pci@vger.kernel.org>; Sat, 20 Nov 2021 04:00:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=//FP34TjOh54WQTyCHnU1I0Mh0H/EWWNbNtPMSeL35I=;
+        b=K7xaifKz/9stCNR/QSO0pCtP9k5pAbr3KX6/kvJOEbrniuSCwL+0iDzTBRzmsqgqQ9
+         rOLxDzXPxVRh+N59m2fDkEUKbOUjjx9Taod1cAZ1ltACawjuXGF89ubdGFbClW4ei+Rz
+         BtSIX4q+RtqDJDg25CymcpfB+XPY1Fqt8as0fcslIDbskpr0mL/2VLX6MVlZoEVYqZw8
+         5ADSH12kIr7Mvu1OM0+IXlxCL+g7HzP9Pr3+INN4w4HGnTb7LqAXxopkAiV/7Hn9SVRG
+         zACY+N0g4ro1trm/3Oqvwy6msi3FLIyVaYWNX+oIJa+ZSkZJcvybnE4dhIwyJCFQHAhr
+         wphA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=//FP34TjOh54WQTyCHnU1I0Mh0H/EWWNbNtPMSeL35I=;
+        b=t3NfY+TOfCfC2HFiZteh/pQ5mrfrUjlZMR5Q/d9LUfH0vunQaznoV3FZRJfjb94MSm
+         aA/SvhWgzyxxtNT6Gt5hXy2EIeVKxLFENXr9jq1xx0LvdL3CcL09uVFX4kAMujRoUIuf
+         YMfSDlO5zLr2eDQD1HGHL3QeogUI8EYT95L7mqSdYveoLpGz+R1uaq9Pyy7ErcMzk+PZ
+         PGesbt9EmSNF+zS4msHeo5DDnqQkk/7hjI65NubhTMe8lYyVmBEdvhu2Q9jxAaqT1qrE
+         QsAKnaSc4uky7DkvqbwvAMiqoF601evRQsGGBy66pa3su+pJoLmdyee0ffh2IM6GKax5
+         RgiA==
+X-Gm-Message-State: AOAM531fwgoWn7Hifb4NB44kobsv7FhtLWJstkCUCo37ooXtRtq+5Hmi
+        J+811y5b2G9cOZYchczjZtkJikmG6xYSj4pRbfI=
+X-Google-Smtp-Source: ABdhPJycfjUmRz+aUNOCegez6u8UCLOc4eMuh2cvh9YKuY5g1L0xnYVJJtjiPeUUkkVxVp/OgM7NRyT0oU6RZ1NbMyc=
+X-Received: by 2002:a05:651c:612:: with SMTP id k18mr33446388lje.383.1637409633704;
+ Sat, 20 Nov 2021 04:00:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a2e:aa14:0:0:0:0:0 with HTTP; Sat, 20 Nov 2021 04:00:33
+ -0800 (PST)
+Reply-To: generaleleanorp3@gmail.com
+From:   "General Eleanor." <abuazizi93@gmail.com>
+Date:   Sat, 20 Nov 2021 04:00:33 -0800
+Message-ID: <CALcEH5-6baCqT8VETyfn93eRsvq_ibY5YtpyHGkiaE5PrBkuXA@mail.gmail.com>
+Subject: STRICTLY AND CONFIDENT.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/aspm
-branch HEAD: fa285baf844303d119d657d4f97e0777acd51b8e  PCI/ASPM: Remove struct aspm_latency
+Dear Beloved.
 
-elapsed time: 726m
+I am General Eleanor from the USA working in the US Army but presently
+in Yemen, for a peacekeeping mission, I sincerely apologize for
+intruding into your privacy. I have something very important to
+discuss with you.
+Some money in various currencies where discovered in barrels at a farm
+house in the middle East during a rescue operation in Iraq War and it
+was agreed by Sergeant Kenneth Buff and myself that some part of these
+money be shared between us, I was given a total of ($13.5 Million US
+Dollars) as my own share , I kept this money in a security company for
+a long while now which i declared and deposit as my personal and
+family treasure and it has been secured and protected for years now
+with the security company.
 
-configs tested: 218
-configs skipped: 3
+Now, the WAR in Iraq is over, and all possible problems that could
+have emanated from the shared money has been totally cleaned up and
+all files closed, all what was discovered in the Middle East is no
+more discussed, i am ready to retire from active services by the end
+of next month, but, i need a trustworthy person that can help me take
+possession of this funds and keep it safe while i work on my
+retirement letter to join you so that we could discuss possible
+business partnership together with the money.
+I'll tell you what! No compensation can make up for the risk we are
+taking with our lives.You can confirm the genuineness of the findings
+by clicking on this website.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+http://news.bbc.co.uk/2/hi/middle_east/2988455.stm
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211118
-i386                 randconfig-c001-20211119
-mips                 randconfig-c004-20211118
-arm                        spear6xx_defconfig
-powerpc                     tqm8555_defconfig
-xtensa                       common_defconfig
-sh                        dreamcast_defconfig
-powerpc                        cell_defconfig
-arm                            pleb_defconfig
-xtensa                              defconfig
-xtensa                           alldefconfig
-mips                       lemote2f_defconfig
-powerpc                      walnut_defconfig
-arm                        mvebu_v5_defconfig
-mips                         mpc30x_defconfig
-powerpc                      acadia_defconfig
-s390                          debug_defconfig
-powerpc                 mpc8540_ads_defconfig
-mips                malta_qemu_32r6_defconfig
-arm                           omap1_defconfig
-arm                         palmz72_defconfig
-arc                     nsimosci_hs_defconfig
-arm                       omap2plus_defconfig
-sh                 kfr2r09-romimage_defconfig
-m68k                         apollo_defconfig
-mips                           mtx1_defconfig
-powerpc                        icon_defconfig
-sh                           se7750_defconfig
-powerpc                   bluestone_defconfig
-mips                     loongson2k_defconfig
-arc                         haps_hs_defconfig
-m68k                       m5475evb_defconfig
-mips                         bigsur_defconfig
-powerpc                 mpc837x_mds_defconfig
-m68k                        m5272c3_defconfig
-alpha                            allyesconfig
-arc                 nsimosci_hs_smp_defconfig
-mips                           jazz_defconfig
-sh                          r7785rp_defconfig
-parisc                generic-64bit_defconfig
-sparc                       sparc32_defconfig
-xtensa                  cadence_csp_defconfig
-powerpc                      chrp32_defconfig
-powerpc                     tqm8541_defconfig
-powerpc                 mpc834x_itx_defconfig
-arm                         s5pv210_defconfig
-m68k                        stmark2_defconfig
-arm                         socfpga_defconfig
-arm64                            alldefconfig
-powerpc                     tqm8560_defconfig
-mips                   sb1250_swarm_defconfig
-sh                           se7705_defconfig
-mips                        maltaup_defconfig
-arm                      footbridge_defconfig
-arc                           tb10x_defconfig
-powerpc                     pseries_defconfig
-arc                        nsim_700_defconfig
-arm                         s3c2410_defconfig
-sh                                  defconfig
-m68k                         amcore_defconfig
-arm                     am200epdkit_defconfig
-sh                           se7343_defconfig
-powerpc                  mpc885_ads_defconfig
-powerpc                      pasemi_defconfig
-powerpc                     rainier_defconfig
-sparc64                             defconfig
-riscv             nommu_k210_sdcard_defconfig
-arm                          collie_defconfig
-m68k                             alldefconfig
-arc                     haps_hs_smp_defconfig
-sh                   sh7770_generic_defconfig
-mips                       bmips_be_defconfig
-m68k                            mac_defconfig
-h8300                     edosk2674_defconfig
-arm                             mxs_defconfig
-sh                               allmodconfig
-arm                           stm32_defconfig
-arm                            hisi_defconfig
-mips                  cavium_octeon_defconfig
-m68k                        m5407c3_defconfig
-arm                        vexpress_defconfig
-parisc                              defconfig
-arm                         cm_x300_defconfig
-powerpc                     ep8248e_defconfig
-csky                                defconfig
-powerpc                      ppc40x_defconfig
-xtensa                          iss_defconfig
-microblaze                          defconfig
-parisc                           allyesconfig
-arm                           sunxi_defconfig
-m68k                          multi_defconfig
-s390                       zfcpdump_defconfig
-um                           x86_64_defconfig
-powerpc                   motionpro_defconfig
-sh                          urquell_defconfig
-mips                    maltaup_xpa_defconfig
-powerpc                     kmeter1_defconfig
-arm                         hackkit_defconfig
-arm                     eseries_pxa_defconfig
-sh                        sh7763rdp_defconfig
-mips                           rs90_defconfig
-arm                         mv78xx0_defconfig
-ia64                             alldefconfig
-sh                        sh7785lcr_defconfig
-arm                  randconfig-c002-20211118
-arm                  randconfig-c002-20211119
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a005-20211119
-x86_64               randconfig-a003-20211119
-x86_64               randconfig-a002-20211119
-x86_64               randconfig-a001-20211119
-x86_64               randconfig-a006-20211119
-x86_64               randconfig-a004-20211119
-i386                 randconfig-a006-20211119
-i386                 randconfig-a003-20211119
-i386                 randconfig-a001-20211119
-i386                 randconfig-a005-20211119
-i386                 randconfig-a004-20211119
-i386                 randconfig-a002-20211119
-x86_64               randconfig-a015-20211118
-x86_64               randconfig-a012-20211118
-x86_64               randconfig-a011-20211118
-x86_64               randconfig-a013-20211118
-x86_64               randconfig-a016-20211118
-x86_64               randconfig-a014-20211118
-i386                 randconfig-a016-20211118
-i386                 randconfig-a014-20211118
-i386                 randconfig-a012-20211118
-i386                 randconfig-a011-20211118
-i386                 randconfig-a013-20211118
-i386                 randconfig-a015-20211118
-arc                  randconfig-r043-20211120
-s390                 randconfig-r044-20211120
-riscv                randconfig-r042-20211120
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-riscv                            allyesconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+I=E2=80=99m seeking your kind assistance to move the sum of US$13.5 Million
+Dollars to you as long as you will assure me that the money will be
+safe in your care until I complete my service here in (Yemen) before
+the end of next month.
+The most important thing is; =E2=80=9CCan I Trust you=E2=80=9D?As an office=
+r on ACTIVE
+DUTY I am not allowed to have access to money, therefore, I have
+declared the content of the consignment as personal and my treasure. I
+would like to deliver to you. You will be rewarded with 30% of this
+funds for your assistance, all that I require is your mutual trust
+between us. Don't betray me when you receive the consignment.
 
-clang tested configs:
-i386                 randconfig-c001-20211119
-x86_64               randconfig-c007-20211119
-arm                  randconfig-c002-20211119
-s390                 randconfig-c005-20211119
-powerpc              randconfig-c003-20211119
-riscv                randconfig-c006-20211119
-i386                 randconfig-c001-20211118
-x86_64               randconfig-c007-20211118
-arm                  randconfig-c002-20211118
-s390                 randconfig-c005-20211118
-powerpc              randconfig-c003-20211118
-riscv                randconfig-c006-20211118
-mips                 randconfig-c004-20211118
-x86_64               randconfig-a001-20211120
-x86_64               randconfig-a006-20211120
-x86_64               randconfig-a003-20211120
-x86_64               randconfig-a004-20211120
-x86_64               randconfig-a005-20211120
-x86_64               randconfig-a002-20211120
-i386                 randconfig-a006-20211118
-i386                 randconfig-a003-20211118
-i386                 randconfig-a001-20211118
-i386                 randconfig-a005-20211118
-i386                 randconfig-a004-20211118
-i386                 randconfig-a002-20211118
-x86_64               randconfig-a015-20211119
-x86_64               randconfig-a011-20211119
-x86_64               randconfig-a012-20211119
-x86_64               randconfig-a013-20211119
-x86_64               randconfig-a016-20211119
-x86_64               randconfig-a014-20211119
-x86_64               randconfig-a005-20211118
-x86_64               randconfig-a003-20211118
-x86_64               randconfig-a001-20211118
-x86_64               randconfig-a002-20211118
-x86_64               randconfig-a006-20211118
-x86_64               randconfig-a004-20211118
-hexagon              randconfig-r045-20211119
-hexagon              randconfig-r041-20211119
-riscv                randconfig-r042-20211119
-s390                 randconfig-r044-20211119
-hexagon              randconfig-r045-20211118
-hexagon              randconfig-r041-20211118
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Sincerely,
+General Eleanor.
