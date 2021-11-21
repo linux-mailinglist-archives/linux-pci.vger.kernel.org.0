@@ -2,93 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EB114582CA
-	for <lists+linux-pci@lfdr.de>; Sun, 21 Nov 2021 10:43:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6E6C45834A
+	for <lists+linux-pci@lfdr.de>; Sun, 21 Nov 2021 13:24:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232752AbhKUJqj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 21 Nov 2021 04:46:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232486AbhKUJqj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 21 Nov 2021 04:46:39 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 680FAC061574
-        for <linux-pci@vger.kernel.org>; Sun, 21 Nov 2021 01:43:34 -0800 (PST)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1mojNi-0003AD-R7; Sun, 21 Nov 2021 10:43:30 +0100
-Message-ID: <496aaef5-e542-342c-42ef-ccbc2833df7c@leemhuis.info>
-Date:   Sun, 21 Nov 2021 10:43:30 +0100
+        id S238196AbhKUM1R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 21 Nov 2021 07:27:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233019AbhKUM1R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 21 Nov 2021 07:27:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AF78D6023E;
+        Sun, 21 Nov 2021 12:24:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1637497452;
+        bh=eMYFmoZSFX2jyVOSCFjFFwc/RwT1DrSIr7UoN3UV1zY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yhA5l4/fq4dGiMzBP9UEo6VKSq2+Y8NLneGwVFnYVQjp963jn1aK8kW/32WSu2xZR
+         84fjSTgs1mkLutflZnOuHSbnPfNOrLIeS/Bp9dMLmFT2Z5rjZ+4eXPaN9N2aSugR71
+         ph6JmWtMVYcanb5vpO42MjgM2Bu0YUkklZSsNoKQ=
+Date:   Sun, 21 Nov 2021 13:24:09 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/4] PCI: Add #defines for accessing PCIe DVSEC fields
+Message-ID: <YZo6aczgqoobIcDC@kroah.com>
+References: <20211120231705.189969-1-david.e.box@linux.intel.com>
+ <20211120231705.189969-2-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: PCIe regression on APM Merlin (aarch64 dev platform) preventing
- NVME initialization
-Content-Language: en-BW
-To:     =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>,
-        linux-pci@vger.kernel.org,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc:     Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <CA+enf=v9rY_xnZML01oEgKLmvY1NGBUUhnSJaETmXtDtXfaczA@mail.gmail.com>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CA+enf=v9rY_xnZML01oEgKLmvY1NGBUUhnSJaETmXtDtXfaczA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637487814;cc57a2b3;
-X-HE-SMSGID: 1mojNi-0003AD-R7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211120231705.189969-2-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, this is your Linux kernel regression tracker speaking.
-
-CC in the regressions list.
-
-On 18.11.21 19:10, Stéphane Graber wrote:
->
-> I've recently been given access to a set of 4 APM X-Gene2 Merlin
-> boards (old-ish development platform).
-> Running them on Ubuntu 20.04's stock 5.4 kernel worked fine but trying
-> to run anything else would fail to boot due to a NVME initialization
-> timeout preventing the main drive from showing up at all.
+On Sat, Nov 20, 2021 at 03:17:02PM -0800, David E. Box wrote:
+> Add #defines for accessing Vendor ID, Revision, Length, and ID offsets
+> in the Designated Vendor Specific Extended Capability (DVSEC). Defined
+> in PCIe r5.0, sec 7.9.6.
 > 
-> Tracking this issue, I first moved to clean mainline kernels and then
-> isolated the issue to be somewhere between 5.4.0 and 5.5.0-rc1, which
-> sadly meant the merge window (so much for a quick bisect...). I've
-> then bisected between those two points and came up with:
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  include/uapi/linux/pci_regs.h | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
->   6dce5aa59e0bf2430733d7a8b11c205ec10f408e (refs/bisect/bad) PCI:
-> xgene: Use inbound resources for setup
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index ff6ccbc6efe9..318f3f1f9e92 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1086,7 +1086,11 @@
+>  
+>  /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+>  #define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
+> +#define  PCI_DVSEC_HEADER1_VID(x)	((x) & 0xffff)
+> +#define  PCI_DVSEC_HEADER1_REV(x)	(((x) >> 16) & 0xf)
+> +#define  PCI_DVSEC_HEADER1_LEN(x)	(((x) >> 20) & 0xfff)
+>  #define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-Specific Header2 */
+> +#define  PCI_DVSEC_HEADER2_ID(x)		((x) & 0xffff)
 
-TWIMC: To be sure this issue doesn't fall through the cracks unnoticed,
-I'm adding it to regzbot, my Linux kernel regression tracking bot:
+Why does userspace need to have these defines?  What userspace tool is
+going to use these?
 
-#regzbot ^introduced 6dce5aa59e0bf2430733d7a8b11c205ec10f408e
-#regzbot ignore-activity
+thanks,
 
-Ciao, Thorsten, your Linux kernel regression tracker.
-
-
-P.S.: If you want to know more about regzbot, check out its
-web-interface, the getting start guide, and/or the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for the reporter: when reporting a regression it's in your interest
-to tell #regzbot about it in the report, as that will ensure the
-regression gets on the radar of regzbot and the regression tracker.
-That's in your interest, as they will make sure the report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot, just
-fix the issue as you normally would. Just remember to include a 'Link:'
-tag to the report in the commit message, as explained in
-Documentation/process/submitting-patches.rst, which recently was made
-more explicit in commit 1f57bd42b77c:
-https://git.kernel.org/linus/1f57bd42b77c
+greg k-h
