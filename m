@@ -2,133 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA860459822
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Nov 2021 00:01:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 651A1459848
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Nov 2021 00:09:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231451AbhKVXFF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Nov 2021 18:05:05 -0500
-Received: from mga02.intel.com ([134.134.136.20]:26829 "EHLO mga02.intel.com"
+        id S231230AbhKVXMy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Nov 2021 18:12:54 -0500
+Received: from mga03.intel.com ([134.134.136.65]:49624 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231709AbhKVXFE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Nov 2021 18:05:04 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10176"; a="222123100"
+        id S229619AbhKVXMx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Nov 2021 18:12:53 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10176"; a="234851984"
 X-IronPort-AV: E=Sophos;i="5.87,255,1631602800"; 
-   d="scan'208";a="222123100"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 15:01:47 -0800
+   d="scan'208";a="234851984"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 15:09:46 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,255,1631602800"; 
-   d="scan'208";a="674236746"
-Received: from wqiu6-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.143.45])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 15:01:47 -0800
-Date:   Mon, 22 Nov 2021 15:01:46 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 19/23] cxl/pci: Store component register base in cxlds
-Message-ID: <20211122230146.lu5wuhelv6wwmrap@intel.com>
-References: <20211120000250.1663391-1-ben.widawsky@intel.com>
- <20211120000250.1663391-20-ben.widawsky@intel.com>
- <20211122171142.000002c4@Huawei.com>
+   d="scan'208";a="497053520"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 22 Nov 2021 15:09:46 -0800
+Received: from xwu17-mobl1.amr.corp.intel.com (xwu17-mobl1.amr.corp.intel.com [10.212.223.69])
+        by linux.intel.com (Postfix) with ESMTP id E7488580418;
+        Mon, 22 Nov 2021 15:09:45 -0800 (PST)
+Message-ID: <3b9935baf114dac8426e33f116e43e7fb19e607f.camel@linux.intel.com>
+Subject: Re: [PATCH 3/4] platform/x86/intel: Move intel_pmt from MFD to
+ Auxiliary Bus
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Mon, 22 Nov 2021 15:09:45 -0800
+In-Reply-To: <20211122184351.GA2160551@bhelgaas>
+References: <20211122184351.GA2160551@bhelgaas>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211122171142.000002c4@Huawei.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21-11-22 17:11:42, Jonathan Cameron wrote:
-> On Fri, 19 Nov 2021 16:02:46 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Mon, 2021-11-22 at 12:43 -0600, Bjorn Helgaas wrote:
+> On Sat, Nov 20, 2021 at 03:17:04PM -0800, David E. Box wrote:
+> > Intel Platform Monitoring Technology (PMT) support is indicated by
+> > presence of an Intel defined PCIe Designated Vendor Specific Extended
+> > Capabilities (DVSEC) structure with a PMT specific ID. The current MFD
+> > implementation creates child devices for each PMT feature, currently
+> > telemetry and crashlog. 
 > 
-> > The component register base address is enumerated and stored in the
-> > cxl_device_state structure for use by the endpoint driver.
-> > 
-> > Component register base addresses are obtained through PCI mechanisms.
-> > As such it makes most sense for the cxl_pci driver to obtain that
-> > address. In order to reuse the port driver for enumerating decoder
-> > resources for an endpoint, it is desirable to be able to add the
-> > endpoint as a port. The endpoint does know of the cxlds and can pull the
-> > component register base from there and pass it along to port creation.
-> 
-> This feels like a lot of explanation in for trivial caching of an address.
-> I'm not sure you need to be that detailed, though I guess it does no real
-> harm.
+> Apparently "watcher," too?
 
-It is mostly to articulate that cxl_pci is responsible for PCI stuff, and
-cxl_mem is responsible for CXL.mem stuff, and that's why we didn't just do this
-work in cxl_mem (which indeed was what I originally did).
+Yes.
 
 > 
-> Another one where I'm unsure why we are muddling on after an error...
+> > However DVSEC structures may also be used by Intel to indicate
+> > support for other features. The Out Of Band Management Services
+> > Module (OOBMSM) 
+> 
+> OOBMSM refers to something outside this series?  Oh, I see ... looks
+> like that's a specific device (PCI_DEVICE_ID_INTEL_VSEC_OOBMSM).
 
-Same motivation as the other - mailbox can still be used even if the media isn't
-available.
+Yes
 
 > 
+> > uses DVSEC to enumerate several features,
+> > including PMT.  In order to support them it is necessary to modify the
+> > intel_pmt driver to handle the creation of the child devices more
+> > generically.  Additionally, since these are not platform devices (which
+> > is what MFD is really intended for) move the implementation to the more
+> > appropriate Auxiliary bus and host in platform/x86/intel.
 > 
+> It'd be useful to mention *why* the auxiliary bus is more appropriate.
+> It's not obvious to me.
+
+Sure I'll add this.
+
+> 
+> > Also, rename
+> > the driver from intel_pmt to intel_vsec to better reflect the purpose.
 > > 
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > ---
-> > Changes since RFCv2:
-> > This patch was originally named, "cxl/core: Store component register
-> > base for memdevs". It plumbed the component registers through memdev
-> > creation. After more work, it became apparent we needed to plumb other
-> > stuff from the pci driver, so going forward, cxlds will just be
-> > referenced by the cxl_mem driver. This also allows us to ignore the
-> > change needed to cxl_test
-> > 
-> > - Rework patch to store the base in cxlds
-> > - Remove defunct comment (Dan)
-> > ---
-> >  drivers/cxl/cxlmem.h |  2 ++
-> >  drivers/cxl/pci.c    | 11 +++++++++++
-> >  2 files changed, 13 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index a9424dd4e5c3..b1d753541f4e 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -134,6 +134,7 @@ struct cxl_endpoint_dvsec_info {
-> >   * @next_volatile_bytes: volatile capacity change pending device reset
-> >   * @next_persistent_bytes: persistent capacity change pending device reset
-> >   * @info: Cached DVSEC information about the device.
-> > + * @component_reg_phys: register base of component registers
-> >   * @mbox_send: @dev specific transport for transmitting mailbox commands
-> >   *
-> >   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> > @@ -165,6 +166,7 @@ struct cxl_dev_state {
-> >  	u64 next_persistent_bytes;
-> >  
-> >  	struct cxl_endpoint_dvsec_info *info;
-> > +	resource_size_t component_reg_phys;
-> >  
-> >  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-> >  	int (*wait_media_ready)(struct cxl_dev_state *cxlds);
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index f1a68bfe5f77..a8e375950514 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -663,6 +663,17 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > +	/*
-> > +	 * If the component registers can't be found, the cxl_pci driver may
-> > +	 * still be useful for management functions so don't return an error.
-> > +	 */
-> > +	cxlds->component_reg_phys = CXL_RESOURCE_NONE;
-> > +	rc = cxl_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-> > +	if (rc)
-> > +		dev_warn(&cxlmd->dev, "No component registers (%d)\n", rc);
-> > +	else
-> > +		cxlds->component_reg_phys = cxl_reg_block(pdev, &map);
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Reviewed-by: Mark Gross <markgross@kernel.org>
+> > -static int pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id
+> > *id)
+> > -{
+> > - ...
+> > -
+> > -	pm_runtime_put(&pdev->dev);
+> > -	pm_runtime_allow(&pdev->dev);
+> 
+> What happened to this runtime PM functionality?  Is it no longer
+> needed when using the auxiliary bus?  I don't see corresponding
+> functionality there.
+
+I need to add a comment for this. Support will be added back when a device is
+added that needs it. Current devices do not.
+
+> 
+> > -	return 0;
+> > -}
+> > -
+> > -static void pmt_pci_remove(struct pci_dev *pdev)
+> > -{
+> > -	pm_runtime_forbid(&pdev->dev);
+> > -	pm_runtime_get_sync(&pdev->dev);
+> > -}
+> > +static int intel_vsec_add_dev(struct pci_dev *pdev, struct
+> > intel_vsec_header *header,
+> > +			   unsigned long quirks)
+> > +{
+> > + ...
+> > +	res = kcalloc(header->num_entries, sizeof(*res), GFP_KERNEL);
+> > +	if (!res) {
+> > +		kfree(intel_vsec_dev);
+> > +		return -ENOMEM;
+> > +	}
 > > +
-> >  	rc = cxl_pci_setup_mailbox(cxlds);
-> >  	if (rc)
-> >  		return rc;
+> > +	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
+> > +		header->offset >>= TABLE_OFFSET_SHIFT;
+> > +
+> > +	/*
+> > +	 * The DVSEC/VSEC contains the starting offset and count for a block of
+> > +	 * discovery tables. Create a resource list of these tables to the
+> > +	 * auxiliary device driver.
 > 
+> "res" looks like an array of resources, not a list, i.e., I don't see
+> any ->next pointers here.
+
+Yes. Sorry I used "list" loosely.
+
+> 
+> > +	 */
+> > +	for (i = 0, tmp = res; i < header->num_entries; i++, tmp++) {
+> > +		tmp->start = pdev->resource[header->tbir].start +
+> > +			     header->offset + i * (header->entry_size *
+> > sizeof(u32));
+> > +		tmp->end = tmp->start + (header->entry_size * sizeof(u32)) - 1;
+> > +		tmp->flags = IORESOURCE_MEM;
+> > +	}
+> > +
+> > +	intel_vsec_dev->pcidev = pdev;
+> > +	intel_vsec_dev->resource = res;
+> > +	intel_vsec_dev->num_resources = header->num_entries;
+> > +	intel_vsec_dev->quirks = quirks;
+> > +	intel_vsec_dev->ida = &intel_vsec_ida;
+> > +
+> > +	return intel_vsec_add_aux(pdev, intel_vsec_dev, intel_vsec_name(header-
+> > >id));
+> > +}
+> > +/* TGL info */
+> > +static const struct intel_vsec_platform_info tgl_info = {
+> > +	.quirks = VSEC_QUIRK_NO_WATCHER | VSEC_QUIRK_NO_CRASHLOG |
+> > VSEC_QUIRK_TABLE_SHIFT,
+> > +};
+> 
+> I guess these are essentially device defects, i.e., TGL advertises
+> watcher and crashlog via VSEC, but doesn't actually support them?
+
+That's correct. There were several deviations in implementation between the
+first devices and this is how they were resolved. The OOBMSM device doesn't
+require any of these workarounds, hence why it provides no info. Though we may
+use this structure in the future for actual platform data.
+
+> 
+> > +#define PCI_DEVICE_ID_INTEL_VSEC_ADL		0x467d
+> > +#define PCI_DEVICE_ID_INTEL_VSEC_DG1		0x490e
+> > +#define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM		0x09a7
+> > +#define PCI_DEVICE_ID_INTEL_VSEC_TGL		0x9a0d
+> > +static const struct pci_device_id intel_vsec_pci_ids[] = {
+> > +	{ PCI_DEVICE_DATA(INTEL, VSEC_ADL, &tgl_info) },
+> > +	{ PCI_DEVICE_DATA(INTEL, VSEC_DG1, &dg1_info) },
+> > +	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, NULL) },
+> > +	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },
+> 
+> IIUC, you're implicitly saying that only these listed Device IDs can
+> have these VSEC capabilities, or at least, that these VSEC-described
+> features are only supported on these Device IDs.
+
+Yes and yes.
+
+> 
+> That's not the way PCI capabilities work in general, so this doesn't
+> feel like a perfect fit to me, but I guess it's probably the only way
+> to identify the devices you care about.
+
+Understood.
+
+David
+
+> 
+> Bjorn
+
