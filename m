@@ -2,66 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDBDB458947
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Nov 2021 07:21:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BF99458B83
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Nov 2021 10:29:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229906AbhKVGY4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Nov 2021 01:24:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59672 "EHLO mail.kernel.org"
+        id S238882AbhKVJci (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Nov 2021 04:32:38 -0500
+Received: from mga05.intel.com ([192.55.52.43]:53776 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229527AbhKVGYz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Nov 2021 01:24:55 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9AD5560E08;
-        Mon, 22 Nov 2021 06:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1637562109;
-        bh=fzsRN4izc+0jRBS7aC+AnWDJdXqUSKg6OSnIdhhFAxc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F1neIeXxphTLVqAMO4AQgvcHh8s03h+MeFaPz/RpjL2BobhAbGpta6xGAkP7grzRl
-         MEmsMHSHhsCd0I4/E6EYJvVYv4QZIdLaV1mtJlafgIz/xhloLSeBq1PWbyLTgOt2Er
-         LdfnBC3V6VXeePIONb7cClfQkrFCIAyws4oWKNiA=
-Date:   Mon, 22 Nov 2021 07:21:38 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 4/4] platform/x86: Add Intel Software Defined Silicon
- driver
-Message-ID: <YZs28g87GE3XgAKk@kroah.com>
-References: <20211120231705.189969-1-david.e.box@linux.intel.com>
- <20211120231705.189969-5-david.e.box@linux.intel.com>
- <YZo8HUxx8LNgOMeK@kroah.com>
- <4d8ba355de09a4a806b6075305ca8d7156dc70ef.camel@linux.intel.com>
+        id S230447AbhKVJch (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Nov 2021 04:32:37 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10175"; a="320980423"
+X-IronPort-AV: E=Sophos;i="5.87,254,1631602800"; 
+   d="scan'208";a="320980423"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 01:29:31 -0800
+X-IronPort-AV: E=Sophos;i="5.87,254,1631602800"; 
+   d="scan'208";a="508879579"
+Received: from rmcdonax-mobl.ger.corp.intel.com (HELO localhost) ([10.252.19.217])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 01:29:13 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Jakub Kicinski <kuba@kernel.org>, bpf@vger.kernel.org
+Cc:     Jakub Kicinski <kuba@kernel.org>, axboe@kernel.dk,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        yuq825@gmail.com, robdclark@gmail.com, sean@poorly.run,
+        christian.koenig@amd.com, ray.huang@amd.com, sgoutham@marvell.com,
+        gakula@marvell.com, sbhatta@marvell.com, hkelam@marvell.com,
+        jingoohan1@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com,
+        krzysztof.kozlowski@canonical.com, mani@kernel.org,
+        pawell@cadence.com, peter.chen@kernel.org, rogerq@kernel.org,
+        a-govindraju@ti.com, gregkh@linuxfoundation.org, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
+        kpsingh@kernel.org, sj@kernel.org, akpm@linux-foundation.org,
+        thomas.hellstrom@linux.intel.com, matthew.auld@intel.com,
+        colin.king@intel.com, geert@linux-m68k.org,
+        linux-block@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, lima@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH bpf] treewide: add missing includes masked by cgroup ->
+ bpf dependency
+In-Reply-To: <20211120035253.72074-1-kuba@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20211120035253.72074-1-kuba@kernel.org>
+Date:   Mon, 22 Nov 2021 11:29:10 +0200
+Message-ID: <87fsroo7x5.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d8ba355de09a4a806b6075305ca8d7156dc70ef.camel@linux.intel.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 21, 2021 at 09:18:25AM -0800, David E. Box wrote:
-> > These sysfs attributes are crazy.  Who has audited them to be correct
-> > and work properly? It feels like there are just buffer overflows
-> > waiting to be exploited in them due to the reading/writing of raw memory
-> > buffers all over the place.
-> 
-> Agree with the concern. I can submit the tests that were used. Is selftests the
-> best place?
+On Fri, 19 Nov 2021, Jakub Kicinski <kuba@kernel.org> wrote:
+> cgroup.h (therefore swap.h, therefore half of the universe)
+> includes bpf.h which in turn includes module.h and slab.h.
+> Since we're about to get rid of that dependency we need
+> to clean things up.
+>
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+> CC: axboe@kernel.dk
+> CC: maarten.lankhorst@linux.intel.com
+> CC: mripard@kernel.org
+> CC: tzimmermann@suse.de
+> CC: airlied@linux.ie
+> CC: daniel@ffwll.ch
+> CC: jani.nikula@linux.intel.com
+> CC: joonas.lahtinen@linux.intel.com
+> CC: rodrigo.vivi@intel.com
+> CC: yuq825@gmail.com
+> CC: robdclark@gmail.com
+> CC: sean@poorly.run
+> CC: christian.koenig@amd.com
+> CC: ray.huang@amd.com
+> CC: sgoutham@marvell.com
+> CC: gakula@marvell.com
+> CC: sbhatta@marvell.com
+> CC: hkelam@marvell.com
+> CC: jingoohan1@gmail.com
+> CC: lorenzo.pieralisi@arm.com
+> CC: robh@kernel.org
+> CC: kw@linux.com
+> CC: bhelgaas@google.com
+> CC: krzysztof.kozlowski@canonical.com
+> CC: mani@kernel.org
+> CC: pawell@cadence.com
+> CC: peter.chen@kernel.org
+> CC: rogerq@kernel.org
+> CC: a-govindraju@ti.com
+> CC: gregkh@linuxfoundation.org
+> CC: ast@kernel.org
+> CC: daniel@iogearbox.net
+> CC: andrii@kernel.org
+> CC: kafai@fb.com
+> CC: songliubraving@fb.com
+> CC: yhs@fb.com
+> CC: john.fastabend@gmail.com
+> CC: kpsingh@kernel.org
+> CC: sj@kernel.org
+> CC: akpm@linux-foundation.org
+> CC: thomas.hellstrom@linux.intel.com
+> CC: matthew.auld@intel.com
+> CC: colin.king@intel.com
+> CC: geert@linux-m68k.org
+> CC: linux-block@vger.kernel.org
+> CC: dri-devel@lists.freedesktop.org
+> CC: intel-gfx@lists.freedesktop.org
+> CC: lima@lists.freedesktop.org
+> CC: linux-arm-msm@vger.kernel.org
+> CC: freedreno@lists.freedesktop.org
+> CC: linux-pci@vger.kernel.org
+> CC: linux-arm-kernel@lists.infradead.org
+> CC: linux-samsung-soc@vger.kernel.org
+> CC: linux-usb@vger.kernel.org
+> CC: bpf@vger.kernel.org
+> CC: linux-mm@kvack.org
+>
+> Well, let's see if this makes it thru email servers...
+> ---
+>  block/fops.c                                          | 1 +
+>  drivers/gpu/drm/drm_gem_shmem_helper.c                | 1 +
+>  drivers/gpu/drm/i915/gt/intel_gtt.c                   | 1 +
+>  drivers/gpu/drm/i915/i915_request.c                   | 1 +
 
-Yes.
+For the i915 parts,
 
-> > Where is the userspace tool that uses these files?
-> 
-> The tool will be published in the same github repo as the spec once the driver
-> is ready.
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 
-Isn't the driver "ready" if you are asking for it to be accepted
-here?  Why isn't it published already so we can see if it actually is
-tested?
 
-thanks,
-
-greg k-h
+-- 
+Jani Nikula, Intel Open Source Graphics Center
