@@ -2,85 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79A6D4594B2
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Nov 2021 19:28:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 598124594E1
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Nov 2021 19:43:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240287AbhKVSbN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Nov 2021 13:31:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44428 "EHLO mail.kernel.org"
+        id S233158AbhKVSrA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Nov 2021 13:47:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229853AbhKVSbM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Nov 2021 13:31:12 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BAC8160F6F;
-        Mon, 22 Nov 2021 18:28:05 +0000 (UTC)
+        id S230453AbhKVSrA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Nov 2021 13:47:00 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CD2516052B;
+        Mon, 22 Nov 2021 18:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637605686;
-        bh=konvSo77Cx8ln8EJy9hBJpfgeh2p+6Im9gPnwaVvtcE=;
+        s=k20201202; t=1637606633;
+        bh=iQ+8WwXuGwrBc62nrAsZJ2L8766olCwodMARbelPUP8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KAoHQNfLF2Vjg4BscPPxWDJ0g3M4DFTf8kY7Ac+dD9nfCBSd+Ya+iAcqVAHZRZHWe
-         6/oOOfNQkyJFtScp+pZe+cVhbdU6TfHDwPzm623zb3cE0HwZDe+9mepaj0yHgqJkts
-         BUxazuHp2yEK+m3UCIbZleOqik4WeTp1nCJtoi1ufE0C4+OUN8PmVBpkjEmMwBUbzz
-         nj3Em69KVmtH+6Hn5Iuo1RT4o7rRzXnVNR/301UWRd/e0uef56vADR+I3+ZnuPeI5b
-         OorpzgMfyavFPbk2F6x/EouklIfzULQF3hJuRJTwzranrrBCCKTWNs0mYKtxbAk7k8
-         ufbAPbXbTOZ4Q==
-Date:   Mon, 22 Nov 2021 12:28:04 -0600
+        b=hztoRRD7PHIDbZE5E6fQmmU5TdNMMsu4BnknxInGKEaqL8tdSjWxtFLIa7GXM8D1b
+         yO8ba3qT4P6uF3HoAvff/D1pUkIBGeqPIfTurbE/aBVCYRgBiTpsz2T9rYI0BtZ4wT
+         nnuAv2eDb8cAixErUfHzhGG+gPq7hpaChvpkcB/+KUOjC8Tj6lH4mkc3bAczzSEkjb
+         J3SffRcJKUSsedzvhDFbnxmLL7J78jpMRPFpAZmzvWdFJ114wE6xVUndhL8I7zt9Q8
+         8yZEsVc05U3HAki96xEcHfbAek+MVVyLgBuJWyINDSE0a3dxJWKGSjTrARBKDispEf
+         vF1Ld3t3weg+Q==
+Date:   Mon, 22 Nov 2021 12:43:51 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
-        hdegoede@redhat.com, bhelgaas@google.com,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/4] PCI: Add #defines for accessing PCIe DVSEC fields
-Message-ID: <20211122182804.GA2157671@bhelgaas>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/4] platform/x86/intel: Move intel_pmt from MFD to
+ Auxiliary Bus
+Message-ID: <20211122184351.GA2160551@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YZo6aczgqoobIcDC@kroah.com>
+In-Reply-To: <20211120231705.189969-4-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 21, 2021 at 01:24:09PM +0100, Greg KH wrote:
-> On Sat, Nov 20, 2021 at 03:17:02PM -0800, David E. Box wrote:
-> > Add #defines for accessing Vendor ID, Revision, Length, and ID offsets
-> > in the Designated Vendor Specific Extended Capability (DVSEC). Defined
-> > in PCIe r5.0, sec 7.9.6.
-> > 
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  include/uapi/linux/pci_regs.h | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> > index ff6ccbc6efe9..318f3f1f9e92 100644
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -1086,7 +1086,11 @@
-> >  
-> >  /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
-> >  #define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
-> > +#define  PCI_DVSEC_HEADER1_VID(x)	((x) & 0xffff)
-> > +#define  PCI_DVSEC_HEADER1_REV(x)	(((x) >> 16) & 0xf)
-> > +#define  PCI_DVSEC_HEADER1_LEN(x)	(((x) >> 20) & 0xfff)
-> >  #define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-Specific Header2 */
-> > +#define  PCI_DVSEC_HEADER2_ID(x)		((x) & 0xffff)
+On Sat, Nov 20, 2021 at 03:17:04PM -0800, David E. Box wrote:
+> Intel Platform Monitoring Technology (PMT) support is indicated by
+> presence of an Intel defined PCIe Designated Vendor Specific Extended
+> Capabilities (DVSEC) structure with a PMT specific ID. The current MFD
+> implementation creates child devices for each PMT feature, currently
+> telemetry and crashlog. 
+
+Apparently "watcher," too?
+
+> However DVSEC structures may also be used by Intel to indicate
+> support for other features. The Out Of Band Management Services
+> Module (OOBMSM) 
+
+OOBMSM refers to something outside this series?  Oh, I see ... looks
+like that's a specific device (PCI_DEVICE_ID_INTEL_VSEC_OOBMSM).
+
+> uses DVSEC to enumerate several features,
+> including PMT.  In order to support them it is necessary to modify the
+> intel_pmt driver to handle the creation of the child devices more
+> generically.  Additionally, since these are not platform devices (which
+> is what MFD is really intended for) move the implementation to the more
+> appropriate Auxiliary bus and host in platform/x86/intel.
+
+It'd be useful to mention *why* the auxiliary bus is more appropriate.
+It's not obvious to me.
+
+> Also, rename
+> the driver from intel_pmt to intel_vsec to better reflect the purpose.
 > 
-> Why does userspace need to have these defines?  What userspace tool is
-> going to use these?
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Mark Gross <markgross@kernel.org>
 
-This is pretty typical of other content in pci_regs.h.  There's lots
-of existing content that may not be directly useful to userspace, but
-it's there because it's convenient to have definitions prescribed by
-the spec all together in one place.
+> -static int pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> -{
+> - ...
+> -
+> -	pm_runtime_put(&pdev->dev);
+> -	pm_runtime_allow(&pdev->dev);
 
-They probably shouldn't go in drivers/pci/pci.h because by definition
-this vendor-specific stuff will be used by vendor-specific drivers but
-not by the PCI core.
+What happened to this runtime PM functionality?  Is it no longer
+needed when using the auxiliary bus?  I don't see corresponding
+functionality there.
 
-I guess these *could* go in include/linux/pci.h, but that wouldn't be
-my first choice because there's nothing similar there.
+> -	return 0;
+> -}
+> -
+> -static void pmt_pci_remove(struct pci_dev *pdev)
+> -{
+> -	pm_runtime_forbid(&pdev->dev);
+> -	pm_runtime_get_sync(&pdev->dev);
+> -}
+
+> +static int intel_vsec_add_dev(struct pci_dev *pdev, struct intel_vsec_header *header,
+> +			   unsigned long quirks)
+> +{
+> + ...
+> +	res = kcalloc(header->num_entries, sizeof(*res), GFP_KERNEL);
+> +	if (!res) {
+> +		kfree(intel_vsec_dev);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	if (quirks & VSEC_QUIRK_TABLE_SHIFT)
+> +		header->offset >>= TABLE_OFFSET_SHIFT;
+> +
+> +	/*
+> +	 * The DVSEC/VSEC contains the starting offset and count for a block of
+> +	 * discovery tables. Create a resource list of these tables to the
+> +	 * auxiliary device driver.
+
+"res" looks like an array of resources, not a list, i.e., I don't see
+any ->next pointers here.
+
+> +	 */
+> +	for (i = 0, tmp = res; i < header->num_entries; i++, tmp++) {
+> +		tmp->start = pdev->resource[header->tbir].start +
+> +			     header->offset + i * (header->entry_size * sizeof(u32));
+> +		tmp->end = tmp->start + (header->entry_size * sizeof(u32)) - 1;
+> +		tmp->flags = IORESOURCE_MEM;
+> +	}
+> +
+> +	intel_vsec_dev->pcidev = pdev;
+> +	intel_vsec_dev->resource = res;
+> +	intel_vsec_dev->num_resources = header->num_entries;
+> +	intel_vsec_dev->quirks = quirks;
+> +	intel_vsec_dev->ida = &intel_vsec_ida;
+> +
+> +	return intel_vsec_add_aux(pdev, intel_vsec_dev, intel_vsec_name(header->id));
+> +}
+
+> +/* TGL info */
+> +static const struct intel_vsec_platform_info tgl_info = {
+> +	.quirks = VSEC_QUIRK_NO_WATCHER | VSEC_QUIRK_NO_CRASHLOG | VSEC_QUIRK_TABLE_SHIFT,
+> +};
+
+I guess these are essentially device defects, i.e., TGL advertises
+watcher and crashlog via VSEC, but doesn't actually support them?
+
+> +#define PCI_DEVICE_ID_INTEL_VSEC_ADL		0x467d
+> +#define PCI_DEVICE_ID_INTEL_VSEC_DG1		0x490e
+> +#define PCI_DEVICE_ID_INTEL_VSEC_OOBMSM		0x09a7
+> +#define PCI_DEVICE_ID_INTEL_VSEC_TGL		0x9a0d
+> +static const struct pci_device_id intel_vsec_pci_ids[] = {
+> +	{ PCI_DEVICE_DATA(INTEL, VSEC_ADL, &tgl_info) },
+> +	{ PCI_DEVICE_DATA(INTEL, VSEC_DG1, &dg1_info) },
+> +	{ PCI_DEVICE_DATA(INTEL, VSEC_OOBMSM, NULL) },
+> +	{ PCI_DEVICE_DATA(INTEL, VSEC_TGL, &tgl_info) },
+
+IIUC, you're implicitly saying that only these listed Device IDs can
+have these VSEC capabilities, or at least, that these VSEC-described
+features are only supported on these Device IDs.
+
+That's not the way PCI capabilities work in general, so this doesn't
+feel like a perfect fit to me, but I guess it's probably the only way
+to identify the devices you care about.
 
 Bjorn
