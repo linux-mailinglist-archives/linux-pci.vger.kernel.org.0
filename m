@@ -2,181 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7F014594E6
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Nov 2021 19:44:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86B81459548
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Nov 2021 20:05:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239626AbhKVSr1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Nov 2021 13:47:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239598AbhKVSr1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 22 Nov 2021 13:47:27 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E8B5060D42;
-        Mon, 22 Nov 2021 18:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637606660;
-        bh=smQupKCLw4/7NyflTJNZhsEQw8ICgUvAHXrWnYkvtNM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qAWaN6VG1TF9wBTDARQQGJZFdwbHRQ2z22UHorEWJgwqoUzoUQhECHHQH4ieIuCv9
-         1CvgyrhG0yPgX9ohhaMVJ87Y3eMXxi2kQMN0Fn6osEj5nw4a+M8BwaIyCWfADdLudF
-         7eZ6caPQeP4AEWRC99Lp3ABkIm88a98ar0lyPhVdoHdiW2o1vE/r1H/v2lF+77kZcR
-         WkqmR0lHOxIjE34MHRl5UOgjZ5S/mQbyS68WV1UdGbGPhyCLqSdrL7c0PNP5S05+9f
-         cGA8ncUpFK9jr6uoHPRDzjqwSk5cmmciQ4cX6Qc0fPzo4gY1S6DzWdcmO/QX8OMtiy
-         aXTWSna3GibcA==
-Date:   Mon, 22 Nov 2021 12:44:18 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        srinivas.pandruvada@intel.com, mgross@linux.intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 4/4] platform/x86: Add Intel Software Defined Silicon
- driver
-Message-ID: <20211122184418.GA2159461@bhelgaas>
+        id S234243AbhKVTIS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Nov 2021 14:08:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230159AbhKVTIS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Nov 2021 14:08:18 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B0CC061574;
+        Mon, 22 Nov 2021 11:05:11 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id j6-20020a17090a588600b001a78a5ce46aso86702pji.0;
+        Mon, 22 Nov 2021 11:05:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wsUPjYRSa+cVuPmeOccQvohC2mlPhYpnjuTt833pevA=;
+        b=Bnfiah7sQM+j87SrG5I0wv4eVF/apTdvxarka+1o/gH06RgU1VCS5bsrY9Q/3Zz7W9
+         8mxflCCb7v9jxD1WFro+THrRF1kGecSk2OSFh/C1SlAGIQLSYKU+cEswL935s2gT9lmR
+         2INaE/xUBS36dh7UjWUmqW96bdr2qL4l1xQ6OhC1E0V2oczo1vTFXny0YFbowiLHmfmv
+         GzDATb7Q2/UbAyo+8bfsgWGbe4kd2YtRXU4Hhe8/ppZcIrhI/5FsIGls7iUmLiQPgJEf
+         pA+oNflZP1OpMvg8r0c3wzEDkZtYiQ6eGDusiHYh+5K7gnfPFO5ewyhsTSk5+vHlH3UQ
+         3q0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wsUPjYRSa+cVuPmeOccQvohC2mlPhYpnjuTt833pevA=;
+        b=79qdiQBMWZEfmi1DbIedwWozCf9PUqBB4ahaJdRcr+1ZUn5F6PxlL6ZdOP2dxb0mbL
+         makZrqzqvf3mCdX0GMwTjc8CNvjrwRKhOR0WUFOBg4sbWtf2x6N9CwAf8GZuaWljGVUG
+         ihIAkxXHEjgLWFUL8t9GIHcbOkIpCtyaEqd4rahmuO0UumdJ2iYJh6TLrTUKgKWoYTEV
+         +O3EJPuV8NTeBWUsj12Y52Ovr6VYoc/eQ4dtq7rzHSlGdIWxC0mk+2afXEixPQxH3Ghe
+         cpmwDY4VFDSXRU3jXCBJ23rayndEKuryFfi0OAbbtw02Gpm+2znNVQWXlPIHLqbzHGJT
+         4ulQ==
+X-Gm-Message-State: AOAM531uvu4MLiaOoK2V3K7Dyrsw8QWy598VcTGlIUiadQMg0nzmYcNR
+        6lmsIJZ82sNHkiRbqs46Ak+kVBlsPwI=
+X-Google-Smtp-Source: ABdhPJwQrX5J8WhPnfYU+bmzPaJ4iDA3831y0oX5B3bNlEZ5LDf0g4YYefDfo8BqsuVItfG4Ijjxiw==
+X-Received: by 2002:a17:90b:1d0b:: with SMTP id on11mr33223962pjb.163.1637607910934;
+        Mon, 22 Nov 2021 11:05:10 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id q32sm8127059pja.4.2021.11.22.11.05.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Nov 2021 11:05:10 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM STB PCIE
+        DRIVER), Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-pci@vger.kernel.org (open list:BROADCOM STB PCIE DRIVER)
+Subject: [PATCH] PCI: brcmstb: Do not use __GENMASK
+Date:   Mon, 22 Nov 2021 11:04:58 -0800
+Message-Id: <20211122190459.3189616-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211120231705.189969-5-david.e.box@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 20, 2021 at 03:17:05PM -0800, David E. Box wrote:
-> Intel Software Defined Silicon (SDSi) is a post manufacturing mechanism for
-> activating additional silicon features. Features are enabled through a
-> license activation process.  The SDSi driver provides a per socket, sysfs
-> attribute interface for applications to perform 3 main provisioning
-> functions:
-> 
-> 1. Provision an Authentication Key Certificate (AKC), a key written to
->    internal NVRAM that is used to authenticate a capability specific
->    activation payload.
-> 
-> 2. Provision a Capability Activation Payload (CAP), a token authenticated
->    using the AKC and applied to the CPU configuration to activate a new
->    feature.
-> 
-> 3. Read the SDSi State Certificate, containing the CPU configuration
->    state.
-> 
-> The operations perform function specific mailbox commands that forward the
-> requests to SDSi hardware to perform authentication of the payloads and
-> enable the silicon configuration (to be made available after power
-> cycling).
-> 
-> The SDSi device itself is enumerated as an auxiliary device from the
-> intel_vsec driver and as such has a build dependency on CONFIG_INTEL_VSEC.
-> 
-> Link: https://github.com/intel/intel-sdsi
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Mark Gross <markgross@kernel.org>
-> ---
->  .../ABI/testing/sysfs-driver-intel_sdsi       |  75 +++
->  MAINTAINERS                                   |   5 +
->  drivers/platform/x86/intel/Kconfig            |  12 +
->  drivers/platform/x86/intel/Makefile           |   2 +
->  drivers/platform/x86/intel/sdsi.c             | 571 ++++++++++++++++++
->  drivers/platform/x86/intel/vsec.c             |  12 +-
->  6 files changed, 676 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
->  create mode 100644 drivers/platform/x86/intel/sdsi.c
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-driver-intel_sdsi b/Documentation/ABI/testing/sysfs-driver-intel_sdsi
-> new file mode 100644
-> index 000000000000..32a017ed3dd3
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-driver-intel_sdsi
-> @@ -0,0 +1,75 @@
-> +What:		/sys/bus/auxiliary/devices/intel_extended_cap.sdsi.X
-> +Date:		Nov 2021
-> +KernelVersion:	5.17
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		This folder contains interface files for accessing Intel
-> +		Software Defined Silicon (SDSi) features on a CPU. X
-> +		represent the socket instance (though not the socket id).
+Define the legacy MSI intterupt bitmask as well as the non-legacy
+interrupt bitmask using GENMASK and then use them in brcm_msi_set_regs()
+in place of __GENMASK().
 
-s/represent/represents/
-s/socket id/socket ID/
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-As a user, how do I learn the socket instance?  Look at dmesg?  Look
-at some other sysfs file?
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 1fc7bd49a7ad..3391b4135b65 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -144,6 +144,9 @@
+ #define BRCM_INT_PCI_MSI_NR		32
+ #define BRCM_INT_PCI_MSI_LEGACY_NR	8
+ #define BRCM_INT_PCI_MSI_SHIFT		0
++#define BRCM_INT_PCI_MSI_MASK		GENMASK(BRCM_INT_PCI_MSI_NR - 1, 0)
++#define BRCM_INT_PCI_MSI_LEGACY_MASK	GENMASK(31, \
++						32 - BRCM_INT_PCI_MSI_LEGACY_NR)
+ 
+ /* MSI target addresses */
+ #define BRCM_MSI_TARGET_ADDR_LT_4GB	0x0fffffffcULL
+@@ -619,7 +622,8 @@ static void brcm_msi_remove(struct brcm_pcie *pcie)
+ 
+ static void brcm_msi_set_regs(struct brcm_msi *msi)
+ {
+-	u32 val = __GENMASK(31, msi->legacy_shift);
++	u32 val = msi->legacy ? BRCM_INT_PCI_MSI_LEGACY_MASK :
++				BRCM_INT_PCI_MSI_MASK;
+ 
+ 	writel(val, msi->intr_base + MSI_INT_MASK_CLR);
+ 	writel(val, msi->intr_base + MSI_INT_CLR);
+-- 
+2.25.1
 
-> +		Some files communicate with SDSi hardware through a mailbox.
-> +		Should the operation fail, one of the following error codes
-> +		may be returned:
-> +
-> +		Error Code	Cause
-> +	        ----------	-----
-> +	        EIO		General mailbox failure. Log may indicate cause.
-> +	        EBUSY		Mailbox is owned by another agent.
-> +	        EPERM		SDSI capability is not enabled in hardware.
-> +	        EPROTO		Failure in mailbox protocol detected by driver.
-> +				See log for details.
-> +	        EOVERFLOW	For provision commands, the size of the data
-> +				exceeds what may be written.
-> +	        ESPIPE		Seeking is not allowed.
-> +	        ETIMEDOUT	Failure to complete mailbox transaction in time.
-> +
-> +What:		/sys/bus/auxiliary/devices/intel_extended_cap.sdsi.X/guid
-> +Date:		Nov 2021
-> +KernelVersion:	5.17
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		(RO) The GUID for the registers file. The GUID identifies
-> +		the register layout of the registers file in this folder.
-> +		Information about the register layouts for a particular GUID
-> +		is available at http://github.com/intel/intel-sdsi
-
-s/register layout of the registers file/layout of the registers file/
-
-> +What:		/sys/bus/auxiliary/devices/intel_extended_cap.sdsi.X/registers
-> +Date:		Nov 2021
-> +KernelVersion:	5.17
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		(RO) Contains information needed by applications to provision
-> +		a CPU and monitor status information. The layout of this file
-> +		is determined by the GUID in this folder. Information about the
-> +		layout for a particular GUID is available at
-> +		http://github.com/intel/intel-sdsi
-> +
-> +What:		/sys/bus/auxiliary/devices/intel_extended_cap.sdsi.X/provision_akc
-> +Date:		Nov 2021
-> +KernelVersion:	5.17
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		(WO) Used to write an Authentication Key Certificate (AKC) to
-> +		the SDSi NVRAM for the CPU. The AKC is used to authentication a
-> +		Capability Activation Payload. Mailbox command.
-
-s/used to authentication/used to authenticate/
-
-> +What:		/sys/bus/auxiliary/devices/intel_extended_cap.sdsi.X/provision_cap
-> +Date:		Nov 2021
-> +KernelVersion:	5.17
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		(WO) Used to write a Capability Activation Payload (CAP) to the
-> +		SDSi NVRAM for the CPU. CAP files are used to activate a given
-> +		CPU feature. The CAP file is validated by SDSi hardware using a
-> +		previously provision AKC file. Upon successful authentication, the
-> +		CPU configuration is updated. A cold reboot is required to fully
-> +		activate the feature. Mailbox command.
-
-"CAP file" sounds like it might be redundant.  It *seems* like the
-*payload* is what will be validated by SDSi and activate the feature.
-Not sure "file" is meaningful if this is really talking about the
-content of the CAP.
-
-s/previously provision/previously provisioned/
-
-> +What:		/sys/bus/auxiliary/devices/intel_extended_cap.sdsi.X/read_state_cert
-> +Date:		Nov 2021
-> +KernelVersion:	5.17
-> +Contact:	"David E. Box" <david.e.box@linux.intel.com>
-> +Description:
-> +		(RO) Used to read back the current State Certificate for the CPU
-> +		from SDSi hardware. The State Certificate contains information
-> +		about the current licenses on the CPU. Mailbox command.
