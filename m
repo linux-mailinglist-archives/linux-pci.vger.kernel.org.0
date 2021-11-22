@@ -2,122 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E74D4596F3
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Nov 2021 22:50:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDDF645970C
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Nov 2021 22:58:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235413AbhKVVyD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Nov 2021 16:54:03 -0500
-Received: from sibelius.xs4all.nl ([83.163.83.176]:61056 "EHLO
-        sibelius.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235323AbhKVVyA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Nov 2021 16:54:00 -0500
-Received: from localhost (bloch.sibelius.xs4all.nl [local])
-        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id fa3b4a34;
-        Mon, 22 Nov 2021 22:50:48 +0100 (CET)
-Date:   Mon, 22 Nov 2021 22:50:48 +0100 (CET)
-From:   Mark Kettenis <mark.kettenis@xs4all.nl>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     pali@kernel.org, luca@lucaceresoli.net,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, kernel-team@android.com,
-        alyssa@rosenzweig.io, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, joey.gouly@arm.com
-In-Reply-To: <87zgpw5jza.wl-maz@kernel.org> (message from Marc Zyngier on Mon,
-        22 Nov 2021 14:43:37 +0000)
-Subject: Re: [PATCH v2] PCI: apple: Follow the PCIe specifications when
- resetting the port
-References: <20211122104156.518063-1-maz@kernel.org>
- <20211122120347.6qyiycqqjkgqvtta@pali> <87zgpw5jza.wl-maz@kernel.org>
-MIME-version: 1.0
-Content-type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Message-ID: <d3caf39f58b0528b@bloch.sibelius.xs4all.nl>
+        id S237453AbhKVWBK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Nov 2021 17:01:10 -0500
+Received: from mga11.intel.com ([192.55.52.93]:16947 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232667AbhKVWBJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Nov 2021 17:01:09 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10176"; a="232378557"
+X-IronPort-AV: E=Sophos;i="5.87,255,1631602800"; 
+   d="scan'208";a="232378557"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 13:58:03 -0800
+X-IronPort-AV: E=Sophos;i="5.87,255,1631602800"; 
+   d="scan'208";a="456811511"
+Received: from wqiu6-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.143.45])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 13:58:02 -0800
+Date:   Mon, 22 Nov 2021 13:58:01 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 13/23] cxl/core: Move target population locking to caller
+Message-ID: <20211122215801.gshai367q2fhp6uj@intel.com>
+References: <20211120000250.1663391-1-ben.widawsky@intel.com>
+ <20211120000250.1663391-14-ben.widawsky@intel.com>
+ <20211122163302.00005ae9@Huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211122163302.00005ae9@Huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Date: Mon, 22 Nov 2021 14:43:37 +0000
-> From: Marc Zyngier <maz@kernel.org>
+On 21-11-22 16:33:02, Jonathan Cameron wrote:
+> On Fri, 19 Nov 2021 16:02:40 -0800
+> Ben Widawsky <ben.widawsky@intel.com> wrote:
 > 
-> On Mon, 22 Nov 2021 12:03:47 +0000,
-> Pali Rohár <pali@kernel.org> wrote:
+> > In preparation for a port driver that enumerates a descendant port +
+> > decoder hierarchy, arrange for an unlocked version of cxl_decoder_add().
+> > Otherwise a port-driver that adds a child decoder will deadlock on the
+> > device_lock() in ->probe().
 > > 
-> > On Monday 22 November 2021 10:41:56 Marc Zyngier wrote:
-> > > While the Apple PCIe driver works correctly when directly booted
-> > > from the firmware, it fails to initialise when the kernel is booted
-> > > from a bootloader using PCIe such as u-boot.
-> > > 
-> > > That's beacuse we're missing a proper reset of the port (we only
-> > > clear the reset, but never assert it).
-> > > 
-> > > The PCIe spec requirements are two-fold:
-> > > 
-> > > - #PERST must be asserted before setting up the clocks, and
-> > >   stay asserted for at least 100us (Tperst-clk).
-> > > 
-> > > - Once #PERST is deasserted, the OS must wait for at least 100ms
-> > >   "from the end of a Conventional Reset" before we can start talking
-> > >   to the devices
-> > > 
-> > > Implementing this results in a booting system.
-> > > 
-> > > Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
-> > > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > > Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Pali Rohár <pali@kernel.org>
-> > 
-> > Looks good, but see comment below.
-> > 
-> > Acked-by: Pali Rohár <pali@kernel.org>
 > 
-> Thanks for that.
-> 
-> > 
-> > > ---
-> > >  drivers/pci/controller/pcie-apple.c | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> > > index 1bf4d75b61be..957960a733c4 100644
-> > > --- a/drivers/pci/controller/pcie-apple.c
-> > > +++ b/drivers/pci/controller/pcie-apple.c
-> > > @@ -539,13 +539,23 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
-> > >  
-> > >  	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
-> > >  
-> > > +	/* Engage #PERST before setting up the clock */
-> > > +	gpiod_set_value(reset, 0);
-> > > +
-> > >  	ret = apple_pcie_setup_refclk(pcie, port);
-> > >  	if (ret < 0)
-> > >  		return ret;
-> > >  
-> > > +	/* The minimal Tperst-clk value is 100us (PCIe CMS r2.0, 2.6.2) */
-> > > +	usleep_range(100, 200);
-> > > +
-> > > +	/* Deassert #PERST */
-> > >  	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
-> > >  	gpiod_set_value(reset, 1);
-> > 
-> > + Luca
-> > 
-> > Just one comment. PERST# (PCIe Reset) is active-low signal. De-asserting
-> > means to really set value to 1.
-> > 
-> > But there was a discussion that de-asserting should be done by call:
-> >   gpiod_set_value(reset, 0);
-> > 
-> > https://lore.kernel.org/linux-pci/51be082a-ff10-8a19-5648-f279aabcac51@lucaceresoli.net/
-> > 
-> > Could we make this new pcie-apple.c driver to use gpiod_set_value(reset, 0)
-> > for de-asserting, like in other drivers?
-> 
-> I guess it depends whether you care about the assertion or the signal
-> itself. I think we may have a bug in the way the GPIOs are handled at
-> the moment, as it makes no difference whether I register the GPIO are
-> active high or active low...
+> I think this description should call out that the lock was originally taken
+> for a much shorter time in decoder_populate_targets() but is moved
+> up one layer.
 
-That's unfortunate.  But maybe that's an opportunity to fix the
-devicetree to use GPIO_ACTIVE_LOW for these GPIOs?
+Sounds good.
+
+> 
+> One other query inline.  Seems like we the WARN_ON stuff is a bit
+> over paranoid given what's visible in this patch.  If there is a
+> good reason for that, then add something to the patch description to
+> justify it.
+>  
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > 
+> > ---
+> > 
+> > Changes since RFCv2:
+> > - Reword commit message (Dan)
+> > - Move decoder API changes into this patch (Dan)
+> > ---
+> >  drivers/cxl/core/bus.c | 59 +++++++++++++++++++++++++++++++-----------
+> >  drivers/cxl/cxl.h      |  1 +
+> >  2 files changed, 45 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> > index 16b15f54fb62..cd6fe7823c69 100644
+> > --- a/drivers/cxl/core/bus.c
+> > +++ b/drivers/cxl/core/bus.c
+> > @@ -487,28 +487,22 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+> >  {
+> >  	int rc = 0, i;
+> >  
+> > +	device_lock_assert(&port->dev);
+> > +
+> >  	if (!target_map)
+> >  		return 0;
+> >  
+> > -	device_lock(&port->dev);
+> > -	if (list_empty(&port->dports)) {
+> > -		rc = -EINVAL;
+> > -		goto out_unlock;
+> > -	}
+> > +	if (list_empty(&port->dports))
+> > +		return -EINVAL;
+> >  
+> >  	for (i = 0; i < cxld->nr_targets; i++) {
+> >  		struct cxl_dport *dport = find_dport(port, target_map[i]);
+> >  
+> > -		if (!dport) {
+> > -			rc = -ENXIO;
+> > -			goto out_unlock;
+> > -		}
+> > +		if (!dport)
+> > +			return -ENXIO;
+> >  		cxld->target[i] = dport;
+> >  	}
+> >  
+> > -out_unlock:
+> > -	device_unlock(&port->dev);
+> > -
+> >  	return rc;
+> >  }
+> >  
+> > @@ -571,7 +565,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+> >  EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
+> >  
+> >  /**
+> > - * cxl_decoder_add - Add a decoder with targets
+> > + * cxl_decoder_add_locked - Add a decoder with targets
+> >   * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
+> >   * @target_map: A list of downstream ports that this decoder can direct memory
+> >   *              traffic to. These numbers should correspond with the port number
+> > @@ -581,12 +575,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
+> >   * is an endpoint device. A more awkward example is a hostbridge whose root
+> >   * ports get hot added (technically possible, though unlikely).
+> >   *
+> > - * Context: Process context. Takes and releases the cxld's device lock.
+> > + * This is the locked variant of cxl_decoder_add().
+> > + *
+> > + * Context: Process context. Expects the cxld's device lock to be held.
+> >   *
+> >   * Return: Negative error code if the decoder wasn't properly configured; else
+> >   *	   returns 0.
+> >   */
+> > -int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> > +int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
+> >  {
+> >  	struct cxl_port *port;
+> >  	struct device *dev;
+> > @@ -619,6 +615,39 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> >  
+> >  	return device_add(dev);
+> >  }
+> > +EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, CXL);
+> > +
+> > +/**
+> > + * cxl_decoder_add - Add a decoder with targets
+> > + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
+> > + * @target_map: A list of downstream ports that this decoder can direct memory
+> > + *              traffic to. These numbers should correspond with the port number
+> > + *              in the PCIe Link Capabilities structure.
+> > + *
+> > + * This is the unlocked variant of cxl_decoder_add_locked().
+> > + * See cxl_decoder_add_locked().
+> > + *
+> > + * Context: Process context. Takes and releases the cxld's device lock.
+> > + */
+> > +int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> > +{
+> > +	struct cxl_port *port;
+> > +	int rc;
+> > +
+> > +	if (WARN_ON_ONCE(!cxld))
+> > +		return -EINVAL;
+> 
+> Why do we now need these protections but didn't before?
+
+I don't quite understand what you're trying to point out.
+
+Prior to this patch, cxl_decoder_add() checks:
+- !cxld
+- IS_ERR(cxld)
+- cxld->interleave_ways != 0
+
+After this patch, cxl_decoder_add() checks:
+- !cxld
+- IS_ERR(cxld)
+- (and then calls cxl_decoder_add_locked())
+
+And cxl_decoder_add_locked() checks:
+- !cxld
+- IS_ERR(cxld)
+- cxld->interleave_ways != 0
+
+Ultimately we want to check all 3, and since cxl_decoder_add() calls
+cxl_decoder_add_locked(), we're good there. The problem is to get from a cxld to
+a port, you need to make sure you have a valid cxld, and the API previously
+allowed !cxld and IS_ERR(cxld). So there are duplicative checks if you call
+cxl_decoder_add(), but other than that I don't see any new protections.
+
+> 
+> 
+> > +
+> > +	if (WARN_ON_ONCE(IS_ERR(cxld)))
+> > +		return PTR_ERR(cxld);
+> > +
+> > +	port = to_cxl_port(cxld->dev.parent);
+> > +
+> > +	device_lock(&port->dev);
+> > +	rc = cxl_decoder_add_locked(cxld, target_map);
+> > +	device_unlock(&port->dev);
+> > +
+> > +	return rc;
+> > +}
+> >  EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
+> >  
+> >  static void cxld_unregister(void *dev)
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index b66ed8f241c6..2c5627fa8a34 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -290,6 +290,7 @@ struct cxl_decoder *to_cxl_decoder(struct device *dev);
+> >  bool is_root_decoder(struct device *dev);
+> >  struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+> >  				      unsigned int nr_targets);
+> > +int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map);
+> >  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
+> >  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
+> >  
+> 
