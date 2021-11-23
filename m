@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C04E245A0DF
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Nov 2021 12:06:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AC0045A100
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Nov 2021 12:09:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230134AbhKWLJH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Nov 2021 06:09:07 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4153 "EHLO
+        id S231739AbhKWLMq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Nov 2021 06:12:46 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4154 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234312AbhKWLJG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Nov 2021 06:09:06 -0500
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hz1Rw0164z67Ml8;
-        Tue, 23 Nov 2021 19:02:03 +0800 (CST)
+        with ESMTP id S234555AbhKWLMq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Nov 2021 06:12:46 -0500
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Hz1bS3nttz67wvf;
+        Tue, 23 Nov 2021 19:08:36 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 23 Nov 2021 12:05:56 +0100
+ 15.1.2308.20; Tue, 23 Nov 2021 12:09:36 +0100
 Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Tue, 23 Nov
- 2021 11:05:55 +0000
-Date:   Tue, 23 Nov 2021 11:05:53 +0000
+ 2021 11:09:35 +0000
+Date:   Tue, 23 Nov 2021 11:09:34 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
@@ -30,14 +30,13 @@ CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 13/23] cxl/core: Move target population locking to
- caller
-Message-ID: <20211123110553.00001e2b@Huawei.com>
-In-Reply-To: <20211122215801.gshai367q2fhp6uj@intel.com>
+Subject: Re: [PATCH 18/23] cxl/pci: Implement wait for media active
+Message-ID: <20211123110934.000070a2@Huawei.com>
+In-Reply-To: <20211122225751.bofqtswxree74n7f@intel.com>
 References: <20211120000250.1663391-1-ben.widawsky@intel.com>
-        <20211120000250.1663391-14-ben.widawsky@intel.com>
-        <20211122163302.00005ae9@Huawei.com>
-        <20211122215801.gshai367q2fhp6uj@intel.com>
+        <20211120000250.1663391-19-ben.widawsky@intel.com>
+        <20211122170335.0000563c@Huawei.com>
+        <20211122225751.bofqtswxree74n7f@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -51,197 +50,136 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 22 Nov 2021 13:58:01 -0800
+On Mon, 22 Nov 2021 14:57:51 -0800
 Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> On 21-11-22 16:33:02, Jonathan Cameron wrote:
-> > On Fri, 19 Nov 2021 16:02:40 -0800
+> On 21-11-22 17:03:35, Jonathan Cameron wrote:
+> > On Fri, 19 Nov 2021 16:02:45 -0800
 > > Ben Widawsky <ben.widawsky@intel.com> wrote:
 > >   
-> > > In preparation for a port driver that enumerates a descendant port +
-> > > decoder hierarchy, arrange for an unlocked version of cxl_decoder_add().
-> > > Otherwise a port-driver that adds a child decoder will deadlock on the
-> > > device_lock() in ->probe().
-> > >   
+> > > CXL 2.0 8.1.3.8.2 defines "Memory_Active: When set, indicates that the
+> > > CXL Range 1 memory is fully initialized and available for software use.
+> > > Must be set within Range 1. Memory_Active_Timeout of deassertion of  
 > > 
-> > I think this description should call out that the lock was originally taken
-> > for a much shorter time in decoder_populate_targets() but is moved
-> > up one layer.  
+> > Range 1?
+> >   
 > 
-> Sounds good.
-With that added and below discussion resolved.
+> Not my numbering... It's the first DVSEC range.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Ah, got it. Maybe Range 1: Memory Active timeout ?
 
 > 
+> > > reset to CXL device if CXL.mem HwInit Mode=1" The CXL* Type 3 Memory
+> > > Device Software Guide (Revision 1.0) further describes the need to check
+> > > this bit before using HDM.
+> > > 
+> > > Unfortunately, Memory_Active can take quite a long time depending on
+> > > media size (up to 256s per 2.0 spec). Since the cxl_pci driver doesn't
+> > > care about this, a callback is exported as part of driver state for use
+> > > by drivers that do care.
+> > > 
+> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
 > > 
-> > One other query inline.  Seems like we the WARN_ON stuff is a bit
-> > over paranoid given what's visible in this patch.  If there is a
-> > good reason for that, then add something to the patch description to
-> > justify it.
-> >    
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > 
+> > Same thing about size not being used...
+> >   
+> 
+> Yep, got it.
+> 
 > > > ---
-> > > 
-> > > Changes since RFCv2:
-> > > - Reword commit message (Dan)
-> > > - Move decoder API changes into this patch (Dan)
+> > > This patch did not exist in RFCv2
 > > > ---
-> > >  drivers/cxl/core/bus.c | 59 +++++++++++++++++++++++++++++++-----------
-> > >  drivers/cxl/cxl.h      |  1 +
-> > >  2 files changed, 45 insertions(+), 15 deletions(-)
+> > >  drivers/cxl/cxlmem.h |  1 +
+> > >  drivers/cxl/pci.c    | 56 ++++++++++++++++++++++++++++++++++++++++++++
+> > >  2 files changed, 57 insertions(+)
 > > > 
-> > > diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> > > index 16b15f54fb62..cd6fe7823c69 100644
-> > > --- a/drivers/cxl/core/bus.c
-> > > +++ b/drivers/cxl/core/bus.c
-> > > @@ -487,28 +487,22 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
-> > >  {
-> > >  	int rc = 0, i;
+> > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > > index eac5528ccaae..a9424dd4e5c3 100644
+> > > --- a/drivers/cxl/cxlmem.h
+> > > +++ b/drivers/cxl/cxlmem.h
+> > > @@ -167,6 +167,7 @@ struct cxl_dev_state {
+> > >  	struct cxl_endpoint_dvsec_info *info;
 > > >  
-> > > +	device_lock_assert(&port->dev);
-> > > +
-> > >  	if (!target_map)
-> > >  		return 0;
+> > >  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+> > > +	int (*wait_media_ready)(struct cxl_dev_state *cxlds);
+> > >  };
 > > >  
-> > > -	device_lock(&port->dev);
-> > > -	if (list_empty(&port->dports)) {
-> > > -		rc = -EINVAL;
-> > > -		goto out_unlock;
-> > > -	}
-> > > +	if (list_empty(&port->dports))
-> > > +		return -EINVAL;
-> > >  
-> > >  	for (i = 0; i < cxld->nr_targets; i++) {
-> > >  		struct cxl_dport *dport = find_dport(port, target_map[i]);
-> > >  
-> > > -		if (!dport) {
-> > > -			rc = -ENXIO;
-> > > -			goto out_unlock;
-> > > -		}
-> > > +		if (!dport)
-> > > +			return -ENXIO;
-> > >  		cxld->target[i] = dport;
-> > >  	}
-> > >  
-> > > -out_unlock:
-> > > -	device_unlock(&port->dev);
-> > > -
-> > >  	return rc;
+> > >  enum cxl_opcode {
+> > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > > index b3f46045bf3e..f1a68bfe5f77 100644
+> > > --- a/drivers/cxl/pci.c
+> > > +++ b/drivers/cxl/pci.c
+> > > @@ -496,6 +496,60 @@ static int wait_for_valid(struct cxl_dev_state *cxlds)
+> > >  	return valid ? 0 : -ETIMEDOUT;
 > > >  }
 > > >  
-> > > @@ -571,7 +565,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> > >  EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
-> > >  
-> > >  /**
-> > > - * cxl_decoder_add - Add a decoder with targets
-> > > + * cxl_decoder_add_locked - Add a decoder with targets
-> > >   * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
-> > >   * @target_map: A list of downstream ports that this decoder can direct memory
-> > >   *              traffic to. These numbers should correspond with the port number
-> > > @@ -581,12 +575,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
-> > >   * is an endpoint device. A more awkward example is a hostbridge whose root
-> > >   * ports get hot added (technically possible, though unlikely).
-> > >   *
-> > > - * Context: Process context. Takes and releases the cxld's device lock.
-> > > + * This is the locked variant of cxl_decoder_add().
-> > > + *
-> > > + * Context: Process context. Expects the cxld's device lock to be held.
-> > >   *
-> > >   * Return: Negative error code if the decoder wasn't properly configured; else
-> > >   *	   returns 0.
-> > >   */
-> > > -int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
-> > > +int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
-> > >  {
-> > >  	struct cxl_port *port;
-> > >  	struct device *dev;
-> > > @@ -619,6 +615,39 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
-> > >  
-> > >  	return device_add(dev);
-> > >  }
-> > > +EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, CXL);
-> > > +
-> > > +/**
-> > > + * cxl_decoder_add - Add a decoder with targets
-> > > + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
-> > > + * @target_map: A list of downstream ports that this decoder can direct memory
-> > > + *              traffic to. These numbers should correspond with the port number
-> > > + *              in the PCIe Link Capabilities structure.
-> > > + *
-> > > + * This is the unlocked variant of cxl_decoder_add_locked().
-> > > + * See cxl_decoder_add_locked().
-> > > + *
-> > > + * Context: Process context. Takes and releases the cxld's device lock.
+> > > +/*
+> > > + * Implements Figure 43 of the CXL Type 3 Memory Device Software Guide. Waits a
+> > > + * full 256s no matter what the device reports.
 > > > + */
-> > > +int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> > > +static int wait_for_media_ready(struct cxl_dev_state *cxlds)
 > > > +{
-> > > +	struct cxl_port *port;
+> > > +	const unsigned long timeout = jiffies + (256 * HZ);
+> > > +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+> > > +	u64 md_status;
+> > > +	bool active;
 > > > +	int rc;
 > > > +
-> > > +	if (WARN_ON_ONCE(!cxld))
-> > > +		return -EINVAL;  
+> > > +	rc = wait_for_valid(cxlds);
+> > > +	if (rc)
+> > > +		return rc;
+> > > +
+> > > +	do {
+> > > +		u64 size;
+> > > +		u32 temp;
+> > > +		int rc;
+> > > +
+> > > +		rc = pci_read_config_dword(pdev, CDPDR(cxlds, 0, SIZE, HIGH),
+> > > +					   &temp);
+> > > +		if (rc)
+> > > +			return -ENXIO;
+> > > +		size = (u64)temp << 32;
+> > > +
+> > > +		rc = pci_read_config_dword(pdev, CDPDR(cxlds, 0, SIZE, LOW),
+> > > +					   &temp);
+> > > +		if (rc)
+> > > +			return -ENXIO;
+> > > +		size |= temp & CXL_DVSEC_PCIE_DEVICE_MEM_SIZE_LOW_MASK;
+> > > +
+> > > +		active = FIELD_GET(CXL_DVSEC_PCIE_DEVICE_MEM_ACTIVE, temp);  
 > > 
-> > Why do we now need these protections but didn't before?  
-> 
-> I don't quite understand what you're trying to point out.
-> 
-> Prior to this patch, cxl_decoder_add() checks:
-> - !cxld
-> - IS_ERR(cxld)
-> - cxld->interleave_ways != 0
-> 
-> After this patch, cxl_decoder_add() checks:
-> - !cxld
-> - IS_ERR(cxld)
-> - (and then calls cxl_decoder_add_locked())
-> 
-> And cxl_decoder_add_locked() checks:
-> - !cxld
-> - IS_ERR(cxld)
-> - cxld->interleave_ways != 0
-> 
-> Ultimately we want to check all 3, and since cxl_decoder_add() calls
-> cxl_decoder_add_locked(), we're good there. The problem is to get from a cxld to
-> a port, you need to make sure you have a valid cxld, and the API previously
-> allowed !cxld and IS_ERR(cxld). So there are duplicative checks if you call
-> cxl_decoder_add(), but other than that I don't see any new protections.
-
-Ah. It was the duplication that I didn't follow.
-
-Fair enough
-
-J
-> 
-> > 
+> > Only need to read the register to get active for this particular functionality.
 > >   
+> > > +		if (active)
+> > > +			break;
+> > > +		cpu_relax();
+> > > +		mdelay(100);
+> > > +	} while (!time_after(jiffies, timeout));
 > > > +
-> > > +	if (WARN_ON_ONCE(IS_ERR(cxld)))
-> > > +		return PTR_ERR(cxld);
+> > > +	if (!active)
+> > > +		return -ETIMEDOUT;
 > > > +
-> > > +	port = to_cxl_port(cxld->dev.parent);
+> > > +	rc = check_device_status(cxlds);
+> > > +	if (rc)
+> > > +		return rc;
 > > > +
-> > > +	device_lock(&port->dev);
-> > > +	rc = cxl_decoder_add_locked(cxld, target_map);
-> > > +	device_unlock(&port->dev);
+> > > +	md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> > > +	if (!CXLMDEV_READY(md_status))
+> > > +		return -EIO;
 > > > +
-> > > +	return rc;
+> > > +	return 0;
 > > > +}
-> > >  EXPORT_SYMBOL_NS_GPL(cxl_decoder_add, CXL);
+> > > +
+> > >  static struct cxl_endpoint_dvsec_info *dvsec_ranges(struct cxl_dev_state *cxlds)
+> > >  {
+> > >  	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+> > > @@ -598,6 +652,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > >  	if (!cxlds->device_dvsec)
+> > >  		dev_warn(&pdev->dev,
+> > >  			 "Device DVSEC not present. Expect limited functionality.\n");
+> > > +	else
+> > > +		cxlds->wait_media_ready = wait_for_media_ready;
 > > >  
-> > >  static void cxld_unregister(void *dev)
-> > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > > index b66ed8f241c6..2c5627fa8a34 100644
-> > > --- a/drivers/cxl/cxl.h
-> > > +++ b/drivers/cxl/cxl.h
-> > > @@ -290,6 +290,7 @@ struct cxl_decoder *to_cxl_decoder(struct device *dev);
-> > >  bool is_root_decoder(struct device *dev);
-> > >  struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> > >  				      unsigned int nr_targets);
-> > > +int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map);
-> > >  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
-> > >  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
-> > >    
+> > >  	rc = cxl_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+> > >  	if (rc)  
 > >   
 
