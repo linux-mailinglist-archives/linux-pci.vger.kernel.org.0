@@ -2,219 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F90E45A75E
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Nov 2021 17:16:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB8E945AA86
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Nov 2021 18:49:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237394AbhKWQT4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Nov 2021 11:19:56 -0500
-Received: from mga07.intel.com ([134.134.136.100]:59371 "EHLO mga07.intel.com"
+        id S236778AbhKWRwI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Nov 2021 12:52:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231683AbhKWQT4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 23 Nov 2021 11:19:56 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10176"; a="298462060"
-X-IronPort-AV: E=Sophos;i="5.87,258,1631602800"; 
-   d="scan'208";a="298462060"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2021 08:14:45 -0800
-X-IronPort-AV: E=Sophos;i="5.87,258,1631602800"; 
-   d="scan'208";a="591243411"
-Received: from kazushig-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.142.113])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2021 08:14:44 -0800
-Date:   Tue, 23 Nov 2021 08:14:43 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        id S238975AbhKWRwE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 23 Nov 2021 12:52:04 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6E04360174;
+        Tue, 23 Nov 2021 17:48:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637689735;
+        bh=pzzlSCJjdpkheBKOkp72bp1PArvjM9Ss86yRCbZoIQE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=K4vou06+XZlhOBT8RcmBo2uHZuVef7Zt+u0n986gQgtUmuuNHIF25HOQJTzCq7UGV
+         lnfu27GpREcVMtVySvrbc4y8eu/yUGI5uEX0Pn93s/CYxXkpDT+fPAbp7p8pTs/KBQ
+         BzWBIrpX3r+pqcrEzy1csHKyKXKNdap6TkuvbuIg4RnTRhGWpOMwGieQEuInetEBc8
+         F2/5IA11iTYapiXFMf6QdhRTlZU4qyUR0y5LGb+pqx7+LRwHaUf3QUOQdJ85lH8kkr
+         eTd5QBXtk2ihepj85G1XZdDyGvaIayIorQYJAjuLosdGl88+q8B06tTzJ48o3CJ6Ar
+         mPNsn2m9OmLXQ==
+Date:   Tue, 23 Nov 2021 11:48:53 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
         Alison Schofield <alison.schofield@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 20/23] cxl/port: Introduce a port driver
-Message-ID: <20211123161443.6gsl67mskttwpoyo@intel.com>
-References: <20211120000250.1663391-1-ben.widawsky@intel.com>
- <20211120000250.1663391-21-ben.widawsky@intel.com>
- <20211122174132.00001f80@Huawei.com>
- <20211122233820.nxb5daiakkbdqd7w@intel.com>
- <20211123113823.00007ce7@Huawei.com>
+Subject: Re: [PATCH 18/23] cxl/pci: Implement wait for media active
+Message-ID: <20211123174853.GA2230542@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211123113823.00007ce7@Huawei.com>
+In-Reply-To: <20211123160413.pprxwlhan2qypjtv@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21-11-23 11:38:23, Jonathan Cameron wrote:
-> On Mon, 22 Nov 2021 15:38:20 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
-> 
-> ...
-> 
-> > > > +static int enumerate_hdm_decoders(struct cxl_port *port,
-> > > > +				  struct cxl_port_data *portdata)
-> > > > +{
-> > > > +	void __iomem *hdm_decoder = portdata->regs.hdm_decoder;
-> > > > +	bool global_enable;
-> > > > +	u32 global_ctrl;
-> > > > +	int i = 0;
-> > > > +
-> > > > +	global_ctrl = readl(hdm_decoder + CXL_HDM_DECODER_CTRL_OFFSET);
-> > > > +	global_enable = global_ctrl & CXL_HDM_DECODER_ENABLE;
-> > > > +	if (!global_enable) {
-> > > > +		i = dvsec_range_used(port);
-> > > > +		if (i) {
-> > > > +			dev_err(&port->dev,
-> > > > +				"Couldn't add port because device is using DVSEC range registers\n");
-> > > > +			return -EBUSY;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	for (i = 0; i < portdata->caps.count; i++) {
-> > > > +		int rc, target_count = portdata->caps.tc;
-> > > > +		struct cxl_decoder *cxld;
-> > > > +		int *target_map = NULL;
-> > > > +		u64 size;
-> > > > +
-> > > > +		if (is_endpoint_port(port))
-> > > > +			target_count = 0;
-> > > > +
-> > > > +		cxld = cxl_decoder_alloc(port, target_count);
-> > > > +		if (IS_ERR(cxld)) {
-> > > > +			dev_warn(&port->dev,
-> > > > +				 "Failed to allocate the decoder\n");
-> > > > +			return PTR_ERR(cxld);
-> > > > +		}
-> > > > +
-> > > > +		cxld->target_type = CXL_DECODER_EXPANDER;
-> > > > +		cxld->interleave_ways = 1;
-> > > > +		cxld->interleave_granularity = 0;
-> > > > +
-> > > > +		size = get_decoder_size(hdm_decoder, i);
-> > > > +		if (size != 0) {
-> > > > +#define decoderN(reg, n) hdm_decoder + CXL_HDM_DECODER0_##reg(n)  
-> > > 
-> > > Perhaps this block in the if (size != 0) would be more readable if broken out
-> > > to a utility function?  
+On Tue, Nov 23, 2021 at 08:04:13AM -0800, Ben Widawsky wrote:
+> On 21-11-23 11:09:34, Jonathan Cameron wrote:
+> > On Mon, 22 Nov 2021 14:57:51 -0800
+> > Ben Widawsky <ben.widawsky@intel.com> wrote:
 > > 
-> > I don't get this comment, there is already get_decoder_size(). Can you please
-> > elaborate?
+> > > On 21-11-22 17:03:35, Jonathan Cameron wrote:
+> > > > On Fri, 19 Nov 2021 16:02:45 -0800
+> > > > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > > >   
+> > > > > CXL 2.0 8.1.3.8.2 defines "Memory_Active: When set,
+> > > > > indicates that the CXL Range 1 memory is fully initialized
+> > > > > and available for software use.  Must be set within Range 1.
+> > > > > Memory_Active_Timeout of deassertion of  
+> > ...
+> > Ah, got it. Maybe Range 1: Memory Active timeout ?
 > 
-> Sure.  Just talking about having something like
+> I can, but this is just quoted from the spec. Would this be better:
 > 
-> 		if (size != 0)
-> 			init_decoder() // or something better named
+> The CXL Type 3 Memory Device Software Guide (Revision 1.0) describes the
+> need to check media active before using HDM. CXL 2.0 8.1.3.8.2 states:
 > 
-> as an alternative to this deep nesting. 
-> 
+>   Memory_Active: When set, indicates that the CXL Range 1 memory is
+>   fully initialized and available for software use. Must be set within
+>   Range 1. Memory_Active_Timeout of deassertion of reset to CXL device
+>   if CXL.mem HwInit Mode=1
 
-Sounds good. I can combine it with the similar initialization done in cxl_acpi.
+That is some weird wording.  I stumbled over that, too.  I like the
+quote format better, but I still don't know what it means.
 
-> > 
-> > > As normal I'm not keen on the macro magic if we can avoid it.
-> > >   
-> > 
-> > Yeah - just trying to not have to deal with wrapping long lines.
-> > 
-> > >   
-> > > > +			int temp[CXL_DECODER_MAX_INTERLEAVE];
-> > > > +			u64 base;
-> > > > +			u32 ctrl;
-> > > > +			int j;
-> > > > +			union {
-> > > > +				u64 value;
-> > > > +				char target_id[8];
-> > > > +			} target_list;  
-> > > 
-> > > I thought we tried to avoid this union usage in kernel because of the whole
-> > > thing about c compilers being able to do what they like with it...
-> > >   
-> > 
-> > I wasn't aware of the restriction. I can change it back if it's required. It
-> > does look a lot nicer this way. Is there a reference to this issue somewhere?
-> 
-> Hmm. Seems I was out of date on this.  There is a mess in the c99 standard that
-> contradicts itself on whether you can do this or not.
-> 
-> https://davmac.wordpress.com/2010/02/26/c99-revisited/
-
-Thanks for the link.
-
-> 
-> The pull request for a patch form Andy got a Linus response...
-> 
-> https://lore.kernel.org/all/CAJZ5v0jq45atkapwSjJ4DkHhB1bfOA-Sh1TiA3dPXwKyFTBheA@mail.gmail.com/
-> 
-
-That was a fun read :-)
-
-I'll defer to Dan on this. This was actually his code that he suggested in
-review of the RFC.
-
-> 
-> > 
-> > > > +
-> > > > +			target_map = temp;  
-> > > 
-> > > This is set to a variable that goes out of scope whilst target_map is still in
-> > > use.
-> > >   
-> > 
-> > Yikes. I'm pretty surprised the compiler didn't catch this.
-> > 
-> > > > +			ctrl = readl(decoderN(CTRL_OFFSET, i));
-> > > > +			base = ioread64_hi_lo(decoderN(BASE_LOW_OFFSET, i));
-> > > > +
-> > > > +			cxld->decoder_range = (struct range){
-> > > > +				.start = base,
-> > > > +				.end = base + size - 1
-> > > > +			};
-> > > > +
-> > > > +			cxld->flags = CXL_DECODER_F_ENABLE;
-> > > > +			cxld->interleave_ways = to_interleave_ways(ctrl);
-> > > > +			cxld->interleave_granularity =
-> > > > +				to_interleave_granularity(ctrl);
-> > > > +
-> > > > +			if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl) == 0)
-> > > > +				cxld->target_type = CXL_DECODER_ACCELERATOR;
-> > > > +
-> > > > +			target_list.value = ioread64_hi_lo(decoderN(TL_LOW, i));
-> > > > +			for (j = 0; j < cxld->interleave_ways; j++)
-> > > > +				target_map[j] = target_list.target_id[j];
-> > > > +#undef decoderN
-> > > > +		}
-> > > > +
-> > > > +		rc = cxl_decoder_add_locked(cxld, target_map);
-> > > > +		if (rc)
-> > > > +			put_device(&cxld->dev);
-> > > > +		else
-> > > > +			rc = cxl_decoder_autoremove(&port->dev, cxld);
-> > > > +		if (rc)
-> > > > +			dev_err(&port->dev, "Failed to add decoder\n");  
-> > > 
-> > > If that fails on the autoremove registration (unlikely) this message
-> > > will be rather confusing - as the add was fine...
-> > > 
-> > > This nest of carrying on when we have an error is getting ever deeper...
-> > >   
-> > 
-> > Yeah, this is not great. I will clean it up.
-> > 
-> > Thanks.
-> > 
-> > > > +		else
-> > > > +			dev_dbg(&cxld->dev, "Added to port %s\n",
-> > > > +				dev_name(&port->dev));
-> > > > +	}
-> > > > +
-> > > > +	/*
-> > > > +	 * Turn on global enable now since DVSEC ranges aren't being used and
-> > > > +	 * we'll eventually want the decoder enabled.
-> > > > +	 */
-> > > > +	if (!global_enable) {
-> > > > +		dev_dbg(&port->dev, "Enabling HDM decode\n");
-> > > > +		writel(global_ctrl | CXL_HDM_DECODER_ENABLE, hdm_decoder + CXL_HDM_DECODER_CTRL_OFFSET);
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +  
-> 
+That last piece ("Memory_Active_Timeout of deassertion ...") purports
+to be a sentence, but is not.
