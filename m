@@ -2,81 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8BAD45ACB0
-	for <lists+linux-pci@lfdr.de>; Tue, 23 Nov 2021 20:38:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB75445AE83
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Nov 2021 22:36:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240135AbhKWTlA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Nov 2021 14:41:00 -0500
-Received: from mga04.intel.com ([192.55.52.120]:2105 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239308AbhKWTkx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 23 Nov 2021 14:40:53 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10177"; a="233834797"
-X-IronPort-AV: E=Sophos;i="5.87,258,1631602800"; 
-   d="scan'208";a="233834797"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2021 11:37:43 -0800
-X-IronPort-AV: E=Sophos;i="5.87,258,1631602800"; 
-   d="scan'208";a="509543633"
-Received: from sshetty1-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.143.221])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2021 11:37:42 -0800
-Date:   Tue, 23 Nov 2021 11:37:41 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 18/23] cxl/pci: Implement wait for media active
-Message-ID: <20211123193741.eberq6qmg44rab4a@intel.com>
-References: <20211123160413.pprxwlhan2qypjtv@intel.com>
- <20211123174853.GA2230542@bhelgaas>
+        id S236393AbhKWVjZ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 23 Nov 2021 16:39:25 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46141 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229586AbhKWVjZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Nov 2021 16:39:25 -0500
+Received: from [77.244.183.192] (port=64428 helo=[192.168.178.41])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1mpdSX-0008mA-Vi; Tue, 23 Nov 2021 22:36:14 +0100
+Subject: Re: [PATCH v3 3/3] PCI: apple: Fix #PERST polarity
+To:     Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>,
+        kernel-team@android.com
+References: <20211123180636.80558-1-maz@kernel.org>
+ <20211123180636.80558-4-maz@kernel.org>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <453389da-b041-94b3-009e-6c6323134936@lucaceresoli.net>
+Date:   Tue, 23 Nov 2021 22:36:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211123174853.GA2230542@bhelgaas>
+In-Reply-To: <20211123180636.80558-4-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21-11-23 11:48:53, Bjorn Helgaas wrote:
-> On Tue, Nov 23, 2021 at 08:04:13AM -0800, Ben Widawsky wrote:
-> > On 21-11-23 11:09:34, Jonathan Cameron wrote:
-> > > On Mon, 22 Nov 2021 14:57:51 -0800
-> > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > 
-> > > > On 21-11-22 17:03:35, Jonathan Cameron wrote:
-> > > > > On Fri, 19 Nov 2021 16:02:45 -0800
-> > > > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > >   
-> > > > > > CXL 2.0 8.1.3.8.2 defines "Memory_Active: When set,
-> > > > > > indicates that the CXL Range 1 memory is fully initialized
-> > > > > > and available for software use.  Must be set within Range 1.
-> > > > > > Memory_Active_Timeout of deassertion of  
-> > > ...
-> > > Ah, got it. Maybe Range 1: Memory Active timeout ?
-> > 
-> > I can, but this is just quoted from the spec. Would this be better:
-> > 
-> > The CXL Type 3 Memory Device Software Guide (Revision 1.0) describes the
-> > need to check media active before using HDM. CXL 2.0 8.1.3.8.2 states:
-> > 
-> >   Memory_Active: When set, indicates that the CXL Range 1 memory is
-> >   fully initialized and available for software use. Must be set within
-> >   Range 1. Memory_Active_Timeout of deassertion of reset to CXL device
-> >   if CXL.mem HwInit Mode=1
-> 
-> That is some weird wording.  I stumbled over that, too.  I like the
-> quote format better, but I still don't know what it means.
-> 
-> That last piece ("Memory_Active_Timeout of deassertion ...") purports
-> to be a sentence, but is not.
+Hi Mark,
 
-I've reported this to the person locally who drives spec changes. Since it's now
-confused multiple people, I will rewrite it with my interpretation if people
-think that is more optimal.
+On 23/11/21 19:06, Marc Zyngier wrote:
+> Now that #PERST is properly defined as active-low in the device tree,
+> fix the driver to correctly drive the line indemendently of the
+> implied polarity.
+> 
+> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
+> Suggested-by: Pali Rohár <pali@kernel.org>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-"Memory Active bit must be set within Memory_Active_Timeout amount of time
-after reset."
+Thanks for quickly addressing this!
+
+Do we need a transition path for backward compatibility with old DTs
+already around? Something like this [0]. You said [1] the DT actually
+used is not even the one in the kernel, thus how do we guarantee DT and
+driver switch to the new polarity all at once?
+
+[0] https://lkml.org/lkml/2021/6/24/1049
+[1] https://lkml.org/lkml/2021/11/23/455
+
+> ---
+>  drivers/pci/controller/pcie-apple.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+> index 957960a733c4..03bc56f39be5 100644
+> --- a/drivers/pci/controller/pcie-apple.c
+> +++ b/drivers/pci/controller/pcie-apple.c
+> @@ -540,7 +540,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+>  	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
+>  
+>  	/* Engage #PERST before setting up the clock */
+>
+> -	gpiod_set_value(reset, 0);
+> +	gpiod_set_value(reset, 1);
+>  
+>  	ret = apple_pcie_setup_refclk(pcie, port);
+>  	if (ret < 0)
+> @@ -551,7 +551,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+>  
+>  	/* Deassert #PERST */
+>  	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
+> -	gpiod_set_value(reset, 1);
+> +	gpiod_set_value(reset, 0);
+
+Minor note: if it were me I would coalesce patches 1 and 3 together,
+otherwise we are insisting on a wrong implementation (patch 1) to later
+fix it all (this patch).
+
+-- 
+Luca
+
