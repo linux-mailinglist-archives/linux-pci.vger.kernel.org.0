@@ -2,115 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DE7145BFBF
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 13:58:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BBA845C1B2
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 14:18:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245197AbhKXNBX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 08:01:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:37156 "EHLO foss.arm.com"
+        id S1347818AbhKXNVC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 08:21:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346253AbhKXM7X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Nov 2021 07:59:23 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 075C71042;
-        Wed, 24 Nov 2021 04:56:13 -0800 (PST)
-Received: from [10.57.56.56] (unknown [10.57.56.56])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58DFB3F73B;
-        Wed, 24 Nov 2021 04:56:11 -0800 (PST)
-Message-ID: <fa1d802c-43a0-cbec-c16b-c662e3fdf7fa@arm.com>
-Date:   Wed, 24 Nov 2021 12:56:06 +0000
+        id S1349285AbhKXNS7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 24 Nov 2021 08:18:59 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B144861AF0;
+        Wed, 24 Nov 2021 12:46:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637757973;
+        bh=bRl9hDJ5fv7GM9VcwWXnou2FrLe+Pdi0eP8dUHnU0CU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bpSXyt0J3ea65y4x5TXEqZd2yLcfIWbCSISDOpL0qhPP024MJQhcxKv3qq29Le3YH
+         Oi9ObFlsmuqGORWySP6P8qc2kmAdwUEoFKwJsPYHMmE/CrW1IYtnwNxnnvGU8kLle0
+         ad1n5kZ5e4CB1JA7aWYQFTZGfekB3FK4gsU0wvWZD6KFHxAFNz216XkB676GABs33w
+         N0lUvp+zwYveggPAI3WqKT8TfXWQhWWn/Bxn4iAbgO56EWBrYPD3rHl/itLwrKQsTE
+         vB7/zJy50OoiYCDI6rej58nZQswjmhR6Uhgr0uDY6qG/24R2C3Y1IHxjhKqcipEBFn
+         sXGRIZokSXDhw==
+Received: by pali.im (Postfix)
+        id 7555A56D; Wed, 24 Nov 2021 13:46:11 +0100 (CET)
+Date:   Wed, 24 Nov 2021 13:46:11 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Martin Mares <mj@ucw.cz>, Bjorn Helgaas <helgaas@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] lspci: Show Slot Power Limit values above EFh
+Message-ID: <20211124124611.wi6u77pnparg2563@pali>
+References: <20211101144740.14256-1-pali@kernel.org>
+ <YYABw84admN1+8Ly@casper.infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH v3 1/3] PCI: apple: Follow the PCIe specifications when
- resetting the port
-Content-Language: en-GB
-To:     Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Kettenis <mark.kettenis@xs4all.nl>,
-        Luca Ceresoli <luca@lucaceresoli.net>, kernel-team@android.com
-References: <20211123180636.80558-1-maz@kernel.org>
- <20211123180636.80558-2-maz@kernel.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20211123180636.80558-2-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <YYABw84admN1+8Ly@casper.infradead.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-11-23 18:06, Marc Zyngier wrote:
-> While the Apple PCIe driver works correctly when directly booted
-> from the firmware, it fails to initialise when the kernel is booted
-> from a bootloader using PCIe such as u-boot.
+On Monday 01 November 2021 15:03:31 Matthew Wilcox wrote:
+> On Mon, Nov 01, 2021 at 03:47:40PM +0100, Pali Rohár wrote:
+> > PCI Express Base Specification rev. 3.0 has the following definition for
+> > the Slot Power Limit Value:
+> > 
+> > =======================================================================
+> > When the Slot Power Limit Scale field equals 00b (1.0x) and Slot Power
+> > Limit Value exceeds EFh, the following alternative encodings are used:
+> >   F0h = 250 W Slot Power Limit
+> >   F1h = 275 W Slot Power Limit
+> >   F2h = 300 W Slot Power Limit
+> >   F3h to FFh = Reserved for Slot Power Limit values above 300 W
+> > =======================================================================
+> > 
+> > Replace function power_limit() by show_power_limit() which also prints
+> > power limit value. Show reserved value as string ">300W" and omit usage of
+> > floating point variables as it is not needed.
 > 
-> That's beacuse we're missing a proper reset of the port (we only
-> clear the reset, but never assert it).
-> 
-> The PCIe spec requirements are two-fold:
-> 
-> - #PERST must be asserted before setting up the clocks, and
->    stay asserted for at least 100us (Tperst-clk).
-> 
-> - Once #PERST is deasserted, the OS must wait for at least 100ms
->    "from the end of a Conventional Reset" before we can start talking
->    to the devices
-> 
-> Implementing this results in a booting system.
-> 
-> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
-> Acked-by: Pali Rohár <pali@kernel.org>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->   drivers/pci/controller/pcie-apple.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index 1bf4d75b61be..957960a733c4 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -539,13 +539,23 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
->   
->   	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
->   
-> +	/* Engage #PERST before setting up the clock */
-> +	gpiod_set_value(reset, 0);
+> I don't understand why you want to avoid the use of floating point here?
 
-FWIW, given that getting the GPIO with GPIOD_OUT_LOW should have had 
-this effect in the first place, if this isn't a no-op at this point then 
-it would hint at something being more significantly wrong down at the 
-GPIO/pinctrl end :/
+Because library does not use floating point. So I thought that it is a
+good idea to not use it neither for printing power limit.
 
-Once you fix the polarity in the later patch, though, adding the 
-explicit reset assertion here does seem a far nicer option than fiddling 
-the flags to preserve the implicit assertion earlier.
+I can change it, just I wanted to hear project / library preference.
 
-Cheers,
-Robin.
-
-> +
->   	ret = apple_pcie_setup_refclk(pcie, port);
->   	if (ret < 0)
->   		return ret;
->   
-> +	/* The minimal Tperst-clk value is 100us (PCIe CMS r2.0, 2.6.2) */
-> +	usleep_range(100, 200);
-> +
-> +	/* Deassert #PERST */
->   	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
->   	gpiod_set_value(reset, 1);
->   
-> +	/* Wait for 100ms after #PERST deassertion (PCIe r2.0, 6.6.1) */
-> +	msleep(100);
-> +
->   	ret = readl_relaxed_poll_timeout(port->base + PORT_STATUS, stat,
->   					 stat & PORT_STATUS_READY, 100, 250000);
->   	if (ret < 0) {
+> > +++ b/ls-caps.c
+> > @@ -656,10 +656,27 @@ static int exp_downstream_port(int type)
+> >  	 type == PCI_EXP_TYPE_PCIE_BRIDGE;	/* PCI/PCI-X to PCIe Bridge */
+> >  }
+> >  
+> > -static float power_limit(int value, int scale)
+> > +static void show_power_limit(int value, int scale)
+> >  {
+> > -  static const float scales[4] = { 1.0, 0.1, 0.01, 0.001 };
+> > -  return value * scales[scale];
+> > +  static const int scales[4] = { 1000, 100, 10, 1 };
+> > +  static const int scale0_values[3] = { 250, 275, 300 };
+> > +  if (scale == 0 && value >= 0xF0) {
+> > +    /* F3h to FFh = Reserved for Slot Power Limit values above 300 W */
+> > +    if (value >= 0xF3) {
+> > +      printf(">300W");
+> > +      return;
+> > +    }
+> > +    value = scale0_values[value - 0xF0];
+> > +  }
+> > +  value *= scales[scale];
+> > +  printf("%d", value / 1000);
+> > +  if (value % 10)
+> > +    printf(".%03d", value % 1000);
+> > +  else if (value % 100)
+> > +    printf(".%02d", (value / 10) % 100);
+> > +  else if (value % 1000)
+> > +    printf(".%d", (value / 100) % 10);
+> > +  printf("W");
+> 
+> Wouldn't this be clearer if written as:
+> 
+> static void show_power_limit(int value, int scale)
+> {
+>   static const float scales[4] = { 1.0, 0.1, 0.01, 0.001 };
+>   static const int scale0_values[3] = { 250, 275, 300 };
+> 
+>   if (scale == 0 && value >= 0xF0) {
+>     /* F3h to FFh = Reserved for Slot Power Limit values above 300 W */
+>     if (value >= 0xF3) {
+>       printf(">300W");
+>       return;
+>     }
+>     value = scale0_values[value - 0xF0];
+>   }
+>   printf("%.3fW", value * scales[scale]);
+> }
 > 
