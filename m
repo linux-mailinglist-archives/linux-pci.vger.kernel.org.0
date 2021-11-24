@@ -2,76 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25B2C45C96C
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 17:00:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ECE045C9E9
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 17:24:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348075AbhKXQDa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 11:03:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1347900AbhKXQD1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Nov 2021 11:03:27 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CB22061039;
-        Wed, 24 Nov 2021 16:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637769617;
-        bh=PS8BXmc0apnAT5WQtcrX/oVZ1nWh8ZdCVi4swSkcJE8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CbuwDsEZTEdbOU48GX/bA2wovK54HP7wJyrDotI96cZvBJyHTKsMrO4ovR1Q8ESj/
-         c6J/5qW8ePrPgon5n0aMcQ6misKpBcXBXvpE4TFhnnHZtJYhnWeVsylYjlWf88wT4A
-         XMwyqiNPdn2xQSxZ71E+CShhjJuHqkrmlNt87Jaj0xdZg5Xi+OgybrhJTAVJS5O1PI
-         GthfD3DeWhNJWmk0/wl3LQlqDrsQf1ZzB/7oQ05iZc4K9urW+fBb7jEJjPGAiizE5y
-         1PpmTZJedF/JI34abTUZnlo8DJv/WZp/UhB+9OsxqS6b6UrFAp/Bdnl4sol4J/++Fh
-         W8/3P+H0LHC7w==
-Received: by pali.im (Postfix)
-        id 8CD0256D; Wed, 24 Nov 2021 17:00:17 +0100 (CET)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        id S1348543AbhKXQ1S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 11:27:18 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46781 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348524AbhKXQ1R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 11:27:17 -0500
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 6438924000B;
+        Wed, 24 Nov 2021 16:24:02 +0000 (UTC)
+Date:   Wed, 24 Nov 2021 17:24:02 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] PCI: pci-bridge-emul: Set PCI_STATUS_CAP_LIST for PCIe device
-Date:   Wed, 24 Nov 2021 16:59:44 +0100
-Message-Id: <20211124155944.1290-7-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211124155944.1290-1-pali@kernel.org>
-References: <20211124155944.1290-1-pali@kernel.org>
+Subject: Re: [PATCH 4/5] arm: ioremap: Replace pci_ioremap_io() usage by
+ pci_remap_iospace()
+Message-ID: <YZ5nIhtFVgPdNxAj@piout.net>
+References: <20211124154116.916-1-pali@kernel.org>
+ <20211124154116.916-5-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211124154116.916-5-pali@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since all PCI Express device Functions are required to implement the PCI
-Express Capability structure, Capabilities List bit in PCI Status Register
-must be hardwired to 1b. Capabilities Pointer register (which is already
-set by pci-bride-emul.c driver) is valid only when Capabilities List is set
-to 1b.
+On 24/11/2021 16:41:15+0100, Pali Roh·r wrote:
+> Replace all usage of ARM specific pci_ioremap_io() function by standard PCI
+> core API function pci_remap_iospace() in all drivers and arm march code.
+> 
+> Signed-off-by: Pali Roh·r <pali@kernel.org>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Signed-off-by: Pali Roh√°r <pali@kernel.org>
-Fixes: 23a5fba4d941 ("PCI: Introduce PCI bridge emulated config space common logic")
-Cc: stable@vger.kernel.org
----
- drivers/pci/pci-bridge-emul.c | 1 +
- 1 file changed, 1 insertion(+)
+> ---
+>  arch/arm/mach-dove/pcie.c    |  9 +++++----
+>  arch/arm/mach-iop32x/pci.c   |  5 ++++-
+>  arch/arm/mach-mv78xx0/pcie.c |  5 ++++-
+>  arch/arm/mach-orion5x/pci.c  | 10 ++++++++--
+>  drivers/pcmcia/at91_cf.c     |  6 +++++-
+>  5 files changed, 26 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
+> index ee91ac6b5ebf..2a493bdfffc6 100644
+> --- a/arch/arm/mach-dove/pcie.c
+> +++ b/arch/arm/mach-dove/pcie.c
+> @@ -38,6 +38,7 @@ static int num_pcie_ports;
+>  static int __init dove_pcie_setup(int nr, struct pci_sys_data *sys)
+>  {
+>  	struct pcie_port *pp;
+> +	struct resource realio;
+>  
+>  	if (nr >= num_pcie_ports)
+>  		return 0;
+> @@ -53,10 +54,10 @@ static int __init dove_pcie_setup(int nr, struct pci_sys_data *sys)
+>  
+>  	orion_pcie_setup(pp->base);
+>  
+> -	if (pp->index == 0)
+> -		pci_ioremap_io(sys->busnr * SZ_64K, DOVE_PCIE0_IO_PHYS_BASE);
+> -	else
+> -		pci_ioremap_io(sys->busnr * SZ_64K, DOVE_PCIE1_IO_PHYS_BASE);
+> +	realio.start = sys->busnr * SZ_64K;
+> +	realio.end = realio.start + SZ_64K - 1;
+> +	pci_remap_iospace(&realio, pp->index == 0 ? DOVE_PCIE0_IO_PHYS_BASE :
+> +						    DOVE_PCIE1_IO_PHYS_BASE);
+>  
+>  	/*
+>  	 * IORESOURCE_MEM
+> diff --git a/arch/arm/mach-iop32x/pci.c b/arch/arm/mach-iop32x/pci.c
+> index ab0010dc3145..7a215d2ee7e2 100644
+> --- a/arch/arm/mach-iop32x/pci.c
+> +++ b/arch/arm/mach-iop32x/pci.c
+> @@ -185,6 +185,7 @@ iop3xx_pci_abort(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+>  int iop3xx_pci_setup(int nr, struct pci_sys_data *sys)
+>  {
+>  	struct resource *res;
+> +	struct resource realio;
+>  
+>  	if (nr != 0)
+>  		return 0;
+> @@ -206,7 +207,9 @@ int iop3xx_pci_setup(int nr, struct pci_sys_data *sys)
+>  
+>  	pci_add_resource_offset(&sys->resources, res, sys->mem_offset);
+>  
+> -	pci_ioremap_io(0, IOP3XX_PCI_LOWER_IO_PA);
+> +	realio.start = 0;
+> +	realio.end = realio.start + SZ_64K - 1;
+> +	pci_remap_iospace(&realio, IOP3XX_PCI_LOWER_IO_PA);
+>  
+>  	return 1;
+>  }
+> diff --git a/arch/arm/mach-mv78xx0/pcie.c b/arch/arm/mach-mv78xx0/pcie.c
+> index 636d84b40466..e15646af7f26 100644
+> --- a/arch/arm/mach-mv78xx0/pcie.c
+> +++ b/arch/arm/mach-mv78xx0/pcie.c
+> @@ -101,6 +101,7 @@ static void __init mv78xx0_pcie_preinit(void)
+>  static int __init mv78xx0_pcie_setup(int nr, struct pci_sys_data *sys)
+>  {
+>  	struct pcie_port *pp;
+> +	struct resource realio;
+>  
+>  	if (nr >= num_pcie_ports)
+>  		return 0;
+> @@ -115,7 +116,9 @@ static int __init mv78xx0_pcie_setup(int nr, struct pci_sys_data *sys)
+>  	orion_pcie_set_local_bus_nr(pp->base, sys->busnr);
+>  	orion_pcie_setup(pp->base);
+>  
+> -	pci_ioremap_io(nr * SZ_64K, MV78XX0_PCIE_IO_PHYS_BASE(nr));
+> +	realio.start = nr * SZ_64K;
+> +	realio.end = realio.start + SZ_64K - 1;
+> +	pci_remap_iospace(&realio, MV78XX0_PCIE_IO_PHYS_BASE(nr));
+>  
+>  	pci_add_resource_offset(&sys->resources, &pp->res, sys->mem_offset);
+>  
+> diff --git a/arch/arm/mach-orion5x/pci.c b/arch/arm/mach-orion5x/pci.c
+> index 76951bfbacf5..92e938bba20d 100644
+> --- a/arch/arm/mach-orion5x/pci.c
+> +++ b/arch/arm/mach-orion5x/pci.c
+> @@ -142,6 +142,7 @@ static struct pci_ops pcie_ops = {
+>  static int __init pcie_setup(struct pci_sys_data *sys)
+>  {
+>  	struct resource *res;
+> +	struct resource realio;
+>  	int dev;
+>  
+>  	/*
+> @@ -164,7 +165,9 @@ static int __init pcie_setup(struct pci_sys_data *sys)
+>  		pcie_ops.read = pcie_rd_conf_wa;
+>  	}
+>  
+> -	pci_ioremap_io(sys->busnr * SZ_64K, ORION5X_PCIE_IO_PHYS_BASE);
+> +	realio.start = sys->busnr * SZ_64K;
+> +	realio.end = realio.start + SZ_64K - 1;
+> +	pci_remap_iospace(&realio, ORION5X_PCIE_IO_PHYS_BASE);
+>  
+>  	/*
+>  	 * Request resources.
+> @@ -466,6 +469,7 @@ static void __init orion5x_setup_pci_wins(void)
+>  static int __init pci_setup(struct pci_sys_data *sys)
+>  {
+>  	struct resource *res;
+> +	struct resource realio;
+>  
+>  	/*
+>  	 * Point PCI unit MBUS decode windows to DRAM space.
+> @@ -482,7 +486,9 @@ static int __init pci_setup(struct pci_sys_data *sys)
+>  	 */
+>  	orion5x_setbits(PCI_CMD, PCI_CMD_HOST_REORDER);
+>  
+> -	pci_ioremap_io(sys->busnr * SZ_64K, ORION5X_PCI_IO_PHYS_BASE);
+> +	realio.start = sys->busnr * SZ_64K;
+> +	realio.end = realio.start + SZ_64K - 1;
+> +	pci_remap_iospace(&realio, ORION5X_PCI_IO_PHYS_BASE);
+>  
+>  	/*
+>  	 * Request resources
+> diff --git a/drivers/pcmcia/at91_cf.c b/drivers/pcmcia/at91_cf.c
+> index 6b1edfc890a3..92df2c2c5d07 100644
+> --- a/drivers/pcmcia/at91_cf.c
+> +++ b/drivers/pcmcia/at91_cf.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_gpio.h>
+> +#include <linux/pci.h>
+>  #include <linux/regmap.h>
+>  
+>  #include <pcmcia/ss.h>
+> @@ -230,6 +231,7 @@ static int at91_cf_probe(struct platform_device *pdev)
+>  	struct at91_cf_socket	*cf;
+>  	struct at91_cf_data	*board;
+>  	struct resource		*io;
+> +	struct resource		realio;
+>  	int			status;
+>  
+>  	board = devm_kzalloc(&pdev->dev, sizeof(*board), GFP_KERNEL);
+> @@ -307,7 +309,9 @@ static int at91_cf_probe(struct platform_device *pdev)
+>  	 * io_offset is set to 0x10000 to avoid the check in static_find_io().
+>  	 * */
+>  	cf->socket.io_offset = 0x10000;
+> -	status = pci_ioremap_io(0x10000, cf->phys_baseaddr + CF_IO_PHYS);
+> +	realio.start = cf->socket.io_offset;
+> +	realio.end = realio.start + SZ_64K - 1;
+> +	status = pci_remap_iospace(&realio, cf->phys_baseaddr + CF_IO_PHYS);
+>  	if (status)
+>  		goto fail0a;
+>  
+> -- 
+> 2.20.1
+> 
 
-diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index 6c75dc296984..d11633999df5 100644
---- a/drivers/pci/pci-bridge-emul.c
-+++ b/drivers/pci/pci-bridge-emul.c
-@@ -339,6 +339,7 @@ int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
- 
- 	if (bridge->has_pcie) {
- 		bridge->conf.capabilities_pointer = PCI_CAP_PCIE_START;
-+		bridge->conf.status |= cpu_to_le16(PCI_STATUS_CAP_LIST);
- 		bridge->pcie_conf.cap_id = PCI_CAP_ID_EXP;
- 		bridge->pcie_conf.cap |= cpu_to_le16(PCI_EXP_TYPE_ROOT_PORT << 4);
- 		bridge->pcie_cap_regs_behavior =
 -- 
-2.20.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
