@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDE4D45C8FD
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 16:42:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E293845C8FB
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 16:42:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344056AbhKXPpI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 10:45:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48560 "EHLO mail.kernel.org"
+        id S1344961AbhKXPpG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 10:45:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344439AbhKXPo4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Nov 2021 10:44:56 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C6EDF60FD9;
-        Wed, 24 Nov 2021 15:41:46 +0000 (UTC)
+        id S1344472AbhKXPo5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 24 Nov 2021 10:44:57 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E0CBC6102A;
+        Wed, 24 Nov 2021 15:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637768506;
-        bh=dWjAjYTv1UJNuz4DlD4z4Q3QWuFZ2bz6r9JNBl8Oe8Q=;
+        s=k20201202; t=1637768508;
+        bh=B4KwqLhItoYGnyJ9ogfHgJBcg/G5wxI+LrCO4toFBSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJEc/g9s3M1t31hg6BTMpM9Qih98I29UPN+TCro87IWeQRjQHPkQatmiMwEk52okt
-         QzBxwgD2jpwaDrH1I31gmMkKhRVi0dOO8aXbWFCxLPcTto9Q7LyOxj/lqJwNbtEdLp
-         m/ftjBpEWPyXbwKv3u3OA25epyy/ULuTzgTRy22NlNKLh+LCAuh+LRb85llZWy72Pe
-         u2pWSfGw5PBM6wzyuXXj1A5uLR9nzezKBIgYuhvRKyYntur0abMORJFaOnHRv3iluy
-         uCfcUDi2KBKNLim/6zQ4OMxCS43jo0BUH+m+PPRBOMX5cGrkFO08Scp1TGo5lK5lKv
-         H2Ha90ndMggEw==
+        b=smfTHi3C0BGbB+Tqh/ucp+n9eBQJakBTr/g9WyHJT4bHTI+7e7kmHjwDrL3dkZibA
+         kvBCQ7h/VfXzR1L/Fjlb2468A7ADDlt+xz/jAqCG39yQpcgRjJiKBlcyDh0UjjfJ7b
+         5NcW/WxA1AYwYrsO3rqW6OmI2Dsa2a/gVgDjK6KNl6spgubhlZP1TpbF+Ugp3tInxg
+         Ntw+g+mzL/TD9tqwHddURa2qHoValYWcRNdInuqPKPhWt6o+6g+Z/8dJE8vnerrXXr
+         YYrRnmdMLMOBI2bpC1Yx4fnhqoAph1qPZs9Q4qqT0t9C5GmSuVPWBAAXx2ZYY7R1g4
+         pt2bs24uzZmDA==
 Received: by pali.im (Postfix)
-        id EB6E5AFB; Wed, 24 Nov 2021 16:41:44 +0100 (CET)
+        id 177ECB01; Wed, 24 Nov 2021 16:41:46 +0100 (CET)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
@@ -41,9 +41,9 @@ To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] arm: ioremap: Implement standard PCI function pci_remap_iospace()
-Date:   Wed, 24 Nov 2021 16:41:12 +0100
-Message-Id: <20211124154116.916-2-pali@kernel.org>
+Subject: [PATCH 2/5] PCI: mvebu: Replace pci_ioremap_io() usage by devm_pci_remap_iospace()
+Date:   Wed, 24 Nov 2021 16:41:13 +0100
+Message-Id: <20211124154116.916-3-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20211124154116.916-1-pali@kernel.org>
 References: <20211124154116.916-1-pali@kernel.org>
@@ -54,66 +54,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pci_remap_iospace() is standard PCI core function. Architecture code can
-reimplement default core implementation if needs custom arch specific
-functionality.
+Now when ARM architecture code also provides standard PCI core function
+pci_remap_iospace(), use its devm_pci_remap_iospace() variant in
+pci-mvebu.c driver instead of old ARM-specific pci_ioremap_io() function.
 
-ARM needs custom implementation due to pci_ioremap_set_mem_type() hook
-which allows ARM platforms to change mem type for iospace.
-
-Implement this pci_remap_iospace() function for ARM architecture to
-correctly handle pci_ioremap_set_mem_type() hook, which allows usage of
-this standard PCI core function also for platforms which needs different
-mem type (e.g. Marvell Armada 375, 38x and 39x).
+Call devm_pci_remap_iospace() before adding IO resource to host bridge
+structure, at the place where it should be.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- arch/arm/include/asm/io.h |  5 +++++
- arch/arm/mm/ioremap.c     | 15 +++++++++++++++
- 2 files changed, 20 insertions(+)
+ drivers/pci/controller/pci-mvebu.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-index c576fa7d9bf8..12eca75bdee9 100644
---- a/arch/arm/include/asm/io.h
-+++ b/arch/arm/include/asm/io.h
-@@ -182,6 +182,11 @@ static inline void pci_ioremap_set_mem_type(int mem_type) {}
+diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+index ed13e81cd691..a55b8bd5eb62 100644
+--- a/drivers/pci/controller/pci-mvebu.c
++++ b/drivers/pci/controller/pci-mvebu.c
+@@ -992,6 +992,10 @@ static int mvebu_pcie_parse_request_resources(struct mvebu_pcie *pcie)
+ 					 resource_size(&pcie->io) - 1);
+ 		pcie->realio.name = "PCI I/O";
  
- extern int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr);
- 
-+struct resource;
++		ret = devm_pci_remap_iospace(dev, &pcie->realio, pcie->io.start);
++		if (ret)
++			return ret;
 +
-+#define pci_remap_iospace pci_remap_iospace
-+int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
-+
- /*
-  * PCI configuration space mapping function.
-  *
-diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
-index 6e830b9418c9..fa3bde48d6a7 100644
---- a/arch/arm/mm/ioremap.c
-+++ b/arch/arm/mm/ioremap.c
-@@ -459,6 +459,21 @@ void pci_ioremap_set_mem_type(int mem_type)
- 	pci_ioremap_mem_type = mem_type;
- }
- 
-+int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
-+{
-+	unsigned long vaddr = (unsigned long)PCI_IOBASE + res->start;
-+
-+	if (!(res->flags & IORESOURCE_IO))
-+		return -EINVAL;
-+
-+	if (res->end > IO_SPACE_LIMIT)
-+		return -EINVAL;
-+
-+	return ioremap_page_range(vaddr, vaddr + resource_size(res), phys_addr,
-+				  __pgprot(get_mem_type(pci_ioremap_mem_type)->prot_pte));
-+}
-+EXPORT_SYMBOL(pci_remap_iospace);
-+
- int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
+ 		pci_add_resource(&bridge->windows, &pcie->realio);
+ 		ret = devm_request_resource(dev, &ioport_resource, &pcie->realio);
+ 		if (ret)
+@@ -1010,7 +1014,6 @@ static int mvebu_pcie_parse_request_resources(struct mvebu_pcie *pcie)
+  */
+ static int mvebu_pci_host_probe(struct pci_host_bridge *bridge)
  {
- 	BUG_ON(offset + SZ_64K - 1 > IO_SPACE_LIMIT);
+-	struct mvebu_pcie *pcie;
+ 	struct pci_bus *bus, *child;
+ 	int ret;
+ 
+@@ -1020,14 +1023,6 @@ static int mvebu_pci_host_probe(struct pci_host_bridge *bridge)
+ 		return ret;
+ 	}
+ 
+-	pcie = pci_host_bridge_priv(bridge);
+-	if (resource_size(&pcie->io) != 0) {
+-		unsigned int i;
+-
+-		for (i = 0; i < resource_size(&pcie->realio); i += SZ_64K)
+-			pci_ioremap_io(i, pcie->io.start + i);
+-	}
+-
+ 	bus = bridge->bus;
+ 
+ 	/*
 -- 
 2.20.1
 
