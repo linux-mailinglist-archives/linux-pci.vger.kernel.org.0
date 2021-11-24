@@ -2,101 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 298E945C8F5
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 16:41:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C95E45C92F
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 16:51:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241916AbhKXPpB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 10:45:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241798AbhKXPo7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Nov 2021 10:44:59 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B82B76104F;
-        Wed, 24 Nov 2021 15:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637768509;
-        bh=WJvNY+0Pg9RFMP93Ezkwezkf68NlQN8B55mf/eDaHCY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RVmubVOYAgO9TjgiPbl5TGVesxZ2yZUGV3t2pespsxrGDULLKyZIWNu7TP+bSymMg
-         82kEugAqyeu9tWw9uWF2SOrKHWbzT8Ajy/NzHQiDvQqqbLHHzADmBFzIdmobFhOgPh
-         J/IuY7nbruSuSZTjEjOQJ7orecTTcUi7TXW+Vy474qLNTtXYp6JNqflzE1HjM5cxAg
-         kng+3vONiAtKQso5r/bLTk79+eWz6y8TBry8OAY0HBgDVFJpTMHAb/0TCjxM7bIIvN
-         qcddQHNOivSpd+Cs9BVZaxD2tdiC4C8Cx5kGZQWQSW/295EUkdvqopjw9Mq0jDbBiG
-         +U2jAshfhsbUQ==
-Received: by pali.im (Postfix)
-        id 773BF56D; Wed, 24 Nov 2021 16:41:49 +0100 (CET)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
+        id S240826AbhKXPys (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 10:54:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346498AbhKXPyr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 10:54:47 -0500
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C49EC061574;
+        Wed, 24 Nov 2021 07:51:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=83Z9ctsXhi4n6jL1I+xnZYOsulRili5YtWNkeTxLDvY=; b=O7JOpWGcH4DnhCV+XrFVDi83VC
+        vjiYAQOklY/dedfzCATe0m84ZCCGpC19/nyEcuuM5m94AIzji0oGc9sfnQQR8aolKgTxP4o2GQ+Xc
+        YlZeXOYhBsdXAZMwSi+YqF+bCuqPTBtTzP35dk3g6C58RZTaYf2g+yaXSQOHzwuL/XSGrSB8QmTXd
+        +SxFWxTlgGfheF5iU10JREpJdELdxQSs9O+mJxIg7DkuZhIw1PYGodPZUKjp7VHnkmvgnkmkI5tPh
+        cX/AGJsyoeHQtMxrgWTaBVfptCGiBzQcu5eYlw0mZE5Fu7RfqUixgtVKnAmiuNgx7n30DLyGv2D7+
+        4k6GdpEw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55852)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1mpuYP-0000oH-NY; Wed, 24 Nov 2021 15:51:25 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1mpuYN-0001JA-4r; Wed, 24 Nov 2021 15:51:23 +0000
+Date:   Wed, 24 Nov 2021 15:51:23 +0000
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
         Gregory Clement <gregory.clement@bootlin.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Dominik Brodowski <linux@dominikbrodowski.net>,
         Nicolas Ferre <nicolas.ferre@microchip.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] arm: ioremap: Remove unused ARM-specific function pci_ioremap_io()
-Date:   Wed, 24 Nov 2021 16:41:16 +0100
-Message-Id: <20211124154116.916-6-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211124154116.916-1-pali@kernel.org>
+Subject: Re: [PATCH 1/5] arm: ioremap: Implement standard PCI function
+ pci_remap_iospace()
+Message-ID: <YZ5fez3JSUgl+NNq@shell.armlinux.org.uk>
 References: <20211124154116.916-1-pali@kernel.org>
+ <20211124154116.916-2-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211124154116.916-2-pali@kernel.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This function is not used by any driver anymore. So completely remove it.
+On Wed, Nov 24, 2021 at 04:41:12PM +0100, Pali Roh·r wrote:
+> pci_remap_iospace() is standard PCI core function. Architecture code can
+> reimplement default core implementation if needs custom arch specific
+> functionality.
+> 
+> ARM needs custom implementation due to pci_ioremap_set_mem_type() hook
+> which allows ARM platforms to change mem type for iospace.
+> 
+> Implement this pci_remap_iospace() function for ARM architecture to
+> correctly handle pci_ioremap_set_mem_type() hook, which allows usage of
+> this standard PCI core function also for platforms which needs different
+> mem type (e.g. Marvell Armada 375, 38x and 39x).
+> 
+> Signed-off-by: Pali Roh·r <pali@kernel.org>
 
-Signed-off-by: Pali Roh√°r <pali@kernel.org>
----
- arch/arm/include/asm/io.h |  2 --
- arch/arm/mm/ioremap.c     | 11 -----------
- 2 files changed, 13 deletions(-)
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-index 12eca75bdee9..0c70eb688a00 100644
---- a/arch/arm/include/asm/io.h
-+++ b/arch/arm/include/asm/io.h
-@@ -180,8 +180,6 @@ void pci_ioremap_set_mem_type(int mem_type);
- static inline void pci_ioremap_set_mem_type(int mem_type) {}
- #endif
- 
--extern int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr);
--
- struct resource;
- 
- #define pci_remap_iospace pci_remap_iospace
-diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
-index fa3bde48d6a7..197f8eb3a775 100644
---- a/arch/arm/mm/ioremap.c
-+++ b/arch/arm/mm/ioremap.c
-@@ -474,17 +474,6 @@ int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
- }
- EXPORT_SYMBOL(pci_remap_iospace);
- 
--int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
--{
--	BUG_ON(offset + SZ_64K - 1 > IO_SPACE_LIMIT);
--
--	return ioremap_page_range(PCI_IO_VIRT_BASE + offset,
--				  PCI_IO_VIRT_BASE + offset + SZ_64K,
--				  phys_addr,
--				  __pgprot(get_mem_type(pci_ioremap_mem_type)->prot_pte));
--}
--EXPORT_SYMBOL_GPL(pci_ioremap_io);
--
- void __iomem *pci_remap_cfgspace(resource_size_t res_cookie, size_t size)
- {
- 	return arch_ioremap_caller(res_cookie, size, MT_UNCACHED,
 -- 
-2.20.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
