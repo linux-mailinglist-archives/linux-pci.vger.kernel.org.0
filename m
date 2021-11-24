@@ -2,218 +2,286 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8512745B3B4
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 06:00:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8477E45B40B
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 06:52:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbhKXFDn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 00:03:43 -0500
-Received: from mga02.intel.com ([134.134.136.20]:15252 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229482AbhKXFDn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Nov 2021 00:03:43 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10177"; a="222426436"
-X-IronPort-AV: E=Sophos;i="5.87,258,1631602800"; 
-   d="scan'208";a="222426436"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2021 21:00:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,258,1631602800"; 
-   d="scan'208";a="509685277"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 23 Nov 2021 21:00:32 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mpkOW-0004K6-1d; Wed, 24 Nov 2021 05:00:32 +0000
-Date:   Wed, 24 Nov 2021 13:00:18 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- ff81d75aa0e465f4a37e30da1d48f4cdd43a12ba
-Message-ID: <619dc6e2.DHaJcSzbFgmTNYms%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S233231AbhKXFzk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 00:55:40 -0500
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:33374
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233212AbhKXFzk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 00:55:40 -0500
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 2085D40008
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 05:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1637733149;
+        bh=V/j9435sf+Q6QqIYUyi0ktOVWvCT49bfuL52dC8eJNQ=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=mNA71YDlPdMDewD3l9zhJplvW/lU6JG5K33Ie2aSCJOnbyp387hcJTA8AsAsyPonC
+         YcGnFIAVyUsAVEqJ1pRjiRHMNmsniWnOjEF3/dFmlyeU4C62WWnaFbVzYXVDmAFlly
+         PoRK5eQZVr0rqqJB3IaV6DOJjMiOuCYava/gVdJutkJtWB31a+5c0PZBHFr1DKJM+Y
+         dHYDA+z17+agCWgjwKXKjGce2RMkDsoH1ECDqur1EeWHIkKJ6YbN2Sr7H8Zf+uKaUy
+         HibNTSiOESlWIbKQZzPeKPftNUpMbc/o0F0d3EHRZZJzEU+SpbgRLO5G/+6WalPIEV
+         FgybKkKwwkvEw==
+Received: by mail-pj1-f70.google.com with SMTP id iq9-20020a17090afb4900b001a54412feb0so1065537pjb.1
+        for <linux-pci@vger.kernel.org>; Tue, 23 Nov 2021 21:52:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V/j9435sf+Q6QqIYUyi0ktOVWvCT49bfuL52dC8eJNQ=;
+        b=hcOiNjKXviAHYXASlMyDeyKC2FluT/PE+zcFZa5LlwTZ8Fon/eeDmo06mIQcMezQl/
+         1Oy/EQRH3Vh+DGGDuq185TW6yKXU/qu/xB1MTiOMlF7Sw7lQtyoCJ1YDU/os7Y4GrTnv
+         RITYrOVG8MfBtHUbRtxYocf42oKZeRPmMK689y4GhEZNmqQQARGOYkMvKlUi0NcM2Tgl
+         SmyOK7nQLgB8PI6pBwtqSXOIF7I3KRQArxYeWYVW3cJ3Celp5cBCCSMJ1izcCkXrSgA2
+         KF24sq8iK9F11lYDKZEU9gRE+KTKOei/oVCaiDOjCR30mwR044N/8bR3nX0xCDoot5ow
+         rxHg==
+X-Gm-Message-State: AOAM533QCMoj2yutPzPJ/BcrqY12AZ8CwIX0lPiu1xyXo25NJMIIpke7
+        FxK9n101ZdaUAzJEl2UTMQPtajingQJ4JF2n1MtoBe1tu/+VzY4rWqBX32B/WaCuvRXxEN1c3+6
+        pdVfRhZCgJFA7QegzKe1l+UgSfPdG8ZcnroJXCXFt4owAX4SpKT65qg==
+X-Received: by 2002:a17:90a:fe0a:: with SMTP id ck10mr5187435pjb.216.1637733147744;
+        Tue, 23 Nov 2021 21:52:27 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxtcQIbaN5dL44ZbqC9L1a1WlemOP/LRBnvajM2RC/ohJohHICyHnWXVJGR7cdc4bVPeYgPZaVQp8pkmusSUQE=
+X-Received: by 2002:a17:90a:fe0a:: with SMTP id ck10mr5187399pjb.216.1637733147439;
+ Tue, 23 Nov 2021 21:52:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <d4084296-9d36-64ec-8a79-77d82ac6d31c@canonical.com>
+ <20210914104301.48270518.alex.williamson@redhat.com> <9e8d0e9e-1d94-35e8-be1f-cf66916c24b2@canonical.com>
+ <20210915103235.097202d2.alex.williamson@redhat.com> <2fadf33d-8487-94c2-4460-2a20fdb2ea12@canonical.com>
+ <20211005171326.3f25a43a.alex.williamson@redhat.com> <CAKAwkKtJQ1mE3=iaDA1B_Dkn1+ZbN0jTSWrQon0=SAszRv5xFw@mail.gmail.com>
+ <20211012140516.6838248b.alex.williamson@redhat.com> <CAKAwkKsF3Kn1HLAg55cBVmPmo2y0QAf7g6Zc7q6ZsQZBXGW9bg@mail.gmail.com>
+ <CAKAwkKsoKELnR=--06sRZL3S6_rQVi5J_Kcv6iRQ6w2tY71WCQ@mail.gmail.com> <20211104160541.4aedc593.alex.williamson@redhat.com>
+In-Reply-To: <20211104160541.4aedc593.alex.williamson@redhat.com>
+From:   Matthew Ruffell <matthew.ruffell@canonical.com>
+Date:   Wed, 24 Nov 2021 18:52:16 +1300
+Message-ID: <CAKAwkKs=p3bHQL5VXuh_Xhu3A+mg0mSEuFJ_fy4Zh6E6YG4aag@mail.gmail.com>
+Subject: Re: [PROBLEM] Frequently get "irq 31: nobody cared" when passing
+ through 2x GPUs that share same pci switch via vfio
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-pci@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        kvm@vger.kernel.org, nathan.langford@xcelesunifiedtechnologies.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: ff81d75aa0e465f4a37e30da1d48f4cdd43a12ba  Merge branch 'pci/switchtec'
+Hi Alex,
 
-elapsed time: 723m
+I have forward ported your patch to 5.16-rc2 to account for the vfio module
+refactor that happened recently. Attached below.
 
-configs tested: 158
-configs skipped: 4
+Have you had an opportunity to research if it is possible to conditionalise
+clearing DisINTx by looking at the interrupt status and seeing if there is a
+pending interrupt but no handler set?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+We are testing a 5.16-rc2 kernel with the patch applied on Nathan's server
+currently, and we are also trying out the pci=clearmsi command line parameter
+that was discussed on linux-pci a few years ago in [1][2][3][4] along with
+setting snd-hda-intel.enable_msi=1 to see if it helps the crashkernel not get
+stuck copying IR tables.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211123
-sh                      rts7751r2d1_defconfig
-sh                        apsh4ad0a_defconfig
-arm                         vf610m4_defconfig
-powerpc                     mpc83xx_defconfig
-sh                           se7722_defconfig
-mips                      fuloong2e_defconfig
-powerpc                      bamboo_defconfig
-mips                          ath25_defconfig
-sh                             shx3_defconfig
-powerpc                 mpc836x_mds_defconfig
-arm                           stm32_defconfig
-xtensa                       common_defconfig
-sh                         ecovec24_defconfig
-m68k                        stmark2_defconfig
-mips                           ip27_defconfig
-arm                          gemini_defconfig
-powerpc64                           defconfig
-arm                        magician_defconfig
-mips                       rbtx49xx_defconfig
-h8300                     edosk2674_defconfig
-arm                         hackkit_defconfig
-m68k                            q40_defconfig
-arc                            hsdk_defconfig
-mips                       capcella_defconfig
-mips                     cu1830-neo_defconfig
-nios2                         3c120_defconfig
-m68k                       m5249evb_defconfig
-xtensa                    smp_lx200_defconfig
-powerpc                     tqm8555_defconfig
-arm                          badge4_defconfig
-powerpc                       ebony_defconfig
-openrisc                            defconfig
-arc                        nsim_700_defconfig
-powerpc                      acadia_defconfig
-arm                         orion5x_defconfig
-mips                     decstation_defconfig
-mips                      pic32mzda_defconfig
-powerpc                      arches_defconfig
-arm                         s3c2410_defconfig
-powerpc                     kilauea_defconfig
-arc                     haps_hs_smp_defconfig
-sh                          kfr2r09_defconfig
-powerpc                     tqm8548_defconfig
-arm                              alldefconfig
-arm                         cm_x300_defconfig
-powerpc                    ge_imp3a_defconfig
-ia64                          tiger_defconfig
-arm                  colibri_pxa270_defconfig
-sh                              ul2_defconfig
-arm                         axm55xx_defconfig
-powerpc                 mpc832x_mds_defconfig
-powerpc                     pseries_defconfig
-arm                        oxnas_v6_defconfig
-riscv                            allmodconfig
-powerpc                     ppa8548_defconfig
-arm                          imote2_defconfig
-sh                           se7750_defconfig
-arm                        realview_defconfig
-powerpc                     stx_gp3_defconfig
-um                                  defconfig
-sh                   rts7751r2dplus_defconfig
-mips                          rm200_defconfig
-arc                     nsimosci_hs_defconfig
-mips                      maltaaprp_defconfig
-sh                           se7206_defconfig
-m68k                         apollo_defconfig
-sh                ecovec24-romimage_defconfig
-sh                          r7785rp_defconfig
-mips                    maltaup_xpa_defconfig
-arm                        mvebu_v7_defconfig
-arm                  randconfig-c002-20211123
-arm                  randconfig-c002-20211124
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a001-20211123
-x86_64               randconfig-a003-20211123
-x86_64               randconfig-a006-20211123
-x86_64               randconfig-a004-20211123
-x86_64               randconfig-a005-20211123
-x86_64               randconfig-a002-20211123
-i386                 randconfig-a001-20211123
-i386                 randconfig-a002-20211123
-i386                 randconfig-a005-20211123
-i386                 randconfig-a006-20211123
-i386                 randconfig-a004-20211123
-i386                 randconfig-a003-20211123
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+[1] https://marc.info/?l=linux-pci&m=153988799707413
+[2] https://lore.kernel.org/linux-pci/20181018183721.27467-1-gpiccoli@canonical.com/
+[3] https://lore.kernel.org/linux-pci/20181018183721.27467-2-gpiccoli@canonical.com/
+[4] https://lore.kernel.org/linux-pci/20181018183721.27467-3-gpiccoli@canonical.com/
 
-clang tested configs:
-s390                 randconfig-c005-20211123
-i386                 randconfig-c001-20211123
-powerpc              randconfig-c003-20211123
-arm                  randconfig-c002-20211123
-riscv                randconfig-c006-20211123
-x86_64               randconfig-c007-20211123
-mips                 randconfig-c004-20211123
-x86_64               randconfig-a014-20211123
-x86_64               randconfig-a011-20211123
-x86_64               randconfig-a012-20211123
-x86_64               randconfig-a016-20211123
-x86_64               randconfig-a013-20211123
-x86_64               randconfig-a015-20211123
-i386                 randconfig-a016-20211123
-i386                 randconfig-a015-20211123
-i386                 randconfig-a012-20211123
-i386                 randconfig-a013-20211123
-i386                 randconfig-a014-20211123
-i386                 randconfig-a011-20211123
-hexagon              randconfig-r045-20211123
-s390                 randconfig-r044-20211123
-hexagon              randconfig-r041-20211123
-riscv                randconfig-r042-20211123
+I will let you know how we get on.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Thanks,
+Matthew
+
+diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+index f948e6cd2993..cbca207ddc45 100644
+--- a/drivers/vfio/pci/vfio_pci_core.c
++++ b/drivers/vfio/pci/vfio_pci_core.c
+@@ -276,6 +276,7 @@ int vfio_pci_core_enable(struct vfio_pci_core_device *vdev)
+             vdev->pci_2_3 = pci_intx_mask_supported(pdev);
+     }
+
++    vfio_intx_stub_init(vdev);
+     pci_read_config_word(pdev, PCI_COMMAND, &cmd);
+     if (vdev->pci_2_3 && (cmd & PCI_COMMAND_INTX_DISABLE)) {
+         cmd &= ~PCI_COMMAND_INTX_DISABLE;
+@@ -365,6 +366,14 @@ void vfio_pci_core_disable(struct
+vfio_pci_core_device *vdev)
+         kfree(dummy_res);
+     }
+
++    /*
++     * Set known command register state, disabling MSI/X (via busmaster)
++     * and INTx directly.  At this point we can teardown the INTx stub
++     * handler initialized from the SET_IRQS teardown above.
++     */
++    pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
++    vfio_intx_stub_exit(vdev);
++
+     vdev->needs_reset = true;
+
+     /*
+@@ -382,12 +391,6 @@ void vfio_pci_core_disable(struct
+vfio_pci_core_device *vdev)
+         pci_save_state(pdev);
+     }
+
+-    /*
+-     * Disable INTx and MSI, presumably to avoid spurious interrupts
+-     * during reset.  Stolen from pci_reset_function()
+-     */
+-    pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
+-
+     /*
+      * Try to get the locks ourselves to prevent a deadlock. The
+      * success of this is dependent on being able to lock the device,
+diff --git a/drivers/vfio/pci/vfio_pci_intrs.c
+b/drivers/vfio/pci/vfio_pci_intrs.c
+index 6069a11fb51a..98cf528aa175 100644
+--- a/drivers/vfio/pci/vfio_pci_intrs.c
++++ b/drivers/vfio/pci/vfio_pci_intrs.c
+@@ -139,6 +139,44 @@ static irqreturn_t vfio_intx_handler(int irq, void *dev_id)
+     return ret;
+ }
+
++static irqreturn_t vfio_intx_stub(int irq, void *dev_id)
++{
++    struct vfio_pci_core_device *vdev = dev_id;
++
++    if (pci_check_and_mask_intx(vdev->pdev))
++        return IRQ_HANDLED;
++
++    return IRQ_NONE;
++}
++
++void vfio_intx_stub_init(struct vfio_pci_core_device *vdev)
++{
++    char *name;
++
++    if (vdev->nointx || !vdev->pci_2_3 || !vdev->pdev->irq)
++        return;
++
++    name = kasprintf(GFP_KERNEL, "vfio-intx-stub(%s)",
++             pci_name(vdev->pdev));
++    if (!name)
++        return;
++
++    if (request_irq(vdev->pdev->irq, vfio_intx_stub,
++            IRQF_SHARED, name, vdev))
++        kfree(name);
++
++    vdev->intx_stub = true;
++}
++
++void vfio_intx_stub_exit(struct vfio_pci_core_device *vdev)
++{
++    if (!vdev->intx_stub)
++        return;
++
++    kfree(free_irq(vdev->pdev->irq, vdev));
++    vdev->intx_stub = false;
++}
++
+ static int vfio_intx_enable(struct vfio_pci_core_device *vdev)
+ {
+     if (!is_irq_none(vdev))
+@@ -153,6 +191,8 @@ static int vfio_intx_enable(struct
+vfio_pci_core_device *vdev)
+
+     vdev->num_ctx = 1;
+
++    vfio_intx_stub_exit(vdev);
++
+     /*
+      * If the virtual interrupt is masked, restore it.  Devices
+      * supporting DisINTx can be masked at the hardware level
+@@ -231,6 +271,7 @@ static void vfio_intx_disable(struct
+vfio_pci_core_device *vdev)
+     vdev->irq_type = VFIO_PCI_NUM_IRQS;
+     vdev->num_ctx = 0;
+     kfree(vdev->ctx);
++    vfio_intx_stub_init(vdev);
+ }
+
+ /*
+@@ -258,6 +299,8 @@ static int vfio_msi_enable(struct
+vfio_pci_core_device *vdev, int nvec, bool msi
+     if (!vdev->ctx)
+         return -ENOMEM;
+
++    vfio_intx_stub_exit(vdev);
++
+     /* return the number of supported vectors if we can't get all: */
+     cmd = vfio_pci_memory_lock_and_enable(vdev);
+     ret = pci_alloc_irq_vectors(pdev, 1, nvec, flag);
+@@ -266,6 +309,7 @@ static int vfio_msi_enable(struct
+vfio_pci_core_device *vdev, int nvec, bool msi
+             pci_free_irq_vectors(pdev);
+         vfio_pci_memory_unlock_and_restore(vdev, cmd);
+         kfree(vdev->ctx);
++        vfio_intx_stub_init(vdev);
+         return ret;
+     }
+     vfio_pci_memory_unlock_and_restore(vdev, cmd);
+@@ -388,6 +432,7 @@ static int vfio_msi_set_block(struct
+vfio_pci_core_device *vdev, unsigned start,
+ static void vfio_msi_disable(struct vfio_pci_core_device *vdev, bool msix)
+ {
+     struct pci_dev *pdev = vdev->pdev;
++    pci_dev_flags_t dev_flags = pdev->dev_flags;
+     int i;
+     u16 cmd;
+
+@@ -399,19 +444,22 @@ static void vfio_msi_disable(struct
+vfio_pci_core_device *vdev, bool msix)
+     vfio_msi_set_block(vdev, 0, vdev->num_ctx, NULL, msix);
+
+     cmd = vfio_pci_memory_lock_and_enable(vdev);
+-    pci_free_irq_vectors(pdev);
+-    vfio_pci_memory_unlock_and_restore(vdev, cmd);
+
+     /*
+-     * Both disable paths above use pci_intx_for_msi() to clear DisINTx
+-     * via their shutdown paths.  Restore for NoINTx devices.
++     * XXX pci_intx_for_msi() will clear DisINTx, which can trigger an
++     * INTx storm even before we return from pci_free_irq_vectors(), even
++     * as we'll restore the previous command register immediately after.
++     * Hack around it by masking in a dev_flag to prevent such behavior.
+      */
+-    if (vdev->nointx)
+-        pci_intx(pdev, 0);
++    pdev->dev_flags |= PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG;
++    pci_free_irq_vectors(pdev);
++    pdev->dev_flags = dev_flags;
+
++    vfio_pci_memory_unlock_and_restore(vdev, cmd);
+     vdev->irq_type = VFIO_PCI_NUM_IRQS;
+     vdev->num_ctx = 0;
+     kfree(vdev->ctx);
++    vfio_intx_stub_init(vdev);
+ }
+
+ /*
+diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
+index ef9a44b6cf5d..58e1029eb083 100644
+--- a/include/linux/vfio_pci_core.h
++++ b/include/linux/vfio_pci_core.h
+@@ -124,6 +124,7 @@ struct vfio_pci_core_device {
+     bool            needs_reset;
+     bool            nointx;
+     bool            needs_pm_restore;
++    bool            intx_stub;
+     struct pci_saved_state    *pci_saved_state;
+     struct pci_saved_state    *pm_save;
+     int            ioeventfds_nr;
+@@ -145,6 +146,9 @@ struct vfio_pci_core_device {
+ #define is_irq_none(vdev) (!(is_intx(vdev) || is_msi(vdev) || is_msix(vdev)))
+ #define irq_is(vdev, type) (vdev->irq_type == type)
+
++extern void vfio_intx_stub_init(struct vfio_pci_core_device *vdev);
++extern void vfio_intx_stub_exit(struct vfio_pci_core_device *vdev);
++
+ extern void vfio_pci_intx_mask(struct vfio_pci_core_device *vdev);
+ extern void vfio_pci_intx_unmask(struct vfio_pci_core_device *vdev);
