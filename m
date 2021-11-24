@@ -2,58 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2078D45B56A
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 08:33:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BFCE45B5B3
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 08:40:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241135AbhKXHgd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 02:36:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241130AbhKXHga (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Nov 2021 02:36:30 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D702760ED4;
-        Wed, 24 Nov 2021 07:33:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1637739201;
-        bh=fAoZJXLu4kdGq8lV85I9ZGE3DyGUx4/jwY+1T7LxN+g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OVEc42WNzkV9yZzFVYiNNc8ZogMajpuGRiBxMA/VqD7GdJZ4/iwvJWRb7rauVsvD1
-         kstnOrZkMKLQrVkPuiwo7m10gORNOkKCc6GHeuq60RgK/py+L6618H6Ouw3cBgRppo
-         DBvNiFTc+vAgwk2AYgJ8VGPr3AVIzHiox7Wsodts=
-Date:   Wed, 24 Nov 2021 08:33:18 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 20/23] cxl/port: Introduce a port driver
-Message-ID: <YZ3qvtHlMkRnC74f@kroah.com>
-References: <CAPcyv4h7h3oJTEorMhL6MMD5FYbSxaWs6tb3-w=JWxhR=j77+A@mail.gmail.com>
- <20211123235557.GA2247853@bhelgaas>
- <CAPcyv4g0=zz8BtB9DRW0FGsRRvgGwEaQcgbmXDhJ3DwNFS9Z+g@mail.gmail.com>
- <20211124063316.GA6792@lst.de>
- <CAPcyv4ii=bjKNQxoMLF-gscJy7Bh8CUn205_1GpCwfMyJ22+6g@mail.gmail.com>
- <20211124072824.GA7738@lst.de>
+        id S229966AbhKXHnd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 02:43:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229815AbhKXHnd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 02:43:33 -0500
+X-Greylist: delayed 159998 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 Nov 2021 23:40:24 PST
+Received: from mail.marcansoft.com (marcansoft.com [IPv6:2a01:298:fe:f::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12664C061574;
+        Tue, 23 Nov 2021 23:40:24 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: marcan@marcan.st)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id 710453FA5E;
+        Wed, 24 Nov 2021 07:40:20 +0000 (UTC)
+Subject: Re: [PATCH] PCI: apple: Configure link speeds properly
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20211122111332.72264-1-marcan@marcan.st>
+ <CAL_Jsq+vFbFN+WQhi3dRicW+kaP1Oi9JPSmnAFL7XAc0eCvgrA@mail.gmail.com>
+From:   Hector Martin <marcan@marcan.st>
+Message-ID: <8e881b80-614c-dccf-ddaf-895d1acf26c7@marcan.st>
+Date:   Wed, 24 Nov 2021 16:40:17 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211124072824.GA7738@lst.de>
+In-Reply-To: <CAL_Jsq+vFbFN+WQhi3dRicW+kaP1Oi9JPSmnAFL7XAc0eCvgrA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: es-ES
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 24, 2021 at 08:28:24AM +0100, Christoph Hellwig wrote:
-> On Tue, Nov 23, 2021 at 11:17:55PM -0800, Dan Williams wrote:
-> > I am missing the counter proposal in both Bjorn's and your distaste
-> > for aux bus and PCIe portdrv?
+On 24/11/2021 11.23, Rob Herring wrote:
+>> +#include "../pci.h"
+>> +/* Apple PCIe is based on DesignWare IP and shares some registers */
+>> +#include "dwc/pcie-designware.h"
 > 
-> Given that I've only brought in in the last mail I have no idea what
-> the original proposal even is.
+> I'm starting to regret this not being part of the DWC driver...
 
-Neither do I :(
+Main issue is the DWC driver seems to have a pretty hard-coded 
+assumption of one port per controller, plus does a bunch of stuff 
+differently for the higher layers. It seems Apple used the DWC PHY/LTSSM 
+bits, then rolled their own upper layer.
+
+>> +/* The offset of the PCIe capabilities structure in bridge config space */
+>> +#define PCIE_CAP_BASE          0x70
+> 
+> This offset is discoverable, so don't hardcode it.
+
+Sure, it just means I have to reinvent the PCI capability lookup wheel 
+again. I'd love to use the regular accessors, but the infrastructure 
+isn't up to the point where we can do that yet yere. DWC also reinvents 
+this wheel, but we can't reuse that code because it pokes these 
+registers through a separate reg range, not config space (even though it 
+seems like they should be the same thing? I'm not sure what's going on 
+in the DWC devices... for the Apple controller it's just the ECAM).
+
+>> +       max_gen = of_pci_get_max_link_speed(port->np);
+>> +       if (max_gen < 0) {
+>> +               dev_err(port->pcie->dev, "max link speed not specified\n");
+> 
+> Better to fail than limp along in gen1? Though you don't check the
+> return value...
+> 
+> Usually, the DT property is there to limit the speed when there's a
+> board limitation.
+
+The default *setting* is actually Gen4, but without 
+PCIE_LINK_WIDTH_SPEED_CONTROL poked it always trains at Gen1. Might make 
+more sense to only set the LNKCTL field if max-link-speed is specified, 
+and unconditionally poke that bit. That'll get us Gen4 by default (or 
+even presumably Gen5 in future controllers, if everything else stays 
+compatible).
+
+-- 
+Hector Martin (marcan@marcan.st)
+Public Key: https://mrcn.st/pub
