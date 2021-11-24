@@ -2,133 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4083245CD32
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 20:30:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3C4645CD3D
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 20:31:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244724AbhKXTdY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 14:33:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33244 "EHLO
+        id S1351187AbhKXTer (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 14:34:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351000AbhKXTdO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 14:33:14 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88983C061574;
-        Wed, 24 Nov 2021 11:30:04 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637782202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LYogUZz5SCgK/KWX9KT7zTNAuMHBvkv1vFcTH7JmwzE=;
-        b=iFHR8vN0YSSvuY+/FEqOWS04ELNvnlIINtGmzBvpgvoW0RJXJNsuHQmBfMj2iA4ZMko4H2
-        60BmO1srcUsxSyxf3b8VwniTwrU4MW5HYIXnO89hYIS7P1Dv+dfsCPnYU7rnP5wpbTitY0
-        d+Uog0bcMrja6eQpc+n+YlkcbsQy9imG2hGFjxPQyYFnX6EtIaVaRi/GO9kEUtQ+z/u24q
-        yeZsZgvknnYSXbkPASptJlMOrvr5vdukN69zMmHhXuYOWPC8Bsq0PCSq9rs+XpnYsjoU08
-        2MExB79kFbRR0fbL2JT4UdNRaQEHAcI3vik+kIMHnW4vn3C+t3gOgV0PnSzSIA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637782202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LYogUZz5SCgK/KWX9KT7zTNAuMHBvkv1vFcTH7JmwzE=;
-        b=ZIXqIBgjBL4jcz44alU7iuZQZux6E74834ms00khTW9kWpyR41Bmv11e6hQ6i28s8f1em7
-        dHuN95+5/LDPrhBg==
-To:     Nitesh Lal <nilal@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
-        davem@davemloft.net, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        huangguangbin2@huawei.com, huangdaode@huawei.com,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Alex Belits <abelits@marvell.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
-        akpm@linuxfoundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        chris.friesen@windriver.com, Marc Zyngier <maz@kernel.org>,
-        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com,
-        Stefan Assmann <sassmann@redhat.com>,
-        Tomas Henzl <thenzl@redhat.com>, james.smart@broadcom.com,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Ken Cox <jkc@redhat.com>, faisal.latif@intel.com,
-        shiraz.saleem@intel.com, tariqt@nvidia.com,
-        Alaa Hleihel <ahleihel@redhat.com>,
-        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
-        saeedm@nvidia.com,
-        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
-        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
-        Al Stone <ahs3@redhat.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
-        bjorn.andersson@linaro.org, chunkuang.hu@kernel.org,
-        yongqiang.niu@mediatek.com, baolin.wang7@gmail.com,
-        Petr Oros <poros@redhat.com>, Ming Lei <minlei@redhat.com>,
-        Ewan Milne <emilne@redhat.com>, jejb@linux.ibm.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        kabel@kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>, kashyap.desai@broadcom.com,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        shivasharan.srikanteshwara@broadcom.com,
-        sathya.prakash@broadcom.com,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        suganath-prabu.subramani@broadcom.com, ley.foon.tan@intel.com,
-        jbrunet@baylibre.com, johannes@sipsolutions.net,
-        snelson@pensando.io, lewis.hanly@microchip.com, benve@cisco.com,
-        _govind@gmx.com, jassisinghbrar@gmail.com
-Subject: Re: [PATCH v6 00/14] genirq: Cleanup the abuse of
- irq_set_affinity_hint()
-In-Reply-To: <CAFki+L=9Hw-2EONFEX6b7k6iRX_yLx1zcS+NmWsDSuBWg8w-Qw@mail.gmail.com>
-References: <20210903152430.244937-1-nitesh@redhat.com>
- <CAFki+L=9Hw-2EONFEX6b7k6iRX_yLx1zcS+NmWsDSuBWg8w-Qw@mail.gmail.com>
-Date:   Wed, 24 Nov 2021 20:30:01 +0100
-Message-ID: <87bl29l5c6.ffs@tglx>
+        with ESMTP id S1351245AbhKXTeR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 14:34:17 -0500
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A4ECC06174A
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 11:31:07 -0800 (PST)
+Received: by mail-pf1-x42c.google.com with SMTP id g18so3625714pfk.5
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 11:31:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vI7SzUj5UovgtfMb+fdADiLIwlcQ1wWC4aPy4AKa9sw=;
+        b=0bLuuQ/jE+gTjDQ7ciBE/07ddYj2uqOteQnZLi85uA8MFu8jSoIUYqqJCccGABtrTF
+         A78/mVgvstS02fSGtc8JEl33phPEac/WZZL7AmRbJxiWgXhlevV+smf69rNbhc9RoY4L
+         OdMXMQpGDvQ1a9+DKKGEyPvaBuy2/gNYEkqQ8m5CtKGOyxog3YkFzqDWpSz+I7i9ZJj9
+         8vLtEE+lnvfb/0/3ccZUw9Utcz2RzvdJSyirxLeiHsNBoblVFWtxy0EmtfEs5ixviCGf
+         ntc2dts22JJo5BbzkzJhTxcHYc661w25eCwPiOJ5PK8YOuQNmEBR/7RQNLQ7ux9FijIg
+         9ZIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vI7SzUj5UovgtfMb+fdADiLIwlcQ1wWC4aPy4AKa9sw=;
+        b=4cMddfePKnfER3dND+a2gavgKC/BVXYPk917tKPg+yhKXtgTktMZNodeHlWDAVSxx4
+         7mP7wFChR9SJCcTutKatsw6Qq5SQDMYdHUtgheP/XusSr1r8lYw8GojJo0MO+iW8CXGP
+         pb2qV/XrosHbkIpsbo531t37rEUYK9laOBZQsyBTlTlMxDYuMOX7r3E9e+MUdE5blyPH
+         B+ekppd+P7i9sb80zyMFPMOfl2DCyiiXetOw674IM+wYG3C2QItx/HMQ4DrHcOcbEqpP
+         +0lFcOKXUM2sgnZ8rcz18Gu8zbHOScgk7JppTg91EathOJK6GxUPddEVKocEc2TEQ7i7
+         xnig==
+X-Gm-Message-State: AOAM531wHKtLbJTua0rlSRvNPs2xDkcwqlfANJvOYQcf00Zv2FZoBDDQ
+        3FvBnmR7Q6MALdd5C33gXuRW3rntKTpWs0Wnzr02yw==
+X-Google-Smtp-Source: ABdhPJwu4BzXwUzPTOx3eZyuEmi1g/2RqUwz46ZVZuCSxJm6PakajWT8pRAEysCQkiHfpnoiaOBdmQLapQccbnY/QTM=
+X-Received: by 2002:a05:6a00:140e:b0:444:b077:51ef with SMTP id
+ l14-20020a056a00140e00b00444b07751efmr8535703pfu.61.1637782266311; Wed, 24
+ Nov 2021 11:31:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-4-ben.widawsky@intel.com>
+In-Reply-To: <20211120000250.1663391-4-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 24 Nov 2021 11:30:56 -0800
+Message-ID: <CAPcyv4ic827h-WPxU2e1aKu1mVo78aNdNo82skcLW6hqnOnSEQ@mail.gmail.com>
+Subject: Re: [PATCH 03/23] cxl/pci: Extract device status check
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Nitesh,
-
-On Mon, Sep 13 2021 at 10:34, Nitesh Lal wrote:
-> On Fri, Sep 3, 2021 at 11:25 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
->>
->> The drivers currently rely on irq_set_affinity_hint() to either set the
->> affinity_hint that is consumed by the userspace and/or to enforce a custom
->> affinity.
->>
->> irq_set_affinity_hint() as the name suggests is originally introduced to
->> only set the affinity_hint to help the userspace in guiding the interrupts
->> and not the affinity itself. However, since the commit
->>
->>         e2e64a932556 "genirq: Set initial affinity in irq_set_affinity_hint()"
-
-sorry for ignoring this. It fell through the cracks.
-
->> Thomas Gleixner (1):
->>   genirq: Provide new interfaces for affinity hints
-
-Did I actually write this?
-
-> Any suggestions on what should be the next steps here? Unfortunately, I haven't
-> been able to get any reviews on the following two patches:
->   be2net: Use irq_update_affinity_hint
->   hinic: Use irq_set_affinity_and_hint
+On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> One option would be to proceed with the remaining patches and I can try
-> posting these two again when I post patches for the remaining drivers?
+> The Memory Device Status register is inspected in the same way for at
+> least two flows in the CXL Type 3 Memory Device Software Guide
+> (Revision: 1.0): 2.13.9 Device discovery and mailbox ready sequence,
+> and 2.13.10 Media ready sequence. Extract this common functionality for
+> use by both.
 
-The more general question is whether I should queue all the others or
-whether some subsystem would prefer to pull in a tagged commit on top of
-rc1. I'm happy to carry them all of course.
+Can you translate this into CXL specification terms? See below for the
+rationale...
 
-Thanks,
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+> This patch did not exist in RFCv2
+> ---
+>  drivers/cxl/pci.c | 33 +++++++++++++++++++++++++--------
+>  1 file changed, 25 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index a6ea9811a05b..6c8d09fb3a17 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -182,6 +182,27 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>         return 0;
+>  }
+>
+> +/*
+> + * Implements roughly the bottom half of Figure 42 of the CXL Type 3 Memory
+> + * Device Software Guide
 
-        tglx
+I do appreciate that document for working through some of the concerns
+that system software might have for various CXL flows, but at the same
+time it's not authoritative. I.e. it is not a specification itself and
+it depends on the CXL specification as the "source of truth". So for
+Linux commentary I would translate the guide's recommendations back
+into the base truth from the CXL specification.
 
+There will be places where Linux goes a different direction than the
+software guide so I do not want to set any expectations that those
+excursions are a bug, or otherwise require someone to consult a
+specific hardware vendor's software guide.
 
+Especially in this case when the logic is simply "check a couple fatal
+status flags", the base specification is sufficient and the original
+code made no reference to the guide.
+
+> + */
+> +static int check_device_status(struct cxl_dev_state *cxlds)
+> +{
+> +       const u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> +
+> +       if (md_status & CXLMDEV_DEV_FATAL) {
+> +               dev_err(cxlds->dev, "Fatal: replace device\n");
+
+The specification says "replace device", I disagree that the kernel
+should be recommending that the device by replaced. Just report what
+the driver does, and that's probably easier if the error messages are
+left to the caller.
+
+        const u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+
+        if (md_status & (CXLMDEV_DEV_FATAL | CXLMDEV_FW_HALT)) {
+                dev_err(dev, "mbox: failed to acquire, device state:%s%s\n",
+                        md_status & CXLMDEV_DEV_FATAL ? " fatal" : "",
+                        md_status & CXLMDEV_FW_HALT ? " firmware-halt" : "");
+                return -EIO;
+        }
+
+...i.e. it's not clear to me the helper helps.
+
+> +               return -EIO;
+> +       }
+> +
+> +       if (md_status & CXLMDEV_FW_HALT) {
+> +               dev_err(cxlds->dev, "FWHalt: reset or replace device\n");
+> +               return -EBUSY;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  /**
+>   * cxl_pci_mbox_get() - Acquire exclusive access to the mailbox.
+>   * @cxlds: The device state to gain access to.
+> @@ -231,17 +252,13 @@ static int cxl_pci_mbox_get(struct cxl_dev_state *cxlds)
+>          * Hardware shouldn't allow a ready status but also have failure bits
+>          * set. Spit out an error, this should be a bug report
+>          */
+> -       rc = -EFAULT;
+> -       if (md_status & CXLMDEV_DEV_FATAL) {
+> -               dev_err(dev, "mbox: reported ready, but fatal\n");
+> +       rc = check_device_status(cxlds);
+> +       if (rc)
+>                 goto out;
+> -       }
+> -       if (md_status & CXLMDEV_FW_HALT) {
+> -               dev_err(dev, "mbox: reported ready, but halted\n");
+> -               goto out;
+> -       }
+> +
+>         if (CXLMDEV_RESET_NEEDED(md_status)) {
+
+I think this check needs to go. If the reset is needed because of one
+of the above failure statuses then the function will have already
+error exited. If the reset is needed because media is disabled that
+should not be fatal for mailbox operations. It could be useful to do
+some interrogation of *why* media is disabled.
+
+>                 dev_err(dev, "mbox: reported ready, but reset needed\n");
+> +               rc = -EFAULT;
+>                 goto out;
+>         }
+>
+> --
+> 2.34.0
+>
