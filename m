@@ -2,93 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BFCE45B5B3
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 08:40:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F1AB45B5FC
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 08:54:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229966AbhKXHnd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 02:43:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42236 "EHLO
+        id S240685AbhKXH5X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 02:57:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229815AbhKXHnd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 02:43:33 -0500
-X-Greylist: delayed 159998 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 Nov 2021 23:40:24 PST
-Received: from mail.marcansoft.com (marcansoft.com [IPv6:2a01:298:fe:f::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12664C061574;
-        Tue, 23 Nov 2021 23:40:24 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id 710453FA5E;
-        Wed, 24 Nov 2021 07:40:20 +0000 (UTC)
-Subject: Re: [PATCH] PCI: apple: Configure link speeds properly
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20211122111332.72264-1-marcan@marcan.st>
- <CAL_Jsq+vFbFN+WQhi3dRicW+kaP1Oi9JPSmnAFL7XAc0eCvgrA@mail.gmail.com>
-From:   Hector Martin <marcan@marcan.st>
-Message-ID: <8e881b80-614c-dccf-ddaf-895d1acf26c7@marcan.st>
-Date:   Wed, 24 Nov 2021 16:40:17 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        with ESMTP id S240520AbhKXH5X (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 02:57:23 -0500
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3ACC061714
+        for <linux-pci@vger.kernel.org>; Tue, 23 Nov 2021 23:54:14 -0800 (PST)
+Received: by mail-pj1-x102b.google.com with SMTP id np3so1820052pjb.4
+        for <linux-pci@vger.kernel.org>; Tue, 23 Nov 2021 23:54:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U6GvgMO3bDV1Gv9RaQtAnaYISkA1nQVTEfzgtEITUG8=;
+        b=UZS7PhUUjfRt8wcMdv3RZNHnBXhEtw8IJrbI5ebpS2k7XYM9CeRmI93G9PIvJMrNhH
+         PFpEI+dWT12WQHau2OEFRpXYCPWzo1Pbsy9vInMe2Vf4pnp901bAjEsQids4ea3v6OW2
+         3dKhBYOKAAbFJ5DpKPM5t7UyCrUvcr5TuAZsQFixDY4HLPQRXzkLL3WgSJoMVFJOLwtF
+         M8jUEb0QW+EXRK782MJ9VK9Y3Jb4qHNdyrg9i56lYHPHxVTZLhrrESj1LyVK+6ZU1ZCw
+         BXDc7o93AKBWjOEs2yS1/5zPhUOz7SMtZkTpkmCab0b8YRQP9lhYBadpYMnP7U9Bg9za
+         vTTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U6GvgMO3bDV1Gv9RaQtAnaYISkA1nQVTEfzgtEITUG8=;
+        b=C2efAL1IWTGB6GmBRJzjivnPWHyLJ5CB00lLL2IoJggiIAhG1ToPu3k9m5AkZ0TqpH
+         imuWo3ySrA3V9ZXv0oErgm11RZ8x8gJLTrAce80F4bYkn4UsEmt32n9dKt7ak7HptF0l
+         YuwbTTvLOaXgLnnvEDjgK6fYTl3P5GOs30vLJdlP/W0ijmxGqRCM4TOcLb6ui4t6EVUo
+         lUi/8DrpsJg2+gGd9dcg2OQgBuCpptWS7nCv7YXJ6T7TFRj4Gw5ZxUUNJ4Lj/aQaHe1M
+         TS/hdUUDpqj3GQshhtNoWRYe6309E+d4tRtshrMkBJ+aPWIidcI7wgN5b0aJnnJ//Mmi
+         swWg==
+X-Gm-Message-State: AOAM533YeEF1eO5Zxm5kCLAOKX/hbMC0fU4JvdRnyMEOsMa88o3O4h5D
+        LaBXZrHSxngT8fyjKYgaB8zSFxOp49r9/HqvmY44Ng==
+X-Google-Smtp-Source: ABdhPJwx5vxubnaQUhsFqNh+AUbdwrIOygehiI/0X/MoXrj2GP35tdedYUei/q+OXo5lEHg2D3Fy+SN4/bfItOng0VE=
+X-Received: by 2002:a17:902:6acb:b0:142:76c3:d35f with SMTP id
+ i11-20020a1709026acb00b0014276c3d35fmr15690393plt.89.1637740453619; Tue, 23
+ Nov 2021 23:54:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+vFbFN+WQhi3dRicW+kaP1Oi9JPSmnAFL7XAc0eCvgrA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: es-ES
-Content-Transfer-Encoding: 7bit
+References: <CAPcyv4h7h3oJTEorMhL6MMD5FYbSxaWs6tb3-w=JWxhR=j77+A@mail.gmail.com>
+ <20211123235557.GA2247853@bhelgaas> <CAPcyv4g0=zz8BtB9DRW0FGsRRvgGwEaQcgbmXDhJ3DwNFS9Z+g@mail.gmail.com>
+ <20211124063316.GA6792@lst.de> <CAPcyv4ii=bjKNQxoMLF-gscJy7Bh8CUn205_1GpCwfMyJ22+6g@mail.gmail.com>
+ <20211124072824.GA7738@lst.de> <YZ3qvtHlMkRnC74f@kroah.com>
+In-Reply-To: <YZ3qvtHlMkRnC74f@kroah.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 23 Nov 2021 23:54:03 -0800
+Message-ID: <CAPcyv4iYcBFDhDtcxc37EWfX1Wpuh8Zsm4-whTL0vNyY4zW3AQ@mail.gmail.com>
+Subject: Re: [PATCH 20/23] cxl/port: Introduce a port driver
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 24/11/2021 11.23, Rob Herring wrote:
->> +#include "../pci.h"
->> +/* Apple PCIe is based on DesignWare IP and shares some registers */
->> +#include "dwc/pcie-designware.h"
-> 
-> I'm starting to regret this not being part of the DWC driver...
+On Tue, Nov 23, 2021 at 11:33 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Nov 24, 2021 at 08:28:24AM +0100, Christoph Hellwig wrote:
+> > On Tue, Nov 23, 2021 at 11:17:55PM -0800, Dan Williams wrote:
+> > > I am missing the counter proposal in both Bjorn's and your distaste
+> > > for aux bus and PCIe portdrv?
+> >
+> > Given that I've only brought in in the last mail I have no idea what
+> > the original proposal even is.
+>
+> Neither do I :(
 
-Main issue is the DWC driver seems to have a pretty hard-coded 
-assumption of one port per controller, plus does a bunch of stuff 
-differently for the higher layers. It seems Apple used the DWC PHY/LTSSM 
-bits, then rolled their own upper layer.
+To be clear I am also trying to get to the root of Bjorn's concern.
 
->> +/* The offset of the PCIe capabilities structure in bridge config space */
->> +#define PCIE_CAP_BASE          0x70
-> 
-> This offset is discoverable, so don't hardcode it.
-
-Sure, it just means I have to reinvent the PCI capability lookup wheel 
-again. I'd love to use the regular accessors, but the infrastructure 
-isn't up to the point where we can do that yet yere. DWC also reinvents 
-this wheel, but we can't reuse that code because it pokes these 
-registers through a separate reg range, not config space (even though it 
-seems like they should be the same thing? I'm not sure what's going on 
-in the DWC devices... for the Apple controller it's just the ECAM).
-
->> +       max_gen = of_pci_get_max_link_speed(port->np);
->> +       if (max_gen < 0) {
->> +               dev_err(port->pcie->dev, "max link speed not specified\n");
-> 
-> Better to fail than limp along in gen1? Though you don't check the
-> return value...
-> 
-> Usually, the DT property is there to limit the speed when there's a
-> board limitation.
-
-The default *setting* is actually Gen4, but without 
-PCIE_LINK_WIDTH_SPEED_CONTROL poked it always trains at Gen1. Might make 
-more sense to only set the LNKCTL field if max-link-speed is specified, 
-and unconditionally poke that bit. That'll get us Gen4 by default (or 
-even presumably Gen5 in future controllers, if everything else stays 
-compatible).
-
--- 
-Hector Martin (marcan@marcan.st)
-Public Key: https://mrcn.st/pub
+The proposal in $SUBJECT is to build on / treat a CXL topology as a
+Linux device topology on /sys/bus/cxl that references devices on
+/sys/bus/platform (CXL ACPI topology root and Host Bridges) and
+/sys/bus/pci (CXL Switches and Endpoints). This CXL port device
+topology has already been shipping for a few kernel cycles. What is on
+the table now is a driver for CXL port devices (a logical Linux
+construct). The driver handles discovery of "component registers"
+either by ACPI table or PCI DVSEC and offers services to proxision CXL
+regions. CXL 'regions' are also proposed as Linux devices that
+represent an active CXL memory range which can interleave multiple
+endpoints across multiple switches and host bridges.
