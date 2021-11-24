@@ -2,215 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ECE045C9E9
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 17:24:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9DEC45CB62
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 18:51:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348543AbhKXQ1S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 11:27:18 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:46781 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348524AbhKXQ1R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 11:27:17 -0500
-Received: (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 6438924000B;
-        Wed, 24 Nov 2021 16:24:02 +0000 (UTC)
-Date:   Wed, 24 Nov 2021 17:24:02 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] arm: ioremap: Replace pci_ioremap_io() usage by
- pci_remap_iospace()
-Message-ID: <YZ5nIhtFVgPdNxAj@piout.net>
-References: <20211124154116.916-1-pali@kernel.org>
- <20211124154116.916-5-pali@kernel.org>
+        id S242743AbhKXRy0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 12:54:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38766 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240911AbhKXRyZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 12:54:25 -0500
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A76C061574
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 09:51:16 -0800 (PST)
+Received: by mail-pg1-x533.google.com with SMTP id q16so2817648pgq.10
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 09:51:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oTDchkafpOp/46IgeNxQuNHz+bM7M0+5Ox+wOnWqwfQ=;
+        b=Qb2R4+I+DtEcOkXq0TYH/CagTNAxs9vdwiKlDdzULoiuVos13Xj0bBoEZSIPlJijzR
+         C478wnOgwX2OIroiZLUXmkCPPl7ne/tYZ6BhKk2rJK6CwWNPOkQPdhuayJPTVdRrDcgL
+         lYvMSdRGlCmlv6Yx0LePe8p8yv07r0peWf6/ErtsteaCes01s8SNwZ2q+UfiZQEciJ5R
+         14+qbgLpmXR5b1sK15zTGPdKVkRwKQ9vgA4LZtRxlhr6dxnNSySqCpZULAsRTj6j4ZuC
+         AymmMd7hKuQHEFmtp6YoDZPpoqm3daj0NDEv0m+0NdMYu4USrjQ47MKRLlI/ImkVjBPx
+         BcWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oTDchkafpOp/46IgeNxQuNHz+bM7M0+5Ox+wOnWqwfQ=;
+        b=MfRHGLQqCJ62MlJmbvxC5iJqZwSMVAEiakJYds7rB2l7xZbKLL8N/SImPVwxaSdCst
+         xruT9ukl46Szs5XuJLZl7PQj5l5eKpnkzrYHH9ESZ/Z9z1QpZXjFHfXFklpp0aEkpW2f
+         kCUUsdE4NsemgiM/R0AkgpvChyOjiMBrjEVDP0HeH2eOyRO/uAFWZznNBnaElsCZSVvu
+         v3Qrd3OyJYgSmtKrEQdfzbfj6pRdnJjxHPpFVZJpFko07pjcjOWZ/yoWfmSLbk0JWmIc
+         eVnKZfIE5PmfEVclb3kezcxoVn3DV2Rkg0tnQl5prPfRnXcENY/a/O8Ya365XNXjnPJH
+         LJ+A==
+X-Gm-Message-State: AOAM531/MU6e0M9hnPZjZ8xufb5YkG9qSntVKP6Sd+iMuJd9E92blkli
+        oG6HsP0CFAcIHD/q3B+kmZ71SQ==
+X-Google-Smtp-Source: ABdhPJwuLqZldVSYdI75Ai+PcBDkHa+xkpmfqt3+9vDSJ2R9/PWi5Orovy471RaYzID644RlCM4n+A==
+X-Received: by 2002:aa7:9404:0:b0:494:6e78:67cd with SMTP id x4-20020aa79404000000b004946e7867cdmr7671622pfo.84.1637776275657;
+        Wed, 24 Nov 2021 09:51:15 -0800 (PST)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id d2sm330981pfu.203.2021.11.24.09.51.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Nov 2021 09:51:14 -0800 (PST)
+Date:   Wed, 24 Nov 2021 10:51:11 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     gregkh@linuxfoundation.org, helgaas@kernel.org,
+        alexander.shishkin@linux.intel.com, lorenzo.pieralisi@arm.com,
+        will@kernel.org, mark.rutland@arm.com, suzuki.poulose@arm.com,
+        mike.leach@linaro.org, leo.yan@linaro.org,
+        jonathan.cameron@huawei.com, daniel.thompson@linaro.org,
+        joro@8bytes.org, john.garry@huawei.com,
+        shameerali.kolothum.thodi@huawei.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        iommu@lists.linux-foundation.org, prime.zeng@huawei.com,
+        liuqi115@huawei.com, zhangshaokun@hisilicon.com,
+        linuxarm@huawei.com, song.bao.hua@hisilicon.com
+Subject: Re: [PATCH v2 1/6] iommu: Export iommu_{get,put}_resv_regions()
+Message-ID: <20211124175111.GA35341@p14s>
+References: <20211116090625.53702-1-yangyicong@hisilicon.com>
+ <20211116090625.53702-2-yangyicong@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211124154116.916-5-pali@kernel.org>
+In-Reply-To: <20211116090625.53702-2-yangyicong@hisilicon.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 24/11/2021 16:41:15+0100, Pali Rohár wrote:
-> Replace all usage of ARM specific pci_ioremap_io() function by standard PCI
-> core API function pci_remap_iospace() in all drivers and arm march code.
+On Tue, Nov 16, 2021 at 05:06:20PM +0800, Yicong Yang wrote:
+> Export iommu_{get,put}_resv_regions() to the modules so that the driver
+> can retrieve and use the reserved regions of the device.
 > 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 > ---
->  arch/arm/mach-dove/pcie.c    |  9 +++++----
->  arch/arm/mach-iop32x/pci.c   |  5 ++++-
->  arch/arm/mach-mv78xx0/pcie.c |  5 ++++-
->  arch/arm/mach-orion5x/pci.c  | 10 ++++++++--
->  drivers/pcmcia/at91_cf.c     |  6 +++++-
->  5 files changed, 26 insertions(+), 9 deletions(-)
+>  drivers/iommu/iommu.c | 2 ++
+>  include/linux/iommu.h | 4 ++--
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
-> index ee91ac6b5ebf..2a493bdfffc6 100644
-> --- a/arch/arm/mach-dove/pcie.c
-> +++ b/arch/arm/mach-dove/pcie.c
-> @@ -38,6 +38,7 @@ static int num_pcie_ports;
->  static int __init dove_pcie_setup(int nr, struct pci_sys_data *sys)
->  {
->  	struct pcie_port *pp;
-> +	struct resource realio;
->  
->  	if (nr >= num_pcie_ports)
->  		return 0;
-> @@ -53,10 +54,10 @@ static int __init dove_pcie_setup(int nr, struct pci_sys_data *sys)
->  
->  	orion_pcie_setup(pp->base);
->  
-> -	if (pp->index == 0)
-> -		pci_ioremap_io(sys->busnr * SZ_64K, DOVE_PCIE0_IO_PHYS_BASE);
-> -	else
-> -		pci_ioremap_io(sys->busnr * SZ_64K, DOVE_PCIE1_IO_PHYS_BASE);
-> +	realio.start = sys->busnr * SZ_64K;
-> +	realio.end = realio.start + SZ_64K - 1;
-> +	pci_remap_iospace(&realio, pp->index == 0 ? DOVE_PCIE0_IO_PHYS_BASE :
-> +						    DOVE_PCIE1_IO_PHYS_BASE);
->  
->  	/*
->  	 * IORESOURCE_MEM
-> diff --git a/arch/arm/mach-iop32x/pci.c b/arch/arm/mach-iop32x/pci.c
-> index ab0010dc3145..7a215d2ee7e2 100644
-> --- a/arch/arm/mach-iop32x/pci.c
-> +++ b/arch/arm/mach-iop32x/pci.c
-> @@ -185,6 +185,7 @@ iop3xx_pci_abort(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
->  int iop3xx_pci_setup(int nr, struct pci_sys_data *sys)
->  {
->  	struct resource *res;
-> +	struct resource realio;
->  
->  	if (nr != 0)
->  		return 0;
-> @@ -206,7 +207,9 @@ int iop3xx_pci_setup(int nr, struct pci_sys_data *sys)
->  
->  	pci_add_resource_offset(&sys->resources, res, sys->mem_offset);
->  
-> -	pci_ioremap_io(0, IOP3XX_PCI_LOWER_IO_PA);
-> +	realio.start = 0;
-> +	realio.end = realio.start + SZ_64K - 1;
-> +	pci_remap_iospace(&realio, IOP3XX_PCI_LOWER_IO_PA);
->  
->  	return 1;
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index dd7863e453a5..e96711eee965 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -2792,6 +2792,7 @@ void iommu_get_resv_regions(struct device *dev, struct list_head *list)
+>  	if (ops && ops->get_resv_regions)
+>  		ops->get_resv_regions(dev, list);
 >  }
-> diff --git a/arch/arm/mach-mv78xx0/pcie.c b/arch/arm/mach-mv78xx0/pcie.c
-> index 636d84b40466..e15646af7f26 100644
-> --- a/arch/arm/mach-mv78xx0/pcie.c
-> +++ b/arch/arm/mach-mv78xx0/pcie.c
-> @@ -101,6 +101,7 @@ static void __init mv78xx0_pcie_preinit(void)
->  static int __init mv78xx0_pcie_setup(int nr, struct pci_sys_data *sys)
+> +EXPORT_SYMBOL_GPL(iommu_get_resv_regions);
+>  
+>  void iommu_put_resv_regions(struct device *dev, struct list_head *list)
 >  {
->  	struct pcie_port *pp;
-> +	struct resource realio;
+> @@ -2800,6 +2801,7 @@ void iommu_put_resv_regions(struct device *dev, struct list_head *list)
+>  	if (ops && ops->put_resv_regions)
+>  		ops->put_resv_regions(dev, list);
+>  }
+> +EXPORT_SYMBOL_GPL(iommu_put_resv_regions);
 >  
->  	if (nr >= num_pcie_ports)
->  		return 0;
-> @@ -115,7 +116,9 @@ static int __init mv78xx0_pcie_setup(int nr, struct pci_sys_data *sys)
->  	orion_pcie_set_local_bus_nr(pp->base, sys->busnr);
->  	orion_pcie_setup(pp->base);
+>  /**
+>   * generic_iommu_put_resv_regions - Reserved region driver helper
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index d2f3435e7d17..1b7b0f370e28 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -450,8 +450,8 @@ extern phys_addr_t iommu_iova_to_phys(struct iommu_domain *domain, dma_addr_t io
+>  extern void iommu_set_fault_handler(struct iommu_domain *domain,
+>  			iommu_fault_handler_t handler, void *token);
 >  
-> -	pci_ioremap_io(nr * SZ_64K, MV78XX0_PCIE_IO_PHYS_BASE(nr));
-> +	realio.start = nr * SZ_64K;
-> +	realio.end = realio.start + SZ_64K - 1;
-> +	pci_remap_iospace(&realio, MV78XX0_PCIE_IO_PHYS_BASE(nr));
->  
->  	pci_add_resource_offset(&sys->resources, &pp->res, sys->mem_offset);
->  
-> diff --git a/arch/arm/mach-orion5x/pci.c b/arch/arm/mach-orion5x/pci.c
-> index 76951bfbacf5..92e938bba20d 100644
-> --- a/arch/arm/mach-orion5x/pci.c
-> +++ b/arch/arm/mach-orion5x/pci.c
-> @@ -142,6 +142,7 @@ static struct pci_ops pcie_ops = {
->  static int __init pcie_setup(struct pci_sys_data *sys)
->  {
->  	struct resource *res;
-> +	struct resource realio;
->  	int dev;
->  
->  	/*
-> @@ -164,7 +165,9 @@ static int __init pcie_setup(struct pci_sys_data *sys)
->  		pcie_ops.read = pcie_rd_conf_wa;
->  	}
->  
-> -	pci_ioremap_io(sys->busnr * SZ_64K, ORION5X_PCIE_IO_PHYS_BASE);
-> +	realio.start = sys->busnr * SZ_64K;
-> +	realio.end = realio.start + SZ_64K - 1;
-> +	pci_remap_iospace(&realio, ORION5X_PCIE_IO_PHYS_BASE);
->  
->  	/*
->  	 * Request resources.
-> @@ -466,6 +469,7 @@ static void __init orion5x_setup_pci_wins(void)
->  static int __init pci_setup(struct pci_sys_data *sys)
->  {
->  	struct resource *res;
-> +	struct resource realio;
->  
->  	/*
->  	 * Point PCI unit MBUS decode windows to DRAM space.
-> @@ -482,7 +486,9 @@ static int __init pci_setup(struct pci_sys_data *sys)
->  	 */
->  	orion5x_setbits(PCI_CMD, PCI_CMD_HOST_REORDER);
->  
-> -	pci_ioremap_io(sys->busnr * SZ_64K, ORION5X_PCI_IO_PHYS_BASE);
-> +	realio.start = sys->busnr * SZ_64K;
-> +	realio.end = realio.start + SZ_64K - 1;
-> +	pci_remap_iospace(&realio, ORION5X_PCI_IO_PHYS_BASE);
->  
->  	/*
->  	 * Request resources
-> diff --git a/drivers/pcmcia/at91_cf.c b/drivers/pcmcia/at91_cf.c
-> index 6b1edfc890a3..92df2c2c5d07 100644
-> --- a/drivers/pcmcia/at91_cf.c
-> +++ b/drivers/pcmcia/at91_cf.c
-> @@ -20,6 +20,7 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/of_gpio.h>
-> +#include <linux/pci.h>
->  #include <linux/regmap.h>
->  
->  #include <pcmcia/ss.h>
-> @@ -230,6 +231,7 @@ static int at91_cf_probe(struct platform_device *pdev)
->  	struct at91_cf_socket	*cf;
->  	struct at91_cf_data	*board;
->  	struct resource		*io;
-> +	struct resource		realio;
->  	int			status;
->  
->  	board = devm_kzalloc(&pdev->dev, sizeof(*board), GFP_KERNEL);
-> @@ -307,7 +309,9 @@ static int at91_cf_probe(struct platform_device *pdev)
->  	 * io_offset is set to 0x10000 to avoid the check in static_find_io().
->  	 * */
->  	cf->socket.io_offset = 0x10000;
-> -	status = pci_ioremap_io(0x10000, cf->phys_baseaddr + CF_IO_PHYS);
-> +	realio.start = cf->socket.io_offset;
-> +	realio.end = realio.start + SZ_64K - 1;
-> +	status = pci_remap_iospace(&realio, cf->phys_baseaddr + CF_IO_PHYS);
->  	if (status)
->  		goto fail0a;
->  
-> -- 
-> 2.20.1
-> 
+> -extern void iommu_get_resv_regions(struct device *dev, struct list_head *list);
+> -extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
+> +void iommu_get_resv_regions(struct device *dev, struct list_head *list);
+> +void iommu_put_resv_regions(struct device *dev, struct list_head *list);
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+>  extern void generic_iommu_put_resv_regions(struct device *dev,
+>  					   struct list_head *list);
+>  extern void iommu_set_default_passthrough(bool cmd_line);
+> -- 
+> 2.33.0
+> 
