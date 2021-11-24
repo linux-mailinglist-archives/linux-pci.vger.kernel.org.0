@@ -2,161 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC26945D09B
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 23:55:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C44FD45D0BE
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Nov 2021 00:05:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345960AbhKXW63 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 17:58:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345381AbhKXW62 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 17:58:28 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7986BC061574
-        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 14:55:18 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id j5-20020a17090a318500b001a6c749e697so5099723pjb.1
-        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 14:55:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sEkXTr1CVlB4OvzJNloCs5luN2SOG/AE8/F/zeex2Q8=;
-        b=Vh4LeKm6XE23WW2uQBz8rJeoRE5Lz3+Gl+1q/Er3IUj1MxuNT4zjPpngzSk84mYb+B
-         KJf+RswKjhj5X4pevNp9HtWcuXJ2sF5qLKDmxT/a+x11yqzTY0Ds1vozSZ5E6LlaiaYK
-         hs+WXsmMtL0fclpZogZ29AfesB1zkHPUezzwdDh206re0sbnpkrIkTEZ4u8USfYO9L48
-         Qgig3/Jm9NchgBCK2beQIXxOCpegxifNuNg3C//jQcPZP3qduimzUstbjxTu6XezbTSp
-         DK8wVmmY9h4LRjwGY6kF2zSFEVV+cf5xXNXTtAdL3Ml1L+5tKcisVpESHYa/YkYXH+PO
-         I+5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sEkXTr1CVlB4OvzJNloCs5luN2SOG/AE8/F/zeex2Q8=;
-        b=0tqf0/zvFusXUlHUOYNmJDLur+Tue+VVCMmKp9RCTz3raiFgHtGcF9F7P6yQTFr+fk
-         KBm8dNnDSM1B2/wBuQXCqAEVPk8H+9Fj/uU+2Zylrni3UV98vqDbTK9YGAkF1TR8vyGh
-         nmtzQLdGMhouN6AgE7DXLWyPaKHTonel1UYq9Dtd2AFAQd5Ta+j+PM9wHqrd6ccXSMBL
-         GXPvnqS7eG9Yu1O4ynfjUX75p+YrWloxcqKJF0X+vGe5ZW1BCZj3EJn21U8cz22nCU3q
-         DdV7EhN/cuBVzizvJlzQfVROFY7HLe6nJeGpAUipShF1pBikv7+AO8er+gqb8zVmERKb
-         cTZA==
-X-Gm-Message-State: AOAM530JK2pQhzDx0D4sJrQa8mGDTsErs85fRwSAEsyxSQLGrPZedlqU
-        fvMtVxo6G6AozcjcsVf1gXBMOMKyG9f6R00pguP7dPK67lI=
-X-Google-Smtp-Source: ABdhPJxzAggYjDjVpJuE9CXjDLPIcFWy84MuHHNMSY9727LcP9eEGNmGHhtJPJlJsdXpkc9UB+ATvaMt0RMJKhjh1vo=
-X-Received: by 2002:a17:90b:1e07:: with SMTP id pg7mr834434pjb.93.1637794517965;
- Wed, 24 Nov 2021 14:55:17 -0800 (PST)
+        id S1352390AbhKXXIR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 18:08:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1352370AbhKXXIR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 24 Nov 2021 18:08:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1B413610A1;
+        Wed, 24 Nov 2021 23:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637795107;
+        bh=wHpvNaIZ8v0pug4/Z5vHHcFvT4++TpzarXrssDbXZVs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JGT8hJLa2T+zGc61SnGCNTlnCroqIHmL02VnEYJ8IKaHCz0ACCroW2zdcRzkCXRws
+         0yhPDJqQzRDta3EdUNkwNXJ1tA+JmTat7s/SaYhp8niRmbS2ULzqzQxxiJTHcIatYi
+         pfSDscfnre3vain3keXiz5NzW+riNSxKoXcdvnR4JrcS1lm49EA6zsvHNMwTfjx0ZA
+         OZL4AcSt9zmGWtDj0TfdNAnSqlTeye/2peXEkqzsYP0wsJfth+6Hrhp1wnakDGQQav
+         4dYLZR1Qauh3O7hRE+d0Ed3CDNPmq08Dk3DYv3xPES80YJSdSrAh1wnmYT0Z0be3lU
+         2rVuqxjXwmQxA==
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     pali@kernel.org, stable@vger.kernel.org,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Subject: [PATCH 4.19 01/20] PCI: aardvark: Fix a leaked reference by adding missing of_node_put()
+Date:   Thu, 25 Nov 2021 00:04:41 +0100
+Message-Id: <20211124230500.27109-2-kabel@kernel.org>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20211124230500.27109-1-kabel@kernel.org>
+References: <20211124230500.27109-1-kabel@kernel.org>
 MIME-Version: 1.0
-References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-12-ben.widawsky@intel.com>
-In-Reply-To: <20211120000250.1663391-12-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Nov 2021 14:55:07 -0800
-Message-ID: <CAPcyv4gh+Q0e56do-AuKeu4WFWVhutFjX475=5rQKazT_kcxTw@mail.gmail.com>
-Subject: Re: [PATCH 11/23] cxl/core: Document and tighten up decoder APIs
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> Since the code to add decoders for switches and endpoints is on the
-> horizon it helps to have properly documented APIs. In addition, the
-> decoder APIs will never need to support a negative count for downstream
-> targets as the spec explicitly starts numbering them at 1, ie. even 0 is
-> an "invalid" value which can be used as a sentinel.
+From: Wen Yang <wen.yang99@zte.com.cn>
 
-Looks good to me:
+commit 3842f5166bf1ef286fe7a39f262b5c9581308366 upstream.
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+The call to of_get_next_child() returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
->
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
->
-> ---
->
-> This is respun from a previous incantation here:
-> https://lore.kernel.org/linux-cxl/20210915155946.308339-1-ben.widawsky@intel.com/
-> ---
->  drivers/cxl/core/bus.c | 33 +++++++++++++++++++++++++++++++--
->  drivers/cxl/cxl.h      |  3 ++-
->  2 files changed, 33 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
-> index 8e80e85350b1..1ee12a60f3f4 100644
-> --- a/drivers/cxl/core/bus.c
-> +++ b/drivers/cxl/core/bus.c
-> @@ -495,7 +495,20 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
->         return rc;
->  }
->
-> -struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-> +/**
-> + * cxl_decoder_alloc - Allocate a new CXL decoder
-> + * @port: owning port of this decoder
-> + * @nr_targets: downstream targets accessible by this decoder. All upstream
-> + *             ports and root ports must have at least 1 target.
-> + *
-> + * A port should contain one or more decoders. Each of those decoders enable
-> + * some address space for CXL.mem utilization. A decoder is expected to be
-> + * configured by the caller before registering.
-> + *
-> + * Return: A new cxl decoder to be registered by cxl_decoder_add()
-> + */
-> +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> +                                     unsigned int nr_targets)
->  {
->         struct cxl_decoder *cxld, cxld_const_init = {
->                 .nr_targets = nr_targets,
-> @@ -503,7 +516,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
->         struct device *dev;
->         int rc = 0;
->
-> -       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
-> +       if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets == 0)
->                 return ERR_PTR(-EINVAL);
->
->         cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
-> @@ -535,6 +548,22 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
->
-> +/**
-> + * cxl_decoder_add - Add a decoder with targets
-> + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
-> + * @target_map: A list of downstream ports that this decoder can direct memory
-> + *              traffic to. These numbers should correspond with the port number
-> + *              in the PCIe Link Capabilities structure.
-> + *
-> + * Certain types of decoders may not have any targets. The main example of this
-> + * is an endpoint device. A more awkward example is a hostbridge whose root
-> + * ports get hot added (technically possible, though unlikely).
-> + *
-> + * Context: Process context. Takes and releases the cxld's device lock.
-> + *
-> + * Return: Negative error code if the decoder wasn't properly configured; else
-> + *        returns 0.
-> + */
->  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
->  {
->         struct cxl_port *port;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index ad816fb5bdcc..b66ed8f241c6 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -288,7 +288,8 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
->
->  struct cxl_decoder *to_cxl_decoder(struct device *dev);
->  bool is_root_decoder(struct device *dev);
-> -struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
-> +struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> +                                     unsigned int nr_targets);
->  int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
->  int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
->
-> --
-> 2.34.0
->
+irq_domain_add_linear() also calls of_node_get() to increase refcount,
+so irq_domain will not be affected when it is released.
+
+Detected by coccinelle with the following warnings:
+  ./drivers/pci/controller/pci-aardvark.c:826:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 798, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Marek Behún <kabel@kernel.org>
+---
+ drivers/pci/controller/pci-aardvark.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 98fb3c1f45e4..3625d73e016a 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -754,6 +754,7 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
+ 	struct device_node *node = dev->of_node;
+ 	struct device_node *pcie_intc_node;
+ 	struct irq_chip *irq_chip;
++	int ret = 0;
+ 
+ 	raw_spin_lock_init(&pcie->irq_lock);
+ 
+@@ -768,8 +769,8 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
+ 	irq_chip->name = devm_kasprintf(dev, GFP_KERNEL, "%s-irq",
+ 					dev_name(dev));
+ 	if (!irq_chip->name) {
+-		of_node_put(pcie_intc_node);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto out_put_node;
+ 	}
+ 
+ 	irq_chip->irq_mask = advk_pcie_irq_mask;
+@@ -781,11 +782,13 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
+ 				      &advk_pcie_irq_domain_ops, pcie);
+ 	if (!pcie->irq_domain) {
+ 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+-		of_node_put(pcie_intc_node);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto out_put_node;
+ 	}
+ 
+-	return 0;
++out_put_node:
++	of_node_put(pcie_intc_node);
++	return ret;
+ }
+ 
+ static void advk_pcie_remove_irq_domain(struct advk_pcie *pcie)
+-- 
+2.32.0
+
