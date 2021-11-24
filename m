@@ -2,96 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D737745C7A7
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 15:40:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C369F45C718
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 15:18:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350172AbhKXOn5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 09:43:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352344AbhKXOnz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 09:43:55 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B388C21AA76
-        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 06:04:54 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id nh10-20020a17090b364a00b001a69adad5ebso2829008pjb.2
-        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 06:04:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LKK6ExNzSQzy0j7H6kvB9GSvV7uuA0xvCSvp04ywCxM=;
-        b=wq0g7u7qaPUTV/HImPQzef8z2eLsaWXYcsiZAYi753fzSsLFjYyly9AHClHd9U7ie1
-         4aFQyVax836p0JRlympP7qSa51wqP9Sb5d4/DObqA5oDiomBkNlv9W53bZFqAo+rY6Ke
-         RHNrmTQbePQ+Whu1W9AvoDCMgmhSq9ALLYzUD9y6bdoMAPfPkan/ToOBCHGeouPsCqbd
-         zFMw4JxBJGojrRwYAb25F+RVDIXSQGwAQWoVA0DhbhWSfOSD9NEth+8LRO3LFIpCRZ+j
-         sagw/7YTD2Xd/jQ0dwkUS+GLjCg8FT3RfRhEz+5QCJ7gdcq/CbhD3oqD/5LtHHkpZE2y
-         t/4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LKK6ExNzSQzy0j7H6kvB9GSvV7uuA0xvCSvp04ywCxM=;
-        b=paPzGo3LcXsfq9PkgI8B3xXKDiVg2H1DHV6G73Cg57Kn2n/fTXTAyC626kRkdjold+
-         tYNx1pXmxKexjX5gxV4iCFQyV+YCFzk/K1mKhRx1C0joG2I3K5CqqrZoYRFEXs9WtL3n
-         dG0ghet9Lhotp/9OL/d2jwT0432r2m0zayb+xigDq8nFeNBMsGMrsXYnjoQZ8NQXs+Yb
-         OBeO3zzYS5FmahTZ6HE9ruPvNC+tIUL4uLSIaskdcOvIsXhp6+BO6VLpANVFV3rQV05X
-         5wvMooN5wMxBXaRfjVGm/WfrEO3soeMJPqVxQ2UtGdLLDlW1kRaSPOXuW1wWSdMHzquy
-         v6sw==
-X-Gm-Message-State: AOAM530rbvZRy9Mwag0wFteb4mX++6pVJ0Kl/WhqlnnYLBK9eCGQUkNN
-        R7y18lzwmNqTUyF/ZJH+I98I
-X-Google-Smtp-Source: ABdhPJz4gF1KEK89rws4cRqe6hwRhjQidhv10SVJBA+zplygTVNOUnNSjgqlYzxgjMr/tAWENJef6A==
-X-Received: by 2002:a17:902:7fc3:b0:144:e29c:228d with SMTP id t3-20020a1709027fc300b00144e29c228dmr18474667plb.4.1637762693629;
-        Wed, 24 Nov 2021 06:04:53 -0800 (PST)
-Received: from localhost.localdomain ([2409:4072:6d01:b1fa:45f8:8977:6ea4:8b04])
-        by smtp.gmail.com with ESMTPSA id q1sm17446019pfu.33.2021.11.24.06.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Nov 2021 06:04:53 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     svarbanov@mm-sol.com, bjorn.andersson@linaro.org, robh@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] PCI: qcom: Fix warning generated due to the incorrect data type
-Date:   Wed, 24 Nov 2021 19:34:24 +0530
-Message-Id: <20211124140424.51675-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        id S1348792AbhKXOVS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 09:21:18 -0500
+Received: from mga04.intel.com ([192.55.52.120]:58842 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1353502AbhKXOS4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 24 Nov 2021 09:18:56 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10177"; a="234009700"
+X-IronPort-AV: E=Sophos;i="5.87,260,1631602800"; 
+   d="scan'208";a="234009700"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2021 06:15:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,260,1631602800"; 
+   d="scan'208";a="650406325"
+Received: from kuha.fi.intel.com ([10.237.72.166])
+  by fmsmga001.fm.intel.com with SMTP; 24 Nov 2021 06:15:43 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 24 Nov 2021 16:15:42 +0200
+Date:   Wed, 24 Nov 2021 16:15:42 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 0/3] device property: Remove device_add_properties()
+Message-ID: <YZ5JDhOnDw+qqzJP@kuha.fi.intel.com>
+References: <20211115121001.77041-1-heikki.krogerus@linux.intel.com>
+ <CAJZ5v0jsWVw4OyVbkdn2374tLAXAShZ_B3CKDmnQOE_QEXXPiQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jsWVw4OyVbkdn2374tLAXAShZ_B3CKDmnQOE_QEXXPiQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix the below sparse warning due to the use of incorrect initializer
-data type (u16) for bdf_be variable that receives the return value of
-cpu_to_be16(). The correct type should be __be16.
+On Wed, Nov 24, 2021 at 02:59:01PM +0100, Rafael J. Wysocki wrote:
+> On Mon, Nov 15, 2021 at 1:10 PM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > Hi,
+> >
+> > One more version. Hopefully the commit messages are now OK. No other
+> > changes since v3:
+> >
+> > https://lore.kernel.org/lkml/20211006112643.77684-1-heikki.krogerus@linux.intel.com/
+> >
+> >
+> > v3 cover letter:
+> >
+> > In this third version of this series, the second patch is now split in
+> > two. The device_remove_properties() call is first removed from
+> > device_del() in its own patch, and the
+> > device_add/remove_properties() API is removed separately in the last
+> > patch. I hope the commit messages are clear enough this time.
+> >
+> >
+> > v2 cover letter:
+> >
+> > This is the second version where I only modified the commit message of
+> > the first patch according to comments from Bjorn.
+> >
+> >
+> > Original cover letter:
+> >
+> > There is one user left for the API, so converting that to use software
+> > node API instead, and removing the function.
+> >
+> >
+> > thanks,
+> >
+> > Heikki Krogerus (3):
+> >   PCI: Convert to device_create_managed_software_node()
+> >   driver core: Don't call device_remove_properties() from device_del()
+> >   device property: Remove device_add_properties() API
+> >
+> >  drivers/base/core.c      |  1 -
+> >  drivers/base/property.c  | 48 ----------------------------------------
+> >  drivers/pci/quirks.c     |  2 +-
+> >  include/linux/property.h |  4 ----
+> >  4 files changed, 1 insertion(+), 54 deletions(-)
+> 
+> Has this been picked up already or am I expected to pick it up?
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/controller/dwc/pcie-qcom.c:1305:30: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned short [usertype] bdf_be @@     got restricted __be16 [usertype] @@
-   drivers/pci/controller/dwc/pcie-qcom.c:1305:30: sparse:     expected unsigned short [usertype] bdf_be
-   drivers/pci/controller/dwc/pcie-qcom.c:1305:30: sparse:     got restricted __be16 [usertype]
+It hasn't been picked up by anybody, so if you can take these, that
+would be great.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 8a7a300163e5..6c3b034e9946 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1312,7 +1312,7 @@ static int qcom_pcie_config_sid_sm8250(struct qcom_pcie *pcie)
- 
- 	/* Look for an available entry to hold the mapping */
- 	for (i = 0; i < nr_map; i++) {
--		u16 bdf_be = cpu_to_be16(map[i].bdf);
-+		__be16 bdf_be = cpu_to_be16(map[i].bdf);
- 		u32 val;
- 		u8 hash;
- 
 -- 
-2.25.1
-
+heikki
