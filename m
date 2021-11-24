@@ -2,180 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3C4645CD3D
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 20:31:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFC9345CD92
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 20:56:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351187AbhKXTer (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 14:34:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33502 "EHLO
+        id S236178AbhKXT76 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 14:59:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351245AbhKXTeR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 14:34:17 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A4ECC06174A
-        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 11:31:07 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id g18so3625714pfk.5
-        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 11:31:07 -0800 (PST)
+        with ESMTP id S234835AbhKXT75 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 14:59:57 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C56FC061574
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 11:56:47 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id y7so2788620plp.0
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 11:56:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vI7SzUj5UovgtfMb+fdADiLIwlcQ1wWC4aPy4AKa9sw=;
-        b=0bLuuQ/jE+gTjDQ7ciBE/07ddYj2uqOteQnZLi85uA8MFu8jSoIUYqqJCccGABtrTF
-         A78/mVgvstS02fSGtc8JEl33phPEac/WZZL7AmRbJxiWgXhlevV+smf69rNbhc9RoY4L
-         OdMXMQpGDvQ1a9+DKKGEyPvaBuy2/gNYEkqQ8m5CtKGOyxog3YkFzqDWpSz+I7i9ZJj9
-         8vLtEE+lnvfb/0/3ccZUw9Utcz2RzvdJSyirxLeiHsNBoblVFWtxy0EmtfEs5ixviCGf
-         ntc2dts22JJo5BbzkzJhTxcHYc661w25eCwPiOJ5PK8YOuQNmEBR/7RQNLQ7ux9FijIg
-         9ZIw==
+        bh=7h1vFpWqDU2OtGi+/IyAAvPa60wlmNfJfmeOIcFNJas=;
+        b=fZU5/O2Ljt1Sz3hEAyId/l093eSOYt/gB2NiOp6Big61hXRWlLdh8Q0h6Nv/HBl1Ab
+         9W7LKxnc2Lvo0dSlegwrrzPDU9F2CJmRYv8hFejusk1/QA4kDdIvVBInswd/W7eaIXxq
+         N6Hhs9pKo966YItoJH44ZftfZTtIIvHmQl2/s5NZAW5IeASJKz5h6LOin5Lstu8cobsx
+         fP4YUOpv6CWx9+vizjkjz9cTG708XgGqv1BkqP2GVLKlmZRsy/+TEHO1RO1/D6Q447j1
+         9iRVLSNlb8mqGiKC3CJjfbuQ26INyLu/18/Y6s8UKU8UX3HngtMRaBX4x+KSySLAocEm
+         SJNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vI7SzUj5UovgtfMb+fdADiLIwlcQ1wWC4aPy4AKa9sw=;
-        b=4cMddfePKnfER3dND+a2gavgKC/BVXYPk917tKPg+yhKXtgTktMZNodeHlWDAVSxx4
-         7mP7wFChR9SJCcTutKatsw6Qq5SQDMYdHUtgheP/XusSr1r8lYw8GojJo0MO+iW8CXGP
-         pb2qV/XrosHbkIpsbo531t37rEUYK9laOBZQsyBTlTlMxDYuMOX7r3E9e+MUdE5blyPH
-         B+ekppd+P7i9sb80zyMFPMOfl2DCyiiXetOw674IM+wYG3C2QItx/HMQ4DrHcOcbEqpP
-         +0lFcOKXUM2sgnZ8rcz18Gu8zbHOScgk7JppTg91EathOJK6GxUPddEVKocEc2TEQ7i7
-         xnig==
-X-Gm-Message-State: AOAM531wHKtLbJTua0rlSRvNPs2xDkcwqlfANJvOYQcf00Zv2FZoBDDQ
-        3FvBnmR7Q6MALdd5C33gXuRW3rntKTpWs0Wnzr02yw==
-X-Google-Smtp-Source: ABdhPJwu4BzXwUzPTOx3eZyuEmi1g/2RqUwz46ZVZuCSxJm6PakajWT8pRAEysCQkiHfpnoiaOBdmQLapQccbnY/QTM=
-X-Received: by 2002:a05:6a00:140e:b0:444:b077:51ef with SMTP id
- l14-20020a056a00140e00b00444b07751efmr8535703pfu.61.1637782266311; Wed, 24
- Nov 2021 11:31:06 -0800 (PST)
+        bh=7h1vFpWqDU2OtGi+/IyAAvPa60wlmNfJfmeOIcFNJas=;
+        b=qb0alMZ7rm/sxXzpkDarwUBKMCMp4ienJRkLbNAYvwWfI2EGAS7P/SulA9fTUBTxFE
+         YrnXfK28Mf9pKBrZmsD4T0hjgQKKP/GhowGwRQluEJfOGzBOBpq57chHmQ3nxoGN6Ryp
+         eM0IGVOwiZhPvkaIUm7WqZNMOxYKkf5puk/XdvPlco1AlbiTZBUts+1gEUkyp+gxx6tW
+         Dq9WGLI4CuibJY6K8GRoQbLO5YOMxfUeIbTHLAOd9Tch9vUyDrIQpUli6ik6jpF8WCvi
+         FFrEgcyJ35CBO0cZbNIQAZ5ZSMj40cFvmCEROEv9u+tRyzGbtcIVTBqHbu3nItBTscJZ
+         is8w==
+X-Gm-Message-State: AOAM530c5DvV+nhMxaH0eyJBVXt47lfI5JBgEOiiCD52VtL1GvjDwmYz
+        ekSHmWXFPBdRWAhE5drU8c1lQR9+awMZ8jLLo42TmQ==
+X-Google-Smtp-Source: ABdhPJwm4hikZT4Ncw6PgOI8xFXeBTXNrSc3e5vvgqHZ06VsiBRax46pSspRK5VStMh8R68zS7AtCrGoKa4Hqsd52Uc=
+X-Received: by 2002:a17:90b:1e49:: with SMTP id pi9mr12278429pjb.220.1637783806957;
+ Wed, 24 Nov 2021 11:56:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-4-ben.widawsky@intel.com>
-In-Reply-To: <20211120000250.1663391-4-ben.widawsky@intel.com>
+References: <20211120000250.1663391-1-ben.widawsky@intel.com>
+ <20211120000250.1663391-5-ben.widawsky@intel.com> <20211122150227.00000020@Huawei.com>
+ <20211122171731.2hzsmspdhgw2wyqi@intel.com> <20211122175349.00007ced@Huawei.com>
+In-Reply-To: <20211122175349.00007ced@Huawei.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Nov 2021 11:30:56 -0800
-Message-ID: <CAPcyv4ic827h-WPxU2e1aKu1mVo78aNdNo82skcLW6hqnOnSEQ@mail.gmail.com>
-Subject: Re: [PATCH 03/23] cxl/pci: Extract device status check
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+Date:   Wed, 24 Nov 2021 11:56:36 -0800
+Message-ID: <CAPcyv4in8B1otPwRNiMQ4AFYETTm-miYbw3mMjDzx=jPqhvmAQ@mail.gmail.com>
+Subject: Re: [PATCH 04/23] cxl/pci: Implement Interface Ready Timeout
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
+        Linux PCI <linux-pci@vger.kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Mon, Nov 22, 2021 at 9:54 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
 >
-> The Memory Device Status register is inspected in the same way for at
-> least two flows in the CXL Type 3 Memory Device Software Guide
-> (Revision: 1.0): 2.13.9 Device discovery and mailbox ready sequence,
-> and 2.13.10 Media ready sequence. Extract this common functionality for
-> use by both.
-
-Can you translate this into CXL specification terms? See below for the
-rationale...
-
+> On Mon, 22 Nov 2021 09:17:31 -0800
+> Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
-> This patch did not exist in RFCv2
-> ---
->  drivers/cxl/pci.c | 33 +++++++++++++++++++++++++--------
->  1 file changed, 25 insertions(+), 8 deletions(-)
+> > On 21-11-22 15:02:27, Jonathan Cameron wrote:
+> > > On Fri, 19 Nov 2021 16:02:31 -0800
+> > > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > >
+> > > > The original driver implementation used the doorbell timeout for the
+> > > > Mailbox Interface Ready bit to piggy back off of, since the latter
+> > > > doesn't have a defined timeout. This functionality, introduced in
+> > > > 8adaf747c9f0 ("cxl/mem: Find device capabilities"), can now be improved
+> > > > since a timeout has been defined with an ECN to the 2.0 spec.
+> > > >
+> > > > While devices implemented prior to the ECN could have an arbitrarily
+> > > > long wait and still be within spec, the max ECN value (256s) is chosen
+> > > > as the default for all devices. All vendors in the consortium agreed to
+> > > > this amount and so it is reasonable to assume no devices made will
+> > > > exceed this amount.
+> > >
+> > > Optimistic :)
+> > >
+> >
+> > Reasonable to assume is certainly not the same as "in reality". I can soften
+> > this wording.
+> >
+> > > >
+> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > > ---
+> > > > This patch did not exist in RFCv2
+> > > > ---
+> > > >  drivers/cxl/pci.c | 29 +++++++++++++++++++++++++++++
+> > > >  1 file changed, 29 insertions(+)
+> > > >
+> > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > > > index 6c8d09fb3a17..2cef9fec8599 100644
+> > > > --- a/drivers/cxl/pci.c
+> > > > +++ b/drivers/cxl/pci.c
+> > > > @@ -2,6 +2,7 @@
+> > > >  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+> > > >  #include <linux/io-64-nonatomic-lo-hi.h>
+> > > >  #include <linux/module.h>
+> > > > +#include <linux/delay.h>
+> > > >  #include <linux/sizes.h>
+> > > >  #include <linux/mutex.h>
+> > > >  #include <linux/list.h>
+> > > > @@ -298,6 +299,34 @@ static int cxl_pci_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *c
+> > > >  static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+> > > >  {
+> > > >   const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
+> > > > + unsigned long timeout;
+> > > > + u64 md_status;
+> > > > + int rc;
+> > > > +
+> > > > + /*
+> > > > +  * CXL 2.0 ECN "Add Mailbox Ready Time" defines a capability field to
+> > > > +  * dictate how long to wait for the mailbox to become ready. For
+> > > > +  * simplicity, and to handle devices that might have been implemented
+> > >
+> > > I'm not keen on the 'for simplicity' argument here.  If the device is advertising
+> > > a lower value, then that is what we should use.  It's fine to wait the max time
+> > > if nothing is specified.  It'll cost us a few lines of code at most unless
+> > > I am missing something...
+> > >
+> > > Jonathan
+> > >
+> >
+> > Let me pose it a different way, if a device advertises 1s, but for whatever
+> > takes 4s to come up, should we penalize it over the device advertising 256s?
 >
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index a6ea9811a05b..6c8d09fb3a17 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -182,6 +182,27 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
->         return 0;
->  }
+> Yes, because it is buggy.  A compliance test should have failed on this anyway.
 >
-> +/*
-> + * Implements roughly the bottom half of Figure 42 of the CXL Type 3 Memory
-> + * Device Software Guide
-
-I do appreciate that document for working through some of the concerns
-that system software might have for various CXL flows, but at the same
-time it's not authoritative. I.e. it is not a specification itself and
-it depends on the CXL specification as the "source of truth". So for
-Linux commentary I would translate the guide's recommendations back
-into the base truth from the CXL specification.
-
-There will be places where Linux goes a different direction than the
-software guide so I do not want to set any expectations that those
-excursions are a bug, or otherwise require someone to consult a
-specific hardware vendor's software guide.
-
-Especially in this case when the logic is simply "check a couple fatal
-status flags", the base specification is sufficient and the original
-code made no reference to the guide.
-
-> + */
-> +static int check_device_status(struct cxl_dev_state *cxlds)
-> +{
-> +       const u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
-> +
-> +       if (md_status & CXLMDEV_DEV_FATAL) {
-> +               dev_err(cxlds->dev, "Fatal: replace device\n");
-
-The specification says "replace device", I disagree that the kernel
-should be recommending that the device by replaced. Just report what
-the driver does, and that's probably easier if the error messages are
-left to the caller.
-
-        const u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
-
-        if (md_status & (CXLMDEV_DEV_FATAL | CXLMDEV_FW_HALT)) {
-                dev_err(dev, "mbox: failed to acquire, device state:%s%s\n",
-                        md_status & CXLMDEV_DEV_FATAL ? " fatal" : "",
-                        md_status & CXLMDEV_FW_HALT ? " firmware-halt" : "");
-                return -EIO;
-        }
-
-...i.e. it's not clear to me the helper helps.
-
-> +               return -EIO;
-> +       }
-> +
-> +       if (md_status & CXLMDEV_FW_HALT) {
-> +               dev_err(cxlds->dev, "FWHalt: reset or replace device\n");
-> +               return -EBUSY;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  /**
->   * cxl_pci_mbox_get() - Acquire exclusive access to the mailbox.
->   * @cxlds: The device state to gain access to.
-> @@ -231,17 +252,13 @@ static int cxl_pci_mbox_get(struct cxl_dev_state *cxlds)
->          * Hardware shouldn't allow a ready status but also have failure bits
->          * set. Spit out an error, this should be a bug report
->          */
-> -       rc = -EFAULT;
-> -       if (md_status & CXLMDEV_DEV_FATAL) {
-> -               dev_err(dev, "mbox: reported ready, but fatal\n");
-> +       rc = check_device_status(cxlds);
-> +       if (rc)
->                 goto out;
-> -       }
-> -       if (md_status & CXLMDEV_FW_HALT) {
-> -               dev_err(dev, "mbox: reported ready, but halted\n");
-> -               goto out;
-> -       }
-> +
->         if (CXLMDEV_RESET_NEEDED(md_status)) {
-
-I think this check needs to go. If the reset is needed because of one
-of the above failure statuses then the function will have already
-error exited. If the reset is needed because media is disabled that
-should not be fatal for mailbox operations. It could be useful to do
-some interrogation of *why* media is disabled.
-
->                 dev_err(dev, "mbox: reported ready, but reset needed\n");
-> +               rc = -EFAULT;
->                 goto out;
->         }
+> > The
+> > way this field is defined in the spec would [IMHO] lead vendors to simply put
+> > the max field in there to game the driver, so why not start off with just
+> > insisting they don't?
 >
-> --
-> 2.34.0
+> Given reading this value and getting a big number gives the implication that
+> the device is meant to be really slow to initialize, I'd expect that to push
+> vendors a little in the directly of putting realistic values in).
 >
+> Maybe we should print the value in the log to make them look silly ;)
+
+A print message on the way to a static default timeout value is about
+all a device's self reported timeout is useful.
+
+"device not ready after waiting %d seconds, continuing to wait up to %d seconds"
+
+It's also not clear to me that the Linux default timeout should be so
+generous at 256 seconds. It might be suitable to just complain about
+devices that are taking more than 60 seconds to initialize with an
+option to override that timeout for odd outliers. Otherwise encourage
+hardware implementations to beat the Linux timeout value to get
+support out of the box.
+
+I notice that not even libata waits more than a minute for a given
+device to finish post-reset shenanigans, so might as well set 60
+seconds as what the driver will tolerate out of the box.
