@@ -2,117 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0B3C45D063
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 23:49:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4E4D45D09F
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 23:56:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352135AbhKXWxB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 17:53:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244982AbhKXWw7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Nov 2021 17:52:59 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1A48661074;
-        Wed, 24 Nov 2021 22:49:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637794189;
-        bh=lkmT5oUlkagVlqjx9WivqLmmqv3j4oR0Fkd27SiI9C8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jb4E+Qe5UZqAUcdCXVzrgNg6QELBAq/wZCszFsb7f7PD5iPp4idomPWsS0TK5HXzI
-         xjt5FrWxfRGhd80jw2nAH90/s6GRBebFKW3XbS7DxZkjhSNPn3WX8OnEb1IeteanOW
-         x8F9njdXS+z1vjYD0jvWqxVHk1TebD2ojpZb1jA8m0eMPz4sJ6CFaOGJXo6adqnf2e
-         nYeD2PigtsY/eprAhUrsqaE7MBusY1UlTTUiJfYJc0W0sJeErTTmOduCX7blzWoeRV
-         8aIb3oNxgZ0nsemC+D0BY8DDoAE02ZNfxOo516EOI92n0Hd8nsH9MUeQKCc/SyN7mo
-         EfEvIxkP9smkA==
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     pali@kernel.org, stable@vger.kernel.org,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH 4.14 02/24] PCI: aardvark: Fix a leaked reference by adding missing of_node_put()
-Date:   Wed, 24 Nov 2021 23:49:11 +0100
-Message-Id: <20211124224933.24275-3-kabel@kernel.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211124224933.24275-1-kabel@kernel.org>
-References: <20211124224933.24275-1-kabel@kernel.org>
+        id S242823AbhKXW7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 17:59:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352583AbhKXW6N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 17:58:13 -0500
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E61AC061761
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 14:55:02 -0800 (PST)
+Received: by mail-wr1-x441.google.com with SMTP id b12so7264760wrh.4
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 14:55:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=JLB1cvK2N8Xhl0tAVQYXOSZvUM5uO2FBwES0xEnG4NI=;
+        b=MGe4Qs2WYrGaRLbzJxycQisQvzVyc0utNhgzHoeWnRI1SwXkCkhFTVid1m50i/yPVm
+         jWFNUNXtSRUjFN73CfGZg6ITphcyvhC8sKG0NCJ2PYhdFstW/9M5JE1pP7g/5HP1Vnkq
+         tJDZ9uGt3vWLTmog8kgfwOR3rOVqXO0sw5qX0ag02vlrNp/jS5d9l6O8YqZNXeVhSvXZ
+         Ft3d/vOkUf709DFmMnYVD3znmqh0uEKKd4uJBFBFIE+y8bweRAHsSINkkJcHvJwgO5FI
+         HVM7wgxVm86XRD3cipIbx3+Y6BRZ9t/obWyJc/uVDWf3tN9EZE2DT1UirCtxGml5HxTk
+         /gnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=JLB1cvK2N8Xhl0tAVQYXOSZvUM5uO2FBwES0xEnG4NI=;
+        b=cWBg5F4OWa0LXZbTu+uE2DbJd4McpJtApI0jIPc7Y8bFV4i4OrDf26W1NhBEYNb5bs
+         gqMs1KtNsvXJJ//Z42KF0hoFGptYggeWQkoi/p+WCGxsDEadgALEAFtuF5l+KIV6W5z5
+         pByBB9QhZUeR6Dm2Jm0HgVZsvdDKrtWsGAS2AuqX9ZIKWPCyVbcGXEIGocUm/Q1CsF7k
+         ratJ0ftO67k//TYAiOjrdKUyWK6EPdpRKIHogEql5nM7oz+JKEsI34cVDGOTbFVARyQm
+         xwJTyFErQVK6mpDvmgvi2jeC4+yhBONgz2eP/r/olZ5GR+4W7PbQokrK7bCkBbXl8r+L
+         jUCA==
+X-Gm-Message-State: AOAM532Tb+W5IxjW6MaT6oycsGUFdFu+Us0yUe+yWj3C+Am51rQBfUqZ
+        wnLMzAYUccLCVNSDF7ZnBDo=
+X-Google-Smtp-Source: ABdhPJxtc/tIFIfdWhd6KYSz7xj6M3y5CO051Drfaht5LoDb5fCWFmPjZhmahNfOKXzl+RwyJi2Mbw==
+X-Received: by 2002:a5d:4d8b:: with SMTP id b11mr837336wru.393.1637794501043;
+        Wed, 24 Nov 2021 14:55:01 -0800 (PST)
+Received: from [172.20.10.6] ([102.89.1.73])
+        by smtp.gmail.com with ESMTPSA id k187sm6987929wme.0.2021.11.24.14.54.56
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Wed, 24 Nov 2021 14:54:59 -0800 (PST)
+Message-ID: <619ec2c3.1c69fb81.7104d.25ce@mx.google.com>
+From:   Mr Charles <ellagolaan721@gmail.com>
+X-Google-Original-From: "Mr Charles" <info@gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Kredit
+To:     Recipients <info@gmail.com>
+Date:   Wed, 24 Nov 2021 17:54:56 -0500
+Reply-To: chalesjacksoninvestment68@gmail.com
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+Guten Tag Herr/Frau
 
-commit 3842f5166bf1ef286fe7a39f262b5c9581308366 upstream.
+Ben=F6tigen Sie einen Kredit, um ein Unternehmen zu gr=FCnden? Wenn ja, mel=
+de dich bitte f=FCr weitere Informationen bei mir.
 
-The call to of_get_next_child() returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
-
-irq_domain_add_linear() also calls of_node_get() to increase refcount,
-so irq_domain will not be affected when it is released.
-
-Detected by coccinelle with the following warnings:
-  ./drivers/pci/controller/pci-aardvark.c:826:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 798, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Marek Behún <kabel@kernel.org>
----
- drivers/pci/host/pci-aardvark.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/host/pci-aardvark.c b/drivers/pci/host/pci-aardvark.c
-index fd605796b011..79cd11b1c89a 100644
---- a/drivers/pci/host/pci-aardvark.c
-+++ b/drivers/pci/host/pci-aardvark.c
-@@ -789,6 +789,7 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
- 	struct device_node *node = dev->of_node;
- 	struct device_node *pcie_intc_node;
- 	struct irq_chip *irq_chip;
-+	int ret = 0;
- 
- 	raw_spin_lock_init(&pcie->irq_lock);
- 
-@@ -803,8 +804,8 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
- 	irq_chip->name = devm_kasprintf(dev, GFP_KERNEL, "%s-irq",
- 					dev_name(dev));
- 	if (!irq_chip->name) {
--		of_node_put(pcie_intc_node);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto out_put_node;
- 	}
- 
- 	irq_chip->irq_mask = advk_pcie_irq_mask;
-@@ -816,11 +817,13 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
- 				      &advk_pcie_irq_domain_ops, pcie);
- 	if (!pcie->irq_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
--		of_node_put(pcie_intc_node);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto out_put_node;
- 	}
- 
--	return 0;
-+out_put_node:
-+	of_node_put(pcie_intc_node);
-+	return ret;
- }
- 
- static void advk_pcie_remove_irq_domain(struct advk_pcie *pcie)
--- 
-2.32.0
-
+Vielen Dank
