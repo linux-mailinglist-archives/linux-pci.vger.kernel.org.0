@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E293845C8FB
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 16:42:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 385E045C8FC
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 16:42:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344961AbhKXPpG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 10:45:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48632 "EHLO mail.kernel.org"
+        id S241346AbhKXPpH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 10:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344472AbhKXPo5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1344461AbhKXPo5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 24 Nov 2021 10:44:57 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E0CBC6102A;
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6934160FE3;
         Wed, 24 Nov 2021 15:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637768508;
-        bh=B4KwqLhItoYGnyJ9ogfHgJBcg/G5wxI+LrCO4toFBSw=;
+        s=k20201202; t=1637768507;
+        bh=6tDf7XJQIJvtSbp9viQfuVz7wDd2WfE7mXusR8/VED8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smfTHi3C0BGbB+Tqh/ucp+n9eBQJakBTr/g9WyHJT4bHTI+7e7kmHjwDrL3dkZibA
-         kvBCQ7h/VfXzR1L/Fjlb2468A7ADDlt+xz/jAqCG39yQpcgRjJiKBlcyDh0UjjfJ7b
-         5NcW/WxA1AYwYrsO3rqW6OmI2Dsa2a/gVgDjK6KNl6spgubhlZP1TpbF+Ugp3tInxg
-         Ntw+g+mzL/TD9tqwHddURa2qHoValYWcRNdInuqPKPhWt6o+6g+Z/8dJE8vnerrXXr
-         YYrRnmdMLMOBI2bpC1Yx4fnhqoAph1qPZs9Q4qqT0t9C5GmSuVPWBAAXx2ZYY7R1g4
-         pt2bs24uzZmDA==
+        b=Pvhol1Ht81T34h17oByeGlEXxfM2tonYSzmIX43HESR6gMDHEIckCw4JaBtcvazJe
+         elCaAg+GzntUtRo4XYbAqLgKE+rfDQWd6I7TkB1OdNM47rsIWK4Bzqr2Te5h80NtTv
+         PN66gaFwWvKCOsWciD5cxa8asipHRnIeqco+vYaMMKo3Vr0sGiYPVWWlxYDGBK6EZx
+         sAuS+otIAJB4VHm9bx1/gBy8z4ojFDLn84+Lfo5d/xivt8r3mkx8uGROlJHBKK7c5O
+         1aq292rOQYMeW7s0H0J/AlN+h9tqEtcOEhUluhti0ZcCC4PMcBFm6403VjgKQw1DLp
+         GAf6ee1a1IooQ==
 Received: by pali.im (Postfix)
-        id 177ECB01; Wed, 24 Nov 2021 16:41:46 +0100 (CET)
+        id 28DAD56D; Wed, 24 Nov 2021 16:41:47 +0100 (CET)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
@@ -41,9 +41,9 @@ To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] PCI: mvebu: Replace pci_ioremap_io() usage by devm_pci_remap_iospace()
-Date:   Wed, 24 Nov 2021 16:41:13 +0100
-Message-Id: <20211124154116.916-3-pali@kernel.org>
+Subject: [PATCH 3/5] PCI: mvebu: Remove custom mvebu_pci_host_probe() function
+Date:   Wed, 24 Nov 2021 16:41:14 +0100
+Message-Id: <20211124154116.916-4-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20211124154116.916-1-pali@kernel.org>
 References: <20211124154116.916-1-pali@kernel.org>
@@ -54,56 +54,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now when ARM architecture code also provides standard PCI core function
-pci_remap_iospace(), use its devm_pci_remap_iospace() variant in
-pci-mvebu.c driver instead of old ARM-specific pci_ioremap_io() function.
-
-Call devm_pci_remap_iospace() before adding IO resource to host bridge
-structure, at the place where it should be.
+Now after pci_ioremap_io() usage was replaced by devm_pci_remap_iospace()
+function, there is no need to use custom mvebu_pci_host_probe() function.
+Current implementation of mvebu_pci_host_probe() is same as standard PCI
+core functionn pci_host_probe(). So replace mvebu_pci_host_probe() call by
+pci_host_probe() and remove custom mvebu_pci_host_probe() function.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- drivers/pci/controller/pci-mvebu.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/pci/controller/pci-mvebu.c | 41 +-----------------------------
+ 1 file changed, 1 insertion(+), 40 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index ed13e81cd691..a55b8bd5eb62 100644
+index a55b8bd5eb62..f2180e4630a1 100644
 --- a/drivers/pci/controller/pci-mvebu.c
 +++ b/drivers/pci/controller/pci-mvebu.c
-@@ -992,6 +992,10 @@ static int mvebu_pcie_parse_request_resources(struct mvebu_pcie *pcie)
- 					 resource_size(&pcie->io) - 1);
- 		pcie->realio.name = "PCI I/O";
+@@ -1005,45 +1005,6 @@ static int mvebu_pcie_parse_request_resources(struct mvebu_pcie *pcie)
+ 	return 0;
+ }
  
-+		ret = devm_pci_remap_iospace(dev, &pcie->realio, pcie->io.start);
-+		if (ret)
-+			return ret;
-+
- 		pci_add_resource(&bridge->windows, &pcie->realio);
- 		ret = devm_request_resource(dev, &ioport_resource, &pcie->realio);
- 		if (ret)
-@@ -1010,7 +1014,6 @@ static int mvebu_pcie_parse_request_resources(struct mvebu_pcie *pcie)
-  */
- static int mvebu_pci_host_probe(struct pci_host_bridge *bridge)
- {
--	struct mvebu_pcie *pcie;
- 	struct pci_bus *bus, *child;
- 	int ret;
- 
-@@ -1020,14 +1023,6 @@ static int mvebu_pci_host_probe(struct pci_host_bridge *bridge)
- 		return ret;
- 	}
- 
--	pcie = pci_host_bridge_priv(bridge);
--	if (resource_size(&pcie->io) != 0) {
--		unsigned int i;
+-/*
+- * This is a copy of pci_host_probe(), except that it does the I/O
+- * remap as the last step, once we are sure we won't fail.
+- *
+- * It should be removed once the I/O remap error handling issue has
+- * been sorted out.
+- */
+-static int mvebu_pci_host_probe(struct pci_host_bridge *bridge)
+-{
+-	struct pci_bus *bus, *child;
+-	int ret;
 -
--		for (i = 0; i < resource_size(&pcie->realio); i += SZ_64K)
--			pci_ioremap_io(i, pcie->io.start + i);
+-	ret = pci_scan_root_bus_bridge(bridge);
+-	if (ret < 0) {
+-		dev_err(bridge->dev.parent, "Scanning root bridge failed");
+-		return ret;
 -	}
 -
- 	bus = bridge->bus;
+-	bus = bridge->bus;
+-
+-	/*
+-	 * We insert PCI resources into the iomem_resource and
+-	 * ioport_resource trees in either pci_bus_claim_resources()
+-	 * or pci_bus_assign_resources().
+-	 */
+-	if (pci_has_flag(PCI_PROBE_ONLY)) {
+-		pci_bus_claim_resources(bus);
+-	} else {
+-		pci_bus_size_bridges(bus);
+-		pci_bus_assign_resources(bus);
+-
+-		list_for_each_entry(child, &bus->children, node)
+-			pcie_bus_configure_settings(child);
+-	}
+-
+-	pci_bus_add_devices(bus);
+-	return 0;
+-}
+-
+ static int mvebu_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -1118,7 +1079,7 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+ 	bridge->ops = &mvebu_pcie_ops;
+ 	bridge->align_resource = mvebu_pcie_align_resource;
  
- 	/*
+-	return mvebu_pci_host_probe(bridge);
++	return pci_host_probe(bridge);
+ }
+ 
+ static const struct of_device_id mvebu_pcie_of_match_table[] = {
 -- 
 2.20.1
 
