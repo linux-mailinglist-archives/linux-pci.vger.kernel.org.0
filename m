@@ -2,135 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE02245B300
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 05:13:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F9E645B305
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Nov 2021 05:15:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240896AbhKXEQa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 Nov 2021 23:16:30 -0500
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:39181 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232238AbhKXEQ2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Nov 2021 23:16:28 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id DE5B010315524;
-        Wed, 24 Nov 2021 05:13:17 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id A4BAB17C3C; Wed, 24 Nov 2021 05:13:17 +0100 (CET)
-Date:   Wed, 24 Nov 2021 05:13:17 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>
-Subject: Re: Lockdep warning about ctrl->reset_lock in
- pciehp_check_presence/pciehp_ist on TB3 dock unplug
-Message-ID: <20211124041317.GA1887@wunner.de>
-References: <de684a28-9038-8fc6-27ca-3f6f2f6400d7@redhat.com>
- <20211122212943.GA2176134@bhelgaas>
+        id S232822AbhKXESc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 Nov 2021 23:18:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232238AbhKXESc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 Nov 2021 23:18:32 -0500
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76FACC061574
+        for <linux-pci@vger.kernel.org>; Tue, 23 Nov 2021 20:15:23 -0800 (PST)
+Received: by mail-pg1-x52c.google.com with SMTP id f65so999567pgc.0
+        for <linux-pci@vger.kernel.org>; Tue, 23 Nov 2021 20:15:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wxLF7u8QoM20c372oL9wZ9ZMbqobmlvg8VEP/5FR5bw=;
+        b=rXcXoN9mjL9HrOaVuVtr0OkHqnoLKOCUGz9XXIMvBXGU8zsOAWbjvutZy+O9pXOGbm
+         eSjnHVSuutZ5RAPctBjRftWx5lyNMq+cLkiliGVSKtmfHOYCJJ7VI9tVMgwkEauaN837
+         HOYtZYddjYFnc5UDVkK960qAZVheSl1a8q2tx2YQ9k+5Z8rz1he9fx7/22JbCcnqNCxB
+         7FaVpqndimVqCoZ+mLq7VZLxl26PhNCrDYWot7W47EXe92rONBodpmjWZhhaUFxkcHQl
+         OovvbP105Dtch1rSxJ3L2f75iX7pcYOkUaGfgbjeQv2k7F6wWVq3CuJMlieIVZO556BB
+         K9CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wxLF7u8QoM20c372oL9wZ9ZMbqobmlvg8VEP/5FR5bw=;
+        b=Kxwr3Wog9ycb6SUyn9U9bPx7KWtxLfqg+uoJQ6J8kfadCILqwh+Ryqutz/+g/hEMUz
+         7+7Pr4NSWiEd5y3YStcC6H3VbmxUa+yfT49Ra3Qik1cGnqneuR9c4XDAVfpyM4l+qk8H
+         GlFuRHFVnyAMmwZfQlho5tWmJNK577mS285yYwveAaylIW7VmO49jyjLfra09DA5LjXt
+         SuUrXMh6iyp8CSUh/MxKWezLz8mMp3UBseU72AAwSsFNJvy1QRsl1r8pwABQ5uaKpDip
+         5MqiES6gwZagl37LeP1vuBrGOXMDI95i59wdpM7xTSjf/A3ViIgSf+Brbqz+jugz9TVA
+         HMOA==
+X-Gm-Message-State: AOAM531JmrLYeoMeG9zBo49juZPhpRmMEk85heDE1jqMv8Utzeb3b2ww
+        WqmNmTSqP32rVmxksVGPQRHiQs2yniySpL3KT1/84wSS10A=
+X-Google-Smtp-Source: ABdhPJwn8C0TVVqaIkNJMKGMZskgbr7QkoamHPCDWPdmW74faUztMSRwKmwGJ2ltAb/0UnFcxQ39nsQ7DZeKTFbl8sk=
+X-Received: by 2002:aa7:8d0a:0:b0:4a2:82d7:1695 with SMTP id
+ j10-20020aa78d0a000000b004a282d71695mr2819706pfe.86.1637727323026; Tue, 23
+ Nov 2021 20:15:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211122212943.GA2176134@bhelgaas>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-2-ben.widawsky@intel.com>
+In-Reply-To: <20211120000250.1663391-2-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 23 Nov 2021 20:15:12 -0800
+Message-ID: <CAPcyv4iinb288amqu=QZ78wXMSNOADTtTzybcSVgKKvm74u-Sg@mail.gmail.com>
+Subject: Re: [PATCH 01/23] cxl: Rename CXL_MEM to CXL_PCI
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 22, 2021 at 03:29:43PM -0600, Bjorn Helgaas wrote:
-> On Mon, Nov 22, 2021 at 05:45:32PM +0100, Hans de Goede wrote:
-> > With 5.16-rc2 I'm getting the following lockdep warning when unplugging
-> > a Lenovo X1C8 from a Lenovo 2nd gen TB3 dock:
+On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> The cxl_mem module was renamed cxl_pci in commit 21e9f76733a8 ("cxl:
+> Rename mem to pci"). In preparation for adding an ancillary driver for
+> cxl_memdev devices (registered on the cxl bus by cxl_pci), go ahead and
+> rename CONFIG_CXL_MEM to CONFIG_CXL_PCI. Free up the CXL_MEM name for
+> that new driver to manage CXL.mem endpoint operations.
+>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
 
-Thanks for the report.  I'm aware of this issue, it's still on my todo
-list.  Theodore already came across it a while ago:
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-https://lore.kernel.org/linux-pci/20190402021933.GA2966@mit.edu/
 
-It's a false positive, we need to use a separate lockdep class either
-for each hotplug port or for each level in the PCI hierarchy.
-
-Thanks,
-
-Lukas
-
-> > [   28.583853] pcieport 0000:06:01.0: pciehp: Slot(1): Link Down
-> > [   28.583891] pcieport 0000:06:01.0: pciehp: Slot(1): Card not present
-> > [   28.583995] pcieport 0000:09:04.0: can't change power state from D3cold to D0 (config space inaccessible)
-> > 
-> > [   28.584849] ============================================
-> > [   28.584854] WARNING: possible recursive locking detected
-> > [   28.584858] 5.16.0-rc2+ #621 Not tainted
-> > [   28.584864] --------------------------------------------
-> > [   28.584867] irq/124-pciehp/86 is trying to acquire lock:
-> > [   28.584873] ffff8e5ac4299ef8 (&ctrl->reset_lock){.+.+}-{3:3}, at: pciehp_check_presence+0x23/0x80
-> > [   28.584904] 
-> >                but task is already holding lock:
-> > [   28.584908] ffff8e5ac4298af8 (&ctrl->reset_lock){.+.+}-{3:3}, at: pciehp_ist+0xf3/0x180
-> > [   28.584929] 
-> >                other info that might help us debug this:
-> > [   28.584933]  Possible unsafe locking scenario:
-> > 
-> > [   28.584936]        CPU0
-> > [   28.584939]        ----
-> > [   28.584942]   lock(&ctrl->reset_lock);
-> > [   28.584949]   lock(&ctrl->reset_lock);
-> > [   28.584955] 
-> >                 *** DEADLOCK ***
-> > 
-> > [   28.584959]  May be due to missing lock nesting notation
-> > 
-> > [   28.584963] 3 locks held by irq/124-pciehp/86:
-> > [   28.584970]  #0: ffff8e5ac4298af8 (&ctrl->reset_lock){.+.+}-{3:3}, at: pciehp_ist+0xf3/0x180
-> > [   28.584991]  #1: ffffffffa3b024e8 (pci_rescan_remove_lock){+.+.}-{3:3}, at: pciehp_unconfigure_device+0x31/0x110
-> > [   28.585012]  #2: ffff8e5ac1ee2248 (&dev->mutex){....}-{3:3}, at: device_release_driver+0x1c/0x40
-> > [   28.585037] 
-> >                stack backtrace:
-> > [   28.585042] CPU: 4 PID: 86 Comm: irq/124-pciehp Not tainted 5.16.0-rc2+ #621
-> > [   28.585052] Hardware name: LENOVO 20U90SIT19/20U90SIT19, BIOS N2WET30W (1.20 ) 08/26/2021
-> > [   28.585059] Call Trace:
-> > [   28.585064]  <TASK>
-> > [   28.585073]  dump_stack_lvl+0x59/0x73
-> > [   28.585087]  __lock_acquire.cold+0xc5/0x2c6
-> > [   28.585106]  ? find_held_lock+0x2b/0x80
-> > [   28.585124]  lock_acquire+0xb5/0x2b0
-> > [   28.585132]  ? pciehp_check_presence+0x23/0x80
-> > [   28.585144]  ? lock_is_held_type+0xa8/0x120
-> > [   28.585161]  down_read+0x3e/0x50
-> > [   28.585172]  ? pciehp_check_presence+0x23/0x80
-> > [   28.585183]  pciehp_check_presence+0x23/0x80
-> > [   28.585194]  pciehp_runtime_resume+0x5c/0xa0
-> > [   28.585206]  ? pci_msix_init+0x60/0x60
-> > [   28.585214]  device_for_each_child+0x45/0x70
-> > [   28.585227]  pcie_port_device_runtime_resume+0x20/0x30
-> > [   28.585236]  pci_pm_runtime_resume+0xa7/0xc0
-> > [   28.585246]  ? pci_pm_freeze_noirq+0x100/0x100
-> > [   28.585257]  __rpm_callback+0x41/0x110
-> > [   28.585271]  ? pci_pm_freeze_noirq+0x100/0x100
-> > [   28.585281]  rpm_callback+0x59/0x70
-> > [   28.585293]  rpm_resume+0x512/0x7b0
-> > [   28.585309]  __pm_runtime_resume+0x4a/0x90
-> > [   28.585322]  __device_release_driver+0x28/0x240
-> > [   28.585338]  device_release_driver+0x26/0x40
-> > [   28.585351]  pci_stop_bus_device+0x68/0x90
-> > [   28.585363]  pci_stop_bus_device+0x2c/0x90
-> > [   28.585373]  pci_stop_and_remove_bus_device+0xe/0x20
-> > [   28.585384]  pciehp_unconfigure_device+0x6c/0x110
-> > [   28.585396]  ? __pm_runtime_resume+0x58/0x90
-> > [   28.585409]  pciehp_disable_slot+0x5b/0xe0
-> > [   28.585421]  pciehp_handle_presence_or_link_change+0xc3/0x2f0
-> > [   28.585436]  pciehp_ist+0x179/0x180
-> > [   28.585449]  ? disable_irq_nosync+0x10/0x10
-> > [   28.585460]  irq_thread_fn+0x1d/0x60
-> > [   28.585470]  ? irq_thread+0x81/0x1a0
-> > [   28.585480]  irq_thread+0xcb/0x1a0
-> > [   28.585491]  ? irq_thread_fn+0x60/0x60
-> > [   28.585502]  ? irq_thread_check_affinity+0xb0/0xb0
-> > [   28.585514]  kthread+0x165/0x190
-> > [   28.585522]  ? set_kthread_struct+0x40/0x40
-> > [   28.585531]  ret_from_fork+0x1f/0x30
-> > [   28.585554]  </TASK>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+>
+> ---
+> Changes since RFCv2:
+> - Reword commit message (Dan)
+> - Reword Kconfig description (Dan)
+> ---
+>  drivers/cxl/Kconfig  | 23 ++++++++++++-----------
+>  drivers/cxl/Makefile |  2 +-
+>  2 files changed, 13 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 67c91378f2dd..ef05e96f8f97 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -13,25 +13,26 @@ menuconfig CXL_BUS
+>
+>  if CXL_BUS
+>
+> -config CXL_MEM
+> -       tristate "CXL.mem: Memory Devices"
+> +config CXL_PCI
+> +       tristate "PCI manageability"
+>         default CXL_BUS
+>         help
+> -         The CXL.mem protocol allows a device to act as a provider of
+> -         "System RAM" and/or "Persistent Memory" that is fully coherent
+> -         as if the memory was attached to the typical CPU memory
+> -         controller.
+> +         The CXL specification defines a "CXL memory device" sub-class in the
+> +         PCI "memory controller" base class of devices. Device's identified by
+> +         this class code provide support for volatile and / or persistent
+> +         memory to be mapped into the system address map (Host-managed Device
+> +         Memory (HDM)).
+>
+> -         Say 'y/m' to enable a driver that will attach to CXL.mem devices for
+> -         configuration and management primarily via the mailbox interface. See
+> -         Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification for more
+> -         details.
+> +         Say 'y/m' to enable a driver that will attach to CXL memory expander
+> +         devices enumerated by the memory device class code for configuration
+> +         and management primarily via the mailbox interface. See Chapter 2.3
+> +         Type 3 CXL Device in the CXL 2.0 specification for more details.
+>
+>           If unsure say 'm'.
+>
+>  config CXL_MEM_RAW_COMMANDS
+>         bool "RAW Command Interface for Memory Devices"
+> -       depends on CXL_MEM
+> +       depends on CXL_PCI
+>         help
+>           Enable CXL RAW command interface.
+>
+> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> index d1aaabc940f3..cf07ae6cea17 100644
+> --- a/drivers/cxl/Makefile
+> +++ b/drivers/cxl/Makefile
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_CXL_BUS) += core/
+> -obj-$(CONFIG_CXL_MEM) += cxl_pci.o
+> +obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+>  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+>  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+>
+> --
+> 2.34.0
+>
