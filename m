@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E19B45DA63
+	by mail.lfdr.de (Postfix) with ESMTP id 0E7C045DA62
 	for <lists+linux-pci@lfdr.de>; Thu, 25 Nov 2021 13:50:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237589AbhKYMxT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Nov 2021 07:53:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45584 "EHLO mail.kernel.org"
+        id S245494AbhKYMxS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Nov 2021 07:53:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1353484AbhKYMvp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1353575AbhKYMvp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 25 Nov 2021 07:51:45 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B93EA610D2;
-        Thu, 25 Nov 2021 12:46:39 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 312CC610F9;
+        Thu, 25 Nov 2021 12:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637844399;
-        bh=HAwmzdzGbp3IRdqXEag5++Pgk0BJ9we/P6AQ8qPIyTs=;
+        s=k20201202; t=1637844401;
+        bh=I22+rZTnzG+DDCPyUEnV19dYpz4cUH9W+Ns6gKnI/bo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HRIycqlRwe0l1Cpe9qadszwuU8qNRH+vVX/HsiQnK7rhxqghhwTZ4uy32NGKbh8qs
-         GR2RQ3Bj2IMZqTezqHB0X0pVrbnqDMrQLzK9n+jfePCfgRp69th2x1ML2jOzYp44aW
-         MecvdFbDzJtyGiz4VtNejtEViTY3tOAZO2TMGG9a3vda7x/8nKQ4ELUBtddz1ViJUi
-         xk6xMwAgeB8z7GXWgXZGGHwieC02Vop7XQsMvq3Y+GHIwZTj8VB7TDhMnx8ReGIYeo
-         kcCSX8WmUcKVL7CsKG7iwU9yt18Low8+yJW9nVnsTTHTRV3eKeBmUAa638kq2n6B5w
-         /viQaVb0SXsLA==
+        b=GjVCqedx94OmhYlagOgMOGMSEpsMVcpvrjaii9/oLYfZ+dIP4NAKEhhvly67MOgJo
+         fJUmifie6FJwo2wUCExn+EZ5MI11dPLKBQIUrhm/zhkwnl6OEZ8UMiX6q+zgb8UdKV
+         t4Jv5i1cVtFsK+Kq/nrw58A0ABDbcxY9R4Thkvq4qNMOnOv+5QqAQLUKMUMHrtdRI1
+         JNf3J6y21K2JNRS10MM0spUFI6P5Wib+7kZPvtFQDrCI5rnrqjW2PWY/GqXXPTJtUB
+         eOl0XW5GwHXTiUU1O/Z67bJMpM/amWj1r+dk7j3n3P0Xz0hAMJWrivQh6eNA88KPQh
+         LwLQjFtRvh+kQ==
 Received: by pali.im (Postfix)
-        id 77E46EDE; Thu, 25 Nov 2021 13:46:39 +0100 (CET)
+        id 8AD9767E; Thu, 25 Nov 2021 13:46:40 +0100 (CET)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -34,9 +34,9 @@ To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 09/15] PCI: mvebu: Setup PCIe controller to Root Complex mode
-Date:   Thu, 25 Nov 2021 13:45:59 +0100
-Message-Id: <20211125124605.25915-10-pali@kernel.org>
+Subject: [PATCH 10/15] PCI: mvebu: Set PCI Bridge Class Code to PCI Bridge
+Date:   Thu, 25 Nov 2021 13:46:00 +0100
+Message-Id: <20211125124605.25915-11-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20211125124605.25915-1-pali@kernel.org>
 References: <20211125124605.25915-1-pali@kernel.org>
@@ -47,41 +47,68 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This driver operates only in Root Complex mode, so ensure that hardware is
-properly configured in Root Complex mode.
+The default value of Class Code of this bridge corresponds to a Memory
+controller, though. This is probably relict from the past when old
+Marvell/Galileo PCI-based controllers were used as standalone PCI device
+for connecting SDRAM or workaround for PCs with broken BIOS. Details are
+in commit 36de23a4c5f0 ("MIPS: Cobalt: Explain GT64111 early PCI fixup").
+
+Change the Class Code to correspond to a PCI Bridge.
+
+Add comment explaining this change.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Cc: stable@vger.kernel.org
 ---
- drivers/pci/controller/pci-mvebu.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pci-mvebu.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index 12afa565bfcf..017ae9f869ac 100644
+index 017ae9f869ac..4edce441901c 100644
 --- a/drivers/pci/controller/pci-mvebu.c
 +++ b/drivers/pci/controller/pci-mvebu.c
-@@ -56,6 +56,7 @@
- #define  PCIE_MASK_ENABLE_INTS          0x0f000000
- #define PCIE_CTRL_OFF		0x1a00
- #define  PCIE_CTRL_X1_MODE		0x0001
-+#define  PCIE_CTRL_RC_MODE		BIT(1)
- #define PCIE_STAT_OFF		0x1a04
- #define  PCIE_STAT_BUS                  0xff00
- #define  PCIE_STAT_DEV                  0x1f0000
-@@ -224,7 +225,12 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+@@ -225,7 +225,7 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
  
  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
  {
--	u32 cmd, mask;
-+	u32 ctrl, cmd, mask;
-+
-+	/* Setup PCIe controller to Root Complex mode. */
-+	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
-+	ctrl |= PCIE_CTRL_RC_MODE;
-+	mvebu_writel(port, ctrl, PCIE_CTRL_OFF);
+-	u32 ctrl, cmd, mask;
++	u32 ctrl, cmd, dev_rev, mask;
  
- 	/* Disable Root Bridge I/O space, memory space and bus mastering. */
- 	cmd = mvebu_readl(port, PCIE_CMD_OFF);
+ 	/* Setup PCIe controller to Root Complex mode. */
+ 	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
+@@ -237,6 +237,32 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+ 	cmd &= ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER);
+ 	mvebu_writel(port, cmd, PCIE_CMD_OFF);
+ 
++	/*
++	 * Change Class Code of PCI Bridge device to PCI Bridge (0x6004)
++	 * because default value is Memory controller (0x5080).
++	 *
++	 * Note that this mvebu PCI Bridge does not have compliant Type 1
++	 * Configuration Space. Header Type is reported as Type 0 and it
++	 * has format of Type 0 config space.
++	 *
++	 * Moreover Type 0 BAR registers (ranges 0x10 - 0x28 and 0x30 - 0x34)
++	 * have the same format in Marvell's specification as in PCIe
++	 * specification, but their meaning is totally different and they do
++	 * different things: they are aliased into internal mvebu registers
++	 * (e.g. PCIE_BAR_LO_OFF) and these should not be changed or
++	 * reconfigured by pci device drivers.
++	 *
++	 * Therefore driver uses emulation of PCI Bridge which emulates
++	 * access to configuration space via internal mvebu registers or
++	 * emulated configuration buffer. Driver access these PCI Bridge
++	 * directly for simplification, but these registers can be accessed
++	 * also via standard mvebu way for accessing PCI config space.
++	 */
++	dev_rev = mvebu_readl(port, PCIE_DEV_REV_OFF);
++	dev_rev &= ~0xffffff00;
++	dev_rev |= (PCI_CLASS_BRIDGE_PCI << 8) << 8;
++	mvebu_writel(port, dev_rev, PCIE_DEV_REV_OFF);
++
+ 	/* Point PCIe unit MBUS decode windows to DRAM space. */
+ 	mvebu_pcie_setup_wins(port);
+ 
 -- 
 2.20.1
 
