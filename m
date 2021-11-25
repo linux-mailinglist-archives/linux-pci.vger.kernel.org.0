@@ -2,70 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFC3E45D198
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Nov 2021 01:24:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E84C545D26C
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Nov 2021 02:26:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352886AbhKYAYW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Nov 2021 19:24:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42684 "EHLO
+        id S1347340AbhKYB3t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Nov 2021 20:29:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352743AbhKYAYR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 19:24:17 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158D6C061574
-        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 16:21:06 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id o20so17664479eds.10
-        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 16:21:06 -0800 (PST)
+        with ESMTP id S236498AbhKYB1t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Nov 2021 20:27:49 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 145E4C08ECBD
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 16:34:20 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id m24so3196409pls.10
+        for <linux-pci@vger.kernel.org>; Wed, 24 Nov 2021 16:34:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=JLB1cvK2N8Xhl0tAVQYXOSZvUM5uO2FBwES0xEnG4NI=;
-        b=Iy7W2Cp4SIxjtwsYFQTvtbRXcHFbFQ7bmxMleNeLoNuizTBX6PqQcDn6zSPm+dvvXw
-         x8EtTZTC0SJdqgDat74MnrmurwMM5MXUt63OOlNZR45tEg11BH3vQO/fbOsRMRisrN4e
-         UcR+BTEETOTnadUBLIONJ4uKGmfyKwK99nHZUYz1JRcw/h1rsA1zDZgT6hcyZD/2B/ai
-         CFL+8m4FJK+5gs/psbls0rE9XbuM4UT1SL37Pvua7dx2Nr1qBQtpL+fpxa6irdbwsPIv
-         RzYP2t4fRgxZMeb2qreLx5HwLkykRI0pA2LzKRy+rWrSnXmf2IrJfXt7cr4Le0EwQIpc
-         jUUQ==
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u4KIN2dv3zujSKlFX2maO2xnyNaGGDuJrxaXEWwcRpQ=;
+        b=vC2csGsqUGxpMVK1Wrd1CpFBkezStgqStPUWia/9biTRwxrW4G8n4JJEQDizEKJOcv
+         fSCgNVr1cO2vHRirG8kUOoW3PbuB7xneC+5/oJXcBCQl9wwNTa+OCqF6gdjdUhe/gn37
+         y5VJ3006d/FcLdWFhff/IBEl3I0VcjiQsvy8M89oQ/LORrfjQ6Ei2Sc04MuyNUEAeyMy
+         t2KyeybrUQ/UrEz/A23wBbKQoyl5Y/FzlGMr27Dvetr64FG1LHOQDy+nfBZB+01CzD0F
+         Zrl1xOVx/7b6ZTMHitEa+hY9x1Gcnv+hHC7yr3u2hZGv77C4r7Byi7XX41JJ2iEalbqJ
+         a7mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=JLB1cvK2N8Xhl0tAVQYXOSZvUM5uO2FBwES0xEnG4NI=;
-        b=zFUhcx6ukQ0vIEp04yyaV4khyjcw8n7vLBm/35ub+on8lV1WTSd3WCI4m4qds1R881
-         elocD3Oectcw/oc8UWEEgG5qJYLygtt6c1FZMYe21ISmKr0Fq76Y1zlXNu+ssIjrtKk1
-         aGQVNFw4ke+EDsIu7reMf/4A//2kiuXqDd68J/UTM897qYuX+HgAj3XPikngu6SpQLOM
-         QjizIqEaEWU/QVxeosL88RsFSOGWXq/N44xLmBjJcbao2Jz+gfNXEMGt3N0Ty+wfc4YX
-         U8Q9PRt6X9zyJIla5qTZ6hBC828Mk62dLWZRw1HTifmH0fZJHEz9EX9J4kiQEJFfAhp5
-         Q4Gg==
-X-Gm-Message-State: AOAM530cnsb5PIC8DdY1FFdqS79xRVF6s923DdaqSLUwOHBYFicD1YNx
-        v7rLKTihHSW+8UmqEJhA1O4=
-X-Google-Smtp-Source: ABdhPJyJtlz25AEOd7OMQFYeZU8dqGzoz+KpE6X08lbrtZIg4OCiR9bFVwb+VAIMbSPy3lpG9AxkMw==
-X-Received: by 2002:a05:6402:2026:: with SMTP id ay6mr32608992edb.202.1637799664702;
-        Wed, 24 Nov 2021 16:21:04 -0800 (PST)
-Received: from [172.20.10.6] ([197.210.227.224])
-        by smtp.gmail.com with ESMTPSA id u10sm861106edo.16.2021.11.24.16.20.58
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Wed, 24 Nov 2021 16:21:04 -0800 (PST)
-Message-ID: <619ed6f0.1c69fb81.3252.36e0@mx.google.com>
-From:   Mr Charles <zollerjohnucfirm42@gmail.com>
-X-Google-Original-From: "Mr Charles" <info@gmail.com>
-Content-Type: text/plain; charset="iso-8859-1"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u4KIN2dv3zujSKlFX2maO2xnyNaGGDuJrxaXEWwcRpQ=;
+        b=GwanwiZXBlUbbCDw6BbhpZnUHaNLtkltqaGu36fkUTjlQI957PcRr6IibEe6vS93NS
+         3lL3StWsNWppMJJeewe91pjItP2EsoghhzaaTxR94flJPWAY+4ipD34Cmwd8Bt5qV0iV
+         0aq2lotfEeKYfJOKxekjsTR2BQ0OvZG6LbLhD0TCnBAKp7hGhm0oL9z4x3ttspK6K2G4
+         qjY/1RwPYC6FYDw36zivdIDNw0EDsidhw21W6Wnm1xIDmwrcJnfxGh7WbOB3Whd14xrD
+         exhrPgDfhI1LvVMLdXLSYXnotxRlY7wZ21nKjenBCYfzlC8JyRCTvmf2kxplAb8MlPDP
+         fqmQ==
+X-Gm-Message-State: AOAM533vdxaROJrkvzRY1eAU5xCqUVnZtqceB39CTd0ZIGUVRfoJcMG4
+        +b6qSgyq4yfRBh1Fdcx9HDKW3B9FLxih2sWi3Hhteg==
+X-Google-Smtp-Source: ABdhPJz9397l5v8CijNctOC/Xc8xCBkGt3KFU1rVNNw+qoHCx9npaqi3bSQRtCCdWAGomHBvocbkphEOI7tefDIf3OE=
+X-Received: by 2002:a17:90b:1e07:: with SMTP id pg7mr1640070pjb.93.1637800459614;
+ Wed, 24 Nov 2021 16:34:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Kredit
-To:     Recipients <info@gmail.com>
-Date:   Wed, 24 Nov 2021 19:20:58 -0500
-Reply-To: chalesjacksoninvestment68@gmail.com
+References: <20211120000250.1663391-1-ben.widawsky@intel.com> <20211120000250.1663391-14-ben.widawsky@intel.com>
+In-Reply-To: <20211120000250.1663391-14-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 24 Nov 2021 16:34:09 -0800
+Message-ID: <CAPcyv4jjVvCn2848-m8BOEHOW+20a=o3zC4Msr+Exa4n_g75Mg@mail.gmail.com>
+Subject: Re: [PATCH 13/23] cxl/core: Move target population locking to caller
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Guten Tag Herr/Frau
+On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> In preparation for a port driver that enumerates a descendant port +
+> decoder hierarchy, arrange for an unlocked version of cxl_decoder_add().
+> Otherwise a port-driver that adds a child decoder will deadlock on the
+> device_lock() in ->probe().
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+>
+> ---
+>
+> Changes since RFCv2:
+> - Reword commit message (Dan)
+> - Move decoder API changes into this patch (Dan)
+> ---
+>  drivers/cxl/core/bus.c | 59 +++++++++++++++++++++++++++++++-----------
+>  drivers/cxl/cxl.h      |  1 +
+>  2 files changed, 45 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/cxl/core/bus.c b/drivers/cxl/core/bus.c
+> index 16b15f54fb62..cd6fe7823c69 100644
+> --- a/drivers/cxl/core/bus.c
+> +++ b/drivers/cxl/core/bus.c
+> @@ -487,28 +487,22 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+>  {
+>         int rc = 0, i;
+>
+> +       device_lock_assert(&port->dev);
+> +
+>         if (!target_map)
+>                 return 0;
+>
+> -       device_lock(&port->dev);
+> -       if (list_empty(&port->dports)) {
+> -               rc = -EINVAL;
+> -               goto out_unlock;
+> -       }
+> +       if (list_empty(&port->dports))
+> +               return -EINVAL;
+>
+>         for (i = 0; i < cxld->nr_targets; i++) {
+>                 struct cxl_dport *dport = find_dport(port, target_map[i]);
+>
+> -               if (!dport) {
+> -                       rc = -ENXIO;
+> -                       goto out_unlock;
+> -               }
+> +               if (!dport)
+> +                       return -ENXIO;
+>                 cxld->target[i] = dport;
+>         }
+>
+> -out_unlock:
+> -       device_unlock(&port->dev);
+> -
+>         return rc;
+>  }
+>
+> @@ -571,7 +565,7 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+>  EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
+>
+>  /**
+> - * cxl_decoder_add - Add a decoder with targets
+> + * cxl_decoder_add_locked - Add a decoder with targets
+>   * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
+>   * @target_map: A list of downstream ports that this decoder can direct memory
+>   *              traffic to. These numbers should correspond with the port number
+> @@ -581,12 +575,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
+>   * is an endpoint device. A more awkward example is a hostbridge whose root
+>   * ports get hot added (technically possible, though unlikely).
+>   *
+> - * Context: Process context. Takes and releases the cxld's device lock.
+> + * This is the locked variant of cxl_decoder_add().
+> + *
+> + * Context: Process context. Expects the cxld's device lock to be held.
+>   *
+>   * Return: Negative error code if the decoder wasn't properly configured; else
+>   *        returns 0.
+>   */
+> -int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+> +int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
+>  {
+>         struct cxl_port *port;
+>         struct device *dev;
+> @@ -619,6 +615,39 @@ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
+>
+>         return device_add(dev);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(cxl_decoder_add_locked, CXL);
+> +
+> +/**
+> + * cxl_decoder_add - Add a decoder with targets
+> + * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
+> + * @target_map: A list of downstream ports that this decoder can direct memory
+> + *              traffic to. These numbers should correspond with the port number
+> + *              in the PCIe Link Capabilities structure.
+> + *
+> + * This is the unlocked variant of cxl_decoder_add_locked().
+> + * See cxl_decoder_add_locked().
+> + *
+> + * Context: Process context. Takes and releases the cxld's device lock.
 
-Ben=F6tigen Sie einen Kredit, um ein Unternehmen zu gr=FCnden? Wenn ja, mel=
-de dich bitte f=FCr weitere Informationen bei mir.
+No, it takes the port's lock to walk its dport list.
 
-Vielen Dank
+Otherwise, looks good to me:
+
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
