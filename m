@@ -2,425 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E690645E2EB
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Nov 2021 23:15:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D86DA45E831
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Nov 2021 08:06:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230173AbhKYWSv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Nov 2021 17:18:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233438AbhKYWQu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Nov 2021 17:16:50 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F137A6112D;
-        Thu, 25 Nov 2021 22:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637878418;
-        bh=RFXhoo0xHg4VMabIX9scPHIOIhA3BwHFHqNRwyi1wtk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Rbn0Ft5QW4Zu9W92AkAXWk4NeXHlwagP1ExTmvEvUBqwloeHXqNj+bPf+o0P8Jpt8
-         a0rzX0WY+CI0h5awg3Ra8Ltvr2Q1eRVyyOdF/oZV3YiEYYaijenx5e6ayQnNpr0I6u
-         yDnA51wWm8Tm0/wPIa4BNlGSoGugjGIGY4KEX/iDJWP2Qt0bSfnbeNA4gB+r9TZU9r
-         jkLQRhDtED3PYQD70zM0c6xxYpgpPoB+4uPKKQLER64VX2k9DFRaPKhdgDROEYY2/y
-         XOvzsrBImiKrS7IG3AViM8eVAcO0uXZXf6WEvgF8rW3STn2SN5r6elRlsfhIICOfl3
-         4GydaI4XrXV+g==
-Date:   Thu, 25 Nov 2021 16:13:36 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>, kw@linux.com, pavel@ucw.cz
-Subject: Re: [PATCH v3] Add support for PCIe SSD status LED management
-Message-ID: <20211125221336.GA2316181@bhelgaas>
+        id S236083AbhKZHJl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Nov 2021 02:09:41 -0500
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:43398 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232116AbhKZHHl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 02:07:41 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0UyM4Bt8_1637910264;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0UyM4Bt8_1637910264)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 26 Nov 2021 15:04:26 +0800
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+To:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        helgaas@kernel.org
+Cc:     bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
+        lenb@kernel.org, rjw@rjwysocki.net, bhelgaas@google.com,
+        xueshuai@linux.alibaba.com, zhangliguang@linux.alibaba.com,
+        zhuo.song@linux.alibaba.com
+Subject: [RFC PATCH v4] ACPI: Move sdei_init and ghes_init ahead to handle platform errors earlier
+Date:   Fri, 26 Nov 2021 15:04:22 +0800
+Message-Id: <20211126070422.73234-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210813213653.3760-1-stuart.w.hayes@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 05:36:53PM -0400, Stuart Hayes wrote:
-> This patch adds support for the PCIe SSD Status LED Management
-> interface, as described in the "_DSM Additions for PCIe SSD Status LED
-> Management" ECN to the PCI Firmware Specification revision 3.2.
+On an ACPI system, ACPI is initialised very early from a subsys_initcall(),
+while SDEI is not ready until a subsys_initcall_sync().
 
-I think r3.3 has been released, so we can cite that now.
+The SDEI driver provides functions (e.g. apei_sdei_register_ghes,
+apei_sdei_unregister_ghes) to register or unregister event callback for
+dispatcher in firmware. When the GHES driver probing, it registers the
+corresponding callback according to the notification type specified by
+GHES. If the GHES notification type is SDEI, the GHES driver will call
+apei_sdei_register_ghes to register event call.
 
-> It will add (led_classdev) LEDs to each PCIe device that has a supported
-> _DSM interface (one off/on LED per supported state). Both PCIe storage
-> devices, and the ports to which they are connected, can support this
-> interface.
+When the firmware emits an event, it migrates the handling of the event
+into the kernel at the registered entry-point __sdei_asm_handler. And
+finally, the kernel will call the registered event callback and return
+status_code to indicate the status of event handling. SDEI_EV_FAILED
+indicates that the kernel failed to handle the event.
 
-To be OCD, we should tighten up the "ports to which they are
-connected" part (see details below).
+Consequently, when an error occurs during kernel booting, the kernel is
+unable to handle and report errors until the GHES driver is initialized by
+device_initcall(), in which the event callback is registered. All errors
+that occurred before GHES initialization are missed and there is no chance
+to report and find them again.
 
-> + * drive_status_dev->dev could be the drive itself or its PCIe port
+From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
+memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
+the estatus memory pool. On the other hand, ghes_init() relies on
+sdei_init() to detect the SDEI version and the framework for registering
+and unregistering events. By the way, I don't figure out why acpi_hest_init
+is called in acpi_pci_root_init, it don't rely on any other thing. May it
+could be moved further, following acpi_iort_init in acpi_init.
 
-I assume you mean "drive_status_dev->pdev" (not "->dev")?
+sdei_init() relies on ACPI table which is initialized subsys_initcall():
+acpi_init(), acpi_bus_init(), acpi_load_tables(), acpi_tb_laod_namespace().
+May it should be also moved further, after acpi_load_tables.
 
-"... drive itself or its PCIe port" is ambiguous because switches and
-endpoints both have Ports.  It sounds like this refers to either the
-endpoint or the switch downstream port leading to it, which would
-match the PCI Firmware spec language about the _DSM being "under the
-ACPI object representing the embedded PCIe device/function or under
-the ACPI PCIe description representing the add-in PCI Express slot."
+In this patch, move sdei_init and ghes_init as far ahead as possible, right
+after acpi_hest_init().
 
-> +struct drive_status_dev {
-> +	struct list_head list;
-> +	/* PCI device that has the LED controls */
-> +	struct pci_dev *pdev;
-> +	/* _DSM (or NPEM) LED ops */
-> +	struct drive_status_led_ops *ops;
-> +	/* currently active states */
-> +	u32 states;
-> +	int num_leds;
-> +	struct drive_status_state_led leds[];
-> +};
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+---
+ drivers/acpi/apei/ghes.c    | 18 ++++++++----------
+ drivers/acpi/pci_root.c     |  5 ++++-
+ drivers/firmware/arm_sdei.c | 13 ++-----------
+ include/acpi/apei.h         |  2 ++
+ include/linux/arm_sdei.h    |  2 ++
+ 5 files changed, 18 insertions(+), 22 deletions(-)
 
-I think this would be easier to read if you can fit the comments to
-the right on the same line, e.g.,
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 0c8330ed1ffd..b11e46fb4b3d 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -1457,27 +1457,26 @@ static struct platform_driver ghes_platform_driver = {
+ 	.remove		= ghes_remove,
+ };
+ 
+-static int __init ghes_init(void)
++void __init ghes_init(void)
+ {
+ 	int rc;
+ 
+ 	if (acpi_disabled)
+-		return -ENODEV;
++		return;
+ 
+ 	switch (hest_disable) {
+ 	case HEST_NOT_FOUND:
+-		return -ENODEV;
++		pr_info(GHES_PFX "HEST is not found!\n");
++		return;
+ 	case HEST_DISABLED:
+ 		pr_info(GHES_PFX "HEST is not enabled!\n");
+-		return -EINVAL;
++		return;
+ 	default:
+ 		break;
+ 	}
+ 
+-	if (ghes_disable) {
++	if (ghes_disable)
+ 		pr_info(GHES_PFX "GHES is not enabled!\n");
+-		return -EINVAL;
+-	}
+ 
+ 	ghes_nmi_init_cxt();
+ 
+@@ -1495,8 +1494,7 @@ static int __init ghes_init(void)
+ 	else
+ 		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
+ 
+-	return 0;
++	return;
+ err:
+-	return rc;
++	ghes_disable = 1;
+ }
+-device_initcall(ghes_init);
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index ab2f7dfb0c44..1260bb556184 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -23,7 +23,7 @@
+ #include <linux/dmi.h>
+ #include <linux/platform_data/x86/apple.h>
+ #include <acpi/apei.h>	/* for acpi_hest_init() */
+-
++#include <linux/arm_sdei.h> /* for sdei_init() */
+ #include "internal.h"
+ 
+ #define ACPI_PCI_ROOT_CLASS		"pci_bridge"
+@@ -946,6 +946,9 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+ void __init acpi_pci_root_init(void)
+ {
+ 	acpi_hest_init();
++	sdei_init();
++	ghes_init();
++
+ 	if (acpi_pci_disabled)
+ 		return;
+ 
+diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+index a7e762c352f9..1e1a51510e83 100644
+--- a/drivers/firmware/arm_sdei.c
++++ b/drivers/firmware/arm_sdei.c
+@@ -1059,14 +1059,14 @@ static bool __init sdei_present_acpi(void)
+ 	return true;
+ }
+ 
+-static int __init sdei_init(void)
++void __init sdei_init(void)
+ {
+ 	struct platform_device *pdev;
+ 	int ret;
+ 
+ 	ret = platform_driver_register(&sdei_driver);
+ 	if (ret || !sdei_present_acpi())
+-		return ret;
++		return;
+ 
+ 	pdev = platform_device_register_simple(sdei_driver.driver.name,
+ 					       0, NULL, 0);
+@@ -1076,17 +1076,8 @@ static int __init sdei_init(void)
+ 		pr_info("Failed to register ACPI:SDEI platform device %d\n",
+ 			ret);
+ 	}
+-
+-	return ret;
+ }
+ 
+-/*
+- * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
+- * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
+- * by device_initcall(). We want to be called in the middle.
+- */
+-subsys_initcall_sync(sdei_init);
+-
+ int sdei_event_handler(struct pt_regs *regs,
+ 		       struct sdei_registered_event *arg)
+ {
+diff --git a/include/acpi/apei.h b/include/acpi/apei.h
+index ece0a8af2bae..7dbd6363fda7 100644
+--- a/include/acpi/apei.h
++++ b/include/acpi/apei.h
+@@ -27,8 +27,10 @@ extern int hest_disable;
+ extern int erst_disable;
+ #ifdef CONFIG_ACPI_APEI_GHES
+ extern bool ghes_disable;
++void __init ghes_init(void);
+ #else
+ #define ghes_disable 1
++static inline void ghes_init(void) { return; }
+ #endif
+ 
+ #ifdef CONFIG_ACPI_APEI
+diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
+index 0a241c5c911d..9c987188b692 100644
+--- a/include/linux/arm_sdei.h
++++ b/include/linux/arm_sdei.h
+@@ -46,9 +46,11 @@ int sdei_unregister_ghes(struct ghes *ghes);
+ /* For use by arch code when CPU hotplug notifiers are not appropriate. */
+ int sdei_mask_local_cpu(void);
+ int sdei_unmask_local_cpu(void);
++void __init sdei_init(void);
+ #else
+ static inline int sdei_mask_local_cpu(void) { return 0; }
+ static inline int sdei_unmask_local_cpu(void) { return 0; }
++static inline void sdei_init(void) { return ; }
+ #endif /* CONFIG_ARM_SDE_INTERFACE */
+ 
+ 
+-- 
+2.20.1.12.g72788fdb
 
-        struct pci_dev *pdev;           /* dev with controls */
-
-> +static void dsm_status_err_print(struct pci_dev *pdev,
-> +				 struct ssdleds_dsm_output *output)
-> +{
-> +	switch (output->status) {
-> +	case 0:
-> +		break;
-> +	case 1:
-> +		pci_dbg(pdev, "_DSM not supported\n");
-
-pci_dbg() often goes nowhere.  Seems like these might be pci_info()?
-
-> +static int dsm_set(struct pci_dev *pdev, u32 value)
-> +{
-> +	acpi_handle handle;
-> +	union acpi_object *out_obj, arg3[2];
-> +	struct ssdleds_dsm_output *dsm_output;
-> +
-> +	handle = ACPI_HANDLE(&pdev->dev);
-> +	if (!handle)
-> +		return -ENODEV;
-> +
-> +	arg3[0].type = ACPI_TYPE_PACKAGE;
-> +	arg3[0].package.count = 1;
-> +	arg3[0].package.elements = &arg3[1];
-> +
-> +	arg3[1].type = ACPI_TYPE_BUFFER;
-> +	arg3[1].buffer.length = 4;
-> +	arg3[1].buffer.pointer = (u8 *)&value;
-> +
-> +	out_obj = acpi_evaluate_dsm_typed(handle, &pcie_ssd_leds_dsm_guid,
-> +				1, SET_STATE_DSM, &arg3[0], ACPI_TYPE_BUFFER);
-> +	if (!out_obj)
-> +		return -EIO;
-> +
-> +	if (out_obj->buffer.length < 8) {
-> +		ACPI_FREE(out_obj);
-> +		return -EIO;
-> +	}
-> +
-> +	dsm_output = (struct ssdleds_dsm_output *)out_obj->buffer.pointer;
-> +
-> +	if (dsm_output->status != 0) {
-> +		dsm_status_err_print(pdev, dsm_output);
-> +		ACPI_FREE(out_obj);
-> +		return -EIO;
-> +	}
-> +	ACPI_FREE(out_obj);
-> +	return 0;
-> +}
-> +
-> +static int dsm_get(struct pci_dev *pdev, u64 dsm_func, u32 *output)
-> +{
-> +	acpi_handle handle;
-> +	union acpi_object *out_obj;
-> +	struct ssdleds_dsm_output *dsm_output;
-> +
-> +	handle = ACPI_HANDLE(&pdev->dev);
-> +	if (!handle)
-> +		return -ENODEV;
-> +
-> +	out_obj = acpi_evaluate_dsm_typed(handle, &pcie_ssd_leds_dsm_guid, 0x1,
-> +					  dsm_func, NULL, ACPI_TYPE_BUFFER);
-> +	if (!out_obj)
-> +		return -EIO;
-> +
-> +	if (out_obj->buffer.length < 8) {
-> +		ACPI_FREE(out_obj);
-> +		return -EIO;
-> +	}
-> +
-> +	dsm_output = (struct ssdleds_dsm_output *)out_obj->buffer.pointer;
-> +	if (dsm_output->status != 0) {
-> +		dsm_status_err_print(pdev, dsm_output);
-> +		ACPI_FREE(out_obj);
-> +		return -EIO;
-> +	}
-> +
-> +	*output = dsm_output->state;
-> +	ACPI_FREE(out_obj);
-> +	return 0;
-> +}
-> +
-> +static int get_supported_states_dsm(struct pci_dev *pdev, u32 *states)
-> +{
-> +	return dsm_get(pdev, GET_SUPPORTED_STATES_DSM, states);
-> +}
-> +
-> +static int get_current_states_dsm(struct pci_dev *pdev, u32 *states)
-> +{
-> +	return dsm_get(pdev, GET_STATE_DSM, states);
-> +}
-> +
-> +static int set_current_states_dsm(struct pci_dev *pdev, u32 states)
-> +{
-> +	return dsm_set(pdev, states);
-> +}
-> +
-> +static bool pdev_has_dsm(struct pci_dev *pdev)
-> +{
-> +	acpi_handle handle;
-> +
-> +	handle = ACPI_HANDLE(&pdev->dev);
-> +	if (!handle)
-> +		return false;
-> +
-> +	return acpi_check_dsm(handle, &pcie_ssd_leds_dsm_guid, 0x1,
-> +			      1 << GET_SUPPORTED_STATES_DSM ||
-> +			      1 << GET_STATE_DSM ||
-> +			      1 << SET_STATE_DSM);
-> +}
-> +
-> +struct drive_status_led_ops dsm_drive_status_led_ops = {
-> +	.get_supported_states = get_supported_states_dsm,
-> +	.get_current_states = get_current_states_dsm,
-> +	.set_current_states = set_current_states_dsm,
-> +};
-> +
-> +/*
-> + * code not specific to method (_DSM/NPEM)
-> + */
-> +
-> +static int set_brightness(struct led_classdev *led_cdev,
-> +				       enum led_brightness brightness)
-> +{
-> +	struct drive_status_state_led *led;
-> +	int err;
-> +
-> +	led = container_of(led_cdev, struct drive_status_state_led, cdev);
-> +
-> +	if (brightness == LED_OFF)
-> +		clear_bit(led->bit, (unsigned long *)&(led->dsdev->states));
-> +	else
-> +		set_bit(led->bit, (unsigned long *)&(led->dsdev->states));
-> +	err = led->dsdev->ops->set_current_states(led->dsdev->pdev,
-> +						  led->dsdev->states);
-> +	if (err < 0)
-> +		return err;
-> +	return 0;
-
-Looks currently equivalent to simply "return err" (or
-"return led->dsdev->ops->set_current_states(...)").
-
-Is there a case where the ops might return something positive?
-
-> +}
-> +
-> +static enum led_brightness get_brightness(struct led_classdev *led_cdev)
-> +{
-> +	struct drive_status_state_led *led;
-> +
-> +	led = container_of(led_cdev, struct drive_status_state_led, cdev);
-> +	return test_bit(led->bit, (unsigned long *)&led->dsdev->states)
-> +		? LED_ON : LED_OFF;
-> +}
-> +
-> +static struct drive_status_dev *to_drive_status_dev(struct pci_dev *pdev)
-> +{
-> +	struct drive_status_dev *dsdev;
-> +
-> +	mutex_lock(&drive_status_dev_list_lock);
-> +	list_for_each_entry(dsdev, &drive_status_dev_list, list)
-> +		if (pdev == dsdev->pdev) {
-> +			mutex_unlock(&drive_status_dev_list_lock);
-> +			return dsdev;
-> +		}
-
-Even though the four-line body is technically a single statement, I
-think braces around those lines would improve readability.
-
-> +	mutex_unlock(&drive_status_dev_list_lock);
-> +	return NULL;
-> +}
-> +
-> +static void remove_drive_status_dev(struct drive_status_dev *dsdev)
-> +{
-> +	if (dsdev) {
-> +		int i;
-
-  if (!dsdev)
-    return;
-
-so you can unindent the usual path.
-
-> +
-> +		mutex_lock(&drive_status_dev_list_lock);
-> +		list_del(&dsdev->list);
-> +		mutex_unlock(&drive_status_dev_list_lock);
-> +		for (i = 0; i < dsdev->num_leds; i++)
-> +			led_classdev_unregister(&dsdev->leds[i].cdev);
-> +		kfree(dsdev);
-> +	}
-> +}
-> +
-> +static void add_drive_status_dev(struct pci_dev *pdev,
-> +				 struct drive_status_led_ops *ops)
-> +{
-> +	u32 supported;
-> +	int ret, num_leds, i;
-> +	struct drive_status_dev *dsdev;
-> +	char name[LED_MAX_NAME_SIZE];
-> +	struct drive_status_state_led *led;
-> +
-> +	if (to_drive_status_dev(pdev))
-> +		/*
-> +		 * leds have already been added for this dev
-
-s/leds/LEDs/ to match other usage.
-
-> +		 */
-> +		return;
-> +
-> +	if (ops->get_supported_states(pdev, &supported) < 0)
-> +		return;
-> +	num_leds = hweight32(supported);
-> +	if (num_leds == 0)
-> +		return;
-> +
-> +	dsdev = kzalloc(struct_size(dsdev, leds, num_leds), GFP_KERNEL);
-> +	if (!dsdev)
-> +		return;
-> +
-> +	dsdev->num_leds = 0;
-> +	dsdev->pdev = pdev;
-> +	dsdev->ops = ops;
-> +	dsdev->states = 0;
-> +	if (ops->set_current_states(pdev, dsdev->states)) {
-> +		kfree(dsdev);
-> +		return;
-> +	}
-> +	INIT_LIST_HEAD(&dsdev->list);
-> +	/*
-> +	 * add LEDs only for supported states
-> +	 */
-> +	for (i = 0; i < ARRAY_SIZE(led_states); i++) {
-> +		if (!test_bit(led_states[i].bit, (unsigned long *)&supported))
-> +			continue;
-> +
-> +		led = &dsdev->leds[dsdev->num_leds];
-> +		led->dsdev = dsdev;
-> +		led->bit = led_states[i].bit;
-> +
-> +		snprintf(name, sizeof(name), "%s::%s",
-> +			 pci_name(pdev), led_states[i].name);
-> +		led->cdev.name = name;
-> +		led->cdev.max_brightness = LED_ON;
-> +		led->cdev.brightness_set_blocking = set_brightness;
-> +		led->cdev.brightness_get = get_brightness;
-> +		ret = 0;
-> +		ret = led_classdev_register(&pdev->dev, &led->cdev);
-> +		if (ret) {
-> +			pr_warn("Failed to register LEDs for %s\n", pci_name(pdev));
-
-pci_warn().  Maybe include the led_states[i].name?
-
-> +			remove_drive_status_dev(dsdev);
-> +			return;
-> +		}
-> +		dsdev->num_leds++;
-> +	}
-> +
-> +	mutex_lock(&drive_status_dev_list_lock);
-> +	list_add_tail(&dsdev->list, &drive_status_dev_list);
-> +	mutex_unlock(&drive_status_dev_list_lock);
-> +}
-> +
-> +/*
-> + * code specific to PCIe devices
-> + */
-> +static void probe_pdev(struct pci_dev *pdev)
-> +{
-> +	/*
-> +	 * This is only supported on PCIe storage devices and PCIe ports
-> +	 */
-> +	if (pdev->class != PCI_CLASS_STORAGE_EXPRESS &&
-> +	    pdev->class != PCI_CLASS_BRIDGE_PCI)
-
-I don't see this restriction in the spec.  Did I miss it?
-
-> +		return;
-> +	if (pdev_has_dsm(pdev))
-> +		add_drive_status_dev(pdev, &dsm_drive_status_led_ops);
-> +}
-> +
-> +static int ssd_leds_pci_bus_notifier_cb(struct notifier_block *nb,
-> +					   unsigned long action, void *data)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(data);
-> +
-> +	if (action == BUS_NOTIFY_ADD_DEVICE)
-> +		probe_pdev(pdev);
-> +	else if (action == BUS_NOTIFY_DEL_DEVICE)
-> +		remove_drive_status_dev(to_drive_status_dev(pdev));
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block ssd_leds_pci_bus_nb = {
-> +	.notifier_call = ssd_leds_pci_bus_notifier_cb,
-> +	.priority = INT_MIN,
-> +};
-> +
-> +static void initial_scan_for_leds(void)
-> +{
-> +	struct pci_dev *pdev = NULL;
-> +
-> +	for_each_pci_dev(pdev)
-> +		probe_pdev(pdev);
-> +}
-> +
-> +static int __init ssd_leds_init(void)
-> +{
-> +	mutex_init(&drive_status_dev_list_lock);
-> +	INIT_LIST_HEAD(&drive_status_dev_list);
-> +
-> +	bus_register_notifier(&pci_bus_type, &ssd_leds_pci_bus_nb);
-> +	initial_scan_for_leds();
-
-This is the only way to deal with (a) making this a module that can be
-loaded later and (b) handling hot-added devices, so I see why this is
-here.  But it's ugly.  IMO, for_each_pci_dev() is a symptom of
-something that should have been done during enumeration, but wasn't.
-
-> +	return 0;
-> +}
-> +
-> +static void __exit ssd_leds_exit(void)
-> +{
-> +	struct drive_status_dev *dsdev, *temp;
-> +
-> +	bus_unregister_notifier(&pci_bus_type, &ssd_leds_pci_bus_nb);
-> +	list_for_each_entry_safe(dsdev, temp, &drive_status_dev_list, list)
-> +		remove_drive_status_dev(dsdev);
-> +}
-> +
-> +module_init(ssd_leds_init);
-> +module_exit(ssd_leds_exit);
-> +
-> +MODULE_AUTHOR("Stuart Hayes <stuart.w.hayes@gmail.com>");
-> +MODULE_DESCRIPTION("Support for PCIe SSD Status LEDs");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.27.0
-> 
