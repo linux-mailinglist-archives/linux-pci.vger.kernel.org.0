@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DB3145E967
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Nov 2021 09:33:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 488DA45E96D
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Nov 2021 09:34:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359557AbhKZIgx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Nov 2021 03:36:53 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44708 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345287AbhKZIex (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 03:34:53 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1AQ8VWCK056227;
-        Fri, 26 Nov 2021 02:31:32 -0600
+        id S1359607AbhKZIg5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Nov 2021 03:36:57 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43552 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1359513AbhKZIe4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 03:34:56 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1AQ8VagJ027167;
+        Fri, 26 Nov 2021 02:31:36 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1637915492;
-        bh=6cp3cE045NEnUdKoUZx9YiwkO99QWOlvA+gPGFnlUYo=;
+        s=ti-com-17Q1; t=1637915496;
+        bh=dVjv3JdHHVlPFIfNTUhqsH8CuFCYe12oVt/3tyuSFCA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=g+O5mEwR+TJ5HqCXIjyxOilz7rVTabSeSAAY3X6DyeOkkKiWtFNf17jxtqfHVQ298
-         Fme0w8KKmzbkm/DT8HVNDG3zTjSRUhmKsBiAj7JADbWLfA8y2VWQ1zG5Bzmar4CK9Z
-         OhYzErdCsSML+bWm0EXBs36KHZcZl7J0RdYi++Zo=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1AQ8VWhT035283
+        b=Tohq3gqIrSL5xLKkePE4mHlqZgVlOTowf2tOQRq675T67NTu1fKqdSAWhsjSjSzdQ
+         LN4IIXkP5K/F0mLz+CH/GgebZ2K0j51pKOW4CSI/O/UeEgjwIEfCykHPfy7HTAutQq
+         CqhaWx9xscayqZrZSPWd4nuiG4/hoyoKnJ/D6zFo=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1AQ8Vadk039514
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Nov 2021 02:31:32 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 26 Nov 2021 02:31:36 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 26
- Nov 2021 02:31:31 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2021 02:31:35 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Fri, 26 Nov 2021 02:31:31 -0600
+ Frontend Transport; Fri, 26 Nov 2021 02:31:35 -0600
 Received: from a0393678-lt.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1AQ8VKEm127547;
-        Fri, 26 Nov 2021 02:31:28 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1AQ8VKEn127547;
+        Fri, 26 Nov 2021 02:31:32 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
@@ -44,120 +44,121 @@ To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
 CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         <devicetree@vger.kernel.org>
-Subject: [PATCH v2 2/5] PCI: keystone: Use phandle argument from "ti,syscon-pcie-id"/"ti,syscon-pcie-mode"
-Date:   Fri, 26 Nov 2021 14:01:16 +0530
-Message-ID: <20211126083119.16570-3-kishon@ti.com>
+Subject: [PATCH v2 3/5] PCI: keystone: Add workaround for Errata #i2037 (AM65x SR 1.0)
+Date:   Fri, 26 Nov 2021 14:01:17 +0530
+Message-ID: <20211126083119.16570-4-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211126083119.16570-1-kishon@ti.com>
 References: <20211126083119.16570-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Get "syscon" pcie_mode and pcie_id offset from the argument of
-"ti,syscon-pcie-id" and "ti,syscon-pcie-mode" phandle respectively.
-Previously a subnode to "syscon" node was added which has the
-exact memory mapped address of pcie_mode and pcie_id but now the
-offset of pcie_mode and pcie_id within "syscon" is now being passed
-as argument to "ti,syscon-pcie-id" and "ti,syscon-pcie-mode" phandle.
+Errata #i2037 in AM65x/DRA80xM Processors Silicon Revision 1.0
+(SPRZ452D–July 2018–Revised December 2019 [1]) mentions when an
+inbound PCIe TLP spans more than two internal AXI 128-byte bursts,
+the bus may corrupt the packet payload and the corrupt data may
+cause associated applications or the processor to hang.
 
-If the offset is not provided in "ti,syscon-pcie-id"/"ti,syscon-pcie-mode",
-the full memory mapped address of pcie_ctrl is used in order to maintain
-old DT compatibility.
+The workaround for Errata #i2037 is to limit the maximum read
+request size and maximum payload size to 128 bytes. Add workaround
+for Errata #i2037 here. The errata and workaround is applicable
+only to AM65x SR 1.0 and later versions of the silicon will have
+this fixed.
 
-Similar change for J721E is as discussed in [1]
-
-[1] -> http://lore.kernel.org/r/CAL_JsqKiUcO76bo1GoepWM1TusJWoty_BRy2hFSgtEVMqtrvvQ@mail.gmail.com
+[1] -> https://www.ti.com/lit/er/sprz452f/sprz452f.pdf
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 27 ++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+ drivers/pci/controller/dwc/pci-keystone.c | 42 +++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 865258d8c53c..13f03a97714c 100644
+index 13f03a97714c..52d20fe17ee9 100644
 --- a/drivers/pci/controller/dwc/pci-keystone.c
 +++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -775,12 +775,19 @@ static int __init ks_pcie_init_id(struct keystone_pcie *ks_pcie)
- 	struct dw_pcie *pci = ks_pcie->pci;
- 	struct device *dev = pci->dev;
- 	struct device_node *np = dev->of_node;
-+	struct of_phandle_args args;
-+	unsigned int offset = 0;
+@@ -35,6 +35,11 @@
+ #define PCIE_DEVICEID_SHIFT	16
  
- 	devctrl_regs = syscon_regmap_lookup_by_phandle(np, "ti,syscon-pcie-id");
- 	if (IS_ERR(devctrl_regs))
- 		return PTR_ERR(devctrl_regs);
- 
--	ret = regmap_read(devctrl_regs, 0, &id);
-+	/* Do not error out to maintain old DT compatibility */
-+	ret = of_parse_phandle_with_fixed_args(np, "ti,syscon-pcie-id", 1, 0, &args);
-+	if (!ret)
-+		offset = args.args[0];
+ /* Application registers */
++#define PID				0x000
++#define RTL				GENMASK(15, 11)
++#define RTL_SHIFT			11
++#define AM6_PCI_PG1_RTL_VER		0x15
 +
-+	ret = regmap_read(devctrl_regs, offset, &id);
- 	if (ret)
- 		return ret;
+ #define CMD_STATUS			0x004
+ #define LTSSM_EN_VAL		        BIT(0)
+ #define OB_XLAT_EN_VAL		        BIT(1)
+@@ -105,6 +110,8 @@
  
-@@ -989,6 +996,8 @@ static int ks_pcie_enable_phy(struct keystone_pcie *ks_pcie)
- static int ks_pcie_set_mode(struct device *dev)
+ #define to_keystone_pcie(x)		dev_get_drvdata((x)->dev)
+ 
++#define PCI_DEVICE_ID_TI_AM654X		0xb00c
++
+ struct ks_pcie_of_data {
+ 	enum dw_pcie_device_mode mode;
+ 	const struct dw_pcie_host_ops *host_ops;
+@@ -528,7 +535,11 @@ static int ks_pcie_start_link(struct dw_pcie *pci)
+ static void ks_pcie_quirk(struct pci_dev *dev)
  {
- 	struct device_node *np = dev->of_node;
-+	struct of_phandle_args args;
-+	unsigned int offset = 0;
- 	struct regmap *syscon;
- 	u32 val;
- 	u32 mask;
-@@ -998,10 +1007,15 @@ static int ks_pcie_set_mode(struct device *dev)
- 	if (IS_ERR(syscon))
- 		return 0;
- 
-+	/* Do not error out to maintain old DT compatibility */
-+	ret = of_parse_phandle_with_fixed_args(np, "ti,syscon-pcie-mode", 1, 0, &args);
-+	if (!ret)
-+		offset = args.args[0];
+ 	struct pci_bus *bus = dev->bus;
++	struct keystone_pcie *ks_pcie;
++	struct device *bridge_dev;
+ 	struct pci_dev *bridge;
++	u32 val;
 +
- 	mask = KS_PCIE_DEV_TYPE_MASK | KS_PCIE_SYSCLOCKOUTEN;
- 	val = KS_PCIE_DEV_TYPE(RC) | KS_PCIE_SYSCLOCKOUTEN;
+ 	static const struct pci_device_id rc_pci_devids[] = {
+ 		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCIE_RC_K2HK),
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+@@ -540,6 +551,11 @@ static void ks_pcie_quirk(struct pci_dev *dev)
+ 		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
+ 		{ 0, },
+ 	};
++	static const struct pci_device_id am6_pci_devids[] = {
++		{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654X),
++		 .class = PCI_CLASS_BRIDGE_PCI << 8, .class_mask = ~0, },
++		{ 0, },
++	};
  
--	ret = regmap_update_bits(syscon, 0, mask, val);
-+	ret = regmap_update_bits(syscon, offset, mask, val);
- 	if (ret) {
- 		dev_err(dev, "failed to set pcie mode\n");
- 		return ret;
-@@ -1014,6 +1028,8 @@ static int ks_pcie_am654_set_mode(struct device *dev,
- 				  enum dw_pcie_device_mode mode)
- {
- 	struct device_node *np = dev->of_node;
-+	struct of_phandle_args args;
-+	unsigned int offset = 0;
- 	struct regmap *syscon;
- 	u32 val;
- 	u32 mask;
-@@ -1023,6 +1039,11 @@ static int ks_pcie_am654_set_mode(struct device *dev,
- 	if (IS_ERR(syscon))
- 		return 0;
- 
-+	/* Do not error out to maintain old DT compatibility */
-+	ret = of_parse_phandle_with_fixed_args(np, "ti,syscon-pcie-mode", 1, 0, &args);
-+	if (!ret)
-+		offset = args.args[0];
-+
- 	mask = AM654_PCIE_DEV_TYPE_MASK;
- 
- 	switch (mode) {
-@@ -1037,7 +1058,7 @@ static int ks_pcie_am654_set_mode(struct device *dev,
- 		return -EINVAL;
+ 	if (pci_is_root_bus(bus))
+ 		bridge = dev;
+@@ -565,6 +581,32 @@ static void ks_pcie_quirk(struct pci_dev *dev)
+ 			pcie_set_readrq(dev, 256);
+ 		}
  	}
++
++	/*
++	 * Memory transactions fail with PCI controller in AM654 PG1.0
++	 * when MRRS is set to more than 128 bytes. Force the MRRS to
++	 * 128 bytes in all downstream devices.
++	 */
++	if (pci_match_id(am6_pci_devids, bridge)) {
++		bridge_dev = pci_get_host_bridge_device(dev);
++		if (!bridge_dev && !bridge_dev->parent)
++			return;
++
++		ks_pcie = dev_get_drvdata(bridge_dev->parent);
++		if (!ks_pcie)
++			return;
++
++		val = ks_pcie_app_readl(ks_pcie, PID);
++		val &= RTL;
++		val >>= RTL_SHIFT;
++		if (val != AM6_PCI_PG1_RTL_VER)
++			return;
++
++		if (pcie_get_readrq(dev) > 128) {
++			dev_info(&dev->dev, "limiting MRRS to 128 bytes\n");
++			pcie_set_readrq(dev, 128);
++		}
++	}
+ }
+ DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, ks_pcie_quirk);
  
--	ret = regmap_update_bits(syscon, 0, mask, val);
-+	ret = regmap_update_bits(syscon, offset, mask, val);
- 	if (ret) {
- 		dev_err(dev, "failed to set pcie mode\n");
- 		return ret;
 -- 
 2.17.1
 
