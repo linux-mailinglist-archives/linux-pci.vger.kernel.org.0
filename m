@@ -2,78 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31BA045FE99
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 13:35:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10F4C45FF01
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 15:06:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237278AbhK0Mio (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 27 Nov 2021 07:38:44 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:38978 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242443AbhK0Mgn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 07:36:43 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CD159B81B33;
-        Sat, 27 Nov 2021 12:33:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFB5FC53FAD;
-        Sat, 27 Nov 2021 12:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1638016406;
-        bh=jDfQyHsi3RriZ5ZWV8f+HEUm1N4gUzCAPBaQlnUROlA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RvixBZ/ISwOAUImnksfi7zufQTgUiqeLh/7boi8Gt5SIP7YchCvymFs19VAM+pqQo
-         zjsGrjhGOqrYedKeM7bug0fJlGXWkldVSjj/ZtkL8dpoOrPARzAeroMsQSxSSLXYZ+
-         GT3Hs1K1hfMe+l7Tkwp0ugaxHRcZ+LUpK2NveDWM=
-Date:   Sat, 27 Nov 2021 13:33:24 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: Re: [patch 32/32] genirq/msi: Convert storage to xarray
-Message-ID: <YaIllD3pSVCI/gbj@kroah.com>
-References: <20211126230957.239391799@linutronix.de>
- <20211126232736.190744801@linutronix.de>
+        id S232663AbhK0OKK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 27 Nov 2021 09:10:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1355184AbhK0OIK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 09:08:10 -0500
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747D3C061574
+        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:04:55 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id i12so10442345wmq.4
+        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:04:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GCdeKtahZuwgihEDa3jpfYcCx7XYaTIuoBcydH+txEk=;
+        b=F4bJFyAsGhHIeb+0+KV4Og3mjVoWXeCxJKDIwA8t0tWJv6IXUqVVmpZG9mUKkKbAL1
+         WAv7F36XwUQZxxpET/QIx4qm89qB5WBO31Asgw4WuN4yvrDzLypIBWm98+RAzJFBKSAi
+         JygQIRtWCfsHoUC8y7VVrZUvN+zaBu+e64pk2QYFuiJxB9F3xJ5bGw8gbSu6U10INawz
+         2Mvigjq7drcfMw6Sjmwb4F9U+uJp+EemMVKqnX/3uB7ln3FnzLE3ryxSerw2xIEuExez
+         V/Pr6qyya0O+3EZ3bxTjT6cNaWTk4kDwSYuKjd0r8Y5x3M4uelwbf3bh1FrkCaLwsi41
+         o6ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GCdeKtahZuwgihEDa3jpfYcCx7XYaTIuoBcydH+txEk=;
+        b=rw0eDi3e2U0uvyin/Ev84+4a66QJvIV/M2v9yhEU2sr+/OW/QmGcf4sRcbdFP1USAP
+         WF5fgSQlfbYQA+/TpLC0mOB6U+5qbKvLOy8Tx8NAf7JwzI3ir2ipj7z6PYy2pdEPguNG
+         fBOfuEawX19olxsLSPbUzLC1Gr6YCVY2MqDw6Z5wCga2dvaysaEsrIFhLLb8Ej+IaDUs
+         dpqwfPP21riXFRycgpEb2pd5t+bgFn0Imsd0LegcRUbQLGL6YwLmQnItqf93Gy2GrFND
+         7LygTIUFJSKg1T6uYf0n0SPvrd2lXGIt/fFqQGw62cTlxCv5+1fqPmeas44ZXzNO7YgX
+         kZ9Q==
+X-Gm-Message-State: AOAM533RSpO9Z81ci2ymCsRz7T1hBnvCVhA+fsvnq9Hsa6Uz7DTsG8ca
+        QSnzv6Xsp3PoTspkAgQF3H4=
+X-Google-Smtp-Source: ABdhPJxEKHdIrhCMti8Ie7wRoqrGDZq0WyAWLHbXtGsxCSRFWD26RSFJ88eP+5xN+kVWz/NNkTIs0g==
+X-Received: by 2002:a05:600c:3c8a:: with SMTP id bg10mr23236279wmb.106.1638021893916;
+        Sat, 27 Nov 2021 06:04:53 -0800 (PST)
+Received: from claire-ThinkPad-T470.localdomain (dynamic-2a01-0c22-7349-1000-d163-c2fa-698a-934f.c22.pool.telefonica.de. [2a01:c22:7349:1000:d163:c2fa:698a:934f])
+        by smtp.gmail.com with ESMTPSA id w7sm8447071wru.51.2021.11.27.06.04.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Nov 2021 06:04:53 -0800 (PST)
+From:   Fan Fei <ffclaire1224@gmail.com>
+To:     bjorn@helgaas.com
+Cc:     Fan Fei <ffclaire1224@gmail.com>, linux-pci@vger.kernel.org
+Subject: [PATCH 0/6] Unify controller structure name 
+Date:   Sat, 27 Nov 2021 15:04:37 +0100
+Message-Id: <cover.1638021831.git.ffclaire1224@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211126232736.190744801@linutronix.de>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 27, 2021 at 02:23:17AM +0100, Thomas Gleixner wrote:
-> The current linked list storage for MSI descriptors is suboptimal in
-> several ways:
-> 
->   1) Looking up a MSI desciptor requires a O(n) list walk in the worst case
-> 
->   2) The upcoming support of runtime expansion of MSI-X vectors would need
->      to do a full list walk to figure out whether a particular index is
->      already associated.
-> 
->   3) Runtime expansion of sparse allocations is even more complex as the
->      current implementation assumes an ordered list (increasing MSI index).
-> 
-> Use an xarray which solves all of the above problems nicely.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  include/linux/msi.h |   19 ++---
->  kernel/irq/msi.c    |  188 ++++++++++++++++++++++------------------------------
->  2 files changed, 90 insertions(+), 117 deletions(-)
+Controllrt structure name of some PCI drivers does not match the convention
+struct of other PCI driver, namely <driver>_pcie, e.g. xgene_pcie_port,
+intel_pcie_port, xilinx_pcie_port, uniphier_pcie_priv, tegra_pcie_dw,
+mk_pcie_dw. Unify them to the convetion. Some instantiation name of the
+struct name, e.g. port, priv,  are also unified to 'pcie'.
 
-Much simpler code too, nice!
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fan Fei (6):
+  PCI: xgene: Rename struct xgene_pcie_port to xgene_pcie
+  PCI: intel-gw: Rename struct intel_pcie_port to intel_pcie
+  PCI: uniphier: Rename struct uniphier_pcie_priv to uniphier_pcie
+  PCI: tegra194: Rename struct tegra_pcie_dw to tegra194_pcie
+  PCI: xilinx: Rename struct xilinx_pcie_port to xilinx_pcie
+  PCI: mediatek-gen3: Rename struct mtk_pcie_port to mtk_gen_pcie
+
+ drivers/pci/controller/dwc/pcie-intel-gw.c  | 204 +++++------
+ drivers/pci/controller/dwc/pcie-tegra194.c  | 120 +++----
+ drivers/pci/controller/dwc/pcie-uniphier.c  | 159 +++++----
+ drivers/pci/controller/pci-xgene.c          |  46 +--
+ drivers/pci/controller/pcie-mediatek-gen3.c | 370 ++++++++++----------
+ drivers/pci/controller/pcie-xilinx.c        | 154 ++++----
+ 6 files changed, 534 insertions(+), 519 deletions(-)
+
+-- 
+2.25.1
+
