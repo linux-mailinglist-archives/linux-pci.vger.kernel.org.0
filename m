@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E0F645FADC
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 02:31:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5D9645FAE7
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 02:32:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349172AbhK0BfG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Nov 2021 20:35:06 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40390 "EHLO
+        id S231288AbhK0BfO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Nov 2021 20:35:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40454 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350649AbhK0BdB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 20:33:01 -0500
-Message-ID: <20211126232734.411769132@linutronix.de>
+        with ESMTP id S1351216AbhK0BdL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 20:33:11 -0500
+Message-ID: <20211126232734.472421030@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637976212;
+        s=2020; t=1637976214;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=dWlRgqR+0drt9PwtC3seDhr2BnCncrRnkVfFxsvT5DI=;
-        b=ErFEn9JAHZmB9N7TIfTOBXfqadUYsXpmipIzHwuhs1qUCDliJVI5OWR05sQtXVu27rTXEf
-        vwIl2QkSVsw/Qxi30tHLjeruo5PHb+yIuNXpoSkn3LI93hCPDrQe/mKvZ8NzUb2c9j4uyT
-        nSxZhq2G+Ov+hRATjuF6hb24yDDEQPMc8V+RYteTmsghpRtQWtq9wMKV+GaIyfpE9JXaRP
-        3giq5a+TVDahUjBTCNfv1xPWC9LqaZx+ZmPi1P32GMDSm7PQTA9p8o54Kjer59HeYMhUm8
-        WwOXhTP7Y1Pzd4w71w4kZqXr+QkUduldyjhasIlFU5v9Pr/nazqsGXFwi3fPiQ==
+         references:references; bh=6oZqwpJI2ncU7744G6NHeAq/N32euzli5OU76GfrY2c=;
+        b=GAGmL7d1N8uC1yKy0ZbjNvVoteEymm0s2lfB2SQiRQJSTnG4lxZvIzNXI6dE5zT0qmYukx
+        Ek0o2pJ6F7gJ66WN7WzYZnMHsPJ3TWsj4ar6AIbhWm8QIRVfupdVA9OpUAx17aehdPscQZ
+        Lg59OOcqR816fEf/7kg+b6RtSMsWUlzft4Azf8pPOq4tYmiqCEiKEwtkrlpjQhT1UWADUC
+        EIk8g+7+240oQze1IRwtycYq3RsfDeLN57I+aldtGTMxe7I9+vPAlDdL1+huoQa1pIze6H
+        PNEp6adJj+BbHFumBQa6CQHqEgfW8VzXIcf78aZDs+JbSnljFS4BYCFXJ5yX0w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637976212;
+        s=2020e; t=1637976214;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=dWlRgqR+0drt9PwtC3seDhr2BnCncrRnkVfFxsvT5DI=;
-        b=UXoJTaH8HHXYi93GRMVRUhgn+NP1loOvwQRR91dam6iZ7yWtaJkuebAQ3xt3KIuZVa1QKh
-        MzVvnRXez6BFs2BA==
+         references:references; bh=6oZqwpJI2ncU7744G6NHeAq/N32euzli5OU76GfrY2c=;
+        b=+2s6w74PSjqM8eEWrbWTHc2wnRrZf6vTQi46me8jdSWMvpBo1xQ9uC2YmfF5y5+1IRfgih
+        Ne/rG1d3lDc65pCA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -43,99 +43,182 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Jon Mason <jdmason@kudzu.us>,
         Dave Jiang <dave.jiang@intel.com>,
         Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: [patch 02/32] genirq/msi: Add mutex for MSI list protection
+Subject: [patch 03/32] genirq/msi: Provide msi_domain_alloc/free_irqs_descs_locked()
 References: <20211126230957.239391799@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:23:31 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:23:33 +0100 (CET)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For upcoming runtime extensions of MSI-X interrupts it's required to
-protect the MSI descriptor list. Add a mutex to struct msi_device_data and
-provide lock/unlock functions.
+Usage sites which do allocations of the MSI descriptors before invoking
+msi_domain_alloc_irqs() require to lock the MSI decriptors accross the
+operation.
+
+Provide entry points which can be called with the MSI mutex held and lock
+the mutex in the existing entry points.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/msi.h |    6 ++++++
- kernel/irq/msi.c    |   25 +++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+ include/linux/msi.h |    3 ++
+ kernel/irq/msi.c    |   74 ++++++++++++++++++++++++++++++++++++++++------------
+ 2 files changed, 61 insertions(+), 16 deletions(-)
 
 --- a/include/linux/msi.h
 +++ b/include/linux/msi.h
-@@ -3,6 +3,7 @@
- #define LINUX_MSI_H
+@@ -413,9 +413,12 @@ struct irq_domain *msi_create_irq_domain
+ 					 struct irq_domain *parent);
+ int __msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+ 			    int nvec);
++int msi_domain_alloc_irqs_descs_locked(struct irq_domain *domain, struct device *dev,
++				       int nvec);
+ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+ 			  int nvec);
+ void __msi_domain_free_irqs(struct irq_domain *domain, struct device *dev);
++void msi_domain_free_irqs_descs_locked(struct irq_domain *domain, struct device *dev);
+ void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev);
+ struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain);
  
- #include <linux/spinlock.h>
-+#include <linux/mutex.h>
- #include <linux/list.h>
- #include <linux/bits.h>
- #include <asm/msi.h>
-@@ -146,6 +147,7 @@ struct msi_desc {
-  * @attrs:		Pointer to the sysfs attribute group
-  * @platform_data:	Platform-MSI specific data
-  * @list:		List of MSI descriptors associated to the device
-+ * @mutex:		Mutex protecting the MSI list
-  */
- struct msi_device_data {
- 	raw_spinlock_t			lock;
-@@ -153,6 +155,7 @@ struct msi_device_data {
- 	const struct attribute_group    **attrs;
- 	struct platform_msi_priv_data	*platform_data;
- 	struct list_head		list;
-+	struct mutex			mutex;
- };
- 
- int msi_setup_device_data(struct device *dev);
-@@ -187,6 +190,9 @@ static inline unsigned int msi_get_virq(
- 	return ret < 0 ? 0 : ret;
- }
- 
-+void msi_lock_descs(struct device *dev);
-+void msi_unlock_descs(struct device *dev);
-+
- /* Helpers to hide struct msi_desc implementation details */
- #define msi_desc_to_dev(desc)		((desc)->dev)
- #define dev_to_msi_list(dev)		(&(dev)->msi.data->list)
 --- a/kernel/irq/msi.c
 +++ b/kernel/irq/msi.c
-@@ -116,12 +116,37 @@ int msi_setup_device_data(struct device
+@@ -691,10 +691,8 @@ int __msi_domain_alloc_irqs(struct irq_d
+ 		virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
+ 					       dev_to_node(dev), &arg, false,
+ 					       desc->affinity);
+-		if (virq < 0) {
+-			ret = msi_handle_pci_fail(domain, desc, allocated);
+-			goto cleanup;
+-		}
++		if (virq < 0)
++			return msi_handle_pci_fail(domain, desc, allocated);
  
- 	raw_spin_lock_init(&md->lock);
- 	INIT_LIST_HEAD(&md->list);
-+	mutex_init(&md->mutex);
- 	dev->msi.data = md;
- 	devres_add(dev, md);
+ 		for (i = 0; i < desc->nvec_used; i++) {
+ 			irq_set_msi_desc_off(virq, i, desc);
+@@ -728,7 +726,7 @@ int __msi_domain_alloc_irqs(struct irq_d
+ 		}
+ 		ret = irq_domain_activate_irq(irq_data, can_reserve);
+ 		if (ret)
+-			goto cleanup;
++			return ret;
+ 	}
+ 
+ skip_activate:
+@@ -743,38 +741,63 @@ int __msi_domain_alloc_irqs(struct irq_d
+ 		}
+ 	}
  	return 0;
+-
+-cleanup:
+-	msi_domain_free_irqs(domain, dev);
+-	return ret;
  }
  
  /**
-+ * msi_lock_descs - Lock the MSI descriptor storage of a device
-+ * @dev:	Device to operate on
-+ */
-+void msi_lock_descs(struct device *dev)
-+{
-+	if (WARN_ON_ONCE(!dev->msi.data))
-+		return;
-+	mutex_lock(&dev->msi.data->mutex);
+- * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
++ * msi_domain_alloc_irqs_descs_locked - Allocate interrupts from a MSI interrupt domain
+  * @domain:	The domain to allocate from
+  * @dev:	Pointer to device struct of the device for which the interrupts
+  *		are allocated
+  * @nvec:	The number of interrupts to allocate
+  *
++ * Must be invoked from within a msi_lock_descs() / msi_unlock_descs()
++ * pair. Use this for MSI irqdomains which implement their own vector
++ * allocation/free.
++ *
+  * Return: %0 on success or an error code.
+  */
+-int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+-			  int nvec)
++int msi_domain_alloc_irqs_descs_locked(struct irq_domain *domain, struct device *dev,
++				       int nvec)
+ {
+ 	struct msi_domain_info *info = domain->host_data;
+ 	struct msi_domain_ops *ops = info->ops;
+ 	int ret;
+ 
++	lockdep_assert_held(&dev->msi.data->mutex);
++
+ 	ret = ops->domain_alloc_irqs(domain, dev, nvec);
+ 	if (ret)
+-		return ret;
++		goto cleanup;
+ 
+ 	if (!(info->flags & MSI_FLAG_DEV_SYSFS))
+ 		return 0;
+ 
+ 	ret = msi_device_populate_sysfs(dev);
+ 	if (ret)
+-		msi_domain_free_irqs(domain, dev);
++		goto cleanup;
++	return 0;
++
++cleanup:
++	msi_domain_free_irqs_descs_locked(domain, dev);
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(msi_lock_descs);
 +
 +/**
-+ * msi_unlock_descs - Unlock the MSI descriptor storage of a device
-+ * @dev:	Device to operate on
++ * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
++ * @domain:	The domain to allocate from
++ * @dev:	Pointer to device struct of the device for which the interrupts
++ *		are allocated
++ * @nvec:	The number of interrupts to allocate
++ *
++ * Return: %0 on success or an error code.
 + */
-+void msi_unlock_descs(struct device *dev)
++int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev, int nvec)
 +{
-+	if (WARN_ON_ONCE(!dev->msi.data))
-+		return;
-+	mutex_unlock(&dev->msi.data->mutex);
++	int ret;
++
++	msi_lock_descs(dev);
++	ret = msi_domain_alloc_irqs_descs_locked(domain, dev, nvec);
++	msi_unlock_descs(dev);
+ 	return ret;
+ }
+ 
+@@ -804,22 +827,41 @@ void __msi_domain_free_irqs(struct irq_d
+ }
+ 
+ /**
+- * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated to @dev
++ * msi_domain_free_irqs_descs_locked - Free interrupts from a MSI interrupt @domain associated to @dev
+  * @domain:	The domain to managing the interrupts
+  * @dev:	Pointer to device struct of the device for which the interrupts
+  *		are free
++ *
++ * Must be invoked from within a msi_lock_descs() / msi_unlock_descs()
++ * pair. Use this for MSI irqdomains which implement their own vector
++ * allocation.
+  */
+-void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
++void msi_domain_free_irqs_descs_locked(struct irq_domain *domain, struct device *dev)
+ {
+ 	struct msi_domain_info *info = domain->host_data;
+ 	struct msi_domain_ops *ops = info->ops;
+ 
++	lockdep_assert_held(&dev->msi.data->mutex);
++
+ 	if (info->flags & MSI_FLAG_DEV_SYSFS)
+ 		msi_device_destroy_sysfs(dev);
+ 	ops->domain_free_irqs(domain, dev);
+ }
+ 
+ /**
++ * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated to @dev
++ * @domain:	The domain to managing the interrupts
++ * @dev:	Pointer to device struct of the device for which the interrupts
++ *		are free
++ */
++void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
++{
++	msi_lock_descs(dev);
++	msi_domain_free_irqs_descs_locked(domain, dev);
++	msi_unlock_descs(dev);
 +}
-+EXPORT_SYMBOL_GPL(msi_unlock_descs);
 +
 +/**
-  * __msi_get_virq - Return Linux interrupt number of a MSI interrupt
-  * @dev:	Device to operate on
-  * @index:	MSI interrupt index to look for (0-based)
+  * msi_get_domain_info - Get the MSI interrupt domain info for @domain
+  * @domain:	The interrupt domain to retrieve data from
+  *
 
