@@ -2,104 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A3174600EE
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 19:29:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CE4746011C
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 20:25:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234983AbhK0ScW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 27 Nov 2021 13:32:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59980 "EHLO
+        id S1355983AbhK0T2N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 27 Nov 2021 14:28:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355871AbhK0SaW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 13:30:22 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B20BC061574
-        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 10:25:40 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id w1so53048447edc.6
-        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 10:25:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=nSnzgrxddn0odJ+F4Pm2LVSoEistsw4jHMhtjB6XfyM=;
-        b=NpDgKnu7IK84ST0BwNvauAZPvqfewrMrBSYU29meSTsGPPaD8mx7jSkHsY/1x+Co8j
-         2iP5UY1Z7m/JZ+GFRjk931GMDGnm7+/bocdAXCeeVClXq1aus8j6NE7vXYbOqUQBk0T2
-         s2rPEbaC2XHIwIYhR+eUaAuww8uXKTcUGXOL7HUTJyv8cDD+2wb0bhvoODjr557Ksl/q
-         gLB7VgdPrnJUikPIZTGjQ0rCV8rT/XLGCaDRa/zzOUROHh6ipSav0xK4hUYfKOpcwVIP
-         A0+WTB+dk8wdEjmoGFXqYm7u3j0qY6uGDU9ZJ+erkkvXuM24oqbj45xbOE3EiyP/DwK5
-         /o7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=nSnzgrxddn0odJ+F4Pm2LVSoEistsw4jHMhtjB6XfyM=;
-        b=YpUKvxILC+j03eDRKoHSfNG7KDDKsSVg6VZbZWZs5BX7wGSuPrcCzUgT3EYGRkkz28
-         8MXUW6/I0XPHx0zb5r9N8dY9P4SkQJRhEsXKReGMfretlsu501rn7iN1Q0ojEF27M/yP
-         iLyzRwk2Pr1sfY8HAnKdTyV5m6mt3XJiRwpk8QkD3kV+XzHdoi6Ls/8Ya6pyPtnEoGfr
-         6korwBOeLk1F/GsUGTPHWdk1ebEr5UUYPzx+mqu120fot4yuHoCi2fmS1eDm2gGvOvaO
-         U92pF0b2IVO88YZ/YfAxi7Tmz9c1/nNkT92as6MpBjx7ZPw3V49MVqGjs9qlU8sF6nGT
-         24yQ==
-X-Gm-Message-State: AOAM530cxJlc4kusbpbviNX1hMeLzzQBt1xBYeK1nK0YImO4BrKEJ/Ic
-        XSEXbmjfZAKH+jNspSX9uTDigTFpT1vQLmdVYN8=
-X-Google-Smtp-Source: ABdhPJypISIuOGr05q3DOnVjuXifmQlcPkmIlrYSN0Uois87TnAz7wjgGCfjaJNhM1ouXBODYoyaTAmH8qIqCx3uncg=
-X-Received: by 2002:a05:6402:3590:: with SMTP id y16mr58552824edc.343.1638037538532;
- Sat, 27 Nov 2021 10:25:38 -0800 (PST)
+        with ESMTP id S235665AbhK0T0M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 14:26:12 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A209DC061763;
+        Sat, 27 Nov 2021 11:22:29 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638040947;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=B1qxQCFfbrdFSxQkL8hZX6Zfer69wbZc+107UOQS45k=;
+        b=E1FJbCvWO7yuYLjHi6JwLKVgq2jlrRGKU1HBNyRwkQgjKRoSGjUb4pVTuxy8aoeGJGziDl
+        r8JphJFwXy3pRd938tJMCqGxnJcUAp9iA6H7wUgVJDLPQYC0hlltbZnQ7fw5eKbBG50NEQ
+        FXLOJNHJX5/bywfSByEFauxlCkc/tKg30CWc3nYUoynQmX3k2ccGXnhWmWx3vjTJiI2hhg
+        isRToszMiuoEqJ2vNhYq2qaKA1Kc14PumeixOZdyhyijjHMgqhIG/j3ipGInWGCKUkhwTV
+        LJZ6KSloel2ZHgcO4LenCtL2OSRR9rqtn2MV2WNvi6r/dOTn5fDEhunBQL8+VA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638040947;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=B1qxQCFfbrdFSxQkL8hZX6Zfer69wbZc+107UOQS45k=;
+        b=YbWaCIQ16i7j9FW8GIP6eOod9vGpKoNmsdX1E4W3VcFQqHxjQb/AxNhkFM9vvx1QRhO7Yp
+        kNlszx9Qprspl7CA==
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
+Subject: Re: [patch 07/32] genirq/msi: Count the allocated MSI descriptors
+In-Reply-To: <YaIiPISLr7VokL8P@kroah.com>
+References: <20211126230957.239391799@linutronix.de>
+ <20211126232734.708730446@linutronix.de> <YaIiPISLr7VokL8P@kroah.com>
+Date:   Sat, 27 Nov 2021 20:22:26 +0100
+Message-ID: <87o865flot.ffs@tglx>
 MIME-Version: 1.0
-Reply-To: gen.ireneduncan@gmail.com
-Sender: afringawa121@gmail.com
-Received: by 2002:a17:907:7da4:0:0:0:0 with HTTP; Sat, 27 Nov 2021 10:25:38
- -0800 (PST)
-From:   Irene Duncan <gn.ireneduncan@gmail.com>
-Date:   Sat, 27 Nov 2021 19:25:38 +0100
-X-Google-Sender-Auth: m4W6IET8g-MxZqpMhD4CqvwrgD8
-Message-ID: <CAG1-aHHNtBchMQU=uErGiZtn59XN5-8fmbXi-GFPE8i6g-B48A@mail.gmail.com>
-Subject: With due respect
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+On Sat, Nov 27 2021 at 13:19, Greg Kroah-Hartman wrote:
+> On Sat, Nov 27, 2021 at 02:22:38AM +0100, Thomas Gleixner wrote:
+>> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>
+> No changelog?
 
-I am General Irene Duncan from the USA working in the US Army but
-presently in Syria for a peacekeeping mission, I sincerely apologize
-for intruding into your privacy. I have something very important to
-discuss with you.
+Bah. This one should not be there at all.
 
-Some money in various currencies where discovered in barrels at a farm
-house in the middle East during a rescue operation in Iraq War and it
-was agreed by Sergeant Kenneth Buff and myself that some part of these
-money be shared between us, I was given a total of ($5 Million US
-Dollars) as my own share , I kept this money in a security company for
-a long while now which i declared and deposit as my personal and
-family treasure and it has been secured and protected for years now
-with the security company.
+> Anyway, why do we care about the number of decriptors?
+>> +/**
+>> + * msi_device_num_descs - Query the number of allocated MSI descriptors of a device
+>> + * @dev:	The device to read from
+>> + *
+>> + * Note: This is a lockless snapshot of msi_device_data::num_descs
+>> + *
+>> + * Returns the number of MSI descriptors which are allocated for @dev
+>> + */
+>> +unsigned int msi_device_num_descs(struct device *dev)
+>> +{
+>> +	if (dev->msi.data)
+>> +		return dev->msi.data->num_descs;
+>
+> As this number can change after it is read, what will callers do with
+> it?
 
-Now, the WAR in Iraq is over, and all possible problems that could
-have emanated from the shared money has been totally cleaned up and
-all files closed, all what was discovered in the Middle East is no
-more discussed, i am ready to retire from active services by the end
-of next month, but, i need a trustworthy person that can help me take
-possession of this funds and keep it safe while i work on my
-retirement letter to join you so that we could discuss possible
-business partnership together with the money.
+I wanted to get rid of this, but then forgot. Getting old.
 
-I'll tell you what! No compensation can make up for the risk we are
-taking with our lives.
+Thanks,
 
-I=E2=80=99m seeking your kind assistance to move the sum of US$5 Million
-Dollars to you as long as you will assure me that the money will be
-safe in your care until I complete my service here in (Syria ) before
-the end of next month.
-
-The most important thing is; =E2=80=9CCan I Trust you=E2=80=9D?As an office=
-r on ACTIVE
-DUTY I am not allowed to have access to money, therefore, I have
-declared the content of the consignment as personal and my treasure. I
-would like to deliver to you. You will be rewarded with 30% of this
-funds for your assistance, all that I require is your mutual trust
-between us. Don't betray me when you receive the consignment.
-
-Sincerely,
-General Irene Duncan
+        tglx
