@@ -2,56 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6483A460001
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 16:58:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A3174600EE
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 19:29:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239855AbhK0QCD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 27 Nov 2021 11:02:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55996 "EHLO
+        id S234983AbhK0ScW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 27 Nov 2021 13:32:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbhK0QAD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 11:00:03 -0500
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96343C06173E
-        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 07:56:48 -0800 (PST)
-Received: by mail-ot1-x32f.google.com with SMTP id u18-20020a9d7212000000b00560cb1dc10bso18485054otj.11
-        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 07:56:48 -0800 (PST)
+        with ESMTP id S1355871AbhK0SaW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 13:30:22 -0500
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B20BC061574
+        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 10:25:40 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id w1so53048447edc.6
+        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 10:25:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
          :content-transfer-encoding;
-        bh=Wb8YLQANc5QRzYld+Cz8kvavn4ZutkCVadi3QcaIrpY=;
-        b=Fr8KB/sNhZtkDGzfSVmsZExXWinvFjOR5Ko1s0uSScNTr6JbWF+c6kOdXOuGEu78t/
-         sTWhm850HsnqnXtSfKwyIB4HrWGYTIzeWukDg6IeWRNpezYSD49PQfzoGlD6PQjieAyB
-         pSAHdn5NJYglySEGVTBl/1y8ZKmTEdKy8lQ3j0O0kHjmByvIc2yDdDEF2FnWwBpTCW34
-         DcQlY1WdnrO5vb7M0IQfdT12HoI8AOULQUc3uuFz0R240RakkIEGjQp1JlzCYI7woUYv
-         g2u0SW59xe7NW0hnYQMpxHqWzvCluiqOZFImwB+GYHkIG61GjoeOYEDAMR01PEtUabBY
-         31fw==
+        bh=nSnzgrxddn0odJ+F4Pm2LVSoEistsw4jHMhtjB6XfyM=;
+        b=NpDgKnu7IK84ST0BwNvauAZPvqfewrMrBSYU29meSTsGPPaD8mx7jSkHsY/1x+Co8j
+         2iP5UY1Z7m/JZ+GFRjk931GMDGnm7+/bocdAXCeeVClXq1aus8j6NE7vXYbOqUQBk0T2
+         s2rPEbaC2XHIwIYhR+eUaAuww8uXKTcUGXOL7HUTJyv8cDD+2wb0bhvoODjr557Ksl/q
+         gLB7VgdPrnJUikPIZTGjQ0rCV8rT/XLGCaDRa/zzOUROHh6ipSav0xK4hUYfKOpcwVIP
+         A0+WTB+dk8wdEjmoGFXqYm7u3j0qY6uGDU9ZJ+erkkvXuM24oqbj45xbOE3EiyP/DwK5
+         /o7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=Wb8YLQANc5QRzYld+Cz8kvavn4ZutkCVadi3QcaIrpY=;
-        b=RCKBmBiN8jTVmOqxJ/PiLfp6fCpW2P6hZM0XkfIZElFTa0H3yVV3kiRnOuQd2+kIJd
-         Fl1obNaAWkeYxX0Ro0yoHNk23gejPK9R+y87b2iexnEQEIdpZY5RsbfabJAIXSTodWfh
-         qrOwuZykGed2dbQhRjFGTe3gEAea93SkdmavrRA+1dWmTWxY3w09VRb01AbW+4uGxAog
-         ObgcrefrOdMLTLMhY1dkRz9NhaJwFB1eYEiocmIhgmLcB00N184+Guhs2BmNkMrKlPOk
-         5pBklrbSg6gYZqMVaPu95b/AfBUa7IhSXGmBeBYP5jto6HYXwbRoI3VUXpkN4yNYi1U8
-         3s8A==
-X-Gm-Message-State: AOAM531376c06gZPb9pxGmJ+AyzUgBP93ijSO1tNSgdEuqRG5zDv/5SG
-        EM6ir6Xxu/VNpjWSAFoYI9HntpfFKbgnjTLdMtk=
-X-Google-Smtp-Source: ABdhPJyC4FU9InA+iNRnE7UKWy2E241xcgOzOpK0usEvm0hYnW+xsvUpfZ/Ort/5Izq0oxffd9V+nZRIshTvve6wvls=
-X-Received: by 2002:a05:6830:4414:: with SMTP id q20mr35022514otv.14.1638028607854;
- Sat, 27 Nov 2021 07:56:47 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=nSnzgrxddn0odJ+F4Pm2LVSoEistsw4jHMhtjB6XfyM=;
+        b=YpUKvxILC+j03eDRKoHSfNG7KDDKsSVg6VZbZWZs5BX7wGSuPrcCzUgT3EYGRkkz28
+         8MXUW6/I0XPHx0zb5r9N8dY9P4SkQJRhEsXKReGMfretlsu501rn7iN1Q0ojEF27M/yP
+         iLyzRwk2Pr1sfY8HAnKdTyV5m6mt3XJiRwpk8QkD3kV+XzHdoi6Ls/8Ya6pyPtnEoGfr
+         6korwBOeLk1F/GsUGTPHWdk1ebEr5UUYPzx+mqu120fot4yuHoCi2fmS1eDm2gGvOvaO
+         U92pF0b2IVO88YZ/YfAxi7Tmz9c1/nNkT92as6MpBjx7ZPw3V49MVqGjs9qlU8sF6nGT
+         24yQ==
+X-Gm-Message-State: AOAM530cxJlc4kusbpbviNX1hMeLzzQBt1xBYeK1nK0YImO4BrKEJ/Ic
+        XSEXbmjfZAKH+jNspSX9uTDigTFpT1vQLmdVYN8=
+X-Google-Smtp-Source: ABdhPJypISIuOGr05q3DOnVjuXifmQlcPkmIlrYSN0Uois87TnAz7wjgGCfjaJNhM1ouXBODYoyaTAmH8qIqCx3uncg=
+X-Received: by 2002:a05:6402:3590:: with SMTP id y16mr58552824edc.343.1638037538532;
+ Sat, 27 Nov 2021 10:25:38 -0800 (PST)
 MIME-Version: 1.0
-Sender: ericgloriapaul@gmail.com
-Received: by 2002:a05:6830:231d:0:0:0:0 with HTTP; Sat, 27 Nov 2021 07:56:47
+Reply-To: gen.ireneduncan@gmail.com
+Sender: afringawa121@gmail.com
+Received: by 2002:a17:907:7da4:0:0:0:0 with HTTP; Sat, 27 Nov 2021 10:25:38
  -0800 (PST)
-From:   DINA MCKENNA <dinamckennahowley@gmail.com>
-Date:   Sat, 27 Nov 2021 15:56:47 +0000
-X-Google-Sender-Auth: oDZTPG_LGnKAtM5QjQW-K-OPXz8
-Message-ID: <CAApFGfSkyxaxfVfWatjQ=PKm1ZaCSagBin0cbA0uMjjw+UdwYg@mail.gmail.com>
-Subject: Hello,
+From:   Irene Duncan <gn.ireneduncan@gmail.com>
+Date:   Sat, 27 Nov 2021 19:25:38 +0100
+X-Google-Sender-Auth: m4W6IET8g-MxZqpMhD4CqvwrgD8
+Message-ID: <CAG1-aHHNtBchMQU=uErGiZtn59XN5-8fmbXi-GFPE8i6g-B48A@mail.gmail.com>
+Subject: With due respect
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -59,47 +60,46 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello my dear,.
+Hello,
 
- I sent this mail praying it will get to you in a good condition of
-health, since I myself are in a very critical health condition in
-which I sleep every night without knowing if I may be alive to see the
-next day. I bring peace and love to you. It is by the grace of God, I
-had no choice than to do what is lawful and right in the sight of God
-for eternal life and in the sight of man, for witness of God=E2=80=99s merc=
-y
-and glory upon my life. I am Mrs. Dina. Howley Mckenna,. a widow. I am
-suffering from a long time brain tumor, It has defiled all forms of
-medical treatment, and right now I have about a few months to leave,
-according to medical experts. The situation has gotten complicated
-recently with my inability to hear proper, am communicating with you
-with the help of the chief nurse herein the hospital, from all
-indication my conditions is really deteriorating and it is quite
-obvious that, according to my doctors they have advised me that I may
-not live too long, Because this illness has gotten to a very bad
-stage. I plead that you will not expose or betray this trust and
-confidence that I am about to repose on you for the mutual benefit of
-the orphans and the less privilege. I have some funds I inherited from
-my late husband, the sum of ($ 11,000,000.00, Eleven Million Dollars).
-Having known my condition, I decided to donate this fund to you
-believing that you will utilize it the way i am going to instruct
-herein. I need you to assist me and reclaim this money and use it for
-Charity works therein your country  for orphanages and gives justice
-and help to the poor, needy and widows says The Lord." Jeremiah
-22:15-16.=E2=80=9C and also build schools for less privilege that will be
-named after my late husband if possible and to promote the word of God
-and the effort that the house of God is maintained. I do not want a
-situation where this money will be used in an ungodly manner. That's
-why I'm taking this decision. I'm not afraid of death, so I know where
-I'm going. I accept this decision because I do not have any child who
-will inherit this money after I die.. Please I want your sincerely and
-urgent answer to know if you will be able to execute this project for
-the glory of God, and I will give you more information on how the fund
-will be transferred to your bank account. May the grace, peace, love
-and the truth in the Word of God be with you and all those that you
-love and care for.
+I am General Irene Duncan from the USA working in the US Army but
+presently in Syria for a peacekeeping mission, I sincerely apologize
+for intruding into your privacy. I have something very important to
+discuss with you.
 
-I'm waiting for your immediate reply..
+Some money in various currencies where discovered in barrels at a farm
+house in the middle East during a rescue operation in Iraq War and it
+was agreed by Sergeant Kenneth Buff and myself that some part of these
+money be shared between us, I was given a total of ($5 Million US
+Dollars) as my own share , I kept this money in a security company for
+a long while now which i declared and deposit as my personal and
+family treasure and it has been secured and protected for years now
+with the security company.
 
-May God Bless you,
-Mrs. Dina. Howley Mckenna.
+Now, the WAR in Iraq is over, and all possible problems that could
+have emanated from the shared money has been totally cleaned up and
+all files closed, all what was discovered in the Middle East is no
+more discussed, i am ready to retire from active services by the end
+of next month, but, i need a trustworthy person that can help me take
+possession of this funds and keep it safe while i work on my
+retirement letter to join you so that we could discuss possible
+business partnership together with the money.
+
+I'll tell you what! No compensation can make up for the risk we are
+taking with our lives.
+
+I=E2=80=99m seeking your kind assistance to move the sum of US$5 Million
+Dollars to you as long as you will assure me that the money will be
+safe in your care until I complete my service here in (Syria ) before
+the end of next month.
+
+The most important thing is; =E2=80=9CCan I Trust you=E2=80=9D?As an office=
+r on ACTIVE
+DUTY I am not allowed to have access to money, therefore, I have
+declared the content of the consignment as personal and my treasure. I
+would like to deliver to you. You will be rewarded with 30% of this
+funds for your assistance, all that I require is your mutual trust
+between us. Don't betray me when you receive the consignment.
+
+Sincerely,
+General Irene Duncan
