@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F031145FADF
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 02:31:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 168BB45FAB5
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 02:31:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348991AbhK0BfJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Nov 2021 20:35:09 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40490 "EHLO
+        id S229902AbhK0BeB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Nov 2021 20:34:01 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40502 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349876AbhK0BbS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 20:31:18 -0500
-Message-ID: <20211126232735.429897588@linutronix.de>
+        with ESMTP id S1350144AbhK0BcA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 20:32:00 -0500
+Message-ID: <20211126232735.489750235@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637976177;
+        s=2020; t=1637976179;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=dSVT/iBVTDrru1VCPsyUkPO+wlN5QYdJblBQDMf4a+Q=;
-        b=Xm0GCVY1m+0W428IA6zGlHkNzF9WUJ0VrGj0AezNSlzDGyPtju25fv3yLiH3aOBo8zYnsZ
-        PkyybXTSGBtd7i42Mo/8Qr+Ls1Ld6BoGicHqofwK+Pqx6fd3qJ/kljV6VOtE8cjdDhCtf6
-        rde5xFjmCAtXxiun8vFjXX0B/4mFbhEDIbBy96a9UtKX7vo6TDELi9ZoB1T/+C772xj7Pv
-        N6bv0WFrn/JjstShZBGC3axkfms4GgHc0zLMyMC0ISPAbnOZiBmG1/Vz7u7ZSyRTGSRtYN
-        h6/1Djh0B6XIHK3ktmLO+5sqJoLVItCf5KTZvmefZQU4xNds1zG4TIngfDuARQ==
+         references:references; bh=D1PGUTvbMCo12qSm9MpHyC/iszyAeQMlmvbSI9Ov2K8=;
+        b=dSOefgEzVF3y0kFgrBELTV78fRT2lvmklMRud2O8mTwCq1fooqITSW6M0o7Y1Ikoq6ZQgE
+        9lk4I+5L6XyUZDCm5WVLnAbSqz/C00eGpmuyJSiRTwCy1/gYpH38PfBD+eZjope/mcuEZY
+        Odm0tP/s6oSiFqLTWxH+vBCrptn6ud5dBR293EPQtv3luwM+554i5ZfZSS5OKWCTfRXkk3
+        VaKTFgeK5qhGhBVvvZYKycFTW3I+Cxa+jxVibbGjfhD7fyWmf4lBimd1YrS2cob1apVBBk
+        bje7cFpIi1OAHzZOid9MfC31Sn+QAtrkCI9oV5Wj9e6Mnif9NN7Z/f/w0DIJnA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637976177;
+        s=2020e; t=1637976179;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=dSVT/iBVTDrru1VCPsyUkPO+wlN5QYdJblBQDMf4a+Q=;
-        b=xLS/rnrS52pKeIJoXWDMu7CBvqad8o74liCuyH1ND4Vvp+xDnyL9QzY6iar2s06evHw/uW
-        SnVpRUgfZJzhyRBQ==
+         references:references; bh=D1PGUTvbMCo12qSm9MpHyC/iszyAeQMlmvbSI9Ov2K8=;
+        b=nFhopcGPYBSKoeH9CKS3nz+cxdVkftjHUy8fitQVgZ3dwO0mFLrSoZ7n4NnE11nUsB6YgH
+        PRseupyvssZHNJAw==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -43,50 +43,52 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Jon Mason <jdmason@kudzu.us>,
         Dave Jiang <dave.jiang@intel.com>,
         Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: [patch 19/32] powerpc/mpic_u3msi: Use msi_for_each-desc()
+Subject: [patch 20/32] PCI: hv: Rework MSI handling
 References: <20211126230957.239391799@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:22:56 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:22:58 +0100 (CET)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Replace the about to vanish iterators and make use of the filtering.
+Replace the about to vanish iterators and make use of the filtering. Take
+the descriptor lock around the iterators.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/powerpc/sysdev/mpic_u3msi.c |    9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/pci/controller/pci-hyperv.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/arch/powerpc/sysdev/mpic_u3msi.c
-+++ b/arch/powerpc/sysdev/mpic_u3msi.c
-@@ -104,17 +104,12 @@ static void u3msi_teardown_msi_irqs(stru
- 	struct msi_desc *entry;
- 	irq_hw_number_t hwirq;
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3445,18 +3445,23 @@ static int hv_pci_suspend(struct hv_devi
+ 
+ static int hv_pci_restore_msi_msg(struct pci_dev *pdev, void *arg)
+ {
+-	struct msi_desc *entry;
+ 	struct irq_data *irq_data;
++	struct msi_desc *entry;
++	int ret = 0;
  
 -	for_each_pci_msi_entry(entry, pdev) {
--		if (!entry->irq)
--			continue;
--
++	msi_lock_descs(&pdev->dev);
 +	msi_for_each_desc(entry, &pdev->dev, MSI_DESC_ASSOCIATED) {
- 		hwirq = virq_to_hw(entry->irq);
- 		irq_set_msi_desc(entry->irq, NULL);
- 		irq_dispose_mapping(entry->irq);
- 		msi_bitmap_free_hwirqs(&msi_mpic->msi_bitmap, hwirq, 1);
+ 		irq_data = irq_get_irq_data(entry->irq);
+-		if (WARN_ON_ONCE(!irq_data))
+-			return -EINVAL;
++		if (WARN_ON_ONCE(!irq_data)) {
++			ret = -EINVAL;
++			break;
++		}
+ 
+ 		hv_compose_msi_msg(irq_data, &entry->msg);
  	}
--
--	return;
++	msi_unlock_descs(&pdev->dev);
+ 
+-	return 0;
++	return ret;
  }
  
- static int u3msi_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
-@@ -136,7 +131,7 @@ static int u3msi_setup_msi_irqs(struct p
- 		return -ENXIO;
- 	}
- 
--	for_each_pci_msi_entry(entry, pdev) {
-+	msi_for_each_desc(entry, &pdev->dev, MSI_DESC_NOTASSOCIATED) {
- 		hwirq = msi_bitmap_alloc_hwirqs(&msi_mpic->msi_bitmap, 1);
- 		if (hwirq < 0) {
- 			pr_debug("u3msi: failed allocating hwirq\n");
+ /*
 
