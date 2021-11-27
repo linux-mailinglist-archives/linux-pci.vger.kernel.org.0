@@ -2,57 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1530745FF03
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 15:07:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C56945FF04
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 15:07:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244582AbhK0OKQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 27 Nov 2021 09:10:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59544 "EHLO
+        id S1351293AbhK0OKS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 27 Nov 2021 09:10:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237867AbhK0OIQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 09:08:16 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC73C061758
-        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:05:01 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id p27-20020a05600c1d9b00b0033bf8532855so8678242wms.3
-        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:05:01 -0800 (PST)
+        with ESMTP id S1355187AbhK0OIS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 09:08:18 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C9FC061759
+        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:05:03 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id q3so2301266wru.5
+        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:05:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=U3uaYTgTa9MjvCZttNhR23oLmD89ZxoFQWsGmvmVB9A=;
-        b=KwPdTrOc06mYEaZ0eQSd2Wfy9ZzImQVg9kcoDDqxV6HRmXqXkpOlx+nZxClWUyrO86
-         sd/qqviF766IXk0BgQEBTI9njhBjErWBiKcTPPI17DPEvCrPJarALA3bCwnq11UAOY9L
-         KaTqeQOKUZnNuHjcZIpPFeDCFhh/CCWaycD+AVRUyNb7lCayC821HmIqMtDh3lJAWyz3
-         +25Xq4X1wDa7r98z87No7x8p+tfeP/espe4zEjrq/pKAVAFu3pGI03XihKQeKYcNRGDf
-         ftN6nmqtm6xvpEFYM4YpWQqSYgYE97IUV93MAmrzpfmMrkRXBZmCsYV7OVGRNTwxdFhF
-         m8Hg==
+        bh=5SmlbGz5AzGOa51KDhhJi2z8boXsxZopGisOzaRi8bk=;
+        b=Sn37F6D2scr5ALYazYqPTPOXpkAkxdlUDsTUN6iDxTWm+LjV2feo0yON9q90bw1IsS
+         X81M9vDGt0yuztA37IyMLARoLi0ZEH0KqCFdpxXAcgGpN2HPEKuwnpu1E0DqRjlTLrum
+         Nb7xvYOLX+Y2Kcn2Rf2OsmAVKcgp/hocjMm0I/nKsRlowWCisg97OP17S/11Lh2Dd+Ii
+         LTjvw4Xn6ApWKxe59K6NYJf7WNh0a5qCJJxmElfqSCmLkNSIwmncVx1jIUipeOQRpM8p
+         6RDpHG1uRF2jCfj8DwYVwi0oWloIGuZlU7KiBTydnxf9q66AlFWgUxoQK0YYO8BFRYOx
+         7gAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=U3uaYTgTa9MjvCZttNhR23oLmD89ZxoFQWsGmvmVB9A=;
-        b=zBRx32l3S/SsxpirW2Wbv8tOiJFAJ4oORZTSixPO0q3nl/UfYV03Ilikn2inb0WqBH
-         BuNSIHGhmpXzO01z+CLQzE2JjqnPY9kW5WvsKY1Whz+esr7T1oYjgCCXw59VeOKRQWZw
-         iAmeJgI5Tah3z0NV/wHuoh/keZun+UZ8GIvXdVVTLXgpoTZWphRbuiHo+W7H+gjtwqHX
-         mOOxi+OfLuijikZUYwj/3z7cOgXZgQeAzoCPUu6GnxHTVYIWfUp1kbBmMb5T37P6+32N
-         AD+c0krZ5JTnNx2V4gViPKYFCkrPyN7dvgaqOjAxKaUORklJ42bgJ936W8iXTIDm9lT3
-         DfKw==
-X-Gm-Message-State: AOAM5306Q7gkMQn5I5fJhfVgH7Rlb071wvNKcMV+D4ZuLhwUddVleLbB
-        1Owh+3ZnOB6OS4vk3+Bqk88=
-X-Google-Smtp-Source: ABdhPJysLmEmfGq4Cplt1ZsXMqDWewO5F6XJaGDRyGSNwxcfLMJ7k4V6xs56M72S3L5rLzRC1mWsBQ==
-X-Received: by 2002:a7b:c084:: with SMTP id r4mr22965419wmh.107.1638021900362;
-        Sat, 27 Nov 2021 06:05:00 -0800 (PST)
+        bh=5SmlbGz5AzGOa51KDhhJi2z8boXsxZopGisOzaRi8bk=;
+        b=IewNKRh6SS0l1lLq5A+JZSeaLFOI9scsEKAIMHX0cHQTtE4VTw+5Pquz/cFNkQPJhI
+         BOTxTbp+MVZyq0XM19sVAOu0pXA72sVWiDbjcKB5hIgj2JpKTP5bwucPuo/rKTovQQT3
+         5C2ElzSGlRW5kSZHekPycs8AjxmWxPfmVrOvETm0Dzf2sZru/iErYZqRpTAU35j2OZKW
+         Y/eyZP0/byHC8FKqB4q6Zf1p32b5wNIavRe+9phFHcXzf6ieAG3GpcUzSUEszfTyWz0w
+         FMdtuBjdosBC0WpOcI30XZEQDDQUViJA66kvIBJ2eyDcz+W24MrJslNzS5coLF7zgQs6
+         DNhA==
+X-Gm-Message-State: AOAM530Gt1eWmCXva6vQlS9nrrmrzBMVI4TDwHvNV4KdUxnyUB4PnnHU
+        gE5cdlamsuaf1ghL/AiWyMCDMCfTIQNu1Q==
+X-Google-Smtp-Source: ABdhPJxMxNk+IVigRQqkLbtL9IC0DvRhkzW6Dcq0pYbmB0mMRE/Tk9TwUYdQ3Du1D68zucJHlmVAxQ==
+X-Received: by 2002:a05:6000:168e:: with SMTP id y14mr20987065wrd.331.1638021902138;
+        Sat, 27 Nov 2021 06:05:02 -0800 (PST)
 Received: from claire-ThinkPad-T470.localdomain (dynamic-2a01-0c22-7349-1000-d163-c2fa-698a-934f.c22.pool.telefonica.de. [2a01:c22:7349:1000:d163:c2fa:698a:934f])
-        by smtp.gmail.com with ESMTPSA id w7sm8447071wru.51.2021.11.27.06.04.59
+        by smtp.gmail.com with ESMTPSA id w7sm8447071wru.51.2021.11.27.06.05.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Nov 2021 06:05:00 -0800 (PST)
+        Sat, 27 Nov 2021 06:05:01 -0800 (PST)
 From:   Fan Fei <ffclaire1224@gmail.com>
 To:     bjorn@helgaas.com
 Cc:     Fan Fei <ffclaire1224@gmail.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 2/6] PCI: intel-gw: Rename struct intel_pcie_port to intel_pcie
-Date:   Sat, 27 Nov 2021 15:04:39 +0100
-Message-Id: <2e0c1e981e412179a27148e116d3cd5cdd9946e0.1638021831.git.ffclaire1224@gmail.com>
+Subject: [PATCH 3/6] PCI: uniphier: Rename struct uniphier_pcie_priv to uniphier_pcie
+Date:   Sat, 27 Nov 2021 15:04:40 +0100
+Message-Id: <3eb1b81cb731ab355f53699bf1e15d006ed08327.1638021831.git.ffclaire1224@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1638021831.git.ffclaire1224@gmail.com>
 References: <cover.1638021831.git.ffclaire1224@gmail.com>
@@ -62,440 +62,386 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Rename struct intel_pcie_port to intel_pcie to match the convention of
-<driver>_pcie. No functional change intended.
+Rename struct uniphier_pcie_priv to uniphier_pcie to match the convention
+of <driver>_pcie. No functional change intended.
 
 Signed-off-by: Fan Fei <ffclaire1224@gmail.com>
 ---
- drivers/pci/controller/dwc/pcie-intel-gw.c | 204 ++++++++++-----------
- 1 file changed, 102 insertions(+), 102 deletions(-)
+ drivers/pci/controller/dwc/pcie-uniphier.c | 159 +++++++++++----------
+ 1 file changed, 87 insertions(+), 72 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
-index d15cf35fa7f2..5ba144924ff8 100644
---- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-+++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-@@ -62,7 +62,7 @@ struct intel_pcie_soc {
- 	unsigned int	pcie_ver;
- };
+diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+index d05be942956e..a899dcfb28c4 100644
+--- a/drivers/pci/controller/dwc/pcie-uniphier.c
++++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+@@ -61,7 +61,7 @@
+ #define PCL_RDLH_LINK_UP		BIT(1)
+ #define PCL_XMLH_LINK_UP		BIT(0)
  
--struct intel_pcie_port {
-+struct intel_pcie {
- 	struct dw_pcie		pci;
- 	void __iomem		*app_base;
- 	struct gpio_desc	*reset_gpio;
-@@ -83,53 +83,53 @@ static void pcie_update_bits(void __iomem *base, u32 ofs, u32 mask, u32 val)
- 		writel(val, base + ofs);
- }
+-struct uniphier_pcie_priv {
++struct uniphier_pcie {
+ 	void __iomem *base;
+ 	struct dw_pcie pci;
+ 	struct clk *clk;
+@@ -72,62 +72,62 @@ struct uniphier_pcie_priv {
  
--static inline void pcie_app_wr(struct intel_pcie_port *lpp, u32 ofs, u32 val)
-+static inline void pcie_app_wr(struct intel_pcie *pcie, u32 ofs, u32 val)
- {
--	writel(val, lpp->app_base + ofs);
-+	writel(val, pcie->app_base + ofs);
- }
+ #define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
  
--static void pcie_app_wr_mask(struct intel_pcie_port *lpp, u32 ofs,
-+static void pcie_app_wr_mask(struct intel_pcie *pcie, u32 ofs,
- 			     u32 mask, u32 val)
- {
--	pcie_update_bits(lpp->app_base, ofs, mask, val);
-+	pcie_update_bits(pcie->app_base, ofs, mask, val);
- }
- 
--static inline u32 pcie_rc_cfg_rd(struct intel_pcie_port *lpp, u32 ofs)
-+static inline u32 pcie_rc_cfg_rd(struct intel_pcie *pcie, u32 ofs)
- {
--	return dw_pcie_readl_dbi(&lpp->pci, ofs);
-+	return dw_pcie_readl_dbi(&pcie->pci, ofs);
- }
- 
--static inline void pcie_rc_cfg_wr(struct intel_pcie_port *lpp, u32 ofs, u32 val)
-+static inline void pcie_rc_cfg_wr(struct intel_pcie *pcie, u32 ofs, u32 val)
- {
--	dw_pcie_writel_dbi(&lpp->pci, ofs, val);
-+	dw_pcie_writel_dbi(&pcie->pci, ofs, val);
- }
- 
--static void pcie_rc_cfg_wr_mask(struct intel_pcie_port *lpp, u32 ofs,
-+static void pcie_rc_cfg_wr_mask(struct intel_pcie *pcie, u32 ofs,
- 				u32 mask, u32 val)
- {
--	pcie_update_bits(lpp->pci.dbi_base, ofs, mask, val);
-+	pcie_update_bits(pcie->pci.dbi_base, ofs, mask, val);
- }
- 
--static void intel_pcie_ltssm_enable(struct intel_pcie_port *lpp)
-+static void intel_pcie_ltssm_enable(struct intel_pcie *pcie)
- {
--	pcie_app_wr_mask(lpp, PCIE_APP_CCR, PCIE_APP_CCR_LTSSM_ENABLE,
-+	pcie_app_wr_mask(pcie, PCIE_APP_CCR, PCIE_APP_CCR_LTSSM_ENABLE,
- 			 PCIE_APP_CCR_LTSSM_ENABLE);
- }
- 
--static void intel_pcie_ltssm_disable(struct intel_pcie_port *lpp)
-+static void intel_pcie_ltssm_disable(struct intel_pcie *pcie)
- {
--	pcie_app_wr_mask(lpp, PCIE_APP_CCR, PCIE_APP_CCR_LTSSM_ENABLE, 0);
-+	pcie_app_wr_mask(pcie, PCIE_APP_CCR, PCIE_APP_CCR_LTSSM_ENABLE, 0);
- }
- 
--static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
-+static void intel_pcie_link_setup(struct intel_pcie *pcie)
+-static void uniphier_pcie_ltssm_enable(struct uniphier_pcie_priv *priv,
++static void uniphier_pcie_ltssm_enable(struct uniphier_pcie *pcie,
+ 				       bool enable)
  {
  	u32 val;
--	u8 offset = dw_pcie_find_capability(&lpp->pci, PCI_CAP_ID_EXP);
-+	u8 offset = dw_pcie_find_capability(&pcie->pci, PCI_CAP_ID_EXP);
  
--	val = pcie_rc_cfg_rd(lpp, offset + PCI_EXP_LNKCTL);
-+	val = pcie_rc_cfg_rd(pcie, offset + PCI_EXP_LNKCTL);
- 
- 	val &= ~(PCI_EXP_LNKCTL_LD | PCI_EXP_LNKCTL_ASPMC);
--	pcie_rc_cfg_wr(lpp, offset + PCI_EXP_LNKCTL, val);
-+	pcie_rc_cfg_wr(pcie, offset + PCI_EXP_LNKCTL, val);
+-	val = readl(priv->base + PCL_APP_READY_CTRL);
++	val = readl(pcie->base + PCL_APP_READY_CTRL);
+ 	if (enable)
+ 		val |= PCL_APP_LTSSM_ENABLE;
+ 	else
+ 		val &= ~PCL_APP_LTSSM_ENABLE;
+-	writel(val, priv->base + PCL_APP_READY_CTRL);
++	writel(val, pcie->base + PCL_APP_READY_CTRL);
  }
  
- static void intel_pcie_init_n_fts(struct dw_pcie *pci)
-@@ -148,14 +148,14 @@ static void intel_pcie_init_n_fts(struct dw_pcie *pci)
- 	pci->n_fts[0] = PORT_AFR_N_FTS_GEN12_DFT;
- }
- 
--static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
-+static int intel_pcie_ep_rst_init(struct intel_pcie *pcie)
+-static void uniphier_pcie_init_rc(struct uniphier_pcie_priv *priv)
++static void uniphier_pcie_init_rc(struct uniphier_pcie *pcie)
  {
--	struct device *dev = lpp->pci.dev;
-+	struct device *dev = pcie->pci.dev;
+ 	u32 val;
+ 
+ 	/* set RC MODE */
+-	val = readl(priv->base + PCL_MODE);
++	val = readl(pcie->base + PCL_MODE);
+ 	val |= PCL_MODE_REGEN;
+ 	val &= ~PCL_MODE_REGVAL;
+-	writel(val, priv->base + PCL_MODE);
++	writel(val, pcie->base + PCL_MODE);
+ 
+ 	/* use auxiliary power detection */
+-	val = readl(priv->base + PCL_APP_PM0);
++	val = readl(pcie->base + PCL_APP_PM0);
+ 	val |= PCL_SYS_AUX_PWR_DET;
+-	writel(val, priv->base + PCL_APP_PM0);
++	writel(val, pcie->base + PCL_APP_PM0);
+ 
+ 	/* assert PERST# */
+-	val = readl(priv->base + PCL_PINCTRL0);
++	val = readl(pcie->base + PCL_PINCTRL0);
+ 	val &= ~(PCL_PERST_NOE_REGVAL | PCL_PERST_OUT_REGVAL
+ 		 | PCL_PERST_PLDN_REGVAL);
+ 	val |= PCL_PERST_NOE_REGEN | PCL_PERST_OUT_REGEN
+ 		| PCL_PERST_PLDN_REGEN;
+-	writel(val, priv->base + PCL_PINCTRL0);
++	writel(val, pcie->base + PCL_PINCTRL0);
+ 
+-	uniphier_pcie_ltssm_enable(priv, false);
++	uniphier_pcie_ltssm_enable(pcie, false);
+ 
+ 	usleep_range(100000, 200000);
+ 
+ 	/* deassert PERST# */
+-	val = readl(priv->base + PCL_PINCTRL0);
++	val = readl(pcie->base + PCL_PINCTRL0);
+ 	val |= PCL_PERST_OUT_REGVAL | PCL_PERST_OUT_REGEN;
+-	writel(val, priv->base + PCL_PINCTRL0);
++	writel(val, pcie->base + PCL_PINCTRL0);
+ }
+ 
+-static int uniphier_pcie_wait_rc(struct uniphier_pcie_priv *priv)
++static int uniphier_pcie_wait_rc(struct uniphier_pcie *pcie)
+ {
+ 	u32 status;
  	int ret;
  
--	lpp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
--	if (IS_ERR(lpp->reset_gpio)) {
--		ret = PTR_ERR(lpp->reset_gpio);
-+	pcie->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(pcie->reset_gpio)) {
-+		ret = PTR_ERR(pcie->reset_gpio);
- 		if (ret != -EPROBE_DEFER)
- 			dev_err(dev, "Failed to request PCIe GPIO: %d\n", ret);
- 		return ret;
-@@ -167,19 +167,19 @@ static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
- 	return 0;
- }
- 
--static void intel_pcie_core_rst_assert(struct intel_pcie_port *lpp)
-+static void intel_pcie_core_rst_assert(struct intel_pcie *pcie)
- {
--	reset_control_assert(lpp->core_rst);
-+	reset_control_assert(pcie->core_rst);
- }
- 
--static void intel_pcie_core_rst_deassert(struct intel_pcie_port *lpp)
-+static void intel_pcie_core_rst_deassert(struct intel_pcie *pcie)
- {
- 	/*
- 	 * One micro-second delay to make sure the reset pulse
- 	 * wide enough so that core reset is clean.
- 	 */
- 	udelay(1);
--	reset_control_deassert(lpp->core_rst);
-+	reset_control_deassert(pcie->core_rst);
- 
- 	/*
- 	 * Some SoC core reset also reset PHY, more delay needed
-@@ -188,58 +188,58 @@ static void intel_pcie_core_rst_deassert(struct intel_pcie_port *lpp)
- 	usleep_range(1000, 2000);
- }
- 
--static void intel_pcie_device_rst_assert(struct intel_pcie_port *lpp)
-+static void intel_pcie_device_rst_assert(struct intel_pcie *pcie)
- {
--	gpiod_set_value_cansleep(lpp->reset_gpio, 1);
-+	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
- }
- 
--static void intel_pcie_device_rst_deassert(struct intel_pcie_port *lpp)
-+static void intel_pcie_device_rst_deassert(struct intel_pcie *pcie)
- {
--	msleep(lpp->rst_intrvl);
--	gpiod_set_value_cansleep(lpp->reset_gpio, 0);
-+	msleep(pcie->rst_intrvl);
-+	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
- }
- 
--static void intel_pcie_core_irq_disable(struct intel_pcie_port *lpp)
-+static void intel_pcie_core_irq_disable(struct intel_pcie *pcie)
- {
--	pcie_app_wr(lpp, PCIE_APP_IRNEN, 0);
--	pcie_app_wr(lpp, PCIE_APP_IRNCR, PCIE_APP_IRN_INT);
-+	pcie_app_wr(pcie, PCIE_APP_IRNEN, 0);
-+	pcie_app_wr(pcie, PCIE_APP_IRNCR, PCIE_APP_IRN_INT);
- }
- 
- static int intel_pcie_get_resources(struct platform_device *pdev)
- {
--	struct intel_pcie_port *lpp = platform_get_drvdata(pdev);
--	struct dw_pcie *pci = &lpp->pci;
-+	struct intel_pcie *pcie = platform_get_drvdata(pdev);
-+	struct dw_pcie *pci = &pcie->pci;
- 	struct device *dev = pci->dev;
- 	int ret;
- 
--	lpp->core_clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(lpp->core_clk)) {
--		ret = PTR_ERR(lpp->core_clk);
-+	pcie->core_clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pcie->core_clk)) {
-+		ret = PTR_ERR(pcie->core_clk);
- 		if (ret != -EPROBE_DEFER)
- 			dev_err(dev, "Failed to get clks: %d\n", ret);
- 		return ret;
- 	}
- 
--	lpp->core_rst = devm_reset_control_get(dev, NULL);
--	if (IS_ERR(lpp->core_rst)) {
--		ret = PTR_ERR(lpp->core_rst);
-+	pcie->core_rst = devm_reset_control_get(dev, NULL);
-+	if (IS_ERR(pcie->core_rst)) {
-+		ret = PTR_ERR(pcie->core_rst);
- 		if (ret != -EPROBE_DEFER)
- 			dev_err(dev, "Failed to get resets: %d\n", ret);
- 		return ret;
- 	}
- 
- 	ret = device_property_read_u32(dev, "reset-assert-ms",
--				       &lpp->rst_intrvl);
-+				       &pcie->rst_intrvl);
- 	if (ret)
--		lpp->rst_intrvl = RESET_INTERVAL_MS;
-+		pcie->rst_intrvl = RESET_INTERVAL_MS;
- 
--	lpp->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
--	if (IS_ERR(lpp->app_base))
--		return PTR_ERR(lpp->app_base);
-+	pcie->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
-+	if (IS_ERR(pcie->app_base))
-+		return PTR_ERR(pcie->app_base);
- 
--	lpp->phy = devm_phy_get(dev, "pcie");
--	if (IS_ERR(lpp->phy)) {
--		ret = PTR_ERR(lpp->phy);
-+	pcie->phy = devm_phy_get(dev, "pcie");
-+	if (IS_ERR(pcie->phy)) {
-+		ret = PTR_ERR(pcie->phy);
- 		if (ret != -EPROBE_DEFER)
- 			dev_err(dev, "Couldn't get pcie-phy: %d\n", ret);
- 		return ret;
-@@ -248,137 +248,137 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int intel_pcie_wait_l2(struct intel_pcie_port *lpp)
-+static int intel_pcie_wait_l2(struct intel_pcie *pcie)
- {
- 	u32 value;
- 	int ret;
--	struct dw_pcie *pci = &lpp->pci;
-+	struct dw_pcie *pci = &pcie->pci;
- 
- 	if (pci->link_gen < 3)
- 		return 0;
- 
- 	/* Send PME_TURN_OFF message */
--	pcie_app_wr_mask(lpp, PCIE_APP_MSG_CR, PCIE_APP_MSG_XMT_PM_TURNOFF,
-+	pcie_app_wr_mask(pcie, PCIE_APP_MSG_CR, PCIE_APP_MSG_XMT_PM_TURNOFF,
- 			 PCIE_APP_MSG_XMT_PM_TURNOFF);
- 
- 	/* Read PMC status and wait for falling into L2 link state */
--	ret = readl_poll_timeout(lpp->app_base + PCIE_APP_PMC, value,
-+	ret = readl_poll_timeout(pcie->app_base + PCIE_APP_PMC, value,
- 				 value & PCIE_APP_PMC_IN_L2, 20,
- 				 jiffies_to_usecs(5 * HZ));
- 	if (ret)
--		dev_err(lpp->pci.dev, "PCIe link enter L2 timeout!\n");
-+		dev_err(pcie->pci.dev, "PCIe link enter L2 timeout!\n");
- 
- 	return ret;
- }
- 
--static void intel_pcie_turn_off(struct intel_pcie_port *lpp)
-+static void intel_pcie_turn_off(struct intel_pcie *pcie)
- {
--	if (dw_pcie_link_up(&lpp->pci))
--		intel_pcie_wait_l2(lpp);
-+	if (dw_pcie_link_up(&pcie->pci))
-+		intel_pcie_wait_l2(pcie);
- 
- 	/* Put endpoint device in reset state */
--	intel_pcie_device_rst_assert(lpp);
--	pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND, PCI_COMMAND_MEMORY, 0);
-+	intel_pcie_device_rst_assert(pcie);
-+	pcie_rc_cfg_wr_mask(pcie, PCI_COMMAND, PCI_COMMAND_MEMORY, 0);
- }
- 
--static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
-+static int intel_pcie_host_setup(struct intel_pcie *pcie)
- {
- 	int ret;
--	struct dw_pcie *pci = &lpp->pci;
-+	struct dw_pcie *pci = &pcie->pci;
- 
--	intel_pcie_core_rst_assert(lpp);
--	intel_pcie_device_rst_assert(lpp);
-+	intel_pcie_core_rst_assert(pcie);
-+	intel_pcie_device_rst_assert(pcie);
- 
--	ret = phy_init(lpp->phy);
-+	ret = phy_init(pcie->phy);
- 	if (ret)
- 		return ret;
- 
--	intel_pcie_core_rst_deassert(lpp);
-+	intel_pcie_core_rst_deassert(pcie);
- 
--	ret = clk_prepare_enable(lpp->core_clk);
-+	ret = clk_prepare_enable(pcie->core_clk);
+ 	/* wait PIPE clock */
+-	ret = readl_poll_timeout(priv->base + PCL_PIPEMON, status,
++	ret = readl_poll_timeout(pcie->base + PCL_PIPEMON, status,
+ 				 status & PCL_PCLK_ALIVE, 100000, 1000000);
  	if (ret) {
--		dev_err(lpp->pci.dev, "Core clock enable failed: %d\n", ret);
-+		dev_err(pcie->pci.dev, "Core clock enable failed: %d\n", ret);
- 		goto clk_err;
- 	}
- 
- 	pci->atu_base = pci->dbi_base + 0xC0000;
- 
--	intel_pcie_ltssm_disable(lpp);
--	intel_pcie_link_setup(lpp);
-+	intel_pcie_ltssm_disable(pcie);
-+	intel_pcie_link_setup(pcie);
- 	intel_pcie_init_n_fts(pci);
- 	dw_pcie_setup_rc(&pci->pp);
- 	dw_pcie_upconfig_setup(pci);
- 
--	intel_pcie_device_rst_deassert(lpp);
--	intel_pcie_ltssm_enable(lpp);
-+	intel_pcie_device_rst_deassert(pcie);
-+	intel_pcie_ltssm_enable(pcie);
- 
- 	ret = dw_pcie_wait_for_link(pci);
- 	if (ret)
- 		goto app_init_err;
- 
- 	/* Enable integrated interrupts */
--	pcie_app_wr_mask(lpp, PCIE_APP_IRNEN, PCIE_APP_IRN_INT,
-+	pcie_app_wr_mask(pcie, PCIE_APP_IRNEN, PCIE_APP_IRN_INT,
- 			 PCIE_APP_IRN_INT);
- 
- 	return 0;
- 
- app_init_err:
--	clk_disable_unprepare(lpp->core_clk);
-+	clk_disable_unprepare(pcie->core_clk);
- clk_err:
--	intel_pcie_core_rst_assert(lpp);
--	phy_exit(lpp->phy);
-+	intel_pcie_core_rst_assert(pcie);
-+	phy_exit(pcie->phy);
- 
- 	return ret;
- }
- 
--static void __intel_pcie_remove(struct intel_pcie_port *lpp)
-+static void __intel_pcie_remove(struct intel_pcie *pcie)
- {
--	intel_pcie_core_irq_disable(lpp);
--	intel_pcie_turn_off(lpp);
--	clk_disable_unprepare(lpp->core_clk);
--	intel_pcie_core_rst_assert(lpp);
--	phy_exit(lpp->phy);
-+	intel_pcie_core_irq_disable(pcie);
-+	intel_pcie_turn_off(pcie);
-+	clk_disable_unprepare(pcie->core_clk);
-+	intel_pcie_core_rst_assert(pcie);
-+	phy_exit(pcie->phy);
- }
- 
- static int intel_pcie_remove(struct platform_device *pdev)
- {
--	struct intel_pcie_port *lpp = platform_get_drvdata(pdev);
--	struct pcie_port *pp = &lpp->pci.pp;
-+	struct intel_pcie *pcie = platform_get_drvdata(pdev);
-+	struct pcie_port *pp = &pcie->pci.pp;
- 
- 	dw_pcie_host_deinit(pp);
--	__intel_pcie_remove(lpp);
-+	__intel_pcie_remove(pcie);
- 
- 	return 0;
- }
- 
- static int __maybe_unused intel_pcie_suspend_noirq(struct device *dev)
- {
--	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-+	struct intel_pcie *pcie = dev_get_drvdata(dev);
- 	int ret;
- 
--	intel_pcie_core_irq_disable(lpp);
--	ret = intel_pcie_wait_l2(lpp);
-+	intel_pcie_core_irq_disable(pcie);
-+	ret = intel_pcie_wait_l2(pcie);
- 	if (ret)
+-		dev_err(priv->pci.dev,
++		dev_err(pcie->pci.dev,
+ 			"Failed to initialize controller in RC mode\n");
  		return ret;
+ 	}
+@@ -137,10 +137,10 @@ static int uniphier_pcie_wait_rc(struct uniphier_pcie_priv *priv)
  
--	phy_exit(lpp->phy);
--	clk_disable_unprepare(lpp->core_clk);
-+	phy_exit(pcie->phy);
-+	clk_disable_unprepare(pcie->core_clk);
- 	return ret;
- }
- 
- static int __maybe_unused intel_pcie_resume_noirq(struct device *dev)
+ static int uniphier_pcie_link_up(struct dw_pcie *pci)
  {
--	struct intel_pcie_port *lpp = dev_get_drvdata(dev);
-+	struct intel_pcie *pcie = dev_get_drvdata(dev);
+-	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
++	struct uniphier_pcie *pcie = to_uniphier_pcie(pci);
+ 	u32 val, mask;
  
--	return intel_pcie_host_setup(lpp);
-+	return intel_pcie_host_setup(pcie);
+-	val = readl(priv->base + PCL_STATUS_LINK);
++	val = readl(pcie->base + PCL_STATUS_LINK);
+ 	mask = PCL_RDLH_LINK_UP | PCL_XMLH_LINK_UP;
+ 
+ 	return (val & mask) == mask;
+@@ -148,39 +148,54 @@ static int uniphier_pcie_link_up(struct dw_pcie *pci)
+ 
+ static int uniphier_pcie_start_link(struct dw_pcie *pci)
+ {
+-	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
++	struct uniphier_pcie *pcie = to_uniphier_pcie(pci);
+ 
+-	uniphier_pcie_ltssm_enable(priv, true);
++	uniphier_pcie_ltssm_enable(pcie, true);
+ 
+ 	return 0;
  }
  
- static int intel_pcie_rc_init(struct pcie_port *pp)
+ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+ {
+-	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
++	struct uniphier_pcie *pcie = to_uniphier_pcie(pci);
+ 
+-	uniphier_pcie_ltssm_enable(priv, false);
++	uniphier_pcie_ltssm_enable(pcie, false);
+ }
+ 
+-static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
++static void uniphier_pcie_irq_enable(struct uniphier_pcie *pcie)
+ {
+-	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+-	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
++	writel(PCL_RCV_INT_ALL_ENABLE, pcie->base + PCL_RCV_INT);
++	writel(PCL_RCV_INTX_ALL_ENABLE, pcie->base + PCL_RCV_INTX);
+ }
+ 
++
++static void uniphier_pcie_irq_ack(struct irq_data *d)
++{
++	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct uniphier_pcie *pcie = to_uniphier_pcie(pci);
++	u32 val;
++
++	val = readl(pcie->base + PCL_RCV_INTX);
++	val &= ~PCL_RCV_INTX_ALL_STATUS;
++	val |= BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_STATUS_SHIFT);
++	writel(val, pcie->base + PCL_RCV_INTX);
++}
++
++
+ static void uniphier_pcie_irq_mask(struct irq_data *d)
+ {
+ 	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
++	struct uniphier_pcie *pcie = to_uniphier_pcie(pci);
+ 	unsigned long flags;
+ 	u32 val;
+ 
+ 	raw_spin_lock_irqsave(&pp->lock, flags);
+ 
+-	val = readl(priv->base + PCL_RCV_INTX);
++	val = readl(pcie->base + PCL_RCV_INTX);
+ 	val |= BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_MASK_SHIFT);
+-	writel(val, priv->base + PCL_RCV_INTX);
++	writel(val, pcie->base + PCL_RCV_INTX);
+ 
+ 	raw_spin_unlock_irqrestore(&pp->lock, flags);
+ }
+@@ -189,15 +204,15 @@ static void uniphier_pcie_irq_unmask(struct irq_data *d)
+ {
+ 	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
++	struct uniphier_pcie *pcie = to_uniphier_pcie(pci);
+ 	unsigned long flags;
+ 	u32 val;
+ 
+ 	raw_spin_lock_irqsave(&pp->lock, flags);
+ 
+-	val = readl(priv->base + PCL_RCV_INTX);
++	val = readl(pcie->base + PCL_RCV_INTX);
+ 	val &= ~BIT(irqd_to_hwirq(d) + PCL_RCV_INTX_MASK_SHIFT);
+-	writel(val, priv->base + PCL_RCV_INTX);
++	writel(val, pcie->base + PCL_RCV_INTX);
+ 
+ 	raw_spin_unlock_irqrestore(&pp->lock, flags);
+ }
+@@ -226,13 +241,13 @@ static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+ {
+ 	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
++	struct uniphier_pcie *pcie = to_uniphier_pcie(pci);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	unsigned long reg;
+ 	u32 val, bit;
+ 
+ 	/* INT for debug */
+-	val = readl(priv->base + PCL_RCV_INT);
++	val = readl(pcie->base + PCL_RCV_INT);
+ 
+ 	if (val & PCL_CFG_BW_MGT_STATUS)
+ 		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+@@ -243,16 +258,16 @@ static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+ 	if (val & PCL_CFG_PME_MSI_STATUS)
+ 		dev_dbg(pci->dev, "PME Interrupt\n");
+ 
+-	writel(val, priv->base + PCL_RCV_INT);
++	writel(val, pcie->base + PCL_RCV_INT);
+ 
+ 	/* INTx */
+ 	chained_irq_enter(chip, desc);
+ 
+-	val = readl(priv->base + PCL_RCV_INTX);
++	val = readl(pcie->base + PCL_RCV_INTX);
+ 	reg = FIELD_GET(PCL_RCV_INTX_ALL_STATUS, val);
+ 
+ 	for_each_set_bit(bit, &reg, PCI_NUM_INTX)
+-		generic_handle_domain_irq(priv->legacy_irq_domain, bit);
++		generic_handle_domain_irq(pcie->legacy_irq_domain, bit);
+ 
+ 	chained_irq_exit(chip, desc);
+ }
+@@ -260,7 +275,7 @@ static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+ static int uniphier_pcie_config_legacy_irq(struct pcie_port *pp)
  {
  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--	struct intel_pcie_port *lpp = dev_get_drvdata(pci->dev);
-+	struct intel_pcie *pcie = dev_get_drvdata(pci->dev);
+-	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
++	struct uniphier_pcie *pcie = to_uniphier_pcie(pci);
+ 	struct device_node *np = pci->dev->of_node;
+ 	struct device_node *np_intc;
+ 	int ret = 0;
+@@ -278,9 +293,9 @@ static int uniphier_pcie_config_legacy_irq(struct pcie_port *pp)
+ 		goto out_put_node;
+ 	}
  
--	return intel_pcie_host_setup(lpp);
-+	return intel_pcie_host_setup(pcie);
- }
- 
- static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
-@@ -402,17 +402,17 @@ static int intel_pcie_probe(struct platform_device *pdev)
+-	priv->legacy_irq_domain = irq_domain_add_linear(np_intc, PCI_NUM_INTX,
++	pcie->legacy_irq_domain = irq_domain_add_linear(np_intc, PCI_NUM_INTX,
+ 						&uniphier_intx_domain_ops, pp);
+-	if (!priv->legacy_irq_domain) {
++	if (!pcie->legacy_irq_domain) {
+ 		dev_err(pci->dev, "Failed to get INTx domain\n");
+ 		ret = -ENODEV;
+ 		goto out_put_node;
+@@ -297,14 +312,14 @@ static int uniphier_pcie_config_legacy_irq(struct pcie_port *pp)
+ static int uniphier_pcie_host_init(struct pcie_port *pp)
  {
- 	const struct intel_pcie_soc *data;
- 	struct device *dev = &pdev->dev;
--	struct intel_pcie_port *lpp;
-+	struct intel_pcie *pcie;
- 	struct pcie_port *pp;
- 	struct dw_pcie *pci;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
++	struct uniphier_pcie *pcie = to_uniphier_pcie(pci);
  	int ret;
  
--	lpp = devm_kzalloc(dev, sizeof(*lpp), GFP_KERNEL);
--	if (!lpp)
+ 	ret = uniphier_pcie_config_legacy_irq(pp);
+ 	if (ret)
+ 		return ret;
+ 
+-	uniphier_pcie_irq_enable(priv);
++	uniphier_pcie_irq_enable(pcie);
+ 
+ 	return 0;
+ }
+@@ -313,36 +328,36 @@ static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
+ 	.host_init = uniphier_pcie_host_init,
+ };
+ 
+-static int uniphier_pcie_host_enable(struct uniphier_pcie_priv *priv)
++static int uniphier_pcie_host_enable(struct uniphier_pcie *pcie)
+ {
+ 	int ret;
+ 
+-	ret = clk_prepare_enable(priv->clk);
++	ret = clk_prepare_enable(pcie->clk);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = reset_control_deassert(priv->rst);
++	ret = reset_control_deassert(pcie->rst);
+ 	if (ret)
+ 		goto out_clk_disable;
+ 
+-	uniphier_pcie_init_rc(priv);
++	uniphier_pcie_init_rc(pcie);
+ 
+-	ret = phy_init(priv->phy);
++	ret = phy_init(pcie->phy);
+ 	if (ret)
+ 		goto out_rst_assert;
+ 
+-	ret = uniphier_pcie_wait_rc(priv);
++	ret = uniphier_pcie_wait_rc(pcie);
+ 	if (ret)
+ 		goto out_phy_exit;
+ 
+ 	return 0;
+ 
+ out_phy_exit:
+-	phy_exit(priv->phy);
++	phy_exit(pcie->phy);
+ out_rst_assert:
+-	reset_control_assert(priv->rst);
++	reset_control_assert(pcie->rst);
+ out_clk_disable:
+-	clk_disable_unprepare(priv->clk);
++	clk_disable_unprepare(pcie->clk);
+ 
+ 	return ret;
+ }
+@@ -356,41 +371,41 @@ static const struct dw_pcie_ops dw_pcie_ops = {
+ static int uniphier_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct uniphier_pcie_priv *priv;
++	struct uniphier_pcie *pcie;
+ 	int ret;
+ 
+-	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+-	if (!priv)
 +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
 +	if (!pcie)
  		return -ENOMEM;
  
--	platform_set_drvdata(pdev, lpp);
--	pci = &lpp->pci;
+-	priv->pci.dev = dev;
+-	priv->pci.ops = &dw_pcie_ops;
++	pcie->pci.dev = dev;
++	pcie->pci.ops = &dw_pcie_ops;
+ 
+-	priv->base = devm_platform_ioremap_resource_byname(pdev, "link");
+-	if (IS_ERR(priv->base))
+-		return PTR_ERR(priv->base);
++	pcie->base = devm_platform_ioremap_resource_byname(pdev, "link");
++	if (IS_ERR(pcie->base))
++		return PTR_ERR(pcie->base);
+ 
+-	priv->clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(priv->clk))
+-		return PTR_ERR(priv->clk);
++	pcie->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(pcie->clk))
++		return PTR_ERR(pcie->clk);
+ 
+-	priv->rst = devm_reset_control_get_shared(dev, NULL);
+-	if (IS_ERR(priv->rst))
+-		return PTR_ERR(priv->rst);
++	pcie->rst = devm_reset_control_get_shared(dev, NULL);
++	if (IS_ERR(pcie->rst))
++		return PTR_ERR(pcie->rst);
+ 
+-	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
+-	if (IS_ERR(priv->phy))
+-		return PTR_ERR(priv->phy);
++	pcie->phy = devm_phy_optional_get(dev, "pcie-phy");
++	if (IS_ERR(pcie->phy))
++		return PTR_ERR(pcie->phy);
+ 
+-	platform_set_drvdata(pdev, priv);
 +	platform_set_drvdata(pdev, pcie);
-+	pci = &pcie->pci;
- 	pci->dev = dev;
- 	pp = &pci->pp;
  
-@@ -420,7 +420,7 @@ static int intel_pcie_probe(struct platform_device *pdev)
+-	ret = uniphier_pcie_host_enable(priv);
++	ret = uniphier_pcie_host_enable(pcie);
  	if (ret)
  		return ret;
  
--	ret = intel_pcie_ep_rst_init(lpp);
-+	ret = intel_pcie_ep_rst_init(pcie);
- 	if (ret)
- 		return ret;
+-	priv->pci.pp.ops = &uniphier_pcie_host_ops;
++	pcie->pci.pp.ops = &uniphier_pcie_host_ops;
  
+-	return dw_pcie_host_init(&priv->pci.pp);
++	return dw_pcie_host_init(&pcie->pci.pp);
+ }
+ 
+ static const struct of_device_id uniphier_pcie_match[] = {
 -- 
 2.25.1
 
