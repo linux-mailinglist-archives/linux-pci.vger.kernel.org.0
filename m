@@ -2,349 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 454B245FF21
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 15:16:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CC0945FF27
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 15:19:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245464AbhK0OTz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 27 Nov 2021 09:19:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33458 "EHLO
+        id S235734AbhK0OWz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 27 Nov 2021 09:22:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343515AbhK0ORy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 09:17:54 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8CE5C0613F9
-        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:11:48 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id c4so25146745wrd.9
-        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:11:48 -0800 (PST)
+        with ESMTP id S235610AbhK0OUz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 09:20:55 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47FDC061574
+        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:17:40 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id o13so25122657wrs.12
+        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:17:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=W1ucDj9vJAFoVvso9iUaodUIPODzZVXYrphoOb8WCVM=;
-        b=ZLSoIpXw4N3OumU1Kq6UX6xp0lU7xYtBYtzzAXLlIXggkCuqy0sVz5DhodmrVofh86
-         qMGm0eVY+gFjZm4txnlLcmKJw082SeqOk8C8r2xwvZW0NovlgdyqpDzaVgz0POuJR4DR
-         zFtNacAutj2d1WwMT4FClu+8TTfWoBvCceeh/RFGO2cNejdhBMznCbK82BsI3kuXpg8R
-         7rM6bLvT06OAhIxXQwyKMKAJVigJtu6ZI0b54TtWpZ7p0KXtYoLtNhlBJ+UkoIAkf1b1
-         6xAxq98jFuUXOKmWXrYUH2LQIyoWs14P7zjZ3CemTASrUE5LOU4aDW6M3n4/FU/efXmS
-         lAYA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wfPJG337NiEiGZknamoNSmWy9jdr+ykPSrvVDRBcRhk=;
+        b=R5RdcJGCIMSIyZ1UnkUiDR7CpEO7Gta7R1EHBMKnW8bqul9Aj6f9wLXlF88UXkXKll
+         yCjk1fKBoeFuurSKWYi27Ip8mb+gXZm+dDwaEjELIzwHju99NysyNvKezJr5O2nmOryw
+         lgd0zp6Ccn+L1zNjXfjVeYl92KNK1JPKnv4URK/uypK1FAdQVYoXbE+dI9mAXtA8VDOI
+         EUo/okiS4TIvvE4NUC8I/ngrmMl41dYEai+4wXDBm0id14ou/9pArtNmzuUbfY6RVqec
+         g9zVxuCAKh9P3mUfyQ9lnQu2udZKPradeV/jEDSIHbYhfByD3488eZ1mXyWZOXOuNzrR
+         JMZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=W1ucDj9vJAFoVvso9iUaodUIPODzZVXYrphoOb8WCVM=;
-        b=yMG/3c3GJG5UHr3bna+a9iIP+ApNyliWnmD1SOHD92ZtDIf2CaeIdjWj4fZuMCp6KU
-         a/RUXYYvu6kE5cX41g+7i4AUjwPtMu2I3hi8C2CfmitCA1yqC5ByM/XoyaiZbqdhhdxR
-         HWpiupxm4nuLcNWsoOlYXKGKRJ6Bx3CGzYrw+8IV/5JETku5p3ouWesVi5Rk3aXXat+5
-         QULvA9yKzJezODqY13eAQMk0Zs1nrLHMelN7fRCD6ZBatNWHGgMC8roLfp3e1rxxC65U
-         JOeLodvjQ+W3jIMQjc+4/ysKd+ewqotTN2eF+N2MRUecuNwsgmYjv7ySED36z2XJJAQ1
-         HDaQ==
-X-Gm-Message-State: AOAM531h1de1ygksnMkLmSLfz1Zw4nP78wYGgeqsZg3pLJYUUrjoHWdY
-        fDdATv4llpTNXDrh5zPwyzdz1wIuqu/q/Q==
-X-Google-Smtp-Source: ABdhPJxfpKdDx+ZQQUwFaTDpk2dmpJ9xfWw1bt/hUu7o3rWAWdVzzK/jOXOdRR54NRxGCv9Aqp/L4Q==
-X-Received: by 2002:a5d:5504:: with SMTP id b4mr20893188wrv.307.1638022307352;
-        Sat, 27 Nov 2021 06:11:47 -0800 (PST)
-Received: from claire-ThinkPad-T470.localdomain (dynamic-2a01-0c22-7349-1000-d163-c2fa-698a-934f.c22.pool.telefonica.de. [2a01:c22:7349:1000:d163:c2fa:698a:934f])
-        by smtp.gmail.com with ESMTPSA id q26sm8754522wrc.39.2021.11.27.06.11.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wfPJG337NiEiGZknamoNSmWy9jdr+ykPSrvVDRBcRhk=;
+        b=x6X7Xsm2zWMxeizsYKLx1aHXYs/2CzrHNBXUBteQiGAF3hkfRZqdHU0128dzbrNYLm
+         uxnOzTrDqqxro7aWNC5XI1vWCy1adX5jXWX1zBfQnjWMBUXGqPKBz51QEal2JkZNjQc+
+         CMtepOIfr7+I1biTUsm1ha6LaJD20QKkpsjtFjtkEGXmFrvSCJcLiDnjIXdCmE20F5PA
+         RtJtegv02v5Lul6K8qjFzr1BMBSfY4Gnm8uJAYxrCK8JDXkWuIE+C25qV1cUF4UO8wBJ
+         mgZylSubAT3tAeEhR5FJG0lDlKzy8JvFLG6KqFDuYHFWxFByhgk8EiPYGfCjdB4inDC7
+         M6Sw==
+X-Gm-Message-State: AOAM530ZNhj6eZ+woxfBEey08C73nVttViQ4M55kma9OpXArS+hHDE4K
+        EnaBlHvw00wRVCSn4PivTaxb+/QcjiiFhw==
+X-Google-Smtp-Source: ABdhPJys5pL695Uuh57hZFp3qna2Z8S1pa6xz3jsx1M+Y+8YUOVwsk8cf1FMa3h1Zr+vBB5Zv/c9eA==
+X-Received: by 2002:adf:e2c4:: with SMTP id d4mr20586303wrj.568.1638022659177;
+        Sat, 27 Nov 2021 06:17:39 -0800 (PST)
+Received: from claire-ThinkPad-T470 (dynamic-2a01-0c22-7349-1000-d163-c2fa-698a-934f.c22.pool.telefonica.de. [2a01:c22:7349:1000:d163:c2fa:698a:934f])
+        by smtp.gmail.com with ESMTPSA id l21sm8609593wrb.38.2021.11.27.06.17.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Nov 2021 06:11:47 -0800 (PST)
+        Sat, 27 Nov 2021 06:17:38 -0800 (PST)
+Date:   Sat, 27 Nov 2021 15:17:37 +0100
 From:   Fan Fei <ffclaire1224@gmail.com>
-To:     bjorn@helgaas.com
-Cc:     Fan Fei <ffclaire1224@gmail.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 13/13] PCI: rcar: Replace device * with platform_device *
-Date:   Sat, 27 Nov 2021 15:11:21 +0100
-Message-Id: <7b7de38c0b3eb0b497f3eed2a3a62739b351d1e7.1638022050.git.ffclaire1224@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1638022048.git.ffclaire1224@gmail.com>
-References: <cover.1638022048.git.ffclaire1224@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/4] Remove device * in struct
+Message-ID: <20211127141737.GA46129@claire-ThinkPad-T470>
+References: <cover.1637533108.git.ffclaire1224@gmail.com>
+ <20211123160531.GA2225123@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211123160531.GA2225123@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some PCI controller struct contain "device *", while others contain
-"platform_device *". Unify "device *dev" to "platform_device *pdev" in
-struct rcar_pcie, because PCI controllers interact with platform_device
-directly, not device, to enumerate the controlled device. Modify rcar host
-and endpoint file in this patch, because both struct include member
-rcar_pcie.
+On Tue, Nov 23, 2021 at 10:05:31AM -0600, Bjorn Helgaas wrote:
+> On Tue, Nov 23, 2021 at 04:38:34PM +0100, Fan Fei wrote:
+> > Remove "device *" in structs that refer struct dw_pcie or cdns_pcie.
+> > Because these two struct contain a "struct device *" already.
+> > 
+> > Fan Fei (4): PCI: j721e: Remove cast of void* type PCI: tegra194:
+> > Remove device * in struct PCI: al: Remove device * in struct PCI:
+> > j721e: Remove device * in struct
+> > 
+> >  drivers/pci/controller/cadence/pci-j721e.c |  14 ++-
+> >  drivers/pci/controller/dwc/pcie-al.c       |  10 +-
+> >  drivers/pci/controller/dwc/pcie-tegra194.c | 109 +++++++++++----------
+> >  3 files changed, 69 insertions(+), 64 deletions(-)
+> 
+> Your "Prefer of_device_get_match_data()" series applies cleanly on my
+> "main" branch.
+> 
+> But this series doesn't apply cleanly on "main" (v5.16-rc1) or on top of
+> the "Prefer of_device_get_match_data()" series.
+> 
+> Can you rebase to apply on v5.16-rc1 or, if there are conflicts with the
+> previous series, on top of that previous series?
+>
+I sent the 1st patch sereis "rename-struct", and the 2nd patch series 
+"unify-platform_device" to the mailing list.
 
-Signed-off-by: Fan Fei <ffclaire1224@gmail.com>
----
- drivers/pci/controller/pcie-rcar-ep.c   | 40 ++++++++++++++-----------
- drivers/pci/controller/pcie-rcar-host.c | 27 +++++++++--------
- drivers/pci/controller/pcie-rcar.h      |  2 +-
- 3 files changed, 37 insertions(+), 32 deletions(-)
+Also, does this response go the correct list?
 
-diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
-index f9682df1da61..1a471220f560 100644
---- a/drivers/pci/controller/pcie-rcar-ep.c
-+++ b/drivers/pci/controller/pcie-rcar-ep.c
-@@ -87,10 +87,11 @@ static int rcar_pcie_ep_get_window(struct rcar_pcie_endpoint *ep,
- 	return -EINVAL;
- }
- 
--static int rcar_pcie_parse_outbound_ranges(struct rcar_pcie_endpoint *ep,
--					   struct platform_device *pdev)
-+static int rcar_pcie_parse_outbound_ranges(struct rcar_pcie_endpoint *ep)
- {
- 	struct rcar_pcie *pcie = &ep->pcie;
-+	struct platform_device *pdev = pcie->pdev;
-+	struct device *dev = &pdev->dev;
- 	char outbound_name[10];
- 	struct resource *res;
- 	unsigned int i = 0;
-@@ -102,13 +103,13 @@ static int rcar_pcie_parse_outbound_ranges(struct rcar_pcie_endpoint *ep,
- 						   IORESOURCE_MEM,
- 						   outbound_name);
- 		if (!res) {
--			dev_err(pcie->dev, "missing outbound window %u\n", i);
-+			dev_err(dev, "missing outbound window %u\n", i);
- 			return -EINVAL;
- 		}
--		if (!devm_request_mem_region(&pdev->dev, res->start,
-+		if (!devm_request_mem_region(dev, res->start,
- 					     resource_size(res),
- 					     outbound_name)) {
--			dev_err(pcie->dev, "Cannot request memory region %s.\n",
-+			dev_err(dev, "Cannot request memory region %s.\n",
- 				outbound_name);
- 			return -EIO;
- 		}
-@@ -125,12 +126,12 @@ static int rcar_pcie_parse_outbound_ranges(struct rcar_pcie_endpoint *ep,
- 	return 0;
- }
- 
--static int rcar_pcie_ep_get_pdata(struct rcar_pcie_endpoint *ep,
--				  struct platform_device *pdev)
-+static int rcar_pcie_ep_get_pdata(struct rcar_pcie_endpoint *ep)
- {
- 	struct rcar_pcie *pcie = &ep->pcie;
- 	struct pci_epc_mem_window *window;
--	struct device *dev = pcie->dev;
-+	struct platform_device *pdev = pcie->pdev;
-+	struct device *dev = &pdev->dev;
- 	struct resource res;
- 	int err;
- 
-@@ -146,7 +147,7 @@ static int rcar_pcie_ep_get_pdata(struct rcar_pcie_endpoint *ep,
- 	if (!ep->ob_window)
- 		return -ENOMEM;
- 
--	rcar_pcie_parse_outbound_ranges(ep, pdev);
-+	rcar_pcie_parse_outbound_ranges(ep);
- 
- 	err = of_property_read_u8(dev->of_node, "max-functions",
- 				  &ep->max_functions);
-@@ -201,13 +202,14 @@ static int rcar_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 	dma_addr_t cpu_addr = epf_bar->phys_addr;
- 	enum pci_barno bar = epf_bar->barno;
- 	struct rcar_pcie *pcie = &ep->pcie;
-+	struct device *dev = &pcie->pdev->dev;
- 	u32 mask;
- 	int idx;
- 	int err;
- 
- 	idx = find_first_zero_bit(ep->ib_window_map, ep->num_ib_windows);
- 	if (idx >= ep->num_ib_windows) {
--		dev_err(pcie->dev, "no free inbound window\n");
-+		dev_err(dev, "no free inbound window\n");
- 		return -EINVAL;
- 	}
- 
-@@ -236,7 +238,7 @@ static int rcar_pcie_ep_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 
- 	err = rcar_pcie_wait_for_phyrdy(pcie);
- 	if (err) {
--		dev_err(pcie->dev, "phy not ready\n");
-+		dev_err(dev, "phy not ready\n");
- 		return -EINVAL;
- 	}
- 
-@@ -288,6 +290,7 @@ static int rcar_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, u8 vfn,
- {
- 	struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
- 	struct rcar_pcie *pcie = &ep->pcie;
-+	struct device *dev = &pcie->pdev->dev;
- 	struct resource_entry win;
- 	struct resource res;
- 	int window;
-@@ -296,13 +299,13 @@ static int rcar_pcie_ep_map_addr(struct pci_epc *epc, u8 fn, u8 vfn,
- 	/* check if we have a link. */
- 	err = rcar_pcie_wait_for_dl(pcie);
- 	if (err) {
--		dev_err(pcie->dev, "link not up\n");
-+		dev_err(dev, "link not up\n");
- 		return err;
- 	}
- 
- 	window = rcar_pcie_ep_get_window(ep, addr);
- 	if (window < 0) {
--		dev_err(pcie->dev, "failed to get corresponding window\n");
-+		dev_err(dev, "failed to get corresponding window\n");
- 		return -EINVAL;
- 	}
- 
-@@ -347,23 +350,24 @@ static int rcar_pcie_ep_assert_intx(struct rcar_pcie_endpoint *ep,
- 				    u8 fn, u8 intx)
- {
- 	struct rcar_pcie *pcie = &ep->pcie;
-+	struct device *dev = &pcie->pdev->dev;
- 	u32 val;
- 
- 	val = rcar_pci_read_reg(pcie, PCIEMSITXR);
- 	if ((val & PCI_MSI_FLAGS_ENABLE)) {
--		dev_err(pcie->dev, "MSI is enabled, cannot assert INTx\n");
-+		dev_err(dev, "MSI is enabled, cannot assert INTx\n");
- 		return -EINVAL;
- 	}
- 
- 	val = rcar_pci_read_reg(pcie, PCICONF(1));
- 	if ((val & INTDIS)) {
--		dev_err(pcie->dev, "INTx message transmission is disabled\n");
-+		dev_err(dev, "INTx message transmission is disabled\n");
- 		return -EINVAL;
- 	}
- 
- 	val = rcar_pci_read_reg(pcie, PCIEINTXR);
- 	if ((val & ASTINTX)) {
--		dev_err(pcie->dev, "INTx is already asserted\n");
-+		dev_err(dev, "INTx is already asserted\n");
- 		return -EINVAL;
- 	}
- 
-@@ -487,7 +491,7 @@ static int rcar_pcie_ep_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	pcie = &ep->pcie;
--	pcie->dev = dev;
-+	pcie->pdev = pdev;
- 
- 	pm_runtime_enable(dev);
- 	err = pm_runtime_resume_and_get(dev);
-@@ -496,7 +500,7 @@ static int rcar_pcie_ep_probe(struct platform_device *pdev)
- 		goto err_pm_disable;
- 	}
- 
--	err = rcar_pcie_ep_get_pdata(ep, pdev);
-+	err = rcar_pcie_ep_get_pdata(ep);
- 	if (err < 0) {
- 		dev_err(dev, "failed to request resources: %d\n", err);
- 		goto err_pm_put;
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index e12c2d8be05a..4984e4d0078d 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -216,7 +216,7 @@ static struct pci_ops rcar_pcie_ops = {
- 
- static void rcar_pcie_force_speedup(struct rcar_pcie *pcie)
- {
--	struct device *dev = pcie->dev;
-+	struct device *dev = &pcie->pdev->dev;
- 	unsigned int timeout = 1000;
- 	u32 macsr;
- 
-@@ -312,7 +312,7 @@ static int rcar_pcie_enable(struct rcar_pcie_host *host)
- 
- static int phy_wait_for_ack(struct rcar_pcie *pcie)
- {
--	struct device *dev = pcie->dev;
-+	struct device *dev = &pcie->pdev->dev;
- 	unsigned int timeout = 100;
- 
- 	while (timeout--) {
-@@ -490,7 +490,7 @@ static irqreturn_t rcar_pcie_msi_irq(int irq, void *data)
- 	struct rcar_pcie_host *host = data;
- 	struct rcar_pcie *pcie = &host->pcie;
- 	struct rcar_msi *msi = &host->msi;
--	struct device *dev = pcie->dev;
-+	struct device *dev = &pcie->pdev->dev;
- 	unsigned long reg;
- 
- 	reg = rcar_pci_read_reg(pcie, PCIEMSIFR);
-@@ -653,20 +653,21 @@ static struct msi_domain_info rcar_msi_info = {
- static int rcar_allocate_domains(struct rcar_msi *msi)
- {
- 	struct rcar_pcie *pcie = &msi_to_host(msi)->pcie;
--	struct fwnode_handle *fwnode = dev_fwnode(pcie->dev);
-+	struct device *dev = &pcie->pdev->dev;
-+	struct fwnode_handle *fwnode = dev_fwnode(dev);
- 	struct irq_domain *parent;
- 
- 	parent = irq_domain_create_linear(fwnode, INT_PCI_MSI_NR,
- 					  &rcar_msi_domain_ops, msi);
- 	if (!parent) {
--		dev_err(pcie->dev, "failed to create IRQ domain\n");
-+		dev_err(dev, "failed to create IRQ domain\n");
- 		return -ENOMEM;
- 	}
- 	irq_domain_update_bus_token(parent, DOMAIN_BUS_NEXUS);
- 
- 	msi->domain = pci_msi_create_irq_domain(fwnode, &rcar_msi_info, parent);
- 	if (!msi->domain) {
--		dev_err(pcie->dev, "failed to create MSI domain\n");
-+		dev_err(dev, "failed to create MSI domain\n");
- 		irq_domain_remove(parent);
- 		return -ENOMEM;
- 	}
-@@ -685,7 +686,7 @@ static void rcar_free_domains(struct rcar_msi *msi)
- static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
- {
- 	struct rcar_pcie *pcie = &host->pcie;
--	struct device *dev = pcie->dev;
-+	struct device *dev = &pcie->pdev->dev;
- 	struct rcar_msi *msi = &host->msi;
- 	struct resource res;
- 	int err;
-@@ -751,7 +752,7 @@ static void rcar_pcie_teardown_msi(struct rcar_pcie_host *host)
- static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
- {
- 	struct rcar_pcie *pcie = &host->pcie;
--	struct device *dev = pcie->dev;
-+	struct device *dev = &pcie->pdev->dev;
- 	struct resource res;
- 	int err, i;
- 
-@@ -821,7 +822,7 @@ static int rcar_pcie_inbound_ranges(struct rcar_pcie *pcie,
- 
- 	while (cpu_addr < cpu_end) {
- 		if (idx >= MAX_NR_INBOUND_MAPS - 1) {
--			dev_err(pcie->dev, "Failed to map inbound regions!\n");
-+			dev_err(&pcie->pdev->dev, "Failed to map inbound regions!\n");
- 			return -EINVAL;
- 		}
- 		/*
-@@ -899,13 +900,13 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 
- 	host = pci_host_bridge_priv(bridge);
- 	pcie = &host->pcie;
--	pcie->dev = dev;
-+	pcie->pdev = pdev;
- 	platform_set_drvdata(pdev, host);
- 
--	pm_runtime_enable(pcie->dev);
--	err = pm_runtime_get_sync(pcie->dev);
-+	pm_runtime_enable(dev);
-+	err = pm_runtime_get_sync(dev);
- 	if (err < 0) {
--		dev_err(pcie->dev, "pm_runtime_get_sync failed\n");
-+		dev_err(dev, "pm_runtime_get_sync failed\n");
- 		goto err_pm_put;
- 	}
- 
-diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
-index 9bb125db85c6..1f33ceb51b83 100644
---- a/drivers/pci/controller/pcie-rcar.h
-+++ b/drivers/pci/controller/pcie-rcar.h
-@@ -125,7 +125,7 @@
- #define MAX_NR_INBOUND_MAPS	6
- 
- struct rcar_pcie {
--	struct device		*dev;
-+	struct platform_device		*pdev;
- 	void __iomem		*base;
- };
- 
--- 
-2.25.1
-
+Thank you for helping me learn the rules to work with the kernel 
+community.
+>
+Kind regards
+Fan 
