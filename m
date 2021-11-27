@@ -2,57 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71C6E45FF1B
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 15:16:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6BA745FF1C
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 15:16:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235744AbhK0OTt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 27 Nov 2021 09:19:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33870 "EHLO
+        id S235878AbhK0OTv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 27 Nov 2021 09:19:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235878AbhK0ORs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 09:17:48 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87127C0613F1
-        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:11:37 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id c6-20020a05600c0ac600b0033c3aedd30aso8675851wmr.5
-        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:11:37 -0800 (PST)
+        with ESMTP id S243525AbhK0ORv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 27 Nov 2021 09:17:51 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 527DBC0613F2
+        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:11:39 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id 133so10513381wme.0
+        for <linux-pci@vger.kernel.org>; Sat, 27 Nov 2021 06:11:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EZ/a1hLw4ib4u/sKDQg2z3YvvoSc0gXGQR3XWvJND3g=;
-        b=oqhFJrPbWY79Vj5f5L0bx09G+WbgjAONBUVmiErfATsmYwQoMdhG8D9QdXevd+QSnW
-         oFkYAPUvdbYBbcAoblBCypCHSrTtbmzWQi5BElfjXTLjJLYPb0mHfuyqacsZpmSuw8Mp
-         jAGZTQe+ZNdkLFkKcBAFtXCR3432+ccFRYbrDfn1I4DLbmzLbsxNz6T4OAzfHd99Pz5j
-         3DLKpkXyksIKCVkE4Y96/poYPSA99CT+l5SlFt3CHzZigvG6hR0EIaJjRWwDUh5+t0PP
-         JCSg/0EPPPpH+tOhY3xwheo1lSeQZ36ksmtPYPS3qs/vHDvoUVyZ3zGR0/lC9uDeRxTs
-         Hp5A==
+        bh=i++CnfQul7tulbjn5Ada0LDULJ8HgeGM/trVrGjJFJQ=;
+        b=JDG2eaBM7xt7oDxiP7tHPrpYdroCV22/iciUUmf+Lv3t5ESc9DBiPzqtn0dNv3gr1r
+         Xbow4y2zMJ22NpBMiOX8hnCuH4ljA2veSmU48qFq/AZjT4aTVu5kq6XpI5gIFqK1wLOT
+         NXq2FeB7XTmdX8H+2n5lb1pqSF5tL4Rv00AgUJqgLs71BKSzJoJqSqenxGf7uoqeNCFG
+         ZErojsOrvuRmscUaJiH3ImZiCW2wdpBSkm830IMTurNpRg0yG7zkkafE42yNlX9uRNUJ
+         g2MKa657GTOSqDVDKWzrpnXGuhOv3hU2khxkYlAwT6dRr0z0mXjTPjzrgf505nCDVApd
+         bZ4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EZ/a1hLw4ib4u/sKDQg2z3YvvoSc0gXGQR3XWvJND3g=;
-        b=qpwZHYiRX9r5a3bBH+krtjHcoq9fy0Nq+otLu7m+IKcvrfaCrtzO9HLy4PsK6alFhN
-         VAg79NfY8AmRVa/H0uuXKx7byujbU7ogaM7C9UhO65Dii7vrqya6s1Y+NeXADVKqY9j3
-         HPMc9kx3pLvakBuSHgfQlrKKiPAqz6if/X2dsf0Oq3c3oA1+4b00ZWwNO40SH++umOmZ
-         DppBv3DqWP16KRccrw04iPHOAvdudgxPmkj/rBM98ox1DbVybresxJX4w1djyhvrE8Ah
-         ULmDS1JR62Db2bL6cvBB3lav5LrZk9xEGYFWfS2PuFloIiZx5wno7uhVxTCrr9WH4nG5
-         JuRw==
-X-Gm-Message-State: AOAM533vH7UpvBdgHitpmzARk+GH9W2prc3sOrz7sUKsbnRQCw+ZcXIM
-        gTRAH6Jt90KBM5H/Uc0shmwnJ3BWG0Xk4Q==
-X-Google-Smtp-Source: ABdhPJwsQ8RBGmaR68eJc+uAbx2KvJIE4ouM9lYecwGOYm0nOmZ5Vt0dBnsmDhqgI1f4t7Ap4feSIw==
-X-Received: by 2002:a1c:7c19:: with SMTP id x25mr23192727wmc.42.1638022296061;
-        Sat, 27 Nov 2021 06:11:36 -0800 (PST)
+        bh=i++CnfQul7tulbjn5Ada0LDULJ8HgeGM/trVrGjJFJQ=;
+        b=rTIxcfg63Sf4jnw0zHkf66hRXU9iI+6FHv+rtXf3hD1P+xslTinqcWXu+8MzTaOSsG
+         RHi1Kpe0d5RtMF1wN2DTypEQyr6CQXKygaBPjxP6Urh3vH7hVlC48dfT8mvCLniDKm/4
+         sdH4hyzZ2moKUg/qxf563L9i2lAqpq0qHJm4nvCr0lL6hbo2emjYKyB4I0AwWxLbOiu8
+         KCRZwOQEzrUlCLDv1pDzaYxMgGwQ92O0csy88pv7mV2PH/wQEXmjMNDDbRCKhSQaDRef
+         /swo8xdlJhRiQt8swwFcg1/peUsNPstIPJNYHRrDU9wVZSosythaq13n2VzEhAPYqJXc
+         ks/Q==
+X-Gm-Message-State: AOAM530nsXlK3meK6PQrtvAyoJac2KYWyehB0SZi7zRJ/KnjgjQOdWM8
+        G6dfpNyngqT8WckmcbaBZwHziBp3NHcHTA==
+X-Google-Smtp-Source: ABdhPJxnQfSJTSG39P3LAxqNbdYXXfrM26rfeDd0L9BJoklL7/7Xp+2+FrR4Rw+gcHo2e2wyWuGppQ==
+X-Received: by 2002:a05:600c:4303:: with SMTP id p3mr23333159wme.128.1638022297841;
+        Sat, 27 Nov 2021 06:11:37 -0800 (PST)
 Received: from claire-ThinkPad-T470.localdomain (dynamic-2a01-0c22-7349-1000-d163-c2fa-698a-934f.c22.pool.telefonica.de. [2a01:c22:7349:1000:d163:c2fa:698a:934f])
-        by smtp.gmail.com with ESMTPSA id q26sm8754522wrc.39.2021.11.27.06.11.35
+        by smtp.gmail.com with ESMTPSA id q26sm8754522wrc.39.2021.11.27.06.11.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Nov 2021 06:11:35 -0800 (PST)
+        Sat, 27 Nov 2021 06:11:37 -0800 (PST)
 From:   Fan Fei <ffclaire1224@gmail.com>
 To:     bjorn@helgaas.com
 Cc:     Fan Fei <ffclaire1224@gmail.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 06/13] PCI: brcmstb: Replace device * with platform_device *
-Date:   Sat, 27 Nov 2021 15:11:14 +0100
-Message-Id: <fd50e5903c6cdb2e8d7bc9460e47cb848da4badb.1638022049.git.ffclaire1224@gmail.com>
+Subject: [PATCH 07/13] PCI: mediatek-gen3: Replace device * with platform_device *
+Date:   Sat, 27 Nov 2021 15:11:15 +0100
+Message-Id: <301c798d4799fd2a941b49b7acab119c484d0744.1638022049.git.ffclaire1224@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1638022048.git.ffclaire1224@gmail.com>
 References: <cover.1638022048.git.ffclaire1224@gmail.com>
@@ -64,165 +64,165 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Some PCI controller struct contain "device *", while others contain
 "platform_device *". Unify "device *dev" to "platform_device *pdev" in
-struct brcmstb_pcie, because PCI controllers interact with platform_device
+struct mtk_pcie, because PCI controllers interact with platform_device
 directly, not device, to enumerate the controlled device.
 
 Signed-off-by: Fan Fei <ffclaire1224@gmail.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 35 ++++++++++++++-------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+ drivers/pci/controller/pcie-mediatek-gen3.c | 36 ++++++++++++---------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 1fc7bd49a7ad..e6f0c3e561b6 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -278,7 +278,7 @@ struct brcm_msi {
- 
- /* Internal PCIe Host Controller Information.*/
- struct brcm_pcie {
--	struct device		*dev;
-+	struct platform_device		*pdev;
- 	void __iomem		*base;
- 	struct clk		*clk;
- 	struct device_node	*np;
-@@ -641,7 +641,7 @@ static int brcm_pcie_enable_msi(struct brcm_pcie *pcie)
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index 459fe88297b0..6e347be00b0d 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -130,7 +130,7 @@ struct mtk_msi_set {
+  * @msi_irq_in_use: bit map for assigned MSI IRQ
+  */
+ struct mtk_gen3_pcie {
+-	struct device *dev;
++	struct platform_device *pdev;
+ 	void __iomem *base;
+ 	phys_addr_t reg_base;
+ 	struct reset_control *mac_reset;
+@@ -213,11 +213,12 @@ static int mtk_pcie_set_trans_table(struct mtk_gen3_pcie *pcie,
+ 				    resource_size_t size,
+ 				    unsigned long type, int num)
  {
- 	struct brcm_msi *msi;
- 	int irq, ret;
--	struct device *dev = pcie->dev;
 +	struct device *dev = &pcie->pdev->dev;
+ 	void __iomem *table;
+ 	u32 val;
  
- 	irq = irq_of_parse_and_map(dev->of_node, 1);
- 	if (irq <= 0) {
-@@ -780,7 +780,7 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
+ 	if (num >= PCIE_MAX_TRANS_TABLES) {
+-		dev_err(pcie->dev, "not enough translate table for addr: %#llx, limited to [%d]\n",
++		dev_err(dev, "not enough translate table for addr: %#llx, limited to [%d]\n",
+ 			(unsigned long long)cpu_addr, PCIE_MAX_TRANS_TABLES);
+ 		return -ENODEV;
+ 	}
+@@ -275,6 +276,7 @@ static void mtk_pcie_enable_msi(struct mtk_gen3_pcie *pcie)
+ 
+ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
  {
- 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
- 	struct resource_entry *entry;
--	struct device *dev = pcie->dev;
-+	struct device *dev = &pcie->pdev->dev;
- 	u64 lowest_pcie_addr = ~(u64)0;
- 	int ret, i = 0;
- 	u64 size = 0;
-@@ -866,7 +866,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
- 	u64 rc_bar2_offset, rc_bar2_size;
- 	void __iomem *base = pcie->base;
--	struct device *dev = pcie->dev;
 +	struct device *dev = &pcie->pdev->dev;
  	struct resource_entry *entry;
- 	bool ssc_good = false;
- 	struct resource *res;
-@@ -984,7 +984,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 			continue;
- 
- 		if (num_out_wins >= BRCM_NUM_PCIE_OUT_WINS) {
--			dev_err(pcie->dev, "too many outbound wins\n");
-+			dev_err(dev, "too many outbound wins\n");
- 			return -EINVAL;
- 		}
- 
-@@ -1067,7 +1067,7 @@ static void brcm_pcie_enter_l23(struct brcm_pcie *pcie)
+ 	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+ 	unsigned int table_index = 0;
+@@ -320,7 +322,7 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+ 				 PCI_PM_D3COLD_WAIT * USEC_PER_MSEC);
+ 	if (err) {
+ 		val = readl_relaxed(pcie->base + PCIE_LTSSM_STATUS_REG);
+-		dev_err(pcie->dev, "PCIe link down, ltssm reg val: %#x\n", val);
++		dev_err(dev, "PCIe link down, ltssm reg val: %#x\n", val);
+ 		return err;
  	}
  
- 	if (!l23)
--		dev_err(pcie->dev, "failed to enter low-power link state\n");
-+		dev_err(&pcie->pdev->dev, "failed to enter low-power link state\n");
- }
+@@ -352,7 +354,7 @@ static int mtk_pcie_startup_port(struct mtk_gen3_pcie *pcie)
+ 		if (err)
+ 			return err;
  
- static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
-@@ -1101,7 +1101,7 @@ static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
+-		dev_dbg(pcie->dev, "set %s trans window[%d]: cpu_addr = %#llx, pci_addr = %#llx, size = %#llx\n",
++		dev_dbg(dev, "set %s trans window[%d]: cpu_addr = %#llx, pci_addr = %#llx, size = %#llx\n",
+ 			range_type, table_index, (unsigned long long)cpu_addr,
+ 			(unsigned long long)pci_addr, (unsigned long long)size);
  
- 	ret = (tmp & combined_mask) == val ? 0 : -EIO;
- 	if (ret)
--		dev_err(pcie->dev, "failed to %s phy\n", (start ? "start" : "stop"));
-+		dev_err(&pcie->pdev->dev, "failed to %s phy\n", (start ? "start" : "stop"));
- 
- 	return ret;
- }
-@@ -1231,24 +1231,25 @@ static const struct of_device_id brcm_pcie_match[] = {
- 
- static int brcm_pcie_probe(struct platform_device *pdev)
+@@ -397,6 +399,7 @@ static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
  {
-+	struct device *dev = &pdev->dev;
- 	struct device_node *np = pdev->dev.of_node, *msi_np;
- 	struct pci_host_bridge *bridge;
- 	const struct pcie_cfg_data *data;
- 	struct brcm_pcie *pcie;
+ 	struct mtk_msi_set *msi_set = irq_data_get_irq_chip_data(data);
+ 	struct mtk_gen3_pcie *pcie = data->domain->host_data;
++	struct device *dev = &pcie->pdev->dev;
+ 	unsigned long hwirq;
+ 
+ 	hwirq =	data->hwirq % PCIE_MSI_IRQS_PER_SET;
+@@ -404,7 +407,7 @@ static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	msg->address_hi = upper_32_bits(msi_set->msg_addr);
+ 	msg->address_lo = lower_32_bits(msi_set->msg_addr);
+ 	msg->data = hwirq;
+-	dev_dbg(pcie->dev, "msi#%#lx address_hi %#x address_lo %#x data %d\n",
++	dev_dbg(dev, "msi#%#lx address_hi %#x address_lo %#x data %d\n",
+ 		hwirq, msg->address_hi, msg->address_lo, msg->data);
+ }
+ 
+@@ -575,7 +578,7 @@ static const struct irq_domain_ops intx_domain_ops = {
+ 
+ static int mtk_pcie_init_irq_domains(struct mtk_gen3_pcie *pcie)
+ {
+-	struct device *dev = pcie->dev;
++	struct device *dev = &pcie->pdev->dev;
+ 	struct device_node *intc_node, *node = dev->of_node;
  	int ret;
  
--	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
-+	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
- 	if (!bridge)
- 		return -ENOMEM;
+@@ -691,8 +694,8 @@ static void mtk_pcie_irq_handler(struct irq_desc *desc)
  
--	data = of_device_get_match_data(&pdev->dev);
-+	data = of_device_get_match_data(dev);
- 	if (!data) {
- 		pr_err("failed to look up compatible string\n");
- 		return -EINVAL;
- 	}
+ static int mtk_pcie_setup_irq(struct mtk_gen3_pcie *pcie)
+ {
+-	struct device *dev = pcie->dev;
+-	struct platform_device *pdev = to_platform_device(dev);
++	struct platform_device *pdev = pcie->pdev;
++	struct device *dev = &pdev->dev;
+ 	int err;
  
- 	pcie = pci_host_bridge_priv(bridge);
--	pcie->dev = &pdev->dev;
+ 	err = mtk_pcie_init_irq_domains(pcie);
+@@ -710,8 +713,8 @@ static int mtk_pcie_setup_irq(struct mtk_gen3_pcie *pcie)
+ 
+ static int mtk_pcie_parse_port(struct mtk_gen3_pcie *pcie)
+ {
+-	struct device *dev = pcie->dev;
+-	struct platform_device *pdev = to_platform_device(dev);
++	struct platform_device *pdev = pcie->pdev;
++	struct device *dev = &pdev->dev;
+ 	struct resource *regs;
+ 	int ret;
+ 
+@@ -764,7 +767,7 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie *pcie)
+ 
+ static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
+ {
+-	struct device *dev = pcie->dev;
++	struct device *dev = &pcie->pdev->dev;
+ 	int err;
+ 
+ 	/* PHY power on and enable pipe clock */
+@@ -811,10 +814,11 @@ static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
+ 
+ static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie)
+ {
++	struct device *dev = &pcie->pdev->dev;
+ 	clk_bulk_disable_unprepare(pcie->num_clks, pcie->clks);
+ 
+-	pm_runtime_put_sync(pcie->dev);
+-	pm_runtime_disable(pcie->dev);
++	pm_runtime_put_sync(dev);
++	pm_runtime_disable(dev);
+ 	reset_control_assert(pcie->mac_reset);
+ 
+ 	phy_power_off(pcie->phy);
+@@ -865,7 +869,7 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+ 
+ 	pcie = pci_host_bridge_priv(host);
+ 
+-	pcie->dev = dev;
 +	pcie->pdev = pdev;
- 	pcie->np = np;
- 	pcie->reg_offsets = data->offsets;
- 	pcie->type = data->type;
-@@ -1259,7 +1260,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	if (IS_ERR(pcie->base))
- 		return PTR_ERR(pcie->base);
+ 	platform_set_drvdata(pdev, pcie);
  
--	pcie->clk = devm_clk_get_optional(&pdev->dev, "sw_pcie");
-+	pcie->clk = devm_clk_get_optional(dev, "sw_pcie");
- 	if (IS_ERR(pcie->clk))
- 		return PTR_ERR(pcie->clk);
- 
-@@ -1270,15 +1271,15 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 
- 	ret = clk_prepare_enable(pcie->clk);
- 	if (ret) {
--		dev_err(&pdev->dev, "could not enable clock\n");
-+		dev_err(dev, "could not enable clock\n");
- 		return ret;
+ 	err = mtk_pcie_setup(pcie);
+@@ -961,7 +965,7 @@ static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
+ 	/* Trigger link to L2 state */
+ 	err = mtk_pcie_turn_off_link(pcie);
+ 	if (err) {
+-		dev_err(pcie->dev, "cannot enter L2 state\n");
++		dev_err(dev, "cannot enter L2 state\n");
+ 		return err;
  	}
--	pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
-+	pcie->rescal = devm_reset_control_get_optional_shared(dev, "rescal");
- 	if (IS_ERR(pcie->rescal)) {
- 		clk_disable_unprepare(pcie->clk);
- 		return PTR_ERR(pcie->rescal);
- 	}
--	pcie->perst_reset = devm_reset_control_get_optional_exclusive(&pdev->dev, "perst");
-+	pcie->perst_reset = devm_reset_control_get_optional_exclusive(dev, "perst");
- 	if (IS_ERR(pcie->perst_reset)) {
- 		clk_disable_unprepare(pcie->clk);
- 		return PTR_ERR(pcie->perst_reset);
-@@ -1286,7 +1287,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
  
- 	ret = reset_control_reset(pcie->rescal);
- 	if (ret)
--		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
-+		dev_err(dev, "failed to deassert 'rescal'\n");
+@@ -970,7 +974,7 @@ static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
+ 	val |= PCIE_PE_RSTB;
+ 	writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
  
- 	ret = brcm_phy_start(pcie);
- 	if (ret) {
-@@ -1301,7 +1302,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+-	dev_dbg(pcie->dev, "entered L2 states successfully");
++	dev_dbg(dev, "entered L2 states successfully");
  
- 	pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
- 	if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
--		dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
-+		dev_err(dev, "hardware revision with unsupported PERST# setup\n");
- 		ret = -ENODEV;
- 		goto fail;
- 	}
-@@ -1310,7 +1311,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	if (pci_msi_enabled() && msi_np == pcie->np) {
- 		ret = brcm_pcie_enable_msi(pcie);
- 		if (ret) {
--			dev_err(pcie->dev, "probe of internal MSI failed");
-+			dev_err(dev, "probe of internal MSI failed");
- 			goto fail;
- 		}
- 	}
+ 	mtk_pcie_irq_save(pcie);
+ 	mtk_pcie_power_down(pcie);
 -- 
 2.25.1
 
