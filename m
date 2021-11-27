@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD6DD45FBC5
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 03:14:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD6AE45FBCA
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 03:14:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347362AbhK0CSD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Nov 2021 21:18:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46966 "EHLO
+        id S1349696AbhK0CSF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Nov 2021 21:18:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234348AbhK0CQD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 21:16:03 -0500
+        with ESMTP id S1350089AbhK0CQE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 21:16:04 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CA7BC08EB39;
-        Fri, 26 Nov 2021 17:31:05 -0800 (PST)
-Message-ID: <20211126232735.010399268@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E10C08EB3B;
+        Fri, 26 Nov 2021 17:31:06 -0800 (PST)
+Message-ID: <20211126232735.069709622@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637976228;
+        s=2020; t=1637976229;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=mHgTxiBl9Pg381SuWjuguHHZxZ6bDXurYM8uLZLwzPA=;
-        b=Flk9jqiwodYDq32oY3PYnMQm/YOqwKDQ7cmmLKJ0lajH+8Ex2lsY//uMmz2ElpkGDPaYtd
-        xbKePfG+vqS4YDrriDcjXrIf8Byvs/HYcqMfxYHUhSL6SMdphYYLNlAHl6tO6NkrCVLq8c
-        rDD7nm0uvUbiNhZOw2GsMU48ugDjAIjJYUJZmyCHUGImXlhy39EqW2o9MibaB1zzn7aEVc
-        H1x8KQ3wOi6/pjq32kMiTtHt+Bj6A254ZgoV/OCjbqOHhcmrq1q39M62NPDhuC1AAtQ15W
-        WHxr5ALDTDsVZVkDcFbS3ZtN0uXNJwXCq8+ruCLLmkxslvM2TfK8ww988sBdTg==
+         references:references; bh=JXvHU/eN0iJfDqMWbOd2UGXYgpl11UY148yTUdaqnAk=;
+        b=lSmmn8UQUMHaA27oGWhQLdRMIwwKOAAOugFuLESWrhOHRA0aO8qY5X/spCYMfdo+DWtgt/
+        EiODp9I8nmnYJ5JPIrquNFnczbXu4k53zacEouvHyV9kaUOniBabuAhTHAyeZ5WSb7N4VE
+        d+pWHde0JfVhC+CASELRdaucgofCV1jyaSKZXUCTUXLG52sM0HTvz87W7O15eeok3WhGxm
+        pXiS+RCNLsQUGictBvlomudk7UNUosYq86OyVha2p1HRivqcvKldhq0AZ/ct8g4RiZNjIm
+        JarVsbJw/nHNXkTNfySt+FLD/Lid42RxqdWZZnM2S/dRZaK0KBN81F0dSvfaog==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637976228;
+        s=2020e; t=1637976229;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=mHgTxiBl9Pg381SuWjuguHHZxZ6bDXurYM8uLZLwzPA=;
-        b=Y5WUWmApJsT3J8ErrRYJzpfNt68A9GSLSzw8k2IiNfGTkmAYxnp3l/haBIpMPfQE64YFFD
-        o8bIDdFVc5Y3XkAw==
+         references:references; bh=JXvHU/eN0iJfDqMWbOd2UGXYgpl11UY148yTUdaqnAk=;
+        b=0jNcPNgz56R9m5AGoyTj7IbGVRdx1dNEXeV5JlIcEI27fXTSQCtAvXBudMGXD7KkOugn5p
+        xQqnq+Ij5fdYP4Bw==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -46,11 +46,11 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Jon Mason <jdmason@kudzu.us>,
         Dave Jiang <dave.jiang@intel.com>,
         Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: [patch 12/32] x86/pci/xen: Use msi_for_each_desc()
+Subject: [patch 13/32] xen/pcifront: Rework MSI handling
 References: <20211126230957.239391799@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:23:47 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:23:49 +0100 (CET)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -59,51 +59,18 @@ Replace the about to vanish iterators.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/pci/xen.c |   14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/pci/xen-pcifront.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/pci/xen.c
-+++ b/arch/x86/pci/xen.c
-@@ -184,7 +184,7 @@ static int xen_setup_msi_irqs(struct pci
- 	if (ret)
- 		goto error;
- 	i = 0;
--	for_each_pci_msi_entry(msidesc, dev) {
-+	msi_for_each_desc(msidesc, &dev->dev, MSI_DESC_NOTASSOCIATED) {
- 		irq = xen_bind_pirq_msi_to_irq(dev, msidesc, v[i],
- 					       (type == PCI_CAP_ID_MSI) ? nvec : 1,
- 					       (type == PCI_CAP_ID_MSIX) ?
-@@ -235,7 +235,7 @@ static int xen_hvm_setup_msi_irqs(struct
- 	if (type == PCI_CAP_ID_MSI && nvec > 1)
- 		return 1;
- 
--	for_each_pci_msi_entry(msidesc, dev) {
-+	msi_for_each_desc(msidesc, &dev->dev, MSI_DESC_NOTASSOCIATED) {
- 		pirq = xen_allocate_pirq_msi(dev, msidesc);
- 		if (pirq < 0) {
- 			irq = -ENODEV;
-@@ -270,7 +270,7 @@ static int xen_initdom_setup_msi_irqs(st
- 	int ret = 0;
- 	struct msi_desc *msidesc;
- 
--	for_each_pci_msi_entry(msidesc, dev) {
-+	msi_for_each_desc(msidesc, &dev->dev, MSI_DESC_NOTASSOCIATED) {
- 		struct physdev_map_pirq map_irq;
- 		domid_t domid;
- 
-@@ -389,11 +389,9 @@ static void xen_teardown_msi_irqs(struct
- 	struct msi_desc *msidesc;
- 	int i;
- 
--	for_each_pci_msi_entry(msidesc, dev) {
--		if (msidesc->irq) {
--			for (i = 0; i < msidesc->nvec_used; i++)
--				xen_destroy_irq(msidesc->irq + i);
--		}
-+	msi_for_each_desc(msidesc, &dev->dev, MSI_DESC_ASSOCIATED) {
-+		for (i = 0; i < msidesc->nvec_used; i++)
-+			xen_destroy_irq(msidesc->irq + i);
+--- a/drivers/pci/xen-pcifront.c
++++ b/drivers/pci/xen-pcifront.c
+@@ -262,7 +262,7 @@ static int pci_frontend_enable_msix(stru
  	}
- }
  
+ 	i = 0;
+-	for_each_pci_msi_entry(entry, dev) {
++	msi_for_each_desc(entry, &dev->dev, MSI_DESC_NOTASSOCIATED) {
+ 		op.msix_entries[i].entry = entry->msi_index;
+ 		/* Vector is useless at this point. */
+ 		op.msix_entries[i].vector = -1;
 
