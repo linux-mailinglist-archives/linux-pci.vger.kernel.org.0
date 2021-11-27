@@ -2,36 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BD3645FC10
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 03:24:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1684345FB49
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 02:35:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242414AbhK0C2F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Nov 2021 21:28:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242794AbhK0C0E (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 21:26:04 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C47BC0619E8;
-        Fri, 26 Nov 2021 17:32:50 -0800 (PST)
-Message-ID: <20211127000918.948090130@linutronix.de>
+        id S1347407AbhK0BiF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Nov 2021 20:38:05 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40764 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352462AbhK0BgE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 20:36:04 -0500
+Message-ID: <20211127000919.004572849@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637976310;
+        s=2020; t=1637976311;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=0A61IAyhwI6GY5iuZYdA+ROlAbbN0w/XOIQw6hDb9NM=;
-        b=a3iGOUSTx4AN3Q+pI7OaLd8XxRJez4TVI0yS8OwSrBLHpMdd43pK6NS2i9A78zct8mMk9N
-        KkCBGxJmthiU+adM0JABQFd1JpzvyWEDZYkDTb6KmwkCcIlJvYwRrVtecKgwiWt149QTKy
-        kXNw9ozrprUifZWGRJ3ozGMEgFx7xSIRi4PKYhplfZ2luJnSotKEvPT5jrmonGKUd48KP4
-        l+CgfvLLEiDNlvnHaEw1Cta1aegPtCzTvkIfKuY21nSEgRwMKfcO4iuilA54iG4h/Lw0VE
-        OOcQ/VEF5J9CngnBfWKhbVR9UJEUOHQQedT9R8W+9iFsK//l3/Je1Nou98oMNw==
+         references:references; bh=iXWx8ngjVm94paCMjL44qtncyzw3jmQTRYweVvwdUTE=;
+        b=XMZ8+C4S5qdKr1Con79Z8ll6XVMM2fnwfUd6VibARMXKBZJmbzz2rdgHplVFzqQWoTjqXL
+        a71t/1Td6DZLsRGHxaA0Xy69M6LynlfnUWWrPppwCpmvz1S4krQdufBQTGAqkoP0l3s8T3
+        5/d33e6N4qMca0wqhegVl6SB4Kg+rkn1Q5Lq3ndlMN3YDCufaLN+bpKiuw5/eO8PEddKg7
+        KXX4wVb7cTsJ2Tc/55bKjXTrqTb0PPVsc9nsJs/ZzoOSFGZaIbOseCSK90/VO3qoq0OR3S
+        bX2HgbvnzX2XCKSBc8Aiz7O3JmG+aqKSvt2jQ+saMx9qcR/0zEVPXRcCgYtdXQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637976310;
+        s=2020e; t=1637976311;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=0A61IAyhwI6GY5iuZYdA+ROlAbbN0w/XOIQw6hDb9NM=;
-        b=bg4/hHFjPj1TJiW6AfVYBKxndqevN1BSCZqejV8miPfCEJVhBd+nd4HllZp/pRBVSGwDQb
-        VCXYClThCFvP92AQ==
+         references:references; bh=iXWx8ngjVm94paCMjL44qtncyzw3jmQTRYweVvwdUTE=;
+        b=KqCEEAwQIQ5ub2ZhfoOhVriWcwZnFHllmQP6Q5tXV21krUdnjIG0tW2/eI3ljwxV7nF3wo
+        hBnPVTOZ03C+6jDQ==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -44,99 +41,108 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Andrew Cooper <amc96@cam.ac.uk>,
         Juergen Gross <jgross@suse.com>, linux-pci@vger.kernel.org,
         xen-devel@lists.xenproject.org
-Subject: [patch 08/10] PCI/MSI: Provide pci_msi_domain_supports_expand()
+Subject: [patch 09/10] PCI/MSI: Provide pci_msix_expand_vectors[_at]()
 References: <20211126233124.618283684@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:25:09 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:25:11 +0100 (CET)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Not all irq domain implementations can support runtime MSI-X vector
-expansion as they assume zero based allocations or have other
-restrictions.
-
-The legacy PCI allocation functions are not suited for runtime vector
-expansion either.
-
-Add a function which allows to query whether runtime MSI-X vector expansion
-is supported or not.
+Provide a new interface which allows to expand the MSI-X vector space if
+the underlying irq domain implementation supports it.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/pci/msi/irqdomain.c |   29 +++++++++++++++++++++++------
- include/linux/msi.h         |    2 ++
- 2 files changed, 25 insertions(+), 6 deletions(-)
+ drivers/pci/msi/msi.c |   41 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci.h   |   13 +++++++++++++
+ 2 files changed, 54 insertions(+)
 
---- a/drivers/pci/msi/irqdomain.c
-+++ b/drivers/pci/msi/irqdomain.c
-@@ -8,12 +8,18 @@
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -1025,6 +1025,47 @@ int pci_alloc_irq_vectors_affinity(struc
+ EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
  
- #include "msi.h"
- 
-+static struct irq_domain *pci_get_msi_domain(struct pci_dev *dev)
+ /**
++ * pci_msix_expand_vectors_at - Expand MSI-X interrupts for a device
++ *
++ * @dev:	PCI device to operate on
++ * @at:		Allocate at MSI-X index. If @at == PCI_MSI_EXPAND_AUTO
++ *		the function expands automatically after the last
++ *		active index.
++ * @nvec:	Number of vectors to allocate
++ *
++ * Expand the MSI-X vectors of a device after an initial enablement and
++ * allocation.
++ *
++ * Return: 0 if the allocation was successful, an error code otherwise.
++ */
++int pci_msix_expand_vectors_at(struct pci_dev *dev, unsigned int at, unsigned int nvec)
 +{
-+	struct irq_domain *domain = dev_get_msi_domain(&dev->dev);
++	struct msi_device_data *md = dev->dev.msi.data;
++	struct msi_range range = { .ndesc = nvec, };
++	unsigned int max_vecs;
++	int ret;
 +
-+	return domain && irq_domain_is_hierarchy(domain) ? domain : NULL;
++	if (!pci_msi_enable || !dev || !dev->msix_enabled || !md)
++		return -ENOTSUPP;
++
++	if (!pci_msi_domain_supports_expand(dev))
++		return -ENOTSUPP;
++
++	max_vecs = pci_msix_vec_count(dev);
++	if (!nvec || nvec > max_vecs)
++		return -EINVAL;
++
++	range.first = at == PCI_MSIX_EXPAND_AUTO ? md->num_descs : at;
++
++	if (range.first >= max_vecs || nvec > max_vecs - range.first)
++		return -ENOSPC;
++
++	ret = msix_setup_interrupts(dev, dev->msix_base, &range, NULL, NULL, true);
++	return ret <= 0 ? ret : -ENOSPC;;
 +}
++EXPORT_SYMBOL_GPL(pci_msix_expand_vectors_at);
 +
- int pci_msi_setup_msi_irqs(struct pci_dev *dev, struct msi_range *range, int type)
- {
--	struct irq_domain *domain;
-+	struct irq_domain *domain = pci_get_msi_domain(dev);
++/**
+  * pci_free_irq_vectors - free previously allocated IRQs for a device
+  * @dev:		PCI device to operate on
+  *
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1534,6 +1534,7 @@ static inline int pci_enable_msix_exact(
+ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+ 				   unsigned int max_vecs, unsigned int flags,
+ 				   struct irq_affinity *affd);
++int pci_msix_expand_vectors_at(struct pci_dev *dev, unsigned int at, unsigned int nvec);
  
--	domain = dev_get_msi_domain(&dev->dev);
--	if (domain && irq_domain_is_hierarchy(domain))
-+	if (domain)
- 		return msi_domain_alloc_irqs_descs_locked(domain, &dev->dev, range);
- 
- 	return pci_msi_legacy_setup_msi_irqs(dev, range->ndesc, type);
-@@ -21,15 +27,26 @@ int pci_msi_setup_msi_irqs(struct pci_de
- 
- void pci_msi_teardown_msi_irqs(struct pci_dev *dev, struct msi_range *range)
- {
--	struct irq_domain *domain;
-+	struct irq_domain *domain = pci_get_msi_domain(dev);
- 
--	domain = dev_get_msi_domain(&dev->dev);
--	if (domain && irq_domain_is_hierarchy(domain))
-+	if (domain)
- 		msi_domain_free_irqs_descs_locked(domain, &dev->dev, range);
- 	else
- 		pci_msi_legacy_teardown_msi_irqs(dev);
+ void pci_free_irq_vectors(struct pci_dev *dev);
+ int pci_irq_vector(struct pci_dev *dev, unsigned int nr);
+@@ -1565,6 +1566,11 @@ pci_alloc_irq_vectors_affinity(struct pc
+ 	return -ENOSPC;
  }
  
-+bool pci_msi_domain_supports_expand(struct pci_dev *dev)
++static inline int pci_msix_expand_vectors_at(struct pci_dev *dev, unsigned int at, unsigned int nvec)
 +{
-+	struct irq_domain *domain = pci_get_msi_domain(dev);
-+	struct msi_domain_info *info;
++	return -ENOTSUPP;
++}
 +
-+	if (!domain)
-+		return false;
+ static inline void pci_free_irq_vectors(struct pci_dev *dev)
+ {
+ }
+@@ -1582,6 +1588,13 @@ static inline const struct cpumask *pci_
+ }
+ #endif
+ 
++#define PCI_MSIX_EXPAND_AUTO	(UINT_MAX)
 +
-+	info = domain->host_data;
-+	return info->flags & MSI_FLAG_CAN_EXPAND;
++static inline int pci_msix_expand_vectors(struct pci_dev *dev, unsigned int nvec)
++{
++	return pci_msix_expand_vectors_at(dev, PCI_MSIX_EXPAND_AUTO, nvec);
 +}
 +
  /**
-  * pci_msi_domain_write_msg - Helper to write MSI message to PCI config space
-  * @irq_data:	Pointer to interrupt data of the MSI interrupt
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -552,11 +552,13 @@ struct irq_domain *pci_msi_create_irq_do
- u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
- struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
- bool pci_dev_has_special_msi_domain(struct pci_dev *pdev);
-+bool pci_msi_domain_supports_expand(struct pci_dev *dev);
- #else
- static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
- {
- 	return NULL;
- }
-+static inline bool pci_msi_domain_supports_expand(struct pci_dev *dev) { return false; }
- #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
- 
- #endif /* LINUX_MSI_H */
+  * pci_irqd_intx_xlate() - Translate PCI INTx value to an IRQ domain hwirq
+  * @d: the INTx IRQ domain
 
