@@ -2,33 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1C6245FB40
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 02:34:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F394945FC0B
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 03:20:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbhK0BhV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Nov 2021 20:37:21 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40750 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239833AbhK0BfU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 20:35:20 -0500
-Message-ID: <20211127000918.723637256@linutronix.de>
+        id S233311AbhK0CXz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Nov 2021 21:23:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237265AbhK0CVy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 21:21:54 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B847C08EC73;
+        Fri, 26 Nov 2021 17:32:08 -0800 (PST)
+Message-ID: <20211127000918.779751933@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637976304;
+        s=2020; t=1637976305;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=wAZLS4DVWG/31wPrjnVkWgrCpcsyPlNJgofX29BhKpw=;
-        b=US7UNPS+NXprP3fC+BqxW5rKcXZSUWRgYEei1kp1cCjbCMj3u+ySTjRvZnXM2ceKo4onbi
-        DdeUZvv7ATkP7ocNNn103LksVWfjm5uN9xsMKNKUkJ5r7sAXBwyi3mWHJUGAYCIKsxFF8W
-        zeL8yJWHe6fOAHY3g1/48EOhvZlfjNp/xG9NYWpzEZ3rn98/Ofvp3DTasIjXlw2cK2wMds
-        TqzUkjIiplaZtF10uMqyFnaMhAQOSsF6MZzpiHysW2poqTq6yZnmBnI89SRY6U/PvhxBa9
-        +2GTvPrB5USmFIGIwqM5iNn3fQxU8Z4UCD6VIYJcstNKx8rpJV4CIsc0NRThdA==
+         references:references; bh=CFmm+AWRwXcJQSLL7VY9/FlDxYE98PyZd7GrvqHxiD8=;
+        b=jPDSHQYSdxJlKUo1m9F9w8gw8R2TMDWPPxDRazvUWAKO2OAqttDQmAKiiB0cHxtncw0LoP
+        I0nGS3ipmEFxCJjXQCspGZYqDLzYgAoHAzN8IALfV/R/UU8HnLONKw15r9QLBWIOy2tuBo
+        v9UWh+uBu1gxtuVFZyC/oeYLLr7fsy2iBobG7WdjyJrjG53L08Qf0qS3j4Lea61UvUlvc7
+        FlpqePyPni277I+e5Ve/tq90mOGCGQlu+ToYDaGLhxtuIL86QQHHHN2/nYRSDe2FLpzekY
+        c4FjwvUSwWt/aSE1XxP6zVLeTmHWkEXcbwea6utFdTTv8Pecmzc4qo2LW6T26Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637976304;
+        s=2020e; t=1637976305;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=wAZLS4DVWG/31wPrjnVkWgrCpcsyPlNJgofX29BhKpw=;
-        b=5hog39uj/8+DNtMBKVJ45GPgya8dS0p++jg39/Ye2fIq1TOglsCWtkpKvp9KVSipqhlIKT
-        vEZHhZd84iLgrSBQ==
+         references:references; bh=CFmm+AWRwXcJQSLL7VY9/FlDxYE98PyZd7GrvqHxiD8=;
+        b=YpvVGHpsYjY8WLBK+/d3v25qrNDG94vLX8P5K9v/o3GbLxhwTttsJXuyACy8VlvKBn+N9c
+        5C2HM/JCLaf7F2Cw==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -41,59 +44,32 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Andrew Cooper <amc96@cam.ac.uk>,
         Juergen Gross <jgross@suse.com>, linux-pci@vger.kernel.org,
         xen-devel@lists.xenproject.org
-Subject: [patch 04/10] genirq/msi: Prepare MSI domain alloc/free for range irq
- allocation
+Subject: [patch 05/10] genirq/msi: Add domain info flag MSI_FLAG_CAN_EXPAND
 References: <20211126233124.618283684@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:25:03 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:25:05 +0100 (CET)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Make the iterators in the allocation and free functions range based.
+Not all MSI domains support runtime expansions of PCI/MSI-X vectors. Add a
+domain flag so implementations can opt in.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/irq/msi.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ include/linux/msi.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -877,6 +877,7 @@ int __msi_domain_alloc_irqs(struct irq_d
- 	msi_alloc_info_t arg = { };
- 	unsigned int vflags = 0;
- 	struct msi_desc *desc;
-+	unsigned long idx;
- 	int allocated = 0;
- 	int i, ret, virq;
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -494,6 +494,8 @@ enum {
+ 	MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS	= (1 << 9),
+ 	/* Free MSI descriptors */
+ 	MSI_FLAG_FREE_MSI_DESCS		= (1 << 10),
++	/* MSI vectors can be expanded after initial setup */
++	MSI_FLAG_CAN_EXPAND		= (1 << 11),
+ };
  
-@@ -906,7 +907,10 @@ int __msi_domain_alloc_irqs(struct irq_d
- 			vflags |= VIRQ_NOMASK_QUIRK;
- 	}
- 
--	msi_for_each_desc(desc, dev, MSI_DESC_NOTASSOCIATED) {
-+	xa_for_each_range(&dev->msi.data->store, idx, desc, range->first, range->last) {
-+		if (!msi_desc_match(desc, MSI_DESC_NOTASSOCIATED))
-+			continue;
-+
- 		ops->set_desc(&arg, desc);
- 
- 		virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
-@@ -999,10 +1003,14 @@ void __msi_domain_free_irqs(struct irq_d
- 	struct msi_domain_info *info = domain->host_data;
- 	struct irq_data *irqd;
- 	struct msi_desc *desc;
-+	unsigned long idx;
- 	int i;
- 
- 	/* Only handle MSI entries which have an interrupt associated */
--	msi_for_each_desc(desc, dev, MSI_DESC_ASSOCIATED) {
-+	xa_for_each_range(&dev->msi.data->store, idx, desc, range->first, range->last) {
-+		if (!msi_desc_match(desc, MSI_DESC_ASSOCIATED))
-+			continue;
-+
- 		/* Make sure all interrupts are deactivated */
- 		for (i = 0; i < desc->nvec_used; i++) {
- 			irqd = irq_domain_get_irq_data(domain, desc->irq + i);
+ int msi_domain_set_affinity(struct irq_data *data, const struct cpumask *mask,
 
