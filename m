@@ -2,35 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FF3545FA71
-	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 02:28:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64E7645FA76
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Nov 2021 02:28:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350142AbhK0BcA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Nov 2021 20:32:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40502 "EHLO
+        id S1344848AbhK0BcB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Nov 2021 20:32:01 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40504 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350311AbhK0B37 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 20:29:59 -0500
-Message-ID: <20211126230957.239391799@linutronix.de>
+        with ESMTP id S1348343AbhK0BaA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Nov 2021 20:30:00 -0500
+Message-ID: <20211126232734.349989857@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637976148;
+        s=2020; t=1637976149;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=D0nbUkdccTCr+2Br2gyXx7cP8vfnCoeXBZSgMbFqpdM=;
-        b=TEH82iHayKr/ntaPYYfi30q+zCMZHKxasmVUpcMFsUzBAk6YgBm3YBOTFIVC6RffhkF/Tk
-        bwUmRooEMF85FbSUM+o9jdCi6u+6knuAgcavR0gB7dKy2Q/iq3kcQjkIbfjWHKFKnVPbpR
-        xIltg0AIgjG0BjA0HRjgpmSAKa9JAmk5F7FfSZAu0vBKn9KBzWaSNl30AxYaaf+ealQWgk
-        fgufOWF0E0tVfiWFQ7V4bV0rN6KFodraeUo049MRdidrEH7XWB8C/1Z8OhA6+XouFTwtaE
-        WIHKJ533Tz3Fo8jw7nBLGws1Qb94n7NwcnisVd8rgqbYmiwpFesUWoSmTJfj1w==
+         references:references; bh=pqZGjMh/WFXDkVYYwyzdxBCQBDh9R/X8Ua/hDtqXIzc=;
+        b=c8fPZe3NH8mmnLC1XCxHOiwyUsoo3Oz2dNo+Xistop6scHQkf9+Z73Wiqf0F65gfSUJcDl
+        rrvg+PdTEKdgrdR8zBORNF6o4EUY1849VsW8o0lNUXYfTMTFWN5Usli51WzelIMGz4xm5I
+        bN0srtu1rSm4+6x4nQM7gqMC95VQpHA1ipG8s4RkhKgol3xO2unXot7KHimzL9G0ih/1Zl
+        S4n7yIPIriI/g7zNMeQDXaNkht55IX9/8jf9PDxEres/Fk1jvJ7ec4CYDEPGHFvWYLjgvW
+        xoIfcxHlDTkZeT77a5QRBWSx+6KDvFNkJQEgJVQ8qnWTFRDSUwAB1rDzeBUqBA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637976148;
+        s=2020e; t=1637976149;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=D0nbUkdccTCr+2Br2gyXx7cP8vfnCoeXBZSgMbFqpdM=;
-        b=6MlFc/aHe2yyZUJPi9w8j4A1gcK4pI/ykoPIROYyuyct/PJqIaqSJWUIpI3wZ/ETqn93vt
-        Dk5vUE+uTfjirbDg==
+         references:references; bh=pqZGjMh/WFXDkVYYwyzdxBCQBDh9R/X8Ua/hDtqXIzc=;
+        b=pz/xiIKx0qLuOM6nec0j1U7BpDjbHiUGl9cc9btBPBK/7FoAehDmaaNj7WGlJKSXXmjuEU
+        q25xS/2gwdHgsqCw==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -45,75 +43,102 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Jon Mason <jdmason@kudzu.us>,
         Dave Jiang <dave.jiang@intel.com>,
         Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: [patch 00/32] genirq/msi, PCI/MSI: Spring cleaning - Part 2
+Subject: [patch 01/32] genirq/msi: Move descriptor list to struct msi_device_data
+References: <20211126230957.239391799@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Date:   Sat, 27 Nov 2021 02:22:27 +0100 (CET)
+Content-Type: text/plain; charset=UTF-8
+Date:   Sat, 27 Nov 2021 02:22:29 +0100 (CET)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-VGhpcyBpcyB0aGUgdGhpcmQgcGFydCBvZiBbUENJXU1TSSByZWZhY3RvcmluZyB3aGljaCBhaW1z
-IHRvIHByb3ZpZGUgdGhlCmFiaWxpdHkgb2YgZXhwYW5kaW5nIE1TSS1YIHZlY3RvcnMgYWZ0ZXIg
-ZW5hYmxpbmcgTVNJLVguCgpUaGUgZmlyc3QgdHdvIHBhcnRzIG9mIHRoaXMgd29yayBjYW4gYmUg
-Zm91bmQgaGVyZToKCiAgICBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjExMTI2MjIyNzAw
-Ljg2MjQwNzk3N0BsaW51dHJvbml4LmRlCiAgICBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIw
-MjExMTI2MjI0MTAwLjMwMzA0Njc0OUBsaW51dHJvbml4LmRlCgpUaGlzIHRoaXJkIHBhcnQgaGFz
-IHRoZSBmb2xsb3dpbmcgaW1wb3J0YW50IGNoYW5nZXM6CgogICAxKSBBZGQgbG9ja2luZyB0byBw
-cm90ZWN0IHRoZSBNU0kgZGVzY3JpcHRvciBzdG9yYWdlCgogICAgICBSaWdodCBub3cgdGhlIE1T
-SSBkZXNjcmlwdG9yIHN0b3JhZ2UgKGxpbmtlZCBsaXN0KSBpcyBub3QgcHJvdGVjdGVkCiAgICAg
-IGJ5IGFueXRoaW5nIHVuZGVyIHRoZSBhc3N1bXB0aW9uIHRoYXQgdGhlIGxpc3QgaXMgaW5zdGFs
-bGVkIGJlZm9yZQogICAgICB1c2UgYW5kIGRlc3Ryb3llZCBhZnRlciB1c2UuIEFzIHRoaXMgaXMg
-YWJvdXQgdG8gY2hhbmdlIHRoZXJlIGhhcyB0bwogICAgICBiZSBwcm90ZWN0aW9uCgogICAyKSBB
-IG5ldyBzZXQgb2YgaXRlcmF0b3JzIHdoaWNoIGFsbG93IGZpbHRlcmluZyBvbiB0aGUgc3RhdGUg
-b2YgdGhlCiAgICAgIGRlc2NyaXB0b3JzIG5hbWVseSB3aGV0aGVyIGEgZGVzY3JpcHRvciBpcyBh
-c3NvY2lhdGVkIHRvIGEgTGludXgKICAgICAgaW50ZXJydXB0IG9yIG5vdC4KCiAgICAgIFRoaXMg
-Y2xlYW5zIHVwIGEgbG90IG9mIHVzZSBjYXNlcyB3aGljaCBoYXZlIHRvIGRvIHRoaXMgZmlsdGVy
-aW5nCiAgICAgIG1hbnVhbGx5LgoKICAgMykgQSBuZXcgc2V0IG9mIE1TSSBkZXNjcmlwdG9yIGFs
-bG9jYXRpb24gZnVuY3Rpb25zIHdoaWNoIG1ha2UgdGhlIHVzYWdlCiAgICAgIHNpdGVzIHNpbXBs
-ZXIgYW5kIGNvbmZpbmUgdGhlIHN0b3JhZ2UgaGFuZGxpbmcgdG8gdGhlIGNvcmUgY29kZS4KCiAg
-ICAgIFRyaXZpYWwgTVNJIGRlc2NyaXB0b3JzIChub24gUENJKSBhcmUgbm93IGFsbG9jYXRlZCBi
-eSB0aGUgY29yZSBjb2RlCiAgICAgIGF1dG9tYXRpY2FsbHkgd2hlbiB0aGUgdW5kZXJseWluZyBp
-cnEgZG9tYWluIHJlcXVlc3RzIHRoYXQuCgogICA0KSBSZXdvcmsgb2Ygc3lzZnMgaGFuZGxpbmcg
-dG8gcHJlcGFyZSBmb3IgZHluYW1pYyBleHRlbnNpb24gb2YgTVNJLVgKCiAgICAgIFRoZSBjdXJy
-ZW50IG1lY2hhbmlzbSB3aGljaCBjcmVhdGVzIHRoZSBkaXJlY3RvcnkgYW5kIHRoZSBhdHRyaWJ1
-dGVzCiAgICAgIGZvciBhbGwgTVNJIGRlc2NyaXB0b3JzIGluIG9uZSBnbyBpcyBvYnZpb3VzbHkg
-bm90IHN1aXRhYmxlIGZvcgogICAgICBkeW5hbWljIGV4dGVuc2lvbi4gVGhlIHJld29yayBzcGxp
-dHMgdGhlIGRpcmVjdG9yeSBjcmVhdGlvbiBvdXQgYW5kCiAgICAgIGxldHMgdGhlIE1TSSBpbnRl
-cnJ1cHQgYWxsb2NhdGlvbiBjcmVhdGUgdGhlIHBlciBkZXNjcmlwdG9yCiAgICAgIGF0dHJpYnV0
-ZXMuCgogICA1KSBDb252ZXJzaW9uIG9mIHRoZSBNU0kgZGVzY3JpcHRvciBzdG9yYWdlIHRvIHhh
-cnJheQoKICAgICAgVGhlIGxpbmtlZCBsaXN0IGJhc2VkIHN0b3JhZ2UgaXMgc3Vib3B0aW1hbCBl
-dmVuIHdpdGhvdXQgZHluYW1pYwogICAgICBleHBhbnNpb24gYXMgaXQgcmVxdWlyZXMgZnVsbCBs
-aXN0IHdhbGtzIHRvIGdldCB0byBhIHNwZWNpZmljCiAgICAgIGRlc2NyaXB0b3IuIFdpdGggZHlu
-YW1pYyBleHBhbnNpb24gdGhpcyBnZXRzIGV2ZW4gbW9yZQogICAgICBjb252b2x1dGVkLiBYYXJy
-YXkgaXMgd2F5IG1vcmUgc3VpdGFibGUgYW5kIHNpbXBsaWZpZXMgdGhlCiAgICAgIGZpbmFsIGdv
-YWwgb2YgZHluYW1pYyBleHBhbnNpb24gb2YgdGhlIE1TSS1YIHNwYWNlLgoKVGhpcyB0aGlyZCBz
-ZXJpZXMgaXMgYmFzZWQgb246CgogICAgIGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGlu
-dXgva2VybmVsL2dpdC90Z2x4L2RldmVsLmdpdCBtc2ktdjEtcGFydC0yCgphbmQgYWxzbyBhdmFp
-bGFibGUgZnJvbSBnaXQ6CgogICAgIGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgv
-a2VybmVsL2dpdC90Z2x4L2RldmVsLmdpdCBtc2ktdjEtcGFydC0zCgpGb3IgdGhlIGN1cmlvdXMg
-d2hvIGNhbid0IHdhaXQgZm9yIHRoZSBuZXh0IHBhcnQgdG8gYXJyaXZlIHRoZSBmdWxsIHNlcmll
-cwppcyBhdmFpbGFibGUgdmlhOgoKICAgICBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xp
-bnV4L2tlcm5lbC9naXQvdGdseC9kZXZlbC5naXQgbXNpLXYxLXBhcnQtNAoKVGhhbmtzLAoKCXRn
-bHgKLS0tCiAuY2xhbmctZm9ybWF0ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgCiBh
-cmNoL3Bvd2VycGMvcGxhdGZvcm1zLzR4eC9oc3RhX21zaS5jICB8ICAgIDcgCiBhcmNoL3Bvd2Vy
-cGMvcGxhdGZvcm1zL2NlbGwvYXhvbl9tc2kuYyB8ICAgIDcgCiBhcmNoL3Bvd2VycGMvcGxhdGZv
-cm1zL3Bhc2VtaS9tc2kuYyAgICB8ICAgIDkgCiBhcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF9tc2ku
-YyAgICAgICAgICB8ICAgIDggCiBhcmNoL3Bvd2VycGMvc3lzZGV2L21waWNfdTNtc2kuYyAgICAg
-ICB8ICAgIDkgCiBhcmNoL3MzOTAvcGNpL3BjaV9pcnEuYyAgICAgICAgICAgICAgICB8ICAgIDYg
-CiBhcmNoL3g4Ni9wY2kveGVuLmMgICAgICAgICAgICAgICAgICAgICB8ICAgMTQgCiBkcml2ZXJz
-L2Jhc2UvY29yZS5jICAgICAgICAgICAgICAgICAgICB8ICAgIDMgCiBkcml2ZXJzL2Jhc2UvcGxh
-dGZvcm0tbXNpLmMgICAgICAgICAgICB8ICAxMTAgLS0tLS0KIGRyaXZlcnMvYnVzL2ZzbC1tYy9m
-c2wtbWMtbXNpLmMgICAgICAgIHwgICA2MSAtLQogZHJpdmVycy9udGIvbXNpLmMgICAgICAgICAg
-ICAgICAgICAgICAgfCAgIDE5IAogZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2ktaHlwZXJ2LmMg
-ICAgfCAgIDE1IAogZHJpdmVycy9wY2kvbXNpL2lycWRvbWFpbi5jICAgICAgICAgICAgfCAgIDEx
-IAogZHJpdmVycy9wY2kvbXNpL2xlZ2FjeS5jICAgICAgICAgICAgICAgfCAgIDIwIAogZHJpdmVy
-cy9wY2kvbXNpL21zaS5jICAgICAgICAgICAgICAgICAgfCAgMjU1ICsrKysrLS0tLS0tCiBkcml2
-ZXJzL3BjaS94ZW4tcGNpZnJvbnQuYyAgICAgICAgICAgICB8ICAgIDIgCiBkcml2ZXJzL3NvYy90
-aS90aV9zY2lfaW50YV9tc2kuYyAgICAgICB8ICAgNzcgKy0tCiBpbmNsdWRlL2xpbnV4L2Rldmlj
-ZS5oICAgICAgICAgICAgICAgICB8ICAgIDQgCiBpbmNsdWRlL2xpbnV4L21zaS5oICAgICAgICAg
-ICAgICAgICAgICB8ICAxMzUgKysrKystCiBpbmNsdWRlL2xpbnV4L3NvYy90aS90aV9zY2lfaW50
-YV9tc2kuaCB8ICAgIDEgCiBrZXJuZWwvaXJxL21zaS5jICAgICAgICAgICAgICAgICAgICAgICB8
-ICA3MTkgKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tCiAyMiBmaWxlcyBjaGFuZ2Vk
-LCA4NDEgaW5zZXJ0aW9ucygrKSwgNjUyIGRlbGV0aW9ucygtKQoKCg==
+It's only required when MSI is in use.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ drivers/base/core.c    |    3 ---
+ include/linux/device.h |    4 ----
+ include/linux/msi.h    |    4 +++-
+ kernel/irq/msi.c       |    5 ++++-
+ 4 files changed, 7 insertions(+), 9 deletions(-)
+
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2874,9 +2874,6 @@ void device_initialize(struct device *de
+ 	INIT_LIST_HEAD(&dev->devres_head);
+ 	device_pm_init(dev);
+ 	set_dev_node(dev, NUMA_NO_NODE);
+-#ifdef CONFIG_GENERIC_MSI_IRQ
+-	INIT_LIST_HEAD(&dev->msi_list);
+-#endif
+ 	INIT_LIST_HEAD(&dev->links.consumers);
+ 	INIT_LIST_HEAD(&dev->links.suppliers);
+ 	INIT_LIST_HEAD(&dev->links.defer_sync);
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -422,7 +422,6 @@ struct dev_msi_info {
+  * @em_pd:	device's energy model performance domain
+  * @pins:	For device pin management.
+  *		See Documentation/driver-api/pin-control.rst for details.
+- * @msi_list:	Hosts MSI descriptors
+  * @numa_node:	NUMA node this device is close to.
+  * @dma_ops:    DMA mapping operations for this device.
+  * @dma_mask:	Dma mask (if dma'ble device).
+@@ -518,9 +517,6 @@ struct device {
+ 	struct dev_pin_info	*pins;
+ #endif
+ 	struct dev_msi_info	msi;
+-#ifdef CONFIG_GENERIC_MSI_IRQ
+-	struct list_head	msi_list;
+-#endif
+ #ifdef CONFIG_DMA_OPS
+ 	const struct dma_map_ops *dma_ops;
+ #endif
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -145,12 +145,14 @@ struct msi_desc {
+  * @properties:		MSI properties which are interesting to drivers
+  * @attrs:		Pointer to the sysfs attribute group
+  * @platform_data:	Platform-MSI specific data
++ * @list:		List of MSI descriptors associated to the device
+  */
+ struct msi_device_data {
+ 	raw_spinlock_t			lock;
+ 	unsigned long			properties;
+ 	const struct attribute_group    **attrs;
+ 	struct platform_msi_priv_data	*platform_data;
++	struct list_head		list;
+ };
+ 
+ int msi_setup_device_data(struct device *dev);
+@@ -187,7 +189,7 @@ static inline unsigned int msi_get_virq(
+ 
+ /* Helpers to hide struct msi_desc implementation details */
+ #define msi_desc_to_dev(desc)		((desc)->dev)
+-#define dev_to_msi_list(dev)		(&(dev)->msi_list)
++#define dev_to_msi_list(dev)		(&(dev)->msi.data->list)
+ #define first_msi_entry(dev)		\
+ 	list_first_entry(dev_to_msi_list((dev)), struct msi_desc, list)
+ #define for_each_msi_entry(desc, dev)	\
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -87,7 +87,9 @@ EXPORT_SYMBOL_GPL(get_cached_msi_msg);
+ 
+ static void msi_device_data_release(struct device *dev, void *res)
+ {
+-	WARN_ON_ONCE(!list_empty(&dev->msi_list));
++	struct msi_device_data *md = res;
++
++	WARN_ON_ONCE(!list_empty(&md->list));
+ 	dev->msi.data = NULL;
+ }
+ 
+@@ -113,6 +115,7 @@ int msi_setup_device_data(struct device
+ 		return -ENOMEM;
+ 
+ 	raw_spin_lock_init(&md->lock);
++	INIT_LIST_HEAD(&md->list);
+ 	dev->msi.data = md;
+ 	devres_add(dev, md);
+ 	return 0;
+
