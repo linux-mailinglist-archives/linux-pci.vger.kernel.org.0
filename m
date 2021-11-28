@@ -2,109 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3624946093B
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Nov 2021 20:11:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35203460944
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Nov 2021 20:20:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234966AbhK1TOg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 28 Nov 2021 14:14:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:48912 "EHLO
+        id S234724AbhK1TXO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 28 Nov 2021 14:23:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48970 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235084AbhK1TMg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Nov 2021 14:12:36 -0500
+        with ESMTP id S235084AbhK1TVO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Nov 2021 14:21:14 -0500
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638126558;
+        s=2020; t=1638127077;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=CjZcRIM8mi5Lga3dE0YMFAAVgRUsLCHnKUD78SK4AQQ=;
-        b=RXQ9TCzzfl4WPtWcEJoRHxY0CML6p5j+vVn642rlvX4FXeGOQlTdOUHJA7TT/zMvTcjhsJ
-        z2rlcikR4dPUEfkkZEyKLgBw5JNje7IukbrP5rH+IE6poqMYiao1Ca4Jv76m34iRN55Ugp
-        9P197uGT9ReR6cEJgyZzR2bL1i5B2LiF3G8u3m1MGyv/K7P7ZcAj693GrLpygGCZMR0zi0
-        0KJ7ALQY8WY49eWHTHuU3ao5WzbumtDwaMd5vjrhuQEmq6z0WkfUTzt9rSRrTjaYjKnNAh
-        cfKsUGOras+oIgI8Eal2B4zXTACelM12H/MpiLBy/YwAKS60vXfzAPoKFbwzqA==
+        bh=/JUkgr1+1xpaGfU+RedPaRQmMTBII3kcX9LK2s6OBK4=;
+        b=OwlJzKpXh6HUO0d3S226LkHX0VBEv/ZMGzpouZpDaknUBEWmnL8N2ToysfCkKrXjYYLOZt
+        iVHuFafr0na37AQ6l9x85IxpDbPbsDoXGIi4PG8PTi0OhrcrYJoC+WaQfVt0vabA2eV+em
+        Ng7psNOZAIZ6xyzx621ez74kPw534jLdfrViT1k8TelbaOpr2LqjSUYcbp1OmtUlpO8Rg4
+        hfzXc9Jnehb8NHUubdd/cHrAjk8X0duzPRgkrYbGSvWuwrfUsk87VbsYQiNw3269IIlODP
+        uCKRHXUM+mb3iSajZoLTXqvgYDA9blbP6Sp/JVA16AG7rVFKHfUjui+S06A1ow==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638126558;
+        s=2020e; t=1638127077;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=CjZcRIM8mi5Lga3dE0YMFAAVgRUsLCHnKUD78SK4AQQ=;
-        b=bp81l/mvh3aNr1oJURqDKy63fAKoxH05F3XfT4StsiB+7OI2VuNNOHrlu3G2D0TFLaaxGV
-        tRyuRxEuQqfHuuBA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
+        bh=/JUkgr1+1xpaGfU+RedPaRQmMTBII3kcX9LK2s6OBK4=;
+        b=JXCAyg87l9Mmdgu7jORXkXxXfTo1i6k+92QcrgQ4LwuGTC1qebUkIJsKOUQq12BUqiQCat
+        D/zS/UZaK15PW0BA==
+To:     Marc Zyngier <maz@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
         Alex Williamson <alex.williamson@redhat.com>,
         Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
-Subject: Re: [patch 02/37] device: Add device::msi_data pointer and struct
- msi_device_data
-In-Reply-To: <20211128001406.GT4670@nvidia.com>
-References: <20211126224100.303046749@linutronix.de>
- <20211126230524.045836616@linutronix.de>
- <20211128001406.GT4670@nvidia.com>
-Date:   Sun, 28 Nov 2021 20:09:18 +0100
-Message-ID: <87czmkf675.ffs@tglx>
+        Ashok Raj <ashok.raj@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Cooper <amc96@cam.ac.uk>,
+        Juergen Gross <jgross@suse.com>, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [patch 03/10] genirq/msi: Make MSI descriptor alloc/free ready
+ for range allocations
+In-Reply-To: <8735ngs26o.wl-maz@kernel.org>
+References: <20211126233124.618283684@linutronix.de>
+ <20211127000918.664542907@linutronix.de> <8735ngs26o.wl-maz@kernel.org>
+Date:   Sun, 28 Nov 2021 20:17:56 +0100
+Message-ID: <87a6hof5sr.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 27 2021 at 20:14, Jason Gunthorpe wrote:
-> On Sat, Nov 27, 2021 at 02:20:09AM +0100, Thomas Gleixner wrote:
+On Sun, Nov 28 2021 at 15:57, Marc Zyngier wrote:
+> On Sat, 27 Nov 2021 01:24:34 +0000,
+> Thomas Gleixner <tglx@linutronix.de> wrote:
 >
->> +/**
->> + * msi_setup_device_data - Setup MSI device data
->> + * @dev:	Device for which MSI device data should be set up
->> + *
->> + * Return: 0 on success, appropriate error code otherwise
->> + *
->> + * This can be called more than once for @dev. If the MSI device data is
->> + * already allocated the call succeeds. The allocated memory is
->> + * automatically released when the device is destroyed.
+> The issue seems to be originating in the previous patch, where the
+> following line was added:
 >
-> I would say 'by devres when the driver is removed' rather than device
-> is destroyed - to me the latter implies it would happen at device_del
-> or perhaps during release..
-
-Ah. Indeed it's when the driver unbinds because that's what disables MSI.
-
->> +int msi_setup_device_data(struct device *dev)
->> +{
->> +	struct msi_device_data *md;
->> +
->> +	if (dev->msi.data)
->> +		return 0;
->> +
->> +	md = devres_alloc(msi_device_data_release, sizeof(*md), GFP_KERNEL);
->> +	if (!md)
->> +		return -ENOMEM;
->> +
->> +	raw_spin_lock_init(&md->lock);
+> +	struct msi_range range = { .first = 0, .last = UINT_MAX, .ndesc = nvec, };
 >
-> I also couldn't guess why this needed to be raw?
+> In that context, only 'ndesc' was used, and that was fine.
+>
+> However, in the current patch, ndesc use is removed, only first/last
+> are considered, and UINT_MAX is... a lot of MSIs.
+>
+> This fixes it:
+>
+> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> index bef5b74a7268..a520bfd94a56 100644
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -975,7 +975,7 @@ int msi_domain_alloc_irqs_descs_locked(struct irq_domain *domain, struct device
+>   */
+>  int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev, int nvec)
+>  {
+> -	struct msi_range range = { .first = 0, .last = UINT_MAX, .ndesc = nvec, };
+> +	struct msi_range range = { .first = 0, .last = nvec - 1, .ndesc = nvec, };
+>  	int ret;
+>  
+>  	msi_lock_descs(dev);
+>
+> However, it'd be good to clarify the use of range->ndesc.
 
-That lock is to replace the raw spinlock we have in struct device right
-now, which is protecting low level register access and that's called
-from within irq_desc::lock held regions with interrupts disabled. I had
-to stick something into the data structure because allocating 0 bytes is
-invalid. But yes, I should have mentioned it in the changelog.
+Hrm. The stupid search should terminated nevertheless. Let me stare at
+it again.
+
+>> -static int msi_add_simple_msi_descs(struct device *dev, unsigned int index, unsigned int ndesc)
+>> +static int msi_add_simple_msi_descs(struct device *dev, struct msi_range *range)
+>
+> nit: most of the functions changed in this patch need to have their
+> documentation tidied up.
+
+Duh, yes.
 
 Thanks,
 
         tglx
-
-
