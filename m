@@ -2,190 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC0DC460753
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Nov 2021 16:59:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3624946093B
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Nov 2021 20:11:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238491AbhK1QC4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 28 Nov 2021 11:02:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352844AbhK1QAz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Nov 2021 11:00:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C350C061746;
-        Sun, 28 Nov 2021 07:57:39 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D9D6D60FF2;
-        Sun, 28 Nov 2021 15:57:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39E31C004E1;
-        Sun, 28 Nov 2021 15:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638115058;
-        bh=dvG9p4JqFdjvOEy4EOXxmzA5LeHayuGr/Isd+G4hlxQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VvikoL4cJtNFOFPZajteiBXe8ODn9A+inzWnb1CaODmfNAbPwtbi08LL0plfuHxDd
-         DgSa9NTBzspw9q7oYBHcBXjh+vJD4PalgBNC/xQ/STeSZ8ewzx4AbQ9n36UqQatFyD
-         1bcZNZffvJGhdA7Xdefty9eQqd4zpvDNt2H8vFg5BapAqAq7KJERfwGGf3ZDVdmirY
-         0qakJZOeNItYEDopWJl9xC2o8fcS28t7nM+gmh9J1FBWGPKvUHqqdNSdDR1Kh7mtvx
-         zq+hYq8AxC6y937gfo3dFPb5jPwBYfQvs36hTRqRq5kkx1M2f9JsbJxWQfa0sVPdL3
-         Pvgxuk0l5kd0Q==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mrMYZ-008Rat-NA; Sun, 28 Nov 2021 15:57:35 +0000
-Date:   Sun, 28 Nov 2021 15:57:35 +0000
-Message-ID: <8735ngs26o.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
+        id S234966AbhK1TOg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 28 Nov 2021 14:14:36 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48912 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235084AbhK1TMg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Nov 2021 14:12:36 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638126558;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CjZcRIM8mi5Lga3dE0YMFAAVgRUsLCHnKUD78SK4AQQ=;
+        b=RXQ9TCzzfl4WPtWcEJoRHxY0CML6p5j+vVn642rlvX4FXeGOQlTdOUHJA7TT/zMvTcjhsJ
+        z2rlcikR4dPUEfkkZEyKLgBw5JNje7IukbrP5rH+IE6poqMYiao1Ca4Jv76m34iRN55Ugp
+        9P197uGT9ReR6cEJgyZzR2bL1i5B2LiF3G8u3m1MGyv/K7P7ZcAj693GrLpygGCZMR0zi0
+        0KJ7ALQY8WY49eWHTHuU3ao5WzbumtDwaMd5vjrhuQEmq6z0WkfUTzt9rSRrTjaYjKnNAh
+        cfKsUGOras+oIgI8Eal2B4zXTACelM12H/MpiLBy/YwAKS60vXfzAPoKFbwzqA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638126558;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CjZcRIM8mi5Lga3dE0YMFAAVgRUsLCHnKUD78SK4AQQ=;
+        b=bp81l/mvh3aNr1oJURqDKy63fAKoxH05F3XfT4StsiB+7OI2VuNNOHrlu3G2D0TFLaaxGV
+        tRyuRxEuQqfHuuBA==
+To:     Jason Gunthorpe <jgg@nvidia.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
         Alex Williamson <alex.williamson@redhat.com>,
         Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
         Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Cooper <amc96@cam.ac.uk>,
-        Juergen Gross <jgross@suse.com>, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [patch 03/10] genirq/msi: Make MSI descriptor alloc/free ready for range allocations
-In-Reply-To: <20211127000918.664542907@linutronix.de>
-References: <20211126233124.618283684@linutronix.de>
-        <20211127000918.664542907@linutronix.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, helgaas@kernel.org, alex.williamson@redhat.com, kevin.tian@intel.com, jgg@nvidia.com, megha.dey@intel.com, ashok.raj@intel.com, mpe@ellerman.id.au, amc96@cam.ac.uk, jgross@suse.com, linux-pci@vger.kernel.org, xen-devel@lists.xenproject.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
+Subject: Re: [patch 02/37] device: Add device::msi_data pointer and struct
+ msi_device_data
+In-Reply-To: <20211128001406.GT4670@nvidia.com>
+References: <20211126224100.303046749@linutronix.de>
+ <20211126230524.045836616@linutronix.de>
+ <20211128001406.GT4670@nvidia.com>
+Date:   Sun, 28 Nov 2021 20:09:18 +0100
+Message-ID: <87czmkf675.ffs@tglx>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 27 Nov 2021 01:24:34 +0000,
-Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> Convert the MSI descriptor related functions to ranges and fixup the call
-> sites.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  drivers/base/platform-msi.c |    3 ++-
->  include/linux/msi.h         |    7 ++++---
->  kernel/irq/msi.c            |   38 +++++++++++++++++++-------------------
->  3 files changed, 25 insertions(+), 23 deletions(-)
+On Sat, Nov 27 2021 at 20:14, Jason Gunthorpe wrote:
+> On Sat, Nov 27, 2021 at 02:20:09AM +0100, Thomas Gleixner wrote:
+>
+>> +/**
+>> + * msi_setup_device_data - Setup MSI device data
+>> + * @dev:	Device for which MSI device data should be set up
+>> + *
+>> + * Return: 0 on success, appropriate error code otherwise
+>> + *
+>> + * This can be called more than once for @dev. If the MSI device data is
+>> + * already allocated the call succeeds. The allocated memory is
+>> + * automatically released when the device is destroyed.
+>
+> I would say 'by devres when the driver is removed' rather than device
+> is destroyed - to me the latter implies it would happen at device_del
+> or perhaps during release..
 
-This particular patch breaks one of my test boxes when allocating the
-MSIs for the first SMMUv3 it encounters:
+Ah. Indeed it's when the driver unbinds because that's what disables MSI.
 
-[   14.700206] arm-smmu-v3 arm-smmu-v3.0.auto: option mask 0x0
-[   14.705848] arm-smmu-v3 arm-smmu-v3.0.auto: ias 48-bit, oas 48-bit (features 0x00041fff)
-[   14.716184] arm-smmu-v3 arm-smmu-v3.0.auto: allocated 65536 entries for cmdq
-[   14.723285] arm-smmu-v3 arm-smmu-v3.0.auto: allocated 128 entries for evtq
-[   14.730170] arm-smmu-v3 arm-smmu-v3.0.auto: allocated 256 entries for priq
-[   41.282305] watchdog: BUG: soft lockup - CPU#43 stuck for 26s! [swapper/0:1]
-[   41.289383] Modules linked in:
-[   41.292430] irq event stamp: 3906684
-[   41.295994] hardirqs last  enabled at (3906683): [<ffffb73f677c54d8>] ___slab_alloc+0x7c8/0x8c0
-[   41.304698] hardirqs last disabled at (3906684): [<ffffb73f6806d478>] el1_interrupt+0x38/0xb0
-[   41.313220] softirqs last  enabled at (3798058): [<ffffb73f6746099c>] __do_softirq+0x40c/0x58c
-[   41.321825] softirqs last disabled at (3798053): [<ffffb73f674ee610>] __irq_exit_rcu+0x120/0x160
-[   41.330607] CPU: 43 PID: 1 Comm: swapper/0 Not tainted 5.16.0-rc2-00078-g76af42494903 #41
-[   41.338775] Hardware name: WIWYNN Mt.Jade Server System B81.030Z1.0007/Mt.Jade Motherboard, BIOS 1.3.20210110 2021/01/10
-[   41.349634] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   41.356585] pc : lock_is_held_type+0x124/0x20c
-[   41.361019] lr : lock_is_held_type+0xe8/0x20c
-[   41.365365] sp : ffff80001051b840
-[   41.368669] pmr_save: 000000e0
-[   41.371712] x29: ffff80001051b840 x28: ffff000034d80000 x27: ffff07ff87606600
-[   41.378838] x26: 00000000000000e0 x25: 00000000ffffffff x24: ffffb73f68733d00
-[   41.385964] x23: 0000000000000028 x22: ffff07ff87606fb8 x21: ffffb73f68bffc38
-[   41.393090] x20: ffff07ff87606fe0 x19: 0000000000000002 x18: 0000000000000014
-[   41.400217] x17: 0000000076a13aac x16: 00000000486de301 x15: 00000000ed5ff5e1
-[   41.407342] x14: 00000000fda7b077 x13: 0000000000000006 x12: 00000000b82b73dd
-[   41.414468] x11: ffff07ff87606fb8 x10: ffffb73f6952d000 x9 : ffffb73f675a3750
-[   41.421594] x8 : 0000000000000000 x7 : ffffb73f68e16000 x6 : ffffb73f677c6d64
-[   41.428720] x5 : 0000000000000000 x4 : 0000000000000001 x3 : 000000000000ffff
-[   41.435846] x2 : ffff50ff17454000 x1 : 0000000000000000 x0 : 0000000000000000
-[   41.442972] Call trace:
-[   41.445407]  lock_is_held_type+0x124/0x20c
-[   41.449494]  rcu_read_lock_sched_held+0x68/0xac
-[   41.454018]  trace_lock_acquire+0x78/0x1c0
-[   41.458107]  lock_acquire+0x40/0x90
-[   41.461585]  fs_reclaim_acquire+0x90/0x114
-[   41.465676]  kmem_cache_alloc_trace+0x80/0x300
-[   41.470110]  msi_add_simple_msi_descs+0x70/0x150
-[   41.474718]  msi_domain_alloc_irqs_descs_locked+0x90/0xfc
-[   41.480106]  msi_domain_alloc_irqs+0x58/0xa0
-[   41.484364]  platform_msi_domain_alloc_irqs+0x5c/0xa0
-[   41.489410]  arm_smmu_device_probe+0xfc0/0x1230
-[   41.493936]  platform_probe+0x74/0xe4
-[   41.497590]  really_probe+0xc4/0x470
-[   41.501156]  __driver_probe_device+0x11c/0x190
-[   41.505589]  driver_probe_device+0x48/0x110
-[   41.509761]  __driver_attach+0xe0/0x200
-[   41.513585]  bus_for_each_dev+0x7c/0xe0
-[   41.517412]  driver_attach+0x30/0x3c
-[   41.520976]  bus_add_driver+0x150/0x230
-[   41.524801]  driver_register+0x84/0x140
-[   41.528626]  __platform_driver_register+0x34/0x40
-[   41.533319]  arm_smmu_driver_init+0x2c/0x38
-[   41.537496]  do_one_initcall+0x80/0x3d0
-[   41.541321]  kernel_init_freeable+0x318/0x3a0
-[   41.545672]  kernel_init+0x30/0x14c
-[   41.549151]  ret_from_fork+0x10/0x20
+>> +int msi_setup_device_data(struct device *dev)
+>> +{
+>> +	struct msi_device_data *md;
+>> +
+>> +	if (dev->msi.data)
+>> +		return 0;
+>> +
+>> +	md = devres_alloc(msi_device_data_release, sizeof(*md), GFP_KERNEL);
+>> +	if (!md)
+>> +		return -ENOMEM;
+>> +
+>> +	raw_spin_lock_init(&md->lock);
+>
+> I also couldn't guess why this needed to be raw?
 
-The issue seems to be originating in the previous patch, where the
-following line was added:
-
-+	struct msi_range range = { .first = 0, .last = UINT_MAX, .ndesc = nvec, };
-
-In that context, only 'ndesc' was used, and that was fine.
-
-However, in the current patch, ndesc use is removed, only first/last
-are considered, and UINT_MAX is... a lot of MSIs.
-
-This fixes it:
-
-diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index bef5b74a7268..a520bfd94a56 100644
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -975,7 +975,7 @@ int msi_domain_alloc_irqs_descs_locked(struct irq_domain *domain, struct device
-  */
- int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev, int nvec)
- {
--	struct msi_range range = { .first = 0, .last = UINT_MAX, .ndesc = nvec, };
-+	struct msi_range range = { .first = 0, .last = nvec - 1, .ndesc = nvec, };
- 	int ret;
- 
- 	msi_lock_descs(dev);
-
-However, it'd be good to clarify the use of range->ndesc.
-
-[...]
-
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -101,19 +101,19 @@ int msi_add_msi_desc(struct device *dev,
->   *
->   * Return: 0 on success or an appropriate failure code.
->   */
-> -static int msi_add_simple_msi_descs(struct device *dev, unsigned int index, unsigned int ndesc)
-> +static int msi_add_simple_msi_descs(struct device *dev, struct msi_range *range)
-
-nit: most of the functions changed in this patch need to have their
-documentation tidied up.
+That lock is to replace the raw spinlock we have in struct device right
+now, which is protecting low level register access and that's called
+from within irq_desc::lock held regions with interrupts disabled. I had
+to stick something into the data structure because allocating 0 bytes is
+invalid. But yes, I should have mentioned it in the changelog.
 
 Thanks,
 
-	M.
+        tglx
 
--- 
-Without deviation from the norm, progress is not possible.
+
