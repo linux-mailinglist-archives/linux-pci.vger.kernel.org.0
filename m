@@ -2,152 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B984846096E
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Nov 2021 20:35:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D355246097F
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Nov 2021 20:39:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240294AbhK1Tic (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 28 Nov 2021 14:38:32 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49096 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233617AbhK1Tgc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Nov 2021 14:36:32 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638127993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1GlxYQghjX/NPZP4Y4QM4fareAu4mBm93KG+myCiGto=;
-        b=DgcprPBW/81BkSHjJgmsxjaRqitbjGL9EDMFHHZ2nCVm9ZNuM+gjECAv90JUHFxIrui/L+
-        i8xnBM1FGsJYSxNTiCauSdv5yq6vcYFxjg+FI4ckbVHmijipJqfqB/tp1npM9PeYCOem7w
-        WnJURZe7FSx9wfTCeaewenlJgqEez6dqTl1QMrs4TNmeae/FEBB98svXJROIwA5OrHNTX7
-        9naqvYA4XfNvKY9+xYUYkGJQIupfvGqG6TqdnkTyCSBDA/ixiT0p7IuVArVx4YX/t987LW
-        XaTE6vqhjiMCzwIGTWR49NxaOW6QNxg7HHdQ4VMUSEWf8Lt9R9AeQEE8/+D0/A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638127993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1GlxYQghjX/NPZP4Y4QM4fareAu4mBm93KG+myCiGto=;
-        b=0YFK2ikLD85dMchKzkQEjIhjX0qFq4rzV5LTolOrL2HSk1n7hhTkLtb+10n0f+lAvVO+JT
-        ZOgkaWMfNUcjy/Dg==
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        id S232013AbhK1TnG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 28 Nov 2021 14:43:06 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:53702 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235084AbhK1TlG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 28 Nov 2021 14:41:06 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D56366111B;
+        Sun, 28 Nov 2021 19:37:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7BAC004E1;
+        Sun, 28 Nov 2021 19:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638128269;
+        bh=9kshVg9cWpie2kn2nDFxTot3kBs7ISxnybYkG4sh8SM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nZest/lJT4X+8M592uWupGcZA3K/bqpTbWXeabbvC0ZxQ9e7NFcweRsLi7hPITUxi
+         cv3N1cQ4AvwAkP/8BbG8U4/eNiDUwizouClthzINE6Z02aJay9QfGBzvB3o5zRpY0t
+         A7u6aKdfeU7rzeujANQP3gXKyhtm7f45fn8Vx11KlK2MUAuEC3uHEX680Tb6AayILE
+         IK/Ufbe3Hdy9YtKCoMnccCSllNGTkg36pvnE3PXBdSW2gwDFjmBDIbhUmOCuHLkcMG
+         ctIZ0c1oxyCwilUk8uaY0b04ik5js9T60W6ssAhdZleFp0cihB1hYaWxYe/eqGc93f
+         OwcqHzbhqKY6A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mrPze-008TDJ-Q8; Sun, 28 Nov 2021 19:37:47 +0000
+Date:   Sun, 28 Nov 2021 19:37:45 +0000
+Message-ID: <871r30rrzq.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
         Alex Williamson <alex.williamson@redhat.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Jason Gunthorpe <jgg@nvidia.com>,
         Megha Dey <megha.dey@intel.com>,
         Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [patch 31/32] genirq/msi: Simplify sysfs handling
-In-Reply-To: <YaNi2RkiYdnoEDau@kroah.com>
-References: <20211126230957.239391799@linutronix.de>
- <20211126232736.135247787@linutronix.de> <YaIlX8bef2jPLkUE@kroah.com>
- <87lf19fl9i.ffs@tglx> <YaNi2RkiYdnoEDau@kroah.com>
-Date:   Sun, 28 Nov 2021 20:33:13 +0100
-Message-ID: <871r30f53a.ffs@tglx>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
+Subject: Re: [patch 29/37] PCI/MSI: Use __msi_get_virq() in pci_get_vector()
+In-Reply-To: <20211126230525.660206325@linutronix.de>
+References: <20211126224100.303046749@linutronix.de>
+        <20211126230525.660206325@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, helgaas@kernel.org, alex.williamson@redhat.com, kevin.tian@intel.com, jgg@nvidia.com, megha.dey@intel.com, ashok.raj@intel.com, linux-pci@vger.kernel.org, gregkh@linuxfoundation.org, ssantosh@kernel.org, iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org, stuyoder@gmail.com, laurentiu.tudor@nxp.com, nm@ti.com, kristo@kernel.org, linux-arm-kernel@lists.infradead.org, x86@kernel.org, vkoul@kernel.org, mark.rutland@arm.com, will@kernel.org, okaya@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 28 2021 at 12:07, Greg Kroah-Hartman wrote:
-> On Sat, Nov 27, 2021 at 08:31:37PM +0100, Thomas Gleixner wrote:
->> On Sat, Nov 27 2021 at 13:32, Greg Kroah-Hartman wrote:
->> > On Sat, Nov 27, 2021 at 02:23:15AM +0100, Thomas Gleixner wrote:
->> >> The sysfs handling for MSI is a convoluted maze and it is in the way of
->> >> supporting dynamic expansion of the MSI-X vectors because it only supports
->> >> a one off bulk population/free of the sysfs entries.
->> >> 
->> >> Change it to do:
->> >> 
->> >>    1) Creating an empty sysfs attribute group when msi_device_data is
->> >>       allocated
->> >> 
->> >>    2) Populate the entries when the MSI descriptor is initialized
->> >
->> > How much later does this happen?  Can it happen while the device has a
->> > driver bound to it?
->> 
->> That's not later than before. It's when the driver initializes the
->> MSI[X] interrupts, which usually happens in the probe() function.
->> 
->> The difference is that the group, (i.e.) directory is created slightly
->> earlier.
->
-> Ok, but that still happens when probe() is called for the driver,
-> right?
+On Sat, 27 Nov 2021 01:22:03 +0000,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> Use __msi_get_vector() and handle the return values to be compatible.
+> 
+> No functional change intended.
 
-Yes.
+You wish ;-).
 
->> >> +static inline int msi_sysfs_create_group(struct device *dev)
->> >> +{
->> >> +	return devm_device_add_group(dev, &msi_irqs_group);
->> >
->> > Much nicer, but you changed the lifetime rules of when these attributes
->> > will be removed, is that ok?
->> 
->> The msi entries are removed at the same place as they are removed in the
->> current mainline code, i.e. when the device driver shuts the device
->> down and disables MSI[X], which happens usually during remove()
->> 
->> What's different now is that the empty group stays around a bit
->> longer. I don't see how that matters.
->
-> How much longer does it stick around?
->
-> What happens if this sequence happens:
-> 	- probe()
-> 	- disconnect()
-> 	- probe()
-> with the same device (i.e. the device is not removed from the system)?
->
-> Which can happen as userspace can trigger disconnect() or even worse, if
-> the driver is unloaded and then loaded again?  Will the second call to
-> create this directory fail as it is not cleaned up yet?
->
-> I can never remember if devm_*() stuff sticks around for the device
-> lifecycle, or for the driver/device lifecycle, which is one big reason
-> why I don't like that api...
+[   15.779540] pcieport 0001:00:01.0: AER: request AER IRQ -22 failed
 
-Driver lifecycle AFAICT.
+Notice how amusing the IRQ number is?
 
->> > I still worry that these attributes show up "after" the device is
->> > registered with the driver core, but hey, it's no worse than it
->> > currently is, so that's not caused by this patch series...
->> 
->> Happens that register before or after driver->probe()?
->
-> During probe is a bit too late, but we can handle that as we are used to
-> it.  If it happens after probe() succeeds, based on something else being
-> asked for in the driver (like the device being opened), then userspace
-> has no chance of ever noticing these attributes being added.
->
-> But again, this isn't new to your code series, so I wouldn't worry about
-> it.  Obviously userspace tools do not care or really notice these
-> attributes at all otherwise the authors of them would have complained
-> a long time ago :)
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  drivers/pci/msi/msi.c |   25 +++++--------------------
+>  1 file changed, 5 insertions(+), 20 deletions(-)
+> 
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -1023,28 +1023,13 @@ EXPORT_SYMBOL(pci_free_irq_vectors);
+>   */
+>  int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
+>  {
+> -	if (dev->msix_enabled) {
+> -		struct msi_desc *entry;
+> +	int irq = __msi_get_virq(&dev->dev, nr);
+>  
+> -		for_each_pci_msi_entry(entry, dev) {
+> -			if (entry->msi_index == nr)
+> -				return entry->irq;
+> -		}
+> -		WARN_ON_ONCE(1);
+> -		return -EINVAL;
+> +	switch (irq) {
+> +	case -ENODEV: return !nr ? dev->irq : -EINVAL;
+> +	case -ENOENT: return -EINVAL;
+>  	}
+> -
+> -	if (dev->msi_enabled) {
+> -		struct msi_desc *entry = first_pci_msi_entry(dev);
+> -
+> -		if (WARN_ON_ONCE(nr >= entry->nvec_used))
+> -			return -EINVAL;
+> -	} else {
+> -		if (WARN_ON_ONCE(nr > 0))
+> -			return -EINVAL;
+> -	}
+> -
+> -	return dev->irq + nr;
+> +	return irq;
+>  }
+>  EXPORT_SYMBOL(pci_irq_vector);
 
-I have no idea how these attributes are used at all. Neil should knows
-as he added it in the first place.
+I worked around it with the hack below, but I doubt this is the real
+thing. portdrv_core.c does complicated things, and I don't completely
+understand its logic.
 
-> So again, no real objection from me here, just meta-comments, except for
-> the above thing with the devm_* call to ensure that the
-> probe/disconnect/probe sequence will still work just as well as it does
-> today.  Should be easy enough to test out by just unloading a module and
-> then loading it again with this patch series applied.
+	M.
 
-That works just fine. Tested that already before posting. After module
-removal the directory is gone.
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index 1f72bc734226..b15278a5fb4b 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -1092,8 +1092,9 @@ int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
+ 	int irq = __msi_get_virq(&dev->dev, nr);
+ 
+ 	switch (irq) {
+-	case -ENODEV: return !nr ? dev->irq : -EINVAL;
+-	case -ENOENT: return -EINVAL;
++	case -ENOENT:
++	case -ENODEV:
++		return !nr ? dev->irq : -EINVAL;
+ 	}
+ 	return irq;
+ }
 
-Thanks,
-
-        tglx
+-- 
+Without deviation from the norm, progress is not possible.
