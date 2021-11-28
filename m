@@ -2,48 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6326846029C
-	for <lists+linux-pci@lfdr.de>; Sun, 28 Nov 2021 01:41:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C1834602B2
+	for <lists+linux-pci@lfdr.de>; Sun, 28 Nov 2021 02:02:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356724AbhK1AoZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 27 Nov 2021 19:44:25 -0500
-Received: from mail-dm6nam12on2074.outbound.protection.outlook.com ([40.107.243.74]:13216
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        id S1356763AbhK1BF5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 27 Nov 2021 20:05:57 -0500
+Received: from mail-bn7nam10on2046.outbound.protection.outlook.com ([40.107.92.46]:63553
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1356720AbhK1AmY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 27 Nov 2021 19:42:24 -0500
+        id S231160AbhK1BD4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 27 Nov 2021 20:03:56 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FkoDlLpe8gk/rOuXCNZs5vImIznaaYm1UjjgSAUOmXcJWxoJyJyABCgeLlGsJMjPA6jWCbNNZGvDLrUSRx33qWf8DDFkkLGTZ3kxPAZJbQ2Y3Fj0Nfl7BNe2DvENHcgHsNkYJFR1F/B3Kn1pacpEJGMVpKLKaDu4Cz/1y0ljmkTi6lZnaZqeyo1b0ZgKImv3DCIIkUNNMiINARK/Z6sLvTkJEnEufI6pQOa5pWmG0V71KDKiTrma3WhmAewV/yRygUGMTn5RRcv209gNR33RxMh0+kxojtlJgbvUSn+AhpGU4Q9qabBA2D3KYMRveZLV5uhmqzplE7toZc6lUuQoHQ==
+ b=OmLAEb264UyG/Rn/FQpifpXCLGRavFjVl3psdqQF9B0egPP7WP+5260eMgWKR3E7USn7+tGzmh7rMytt8nWqZ/UFtKiKIvSCuRBG2Lw0jf+EUIOvaatnxO1Tzr0gyxF5HA069FAawsG2QR7u9N6XVVsBpkbZwgy8ixWUTTm/kRKxWCt2eDQuyJNiUQkMRWcqcGArUI8udjGuxi1nizGJ0P8uwTE6Wu9NBwDFgNU1tKFi3mP7G6nlIc5ZTaXO7wpYAS7t2chXhGzWRmN6SCjMOA7+3ksbgQtK/CTRdc14Pmqq7yk1qufwgigBHqwYDJgIDNx/8HXlTo7E/P09RFrBnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Tz4cpaIwFwSIj7EnQHsvxDTuJb0X+4M1u9/QqVv1eVo=;
- b=mQ69ugxjNGno5DUeUESQ5/MrJXU65afZgKW44GsPh/GkTq/t/wuofUAM5Pyd/IyrtYUAfQltNPMx9E0DNfEvvD/hN4hkZ0qw2FJxi3sVa2BCI1iaUHe02+7PLyRb+0IPCWek9kG2NC5GoxSzKftNdxohRlYoWlTQf3U7qplLFu4b9YwQLsYPQoSiY3sh7nUpASh115WgnPdWg67s44hfXYQ6FApfJDrwf1GR52qNqRDdXyj6VKnJqSZ13hHWe0IJEBYQO05jOsCPzOU2pibXelqTy/OIuTckkCMYazVgi4FxqgI3a2Ls91opEhPZNANdjt9dSaEOrCdGUKGwx6Xknw==
+ bh=rSuFiADXHEbRNF87F77c8iR5JVN750YAAsdtJGLNHkQ=;
+ b=LC+vITO2Pknu3BtKn2IAkpc9iK8b+JMZ0X6A3lG8+TgS8JUkhRBC4Tb295c+1D4ePdqJ/e6aTsu/FQ7HbU7b3QHfuRkiL1ETqLs4nu25XjXUaXHHyef7Ug+oxAmt2Szu95hGLBCncdAfw9dNDXUC0nT6WPrQTM7BQBVVEws49V0GkaXfjYoAlcdwhBREZmASh2KDkGxYYdPtjSz4dxTL4UN5/PwE5DnV2ja5Itrfh8/XRg6s3HmsmZ5IkmGzbKRKVkiMFDPiZEEnsLbsYIwp50nUV9rDld//B6F9+gK7GhYAO1iG/7sfqqhsDDOJNDc8doL744Mf/EtbxpJAsvnOzg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tz4cpaIwFwSIj7EnQHsvxDTuJb0X+4M1u9/QqVv1eVo=;
- b=AMJGjwdI0LwyFtJQuBWNLqriiAD4cIxSVD0j3xB6kSL5mrL+MV7TWvJHBtwNEQpIktMP4p0pioq0xH+q29C257hmtBEGETWZFHdrt/sjXFT/tqd3+OtSsMVrK/BCk5xY1QaToZlFjn7IWDZ9pQhAi57UOqXRjDRtd29t02uRr8PeQwtAUEHjX1R8+1iTcx0LYd4+PMpa9RS8adKIdVaTtAsXreZw07zjOP4DEBwXRSW2jLiPKFpnxJOPE9TZZHndvAFDxUFCqMiffwA1r+fs9zEXyJ9EjE+0lSKXUkpShzMrZdmcfuNHVtLgtAtRgpK5pEJphukqHWRlXfyrEHdVhA==
-Received: from BL0PR12MB5508.namprd12.prod.outlook.com (2603:10b6:208:1c1::17)
- by BL1PR12MB5142.namprd12.prod.outlook.com (2603:10b6:208:312::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Sun, 28 Nov
- 2021 00:39:07 +0000
+ bh=rSuFiADXHEbRNF87F77c8iR5JVN750YAAsdtJGLNHkQ=;
+ b=ccvevOaSqVMxW7u5i4siD0URuTx1eU547U7hlW6n68q0z3FtoqHc3r6JOaF48U5BVtRDJi7B5xF38JSFkGXWP8uoRh9sMpJD4YGdJzj/iDfSTOjweHRnawXG78/GVfpuqH353trfhKs2u3/OwhPOawTbiIubR8dDIqAG5HLrNAvmBsqwAWlGuLHwIZy7bch1A8yOGV7tIue7GyNcBF/CkF9PgKVTxMxqpIxwBXwO1Opdiwk0Ak1BLaw8xQU+pCxMgvnQSlMif5QoWgvLuUnsc8un5wDV65TgqA5UJBKCxtFFFPMyeo146dBeTOQDkzPychl1BeIEqpRtePKEZYB5Rw==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL0PR12MB5508.namprd12.prod.outlook.com (2603:10b6:208:1c1::17) with
+ by BL1PR12MB5208.namprd12.prod.outlook.com (2603:10b6:208:311::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Sun, 28 Nov
- 2021 00:39:07 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.22; Sun, 28 Nov
+ 2021 01:00:38 +0000
 Received: from BL0PR12MB5506.namprd12.prod.outlook.com
  ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
  ([fe80::5897:83b2:a704:7909%8]) with mapi id 15.20.4734.023; Sun, 28 Nov 2021
- 00:39:06 +0000
-Date:   Sat, 27 Nov 2021 20:39:05 -0400
+ 01:00:38 +0000
+Date:   Sat, 27 Nov 2021 21:00:37 -0400
 From:   Jason Gunthorpe <jgg@nvidia.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -54,120 +49,173 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Megha Dey <megha.dey@intel.com>,
         Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
-Subject: Re: [patch 00/37] genirq/msi, PCI/MSI: Spring cleaning - Part 2
-Message-ID: <20211128003905.GU4670@nvidia.com>
-References: <20211126224100.303046749@linutronix.de>
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
+Subject: Re: [patch 04/32] genirq/msi: Provide a set of advanced MSI
+ accessors and iterators
+Message-ID: <20211128010037.GV4670@nvidia.com>
+References: <20211126230957.239391799@linutronix.de>
+ <20211126232734.531194050@linutronix.de>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211126224100.303046749@linutronix.de>
-X-ClientProxiedBy: BL0PR05CA0001.namprd05.prod.outlook.com
- (2603:10b6:208:91::11) To BL0PR12MB5506.namprd12.prod.outlook.com
+In-Reply-To: <20211126232734.531194050@linutronix.de>
+X-ClientProxiedBy: BLAPR03CA0075.namprd03.prod.outlook.com
+ (2603:10b6:208:329::20) To BL0PR12MB5506.namprd12.prod.outlook.com
  (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.162.113.129) by BL0PR05CA0001.namprd05.prod.outlook.com (2603:10b6:208:91::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.9 via Frontend Transport; Sun, 28 Nov 2021 00:39:06 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mr8Dh-003ndX-GD; Sat, 27 Nov 2021 20:39:05 -0400
+Received: from mlx.ziepe.ca (142.162.113.129) by BLAPR03CA0075.namprd03.prod.outlook.com (2603:10b6:208:329::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.22 via Frontend Transport; Sun, 28 Nov 2021 01:00:38 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mr8YX-003nwf-Bm; Sat, 27 Nov 2021 21:00:37 -0400
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7c2fd1b1-3b57-4471-8ac1-08d9b2077bf6
-X-MS-TrafficTypeDiagnostic: BL0PR12MB5508:|BL1PR12MB5142:
-X-Microsoft-Antispam-PRVS: <BL0PR12MB5508568AF0E7403C0116375FC2659@BL0PR12MB5508.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Office365-Filtering-Correlation-Id: 8752eb34-cae0-4763-7454-08d9b20a7de8
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5208:
+X-Microsoft-Antispam-PRVS: <BL1PR12MB52083FF4CCDE1E0B8307FCE9C2659@BL1PR12MB5208.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VTTPo45AbnTQ9Zu0VMI5BBlrWx/0NkRfKNETYyLh9peRo0I/rLcmkol++Ht5BVq5//3ejeZ+zoVIza1i8gT0mdbwjl7dVjwbZ966AOHLG2qsbH6X5xWL2u109KCTf7nFt5mAZ4vwLAfT9xXEASoaGgUvvUzHiEumbW1rdSPVuivYG8D6/bsZVwg9U8WSw18w6mighKihtMd8svQoIERNBFf3GQkwrM0gltDEJIsjLUm3D0AddLxruLdIkcEj9EEX5HmqAoCjegKcp2B2KfG5kuBz78qaGIxclMHpG8ApHo4/H51/r61dMkAtpUClY7CwOSQ6QTDtKj5e49/k3X6bTNKrgu94zwifIUBGtSaVHxrOOfYPncJsCSau5YXXAwqDobVnopJCwMHt4gCjobYY22mDu1AtZIs/dxGHf/CqvUGsrPMKsBDvt6ZeffmFwHjztPweu0MYO08+pawhS8TPcrMt+P5NW3oaSDbd1hq6oWCLV8Uytv7WstyMSX1AyPKTcvF7ZqO2Fg4D3PSO6f2flNaWMGp1Ub1EoyrUPPxRlqiZ+nPO6phiOlbQK6Bb9i7qLnY9NyddaiEeaK8jMu4xBnlNiOsVHXsFM2yWdeUslEF1KUPzUR7OXkrk0pPSCuja4l2/SW5g+k1HqcQlbnfR75l4fYWhpOule1fos0Ks5bOhRsNqgpEabHIUNpANSS9yOCHFGslD4oHA8L0xKqiYOmyqoRoEFp/RB1JYrdK6iqw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5508.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(33656002)(36756003)(26005)(6916009)(5660300002)(38100700002)(8676002)(4326008)(186003)(9786002)(426003)(2616005)(54906003)(2906002)(316002)(66946007)(7416002)(8936002)(1076003)(508600001)(9746002)(86362001)(66476007)(66556008)(966005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: LUxCNuIZ25saZFExii+ANE36ff9Gyi4cDtsxZKnZpabPJ2MbRaNpRzBL4p9fKuITkTXg5ZPP55sardmOZlV7juWZvB3BY1hn40kjN1l4npVeKXgf8wSLUbT8O30nbP6JPlUBKa8N61asiafaFgBblAubrhHCOjYlTdFkPUXRYW+GRKGeghzSBBBdpygrf0PPdOEbyDUNwsKDebcpVpxq2zNCA9DqOY178PBYDKGQDP0/AFtj9qmsBA2sgubljwWyaTWadDsSu01UJIbkB0wpY6kt9dVVF08MeMYC4VpqqTmix5FM+LZuKrq+i61Wy9ETK3eNkb8psrQ2PnmFaw18ZpzCqoPoB+JOyHYkkFe4E35e+L3wX6hiIDuciiWHU3NfFpjKZJzzh+02CG6CvkuZEFakcEi60ra5DkjTC6iu56W4/AmyRID2nrccPEFKC6blaqbRIffn9iL4TWzQf9CFR9bsZgalDviflcvAVBDK7ceArGmMo0j/R1S6vuNeDu3l23XqWO5PNbVpBsgOqLh7+pxWA+QdkqHj+cMHrBLh5gBD1YzfwJE3SP+3cgbPiAK3AYWDKFbtY/kzjiSOnolbLUZnDIBVd9JG1mHBWwPInin/KFCEU4XI7uHQGUBYY1+0/oTbAUNVEFMRhXvQwE4//w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(86362001)(66946007)(26005)(508600001)(426003)(66476007)(2616005)(36756003)(8676002)(66556008)(38100700002)(9746002)(6916009)(83380400001)(8936002)(5660300002)(54906003)(2906002)(7416002)(9786002)(316002)(33656002)(1076003)(186003)(4326008);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XAyuai/FfcqzYUyutbGOfi1yy1QcxAzOxUc0MYm0LIl0gNBWEQwEGEedtq5R?=
- =?us-ascii?Q?yw0ClOnO+bMqMiERVsTw1V7SL7iui97VbXKdQ9KwoimuA6IHqXsCFYx6sf6k?=
- =?us-ascii?Q?wFmW6VG9TCbW/BVU3QeoVu2zuTmtJNfiiwbOUjssAqJGOQoSqhe45s2iFlBL?=
- =?us-ascii?Q?ihwaT3JmkIzPpI2QVtZBmu9xuCN9Z3+Igf8Pio70cI1yAlk7GTMRw18GR7PB?=
- =?us-ascii?Q?WIoXJN1a6OqKeu3ophJmlL9rOxGa85+WjZ486L4jTDd51UU9m0SB3AsEiWp6?=
- =?us-ascii?Q?dr7SCkenEirUTQOX+tc5jBrNJpHTi1X4qJcr1qe2nri2nxQmK0VTG137RMKk?=
- =?us-ascii?Q?EVtynFgFJngKbHiTbGzr7dW/ZYh68gyRXKV75zyjhJ6UtNaQh1cTEcBnavb7?=
- =?us-ascii?Q?pmt1KwbIvtaUTQsRDDAMFILv18wGP6FGar9CpZDyGpjx/gOSDxI+6ZfJBZ+h?=
- =?us-ascii?Q?kpZdCf5nzfLUOpgcYw1/rtyvJyv+9RNVhv3+i6IpD1aU9jzKAS9Xs3G59RCj?=
- =?us-ascii?Q?Cc8Ivcgyb6cCFnL2zUAJw5pQ8Lzhy6Dq7JB8XNjEcb2jnz/MIB9Bi7NTLWYJ?=
- =?us-ascii?Q?zIn4eSgSFmkQfgdmndsEwC4A8Wrt8iiP9WtvKzahOOP/Pj3AX4z9u6XbA5St?=
- =?us-ascii?Q?X0o8ekXyLkuv6nNySte8Chpv+UGU1gYJs1spLKqyKlJrpxWRDCN3tkL2qu2W?=
- =?us-ascii?Q?IE0iN7T7eZiiYbJNLxF94XpyjecVDtcA3S5DhiHvFKVkQdxB6+RyZ+GvtGUu?=
- =?us-ascii?Q?hifcIeUj+ssk95ihRwob1db/MpiUDM04XcW9kxVEJZG73JqEpXYVWjiReaZF?=
- =?us-ascii?Q?swbQ1nNy0Eon1oX0oxLce/D6rjUuvQfIBsCP+X/wczKZAeER+Z3wWEeWlDCh?=
- =?us-ascii?Q?q4nwVkvumqGv5gkw81OzlZl18C2RpAJE1MzU+x+Jz9tCfaSTFLzq3agB1NAF?=
- =?us-ascii?Q?m+eR0LkaVaf6qRHEpq16OgaMbzMAb/L6kGyGeeaojxtb7bqD13IapJU/Boha?=
- =?us-ascii?Q?5h7JUzWa98p4jx2IU1nsR9t3DF2NJp2WucHAVujePbWZUy0rN8i5EZnX5REx?=
- =?us-ascii?Q?9560Fc77hz7W9SCPmg0oLpOXDso/j9stqjwtusHeyxKwCvcGbD9erBFaQHUQ?=
- =?us-ascii?Q?Gn3qRpjklY5NmDcU08p24PcoL3+bSgjCpvmizdUv210WCWK89AJDkTGk0/a9?=
- =?us-ascii?Q?3tH2q5NWeQKfhpD6azbTEFOapx/RLmFo8TfuE5SbK+UUd61bsuL7GMuJKYI8?=
- =?us-ascii?Q?MSjq7XBYeTfCDK6hWhYzAOIX2LpjePGGKNHCCTNilujkodrYs384bd1dBz89?=
- =?us-ascii?Q?i91BVJ3qL4onCYoXUCQp6dbRHHApeeL2mW4vcQHJTwLBuyLGdRbvR37rBWRn?=
- =?us-ascii?Q?4zeK4ZxFqN/DIfDXBoTT+T14eC1yXiLxi3948WcqhE/ujVGaZAkL3LXyet8u?=
- =?us-ascii?Q?XKs4hH5QIiTbeSwGLpHoRYph482nMzRlMgxW2vf9SgCfubWzmbZYoGByZ/lZ?=
- =?us-ascii?Q?HFlet1uDNPP1LX0LV4qQ/RWXhhqHXksXiMyFL4j7uRdmDSNq00JRzZjPSCoG?=
- =?us-ascii?Q?cSzvkVvvwNDexh8OjVY=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?O1/xMy3YlSOccFzKS8MT6xkwzfF//odEuhpUs4hbvakw0tS5HCmvMlz41z6N?=
+ =?us-ascii?Q?k1LBoj2Vu9fS0BK1O9ZA2J9o8lAjuHYVIVqo2HZkryxAv60pFjkpThgmvVG1?=
+ =?us-ascii?Q?U7RRFXJblbefuJVp2YTv2UgXleYKM9ieaDJQlbJericd2Oexatvjra7wZtM1?=
+ =?us-ascii?Q?Es59C6Had/X6eY2bHQ5pStI96DAecsvKkU09EYJy4LcVhWhLao05ls3x7r1I?=
+ =?us-ascii?Q?dwKRziCsOwU+pV6xYNc04BSl73Lu3GtDwW/G+YV4qBe8Y/r+Ja93obvJBCmp?=
+ =?us-ascii?Q?kkGfyjzCyUWjKQ3muLhxglS35E3NjIoHcKjTZX+9Ts/A2wN7oNEKTJyAejgu?=
+ =?us-ascii?Q?ZaDnxYGB2hpni5ZMaH5EZA+G5Df9VGEDLXERztgipCNXUxUpWhrSfUJOgDll?=
+ =?us-ascii?Q?t0JF4O/5g4MfoXs5oGjttxlQ5WDd+L/WAWOBLwwVGZiUhLPby0swWo3/KeuT?=
+ =?us-ascii?Q?aQfLRnvxOxh0nTjUTO5Hfk2TSrVJ8LWjnrODuJ/E7MJkFWEPzDI8+QghHwPW?=
+ =?us-ascii?Q?0axAdhHOM8Yy4p9pOW83Q+K+ToJFhmCjhhLP8I5ocYlUI6V2IfI3G/UHkbjA?=
+ =?us-ascii?Q?bgrfRfxokPqJBDqLwRdDsiiAqPkuclA0GB7KjKphfAw1F6IsS91WXjAxlDRV?=
+ =?us-ascii?Q?Sc8BFvUFMPVTO9evTriRXXeDbMmV3ybiDqoJcN70rkYKq/SXbo/7lhfoe4S2?=
+ =?us-ascii?Q?c2ls1qnwh9A9sxzkdxubpEkr1gnT/l2YgwyuYP/61shhrfyd39/PidjsyhcB?=
+ =?us-ascii?Q?AOxNQTuJOi+ncxI679cH5FU5ua+HLFhsAGoAOka/dGTGmnz5BrD84yzZJeLi?=
+ =?us-ascii?Q?2egosyWl0MeFekCh6WmHc6Fgk7+lmwNbxhoBTcDYhL6tn+BVcREMeMChLOd+?=
+ =?us-ascii?Q?7duWxb93ttTdXOTK5E+G7Tv2dET/7LLXsIb57feg7jEiphBh9OmQ7xppIXo/?=
+ =?us-ascii?Q?Z2xPC1ZpTGT0dJzesLUPCIXLp33KBbUyPNYZaMgX2M0a/LfSuN6VWjsqeyiy?=
+ =?us-ascii?Q?zzsAAPVJepLHr/PIwP36EDLqVgGuEAroTaMg/Nmq2g1h8uMXyCVek+6DjaYM?=
+ =?us-ascii?Q?VJxqdtwk7GK+MD9MmoQTp4Jl/xngIbHXPYYllvnXPp+08H3neHhY7SKXRQvM?=
+ =?us-ascii?Q?HUK1dd/6YteiHH2JND6Y9rHIyeneTeyUBiA2dnp7K48AqLqUACq3LOEuJVa1?=
+ =?us-ascii?Q?usVOLQ4z5zEdU2Wgz0kP2usDPbHTqUB2pOsxEZ8Ti7WjFgZF6Urtucn70te3?=
+ =?us-ascii?Q?72uxQft0UKCx5SOVVThIfi1Gd2MOl9MaAcwwatPUXkWDbztvEeZq+aYkAv/A?=
+ =?us-ascii?Q?5VHi4Ws6ZrjHS+YroIvFqBRNUMwYmax4B8CpGIn/cOcFCPZKgpbtw0wznhAF?=
+ =?us-ascii?Q?9ZCF02bHEaF2ofVKYMWaIzchBi+pXaeys/hwaYeCv+QhiSeDilVTdNiBCnko?=
+ =?us-ascii?Q?WjVLDbGBDQNqCPl3czRr37O/cS/csWxmQQ/mgQ72r1J7nPLCsuBFGQQT1PBy?=
+ =?us-ascii?Q?Ef4/3YwU5WukD6NvOjyeDtq0wE/FshE7Al8tpjKpbPch7W1NZ7kPa+hwmZ51?=
+ =?us-ascii?Q?YFqZ6EalFje4lYaw/8U=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c2fd1b1-3b57-4471-8ac1-08d9b2077bf6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8752eb34-cae0-4763-7454-08d9b20a7de8
 X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2021 00:39:06.6235
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2021 01:00:38.3400
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xrqlAexVn5snThqU+O4W7p/UeFb4IBeJhx1NbfCGCxt53/579dmiNnEQzYixlyVY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5142
+X-MS-Exchange-CrossTenant-UserPrincipalName: EQRpN3xw4r09o19QPl+gR9ZtN6+qbn5jb3axmfZ6Rsb6SoobPNU4gAKWGmCbDdYl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5208
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 27, 2021 at 02:21:17AM +0100, Thomas Gleixner wrote:
-> This is the second part of [PCI]MSI refactoring which aims to provide the
-> ability of expanding MSI-X vectors after enabling MSI-X.
+On Sat, Nov 27, 2021 at 02:22:33AM +0100, Thomas Gleixner wrote:
+> In preparation for dynamic handling of MSI-X interrupts provide a new set
+> of MSI descriptor accessor functions and iterators. They are benefitial per
+> se as they allow to cleanup quite some code in various MSI domain
+> implementations.
 > 
-> The first part of this work can be found here:
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>  include/linux/msi.h |   58 ++++++++++++++++++++++++++++
+>  kernel/irq/msi.c    |  107 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 165 insertions(+)
 > 
->     https://lore.kernel.org/r/20211126222700.862407977@linutronix.de
-> 
-> This second part has the following important changes:
-> 
->    1) Cleanup of the MSI related data in struct device
-> 
->       struct device contains at the moment various MSI related parts. Some
->       of them (the irq domain pointer) cannot be moved out, but the rest
->       can be allocated on first use. This is in preparation of adding more
->       per device MSI data later on.
-> 
->    2) Consolidation of sysfs handling
-> 
->       As a first step this moves the sysfs pointer from struct msi_desc
->       into the new per device MSI data structure where it belongs.
-> 
->       Later changes will cleanup this code further, but that's not possible
->       at this point.
-> 
->    3) Store per device properties in the per device MSI data to avoid
->       looking up MSI descriptors and analysing their data. Cleanup all
->       related use cases.
-> 
->    4) Provide a function to retrieve the Linux interrupt number for a given
->       MSI index similar to pci_irq_vector() and cleanup all open coded
->       variants.
+> +++ b/include/linux/msi.h
+> @@ -140,6 +140,18 @@ struct msi_desc {
+>  	struct pci_msi_desc		pci;
+>  };
+>  
+> +/*
+> + * Filter values for the MSI descriptor iterators and accessor functions.
+> + */
+> +enum msi_desc_filter {
+> +	/* All descriptors */
+> +	MSI_DESC_ALL,
+> +	/* Descriptors which have no interrupt associated */
+> +	MSI_DESC_NOTASSOCIATED,
+> +	/* Descriptors which have an interrupt associated */
+> +	MSI_DESC_ASSOCIATED,
+> +};
+> +
+>  /**
+>   * msi_device_data - MSI per device data
+>   * @lock:		Spinlock to protect register access
+> @@ -148,6 +160,8 @@ struct msi_desc {
+>   * @platform_data:	Platform-MSI specific data
+>   * @list:		List of MSI descriptors associated to the device
+>   * @mutex:		Mutex protecting the MSI list
+> + * @__next:		Cached pointer to the next entry for iterators
+> + * @__filter:		Cached descriptor filter
+>   */
+>  struct msi_device_data {
+>  	raw_spinlock_t			lock;
+> @@ -156,6 +170,8 @@ struct msi_device_data {
+>  	struct platform_msi_priv_data	*platform_data;
+>  	struct list_head		list;
+>  	struct mutex			mutex;
+> +	struct msi_desc			*__next;
+> +	enum msi_desc_filter		__filter;
+>  };
+>  
+>  int msi_setup_device_data(struct device *dev);
+> @@ -193,6 +209,48 @@ static inline unsigned int msi_get_virq(
+>  void msi_lock_descs(struct device *dev);
+>  void msi_unlock_descs(struct device *dev);
+>  
+> +struct msi_desc *__msi_first_desc(struct device *dev, enum msi_desc_filter filter, unsigned int base_index);
+> +struct msi_desc *msi_next_desc(struct device *dev);
+> +
+> +/**
+> + * msi_first_desc - Get the first MSI descriptor associated to the device
+> + * @dev:	Device to search
+> + */
+> +static inline struct msi_desc *msi_first_desc(struct device *dev)
+> +{
+> +	return __msi_first_desc(dev, MSI_DESC_ALL, 0);
+> +}
+> +
+> +
+> +/**
+> + * msi_for_each_desc_from - Iterate the MSI descriptors from a given index
+> + *
+> + * @desc:	struct msi_desc pointer used as iterator
+> + * @dev:	struct device pointer - device to iterate
+> + * @filter:	Filter for descriptor selection
+> + * @base_index:	MSI index to iterate from
+> + *
+> + * Notes:
+> + *  - The loop must be protected with a msi_lock_descs()/msi_unlock_descs()
+> + *    pair.
+> + *  - It is safe to remove a retrieved MSI descriptor in the loop.
+> + */
+> +#define msi_for_each_desc_from(desc, dev, filter, base_index)			\
+> +	for ((desc) = __msi_first_desc((dev), (filter), (base_index)); (desc);	\
+> +	     (desc) = msi_next_desc((dev)))
 
-The msi_get_virq() sure does make a big difference.. Though it does
-highlight there is some asymmetry with how platform and PCI works here
-where PCI fills some 'struct msix_entry *'. Many drivers would be
-quite happy to just call msi_get_virq() and avoid the extra memory, so
-I think the msi_get_virq() version is good.
+Given this ends up as an xarray it feels really weird that there is a
+hidden shared __next/__iter_idx instead of having the caller provide
+the index storage as is normal for xa operations.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+I understand why that isn't desirable at this patch where the storage
+would have to be a list_head pointer, but still, seems like an odd
+place to end up at the end of the series.
 
-Thanks,
+eg add index here unused and then the last patch uses it instead of
+__iter_idx.
+
+Also, I don't understand why filter was stored in the dev and not
+passed into msi_next_desc() in the macro here?
+
 Jason
