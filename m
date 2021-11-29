@@ -2,115 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 313AB4623AB
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 22:46:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 544F44625DC
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 23:42:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232572AbhK2Vtx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 16:49:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49444 "EHLO
+        id S234808AbhK2WoS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 17:44:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232013AbhK2Vrw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 16:47:52 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1860C091D29
-        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 12:07:05 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id i12so18087030pfd.6
-        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 12:07:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NJrp2+FzWwPNKC0TiiwoM0QJLZPs30y4vXdiwN3K1eI=;
-        b=wdoaFhdkx5b4Neu0p1DGZnwHEG/SIHmDN4CJ50K6XljfDvdX6HT9b+3ejBMYtAFIe+
-         Cc/FZi/wlBJPt1xD1hlZH5RPpWIxX0BEMPSs1iYlo9khwxd88IkPgKZBNRFQc4cxapau
-         sMROcMOBmFgUhZBYwDAkiAcu81+wroFGj0+5P0ydawrb0/w0ofYqt/Xn8IKJqTS6oi0e
-         mkHYZAtrpUSk/ZB7BXQvdHV64nvoJ2m2xDzYpZf+sPWCZSC8fjb9gjrw78wu3G2F2ATH
-         II5RrZbQynVa3z4dmF8SHahuTA/VdqcOTp1QHnRyyk3D3NSI8xdmwlYdATKK0YeSPh6k
-         Vh/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NJrp2+FzWwPNKC0TiiwoM0QJLZPs30y4vXdiwN3K1eI=;
-        b=DXYGtt+ND47cGTwLby03ZfsFEhy5Xbvli4Lsx5r1AM0KCBoT7HZPl/2v7GsVLHOFwo
-         Xz5qbkTIFftZcH/4ZudgrGBBSxpk5/kgcPMsJyjziPDXbvIgyKFrv8yY7UsnOsUA7Erj
-         K/yY0lcvgN5zKhplP2E66PORBSymsS88IIjo4E3aAyiSWaBmQYuCiH/yJgCtMicve+ph
-         sEmTEyGJnAFu0I1tXHSWNdaVVl73sMaeJzQV+BxWBOSdkivjwMSF962n9/IxP7WbfQ/p
-         NErHfUaWrgxRFyAl+6BZTCcwk2uBuyTCMwIQr7Ux0AahNEsLEUQwP1wHDY2zJG+HrsRM
-         Ht4w==
-X-Gm-Message-State: AOAM531/X86VYPdvZZs3X51NZbU0O7U/kc20v/8waq62wpyS1Jw3I4Mn
-        vvzUhWHi1pi4/DOjOe1WNy1lYdJ3XjdvHQVRvNmrzw==
-X-Google-Smtp-Source: ABdhPJyvcANPg6SUDCV4oyzlP2Gi2CZUfp1yUKyo+IcaxZgUlJn3exxwQddmyi/EQqgweFk6HFgHF7pdNAs5KZiVOQQ=
-X-Received: by 2002:a63:ef03:: with SMTP id u3mr25991020pgh.74.1638216425405;
- Mon, 29 Nov 2021 12:07:05 -0800 (PST)
+        with ESMTP id S234285AbhK2Wnp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 17:43:45 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0624CC043AD8;
+        Mon, 29 Nov 2021 12:51:13 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638219071;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tz/JDx8g54Ok4OMBliMP1MHdAMZdu38KyT07rgK4kek=;
+        b=EJHYdtcQ7CkIX5jk0EPaQKBNxB/I4Fmx4psc3dNfeVrvTFpfEeqts20BFVbt5PAcORMNHi
+        YmEYN7qu9o9Nf+xrWi1DDTWj8DqHrD/TaMw5SFkbD9O9fYe/B4c4CovKJtoayoJFBLXFhN
+        h1GDxLrYh/zoeCY8+4MzczVeqOnc/INyFI9/5AX3gUiOfVu22C1ifU4McFVa8VwqLko/cL
+        R/kEgQCcjhyb30qp4KynvMsylSgqwoxDEXZFQey00qSiM47Wq3tkv0cLqJ0EqVtA/e+0Fv
+        AngN+lIgcGkoPC0smzvCoXGvs5qyyndto5EVdLqns8n0Bo2OfZztMwHgnyLp/A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638219071;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tz/JDx8g54Ok4OMBliMP1MHdAMZdu38KyT07rgK4kek=;
+        b=sVqzZBKzTnDKRGPDAdt0lfSw7znG5ecBJX8UUs+ZB5r69qdnSChYv4MKQc8kplV1rgOuob
+        O5RAPkes0fGbEIBg==
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
+In-Reply-To: <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com>
+References: <20211126230957.239391799@linutronix.de>
+ <20211126232735.547996838@linutronix.de>
+ <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com>
+Date:   Mon, 29 Nov 2021 21:51:10 +0100
+Message-ID: <874k7ueldt.ffs@tglx>
 MIME-Version: 1.0
-References: <20211120000250.1663391-1-ben.widawsky@intel.com>
- <20211120000250.1663391-13-ben.widawsky@intel.com> <20211122162039.000022c1@Huawei.com>
- <20211122193751.gipqgs5ap24dacm3@intel.com> <CAPcyv4gBmc+C4d1RExH5qB2qunhkkMRqNZwzz29gc-1uaJiM4A@mail.gmail.com>
- <20211129200514.2o2zmjelfl3nahyt@intel.com>
-In-Reply-To: <20211129200514.2o2zmjelfl3nahyt@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 29 Nov 2021 12:07:00 -0800
-Message-ID: <CAPcyv4gONHAxas+=LfJnQSOf+3gZPr6i+mJLV6NO8ODFGoVfJQ@mail.gmail.com>
-Subject: Re: [PATCH 12/23] cxl: Introduce endpoint decoders
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 12:05 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 21-11-24 16:07:23, Dan Williams wrote:
-> > On Mon, Nov 22, 2021 at 11:38 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > On 21-11-22 16:20:39, Jonathan Cameron wrote:
-> > > > On Fri, 19 Nov 2021 16:02:39 -0800
-> > > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > >
-> > > > > Endpoints have decoders too. It is useful to share the same
-> > > > > infrastructure from cxl_core. Endpoints do not have dports (downstream
-> > > > > targets), only the underlying physical medium. As a result, some special
-> > > > > casing is needed.
-> > > > >
-> > > > > There is no functional change introduced yet as endpoints don't actually
-> > > > > enumerate decoders yet.
-> > > > >
-> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > >
-> > > > I'm not a fan of special values like using 0 here to indicate endpoint
-> > > > device.  I'd rather see a base cxl_decode_alloc(..., bool ep)
-> > > > and possibly wrappers for the non ep case and ep one.
-> > > >
-> > > > Jonathan
-> > > >
-> > >
-> > > My inclination is the opposite. However, I think you and Dan both brought up
-> > > something to this effect in the previous RFCs.
-> > >
-> > > Dan, do you have a preference here?
-> >
-> > I was thinking something along the lines of what Jonathan wants,
-> > explicit per-type APIs, but internal / private to the core can use
-> > heuristics like nr_targets == 0 == endpoint.
-> >
-> > So unexport cxl_decoder_alloc() and have separate:
-> >
-> > cxl_root_decoder_alloc()
-> > cxl_switch_decoder_alloc()
-> > cxl_endpoint_decoder_alloc()
-> >
-> > ...apis that use a static cxl_decoder_alloc() internally. Probably
-> > also wants a cxl_endpoint_decoder_add() that drops the need to pass a
-> > NULL @target_map.
->
-> Would you a like a prep patch to set up the APIs first, or just do it all in
-> one?
+Logan,
 
-Prep patch to switch over the current usages to the new style before
-introducing more helpers sounds good to me.
+On Mon, Nov 29 2021 at 11:21, Logan Gunthorpe wrote:
+> On 2021-11-26 6:23 p.m., Thomas Gleixner wrote:
+>> Replace the about to vanish iterators, make use of the filtering and take
+>> the descriptor lock around the iteration.
+>
+> This patch looks good to me:
+>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+thanks for having a look at this. While I have your attention, I have a
+question related to NTB.
+
+The switchtec driver is the only one which uses PCI_IRQ_VIRTUAL in order
+to allocate non-hardware backed MSI-X descriptors.
+
+AFAIU these descriptors are not MSI-X descriptors in the regular sense
+of PCI/MSI-X. They are allocated via the PCI/MSI mechanism but their
+usage is somewhere in NTB which has nothing to do with the way how the
+real MSI-X interrupts of a device work which explains why we have those
+pci.msi_attrib.is_virtual checks all over the place.
+
+I assume that there are other variants feeding into NTB which can handle
+that without this PCI_IRQ_VIRTUAL quirk, but TBH, I got completely lost
+in that code.
+
+Could you please shed some light on the larger picture of this?
+
+Thanks,
+
+        tglx
