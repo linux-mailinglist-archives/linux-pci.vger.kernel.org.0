@@ -2,88 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA43346224F
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 21:39:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88560462279
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 21:47:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230386AbhK2UnE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 15:43:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34780 "EHLO
+        id S231404AbhK2UvF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 15:51:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232226AbhK2UlE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 15:41:04 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06318C09677B
-        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 09:16:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C2F3BB8120F
-        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 17:15:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5801C53FAD;
-        Mon, 29 Nov 2021 17:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638206157;
-        bh=JP6Bblx4Vh3MrNtB3GUhSi7CyJJS9rWRtyMrbQenCAg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hg6EVArRLKF7E7C9HpuFrK3sx0YhUWcw5eMpwULioa+gn3FESKRhQJXw+KOFgadIf
-         WDWyJk5X/ZTIvRmoU5koPLSNupzhYHdV67J8faBPLJiDvNIEEbz5xTuHPEPnDHsni3
-         MneQEr4BAkyiTmREJsDsrxnEmZb6o+/p2H8KMAbRELAZVsy8q3PC1M0eD1vVh9lV9v
-         nMT/dts7Bt7CN+Zgpbk6Cbdyu7uoXsMNNQjcXfoM7oU2cslP5eES8K1ZGeexi/8wPw
-         KsesK9yVPr0q7fzoNkbtfrpoSW+I4Nb9ILW/n13eSiqQyx9JLDumketjdnPJZFFfy/
-         oyhGMapgniHdQ==
-Date:   Mon, 29 Nov 2021 18:15:53 +0100
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, pali@kernel.org
-Subject: Re: [PATCH 7/7] PCI: aardvark: Reset PCIe card and disable PHY at
- driver unbind
-Message-ID: <20211129181553.41a341bb@thinkpad>
-In-Reply-To: <20211129164043.GA26244@lpieralisi>
-References: <20211031181233.9976-1-kabel@kernel.org>
-        <20211031181233.9976-8-kabel@kernel.org>
-        <20211129164043.GA26244@lpieralisi>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S231747AbhK2UtE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 15:49:04 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FC7C08ED70;
+        Mon, 29 Nov 2021 09:28:22 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638206899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xqOKj3IZWMqS0ugg10eOFI5oEB30iI5TJapcXH2ni4A=;
+        b=IOCjwDnV+IhR2HGDg4wVW6lOUizRnX5reRLkcfy7IRV/nMGiAjTI2+oGxxK38tfywRFsWe
+        EqGxuI8LaAsxJ91CSBaG/Ny4PUPGFBzKec91201k62zrl5ylKwAJ7VvLVyjvYcmX97yJgJ
+        jlhghtbx5kqCMWQEAQ6Tj79vF6/jFLq9K638DL4nnmZC2uTuC7qHv+hQouGs+XwIrl6AVQ
+        RUinNzARNB8tKdwysaZqzVoSHC6uvNgYZe9de/S/0+EwNCAoJtBFbB2VaL+3HemYbbawj9
+        uMUhH7WxAWbpeHyhP/oMxZ6AFxKlmnDpauO3W1U1WL5S8emIaNO/cYOI7lRQAA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638206899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xqOKj3IZWMqS0ugg10eOFI5oEB30iI5TJapcXH2ni4A=;
+        b=Ka5WIX7ljoOUvjodiScPWGQPf8TJxN+HN3R45g4Re/IWJ59DCK96971cDB4QWE5pYu9633
+        JWWorprRZAvg0xAA==
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Cooper <amc96@cam.ac.uk>,
+        Juergen Gross <jgross@suse.com>, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [patch 03/10] genirq/msi: Make MSI descriptor alloc/free ready
+ for range allocations
+In-Reply-To: <87a6hof5sr.ffs@tglx>
+References: <20211126233124.618283684@linutronix.de>
+ <20211127000918.664542907@linutronix.de> <8735ngs26o.wl-maz@kernel.org>
+ <87a6hof5sr.ffs@tglx>
+Date:   Mon, 29 Nov 2021 18:28:18 +0100
+Message-ID: <877dcqeurx.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 29 Nov 2021 16:40:43 +0000
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+On Sun, Nov 28 2021 at 20:17, Thomas Gleixner wrote:
+> On Sun, Nov 28 2021 at 15:57, Marc Zyngier wrote:
+> Hrm. The stupid search should terminated nevertheless. Let me stare at
+> it again.
 
-> On Sun, Oct 31, 2021 at 07:12:33PM +0100, Marek Beh=C3=BAn wrote:
-> > From: Pali Roh=C3=A1r <pali@kernel.org>
-> >=20
-> > When unbinding driver, assert PERST# signal which prepares PCIe card for
-> > power down. Then disable link training and PHY. =20
->=20
-> This reads as three actions. If we carry them out as a single patch we
-> have to explain why they are related and what problem they are solving
-> as a _single_ commit.
->=20
-> Otherwise we have to split this patch into three and explain each of
-> them as a separate fix.
->=20
-> I understand it is tempting to coalesce missing code in one single
-> change but every commit must implement a single logical change.
+Found it. Just my inability to read xarray documentation.
 
-Hi Lorenzo,
+Thanks,
 
-this is a fix for driver remove function. Although each of these things
-could be introduced in separate commits, IMO it doesn't make sense to
-split it. It should have been done this way in the first place when the
-driver removal support was introduced. I guess we could rewrite the
-commit message to:
-
-  PCI: aardvark: Disable controller entirely at driver unbind
-
-  Add the following to driver unbind to disable the controller entirely:
-  - asserting PERST# signal
-  - disabling link training
-  - disable PHY
-
-Would this be okay?
-
-Marek
+        tglx
