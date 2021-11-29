@@ -2,57 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3217461B48
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 16:47:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41B46461BF6
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 17:42:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234269AbhK2Puj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 10:50:39 -0500
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:47491 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229883AbhK2Psh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 10:48:37 -0500
-X-Greylist: delayed 335 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Nov 2021 10:48:37 EST
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id EC4232805F0AC;
-        Mon, 29 Nov 2021 16:45:18 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id DF6FA30CB13; Mon, 29 Nov 2021 16:45:18 +0100 (CET)
-Date:   Mon, 29 Nov 2021 16:45:18 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: pciehp: Use down_read/write_nested(reset_lock)
- to fix lockdep errors
-Message-ID: <20211129154518.GB4896@wunner.de>
-References: <20211129121934.4963-1-hdegoede@redhat.com>
- <20211129121934.4963-2-hdegoede@redhat.com>
+        id S1345226AbhK2QqI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 11:46:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:43402 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232009AbhK2QoH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Nov 2021 11:44:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C06F61063;
+        Mon, 29 Nov 2021 08:40:49 -0800 (PST)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35A143F5A1;
+        Mon, 29 Nov 2021 08:40:49 -0800 (PST)
+Date:   Mon, 29 Nov 2021 16:40:43 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc:     linux-pci@vger.kernel.org, pali@kernel.org
+Subject: Re: [PATCH 7/7] PCI: aardvark: Reset PCIe card and disable PHY at
+ driver unbind
+Message-ID: <20211129164043.GA26244@lpieralisi>
+References: <20211031181233.9976-1-kabel@kernel.org>
+ <20211031181233.9976-8-kabel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20211129121934.4963-2-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211031181233.9976-8-kabel@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 01:19:34PM +0100, Hans de Goede wrote:
-> --- a/drivers/pci/hotplug/pciehp.h
-> +++ b/drivers/pci/hotplug/pciehp.h
-> @@ -106,6 +106,7 @@ struct controller {
->  
->  	struct hotplug_slot hotplug_slot;	/* hotplug core interface */
->  	struct rw_semaphore reset_lock;
-> +	unsigned int depth;
->  	unsigned int ist_running;
->  	int request_result;
->  	wait_queue_head_t requester;
+On Sun, Oct 31, 2021 at 07:12:33PM +0100, Marek Behún wrote:
+> From: Pali Rohár <pali@kernel.org>
+> 
+> When unbinding driver, assert PERST# signal which prepares PCIe card for
+> power down. Then disable link training and PHY.
 
-Could you amend the kernel-doc of the struct with a short explanation
-of the attribute you're adding above?  Thanks!
+This reads as three actions. If we carry them out as a single patch we
+have to explain why they are related and what problem they are solving
+as a _single_ commit.
+
+Otherwise we have to split this patch into three and explain each of
+them as a separate fix.
+
+I understand it is tempting to coalesce missing code in one single
+change but every commit must implement a single logical change.
+
+Thanks,
+Lorenzo
+
+> Fixes: 526a76991b7b ("PCI: aardvark: Implement driver 'remove' function and allow to build it as module")
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index b3d89cb449b6..2a82c4652c28 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -1737,10 +1737,22 @@ static int advk_pcie_remove(struct platform_device *pdev)
+>  	/* Free config space for emulated root bridge */
+>  	pci_bridge_emul_cleanup(&pcie->bridge);
+>  
+> +	/* Assert PERST# signal which prepares PCIe card for power down */
+> +	if (pcie->reset_gpio)
+> +		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
+> +
+> +	/* Disable link training */
+> +	val = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> +	val &= ~LINK_TRAINING_EN;
+> +	advk_writel(pcie, val, PCIE_CORE_CTRL0_REG);
+> +
+>  	/* Disable outbound address windows mapping */
+>  	for (i = 0; i < OB_WIN_COUNT; i++)
+>  		advk_pcie_disable_ob_win(pcie, i);
+>  
+> +	/* Disable phy */
+> +	advk_pcie_disable_phy(pcie);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.32.0
+> 
