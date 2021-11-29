@@ -2,71 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F6164614E9
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 13:21:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 990914614EC
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 13:21:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344185AbhK2MYs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 07:24:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:37344 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241775AbhK2MWn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Nov 2021 07:22:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7AD741042;
-        Mon, 29 Nov 2021 04:19:25 -0800 (PST)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B24B3F694;
-        Mon, 29 Nov 2021 04:19:23 -0800 (PST)
-Date:   Mon, 29 Nov 2021 12:19:18 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Mikko Perttunen <mperttunen@nvidia.com>, rafael@kernel.org,
-        viresh.kumar@linaro.org, jonathanh@nvidia.com,
-        krzysztof.kozlowski@canonical.com, robh@kernel.org, kw@linux.com,
-        p.zabel@pengutronix.de, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amitk@kernel.org,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 5/5] PCI: tegra194: Handle errors in BPMP response
-Message-ID: <20211129121918.GA24438@lpieralisi>
-References: <20210915085517.1669675-1-mperttunen@nvidia.com>
- <20210915085517.1669675-5-mperttunen@nvidia.com>
- <YV86l4OhqKN0AkMN@orome.fritz.box>
- <20211013125956.GA11036@lpieralisi>
+        id S241858AbhK2MZM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 07:25:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58884 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S244317AbhK2MXM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 07:23:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1638188392;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=L37pwsHQHKvZbfR1sKIBLcJDZnuF8PL4vls2mHdyB7A=;
+        b=UdjXaAGfrR3mz4jD7yctoATfp/njWGguPxe2h9FXth+AU7wYwm06JGF7Qt3ujOO7kM+bTA
+        EYpJAAKpt+IvqsgyGyNI4MAR6lqkEFndMrQ9QgUxtwvI5vLt29DO+9jjSl01RMf8bDzrDj
+        dxoofaN87+PlxUpJvZ7Mv/Dg6ivzhdM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-306-PTARWtVRMGSN20WV5g-45Q-1; Mon, 29 Nov 2021 07:19:40 -0500
+X-MC-Unique: PTARWtVRMGSN20WV5g-45Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 550461006AA0;
+        Mon, 29 Nov 2021 12:19:38 +0000 (UTC)
+Received: from x1.localdomain (unknown [10.39.194.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4CECB1017CF5;
+        Mon, 29 Nov 2021 12:19:35 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH 1/2] PCI: Add a pci_dev_depth() helper function
+Date:   Mon, 29 Nov 2021 13:19:33 +0100
+Message-Id: <20211129121934.4963-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211013125956.GA11036@lpieralisi>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 01:59:56PM +0100, Lorenzo Pieralisi wrote:
-> On Thu, Oct 07, 2021 at 08:21:11PM +0200, Thierry Reding wrote:
-> > On Wed, Sep 15, 2021 at 11:55:17AM +0300, Mikko Perttunen wrote:
-> > > The return value from tegra_bpmp_transfer indicates the success or
-> > > failure of the IPC transaction with BPMP. If the transaction
-> > > succeeded, we also need to check the actual command's result code.
-> > > Add code to do this.
-> > > 
-> > > Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-tegra194.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > Acked-by: Thierry Reding <treding@nvidia.com>
-> 
-> Hi Thierry,
-> 
-> can I pull this patch into the PCI tree ? Or if you want the series
-> to go via another tree:
-> 
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Add a pci_dev_depth() helper function, which returns the depth
+of a device in the PCI hierarchy.
 
-Hi,
+This is useful to have for lockdep annotations for dealing with
+nested locked when traversing the hierarchy.
 
-I would like to ask please how you want this series to be handled.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ include/linux/pci.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Thanks,
-Lorenzo
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 7d825637d7ca..6ad78cc67aa8 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -691,6 +691,26 @@ static inline bool pci_is_bridge(struct pci_dev *dev)
+ 		dev->hdr_type == PCI_HEADER_TYPE_CARDBUS;
+ }
+ 
++/**
++ * pci_dev_depth - Return the depth of a device in the PCI hierarchy
++ * @dev: PCI device
++ *
++ * Return the depth (number of parent busses above) the device in
++ * the PCI hierarchy.
++ */
++static inline int pci_dev_depth(struct pci_dev *dev)
++{
++	struct pci_bus *bus = dev->bus;
++	int depth = 0;
++
++	while (bus->parent) {
++		depth++;
++		bus = bus->parent;
++	}
++
++	return depth;
++}
++
+ #define for_each_pci_bridge(dev, bus)				\
+ 	list_for_each_entry(dev, &bus->devices, bus_list)	\
+ 		if (!pci_is_bridge(dev)) {} else
+-- 
+2.33.1
+
