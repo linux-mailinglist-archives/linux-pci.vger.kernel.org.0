@@ -2,121 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8DB3460DF1
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 05:05:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA1D946102C
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 09:29:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236625AbhK2EI4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 28 Nov 2021 23:08:56 -0500
-Received: from mga11.intel.com ([192.55.52.93]:11618 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230207AbhK2EGy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 28 Nov 2021 23:06:54 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10182"; a="233385854"
-X-IronPort-AV: E=Sophos;i="5.87,272,1631602800"; 
-   d="scan'208";a="233385854"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2021 20:03:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,272,1631602800"; 
-   d="scan'208";a="458985855"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
-  by orsmga006.jf.intel.com with ESMTP; 28 Nov 2021 20:03:29 -0800
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>, iommu@lists.linux-foundation.org,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/17] driver core: Add dma_unconfigure callback in
- bus_type
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20211128025051.355578-1-baolu.lu@linux.intel.com>
- <20211128025051.355578-3-baolu.lu@linux.intel.com>
- <YaM3slBGozqxsQ+m@kroah.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <0eca1892-a063-a695-ac35-0ac1e2de28e0@linux.intel.com>
-Date:   Mon, 29 Nov 2021 12:03:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S1343561AbhK2Ick (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 03:32:40 -0500
+Received: from 8.mo548.mail-out.ovh.net ([46.105.45.231]:58355 "EHLO
+        8.mo548.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243376AbhK2Iak (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 03:30:40 -0500
+X-Greylist: delayed 888 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Nov 2021 03:30:39 EST
+Received: from mxplan5.mail.ovh.net (unknown [10.108.20.7])
+        by mo548.mail-out.ovh.net (Postfix) with ESMTPS id D10AB2064C;
+        Mon, 29 Nov 2021 07:33:34 +0000 (UTC)
+Received: from kaod.org (37.59.142.103) by DAG4EX1.mxp5.local (172.16.2.31)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Mon, 29 Nov
+ 2021 08:33:33 +0100
+Authentication-Results: garm.ovh; auth=pass (GARM-103G0058ffb0110-7673-40ee-a51a-c9a65a45fa89,
+                    3279756C2EB34864E332BB908A933B747C53BE44) smtp.auth=clg@kaod.org
+X-OVh-ClientIp: 82.64.250.170
+Message-ID: <b1a6d267-c7b4-c4b9-ab0e-f5cc32bfe9bf@kaod.org>
+Date:   Mon, 29 Nov 2021 08:33:33 +0100
 MIME-Version: 1.0
-In-Reply-To: <YaM3slBGozqxsQ+m@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [patch 05/22] genirq/msi: Fixup includes
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     <linux-hyperv@vger.kernel.org>, Paul Mackerras <paulus@samba.org>,
+        <sparclinux@vger.kernel.org>, Wei Liu <wei.liu@kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>, Marc Zygnier <maz@kernel.org>,
+        <x86@kernel.org>, Christian Borntraeger <borntraeger@de.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Jason Gunthorpe <jgg@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>, <ath11k@lists.infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
+References: <20211126222700.862407977@linutronix.de>
+ <20211126223824.382273262@linutronix.de>
+From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+In-Reply-To: <20211126223824.382273262@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [37.59.142.103]
+X-ClientProxiedBy: DAG1EX2.mxp5.local (172.16.2.2) To DAG4EX1.mxp5.local
+ (172.16.2.31)
+X-Ovh-Tracer-GUID: 67cb6c92-6833-4394-901b-34c8b386eb6d
+X-Ovh-Tracer-Id: 9389442276353674140
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddrheekgdegjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfhfhfgjtgfgihesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucggtffrrghtthgvrhhnpeeigedvffekgeeftedutddttdevudeihfegudffkeeitdekkeetkefhffelveelleenucfkpheptddrtddrtddrtddpfeejrdehledrudegvddruddtfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegtlhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigphhptgdquggvvheslhhishhtshdrohiilhgrsghsrdhorhhg
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/28/21 4:02 PM, Greg Kroah-Hartman wrote:
-> On Sun, Nov 28, 2021 at 10:50:36AM +0800, Lu Baolu wrote:
->> The bus_type structure defines dma_configure() callback for bus drivers
->> to configure DMA on the devices. This adds the paired dma_unconfigure()
->> callback and calls it during driver unbinding so that bus drivers can do
->> some cleanup work.
->>
->> One use case for this paired DMA callbacks is for the bus driver to check
->> for DMA ownership conflicts during driver binding, where multiple devices
->> belonging to a same IOMMU group (the minimum granularity of isolation and
->> protection) may be assigned to kernel drivers or user space respectively.
->>
->> Without this change, for example, the vfio driver has to listen to a bus
->> BOUND_DRIVER event and then BUG_ON() in case of dma ownership conflict.
->> This leads to bad user experience since careless driver binding operation
->> may crash the system if the admin overlooks the group restriction. Aside
->> from bad design, this leads to a security problem as a root user, even with
->> lockdown=integrity, can force the kernel to BUG.
->>
->> With this change, the bus driver could check and set the DMA ownership in
->> driver binding process and fail on ownership conflicts. The DMA ownership
->> should be released during driver unbinding.
->>
->> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
->> Link: https://lore.kernel.org/linux-iommu/20210922123931.GI327412@nvidia.com/
->> Link: https://lore.kernel.org/linux-iommu/20210928115751.GK964074@nvidia.com/
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   include/linux/device/bus.h | 3 +++
->>   drivers/base/dd.c          | 7 ++++++-
->>   2 files changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
->> index a039ab809753..ef54a71e5f8f 100644
->> --- a/include/linux/device/bus.h
->> +++ b/include/linux/device/bus.h
->> @@ -59,6 +59,8 @@ struct fwnode_handle;
->>    *		bus supports.
->>    * @dma_configure:	Called to setup DMA configuration on a device on
->>    *			this bus.
->> + * @dma_unconfigure:	Called to cleanup DMA configuration on a device on
->> + *			this bus.
+On 11/27/21 02:18, Thomas Gleixner wrote:
+> Remove the kobject.h include from msi.h as it's not required and add a
+> sysfs.h include to the core code instead.
 > 
-> "dma_cleanup()" is a better name for this, don't you think?
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-I agree with you. dma_cleanup() is more explicit and better here.
 
+This patch breaks compile on powerpc :
+
+   CC      arch/powerpc/kernel/msi.o
+In file included from ../arch/powerpc/kernel/msi.c:7:
+../include/linux/msi.h:410:65: error: ‘struct cpumask’ declared inside parameter list will not be visible outside of this definition or declaration [-Werror]
+   410 | int msi_domain_set_affinity(struct irq_data *data, const struct cpumask *mask,
+       |                                                                 ^~~~~~~
+cc1: all warnings being treated as errors
+
+Below is fix you can merge in patch 5.
+
+Thanks,
+
+C.
+
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -2,6 +2,7 @@
+  #ifndef LINUX_MSI_H
+  #define LINUX_MSI_H
+  
++#include <linux/cpumask.h>
+  #include <linux/list.h>
+  #include <asm/msi.h>
+
+> ---
+>   include/linux/msi.h |    1 -
+>   kernel/irq/msi.c    |    1 +
+>   2 files changed, 1 insertion(+), 1 deletion(-)
 > 
-> thanks,
-> 
-> greg k-h
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -2,7 +2,6 @@
+>   #ifndef LINUX_MSI_H
+>   #define LINUX_MSI_H
+>   
+> -#include <linux/kobject.h>
+>   #include <linux/list.h>
+>   #include <asm/msi.h>
+>   
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/irqdomain.h>
+>   #include <linux/msi.h>
+>   #include <linux/slab.h>
+> +#include <linux/sysfs.h>
+>   #include <linux/pci.h>
+>   
+>   #include "internals.h"
 > 
 
-Best regards,
-baolu
