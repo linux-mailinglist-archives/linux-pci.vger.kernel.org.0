@@ -2,71 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88560462279
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 21:47:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05E1F461FE1
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 20:07:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231404AbhK2UvF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 15:51:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231747AbhK2UtE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 15:49:04 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FC7C08ED70;
-        Mon, 29 Nov 2021 09:28:22 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638206899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xqOKj3IZWMqS0ugg10eOFI5oEB30iI5TJapcXH2ni4A=;
-        b=IOCjwDnV+IhR2HGDg4wVW6lOUizRnX5reRLkcfy7IRV/nMGiAjTI2+oGxxK38tfywRFsWe
-        EqGxuI8LaAsxJ91CSBaG/Ny4PUPGFBzKec91201k62zrl5ylKwAJ7VvLVyjvYcmX97yJgJ
-        jlhghtbx5kqCMWQEAQ6Tj79vF6/jFLq9K638DL4nnmZC2uTuC7qHv+hQouGs+XwIrl6AVQ
-        RUinNzARNB8tKdwysaZqzVoSHC6uvNgYZe9de/S/0+EwNCAoJtBFbB2VaL+3HemYbbawj9
-        uMUhH7WxAWbpeHyhP/oMxZ6AFxKlmnDpauO3W1U1WL5S8emIaNO/cYOI7lRQAA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638206899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xqOKj3IZWMqS0ugg10eOFI5oEB30iI5TJapcXH2ni4A=;
-        b=Ka5WIX7ljoOUvjodiScPWGQPf8TJxN+HN3R45g4Re/IWJ59DCK96971cDB4QWE5pYu9633
-        JWWorprRZAvg0xAA==
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Cooper <amc96@cam.ac.uk>,
-        Juergen Gross <jgross@suse.com>, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [patch 03/10] genirq/msi: Make MSI descriptor alloc/free ready
- for range allocations
-In-Reply-To: <87a6hof5sr.ffs@tglx>
-References: <20211126233124.618283684@linutronix.de>
- <20211127000918.664542907@linutronix.de> <8735ngs26o.wl-maz@kernel.org>
- <87a6hof5sr.ffs@tglx>
-Date:   Mon, 29 Nov 2021 18:28:18 +0100
-Message-ID: <877dcqeurx.ffs@tglx>
+        id S234687AbhK2TKV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 14:10:21 -0500
+Received: from mga11.intel.com ([192.55.52.93]:16544 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234990AbhK2TIU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Nov 2021 14:08:20 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10183"; a="233552754"
+X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
+   d="scan'208";a="233552754"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 11:05:02 -0800
+X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
+   d="scan'208";a="540104967"
+Received: from ajmcfarl-mobl1.amr.corp.intel.com (HELO fmmunozr-desk.hsd1.ca.comcast.net) ([10.213.167.234])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 11:05:01 -0800
+From:   francisco.munoz.ruiz@linux.intel.com
+To:     linux-pci@vger.kernel.org
+Cc:     helgaas@kernel.org, jonathan.derrick@intel.com,
+        dan.j.williams@intel.com, nirmal.patel@linux.intel.com,
+        Karthik L Gopalakrishnan <karthik.l.gopalakrishnan@intel.com>,
+        Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+Subject: [PATCH] PCI: vmd: Add device id for VMD device 8086:A77F
+Date:   Mon, 29 Nov 2021 11:02:32 -0800
+Message-Id: <20211129190232.24375-1-francisco.munoz.ruiz@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 28 2021 at 20:17, Thomas Gleixner wrote:
-> On Sun, Nov 28 2021 at 15:57, Marc Zyngier wrote:
-> Hrm. The stupid search should terminated nevertheless. Let me stare at
-> it again.
+From: Karthik L Gopalakrishnan <karthik.l.gopalakrishnan@intel.com>
 
-Found it. Just my inability to read xarray documentation.
+Add support for this VMD device which supports the bus rectriction mode.
+The feature that turns off vector 0 for MSI-X remapping is also enabled.
 
-Thanks,
+Signed-off-by: Karthik L Gopalakrishnan <karthik.l.gopalakrishnan@intel.com>
+Signed-off-by: Francisco Munoz <francisco.munoz.ruiz@linux.intel.com>
+---
+ drivers/pci/controller/vmd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-        tglx
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index a45e8e59d3d4..0e6ca6cae2c7 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -953,6 +953,10 @@ static const struct pci_device_id vmd_ids[] = {
+ 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+ 				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+ 				VMD_FEAT_OFFSET_FIRST_VECTOR,},
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa77f),
++		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
++				VMD_FEAT_HAS_BUS_RESTRICTIONS |
++				VMD_FEAT_OFFSET_FIRST_VECTOR,},
+ 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
+ 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+ 				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+-- 
+2.25.1
+
