@@ -2,135 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01D77462037
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 20:18:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1E49462024
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 20:16:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244423AbhK2TVP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 14:21:15 -0500
-Received: from mga14.intel.com ([192.55.52.115]:15553 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1378944AbhK2TTN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Nov 2021 14:19:13 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10183"; a="236286449"
-X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="236286449"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 11:11:48 -0800
-X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="676487018"
-Received: from ajsteine-mobl13.amr.corp.intel.com (HELO intel.com) ([10.252.141.244])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 11:11:47 -0800
-Date:   Mon, 29 Nov 2021 11:11:46 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 05/23] cxl/pci: Don't poll doorbell for mailbox access
-Message-ID: <20211129191146.vhiwkf5jsegil4aa@intel.com>
-References: <20211120000250.1663391-1-ben.widawsky@intel.com>
- <20211120000250.1663391-6-ben.widawsky@intel.com>
- <CAPcyv4jUExKbFhTXQGs_ayUvQqrp_76Z5Wywf7=ADXKcTF3DnQ@mail.gmail.com>
- <20211129183330.svptvcystceazgwc@intel.com>
- <CAPcyv4hPP8KYXD-6mrpHRpLYLqSQb22Lie2_m1Nc=Y5NqqfJgQ@mail.gmail.com>
+        id S1380133AbhK2TTp convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 29 Nov 2021 14:19:45 -0500
+Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:42128
+        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1344159AbhK2TRo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 14:17:44 -0500
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 1B23D41E9C
+        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 19:14:25 +0000 (UTC)
+Received: by mail-lj1-f180.google.com with SMTP id i63so36451253lji.3
+        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 11:14:25 -0800 (PST)
+X-Gm-Message-State: AOAM531tLAG9alx9pFgaQeHox+fOiMu5drJh5rIWrK166JhwIZnh7wfU
+        Z8RKaJ6tINxQrWXE0p1SW2cEKE9HyGcAJUSRnuAqLQ==
+X-Google-Smtp-Source: ABdhPJy6tlWcl9tuWIn0Dybo+bAubAlmBJK8KhhQEV/k3KiuxwCNQAo3iiP7Kt6c0VpHRRrrbX3Owws2wxiVzvWgVgI=
+X-Received: by 2002:a2e:5850:: with SMTP id x16mr51799860ljd.122.1638213264420;
+ Mon, 29 Nov 2021 11:14:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hPP8KYXD-6mrpHRpLYLqSQb22Lie2_m1Nc=Y5NqqfJgQ@mail.gmail.com>
+References: <20211129173637.303201-1-robh@kernel.org>
+In-Reply-To: <20211129173637.303201-1-robh@kernel.org>
+From:   =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>
+Date:   Mon, 29 Nov 2021 14:14:13 -0500
+X-Gmail-Original-Message-ID: <CA+enf=vOE7dAPL+fpcFytxMkVsDcgrroCchWKYfd6YjGaE4bVQ@mail.gmail.com>
+Message-ID: <CA+enf=vOE7dAPL+fpcFytxMkVsDcgrroCchWKYfd6YjGaE4bVQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: xgene: Fix IB window setup
+To:     Rob Herring <robh@kernel.org>
+Cc:     Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        stable@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21-11-29 11:02:41, Dan Williams wrote:
-> On Mon, Nov 29, 2021 at 10:33 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > On 21-11-24 13:55:03, Dan Williams wrote:
-> > > On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > >
-> > > > The expectation is that the mailbox interface ready bit is the first
-> > > > step in access through the mailbox interface. Therefore, waiting for the
-> > > > doorbell busy bit to be clear would imply that the mailbox interface is
-> > > > ready. The original driver implementation used the doorbell timeout for
-> > > > the Mailbox Interface Ready bit to piggyback off of, since the latter
-> > > > doesn't have a defined timeout (introduced in 8adaf747c9f0 ("cxl/mem:
-> > > > Find device capabilities"), a timeout has since been defined with an ECN
-> > > > to the 2.0 spec). With the current driver waiting for mailbox interface
-> > > > ready as a part of probe() it's no longer necessary to use the
-> > > > piggyback.
-> > > >
-> > > > With the piggybacking no longer necessary it doesn't make sense to check
-> > > > doorbell status when acquiring the mailbox. It will be checked during
-> > > > the normal mailbox exchange protocol.
-> > > >
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > ---
-> > > > This patch did not exist in RFCv2
-> > > > ---
-> > > >  drivers/cxl/pci.c | 25 ++++++-------------------
-> > > >  1 file changed, 6 insertions(+), 19 deletions(-)
-> > > >
-> > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > > > index 2cef9fec8599..869b4fc18e27 100644
-> > > > --- a/drivers/cxl/pci.c
-> > > > +++ b/drivers/cxl/pci.c
-> > > > @@ -221,27 +221,14 @@ static int cxl_pci_mbox_get(struct cxl_dev_state *cxlds)
-> > > >
-> > > >         /*
-> > > >          * XXX: There is some amount of ambiguity in the 2.0 version of the spec
-> > > > -        * around the mailbox interface ready (8.2.8.5.1.1).  The purpose of the
-> > > > +        * around the mailbox interface ready (8.2.8.5.1.1). The purpose of the
-> > > >          * bit is to allow firmware running on the device to notify the driver
-> > > > -        * that it's ready to receive commands. It is unclear if the bit needs
-> > > > -        * to be read for each transaction mailbox, ie. the firmware can switch
-> > > > -        * it on and off as needed. Second, there is no defined timeout for
-> > > > -        * mailbox ready, like there is for the doorbell interface.
-> > > > -        *
-> > > > -        * Assumptions:
-> > > > -        * 1. The firmware might toggle the Mailbox Interface Ready bit, check
-> > > > -        *    it for every command.
-> > > > -        *
-> > > > -        * 2. If the doorbell is clear, the firmware should have first set the
-> > > > -        *    Mailbox Interface Ready bit. Therefore, waiting for the doorbell
-> > > > -        *    to be ready is sufficient.
-> > > > +        * that it's ready to receive commands. The spec does not clearly define
-> > > > +        * under what conditions the bit may get set or cleared. As of the 2.0
-> > > > +        * base specification there was no defined timeout for mailbox ready,
-> > > > +        * like there is for the doorbell interface. This was fixed with an ECN,
-> > > > +        * but it's possible early devices implemented this before the ECN.
-> > >
-> > > Can we just drop comment block altogether? Outside of
-> > > cxl_pci_setup_mailbox() the only time the mailbox status should be
-> > > checked is after a doorbell timeout after submitting a command.
-> > >
-> >
-> > Yes, I think it's fine to drop it.
-> >
-> > > >          */
-> > > > -       rc = cxl_pci_mbox_wait_for_doorbell(cxlds);
-> > > > -       if (rc) {
-> > > > -               dev_warn(dev, "Mailbox interface not ready\n");
-> > > > -               goto out;
-> > > > -       }
-> > > > -
-> > > >         md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
-> > > >         if (!(md_status & CXLMDEV_MBOX_IF_READY && CXLMDEV_READY(md_status))) {
-> > > >                 dev_err(dev, "mbox: reported doorbell ready, but not mbox ready\n");
-> > >
-> > > This error message is obsolete since nothing is pre-checking the
-> > > mailbox anymore, and per above I see no problem waiting to check the
-> > > status until after the mailbox has failed to respond after a timeout.
-> >
-> > The message is wrong, but I think the logic is still valuable. How about:
-> > "mbox: reported interface ready, but mbox not ready"
-> 
-> You mean check this every time even though the spec says the driver
-> only needs to check it once per-reset?
+On Mon, Nov 29, 2021 at 12:36 PM Rob Herring <robh@kernel.org> wrote:
+>
+> Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
+> broke PCI support on XGene. The cause is the IB resources are now sorted
+> in address order instead of being in DT dma-ranges order. The result is
+> which inbound registers are used for each region are swapped. I don't
+> know the details about this h/w, but it appears that IB region 0
+> registers can't handle a size greater than 4GB. In any case, limiting
+> the size for region 0 is enough to get back to the original assignment
+> of dma-ranges to regions.
+>
+> Reported-by: Stéphane Graber <stgraber@ubuntu.com>
+> Fixes: 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
+> Link: https://lore.kernel.org/all/CA+enf=v9rY_xnZML01oEgKLmvY1NGBUUhnSJaETmXtDtXfaczA@mail.gmail.com/
+> Cc: stable@vger.kernel.org # v5.5+
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Unfortunately it does not say that. "... it shall remain set until the next
-reset or the device encounters an error that prevents any mailbox
-communication."
+I've been running with this exact change on top of the latest 5.12
+stable release for a few days now, so can confirm that on my hardware
+it's behaving perfectly (on 4 different servers).
 
-Once we have real error checking in place, this could go away, though I see no
-harm in leaving it.
+Tested-by: Stéphane Graber <stgraber@ubuntu.com>
+
+> ---
+>  drivers/pci/controller/pci-xgene.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
+> index 56d0d50338c8..d83dbd977418 100644
+> --- a/drivers/pci/controller/pci-xgene.c
+> +++ b/drivers/pci/controller/pci-xgene.c
+> @@ -465,7 +465,7 @@ static int xgene_pcie_select_ib_reg(u8 *ib_reg_mask, u64 size)
+>                 return 1;
+>         }
+>
+> -       if ((size > SZ_1K) && (size < SZ_1T) && !(*ib_reg_mask & (1 << 0))) {
+> +       if ((size > SZ_1K) && (size < SZ_4G) && !(*ib_reg_mask & (1 << 0))) {
+>                 *ib_reg_mask |= (1 << 0);
+>                 return 0;
+>         }
+> --
+> 2.32.0
+>
