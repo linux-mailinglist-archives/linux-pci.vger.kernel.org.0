@@ -2,117 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4802461D82
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 19:22:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD576461D9F
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 19:24:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351084AbhK2SZq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 13:25:46 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:47108 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbhK2SXp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 13:23:45 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 85439CE13D7;
-        Mon, 29 Nov 2021 18:20:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EF96C53FAD;
-        Mon, 29 Nov 2021 18:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1638210024;
-        bh=GZGDxE8s+2V561z3QS8z0po771bfpbHBVhYMNFTZPXI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mdRIBtvTmf88vjKsGmMH9hHm+a/vb274PqujYc45fWeJ+2D/XfPivh3HfEdViVr9u
-         uGJYOPYnk4jmyK45kkr9b+IO7KxWUpvCKzKI9dpfgxLC/mNVhjXo8gXMGO4yGVq6xp
-         fcVsa8a4sJv1MAIaQaKDD3DzIoMrZwMsOgv84pao=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH 4.19 17/69] PCI: aardvark: Fix a leaked reference by adding missing of_node_put()
-Date:   Mon, 29 Nov 2021 19:17:59 +0100
-Message-Id: <20211129181704.225629103@linuxfoundation.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211129181703.670197996@linuxfoundation.org>
-References: <20211129181703.670197996@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1378152AbhK2S1N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 13:27:13 -0500
+Received: from ale.deltatee.com ([204.191.154.188]:44806 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1349752AbhK2SZM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 13:25:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=WV/TNnYNnFcZxzUqPd3ZA5cAcLIoTgfWNZK1F+bgrdE=; b=i+hqBeVjGcPhRQj4lEj6ktxCov
+        xKEF9uG+mDz4HqGRMeO1nFng5r97jDgdDGG1iqzovojY+adfOjUTtvG8uqnd15ZiaUUp693volE2B
+        KXhlE9aQ8xsPkhjnw7xII1M9i5KGePGLSmBETHhUtfpToXeBhXkuZHD5OmdpzNDPqUiflVkb77FpC
+        FW2ajJwdYW5jzNtTPgxbGDl9d3+DcfT81G5QAc7Vk6FluGUu4xjgynE1j/uiY9T9SQ0e6SJTZ3XO+
+        BAmRg2cHOZ+nH6spZy/PpJToErS9Pz3NxOZFgp1OA5J1gaFVsyhN3zOWGqk7CGNHNrX/X9laeQK7J
+        JayDubbA==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1mrlHS-00ANgo-Vh; Mon, 29 Nov 2021 11:21:36 -0700
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20211126230957.239391799@linutronix.de>
+ <20211126232735.547996838@linutronix.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com>
+Date:   Mon, 29 Nov 2021 11:21:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211126232735.547996838@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: borntraeger@de.ibm.com, hca@linux.ibm.com, linux-s390@vger.kernel.org, linux-ntb@googlegroups.com, allenbh@gmail.com, dave.jiang@intel.com, jdmason@kudzu.us, gregkh@linuxfoundation.org, linux-pci@vger.kernel.org, ashok.raj@intel.com, megha.dey@intel.com, jgg@nvidia.com, kevin.tian@intel.com, alex.williamson@redhat.com, maz@kernel.org, helgaas@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.2 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
-
-commit 3842f5166bf1ef286fe7a39f262b5c9581308366 upstream.
-
-The call to of_get_next_child() returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
-
-irq_domain_add_linear() also calls of_node_get() to increase refcount,
-so irq_domain will not be affected when it is released.
-
-Detected by coccinelle with the following warnings:
-  ./drivers/pci/controller/pci-aardvark.c:826:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 798, but without a corresponding object release within this function.
-
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Marek Behún <kabel@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/pci/controller/pci-aardvark.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -754,6 +754,7 @@ static int advk_pcie_init_irq_domain(str
- 	struct device_node *node = dev->of_node;
- 	struct device_node *pcie_intc_node;
- 	struct irq_chip *irq_chip;
-+	int ret = 0;
- 
- 	raw_spin_lock_init(&pcie->irq_lock);
- 
-@@ -768,8 +769,8 @@ static int advk_pcie_init_irq_domain(str
- 	irq_chip->name = devm_kasprintf(dev, GFP_KERNEL, "%s-irq",
- 					dev_name(dev));
- 	if (!irq_chip->name) {
--		of_node_put(pcie_intc_node);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto out_put_node;
- 	}
- 
- 	irq_chip->irq_mask = advk_pcie_irq_mask;
-@@ -781,11 +782,13 @@ static int advk_pcie_init_irq_domain(str
- 				      &advk_pcie_irq_domain_ops, pcie);
- 	if (!pcie->irq_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
--		of_node_put(pcie_intc_node);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto out_put_node;
- 	}
- 
--	return 0;
-+out_put_node:
-+	of_node_put(pcie_intc_node);
-+	return ret;
- }
- 
- static void advk_pcie_remove_irq_domain(struct advk_pcie *pcie)
 
 
+On 2021-11-26 6:23 p.m., Thomas Gleixner wrote:
+> Replace the about to vanish iterators, make use of the filtering and take
+> the descriptor lock around the iteration.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jon Mason <jdmason@kudzu.us>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Allen Hubbe <allenbh@gmail.com>
+> Cc: linux-ntb@googlegroups.com
+
+This patch looks good to me:
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Thanks,
+
+Logan
