@@ -2,110 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A719461C13
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 17:46:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A225D461D6F
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 19:16:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345463AbhK2QuF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 11:50:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:43430 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243195AbhK2QsF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Nov 2021 11:48:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADD3D12FC;
-        Mon, 29 Nov 2021 08:44:47 -0800 (PST)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24E4A3F5A1;
-        Mon, 29 Nov 2021 08:44:47 -0800 (PST)
-Date:   Mon, 29 Nov 2021 16:44:44 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     linux-pci@vger.kernel.org, pali@kernel.org
-Subject: Re: [PATCH 2/7] PCI: pci-bridge-emul: Add definitions for missing
- capabilities registers
-Message-ID: <20211129164444.GC26244@lpieralisi>
-References: <20211031181233.9976-1-kabel@kernel.org>
- <20211031181233.9976-3-kabel@kernel.org>
+        id S1350561AbhK2SUB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 13:20:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1349599AbhK2SSB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 13:18:01 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95423C0698FC;
+        Mon, 29 Nov 2021 06:46:02 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638197160;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=moCVXIgDd3WnVTqImBDpITWvvySrFpXIFP1kWeQJHKU=;
+        b=3S6nmBadZg5tSz0rZHXEDZM40jhTHe/7y2CLs37JoDJvOsqgG2cw7AFkhZmO3IdHZkuU9R
+        pVQt9YCIdmL3mqxv0ggmb01VmoCUbHZRd64fJZOBgy3p6qf0yt+N3IeVkNZOmjc2ffHdBW
+        Fe3cKz/hyz3coikXPRJojbmAf8pnQXCKIifn18l8SAPBIAtd++qZL7lcd2GUQ43ReBZSSb
+        YEaX4dZnsyMGt030d1oeJE78U9xH9MpjyOlXGXYTOBLeSTyHK/p9iuz/Yv3815hL8aqm+X
+        NprgrTl+hvQHD/9Rby3+aV+xzNqCHnMwOelYZ23ZX4e7euce2B93n/AvKumo8A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638197160;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=moCVXIgDd3WnVTqImBDpITWvvySrFpXIFP1kWeQJHKU=;
+        b=vkhx9Uk6Dv9aGqVVDjVmHZWJ3IWDihE7siFS7bF7kSJaV33N0jk920aDAUwoTwmfFwotsF
+        Cg8b0iVzhVwufjCA==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
+Subject: Re: [patch 04/32] genirq/msi: Provide a set of advanced MSI
+ accessors and iterators
+In-Reply-To: <20211129140112.GX4670@nvidia.com>
+References: <877dcsf5l5.ffs@tglx> <87o863e2j0.ffs@tglx>
+ <20211129140112.GX4670@nvidia.com>
+Date:   Mon, 29 Nov 2021 15:46:00 +0100
+Message-ID: <87a6hndnpz.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211031181233.9976-3-kabel@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Oct 31, 2021 at 07:12:28PM +0100, Marek Behún wrote:
-> From: Pali Rohár <pali@kernel.org>
-> 
-> pci-bridge-emul driver already allocates buffer for capabilities up to the
-> PCI_EXP_SLTSTA2 register, but does not define bit access behavior for these
-> registers. Add these missing definitions.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> Cc: stable@vger.kernel.org
+Jason,
 
-Is this tag in preparation for something else ? I don't even think this
-is a fix per-se.
+On Mon, Nov 29 2021 at 10:01, Jason Gunthorpe wrote:
+> On Mon, Nov 29, 2021 at 10:26:11AM +0100, Thomas Gleixner wrote:
+>> After looking at all the call sites again, there is no real usage for
+>> this local index variable.
+>> 
+>> If anything needs the index of a descriptor then it's available in the
+>> descriptor itself. That won't change because the low level message write
+>> code needs the index too and the only accessible storage there is
+>> msi_desc.
+>
+> Oh, that makes it simpler, just use the current desc->index as the
+> input to the xa_for_each_start() and then there should be no need of
+> hidden state?
 
-Lorenzo
+That works for alloc, but on free that's going to end up badly.
 
-> ---
->  drivers/pci/pci-bridge-emul.c | 39 +++++++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
-> 
-> diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-> index a4af1a533d71..aa3320e3c469 100644
-> --- a/drivers/pci/pci-bridge-emul.c
-> +++ b/drivers/pci/pci-bridge-emul.c
-> @@ -251,6 +251,45 @@ struct pci_bridge_reg_behavior pcie_cap_regs_behavior[PCI_CAP_PCIE_SIZEOF / 4] =
->  		.ro = GENMASK(15, 0) | PCI_EXP_RTSTA_PENDING,
->  		.w1c = PCI_EXP_RTSTA_PME,
->  	},
-> +
-> +	[PCI_EXP_DEVCAP2 / 4] = {
-> +		/* Device capabilities 2 register has reserved bits [30:27]. */
-> +		.ro = BIT(31) | GENMASK(26, 0),
-> +	},
-> +
-> +	[PCI_EXP_DEVCTL2 / 4] = {
-> +		/*
-> +		 * Device control 2 register is RW.
-> +		 *
-> +		 * Device status 2 register is reserved.
-> +		 */
-> +		.rw = GENMASK(15, 0),
-> +	},
-> +
-> +	[PCI_EXP_LNKCAP2 / 4] = {
-> +		/* Link capabilities 2 register has reserved bits [30:25] and 0. */
-> +		.ro = BIT(31) | GENMASK(24, 1),
-> +	},
-> +
-> +	[PCI_EXP_LNKCTL2 / 4] = {
-> +		/*
-> +		 * Link control 2 register is RW.
-> +		 *
-> +		 * Link status 2 register has bits 5, 15 W1C;
-> +		 * bits 10, 11 reserved and others are RO.
-> +		 */
-> +		.rw = GENMASK(15, 0),
-> +		.w1c = (BIT(15) | BIT(5)) << 16,
-> +		.ro = (GENMASK(14, 12) | GENMASK(9, 6) | GENMASK(4, 0)) << 16,
-> +	},
-> +
-> +	[PCI_EXP_SLTCAP2 / 4] = {
-> +		/* Slot capabilities 2 register is reserved. */
-> +	},
-> +
-> +	[PCI_EXP_SLTCTL2 / 4] = {
-> +		/* Both Slot control 2 and Slot status 2 registers are reserved. */
-> +	},
->  };
->  
->  /*
-> -- 
-> 2.32.0
-> 
+>> What for? The usage sites should not have to care about the storage
+>> details of a facility they are using.
+>
+> Generally for_each things shouldn't have hidden state that prevents
+> them from being nested. It is just an unexpected design pattern..
+
+I'm not seeing any sensible use case for:
+
+     msi_for_each_desc(dev)
+        msi_for_each_desc(dev)
+
+If that ever comes forth, I'm happy to debate this further :)
+
+Thanks,
+
+        tglx
