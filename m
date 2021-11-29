@@ -2,147 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92DBD4626A7
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 23:52:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17E344627C3
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 00:07:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235624AbhK2Wzf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 17:55:35 -0500
-Received: from mga11.intel.com ([192.55.52.93]:35009 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236124AbhK2WzR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Nov 2021 17:55:17 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10183"; a="233592853"
-X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="233592853"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 14:50:25 -0800
-X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
-   d="scan'208";a="540182749"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.175.223]) ([10.209.175.223])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 14:50:24 -0800
-Message-ID: <693a42d6-34d0-b8f9-f8b8-39ebbabb7f16@intel.com>
-Date:   Mon, 29 Nov 2021 15:50:23 -0700
+        id S236776AbhK2XJ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 18:09:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237337AbhK2XJO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 18:09:14 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89E1C0F74C4;
+        Mon, 29 Nov 2021 13:07:10 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id D6E43CE16B4;
+        Mon, 29 Nov 2021 21:07:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA8D1C53FC7;
+        Mon, 29 Nov 2021 21:07:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638220027;
+        bh=YYsrWpsjHtYy14bPA9IeK6DYB6TTLcgfXcuOF1CfI00=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CV5bVkbPH6U6AOHjBPA2DrM1eZ1WCNEEr2V6Ogj8edwXiqOAEFU3aEpj2j0ppognm
+         2KxVMZtL166u/kJuNPXut4yC2aMuRaFHvW4XWbPWR+cGNYLFYZMRqgJ5oUK9naNO45
+         gAy81Zl4ifg7GW82DuwY9xzyOk+X832OV12I7Rv0qLGaUJO8i0iLBxlKB0BRV1jRux
+         GsDpx057WgYTWJdD+dY1CXtjSmcSeJ13NIyxl3ovhAI9xO8V4yw5Inwyh9J/UMQMpr
+         joNxkB3DRW1TAUbGjKGgBeIKTzWJ4doP6PiUwAkwpHCtW6g8EAMalLhhhJPO8EyR+/
+         IVsq1x4BmP61A==
+Date:   Mon, 29 Nov 2021 15:07:05 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com,
+        henning.schild@siemens.com
+Subject: Re: [PATCH v1 3/7] PCI: New Primary to Sideband (P2SB) bridge
+ support library
+Message-ID: <20211129210705.GA2689680@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-Content-Language: en-US
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-References: <20211126230957.239391799@linutronix.de>
- <20211126232735.547996838@linutronix.de>
- <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com> <874k7ueldt.ffs@tglx>
- <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YaD/hspdA/j0tL5h@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Nov 26, 2021 at 05:38:46PM +0200, Andy Shevchenko wrote:
+> On Mon, Mar 08, 2021 at 07:42:21PM -0600, Bjorn Helgaas wrote:
+> > On Mon, Mar 08, 2021 at 09:16:50PM +0200, Andy Shevchenko wrote:
+> > > On Mon, Mar 08, 2021 at 12:52:12PM -0600, Bjorn Helgaas wrote:
+> > > > On Mon, Mar 08, 2021 at 02:20:16PM +0200, Andy Shevchenko wrote:
+> > > > > From: Jonathan Yong <jonathan.yong@intel.com>
+> > > > > 
+> > > > > There is already one and at least one more user is coming which
+> > > > > requires an access to Primary to Sideband bridge (P2SB) in order to
+> > > > > get IO or MMIO bar hidden by BIOS. Create a library to access P2SB
+> > > > > for x86 devices.
+> > > > 
+> > > > Can you include a spec reference?
+> > > 
+> > > I'm not sure I have a public link to the spec. It's the 100 Series PCH [1].
+> > > The document number to look for is 546955 [2] and there actually a bit of
+> > > information about this.
+> > 
+> > This link, found by googling for "p2sb bridge", looks like it might
+> > have relevant public links:
+> > 
+> > https://lab.whitequark.org/notes/2017-11-08/accessing-intel-ich-pch-gpios/
+> > 
+> > I'd prefer if you could dig out the relevant sections because I really
+> > don't know how to identify them.
+> 
+> I'm not sure I understand what you would like to see. The
+> information about P2SB here has confidential tag. I probably can use
+> the document number and cite couple of paragraphs from it. Would it
+> be sufficient?
 
-On 11/29/2021 3:27 PM, Logan Gunthorpe wrote:
->
-> On 2021-11-29 1:51 p.m., Thomas Gleixner wrote:
->> Logan,
->>
->> On Mon, Nov 29 2021 at 11:21, Logan Gunthorpe wrote:
->>> On 2021-11-26 6:23 p.m., Thomas Gleixner wrote:
->>>> Replace the about to vanish iterators, make use of the filtering and take
->>>> the descriptor lock around the iteration.
->>> This patch looks good to me:
->>>
->>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
->> thanks for having a look at this. While I have your attention, I have a
->> question related to NTB.
->>
->> The switchtec driver is the only one which uses PCI_IRQ_VIRTUAL in order
->> to allocate non-hardware backed MSI-X descriptors.
->>
->> AFAIU these descriptors are not MSI-X descriptors in the regular sense
->> of PCI/MSI-X. They are allocated via the PCI/MSI mechanism but their
->> usage is somewhere in NTB which has nothing to do with the way how the
->> real MSI-X interrupts of a device work which explains why we have those
->> pci.msi_attrib.is_virtual checks all over the place.
->>
->> I assume that there are other variants feeding into NTB which can handle
->> that without this PCI_IRQ_VIRTUAL quirk, but TBH, I got completely lost
->> in that code.
->>
->> Could you please shed some light on the larger picture of this?
-> Yes, of course. I'll try to explain:
->
-> The NTB code here is trying to create an MSI interrupt that is not
-> triggered by the PCI device itself but from a peer behind the
-> Non-Transparent Bridge (or, more carefully: from the CPU's perspective
-> the interrupt will come from the PCI device, but nothing in the PCI
-> device's firmware or hardware will have triggered the interrupt).
->
-> In most cases, the NTB code needs more interrupts than the hardware
-> actually provides for in its MSI-X table. That's what PCI_IRQ_VIRTUAL is
-> for: it allows the driver to request more interrupts than the hardware
-> advertises (ie. pci_msix_vec_count()). These extra interrupts are
-> created, but get flagged with msi_attrib.is_virtual which ensures
-> functions that program the MSI-X table don't try to write past the end
-> of the hardware's table.
->
-> The NTB code in drivers/ntb/msi.c uses these virtual MSI-X interrupts.
-> (Or rather it can use any interrupt: it doesn't care whether its virtual
-> or not, it would be fine if it is just a spare interrupt in hardware,
-> but in practice, it will usually be a virtual one). The code uses these
-> interrupts by setting up a memory window in the bridge to cover the MMIO
-> addresses of MSI-X interrupts. It communicates the offsets of the
-> interrupts (and the MSI message data) to the peer so that the peer can
-> trigger the interrupt simply by writing the message data to its side of
-> the memory window. (In the code: ntbm_msi_request_threaded_irq() is
-> called to request and interrupt which fills in the ntb_msi_desc with the
-> offset and data, which is transferred to the peer which would then use
-> ntb_msi_peer_trigger() to trigger the interrupt.)
->
-> Existing NTB hardware does already have what's called a doorbell which
-> provides the same functionally as the above technique. However, existing
-> hardware implementations of doorbells have significant latency and thus
-> slow down performance substantially. Implementing the MSI interrupts as
-> described above increased the performance of ntb_transport by more than
-> three times[1].
->
-> There aren't really other "variants". In theory, IDT hardware would also
-> require the same quirk but the drivers in the tree aren't quite up to
-> snuff and don't even support ntb_transport (so nobody has added
-> support). Intel and AMD drivers could probably do this as well (provided
-> they have extra memory windows) but I don't know that anyone has tried.
+This patch proposes to add drivers/pci/pci-p2sb.c.  Things in
+drivers/pci/ should generally be documented via PCI-SIG specs to make
+them maintainable.  pci-p2sb.c is clearly x86- and Intel-specific.
+Maybe arch/x86/pci/ would be a better place for it?
 
-The Intel driver used to do something similar to bypass the doorbell 
-hardware errata for pre Skylake Xeon hardware that wasn't upstream. I'd 
-like to get this working for the performance reasons you mentioned. I 
-just really need to find some time to test this with the second memory 
-window Intel NTB has.
+If I were to maintain it under drivers/pci/, I would want some
+description about P2SBC_HIDE_BYTE, which device's config space it is
+in (apparently 0d.0 of some CPU), and which device it hides/unhides
+(apparently some device X other than the CPU).
 
+> > The code suggests that a register on this device controls whether a
+> > different device is visible in config space.  I think it will be
+> > better if we can describe what's happening.
+> 
+> Actually it seems incorrect assumption (while it works by some reason).
+> I have to double test this.
+> 
+> From the doc:
+> 
+> "The P2SB is enumerated as a normal PCI device. ...
+> Writing a 1 to the P2SBC.HIDE field in the P2SB PCI Configuration space
+> hides the device; writing a 0 to this field, unhides the device."
+> 
+> It clearly states the P2SB PCI configuration space.
 
->
-> Let me know if anything is still unclear or you have further questions.
-> You can also read the last posting of the patch series[2] if you'd like
-> more information.
->
-> Logan
->
-> [1] 2b0569b3b7e6 ("NTB: Add MSI interrupt support to ntb_transport")
-> [2]
-> https://lore.kernel.org/all/20190523223100.5526-1-logang@deltatee.com/T/#u
->
->
->
->
+It clearly says P2SBC.HIDE is in P2SB config space.  But I think it's
+talking about hiding/unhiding a device other than P2SB.
+
+This patch suggests the P2SB device is at PCI_DEVFN(13, 0), and the
+lpc_ich_init_spi() patch suggests there's a SPI controller at
+PCI_DEVFN(13, 2).  And apparently P2SBC_HIDE_BIT in PCI_DEVFN(13, 0)
+determines whether PCI_DEVFN(13, 2) appears in config space.
+
+So it sounds like P2SB is always visible in config space and is not
+itself a "bridge".  The SPI controller, which *is* a bridge from PCI
+to SPI, appears at PCI_DEVFN(13, 2) in config space when
+P2SBC_HIDE_BIT is cleared.
+
+> > This all sounds quite irregular from the point of view of the PCI
+> > core.  If a device responds to address space that is not described by
+> > a standard PCI BAR, or by an EA capability, or by one of the legacy
+> > VGA or IDE exceptions, we have a problem.  That space must be
+> > described *somehow* in a generic way, e.g., ACPI or similar.
+> > 
+> > What happens if CONFIG_PCI_P2SB is unset?  The device doesn't know
+> > that, and if it is still consuming MMIO address space that we don't
+> > know about, that's a problem.
+> 
+> Yeah, Henning already answered on this and I believe that nothing
+> prevents OS to try that addresses for other PCI devices, except the
+> memory region reservation (by ACPI and / or e820 meaning). It means
+> that we rely on firmware to do the right thing if it hides the P2SB
+> bar.
+> 
+> And at the same time P2SB bar is used as a part of telling OS where
+> the *fixed* 16Mb region of MMIO is located.
+
+If the SPI controller consumes PCI address space, that space must be
+discoverable by standard PCI enumeration and BAR sizing.
+
+If the BIOS hides the device, I assume that means it does not respond
+in config space and does not consume MMIO space.  That's fine.
+
+If the BIOS hides the device and the OS unhides it, the unhide should
+happen before PCI device enumeration, so the PCI core will find the
+device and learn about the MMIO space it consumes.
+
+Bjorn
