@@ -2,94 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 544F44625DC
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 23:42:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC931462358
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 22:30:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234808AbhK2WoS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 17:44:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234285AbhK2Wnp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 17:43:45 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0624CC043AD8;
-        Mon, 29 Nov 2021 12:51:13 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638219071;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tz/JDx8g54Ok4OMBliMP1MHdAMZdu38KyT07rgK4kek=;
-        b=EJHYdtcQ7CkIX5jk0EPaQKBNxB/I4Fmx4psc3dNfeVrvTFpfEeqts20BFVbt5PAcORMNHi
-        YmEYN7qu9o9Nf+xrWi1DDTWj8DqHrD/TaMw5SFkbD9O9fYe/B4c4CovKJtoayoJFBLXFhN
-        h1GDxLrYh/zoeCY8+4MzczVeqOnc/INyFI9/5AX3gUiOfVu22C1ifU4McFVa8VwqLko/cL
-        R/kEgQCcjhyb30qp4KynvMsylSgqwoxDEXZFQey00qSiM47Wq3tkv0cLqJ0EqVtA/e+0Fv
-        AngN+lIgcGkoPC0smzvCoXGvs5qyyndto5EVdLqns8n0Bo2OfZztMwHgnyLp/A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638219071;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tz/JDx8g54Ok4OMBliMP1MHdAMZdu38KyT07rgK4kek=;
-        b=sVqzZBKzTnDKRGPDAdt0lfSw7znG5ecBJX8UUs+ZB5r69qdnSChYv4MKQc8kplV1rgOuob
-        O5RAPkes0fGbEIBg==
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-In-Reply-To: <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com>
-References: <20211126230957.239391799@linutronix.de>
- <20211126232735.547996838@linutronix.de>
- <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com>
-Date:   Mon, 29 Nov 2021 21:51:10 +0100
-Message-ID: <874k7ueldt.ffs@tglx>
+        id S230078AbhK2VdU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 16:33:20 -0500
+Received: from mga05.intel.com ([192.55.52.43]:46903 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232771AbhK2VbS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Nov 2021 16:31:18 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10183"; a="322318957"
+X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
+   d="scan'208";a="322318957"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 13:24:00 -0800
+X-IronPort-AV: E=Sophos;i="5.87,273,1631602800"; 
+   d="scan'208";a="594837751"
+Received: from ajsteine-mobl13.amr.corp.intel.com (HELO intel.com) ([10.252.141.244])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2021 13:23:59 -0800
+Date:   Mon, 29 Nov 2021 13:23:57 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 14/23] cxl: Introduce topology host registration
+Message-ID: <20211129212357.6fnqn4vaoowo4vpq@intel.com>
+References: <20211120000250.1663391-1-ben.widawsky@intel.com>
+ <20211120000250.1663391-15-ben.widawsky@intel.com>
+ <CAPcyv4inKyG7biUh6nxhq9Y22-D5Pg4FgJeZw7mbhSrfwqxGcA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4inKyG7biUh6nxhq9Y22-D5Pg4FgJeZw7mbhSrfwqxGcA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Logan,
+On 21-11-24 17:09:03, Dan Williams wrote:
+> On Fri, Nov 19, 2021 at 4:03 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >
+> > The description of the CXL topology will be conveyed by a platform
+> > specific entity that is expected to be a singleton. For ACPI based
+> > systems, this is ACPI0017. When the topology host goes away, which as of
+> > now can only be triggered by module unload, it is desirable to have the
+> > entire topology cleaned up. Regular devm unwinding handles most
+> > situations already, but what's missing is the ability to teardown the
+> > root port. Since the root port is platform specific, the core needs a
+> > set of APIs to allow platform specific drivers to register their root
+> > ports. With that, all the automatic teardown can occur.
+> 
+> Wait, no, that was one of the original motivations, but then we
+> discussed here [1] that devm teardown of a topology can happen
+> naturally / hierarchically.
+> 
+> [1]: https://lore.kernel.org/r/CAPcyv4ikVFFqyfH2zLhBVJ28N1_gufGHd2gVbP2h+Rv2cZEpeA@mail.gmail.com
+> 
+> No, the reason for the cxl_topology_host is as a constraint for when
+> CXL.mem connectivity can be verified from root to endpoint. Given that
+> endpoints can attach at any point in time relative to when the root
+> arrives CXL.mem connectivity needs to be revalidated at every topology
+> host arrival / depart event.
 
-On Mon, Nov 29 2021 at 11:21, Logan Gunthorpe wrote:
-> On 2021-11-26 6:23 p.m., Thomas Gleixner wrote:
->> Replace the about to vanish iterators, make use of the filtering and take
->> the descriptor lock around the iteration.
->
-> This patch looks good to me:
->
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Oops. I forgot to update the commit message, I will take what you wrote with
+slight modification.
 
-thanks for having a look at this. While I have your attention, I have a
-question related to NTB.
 
-The switchtec driver is the only one which uses PCI_IRQ_VIRTUAL in order
-to allocate non-hardware backed MSI-X descriptors.
-
-AFAIU these descriptors are not MSI-X descriptors in the regular sense
-of PCI/MSI-X. They are allocated via the PCI/MSI mechanism but their
-usage is somewhere in NTB which has nothing to do with the way how the
-real MSI-X interrupts of a device work which explains why we have those
-pci.msi_attrib.is_virtual checks all over the place.
-
-I assume that there are other variants feeding into NTB which can handle
-that without this PCI_IRQ_VIRTUAL quirk, but TBH, I got completely lost
-in that code.
-
-Could you please shed some light on the larger picture of this?
-
-Thanks,
-
-        tglx
