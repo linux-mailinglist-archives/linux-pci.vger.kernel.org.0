@@ -2,98 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE0CE461117
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 10:28:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 186FF461124
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 10:32:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243818AbhK2Jbb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 04:31:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52410 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243995AbhK2J3b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 04:29:31 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638177972;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to; bh=vsQfYjhiBM4r7l7V0nZmUO3oNlQtIhI3OMTj1eyI/yY=;
-        b=nJiWamimirlRvKEdNsX2fBgwvYCCn9sR0fworYU1e5X/OaMTPxTSgzyGd0flO3B2jcqmXN
-        UYv1JQYV9GCd0ejevd1Ub9OnENXKUn/OA2QFn8xXj/sAX0BcCQy1sALSFg8bfV1CfD01Yr
-        vXCJHIl5OfIkIx0xbSIGcyIiO7GiZvvsQlTiHUfke6tXUWLYBm7kKgYKx6Paroj+LA8C2w
-        luN+p+aDstwwYHSWwzluIAk/1XqYaCSkPf6h3q1iPkAscoWQKhIE8UM85kdNoLHvSAcykl
-        YyigM7O67ykaWw4Gc7g4bF0rQgLpFAj5EdNGD4jeHaTIFgkaGYj15uJwdOCwmA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638177972;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to; bh=vsQfYjhiBM4r7l7V0nZmUO3oNlQtIhI3OMTj1eyI/yY=;
-        b=Hln4q+IFuycSbrNa+go3njlxYP/OFv40X+QILw3q5t55RcCnD12KZEM9fQtyQaIOVJ/gnK
-        DduA4aH3uyI7GKDA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
+        id S232358AbhK2JfQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 04:35:16 -0500
+Received: from m43-7.mailgun.net ([69.72.43.7]:48042 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234519AbhK2JdP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 29 Nov 2021 04:33:15 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1638178198; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=6eYnZqn/a+66YlvOdqd+LVZ4HfzlOTayDC9zFdg1eh8=; b=msIb9nD4T9xoTH1L/oZSAM+6AmshQs5IBLD42xZjlu1Q/WgzRJYk0ZhNlAS6j7sXPdXt5FVq
+ jkc3Vm6qElYEMo1EJj7e6+3ugu0IkDTBHUY/VqerJ4ANXEYrgKtt0stHRYawK4jcLNTxDw75
+ zhusivEUpsd8VgPdPNMwnpE6BIw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 61a49d953553c354be8af892 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Nov 2021 09:29:57
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D166AC4361B; Mon, 29 Nov 2021 09:29:56 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+Received: from tykki (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C23B0C4338F;
+        Mon, 29 Nov 2021 09:29:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org C23B0C4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
         Marc Zygnier <maz@kernel.org>,
         Alex Williamson <alex.williamson@redhat.com>,
         Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
+        linux-pci@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+        linux-hyperv@vger.kernel.org, Juergen Gross <jgross@suse.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: Re: [patch 04/32] genirq/msi: Provide a set of advanced MSI
- accessors and iterators
-In-Reply-To: <877dcsf5l5.ffs@tglx>
-Date:   Mon, 29 Nov 2021 10:26:11 +0100
-Message-ID: <87o863e2j0.ffs@tglx>
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: [patch 10/22] genirq/msi, treewide: Use a named struct for PCI/MSI attributes
+References: <20211126222700.862407977@linutronix.de>
+        <20211126223824.679247706@linutronix.de>
+Date:   Mon, 29 Nov 2021 11:29:46 +0200
+In-Reply-To: <20211126223824.679247706@linutronix.de> (Thomas Gleixner's
+        message of "Sat, 27 Nov 2021 02:18:50 +0100 (CET)")
+Message-ID: <874k7vcnsl.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jason,
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-On Sun, Nov 28 2021 at 20:22, Thomas Gleixner wrote:
-> On Sat, Nov 27 2021 at 21:00, Jason Gunthorpe wrote:
->> On Sat, Nov 27, 2021 at 02:22:33AM +0100, Thomas Gleixner wrote:
->> I understand why that isn't desirable at this patch where the storage
->> would have to be a list_head pointer, but still, seems like an odd
->> place to end up at the end of the series.
->>
->> eg add index here unused and then the last patch uses it instead of
->> __iter_idx.
+> The unnamed struct sucks and is in the way of further cleanups. Stick the
+> PCI related MSI data into a real data structure and cleanup all users.
 >
-> TBH, didn't think about doing just that. OTH, given the experience of
-> looking at the creative mess people create, this was probably also a
-> vain attempt to make it harder in the future.
+> No functional change.
 >
->> Also, I don't understand why filter was stored in the dev and not
->> passed into msi_next_desc() in the macro here?
->
-> No real reason. I probably just stored it along with the rest. Lemme try
-> that index approach.
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: sparclinux@vger.kernel.org
+> Cc: x86@kernel.org
+> Cc: xen-devel@lists.xenproject.org
+> Cc: ath11k@lists.infradead.org
+> ---
+>  arch/powerpc/platforms/cell/axon_msi.c    |    2 
+>  arch/powerpc/platforms/powernv/pci-ioda.c |    4 -
+>  arch/powerpc/platforms/pseries/msi.c      |    6 -
+>  arch/sparc/kernel/pci_msi.c               |    4 -
+>  arch/x86/kernel/apic/msi.c                |    2 
+>  arch/x86/pci/xen.c                        |    6 -
+>  drivers/net/wireless/ath/ath11k/pci.c     |    2 
 
-After looking at all the call sites again, there is no real usage for
-this local index variable.
+For ath11k:
 
-If anything needs the index of a descriptor then it's available in the
-descriptor itself. That won't change because the low level message write
-code needs the index too and the only accessible storage there is
-msi_desc.
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
 
-So the "gain" would be to have a pointless 'unsigned long index;'
-variable at all usage sites.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-What for? The usage sites should not have to care about the storage
-details of a facility they are using.
-
-So it might look odd in the first place, but at the end it's conveniant
-and does not put any restrictions on changing the underlying mechanics.
-
-Thanks,
-
-        tglx
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
