@@ -2,90 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BEAA462042
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 20:20:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA43346224F
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 21:39:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238429AbhK2TXj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 14:23:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46044 "EHLO
+        id S230386AbhK2UnE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 15:43:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351560AbhK2TVj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 14:21:39 -0500
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ef0:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39EF8C0619D3
-        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 07:39:47 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        with ESMTP id S232226AbhK2UlE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 15:41:04 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06318C09677B
+        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 09:16:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id AA2332805D230;
-        Mon, 29 Nov 2021 16:39:43 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 9DAC22ED5ED; Mon, 29 Nov 2021 16:39:43 +0100 (CET)
-Date:   Mon, 29 Nov 2021 16:39:43 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: pciehp: Use down_read/write_nested(reset_lock)
- to fix lockdep errors
-Message-ID: <20211129153943.GA4896@wunner.de>
-References: <20211129121934.4963-1-hdegoede@redhat.com>
- <20211129121934.4963-2-hdegoede@redhat.com>
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C2F3BB8120F
+        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 17:15:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5801C53FAD;
+        Mon, 29 Nov 2021 17:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638206157;
+        bh=JP6Bblx4Vh3MrNtB3GUhSi7CyJJS9rWRtyMrbQenCAg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hg6EVArRLKF7E7C9HpuFrK3sx0YhUWcw5eMpwULioa+gn3FESKRhQJXw+KOFgadIf
+         WDWyJk5X/ZTIvRmoU5koPLSNupzhYHdV67J8faBPLJiDvNIEEbz5xTuHPEPnDHsni3
+         MneQEr4BAkyiTmREJsDsrxnEmZb6o+/p2H8KMAbRELAZVsy8q3PC1M0eD1vVh9lV9v
+         nMT/dts7Bt7CN+Zgpbk6Cbdyu7uoXsMNNQjcXfoM7oU2cslP5eES8K1ZGeexi/8wPw
+         KsesK9yVPr0q7fzoNkbtfrpoSW+I4Nb9ILW/n13eSiqQyx9JLDumketjdnPJZFFfy/
+         oyhGMapgniHdQ==
+Date:   Mon, 29 Nov 2021 18:15:53 +0100
+From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, pali@kernel.org
+Subject: Re: [PATCH 7/7] PCI: aardvark: Reset PCIe card and disable PHY at
+ driver unbind
+Message-ID: <20211129181553.41a341bb@thinkpad>
+In-Reply-To: <20211129164043.GA26244@lpieralisi>
+References: <20211031181233.9976-1-kabel@kernel.org>
+        <20211031181233.9976-8-kabel@kernel.org>
+        <20211129164043.GA26244@lpieralisi>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211129121934.4963-2-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 01:19:34PM +0100, Hans de Goede wrote:
-> Use down_read_nested() and down_write_nested() when taking the
-> ctrl->reset_lock rw-sem, passing the PCI-device depth in the hierarchy
-> as lock subclass parameter. This fixes the following false-positive lockdep
-> report when unplugging a Lenovo X1C8 from a Lenovo 2nd gen TB3 dock:
-[...]
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Mon, 29 Nov 2021 16:40:43 +0000
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
 
-That's exactly what I had in mind, thanks.
+> On Sun, Oct 31, 2021 at 07:12:33PM +0100, Marek Beh=C3=BAn wrote:
+> > From: Pali Roh=C3=A1r <pali@kernel.org>
+> >=20
+> > When unbinding driver, assert PERST# signal which prepares PCIe card for
+> > power down. Then disable link training and PHY. =20
+>=20
+> This reads as three actions. If we carry them out as a single patch we
+> have to explain why they are related and what problem they are solving
+> as a _single_ commit.
+>=20
+> Otherwise we have to split this patch into three and explain each of
+> them as a separate fix.
+>=20
+> I understand it is tempting to coalesce missing code in one single
+> change but every commit must implement a single logical change.
 
-Reported-by: "Theodore Ts'o" <tytso@mit.edu>
-Link: https://lore.kernel.org/linux-pci/20190402021933.GA2966@mit.edu/
-Link: https://lore.kernel.org/linux-pci/de684a28-9038-8fc6-27ca-3f6f2f6400d7@redhat.com/
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
+Hi Lorenzo,
 
+this is a fix for driver remove function. Although each of these things
+could be introduced in separate commits, IMO it doesn't make sense to
+split it. It should have been done this way in the first place when the
+driver removal support was introduced. I guess we could rewrite the
+commit message to:
 
-> Note the 2nd patch can probably use a Fixes: tag but I had no
-> idea which commit to put there. Or maybe add a Cc: stable to
-> both patches?
+  PCI: aardvark: Disable controller entirely at driver unbind
 
-I'd just add a stable designation and let the stable maintainers decide
-which versions to backport to.  The problem I see is the dependency on
-the first patch in the series.  In theory there's a syntax to specify
-such prerequisites (see "Option 3" in
-Documentation/process/stable-kernel-rules.rst), but in practice,
-my experience is that stable maintainers may ignore such prerequisite tags.
-It might be simplest to just squash the two patches together.
+  Add the following to driver unbind to disable the controller entirely:
+  - asserting PERST# signal
+  - disabling link training
+  - disable PHY
 
-If you do respin, it would be good to explain in the commit message why
-one lockdep class is used per hierarchy level:  This is done to conserve
-class keys because their number is limited and the complexity grows
-quadratically with number of keys according to
-Documentation/locking/lockdep-design.rst.
+Would this be okay?
 
-It would also be good to explain why the lockdep splat occurs and why
-it's a false positive:  With Thunderbolt, hotplug ports are nested.  When
-removing multiple devices in a daisy-chain, each hotplug port's reset_lock
-may be acquired recursively.  It's never the same lock, so the lockdep
-splat is a false positive.  Because locks at the same hierarchy level
-are never acquired recursively, a per-level lockdep class is sufficient
-to fix the lockdep splat.
-
-Thanks,
-
-Lukas
+Marek
