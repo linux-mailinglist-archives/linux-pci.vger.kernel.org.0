@@ -2,101 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64100461A72
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 15:56:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20B31461BB9
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 17:24:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234760AbhK2O7q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 09:59:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:41692 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346090AbhK2O5q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 29 Nov 2021 09:57:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F18AD1042;
-        Mon, 29 Nov 2021 06:54:25 -0800 (PST)
-Received: from [10.57.34.182] (unknown [10.57.34.182])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7D1C3F766;
-        Mon, 29 Nov 2021 06:54:21 -0800 (PST)
-Message-ID: <b192ad88-5e4e-6f32-1cc7-7a50fc0676a1@arm.com>
-Date:   Mon, 29 Nov 2021 14:54:18 +0000
+        id S1344911AbhK2Q15 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 11:27:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232280AbhK2QZ4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 11:25:56 -0500
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16537C08EB1C
+        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 06:18:34 -0800 (PST)
+Received: by mail-pg1-x52c.google.com with SMTP id r138so16189550pgr.13
+        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 06:18:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=j3O/5MRv4o737C0oopTh1dp5Ws0iLGTAz5ZUiiyM4f4=;
+        b=mwOYEUprbIYmHxZhwedKY1a+bC0RYWDG5IGwG6XdOD8vsG90oSrS1SRwOOLYEImjTB
+         d2x0fXWXbPBL77phtZztUbrnUCjwxhMnC0sKY1Elw+qG9ogyJgkZFw8J6D3RmR/hdA8k
+         I91ACfJHmy5OKm9bLrlgOyH6Yw6Z80SyH+oxj0TjsIQsdzppk7uATGzKw3cQ1DuVDwaC
+         hVREua9Zwt+8oWqlkUiDuXbMO4ejr4mn9l4eBf3i9bZBRZJ+DZ1d+0NKvFIiJK7cNBFE
+         akRywYALC6e/rkQvbbYg2uYO3qjIwT8cVMw8l/KIxwr4Rf0T1FP/xHZPxJkqtMIEVGWh
+         NKmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=j3O/5MRv4o737C0oopTh1dp5Ws0iLGTAz5ZUiiyM4f4=;
+        b=In/l3QYNw+QhD5WJsLzxYQdOBC3uRsp/JOX4HqtVMAy/8/gQz7MxhiesyF00Bigsq8
+         fsFDevK4qK9yxku96wAmCY2xY9Buvn+F/ITdhI/y2f7FoBMgnYyworhty9ra6h0X2Z2T
+         AOwu6tjUCtlXjfvMFXmMqhxX8K2AGfhwARDxCl8eUhs+7hYN0vMs4682w2KfQ7YAu7xA
+         BNqdhC+XkiGr+3kxFevvC9ECynz/nYsSOs7kmMbFW2LEHQ3hC0EIS/UIc3XcTL0y+STq
+         lRflLiEXJ3VwK0afUjwf2gw2iZO613bd4akOSaEkheeQtWr4P+nmqiegINKh0O1wZnfr
+         oU8A==
+X-Gm-Message-State: AOAM530APnaIXHMHEdpVZPBSb8pvQzGPrhaeOHxxfqE4SkNERjTUB+ow
+        uGotKJ4iIeF60PDbos7hFcqsEZ3EX9NN8+BuA3Y=
+X-Google-Smtp-Source: ABdhPJwgcS/ywWrm5PeyDQj4KnewneXYuMvEo1qxFgU5E8px4CyjlAG1TTOKceq/VXl1BAKV1vsh9pbpVFckBZpU9XE=
+X-Received: by 2002:a63:495b:: with SMTP id y27mr21818514pgk.601.1638195513490;
+ Mon, 29 Nov 2021 06:18:33 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [patch 33/37] iommu/arm-smmu-v3: Use msi_get_virq()
-Content-Language: en-GB
-To:     Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>
-Cc:     Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>,
-        Stuart Yoder <stuyoder@gmail.com>, linux-pci@vger.kernel.org,
-        Ashok Raj <ashok.raj@intel.com>, Marc Zygnier <maz@kernel.org>,
-        x86@kernel.org, Sinan Kaya <okaya@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Tero Kristo <kristo@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-References: <20211126224100.303046749@linutronix.de>
- <20211126230525.885757679@linutronix.de>
- <20211129105506.GA22761@willie-the-truck>
- <76a1b5c1-01c8-bb30-6105-b4073dc23065@arm.com> <87czmjdnw9.ffs@tglx>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <87czmjdnw9.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:6a10:cac2:0:0:0:0 with HTTP; Mon, 29 Nov 2021 06:18:32
+ -0800 (PST)
+Reply-To: salemchantal@mail.ee
+From:   MRS Salem Chantal Lawrence <westernunionheadoffice544@gmail.com>
+Date:   Mon, 29 Nov 2021 06:18:32 -0800
+Message-ID: <CAA8cJM8kvSg+fugf=5EJyyGrweM3KsXBYU9pRWBmzZOYVWahpg@mail.gmail.com>
+Subject: ATM VISA DAPARTCARD
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-11-29 14:42, Thomas Gleixner wrote:
-> On Mon, Nov 29 2021 at 13:13, Robin Murphy wrote:
->> On 2021-11-29 10:55, Will Deacon wrote:
->>>> -	}
->>>> +	smmu->evtq.q.irq = msi_get_virq(dev, EVTQ_MSI_INDEX);
->>>> +	smmu->gerr_irq = msi_get_virq(dev, GERROR_MSI_INDEX);
->>>> +	smmu->priq.q.irq = msi_get_virq(dev, PRIQ_MSI_INDEX);
->>>
->>> Prviously, if retrieval of the MSI failed then we'd fall back to wired
->>> interrupts. Now, I think we'll clobber the interrupt with 0 instead. Can
->>> we make the assignments to smmu->*irq here conditional on the MSI being
->>> valid, please?
->>
->> I was just looking at that too, but reached the conclusion that it's
->> probably OK, since consumption of this value later is gated on
->> ARM_SMMU_FEAT_PRI, so the fact that it changes from 0 to an error value
->> in the absence of PRI should make no practical difference.
-> 
-> It's actually 0 when the vector cannot be found.
+Attention
 
-Oh, -1 for my reading comprehension but +1 for my confidence in the 
-patch then :)
 
-I'll let Will have the final say over how cautious we really want to be 
-here, but as far as I'm concerned it's a welcome cleanup as-is. Ditto 
-for patch #32 based on the same reasoning, although I don't have a 
-suitable test platform on-hand to sanity-check that one.
+You have been compensated with the sum of 4.6 million dollars in this
+United Nation the payment will be issue into Atm Visa Card and send to you
 
-Cheers,
-Robin.
+from the santander bank of spain we need your address, Passport and your
+whatsapp number.
 
->> If we don't have MSIs at all, we'd presumably still fail earlier
->> either at the dev->msi_domain check or upon trying to allocate the
->> vectors, so we'll still fall back to any previously-set wired values
->> before getting here.  The only remaining case is if we've
->> *successfully* allocated the expected number of vectors yet are then
->> somehow unable to retrieve one or more of them - presumably the system
->> has to be massively borked for that to happen, at which point do we
->> really want to bother trying to reason about anything?
-> 
-> Probably not. At that point something is going to explode sooner than
-> later in colorful ways.
-> 
-> Thanks,
-> 
->          tglx
-> 
+
+THANKS
+MRS Salem Chantal Lawrence
