@@ -2,99 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C1FE462382
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 22:40:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A41A46264A
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 23:48:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231482AbhK2VoF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 16:44:05 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56576 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230335AbhK2VmF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 16:42:05 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638221925;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sTsTXZmVNEttdKActcp/MQ79Sqm2VlTHeENYuk8KrhE=;
-        b=ILyfVKGE5UZvmRThsq5XEtpixIVIivrUSBAXm+humQHTDLzWIKEX4H8+4OD+aeIfZ4DV92
-        9T+62U6FIpWYIpoyRwMMumiAWctcb/I9yr1yNfsu8sRnZChwXIMAcSaHOA+Rqc6gRrobwk
-        VD1hPi2gr2//sF+SQuC4nahdGSaDafaDW7sBy0aS8tR1r1meQJeCOwOOGRC5aIHAc9Xvk4
-        /FJzDlJKlE89PcGuwq4SuMSriWZnI0H29jLtYIq6CXQ6TOUli2NIXrPAh97GMsBqbXW+Qh
-        eBXpIwFI96/i9Jnc137e9kO89zceLA086wH/JPWoxTfUn5qn3H8Cfws4QVJy/w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638221925;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sTsTXZmVNEttdKActcp/MQ79Sqm2VlTHeENYuk8KrhE=;
-        b=IFrPJPgHlzA5jXpCGMUgcnutoSn2o/emSpKWK3dUIvafMv+/N8+lm8fxoSszjkihxr/hYU
-        KzMXez+vjEq3dIDw==
-To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     linux-hyperv@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        sparclinux@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>, Marc Zygnier <maz@kernel.org>,
-        x86@kernel.org, Christian Borntraeger <borntraeger@de.ibm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jason Gunthorpe <jgg@nvidia.com>, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
-        Kevin Tian <kevin.tian@intel.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch 05/22] genirq/msi: Fixup includes
-In-Reply-To: <b1a6d267-c7b4-c4b9-ab0e-f5cc32bfe9bf@kaod.org>
-References: <20211126222700.862407977@linutronix.de>
- <20211126223824.382273262@linutronix.de>
- <b1a6d267-c7b4-c4b9-ab0e-f5cc32bfe9bf@kaod.org>
-Date:   Mon, 29 Nov 2021 22:38:44 +0100
-Message-ID: <87tufud4m3.ffs@tglx>
+        id S234200AbhK2Wtw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 17:49:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235479AbhK2WtT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 17:49:19 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F62C0619FF
+        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 14:04:40 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id g14so78086275edb.8
+        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 14:04:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=9QABpclmDsiBw3O50MnuiVrQu5ZlXjbuKEZDiFrlX+M=;
+        b=oiFlsiTC7wUIWSjwnxxqqPl0wwMT0zJBSGJhjHzWKa2BSxxCx9R74nlBUSKBHbRnfR
+         km7OcxwLVQljTJlHu97B6XoY0Cd5+S8z1/kr+fQ5LQvx0SbJ+ugd+Q8zVws6G7AdvFVO
+         rHVYRJLIjGcTOSi6jw5G1YCuZu6KP1ERvTeBBHIZ8/zLstCoWImtRkJrkPGIHtKkE3/R
+         +Atssxal6LZJBs635ht2vCk46tdtT/id5Da1BaaVFTowW9Ph8MwrvaGtO/rJ2x+YAP6s
+         82C2er7DMqjR4xbypS88sAfhhl16vLxEmVtVEPajBQrQrIP8gTvWAAnxE1I87iGLNphC
+         xKJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=9QABpclmDsiBw3O50MnuiVrQu5ZlXjbuKEZDiFrlX+M=;
+        b=6HLfHfl4kqw9QZPgPhecpPE/7VvrgamS1Lxm6Aw9zyKLIE0yLXS3j0Ec86Mnky5gg1
+         w6CR/Xm+6DGRf0ierFOph9eNyZHV8R7CX5HoNPkdTq07r3IHpTf7/dVZXnTVRwLWbXw6
+         GkKvLkgWxu83Iy0FY6QHs8O4JEwUwabTmSWuCeTHcOSiyfyCQCza2DLrtGM9rIdizJQH
+         ECqDIbH51gFD3iZ7sgD5smaTIhvvYNueG11ZW8UsEc84esqwJpyEznuvjZl3QaNsOs38
+         3i0w1ZNqyxUbbyk6eKgfA3rqnPHCpHREfzE6deU9O1/Ky8zQtJfrwzRVr0bbZ7plsmsx
+         iF8g==
+X-Gm-Message-State: AOAM532jT7KwIK+F1zuOHLsILfHxxBvSiGww8N8fuilIgDK/zJJK+btK
+        ei1fgCqyVBpTa249RP7e+F2RTF7vRAxb3naO0eI=
+X-Google-Smtp-Source: ABdhPJxNs3OKAYyjAIucm4FxnVk9eoCrSIaStTsFNTybc11OAK5vB9AZqMObbGbaShCyBqStXH+rWKiWWBvBP3lmvRE=
+X-Received: by 2002:a17:907:3e8a:: with SMTP id hs10mr62878225ejc.404.1638223479275;
+ Mon, 29 Nov 2021 14:04:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Received: by 2002:a54:2ecf:0:0:0:0:0 with HTTP; Mon, 29 Nov 2021 14:04:39
+ -0800 (PST)
+Reply-To: lisshuuu1@gmail.com
+From:   MS LISA HUGH <olivier.folly0@gmail.com>
+Date:   Mon, 29 Nov 2021 23:04:39 +0100
+Message-ID: <CAG_GOAtqOQyDm+Aj1KqD6to_uVgTiw+r=AnY6nXHRFCpswU5AA@mail.gmail.com>
+Subject: YOU HAVE THE DETAILS AS SOON I HEAR FROM YOU(Ms Lisa Hugh)
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Cedric,
+Dear Friend,
 
-On Mon, Nov 29 2021 at 08:33, C=C3=A9dric Le Goater wrote:
-> On 11/27/21 02:18, Thomas Gleixner wrote:
->> Remove the kobject.h include from msi.h as it's not required and add a
->> sysfs.h include to the core code instead.
->>=20
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->
->
-> This patch breaks compile on powerpc :
->
->    CC      arch/powerpc/kernel/msi.o
-> In file included from ../arch/powerpc/kernel/msi.c:7:
-> ../include/linux/msi.h:410:65: error: =E2=80=98struct cpumask=E2=80=99 de=
-clared inside parameter list will not be visible outside of this definition=
- or declaration [-Werror]
->    410 | int msi_domain_set_affinity(struct irq_data *data, const struct =
-cpumask *mask,
->        |                                                                 =
-^~~~~~~
-> cc1: all warnings being treated as errors
->
-> Below is fix you can merge in patch 5.
+I am Ms Lisa Hugh accountant and files keeping by profession here with the bank.
 
-thanks for having a look. I fixed up this and other fallout and pushed out =
-an
-updated series (all 4 parts) to:
+I need Your help for this transfer($4,500,000,00 ,U.S.DOLLARS)to your
+bank account with your co-operation for both of us benefit.
 
-        git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel msi
-
-Thanks,
-
-        tglx
+Please send the follow below,
+1)AGE....2)TELEPHONE NUMBER,,,,,...,3)COUNTRY.....4)OCCUPATION......
+Thanks.
+Ms Lisa Hugh
