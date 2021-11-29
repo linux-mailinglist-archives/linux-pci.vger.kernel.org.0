@@ -2,244 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 374E34614F6
-	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 13:23:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E37E1461509
+	for <lists+linux-pci@lfdr.de>; Mon, 29 Nov 2021 13:27:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230232AbhK2M0T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 07:26:19 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:20937 "EHLO
+        id S239035AbhK2Man (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 07:30:43 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:59671 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237410AbhK2MYS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 07:24:18 -0500
+        by vger.kernel.org with ESMTP id S239557AbhK2M2n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 07:28:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638188461;
+        s=mimecast20190719; t=1638188725;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1WY9N/WdHw4EuhHdEEHxJlQmC0ZWlV74g+hiQSgIYe0=;
-        b=V0XDkoRILfQXwgNu3Ewaz6myGTHpooj1ynrgEvIbT0FmQFjzNh+Ko6A/yOa2VJ4r/Jx8g+
-        aoo2wsoo7h/hFOPBYNBLtIb6JOhMZx58dlDJJ64ULroTwKnd+X58qhCkPKC1s/l14sjDno
-        8kd/NEQf8s2P3EERnSEfjVcs8nqhZ20=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=fbLRMSTFzjNXMAIb9l/Um0Ew3pAD94nKgUFKycrBk0o=;
+        b=SQzw4Kq2SQEohexmAFD8MdTLHoWjtwk5/b+VeZpnAPWWD4KrMbBwok8B4zDK1kR4R1SlOd
+        WIxHIIyf3bNYozQsz2PAnSuPYvAibbC2bMcbA7+XtJVcgS/cxG4zLD+nxiC/iKWB3Q1kVy
+        9UNVnWAXAZSf0l1JnHaX8aDj4kqb4VI=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-2-MqjPNu6YNamXw-61jY3VsA-1; Mon, 29 Nov 2021 07:19:47 -0500
-X-MC-Unique: MqjPNu6YNamXw-61jY3VsA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 409C381CCB6;
-        Mon, 29 Nov 2021 12:19:46 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.194.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A2AD0101E819;
-        Mon, 29 Nov 2021 12:19:38 +0000 (UTC)
+ us-mta-372-qLxgo4f5NkmgKV0JF05rgw-1; Mon, 29 Nov 2021 07:25:23 -0500
+X-MC-Unique: qLxgo4f5NkmgKV0JF05rgw-1
+Received: by mail-ed1-f70.google.com with SMTP id m17-20020aa7d351000000b003e7c0bc8523so13555294edr.1
+        for <linux-pci@vger.kernel.org>; Mon, 29 Nov 2021 04:25:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:from:to:cc:references:in-reply-to
+         :content-transfer-encoding;
+        bh=fbLRMSTFzjNXMAIb9l/Um0Ew3pAD94nKgUFKycrBk0o=;
+        b=LqVU/3PIJKq1h1kYXkloV/tWA6MRuIxs/lAEsHdoYpDMewFMREA18w62/yhRLM3QON
+         H7cKxCnHKK++W+66Y/4HhmR4ZYKDfJiNAg4VC2PHGS7CvUpuK5MMaqKy4ZH5nqvb7Bez
+         fvwIxH74sHAqDDNPlvPOP5OKcduhNYaLglPssU6M+jotpRykHKcOvxqA/eX6spLdnN5d
+         Q7dvG1L/xVu+aCPQ8XEbvLjUHXoYE72utvKu1xo5aWzAbfBOYFzYFxjPRAFn71DiKTvG
+         zO1U12g6iIyPwN65KWQhIGTBxoKD+cWW2Db0d5nlinh44Vm4GoVRaxrABC83F50YsvAV
+         kOwQ==
+X-Gm-Message-State: AOAM532oYCwoCxbnObkic36pvbRMP5U895LI1KyVjGhLN4OpvjOl3T+R
+        NX6RDq0kXWr1hP4/btnTwvtJSuqpfb8VDjilx6r0/Ic35vZ+8ay9cGyJ+O8SMh2ZbYWRG8suStQ
+        2UPsEawD0ywOuMiPATq0t
+X-Received: by 2002:a05:6402:42c6:: with SMTP id i6mr75615004edc.223.1638188722782;
+        Mon, 29 Nov 2021 04:25:22 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzLNVeeOMg0EFF6YQklGTUg84zccH26xvOXT+D6LqAQX4Irz2hbtH9SJogLXIETFVgVVDqjcQ==
+X-Received: by 2002:a05:6402:42c6:: with SMTP id i6mr75614987edc.223.1638188722643;
+        Mon, 29 Nov 2021 04:25:22 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1054:9d19:e0f0:8214? (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id t3sm9065577edr.63.2021.11.29.04.25.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Nov 2021 04:25:22 -0800 (PST)
+Message-ID: <6ea88158-2ef1-daec-56c4-59302d775928@redhat.com>
+Date:   Mon, 29 Nov 2021 13:25:21 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: Lockdep warning about ctrl->reset_lock in
+ pciehp_check_presence/pciehp_ist on TB3 dock unplug
+Content-Language: en-US
 From:   Hans de Goede <hdegoede@redhat.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>
-Cc:     Hans de Goede <hdegoede@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
+To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
         Andreas Noever <andreas.noever@gmail.com>,
         Michael Jamet <michael.jamet@intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 2/2] PCI: pciehp: Use down_read/write_nested(reset_lock) to fix lockdep errors
-Date:   Mon, 29 Nov 2021 13:19:34 +0100
-Message-Id: <20211129121934.4963-2-hdegoede@redhat.com>
-In-Reply-To: <20211129121934.4963-1-hdegoede@redhat.com>
-References: <20211129121934.4963-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Yehezkel Bernat <YehezkelShB@gmail.com>
+References: <de684a28-9038-8fc6-27ca-3f6f2f6400d7@redhat.com>
+ <20211122212943.GA2176134@bhelgaas> <20211124041317.GA1887@wunner.de>
+ <8abe5147-f468-01a4-6ea6-1a01cde5f1b9@redhat.com>
+In-Reply-To: <8abe5147-f468-01a4-6ea6-1a01cde5f1b9@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use down_read_nested() and down_write_nested() when taking the
-ctrl->reset_lock rw-sem, passing the PCI-device depth in the hierarchy
-as lock subclass parameter. This fixes the following false-positive lockdep
-report when unplugging a Lenovo X1C8 from a Lenovo 2nd gen TB3 dock:
+Hi,
 
-[   28.583853] pcieport 0000:06:01.0: pciehp: Slot(1): Link Down
-[   28.583891] pcieport 0000:06:01.0: pciehp: Slot(1): Card not present
-[   28.583995] pcieport 0000:09:04.0: can't change power state from D3cold to D0 (config space inaccessible)
+On 11/24/21 15:31, Hans de Goede wrote:
+> Hi,
+> 
+> On 11/24/21 05:13, Lukas Wunner wrote:
+>> On Mon, Nov 22, 2021 at 03:29:43PM -0600, Bjorn Helgaas wrote:
+>>> On Mon, Nov 22, 2021 at 05:45:32PM +0100, Hans de Goede wrote:
+>>>> With 5.16-rc2 I'm getting the following lockdep warning when unplugging
+>>>> a Lenovo X1C8 from a Lenovo 2nd gen TB3 dock:
+>>
+>> Thanks for the report.  I'm aware of this issue, it's still on my todo
+>> list.  Theodore already came across it a while ago:
+>>
+>> https://lore.kernel.org/linux-pci/20190402021933.GA2966@mit.edu/
+>>
+>> It's a false positive, we need to use a separate lockdep class either
+>> for each hotplug port or for each level in the PCI hierarchy.
+> 
+> Can we easily determine what the level in the PCI hierarchy is ?
+> 
+> If yes; and if having a separate lock class per level is enough,
+> then the code could simply switch to down_read_nested
+> (and other xxx_nested) functions passing the level as
+> "subclass" parameter.
+> 
+> If no, maybe we should add an "int level" member to
+> struct controller ?
+> 
+> And then make the switch to the foo_nested locking functions
+> based on that ?
 
-[   28.584849] ============================================
-[   28.584854] WARNING: possible recursive locking detected
-[   28.584858] 5.16.0-rc2+ #621 Not tainted
-[   28.584864] --------------------------------------------
-[   28.584867] irq/124-pciehp/86 is trying to acquire lock:
-[   28.584873] ffff8e5ac4299ef8 (&ctrl->reset_lock){.+.+}-{3:3}, at: pciehp_check_presence+0x23/0x80
-[   28.584904]
-               but task is already holding lock:
-[   28.584908] ffff8e5ac4298af8 (&ctrl->reset_lock){.+.+}-{3:3}, at: pciehp_ist+0xf3/0x180
-[   28.584929]
-               other info that might help us debug this:
-[   28.584933]  Possible unsafe locking scenario:
+So I've given the above idea a shot and fixes the false-positive
+lockdep warning for me. I've posted a 2 patch series fixing this
+upstream:
 
-[   28.584936]        CPU0
-[   28.584939]        ----
-[   28.584942]   lock(&ctrl->reset_lock);
-[   28.584949]   lock(&ctrl->reset_lock);
-[   28.584955]
-                *** DEADLOCK ***
+https://lore.kernel.org/linux-pci/20211129121934.4963-1-hdegoede@redhat.com/T/#t
 
-[   28.584959]  May be due to missing lock nesting notation
+Note the 2nd patch can probably use a Fixes: tag but I had no
+idea which commit to put there. Or maybe add a Cc: stable to
+both patches?
 
-[   28.584963] 3 locks held by irq/124-pciehp/86:
-[   28.584970]  #0: ffff8e5ac4298af8 (&ctrl->reset_lock){.+.+}-{3:3}, at: pciehp_ist+0xf3/0x180
-[   28.584991]  #1: ffffffffa3b024e8 (pci_rescan_remove_lock){+.+.}-{3:3}, at: pciehp_unconfigure_device+0x31/0x110
-[   28.585012]  #2: ffff8e5ac1ee2248 (&dev->mutex){....}-{3:3}, at: device_release_driver+0x1c/0x40
-[   28.585037]
-               stack backtrace:
-[   28.585042] CPU: 4 PID: 86 Comm: irq/124-pciehp Not tainted 5.16.0-rc2+ #621
-[   28.585052] Hardware name: LENOVO 20U90SIT19/20U90SIT19, BIOS N2WET30W (1.20 ) 08/26/2021
-[   28.585059] Call Trace:
-[   28.585064]  <TASK>
-[   28.585073]  dump_stack_lvl+0x59/0x73
-[   28.585087]  __lock_acquire.cold+0xc5/0x2c6
-[   28.585106]  ? find_held_lock+0x2b/0x80
-[   28.585124]  lock_acquire+0xb5/0x2b0
-[   28.585132]  ? pciehp_check_presence+0x23/0x80
-[   28.585144]  ? lock_is_held_type+0xa8/0x120
-[   28.585161]  down_read+0x3e/0x50
-[   28.585172]  ? pciehp_check_presence+0x23/0x80
-[   28.585183]  pciehp_check_presence+0x23/0x80
-[   28.585194]  pciehp_runtime_resume+0x5c/0xa0
-[   28.585206]  ? pci_msix_init+0x60/0x60
-[   28.585214]  device_for_each_child+0x45/0x70
-[   28.585227]  pcie_port_device_runtime_resume+0x20/0x30
-[   28.585236]  pci_pm_runtime_resume+0xa7/0xc0
-[   28.585246]  ? pci_pm_freeze_noirq+0x100/0x100
-[   28.585257]  __rpm_callback+0x41/0x110
-[   28.585271]  ? pci_pm_freeze_noirq+0x100/0x100
-[   28.585281]  rpm_callback+0x59/0x70
-[   28.585293]  rpm_resume+0x512/0x7b0
-[   28.585309]  __pm_runtime_resume+0x4a/0x90
-[   28.585322]  __device_release_driver+0x28/0x240
-[   28.585338]  device_release_driver+0x26/0x40
-[   28.585351]  pci_stop_bus_device+0x68/0x90
-[   28.585363]  pci_stop_bus_device+0x2c/0x90
-[   28.585373]  pci_stop_and_remove_bus_device+0xe/0x20
-[   28.585384]  pciehp_unconfigure_device+0x6c/0x110
-[   28.585396]  ? __pm_runtime_resume+0x58/0x90
-[   28.585409]  pciehp_disable_slot+0x5b/0xe0
-[   28.585421]  pciehp_handle_presence_or_link_change+0xc3/0x2f0
-[   28.585436]  pciehp_ist+0x179/0x180
-[   28.585449]  ? disable_irq_nosync+0x10/0x10
-[   28.585460]  irq_thread_fn+0x1d/0x60
-[   28.585470]  ? irq_thread+0x81/0x1a0
-[   28.585480]  irq_thread+0xcb/0x1a0
-[   28.585491]  ? irq_thread_fn+0x60/0x60
-[   28.585502]  ? irq_thread_check_affinity+0xb0/0xb0
-[   28.585514]  kthread+0x165/0x190
-[   28.585522]  ? set_kthread_struct+0x40/0x40
-[   28.585531]  ret_from_fork+0x1f/0x30
-[   28.585554]  </TASK>
-[   28.586512] xhci_hcd 0000:0a:00.0: remove, state 1
-[   28.586538] usb usb4: USB disconnect, device number 1
-[   28.586547] usb 4-2: USB disconnect, device number 2
-[   28.586555] usb 4-2.1: USB disconnect, device number 3
-[   28.586561] usb 4-2.1.2: USB disconnect, device number 5
-[   28.587709] xhci_hcd 0000:0a:00.0: xHCI host controller not responding, assume dead
-[   28.590021] usb 4-2.3: USB disconnect, device number 4
-[   28.613814] xhci_hcd 0000:0a:00.0: WARN Can't disable streams for endpoint 0x1, streams are being disabled already
-[   28.616865] xhci_hcd 0000:0a:00.0: USB bus 4 deregistered
-[   28.617082] xhci_hcd 0000:0a:00.0: remove, state 1
-[   28.617089] usb usb3: USB disconnect, device number 1
-[   28.617092] usb 3-2: USB disconnect, device number 2
-[   28.617094] usb 3-2.1: USB disconnect, device number 3
-[   28.617096] usb 3-2.1.1: USB disconnect, device number 6
-[   28.617098] usb 3-2.1.1.4: USB disconnect, device number 8
-[   28.645354] usb 3-2.1.3: USB disconnect, device number 7
-[   28.645357] usb 3-2.1.3.1: USB disconnect, device number 10
-[   28.647489] usb 3-2.1.3.4: USB disconnect, device number 11
-[   28.647494] usb 3-2.1.3.4.1: USB disconnect, device number 13
-[   28.760411] usb 3-2.1.4: USB disconnect, device number 9
-[   28.760414] usb 3-2.1.4.1: USB disconnect, device number 12
-[   28.795513] usb 3-2.4: USB disconnect, device number 4
-[   28.821464] usb 3-2.5: USB disconnect, device number 5
-[   28.822850] xhci_hcd 0000:0a:00.0: Host halt failed, -19
-[   28.822854] xhci_hcd 0000:0a:00.0: Host not accessible, reset failed.
-[   28.823331] xhci_hcd 0000:0a:00.0: USB bus 3 deregistered
-[   28.823589] pci 0000:0a:00.0: Removing from iommu group 15
-[   28.823605] pci_bus 0000:0a: busn_res: [bus 0a] is released
-[   28.823660] pci 0000:09:02.0: Removing from iommu group 15
-[   28.823729] pci_bus 0000:0b: busn_res: [bus 0b-2c] is released
-[   28.823773] pci 0000:09:04.0: Removing from iommu group 15
-[   28.823782] pci_bus 0000:09: busn_res: [bus 09-2c] is released
-[   28.823851] pci 0000:08:00.0: Removing from iommu group 15
+Regards,
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/pci/hotplug/pciehp.h      | 1 +
- drivers/pci/hotplug/pciehp_core.c | 2 +-
- drivers/pci/hotplug/pciehp_hpc.c  | 7 ++++---
- 3 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index 918dccbc74b6..7de17f32bf8c 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -106,6 +106,7 @@ struct controller {
- 
- 	struct hotplug_slot hotplug_slot;	/* hotplug core interface */
- 	struct rw_semaphore reset_lock;
-+	unsigned int depth;
- 	unsigned int ist_running;
- 	int request_result;
- 	wait_queue_head_t requester;
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index f34114d45259..4042d87d539d 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -166,7 +166,7 @@ static void pciehp_check_presence(struct controller *ctrl)
- {
- 	int occupied;
- 
--	down_read(&ctrl->reset_lock);
-+	down_read_nested(&ctrl->reset_lock, ctrl->depth);
- 	mutex_lock(&ctrl->state_lock);
- 
- 	occupied = pciehp_card_present_or_link_active(ctrl);
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 83a0fa119cae..54643a95baad 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -583,7 +583,7 @@ static void pciehp_ignore_dpc_link_change(struct controller *ctrl,
- 	 * the corresponding link change may have been ignored above.
- 	 * Synthesize it to ensure that it is acted on.
- 	 */
--	down_read(&ctrl->reset_lock);
-+	down_read_nested(&ctrl->reset_lock, ctrl->depth);
- 	if (!pciehp_check_link_active(ctrl))
- 		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
- 	up_read(&ctrl->reset_lock);
-@@ -746,7 +746,7 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 	 * Disable requests have higher priority than Presence Detect Changed
- 	 * or Data Link Layer State Changed events.
- 	 */
--	down_read(&ctrl->reset_lock);
-+	down_read_nested(&ctrl->reset_lock, ctrl->depth);
- 	if (events & DISABLE_SLOT)
- 		pciehp_handle_disable_request(ctrl);
- 	else if (events & (PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_DLLSC))
-@@ -906,7 +906,7 @@ int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, bool probe)
- 	if (probe)
- 		return 0;
- 
--	down_write(&ctrl->reset_lock);
-+	down_write_nested(&ctrl->reset_lock, ctrl->depth);
- 
- 	if (!ATTN_BUTTN(ctrl)) {
- 		ctrl_mask |= PCI_EXP_SLTCTL_PDCE;
-@@ -975,6 +975,7 @@ struct controller *pcie_init(struct pcie_device *dev)
- 		return NULL;
- 
- 	ctrl->pcie = dev;
-+	ctrl->depth = pci_dev_depth(dev->port);
- 	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &slot_cap);
- 
- 	if (pdev->hotplug_user_indicators)
--- 
-2.33.1
+Hans
 
