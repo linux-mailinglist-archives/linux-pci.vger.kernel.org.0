@@ -2,101 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09434463AEA
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 17:03:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A58463BEA
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 17:36:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234623AbhK3QHD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 11:07:03 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:56252 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229783AbhK3QHC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 11:07:02 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 1A03ECE1410;
-        Tue, 30 Nov 2021 16:03:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2398C53FC7;
-        Tue, 30 Nov 2021 16:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638288220;
-        bh=tK9LCxQALG+XYMfehzdMiewK02vT2wEJJjF+v9T3HCs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IOr3RAEWSfHqvq/PrjBge2DDC3vR5Su23evbXIaXf4kRwUxGFSj5LoZ0otmQkmM+G
-         7qX/ewmErJNnHmPj1mdSoBppPzX1QV5k1kxB/7+gnOADYajFu/wUxhuQUq6sFMVQci
-         upiltg9llpLNe1HwF2oTunW+cWWiGnmW3yUwmu8BS8MU5j2TjrwWdGccmMEQGgzRKo
-         QRO/CFAuae8boOHr2rwI1k0jvX0Znfe4XWdaWzpaSXCoJra6FApxUudtboKtc3ETTF
-         IUJOWSBH3puHQbjz2nkiKFPpshtOCIAVIamBU5kE7LaSfY8OlKV+cAynjHZbxD+kCm
-         gCovLG3cMvCbg==
-Date:   Tue, 30 Nov 2021 10:03:38 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        svarbanov@mm-sol.com, bjorn.andersson@linaro.org, robh@kernel.org,
+        id S244027AbhK3QjL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 11:39:11 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:56127 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238032AbhK3QjJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 11:39:09 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 57BBE580131;
+        Tue, 30 Nov 2021 11:35:49 -0500 (EST)
+Received: from imap47 ([10.202.2.97])
+  by compute3.internal (MEProxy); Tue, 30 Nov 2021 11:35:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=mime-version:message-id:in-reply-to:references:date:from:to
+        :cc:subject:content-type; s=fm3; bh=jY6BiEiqqEX3r2Q5KUj5NScjlUZf
+        fg61Yq1tlm97XYA=; b=jyB3/dh+y7c9vt/oLRpNSfNC/oiUOK/VJK8JZyNRCFOc
+        bbeesyoIbl0CSqNRur2TB14V/liIrJm4KX65Ik5ZGo1zySpONG4YtTYzxS9CUKqo
+        NadBNNjzdNLypkNQ0jqUx8ihBa7tFdlcJZ+mGSzOsWBPYZXi4QI48dbCjTPCKc5Y
+        imDYW1yZvArYKhwyp0CUULMH+TDwPYZwXkrriKohEY1X5H/zQAaPyMzgBO7q5Cg7
+        K35cAUIOssmHF9cib9gSoodhxLIIP6rEjUQRWSyBeJDJDGwUQEyFCCbTWHTAflun
+        Gf1K62APOkgUU9E3NuoB2p/MdnsLAq+TZzTuNdzy4g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=jY6BiE
+        iqqEX3r2Q5KUj5NScjlUZffg61Yq1tlm97XYA=; b=exCdb3Nlcw6TyjODvHWX5M
+        AR4JsRPKMCpnb4auq1n3u4nBIjfoQu+GhUoAi2rLTUxifFSh1/E9pI4pOM214S1n
+        y7F99nqoJl5pf6X6pnTbXPgmd2Ff9LSDFno6mF3LCa7cu6ToYwDsg40cFloTMm6X
+        T8BPVW9CqytvDYZud5nRlSMqScxpaRp2wizBe8djXxwO1vWYLmUEasWdoecS7S+/
+        up8vIDqSqu9xxrKrZo0PojWXnjMUYnv+3Zw1W3tqMOvQOO/bs2kXY8Q1KOcpBK3U
+        opHeutP31WvAe7KgYdw6A3LDPVHkLeiyINTvGjDU/vMG4EO8OX7MknPAdljc9YGg
+        ==
+X-ME-Sender: <xms:5FKmYShZZhFZh_IqmL6zHDeut9llF2lsBwsB5ob6JIMrKfKQufKHZA>
+    <xme:5FKmYTAChIUwXNvY3MibWHPgF9kZgGL3xHeFJpb6V8JNAtxzdQuVdbF_rQ4CJOJpV
+    QQep3Wcyj173qdgvIQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddriedugdelvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedfufhvvghn
+    ucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrfgrth
+    htvghrnhepvedvgeevuddvvedvgfelfeegiedvgeehieeutdelvedvieevveeljeefvedt
+    leehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdruggv
+    vh
+X-ME-Proxy: <xmx:5FKmYaFmzA6NDcLu9LRzcsdsr0jSn8GM_Cu20YrnjBaUO3k5fIxcfA>
+    <xmx:5FKmYbTEi3CfNwGKFxUyj_LkA-infyZrfKX1l9P8p3GPOnW5tEiHUQ>
+    <xmx:5FKmYfw8cCiPIb3PwaLkom8BOFImZuMrUAtPEuPt0dPAg__QyHfuAA>
+    <xmx:5VKmYUoGkNdE6vr5qBJo0dj_y2WXJf4TWEUMQSqeDoNjOG5NFDuvdg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id BDB3C27407E3; Tue, 30 Nov 2021 11:35:48 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-4410-g5528bb82a8-fm-20211130.003-g5528bb82
+Mime-Version: 1.0
+Message-Id: <0f3c9f9e-caf9-462a-ba8d-882266d4c7c4@www.fastmail.com>
+In-Reply-To: <20211130160338.GA2739234@bhelgaas>
+References: <20211130160338.GA2739234@bhelgaas>
+Date:   Tue, 30 Nov 2021 17:35:16 +0100
+From:   "Sven Peter" <sven@svenpeter.dev>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>,
+        "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>
+Cc:     "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>, svarbanov@mm-sol.com,
+        bjorn.andersson@linaro.org, "Rob Herring" <robh@kernel.org>,
         linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Sven Peter <sven@svenpeter.dev>
-Subject: Re: [PATCH] PCI: qcom: Fix warning generated due to the incorrect
- data type
-Message-ID: <20211130160338.GA2739234@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211130062137.GD205712@thinkpad>
+        linux-kernel@vger.kernel.org, "kernel test robot" <lkp@intel.com>,
+        "Marc Zyngier" <maz@kernel.org>,
+        "Alyssa Rosenzweig" <alyssa@rosenzweig.io>
+Subject: Re: [PATCH] PCI: qcom: Fix warning generated due to the incorrect data type
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Marc, Alyssa, Sven for RID-to-SID mapping insight.  The patch at
-https://lore.kernel.org/all/20211130062137.GD205712@thinkpad/ merely
-fixes a warning.  My meta-question is about the qcom BDF-to-SID
-mapping.]
+Hi,
 
-On Tue, Nov 30, 2021 at 11:51:37AM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Nov 29, 2021 at 09:36:14PM -0600, Bjorn Helgaas wrote:
-> > ...
-> > I'm also curious why pcie-qcom.c is the only driver that does this.
-> > "iommu-map" is not specific to qcom, but no other drivers do similar
-> > things with it.
-> 
-> Yes, on the recent qcom platforms starting from sm8250 we need to program
-> the BDF to SID mapping in the controller and that's the reason we are
-> extracting the "iommu-map" property in DT.
+On Tue, Nov 30, 2021, at 17:03, Bjorn Helgaas wrote:
+> [+cc Marc, Alyssa, Sven for RID-to-SID mapping insight.  The patch at
+> https://lore.kernel.org/all/20211130062137.GD205712@thinkpad/ merely
+> fixes a warning.  My meta-question is about the qcom BDF-to-SID
+> mapping.]
+>
+> On Tue, Nov 30, 2021 at 11:51:37AM +0530, Manivannan Sadhasivam wrote:
+>> On Mon, Nov 29, 2021 at 09:36:14PM -0600, Bjorn Helgaas wrote:
+>> > ...
+>> > I'm also curious why pcie-qcom.c is the only driver that does this.
+>> > "iommu-map" is not specific to qcom, but no other drivers do similar
+>> > things with it.
+>> 
+>> Yes, on the recent qcom platforms starting from sm8250 we need to program
+>> the BDF to SID mapping in the controller and that's the reason we are
+>> extracting the "iommu-map" property in DT.
+>
+> This sounds like something that may not really be specific to sm8250.
 
-This sounds like something that may not really be specific to sm8250.
+So a single IOMMU can possibly differentiate between N different devices [1].
+Each device [1] is identified by some number which is called sid (stream id?
+security id? who knows.) on Apple hardware (and apparently also on qcom).
+Now I don't know much about PCI but the way I understand it is that the
+bus/device/function tuple can be used to uniquely identify a single device on the bus.
+All iommu-map does is to provide the mapping between those two different spaces [2].
 
-It looks vaguely similar to apple_pcie_add_device().  Compare the qcom
-code at [1] with the Apple code at [2].
+For most iommus this seems to be just a static mapping that's hardwired in silicon
+and I think that's why almost no PCI driver needs to care about it: The iommu
+core will just use it to convert the PCI requester ID to a number the iommu
+driver understands.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-qcom.c?id=v5.16-rc1#n1308
-[2] https://git.kernel.org/linus/468c8d52c332
+Apple's frankenchip however allows to configure this mapping from software
+after a device has been attached and that's why we need that special code inside
+the PCI driver: We have to make sure that whatever is configured inside iommu-map
+(and used by the iommu core to match PCI devices to iommu groups) matches to what
+the HW does.
 
-> > > sparse warnings: (new ones prefixed by >>)
-> > > >> drivers/pci/controller/dwc/pcie-qcom.c:1305:30: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned short [usertype] bdf_be @@     got restricted __be16 [usertype] @@
-> > >    drivers/pci/controller/dwc/pcie-qcom.c:1305:30: sparse:     expected unsigned short [usertype] bdf_be
-> > >    drivers/pci/controller/dwc/pcie-qcom.c:1305:30: sparse:     got restricted __be16 [usertype]
-> > > 
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > index 8a7a300163e5..6c3b034e9946 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > @@ -1312,7 +1312,7 @@ static int qcom_pcie_config_sid_sm8250(struct qcom_pcie *pcie)
-> > >  
-> > >  	/* Look for an available entry to hold the mapping */
-> > >  	for (i = 0; i < nr_map; i++) {
-> > > -		u16 bdf_be = cpu_to_be16(map[i].bdf);
-> > > +		__be16 bdf_be = cpu_to_be16(map[i].bdf);
-> > >  		u32 val;
-> > >  		u8 hash;
-> > >  
-> > > -- 
-> > > 2.25.1
-> > > 
+I can only assume that qcom does something similar. It looks like the qcom HW can be
+fully configured during probe time though while we really have to wait until a device
+is attached for the Apple chip (mostly because we only have 16 slots there).
+
+
+Hope that helps.
+
+
+Best,
+
+Sven
+
+
+
+[1] Technically the smallest unit are iommu groups which can contain multiple
+devices but we can just ignore that. The iommu code will do the correct thing
+if it gets told that two PCI devices have the same identification number.
+
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iommu/of_iommu.c#n53
