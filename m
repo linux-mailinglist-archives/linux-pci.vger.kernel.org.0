@@ -2,115 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67C304633B6
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 12:59:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D22414633D3
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 13:07:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231168AbhK3MDC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 07:03:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229918AbhK3MDB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 07:03:01 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D9BC061574;
-        Tue, 30 Nov 2021 03:59:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id E0E24CE18FE;
-        Tue, 30 Nov 2021 11:59:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C9BC53FC7;
-        Tue, 30 Nov 2021 11:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638273579;
-        bh=nGzxpZJWSCKzpRqYJRSIk5w5ewqGleaL9kREzEMMTm0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bXXy+uZDSzifTQFRwczjKuHFmOV+jMJldtLzV1t6J6WNjbxOfzERZc3bPWPhWm3Yj
-         7XMOZm0vyo2HweT9tuMLIQrblKkMc5tidTavCs+XdZSbkO3OFo2O/Y3t/CThmhN1TU
-         hlQV6h1k027CfmFAIadoxL0ZC+dV4m8bTXSUCQrGniW5ZtakRKHAFqengoDZsT0/fk
-         3/xvWVIACugeQUfuZoXvg6+rKLmGaF66ubQydNcolGZnCPk5xmHYpsZWQGmIT7SulB
-         PqbEgocg+Lr/qQifPvUohu+4TAQQhWL0V1ONSp//M+Tkw6EnguQEsI/swkF2IbJjmf
-         8RftIB1IOm90A==
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1ms1nI-008rZE-MQ; Tue, 30 Nov 2021 11:59:34 +0000
+        id S241336AbhK3MLO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 07:11:14 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:31928 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241309AbhK3MLN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 07:11:13 -0500
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4J3LZT5yNzzcbfJ;
+        Tue, 30 Nov 2021 20:07:45 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (7.193.23.202) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Tue, 30 Nov 2021 20:07:52 +0800
+Received: from localhost.localdomain (10.67.165.103) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Tue, 30 Nov 2021 20:07:51 +0800
+From:   Qi Liu <liuqi115@huawei.com>
+To:     <will@kernel.org>, <mark.rutland@arm.com>, <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
+        <zhangshaokun@hisilicon.com>
+Subject: [PATCH v12 0/2] drivers/perf: hisi: Add support for PCIe PMU
+Date:   Tue, 30 Nov 2021 20:04:48 +0800
+Message-ID: <20211130120450.2747-1-liuqi115@huawei.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Date:   Tue, 30 Nov 2021 11:59:32 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Mark Kettenis <mark.kettenis@xs4all.nl>,
-        Luca Ceresoli <luca@lucaceresoli.net>, kernel-team@android.com
-Subject: Re: [PATCH v3 0/3] PCI: apple: Assorted #PERST fixes
-In-Reply-To: <20211130115632.GA3355@lpieralisi>
-References: <20211123180636.80558-1-maz@kernel.org>
- <20211130115632.GA3355@lpieralisi>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <b2a06abf476b3e89504a227b3d1bea7c@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, pali@kernel.org, alyssa@rosenzweig.io, mark.kettenis@xs4all.nl, luca@lucaceresoli.net, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.165.103]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo, Bjorn,
+This patchset adds support for HiSilicon PCIe Performance Monitoring
+Unit(PMU). It is a PCIe Root Complex integrated End Point(RCiEP) device
+added on Hip09. Each PCIe Core has a PMU RCiEP to monitor multi root
+ports and all Endpoints downstream these root ports.
 
-On 2021-11-30 11:56, Lorenzo Pieralisi wrote:
-> On Tue, Nov 23, 2021 at 06:06:33PM +0000, Marc Zyngier wrote:
->> Apologies for the rapid fire (I tend to be much more conservative when
->> resending series), but given that this series has a direct impact on
->> other projects (such as u-boot), I'm trying to converge as quickly as
->> possible.
->> 
->> This series aims at fixing a number of issues for the recently merged
->> Apple PCIe driver, all revolving around the mishandling of #PERST:
->> 
->> - we didn't properly drive #PERST, and we didn't follow the specified
->>   timings
->> 
->> - the DT had the wrong polarity, which has impacts on the driver
->>   itself
->> 
->> Hopefully, this should address all the issues reported so far.
->> 
->> * From v2:
->>   - Fixed DT
->>   - Fixed #PERST polarity in the driver
->>   - Collected Pali's ack on patch #1
->> 
->> [1] https://lore.kernel.org/r/20211122104156.518063-1-maz@kernel.org
->> 
->> Marc Zyngier (3):
->>   PCI: apple: Follow the PCIe specifications when resetting the port
->>   arm64: dts: apple: t8103: Fix PCIe #PERST polarity
->>   PCI: apple: Fix #PERST polarity
->> 
->>  arch/arm64/boot/dts/apple/t8103.dtsi |  7 ++++---
->>  drivers/pci/controller/pcie-apple.c  | 12 +++++++++++-
->>  2 files changed, 15 insertions(+), 4 deletions(-)
-> 
-> Hi Bjorn,
-> 
-> this series is v5.16-rcX material for PCI fixes, can you pick patches 
-> 1,3
-> up please ?
+HiSilicon PCIe PMU is supported to collect performance data of PCIe bus,
+such as: bandwidth, latency etc.
 
-Do you mind picking patch #2 as well? Or shall I route it somewhere 
-else?
+Example usage of counting PCIe rx memory write latency::
 
-Thanks,
+  $# perf stat -e hisi_pcie0_core0/rx_mwr_latency/
+  $# perf stat -e hisi_pcie0_core0/rx_mwr_cnt/
+  $# perf stat -g -e hisi_pcie0_core0/rx_mwr_latency/ -e hisi_pcie0_core0/rx_mwr_cnt/
 
-         M.
+average rx memory write latency can be calculated like this:
+  latency = rx_mwr_latency / rx_mwr_cnt.
+
+Common PMU events and metrics will be described in JSON file, and will be add
+in userspace perf tool latter.
+
+Changes since v11:
+- Address the comments from Krzysztof, drop all the final dot and change bdf in comment to BDF.
+- Link: https://lore.kernel.org/linux-arm-kernel/20211029093632.4350-1-liuqi115@huawei.com/
+
+Changes since v10:
+- Drop the out of date comment according to Jonathan's review.
+- Link: https://lore.kernel.org/linux-arm-kernel/20210915074524.18040-1-liuqi115@huawei.com/
+
+Changes since v9:
+- Add check in hisi_pcie_pmu_validate_event_group to count counters accurently .
+- Link: https://lore.kernel.org/linux-arm-kernel/20210818051246.29545-1-liuqi115@huawei.com/
+
+Changes since v8:
+- Remove subevent parameter in attr->config.
+- Check the counter scheduling constraints when accepting an event group.
+- Link: https://lore.kernel.org/linux-arm-kernel/20210728080932.72515-1-liuqi115@huawei.com/
+
+Changes since v7:
+- Drop headerfile cpumask.h and cpuhotplug.h.
+- Rename events in perf list: bw->flux, lat->delay, as driver doesn't
+  process bandwidth and average latency data.
+- Link: https://lore.kernel.org/linux-arm-kernel/1624532384-43002-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v6:
+- Move the driver to drivers/perf/hisilicon.
+- Treat content in PMU counter and ext_counter as different PMU events, and
+  export them separately.
+- Address the comments from Will and Krzysztof.
+- Link: https://lore.kernel.org/linux-arm-kernel/1622467951-32114-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v5:
+- Fix some errors when build under ARCH=xtensa.
+- Link: https://lore.kernel.org/linux-arm-kernel/1621946795-14046-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v4:
+- Replace irq_set_affinity_hint() with irq_set_affinity().
+- Link: https://lore.kernel.org/linux-arm-kernel/1621417741-5229-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v3:
+- Fix some warnings when build under 32bits architecture.
+- Address the comments from John.
+- Link: https://lore.kernel.org/linux-arm-kernel/1618490885-44612-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v2:
+- Address the comments from John.
+- Link: https://lore.kernel.org/linux-arm-kernel/1617959157-22956-1-git-send-email-liuqi115@huawei.com/
+
+Changes since v1:
+- Drop the internal Reviewed-by tag.
+- Fix some build warnings when W=1.
+- Link: https://lore.kernel.org/linux-arm-kernel/1617788943-52722-1-git-send-email-liuqi115@huawei.com/
+
+Qi Liu (2):
+  docs: perf: Add description for HiSilicon PCIe PMU driver
+  drivers/perf: hisi: Add driver for HiSilicon PCIe PMU
+
+ .../admin-guide/perf/hisi-pcie-pmu.rst        | 106 ++
+ MAINTAINERS                                   |   2 +
+ drivers/perf/hisilicon/Kconfig                |   9 +
+ drivers/perf/hisilicon/Makefile               |   2 +
+ drivers/perf/hisilicon/hisi_pcie_pmu.c        | 948 ++++++++++++++++++
+ include/linux/cpuhotplug.h                    |   1 +
+ 6 files changed, 1068 insertions(+)
+ create mode 100644 Documentation/admin-guide/perf/hisi-pcie-pmu.rst
+ create mode 100644 drivers/perf/hisilicon/hisi_pcie_pmu.c
+
 -- 
-Jazz is not dead. It just smells funny...
+2.33.0
+
