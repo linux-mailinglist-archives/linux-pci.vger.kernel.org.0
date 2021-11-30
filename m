@@ -2,129 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05836463C77
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 18:04:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52A58463CC4
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 18:27:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243960AbhK3RHm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 12:07:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36316 "EHLO
+        id S244871AbhK3RbC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 12:31:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbhK3RHm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 12:07:42 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A582C061574;
-        Tue, 30 Nov 2021 09:04:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S244840AbhK3RaG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 12:30:06 -0500
+Received: from mail.marcansoft.com (marcansoft.com [IPv6:2a01:298:fe:f::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7D3C061574;
+        Tue, 30 Nov 2021 09:26:46 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 5E2B0CE1849;
-        Tue, 30 Nov 2021 17:04:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39ADDC53FC1;
-        Tue, 30 Nov 2021 17:04:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638291859;
-        bh=cSn+Ep2v0SL7KJfHgs3j8RbhQX+lAo4RdrTIDkGPmpY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Elt8UquEZNJJ2xkFTrhIXggTrDjb06fXulzTul/7jMrtjYrVoY1BmQpxzElEPWVoN
-         D674Vs+yNHUj/afbrEtFhlZae3ZKDIzJeizf6P4yLxh2hengfZTT3kAB9DWW0jVWDo
-         X/08374AsvWJBB9H6JjCtA+NpIBaaJ7vBdd4Ie1pRjsphOo9v+EDEjskDIuWN3WK/o
-         NBrdwA3e80xuOIx5JlJMTpfkTuY3ML0NXqMCqy7n81cparGcHGdrWwtB73JAu3Uhqk
-         TIpoMRvQcNgfdToZDG/PXj8ilkSjy82LD3zgx+gsGXv66QAzwKxtC5zvpms/vdTDxt
-         7jR3WGiIJuBWA==
-Date:   Tue, 30 Nov 2021 11:04:17 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     nsaenz@kernel.org, jim2101024@gmail.com, f.fainelli@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: brcmstb: Declare a bitmap as a bitmap, not as a
- plain 'unsigned long'
-Message-ID: <20211130170417.GA2744534@bhelgaas>
+        (Authenticated sender: marcan@marcan.st)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id A1C7E41DF4;
+        Tue, 30 Nov 2021 17:26:41 +0000 (UTC)
+Subject: Re: [PATCH] PCI: apple: Fix REFCLK1 enable/poll logic
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>, bhelgaas@google.com
+Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20211117140044.193865-1-marcan@marcan.st>
+ <87v90q7jk3.wl-maz@kernel.org> <20211130164957.GA4920@lpieralisi>
+From:   Hector Martin <marcan@marcan.st>
+Message-ID: <845d5f52-05ad-fd2c-1ad1-49e081c3ca14@marcan.st>
+Date:   Wed, 1 Dec 2021 02:26:39 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6d9da2112aab2939d1507b90962d07bfd735b4c.1636273671.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20211130164957.GA4920@lpieralisi>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: es-ES
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 07, 2021 at 09:32:58AM +0100, Christophe JAILLET wrote:
-> The 'used' field of 'struct brcm_msi' is used as a bitmap. So it should
-> be declared as so (i.e. unsigned long *).
+On 01/12/2021 01.49, Lorenzo Pieralisi wrote:
+> On Wed, Nov 17, 2021 at 05:56:12PM +0000, Marc Zyngier wrote:
+>> On Wed, 17 Nov 2021 14:00:44 +0000,
+>> Hector Martin <marcan@marcan.st> wrote:
+>>>
+>>> REFCLK1 has req/ack bits just like REFCLK0
+>>>
+>>> Signed-off-by: Hector Martin <marcan@marcan.st>
+>>> ---
+>>>   drivers/pci/controller/pcie-apple.c | 7 ++++---
+>>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+>>> index b665d29af77a..420c291a5c68 100644
+>>> --- a/drivers/pci/controller/pcie-apple.c
+>>> +++ b/drivers/pci/controller/pcie-apple.c
+>>> @@ -42,8 +42,9 @@
+>>>   #define   CORE_FABRIC_STAT_MASK		0x001F001F
+>>>   #define CORE_LANE_CFG(port)		(0x84000 + 0x4000 * (port))
+>>>   #define   CORE_LANE_CFG_REFCLK0REQ	BIT(0)
+>>> -#define   CORE_LANE_CFG_REFCLK1		BIT(1)
+>>> +#define   CORE_LANE_CFG_REFCLK1REQ	BIT(1)
+>>>   #define   CORE_LANE_CFG_REFCLK0ACK	BIT(2)
+>>> +#define   CORE_LANE_CFG_REFCLK1ACK	BIT(3)
+>>>   #define   CORE_LANE_CFG_REFCLKEN	(BIT(9) | BIT(10))
+>>>   #define CORE_LANE_CTL(port)		(0x84004 + 0x4000 * (port))
+>>>   #define   CORE_LANE_CTL_CFGACC		BIT(15)
+>>> @@ -481,9 +482,9 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
+>>>   	if (res < 0)
+>>>   		return res;
+>>>   
+>>> -	rmw_set(CORE_LANE_CFG_REFCLK1, pcie->base + CORE_LANE_CFG(port->idx));
+>>> +	rmw_set(CORE_LANE_CFG_REFCLK1REQ, pcie->base + CORE_LANE_CFG(port->idx));
+>>>   	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
+>>> -					 stat, stat & CORE_LANE_CFG_REFCLK1,
+>>> +					 stat, stat & CORE_LANE_CFG_REFCLK1ACK,
+>>>   					 100, 50000);
+>>>   
+>>>   	if (res < 0)
+>>> -- 
+>>> 2.33.0
+>>>
+>>>
+>>
+>> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
+>> Acked-by: Marc Zyngier <maz@kernel.org>
 > 
-> This fixes an harmless Coverity warning about array vs singleton usage.
+> Hi Hector, Bjorn,
 > 
-> This bitmap can be BRCM_INT_PCI_MSI_LEGACY_NR or BRCM_INT_PCI_MSI_NR long.
-> So, while at it, document it, should it help someone in the future.
+> if this is a fix we can aim at one of the upcoming -rcX.
 > 
-> Addresses-Coverity: "Out-of-bounds access (ARRAY_VS_SINGLETON)"
-> Suggested-by: Krzysztof Wilczynski <kw@linux.com>
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> The BUILD_BUG_ON is surely a bit to much of paranoia :)
-> 
-> I'm also not really pleased about the layout of the DECLARE_BITMAP. This
-> looks odd, but I couldn't find something nicer :(
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 1fc7bd49a7ad..15d394ac7478 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -266,8 +266,9 @@ struct brcm_msi {
->  	struct mutex		lock; /* guards the alloc/free operations */
->  	u64			target_addr;
->  	int			irq;
-> -	/* used indicates which MSI interrupts have been alloc'd */
-> -	unsigned long		used;
-> +	/* Used indicates which MSI interrupts have been alloc'd. 'nr' bellow is
-> +	   the real size of the bitmap. It depends on the chip. */
+> It would be nicer though to explain a bit better what it is
+> fixing in the commit log (and what's broken if we don't merge it),
+> as it stands it is a bit terse.
 
-I hate to bike-shed this even more, but IMO we should just drop the
-comment above completely.  It's not the usual commenting style, no
-other drivers provide similar explanation, and "below" is misspelled,
-which will lead to a future fixup patch.
+I don't think anything is broken per se, it still works without this 
+patch (probably because the refclk gets enabled fast enough that we 
+don't have to wait for it); it's just that I think this is the correct 
+logic. This is all reverse engineered anyway, so ultimately there is no 
+hardware documentation to point to to say what's right and what's wrong...
 
-> +	DECLARE_BITMAP		(used, BRCM_INT_PCI_MSI_NR);
->  	bool			legacy;
->  	/* Some chips have MSIs in bits [31..24] of a shared register. */
->  	int			legacy_shift;
-> @@ -534,7 +535,7 @@ static int brcm_msi_alloc(struct brcm_msi *msi)
->  	int hwirq;
->  
->  	mutex_lock(&msi->lock);
-> -	hwirq = bitmap_find_free_region(&msi->used, msi->nr, 0);
-> +	hwirq = bitmap_find_free_region(msi->used, msi->nr, 0);
->  	mutex_unlock(&msi->lock);
->  
->  	return hwirq;
-> @@ -543,7 +544,7 @@ static int brcm_msi_alloc(struct brcm_msi *msi)
->  static void brcm_msi_free(struct brcm_msi *msi, unsigned long hwirq)
->  {
->  	mutex_lock(&msi->lock);
-> -	bitmap_release_region(&msi->used, hwirq, 0);
-> +	bitmap_release_region(msi->used, hwirq, 0);
->  	mutex_unlock(&msi->lock);
->  }
->  
-> @@ -661,6 +662,12 @@ static int brcm_pcie_enable_msi(struct brcm_pcie *pcie)
->  	msi->irq = irq;
->  	msi->legacy = pcie->hw_rev < BRCM_PCIE_HW_REV_33;
->  
-> +	/*
-> +	 * Sanity check to make sure that the 'used' bitmap in struct brcm_msi
-> +	 * is large enough.
-> +	 */
-> +	BUILD_BUG_ON(BRCM_INT_PCI_MSI_LEGACY_NR > BRCM_INT_PCI_MSI_NR);
-> +
->  	if (msi->legacy) {
->  		msi->intr_base = msi->base + PCIE_INTR2_CPU_BASE;
->  		msi->nr = BRCM_INT_PCI_MSI_LEGACY_NR;
-> -- 
-> 2.30.2
-> 
+-- 
+Hector Martin (marcan@marcan.st)
+Public Key: https://mrcn.st/pub
