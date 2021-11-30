@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 983D446346A
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 13:36:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E9F946346B
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 13:36:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231437AbhK3Mju (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 07:39:50 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:35536 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230406AbhK3Mjt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 07:39:49 -0500
+        id S230222AbhK3Mjv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 07:39:51 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:44428 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230406AbhK3Mjv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 07:39:51 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2EAF7B81920
-        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 12:36:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF63C53FD0;
-        Tue, 30 Nov 2021 12:36:26 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 354CACE18FA
+        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 12:36:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF16C53FC7;
+        Tue, 30 Nov 2021 12:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638275787;
-        bh=7dWtS7IabxxufChgE1lrOYtnRbIhcoqfnxK0McNkq24=;
+        s=k20201202; t=1638275789;
+        bh=dtN3HkPg9muD4NSst+bR1T01bHdCkAPKNB1bc5rpn+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U6lwi/Cm4M3IqAbKRBfcJpuJ3IN3fGMwuCgqP3SuVRIyx8nLqhyzXavOXDyIxFI0N
-         UIe/Hqi/jFTgFcBGyoDx05OV6Ljw8JFya7KcyhhntKhwyK5b8YLBr/b0Ve+dqltD1G
-         qSXFmHSPi6Cd7pWL0QTOISitgxmdxvvUyp0mzPniOT58EylzGTWQe5s+aj3Il9sBpP
-         +jI6AMz5fwrhhP6Y50FpNWpHwY2P6Hy+TGLOLAx2hazgMvNmmONn4rINKHPoQpj6JW
-         ZNVNrxTTxOQUqbpI1Il9jrWTh+HXo7bv92Ik+IWSEWJVUBPKrqYibzbCPEgaZ1kHXJ
-         qjvRqC0Db7N/g==
+        b=n9G5fbc72CoVNK2mq4tec16KXs5ZUOh8aDzqE91OY7ES6GOmzNlkdlwXcmXA4+2uq
+         4D9ZRdeFNM7A6VnVqUx0J8bC1kQKnXcLIbdNfkIK8+8cuenC+EhInl6qjMPTd4KgLF
+         tjmqYLmOmV9UPhZ7q5y/CJJ0zeL1wbAT+YtbyyZ3SKAm8DfH+s3MCSgRDnmrEQkTNL
+         CY5i7M3uglNXnLPPEYKCIIXv01NLlwPMPvNK7c67MmQxRYxw8/nakYgZOHqBqnKQaL
+         eYVHi9TuoEAxT4m1Hv17wr2/PHbF8cV/H11+6Ddw1dSjMyuW6g8wci1i6UpEp9OQHJ
+         MHy3yAGFUsOJg==
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     pali@kernel.org, linux-pci@vger.kernel.org,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH v2 01/11] PCI: pci-bridge-emul: Add description for class_revision field
-Date:   Tue, 30 Nov 2021 13:36:11 +0100
-Message-Id: <20211130123621.23062-2-kabel@kernel.org>
+Subject: [PATCH v2 02/11] PCI: pci-bridge-emul: Add definitions for missing capabilities registers
+Date:   Tue, 30 Nov 2021 13:36:12 +0100
+Message-Id: <20211130123621.23062-3-kabel@kernel.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20211130123621.23062-1-kabel@kernel.org>
 References: <20211130123621.23062-1-kabel@kernel.org>
@@ -47,41 +47,66 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Pali Rohár <pali@kernel.org>
 
-The current assignment to the class_revision member
-
-  class_revision |= cpu_to_le32(PCI_CLASS_BRIDGE_PCI << 16);
-
-can make the reader think that class is at high 16 bits of the member and
-revision at low 16 bits.
-
-In reality, class is at high 24 bits, but the class for PCI Bridge Normal
-Decode is PCI_CLASS_BRIDGE_PCI << 8.
-
-Change the assignment and add a comment to make this clearer.
+pci-bridge-emul driver already allocates buffer for capabilities up to the
+PCI_EXP_SLTSTA2 register, but does not define bit access behavior for these
+registers. Add these missing definitions.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Signed-off-by: Marek Behún <kabel@kernel.org>
 ---
- drivers/pci/pci-bridge-emul.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pci/pci-bridge-emul.c | 39 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index db97cddfc85e..a4af1a533d71 100644
+index a4af1a533d71..aa3320e3c469 100644
 --- a/drivers/pci/pci-bridge-emul.c
 +++ b/drivers/pci/pci-bridge-emul.c
-@@ -265,7 +265,11 @@ int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
- {
- 	BUILD_BUG_ON(sizeof(bridge->conf) != PCI_BRIDGE_CONF_END);
+@@ -251,6 +251,45 @@ struct pci_bridge_reg_behavior pcie_cap_regs_behavior[PCI_CAP_PCIE_SIZEOF / 4] =
+ 		.ro = GENMASK(15, 0) | PCI_EXP_RTSTA_PENDING,
+ 		.w1c = PCI_EXP_RTSTA_PME,
+ 	},
++
++	[PCI_EXP_DEVCAP2 / 4] = {
++		/* Device capabilities 2 register has reserved bits [30:27]. */
++		.ro = BIT(31) | GENMASK(26, 0),
++	},
++
++	[PCI_EXP_DEVCTL2 / 4] = {
++		/*
++		 * Device control 2 register is RW.
++		 *
++		 * Device status 2 register is reserved.
++		 */
++		.rw = GENMASK(15, 0),
++	},
++
++	[PCI_EXP_LNKCAP2 / 4] = {
++		/* Link capabilities 2 register has reserved bits [30:25] and 0. */
++		.ro = BIT(31) | GENMASK(24, 1),
++	},
++
++	[PCI_EXP_LNKCTL2 / 4] = {
++		/*
++		 * Link control 2 register is RW.
++		 *
++		 * Link status 2 register has bits 5, 15 W1C;
++		 * bits 10, 11 reserved and others are RO.
++		 */
++		.rw = GENMASK(15, 0),
++		.w1c = (BIT(15) | BIT(5)) << 16,
++		.ro = (GENMASK(14, 12) | GENMASK(9, 6) | GENMASK(4, 0)) << 16,
++	},
++
++	[PCI_EXP_SLTCAP2 / 4] = {
++		/* Slot capabilities 2 register is reserved. */
++	},
++
++	[PCI_EXP_SLTCTL2 / 4] = {
++		/* Both Slot control 2 and Slot status 2 registers are reserved. */
++	},
+ };
  
--	bridge->conf.class_revision |= cpu_to_le32(PCI_CLASS_BRIDGE_PCI << 16);
-+	/*
-+	 * class_revision: Class is high 24 bits and revision is low 8 bit of this member,
-+	 * while class for PCI Bridge Normal Decode has the 24-bit value: PCI_CLASS_BRIDGE_PCI << 8
-+	 */
-+	bridge->conf.class_revision |= cpu_to_le32((PCI_CLASS_BRIDGE_PCI << 8) << 8);
- 	bridge->conf.header_type = PCI_HEADER_TYPE_BRIDGE;
- 	bridge->conf.cache_line_size = 0x10;
- 	bridge->conf.status = cpu_to_le16(PCI_STATUS_CAP_LIST);
+ /*
 -- 
 2.32.0
 
