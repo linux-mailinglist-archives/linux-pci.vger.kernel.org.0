@@ -2,143 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5D1A4632B4
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 12:43:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AF48463370
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 12:54:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240937AbhK3Lqz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 06:46:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240934AbhK3Lqz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 06:46:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC4AC061574
-        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 03:43:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B334EB81840
-        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 11:43:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17BB2C53FC7;
-        Tue, 30 Nov 2021 11:43:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638272613;
-        bh=cKxcJ9ObXwl8nHUKPhMz810cnyb/0e+CTILW+QM8coQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BaQSywkR88jDG2sPWQyHgOjS3Zi8Sjn67bn+2r5CjPQBcUKaE8LluEoagKM/OvPkP
-         zNEUuWyaY0FT8t1Xrfmu85A1PMwahF36lD2LEDURVJHNET/Z9HfjlDoachK2U22eoP
-         QTXOd+lq7gPJkVRc1FZybx3V4WVeLOmhHCbMvoZTJnMv5TFvTn/CSQMyvt6bbOMtVM
-         0FoLCnMAZYMvGG/K1QlSFGbhUg6ViPJdBAUqh1k1MCfK2MQDoRh8EqmVHvo/Cv7dod
-         09mFiR1T/gGvNTZNw1ujj7kJYM9zMtWwInxD6Wa7Du5MNIPkIsUpOWoFsVvROTH8ff
-         TZnEplp7U0/Cg==
-Received: by pali.im (Postfix)
-        id DCD527DF; Tue, 30 Nov 2021 12:43:29 +0100 (CET)
-Date:   Tue, 30 Nov 2021 12:43:29 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH pci-fixes 2/2] Revert "PCI: aardvark: Fix support for
- PCI_ROM_ADDRESS1 on emulated bridge"
-Message-ID: <20211130114329.c3cm46trb6gc7vol@pali>
-References: <20211125160148.26029-1-kabel@kernel.org>
- <20211125160148.26029-3-kabel@kernel.org>
+        id S231409AbhK3L5Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 06:57:24 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4180 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230273AbhK3L5W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 06:57:22 -0500
+Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J3LF31Knkz67jq6;
+        Tue, 30 Nov 2021 19:52:39 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.20; Tue, 30 Nov 2021 12:54:00 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Tue, 30 Nov
+ 2021 11:53:59 +0000
+Date:   Tue, 30 Nov 2021 11:53:58 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     LKML <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Stuart Yoder <stuyoder@gmail.com>, <linux-pci@vger.kernel.org>,
+        Will Deacon <will@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Marc Zygnier <maz@kernel.org>, <x86@kernel.org>,
+        Sinan Kaya <okaya@kernel.org>,
+        <iommu@lists.linux-foundation.org>,
+        "Bjorn Helgaas" <helgaas@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        "Jason Gunthorpe" <jgg@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tero Kristo <kristo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Vinod Koul" <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
+Subject: Re: [patch 08/37] genirq/msi: Provide
+ msi_device_populate/destroy_sysfs()
+Message-ID: <20211130115358.000017ec@Huawei.com>
+In-Reply-To: <20211126230524.416227100@linutronix.de>
+References: <20211126224100.303046749@linutronix.de>
+        <20211126230524.416227100@linutronix.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211125160148.26029-3-kabel@kernel.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 25 November 2021 17:01:48 Marek Behún wrote:
-> This reverts commit 239edf686c14a9ff926dec2f350289ed7adfefe2.
-> 
-> PCI Bridge which represents aardvark's PCIe Root Port has Expansion ROM
-> Base Address register at offset 0x30, but its meaning is different than
-> PCI's Expansion ROM BAR register, although the layout is the same.
-> (This is why we thought it does the same thing.)
-> 
-> First: there is no ROM (or part of BootROM) in the A3720 SOC dedicated
-> for PCIe Root Port (or controller in RC mode) containing executable code
-> that would initialize the Root Port, suitable for execution in
-> bootloader (this is how Expansion ROM BAR is used on x86).
-> 
-> Second: in A3720 spec the register (address D0070030) is not documented
-> at all for Root Complex mode, but similar to other BAR registers, it has
-> an "entangled partner" in register D0075920, which does address
-> translation for the BAR in D0070030:
-> - the BAR register sets the address from the view of PCIe bus
-> - the translation register sets the address from the view of the CPU
-> 
-> The other BAR registers also have this entangled partner, and they
-> can be used to:
-> - in RC mode: address-checking on the receive side of the RC (they
->   can define address ranges for memory accesses from remote Endpoints
->   to the RC)
-> - in Endpoint mode: allow the remote CPU to access memory on A3720
-> 
-> The Expansion ROM BAR has only the Endpoint part documented, but from
-> the similarities we think that it can also be used in RC mode in that
-> way.
-> 
-> So either Expansion ROM BAR has different meaning (if the hypothesis
-> above is true), or we don't know it's meaning (since it is not
-> documented for RC mode).
-> 
-> Remove the register from the emulated bridge accessing functions.
-> 
-> Fixes: 239edf686c14 ("PCI: aardvark: Fix support for PCI_ROM_ADDRESS1 on emulated bridge")
-> Signed-off-by: Marek Behún <kabel@kernel.org>
+On Sat, 27 Nov 2021 02:20:19 +0100 (CET)
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Seems that there is missing my tag, so I'm adding:
+> Add new allocation functions which can be activated by domain info
+> flags. They store the groups pointer in struct msi_device_data.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
-
-It is really a trap if device has register names and offsets same as in
-PCIe spec, also syntax/content of registers is same, but then semantic,
-meaning and usage is totally different.
+A few trivial comments...
 
 > ---
->  drivers/pci/controller/pci-aardvark.c | 9 ---------
->  1 file changed, 9 deletions(-)
+>  include/linux/msi.h |   12 +++++++++++-
+>  kernel/irq/msi.c    |   42 ++++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 51 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index baa62cdcaab4..e3001b3b3293 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -32,7 +32,6 @@
->  #define PCIE_CORE_DEV_ID_REG					0x0
->  #define PCIE_CORE_CMD_STATUS_REG				0x4
->  #define PCIE_CORE_DEV_REV_REG					0x8
-> -#define PCIE_CORE_EXP_ROM_BAR_REG				0x30
->  #define PCIE_CORE_PCIEXP_CAP					0xc0
->  #define PCIE_CORE_ERR_CAPCTL_REG				0x118
->  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
-> @@ -774,10 +773,6 @@ advk_pci_bridge_emul_base_conf_read(struct pci_bridge_emul *bridge,
->  		*value = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
->  		return PCI_BRIDGE_EMUL_HANDLED;
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -174,9 +174,11 @@ struct msi_desc {
+>  /**
+>   * msi_device_data - MSI per device data
+>   * @lock:		Spinlock to protect register access
+> + * @attrs:		Pointer to the sysfs attribute group
+>   */
+>  struct msi_device_data {
+> -	raw_spinlock_t		lock;
+> +	raw_spinlock_t			lock;
+
+Trivial: Move the alignment change back to patch 2.
+
+> +	const struct attribute_group    **attrs;
+>  };
 >  
-> -	case PCI_ROM_ADDRESS1:
-> -		*value = advk_readl(pcie, PCIE_CORE_EXP_ROM_BAR_REG);
-> -		return PCI_BRIDGE_EMUL_HANDLED;
-> -
->  	case PCI_INTERRUPT_LINE: {
->  		/*
->  		 * From the whole 32bit register we support reading from HW only
-> @@ -810,10 +805,6 @@ advk_pci_bridge_emul_base_conf_write(struct pci_bridge_emul *bridge,
->  		advk_writel(pcie, new, PCIE_CORE_CMD_STATUS_REG);
->  		break;
+>  int msi_setup_device_data(struct device *dev);
+> @@ -242,10 +244,16 @@ void pci_msi_mask_irq(struct irq_data *d
+>  void pci_msi_unmask_irq(struct irq_data *data);
 >  
-> -	case PCI_ROM_ADDRESS1:
-> -		advk_writel(pcie, new, PCIE_CORE_EXP_ROM_BAR_REG);
-> -		break;
-> -
->  	case PCI_INTERRUPT_LINE:
->  		if (mask & (PCI_BRIDGE_CTL_BUS_RESET << 16)) {
->  			u32 val = advk_readl(pcie, PCIE_CORE_CTRL1_REG);
-> -- 
-> 2.32.0
+>  #ifdef CONFIG_SYSFS
+> +int msi_device_populate_sysfs(struct device *dev);
+> +void msi_device_destroy_sysfs(struct device *dev);
+> +
+>  const struct attribute_group **msi_populate_sysfs(struct device *dev);
+>  void msi_destroy_sysfs(struct device *dev,
+>  		       const struct attribute_group **msi_irq_groups);
+>  #else
+> +static inline int msi_device_populate_sysfs(struct device *dev) { return 0; }
+> +static inline void msi_device_destroy_sysfs(struct device *dev) { }
+> +
+>  static inline const struct attribute_group **msi_populate_sysfs(struct device *dev)
+>  {
+>  	return NULL;
+> @@ -393,6 +401,8 @@ enum {
+>  	MSI_FLAG_MUST_REACTIVATE	= (1 << 5),
+>  	/* Is level-triggered capable, using two messages */
+>  	MSI_FLAG_LEVEL_CAPABLE		= (1 << 6),
+> +	/* Populate sysfs on alloc() and destroy it on free() */
+> +	MSI_FLAG_DEV_SYSFS		= (1 << 7),
+>  };
+>  
+>  int msi_domain_set_affinity(struct irq_data *data, const struct cpumask *mask,
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -214,6 +214,20 @@ const struct attribute_group **msi_popul
+>  }
+>  
+>  /**
+> + * msi_device_populate_sysfs - Populate msi_irqs sysfs entries for a device
+> + * @dev:	The device(PCI, platform etc) which will get sysfs entries
+
+Space after device
+
+> + */
+> +int msi_device_populate_sysfs(struct device *dev)
+> +{
+> +	const struct attribute_group **group = msi_populate_sysfs(dev);
+> +
+> +	if (IS_ERR(group))
+> +		return PTR_ERR(group);
+> +	dev->msi.data->attrs = group;
+> +	return 0;
+> +}
+> +
+> +/**
+>   * msi_destroy_sysfs - Destroy msi_irqs sysfs entries for devices
+>   * @dev:		The device(PCI, platform etc) who will remove sysfs entries
+>   * @msi_irq_groups:	attribute_group for device msi_irqs entries
+> @@ -239,6 +253,17 @@ void msi_destroy_sysfs(struct device *de
+>  		kfree(msi_irq_groups);
+>  	}
+>  }
+> +
+> +/**
+> + * msi_device_destroy_sysfs - Destroy msi_irqs sysfs entries for a device
+> + * @dev:		The device(PCI, platform etc) for which to remove
+> + *			sysfs entries
+> + */
+> +void msi_device_destroy_sysfs(struct device *dev)
+> +{
+> +	msi_destroy_sysfs(dev, dev->msi.data->attrs);
+> +	dev->msi.data->attrs = NULL;
+> +}
+>  #endif
+>  
+>  #ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+> @@ -686,8 +711,19 @@ int msi_domain_alloc_irqs(struct irq_dom
+>  {
+>  	struct msi_domain_info *info = domain->host_data;
+>  	struct msi_domain_ops *ops = info->ops;
+> +	int ret;
+>  
+> -	return ops->domain_alloc_irqs(domain, dev, nvec);
+> +	ret = ops->domain_alloc_irqs(domain, dev, nvec);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!(info->flags & MSI_FLAG_DEV_SYSFS))
+> +		return 0;
+> +
+> +	ret = msi_device_populate_sysfs(dev);
+> +	if (ret)
+> +		msi_domain_free_irqs(domain, dev);
+> +	return ret;
+>  }
+>  
+>  void __msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+> @@ -726,7 +762,9 @@ void msi_domain_free_irqs(struct irq_dom
+>  	struct msi_domain_info *info = domain->host_data;
+>  	struct msi_domain_ops *ops = info->ops;
+>  
+> -	return ops->domain_free_irqs(domain, dev);
+> +	if (info->flags & MSI_FLAG_DEV_SYSFS)
+> +		msi_device_destroy_sysfs(dev);
+> +	ops->domain_free_irqs(domain, dev);
+>  }
+>  
+>  /**
 > 
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+
