@@ -2,111 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EAF7462E3D
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 09:09:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3774462E48
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 09:12:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239460AbhK3IMz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 03:12:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239458AbhK3IMz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 03:12:55 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27FE7C061574
-        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 00:09:36 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id w33-20020a17090a6ba400b001a722a06212so13419171pjj.0
-        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 00:09:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bly9GlQE9/JyEKSh/5GI0ST+fFzm9mG/myfF2bLxku4=;
-        b=UvbICQtz9xncEJyS6L4w9UHSs484FId5l+ggZSBTf1C+xccW3Li+S0FZZFLSdyb6Nh
-         WBBca/gF9Nf5qdsq23KLGQ0oZkrqrsMJZOTQWwvD0VAUmDTT6VIs27heyGqIhnwXCN6J
-         RuXxzacRfreZWohUUuvY6mxZ4Avxk89rSd/XUYRrr965SlUAQ0a4T7gAmMGkW7uvxCRf
-         eJWyfwRnrJMNCH/nrrUzZMLvZqy0sVVGZ3Cc0necyJWbUFtc3EM43WU+eYilK7/C8jek
-         PV20XAZQcLBkHkuxx8OBbpBrEauM1nt4ZYMyvICUBpMCFRhH3vyKPAS4OMQuVX1busxo
-         CKLw==
+        id S239499AbhK3IPo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 03:15:44 -0500
+Received: from mail-pf1-f170.google.com ([209.85.210.170]:43595 "EHLO
+        mail-pf1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239495AbhK3IPo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 03:15:44 -0500
+Received: by mail-pf1-f170.google.com with SMTP id n85so19777850pfd.10;
+        Tue, 30 Nov 2021 00:12:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bly9GlQE9/JyEKSh/5GI0ST+fFzm9mG/myfF2bLxku4=;
-        b=6H9E/ZYAv1noZRcEDX+Z8K0powvCLdf6ZdGRY1sPqnve/11gufhu1lwojkrfq8tH6P
-         y2beBKtQIX9DiOL6gP8CBVn/vbrf0tWmw7fePZX+sF62EL0PUn1C8hhMMIvjqcdgs4nS
-         9d6Si9tSPZ9ThIwY0u4jY6AXgIqiwLGrG5W0gi0WzgFb8RvuKLMbA9v6atQ/5nI9Oe1y
-         D69sZr8ETRL5rkj8tvN+TiOStv3X8MFLGBuT6imFFkZTIOIwYU0bfSL0Oo1ko9m/ru1F
-         oi2J8dH9Vw9o+r+CdsCUUFPEEghCFhPP+5iGm23jKtjL/cw5WeNjF8xs5HMu+LCdhw+k
-         Ih4A==
-X-Gm-Message-State: AOAM533AnZphs9f46DXViwqhJjF09lUhMapp4ofQReFV9TjWI+l8k16q
-        sK32KmMS/xqSt5Xnq52DptkV
-X-Google-Smtp-Source: ABdhPJxtTZUBC0SRMaIc0y3cQL/FKYQEWA0qhBlBJKChPYousUEzqNOJoTbiVazJVXx9uOsqsH6Xeg==
-X-Received: by 2002:a17:902:bcc4:b0:141:bfc4:ada with SMTP id o4-20020a170902bcc400b00141bfc40adamr65113728pls.20.1638259775500;
-        Tue, 30 Nov 2021 00:09:35 -0800 (PST)
-Received: from localhost.localdomain ([202.21.42.3])
-        by smtp.gmail.com with ESMTPSA id c18sm20366043pfl.201.2021.11.30.00.09.31
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oOtBm70QtWvgwX0qhSoyfuzskIptKAWAcyAGLs0h6lc=;
+        b=nCALnkNWMEJxlcmuxl0hNGpm2mwKWEqV5aeXcdtpZxVNBi9Fii6ceCmWbYbp9uMAh6
+         eriPZ74LV1AB82jfU5aCjvd54pworOPdTaNht6YJfPv4PM2vZjvuUp+ZuySmoKbMzovZ
+         C+eJZ7CLeouHG1ruQdcRatwt96Fak6R+OHXzaZ1U+sLpfjzvUskYOSXWxfJs8ZbL71e7
+         eHI1TXo/B1EYaRgIBe/z83qcIfiFjMaMWbd5p67nzIiw5iKMpzqhWfZ4A8wR5s2VXycG
+         ZtJKzGgBDRRYy5ihnPc6HK8E6Mi23uHWLDpSVOtC5DA2DT3UZk3K7KpgHxcVP9WXHSQo
+         fOqQ==
+X-Gm-Message-State: AOAM530x+oH02h+u41tJgEE1BWNL3sy7FLS3Sk8RpZcjBUuOdGwA4cyv
+        BUpjiKrkeXk8bj4RzPF2tFQ=
+X-Google-Smtp-Source: ABdhPJy8q2DqldYdtiN65JQyUznoDqXysRHHlfcMW5tz/jiV/hZdMsaZ495IkMV5vUvsXPZt5Ley9Q==
+X-Received: by 2002:aa7:88d5:0:b0:49f:e382:3d62 with SMTP id k21-20020aa788d5000000b0049fe3823d62mr44398168pff.76.1638259945042;
+        Tue, 30 Nov 2021 00:12:25 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id q11sm19873718pfk.192.2021.11.30.00.12.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Nov 2021 00:09:34 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     svarbanov@mm-sol.com, bjorn.andersson@linaro.org, robh@kernel.org,
+        Tue, 30 Nov 2021 00:12:24 -0800 (PST)
+Date:   Tue, 30 Nov 2021 09:12:14 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        svarbanov@mm-sol.com, bjorn.andersson@linaro.org, robh@kernel.org,
         linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        kernel test robot <lkp@intel.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Subject: [PATCH v3] PCI: qcom: Use __be16 type to store return value from cpu_to_be16()
-Date:   Tue, 30 Nov 2021 13:39:24 +0530
-Message-Id: <20211130080924.266116-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2] PCI: qcom: Use __be16 for catching cpu_to_be16()
+ return instead of u16
+Message-ID: <YaXc3mlBbhvEkZCX@rocinante>
+References: <20211130064215.207393-1-manivannan.sadhasivam@linaro.org>
+ <YaXSoLpIfrTh81/+@rocinante>
+ <20211130080456.GE205712@thinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211130080456.GE205712@thinkpad>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-cpu_to_be16() returns __be16 value but the driver uses u16 and that's
-incorrect. Fix it by using __be16 as the data type of bdf_be variable.
+Hello!
 
-The issue was spotted by the below sparse warning:
+[...]
+> > > cpu_to_be16() returns __be16 value but the driver uses u16 and that's
+> > > incorrect. Fix it by using __be16 as the datatype of bdf_be variable.
+> > 
+> > It would be "data type" in the above.
+> > 
+> > Not really a requirement to do so, but you could include the actual
+> > warning, as sometimes this is useful for reference later, as per:
+> > 
+> >   drivers/pci/controller/dwc/pcie-qcom.c:1346:30: warning: incorrect type in initializer (different base types)
+> >   drivers/pci/controller/dwc/pcie-qcom.c:1346:30:    expected unsigned short [usertype] bdf_be
+> >   drivers/pci/controller/dwc/pcie-qcom.c:1346:30:    got restricted __be16 [usertype]
+> > 
+> 
+> I usually do but as per Bjorn's comment I thought it is not recommended for PCI
+> subsystem (or maybe I misread his comments). Will add.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/controller/dwc/pcie-qcom.c:1305:30: sparse: sparse: incorrect type in initializer (different base types) @@     expected unsigned short [usertype] bdf_be @@     got restricted __be16 [usertype] @@
-   drivers/pci/controller/dwc/pcie-qcom.c:1305:30: sparse:     expected unsigned short [usertype] bdf_be
-   drivers/pci/controller/dwc/pcie-qcom.c:1305:30: sparse:     got restricted __be16 [usertype]
+Ah right.  I must have missed his comment too.  I usually include warnings
+myself, where applicable.  Let's wait for what Bjorn says, just in case, so
+that we avoid adding something he does not want to have included in the
+commit message.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
+[...]
+> > Also, since I have your attention, it seems we have a number of unused
+> > macros in the qcom driver, as per:
+> > 
+> >   drivers/pci/controller/dwc/pcie-qcom.c:#define PCIE20_PARF_BDF_TRANSLATE_CFG            0x24C
+> >   drivers/pci/controller/dwc/pcie-qcom.c:#define PCIE20_PARF_SID_OFFSET                   0x234
+> >   drivers/pci/controller/dwc/pcie-qcom.c:#define PCIE20_PARF_SLV_ADDR_SPACE_SIZE          0x16C
+> > 
+> > And also in the qcom-ep driver, as per:
+> > 
+> 
+> These defines are helpful for someone who wants to add some functionality or
+> even bug fix in the future. Since these controllers are not publically
+> documented, having these definitions helps a lot.
 
-Changes in v3:
+Got it!  I run a nightly CI pipeline and been seeing complains due to the
+"-Wunused-macros" show up in the log, so I decided to steal the spotlight,
+so to speak, to ask about these.
 
-* Added Krzysztof's reviewed-by tag and modified the commit message as per
-his comments
+Thank you for letting me know.  Appreciated!
 
-Changes in v2:
-
-* Modified the commit message and subject to describe the actual issue
-as per comments from Bjorn.
-
- drivers/pci/controller/dwc/pcie-qcom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 1c3d1116bb60..ddecd7f341c5 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1343,7 +1343,7 @@ static int qcom_pcie_config_sid_sm8250(struct qcom_pcie *pcie)
- 
- 	/* Look for an available entry to hold the mapping */
- 	for (i = 0; i < nr_map; i++) {
--		u16 bdf_be = cpu_to_be16(map[i].bdf);
-+		__be16 bdf_be = cpu_to_be16(map[i].bdf);
- 		u32 val;
- 		u8 hash;
- 
--- 
-2.25.1
-
+	Krzysztof
