@@ -2,76 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52DD5463530
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 14:16:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D298C46355D
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 14:25:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231747AbhK3NTT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 08:19:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230510AbhK3NTQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 08:19:16 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2E0C061574
-        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 05:15:55 -0800 (PST)
+        id S232733AbhK3N2w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 08:28:52 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:59318 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232336AbhK3N2w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 08:28:52 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 77DB1CE19D8
-        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 13:15:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1803C53FC7;
-        Tue, 30 Nov 2021 13:15:50 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 217C4CE19FE
+        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 13:25:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35EFFC53FC7;
+        Tue, 30 Nov 2021 13:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638278151;
-        bh=MMmBdPAZNAlMH/SpZK89ywvP+E58NwMbdWWPno6Efy8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QmEyxlkhgWis2WiahEJ7BHFVtK2IdtepzR0g0UHne858jqFEFHGtjBIq0Zk/nr4c1
-         1iwIbOFTXUDpr1H2QKtwyrUadPAkkQ/zyW07IsqMxW98r13ntY7nO+bcF/Hv2mEfoo
-         c3xCIk+vzPIp81EbUslWjugudkiy6ZW6NZAk9RTYoEkfiWwtKNZH3zr2TYnbm/LWrr
-         f981Pcc/thdSEj81/8tGBC82Yw7/XKeGOEmGA1fVLN50d+X6LoLQ0GBFTRiw4a3b2j
-         OcfcoQm8ew5iOynR7vA3a9ferr0Lk+vsE+oLg2f+vcfnM8pUmVPdcAahTvCVQZZPkx
-         AuZBbdr8kBieg==
-Date:   Tue, 30 Nov 2021 14:15:47 +0100
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 02/11] PCI: pci-bridge-emul: Add definitions for
- missing capabilities registers
-Message-ID: <20211130141547.32e9d950@thinkpad>
-In-Reply-To: <20211130124326.nbsqy5bgfgyccor5@pali>
-References: <20211130123621.23062-1-kabel@kernel.org>
-        <20211130123621.23062-3-kabel@kernel.org>
-        <20211130124326.nbsqy5bgfgyccor5@pali>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        s=k20201202; t=1638278730;
+        bh=16RVcrqaBmMR43aspTwZCscC3NVFsAEmtV7ZMbpjKTU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Qw46RVFQdVfVsZ36VcxKJw5fBf0yapEGOAMqEUL+RQV+0h2Hl2GmtBfE7D8/kpGHk
+         2QALblerpyZOZBAbpySC7irI8LJ9/d/tEmsam1K0aCVBeRgDl0f0KEmHWQYuc8Hs3t
+         q1q3xtaUsd/F2XRH+NqwHBMcVAEDpEFhCo+v7dKXmBr59cWwx+LsQc3KxNZNTQ9+fS
+         4ZAfOGL6JST5jzAiUd7N6rEFHbA/PNLjA1Z1m2qerJkhWUMpOPKXaXxsN7St5IDwbZ
+         sequz8MHpk334boxGtHlhNINQhlB9i1ri2TybebCuh+omTB8l2Z4xS4cot56Rzfvof
+         /jRg6JktSnz9g==
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     pali@kernel.org, linux-pci@vger.kernel.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Subject: [PATCH v3 00/11] PCI: aardvark controller fixes BATCH 3
+Date:   Tue, 30 Nov 2021 14:25:12 +0100
+Message-Id: <20211130132523.28126-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 30 Nov 2021 13:43:26 +0100
-Pali Roh=C3=A1r <pali@kernel.org> wrote:
+Dear Lorenzo,
 
-> This patch is old version which does not reflect all reserved bits. Few
-> days ago I have sent new version of this patch in patch series with
-> other pci-bridge-emul.c related fixes:
->=20
-> https://lore.kernel.org/linux-pci/20211124155944.1290-4-pali@kernel.org/
+sorry about this, I overlooked one more change Pali did in the second
+patch.
 
-Pali, Lorenzo, let us define priorities for Lorenzo:
+Changes since v2:
+- updated the second patch, updated definitions of registers
+  PCI_EXP_DEVCAP2 and PCI_EXP_DEVCTL2
 
-I will send v3 of this series with this one patch replaced with new
-version. This series will have the most priority for Lorenzo.
-
-Afterwards let's send another version (v2) of
-  PCI: pci-bridge-emul: Various fixes
-with this patch removed (since it will be merged via aardvark).
-This series will have second priority.
-
-After that Lorenzo will look at mvebu patches.
-
-Is that ok?
+Changes since v1:
+- removed fixes / stable tags
+- split the patches as you first suggested, since it makes more sense
+  IMO
+- changed some commit messages a little
 
 Marek
+
+Pali Rohár (11):
+  PCI: pci-bridge-emul: Add description for class_revision field
+  PCI: pci-bridge-emul: Add definitions for missing capabilities
+    registers
+  PCI: aardvark: Add support for DEVCAP2, DEVCTL2, LNKCAP2 and LNKCTL2
+    registers on emulated bridge
+  PCI: aardvark: Clear all MSIs at setup
+  PCI: aardvark: Comment actions in driver remove method
+  PCI: aardvark: Disable bus mastering when unbinding driver
+  PCI: aardvark: Mask all interrupts when unbinding driver
+  PCI: aardvark: Fix memory leak in driver unbind
+  PCI: aardvark: Assert PERST# when unbinding driver
+  PCI: aardvark: Disable link training when unbinding driver
+  PCI: aardvark: Disable common PHY when unbinding driver
+
+ drivers/pci/controller/pci-aardvark.c | 65 ++++++++++++++++++++++++---
+ drivers/pci/pci-bridge-emul.c         | 49 +++++++++++++++++++-
+ 2 files changed, 107 insertions(+), 7 deletions(-)
+
+-- 
+2.32.0
+
