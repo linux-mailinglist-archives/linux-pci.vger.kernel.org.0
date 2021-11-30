@@ -2,101 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BCCF463426
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 13:22:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D02946344D
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 13:30:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232808AbhK3MZg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 07:25:36 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:56458 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232530AbhK3MZf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 07:25:35 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 39761B818FE
-        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 12:22:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D4F2C53FC7;
-        Tue, 30 Nov 2021 12:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638274932;
-        bh=bIcR2swGnj8SqKE5jiL6iiFDYqPU9Z55FYaC5GxEUTU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MNUBCKNoC2gPIVvNVNsnLe1SD050tMEJ4IYAqNVoc6KWNE39pCGN0Qmi6fbBrbKjt
-         mJYkic/UJiP742JvPba73M7tLnNihAhus1FLpftdrOko87AiAiBUNcMmioV6UIprfd
-         U5ySkWRmjoQLEMuN3ZIl7w6F32sCaAgRKXgyR8M3xJ0+s/rPaV1HumcyVb8eq8bj6W
-         M+3xcNO2OYhyRtLrIzPkqB2dKP/OJ5jGb2WvKelxZNSAzGDfbuPgpu+ZAm20QneNmo
-         EAx/p8S8EYeNYFhXaXGRWgi8OM2f8IJpnkoeuxy/GWeMG6J2j3RJzA7Gz4l5jJOVkE
-         I4yhSe90MdaFg==
-Date:   Tue, 30 Nov 2021 13:22:09 +0100
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, pali@kernel.org
-Subject: Re: [PATCH 7/7] PCI: aardvark: Reset PCIe card and disable PHY at
- driver unbind
-Message-ID: <20211130132209.3d3c717e@thinkpad>
-In-Reply-To: <20211130103157.GA32648@lpieralisi>
-References: <20211031181233.9976-1-kabel@kernel.org>
-        <20211031181233.9976-8-kabel@kernel.org>
-        <20211129164043.GA26244@lpieralisi>
-        <20211129181553.41a341bb@thinkpad>
-        <20211130103157.GA32648@lpieralisi>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        id S231177AbhK3MeO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 07:34:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:32822 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231559AbhK3MeO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 07:34:14 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638275453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MoxU22IJJPvJRa8OS7V+vWzcBzYBFKmJ+AzUDqGDJ0c=;
+        b=By9F2CxzS/o9ToFNEiRxLUVS4AyQNuM7azBeEiD814EleLq+hJGIFbr5Pb7s+yxDcghQJZ
+        bz+QmgZkMouYYFY+n8NIMmEVrzBGnKypYEtqksbB0LcQcsXrqkseVFUPXnb/sd5ZkkeCjp
+        Pnu87QVrfqY+aPFRcb2JbkA20ryw2kwZX8Zt58hXMuKopfKcpJeEcYrsQaBCBid5TfxvzR
+        pg01jc6fTOy30S6/4paKJbL3nUdr+wHzyl4B2pcoryuGOAyzDqtURCC8EFqCHDYt+1EdmP
+        Tn7K/VVDH3bM9b/JWsuJU4BSSPJHX1HAmQQ17NBsztNZhn1jdrGHUG7vESjD7A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638275453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MoxU22IJJPvJRa8OS7V+vWzcBzYBFKmJ+AzUDqGDJ0c=;
+        b=b3LRCCrahGv4zVsp1t2g38jgPS8/TbYK4NCKubQCW9LmpN8f4nz/THoNrepB7KLN6Bne8n
+        caFNq7QymQ+tnnDg==
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Cc:     Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>,
+        Stuart Yoder <stuyoder@gmail.com>, linux-pci@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>, Marc Zygnier <maz@kernel.org>,
+        x86@kernel.org, Sinan Kaya <okaya@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Tero Kristo <kristo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Subject: Re: [patch 33/37] iommu/arm-smmu-v3: Use msi_get_virq()
+In-Reply-To: <20211130093607.GA23941@willie-the-truck>
+References: <20211126224100.303046749@linutronix.de>
+ <20211126230525.885757679@linutronix.de>
+ <20211129105506.GA22761@willie-the-truck>
+ <76a1b5c1-01c8-bb30-6105-b4073dc23065@arm.com> <87czmjdnw9.ffs@tglx>
+ <b192ad88-5e4e-6f32-1cc7-7a50fc0676a1@arm.com>
+ <20211130093607.GA23941@willie-the-truck>
+Date:   Tue, 30 Nov 2021 13:30:53 +0100
+Message-ID: <878rx5ddvm.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 30 Nov 2021 10:31:57 +0000
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+On Tue, Nov 30 2021 at 09:36, Will Deacon wrote:
+> On Mon, Nov 29, 2021 at 02:54:18PM +0000, Robin Murphy wrote:
+>> On 2021-11-29 14:42, Thomas Gleixner wrote:
+>> > It's actually 0 when the vector cannot be found.
+>> 
+>> Oh, -1 for my reading comprehension but +1 for my confidence in the patch
+>> then :)
+>> 
+>> I'll let Will have the final say over how cautious we really want to be
+>> here, but as far as I'm concerned it's a welcome cleanup as-is. Ditto for
+>> patch #32 based on the same reasoning, although I don't have a suitable test
+>> platform on-hand to sanity-check that one.
+>
+> If, as it appears, msi_get_virq() isn't going to fail meaningfully after
+> we've successfully called platform_msi_domain_alloc_irqs() then it sounds
+> like the patch is fine. Just wanted to check though, as Spring cleaning at
+> the end of November raised an eyebrow over here :)
 
-> On Mon, Nov 29, 2021 at 06:15:53PM +0100, Marek Beh=C3=BAn wrote:
-> > On Mon, 29 Nov 2021 16:40:43 +0000
-> > Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-> >  =20
-> > > On Sun, Oct 31, 2021 at 07:12:33PM +0100, Marek Beh=C3=BAn wrote: =20
-> > > > From: Pali Roh=C3=A1r <pali@kernel.org>
-> > > >=20
-> > > > When unbinding driver, assert PERST# signal which prepares PCIe car=
-d for
-> > > > power down. Then disable link training and PHY.   =20
-> > >=20
-> > > This reads as three actions. If we carry them out as a single patch we
-> > > have to explain why they are related and what problem they are solving
-> > > as a _single_ commit.
-> > >=20
-> > > Otherwise we have to split this patch into three and explain each of
-> > > them as a separate fix.
-> > >=20
-> > > I understand it is tempting to coalesce missing code in one single
-> > > change but every commit must implement a single logical change. =20
-> >=20
-> > Hi Lorenzo,
-> >=20
-> > this is a fix for driver remove function. Although each of these things
-> > could be introduced in separate commits, IMO it doesn't make sense to
-> > split it. It should have been done this way in the first place when the
-> > driver removal support was introduced. I guess we could rewrite the
-> > commit message to:
-> >=20
-> >   PCI: aardvark: Disable controller entirely at driver unbind =20
->=20
-> "PCI: aardvark: Fix the controller disabling sequence"
->=20
-> >   Add the following to driver unbind to disable the controller entirely:
-> >   - asserting PERST# signal
-> >   - disabling link training
-> >   - disable PHY
-> >=20
-> > Would this be okay? =20
->=20
-> Yes, that's what I meant. I would describe the change in its entirety
-> not as three fixes - it makes sense to have one single patch as long
-> as we describe it properly.
+Fair enough. Next time I'll name it 'Cleaning the Augean stables' when
+it's the wrong season.
 
-After I went through it again, I think it would be better to split it
-into 3 patches. I am going to do that this way.
+Thanks,
 
-Marek
+        tglx
+
