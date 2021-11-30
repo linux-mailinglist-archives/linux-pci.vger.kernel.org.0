@@ -2,126 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34F69463266
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 12:29:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9537346326B
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 12:31:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238784AbhK3LdD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 06:33:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:35278 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239844AbhK3LdD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 30 Nov 2021 06:33:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 446D21063;
-        Tue, 30 Nov 2021 03:29:44 -0800 (PST)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 917133F766;
-        Tue, 30 Nov 2021 03:29:43 -0800 (PST)
-Date:   Tue, 30 Nov 2021 11:29:37 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, pali@kernel.org
-Subject: Re: [PATCH pci-fixes 2/2] Revert "PCI: aardvark: Fix support for
- PCI_ROM_ADDRESS1 on emulated bridge"
-Message-ID: <20211130112937.GA3130@lpieralisi>
-References: <20211125160148.26029-1-kabel@kernel.org>
- <20211125160148.26029-3-kabel@kernel.org>
+        id S237088AbhK3LfM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 06:35:12 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:16323 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232569AbhK3LfM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 06:35:12 -0500
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4J3KmR72RPz91QC;
+        Tue, 30 Nov 2021 19:31:19 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Tue, 30 Nov 2021 19:31:51 +0800
+CC:     <yangyicong@hisilicon.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Subject: [Issue] PCIe AER/Hotplug is disabled when pcie_aspm=off
+To:     <bhelgaas@google.com>, <rafael@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+Message-ID: <4d5943c3-1951-767a-5b03-46f527e6ab3a@hisilicon.com>
+Date:   Tue, 30 Nov 2021 19:31:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211125160148.26029-3-kabel@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 25, 2021 at 05:01:48PM +0100, Marek Behún wrote:
-> This reverts commit 239edf686c14a9ff926dec2f350289ed7adfefe2.
-> 
-> PCI Bridge which represents aardvark's PCIe Root Port has Expansion ROM
-> Base Address register at offset 0x30, but its meaning is different than
-> PCI's Expansion ROM BAR register, although the layout is the same.
-> (This is why we thought it does the same thing.)
-> 
-> First: there is no ROM (or part of BootROM) in the A3720 SOC dedicated
-> for PCIe Root Port (or controller in RC mode) containing executable code
-> that would initialize the Root Port, suitable for execution in
-> bootloader (this is how Expansion ROM BAR is used on x86).
-> 
-> Second: in A3720 spec the register (address D0070030) is not documented
-> at all for Root Complex mode, but similar to other BAR registers, it has
-> an "entangled partner" in register D0075920, which does address
-> translation for the BAR in D0070030:
-> - the BAR register sets the address from the view of PCIe bus
-> - the translation register sets the address from the view of the CPU
-> 
-> The other BAR registers also have this entangled partner, and they
-> can be used to:
-> - in RC mode: address-checking on the receive side of the RC (they
->   can define address ranges for memory accesses from remote Endpoints
->   to the RC)
-> - in Endpoint mode: allow the remote CPU to access memory on A3720
-> 
-> The Expansion ROM BAR has only the Endpoint part documented, but from
-> the similarities we think that it can also be used in RC mode in that
-> way.
-> 
-> So either Expansion ROM BAR has different meaning (if the hypothesis
-> above is true), or we don't know it's meaning (since it is not
-> documented for RC mode).
-> 
-> Remove the register from the emulated bridge accessing functions.
-> 
-> Fixes: 239edf686c14 ("PCI: aardvark: Fix support for PCI_ROM_ADDRESS1 on emulated bridge")
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> ---
->  drivers/pci/controller/pci-aardvark.c | 9 ---------
->  1 file changed, 9 deletions(-)
+Hi Bjorn and Rafael,
 
-Bjorn,
+Our test found that if set pcie_aspm=off in cmdline, the AER and hotplug is also disabled without
+negotiating with firmware through _OSC. Driver regards ASPM as a requirement of PCIe support and
+if it's disabled, we'll not enable other advanced services like AER and hotplug at all.
 
-this reverts a commit we merged the last merge window so it is
-a candidate for one of the upcoming -rcX.
+Any reason for binding ASPM with other PCIe services? There is an attempt to split ASPM with other
+services [1] but the patch is not accepted. The original patch [2] makes ASPM a necessity related
+a bugzilla report but I didn't figure out the detailed reason for doing so.
+
+Can we add some detailed reasons in the code why regards ASPM a necessity?
+or shall we split ASPM and other services as they are independent?
+
+[1] https://lore.kernel.org/linux-pci/20190702201318.GC128603@google.com/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=415e12b23792
 
 Thanks,
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index baa62cdcaab4..e3001b3b3293 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -32,7 +32,6 @@
->  #define PCIE_CORE_DEV_ID_REG					0x0
->  #define PCIE_CORE_CMD_STATUS_REG				0x4
->  #define PCIE_CORE_DEV_REV_REG					0x8
-> -#define PCIE_CORE_EXP_ROM_BAR_REG				0x30
->  #define PCIE_CORE_PCIEXP_CAP					0xc0
->  #define PCIE_CORE_ERR_CAPCTL_REG				0x118
->  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
-> @@ -774,10 +773,6 @@ advk_pci_bridge_emul_base_conf_read(struct pci_bridge_emul *bridge,
->  		*value = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
->  		return PCI_BRIDGE_EMUL_HANDLED;
->  
-> -	case PCI_ROM_ADDRESS1:
-> -		*value = advk_readl(pcie, PCIE_CORE_EXP_ROM_BAR_REG);
-> -		return PCI_BRIDGE_EMUL_HANDLED;
-> -
->  	case PCI_INTERRUPT_LINE: {
->  		/*
->  		 * From the whole 32bit register we support reading from HW only
-> @@ -810,10 +805,6 @@ advk_pci_bridge_emul_base_conf_write(struct pci_bridge_emul *bridge,
->  		advk_writel(pcie, new, PCIE_CORE_CMD_STATUS_REG);
->  		break;
->  
-> -	case PCI_ROM_ADDRESS1:
-> -		advk_writel(pcie, new, PCIE_CORE_EXP_ROM_BAR_REG);
-> -		break;
-> -
->  	case PCI_INTERRUPT_LINE:
->  		if (mask & (PCI_BRIDGE_CTL_BUS_RESET << 16)) {
->  			u32 val = advk_readl(pcie, PCIE_CORE_CTRL1_REG);
-> -- 
-> 2.32.0
-> 
+Yicong
