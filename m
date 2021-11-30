@@ -2,89 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C493F462DF7
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 08:55:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54140462E2B
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 09:03:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239235AbhK3H7I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 02:59:08 -0500
-Received: from mail-pj1-f46.google.com ([209.85.216.46]:38555 "EHLO
-        mail-pj1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239244AbhK3H7G (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 02:59:06 -0500
-Received: by mail-pj1-f46.google.com with SMTP id p18-20020a17090ad31200b001a78bb52876so17634596pju.3;
-        Mon, 29 Nov 2021 23:55:47 -0800 (PST)
+        id S239413AbhK3IGx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 03:06:53 -0500
+Received: from mail-pg1-f180.google.com ([209.85.215.180]:39449 "EHLO
+        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239390AbhK3IGw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 03:06:52 -0500
+Received: by mail-pg1-f180.google.com with SMTP id r5so18883736pgi.6;
+        Tue, 30 Nov 2021 00:03:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=VYPuISL5AV9b4E/5sq8DgKC5OFOrBQe6hWM4JGgFD7o=;
-        b=qNoOGEFgWIZgA4tBDVsZq62otoKejdLUpOuiIKkoyzRNXYTl0KYfifv92sRraIt+EX
-         trgR1zG4w1zkea3rXjCfjB8J3vi0QuRLVc7NPJviKuuzD1iT37GeO66cnXBN5+6K99xw
-         OeAGPLPvoKxB5HQOpi1ELZvpvULuGgt9xbviWbifSbRSJ75PBw0yGGeluqcAb6HyHcsF
-         /qRR9OYPhpaUP+HZ7TJU1yZjtExy/lTAF8saW2md/h5grxYHcgScbIl+AP7leU34Pn2A
-         yTpqVv5xICoEBHFiLEQBOXKJPuriEHDqRolwMRHxCL1696FxeOBfDOVKnQTZXk9yIx7r
-         xdCg==
-X-Gm-Message-State: AOAM533yCIKFaAFZ3ab5CjxEPcCS6xzQ6G9ig8z9nBNzA7kwkiA0QMrW
-        RWjpJG3gGVd+dfgj3h7NG2FVLuBJZW5o3A==
-X-Google-Smtp-Source: ABdhPJz04yNg4GA4sIOYmmtxvpiWBf/F88jQ6hPP605g1rdkloZvN21YQRwYETsFQa6KnRACldUzrg==
-X-Received: by 2002:a17:90a:4414:: with SMTP id s20mr4170745pjg.132.1638258947157;
-        Mon, 29 Nov 2021 23:55:47 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to;
+        bh=44H9x6jq/cDKCVfT3PAwIodg8SUeceQE3Ngyr/m8zEc=;
+        b=a5UI5kPx5PFOIOe2ZFPXqaCipfwnXRmi0HqYfvneJJjSaA9w7RuRT70QLvUcKmxM1u
+         Qxa3it+Mu+8zQRiqcWTMP27sSextSJHFOOiAtPe7JIJyNVrhAqEq7FZOr0Yz23alNjoo
+         3dtIG91+eZw9540yb4RlYVp+YfDmQ9WVP8SBExYEHUDdUJSSC2hsLUbcjlXj642ywGy3
+         kDKyOYV0ky6Fkt2XQGzIt46S1RcGXu9ts7g+B06v74anfxNjZotBQd4I+YvEZhu9omOM
+         VSZ/2f48SvwWggwEaNofQAsfAy4Rifi/UgENm3+rqfdYQHRvf/DPMuyGEc26PvI0YXEz
+         hwiw==
+X-Gm-Message-State: AOAM532w8tinDSLZu48sb74zVfZnMHrzETOVAvf0sD5q+5JyrmIPodIw
+        0VMyjelwy3NzwPtVH+iXQDM=
+X-Google-Smtp-Source: ABdhPJxon6fCisjjARBWiIfZe1fuI6GCGyDOolG9YhuP1agxDgt8lsRz1jUpKo9w92Em3V8oyEJEDQ==
+X-Received: by 2002:a05:6a00:1a4f:b0:4a3:3c4a:b708 with SMTP id h15-20020a056a001a4f00b004a33c4ab708mr44447918pfv.29.1638259413674;
+        Tue, 30 Nov 2021 00:03:33 -0800 (PST)
 Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id s38sm13895518pga.40.2021.11.29.23.55.40
+        by smtp.gmail.com with ESMTPSA id o134sm18578612pfg.1.2021.11.30.00.03.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Nov 2021 23:55:46 -0800 (PST)
-Date:   Tue, 30 Nov 2021 08:55:36 +0100
+        Tue, 30 Nov 2021 00:03:33 -0800 (PST)
+Date:   Tue, 30 Nov 2021 09:03:23 +0100
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Toan Le <toan@os.amperecomputing.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
-        stable@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: xgene: Fix IB window setup
-Message-ID: <YaXY+E2Uto4O43c3@rocinante>
-References: <20211129173637.303201-1-robh@kernel.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        michael.a.bottini@linux.intel.com, rafael@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI/ASPM: Add ASPM BIOS override function
+Message-ID: <YaXay7MkIybYz4uI@rocinante>
+References: <20211120015756.1396263-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211129173637.303201-1-robh@kernel.org>
+In-Reply-To: <20211120015756.1396263-1-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi David,
 
-> Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
-> broke PCI support on XGene. The cause is the IB resources are now sorted
-> in address order instead of being in DT dma-ranges order. The result is
-> which inbound registers are used for each region are swapped. I don't
-> know the details about this h/w, but it appears that IB region 0
-> registers can't handle a size greater than 4GB. In any case, limiting
-> the size for region 0 is enough to get back to the original assignment
-> of dma-ranges to regions.
+[...]
+> @@ -562,11 +562,13 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+>  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+>  void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+> +void pcie_aspm_policy_override(struct pci_dev *dev);
+>  #else
+>  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+> +static inline void pcie_aspm_policy_override(struct pci_dev *dev) {}
+>  #endif
 
-A small nitpick: it would be "X-Gene" in the above as per Applied Micro's
-(or rather MACOM Technology Solutions these days, I suppose) product line
-naming.
+A small nitpick, and a slight OCD on my part, so feel free to ignore this,
+of course: a missing space between curly brackets, to keep things aligned
+with previous definitions.
 
-> @@ -465,7 +465,7 @@ static int xgene_pcie_select_ib_reg(u8 *ib_reg_mask, u64 size)
->  		return 1;
->  	}
+> @@ -1140,6 +1140,24 @@ int pci_disable_link_state(struct pci_dev *pdev, int state)
+>  }
+>  EXPORT_SYMBOL(pci_disable_link_state);
 >  
-> -	if ((size > SZ_1K) && (size < SZ_1T) && !(*ib_reg_mask & (1 << 0))) {
-> +	if ((size > SZ_1K) && (size < SZ_4G) && !(*ib_reg_mask & (1 << 0))) {
->  		*ib_reg_mask |= (1 << 0);
->  		return 0;
->  	}
+> +void pcie_aspm_policy_override(struct pci_dev *pdev)
+> +{
+> +	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
+> +
+> +	down_read(&pci_bus_sem);
+> +	mutex_lock(&aspm_lock);
+> +
+> +	if (link) {
+> +		link->aspm_default = ASPM_STATE_ALL;
+> +		pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> +		pcie_set_clkpm(link, policy_to_clkpm_state(link));
+> +	}
+> +
+> +	mutex_unlock(&aspm_lock);
+> +	up_read(&pci_bus_sem);
+> +}
+> +EXPORT_SYMBOL(pcie_aspm_policy_override);
 
-Thank you!
+What about the following version where if we have no link (albeit, I am not
+sure how often this is going to be the case?) then we don't even attempt to
+get a hold on the lock and such:
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+	void pcie_aspm_policy_override(struct pci_dev *pdev)
+	{
+		struct pcie_link_state *link = pcie_aspm_get_link(pdev);
+	
+		if (!link)
+			return;
+	
+		down_read(&pci_bus_sem);
+		mutex_lock(&aspm_lock);
+	
+		link->aspm_default = ASPM_STATE_ALL;
+		pcie_config_aspm_link(link, policy_to_aspm_state(link));
+		pcie_set_clkpm(link, policy_to_clkpm_state(link));
+	
+		mutex_unlock(&aspm_lock);
+		up_read(&pci_bus_sem);
+	}
 
-Also, thank you Stéphane for testing!  Much appreciated!
+What do you think?  Would this make sense?
 
 	Krzysztof
