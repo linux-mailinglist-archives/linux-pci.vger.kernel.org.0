@@ -2,82 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B31C4628ED
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 01:12:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 322C546291E
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 01:29:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232444AbhK3APq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 Nov 2021 19:15:46 -0500
-Received: from mail-oi1-f170.google.com ([209.85.167.170]:33399 "EHLO
-        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230422AbhK3APq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 19:15:46 -0500
-Received: by mail-oi1-f170.google.com with SMTP id q25so37930920oiw.0;
-        Mon, 29 Nov 2021 16:12:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yaTORaek8SGtN1jMlwQxhZ6UKgv8m7MkqR3SQOMbc+I=;
-        b=ok0pcboQp/46FzYsiNEReJ+5mnKkMitvcl/8x9V4MX89+bWgqFSzjJ4CvygfZwSreI
-         OkSmwQHCaEP3mqmUaJH74mMNEowG6fgoZbcDdjHx8tzW/hi2uXe1Jxa2SwTeNipom/H8
-         Ph9s+fewNQjU1CiQx9VkPyVwGKwTE4pMWq/QUjnR6Jv/oreiMpi8nUb70NBIzWEVPWB6
-         BRYkh9ZlEOPibf25q/qfsLCFQynLf2fGE2JgXU7iZ58yybG2QTXY8Q6t8dxP8vbu+Ttp
-         CztBz8FOQaYc6A7BQn+A4IDcK0H2O21MywybdcJIqmHTP+0D74fIZVMVgrelt4PUMlBz
-         BtjQ==
-X-Gm-Message-State: AOAM531xuppDorqCpmbBXb61Y8nX8vYVzVheHiUEBd6/KwyFBduREZr1
-        WKWxu7eVpJ3kXnq4QYtK9Q==
-X-Google-Smtp-Source: ABdhPJyP+dCDXIubcceXPglQT3v6v/BHRwyvbbdmZ53hCSzkx6c6437/LRnAzyqK9bkLmDC24d2HSQ==
-X-Received: by 2002:aca:130e:: with SMTP id e14mr1209178oii.51.1638231147371;
-        Mon, 29 Nov 2021 16:12:27 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id 3sm3298124oif.12.2021.11.29.16.12.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Nov 2021 16:12:26 -0800 (PST)
-Received: (nullmailer pid 870866 invoked by uid 1000);
-        Tue, 30 Nov 2021 00:12:25 -0000
-Date:   Mon, 29 Nov 2021 18:12:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Aswath Govindraju <a-govindraju@ti.com>
-Cc:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: ti,j721e: Add device id for J721S2
-Message-ID: <YaVsaYqWIFCwHigK@robh.at.kernel.org>
-References: <20211119133253.18590-1-a-govindraju@ti.com>
+        id S233902AbhK3AdC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 Nov 2021 19:33:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229763AbhK3AdB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 Nov 2021 19:33:01 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8246EC061574;
+        Mon, 29 Nov 2021 16:29:43 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638232180;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ov7S8ctUVOm/fzBM/u7NjugMxVazBJXa1iv3Y2wSy0E=;
+        b=1v1Ftk1INwk/lIkJSL2yOv7rcV+z1XblHobhTdxt3gBAdL1PHSZSo9LKnF/wsw5OX9bbkx
+        Nh3tJjcdMqXtEGwwVdemqI+uu/S3/7QRlIbXXsCpGFVWvk/Q3qMA0KVfyIsISlNiHXnbTj
+        rikfAjw8sYw39SQO3RLcZpBS98L3iDR+nH1hMr5aqWBbYE3a6LZaR2Yux81Pi3YV4A7zLt
+        7lET4ArvSaljWUeku2I3qdgh++YdDP9qICXOb8BVWtrcZIlTcXaItmxafZEerQWubUo3en
+        S/iulKMD9NHXYM84MQcOfLhs8AnsYbpO5itY0ZT9VkenQQHC1GCa49eY/P9f0w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638232180;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ov7S8ctUVOm/fzBM/u7NjugMxVazBJXa1iv3Y2wSy0E=;
+        b=f7dYLMdQ6XnEpZMPMNWN6qPR2FzYs3QwUGrztuEuKH8jC8Sh3Xkp/9yNbqW9nyyq4j5Wks
+        EBcCmMpy2WG+HwAA==
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org
+Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
+In-Reply-To: <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com>
+References: <20211126230957.239391799@linutronix.de>
+ <20211126232735.547996838@linutronix.de>
+ <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com> <874k7ueldt.ffs@tglx>
+ <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com>
+Date:   Tue, 30 Nov 2021 01:29:39 +0100
+Message-ID: <87ilwacwp8.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211119133253.18590-1-a-govindraju@ti.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 07:02:53PM +0530, Aswath Govindraju wrote:
-> Document the device id of J721S2 SoC.
-> 
-> Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
-> ---
->  Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-> index cc900202df29..0411bf5a1700 100644
-> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-> @@ -71,6 +71,8 @@ properties:
->            - const: 0xb00f
->        - items:
->            - const: 0xb010
-> +      - items:
-> +          - const: 0xb013
+Logan,
 
-This can all be just an 'enum'.
+On Mon, Nov 29 2021 at 15:27, Logan Gunthorpe wrote:
+> On 2021-11-29 1:51 p.m., Thomas Gleixner wrote:
+>> The switchtec driver is the only one which uses PCI_IRQ_VIRTUAL in order
+>> to allocate non-hardware backed MSI-X descriptors.
+>> 
+>> AFAIU these descriptors are not MSI-X descriptors in the regular sense
+>> of PCI/MSI-X. They are allocated via the PCI/MSI mechanism but their
+>> usage is somewhere in NTB which has nothing to do with the way how the
+>> real MSI-X interrupts of a device work which explains why we have those
+>> pci.msi_attrib.is_virtual checks all over the place.
+>> 
+>> I assume that there are other variants feeding into NTB which can handle
+>> that without this PCI_IRQ_VIRTUAL quirk, but TBH, I got completely lost
+>> in that code.
+>> 
+>> Could you please shed some light on the larger picture of this?
+>
+> Yes, of course. I'll try to explain:
+>
+> The NTB code here is trying to create an MSI interrupt that is not
+> triggered by the PCI device itself but from a peer behind the
+> Non-Transparent Bridge (or, more carefully: from the CPU's perspective
+> the interrupt will come from the PCI device, but nothing in the PCI
+> device's firmware or hardware will have triggered the interrupt).
 
->  
->    msi-map: true
->  
-> -- 
-> 2.17.1
-> 
-> 
+That far I got.
+
+> In most cases, the NTB code needs more interrupts than the hardware
+> actually provides for in its MSI-X table. That's what PCI_IRQ_VIRTUAL is
+> for: it allows the driver to request more interrupts than the hardware
+> advertises (ie. pci_msix_vec_count()). These extra interrupts are
+> created, but get flagged with msi_attrib.is_virtual which ensures
+> functions that program the MSI-X table don't try to write past the end
+> of the hardware's table.
+>
+> The NTB code in drivers/ntb/msi.c uses these virtual MSI-X interrupts.
+> (Or rather it can use any interrupt: it doesn't care whether its virtual
+> or not, it would be fine if it is just a spare interrupt in hardware,
+> but in practice, it will usually be a virtual one). The code uses these
+> interrupts by setting up a memory window in the bridge to cover the MMIO
+> addresses of MSI-X interrupts. It communicates the offsets of the
+> interrupts (and the MSI message data) to the peer so that the peer can
+> trigger the interrupt simply by writing the message data to its side of
+> the memory window. (In the code: ntbm_msi_request_threaded_irq() is
+> called to request and interrupt which fills in the ntb_msi_desc with the
+> offset and data, which is transferred to the peer which would then use
+> ntb_msi_peer_trigger() to trigger the interrupt.)
+
+So the whole thing looks like this:
+
+    PCIe
+     |
+     |   ________________________
+     |   |                       |
+     |   | NTB                   |
+     |   |                       |
+     |   | PCI config space      |
+     |   |     MSI-X space       |
+     |   |_______________________|
+     |---|                       |
+         | Memory window A       |
+         | Memory window ..      |
+         | Memory window N       |
+         |_______________________|
+
+The peers can inject an interrupt through the associated memory window
+like the NTB device itself does via the real MSI-X interrupts by writing
+the associated MSI message data to the associated address (either
+directly to the targeted APIC or to the IOMMU table).
+
+As this message goes through the NTB device it's tagged as originating
+from the NTB PCIe device as seen by the IOMMU/Interrupt remapping unit.
+
+So far so good.
+
+I completely understand why you went down the road to add this
+PCI_IRQ_VIRTUAL "feature", but TBH this should have never happened.
+
+Why?
+
+These interrupts have absolutely nothing to do with PCI/MSI-X as defined
+by the spec and as handled by the PCI/MSI core.
+
+The fact that the MSI message is transported by PCIe does not change
+that at all, neither does it matter that from an IOMMU/Interrupt
+remapping POV these messages are tagged to come from that particular
+PCIe device.
+
+At the conceptual level these interrupts are in separate irq domains:
+
+     |   _______________________
+     |   |                      |
+     |   | NTB                  |
+     |   |                      |
+     |   | PCI config space     |
+     |   |     MSI-X space      | <- #1 Global or per IOMMU zone PCI/MSI domain
+     |   |_____________________ |
+     |---|                      |
+         | Memory window A      |
+         | Memory window ..     | <- #2 Per device NTB domain
+         | Memory window N      |
+         |______________________|
+
+You surely can see the disctinction between #1 and #2, right?
+
+And because they are in different domains, they simply cannot share the
+interrupt chip implementation taking care of the particular oddities of
+the "hardware". I know, you made it 'shared' by adding these
+'is_virtual' conditionals all over the place, but that pretty much
+defeats the purpose of having separate domains.
+
+This is also reflected in drivers/ntb/msi.c::ntbm_msi_request_threaded_irq():
+
+	for_each_pci_msi_entry(entry, ntb->pdev) {
+		if (irq_has_action(entry->irq))
+			continue;
+
+What on earth guarantees that this check has any relevance? Just because
+an entry does not have an interrupt requested on it does not tell
+anything.
+
+That might be an actual entry which belongs to the physical PCI NTB
+device MSI-X space which is not requested yet. Just because that
+swichtec device does not fall into that category does not make it any
+more correct.
+
+Seriously, infrastructure code which relies on undocumented assumptions
+based on a particular hardware device is broken by definition.
+
+I'm way too tired to come up with a proper solution for that, but that
+PCI_IRQ_VIRTUAL has to die ASAP.
+
+Thanks,
+
+        tglx
+
