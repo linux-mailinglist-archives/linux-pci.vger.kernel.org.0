@@ -2,123 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F0C34634B9
-	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 13:43:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B9CB4634BA
+	for <lists+linux-pci@lfdr.de>; Tue, 30 Nov 2021 13:45:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229481AbhK3Mqw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 07:46:52 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:47154 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbhK3Mqw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 07:46:52 -0500
+        id S229542AbhK3Msg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 07:48:36 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:40752 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229470AbhK3Msf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 07:48:35 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 95BADCE19D9
-        for <linux-pci@vger.kernel.org>; Tue, 30 Nov 2021 12:43:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96295C53FC7;
-        Tue, 30 Nov 2021 12:43:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 30848B818B1;
+        Tue, 30 Nov 2021 12:45:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0DBFC53FC1;
+        Tue, 30 Nov 2021 12:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638276209;
-        bh=fCNGB7FPSYdNaC146YDtmtbHSgbT8zIcFf3Dle6ot4Y=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=GhEvg1EaJfUIvML4NvpnIMlzekaIaq3F7rhduSowpvBTL+92HFt1OTAmSn1Gjkb4S
-         Hd0IlPqw3TMQxIpRSS3REEvQJqWN4qqI9aWWqYPwr+SvSPUsxDKY6k4nDajOW4wqU5
-         vANJWJ4Eu3vld/UT1LOH7JURfCZZR4RPgEN0nFt16Lg5CGITodaGXm9VUt5u8kQ47R
-         ncDLg5nwzxjiHAG+0fUk83voRMNUYcFaaTgBL9ioZWEh4JGr3nJlwHnfp/Cbp1bwB6
-         lFdtpVqyidomEJNOnWZnw5hY7u3p6HDsJ5a0rjKyZznSRq0PQMfpCB0I1XCx6WRaru
-         GAhZQsJNiIC4w==
-Received: by pali.im (Postfix)
-        id E78CD7DF; Tue, 30 Nov 2021 13:43:26 +0100 (CET)
-Date:   Tue, 30 Nov 2021 13:43:26 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 02/11] PCI: pci-bridge-emul: Add definitions for
- missing capabilities registers
-Message-ID: <20211130124326.nbsqy5bgfgyccor5@pali>
-References: <20211130123621.23062-1-kabel@kernel.org>
- <20211130123621.23062-3-kabel@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211130123621.23062-3-kabel@kernel.org>
-User-Agent: NeoMutt/20180716
+        s=k20201202; t=1638276313;
+        bh=ie6jGMCQkD1j8a29bDYEYEewpWAyFPXNvL9ShIZZXEw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ed4jNze52Kz9LERDwMESSwaUoaCZaARAsXdhFsXPDTSjzXFKdFbBzu8mO/MFA3V5D
+         cW+u7AF4ob1AyVYwcme8NpV7O8YBenpCvcYJxVrf7ZjhW76r1aj3KzD0jL7Gig7c5f
+         2h5nH3NcBzpQNmN29eiKJeOHlWoIE1lVx59Rjri+G+YKatY1VAcm5HYbx249JDIeWP
+         /e7ChdhqyyDR8mzrAQRHfL+aEBPiHujU0G/kuuw7WepC5ppKeO+nVpNBfdl/+uN408
+         /HG+RhYD2hbbJ5qvqQBo4lmud68QcCGzhwzOfZMlzHaaa77/DwB1t4PfM5Ey1l7y0G
+         qC9HMzxtqwstA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1ms2VT-008sOU-Nf; Tue, 30 Nov 2021 12:45:11 +0000
+Date:   Tue, 30 Nov 2021 12:45:11 +0000
+Message-ID: <87ee6xn76w.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>,
+        Luca Ceresoli <luca@lucaceresoli.net>, kernel-team@android.com,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 0/3] PCI: apple: Assorted #PERST fixes
+In-Reply-To: <20211130121237.GB3355@lpieralisi>
+References: <20211123180636.80558-1-maz@kernel.org>
+        <20211130115632.GA3355@lpieralisi>
+        <b2a06abf476b3e89504a227b3d1bea7c@kernel.org>
+        <20211130121237.GB3355@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, pali@kernel.org, alyssa@rosenzweig.io, mark.kettenis@xs4all.nl, luca@lucaceresoli.net, kernel-team@android.com, arnd@arndb.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 30 November 2021 13:36:12 Marek Behún wrote:
-> From: Pali Rohár <pali@kernel.org>
-> 
-> pci-bridge-emul driver already allocates buffer for capabilities up to the
-> PCI_EXP_SLTSTA2 register, but does not define bit access behavior for these
-> registers. Add these missing definitions.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> ---
->  drivers/pci/pci-bridge-emul.c | 39 +++++++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
-> 
-> diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-> index a4af1a533d71..aa3320e3c469 100644
-> --- a/drivers/pci/pci-bridge-emul.c
-> +++ b/drivers/pci/pci-bridge-emul.c
-> @@ -251,6 +251,45 @@ struct pci_bridge_reg_behavior pcie_cap_regs_behavior[PCI_CAP_PCIE_SIZEOF / 4] =
->  		.ro = GENMASK(15, 0) | PCI_EXP_RTSTA_PENDING,
->  		.w1c = PCI_EXP_RTSTA_PME,
->  	},
-> +
-> +	[PCI_EXP_DEVCAP2 / 4] = {
-> +		/* Device capabilities 2 register has reserved bits [30:27]. */
-> +		.ro = BIT(31) | GENMASK(26, 0),
-> +	},
-> +
-> +	[PCI_EXP_DEVCTL2 / 4] = {
-> +		/*
-> +		 * Device control 2 register is RW.
-> +		 *
-> +		 * Device status 2 register is reserved.
-> +		 */
-> +		.rw = GENMASK(15, 0),
-> +	},
-> +
-> +	[PCI_EXP_LNKCAP2 / 4] = {
-> +		/* Link capabilities 2 register has reserved bits [30:25] and 0. */
-> +		.ro = BIT(31) | GENMASK(24, 1),
-> +	},
-> +
-> +	[PCI_EXP_LNKCTL2 / 4] = {
-> +		/*
-> +		 * Link control 2 register is RW.
-> +		 *
-> +		 * Link status 2 register has bits 5, 15 W1C;
-> +		 * bits 10, 11 reserved and others are RO.
-> +		 */
-> +		.rw = GENMASK(15, 0),
-> +		.w1c = (BIT(15) | BIT(5)) << 16,
-> +		.ro = (GENMASK(14, 12) | GENMASK(9, 6) | GENMASK(4, 0)) << 16,
-> +	},
-> +
-> +	[PCI_EXP_SLTCAP2 / 4] = {
-> +		/* Slot capabilities 2 register is reserved. */
-> +	},
-> +
-> +	[PCI_EXP_SLTCTL2 / 4] = {
-> +		/* Both Slot control 2 and Slot status 2 registers are reserved. */
-> +	},
->  };
->  
->  /*
-> -- 
-> 2.32.0
-> 
++ Arnd,
 
-This patch is old version which does not reflect all reserved bits. Few
-days ago I have sent new version of this patch in patch series with
-other pci-bridge-emul.c related fixes:
+On Tue, 30 Nov 2021 12:12:37 +0000,
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> 
+> On Tue, Nov 30, 2021 at 11:59:32AM +0000, Marc Zyngier wrote:
+> > Hi Lorenzo, Bjorn,
+> > 
+> > On 2021-11-30 11:56, Lorenzo Pieralisi wrote:
+> > > On Tue, Nov 23, 2021 at 06:06:33PM +0000, Marc Zyngier wrote:
+> > > > Apologies for the rapid fire (I tend to be much more conservative when
+> > > > resending series), but given that this series has a direct impact on
+> > > > other projects (such as u-boot), I'm trying to converge as quickly as
+> > > > possible.
+> > > > 
+> > > > This series aims at fixing a number of issues for the recently merged
+> > > > Apple PCIe driver, all revolving around the mishandling of #PERST:
+> > > > 
+> > > > - we didn't properly drive #PERST, and we didn't follow the specified
+> > > >   timings
+> > > > 
+> > > > - the DT had the wrong polarity, which has impacts on the driver
+> > > >   itself
+> > > > 
+> > > > Hopefully, this should address all the issues reported so far.
+> > > > 
+> > > > * From v2:
+> > > >   - Fixed DT
+> > > >   - Fixed #PERST polarity in the driver
+> > > >   - Collected Pali's ack on patch #1
+> > > > 
+> > > > [1] https://lore.kernel.org/r/20211122104156.518063-1-maz@kernel.org
+> > > > 
+> > > > Marc Zyngier (3):
+> > > >   PCI: apple: Follow the PCIe specifications when resetting the port
+> > > >   arm64: dts: apple: t8103: Fix PCIe #PERST polarity
+> > > >   PCI: apple: Fix #PERST polarity
+> > > > 
+> > > >  arch/arm64/boot/dts/apple/t8103.dtsi |  7 ++++---
+> > > >  drivers/pci/controller/pcie-apple.c  | 12 +++++++++++-
+> > > >  2 files changed, 15 insertions(+), 4 deletions(-)
+> > > 
+> > > Hi Bjorn,
+> > > 
+> > > this series is v5.16-rcX material for PCI fixes, can you pick patches
+> > > 1,3
+> > > up please ?
+> > 
+> > Do you mind picking patch #2 as well? Or shall I route it somewhere else?
+> 
+> We were told that we should not pick up dts changes, they would normally
+> go via the ARM SOC team, not sure whether the fixes policy is different
+> though but I suspect that's not the case.
 
-https://lore.kernel.org/linux-pci/20211124155944.1290-4-pali@kernel.org/
+OK. Doesn't really help with keeping these two commit close together,
+but hey, if that can't be helped...
+
+Arnd, do you mind picking up patch #2 as a 5.16 fix?
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
