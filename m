@@ -2,80 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BC8E465273
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 17:05:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17FB14652B8
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 17:24:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239127AbhLAQIx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 11:08:53 -0500
-Received: from mga02.intel.com ([134.134.136.20]:36796 "EHLO mga02.intel.com"
+        id S1350369AbhLAQ16 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 11:27:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:41422 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231986AbhLAQH5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Dec 2021 11:07:57 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="223716561"
-X-IronPort-AV: E=Sophos;i="5.87,278,1631602800"; 
-   d="scan'208";a="223716561"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 08:02:54 -0800
-X-IronPort-AV: E=Sophos;i="5.87,278,1631602800"; 
-   d="scan'208";a="654828841"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 08:02:50 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1msS3H-0012Uu-9X;
-        Wed, 01 Dec 2021 18:01:47 +0200
-Date:   Wed, 1 Dec 2021 18:01:46 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh@kernel.org>,
+        id S239441AbhLAQ14 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 Dec 2021 11:27:56 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32A6B143B;
+        Wed,  1 Dec 2021 08:24:35 -0800 (PST)
+Received: from e123427-lin.arm.com (unknown [10.57.32.187])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 696F43F766;
+        Wed,  1 Dec 2021 08:24:33 -0800 (PST)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     marek.vasut@gmail.com, linux-pci@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-renesas-soc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>
-Subject: Re: [PATCH v2 1/1] PCI: brcmstb: Use BIT() as __GENMASK() is for
- internal use only
-Message-ID: <YaecakqeoSPoqq4k@smile.fi.intel.com>
-References: <20211115112000.23693-1-andriy.shevchenko@linux.intel.com>
- <163837398126.3058.11030158077196581603.b4-ty@arm.com>
+        Stephen Boyd <sboyd@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH v4] PCI: rcar: Check if device is runtime suspended instead of __clk_is_enabled()
+Date:   Wed,  1 Dec 2021 16:24:26 +0000
+Message-Id: <163837585219.20378.14215787015819697563.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20211115204641.12941-1-marek.vasut@gmail.com>
+References: <20211115204641.12941-1-marek.vasut@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <163837398126.3058.11030158077196581603.b4-ty@arm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 01, 2021 at 03:53:21PM +0000, Lorenzo Pieralisi wrote:
-> On Mon, 15 Nov 2021 13:20:00 +0200, Andy Shevchenko wrote:
-> > Use BIT() as __GENMASK() is for internal use only. The rationale
-> > of switching to BIT() is to provide better generated code. The
-> > GENMASK() against non-constant numbers may produce an ugly assembler
-> > code. On contrary the BIT() is simply converted to corresponding shift
-> > operation.
-> > 
-> > Note, it's the only user of __GENMASK() in the kernel outside of its own realm.
-> > 
-> > [...]
+On Mon, 15 Nov 2021 21:46:41 +0100, marek.vasut@gmail.com wrote:
+> From: Marek Vasut <marek.vasut+renesas@gmail.com>
 > 
-> Applied to pci/brcmstb, thanks!
+> Replace __clk_is_enabled() with pm_runtime_suspended(),
+> as __clk_is_enabled() was checking the wrong bus clock
+> and caused the following build error too:
+>   arm-linux-gnueabi-ld: drivers/pci/controller/pcie-rcar-host.o: in function `rcar_pcie_aarch32_abort_handler':
+>   pcie-rcar-host.c:(.text+0xdd0): undefined reference to `__clk_is_enabled'
 > 
-> [1/1] PCI: brcmstb: Use BIT() as __GENMASK() is for internal use only
->       https://git.kernel.org/lpieralisi/pci/c/6ec6eb949d
+> [...]
 
-Thanks, but there is another patch which changes the logic a bit and cleans up
-more.
+Applied to pci/rcar, thanks!
 
-  From: Florian Fainelli <f.fainelli@gmail.com>
-  Subject: [PATCH] PCI: brcmstb: Do not use __GENMASK
+[1/1] PCI: rcar: Check if device is runtime suspended instead of __clk_is_enabled()
+      https://git.kernel.org/lpieralisi/pci/c/d2a14b5498
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Lorenzo
