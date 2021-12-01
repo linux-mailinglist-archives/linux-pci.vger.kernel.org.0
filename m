@@ -2,128 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86DF546576B
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 21:50:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF1C46576D
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 21:51:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239840AbhLAUyA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 15:54:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236004AbhLAUx2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 15:53:28 -0500
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3F8C061756;
-        Wed,  1 Dec 2021 12:50:06 -0800 (PST)
-Received: by mail-oi1-x229.google.com with SMTP id t23so51167718oiw.3;
-        Wed, 01 Dec 2021 12:50:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3lAtleqfk79RizN4Xfz/dv/nqBhWl4vDwc0f8SGgsxY=;
-        b=KKYTA5Ku21eIUzrkOUBNprVJhnXu6Wu+pkGI21cKM8rtadKU9es1ODKMn0ZVPmHcDr
-         Zo/ASlBWBgg0rv4KKzfFL5eoXrRtXPYtIUeT4V0QcsUh2ejUR9L4IOwbSThxczRPCegA
-         F3QiDUtjWeS+iExMM0X3csJQG7Li1L5IPTvsvbNifEo9f0QFuBrYF420Uec875KmlHr7
-         xb51HeL4U+B8g6EMZzqcmLh6iNpuFbDc7rWRNXq1N1QBfzhg8MicQ+r/gSjS7luUrNde
-         CFwgoVp5ltRayrxzn0otRSHWhHDrc71ADzySTp1UqF1YBdZLQ6bdpjLMj1dXiOSaC6TY
-         xV5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3lAtleqfk79RizN4Xfz/dv/nqBhWl4vDwc0f8SGgsxY=;
-        b=phoH202eJhiBWlVhBWl7M+5/In7iShbUj4/1/tJo8FYIefjdyHoaIiyGjfQCW/hWlv
-         3MnREwsx1M93AggyaRdnc0KyqJeOk2V1FUuQQDcpbvW3fp2Kx87VZJqLD3v5E+JwAZsY
-         Nxk4KXhQj52jh/R+5motjggZPNFoGkmgsGqNJTYn/Hlibnjb+cvROs3PTEuoF9tUIoV9
-         OoVXxLyS99nllEiUeOg9M+FxyTWXH3ho8KbIFZ6XKG/+PleLe4GG5Np/uiNUa5zhrHSu
-         2xVu1k7itwKJB+2RVUjeI6gtE4UXKWtnr7ZdbCeHDdE5WIdhPuwY5JcX7pOJOJjtCGJX
-         oNmA==
-X-Gm-Message-State: AOAM531DUedQRhaGC0JGiTk7inV5BVnxM79TYcRUHs9kMsVrd8MmSokU
-        ht5aDPmsM/o0HFzGnIQA55JcjgwU0aY=
-X-Google-Smtp-Source: ABdhPJwViydUn1I4EprG4LndgvL2P0TFnWLOe1G91Z/AZbNE7DUadF5hsCCyosozj/NwiFTwxImxKA==
-X-Received: by 2002:a05:6808:150c:: with SMTP id u12mr681911oiw.6.1638391805132;
-        Wed, 01 Dec 2021 12:50:05 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a5sm328523otd.74.2021.12.01.12.50.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Dec 2021 12:50:04 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: Linux 5.16-rc3
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <20211201203822.GA2840039@bhelgaas>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <542e38c7-afed-ebf5-5254-8aa6ee22b01a@roeck-us.net>
-Date:   Wed, 1 Dec 2021 12:50:02 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S239892AbhLAUyi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 15:54:38 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:58811 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1353181AbhLAUyN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 15:54:13 -0500
+Received: from mail-wr1-f45.google.com ([209.85.221.45]) by
+ mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MqJyX-1mDx0r3N5v-00nQBL; Wed, 01 Dec 2021 21:50:50 +0100
+Received: by mail-wr1-f45.google.com with SMTP id j3so55077007wrp.1;
+        Wed, 01 Dec 2021 12:50:50 -0800 (PST)
+X-Gm-Message-State: AOAM531V/fVa8/1nkSatwozvcTdofCkRVRUD585XjA1jI4mb9LQawBj/
+        UiebZzinoxNFKqqaCZqodAdMQfPeZqz4hTFgVrk=
+X-Google-Smtp-Source: ABdhPJy3odhEkjPswm8W3FP+Lv8hzUHatDu8HWlNNQ5COgwGd0PgGAudbvzHJNrhdkYewPzVy1QacKwcJDH93MqqvzA=
+X-Received: by 2002:a5d:64ea:: with SMTP id g10mr9552455wri.137.1638391850399;
+ Wed, 01 Dec 2021 12:50:50 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20211201203822.GA2840039@bhelgaas>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20211119232017.GA1981034@bhelgaas> <20211201202433.GA2837547@bhelgaas>
+In-Reply-To: <20211201202433.GA2837547@bhelgaas>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 1 Dec 2021 21:50:34 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2bb3w+6G4W0OAv1ASmfeOr0NTHMPpJ2An-ms2Vk7VnhQ@mail.gmail.com>
+Message-ID: <CAK8P3a2bb3w+6G4W0OAv1ASmfeOr0NTHMPpJ2An-ms2Vk7VnhQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] PCI: let 'pcibios_root_bridge_prepare()' access to 'bridge->windows'
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        John Crispin <john@phrozen.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Tukz/1HhzPO7mRE/8y4rnl2v5Bts7hpYkSys506DXl0FxQK1kGl
+ bnFMIy36D31ArSmLPrkyCq9wcUMu2kaABrF+BAQxsrmbmMrdoZQk7ZXDhDAyO6XilrZ5Eoz
+ DMPMxQozUEFg4gVonqqCrlxAtOLE0Gx2QACyX1kpL/HthY1de2SdHAzavRtrrf88krJjmm8
+ YR6k6tfGuctsfpmiYbtSQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1NQTz62PwxE=:3uWKsgT3bi2/vSfJRH9qg+
+ eCE45pX9jpvlWqOrbWVDxkFM7II8Vve2v2BEezD0MgfGWEGleC2fKTF++y8zDpkkWmA67PFg2
+ ANhSxlm+zIAk+3zMLkUmGT3ZH7+nQu9IUHP9/VfRA1VR/EVfd3rFY3mohdWaaYVeMX34JO8/x
+ x5w1TppSvuSY+K1PjQJymh2ruHccl8WGm+Rum8/oSgN3gaysydgq7hVw3VP8gqkTGdRnztHoQ
+ BTHgwhu1WXfaGD6DcE9wY7wR3arhfVPRtqMauO0uDUoub4LF35a9nZi+fvafkN47ACdv3a+XF
+ ig+S59SsqJE4dr7OaOSKw4FkL+SWRIt6cD9XkzwUbpoDNRcvMbdpZZ/8Muj+KglgkJfG5oWbV
+ ud/y7RGTmnoHLph7y/DZ1yFCHfK6P1t+h+13QrTQxP59I1OyN3zGvfHry8TmiwVsuyc7eF+28
+ J4GtOMOHyN7F2zFm6+wJLVEqhhWYUlJXASlNb5mmF+aYMeGz+kcww7FhAof4/QHum79wtzV8Q
+ 8/yydwQE1emF+CA4p5C8ALSXHiX4Cvu9FTI1V4G6gtcHV1Md+HFtCpHlNaEFZrQwyZkp8d455
+ /SByYDTXq9J5T8ZkzYTvd0HQC0TVsgR2lEsStPIUbkbM7dhjfloyT6Gomd5i36sDJZ1cxrlIR
+ xGD9GEpTE/VerseKEzJXQyfQ/xLfyzZWRuSfxb4v12ezoo1P3ZRQF2McP75U18JpfOHg=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/1/21 12:38 PM, Bjorn Helgaas wrote:
-> [+cc linux-pci]
-> 
-> On Mon, Nov 29, 2021 at 01:18:12PM +0100, Sergio Paracuellos wrote:
->> On Mon, Nov 29, 2021 at 5:17 AM Guenter Roeck <linux@roeck-us.net> wrote:
->>> On 11/28/21 7:07 PM, Randy Dunlap wrote:
->>>> On 11/28/21 17:59, Guenter Roeck wrote:
->>>>> ...
->>>>> Build results:
->>>>>      total: 153 pass: 152 fail: 1
->>>>> Failed builds:
->>>>>      mips:allmodconfig
->>>>> Qemu test results:
->>>>>      total: 482 pass: 482 fail: 0
->>>>>
->>>>> Building mips:allmodconfig ... failed
->>>>> --------------
->>>>> Error log:
->>>>> ERROR: modpost: missing MODULE_LICENSE() in drivers/pci/controller/pcie-mt7621.o
->>>>> ERROR: modpost: "mips_cm_unlock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
->>>>> ERROR: modpost: "mips_cpc_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
->>>>> ERROR: modpost: "mips_cm_lock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
->>>>> ERROR: modpost: "mips_cm_is64" [drivers/pci/controller/pcie-mt7621.ko] undefined!
->>>>> ERROR: modpost: "mips_gcr_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
->>>>>
->>>>> There is still no fix for the mips:allmodconfig build problem as far
->>>>> as I can see. It is a bit odd, because the fix would be as simple as
->>>>>
->>>>>    config PCIE_MT7621
->>>>> -    tristate "MediaTek MT7621 PCIe Controller"
->>>>> -    depends on (RALINK && SOC_MT7621) || (MIPS && COMPILE_TEST)
->>>>> +    bool "MediaTek MT7621 PCIe Controller"
->>>>> +    depends on SOC_MT7621 || (MIPS && COMPILE_TEST)
->>>>>        select PHY_MT7621_PCI
->>>>>        default SOC_MT7621
->>>>>        help
->>>>>
->>>>> Context: tristate doesn't make sense here because both RALINK and
->>>>> SOC_MT7621 are bool. Also, RALINK is redundant because SOC_MT7621
->>>>> already depends on it. The compile failure is due to missing exported
->>>>> symbols, and it is only seen if PCIE_MT7621=m - which is only possible
->>>>> if COMPILE_TEST=y. In other words, the dependencies above are set such
->>>>> that test builds, and only test builds, fail.
->>>>>
->>>>> The problem was introduced with commit 2bdd5238e756 ("PCI: mt7621:
->>>>> Add MediaTek MT7621 PCIe host controller driver"). Copying some of
->>>>> those responsible to see if we can expect a solution sometime soon.
-> 
-> Can we do a minimal patch along the lines of the above for v5.16?
-> 
+On Wed, Dec 1, 2021 at 9:24 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Fri, Nov 19, 2021 at 05:20:17PM -0600, Bjorn Helgaas wrote:
+> >
+> > Arnd added this with 37d6a0a6f470 ("PCI: Add
+> > pci_register_host_bridge() interface") [1].
+> >
+> > I can't remember why this was done, but we did go to some trouble to
+> > move things around, so there must have been a good reason.
+> >
+> > Arnd or Thierry, do you remember?
+>
+> Nobody seems to remember, so I think we should go ahead and make this
+> change after the usual due diligence (audit the code between the old
+> site and the new site to look for any uses of bridge->windows).
+>
+> I think this would be material for v5.17.
 
-I would suggest to either do that or, if module support is mandatory,
-revert the patch and re-apply it if and when it can be built as module.
+Sorry I forgot to reply to your earlier mail. I think this is fine, as far as I
+remember, the only reason the bridge windows are moved from the list
+and added back one at a time was to preserve the exact orderorks.
 
-Guenter
+We could probably even skip that step entirely and iterate throughing
+that was there originally, to keep the behavior after a series of reworks.
+
+We could probably even skip that step entirely and iterate through
+bridge->windows instead of the local list to simplify this.
+
+For Sergio's patch:
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
