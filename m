@@ -2,140 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3851A4644A5
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 02:53:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EF6746451F
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 03:54:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345580AbhLAB4d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 Nov 2021 20:56:33 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:38696 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230168AbhLAB4d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 20:56:33 -0500
+        id S1346269AbhLAC5y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 Nov 2021 21:57:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241503AbhLAC5u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 Nov 2021 21:57:50 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA3FC061748;
+        Tue, 30 Nov 2021 18:54:28 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9177CB81DC3
-        for <linux-pci@vger.kernel.org>; Wed,  1 Dec 2021 01:53:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ACCBC53FCB;
-        Wed,  1 Dec 2021 01:53:10 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1CB51B8164C;
+        Wed,  1 Dec 2021 02:54:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3786AC53FCB;
+        Wed,  1 Dec 2021 02:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638323591;
-        bh=IQ4x5m8J6ycXd4+XrGiJrJYmjGa6k2Zc6P7oiLfbbck=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=RCRiqVkxKUfINUjIx1V5uJZglwvlQwIinscAOPJ6MTOPriC7tFot3oRHZzJvdS5tX
-         hrkzsKEBVYG7Fq2Qz0Xxk18AJtH8u9Knd65iZO1dWPRIb9KXXm9PzOPnGrnlrux2gq
-         RHQziJAXVUPsVtnhxLSPFEoX/MwWZsz2W2YnLtGMbWyRiSOdqyywgkkLOyP2a9mxs0
-         7YfFFj7RKrS7EKgVxdZBY5dYifXhb0YyW0Ud4X0qDRrEssrMbecvMf55H8o+162zUm
-         +W7wmJFWW4eFzvdPZ7J72mX3KpxnuB8G3luffEn5BvW0zqeEqzJKJZNX57K9gFyp3U
-         TrQzA5rbiPwUg==
-Date:   Tue, 30 Nov 2021 19:53:08 -0600
+        s=k20201202; t=1638327265;
+        bh=bLoI2u1zhgXsRynXZI+d7PsJZN0AP7jMWKDX+qn0CQo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=plMU7TyDEyojfbdt2+C+FKRjElwHXfUPE3a0n3tTBZKJ9tzcRmhS8DW9LGehQe+GY
+         yvwgrbfI+JctbnSvSlgmugH+S/iK43HFVvfZE2+Db/niqtsEzzpcwn54x1Oo+v9RXT
+         m7ZLru5eDGRLtyicXPmrPZNafIQwM+7BRK8OoLydQt1fJDobDfZwKuq/c0BbugivYz
+         AbsY8gU4bC413t29yCFb0FozBXJ1c+IE5+eLO1vCH2vu22jNvx1zt36F/KDtOR5RHl
+         pJraNNiAsb6PitY1x0fTW7IUfGxFHdf32D2hp2a/w4iC4eEdbPDwXd/nV+e8EcLl00
+         xNfWcg9+Mh6xA==
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        pali@kernel.org
-Subject: Re: [PATCH pci-fixes 2/2] Revert "PCI: aardvark: Fix support for
- PCI_ROM_ADDRESS1 on emulated bridge"
-Message-ID: <20211201015308.GA2791148@bhelgaas>
+To:     David Airlie <airlied@linux.ie>
+Cc:     Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 RESEND 0/3] agp: convert to generic power management
+Date:   Tue, 30 Nov 2021 20:54:16 -0600
+Message-Id: <20211201025419.2797624-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211130112937.GA3130@lpieralisi>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 30, 2021 at 11:29:37AM +0000, Lorenzo Pieralisi wrote:
-> On Thu, Nov 25, 2021 at 05:01:48PM +0100, Marek Behún wrote:
-> > This reverts commit 239edf686c14a9ff926dec2f350289ed7adfefe2.
-> > 
-> > PCI Bridge which represents aardvark's PCIe Root Port has Expansion ROM
-> > Base Address register at offset 0x30, but its meaning is different than
-> > PCI's Expansion ROM BAR register, although the layout is the same.
-> > (This is why we thought it does the same thing.)
-> > 
-> > First: there is no ROM (or part of BootROM) in the A3720 SOC dedicated
-> > for PCIe Root Port (or controller in RC mode) containing executable code
-> > that would initialize the Root Port, suitable for execution in
-> > bootloader (this is how Expansion ROM BAR is used on x86).
-> > 
-> > Second: in A3720 spec the register (address D0070030) is not documented
-> > at all for Root Complex mode, but similar to other BAR registers, it has
-> > an "entangled partner" in register D0075920, which does address
-> > translation for the BAR in D0070030:
-> > - the BAR register sets the address from the view of PCIe bus
-> > - the translation register sets the address from the view of the CPU
-> > 
-> > The other BAR registers also have this entangled partner, and they
-> > can be used to:
-> > - in RC mode: address-checking on the receive side of the RC (they
-> >   can define address ranges for memory accesses from remote Endpoints
-> >   to the RC)
-> > - in Endpoint mode: allow the remote CPU to access memory on A3720
-> > 
-> > The Expansion ROM BAR has only the Endpoint part documented, but from
-> > the similarities we think that it can also be used in RC mode in that
-> > way.
-> > 
-> > So either Expansion ROM BAR has different meaning (if the hypothesis
-> > above is true), or we don't know it's meaning (since it is not
-> > documented for RC mode).
-> > 
-> > Remove the register from the emulated bridge accessing functions.
-> > 
-> > Fixes: 239edf686c14 ("PCI: aardvark: Fix support for PCI_ROM_ADDRESS1 on emulated bridge")
-> > Signed-off-by: Marek Behún <kabel@kernel.org>
-> > ---
-> >  drivers/pci/controller/pci-aardvark.c | 9 ---------
-> >  1 file changed, 9 deletions(-)
-> 
-> Bjorn,
-> 
-> this reverts a commit we merged the last merge window so it is
-> a candidate for one of the upcoming -rcX.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Sure, happy to apply the revert.
+This is a repost of patches from Vaibhav to convert from legacy PCI power
+management to generic power management.  The most recent posting is here:
 
-What problem does the revert fix?  I assume 239edf686c14 ("PCI:
-aardvark: Fix support for PCI_ROM_ADDRESS1 on emulated bridge") broke
-something, but the commit log for the revert doesn't say *what*.  How
-would one notice that something broke?
+  https://lore.kernel.org/all/20210112080924.1038907-1-vaibhavgupta40@gmail.com/
 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index baa62cdcaab4..e3001b3b3293 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -32,7 +32,6 @@
-> >  #define PCIE_CORE_DEV_ID_REG					0x0
-> >  #define PCIE_CORE_CMD_STATUS_REG				0x4
-> >  #define PCIE_CORE_DEV_REV_REG					0x8
-> > -#define PCIE_CORE_EXP_ROM_BAR_REG				0x30
-> >  #define PCIE_CORE_PCIEXP_CAP					0xc0
-> >  #define PCIE_CORE_ERR_CAPCTL_REG				0x118
-> >  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
-> > @@ -774,10 +773,6 @@ advk_pci_bridge_emul_base_conf_read(struct pci_bridge_emul *bridge,
-> >  		*value = advk_readl(pcie, PCIE_CORE_CMD_STATUS_REG);
-> >  		return PCI_BRIDGE_EMUL_HANDLED;
-> >  
-> > -	case PCI_ROM_ADDRESS1:
-> > -		*value = advk_readl(pcie, PCIE_CORE_EXP_ROM_BAR_REG);
-> > -		return PCI_BRIDGE_EMUL_HANDLED;
-> > -
-> >  	case PCI_INTERRUPT_LINE: {
-> >  		/*
-> >  		 * From the whole 32bit register we support reading from HW only
-> > @@ -810,10 +805,6 @@ advk_pci_bridge_emul_base_conf_write(struct pci_bridge_emul *bridge,
-> >  		advk_writel(pcie, new, PCIE_CORE_CMD_STATUS_REG);
-> >  		break;
-> >  
-> > -	case PCI_ROM_ADDRESS1:
-> > -		advk_writel(pcie, new, PCIE_CORE_EXP_ROM_BAR_REG);
-> > -		break;
-> > -
-> >  	case PCI_INTERRUPT_LINE:
-> >  		if (mask & (PCI_BRIDGE_CTL_BUS_RESET << 16)) {
-> >  			u32 val = advk_readl(pcie, PCIE_CORE_CTRL1_REG);
-> > -- 
-> > 2.32.0
-> > 
+Vaibhav has converted around 180 drivers to generic power management, and
+over 100 of those conversions have made it upstream.  If we can finish off
+the remaining ones, we'll be able to remove quite a bit of ugly legacy code
+from the PCI core.
+
+I updated the commit logs to try to make it easier to verify these.  The
+patches themselves are unchanged other than being rebased to v5.16-rc1.
+
+Vaibhav Gupta (3):
+  amd64-agp: convert to generic power management
+  sis-agp: convert to generic power management
+  via-agp: convert to generic power management
+
+ drivers/char/agp/amd64-agp.c | 24 ++++++------------------
+ drivers/char/agp/sis-agp.c   | 25 ++++++-------------------
+ drivers/char/agp/via-agp.c   | 25 +++++--------------------
+ 3 files changed, 17 insertions(+), 57 deletions(-)
+
+-- 
+2.25.1
+
