@@ -2,89 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA199465060
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 15:48:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D929A46507E
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 15:52:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243046AbhLAOwH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 09:52:07 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:47583 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241314AbhLAOwG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 09:52:06 -0500
-Received: from mail-wr1-f50.google.com ([209.85.221.50]) by
- mrelayeu.kundenserver.de (mreue010 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MHGPA-1mo5L118fg-00DFo4; Wed, 01 Dec 2021 15:48:43 +0100
-Received: by mail-wr1-f50.google.com with SMTP id u1so52801192wru.13;
-        Wed, 01 Dec 2021 06:48:43 -0800 (PST)
-X-Gm-Message-State: AOAM532k9tbxxA2pf+yWrYPd1j4hgCkjtRis1VXWVCXZJddRzvx+YOhG
-        pzPipVYfuhjdf18xWm7O8ijyBMeyk7fXhLqInw4=
-X-Google-Smtp-Source: ABdhPJzo2pMWE4T6XNg8FA0+pXNoUCDZCXkh9eo9Ar1pSsX/C/rQBtRN77mPrv8JrJZTJtKGbN+WSmlFuKU2r4FOWPY=
-X-Received: by 2002:adf:d091:: with SMTP id y17mr7656798wrh.418.1638370122901;
- Wed, 01 Dec 2021 06:48:42 -0800 (PST)
+        id S243269AbhLAOzc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 09:55:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242347AbhLAOz0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 09:55:26 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C3FC061574;
+        Wed,  1 Dec 2021 06:52:05 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638370323;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BTbSr5Tnue7aLzSgJJm9awkXjJzR21QR4KzXcy3eBrc=;
+        b=GlbNwZ4D0pGu3V697epfgZEeLrmaD/2KCVk3PSbXS5CtHEz3XyQGYf3l84zFOWR7HO/+pR
+        qBnx6gA3eOMh2RzL39CN8JVZzGiRrRPmmHZ8CHTeYKkKvchcvLPNgXwCSxWmmCVofpEJmI
+        rNPgtI1cSC9SYw6MVXzLDp3UJpiKw4FJtUj11vYAeN7eL/AGYGWZhDsSSRaXE1YIbWZrai
+        cLe4esqu/0neHx/rJBCKGu6bLTWvO7fjlheOC27IDxnm5i1vf7PC1SeYQMizsLJ+TMtg07
+        Q9uOcE5s42RhwfPwZBCHsz8qCR5nL4M1v8HtPC4wO59T8QPyN9aVf98sja8qYw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638370323;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BTbSr5Tnue7aLzSgJJm9awkXjJzR21QR4KzXcy3eBrc=;
+        b=avo6A8LECbQFww8OTS/mru02KDfMYMzNo/d+exTLTa9qwAm7vhwLxgo3LL7UnS1TJSx9MP
+        9tN1Qpe5I0EOkJAA==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org
+Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
+In-Reply-To: <87o861banv.ffs@tglx>
+References: <20211126230957.239391799@linutronix.de>
+ <20211126232735.547996838@linutronix.de>
+ <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com> <874k7ueldt.ffs@tglx>
+ <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com> <87ilwacwp8.ffs@tglx>
+ <d6f13729-1b83-fa7d-3f0d-98d4e3f7a2aa@deltatee.com> <87v909bf2k.ffs@tglx>
+ <20211130202800.GE4670@nvidia.com> <87o861banv.ffs@tglx>
+Date:   Wed, 01 Dec 2021 15:52:02 +0100
+Message-ID: <871r2w9y3x.ffs@tglx>
 MIME-Version: 1.0
-References: <20211123180636.80558-1-maz@kernel.org> <20211130115632.GA3355@lpieralisi>
- <b2a06abf476b3e89504a227b3d1bea7c@kernel.org> <20211130121237.GB3355@lpieralisi>
- <87ee6xn76w.wl-maz@kernel.org>
-In-Reply-To: <87ee6xn76w.wl-maz@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 1 Dec 2021 15:48:26 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2WxO4vEAKbp92dA7SDCxdtSdMeFi+rJ8WJWqcHYYqksA@mail.gmail.com>
-Message-ID: <CAK8P3a2WxO4vEAKbp92dA7SDCxdtSdMeFi+rJ8WJWqcHYYqksA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] PCI: apple: Assorted #PERST fixes
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Mark Kettenis <mark.kettenis@xs4all.nl>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:p4L5zIWucwairGWiVXCqZuS2AC2PIyh/X5XtfHlTCQ3Tt38Ofmz
- dVrvPEnmg5QUv5hp2hrGwDEWSQAtX3cxbNQlkivFmPHJ8PFopJtjRO247wxp69FEwWb/3kK
- Q1pW/JmAYdoMArX6rXmeBjaW8pGjjC9+11U5/Fe+zh7pLiyFqVg767krOjqG2WJJcMJ7HL8
- pY0uQyjC2Zn5B00xrN15g==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ArW6EmOkN8I=:Wn9m2vE7YkezfkwNN06UVB
- 52RycsfIY2De/6a9FxqjpO1CDzAQhp1BUfvb4fBr9ADeg0Oygv+zdRIXyVXQOOOcPdLl0BGy5
- o0onHwR13mawsFocn/h24Kj5wDMph/H0oOJLV+3ZsE+pmdqdfSf2gzv/4GXphje8k1wgasdwH
- qZhG5xFA7GCEaADYTEk9Vs1TqbBD9BevB2Po7NCm6urGC/2s+ZOlsOEHLn0u5H/Sw1vkMsbBz
- 0SlPIvCspgC9aCh/iGTmvS+MdTMwKUZW7jWFcbKSHXpTWclyOQIpaEt4sCzrJL25t++S81QUX
- S2EQY/+sXbUClg4ww6H/SC6DTds0T7e7csvEbQsj67HWqUrJ9KMcCcBmT0Pcbs5f/znifLlyR
- olBzK06hQ7Si8zUNkTTnckET/hAzeKySE5XlUqgQOLQhHoXmR9aO3vc5KM0hoiLJqxRJJy8Km
- 3UfD/KKmHGc/rSm2wkCHRhqEKHgNtg+jsxMOu2wfGnZykc2AVS0CVF1+LIqGjLYx81xeQ3Ynn
- pcL1Qz0rI+kkSf6JHe1DHqkube5NcK/Jb+JhpBVy3zk2KmPPEqGOa5NfhBZ53N1y+ydpmtRBw
- l3tKhhH2bqa6eot7Ijp0VoESTU6jk3pwLkdd2wTAQButdYEc7aPdqzA2XNhNSElKiBGkUx9jd
- 31I1DVz1dNURDJB77VcO1TWrlEAQ+q8+ygkaD9Daf82HCXsvH3o/qlsfw+H2iKsNhL0j1uEdE
- RYL9M3FXt+cYOy7EhNHiZLazwAWegC2bOsLSe5A8hOHbQ3bwkg9TKMLTndr7gEmOnA91YDMvZ
- b6EO4mPiGavOi4+XRixlh3gi2hmN09qIiQoDSFSAFXcO1MrWcw=
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 30, 2021 at 1:45 PM Marc Zyngier <maz@kernel.org> wrote:
-> On Tue, 30 Nov 2021 12:12:37 +0000, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-> > On Tue, Nov 30, 2021 at 11:59:32AM +0000, Marc Zyngier wrote:
-> > > On 2021-11-30 11:56, Lorenzo Pieralisi wrote:
-> >
-> > We were told that we should not pick up dts changes, they would normally
-> > go via the ARM SOC team, not sure whether the fixes policy is different
-> > though but I suspect that's not the case.
+On Tue, Nov 30 2021 at 22:23, Thomas Gleixner wrote:
+> On Tue, Nov 30 2021 at 16:28, Jason Gunthorpe wrote:
 >
-> OK. Doesn't really help with keeping these two commit close together,
-> but hey, if that can't be helped...
->
-> Arnd, do you mind picking up patch #2 as a 5.16 fix?
+> The real problem is where to store the MSI descriptors because the PCI
+> device has its own real PCI/MSI-X interrupts which means it still shares
+> the storage space.
 
-I try not to bypass the platform maintainers, I'd prefer if this came
-my way through
-the asahi tree (just replied to the patch as well). In this case it
-sounds like there
-is a good reason to have it go in along with the driver change, so that's fine
-as well, and I provided an Ack for that.
+Bah. I confused myself by staring at the existing code instead of
+looking at how this NTB stuff actually works.
 
-       Arnd
+So if I understand it correctly then the end result looks like this:
+
+1) PCIe device (switchtec)
+
+   The device has 4 MSI[X] interrupts: event, dma_rpc, message,
+   doorbell. The event and dma_rpc interrupts are requested by the
+   switchtec PCI driver itself.
+
+2) Switchtec character device
+
+   The switchtec PCI driver creates a character device which is exposed
+   for device specific IOCTLs
+
+   The device belongs to the switchtec_class device class.
+
+3) Switchtec NTB device
+
+   The ntb_hw_switchtec driver registers the switchtec_class class
+   interface.
+
+   So when #2 is registered with the driver core the switchtec class
+   interface add_dev() function is invoked. That function creates a NTB
+   device, requests the message and the doorbell interrupts which have
+   been allocated by the underlying PCIe device driver (#1) and
+   registers the NTB device with the NTB core.
+
+4) The NTB core then tries to use the virtual MSI vectors which have
+   been allocated by the switchtec driver in #1 and requires the msg
+   write intercept to actually expose it to the peers.
+
+So we really can go and create a MSI irqdomain and stick the pointer
+into stdev->dev.irqdomain. The parent domain of this irqdomain is
+
+     stdev->pdev.dev.irqdomain->parent
+
+which is either the irq remapping domain or the vector domain. Which is
+pretty much what I proposed as general facility for IMS/IDXD. I need to
+go back and polish that up on top of the current pile.
+
+Along with that have an irq chip implementation which exposes:
+
+static struct irq_chip ntb_chip = {
+	.name			= "ntb",
+	.irq_ack		= irq_chip_ack_parent,
+	.irq_write_msi_msg	= ntb_msi_write_msg,
+#ifdef CONFIG_SMP
+	.irq_set_affinity	= irq_chip_set_affinity_parent,
+#endif
+};
+
+We just need some reasonable solution for the DMA/remap problem Jason
+mentioned vs. msi_desc::dev, but that wants to be cleaned up in any
+case for all the aliasing muck.
+
+Thanks,
+
+        tglx
+
+
