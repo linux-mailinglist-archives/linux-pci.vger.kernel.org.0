@@ -2,107 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DA3F4658E2
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 23:06:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FF0D4658F9
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 23:17:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343535AbhLAWKS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 17:10:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39530 "EHLO
+        id S244799AbhLAWUc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 17:20:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240110AbhLAWKS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 17:10:18 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 435D5C061574
-        for <linux-pci@vger.kernel.org>; Wed,  1 Dec 2021 14:06:56 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id fv9-20020a17090b0e8900b001a6a5ab1392so2924969pjb.1
-        for <linux-pci@vger.kernel.org>; Wed, 01 Dec 2021 14:06:56 -0800 (PST)
+        with ESMTP id S242357AbhLAWUc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 17:20:32 -0500
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8375CC061574;
+        Wed,  1 Dec 2021 14:17:10 -0800 (PST)
+Received: by mail-oi1-x229.google.com with SMTP id bk14so51601258oib.7;
+        Wed, 01 Dec 2021 14:17:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FYH0cQHUBYKj1N7VJLH/Jqp1Gh1NxCPdlsjxd1BzPQI=;
-        b=UAMmlBepsZa1x9sZVT3jt7tTpsIAKj+3//7rgWEBNtelLrpI2bQ+JLE4Eg4PG1eoTk
-         U9jYsWIEyy0j5e5WytI4Pg9ruLY8BghCHf4DvZwgrhTVBqvMUWWncOD8yDg4szkU1j5q
-         wKuf0YIAmwnLxPfO1+ZdUJ+0WH93brzZtW7RudAcxKAwy7EZJo07IvfGnZCAHdB0oWj+
-         UFhNEJT4qSa9KFOzljbfOaIEaplOaJTEe4brIlZyn6WQX7kCuS1BNF8eSgCgQEO8UoMf
-         RUsB+Y2r8tiJJiiNf5p8Rc8Ep2uwIv15WIw+FI/8eDO0m6JeFOmmS6RkQ1l3gEDS2xXm
-         qd/Q==
+        d=gmail.com; s=20210112;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UZD+wACY3SAuTXTUljVln3laEvcK5M7PHpyfxljx+Jk=;
+        b=AFp0DZrbg+kL+LwrvONlq6K9FDEB8l4aqulKDEq9wkZYI1E3lFkReWCc4n8My8QcOV
+         FK5pStCUOz5JLp7w22iP6i+uL/Ci4JMR0VjMeNKUlj7Lbb8k3ukrWMgpiUUVxdfTTEh3
+         4v0vwPCtSo8PzDZN+xvuS3AWguRN/2N5QUCoCf9ffXnO02Sb7bW4my+rFvzJRvVBOCnn
+         IxA/THxjH/ytSTKJPvX3pH+4GpYDri3PxrtG3M9qeID9eYn9a82SiLaT8jrLXp2bPJYU
+         ll6jVQjBIV4khOG/hQI4u01oXbo9HFh48Mwg4tSGWxHHf/nqzgwGD4WhcZN5CyGwObdT
+         UKGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FYH0cQHUBYKj1N7VJLH/Jqp1Gh1NxCPdlsjxd1BzPQI=;
-        b=JiciUhMrvohP0msHXiiwiPod0kinT1ggYY511ndsyodjHSznyWO39ZOslkBxsEcsgH
-         SufZmUK37DG4rexjkiZzFe/lGqVzbW6+1pF5q8zrIyuVFZhJwXFCX9dM6B+QXG/qlV8e
-         Qer29wEgWghm/755x7mw4QrBml4xjg1Q9VE46yhJEabcaAN9v68RKOnjaGgIDvjnhLkw
-         K37I/zs/tf/LXK449H3oKxBJB5ku412cEpupwgDUrOg3N3eKazFBHE38Ouhm2NSrxZrM
-         hvrK1j2qMVp3beE6+zjSFctfD8mcQXYVmyonolMSsB5QS1fEWYifxqtdUG5aVYPTuOcF
-         rYOg==
-X-Gm-Message-State: AOAM5339EwCVZArWypLReF22Hnh4QKr/wDaQvQRiuiJiGn1zKV0RnFgd
-        pAUduDbAGDMpOZPP8hKdyrNvEM6W2FypUsZtZuKCCw==
-X-Google-Smtp-Source: ABdhPJxnodH/dwhX99BtM9rTIpTEvtmXLHSgJB+sp8bD8FSEPn8cozJRxYFi3df9F+TLbf/uX0X5IOnHOVH36WMWW0U=
-X-Received: by 2002:a17:902:7c8a:b0:143:bb4a:7bb3 with SMTP id
- y10-20020a1709027c8a00b00143bb4a7bb3mr10863184pll.46.1638396415751; Wed, 01
- Dec 2021 14:06:55 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UZD+wACY3SAuTXTUljVln3laEvcK5M7PHpyfxljx+Jk=;
+        b=c0F+jup9q9/PC1Qxcm3Bw92EntGmylqwY2vUZhAfHPMasFIuntSyZBXG9mTWXVofDr
+         S6zjvh5D7ET8YmAN4MuxgVT9L2XEj6V2Q0EpepeVGtX2RSjQbBBMFNnjRmwKzGkDF3Qc
+         8+u1VqildEtGW+fWhdCmtXz3+6DFcFr08NfVcZLV6oF7p9e7lMTey/rSWjQG1bY7Qmw5
+         Y79Cje4kaFVAK6AuhLp1RnJIHCyUK7ZePQH6vPS2KVU0kK8AjGzWg8MawWbEU1NvrF4q
+         544ICB5FgUsCGcdh5+EiPhhTOZ6VnjQF4WjMFLhhmPNaHIzVYes2kRcgg2tLhKKstIpN
+         yi4g==
+X-Gm-Message-State: AOAM531uMk8dqXZXZb8PEsO7lG6vYLFkYLBEcAO5CH9ZiEqWUInsOlPu
+        VG7jmy8M6hcSZ+W47DlskeUz9dCmiz8=
+X-Google-Smtp-Source: ABdhPJy/Ko5RmZFfrSdHWpJGy3yrJjyfbKqIy4l3ek0avXdcJzN5Kt1mcKgyyxew4PMN97s50heykw==
+X-Received: by 2002:a05:6808:1403:: with SMTP id w3mr1054161oiv.80.1638397029652;
+        Wed, 01 Dec 2021 14:17:09 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e3sm382044otk.71.2021.12.01.14.17.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Dec 2021 14:17:09 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH v2 2/5] MIPS: ralink: implement
+ 'pcibios_root_bridge_prepare()'
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        linux-pci@vger.kernel.org
+Cc:     linux-mips@vger.kernel.org, tsbogend@alpha.franken.de,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com, arnd@arndb.de,
+        linux-kernel@vger.kernel.org
+References: <20211201215127.23550-1-sergio.paracuellos@gmail.com>
+ <20211201215127.23550-3-sergio.paracuellos@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <d243a90d-25b2-a65f-b69d-af7497db8742@roeck-us.net>
+Date:   Wed, 1 Dec 2021 14:17:07 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-References: <20211101180243.23761-1-tharvey@gateworks.com>
-In-Reply-To: <20211101180243.23761-1-tharvey@gateworks.com>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Wed, 1 Dec 2021 14:06:44 -0800
-Message-ID: <CAJ+vNU2Pfwz5e0Jj6c5npceOwuNTB_dTVuL4NMD2qxr0CGyeGQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: imx: do not remap invalid res
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Richard Zhu <hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20211201215127.23550-3-sergio.paracuellos@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 1, 2021 at 11:03 AM Tim Harvey <tharvey@gateworks.com> wrote:
->
-> On imx6 and perhaps others when pcie probes you get a:
-> imx6q-pcie 33800000.pcie: invalid resource
->
-> This occurs because the atu is not specified in the DT and as such it
-> should not be remapped.
->
-> Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+On 12/1/21 1:51 PM, Sergio Paracuellos wrote:
+> PCI core code call 'pcibios_root_bridge_prepare()' function inside function
+> 'pci_register_host_bridge()'. This point is very good way to properly enter
+> into this MIPS ralink specific code to properly setup I/O coherency units
+> with PCI memory addresses.
+> 
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 > ---
->  drivers/pci/controller/dwc/pcie-designware.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index a945f0c0e73d..3254f60d1713 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -671,10 +671,11 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
->                 if (!pci->atu_base) {
->                         struct resource *res =
->                                 platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
-> -                       if (res)
-> +                       if (res) {
->                                 pci->atu_size = resource_size(res);
-> -                       pci->atu_base = devm_ioremap_resource(dev, res);
-> -                       if (IS_ERR(pci->atu_base))
-> +                               pci->atu_base = devm_ioremap_resource(dev, res);
-> +                       }
-> +                       if (!pci->atu_base || IS_ERR(pci->atu_base))
->                                 pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
->                 }
->
-> --
-> 2.17.1
->
+>   arch/mips/ralink/mt7621.c | 30 ++++++++++++++++++++++++++++++
+>   1 file changed, 30 insertions(+)
+> 
+> diff --git a/arch/mips/ralink/mt7621.c b/arch/mips/ralink/mt7621.c
+> index bd71f5b14238..7649416c1cd7 100644
+> --- a/arch/mips/ralink/mt7621.c
+> +++ b/arch/mips/ralink/mt7621.c
+> @@ -10,6 +10,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/sys_soc.h>
+>   #include <linux/memblock.h>
+> +#include <linux/pci.h>
+>   
+>   #include <asm/bootinfo.h>
+>   #include <asm/mipsregs.h>
+> @@ -22,6 +23,35 @@
+>   
+>   static void *detect_magic __initdata = detect_memory_region;
+>   
+> +int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
+> +{
+> +	struct resource_entry *entry;
+> +	resource_size_t mask;
+> +
+> +	entry = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
+> +	if (!entry) {
+> +		pr_err("Cannot get memory resource\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (mips_cps_numiocu(0)) {
+> +		/*
+> +		 * FIXME: hardware doesn't accept mask values with 1s after
+> +		 * 0s (e.g. 0xffef), so it would be great to warn if that's
+> +		 * about to happen
+> +		 */ > +		mask = ~(entry->res->end - entry->res->start);
+> +
 
-ping - any feedback on this?
+Try something like this:
+		WARN_ON((mask != ~0UL && BIT(ffz(mask)) - 1 != mask);
 
-Best regards,
+> +		write_gcr_reg1_base(entry->res->start);
+> +		write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
+> +		pr_info("PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
+> +			(unsigned long long)read_gcr_reg1_base(),
+> +			(unsigned long long)read_gcr_reg1_mask());
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   phys_addr_t mips_cpc_default_phys_base(void)
+>   {
+>   	panic("Cannot detect cpc address");
+> 
 
-Tim
