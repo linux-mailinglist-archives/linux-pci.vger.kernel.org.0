@@ -2,81 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26DAD46571B
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 21:27:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F394246571C
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 21:27:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352991AbhLAUaf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 15:30:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240527AbhLAUaL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 15:30:11 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C4F4C061574;
-        Wed,  1 Dec 2021 12:26:49 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638390408;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9iFHbC8vXSahbGhWk+99dygWsu4VzQjJs9HViZs2rMo=;
-        b=X5oW6RyQIgtTBoLZDk5CfA+uzuP0ey6oo1pGzY+IscAXL89y3Sjn1bi4vAYyYBieiuY3/K
-        F7gSwDAljg9nTH9ECOZ7nXkXA808XjF6H2Lm1eQoQuIlgihk6wx02ESNBx7zejI26w7a6l
-        k3vutN8wnXUMFpKw2LaQGelQVhpSu3NgT3YFfXNluw/zMV1Dne3jpuZTe8NG2Mzyd5ma+F
-        blVsCgHszhNnizFd4RppbXlmKaKwC7pNcO5LUG//limyix5YFu8k49V7wr3O9/cJ22AjeX
-        Q+fjCsZDBvzyLrICxko0ABOcUIfPTLA2Iug2LwPnx7MxSr8X5v9NvEJy9kohtQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638390408;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9iFHbC8vXSahbGhWk+99dygWsu4VzQjJs9HViZs2rMo=;
-        b=CRizFADOFzc1+eC64/quP0E3Wa3OCcWn3njB8JD9fmlAhMM4tDLFf9Es4vSez6+s+jf5e8
-        M9i0vGWCFczFO5DA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org
-Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-In-Reply-To: <20211201184726.GN4670@nvidia.com>
-References: <874k7ueldt.ffs@tglx>
- <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com> <87ilwacwp8.ffs@tglx>
- <d6f13729-1b83-fa7d-3f0d-98d4e3f7a2aa@deltatee.com> <87v909bf2k.ffs@tglx>
- <20211130202800.GE4670@nvidia.com> <87o861banv.ffs@tglx>
- <871r2w9y3x.ffs@tglx> <20211201151121.GL4670@nvidia.com>
- <87sfvc893n.ffs@tglx> <20211201184726.GN4670@nvidia.com>
-Date:   Wed, 01 Dec 2021 21:26:47 +0100
-Message-ID: <87h7bs841k.ffs@tglx>
+        id S244037AbhLAUap (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 15:30:45 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:38378 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352987AbhLAUaf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 15:30:35 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id C9ECFCE20EC;
+        Wed,  1 Dec 2021 20:27:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0621C53FCC;
+        Wed,  1 Dec 2021 20:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638390431;
+        bh=b5rkvR6LekgO0rg6c0uTc4/KVL/busuE/cjB5N/j/XY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fyP2rmG4IIb7oRsJaSnkQIgDrNU5ITCSow2elT+BP0UxRNCGngfnDnFdBJ6IFuRCa
+         sRZEaUPYxg0a2HIPBWOsqu0TmtXgag0PKJBEuZ9nLV1641kqNKHleBXshRasbCbz1v
+         l5g2o5+JFOPwZ0D7Kv/c8jxb5/g4KDo+rNyEKkrR8ldlZ4v6lGwWHT1JptmDPnHf65
+         lHTFcXo2J8TIQ1s1Dc38FsI7E4F+tOevUBU/VhcdvLYgbUj7QAk8W194Cy1EQbojT+
+         MgkjMgZTUCFrsnqRUZajcbRL0MashYDWB5/tRG4nREQmNPCBIItHwEHc4r3I5p/mdx
+         nggVC6aWLo9yQ==
+Date:   Wed, 1 Dec 2021 14:27:09 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-mips@vger.kernel.org,
+        tsbogend@alpha.franken.de, john@phrozen.org,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com, arnd@arndb.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] PCI: let 'pcibios_root_bridge_prepare()' access to
+ 'bridge->windows'
+Message-ID: <20211201202709.GA2839013@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211115070809.15529-2-sergio.paracuellos@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 01 2021 at 14:47, Jason Gunthorpe wrote:
-> On Wed, Dec 01, 2021 at 07:37:32PM +0100, Thomas Gleixner wrote:
->> I picked that because it _is_ already used to establish the connection
->> to the switchtec_class NTB driver which is beyond the usual cdev muck.
->
-> IMHO that is also a misuse. These days two drivers should be hooked
-> together using an aux device, not a cdev and the obscure
-> class_interface stuff. Aux device supports auto probing and module
-> auto loading for instance.
->
-> An interrupt on an aux device is at least somewhat conceptually
-> parallel to an interrupt on a mdev as both are usually representing
-> some slice of a device.
+On Mon, Nov 15, 2021 at 08:08:05AM +0100, Sergio Paracuellos wrote:
+> When function 'pci_register_host_bridge()' is called, 'bridge->windows' are
+> already available. However this windows are being moved temporarily from
+> there. To let 'pcibios_root_bridge_prepare()' to have access to this windows
+> move this windows movement after call this function. This is interesting for
+> MIPS ralink mt7621 platform to be able to properly set I/O coherence units
+> with this information and avoid custom MIPs code in generic PCIe controller
+> drivers.
 
-No argument about that.
+Oops, forgot to mention:
+
+s/this windows/these windows/
+s/MIPs/MIPS/
+
+You can drop the single quote around function names, too; the "()" is
+enough of a hint.
+
+And s/PCI: let/PCI: Let/ in the subject.
