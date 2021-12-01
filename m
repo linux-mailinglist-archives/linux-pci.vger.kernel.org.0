@@ -2,137 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E35004658A1
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 22:52:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06BA246589E
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 22:52:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353307AbhLAVzT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 16:55:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35978 "EHLO
+        id S238492AbhLAVzU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 16:55:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353177AbhLAVy4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 16:54:56 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB54C061574;
-        Wed,  1 Dec 2021 13:51:34 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id j3so55361472wrp.1;
-        Wed, 01 Dec 2021 13:51:34 -0800 (PST)
+        with ESMTP id S1353204AbhLAVzE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 16:55:04 -0500
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D81E7C061748;
+        Wed,  1 Dec 2021 13:51:35 -0800 (PST)
+Received: by mail-wr1-x42c.google.com with SMTP id o13so55202036wrs.12;
+        Wed, 01 Dec 2021 13:51:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o3XUpWa6+1DXUAt7w4vSplRb3YE72oXrdXq5mYAn8E8=;
-        b=nUNKvTiylaT/oSLbkLZjB1slHcDpnS/DsfQ5raYHmniDr+B6FjCKFTo6CaoEOpKRTf
-         mSS+rWFlglrnwQ3zwLz6kWx+E5mAraBiJ7qnSx8dFFtdd8pgyb4lIksiOT9lbOKjyILD
-         An+xqLSQ/f5Hh+KRdiZW7neYtAO3vsn3uXAwdr2+ubBHSPR4IQd+w1iqL/rHTaZXRL7H
-         p5342XYk6q8yiTEpuEV0o05iEy9UKr4Gcfr6uGQVf0F19BQzO6LfkaJo6htZobMgqTdN
-         wjWeqnZQgsAGfnkDkfmUq2hjpy8CgYaNldprlfZoPx/yyqokb/dNbITW4KxPViuEV4Li
-         txSA==
+        bh=MpmprtYs1zzkd2ypJgJU4YoRdsGFG26a01JTF8ywYGA=;
+        b=H3Nu5SJHd7C4bi1b2m7iILOA/7YRSiWGVuzQyhEApkOuLOx8MawpV5zDMKT70cW52q
+         vqPQ5F4Q0HjsRgi/UjSwuy/oyV7SVOVEPqWHyNxZfs2of0KFcmo73bopY6zJgy86ofbA
+         Vv63HCJL80fv/BmtoFjONKubycm74ipJ07532lsofE/4AFWRko3uw0JvAhoW+LleOVwU
+         yuq1MRGKYrfLUGfyuIbybK/4+riEF0SSE/Xv7b/pvkvlCm0UzXFOhpr5+oHNjkunEoPT
+         2QVyUXTy39Sdhdjwhxeu9fmbp19Ln86X8gmK6HE3k6B1Nu1mlbFY8OMR18Wjkj4BSQpI
+         RDLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o3XUpWa6+1DXUAt7w4vSplRb3YE72oXrdXq5mYAn8E8=;
-        b=MQ41+hzn1RIouw9ajLIsIcFZ5BGtDa4mwXTsfrajgbw17oD9NEcj8QdSsDPLZ1IK07
-         Cns9R500SqHWH/NDt/W8SEe1mOwe2H7sPScHOQmNWU2OlplJD497zFFNzvrAB0cr/V4d
-         gxblR/GeEIbdI2uSjbIvrUXpZsLExOtXnuxFEEIStrxi0ME81Y436Vy0v0ejLB+5OFbD
-         MQGJuYOCaDTLI0iRKTREkeTw6LFrqM5UavoFaoiphnWp0B5OVXBNwl+aq57sLPbpetP1
-         E89GhaS1PtA2Yt2WO4DqsyqUmj63RWdnwn+SHBtLa4SSA9aUlBYRIzARezKqgKaPAbOT
-         JLNA==
-X-Gm-Message-State: AOAM533GDXatBwvuqTfF5Stc2aV2l4zro8wD6MGeotef+n442OXVGJOk
-        sEPYp8IWx1LBLhdtBNVXj6eI+1FF1xA=
-X-Google-Smtp-Source: ABdhPJwv8yBgZ93ZrFgFmS1gzRyupMYLkDwjVA2UviZeKjsUT3wScpUl2WBaFuVIt0eCJZErld9Uzg==
-X-Received: by 2002:adf:d1e2:: with SMTP id g2mr9930385wrd.179.1638395493244;
-        Wed, 01 Dec 2021 13:51:33 -0800 (PST)
+        bh=MpmprtYs1zzkd2ypJgJU4YoRdsGFG26a01JTF8ywYGA=;
+        b=2AFeUJEcgKeXRVCQLSfsMrxMgV8LbpeXLHqcJlmAo9IBxkQwmVQd5HHS7PBbrOzBUx
+         Ft0TIWMvehBfVIVX3gfjmb/p5JvQ7EyWtpWM/tMqfi/WCB0aNKG7NKE++Xk1f6uSq9r9
+         DNEleOGx8IvCI3DVVVPg6avamv3oFW4u73gUWu/yIJv7cWjwgXOqj9vCV8yXWVxucHpt
+         opJ1G/mPo96cjAJyQrfxwMAOOPO6N0vSuR/8JDZWI9EPZOZGT5OOrmXOnTG1bRPrl6RT
+         DlzVFPZDIYhKckVJzQ5WnnwXo1JwVcdPpcQ2weKFZ2U4IJQdpkTntE6gmzxnDuZv7Ajg
+         FB1A==
+X-Gm-Message-State: AOAM532sIsOekZd/IPNBbYz1J8ZpmabBw+Dx3Lt/KVbtPAV9WvxtKrt1
+        672PqPgWqWiU8qsPKbALhqss8Mg8ewk=
+X-Google-Smtp-Source: ABdhPJz6Vod6cOigId5BjxWLpL2kixofNNnqdA+gjt3UhkJFkDTDAzFeM+TIZTraVSEP1TowL6r1/g==
+X-Received: by 2002:a5d:6547:: with SMTP id z7mr9405501wrv.597.1638395494249;
+        Wed, 01 Dec 2021 13:51:34 -0800 (PST)
 Received: from localhost.localdomain (252.red-83-54-181.dynamicip.rima-tde.net. [83.54.181.252])
-        by smtp.gmail.com with ESMTPSA id c10sm877879wrb.81.2021.12.01.13.51.32
+        by smtp.gmail.com with ESMTPSA id c10sm877879wrb.81.2021.12.01.13.51.33
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Dec 2021 13:51:32 -0800 (PST)
+        Wed, 01 Dec 2021 13:51:33 -0800 (PST)
 From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
 To:     linux-pci@vger.kernel.org
 Cc:     linux-mips@vger.kernel.org, tsbogend@alpha.franken.de,
         lorenzo.pieralisi@arm.com, bhelgaas@google.com, arnd@arndb.de,
         linux@roeck-us.net, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v2 3/5] PCI: mt7621: Avoid custom MIPS code in driver code
-Date:   Wed,  1 Dec 2021 22:51:25 +0100
-Message-Id: <20211201215127.23550-4-sergio.paracuellos@gmail.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Yanteng Si <siyanteng@loongson.cn>
+Subject: [PATCH v2 4/5] PCI: mt7621: Add missing 'MODULE_LICENSE()' definition
+Date:   Wed,  1 Dec 2021 22:51:26 +0100
+Message-Id: <20211201215127.23550-5-sergio.paracuellos@gmail.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211201215127.23550-1-sergio.paracuellos@gmail.com>
 References: <20211201215127.23550-1-sergio.paracuellos@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Driver code is setting up MIPS specific I/O coherency units addresses config.
-This MIPS specific thing has been moved to be done when PCI code call the
-'pcibios_root_bridge_prepare()' function which has been implemented for MIPS
-ralink mt7621 platform. Hence, remove MIPS specific code from driver code.
-After this change there is also no need to add any MIPS specific includes
-to avoid some errors reported by Kernet Test Robot with W=1 builds.
+MT7621 PCIe host controller driver can be built as a module but there is no
+'MODULE_LICENSE()' specified in code, causing a build error due to missing
+license information.
 
-Reported-by: kernel test robot <lkp@intel.com>
+ERROR: modpost: missing MODULE_LICENSE() in drivers/pci/controller/pcie-mt7621.o
+
+Fix this by adding 'MODULE_LICENSE()' to the driver.
+
+Fixes: 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver")
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
 Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 ---
- drivers/pci/controller/pcie-mt7621.c | 37 ----------------------------
- 1 file changed, 37 deletions(-)
+ drivers/pci/controller/pcie-mt7621.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
-index 4138c0e83513..42cce31df943 100644
+index 42cce31df943..9da7452f565e 100644
 --- a/drivers/pci/controller/pcie-mt7621.c
 +++ b/drivers/pci/controller/pcie-mt7621.c
-@@ -208,37 +208,6 @@ static inline void mt7621_control_deassert(struct mt7621_pcie_port *port)
- 		reset_control_assert(port->pcie_rst);
- }
- 
--static int setup_cm_memory_region(struct pci_host_bridge *host)
--{
--	struct mt7621_pcie *pcie = pci_host_bridge_priv(host);
--	struct device *dev = pcie->dev;
--	struct resource_entry *entry;
--	resource_size_t mask;
--
--	entry = resource_list_first_type(&host->windows, IORESOURCE_MEM);
--	if (!entry) {
--		dev_err(dev, "cannot get memory resource\n");
--		return -EINVAL;
--	}
--
--	if (mips_cps_numiocu(0)) {
--		/*
--		 * FIXME: hardware doesn't accept mask values with 1s after
--		 * 0s (e.g. 0xffef), so it would be great to warn if that's
--		 * about to happen
--		 */
--		mask = ~(entry->res->end - entry->res->start);
--
--		write_gcr_reg1_base(entry->res->start);
--		write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
--		dev_info(dev, "PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
--			 (unsigned long long)read_gcr_reg1_base(),
--			 (unsigned long long)read_gcr_reg1_mask());
--	}
--
--	return 0;
--}
--
- static int mt7621_pcie_parse_port(struct mt7621_pcie *pcie,
- 				  struct device_node *node,
- 				  int slot)
-@@ -557,12 +526,6 @@ static int mt7621_pci_probe(struct platform_device *pdev)
- 		goto remove_resets;
- 	}
- 
--	err = setup_cm_memory_region(bridge);
--	if (err) {
--		dev_err(dev, "error setting up iocu mem regions\n");
--		goto remove_resets;
--	}
--
- 	return mt7621_pcie_register_host(bridge);
- 
- remove_resets:
+@@ -561,3 +561,5 @@ static struct platform_driver mt7621_pci_driver = {
+ 	},
+ };
+ builtin_platform_driver(mt7621_pci_driver);
++
++MODULE_LICENSE("GPL v2");
 -- 
 2.33.0
 
