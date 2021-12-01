@@ -2,98 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 828914647B6
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 08:14:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DDC4464AEC
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 10:51:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347150AbhLAHRp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 02:17:45 -0500
-Received: from 1.mo552.mail-out.ovh.net ([178.32.96.117]:55377 "EHLO
-        1.mo552.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240719AbhLAHRo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 02:17:44 -0500
-X-Greylist: delayed 162739 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Dec 2021 02:17:44 EST
-Received: from mxplan5.mail.ovh.net (unknown [10.108.1.125])
-        by mo552.mail-out.ovh.net (Postfix) with ESMTPS id B6B2D217F7;
-        Wed,  1 Dec 2021 07:14:07 +0000 (UTC)
-Received: from kaod.org (37.59.142.105) by DAG4EX1.mxp5.local (172.16.2.31)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 1 Dec
- 2021 08:14:05 +0100
-Authentication-Results: garm.ovh; auth=pass (GARM-105G00686e3cafe-0521-4f42-aedc-fcaeb2775d24,
-                    A214034E9EDAB49BEA2160BF49F8C38F118F2259) smtp.auth=clg@kaod.org
-X-OVh-ClientIp: 90.11.56.15
-Message-ID: <39556bdc-f48c-68b2-6bec-5975b92e02e2@kaod.org>
-Date:   Wed, 1 Dec 2021 08:14:05 +0100
+        id S1348365AbhLAJy2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 04:54:28 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:45588 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348356AbhLAJyO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 04:54:14 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B253FB81E0B
+        for <linux-pci@vger.kernel.org>; Wed,  1 Dec 2021 09:50:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 164C5C53FD4;
+        Wed,  1 Dec 2021 09:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638352250;
+        bh=ax3GoV0NHtKcbnURuzRgjVefaUgRY+HpnCKxXrAFqMY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=J25seWw+tGaOtByFu5nuQpmVYT78rAgjeLD0/+pBil5b1PmJaOhp6YcKcBTWnoUaZ
+         uQU6Qr8D6objSrAMtlriNKP3PUdpG9Pnc6avqkLoJ4bh/WKjC16kWG5y+8c3Dv/cLe
+         7nlqBCCg00ecusr3x9YEWy/0UE+EI9P9gJYQq4O0TTaIP9HoAKYlBS1Z+qrAeD8DhC
+         uvinntKF+oPOJh6W6P20BAKHcqNyJLkJ4y3phvwvAspmgMZkPlw2/sffVnKaQa4Wer
+         EFcO2azpgP+uas4tQJs47Ccio4MvC2IvhkA74KyXkEE/mo1VFTXiJB0cs8LXB0IA5t
+         Hf8Q8T26oX3gg==
+Date:   Wed, 1 Dec 2021 10:50:45 +0100
+From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        pali@kernel.org
+Subject: Re: [PATCH pci-fixes 2/2] Revert "PCI: aardvark: Fix support for
+ PCI_ROM_ADDRESS1 on emulated bridge"
+Message-ID: <20211201105045.41228d82@thinkpad>
+In-Reply-To: <20211201015308.GA2791148@bhelgaas>
+References: <20211130112937.GA3130@lpieralisi>
+        <20211201015308.GA2791148@bhelgaas>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [patch 05/22] genirq/msi: Fixup includes
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     <linux-hyperv@vger.kernel.org>, Paul Mackerras <paulus@samba.org>,
-        <sparclinux@vger.kernel.org>, Wei Liu <wei.liu@kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>, Marc Zygnier <maz@kernel.org>,
-        <x86@kernel.org>, Christian Borntraeger <borntraeger@de.ibm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jason Gunthorpe <jgg@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <xen-devel@lists.xenproject.org>, <ath11k@lists.infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
-References: <20211126222700.862407977@linutronix.de>
- <20211126223824.382273262@linutronix.de>
- <b1a6d267-c7b4-c4b9-ab0e-f5cc32bfe9bf@kaod.org> <87tufud4m3.ffs@tglx>
- <524d9b84-caa8-dd6f-bb5e-9fc906d279c0@kaod.org> <87czmhb8gq.ffs@tglx>
- <875ys9b71j.ffs@tglx>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-In-Reply-To: <875ys9b71j.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [37.59.142.105]
-X-ClientProxiedBy: DAG1EX2.mxp5.local (172.16.2.2) To DAG4EX1.mxp5.local
- (172.16.2.31)
-X-Ovh-Tracer-GUID: e52f034b-6a74-4e80-b1cd-9a54c9a992a9
-X-Ovh-Tracer-Id: 2359604732828158876
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddriedvgddutdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvfhfhjggtgfhisehtkeertddtfeejnecuhfhrohhmpeevrogurhhitggpnfgvpgfiohgrthgvrhcuoegtlhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhepjeekvdfgudevkeefkeeltdejteekvdegffegudetgeettdffjeefheekfeelffdtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkpheptddrtddrtddrtddpfeejrdehledrudegvddruddtheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegtlhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigphhptgdquggvvheslhhishhtshdrohiilhgrsghsrdhorhhg
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/30/21 23:41, Thomas Gleixner wrote:
-> On Tue, Nov 30 2021 at 23:10, Thomas Gleixner wrote:
-> 
->> On Tue, Nov 30 2021 at 22:48, Cédric Le Goater wrote:
->>> On 11/29/21 22:38, Thomas Gleixner wrote:
->>>> On Mon, Nov 29 2021 at 08:33, Cédric Le Goater wrote:
->>>> thanks for having a look. I fixed up this and other fallout and pushed out an
->>>> updated series (all 4 parts) to:
->>>>
->>>>           git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel msi
->>>
->>> pSeries fails to allocate MSIs starting with this patch :
->>>
->>>    [PATCH 049/101] powerpc/pseries/msi: Let core code check for contiguous ...
->>>
->>> I will dig in later on.
->>
->> Let me stare at the core function..
-> 
-> It's not the core function. It's the patch above and I'm a moron.
+On Tue, 30 Nov 2021 19:53:08 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-All good now. Ship it !
+> On Tue, Nov 30, 2021 at 11:29:37AM +0000, Lorenzo Pieralisi wrote:
+> > On Thu, Nov 25, 2021 at 05:01:48PM +0100, Marek Beh=C3=BAn wrote: =20
+> > > This reverts commit 239edf686c14a9ff926dec2f350289ed7adfefe2.
+> > >=20
+> > > PCI Bridge which represents aardvark's PCIe Root Port has Expansion R=
+OM
+> > > Base Address register at offset 0x30, but its meaning is different th=
+an
+> > > PCI's Expansion ROM BAR register, although the layout is the same.
+> > > (This is why we thought it does the same thing.)
+> > >=20
+> > > First: there is no ROM (or part of BootROM) in the A3720 SOC dedicated
+> > > for PCIe Root Port (or controller in RC mode) containing executable c=
+ode
+> > > that would initialize the Root Port, suitable for execution in
+> > > bootloader (this is how Expansion ROM BAR is used on x86).
+> > >=20
+> > > Second: in A3720 spec the register (address D0070030) is not document=
+ed
+> > > at all for Root Complex mode, but similar to other BAR registers, it =
+has
+> > > an "entangled partner" in register D0075920, which does address
+> > > translation for the BAR in D0070030:
+> > > - the BAR register sets the address from the view of PCIe bus
+> > > - the translation register sets the address from the view of the CPU
+> > >=20
+> > > The other BAR registers also have this entangled partner, and they
+> > > can be used to:
+> > > - in RC mode: address-checking on the receive side of the RC (they
+> > >   can define address ranges for memory accesses from remote Endpoints
+> > >   to the RC)
+> > > - in Endpoint mode: allow the remote CPU to access memory on A3720
+> > >=20
+> > > The Expansion ROM BAR has only the Endpoint part documented, but from
+> > > the similarities we think that it can also be used in RC mode in that
+> > > way.
+> > >=20
+> > > So either Expansion ROM BAR has different meaning (if the hypothesis
+> > > above is true), or we don't know it's meaning (since it is not
+> > > documented for RC mode).
+> > >=20
+> > > Remove the register from the emulated bridge accessing functions.
+> > >=20
+> > > Fixes: 239edf686c14 ("PCI: aardvark: Fix support for PCI_ROM_ADDRESS1=
+ on emulated bridge")
+> > > Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
+> > > ---
+> > >  drivers/pci/controller/pci-aardvark.c | 9 ---------
+> > >  1 file changed, 9 deletions(-) =20
+> >=20
+> > Bjorn,
+> >=20
+> > this reverts a commit we merged the last merge window so it is
+> > a candidate for one of the upcoming -rcX. =20
+>=20
+> Sure, happy to apply the revert.
+>=20
+> What problem does the revert fix?  I assume 239edf686c14 ("PCI:
+> aardvark: Fix support for PCI_ROM_ADDRESS1 on emulated bridge") broke
+> something, but the commit log for the revert doesn't say *what*.  How
+> would one notice that something broke?
 
-Thanks,
+Hello Bjorn,
 
-C.
+It doesn't break any real functionality that I know of, although it
+might, since the register is read pci/probe.c pci_setup_device()
+(pci_read_bases()).
 
+But allowing the access to the register when it has different meaning
+is wrong in a similar sense that a memory leak is wrong (a memory leak
+also does not necessarily cause real problems, if it is small, but
+still we should fix it).
 
-
-
+Marek
