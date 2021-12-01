@@ -2,137 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FF0D4658F9
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 23:17:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5313C465990
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 23:53:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244799AbhLAWUc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 17:20:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242357AbhLAWUc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 17:20:32 -0500
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8375CC061574;
-        Wed,  1 Dec 2021 14:17:10 -0800 (PST)
-Received: by mail-oi1-x229.google.com with SMTP id bk14so51601258oib.7;
-        Wed, 01 Dec 2021 14:17:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UZD+wACY3SAuTXTUljVln3laEvcK5M7PHpyfxljx+Jk=;
-        b=AFp0DZrbg+kL+LwrvONlq6K9FDEB8l4aqulKDEq9wkZYI1E3lFkReWCc4n8My8QcOV
-         FK5pStCUOz5JLp7w22iP6i+uL/Ci4JMR0VjMeNKUlj7Lbb8k3ukrWMgpiUUVxdfTTEh3
-         4v0vwPCtSo8PzDZN+xvuS3AWguRN/2N5QUCoCf9ffXnO02Sb7bW4my+rFvzJRvVBOCnn
-         IxA/THxjH/ytSTKJPvX3pH+4GpYDri3PxrtG3M9qeID9eYn9a82SiLaT8jrLXp2bPJYU
-         ll6jVQjBIV4khOG/hQI4u01oXbo9HFh48Mwg4tSGWxHHf/nqzgwGD4WhcZN5CyGwObdT
-         UKGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UZD+wACY3SAuTXTUljVln3laEvcK5M7PHpyfxljx+Jk=;
-        b=c0F+jup9q9/PC1Qxcm3Bw92EntGmylqwY2vUZhAfHPMasFIuntSyZBXG9mTWXVofDr
-         S6zjvh5D7ET8YmAN4MuxgVT9L2XEj6V2Q0EpepeVGtX2RSjQbBBMFNnjRmwKzGkDF3Qc
-         8+u1VqildEtGW+fWhdCmtXz3+6DFcFr08NfVcZLV6oF7p9e7lMTey/rSWjQG1bY7Qmw5
-         Y79Cje4kaFVAK6AuhLp1RnJIHCyUK7ZePQH6vPS2KVU0kK8AjGzWg8MawWbEU1NvrF4q
-         544ICB5FgUsCGcdh5+EiPhhTOZ6VnjQF4WjMFLhhmPNaHIzVYes2kRcgg2tLhKKstIpN
-         yi4g==
-X-Gm-Message-State: AOAM531uMk8dqXZXZb8PEsO7lG6vYLFkYLBEcAO5CH9ZiEqWUInsOlPu
-        VG7jmy8M6hcSZ+W47DlskeUz9dCmiz8=
-X-Google-Smtp-Source: ABdhPJy/Ko5RmZFfrSdHWpJGy3yrJjyfbKqIy4l3ek0avXdcJzN5Kt1mcKgyyxew4PMN97s50heykw==
-X-Received: by 2002:a05:6808:1403:: with SMTP id w3mr1054161oiv.80.1638397029652;
-        Wed, 01 Dec 2021 14:17:09 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e3sm382044otk.71.2021.12.01.14.17.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Dec 2021 14:17:09 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCH v2 2/5] MIPS: ralink: implement
- 'pcibios_root_bridge_prepare()'
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        linux-pci@vger.kernel.org
-Cc:     linux-mips@vger.kernel.org, tsbogend@alpha.franken.de,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com, arnd@arndb.de,
-        linux-kernel@vger.kernel.org
-References: <20211201215127.23550-1-sergio.paracuellos@gmail.com>
- <20211201215127.23550-3-sergio.paracuellos@gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <d243a90d-25b2-a65f-b69d-af7497db8742@roeck-us.net>
-Date:   Wed, 1 Dec 2021 14:17:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S1353715AbhLAW5K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 17:57:10 -0500
+Received: from mga09.intel.com ([134.134.136.24]:51076 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1343872AbhLAW5K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 1 Dec 2021 17:57:10 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="236389778"
+X-IronPort-AV: E=Sophos;i="5.87,280,1631602800"; 
+   d="scan'208";a="236389778"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 14:53:48 -0800
+X-IronPort-AV: E=Sophos;i="5.87,280,1631602800"; 
+   d="scan'208";a="602370697"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.64.69]) ([10.212.64.69])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 14:53:47 -0800
+Message-ID: <0eab4c0e-c672-1138-2d95-3c9bee9ecdb1@intel.com>
+Date:   Wed, 1 Dec 2021 15:53:46 -0700
 MIME-Version: 1.0
-In-Reply-To: <20211201215127.23550-3-sergio.paracuellos@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
 Content-Language: en-US
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org
+References: <20211126230957.239391799@linutronix.de>
+ <20211126232735.547996838@linutronix.de>
+ <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com> <874k7ueldt.ffs@tglx>
+ <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com> <87ilwacwp8.ffs@tglx>
+ <d6f13729-1b83-fa7d-3f0d-98d4e3f7a2aa@deltatee.com> <87v909bf2k.ffs@tglx>
+ <20211130202800.GE4670@nvidia.com> <87o861banv.ffs@tglx>
+ <20211201001748.GF4670@nvidia.com> <87mtlkaauo.ffs@tglx>
+ <8c2262ba-173e-0007-bc4c-94ec54b2847d@intel.com> <87pmqg88xq.ffs@tglx>
+ <df00b87e-00dc-d998-8b64-46b16dba46eb@intel.com> <87k0go8432.ffs@tglx>
+ <f4cc305b-a329-6d27-9fca-b74ebc9fa0c1@intel.com> <878rx480fk.ffs@tglx>
+ <45302c9d-f7a0-5a47-d0be-127d0dea45fb@intel.com> <875ys87zl5.ffs@tglx>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <875ys87zl5.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/1/21 1:51 PM, Sergio Paracuellos wrote:
-> PCI core code call 'pcibios_root_bridge_prepare()' function inside function
-> 'pci_register_host_bridge()'. This point is very good way to properly enter
-> into this MIPS ralink specific code to properly setup I/O coherency units
-> with PCI memory addresses.
-> 
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> ---
->   arch/mips/ralink/mt7621.c | 30 ++++++++++++++++++++++++++++++
->   1 file changed, 30 insertions(+)
-> 
-> diff --git a/arch/mips/ralink/mt7621.c b/arch/mips/ralink/mt7621.c
-> index bd71f5b14238..7649416c1cd7 100644
-> --- a/arch/mips/ralink/mt7621.c
-> +++ b/arch/mips/ralink/mt7621.c
-> @@ -10,6 +10,7 @@
->   #include <linux/slab.h>
->   #include <linux/sys_soc.h>
->   #include <linux/memblock.h>
-> +#include <linux/pci.h>
->   
->   #include <asm/bootinfo.h>
->   #include <asm/mipsregs.h>
-> @@ -22,6 +23,35 @@
->   
->   static void *detect_magic __initdata = detect_memory_region;
->   
-> +int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
-> +{
-> +	struct resource_entry *entry;
-> +	resource_size_t mask;
-> +
-> +	entry = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
-> +	if (!entry) {
-> +		pr_err("Cannot get memory resource\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (mips_cps_numiocu(0)) {
-> +		/*
-> +		 * FIXME: hardware doesn't accept mask values with 1s after
-> +		 * 0s (e.g. 0xffef), so it would be great to warn if that's
-> +		 * about to happen
-> +		 */ > +		mask = ~(entry->res->end - entry->res->start);
-> +
 
-Try something like this:
-		WARN_ON((mask != ~0UL && BIT(ffz(mask)) - 1 != mask);
+On 12/1/2021 3:03 PM, Thomas Gleixner wrote:
+> On Wed, Dec 01 2021 at 14:49, Dave Jiang wrote:
+>> On 12/1/2021 2:44 PM, Thomas Gleixner wrote:
+>>> How that is backed on the host does not really matter. You can expose
+>>> MSI-X to the guest with a INTx backing as well.
+>>>
+>>> I'm still failing to see the connection between the 9 MSIX vectors and
+>>> the 2048 IMS vectors which I assume that this is the limitation of the
+>>> physical device, right?
+>> I think I was confused with what you were asking and was thinking you
+>> are saying why can't we just have MSIX on guest backed by the MSIX on
+>> the physical device and thought there would not be enough vectors to
+>> service the many guests. I think I understand what your position is now
+>> with the clarification above.
+> This still depends on how this overall discussion about representation
+> of all of this stuff is resolved.
+>
+>>> What needs a subdevice to expose?
+> Can you answer that too please?
 
-> +		write_gcr_reg1_base(entry->res->start);
-> +		write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
-> +		pr_info("PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
-> +			(unsigned long long)read_gcr_reg1_base(),
-> +			(unsigned long long)read_gcr_reg1_mask());
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   phys_addr_t mips_cpc_default_phys_base(void)
->   {
->   	panic("Cannot detect cpc address");
-> 
+Sorry. So initial version of the IDXD sub-device is represented with a 
+single queue. It needs a command irq (emulated) and a completion irq 
+that is backed by a device vector (currently IMS).
 
+
+>
+> Thanks,
+>
+>          tglx
