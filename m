@@ -2,107 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC9E1464724
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 07:25:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 828914647B6
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 08:14:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346866AbhLAG2h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 01:28:37 -0500
-Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:58114
-        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231871AbhLAG2g (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 01:28:36 -0500
-Received: from localhost.localdomain (unknown [10.101.196.174])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 4BAB03FFDF;
-        Wed,  1 Dec 2021 06:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1638339911;
-        bh=ZuTbVzRuXq+1BXK11qhbZ9L2S3ttVt8+EAIqTiNSJ7M=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=aFyflSTQHTTxruerqZG6VEZvaphkDHFxHvaH5Qt0dXnFfDV5TRrSKSSiKNMWhVfeG
-         81dnrkmodHI91oVeoJ/Gmo5paY3BV2Cu7HngFmfR/hns1uY06kyB41U5OZMBnjZdDv
-         fz2lD4Ej0wOrMC2smTPsjvnVCwpTVQ3elYL/ygzCTD4zdVlQGPnLQtYhpDtdoUywGq
-         +7kWyltzhyk48GwcQh7JRb62Tuv0g1SiXnvDHRG5nTufwdsnV3/Np+nsB8x7/fnWEB
-         L7xLqcumvodDi98D4h4bMFaglWelfwIo/ieaqkUL/xv5vR0+bD0PF1bMiKCFMW6SVA
-         3GEOWHiqKp2kQ==
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com
-Cc:     linux-pm@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: vmd: Honor ACPI _OSC on PCIe features
-Date:   Wed,  1 Dec 2021 14:24:22 +0800
-Message-Id: <20211201062423.1313114-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.32.0
+        id S1347150AbhLAHRp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 02:17:45 -0500
+Received: from 1.mo552.mail-out.ovh.net ([178.32.96.117]:55377 "EHLO
+        1.mo552.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240719AbhLAHRo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 02:17:44 -0500
+X-Greylist: delayed 162739 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Dec 2021 02:17:44 EST
+Received: from mxplan5.mail.ovh.net (unknown [10.108.1.125])
+        by mo552.mail-out.ovh.net (Postfix) with ESMTPS id B6B2D217F7;
+        Wed,  1 Dec 2021 07:14:07 +0000 (UTC)
+Received: from kaod.org (37.59.142.105) by DAG4EX1.mxp5.local (172.16.2.31)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 1 Dec
+ 2021 08:14:05 +0100
+Authentication-Results: garm.ovh; auth=pass (GARM-105G00686e3cafe-0521-4f42-aedc-fcaeb2775d24,
+                    A214034E9EDAB49BEA2160BF49F8C38F118F2259) smtp.auth=clg@kaod.org
+X-OVh-ClientIp: 90.11.56.15
+Message-ID: <39556bdc-f48c-68b2-6bec-5975b92e02e2@kaod.org>
+Date:   Wed, 1 Dec 2021 08:14:05 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [patch 05/22] genirq/msi: Fixup includes
+Content-Language: en-US
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     <linux-hyperv@vger.kernel.org>, Paul Mackerras <paulus@samba.org>,
+        <sparclinux@vger.kernel.org>, Wei Liu <wei.liu@kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>, Marc Zygnier <maz@kernel.org>,
+        <x86@kernel.org>, Christian Borntraeger <borntraeger@de.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Jason Gunthorpe <jgg@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>, <ath11k@lists.infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
+References: <20211126222700.862407977@linutronix.de>
+ <20211126223824.382273262@linutronix.de>
+ <b1a6d267-c7b4-c4b9-ab0e-f5cc32bfe9bf@kaod.org> <87tufud4m3.ffs@tglx>
+ <524d9b84-caa8-dd6f-bb5e-9fc906d279c0@kaod.org> <87czmhb8gq.ffs@tglx>
+ <875ys9b71j.ffs@tglx>
+From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+In-Reply-To: <875ys9b71j.ffs@tglx>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [37.59.142.105]
+X-ClientProxiedBy: DAG1EX2.mxp5.local (172.16.2.2) To DAG4EX1.mxp5.local
+ (172.16.2.31)
+X-Ovh-Tracer-GUID: e52f034b-6a74-4e80-b1cd-9a54c9a992a9
+X-Ovh-Tracer-Id: 2359604732828158876
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddriedvgddutdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvfhfhjggtgfhisehtkeertddtfeejnecuhfhrohhmpeevrogurhhitggpnfgvpgfiohgrthgvrhcuoegtlhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhepjeekvdfgudevkeefkeeltdejteekvdegffegudetgeettdffjeefheekfeelffdtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkpheptddrtddrtddrtddpfeejrdehledrudegvddruddtheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegtlhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigphhptgdquggvvheslhhishhtshdrohiilhgrsghsrdhorhhg
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When Samsung PCIe Gen4 NVMe is connected to Intel ADL VMD, the
-combination causes AER message flood and drags the system performance
-down.
+On 11/30/21 23:41, Thomas Gleixner wrote:
+> On Tue, Nov 30 2021 at 23:10, Thomas Gleixner wrote:
+> 
+>> On Tue, Nov 30 2021 at 22:48, Cédric Le Goater wrote:
+>>> On 11/29/21 22:38, Thomas Gleixner wrote:
+>>>> On Mon, Nov 29 2021 at 08:33, Cédric Le Goater wrote:
+>>>> thanks for having a look. I fixed up this and other fallout and pushed out an
+>>>> updated series (all 4 parts) to:
+>>>>
+>>>>           git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel msi
+>>>
+>>> pSeries fails to allocate MSIs starting with this patch :
+>>>
+>>>    [PATCH 049/101] powerpc/pseries/msi: Let core code check for contiguous ...
+>>>
+>>> I will dig in later on.
+>>
+>> Let me stare at the core function..
+> 
+> It's not the core function. It's the patch above and I'm a moron.
 
-The issue doesn't happen when VMD mode is disabled in BIOS, since AER
-isn't enabled by acpi_pci_root_create() . When VMD mode is enabled, AER
-is enabled regardless of _OSC:
-[    0.410076] acpi PNP0A08:00: _OSC: platform does not support [AER]
-...
-[    1.486704] pcieport 10000:e0:06.0: AER: enabled with IRQ 146
+All good now. Ship it !
 
-Since VMD is an aperture to regular PCIe root ports, honor ACPI _OSC to
-disable PCIe features accordingly to resolve the issue.
+Thanks,
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215027
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/pci/controller/vmd.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+C.
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index a45e8e59d3d48..8298862417e84 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -670,7 +670,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	LIST_HEAD(resources);
- 	resource_size_t offset[2] = {0};
- 	resource_size_t membar2_offset = 0x2000;
--	struct pci_bus *child;
-+	struct pci_bus *child, *bus;
-+	struct pci_host_bridge *root_bridge, *vmd_bridge;
- 	int ret;
- 
- 	/*
-@@ -798,6 +799,21 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 		return -ENODEV;
- 	}
- 
-+	vmd_bridge = to_pci_host_bridge(vmd->bus->bridge);
-+
-+	bus = vmd->dev->bus;
-+	while (bus->parent)
-+		bus = bus->parent;
-+
-+	root_bridge = to_pci_host_bridge(bus->bridge);
-+
-+	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
-+	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
-+	vmd_bridge->native_aer = root_bridge->native_aer;
-+	vmd_bridge->native_pme = root_bridge->native_pme;
-+	vmd_bridge->native_ltr = root_bridge->native_ltr;
-+	vmd_bridge->native_dpc = root_bridge->native_dpc;
-+
- 	vmd_attach_resources(vmd);
- 	if (vmd->irq_domain)
- 		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
--- 
-2.32.0
+
+
 
