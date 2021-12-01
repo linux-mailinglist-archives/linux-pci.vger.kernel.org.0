@@ -2,119 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C067046503F
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 15:44:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C218B465057
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 15:47:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350560AbhLAOrN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 09:47:13 -0500
-Received: from mail-ot1-f48.google.com ([209.85.210.48]:46954 "EHLO
-        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350719AbhLAOoV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 09:44:21 -0500
-Received: by mail-ot1-f48.google.com with SMTP id x3-20020a05683000c300b0057a5318c517so5199462oto.13;
-        Wed, 01 Dec 2021 06:41:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ed/ZcCSR+4sJXjgWKobu/vSzvVTBSgkCNvP/E+sGc34=;
-        b=ZnxK66YcosTZ/M3SlJj1J1dxXuRAVnk0feQapOk/6XuQGvtPLomMcEf/Lw7Z8SLdpE
-         kQ1Y1gydrFRpAOwPUP/pFAXZYI59W5fP8AI8ccR/10+QTAMu4r6gtaTudxntpYb5LNS/
-         n4R2R+FCDGpzAPXd7wFARYWlIWhWr8uTtoCNQiPLAQ4DXRIKq2Ydg+3op7fuhhZ5RcLz
-         LgOu3JeS+idC9nTSLXYEU2rCOSHMxtDVjwA/6UsD1EdgczdVrZxDnFdqIf8f6EE+jvgV
-         fjXuFsCvTKFLX0yxDX0KAxrAIakJHytm8MeA7CTbj3JeNs5N8flRrPWmtG0nBAtiD2L5
-         Gkfw==
-X-Gm-Message-State: AOAM531NiUeqEczO0fOcjncJhFf/7LJsCEphvcUrR4CIUhPwiImfsYSr
-        t7jfbA0Cyl60z6eGXzLm0lAvfdpG7ZbomcaTLjo=
-X-Google-Smtp-Source: ABdhPJxp6TilHl0+OEDr77mPSoLcvUkS0xfcqLlnOeV8gwqQPAQ7V3osdNMQRxGpaXfwgjoTqV06EsoMdJQnFolzgaM=
-X-Received: by 2002:a05:6830:348f:: with SMTP id c15mr6239258otu.254.1638369660021;
- Wed, 01 Dec 2021 06:41:00 -0800 (PST)
+        id S239067AbhLAOuj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 09:50:39 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:47189 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1351223AbhLAOtr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 09:49:47 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]) by
+ mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MOV26-1nF3nz0A0s-00Ps8U; Wed, 01 Dec 2021 15:46:25 +0100
+Received: by mail-wr1-f53.google.com with SMTP id t9so35841005wrx.7;
+        Wed, 01 Dec 2021 06:46:24 -0800 (PST)
+X-Gm-Message-State: AOAM5309hPNORYq8XaR4PUYMO4EuFCCJIaT0bDNbnfSuVOIf5OPzTG5C
+        n6VsVjrwA0wxHxtd7AxBAQWJ0gzw4tFAhhTBzzg=
+X-Google-Smtp-Source: ABdhPJxEg5r/1w/gDfBKUHkMFSPBJmkzNLxv5dteXMnmB0X88uwuOvhFFjwMxR4Q+HIIdILvI8+vwRNxXRYIqdS7qwQ=
+X-Received: by 2002:a5d:4107:: with SMTP id l7mr7152804wrp.209.1638369984034;
+ Wed, 01 Dec 2021 06:46:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20211201062423.1313114-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20211201062423.1313114-1-kai.heng.feng@canonical.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 1 Dec 2021 15:40:49 +0100
-Message-ID: <CAJZ5v0jQUc8NyNYiGpx0ayEPXJR-TS4fy832+2fBGgKLmdWjtg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: vmd: Honor ACPI _OSC on PCIe features
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
+References: <20211123180636.80558-1-maz@kernel.org> <20211123180636.80558-3-maz@kernel.org>
+ <3ba6ece5-9fa5-1bd8-5d11-47e2c6bda9ec@lucaceresoli.net>
+In-Reply-To: <3ba6ece5-9fa5-1bd8-5d11-47e2c6bda9ec@lucaceresoli.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 1 Dec 2021 15:46:07 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0jvtpJWo_ruS4zvTNox-1ekX=UKFzHMOZWNCHz=nEyOQ@mail.gmail.com>
+Message-ID: <CAK8P3a0jvtpJWo_ruS4zvTNox-1ekX=UKFzHMOZWNCHz=nEyOQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] arm64: dts: apple: t8103: Fix PCIe #PERST polarity
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>,
+        Android Kernel Team <kernel-team@android.com>,
+        Hector Martin <marcan@marcan.st>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:SZuEMn2n6b1B+CAIBFqbzkRWvF0uBoAwl0gxMuz6W576pYAOAe4
+ CajDcI/5dWLRD1MsLmAUId5G0ye4/52SXQi6j6Cd3s47cGjwPHFX6lKvkSjzH1KwWncgeFR
+ srIF+NnHsTxOVkAwuNLktlQ2xVU90O9x7opUwxysKX5Pr0F5QB5jfAoku+L8qg8S5EGSVje
+ XprV3DIhFShhiEgByhUWQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UbtqTtIGwXA=:9vRQexDLo0qW7WwI4sIZqB
+ J4GvLFb13EwUhVXYNXDXx72iQGAQKNJ5kzE/wwxB4KwWR5A8q7soNfs050OP7TjzY9wwzkDZ7
+ Bx3y0Ob9SS5KbCSOk1CzpqRDBHTvhMshyq7Pz45Qf5nQ8fXMZIA3T00FZIdZDnt/F9HWzQBoP
+ rLyz4xGljKs1z4CU5YT2qarPRnCEv0OyF/HggypASriwfsTgXi0y178owRlQRxm6evZ2LkyD/
+ G7gz9tyq2p//arawBwMhkbl+D9Ih1MxrgHtAWKm78OmFcstcwpSz0Yqv1ENOEgoKZTrB258E7
+ 7rzyQaOEblf4O58NyrM4X2YMO/GBOfyO906/fT2JJYnSvYSZOejntzcYBd5FcwWffsgH9vlQ9
+ B0VTTIjns5qJPu9ZvfNy43gg7AvgKRkGwZlqO6N0fZ6/selAPWidxVdbK1CBG350HsXsJatYA
+ sp2kN4aeAuiJPsbHnd4D5PWDn3mK8O1FuSZ06ssAwFkrL+j3UNaGmN4sZeTnwdGUHiM4co6hy
+ Ur3z5QI1U61KxHlbualFV0hNJGdJAMXWyIHSyNNzpWqKI+kfypgJWOsHlNb21ryRO5hV31kGd
+ 69vP/aFvWmnnniqxK9ic3pkDtrF57zanciK8r+k3np330hZuAz+j6EcpSViYY0TD378m1ittI
+ UNTwtyrmOfv7pccOPrbcnPU6BteHa89Y0QYtRflqgm4ySK4O3jlTltStOkpMCkP2ZHB7ovCbe
+ Zjgmx27UREwkgsu3WbSZyGPOECeiaqxD1MBeMnqRpQSuuhtqctYV00LaWFlbKg/77j4b8rWqG
+ dFPiZLcBJVblBpNR1KDdMAaMh+2M9GzDeh+GMDImqS6Rz3jqg8=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 1, 2021 at 7:25 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
+On Wed, Nov 24, 2021 at 10:17 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+> On 23/11/21 19:06, Marc Zyngier wrote:
+> > As the name indicates, #PERST is active low. So fix the DT description
+> > to match the HW behaviour.
+> >
+> > Fixes: ff2a8d91d80c ("arm64: apple: Add PCIe node")
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
 >
-> When Samsung PCIe Gen4 NVMe is connected to Intel ADL VMD, the
-> combination causes AER message flood and drags the system performance
-> down.
->
-> The issue doesn't happen when VMD mode is disabled in BIOS, since AER
-> isn't enabled by acpi_pci_root_create() . When VMD mode is enabled, AER
-> is enabled regardless of _OSC:
-> [    0.410076] acpi PNP0A08:00: _OSC: platform does not support [AER]
-> ...
-> [    1.486704] pcieport 10000:e0:06.0: AER: enabled with IRQ 146
->
-> Since VMD is an aperture to regular PCIe root ports, honor ACPI _OSC to
-> disable PCIe features accordingly to resolve the issue.
->
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215027
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/pci/controller/vmd.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index a45e8e59d3d48..8298862417e84 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -670,7 +670,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->         LIST_HEAD(resources);
->         resource_size_t offset[2] = {0};
->         resource_size_t membar2_offset = 0x2000;
-> -       struct pci_bus *child;
-> +       struct pci_bus *child, *bus;
-> +       struct pci_host_bridge *root_bridge, *vmd_bridge;
->         int ret;
->
->         /*
-> @@ -798,6 +799,21 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->                 return -ENODEV;
->         }
->
-> +       vmd_bridge = to_pci_host_bridge(vmd->bus->bridge);
-> +
-> +       bus = vmd->dev->bus;
-> +       while (bus->parent)
-> +               bus = bus->parent;
+> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-What about using pci_fimd_host_bridge() here?
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-LGTM otherwise.
+If the driver changes are not yet forwarded to Linus, feel free to add
+this one as well. Otherwise please send it to Hector Martin so he can
+add it to the other Apple DT fixes for 5.16.
 
-> +
-> +       root_bridge = to_pci_host_bridge(bus->bridge);
-> +
-> +       vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
-> +       vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
-> +       vmd_bridge->native_aer = root_bridge->native_aer;
-> +       vmd_bridge->native_pme = root_bridge->native_pme;
-> +       vmd_bridge->native_ltr = root_bridge->native_ltr;
-> +       vmd_bridge->native_dpc = root_bridge->native_dpc;
-> +
->         vmd_attach_resources(vmd);
->         if (vmd->irq_domain)
->                 dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
-> --
-> 2.32.0
->
+      Arnd
