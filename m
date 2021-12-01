@@ -2,103 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B95DB465891
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 22:49:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97D49465896
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 22:51:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353170AbhLAVxH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 16:53:07 -0500
-Received: from mga04.intel.com ([192.55.52.120]:61089 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1353136AbhLAVxE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Dec 2021 16:53:04 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="235299285"
-X-IronPort-AV: E=Sophos;i="5.87,280,1631602800"; 
-   d="scan'208";a="235299285"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 13:49:21 -0800
-X-IronPort-AV: E=Sophos;i="5.87,280,1631602800"; 
-   d="scan'208";a="602315926"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.64.69]) ([10.212.64.69])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 13:49:19 -0800
-Message-ID: <45302c9d-f7a0-5a47-d0be-127d0dea45fb@intel.com>
-Date:   Wed, 1 Dec 2021 14:49:18 -0700
+        id S1353202AbhLAVy4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 16:54:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234733AbhLAVyy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 16:54:54 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9AAC061574;
+        Wed,  1 Dec 2021 13:51:31 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id j3so55361172wrp.1;
+        Wed, 01 Dec 2021 13:51:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DX2ga5YEZ7pQITxRdnzgB23jvyNbXnpWAo2XxfRd5Kw=;
+        b=mxoOLflFLSRdalRBq5p0dGpppQigio+qYm6bH+Losq6tiUZsIMm0kP9SjU4ZyeEmJU
+         Huo8ApFO4FDudVBhgegU66gzREWq5EfArgFIwai0UA7nQKa0f4P+OnzNeyz3ccZq0v9K
+         VbjVj6aqcE9oDqqpoPQDr8vnDTS+lFwXUeV+6KO5bilAQ2L8JjlnEtgNQo7ADELavPPi
+         5tvi+68dxALZyuFtYiEDcbu8ncVpK+GKb1YKF5IV27TCZiTjFMoV4KipADiBbhjFJPWF
+         FntPYQm3ljFoUMRTX0+YKy/lxvix8eModMpUthry/DvzYQRFBgOIHIyFKZVLIUv0gNky
+         3fNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DX2ga5YEZ7pQITxRdnzgB23jvyNbXnpWAo2XxfRd5Kw=;
+        b=7yOwekpVmEN643uKYWk7VE9BgA9HoxFCsNjSUQ7UirAAcNxPYLbdcoHtI1gJKAb6gX
+         S3BJPgIysZKrseG45HWQPz9Ol6KFeUCzWjyKuE40PjlY82FzER/5kCAI+gyU2lZ5gqGR
+         2Pd0Utj8JRqOUrK9X2Aw3eBixx9y2Lgt/2mkrUTS+ivV1Ex4Q+1eQf0JX8MJ4ijiHNyk
+         XsPDJJwUUnh0KFuMfcj+Q3GW2Sud2Vj+ifKdMNl4O2ri3ZUFhku4uW7eD7rXbxaVqJur
+         pfU6WsVhy/FhrGTn9Is2CGTzL1CLcN7xWUJKF2Kkv72DJ8R7U9KJAurOC1uhpjzxGRAS
+         fTPQ==
+X-Gm-Message-State: AOAM533A1nX6GZb/p35LsKOT4+RP+JzzSCJji9pt6pYZdR0kB9uFrIzv
+        Hvf8anwCGiTS7bsBo6KwwpD9C+Bv78U=
+X-Google-Smtp-Source: ABdhPJzQqTLzBm2R/MWnDF1D8Q8zLBQiaLSj0iDpJEMAmByCh1OoG3TgFkFL8/A3GTrf/U67l3FxPA==
+X-Received: by 2002:adf:d844:: with SMTP id k4mr9851656wrl.622.1638395490242;
+        Wed, 01 Dec 2021 13:51:30 -0800 (PST)
+Received: from localhost.localdomain (252.red-83-54-181.dynamicip.rima-tde.net. [83.54.181.252])
+        by smtp.gmail.com with ESMTPSA id c10sm877879wrb.81.2021.12.01.13.51.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Dec 2021 13:51:29 -0800 (PST)
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-mips@vger.kernel.org, tsbogend@alpha.franken.de,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com, arnd@arndb.de,
+        linux@roeck-us.net, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] PCI: mt7621: Remove specific MIPS code from driver
+Date:   Wed,  1 Dec 2021 22:51:22 +0100
+Message-Id: <20211201215127.23550-1-sergio.paracuellos@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org,
-        Joerg Roedel <jroedel@suse.de>,
-        iommu@lists.linux-foundation.org
-References: <20211126230957.239391799@linutronix.de>
- <20211126232735.547996838@linutronix.de>
- <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com> <874k7ueldt.ffs@tglx>
- <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com> <87ilwacwp8.ffs@tglx>
- <d6f13729-1b83-fa7d-3f0d-98d4e3f7a2aa@deltatee.com> <87v909bf2k.ffs@tglx>
- <20211130202800.GE4670@nvidia.com> <87o861banv.ffs@tglx>
- <20211201001748.GF4670@nvidia.com> <87mtlkaauo.ffs@tglx>
- <8c2262ba-173e-0007-bc4c-94ec54b2847d@intel.com> <87pmqg88xq.ffs@tglx>
- <df00b87e-00dc-d998-8b64-46b16dba46eb@intel.com> <87k0go8432.ffs@tglx>
- <f4cc305b-a329-6d27-9fca-b74ebc9fa0c1@intel.com> <878rx480fk.ffs@tglx>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <878rx480fk.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi all,
 
-On 12/1/2021 2:44 PM, Thomas Gleixner wrote:
-> On Wed, Dec 01 2021 at 14:21, Dave Jiang wrote:
->> On 12/1/2021 1:25 PM, Thomas Gleixner wrote:
->>>> The hardware implementation does not have enough MSIX vectors for
->>>> guests. There are only 9 MSIX vectors total (8 for queues) and 2048 IMS
->>>> vectors. So if we are to do MSI-X for all of them, then we need to do
->>>> the IMS backed MSIX scheme rather than passthrough IMS to guests.
->>> Confused. Are you talking about passing a full IDXD device to the guest
->>> or about passing a carved out subdevice, aka. queue?
->> I'm talking about carving out a subdevice. I had the impression of you
->> wanting IMS passed through for all variations. But it sounds like for a
->> sub-device, you are ok with the implementation of MSIX backed by IMS?
-> I don't see anything wrong with that. A subdevice is it's own entity and
-> VFIO can chose the most conveniant representation of it to the guest
-> obviously.
->
-> How that is backed on the host does not really matter. You can expose
-> MSI-X to the guest with a INTx backing as well.
->
-> I'm still failing to see the connection between the 9 MSIX vectors and
-> the 2048 IMS vectors which I assume that this is the limitation of the
-> physical device, right?
+MIPS specific code can be removed from driver and put into ralink mt7621
+instead which is a more accurate place to do this. To make this possible
+we need to have access to 'bridge->windows' in 'pcibios_root_bridge_prepare()'
+which has been implemented for ralink mt7621 platform (there is no real
+need to implement this for any other platforms since those ones haven't got
+I/O coherency units). This also allow us to properly enable this driver to
+completely be enabled for COMPILE_TEST. This patchset appoarch:
+- Move windows list splice in 'pci_register_host_bridge()' after function
+  'pcibios_root_bridge_prepare()' is called.
+- Implement 'pcibios_root_bridge_prepare()' for ralink mt7621.
+- Avoid custom MIPs code in pcie-mt7621 driver.
+- Add missing 'MODULE_LICENSE()' to pcie-mt7621 driver to avoid compile test
+  module compilation to complain (already sent patch from Yanteng Si that
+  I have rewrite commit message and long description a bit.
+- Remove MIPS conditional code from Kconfig.
 
-I think I was confused with what you were asking and was thinking you 
-are saying why can't we just have MSIX on guest backed by the MSIX on 
-the physical device and thought there would not be enough vectors to 
-service the many guests. I think I understand what your position is now 
-with the clarification above.
+This patchset also fix some errors reported by Kernel Test Robot about
+implicit mips functions used in driver code and fix errors in driver when
+is compiled as a module [1] (mips:allmodconfig).
 
+There was an ongoing discussion about this here [0] but I preferred to send
+my proposal for better review and understanding.
 
->
-> What needs a subdevice to expose?
->
-> Thanks,
->
->          tglx
->
->
->
+Changes in v2:
+ - Collect Acked-by from Arnd Bergmann for PATCH 1.
+ - Collect Reviewed-by from Krzysztof Wilczyński for PATCH 4.
+ - Adjust some patches commit subject and message as pointed out by Bjorn in review of v1 of the series[2]. 
+
+This patchset is the good way of properly compile driver as a module removing
+all MIPS specific code into arch ralink mt7621 place. To avoid mips:allmodconfig reported
+problems for v5.16 the following patch has been sent [3]. This patch should be reverted
+for properly add this series.
+
+[0]: https://lore.kernel.org/linux-mips/CAMhs-H8ShoaYiFOOzJaGC68nZz=V365RXN_Kjuj=fPFENGJiiw@mail.gmail.com/T/#t
+[1]: https://lkml.org/lkml/2021/11/14/436
+[2]: https://lore.kernel.org/r/20211115070809.15529-1-sergio.paracuellos@gmail.com
+[3]: https://lore.kernel.org/linux-pci/20211201214343.23307-1-sergio.paracuellos@gmail.com/T/#u
+
+Thanks in advance for your time.
+
+Best regards,
+   Sergio Paracuellos
+
+Sergio Paracuellos (5):
+  PCI: Let pcibios_root_bridge_prepare() access to 'bridge->windows'
+  MIPS: ralink: implement 'pcibios_root_bridge_prepare()'
+  PCI: mt7621: Avoid custom MIPS code in driver code
+  PCI: mt7621: Add missing 'MODULE_LICENSE()' definition
+  PCI: mt7621: Kconfig: Allow COMPILE_TEST for all arches
+
+ arch/mips/ralink/mt7621.c            | 30 +++++++++++++++++++++
+ drivers/pci/controller/Kconfig       |  2 +-
+ drivers/pci/controller/pcie-mt7621.c | 39 ++--------------------------
+ drivers/pci/probe.c                  |  4 +--
+ 4 files changed, 35 insertions(+), 40 deletions(-)
+
+-- 
+2.33.0
+
