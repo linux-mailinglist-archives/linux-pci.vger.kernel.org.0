@@ -2,104 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC2704655CD
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 19:47:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13B8246566C
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 20:26:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244785AbhLASvQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 13:51:16 -0500
-Received: from mga11.intel.com ([192.55.52.93]:21949 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244775AbhLASvP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 1 Dec 2021 13:51:15 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="234031712"
-X-IronPort-AV: E=Sophos;i="5.87,279,1631602800"; 
-   d="scan'208";a="234031712"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 10:47:37 -0800
-X-IronPort-AV: E=Sophos;i="5.87,279,1631602800"; 
-   d="scan'208";a="602264166"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.64.69]) ([10.212.64.69])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 10:47:35 -0800
-Message-ID: <df00b87e-00dc-d998-8b64-46b16dba46eb@intel.com>
-Date:   Wed, 1 Dec 2021 11:47:35 -0700
+        id S245555AbhLAT3n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 14:29:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352998AbhLAT27 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 14:28:59 -0500
+Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ADCEC0613FC;
+        Wed,  1 Dec 2021 11:25:38 -0800 (PST)
+Received: by mail-ua1-x932.google.com with SMTP id j14so51136378uan.10;
+        Wed, 01 Dec 2021 11:25:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R/lFdTalLpoR7XoJO19/rmrZrA2nWCTKKIFYKXP72ZM=;
+        b=LQ7ozUqtFdB/n4fy/WWECNPTTBxEOevWyhOi8j/Ck1CrkuTjNI2pYz1Vr8y+nChALP
+         n7HJkWd+x+bfNJmsx0Nz7wEUYfh6kbY8MDoALIUXlTwsDvSF0sjG8xeBxcqzsbL0Nugf
+         3FinNpNTBCqXUy21wjI3dGl2HRwlOQkpTOK5HZ5UxpwiSmz6khToEm6NW0zALGH/zsbJ
+         AK7j4rvUe8bsk+aSBqhMKX1sitEA+hkLb9tDVA/hOEtve3xSHn4D+m9aAIkkgRMzcPX6
+         wo+SUq1Plq70bCvM7rcPBBEOuiROxG7sMkT5ycUXaP+vg3/W+CkVagDTmTN+IMmMhgLE
+         GIwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R/lFdTalLpoR7XoJO19/rmrZrA2nWCTKKIFYKXP72ZM=;
+        b=04YwbVhcybXn2zVdvTbLHD+wFI+8TBF3RQj38FeQfki2c/iIZl4T/tV8V9DJA68dWA
+         X19BRU2wlnh8HA6So85BVUBuwKd5tiqN/AuoCXRPc9LxTjJOVovmIT3ZiC4gqQ38es/V
+         OCAo/D5iHFmvaGslAfxtfL7AKFeEJRzGR7orHan4CrSd/0UWUPW/N2eB+v8f+95/AY9q
+         NJ+8Sdw2UoQBWy20nUwHo33EdT5aP7t1mdjfz4creMDJ0S3CkB4PQxDOgNk75R43DpAg
+         91xWmTzFQ7Rb6Y0zLZMmLdzPwjbbdjPBE1+OI9xdRaGEo3vFGF8khE4Iyoh3BWPsGMJu
+         DeWQ==
+X-Gm-Message-State: AOAM532fl73nBf0+w58elgYADKeEDIodIQPxB7sNqacB/8PrZ0RPth+y
+        wlmcg+UOQptekJ7sN1Apwu/PzR/XfVwkFrWhBN8=
+X-Google-Smtp-Source: ABdhPJzYrWwPfyPmACGXWaVxXxzo/lgx5ssxK3IhAvPACkQJpZ3pMnDUdybQ0GFwW99Gc8xLnVGi4u3ELgfMP3xafA0=
+X-Received: by 2002:a67:de12:: with SMTP id q18mr5992904vsk.17.1638386737304;
+ Wed, 01 Dec 2021 11:25:37 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org,
-        Joerg Roedel <jroedel@suse.de>,
-        iommu@lists.linux-foundation.org
-References: <20211126230957.239391799@linutronix.de>
- <20211126232735.547996838@linutronix.de>
- <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com> <874k7ueldt.ffs@tglx>
- <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com> <87ilwacwp8.ffs@tglx>
- <d6f13729-1b83-fa7d-3f0d-98d4e3f7a2aa@deltatee.com> <87v909bf2k.ffs@tglx>
- <20211130202800.GE4670@nvidia.com> <87o861banv.ffs@tglx>
- <20211201001748.GF4670@nvidia.com> <87mtlkaauo.ffs@tglx>
- <8c2262ba-173e-0007-bc4c-94ec54b2847d@intel.com> <87pmqg88xq.ffs@tglx>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <87pmqg88xq.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20211115070809.15529-4-sergio.paracuellos@gmail.com> <20211201181609.GA2831753@bhelgaas>
+In-Reply-To: <20211201181609.GA2831753@bhelgaas>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Wed, 1 Dec 2021 20:25:26 +0100
+Message-ID: <CAMhs-H_68tW9jua+QCMO=7zVKCxAe862zKGp5JMrWmcVtbT7iA@mail.gmail.com>
+Subject: Re: [PATCH 3/5] PCI: mt7621: avoid custom MIPS code in driver code
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        John Crispin <john@phrozen.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Bjorn,
 
-On 12/1/2021 11:41 AM, Thomas Gleixner wrote:
-> Dave,
+On Wed, Dec 1, 2021 at 7:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> please trim your replies.
->
-> On Wed, Dec 01 2021 at 09:28, Dave Jiang wrote:
->
->> On 12/1/2021 3:16 AM, Thomas Gleixner wrote:
->>> Jason,
->>>
->>> CC+ IOMMU folks
->>>
->>> On Tue, Nov 30 2021 at 20:17, Jason Gunthorpe wrote:
->>>> On Tue, Nov 30, 2021 at 10:23:16PM +0100, Thomas Gleixner wrote:
->>> Though I fear there is also a use case for MSI-X and IMS tied to the
->>> same device. That network card you are talking about might end up using
->>> MSI-X for a control block and then IMS for the actual network queues
->>> when it is used as physical function device as a whole, but that's
->>> conceptually a different case.
->> Hi Thomas. This is actually the IDXD usage for a mediated device passed
->> to a guest kernel when we plumb the pass through of IMS to the guest
->> rather than doing previous implementation of having a MSIX vector on
->> guest backed by IMS.
-> Which makes a lot of sense.
->
->> The control block for the mediated device is emulated and therefore an
->> emulated MSIX vector will be surfaced as vector 0. However the queues
->> will backed by IMS vectors. So we end up needing MSIX and IMS coexist
->> running on the guest kernel for the same device.
-> Why? What's wrong with using straight MSI-X for all of them?
+> s/avoid custom/Avoid custom/ in subject.
 
-The hardware implementation does not have enough MSIX vectors for 
-guests. There are only 9 MSIX vectors total (8 for queues) and 2048 IMS 
-vectors. So if we are to do MSI-X for all of them, then we need to do 
-the IMS backed MSIX scheme rather than passthrough IMS to guests.
-
+Ok, I will change this and send v2 of this series after the PATCH 1
+change in the series is clear and validated that it is an accepted way
+to go.
 
 >
-> Thanks,
+> On Mon, Nov 15, 2021 at 08:08:07AM +0100, Sergio Paracuellos wrote:
+> > Driver code is setting up MIPS specific I/O coherency units addresses config.
+> > This MIPS specific thing has been moved to be done when PCI code call the
+> > 'pcibios_root_bridge_prepare()' function which has been implemented for MIPS
+> > ralink mt7621 platform. Hence, remove MIPS specific code from driver code.
+> > After this changes there is also no need to add any MIPS specific includes
+> > to avoid some errors reported by Kernet Tets Robot with W=1 builds.
 >
->          tglx
+> s/this changes/this change/
+> s/Tets/Test/
+
+Ups, true. Thanks :).
+
 >
+> The patch doesn't touch any #include lines, so I'm not sure what the
+> last sentence is telling us.
+
+Kernel test robot reported implicit declarations because of the use of
+MIPS specific functions without explicit include added in driver code
+[0].
+
+After this change, this issue also disappears and that is why
+'Reported-by' tag is added and this sentence included in the commit
+message. Let me know the way you prefer me to write the commit message
+to take into account this fact.
+
+Thanks,
+    Sergio Paracuellos
+
+[0]: https://lore.kernel.org/lkml/CAMhs-H_yugWd4v1OnBR8iqTVQS_T-S3pdrJbZq=MC646QSyb4Q@mail.gmail.com/T/
+
+>
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > ---
+> >  drivers/pci/controller/pcie-mt7621.c | 37 ----------------------------
+> >  1 file changed, 37 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
+> > index b60dfb45ef7b..9cf541f5de9c 100644
+> > --- a/drivers/pci/controller/pcie-mt7621.c
+> > +++ b/drivers/pci/controller/pcie-mt7621.c
+> > @@ -208,37 +208,6 @@ static inline void mt7621_control_deassert(struct mt7621_pcie_port *port)
+> >               reset_control_assert(port->pcie_rst);
+> >  }
+> >
+> > -static int setup_cm_memory_region(struct pci_host_bridge *host)
+> > -{
+> > -     struct mt7621_pcie *pcie = pci_host_bridge_priv(host);
+> > -     struct device *dev = pcie->dev;
+> > -     struct resource_entry *entry;
+> > -     resource_size_t mask;
+> > -
+> > -     entry = resource_list_first_type(&host->windows, IORESOURCE_MEM);
+> > -     if (!entry) {
+> > -             dev_err(dev, "cannot get memory resource\n");
+> > -             return -EINVAL;
+> > -     }
+> > -
+> > -     if (mips_cps_numiocu(0)) {
+> > -             /*
+> > -              * FIXME: hardware doesn't accept mask values with 1s after
+> > -              * 0s (e.g. 0xffef), so it would be great to warn if that's
+> > -              * about to happen
+> > -              */
+> > -             mask = ~(entry->res->end - entry->res->start);
+> > -
+> > -             write_gcr_reg1_base(entry->res->start);
+> > -             write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
+> > -             dev_info(dev, "PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
+> > -                      (unsigned long long)read_gcr_reg1_base(),
+> > -                      (unsigned long long)read_gcr_reg1_mask());
+> > -     }
+> > -
+> > -     return 0;
+> > -}
+> > -
+> >  static int mt7621_pcie_parse_port(struct mt7621_pcie *pcie,
+> >                                 struct device_node *node,
+> >                                 int slot)
+> > @@ -557,12 +526,6 @@ static int mt7621_pci_probe(struct platform_device *pdev)
+> >               goto remove_resets;
+> >       }
+> >
+> > -     err = setup_cm_memory_region(bridge);
+> > -     if (err) {
+> > -             dev_err(dev, "error setting up iocu mem regions\n");
+> > -             goto remove_resets;
+> > -     }
+> > -
+> >       return mt7621_pcie_register_host(bridge);
+> >
+> >  remove_resets:
+> > --
+> > 2.33.0
+> >
