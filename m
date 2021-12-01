@@ -2,191 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A03C1465706
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 21:21:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AFC246570B
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Dec 2021 21:24:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239714AbhLAUYy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 15:24:54 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42958 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239682AbhLAUYx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 15:24:53 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638390090;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XT2wUHCzGqHpG3jIMlo/pIyGWM+MoMGI0fdIA1I0A8A=;
-        b=sbuHX70HoTMCTvQEj76ryoHtY6DI/+vfWQUUTksXv5nW00dxNOLlfEf+NQCz6Pogx5cxON
-        bhRF88wSNqWpcTNv9HaatLPgrCGX0FGWrQAnsen2OD3fyuFPACA0gZPfxirNBuQftKtmT5
-        4Op58ZCeMmrKMz4Z8WoqOFXQ3cKyVtBKzlvGjlr/RhzK9Ahw34co+9UumRt/RTSkMs801E
-        Cretx0BdbZEKZc1FLKEWd6L80nSP+2vCsRkRP1T0gS5MoDWFW6qmctB251f5A2HDydi5oa
-        Tnfblrtx1T/f60OF/c5T2Fyb4vrRpmWhvShkmrMLsD5S2WagNLxTzanYcRPV4w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638390090;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XT2wUHCzGqHpG3jIMlo/pIyGWM+MoMGI0fdIA1I0A8A=;
-        b=8iqy66nCBYTd+SSVovf1ktB8lPStcgQyxhheRTxqvNeAhaIQi+dceoXbFQtKXalHyXIYz5
-        VLgGaC6YwmaKVnAA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org,
-        Joerg Roedel <jroedel@suse.de>,
-        iommu@lists.linux-foundation.org
-Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-In-Reply-To: <20211201181406.GM4670@nvidia.com>
-References: <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com>
- <87ilwacwp8.ffs@tglx> <d6f13729-1b83-fa7d-3f0d-98d4e3f7a2aa@deltatee.com>
- <87v909bf2k.ffs@tglx> <20211130202800.GE4670@nvidia.com>
- <87o861banv.ffs@tglx> <20211201001748.GF4670@nvidia.com>
- <87mtlkaauo.ffs@tglx> <20211201130023.GH4670@nvidia.com>
- <87y2548byw.ffs@tglx> <20211201181406.GM4670@nvidia.com>
-Date:   Wed, 01 Dec 2021 21:21:29 +0100
-Message-ID: <87mtlk84ae.ffs@tglx>
+        id S239682AbhLAU2E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 15:28:04 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:37312 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236022AbhLAU17 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 15:27:59 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id C85CECE1DED;
+        Wed,  1 Dec 2021 20:24:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19DBC53FAD;
+        Wed,  1 Dec 2021 20:24:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638390275;
+        bh=RfUDGA9Opcm0XRf6ZxK7XVniW39BZnCSqaVtSY+yyKE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CxHoOAUsAB+JdbpHWTcfrHbOYM5A7fyIgVB03unYvl+lI00GSOnrQ2QSMiKNSLN8L
+         XgspUzF4B6F5l/472NOs/AO4pWL8mFHk1chcCzyDyk5zGnd34RwLvQYp2W4f5qZa3H
+         JoHSLHM9rUOsdOX6YYhT+5zuBxekthdEJSrFkq3Ih+HSGeAzxT1XZeQ0TQSm0ob5Jn
+         PZ0Lv/DJq+FwcxlDSCz7ujKguwSYjXuCm+isLsdlO/K3nrDPZ3ZaF8VmS30qySMfFv
+         1fjWoIcunqUd+/UHv4Aez+KpWfmsMgT03gBcKq5bnKJ7O4ZhNvhQ0AiOurrGjgwv/z
+         gVvb1SW8Mqofg==
+Date:   Wed, 1 Dec 2021 14:24:33 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-mips@vger.kernel.org,
+        tsbogend@alpha.franken.de, john@phrozen.org,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com, arnd@arndb.de,
+        linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/5] PCI: let 'pcibios_root_bridge_prepare()' access to
+ 'bridge->windows'
+Message-ID: <20211201202433.GA2837547@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211119232017.GA1981034@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jason,
+On Fri, Nov 19, 2021 at 05:20:17PM -0600, Bjorn Helgaas wrote:
+> [+cc Thierry]
+> 
+> In subject,
+> 
+>   PCI: Let pcibios_root_bridge_prepare() access bridge->windows
+> 
+> On Mon, Nov 15, 2021 at 08:08:05AM +0100, Sergio Paracuellos wrote:
+> > When function 'pci_register_host_bridge()' is called, 'bridge->windows' are
+> > already available. However this windows are being moved temporarily from
+> > there. To let 'pcibios_root_bridge_prepare()' to have access to this windows
+> > move this windows movement after call this function. This is interesting for
+> > MIPS ralink mt7621 platform to be able to properly set I/O coherence units
+> > with this information and avoid custom MIPs code in generic PCIe controller
+> > drivers.
+> >
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > ---
+> >  drivers/pci/probe.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 087d3658f75c..372a70efccc6 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -898,8 +898,6 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+> >  
+> >  	bridge->bus = bus;
+> >  
+> > -	/* Temporarily move resources off the list */
+> > -	list_splice_init(&bridge->windows, &resources);
+> 
+> Arnd added this with 37d6a0a6f470 ("PCI: Add
+> pci_register_host_bridge() interface") [1].
+> 
+> I can't remember why this was done, but we did go to some trouble to
+> move things around, so there must have been a good reason.
+> 
+> Arnd or Thierry, do you remember?
 
-On Wed, Dec 01 2021 at 14:14, Jason Gunthorpe wrote:
-> On Wed, Dec 01, 2021 at 06:35:35PM +0100, Thomas Gleixner wrote:
->> On Wed, Dec 01 2021 at 09:00, Jason Gunthorpe wrote:
->> But NTB is operating through an abstraction layer and is not a direct
->> PCIe device driver.
->
-> I'm not sure exactly how NTB seems to be split between switchtec and
-> the ntb code, but since the ntbd code seems to be doing MMIO touches,
-> it feels like part of a PCIe driver?
+Nobody seems to remember, so I think we should go ahead and make this
+change after the usual due diligence (audit the code between the old
+site and the new site to look for any uses of bridge->windows).
 
-It's a maze of magic PCIe driver with callbacks left and right into the
-underlying NTB hardware driver which itself does some stuff on its own
-and also calls back into the underlying PCIe driver.
+I think this would be material for v5.17.
 
-Decomposing that thing feels like being trapped in the Labyrinth of
-Knossos. But let's ignore that for a moment.
-
->> The VFIO driver does not own the irq chip ever. The irq chip is of
->> course part of the underlying infrastructure. I never asked for that.
->
-> That isn't quite what I ment.. I ment the PCIe driver cannot create
-> the domain or make use of the irq_chip until the VFIO layer comes
-> along and provides the struct device. To me this is backwards
-> layering, the interrupts come from the PCIe layer and should exist
-> independently from VFIO.
-
-See below.
-
->>      When it allocates a slice for whatever usage then it also
->>      allocates the IMS interrupts (though the VFIO people want to
->>      have only one and do the allocations later on demand).
->> 
->>      That allocation cannot be part of the PCI/MSIx interrupt
->>      domain as we already agreed on.
->
-> Yes, it is just an open question of where the new irq_domain need to
-> reside
-
-The irqdomain is created by and part of the physical device. But that
-does not mean that the interrupts which are allocated from that irq
-domain are stored in the physical device representation.
-
-Going by that logic, the PCI/MSI domain would store all MSI[X]
-interrupts which are allocated on some root bridge or wherever.
-
-They are obviously stored per PCI device, but the irqdomain is owned
-e.g. by the underlying IOMMU zone.
-
-The irqdomain is managing and handing out resources. Like any other
-resource manager does.
-
-See?
-
->>     1) Storage
->> 
->>        A) Having "subdevices" solves the storage problem nicely and
->>           makes everything just fall in place. Even for a purely
->>           physical multiqueue device one can argue that each queue is a
->>           "subdevice" of the physical device. The fact that we lump them
->>           all together today is not an argument against that.
->
-> I don't like the idea that queue is a device, that is trying to force
-> a struct device centric world onto a queue which doesn't really want
-> it..
-
-Here we are at the point where we agree to disagree.
-
-Of course a queue is a resource, but what prevents us to represent a
-queue as a carved out subdevice of the physical device?
-
-Look at it from the VF point of view. If VFs are disabled then all
-resources belong to the physical device. If VFs are enabled then the
-hardware/firmware splits the resources into separate subdevices which
-have their own device representation, interrupt storage etc.
-
-As VFs have a scalability limitation due to the underlying PCIe
-restrictions the step we are talking about now is to split the queues up
-in software which means nothing else than creating a software
-representation of finer grained and more scalable subdevices.
-
-So why would we want to pretend that these are not devices?
-
-They are from a conceptual and topology view a subdevice of the physical
-device. Just because they are named queues does not make it any
-different.
-
-Let's look at VFIO again. If VFIO passes a VF through then it builds a
-wrapper around the VF device.
-
-So if a queue is represented as a subdevice, then VFIO can just build
-a wrapper around that subdevice.
-
-But with your model, VFIO has to create a device, request a queue,
-wrestle the interrupts in place, etc. Which is exactly the opposite of
-how VFs are handled.
-
-So again, why would we want to make software managed subdevices look
-exactly the opposite way like hardware/firmware managed subdevices?
-
-Let me also look at the cdev which is exposed by the phsyical device.
-
-The cdev is nothing else than a software vehicle to create a /dev/
-node. (ignore the switchtec case which (ab)uses the cdev to connect to
-NTB). The cdev allows user space to allocate/release a resource.
-
-Of course it can just allocate a queue and stick the necessary
-interrupts into the physical device MSI descriptor storage.
-
-But there is no reason why the queue allocation cannot allocate a
-subdevice representing the queue.
-
-That makes the VFIO and the cdev case just using the same underlying
-representation which can expose it's properties via the underlying
-device.
-
-Which in turn is consistent all over the place and does not require any
-special case for anything. Neither for interrupts nor for anything else.
-
-Thanks,
-
-        tglx
-
-
-
+> >  	bus->sysdata = bridge->sysdata;
+> >  	bus->ops = bridge->ops;
+> >  	bus->number = bus->busn_res.start = bridge->busnr;
+> > @@ -925,6 +923,8 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+> >  	if (err)
+> >  		goto free;
+> >  
+> > +	/* Temporarily move resources off the list */
+> > +	list_splice_init(&bridge->windows, &resources);
+> >  	err = device_add(&bridge->dev);
+> >  	if (err) {
+> >  		put_device(&bridge->dev);
+> > -- 
+> > 2.33.0
+> > 
+> 
+> [1] https://git.kernel.org/linus/37d6a0a6f470
