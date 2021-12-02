@@ -2,228 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CB994669FA
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 19:41:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B74A1466A70
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 20:26:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232736AbhLBSpI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 13:45:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229950AbhLBSpH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 13:45:07 -0500
-Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0E1C06174A;
-        Thu,  2 Dec 2021 10:41:44 -0800 (PST)
-Received: by mail-vk1-xa2d.google.com with SMTP id m16so194400vkl.13;
-        Thu, 02 Dec 2021 10:41:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jlkcU/LshfTlpRQHKItZ7lgWIZTTU48Suk27bZaQ6SI=;
-        b=SszHNGbdgz/q4zTK7ZHrq1za+0KN7+WYA/iVNcpc9SRp08lSjUByV7AIC9aXz7DCwh
-         Osz6YuxLLvMELPudYYGzNvZ93Blos078XmJiOCqPImcFIuoIDo2dJ18HyZJCM5EBXj40
-         XpCVxiiROH0NBqXy8wyV7xZ2jnB4V67c2kniEMZemnkwApNucMZDazz0C/STmwn9i6+a
-         kos07nDW2V7MkHAoqrZ5zPT7QdYl7dmvydMOWbAb2g4DBK+UX5dVGXL09rtqpPzW6dBn
-         zRnQRlnPGOw5uAdLzMuNL6NeqwQcleguRca68oaS2CLZXOcVMXcQaSCZ/5bzkjylG8ic
-         U6aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jlkcU/LshfTlpRQHKItZ7lgWIZTTU48Suk27bZaQ6SI=;
-        b=y7kJHrkTSLQcStDYClAsZLKEZDMZgOkkAV3D6fm5b+s5bLe1drqAfRX0DP6x9Gh5CP
-         Pf5PbmQG/ImoIJVQmDiWnJNCsTLZFujw0KaQjsbpn0YdAKiLbMbeWW4QCNfcE6ldTh3s
-         RJJ4BTFEAtQR3S66Tp47+wtLY+hcGfyu+hBfRAn31tH+L/E/AxvtJtIzHcM7stQCCZCA
-         urvWcrEdPIp+LZdQWNCmfyL//3y4fSxl44ccqUTGbILndZpWeoYi3/bJfxa9wVH1Rd/q
-         ay7lEaOhPTqn7TNii8hfyrw456vz0kGxq4qVHuI8B9q0HjwRVSA9e4FsOEvTVxY94Ut4
-         1m2Q==
-X-Gm-Message-State: AOAM533e4G06j7N7RDmoq9/TrDuEPTt+3J+1J/6EdKGRYLp/oSSJva66
-        J8rso9paP+MM7tJVga+WF8N9q1p6eK6vV51pzpo=
-X-Google-Smtp-Source: ABdhPJz8j6ZFP8VCxEZnkfKFuJWOeO7lz5PbnbrijExs4K9ro7AvuJYLB4vh3Wp+cwV/4MXjJtJzThTnbrmZzFXqRks=
-X-Received: by 2002:a1f:2849:: with SMTP id o70mr17112084vko.35.1638470503418;
- Thu, 02 Dec 2021 10:41:43 -0800 (PST)
+        id S1376825AbhLBT3p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 14:29:45 -0500
+Received: from mga03.intel.com ([134.134.136.65]:36394 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1376857AbhLBT3c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 Dec 2021 14:29:32 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="236724569"
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="236724569"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 11:25:57 -0800
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="512998017"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.123])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 11:25:56 -0800
+Date:   Thu, 2 Dec 2021 11:21:39 -0800
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Dey, Megha" <megha.dey@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Cooper <amc96@cam.ac.uk>,
+        Juergen Gross <jgross@suse.com>, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [patch 09/10] PCI/MSI: Provide pci_msix_expand_vectors[_at]()
+Message-ID: <20211202192139.GE364748@otc-nc-03>
+References: <20211126233124.618283684@linutronix.de>
+ <20211127000919.004572849@linutronix.de>
+ <7ad200fa-dda3-4932-cd23-ad6e79288ea4@intel.com>
+ <871r2v71mg.ffs@tglx>
 MIME-Version: 1.0
-References: <20211201215127.23550-1-sergio.paracuellos@gmail.com>
- <20211201215127.23550-3-sergio.paracuellos@gmail.com> <d243a90d-25b2-a65f-b69d-af7497db8742@roeck-us.net>
- <CAMhs-H_i7aFeqf4EBtzdL0SKgKrseZGpVU-ytvangpeCMVTmFw@mail.gmail.com>
- <9401e88b-de5a-dd2a-7e82-f3657ea86e8f@roeck-us.net> <CAMhs-H8vw48RkpFz+rqvoPqDPpkaHdn60j6SdbDJHTNTTp7Fcg@mail.gmail.com>
- <c70584d5-8efd-6b3e-aab5-c8161f39931b@roeck-us.net>
-In-Reply-To: <c70584d5-8efd-6b3e-aab5-c8161f39931b@roeck-us.net>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Thu, 2 Dec 2021 19:41:31 +0100
-Message-ID: <CAMhs-H98sDT3g6nmxpz+07L7gs8Bi0gpPSEXJA1q5ecucihyog@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] MIPS: ralink: implement 'pcibios_root_bridge_prepare()'
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871r2v71mg.ffs@tglx>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 2, 2021 at 6:02 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 12/2/21 7:50 AM, Sergio Paracuellos wrote:
-> > Hi Guenter,
-> >
-> > On Thu, Dec 2, 2021 at 4:06 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> >>
-> >> On 12/2/21 12:29 AM, Sergio Paracuellos wrote:
-> >>> Hi Guenter,
-> >>>
-> >>> On Wed, Dec 1, 2021 at 11:17 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> >>>>
-> >>>> On 12/1/21 1:51 PM, Sergio Paracuellos wrote:
-> >>>>> PCI core code call 'pcibios_root_bridge_prepare()' function inside function
-> >>>>> 'pci_register_host_bridge()'. This point is very good way to properly enter
-> >>>>> into this MIPS ralink specific code to properly setup I/O coherency units
-> >>>>> with PCI memory addresses.
-> >>>>>
-> >>>>> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> >>>>> ---
-> >>>>>     arch/mips/ralink/mt7621.c | 30 ++++++++++++++++++++++++++++++
-> >>>>>     1 file changed, 30 insertions(+)
-> >>>>>
-> >>>>> diff --git a/arch/mips/ralink/mt7621.c b/arch/mips/ralink/mt7621.c
-> >>>>> index bd71f5b14238..7649416c1cd7 100644
-> >>>>> --- a/arch/mips/ralink/mt7621.c
-> >>>>> +++ b/arch/mips/ralink/mt7621.c
-> >>>>> @@ -10,6 +10,7 @@
-> >>>>>     #include <linux/slab.h>
-> >>>>>     #include <linux/sys_soc.h>
-> >>>>>     #include <linux/memblock.h>
-> >>>>> +#include <linux/pci.h>
-> >>>>>
-> >>>>>     #include <asm/bootinfo.h>
-> >>>>>     #include <asm/mipsregs.h>
-> >>>>> @@ -22,6 +23,35 @@
-> >>>>>
-> >>>>>     static void *detect_magic __initdata = detect_memory_region;
-> >>>>>
-> >>>>> +int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
-> >>>>> +{
-> >>>>> +     struct resource_entry *entry;
-> >>>>> +     resource_size_t mask;
-> >>>>> +
-> >>>>> +     entry = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
-> >>>>> +     if (!entry) {
-> >>>>> +             pr_err("Cannot get memory resource\n");
-> >>>>> +             return -EINVAL;
-> >>>>> +     }
-> >>>>> +
-> >>>>> +     if (mips_cps_numiocu(0)) {
-> >>>>> +             /*
-> >>>>> +              * FIXME: hardware doesn't accept mask values with 1s after
-> >>>>> +              * 0s (e.g. 0xffef), so it would be great to warn if that's
-> >>>>> +              * about to happen
-> >>>>> +              */ > +         mask = ~(entry->res->end - entry->res->start);
-> >>>>> +
-> >>>>
-> >>>> Try something like this:
-> >>>>                   WARN_ON((mask != ~0UL && BIT(ffz(mask)) - 1 != mask);
-> >>>
-> >>> Thanks for the tip. The following works for me:
-> >>>
-> >>>                     WARN_ON(mask != ~0UL && ~(BIT(__ffs(mask)) - 1) != mask);
-> >>
-> >> Are you sure ? __ffs() returns the first bit set, which isn't useful
-> >> for this test.
-> >
-> > My mask is calculated as follows:
-> >   mask = ~(entry->res->end - entry->res->start);
-> >
-> > Where for normal memory resource:
-> >   - entry->res->end = 0x6fffffff;
-> >   - entry->res->start = 0x60000000;
-> >
-> > So I end up with a mask: 0xf0000000.
-> >
-> > So applying ~(BIT(__ffs(mask)) - 1) I get a good '0xf0000000' for this
-> > particular case which looks correct.
-> >
-> > Suppose an invalid case with the mask being 0xffef0000.
-> >
-> > Applying ~(BIT(__ffs(mask)) - 1) will be 0xffff0000 which will trigger
-> > the WARN_ON since 0xffff0000 != 0xffef0000
-> >
-> > So I think this is correct... Am I missing something?
-> >
->
-> Your description says "hardware doesn't accept mask values with 1s after 0s
-> (e.g. 0xffef)". 0xf0000000 has 1s after 0s.
->
-> Your version works (I think) as long as the upper mask bits are all 1s.
-> It will fail, for example, if the mask value is 0xf000000 and
-> sizeof(long) == 8. Your test is the equivalent of "no mask value
-> with 0s after 1s", assuming that sizeof(resource_size_t) == sizeof(long).
-> As far as I can see with test code, it fails if sizeof(resource_size_t)
-> != sizeof(long). Also, it returns an error if mask == 0. I guess that is
-> a corner case, but it would be interesting to know if it is theoretically
-> valid.
+Hi Thomas,
 
-Thanks a lot for the clear explanation. I was assuming MIPS ralink
-arch so sizeof(long) and sizeof(resource_size_t) are equal and upper
-mask bits are all 1s. But you are right, my version will fail if this
-sizeof(long) were eight.
+On Thu, Dec 02, 2021 at 11:16:39AM +0100, Thomas Gleixner wrote:
+> Megha,
+> 
+> On Wed, Dec 01 2021 at 17:08, Megha Dey wrote:
+> > On 11/26/2021 5:25 PM, Thomas Gleixner wrote:
+> >>   /**
+> >> + * pci_msix_expand_vectors_at - Expand MSI-X interrupts for a device
+> >> + *
+> >> + * @dev:	PCI device to operate on
+> >> + * @at:		Allocate at MSI-X index. If @at == PCI_MSI_EXPAND_AUTO
+> >> + *		the function expands automatically after the last
+> > Not sure why some of these changes related to PCI_MSIX_EXPAND_AUTO and 
+> > num_descs did not make it to the 'msi' branch.
+> > Is this intentional?
+> 
+> Yes, because I'm not happy about that magic.
+> 
+> >
+> > For instance, say:
+> > 1. Driver requests for 5 vectors:
+> > pci_enable_msix_range(dev, NULL, 5, 5)
+> > =>num_descs = 5
+> 
+> Driver should not use with pci_enable_msix_range() in the first
+> place. But yes, it got 5 vectors now.
 
->
-> I _think_ the following works even if sizeof(resource_size_t) != sizeof(long).
->
->         WARN_ON(mask && BIT(ffz(~mask)) - 1 != ~mask);
+Bad start with a deprecated interface :-). 
 
-This works for me also and looks like it does the right thing for any
-case, thanks.
+> 
+> > 2. Driver frees vectors at index 1,2:
+> > range = {1, 2, 2};
+> > pci_msi_teardown_msi_irqs(dev, range)
+> 
+> That function is not accessible by drivers for a reason.
+> 
+> > =>num_descs = 3; Current active vectors are at index: 0, 3, 4
+> 
+> > 3. Driver requests for 3 more vectors using the new API:
+> > pci_msix_expand_vectors(dev, 3)
+> > =>range.first = 3 => It will try to allocate index 3-5, but we already 
+> > have 3,4 active?
+> > Ideally, we would want index 1,2 and 5 to be allocated for this request 
+> > right?
+> >
+> > Could you please let me know what I am missing?
+> 
+> You're missing the real world use case. The above is fiction.
 
->
-> or, alternatively, something like
->
->         mask2 = entry->res->end - entry->res->start;
->         mask = ~mask2;
->         WARN_ON(mask && BIT(ffz(mask2)) - 1 != mask2);
->
-> though that looks a bit weird.
+I don't think there is a valid use case for freeing specific vectors. Its
+true some are special, IDXD has vector#0 like that. But I expect drivers to
+acquire these special vectors  once and never free them until driver 
+tear down time.
 
-Agreed, using two variables here looks weird also for me.
+But there is a need to free on demand, for a subdevice constructed for idxd
+pass-through, when the guest is torn down, host would need to free them.
+Only growing on demand seems to only catch one part of the dynamic part.
 
-Best regards,
-    Sergio Paracuellos
+IDXD also allocates interrupt only when the WQ is enabled, and frees when its
+disabled. 
 
->
-> Thanks,
-> Guenter
->
-> > Thanks,
-> >      Sergio Paracuellos
-> >>
-> >> Guenter
-> >>
-> >>>
-> >>> I will send this as a different patch, though.
-> >>>
-> >>> Best regards,
-> >>>       Sergio Paracuellos
-> >>>
-> >>>>
-> >>>>> +             write_gcr_reg1_base(entry->res->start);
-> >>>>> +             write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
-> >>>>> +             pr_info("PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
-> >>>>> +                     (unsigned long long)read_gcr_reg1_base(),
-> >>>>> +                     (unsigned long long)read_gcr_reg1_mask());
-> >>>>> +     }
-> >>>>> +
-> >>>>> +     return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>>     phys_addr_t mips_cpc_default_phys_base(void)
-> >>>>>     {
-> >>>>>         panic("Cannot detect cpc address");
-> >>>>>
-> >>>>
-> >>
->
+> 
+> If a driver would release 1 and 2 then it should explicitely reallocate
+> 1 and 2 and not let the core decide to magically allocate something.
+> 
+> If the driver wants three more after freeing 1, 2 then the core could
+> just allocate 5, 6, 7, and would still fulfil the callers request to
+> allocate three more, right?
+
+Since the core is already managing what's allocated and free, requiring
+drivers to manage each allocated entries seem hard, while the core can
+easily manage it. For IDXD cases, we don't really care which ones of the
+IMS is being allocated and freed. It just wants one of the available IMS
+entries. The assumption is since the driver would have acquired any special
+ones upfront with the alloc_irqs().
+
+
+> 
+> And even if it just allocates one, then the caller still has to know the
+> index upfront. Why? Because it needs to know it in order to get the
+> Linux interrupt number via pci_irq_vector().
+
+If we were to allocate one, the new API can simply return the index
+directly to the caller, and they call pci_irq_vector() to get the IRQ
+number.
+
+> 
+> > Correspondingly, pci_free_msix_irq_vector(pdev, irq) frees all the 
+> > allocated resources associated with MSI-X interrupt with Linux IRQ 
+> > number 'irq'.
+> > I had issues when trying to dynamically allocate more than 1 interrupt 
+> > because I didn't have a clean way to communicate to the driver what 
+> > indexes were assigned in the current allocation.
+> 
+> If the driver is able to free a particular vector then it should exactly
+> know what it it doing and which index it is freeing. If it needs that
+> particular vector again, then it knows the index, right?
+> 
+> Let's look how MSI-X works in reality:
+> 
+> Each vector is associated to a particular function in the device. How
+> that association works is device dependent.
+> 
+> Some devices have hardwired associations, some allow the driver to
+> program the association in the device configuration and there is also a
+> combination of both.
+> 
+> So if the driver would free the vector for a particular functionality,
+> or not allocate it in the first place, then it exactly knows what it
+> freed and what it needs to allocate when it needs that functionality
+> (again).
+
+It doesn't *have* to be that all vectors are special. Some of them are
+special that they acquired all during driver load time. These are allocated
+once and never freed. The rest are for say completion interrupts or such and 
+such that go with work queues. These can dynamically be allocated and
+freed.
+
+The driver doesn't really care which index it wants or what the next index
+should be. But it has to remember the allocated ones so it can pass down
+for the free. Maybe the one we did a while back
+
+https://lore.kernel.org/lkml/1561162778-12669-1-git-send-email-megha.dey@linux.intel.com/
+
+This has a group handle, and kept adding things to it.
+
+> 
+> What you are trying to create is a solution in search of a problem. You
+> cannot declare via a random allocation API how devices work. You neither
+> can fix the VFIO issue in a sensible way.
+> 
+> VFIO starts with vector #0 allocated. The guest then unmasks vector #50.
+> 
+> With your magic interface VFIO has to allocate 49 vectors and then free
+> 48 of them again or just keep 48 around for nothing which defeats the
+> purpose of on demand allocation completely.
+
+This use case is broken already, the VFIO case sort of assumes things are
+growing in sequence. Today it doesn't have a hint on which entry is being
+unmasked I suppose. So VFIO simply releases everything, adds N more than
+currently allocated. 
+
+If there is a real world need for allocating a
+specific vector#50, maybe we should add a alloc_exact() type and core can
+check if #50 is still available.
+
+Maybe for MSIx we don't have a need to shrink based on current usage. IMS
+requires both grow and shrink. But it might be odd to have 2 domains behave
+quite differently.
+
+Cheers,
+Ashok
