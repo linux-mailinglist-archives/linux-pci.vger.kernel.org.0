@@ -2,143 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA553465D6B
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 05:30:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23813465DA0
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 05:55:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355432AbhLBEdq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 23:33:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41832 "EHLO
+        id S239249AbhLBE6f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Dec 2021 23:58:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355426AbhLBEdn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 23:33:43 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082A5C061574;
-        Wed,  1 Dec 2021 20:30:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S236703AbhLBE6e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 23:58:34 -0500
+Received: from mail.marcansoft.com (marcansoft.com [IPv6:2a01:298:fe:f::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFD5C061574;
+        Wed,  1 Dec 2021 20:55:12 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 53B9DCE21AD;
-        Thu,  2 Dec 2021 04:30:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EFB4C53FCC;
-        Thu,  2 Dec 2021 04:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638419417;
-        bh=xOtsh6uB0JwyVP3cPswcBfduh5x3rcKpeZ3dUk4ARhw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TTjkRP+XzHN6asg+o1L5lUZNHiqz2zriD1fGUvY2Uk+HB0I5toXBuzyIWJNPCDR1W
-         xTs+fYr8lQMfWz5ra1ZHqcvt8YEhr/7Re0Rwz5Vr8jNTs4zSKoWh/cojqfxUSLOKKk
-         buTrtxijEZlyZKaki2UgM/Sgl9hfL10MWtMT6PQWWe/XH1dSpV7Rnt7Ivx2+vyRNjx
-         TsMh56AAmelDz4Cia+OjadKa3EqelggrB9LHDdNbYkc/kZLBVpywRXioi/4Dkm7X3E
-         NupVyBlAHRPAk3+OZgpKYehnjxuqJI+XfoMw4FJ8pc8vNyt77J8+8//u3JXtE3G97M
-         GhyA8iFtBsM+Q==
-Date:   Thu, 2 Dec 2021 10:00:13 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, marcel.ziswiler@toradex.com,
-        tharvey@gateworks.com, kishon@ti.com, robh@kernel.org,
-        galak@kernel.crashing.org, shawnguo@kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: Re: [PATCH v6 5/8] phy: freescale: pcie: Initialize the imx8 pcie
- standalone phy driver
-Message-ID: <YahL1TMkt8S0RNX5@matsya>
-References: <1637200489-11855-1-git-send-email-hongxing.zhu@nxp.com>
- <1637200489-11855-6-git-send-email-hongxing.zhu@nxp.com>
+        (Authenticated sender: marcan@marcan.st)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id 58B8741F28;
+        Thu,  2 Dec 2021 04:55:08 +0000 (UTC)
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20211122111332.72264-1-marcan@marcan.st>
+ <CAL_Jsq+vFbFN+WQhi3dRicW+kaP1Oi9JPSmnAFL7XAc0eCvgrA@mail.gmail.com>
+ <8e881b80-614c-dccf-ddaf-895d1acf26c7@marcan.st>
+ <CAL_JsqLMgkTdbKNP=kAvwKFQp+m330ztTX8v_UFmj2zvzsB-KA@mail.gmail.com>
+From:   Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH] PCI: apple: Configure link speeds properly
+Message-ID: <7f6928fc-97fd-cbe8-f7e9-954945b4574b@marcan.st>
+Date:   Thu, 2 Dec 2021 13:55:05 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1637200489-11855-6-git-send-email-hongxing.zhu@nxp.com>
+In-Reply-To: <CAL_JsqLMgkTdbKNP=kAvwKFQp+m330ztTX8v_UFmj2zvzsB-KA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: es-ES
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18-11-21, 09:54, Richard Zhu wrote:
-> Add the standalone i.MX8 PCIe PHY driver.
+On 30/11/2021 00.02, Rob Herring wrote:
+>> Sure, it just means I have to reinvent the PCI capability lookup wheel
+>> again. I'd love to use the regular accessors, but the infrastructure
+>> isn't up to the point where we can do that yet yere. DWC also reinvents
+>> this wheel, but we can't reuse that code because it pokes these
+>> registers through a separate reg range, not config space (even though it
+>> seems like they should be the same thing? I'm not sure what's going on
+>> in the DWC devices... for the Apple controller it's just the ECAM).
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Reviewed-by: Tim Harvey <tharvey@gateworks.com>
-> Tested-by: Tim Harvey <tharvey@gateworks.com>
-> ---
->  drivers/phy/freescale/Kconfig              |   9 +
->  drivers/phy/freescale/Makefile             |   1 +
->  drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 237 +++++++++++++++++++++
->  3 files changed, 247 insertions(+)
->  create mode 100644 drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+> Since it is just ECAM, can you use the regular config space accessors?
+
+The problem is this is before the PCI objects are created, so those 
+wouldn't work since they expect to be called on a pci_dev and such.
+
+>>>> +       max_gen = of_pci_get_max_link_speed(port->np);
+>>>> +       if (max_gen < 0) {
+>>>> +               dev_err(port->pcie->dev, "max link speed not specified\n");
+>>>
+>>> Better to fail than limp along in gen1? Though you don't check the
+>>> return value...
+>>>
+>>> Usually, the DT property is there to limit the speed when there's a
+>>> board limitation.
+>>
+>> The default *setting* is actually Gen4, but without
+>> PCIE_LINK_WIDTH_SPEED_CONTROL poked it always trains at Gen1. Might make
+>> more sense to only set the LNKCTL field if max-link-speed is specified,
+>> and unconditionally poke that bit. That'll get us Gen4 by default (or
+>> even presumably Gen5 in future controllers, if everything else stays
+>> compatible).
 > 
-> diff --git a/drivers/phy/freescale/Kconfig b/drivers/phy/freescale/Kconfig
-> index 320630ffe3cd..e821498b1f7f 100644
-> --- a/drivers/phy/freescale/Kconfig
-> +++ b/drivers/phy/freescale/Kconfig
-> @@ -14,3 +14,12 @@ config PHY_MIXEL_MIPI_DPHY
->  	help
->  	  Enable this to add support for the Mixel DSI PHY as found
->  	  on NXP's i.MX8 family of SOCs.
-> +
-> +config PHY_FSL_IMX8M_PCIE
-> +	tristate "Freescale i.MX8M PCIE PHY"
-> +	depends on OF && HAS_IOMEM
-> +	select GENERIC_PHY
-> +	default ARCH_MXC && ARM64
+> You already do some setup in firmware for ECAM, right? I think it
+> would be better if you can do any default setup there and then
+> max-link-speed is only an override for the kernel.
 
-Why should this be default ? We dont do that for new drivers.. You may
-add this to respective config file though...
+I thought the PCIE_LINK_WIDTH_SPEED_CONTROL thing had to be set later, 
+but trying it now I realized we were missing a bit of initialization 
+that was causing it not to work. Indeed it can be done there and we can 
+drop it from the kernel.
 
-> +static int imx8_pcie_phy_init(struct phy *phy)
-> +{
-> +	int ret;
-> +	u32 val, pad_mode;
-> +	struct imx8_pcie_phy *imx8_phy = phy_get_drvdata(phy);
-> +
-> +	reset_control_assert(imx8_phy->reset);
-> +
-> +	pad_mode = imx8_phy->refclk_pad_mode;
-> +	/* Set AUX_EN_OVERRIDE 1'b0, when the CLKREQ# isn't hooked */
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE,
-> +			   imx8_phy->clkreq_unused ?
-> +			   0 : IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE);
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_AUX_EN,
-> +			   IMX8MM_GPR_PCIE_AUX_EN);
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_POWER_OFF, 0);
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_SSC_EN, 0);
-> +
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_REF_CLK_SEL,
-> +			   pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT ?
-> +			   IMX8MM_GPR_PCIE_REF_CLK_EXT :
-> +			   IMX8MM_GPR_PCIE_REF_CLK_PLL);
-> +	usleep_range(100, 200);
-> +
-> +	/* Do the PHY common block reset */
-> +	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
-> +			   IMX8MM_GPR_PCIE_CMN_RST,
-> +			   IMX8MM_GPR_PCIE_CMN_RST);
-> +	usleep_range(200, 500);
-> +
-> +
+We could even do the max-link-speed thing in m1n1 if we want. It has 
+access to the value from the ADT directly, which to be correct we'd have 
+to dynamically transplant to the DT, since there's at least one device 
+that has different PCIe devices on one port depending on hardware 
+variant, while sharing a devicetree. If we're okay with the kernel just 
+not implementing this feature for now, we can say it's the bootloader's job.
 
-No multi blank line please
+Ultimately we ship the DTs along with m1n1, so there's an argument that 
+if some day we need to override the max-link-speed for whatever reason 
+over what the ADT says, well, we'd be shipping the updated DT along with 
+m1n1 anyway, so we might as well make m1n1 do it... if so, it might make 
+sense to drop those properties from the actual DTs we ship altogether, 
+at least for now.
 
-> +static struct platform_driver imx8_pcie_phy_driver = {
-> +	.probe	= imx8_pcie_phy_probe,
-> +	.driver = {
-> +		.name	= "imx8-pcie-phy",
-> +		.of_match_table	= imx8_pcie_phy_of_match,
-> +	}
-> +};
-> +module_platform_driver(imx8_pcie_phy_driver);
-> +
-> +MODULE_DESCRIPTION("FSL IMX8 PCIE PHY driver");
-> +MODULE_LICENSE("GPL");
-
-This does not match the SPDX tag you have given
+If we decide to make it m1n1's job entirely, we can drop this patch 
+altogether, at least for now (I can't say how this will interact with 
+suspend/resume and other power management, and hotplug... but we'll open 
+that can of worms when we get there).
 
 -- 
-~Vinod
+Hector Martin (marcan@marcan.st)
+Public Key: https://mrcn.st/pub
