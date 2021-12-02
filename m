@@ -2,111 +2,291 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23813465DA0
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 05:55:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD9A5465DEE
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 06:30:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239249AbhLBE6f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Dec 2021 23:58:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47364 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236703AbhLBE6e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Dec 2021 23:58:34 -0500
-Received: from mail.marcansoft.com (marcansoft.com [IPv6:2a01:298:fe:f::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFD5C061574;
-        Wed,  1 Dec 2021 20:55:12 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id 58B8741F28;
-        Thu,  2 Dec 2021 04:55:08 +0000 (UTC)
-To:     Rob Herring <robh@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20211122111332.72264-1-marcan@marcan.st>
- <CAL_Jsq+vFbFN+WQhi3dRicW+kaP1Oi9JPSmnAFL7XAc0eCvgrA@mail.gmail.com>
- <8e881b80-614c-dccf-ddaf-895d1acf26c7@marcan.st>
- <CAL_JsqLMgkTdbKNP=kAvwKFQp+m330ztTX8v_UFmj2zvzsB-KA@mail.gmail.com>
-From:   Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH] PCI: apple: Configure link speeds properly
-Message-ID: <7f6928fc-97fd-cbe8-f7e9-954945b4574b@marcan.st>
-Date:   Thu, 2 Dec 2021 13:55:05 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S1355400AbhLBFdh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 00:33:37 -0500
+Received: from mga06.intel.com ([134.134.136.31]:20188 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1345061AbhLBFda (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 Dec 2021 00:33:30 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="297428914"
+X-IronPort-AV: E=Sophos;i="5.87,281,1631602800"; 
+   d="scan'208";a="297428914"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 21:30:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,281,1631602800"; 
+   d="scan'208";a="677531018"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 01 Dec 2021 21:30:06 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1msefV-000Fua-Uo; Thu, 02 Dec 2021 05:30:05 +0000
+Date:   Thu, 02 Dec 2021 13:29:14 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ 77dd98624efc9ed4788e636be5cf2edb90f5e43b
+Message-ID: <61a859aa.rV05GC6eJqp0w90N%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLMgkTdbKNP=kAvwKFQp+m330ztTX8v_UFmj2zvzsB-KA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: es-ES
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 30/11/2021 00.02, Rob Herring wrote:
->> Sure, it just means I have to reinvent the PCI capability lookup wheel
->> again. I'd love to use the regular accessors, but the infrastructure
->> isn't up to the point where we can do that yet yere. DWC also reinvents
->> this wheel, but we can't reuse that code because it pokes these
->> registers through a separate reg range, not config space (even though it
->> seems like they should be the same thing? I'm not sure what's going on
->> in the DWC devices... for the Apple controller it's just the ECAM).
-> 
-> Since it is just ECAM, can you use the regular config space accessors?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 77dd98624efc9ed4788e636be5cf2edb90f5e43b  Merge branch 'pci/errors'
 
-The problem is this is before the PCI objects are created, so those 
-wouldn't work since they expect to be called on a pci_dev and such.
+elapsed time: 720m
 
->>>> +       max_gen = of_pci_get_max_link_speed(port->np);
->>>> +       if (max_gen < 0) {
->>>> +               dev_err(port->pcie->dev, "max link speed not specified\n");
->>>
->>> Better to fail than limp along in gen1? Though you don't check the
->>> return value...
->>>
->>> Usually, the DT property is there to limit the speed when there's a
->>> board limitation.
->>
->> The default *setting* is actually Gen4, but without
->> PCIE_LINK_WIDTH_SPEED_CONTROL poked it always trains at Gen1. Might make
->> more sense to only set the LNKCTL field if max-link-speed is specified,
->> and unconditionally poke that bit. That'll get us Gen4 by default (or
->> even presumably Gen5 in future controllers, if everything else stays
->> compatible).
-> 
-> You already do some setup in firmware for ECAM, right? I think it
-> would be better if you can do any default setup there and then
-> max-link-speed is only an override for the kernel.
+configs tested: 230
+configs skipped: 3
 
-I thought the PCIE_LINK_WIDTH_SPEED_CONTROL thing had to be set later, 
-but trying it now I realized we were missing a bit of initialization 
-that was causing it not to work. Indeed it can be done there and we can 
-drop it from the kernel.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-We could even do the max-link-speed thing in m1n1 if we want. It has 
-access to the value from the ADT directly, which to be correct we'd have 
-to dynamically transplant to the DT, since there's at least one device 
-that has different PCIe devices on one port depending on hardware 
-variant, while sharing a devicetree. If we're okay with the kernel just 
-not implementing this feature for now, we can say it's the bootloader's job.
+gcc tested configs:
+arm64                               defconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211128
+i386                 randconfig-c001-20211201
+arm                       cns3420vb_defconfig
+arm                            hisi_defconfig
+arm                        mvebu_v7_defconfig
+arc                              alldefconfig
+arm                  colibri_pxa270_defconfig
+arm                      integrator_defconfig
+openrisc                  or1klitex_defconfig
+xtensa                    xip_kc705_defconfig
+m68k                          atari_defconfig
+sh                          sdk7786_defconfig
+mips                          rb532_defconfig
+arm                          ixp4xx_defconfig
+mips                          rm200_defconfig
+ia64                          tiger_defconfig
+mips                        qi_lb60_defconfig
+mips                         mpc30x_defconfig
+s390                             alldefconfig
+mips                           ci20_defconfig
+m68k                       m5208evb_defconfig
+m68k                        m5407c3_defconfig
+powerpc                      makalu_defconfig
+sh                           se7721_defconfig
+sh                               alldefconfig
+arc                         haps_hs_defconfig
+arm                          exynos_defconfig
+xtensa                              defconfig
+arc                      axs103_smp_defconfig
+sparc                       sparc32_defconfig
+mips                           ip22_defconfig
+arm                         hackkit_defconfig
+arm                         mv78xx0_defconfig
+arm                          moxart_defconfig
+sh                               j2_defconfig
+powerpc                      arches_defconfig
+sparc64                          alldefconfig
+powerpc                     mpc83xx_defconfig
+mips                        bcm63xx_defconfig
+i386                             alldefconfig
+powerpc                      mgcoge_defconfig
+mips                           rs90_defconfig
+arm                           sunxi_defconfig
+arm                      jornada720_defconfig
+arc                          axs101_defconfig
+arm                        clps711x_defconfig
+powerpc                 mpc8272_ads_defconfig
+nios2                         10m50_defconfig
+powerpc                    mvme5100_defconfig
+s390                       zfcpdump_defconfig
+sh                          rsk7269_defconfig
+arm                       imx_v6_v7_defconfig
+mips                        bcm47xx_defconfig
+powerpc                 mpc85xx_cds_defconfig
+mips                         db1xxx_defconfig
+mips                        omega2p_defconfig
+xtensa                       common_defconfig
+sh                         ap325rxa_defconfig
+openrisc                            defconfig
+powerpc                     tqm8560_defconfig
+arm                       spear13xx_defconfig
+nds32                               defconfig
+arm                            pleb_defconfig
+arm                          pxa168_defconfig
+sh                          rsk7203_defconfig
+powerpc                     rainier_defconfig
+sh                        dreamcast_defconfig
+sh                   secureedge5410_defconfig
+riscv                    nommu_virt_defconfig
+arm                        cerfcube_defconfig
+powerpc                      ep88xc_defconfig
+arm                     eseries_pxa_defconfig
+arm                        multi_v7_defconfig
+mips                      maltaaprp_defconfig
+sh                          sdk7780_defconfig
+powerpc                     pseries_defconfig
+arm                   milbeaut_m10v_defconfig
+um                           x86_64_defconfig
+csky                                defconfig
+m68k                         amcore_defconfig
+mips                       capcella_defconfig
+arm                        multi_v5_defconfig
+arm                           h5000_defconfig
+h8300                       h8s-sim_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc64                           defconfig
+mips                      pic32mzda_defconfig
+ia64                             alldefconfig
+nios2                            alldefconfig
+powerpc                 mpc832x_rdb_defconfig
+sh                              ul2_defconfig
+sh                         ecovec24_defconfig
+arc                     nsimosci_hs_defconfig
+arm                  randconfig-c002-20211128
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+sparc                            allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20211130
+i386                 randconfig-a002-20211130
+i386                 randconfig-a006-20211130
+i386                 randconfig-a004-20211130
+i386                 randconfig-a003-20211130
+i386                 randconfig-a001-20211130
+i386                 randconfig-a001-20211201
+i386                 randconfig-a005-20211201
+i386                 randconfig-a003-20211201
+i386                 randconfig-a002-20211201
+i386                 randconfig-a006-20211201
+i386                 randconfig-a004-20211201
+i386                 randconfig-a001-20211129
+i386                 randconfig-a002-20211129
+i386                 randconfig-a006-20211129
+i386                 randconfig-a005-20211129
+i386                 randconfig-a004-20211129
+i386                 randconfig-a003-20211129
+x86_64               randconfig-a011-20211128
+x86_64               randconfig-a014-20211128
+x86_64               randconfig-a012-20211128
+x86_64               randconfig-a016-20211128
+x86_64               randconfig-a013-20211128
+x86_64               randconfig-a015-20211128
+i386                 randconfig-a015-20211128
+i386                 randconfig-a016-20211128
+i386                 randconfig-a013-20211128
+i386                 randconfig-a012-20211128
+i386                 randconfig-a014-20211128
+i386                 randconfig-a011-20211128
+i386                 randconfig-a016-20211202
+i386                 randconfig-a013-20211202
+i386                 randconfig-a011-20211202
+i386                 randconfig-a014-20211202
+i386                 randconfig-a012-20211202
+i386                 randconfig-a015-20211202
+arc                  randconfig-r043-20211128
+s390                 randconfig-r044-20211128
+riscv                randconfig-r042-20211128
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-Ultimately we ship the DTs along with m1n1, so there's an argument that 
-if some day we need to override the max-link-speed for whatever reason 
-over what the ADT says, well, we'd be shipping the updated DT along with 
-m1n1 anyway, so we might as well make m1n1 do it... if so, it might make 
-sense to drop those properties from the actual DTs we ship altogether, 
-at least for now.
+clang tested configs:
+s390                 randconfig-c005-20211128
+i386                 randconfig-c001-20211128
+riscv                randconfig-c006-20211128
+arm                  randconfig-c002-20211128
+powerpc              randconfig-c003-20211128
+x86_64               randconfig-c007-20211128
+mips                 randconfig-c004-20211128
+arm                  randconfig-c002-20211201
+x86_64               randconfig-c007-20211201
+riscv                randconfig-c006-20211201
+mips                 randconfig-c004-20211201
+i386                 randconfig-c001-20211201
+powerpc              randconfig-c003-20211201
+s390                 randconfig-c005-20211201
+x86_64               randconfig-a001-20211128
+x86_64               randconfig-a006-20211128
+x86_64               randconfig-a003-20211128
+x86_64               randconfig-a005-20211128
+x86_64               randconfig-a004-20211128
+x86_64               randconfig-a002-20211128
+i386                 randconfig-a001-20211128
+i386                 randconfig-a002-20211128
+i386                 randconfig-a006-20211128
+i386                 randconfig-a005-20211128
+i386                 randconfig-a004-20211128
+i386                 randconfig-a003-20211128
+x86_64               randconfig-a014-20211130
+x86_64               randconfig-a016-20211130
+x86_64               randconfig-a013-20211130
+x86_64               randconfig-a012-20211130
+x86_64               randconfig-a015-20211130
+x86_64               randconfig-a011-20211130
+i386                 randconfig-a015-20211129
+i386                 randconfig-a016-20211129
+i386                 randconfig-a013-20211129
+i386                 randconfig-a012-20211129
+i386                 randconfig-a014-20211129
+i386                 randconfig-a011-20211129
+i386                 randconfig-a013-20211201
+i386                 randconfig-a016-20211201
+i386                 randconfig-a011-20211201
+i386                 randconfig-a014-20211201
+i386                 randconfig-a012-20211201
+i386                 randconfig-a015-20211201
+hexagon              randconfig-r045-20211129
+hexagon              randconfig-r041-20211129
+s390                 randconfig-r044-20211129
+riscv                randconfig-r042-20211129
+hexagon              randconfig-r045-20211128
+hexagon              randconfig-r041-20211128
 
-If we decide to make it m1n1's job entirely, we can drop this patch 
-altogether, at least for now (I can't say how this will interact with 
-suspend/resume and other power management, and hotplug... but we'll open 
-that can of worms when we get there).
-
--- 
-Hector Martin (marcan@marcan.st)
-Public Key: https://mrcn.st/pub
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
