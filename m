@@ -2,236 +2,227 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 061564663F9
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 13:50:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B25B54664C8
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 14:55:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358095AbhLBMyG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 07:54:06 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:57723 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1346795AbhLBMyE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 07:54:04 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0UzAa6VZ_1638449438;
-Received: from 30.240.117.107(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0UzAa6VZ_1638449438)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 02 Dec 2021 20:50:40 +0800
-Message-ID: <12b01448-0ebe-44fc-529a-6a1243acc2e3@linux.alibaba.com>
-Date:   Thu, 2 Dec 2021 20:50:37 +0800
+        id S1358373AbhLBN6a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 08:58:30 -0500
+Received: from mail-mw2nam10on2086.outbound.protection.outlook.com ([40.107.94.86]:40737
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1358355AbhLBN62 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 Dec 2021 08:58:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mUhDshf1ZF1Urz6u2ISWk/LBeVWZ8UFKjWlsk4Rs77hO2jwfJE8j6x+tgyYC4j3+lTdyP57TKKRLQpvP5P1wZGxHjTJwFIOyPK/K1ojtb+J9qFIX4dC80/kMeOUC5zDOZBmxSct6B39izS+n4yiS7IfHzLk5COQTWKUquimR0oDCpjMCtcJmh+oZ9yrP93KhaiiNQ21KuDyipRPuJCmOFg4JPNIUBcLRD+pR7Ma0qtdci9dJufMxrnWWHX9vza40FVKOkXLWh042ZWkb2PBV9GSBrxTU4oEJdDsg2K3r2xNi0mYAVfOlgPd57+Y/y4EZ74QXNmrZUwzKxt+tbEMXgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uJG/8wULDaO7GKgoOBZHMVL7ikcFpagddB3jmecP7QU=;
+ b=Wh7dhHqqmHyfQOiD0EpytLTVb9CVa92zrp3pUWSurIk2BN7Ex1gT/MFImD+mNQR47KbcnjsN4RrN9MFXPrsoDYkTK27X/EGY9/irA5OeiemuBxGeL11WaKEwobiMlIl9D8oRmoyhCpJGEuM3XIyi5umK8zXo849FxsqATdUa20gu5+3+7YHC0FyC6Cd4ljQHPa5GXPUHt2gbnsI4FMxMDmx45anHkMACtu6ksBZ6uBdVtB1sQoeb5FOFKrNxV32PfduFdrdxz92sCYDzME9cn4/PBeMMgzUnko9k8lNUkCOY4nw7J3z4STLFqHpx6NtB5J2Uerf/GXHUovgfA0a00g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uJG/8wULDaO7GKgoOBZHMVL7ikcFpagddB3jmecP7QU=;
+ b=is00GuVARRk+RbC2L7QJffw2u5uk85USeeT/8emnEml+2cq+5SdV3a9nx/6pPR/YbKNkTOL5YB1Y0ei/e8CFqohsecAsux2AdUNl6M36TWzEuQ0WLCdthS+zUWJdXqE6zKPXuSwzQlt6XV3jyaHLUepys8Tv/PfO2y5FX3XVmEfuoyCYsgenDPuveBJ3GrwM28DPPSWAx64yWlfKSAKnHELauqbN2AhY6vT9sQS9ImVveyyW3D2pXS6RKIb4UEu01AVXsn+xNhmUX08DJ6H+pPOPGUb9scuEISuEDpEtC3n3d4l1AZYkTXgsAtFSmRgF9rbKvKZUVnk0Wwiea/pGRw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5335.namprd12.prod.outlook.com (2603:10b6:208:317::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.24; Thu, 2 Dec
+ 2021 13:55:03 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::d8be:e4e4:ce53:6d11]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::d8be:e4e4:ce53:6d11%5]) with mapi id 15.20.4755.016; Thu, 2 Dec 2021
+ 13:55:03 +0000
+Date:   Thu, 2 Dec 2021 09:55:02 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
+Message-ID: <20211202135502.GP4670@nvidia.com>
+References: <87v909bf2k.ffs@tglx>
+ <20211130202800.GE4670@nvidia.com>
+ <87o861banv.ffs@tglx>
+ <20211201001748.GF4670@nvidia.com>
+ <87mtlkaauo.ffs@tglx>
+ <20211201130023.GH4670@nvidia.com>
+ <87y2548byw.ffs@tglx>
+ <20211201181406.GM4670@nvidia.com>
+ <87mtlk84ae.ffs@tglx>
+ <87r1av7u3d.ffs@tglx>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r1av7u3d.ffs@tglx>
+X-ClientProxiedBy: MN2PR15CA0004.namprd15.prod.outlook.com
+ (2603:10b6:208:1b4::17) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.3.2
-Subject: Re: [RFC PATCH v4] ACPI: Move sdei_init and ghes_init ahead to handle
- platform errors earlier
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
-        lenb@kernel.org, rjw@rjwysocki.net, bhelgaas@google.com,
-        zhangliguang@linux.alibaba.com, zhuo.song@linux.alibaba.com,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-References: <20211126070422.73234-1-xueshuai@linux.alibaba.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20211126070422.73234-1-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Received: from mlx.ziepe.ca (142.162.113.129) by MN2PR15CA0004.namprd15.prod.outlook.com (2603:10b6:208:1b4::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.22 via Frontend Transport; Thu, 2 Dec 2021 13:55:03 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1msmYA-006rEm-Hc; Thu, 02 Dec 2021 09:55:02 -0400
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7dc43f66-a4d2-44cb-58d5-08d9b59b570b
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5335:
+X-Microsoft-Antispam-PRVS: <BL1PR12MB53350C926591FE56F22F130FC2699@BL1PR12MB5335.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JbiSfJXKQjXEqDq23f1P0x8j8DmykDYVUEYLNeuy5eA0lwVYK5vu2dPiU9ygnhsOu8KvommqwJWMF330ea34YHnHfQeL0OX3ZkQMo8FKCgcXK19gRrCaI2cyIqmJFS4SmuqX0e88tUR90JRh2p8rP4GseC1/ZuAUheDOvxvM9/v5bjMyC5fHV8akpgHvaAkVwjwUbrqXekQKuOkRGZVC4Vx7cGFOTDHcaaBBh0pei8CE531g1g9lz67Aw+GeNL1I9LZvnxCCfOuh+uJlJf209sY1ftd4pJ+MwZp+ySZxsWhUWJfguy/09pYfKUmpvu61lLmqS/BcqQH9uSRdh8W6L2TWfrXwQx1TfnlezWMdPq0I72LgUn7Y8PQIDCFJWwT8bgXAAa7SjnoyVGchTBaqkLvqMFKTgHRZqirtwN9Oo07G6d9pMf1OGs5j2hpXU/t1miS/sOeIPFj64EsZF7MNETI0/vxr1AHLdtaxZbi4VEaLjBhnTrtDTRCJXecLdvlYp9ZVqvasIH0h3nzy46dtIqVKQ+mol+WwzXNuXRGUwgwNmGAzbBlv/GS/2F3SCQ7bkrIooDR8CH6OnlQY6oxMB8AK0GTtnWrByqo1YsEmX278uU7hqrsqD3E3C4PMpX74o0ue6rrASX0hFGSiXuqOlA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(9746002)(9786002)(6916009)(8676002)(26005)(186003)(4326008)(8936002)(54906003)(86362001)(5660300002)(7416002)(66556008)(38100700002)(316002)(66946007)(426003)(2616005)(83380400001)(36756003)(1076003)(508600001)(2906002)(33656002)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fX78J73ccCHHCFIjaucx8HssmlMi8Zfl8x3UBWXZUgp/IWdE5BAvDd0hWNS4?=
+ =?us-ascii?Q?o7MCXnOOI6yAIR5UFSijWH3cwuVO6tielLDFtQMKGbLfT1yNWFOBss+ON5aL?=
+ =?us-ascii?Q?0Pv8jE9qTj8gZrszi0kAui2IbuWP9IjRlH04ebrWS7qBWmj8eQWb/sJY9WuY?=
+ =?us-ascii?Q?EKtNnos2Rdjx4gq9vR6RHb2L6YhQCFdyJogfxoyQirMbPJOehjUVSgUvQYyw?=
+ =?us-ascii?Q?ScGkDhy4cQYRAa3lenHh752EMGDwWWp+Xwv229p00wIwLJtcGaSO/2GZVSyT?=
+ =?us-ascii?Q?RMk3ZZA4TeR6Pj8vO6n6GuSYw90ZY/ISYM01amBh1T81c0jXEjbgoLXbV1OB?=
+ =?us-ascii?Q?rhhgb0uuSVl4BZGZOBkIQx89NCw8rWc4HwUAKG29qVtz67BcUI9xFsfySONb?=
+ =?us-ascii?Q?utIr29mnGHX7oM/fS0kO4+cpCyAlrU8G/SQcXRw+G7I0w64Pyu+5AxQxOWRb?=
+ =?us-ascii?Q?89LoYvEgSYDCPf27qqTdaMEYk9RmUK5OGkbN/E4pOkDnqRYW+ax5bK8B9fW0?=
+ =?us-ascii?Q?TXPc+ksjiCehx/gaWQep1SHb9J2Y1fWiCv1T9jiE4GUEH3vtWe7jvr8gAfcG?=
+ =?us-ascii?Q?74H4DOQewVLI54dEXqDeC8SFxLrnFKmTLQNixOv2v0s/5s4oxHeA+xdSn3Hq?=
+ =?us-ascii?Q?6cAtcLeeAgXfnh4eumoFtZQB6oZ6YkCxM37q26cigymBYO7APV8jrZzj66Ms?=
+ =?us-ascii?Q?Iseu3R7vtrUTtSjsMHBIUC32/yud942goVpxhjpPe5T2K4O6CVB38wExkhuo?=
+ =?us-ascii?Q?ziO4J557S0QCXKhNFYAYCsCNXij/utBNs6HfDVLxPoMEp/52FXgUCLzWi/le?=
+ =?us-ascii?Q?QNgGyL+ynuHCNQKLwGZMdPW5NNTT5B1yjeCPVxNeL8GwfBd57lh67zzpnOni?=
+ =?us-ascii?Q?gswBTtXFMQhypDSh0Tt3Meg29e7UgIqAqlEF3gLGAvLkteRLQ+puhAm7U8c7?=
+ =?us-ascii?Q?HiiQf2i1pDtjDat+PpZuV/VPVxnSlMIFBfF5V+Ffn8zkxCKK4kyp2O5UvZs5?=
+ =?us-ascii?Q?eabWeK0yHeHk6zCqdfCtGg6tAMEL5hyNVR/IuFXQSTR2W5NyBEzR5YF1RwPD?=
+ =?us-ascii?Q?nBCnU/KkYNRxkI8riO9tIP4hDXZwH1Y66eM3gsi7XRwWkpc2JO1CcQGhAbhX?=
+ =?us-ascii?Q?jp9PrAyrDYEEL+grGquHV4MUTU5WvYK/TCY+6O5xRGhCVG3Zu6sMyYXlkd93?=
+ =?us-ascii?Q?QfGwbWpr0rfUlPi2MmwPm8LM0kZbSnZqhKdMrOo1o6iOWn0G2/z/l+xv9NpA?=
+ =?us-ascii?Q?8qS+No4tN+odR/Dh5ALNgdwNLGsFOg9AADSEtI2+DUx0hibyfpowc5bwxXpo?=
+ =?us-ascii?Q?4NwpjOqPtgfaKxQEGJJvxy/6qKCYUfJ9u2Makkk9V5D133+1XOmrL9ECsMhW?=
+ =?us-ascii?Q?n5GftYxxoFq6Edm9/Ry/hoMTU82b7w/txMsHPQz2M+J2ut6IFeSoZMu0c9Ql?=
+ =?us-ascii?Q?15mtfoYo2Uzxdc6h1FUwT/oowS5qvrPkFFuosBO06XJHpF8OBCV/xDz3q8yI?=
+ =?us-ascii?Q?AbBLxU7LYu1zHTkAbQsZ7Elio7ta3G9rw3P7tiYDjIqvOlA63GGvQizkpkbp?=
+ =?us-ascii?Q?Cb8afhRxbjEC3hAkTtw=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7dc43f66-a4d2-44cb-58d5-08d9b59b570b
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2021 13:55:03.7055
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bMGEhjGZTe3XmX7e7UpmGrW1NEVlPCiahNWAUuIf/FbVaD0FAFHsnYWKHvwUVAcT
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5335
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjron,
+On Thu, Dec 02, 2021 at 01:01:42AM +0100, Thomas Gleixner wrote:
+> Jason,
+> 
+> On Wed, Dec 01 2021 at 21:21, Thomas Gleixner wrote:
+> > On Wed, Dec 01 2021 at 14:14, Jason Gunthorpe wrote:
+> > Which in turn is consistent all over the place and does not require any
+> > special case for anything. Neither for interrupts nor for anything else.
+> 
+> that said, feel free to tell me that I'm getting it all wrong.
+> 
+> The reason I'm harping on this is that we are creating ABIs on several
+> ends and we all know that getting that wrong is a major pain.
 
-By any chance, could you help review this patch? Any comment are welcomed.
+I don't really like coupling the method to fetch IRQs with needing
+special struct devices. Struct devices have a sysfs presence and it is
+not always appropriate to create sysfs stuff just to allocate some
+IRQs.
+
+A queue is simply not a device, it doesn't make any sense. A queue is
+more like a socket().
+
+That said, we often have enough struct devices floating about to make
+this work. Between netdev/ib_device/aux device/mdev we can use them to
+do this.
+
+I think it is conceptual nonsense to attach an IMS IRQ domain to a
+netdev or a cdev, but it will solve this problem.
+
+However, I would really prefer that there be no uAPI here. 
+
+I looked at the msi_irqs/ stuff and could not find a user. Debian code
+search found nothing, Greg redid the entire uAPI in 2013
+(1c51b50c2995), so I think it is just dead. (maybe delete it?)
+
+So lets not create any sysfs for IMS with the msi_irqs/ dir.  We can
+revise the in-kenel mechanism someday if it turns out to be a problem.
+
+As to your question:
+
+> So again, why would we want to make software managed subdevices look
+> exactly the opposite way like hardware/firmware managed subdevices?
+
+That isn't my thinking at all.
+
+Something like mlx5 has a hw/fw managed VF and there is an RPC call
+from driver to device to 'create a queue'. The device has no hard
+division inside along a VF, the device simply checks resource limits
+and security properties and returns one of the >>10k queues. Again
+think more like socket() than a hard partitioning.
+
+It is the same as I suggest for IDXD & VFIO where the PCIe IDXD layer
+takes the place of hw/fw and has a 'create a queue' API call for the
+VFIO layer to use. Instead of using a VF as the security identity, it
+uses a PASID.
+
+This is a logical partitioning and it matches the partioning we'd have
+if it was a real device.
+
+> So if a queue is represented as a subdevice, then VFIO can just build
+> a wrapper around that subdevice.
+
+I think that oversimplifies the picture.
+
+IDXD is a multi queue device that uses PASID as a security context. It
+has a cdev /dev/idxd interface where userspace can use an IOCTL and
+get a queue to use. The queue is bound to a PASID that is linked to an
+IO Page table that mirrors the process page table. Userspace operates
+the queue and does whatever with it.
+
+VFIO is just another interface that should logically be considered a
+peer of the cdev. Using VFIO userspace can get a queue, bind it to a
+PASID and operate it. The primary difference between the cdev and the
+VFIO mdev is user programming API - VFIO uses IOCTLs that carry
+emulated MMIO read/write operations.
+
+I consider *neither* to be a subdevice. They are just a user API,
+however convoluted, to create a queue, associate it with a PASID
+security context and allow userspace to operate the queue. It is much
+closer to socket() than a PCI VF subdevice.
+
+Internally the driver should be built so that the PCI driver is doing
+all the device operation and the two uAPI layers are only concerend
+with translating their repsective uAPIs to the internal device API.
+
+Further, there is no reason why IMS should be reserved exclusively for
+VFIO! Why shouldn't the cdev be able to use IMS vectors too? It is
+just a feature of the PCI device like MSI. If the queue has a PASID it
+can use IDXD's IMS.
+
+If we really need a 2nd struct device to turn on IMS then, I'd suggest
+picking the cdev, as it keeps IMS and its allocator inside the IDXD
+PCIe driver and not in the VFIO world.
 
 Regards,
-Shuai
-
-On 2021/11/26 PM3:04, Shuai Xue wrote:
-> On an ACPI system, ACPI is initialised very early from a subsys_initcall(),
-> while SDEI is not ready until a subsys_initcall_sync().
-> 
-> The SDEI driver provides functions (e.g. apei_sdei_register_ghes,
-> apei_sdei_unregister_ghes) to register or unregister event callback for
-> dispatcher in firmware. When the GHES driver probing, it registers the
-> corresponding callback according to the notification type specified by
-> GHES. If the GHES notification type is SDEI, the GHES driver will call
-> apei_sdei_register_ghes to register event call.
-> 
-> When the firmware emits an event, it migrates the handling of the event
-> into the kernel at the registered entry-point __sdei_asm_handler. And
-> finally, the kernel will call the registered event callback and return
-> status_code to indicate the status of event handling. SDEI_EV_FAILED
-> indicates that the kernel failed to handle the event.
-> 
-> Consequently, when an error occurs during kernel booting, the kernel is
-> unable to handle and report errors until the GHES driver is initialized by
-> device_initcall(), in which the event callback is registered. All errors
-> that occurred before GHES initialization are missed and there is no chance
-> to report and find them again.
-> 
-> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
-> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
-> the estatus memory pool. On the other hand, ghes_init() relies on
-> sdei_init() to detect the SDEI version and the framework for registering
-> and unregistering events. By the way, I don't figure out why acpi_hest_init
-> is called in acpi_pci_root_init, it don't rely on any other thing. May it
-> could be moved further, following acpi_iort_init in acpi_init.
-> 
-> sdei_init() relies on ACPI table which is initialized subsys_initcall():
-> acpi_init(), acpi_bus_init(), acpi_load_tables(), acpi_tb_laod_namespace().
-> May it should be also moved further, after acpi_load_tables.
-> 
-> In this patch, move sdei_init and ghes_init as far ahead as possible, right
-> after acpi_hest_init().
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> ---
->  drivers/acpi/apei/ghes.c    | 18 ++++++++----------
->  drivers/acpi/pci_root.c     |  5 ++++-
->  drivers/firmware/arm_sdei.c | 13 ++-----------
->  include/acpi/apei.h         |  2 ++
->  include/linux/arm_sdei.h    |  2 ++
->  5 files changed, 18 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 0c8330ed1ffd..b11e46fb4b3d 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -1457,27 +1457,26 @@ static struct platform_driver ghes_platform_driver = {
->  	.remove		= ghes_remove,
->  };
->  
-> -static int __init ghes_init(void)
-> +void __init ghes_init(void)
->  {
->  	int rc;
->  
->  	if (acpi_disabled)
-> -		return -ENODEV;
-> +		return;
->  
->  	switch (hest_disable) {
->  	case HEST_NOT_FOUND:
-> -		return -ENODEV;
-> +		pr_info(GHES_PFX "HEST is not found!\n");
-> +		return;
->  	case HEST_DISABLED:
->  		pr_info(GHES_PFX "HEST is not enabled!\n");
-> -		return -EINVAL;
-> +		return;
->  	default:
->  		break;
->  	}
->  
-> -	if (ghes_disable) {
-> +	if (ghes_disable)
->  		pr_info(GHES_PFX "GHES is not enabled!\n");
-> -		return -EINVAL;
-> -	}
->  
->  	ghes_nmi_init_cxt();
->  
-> @@ -1495,8 +1494,7 @@ static int __init ghes_init(void)
->  	else
->  		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
->  
-> -	return 0;
-> +	return;
->  err:
-> -	return rc;
-> +	ghes_disable = 1;
->  }
-> -device_initcall(ghes_init);
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index ab2f7dfb0c44..1260bb556184 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -23,7 +23,7 @@
->  #include <linux/dmi.h>
->  #include <linux/platform_data/x86/apple.h>
->  #include <acpi/apei.h>	/* for acpi_hest_init() */
-> -
-> +#include <linux/arm_sdei.h> /* for sdei_init() */
->  #include "internal.h"
->  
->  #define ACPI_PCI_ROOT_CLASS		"pci_bridge"
-> @@ -946,6 +946,9 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->  void __init acpi_pci_root_init(void)
->  {
->  	acpi_hest_init();
-> +	sdei_init();
-> +	ghes_init();
-> +
->  	if (acpi_pci_disabled)
->  		return;
->  
-> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-> index a7e762c352f9..1e1a51510e83 100644
-> --- a/drivers/firmware/arm_sdei.c
-> +++ b/drivers/firmware/arm_sdei.c
-> @@ -1059,14 +1059,14 @@ static bool __init sdei_present_acpi(void)
->  	return true;
->  }
->  
-> -static int __init sdei_init(void)
-> +void __init sdei_init(void)
->  {
->  	struct platform_device *pdev;
->  	int ret;
->  
->  	ret = platform_driver_register(&sdei_driver);
->  	if (ret || !sdei_present_acpi())
-> -		return ret;
-> +		return;
->  
->  	pdev = platform_device_register_simple(sdei_driver.driver.name,
->  					       0, NULL, 0);
-> @@ -1076,17 +1076,8 @@ static int __init sdei_init(void)
->  		pr_info("Failed to register ACPI:SDEI platform device %d\n",
->  			ret);
->  	}
-> -
-> -	return ret;
->  }
->  
-> -/*
-> - * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
-> - * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
-> - * by device_initcall(). We want to be called in the middle.
-> - */
-> -subsys_initcall_sync(sdei_init);
-> -
->  int sdei_event_handler(struct pt_regs *regs,
->  		       struct sdei_registered_event *arg)
->  {
-> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
-> index ece0a8af2bae..7dbd6363fda7 100644
-> --- a/include/acpi/apei.h
-> +++ b/include/acpi/apei.h
-> @@ -27,8 +27,10 @@ extern int hest_disable;
->  extern int erst_disable;
->  #ifdef CONFIG_ACPI_APEI_GHES
->  extern bool ghes_disable;
-> +void __init ghes_init(void);
->  #else
->  #define ghes_disable 1
-> +static inline void ghes_init(void) { return; }
->  #endif
->  
->  #ifdef CONFIG_ACPI_APEI
-> diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
-> index 0a241c5c911d..9c987188b692 100644
-> --- a/include/linux/arm_sdei.h
-> +++ b/include/linux/arm_sdei.h
-> @@ -46,9 +46,11 @@ int sdei_unregister_ghes(struct ghes *ghes);
->  /* For use by arch code when CPU hotplug notifiers are not appropriate. */
->  int sdei_mask_local_cpu(void);
->  int sdei_unmask_local_cpu(void);
-> +void __init sdei_init(void);
->  #else
->  static inline int sdei_mask_local_cpu(void) { return 0; }
->  static inline int sdei_unmask_local_cpu(void) { return 0; }
-> +static inline void sdei_init(void) { return ; }
->  #endif /* CONFIG_ARM_SDE_INTERFACE */
->  
->  
-> 
+Jason
