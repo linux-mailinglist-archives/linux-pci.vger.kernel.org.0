@@ -2,96 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FF98465E4B
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 07:35:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5DF5465F64
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 09:30:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344786AbhLBGiy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 01:38:54 -0500
-Received: from tomli.me ([31.220.7.45]:12778 "EHLO tomli.me"
+        id S1356142AbhLBIdz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 03:33:55 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:52838 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240839AbhLBGix (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 2 Dec 2021 01:38:53 -0500
-Received: from tomli.me (localhost [127.0.0.1])
-        by tomli.me (OpenSMTPD) with ESMTP id ca9aa9be;
-        Thu, 2 Dec 2021 06:35:29 +0000 (UTC)
-Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
-Received: from Unknown (HELO work) (123.118.114.103)
- by tomli.me (qpsmtpd/0.96) with ESMTPSA (AEAD-AES256-GCM-SHA384 encrypted); Thu, 02 Dec 2021 06:35:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=date:from:to:cc:subject:message-id:mime-version:content-type:content-transfer-encoding; s=1490979754; bh=bOCrpZ2RjHxF2pFYdnVUvO3AaF9fNozXR7lvIsSGFCw=; b=XgzS5bE/Zsljd92Q5lqyRkv/djF3PV4pmEKe3ipRAkMbslgUUn1KKBJgQ1phCgntMGmV5IfOB4i+FUl3HezGQYA/28IOHpxlPFArSC7tx4lAgJm9gvIHpgwdG9Pr58JCqLqgjMq6Aw/r+zxT1lvTksAnZ7LzHrSeSZSPJLAO8prxniZAE4ppyqN65HgAGozwIsNhZJBNNDnFj7bzZBAYZOj7NpZ/rxtsmt1bIa077LZ0Olo6uQHFVKCZSnTz4KfascwRlR9a/ZC5VFdS5oQnO0B+1TbZ2h+Gn65OaP6vrDZnedkKwM+0ldZ4OvKJFpCC5ezCgs6m8z/9vVf1zka4Gw==
-Date:   Thu, 2 Dec 2021 06:35:21 +0000
-From:   Yifeng Li <tomli@tomli.me>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Sam Bingner <sam@bingner.com>, linux-pci@vger.kernel.org,
-        trivial@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 RESEND] PCI: Add func1 DMA quirk for Marvell 88SE9125 SATA
- controller
-Message-ID: <YahpKVR+McJVDdkD@work>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        id S1356125AbhLBIdj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 Dec 2021 03:33:39 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CA3ED201CD6;
+        Thu,  2 Dec 2021 09:30:15 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 35F01200222;
+        Thu,  2 Dec 2021 09:30:15 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 0CBC3183AC96;
+        Thu,  2 Dec 2021 16:30:12 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, marcel.ziswiler@toradex.com,
+        tharvey@gateworks.com, kishon@ti.com, vkoul@kernel.org,
+        robh@kernel.org, galak@kernel.crashing.org, shawnguo@kernel.org
+Cc:     hongxing.zhu@nxp.com, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com
+Subject: [PATCH v7 0/8] Add the imx8m pcie phy driver and imx8mm pcie support
+Date:   Thu,  2 Dec 2021 16:02:30 +0800
+Message-Id: <1638432158-4119-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Like other SATA controller chips in the Marvell 88SE91xx series, the
-Marvell 88SE9125 has the same DMA requester ID hardware bug that prevents
-it from working under IOMMU. This patch adds its device ID 0x9125 to the
-Function 1 DMA alias quirk list.
+Refer to the discussion [1] when try to enable i.MX8MM PCIe support,
+one standalone PCIe PHY driver should be seperated from i.MX PCIe
+driver when enable i.MX8MM PCIe support.
 
-This patch should not be confused with an earlier patch, commit 059983790a4c
-("PCI: Add function 1 DMA alias quirk for Marvell 9215 SATA controller"),
-which applies to a different chip with a similar model number, 88SE9215.
+This patch-set adds the standalone PCIe PHY driver suport[1-5], and i.MX8MM
+PCIe support[6-8] to have whole view to review this patch-set.
 
-Without this patch, device initialization fails with DMA errors.
+The PCIe works on i.MX8MM EVK board based the the blkctrl power driver
+[2] and this patch-set. And tested by Tim and Marcel on the different
+reference clock modes boards.
 
-    ata8: softreset failed (1st FIS failed)
-    DMAR: DRHD: handling fault status reg 2
-    DMAR: [DMA Write NO_PASID] Request device [03:00.1] fault addr 0xfffc0000 [fault reason 0x02] Present bit in context entry is clear
-    DMAR: DRHD: handling fault status reg 2
-    DMAR: [DMA Read NO_PASID] Request device [03:00.1] fault addr 0xfffc0000 [fault reason 0x02] Present bit in context entry is clear
+[1] https://patchwork.ozlabs.org/project/linux-pci/patch/20210510141509.929120-3-l.stach@pengutronix.de/
+[2] https://patchwork.kernel.org/project/linux-arm-kernel/cover/20210910202640.980366-1-l.stach@pengutronix.de/
 
-After applying the patch, the controller can be successfully initialized.
+Main changes v6 --> v7:
+- Add "Reviewed-by: Rob Herring <robh@kernel.org>" into #2 patches.
+- Regarding Vinod's review comments do the following changes.
+  - Don't build in the PHY driver in default.
+  - Remove the extra blank line
+  - Correct the license tag.
 
-    ata8: SATA link up 1.5 Gbps (SStatus 113 SControl 330)
-    ata8.00: ATAPI: PIONEER BD-RW   BDR-207M, 1.21, max UDMA/100
-    ata8.00: configured for UDMA/100
-    scsi 7:0:0:0: CD-ROM            PIONEER  BD-RW   BDR-207M 1.21 PQ: 0 ANSI: 5
+Main changes v5 --> v6:
+- Add "Reviewed-by: Rob Herring <robh@kernel.org>" into #1 and #3 patches.
+- Merge Rob's review comments to the #2 patch.
 
-Cc: stable@vger.kernel.org
-Reported-by: Sam Bingner <sam@bingner.com>
-Tested-by: Sam Bingner <sam@bingner.com>
-Tested-by: Yifeng Li <tomli@tomli.me>
-Signed-off-by: Yifeng Li <tomli@tomli.me>
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
----
+Main changes v4 --> v5:
+- Set the AUX_EN always 1b'1, thus it can fix the regression introduced in v4
+  series on Marcel's board.
+- Use the lower-case letter in the devicetreee refer to Marcel's comments.
+- Since the default value of the deemphasis parameters are zero, only set
+  the deemphasis registers when the input paramters are none zero.
 
-Notes:
-    v3: Use full names in Reported-by and Tested-by tags.
-    
-    v2: I accidentally sent an earlier version of the commit without
-    CCing stable@vger.kernel.org. The mail itself was also rejected by
-    many servers due to a DKIM issue. Thus [PATCH v2], sorry for the
-    noise.
+Main changes v3 --> v4:
+- Update the yaml to fix syntax error, add maxitems and drop description of phy
+- Correct the clock name in PHY DT node.
+- Squash the EVK board relalted dts changes into one patch, and drop the
+  useless dummy clock and gpio suffix in DT nodes.
+- Add board specific de-emphasis parameters as DT properties. Thus each board
+  can specify its actual de-emphasis values.
+- Update the commit log of PHY driver.
+- Remove the useless codes from PCIe driver, since they are moved to PHY driver
+- After the discussion and verification of the CLKREQ# configurations with Tim,
+  agree to add an optional boolean property "fsl,clkreq-unsupported", indicates
+  the CLKREQ# signal is hooked or not in HW designs.
+- Add "Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>" tag, since
+  Marcel help to test the v3 patch-set.
 
- drivers/pci/quirks.c | 3 +++
- 1 file changed, 3 insertions(+)
+Main changes v2 --> v3:
+- Regarding Lucas' comments.
+ - to have a whole view to review the patches, send out the i.MX8MM PCIe support too.
+ - move the PHY related bits manipulations of the GPR/SRC to standalone PHY driver.
+ - split the dts changes to SOC and board DT, and use the enum instead of raw value.
+ - update the license of the dt-binding header file.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 003950c73..20a932690 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4103,6 +4103,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9120,
- 			 quirk_dma_func1_alias);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9123,
- 			 quirk_dma_func1_alias);
-+/* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c136 */
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9125,
-+			 quirk_dma_func1_alias);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9128,
- 			 quirk_dma_func1_alias);
- /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c14 */
--- 
-2.31.1
+Changes v1 --> v2:
+- Update the license of the dt-binding header file to make the license
+  compatible with dts files.
+- Fix the dt_binding_check errors.
+
+Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml    |   6 +++
+Documentation/devicetree/bindings/phy/fsl,imx8-pcie-phy.yaml |  92 +++++++++++++++++++++++++++++++
+arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi                |  55 +++++++++++++++++++
+arch/arm64/boot/dts/freescale/imx8mm.dtsi                    |  46 +++++++++++++++-
+drivers/pci/controller/dwc/pci-imx6.c                        |  83 +++++++++++++++++++++++++---
+drivers/phy/freescale/Kconfig                                |   8 +++
+drivers/phy/freescale/Makefile                               |   1 +
+drivers/phy/freescale/phy-fsl-imx8m-pcie.c                   | 236 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+include/dt-bindings/phy/phy-imx8-pcie.h                      |  14 +++++
+9 files changed, 532 insertions(+), 9 deletions(-)
+
+[PATCH v7 1/8] dt-bindings: phy: phy-imx8-pcie: Add binding for the
+[PATCH v7 2/8] dt-bindings: phy: Add imx8 pcie phy driver support
+[PATCH v7 3/8] dt-bindings: imx6q-pcie: Add PHY phandles and name
+[PATCH v7 4/8] arm64: dts: imx8mm: Add the pcie phy support
+[PATCH v7 5/8] phy: freescale: pcie: Initialize the imx8 pcie
+[PATCH v7 6/8] arm64: dts: imx8mm: Add the pcie support
+[PATCH v7 7/8] arm64: dts: imx8mm-evk: Add the pcie support on imx8mm
+[PATCH v7 8/8] PCI: imx: Add the imx8mm pcie support
