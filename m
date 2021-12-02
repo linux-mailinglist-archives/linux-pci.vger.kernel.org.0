@@ -2,187 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C249466952
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 18:43:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CB994669FA
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 19:41:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351777AbhLBRrS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 12:47:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
+        id S232736AbhLBSpI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 13:45:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347965AbhLBRrP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 12:47:15 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2648EC06174A;
-        Thu,  2 Dec 2021 09:43:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D8B6BB823FB;
-        Thu,  2 Dec 2021 17:43:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 421BFC00446;
-        Thu,  2 Dec 2021 17:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638467030;
-        bh=Wvqr4QMgbo28VZ42PO+nadxc4Mne7hS7quuoqz8hLQ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=TJ/suPL5zvfVulaERMDm+NFvtd0ok8UV2/0Tfli6lNEkk+SqJOCqzbs6WSce1U9r4
-         MWMtSUeLHsEmM3xyZKE9a58Rlb3r9YtEGXGMI4biKrOhmsscwh/tdOm4ZtOhpqoo1S
-         fp3LcFtur0YEh9MmVe5MioLXStoB0kGrf13lom4GIYfaXQclLva9xKTJw/Ib5jYjU3
-         +MfVND9jQcDxtefB7l+vdls/ikPzkq3YtcWRsdGttLlkAvpNpIS3QSmx2QbWs1dynB
-         qiy/jYhGI6fnU0R2K0MA5H3a9LJBn1C6+SqDxXGu3qNNR7V2+Bw/Hlg/gQY0ZTmUkv
-         qewE1tnAmWDBQ==
-Date:   Thu, 2 Dec 2021 11:43:48 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     David Airlie <airlied@linux.ie>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 1/3] amd64-agp: convert to generic power management
-Message-ID: <20211202174348.GA2899481@bhelgaas>
+        with ESMTP id S229950AbhLBSpH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 13:45:07 -0500
+Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0E1C06174A;
+        Thu,  2 Dec 2021 10:41:44 -0800 (PST)
+Received: by mail-vk1-xa2d.google.com with SMTP id m16so194400vkl.13;
+        Thu, 02 Dec 2021 10:41:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jlkcU/LshfTlpRQHKItZ7lgWIZTTU48Suk27bZaQ6SI=;
+        b=SszHNGbdgz/q4zTK7ZHrq1za+0KN7+WYA/iVNcpc9SRp08lSjUByV7AIC9aXz7DCwh
+         Osz6YuxLLvMELPudYYGzNvZ93Blos078XmJiOCqPImcFIuoIDo2dJ18HyZJCM5EBXj40
+         XpCVxiiROH0NBqXy8wyV7xZ2jnB4V67c2kniEMZemnkwApNucMZDazz0C/STmwn9i6+a
+         kos07nDW2V7MkHAoqrZ5zPT7QdYl7dmvydMOWbAb2g4DBK+UX5dVGXL09rtqpPzW6dBn
+         zRnQRlnPGOw5uAdLzMuNL6NeqwQcleguRca68oaS2CLZXOcVMXcQaSCZ/5bzkjylG8ic
+         U6aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jlkcU/LshfTlpRQHKItZ7lgWIZTTU48Suk27bZaQ6SI=;
+        b=y7kJHrkTSLQcStDYClAsZLKEZDMZgOkkAV3D6fm5b+s5bLe1drqAfRX0DP6x9Gh5CP
+         Pf5PbmQG/ImoIJVQmDiWnJNCsTLZFujw0KaQjsbpn0YdAKiLbMbeWW4QCNfcE6ldTh3s
+         RJJ4BTFEAtQR3S66Tp47+wtLY+hcGfyu+hBfRAn31tH+L/E/AxvtJtIzHcM7stQCCZCA
+         urvWcrEdPIp+LZdQWNCmfyL//3y4fSxl44ccqUTGbILndZpWeoYi3/bJfxa9wVH1Rd/q
+         ay7lEaOhPTqn7TNii8hfyrw456vz0kGxq4qVHuI8B9q0HjwRVSA9e4FsOEvTVxY94Ut4
+         1m2Q==
+X-Gm-Message-State: AOAM533e4G06j7N7RDmoq9/TrDuEPTt+3J+1J/6EdKGRYLp/oSSJva66
+        J8rso9paP+MM7tJVga+WF8N9q1p6eK6vV51pzpo=
+X-Google-Smtp-Source: ABdhPJz8j6ZFP8VCxEZnkfKFuJWOeO7lz5PbnbrijExs4K9ro7AvuJYLB4vh3Wp+cwV/4MXjJtJzThTnbrmZzFXqRks=
+X-Received: by 2002:a1f:2849:: with SMTP id o70mr17112084vko.35.1638470503418;
+ Thu, 02 Dec 2021 10:41:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211201025419.2797624-2-helgaas@kernel.org>
+References: <20211201215127.23550-1-sergio.paracuellos@gmail.com>
+ <20211201215127.23550-3-sergio.paracuellos@gmail.com> <d243a90d-25b2-a65f-b69d-af7497db8742@roeck-us.net>
+ <CAMhs-H_i7aFeqf4EBtzdL0SKgKrseZGpVU-ytvangpeCMVTmFw@mail.gmail.com>
+ <9401e88b-de5a-dd2a-7e82-f3657ea86e8f@roeck-us.net> <CAMhs-H8vw48RkpFz+rqvoPqDPpkaHdn60j6SdbDJHTNTTp7Fcg@mail.gmail.com>
+ <c70584d5-8efd-6b3e-aab5-c8161f39931b@roeck-us.net>
+In-Reply-To: <c70584d5-8efd-6b3e-aab5-c8161f39931b@roeck-us.net>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Thu, 2 Dec 2021 19:41:31 +0100
+Message-ID: <CAMhs-H98sDT3g6nmxpz+07L7gs8Bi0gpPSEXJA1q5ecucihyog@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] MIPS: ralink: implement 'pcibios_root_bridge_prepare()'
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[cc->to: Rafael: help :)]
+On Thu, Dec 2, 2021 at 6:02 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 12/2/21 7:50 AM, Sergio Paracuellos wrote:
+> > Hi Guenter,
+> >
+> > On Thu, Dec 2, 2021 at 4:06 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> >>
+> >> On 12/2/21 12:29 AM, Sergio Paracuellos wrote:
+> >>> Hi Guenter,
+> >>>
+> >>> On Wed, Dec 1, 2021 at 11:17 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> >>>>
+> >>>> On 12/1/21 1:51 PM, Sergio Paracuellos wrote:
+> >>>>> PCI core code call 'pcibios_root_bridge_prepare()' function inside function
+> >>>>> 'pci_register_host_bridge()'. This point is very good way to properly enter
+> >>>>> into this MIPS ralink specific code to properly setup I/O coherency units
+> >>>>> with PCI memory addresses.
+> >>>>>
+> >>>>> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> >>>>> ---
+> >>>>>     arch/mips/ralink/mt7621.c | 30 ++++++++++++++++++++++++++++++
+> >>>>>     1 file changed, 30 insertions(+)
+> >>>>>
+> >>>>> diff --git a/arch/mips/ralink/mt7621.c b/arch/mips/ralink/mt7621.c
+> >>>>> index bd71f5b14238..7649416c1cd7 100644
+> >>>>> --- a/arch/mips/ralink/mt7621.c
+> >>>>> +++ b/arch/mips/ralink/mt7621.c
+> >>>>> @@ -10,6 +10,7 @@
+> >>>>>     #include <linux/slab.h>
+> >>>>>     #include <linux/sys_soc.h>
+> >>>>>     #include <linux/memblock.h>
+> >>>>> +#include <linux/pci.h>
+> >>>>>
+> >>>>>     #include <asm/bootinfo.h>
+> >>>>>     #include <asm/mipsregs.h>
+> >>>>> @@ -22,6 +23,35 @@
+> >>>>>
+> >>>>>     static void *detect_magic __initdata = detect_memory_region;
+> >>>>>
+> >>>>> +int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
+> >>>>> +{
+> >>>>> +     struct resource_entry *entry;
+> >>>>> +     resource_size_t mask;
+> >>>>> +
+> >>>>> +     entry = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
+> >>>>> +     if (!entry) {
+> >>>>> +             pr_err("Cannot get memory resource\n");
+> >>>>> +             return -EINVAL;
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     if (mips_cps_numiocu(0)) {
+> >>>>> +             /*
+> >>>>> +              * FIXME: hardware doesn't accept mask values with 1s after
+> >>>>> +              * 0s (e.g. 0xffef), so it would be great to warn if that's
+> >>>>> +              * about to happen
+> >>>>> +              */ > +         mask = ~(entry->res->end - entry->res->start);
+> >>>>> +
+> >>>>
+> >>>> Try something like this:
+> >>>>                   WARN_ON((mask != ~0UL && BIT(ffz(mask)) - 1 != mask);
+> >>>
+> >>> Thanks for the tip. The following works for me:
+> >>>
+> >>>                     WARN_ON(mask != ~0UL && ~(BIT(__ffs(mask)) - 1) != mask);
+> >>
+> >> Are you sure ? __ffs() returns the first bit set, which isn't useful
+> >> for this test.
+> >
+> > My mask is calculated as follows:
+> >   mask = ~(entry->res->end - entry->res->start);
+> >
+> > Where for normal memory resource:
+> >   - entry->res->end = 0x6fffffff;
+> >   - entry->res->start = 0x60000000;
+> >
+> > So I end up with a mask: 0xf0000000.
+> >
+> > So applying ~(BIT(__ffs(mask)) - 1) I get a good '0xf0000000' for this
+> > particular case which looks correct.
+> >
+> > Suppose an invalid case with the mask being 0xffef0000.
+> >
+> > Applying ~(BIT(__ffs(mask)) - 1) will be 0xffff0000 which will trigger
+> > the WARN_ON since 0xffff0000 != 0xffef0000
+> >
+> > So I think this is correct... Am I missing something?
+> >
+>
+> Your description says "hardware doesn't accept mask values with 1s after 0s
+> (e.g. 0xffef)". 0xf0000000 has 1s after 0s.
+>
+> Your version works (I think) as long as the upper mask bits are all 1s.
+> It will fail, for example, if the mask value is 0xf000000 and
+> sizeof(long) == 8. Your test is the equivalent of "no mask value
+> with 0s after 1s", assuming that sizeof(resource_size_t) == sizeof(long).
+> As far as I can see with test code, it fails if sizeof(resource_size_t)
+> != sizeof(long). Also, it returns an error if mask == 0. I guess that is
+> a corner case, but it would be interesting to know if it is theoretically
+> valid.
 
-On Tue, Nov 30, 2021 at 08:54:17PM -0600, Bjorn Helgaas wrote:
-> From: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> 
-> Convert amd64-agp from legacy PCI power management to the generic power
-> management framework.
-> 
-> Previously, amd64-agp used legacy PCI power management.
-> agp_amd64_suspend() looked like this:
-> 
->   agp_amd64_suspend
->     pci_save_state(pdev)
->     pci_set_power_state(pdev, pci_choose_state(pdev, state))
-> 
-> With generic power management, these are both done by the PCI core in
-> pci_pm_runtime_suspend(), so drop agp_amd64_suspend() completely.
+Thanks a lot for the clear explanation. I was assuming MIPS ralink
+arch so sizeof(long) and sizeof(resource_size_t) are equal and upper
+mask bits are all 1s. But you are right, my version will fail if this
+sizeof(long) were eight.
 
-I think the *patch* is correct, but my explanation is wrong.  Would
-appreciate any corrections!
+>
+> I _think_ the following works even if sizeof(resource_size_t) != sizeof(long).
+>
+>         WARN_ON(mask && BIT(ffz(~mask)) - 1 != ~mask);
 
-Prior to this patch, agp_amd64_suspend() is a pci_driver.suspend()
-method and is called in this path:
+This works for me also and looks like it does the right thing for any
+case, thanks.
 
-  pci_pm_suspend
-    pci_legacy_suspend
-      drv->suspend
+>
+> or, alternatively, something like
+>
+>         mask2 = entry->res->end - entry->res->start;
+>         mask = ~mask2;
+>         WARN_ON(mask && BIT(ffz(mask2)) - 1 != mask2);
+>
+> though that looks a bit weird.
 
-After this patch, agp_amd64_suspend() is not implemented at all, and
-we do the pci_save_state() and pci_set_power_state() in PCI generic
-code.
+Agreed, using two variables here looks weird also for me.
 
-But I think those actually happen in pci_pm_suspend_noirq(), not in
-pci_pm_runtime_suspend(), i.e., in this path:
+Best regards,
+    Sergio Paracuellos
 
-  suspend_devices_and_enter
-    dpm_suspend_start(PMSG_SUSPEND)
-      dpm_suspend(PMSG_SUSPEND)
-        device_suspend
-          __device_suspend
-            callback = pm_op(dev->bus->pm, state)
-            dpm_run_callback(callback)
-              pci_pm_suspend                            # PCI bus method
-                dev->driver->pm->suspend
-                  agp_amd64_suspend                     # <-- no longer needed
-    suspend_enter
-      dpm_suspend_noirq(PMSG_SUSPEND)
-        dpm_noirq_suspend_devices(PMSG_SUSPEND)
-          device_suspend_noirq
-            __device_suspend_noirq
-              callback = pm_noirq_op(dev->bus->pm, state)
-              dpm_run_callback(callback)
-                pci_pm_suspend_noirq                    # PCI bus method
-                  pci_save_state                        # <-- now done here
-                  pci_prepare_to_sleep
-                    pci_set_power_state                 # <-- and here
-                  
-I got confused because I couldn't find the call chain leading to
-pci_pm_suspend_noirq().  pm_op() and dpm_run_callback() essentially
-break the call chain, which makes it a little hard to follow.
-
-> agp_amd64_resume() looked like this:
-> 
->   agp_amd64_resume
->     pci_set_power_state(pdev, PCI_D0)
->     pci_restore_state(pdev)
->     ...
-> 
-> With generic power management, the PCI parts are done by
-> pci_pm_runtime_resume(), so drop those from agp_amd64_resume().
-> 
-> [bhelgaas: commit log]
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/char/agp/amd64-agp.c | 24 ++++++------------------
->  1 file changed, 6 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/char/agp/amd64-agp.c b/drivers/char/agp/amd64-agp.c
-> index b40edae32817..dc78a4fb879e 100644
-> --- a/drivers/char/agp/amd64-agp.c
-> +++ b/drivers/char/agp/amd64-agp.c
-> @@ -588,20 +588,11 @@ static void agp_amd64_remove(struct pci_dev *pdev)
->  	agp_bridges_found--;
->  }
->  
-> -#ifdef CONFIG_PM
-> +#define agp_amd64_suspend NULL
->  
-> -static int agp_amd64_suspend(struct pci_dev *pdev, pm_message_t state)
-> +static int __maybe_unused agp_amd64_resume(struct device *dev)
->  {
-> -	pci_save_state(pdev);
-> -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
-> -
-> -	return 0;
-> -}
-> -
-> -static int agp_amd64_resume(struct pci_dev *pdev)
-> -{
-> -	pci_set_power_state(pdev, PCI_D0);
-> -	pci_restore_state(pdev);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
->  
->  	if (pdev->vendor == PCI_VENDOR_ID_NVIDIA)
->  		nforce3_agp_init(pdev);
-> @@ -609,8 +600,6 @@ static int agp_amd64_resume(struct pci_dev *pdev)
->  	return amd_8151_configure();
->  }
->  
-> -#endif /* CONFIG_PM */
-> -
->  static const struct pci_device_id agp_amd64_pci_table[] = {
->  	{
->  	.class		= (PCI_CLASS_BRIDGE_HOST << 8),
-> @@ -738,15 +727,14 @@ static const struct pci_device_id agp_amd64_pci_promisc_table[] = {
->  	{ }
->  };
->  
-> +static SIMPLE_DEV_PM_OPS(agp_amd64_pm_ops, agp_amd64_suspend, agp_amd64_resume);
-> +
->  static struct pci_driver agp_amd64_pci_driver = {
->  	.name		= "agpgart-amd64",
->  	.id_table	= agp_amd64_pci_table,
->  	.probe		= agp_amd64_probe,
->  	.remove		= agp_amd64_remove,
-> -#ifdef CONFIG_PM
-> -	.suspend	= agp_amd64_suspend,
-> -	.resume		= agp_amd64_resume,
-> -#endif
-> +	.driver.pm  = &agp_amd64_pm_ops,
->  };
->  
->  
-> -- 
-> 2.25.1
-> 
+>
+> Thanks,
+> Guenter
+>
+> > Thanks,
+> >      Sergio Paracuellos
+> >>
+> >> Guenter
+> >>
+> >>>
+> >>> I will send this as a different patch, though.
+> >>>
+> >>> Best regards,
+> >>>       Sergio Paracuellos
+> >>>
+> >>>>
+> >>>>> +             write_gcr_reg1_base(entry->res->start);
+> >>>>> +             write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
+> >>>>> +             pr_info("PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
+> >>>>> +                     (unsigned long long)read_gcr_reg1_base(),
+> >>>>> +                     (unsigned long long)read_gcr_reg1_mask());
+> >>>>> +     }
+> >>>>> +
+> >>>>> +     return 0;
+> >>>>> +}
+> >>>>> +
+> >>>>>     phys_addr_t mips_cpc_default_phys_base(void)
+> >>>>>     {
+> >>>>>         panic("Cannot detect cpc address");
+> >>>>>
+> >>>>
+> >>
+>
