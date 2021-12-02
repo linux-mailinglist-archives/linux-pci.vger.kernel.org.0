@@ -2,164 +2,297 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25175466B9A
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 22:24:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA3DE466CB9
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 23:31:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377030AbhLBV1e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 16:27:34 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:35098 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349000AbhLBV1b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 16:27:31 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A6B526285A;
-        Thu,  2 Dec 2021 21:24:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C889DC00446;
-        Thu,  2 Dec 2021 21:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638480247;
-        bh=o7+t3DCbVFKCCTBenNxoyOz36LbK9+1Y54ENVixcE0o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nJmhlcR5QFcSiT9vNQJwIqf3rsHqEjkUWfStp+dFT7IquVNhsLPo0qOIKrkIx0FOy
-         orX0EnAJ88V3QeivowcPSy6RE9GStypMpGVp9c94nt0nzoIjF8RotK121LYr9daPa0
-         YkrkEB4ly3s2THCuSzdqEFPw+TqSMS8FVMDZodQESy7z62RX+QQTB8r6NNrgIKQ26p
-         vABKvtHBW9lEbKD/B+bMqsO9Ts1z8xpbQMKPewbKTMSBCGyBLhOQnpDXnfW6TvTzq2
-         ndBHlIjXzxRJp/dQnPtXPSI4S3IwKN4r667arOdHIjfnHYmz2VJbZEtVVaggoF8K6p
-         M80IgL6D3bA+A==
-Date:   Thu, 2 Dec 2021 15:24:05 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        id S231538AbhLBWei (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 17:34:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231240AbhLBWeh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 17:34:37 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C15EEC06174A;
+        Thu,  2 Dec 2021 14:31:14 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638484272;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VPV/P40v2U0P8DhSWSQCuWDSGa4mGn96LwynWGTQrSo=;
+        b=KSrBvnhgjDA7Ok2VXU38PHDhTsKqhMhbNCw4wyfCGQDprdzFEft34TwZ9FMYo7WGroyCqs
+        CmlxKCaPIw0YfLKorO6Xpk7+EoGoa6ujvP4c9L0gbfJt9XXa5HNNJgwyvDXhAVcveyeAZQ
+        7eEo9fQKAZEWVmKWep1+dBFW/5M27Q0rK+vWCFkl8lrwx3as5LCWj0iJavZpHhLuCTLISO
+        aYBb8UL+OZu6qkfxuPS8wnF3wSoVZS6BLCuA2TUWLxh47MqQ9NNkBROw4w4Xs6lZ3Wz/dz
+        wWpbouq6ZoICPA2l3gnEZDf+zIbfxm9In6qTdt10JyhvFUwFDbFp/VHuSf+snQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638484272;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VPV/P40v2U0P8DhSWSQCuWDSGa4mGn96LwynWGTQrSo=;
+        b=mNChMHozKXHd8nwdd11Tr1p2dwkGFGdUKOI5h1dZi6RBm0kzTEaCB/gNblrfrxvjshs8iH
+        CK3u4vCGKHKbKaCQ==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 20/23] cxl/port: Introduce a port driver
-Message-ID: <20211202212405.GA2918514@bhelgaas>
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
+In-Reply-To: <20211202200017.GS4670@nvidia.com>
+References: <87o861banv.ffs@tglx> <20211201001748.GF4670@nvidia.com>
+ <87mtlkaauo.ffs@tglx> <20211201130023.GH4670@nvidia.com>
+ <87y2548byw.ffs@tglx> <20211201181406.GM4670@nvidia.com>
+ <87mtlk84ae.ffs@tglx> <87r1av7u3d.ffs@tglx>
+ <20211202135502.GP4670@nvidia.com> <87wnkm6c77.ffs@tglx>
+ <20211202200017.GS4670@nvidia.com>
+Date:   Thu, 02 Dec 2021 23:31:11 +0100
+Message-ID: <87o85y63m8.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4ii=bjKNQxoMLF-gscJy7Bh8CUn205_1GpCwfMyJ22+6g@mail.gmail.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 23, 2021 at 11:17:55PM -0800, Dan Williams wrote:
-> On Tue, Nov 23, 2021 at 10:33 PM Christoph Hellwig <hch@lst.de> wrote:
-> > On Tue, Nov 23, 2021 at 04:40:06PM -0800, Dan Williams wrote:
-> > > Let me ask a clarifying question coming from the other direction that
-> > > resulted in the creation of the auxiliary bus architecture. Some
-> > > background. RDMA is a protocol that may run on top of Ethernet.
-> >
-> > No, RDMA is a concept.  Linux supports 2 and a half RDMA protocols
-> > that run over ethernet (RoCE v1 and v2 and iWarp).
-> 
-> Yes, I was being too coarse, point taken. However, I don't think that
-> changes the observation that multiple vendors are using aux bus to
-> share a feature driver across multiple base Ethernet drivers.
-> 
-> > > Consider the case where you have multiple generations of Ethernet
-> > > adapter devices, but they all support common RDMA functionality. You
-> > > only have the one PCI device to attach a unique Ethernet driver. What
-> > > is an idiomatic way to deploy a module that automatically loads and
-> > > attaches to the exported common functionality across adapters that
-> > > otherwise have a unique native driver for the hardware device?
-> >
-> > The whole aux bus drama is mostly because the intel design for these
-> > is really fucked up.  All the sane HCAs do not use this model.  All
-> > this attchment crap really should not be there.
-> 
-> I am missing the counter proposal in both Bjorn's and your distaste
-> for aux bus and PCIe portdrv?
+Jason,
 
-For the case of PCIe portdrv, the functionality involved is Power
-Management Events (PME), Advanced Error Reporting (AER), PCIe native
-hotplug, Downstream Port Containment (DPC), and Bandwidth
-Notifications.
+On Thu, Dec 02 2021 at 16:00, Jason Gunthorpe wrote:
+> On Thu, Dec 02, 2021 at 08:25:48PM +0100, Thomas Gleixner wrote:
+>> We seem to have a serious problem of terminology and the understanding
+>> of topology which is why we continue to talk past each other forever.
+>
+> I think I understand and agree with everything you said below.
 
-Currently each has a separate "port service driver" with .probe(),
-.remove(), .suspend(), .resume(), etc.
+Good!
 
-The services share interrupt vectors.  It's quite complicated to set
-them up, and it has to be done in the portdrv, not in the individual
-drivers.
+> The point we diverge is where to put the vector storage:
 
-They also share power state (D0, D3hot, etc).  
+Kinda. The vector, i.e. message storage is either:
 
-In my mind these are not separate devices from the underlying PCI
-device, and I don't think splitting the support into "service drivers"
-made things better.  I think it would be simpler if these were just
-added to pci_init_capabilities() like other optional pieces of PCI
-functionality.
+  - MSI entry in the PCI config space
+  - MSI-X table in the PCI config space
+  - Device specific IMS storage
 
-Sysfs looks like this:
+The software representation aka struct msi_desc is a different
+story. That's what we are debating.
 
-  /sys/devices/pci0000:00/0000:00:1c.0/                       # Root Port
-  /sys/devices/pci0000:00/0000:00:1c.0/0000:00:1c.0:pcie002/  # AER "device"
-  /sys/devices/pci0000:00/0000:00:1c.0/0000:00:1c.0:pcie010/  # BW notif
+>> Of course we can store them in pci_dev.dev.msi.data.store. Either with a
+>> dedicated xarray or by partitioning the xarray space. Both have their
+>> pro and cons.
+>
+> This decision seems to drive the question of how many 'struct devices'
+> do we need, and where do we get them..
 
-  /sys/bus/pci/devices/0000:00:1c.0 -> ../../../devices/pci0000:00/0000:00:1c.0/
-  /sys/bus/pci_express/devices/0000:00:1c.0:pcie002 -> ../../../devices/pci0000:00/0000:00:1c.0/0000:00:1c.0:pcie002/
+Not really. There is nothing what enforces to make the MSI irqdomain
+storage strictly hang off struct device. There has to be a connection to
+a struct device in some way obviously to make IOMMU happy.
 
-The "pcie002" names (hex for PCIE_PORT_SERVICE_AER, etc.) are
-unintelligible.  I don't know why we have a separate
-/sys/bus/pci_express hierarchy.
+>> Such a logical function would be the entity to hand out for VFIO or
+>> cdev.
+>
+> What is a logical function, concretely?
 
-IIUC, CXL devices will be enumerated by the usual PCI enumeration, so
-there will be a struct pci_dev for them, and they will appear under
-/sys/devices/pci*/.
+That's a name I came up with for a abstract representation of such a
+queue container. I came up with that as a obvious consequence of my
+previous reasoning about PF -> VF -> XF.
 
-They will have the usual PCI Power Management, MSI, AER, DPC, and
-similar Capabilites, so the PCI core will manage them.
+> Does it have struct device?
 
-CXL devices have lots of fancy additional features.  Does that merit
-making a separate struct device and a separate sysfs hierarchy for
-them?  I don't know.
+It does not necessarily have to .
 
-> > > Another example, the Native PCIe Enclosure Management (NPEM)
-> > > specification defines a handful of registers that can appear anywhere
-> > > in the PCIe hierarchy. How can you write a common driver that is
-> > > generically applicable to any given NPEM instance?
-> >
-> > Another totally messed up spec.  But then pretty much everything coming
-> > from the PCIe SIG in terms of interface tends to be really, really
-> > broken lately.
+> Can I instead suggest a name like 'message interrupt table' ?
 
-Hotplug is more central to PCI than NPEM is, but NPEM is a little bit
-like PCIe native hotplug in concept: hotplug has a few registers that
-control downstream indicators, interlock, and power controller; NPEM
-has registers that control downstream indicators.
+Well yes, but that's not what I meant. See below.
 
-Both are prescribed by the PCIe spec and presumably designed to work
-alongside the usual device-specific drivers for bridges, SSDs, etc.
+> Ie a device has two linearly indexed message interrupt tables - the
+> PCI SIG defined MSI/MSI-X one created by the PCI core and the IMS one
+> created by the driver.
+>
+> Both start at 0 index and they have different irq_domains.
+>
+> Instead of asking the driver to create a domain we ask the driver to
+> create a new 'message interrupt table'. The driver provides the
+> irq_chip to program the messages and the pci_device. The core code
+> manages the irq domain setup.
+>
+> Using what you say below:
+>
+>> If this is not split out, then every driver and wrapper has to come up
+>> with it's own representation of this instead of being able to do:
+>> 
+>>      request_irq(msi_get_virq(lfunc, idx=0), handler0, ...);
+>>      request_irq(msi_get_virq(lfunc, idx=1), handler1, ...);
+>
+> We could say:
+>   msi_get_virq(device.pci_msi_table, index=0)
+>
+> Is the 0th PCI SIG MSI vector
+>
+> Something like:
+>
+>  ims_table = pci_create_msi_table(pci_dev, my_irq_chip,..)
+>  msi_get_virq(ims_table, index=0)
 
-I would at least explore the idea of doing common support by
-integrating NPEM into the PCI core.  There would have to be some hook
-for the enclosure-specific bits, but I think it's fair for the details
-of sending commands and polling for command completed to be part of
-the PCI core.
+Which is pretty much a wrapper around two different irqdomains for the
+device and either partitioned index space in the xarray or two xarrays.
 
-> DVSEC and DOE is more of the same in terms of composing add-on
-> features into devices. Hardware vendors want to mix multiple hard-IPs
-> into a single device, aux bus is one response. Topology specific buses
-> like /sys/bus/cxl are another.
+Just badly named because the table itself is where the resulting message
+is stored, which is composed with the help of the relevant MSI
+descriptor. See above.
 
-VSEC and DVSEC are pretty much wild cards since the PCIe spec says
-nothing about what registers they may contain or how they should work.
+We really should not try to make up an artifical table representation
+for something which does not necessarily have a table at all, i.e. the
+devices you talk about which store the message in queue specific system
+memory. Pretending that this is a table is just silly.
 
-DOE *is* specified by PCIe, at least in terms of the data transfer
-protocol (interrupt usage, read/write mailbox, etc).  I think that,
-and the fact that it's not specific to CXL, means we need some kind of
-PCI core interface to do the transfers.
+Also I disagree that this has to be tied to a PCI specific interface,
+except for creating a PCI specific wrapper for it to not make a driver
+developer have to write '&pdev->dev', which is the very least of our
+problems.
 
-> This CXL port driver is offering enumeration, link management, and
-> memory decode setup services to the rest of the topology. I see it as
-> similar to management protocol services offered by libsas.
+IMS as a technical concept is absolutely not PCI specific at all and not
+invented by PCI/SIG. It's a marketing brandname for something which
+existed way before they thought about it: Message signaled interrupts.
 
-Bjorn
+Aside of that 'my_irq_chip' does not cut it at all because of the way
+how the resulting messages are stored. IDXD has IOMEM storage and a
+storage space limitation while your device uses system memory storage
+and has other limitations, i.e. system memory and the number of queues
+the device can provide.
+
+An irqchip is a just set of functions to talk to hardware either
+directly or via some indirect transport (I2C, SPI, MLX queue management
+magic...). These functions require irqdomain and/or device specific
+information to function.
+
+Trying to create a universal pci_create_foo() wrapper around this is
+going to be like the 13th Herkulean task.
+
+Seriously, you cannot make something uniform which is by definition
+non-uniform.
+
+Let's not even try to pretend that it is possible.
+
+> Is the 0th IMS vector
+>
+> Is it close to what you are thinking with lfunc?
+
+Not really. I was really reasoning about an abstract representation for
+a functional queue, which is more than just a queue allocated from the
+PF or VF device.
+
+I really meant a container like this:
+
+struct logical_function {
+        /* Pointer to the physical device */
+        struct device		*phys_device;
+        /* MSI descriptor storage */
+	struct msi_data		msi;
+        /* The queue number */
+        unsigned int		queue_nr;
+        /* Add more information which is common to these things */
+};
+
+Now the real queue, which is obviously not generic:
+
+struct myqueue_function {
+	struct logical_function lfunc;
+        struct myqueue		queue;
+};        
+
+The idea is to have a common representation for these type of things
+which allows:
+
+ 1) Have common code for exposing queues to VFIO, cdev, sysfs...
+
+    You still need myqueue specific code, but the common stuff which is
+    in struct logical_function can be generic and device independent.
+
+ 2) Having the MSI storage per logical function (queue) allows to have
+    a queue relative 0 based MSI index space.
+
+    The actual index in the physical table (think IMS) would be held in
+    the msi descriptor itself.
+
+`   Which then allows queue relative addressing without extra device/queue
+    specific meta storage.
+
+    i.e.
+
+        msi_get_virq(&myqueue->lfunc.msi, idx = 0)
+
+    v.s.
+
+        idx = myqueue->msidx[0];
+        msi_get_virq(pcidev->dev, idx);
+
+        where the queue management code has to set up myqueue->msidx[]
+        and stick the index of the underlying device storage into it.
+
+ 3) Setup and teardown would be simply per logical function for
+    all of the related resources which are required.
+
+    Interrrupt teardown would look like this:
+
+      msi_domain_free_all_irqs(irqdomain, &lfunc->msi);
+
+    vs.
+
+      for (i = 0; i < myqueue->nrirqs; i++)
+           msi_domain_free_irq(irqdomain, &pcidev->dev, myqueue->msidx[0]);
+
+
+Now change struct logical_function to:
+
+struct logical_function {
+-       /* Pointer to the physical device */
+-       struct device		*phys_device;
+
++       /* Pseudo device to allow using devres */
++       struct pseudo_device	pseudo_device;
+
+	/* MSI descriptor storage */
+	struct msi_data		msi;
+        /* The queue number */
+        unsigned int		queue_nr;
+        /* Add more information which is common to these things */
+};
+
+where struct pseudo_device holds the phys_device pointer and then you
+can utilize the devres infrastructure like you do for any other device
+and do:
+
+      pseudo_device_add(&myqueue->lfunc.pseudo_device);
+
+at setup time and
+
+      pseudo_device_remove(&myqueue->lfunc.pseudo_device);
+
+on teardown and let all the resources including MSI interrupts be
+released automatically.
+
+Needs some infrastructure obviously, but to me that makes a lot of
+sense.
+
+And I named it pseudo_device on purpose as it is just a vehicle to make
+existing infrastructure which is device specific usable for this kind of
+thing.
+
+I might be completely off track. Feel free to tell me so :)
+
+Thanks,
+
+        tglx
