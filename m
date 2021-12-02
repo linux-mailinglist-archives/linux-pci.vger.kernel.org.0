@@ -2,95 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22AA1466D4A
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 23:53:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C7A1466DCA
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Dec 2021 00:32:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233166AbhLBW47 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 17:56:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
+        id S1359276AbhLBXgS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 18:36:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231682AbhLBW44 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 17:56:56 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA6AC06174A;
-        Thu,  2 Dec 2021 14:53:34 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id y14-20020a17090a2b4e00b001a5824f4918so3673896pjc.4;
-        Thu, 02 Dec 2021 14:53:34 -0800 (PST)
+        with ESMTP id S1358237AbhLBXgS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 18:36:18 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7128AC06174A;
+        Thu,  2 Dec 2021 15:32:55 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id b13so849828plg.2;
+        Thu, 02 Dec 2021 15:32:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GOuMIQHZ6ZbFY/aDEI/F7vdwlKHdquEP2d6O5QmO4Z4=;
-        b=DpP1aNTNhzUyoMO15ULD7LcqNp6QDZ5a44ujOths0vpPQWLQ/KSpsEtMK/cLPXC8Pw
-         ve2h4KN3BAmOfoH31++AdFSBbAP1U0F7QY4XjPmUkYx6sahCT8V60inUek1eaIsQ1ov4
-         J1r8sTm8PZwK1EJFGWU/oeW8u+iUfKUvSglb2KSR6Bnd6KFSY1Q3nOc2Wfj48NC9QfM2
-         6agfdkcsmt3AyzLx7fY7HDfY8XF+ZPHyXS/2UUtAWoWIYMUNU9j0sAe1Xo6blcjUTO5u
-         kba9l05MRyMMGqFrASMQx7+Ee9LVgE5cNtV8GBqY0JcaVvOsVBunrC5m2v7sYYCAFEAs
-         xsfg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iyZZXm+sZmPd75E/vSAEhJ0vzhxAH+A8lUCHMAK0xy4=;
+        b=eRDLPYSP7mhJosSyHDqk0N6vvbVuUZldeGkvJEfWUeiZLfwYyjMSq7ck9mVKL7FvVH
+         pODp0Y5MHVmyvu4xPTqk3tE3SQjoOHUD07/EMmYaUXrmZ3A6jpIssLWFS0UQuoExFucK
+         DJTc8QYz4bAPn7s5mlND//hTKmqAmtAlCwL+Sm+K5MZrITgMNiewWO2rI4Vc7xc48tjf
+         E4uyljD7Nrc4MGHd4viMOXp5PXdUDWqLtMajLtJsgTjOSbUmDqc4SNT+e18+VdoOGv0X
+         2cBgP70ooDrF4i3F/gpCCHczO15gUoYGmRPAmCoiBqT/tmyUdF8ulKnXXkHcavEoGLtn
+         J5cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=GOuMIQHZ6ZbFY/aDEI/F7vdwlKHdquEP2d6O5QmO4Z4=;
-        b=p+Y+JRCjkKVU51OHui/tBoTixJGXvXHjuVDT9CXSRwINh3dG75+Zm0mXNmrt+WmLs1
-         oRAWXiBc78hnjVrFs5grgHY2adpXgXfAV8zJ0qmIIGaFVxS1aZK8QoaVFHd2EzBGf6n2
-         TMqXI2JwdyPLzgvztPGlcgFvH7vy5NkGxOCwWfPUdfE2mHM+n3y8wj6SvkNhCy7PBJ6l
-         4QWpfe5b7tj8geBNABFq6FYY8zR+uw75GsTljIkafGz3bZwLHo8ExRHkjtUqdhzeYJE5
-         X/UlVKshPv6VbzLIkjGgfDRk2ujQlgw1id9YJnmLGX17kSBuA44XglC0OAAbXkuOwBtB
-         9ejw==
-X-Gm-Message-State: AOAM530DYYUGqpwMxyYNtzmMfybOioC1EaMX/YjR1nXTcbhjQjBiwJf8
-        yEgrA3z08fS4KfzSlal7luKYdkRLcew=
-X-Google-Smtp-Source: ABdhPJxs0UAlZEUMLhYkinbXBZEpkqNHoJkLj1iOYpaYj1/QcZ8+cMmp/6BHI438GIRyht0oVXfn8Q==
-X-Received: by 2002:a17:90b:4a05:: with SMTP id kk5mr9360528pjb.232.1638485613293;
-        Thu, 02 Dec 2021 14:53:33 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x6sm553906pga.14.2021.12.02.14.53.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Dec 2021 14:53:32 -0800 (PST)
-Subject: Re: [PATCH] dt-bindings: PCI: brcmstb: compatible is required
-To:     Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     devicetree@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:BROADCOM STB PCIE DRIVER" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20211202223609.1171452-1-f.fainelli@gmail.com>
- <CAL_JsqLR=TeKFj1DO-UDcFDcuuw9VUzy9tdxmdK797ywX+fN8g@mail.gmail.com>
+        bh=iyZZXm+sZmPd75E/vSAEhJ0vzhxAH+A8lUCHMAK0xy4=;
+        b=tg3if/ILPR0Ymz2Hs4ybwoITm3hUyzGgYWo6wYdjfXAeMmfCQxTzoSc3VihIdgphAP
+         HBELfRdOqxkKqRPpElzwF8O/UfXviq7RGCf0CjarJjTK1OLLw9CRwr+/tKWUk3blvQmf
+         KppSEI3NwfG12soryG4NQaN7nODBryRN47oCLJESbEZ6kkxesJtw4vhJhQwmB2RBMfzJ
+         w6Z26kxmCW04P41wPcKmUkhMoc8MW2RhXdRjFm80moleZKjsMDg7dtBErA2FoxkkfXxV
+         TK7OPYJk5yMj6jg6VC8hPJKZXbVHA2vA9sDzfX6IfrRh3CHKP0dplj5uaW5fhmCi3mWG
+         wBQQ==
+X-Gm-Message-State: AOAM53191/o+wo5+6pySzEZ+F5jPmYyoM8Gcx9dWDr7zoSsIFrj2ySxl
+        mlwQxYCW2yjvPkDionKi69RRHsI8x8Y=
+X-Google-Smtp-Source: ABdhPJzk4ijSJIjUfwTmegj3V2uablnWLmsw4UZsT3qXB7VLMO6Uuc/xnrYencaXw3ZpWxwaosZrRA==
+X-Received: by 2002:a17:90a:ea09:: with SMTP id w9mr9520766pjy.46.1638487974592;
+        Thu, 02 Dec 2021 15:32:54 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id j1sm809118pfe.158.2021.12.02.15.32.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Dec 2021 15:32:54 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <a72e7ef1-5630-8b9f-a6a3-bc66fe447be3@gmail.com>
-Date:   Thu, 2 Dec 2021 14:53:31 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+To:     devicetree@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM IPROC ARM
+        ARCHITECTURE),
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM IPROC ARM
+        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 0/5] Convert iProc PCIe binding to YAML
+Date:   Thu,  2 Dec 2021 15:32:43 -0800
+Message-Id: <20211202233248.1190797-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLR=TeKFj1DO-UDcFDcuuw9VUzy9tdxmdK797ywX+fN8g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/2/21 2:41 PM, Rob Herring wrote:
-> On Thu, Dec 2, 2021 at 4:36 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->> The compatible property is required, make sure the binding documents it
->> as such.
-> 
-> Yes, though if 'compatible' is not present and matching, the schema is
-> never applied. I'll apply it later, but I wouldn't be too concerned
-> fixing any others.
+This patch series converts the iProc PCIe binding to YAML. Given there
+is a majority of DTS changes, it would make sense for me to pull this
+via the Broadcom ARM SoC git tree.
 
-OK, just happened to run into that one by accident while converting the
-iProc PCIe binding to YAML.
+Thanks!
+
+Florian Fainelli (5):
+  ARM: dts: Cygnus: Fixed iProc PCIe controller properties
+  ARM: dts: HR2: Fixed iProc PCIe controller properties
+  ARM: dts: NSP: Fixed iProc PCIe controller properties
+  arm64: dts: ns2: Add missing interrupt-controller property
+  dt-bindings: pci: Convert iProc PCIe to YAML
+
+ .../bindings/pci/brcm,iproc-pcie.txt          | 133 --------------
+ .../bindings/pci/brcm,iproc-pcie.yaml         | 172 ++++++++++++++++++
+ arch/arm/boot/dts/bcm-cygnus.dtsi             |  14 +-
+ arch/arm/boot/dts/bcm-hr2.dtsi                |   6 +-
+ arch/arm/boot/dts/bcm-nsp.dtsi                |   9 +-
+ .../boot/dts/broadcom/northstar2/ns2.dtsi     |   2 +
+ 6 files changed, 192 insertions(+), 144 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
+
 -- 
-Florian
+2.25.1
+
