@@ -2,97 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7B0E466515
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 15:18:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3521466533
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 15:23:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358510AbhLBOVg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 09:21:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358531AbhLBOV1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 09:21:27 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA59C0617A5
-        for <linux-pci@vger.kernel.org>; Thu,  2 Dec 2021 06:17:43 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id l22so71850780lfg.7
-        for <linux-pci@vger.kernel.org>; Thu, 02 Dec 2021 06:17:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xL4c95uqByU7J08CZiX/XHP0HZvf8gLdVWZxGCtbXXU=;
-        b=sNtnipCEgRSiLyzcUP8nFO9lRdlmoymw3vEn4BMyNF2Qlb3qCHcsbrNRTDtIotwsbk
-         dgKrbHfLwx7xyqYusZx6jqNhnL4bSHgI39IUNpwZ7PO5C8I2gon15ouXdd26seWkKq+i
-         qHSfftUIF7oqv2lldD/ceoB7lC4es7JZ+hr38SPSjHCbxpo6HbXswfzISrZf4MM4dLea
-         GcjvXp4rsJB29zomsNlJk49ubLNW+IC+HXLOiQyNWp5UcCBf1O2AhwU2dkt073LEk0mN
-         V4Jst+VJYdvQ3k6tLkRh9Y2EXFWTRWV4a6AzFGAbYeOLwT3zikEdBnS8G5ZY3/IiEyu2
-         S/aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xL4c95uqByU7J08CZiX/XHP0HZvf8gLdVWZxGCtbXXU=;
-        b=XogHSA1T9sU+JGKDw/4aXzBRO8iY/8wiNAE5pksK7rTN1QvKXo++1tNiBPDz9SS1dX
-         7rAz/L/8sx6mxnZ3Dbm6E4WqSqeA6mERJbw9100QLeA3JDuNocf9D/Byfx6xCrJr4jpB
-         OnNyIp0kDQfH0QUiq96AYopMo8g5jgFA7Y1ufEQYfreICZw6iwsgs2X19yC8iGQfGQUh
-         e4yE5fMTh9QteVPmquvFZYA+rREGGvsqkZfJinaJOX3aBNcEianHdD3Qh1Cx2cjNX4QH
-         WyviNnDguxgqqfZHGrYVM+ZVFsoaW5uPkgyM/BWp819obdl7RmAdCLvCl06UfbTmi+Ge
-         nWBQ==
-X-Gm-Message-State: AOAM530W9qtmDTrE10rwKebEZZdp0Upiby/NpnyeZYM+qXwp9o/vtVvv
-        odDRADVZrIxdwEaq/8tC0pfiPA==
-X-Google-Smtp-Source: ABdhPJxwS1ZJE+rFkAabfyXdoekK/hRmTaui1SVyA6I2RXczyk8lcIdqlWOM+2va9OgJViM5c4GlPQ==
-X-Received: by 2002:a05:6512:3213:: with SMTP id d19mr12392700lfe.519.1638454661909;
-        Thu, 02 Dec 2021 06:17:41 -0800 (PST)
-Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id m15sm362487lfg.165.2021.12.02.06.17.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Dec 2021 06:17:41 -0800 (PST)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: [PATCH v1 10/10] arm64: dts: qcom: sm8450-qrd: enable PCIe0 host
-Date:   Thu,  2 Dec 2021 17:17:26 +0300
-Message-Id: <20211202141726.1796793-11-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211202141726.1796793-1-dmitry.baryshkov@linaro.org>
-References: <20211202141726.1796793-1-dmitry.baryshkov@linaro.org>
+        id S1358515AbhLBO1J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 09:27:09 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:57420 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347257AbhLBO1H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 09:27:07 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 927F9CE2304;
+        Thu,  2 Dec 2021 14:23:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 153FEC53FCB;
+        Thu,  2 Dec 2021 14:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1638455021;
+        bh=oNnu/fYAquguLpIjYchK/Hyo7SQoNQsDNVEvVDkmwwk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d/aD7jGGlhRQjYD/ICQSfDKoktRiprSbgaJ8mVVH9OPYzLELURNXeF3/gTDBLQ/Yy
+         6x0JCTvaCeSp9JwZ1MYyDngkR4Hcx89iyNJ+Uo/WH50ZI+87VTZs0h3TOKCOnfzt48
+         o4onjuvyaKSqZ5RiWx5EzAY8TzrdsK/qMfaG0rkE=
+Date:   Thu, 2 Dec 2021 15:23:38 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
+Message-ID: <YajW6veanK4GZUkv@kroah.com>
+References: <20211130202800.GE4670@nvidia.com>
+ <87o861banv.ffs@tglx>
+ <20211201001748.GF4670@nvidia.com>
+ <87mtlkaauo.ffs@tglx>
+ <20211201130023.GH4670@nvidia.com>
+ <87y2548byw.ffs@tglx>
+ <20211201181406.GM4670@nvidia.com>
+ <87mtlk84ae.ffs@tglx>
+ <87r1av7u3d.ffs@tglx>
+ <20211202135502.GP4670@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211202135502.GP4670@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Enable PCIe0 host on SM8450 QRD device.
+On Thu, Dec 02, 2021 at 09:55:02AM -0400, Jason Gunthorpe wrote:
+> Further, there is no reason why IMS should be reserved exclusively for
+> VFIO! Why shouldn't the cdev be able to use IMS vectors too? It is
+> just a feature of the PCI device like MSI. If the queue has a PASID it
+> can use IDXD's IMS.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8450-qrd.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+No, sorry, but a cdev is not for anything resembling any real resource
+at all.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8450-qrd.dts b/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-index 30ebafe9c6d2..017b0120c5d9 100644
---- a/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-@@ -346,6 +346,10 @@ vreg_l3h_0p91: ldo3 {
- 	};
- };
- 
-+&pcie0 {
-+	status = "okay";
-+};
-+
- &pcie0_phy {
- 	status = "okay";
- 	vdda-phy-supply = <&vreg_l5b_0p88>;
--- 
-2.33.0
+It is ONLY for the /dev/NODE interface that controls the character
+device api to userspace.  The struct device involved in it is ONLY for
+that, nothing else.  Any attempt to add things to it will be gleefully
+rejected.
 
+The cdev api today (in the kernel) exposes too much mess and there's at
+least 4 or 5 different ways to use it.  It's on my long-term TODO list
+to fix this up to not even allow abuses like you are considering here,
+so please don't do that.
+
+> If we really need a 2nd struct device to turn on IMS then, I'd suggest
+> picking the cdev, as it keeps IMS and its allocator inside the IDXD
+> PCIe driver and not in the VFIO world.
+
+No!  Again, a cdev is to control the lifespan/lifecycle of the /dev/NODE
+only.  Anything other than that is not ok to do at all.
+
+thanks,
+
+greg k-h
