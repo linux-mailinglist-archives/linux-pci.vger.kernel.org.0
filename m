@@ -2,117 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23DBA466104
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 10:58:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEEC0466110
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 11:01:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbhLBKCI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 05:02:08 -0500
-Received: from mail-ed1-f46.google.com ([209.85.208.46]:39880 "EHLO
-        mail-ed1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357198AbhLBKA6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 05:00:58 -0500
-Received: by mail-ed1-f46.google.com with SMTP id w1so113864843edc.6;
-        Thu, 02 Dec 2021 01:57:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=en+Opy31MVytWWQD7G7uESibRnRhr5heljRq+Tgyh3k=;
-        b=oPgKGvqFeJeSvqCNO3WSNpJoYQ9qSLzPxDb4Z1/CV4g3TBvpxI1qg2oM7vruqV2soD
-         MlU2VKe+Tk6aQXySZ9nSdS0aqRcr2Jn1E6fM2hJ6KQ8UndG1gZR/eOejsOnoyX2EXloN
-         Nk2Mwjma0lV9je4CBc29TAM34yOfub5ibQUy1xrlzEUc+9P+5JwLDS0eEl09PALTkxor
-         fPIGO6SGGxKP+B8kpR4S6rQru61rmtGxpfBz3Jt+0o+X0C/jCRG3ORqrYzujqUAQdr6f
-         cvaQAKJGIPYalt4XZLhf6b7+P4UmooSjoInraQAQEts3wOkknhMBcHUHjuxJimawppIB
-         aqAA==
-X-Gm-Message-State: AOAM530AR4frB4GlBAkm3vn1xpfczxP545uHkZ561RdMB5mjyjPO/aOI
-        QVNy2TTgW0VLT5oJyAvnCSQ=
-X-Google-Smtp-Source: ABdhPJw6nmoGzRg2kEWm4EnXCY7RMccJAoIb40B+fUyn9zp8V8Br3ohmm71FaGOTtg+ckZXf623FnQ==
-X-Received: by 2002:a05:6402:5206:: with SMTP id s6mr16405018edd.113.1638439054291;
-        Thu, 02 Dec 2021 01:57:34 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id z22sm2035051edd.78.2021.12.02.01.57.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Dec 2021 01:57:33 -0800 (PST)
-Date:   Thu, 2 Dec 2021 10:57:32 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Qi Liu <liuqi115@huawei.com>
-Cc:     will@kernel.org, mark.rutland@arm.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        zhangshaokun@hisilicon.com
-Subject: Re: [PATCH v13 0/2] drivers/perf: hisi: Add support for PCIe PMU
-Message-ID: <YaiYjHRrX+XfTic8@rocinante>
-References: <20211202080633.2919-1-liuqi115@huawei.com>
+        id S230243AbhLBKEq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 05:04:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:60860 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230089AbhLBKEj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 Dec 2021 05:04:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0695142F;
+        Thu,  2 Dec 2021 02:01:16 -0800 (PST)
+Received: from e123427-lin.arm.com (unknown [10.57.32.195])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19E2C3F7D7;
+        Thu,  2 Dec 2021 02:01:15 -0800 (PST)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, pali@kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 00/11] PCI: aardvark controller fixes BATCH 3
+Date:   Thu,  2 Dec 2021 10:01:09 +0000
+Message-Id: <163843918639.2166.8445948322592754351.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20211130172913.9727-1-kabel@kernel.org>
+References: <20211130172913.9727-1-kabel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211202080633.2919-1-liuqi115@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Qi,
-
-[...]
-> Changes since v12:
-> - Modify the printout message of cpuhotplug to standard.
-> - Link: https://lore.kernel.org/linux-arm-kernel/20211130120450.2747-1-liuqi115@huawei.com/
-> 
-> Changes since v11:
-> - Address the comments from Krzysztof, drop all the final dot and change bdf in comment to BDF.
-> - Link: https://lore.kernel.org/linux-arm-kernel/20211029093632.4350-1-liuqi115@huawei.com/
-> 
-> Changes since v10:
-> - Drop the out of date comment according to Jonathan's review.
-> - Link: https://lore.kernel.org/linux-arm-kernel/20210915074524.18040-1-liuqi115@huawei.com/
-> 
-> Changes since v9:
-> - Add check in hisi_pcie_pmu_validate_event_group to count counters accurently .
-> - Link: https://lore.kernel.org/linux-arm-kernel/20210818051246.29545-1-liuqi115@huawei.com/
-> 
-> Changes since v8:
-> - Remove subevent parameter in attr->config.
-> - Check the counter scheduling constraints when accepting an event group.
-> - Link: https://lore.kernel.org/linux-arm-kernel/20210728080932.72515-1-liuqi115@huawei.com/
-> 
-> Changes since v7:
-> - Drop headerfile cpumask.h and cpuhotplug.h.
-> - Rename events in perf list: bw->flux, lat->delay, as driver doesn't
->   process bandwidth and average latency data.
-> - Link: https://lore.kernel.org/linux-arm-kernel/1624532384-43002-1-git-send-email-liuqi115@huawei.com/
-> 
-> Changes since v6:
-> - Move the driver to drivers/perf/hisilicon.
-> - Treat content in PMU counter and ext_counter as different PMU events, and
->   export them separately.
-> - Address the comments from Will and Krzysztof.
-> - Link: https://lore.kernel.org/linux-arm-kernel/1622467951-32114-1-git-send-email-liuqi115@huawei.com/
-> 
-> Changes since v5:
-> - Fix some errors when build under ARCH=xtensa.
-> - Link: https://lore.kernel.org/linux-arm-kernel/1621946795-14046-1-git-send-email-liuqi115@huawei.com/
-> 
-> Changes since v4:
-> - Replace irq_set_affinity_hint() with irq_set_affinity().
-> - Link: https://lore.kernel.org/linux-arm-kernel/1621417741-5229-1-git-send-email-liuqi115@huawei.com/
+On Tue, 30 Nov 2021 18:29:02 +0100, Marek Behún wrote:
+> as you requested on IRC, I added more explanation to commit logs of the
+> last 3 patches.
 > 
 > Changes since v3:
-> - Fix some warnings when build under 32bits architecture.
-> - Address the comments from John.
-> - Link: https://lore.kernel.org/linux-arm-kernel/1618490885-44612-1-git-send-email-liuqi115@huawei.com/
+> - updated commit messages of patches 9, 10 and 11
 > 
 > Changes since v2:
-> - Address the comments from John.
-> - Link: https://lore.kernel.org/linux-arm-kernel/1617959157-22956-1-git-send-email-liuqi115@huawei.com/
+> - updated the second patch, updated definitions of registers
+>   PCI_EXP_DEVCAP2 and PCI_EXP_DEVCTL2
 > 
-> Changes since v1:
-> - Drop the internal Reviewed-by tag.
-> - Fix some build warnings when W=1.
-> - Link: https://lore.kernel.org/linux-arm-kernel/1617788943-52722-1-git-send-email-liuqi115@huawei.com/
-> Qi Liu (2):
->   docs: perf: Add description for HiSilicon PCIe PMU driver
->   drivers/perf: hisi: Add driver for HiSilicon PCIe PMU
+> [...]
 
-Thank you!  Solid work here!  Much appreciated.
+Applied to pci/aardvark, thanks!
 
-	Krzysztof
+[01/11] PCI: pci-bridge-emul: Add description for class_revision field
+        https://git.kernel.org/lpieralisi/pci/c/9319230ac1
+[02/11] PCI: pci-bridge-emul: Add definitions for missing capabilities registers
+        https://git.kernel.org/lpieralisi/pci/c/8ea673a8b3
+[03/11] PCI: aardvark: Add support for DEVCAP2, DEVCTL2, LNKCAP2 and LNKCTL2 registers on emulated bridge
+        https://git.kernel.org/lpieralisi/pci/c/1d3e170344
+[04/11] PCI: aardvark: Clear all MSIs at setup
+        https://git.kernel.org/lpieralisi/pci/c/7d8dc1f7cd
+[05/11] PCI: aardvark: Comment actions in driver remove method
+        https://git.kernel.org/lpieralisi/pci/c/a4ca7948e1
+[06/11] PCI: aardvark: Disable bus mastering when unbinding driver
+        https://git.kernel.org/lpieralisi/pci/c/a46f2f6dd4
+[07/11] PCI: aardvark: Mask all interrupts when unbinding driver
+        https://git.kernel.org/lpieralisi/pci/c/13bcdf07cb
+[08/11] PCI: aardvark: Fix memory leak in driver unbind
+        https://git.kernel.org/lpieralisi/pci/c/2f040a17f5
+[09/11] PCI: aardvark: Assert PERST# when unbinding driver
+        https://git.kernel.org/lpieralisi/pci/c/1f54391be8
+[10/11] PCI: aardvark: Disable link training when unbinding driver
+        https://git.kernel.org/lpieralisi/pci/c/759dec2e3d
+[11/11] PCI: aardvark: Disable common PHY when unbinding driver
+        https://git.kernel.org/lpieralisi/pci/c/fdbbe242c1
+
+Thanks,
+Lorenzo
