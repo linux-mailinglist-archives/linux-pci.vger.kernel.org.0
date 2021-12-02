@@ -2,123 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79CA24667B7
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 17:17:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E690E4667C6
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 17:22:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359366AbhLBQVA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 11:21:00 -0500
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:46653 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359360AbhLBQVA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 11:21:00 -0500
-Received: by mail-oi1-f175.google.com with SMTP id s139so83640oie.13;
-        Thu, 02 Dec 2021 08:17:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uq/YsP4B8aOPtGNOL/5xcSdESCXdsQckUG9RYj9ftAs=;
-        b=Dzmm0t4jEtZ+LYYbGrr2KOxvqfK2jedyjea/LKfQGYxyZmL4V6Vp8HSmobFd8WmTey
-         EA1mkjGM9FvDDjWVb+xaosjAO2Os4PmApO+PoQCsfz0ZuVifmkD1OebmsRSNu1YUe1zy
-         i0r32SptSeKMkWkK/Sw/OGP0KR1dThTel9s+y4uOQjHOKtNccnhwlgqhnYqf3VweF/j0
-         K/EHicrd6pla6fG7PqywkYkdXtTMiHA8M9wdfv3163S5r4RN1cCko1bQi654JUMHdRyC
-         4xE2lgjgrp5L61Jgn3a8Q0LXe5P1xqHLCHg904P9PVyHE3kS2nOFHKuTVwVg2Pr+TKF+
-         LT8Q==
-X-Gm-Message-State: AOAM5306M0DBoUyZvF40lnAczz7RkfBvo76j4wyvSyvp81wywmzwBbXZ
-        9s44NyrZSo4KJPh42TbDFsw79g8VW78m+kKYiHM=
-X-Google-Smtp-Source: ABdhPJznXOxt4pGds4V359+qQWbXYupzvtZ30NRG/ULmogT4vFwGWTS0kJU1zxW0zOAP7cjZFvZVSLoSxoLNukd7s68=
-X-Received: by 2002:a05:6808:e90:: with SMTP id k16mr5109369oil.166.1638461857185;
- Thu, 02 Dec 2021 08:17:37 -0800 (PST)
+        id S1354218AbhLBQ0A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 11:26:00 -0500
+Received: from mga12.intel.com ([192.55.52.136]:60323 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1347508AbhLBQZ7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 2 Dec 2021 11:25:59 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="216760841"
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="216760841"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 08:22:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="513250779"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 02 Dec 2021 08:22:35 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1msoqw-000GUP-O3; Thu, 02 Dec 2021 16:22:34 +0000
+Date:   Fri, 03 Dec 2021 00:22:07 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:for-linus] BUILD SUCCESS
+ 39bd54d43b3f8b3c7b3a75f5d868d8bb858860e7
+Message-ID: <61a8f2af.7GTu3oeLzMmUOl+i%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20211202030450.1355821-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20211202030450.1355821-1-kai.heng.feng@canonical.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 2 Dec 2021 17:17:25 +0100
-Message-ID: <CAJZ5v0hpEy46Vh83dQ_orG=jW+a1b2+kipRLQOVOnvhjN0j03g@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: vmd: Honor ACPI _OSC on PCIe features
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 2, 2021 at 4:05 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> When Samsung PCIe Gen4 NVMe is connected to Intel ADL VMD, the
-> combination causes AER message flood and drags the system performance
-> down.
->
-> The issue doesn't happen when VMD mode is disabled in BIOS, since AER
-> isn't enabled by acpi_pci_root_create() . When VMD mode is enabled, AER
-> is enabled regardless of _OSC:
-> [    0.410076] acpi PNP0A08:00: _OSC: platform does not support [AER]
-> ...
-> [    1.486704] pcieport 10000:e0:06.0: AER: enabled with IRQ 146
->
-> Since VMD is an aperture to regular PCIe root ports, honor ACPI _OSC to
-> disable PCIe features accordingly to resolve the issue.
->
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215027
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v2:
->  - Use pci_find_host_bridge() instead of open coding.
->
->  drivers/pci/controller/vmd.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index a45e8e59d3d48..acf847cb825c0 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -671,6 +671,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->         resource_size_t offset[2] = {0};
->         resource_size_t membar2_offset = 0x2000;
->         struct pci_bus *child;
-> +       struct pci_host_bridge *root_bridge, *vmd_bridge;
->         int ret;
->
->         /*
-> @@ -798,6 +799,17 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->                 return -ENODEV;
->         }
->
-> +       vmd_bridge = to_pci_host_bridge(vmd->bus->bridge);
-> +
-> +       root_bridge = pci_find_host_bridge(vmd->dev->bus);
-> +
-> +       vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
-> +       vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
-> +       vmd_bridge->native_aer = root_bridge->native_aer;
-> +       vmd_bridge->native_pme = root_bridge->native_pme;
-> +       vmd_bridge->native_ltr = root_bridge->native_ltr;
-> +       vmd_bridge->native_dpc = root_bridge->native_dpc;
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
+branch HEAD: 39bd54d43b3f8b3c7b3a75f5d868d8bb858860e7  Revert "PCI: aardvark: Fix support for PCI_ROM_ADDRESS1 on emulated bridge"
 
-One more, arguably minor, thing: I would put the above copying into a
-separate function and call it here and I would add a comment
-explaining why it is done next to it, like
+elapsed time: 723m
 
-/*
- * Since VMD is an aperture to regular PCIe root ports, only allow it to control
- * features that the OS is allowed to control on the physical PCI bus.
- */
-vmd_copy_host_bridge_flags(to_pci_host_bridge(vmd->bus->bridge),
-pci_find_host_bridge(vmd->dev->bus));
+configs tested: 129
+configs skipped: 3
 
-> +
->         vmd_attach_resources(vmd);
->         if (vmd->irq_domain)
->                 dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
-> --
-> 2.32.0
->
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211202
+powerpc                          g5_defconfig
+arc                        nsim_700_defconfig
+openrisc                 simple_smp_defconfig
+powerpc                 xes_mpc85xx_defconfig
+powerpc                 linkstation_defconfig
+sh                        apsh4ad0a_defconfig
+arm                       versatile_defconfig
+sh                     sh7710voipgw_defconfig
+riscv                    nommu_k210_defconfig
+powerpc                 mpc8540_ads_defconfig
+sh                          r7780mp_defconfig
+sh                         apsh4a3a_defconfig
+xtensa                    smp_lx200_defconfig
+arm                         hackkit_defconfig
+arm                         mv78xx0_defconfig
+s390                                defconfig
+h8300                            allyesconfig
+alpha                               defconfig
+sh                        edosk7705_defconfig
+nds32                            alldefconfig
+sh                          landisk_defconfig
+sh                        edosk7760_defconfig
+m68k                       m5275evb_defconfig
+arm                      tct_hammer_defconfig
+xtensa                          iss_defconfig
+mips                        bcm63xx_defconfig
+nds32                               defconfig
+arm                            pleb_defconfig
+arm                          pxa168_defconfig
+powerpc                     tqm5200_defconfig
+sh                             sh03_defconfig
+powerpc                     pseries_defconfig
+arm                   milbeaut_m10v_defconfig
+arm                          iop32x_defconfig
+sh                     magicpanelr2_defconfig
+powerpc                   motionpro_defconfig
+xtensa                    xip_kc705_defconfig
+m68k                       m5475evb_defconfig
+powerpc                           allnoconfig
+arm                  colibri_pxa300_defconfig
+arm                           sama5_defconfig
+sh                ecovec24-romimage_defconfig
+arm                         assabet_defconfig
+sh                          rsk7203_defconfig
+powerpc                      mgcoge_defconfig
+arm                           h5000_defconfig
+arm                  randconfig-c002-20211202
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+x86_64               randconfig-a016-20211202
+x86_64               randconfig-a011-20211202
+x86_64               randconfig-a013-20211202
+x86_64               randconfig-a014-20211202
+x86_64               randconfig-a012-20211202
+x86_64               randconfig-a015-20211202
+i386                 randconfig-a016-20211202
+i386                 randconfig-a013-20211202
+i386                 randconfig-a011-20211202
+i386                 randconfig-a014-20211202
+i386                 randconfig-a012-20211202
+i386                 randconfig-a015-20211202
+arc                  randconfig-r043-20211202
+s390                 randconfig-r044-20211202
+riscv                randconfig-r042-20211202
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+
+clang tested configs:
+arm                  randconfig-c002-20211202
+x86_64               randconfig-c007-20211202
+riscv                randconfig-c006-20211202
+i386                 randconfig-c001-20211202
+powerpc              randconfig-c003-20211202
+s390                 randconfig-c005-20211202
+x86_64               randconfig-a006-20211202
+x86_64               randconfig-a005-20211202
+x86_64               randconfig-a001-20211202
+x86_64               randconfig-a002-20211202
+x86_64               randconfig-a004-20211202
+x86_64               randconfig-a003-20211202
+i386                 randconfig-a001-20211202
+i386                 randconfig-a005-20211202
+i386                 randconfig-a002-20211202
+i386                 randconfig-a003-20211202
+i386                 randconfig-a006-20211202
+i386                 randconfig-a004-20211202
+hexagon              randconfig-r045-20211202
+hexagon              randconfig-r041-20211202
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
