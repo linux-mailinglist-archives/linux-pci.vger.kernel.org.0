@@ -2,222 +2,241 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42F094668C7
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 18:02:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32996466932
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 18:32:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359813AbhLBRFY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 12:05:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347861AbhLBRFX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 12:05:23 -0500
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FDEC06174A;
-        Thu,  2 Dec 2021 09:02:01 -0800 (PST)
-Received: by mail-oi1-x235.google.com with SMTP id bj13so431386oib.4;
-        Thu, 02 Dec 2021 09:02:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=00/E42FjoqEqAzMF9xc1DVwSebesIQL9IMmpKLjE84c=;
-        b=gfJVq4GwgkeDrP+HqL4heNSY666jU+P5mBcshHCGxHx2R+fyuHoLS/oy80rH2k/Nmp
-         s0kJZ5HT5WhWPZr5DzdDeUeMoJPCDtsD1fSFqVdXL0aLFilYWO4jzLxeFyzlY5XAvF1N
-         ZjBUpo9hcPPoRd0T5cHS6efYKTNpMn8t1D4C0iL6r9DEG1qX9QQfxds/J8diiqdpCYtU
-         KngHJD4eNLEBAsI5wW6ST7b0KBUFv3TRBwDlRl/2nLix7o52z/U3j2ElsNbjgq/Pr4Ee
-         67fadfazvHpHxjnAIHtcL0iIhn7fDCdd9+yqLdIG3dtrhwOuCUgZNIjmIIKL5iIaTyFQ
-         1sGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:to:cc:references:from:subject:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=00/E42FjoqEqAzMF9xc1DVwSebesIQL9IMmpKLjE84c=;
-        b=DuWTiN62q2Y/Vou0GREpF33nuMrP0hZuII9e4Ar58AB4fFEmq8hXbLL7wLKIoaDLtO
-         PAQwbpGm9yTh5pAhctNqhqdQgtMsyMt6iwYxMdm4C7Gx+6F0PF8MDXQCkQYLXgEIPhMt
-         oWIbIK+gV6B2dQVpAOsS+xKePCDEzaG1L/qS4o6883cofS0zaA3LL3OrbPQZcZG5ZBop
-         6Q8AZZV+brsif9UvYBcFtKF26bz0/y/G/tyybbPqtPmIo7B3+aIj2A+yJ9u11j/3OE4O
-         +Wlz8Af9dGUVV/B5HD/GkXvlcOQqT3ERw2H0Cdy+U/tSSXd/qEWJVSdgD+UuTnzsTxeJ
-         pVFA==
-X-Gm-Message-State: AOAM531h31BfQjPM54BX4vfHNCmjHolze5Tjv2GANZ7CVcbPZd5zbG3S
-        PzbjW4v34NvUJSDg8aH0O112eVBxVTQ=
-X-Google-Smtp-Source: ABdhPJyhCaV/BceC8DU6uzkJq3wZ2XFPKuCodlaG1Y9Z0h1ebjhFspN3yW/iNgJwkBp4KrpUD+8nfQ==
-X-Received: by 2002:a05:6808:8c9:: with SMTP id k9mr5357601oij.147.1638464519988;
-        Thu, 02 Dec 2021 09:01:59 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i3sm92967ooq.39.2021.12.02.09.01.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Dec 2021 09:01:59 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20211201215127.23550-1-sergio.paracuellos@gmail.com>
- <20211201215127.23550-3-sergio.paracuellos@gmail.com>
- <d243a90d-25b2-a65f-b69d-af7497db8742@roeck-us.net>
- <CAMhs-H_i7aFeqf4EBtzdL0SKgKrseZGpVU-ytvangpeCMVTmFw@mail.gmail.com>
- <9401e88b-de5a-dd2a-7e82-f3657ea86e8f@roeck-us.net>
- <CAMhs-H8vw48RkpFz+rqvoPqDPpkaHdn60j6SdbDJHTNTTp7Fcg@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 2/5] MIPS: ralink: implement
- 'pcibios_root_bridge_prepare()'
-Message-ID: <c70584d5-8efd-6b3e-aab5-c8161f39931b@roeck-us.net>
-Date:   Thu, 2 Dec 2021 09:01:56 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S231687AbhLBRfe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 12:35:34 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:57190 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346939AbhLBRfd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 12:35:33 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0E8A262769;
+        Thu,  2 Dec 2021 17:32:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73356C53FCC;
+        Thu,  2 Dec 2021 17:32:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638466330;
+        bh=G63/CPc0sGhJ6RNRjiHaXeZkOjec5feUCh0XtnNnEoo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VT+dhSIh4z36LzrFe17GmUlUweI6uGQrxyWIge6QsGFpackPpsxpo5r75fh0W+7C3
+         xDY2HF90AegX5JVsupl6+3rzOT63HkP5llKqe+CD87oYFtJgSPgU6FaytpI1UF1sa6
+         p/IDCuGDjQdo+Ec4J9g9fxJghB1Og7POW2UZqrSMy+PmiW5EGXTr1EnqTSkbPhidVH
+         Fe0en6yr27cfvvapwN2f4kfHW+OFkSek7xJOmFwfR77033jTTSkgKY0IY7/B18limU
+         NK/09U2VGF8nCIaWvswgI8HjY+BIHdK6oQhLYZVc9vN/UdXSsV6PezxInGBAxz3Yv8
+         u3gBONwqkKFrw==
+Received: by mail-ed1-f46.google.com with SMTP id y12so824273eda.12;
+        Thu, 02 Dec 2021 09:32:10 -0800 (PST)
+X-Gm-Message-State: AOAM5313IuCsI0cec5rfPRPKElnMox5cSOaa90K+14D6g5x1/3TCksRt
+        uYjeNMceZjkEJJss3LQhzLUvg2ZmTTECgIDAMw==
+X-Google-Smtp-Source: ABdhPJx257xFB6ufTtKdNAR1SAXyTZ0H4BZYcKhETITqQRHTuZc1I72oQHZuGGmtqyZM4MBdRLQPjsmKp2bW66syJNU=
+X-Received: by 2002:a17:907:a411:: with SMTP id sg17mr16695457ejc.84.1638466327633;
+ Thu, 02 Dec 2021 09:32:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAMhs-H8vw48RkpFz+rqvoPqDPpkaHdn60j6SdbDJHTNTTp7Fcg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20201005215817.GA3063223@bjorn-Precision-5520> <20211202110624.143028-1-ffclaire1224@gmail.com>
+In-Reply-To: <20211202110624.143028-1-ffclaire1224@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 2 Dec 2021 11:31:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKNY1MKXcwKOn544Y94LSYiKLcLOhuRu2WFCw1XJh5HFg@mail.gmail.com>
+Message-ID: <CAL_JsqKNY1MKXcwKOn544Y94LSYiKLcLOhuRu2WFCw1XJh5HFg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Improve compile-test coverage
+To:     Fan Fei <ffclaire1224@gmail.com>
+Cc:     helgaas@kernel.org, bjorn@helgaas.com, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, pratyush.anand@gmail.com,
+        thomas.petazzoni@bootlin.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/2/21 7:50 AM, Sergio Paracuellos wrote:
-> Hi Guenter,
-> 
-> On Thu, Dec 2, 2021 at 4:06 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>
->> On 12/2/21 12:29 AM, Sergio Paracuellos wrote:
->>> Hi Guenter,
->>>
->>> On Wed, Dec 1, 2021 at 11:17 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>>>
->>>> On 12/1/21 1:51 PM, Sergio Paracuellos wrote:
->>>>> PCI core code call 'pcibios_root_bridge_prepare()' function inside function
->>>>> 'pci_register_host_bridge()'. This point is very good way to properly enter
->>>>> into this MIPS ralink specific code to properly setup I/O coherency units
->>>>> with PCI memory addresses.
->>>>>
->>>>> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
->>>>> ---
->>>>>     arch/mips/ralink/mt7621.c | 30 ++++++++++++++++++++++++++++++
->>>>>     1 file changed, 30 insertions(+)
->>>>>
->>>>> diff --git a/arch/mips/ralink/mt7621.c b/arch/mips/ralink/mt7621.c
->>>>> index bd71f5b14238..7649416c1cd7 100644
->>>>> --- a/arch/mips/ralink/mt7621.c
->>>>> +++ b/arch/mips/ralink/mt7621.c
->>>>> @@ -10,6 +10,7 @@
->>>>>     #include <linux/slab.h>
->>>>>     #include <linux/sys_soc.h>
->>>>>     #include <linux/memblock.h>
->>>>> +#include <linux/pci.h>
->>>>>
->>>>>     #include <asm/bootinfo.h>
->>>>>     #include <asm/mipsregs.h>
->>>>> @@ -22,6 +23,35 @@
->>>>>
->>>>>     static void *detect_magic __initdata = detect_memory_region;
->>>>>
->>>>> +int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
->>>>> +{
->>>>> +     struct resource_entry *entry;
->>>>> +     resource_size_t mask;
->>>>> +
->>>>> +     entry = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
->>>>> +     if (!entry) {
->>>>> +             pr_err("Cannot get memory resource\n");
->>>>> +             return -EINVAL;
->>>>> +     }
->>>>> +
->>>>> +     if (mips_cps_numiocu(0)) {
->>>>> +             /*
->>>>> +              * FIXME: hardware doesn't accept mask values with 1s after
->>>>> +              * 0s (e.g. 0xffef), so it would be great to warn if that's
->>>>> +              * about to happen
->>>>> +              */ > +         mask = ~(entry->res->end - entry->res->start);
->>>>> +
->>>>
->>>> Try something like this:
->>>>                   WARN_ON((mask != ~0UL && BIT(ffz(mask)) - 1 != mask);
->>>
->>> Thanks for the tip. The following works for me:
->>>
->>>                     WARN_ON(mask != ~0UL && ~(BIT(__ffs(mask)) - 1) != mask);
->>
->> Are you sure ? __ffs() returns the first bit set, which isn't useful
->> for this test.
-> 
-> My mask is calculated as follows:
->   mask = ~(entry->res->end - entry->res->start);
-> 
-> Where for normal memory resource:
->   - entry->res->end = 0x6fffffff;
->   - entry->res->start = 0x60000000;
-> 
-> So I end up with a mask: 0xf0000000.
-> 
-> So applying ~(BIT(__ffs(mask)) - 1) I get a good '0xf0000000' for this
-> particular case which looks correct.
-> 
-> Suppose an invalid case with the mask being 0xffef0000.
-> 
-> Applying ~(BIT(__ffs(mask)) - 1) will be 0xffff0000 which will trigger
-> the WARN_ON since 0xffff0000 != 0xffef0000
-> 
-> So I think this is correct... Am I missing something?
-> 
+On Thu, Dec 2, 2021 at 5:06 AM Fan Fei <ffclaire1224@gmail.com> wrote:
+>
+> Remove the "depends on OF" in Kconfig of PCI controllers. These drivers
+> depends on CONFIG_OF because they use interface in of.h file, e.g.
+> "of_match_ptr()". But these interface are defined as stub if CONFIG_OF is
+> not set. Thus we can compile them without CONFIG_OF, instead just with
+> COMPILE_TEST.
+>
+> Signed-off-by: Fan Fei <ffclaire1224@gmail.com>
+> ---
+> Hi, Bjorn,
+>
+> I just did as what you suggested, remove the "depends on OF" in Konfig, and
+> compile it. It seems to work well. On the thread
+> https://lore.kernel.org/all/20201005215817.GA3063223@bjorn-Precision-5520/
+> mentioned by the task excel, there are some replacement of "of_match_ptr()",
+> but this function seems to be defined even CONFIG_OF is not set. Is it
+> correct to reply in this thread or shall I send it to mail list directly?
+>
+> Kind regards
+> Fan
+>
+>  drivers/pci/controller/Kconfig | 24 ++++++------------------
+>  1 file changed, 6 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 93b141110537..6e988420f900 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -8,13 +8,11 @@ config PCI_MVEBU
+>         depends on ARCH_MVEBU || ARCH_DOVE || COMPILE_TEST
+>         depends on MVEBU_MBUS
+>         depends on ARM
+> -       depends on OF
+>         select PCI_BRIDGE_EMUL
+>
+>  config PCI_AARDVARK
+>         tristate "Aardvark PCIe controller"
+>         depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
+> -       depends on OF
+>         depends on PCI_MSI_IRQ_DOMAIN
+>         select PCI_BRIDGE_EMUL
+>         help
+> @@ -34,12 +32,11 @@ config PCIE_XILINX_NWL
+>
+>  config PCI_FTPCI100
+>         bool "Faraday Technology FTPCI100 PCI controller"
+> -       depends on OF
+>         default ARCH_GEMINI
+>
+>  config PCI_IXP4XX
+>         bool "Intel IXP4xx PCI controller"
+> -       depends on ARM && OF
+> +       depends on ARM
+>         depends on ARCH_IXP4XX || COMPILE_TEST
+>         default ARCH_IXP4XX
+>         help
+> @@ -85,7 +82,6 @@ config PCI_HOST_COMMON
+>
+>  config PCI_HOST_GENERIC
+>         tristate "Generic PCI host controller"
+> -       depends on OF
+>         select PCI_HOST_COMMON
+>         select IRQ_DOMAIN
+>         help
+> @@ -94,7 +90,7 @@ config PCI_HOST_GENERIC
+>
+>  config PCIE_XILINX
+>         bool "Xilinx AXI PCIe host bridge support"
+> -       depends on OF || COMPILE_TEST
+> +       depends on COMPILE_TEST
+>         depends on PCI_MSI_IRQ_DOMAIN
+>         help
+>           Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
+> @@ -111,7 +107,7 @@ config PCIE_XILINX_CPM
+>  config PCI_XGENE
+>         bool "X-Gene PCIe controller"
+>         depends on ARM64 || COMPILE_TEST
+> -       depends on OF || (ACPI && PCI_QUIRKS)
+> +       depends on ACPI && PCI_QUIRKS
 
-Your description says "hardware doesn't accept mask values with 1s after 0s
-(e.g. 0xffef)". 0xf0000000 has 1s after 0s.
+This is wrong because now it will only build if ACPI && PCI_QUIRKS.
+Maybe that condition can be dropped too.
 
-Your version works (I think) as long as the upper mask bits are all 1s.
-It will fail, for example, if the mask value is 0xf000000 and
-sizeof(long) == 8. Your test is the equivalent of "no mask value
-with 0s after 1s", assuming that sizeof(resource_size_t) == sizeof(long).
-As far as I can see with test code, it fails if sizeof(resource_size_t)
-!= sizeof(long). Also, it returns an error if mask == 0. I guess that is
-a corner case, but it would be interesting to know if it is theoretically
-valid.
+>         help
+>           Say Y here if you want internal PCI support on APM X-Gene SoC.
+>           There are 5 internal PCIe ports available. Each port is GEN3 capable
+> @@ -128,7 +124,6 @@ config PCI_XGENE_MSI
+>
+>  config PCI_V3_SEMI
+>         bool "V3 Semiconductor PCI controller"
+> -       depends on OF
+>         depends on ARM || COMPILE_TEST
+>         default ARCH_INTEGRATOR_AP
+>
+> @@ -146,7 +141,6 @@ config PCIE_IPROC
+>  config PCIE_IPROC_PLATFORM
+>         tristate "Broadcom iProc PCIe platform bus driver"
+>         depends on ARCH_BCM_IPROC || (ARM && COMPILE_TEST)
+> -       depends on OF
+>         select PCIE_IPROC
+>         default ARCH_BCM_IPROC
+>         help
+> @@ -190,7 +184,7 @@ config PCIE_ALTERA_MSI
+>  config PCI_HOST_THUNDER_PEM
+>         bool "Cavium Thunder PCIe controller to off-chip devices"
+>         depends on ARM64 || COMPILE_TEST
+> -       depends on OF || (ACPI && PCI_QUIRKS)
+> +       depends on ACPI && PCI_QUIRKS
 
-I _think_ the following works even if sizeof(resource_size_t) != sizeof(long).
+Same here
 
-	WARN_ON(mask && BIT(ffz(~mask)) - 1 != ~mask);
+>         select PCI_HOST_COMMON
+>         help
+>           Say Y here if you want PCIe support for CN88XX Cavium Thunder SoCs.
+> @@ -198,7 +192,7 @@ config PCI_HOST_THUNDER_PEM
+>  config PCI_HOST_THUNDER_ECAM
+>         bool "Cavium Thunder ECAM controller to on-chip devices on pass-1.x silicon"
+>         depends on ARM64 || COMPILE_TEST
+> -       depends on OF || (ACPI && PCI_QUIRKS)
+> +       depends on ACPI && PCI_QUIRKS
 
-or, alternatively, something like
+And here.
 
-	mask2 = entry->res->end - entry->res->start;
-	mask = ~mask2;
-	WARN_ON(mask && BIT(ffz(mask2)) - 1 != mask2);
-
-though that looks a bit weird.
-
-Thanks,
-Guenter
-
-> Thanks,
->      Sergio Paracuellos
->>
->> Guenter
->>
->>>
->>> I will send this as a different patch, though.
->>>
->>> Best regards,
->>>       Sergio Paracuellos
->>>
->>>>
->>>>> +             write_gcr_reg1_base(entry->res->start);
->>>>> +             write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
->>>>> +             pr_info("PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
->>>>> +                     (unsigned long long)read_gcr_reg1_base(),
->>>>> +                     (unsigned long long)read_gcr_reg1_mask());
->>>>> +     }
->>>>> +
->>>>> +     return 0;
->>>>> +}
->>>>> +
->>>>>     phys_addr_t mips_cpc_default_phys_base(void)
->>>>>     {
->>>>>         panic("Cannot detect cpc address");
->>>>>
->>>>
->>
-
+>         select PCI_HOST_COMMON
+>         help
+>           Say Y here if you want ECAM support for CN88XX-Pass-1.x Cavium Thunder SoCs.
+> @@ -210,7 +204,6 @@ config PCIE_ROCKCHIP
+>  config PCIE_ROCKCHIP_HOST
+>         tristate "Rockchip PCIe host controller"
+>         depends on ARCH_ROCKCHIP || COMPILE_TEST
+> -       depends on OF
+>         depends on PCI_MSI_IRQ_DOMAIN
+>         select MFD_SYSCON
+>         select PCIE_ROCKCHIP
+> @@ -222,7 +215,6 @@ config PCIE_ROCKCHIP_HOST
+>  config PCIE_ROCKCHIP_EP
+>         bool "Rockchip PCIe endpoint controller"
+>         depends on ARCH_ROCKCHIP || COMPILE_TEST
+> -       depends on OF
+>         depends on PCI_ENDPOINT
+>         select MFD_SYSCON
+>         select PCIE_ROCKCHIP
+> @@ -234,7 +226,6 @@ config PCIE_ROCKCHIP_EP
+>  config PCIE_MEDIATEK
+>         tristate "MediaTek PCIe controller"
+>         depends on ARCH_MEDIATEK || COMPILE_TEST
+> -       depends on OF
+>         depends on PCI_MSI_IRQ_DOMAIN
+>         help
+>           Say Y here if you want to enable PCIe controller support on
+> @@ -272,7 +263,6 @@ config PCIE_BRCMSTB
+>         tristate "Broadcom Brcmstb PCIe host controller"
+>         depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM4908 || \
+>                    BMIPS_GENERIC || COMPILE_TEST
+> -       depends on OF
+>         depends on PCI_MSI_IRQ_DOMAIN
+>         default ARCH_BRCMSTB
+>         help
+> @@ -289,7 +279,6 @@ config PCI_HYPERV_INTERFACE
+>  config PCI_LOONGSON
+>         bool "LOONGSON PCI Controller"
+>         depends on MACH_LOONGSON64 || COMPILE_TEST
+> -       depends on OF
+>         depends on PCI_QUIRKS
+>         default MACH_LOONGSON64
+>         help
+> @@ -298,7 +287,7 @@ config PCI_LOONGSON
+>
+>  config PCIE_MICROCHIP_HOST
+>         bool "Microchip AXI PCIe host bridge support"
+> -       depends on PCI_MSI && OF
+> +       depends on PCI_MSI
+>         select PCI_MSI_IRQ_DOMAIN
+>         select GENERIC_MSI_IRQ_DOMAIN
+>         select PCI_HOST_COMMON
+> @@ -321,7 +310,6 @@ config PCIE_APPLE_MSI_DOORBELL_ADDR
+>  config PCIE_APPLE
+>         tristate "Apple PCIe controller"
+>         depends on ARCH_APPLE || COMPILE_TEST
+> -       depends on OF
+>         depends on PCI_MSI_IRQ_DOMAIN
+>         select PCI_HOST_COMMON
+>         help
+> --
+> 2.25.1
+>
