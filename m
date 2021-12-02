@@ -2,96 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 075DC466CFA
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 23:36:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43296466D17
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Dec 2021 23:41:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238803AbhLBWjg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 17:39:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239088AbhLBWjf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 17:39:35 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1912AC06174A;
-        Thu,  2 Dec 2021 14:36:13 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id fv9-20020a17090b0e8900b001a6a5ab1392so933065pjb.1;
-        Thu, 02 Dec 2021 14:36:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nAYeNDvhgDILO8lux5iSfJYMw3kenwEJyvnf9qyQGHY=;
-        b=dk9JFHkmHdKrSkr93JaABRmJlytvDl/PdTmdWSrmiRZTD3caX04RaPvbiiINcKEcOV
-         amRtieAZ6db571P8cTk5I+ArMvnfhcZJmkVEFRZPVfor3MrLlONqU3gG5Hq2JwYTdvID
-         Ugd/Bhk9pxmEoKcAd5NUxTBIM+McbMGIPYzZzYaixSjky8Y9B8AY1Otctpc8/tXkRgLX
-         mwcT9CKX13NSNtlOyIRMFgnqP1W+Px92DL9hUkn/UuH/Z72L0ybvN9xnwMHOQ5sI7MUX
-         1FwEusE27ZKg6xWvEsgrPy+GlubHjbzzI5xGxFhTdqJmVFiUXQDqrr1yaqa7ugqKnGvi
-         ZSMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nAYeNDvhgDILO8lux5iSfJYMw3kenwEJyvnf9qyQGHY=;
-        b=TbqhZXMO9f+nucLWsA/wPBHeMiqkza8CFFp9rGbaXgyLnSdABwONNJQrYIrD+JlKWE
-         gbDSi+WWjEiA+P3lYRC+pAPqQVpoUritpNas8Fbe+FaqKr209CmNZ1K6SLQ46Dz1EfXJ
-         TsaABUJ3STjtqUYAnULr2TKCgR00PHPM094jBd+c+/XxXNOpGs7rfOMXIcpRdvmIBvhy
-         PURlO/KYYluGDmp34ntSDOwARh+GbcGv02gkTrm1630DKVX8i3+EQbcY9Gqd/t3zhk8I
-         G+qN3sqXC28tBgQ6yqcX6gqBZBkJviwpRXn8BTt5GhtPeydRIduDf0hJ14Iz57SLuuNd
-         poKg==
-X-Gm-Message-State: AOAM531KNbTBHrkmfBgDQYInAFuMQyjQjeFwSI+FbfwWqFrJWqeqPNy7
-        /neXSlYXbJxdGMcCuSRFobr4VNgmXWQ=
-X-Google-Smtp-Source: ABdhPJzWiCEYVzvMY11bnTFeDDpQl/Ef63/fx3srX8uWojUPNH1LJHpa+wYtCA11gLyzNBz8zu2rJg==
-X-Received: by 2002:a17:90a:7d09:: with SMTP id g9mr9141036pjl.199.1638484572260;
-        Thu, 02 Dec 2021 14:36:12 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id h18sm790996pfh.172.2021.12.02.14.36.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Dec 2021 14:36:11 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     devicetree@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE), Jim Quinlan <jim2101024@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-pci@vger.kernel.org (open list:BROADCOM STB PCIE DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] dt-bindings: PCI: brcmstb: compatible is required
-Date:   Thu,  2 Dec 2021 14:36:09 -0800
-Message-Id: <20211202223609.1171452-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        id S1349088AbhLBWow (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 17:44:52 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:39260 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242668AbhLBWow (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 17:44:52 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3E5576287C;
+        Thu,  2 Dec 2021 22:41:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B69BC53FCD;
+        Thu,  2 Dec 2021 22:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638484888;
+        bh=6OiKIjxtmjjpUOCmkRIj43jn8Md1ipCMNo/5OXc5h2U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=A77LaDEakD7rtcB3KbTrqnfE9Ky1ZHZiM38wgDdUrUjeRW9pQo+EuNeoQBMcPWeJq
+         oKk1QW1TP1/R3wsoJY9Z54V6zvQRs8DgjwGlrt8DXXBFguYGn7VkVWGI5t6cEMjRZ+
+         /6Ou1f5zfXafc3vSum3HaCC0pWnxosFtJb0SXlwZ6bk2JUFTufy4s3uqar3NDxMk0q
+         DpKUfnyObNN4rDJVrSKVB0uR5Rni+wZuaWJjWxNp/SO3kdA0ojapUhn2DLxvDurosB
+         6jJrdhE/w1vWBB2NJZcor6xqYyd0g9Pv5cGoh/PNSbnkaDWvxr20JnY2PbsXzI6apd
+         YJMQboRbBeRbA==
+Received: by mail-ed1-f45.google.com with SMTP id z5so4039017edd.3;
+        Thu, 02 Dec 2021 14:41:28 -0800 (PST)
+X-Gm-Message-State: AOAM532qQ0QuDDbRyGaF8bOEt7iupTAmdHSxj//x9NWiinQe8Fi6qoGx
+        bg1cZhAMmVbN2FKRfrBbw5ylk/Qxp1352JVegw==
+X-Google-Smtp-Source: ABdhPJwlI+p9riw2EQARHYYQ7wuw9z4/AosHRQ9rvr5bD+PLTYx0Lh9d9ZeTJuc1FvaYCGMzuZBpIJCZb8ZoQcYci6w=
+X-Received: by 2002:a17:907:16ac:: with SMTP id hc44mr18010068ejc.363.1638484887007;
+ Thu, 02 Dec 2021 14:41:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211202223609.1171452-1-f.fainelli@gmail.com>
+In-Reply-To: <20211202223609.1171452-1-f.fainelli@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 2 Dec 2021 16:41:15 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLR=TeKFj1DO-UDcFDcuuw9VUzy9tdxmdK797ywX+fN8g@mail.gmail.com>
+Message-ID: <CAL_JsqLR=TeKFj1DO-UDcFDcuuw9VUzy9tdxmdK797ywX+fN8g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: PCI: brcmstb: compatible is required
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saenz Julienne <nsaenzjulienne@suse.de>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:BROADCOM STB PCIE DRIVER" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The compatible property is required, make sure the binding documents it
-as such.
+On Thu, Dec 2, 2021 at 4:36 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> The compatible property is required, make sure the binding documents it
+> as such.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Yes, though if 'compatible' is not present and matching, the schema is
+never applied. I'll apply it later, but I wouldn't be too concerned
+fixing any others.
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index 1fe102743f82..7c24d711b377 100644
---- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -76,6 +76,7 @@ properties:
-       maxItems: 3
- 
- required:
-+  - compatible
-   - reg
-   - ranges
-   - dma-ranges
--- 
-2.25.1
-
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 1fe102743f82..7c24d711b377 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -76,6 +76,7 @@ properties:
+>        maxItems: 3
+>
+>  required:
+> +  - compatible
+>    - reg
+>    - ranges
+>    - dma-ranges
+> --
+> 2.25.1
+>
