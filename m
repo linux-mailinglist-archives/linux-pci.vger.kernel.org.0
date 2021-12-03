@@ -2,73 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 048E64676E3
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Dec 2021 12:57:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF159467699
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Dec 2021 12:36:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380640AbhLCMAs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Dec 2021 07:00:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46518 "EHLO
+        id S1352062AbhLCLkD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Dec 2021 06:40:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380639AbhLCMAs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Dec 2021 07:00:48 -0500
-Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C3F6C06173E;
-        Fri,  3 Dec 2021 03:57:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=/k6j6wHaioGkrZLjGu4ey+Q0rMQZQIVRikhhuIY/xoM=; b=N2SvzWJJUh3iC2a6UumjTLAzBl
-        38YdXs6/nJW11o51MJakuXeyvwJ265Y5uFtSf7MJWsemBSLGksuq0N38VrtQSkEVa9zxCBbxdTHpW
-        koaSxTs5O4axB8Q5RdnK3G39ZOiSPrtBSq41/7lF8zoRr8b/eKl1Ad3zdsuLNjchMwJc=;
-Received: from p54ae943f.dip0.t-ipconnect.de ([84.174.148.63] helo=localhost.localdomain)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1mt6oy-0004Ez-Bw; Fri, 03 Dec 2021 12:33:44 +0100
-From:   Felix Fietkau <nbd@nbd.name>
-To:     linux-arm-kernel@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     john@phrozen.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: [PATCH v6 10/14] PCI: mediatek: allow selecting controller driver for airoha arch
-Date:   Fri,  3 Dec 2021 12:33:27 +0100
-Message-Id: <20211203113331.20510-11-nbd@nbd.name>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20211203113331.20510-1-nbd@nbd.name>
-References: <20211203113331.20510-1-nbd@nbd.name>
+        with ESMTP id S1351947AbhLCLkA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Dec 2021 06:40:00 -0500
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B33C06174A
+        for <linux-pci@vger.kernel.org>; Fri,  3 Dec 2021 03:36:36 -0800 (PST)
+Received: by mail-lj1-x236.google.com with SMTP id l7so5617708lja.2
+        for <linux-pci@vger.kernel.org>; Fri, 03 Dec 2021 03:36:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=sMVXZmEK+H09avKUHH3w2S8Bcher2YrYywIf+YnGSP0=;
+        b=CoFFPeQmMoWelU+KgnNjTjow6Wr8bcxDVrp3FirceKayNh4j0DjUOuVgw2DSMlSg5w
+         QKACtearbVXQ03M2MoBE3mrhpDa5UZaN4PHx7MddRo3/4DbOXdXntPDzddPp56xUiQjw
+         SVP13R+5cXlLdHBJYC37ssDTKc7ZSGuepNm09qYT6NjpHWPFujY08lspcZf6BV8Q6q3t
+         C5xDglnSMLtVOqOztns7F+EDVgzw3+TzSsbHNIdV9Ni7FMA8g8VLhAcs5s8s9jkhVBa1
+         0WS4+ZL48pweQ8CJOZ1/OTYIDsrt+fNoZJAxCNhLhnEWFny44ZlmOJEmF8JWI9UIPtq/
+         mZew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=sMVXZmEK+H09avKUHH3w2S8Bcher2YrYywIf+YnGSP0=;
+        b=C5QB/8zcN5/mw0w2LgNgDFMn819CCM9LF860nZ9tIAinEvum/wvF4Ej/oIr9OXEVnU
+         41fuilOFfXg0CnfH9idmDrhMk9tHBkaO6OqxUvq3SN26cPGm9n/A8TzVz19trHnDyvdP
+         8BL30J7ihK0pL/nUnTE0Wi/Uaf4A32LtIzyVIPgCqoMVvUe1wIpUtNU/iOsKKynR6YNs
+         NKVjM1ZhMJyLt+x9IVEOQLAklNrCMTFZXREQLIE+2tVqGlYdcW4eSEK2BaEdI3O/R6nX
+         X90vzNPPFBXEt+l2iMDIXGFPNI02+Ctzk9IWhmCE/06qfIf4xu9S3At2KNxTcT8ycv1Y
+         WZbg==
+X-Gm-Message-State: AOAM532RjHl7qg7Wa6lU23nf4DB/Tk4x/88YQj0yPhd/V619sXQL3IRy
+        p8SzAnhHoJ8UlD5bHQSbgj6alMNWAWtyQ1SRIxw=
+X-Google-Smtp-Source: ABdhPJzzk2GZAYDxRxi2dvokPfLF2HSYprfcDPiczgDrKcQfXc0W0ZnypYojFerVkgc31arrUTf5MLxthDtWXi6VGnM=
+X-Received: by 2002:a2e:9953:: with SMTP id r19mr17456310ljj.442.1638531395114;
+ Fri, 03 Dec 2021 03:36:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:ab3:788f:0:0:0:0:0 with HTTP; Fri, 3 Dec 2021 03:36:34 -0800 (PST)
+Reply-To: mrsbillchantal2022@mail.com
+From:   Williams Smith <williamssmith01212@gmail.com>
+Date:   Fri, 3 Dec 2021 12:36:34 +0100
+Message-ID: <CAJX8iid4QtRxzfV9QrhY=-_mn451_WMSapAD_KuVQBq-PzWdTA@mail.gmail.com>
+Subject: Dear Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The EN7523 SoC uses the same controller as MT7622
+Dear Friend
+You have been compensated with the sum of 5.4 million dollars in this
+united nation the payment will be Issue into ATM visa card and send to
+you from the bank  we need your address, passport and your Whatsapp
+Number.
+Thanks
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
----
- drivers/pci/controller/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 93b141110537..f1342059c2a3 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -233,7 +233,7 @@ config PCIE_ROCKCHIP_EP
- 
- config PCIE_MEDIATEK
- 	tristate "MediaTek PCIe controller"
--	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	depends on ARCH_AIROHA || ARCH_MEDIATEK || COMPILE_TEST
- 	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	help
--- 
-2.30.1
-
+Mrs.Bill Chantal
