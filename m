@@ -2,115 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27C8946709C
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Dec 2021 04:16:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CF2D46712F
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Dec 2021 05:36:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232821AbhLCDTz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Dec 2021 22:19:55 -0500
-Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:35626
-        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231585AbhLCDTy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 22:19:54 -0500
-Received: from localhost.localdomain (unknown [10.101.196.174])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 820B54007C;
-        Fri,  3 Dec 2021 03:16:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1638501390;
-        bh=Ugxulh7BMZxGlTFeVZ7SV3BB1ydn8nF9gDW7rGrY2pk=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=KTZyLMv3nhUmRJc84SPrGaHoBtv+NfznQKqz/uF+2zw1tvGXHdxY+c1jbCe/n0VL4
-         x0MoPpTqVRPGmc6QIuSP6bzaEVttyTF3RIWbhb4I8QVXjBLUsqgk0Vmjkv8ZSpy4gq
-         RYWFFhGjwjpiaf87zxacNEGB3NpvJAFg8yurr/LHqVk6x/KbJX6bDzbY2RRV48nzTx
-         25Xfx2ZswClWHlz76OsFDMv85OmSWK9d/iyTV9nV8H9FRFOFcdZ1p/C1t9/KGA0H7l
-         WyB5OK+3uKyqSQ+og1MonaMC+cZ1dagDJBOcDivRJCIUnRPV9j2bpILaOZ4wKUHner
-         BGlG2n1xTbaAA==
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com
-Cc:     linux-pm@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        id S243079AbhLCEja (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Dec 2021 23:39:30 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54764 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231895AbhLCEja (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Dec 2021 23:39:30 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1B34ZpCr004751;
+        Thu, 2 Dec 2021 22:35:51 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1638506151;
+        bh=tHOb1/Ot8tnRiuha9yDJRa7nKoMVTneKl4bdf5cHG4M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jinjlWOPwewDFjXW8TmrO90isdWlqOxXh8mAD6EW0tqSNlaGsp3jhPnMxeGUMsD4N
+         j1rVhB7pzjoUxmYL78r0G0tvrlJ/vMHTxm/LMmF76A+66qI83pts+3VP2QjPS+8bWK
+         L6ica782piRFoKaA5/2sLzPYb0ugERO86B870f48=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1B34Zpgi053245
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 2 Dec 2021 22:35:51 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Thu, 2
+ Dec 2021 22:35:51 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Thu, 2 Dec 2021 22:35:50 -0600
+Received: from [10.250.234.92] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1B34ZkPL127255;
+        Thu, 2 Dec 2021 22:35:47 -0600
+Subject: Re: [PATCH v2 1/2] PCI: endpoint: pci-epf-test: register notifier if
+ only core_init_notifier is enabled
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] PCI: vmd: Honor ACPI _OSC on PCIe features
-Date:   Fri,  3 Dec 2021 11:15:41 +0800
-Message-Id: <20211203031541.1428904-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.32.0
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Om Prakash Singh <omp@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1630473361-27198-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1630473361-27198-2-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <465e7382-5ba5-e380-142d-bffbb0337574@ti.com>
+Date:   Fri, 3 Dec 2021 10:05:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1630473361-27198-2-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When Samsung PCIe Gen4 NVMe is connected to Intel ADL VMD, the
-combination causes AER message flood and drags the system performance
-down.
 
-The issue doesn't happen when VMD mode is disabled in BIOS, since AER
-isn't enabled by acpi_pci_root_create() . When VMD mode is enabled, AER
-is enabled regardless of _OSC:
-[    0.410076] acpi PNP0A08:00: _OSC: platform does not support [AER]
-...
-[    1.486704] pcieport 10000:e0:06.0: AER: enabled with IRQ 146
 
-Since VMD is an aperture to regular PCIe root ports, honor ACPI _OSC to
-disable PCIe features accordingly to resolve the issue.
+On 01/09/21 10:46 am, Kunihiko Hayashi wrote:
+> Need to register pci_epf_test_notifier function even if only
+> core_init_notifier is enabled.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Acked-by: Om Prakash Singh <omp@nvidia.com>
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215027
-Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v3:
- - Use a new helper function.
-
-v2:
- - Use pci_find_host_bridge() instead of open coding.
-
- drivers/pci/controller/vmd.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index a45e8e59d3d48..691765e6c12aa 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -661,6 +661,21 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
- 	return 0;
- }
- 
-+/*
-+ * Since VMD is an aperture to regular PCIe root ports, only allow it to
-+ * control features that the OS is allowed to control on the physical PCI bus.
-+ */
-+static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
-+				       struct pci_host_bridge *vmd_bridge)
-+{
-+	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
-+	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
-+	vmd_bridge->native_aer = root_bridge->native_aer;
-+	vmd_bridge->native_pme = root_bridge->native_pme;
-+	vmd_bridge->native_ltr = root_bridge->native_ltr;
-+	vmd_bridge->native_dpc = root_bridge->native_dpc;
-+}
-+
- static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- {
- 	struct pci_sysdata *sd = &vmd->sysdata;
-@@ -798,6 +813,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 		return -ENODEV;
- 	}
- 
-+	vmd_copy_host_bridge_flags(pci_find_host_bridge(vmd->dev->bus),
-+				   to_pci_host_bridge(vmd->bus->bridge));
-+
- 	vmd_attach_resources(vmd);
- 	if (vmd->irq_domain)
- 		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
--- 
-2.32.0
-
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 90d84d3..80456ad 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -874,7 +874,7 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>  	if (ret)
+>  		epf_test->dma_supported = false;
+>  
+> -	if (linkup_notifier) {
+> +	if (linkup_notifier || core_init_notifier) {
+>  		epf->nb.notifier_call = pci_epf_test_notifier;
+>  		pci_epc_register_notifier(epc, &epf->nb);
+>  	} else {
+> 
