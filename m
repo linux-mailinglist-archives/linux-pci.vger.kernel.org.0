@@ -2,71 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32AA1467FD9
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Dec 2021 23:19:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2938468064
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Dec 2021 00:31:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344218AbhLCWWX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Dec 2021 17:22:23 -0500
-Received: from mail-wr1-f50.google.com ([209.85.221.50]:40930 "EHLO
-        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354009AbhLCWWT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Dec 2021 17:22:19 -0500
-Received: by mail-wr1-f50.google.com with SMTP id t9so8568655wrx.7
-        for <linux-pci@vger.kernel.org>; Fri, 03 Dec 2021 14:18:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CO0ztj7/pipmp7ehHwcTcmjZVnurHNfUozf0SYjuN0k=;
-        b=SVDAVtCDOH8cgtx0CLbCcvHX1mVkJBWkIZLOsFsj8WpL5MgGHpMz+GS6JwUEaS8PP9
-         LyJQiFG8weivAN7c/aqq5O5xjGt0wOcXNKqkLWr2YVAXncqcwEbHS70g0dia8yfCnO3w
-         KnKx/XuyPuqa7tuFIxTKPiowEcL3gh0e7r2ucr+tdml3+NGclsFVWOgXugqqsBim0UUr
-         spwL3NdiuLZsxS38kmIMN+Qf7pflvva6C3G7PsDrCM2cMvBTcfoRDqrCw594wvZiVzV9
-         s15uKEYm75ydcWxfzsAa/bb/4pXlJLX5zvTPBVH72dwvmL8rtDTm5FGxotsZHvIrOLVf
-         gOSw==
-X-Gm-Message-State: AOAM533mekefh5NyoM4A9m9c9RPQQvr9g0D+Q8bDd7YIJbeEzWBKz1pV
-        EUSRIYm7tjj/TaMvZtCyZ6alMLqSVHbTag==
-X-Google-Smtp-Source: ABdhPJwIZAT7V+zfKg3QEgIFZfN8RUtdJ/4Jogw8BqDUqMQKcnG36fIKz1uBJ6/j8LA9LAXeZemLRQ==
-X-Received: by 2002:adf:ab53:: with SMTP id r19mr24861903wrc.584.1638569934450;
-        Fri, 03 Dec 2021 14:18:54 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id f13sm4639330wmq.29.2021.12.03.14.18.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Dec 2021 14:18:53 -0800 (PST)
-Date:   Fri, 3 Dec 2021 23:18:52 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+        id S1354241AbhLCXfB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Dec 2021 18:35:01 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:58632 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240573AbhLCXe7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Dec 2021 18:34:59 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7B2DA62D33
+        for <linux-pci@vger.kernel.org>; Fri,  3 Dec 2021 23:31:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 330ACC53FAD;
+        Fri,  3 Dec 2021 23:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638574293;
+        bh=mot38KtECLsQ87UtpV2RGOesj9zR4Kju+CbMI3hZmcA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gciqKgLDo9u7pQaA73InGrZWgBcxdVSN3h7+zQrlqeuGhaoWTcO4SA8ibf5jPcOcd
+         nqJhBOJ+kqFxDgogm1BdSXvMhGWPXhmt8dIxmoQ/bE44B/6WpDAZWSLUR9HlXH4jDn
+         LNO1NHc4nmxXoENc56RalaM4DJmVd7m6IwEbfH1rW4WAmt9cYfmHVonqhiQbYuwMzN
+         HWU65lsoClpKEbMMNMfFwNYOxCenOx2LNuaz2hLDIOiLNEhWaXyYg5XpVDRpX5M5E5
+         tRtL89D6Uom4tXHEgtrNOxhJcC7Pi1yWM8D2+k86KIx7WuJBzDkCN+/4KB1u0Weg9G
+         9KRQRhJB2uzlw==
+Date:   Fri, 3 Dec 2021 15:31:31 -0800
+From:   Keith Busch <kbusch@kernel.org>
 To:     Tim Harvey <tharvey@gateworks.com>
 Cc:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Jens Axboe <axboe@kernel.dk>
+        Richard Zhu <hongxing.zhu@nxp.com>
 Subject: Re: IMX8MM PCIe performance evaluated with NVMe
-Message-ID: <YaqXzOxjScP1IC99@rocinante>
+Message-ID: <20211203233131.GE3839336@dhcp-10-100-145-180.wdc.com>
 References: <CAJ+vNU0OZvy4RamHZ18aJ6+AiO3BxXQx-3-sQYop6sF1QRMmwA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <CAJ+vNU0OZvy4RamHZ18aJ6+AiO3BxXQx-3-sQYop6sF1QRMmwA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+CC Jens as he is the block, I/O scheduler, NVMe, etc., maintainer]
+On Fri, Dec 03, 2021 at 01:52:17PM -0800, Tim Harvey wrote:
+> Greetings,
+> 
+> I'm using PCIe on the IMX8M Mini and testing PCIe performance with a
+> NVMe constrained to 1 lane. The NVMe in question is a Samsung SSD980
+> 500GB which claims 3500MB/s read speed (with a gen3 x4 link).
+> 
+> My understanding of PCIe performance would give the following
+> theoretical max bandwidth based on clock and encoding:
+> pcie gen1 x1 : 2500MT/s*1lane*80% (8B/10B encoding) = 2000Mbps = 250MB/s
+> pcie gen2 x1 : 5000MT/s*1lane*80% (8B/10B encoding) = 4000Mbps = 500MB/s
+> pcie gen3 x1 : 8000MT/s*1lane*98.75% (128B/130B encoding) = 7900Mbps = 987.5MB/s
+> pcie gen3 x4 : 8000MT/s*4lane*98.75% (128B/130B encoding) = 31600Mbps = 3950MB/s
+> 
+> My assumption is an NVMe would have very little data overhead and thus
+> be a simple way to test PCIe bus performance.
 
-Hi Tim,
+Your 'dd' output is only reporting the user data throughput, but there
+is more happening on the link than just user data.
 
-[...]
+You've accounted for the bit encoding, but there's more from the PCIe
+protocol: the PHY layer (SOS), DLLP (Ack, FC), and TLP (headers,
+sequences, checksums). 
+
+NVMe itself also adds some overhead in the form of SQE, CQE, PRP, and
+MSIx.
+
+All told, the best theoretical bandwidth that user data will be able to
+utilize out of the link is going to end up being ~85-90%, depending on
+your PCIe MPS (Max Payload Size) setting.
+ 
+> Testing this NVMe with 'dd if=/dev/nvme0n1 of=/dev/null bs=1M
+> count=500 iflag=nocache' on various systems gives me the following:
+
+If using 'dd', I think you want to use 'iflag=direct' rather than 'nocache'.
+
+> - x86 gen3 x4: 2700MB/s (vs theoretical max of ~4GB/s)
+> - x86 gen3 x1: 840MB/s
+> - x86 gen2 x1: 390MB/s
+> - cn8030 gen3 x1: 352MB/s (Cavium OcteonTX)
+> - cn8030 gen2 x1: 193MB/s (Cavium OcteonTX)
+> - imx8mm gen2 x1: 266MB/s
+> 
+> The various x86 tests were not all done on the same PC or the same
+> kernel or kernel config... I used what I had around with whatever
+> Linux OS was on them just to get a feel for performance and in all
+> cases but the x4 case lanes 2/3/4 were masked off with kapton tape to
+> force a 1-lane link.
+> 
+> Why do you think the IMX8MM running at gen2 x1 would have such a lower
+> than expected performance (266MB/s vs the 390MB/s an x86 gen2 x1 could
+> get)?
+> 
 > What would a more appropriate way of testing PCIe performance be?
 
-I am adding Jens here for visibility as he does a lot of storage and I/O
-performance testing on various platforms and with various hardware, he also
-wrote fio[1], which I would recommend for testing over dd, and also is
-a NVMe driver maintainer.  If he has a moment, then perhaps he could give
-us some tips too.
+Beyond the protocol overhead, 'dd' is probably not going to be the best
+way to meausre a device's performance. This sends just one command at a
+time, so you are also measuring the full software stack latency, which
+includes a system call and interrupt driven context switches. The PCIe
+traffic would be idle during this overhead when running at just qd1.
 
-1. https://github.com/axboe/fio
+I am guessing your x86 is simply faster at executing through this
+software stack than your imx8mm, so the software latency is lower.
 
-	Krzysztof
+A better approach may be to use higher queue depths with batched
+submissions so that your software overhead can occur concurrently with
+your PCIe traffic. Also, you can eliminate interrupt context switches if
+you use polled IO queues.
