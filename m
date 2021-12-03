@@ -2,117 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D79F5467EF6
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Dec 2021 21:50:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAA11467F91
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Dec 2021 22:52:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383138AbhLCUx2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Dec 2021 15:53:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56232 "EHLO
+        id S1353851AbhLCVzy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Dec 2021 16:55:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383115AbhLCUx1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Dec 2021 15:53:27 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D81BC061751
-        for <linux-pci@vger.kernel.org>; Fri,  3 Dec 2021 12:50:03 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id iq11so3212307pjb.3
-        for <linux-pci@vger.kernel.org>; Fri, 03 Dec 2021 12:50:03 -0800 (PST)
+        with ESMTP id S236017AbhLCVzx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Dec 2021 16:55:53 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09357C061751
+        for <linux-pci@vger.kernel.org>; Fri,  3 Dec 2021 13:52:29 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id n8so3014102plf.4
+        for <linux-pci@vger.kernel.org>; Fri, 03 Dec 2021 13:52:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gateworks-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IiqXSBmJKS4kFGk8I5OsxyFVKYg9Egn5AKwrNVhe8+s=;
-        b=0BG1lqGydoNBgMiY7AcikoL6dXY9LlGIHnXTfzov/oVqxmQB0ZXnBNrshPew1B0fOB
-         TGxV5rt6TyDDqBx+CqReMnCqD0jpKZAbFCroW78Ma+Fjyba1GojEGlehVTfwg+5CSgPL
-         TswwN3Zl7H86Z0GFLhM89qbG38sfFpuYbBDvm1c8Ao6k9A9HrfybPD1n/kq1ANbdnDzS
-         Wchoc7OsFCuX2mEr5tzUzfEbOINoGOjh8Etewa4p8yAbM6D5wZLNtTxsh+8bb5ccwPiu
-         I9sS0YTOUDqcPmPz/AFCrExO3jGBF2CsRPo4C4HtJzlcfKvp6TACro9z1OcLvVj9Pv/7
-         B1Bg==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=qZBZSabmVpVMJlMhIHSKvPqNuRuuyKGfZbUIk3kgfm0=;
+        b=rhleK7qheGsItKb6SZxFzzoeXr1uMqV/OMRgj25wk9sVPceFYIln2nx5+eYX5Agnfy
+         EhHUXWzsKZzpjY1VZB75V+BZOaXIOnRAzf5ySpaIQIol38NBFNvUxXF2PwwKBDum89tP
+         iFTUFoXe3qTDHFqAOsSOwl3KjdYLqoZ8jvIi0CoTctUtc+GU0ZgXs7E5VZ8uiWHsUBXo
+         Vnr02NqhXp3RB/LVSg8+pLnKRYuuqzfq1bO8oSvQnjAy6fwHut0zkuZfuBaNU2CsscJP
+         SAXaSkpeO6GC3EKlXdH4gxGCAabbuSeKMszLzClFnV6741JPi/2OxF4pCXnWdK9qU14V
+         1d6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IiqXSBmJKS4kFGk8I5OsxyFVKYg9Egn5AKwrNVhe8+s=;
-        b=4b2bYOF0nR3yX2H4ib/qi75KYAN30OmcyFT7HLA4hNUVFhp7KFy2p9PazPw8h4ujQi
-         q8Y+n5GLFxwheQdNyBfkKdelS8bnXgYHY1c8mFG8Gz9/j0+91nWffPNlWtuyJDDnZXGO
-         6O/JQJM7f8KJDktD5XBtXhXe4FvSd7QxjsuPH0WxiPXgJRAV6fOVSVweu+zDiiNUKbxI
-         6MNYoRr4Udva3BB2W9ydUPeNg9rlHs/8O3HAZx0sXnjLG3r54cnrSHSIULCJCALSGA6F
-         B7CKfSd9nojA0eKFKm67UWUwWeRRq+F5pHVsA/mYpR5c5OK+zB3KpoJvyzDQ3YSIMztU
-         Z4yA==
-X-Gm-Message-State: AOAM5307TuTV22uVc37xvZhzgIzwq4KoyuXrBCTef44/mi28B2Qanq7p
-        FLdacWIILEjrjCgFwd5TFLeWCGJyyLYZEohw33EJzg==
-X-Google-Smtp-Source: ABdhPJxbAQxHMArZuK3BX5qF3GrctQzCOwlbmxEmbIGAClliQ6dzUfk0Lmg9b98HGiDZAeBceGNDNNUjELHnf1amUG8=
-X-Received: by 2002:a17:902:714f:b0:142:892d:a46 with SMTP id
- u15-20020a170902714f00b00142892d0a46mr24999096plm.39.1638564602684; Fri, 03
- Dec 2021 12:50:02 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=qZBZSabmVpVMJlMhIHSKvPqNuRuuyKGfZbUIk3kgfm0=;
+        b=cTB/N3FDa2czOOjjWFIIoHCCPDngndC7xuWy45Exw2whF+hWHpvdEr+ltycMfCvMaI
+         kNTGZ1HwEKpozbOvME3MdWflFC8uGuiHYpElVTkOAsSa1JXN140k9C7MoaE6H4JpXj8/
+         wlUGOhsnPgOqMitkNgQVL226pOAiTXE0IP58BOYvhbEIV6h2upsRG+0GaBQGGBuUFSU3
+         GOJalRhHWfFWShgK9pZK0e859bPaiyA1tMsnDX92JCVooFPurKxILFBTOFPRg0RXRmEC
+         y1AIZdot2VQNVC/Zt9B+pw2L8dqj3/Q39LSXctk5YPS29OzrfYPv+f8E6OI8A+sbFY3l
+         1Cbg==
+X-Gm-Message-State: AOAM531xYDpb36fTzplmjvk85cpi8zdCoi2qRVuPU2mCdXAoIhq49mg7
+        y9fSauz+gJgUCjsjHvLdNAwSpINAPwM6pbdvuLLZZQ==
+X-Google-Smtp-Source: ABdhPJyJruIwcpKuFw3KnHAwUYkrH+d1zcMD+o4bTMnt93xzgt3bjIyX4KEMuxzeN8JNpu5v6qF17vuT3ZMNwcaXNWE=
+X-Received: by 2002:a17:90b:1b06:: with SMTP id nu6mr17169193pjb.155.1638568348370;
+ Fri, 03 Dec 2021 13:52:28 -0800 (PST)
 MIME-Version: 1.0
-References: <CAJ+vNU2Pfwz5e0Jj6c5npceOwuNTB_dTVuL4NMD2qxr0CGyeGQ@mail.gmail.com>
- <20211203202831.GA3020182@bhelgaas>
-In-Reply-To: <20211203202831.GA3020182@bhelgaas>
 From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Fri, 3 Dec 2021 12:49:51 -0800
-Message-ID: <CAJ+vNU0bZv4OKVgZCwqjstZrncU5pggzVZ_RnpON7XKYpKZ+EA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: imx: do not remap invalid res
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
+Date:   Fri, 3 Dec 2021 13:52:17 -0800
+Message-ID: <CAJ+vNU0OZvy4RamHZ18aJ6+AiO3BxXQx-3-sQYop6sF1QRMmwA@mail.gmail.com>
+Subject: IMX8MM PCIe performance evaluated with NVMe
+To:     Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
         Richard Zhu <hongxing.zhu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 3, 2021 at 12:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Dec 01, 2021 at 02:06:44PM -0800, Tim Harvey wrote:
-> > On Mon, Nov 1, 2021 at 11:03 AM Tim Harvey <tharvey@gateworks.com> wrote:
-> > >
-> > > On imx6 and perhaps others when pcie probes you get a:
-> > > imx6q-pcie 33800000.pcie: invalid resource
-> > >
-> > > This occurs because the atu is not specified in the DT and as such it
-> > > should not be remapped.
-> > >
-> > > Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> > > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware.c | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index a945f0c0e73d..3254f60d1713 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -671,10 +671,11 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
-> > >                 if (!pci->atu_base) {
-> > >                         struct resource *res =
-> > >                                 platform_get_resource_byname(pdev, IORESOURCE_MEM, "atu");
-> > > -                       if (res)
-> > > +                       if (res) {
-> > >                                 pci->atu_size = resource_size(res);
-> > > -                       pci->atu_base = devm_ioremap_resource(dev, res);
-> > > -                       if (IS_ERR(pci->atu_base))
-> > > +                               pci->atu_base = devm_ioremap_resource(dev, res);
-> > > +                       }
-> > > +                       if (!pci->atu_base || IS_ERR(pci->atu_base))
-> > >                                 pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
-> > >                 }
-> > >
-> > > --
-> > > 2.17.1
-> > >
-> >
-> > ping - any feedback on this?
->
-> Looks like Lorenzo corrected the subject line for you and applied it:
->
-> https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?id=6e5ebc96ec65
+Greetings,
 
-Yes, I saw that. Thanks everyone!
+I'm using PCIe on the IMX8M Mini and testing PCIe performance with a
+NVMe constrained to 1 lane. The NVMe in question is a Samsung SSD980
+500GB which claims 3500MB/s read speed (with a gen3 x4 link).
+
+My understanding of PCIe performance would give the following
+theoretical max bandwidth based on clock and encoding:
+pcie gen1 x1 : 2500MT/s*1lane*80% (8B/10B encoding) = 2000Mbps = 250MB/s
+pcie gen2 x1 : 5000MT/s*1lane*80% (8B/10B encoding) = 4000Mbps = 500MB/s
+pcie gen3 x1 : 8000MT/s*1lane*98.75% (128B/130B encoding) = 7900Mbps = 987.5MB/s
+pcie gen3 x4 : 8000MT/s*4lane*98.75% (128B/130B encoding) = 31600Mbps = 3950MB/s
+
+My assumption is an NVMe would have very little data overhead and thus
+be a simple way to test PCIe bus performance.
+
+Testing this NVMe with 'dd if=/dev/nvme0n1 of=/dev/null bs=1M
+count=500 iflag=nocache' on various systems gives me the following:
+- x86 gen3 x4: 2700MB/s (vs theoretical max of ~4GB/s)
+- x86 gen3 x1: 840MB/s
+- x86 gen2 x1: 390MB/s
+- cn8030 gen3 x1: 352MB/s (Cavium OcteonTX)
+- cn8030 gen2 x1: 193MB/s (Cavium OcteonTX)
+- imx8mm gen2 x1: 266MB/s
+
+The various x86 tests were not all done on the same PC or the same
+kernel or kernel config... I used what I had around with whatever
+Linux OS was on them just to get a feel for performance and in all
+cases but the x4 case lanes 2/3/4 were masked off with kapton tape to
+force a 1-lane link.
+
+Why do you think the IMX8MM running at gen2 x1 would have such a lower
+than expected performance (266MB/s vs the 390MB/s an x86 gen2 x1 could
+get)?
+
+What would a more appropriate way of testing PCIe performance be?
 
 Best regards,
 
