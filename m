@@ -2,73 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63DDE467253
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Dec 2021 07:59:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D022446725C
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Dec 2021 08:03:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378739AbhLCHDH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Dec 2021 02:03:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34842 "EHLO
+        id S243016AbhLCHG4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Dec 2021 02:06:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345605AbhLCHDH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Dec 2021 02:03:07 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77174C06174A;
-        Thu,  2 Dec 2021 22:59:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=L9TEsOSb6kRI6cv6AHNLCgEMmFVJ2TwOFsBuT0mf2uI=; b=WJ8/zUe+SXuI4BfCR+BUL7Vkst
-        WOwpe629JqT5Ndyc5srczyQ4GFkF24TYiT9Ch+yu8WMHtIQ/kJXhe/tuz17Cebczq4jV8M3AysQi5
-        IgnYWA1kanCUQrzI2U5A3adQJk08pfuWgEJBtPO/lspAYfPYeqYQt8PgEhjJ0Qd/1dSX8qSaPZBFp
-        VDcLl0khw9Eoc+u80YauIiJ5fAb/cmt5z3dorT2qy/OKtIwbKJDwXRoiU0cYCt2N1MD16BOV5V7Ow
-        A1b7zYc8+EHrUAHlxpQL3ln0AcvSdc3xmv6xquHn5CofPFcYFWarkubJ7fDXuxOSQm8ryuWQcS3Se
-        gQvjr07w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mt2Xj-00EeJY-SA; Fri, 03 Dec 2021 06:59:39 +0000
-Date:   Thu, 2 Dec 2021 22:59:39 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     bpf@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Peter Chen <peter.chen@kernel.org>,
-        SeongJae Park <sj@kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>, axboe@kernel.dk,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@linux.ie, daniel@ffwll.ch,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, yuq825@gmail.com, robdclark@gmail.com,
-        sean@poorly.run, christian.koenig@amd.com, ray.huang@amd.com,
-        sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
-        hkelam@marvell.com, jingoohan1@gmail.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
-        krzysztof.kozlowski@canonical.com, mani@kernel.org,
-        pawell@cadence.com, rogerq@kernel.org, a-govindraju@ti.com,
-        gregkh@linuxfoundation.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, kpsingh@kernel.org,
-        akpm@linux-foundation.org, thomas.hellstrom@linux.intel.com,
-        matthew.auld@intel.com, colin.king@intel.com, geert@linux-m68k.org,
-        linux-block@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, lima@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH bpf v2] treewide: add missing includes masked by cgroup
- -> bpf dependency
-Message-ID: <YanAW6KnyNQ1V34r@infradead.org>
-References: <20211202203400.1208663-1-kuba@kernel.org>
+        with ESMTP id S237867AbhLCHG4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Dec 2021 02:06:56 -0500
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE7CC06174A;
+        Thu,  2 Dec 2021 23:03:33 -0800 (PST)
+Received: by mail-ua1-x931.google.com with SMTP id ay21so3625109uab.12;
+        Thu, 02 Dec 2021 23:03:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QJwiOrFQoyT/DFZ7NrGBfihykc/tgLBTmMyaxCgbZN0=;
+        b=cARvOhzbk+98NFxDOIUeYpptxDaN0n0NklsGqrhionsXI2kRHcAFDotrRBF+weDfxj
+         sMXA5ahhB7CJF8Z9LvCML2fb9JFoUbSEONPT2YqfQ1xChdLxZS7WWK6OIs6gTv0WV0Wm
+         TKfn0yFzm+u1J/Aq77QeRZL5m3lOE9gyK/AIKIC4dblR3vKTXDpKlUgkvU5nAYPB0cCe
+         n447+7t/hr8doZ5fn9vYNAjnJ8FDukCXSI1X1HBo/6q/bpyogv5ilxW4TaIXLy6TmCrn
+         AsWFhuBmzJTFQ13WfXi7Ewv4Tp/P9NrjLA60tJ5kLdwjsnNwxKdHHp/DgrrZnzVFp59R
+         u5dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QJwiOrFQoyT/DFZ7NrGBfihykc/tgLBTmMyaxCgbZN0=;
+        b=MNKPFJ9e/zHY1gJ9WiwH1NhUjvChkZxzU5+BNt2mAycz7R4z24S7nv0li6o7iJ+yqv
+         9P9B2fIpbwn1kOuJw87G11FF4TAzx/5ilz6isnfWtEQaKC9N4CRk9pf+9H3VRqb29wFO
+         tBuETb3Eq01ns5t7g9IjShsu5kVKj5FilKtl7mAr9bvp0gLl+DbPUIwuPjoZffK1lNcO
+         9QfMM8/iUvZagAW7VBPl1nQR+5ItYt39sobzbcWUgpx52Pjqj5My3THKA0Yj1wUq6tr+
+         5LjK9T104rcLf6XvPxQfDAYZPlWG8PJU1m9uJkp5m2PIZMQj//gSn1W4ose6m4pfL2n7
+         WedQ==
+X-Gm-Message-State: AOAM533zrhQCh8GJqlnFWJrlbs1CIIEPQ8iLfMYkToE4r33pvlGSVIcF
+        u1xe1dtDLb3GmiqmHZEh2m5eidDXBM3kiNdxcQ0=
+X-Google-Smtp-Source: ABdhPJwjIuk1em7vd/YHbdqVvjuxdC2a8NZdd0mxjqAjPQc42tfDhqmlF+1uD7fgR+6Bft+JN52l1LdpYSNe0OVtSkA=
+X-Received: by 2002:ab0:14a:: with SMTP id 68mr20041354uak.0.1638515012183;
+ Thu, 02 Dec 2021 23:03:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211202203400.1208663-1-kuba@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20211201215127.23550-1-sergio.paracuellos@gmail.com>
+ <20211201215127.23550-3-sergio.paracuellos@gmail.com> <6ebd3d77-e012-4b27-f0dc-a81c59d76fe4@roeck-us.net>
+In-Reply-To: <6ebd3d77-e012-4b27-f0dc-a81c59d76fe4@roeck-us.net>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Fri, 3 Dec 2021 08:03:21 +0100
+Message-ID: <CAMhs-H_Kdai3nOKZjAT04HMu67+wA3saoW_akQkfv3U0po41AQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] MIPS: ralink: implement 'pcibios_root_bridge_prepare()'
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks, always good to see someone else helping to unwind our include
-dependency mess..
+On Thu, Dec 2, 2021 at 8:45 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 12/1/21 1:51 PM, Sergio Paracuellos wrote:
+> > PCI core code call 'pcibios_root_bridge_prepare()' function inside function
+> > 'pci_register_host_bridge()'. This point is very good way to properly enter
+> > into this MIPS ralink specific code to properly setup I/O coherency units
+> > with PCI memory addresses.
+> >
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > ---
+> >   arch/mips/ralink/mt7621.c | 30 ++++++++++++++++++++++++++++++
+> >   1 file changed, 30 insertions(+)
+> >
+> > diff --git a/arch/mips/ralink/mt7621.c b/arch/mips/ralink/mt7621.c
+> > index bd71f5b14238..7649416c1cd7 100644
+> > --- a/arch/mips/ralink/mt7621.c
+> > +++ b/arch/mips/ralink/mt7621.c
+> > @@ -10,6 +10,7 @@
+> >   #include <linux/slab.h>
+> >   #include <linux/sys_soc.h>
+> >   #include <linux/memblock.h>
+> > +#include <linux/pci.h>
+> >
+> >   #include <asm/bootinfo.h>
+> >   #include <asm/mipsregs.h>
+> > @@ -22,6 +23,35 @@
+> >
+> >   static void *detect_magic __initdata = detect_memory_region;
+> >
+> > +int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
+> > +{
+> > +     struct resource_entry *entry;
+> > +     resource_size_t mask;
+> > +
+> > +     entry = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
+> > +     if (!entry) {
+> > +             pr_err("Cannot get memory resource\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if (mips_cps_numiocu(0)) {
+> > +             /*
+> > +              * FIXME: hardware doesn't accept mask values with 1s after
+> > +              * 0s (e.g. 0xffef), so it would be great to warn if that's
+> > +              * about to happen
+> > +              */
+> > +             mask = ~(entry->res->end - entry->res->start);
+> > +
+>
+> One more comment: From the include file,
+>
+> #define CM_GCR_REGn_MASK_ADDRMASK               GENMASK(31, 16)
+>
+> suggests that only the upper 16 bit are valid (relevant ?) for the mask.
+> Given that, it might make sense to make sure that the lower 16 bit are not set,
+> maybe with
+>                 mask = ~(entry->res->end - entry->res->start) & CM_GCR_REGn_MASK_ADDRMASK;
+>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Makes sense, thanks.
+
+Best regards,
+     Sergio Paracuellos
+
+> Thanks,
+> Guenter
+>
+> > +             write_gcr_reg1_base(entry->res->start);
+> > +             write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
+> > +             pr_info("PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
+> > +                     (unsigned long long)read_gcr_reg1_base(),
+> > +                     (unsigned long long)read_gcr_reg1_mask());
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >   phys_addr_t mips_cpc_default_phys_base(void)
+> >   {
+> >       panic("Cannot detect cpc address");
+> >
+>
