@@ -2,163 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88BF8468200
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Dec 2021 03:35:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD14446834B
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Dec 2021 09:02:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384053AbhLDCiX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Dec 2021 21:38:23 -0500
-Received: from mga14.intel.com ([192.55.52.115]:42835 "EHLO mga14.intel.com"
+        id S1355004AbhLDIGK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 4 Dec 2021 03:06:10 -0500
+Received: from mga07.intel.com ([134.134.136.100]:56864 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235609AbhLDCiX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 3 Dec 2021 21:38:23 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10187"; a="237312074"
-X-IronPort-AV: E=Sophos;i="5.87,286,1631602800"; 
-   d="scan'208";a="237312074"
+        id S1343993AbhLDIGJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 4 Dec 2021 03:06:09 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10187"; a="300488956"
+X-IronPort-AV: E=Sophos;i="5.87,287,1631602800"; 
+   d="scan'208";a="300488956"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 18:34:58 -0800
-X-IronPort-AV: E=Sophos;i="5.87,286,1631602800"; 
-   d="scan'208";a="501403727"
-Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.212.5.226]) ([10.212.5.226])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 18:34:57 -0800
-Message-ID: <119cd071-9cca-d2a7-4198-50c351b729b0@linux.intel.com>
-Date:   Fri, 3 Dec 2021 19:34:53 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH v5] PCI: vmd: Clean up domain before enumeration
-Content-Language: en-US
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2021 00:02:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,287,1631602800"; 
+   d="scan'208";a="501465513"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 04 Dec 2021 00:02:43 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mtQ0I-000Ihi-CU; Sat, 04 Dec 2021 08:02:42 +0000
+Date:   Sat, 04 Dec 2021 16:02:33 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, jonathan.derrick@linux.dev,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <20211203181807.GA3009059@bhelgaas>
-From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-In-Reply-To: <20211203181807.GA3009059@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ fcf5ca40c844c084847c4e3ff3968ddec40dfa2a
+Message-ID: <61ab2099.jTgStAnSZ4ryCR9L%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/3/2021 11:18 AM, Bjorn Helgaas wrote:
-> [+cc Lorenzo]
->
-> On Tue, Nov 16, 2021 at 03:11:36PM -0700, Nirmal Patel wrote:
->> During VT-d pass-through, the VMD driver occasionally fails to
->> enumerate underlying NVMe devices when repetitive reboots are
->> performed in the guest OS. The issue can be resolved by resetting
->> VMD root ports for proper enumeration and triggering secondary bus
->> reset which will also propagate reset through downstream bridges.
-> Hmm.  Does not say what the root cause is, just that it can be "fixed"
-> by a reset, but OK.
->
->> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
->> Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
->> ---
->> ---
->> v4->v5: Fixing small nitpick fix.
->> v3->v4: Using pci_reset_bus function for secondary bus reset instead of
->>         manually triggering secondary bus reset, addressing review
->>         comments of v3.
->> v2->v3: Combining two functions into one, Remove redundant definations
->>         and Formatting fixes
->>
->>  drivers/pci/controller/vmd.c | 37 ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 37 insertions(+)
->>
->> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
->> index a5987e52700e..a905fce6232f 100644
->> --- a/drivers/pci/controller/vmd.c
->> +++ b/drivers/pci/controller/vmd.c
->> @@ -498,6 +498,40 @@ static inline void vmd_acpi_begin(void) { }
->>  static inline void vmd_acpi_end(void) { }
->>  #endif /* CONFIG_ACPI */
->>  
->> +static void vmd_domain_reset(struct vmd_dev *vmd)
->> +{
->> +	u16 bus, max_buses = resource_size(&vmd->resources[0]);
->> +	u8 dev, functions, fn, hdr_type;
->> +	char __iomem *base;
-> I don't understand what's going on here.
->
->> +	for (bus = 0; bus < max_buses; bus++) {
->> +		for (dev = 0; dev < 32; dev++) {
->> +			base = vmd->cfgbar + PCIE_ECAM_OFFSET(bus,
->> +						PCI_DEVFN(dev, 0), 0);
->> +
->> +			hdr_type = readb(base + PCI_HEADER_TYPE) &
->> +					 PCI_HEADER_TYPE_MASK;
->> +			functions = (hdr_type & 0x80) ? 8 : 1;
-> This look like an open-coded version of pci_hdr_type() for every
-> possible device on every possible bus below the VMD, regardless of
-> whether that device actually exists.  So most of these reads will
-> result in Unsupported Request errors and 0xff data returns, which you
-> interpret as a multi-function device.
->
->> +			for (fn = 0; fn < functions; fn++) {
->> +				base = vmd->cfgbar + PCIE_ECAM_OFFSET(bus,
->> +						PCI_DEVFN(dev, fn), 0);
->> +
->> +				hdr_type = readb(base + PCI_HEADER_TYPE) &
->> +						PCI_HEADER_TYPE_MASK;
-> So you open-code pci_hdr_type() again, for lots of functions that
-> don't exist.
->
->> +				if (hdr_type != PCI_HEADER_TYPE_BRIDGE ||
->> +				    (readw(base + PCI_CLASS_DEVICE) !=
->> +				     PCI_CLASS_BRIDGE_PCI))
->> +					continue;
-> This at least will skip the rest for functions that don't exist, since
-> hdr_type will be 0x7f (not 0x01, PCI_HEADER_TYPE_BRIDGE).
->
->> +
->> +				memset_io(base + PCI_IO_BASE, 0,
->> +					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
-> And here you clear the base & limit registers of the IO and MEM
-> windows of each bridge, again with basically a hand-written special
-> case of pci_write_config_*().
->
-> This looks like you're trying to disable the windows.  AFAICT, the
-> spec doesn't say what happens to the window base/limit registers after
-> reset, but it does say that reset clears the I/O Space Enable and
-> Memory Space Enable in the Command Register.  For bridges, that will
-> disable the windows.
->
-> Writing zero to both base & limit does not disable the windows; it
-> just sets them to [io 0x0000-0x0fff], [mem 0x00000000-0x000fffff],
-> etc.
->
-> So I'm not really convinced that this function is necessary at all,
-> given that you do a secondary bus reset on every VMD root port right
-> afterwards.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: fcf5ca40c844c084847c4e3ff3968ddec40dfa2a  Merge branch 'pci/errors'
 
-I am trying to clean up bridge devices under each vmd domain and then run
-secondary bus reset. Is propagation of hot reset on downstream ports via
-secondary bus reset enough between multiple reboot? I am testing if it
-solves our issue. I will let you know the results. Please let me know if you
-have more suggestions.
+elapsed time: 767m
 
-Thanks.
+configs tested: 168
+configs skipped: 3
 
->
->> +			}
->> +		}
->> +	}
->> +}
->> +
->>  static void vmd_attach_resources(struct vmd_dev *vmd)
->>  {
->>  	vmd->dev->resource[VMD_MEMBAR1].child = &vmd->resources[1];
->> @@ -801,6 +835,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->>  	vmd_acpi_begin();
->>  
->>  	pci_scan_child_bus(vmd->bus);
->> +	vmd_domain_reset(vmd);
->> +	list_for_each_entry(child, &vmd->bus->children, node)
->> +		pci_reset_bus(child->self);
->>  	pci_assign_unassigned_bus_resources(vmd->bus);
->>  
->>  	/*
->> -- 
->> 2.27.0
->>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                               defconfig
+mips                 randconfig-c004-20211203
+i386                 randconfig-c001-20211203
+xtensa                generic_kc705_defconfig
+nds32                               defconfig
+mips                      pic32mzda_defconfig
+arm64                            alldefconfig
+powerpc                          g5_defconfig
+arm                        clps711x_defconfig
+alpha                            alldefconfig
+ia64                         bigsur_defconfig
+sh                             shx3_defconfig
+powerpc                    adder875_defconfig
+m68k                       m5208evb_defconfig
+powerpc                      arches_defconfig
+s390                             allyesconfig
+arm                         shannon_defconfig
+powerpc                 mpc8540_ads_defconfig
+mips                      fuloong2e_defconfig
+sh                        edosk7760_defconfig
+powerpc                     tqm8555_defconfig
+openrisc                    or1ksim_defconfig
+arc                          axs101_defconfig
+m68k                        m5407c3_defconfig
+um                             i386_defconfig
+mips                        maltaup_defconfig
+sparc                       sparc64_defconfig
+mips                        vocore2_defconfig
+arm                          pxa3xx_defconfig
+sh                               alldefconfig
+nios2                         10m50_defconfig
+powerpc                     ppa8548_defconfig
+powerpc                 mpc834x_itx_defconfig
+sh                          rsk7269_defconfig
+arc                        nsim_700_defconfig
+arm                         s5pv210_defconfig
+um                           x86_64_defconfig
+mips                           xway_defconfig
+arm                            xcep_defconfig
+powerpc                       holly_defconfig
+powerpc                      ppc40x_defconfig
+nios2                               defconfig
+riscv                    nommu_k210_defconfig
+powerpc                        cell_defconfig
+sh                            hp6xx_defconfig
+powerpc                 mpc836x_rdk_defconfig
+arm                         at91_dt_defconfig
+powerpc                     powernv_defconfig
+powerpc                      cm5200_defconfig
+sh                         microdev_defconfig
+powerpc                 canyonlands_defconfig
+arm                      jornada720_defconfig
+arm                         bcm2835_defconfig
+powerpc                 mpc8272_ads_defconfig
+arc                      axs103_smp_defconfig
+arm                         palmz72_defconfig
+xtensa                       common_defconfig
+sh                         ap325rxa_defconfig
+arm                         socfpga_defconfig
+mips                          rm200_defconfig
+mips                            gpr_defconfig
+h8300                               defconfig
+mips                         rt305x_defconfig
+sh                           se7712_defconfig
+arm                        mvebu_v5_defconfig
+mips                       bmips_be_defconfig
+sparc                       sparc32_defconfig
+sh                           se7751_defconfig
+nios2                            allyesconfig
+arm                          ep93xx_defconfig
+powerpc                       eiger_defconfig
+arm                       aspeed_g4_defconfig
+sparc                            alldefconfig
+mips                          malta_defconfig
+powerpc                        warp_defconfig
+microblaze                          defconfig
+arm                  randconfig-c002-20211203
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20211203
+x86_64               randconfig-a005-20211203
+x86_64               randconfig-a001-20211203
+x86_64               randconfig-a002-20211203
+x86_64               randconfig-a004-20211203
+x86_64               randconfig-a003-20211203
+i386                 randconfig-a001-20211203
+i386                 randconfig-a005-20211203
+i386                 randconfig-a002-20211203
+i386                 randconfig-a003-20211203
+i386                 randconfig-a006-20211203
+i386                 randconfig-a004-20211203
+i386                 randconfig-a013-20211204
+i386                 randconfig-a016-20211204
+i386                 randconfig-a011-20211204
+i386                 randconfig-a014-20211204
+i386                 randconfig-a012-20211204
+i386                 randconfig-a015-20211204
+arc                  randconfig-r043-20211203
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+
+clang tested configs:
+arm                  randconfig-c002-20211203
+x86_64               randconfig-c007-20211203
+riscv                randconfig-c006-20211203
+mips                 randconfig-c004-20211203
+i386                 randconfig-c001-20211203
+powerpc              randconfig-c003-20211203
+s390                 randconfig-c005-20211203
+x86_64               randconfig-a016-20211203
+x86_64               randconfig-a011-20211203
+x86_64               randconfig-a013-20211203
+x86_64               randconfig-a014-20211203
+x86_64               randconfig-a015-20211203
+x86_64               randconfig-a012-20211203
+i386                 randconfig-a016-20211203
+i386                 randconfig-a013-20211203
+i386                 randconfig-a011-20211203
+i386                 randconfig-a014-20211203
+i386                 randconfig-a012-20211203
+i386                 randconfig-a015-20211203
+x86_64               randconfig-a006-20211204
+x86_64               randconfig-a005-20211204
+x86_64               randconfig-a001-20211204
+x86_64               randconfig-a002-20211204
+x86_64               randconfig-a004-20211204
+x86_64               randconfig-a003-20211204
+hexagon              randconfig-r045-20211203
+s390                 randconfig-r044-20211203
+hexagon              randconfig-r041-20211203
+riscv                randconfig-r042-20211203
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
