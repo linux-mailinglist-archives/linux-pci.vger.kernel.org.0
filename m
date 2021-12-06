@@ -2,273 +2,208 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D793468B5E
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Dec 2021 15:16:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B34E1468EAB
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 02:59:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234807AbhLEOUL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Dec 2021 09:20:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234524AbhLEOUL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Dec 2021 09:20:11 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C1BAC061714;
-        Sun,  5 Dec 2021 06:16:44 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638713800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sJTQUIRR77MaSNIdhZpi/LTBTa3zuBS70Kn6pQ3k3x4=;
-        b=yD1StGSOHlk6RlSGRR+TrLWg0wckaM608a8e99ggT3Bd6RYNRkapYOOSja0cPA0zSjfnDw
-        c06H50JiCJEUhCUVUc8qE1csfa8vr5fz52V+zK3Zk42tVbUqzej5yq3wAQjeWeTV5W/BJf
-        twK9J70//mEDrfjm4L7ifeevlIXyaAI39wtiEUoa15a38eReRpDY8ycv+lQ/U7UBvLCGFp
-        2veaCrVpAu0IeGZk7yfu8kY7HZHwQRH6y1nhcK/Mt/4i1Rma+LVZSPme2rgoyGe+MWhBlm
-        aQ3T7dNZQBc6R/KvCJSKfRa9LzdbrWVzDA4evblraJwmI3pR0+g43jeREh+PCA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638713800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sJTQUIRR77MaSNIdhZpi/LTBTa3zuBS70Kn6pQ3k3x4=;
-        b=qH/RLvwSHUt6Ph9FdFVGnlnQOGRwIJr6RblwaJUaSVzx76f4dRY0bxKeW2TgzpeuIos4hI
-        LLHLspi6g3Ee7tDw==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
+        id S231767AbhLFCCy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 5 Dec 2021 21:02:54 -0500
+Received: from mga17.intel.com ([192.55.52.151]:52370 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231624AbhLFCCx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 5 Dec 2021 21:02:53 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10189"; a="217916183"
+X-IronPort-AV: E=Sophos;i="5.87,290,1631602800"; 
+   d="scan'208";a="217916183"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2021 17:59:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,290,1631602800"; 
+   d="scan'208";a="514541894"
+Received: from allen-box.sh.intel.com ([10.239.159.118])
+  by orsmga008.jf.intel.com with ESMTP; 05 Dec 2021 17:59:12 -0800
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
         Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
         Kevin Tian <kevin.tian@intel.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org,
-        Joerg Roedel <jroedel@suse.de>,
-        iommu@lists.linux-foundation.org, Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-In-Reply-To: <87v9044fkb.ffs@tglx>
-References: <87y2548byw.ffs@tglx> <20211201181406.GM4670@nvidia.com>
- <87mtlk84ae.ffs@tglx> <87r1av7u3d.ffs@tglx>
- <20211202135502.GP4670@nvidia.com> <87wnkm6c77.ffs@tglx>
- <20211202200017.GS4670@nvidia.com> <87o85y63m8.ffs@tglx>
- <20211203003749.GT4670@nvidia.com> <877dcl681d.ffs@tglx>
- <20211203164104.GX4670@nvidia.com> <87v9044fkb.ffs@tglx>
-Date:   Sun, 05 Dec 2021 15:16:40 +0100
-Message-ID: <87o85v3znb.ffs@tglx>
+        Ashok Raj <ashok.raj@intel.com>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v3 00/18] Fix BUG_ON in vfio_iommu_group_notifier()
+Date:   Mon,  6 Dec 2021 09:58:45 +0800
+Message-Id: <20211206015903.88687-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Dec 04 2021 at 15:20, Thomas Gleixner wrote:
-> On Fri, Dec 03 2021 at 12:41, Jason Gunthorpe wrote:
-> So I need to break that up in a way which caters for both cases, but
-> does neither create a special case for PCI nor for the rest of the
-> universe, i.e. the 1:1 case has to be a subset of the 1:2 case which
-> means all of it is common case. With that solved the storage question
-> becomes a nobrainer.
->
-> When I looked at it again yesterday while writing mail, I went back to
-> my notes and found the loose ends where I left off. Let me go back and
-> start over from there.
+Hi folks,
 
-I found out why I stopped looking at it. I came from a similar point of
-view what you were suggesting:
+The iommu group is the minimal isolation boundary for DMA. Devices in
+a group can access each other's MMIO registers via peer to peer DMA
+and also need share the same I/O address space.
 
->> If IMS == MSI, then couldn't we conceptually have the dev->irqdomain
->> completely unable to handle IMS/MSI/MSI-X at all, and instead, when
->> the driver asks for PCI MSI access we create a new hierarchical
->> irqdomain and link it to a MSI chip_ops or a MSI-X chip_ops - just as
->> you outlined for IMS?  (again, not saying to do this, but let's ask if
->> that makes more sense than the current configuration)
+Once the I/O address space is assigned to user control it is no longer
+available to the dma_map* API, which effectively makes the DMA API
+non-working.
 
-Which I shot down with:
+Second, userspace can use DMA initiated by a device that it controls
+to access the MMIO spaces of other devices in the group. This allows
+userspace to indirectly attack any kernel owned device and it's driver.
 
-> That's not really a good idea because dev->irqdomain is a generic
-> mechanism and not restricted to the PCI use case. Special casing it for
-> PCI is just wrong. Special casing it for all use cases just to please
-> PCI is equally wrong. There is a world outside of PCI and x86. 
+Therefore groups must either be entirely under kernel control or
+userspace control, never a mixture. Unfortunately some systems have
+problems with the granularity of groups and there are a couple of
+important exceptions:
 
-That argument is actually only partially correct.
+ - pci_stub allows the admin to block driver binding on a device and
+   make it permanently shared with userspace. Since PCI stub does not
+   do DMA it is safe, however the admin must understand that using
+   pci_stub allows userspace to attack whatever device it was bound
+   it.
 
-After studying my notes and some more code (sigh), it looks feasible
-under certain assumptions, constraints and consequences.
+ - PCI bridges are sometimes included in groups. Typically PCI bridges
+   do not use DMA, and generally do not have MMIO regions.
 
-Assumptions:
+Generally any device that does not have any MMIO registers is a
+possible candidate for an exception.
 
-  1) The irqdomain pointer of PCI devices which is set up during device
-     discovery is not used by anything else than infrastructure which
-     knows how to handle it.
+Currently vfio adopts a workaround to detect violations of the above
+restrictions by monitoring the driver core BOUND event, and hardwiring
+the above exceptions. Since there is no way for vfio to reject driver
+binding at this point, BUG_ON() is triggered if a violation is
+captured (kernel driver BOUND event on a group which already has some
+devices assigned to userspace). Aside from the bad user experience
+this opens a way for root userspace to crash the kernel, even in high
+integrity configurations, by manipulating the module binding and
+triggering the BUG_ON.
 
-     Of course there is no guarantee, but I'm not that horrified about
-     it anymore after chasing the exposure with yet more coccinelle
-     scripts.
+This series solves this problem by making the user/kernel ownership a
+core concept at the IOMMU layer. The driver core enforces kernel
+ownership while drivers are bound and violations now result in a error
+codes during probe, not BUG_ON failures.
 
-Constraints:
+Patch partitions:
+  [PATCH 1-9]: Detect DMA ownership conflicts during driver binding;
+  [PATCH 10-13]: Add security context management for assigned devices;
+  [PATCH 14-18]: Various cleanups.
 
-  1) This is strictly opt-in and depends on hierarchical irqdomains.
+This is part one of three initial series for IOMMUFD:
+ * Move IOMMU Group security into the iommu layer
+ - Generic IOMMUFD implementation
+ - VFIO ability to consume IOMMUFD
 
-     If an architecture/subarchitecture wants to support it then it
-     needs to rework their PCI/MSI backend to hierarchical irqdomains or
-     make their PCI/MSI irqdomain ready for the task.
+Change log:
+v1: initial post
+  - https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/
 
-     From my inspection of 30+ PCI/MSI irqdomains, most of them should
-     be trivial to convert. The hard ones are powerpc, XEN and VMD,
-     where XEN is definitely the most convoluted one.
+v2:
+  - https://lore.kernel.org/linux-iommu/20211128025051.355578-1-baolu.lu@linux.intel.com/
 
-     That means that devices which depend on IMS won't work on anything
-     which is not up to date.
+  - Move kernel dma ownership auto-claiming from driver core to bus
+    callback. [Greg/Christoph/Robin/Jason]
+    https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#m153706912b770682cb12e3c28f57e171aa1f9d0c
 
-  2) Guest support is strictly opt-in
+  - Code and interface refactoring for iommu_set/release_dma_owner()
+    interfaces. [Jason]
+    https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#mea70ed8e4e3665aedf32a5a0a7db095bf680325e
 
-     The underlying architecture/subarchitecture specific irqdomain has
-     to detect at setup time (eventually early boot), whether the
-     underlying hypervisor supports it.
+  - [NEW]Add new iommu_attach/detach_device_shared() interfaces for
+    multiple devices group. [Robin/Jason]
+    https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#mea70ed8e4e3665aedf32a5a0a7db095bf680325e
 
-     The only reasonable way to support that is the availability of
-     interrupt remapping via vIOMMU, as we discussed before.
+  - [NEW]Use iommu_attach/detach_device_shared() in drm/tegra drivers.
 
-  3) IOMMU/Interrupt remapping dependency
+  - Refactoring and description refinement.
 
-     While IMS just works without interrupt remapping on bare metal the
-     fact that there is no reliable way to figure out whether the kernel
-     runs on bare metal or not, makes it pretty much mandatory, at least
-     on x86.
+v3:
+  - Rename bus_type::dma_unconfigure to bus_type::dma_cleanup. [Greg]
+    https://lore.kernel.org/linux-iommu/c3230ace-c878-39db-1663-2b752ff5384e@linux.intel.com/T/#m6711e041e47cb0cbe3964fad0a3466f5ae4b3b9b
 
-     That's not a hardcoded constraint. It's a decision made during the
-     setup of the underlying architecture/subarchitecture specific
-     irqdomain.
+  - Avoid _platform_dma_configure for platform_bus_type::dma_configure.
+    [Greg]
+    https://lore.kernel.org/linux-iommu/c3230ace-c878-39db-1663-2b752ff5384e@linux.intel.com/T/#m43fc46286611aa56a5c0eeaad99d539e5519f3f6
 
-  4) The resulting irqdomain hierarchy would ideally look like this:
+  - Patch "0012-iommu-Add-iommu_at-de-tach_device_shared-for-mult.patch"
+    and "0018-drm-tegra-Use-the-iommu-dma_owner-mechanism.patch" have
+    been tested by Dmitry Osipenko <digetx@gmail.com>.
 
-     VECTOR -> [IOMMU, ROUTING, ...] -> PCI/[MSI/MSI-X/IMS] domains
+This is based on v5.16-rc3 and available on github:
+https://github.com/LuBaolu/intel-iommu/commits/iommu-dma-ownership-v3
 
-     That does not work in all cases due to architecture and host
-     controller constraints, so we might end up with:
+Best regards,
+baolu
 
-           VECTOR -> IOMMU -> SHIM -> PCI/[MSI/MSI-X/IMS] domains
+Jason Gunthorpe (2):
+  vfio: Delete the unbound_list
+  drm/tegra: Use the iommu dma_owner mechanism
 
-     The nice thing about the irqdomain hierarchy concept is that this
-     does not create any runtime special cases as the base hierarchy is
-     established at boot or device detection time. It's just another
-     layer of indirection.
+Lu Baolu (16):
+  iommu: Add device dma ownership set/release interfaces
+  driver core: Add dma_cleanup callback in bus_type
+  driver core: platform: Rename platform_dma_configure()
+  driver core: platform: Add driver dma ownership management
+  amba: Add driver dma ownership management
+  bus: fsl-mc: Add driver dma ownership management
+  PCI: Add driver dma ownership management
+  PCI: pci_stub: Suppress kernel DMA ownership auto-claiming
+  PCI: portdrv: Suppress kernel DMA ownership auto-claiming
+  iommu: Add security context management for assigned devices
+  iommu: Expose group variants of dma ownership interfaces
+  iommu: Add iommu_at[de]tach_device_shared() for multi-device groups
+  vfio: Set DMA USER ownership for VFIO devices
+  vfio: Remove use of vfio_group_viable()
+  vfio: Remove iommu group notifier
+  iommu: Remove iommu group changes notifier
 
-  5) The design rules for the device specific IMS irqdomains have to be
-     documented and enforced to the extent possible.
+ include/linux/amba/bus.h              |   1 +
+ include/linux/device/bus.h            |   3 +
+ include/linux/fsl/mc.h                |   5 +
+ include/linux/iommu.h                 |  93 ++++++--
+ include/linux/pci.h                   |   5 +
+ include/linux/platform_device.h       |   3 +-
+ drivers/amba/bus.c                    |  30 ++-
+ drivers/base/dd.c                     |   7 +-
+ drivers/base/platform.c               |  31 ++-
+ drivers/bus/fsl-mc/fsl-mc-bus.c       |  26 +-
+ drivers/gpu/drm/tegra/dc.c            |   1 +
+ drivers/gpu/drm/tegra/drm.c           |  55 +++--
+ drivers/gpu/drm/tegra/gr2d.c          |   1 +
+ drivers/gpu/drm/tegra/gr3d.c          |   1 +
+ drivers/gpu/drm/tegra/vic.c           |   1 +
+ drivers/iommu/iommu.c                 | 329 ++++++++++++++++++++------
+ drivers/pci/pci-driver.c              |  21 ++
+ drivers/pci/pci-stub.c                |   1 +
+ drivers/pci/pcie/portdrv_pci.c        |   2 +
+ drivers/vfio/fsl-mc/vfio_fsl_mc.c     |   1 +
+ drivers/vfio/pci/vfio_pci.c           |   1 +
+ drivers/vfio/platform/vfio_amba.c     |   1 +
+ drivers/vfio/platform/vfio_platform.c |   1 +
+ drivers/vfio/vfio.c                   | 248 ++-----------------
+ 24 files changed, 502 insertions(+), 366 deletions(-)
 
-     Rules which I have in my notes as of today:
+-- 
+2.25.1
 
-       - The device specific IMS irq chip / irqdomain has to be strictly
-         separated from the rest of the driver code and can only
-         interact via the irq chip data which is either per interrupt or
-         per device.
-
-         I have some ideas how to enforce these things to go into
-         drivers/irqchip/ so they are exposed to scrutiny and not
-         burried in some "my device is special" driver code and applied
-         by subsystem maintainers before anyone can even look at it. 
-
-       - The irqchip callbacks which can be implemented by these top
-         level domains are going to be restricted.
-
-       - For the irqchip callbacks which are allowed/required the rules
-         vs. following down the hierarchy need to be defined and
-         enforced.
-
-       - To achieve that the registration interface will not be based on
-         struct irq_chip. This will be a new representation and the core
-         will convert that into a proper irq chip which fits into the
-         hierarchy. This provides one central place where the hierarchy
-         requirements can be handled as they depend on the underlying
-         MSI domain (IOMMU, SHIM, etc.). Otherwise any change on that
-         would require to chase the IMS irqchips all over the place.
-
-Consequences:
-
-  1) A more radical split between legacy and hierarchical irqdomain
-     code in drivers/pci/msi/ into:
-
-       - api
-       - legacy
-       - irqdomain
-       - shared
-
-     That means that we are going to end up with duplicated code for
-     some of the mechanisms up to the point where the stuck-in-the-mud
-     parts either get converted or deleted.
-
-  2) The device centric storage concept will stay as it does not make
-     any sense to push it towards drivers and what's worse it would be a
-     major pain vs. the not yet up to the task irqdomains and the legacy
-     architecture backends to change that. I really have no interrest to
-     make the legacy code 
-
-     It also makes sense because the interrupts are strictly tied to the
-     device. They cannot originate from some disconnected layer of thin
-     air.
-
-     Sorry Jason, no tables for you. :)
-
-How to get there:
-
-  1) I'm going to post part 1-3 of the series once more with the fallout
-     and review comments addressed.
-
-  2) If nobody objects, I'll merge that into tip irq/msi and work on top
-     of that.
-
-     The consolidation makes sense on it's own and is required anyway. I
-     might need to revisit some of the already touched places, but that
-     should be a halfways limited number. I rather do that step for step
-     on top than going back to start and mixing the new concepts in from
-     the very beginning.
-
-     But I drop part 4 in it's current form because that's going to be
-     part of the new infrastructure.
-
-  3) I'll work on that bottom up towards a driver exposable API as that
-     is going to be a result of the final requirements of the underlying
-     infrastructure.
-
-     The final driver visible interfaces can be bikeshedded on top to
-     make them palatable for driver writers.
-
-  4) Convert x86 PCI/MSI[x] to the new scheme
-
-  5) Implement an IMS user.
-
-     The obvious candidate which should be halfways accessible is the
-     ath11 PCI driver which falls into that category.
-
-     It uses horrendous hackery to make it "work" by abusing MSI. It's a
-     wonder that it works at all, by some definition of "works".
-
-     I'm pretty sure how to make it fall apart without touching a single
-     line of code.
-
-     With a small code change I can make it fail hard without blowing up
-     any other MSI/MSI-X user except the switchtec NTB.
-
-     That's a prime example for the way how driver writers behave.
-
-     Instead of talking to the people who are responsible for the
-     interrupt subsystem, they go off and do their own thing. It does
-     not explode on their test machine, but it's not even remotely close
-     to the requirements for PCI drivers to work independent of the
-     underlying platform.
-
-     Of course the responsible maintainer does not even notice and waves
-     it through without questioning it.
-
-Thoughts?
-
-Thanks,
-
-        tglx
