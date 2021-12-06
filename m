@@ -2,199 +2,223 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A568E46A5E5
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 20:44:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32EF346A608
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 20:52:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236694AbhLFTr5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Dec 2021 14:47:57 -0500
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:45639 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245093AbhLFTr5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 14:47:57 -0500
-Received: by mail-ot1-f41.google.com with SMTP id a23-20020a9d4717000000b0056c15d6d0caso14988003otf.12;
-        Mon, 06 Dec 2021 11:44:28 -0800 (PST)
+        id S1348755AbhLFT4Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Dec 2021 14:56:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348752AbhLFT4Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 14:56:24 -0500
+Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE5DC061746;
+        Mon,  6 Dec 2021 11:52:55 -0800 (PST)
+Received: by mail-ua1-x930.google.com with SMTP id p37so21933361uae.8;
+        Mon, 06 Dec 2021 11:52:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vrXin/HXbXG1mkAXUdU3bzqqz9eX4d3rYtsLa4pucxw=;
+        b=nDmVgYJ/PlSvCUzukGDeqqONJGyo38g6dxHIqMAz4ZhdMKFNYWO8zW6qPw+60MscTd
+         ZkTRH2cgDr0KgoxzSbE4ybGjEmuRqdpG0TUAPpspaIkKlURBd+JO1aqhCIegCgtZGnUe
+         ibnld6zq3UQCac7G8cBceBd4nd9tvhYkyGYe7s/tku2hvBJ3wZVAcM6Wd1bubAS0peNV
+         ptgFa90xBpPPDM/8lrdwKbM4GKithKGd+VZjV7wBHt5Dp50BoiBF/9gpB0QONTytYwA1
+         PPP5MO3zsGHhPXrGmQrnW/fcrLaC32XO/+3ua24iPnvWciTVURe9m7aCL9R40g2QLyp5
+         tpzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pOQ79x7j60T/Aoxgzg7Q/WKtgZBCeGXzkMDE3RqKJOo=;
-        b=3QmNFG4nFCwHFK6G4lTDvKegPj4zwBJcSM1hEKvUamJ7PeAvlCe3G8Uan4BjTLgsKy
-         TGNRDHO0ubulixJq7F1X+UOY6cmlL28/Kje4LxDKlAhT3B2UAXKLaEiLhCRvsPuC/tze
-         L+TuUewqUDjauW0N0/AReitQS6SS19wU/vzcItnAYHa8EvgB2cwezSsoRNxl/kDuTfIy
-         MG2dyXZ/IOD9vaXK1oKVeHUKp6K0IiHXkXC5tyX5ylOvIgSLem8hZe9PE3Z2uiRVcWeT
-         aG04K0qSM8KzOKX0JbvNDVr31D9BMww6U5usbEjedh8tJ0Avm0ddESjBiQZkH9DMFPPQ
-         2DMg==
-X-Gm-Message-State: AOAM532gBskUq39NztkagaknjFju48m3qycKy6NUIAkFTFTpfgzsNmeT
-        5RQ+PQLP8RxizAIprB4vJmyK5bK5XA==
-X-Google-Smtp-Source: ABdhPJz52nzCgw/hwbjYAAgjDYBEG+KdXK5nF3jLcZY0sCOmKJpTkCzBrNtc47G1zyZLA2GWcVNmwg==
-X-Received: by 2002:a9d:77d1:: with SMTP id w17mr30919009otl.329.1638819867943;
-        Mon, 06 Dec 2021 11:44:27 -0800 (PST)
-Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id o6sm2291382oou.41.2021.12.06.11.44.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 11:44:27 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] dt-bindings: PCI: designware: Fix 'unevaluatedProperties' warnings
-Date:   Mon,  6 Dec 2021 13:44:25 -0600
-Message-Id: <20211206194426.2470080-1-robh@kernel.org>
-X-Mailer: git-send-email 2.32.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vrXin/HXbXG1mkAXUdU3bzqqz9eX4d3rYtsLa4pucxw=;
+        b=yYdmGj0FAVHe0mJh/OHDeEvmKM4GFXsuLxJWutyssa6c7tyZeulX3tmgvdBy2r45kX
+         +bBOMvCUzSM4IaAc0X96P8L/YPW9jDYf/ETwvKfkM6kPfvJGZkrGv8FhiwT2p7kSTWKb
+         Xcpby4+D1b4L7dm6dHQaJOVcJkyylDo7T9cxkXZNmd+nZp1YuaqtAuIj0O/2kUGJNKhq
+         XDch6MkFB9su2sH1BWXUh6mwvEAMbTyizJR6PfxvNwHYnpjzMX9pdfUBGmhW4G840v5A
+         NZv+fOjwMnH9ozL88L+tdBG5eiAvv2pedJ8mXdPNb3NHOGm5iR8mmts5hX7UsbjDx6CD
+         E5ww==
+X-Gm-Message-State: AOAM532RNwbKRQiiBb4ix4+AWVyNIw3oMs0A8ShUQ9TXwVmsWQ8vnvrc
+        Fbgg8UzIaYqfX/dpc8qLB76qGvJ0nY01+TZqzZHhFSNA
+X-Google-Smtp-Source: ABdhPJyUiGZbBBY7MWqrYEkfviMec8HXucbIt3f+AkAmjHcK7OnVQWqUWU5Xu/hUs3bHmfranmVtMbYS0JLk30bQKwk=
+X-Received: by 2002:ab0:2a8b:: with SMTP id h11mr43242829uar.98.1638820374257;
+ Mon, 06 Dec 2021 11:52:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211206194406.2469361-1-robh@kernel.org>
+In-Reply-To: <20211206194406.2469361-1-robh@kernel.org>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Mon, 6 Dec 2021 20:52:42 +0100
+Message-ID: <CAMhs-H888q9FihfXkn=wdV8j2iRTnaXiXf=9onRxab8qHvFwcQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: PCI: Fix 'unevaluatedProperties' warnings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Abraham I <kishon@ti.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-With 'unevaluatedProperties' support implemented, there's a number of
-warnings from the Designware PCIe based bindings:
+On Mon, Dec 6, 2021 at 8:44 PM Rob Herring <robh@kernel.org> wrote:
+>
+> With 'unevaluatedProperties' support implemented, there's several
+> warnings due to undocumented properties:
+>
+> Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dt.yaml: pcie@1e140000: pcie@0,0: Unevaluated properties are not allowed ('phy-names' was unexpected)
+> Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dt.yaml: pcie@1e140000: pcie@1,0: Unevaluated properties are not allowed ('phy-names' was unexpected)
+> Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dt.yaml: pcie@1e140000: pcie@2,0: Unevaluated properties are not allowed ('phy-names' was unexpected)
+> Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.example.dt.yaml: pcie@11230000: Unevaluated properties are not allowed ('phy-names' was unexpected)
+> Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: pcie@2030000000: Unevaluated properties are not allowed ('interrupt-controller' was unexpected)
+> Documentation/devicetree/bindings/pci/ti,am65-pci-ep.example.dt.yaml: pcie-ep@5500000: Unevaluated properties are not allowed ('num-ib-windows', 'num-ob-windows' were unexpected)
+> Documentation/devicetree/bindings/pci/ti,am65-pci-host.example.dt.yaml: pcie@5500000: Unevaluated properties are not allowed ('num-viewport', 'interrupts' were unexpected)
+> Documentation/devicetree/bindings/pci/ti,j721e-pci-host.example.dt.yaml: pcie@2900000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
+>
+> Add the necessary property definitions or remove the properties from the
+> examples to fix these warnings.
+>
+> Cc: Ryder Lee <ryder.lee@mediatek.com>
+> Cc: Jianjun Wang <jianjun.wang@mediatek.com>
+> Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Daire McNamara <daire.mcnamara@microchip.com>
+> Cc: Abraham I <kishon@ti.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-mediatek@lists.infradead.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/pci/mediatek,mt7621-pcie.yaml     |  3 +++
 
-Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.example.dt.yaml: pcie@1ffc000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'device_type', 'bus-range', 'ranges', '#interrupt-cells', 'interrupt-map-mask', 'interrupt-map' were unexpected)
-Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.example.dt.yaml: pcie@1ffc000: Unevaluated properties are not allowed ('clock-names' was unexpected)
-Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@f4000000: Unevaluated properties are not allowed ('bus-range', '#address-cells', '#size-cells', 'device_type', 'ranges', 'num-lanes', '#interrupt-cells', 'interrupts', 'interrupt-names', 'interrupt-map-mask', 'interrupt-map', 'clocks', 'clock-names' were unexpected)
-Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@f4000000: Unevaluated properties are not allowed ('clock-names' was unexpected)
-Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@f5000000: Unevaluated properties are not allowed ('bus-range', '#address-cells', '#size-cells', 'device_type', 'phys', 'ranges', 'num-lanes', '#interrupt-cells', 'interrupts', 'interrupt-names', 'interrupt-map-mask', 'interrupt-map', 'reset-gpios', 'pcie@0,0' were unexpected)
-Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@f5000000: Unevaluated properties are not allowed ('phys', 'hisilicon,clken-gpios' were unexpected)
-Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml: pcie@d0e00000: Unevaluated properties are not allowed ('device_type', '#address-cells', '#size-cells', 'linux,pci-domain', 'bus-range', '#interrupt-cells', 'interrupt-map-mask', 'interrupt-map' were unexpected)
-Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml: pcie@d0e00000: Unevaluated properties are not allowed ('resets', 'phys', 'phy-names', 'reset-assert-ms' were unexpected)
-Documentation/devicetree/bindings/pci/rockchip-dw-pcie.example.dt.yaml: pcie@fe280000: Unevaluated properties are not allowed ('clock-names', 'msi-map', 'phys', 'phy-names', 'power-domains', 'resets', 'reset-names' were unexpected)
-Documentation/devicetree/bindings/pci/samsung,exynos-pcie.example.dt.yaml: pcie@15700000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', '#interrupt-cells', 'device_type', 'bus-range', 'ranges', 'interrupt-map-mask', 'interrupt-map' were unexpected)
-Documentation/devicetree/bindings/pci/samsung,exynos-pcie.example.dt.yaml: pcie@15700000: Unevaluated properties are not allowed ('clock-names', 'phys', 'vdd10-supply', 'vdd18-supply' were unexpected)
-Documentation/devicetree/bindings/pci/sifive,fu740-pcie.example.dt.yaml: pcie@e00000000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', '#interrupt-cells', 'device_type', 'dma-coherent', 'bus-range', 'ranges', 'interrupts', 'interrupt-parent', 'interrupt-map-mask', 'interrupt-map', 'clock-names', 'clocks' were unexpected)
-Documentation/devicetree/bindings/pci/sifive,fu740-pcie.example.dt.yaml: pcie@e00000000: Unevaluated properties are not allowed ('dma-coherent', 'clock-names', 'resets', 'pwren-gpios' were unexpected)
-Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.example.dt.yaml: pcie-ep@66000000: Unevaluated properties are not allowed ('clock-names', 'clocks', 'reset-names', 'resets', 'phy-names', 'phys' were unexpected)
-Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.example.dt.yaml: pcie@28400000: Unevaluated properties are not allowed ('clock-names' was unexpected)
-Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.example.dt.yaml: pcie@28400000: Unevaluated properties are not allowed ('device_type', 'bus-range', 'num-viewport', '#address-cells', '#size-cells', '#interrupt-cells', 'ranges', 'interrupt-names', 'interrupt-map-mask', 'interrupt-map', 'max-link-speed' were unexpected)
+Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
-The main problem is that snps,dw-pcie.yaml and snps,dw-pcie-ep.yaml
-shouldn't set 'unevaluatedProperties: false'. Otherwise, bindings that
-reference them cannot add additional properties. With that addressed,
-there's a handful of other undocumented properties to add.
+Thanks,
+    Sergio Paracuellos
 
-Cc: Xiaowei Song <songxiaowei@hisilicon.com>
-Cc: Binghui Wang <wangbinghui@hisilicon.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Greentime Hu <greentime.hu@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../bindings/pci/hisilicon,kirin-pcie.yaml          | 13 +++++++++++++
- .../devicetree/bindings/pci/sifive,fu740-pcie.yaml  |  4 ++--
- .../devicetree/bindings/pci/snps,dw-pcie-ep.yaml    |  2 +-
- .../devicetree/bindings/pci/snps,dw-pcie.yaml       |  2 +-
- .../bindings/pci/socionext,uniphier-pcie-ep.yaml    |  2 +-
- 5 files changed, 18 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-index cbee87802559..c9f04999c9cf 100644
---- a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-@@ -37,6 +37,19 @@ properties:
-     minItems: 3
-     maxItems: 4
- 
-+  clocks: true
-+
-+  clock-names:
-+    items:
-+      - const: pcie_phy_ref
-+      - const: pcie_aux
-+      - const: pcie_apb_phy
-+      - const: pcie_apb_sys
-+      - const: pcie_aclk
-+
-+  phys:
-+    maxItems: 1
-+
-   hisilicon,clken-gpios:
-     description: |
-       Clock input enablement GPIOs from PCI devices like Ethernet, M.2 and
-diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-index 2b9d1d6fc661..9215c6ee24a0 100644
---- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-@@ -32,6 +32,8 @@ properties:
-       - const: config
-       - const: mgmt
- 
-+  dma-coherent: true
-+
-   num-lanes:
-     const: 8
- 
-@@ -64,7 +66,6 @@ required:
-   - interrupt-parent
-   - interrupt-map-mask
-   - interrupt-map
--  - clock-names
-   - clocks
-   - resets
-   - pwren-gpios
-@@ -104,7 +105,6 @@ examples:
-                             <0x0 0x0 0x0 0x2 &plic0 58>,
-                             <0x0 0x0 0x0 0x3 &plic0 59>,
-                             <0x0 0x0 0x0 0x4 &plic0 60>;
--            clock-names = "pcie_aux";
-             clocks = <&prci PRCI_CLK_PCIE_AUX>;
-             resets = <&prci 4>;
-             pwren-gpios = <&gpio 5 0>;
-diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
-index b5935b1b153f..b3b544eaf5aa 100644
---- a/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
-@@ -73,7 +73,7 @@ required:
-   - reg-names
-   - compatible
- 
--unevaluatedProperties: false
-+additionalProperties: true
- 
- examples:
-   - |
-diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-index 9ed0dfba7f89..a5345c494744 100644
---- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-@@ -73,7 +73,7 @@ properties:
-       does not specify it, the driver autodetects it.
-     deprecated: true
- 
--unevaluatedProperties: false
-+additionalProperties: true
- 
- required:
-   - reg
-diff --git a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-index 144cbcd60a1c..179ab0858482 100644
---- a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
-@@ -79,7 +79,7 @@ required:
-   - resets
-   - reset-names
- 
--additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
--- 
-2.32.0
-
+>  .../bindings/pci/mediatek-pcie-gen3.yaml       |  4 ++++
+>  .../bindings/pci/microchip,pcie-host.yaml      | 18 ++++++++++++++++++
+>  .../bindings/pci/ti,am65-pci-ep.yaml           |  2 --
+>  .../bindings/pci/ti,am65-pci-host.yaml         |  4 +++-
+>  .../bindings/pci/ti,j721e-pci-host.yaml        |  2 ++
+>  6 files changed, 30 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
+> index 044fa967bc8b..d60f43fd9c5a 100644
+> --- a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
+> @@ -45,6 +45,9 @@ patternProperties:
+>        phys:
+>          maxItems: 1
+>
+> +      phy-names:
+> +        pattern: '^pcie-phy[0-2]$'
+> +
+>      required:
+>        - "#interrupt-cells"
+>        - interrupt-map-mask
+> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> index 742206dbd965..0499b94627ae 100644
+> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> @@ -95,6 +95,10 @@ properties:
+>    phys:
+>      maxItems: 1
+>
+> +  phy-names:
+> +    items:
+> +      - const: pcie-phy
+> +
+>    '#interrupt-cells':
+>      const: 1
+>
+> diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> index 7b0776457178..edb4f81253c8 100644
+> --- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+> @@ -46,6 +46,24 @@ properties:
+>    msi-parent:
+>      description: MSI controller the device is capable of using.
+>
+> +  interrupt-controller:
+> +    type: object
+> +    properties:
+> +      '#address-cells':
+> +        const: 0
+> +
+> +      '#interrupt-cells':
+> +        const: 1
+> +
+> +      interrupt-controller: true
+> +
+> +    required:
+> +      - '#address-cells'
+> +      - '#interrupt-cells'
+> +      - interrupt-controller
+> +
+> +    additionalProperties: false
+> +
+>  required:
+>    - reg
+>    - reg-names
+> diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
+> index 78c217d362a7..a6896cb40e83 100644
+> --- a/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
+> @@ -66,8 +66,6 @@ examples:
+>          reg-names = "app", "dbics", "addr_space", "atu";
+>          power-domains = <&k3_pds 120 TI_SCI_PD_EXCLUSIVE>;
+>          ti,syscon-pcie-mode = <&pcie0_mode>;
+> -        num-ib-windows = <16>;
+> -        num-ob-windows = <16>;
+>          max-link-speed = <2>;
+>          dma-coherent;
+>          interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
+> diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
+> index 834dc1c1743c..eabe1635e336 100644
+> --- a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
+> @@ -29,6 +29,9 @@ properties:
+>        - const: config
+>        - const: atu
+>
+> +  interrupts:
+> +    maxItems: 1
+> +
+>    power-domains:
+>      maxItems: 1
+>
+> @@ -87,7 +90,6 @@ examples:
+>          ti,syscon-pcie-id = <&pcie_devid>;
+>          ti,syscon-pcie-mode = <&pcie0_mode>;
+>          bus-range = <0x0 0xff>;
+> -        num-viewport = <16>;
+>          max-link-speed = <2>;
+>          dma-coherent;
+>          interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
+> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> index cc900202df29..2115d5a3f0e1 100644
+> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> @@ -60,6 +60,8 @@ properties:
+>        - const: fck
+>        - const: pcie_refclk
+>
+> +  dma-coherent: true
+> +
+>    vendor-id:
+>      const: 0x104c
+>
+> --
+> 2.32.0
+>
