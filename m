@@ -2,77 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFD60469535
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 12:45:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21217469554
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 12:56:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242681AbhLFLtE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Dec 2021 06:49:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:55070 "EHLO foss.arm.com"
+        id S242839AbhLFMAE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Dec 2021 07:00:04 -0500
+Received: from 8bytes.org ([81.169.241.247]:40126 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237397AbhLFLtE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 6 Dec 2021 06:49:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7AA4B1042;
-        Mon,  6 Dec 2021 03:45:35 -0800 (PST)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF63B3F73D;
-        Mon,  6 Dec 2021 03:45:34 -0800 (PST)
-Date:   Mon, 6 Dec 2021 11:45:32 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Shunsuke Mie <mie@igel.co.jp>, kishon@ti.com
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: endpoint: Fix use after free in pci_epf_remove_cfs()
-Message-ID: <20211206114532.GB18520@lpieralisi>
-References: <20210621070058.37682-1-mie@igel.co.jp>
+        id S242778AbhLFL77 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Dec 2021 06:59:59 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 341393FC; Mon,  6 Dec 2021 12:56:28 +0100 (CET)
+Date:   Mon, 6 Dec 2021 12:56:21 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     gregkh@linuxfoundation.org, helgaas@kernel.org,
+        alexander.shishkin@linux.intel.com, lorenzo.pieralisi@arm.com,
+        will@kernel.org, mark.rutland@arm.com, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, mike.leach@linaro.org, leo.yan@linaro.org,
+        jonathan.cameron@huawei.com, daniel.thompson@linaro.org,
+        john.garry@huawei.com, shameerali.kolothum.thodi@huawei.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        coresight@lists.linaro.org, linux-pci@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, iommu@lists.linux-foundation.org,
+        prime.zeng@huawei.com, liuqi115@huawei.com,
+        zhangshaokun@hisilicon.com, linuxarm@huawei.com,
+        song.bao.hua@hisilicon.com
+Subject: Re: [PATCH v2 1/6] iommu: Export iommu_{get,put}_resv_regions()
+Message-ID: <Ya36ZSG1LFjhGGfO@8bytes.org>
+References: <20211116090625.53702-1-yangyicong@hisilicon.com>
+ <20211116090625.53702-2-yangyicong@hisilicon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210621070058.37682-1-mie@igel.co.jp>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20211116090625.53702-2-yangyicong@hisilicon.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[dropped stable, erroneously added to the CC list]
+On Tue, Nov 16, 2021 at 05:06:20PM +0800, Yicong Yang wrote:
+> Export iommu_{get,put}_resv_regions() to the modules so that the driver
+> can retrieve and use the reserved regions of the device.
 
-On Mon, Jun 21, 2021 at 04:00:58PM +0900, Shunsuke Mie wrote:
-> All of entries are freed in a loop, however, the freed entry is accessed
-> by list_del() after the loop.
-> 
-> When epf driver that includes pci-epf-test unload, the pci_epf_remove_cfs()
-> is called, and occurred the use after free. Therefore, kernel panics
-> randomly after or while the module unloading.
-> 
-> I tested this patch with r8a77951-Salvator-xs boards.
-> 
-> Fixes: ef1433f ("PCI: endpoint: Create configfs entry for each pci_epf_device_id table entry")
-> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
-> ---
->  drivers/pci/endpoint/pci-epf-core.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+Why should any driver bother? These functions are only used by the iommu
+core to call into iommu drivers to get information about needed direct
+mappings. Why drivers need this information belongs into this commit
+message.
 
-Kishon, please review this patch, thanks.
+Regards,
 
-Lorenzo
+	Joerg
 
-> 
-> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> index e9289d10f822..538e902b0ba6 100644
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -202,8 +202,10 @@ static void pci_epf_remove_cfs(struct pci_epf_driver *driver)
->  		return;
->  
->  	mutex_lock(&pci_epf_mutex);
-> -	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry)
-> +	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry) {
-> +		list_del(&group->group_entry);
->  		pci_ep_cfs_remove_epf_group(group);
-> +	}
->  	list_del(&driver->epf_group);
->  	mutex_unlock(&pci_epf_mutex);
->  }
-> -- 
-> 2.17.1
-> 
