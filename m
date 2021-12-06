@@ -2,89 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C06F14698D5
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 15:26:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB7E74698F7
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 15:30:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343622AbhLFO3i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Dec 2021 09:29:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:58812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343580AbhLFO3h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 6 Dec 2021 09:29:37 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C566F1FB;
-        Mon,  6 Dec 2021 06:26:08 -0800 (PST)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FCFE3F5A1;
-        Mon,  6 Dec 2021 06:26:07 -0800 (PST)
-Date:   Mon, 6 Dec 2021 14:26:01 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] PCI: pci-bridge-emul: Various fixes
-Message-ID: <20211206142601.GA20570@lpieralisi>
-References: <20211124155944.1290-1-pali@kernel.org>
- <163879317819.3988.9390653012838076482.b4-ty@arm.com>
- <20211206122451.v4pci63ox3hntsw6@pali>
+        id S1344296AbhLFOdg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Dec 2021 09:33:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344284AbhLFOdf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 09:33:35 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC2D9C0613F8;
+        Mon,  6 Dec 2021 06:30:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wUoLiSn51OKyZKPLXHrwnmgPjRpnvpvyNU8vXyEVvE8=; b=il/9NTD05MPaaylKKrpQt7dzHY
+        zRXxWas+vo63olsRGM5IHckhvmwDXk98hanMLtbb6G6BTqx/SBYZhyb0iJu1VHK8gMMFJg3/ii79E
+        vkaK/17F0Gxg4Kz9YGlf7eUiQeE5b6L0CohSjfbMgZ5+I3GgHR2lUenGJ4VKKOp8PLPERyCTilzUQ
+        NcTsKC59hEftqUDEmNZPvaofOh5AgkPoccTcIo/Prhs6+evpXQK7jTZrpVCDMXhynTDiTclNXaST7
+        ZyQ2bRRXXrCecJJgNMesx9hpA5gBbnw8EcfoFlBzTs1srWc2Uk6+9Eqev46AHJz0LZ2kExspIggfr
+        hZdb/3Sw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1muF01-004Cm0-LS; Mon, 06 Dec 2021 14:29:49 +0000
+Date:   Mon, 6 Dec 2021 06:29:49 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/18] iommu: Add device dma ownership set/release
+ interfaces
+Message-ID: <Ya4eXZtdMGhEP7GO@infradead.org>
+References: <20211206015903.88687-1-baolu.lu@linux.intel.com>
+ <20211206015903.88687-2-baolu.lu@linux.intel.com>
+ <Ya4Ru/GtILJYzI6j@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211206122451.v4pci63ox3hntsw6@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <Ya4Ru/GtILJYzI6j@8bytes.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 06, 2021 at 01:24:51PM +0100, Pali Rohár wrote:
-> On Monday 06 December 2021 12:19:57 Lorenzo Pieralisi wrote:
-> > On Wed, 24 Nov 2021 16:59:38 +0100, Pali Rohár wrote:
-> > > This patch series contains various fixes for pci-bridge-emul code.
-> > > This code is used only by pci-aardvark.c and pci-mvebu.c drivers.
-> > > 
-> > > Pali Rohár (6):
-> > >   PCI: pci-bridge-emul: Make expansion ROM Base Address register
-> > >     read-only
-> > >   PCI: pci-bridge-emul: Properly mark reserved PCIe bits in PCI config
-> > >     space
-> > >   PCI: pci-bridge-emul: Add definitions for missing capabilities
-> > >     registers
-> > >   PCI: pci-bridge-emul: Fix definitions of reserved bits
-> > >   PCI: pci-bridge-emul: Correctly set PCIe capabilities
-> > >   PCI: pci-bridge-emul: Set PCI_STATUS_CAP_LIST for PCIe device
-> > > 
-> > > [...]
-> > 
-> > Applied to pci/bridge-emul, thanks!
-> > 
-> > [1/6] PCI: pci-bridge-emul: Make expansion ROM Base Address register read-only
-> >       https://git.kernel.org/lpieralisi/pci/c/1c1a3b4d3e
-> > [2/6] PCI: pci-bridge-emul: Properly mark reserved PCIe bits in PCI config space
-> >       https://git.kernel.org/lpieralisi/pci/c/7b067ac63a
-> > [3/6] PCI: pci-bridge-emul: Add definitions for missing capabilities registers
-> >       https://git.kernel.org/lpieralisi/pci/c/faa3e547f4
+On Mon, Dec 06, 2021 at 02:35:55PM +0100, Joerg Roedel wrote:
+> >                 enum iommu_dma_owner type, void *owner_cookie);
+> >         void iommu_device_release_dma_owner(struct device *dev,
+> >                 enum iommu_dma_owner type);
 > 
-> Hello Lorenzo! This patch "PCI: pci-bridge-emul: Add definitions for
-> missing capabilities registers" is now in your two different branches:
-> pci/bridge-emul and pci/aardvark. Not sure if you want to have this same
-> patch on two places... So please check.
+> It the owner is a group-wide setting, it should be called with the group
+> instead of the device. I have seen the group-specific funcitons are
+> added later, but that leaves the question why the device-specific ones
+> are needed at all.
 
-Dropped, thanks.
+They aren't really.  A lot of bus drivers need helpers to set/release
+the dma API domain if there is an iommu group, but tegra which actually
+sets a non-default value would be much better off with just open coding
+them.
 
-Lorenzo
+> > @@ -621,6 +624,7 @@ struct iommu_group *iommu_group_alloc(void)
+> >  	INIT_LIST_HEAD(&group->devices);
+> >  	INIT_LIST_HEAD(&group->entry);
+> >  	BLOCKING_INIT_NOTIFIER_HEAD(&group->notifier);
+> > +	group->dma_owner = DMA_OWNER_NONE;
+> 
+> 
+> DMA_OWNER_NONE is also questionable. All devices are always in one
+> domain, and the default domain is always the one used for DMA-API, so
+> why isn't the initial value DMA_OWNER_DMA_API?
 
-> > [4/6] PCI: pci-bridge-emul: Fix definitions of reserved bits
-> >       https://git.kernel.org/lpieralisi/pci/c/a3ab28a2e3
-> > [5/6] PCI: pci-bridge-emul: Correctly set PCIe capabilities
-> >       https://git.kernel.org/lpieralisi/pci/c/0f7ba81700
-> > [6/6] PCI: pci-bridge-emul: Set PCI_STATUS_CAP_LIST for PCIe device
-> >       https://git.kernel.org/lpieralisi/pci/c/32051099e8
-> > 
-> > Thanks,
-> > Lorenzo
+The interesting part is the suppress_auto_claim_dma_owner flag, but it
+might make more sense to release the dma API ownership for that rather
+than requesting it if it is not set.
