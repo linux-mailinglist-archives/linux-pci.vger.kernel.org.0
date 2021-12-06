@@ -2,55 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 773E746951F
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 12:39:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFD60469535
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 12:45:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242596AbhLFLnP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Dec 2021 06:43:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:54930 "EHLO foss.arm.com"
+        id S242681AbhLFLtE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Dec 2021 06:49:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:55070 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241994AbhLFLnO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 6 Dec 2021 06:43:14 -0500
+        id S237397AbhLFLtE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Dec 2021 06:49:04 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D76751042;
-        Mon,  6 Dec 2021 03:39:45 -0800 (PST)
-Received: from e123427-lin.arm.com (unknown [10.57.33.247])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5077B3F73D;
-        Mon,  6 Dec 2021 03:39:44 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7AA4B1042;
+        Mon,  6 Dec 2021 03:45:35 -0800 (PST)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF63B3F73D;
+        Mon,  6 Dec 2021 03:45:34 -0800 (PST)
+Date:   Mon, 6 Dec 2021 11:45:32 +0000
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH linux-next] PCI: qcom-ep: Remove surplus dev_err() when using platform_get_irq_byname()
-Date:   Mon,  6 Dec 2021 11:39:36 +0000
-Message-Id: <163879076227.16791.16581448019672961369.b4-ty@arm.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20211027112931.37182-1-kw@linux.com>
-References: <20211027112931.37182-1-kw@linux.com>
+To:     Shunsuke Mie <mie@igel.co.jp>, kishon@ti.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Fix use after free in pci_epf_remove_cfs()
+Message-ID: <20211206114532.GB18520@lpieralisi>
+References: <20210621070058.37682-1-mie@igel.co.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210621070058.37682-1-mie@igel.co.jp>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 27 Oct 2021 11:29:31 +0000, Krzysztof Wilczyński wrote:
-> There is no need to call the dev_err() function directly to print a
-> custom message when handling an error from either the platform_get_irq()
-> or platform_get_irq_byname() functions as both are going to display an
-> appropriate error message in case of a failure.
+[dropped stable, erroneously added to the CC list]
+
+On Mon, Jun 21, 2021 at 04:00:58PM +0900, Shunsuke Mie wrote:
+> All of entries are freed in a loop, however, the freed entry is accessed
+> by list_del() after the loop.
 > 
-> This change is as per suggestions from Coccinelle, e.g.,
->   drivers/pci/controller/dwc/pcie-qcom-ep.c:556:2-9: line 556 is redundant because platform_get_irq() already prints an error
+> When epf driver that includes pci-epf-test unload, the pci_epf_remove_cfs()
+> is called, and occurred the use after free. Therefore, kernel panics
+> randomly after or while the module unloading.
 > 
-> [...]
+> I tested this patch with r8a77951-Salvator-xs boards.
+> 
+> Fixes: ef1433f ("PCI: endpoint: Create configfs entry for each pci_epf_device_id table entry")
+> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> ---
+>  drivers/pci/endpoint/pci-epf-core.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Applied to pci/dwc, thanks!
+Kishon, please review this patch, thanks.
 
-[1/1] PCI: qcom-ep: Remove surplus dev_err() when using platform_get_irq_byname()
-      https://git.kernel.org/lpieralisi/pci/c/549bf94dd2
-
-Thanks,
 Lorenzo
+
+> 
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> index e9289d10f822..538e902b0ba6 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -202,8 +202,10 @@ static void pci_epf_remove_cfs(struct pci_epf_driver *driver)
+>  		return;
+>  
+>  	mutex_lock(&pci_epf_mutex);
+> -	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry)
+> +	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry) {
+> +		list_del(&group->group_entry);
+>  		pci_ep_cfs_remove_epf_group(group);
+> +	}
+>  	list_del(&driver->epf_group);
+>  	mutex_unlock(&pci_epf_mutex);
+>  }
+> -- 
+> 2.17.1
+> 
