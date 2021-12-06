@@ -2,52 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B04D46A5DF
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 20:44:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D29146A5E1
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 20:44:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244293AbhLFTri (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Dec 2021 14:47:38 -0500
-Received: from mail-ot1-f42.google.com ([209.85.210.42]:34577 "EHLO
-        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239791AbhLFTri (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 14:47:38 -0500
-Received: by mail-ot1-f42.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso15072810otj.1;
-        Mon, 06 Dec 2021 11:44:08 -0800 (PST)
+        id S239791AbhLFTro (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Dec 2021 14:47:44 -0500
+Received: from mail-oi1-f179.google.com ([209.85.167.179]:41696 "EHLO
+        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245095AbhLFTro (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 14:47:44 -0500
+Received: by mail-oi1-f179.google.com with SMTP id u74so23359703oie.8;
+        Mon, 06 Dec 2021 11:44:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=OV4V5cyyfp1d5JWGFe/iPBsQ41nRRI65xNtRWHtdygo=;
-        b=XtagYp0etFwKKStp+iKM33U/+sZl3DUhL0d/VN8F8vrgUkKi8zPfjjsFwqHsCtMI+I
-         yG7k3+KDDkdPqP5AgbipqlK6RkbZP8OS4ns5n8rfu/K+do9TRvYfQWGlYdR0KK5xaBMW
-         cpO/K8VEiIhPfbNSST9JGWhA1sGq+k5/SDJ6Xj9HTExKL11w8CipixKxp2EV1AXejAeI
-         jH0NAxHrUE+JXJ81Jav6Ex4OUZ9xXH2JYIfcWGv5JTiyzHOqBDgrKfWcsgaPY+yMyc4A
-         mp6zQtPh+K2AoJOyUv8i5ZJhZW2k9wvuB9nreCf/Udn91djy0/1epprZWhA0u4cr8k3t
-         uAYg==
-X-Gm-Message-State: AOAM531RG5cXJzZRK1C9PYakXrkmr234ozPwOtKHeDlMw6R7+BQ5wU7F
-        3uXva9+iq3V/57TDgqL3ReXOeyUBzQ==
-X-Google-Smtp-Source: ABdhPJwi4XEJy59m8vu3H7Fv79SUAhYZeBX8Nof8y9Mu60hPozLl0q+Nd+PTyUE+N+3I89DX4D0Azw==
-X-Received: by 2002:a05:6830:2019:: with SMTP id e25mr32350823otp.96.1638819848480;
-        Mon, 06 Dec 2021 11:44:08 -0800 (PST)
+        bh=wfihAw8tyo1zNh4VJTiAyI88HJdV6X35dks0WWfJL2c=;
+        b=GX2MwqEy7FAfBqIfSAUBM2opsBbqq1RoDk+zITpP9iwQzdzZTVjBwRUuyHxx6Yl6v2
+         O7sCUALUyk2MEJ5XMmgcJ3lil5nijysDwle4BYV8fkOUO47eIbj7J6T4au8WWpQD5bUS
+         /Kvd0w4TlmQpTzJLL8clgr11hA7/JxaJ/3w97pZAeQFnjR2hbYE4IAi8JFBqp594Hc6L
+         pSkcmi+/B5+f+5MhMPw0DyV8geLKVbtwyn3JX0X7nRtM2eGEx2bXaLFKZlPPFGzx/xMW
+         2PHtq7fWaYoNLM6sWfe4NPjmCn81WcCriW3DsEXc7Jai6Cm6tQOmegCswUoB8wzT6kTE
+         Y76g==
+X-Gm-Message-State: AOAM532Qst7XQijamUIDb1IHQZhDvm2qH64aJhalGGhy1Tlqy/N+dbXy
+        y+weG7ovcJC4TKCQCJ+iHA==
+X-Google-Smtp-Source: ABdhPJyJZUdf9lBNZX5yg4nfZjxGo3sVeUe+MvwzhJh5d71jS/HJ0OmZLOwxlAA5ffobrxPzoEozkg==
+X-Received: by 2002:a54:4191:: with SMTP id 17mr708499oiy.50.1638819854929;
+        Mon, 06 Dec 2021 11:44:14 -0800 (PST)
 Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id g17sm2876640oiy.14.2021.12.06.11.44.07
+        by smtp.googlemail.com with ESMTPSA id s6sm3067855ois.3.2021.12.06.11.44.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 11:44:08 -0800 (PST)
+        Mon, 06 Dec 2021 11:44:14 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Abraham I <kishon@ti.com>
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
 Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: PCI: Fix 'unevaluatedProperties' warnings
-Date:   Mon,  6 Dec 2021 13:44:05 -0600
-Message-Id: <20211206194406.2469361-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: PCI: cdns-ep: Fix 'unevaluatedProperties' warnings
+Date:   Mon,  6 Dec 2021 13:44:13 -0600
+Message-Id: <20211206194413.2469643-1-robh@kernel.org>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -55,147 +49,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-With 'unevaluatedProperties' support implemented, there's several
-warnings due to undocumented properties:
+With 'unevaluatedProperties' support implemented, the TI j721e endpoint
+binding example has a warning:
 
-Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dt.yaml: pcie@1e140000: pcie@0,0: Unevaluated properties are not allowed ('phy-names' was unexpected)
-Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dt.yaml: pcie@1e140000: pcie@1,0: Unevaluated properties are not allowed ('phy-names' was unexpected)
-Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dt.yaml: pcie@1e140000: pcie@2,0: Unevaluated properties are not allowed ('phy-names' was unexpected)
-Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.example.dt.yaml: pcie@11230000: Unevaluated properties are not allowed ('phy-names' was unexpected)
-Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: pcie@2030000000: Unevaluated properties are not allowed ('interrupt-controller' was unexpected)
-Documentation/devicetree/bindings/pci/ti,am65-pci-ep.example.dt.yaml: pcie-ep@5500000: Unevaluated properties are not allowed ('num-ib-windows', 'num-ob-windows' were unexpected)
-Documentation/devicetree/bindings/pci/ti,am65-pci-host.example.dt.yaml: pcie@5500000: Unevaluated properties are not allowed ('num-viewport', 'interrupts' were unexpected)
-Documentation/devicetree/bindings/pci/ti,j721e-pci-host.example.dt.yaml: pcie@2900000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
+Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.example.dt.yaml: pcie-ep@d000000: Unevaluated properties are not allowed ('max-link-speed', 'num-lanes', 'max-functions' were unexpected)
 
-Add the necessary property definitions or remove the properties from the
-examples to fix these warnings.
+Adjust where pci-ep.yaml is referenced so that ti,j721e-pci-ep.yaml will
+include it.
 
-Cc: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Jianjun Wang <jianjun.wang@mediatek.com>
-Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: Tom Joseph <tjoseph@cadence.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Daire McNamara <daire.mcnamara@microchip.com>
-Cc: Abraham I <kishon@ti.com>
 Cc: linux-pci@vger.kernel.org
-Cc: linux-mediatek@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/pci/mediatek,mt7621-pcie.yaml     |  3 +++
- .../bindings/pci/mediatek-pcie-gen3.yaml       |  4 ++++
- .../bindings/pci/microchip,pcie-host.yaml      | 18 ++++++++++++++++++
- .../bindings/pci/ti,am65-pci-ep.yaml           |  2 --
- .../bindings/pci/ti,am65-pci-host.yaml         |  4 +++-
- .../bindings/pci/ti,j721e-pci-host.yaml        |  2 ++
- 6 files changed, 30 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml | 1 -
+ Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml      | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-index 044fa967bc8b..d60f43fd9c5a 100644
---- a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-@@ -45,6 +45,9 @@ patternProperties:
-       phys:
-         maxItems: 1
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+index 651eee88989d..e6ef1012a580 100644
+--- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+@@ -11,7 +11,6 @@ maintainers:
  
-+      phy-names:
-+        pattern: '^pcie-phy[0-2]$'
-+
-     required:
-       - "#interrupt-cells"
-       - interrupt-map-mask
-diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-index 742206dbd965..0499b94627ae 100644
---- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-+++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-@@ -95,6 +95,10 @@ properties:
-   phys:
-     maxItems: 1
+ allOf:
+   - $ref: "cdns-pcie-ep.yaml#"
+-  - $ref: "pci-ep.yaml#"
  
-+  phy-names:
-+    items:
-+      - const: pcie-phy
-+
-   '#interrupt-cells':
-     const: 1
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+index 21e8a8849076..baeafda36ebe 100644
+--- a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+@@ -11,6 +11,7 @@ maintainers:
  
-diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-index 7b0776457178..edb4f81253c8 100644
---- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-@@ -46,6 +46,24 @@ properties:
-   msi-parent:
-     description: MSI controller the device is capable of using.
+ allOf:
+   - $ref: "cdns-pcie.yaml#"
++  - $ref: "pci-ep.yaml#"
  
-+  interrupt-controller:
-+    type: object
-+    properties:
-+      '#address-cells':
-+        const: 0
-+
-+      '#interrupt-cells':
-+        const: 1
-+
-+      interrupt-controller: true
-+
-+    required:
-+      - '#address-cells'
-+      - '#interrupt-cells'
-+      - interrupt-controller
-+
-+    additionalProperties: false
-+
- required:
-   - reg
-   - reg-names
-diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
-index 78c217d362a7..a6896cb40e83 100644
---- a/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-ep.yaml
-@@ -66,8 +66,6 @@ examples:
-         reg-names = "app", "dbics", "addr_space", "atu";
-         power-domains = <&k3_pds 120 TI_SCI_PD_EXCLUSIVE>;
-         ti,syscon-pcie-mode = <&pcie0_mode>;
--        num-ib-windows = <16>;
--        num-ob-windows = <16>;
-         max-link-speed = <2>;
-         dma-coherent;
-         interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
-diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-index 834dc1c1743c..eabe1635e336 100644
---- a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-@@ -29,6 +29,9 @@ properties:
-       - const: config
-       - const: atu
- 
-+  interrupts:
-+    maxItems: 1
-+
-   power-domains:
-     maxItems: 1
- 
-@@ -87,7 +90,6 @@ examples:
-         ti,syscon-pcie-id = <&pcie_devid>;
-         ti,syscon-pcie-mode = <&pcie0_mode>;
-         bus-range = <0x0 0xff>;
--        num-viewport = <16>;
-         max-link-speed = <2>;
-         dma-coherent;
-         interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
-diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-index cc900202df29..2115d5a3f0e1 100644
---- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-@@ -60,6 +60,8 @@ properties:
-       - const: fck
-       - const: pcie_refclk
- 
-+  dma-coherent: true
-+
-   vendor-id:
-     const: 0x104c
- 
+ properties:
+   cdns,max-outbound-regions:
 -- 
 2.32.0
 
