@@ -2,99 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7571946959F
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 13:24:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CA474695A4
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 13:28:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243086AbhLFM2Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Dec 2021 07:28:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234735AbhLFM2Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 07:28:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F1EC061746;
-        Mon,  6 Dec 2021 04:24:55 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DA2A361260;
-        Mon,  6 Dec 2021 12:24:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F037C341C2;
-        Mon,  6 Dec 2021 12:24:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638793494;
-        bh=uyixaSob4Wksy6mAI4HQO4bfeCI5HAdK8TB5r7VhL+U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J9Q0kAy0bcvE/fn2YaFSAu5uHyhcGXIWuiUUkia/tXj/dO6wDA/1KVW8bIZFCXQ3G
-         qbmDF+DT4IIBm0XSupRoTPzRBWSFbhR0FeSrpzLVGwTxhWM9xwEYY/iXqisfsyrUr+
-         y/KBihlDQYi6COhB7/oZWc6yZXLXj+1PnsRCkkFqUuHQsGuycaVniqi4lgFlF0SvOO
-         eNGVaScg5A0VrL1Hu+BjBq156Y8g2Og3Y6qTwhtA1Tcvty/eGoeVq4CND1GWO4uKZJ
-         KlRmKg82sYv/H6OC3Eu4I/syWDSnZEl5HFXq3wCQNRs/p0qsuaYO+QARxXthmD7xng
-         00pK6bIOEaE8w==
-Received: by pali.im (Postfix)
-        id 80E72F63; Mon,  6 Dec 2021 13:24:51 +0100 (CET)
-Date:   Mon, 6 Dec 2021 13:24:51 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh@kernel.org>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] PCI: pci-bridge-emul: Various fixes
-Message-ID: <20211206122451.v4pci63ox3hntsw6@pali>
-References: <20211124155944.1290-1-pali@kernel.org>
- <163879317819.3988.9390653012838076482.b4-ty@arm.com>
+        id S235286AbhLFMba (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Dec 2021 07:31:30 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4202 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232833AbhLFMba (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 07:31:30 -0500
+Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J72jq2fwHz687ND;
+        Mon,  6 Dec 2021 20:26:55 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Mon, 6 Dec 2021 13:27:59 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Mon, 6 Dec
+ 2021 12:27:58 +0000
+Date:   Mon, 6 Dec 2021 12:27:56 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>, <linux-cxl@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 2/5] PCI/DOE: Add Data Object Exchange Aux Driver
+Message-ID: <20211206122756.00006b31@Huawei.com>
+In-Reply-To: <CAPcyv4h8Rns_55gqPvn0huvhO4E=iy_PJQ_dKJxxOG=dOOKw9Q@mail.gmail.com>
+References: <CAPcyv4hDTitnqasVwLTV4QPJqW_ykoJc+hRVRm8aLzG4xBxVag@mail.gmail.com>
+        <20211203235617.GA3036259@bhelgaas>
+        <CAPcyv4h8Rns_55gqPvn0huvhO4E=iy_PJQ_dKJxxOG=dOOKw9Q@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <163879317819.3988.9390653012838076482.b4-ty@arm.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml746-chm.china.huawei.com (10.201.108.196) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 06 December 2021 12:19:57 Lorenzo Pieralisi wrote:
-> On Wed, 24 Nov 2021 16:59:38 +0100, Pali Rohár wrote:
-> > This patch series contains various fixes for pci-bridge-emul code.
-> > This code is used only by pci-aardvark.c and pci-mvebu.c drivers.
-> > 
-> > Pali Rohár (6):
-> >   PCI: pci-bridge-emul: Make expansion ROM Base Address register
-> >     read-only
-> >   PCI: pci-bridge-emul: Properly mark reserved PCIe bits in PCI config
-> >     space
-> >   PCI: pci-bridge-emul: Add definitions for missing capabilities
-> >     registers
-> >   PCI: pci-bridge-emul: Fix definitions of reserved bits
-> >   PCI: pci-bridge-emul: Correctly set PCIe capabilities
-> >   PCI: pci-bridge-emul: Set PCI_STATUS_CAP_LIST for PCIe device
-> > 
-> > [...]
-> 
-> Applied to pci/bridge-emul, thanks!
-> 
-> [1/6] PCI: pci-bridge-emul: Make expansion ROM Base Address register read-only
->       https://git.kernel.org/lpieralisi/pci/c/1c1a3b4d3e
-> [2/6] PCI: pci-bridge-emul: Properly mark reserved PCIe bits in PCI config space
->       https://git.kernel.org/lpieralisi/pci/c/7b067ac63a
-> [3/6] PCI: pci-bridge-emul: Add definitions for missing capabilities registers
->       https://git.kernel.org/lpieralisi/pci/c/faa3e547f4
+On Sat, 4 Dec 2021 07:47:59 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Hello Lorenzo! This patch "PCI: pci-bridge-emul: Add definitions for
-missing capabilities registers" is now in your two different branches:
-pci/bridge-emul and pci/aardvark. Not sure if you want to have this same
-patch on two places... So please check.
-
-> [4/6] PCI: pci-bridge-emul: Fix definitions of reserved bits
->       https://git.kernel.org/lpieralisi/pci/c/a3ab28a2e3
-> [5/6] PCI: pci-bridge-emul: Correctly set PCIe capabilities
->       https://git.kernel.org/lpieralisi/pci/c/0f7ba81700
-> [6/6] PCI: pci-bridge-emul: Set PCI_STATUS_CAP_LIST for PCIe device
->       https://git.kernel.org/lpieralisi/pci/c/32051099e8
+> On Fri, Dec 3, 2021 at 3:56 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Fri, Dec 03, 2021 at 12:48:18PM -0800, Dan Williams wrote:  
+> > > On Tue, Nov 16, 2021 at 3:48 PM Bjorn Helgaas <helgaas@kernel.org> wrote:  
+> > > > On Fri, Nov 05, 2021 at 04:50:53PM -0700, ira.weiny@intel.com wrote:  
+> > > > > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > >
+> > > > > Introduced in a PCI ECN [1], DOE provides a config space based mailbox
+> > > > > with standard protocol discovery.  Each mailbox is accessed through a
+> > > > > DOE Extended Capability.
+> > > > >
+> > > > > Define an auxiliary device driver which control DOE auxiliary devices
+> > > > > registered on the auxiliary bus.  
+> > > >
+> > > > What do we gain by making this an auxiliary driver?
+> > > >
+> > > > This doesn't really feel like a "driver," and apparently it used to be
+> > > > a library.  I'd like to see the rationale and benefits of the driver
+> > > > approach (in the eventual commit log as well as the current email
+> > > > thread).  
+> > >
+> > > I asked Ira to use the auxiliary bus for DOE primarily for the ABI it
+> > > offers for userspace to manage kernel vs userspace access to a device.
+> > > CONFIG_IO_STRICT_DEVMEM set the precedent that userspace can not
+> > > clobber mmio space that is actively claimed by a kernel driver. I
+> > > submit that DOE merits the same protection for DOE instances that the
+> > > kernel consumes.
+> > >
+> > > Unlike other PCI configuration registers that root userspace has no
+> > > reason to touch unless it wants to actively break things, DOE is a
+> > > mechanism that root userspace may need to access directly in some
+> > > cases. There are a few examples that come to mind.  
+> >
+> > It's useful for root to read/write config registers with setpci, e.g.,
+> > to test ASPM configuration, test power management behavior, etc.  That
+> > can certainly break things and interfere with kernel access (and IMO
+> > should taint the kernel) but we have so far accepted that risk.  I
+> > think the same will be true for DOE.  
 > 
-> Thanks,
-> Lorenzo
+> I think DOE is a demonstrable step worse than those examples and
+> pushes into the unacceptable risk category. It invites a communication
+> protocol with an unbounded range of side effects (especially when
+> controlling a device like a CXL memory expander that affects "System
+> RAM" directly). Part of what drives platform / device vendors to the
+> standards negotiation table is the OS encouraging common interfaces.
+> If Linux provides an unfettered DOE interface it reduces an incentive
+> for device vendors to collaborate with the kernel community.
+> 
+> I do like the taint proposal though, if I can't convince you that DOE
+> merits explicit root userspace lockout beyond
+> CONFIG_LOCK_DOWN_KERNEL_FORCE_INTEGRITY, I would settle for the kernel
+> warning loudly about DOE usage that falls outside the kernel's
+> expectations.
+> 
+> > In addition, I would think you might want a safe userspace interface
+> > via sysfs, e.g., something like the "vpd" file, but I missed that if
+> > it was in this series.  
+> 
+> I do not think the kernel is well served by a generic userspace
+> passthrough for DOE for the same reason that there is no generic
+> passthrough for the ACPI _DSM facility. When the kernel becomes a
+> generic pipe to a vendor specific interface it impedes the kernel from
+> developing standard interfaces across vendors. Each vendor will ship
+> their own quirky feature and corresponding vendor-specific tool with
+> minimal incentive to coordinate with other vendors doing similar
+> things. At a minimum the userspace interface for DOE should be at a
+> level above the raw transport and be enabled per standardized /
+> published DOE protocol.  I.e. a userspace interface to read the CDAT
+> table retrieved over DOE, or a userspace interface to enumerate IDE
+> capabilities, etc.
+
+I agree with Dan that a generic pass through is a bad idea, but we
+do have code for one in an earlier version...
+https://lore.kernel.org/linux-pci/20210524133938.2815206-5-Jonathan.Cameron@huawei.com/
+
+We could take the approach of an allow list for this, if we can figure
+out an appropriate way to manage that list.
+
+> 
+> > > CXL Compliance Testing (see CXL 2.0 14.16.4 Compliance Mode DOE)
+> > > offers a mechanism to set different test modes for a DOE device. The
+> > > kernel has no reason to ever use that interface, and it has strong
+> > > reasons to want to block access to it in production. However, hardware
+> > > vendors also use debug Linux builds for hardware bringup. So I would
+> > > like to be able to say that the mechanism to gain access to the
+> > > compliance DOE is to detach the aux DOE driver from the right aux DOE
+> > > device. Could we build a custom way to do the same for the DOE
+> > > library, sure, but why re-invent the wheel when udev and the driver
+> > > model can handle this type of policy question already?
+> > >
+> > > Another use case is SPDM where an agent can establish a secure message
+> > > passing channel to a device, or paravirtualized device to exchange
+> > > protected messages with the hypervisor. My expectation is that in
+> > > addition to the kernel establishing SPDM sessions for PCI IDE and
+> > > CXL.cachemem IDE (link Integrity and Data Encryption) there will be
+> > > use cases for root userspace to establish their own SPDM session. In
+> > > that scenario as well the kernel can be told to give up control of a
+> > > specific DOE instance by detaching the aux device for its driver, but
+> > > otherwise the kernel driver can be assured that userspace will not
+> > > clobber its communications with its own attempts to talk over the DOE.  
+> >
+> > I assume the kernel needs to control access to DOE in all cases,
+> > doesn't it?  For example, DOE can generate interrupts, and only the
+> > kernel can field them.  Maybe if I saw the userspace interface this
+> > would make more sense to me.  I'm hoping there's a reasonable "send
+> > this query and give me the response" primitive that can be implemented
+> > in the kernel, used by drivers, and exposed safely to userspace.  
+> 
+> A DOE can generate interrupts, but I have yet to see a protocol that
+> demands that. The userspace interface in the patches is just a binary
+> attribute to dump the "CDAT" table retrieved over DOE. No generic
+> passthrough is provided per the concerns above.
+
+I don't think it would be that hard to set up a protocol specific interface
+for establishment of secure channels to cover that particular case.  As long
+as we ensure userspace can see / manage the crypto elements it won't matter
+if the data is passed through another interface on it's way to the DOE.
+
+Jonathan
