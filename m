@@ -2,36 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E49E46AD8A
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 23:52:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 952C046ADB6
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Dec 2021 23:53:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376412AbhLFWzy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Dec 2021 17:55:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359202AbhLFWz0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 17:55:26 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFC99C0698C3;
-        Mon,  6 Dec 2021 14:51:39 -0800 (PST)
-Message-ID: <20211206210748.793119155@linutronix.de>
+        id S1377367AbhLFW4V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Dec 2021 17:56:21 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48392 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1359684AbhLFWzK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 17:55:10 -0500
+Message-ID: <20211206210748.847219474@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638831098;
+        s=2020; t=1638831100;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=GUR2OxklGtF7nIOBqOyJrqx9CLAOqYt69MVFmzr2xdI=;
-        b=nn7dEwkEAkvWRKbdApCe1Nm/bB6LC9VNn6X6hBZTCaCIYeYxE+VrS7/Mtl1kphsy8a/Q23
-        kjB4YpSOhYoMrj7ErcNmK8M8f0lj0Y59umb1wroZ3CNKfFENgr+n8OkJ6r8b3o/v1b8yXW
-        b7ndtXG/q2hCY9j6o4RicdXwGGzUa/M29ROck6jbO2NDHydrPYG9wL2lRiWRf/AFhMUQt1
-        iLIG8S61ibfICnkXqLvCZK6jr50bd2s65rfMK1h0boqu09T3/hPzNOypVDSANi0qi3ySMa
-        qOn/Tsktc2oYmhtwz6s1KlZz+zosMMfgyON0d7vskLdthwamU1D2s5rhVbATcA==
+         references:references; bh=BUH8kO9WlotKw1Jm4iAVN62jvoEejpolEUEH0KsFyqY=;
+        b=tkf6bcVZHT1vI5JwxsngLbDMdnn2lBna/IkgSEZ9qzd3LKYAdX5p3zvNKUebBGpCAM6CJx
+        BbKf+B1Qk5UyIKOzpvq++GVC6W6rWHVd0BvjEVOtA/GJvzzu66VcQgk+kGe+ar7QZPe6t0
+        /ww5Acp8h5i0qKoObgyWrNfQ08o3c2XWlUN4zltdcbyzTI9jfj1h9knJjj8mYFeNzno8W+
+        OrSP+fB66SMGpTT1Y+4sLn8gpfJhkXq6fpNwI1zgA2WGZsdX1ibWLHtxfQAZNPGKhNrNy6
+        xmWW8XjfZUQpp7yv/8hWXrYyZavzKNpUoFIYuiefEaNe9+P8ge2U69ebgZMuoA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638831098;
+        s=2020e; t=1638831100;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=GUR2OxklGtF7nIOBqOyJrqx9CLAOqYt69MVFmzr2xdI=;
-        b=8CfzsmQ7CNDe0nMTxrF9BsEbKCFk5GvK6bcHAeaT1wkDGjUkuPIqDQJmgOzxewvdhSqDDu
-        CQ5LX8F2K+7lXrAA==
+         references:references; bh=BUH8kO9WlotKw1Jm4iAVN62jvoEejpolEUEH0KsFyqY=;
+        b=V7ZDB1fDrNysdWEbulYRahYuzwoHAn9aIh3jtzGHZC23V577AVQihnfAkbh0fZTVDbvuIZ
+        V36JM4tCqbvyYeAA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -50,43 +47,118 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Jon Mason <jdmason@kudzu.us>,
         Dave Jiang <dave.jiang@intel.com>,
         Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: [patch V2 22/31] soc: ti: ti_sci_inta_msi: Remove
- ti_sci_inta_msi_domain_free_irqs()
+Subject: [patch V2 23/31] bus: fsl-mc-msi: Simplify MSI descriptor handling
 References: <20211206210600.123171746@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon,  6 Dec 2021 23:51:37 +0100 (CET)
+Date:   Mon,  6 Dec 2021 23:51:39 +0100 (CET)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The function has no users and is pointless now that the core frees the MSI
-descriptors, which means potential users can just use msi_domain_free_irqs().
+Let the MSI irq domain code handle descriptor allocation and free.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/soc/ti/ti_sci_inta_msi.c       |    6 ------
- include/linux/soc/ti/ti_sci_inta_msi.h |    1 -
- 2 files changed, 7 deletions(-)
+ drivers/bus/fsl-mc/fsl-mc-msi.c |   61 ++--------------------------------------
+ 1 file changed, 4 insertions(+), 57 deletions(-)
 
---- a/drivers/soc/ti/ti_sci_inta_msi.c
-+++ b/drivers/soc/ti/ti_sci_inta_msi.c
-@@ -121,9 +121,3 @@ int ti_sci_inta_msi_domain_alloc_irqs(st
- 	return ret;
+--- a/drivers/bus/fsl-mc/fsl-mc-msi.c
++++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
+@@ -170,6 +170,7 @@ struct irq_domain *fsl_mc_msi_create_irq
+ 		fsl_mc_msi_update_dom_ops(info);
+ 	if (info->flags & MSI_FLAG_USE_DEF_CHIP_OPS)
+ 		fsl_mc_msi_update_chip_ops(info);
++	info->flags |= MSI_FLAG_ALLOC_SIMPLE_MSI_DESCS | MSI_FLAG_FREE_MSI_DESCS;
+ 
+ 	domain = msi_create_irq_domain(fwnode, info, parent);
+ 	if (domain)
+@@ -210,45 +211,7 @@ struct irq_domain *fsl_mc_find_msi_domai
+ 	return msi_domain;
  }
- EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
--
--void ti_sci_inta_msi_domain_free_irqs(struct device *dev)
+ 
+-static void fsl_mc_msi_free_descs(struct device *dev)
 -{
--	msi_domain_free_irqs(dev->msi.domain, dev);
+-	struct msi_desc *desc, *tmp;
+-
+-	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
+-		list_del(&desc->list);
+-		free_msi_entry(desc);
+-	}
 -}
--EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_free_irqs);
---- a/include/linux/soc/ti/ti_sci_inta_msi.h
-+++ b/include/linux/soc/ti/ti_sci_inta_msi.h
-@@ -18,5 +18,4 @@ struct irq_domain
- 				   struct irq_domain *parent);
- int ti_sci_inta_msi_domain_alloc_irqs(struct device *dev,
- 				      struct ti_sci_resource *res);
--void ti_sci_inta_msi_domain_free_irqs(struct device *dev);
- #endif /* __INCLUDE_LINUX_IRQCHIP_TI_SCI_INTA_H */
+-
+-static int fsl_mc_msi_alloc_descs(struct device *dev, unsigned int irq_count)
+-
+-{
+-	unsigned int i;
+-	int error;
+-	struct msi_desc *msi_desc;
+-
+-	for (i = 0; i < irq_count; i++) {
+-		msi_desc = alloc_msi_entry(dev, 1, NULL);
+-		if (!msi_desc) {
+-			dev_err(dev, "Failed to allocate msi entry\n");
+-			error = -ENOMEM;
+-			goto cleanup_msi_descs;
+-		}
+-
+-		msi_desc->msi_index = i;
+-		INIT_LIST_HEAD(&msi_desc->list);
+-		list_add_tail(&msi_desc->list, dev_to_msi_list(dev));
+-	}
+-
+-	return 0;
+-
+-cleanup_msi_descs:
+-	fsl_mc_msi_free_descs(dev);
+-	return error;
+-}
+-
+-int fsl_mc_msi_domain_alloc_irqs(struct device *dev,
+-				 unsigned int irq_count)
++int fsl_mc_msi_domain_alloc_irqs(struct device *dev,  unsigned int irq_count)
+ {
+ 	struct irq_domain *msi_domain;
+ 	int error;
+@@ -261,28 +224,17 @@ int fsl_mc_msi_domain_alloc_irqs(struct
+ 	if (error)
+ 		return error;
+ 
+-	if (!list_empty(dev_to_msi_list(dev)))
++	if (msi_first_desc(dev, MSI_DESC_ALL))
+ 		return -EINVAL;
+ 
+-	error = fsl_mc_msi_alloc_descs(dev, irq_count);
+-	if (error < 0)
+-		return error;
+-
+ 	/*
+ 	 * NOTE: Calling this function will trigger the invocation of the
+ 	 * its_fsl_mc_msi_prepare() callback
+ 	 */
+ 	error = msi_domain_alloc_irqs(msi_domain, dev, irq_count);
+ 
+-	if (error) {
++	if (error)
+ 		dev_err(dev, "Failed to allocate IRQs\n");
+-		goto cleanup_msi_descs;
+-	}
+-
+-	return 0;
+-
+-cleanup_msi_descs:
+-	fsl_mc_msi_free_descs(dev);
+ 	return error;
+ }
+ 
+@@ -295,9 +247,4 @@ void fsl_mc_msi_domain_free_irqs(struct
+ 		return;
+ 
+ 	msi_domain_free_irqs(msi_domain, dev);
+-
+-	if (list_empty(dev_to_msi_list(dev)))
+-		return;
+-
+-	fsl_mc_msi_free_descs(dev);
+ }
 
