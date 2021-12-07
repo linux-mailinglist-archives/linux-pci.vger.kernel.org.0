@@ -2,127 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D96E46AE49
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 00:12:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AF9A46AFAB
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 02:21:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376866AbhLFXPz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Dec 2021 18:15:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376764AbhLFXPy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 18:15:54 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88FDCC061746;
-        Mon,  6 Dec 2021 15:12:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4CA78B8111B;
-        Mon,  6 Dec 2021 23:12:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CBE2C004DD;
-        Mon,  6 Dec 2021 23:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638832343;
-        bh=N+sG/ua5ywere0oxAo3CtHcnOnnRgW8/3YFg1XGB34w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ofP9EOSc5wGmI30zOggT2vYNOWGnUJNY8GUgpe6+QvFYywQ64dcCQkWpaVPHhGNGw
-         DrIlQx2fvLi8h5YfGxdVYF52ux60Dx9rPceHpQ2tdg1bE/UkCaOIGTv0acyLbpY3Xo
-         LkM/pUzpwMZv8zTMe5x618AWU7OWp+5Xfqxa6084Epq7vvZwyor/Zu2CT2nxepnTSb
-         f+RBYC+rGx5cVdzaXYNJCEoZFN6ixecWm2QtFDYx/1zZSia8DyX1gHnVUYFsHlHlRP
-         jJlgllKI2mcu89nKRtI5fsOW3dStqep7jRtWjrbUYWixU+bKt1qwN1qbHiGFRDYhS/
-         T/Zs++NObJhqw==
-Date:   Mon, 6 Dec 2021 15:12:18 -0800
-From:   Keith Busch <kbusch@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, linux-pm@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: vmd: Honor ACPI _OSC on PCIe features
-Message-ID: <20211206231218.GA3843138@dhcp-10-100-145-180.wdc.com>
-References: <20211203031541.1428904-1-kai.heng.feng@canonical.com>
+        id S1344156AbhLGBZT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Dec 2021 20:25:19 -0500
+Received: from mga11.intel.com ([192.55.52.93]:17752 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1354419AbhLGBZP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Dec 2021 20:25:15 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10190"; a="234962637"
+X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
+   d="scan'208";a="234962637"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 17:21:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
+   d="scan'208";a="515020741"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by orsmga008.jf.intel.com with ESMTP; 06 Dec 2021 17:21:38 -0800
+Cc:     baolu.lu@linux.intel.com, Stuart Yoder <stuyoder@gmail.com>,
+        rafael@kernel.org, David Airlie <airlied@linux.ie>,
+        linux-pci@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Will Deacon <will@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        kvm@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        iommu@lists.linux-foundation.org,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v3 03/18] driver core: platform: Rename
+ platform_dma_configure()
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>
+References: <20211206015903.88687-1-baolu.lu@linux.intel.com>
+ <20211206015903.88687-4-baolu.lu@linux.intel.com>
+ <Ya3BYxrgkNK3kbGI@kroah.com> <Ya4abbx5M31LYd3N@infradead.org>
+ <20211206144535.GB4670@nvidia.com> <Ya4ikRpenoQPXfML@infradead.org>
+ <20211206150415.GD4670@nvidia.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <33f088b2-19c6-c8fe-38f6-f3016ff13f26@linux.intel.com>
+Date:   Tue, 7 Dec 2021 09:21:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211203031541.1428904-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20211206150415.GD4670@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 03, 2021 at 11:15:41AM +0800, Kai-Heng Feng wrote:
-> When Samsung PCIe Gen4 NVMe is connected to Intel ADL VMD, the
-> combination causes AER message flood and drags the system performance
-> down.
-> 
-> The issue doesn't happen when VMD mode is disabled in BIOS, since AER
-> isn't enabled by acpi_pci_root_create() . When VMD mode is enabled, AER
-> is enabled regardless of _OSC:
-> [    0.410076] acpi PNP0A08:00: _OSC: platform does not support [AER]
-> ...
-> [    1.486704] pcieport 10000:e0:06.0: AER: enabled with IRQ 146
-> 
-> Since VMD is an aperture to regular PCIe root ports, honor ACPI _OSC to
-> disable PCIe features accordingly to resolve the issue.
+On 12/6/21 11:04 PM, Jason Gunthorpe wrote:
+> On Mon, Dec 06, 2021 at 06:47:45AM -0800, Christoph Hellwig wrote:
+>> On Mon, Dec 06, 2021 at 10:45:35AM -0400, Jason Gunthorpe via iommu wrote:
+>>> IIRC the only thing this function does is touch ACPI and OF stuff?
+>>> Isn't that firmware?
+>>>
+>>> AFAICT amba uses this because AMBA devices might be linked to DT
+>>> descriptions?
+>> But DT descriptions aren't firmware.  They are usually either passed onb
+>> the bootloader or in some deeply embedded setups embedded into the
+>> kernel image.
+> Pedenatically yes, but do you know of a common word to refer to both
+> OF and ACPI that is better than firmware?:)
 
-At least for some versions of this hardare, I recall ACPI is unaware of
-any devices in the VMD domain; the platform can not see past the VMD
-endpoint, so I throught the driver was supposed to always let the VMD
-domain use OS native support regardless of the parent's ACPI _OSC.
+If the firmware_ name is confusing, how about common_dma_configure()?
+Or, copy the 6 lines of code to amba bus driver?
 
- 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215027
-> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v3:
->  - Use a new helper function.
-> 
-> v2:
->  - Use pci_find_host_bridge() instead of open coding.
-> 
->  drivers/pci/controller/vmd.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index a45e8e59d3d48..691765e6c12aa 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -661,6 +661,21 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
->  	return 0;
->  }
->  
-> +/*
-> + * Since VMD is an aperture to regular PCIe root ports, only allow it to
-> + * control features that the OS is allowed to control on the physical PCI bus.
-> + */
-> +static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
-> +				       struct pci_host_bridge *vmd_bridge)
-> +{
-> +	vmd_bridge->native_pcie_hotplug = root_bridge->native_pcie_hotplug;
-> +	vmd_bridge->native_shpc_hotplug = root_bridge->native_shpc_hotplug;
-> +	vmd_bridge->native_aer = root_bridge->native_aer;
-> +	vmd_bridge->native_pme = root_bridge->native_pme;
-> +	vmd_bridge->native_ltr = root_bridge->native_ltr;
-> +	vmd_bridge->native_dpc = root_bridge->native_dpc;
-> +}
-> +
->  static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  {
->  	struct pci_sysdata *sd = &vmd->sysdata;
-> @@ -798,6 +813,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  		return -ENODEV;
->  	}
->  
-> +	vmd_copy_host_bridge_flags(pci_find_host_bridge(vmd->dev->bus),
-> +				   to_pci_host_bridge(vmd->bus->bridge));
-> +
->  	vmd_attach_resources(vmd);
->  	if (vmd->irq_domain)
->  		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
-> -- 
-> 2.32.0
-> 
+Best regards,
+baolu
