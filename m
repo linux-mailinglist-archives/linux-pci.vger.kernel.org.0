@@ -2,103 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD17F46C4A2
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 21:30:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D72C46C4D1
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 21:42:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232631AbhLGUeJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 15:34:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47006 "EHLO
+        id S241424AbhLGUp4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 15:45:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232323AbhLGUeI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 15:34:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0E8C061574;
-        Tue,  7 Dec 2021 12:30:38 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C19B6B81DD1;
-        Tue,  7 Dec 2021 20:30:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B158C341C3;
-        Tue,  7 Dec 2021 20:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638909034;
-        bh=vcoC+Uyri7g9qycwRWUHoUG2kf9GeTBEOaheV4ro89g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UObvtOcdnqtp3lRabJHPBO9zvAXJ1d/8eNBRjpZ6otbLk5LnSEQzlSDTGpRZLGxxH
-         13iT+3dRgQ8IOisWDu4P3YUC0pWIUffuoPYDmPtWatVLhy4/J4l92Hj2Zyzbkwparv
-         1ZG1oK5E7RSnyns00W5SMNR7/1qrVs8Xs9GcVOtRdQyGDsf7erHvqUK/it3a/gW7i6
-         ePaKGpU631QulUEhArFq7OhH+gqcp4gx/lKk/r3oR3ub4oofGrqCdE+i0DKw0AS8Em
-         QWLrJXx0lbjJP9WAOu89mvdBmBPonky0RPbtTDWYiJoXIS6HDfoEjygJ2OGXjyjbAX
-         5o/RtIrwiImZA==
-Date:   Tue, 7 Dec 2021 14:30:32 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Mark Kettenis <mark.kettenis@xs4all.nl>,
-        Luca Ceresoli <luca@lucaceresoli.net>, kernel-team@android.com
-Subject: Re: [PATCH v3 0/3] PCI: apple: Assorted #PERST fixes
-Message-ID: <20211207203032.GA74708@bhelgaas>
+        with ESMTP id S241414AbhLGUpz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 15:45:55 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D545FC061574;
+        Tue,  7 Dec 2021 12:42:24 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638909743;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8kdDUloupcZ7zsHm8ipSzMG1KhDz+bCCecRfNXSnpkg=;
+        b=myOlC5dgE3khI7L8VZJuvb0AqNwW72GyeFELcD1PBbXUtZ68+3HHkLJ6B3AHqyMzsf2WT8
+        +ujqWMGHpaY4rsmjld2a82Vj5AIv9LECzrGlZmnD/32El3mdYogpJBXD830FzxpM64lfFA
+        4umcD+gxjhc1TVxDz7X7+HSKF/BzRb/G2QPcgdTOuekTL5TVuB7tk2FDJgZvBY12rIApXt
+        6/cKg45LVQbCHkJ50Jh/VwMaNydeam+MMtnO87aLsvswM8Dg0b8u1s2wEbGXeG0S5d8b8M
+        gpLncVriJOZxdr/S+hNQBS9u1GXShwEAVsplRx5hkczW+cMOAp/ZAeGaDzJRnQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638909743;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8kdDUloupcZ7zsHm8ipSzMG1KhDz+bCCecRfNXSnpkg=;
+        b=0V4XVUsOsvnU+9Fv3Fb95pdvdCgo/+dE0Mo+fVtsflMeNE/VXjrD4Tr1l/AitQqcrCl0wJ
+        KhJ9aDeINWrmG3AA==
+To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org, Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: [patch V2 01/23] powerpc/4xx: Remove MSI support which never
+ worked
+In-Reply-To: <27f22e0e-8f84-a6d7-704b-d9eddc642d74@kaod.org>
+References: <20211206210147.872865823@linutronix.de>
+ <20211206210223.872249537@linutronix.de>
+ <8d1e9d2b-fbe9-2e15-6df6-03028902791a@kaod.org>
+ <87ilw0odel.fsf@mpe.ellerman.id.au>
+ <27f22e0e-8f84-a6d7-704b-d9eddc642d74@kaod.org>
+Date:   Tue, 07 Dec 2021 21:42:22 +0100
+Message-ID: <8735n42lld.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211207101621.GA466@lpieralisi>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 10:16:32AM +0000, Lorenzo Pieralisi wrote:
-> On Tue, Nov 30, 2021 at 11:56:32AM +0000, Lorenzo Pieralisi wrote:
-> > On Tue, Nov 23, 2021 at 06:06:33PM +0000, Marc Zyngier wrote:
-> > > Apologies for the rapid fire (I tend to be much more conservative when
-> > > resending series), but given that this series has a direct impact on
-> > > other projects (such as u-boot), I'm trying to converge as quickly as
-> > > possible.
-> > > 
-> > > This series aims at fixing a number of issues for the recently merged
-> > > Apple PCIe driver, all revolving around the mishandling of #PERST:
-> > > 
-> > > - we didn't properly drive #PERST, and we didn't follow the specified
-> > >   timings
-> > >   
-> > > - the DT had the wrong polarity, which has impacts on the driver
-> > >   itself
-> > > 
-> > > Hopefully, this should address all the issues reported so far.
-> > > 
-> > > * From v2:
-> > >   - Fixed DT
-> > >   - Fixed #PERST polarity in the driver
-> > >   - Collected Pali's ack on patch #1
-> > > 
-> > > [1] https://lore.kernel.org/r/20211122104156.518063-1-maz@kernel.org
-> > > 
-> > > Marc Zyngier (3):
-> > >   PCI: apple: Follow the PCIe specifications when resetting the port
-> > >   arm64: dts: apple: t8103: Fix PCIe #PERST polarity
-> > >   PCI: apple: Fix #PERST polarity
-> > > 
-> > >  arch/arm64/boot/dts/apple/t8103.dtsi |  7 ++++---
-> > >  drivers/pci/controller/pcie-apple.c  | 12 +++++++++++-
-> > >  2 files changed, 15 insertions(+), 4 deletions(-)
-> > 
-> > Hi Bjorn,
-> > 
-> > this series is v5.16-rcX material for PCI fixes, can you pick patches
-> > 1,3 up please ?
-> 
-> Hi Bjorn,
-> 
-> Arnd acked patch 2, can we send the whole series upstream for one
-> of the upcoming -rcX please ? It is fixing code that was merged
-> in the last merge window.
+Cedric,
 
-I put all three of these on for-linus and will ask Linus to pull them
-before -rc5.
+On Tue, Dec 07 2021 at 16:50, C=C3=A9dric Le Goater wrote:
+> On 12/7/21 12:36, Michael Ellerman wrote:
+>>=20
+>> This patch should drop those selects I guess. Can you send an
+>> incremental diff for Thomas to squash in?
+>
+> Sure.
+>
+>> Removing all the tendrils in various device tree files will probably
+>> require some archaeology, and it should be perfectly safe to leave those
+>> in the tree with the driver gone. So I think we can do that as a
+>> subsequent patch, rather than in this series.
+>
+> Here are the changes. Compiled tested with ppc40x and ppc44x defconfigs.
 
-I do have open questions about the PERST# timing, but we can update
-this if needed.
+< Lots of patch skipped />
+> @@ -141,7 +138,6 @@ config REDWOOD
+>   	select FORCE_PCI
+>   	select PPC4xx_PCI_EXPRESS
+>   	select PCI_MSI
+> -	select PPC4xx_MSI
+>   	help
+>   	  This option enables support for the AMCC PPC460SX Redwood board.
+
+While that is incremental it certainly is worth a patch on it's
+own. Could you add a proper changelog and an SOB please?
+
+Thanks,
+
+        tglx
