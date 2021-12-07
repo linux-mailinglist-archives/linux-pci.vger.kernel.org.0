@@ -2,158 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E025246C782
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 23:30:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F420746C7BD
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 23:49:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242222AbhLGWeX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 17:34:23 -0500
-Received: from mga06.intel.com ([134.134.136.31]:15569 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242213AbhLGWeX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 Dec 2021 17:34:23 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="298496413"
-X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="298496413"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 14:30:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="563847185"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Dec 2021 14:30:51 -0800
-Received: from debox1-desk4.hsd1.or.comcast.net (unknown [10.251.18.198])
-        by linux.intel.com (Postfix) with ESMTP id 90AA05804B4;
-        Tue,  7 Dec 2021 14:30:51 -0800 (PST)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, kw@linux.com, bhelgaas@google.com,
-        david.e.box@linux.intel.com, michael.a.bottini@linux.intel.com,
-        rafael@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Adhitya Mohan <me@adhityamohan.in>
-Subject: [V2 2/2] PCI: vmd: Override ASPM on TGL/ADL VMD devices
-Date:   Tue,  7 Dec 2021 14:30:50 -0800
-Message-Id: <20211207223050.872095-2-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211207223050.872095-1-david.e.box@linux.intel.com>
-References: <20211207223050.872095-1-david.e.box@linux.intel.com>
+        id S242360AbhLGWxT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 17:53:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240577AbhLGWxT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 17:53:19 -0500
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B779C061574;
+        Tue,  7 Dec 2021 14:49:48 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id p13so789332pfw.2;
+        Tue, 07 Dec 2021 14:49:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EdYea8gkEDGih1RnGbJo2dm6hJijWB5dNAEaQbMNm28=;
+        b=XK03meLzpPySHZumczyM01BVWrjErrL8miiNiU6yeobYKNBv9QSMaGdcEymmy8pKvA
+         hexe8G+raZtoCzLR6fX/tLWlgGWKycTffZxAk8iprUJzUvfjMMyd/hrtO35PebHSp8Iz
+         4ks7sXJKDtLEWXdPE+gPQrNiPfaIxR+TGRRhK6E6T9ijNgXLM3tsR+ekbTYauL/fd0ra
+         59eRWmywLaxmZd0TZtnrWWA+ZFVmxsjjcZ130/3mefw98BsQQiqrmtJ3COxu5wpgIhTN
+         srIW00HiEdJaWNZRd9RrjBJzL2RTfIOWBGe05GMM9SadGETUQ8ttOkoAtV9YOABRAy73
+         HZ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EdYea8gkEDGih1RnGbJo2dm6hJijWB5dNAEaQbMNm28=;
+        b=TACjGOUe130Hx3WewdWtK3CNUSosohxd0CcjJqKC0D5CbtpGqDOnuN4g6FWpWQgN/m
+         RVl8w8QBuL6dPF9DbVSpPS0YjNNURkWPcWfBXMHh43l86rTMWNGakxYv8IdT7I/4Yovn
+         S/BNQsuM4s/EeRf7EiPibhh64ziNjpLOnMA+mCV4vkvkNDY3Zh0AXlm8NDk2RvGVeco9
+         v0fKCLqdXXLbSKax9gAE4wj1iLEspvhXfKWhY3l2HQiiT9GWtiZabQQu8JEEhaqUetfJ
+         /1ONyRYvP0FK0jsOM8rFcKRbOrCByw3dG+Rq/WjG5r0lctxWGiIa4d0GpsCyXm8bO7YZ
+         +uIQ==
+X-Gm-Message-State: AOAM533VuqrZrk19NJAnxnvKb0lFigW/Bg8fNoFVKUv+DUyC940/Ljog
+        UeExjKYvGnNzVoIyE/yfyyglnGwaZyI=
+X-Google-Smtp-Source: ABdhPJyBJRO4d61TzlSU1qqEV5Y3OLwZjRUGoq8bqkPyJdODmb4ru8puCWYQVdpmuJEv7I7g8yJr9A==
+X-Received: by 2002:a63:4e1c:: with SMTP id c28mr23399855pgb.318.1638917387522;
+        Tue, 07 Dec 2021 14:49:47 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id na13sm551019pjb.11.2021.12.07.14.49.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Dec 2021 14:49:46 -0800 (PST)
+Subject: Re: [PATCH v2 1/5] ARM: dts: Cygnus: Fixed iProc PCIe controller
+ properties
+To:     Rob Herring <robh+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20211206185242.2098683-1-f.fainelli@gmail.com>
+ <20211206185242.2098683-2-f.fainelli@gmail.com>
+ <CAL_JsqKaOkByjwYzyW6G_b90zRjCWVHvi2V0gBx_MJ8v2FmOaw@mail.gmail.com>
+ <fc263ef8-10f8-206e-5df7-76f0b9d50fae@gmail.com>
+ <CAL_JsqL6HV-C6+9Pna_8GVT5V+uEzcYcPDaS1m6AK8LhsWnFaw@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <745799e8-dc2e-359a-0d35-58e74bf86055@gmail.com>
+Date:   Tue, 7 Dec 2021 14:49:45 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqL6HV-C6+9Pna_8GVT5V+uEzcYcPDaS1m6AK8LhsWnFaw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Michael Bottini <michael.a.bottini@linux.intel.com>
+On 12/7/21 12:08 PM, Rob Herring wrote:
+> On Tue, Dec 7, 2021 at 11:44 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>
+>> On 12/7/21 5:49 AM, Rob Herring wrote:
+>>> On Mon, Dec 6, 2021 at 12:52 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>>>
+>>>> Rename the msi controller unit name to 'msi' to avoid collisions
+>>>> with the 'msi-controller' boolean property and add the missing
+>>>> 'interrupt-controller' property which is necessary. We also need to
+>>>> re-arrange the 'ranges' property to show the two cells as being separate
+>>>> instead of combined since the DT checker is not able to differentiate
+>>>> otherwise.
+>>>>
+>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/bcm-cygnus.dtsi | 14 ++++++++------
+>>>>  1 file changed, 8 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+>>>> index 8ecb7861ce10..ea19d1b56400 100644
+>>>> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+>>>> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+>>>> @@ -263,6 +263,7 @@ pcie0: pcie@18012000 {
+>>>>                         compatible = "brcm,iproc-pcie";
+>>>>                         reg = <0x18012000 0x1000>;
+>>>>
+>>>> +                       interrupt-controller;
+>>>
+>>> How is this a fix? This doesn't even work before v5.16 with commit
+>>> 041284181226 ("of/irq: Allow matching of an interrupt-map local to an
+>>> interrupt controller").
+>>
+>> What is the path forward? I suppose I could make the
+>> interrupt-controller property not required for this controller but then
+>> the default interrupt-controller schema is not terribly happy about
+>> seeing an interrupt-map/interrupt-map-mask properties without
+>> interrupt-controller.
+> 
+> There's certainly no requirement for having 'interrupt-controller'.
+> What error are you getting?
 
-On Tiger Lake and Alder Lake platforms, VMD controllers do not have ASPM
-enabled nor LTR values set by BIOS. This leads high power consumption on
-these platforms when VMD is enabled as reported in bugzilla [1].  Enable
-these features in the VMD driver using pcie_aspm_policy_override() to set
-the ASPM policy for the root ports.
+This was the error I was getting because I had made the
+'interrupt-controller' a required property in the brcm,iproc-pcie.yaml
+binding, silly me:
 
-To do this, add an additional flag in VMD features to specify devices that
-must have their respective policies overridden.
+/home/fainelli/dev/linux/arch/arm/boot/dts/bcm958300k.dt.yaml:
+pcie@18012000: 'interrupt-controller' is a required property
+        From schema:
+/home/fainelli/dev/linux/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=213717
-
-Signed-off-by: Michael Bottini <michael.a.bottini@linux.intel.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Tested-by: Adhitya Mohan <me@adhityamohan.in>
----
-V2
- - Use return status to print pci_info message if ASPM cannot be enabled.
- - Add missing static declaration, caught by lkp@intel.com
-
- drivers/pci/controller/vmd.c | 42 +++++++++++++++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index a45e8e59d3d4..e555dcae73cc 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -20,6 +20,8 @@
- 
- #include <asm/irqdomain.h>
- 
-+#include "../pci.h"
-+
- #define VMD_CFGBAR	0
- #define VMD_MEMBAR1	2
- #define VMD_MEMBAR2	4
-@@ -67,6 +69,12 @@ enum vmd_features {
- 	 * interrupt handling.
- 	 */
- 	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
-+
-+	/*
-+	 * Device must have ASPM policy overridden, as its default policy is
-+	 * incorrect.
-+	 */
-+	VMD_FEAT_QUIRK_OVERRIDE_ASPM		= (1 << 5),
- };
- 
- static DEFINE_IDA(vmd_instance_ida);
-@@ -661,6 +669,29 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
- 	return 0;
- }
- 
-+/*
-+ * Override the BIOS ASPM policy and set the LTR value for PCI storage
-+ * devices on the VMD bride.
-+ */
-+static int vmd_enable_aspm(struct pci_dev *pdev, void *userdata)
-+{
-+	int features = *(int *)userdata;
-+
-+	if (features & VMD_FEAT_QUIRK_OVERRIDE_ASPM &&
-+	    pdev->class == PCI_CLASS_STORAGE_EXPRESS) {
-+		int pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-+
-+		if (pos) {
-+			pci_write_config_word(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, 0x1003);
-+			pci_write_config_word(pdev, pos + PCI_LTR_MAX_NOSNOOP_LAT, 0x1003);
-+			if (pcie_aspm_policy_override(pdev))
-+				pci_info(pdev, "Unable of override ASPM policy\n");
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- {
- 	struct pci_sysdata *sd = &vmd->sysdata;
-@@ -807,6 +838,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	pci_scan_child_bus(vmd->bus);
- 	pci_assign_unassigned_bus_resources(vmd->bus);
- 
-+	pci_walk_bus(vmd->bus, vmd_enable_aspm, &features);
-+
- 	/*
- 	 * VMD root buses are virtual and don't return true on pci_is_pcie()
- 	 * and will fail pcie_bus_configure_settings() early. It can instead be
-@@ -948,15 +981,18 @@ static const struct pci_device_id vmd_ids[] = {
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x467f),
- 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
- 				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_OFFSET_FIRST_VECTOR,},
-+				VMD_FEAT_OFFSET_FIRST_VECTOR |
-+				VMD_FEAT_QUIRK_OVERRIDE_ASPM,},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4c3d),
- 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
- 				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_OFFSET_FIRST_VECTOR,},
-+				VMD_FEAT_OFFSET_FIRST_VECTOR |
-+				VMD_FEAT_QUIRK_OVERRIDE_ASPM,},
- 	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
- 		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
- 				VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				VMD_FEAT_OFFSET_FIRST_VECTOR,},
-+				VMD_FEAT_OFFSET_FIRST_VECTOR |
-+				VMD_FEAT_QUIRK_OVERRIDE_ASPM,},
- 	{0,}
- };
- MODULE_DEVICE_TABLE(pci, vmd_ids);
+after taking it out from the required property there are no more
+warnings, I will spin a v3 with the changes, thanks!
 -- 
-2.25.1
-
+Florian
