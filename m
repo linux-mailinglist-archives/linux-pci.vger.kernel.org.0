@@ -2,145 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64FC046C493
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 21:26:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD17F46C4A2
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 21:30:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231710AbhLGU3w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 15:29:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
+        id S232631AbhLGUeJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 15:34:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbhLGU3v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 15:29:51 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E782DC061746
-        for <linux-pci@vger.kernel.org>; Tue,  7 Dec 2021 12:26:20 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id a9so161100wrr.8
-        for <linux-pci@vger.kernel.org>; Tue, 07 Dec 2021 12:26:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CkXmbOcSXdtBG8nSV6cZZ9ohzVatbQZOqgA3s3vf5hk=;
-        b=CpYwtWNW9N1tad35IcVKqSCOmg5c7BRdaiGws5zViiwbeblQfP18LkmVajHrVrWIZD
-         fREkYoM1VTfwF/G+pVq/lj3VZ1E5a8Ugw1ZU15kJvU+Vl+TdeHD8KpARKW9EKKGno4cj
-         rkvzl900/pYyohxrMHJSAWJrS7Yv4KC4BSqm0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CkXmbOcSXdtBG8nSV6cZZ9ohzVatbQZOqgA3s3vf5hk=;
-        b=XD2DeRbN3qnqpk0qgroqxq6Pfan+Pnc31YYjACmOCfkBYB3eVkK0rqwEtCNRNJaxOF
-         NRceKBDW0H5L4WOOJBY2xn6BjdFhuQGS75xioyY5dCkLo53taykHlPqMf+DbNjoiNxYQ
-         x3skrKEeYzfymkEdAAaEKZA/F6llRePQLS2nXUdIzQaSt5yoOcdXwCH02TQKQ9n0NqKT
-         1EM8lx2zKzjMeZzNakzh9xnJ1HoSI7R1I3im59XY3/+NlYIf2eWrMjeCb+2b9k92ujac
-         Rg31g9jOqGJzltnUcDaZBFQJiE5xnAN4IJpNaQlEe6ypytjjN3M0WY+30qGi22WGrVXH
-         Latw==
-X-Gm-Message-State: AOAM533FNhu0Bvlvucnyoj2WF9ekFT18N5f1AeWTeYJ13e/R/PhKVj26
-        Osqz0ST47cx0dp648vfuQUxzM3Mmbnns1gKCfxUw4Q==
-X-Google-Smtp-Source: ABdhPJwrsYzc2lhEB34KbJU1bpdv+YpbHX452by5m4olrT0QC+t3vm5PQ44H/vfQm/J1llb7cPkre2Nq/HNDi+9AOOQ=
-X-Received: by 2002:adf:f786:: with SMTP id q6mr54002268wrp.356.1638908779497;
- Tue, 07 Dec 2021 12:26:19 -0800 (PST)
+        with ESMTP id S232323AbhLGUeI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 15:34:08 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0E8C061574;
+        Tue,  7 Dec 2021 12:30:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C19B6B81DD1;
+        Tue,  7 Dec 2021 20:30:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B158C341C3;
+        Tue,  7 Dec 2021 20:30:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638909034;
+        bh=vcoC+Uyri7g9qycwRWUHoUG2kf9GeTBEOaheV4ro89g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UObvtOcdnqtp3lRabJHPBO9zvAXJ1d/8eNBRjpZ6otbLk5LnSEQzlSDTGpRZLGxxH
+         13iT+3dRgQ8IOisWDu4P3YUC0pWIUffuoPYDmPtWatVLhy4/J4l92Hj2Zyzbkwparv
+         1ZG1oK5E7RSnyns00W5SMNR7/1qrVs8Xs9GcVOtRdQyGDsf7erHvqUK/it3a/gW7i6
+         ePaKGpU631QulUEhArFq7OhH+gqcp4gx/lKk/r3oR3ub4oofGrqCdE+i0DKw0AS8Em
+         QWLrJXx0lbjJP9WAOu89mvdBmBPonky0RPbtTDWYiJoXIS6HDfoEjygJ2OGXjyjbAX
+         5o/RtIrwiImZA==
+Date:   Tue, 7 Dec 2021 14:30:32 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>,
+        Luca Ceresoli <luca@lucaceresoli.net>, kernel-team@android.com
+Subject: Re: [PATCH v3 0/3] PCI: apple: Assorted #PERST fixes
+Message-ID: <20211207203032.GA74708@bhelgaas>
 MIME-Version: 1.0
-References: <20211119220756.18628-1-jim2101024@gmail.com> <20211119220756.18628-4-jim2101024@gmail.com>
- <Ya/Bar212Tb+S9Eo@robh.at.kernel.org>
-In-Reply-To: <Ya/Bar212Tb+S9Eo@robh.at.kernel.org>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Tue, 7 Dec 2021 15:26:08 -0500
-Message-ID: <CA+-6iNzSOY-D_O5rD=+oyxNnjZxpWS-uBQY1mRabQ1AHMfTqwA@mail.gmail.com>
-Subject: Re: [PATCH v9 3/7] dt-bindings: PCI: Add bindings for Brcmstb EP
- voltage regulators
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211207101621.GA466@lpieralisi>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 7, 2021 at 3:17 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Nov 19, 2021 at 05:07:50PM -0500, Jim Quinlan wrote:
-> > Add bindings for Brcmstb EP voltage regulators.  A new mechanism is to be
-> > added to the Linux PCI subsystem that will allocate and turn on/off
-> > regulators.  These are standard regulators -- vpcie12v, vpcie3v3, and
-> > vpcie3v3aux -- placed in the DT in the bridge node under the host bridge
-> > device.
-> >
-> > The use of a regulator property in the pcie EP subnode such as
-> > "vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
-> > file at
-> >
-> > https://github.com/devicetree-org/dt-schema/pull/63
-> >
-> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> > ---
-> >  .../bindings/pci/brcm,stb-pcie.yaml           | 23 +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > index 22f2ef446f18..7113a7f726e7 100644
-> > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> > @@ -159,5 +159,28 @@ examples:
-> >                                   <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
-> >                      brcm,enable-ssc;
-> >                      brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
-> > +
-> > +                    /* PCIe bridge */
->
-> Root port specifically. Didn't Pali mention that before?
-Yes,  my miss, will fix.
->
-> > +                    pci@0,0 {
-> > +                            #address-cells = <3>;
-> > +                            #size-cells = <2>;
-> > +                            reg = <0x0 0x0 0x0 0x0 0x0>;
-> > +                            compatible = "pciclass,0604";
-> > +                            device_type = "pci";
-> > +                            vpcie3v3-supply = <&vreg7>;
-> > +                            ranges;
-> > +
-> > +                            /* PCIe endpoint */
-> > +                            pci-ep@0,0 {
-> > +                                    assigned-addresses =
-> > +                                        <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
-> > +                                    reg = <0x0 0x0 0x0 0x0 0x0>;
-> > +                                    compatible = "pci14e4,1688";
->
-> > +                                    #address-cells = <3>;
-> > +                                    #size-cells = <2>;
-> > +
-> > +                                    ranges;
->
-> These aren't appropriate for an endpoint.
-Got it.
+On Tue, Dec 07, 2021 at 10:16:32AM +0000, Lorenzo Pieralisi wrote:
+> On Tue, Nov 30, 2021 at 11:56:32AM +0000, Lorenzo Pieralisi wrote:
+> > On Tue, Nov 23, 2021 at 06:06:33PM +0000, Marc Zyngier wrote:
+> > > Apologies for the rapid fire (I tend to be much more conservative when
+> > > resending series), but given that this series has a direct impact on
+> > > other projects (such as u-boot), I'm trying to converge as quickly as
+> > > possible.
+> > > 
+> > > This series aims at fixing a number of issues for the recently merged
+> > > Apple PCIe driver, all revolving around the mishandling of #PERST:
+> > > 
+> > > - we didn't properly drive #PERST, and we didn't follow the specified
+> > >   timings
+> > >   
+> > > - the DT had the wrong polarity, which has impacts on the driver
+> > >   itself
+> > > 
+> > > Hopefully, this should address all the issues reported so far.
+> > > 
+> > > * From v2:
+> > >   - Fixed DT
+> > >   - Fixed #PERST polarity in the driver
+> > >   - Collected Pali's ack on patch #1
+> > > 
+> > > [1] https://lore.kernel.org/r/20211122104156.518063-1-maz@kernel.org
+> > > 
+> > > Marc Zyngier (3):
+> > >   PCI: apple: Follow the PCIe specifications when resetting the port
+> > >   arm64: dts: apple: t8103: Fix PCIe #PERST polarity
+> > >   PCI: apple: Fix #PERST polarity
+> > > 
+> > >  arch/arm64/boot/dts/apple/t8103.dtsi |  7 ++++---
+> > >  drivers/pci/controller/pcie-apple.c  | 12 +++++++++++-
+> > >  2 files changed, 15 insertions(+), 4 deletions(-)
+> > 
+> > Hi Bjorn,
+> > 
+> > this series is v5.16-rcX material for PCI fixes, can you pick patches
+> > 1,3 up please ?
+> 
+> Hi Bjorn,
+> 
+> Arnd acked patch 2, can we send the whole series upstream for one
+> of the upcoming -rcX please ? It is fixing code that was merged
+> in the last merge window.
 
-Do you have feedback for any of the other commits?
+I put all three of these on for-linus and will ask Linus to pull them
+before -rc5.
 
-Thanks,
-Jim Quinlan
-Broadcom STB
-
->
-> > +                            };
-> > +                    };
-> >              };
-> >      };
-> > --
-> > 2.17.1
-> >
-> >
+I do have open questions about the PERST# timing, but we can update
+this if needed.
