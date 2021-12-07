@@ -2,142 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F7B846BCEC
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 14:49:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41C2C46BD8C
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 15:24:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237248AbhLGNwu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 08:52:50 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:41340 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232616AbhLGNwu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 08:52:50 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ACB69B817AC;
-        Tue,  7 Dec 2021 13:49:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75EDFC341C3;
-        Tue,  7 Dec 2021 13:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638884957;
-        bh=MCrmhoOfiZaoNBZ0VF5Q8duq+I3/7+arLl4dMixJGQU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mnYrkdQJaclaNickXu+J2BknfkyfTfA0nTldjTAZ4uANM7VNpgX8nRJE1Jk98zHmD
-         u/UgD5X3/ZE4ISqaiYC27w/sgRyOEds79z2zomwm1uFXWhnuPLFZXnouiQDe8xtQtb
-         Ri4AaXPwt50Q1qU5xMywAFPXh4t2YNywrqVcu/jwqiO0Y0HMZyMQtjy+oY/bYibXmH
-         0Ns1UROXa+AxBj+aUP8wx+o3gnXOuTLdn7Bpoz6i6Vefmk7VNh+fti0drdfC+ZmKi8
-         1qVkfKLGUH1r653/gHLeRjG8UZUSCAW7ITEWHVhaGJ2FgUi409Ua1Z7Vh9D7pbx1zf
-         r8USDnV4HrUAA==
-Received: by mail-ed1-f43.google.com with SMTP id r25so56998535edq.7;
-        Tue, 07 Dec 2021 05:49:17 -0800 (PST)
-X-Gm-Message-State: AOAM530auEzKgLp6lQj5UFrqDgwZV162xEqTuFNKExIPMrKruYbwWgKa
-        cnDqnnrhJk/eyKdtaktIzE7BG4w48I1RrKJFGg==
-X-Google-Smtp-Source: ABdhPJxYibkcAorJmNqQ1tmkxWpKm0Rdagpd+pr3AgKn/CGY95tx/YJObidtIvCyVgPsVS/656cL5qA7zo+a0imlv6o=
-X-Received: by 2002:a17:907:7f25:: with SMTP id qf37mr53785773ejc.147.1638884955679;
- Tue, 07 Dec 2021 05:49:15 -0800 (PST)
+        id S237524AbhLGO2Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 09:28:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233302AbhLGO2Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 09:28:25 -0500
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B749EC061746
+        for <linux-pci@vger.kernel.org>; Tue,  7 Dec 2021 06:24:54 -0800 (PST)
+Received: by mail-oi1-x22a.google.com with SMTP id 7so27950975oip.12
+        for <linux-pci@vger.kernel.org>; Tue, 07 Dec 2021 06:24:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vfUP7dJBnmi/OcEPVE2ezJwiVV1EUyQRW+Qu6djHyYk=;
+        b=cKbadL6aJ141eWrYwPOtTIb0RT1sCruIZCJFoP3Mp+GlRexPjDyuc8ORvvqpOGPI1c
+         l0Q/5hwYs4n0G1leCMsw87+GWF6OZpHgo8YIyepUw/4rHrx+431NSShPxQ4XY3okTLa8
+         HwSnvvrIrkX0keGoEVQdundcorMDqQ27ophbgoPuODQ2JZlnfAXNkeajGQs8hTBaOEE+
+         tfNVXSTRb1khLmksktzI+A1fCA7nAeKuYnBaiDuAC7lDS6fudXxOnBhurhdFC+dbdupb
+         HrktztM6Z/tJsuUKo9lz9L63DiAo+6AKFnLGh/Kh9yS9pjnT0scMalVf0onw8bQ6HQ8C
+         /3Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vfUP7dJBnmi/OcEPVE2ezJwiVV1EUyQRW+Qu6djHyYk=;
+        b=EHCmOiuxZoLYDNKZ7hLIp1UER9xtyKYtNwXT8eL08es4rHVyz8N5Gam0iVF5ncnNTf
+         fQrblhhL+YyRRncz+6R0x3A0WQzvXjQ6ikHMCb/7mpBSBGUZC5XvLCWvOjUqlrkZkzOx
+         XAXYfR0/hQZyqE7LykgG+FcAoLoQ4sOEcusky5Dh1+9XqS0aOAWF6dE3qI8VeM1l9QvB
+         kwGgFyRgIaLeu1j75eitdCydXBqg4fLJwf111cKlgw1Q4PhnuTV6Gr/4FSKtvorSOWLM
+         FDHtcLe2pYkR+bQn+fZpagc4OXbLR+x/6Cy+l59ZRyap+M0f61mYK0BZ+Jx40NN0j5Nn
+         9zOQ==
+X-Gm-Message-State: AOAM530Ts9ol7gB2DxxTcVf2ZzYkX0VvqJth+d/ruViUlVelYG/QqR0+
+        qNbRWaRJp3p6SC2+ynWwlkVA5w==
+X-Google-Smtp-Source: ABdhPJydN+P5ZwkGLoLxJVSNSXypXum05RxX0N3o4pvwaY6rUeQx4TwAfDK8+ATcN4/uje330Luq4A==
+X-Received: by 2002:a05:6808:150d:: with SMTP id u13mr5398185oiw.155.1638887094092;
+        Tue, 07 Dec 2021 06:24:54 -0800 (PST)
+Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id e26sm2672959oog.46.2021.12.07.06.24.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Dec 2021 06:24:53 -0800 (PST)
+Date:   Tue, 7 Dec 2021 06:26:18 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v1 02/10] dt-bindings: phy: qcom,qmp: Add SM8450 PCIe PHY
+ bindings
+Message-ID: <Ya9vCkillZqKc6o2@ripper>
+References: <20211202141726.1796793-1-dmitry.baryshkov@linaro.org>
+ <20211202141726.1796793-3-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
-References: <20211206185242.2098683-1-f.fainelli@gmail.com> <20211206185242.2098683-2-f.fainelli@gmail.com>
-In-Reply-To: <20211206185242.2098683-2-f.fainelli@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 Dec 2021 07:49:04 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKaOkByjwYzyW6G_b90zRjCWVHvi2V0gBx_MJ8v2FmOaw@mail.gmail.com>
-Message-ID: <CAL_JsqKaOkByjwYzyW6G_b90zRjCWVHvi2V0gBx_MJ8v2FmOaw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] ARM: dts: Cygnus: Fixed iProc PCIe controller properties
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211202141726.1796793-3-dmitry.baryshkov@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 6, 2021 at 12:52 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> Rename the msi controller unit name to 'msi' to avoid collisions
-> with the 'msi-controller' boolean property and add the missing
-> 'interrupt-controller' property which is necessary. We also need to
-> re-arrange the 'ranges' property to show the two cells as being separate
-> instead of combined since the DT checker is not able to differentiate
-> otherwise.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Thu 02 Dec 06:17 PST 2021, Dmitry Baryshkov wrote:
+
+> There are two different PCIe PHYs on SM8450, one having one lane and
+> another with two lanes. Add DT bindings for the first one. Support for
+> second PCIe host and PHY will be submitted separately.
+> 
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > ---
->  arch/arm/boot/dts/bcm-cygnus.dtsi | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> index 8ecb7861ce10..ea19d1b56400 100644
-> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> @@ -263,6 +263,7 @@ pcie0: pcie@18012000 {
->                         compatible = "brcm,iproc-pcie";
->                         reg = <0x18012000 0x1000>;
->
-> +                       interrupt-controller;
-
-How is this a fix? This doesn't even work before v5.16 with commit
-041284181226 ("of/irq: Allow matching of an interrupt-map local to an
-interrupt controller").
-
-
->                         #interrupt-cells = <1>;
->                         interrupt-map-mask = <0 0 0 0>;
->                         interrupt-map = <0 0 0 0 &gic GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -274,8 +275,8 @@ pcie0: pcie@18012000 {
->                         #address-cells = <3>;
->                         #size-cells = <2>;
->                         device_type = "pci";
-> -                       ranges = <0x81000000 0 0          0x28000000 0 0x00010000
-> -                                 0x82000000 0 0x20000000 0x20000000 0 0x04000000>;
-> +                       ranges = <0x81000000 0 0          0x28000000 0 0x00010000>,
-> +                                <0x82000000 0 0x20000000 0x20000000 0 0x04000000>;
->
->                         phys = <&pcie0_phy>;
->                         phy-names = "pcie-phy";
-> @@ -283,7 +284,7 @@ pcie0: pcie@18012000 {
->                         status = "disabled";
->
->                         msi-parent = <&msi0>;
-> -                       msi0: msi-controller {
-> +                       msi0: msi {
->                                 compatible = "brcm,iproc-msi";
->                                 msi-controller;
->                                 interrupt-parent = <&gic>;
-> @@ -298,6 +299,7 @@ pcie1: pcie@18013000 {
->                         compatible = "brcm,iproc-pcie";
->                         reg = <0x18013000 0x1000>;
->
-> +                       interrupt-controller;
->                         #interrupt-cells = <1>;
->                         interrupt-map-mask = <0 0 0 0>;
->                         interrupt-map = <0 0 0 0 &gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -309,8 +311,8 @@ pcie1: pcie@18013000 {
->                         #address-cells = <3>;
->                         #size-cells = <2>;
->                         device_type = "pci";
-> -                       ranges = <0x81000000 0 0          0x48000000 0 0x00010000
-> -                                 0x82000000 0 0x40000000 0x40000000 0 0x04000000>;
-> +                       ranges = <0x81000000 0 0          0x48000000 0 0x00010000>,
-> +                                <0x82000000 0 0x40000000 0x40000000 0 0x04000000>;
->
->                         phys = <&pcie1_phy>;
->                         phy-names = "pcie-phy";
-> @@ -318,7 +320,7 @@ pcie1: pcie@18013000 {
->                         status = "disabled";
->
->                         msi-parent = <&msi1>;
-> -                       msi1: msi-controller {
-> +                       msi1: msi {
->                                 compatible = "brcm,iproc-msi";
->                                 msi-controller;
->                                 interrupt-parent = <&gic>;
-> --
-> 2.25.1
->
+>  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> index c59bbca9a900..d18075cb2b5d 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> @@ -50,6 +50,7 @@ properties:
+>        - qcom,sm8350-qmp-ufs-phy
+>        - qcom,sm8350-qmp-usb3-phy
+>        - qcom,sm8350-qmp-usb3-uni-phy
+> +      - qcom,sm8450-qmp-gen3x1-pcie-phy
+>        - qcom,sm8450-qmp-ufs-phy
+>        - qcom,sdx55-qmp-pcie-phy
+>        - qcom,sdx55-qmp-usb3-uni-phy
+> @@ -333,6 +334,7 @@ allOf:
+>                - qcom,sm8250-qmp-gen3x1-pcie-phy
+>                - qcom,sm8250-qmp-gen3x2-pcie-phy
+>                - qcom,sm8250-qmp-modem-pcie-phy
+> +              - qcom,sm8450-qmp-gen3x1-pcie-phy
+>      then:
+>        properties:
+>          clocks:
+> -- 
+> 2.33.0
+> 
