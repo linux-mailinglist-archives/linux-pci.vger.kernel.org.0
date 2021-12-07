@@ -2,78 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 874FA46B271
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 06:35:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 405D146B2B5
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 07:06:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235373AbhLGFjA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 00:39:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234147AbhLGFi6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 00:38:58 -0500
-Received: from mail.marcansoft.com (marcansoft.com [IPv6:2a01:298:fe:f::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76156C061746;
-        Mon,  6 Dec 2021 21:35:28 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: hector@marcansoft.com)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id 865B94218A;
-        Tue,  7 Dec 2021 05:35:24 +0000 (UTC)
-From:   Hector Martin <marcan@marcan.st>
-To:     Marc Zyngier <maz@kernel.org>, Sven Peter <sven@svenpeter.dev>
-Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
-Subject: [PATCH] arm64: dts: apple: t8103: Remove PCIe max-link-speed properties
-Date:   Tue,  7 Dec 2021 14:34:58 +0900
-Message-Id: <20211207053458.17777-1-marcan@marcan.st>
-X-Mailer: git-send-email 2.33.0
+        id S236467AbhLGGJc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 01:09:32 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:37050 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S230094AbhLGGJc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 01:09:32 -0500
+X-UUID: c7009bf4b7c64fe49c59bec8c178623c-20211207
+X-UUID: c7009bf4b7c64fe49c59bec8c178623c-20211207
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <qizhong.cheng@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 628431408; Tue, 07 Dec 2021 14:05:58 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 7 Dec 2021 14:05:56 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkcas10.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Tue, 7 Dec 2021 14:05:56 +0800
+From:   qizhong cheng <qizhong.cheng@mediatek.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <chuanjia.liu@mediatek.com>,
+        <qizhong.cheng@mediatek.com>
+Subject: [PATCH] PCI: mediatek: Delay 100ms to wait power and clock to become stable
+Date:   Tue, 7 Dec 2021 14:05:50 +0800
+Message-ID: <20211207060550.20918-1-qizhong.cheng@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The driver doesn't support these, they shouldn't be in the SoC include
-anyway, and we're now configuring this in the bootloader instead. This
-also solves the j274 1G/10G Ethernet variant discrepancy, since that
-will now be configured properly based on the dynamic ADT property.
+Described in PCIe CEM specification setctions 2.2 (PERST# Signal) and
+2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
+be delayed 100ms (TPVPERL) for the power and clock to become stable.
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: qizhong cheng <qizhong.cheng@mediatek.com>
+Change-Id: Ia9abe1e763564a5bad1d045fd268c38e76e2ae95
 ---
- arch/arm64/boot/dts/apple/t8103.dtsi | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
-index 15ee8c8c5fa0..8d1628e0b0c7 100644
---- a/arch/arm64/boot/dts/apple/t8103.dtsi
-+++ b/arch/arm64/boot/dts/apple/t8103.dtsi
-@@ -412,7 +412,6 @@ port00: pci@0,0 {
- 				device_type = "pci";
- 				reg = <0x0 0x0 0x0 0x0 0x0>;
- 				reset-gpios = <&pinctrl_ap 152 0>;
--				max-link-speed = <2>;
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 2f3f974977a3..a61ea3940471 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -702,6 +702,13 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 	 */
+ 	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
  
- 				#address-cells = <3>;
- 				#size-cells = <2>;
-@@ -432,7 +431,6 @@ port01: pci@1,0 {
- 				device_type = "pci";
- 				reg = <0x800 0x0 0x0 0x0 0x0>;
- 				reset-gpios = <&pinctrl_ap 153 0>;
--				max-link-speed = <2>;
- 
- 				#address-cells = <3>;
- 				#size-cells = <2>;
-@@ -452,7 +450,6 @@ port02: pci@2,0 {
- 				device_type = "pci";
- 				reg = <0x1000 0x0 0x0 0x0 0x0>;
- 				reset-gpios = <&pinctrl_ap 33 0>;
--				max-link-speed = <1>;
- 
- 				#address-cells = <3>;
- 				#size-cells = <2>;
++	/*
++	 * Described in PCIe CEM specification setctions 2.2 (PERST# Signal) and
++	 * 2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
++	 * be delayed 100ms (TPVPERL) for the power and clock to become stable.
++	 */
++	msleep(100);
++
+ 	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
+ 	val = readl(port->base + PCIE_RST_CTRL);
+ 	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
 -- 
-2.33.0
+2.25.1
 
