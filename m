@@ -2,102 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66D3446C433
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 21:08:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54D4246C44D
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 21:17:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232178AbhLGUMO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 15:12:14 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:51316 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbhLGUMN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 15:12:13 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A8A97B81858;
-        Tue,  7 Dec 2021 20:08:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CECFC341C3;
-        Tue,  7 Dec 2021 20:08:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638907720;
-        bh=7iECsE/Y/3WDH+hSKw/CvU9fAhHAsdUBKvj/iNSMXUA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eB2WlEkOxMKqWBG4/cC0k1LNrwvjHA7Tb0FsOXXKQXKo3OjZhY/XQ9H+7mTefDAnl
-         TrPVdp5vn0/aHzmEenk/h+aWRxylWK2SZp3xXQMeXPG9JVcwB8IaSfb0aeYSG5lka2
-         hWzXOkTh4wyXOGMqf0jDC80GmhIFAnYEl58IwHw5j9G8dFzNKOafKof7eub6qB3vOG
-         v+uQ+UH13bh0RK4By3SgvYZGOGjS6Bo4z00wNXO5GorHJDVL65klhKPUcm8KA+E3Xx
-         WwRln8ZGWbhHFYBUjOMYUraOFvE0Ubv+IS2Achv9Reay/Vs4iCUlNuYw2FIRydr/ok
-         P6EQacgcAurBg==
-Received: by mail-ed1-f44.google.com with SMTP id l25so374369eda.11;
-        Tue, 07 Dec 2021 12:08:40 -0800 (PST)
-X-Gm-Message-State: AOAM532X852r65PWOPHdNl0AP18qWjbxfUnhLF75DHXRBxXU3EImmM47
-        bpEnQjYTAjTbehh5o2LToyvKvB1zdChJksiPLg==
-X-Google-Smtp-Source: ABdhPJwA9TV+fIIiAm/3KclR1rrQon8NWQlFgkZJrXmBPVhVXjSQmWIYfL8TqwTlEeryByAj0Jv4ANoqhh9Y7EZxl9Y=
-X-Received: by 2002:a05:6402:4251:: with SMTP id g17mr12237548edb.89.1638907718587;
- Tue, 07 Dec 2021 12:08:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20211206185242.2098683-1-f.fainelli@gmail.com>
- <20211206185242.2098683-2-f.fainelli@gmail.com> <CAL_JsqKaOkByjwYzyW6G_b90zRjCWVHvi2V0gBx_MJ8v2FmOaw@mail.gmail.com>
- <fc263ef8-10f8-206e-5df7-76f0b9d50fae@gmail.com>
-In-Reply-To: <fc263ef8-10f8-206e-5df7-76f0b9d50fae@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 Dec 2021 14:08:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL6HV-C6+9Pna_8GVT5V+uEzcYcPDaS1m6AK8LhsWnFaw@mail.gmail.com>
-Message-ID: <CAL_JsqL6HV-C6+9Pna_8GVT5V+uEzcYcPDaS1m6AK8LhsWnFaw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] ARM: dts: Cygnus: Fixed iProc PCIe controller properties
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
+        id S236290AbhLGUVU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 15:21:20 -0500
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:33637 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230259AbhLGUVT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 15:21:19 -0500
+Received: by mail-ot1-f41.google.com with SMTP id 35-20020a9d08a6000000b00579cd5e605eso447665otf.0;
+        Tue, 07 Dec 2021 12:17:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+MB6yXYtqMzh5VNyaR3gPGIIrEYooy9VuBz2n/yIA8c=;
+        b=XtUek/csyPycL/68jDCsEDgzJkvghwxhkkWPVn1w/2+rkZ9bjJWQhzUzjFBOsHhN5R
+         zbGyenzd5fETjMYRotLbnWmAMIuv7XUDOSnzGHR8yG4RQjV9MRxqtDjzhioaSpm/9XUV
+         Y7lI9wzI17I5JSaDGZGctOPFV23S6SgVGtEYQlwrgDzZDClGeyI8jF9mBG1IZaD3fjqt
+         /1AgNaIQpSjhRClbAaOAJ9iwkn366LEB6A2VojDJqCZSq7JNyXCndok0rtZ9rSj+nL98
+         zNurCgFL2wTA8IkAjM87024qDPX1HDt7DdZcegLhC0OAUR4LK41QZZawhEtGmUA5/+P+
+         PBgw==
+X-Gm-Message-State: AOAM531QOf/agoy/u1Eohvy0RnjJQ/o3hfW5o6r/CcPQlCpjgZg9vQgB
+        rY+z9v/cpdQ/T7ftnm5WrQ==
+X-Google-Smtp-Source: ABdhPJw4qzAjPBdGAFRx6O6XT1ckH3u9GEqrcqCw84pwWhRxaYjnxvcT+FztKBIhcpB09VBz5ojcVw==
+X-Received: by 2002:a9d:4543:: with SMTP id p3mr37789092oti.99.1638908268313;
+        Tue, 07 Dec 2021 12:17:48 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id r5sm144000oiw.20.2021.12.07.12.17.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Dec 2021 12:17:47 -0800 (PST)
+Received: (nullmailer pid 759672 invoked by uid 1000);
+        Tue, 07 Dec 2021 20:17:46 -0000
+Date:   Tue, 7 Dec 2021 14:17:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Saenz Julienne <nsaenzjulienne@suse.de>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v9 3/7] dt-bindings: PCI: Add bindings for Brcmstb EP
+ voltage regulators
+Message-ID: <Ya/Bar212Tb+S9Eo@robh.at.kernel.org>
+References: <20211119220756.18628-1-jim2101024@gmail.com>
+ <20211119220756.18628-4-jim2101024@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211119220756.18628-4-jim2101024@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 7, 2021 at 11:44 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 12/7/21 5:49 AM, Rob Herring wrote:
-> > On Mon, Dec 6, 2021 at 12:52 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >>
-> >> Rename the msi controller unit name to 'msi' to avoid collisions
-> >> with the 'msi-controller' boolean property and add the missing
-> >> 'interrupt-controller' property which is necessary. We also need to
-> >> re-arrange the 'ranges' property to show the two cells as being separate
-> >> instead of combined since the DT checker is not able to differentiate
-> >> otherwise.
-> >>
-> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> >> ---
-> >>  arch/arm/boot/dts/bcm-cygnus.dtsi | 14 ++++++++------
-> >>  1 file changed, 8 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> >> index 8ecb7861ce10..ea19d1b56400 100644
-> >> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-> >> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-> >> @@ -263,6 +263,7 @@ pcie0: pcie@18012000 {
-> >>                         compatible = "brcm,iproc-pcie";
-> >>                         reg = <0x18012000 0x1000>;
-> >>
-> >> +                       interrupt-controller;
-> >
-> > How is this a fix? This doesn't even work before v5.16 with commit
-> > 041284181226 ("of/irq: Allow matching of an interrupt-map local to an
-> > interrupt controller").
->
-> What is the path forward? I suppose I could make the
-> interrupt-controller property not required for this controller but then
-> the default interrupt-controller schema is not terribly happy about
-> seeing an interrupt-map/interrupt-map-mask properties without
-> interrupt-controller.
+On Fri, Nov 19, 2021 at 05:07:50PM -0500, Jim Quinlan wrote:
+> Add bindings for Brcmstb EP voltage regulators.  A new mechanism is to be
+> added to the Linux PCI subsystem that will allocate and turn on/off
+> regulators.  These are standard regulators -- vpcie12v, vpcie3v3, and
+> vpcie3v3aux -- placed in the DT in the bridge node under the host bridge
+> device.
+> 
+> The use of a regulator property in the pcie EP subnode such as
+> "vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
+> file at
+> 
+> https://github.com/devicetree-org/dt-schema/pull/63
+> 
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> ---
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 22f2ef446f18..7113a7f726e7 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -159,5 +159,28 @@ examples:
+>                                   <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+>                      brcm,enable-ssc;
+>                      brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
+> +
+> +                    /* PCIe bridge */
 
-There's certainly no requirement for having 'interrupt-controller'.
-What error are you getting?
+Root port specifically. Didn't Pali mention that before?
 
-Rob
+> +                    pci@0,0 {
+> +                            #address-cells = <3>;
+> +                            #size-cells = <2>;
+> +                            reg = <0x0 0x0 0x0 0x0 0x0>;
+> +                            compatible = "pciclass,0604";
+> +                            device_type = "pci";
+> +                            vpcie3v3-supply = <&vreg7>;
+> +                            ranges;
+> +
+> +                            /* PCIe endpoint */
+> +                            pci-ep@0,0 {
+> +                                    assigned-addresses =
+> +                                        <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
+> +                                    reg = <0x0 0x0 0x0 0x0 0x0>;
+> +                                    compatible = "pci14e4,1688";
+
+> +                                    #address-cells = <3>;
+> +                                    #size-cells = <2>;
+> +
+> +                                    ranges;
+
+These aren't appropriate for an endpoint.
+
+> +                            };
+> +                    };
+>              };
+>      };
+> -- 
+> 2.17.1
+> 
+> 
