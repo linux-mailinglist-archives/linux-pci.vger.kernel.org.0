@@ -2,207 +2,314 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC77646BDB0
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 15:29:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B28CE46BDB3
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 15:29:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237834AbhLGOcj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 09:32:39 -0500
-Received: from mga07.intel.com ([134.134.136.100]:12747 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238078AbhLGOch (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 Dec 2021 09:32:37 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10190"; a="300967697"
-X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
-   d="scan'208";a="300967697"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 06:29:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
-   d="scan'208";a="679457657"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 07 Dec 2021 06:29:05 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mubSr-000Mfn-4Q; Tue, 07 Dec 2021 14:29:05 +0000
-Date:   Tue, 07 Dec 2021 22:28:06 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- cc3062ee1393cb98177e40e339acf38a35f21488
-Message-ID: <61af6f76.9sMrcbhXj1f+iF1z%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S233250AbhLGOcq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 09:32:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233206AbhLGOcq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 09:32:46 -0500
+Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CCFC061574
+        for <linux-pci@vger.kernel.org>; Tue,  7 Dec 2021 06:29:15 -0800 (PST)
+Received: by mail-ot1-x335.google.com with SMTP id w6-20020a9d77c6000000b0055e804fa524so18279835otl.3
+        for <linux-pci@vger.kernel.org>; Tue, 07 Dec 2021 06:29:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8qjP+pEwrVWW8ojpY+aChkI82zJfRTztR+mOskZJx4w=;
+        b=pTBDgV9oTmZu2RTmq6EWV4lOz8mUmKPEtyvPPdouMu0OMBI6HFwLiKoOSoKHE2kqZP
+         7hFaOYMTABtlm0DioJivWaz5FRiPGOBveKM+aiQXjyvhN3fFxHa6FqwlocKqOZbxEbar
+         33cM9F+XLhDekdnfk8Qh14Ck6jhOLlW5ucTR2RLvcWRtBFnxRZae1IHJ58hwTfeTThJB
+         8omkw+hN1zpbm/WbDXrnpxDWAPTFPFNLpRRf+L5nhneE9dBVUMZ9l6TyXubrBQA1uzoA
+         9Idj+WOhlUyt1RcEeuOhKLTCC1aDBijmxzL5Z495ONaXyjUFthNNRzgwhl2NiURGhCRe
+         hr9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8qjP+pEwrVWW8ojpY+aChkI82zJfRTztR+mOskZJx4w=;
+        b=ZTDaNggHh08UA4ZDjq6uqhRD9cGOye9KFx0DtULDPghEtDYwMPYSt2TxtqC+dyrsZU
+         kTCQAfT8xIhtfRNAknwiWHjYaQd9kCffaosGavM76WPlRpqVEnh5FCXLQM72xAizL94g
+         tcUzn5HcfkCUrPcTZvRyyOEnw3VnQmJT5gnb/VnwbJRXQjazrQlMbEumhiHd7ZO2+WnG
+         hdLvMvtALrT1QqVBBpYGp4jM1goNndAaisF58lGASSMUh3zYpOAAlYQ9fSMsot+avLIK
+         Q7xQASofT/oMdOYjlAZC4Uls1wuztri9SCyTAq1j2vLSBl4MtqrB/V2wrFKR5ZJ6Zm4v
+         aX4w==
+X-Gm-Message-State: AOAM532KVt//JbNVAvgq8ljImdIzwtNRD9nk5KihQvyJzuT+pVfuBSJR
+        A3wz5jo3Ak3/dvIiNyTFymL6LA==
+X-Google-Smtp-Source: ABdhPJzEFtpD24P8pyEUcamyKdaxq1OKXW7Y79lQjUNmokEXlQMK5qKSYqUp50lucIw3Mhxw1GxW3w==
+X-Received: by 2002:a9d:12c:: with SMTP id 41mr35950380otu.322.1638887355096;
+        Tue, 07 Dec 2021 06:29:15 -0800 (PST)
+Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id w24sm2753175ots.10.2021.12.07.06.29.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Dec 2021 06:29:14 -0800 (PST)
+Date:   Tue, 7 Dec 2021 06:30:39 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v1 03/10] phy: qcom-qmp: Add SM8450 PCIe0 PHY support
+Message-ID: <Ya9wD5gxEIRxJzOv@ripper>
+References: <20211202141726.1796793-1-dmitry.baryshkov@linaro.org>
+ <20211202141726.1796793-4-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20211202141726.1796793-4-dmitry.baryshkov@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: cc3062ee1393cb98177e40e339acf38a35f21488  Merge branch 'pci/errors'
+On Thu 02 Dec 06:17 PST 2021, Dmitry Baryshkov wrote:
 
-elapsed time: 720m
+> There are two different PCIe PHYs on SM8450, one having one lane (v5)
+> and another with two lanes (v5.20). This commit adds support for the
+> first PCIe phy only, support for the second PCIe PHY is coming in next
+> commits.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 125 ++++++++++++++++++++++++++++
+>  drivers/phy/qualcomm/phy-qcom-qmp.h |  33 ++++++++
+>  2 files changed, 158 insertions(+)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index a959c97a699f..22e95de6d7a2 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -2866,6 +2866,97 @@ static const struct qmp_phy_init_tbl qcm2290_usb3_pcs_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RX_SIGDET_LVL, 0x88),
+>  };
+>  
+> +static const struct qmp_phy_init_tbl sm8450_qmp_pcie_serdes_tbl[] = {
 
-configs tested: 147
-configs skipped: 3
+I presume these tables will differ for the other instance, so would it
+perhaps be useful to include "gen3x1" in the name of these arrays?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Regards,
+Bjorn
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211207
-arm                       omap2plus_defconfig
-sh                                  defconfig
-sh                             sh03_defconfig
-arm                       cns3420vb_defconfig
-mips                           rs90_defconfig
-powerpc                     skiroot_defconfig
-mips                        workpad_defconfig
-m68k                        m5307c3_defconfig
-m68k                         apollo_defconfig
-m68k                          atari_defconfig
-arm                       multi_v4t_defconfig
-xtensa                  nommu_kc705_defconfig
-mips                      malta_kvm_defconfig
-riscv                    nommu_virt_defconfig
-powerpc                     taishan_defconfig
-arm                          iop32x_defconfig
-arm                         mv78xx0_defconfig
-arc                     nsimosci_hs_defconfig
-arm                         shannon_defconfig
-powerpc                 mpc8540_ads_defconfig
-sh                            titan_defconfig
-m68k                             allmodconfig
-arm                             rpc_defconfig
-mips                    maltaup_xpa_defconfig
-xtensa                generic_kc705_defconfig
-arm                         at91_dt_defconfig
-arm                           spitz_defconfig
-arc                           tb10x_defconfig
-arm                         lpc32xx_defconfig
-arm                          simpad_defconfig
-arm                       imx_v4_v5_defconfig
-mips                         tb0219_defconfig
-arm                           sama7_defconfig
-mips                            e55_defconfig
-powerpc                   motionpro_defconfig
-openrisc                         alldefconfig
-powerpc                   lite5200b_defconfig
-mips                         mpc30x_defconfig
-m68k                                defconfig
-arc                         haps_hs_defconfig
-sparc                            alldefconfig
-arm                         s5pv210_defconfig
-powerpc                     stx_gp3_defconfig
-powerpc                     pq2fads_defconfig
-mips                        omega2p_defconfig
-arm                        keystone_defconfig
-arm                        cerfcube_defconfig
-powerpc                     akebono_defconfig
-sparc                            allyesconfig
-mips                         db1xxx_defconfig
-mips                     cu1000-neo_defconfig
-powerpc                      pmac32_defconfig
-mips                     decstation_defconfig
-powerpc                        fsp2_defconfig
-powerpc                 mpc836x_mds_defconfig
-mips                  cavium_octeon_defconfig
-mips                           mtx1_defconfig
-sh                   sh7770_generic_defconfig
-alpha                               defconfig
-arm                      jornada720_defconfig
-sh                 kfr2r09-romimage_defconfig
-xtensa                       common_defconfig
-sh                             shx3_defconfig
-arm                  randconfig-c002-20211207
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-sparc                               defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20211207
-x86_64               randconfig-a005-20211207
-x86_64               randconfig-a001-20211207
-x86_64               randconfig-a002-20211207
-x86_64               randconfig-a004-20211207
-x86_64               randconfig-a003-20211207
-i386                 randconfig-a001-20211207
-i386                 randconfig-a005-20211207
-i386                 randconfig-a002-20211207
-i386                 randconfig-a003-20211207
-i386                 randconfig-a006-20211207
-i386                 randconfig-a004-20211207
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-c007-20211207
-arm                  randconfig-c002-20211207
-riscv                randconfig-c006-20211207
-mips                 randconfig-c004-20211207
-i386                 randconfig-c001-20211207
-powerpc              randconfig-c003-20211207
-s390                 randconfig-c005-20211207
-x86_64               randconfig-a016-20211207
-x86_64               randconfig-a011-20211207
-x86_64               randconfig-a013-20211207
-x86_64               randconfig-a014-20211207
-x86_64               randconfig-a015-20211207
-x86_64               randconfig-a012-20211207
-i386                 randconfig-a016-20211207
-i386                 randconfig-a013-20211207
-i386                 randconfig-a011-20211207
-i386                 randconfig-a014-20211207
-i386                 randconfig-a012-20211207
-i386                 randconfig-a015-20211207
-hexagon              randconfig-r045-20211207
-s390                 randconfig-r044-20211207
-riscv                randconfig-r042-20211207
-hexagon              randconfig-r041-20211207
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYSCLK_EN_SEL, 0x08),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CLK_SELECT, 0x34),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CORECLK_DIV_MODE1, 0x08),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_IVCO, 0x0f),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP_EN, 0x42),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_TUNE1_MODE0, 0x24),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_TUNE2_MODE1, 0x03),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_TUNE1_MODE1, 0xb4),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_TUNE_MAP, 0x02),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIN_VCOCAL_HSCLK_SEL, 0x11),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE0, 0x82),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START3_MODE0, 0x03),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START2_MODE0, 0x55),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START1_MODE0, 0x55),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE0, 0x1a),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE0, 0x0a),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE1, 0x68),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START3_MODE1, 0x02),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START2_MODE1, 0xaa),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START1_MODE1, 0xab),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE1, 0x34),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE1, 0x14),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_HSCLK_SEL, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE0, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE0, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE0, 0x36),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE1, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE1, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE1, 0x36),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE2_MODE0, 0x1e),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE1_MODE0, 0xca),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE2_MODE1, 0x18),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE1_MODE1, 0xa2),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYSCLK_BUF_ENABLE, 0x07),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_EN_CENTER, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_PER1, 0x31),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_PER2, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE1_MODE0, 0xde),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE2_MODE0, 0x07),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE1_MODE1, 0x4c),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE2_MODE1, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CLK_ENABLE1, 0x90),
+> +};
+> +
+> +static const struct qmp_phy_init_tbl sm8450_qmp_pcie_tx_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_TX_PI_QEC_CTRL, 0x20),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_TX_LANE_MODE_1, 0x75),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_TX_LANE_MODE_4, 0x3f),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_TX_RES_CODE_LANE_OFFSET_TX, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_TX_RES_CODE_LANE_OFFSET_RX, 0x04),
+> +};
+> +
+> +static const struct qmp_phy_init_tbl sm8450_qmp_pcie_rx_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_00_LOW, 0x7f),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_00_HIGH, 0xff),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_00_HIGH2, 0xbf),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_00_HIGH3, 0x3f),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_00_HIGH4, 0xd8),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_01_LOW, 0xdc),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_01_HIGH, 0xdc),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_01_HIGH2, 0x5c),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_01_HIGH3, 0x34),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_01_HIGH4, 0xa6),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_10_HIGH3, 0x34),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_10_HIGH4, 0x38),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_VGA_CAL_CNTRL2, 0x07),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_GM_CAL, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_UCDR_SB2_THRESH1, 0x08),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_UCDR_SB2_THRESH2, 0x08),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_UCDR_PI_CONTROLS, 0xf0),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_DFE_CTLE_POST_CAL_OFFSET, 0x38),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_TX_ADAPT_POST_THRESH, 0xf0),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_EQU_ADAPTOR_CNTRL4, 0x07),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_UCDR_FO_GAIN, 0x09),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_UCDR_SO_GAIN, 0x05),
+> +};
+> +
+> +static const struct qmp_phy_init_tbl sm8450_qmp_pcie_pcs_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_RX_SIGDET_LVL, 0x77),
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_RATE_SLEW_CNTRL1, 0x0b),
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_REFGEN_REQ_CONFIG1, 0x05),
+> +};
+> +
+> +static const struct qmp_phy_init_tbl sm8450_qmp_pcie_pcs_misc_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_PCIE_OSC_DTCT_ACTIONS, 0x00),
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_PCIE_INT_AUX_CLK_CONFIG1, 0x00),
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_PCIE_EQ_CONFIG2, 0x0f),
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_PCIE_ENDPOINT_REFCLK_DRIVE, 0xc1),
+> +};
+> +
+>  struct qmp_phy;
+>  
+>  /* struct qmp_phy_cfg - per-PHY initialization config */
+> @@ -4116,6 +4207,37 @@ static const struct qmp_phy_cfg sm8450_ufsphy_cfg = {
+>  	.is_dual_lane_phy	= true,
+>  };
+>  
+> +static const struct qmp_phy_cfg sm8450_qmp_gen3x1_pciephy_cfg = {
+> +	.type = PHY_TYPE_PCIE,
+> +	.nlanes = 1,
+> +
+> +	.serdes_tbl		= sm8450_qmp_pcie_serdes_tbl,
+> +	.serdes_tbl_num		= ARRAY_SIZE(sm8450_qmp_pcie_serdes_tbl),
+> +	.tx_tbl			= sm8450_qmp_pcie_tx_tbl,
+> +	.tx_tbl_num		= ARRAY_SIZE(sm8450_qmp_pcie_tx_tbl),
+> +	.rx_tbl			= sm8450_qmp_pcie_rx_tbl,
+> +	.rx_tbl_num		= ARRAY_SIZE(sm8450_qmp_pcie_rx_tbl),
+> +	.pcs_tbl		= sm8450_qmp_pcie_pcs_tbl,
+> +	.pcs_tbl_num		= ARRAY_SIZE(sm8450_qmp_pcie_pcs_tbl),
+> +	.pcs_misc_tbl		= sm8450_qmp_pcie_pcs_misc_tbl,
+> +	.pcs_misc_tbl_num	= ARRAY_SIZE(sm8450_qmp_pcie_pcs_misc_tbl),
+> +	.clk_list		= sdm845_pciephy_clk_l,
+> +	.num_clks		= ARRAY_SIZE(sdm845_pciephy_clk_l),
+> +	.reset_list		= sdm845_pciephy_reset_l,
+> +	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
+> +	.vreg_list		= qmp_phy_vreg_l,
+> +	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+> +	.regs			= sm8250_pcie_regs_layout,
+> +
+> +	.start_ctrl             = SERDES_START | PCS_START,
+> +	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+> +	.phy_status		= PHYSTATUS,
+> +
+> +	.has_pwrdn_delay	= true,
+> +	.pwrdn_delay_min	= 995,		/* us */
+> +	.pwrdn_delay_max	= 1005,		/* us */
+> +};
+> +
+>  static const struct qmp_phy_cfg qcm2290_usb3phy_cfg = {
+>  	.type			= PHY_TYPE_USB3,
+>  	.nlanes			= 1,
+> @@ -5774,6 +5896,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+>  	}, {
+>  		.compatible = "qcom,sm8350-qmp-usb3-uni-phy",
+>  		.data = &sm8350_usb3_uniphy_cfg,
+> +	}, {
+> +		.compatible = "qcom,sm8450-qmp-gen3x1-pcie-phy",
+> +		.data = &sm8450_qmp_gen3x1_pciephy_cfg,
+>  	}, {
+>  		.compatible = "qcom,sm8450-qmp-ufs-phy",
+>  		.data = &sm8450_ufsphy_cfg,
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+> index e15f461065bb..08422037f81b 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.h
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+> @@ -1069,6 +1069,15 @@
+>  #define QPHY_V4_20_PCS_LANE1_INSIG_MX_CTRL2		0x828
+>  
+>  /* Only for QMP V5 PHY - QSERDES COM registers */
+> +#define QSERDES_V5_COM_SSC_EN_CENTER			0x010
+> +#define QSERDES_V5_COM_SSC_PER1				0x01c
+> +#define QSERDES_V5_COM_SSC_PER2				0x020
+> +#define QSERDES_V5_COM_SSC_STEP_SIZE1_MODE0		0x024
+> +#define QSERDES_V5_COM_SSC_STEP_SIZE2_MODE0		0x028
+> +#define QSERDES_V5_COM_SSC_STEP_SIZE1_MODE1		0x030
+> +#define QSERDES_V5_COM_SSC_STEP_SIZE2_MODE1		0x034
+> +#define QSERDES_V5_COM_CLK_ENABLE1			0x048
+> +#define QSERDES_V5_COM_SYSCLK_BUF_ENABLE		0x050
+>  #define QSERDES_V5_COM_PLL_IVCO				0x058
+>  #define QSERDES_V5_COM_CP_CTRL_MODE0			0x074
+>  #define QSERDES_V5_COM_CP_CTRL_MODE1			0x078
+> @@ -1084,10 +1093,22 @@
+>  #define QSERDES_V5_COM_DEC_START_MODE0			0x0bc
+>  #define QSERDES_V5_COM_LOCK_CMP2_MODE1			0x0b8
+>  #define QSERDES_V5_COM_DEC_START_MODE1			0x0c4
+> +#define QSERDES_V5_COM_DIV_FRAC_START1_MODE0		0x0cc
+> +#define QSERDES_V5_COM_DIV_FRAC_START2_MODE0		0x0d0
+> +#define QSERDES_V5_COM_DIV_FRAC_START3_MODE0		0x0d4
+> +#define QSERDES_V5_COM_DIV_FRAC_START1_MODE1		0x0d8
+> +#define QSERDES_V5_COM_DIV_FRAC_START2_MODE1		0x0dc
+> +#define QSERDES_V5_COM_DIV_FRAC_START3_MODE1		0x0e0
+>  #define QSERDES_V5_COM_VCO_TUNE_MAP			0x10c
+> +#define QSERDES_V5_COM_VCO_TUNE1_MODE0			0x110
+> +#define QSERDES_V5_COM_VCO_TUNE2_MODE0			0x114
+> +#define QSERDES_V5_COM_VCO_TUNE1_MODE1			0x118
+> +#define QSERDES_V5_COM_VCO_TUNE2_MODE1			0x11c
+>  #define QSERDES_V5_COM_VCO_TUNE_INITVAL2		0x124
+> +#define QSERDES_V5_COM_CLK_SELECT			0x154
+>  #define QSERDES_V5_COM_HSCLK_SEL			0x158
+>  #define QSERDES_V5_COM_HSCLK_HS_SWITCH_SEL		0x15c
+> +#define QSERDES_V5_COM_CORECLK_DIV_MODE1		0x16c
+>  #define QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE1_MODE0	0x1ac
+>  #define QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE2_MODE0	0x1b0
+>  #define QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE1_MODE1	0x1b4
+> @@ -1130,6 +1151,7 @@
+>  #define QSERDES_V5_RX_AC_JTAG_ENABLE			0x068
+>  #define QSERDES_V5_RX_AC_JTAG_MODE			0x078
+>  #define QSERDES_V5_RX_RX_TERM_BW			0x080
+> +#define QSERDES_V5_RX_TX_ADAPT_POST_THRESH		0x0cc
+>  #define QSERDES_V5_RX_VGA_CAL_CNTRL1			0x0d4
+>  #define QSERDES_V5_RX_VGA_CAL_CNTRL2			0x0d8
+>  #define QSERDES_V5_RX_GM_CAL				0x0dc
+> @@ -1167,6 +1189,17 @@
+>  #define QSERDES_V5_RX_DCC_CTRL1				0x1a8
+>  #define QSERDES_V5_RX_VTH_CODE				0x1b0
+>  
+> +/* Only for QMP V5 PHY - USB/PCIe PCS registers */
+> +#define QPHY_V5_PCS_REFGEN_REQ_CONFIG1			0x0dc
+> +#define QPHY_V5_PCS_RX_SIGDET_LVL			0x188
+> +#define QPHY_V5_PCS_RATE_SLEW_CNTRL1			0x198
+> +
+> +/* Only for QMP V5 PHY - PCS_PCIE registers */
+> +#define QPHY_V5_PCS_PCIE_ENDPOINT_REFCLK_DRIVE		0x20
+> +#define QPHY_V5_PCS_PCIE_INT_AUX_CLK_CONFIG1		0x54
+> +#define QPHY_V5_PCS_PCIE_OSC_DTCT_ACTIONS		0x94
+> +#define QPHY_V5_PCS_PCIE_EQ_CONFIG2			0xa8
+> +
+>  /* Only for QMP V5 PHY - UFS PCS registers */
+>  #define QPHY_V5_PCS_UFS_TIMER_20US_CORECLK_STEPS_MSB	0x00c
+>  #define QPHY_V5_PCS_UFS_TIMER_20US_CORECLK_STEPS_LSB	0x010
+> -- 
+> 2.33.0
+> 
