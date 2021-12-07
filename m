@@ -2,130 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C13F46C09F
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 17:23:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E83146C0C1
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 17:31:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239076AbhLGQ0d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 11:26:33 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:54508 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239565AbhLGQ0d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 11:26:33 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id BF5EECE1C1D;
-        Tue,  7 Dec 2021 16:23:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B26BC341C1;
-        Tue,  7 Dec 2021 16:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638894179;
-        bh=J8QNuptCRMd5FPz3sYAxGk59NtvnPv/BN3NdiOYbym8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rm1+9y3P//iqR/ITy9maM963Sskw8m0oJfvWK2EEs1y+/CTy6C9o/y1lEn0dUP+AZ
-         AajiJaIlEVhQrRTdoL/ir417yGdqSMr1jxcKPsB6COnYaE0IsvxN2/5DYjWNS3eht/
-         4OgIt85RvmWm37ulTCpw2Ugf9Hxmoxd9FJdEbAWlsfKFrNzObAGUHsyRBeTrJV5VTK
-         f2/eCAdCfsjcIa+0DqqRsTnSCH3kqyIDu35kmiOVE/wPJ86JV2gA5QCFGsGgsQMUNV
-         XblxC6rzvJeGo/BHRGOwoPRfsoxv0vFxNY/zN1x/0cd9zQ3LN3/esS8cWG/GA5Jmcu
-         O4RtyJLyldrhQ==
-Date:   Tue, 7 Dec 2021 10:22:57 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Kettenis <mark.kettenis@xs4all.nl>,
-        Luca Ceresoli <luca@lucaceresoli.net>, kernel-team@android.com
-Subject: Re: [PATCH v3 1/3] PCI: apple: Follow the PCIe specifications when
- resetting the port
-Message-ID: <20211207162257.GA44468@bhelgaas>
+        id S234985AbhLGQfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 11:35:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:36182 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232748AbhLGQfK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 Dec 2021 11:35:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A71AF11D4;
+        Tue,  7 Dec 2021 08:31:39 -0800 (PST)
+Received: from [10.57.34.58] (unknown [10.57.34.58])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E436C3F73D;
+        Tue,  7 Dec 2021 08:31:35 -0800 (PST)
+Message-ID: <e60d17fb-58c5-cbbc-391c-043ec15a47b6@arm.com>
+Date:   Tue, 7 Dec 2021 16:31:31 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH v2 2/6] hwtracing: Add trace function support for
+ HiSilicon PCIe Tune and Trace device
+Content-Language: en-GB
+To:     Yicong Yang <yangyicong@hisilicon.com>, gregkh@linuxfoundation.org,
+        helgaas@kernel.org, alexander.shishkin@linux.intel.com,
+        lorenzo.pieralisi@arm.com, will@kernel.org, mark.rutland@arm.com,
+        mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        mike.leach@linaro.org, leo.yan@linaro.org,
+        jonathan.cameron@huawei.com, daniel.thompson@linaro.org,
+        joro@8bytes.org, john.garry@huawei.com,
+        shameerali.kolothum.thodi@huawei.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     zhangshaokun@hisilicon.com, liuqi115@huawei.com,
+        linuxarm@huawei.com, prime.zeng@huawei.com
+References: <20211116090625.53702-1-yangyicong@hisilicon.com>
+ <20211116090625.53702-3-yangyicong@hisilicon.com>
+ <0b67745c-13dd-1fea-1b8b-d55212bad232@arm.com>
+ <3644ad6e-d800-c84b-9d62-6dda8462450f@hisilicon.com>
+ <e7d4afb7-e4e4-e581-872b-2477850ad8da@hisilicon.com>
+ <38bfa372-54c8-2e81-adab-ca24051a0fe6@arm.com>
+ <288856a6-d1eb-d4cc-f3ca-0134b7e4d1dc@hisilicon.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <288856a6-d1eb-d4cc-f3ca-0134b7e4d1dc@hisilicon.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211123180636.80558-2-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 23, 2021 at 06:06:34PM +0000, Marc Zyngier wrote:
-> While the Apple PCIe driver works correctly when directly booted
-> from the firmware, it fails to initialise when the kernel is booted
-> from a bootloader using PCIe such as u-boot.
+On 2021-11-29 08:22, Yicong Yang via iommu wrote:
+> On 2021/11/25 23:49, Robin Murphy wrote:
+>> On 2021-11-18 09:01, Yicong Yang via iommu wrote:
+>>> Hi Robin,
+>>>
+>>> On 2021/11/16 19:37, Yicong Yang wrote:
+>>>> On 2021/11/16 18:56, Robin Murphy wrote:
+>>>>> On 2021-11-16 09:06, Yicong Yang via iommu wrote:
+>>>>> [...]
+>>>>>> +/*
+>>>>>> + * Get RMR address if provided by the firmware.
+>>>>>> + * Return 0 if the IOMMU doesn't present or the policy of the
+>>>>>> + * IOMMU domain is passthrough or we get a usable RMR region.
+>>>>>> + * Otherwise a negative value is returned.
+>>>>>> + */
+>>>>>> +static int hisi_ptt_get_rmr(struct hisi_ptt *hisi_ptt)
+>>>>>> +{
+>>>>>> +    struct pci_dev *pdev = hisi_ptt->pdev;
+>>>>>> +    struct iommu_domain *iommu_domain;
+>>>>>> +    struct iommu_resv_region *region;
+>>>>>> +    LIST_HEAD(list);
+>>>>>> +
+>>>>>> +    /*
+>>>>>> +     * Use direct DMA if IOMMU does not present or the policy of the
+>>>>>> +     * IOMMU domain is passthrough.
+>>>>>> +     */
+>>>>>> +    iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
+>>>>>> +    if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
+>>>>>> +        return 0;
+>>>>>> +
+>>>>>> +    iommu_get_resv_regions(&pdev->dev, &list);
+>>>>>> +    list_for_each_entry(region, &list, list)
+>>>>>> +        if (region->type == IOMMU_RESV_DIRECT &&
+>>>>>> +            region->length >= HISI_PTT_TRACE_BUFFER_SIZE) {
+>>>>>> +            hisi_ptt->trace_ctrl.has_rmr = true;
+>>>>>> +            hisi_ptt->trace_ctrl.rmr_addr = region->start;
+>>>>>> +            hisi_ptt->trace_ctrl.rmr_length = region->length;
+>>>>>> +            break;
+>>>>>> +        }
+>>>>>> +
+>>>>>> +    iommu_put_resv_regions(&pdev->dev, &list);
+>>>>>> +    return hisi_ptt->trace_ctrl.has_rmr ? 0 : -ENOMEM;
+>>>>>> +}
+>>>>>
+>>>>> No.
+>>>>>
+>>>>> The whole point of RMRs is for devices that are already configured to access the given address range in a manner beyond the kernel's control. If you can do this, it proves that you should not have an RMR in the first place.
+>>>>>
+>>>>> The notion of a kernel driver explicitly configuring its device to DMA into any random RMR that looks big enough is so egregiously wrong that I'm almost lost for words...
+>>>>>
+>>>>
+>>>> our bios will reserve such a region and reported it through iort. the device will write to the region and in the driver we need to access the region
+>>>> to get the traced data. the region is reserved exclusively and will not be accessed by kernel or other devices.
+>>>>
+>>>> is it ok to let bios configure the address to the device and from CPU side we just read it?
+>>>>
+>>>
+>>> Any suggestion?  Is this still an issue you concern if we move the configuration of the device address to BIOS and just read from the CPU side?
+>>
+>> If the firmware configures the device so that it's actively tracing and writing out to memory while the kernel boots, then that is a valid reason to have an RMR. However what you're doing in the driver is still complete nonsense. As far as I can follow, the way it's working is this:
+>>
+>> - At probe time, the initial state of the hardware is entirely ignored. If it *is* already active, there appears to be a fun chance of crashing if TRACE_INT_MASK is clear and an interrupt happens to fire before anyone has got round to calling perf_aux_output_begin() to make trace_ctrl.handle.rb non-NULL.
+>>
+>> - Later, once the user starts a tracing session, a buffer is set up *either* as a completely normal DMA allocation, or by memremap()ing some random IOVA carveout which may or may not be whatever memory the firmware was tracing to.
+>>
+>> - The hardware is then reset and completely reprogrammed to use the new buffer, again without any consideration of its previous state (other than possibly timing out and failing if it's already running and that means it never goes idle).
+>>
+>> Therefore the driver does not seem to respect any prior configuration of the device by firmware, does not seem to expect it to be running at boot time, does not seem to have any way to preserve and export any trace data captured in an RMR if it *was* running at boot time, and thus without loss of generality could simply use the dma_alloc_coherent() path all the time. Am I missing anything?
+>>
 > 
-> That's beacuse we're missing a proper reset of the port (we only
-> clear the reset, but never assert it).
+> Thanks for the further explanation and I think I understand your concerns more clearer.
 > 
-> The PCIe spec requirements are two-fold:
+> The trace is not supposed to begin by the firmware at boot time. Due to some hardware restriction, the device cannot trace with non-identical mapping.
+> So we'd like to use RMR to make the device work when the dma mapping is non-identical. Thus we check here to decide whether to use RMR or not: if the iommu
+> is not presented or in the passthrough mode, we can use direct DMA by dma_alloc_coherent(); if the iommu is present and the mode is not passthrough, we try
+> to retrieve RMR or we fail the probe. The firmware is expected to reserve a range of memory and reports it to the driver and is not expected to configure
+> the trace and do boot time tracing.
 > 
-> - #PERST must be asserted before setting up the clocks, and
->   stay asserted for at least 100us (Tperst-clk).
+>> As things stand, RMRs are not yet supported upstream (FYI we're still working on fixing the spec...), so the code above is at best dead, and at worst actively wrong. Furthermore, if the expected usage model *is* that the kernel driver completely resets and reprograms the hardware, then even if there is an RMR for boot-time tracing I would rather expect it to be flagged as remappable, and thus potentially end up as an IOMMU_RESV_DIRECT_RELAXABLE reservation which you wouldn't match anyway.
+>>
 > 
-> - Once #PERST is deasserted, the OS must wait for at least 100ms
->   "from the end of a Conventional Reset" before we can start talking
->   to the devices
-
-Unless somebody objects, I'll s/#PERST/PERST#/ to match the spec
-usage, both here and in the comments below.
-
-I also notice gpiod_get_from_of_node(..., "#PERST") earlier in
-apple_pcie_setup_port().  If it wouldn't break anything, I'd like to
-change that, too.
-
-> Implementing this results in a booting system.
+> Yes the firmware is not expected to start the trace. Will change the desired flag to IOMMU_RESV_DIRECT_RELAXABLE and have a test.
 > 
-> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
-> Acked-by: Pali Roh�r <pali@kernel.org>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/controller/pcie-apple.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>> And after all that, if you really do have a genuine need to respect and preserve prior firmware configuration of the device, then I would surely expect to see the driver actually doing exactly that. Presumably: at probe time, look at TRACE_CTRL; if the device is already configured, read out that configuration - especially including TRACE_ADDR_* - and make sure to reuse it. Not go off on a tangent blindly poking into internal IOMMU API abstractions in the vain hope that the first thing you find happens to be sort-of-related to the information that you actually care about.
+>>
 > 
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index 1bf4d75b61be..957960a733c4 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -539,13 +539,23 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
->  
->  	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
->  
-> +	/* Engage #PERST before setting up the clock */
-> +	gpiod_set_value(reset, 0);
-> +
->  	ret = apple_pcie_setup_refclk(pcie, port);
->  	if (ret < 0)
->  		return ret;
->  
-> +	/* The minimal Tperst-clk value is 100us (PCIe CMS r2.0, 2.6.2) */
-> +	usleep_range(100, 200);
-
-Spec says "min 100us from REFCLK stable before PERST# inactive".  So I
-guess when apple_pcie_setup_refclk() returns, we know REFCLK is
-already stable?
-
-> +	/* Deassert #PERST */
->  	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
->  	gpiod_set_value(reset, 1);
->  
-> +	/* Wait for 100ms after #PERST deassertion (PCIe r2.0, 6.6.1) */
-> +	msleep(100);
-
-Does this port support speeds greater than 5 GT/s?  If so, 6.6.1 says
-we need "100ms after Link training completes," not just after
-deasserting PERST#.
-
-I'll update this citation to "PCIe r5.0, 6.6.1" to reference the
-current spec.
-
->  	ret = readl_relaxed_poll_timeout(port->base + PORT_STATUS, stat,
->  					 stat & PORT_STATUS_READY, 100, 250000);
->  	if (ret < 0) {
-> -- 
-> 2.30.2
+> Yes, we do need RMR to make the device work at situation where the mapping is non-identical.
 > 
+> We're certain that the bios won't start and configure the trace in this device's usage, is it still necessary to make
+> firmware configure the TRACE_ADDR_* to the device?
+> 
+> As suggested, I think I'll need to modify the RMR codes like
+> 
+> - check TRACE_CTRL, and stop it if it's started. (won't happen but check for sanity)
+> - if smmu is not presented, use direct DMA
+> - try to retrieve RMR address with flag IOMMU_RESV_DIRECT_RELAXABLE , if presented set hisi_ptt->has_rmr. in this case we won't use direct DMA
+> - check if the TRACE_ADDR_* has been configured. if so don't reconfigure it when trace
+> - if no rmr but smmu works in passthrough mode, use direct DMA
+> - otherwise fails the probe
+> 
+> If I miss something please point it out.
+
+Thanks for clarifying. Unfortunately it also confirms my suspicion that 
+this is exactly the kind of misuse of RMRs that we don't want to 
+support. You can ignore most of what I said above which applies to the 
+genuine RMR use-case of the device already being configured.
+
+If the device really can't handle SMMU translation then that can be 
+dealt with entirely within Linux. Give it a iommu_def_domain_type quirk 
+to force passthrough; or maybe fail probe if a DMA domain is present and 
+tell the user to change the domain type via sysfs manually; or maybe set 
+up your own IOMMU domain and manually map things 1:1 if you really want 
+to; there are plenty of possible options for implementing that kind of 
+internal software policy. Abusing external firmware mechanisms is not a 
+reasonable one, however.
+
+I also can't help be curious as to exactly *why* the device doesn't work 
+with translation. If it's an RCiEP with some different path to memory 
+that physically bypasses the SMMU compared to "normal" PCIe traffic, 
+then that should be fixed by having the IORT mappings describe the 
+underlying topology correctly in the first place. If it turns out just 
+to be the case that the device only actually drives enough address bits 
+to cover the physical memory map, and using translation happens to 
+result in IOVAs larger than that which then get truncated and go wrong, 
+that's fixed by simply setting the right DMA mask in the driver. If it's 
+some complicated interconnect latency/deadlock thing related to 
+translation delays as traffic flows through the SMMU, I'd expect that to 
+matter regardless of whether the input address happens to match the 
+output address or not. At this point I'm starting to get slightly 
+suspicious of whether we're even trying to solve the right problem at all.
+
+Thanks,
+Robin.
