@@ -2,115 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D76146C207
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 18:44:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33B6346C230
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 18:54:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240162AbhLGRr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 12:47:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233774AbhLGRr7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 12:47:59 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0044C061574;
-        Tue,  7 Dec 2021 09:44:28 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id np3so17592pjb.4;
-        Tue, 07 Dec 2021 09:44:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hSAdXrk133U0WbgiFQpHMNwpQjObfpGgkUoZBDfK8aM=;
-        b=ZW2X6Chr61FyM8paaiD7DtUYLVYMawzF9J3JPVfmVehO2SrFRzHFpE51kokgyB9q3p
-         faXp/dG2Nr91/Uv0bx8zeHqAxC3h+Epq5IG1cifsCh9vv7gaA4E3QgVYGmTldE89h1HQ
-         ER84O+v5cYSMdgSVsvxsmdAwRABpvPfo8kieXcf7bYoAY7l3vZ1rCLLWdNcsbeXet1OU
-         Wd7ok58VbEAHvyCLGJV3pay+R0suRSMO+TzTOG7L2pi+l5Jhg54at19kSkwuqVQkTWFK
-         K2Wl01diiUR69yuvzOwJnjnpjNqaYONN3scndrieFPB0uemD/3ZVnKBdUqY4wuOnHugV
-         JyXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hSAdXrk133U0WbgiFQpHMNwpQjObfpGgkUoZBDfK8aM=;
-        b=fGjrnBEOaYn/FP1kuMo+3Y+o1jaAKZ7OskPHmelsewx3PiYnGyIxLka0r1yLDaW485
-         g2FkX+HBnt7PuoR5063X4hhIUEKj0K05oHkssvZDYWIwjzgHtjt+xsHVso5hPzkuR8R4
-         gjAAPmi0+v6WVo+HLP25V7OTtggesNRt6FCBXpp4xp3BAzInqf3L2WTXnExfnWy4yiDF
-         Yhq2O0k0SV/hynNUQHh4D3aHtk9ojK/m0gy96/ddqAdt1Rh4tUCBPGYjH0Qq6q5rUl//
-         Gu15vuZrVsaOAArn7SY5daz9LlGn1Brz5oEBwQBzLBEsJc4uH+j8zb716eTKQEe41asE
-         jkbA==
-X-Gm-Message-State: AOAM5333hJsoDzrKfQ1ubRncnFV6WGF4BhN3sNnNyFy3BSjUiA7iPQmi
-        MaERVLMBSXX931byxJYI6aNi0RVLXTs=
-X-Google-Smtp-Source: ABdhPJxoHTi/6QQhPLP4vbrWSm4ju6gS+9r4Z/Q+R8wI5UKhwYmHmiZUZ7getrMg5lPDVCuF4BsCfg==
-X-Received: by 2002:a17:902:c643:b0:141:cf6b:6999 with SMTP id s3-20020a170902c64300b00141cf6b6999mr53212481pls.80.1638899067843;
-        Tue, 07 Dec 2021 09:44:27 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id j15sm319231pfh.35.2021.12.07.09.44.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Dec 2021 09:44:26 -0800 (PST)
-Subject: Re: [PATCH v2 1/5] ARM: dts: Cygnus: Fixed iProc PCIe controller
- properties
-To:     Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "moderated list:BROADCOM IPROC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20211206185242.2098683-1-f.fainelli@gmail.com>
- <20211206185242.2098683-2-f.fainelli@gmail.com>
- <CAL_JsqKaOkByjwYzyW6G_b90zRjCWVHvi2V0gBx_MJ8v2FmOaw@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <fc263ef8-10f8-206e-5df7-76f0b9d50fae@gmail.com>
-Date:   Tue, 7 Dec 2021 09:44:25 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S234363AbhLGR5x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 12:57:53 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:56598 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234315AbhLGR5w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 12:57:52 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 3D466CE1C9A;
+        Tue,  7 Dec 2021 17:54:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C3AFC341C3;
+        Tue,  7 Dec 2021 17:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638899658;
+        bh=kVi8XrFSssRXT3rgDgO1jjnYQhug1iemGioceZ8LSLU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CVEsPspzTJfq0TiQD74as4ZI7nk6iN/8wQrz6kGsFg6ZuWh/GWh/cQHLh8JrifBmT
+         81m9io7385vE4X8Zif3qRfiinKAHvDun7SCo4KTQKJR15Xl022OBYBL7xqOu9tjqnx
+         JjmEZGlvMSx7nQNRuOUUaNv6DrXXvutdAO0kRV05t9kd8RW/+HU6ULnIPbeJhgnXna
+         jPMJPi9GFiMtFPaUW8vLH1qZ4GS/xz3GT5QQGAyg+9EQMO4a/908g2IPoS6Sw7aO6z
+         VBeK9zTKkCGAkltLbR00Vb1/jw/T4r/cj8qCxjrZNMx+YPC5bdTOfvgt/20BLdkrPD
+         u5SS4yQi2T5cQ==
+Date:   Tue, 7 Dec 2021 11:54:16 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     qizhong cheng <qizhong.cheng@mediatek.com>
+Cc:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, chuanjia.liu@mediatek.com,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>,
+        Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [RESEND PATCH v2] PCI: mediatek: Delay 100ms to wait power and
+ clock to become stable
+Message-ID: <20211207175416.GA42725@bhelgaas>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKaOkByjwYzyW6G_b90zRjCWVHvi2V0gBx_MJ8v2FmOaw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211207084153.23019-1-qizhong.cheng@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/7/21 5:49 AM, Rob Herring wrote:
-> On Mon, Dec 6, 2021 at 12:52 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->> Rename the msi controller unit name to 'msi' to avoid collisions
->> with the 'msi-controller' boolean property and add the missing
->> 'interrupt-controller' property which is necessary. We also need to
->> re-arrange the 'ranges' property to show the two cells as being separate
->> instead of combined since the DT checker is not able to differentiate
->> otherwise.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  arch/arm/boot/dts/bcm-cygnus.dtsi | 14 ++++++++------
->>  1 file changed, 8 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
->> index 8ecb7861ce10..ea19d1b56400 100644
->> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
->> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
->> @@ -263,6 +263,7 @@ pcie0: pcie@18012000 {
->>                         compatible = "brcm,iproc-pcie";
->>                         reg = <0x18012000 0x1000>;
->>
->> +                       interrupt-controller;
-> 
-> How is this a fix? This doesn't even work before v5.16 with commit
-> 041284181226 ("of/irq: Allow matching of an interrupt-map local to an
-> interrupt controller").
+[+cc Marc, Alyssa, Mark, Luca for reset timing questions]
 
-What is the path forward? I suppose I could make the
-interrupt-controller property not required for this controller but then
-the default interrupt-controller schema is not terribly happy about
-seeing an interrupt-map/interrupt-map-mask properties without
-interrupt-controller.
--- 
-Florian
+On Tue, Dec 07, 2021 at 04:41:53PM +0800, qizhong cheng wrote:
+> Described in PCIe CEM specification sections 2.2 (PERST# Signal) and
+> 2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
+> be delayed 100ms (TPVPERL) for the power and clock to become stable.
+> 
+> Signed-off-by: qizhong cheng <qizhong.cheng@mediatek.com>
+> Acked-by: Pali Rohár <pali@kernel.org>
+> ---
+> 
+> v2:
+>  - Typo fix.
+>  - Rewrap into one paragraph.
+
+1) If you change something, even in the commit log or comments, it is
+a new version, not a "RESEND".  A "RESEND" means "I sent this quite a
+while ago and didn't hear anything, so I'm sending the exact same
+thing again in case the first one got lost."
+
+2) I suggested a subject line update, which apparently got missed.
+Here's a better one:
+
+  PCI: mediatek: Assert PERST# for 100ms for power and clock to stabilize
+
+3) Most importantly, this needs to be reconciled with the similar
+change to the apple driver:
+
+  https://lore.kernel.org/r/20211123180636.80558-2-maz@kernel.org
+
+In the apple driver, we're doing:
+
+  - Assert PERST#
+  - Set up REFCLK
+  - Sleep 100us (T_perst-clk, CEM r5 2.2, 2.9.2)
+  - Deassert PERST#
+  - Sleep 100ms (not sure there's a name? PCIe r5 6.6.1)
+
+But here in mediatek, we're doing:
+
+  - Assert PERST#
+  - Sleep 100ms (T_pvperl, CEM r5 2.2, 2.2.1, 2.9.2)
+  - Deassert PERST#
+
+My questions:
+
+  - Where does apple enforce T_pvperl?  I can't tell where power to
+    the slot is turned on.
+
+  - Where does mediatek enforce the PCIe sec 6.6.1 delay after
+    deasserting PERST# and before config requests?
+
+  - Does either apple or mediatek support speeds greater than 5 GT/s,
+    and if so, shouldn't we start the sec 6.6.1 100ms delay *after*
+    Link training completes?
+
+>  drivers/pci/controller/pcie-mediatek.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 2f3f974977a3..a61ea3940471 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -702,6 +702,13 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+>  	 */
+>  	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
+>  
+> +	/*
+> +	 * Described in PCIe CEM specification sections 2.2 (PERST# Signal) and
+> +	 * 2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
+> +	 * be delayed 100ms (TPVPERL) for the power and clock to become stable.
+> +	 */
+> +	msleep(100);
+> +
+>  	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
+>  	val = readl(port->base + PCIE_RST_CTRL);
+>  	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
+> -- 
+> 2.25.1
+> 
