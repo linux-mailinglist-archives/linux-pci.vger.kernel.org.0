@@ -2,94 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80D1C46B014
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 02:53:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7007B46B073
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 03:07:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235603AbhLGB46 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Dec 2021 20:56:58 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:41690 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233991AbhLGB46 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Dec 2021 20:56:58 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 96775B81644;
-        Tue,  7 Dec 2021 01:53:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E42ADC004DD;
-        Tue,  7 Dec 2021 01:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638842006;
-        bh=eXTQmCkV7TlQUUyikTeYDDeh2Q2A+dhlVrouNNuPuY4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pfNIZhoFL5Z2N5wUx7SiDtzqqqsGp1pcVzcbnxzFyBCCu69un9CTSEJm20HqpSa26
-         NWERhDKFPo2tvCk+QBNApNV2R0BjzaQb6HEhQPPFiQSS0jfiQdLbxZ8UEMeJ2R47Ek
-         RyeS8Q1XhA8bxlJD55FyeVJQqykMHY0AwiVtQOd/qiAqPpL5Z6xLb8vgrfb/8EaWn1
-         5DjywXW46pWw0i9TqyPkMmf67XVcYTDuPFW2Q2jR7KumamuczRDHZDMk0vij1pkcNk
-         EFuhijwDHyQp+EGTQTaXV75F8r8RbqRorE97rcvUYYRoHosPsrjo3gJsAe41zp0l+9
-         2VaYeiXJ7wPww==
-Date:   Mon, 6 Dec 2021 19:53:23 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     qizhong cheng <qizhong.cheng@mediatek.com>
-Cc:     Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczyi=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Chuanjia Liu <chuanjia.liu@mediatek.com>,
-        Jiey Yang <ot_jiey.yang@mediatek.com>
-Subject: Re: [PATCH] PCI: mediatek: Delay 100ms to wait power and clock to
- become stable
-Message-ID: <20211207015323.GA26237@bhelgaas>
+        id S235843AbhLGCLA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Dec 2021 21:11:00 -0500
+Received: from mga12.intel.com ([192.55.52.136]:4195 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231245AbhLGCLA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 6 Dec 2021 21:11:00 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10190"; a="217487427"
+X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
+   d="scan'208";a="217487427"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 18:07:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
+   d="scan'208";a="515046131"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by orsmga008.jf.intel.com with ESMTP; 06 Dec 2021 18:07:23 -0800
+Cc:     baolu.lu@linux.intel.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/18] iommu: Add device dma ownership set/release
+ interfaces
+To:     Christoph Hellwig <hch@infradead.org>
+References: <20211206015903.88687-1-baolu.lu@linux.intel.com>
+ <20211206015903.88687-2-baolu.lu@linux.intel.com>
+ <Ya4hZ2F7MYusgmSB@infradead.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <2872aa9f-c325-ca28-fb64-f86857ad3e91@linux.intel.com>
+Date:   Tue, 7 Dec 2021 10:07:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211104062144.31453-1-qizhong.cheng@mediatek.com>
+In-Reply-To: <Ya4hZ2F7MYusgmSB@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 04, 2021 at 02:21:44PM +0800, qizhong cheng wrote:
-> Described in PCIe CEM specification setctions 2.2 (PERST# Signal) and
-> 2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
-> be delayed 100ms (TPVPERL) for the power and clock to become stable.
-
-Thanks for the spec references.
-
-s/setctions/sections/
-
-> Signed-off-by: qizhong cheng <qizhong.cheng@mediatek.com>
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+On 12/6/21 10:42 PM, Christoph Hellwig wrote:
+> On Mon, Dec 06, 2021 at 09:58:46AM +0800, Lu Baolu wrote:
+>> >From the perspective of who is initiating the device to do DMA, device
+>> DMA could be divided into the following types:
+>>
+>>          DMA_OWNER_DMA_API: Device DMAs are initiated by a kernel driver
+>> 			through the kernel DMA API.
+>>          DMA_OWNER_PRIVATE_DOMAIN: Device DMAs are initiated by a kernel
+>> 			driver with its own PRIVATE domain.
+>> 	DMA_OWNER_PRIVATE_DOMAIN_USER: Device DMAs are initiated by
+>> 			userspace.
+>>
+>> Different DMA ownerships are exclusive for all devices in the same iommu
+>> group as an iommu group is the smallest granularity of device isolation
+>> and protection that the IOMMU subsystem can guarantee. This extends the
+>> iommu core to enforce this exclusion.
+>>
+>> Basically two new interfaces are provided:
+>>
+>>          int iommu_device_set_dma_owner(struct device *dev,
+>>                  enum iommu_dma_owner type, void *owner_cookie);
+>>          void iommu_device_release_dma_owner(struct device *dev,
+>>                  enum iommu_dma_owner type);
+>>
+>> Although above interfaces are per-device, DMA owner is tracked per group
+>> under the hood. An iommu group cannot have different dma ownership set
+>> at the same time. Violation of this assumption fails
+>> iommu_device_set_dma_owner().
+>>
+>> Kernel driver which does DMA have DMA_OWNER_DMA_API automatically set/
+>> released in the driver binding/unbinding process (see next patch).
+>>
+>> Kernel driver which doesn't do DMA could avoid setting the owner type.
+>> Device bound to such driver is considered same as a driver-less device
+>> which is compatible to all owner types.
+>>
+>> Userspace driver framework (e.g. vfio) should set
+>> DMA_OWNER_PRIVATE_DOMAIN_USER for a device before the userspace is allowed
+>> to access it, plus a owner cookie pointer to mark the user identity so a
+>> single group cannot be operated by multiple users simultaneously. Vice
+>> versa, the owner type should be released after the user access permission
+>> is withdrawn.
+>>
+>> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+>> Signed-off-by: Kevin Tian <kevin.tian@intel.com>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   include/linux/iommu.h | 36 +++++++++++++++++
+>>   drivers/iommu/iommu.c | 93 +++++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 129 insertions(+)
+>>
+>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>> index d2f3435e7d17..24676b498f38 100644
+>> --- a/include/linux/iommu.h
+>> +++ b/include/linux/iommu.h
+>> @@ -162,6 +162,23 @@ enum iommu_dev_features {
+>>   	IOMMU_DEV_FEAT_IOPF,
+>>   };
+>>   
+>> +/**
+>> + * enum iommu_dma_owner - IOMMU DMA ownership
+>> + * @DMA_OWNER_NONE: No DMA ownership.
+>> + * @DMA_OWNER_DMA_API: Device DMAs are initiated by a kernel driver through
+>> + *			the kernel DMA API.
+>> + * @DMA_OWNER_PRIVATE_DOMAIN: Device DMAs are initiated by a kernel driver
+>> + *			which provides an UNMANAGED domain.
+>> + * @DMA_OWNER_PRIVATE_DOMAIN_USER: Device DMAs are initiated by userspace,
+>> + *			kernel ensures that DMAs never go to kernel memory.
+>> + */
+>> +enum iommu_dma_owner {
+>> +	DMA_OWNER_NONE,
+>> +	DMA_OWNER_DMA_API,
+>> +	DMA_OWNER_PRIVATE_DOMAIN,
+>> +	DMA_OWNER_PRIVATE_DOMAIN_USER,
+>> +};
+>> +
+>>   #define IOMMU_PASID_INVALID	(-1U)
+>>   
+>>   #ifdef CONFIG_IOMMU_API
+>> @@ -681,6 +698,10 @@ struct iommu_sva *iommu_sva_bind_device(struct device *dev,
+>>   void iommu_sva_unbind_device(struct iommu_sva *handle);
+>>   u32 iommu_sva_get_pasid(struct iommu_sva *handle);
+>>   
+>> +int iommu_device_set_dma_owner(struct device *dev, enum iommu_dma_owner owner,
+>> +			       void *owner_cookie);
+>> +void iommu_device_release_dma_owner(struct device *dev, enum iommu_dma_owner owner);
+>> +
+>>   #else /* CONFIG_IOMMU_API */
+>>   
+>>   struct iommu_ops {};
+>> @@ -1081,6 +1102,21 @@ static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
+>>   {
+>>   	return NULL;
+>>   }
+>> +
+>> +static inline int iommu_device_set_dma_owner(struct device *dev,
+>> +					     enum iommu_dma_owner owner,
+>> +					     void *owner_cookie)
+>> +{
+>> +	if (owner != DMA_OWNER_DMA_API)
+>> +		return -EINVAL;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static inline void iommu_device_release_dma_owner(struct device *dev,
+>> +						  enum iommu_dma_owner owner)
+>> +{
+>> +}
+>>   #endif /* CONFIG_IOMMU_API */
+>>   
+>>   /**
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 8b86406b7162..1de520a07518 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -48,6 +48,9 @@ struct iommu_group {
+>>   	struct iommu_domain *default_domain;
+>>   	struct iommu_domain *domain;
+>>   	struct list_head entry;
+>> +	enum iommu_dma_owner dma_owner;
+>> +	refcount_t owner_cnt;
 > 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 2f3f974977a3..b32acbac8084 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -702,6 +702,14 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
->  	 */
->  	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
->  
-> +	/*
-> +	 * Described in PCIe CEM specification setctions 2.2 (PERST# Signal)
-> +	 * and 2.2.1 (Initial Power-Up (G3 to S0)).
-> +	 * The deassertion of PERST# should be delayed 100ms (TPVPERL)
-> +	 * for the power and clock to become stable.
+> owner_cnt is only manipulated under group->mutex, not need for a
+> refcount_t here, a plain unsigned int while do it and will also
+> simplify a fair bit of code as it avoid the need for atomic add/sub
+> and test operations.
 
-s/setctions/sections/ again.  Otherwise we'll have a typo-fixing patch
-eventually.
+Fair enough.
 
-Please also rewrap into one paragraph.
-
-> +	 */
-> +	msleep(100);
-> +
->  	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
->  	val = readl(port->base + PCIE_RST_CTRL);
->  	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
-> -- 
-> 2.25.1
 > 
+>> +static int __iommu_group_set_dma_owner(struct iommu_group *group,
+>> +				       enum iommu_dma_owner owner,
+>> +				       void *owner_cookie)
+>> +{
+> 
+> As pointed out last time, please move the group->mutex locking into
+> this helper, which makes it identical to the later added public
+> function.
+
+I didn't mean to ignore your comment. :-) As I replied, by placing the
+lock out of the function, the helper could easily handle the error paths
+(return directly without something like "goto out_unlock").
+
+As the implementation of iommu_group_set_dma_owner() has been greatly
+simplified, I agree with you now, we should move the group->mutex
+locking into the helper and make it identical to the latter public
+interface.
+
+I will work towards this.
+
+> 
+>> +static void __iommu_group_release_dma_owner(struct iommu_group *group,
+>> +					    enum iommu_dma_owner owner)
+>> +{
+> 
+> Same here.
+> 
+
+Ditto.
+
+Best regards,
+baolu
