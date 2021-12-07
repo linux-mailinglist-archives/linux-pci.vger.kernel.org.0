@@ -2,334 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE22446BFDE
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 16:50:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C13F46C09F
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Dec 2021 17:23:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233852AbhLGPx4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 10:53:56 -0500
-Received: from smtpout3.mo529.mail-out.ovh.net ([46.105.54.81]:42773 "EHLO
-        smtpout3.mo529.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239112AbhLGPxl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 10:53:41 -0500
-Received: from mxplan5.mail.ovh.net (unknown [10.108.4.36])
-        by mo529.mail-out.ovh.net (Postfix) with ESMTPS id 876D2D06810E;
-        Tue,  7 Dec 2021 16:50:06 +0100 (CET)
-Received: from kaod.org (37.59.142.96) by DAG4EX1.mxp5.local (172.16.2.31)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Tue, 7 Dec
- 2021 16:50:04 +0100
-Authentication-Results: garm.ovh; auth=pass (GARM-96R0016d463d06-8f28-4116-8296-36026f977615,
-                    D5B34436B48CBBE29FDE786D5871FA4E32D79878) smtp.auth=clg@kaod.org
-X-OVh-ClientIp: 86.201.172.254
-Message-ID: <27f22e0e-8f84-a6d7-704b-d9eddc642d74@kaod.org>
-Date:   Tue, 7 Dec 2021 16:50:01 +0100
+        id S239076AbhLGQ0d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 11:26:33 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:54508 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239565AbhLGQ0d (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 11:26:33 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id BF5EECE1C1D;
+        Tue,  7 Dec 2021 16:23:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B26BC341C1;
+        Tue,  7 Dec 2021 16:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638894179;
+        bh=J8QNuptCRMd5FPz3sYAxGk59NtvnPv/BN3NdiOYbym8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rm1+9y3P//iqR/ITy9maM963Sskw8m0oJfvWK2EEs1y+/CTy6C9o/y1lEn0dUP+AZ
+         AajiJaIlEVhQrRTdoL/ir417yGdqSMr1jxcKPsB6COnYaE0IsvxN2/5DYjWNS3eht/
+         4OgIt85RvmWm37ulTCpw2Ugf9Hxmoxd9FJdEbAWlsfKFrNzObAGUHsyRBeTrJV5VTK
+         f2/eCAdCfsjcIa+0DqqRsTnSCH3kqyIDu35kmiOVE/wPJ86JV2gA5QCFGsGgsQMUNV
+         XblxC6rzvJeGo/BHRGOwoPRfsoxv0vFxNY/zN1x/0cd9zQ3LN3/esS8cWG/GA5Jmcu
+         O4RtyJLyldrhQ==
+Date:   Tue, 7 Dec 2021 10:22:57 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>,
+        Luca Ceresoli <luca@lucaceresoli.net>, kernel-team@android.com
+Subject: Re: [PATCH v3 1/3] PCI: apple: Follow the PCIe specifications when
+ resetting the port
+Message-ID: <20211207162257.GA44468@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [patch V2 01/23] powerpc/4xx: Remove MSI support which never
- worked
-Content-Language: en-US
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, <linux-pci@vger.kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <linuxppc-dev@lists.ozlabs.org>, Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        <linux-mips@vger.kernel.org>, Kalle Valo <kvalo@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <sparclinux@vger.kernel.org>, <x86@kernel.org>,
-        <xen-devel@lists.xenproject.org>, <ath11k@lists.infradead.org>,
-        Wei Liu <wei.liu@kernel.org>, <linux-hyperv@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-References: <20211206210147.872865823@linutronix.de>
- <20211206210223.872249537@linutronix.de>
- <8d1e9d2b-fbe9-2e15-6df6-03028902791a@kaod.org>
- <87ilw0odel.fsf@mpe.ellerman.id.au>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-In-Reply-To: <87ilw0odel.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [37.59.142.96]
-X-ClientProxiedBy: DAG9EX1.mxp5.local (172.16.2.81) To DAG4EX1.mxp5.local
- (172.16.2.31)
-X-Ovh-Tracer-GUID: 3ba07c30-c0fb-4b34-adb9-c7c234a94237
-X-Ovh-Tracer-Id: 9416182396562148133
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddrjeehgdekfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfhfhfgjtgfgihesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucggtffrrghtthgvrhhnpeeigedvffekgeeftedutddttdevudeihfegudffkeeitdekkeetkefhffelveelleenucfkpheptddrtddrtddrtddpfeejrdehledrudegvddrleeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdphhgvlhhopehmgihplhgrnhehrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheptghlgheskhgrohgurdhorhhgpdhrtghpthhtohephhgtrgeslhhinhhugidrihgsmhdrtghomh
+In-Reply-To: <20211123180636.80558-2-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/7/21 12:36, Michael Ellerman wrote:
-> CÃ©dric Le Goater <clg@kaod.org> writes:
->> Hello Thomas,
->>
->> On 12/6/21 23:27, Thomas Gleixner wrote:
->>> This code is broken since day one. ppc4xx_setup_msi_irqs() has the
->>> following gems:
->>>
->>>    1) The handling of the result of msi_bitmap_alloc_hwirqs() is completely
->>>       broken:
->>>       
->>>       When the result is greater than or equal 0 (bitmap allocation
->>>       successful) then the loop terminates and the function returns 0
->>>       (success) despite not having installed an interrupt.
->>>
->>>       When the result is less than 0 (bitmap allocation fails), it prints an
->>>       error message and continues to "work" with that error code which would
->>>       eventually end up in the MSI message data.
->>>
->>>    2) On every invocation the file global pp4xx_msi::msi_virqs bitmap is
->>>       allocated thereby leaking the previous one.
->>>
->>> IOW, this has never worked and for more than 10 years nobody cared. Remove
->>> the gunk.
->>>
->>> Fixes: 3fb7933850fa ("powerpc/4xx: Adding PCIe MSI support")
->>
->> Shouldn't we remove all of it ? including the updates in the device trees
->> and the Kconfig changes under :
->>
->> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
->> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
->> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
->> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
->> arch/powerpc/platforms/40x/Kconfig:	select PPC4xx_MSI
+On Tue, Nov 23, 2021 at 06:06:34PM +0000, Marc Zyngier wrote:
+> While the Apple PCIe driver works correctly when directly booted
+> from the firmware, it fails to initialise when the kernel is booted
+> from a bootloader using PCIe such as u-boot.
 > 
-> This patch should drop those selects I guess. Can you send an
-> incremental diff for Thomas to squash in?
+> That's beacuse we're missing a proper reset of the port (we only
+> clear the reset, but never assert it).
+> 
+> The PCIe spec requirements are two-fold:
+> 
+> - #PERST must be asserted before setting up the clocks, and
+>   stay asserted for at least 100us (Tperst-clk).
+> 
+> - Once #PERST is deasserted, the OS must wait for at least 100ms
+>   "from the end of a Conventional Reset" before we can start talking
+>   to the devices
 
-Sure.
+Unless somebody objects, I'll s/#PERST/PERST#/ to match the spec
+usage, both here and in the comments below.
 
-> Removing all the tendrils in various device tree files will probably
-> require some archaeology, and it should be perfectly safe to leave those
-> in the tree with the driver gone. So I think we can do that as a
-> subsequent patch, rather than in this series.
+I also notice gpiod_get_from_of_node(..., "#PERST") earlier in
+apple_pcie_setup_port().  If it wouldn't break anything, I'd like to
+change that, too.
 
-Here are the changes. Compiled tested with ppc40x and ppc44x defconfigs.
+> Implementing this results in a booting system.
+> 
+> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
+> Acked-by: Pali Rohár <pali@kernel.org>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/controller/pcie-apple.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+> index 1bf4d75b61be..957960a733c4 100644
+> --- a/drivers/pci/controller/pcie-apple.c
+> +++ b/drivers/pci/controller/pcie-apple.c
+> @@ -539,13 +539,23 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+>  
+>  	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
+>  
+> +	/* Engage #PERST before setting up the clock */
+> +	gpiod_set_value(reset, 0);
+> +
+>  	ret = apple_pcie_setup_refclk(pcie, port);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	/* The minimal Tperst-clk value is 100us (PCIe CMS r2.0, 2.6.2) */
+> +	usleep_range(100, 200);
 
-Thanks,
+Spec says "min 100us from REFCLK stable before PERST# inactive".  So I
+guess when apple_pcie_setup_refclk() returns, we know REFCLK is
+already stable?
 
-C.
+> +	/* Deassert #PERST */
+>  	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
+>  	gpiod_set_value(reset, 1);
+>  
+> +	/* Wait for 100ms after #PERST deassertion (PCIe r2.0, 6.6.1) */
+> +	msleep(100);
 
-diff --git a/arch/powerpc/boot/dts/bluestone.dts b/arch/powerpc/boot/dts/bluestone.dts
-index aa1ae94cd776..6971595319c1 100644
---- a/arch/powerpc/boot/dts/bluestone.dts
-+++ b/arch/powerpc/boot/dts/bluestone.dts
-@@ -366,30 +366,5 @@ PCIE0: pcie@d00000000 {
-  				0x0 0x0 0x0 0x3 &UIC3 0xe 0x4 /* swizzled int C */
-  				0x0 0x0 0x0 0x4 &UIC3 0xf 0x4 /* swizzled int D */>;
-  		};
--
--		MSI: ppc4xx-msi@C10000000 {
--			compatible = "amcc,ppc4xx-msi", "ppc4xx-msi";
--			reg = < 0xC 0x10000000 0x100
--				0xC 0x10000000 0x100>;
--			sdr-base = <0x36C>;
--			msi-data = <0x00004440>;
--			msi-mask = <0x0000ffe0>;
--			interrupts =<0 1 2 3 4 5 6 7>;
--			interrupt-parent = <&MSI>;
--			#interrupt-cells = <1>;
--			#address-cells = <0>;
--			#size-cells = <0>;
--			msi-available-ranges = <0x0 0x100>;
--			interrupt-map = <
--				0 &UIC3 0x18 1
--				1 &UIC3 0x19 1
--				2 &UIC3 0x1A 1
--				3 &UIC3 0x1B 1
--				4 &UIC3 0x1C 1
--				5 &UIC3 0x1D 1
--				6 &UIC3 0x1E 1
--				7 &UIC3 0x1F 1
--			>;
--		};
-  	};
-  };
-diff --git a/arch/powerpc/boot/dts/canyonlands.dts b/arch/powerpc/boot/dts/canyonlands.dts
-index c5fbb08e0a6e..5db1bff6b23d 100644
---- a/arch/powerpc/boot/dts/canyonlands.dts
-+++ b/arch/powerpc/boot/dts/canyonlands.dts
-@@ -544,23 +544,5 @@ PCIE1: pcie@d20000000 {
-  				0x0 0x0 0x0 0x3 &UIC3 0x12 0x4 /* swizzled int C */
-  				0x0 0x0 0x0 0x4 &UIC3 0x13 0x4 /* swizzled int D */>;
-  		};
--
--		MSI: ppc4xx-msi@C10000000 {
--			compatible = "amcc,ppc4xx-msi", "ppc4xx-msi";
--			reg = < 0xC 0x10000000 0x100>;
--			sdr-base = <0x36C>;
--			msi-data = <0x00000000>;
--			msi-mask = <0x44440000>;
--			interrupt-count = <3>;
--			interrupts = <0 1 2 3>;
--			interrupt-parent = <&UIC3>;
--			#interrupt-cells = <1>;
--			#address-cells = <0>;
--			#size-cells = <0>;
--			interrupt-map = <0 &UIC3 0x18 1
--					1 &UIC3 0x19 1
--					2 &UIC3 0x1A 1
--					3 &UIC3 0x1B 1>;
--		};
-  	};
-  };
-diff --git a/arch/powerpc/boot/dts/katmai.dts b/arch/powerpc/boot/dts/katmai.dts
-index a8f353229fb7..4262b2bbd6de 100644
---- a/arch/powerpc/boot/dts/katmai.dts
-+++ b/arch/powerpc/boot/dts/katmai.dts
-@@ -442,24 +442,6 @@ PCIE2: pcie@d40000000 {
-  				0x0 0x0 0x0 0x4 &UIC3 0xb 0x4 /* swizzled int D */>;
-  		};
-  
--		MSI: ppc4xx-msi@400300000 {
--				compatible = "amcc,ppc4xx-msi", "ppc4xx-msi";
--				reg = < 0x4 0x00300000 0x100>;
--				sdr-base = <0x3B0>;
--				msi-data = <0x00000000>;
--				msi-mask = <0x44440000>;
--				interrupt-count = <3>;
--				interrupts =<0 1 2 3>;
--				interrupt-parent = <&UIC0>;
--				#interrupt-cells = <1>;
--				#address-cells = <0>;
--				#size-cells = <0>;
--				interrupt-map = <0 &UIC0 0xC 1
--					1 &UIC0 0x0D 1
--					2 &UIC0 0x0E 1
--					3 &UIC0 0x0F 1>;
--		};
--
-  		I2O: i2o@400100000 {
-  			compatible = "ibm,i2o-440spe";
-  			reg = <0x00000004 0x00100000 0x100>;
-diff --git a/arch/powerpc/boot/dts/kilauea.dts b/arch/powerpc/boot/dts/kilauea.dts
-index a709fb47a180..c07a7525a72c 100644
---- a/arch/powerpc/boot/dts/kilauea.dts
-+++ b/arch/powerpc/boot/dts/kilauea.dts
-@@ -403,33 +403,5 @@ PCIE1: pcie@c0000000 {
-  				0x0 0x0 0x0 0x3 &UIC2 0xd 0x4 /* swizzled int C */
-  				0x0 0x0 0x0 0x4 &UIC2 0xe 0x4 /* swizzled int D */>;
-  		};
--
--		MSI: ppc4xx-msi@C10000000 {
--			compatible = "amcc,ppc4xx-msi", "ppc4xx-msi";
--			reg = <0xEF620000 0x100>;
--			sdr-base = <0x4B0>;
--			msi-data = <0x00000000>;
--			msi-mask = <0x44440000>;
--			interrupt-count = <12>;
--			interrupts = <0 1 2 3 4 5 6 7 8 9 0xA 0xB 0xC 0xD>;
--			interrupt-parent = <&UIC2>;
--			#interrupt-cells = <1>;
--			#address-cells = <0>;
--			#size-cells = <0>;
--			interrupt-map = <0 &UIC2 0x10 1
--					1 &UIC2 0x11 1
--					2 &UIC2 0x12 1
--					2 &UIC2 0x13 1
--					2 &UIC2 0x14 1
--					2 &UIC2 0x15 1
--					2 &UIC2 0x16 1
--					2 &UIC2 0x17 1
--					2 &UIC2 0x18 1
--					2 &UIC2 0x19 1
--					2 &UIC2 0x1A 1
--					2 &UIC2 0x1B 1
--					2 &UIC2 0x1C 1
--					3 &UIC2 0x1D 1>;
--		};
-  	};
-  };
-diff --git a/arch/powerpc/boot/dts/redwood.dts b/arch/powerpc/boot/dts/redwood.dts
-index f38035a1f4a1..3c849e23e5f3 100644
---- a/arch/powerpc/boot/dts/redwood.dts
-+++ b/arch/powerpc/boot/dts/redwood.dts
-@@ -358,25 +358,6 @@ PCIE2: pcie@d40000000 {
-  				0x0 0x0 0x0 0x4 &UIC3 0xb 0x4 /* swizzled int D */>;
-  		};
-  
--		MSI: ppc4xx-msi@400300000 {
--				compatible = "amcc,ppc4xx-msi", "ppc4xx-msi";
--				reg = < 0x4 0x00300000 0x100
--					0x4 0x00300000 0x100>;
--				sdr-base = <0x3B0>;
--				msi-data = <0x00000000>;
--				msi-mask = <0x44440000>;
--				interrupt-count = <3>;
--				interrupts =<0 1 2 3>;
--				interrupt-parent = <&UIC0>;
--				#interrupt-cells = <1>;
--				#address-cells = <0>;
--				#size-cells = <0>;
--				interrupt-map = <0 &UIC0 0xC 1
--					1 &UIC0 0x0D 1
--					2 &UIC0 0x0E 1
--					3 &UIC0 0x0F 1>;
--		};
--
-  	};
-  
-  
-diff --git a/arch/powerpc/platforms/40x/Kconfig b/arch/powerpc/platforms/40x/Kconfig
-index e3e5217c9822..614ea6dc994c 100644
---- a/arch/powerpc/platforms/40x/Kconfig
-+++ b/arch/powerpc/platforms/40x/Kconfig
-@@ -23,7 +23,6 @@ config KILAUEA
-  	select PPC4xx_PCI_EXPRESS
-  	select FORCE_PCI
-  	select PCI_MSI
--	select PPC4xx_MSI
-  	help
-  	  This option enables support for the AMCC PPC405EX evaluation board.
-  
-diff --git a/arch/powerpc/platforms/44x/Kconfig b/arch/powerpc/platforms/44x/Kconfig
-index 83975ef50975..25b80cd558f8 100644
---- a/arch/powerpc/platforms/44x/Kconfig
-+++ b/arch/powerpc/platforms/44x/Kconfig
-@@ -23,7 +23,6 @@ config BLUESTONE
-  	select APM821xx
-  	select FORCE_PCI
-  	select PCI_MSI
--	select PPC4xx_MSI
-  	select PPC4xx_PCI_EXPRESS
-  	select IBM_EMAC_RGMII if IBM_EMAC
-  	help
-@@ -73,7 +72,6 @@ config KATMAI
-  	select FORCE_PCI
-  	select PPC4xx_PCI_EXPRESS
-  	select PCI_MSI
--	select PPC4xx_MSI
-  	help
-  	  This option enables support for the AMCC PPC440SPe evaluation board.
-  
-@@ -115,7 +113,6 @@ config CANYONLANDS
-  	select FORCE_PCI
-  	select PPC4xx_PCI_EXPRESS
-  	select PCI_MSI
--	select PPC4xx_MSI
-  	select IBM_EMAC_RGMII if IBM_EMAC
-  	select IBM_EMAC_ZMII if IBM_EMAC
-  	help
-@@ -141,7 +138,6 @@ config REDWOOD
-  	select FORCE_PCI
-  	select PPC4xx_PCI_EXPRESS
-  	select PCI_MSI
--	select PPC4xx_MSI
-  	help
-  	  This option enables support for the AMCC PPC460SX Redwood board.
-  
--- 
-2.31.1
+Does this port support speeds greater than 5 GT/s?  If so, 6.6.1 says
+we need "100ms after Link training completes," not just after
+deasserting PERST#.
 
+I'll update this citation to "PCIe r5.0, 6.6.1" to reference the
+current spec.
 
+>  	ret = readl_relaxed_poll_timeout(port->base + PORT_STATUS, stat,
+>  					 stat & PORT_STATUS_READY, 100, 250000);
+>  	if (ret < 0) {
+> -- 
+> 2.30.2
+> 
