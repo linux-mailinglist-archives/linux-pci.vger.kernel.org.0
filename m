@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4429946CF75
+	by mail.lfdr.de (Postfix) with ESMTP id 8D7E846CF76
 	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 09:49:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbhLHIxP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Dec 2021 03:53:15 -0500
-Received: from mga01.intel.com ([192.55.52.88]:1931 "EHLO mga01.intel.com"
+        id S229750AbhLHIxQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Dec 2021 03:53:16 -0500
+Received: from mga05.intel.com ([192.55.52.43]:4945 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229750AbhLHIxM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S229489AbhLHIxM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 8 Dec 2021 03:53:12 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="261862473"
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="324044837"
 X-IronPort-AV: E=Sophos;i="5.87,297,1631602800"; 
-   d="scan'208";a="261862473"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 00:49:39 -0800
+   d="scan'208";a="324044837"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 00:49:38 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,297,1631602800"; 
-   d="scan'208";a="679820828"
+   d="scan'208";a="515676125"
 Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 08 Dec 2021 00:49:38 -0800
+  by orsmga008.jf.intel.com with ESMTP; 08 Dec 2021 00:49:37 -0800
 Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1musds-0000Jv-CQ; Wed, 08 Dec 2021 08:49:36 +0000
-Date:   Wed, 08 Dec 2021 16:49:09 +0800
+        id 1musds-0000Jt-Bh; Wed, 08 Dec 2021 08:49:36 +0000
+Date:   Wed, 08 Dec 2021 16:49:12 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- 6b711ebfff29c8f9f11c798b3dc3618f011f2547
-Message-ID: <61b07185.uvj9i/P6mKLNyZdH%lkp@intel.com>
+Subject: [helgaas-pci:for-linus] BUILD SUCCESS
+ 87620512681a20ef24ece85ac21ff90c9efed37d
+Message-ID: <61b07188.ZQqXmoSuq4/IPYDM%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,10 +39,10 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 6b711ebfff29c8f9f11c798b3dc3618f011f2547  Merge branch 'pci/errors'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
+branch HEAD: 87620512681a20ef24ece85ac21ff90c9efed37d  PCI: apple: Fix PERST# polarity
 
-elapsed time: 723m
+elapsed time: 724m
 
 configs tested: 188
 configs skipped: 3
@@ -57,6 +57,9 @@ arm64                               defconfig
 arm                              allyesconfig
 arm                              allmodconfig
 i386                 randconfig-c001-20211207
+arc                              allyesconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
 arm                         axm55xx_defconfig
 sh                         microdev_defconfig
 mips                     loongson1c_defconfig
@@ -139,7 +142,6 @@ arm                        cerfcube_defconfig
 arm                  colibri_pxa270_defconfig
 m68k                            q40_defconfig
 nds32                             allnoconfig
-nios2                            allyesconfig
 powerpc                     tqm8548_defconfig
 sh                        sh7757lcr_defconfig
 sh                 kfr2r09-romimage_defconfig
@@ -164,10 +166,8 @@ m68k                             allmodconfig
 m68k                                defconfig
 m68k                             allyesconfig
 nios2                               defconfig
-arc                              allyesconfig
 nds32                               defconfig
 alpha                               defconfig
-alpha                            allyesconfig
 arc                                 defconfig
 sh                               allmodconfig
 parisc                              defconfig
