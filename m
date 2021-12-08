@@ -2,151 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 787E346C888
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 01:09:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5998E46C896
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 01:22:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242741AbhLHANX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 19:13:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242706AbhLHANX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 19:13:23 -0500
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A6BC061748
-        for <linux-pci@vger.kernel.org>; Tue,  7 Dec 2021 16:09:52 -0800 (PST)
-Received: by mail-pl1-x64a.google.com with SMTP id a4-20020a170902ecc400b00142562309c7so145210plh.6
-        for <linux-pci@vger.kernel.org>; Tue, 07 Dec 2021 16:09:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ZhZqkrbXveIv+sF93ngTV4dolBugW8SLj/WlAruMndc=;
-        b=haiug30QueIEeXZKZerIrWwOlLcx0NPxj7oel7q56Ms8ORjWmUu9ma6nCYk3HGP9se
-         5VNC3XnJZl7K49uY1Oc/xFgfRvzp/jxuYce7gFsXHMmSr8jE9xESun8kOV8FRbBjgj2B
-         CnBFDKO/kc43Pq+s0ijBeQqN2Pf3x9nFfhhP3hwQ2YErRpR9U75gJbtXLJwxEdbEiqg0
-         LrnWnwjRbB1facyrnQ4D9WykXTyN62sBIrm7fdpQm+15MRK5O7Blfev6HsOIf2x0WyjN
-         jIwId55vj6zmWbfLat3BDge1gULMlu9HH5531oFsrZ7ebSDUM0nDiAKFwPT5qVTwG+YK
-         9aaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ZhZqkrbXveIv+sF93ngTV4dolBugW8SLj/WlAruMndc=;
-        b=eM7P3XlE0odb9q7qmiMYCcdf2V3Ue0fbLm2zRX/DU63JhXv9/ZWChweNwPDS7F5ysJ
-         g62Wntrz+MY3e/WiEfQQJlKxlAkNXxs/uXMCTiVQjgBM6s1riAF48RNysiP5o1UBrEWQ
-         gOAGArRl2OWF7yV4Tt9ie0FKxpvJztv6XsYFBkbWiZxm9vt5TE+vSg42UobYTdHATdBu
-         YQ+Rv0tIi1IjofZILx9yfb7rv7DGBnJLInLddUv3dHKt1+jf81t3kZfaYYnN9NlCG/XW
-         DX5vh0l9F7zO+7sLoKyozZrsFoMlxWrQbxaa78Awx2oibAaP/1k9HRjy0lEOTUSjLiO9
-         GcAQ==
-X-Gm-Message-State: AOAM530GalIwvzYd33FeXMH0g6KYTGW3z9Azxk9uh3cuFv74c8QDfRdg
-        /Dk+/CG/DjnoRMIiVZZrTRV2rJPTt68C
-X-Google-Smtp-Source: ABdhPJxhbqVDGRB2UnUeMhC2ilGnjp0KZLlmkebCf87L92SjvQNJGuprErGx53WG4SkzAMyY9RC6303YyY7X
-X-Received: from rajat2.mtv.corp.google.com ([2620:15c:202:201:acaf:41ab:cb2e:2a2])
- (user=rajatja job=sendgmr) by 2002:a17:903:186:b0:141:eda2:d5fa with SMTP id
- z6-20020a170903018600b00141eda2d5famr54935956plg.63.1638922192032; Tue, 07
- Dec 2021 16:09:52 -0800 (PST)
-Date:   Tue,  7 Dec 2021 16:09:48 -0800
-Message-Id: <20211208000948.487820-1-rajatja@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.34.1.400.ga245620fadb-goog
-Subject: [PATCH] pci/quirks: Add quirk for Bayhub O2 SD controller
-From:   Rajat Jain <rajatja@google.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com,
-        jsbarnes@google.com, gwendal@google.com
-Content-Type: text/plain; charset="UTF-8"
+        id S236245AbhLHAZt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 19:25:49 -0500
+Received: from mga06.intel.com ([134.134.136.31]:24068 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235439AbhLHAZs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 Dec 2021 19:25:48 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="298518382"
+X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
+   d="scan'208";a="298518382"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 16:20:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
+   d="scan'208";a="563883177"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Dec 2021 16:20:44 -0800
+Received: from debox1-desk4.hsd1.or.comcast.net (unknown [10.251.18.198])
+        by linux.intel.com (Postfix) with ESMTP id 90ADE5804B4;
+        Tue,  7 Dec 2021 16:20:44 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lorenzo.pieralisi@arm.com, kw@linux.com, bhelgaas@google.com,
+        david.e.box@linux.intel.com, michael.a.bottini@linux.intel.com,
+        rafael@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2 1/2] PCI/ASPM: Add ASPM BIOS override function
+Date:   Tue,  7 Dec 2021 16:20:42 -0800
+Message-Id: <20211208002043.882200-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This particular SD controller from O2 / Bayhub only allows dword
-accesses to its LTR max latency registers:
-https://github.com/rajatxjain/public_shared/blob/main/OZ711LV2_appnote.pdf
+From: Michael Bottini <michael.a.bottini@linux.intel.com>
 
-Thus add a quirk that saves and restores these registers
-manually using dword acesses:
-LTR Max Snoop Latency Register
-LTR Max No-Snoop Latency Register
+Devices that appear under the Intel VMD host bridge are not visible to BIOS
+and therefore not programmed by BIOS with ASPM settings. For these devices,
+it is necessary for the driver to configure ASPM. Since ASPM settings are
+adjustable at runtime by module parameter, use the same mechanism to allow
+drivers to override the default (in this case never configured) BIOS policy
+to ASPM_STATE_ALL. Then, reconfigure ASPM on the link. Do not override if
+ASPM control is disabled.
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
+Signed-off-by: Michael Bottini <michael.a.bottini@linux.intel.com>
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/mmc/host/sdhci-pci.h |  1 -
- drivers/pci/quirks.c         | 39 ++++++++++++++++++++++++++++++++++++
- include/linux/pci_ids.h      |  1 +
- 3 files changed, 40 insertions(+), 1 deletion(-)
+V2
+ - Change return type to int so caller can determine if override was
+   successful
+ - Return immediately if link is not found so that lock it not
+   unecessarily taken, suggested by kw@linux.com
+ - Don't override if aspm_disabled is true
 
-diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
-index 5e3193278ff9..d47cc0ba7ca4 100644
---- a/drivers/mmc/host/sdhci-pci.h
-+++ b/drivers/mmc/host/sdhci-pci.h
-@@ -10,7 +10,6 @@
- #define PCI_DEVICE_ID_O2_SDS1		0x8421
- #define PCI_DEVICE_ID_O2_FUJIN2		0x8520
- #define PCI_DEVICE_ID_O2_SEABIRD0	0x8620
--#define PCI_DEVICE_ID_O2_SEABIRD1	0x8621
+ drivers/pci/pci.h       |  2 ++
+ drivers/pci/pcie/aspm.c | 19 +++++++++++++++++++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 3d60cabde1a1..c741791f15e0 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -562,11 +562,13 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+ void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+ void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
++int pcie_aspm_policy_override(struct pci_dev *dev);
+ #else
+ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
++static inline int pcie_aspm_policy_override(struct pci_dev *dev) { return -EINVAL }
+ #endif
  
- #define PCI_DEVICE_ID_INTEL_PCH_SDIO0	0x8809
- #define PCI_DEVICE_ID_INTEL_PCH_SDIO1	0x880a
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 003950c738d2..b7bd19802744 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5857,3 +5857,42 @@ static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
- 	pdev->dev_flags |= PCI_DEV_FLAGS_HAS_MSI_MASKING;
+ #ifdef CONFIG_PCIE_ECRC
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 52c74682601a..e2c61e14e724 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -1140,6 +1140,25 @@ int pci_disable_link_state(struct pci_dev *pdev, int state)
  }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
-+
-+/*
-+ * Bayhub OZ711LV2 SD controller has an errata that only allows DWORD accesses
-+ * to the LTR max latency registers. Thus need to save and restore these
-+ * registers manually.
-+ */
-+static void o2_seabird1_save_ltr(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	u32 *reg32;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-+	if (save_state) {
-+		reg32 = &save_state->cap.data[0];
-+		/* Preserve PCI_LTR_MAX_SNOOP_LAT & PCI_LTR_MAX_NOSNOOP_LAT */
-+		pci_read_config_dword(dev, 0x234, reg32);
-+	} else {
-+		pci_err(dev, "quirk can't save LTR snoop latency\n");
-+	}
-+}
-+
-+static void o2_seabird1_restore_ltr(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	u32 *reg32;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-+	if (save_state) {
-+		reg32 = &save_state->cap.data[0];
-+		/* Restore PCI_LTR_MAX_SNOOP_LAT & PCI_LTR_MAX_NOSNOOP_LAT */
-+		pci_write_config_dword(dev, 0x234, *reg32);
-+	} else {
-+		pci_err(dev, "quirk can't restore LTR snoop latency\n");
-+	}
-+}
-+DECLARE_PCI_FIXUP_SUSPEND_LATE(PCI_VENDOR_ID_O2, PCI_DEVICE_ID_O2_SEABIRD1,
-+			       o2_seabird1_save_ltr);
-+DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_O2, PCI_DEVICE_ID_O2_SEABIRD1,
-+			       o2_seabird1_restore_ltr);
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 011f2f1ea5bb..6ed16aa38196 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -1717,6 +1717,7 @@
- #define PCI_DEVICE_ID_O2_8221		0x8221
- #define PCI_DEVICE_ID_O2_8320		0x8320
- #define PCI_DEVICE_ID_O2_8321		0x8321
-+#define PCI_DEVICE_ID_O2_SEABIRD1	0x8621
+ EXPORT_SYMBOL(pci_disable_link_state);
  
- #define PCI_VENDOR_ID_3DFX		0x121a
- #define PCI_DEVICE_ID_3DFX_VOODOO	0x0001
++int pcie_aspm_policy_override(struct pci_dev *pdev)
++{
++	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
++
++	if (!link || aspm_disabled)
++		return -EINVAL;
++
++	down_read(&pci_bus_sem);
++	mutex_lock(&aspm_lock);
++	link->aspm_default = ASPM_STATE_ALL;
++	pcie_config_aspm_link(link, policy_to_aspm_state(link));
++	pcie_set_clkpm(link, policy_to_clkpm_state(link));
++	mutex_unlock(&aspm_lock);
++	up_read(&pci_bus_sem);
++
++	return 0;
++}
++EXPORT_SYMBOL(pcie_aspm_policy_override);
++
+ static int pcie_aspm_set_policy(const char *val,
+ 				const struct kernel_param *kp)
+ {
 -- 
-2.34.1.400.ga245620fadb-goog
+2.25.1
 
