@@ -2,92 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6724846CBFF
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 05:10:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F52046CC0C
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 05:12:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239949AbhLHEO2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 23:14:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40828 "EHLO
+        id S230486AbhLHEQE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 23:16:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239933AbhLHEO1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 23:14:27 -0500
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8756FC0617A2
-        for <linux-pci@vger.kernel.org>; Tue,  7 Dec 2021 20:10:56 -0800 (PST)
-Received: by mail-io1-xd42.google.com with SMTP id b187so1424418iof.11
-        for <linux-pci@vger.kernel.org>; Tue, 07 Dec 2021 20:10:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=w0n14T57zPuvlg1YaFYy3gRfrUPFN1bDHGIrct+fXgc=;
-        b=ixB4i30lBoOd7pTL1qITqNgToJyquXrSFpDotjWOEhdsCACu3yMaq886KyAf98GJ7X
-         TrDybR3Z8N5Ahe8LDAnX9H25E7H/myHZadUlk2AoFfYWOrLuEgGKDJLZ90pOTE7VuFbE
-         bRiWJUIQdw46Kot+gsBiqAa+FPF00HosroNMXK5yKTpOppQJEsJw+/S5DosdxKTeF7rS
-         BvU3oSVjw/oto31uZfPtXUKogYM8D4QDwKkOJtbRqPHakaCeD1pcWn5o7wqVLRkeghAj
-         a3xCnizPuCEEjLfAXJh7eaYRZehoLm5ClEdRUUGBhV8sDWrDzTkt3sMvIf/tEpF9hW2v
-         mxjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=w0n14T57zPuvlg1YaFYy3gRfrUPFN1bDHGIrct+fXgc=;
-        b=LMJAAQoL0kgdRkRkUJy9nBqypLL15Ks8rNDH6X7dnmY9Ba3HCWiukSvc1bd0LsGpBq
-         Yf3rrlal6o1ro7s2idswd+BMGIytMBAujHPjG3g3cemPnjUVLJ6n7AQNfJEwpMkZVtAQ
-         LJ8BmfvsAEDc9TKjn2yKbi8tNI1xWIH61iY6FQpxKToDZXMHLpZL7lvqFUb0yoEFAZeg
-         7+PW5Jn4Q2DwzXE31rxfcrHRkrn4j8b0i7ZedYfo6fPQtxcrLiL66HU8oWFeZfW9JR8+
-         RNHjaGXRB8QTjqJaa16EMzLowA2FKZkPJh+yedyjZ1PNAz7K9SDB2hJbtqYxrioRdRel
-         Wpjw==
-X-Gm-Message-State: AOAM533Ktvtne1kkp6fS6gy0CfajMw8ALjTqW65acDuRrhSu5cJnazKK
-        PoE0t6lt9MaZxjMrwX1yYuxeRGGTdtsnujZmWe8=
-X-Google-Smtp-Source: ABdhPJxnC+KRvHJ+3HpGAdMJaTttSzyP6FxXvex/lQ0ePjy5/vbuxn0Go6Bul3fhtrekcVd16wcewed6tNot4TN/LSU=
-X-Received: by 2002:a6b:2ccf:: with SMTP id s198mr3549800ios.101.1638936655835;
- Tue, 07 Dec 2021 20:10:55 -0800 (PST)
+        with ESMTP id S230193AbhLHEQD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Dec 2021 23:16:03 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7839AC061574;
+        Tue,  7 Dec 2021 20:12:32 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3D099B81F60;
+        Wed,  8 Dec 2021 04:12:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B179BC00446;
+        Wed,  8 Dec 2021 04:12:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638936749;
+        bh=gFJPgHU3rF0+oH3Tv/ru3zNDZuTRZu9S6ukLJe+ET+k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jH2bKsVQqTONUuVL5o90V6g5UaDw/shn9+qBIPC/wfFON1sqD+Bge2VB0ysNc/Hir
+         V83jfomzlevvQ8BMdjpDHo9TPfQji8qg34Ksc/lMWP3kvxl9iltKh4fyc9tw+QzYVE
+         bG87+yE2nL1kQUvo/E7742enyLcKNpVEYpE+9CzSMCia4UoFBb3bsPOo9UWBxvLvec
+         UEGMFhdkiYjByYQLjZQAvcP/up18IGAnE5QA2oOzjUHKmEM6YNJFcXOxMNRfWeYIRc
+         4Oa92xp3Ta6fSkHF+u+F+qWURn6qySsYYPy8uLloU63SRl15Nxsogewid8xghKEvbX
+         jqmjgG2vc4JrQ==
+Date:   Tue, 7 Dec 2021 22:12:28 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mark Kettenis <mark.kettenis@xs4all.nl>
+Cc:     qizhong.cheng@mediatek.com, ryder.lee@mediatek.com,
+        jianjun.wang@mediatek.com, lorenzo.pieralisi@arm.com, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, chuanjia.liu@mediatek.com,
+        pali@kernel.org, maz@kernel.org, alyssa@rosenzweig.io,
+        luca@lucaceresoli.net
+Subject: Re: [RESEND PATCH v2] PCI: mediatek: Delay 100ms to wait power and
+ clock to become stable
+Message-ID: <20211208041228.GA103736@bhelgaas>
 MIME-Version: 1.0
-Received: by 2002:a05:6e02:1a07:0:0:0:0 with HTTP; Tue, 7 Dec 2021 20:10:55
- -0800 (PST)
-Reply-To: dj0015639@gmail.com
-From:   David Jackson <enkenpaul@gmail.com>
-Date:   Wed, 8 Dec 2021 05:10:55 +0100
-Message-ID: <CAG7-cQ9Momosu7+b7Hi4oVBbV1=7-L-NMEM4uBx1TJr-xsorQQ@mail.gmail.com>
-Subject: FEDERAL BUREAU OF INVESTIGATION
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d3cb32527f48df70@bloch.sibelius.xs4all.nl>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Our Ref: RTB /SNT/STB
-To: Beneficiary
+On Tue, Dec 07, 2021 at 10:00:43PM +0100, Mark Kettenis wrote:
+> > Date: Tue, 7 Dec 2021 11:54:16 -0600
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > 
+> > [+cc Marc, Alyssa, Mark, Luca for reset timing questions]
+> 
+> Hi Bjorn,
+> 
+> > On Tue, Dec 07, 2021 at 04:41:53PM +0800, qizhong cheng wrote:
+> > > Described in PCIe CEM specification sections 2.2 (PERST# Signal) and
+> > > 2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
+> > > be delayed 100ms (TPVPERL) for the power and clock to become stable.
+> > > 
+> > > Signed-off-by: qizhong cheng <qizhong.cheng@mediatek.com>
+> > > Acked-by: Pali Rohár <pali@kernel.org>
 
-This is FBI special agents, David Jackson. I was delegated along side
-others by the United Nations to investigate scammers who has been in
-the business of swindling foreigners especially those that has one
-form of transaction/contracts and another. Please be informed that in
-the course of our investigation, we detected that your name and
-details in our Scammed Monitoring Network. We also found out that you
-were scammed of a huge sum of money by scammers via Western union and
-MoneyGram. Be informed here that in a bid to alleviate the suffering
-of scammed victims, the United Nations initiated this compensation
-program and therefore, you are entitled to the sum of Five Million Two
-Hundred Thousand United States Dollars ($5,200,000.00 USD) for being a
-victim.
+> > ...
+> > 3) Most importantly, this needs to be reconciled with the similar
+> > change to the apple driver:
+> > 
+> >   https://lore.kernel.org/r/20211123180636.80558-2-maz@kernel.org
+> > 
+> > In the apple driver, we're doing:
+> > 
+> >   - Assert PERST#
+> >   - Set up REFCLK
+> >   - Sleep 100us (T_perst-clk, CEM r5 2.2, 2.9.2)
+> >   - Deassert PERST#
+> >   - Sleep 100ms (not sure there's a name? PCIe r5 6.6.1)
+> > 
+> > But here in mediatek, we're doing:
+> > 
+> >   - Assert PERST#
+> >   - Sleep 100ms (T_pvperl, CEM r5 2.2, 2.2.1, 2.9.2)
+> >   - Deassert PERST#
+> > 
+> > My questions:
+> 
+> My understanding of the the Apple PCIe hardware is somewhat limited but:
+> 
+> >   - Where does apple enforce T_pvperl?  I can't tell where power to
+> >     the slot is turned on.
+> 
+> So far all available machines only have PCIe devices that are soldered
+> onto the motherboard, so there are no "real" slots.  As far as we can
+> tell the PCIe power domain is already powered on at the point where
+> the m1n1 bootloader takes control.  There is a GPIO that controls
+> power to some devices (WiFi, SDHC on the M1 Pro/Max laptops) and those
+> devices are initially powered off.  The Linux driver doesn't currently
+> attempt to power these devices on, but U-Boot will power them on if
+> the appropriate GPIO is defined in the device tree.  The way this is
+> specified in the device tree is still under discussion.
 
-Note that the said fund will be transfer to you via the Citibank being
-the paying bank mandated by the United Nations officials.
+Does this mean we basically assume that m1n1 and early Linux boot
+takes at least the 100ms T_pvperl required by CEM sec 2.2, but we take
+pains to delay the 100us T_perst-clk?  That seems a little weird, but
+I guess it is clear that REFCLK is *not* enabled before we enable it,
+so we do need at least the 100us there.
 
-However, we have to inform you that we have been able to arrest some
-of the swindlers who has been in this illicit business and will all be
-prosecuted accordingly. Be informed as well that we have limited time
-to stay back here, so we will advice that you urgently respond to this
-message ASAP. And do not inform any of the people that collected money
-from you before now about this new development to avoid jeopardizing
-our investigation. All you need to do is to follow our instruction and
-receive your compensation accordingly as directed by the United
-Nations.
+It also niggles at me a little that the spec says T_pvperl starts from
+*power stable* (not from power enable) and T_perst-clk starts from
+*REFCLK stable* (not REFCLK enable).  Since we don't know the time
+from enable to stable, it seems like native drivers should add some
+circuit-specific constants to the spec values.
 
-We urgently wait to receive your response.
+> >   - Where does mediatek enforce the PCIe sec 6.6.1 delay after
+> >     deasserting PERST# and before config requests?
+> > 
+> >   - Does either apple or mediatek support speeds greater than 5 GT/s,
+> >     and if so, shouldn't we start the sec 6.6.1 100ms delay *after*
+> >     Link training completes?
+> 
+> The Apple hardware advertises support for 8 GT/s, but all the devices
+> integrated on the Mac mini support only 2.5 GT/s or 5 GT/s.
 
-Regards,
-DAVID JACKSON
-FEDERAL BUREAU OF INVESTIGATION
-INVESTIGATION ON ALL ONLINE WIRE TRANSFER
+The spec doesn't say anything about what the downstream devices
+support (obviously it can't because we don't *know* what those devices
+are until after we enumerate them).  So to be pedantically correct,
+I'd argue that we should pay attention to what the Root Port
+advertises.  Of course, I don't think we do this correctly *anywhere*
+today.
+
+Bjorn
