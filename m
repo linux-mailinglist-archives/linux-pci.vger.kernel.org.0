@@ -2,108 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9406046D139
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 11:44:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A47D46D159
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 11:48:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231840AbhLHKsR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Dec 2021 05:48:17 -0500
-Received: from smtpout3.mo529.mail-out.ovh.net ([46.105.54.81]:39451 "EHLO
-        smtpout3.mo529.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231206AbhLHKsR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 05:48:17 -0500
-Received: from mxplan5.mail.ovh.net (unknown [10.109.156.35])
-        by mo529.mail-out.ovh.net (Postfix) with ESMTPS id 4A0F4D092F09;
-        Wed,  8 Dec 2021 11:44:42 +0100 (CET)
-Received: from kaod.org (37.59.142.96) by DAG4EX1.mxp5.local (172.16.2.31)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 8 Dec
- 2021 11:44:40 +0100
-Authentication-Results: garm.ovh; auth=pass (GARM-96R001f5056120-68a4-4c0a-bc06-f617410d6d7e,
-                    EB01F339838E5AA67C986A6C3251B49097B81903) smtp.auth=clg@kaod.org
-X-OVh-ClientIp: 86.201.172.254
-Message-ID: <e92f2bb3-b5e1-c870-8151-3917a789a640@kaod.org>
-Date:   Wed, 8 Dec 2021 11:44:39 +0100
+        id S231879AbhLHKwQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Dec 2021 05:52:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229475AbhLHKwQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 05:52:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CEB4C061746;
+        Wed,  8 Dec 2021 02:48:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A2936B82089;
+        Wed,  8 Dec 2021 10:48:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54905C00446;
+        Wed,  8 Dec 2021 10:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638960521;
+        bh=aZCHSWMXNx/yJOGQvjgTK6Bw1r7H5PDORW4SOKvg2oA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XXS2a4SQPk7Vq/PRar4BbPA+s9HBID1MewzdG9Fgimuc6blGehYijv+j05LMYLj8D
+         fV1+pxfH1xA8EC93p5HYq2+00NJBzGtj+0Ew4Uvu9SajDp5AWEvpxhNXju2VEKG0ve
+         o1LnHkuNaArHN5gSa8wEbCXIhuvERe9CbbIAlGizGNmV9R2qlbHDiHYvMtqiMCySvF
+         LIAWt1YrvHoLi5vjfO2kBDu20EL9yOBo2uMOgCuCT9Od9zjVixqBn6BQYBDZ917d6X
+         AKv26JZzFtx+5QKSQ6t31tcALyIBUJvIjGwGRMG7fqfY90Zi/9QAh/9t3pn18KjoLZ
+         AexSGNgcVAxqA==
+Date:   Wed, 8 Dec 2021 12:48:36 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
+        hdegoede@redhat.com, bhelgaas@google.com,
+        srinivas.pandruvada@intel.com, shuah@kernel.org,
+        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [V2 2/6] driver core: auxiliary bus: Add driver data helpers
+Message-ID: <YbCNhAtiueFZ/hkJ@unreal>
+References: <20211207171448.799376-1-david.e.box@linux.intel.com>
+ <20211207171448.799376-3-david.e.box@linux.intel.com>
+ <YbBYtJFQ47UH2h/k@unreal>
+ <YbBZuwXZWMV9uRXI@kroah.com>
+ <YbBtjSNz8z34czeN@unreal>
+ <YbBwOb6JvWkT3JWI@kroah.com>
+ <YbB29BaOWibImGf5@unreal>
+ <YbCFkQZvIDLtPJTR@smile.fi.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [patch V2 01/23] powerpc/4xx: Remove MSI support which never
- worked
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, <linux-pci@vger.kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <linuxppc-dev@lists.ozlabs.org>, Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        <linux-mips@vger.kernel.org>, Kalle Valo <kvalo@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <sparclinux@vger.kernel.org>, <x86@kernel.org>,
-        <xen-devel@lists.xenproject.org>, <ath11k@lists.infradead.org>,
-        Wei Liu <wei.liu@kernel.org>, <linux-hyperv@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-References: <20211206210147.872865823@linutronix.de>
- <20211206210223.872249537@linutronix.de>
- <8d1e9d2b-fbe9-2e15-6df6-03028902791a@kaod.org>
- <87ilw0odel.fsf@mpe.ellerman.id.au>
- <27f22e0e-8f84-a6d7-704b-d9eddc642d74@kaod.org> <8735n42lld.ffs@tglx>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-In-Reply-To: <8735n42lld.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [37.59.142.96]
-X-ClientProxiedBy: DAG4EX1.mxp5.local (172.16.2.31) To DAG4EX1.mxp5.local
- (172.16.2.31)
-X-Ovh-Tracer-GUID: d54a9dd7-eba7-4e7f-a7a0-0dc7c43fc796
-X-Ovh-Tracer-Id: 10131410315672259365
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddrjeekgddulecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfhfhfgjtgfgihesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucggtffrrghtthgvrhhnpeeuveelvdejteegteefieevfeetffefvddvieekteevleefgeelgfeutedvfedvfeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppedtrddtrddtrddtpdefjedrheelrddugedvrdelieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegtlhhgsehkrghougdrohhrghdprhgtphhtthhopehhtggrsehlihhnuhigrdhisghmrdgtohhm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YbCFkQZvIDLtPJTR@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/7/21 21:42, Thomas Gleixner wrote:
-> Cedric,
+On Wed, Dec 08, 2021 at 12:14:41PM +0200, Andy Shevchenko wrote:
+> On Wed, Dec 08, 2021 at 11:12:20AM +0200, Leon Romanovsky wrote:
+> > On Wed, Dec 08, 2021 at 09:43:37AM +0100, Greg KH wrote:
 > 
-> On Tue, Dec 07 2021 at 16:50, Cédric Le Goater wrote:
->> On 12/7/21 12:36, Michael Ellerman wrote:
->>>
->>> This patch should drop those selects I guess. Can you send an
->>> incremental diff for Thomas to squash in?
->>
->> Sure.
->>
->>> Removing all the tendrils in various device tree files will probably
->>> require some archaeology, and it should be perfectly safe to leave those
->>> in the tree with the driver gone. So I think we can do that as a
->>> subsequent patch, rather than in this series.
->>
->> Here are the changes. Compiled tested with ppc40x and ppc44x defconfigs.
+> ...
 > 
-> < Lots of patch skipped />
->> @@ -141,7 +138,6 @@ config REDWOOD
->>    	select FORCE_PCI
->>    	select PPC4xx_PCI_EXPRESS
->>    	select PCI_MSI
->> -	select PPC4xx_MSI
->>    	help
->>    	  This option enables support for the AMCC PPC460SX Redwood board.
+> > The idea that you have two APIs which do the same thing, one is
+> > obfuscated version of another.
+> > 
+> > If you don't want from people to use driver core function and structures,
+> > you shouldn't expose them in global headers.
 > 
-> While that is incremental it certainly is worth a patch on it's
-> own. Could you add a proper changelog and an SOB please?
+> For all these APIs the rationale is very simple. If you have callback that
+> takes a pointer to the container (*), you better use the APIs related to
+> this container (no need to have an explicit dereferencing). Otherwise you
+> use dev_*() APIs (when it's pointer to the pure struct device).
+> 
+> The value is to have coherent APIs around struct device containers.
+> 
+> *) under container here I assume the data structure that has the embedded
+>    struct device in it.
 
-Here you are.
+Thanks
 
-  https://github.com/legoater/linux/commit/75d2764b11fe8f6d8bf50d60a3feb599ce27b16d
-
-Thanks,
-
-C.
+> 
+ -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
