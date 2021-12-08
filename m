@@ -2,110 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 727E246C998
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 01:52:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 907C246CA48
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 02:50:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234749AbhLHAzx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 19:55:53 -0500
-Received: from mga12.intel.com ([192.55.52.136]:14399 "EHLO mga12.intel.com"
+        id S243177AbhLHByK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 20:54:10 -0500
+Received: from mga02.intel.com ([134.134.136.20]:52890 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233074AbhLHAzx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 Dec 2021 19:55:53 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="217750492"
+        id S243247AbhLHByH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 Dec 2021 20:54:07 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="224992835"
 X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="217750492"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 16:52:22 -0800
+   d="scan'208";a="224992835"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:50:17 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="751677756"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Dec 2021 16:52:19 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mulBy-000NAB-Og; Wed, 08 Dec 2021 00:52:18 +0000
-Date:   Wed, 8 Dec 2021 08:51:55 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>,
-        nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, kw@linux.com, bhelgaas@google.com,
-        michael.a.bottini@linux.intel.com, rafael@kernel.org
-Cc:     kbuild-all@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [V2 1/2] PCI/ASPM: Add ASPM BIOS override function
-Message-ID: <202112080830.ItjrEFOo-lkp@intel.com>
-References: <20211207223050.872095-1-david.e.box@linux.intel.com>
+   d="scan'208";a="515966485"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 07 Dec 2021 17:50:17 -0800
+Received: from debox1-desk4.hsd1.or.comcast.net (unknown [10.251.18.198])
+        by linux.intel.com (Postfix) with ESMTP id BA2685805EC;
+        Tue,  7 Dec 2021 17:50:15 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, hdegoede@redhat.com,
+        david.e.box@linux.intel.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH RESEND V2 0/6] Auxiliary bus driver support for Intel PCIe VSEC/DVSEC
+Date:   Tue,  7 Dec 2021 17:50:09 -0800
+Message-Id: <20211208015015.891275-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211207223050.872095-1-david.e.box@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi "David,
+This series makes changes to the current intel_pmt driver to give it
+broader support for Intel defined PCIe VSEC and DVSEC features. It
+moves the implementation from MFD to the auxiliary bus and creates a
+generic framework for enumerating the extended capabilities. It also
+adds support for a new VSEC, Software Defined Silicon (SDSi).
 
-Thank you for the patch! Yet something to improve:
+Version 2 adds two new patches, sample code and testing.
 
-[auto build test ERROR on v5.16-rc4]
-[also build test ERROR on next-20211207]
-[cannot apply to helgaas-pci/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+Resend due to missing 'PATCH' in Subject of previous series.
 
-url:    https://github.com/0day-ci/linux/commits/David-E-Box/PCI-ASPM-Add-ASPM-BIOS-override-function/20211208-063240
-base:    0fcfb00b28c0b7884635dacf38e46d60bf3d4eb1
-config: nds32-defconfig (https://download.01.org/0day-ci/archive/20211208/202112080830.ItjrEFOo-lkp@intel.com/config)
-compiler: nds32le-linux-gcc (GCC) 11.2.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/efd5524bd4005ec84d4eb6681c54d1ba93fe9ca1
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review David-E-Box/PCI-ASPM-Add-ASPM-BIOS-override-function/20211208-063240
-        git checkout efd5524bd4005ec84d4eb6681c54d1ba93fe9ca1
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=nds32 SHELL=/bin/bash
+David E. Box (6):
+  PCI: Add #defines for accessing PCIe DVSEC fields
+  driver core: auxiliary bus: Add driver data helpers
+  platform/x86/intel: Move intel_pmt from MFD to Auxiliary Bus
+  platform/x86: Add Intel Software Defined Silicon driver
+  sample/sdsi: Sample of SDSi provisiong using sysfs
+  selftests: sdsi: test sysfs setup
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+ .../ABI/testing/sysfs-driver-intel_sdsi       |  77 +++
+ MAINTAINERS                                   |  19 +-
+ drivers/mfd/Kconfig                           |  10 -
+ drivers/mfd/Makefile                          |   1 -
+ drivers/mfd/intel_pmt.c                       | 261 --------
+ drivers/platform/x86/intel/Kconfig            |  23 +
+ drivers/platform/x86/intel/Makefile           |   4 +
+ drivers/platform/x86/intel/pmt/Kconfig        |   4 +-
+ drivers/platform/x86/intel/pmt/class.c        |  21 +-
+ drivers/platform/x86/intel/pmt/class.h        |   5 +-
+ drivers/platform/x86/intel/pmt/crashlog.c     |  47 +-
+ drivers/platform/x86/intel/pmt/telemetry.c    |  46 +-
+ drivers/platform/x86/intel/sdsi.c             | 571 ++++++++++++++++++
+ drivers/platform/x86/intel/vsec.c             | 418 +++++++++++++
+ drivers/platform/x86/intel/vsec.h             |  43 ++
+ include/linux/auxiliary_bus.h                 |  10 +
+ include/uapi/linux/pci_regs.h                 |   4 +
+ samples/sdsi/Makefile                         |   9 +
+ samples/sdsi/sdsi-sample.c                    | 399 ++++++++++++
+ tools/testing/selftests/drivers/sdsi/sdsi.sh  |  18 +
+ .../selftests/drivers/sdsi/sdsi_test.py       | 166 +++++
+ 21 files changed, 1821 insertions(+), 335 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
+ delete mode 100644 drivers/mfd/intel_pmt.c
+ create mode 100644 drivers/platform/x86/intel/sdsi.c
+ create mode 100644 drivers/platform/x86/intel/vsec.c
+ create mode 100644 drivers/platform/x86/intel/vsec.h
+ create mode 100644 samples/sdsi/Makefile
+ create mode 100644 samples/sdsi/sdsi-sample.c
+ create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
+ create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
 
-All errors (new ones prefixed by >>):
+-- 
+2.25.1
 
-   In file included from drivers/pci/of.c:16:
-   drivers/pci/pci.h: In function 'pcie_aspm_policy_override':
->> drivers/pci/pci.h:571:83: error: expected ';' before '}' token
-     571 | static inline int pcie_aspm_policy_override(struct pci_dev *dev) { return -EINVAL }
-         |                                                                                   ^
-
-
-vim +571 drivers/pci/pci.h
-
-   553	
-   554	/* PCI error reporting and recovery */
-   555	pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-   556			pci_channel_state_t state,
-   557			pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev));
-   558	
-   559	bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
-   560	#ifdef CONFIG_PCIEASPM
-   561	void pcie_aspm_init_link_state(struct pci_dev *pdev);
-   562	void pcie_aspm_exit_link_state(struct pci_dev *pdev);
-   563	void pcie_aspm_pm_state_change(struct pci_dev *pdev);
-   564	void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
-   565	int pcie_aspm_policy_override(struct pci_dev *dev);
-   566	#else
-   567	static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
-   568	static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
-   569	static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
-   570	static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
- > 571	static inline int pcie_aspm_policy_override(struct pci_dev *dev) { return -EINVAL }
-   572	#endif
-   573	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
