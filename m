@@ -2,76 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D147D46CDA9
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 07:19:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A20546CDB1
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 07:22:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237858AbhLHGW6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Dec 2021 01:22:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41214 "EHLO
+        id S239695AbhLHGZp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Dec 2021 01:25:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237786AbhLHGW5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 01:22:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0F1C061574
-        for <linux-pci@vger.kernel.org>; Tue,  7 Dec 2021 22:19:26 -0800 (PST)
+        with ESMTP id S239648AbhLHGZo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 01:25:44 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2DBC061574
+        for <linux-pci@vger.kernel.org>; Tue,  7 Dec 2021 22:22:13 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 32F25B81FB9
-        for <linux-pci@vger.kernel.org>; Wed,  8 Dec 2021 06:19:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDA66C341C6;
-        Wed,  8 Dec 2021 06:19:22 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id A0D8FCE19BA
+        for <linux-pci@vger.kernel.org>; Wed,  8 Dec 2021 06:22:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7203AC00446;
+        Wed,  8 Dec 2021 06:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638944364;
-        bh=p83dddMGT4bJihiZzPmp6yGCgIidTvLFxJGa1aAZGrg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+cFq1mU1k3vy5AI4tRGK8Sso6qnhJIFNY58rmqiuMCOwL/eRscckpAARivX7L0ki
-         0LKoDpC9UtV/NWfJQ0aGK/4rIkta9o3+KBasVqHeLm6EBtcqbKrlyCXEFw+mjNGmNk
-         hgsVHc0hfZPbLEKoZ5uH73g2AP+v7xvZKFUC1509DhStDpwp/RXrUTkNaMO2FQwIBB
-         7Tjtq3ZPSgK91c9YoJfDDntOexzTsqNCOAS6oMh5piKFx1ZPViAPEUnTkqFT/6rysE
-         NZCZ9F43SbFJtrOI+qVnob5OvyJibChCB0eWqeKwdXpRblkmqNAryr+KwKpptkbl5O
-         cpuPkU338pRIA==
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     linux-pci@vger.kernel.org, pali@kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH 17/17] PCI: aardvark: Don't mask irq when mapping
-Date:   Wed,  8 Dec 2021 07:18:51 +0100
-Message-Id: <20211208061851.31867-18-kabel@kernel.org>
-X-Mailer: git-send-email 2.32.0
+        s=k20201202; t=1638944529;
+        bh=eiPxxP16JDkon4m/LlRix4vyXMIa2XyaUi9rZA8k5Q8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=u9amCIpiFWBZJokN1iHSKlQnfVXVeYvJ8wbin2V9huz7IfOO2NHfdoWqAmDtKuM0D
+         svKmChV32n1weOl3eU+qXXVrqY/2IYnKnDjI6R4A40pT9zQA0SS1JEkIwrW4Ag65qB
+         k5iH/vf7ByJZptSxyn2n6XarwZEtIrfx7cbMXr8IbEK7ZUEPDNQaE8p0b4amFZcd95
+         /7PHiSj/BilDDbatPdg0F8XJLauCJViVbkQEX31+RYZNaC7mYrq8NB5H9O+XR1NOKy
+         GSbGPkSy31gHdKBa8F0AEKGrRoLCExk4ArFBtA1B8il/li5tFT/14FVKScI4F/FddK
+         dC6BYhFXjSkSg==
+Date:   Wed, 8 Dec 2021 07:22:05 +0100
+From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org,
+        pali@kernel.org
+Subject: Re: [PATCH 00/17] PCI: aardvark controller fixes BATCH 4
+Message-ID: <20211208072205.47134b27@thinkpad>
 In-Reply-To: <20211208061851.31867-1-kabel@kernel.org>
 References: <20211208061851.31867-1-kabel@kernel.org>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+Hello Marc,
 
-By default, all Legacy INTx interrupts are masked, so there is no need to
-mask this interrupt during irq_map callback.
+sorry about this, I wanted to send this series also to you, but
+I accidentally sent it to your @arm.com e-mail address.
+Does that address still work? Should I resend to your @kernel.org
+address?
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Marek Behún <kabel@kernel.org>
----
- drivers/pci/controller/pci-aardvark.c | 1 -
- 1 file changed, 1 deletion(-)
+Marek
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 4a21387a4693..b1b6620b1d9a 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -1339,7 +1339,6 @@ static int advk_pcie_irq_map(struct irq_domain *h,
- {
- 	struct advk_pcie *pcie = h->host_data;
- 
--	advk_pcie_irq_mask(irq_get_irq_data(virq));
- 	irq_set_status_flags(virq, IRQ_LEVEL);
- 	irq_set_chip_and_handler(virq, &pcie->irq_chip,
- 				 handle_level_irq);
--- 
-2.32.0
+On Wed,  8 Dec 2021 07:18:34 +0100
+Marek Beh=C3=BAn <kabel@kernel.org> wrote:
+
+> Hello Lorenzo, Marc,
+>=20
+> this is batch 4 of patches for Aardvark PCIe controller driver.
+>=20
+> This series mainly fixes and adds support for stuff around interrupts.
+> (All but the first one.)
+>=20
+> I have rebased it sot that first come patches that change the API to the
+> new one, as Marc requested. Marc, could you find time to review these?
+>=20
+> Marek
+>=20
+> Marek Beh=C3=BAn (1):
+>   PCI: aardvark: Drop __maybe_unused from advk_pcie_disable_phy()
+>=20
+> Pali Roh=C3=A1r (16):
+>   PCI: aardvark: Rewrite IRQ code to chained IRQ handler
+>   PCI: aardvark: Fix support for MSI interrupts
+>   PCI: aardvark: Fix reading MSI interrupt number
+>   PCI: aardvark: Refactor unmasking summary MSI interrupt
+>   PCI: aardvark: Add support for masking MSI interrupts
+>   PCI: aardvark: Fix setting MSI address
+>   PCI: aardvark: Enable MSI-X support
+>   PCI: aardvark: Add support for ERR interrupt on emulated bridge
+>   PCI: aardvark: Fix reading PCI_EXP_RTSTA_PME bit on emulated bridge
+>   PCI: aardvark: Optimize writing PCI_EXP_RTCTL_PMEIE and
+>     PCI_EXP_RTSTA_PME on emulated bridge
+>   PCI: aardvark: Add support for PME interrupts
+>   PCI: aardvark: Fix support for PME requester on emulated bridge
+>   PCI: aardvark: Use separate INTA interrupt for emulated root bridge
+>   PCI: aardvark: Check return value of generic_handle_domain_irq() when
+>     processing INTx IRQ
+>   PCI: aardvark: Remove irq_mask_ack callback for INTx interrupts
+>   PCI: aardvark: Don't mask irq when mapping
+>=20
+>  drivers/pci/controller/pci-aardvark.c | 332 +++++++++++++++++++-------
+>  1 file changed, 245 insertions(+), 87 deletions(-)
+>=20
 
