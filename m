@@ -2,74 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1B5046CE1C
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 08:07:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECBDE46CE2D
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 08:14:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244409AbhLHHLW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Dec 2021 02:11:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240004AbhLHHLW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 02:11:22 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8855C061574;
-        Tue,  7 Dec 2021 23:07:50 -0800 (PST)
+        id S232580AbhLHHS1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Dec 2021 02:18:27 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:45330 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231535AbhLHHS0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 02:18:26 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id D51BECE19BA;
-        Wed,  8 Dec 2021 07:07:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0D66C00446;
-        Wed,  8 Dec 2021 07:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1638947266;
-        bh=wutgiMs0XujmMpHmW7BVLnhSE5vS+yA9SLyoA4H4HTg=;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5E8FBB81691;
+        Wed,  8 Dec 2021 07:14:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35BC0C00446;
+        Wed,  8 Dec 2021 07:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638947692;
+        bh=AWG3rNQnFaUqlVZi6qDgg8+9yS/8b11qWAJbuAsLQwg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ha6e/BylqojqulxgeZ3IZZdpIXApJ9PUhLZCE0M7CwCIF3SECNq2FiTtUtQM/nb3u
-         zKGmy6YofGX+RDBwmWzXh7xp2rn6ajTnyOQv1hpNivdYBAH74FYaJeC28WQTn1M4xd
-         HFXzfUkAeGFUWsLbFNN3XgHIW7l8X7MMwPz6Ypqg=
-Date:   Wed, 8 Dec 2021 08:07:39 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
-        hdegoede@redhat.com, bhelgaas@google.com,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        shuah@kernel.org, mgross@linux.intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        b=QeYOTtDkErFpuDGtcd6GYC/LZ7toAO2LM14xQDUSZkNqC0l5jc3Mo45rFRPVJNpfx
+         lzUW58lBRDO5xRk+BMW7lDfSzS2JUDkQM4XS7ACZgn2qHdPQadOsFi+COgHol21q+7
+         lIenJ0x6mvE4ApbPEw1+ZcM+vnHL2UXBr+d8h9m+xCYj+nF3489g0FGBpBSa3rwR2L
+         HfSYSLQ0Wzj21PIqPiVZxekjDniB2mDYfXCGJrLFsXtS8cSlN4mjPCoOn6McXp6e7y
+         oIKHTZf5UX7ENjgEP0wNgXcpZCXhDsdDBBXzK/nvzm1MAQluSDUaaxPhZPz52XyKUZ
+         gmcV4fHYfrwSQ==
+Date:   Wed, 8 Dec 2021 09:14:47 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, shuah@kernel.org,
+        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
         linux-kselftest@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [V2 2/6] driver core: auxiliary bus: Add driver data helpers
-Message-ID: <YbBZuwXZWMV9uRXI@kroah.com>
+Subject: Re: [V2 4/6] platform/x86: Add Intel Software Defined Silicon driver
+Message-ID: <YbBbZ+JMk9eEgNKl@unreal>
 References: <20211207171448.799376-1-david.e.box@linux.intel.com>
- <20211207171448.799376-3-david.e.box@linux.intel.com>
- <YbBYtJFQ47UH2h/k@unreal>
+ <20211207171448.799376-5-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YbBYtJFQ47UH2h/k@unreal>
+In-Reply-To: <20211207171448.799376-5-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 08, 2021 at 09:03:16AM +0200, Leon Romanovsky wrote:
-> On Tue, Dec 07, 2021 at 09:14:44AM -0800, David E. Box wrote:
-> > Adds get/set driver data helpers for auxiliary devices.
-> > 
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > Reviewed-by: Mark Gross <markgross@kernel.org>
-> > ---
-> > V2
-> >   - No changes
-> > 
-> >  include/linux/auxiliary_bus.h | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
+On Tue, Dec 07, 2021 at 09:14:46AM -0800, David E. Box wrote:
+> Intel Software Defined Silicon (SDSi) is a post manufacturing mechanism for
+> activating additional silicon features. Features are enabled through a
+> license activation process.  The SDSi driver provides a per socket, sysfs
+> attribute interface for applications to perform 3 main provisioning
+> functions:
 > 
-> I would really like to see an explanation why such obfuscation is really
-> needed. dev_*_drvdata() is a standard way to access driver data.
+> 1. Provision an Authentication Key Certificate (AKC), a key written to
+>    internal NVRAM that is used to authenticate a capability specific
+>    activation payload.
+> 
+> 2. Provision a Capability Activation Payload (CAP), a token authenticated
+>    using the AKC and applied to the CPU configuration to activate a new
+>    feature.
+> 
+> 3. Read the SDSi State Certificate, containing the CPU configuration
+>    state.
+> 
+> The operations perform function specific mailbox commands that forward the
+> requests to SDSi hardware to perform authentication of the payloads and
+> enable the silicon configuration (to be made available after power
+> cycling).
+> 
+> The SDSi device itself is enumerated as an auxiliary device from the
+> intel_vsec driver and as such has a build dependency on CONFIG_INTEL_VSEC.
+> 
+> Link: https://github.com/intel/intel-sdsi
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Mark Gross <markgross@kernel.org>
+> ---
+> V2
+>   - Use sysfs_emit() in guid_show()
+>   - Fix language in ABI, suggested by Bjorn
+>   - Fix wrong directory name in ABI doc
 
-Lots of busses have this helper.  This is nothing new at all, and is
-nice to have.  Look at all of the calls to dev_get_drvdata() in
-include/linux/ for the examples.
+<...>
 
-thanks,
+> @@ -0,0 +1,77 @@
+> +What:		/sys/bus/auxiliary/devices/intel_vsec.sdsi.X
 
-greg k-h
+<...>
+
+> +static const struct auxiliary_device_id sdsi_aux_id_table[] = {
+> +	{ .name = "intel_vsec.sdsi" },
+
+Are you sure that this sysfs is correct?
+
+Auxiliary bus set device name as a combination of module name plus suffix.
+
+  172 int __auxiliary_device_add(struct auxiliary_device *auxdev, const char *modname)
+  173 {
+  174         struct device *dev = &auxdev->dev;
+  175         int ret;
+ ....
+  181
+  182         ret = dev_set_name(dev, "%s.%s.%d", modname, auxdev->name, auxdev->id);
+
+Thanks
