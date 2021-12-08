@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4919646CA4C
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 02:50:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91C6A46CA38
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 02:50:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243233AbhLHByN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Dec 2021 20:54:13 -0500
-Received: from mga05.intel.com ([192.55.52.43]:7653 "EHLO mga05.intel.com"
+        id S243096AbhLHBxu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Dec 2021 20:53:50 -0500
+Received: from mga01.intel.com ([192.55.52.88]:35178 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243158AbhLHByK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 7 Dec 2021 20:54:10 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="323990812"
+        id S243071AbhLHBxs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 7 Dec 2021 20:53:48 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="261808264"
 X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="323990812"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:50:16 -0800
+   d="scan'208";a="261808264"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 17:50:17 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
-   d="scan'208";a="606054977"
+   d="scan'208";a="462578908"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Dec 2021 17:50:16 -0800
+  by orsmga006.jf.intel.com with ESMTP; 07 Dec 2021 17:50:16 -0800
 Received: from debox1-desk4.hsd1.or.comcast.net (unknown [10.251.18.198])
-        by linux.intel.com (Postfix) with ESMTP id 0DD185804B4;
+        by linux.intel.com (Postfix) with ESMTP id 674F6580842;
         Tue,  7 Dec 2021 17:50:16 -0800 (PST)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     lee.jones@linaro.org, hdegoede@redhat.com,
@@ -30,11 +30,10 @@ To:     lee.jones@linaro.org, hdegoede@redhat.com,
         gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
         srinivas.pandruvada@intel.com, mgross@linux.intel.com
 Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH RESEND V2 1/6] PCI: Add #defines for accessing PCIe DVSEC fields
-Date:   Tue,  7 Dec 2021 17:50:10 -0800
-Message-Id: <20211208015015.891275-2-david.e.box@linux.intel.com>
+        linux-pci@vger.kernel.org, Mark Gross <markgross@kernel.org>
+Subject: [PATCH RESEND V2 2/6] driver core: auxiliary bus: Add driver data helpers
+Date:   Tue,  7 Dec 2021 17:50:11 -0800
+Message-Id: <20211208015015.891275-3-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211208015015.891275-1-david.e.box@linux.intel.com>
 References: <20211208015015.891275-1-david.e.box@linux.intel.com>
@@ -44,36 +43,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add #defines for accessing Vendor ID, Revision, Length, and ID offsets
-in the Designated Vendor Specific Extended Capability (DVSEC). Defined
-in PCIe r5.0, sec 7.9.6.
+Adds get/set driver data helpers for auxiliary devices.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Mark Gross <markgross@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
 V2
   - No changes
 
- include/uapi/linux/pci_regs.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/auxiliary_bus.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index ff6ccbc6efe9..318f3f1f9e92 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1086,7 +1086,11 @@
+diff --git a/include/linux/auxiliary_bus.h b/include/linux/auxiliary_bus.h
+index fc51d45f106b..a8338d456e81 100644
+--- a/include/linux/auxiliary_bus.h
++++ b/include/linux/auxiliary_bus.h
+@@ -28,6 +28,16 @@ struct auxiliary_driver {
+ 	const struct auxiliary_device_id *id_table;
+ };
  
- /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
- #define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
-+#define  PCI_DVSEC_HEADER1_VID(x)	((x) & 0xffff)
-+#define  PCI_DVSEC_HEADER1_REV(x)	(((x) >> 16) & 0xf)
-+#define  PCI_DVSEC_HEADER1_LEN(x)	(((x) >> 20) & 0xfff)
- #define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-Specific Header2 */
-+#define  PCI_DVSEC_HEADER2_ID(x)		((x) & 0xffff)
- 
- /* Data Link Feature */
- #define PCI_DLF_CAP		0x04	/* Capabilities Register */
++static inline void *auxiliary_get_drvdata(struct auxiliary_device *auxdev)
++{
++	return dev_get_drvdata(&auxdev->dev);
++}
++
++static inline void auxiliary_set_drvdata(struct auxiliary_device *auxdev, void *data)
++{
++	dev_set_drvdata(&auxdev->dev, data);
++}
++
+ static inline struct auxiliary_device *to_auxiliary_dev(struct device *dev)
+ {
+ 	return container_of(dev, struct auxiliary_device, dev);
 -- 
 2.25.1
 
