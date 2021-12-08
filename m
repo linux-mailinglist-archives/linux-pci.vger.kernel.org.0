@@ -2,111 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7E9146D17E
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 11:59:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A3DA46D4A9
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 14:44:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbhLHLDQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Dec 2021 06:03:16 -0500
-Received: from mga03.intel.com ([134.134.136.65]:10195 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229496AbhLHLDP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Dec 2021 06:03:15 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="237748789"
-X-IronPort-AV: E=Sophos;i="5.87,297,1631602800"; 
-   d="scan'208";a="237748789"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 02:59:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,297,1631602800"; 
-   d="scan'208";a="462724172"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 08 Dec 2021 02:59:40 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1muufk-0000SZ-6p; Wed, 08 Dec 2021 10:59:40 +0000
-Date:   Wed, 8 Dec 2021 18:58:38 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>,
-        nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, kw@linux.com, bhelgaas@google.com,
-        michael.a.bottini@linux.intel.com, rafael@kernel.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/2] PCI/ASPM: Add ASPM BIOS override function
-Message-ID: <202112081833.kaiKplAi-lkp@intel.com>
-References: <20211208002043.882200-1-david.e.box@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211208002043.882200-1-david.e.box@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S234667AbhLHNsT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Dec 2021 08:48:19 -0500
+Received: from mail-oi1-f176.google.com ([209.85.167.176]:41550 "EHLO
+        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234537AbhLHNsR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 08:48:17 -0500
+Received: by mail-oi1-f176.google.com with SMTP id u74so4158659oie.8;
+        Wed, 08 Dec 2021 05:44:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=ceS8DOyVWiqDmyJJ3O1SxSQy6Mk9Il1x095szsCVvCw=;
+        b=bZGe2vU78QTb9s3gnXeasjw+G64aKNlMPkEPxdDdQDsyrNJjCh3d7UeVQ+7rdZYub9
+         MyoQaSHCfAWF+IdOY/c9wc+9h0bnaKHXsZyMO9/bhuFR6u3XZYlFTevbtAcDekVbehTM
+         uZbIROjtFwKuCsjWmAWR0nHF5j5+Q2az0Ryoq1hraUJH+JaeuQzpUpyXydT4tIFNhIR8
+         lrB/rXjhtoOslrO5aeLHFNoEetWTqNO3A6UG77a4J1aQAaFKqpmQqDqM2MILggi6B1J7
+         nqdsH2hRKZim+lDBqBeChmqU3aTjPQHONAkXSiTIbCHZIe72nObFPboLB47I6l/e/MI9
+         JKBw==
+X-Gm-Message-State: AOAM530+IjbG+iHX/AnHYmA9IcqLY1g0mR4XYKB/CEjyfSUtmiWwk8a2
+        bweYWt5Vy/PQyPkcTMuHIQ==
+X-Google-Smtp-Source: ABdhPJxec+HLy8UT+2rjcGw7AHcsngceV3o3idoapO24k1Xgr43VxBA9b+cmmsDjrWI29eG6b2EffA==
+X-Received: by 2002:a54:4693:: with SMTP id k19mr12076076oic.125.1638971084934;
+        Wed, 08 Dec 2021 05:44:44 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id c41sm509087otu.7.2021.12.08.05.44.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 05:44:44 -0800 (PST)
+Received: (nullmailer pid 3857738 invoked by uid 1000);
+        Wed, 08 Dec 2021 13:44:28 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Ray Jui <rjui@broadcom.com>, devicetree@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20211208040432.3658355-7-f.fainelli@gmail.com>
+References: <20211208040432.3658355-1-f.fainelli@gmail.com> <20211208040432.3658355-7-f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 6/6] dt-bindings: pci: Convert iProc PCIe to YAML
+Date:   Wed, 08 Dec 2021 07:44:28 -0600
+Message-Id: <1638971068.781821.3857737.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi "David,
+On Tue, 07 Dec 2021 20:04:32 -0800, Florian Fainelli wrote:
+> Conver the iProc PCIe controller Device Tree binding to YAML now that
+> all DTS in arch/arm and arch/arm64 have been fixed to be compliant.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../bindings/pci/brcm,iproc-pcie.txt          | 133 -------------
+>  .../bindings/pci/brcm,iproc-pcie.yaml         | 176 ++++++++++++++++++
+>  2 files changed, 176 insertions(+), 133 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
+> 
 
-Thank you for the patch! Yet something to improve:
+Running 'make dtbs_check' with the schema in this patch gives the
+following warnings. Consider if they are expected or the schema is
+incorrect. These may not be new warnings.
 
-[auto build test ERROR on v5.16-rc4]
-[also build test ERROR on next-20211208]
-[cannot apply to helgaas-pci/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+This will change in the future.
 
-url:    https://github.com/0day-ci/linux/commits/David-E-Box/PCI-ASPM-Add-ASPM-BIOS-override-function/20211208-082303
-base:    0fcfb00b28c0b7884635dacf38e46d60bf3d4eb1
-config: i386-randconfig-r024-20211207 (https://download.01.org/0day-ci/archive/20211208/202112081833.kaiKplAi-lkp@intel.com/config)
-compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 097a1cb1d5ebb3a0ec4bcaed8ba3ff6a8e33c00a)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/78c85417651fe465aafee7ef1841ab75619b165b
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review David-E-Box/PCI-ASPM-Add-ASPM-BIOS-override-function/20211208-082303
-        git checkout 78c85417651fe465aafee7ef1841ab75619b165b
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/pci/controller/cadence/pci-j721e.c:23:
->> drivers/pci/controller/cadence/../../pci.h:571:82: error: expected ';' after return statement
-   static inline int pcie_aspm_policy_override(struct pci_dev *dev) { return -EINVAL }
-                                                                                    ^
-                                                                                    ;
-   1 error generated.
+Full log is available here: https://patchwork.ozlabs.org/patch/1565076
 
 
-vim +571 drivers/pci/controller/cadence/../../pci.h
+pcie@18012000: msi-controller: 'oneOf' conditional failed, one must be fixed:
+	arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dt.yaml
+	arch/arm/boot/dts/bcm911360_entphn.dt.yaml
+	arch/arm/boot/dts/bcm911360k.dt.yaml
+	arch/arm/boot/dts/bcm958300k.dt.yaml
+	arch/arm/boot/dts/bcm958305k.dt.yaml
+	arch/arm/boot/dts/bcm958522er.dt.yaml
+	arch/arm/boot/dts/bcm958525er.dt.yaml
+	arch/arm/boot/dts/bcm958525xmc.dt.yaml
+	arch/arm/boot/dts/bcm958622hr.dt.yaml
+	arch/arm/boot/dts/bcm958623hr.dt.yaml
+	arch/arm/boot/dts/bcm958625hr.dt.yaml
+	arch/arm/boot/dts/bcm958625k.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64-a0.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64w-a0.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64w.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx65.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx65w.dt.yaml
+	arch/arm/boot/dts/bcm988312hr.dt.yaml
 
-   553	
-   554	/* PCI error reporting and recovery */
-   555	pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-   556			pci_channel_state_t state,
-   557			pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev));
-   558	
-   559	bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
-   560	#ifdef CONFIG_PCIEASPM
-   561	void pcie_aspm_init_link_state(struct pci_dev *pdev);
-   562	void pcie_aspm_exit_link_state(struct pci_dev *pdev);
-   563	void pcie_aspm_pm_state_change(struct pci_dev *pdev);
-   564	void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
-   565	int pcie_aspm_policy_override(struct pci_dev *dev);
-   566	#else
-   567	static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
-   568	static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
-   569	static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
-   570	static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
- > 571	static inline int pcie_aspm_policy_override(struct pci_dev *dev) { return -EINVAL }
-   572	#endif
-   573	
+pcie@18012000: ranges: 'oneOf' conditional failed, one must be fixed:
+	arch/arm/boot/dts/bcm911360_entphn.dt.yaml
+	arch/arm/boot/dts/bcm911360_entphn.dt.yaml
+	arch/arm/boot/dts/bcm911360k.dt.yaml
+	arch/arm/boot/dts/bcm911360k.dt.yaml
+	arch/arm/boot/dts/bcm958300k.dt.yaml
+	arch/arm/boot/dts/bcm958300k.dt.yaml
+	arch/arm/boot/dts/bcm958305k.dt.yaml
+	arch/arm/boot/dts/bcm958305k.dt.yaml
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+pcie@18012000: Unevaluated properties are not allowed ('linux,pci-domain', 'bus-range', '#address-cells', '#size-cells', 'device_type' were unexpected)
+	arch/arm/boot/dts/bcm911360_entphn.dt.yaml
+	arch/arm/boot/dts/bcm911360k.dt.yaml
+	arch/arm/boot/dts/bcm958300k.dt.yaml
+	arch/arm/boot/dts/bcm958305k.dt.yaml
+
+pcie@18013000: msi-controller: 'oneOf' conditional failed, one must be fixed:
+	arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dt.yaml
+	arch/arm/boot/dts/bcm911360_entphn.dt.yaml
+	arch/arm/boot/dts/bcm911360k.dt.yaml
+	arch/arm/boot/dts/bcm958300k.dt.yaml
+	arch/arm/boot/dts/bcm958305k.dt.yaml
+	arch/arm/boot/dts/bcm958522er.dt.yaml
+	arch/arm/boot/dts/bcm958525er.dt.yaml
+	arch/arm/boot/dts/bcm958525xmc.dt.yaml
+	arch/arm/boot/dts/bcm958622hr.dt.yaml
+	arch/arm/boot/dts/bcm958623hr.dt.yaml
+	arch/arm/boot/dts/bcm958625hr.dt.yaml
+	arch/arm/boot/dts/bcm958625k.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64-a0.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64w-a0.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64w.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx65.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx65w.dt.yaml
+	arch/arm/boot/dts/bcm988312hr.dt.yaml
+
+pcie@18013000: ranges: 'oneOf' conditional failed, one must be fixed:
+	arch/arm/boot/dts/bcm911360_entphn.dt.yaml
+	arch/arm/boot/dts/bcm911360_entphn.dt.yaml
+	arch/arm/boot/dts/bcm911360k.dt.yaml
+	arch/arm/boot/dts/bcm911360k.dt.yaml
+	arch/arm/boot/dts/bcm958300k.dt.yaml
+	arch/arm/boot/dts/bcm958300k.dt.yaml
+	arch/arm/boot/dts/bcm958305k.dt.yaml
+	arch/arm/boot/dts/bcm958305k.dt.yaml
+
+pcie@18013000: Unevaluated properties are not allowed ('linux,pci-domain', 'bus-range', '#address-cells', '#size-cells', 'device_type' were unexpected)
+	arch/arm/boot/dts/bcm911360_entphn.dt.yaml
+	arch/arm/boot/dts/bcm911360k.dt.yaml
+	arch/arm/boot/dts/bcm958300k.dt.yaml
+	arch/arm/boot/dts/bcm958305k.dt.yaml
+
+pcie@18014000: msi-controller: 'oneOf' conditional failed, one must be fixed:
+	arch/arm/boot/dts/bcm958522er.dt.yaml
+	arch/arm/boot/dts/bcm958525er.dt.yaml
+	arch/arm/boot/dts/bcm958525xmc.dt.yaml
+	arch/arm/boot/dts/bcm958622hr.dt.yaml
+	arch/arm/boot/dts/bcm958623hr.dt.yaml
+	arch/arm/boot/dts/bcm958625hr.dt.yaml
+	arch/arm/boot/dts/bcm958625k.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64-a0.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64w-a0.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx64w.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx65.dt.yaml
+	arch/arm/boot/dts/bcm958625-meraki-mx65w.dt.yaml
+	arch/arm/boot/dts/bcm988312hr.dt.yaml
+
