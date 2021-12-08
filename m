@@ -2,104 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E27F46DC0C
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 20:22:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B87146DC20
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 20:25:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234566AbhLHTZS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Dec 2021 14:25:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239978AbhLHTZI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 14:25:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452F0C061746;
-        Wed,  8 Dec 2021 11:21:34 -0800 (PST)
+        id S232005AbhLHT2i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Dec 2021 14:28:38 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:36846 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229710AbhLHT2h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 14:28:37 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0A586B82275;
-        Wed,  8 Dec 2021 19:21:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18BBAC341C8;
-        Wed,  8 Dec 2021 19:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1638991291;
-        bh=flAko3jtQKmtx9X5Z+Aj4PgqNh/wtnJ0lsVhb+dcL30=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nishq4Yzs1p2DF8s+QCR43LiGoin7Ct7ZAX8cuwZLtFz0UIWU29andkeh3c4Hn0F2
-         yCcva0gwWef/zf52MUClmF3LF9n08yRH6Rf6ZmO8CheFZeGLvZMzZKFKzVu8p3Ym3J
-         X4WKUdWPjcI3OMLW9j+Yamz+tZ8t6mhMCnB6nfsw=
-Date:   Wed, 8 Dec 2021 20:21:28 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH RESEND V2 3/6] platform/x86/intel: Move intel_pmt from
- MFD to Auxiliary Bus
-Message-ID: <YbEFuN7fwdiNI8vW@kroah.com>
-References: <20211208015015.891275-1-david.e.box@linux.intel.com>
- <20211208015015.891275-4-david.e.box@linux.intel.com>
- <YbDbql39x7Kw6iAC@kroah.com>
- <7e78e6311cb0d261892f7361a1ef10130436f358.camel@linux.intel.com>
- <YbD1NsYHbU8FvtTN@kroah.com>
- <a70956e1c4da10603e29087e893cbae62ce82631.camel@linux.intel.com>
+        by sin.source.kernel.org (Postfix) with ESMTPS id 258A7CE232C;
+        Wed,  8 Dec 2021 19:25:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD8FFC00446;
+        Wed,  8 Dec 2021 19:25:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638991502;
+        bh=oSILA5JRSWyhwLLRJf0zlbR7eHgbv9S0Wl5DNCBoeJk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QwBVXpu2zThzLZ9ZvmcOFQCW4j663oc7ofJUxIBabGfhpWwOWSOlffUtk+fVU7WQI
+         wK67+yKRopTuOorBSrCEmdOD3OZzjnNvNLYcITIoYWWbFZyu35u77JzwiJAAS6ODy5
+         j/XJk/PUzKaszscbXyE9/8LehzuLvZR4wAN4gP12Aa5wZ4L4MB5Lil8IlCvHsIix78
+         XQ0NLdvvtaVPkf+342UFGQ6gaN9jcdFY7OWyryPpP6gS+hnDzuX7RAqBQrS0+DKNqQ
+         0v5a9IrOJamud6AVzFQibkcWuxPHcF3YG9XCfjvH3YW+FY3FwE5PPkJ6xWtgcy1N14
+         umdwcdgl4zATQ==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v5 0/4] block: convert to generic power management
+Date:   Wed,  8 Dec 2021 13:24:45 -0600
+Message-Id: <20211208192449.146076-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a70956e1c4da10603e29087e893cbae62ce82631.camel@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 08, 2021 at 11:09:48AM -0800, David E. Box wrote:
-> On Wed, 2021-12-08 at 19:11 +0100, Greg KH wrote:
-> > On Wed, Dec 08, 2021 at 09:47:26AM -0800, David E. Box wrote:
-> > > On Wed, 2021-12-08 at 17:22 +0100, Greg KH wrote:
-> > > > On Tue, Dec 07, 2021 at 05:50:12PM -0800, David E. Box wrote:
-> > > > > +static struct pci_driver intel_vsec_pci_driver = {
-> > > > > +       .name = "intel_vsec",
-> > > > > +       .id_table = intel_vsec_pci_ids,
-> > > > > +       .probe = intel_vsec_pci_probe,
-> > > > > +};
-> > > > 
-> > > > So when the PCI device is removed from the system you leak resources and
-> > > > have dangling devices?
-> > > 
-> > > No.
-> > > 
-> > > > 
-> > > > Why no PCI remove driver callback?
-> > > 
-> > > After probe all resources are device managed. There's nothing to explicitly clean up. When the
-> > > PCI
-> > > device is removed, all aux devices are automatically removed. This is the case for the SDSi
-> > > driver
-> > > as well.
-> > 
-> > Where is the "automatic cleanup" happening?  As this pci driver is bound
-> > to the PCI device, when the device is removed, what is called in this
-> > driver to remove the resources allocated in the probe callback?
-> > 
-> > confused,
-> 
-> devm_add_action_or_reset(&pdev->dev, intel_vsec_remove_aux, auxdev)
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Wow that is opaque.  Why not do it on remove instead?
+This is a repost of patches from Vaibhav to convert from legacy PCI power
+management to generic power management.  The most recent posting is here:
 
-> intel_vsec_remove_aux() gets called when the PCI device is removed. It calls auxiliary_device_unit()
-> which in turn calls the auxdev release() function that cleans up resources.
+  https://lore.kernel.org/all/20210114115423.52414-1-vaibhavgupta40@gmail.com/
 
-Does this happen when the device is removed, or when the binding of
-driver <-> device is removed?
+Vaibhav has converted around 180 drivers to generic power management, and
+over 100 of those conversions have made it upstream.  If we can finish off
+the remaining ones, we'll be able to remove quite a bit of ugly legacy code
+from the PCI core.
 
-> When the auxdev is removed, all resources that were dev_m added by the SDSi driver are released too
-> which is why it has no remove() either. I'll add the tests that check this.
+I updated the commit logs to try to make it easier to verify these.
 
-Please do so and document it well, as that is an odd "pattern".
+I also added a couple trivial mtip32xx cleanup patches in the same area and
+changed the rsxx patch to completely drop the PM ops since the driver
+doesn't support PM at all.
 
-thanks,
+Bjorn Helgaas (3):
+  mtip32xx: remove pointless drvdata checking
+  mtip32xx: remove pointless drvdata lookups
+  rsxx: Drop PCI legacy power management
 
-greg k-h
+Vaibhav Gupta (1):
+  mtip32xx: convert to generic power management
+
+ drivers/block/mtip32xx/mtip32xx.c | 86 ++++++++-----------------------
+ drivers/block/rsxx/core.c         |  7 ---
+ 2 files changed, 22 insertions(+), 71 deletions(-)
+
+-- 
+2.25.1
+
