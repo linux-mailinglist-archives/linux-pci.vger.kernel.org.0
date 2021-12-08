@@ -2,157 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D13246D761
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 16:51:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E56D46D768
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 16:52:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236325AbhLHPy6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Dec 2021 10:54:58 -0500
-Received: from mail-mw2nam12on2068.outbound.protection.outlook.com ([40.107.244.68]:8896
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S236310AbhLHPy5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 8 Dec 2021 10:54:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kY0G6Zm47GMAJceB2SGeMH4IoTa7S7djXvm0vi1zJH1G1anxJKI2S4kaZyB8iY+2lcjO7O266m2Ibo8vxRkHr+8Cul/fIJRzO7G1TiohAszV+2iwB1x2UGYrjaGZ/cOW67HAP/qcNQuJs8behChEGfxzbDKb2DAfjbP3G1UfHS+ZmVa/ztJHcfU2J4dhSu3q1laoS8GJwbdTa40G625fUplqxzf3k6Q/i7j6yT2JdQTTOvdBPSJIvwlxl7xaX4IyFfKV8S/gibTVkUsauUlXOJua026CuRnDDSfX+0Nqm+JSLrTto7U/7DcP0pULYVWwypesEzbs5JrqzixcNEBs7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s348dqgICSc7yc8kd+csRUb+Z7Y5Qb2f67t8v+cpqVA=;
- b=Xn7+yNcgsexG4ZNFuUU8o6XmsOMndZaItMfL8fnKmJyB7fMeE6rD4a96TKohqhtyNATFMukfquFeH94d7vWsiPlz27A82XU52K9u45ZQKdd9qReR4BXP4uqXg9fvWia1XAyeEE/rL2q4TvVnVRNY3fY8ZRZuiiGv1T4XMUSAcJ1NfxL+FvnKUgjkd229aeRfOqlluRKciiOeY6Le+6bmwbc8HlQoGoIUl/hR5m53K0LNoSRTobZa3AksD2ReQmkMHJ1P4MgQIiqc3zi+OraVrx+WOmtM5YGKpWw3+40Uf53vDbPI6+EAkZ1vtwpM2KXXA29+TFbw0F15uvoV7LZBbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s348dqgICSc7yc8kd+csRUb+Z7Y5Qb2f67t8v+cpqVA=;
- b=SHX6bn5yxH4nBdIdtC6bJRK9LmOS0i6qYvX0aBjWvciekEMDOVvvVYmYU9sUnmwKEkMONMkq7vInjVMJGZouSw+O56OLMhHHblMKexduO+eo2i1V7PT2JoipageT7v/aKK0lzNtTbdLUlvy0wCUXShpFCm/FmvPgnFjo8mXHwqXRt5+eK4cJ8gTYkXgqoK6fV7A9LV48Nz6po6RPw86zJFpHRHJki3noPV09cQjt9F6bHLlzHEOQKmSyQBjr++RG5aH+kgdUmyFktFDIZJ4YMlh3bO+FreHal5lfKlK3ZPvL6wNu9XBTpOrTbDVTy47E6zr7/ihEbM9vTY8MQF6ZsA==
-Received: from BL1PR12MB5189.namprd12.prod.outlook.com (2603:10b6:208:308::20)
- by BL1PR12MB5160.namprd12.prod.outlook.com (2603:10b6:208:311::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.19; Wed, 8 Dec
- 2021 15:51:21 +0000
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5189.namprd12.prod.outlook.com (2603:10b6:208:308::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.11; Wed, 8 Dec
- 2021 15:51:20 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::d8be:e4e4:ce53:6d11]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::d8be:e4e4:ce53:6d11%7]) with mapi id 15.20.4778.013; Wed, 8 Dec 2021
- 15:51:20 +0000
-Date:   Wed, 8 Dec 2021 11:51:18 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
+        id S236366AbhLHPzl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Dec 2021 10:55:41 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:49568 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236352AbhLHPzi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 10:55:38 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 73179B82182;
+        Wed,  8 Dec 2021 15:52:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC856C00446;
+        Wed,  8 Dec 2021 15:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638978724;
+        bh=OBctGawUaTI9Q+mF3DH2vwOAicF08DuL30Jq4ELnZCo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=B/xjj7I6jJtJGPSYC+DzsEZEkhtFYcXqOhe1IIbwTpXCa/huyo+TUz1Pc0Jv1QBEy
+         IteGZROj2CQQqEHNtYau6/ddy9A3KaPKx1NiV7lZy+LGefCZ4LLiVr5vNPGg8UL2+1
+         rW0M/VcSuohFNy+qjkEFM5stK+E5l835OGVFBY90CAZuutjjNuU1wt5s5kjYKmQgj3
+         2vSO9hyfKulLDfVeCafPx5TksaU/ElI3Pwt+nP7qJsyRtlHLsTAWm1VVIoe4eFK6PC
+         Bb4fkYkK2gfj4TV7nBw0XIMVnR7rtNqG5CCbmHkhk6jfi5+Rs1ThGufLkweCninqic
+         pPjBBnXx1DQIA==
+Date:   Wed, 8 Dec 2021 09:52:02 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
         Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [patch V2 24/36] powerpc/pseries/msi: Use MSI device properties
-Message-ID: <20211208155118.GW6385@nvidia.com>
-References: <20211206210307.625116253@linutronix.de>
- <20211206210438.967630948@linutronix.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211206210438.967630948@linutronix.de>
-X-ClientProxiedBy: SJ0PR05CA0164.namprd05.prod.outlook.com
- (2603:10b6:a03:339::19) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: RFC: Extend probing of native PCIe controllers
+Message-ID: <20211208155202.GA127232@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 08eec224-a9ff-4738-cd24-08d9ba629428
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5189:EE_|BL1PR12MB5160:EE_
-X-Microsoft-Antispam-PRVS: <BL1PR12MB518981CB1F689D384A7513D7C26F9@BL1PR12MB5189.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VCqGL0o0dzwUbbMYtl0SXKEqmDeUvriX9Z+GvFis7dXZPoNLN529CY/pq6f5mmzJFrHU49V1fUpfpnlKvcJo6+9tG4Y8O8g3qWWeP0s/Gs8dSIVPpGHUDKJyA2jjbAhYSgkZMByQOMc+C9RzXtlUhCdRVFb1FWjRDk959zdO+d5Gzup/YpxD3pJd5QGw1RG95fz1X90qiWSnSu6vWaRrQG/Eu5DnXd7x5yL1A+2oMHvpYHzlEnkJkejfzv0vqKqRduI/ux8SmxCMwBaDoWc0XiLh2maLrgNZXKVDiwr4YU5kH2Q0I12MDUuoRTlH2c1h9y93BEgOLuii/0WeNoh1A2qTTC57pZd36lZKfp0HLSzV+DiqqZXjOwJ5uwJFuunvzbee/axYJiC7mwq03S/PwtguNqcUKbC0xGx0SFdY2+/mOobDaYUxw14fFZjNwTN28O+FZp34vY3cHi+qtxvmkwTt1VsyAnxrsOxc4LMwb8e7RLYOGUC6BsW7BXOGLAGwCZsy3GCHnHAsOp08OA1wlUS0iEBk9OnwfwuJ77a8+UJYuv2DGu/O90wI2HfrNWvXcKpnIRF5cAbf7boR/cKcHGxSWuSy6cF8CLK9naQhPjMbT5xpKhVzpI4/Ju1kvLVnCLXo5QjCaAabXqDeVHazsg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(7416002)(5660300002)(186003)(8676002)(33656002)(4326008)(8936002)(2616005)(6506007)(508600001)(38100700002)(26005)(6916009)(83380400001)(86362001)(316002)(36756003)(6486002)(4744005)(1076003)(54906003)(6512007)(2906002)(66556008)(66476007)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nY99BlSX7EPurIJ0DhJ4K6f2jifD5yJUaDogsJAS5oVyyJK1VQHwpPYWwfEC?=
- =?us-ascii?Q?yYG3+B2kBS3Y24wHwcM/qPNU98SBtDRURPMmdjlCYuYzL3mk4mOz3irTJa2u?=
- =?us-ascii?Q?yzBv8Nv8jqvEJkzYlHtWmV+70WvJcdJDZdSx0XITebXaZCAK5dfftnrcmNOi?=
- =?us-ascii?Q?/YM4N42f7gZo7cassvjt1dl74hhh/mt0tlYxiuwluD1fgLxzCiJFpZ70vACO?=
- =?us-ascii?Q?zti7j+C2q4zCAcpA5rT7rpZ4QH0HbYqjOefQ4ZC+QGfnDmq4HfBLqERI6Gsd?=
- =?us-ascii?Q?cxKk0yIWll1jJrpeXXofwnm8lELo5ObqBOaQyelhagZwL5C3ag+q8fEwp1gx?=
- =?us-ascii?Q?3ecOG/o7+Gyx3lvA5HgOVriRMBOCl1vA2e1TY5RMGW/gaCaIagp7DDREePCW?=
- =?us-ascii?Q?PMvTgFyveK9hakcH0e0n9U6bwGqwQyC5pvus6FODgXOFc2Dk0dbrNxgbp/SX?=
- =?us-ascii?Q?OGkNOm3pF7Uc+7lO4tGuNZCAHQ6sk5vgT5YZbhfZmSpXL7rw3xzfReyHGjeL?=
- =?us-ascii?Q?7U8lRmExV3KdQJ3nQ0oNRxUdCi2lJqyv4v7x3wQ7AViAS4tkTzrjd5YC4Tyc?=
- =?us-ascii?Q?KV8QECRsyKgluEuZWrPfGA/wZUyA7m/aN3dx3B+jC9h/XbkfdvdHGR0mvHRM?=
- =?us-ascii?Q?kdFggDFIbYeKoJj/0ANwjvm4VgZbRwLlcSiZjquug5ioK33cYTbcz6aEfcbA?=
- =?us-ascii?Q?WWKbXkfoGiPIbOktWJJWtVMaT3Rm0vBdJRJBq+c5BrKMPA9Ha6jWk/wcP/cv?=
- =?us-ascii?Q?lZ7Vtd33/EgfQNYH/RtIiAmssI6NhflU2wbB3PCFftjPOmE52++8IzPfKfqE?=
- =?us-ascii?Q?KllrkM8Tm3Mwb/q7M0dKkJ60/CCt6ufFyhJi9MiqfY8PXDjLsQ0ILXRqErEL?=
- =?us-ascii?Q?x5oCETlb5pvJx8jnpQX8WEDmOVA3jnUQ/Aa5Uvt5eGogk1filUZu2GcpE2mO?=
- =?us-ascii?Q?uts+14sNYh2jHBhAz6g4AeI0JaYV44beFvoRRiOD8HC9vhZX5qrEMN4NefhJ?=
- =?us-ascii?Q?v1FvyqZIfiOjDRuIn7d6BNLlFMwtPoTL2Swg/AdGlcYykKzbho7o9HVbxVX1?=
- =?us-ascii?Q?Vp1ptU4Rcjpk/hMzRkZRlaYG8Ukamyzhpt8QYRFPmnu0TZSYwJLcyssPtC7V?=
- =?us-ascii?Q?KnIAyXz6Vcg6/UG8tUXrcBZEIAE4VpTj6YsTqFCKLEHko3GBa/6UGrU1VdLk?=
- =?us-ascii?Q?zzg/7BB05pnPOVlZJuUJMcKMZRhpt7c+Aju1mJSgI5CwuM/jzt25DkQAN55r?=
- =?us-ascii?Q?E8Nkkk9Y/Fuj5pN3sgeUFlL0XUqSGAFTJyHvStZCmILQqEznIR6QPIs8pNdF?=
- =?us-ascii?Q?At0/9TDLbkUkLRZjs/atuXxzu7TQgKaPjdUi5vpTQveSa0PGRKnndah98WKO?=
- =?us-ascii?Q?YNynFI1u8JcmjZmVOEKkkMx5pTBLx0rYC+HAbFzwCVTyrtK1dfdJPvSki7FE?=
- =?us-ascii?Q?UhUVWsndfNs//1gjdAb5mj4O/pA3tVfjgfatM4H2637f4rPNi8l6/VnLdYXR?=
- =?us-ascii?Q?o9SDnCwJYduoVadyvJjTqaQNxiMH1IGZJTFx5B+ZIJhvJizoc1wlJ6ciypP2?=
- =?us-ascii?Q?cj6VYWZwIyGZr0NhT2Q=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08eec224-a9ff-4738-cd24-08d9ba629428
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2021 15:51:20.6617
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4LtoikyL2SFNcGJqm9Vjd9iRvQA/N54LSatbf3mvYK8ybnzLr+MKENqYbbBEHszW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5160
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211022183808.jdeo7vntnagqkg7g@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 06, 2021 at 11:39:34PM +0100, Thomas Gleixner wrote:
-> instead of fiddling with MSI descriptors.
+On Fri, Oct 22, 2021 at 08:38:08PM +0200, Pali Rohár wrote:
+> Hello!
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
->  arch/powerpc/platforms/pseries/msi.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> In this email I'm describing how I see that probing of native PCIe
+> controller drivers is implemented, how it should be implemented and how
+> to extend / simplify core code for controller drivers.
+>
+> Native PCIe controller drivers needs to fill struct pci_host_bridge and
+> then call pci_host_probe(). Function pci_host_probe() starts probing and
+> enumerating buses and register PCIe devices to system.
 > 
-> +++ b/arch/powerpc/platforms/pseries/msi.c
-> @@ -447,9 +447,9 @@ static int rtas_prepare_msi_irqs(struct
->  static int pseries_msi_ops_prepare(struct irq_domain *domain, struct device *dev,
->  				   int nvec, msi_alloc_info_t *arg)
->  {
-> +	bool is_msix = msi_device_has_property(dev, MSI_PROP_PCI_MSIX);
-> +	int type = is_msix ? PCI_CAP_ID_MSIX : PCI_CAP_ID_MSI;
->  	struct pci_dev *pdev = to_pci_dev(dev);
+> But initialization of PCIe controller and cards on buses (other end of
+> PCIe link) is more complicated and basically every native PCIe
+> controller driver needs to do initialization PCIe link prior calling
+> pci_host_probe(). Steps which controller drivers are doing are de-facto
+> standard steps defined in PCIe base or CEM specification.
+> 
+> The most problematic step is to reset endpoint card and wait until
+> endpoint card start. Reset of endpoint card is done by standard PERST#
+> signal (defined in PCIe CEM spec) and in most cases board export control
+> of this signal to OS via GPIO (few board and drivers have this signal
+> connected to PCIe controller and then PCIe controller has some specific
+> registers to control this signal). Reset via PERST# signal is defined in
+> PCIe CEM and base specs as "PCIe Warm Reset".
+> 
+> As discussed in the following email thread, this PCIe Warm Reset should
+> not depend on PCIe controller as it resets card on the other end of PCIe
+> controller. But currently every native PCIe controller driver does PCIe
+> Warm Reset by its own for randomly chosen time period. There is open
+> question how long should be endpoint card in Warm Reset state:
+> https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+> 
+> Initialization of PCIe endpoint card is described in PCIe CEM spec in
+> Figure 2-10: Power Up. Other informations are in PCIe base spec in 6.6.1
+> Conventional Reset section.
+> 
+> If I understand specifications correctly then OS initialization steps
+> should be following (please correct me if I'm wrong!):
+> 
+> 1) Put PERST# to low which enter endpoint card into reset state
+> 2) Enable AUX power (3.3V) and wait until is stable
+> 3) Enable main power (12V/3.3V) and wait until is stable
+> 4) Enable refclock and wait until is stable
+> 5) Enable LTSSM on PCIe controller to start link training
+> 6) Put PERST# to high which exit endpoint card from reset state
+> 7) Wait until link training completes
+> 8) Wait another 100ms prior accessing config space of endpoint card
+> 
+> Minimal time period between "after step 3)" and "before step 6)" is T_PVPERL = 100ms
+> Minimal time period between "after step 4)" and "before step 6)" is T_PERSTCLK = 100us
+> 
+> After step 6) is end of Fundamental Reset and PCIe controller needs to
+> be in LTSSM Detect state within 20ms. So enabling it prior putting
+> PERST# to high should achieve it.
+> 
+> Competition of link training is indicated by standard DLLLA bit in Root
+> Port config space. Support for DLLLA bit is optional and is indicated by
+> DLLLARC bit in Root Port config space. Lot of PCIe controllers do not
+> support this standard DLLLA bit, but have their own specific register
+> for it.
+> 
+> Similarly is defined power down of PCIe card in PCIe CEM spec in Figure
+> 2-13: Power Down. If I understand it correctly steps are:
+> 
+> 1) Put endpoint card into D3hot state, so PCIe link goes inactive
+> 2) Put PERST# to low, so endpoint card enters reset state
+> 3) Disable main power (12V/3.3V)
+> 4) Disable refclock
+> 
+> In case of surprise power down, PERST# needs to go low in 500ns.
+> 
+> In PCIe base spec in section 5.2 Link State Power Management is
+> described that preparation for removing the main power source can be
+> done also by sending PCIe PME_Turn_Off Message by Root Complex. IIRC
+> there is no standard way how to send PCIe PME_Turn_Off message.
+> 
+> 
+> 
+> 
+> I see that basically every PCIe controller driver is doing its own
+> implementation of PCIe Warm Reset and waiting until PCIe link is ready
+> prior calling pci_host_probe().
+> 
+> Based on all above details I would like to propose following extending
+> of struct pci_host_bridge and pci_host_probe() function to de-duplicate
+> native PCIe controller driver code:
+> 
+> 1) extend struct pci_host_bridge to provide callbacks for:
+>    * enable / disable main power source
+>    * enable / disable refclock
+>    * enable / disable LTSSM link training (if PCIe link should go into Detect / Polling state)
+>    * enable / disable PERST# signal
+>    * returning boolean if endpoint card is present (physically in PCIe/mPCIe/m.2/... slot)
+>    * returning boolean if link training completed
+>    * sending PCIe PME_Turn_Off message
+> 
+> 2) implement asynchronous initialization of PCIe link and enumeration of
+>    PCIe bus behind the PCIe Root Port from pci_host_probe() based on new
+>    callbacks added in 1)
+>    --> so native PCIe controller drivers do not have to do it manually
+>    --> during this initialization can be done also PCIe Hot Reset
+> 
+> 3) implement PCIe Hot Reset as reset method via PERST# signal and put it
+>    into pci_reset_fn_methods[] array
+> 
+> 4) implement PCIe Cold Reset as reset method via power down / up and put
+>    it into pci_reset_fn_methods[] array
+> 
+> 5) as enabling / disabling power supply and toggling PERST# signal is
+>    implemented via GPIO, add some generic implementation for callback
+>    functions which will use named gpios (e.g. from DT)
+> 
+> This could simplify implementations of native PCIe controller drivers by
+> calling initialization steps in correct order with correct timeouts and
+> drivers do not have to do copy+paste same common code or reimplement it
+> with own constants and macros for timeouts, etc...
+> 
+> Also it should enable access to PCIe Root Port as this device is part of
+> Root Complex and should be available also when link is down or link
+> training was not completed. Currently some PCIe controllers are not
+> registered into system when link is down (e.g. card is disconnected or
+> card has some issue). Which also prevents access to PCIe Root Port
+> device. And in some cases it could speed up boot process as pci
+> controller driver does not have to actively wait for link and let kernel
+> do initialization of other devices.
+> 
+> What do you think about this idea?
 
-We have the pci_dev here, why not just do something like
+I would love to have somebody work on this because every native driver
+does it differently and I'm guessing none of them really do it
+correctly.
 
-   bool is_msix = pdev->msix_enabled;
+Note that struct pci_host_bridge is a 1:many situation with Root
+Ports, which is where the link management is.  Unfortunately many
+drivers have the single Root Port assumption baked into them.
 
-?
-
-Jason
+I think I would start small, by adding some #defines for T_PVPERL,
+T_PERSTCLK, etc, and using them, which will probably expose lots of
+gaps and hidden assumptions.  Then maybe add the callback functions
+but use them internally to the driver before moving the calls to the
+shared core.  I like it best when reorganizations like moving all the
+initialization steps into the core are simple "code move only, no
+functional change" sort of things.
