@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A78246D80D
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 17:24:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BAA146D82E
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 17:29:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236824AbhLHQ2J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Dec 2021 11:28:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40440 "EHLO
+        id S236940AbhLHQdS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Dec 2021 11:33:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236757AbhLHQ2I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 11:28:08 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20A7C061746;
-        Wed,  8 Dec 2021 08:24:36 -0800 (PST)
+        with ESMTP id S234307AbhLHQdR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 11:33:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB5C2C061746;
+        Wed,  8 Dec 2021 08:29:44 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 0D66ACE2217;
-        Wed,  8 Dec 2021 16:24:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CD4EC00446;
-        Wed,  8 Dec 2021 16:24:32 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AEA3CB821B3;
+        Wed,  8 Dec 2021 16:29:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CA01C00446;
+        Wed,  8 Dec 2021 16:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1638980673;
-        bh=SmpUb8pQKAosOLfT1/noujmv2wKXUQ70vjh2C2TVP+0=;
+        s=korg; t=1638980982;
+        bh=hQ+Rt1CRNOYnDsv7y+zbtPW6Vn+xzXGRkSA+WYNyj7U=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p9KdOcqq+YCjTOOQmaYm4JfnXk29L1agRnpqYxzhAXNXjXsfSyrdsqLCaXl5vvrVN
-         G/ZLgPG1H4mgd10ZZeCFpQaikA+SmWDMsvXHuRRUymIdAadFD/TfRBt/ktGIYwz6xn
-         VBQOCPDyLUiNXUc+y9AiysmWu/ZffaEDzQR/Exio=
-Date:   Wed, 8 Dec 2021 17:24:30 +0100
+        b=06UR1ARBo7Gh/NjLX15lJO2wNTvKzgSX++sMg+Gu69mg0lvLcHV+z+CgdqOCZDOp0
+         GoMmFdsEUBlF3IGR+ZPuOA/+csnso855Uap7vjY3DGPrcSm2mDmiTV3vUQA4We3fk5
+         21j0E2ytgVKY6/zsPDkDR2a5+hwQlZf/eWJXdO6U=
+Date:   Wed, 8 Dec 2021 17:29:39 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     "David E. Box" <david.e.box@linux.intel.com>
 Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
@@ -38,7 +38,7 @@ Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
         Mark Gross <markgross@kernel.org>
 Subject: Re: [PATCH RESEND V2 4/6] platform/x86: Add Intel Software Defined
  Silicon driver
-Message-ID: <YbDcPipY/SbV3Gvs@kroah.com>
+Message-ID: <YbDdc3VVI/YgqWxT@kroah.com>
 References: <20211208015015.891275-1-david.e.box@linux.intel.com>
  <20211208015015.891275-5-david.e.box@linux.intel.com>
 MIME-Version: 1.0
@@ -77,5 +77,11 @@ On Tue, Dec 07, 2021 at 05:50:13PM -0800, David E. Box wrote:
 > 
 > Link: https://github.com/intel/intel-sdsi
 
-There is no code at this link :(
+Also, why not put the documentation that you have currently at that link
+in this commit in the driver itself?  That would make it much more
+self-contained and live longer than some random external web link that
+could go away at any moment.
 
+thanks,
+
+greg k-h
