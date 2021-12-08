@@ -2,74 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C37F46DD46
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 21:50:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CB8146DD56
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 21:56:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234599AbhLHUyZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Dec 2021 15:54:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46748 "EHLO
+        id S234807AbhLHVA1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Dec 2021 16:00:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232827AbhLHUyY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 15:54:24 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68666C061746
-        for <linux-pci@vger.kernel.org>; Wed,  8 Dec 2021 12:50:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 05525B822BA
-        for <linux-pci@vger.kernel.org>; Wed,  8 Dec 2021 20:50:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E394C00446;
-        Wed,  8 Dec 2021 20:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638996649;
-        bh=cgGLauJN3WSyMttADxJC4UysVrmx7b6+FQJ2qOGZRX8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=r69E++mU1pI8Xd3veo2bc1L6mG2Ti5ny/ulxtYVWDLXrbMp2gbaLLGMGas7hQSvk6
-         kudk/S2GYu+RtgdX8v627WQzDIF5+CR6eY+3bbfNxueq2KO9N00S3pVtAQvKfzN8eQ
-         V/B8XVaJwnwIHmh9D/M/siOcTbNYIkPPJSMCWR7+1NzfaQ1G3bsWyvNqDTnkO1M3Wt
-         kCcrKigr7+JhD7LJhPCo7letseiqoLklEuQkrJyzgCTH9kgHc9xGSRCCOebam5QKEY
-         0jKfErqVy6yAX8B3BSGt7OyTqGUnQ4fbnlMNwrj9Yjxoal0/oBJn0YI7Uf8VlcWdtC
-         abWghJhrUoc1A==
-Date:   Wed, 8 Dec 2021 14:50:47 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Fan Fei <ffclaire1224@gmail.com>
-Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH 0/7] PCI: Prefer of_device_get_match_data() over
- of_match_device()
-Message-ID: <20211208205047.GA153767@bhelgaas>
+        with ESMTP id S235864AbhLHVA1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 16:00:27 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6293C0617A1;
+        Wed,  8 Dec 2021 12:56:54 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638997011;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RI9goYiyaxxlyowVIy50GRXpRhCNUYZrM4r3seD1bKI=;
+        b=NIPhL0sgn8M0aJUIi890pmZGlk891yoUSSDMnC4hnbyawxG2Kyh7G1sHH/xsmtSWUM8FfZ
+        FyiBCPJVbWpXpFfMUl77mb1l8QqDIF5HigALgdn/RYqTMPCpOHMr0KIFCokDN7aLnrEdks
+        8rrnfZKCxcaetGnTQyHUg4mAfEc2N1sxXiIWn5IbWqnhikYmOYt6fknKqXzV7CdqL4P4H4
+        8ZS0DFKNdnSGea2HezKm7Hkc6llGKcBl9S+VI9FjnibvCSYHAcSlNTnETtfGbCxdf3f6N4
+        HjxoAKj0UnKj8JjZlpBFr0/NMCZQnVLvInv7aT9TCLkwNt6S0nNqOl/aBjfedw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638997011;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RI9goYiyaxxlyowVIy50GRXpRhCNUYZrM4r3seD1bKI=;
+        b=KF19qqsUtSG+rWG9NpEYyzGIEvbq/ti9eoiMayWfd1iK3FYz9roP5HeWY227THj1hSYyZu
+        bO4E+0TC1Z5Br/AA==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Cedric Le Goater <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org, Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: [patch V2 20/23] PCI/MSI: Move msi_lock to struct pci_dev
+In-Reply-To: <20211208152925.GU6385@nvidia.com>
+References: <20211206210147.872865823@linutronix.de>
+ <20211206210224.925241961@linutronix.de>
+ <20211208152925.GU6385@nvidia.com>
+Date:   Wed, 08 Dec 2021 21:56:50 +0100
+Message-ID: <871r2m24tp.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1637678103.git.ffclaire1224@gmail.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 23, 2021 at 04:37:55PM +0100, Fan Fei wrote:
-> Some drivers use of_match_device() in probe(), which returns a 
-> "struct of_device_id *". They need only the of_device_id.data member, so 
-> replace of_device_get_match_data() with of_match_device().
-> 
-> Fan Fei (7):
->   PCI: altera: Prefer of_device_get_match_data() over of_match_device()
->   PCI: cadence: Prefer of_device_get_match_data() over of_match_device()
->   PCI: kirin: Prefer of_device_get_match_data() over of_match_device()
->   PCI: dra7xx: Prefer of_device_get_match_data() over of_match_device()
->   PCI: keystone: Prefer of_device_get_match_data() over
->     of_match_device()
->   PCI: artpec6: Prefer of_device_get_match_data() over of_match_device()
->   PCI: dwc: Prefer of_device_get_match_data() over of_device_device()
-> 
->  drivers/pci/controller/cadence/pcie-cadence-plat.c | 6 ++----
->  drivers/pci/controller/dwc/pci-dra7xx.c            | 6 ++----
->  drivers/pci/controller/dwc/pci-keystone.c          | 4 +---
->  drivers/pci/controller/dwc/pcie-artpec6.c          | 6 ++----
->  drivers/pci/controller/dwc/pcie-designware-plat.c  | 6 ++----
->  drivers/pci/controller/dwc/pcie-kirin.c            | 6 ++----
->  drivers/pci/controller/pcie-altera.c               | 8 ++++----
->  7 files changed, 15 insertions(+), 27 deletions(-)
+On Wed, Dec 08 2021 at 11:29, Jason Gunthorpe wrote:
+> On Mon, Dec 06, 2021 at 11:27:56PM +0100, Thomas Gleixner wrote:
+>>  	if (!desc->pci.msi_attrib.can_mask)
+>
+> It looks like most of the time this is called by an irq_chip, except
+> for a few special cases list pci_msi_shutdown()
+>
+> Is this something that should ideally go away someday and use some
+> lock in the irq_chip - not unlike what we've thought is needed for
+> IMS?
 
-Applied to pci/driver-cleanup for v5.17, thank you, Fan!
+Some day we'll have that yes.
