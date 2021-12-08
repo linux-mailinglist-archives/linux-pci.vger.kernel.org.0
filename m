@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF3A46CDA5
+	by mail.lfdr.de (Postfix) with ESMTP id 8638146CDA6
 	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 07:19:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237812AbhLHGWw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S237780AbhLHGWw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Wed, 8 Dec 2021 01:22:52 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:48914 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237786AbhLHGWv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 01:22:51 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:48474 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237802AbhLHGWw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 01:22:52 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 2BF67CE2032
-        for <linux-pci@vger.kernel.org>; Wed,  8 Dec 2021 06:19:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30989C341C8;
-        Wed,  8 Dec 2021 06:19:16 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 46587B81FA7
+        for <linux-pci@vger.kernel.org>; Wed,  8 Dec 2021 06:19:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7318C341C3;
+        Wed,  8 Dec 2021 06:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638944357;
-        bh=UqbpW9Oerpj2Y97ThByxn3L9c44W3OZJNk1Xw4zSY6A=;
+        s=k20201202; t=1638944359;
+        bh=730D4kCLanCh63s5LsGLNpEJREKp9B9bQn6TmiBL9tc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XL3sgjppf9bdyYBXWknHcW+DTCNcxKUWJlnEuo2ytePmp9fuHrKeKv99uR51uO6kC
-         1oeeWQsOM7uUifcaRKsvVIN9Zm+YGaKEc888sM0YsG7F+iGsCuxKvarr8J7UNgS87G
-         yR/wN4pTNpQVKkNXh4N9sHhdiKyo0E/CikNdPZ+a3bduKU8G7F/bakXff7D+Rqc5uQ
-         3/bNNoDvNqK6w3T20HjQnAUEFMzCeV5Kzxgto1QewIeMgqa2r5Jt+E4phsIeaXiqc4
-         UE3P17eiUJkaQRDrQpPCFXdKoPe9UNuH4vCXvUD5R8CEfhjhIHmJRoseDFAP5+DAMV
-         aOeElzlLN1mVQ==
+        b=Vr7bxkNatt3f5nlZkMFErR8NB9+z/YTNrI6VnZdTI+s46rtWrLFea2+06jJ/W8RpY
+         NsIhK/7VwRFwwrCX87NseXQWiSqATmTnliFOXnY4OsRiSYxZ2mYyiYbTfWj9Iljsai
+         xQb18O2S5qnVDuxIPm6LsJTd6pcN+ldlaEHIgkMv/QyoR5fcRn2IR7kRkIzHrgr/dS
+         yCvmcNpcmwHcBU4kKwZkezy22GPomLEL1Ey0BUrU9aYlI5IYnBD6BKf0JAw5gJKyBR
+         hZShqxXOI/OxJS5QEEbZQqtMQXwtRSBfb5S9SV8ujyugvUeeBY42nMRKpRytk2h1um
+         P32MrFfMPLAeQ==
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Marc Zyngier <marc.zyngier@arm.com>
 Cc:     linux-pci@vger.kernel.org, pali@kernel.org,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH 13/17] PCI: aardvark: Fix support for PME requester on emulated bridge
-Date:   Wed,  8 Dec 2021 07:18:47 +0100
-Message-Id: <20211208061851.31867-14-kabel@kernel.org>
+Subject: [PATCH 14/17] PCI: aardvark: Use separate INTA interrupt for emulated root bridge
+Date:   Wed,  8 Dec 2021 07:18:48 +0100
+Message-Id: <20211208061851.31867-15-kabel@kernel.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20211208061851.31867-1-kabel@kernel.org>
 References: <20211208061851.31867-1-kabel@kernel.org>
@@ -48,168 +48,157 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Pali Rohár <pali@kernel.org>
 
-Enable aardvark PME interrupt unconditionally by unmasking it and read PME
-requester ID to emulated bridge config space immediately after receiving
-interrupt.
+Emulated root bridge currently provides only one Legacy INTA interrupt
+which is used for reporting PCIe PME and ERR events and handled by kernel
+PCIe PME and AER drivers.
 
-PME requester ID is stored in the PCIE_MSG_LOG_REG register, which contains
-the last inbound message. So when new inbound message is received by HW
-(including non-PM), the content in PCIE_MSG_LOG_REG register is replaced by
-a new value.
+Aardvark HW reports these PME and ERR events separately, so there is no
+need to mix real INTA interrupt and emulated INTA interrupt for PCIe PME
+and AER drivers.
 
-PCIe specification mandates that subsequent PMEs are kept pending until the
-PME Status Register bit is cleared by software by writing a 1b.
+Register a new advk-EMU irq chip and a new irq domain for emulated root
+bridge and use this new separate irq domain for providing INTA interrupt
+from emulated root bridge for PME and ERR events.
 
-Support for masking/unmasking PME interrupt on emulated bridge via
-PCI_EXP_RTCTL_PMEIE bit is now implemented only in emulated bridge config
-space, to ensure that we do not miss any aardvark PME interrupt.
+The real INTA interrupt from real devices is now separate.
 
-Reading of PCI_EXP_RTCAP and PCI_EXP_RTSTA registers is simplified as final
-value is now always stored into emulated bridge config space by the
-interrupt handler, so there is no need to implement support for these
-registers in read_pcie callback.
-
-Clearing of W1C bit PCI_EXP_RTSTA_PME is now also simplified as it is done
-by pci-bridge-emul.c code for emulated bridge config space. So there is no
-need to implement support for clearing this bit in write_pcie callback.
+A custom map_irq callback function on PCI host bridge structure is used to
+allocate IRQ mapping for emulated root bridge from new irq domain. Original
+callback of_irq_parse_and_map_pci() is used for all other devices as before.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Signed-off-by: Marek Behún <kabel@kernel.org>
 ---
- drivers/pci/controller/pci-aardvark.c | 90 +++++++++++++++------------
- 1 file changed, 49 insertions(+), 41 deletions(-)
+ drivers/pci/controller/pci-aardvark.c | 66 ++++++++++++++++++++++++++-
+ 1 file changed, 64 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 3cf454ddc005..bea44bd5cc0c 100644
+index bea44bd5cc0c..b3e64ae8c438 100644
 --- a/drivers/pci/controller/pci-aardvark.c
 +++ b/drivers/pci/controller/pci-aardvark.c
-@@ -598,6 +598,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	reg &= ~PCIE_ISR0_MSI_INT_PENDING;
- 	advk_writel(pcie, reg, PCIE_ISR0_MASK_REG);
- 
-+	/* Unmask PME interrupt for processing of PME requester */
-+	reg = advk_readl(pcie, PCIE_ISR0_MASK_REG);
-+	reg &= ~PCIE_MSG_PM_PME_MASK;
-+	advk_writel(pcie, reg, PCIE_ISR0_MASK_REG);
-+
- 	/* Enable summary interrupt for GIC SPI source */
- 	reg = PCIE_IRQ_ALL_MASK & (~PCIE_IRQ_ENABLE_INTS_MASK);
- 	advk_writel(pcie, reg, HOST_CTRL_INT_MASK_REG);
-@@ -872,22 +877,11 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
- 		*value = PCI_EXP_SLTSTA_PDS << 16;
- 		return PCI_BRIDGE_EMUL_HANDLED;
- 
--	case PCI_EXP_RTCTL: {
--		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
--		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
--		*value |= le16_to_cpu(bridge->pcie_conf.rootctl) & PCI_EXP_RTCTL_CRSSVE;
--		*value |= PCI_EXP_RTCAP_CRSVIS << 16;
--		return PCI_BRIDGE_EMUL_HANDLED;
--	}
--
--	case PCI_EXP_RTSTA: {
--		u32 isr0 = advk_readl(pcie, PCIE_ISR0_REG);
--		u32 msglog = advk_readl(pcie, PCIE_MSG_LOG_REG);
--		*value = msglog >> 16;
--		if (isr0 & PCIE_MSG_PM_PME_MASK)
--			*value |= PCI_EXP_RTSTA_PME;
--		return PCI_BRIDGE_EMUL_HANDLED;
--	}
-+	/*
-+	 * PCI_EXP_RTCTL and PCI_EXP_RTSTA are also supported, but do not need
-+	 * to be handled here, because their values are stored in emulated
-+	 * config space buffer, and we read them from there when needed.
-+	 */
- 
- 	case PCI_EXP_LNKCAP: {
- 		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
-@@ -942,22 +936,19 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
- 			advk_pcie_wait_for_retrain(pcie);
- 		break;
- 
--	case PCI_EXP_RTCTL:
--		/* Only mask/unmask PME interrupt */
--		if (mask & PCI_EXP_RTCTL_PMEIE) {
--			u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
--			if (new & PCI_EXP_RTCTL_PMEIE)
--				val &= ~PCIE_MSG_PM_PME_MASK;
--			else
--				val |= PCIE_MSG_PM_PME_MASK;
--			advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
--		}
-+	case PCI_EXP_RTCTL: {
-+		u16 rootctl = le16_to_cpu(bridge->pcie_conf.rootctl);
-+		/* Only emulation of PMEIE and CRSSVE bits is provided */
-+		rootctl &= PCI_EXP_RTCTL_PMEIE | PCI_EXP_RTCTL_CRSSVE;
-+		bridge->pcie_conf.rootctl = cpu_to_le16(rootctl);
- 		break;
-+	}
- 
--	case PCI_EXP_RTSTA:
--		if (new & PCI_EXP_RTSTA_PME)
--			advk_writel(pcie, PCIE_MSG_PM_PME_MASK, PCIE_ISR0_REG);
--		break;
-+	/*
-+	 * PCI_EXP_RTSTA is also supported, but does not need to be handled
-+	 * here, because its value is stored in emulated config space buffer,
-+	 * and we write it there when needed.
-+	 */
- 
- 	case PCI_EXP_DEVCTL:
- 	case PCI_EXP_DEVCTL2:
-@@ -1459,6 +1450,31 @@ static void advk_pcie_remove_irq_domain(struct advk_pcie *pcie)
+@@ -278,6 +278,8 @@ struct advk_pcie {
+ 	} wins[OB_WIN_COUNT];
+ 	u8 wins_count;
+ 	int irq;
++	struct irq_domain *emul_irq_domain;
++	struct irq_chip emul_irq_chip;
+ 	struct irq_domain *irq_domain;
+ 	struct irq_chip irq_chip;
+ 	raw_spinlock_t irq_lock;
+@@ -1450,6 +1452,40 @@ static void advk_pcie_remove_irq_domain(struct advk_pcie *pcie)
  	irq_domain_remove(pcie->irq_domain);
  }
  
-+static void advk_pcie_handle_pme(struct advk_pcie *pcie)
++static int advk_pcie_emul_irq_map(struct irq_domain *h,
++				  unsigned int virq, irq_hw_number_t hwirq)
 +{
-+	u32 requester = advk_readl(pcie, PCIE_MSG_LOG_REG) >> 16;
++	struct advk_pcie *pcie = h->host_data;
 +
-+	advk_writel(pcie, PCIE_MSG_PM_PME_MASK, PCIE_ISR0_REG);
++	irq_set_chip_and_handler(virq, &pcie->emul_irq_chip, handle_simple_irq);
++	irq_set_chip_data(virq, pcie);
 +
-+	/*
-+	 * PCIE_MSG_LOG_REG contains the last inbound message, so store
-+	 * the requester ID only when PME was not asserted yet.
-+	 * Also do not trigger PME interrupt when PME is still asserted.
-+	 */
-+	if (!(le32_to_cpu(pcie->bridge.pcie_conf.rootsta) & PCI_EXP_RTSTA_PME)) {
-+		pcie->bridge.pcie_conf.rootsta = cpu_to_le32(requester | PCI_EXP_RTSTA_PME);
-+
-+		/*
-+		 * Trigger PME interrupt only if PMEIE bit in Root Control is set.
-+		 * Aardvark HW returns zero for PCI_EXP_FLAGS_IRQ, so use PCIe interrupt 0.
-+		 */
-+		if (le16_to_cpu(pcie->bridge.pcie_conf.rootctl) & PCI_EXP_RTCTL_PMEIE) {
-+			if (generic_handle_domain_irq(pcie->irq_domain, 0) == -EINVAL)
-+				dev_err_ratelimited(&pcie->pdev->dev, "unhandled ERR IRQ\n");
-+		}
-+	}
++	return 0;
 +}
 +
- static void advk_pcie_handle_msi(struct advk_pcie *pcie)
++static const struct irq_domain_ops advk_pcie_emul_irq_domain_ops = {
++	.map = advk_pcie_emul_irq_map,
++	.xlate = irq_domain_xlate_onecell,
++};
++
++static int advk_pcie_init_emul_irq_domain(struct advk_pcie *pcie)
++{
++	pcie->emul_irq_chip.name = "advk-EMU";
++	pcie->emul_irq_domain = irq_domain_add_linear(NULL, 1,
++				&advk_pcie_emul_irq_domain_ops, pcie);
++	if (!pcie->emul_irq_domain) {
++		dev_err(&pcie->pdev->dev, "Failed to add emul IRQ domain\n");
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static void advk_pcie_remove_emul_irq_domain(struct advk_pcie *pcie)
++{
++	irq_domain_remove(pcie->emul_irq_domain);
++}
++
+ static void advk_pcie_handle_pme(struct advk_pcie *pcie)
  {
- 	u32 msi_val, msi_mask, msi_status, msi_idx;
-@@ -1495,17 +1511,9 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
- 	isr1_mask = advk_readl(pcie, PCIE_ISR1_MASK_REG);
- 	isr1_status = isr1_val & ((~isr1_mask) & PCIE_ISR1_ALL_MASK);
- 
--	/* Process PME interrupt */
--	if (isr0_status & PCIE_MSG_PM_PME_MASK) {
--		/*
--		 * Do not clear PME interrupt bit in ISR0, it is cleared by IRQ
--		 * receiver by writing to the PCI_EXP_RTSTA register of emulated
--		 * root bridge. Aardvark HW returns zero for PCI_EXP_FLAGS_IRQ,
--		 * so use PCIe interrupt 0.
--		 */
+ 	u32 requester = advk_readl(pcie, PCIE_MSG_LOG_REG) >> 16;
+@@ -1469,7 +1505,7 @@ static void advk_pcie_handle_pme(struct advk_pcie *pcie)
+ 		 * Aardvark HW returns zero for PCI_EXP_FLAGS_IRQ, so use PCIe interrupt 0.
+ 		 */
+ 		if (le16_to_cpu(pcie->bridge.pcie_conf.rootctl) & PCI_EXP_RTCTL_PMEIE) {
+-			if (generic_handle_domain_irq(pcie->irq_domain, 0) == -EINVAL)
++			if (generic_handle_domain_irq(pcie->emul_irq_domain, 0) == -EINVAL)
+ 				dev_err_ratelimited(&pcie->pdev->dev, "unhandled ERR IRQ\n");
+ 		}
+ 	}
+@@ -1523,7 +1559,7 @@ static void advk_pcie_handle_int(struct advk_pcie *pcie)
+ 		 * Aardvark HW returns zero for PCI_ERR_ROOT_AER_IRQ, so use
+ 		 * PCIe interrupt 0
+ 		 */
 -		if (generic_handle_domain_irq(pcie->irq_domain, 0) == -EINVAL)
--			dev_err_ratelimited(&pcie->pdev->dev, "unhandled PME IRQ\n");
--	}
-+	/* Process PME interrupt as the first one to do not miss PME requester id */
-+	if (isr0_status & PCIE_MSG_PM_PME_MASK)
-+		advk_pcie_handle_pme(pcie);
++		if (generic_handle_domain_irq(pcie->emul_irq_domain, 0) == -EINVAL)
+ 			dev_err_ratelimited(&pcie->pdev->dev, "unhandled ERR IRQ\n");
+ 	}
  
- 	/* Process ERR interrupt */
- 	if (isr0_status & PCIE_ISR0_ERR_MASK) {
+@@ -1565,6 +1601,21 @@ static void advk_pcie_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
+ }
+ 
++static int advk_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
++{
++	struct advk_pcie *pcie = dev->bus->sysdata;
++
++	/*
++	 * Emulated root bridge has its own emulated irq chip and irq domain.
++	 * Argument pin is the INTx pin (1=INTA, 2=INTB, 3=INTC, 4=INTD) and
++	 * hwirq for irq_create_mapping() is indexed from zero.
++	 */
++	if (pci_is_root_bus(dev->bus))
++		return irq_create_mapping(pcie->emul_irq_domain, pin - 1);
++	else
++		return of_irq_parse_and_map_pci(dev, slot, pin);
++}
++
+ static void advk_pcie_disable_phy(struct advk_pcie *pcie)
+ {
+ 	phy_power_off(pcie->phy);
+@@ -1766,14 +1817,24 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	ret = advk_pcie_init_emul_irq_domain(pcie);
++	if (ret) {
++		dev_err(dev, "Failed to initialize irq\n");
++		advk_pcie_remove_msi_irq_domain(pcie);
++		advk_pcie_remove_irq_domain(pcie);
++		return ret;
++	}
++
+ 	irq_set_chained_handler_and_data(pcie->irq, advk_pcie_irq_handler, pcie);
+ 
+ 	bridge->sysdata = pcie;
+ 	bridge->ops = &advk_pcie_ops;
++	bridge->map_irq = advk_pcie_map_irq;
+ 
+ 	ret = pci_host_probe(bridge);
+ 	if (ret < 0) {
+ 		irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
++		advk_pcie_remove_emul_irq_domain(pcie);
+ 		advk_pcie_remove_msi_irq_domain(pcie);
+ 		advk_pcie_remove_irq_domain(pcie);
+ 		return ret;
+@@ -1825,6 +1886,7 @@ static int advk_pcie_remove(struct platform_device *pdev)
+ 	irq_set_chained_handler_and_data(pcie->irq, NULL, NULL);
+ 
+ 	/* Remove IRQ domains */
++	advk_pcie_remove_emul_irq_domain(pcie);
+ 	advk_pcie_remove_msi_irq_domain(pcie);
+ 	advk_pcie_remove_irq_domain(pcie);
+ 
 -- 
 2.32.0
 
