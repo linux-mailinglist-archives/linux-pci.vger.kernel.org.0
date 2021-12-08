@@ -2,81 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53C9046DABD
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 19:11:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 859C346DAC5
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Dec 2021 19:12:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231241AbhLHSOm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Dec 2021 13:14:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238613AbhLHSOm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Dec 2021 13:14:42 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2B3C0617A1;
-        Wed,  8 Dec 2021 10:11:10 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id B25F6CE0DB2;
-        Wed,  8 Dec 2021 18:11:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C276C00446;
-        Wed,  8 Dec 2021 18:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1638987065;
-        bh=QgoV6e2aIQSqvk2euUblMWbPunbhbGpBkvr/HHcx56A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uA89KPR1ogEE99hrjD3ngclawVcaGHlrPZhYAKw4AD2cO9i0cfhya3+X9S9OYkriE
-         kECO59hDzBBV+JfBUBvPRQ8aHWwfHdm4sDz5doc1GCbloR2NyEJ5PGT6QoHlgV51ml
-         gPNx7M92n6GT7KM/zuGWJbHuKNlwreaNrMG1DIC8=
-Date:   Wed, 8 Dec 2021 19:11:02 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
+        id S238664AbhLHSPe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Dec 2021 13:15:34 -0500
+Received: from mga12.intel.com ([192.55.52.136]:46997 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238661AbhLHSPd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 8 Dec 2021 13:15:33 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10192"; a="217920999"
+X-IronPort-AV: E=Sophos;i="5.88,190,1635231600"; 
+   d="scan'208";a="217920999"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 10:12:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,190,1635231600"; 
+   d="scan'208";a="606388523"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Dec 2021 10:12:00 -0800
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id ECAF4580D37;
+        Wed,  8 Dec 2021 10:11:59 -0800 (PST)
+Message-ID: <329dcd18b7b92f24f3ded0396ffc66ad17e65885.camel@linux.intel.com>
+Subject: Re: [PATCH RESEND V2 4/6] platform/x86: Add Intel Software Defined
+ Silicon driver
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
         andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
         mgross@linux.intel.com, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
         Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH RESEND V2 3/6] platform/x86/intel: Move intel_pmt from
- MFD to Auxiliary Bus
-Message-ID: <YbD1NsYHbU8FvtTN@kroah.com>
+Date:   Wed, 08 Dec 2021 10:11:59 -0800
+In-Reply-To: <YbDdc3VVI/YgqWxT@kroah.com>
 References: <20211208015015.891275-1-david.e.box@linux.intel.com>
- <20211208015015.891275-4-david.e.box@linux.intel.com>
- <YbDbql39x7Kw6iAC@kroah.com>
- <7e78e6311cb0d261892f7361a1ef10130436f358.camel@linux.intel.com>
+         <20211208015015.891275-5-david.e.box@linux.intel.com>
+         <YbDdc3VVI/YgqWxT@kroah.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7e78e6311cb0d261892f7361a1ef10130436f358.camel@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 08, 2021 at 09:47:26AM -0800, David E. Box wrote:
-> On Wed, 2021-12-08 at 17:22 +0100, Greg KH wrote:
-> > On Tue, Dec 07, 2021 at 05:50:12PM -0800, David E. Box wrote:
-> > > +static struct pci_driver intel_vsec_pci_driver = {
-> > > +       .name = "intel_vsec",
-> > > +       .id_table = intel_vsec_pci_ids,
-> > > +       .probe = intel_vsec_pci_probe,
-> > > +};
+On Wed, 2021-12-08 at 17:29 +0100, Greg KH wrote:
+> On Tue, Dec 07, 2021 at 05:50:13PM -0800, David E. Box wrote:
+> > Intel Software Defined Silicon (SDSi) is a post manufacturing mechanism for
+> > activating additional silicon features. Features are enabled through a
+> > license activation process.Â  The SDSi driver provides a per socket, sysfs
+> > attribute interface for applications to perform 3 main provisioning
+> > functions:
 > > 
-> > So when the PCI device is removed from the system you leak resources and
-> > have dangling devices?
-> 
-> No.
-> 
+> > 1. Provision an Authentication Key Certificate (AKC), a key written to
+> > Â Â  internal NVRAM that is used to authenticate a capability specific
+> > Â Â  activation payload.
 > > 
-> > Why no PCI remove driver callback?
+> > 2. Provision a Capability Activation Payload (CAP), a token authenticated
+> > Â Â  using the AKC and applied to the CPU configuration to activate a new
+> > Â Â  feature.
+> > 
+> > 3. Read the SDSi State Certificate, containing the CPU configuration
+> > Â Â  state.
+> > 
+> > The operations perform function specific mailbox commands that forward the
+> > requests to SDSi hardware to perform authentication of the payloads and
+> > enable the silicon configuration (to be made available after power
+> > cycling).
+> > 
+> > The SDSi device itself is enumerated as an auxiliary device from the
+> > intel_vsec driver and as such has a build dependency on CONFIG_INTEL_VSEC.
+> > 
+> > Link: https://github.com/intel/intel-sdsi
 > 
-> After probe all resources are device managed. There's nothing to explicitly clean up. When the PCI
-> device is removed, all aux devices are automatically removed. This is the case for the SDSi driver
-> as well.
+> Also, why not put the documentation that you have currently at that link
+> in this commit in the driver itself?Â  That would make it much more
+> self-contained and live longer than some random external web link that
+> could go away at any moment.
 
-Where is the "automatic cleanup" happening?  As this pci driver is bound
-to the PCI device, when the device is removed, what is called in this
-driver to remove the resources allocated in the probe callback?
+The documentation describes the hardware interface only. It's not OS specific so it was easier to
+add a link. But there's no problem adding a copy to Documentaion in the kernel.
 
-confused,
+David
+> 
+> thanks,
+> 
+> greg k-h
 
-greg k-h
+
