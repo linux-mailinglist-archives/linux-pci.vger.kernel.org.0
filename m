@@ -2,265 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 811D046E49F
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 09:51:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FFBB46E4CE
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 10:03:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235239AbhLIIyw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Dec 2021 03:54:52 -0500
-Received: from mga14.intel.com ([192.55.52.115]:32891 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235243AbhLIIyv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Dec 2021 03:54:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639039878; x=1670575878;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wQs/ApopcmwRqlqQXGZMifpE3fhg23Fm33uDec5LiLg=;
-  b=P/eteEb0/vKV8cgmPuyR2kLHxACvZYHA8w5ICrxlS4cg69N5PHR6C1Y3
-   Mk+6rLCJl3jsNltv7hDPDbh6utJZgvOFSIIp0cDzrg6AbUdsg3leCEsno
-   Q46ypVJzf2LzPE3Lts4gpFKd+it/n5NaTO7+dXLtqqN1I31aa/P10TOqO
-   oAqUO8OAUxD0PuRopMRELnEnh9AlJd7NhwJ0IX8uAfT5fgdua4apY35zL
-   s8jO8XXHft9Vofjc9dwQBA219Kear/o5pUTVI1ZiCCUw+PvaWHyny6nBP
-   gMzmlwmmWZE/HFjeukKLTZRkJuoZIAf7AHk62opMV43ZDtjiG4ezirIv/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10192"; a="238275903"
-X-IronPort-AV: E=Sophos;i="5.88,192,1635231600"; 
-   d="scan'208";a="238275903"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 00:51:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,192,1635231600"; 
-   d="scan'208";a="680250978"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 09 Dec 2021 00:51:16 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mvF91-0001hH-9x; Thu, 09 Dec 2021 08:51:15 +0000
-Date:   Thu, 09 Dec 2021 16:51:08 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/legacy-pm-removal] BUILD SUCCESS
- 7bd0daa8a3437746246a912921593c2111f835eb
-Message-ID: <61b1c37c.zRXhMQvK3bXd9bi2%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S235539AbhLIJGh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Dec 2021 04:06:37 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:37772 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235494AbhLIJGf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 04:06:35 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1639040580;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=E26dnRV33umx8ChJ6qCSA81TgS29bOEnlTFznvEPm70=;
+        b=UBAjhrFqIfvy92gOjMu/92luLZEtQxcB8EnSkIXWAFQBXMfp6FG+CIy6k5fzSZFuMERG/8
+        xFfVtetcOEbsB3znL7bUlgxjs4cz7rEv4z2maPrBY4od7F+YFZUnlxgZiVyKf7nPqzKqZo
+        P6WDalcMWkcD1E4tHNsUxBCWBhcJQXXL67VA9WD/pk40bDo6014XJfmtDBLxn8Zj3ILXcm
+        Fm2H1blgC+OVRbQuDp50QNRDGU4OLKHx5WuixE2ZlDDNvNG1GPQlUnkRK7WMjm0z4QOn5K
+        7+pEpTjkMsQM6XtjDYmPSwQbt/B5mBUSba2zDYbSeit7s9Szp5MWWI+4e9OCpg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1639040580;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=E26dnRV33umx8ChJ6qCSA81TgS29bOEnlTFznvEPm70=;
+        b=Jyj5PjJVVV9UfiYBlLmlLN+yWi9guY+BWs5hyOKN3TpwCmfxKHuQbAic8qnXl2XG/UWEI9
+        pik8o3FpwATUUiAg==
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: RE: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
+In-Reply-To: <BN9PR11MB52766CC46D3D4865308F61D98C709@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <87y2548byw.ffs@tglx> <20211201181406.GM4670@nvidia.com>
+ <87mtlk84ae.ffs@tglx> <87r1av7u3d.ffs@tglx>
+ <20211202135502.GP4670@nvidia.com> <87wnkm6c77.ffs@tglx>
+ <20211202200017.GS4670@nvidia.com> <87o85y63m8.ffs@tglx>
+ <20211203003749.GT4670@nvidia.com> <877dcl681d.ffs@tglx>
+ <20211203164104.GX4670@nvidia.com>
+ <BN9PR11MB52766CC46D3D4865308F61D98C709@BN9PR11MB5276.namprd11.prod.outlook.com>
+Date:   Thu, 09 Dec 2021 10:03:00 +0100
+Message-ID: <87pmq6ywu3.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/legacy-pm-removal
-branch HEAD: 7bd0daa8a3437746246a912921593c2111f835eb  via-agp: convert to generic power management
+Kevin,
 
-elapsed time: 725m
+On Thu, Dec 09 2021 at 06:26, Kevin Tian wrote:
+>> From: Jason Gunthorpe <jgg@nvidia.com>
+>> I don't know of any use case for more than one interrupt on a queue,
+>> and if it did come up I'd probably approach it by making the queue
+>> handle above also specify the 'queue relative HW index'
+>
+> We have such use case with IDXD.
+>
+> Basically the IDXD queue allows software to put an interrupt handle
+> (the index of MSI-X or IMS entry) in the submitted descriptor. Upon
+> completion of the descriptor the hardware finds the specified entry 
+> and then generate interrupt to notify software.
+>
+> Conceptually descriptors submitted to a same queue can use different
+> handles, implying one queue can be associated to multiple interrupts.
 
-configs tested: 191
-configs skipped: 4
+I think you are looking at that from the internal implementation details
+of IDXD. But you can just model it in an IDXD implementation agnostic
+way:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+     ENQCMD(PASID, IMS-ENTRY,.....)
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211207
-i386                 randconfig-c001-20211208
-sh                        edosk7760_defconfig
-riscv                            alldefconfig
-arm                            xcep_defconfig
-sh                           se7750_defconfig
-arm                        shmobile_defconfig
-powerpc                 mpc832x_rdb_defconfig
-sh                        sh7763rdp_defconfig
-csky                             alldefconfig
-arc                        nsim_700_defconfig
-sh                            titan_defconfig
-powerpc                  storcenter_defconfig
-arm                          lpd270_defconfig
-parisc                           alldefconfig
-arm                        spear6xx_defconfig
-arm                           h5000_defconfig
-arm                         orion5x_defconfig
-m68k                        stmark2_defconfig
-powerpc                      pasemi_defconfig
-arm                           sama5_defconfig
-powerpc                     pseries_defconfig
-powerpc                     sequoia_defconfig
-sh                          rsk7201_defconfig
-nios2                               defconfig
-powerpc                      chrp32_defconfig
-arc                    vdk_hs38_smp_defconfig
-powerpc                      pcm030_defconfig
-arm                         mv78xx0_defconfig
-sh                           se7206_defconfig
-um                           x86_64_defconfig
-arm                         palmz72_defconfig
-arm                       versatile_defconfig
-powerpc                 canyonlands_defconfig
-arm                         lpc18xx_defconfig
-arm                            hisi_defconfig
-powerpc                        icon_defconfig
-powerpc                       ebony_defconfig
-powerpc                        fsp2_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                   currituck_defconfig
-sh                           se7343_defconfig
-arm                        neponset_defconfig
-arc                     nsimosci_hs_defconfig
-powerpc                 mpc836x_rdk_defconfig
-arm                            zeus_defconfig
-powerpc                      cm5200_defconfig
-xtensa                  cadence_csp_defconfig
-powerpc                 mpc836x_mds_defconfig
-arm                         hackkit_defconfig
-powerpc                      acadia_defconfig
-arm                          badge4_defconfig
-powerpc                  iss476-smp_defconfig
-xtensa                generic_kc705_defconfig
-powerpc                        warp_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                     magicpanelr2_defconfig
-powerpc                 mpc834x_itx_defconfig
-i386                                defconfig
-sh                            migor_defconfig
-arm                       aspeed_g4_defconfig
-powerpc                 xes_mpc85xx_defconfig
-powerpc                 mpc8540_ads_defconfig
-sparc                       sparc64_defconfig
-arm                  randconfig-c002-20211207
-arm                  randconfig-c002-20211209
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20211207
-x86_64               randconfig-a005-20211207
-x86_64               randconfig-a001-20211207
-x86_64               randconfig-a002-20211207
-x86_64               randconfig-a004-20211207
-x86_64               randconfig-a003-20211207
-i386                 randconfig-a001-20211209
-i386                 randconfig-a005-20211209
-i386                 randconfig-a003-20211209
-i386                 randconfig-a002-20211209
-i386                 randconfig-a006-20211209
-i386                 randconfig-a004-20211209
-i386                 randconfig-a001-20211207
-i386                 randconfig-a005-20211207
-i386                 randconfig-a002-20211207
-i386                 randconfig-a003-20211207
-i386                 randconfig-a006-20211207
-i386                 randconfig-a004-20211207
-x86_64               randconfig-a016-20211208
-x86_64               randconfig-a011-20211208
-x86_64               randconfig-a013-20211208
-x86_64               randconfig-a012-20211208
-x86_64               randconfig-a015-20211208
-x86_64               randconfig-a014-20211208
-i386                 randconfig-a013-20211208
-i386                 randconfig-a016-20211208
-i386                 randconfig-a011-20211208
-i386                 randconfig-a014-20211208
-i386                 randconfig-a012-20211208
-i386                 randconfig-a015-20211208
-x86_64               randconfig-a006-20211209
-x86_64               randconfig-a005-20211209
-x86_64               randconfig-a001-20211209
-x86_64               randconfig-a002-20211209
-x86_64               randconfig-a004-20211209
-x86_64               randconfig-a003-20211209
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+implies an on demand allocation of a virtual queue, which is deallocated
+when the command completes. The PASID and IMS-ENTRY act as the 'queue'
+identifier.
 
-clang tested configs:
-x86_64               randconfig-c007-20211207
-arm                  randconfig-c002-20211207
-riscv                randconfig-c006-20211207
-i386                 randconfig-c001-20211207
-powerpc              randconfig-c003-20211207
-s390                 randconfig-c005-20211207
-arm                  randconfig-c002-20211209
-x86_64               randconfig-c007-20211209
-riscv                randconfig-c006-20211209
-i386                 randconfig-c001-20211209
-mips                 randconfig-c004-20211209
-powerpc              randconfig-c003-20211209
-s390                 randconfig-c005-20211209
-i386                 randconfig-a001-20211208
-i386                 randconfig-a005-20211208
-i386                 randconfig-a003-20211208
-i386                 randconfig-a002-20211208
-i386                 randconfig-a006-20211208
-i386                 randconfig-a004-20211208
-x86_64               randconfig-a016-20211207
-x86_64               randconfig-a011-20211207
-x86_64               randconfig-a013-20211207
-x86_64               randconfig-a014-20211207
-x86_64               randconfig-a015-20211207
-x86_64               randconfig-a012-20211207
-i386                 randconfig-a016-20211207
-i386                 randconfig-a013-20211207
-i386                 randconfig-a011-20211207
-i386                 randconfig-a014-20211207
-i386                 randconfig-a012-20211207
-i386                 randconfig-a015-20211207
-hexagon              randconfig-r045-20211208
-hexagon              randconfig-r041-20211208
-hexagon              randconfig-r045-20211207
-s390                 randconfig-r044-20211207
-riscv                randconfig-r042-20211207
-hexagon              randconfig-r041-20211207
-hexagon              randconfig-r045-20211209
-s390                 randconfig-r044-20211209
-hexagon              randconfig-r041-20211209
-riscv                randconfig-r042-20211209
+The implementation detail of IDXD that it executes these computations on
+an internal shared workqueue does not change that.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Such a workqueue can only execute one enqueued command at a time, which
+means that during the execution of a particular command that IDXD
+internal workqueue represents the 'virtual queue' which is identified by
+the unique PASID/IMS-ENTRY pair.
+
+No?
+
+Thanks,
+
+        tglx
