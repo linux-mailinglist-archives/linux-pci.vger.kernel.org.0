@@ -2,110 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FFBB46E4CE
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 10:03:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECC1E46E5E3
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 10:46:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235539AbhLIJGh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Dec 2021 04:06:37 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37772 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235494AbhLIJGf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 04:06:35 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639040580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=E26dnRV33umx8ChJ6qCSA81TgS29bOEnlTFznvEPm70=;
-        b=UBAjhrFqIfvy92gOjMu/92luLZEtQxcB8EnSkIXWAFQBXMfp6FG+CIy6k5fzSZFuMERG/8
-        xFfVtetcOEbsB3znL7bUlgxjs4cz7rEv4z2maPrBY4od7F+YFZUnlxgZiVyKf7nPqzKqZo
-        P6WDalcMWkcD1E4tHNsUxBCWBhcJQXXL67VA9WD/pk40bDo6014XJfmtDBLxn8Zj3ILXcm
-        Fm2H1blgC+OVRbQuDp50QNRDGU4OLKHx5WuixE2ZlDDNvNG1GPQlUnkRK7WMjm0z4QOn5K
-        7+pEpTjkMsQM6XtjDYmPSwQbt/B5mBUSba2zDYbSeit7s9Szp5MWWI+4e9OCpg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639040580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=E26dnRV33umx8ChJ6qCSA81TgS29bOEnlTFznvEPm70=;
-        b=Jyj5PjJVVV9UfiYBlLmlLN+yWi9guY+BWs5hyOKN3TpwCmfxKHuQbAic8qnXl2XG/UWEI9
-        pik8o3FpwATUUiAg==
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: RE: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-In-Reply-To: <BN9PR11MB52766CC46D3D4865308F61D98C709@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <87y2548byw.ffs@tglx> <20211201181406.GM4670@nvidia.com>
- <87mtlk84ae.ffs@tglx> <87r1av7u3d.ffs@tglx>
- <20211202135502.GP4670@nvidia.com> <87wnkm6c77.ffs@tglx>
- <20211202200017.GS4670@nvidia.com> <87o85y63m8.ffs@tglx>
- <20211203003749.GT4670@nvidia.com> <877dcl681d.ffs@tglx>
- <20211203164104.GX4670@nvidia.com>
- <BN9PR11MB52766CC46D3D4865308F61D98C709@BN9PR11MB5276.namprd11.prod.outlook.com>
-Date:   Thu, 09 Dec 2021 10:03:00 +0100
-Message-ID: <87pmq6ywu3.ffs@tglx>
+        id S231996AbhLIJuR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Dec 2021 04:50:17 -0500
+Received: from smtp23.cstnet.cn ([159.226.251.23]:56800 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231932AbhLIJuK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Dec 2021 04:50:10 -0500
+Received: from localhost.localdomain (unknown [124.16.138.128])
+        by APP-03 (Coremail) with SMTP id rQCowAAXMJJY0LFhwyzAAQ--.33737S2;
+        Thu, 09 Dec 2021 17:46:04 +0800 (CST)
+From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
+To:     ruscur@russell.cc, oohall@gmail.com, bhelgaas@google.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Subject: [PATCH] PCI/AER: potential dereference of null pointer
+Date:   Thu,  9 Dec 2021 17:45:56 +0800
+Message-Id: <20211209094556.2085357-1-jiasheng@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: rQCowAAXMJJY0LFhwyzAAQ--.33737S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw4xtrW8CFykXry5uF1rJFb_yoW3XFg_u3
+        yxWrnrGrWUKFs3WFn0yr4rZryjva4DXrWIqanaqa93Cas7uF97XFyUXr13JF47WFZ3CryD
+        C3sFkr13Cw17KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbckFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8uwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUhNVgUUUUU=
+X-Originating-IP: [124.16.138.128]
+X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kevin,
+he return value of kzalloc() needs to be checked.
+To avoid use of null pointer in case of the failure of alloc.
 
-On Thu, Dec 09 2021 at 06:26, Kevin Tian wrote:
->> From: Jason Gunthorpe <jgg@nvidia.com>
->> I don't know of any use case for more than one interrupt on a queue,
->> and if it did come up I'd probably approach it by making the queue
->> handle above also specify the 'queue relative HW index'
->
-> We have such use case with IDXD.
->
-> Basically the IDXD queue allows software to put an interrupt handle
-> (the index of MSI-X or IMS entry) in the submitted descriptor. Upon
-> completion of the descriptor the hardware finds the specified entry 
-> and then generate interrupt to notify software.
->
-> Conceptually descriptors submitted to a same queue can use different
-> handles, implying one queue can be associated to multiple interrupts.
+Fixes: db89ccbe52c7 ("PCI/AER: Define aer_stats structure for AER capable devices")
+Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+---
+ drivers/pci/pcie/aer.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I think you are looking at that from the internal implementation details
-of IDXD. But you can just model it in an IDXD implementation agnostic
-way:
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index ec943cee5ecc..d04303edf468 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -376,6 +376,8 @@ void pci_aer_init(struct pci_dev *dev)
+ 		return;
+ 
+ 	dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
++	if (!dev->aer_stats)
++		return;
+ 
+ 	/*
+ 	 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
+-- 
+2.25.1
 
-     ENQCMD(PASID, IMS-ENTRY,.....)
-
-implies an on demand allocation of a virtual queue, which is deallocated
-when the command completes. The PASID and IMS-ENTRY act as the 'queue'
-identifier.
-
-The implementation detail of IDXD that it executes these computations on
-an internal shared workqueue does not change that.
-
-Such a workqueue can only execute one enqueued command at a time, which
-means that during the execution of a particular command that IDXD
-internal workqueue represents the 'virtual queue' which is identified by
-the unique PASID/IMS-ENTRY pair.
-
-No?
-
-Thanks,
-
-        tglx
