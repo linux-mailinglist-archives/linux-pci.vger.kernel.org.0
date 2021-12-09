@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA25C46F410
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 20:37:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EC5546F44A
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 20:52:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229593AbhLITkd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Dec 2021 14:40:33 -0500
-Received: from mga18.intel.com ([134.134.136.126]:57581 "EHLO mga18.intel.com"
+        id S231133AbhLIT4D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Dec 2021 14:56:03 -0500
+Received: from mga03.intel.com ([134.134.136.65]:34608 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229531AbhLITkb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Dec 2021 14:40:31 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="225059503"
+        id S229774AbhLIT4D (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Dec 2021 14:56:03 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="238137962"
 X-IronPort-AV: E=Sophos;i="5.88,193,1635231600"; 
-   d="scan'208";a="225059503"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 11:36:57 -0800
+   d="scan'208";a="238137962"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 11:52:29 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,193,1635231600"; 
-   d="scan'208";a="462263649"
+   d="scan'208";a="680470514"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 09 Dec 2021 11:36:55 -0800
+  by orsmga005.jf.intel.com with ESMTP; 09 Dec 2021 11:52:27 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D8A92329; Thu,  9 Dec 2021 21:36:59 +0200 (EET)
+        id 5A11B329; Thu,  9 Dec 2021 21:52:34 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+To:     Jiri Slaby <jirislaby@kernel.org>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.de>
-Subject: [PATCH v3 1/1] PCI: Introduce pci_bus_*() printing macros when device is not available
-Date:   Thu,  9 Dec 2021 21:36:53 +0200
-Message-Id: <20211209193653.84280-1-andriy.shevchenko@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pci_ids: Keep Intel PCI IDs sorted by value
+Date:   Thu,  9 Dec 2021 21:52:31 +0200
+Message-Id: <20211209195231.2785-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -38,69 +38,85 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In some cases PCI device structure is not available and we want to print
-information based on the bus and devfn parameters. For this cases introduce
-pci_bus_*() printing macros and replace in existing users.
+Keep Intel PCI IDs sorted by value.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
 ---
-v3: surrounded 'bus' with parentheses (Joe)
- drivers/pci/probe.c | 12 +++---------
- include/linux/pci.h |  8 ++++++++
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ include/linux/pci_ids.h | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2c91d3509d17..7208901fba70 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2334,16 +2334,12 @@ static bool pci_bus_wait_crs(struct pci_bus *bus, int devfn, u32 *l,
- 	 */
- 	while (pci_bus_crs_vendor_id(*l)) {
- 		if (delay > timeout) {
--			pr_warn("pci %04x:%02x:%02x.%d: not ready after %dms; giving up\n",
--				pci_domain_nr(bus), bus->number,
--				PCI_SLOT(devfn), PCI_FUNC(devfn), delay - 1);
-+			pci_bus_warn(bus, devfn, "not ready after %dms; giving up\n", delay - 1);
- 
- 			return false;
- 		}
- 		if (delay >= 1000)
--			pr_info("pci %04x:%02x:%02x.%d: not ready after %dms; waiting\n",
--				pci_domain_nr(bus), bus->number,
--				PCI_SLOT(devfn), PCI_FUNC(devfn), delay - 1);
-+			pci_bus_info(bus, devfn, "not ready after %dms; waiting\n", delay - 1);
- 
- 		msleep(delay);
- 		delay *= 2;
-@@ -2353,9 +2349,7 @@ static bool pci_bus_wait_crs(struct pci_bus *bus, int devfn, u32 *l,
- 	}
- 
- 	if (delay >= 1000)
--		pr_info("pci %04x:%02x:%02x.%d: ready after %dms\n",
--			pci_domain_nr(bus), bus->number,
--			PCI_SLOT(devfn), PCI_FUNC(devfn), delay - 1);
-+		pci_bus_info(bus, devfn, "ready after %dms\n", delay - 1);
- 
- 	return true;
- }
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 0ce26850470e..14ed28e29857 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2482,4 +2482,12 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
- 	WARN_ONCE(condition, "%s %s: " fmt, \
- 		  dev_driver_string(&(pdev)->dev), pci_name(pdev), ##arg)
- 
-+#define pci_bus_printk(level, bus, devfn, fmt, arg...) \
-+	printk(level "pci %04x:%02x:%02x.%d: " fmt, \
-+	       pci_domain_nr(bus), (bus)->number, PCI_SLOT(devfn), PCI_FUNC(devfn), ##arg)
-+
-+#define pci_bus_err(bus, devfn, fmt, arg...)	pci_bus_printk(KERN_ERR, (bus), devfn, fmt, ##arg)
-+#define pci_bus_warn(bus, devfn, fmt, arg...)	pci_bus_printk(KERN_WARNING, (bus), devfn, fmt, ##arg)
-+#define pci_bus_info(bus, devfn, fmt, arg...)	pci_bus_printk(KERN_INFO, (bus), devfn, fmt, ##arg)
-+
- #endif /* LINUX_PCI_H */
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 86678588d191..306201cb9aff 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2738,12 +2738,6 @@
+ #define PCI_DEVICE_ID_INTEL_82801EB_11	0x24db
+ #define PCI_DEVICE_ID_INTEL_82801EB_12	0x24dc
+ #define PCI_DEVICE_ID_INTEL_82801EB_13	0x24dd
+-#define PCI_DEVICE_ID_INTEL_ESB_1	0x25a1
+-#define PCI_DEVICE_ID_INTEL_ESB_2	0x25a2
+-#define PCI_DEVICE_ID_INTEL_ESB_4	0x25a4
+-#define PCI_DEVICE_ID_INTEL_ESB_5	0x25a6
+-#define PCI_DEVICE_ID_INTEL_ESB_9	0x25ab
+-#define PCI_DEVICE_ID_INTEL_ESB_10	0x25ac
+ #define PCI_DEVICE_ID_INTEL_82820_HB	0x2500
+ #define PCI_DEVICE_ID_INTEL_82820_UP_HB	0x2501
+ #define PCI_DEVICE_ID_INTEL_82850_HB	0x2530
+@@ -2758,14 +2752,15 @@
+ #define PCI_DEVICE_ID_INTEL_82915G_IG	0x2582
+ #define PCI_DEVICE_ID_INTEL_82915GM_HB	0x2590
+ #define PCI_DEVICE_ID_INTEL_82915GM_IG	0x2592
++#define PCI_DEVICE_ID_INTEL_ESB_1	0x25a1
++#define PCI_DEVICE_ID_INTEL_ESB_2	0x25a2
++#define PCI_DEVICE_ID_INTEL_ESB_4	0x25a4
++#define PCI_DEVICE_ID_INTEL_ESB_5	0x25a6
++#define PCI_DEVICE_ID_INTEL_ESB_9	0x25ab
++#define PCI_DEVICE_ID_INTEL_ESB_10	0x25ac
+ #define PCI_DEVICE_ID_INTEL_5000_ERR	0x25F0
+ #define PCI_DEVICE_ID_INTEL_5000_FBD0	0x25F5
+ #define PCI_DEVICE_ID_INTEL_5000_FBD1	0x25F6
+-#define PCI_DEVICE_ID_INTEL_82945G_HB	0x2770
+-#define PCI_DEVICE_ID_INTEL_82945G_IG	0x2772
+-#define PCI_DEVICE_ID_INTEL_3000_HB	0x2778
+-#define PCI_DEVICE_ID_INTEL_82945GM_HB	0x27A0
+-#define PCI_DEVICE_ID_INTEL_82945GM_IG	0x27A2
+ #define PCI_DEVICE_ID_INTEL_ICH6_0	0x2640
+ #define PCI_DEVICE_ID_INTEL_ICH6_1	0x2641
+ #define PCI_DEVICE_ID_INTEL_ICH6_2	0x2642
+@@ -2777,6 +2772,11 @@
+ #define PCI_DEVICE_ID_INTEL_ESB2_14	0x2698
+ #define PCI_DEVICE_ID_INTEL_ESB2_17	0x269b
+ #define PCI_DEVICE_ID_INTEL_ESB2_18	0x269e
++#define PCI_DEVICE_ID_INTEL_82945G_HB	0x2770
++#define PCI_DEVICE_ID_INTEL_82945G_IG	0x2772
++#define PCI_DEVICE_ID_INTEL_3000_HB	0x2778
++#define PCI_DEVICE_ID_INTEL_82945GM_HB	0x27A0
++#define PCI_DEVICE_ID_INTEL_82945GM_IG	0x27A2
+ #define PCI_DEVICE_ID_INTEL_ICH7_0	0x27b8
+ #define PCI_DEVICE_ID_INTEL_ICH7_1	0x27b9
+ #define PCI_DEVICE_ID_INTEL_ICH7_30	0x27b0
+@@ -2941,16 +2941,16 @@
+ #define PCI_DEVICE_ID_INTEL_SBRIDGE_BR		0x3cf5	/* 13.6 */
+ #define PCI_DEVICE_ID_INTEL_SBRIDGE_SAD1	0x3cf6	/* 12.7 */
+ #define PCI_DEVICE_ID_INTEL_IOAT_SNB	0x402f
+-#define PCI_DEVICE_ID_INTEL_5100_16	0x65f0
+-#define PCI_DEVICE_ID_INTEL_5100_19	0x65f3
+-#define PCI_DEVICE_ID_INTEL_5100_21	0x65f5
+-#define PCI_DEVICE_ID_INTEL_5100_22	0x65f6
+ #define PCI_DEVICE_ID_INTEL_5400_ERR	0x4030
+ #define PCI_DEVICE_ID_INTEL_5400_FBD0	0x4035
+ #define PCI_DEVICE_ID_INTEL_5400_FBD1	0x4036
+-#define PCI_DEVICE_ID_INTEL_IOAT_SCNB	0x65ff
+ #define PCI_DEVICE_ID_INTEL_EP80579_0	0x5031
+ #define PCI_DEVICE_ID_INTEL_EP80579_1	0x5032
++#define PCI_DEVICE_ID_INTEL_5100_16	0x65f0
++#define PCI_DEVICE_ID_INTEL_5100_19	0x65f3
++#define PCI_DEVICE_ID_INTEL_5100_21	0x65f5
++#define PCI_DEVICE_ID_INTEL_5100_22	0x65f6
++#define PCI_DEVICE_ID_INTEL_IOAT_SCNB	0x65ff
+ #define PCI_DEVICE_ID_INTEL_82371SB_0	0x7000
+ #define PCI_DEVICE_ID_INTEL_82371SB_1	0x7010
+ #define PCI_DEVICE_ID_INTEL_82371SB_2	0x7020
 -- 
 2.33.0
 
