@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E27C46F664
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 23:02:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3DDA46F653
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 23:00:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233150AbhLIWFz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Dec 2021 17:05:55 -0500
-Received: from st43p00im-zteg10071901.me.com ([17.58.63.169]:52047 "EHLO
-        st43p00im-zteg10071901.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231286AbhLIWFz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 17:05:55 -0500
+        id S231965AbhLIWDi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Dec 2021 17:03:38 -0500
+Received: from st43p00im-zteg10073501.me.com ([17.58.63.180]:55205 "EHLO
+        st43p00im-zteg10073501.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231286AbhLIWDi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 17:03:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-        t=1639086851; bh=+49ITMZhhvsylnROVwCGbQZMaN2WBTCcdJwitqIziGo=;
+        t=1639086855; bh=A2jhYOomsuOm4V0BEb9bdP5dTvI8ffnV0G50ioBK2m4=;
         h=From:To:Subject:Date:Message-Id:MIME-Version;
-        b=V2UXJo7HCJbPQCBlGKRlKoJn4jiLAMyQDg+m7i+h4+ASmYzkZyPyCDU6/YB3lRj56
-         X/96UhgOHNkkUaTqjQr2Ii+hoQyzQ9ZwTX9FEjFqLPd5Czs7uXsq6mrb3R26vd643Y
-         jgFTYkToI7DEfG4Otv+GQQ61bxKl2SXsS0CuKuDBHIzN2cvPz9BnqQpNgswy28ayGj
-         r8fELmUG+R0cbIG04HhYR96okpkEwUpMWvIHA2Z0uSHyPKtxqEo3t5GpY7flWgG4TM
-         efSwnqz0KY7sEpNqvrU32sAob+NTIOJ/SjqE0WRnj9tDMB8lrkJSPi9lK3J7KYcaJD
-         bdpqEsXfH9gJA==
+        b=M40Zm185h/t9iNiu+p4wE2nUpiaUjg9SUMTtcugy6nVu3RYi23+Wblk7NHHvcoK7j
+         0OUIDc2YizL5qUC6xWBdp9tNFTEfEtjs9msZkvS/XBvdhTYQVdd1OP4vsNyKM4DDHv
+         BY4UYR8ZcZ5StJ0A1eHU0a4aFvyGOR4pWgVefFaIedZhAk0SBm+zFbwYbIvs6lZuub
+         x6TZvyA3PLrHqwNvW7md7y8MryV0foPLqZtxH95WwQqLxpcrTiSd3GCdnBSa6kvQTZ
+         h2ZzqpgfEhsRo6kj2MMI432mjOdwKyjYgrGFTUMA6p4b2CEEtAK8on0wpFvpCrR8/x
+         +I2gnkZ+lG9vw==
 Received: from localhost (101.220.150.77.rev.sfr.net [77.150.220.101])
-        by st43p00im-zteg10071901.me.com (Postfix) with ESMTPSA id AD67ED80F3B;
-        Thu,  9 Dec 2021 21:54:10 +0000 (UTC)
+        by st43p00im-zteg10073501.me.com (Postfix) with ESMTPSA id 8F09AAE053D;
+        Thu,  9 Dec 2021 21:54:14 +0000 (UTC)
 From:   Alain Volmat <avolmat@me.com>
 To:     Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org
 Cc:     Patrice Chotard <patrice.chotard@foss.st.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Fabrice Gasnier <fabrice.gasnier@foss.st.com>, avolmat@me.com
-Subject: [PATCH 3/5] MAINTAINERS: add entry for ST STI PCIE driver
-Date:   Thu,  9 Dec 2021 22:53:48 +0100
-Message-Id: <20211209215350.4207-4-avolmat@me.com>
+Subject: [PATCH 4/5] ARM: dts: sti: add the PCIe controller node within stih407-family
+Date:   Thu,  9 Dec 2021 22:53:49 +0100
+Message-Id: <20211209215350.4207-5-avolmat@me.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211209215350.4207-1-avolmat@me.com>
 References: <20211209215350.4207-1-avolmat@me.com>
@@ -46,30 +46,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIE Driver entry for STI family from ST Microelectronics.
+Add the pcie1 entry within stih407-family dtsi.
 
 Signed-off-by: Alain Volmat <avolmat@me.com>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/stih407-family.dtsi | 40 +++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 360e9aa0205d..081ccdfbd89c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14666,6 +14666,12 @@ L:	linux-samsung-soc@vger.kernel.org
- S:	Maintained
- F:	drivers/pci/controller/dwc/pci-exynos.c
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 21f3347a91d6..fe4ea2d5b583 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -631,6 +631,46 @@ spifsm: spifsm@9022000{
+ 			status = "disabled";
+ 		};
  
-+PCI DRIVER FOR ST STI PLATFORM
-+M:	Alain Volmat <avolmat@me.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	drivers/pci/controller/dwc/pcie-sti.c
++		pcie1: pcie@9b10000 {
++			compatible = "st,stih407-pcie";
++			device_type = "pci";
++			reg = <0x09b10000 0x00001000>,	/* cntrl registers */
++			      <0x3fff0000 0x00010000>,	/* config space */
++			      <0x40000000 0xc0000000>;	/* lmi mem window */
 +
- PCI DRIVER FOR SYNOPSYS DESIGNWARE
- M:	Jingoo Han <jingoohan1@gmail.com>
- M:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
++			reg-names = "dbi",
++				    "config",
++				    "mem-window";
++
++			st,syscfg = <&syscfg_core 0xdc 0xe4>;
++
++			#interrupt-cells = <1>;
++			interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi";
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &intc GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 2 &intc GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 3 &intc GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 4 &intc GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++			/* non-prefetchable and prefetchable */
++			ranges = <0x82000000 0 0x30000000 0x30000000 0 0x05550000>,
++				 <0xc2000000 0 0x35550000 0x35550000 0 0x0AAA0000>;
++			bus-range = <0x00 0xff>;
++
++			resets = <&softreset STIH407_PCIE1_SOFTRESET>,
++				 <&powerdown STIH407_PCIE1_POWERDOWN>;
++
++			reset-names = "softreset", "powerdown";
++
++			phys = <&phy_port1 PHY_TYPE_PCIE>;
++			phy-names = "pcie";
++
++			status = "disabled";
++		};
++
+ 		sata0: sata@9b20000 {
+ 			compatible = "st,ahci";
+ 			reg = <0x9b20000 0x1000>;
 -- 
 2.25.1
 
