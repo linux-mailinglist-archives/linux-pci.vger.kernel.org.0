@@ -2,160 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55ADE46E630
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 11:06:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F242046E799
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 12:28:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232499AbhLIKKJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Dec 2021 05:10:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56984 "EHLO
+        id S236702AbhLILbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Dec 2021 06:31:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232469AbhLIKKH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 05:10:07 -0500
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01644C061353
-        for <linux-pci@vger.kernel.org>; Thu,  9 Dec 2021 02:06:34 -0800 (PST)
-Received: by mail-lj1-x229.google.com with SMTP id z8so8134886ljz.9
-        for <linux-pci@vger.kernel.org>; Thu, 09 Dec 2021 02:06:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BKJ6vGqHSwm7BRFptl/55IB7GLQniF1Gw5ceok/cZhg=;
-        b=B5Zp2DulMoGXJqx4vc3B7SZL7xVZhj/W5aL+CzKEd9CHd7Xd2LQ5neYf+MiQI+Utk2
-         61jh6yKtjiLcidAJsE+wQoQLnDVxYU7ZnriuGOzjVlgyvHWed63kQd7pSu79ynK2yjoG
-         2DQz5xLZRdPZdk6dlqB44W8/Q69w/Sfqs9HmAavXYaulF3zTmwYLckFVrlOOTgvUpVVd
-         PpEZVh7b6IQFNsw5W2JI6GPayMWHHtB/J0jpQYqJCzpAdJu2nPEM+N1thQ1fUI8cCWhT
-         ogrvUp1xK0I2EEQ9jCG7WzV3pzzgFjZUP70ZOLXahKWbuybqYXhHgp46xDCFAeXujY1b
-         Pxdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BKJ6vGqHSwm7BRFptl/55IB7GLQniF1Gw5ceok/cZhg=;
-        b=rXl2wK602TfJsf+3u7FhNtSIYVc6LsAmeIY+fKmbQSIBTESjm+o+XJqUJyoA/x8lqP
-         BIx4QecNgExtAcd5TrbsOVJf++S9i9rjbodcyD2N/wwEpExmDMnMrzBn6vQkIOMXBTys
-         d43fH9JeJBGNmlNtLcHr3StRlQlk2Ahh2asSf+0PR2BObYCEg8LFJpsMRX6Yc7y+o28b
-         GsU0gxuGSeXBb+KO8VJ5KXEerNYYFOUk4nUhJJUtmR2s8igoYwunXaFnemF0CvN/jEI6
-         oON9YgLKChkAuGDqZV0NxA+9VexvFNlZobARQVI2h1VNyacX6C098L95ngaWAFClOnME
-         +oLg==
-X-Gm-Message-State: AOAM533Yri+Qyc/DB3TqZFAJSvJBDEsdiew2uq2syy1ZrGYug5CmI0t3
-        5TKuC8ga0nCPinpotqJxV4k2PJPzStvJjS+ty1H8mg==
-X-Google-Smtp-Source: ABdhPJxs4MQnQmfxefpgAy8GaEnwIv5pz3ZpFrg3sPEdkngTkbwJ1UYdI+ITuzs4VkkERX/T9pJjkunsgyGpfGxxQiI=
-X-Received: by 2002:a2e:7114:: with SMTP id m20mr5180210ljc.229.1639044392212;
- Thu, 09 Dec 2021 02:06:32 -0800 (PST)
+        with ESMTP id S235897AbhLILbl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 06:31:41 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFF04C061746;
+        Thu,  9 Dec 2021 03:28:07 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 02BEACE25AD;
+        Thu,  9 Dec 2021 11:28:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEFF2C004DD;
+        Thu,  9 Dec 2021 11:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639049284;
+        bh=YuTVc0t94cbpvLs4mLvsGGUtRGZGrbgNbCZEu9G82uM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B+pe+vFHKfbubH8018U6gvVAsdFtIirIJCalN6EhI4dyZJ5JuEpDxz94hQsRwMhxH
+         /LYK2S5dCya/YfVqPTcj2kEJyQDB9P0JeCFJenA84rjfekgx4pm6Sobg8M85+fS4Ho
+         ZV+DVEUsWTsEj41LEp0SNrpevaRBj42pAILAAidD4x0BtqP/7b/S2tQK5tPymtbkal
+         biH19t/d5PXxleFP3651kY+5HH3EsTbJKMcc6l/tYHoZKtru/qS44e43kHoxCcR7QP
+         c+GMcraWIIhbCXItNTHBxxj8b+6sAHqvuF0rGPiNCa1aYY8LbBV26klBHnEEpUJyf9
+         q61U0NO4MNGKQ==
+Received: by pali.im (Postfix)
+        id 08C1E111E; Thu,  9 Dec 2021 12:28:00 +0100 (CET)
+Date:   Thu, 9 Dec 2021 12:28:00 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     bpeled@marvell.com, kostap@marvell.com, nadavh@marvell.com,
+        stefanc@marvell.com, oferh@marvell.com,
+        Marc St-Amand <mstamand@ciena.com>, mw@semihalf.com,
+        jaz@semihalf.com
+Cc:     thomas.petazzoni@bootlin.com, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, sebastian.hesselbarth@gmail.com,
+        gregory.clement@bootlin.com, andrew@lunn.ch, robh+dt@kernel.org
+Subject: Re: =?utf-8?B?W+KAnVBBVENI4oCdIHY=?= =?utf-8?Q?2?= 1/5] PCI:
+ armada8k: Disable LTSSM on link down interrupts
+Message-ID: <20211209112800.mhdi3oeko5eamfj4@pali>
+References: <1618406454-7953-1-git-send-email-bpeled@marvell.com>
+ <1618406454-7953-2-git-send-email-bpeled@marvell.com>
 MIME-Version: 1.0
-References: <20211208000948.487820-1-rajatja@google.com>
-In-Reply-To: <20211208000948.487820-1-rajatja@google.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 9 Dec 2021 11:05:56 +0100
-Message-ID: <CAPDyKFqW_ttFxyVixWSuYwQa_SPcecRmf=u9KgMScGn0dd+uCg@mail.gmail.com>
-Subject: Re: [PATCH] pci/quirks: Add quirk for Bayhub O2 SD controller
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        rajatxjain@gmail.com, jsbarnes@google.com, gwendal@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1618406454-7953-2-git-send-email-bpeled@marvell.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 8 Dec 2021 at 01:09, Rajat Jain <rajatja@google.com> wrote:
->
-> This particular SD controller from O2 / Bayhub only allows dword
-> accesses to its LTR max latency registers:
-> https://github.com/rajatxjain/public_shared/blob/main/OZ711LV2_appnote.pdf
->
-> Thus add a quirk that saves and restores these registers
-> manually using dword acesses:
-> LTR Max Snoop Latency Register
-> LTR Max No-Snoop Latency Register
->
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
-
-
+On Wednesday 14 April 2021 16:20:50 bpeled@marvell.com wrote:
+> From: Ben Peled <bpeled@marvell.com>
+> 
+> When a PCI link down condition is detected, the link training state
+> machine must be disabled immediately.
+> 
+> Signed-off-by: Marc St-Amand <mstamand@ciena.com>
+> Signed-off-by: Konstantin Porotchkin <kostap@marvell.com>
+> Signed-off-by: Ben Peled <bpeled@marvell.com>
 > ---
->  drivers/mmc/host/sdhci-pci.h |  1 -
->  drivers/pci/quirks.c         | 39 ++++++++++++++++++++++++++++++++++++
->  include/linux/pci_ids.h      |  1 +
->  3 files changed, 40 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
-> index 5e3193278ff9..d47cc0ba7ca4 100644
-> --- a/drivers/mmc/host/sdhci-pci.h
-> +++ b/drivers/mmc/host/sdhci-pci.h
-> @@ -10,7 +10,6 @@
->  #define PCI_DEVICE_ID_O2_SDS1          0x8421
->  #define PCI_DEVICE_ID_O2_FUJIN2                0x8520
->  #define PCI_DEVICE_ID_O2_SEABIRD0      0x8620
-> -#define PCI_DEVICE_ID_O2_SEABIRD1      0x8621
->
->  #define PCI_DEVICE_ID_INTEL_PCH_SDIO0  0x8809
->  #define PCI_DEVICE_ID_INTEL_PCH_SDIO1  0x880a
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 003950c738d2..b7bd19802744 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5857,3 +5857,42 @@ static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
->         pdev->dev_flags |= PCI_DEV_FLAGS_HAS_MSI_MASKING;
+>  drivers/pci/controller/dwc/pcie-armada8k.c | 38 ++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+> index 13901f3..b2278b1 100644
+> --- a/drivers/pci/controller/dwc/pcie-armada8k.c
+> +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+> @@ -54,6 +54,10 @@ struct armada8k_pcie {
+>  #define PCIE_INT_C_ASSERT_MASK		BIT(11)
+>  #define PCIE_INT_D_ASSERT_MASK		BIT(12)
+>  
+> +#define PCIE_GLOBAL_INT_CAUSE2_REG	(PCIE_VENDOR_REGS_OFFSET + 0x24)
+> +#define PCIE_GLOBAL_INT_MASK2_REG	(PCIE_VENDOR_REGS_OFFSET + 0x28)
+> +#define PCIE_INT2_PHY_RST_LINK_DOWN	BIT(1)
+> +
+>  #define PCIE_ARCACHE_TRC_REG		(PCIE_VENDOR_REGS_OFFSET + 0x50)
+>  #define PCIE_AWCACHE_TRC_REG		(PCIE_VENDOR_REGS_OFFSET + 0x54)
+>  #define PCIE_ARUSER_REG			(PCIE_VENDOR_REGS_OFFSET + 0x5C)
+> @@ -193,6 +197,11 @@ static void armada8k_pcie_establish_link(struct armada8k_pcie *pcie)
+>  	       PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK;
+>  	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK1_REG, reg);
+>  
+> +	/* Also enable link down interrupts */
+> +	reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG);
+> +	reg |= PCIE_INT2_PHY_RST_LINK_DOWN;
+> +	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG, reg);
+> +
+>  	if (!dw_pcie_link_up(pci)) {
+>  		/* Configuration done. Start LTSSM */
+>  		reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_CONTROL_REG);
+> @@ -230,6 +239,35 @@ static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
+>  	val = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_CAUSE1_REG);
+>  	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_CAUSE1_REG, val);
+>  
+> +	val = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_CAUSE2_REG);
+> +
+> +	if (PCIE_INT2_PHY_RST_LINK_DOWN & val) {
+> +		u32 ctrl_reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_CONTROL_REG);
+> +		/*
+> +		 * The link went down. Disable LTSSM immediately. This
+> +		 * unlocks the root complex config registers. Downstream
+> +		 * device accesses will return all-Fs
+> +		 */
+
+Hello! This looks like some issue with PCIe HW. Does it mean that if
+LTSSM is not disabled then Root Complex stuck or crash during processing
+config requests from CPU? Or what else happens?
+
+Could you provide more details what is the exact issue described in this
+comment? And is there any Marvell errata about this particular "disable
+LTSSM immediately" issue?
+
+> +		ctrl_reg &= ~(PCIE_APP_LTSSM_EN);
+> +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_CONTROL_REG, ctrl_reg);
+> +		/*
+> +		 * Mask link down interrupts. They can be re-enabled once
+> +		 * the link is retrained.
+> +		 */
+> +		ctrl_reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG);
+> +		ctrl_reg &= ~PCIE_INT2_PHY_RST_LINK_DOWN;
+> +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG, ctrl_reg);
+> +		/*
+> +		 * At this point a worker thread can be triggered to
+> +		 * initiate a link retrain. If link retrains were
+> +		 * possible, that is.
+> +		 */
+> +		dev_dbg(pci->dev, "%s: link went down\n", __func__);
+> +	}
+> +
+> +	/* Now clear the second interrupt cause. */
+> +	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_CAUSE2_REG, val);
+> +
+>  	return IRQ_HANDLED;
 >  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
-> +
-> +/*
-> + * Bayhub OZ711LV2 SD controller has an errata that only allows DWORD accesses
-> + * to the LTR max latency registers. Thus need to save and restore these
-> + * registers manually.
-> + */
-> +static void o2_seabird1_save_ltr(struct pci_dev *dev)
-> +{
-> +       struct pci_cap_saved_state *save_state;
-> +       u32 *reg32;
-> +
-> +       save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-> +       if (save_state) {
-> +               reg32 = &save_state->cap.data[0];
-> +               /* Preserve PCI_LTR_MAX_SNOOP_LAT & PCI_LTR_MAX_NOSNOOP_LAT */
-> +               pci_read_config_dword(dev, 0x234, reg32);
-> +       } else {
-> +               pci_err(dev, "quirk can't save LTR snoop latency\n");
-> +       }
-> +}
-> +
-> +static void o2_seabird1_restore_ltr(struct pci_dev *dev)
-> +{
-> +       struct pci_cap_saved_state *save_state;
-> +       u32 *reg32;
-> +
-> +       save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-> +       if (save_state) {
-> +               reg32 = &save_state->cap.data[0];
-> +               /* Restore PCI_LTR_MAX_SNOOP_LAT & PCI_LTR_MAX_NOSNOOP_LAT */
-> +               pci_write_config_dword(dev, 0x234, *reg32);
-> +       } else {
-> +               pci_err(dev, "quirk can't restore LTR snoop latency\n");
-> +       }
-> +}
-> +DECLARE_PCI_FIXUP_SUSPEND_LATE(PCI_VENDOR_ID_O2, PCI_DEVICE_ID_O2_SEABIRD1,
-> +                              o2_seabird1_save_ltr);
-> +DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_O2, PCI_DEVICE_ID_O2_SEABIRD1,
-> +                              o2_seabird1_restore_ltr);
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 011f2f1ea5bb..6ed16aa38196 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -1717,6 +1717,7 @@
->  #define PCI_DEVICE_ID_O2_8221          0x8221
->  #define PCI_DEVICE_ID_O2_8320          0x8320
->  #define PCI_DEVICE_ID_O2_8321          0x8321
-> +#define PCI_DEVICE_ID_O2_SEABIRD1      0x8621
->
->  #define PCI_VENDOR_ID_3DFX             0x121a
->  #define PCI_DEVICE_ID_3DFX_VOODOO      0x0001
-> --
-> 2.34.1.400.ga245620fadb-goog
->
+>  
+> -- 
+> 2.7.4
+> 
