@@ -2,72 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECC1E46E5E3
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 10:46:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55ADE46E630
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 11:06:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231996AbhLIJuR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Dec 2021 04:50:17 -0500
-Received: from smtp23.cstnet.cn ([159.226.251.23]:56800 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231932AbhLIJuK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 9 Dec 2021 04:50:10 -0500
-Received: from localhost.localdomain (unknown [124.16.138.128])
-        by APP-03 (Coremail) with SMTP id rQCowAAXMJJY0LFhwyzAAQ--.33737S2;
-        Thu, 09 Dec 2021 17:46:04 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     ruscur@russell.cc, oohall@gmail.com, bhelgaas@google.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: [PATCH] PCI/AER: potential dereference of null pointer
-Date:   Thu,  9 Dec 2021 17:45:56 +0800
-Message-Id: <20211209094556.2085357-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        id S232499AbhLIKKJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Dec 2021 05:10:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232469AbhLIKKH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 05:10:07 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01644C061353
+        for <linux-pci@vger.kernel.org>; Thu,  9 Dec 2021 02:06:34 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id z8so8134886ljz.9
+        for <linux-pci@vger.kernel.org>; Thu, 09 Dec 2021 02:06:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BKJ6vGqHSwm7BRFptl/55IB7GLQniF1Gw5ceok/cZhg=;
+        b=B5Zp2DulMoGXJqx4vc3B7SZL7xVZhj/W5aL+CzKEd9CHd7Xd2LQ5neYf+MiQI+Utk2
+         61jh6yKtjiLcidAJsE+wQoQLnDVxYU7ZnriuGOzjVlgyvHWed63kQd7pSu79ynK2yjoG
+         2DQz5xLZRdPZdk6dlqB44W8/Q69w/Sfqs9HmAavXYaulF3zTmwYLckFVrlOOTgvUpVVd
+         PpEZVh7b6IQFNsw5W2JI6GPayMWHHtB/J0jpQYqJCzpAdJu2nPEM+N1thQ1fUI8cCWhT
+         ogrvUp1xK0I2EEQ9jCG7WzV3pzzgFjZUP70ZOLXahKWbuybqYXhHgp46xDCFAeXujY1b
+         Pxdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BKJ6vGqHSwm7BRFptl/55IB7GLQniF1Gw5ceok/cZhg=;
+        b=rXl2wK602TfJsf+3u7FhNtSIYVc6LsAmeIY+fKmbQSIBTESjm+o+XJqUJyoA/x8lqP
+         BIx4QecNgExtAcd5TrbsOVJf++S9i9rjbodcyD2N/wwEpExmDMnMrzBn6vQkIOMXBTys
+         d43fH9JeJBGNmlNtLcHr3StRlQlk2Ahh2asSf+0PR2BObYCEg8LFJpsMRX6Yc7y+o28b
+         GsU0gxuGSeXBb+KO8VJ5KXEerNYYFOUk4nUhJJUtmR2s8igoYwunXaFnemF0CvN/jEI6
+         oON9YgLKChkAuGDqZV0NxA+9VexvFNlZobARQVI2h1VNyacX6C098L95ngaWAFClOnME
+         +oLg==
+X-Gm-Message-State: AOAM533Yri+Qyc/DB3TqZFAJSvJBDEsdiew2uq2syy1ZrGYug5CmI0t3
+        5TKuC8ga0nCPinpotqJxV4k2PJPzStvJjS+ty1H8mg==
+X-Google-Smtp-Source: ABdhPJxs4MQnQmfxefpgAy8GaEnwIv5pz3ZpFrg3sPEdkngTkbwJ1UYdI+ITuzs4VkkERX/T9pJjkunsgyGpfGxxQiI=
+X-Received: by 2002:a2e:7114:: with SMTP id m20mr5180210ljc.229.1639044392212;
+ Thu, 09 Dec 2021 02:06:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: rQCowAAXMJJY0LFhwyzAAQ--.33737S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw4xtrW8CFykXry5uF1rJFb_yoW3XFg_u3
-        yxWrnrGrWUKFs3WFn0yr4rZryjva4DXrWIqanaqa93Cas7uF97XFyUXr13JF47WFZ3CryD
-        C3sFkr13Cw17KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbckFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-        jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8uwCF
-        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
-        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
-        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
-        1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUhNVgUUUUU=
-X-Originating-IP: [124.16.138.128]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
+References: <20211208000948.487820-1-rajatja@google.com>
+In-Reply-To: <20211208000948.487820-1-rajatja@google.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 9 Dec 2021 11:05:56 +0100
+Message-ID: <CAPDyKFqW_ttFxyVixWSuYwQa_SPcecRmf=u9KgMScGn0dd+uCg@mail.gmail.com>
+Subject: Re: [PATCH] pci/quirks: Add quirk for Bayhub O2 SD controller
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        rajatxjain@gmail.com, jsbarnes@google.com, gwendal@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-he return value of kzalloc() needs to be checked.
-To avoid use of null pointer in case of the failure of alloc.
+On Wed, 8 Dec 2021 at 01:09, Rajat Jain <rajatja@google.com> wrote:
+>
+> This particular SD controller from O2 / Bayhub only allows dword
+> accesses to its LTR max latency registers:
+> https://github.com/rajatxjain/public_shared/blob/main/OZ711LV2_appnote.pdf
+>
+> Thus add a quirk that saves and restores these registers
+> manually using dword acesses:
+> LTR Max Snoop Latency Register
+> LTR Max No-Snoop Latency Register
+>
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 
-Fixes: db89ccbe52c7 ("PCI/AER: Define aer_stats structure for AER capable devices")
-Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
----
- drivers/pci/pcie/aer.c | 2 ++
- 1 file changed, 2 insertions(+)
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index ec943cee5ecc..d04303edf468 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -376,6 +376,8 @@ void pci_aer_init(struct pci_dev *dev)
- 		return;
- 
- 	dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
-+	if (!dev->aer_stats)
-+		return;
- 
- 	/*
- 	 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
--- 
-2.25.1
+Kind regards
+Uffe
 
+
+> ---
+>  drivers/mmc/host/sdhci-pci.h |  1 -
+>  drivers/pci/quirks.c         | 39 ++++++++++++++++++++++++++++++++++++
+>  include/linux/pci_ids.h      |  1 +
+>  3 files changed, 40 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
+> index 5e3193278ff9..d47cc0ba7ca4 100644
+> --- a/drivers/mmc/host/sdhci-pci.h
+> +++ b/drivers/mmc/host/sdhci-pci.h
+> @@ -10,7 +10,6 @@
+>  #define PCI_DEVICE_ID_O2_SDS1          0x8421
+>  #define PCI_DEVICE_ID_O2_FUJIN2                0x8520
+>  #define PCI_DEVICE_ID_O2_SEABIRD0      0x8620
+> -#define PCI_DEVICE_ID_O2_SEABIRD1      0x8621
+>
+>  #define PCI_DEVICE_ID_INTEL_PCH_SDIO0  0x8809
+>  #define PCI_DEVICE_ID_INTEL_PCH_SDIO1  0x880a
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 003950c738d2..b7bd19802744 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5857,3 +5857,42 @@ static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
+>         pdev->dev_flags |= PCI_DEV_FLAGS_HAS_MSI_MASKING;
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
+> +
+> +/*
+> + * Bayhub OZ711LV2 SD controller has an errata that only allows DWORD accesses
+> + * to the LTR max latency registers. Thus need to save and restore these
+> + * registers manually.
+> + */
+> +static void o2_seabird1_save_ltr(struct pci_dev *dev)
+> +{
+> +       struct pci_cap_saved_state *save_state;
+> +       u32 *reg32;
+> +
+> +       save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
+> +       if (save_state) {
+> +               reg32 = &save_state->cap.data[0];
+> +               /* Preserve PCI_LTR_MAX_SNOOP_LAT & PCI_LTR_MAX_NOSNOOP_LAT */
+> +               pci_read_config_dword(dev, 0x234, reg32);
+> +       } else {
+> +               pci_err(dev, "quirk can't save LTR snoop latency\n");
+> +       }
+> +}
+> +
+> +static void o2_seabird1_restore_ltr(struct pci_dev *dev)
+> +{
+> +       struct pci_cap_saved_state *save_state;
+> +       u32 *reg32;
+> +
+> +       save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
+> +       if (save_state) {
+> +               reg32 = &save_state->cap.data[0];
+> +               /* Restore PCI_LTR_MAX_SNOOP_LAT & PCI_LTR_MAX_NOSNOOP_LAT */
+> +               pci_write_config_dword(dev, 0x234, *reg32);
+> +       } else {
+> +               pci_err(dev, "quirk can't restore LTR snoop latency\n");
+> +       }
+> +}
+> +DECLARE_PCI_FIXUP_SUSPEND_LATE(PCI_VENDOR_ID_O2, PCI_DEVICE_ID_O2_SEABIRD1,
+> +                              o2_seabird1_save_ltr);
+> +DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_O2, PCI_DEVICE_ID_O2_SEABIRD1,
+> +                              o2_seabird1_restore_ltr);
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 011f2f1ea5bb..6ed16aa38196 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -1717,6 +1717,7 @@
+>  #define PCI_DEVICE_ID_O2_8221          0x8221
+>  #define PCI_DEVICE_ID_O2_8320          0x8320
+>  #define PCI_DEVICE_ID_O2_8321          0x8321
+> +#define PCI_DEVICE_ID_O2_SEABIRD1      0x8621
+>
+>  #define PCI_VENDOR_ID_3DFX             0x121a
+>  #define PCI_DEVICE_ID_3DFX_VOODOO      0x0001
+> --
+> 2.34.1.400.ga245620fadb-goog
+>
