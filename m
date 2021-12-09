@@ -2,73 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A21846F66A
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 23:03:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4176C46F684
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 23:09:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230490AbhLIWHQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Dec 2021 17:07:16 -0500
-Received: from st43p00im-zteg10063401.me.com ([17.58.63.175]:33600 "EHLO
-        st43p00im-zteg10063401.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230193AbhLIWHQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 17:07:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-        t=1639086859; bh=lSevOr7BAHftq5gxm26fGEC7mH3hZcAia+JHROve4Ww=;
-        h=From:To:Subject:Date:Message-Id:MIME-Version;
-        b=q5t/DKdBvP9q+nzCkGJpn7xSxHHNxxgvmXvcW+Wi0lQwPb7+XZEm13Zr0qY3IEtRs
-         7rCEDwnzoADw9cStuRLkadK9jwEwx0XKeyhm2npxT5W6spmbdxH3QGIvfCTLZcUh7r
-         nO3lh25RzloZhhY57OnZ4pZ8t+cRBFyRKfnAE2snTnvUjNLcWAeGOvL5Oscw+MkQhC
-         u4qXOLQmx+XqXrHxxNUhIzXMDBNM0MNUQWGFJTTscfaQTA3dKr+GQbmSUYdr8tYNyK
-         5QECHCBol1M1C/oqMc3bEVVrhzgeWsZEl5sX899tr+CvN8R6/RmAk/ZNQigVH3ZXco
-         dNZV4sM19q+tA==
-Received: from localhost (101.220.150.77.rev.sfr.net [77.150.220.101])
-        by st43p00im-zteg10063401.me.com (Postfix) with ESMTPSA id 445B04A05FD;
-        Thu,  9 Dec 2021 21:54:18 +0000 (UTC)
-From:   Alain Volmat <avolmat@me.com>
-To:     Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org
-Cc:     Patrice Chotard <patrice.chotard@foss.st.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>, avolmat@me.com
-Subject: [PATCH 5/5] ARM: dts: sti: enable PCIe on the stih418-b2264 board
-Date:   Thu,  9 Dec 2021 22:53:50 +0100
-Message-Id: <20211209215350.4207-6-avolmat@me.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211209215350.4207-1-avolmat@me.com>
-References: <20211209215350.4207-1-avolmat@me.com>
+        id S233265AbhLIWNa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Dec 2021 17:13:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232333AbhLIWN3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 17:13:29 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA64EC061746;
+        Thu,  9 Dec 2021 14:09:55 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1639087793;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=B+lqUDLWtnvLeY/KahuIZ2Xvfr4Bwoi1ABSMRvnITCk=;
+        b=WW18ExaRnpYiWwbxv1Oo+xyj2rfXtsbPW+X7DVsTiaqB6wgXzATusvwhCl2GaS0rdR+WnS
+        tJqrFACnb/P7aMyauV0Fi+Y2Ij1B/GX/eVn6EGdEM6K0YI6JQPA4aM+WtDI3/kaLnHJ2QX
+        nipiipByknmKWpGePlYzrzCt1B7GA4MVVwpoZbz8+GW4x4UCOWa7s+e/WbNp3weWyzEOkB
+        ChXF2+m0tC/eW9+h/iL1fdpba0kWZqBeWFWjFofAKXGAntdvIInQwwsjY75CFMBPXGsfyC
+        5gDlVAIJET2FXFHnFwbuWUKB2ii1p17poTV9Hn4kr4bxvGjeaFlv5zW+2fiLpg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1639087793;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=B+lqUDLWtnvLeY/KahuIZ2Xvfr4Bwoi1ABSMRvnITCk=;
+        b=qVn3U9HWxK+h6v6N25iCCmQPsywBb9D/DewlfObPZ14vxsbLUpThsREQ0c1etj4ttkaC80
+        m8v8EwcoDdMel9DA==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
+In-Reply-To: <20211209205835.GZ6385@nvidia.com>
+References: <8c2262ba-173e-0007-bc4c-94ec54b2847d@intel.com>
+ <87pmqg88xq.ffs@tglx> <df00b87e-00dc-d998-8b64-46b16dba46eb@intel.com>
+ <87k0go8432.ffs@tglx> <f4cc305b-a329-6d27-9fca-b74ebc9fa0c1@intel.com>
+ <878rx480fk.ffs@tglx>
+ <BN9PR11MB52765F2EF8420C60FD5945D18C709@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <87sfv2yy19.ffs@tglx> <20211209162129.GS6385@nvidia.com>
+ <878rwtzfh1.ffs@tglx> <20211209205835.GZ6385@nvidia.com>
+Date:   Thu, 09 Dec 2021 23:09:52 +0100
+Message-ID: <8735n1zaz3.ffs@tglx>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.425,18.0.790
- definitions=2021-12-08_08:2021-12-08,2021-12-08 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=708 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-2009150000 definitions=main-2112090112
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Enable the PCIe controller with proper reset gpio pin for this board.
+On Thu, Dec 09 2021 at 16:58, Jason Gunthorpe wrote:
+> On Thu, Dec 09, 2021 at 09:32:42PM +0100, Thomas Gleixner wrote:
+>> That was my thought to avoid having different mechanisms.
+>> 
+>> The address/data pair is computed in two places:
+>> 
+>>   1) Activation of an interrupt
+>>   2) Affinity setting on an interrupt
+>> 
+>> Both configure the IRTE when interrupt remapping is in place.
+>> 
+>> In both cases a vector is allocated in the vector domain and based on
+>> the resulting target APIC / vector number pair the IRTE is
+>> (re)configured.
+>> 
+>> So putting the hypercall into the vIRTE update is the obvious
+>> place. Both activation and affinity setting can fail and propagate an
+>> error code down to the originating caller.
+>> 
+>> Hmm?
+>
+> Okay, I think I get it. Would be nice to have someone from intel
+> familiar with the vIOMMU protocols and qemu code remark what the
+> hypervisor side can look like.
+>
+> There is a bit more work here, we'd have to change VFIO to somehow
+> entirely disconnect the kernel IRQ logic from the MSI table and
+> directly pass control of it to the guest after the hypervisor IOMMU IR
+> secures it. ie directly mmap the msi-x table into the guest
 
-Signed-off-by: Alain Volmat <avolmat@me.com>
----
- arch/arm/boot/dts/stih418-b2264.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+That makes everything consistent and a clear cut on all levels, right?
 
-diff --git a/arch/arm/boot/dts/stih418-b2264.dts b/arch/arm/boot/dts/stih418-b2264.dts
-index a99604bebf8c..ed183292a669 100644
---- a/arch/arm/boot/dts/stih418-b2264.dts
-+++ b/arch/arm/boot/dts/stih418-b2264.dts
-@@ -130,6 +130,11 @@ &ohci1 {
- 	status = "okay";
- };
- 
-+&pcie1 {
-+	reset-gpios = <&pio34 5 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
- &pwm1 {
- 	status = "okay";
- };
--- 
-2.25.1
+Thanks,
+
+        tglx
 
