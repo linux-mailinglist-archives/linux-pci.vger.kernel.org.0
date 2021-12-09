@@ -2,70 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E98546F576
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 22:00:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D83146F583
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Dec 2021 22:02:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231334AbhLIVDv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Dec 2021 16:03:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231689AbhLIVDv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 16:03:51 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A395BC0617A1
-        for <linux-pci@vger.kernel.org>; Thu,  9 Dec 2021 13:00:17 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id x5so6615057pfr.0
-        for <linux-pci@vger.kernel.org>; Thu, 09 Dec 2021 13:00:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=BJPWo58tKlQXm4vRD5vnXhZrKIbn/SXsA1N14vuJVFE=;
-        b=jQWbkZ2Wn0DGuMmXNjQ8F02bBMlGypEanZx6SRJGq2s0IsCyss7KyEi9kTG2u5yTFd
-         PrVKAMGIaxk1X04MIILMx0o+5b4fbiYFaKVhvEciPW2qPPP2ycT4KLKDAsIO/e5asUZ0
-         +7w6TKBPbmLNUqNLPOXWyyrQv325TUdlz1gZyMZx/YjwPJp94Nl2vG8oYnWbtfDLdxpV
-         dq06/pQpQaq/729Rwj9Sag0gaKC1D9OcrEDZ/OWStfQhWuuriSQMvPt0UahmrqbyFSFA
-         4I4v3TnMDzg5uVnGG3/gUqBndb3XHQF7dviMGfOkJ4TjNAWKiZLmLWivjaKiBCYR4gR2
-         XS+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=BJPWo58tKlQXm4vRD5vnXhZrKIbn/SXsA1N14vuJVFE=;
-        b=N6xTxJFSkZovQdkwW3xra/joH3Zj6z1RBqa+yOlkZxK9gMFhArT3qDgBAFX13YY8nW
-         QpcZbhs5SBDrb73L3/j/Lt4w6U0G7XVrXu5qFfIcNptDulezFkwk2WciXmUgiBzDN9uc
-         9eN01JKJ07oaQQJjq7XSXfQLC6tFNt/2Zp+yGotSxomSx5CwaLARJM+Io2O+EYSa7RC6
-         YauO4KDonESvk7wNgEp+aOWHQvrwb207yWIZ4ODwYdkYIQkCcgt03xeHBsN0LHYE5W20
-         siH9fDgi8DjlQ/g63zqAq2Hn7fYf8G9z/tP3XVN5dn59a5B+oFkl2IJHRauuiUTMu9vZ
-         4SfQ==
-X-Gm-Message-State: AOAM533tb/V5MneuVIAiRql2BZNXP8Mno6mrUUwHJ8XfYvDrbOF3hPEW
-        /n4tBmuxR289MyeV/g5IZ0t3jVLhP2IHcQZFcXw=
-X-Google-Smtp-Source: ABdhPJyMkZDKuJmsQcWUoR8BtIUa4Zkw+CMwR6RtSByVUY2mK0cg1os8OY6hzm/vRkM8Hc7SH+XXiV73iFARFpu5aZU=
-X-Received: by 2002:a05:6a00:a14:b0:4a0:945:16fa with SMTP id
- p20-20020a056a000a1400b004a0094516famr13707540pfh.9.1639083617185; Thu, 09
- Dec 2021 13:00:17 -0800 (PST)
+        id S231791AbhLIVFl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Dec 2021 16:05:41 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:41868 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231410AbhLIVFl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 16:05:41 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1639083725;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xxqdvbsXfW9ZTgMmCuXp8YRHSWgAbwtAttb91gr8JjI=;
+        b=DOc6YJ2ZnBO/S4LCXZXRmaCbKg4mw4ULShgz8TQVMTQrtnAO2Xt2ML2QqNoyx+YxXUsHJN
+        M9Uc19toNCVSDrL0eBe6B+2C6HaFEOtjxR4Vo4wDMaGkR/fPp4Wnk8pCtSmMV+G3zim+uJ
+        dTY6cTrRvZdPCszRejdDVRTgiEJq+lNz109fnZuFt1e703qlfscJY8ERwknVxLcHHHkz7A
+        wxSoldZRl7kvhteRoNYLnpDjrMlrysFM5RCRJ+id9dYpo1pfWpwST9eeIao0MKlvGxa//1
+        fq90+ELl15EUbs0r5Np+mZtUBnTVF1oCbSyBny5RQeJBwFKovf/OUugsxVxS8A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1639083725;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xxqdvbsXfW9ZTgMmCuXp8YRHSWgAbwtAttb91gr8JjI=;
+        b=7h0lucwwwhZa1hvXVoxI9ymbY55FLNkqkYChkOSRhqiPlIIQ18VrnDa7PbaNLMd6ZwoxZ+
+        K+aavqocs9ZCuaAA==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Cedric Le Goater <clg@kaod.org>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sinan Kaya <okaya@kernel.org>
+Subject: Re: [patch V2 19/36] PCI/MSI: Store properties in device::msi::data
+In-Reply-To: <87k0gdzmu6.ffs@tglx>
+References: <20211206210307.625116253@linutronix.de>
+ <20211206210438.688216619@linutronix.de>
+ <20211208155816.GZ6385@nvidia.com> <87k0gdzmu6.ffs@tglx>
+Date:   Thu, 09 Dec 2021 22:02:04 +0100
+Message-ID: <875yrxze43.ffs@tglx>
 MIME-Version: 1.0
-Received: by 2002:a05:6a20:7d8b:b0:5d:5c22:870b with HTTP; Thu, 9 Dec 2021
- 13:00:16 -0800 (PST)
-Reply-To: clmloans9@gmail.com
-From:   MR ANTHONY EDWARD <debraalessii@gmail.com>
-Date:   Thu, 9 Dec 2021 22:00:16 +0100
-Message-ID: <CAM30Lis5P9dFLAJZVv+OnuNM1huR68kSJzvkLivpphDKffocDA@mail.gmail.com>
-Subject: DARLEHEN ZU 2% BEANTRAGEN
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---=20
-Ben=C3=B6tigen Sie einen Gesch=C3=A4ftskredit oder einen Kredit jeglicher A=
-rt?
-Wenn ja, kontaktieren Sie uns
+On Thu, Dec 09 2021 at 18:53, Thomas Gleixner wrote:
+> On Wed, Dec 08 2021 at 11:58, Jason Gunthorpe wrote:
+>> On Mon, Dec 06, 2021 at 11:39:26PM +0100, Thomas Gleixner wrote:
+>>> Store the properties which are interesting for various places so the MSI
+>>> descriptor fiddling can be removed.
+>>> 
+>>> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>>> ---
+>>> V2: Use the setter function
+>>> ---
+>>>  drivers/pci/msi/msi.c |    8 ++++++++
+>>>  1 file changed, 8 insertions(+)
+>>
+>> I took more time to look at this, to summarize my remarks on the other
+>> patches
+>>
+>> I think we don't need properties. The info in the msi_desc can come
+>> from the pci_dev which we have easy access to. This seems overall
+>> clearer
+>
+> I fixed that now.
 
-*Vollst=C3=A4ndiger Name:
-*Ben=C3=B6tigte Menge:
-*Darlehensdauer:
-*Handy:
-*Land:
+So much for the theory. dev->msi[x]_enabled are set after everything is
+set up. Some of the places are part of the setup...
+
+/me goes back to stare
