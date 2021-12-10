@@ -2,48 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB7994709B9
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 20:05:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B5E74709BA
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 20:05:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343522AbhLJTIx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Dec 2021 14:08:53 -0500
-Received: from mga07.intel.com ([134.134.136.100]:28003 "EHLO mga07.intel.com"
+        id S1343524AbhLJTIy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Dec 2021 14:08:54 -0500
+Received: from mga05.intel.com ([192.55.52.43]:11323 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343530AbhLJTIw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 10 Dec 2021 14:08:52 -0500
+        id S244771AbhLJTIx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Dec 2021 14:08:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639163117; x=1670699117;
+  t=1639163118; x=1670699118;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=vRsIxhxcV3+5wK98oJEBPXFv1jlN17pq73zQBxxx5kM=;
-  b=dy/l8pfL7BVIzOO9W5qejnxj9N7ZJr0GpJKNPsCnkjPAXxgv+SZFda2M
-   /xksTUa31BO+J/mjKsV/TTdKVUAo0YktOf/wrk4KFPsLrgdLzQk0BwoJf
-   l//Xo5bJrcGvpTw3PQZS4flMNE6BPOqtHJDH3B7JCdAy5SHyq4rkubx27
-   4Z756xTeKrkCEKFWjKekggEzPX2xAZ74A2cw6Uot52vA6+u1im6Xgxooj
-   LbLZbR9+etNnRkr+waqmTvgzKI2qrVV0ZumMIHyi1drViA8y+z14TTsfs
-   +iQRBYbhwaOQRQgbYMDf/FAMHvUqDwl0gLA9nflq45JsMvZ7GNaZdzntx
+  bh=4QDWu/RjloXmKRMUHsT2Ng7s0gnpZwjAqRoUzFZc3kQ=;
+  b=YKCI7ky246wkD085NddnYdbPNDOchpIzK8wtRbJCK3IYvRwYENClf5/U
+   ehgoZAlu2wf0WCl4tn/3ROQNgB2spxe8IK+p6PT32fc/nJFu4/WFG1I4z
+   cBHdHpiEcBrINgVVqWIwlKp77fIwqIBg/WwWFzOM2CtOffsqCNqVOELZH
+   c+Cc6IlAg4u9a3qglcXIsr6lGZxIr3Sm5iXmnoykIBksQI83jIarpYCgZ
+   8kCWVSDRn7CipzHpxTBPhvMhw2jdsH4LWFPXKipjeB+vVFMORpu7H3Qnx
+   wRfeYCdayzxYALjVjVnJ8eG29VmsMq6gU14YGlJQ91f6iIV6M1gxuPw4S
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10194"; a="301804664"
+X-IronPort-AV: E=McAfee;i="6200,9189,10194"; a="324685467"
 X-IronPort-AV: E=Sophos;i="5.88,196,1635231600"; 
-   d="scan'208";a="301804664"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 11:05:17 -0800
+   d="scan'208";a="324685467"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 11:05:17 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,196,1635231600"; 
-   d="scan'208";a="613023990"
+   d="scan'208";a="544072951"
 Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 10 Dec 2021 11:05:16 -0800
+  by orsmga001.jf.intel.com with ESMTP; 10 Dec 2021 11:05:16 -0800
 Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mvlCl-0003aH-H1; Fri, 10 Dec 2021 19:05:15 +0000
-Date:   Sat, 11 Dec 2021 03:04:53 +0800
+        id 1mvlCl-0003aL-IS; Fri, 10 Dec 2021 19:05:15 +0000
+Date:   Sat, 11 Dec 2021 03:04:58 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     kbuild-all@lists.01.org, linux-pci@vger.kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        linux-pci@vger.kernel.org
 Subject: [helgaas-pci:pci/driver-cleanup 8/27]
- drivers/pci/controller/cadence/pci-j721e.c:370:14: warning: assignment
- discards 'const' qualifier from pointer target type
-Message-ID: <202112110258.s3iNhcmi-lkp@intel.com>
+ drivers/pci/controller/cadence/pci-j721e.c:370:7: error: assigning to
+ 'struct j721e_pcie_data *' from 'const void *' discards qualifiers
+Message-ID: <202112110238.rZl7p5gE-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -55,31 +56,33 @@ X-Mailing-List: linux-pci@vger.kernel.org
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/driver-cleanup
 head:   24d25dd0ddf8c2b924a1fafc51dd0e578d304c3a
 commit: 667c60afad253791929991b2dc2ed5417bba2787 [8/27] PCI: j721e: Drop pointless of_device_get_match_data() cast
-config: ia64-randconfig-r016-20211210 (https://download.01.org/0day-ci/archive/20211211/202112110258.s3iNhcmi-lkp@intel.com/config)
-compiler: ia64-linux-gcc (GCC) 11.2.0
+config: arm64-randconfig-r014-20211210 (https://download.01.org/0day-ci/archive/20211211/202112110238.rZl7p5gE-lkp@intel.com/config)
+compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 097a1cb1d5ebb3a0ec4bcaed8ba3ff6a8e33c00a)
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
+        # install arm64 cross compiling tool for clang build
+        # apt-get install binutils-aarch64-linux-gnu
         # https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=667c60afad253791929991b2dc2ed5417bba2787
         git remote add helgaas-pci https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
         git fetch --no-tags helgaas-pci pci/driver-cleanup
         git checkout 667c60afad253791929991b2dc2ed5417bba2787
         # save the config file to linux build tree
         mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=ia64 SHELL=/bin/bash drivers/pci/controller/cadence/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/pci/controller/cadence/
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
-   drivers/pci/controller/cadence/pci-j721e.c: In function 'j721e_pcie_probe':
->> drivers/pci/controller/cadence/pci-j721e.c:370:14: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-     370 |         data = of_device_get_match_data(dev);
-         |              ^
+>> drivers/pci/controller/cadence/pci-j721e.c:370:7: error: assigning to 'struct j721e_pcie_data *' from 'const void *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+           data = of_device_get_match_data(dev);
+                ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
 
 
-vim +/const +370 drivers/pci/controller/cadence/pci-j721e.c
+vim +370 drivers/pci/controller/cadence/pci-j721e.c
 
    351	
    352	static int j721e_pcie_probe(struct platform_device *pdev)
