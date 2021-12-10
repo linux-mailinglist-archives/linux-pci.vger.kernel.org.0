@@ -2,155 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1319D47002C
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 12:37:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA2FB47003A
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 12:39:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240694AbhLJLlD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Dec 2021 06:41:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240680AbhLJLlD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 06:41:03 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FDEAC0617A2
-        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 03:37:28 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id p13so8249119pfw.2
-        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 03:37:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qi2ii7axpVPM6M5j9yKMozSkF/k3GbmTDPLNt+E5MLk=;
-        b=acwYIZDGWQoJ31rdBIRmigTvMAK5hGgUACwg6gzz1XMlcC9WQ8kOCqLsqu8YRJMOa5
-         vrOQL9I+1esExYHfkA0CK1Qy5Mr7ckRp/7xgLfEvhia4KNQBgRP2yhHnAD+36zUSmKei
-         xVbkcpaE4FvukexOVlXNRY4NSx2BnFPjIwOAPqbU14ON2flSKlOfUYL5yxT1j5wLSQrq
-         mdoOIYNV0uY0aDoFDE2p7Q0CFWl7RcDiz2r+u9sl7I+ulHus7icfWSLBkqtkVSnVCKMF
-         uiASmCzf0QK1EF7/KPUQuTmBDxJobM6ofAZ505tFZF4q3NBX3z5a2/hO21VgfFgzMwzh
-         c5Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qi2ii7axpVPM6M5j9yKMozSkF/k3GbmTDPLNt+E5MLk=;
-        b=tKwfbYUIZVgb6QoScPh+fjeYM5dGzIq/Kp+LimGYo2Yy+bNVvXVPXEa6ekVPj3CWNt
-         h3brT6/r4y3fxSVpwXgfvp9vKjdxePSgZLFHmYtr9/4WpA2zerMjPmesQh3TmkwXcCY3
-         VMyMrA0yTItR18WbY+tW3b7rzFbM+omsKv2c7AFgcut0s+vduTJ8bay6lfCWW9/vW2OD
-         qvjmxOdBm2iQa70cp9ilT7+ZqQ8fOCjAYpkWmgB6F03NUuoRHlUFRKOVXcbHrXjLypYt
-         +IHirkbmTVaK7NjQ2OUWTCdbr2KHrc5j6EN23UUOOfasPQlnauX6Cbr1btnVtg6n7CQk
-         fudQ==
-X-Gm-Message-State: AOAM532TxXk/mo+8hFj7xItto5SpzhFnKd11ZVi1Ie5wBTFYZ8Omkk0v
-        H8xY4OJlVWNZHuGN5VSoazIV
-X-Google-Smtp-Source: ABdhPJwZJzp1BvF7xLuULGMdYqjjGXpKYnPljTi18kLCPgfMUUNFpVqPsqgVa6itGcnUd1l3myVGpg==
-X-Received: by 2002:a62:1a03:0:b0:494:64b5:3e01 with SMTP id a3-20020a621a03000000b0049464b53e01mr17584648pfa.35.1639136247602;
-        Fri, 10 Dec 2021 03:37:27 -0800 (PST)
-Received: from thinkpad ([202.21.42.75])
-        by smtp.gmail.com with ESMTPSA id kk7sm14517702pjb.19.2021.12.10.03.37.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 03:37:27 -0800 (PST)
-Date:   Fri, 10 Dec 2021 17:07:20 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH v2 07/10] arm64: dts: qcom: sm8450: add PCIe0 PHY node
-Message-ID: <20211210113720.GG1734@thinkpad>
-References: <20211208171442.1327689-1-dmitry.baryshkov@linaro.org>
- <20211208171442.1327689-8-dmitry.baryshkov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211208171442.1327689-8-dmitry.baryshkov@linaro.org>
+        id S233248AbhLJLn0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Dec 2021 06:43:26 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:58818 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233191AbhLJLnZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 06:43:25 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B407FB823BC;
+        Fri, 10 Dec 2021 11:39:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80260C00446;
+        Fri, 10 Dec 2021 11:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639136388;
+        bh=i1fTgK4mYC9hK4/qp0NL31Wa71Peh6RRTXgIwg25/nU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=V8vzOnooUNmUW41mSo5d5dZ7ABhmO5yL6SIIyRqceWJC6nwxPB4Za+l2S69HT5tfw
+         hjBflD/T8afrmTe2Ew5x/TMwjV5dyCwDA56HnxZJvHRYC/6RlyDckbomtBvRGCIBAi
+         mpdjnyIr6e4Pnpgdxj0AS70KfDypUre3sII0KJX1r7ch8FjCJ0C1/bdD3CD6alEdwB
+         Z2jHNxmEj2KprNYLFBhKp8hGwsAMmPbt0d+N16VtpCZ0C71RsUHcEP1zace+wq0D+L
+         t7DZcRjFYO2XmxEcYlzYNgVONRgV8CISIvSBGVl6IvPr9ue/XwJBqsf/5exh9+qu8t
+         ZCRfVlWEfMsRQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mveFd-00BFMY-VT; Fri, 10 Dec 2021 11:39:46 +0000
+Date:   Fri, 10 Dec 2021 11:39:45 +0000
+Message-ID: <874k7g1yf2.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, lorenzo.pieralisi@arm.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [RFC] PCI/MSI: Warning observed for NVMe with ACPI
+In-Reply-To: <47833bde-a89a-988a-6350-6e6ec90048b4@nvidia.com>
+References: <47833bde-a89a-988a-6350-6e6ec90048b4@nvidia.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: jonathanh@nvidia.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, tglx@linutronix.de, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 08, 2021 at 08:14:39PM +0300, Dmitry Baryshkov wrote:
-> Add device tree node for the first PCIe PHY device found on the Qualcomm
-> SM8450 platform.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8450.dtsi | 42 ++++++++++++++++++++++++++--
->  1 file changed, 40 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> index 16a789cacb65..a047d8a22897 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> @@ -558,8 +558,12 @@ gcc: clock-controller@100000 {
->  			#clock-cells = <1>;
->  			#reset-cells = <1>;
->  			#power-domain-cells = <1>;
-> -			clock-names = "bi_tcxo", "sleep_clk";
-> -			clocks = <&rpmhcc RPMH_CXO_CLK>, <&sleep_clk>;
-> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
-> +				 <&pcie0_lane>,
-> +				 <&sleep_clk>;
-> +			clock-names = "bi_tcxo",
-> +				      "pcie_0_pipe_clk",
-> +				      "sleep_clk";
->  		};
->  
->  		qupv3_id_0: geniqup@9c0000 {
-> @@ -625,6 +629,40 @@ i2c14: i2c@a98000 {
->  			};
->  		};
->  
-> +		pcie0_phy: phy@1c06000 {
-> +			compatible = "qcom,sm8450-qmp-gen3x1-pcie-phy";
-> +			reg = <0 0x01c06000 0 0x200>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +			clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_0_CLKREF_EN>,
-> +				 <&gcc GCC_PCIE_0_PHY_RCHNG_CLK>;
-> +			clock-names = "aux", "cfg_ahb", "ref", "refgen";
-> +
-> +			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
-> +			reset-names = "phy";
-> +
-> +			assigned-clocks = <&gcc GCC_PCIE_0_PHY_RCHNG_CLK>;
-> +			assigned-clock-rates = <100000000>;
-> +
-> +			status = "disabled";
-> +
-> +			pcie0_lane: lanes@1c06200 {
-> +				reg = <0 0x1c06e00 0 0x200>, /* tx */
-> +				      <0 0x1c07000 0 0x200>, /* rx */
-> +				      <0 0x1c06200 0 0x200>, /* pcs */
+Hi Jon,
 
-Oh, so this platform has "PCS" at the starting offset? This is different
-compared to other platforms as "TX" always comes first.
+On Fri, 10 Dec 2021 10:48:22 +0000,
+Jon Hunter <jonathanh@nvidia.com> wrote:
+> 
+> Hi all,
+> 
+> Since Linux v5.13, we have noticed that following warning splat when
+> booting Tegra (ARM64) with ACPI ...
+> 
+> [    2.725479] WARNING: CPU: 0 PID: 94 at include/linux/msi.h:264 free_msi_irqs+0x84/0x188
+> [    2.736137] Modules linked in:
+> [    2.736147] CPU: 0 PID: 94 Comm: kworker/u16:1 Tainted: G        W         5.12.0-rc2-00008-g658376bd3e5-dirty #36
+> [    2.736160] Workqueue: nvme-reset-wq nvme_reset_work
+> [    2.746470] pstate: 60400009 (nZCv daif +PAN -UAO -TCO BTYPE=--)
+> [    2.757713] pc : free_msi_irqs+0x84/0x188
+> [    2.757726] lr : __pci_enable_msix_range+0x380/0x530
+> [    2.757735] sp : ffff800012813b00
+> [    2.757739] x29: ffff800012813b00
+> [    2.768371] x28: 00000000ffffffed
+> [    2.768382] x27: 0000000000000001 x26: 0000000000000000
+> [    2.768393] x25: ffff0000809362e8 x24: 0000000000000000
+> [    2.768407] x23: 000000000000000c x22: ffff000080936000
+> [    2.768418] x21: ffff0000809362e8 x20: ffff0000809362e8
+> [    2.775320] x19: ffff000080936000
+> [    2.785950] x18: ffffffffffffffff
+> [    2.785961] x17: 0000000000000007 x16: 0000000000000001
+> [    2.785975] x15: ffff800011bf9948
+> [    2.793997] x14: ffff8000928137e7
+> [    2.794009] x13: ffff8000128137f5 x12: ffff800011c19640
+> [    2.794023] x11: fffffffffffe5788 x10: 0000000005f5e0ff
+> [    2.794034] x9 : 00000000ffffffd0 x8 : 203a737542204f49
+> [    2.803737] x7 : 444d206465786946 x6 : ffff800011ee1fd7
+> [    2.803750] x5 : 0000000000000000 x4 : 0000000000000000
+> [    2.815286] x3 : 00000000ffffffff x2 : ffff0000809362e8
+> [    2.815300] x1 : ffff0000809362e8 x0 : 0000000000000000
+> [    2.825270] Call trace:
+> [    2.825275]  free_msi_irqs+0x84/0x188
+> [    2.825288]  __pci_enable_msix_range+0x380/0x530
+> [    2.825299]  pci_alloc_irq_vectors_affinity+0x158/0x168
+> [    2.825309]  nvme_reset_work+0x214/0x15b8
+> [    2.829340] dwc-eth-dwmac NVDA1160:00: SPH feature enabled
+> [    2.832986]  process_one_work+0x1cc/0x360
+> [    2.833002]  worker_thread+0x48/0x450
+> [    2.833012]  kthread+0x120/0x150
+> [    2.833020]  ret_from_fork+0x10/0x18
+> 
+> 
+> Bisecting this I found that started to occur because with Linux v5.13,
+> CONFIG_PCI_MSI_ARCH_FALLBACKS was no longer enabled by default and only
+> happened to be enabled because Renesas R-Car was enabling it.
+> 
+> When booting with ACPI, I see that when pci_msi_setup_msi_irqs() is
+> called, it ends up calling arch_setup_msi_irqs() and if
+> CONFIG_PCI_MSI_ARCH_FALLBACKS  is not enabled, then this will call
+> WARN_ON_ONCE(1).
+> 
+> So the question is, should this be enabled by default for ARM64? I see
+> a lot of other architectures enabling this when PCI_MSI is enabled. So
+> I am wondering if we should be doing something like ...
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 1f212b47a48a..4bbd81bab809 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -202,6 +202,7 @@ config ARM64
+>         select PCI_DOMAINS_GENERIC if PCI
+>         select PCI_ECAM if (ACPI && PCI)
+>         select PCI_SYSCALL if PCI
+> +       select PCI_MSI_ARCH_FALLBACKS if PCI_MSI
+>         select POWER_RESET
+>         select POWER_SUPPLY
+>         select SPARSE_IRQ
 
-And the size is "0x200" for all?
++Thomas, as he's neck-deep in the MSI rework.
+
+No, this definitely is the wrong solution.
+
+arm64 doesn't need any arch fallback (I actually went out of my way to
+kill them on this architecture), and requires the individual MSI
+controller drivers to do the right thing by using MSI domains.  Adding
+this config option makes the warning disappear, but the core issue is
+that you have a device that doesn't have a MSI domain associated with
+it.
+
+So either your device isn't MSI capable (odd), your host bridge
+doesn't make the link with the MSI controller to advertise the MSI
+domain (this should normally be dealt with via IORT), or there is a
+bug of a similar sort somewhere else.
+
+Getting to the root of this issue would be the right thing to do.
 
 Thanks,
-Mani
 
-> +				      <0 0x1c06600 0 0x200>; /* pcs_pcie */
-> +				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-> +				clock-names = "pipe0";
-> +
-> +				#clock-cells = <0>;
-> +				#phy-cells = <0>;
-> +				clock-output-names = "pcie_0_pipe_clk";
-> +			};
-> +		};
-> +
->  		config_noc: interconnect@1500000 {
->  			compatible = "qcom,sm8450-config-noc";
->  			reg = <0 0x01500000 0 0x1c000>;
-> -- 
-> 2.33.0
-> 
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
