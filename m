@@ -2,84 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A8EF470896
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 19:23:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC1AC470917
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 19:44:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235682AbhLJS0s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Dec 2021 13:26:48 -0500
-Received: from mail-oo1-f45.google.com ([209.85.161.45]:46886 "EHLO
-        mail-oo1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244934AbhLJS0r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 13:26:47 -0500
-Received: by mail-oo1-f45.google.com with SMTP id p2-20020a4adfc2000000b002c2676904fdso2585825ood.13;
-        Fri, 10 Dec 2021 10:23:12 -0800 (PST)
+        id S242028AbhLJSrl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Dec 2021 13:47:41 -0500
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:35601 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237207AbhLJSrk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 13:47:40 -0500
+Received: by mail-oi1-f170.google.com with SMTP id m6so14436078oim.2;
+        Fri, 10 Dec 2021 10:44:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=yFB47AVNO/VW1/LXFDlNTFblZA7KWFWWfiZyQLw6U3k=;
-        b=wQptJNpLpyiyi85pt/B1mPWAMxPQlTivBa2+0K6bqqKwIe3kfXlwhVXaErAWDNUVWg
-         NsiDjGfh2wVlec1ow9xbwpMJ+8wlMY4ta2vrhitej16slLJp/JHgoDCNrOb4Qu5wgK6/
-         XZQc0Oq/V3qvSL2+fSYZ82BZe2D/pM5L0iDJMlNJneYTsndQ5twMd+np7q+ddAWOWPB2
-         aQEzA6rNZbNLlmSvGjqxiN5RO5GyP6/6Ry9oyEuPXqvLa2Aus/N6yeiljxToTEj0WDKn
-         ebfcdxSxuxtj9si+s7PL42Eh1TnjKHskVVrl4x62cpldhgbsvrI6tgbnTGAMNyBXaaN4
-         28oA==
-X-Gm-Message-State: AOAM533YD1RaNsQu04TEil3Qk2SVHJ252sDHA44Hf76BXzTV+eaWZ120
-        EGAfAXlEJ4OWijWWCMG49A==
-X-Google-Smtp-Source: ABdhPJyc3ABoNJrwZumo7EOyB4hnzXp9P/PIrPs0V7cqsiJUEPu3u1vyvJiJXOR7j6Ncv9hPUJqJPg==
-X-Received: by 2002:a4a:9292:: with SMTP id i18mr9366597ooh.90.1639160591772;
-        Fri, 10 Dec 2021 10:23:11 -0800 (PST)
+        bh=rlreThK0Sey0EGMizq9uyfo3hzBqI9k/YwHzDsxWXlI=;
+        b=JX8FmQ0/oji75PDjnepH4JDLUydc2JUj1HUUBMpdMQlPARTEpuWKRLTOr4sD5sKbxz
+         u4MSAFMGXhia582DqPv2M7OAl/XFdrWq/KzqHs49xtBj3Uf6l7KM3NkTtfkzctmFOm96
+         DnqtH5cFAKeHUc6bfVjLMQzU7evK4NmGwbr5M1oG6Yqa6H0d3lBB6qdSCtOlg6gEh3lu
+         GiTqpHLCy0rBpjUFKkZVWBdPsmN3MIa0D/Bro9l/tnG2nZp0SNvFa8NLclJSGH1xTCdV
+         dRsK7UbLR91op4gZhpGIs+gRJHvvzyPYF+qhCUbCbivyldNCwDZuE0ddDPZ9bHmfC5dI
+         rNSA==
+X-Gm-Message-State: AOAM533RWbaNz6pUO4ERFave3uKvReFoN2lGTyqfrWb7TEGEXAJroOL9
+        bElBs0BnDo6wHfPrEOE7j+PoTiis5Q==
+X-Google-Smtp-Source: ABdhPJyp/UbVF+mB50ua6SkSEbILc6yqej1hsUMidJLzHaqYNUkPeNuWk9tk1mgGwLLU2y+Yg7NaCQ==
+X-Received: by 2002:a05:6808:15a:: with SMTP id h26mr13549366oie.36.1639161845115;
+        Fri, 10 Dec 2021 10:44:05 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id v19sm638482ott.13.2021.12.10.10.23.10
+        by smtp.gmail.com with ESMTPSA id m22sm768027ooj.8.2021.12.10.10.44.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 10:23:10 -0800 (PST)
-Received: (nullmailer pid 1650238 invoked by uid 1000);
-        Fri, 10 Dec 2021 18:23:09 -0000
-Date:   Fri, 10 Dec 2021 12:23:09 -0600
+        Fri, 10 Dec 2021 10:44:04 -0800 (PST)
+Received: (nullmailer pid 1681795 invoked by uid 1000);
+        Fri, 10 Dec 2021 18:44:03 -0000
+Date:   Fri, 10 Dec 2021 12:44:03 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Jim Quinlan <jim2101024@gmail.com>
 Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Mark Brown <broonie@kernel.org>,
         bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 3/7] dt-bindings: PCI: Add bindings for Brcmstb EP
- voltage regulators
-Message-ID: <YbObDXLXX5WR6qvp@robh.at.kernel.org>
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v10 0/7] PCI: brcmstb: root port turns on sub-device power
+Message-ID: <YbOf836C58fUSmCO@robh.at.kernel.org>
 References: <20211209211407.8102-1-jim2101024@gmail.com>
- <20211209211407.8102-4-jim2101024@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211209211407.8102-4-jim2101024@gmail.com>
+In-Reply-To: <20211209211407.8102-1-jim2101024@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 09, 2021 at 04:14:01PM -0500, Jim Quinlan wrote:
-> Add bindings for Brcmstb EP voltage regulators.  A new mechanism is to be
-> added to the Linux PCI subsystem that will allocate and turn on/off
-> regulators.  These are standard regulators -- vpcie12v, vpcie3v3, and
-> vpcie3v3aux -- placed in the DT in the bridge node under the host bridge
-> device.
+On Thu, Dec 09, 2021 at 04:13:58PM -0500, Jim Quinlan wrote:
+> v10 -- Bindings commit example: in comment, refer to bridge under
+>        controller node as a root port. (Pali)
+>     -- Bindings commit example: remove three properties that are not
+>        appropriate for a PCIe endpoint node. (Rob)
 > 
-> The use of a regulator property in the pcie EP subnode such as
-> "vpcie12v-supply" depends on a pending pullreq to the pci-bus.yaml
-> file at
-> 
-> https://github.com/devicetree-org/dt-schema/pull/63
-> 
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> ---
->  .../bindings/pci/brcm,stb-pcie.yaml           | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+> v9  -- Simplify where this mechanism works: instead of looking for
+>        regulators below every bridge, just look for them at the
+>        bridge under the root bus (root port).  Now there is no
+>        modification of portdrv_{pci,core}.c in this submission.
+>     -- Although Pali is working on support for probing native
+>        PCIe controller drivers, this work may take some time to
+>        implement and it still might not be able to accomodate
+>        our driver's requirements (e.g. vreg suspend/resume control).
+>     -- Move regulator suspend/resume control to Brcm RC driver.  It
+>        must reside there because (a) in order to know when to
+>        initiate linkup during resume and (b) to turn on the
+>        regulators before any config-space accesses occur.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+You now have a mixture of 'generic' add/remove_bus hooks and the host 
+controller suspend/resume managing the regulators. I think long term, 
+the portdrv is going to be the right place for all of this with some 
+interface defined for link control. So I think this solution moves 
+sideways rather than towards anything common.
+
+Unfortunately, the only leverage maintainers have to get folks to care 
+about any refactoring is to reject features. We're lucky to find anyone 
+to test refactoring when posted if done independently. There's a long 
+list of commits of PCI hosts that I've broken to prove that. So it's 
+up to Lorenzo and Bjorn on what they want to do here.
+
+Rob
