@@ -2,228 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18C8346F804
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 01:26:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 383C346F867
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 02:23:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234863AbhLJA3y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Dec 2021 19:29:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234849AbhLJA3y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Dec 2021 19:29:54 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37BC8C061746;
-        Thu,  9 Dec 2021 16:26:20 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639095977;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oyRD+ut1wwQO4SYEZeVrK3aZY2EypBixx+iW/lkFS4g=;
-        b=SGuP3jiErQ98J7HDSGUIX8rDX9888+GB8LHUDw6h/Wvhfnk24FU7UD854H8TZCZlitOIbC
-        /VBG/amubqvGbBLOctbw7FifJsbxNgdG2N1F81Vsj1c154aE0hfzDNsot32T25tRAMi7KS
-        yzu4Uwp/Ip0ebzzC1aIGSh/bVxKieeoyfi4WcHYUkyhNjIf2WRUz7csxz8NdfWgfDQv5AF
-        GxureoGLp7/dRPpAVSOuy3UmxmpBOn+KH/qZED3rba+mBhJSs5fzzOL1NTL4tGsbYkt/d7
-        LIa1xm23tREl7w8hubxNLwtDgIAX/nr8NAQ/SXDXAJ0EfZI8KvhQ+lzIa6qwdw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639095977;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oyRD+ut1wwQO4SYEZeVrK3aZY2EypBixx+iW/lkFS4g=;
-        b=7AvNtbOokh8VZBBRmmnzW2IZUOSlz4rYyL79qDJjxujomOTaW52xfFBu37qbnWJytFlDWO
-        CqmJc/9fUfXi95BQ==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
+        id S230387AbhLJB1L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Dec 2021 20:27:11 -0500
+Received: from mga04.intel.com ([192.55.52.120]:35897 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235357AbhLJB1L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 9 Dec 2021 20:27:11 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="236982194"
+X-IronPort-AV: E=Sophos;i="5.88,194,1635231600"; 
+   d="scan'208";a="236982194"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 17:23:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,194,1635231600"; 
+   d="scan'208";a="516558392"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by orsmga008.jf.intel.com with ESMTP; 09 Dec 2021 17:23:29 -0800
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
         Alex Williamson <alex.williamson@redhat.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/18] driver core: platform: Add driver dma ownership
+ management
+To:     Jason Gunthorpe <jgg@nvidia.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-In-Reply-To: <8735n1zaz3.ffs@tglx>
-References: <8c2262ba-173e-0007-bc4c-94ec54b2847d@intel.com>
- <87pmqg88xq.ffs@tglx> <df00b87e-00dc-d998-8b64-46b16dba46eb@intel.com>
- <87k0go8432.ffs@tglx> <f4cc305b-a329-6d27-9fca-b74ebc9fa0c1@intel.com>
- <878rx480fk.ffs@tglx>
- <BN9PR11MB52765F2EF8420C60FD5945D18C709@BN9PR11MB5276.namprd11.prod.outlook.com>
- <87sfv2yy19.ffs@tglx> <20211209162129.GS6385@nvidia.com>
- <878rwtzfh1.ffs@tglx> <20211209205835.GZ6385@nvidia.com>
- <8735n1zaz3.ffs@tglx>
-Date:   Fri, 10 Dec 2021 01:26:16 +0100
-Message-ID: <87sfv1xq3b.ffs@tglx>
+        Christoph Hellwig <hch@infradead.org>
+References: <20211206015903.88687-1-baolu.lu@linux.intel.com>
+ <20211206015903.88687-5-baolu.lu@linux.intel.com>
+ <Ya4f662Af+8kE2F/@infradead.org> <20211206150647.GE4670@nvidia.com>
+ <56a63776-48ca-0d6e-c25c-016dc016e0d5@linux.intel.com>
+ <20211207131627.GA6385@nvidia.com>
+ <c170d215-6aef-ff21-8733-1bae4478e39c@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <b42ffaee-bb96-6db4-8540-b399214f6881@linux.intel.com>
+Date:   Fri, 10 Dec 2021 09:23:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <c170d215-6aef-ff21-8733-1bae4478e39c@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 09 2021 at 23:09, Thomas Gleixner wrote:
-> On Thu, Dec 09 2021 at 16:58, Jason Gunthorpe wrote:
->> Okay, I think I get it. Would be nice to have someone from intel
->> familiar with the vIOMMU protocols and qemu code remark what the
->> hypervisor side can look like.
->>
->> There is a bit more work here, we'd have to change VFIO to somehow
->> entirely disconnect the kernel IRQ logic from the MSI table and
->> directly pass control of it to the guest after the hypervisor IOMMU IR
->> secures it. ie directly mmap the msi-x table into the guest
->
-> That makes everything consistent and a clear cut on all levels, right?
+Hi Greg, Jason and Christoph,
 
-Let me give a bit more rationale here, why I think this is the right
-thing to do. There are several problems with IMS both on the host and on
-the guest side:
+On 12/9/21 9:20 AM, Lu Baolu wrote:
+> On 12/7/21 9:16 PM, Jason Gunthorpe wrote:
+>> On Tue, Dec 07, 2021 at 10:57:25AM +0800, Lu Baolu wrote:
+>>> On 12/6/21 11:06 PM, Jason Gunthorpe wrote:
+>>>> On Mon, Dec 06, 2021 at 06:36:27AM -0800, Christoph Hellwig wrote:
+>>>>> I really hate the amount of boilerplate code that having this in each
+>>>>> bus type causes.
+>>>> +1
+>>>>
+>>>> I liked the first version of this series better with the code near
+>>>> really_probe().
+>>>>
+>>>> Can we go back to that with some device_configure_dma() wrapper
+>>>> condtionally called by really_probe as we discussed?
 
-  1) Contrary to MSI/MSI-X the address/data pair is not completely
-     managed by the core. It's handed off to driver writers in the
-     hope they get it right.
+[...]
 
-  2) Without interrupt remapping there is a fundamental issue on x86
-     for the affinity setting case, as there is no guarantee that
-     the magic protocol which we came up with (see msi_set_affinity()
-     in the x86 code) is correctly implemented at the driver level or
-     that the update is truly atomic so that the problem does not
-     arise. My interrest in chasing these things is exactly zero.
+> 
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index 68ea1f949daa..68ca5a579eb1 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -538,6 +538,32 @@ static int call_driver_probe(struct device *dev, 
+> struct device_driver *drv)
+>          return ret;
+>   }
+> 
+> +static int device_dma_configure(struct device *dev, struct 
+> device_driver *drv)
+> +{
+> +       int ret;
+> +
+> +       if (!dev->bus->dma_configure)
+> +               return 0;
+> +
+> +       ret = dev->bus->dma_configure(dev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (!drv->suppress_auto_claim_dma_owner)
+> +               ret = iommu_device_set_dma_owner(dev, DMA_OWNER_DMA_API, 
+> NULL);
+> +
+> +       return ret;
+> +}
+> +
+> +static void device_dma_cleanup(struct device *dev, struct device_driver 
+> *drv)
+> +{
+> +       if (!dev->bus->dma_configure)
+> +               return;
+> +
+> +       if (!drv->suppress_auto_claim_dma_owner)
+> +               iommu_device_release_dma_owner(dev, DMA_OWNER_DMA_API, 
+> NULL);
+> +}
+> +
+>   static int really_probe(struct device *dev, struct device_driver *drv)
+>   {
+>          bool test_remove = IS_ENABLED(CONFIG_DEBUG_TEST_DRIVER_REMOVE) &&
+> @@ -574,11 +600,8 @@ static int really_probe(struct device *dev, struct 
+> device_driver *drv)
+>          if (ret)
+>                  goto pinctrl_bind_failed;
+> 
+> -       if (dev->bus->dma_configure) {
+> -               ret = dev->bus->dma_configure(dev);
+> -               if (ret)
+> -                       goto probe_failed;
+> -       }
+> +       if (device_dma_configure(dev, drv))
+> +               goto pinctrl_bind_failed;
+> 
+>          ret = driver_sysfs_add(dev);
+>          if (ret) {
+> @@ -660,6 +683,8 @@ static int really_probe(struct device *dev, struct 
+> device_driver *drv)
+>          if (dev->bus)
+>                  blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+> 
+> BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
+> +
+> +       device_dma_cleanup(dev, drv);
+>   pinctrl_bind_failed:
+>          device_links_no_driver(dev);
+>          devres_release_all(dev);
+> @@ -1204,6 +1229,7 @@ static void __device_release_driver(struct device 
+> *dev, struct device *parent)
+>                  else if (drv->remove)
+>                          drv->remove(dev);
+> 
+> +               device_dma_cleanup(dev, drv);
+>                  device_links_driver_cleanup(dev);
+> 
+>                  devres_release_all(dev);
+> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+> index a498ebcf4993..374a3c2cc10d 100644
+> --- a/include/linux/device/driver.h
+> +++ b/include/linux/device/driver.h
+> @@ -100,6 +100,7 @@ struct device_driver {
+>          const char              *mod_name;      /* used for built-in 
+> modules */
+> 
+>          bool suppress_bind_attrs;       /* disables bind/unbind via 
+> sysfs */
+> +       bool suppress_auto_claim_dma_owner;
+>          enum probe_type probe_type;
+> 
+>          const struct of_device_id       *of_match_table;
 
-     With interrupt remapping the affinity change happens at the IRTE
-     level and not at the device level. It's a one time setup for the
-     device.
+Does this work for you? Can I work towards this in the next version?
 
-     Just for the record:
-
-     The ATH11 thing does not have that problem by pure luck because
-     multi-vector MSI is not supported on X86 unless interrupt
-     remapping is enabled. 
-
-     The switchtec NTB thing will fall apart w/o remapping AFAICT.
-
-  3) With remapping the message for the device is constructed at
-     allocation time. It does not change after that because the affinity
-     change happens at the remapping level, which eliminates #2 above.
-
-     That has another advantage for IMS because it does not require any
-     synchronization with the queue or whatever is involved. The next
-     interrupt after the change at the remapping level ends up on the
-     new target.
-
-  4) For the guest side we agreed that we need an hypercall because the
-     host can't trap the write to the MSI[-X] entry anymore.
-
-     Aside of the fact that this creates a special case for IMS which is
-     undesirable in my opinion, it's not really obvious where the
-     hypercall should be placed to work for all scenarios so that it can
-     also solve the existing issue of silent failures.
-
-  5) It's not possible for the kernel to reliably detect whether it is
-     running on bare metal or not. Yes we talked about heuristics, but
-     that's something I really want to avoid.
-
-When looking at the above I came to the conclusion that the consistent
-way is to make IMS depend on IR both on the host and the guest as this
-solves all of the above in one go.
-
-How would that work? With IR the irqdomain hierarchy looks like this:
-
-                   |--IO/APIC
-                   |--MSI
-    vector -- IR --|--MIX-X
-                   |--IMS
-
-There are several context where this matters:
-
-  1) Allocation of an interrupt, e.g. pci_alloc_irq_vectors().
-
-  2) Activation of an interrupt which happens during allocation and/or
-     at request_irq() time
-
-  3) Interrupt affinity setting
-
-#1 Allocation
-
-   That allocates an IRTE, which can fail
-
-#2 Activation
-
-   That's the step where actually a CPU vector is allocated, where the
-   IRTE is updated and where the device message is composed to target
-   the IRTE.
-
-   On X86 activation is happening twice:
-
-   1) During allocation it allocates a special CPU vector which is
-      handed out to all allocated interrupts. That's called reservation
-      mode. This was introduced to prevent vector exhaustion for two
-      cases:
-      
-       - Devices allocating tons of MSI-X vectors without using
-         them. That obviously needs to be fixed at the device driver
-         level, but due to the fact that post probe() allocation is not
-         supported, that's not always possible
-
-       - CPU hotunplug
-
-         All vectors targeting the outgoing CPU need to be migrated to a
-         new target CPU, which can result in exhaustion of the vector
-         space.
-
-         Reservation mode avoids that because it just uses a unique
-         vector for all interrupts which are allocated but not
-         requested.
-
-    2) On request_irq()
-
-       As the vector assigned during allocation is just a place holder
-       to make the MSI hardware happy it needs to be replaced by a
-       real vector.
-
-   Both can fail and the error is propagated through the call chain
-
-#3 Changing the interrupt affinity
-
-   This obviously needs to allocate a new target CPU vector and update
-   the IRTE.
-
-   Allocating a new target CPU vector can fail.
-
-When looking at it from the host side, then the host needs to do the
-same things:
-
-  1) Allocate an IRTE for #1
-
-  2) Update the IRTE for #2 and #3
-
-But that does not necessarily mean that we need two hypercalls. We can
-get away with one in the code which updates the IRTE and that would be
-the point where the host side has to allocate the backing host
-interrupt, which would replace that allocate on unmask mechanism which
-is used today.
-
-It might look awkward on first sight that an IRTE update can fail, but
-it's not that awkward when put into context:
-
-  The first update happens during activation and activation can fail for
-  various reasons.
-  
-The charm is that his works for everything from INTx to IMS because all
-of them go through the same procedure, except that INTx (IO/APIC) does
-not support the reservation mode dance.
-
-Thoughts?
-
-Thanks,
-
-        tglx
+Best regards,
+baolu
