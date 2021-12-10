@@ -2,187 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FDB447050E
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 16:58:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4606B47057D
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 17:20:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237546AbhLJQCW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Dec 2021 11:02:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48994 "EHLO
+        id S240836AbhLJQX7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Dec 2021 11:23:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231806AbhLJQCV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 11:02:21 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 829D1C061746;
-        Fri, 10 Dec 2021 07:58:46 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S240831AbhLJQX6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 11:23:58 -0500
+X-Greylist: delayed 583 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 10 Dec 2021 08:20:23 PST
+Received: from mout-u-204.mailbox.org (mout-u-204.mailbox.org [IPv6:2001:67c:2050:1::465:204])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74C07C061746
+        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 08:20:23 -0800 (PST)
+Received: from smtp102.mailbox.org (unknown [91.198.250.119])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 9C775CE211C;
-        Fri, 10 Dec 2021 15:58:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADACAC00446;
-        Fri, 10 Dec 2021 15:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639151923;
-        bh=fQc56/zhViuchrUCAIhMuthGwsW47T40WSdgudAQYzc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FHLocjgzqCGzMfx3ib/9WfgUTkC/67WpdAcwTXnKorWJ+TF53W8nVT3nwggCmq+72
-         xzBxG1brd9eOjr5tR6FDs24kChImXLe7Dbpm0k870vQgLTA8A5C3CwergZ9SeivnsI
-         D/YVO8VDLJWCqCR+4r95Tr7vMh6pFyxXil3ZgjJDNvzPtkts68w4fTtj9jhM9jo0yv
-         ALDW8fnMRBps3R3m6EbLZXkkqx+MIW9W2I9Tw9ZwnKAcj5SogVFhwNxLFpTfEeCD4k
-         WYN8LGxyJ7JWdgIoXqJFsR99hewDuXt9SUhSLB4tg8LlInCg+vGkbBoZv1gfzpUFC0
-         DmHknT03C16DQ==
-Date:   Fri, 10 Dec 2021 09:58:41 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vihas Mak <makvihas@gmail.com>
-Cc:     bhelgaas@google.com, lukas@wunner.de, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci: ibmphp: removed the commented-out functions
-Message-ID: <20211210155841.GA317413@bhelgaas>
+        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 4J9bV547lpzQjwn;
+        Fri, 10 Dec 2021 17:10:37 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+From:   Stefan Roese <sr@denx.de>
+To:     linux-pci@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Marek Vasut <marex@denx.de>
+Subject: [RFC PATCH] PCI/MSI: Only mask all MSI-X entries when MSI-X is used
+Date:   Fri, 10 Dec 2021 17:10:25 +0100
+Message-Id: <20211210161025.3287927-1-sr@denx.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211209213618.20522-1-makvihas@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 03:06:18AM +0530, Vihas Mak wrote:
-> The functions get_max_adapter_speed() and get_bus_name() in
-> ibmphp_core.c are commented-out and the fields .get_max_adapter_speed
-> and .get_bus_name_status are removed from struct hotplug_slot_ops in
-> pci_hotplug.h. Remove the commented-out functions.
-> 
-> Signed-off-by: Vihas Mak <makvihas@gmail.com>
+This patch moves the masking of the MSI-X entries to a later stage in
+msix_capability_init(), which is not reached on platforms not
+supporting MSI-X. Without this, MSI interrupts from a NVMe drive are not
+received at all on this ZynqMP based platform, only supporting legacy
+and MSI interrupts.
 
-I tweaked the subject line to match the history and applied to
-pci/hotplug for v5.17, thanks!
+Background:
+This patch fixes a problem on our ZynqMP based system working with newer
+NVMe drives which support MSI & MSI-X. Running v5.4 all is fine and
+these drives correctly configure an MSI interrupt and this IRQ is
+received just fine in the ZynqMP rootport. But when updating to v5.10
+or later (I also tested with v5.15 and v5.16-rc4) the MSI interrupt
+gets assigned but no interrupts are received by the NVMe driver at all.
 
-  $ git log --oneline drivers/pci/hotplug/ibmphp_core.c
-  e1a6333e7f89 ("PCI: ibmphp: Remove commented-out functions")
-  2a727f609137 ("PCI: ibmphp: Turn semaphores into completions or mutexes")
-  4051f5ebb11c ("PCI: ibmphp: Fix use-before-set in get_max_bus_speed()")
-  ...
+Note: The ZynqMP PCIe rootport driver only supports legacy and MSI
+interrupts, not MSI-X (yet).
 
-> ---
->  drivers/pci/hotplug/TODO          |  5 ---
->  drivers/pci/hotplug/ibmphp_core.c | 74 -------------------------------
->  2 files changed, 79 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/TODO b/drivers/pci/hotplug/TODO
-> index cc6194aa2..88f217c82 100644
-> --- a/drivers/pci/hotplug/TODO
-> +++ b/drivers/pci/hotplug/TODO
-> @@ -30,11 +30,6 @@ ibmphp:
->    or ibmphp should store a pointer to its bus in struct slot.  Probably the
->    former.
->  
-> -* The functions get_max_adapter_speed() and get_bus_name() are commented out.
-> -  Can they be deleted?  There are also forward declarations at the top of
-> -  ibmphp_core.c as well as pointers in ibmphp_hotplug_slot_ops, likewise
-> -  commented out.
-> -
->  * ibmphp_init_devno() takes a struct slot **, it could instead take a
->    struct slot *.
->  
-> diff --git a/drivers/pci/hotplug/ibmphp_core.c b/drivers/pci/hotplug/ibmphp_core.c
-> index 17124254d..197997e26 100644
-> --- a/drivers/pci/hotplug/ibmphp_core.c
-> +++ b/drivers/pci/hotplug/ibmphp_core.c
-> @@ -50,14 +50,6 @@ static int irqs[16];    /* PIC mode IRQs we're using so far (in case MPS
->  
->  static int init_flag;
->  
-> -/*
-> -static int get_max_adapter_speed_1 (struct hotplug_slot *, u8 *, u8);
-> -
-> -static inline int get_max_adapter_speed (struct hotplug_slot *hs, u8 *value)
-> -{
-> -	return get_max_adapter_speed_1 (hs, value, 1);
-> -}
-> -*/
->  static inline int get_cur_bus_info(struct slot **sl)
->  {
->  	int rc = 1;
-> @@ -401,69 +393,6 @@ static int get_max_bus_speed(struct slot *slot)
->  	return rc;
->  }
->  
-> -/*
-> -static int get_max_adapter_speed_1(struct hotplug_slot *hotplug_slot, u8 *value, u8 flag)
-> -{
-> -	int rc = -ENODEV;
-> -	struct slot *pslot;
-> -	struct slot myslot;
-> -
-> -	debug("get_max_adapter_speed_1 - Entry hotplug_slot[%lx] pvalue[%lx]\n",
-> -						(ulong)hotplug_slot, (ulong) value);
-> -
-> -	if (flag)
-> -		ibmphp_lock_operations();
-> -
-> -	if (hotplug_slot && value) {
-> -		pslot = hotplug_slot->private;
-> -		if (pslot) {
-> -			memcpy(&myslot, pslot, sizeof(struct slot));
-> -			rc = ibmphp_hpc_readslot(pslot, READ_SLOTSTATUS,
-> -						&(myslot.status));
-> -
-> -			if (!(SLOT_LATCH (myslot.status)) &&
-> -					(SLOT_PRESENT (myslot.status))) {
-> -				rc = ibmphp_hpc_readslot(pslot,
-> -						READ_EXTSLOTSTATUS,
-> -						&(myslot.ext_status));
-> -				if (!rc)
-> -					*value = SLOT_SPEED(myslot.ext_status);
-> -			} else
-> -				*value = MAX_ADAPTER_NONE;
-> -		}
-> -	}
-> -
-> -	if (flag)
-> -		ibmphp_unlock_operations();
-> -
-> -	debug("get_max_adapter_speed_1 - Exit rc[%d] value[%x]\n", rc, *value);
-> -	return rc;
-> -}
-> -
-> -static int get_bus_name(struct hotplug_slot *hotplug_slot, char *value)
-> -{
-> -	int rc = -ENODEV;
-> -	struct slot *pslot = NULL;
-> -
-> -	debug("get_bus_name - Entry hotplug_slot[%lx]\n", (ulong)hotplug_slot);
-> -
-> -	ibmphp_lock_operations();
-> -
-> -	if (hotplug_slot) {
-> -		pslot = hotplug_slot->private;
-> -		if (pslot) {
-> -			rc = 0;
-> -			snprintf(value, 100, "Bus %x", pslot->bus);
-> -		}
-> -	} else
-> -		rc = -ENODEV;
-> -
-> -	ibmphp_unlock_operations();
-> -	debug("get_bus_name - Exit rc[%d] value[%x]\n", rc, *value);
-> -	return rc;
-> -}
-> -*/
-> -
->  /****************************************************************************
->   * This routine will initialize the ops data structure used in the validate
->   * function. It will also power off empty slots that are powered on since BIOS
-> @@ -1231,9 +1160,6 @@ const struct hotplug_slot_ops ibmphp_hotplug_slot_ops = {
->  	.get_attention_status =		get_attention_status,
->  	.get_latch_status =		get_latch_status,
->  	.get_adapter_status =		get_adapter_present,
-> -/*	.get_max_adapter_speed =	get_max_adapter_speed,
-> -	.get_bus_name_status =		get_bus_name,
-> -*/
->  };
->  
->  static void ibmphp_unload(void)
-> -- 
-> 2.30.2
-> 
+I've debugged the MSI integration of the ZynqMP PCIe rootport driver
+(pcie-xilinx-nwl.c) and found no issues there. Also the MSI framework
+in the Kernel did not reveal any problems - at least for me. Looking
+a bit deeper into the lspci output, I found an interesting difference
+between v5.4 and v5.10 (or later).
+
+v5.4:
+04:00.0 Non-Volatile memory controller: Marvell Technology Group Ltd. Device 1321 (rev 02) (prog-if 02 [NVM Express])
+        ...
+	Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
+		Address: 00000000fd480000  Data: 0004
+		Masking: 00000000  Pending: 00000000
+	Capabilities: [70] Express (v2) Endpoint, MSI 00
+	...
+	Capabilities: [b0] MSI-X: Enable- Count=67 Masked-
+		Vector table: BAR=0 offset=00002000
+		PBA: BAR=0 offset=00003000
+	...
+
+v5.10:
+04:00.0 Non-Volatile memory controller: Marvell Technology Group Ltd. Device 1321 (rev 02) (prog-if 02 [NVM Express])
+        ...
+        Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
+                Address: 00000000fd480000  Data: 0004
+                Masking: 00000000  Pending: 00000000
+        Capabilities: [70] Express (v2) Endpoint, MSI 00
+        ...
+        Capabilities: [b0] MSI-X: Enable- Count=67 Masked+
+                Vector table: BAR=0 offset=00002000
+                PBA: BAR=0 offset=00003000
+        ...
+
+So the only difference here being the "Masked+" compared to the
+"Masked-" in the working v5.4 Kernel. Testing in this area has shown,
+that the root cause for the masked bit being set was the call to
+msix_mask_all() in msix_capability_init(). Without this, all works just
+fine and the MSI interrupts are received again by the NVMe driver.
+
+BTW: I've also tested this problem with the latest version of Thomas's
+PCI/MSI Spring cleaning on top of v5.16-rc4. No change - the masked bit
+is still set and the MSI interrupt are note received by the NVMe driver.
+
+I'm open to other ideas to fix this issue. So please review and comment.
+
+Fixes: aa8092c1d1f1 ("PCI/MSI: Mask all unused MSI-X entries")
+Signed-off-by: Stefan Roese <sr@denx.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: Marek Vasut <marex@denx.de>
+---
+ drivers/pci/msi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index a7a1c7411348..25b659dd5e2b 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -825,9 +825,6 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+ 		goto out_disable;
+ 	}
+ 
+-	/* Ensure that all table entries are masked. */
+-	msix_mask_all(base, tsize);
+-
+ 	ret = msix_setup_entries(dev, base, entries, nvec, affd);
+ 	if (ret)
+ 		goto out_disable;
+@@ -836,6 +833,9 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+ 	if (ret)
+ 		goto out_avail;
+ 
++	/* Ensure that all table entries are masked. */
++	msix_mask_all(base, tsize);
++
+ 	/* Check if all MSI entries honor device restrictions */
+ 	ret = msi_verify_entries(dev);
+ 	if (ret)
+-- 
+2.34.1
+
