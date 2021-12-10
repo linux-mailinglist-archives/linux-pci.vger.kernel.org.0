@@ -2,95 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC1AC470917
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 19:44:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 512F9470926
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Dec 2021 19:44:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242028AbhLJSrl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Dec 2021 13:47:41 -0500
-Received: from mail-oi1-f170.google.com ([209.85.167.170]:35601 "EHLO
-        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237207AbhLJSrk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 13:47:40 -0500
-Received: by mail-oi1-f170.google.com with SMTP id m6so14436078oim.2;
-        Fri, 10 Dec 2021 10:44:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rlreThK0Sey0EGMizq9uyfo3hzBqI9k/YwHzDsxWXlI=;
-        b=JX8FmQ0/oji75PDjnepH4JDLUydc2JUj1HUUBMpdMQlPARTEpuWKRLTOr4sD5sKbxz
-         u4MSAFMGXhia582DqPv2M7OAl/XFdrWq/KzqHs49xtBj3Uf6l7KM3NkTtfkzctmFOm96
-         DnqtH5cFAKeHUc6bfVjLMQzU7evK4NmGwbr5M1oG6Yqa6H0d3lBB6qdSCtOlg6gEh3lu
-         GiTqpHLCy0rBpjUFKkZVWBdPsmN3MIa0D/Bro9l/tnG2nZp0SNvFa8NLclJSGH1xTCdV
-         dRsK7UbLR91op4gZhpGIs+gRJHvvzyPYF+qhCUbCbivyldNCwDZuE0ddDPZ9bHmfC5dI
-         rNSA==
-X-Gm-Message-State: AOAM533RWbaNz6pUO4ERFave3uKvReFoN2lGTyqfrWb7TEGEXAJroOL9
-        bElBs0BnDo6wHfPrEOE7j+PoTiis5Q==
-X-Google-Smtp-Source: ABdhPJyp/UbVF+mB50ua6SkSEbILc6yqej1hsUMidJLzHaqYNUkPeNuWk9tk1mgGwLLU2y+Yg7NaCQ==
-X-Received: by 2002:a05:6808:15a:: with SMTP id h26mr13549366oie.36.1639161845115;
-        Fri, 10 Dec 2021 10:44:05 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id m22sm768027ooj.8.2021.12.10.10.44.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 10:44:04 -0800 (PST)
-Received: (nullmailer pid 1681795 invoked by uid 1000);
-        Fri, 10 Dec 2021 18:44:03 -0000
-Date:   Fri, 10 Dec 2021 12:44:03 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH v10 0/7] PCI: brcmstb: root port turns on sub-device power
-Message-ID: <YbOf836C58fUSmCO@robh.at.kernel.org>
-References: <20211209211407.8102-1-jim2101024@gmail.com>
+        id S245521AbhLJSsP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Dec 2021 13:48:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48292 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235951AbhLJSsO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 13:48:14 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1639161877;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SscPtTd6NYlTuHsVGD4gIuaxOIVHkwKJUjrMqfCiVF4=;
+        b=TY8BF1JpkOaWtM2lrvFKTimTzat4EoRUHL+2eclOarFXkWGYNp3IyW2HQ5T8OWMWbhbfVq
+        VDI9t4KC4+9kr42qqtXe/zQkX9rgTt0OrLcbIC4lUUJnZcElcKe523A+3l80bmMdk2T6L5
+        d5Hu/EtGPMItJfm5OP7BSFdEbREqITVFviXcxUWECj7AtRzxskgM53w8GvswvRLjsPdB17
+        PVpuyE/35HcdVqIN7L14w6Qv8pd7aSo6oy2iBx3jCjdSZinbR7bP3gFDZcByUHgsRXRjFr
+        33QecEs2XK3Ltk39FZfGapRxuPnM89/MI/XPmnxKqZNooWA0jpNi3oGb1yrqlg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1639161877;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SscPtTd6NYlTuHsVGD4gIuaxOIVHkwKJUjrMqfCiVF4=;
+        b=HHsBOye9UyITzMD4gKeP/m5EEeIczEVFtbEFxqB8YFUhZWJIQz4Lx7hjogYbp35pBy31KU
+        IuicCTDcUwWRSDBA==
+To:     Nitesh Lal <nilal@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        davem@davemloft.net, ajit.khaparde@broadcom.com,
+        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+        huangguangbin2@huawei.com, huangdaode@huawei.com,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Alex Belits <abelits@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, jbrandeb@kernel.org,
+        akpm@linuxfoundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        chris.friesen@windriver.com, Marc Zyngier <maz@kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>, pjwaskiewicz@gmail.com,
+        Stefan Assmann <sassmann@redhat.com>,
+        Tomas Henzl <thenzl@redhat.com>, james.smart@broadcom.com,
+        Ken Cox <jkc@redhat.com>, faisal.latif@intel.com,
+        shiraz.saleem@intel.com, tariqt@nvidia.com,
+        Alaa Hleihel <ahleihel@redhat.com>,
+        Kamal Heib <kheib@redhat.com>, borisp@nvidia.com,
+        saeedm@nvidia.com,
+        "Nikolova, Tatyana E" <tatyana.e.nikolova@intel.com>,
+        "Ismail, Mustafa" <mustafa.ismail@intel.com>,
+        Al Stone <ahs3@redhat.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
+        bjorn.andersson@linaro.org, chunkuang.hu@kernel.org,
+        yongqiang.niu@mediatek.com, baolin.wang7@gmail.com,
+        Petr Oros <poros@redhat.com>, Ming Lei <minlei@redhat.com>,
+        Ewan Milne <emilne@redhat.com>, jejb@linux.ibm.com,
+        kabel@kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>, kashyap.desai@broadcom.com,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        shivasharan.srikanteshwara@broadcom.com,
+        sathya.prakash@broadcom.com,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        suganath-prabu.subramani@broadcom.com, ley.foon.tan@intel.com,
+        jbrunet@baylibre.com, johannes@sipsolutions.net,
+        snelson@pensando.io, lewis.hanly@microchip.com, benve@cisco.com,
+        _govind@gmx.com, jassisinghbrar@gmail.com
+Subject: Re: [PATCH v6 00/14] genirq: Cleanup the abuse of
+ irq_set_affinity_hint()
+In-Reply-To: <CAFki+L=5sLN+nU+YpSSrQN0zkAOKrJorevm0nQ+KdwCpnOzf3w@mail.gmail.com>
+References: <20210903152430.244937-1-nitesh@redhat.com>
+ <CAFki+L=9Hw-2EONFEX6b7k6iRX_yLx1zcS+NmWsDSuBWg8w-Qw@mail.gmail.com>
+ <87bl29l5c6.ffs@tglx>
+ <CAFki+Lmrv-UjZpuTQWr9c-Rymfm-tuCw9WpwmHgyfjVhJgp--g@mail.gmail.com>
+ <CAFki+L=5sLN+nU+YpSSrQN0zkAOKrJorevm0nQ+KdwCpnOzf3w@mail.gmail.com>
+Date:   Fri, 10 Dec 2021 19:44:36 +0100
+Message-ID: <87ilvwxpt7.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211209211407.8102-1-jim2101024@gmail.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 09, 2021 at 04:13:58PM -0500, Jim Quinlan wrote:
-> v10 -- Bindings commit example: in comment, refer to bridge under
->        controller node as a root port. (Pali)
->     -- Bindings commit example: remove three properties that are not
->        appropriate for a PCIe endpoint node. (Rob)
-> 
-> v9  -- Simplify where this mechanism works: instead of looking for
->        regulators below every bridge, just look for them at the
->        bridge under the root bus (root port).  Now there is no
->        modification of portdrv_{pci,core}.c in this submission.
->     -- Although Pali is working on support for probing native
->        PCIe controller drivers, this work may take some time to
->        implement and it still might not be able to accomodate
->        our driver's requirements (e.g. vreg suspend/resume control).
->     -- Move regulator suspend/resume control to Brcm RC driver.  It
->        must reside there because (a) in order to know when to
->        initiate linkup during resume and (b) to turn on the
->        regulators before any config-space accesses occur.
+On Fri, Dec 10 2021 at 08:51, Nitesh Lal wrote:
+> On Wed, Nov 24, 2021 at 5:16 PM Nitesh Lal <nilal@redhat.com> wrote:
+>> > The more general question is whether I should queue all the others or
+>> > whether some subsystem would prefer to pull in a tagged commit on top of
+>> > rc1. I'm happy to carry them all of course.
+>> >
+>>
+>> I am fine either way.
+>> In the past, while I was asking for more testing help I was asked if the
+>> SCSI changes are part of Martins's scsi-fixes tree as that's something
+>> Broadcom folks test to check for regression.
+>> So, maybe Martin can pull this up?
+>>
+>
+> Gentle ping.
+> Any thoughts on the above query?
 
-You now have a mixture of 'generic' add/remove_bus hooks and the host 
-controller suspend/resume managing the regulators. I think long term, 
-the portdrv is going to be the right place for all of this with some 
-interface defined for link control. So I think this solution moves 
-sideways rather than towards anything common.
+As nobody cares, I'll pick it up.
 
-Unfortunately, the only leverage maintainers have to get folks to care 
-about any refactoring is to reject features. We're lucky to find anyone 
-to test refactoring when posted if done independently. There's a long 
-list of commits of PCI hosts that I've broken to prove that. So it's 
-up to Lorenzo and Bjorn on what they want to do here.
+Thanks,
 
-Rob
+        tglx
