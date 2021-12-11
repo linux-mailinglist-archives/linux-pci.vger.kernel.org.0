@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 175274710C3
+	by mail.lfdr.de (Postfix) with ESMTP id 55B7D4710C5
 	for <lists+linux-pci@lfdr.de>; Sat, 11 Dec 2021 03:18:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241304AbhLKCVu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Dec 2021 21:21:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52122 "EHLO
+        id S241691AbhLKCVv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Dec 2021 21:21:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240541AbhLKCVs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 21:21:48 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E057C061A32
-        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 18:18:12 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id b1so21093773lfs.13
-        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 18:18:12 -0800 (PST)
+        with ESMTP id S241117AbhLKCVt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 21:21:49 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E86C061746
+        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 18:18:13 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id b1so21093808lfs.13
+        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 18:18:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uIA3ifLQZgBvpxUOMDtRJH8f89HJ9IrhQ5upk51MF9Q=;
-        b=k2qpxdE2OMMOv6ocUNsnnFKDOqrMJlOKX5S6n0Qw7NiCewLJyFBmyS5Mr7ChuOPGmC
-         Ylo444iRwOhMfTtimPr/kMsb4ZjxDvsavoiD73BQi72Lf1J452hxe8CG9TD+JNqlJuzy
-         aboGC+ryaXDvwj4VFi48iU/KyDVWRM5XEoMMbdiGsibQ71q9eK69R7f2oSmR5O5kqbGG
-         ydQHg11abk5t+uBwIcQRY38fdel7SXRqda7IOXGd4nhvln3M8FnaGwqndLfY6kI7xYJB
-         gguY0IgjkbzzhhNO0ns3wdK+DL+t29+PY+BuE1SAoG1/PyTRJ02840jwusgfRc6PgFp1
-         0GVg==
+        bh=jMeSXoL9O+nVWzUxuXzuxlRG686vo4uKJcR2hEXNT20=;
+        b=rjsegpcfxUYFU85rWXWseAMTI8M4/VDuoe8mZ0+HbIPEOL/VISB+YXw3cnUh99XRFJ
+         ji9LJkMBDs2t04AxE828rCP/QE/BIQySsmXkIEB2QWx1EjyQoPOZw8+fXrhGRD4aTKQA
+         7bOKntSMjkK3iAMClTZWFien6NWRHsegqkGh9NnicQtnAUzuZIhdrs/1kIndtKdoMQtE
+         kRtexxAzajnyPb9lu9KxJwYHY3AoKcU5hasLN9U73BgWG9OA1+rq4P+5Ki8on5b1D1HC
+         izG3fO0zqICPyj1pbK/SlsvB4MWHxjrbB+srutSlmT+aga/NyVGe4SHCLvCQsKJILLzB
+         olSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uIA3ifLQZgBvpxUOMDtRJH8f89HJ9IrhQ5upk51MF9Q=;
-        b=d8FTO19hpEzGYBwcJWTMBZPEk3xSLK73pWNMetzSJX489iEhvjoJ/xdMMKh1zjWDUD
-         M0pvWG0oCH/IdwkcVAHmMSVntzs291lYGgqd/TmHyHi9YNUzwwNXJSCU6+gg/YSzsSQF
-         9fsEE3m+p9ggZp9x8jzYJjB6B6FMMDa3SIG+aCeFMu/9z2YZl5ulODChhtHH25Fq9nIZ
-         AHa7U3tISZIO5Iq4Z+6FQ4ANssWNDBT1MSKSpqofe9D0G9WQt6rmLtcs9xk+qh8z2Fk0
-         tp5wWzgUM1RszCna+knArISNcMX/UUYkPCHNV3CYPeNkOWonGTyZNtJFTH3bs18RUUaX
-         qn0A==
-X-Gm-Message-State: AOAM5316ANFmENadWAmwYl0gg+/fpWwbbLGy1UqRnMniAWaDgRzHrNjH
-        zrdqTVlC4ynZ7mOoLi4INUwwbQ==
-X-Google-Smtp-Source: ABdhPJyl6riVetPDvIzw6COhpZVX6yX0MUh2ufbEMZiGVLCmPODcTZn5tWjgT61b4v+IAhsxAZ2Lzw==
-X-Received: by 2002:ac2:5932:: with SMTP id v18mr15876461lfi.611.1639189090536;
-        Fri, 10 Dec 2021 18:18:10 -0800 (PST)
+        bh=jMeSXoL9O+nVWzUxuXzuxlRG686vo4uKJcR2hEXNT20=;
+        b=n7uLUWth7gpWZDP1GGha697Cgdh7tLnmskbpBi3gSBJlxgTzHRl3FBuRsCJFlc5GCL
+         w7MEAwW9qYMUtH1ghAorskW1AKiGvJQ1lfNR9NN/csoYbX/GFlkF3TJ+GikSXXkECbh6
+         5BgvKnGu4iZ7u7XrEqGSjoJ/xSnleKE656E9yRNpJU6kNgBaRluLJOzpBLJXkNj21djp
+         mHqdmZXZSQZidnhE3sAEusjQcWVS+cgENj4JvgZINGcyLz6YiwKqVkrw5pDov7khAX5b
+         9reRZq4pDTF+7AGqZnO/xvLdxtSJaYTA/r4xKS6ZXUCB2BLOLXBDwNRt2sEE/R4SXxKG
+         wpxQ==
+X-Gm-Message-State: AOAM531bPJXCJ2cZM+afqbNdNFY4bVKNNZFZxDzZd5tsFbYomxgX2xfy
+        txMIcbxD9zDT07ERXekY48J+Vg==
+X-Google-Smtp-Source: ABdhPJx8VeXLlorwjEQCi6PrICLpr3HcEztNZWbbvOWHJ31eiY+HGD54WAFHY1nuHtbc9UmCVjDhGw==
+X-Received: by 2002:a05:6512:3f6:: with SMTP id n22mr10235256lfq.501.1639189091379;
+        Fri, 10 Dec 2021 18:18:11 -0800 (PST)
 Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id y7sm504663lfj.90.2021.12.10.18.18.09
+        by smtp.gmail.com with ESMTPSA id y7sm504663lfj.90.2021.12.10.18.18.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 10 Dec 2021 18:18:10 -0800 (PST)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
@@ -59,9 +59,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: [PATCH v3 09/10] arm64: dts: qcom: sm8450-qrd: enable PCIe0 PHY device
-Date:   Sat, 11 Dec 2021 05:17:57 +0300
-Message-Id: <20211211021758.1712299-10-dmitry.baryshkov@linaro.org>
+Subject: [PATCH v3 10/10] arm64: dts: qcom: sm8450-qrd: enable PCIe0 host
+Date:   Sat, 11 Dec 2021 05:17:58 +0300
+Message-Id: <20211211021758.1712299-11-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211211021758.1712299-1-dmitry.baryshkov@linaro.org>
 References: <20211211021758.1712299-1-dmitry.baryshkov@linaro.org>
@@ -71,38 +71,28 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Enable PCIe0 PHY on the SM8450 QRD device.
+Enable PCIe0 host on SM8450 QRD device.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sm8450-qrd.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/qcom/sm8450-qrd.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sm8450-qrd.dts b/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-index cd74b97b9018..e02d3c86e365 100644
+index e02d3c86e365..f6577ca7d2df 100644
 --- a/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
 +++ b/arch/arm64/boot/dts/qcom/sm8450-qrd.dts
-@@ -346,10 +346,20 @@ vreg_l6e_1p2: ldo6 {
+@@ -346,6 +346,10 @@ vreg_l6e_1p2: ldo6 {
  	};
  };
  
-+&pcie0_phy {
++&pcie0 {
 +	status = "okay";
-+	vdda-phy-supply = <&vreg_l5b_0p88>;
-+	vdda-pll-supply = <&vreg_l6b_1p2>;
 +};
 +
- &qupv3_id_0 {
+ &pcie0_phy {
  	status = "okay";
- };
- 
-+&qupv3_id_1 {
-+	status = "okay";
-+};
-+
- &tlmm {
- 	gpio-reserved-ranges = <28 4>, <36 4>;
- };
+ 	vdda-phy-supply = <&vreg_l5b_0p88>;
 -- 
 2.33.0
 
