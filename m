@@ -2,133 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 559D8471415
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Dec 2021 14:59:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0F27471467
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Dec 2021 16:22:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230463AbhLKN7B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 11 Dec 2021 08:59:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbhLKN7B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Dec 2021 08:59:01 -0500
-Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:1::465:107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B685C061714
-        for <linux-pci@vger.kernel.org>; Sat, 11 Dec 2021 05:59:01 -0800 (PST)
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:105:465:1:4:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4JB8Wj5ZbqzQj8m;
-        Sat, 11 Dec 2021 14:58:57 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Message-ID: <ee612558-18e6-1ef0-3a48-7a971fdd57f2@denx.de>
-Date:   Sat, 11 Dec 2021 14:58:53 +0100
+        id S231294AbhLKPWC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Dec 2021 10:22:02 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:36971 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229503AbhLKPWC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Dec 2021 10:22:02 -0500
+Received: from mail-wr1-f48.google.com ([209.85.221.48]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MGzDv-1mjk843Q7n-00E5a9; Sat, 11 Dec 2021 16:21:59 +0100
+Received: by mail-wr1-f48.google.com with SMTP id u17so19745471wrt.3;
+        Sat, 11 Dec 2021 07:21:59 -0800 (PST)
+X-Gm-Message-State: AOAM5319a7871nV7zsV0a5cBDe4XXC6UUgeRhWe9fEraMQ9XPiJYMA7v
+        3SCFEW9Mg+76rTXmTw7LT3zDfThvbdPLo7rWoj8=
+X-Google-Smtp-Source: ABdhPJw71fHmkJDBQfwdVvTsQemVVjs0TdIXte5O3MuH5722pvreNXPnvtVfyYQ4NEpRi0VtDUcmnQ9Z/Qh6+K4QE8c=
+X-Received: by 2002:a5d:530e:: with SMTP id e14mr21123035wrv.12.1639236119426;
+ Sat, 11 Dec 2021 07:21:59 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH] PCI/MSI: Only mask all MSI-X entries when MSI-X is
- used
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Marek Vasut <marex@denx.de>
-References: <20211210161025.3287927-1-sr@denx.de> <87czm3wimf.ffs@tglx>
-From:   Stefan Roese <sr@denx.de>
-In-Reply-To: <87czm3wimf.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20211210221642.869015045@linutronix.de> <20211210221813.493922179@linutronix.de>
+In-Reply-To: <20211210221813.493922179@linutronix.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 11 Dec 2021 16:21:43 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3U2DSm_DWS+iDkzH14hNMwyOQ77iS=W4HoAyHPh6pqUw@mail.gmail.com>
+Message-ID: <CAK8P3a3U2DSm_DWS+iDkzH14hNMwyOQ77iS=W4HoAyHPh6pqUw@mail.gmail.com>
+Subject: Re: [patch V3 05/35] powerpc/cell/axon_msi: Use PCI device property
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Cedric Le Goater <clg@kaod.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Juergen Gross <jgross@suse.com>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:dL1bxa9iZITAgc3bsHGM2Af3jWeNCf9/dAR0/IBJ7Tybc34XAPl
+ SrPJyALTNcn/07+ugQtPp6MWtAgzaMEYKp/2o+Zxv7LCPV3lFlQPdvUfhDmfA75KHaCbCi+
+ M08B55K3uDyfdS76WkrPRHG2h3Fx0O4fC3ZVhxC6+WSR3iKLyDXOxc1iF+eqVIdsJTUMAw0
+ F+xFl2I37z1iNGfKmONIA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8Mp2aU4myrA=:pZ0MRBWKPnpXZkhthY/2oe
+ Q+k2gTGCXktPZ8BkzJJIMnD7TG5GbIRjGNWBHlI3vnFw6pLiZvfzEE6q5q1XFiqOJnOsTG+Dd
+ w9Z6KWd47eH4ZNuapwERaDx7MMeV6tRmG5lK3YF1sqUf6J9qJDPxhulygiQeXGHj95+C/ILyU
+ EbjxdxU/D81MhiyJxlGnuwTjqPeI4Lc9H8k0lS/vvxf2TVON8ek8HvHRyKyX4ZKBvLI2SRRlI
+ AG6+DT3rk8Sf7Ke04Lz4C5+vBZtaeYx8aQg3wlv64WPKqr5SHMUi9zIBSWxmJ8r9q3maGZLRu
+ FAOhDaKk1c2pUhbIweYgDi11Js39x6+Db9DIw42P7dFRDSbw/03C/ZnqE5YHEr9cGSpjdtXaY
+ DSWUFNCxo4X+Zz2JnwnI3g/pzC+/6TBz3BxesCWSOuDSrCaWfweFYYCrXs5ufw3VFXfvW7JGR
+ LG5/vfwlQ0I71ewyGY3J21qKoCFQ+5pTDDAM494DhEw358tUBucg6uq+wQ82K18ItdHD3e02V
+ AjMzFT9o0LxeLQaCGIawFZBGKz+mQqpGVpdD26ZxWD4Srf4YJ9Y757CtQiMkIHjd1Yp2w47fo
+ uvkkKoogjWSt9BxUvKG2rmTrnhsT1IasrDAQbJ2XQEPTBfDNWB8JAXOFDoVDP10HLJe+gaLEG
+ /PqL9bv4aFoKoIWn1IWMCR6SPVrCvsbO3YcJuKqXABX9MnOItRntDJ7/GO8Hrmt+8eci5b+Qv
+ FOxgdeitH/vGW/SFJY7lj8Wqis0PWQHOU56l7uVI75Esx3Ma05oT1+sg8JhqhHZ9n1iepJFP7
+ PlGVzc51uNLM1rFYKyNvUfzgD2Umjc+l+hs7pKOp8xIuhxM1YI=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
-
-On 12/11/21 11:17, Thomas Gleixner wrote:
-> Stefan,
-> 
-> On Fri, Dec 10 2021 at 17:10, Stefan Roese wrote:
->> I've debugged the MSI integration of the ZynqMP PCIe rootport driver
->> (pcie-xilinx-nwl.c) and found no issues there. Also the MSI framework
->> in the Kernel did not reveal any problems - at least for me. Looking
->> a bit deeper into the lspci output, I found an interesting difference
->> between v5.4 and v5.10 (or later).
->>
->> v5.4:
->> 04:00.0 Non-Volatile memory controller: Marvell Technology Group Ltd. Device 1321 (rev 02) (prog-if 02 [NVM Express])
->>          ...
->> 	Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
->> 		Address: 00000000fd480000  Data: 0004
->> 		Masking: 00000000  Pending: 00000000
->> 	Capabilities: [70] Express (v2) Endpoint, MSI 00
->> 	...
->> 	Capabilities: [b0] MSI-X: Enable- Count=67 Masked-
->> 		Vector table: BAR=0 offset=00002000
->> 		PBA: BAR=0 offset=00003000
->> 	...
->>
->> v5.10:
->> 04:00.0 Non-Volatile memory controller: Marvell Technology Group Ltd. Device 1321 (rev 02) (prog-if 02 [NVM Express])
->>          ...
->>          Capabilities: [50] MSI: Enable+ Count=1/1 Maskable+ 64bit+
->>                  Address: 00000000fd480000  Data: 0004
->>                  Masking: 00000000  Pending: 00000000
->>          Capabilities: [70] Express (v2) Endpoint, MSI 00
->>          ...
->>          Capabilities: [b0] MSI-X: Enable- Count=67 Masked+
->>                  Vector table: BAR=0 offset=00002000
->>                  PBA: BAR=0 offset=00003000
->>          ...
->>
->> So the only difference here being the "Masked+" compared to the
->> "Masked-" in the working v5.4 Kernel. Testing in this area has shown,
->> that the root cause for the masked bit being set was the call to
->> msix_mask_all() in msix_capability_init(). Without this, all works just
->> fine and the MSI interrupts are received again by the NVMe driver.
-> 
-> Not really. The Masked+ in the capabilities entry has nothing to do with
-> the entries in the table being masked. The Masked+ reflects the
-> PCI_MSIX_FLAGS_MASKALL bit in the MSI-X control register.
-> 
-> That is set early on and not cleared in the error handling path. The
-> error handling just clears the MSIX_FLAGS_ENABLE bit.
-> 
-> Can you try the patch below?
-
-Sure, please see below.
-
-> It might still be that this Marvell part really combines the per entry
-> mask bits from MSI-X with MSI, then we need both.
-
-With your patch applied only (mine not), the Masked+ is gone but still
-the MSI interrupts are not received in the system. So you seem to have
-guessed correctly, that we need both changes.
-
-How to continue? Should I integrate your patch into mine and send a new
-version? Or will you send it separately to the list for integration?
-
-Thanks,
-Stefan
-
-> Thanks,
-> 
->          tglx
+On Fri, Dec 10, 2021 at 11:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> From: Thomas Gleixner <tglx@linutronix.de>
+>
+> instead of fiddling with MSI descriptors.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
 > ---
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -777,7 +777,7 @@ static int msix_capability_init(struct p
->   	free_msi_irqs(dev);
->   
->   out_disable:
-> -	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
-> +	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL | PCI_MSIX_FLAGS_ENABLE, 0);
->   
->   	return ret;
->   }
-> 
 
-Viele Grüße,
-Stefan Roese
-
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de
+Acked-by: Arnd Bergmann <arnd@arndb.de>
