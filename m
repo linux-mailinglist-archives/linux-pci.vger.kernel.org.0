@@ -2,156 +2,220 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99AD3471124
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Dec 2021 04:11:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C265A47115A
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Dec 2021 05:13:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244497AbhLKDOs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Dec 2021 22:14:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244455AbhLKDOr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 22:14:47 -0500
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C316BC061751
-        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 19:11:11 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id l18so4914461pgj.9
-        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 19:11:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wZPVLhTmfjbvLXy8wFUxjggNBQQIUKMzW/yUT1AkbIg=;
-        b=MsYzCgMk4JLhLMLV7WvCd6xB1q8NhaATEzsou9pc+5yIw8jz16Pojr5PkCg+GNQZwH
-         AUKsuvTFZdLNvJ5v5Tbp8QslJvhTIYkHENo+gv+UNGu6IPk6BCEK0nEvE/iYG/+x1+sG
-         9Gf+85gnPTKrexYtcSS1JoIiLgXRB/HVZ0z6QmDpzQmF+VTLE5l3UCpWic0HatC6vqsE
-         oHJdQ2exIMqZGYV3cp0D+xO2hKRQLTY/aIvLQ4DfSg/ID5T5eo7cbougTC4vRHXLdFMM
-         vzFHrhGhFVI3u46UKk0kGJeS+vzk2qYvfhoDc5FpCZ72e5LX+JBa6JcUYXdHCSdU1WyJ
-         KYqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wZPVLhTmfjbvLXy8wFUxjggNBQQIUKMzW/yUT1AkbIg=;
-        b=vVCxdRjGVEtyJYbcgpcK1r/jQrLW8I3SjcG4LBdJhBnGKfMo6xG8i3jVxMFPiB7rwC
-         Kng3TaG0v5JedcT+04iZ3451qRV2JEv7KXZN54xOTiGNtQeAjIdG0ld97MAnjhWyKNkb
-         TJ+Y9EJ9GsGuArbdsZiuKfLQTPPuJUeHIgP0RCiebusWijoCjpaNcItv7TpKH3r/Ph6F
-         23f9k+BZtRB/FsabsfikrSbNwsXIuKwpO77X7FIFNEmyFSMRWPk2CqCzhKERRxcho2OU
-         w44g47c5+Cmacfnta5GAbuANnH4h+mgbX4F8QuBir8DB93KQewCQe7gEXoVDDS05HIoS
-         +SaQ==
-X-Gm-Message-State: AOAM531x+LPYusIVmcODmDiX5n9v8d9fhvHDKZZtu9HGp0+IC3SlaHmI
-        Yx5i8JNVi3mynAgEHiviascj
-X-Google-Smtp-Source: ABdhPJzfchh3tDRiN4hj1vD/tbB0nD8iMxo/XxSFswJDLeGypxG5uepeX4JiFWmvYZpdUOFfDLT6kA==
-X-Received: by 2002:a05:6a00:b49:b0:49f:c8e0:51ff with SMTP id p9-20020a056a000b4900b0049fc8e051ffmr21021033pfo.36.1639192271182;
-        Fri, 10 Dec 2021 19:11:11 -0800 (PST)
-Received: from workstation ([202.21.42.75])
-        by smtp.gmail.com with ESMTPSA id m15sm3876838pgd.44.2021.12.10.19.11.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 Dec 2021 19:11:10 -0800 (PST)
-Date:   Sat, 11 Dec 2021 08:41:06 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH v2 05/10] PCI: qcom: Add ddrss_sf_tbu flag
-Message-ID: <20211211031106.GB21304@workstation>
-References: <20211208171442.1327689-1-dmitry.baryshkov@linaro.org>
- <20211208171442.1327689-6-dmitry.baryshkov@linaro.org>
- <20211210112241.GE1734@thinkpad>
- <95401925-6e97-8fce-4fe6-4701c4fad301@linaro.org>
+        id S1345830AbhLKERG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Dec 2021 23:17:06 -0500
+Received: from mga03.intel.com ([134.134.136.65]:10092 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1345827AbhLKERG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 10 Dec 2021 23:17:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639196010; x=1670732010;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Dy5Zuov7zCjsL0xzvPnZJY3XWjn8vLsTjIRw3C6e0XI=;
+  b=Fi7P4HgrUJOUpKLyTXjFGJy+4cRdvhhcY+moJt9n9pHUOSbOuqd4QLvk
+   WbsktW63bXcNcVnntDrwLqFqiVTgavOxWBeftiT/FAVJREX/o14fiCcu9
+   ZQxYf6A/g99z3HDHTINyuAbGo14DC9RqoxivUMvhPf5erEyB6Y4Z0bJQo
+   V8iYz6YjwWeBscSusQNoC//MItEWyyiWs5RfulUNbTiytPuqNeNIggZY3
+   S572GubR+vVd/M08ZO5jcs7O2glCgPVx5MLS2nDc6l2Zznwpiy481fmoc
+   Xc1rxWXCdjNDititxOhsxrmPuBCImBHuVrU6+3sqyk1xIU7aORh+6kxeg
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10194"; a="238448769"
+X-IronPort-AV: E=Sophos;i="5.88,197,1635231600"; 
+   d="scan'208";a="238448769"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 20:13:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,197,1635231600"; 
+   d="scan'208";a="504207510"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 10 Dec 2021 20:13:28 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mvtlI-000467-15; Sat, 11 Dec 2021 04:13:28 +0000
+Date:   Sat, 11 Dec 2021 12:13:12 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ 98c95978f917184dcc30f771f1ea7582bfc0be52
+Message-ID: <61b42558.0w2jnBMCbfrl7uGb%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <95401925-6e97-8fce-4fe6-4701c4fad301@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Dec 11, 2021 at 04:59:05AM +0300, Dmitry Baryshkov wrote:
-> On 10/12/2021 14:22, Manivannan Sadhasivam wrote:
-> > On Wed, Dec 08, 2021 at 08:14:37PM +0300, Dmitry Baryshkov wrote:
-> > > Qualcomm PCIe driver uses compatible string to check if the ddrss_sf_tbu
-> > > clock should be used. Since sc7280 support has added flags, switch to
-> > > the new mechanism to check if this clock should be used.
-> > > 
-> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > ---
-> > >   drivers/pci/controller/dwc/pcie-qcom.c | 5 ++++-
-> > >   1 file changed, 4 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > index 51a0475173fb..803d3ac18c56 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > @@ -194,7 +194,9 @@ struct qcom_pcie_ops {
-> > >   struct qcom_pcie_cfg {
-> > >   	const struct qcom_pcie_ops *ops;
-> > > +	/* flags for ops 2.7.0 and 1.9.0 */
-> > 
-> > No need of this comment.
-> 
-> Dropping it
-> 
-> > 
-> > >   	unsigned int pipe_clk_need_muxing:1;
-> > 
-> > This should be added in the previous patch.
-> 
-> It exists already
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: 98c95978f917184dcc30f771f1ea7582bfc0be52  Merge branch 'pci/errors'
 
-Ah, my tree was outdated. I do see it in -rc4.
+elapsed time: 721m
 
-> > 
-> > > +	unsigned int has_ddrss_sf_tbu_clk:1;
-> > 
-> > Wondering if we could make both the flags "bool" as the values passed to it
-> > are of boolean type. I don't think we could save a significant amount of
-> > memory using bitfields.
-> 
-> I followed the existing pipe_clk_need_muxing. I have no strong preference
-> here, so let's see what Bjorn will prefer.
-> 
+configs tested: 149
+configs skipped: 3
 
-Okay.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks,
-Mani
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211210
+sh                          r7780mp_defconfig
+powerpc                          g5_defconfig
+arm                  colibri_pxa270_defconfig
+sh                      rts7751r2d1_defconfig
+arm                       aspeed_g5_defconfig
+sparc64                             defconfig
+arm                          ixp4xx_defconfig
+sh                           se7780_defconfig
+powerpc                   motionpro_defconfig
+powerpc                    mvme5100_defconfig
+sh                   sh7770_generic_defconfig
+powerpc                        icon_defconfig
+h8300                       h8s-sim_defconfig
+i386                             alldefconfig
+arc                    vdk_hs38_smp_defconfig
+mips                    maltaup_xpa_defconfig
+mips                         cobalt_defconfig
+mips                        bcm63xx_defconfig
+m68k                            q40_defconfig
+arc                           tb10x_defconfig
+arc                     nsimosci_hs_defconfig
+xtensa                generic_kc705_defconfig
+nios2                         3c120_defconfig
+arm                       multi_v4t_defconfig
+sh                           se7619_defconfig
+arm                      integrator_defconfig
+mips                     loongson2k_defconfig
+powerpc                     sequoia_defconfig
+arm                         lpc32xx_defconfig
+microblaze                      mmu_defconfig
+sh                        edosk7705_defconfig
+m68k                         amcore_defconfig
+parisc                generic-32bit_defconfig
+powerpc                     kmeter1_defconfig
+arm                        trizeps4_defconfig
+sh                             sh03_defconfig
+ia64                                defconfig
+arm64                            alldefconfig
+sh                          rsk7203_defconfig
+sh                          polaris_defconfig
+arm                             mxs_defconfig
+arm                            hisi_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc                  mpc866_ads_defconfig
+m68k                          amiga_defconfig
+m68k                          sun3x_defconfig
+arm                           h5000_defconfig
+parisc                           allyesconfig
+arm                  colibri_pxa300_defconfig
+arm                         socfpga_defconfig
+x86_64                           allyesconfig
+sparc                       sparc64_defconfig
+mips                  cavium_octeon_defconfig
+powerpc                      chrp32_defconfig
+powerpc                 mpc8540_ads_defconfig
+m68k                        m5407c3_defconfig
+arc                            hsdk_defconfig
+csky                             alldefconfig
+riscv                    nommu_virt_defconfig
+arm                        neponset_defconfig
+openrisc                  or1klitex_defconfig
+powerpc                     pq2fads_defconfig
+alpha                            alldefconfig
+arm                       netwinder_defconfig
+x86_64                              defconfig
+powerpc                     tqm8541_defconfig
+arm                          pxa3xx_defconfig
+riscv                            alldefconfig
+m68k                       m5275evb_defconfig
+xtensa                          iss_defconfig
+arm                  randconfig-c002-20211210
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20211210
+x86_64               randconfig-a005-20211210
+x86_64               randconfig-a001-20211210
+x86_64               randconfig-a002-20211210
+x86_64               randconfig-a003-20211210
+x86_64               randconfig-a004-20211210
+i386                 randconfig-a001-20211210
+i386                 randconfig-a002-20211210
+i386                 randconfig-a005-20211210
+i386                 randconfig-a003-20211210
+i386                 randconfig-a006-20211210
+i386                 randconfig-a004-20211210
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-> > 
-> > Thanks,
-> > Mani
-> > >   };
-> > >   struct qcom_pcie {
-> > > @@ -1164,7 +1166,7 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
-> > >   	res->clks[3].id = "bus_slave";
-> > >   	res->clks[4].id = "slave_q2a";
-> > >   	res->clks[5].id = "tbu";
-> > > -	if (of_device_is_compatible(dev->of_node, "qcom,pcie-sm8250")) {
-> > > +	if (pcie->cfg->has_ddrss_sf_tbu_clk) {
-> > >   		res->clks[6].id = "ddrss_sf_tbu";
-> > >   		res->num_clks = 7;
-> > >   	} else {
-> > > @@ -1512,6 +1514,7 @@ static const struct qcom_pcie_cfg sdm845_cfg = {
-> > >   static const struct qcom_pcie_cfg sm8250_cfg = {
-> > >   	.ops = &ops_1_9_0,
-> > > +	.has_ddrss_sf_tbu_clk = true,
-> > >   };
-> > >   static const struct qcom_pcie_cfg sc7280_cfg = {
-> > > -- 
-> > > 2.33.0
-> > > 
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
+clang tested configs:
+x86_64               randconfig-a012-20211210
+x86_64               randconfig-a014-20211210
+x86_64               randconfig-a013-20211210
+x86_64               randconfig-a016-20211210
+x86_64               randconfig-a015-20211210
+x86_64               randconfig-a011-20211210
+i386                 randconfig-a013-20211210
+i386                 randconfig-a011-20211210
+i386                 randconfig-a016-20211210
+i386                 randconfig-a014-20211210
+i386                 randconfig-a015-20211210
+i386                 randconfig-a012-20211210
+hexagon              randconfig-r045-20211210
+riscv                randconfig-r042-20211210
+s390                 randconfig-r044-20211210
+hexagon              randconfig-r041-20211210
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
