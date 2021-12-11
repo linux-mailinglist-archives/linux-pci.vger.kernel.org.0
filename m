@@ -2,178 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A851047109D
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Dec 2021 03:10:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC7C94710A9
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Dec 2021 03:18:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238032AbhLKCOF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Dec 2021 21:14:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
+        id S233092AbhLKCVk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Dec 2021 21:21:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233155AbhLKCOE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 21:14:04 -0500
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD84C0617A1
-        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 18:10:28 -0800 (PST)
-Received: by mail-lj1-x22f.google.com with SMTP id z8so16153579ljz.9
-        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 18:10:28 -0800 (PST)
+        with ESMTP id S232777AbhLKCVk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Dec 2021 21:21:40 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29F33C0617A1
+        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 18:18:04 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id m27so21132056lfj.12
+        for <linux-pci@vger.kernel.org>; Fri, 10 Dec 2021 18:18:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=5mmf3FVNjWqjjEHYqk+bNIyyloQFjJWEsTo7/kwY5m4=;
-        b=lBM3/W3/ZSrx/1lHNTuHTam6XwNh/lWnYQHkca9P/+69APilWZsSUtz+sotfUAGLjR
-         JDNhILZnQboavEuPwLOd3rhV6v6uPniWD7PeqcIw5n05e7PA6X4nBVckaaLTODErnnnV
-         qkB+gE0qUcEfMsTY+oN8JgkZ54u8Is4I59Ad7ZaJXiM6LsIQwM2+OvMqFpBeFBpw58iK
-         Nbvj6kHk6eM8bvd+QqBS+JIflK2lhSHMwy6V5hHxUa/vmCJ3Qwr9+7UVYl1xQhge1Nxt
-         CLig5DCOIBolm8S8XeGDDiBPHgFGzuCmXkjJzuj/wBF0MN8Ev40o2ZSoBPObVXhsTwgL
-         YJfA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ih8VEbLk5HADGlpnEJHtvirNVFfEWHbWt9yeGC0U/m4=;
+        b=tfE7zCFn9P4fBH4D36xBAcVI7cw8uw+ugmzQANbHlVW3woHUXcmE5o5Aei6B28D1o/
+         xBFEP0ookfGDun5ChIOuuQnyPEKbmtt/U5DpNDrV1Mm8eQRkvRExDZtDChv3nEiN9Qxo
+         oQuThv3sqdK/TNt8DN9g0pvuZmScfnYsIWQU3UdupCfz1LYhNJknmP6wkd7UHAyflvth
+         QQRqPyXOB3LEc9izelCJv2a9Yv066GjhBbQ7Z1SNKCMOW00O2fdsCLDFeGDNSjrz+FGz
+         XK2j0iqQmP23WpZR9fsGJUcf6DM6fQu+gxXHkIxYyp4TxKhLBbY41U/sAxORwdORhPcE
+         mb+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=5mmf3FVNjWqjjEHYqk+bNIyyloQFjJWEsTo7/kwY5m4=;
-        b=noUTUv6lDw5euTHTebsnR1XGAmQUIcG1GmLz5IYj51EJ+EPHMxan+Pc65hSopkKO9V
-         efq+rQLjL6ku3y+FUNGuwbJafdqSCt6q9Py8dFvt62NF2ybMonKigr7h96+vIlLQ0ZCG
-         Bxd6ATTI8jSm1IEwAvj5gg+7zKgZn8NM+mrBCSDpw6Tr5/emKXyOLq6mzz50EjXc2/Or
-         nT4SAOqQO21q0GIQUuoLJV1ZMPcs53e6B/ZuGOcccd8CZ0R69ElGnhKh1pmsBtf2nSaX
-         iQrKwt3w38YhDkQB0/pLF10ppZTFU9e0k1gFTvnONaSNSWcd1yU046HYMo5qLVKQTu2K
-         F7mQ==
-X-Gm-Message-State: AOAM533ms6Z2/IAtxTuaXN3wmWqM8WfAiMgJHpiS/6NJuktozl2YOwSB
-        x4NXvYgzzWeloQ/CgzHnMQlgpQ==
-X-Google-Smtp-Source: ABdhPJx6rCt0XDxYhAZDn8yN0hvxhjXpMeQyLE7n6bXQ5m6QpV6fOLEjAg5ZfiSeVEeFavNqgGcopw==
-X-Received: by 2002:a2e:b04c:: with SMTP id d12mr16061747ljl.338.1639188626520;
-        Fri, 10 Dec 2021 18:10:26 -0800 (PST)
-Received: from [192.168.1.211] ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id d4sm471176lfg.82.2021.12.10.18.10.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Dec 2021 18:10:26 -0800 (PST)
-Message-ID: <2f2434b7-ea29-0717-a7bd-e2968f9236c8@linaro.org>
-Date:   Sat, 11 Dec 2021 05:10:25 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH v2 07/10] arm64: dts: qcom: sm8450: add PCIe0 PHY node
-Content-Language: en-GB
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
+        bh=Ih8VEbLk5HADGlpnEJHtvirNVFfEWHbWt9yeGC0U/m4=;
+        b=6ZM0bd74cYwL74uPqFSX6yOaTOSuEyzQFAD9C+uGnOS5Pahd1hLk2rtXyRH7F6GnNv
+         U0f+thjTS24TCunhtg6ztQ/abbz6gWejTnpTFMno1mJJCttsKpjTzKupKtAyp4WwmIKM
+         p380Etc9GmAeJVhA0dfJmcAdGmKoD4DH2bdOQHWR4fC6VPyCvZov5Z0hdCWRMY+dPC0N
+         vgrwCluwNrqWpWjJ+hAc34xSH71kR4x59r6zSvIK5eToF5Dn65L/P8AxziJ7TTLvQkvP
+         g8jye12O7qkTteGL4zwUU+fXWYtWu8lkXq1FWImrcY9OUUXy5javDuD58bkhqnP602J/
+         Mi8g==
+X-Gm-Message-State: AOAM533bpdVGMuWjabxnOdVsJQoAhZ4ZrbEduZpZn4wJWlFyDxDI7GS1
+        eZn9dnmBsZeEzU2SX6fuIZHXKw==
+X-Google-Smtp-Source: ABdhPJzSANxpPqCT3Gq8MtF6TYbQpdPwmnk8n4mvREaQ01TeH7E5Oy9b1zhluBVdXST1n7jlMyPj6g==
+X-Received: by 2002:a05:6512:220f:: with SMTP id h15mr16387154lfu.454.1639189082414;
+        Fri, 10 Dec 2021 18:18:02 -0800 (PST)
+Received: from eriador.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id y7sm504663lfj.90.2021.12.10.18.18.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Dec 2021 18:18:02 -0800 (PST)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-phy@lists.infradead.org
-References: <20211208171442.1327689-1-dmitry.baryshkov@linaro.org>
- <20211208171442.1327689-8-dmitry.baryshkov@linaro.org>
- <20211210113720.GG1734@thinkpad>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <20211210113720.GG1734@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v3 00/10] qcom: add support for PCIe0 on SM8450 platform
+Date:   Sat, 11 Dec 2021 05:17:48 +0300
+Message-Id: <20211211021758.1712299-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.33.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/12/2021 14:37, Manivannan Sadhasivam wrote:
-> On Wed, Dec 08, 2021 at 08:14:39PM +0300, Dmitry Baryshkov wrote:
->> Add device tree node for the first PCIe PHY device found on the Qualcomm
->> SM8450 platform.
->>
->> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sm8450.dtsi | 42 ++++++++++++++++++++++++++--
->>   1 file changed, 40 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
->> index 16a789cacb65..a047d8a22897 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
->> @@ -558,8 +558,12 @@ gcc: clock-controller@100000 {
->>   			#clock-cells = <1>;
->>   			#reset-cells = <1>;
->>   			#power-domain-cells = <1>;
->> -			clock-names = "bi_tcxo", "sleep_clk";
->> -			clocks = <&rpmhcc RPMH_CXO_CLK>, <&sleep_clk>;
->> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
->> +				 <&pcie0_lane>,
->> +				 <&sleep_clk>;
->> +			clock-names = "bi_tcxo",
->> +				      "pcie_0_pipe_clk",
->> +				      "sleep_clk";
->>   		};
->>   
->>   		qupv3_id_0: geniqup@9c0000 {
->> @@ -625,6 +629,40 @@ i2c14: i2c@a98000 {
->>   			};
->>   		};
->>   
->> +		pcie0_phy: phy@1c06000 {
->> +			compatible = "qcom,sm8450-qmp-gen3x1-pcie-phy";
->> +			reg = <0 0x01c06000 0 0x200>;
->> +			#address-cells = <2>;
->> +			#size-cells = <2>;
->> +			ranges;
->> +			clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
->> +				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
->> +				 <&gcc GCC_PCIE_0_CLKREF_EN>,
->> +				 <&gcc GCC_PCIE_0_PHY_RCHNG_CLK>;
->> +			clock-names = "aux", "cfg_ahb", "ref", "refgen";
->> +
->> +			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
->> +			reset-names = "phy";
->> +
->> +			assigned-clocks = <&gcc GCC_PCIE_0_PHY_RCHNG_CLK>;
->> +			assigned-clock-rates = <100000000>;
->> +
->> +			status = "disabled";
->> +
->> +			pcie0_lane: lanes@1c06200 {
->> +				reg = <0 0x1c06e00 0 0x200>, /* tx */
->> +				      <0 0x1c07000 0 0x200>, /* rx */
->> +				      <0 0x1c06200 0 0x200>, /* pcs */
-> 
-> Oh, so this platform has "PCS" at the starting offset? This is different
-> compared to other platforms as "TX" always comes first.
-> 
+There are two different PCIe controllers and PHYs on SM8450, one having
+one lane and another with two lanes. This set of patches adds support
+for the first PCIe phy and controller only, support for the second PCIe
+part will come later.
 
-Yes. this is correct.
+Changes since v2:
+ - Remove unnecessary comment in struct qcom_pcie_cfg
+
+Changes since v1:
+ - Fix capitalization/wording of PCI patch subjects
+ - Add missing gen3x1 specification to PHY table names
+
+----------------------------------------------------------------
+Dmitry Baryshkov (10):
+      dt-bindings: pci: qcom: Document PCIe bindings for SM8450
+      dt-bindings: phy: qcom,qmp: Add SM8450 PCIe PHY bindings
+      phy: qcom-qmp: Add SM8450 PCIe0 PHY support
+      PCI: qcom: Remove redundancy between qcom_pcie and qcom_pcie_cfg
+      PCI: qcom: Add ddrss_sf_tbu flag
+      PCI: qcom: Add SM8450 PCIe support
+      arm64: dts: qcom: sm8450: add PCIe0 PHY node
+      arm64: dts: qcom: sm8450: add PCIe0 RC device
+      arm64: dts: qcom: sm8450-qrd: enable PCIe0 PHY device
+      arm64: dts: qcom: sm8450-qrd: enable PCIe0 host
+
+ .../devicetree/bindings/pci/qcom,pcie.txt          |  21 ++-
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |   2 +
+ arch/arm64/boot/dts/qcom/sm8450-qrd.dts            |  14 ++
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               | 143 ++++++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c             |  88 ++++++++-----
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 125 ++++++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |  33 +++++
+ 7 files changed, 388 insertions(+), 38 deletions(-)
 
 
-> And the size is "0x200" for all?
-
-It is for the PCS block.
-
-As you see below, PCS_PCIE starts at 0x600. Initially I thought about 
-extend it further, making it cover few other regions (up to the tx 
-region). However as we do not touch other regions, I decided to keep it 
-as this way.
-
-> 
-> Thanks,
-> Mani
-> 
->> +				      <0 0x1c06600 0 0x200>; /* pcs_pcie */
->> +				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
->> +				clock-names = "pipe0";
->> +
->> +				#clock-cells = <0>;
->> +				#phy-cells = <0>;
->> +				clock-output-names = "pcie_0_pipe_clk";
->> +			};
->> +		};
->> +
->>   		config_noc: interconnect@1500000 {
->>   			compatible = "qcom,sm8450-config-noc";
->>   			reg = <0 0x01500000 0 0x1c000>;
->> -- 
->> 2.33.0
->>
-
-
--- 
-With best wishes
-Dmitry
