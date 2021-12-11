@@ -2,95 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F91847151F
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Dec 2021 18:54:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A289D47164F
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Dec 2021 22:02:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230389AbhLKRyz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 11 Dec 2021 12:54:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230356AbhLKRyz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Dec 2021 12:54:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0770C061714;
-        Sat, 11 Dec 2021 09:54:54 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 64C71B80B3A;
-        Sat, 11 Dec 2021 17:54:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B49D5C004DD;
-        Sat, 11 Dec 2021 17:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639245292;
-        bh=Jo5vuURk4kAxgHfUfbWfY4wl1/saPxtBexHyy82NpVI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=i5MBNOa7UbMhaF8Qi1kXozP9kU+uRRnv8rt5PGCSwloZN+Hq+sGPClErbZ02FmHQz
-         FZqg0HfwnxjaYSpBTuvuKodKN86pHyZRcv0fTf7EaBYbc7hzj36ozg3PAguJWJCa0c
-         VwZnPCExI2LewKGyuDW+sOqh2fH0kkZKTRJ7idKUMI/QOzhOh1/dqjHdBJOgvikrwY
-         KUOzLpel2aBXN/K0XJ/5tgiwOikXuteZidjxfLjIxJi1BQulM+Xv8ii6ARNgqM2YVG
-         hbBNhQax507aYsOaniPlWMPmd+TtMTOZLfJ4LCJ8XIZleu1Lq/4205NLz1IjYTk+nd
-         Kihn5fOrnHkZQ==
-Date:   Sat, 11 Dec 2021 11:54:50 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Cc:     ruscur@russell.cc, oohall@gmail.com, bhelgaas@google.com,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH] PCI/AER: potential dereference of null pointer
-Message-ID: <20211211175450.GA398271@bhelgaas>
+        id S231327AbhLKVCs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Dec 2021 16:02:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55600 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231314AbhLKVCs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Dec 2021 16:02:48 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1639256566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FdNaPmn9F6G56FTGKCGEnmpOIaJzDmXbFBrEJvvwrio=;
+        b=0tKE16dFBEc8E6YsBZj+rZGrOQlPLt1as9ODWymugrtlcmOekCFm2h/cq2b8f8p8E0I/1W
+        bvHJ6lq3iwqzVTfngYF5F51EENiCchoeDzzSvHx47eW69tD129fnlMZImCIyr5r5pT4gTk
+        tjQOEkpUortN+0nFbqwOocGBmOufUci3Pssw1wlxnwqmQh7l2OJlah86sx+jSSZ5qefkpH
+        wZ4xAyP6Mp8osJMVb5Fa7Wl4AoXWenqkxQrhbQJsxt15PfxO6XQM2RaRakuEoqYrvT6wxE
+        AJEPtbI4bAmdNJpz4TLrnLFuEB+DOJjz6wX+DPFiduV7SekICqJtt+Ks0tTvbA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1639256566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FdNaPmn9F6G56FTGKCGEnmpOIaJzDmXbFBrEJvvwrio=;
+        b=ql+xBv8yBTSQS0H6JUhh3/SPimjkvrZeYoQW5oi8wc+CQRF8xNe779rGl2dRgYODht1QSk
+        MioR63/MnOWeE0AQ==
+To:     Stefan Roese <sr@denx.de>, linux-pci@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Marek Vasut <marex@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH] PCI/MSI: Only mask all MSI-X entries when MSI-X is
+ used
+In-Reply-To: <ee612558-18e6-1ef0-3a48-7a971fdd57f2@denx.de>
+References: <20211210161025.3287927-1-sr@denx.de> <87czm3wimf.ffs@tglx>
+ <ee612558-18e6-1ef0-3a48-7a971fdd57f2@denx.de>
+Date:   Sat, 11 Dec 2021 22:02:46 +0100
+Message-ID: <87tufevoqx.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211209094556.2085357-1-jiasheng@iscas.ac.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rajat, author of aer_stats:
-db89ccbe52c7 ("PCI/AER: Define aer_stats structure for AER capable devices"
-81aa5206f9a7 ("PCI/AER: Add sysfs attributes to provide AER stats and breakdown"]
+Stefan,
 
-On Thu, Dec 09, 2021 at 05:45:56PM +0800, Jiasheng Jiang wrote:
-> he return value of kzalloc() needs to be checked.
-> To avoid use of null pointer in case of the failure of alloc.
-> 
-> Fixes: db89ccbe52c7 ("PCI/AER: Define aer_stats structure for AER capable devices")
-> Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
-> ---
->  drivers/pci/pcie/aer.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index ec943cee5ecc..d04303edf468 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -376,6 +376,8 @@ void pci_aer_init(struct pci_dev *dev)
->  		return;
->  
->  	dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
-> +	if (!dev->aer_stats)
-> +		return;
+On Sat, Dec 11 2021 at 14:58, Stefan Roese wrote:
+> On 12/11/21 11:17, Thomas Gleixner wrote:
+>> Can you try the patch below?
+>
+> Sure, please see below.
+>
+>> It might still be that this Marvell part really combines the per entry
+>> mask bits from MSI-X with MSI, then we need both.
+>
+> With your patch applied only (mine not), the Masked+ is gone but still
+> the MSI interrupts are not received in the system. So you seem to have
+> guessed correctly, that we need both changes.
 
-Did you actually trip over a null pointer dereference, and if so,
-where was it?
+Groan. How is that device specification compliant?
 
-I think the intent here was that aer_stats is a non-essential feature,
-and if we can't allocate space to keep the statistics, we can still
-use the device without the stats.
+Vector Control for MSI-X Table Entries
+--------------------------------------
 
-I *think* all the users of dev->aer_stats check for NULL before
-dereferencing it, but if you found a case that doesn't do that, we
-should definitely fix it.
+"00: Mask bit:  When this bit is set, the function is prohibited from
+                sending a message using this MSI-X Table entry.
+                ....
+                This bit=E2=80=99s state after reset is 1 (entry is masked)=
+."
 
-In a few cases (aer_stats_dev_attr, aer_stats_rootport_attr), the
-check isn't obvious -- it happens in aer_stats_attrs_are_visible().
-If aer_stats_attrs_are_visible() finds that aer_stats is NULL, those
-sysfs attributes should not be visible, and the corresponding *_show()
-functions should never be called.
+So how can that work in the first place if that device is PCI
+specification compliant? Seems that PCI/SIG compliance program is just
+another rubberstamping nonsense.
 
->  	/*
->  	 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
-> -- 
-> 2.25.1
-> 
+Can someone who has access to that group please ask them what their
+specification compliance stuff is actualy testing?
+
+Sure, that went unnoticed so far on that marvelous device because the
+kernel was missing a defense line, but sigh...
+
+> How to continue? Should I integrate your patch into mine and send a new
+> version? Or will you send it separately to the list for integration?
+
+Your patch is incomplete. The function can fail later on, which results
+in the same problem, no?
+
+So we need something like the below.
+
+Just to satisfy my curiosity:
+
+  The device supports obviously MSI-X, which is preferred over MSI.
+
+  So why is the MSI-X initialization failing in the first place on this
+  platform?
+
+Thanks,
+
+        tglx
+---
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -722,9 +722,6 @@ static int msix_capability_init(struct p
+ 		goto out_disable;
+ 	}
+=20
+-	/* Ensure that all table entries are masked. */
+-	msix_mask_all(base, tsize);
+-
+ 	ret =3D msix_setup_entries(dev, base, entries, nvec, affd);
+ 	if (ret)
+ 		goto out_disable;
+@@ -751,6 +748,9 @@ static int msix_capability_init(struct p
+ 	/* Set MSI-X enabled bits and unmask the function */
+ 	pci_intx_for_msi(dev, 0);
+ 	dev->msix_enabled =3D 1;
++
++	/* Ensure that all table entries are masked. */
++	msix_mask_all(base, tsize);
+ 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+=20
+ 	pcibios_free_irq(dev);
+@@ -777,7 +777,7 @@ static int msix_capability_init(struct p
+ 	free_msi_irqs(dev);
+=20
+ out_disable:
+-	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
++	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL | PCI_MSIX_FLAGS_=
+ENABLE, 0);
+=20
+ 	return ret;
+ }
