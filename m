@@ -2,94 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F4D6471D12
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Dec 2021 21:55:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD10B471E16
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Dec 2021 22:35:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229485AbhLLUzf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 Dec 2021 15:55:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59354 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbhLLUzf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Dec 2021 15:55:35 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639342533;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=X/NAgpabmqU7SvS/VZzGUCF8aINHFotBjDodV/Kfsg4=;
-        b=LpEiLakmAttHKGEe/3XvPR1wZM1Zx04nHfXTOtMTF+y2v8crOvCX0wLiHUiSxD2FMv70dd
-        pVyrjpQGUNXm58MyJoCymnp+uSMpvxZnJPhGJa4bENiiTG4Tx6pYhvxGRFH0V84NDRbSzF
-        6essnvXYnG0FXAPt+wqOfhMKDE8tNgK0lOLemWVecVSYa/Isa8wFkTUp45sIKm8iuR7JRK
-        73Bi6yC8SORzL04D7o1qph0B/nQEXBpoCQTxZWY8AfMdKlWhBMJba8XHmqBLFYgd62OD6+
-        lCYxnrO3qvB6jMsSI4UwL+BfNgM4mUqSqh0zXXY8IN/6StMQhO6/wd+p+7HX6w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639342533;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=X/NAgpabmqU7SvS/VZzGUCF8aINHFotBjDodV/Kfsg4=;
-        b=bcZqTtGalDhuJSdfHxRVIoNBI2gdJizxqQQ5t6JV10dXy2tkk45yd0xK2H3YKD2oPO52mo
-        TOV2vJAYg0Kr3gAQ==
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "x86@kernel.org" <x86@kernel.org>, "Rodel, Jorg" <jroedel@suse.de>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: RE: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-In-Reply-To: <BL1PR11MB5271326D39DAB692F07587768C739@BL1PR11MB5271.namprd11.prod.outlook.com>
-References: <f4cc305b-a329-6d27-9fca-b74ebc9fa0c1@intel.com>
- <878rx480fk.ffs@tglx>
- <BN9PR11MB52765F2EF8420C60FD5945D18C709@BN9PR11MB5276.namprd11.prod.outlook.com>
- <87sfv2yy19.ffs@tglx> <20211209162129.GS6385@nvidia.com>
- <878rwtzfh1.ffs@tglx> <20211209205835.GZ6385@nvidia.com>
- <8735n1zaz3.ffs@tglx> <87sfv1xq3b.ffs@tglx>
- <BN9PR11MB527619B099061B3814EB40408C719@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20211210123938.GF6385@nvidia.com> <87fsr0xp31.ffs@tglx>
- <BN9PR11MB527625E8A9BB854F3C0D19AE8C729@BN9PR11MB5276.namprd11.prod.outlook.com>
- <875yrvwavf.ffs@tglx>
- <BL1PR11MB5271326D39DAB692F07587768C739@BL1PR11MB5271.namprd11.prod.outlook.com>
-Date:   Sun, 12 Dec 2021 21:55:32 +0100
-Message-ID: <87fsqxv8zf.ffs@tglx>
+        id S229619AbhLLVfN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 Dec 2021 16:35:13 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:43676 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229468AbhLLVfM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Dec 2021 16:35:12 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 21EA0CE0DAF;
+        Sun, 12 Dec 2021 21:35:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C1E4C341CF;
+        Sun, 12 Dec 2021 21:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639344909;
+        bh=R64tI2obkn7D7ySHmCBqe8ERpEC1vgc5+gMcn2gXCyQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VCStpCbdtQLeBBXpPGGNddTVoIseGMsPCb5lmBU211PHB7CrkORpHBekoZXCatwc3
+         2UHNMofHvhdwljSU/+n/NMLxG6fxpCoTTlcqNVan2hw4e6KlbJye4BBOEbF51hg0QC
+         fsu8hCqsIo8tQAwBpstPQZ2ncdiedETu53QQ0kCtehQvB+5AhBPeS5iZwpiu2dzBI7
+         BiDpijsVj+jCtqB7z2OFDCUzoZh1hSZnA+4Q9H2g40dII1U4t8oTDjVqX3cy64cfKf
+         SUR1zQ5oSxW4Ex9Wa26gtS6TRewE5d6WY22dtfCP9C15YOZHdDYhaxIBdSjPQI/wft
+         YHMU9T/XDXGvQ==
+Received: by mail-ed1-f47.google.com with SMTP id o20so46662640eds.10;
+        Sun, 12 Dec 2021 13:35:09 -0800 (PST)
+X-Gm-Message-State: AOAM531Qwfb0f3eyEQSsmYfMu1ypnukMGVRw/vf5j8TBoBJQbLWmH5a6
+        43FfHOmBzY4bRfBPKkhQSFbMmzl240yAY4k+fg==
+X-Google-Smtp-Source: ABdhPJy8jBV8Z7Zm670HYzJ6GiPP9GdoIEKXiQCXJy+EoSSoHt9vu9UNSWi++JgvLz6Vozp0wbphEs/18l5vDT5cOMg=
+X-Received: by 2002:a17:906:5e14:: with SMTP id n20mr39429708eju.466.1639344907565;
+ Sun, 12 Dec 2021 13:35:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20211208171442.1327689-1-dmitry.baryshkov@linaro.org> <20211208171442.1327689-9-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20211208171442.1327689-9-dmitry.baryshkov@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Sun, 12 Dec 2021 15:34:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLiRPy7App3ooWKOeb87DXN2HpirO0-vEoAOfFx-4FbDw@mail.gmail.com>
+Message-ID: <CAL_JsqLiRPy7App3ooWKOeb87DXN2HpirO0-vEoAOfFx-4FbDw@mail.gmail.com>
+Subject: Re: [PATCH v2 08/10] arm64: dts: qcom: sm8450: add PCIe0 RC device
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kevin,
-
-On Sun, Dec 12 2021 at 01:56, Kevin Tian wrote:
->> From: Thomas Gleixner <tglx@linutronix.de>
->> All I can find is drivers/iommu/virtio-iommu.c but I can't find anything
->> vIR related there.
+On Wed, Dec 8, 2021 at 11:15 AM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
 >
-> Well, virtio-iommu is a para-virtualized vIOMMU implementations.
+> Add device tree node for the first PCIe host found on the Qualcomm
+> SM8450 platform.
 >
-> In reality there are also fully emulated vIOMMU implementations (e.g.
-> Qemu fully emulates Intel/AMD/ARM IOMMUs). In those configurations
-> the IR logic in existing iommu drivers just apply:
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8450.dtsi | 101 +++++++++++++++++++++++++++
+>  1 file changed, 101 insertions(+)
 >
-> 	drivers/iommu/intel/irq_remapping.c
-> 	drivers/iommu/amd/iommu.c
+> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> index a047d8a22897..09087a34a007 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> @@ -627,6 +627,84 @@ i2c14: i2c@a98000 {
+>                                 #size-cells = <0>;
+>                                 status = "disabled";
+>                         };
+> +               ];
+> +
+> +               pcie0: pci@1c00000 {
+> +                       compatible = "qcom,pcie-sm8450";
+> +                       reg = <0 0x01c00000 0 0x3000>,
+> +                             <0 0x60000000 0 0xf1d>,
+> +                             <0 0x60000f20 0 0xa8>,
+> +                             <0 0x60001000 0 0x1000>,
+> +                             <0 0x60100000 0 0x100000>;
+> +                       reg-names = "parf", "dbi", "elbi", "atu", "config";
+> +                       device_type = "pci";
+> +                       linux,pci-domain = <0>;
+> +                       bus-range = <0x00 0xff>;
+> +                       num-lanes = <1>;
+> +
+> +                       #address-cells = <3>;
+> +                       #size-cells = <2>;
+> +
+> +                       ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
+> +                                <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
+> +
+> +                       interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names = "msi";
+> +                       #interrupt-cells = <1>;
+> +                       interrupt-map-mask = <0 0 0 0x7>;
+> +                       interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +                                       <0 0 0 2 &intc 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +                                       <0 0 0 3 &intc 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +                                       <0 0 0 4 &intc 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +
+> +                       clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
+> +                                <&gcc GCC_PCIE_0_PIPE_CLK_SRC>,
+> +                                <&pcie0_lane>,
+> +                                <&rpmhcc RPMH_CXO_CLK>,
+> +                                <&gcc GCC_PCIE_0_AUX_CLK>,
+> +                                <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+> +                                <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+> +                                <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
+> +                                <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
+> +                                <&gcc GCC_DDRSS_PCIE_SF_TBU_CLK>,
+> +                                <&gcc GCC_AGGRE_NOC_PCIE_0_AXI_CLK>,
+> +                                <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>;
+> +                       clock-names = "pipe",
+> +                                     "pipe_mux",
+> +                                     "phy_pipe",
+> +                                     "ref",
+> +                                     "aux",
+> +                                     "cfg",
+> +                                     "bus_master",
+> +                                     "bus_slave",
+> +                                     "slave_q2a",
+> +                                     "ddrss_sf_tbu",
+> +                                     "aggre0",
+> +                                     "aggre1";
+> +
+> +                       iommus = <&apps_smmu 0x1c00 0x7f>;
+> +                       iommu-map = <0x0   &apps_smmu 0x1c00 0x1>,
+> +                                   <0x100 &apps_smmu 0x1c01 0x1>;
+> +
+> +                       resets = <&gcc GCC_PCIE_0_BCR>;
+> +                       reset-names = "pci";
+> +
+> +                       power-domains = <&gcc PCIE_0_GDSC>;
+> +                       power-domain-names = "gdsc";
+> +
+> +                       phys = <&pcie0_lane>;
+> +                       phy-names = "pciephy";
+> +
+> +                       perst-gpio = <&tlmm 94 GPIO_ACTIVE_LOW>;
+> +                       enable-gpio = <&tlmm 96 GPIO_ACTIVE_HIGH>;
 
-thanks for the explanation. So that's a full IOMMU emulation. I was more
-expecting a paravirtualized lightweight one.
+-gpios is the preferred form.
 
-Thanks,
+And 'enable-gpios' is not documented.
 
-        tglx
+Rob
