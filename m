@@ -2,156 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD10B471E16
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Dec 2021 22:35:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AE2F471EC6
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 00:28:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbhLLVfN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 Dec 2021 16:35:13 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:43676 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbhLLVfM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Dec 2021 16:35:12 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 21EA0CE0DAF;
-        Sun, 12 Dec 2021 21:35:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C1E4C341CF;
-        Sun, 12 Dec 2021 21:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639344909;
-        bh=R64tI2obkn7D7ySHmCBqe8ERpEC1vgc5+gMcn2gXCyQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VCStpCbdtQLeBBXpPGGNddTVoIseGMsPCb5lmBU211PHB7CrkORpHBekoZXCatwc3
-         2UHNMofHvhdwljSU/+n/NMLxG6fxpCoTTlcqNVan2hw4e6KlbJye4BBOEbF51hg0QC
-         fsu8hCqsIo8tQAwBpstPQZ2ncdiedETu53QQ0kCtehQvB+5AhBPeS5iZwpiu2dzBI7
-         BiDpijsVj+jCtqB7z2OFDCUzoZh1hSZnA+4Q9H2g40dII1U4t8oTDjVqX3cy64cfKf
-         SUR1zQ5oSxW4Ex9Wa26gtS6TRewE5d6WY22dtfCP9C15YOZHdDYhaxIBdSjPQI/wft
-         YHMU9T/XDXGvQ==
-Received: by mail-ed1-f47.google.com with SMTP id o20so46662640eds.10;
-        Sun, 12 Dec 2021 13:35:09 -0800 (PST)
-X-Gm-Message-State: AOAM531Qwfb0f3eyEQSsmYfMu1ypnukMGVRw/vf5j8TBoBJQbLWmH5a6
-        43FfHOmBzY4bRfBPKkhQSFbMmzl240yAY4k+fg==
-X-Google-Smtp-Source: ABdhPJy8jBV8Z7Zm670HYzJ6GiPP9GdoIEKXiQCXJy+EoSSoHt9vu9UNSWi++JgvLz6Vozp0wbphEs/18l5vDT5cOMg=
-X-Received: by 2002:a17:906:5e14:: with SMTP id n20mr39429708eju.466.1639344907565;
- Sun, 12 Dec 2021 13:35:07 -0800 (PST)
+        id S229644AbhLLX2F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 Dec 2021 18:28:05 -0500
+Received: from mail-bn7nam10on2077.outbound.protection.outlook.com ([40.107.92.77]:25312
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229502AbhLLX2F (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 12 Dec 2021 18:28:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c8TkPhBPTzRjTgno7mafcpSY3HGcch+XSmGbUCxrN+Fb6ijkvsWs8UkustpQbNna+QcTASjwGhq1q2JGz5jG4D9idSrEx2dcj18JAtgaQ+yIyJCvm0ZcTBP2xCBWcQB3tl6KrMiIIjbQfv9LX9dDbZ7GxcSKZa+AIoYFL/hOI0i4w95LAX9fD3tMQtGtykKTZF1uyB+YgwAOzOoG7YlRuqlpVoC5NCpubK4EhyrBHpR92UAGqqFfVyM5N+J63gNYYdr5NFJRncYngobV/pm2PT6lpIEMXOMVQIfUyTZma6N2aplpsxuuf9SkOYcfEWAPL4RXPo7UtaDUD5zW/NrXXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zeJJo1tbQoO6wky1sCAjsOVnxXWiJ+2cWKF9ndw66Ec=;
+ b=kEnmHNCrrOqPKdfcwsjaXav4fhZn3cbquG34flwNDuEaOO3relWd2YhynUx3eDX8oqinqBDyQb7Ur79cF6E6Ai9bs5/U9KsBEvfeVuUHCHS3gVuG+PL1ZEiCcu2LEqB+QTzTFcJDmpfkIwubC+BsgGuGZoB/18/Jq/aU9kp9l2kHKnHlgFWNb9Aotg/yLY1lgYhmI/N8MhVwU9TbMxqihwltnML4L79XK7Fonc5pgvjklXzppJaEDk10vO4rbXV7Q2RZMhs4d/K8ls2LWcwzZJV6un2xWvtcaiKBIbmflVDQHpVYTk4t+f3uKQgeso6PRLZphVRaxUkZ9k5g/SKYng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zeJJo1tbQoO6wky1sCAjsOVnxXWiJ+2cWKF9ndw66Ec=;
+ b=AZ8PQoEKo99j3VBcsS1HHKdilP3FNkWASKScKmdbwLsvGg0PhyXsJcv4+pRRknD5jbLDIGpNw4OIHfMSDj79T8AFABPJlT6pdsc+S6RvdU57dKcf4liqB0DjWDUzh1WVUhyFKG4MfCV0IDNsZhvLGwC5yGhv0F0j2C7I28cr6RV7XHq16mAi6gayGK2IaYWKtjWzVP+wnh6JwaDQkAQYoMljIZ+kYnbcSmWeELny545Rda78ijnWRW/B+h1Nhe471XREsKr9eie3JzWQLf+yyZfZWA1KWZ2CcwJNnMxZqsJpdxxofoqrbFEo9FGWwR3aKAGdqL5Zw5d8XbmA8vyrtQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL0PR12MB5538.namprd12.prod.outlook.com (2603:10b6:208:1c9::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.17; Sun, 12 Dec
+ 2021 23:28:01 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::d8be:e4e4:ce53:6d11]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::d8be:e4e4:ce53:6d11%7]) with mapi id 15.20.4778.017; Sun, 12 Dec 2021
+ 23:28:01 +0000
+Date:   Sun, 12 Dec 2021 19:27:58 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Mika =?utf-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
+Message-ID: <20211212232758.GL6385@nvidia.com>
+References: <87k0go8432.ffs@tglx>
+ <f4cc305b-a329-6d27-9fca-b74ebc9fa0c1@intel.com>
+ <878rx480fk.ffs@tglx>
+ <BN9PR11MB52765F2EF8420C60FD5945D18C709@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <87sfv2yy19.ffs@tglx>
+ <20211209162129.GS6385@nvidia.com>
+ <878rwtzfh1.ffs@tglx>
+ <20211209205835.GZ6385@nvidia.com>
+ <BN9PR11MB5276599F467AD5EAC935A79E8C719@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <3f6d4bd7-8b60-1976-73a4-f5ef7f3dbf27@nextfour.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3f6d4bd7-8b60-1976-73a4-f5ef7f3dbf27@nextfour.com>
+X-ClientProxiedBy: BY3PR03CA0005.namprd03.prod.outlook.com
+ (2603:10b6:a03:39a::10) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-References: <20211208171442.1327689-1-dmitry.baryshkov@linaro.org> <20211208171442.1327689-9-dmitry.baryshkov@linaro.org>
-In-Reply-To: <20211208171442.1327689-9-dmitry.baryshkov@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Sun, 12 Dec 2021 15:34:55 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLiRPy7App3ooWKOeb87DXN2HpirO0-vEoAOfFx-4FbDw@mail.gmail.com>
-Message-ID: <CAL_JsqLiRPy7App3ooWKOeb87DXN2HpirO0-vEoAOfFx-4FbDw@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] arm64: dts: qcom: sm8450: add PCIe0 RC device
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "open list:GENERIC PHY FRAMEWORK" <linux-phy@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 16894ac3-9985-4889-e13a-08d9bdc709d8
+X-MS-TrafficTypeDiagnostic: BL0PR12MB5538:EE_
+X-Microsoft-Antispam-PRVS: <BL0PR12MB55385843E582801961193810C2739@BL0PR12MB5538.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HNEOyrH5uPc6d0FYYVNRo36RDEOojF8VA9sT4SKq5SEDWuQcEmhj71LQqGt9qm5U9uU8/TzsktxQvpDq45729d5Dds/K7UaOOZZ1SQ8/SA+ilFL/71nNJCWuKGRZ2OFGOtcw4EmvR+98NzVJu+g2RFTn8IdyESvJUw28mHVlwaLLSjlv6d2Q2VymWe7tGoJjXZy1I5bP3NcXu7uGa/9rOGYM2+fnIn4/el3QDuB2+jNU11JHKpCBB9MmiLrzbNF8CJvshkbFvRLw1o+JbZYXTZf6ZaCpobyQ2D7tnJHAJ90w4y9lzInpfpBemUzors5M01DLehcKOyPr2KXeScHzOoF2R4SAhXz2mjrWQkoW3IeQRHoBBEQhzx4yse1cyG5sI7gjaHLMTNrkPZIPq3FsdelLXxdihmd+Ig0bHPDtC6qjtQ7deAU0Ef7liFibpxNuvU1EvbkN8F7zDpuyA6eXC8N6rKHvmiBDi3mHbF8RhOd3nDytNk4EGL7wjU4amrj+yl6IAf9TTpbcGtS/bAq24mixg+t8/iUc/Dmg8HNuuNq6nHW3nuDc0GJfAlSD9uf1Rft7/PQPMdWgkHh4yTBtJIcHzPR4u5fWb+rHn9vDen6UadztNogOy8QYAdMgNqRA4jJDgflrLqG7RLNJltAfzQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6916009)(36756003)(316002)(4326008)(7416002)(5660300002)(54906003)(66946007)(8936002)(6666004)(66556008)(8676002)(1076003)(2906002)(66476007)(508600001)(33656002)(26005)(6486002)(38100700002)(83380400001)(186003)(6506007)(86362001)(2616005)(6512007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UUdoZzhEU054L2xYZ0VJSm82WjNhaXNjZTRINlhZUHVtTmhqYlFWSVUzNWps?=
+ =?utf-8?B?bVczL3Q3V0Q1d2tzeG92WWpRWVBld3p1M210UkN6ejV2aFhlWXViL3krN2o3?=
+ =?utf-8?B?RFFYOWlHZlY2Nk1kYllWbDRYWjdJZnhPSENxd1E5RXJXYzdWWFFPMkw3aWU1?=
+ =?utf-8?B?bDhxSnZwWmE0YS9nSHd6R2ppaFU0b3JISk53M3ZoSEtkYkFJenhJY3IzQ1dr?=
+ =?utf-8?B?VDJkNVQ5QmJjaWFWRng5QXBlQXdQc25xV1M5c3R6RkR2UmY0bFJINEtHVW1K?=
+ =?utf-8?B?anBoaUQzWEVETGZXblYrR2t0aWk4VUpxMU54ajhWelNZcFNkWDJHdWwwUTlE?=
+ =?utf-8?B?QVV5bWFzQzhsVkJIV2FFS3hBTVFkSWVOdC9WZ2NBRE1CREFham9CTmxZQ2li?=
+ =?utf-8?B?aTdtZGJnMXU2WmVPLytzenZ6b1liYlJTbWpwcm1mZjhib1U2YzR5YUVtVC9U?=
+ =?utf-8?B?clVybkV2WWpiaWRPUHYwRXpmd2M0YkZLUitYazVXT2xKZ1ZkdUdOdU9vQy9K?=
+ =?utf-8?B?eU9mOTQwKzlkL01yYXFMWlVCalVzVXN2NVU1WWpkdG0wTGpZNDBGbjZzVTU4?=
+ =?utf-8?B?Q0dRSnpNZFc3bVRUZW9Ndm9TeG84MHVKOWdqL1dma1hOT0txejRqbUhGVUtl?=
+ =?utf-8?B?c2pValR3T1Z3bStSbGFjbW93aGxzcHE4aFdpZjBEaEdlTVV2R29jSmY0MEVK?=
+ =?utf-8?B?emlpekJCTkpsQWpXb1BwaFlpM2hQeE5yZGN2NUh1OHFoLyt2djl5eGcrdUdq?=
+ =?utf-8?B?cm1SN2RQNExadWxSRGlIbkhyNDZIZVhvdzhLUWMwYU52TUlkdUdKNXNkVGRz?=
+ =?utf-8?B?Yis1ZTV2SUIweUNiK1BWVVlFbDhmZ21RZy9Wc010eE9sV1VTMnlBcUovMzBt?=
+ =?utf-8?B?bEowVXowcFVoSmhsZFYrQ2ErNWplNWEybGJjRTVIbGVkcHZ2cFREQUw4RUw5?=
+ =?utf-8?B?emVDcWpwZjRHaFkxOTV2d2t5U21BUm9PM0p2UU8vMzNtdUlTUGtGeVJFaTBU?=
+ =?utf-8?B?OVQ3UVc3emN2aXBjbUNldHl2ejIzQkZUejBHTk9rMG5ReTk2WjV4UFZvL09s?=
+ =?utf-8?B?WjVrSGsyUWQvenBNOUwxQXhuU3YySS8zalRRNGNJbGZxdEY5R3BILzl1NllB?=
+ =?utf-8?B?MVhnSytDVXJJWUVUM1BJUXhUQzZDa2pOZkxxSSswR2tpYzVtRTY5QkRsbUVX?=
+ =?utf-8?B?WHBERkx2Zk5HU3pMc2JzWUpVakptQzFrUVpPYmpQTHJKUm1uQlNsQjlqdnNj?=
+ =?utf-8?B?Vk03eWNEeWJmbjFhc1FjVkZ1MlE0ZjFIQ09UcGlzTk50L1IxVnBzSDlUejFM?=
+ =?utf-8?B?WVFjZDQwTUFGWGlucm9TYndpNURnVGVxcHg1UHhPSUJMbWxhSUJZQW9jM1dU?=
+ =?utf-8?B?cmxCdm85NmQrSTBHc1pPS3l0VklWYXdlbldnbCtKOFl3bnlXMlE2NEFGamlR?=
+ =?utf-8?B?ZWIyM0hJYlhpdXdia3R3alRoTWpUN3E4aHVDSCtvNE1VMVM0KzZjQmE0bEVu?=
+ =?utf-8?B?Y3MzcVZmaWJWR2E0a0Y3OGtIQmJRUFc2RFh6RmNxVTB6bm83M3QwMUtsc2NO?=
+ =?utf-8?B?YkFoZ01DTWhYZWorV0FiQ3VpZ3VkRXRlSHhmNE9FNndzUEllREhReFVKM3dS?=
+ =?utf-8?B?S3Q2T2ZYVWlOa3ZLQ3NZekVmbXc2RkNyV2ZIQVVBRFBBdGluUDB1cGNQUTEr?=
+ =?utf-8?B?WDZsMExFV3ZocHlYWDBMeExINkJhVlVjSEN5QzNReHNFNzVsMWpPNFBTNEQ0?=
+ =?utf-8?B?ZzduN1plbzFtTm1Ncm5JbnZNUkpwb01jYTNoL2cvUUN6ZlBmYWVoZTBWS1gz?=
+ =?utf-8?B?ZElXelNvZjRGUEQvNUpkNytDQnpyS2duQzA4MmJUZXdFUU1mclgvbDk0VEV3?=
+ =?utf-8?B?TlhGZHUwTTFIU0Q0ekhXeEN3RVlmeHRFVWpsYkVMQTZORFZDVDIwandJU2ZX?=
+ =?utf-8?B?SlEwQmtCajExWGxscHh0WWlwOTR5eHloMC9lWFUrNDJrTkh1MGh2S0RlcXVw?=
+ =?utf-8?B?RWdHN2lnS05XbVNZcWFjOEN2VUpZR1pIMkJOZnhrVUhieWhZYlhHNFlpRDFR?=
+ =?utf-8?B?THRtSlFCcUZORnZTZVNRQVo5a3d5WS9SZ2s4VFUvWUlCY2o2MkF2K3NTSEVj?=
+ =?utf-8?Q?/cDQ=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16894ac3-9985-4889-e13a-08d9bdc709d8
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2021 23:28:01.4423
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ax/OJ08AZALj2IHd774FgQp1WEUTVa4YFbpoHYNNoRLiHeKPzk0Rijm+++xZYSNr
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB5538
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 8, 2021 at 11:15 AM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> Add device tree node for the first PCIe host found on the Qualcomm
-> SM8450 platform.
->
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8450.dtsi | 101 +++++++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> index a047d8a22897..09087a34a007 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> @@ -627,6 +627,84 @@ i2c14: i2c@a98000 {
->                                 #size-cells = <0>;
->                                 status = "disabled";
->                         };
-> +               ];
-> +
-> +               pcie0: pci@1c00000 {
-> +                       compatible = "qcom,pcie-sm8450";
-> +                       reg = <0 0x01c00000 0 0x3000>,
-> +                             <0 0x60000000 0 0xf1d>,
-> +                             <0 0x60000f20 0 0xa8>,
-> +                             <0 0x60001000 0 0x1000>,
-> +                             <0 0x60100000 0 0x100000>;
-> +                       reg-names = "parf", "dbi", "elbi", "atu", "config";
-> +                       device_type = "pci";
-> +                       linux,pci-domain = <0>;
-> +                       bus-range = <0x00 0xff>;
-> +                       num-lanes = <1>;
-> +
-> +                       #address-cells = <3>;
-> +                       #size-cells = <2>;
-> +
-> +                       ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
-> +                                <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
-> +
-> +                       interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "msi";
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-map-mask = <0 0 0 0x7>;
-> +                       interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> +                                       <0 0 0 2 &intc 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> +                                       <0 0 0 3 &intc 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-> +                                       <0 0 0 4 &intc 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> +
-> +                       clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
-> +                                <&gcc GCC_PCIE_0_PIPE_CLK_SRC>,
-> +                                <&pcie0_lane>,
-> +                                <&rpmhcc RPMH_CXO_CLK>,
-> +                                <&gcc GCC_PCIE_0_AUX_CLK>,
-> +                                <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-> +                                <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-> +                                <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-> +                                <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
-> +                                <&gcc GCC_DDRSS_PCIE_SF_TBU_CLK>,
-> +                                <&gcc GCC_AGGRE_NOC_PCIE_0_AXI_CLK>,
-> +                                <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>;
-> +                       clock-names = "pipe",
-> +                                     "pipe_mux",
-> +                                     "phy_pipe",
-> +                                     "ref",
-> +                                     "aux",
-> +                                     "cfg",
-> +                                     "bus_master",
-> +                                     "bus_slave",
-> +                                     "slave_q2a",
-> +                                     "ddrss_sf_tbu",
-> +                                     "aggre0",
-> +                                     "aggre1";
-> +
-> +                       iommus = <&apps_smmu 0x1c00 0x7f>;
-> +                       iommu-map = <0x0   &apps_smmu 0x1c00 0x1>,
-> +                                   <0x100 &apps_smmu 0x1c01 0x1>;
-> +
-> +                       resets = <&gcc GCC_PCIE_0_BCR>;
-> +                       reset-names = "pci";
-> +
-> +                       power-domains = <&gcc PCIE_0_GDSC>;
-> +                       power-domain-names = "gdsc";
-> +
-> +                       phys = <&pcie0_lane>;
-> +                       phy-names = "pciephy";
-> +
-> +                       perst-gpio = <&tlmm 94 GPIO_ACTIVE_LOW>;
-> +                       enable-gpio = <&tlmm 96 GPIO_ACTIVE_HIGH>;
+On Sun, Dec 12, 2021 at 08:44:46AM +0200, Mika Penttilä wrote:
 
--gpios is the preferred form.
+> > /*
+> >   * The MSIX mappable capability informs that MSIX data of a BAR can be mmapped
+> >   * which allows direct access to non-MSIX registers which happened to be within
+> >   * the same system page.
+> >   *
+> >   * Even though the userspace gets direct access to the MSIX data, the existing
+> >   * VFIO_DEVICE_SET_IRQS interface must still be used for MSIX configuration.
+> >   */
+> > #define VFIO_REGION_INFO_CAP_MSIX_MAPPABLE      3
+> > 
+> > IIRC this was introduced for PPC when a device has MSI-X in the same BAR as
+> > other MMIO registers. Trapping MSI-X leads to performance downgrade on
+> > accesses to adjacent registers. MSI-X can be mapped by userspace because
+> > PPC already uses a hypercall mechanism for interrupt. Though unclear about
+> > the detail it sounds a similar usage as proposed here.
+> > 
+> > Thanks
+> > Kevin
+>
+> I see  VFIO_REGION_INFO_CAP_MSIX_MAPPABLE is always set so if msix table is
+> in its own bar, qemu never traps/emulates the access. 
 
-And 'enable-gpios' is not documented.
+It is some backwards compat, the kernel always sets it to indicate a
+new kernel, that doesn't mean qemu doesn't trap.
 
-Rob
+As the comment says, ""VFIO_DEVICE_SET_IRQS interface must still be
+used for MSIX configuration"" so there is no way qemu can meet that
+without either trapping the MSI page or using a special hypercall
+(ppc)
+
+Jason
