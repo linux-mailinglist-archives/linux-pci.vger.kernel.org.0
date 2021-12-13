@@ -2,192 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D135471F10
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 01:50:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B712472043
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 06:14:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230452AbhLMAu2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 Dec 2021 19:50:28 -0500
-Received: from mga18.intel.com ([134.134.136.126]:31491 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229540AbhLMAu0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 12 Dec 2021 19:50:26 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10195"; a="225499505"
-X-IronPort-AV: E=Sophos;i="5.88,201,1635231600"; 
-   d="scan'208";a="225499505"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2021 16:50:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,201,1635231600"; 
-   d="scan'208";a="517543569"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
-  by orsmga008.jf.intel.com with ESMTP; 12 Dec 2021 16:50:18 -0800
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        id S230155AbhLMFOe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Dec 2021 00:14:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230008AbhLMFOd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Dec 2021 00:14:33 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928B2C06173F;
+        Sun, 12 Dec 2021 21:14:33 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 500C7CE0DC7;
+        Mon, 13 Dec 2021 05:14:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85F64C00446;
+        Mon, 13 Dec 2021 05:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639372469;
+        bh=m+MbzkCsPCJNXsBFySexaUdkbI+fIAKWZPiq+A6GBck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pcDQjwCHOz6BSONU5joUW6e60Mu1jAbxQzts0EfFaFm5JmSfwPYHyrXe+as4aLjeM
+         eFJH1OLum6J0MwbxxotL5Ynx/Wl9FSzFLuVcZ/MiaFGyolmZeXYP0aRrzCZjW5ZdJq
+         Yt5fu6OtnruTRf7YSvoSO+XnwngnSyHnpkVidlaQ4C6iMZ9tlspBmToBaYm7+u5kTp
+         56ZJujbc1BVH7oROt6l/x3asZi1J9mKWjGd5xEZzFFEQ0GglJh+ze5/cFl0ltz5OnT
+         HkJi0GnpAKgWw3QDQFyUKxAUiibgYJ1iBPJwPobSVKG5xk0d9X3x2zWgArHsKu4K1+
+         TCjLAS6Yk203w==
+Date:   Mon, 13 Dec 2021 10:44:25 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
         Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
         Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Cedric Le Goater <clg@kaod.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dmaengine@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
         Stuart Yoder <stuyoder@gmail.com>,
         Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 04/18] driver core: platform: Add driver dma ownership
- management
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@infradead.org>
-References: <20211206015903.88687-1-baolu.lu@linux.intel.com>
- <20211206015903.88687-5-baolu.lu@linux.intel.com>
- <Ya4f662Af+8kE2F/@infradead.org> <20211206150647.GE4670@nvidia.com>
- <56a63776-48ca-0d6e-c25c-016dc016e0d5@linux.intel.com>
- <20211207131627.GA6385@nvidia.com>
- <c170d215-6aef-ff21-8733-1bae4478e39c@linux.intel.com>
- <b42ffaee-bb96-6db4-8540-b399214f6881@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <5d537286-2cb3-cf91-c0de-019355110aa1@linux.intel.com>
-Date:   Mon, 13 Dec 2021 08:50:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>
+Subject: Re: [patch V3 29/35] dmaengine: mv_xor_v2: Get rid of msi_desc abuse
+Message-ID: <YbbWsUO6o5ccU5ai@matsya>
+References: <20211210221642.869015045@linutronix.de>
+ <20211210221814.970099984@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <b42ffaee-bb96-6db4-8540-b399214f6881@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211210221814.970099984@linutronix.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/10/21 9:23 AM, Lu Baolu wrote:
-> Hi Greg, Jason and Christoph,
+On 10-12-21, 23:19, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
 > 
-> On 12/9/21 9:20 AM, Lu Baolu wrote:
->> On 12/7/21 9:16 PM, Jason Gunthorpe wrote:
->>> On Tue, Dec 07, 2021 at 10:57:25AM +0800, Lu Baolu wrote:
->>>> On 12/6/21 11:06 PM, Jason Gunthorpe wrote:
->>>>> On Mon, Dec 06, 2021 at 06:36:27AM -0800, Christoph Hellwig wrote:
->>>>>> I really hate the amount of boilerplate code that having this in each
->>>>>> bus type causes.
->>>>> +1
->>>>>
->>>>> I liked the first version of this series better with the code near
->>>>> really_probe().
->>>>>
->>>>> Can we go back to that with some device_configure_dma() wrapper
->>>>> condtionally called by really_probe as we discussed?
-> 
-> [...]
-> 
->>
->> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
->> index 68ea1f949daa..68ca5a579eb1 100644
->> --- a/drivers/base/dd.c
->> +++ b/drivers/base/dd.c
->> @@ -538,6 +538,32 @@ static int call_driver_probe(struct device *dev, 
->> struct device_driver *drv)
->>          return ret;
->>   }
->>
->> +static int device_dma_configure(struct device *dev, struct 
->> device_driver *drv)
->> +{
->> +       int ret;
->> +
->> +       if (!dev->bus->dma_configure)
->> +               return 0;
->> +
->> +       ret = dev->bus->dma_configure(dev);
->> +       if (ret)
->> +               return ret;
->> +
->> +       if (!drv->suppress_auto_claim_dma_owner)
->> +               ret = iommu_device_set_dma_owner(dev, 
->> DMA_OWNER_DMA_API, NULL);
->> +
->> +       return ret;
->> +}
->> +
->> +static void device_dma_cleanup(struct device *dev, struct 
->> device_driver *drv)
->> +{
->> +       if (!dev->bus->dma_configure)
->> +               return;
->> +
->> +       if (!drv->suppress_auto_claim_dma_owner)
->> +               iommu_device_release_dma_owner(dev, DMA_OWNER_DMA_API);
->> +}
->> +
->>   static int really_probe(struct device *dev, struct device_driver *drv)
->>   {
->>          bool test_remove = 
->> IS_ENABLED(CONFIG_DEBUG_TEST_DRIVER_REMOVE) &&
->> @@ -574,11 +600,8 @@ static int really_probe(struct device *dev, 
->> struct device_driver *drv)
->>          if (ret)
->>                  goto pinctrl_bind_failed;
->>
->> -       if (dev->bus->dma_configure) {
->> -               ret = dev->bus->dma_configure(dev);
->> -               if (ret)
->> -                       goto probe_failed;
->> -       }
->> +       if (device_dma_configure(dev, drv))
->> +               goto pinctrl_bind_failed;
->>
->>          ret = driver_sysfs_add(dev);
->>          if (ret) {
->> @@ -660,6 +683,8 @@ static int really_probe(struct device *dev, struct 
->> device_driver *drv)
->>          if (dev->bus)
->>                  blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
->>
->> BUS_NOTIFY_DRIVER_NOT_BOUND, dev);
->> +
->> +       device_dma_cleanup(dev, drv);
->>   pinctrl_bind_failed:
->>          device_links_no_driver(dev);
->>          devres_release_all(dev);
->> @@ -1204,6 +1229,7 @@ static void __device_release_driver(struct 
->> device *dev, struct device *parent)
->>                  else if (drv->remove)
->>                          drv->remove(dev);
->>
->> +               device_dma_cleanup(dev, drv);
->>                  device_links_driver_cleanup(dev);
->>
->>                  devres_release_all(dev);
->> diff --git a/include/linux/device/driver.h 
->> b/include/linux/device/driver.h
->> index a498ebcf4993..374a3c2cc10d 100644
->> --- a/include/linux/device/driver.h
->> +++ b/include/linux/device/driver.h
->> @@ -100,6 +100,7 @@ struct device_driver {
->>          const char              *mod_name;      /* used for built-in 
->> modules */
->>
->>          bool suppress_bind_attrs;       /* disables bind/unbind via 
->> sysfs */
->> +       bool suppress_auto_claim_dma_owner;
->>          enum probe_type probe_type;
->>
->>          const struct of_device_id       *of_match_table;
-> 
-> Does this work for you? Can I work towards this in the next version?
+> Storing a pointer to the MSI descriptor just to keep track of the Linux
+> interrupt number is daft. Use msi_get_virq() instead.
 
-A kindly ping ... Is this heading the right direction? I need your
-advice to move ahead. :-)
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
-Best regards,
-baolu
+-- 
+~Vinod
