@@ -2,209 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEC7D4733F9
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 19:28:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51911473408
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 19:31:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231959AbhLMS2y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Dec 2021 13:28:54 -0500
-Received: from mga03.intel.com ([134.134.136.65]:61668 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241855AbhLMS2x (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Dec 2021 13:28:53 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="238742969"
-X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
-   d="scan'208";a="238742969"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 10:28:52 -0800
-X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
-   d="scan'208";a="463477445"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 10:28:49 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mwq3E-005ink-4L;
-        Mon, 13 Dec 2021 20:27:52 +0200
-Date:   Mon, 13 Dec 2021 20:27:51 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, srinivas.pandruvada@intel.com,
-        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH V3 3/6] platform/x86/intel: Move intel_pmt from MFD to
- Auxiliary Bus
-Message-ID: <YbeQpyIijHbPHktN@smile.fi.intel.com>
-References: <20211213175921.1897860-1-david.e.box@linux.intel.com>
- <20211213175921.1897860-4-david.e.box@linux.intel.com>
+        id S236094AbhLMSbY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Dec 2021 13:31:24 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59894 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230114AbhLMSbX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Dec 2021 13:31:23 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1BDITweD032784;
+        Mon, 13 Dec 2021 12:29:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1639420199;
+        bh=CIwJXsDVc6MpWMxloZbtRdlpLw1Ztan/9G2UzPwMY0E=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=aQr+rT7AbNmri1BYm4glcZYUB4D0/LtbXNn0eGzLe1Xq4LgTziMH/fZw9NMlUSxOJ
+         eUvgRnz/JUOtWmI/LUlydZmqlDtGvShVqc/335BSewifnzHFovUoMb7LUYizCR9g/k
+         /rYDbql0vQTQMlM2Nnxl+1kL4PPvB9mCQmf5UIQI=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1BDITwlR038320
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Dec 2021 12:29:58 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 13
+ Dec 2021 12:29:58 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Mon, 13 Dec 2021 12:29:58 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1BDITwZX089938;
+        Mon, 13 Dec 2021 12:29:58 -0600
+Date:   Mon, 13 Dec 2021 12:29:58 -0600
+From:   Nishanth Menon <nm@ti.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, <linux-pci@vger.kernel.org>,
+        Cedric Le Goater <clg@kaod.org>,
+        Juergen Gross <jgross@suse.com>,
+        <xen-devel@lists.xenproject.org>, Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        <linuxppc-dev@lists.ozlabs.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        <iommu@lists.linux-foundation.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>
+Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
+Message-ID: <20211213182958.ytj4m6gsg35u77cv@detonator>
+References: <20211210221642.869015045@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20211213175921.1897860-4-david.e.box@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20211210221642.869015045@linutronix.de>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 09:59:18AM -0800, David E. Box wrote:
-> Intel Platform Monitoring Technology (PMT) support is indicated by presence
-> of an Intel defined PCIe Designated Vendor Specific Extended Capabilities
-> (DVSEC) structure with a PMT specific ID. The current MFD implementation
-> creates child devices for each PMT feature, currently telemetry, watcher,
-> and crashlog. However DVSEC structures may also be used by Intel to
-> indicate support for other features. The Out Of Band Management Services
-> Module (OOBMSM) uses DVSEC to enumerate several features, including PMT.
-> In order to support them it is necessary to modify the intel_pmt driver to
-> handle the creation of the child devices more generically. To that end,
-> modify the driver to create child devices for any VSEC/DVSEC features on
-> supported devices (indicated by PCI ID).  Additionally, move the
-> implementation from MFD to the Auxiliary bus.  VSEC/DVSEC features are
-> really multifunctional PCI devices, not platform devices as MFD was
-> designed for. Auxiliary bus gives more flexibility by allowing the
-> definition of custom structures that can be shared between associated
-> auxiliary devices and the parent device. Also, rename the driver from
-> intel_pmt to intel_vsec to better reflect the purpose.
+On 23:18-20211210, Thomas Gleixner wrote:
+[...]
+
 > 
-> This series also removes the current runtime pm support which was not
-> complete to begin with. None of the current devices require runtime pm.
-> However the support will be replaced when a device is added that requires
-> it.
+> It's also available from git:
+> 
+>      git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v3-part-2
 
-...
+[...]
 
-> +static bool intel_vsec_walk_dvsec(struct pci_dev *pdev, unsigned long quirks)
-> +{
-> +	bool have_devices = false;
-> +	int pos = 0;
-> +
-> +	do {
-> +		struct intel_vsec_header header;
-> +		u32 table, hdr;
-> +		u16 vid;
-> +		int ret;
-> +
-> +		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-> +		if (!pos)
-> +			break;
-> +
-> +		pci_read_config_dword(pdev, pos + PCI_DVSEC_HEADER1, &hdr);
-> +		vid = PCI_DVSEC_HEADER1_VID(hdr);
-> +		if (vid != PCI_VENDOR_ID_INTEL)
-> +			continue;
-> +
-> +		/* Support only revision 1 */
-> +		header.rev = PCI_DVSEC_HEADER1_REV(hdr);
-> +		if (header.rev != 1) {
-> +			dev_info(&pdev->dev, "Unsupported DVSEC revision %d\n", header.rev);
-> +			continue;
-> +		}
-> +
-> +		header.length = PCI_DVSEC_HEADER1_LEN(hdr);
-> +
-> +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES, &header.num_entries);
-> +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE, &header.entry_size);
-> +		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE, &table);
-> +
-> +		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-> +		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-> +
-> +		pci_read_config_dword(pdev, pos + PCI_DVSEC_HEADER2, &hdr);
-> +		header.id = PCI_DVSEC_HEADER2_ID(hdr);
-> +
-> +		ret = intel_vsec_add_dev(pdev, &header, quirks);
-> +		if (ret)
-> +			continue;
-> +
-> +		have_devices = true;
-> +	} while (true);
-> +
-> +	return have_devices;
-> +}
-> +
-> +static bool intel_vsec_walk_vsec(struct pci_dev *pdev, unsigned long quirks)
-> +{
-> +	bool have_devices = false;
-> +	int pos = 0;
-> +
-> +	do {
-> +		struct intel_vsec_header header;
-> +		u32 table, hdr;
-> +		int ret;
-> +
-> +		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_VNDR);
-> +		if (!pos)
-> +			break;
-> +
-> +		pci_read_config_dword(pdev, pos + PCI_VNDR_HEADER, &hdr);
-> +
-> +		/* Support only revision 1 */
-> +		header.rev = PCI_VNDR_HEADER_REV(hdr);
-> +		if (header.rev != 1) {
-> +			dev_info(&pdev->dev, "Unsupported VSEC revision %d\n", header.rev);
-> +			continue;
-> +		}
-> +
-> +		header.id = PCI_VNDR_HEADER_ID(hdr);
-> +		header.length = PCI_VNDR_HEADER_LEN(hdr);
-> +
-> +		/* entry, size, and table offset are the same as DVSEC */
-> +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES, &header.num_entries);
-> +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE, &header.entry_size);
-> +		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE, &table);
-> +
-> +		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-> +		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-> +
-> +		ret = intel_vsec_add_dev(pdev, &header, quirks);
-> +		if (ret)
-> +			continue;
-> +
-> +		have_devices = true;
-> +	} while (true);
-> +
-> +	return have_devices;
-> +}
+> ---
+>  drivers/dma/ti/k3-udma-private.c                    |    6 
+>  drivers/dma/ti/k3-udma.c                            |   14 -
+>  drivers/irqchip/irq-ti-sci-inta.c                   |    2 
+>  drivers/soc/ti/k3-ringacc.c                         |    6 
+>  drivers/soc/ti/ti_sci_inta_msi.c                    |   22 --
+>  include/linux/soc/ti/ti_sci_inta_msi.h              |    1 
 
+Also while testing on TI K3 platforms, I noticed:
 
-I'm wondering if it makes sense to refactor each of the above to something like
+msi_device_data_release/msi_device_destroy_sysfs in am64xx-evm / j7200
+[1] https://gist.github.com/nmenon/36899c7819681026cfe1ef185fb95f33#file-am64xx-evm-txt-L1018
+[2] https://gist.github.com/nmenon/36899c7819681026cfe1ef185fb95f33#file-j7200-evm-txt-L1076
 
-int intel_vsec_extract_vsec(...)
-{
-	...
-}
+Which is not present in vanilla v5.16-rc4
 
-static bool intel_vsec_walk_dvsec(struct pci_dev *pdev, unsigned long quirks)
-{
-	bool have_devices = false;
-	int pos;
+v5.16-rc4:
+https://gist.github.com/nmenon/1aee3f0a7da47d5e9dcb7336b32a70cb
 
-	while ((pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC))) {
-		if (intel_vsec_extract_vsec())
-			continue;
+msi-v3-part-2:
+https://gist.github.com/nmenon/36899c7819681026cfe1ef185fb95f33
 
-		have_devices = true;
-	}
+(.config https://gist.github.com/nmenon/ec6f95303828abf16a64022d8e3a269f)
 
-	return have_devices;
-}
-
-Either way, it may be worth to convert infinite loops to ones with the clear
-exit condition.
-
-...
-
-> +	/*
-> +	 * Driver cleanup handled by intel_vsec_remove_aux() which is added
-> +	 * to the pci device as a devm action
-
-PCI
-
-Grammatical period at the end.
-
-> +	 */
+Vs:
+next-20211208:
+https://gist.github.com/nmenon/f5ca3558bd5c1fbe62dc5ceb420b536e
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D)/Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
