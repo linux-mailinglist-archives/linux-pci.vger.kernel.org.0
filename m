@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A0AD473364
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 18:59:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7476847335A
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 18:59:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241391AbhLMR7c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Dec 2021 12:59:32 -0500
-Received: from mga18.intel.com ([134.134.136.126]:56114 "EHLO mga18.intel.com"
+        id S241419AbhLMR72 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Dec 2021 12:59:28 -0500
+Received: from mga02.intel.com ([134.134.136.20]:21829 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241455AbhLMR7a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 13 Dec 2021 12:59:30 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="225648983"
+        id S237144AbhLMR70 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Dec 2021 12:59:26 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="226067272"
 X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
-   d="scan'208";a="225648983"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 09:59:28 -0800
+   d="scan'208";a="226067272"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 09:59:25 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
-   d="scan'208";a="505000139"
+   d="scan'208";a="613915237"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 13 Dec 2021 09:59:24 -0800
+  by orsmga004.jf.intel.com with ESMTP; 13 Dec 2021 09:59:25 -0800
 Received: from debox1-desk4.intel.com (unknown [10.212.243.203])
-        by linux.intel.com (Postfix) with ESMTP id 93861580A85;
+        by linux.intel.com (Postfix) with ESMTP id D7F35580C34;
         Mon, 13 Dec 2021 09:59:24 -0800 (PST)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     lee.jones@linaro.org, hdegoede@redhat.com,
@@ -30,63 +30,52 @@ To:     lee.jones@linaro.org, hdegoede@redhat.com,
         gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
         srinivas.pandruvada@intel.com, mgross@linux.intel.com
 Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH V3 0/6] Auxiliary bus driver support for Intel PCIe VSEC/DVSEC
-Date:   Mon, 13 Dec 2021 09:59:15 -0800
-Message-Id: <20211213175921.1897860-1-david.e.box@linux.intel.com>
+        linux-pci@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH V3 1/6] PCI: Add #defines for accessing PCIe DVSEC fields
+Date:   Mon, 13 Dec 2021 09:59:16 -0800
+Message-Id: <20211213175921.1897860-2-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211213175921.1897860-1-david.e.box@linux.intel.com>
+References: <20211213175921.1897860-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series makes changes to the current intel_pmt driver to give it
-broader support for Intel defined PCIe VSEC and DVSEC features. It
-moves the implementation from MFD to the auxiliary bus and creates a
-generic framework for enumerating the extended capabilities. It also
-adds support for a new VSEC, Software Defined Silicon (SDSi).
+Add #defines for accessing Vendor ID, Revision, Length, and ID offsets
+in the Designated Vendor Specific Extended Capability (DVSEC). Defined
+in PCIe r5.0, sec 7.9.6.
 
-David E. Box (6):
-  PCI: Add #defines for accessing PCIe DVSEC fields
-  driver core: auxiliary bus: Add driver data helpers
-  platform/x86/intel: Move intel_pmt from MFD to Auxiliary Bus
-  platform/x86: Add Intel Software Defined Silicon driver
-  tools arch x86: Add Intel SDSi provisiong tool
-  selftests: sdsi: test sysfs setup
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+V3
+  - No changes
+V2
+  - No changes
 
- .../ABI/testing/sysfs-driver-intel_sdsi       |  77 +++
- MAINTAINERS                                   |  19 +-
- drivers/mfd/Kconfig                           |  10 -
- drivers/mfd/Makefile                          |   1 -
- drivers/mfd/intel_pmt.c                       | 261 --------
- drivers/platform/x86/intel/Kconfig            |  23 +
- drivers/platform/x86/intel/Makefile           |   4 +
- drivers/platform/x86/intel/pmt/Kconfig        |   4 +-
- drivers/platform/x86/intel/pmt/class.c        |  21 +-
- drivers/platform/x86/intel/pmt/class.h        |   5 +-
- drivers/platform/x86/intel/pmt/crashlog.c     |  47 +-
- drivers/platform/x86/intel/pmt/telemetry.c    |  46 +-
- drivers/platform/x86/intel/sdsi.c             | 571 ++++++++++++++++++
- drivers/platform/x86/intel/vsec.c             | 422 +++++++++++++
- drivers/platform/x86/intel/vsec.h             |  43 ++
- include/linux/auxiliary_bus.h                 |  10 +
- include/uapi/linux/pci_regs.h                 |   4 +
- tools/arch/x86/intel_sdsi/Makefile            |   9 +
- tools/arch/x86/intel_sdsi/sdsi.c              | 540 +++++++++++++++++
- tools/testing/selftests/drivers/sdsi/sdsi.sh  |  18 +
- .../selftests/drivers/sdsi/sdsi_test.py       | 226 +++++++
- 21 files changed, 2026 insertions(+), 335 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
- delete mode 100644 drivers/mfd/intel_pmt.c
- create mode 100644 drivers/platform/x86/intel/sdsi.c
- create mode 100644 drivers/platform/x86/intel/vsec.c
- create mode 100644 drivers/platform/x86/intel/vsec.h
- create mode 100644 tools/arch/x86/intel_sdsi/Makefile
- create mode 100644 tools/arch/x86/intel_sdsi/sdsi.c
- create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
- create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
+ include/uapi/linux/pci_regs.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index ff6ccbc6efe9..318f3f1f9e92 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -1086,7 +1086,11 @@
+ 
+ /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+ #define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-Specific Header1 */
++#define  PCI_DVSEC_HEADER1_VID(x)	((x) & 0xffff)
++#define  PCI_DVSEC_HEADER1_REV(x)	(((x) >> 16) & 0xf)
++#define  PCI_DVSEC_HEADER1_LEN(x)	(((x) >> 20) & 0xfff)
+ #define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-Specific Header2 */
++#define  PCI_DVSEC_HEADER2_ID(x)		((x) & 0xffff)
+ 
+ /* Data Link Feature */
+ #define PCI_DLF_CAP		0x04	/* Capabilities Register */
 -- 
 2.25.1
 
