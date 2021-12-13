@@ -2,103 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAF4F47334E
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 18:58:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A0AD473364
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 18:59:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241090AbhLMR6l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Dec 2021 12:58:41 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56948 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240983AbhLMR6k (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Dec 2021 12:58:40 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1BDHvg60044666;
-        Mon, 13 Dec 2021 11:57:43 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1639418263;
-        bh=pGs+7nCpdx7S5XWFe/UO8XALjMbjY1+VfXkPmDrylYE=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=TereNqQsHrOJN5x2htMCys19fN9lF6WIIbjFUj5DyrKhTGgPXKwfNA/gNxTT6+77z
-         JRw2kQu/xJl8fmFScS+cwwxZ07+XG8xXUbwh8Kk8HR+9ArnUZz+3a5U0jiM3or8k0i
-         mUKft05BDVfyOiq0ie7rKisbaUamlftbBRwigjBY=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1BDHvgPV120889
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Dec 2021 11:57:42 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 13
- Dec 2021 11:57:42 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Mon, 13 Dec 2021 11:57:42 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1BDHvg6L017557;
-        Mon, 13 Dec 2021 11:57:42 -0600
-Date:   Mon, 13 Dec 2021 11:57:41 -0600
-From:   Nishanth Menon <nm@ti.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, <linux-pci@vger.kernel.org>,
-        Cedric Le Goater <clg@kaod.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        <xen-devel@lists.xenproject.org>, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <linuxppc-dev@lists.ozlabs.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        <iommu@lists.linux-foundation.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [patch V3 34/35] soc: ti: ti_sci_inta_msi: Get rid of
- ti_sci_inta_msi_get_virq()
-Message-ID: <20211213175741.yxabloph4dr37dmt@abroad>
-References: <20211210221642.869015045@linutronix.de>
- <20211210221815.269468319@linutronix.de>
+        id S241391AbhLMR7c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Dec 2021 12:59:32 -0500
+Received: from mga18.intel.com ([134.134.136.126]:56114 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241455AbhLMR7a (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 13 Dec 2021 12:59:30 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="225648983"
+X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
+   d="scan'208";a="225648983"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 09:59:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
+   d="scan'208";a="505000139"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 13 Dec 2021 09:59:24 -0800
+Received: from debox1-desk4.intel.com (unknown [10.212.243.203])
+        by linux.intel.com (Postfix) with ESMTP id 93861580A85;
+        Mon, 13 Dec 2021 09:59:24 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, hdegoede@redhat.com,
+        david.e.box@linux.intel.com, bhelgaas@google.com,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        srinivas.pandruvada@intel.com, mgross@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V3 0/6] Auxiliary bus driver support for Intel PCIe VSEC/DVSEC
+Date:   Mon, 13 Dec 2021 09:59:15 -0800
+Message-Id: <20211213175921.1897860-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20211210221815.269468319@linutronix.de>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23:19-20211210, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Just use the core function msi_get_virq().
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: dmaengine@vger.kernel.org
+This series makes changes to the current intel_pmt driver to give it
+broader support for Intel defined PCIe VSEC and DVSEC features. It
+moves the implementation from MFD to the auxiliary bus and creates a
+generic framework for enumerating the extended capabilities. It also
+adds support for a new VSEC, Software Defined Silicon (SDSi).
 
-Acked-by: Nishanth Menon <nm@ti.com>
+David E. Box (6):
+  PCI: Add #defines for accessing PCIe DVSEC fields
+  driver core: auxiliary bus: Add driver data helpers
+  platform/x86/intel: Move intel_pmt from MFD to Auxiliary Bus
+  platform/x86: Add Intel Software Defined Silicon driver
+  tools arch x86: Add Intel SDSi provisiong tool
+  selftests: sdsi: test sysfs setup
+
+ .../ABI/testing/sysfs-driver-intel_sdsi       |  77 +++
+ MAINTAINERS                                   |  19 +-
+ drivers/mfd/Kconfig                           |  10 -
+ drivers/mfd/Makefile                          |   1 -
+ drivers/mfd/intel_pmt.c                       | 261 --------
+ drivers/platform/x86/intel/Kconfig            |  23 +
+ drivers/platform/x86/intel/Makefile           |   4 +
+ drivers/platform/x86/intel/pmt/Kconfig        |   4 +-
+ drivers/platform/x86/intel/pmt/class.c        |  21 +-
+ drivers/platform/x86/intel/pmt/class.h        |   5 +-
+ drivers/platform/x86/intel/pmt/crashlog.c     |  47 +-
+ drivers/platform/x86/intel/pmt/telemetry.c    |  46 +-
+ drivers/platform/x86/intel/sdsi.c             | 571 ++++++++++++++++++
+ drivers/platform/x86/intel/vsec.c             | 422 +++++++++++++
+ drivers/platform/x86/intel/vsec.h             |  43 ++
+ include/linux/auxiliary_bus.h                 |  10 +
+ include/uapi/linux/pci_regs.h                 |   4 +
+ tools/arch/x86/intel_sdsi/Makefile            |   9 +
+ tools/arch/x86/intel_sdsi/sdsi.c              | 540 +++++++++++++++++
+ tools/testing/selftests/drivers/sdsi/sdsi.sh  |  18 +
+ .../selftests/drivers/sdsi/sdsi_test.py       | 226 +++++++
+ 21 files changed, 2026 insertions(+), 335 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-intel_sdsi
+ delete mode 100644 drivers/mfd/intel_pmt.c
+ create mode 100644 drivers/platform/x86/intel/sdsi.c
+ create mode 100644 drivers/platform/x86/intel/vsec.c
+ create mode 100644 drivers/platform/x86/intel/vsec.h
+ create mode 100644 tools/arch/x86/intel_sdsi/Makefile
+ create mode 100644 tools/arch/x86/intel_sdsi/sdsi.c
+ create mode 100755 tools/testing/selftests/drivers/sdsi/sdsi.sh
+ create mode 100644 tools/testing/selftests/drivers/sdsi/sdsi_test.py
 
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D)/Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+2.25.1
+
