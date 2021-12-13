@@ -2,109 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8410473775
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 23:29:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 484FB47385E
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 00:23:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243575AbhLMW3a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Dec 2021 17:29:30 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:35772 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243417AbhLMW3a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Dec 2021 17:29:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=7iaOSPYC++rVBoYT3QRUQDaMarUdPJ3RFeXKP6p9rM4=; b=b3dBhIgajJAvUk635a5T6J+46S
-        lWGtZao8HbOE8FQzCpvd1HGkyAd8ZKQCD7KmVuvwCjqFnOdp1/6fBQqIqviPbBW3OAlA7rK5mYuJp
-        ISX4VUGcdu+eaAVoI4XiQfUSuYbsqkyzs9pinzLkr8frDEOIvCPGPHWNLRXiDfjEtx6iopkOFseh7
-        3nVLEpOS4Euq+Xe2yxnR8Oqycsa1pui0qvcMZaJQZ7Y60d7xioQ6c13dSL4wCD4OmLA/3MOcr2wjy
-        ErkKSypS9r+JtZqxUMXBuukP7mxIR+F+TYmxzDEHKJktVg54mBubaL0dovEnkeXllV049o5n8uat3
-        N8KqHCbA==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1mwtoY-0042Rf-6n; Mon, 13 Dec 2021 15:28:59 -0700
-To:     Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Cc:     Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>
-References: <20211117215410.3695-1-logang@deltatee.com>
- <20211117215410.3695-12-logang@deltatee.com>
- <e4fda995-6b50-0f74-0af7-4d790ab66ba9@nvidia.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <af6cda4f-9996-0aad-9278-1d41f824a070@deltatee.com>
-Date:   Mon, 13 Dec 2021 15:28:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <e4fda995-6b50-0f74-0af7-4d790ab66ba9@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: mgurtovoy@nvidia.com, ckulkarnilinux@gmail.com, martin.oliveira@eideticom.com, robin.murphy@arm.com, ira.weiny@intel.com, helgaas@kernel.org, jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, christian.koenig@amd.com, jgg@ziepe.ca, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, chaitanyak@nvidia.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.6
-Subject: Re: [PATCH v4 11/23] nvme-pci: convert to using dma_map_sgtable()
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+        id S244174AbhLMXXw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Dec 2021 18:23:52 -0500
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:33436 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237678AbhLMXXv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Dec 2021 18:23:51 -0500
+Received: by mail-ot1-f53.google.com with SMTP id 35-20020a9d08a6000000b00579cd5e605eso19213916otf.0;
+        Mon, 13 Dec 2021 15:23:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=xh0Ia+KIQrUoGbHMEfnzPM6PyEcucK4RBRTve5vYfEs=;
+        b=DEVWe2z5npRYsSvzsAd4yKaa30njfWJFdTOrQ0ZE/UWEs2HqehKEpkruZweU19UgDd
+         u8ROkW4MG3wu8KoI3jfcG15gw+0s2HfRU719Z2iQtFL2WcYR+CP1CCQginJrPaBex6vr
+         L5dQcMvCJ8qSeqs0936NfCndsCLMbNjO8Lz+IB+t5HYgSaG2knhDhuif+FeUTlXpzbWr
+         UmW+e8478fAbTGojOlYzpp1JAFcZG8lFZoyp9v6r5s/r257gSqq5C0Tn3Lz/mvIx0vFt
+         dFCml/kPwzLaelCy+XbBM15mbK8lUi/FTcHBymHK31ejtuNvBQ1/Rs/jaWjlGLUaMSq7
+         ozdg==
+X-Gm-Message-State: AOAM5314E6LZPgUz3d8SVyjgNuE7hh2rtmHQ4HNA4XyC018Mr16dfyyT
+        SjIlhCYqMKsNC7pd7P3/XA==
+X-Google-Smtp-Source: ABdhPJxmXUhSaMbG0tAtg0CKpHFhMXfX10P0J1yjFavh5SniuuDF5GSwM8Aa068A5X6jOnKk51sLEQ==
+X-Received: by 2002:a9d:6d86:: with SMTP id x6mr1270938otp.263.1639437831105;
+        Mon, 13 Dec 2021 15:23:51 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id n6sm2458478otj.78.2021.12.13.15.23.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Dec 2021 15:23:50 -0800 (PST)
+Received: (nullmailer pid 1773611 invoked by uid 1000);
+        Mon, 13 Dec 2021 23:23:49 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+        devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20211213190221.355678-7-f.fainelli@gmail.com>
+References: <20211213190221.355678-1-f.fainelli@gmail.com> <20211213190221.355678-7-f.fainelli@gmail.com>
+Subject: Re: [PATCH 6/6] dt-bindings: pci: Convert iProc PCIe to YAML
+Date:   Mon, 13 Dec 2021 17:23:49 -0600
+Message-Id: <1639437829.333710.1773610.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 2021-12-13 3:21 p.m., Chaitanya Kulkarni wrote:
+On Mon, 13 Dec 2021 11:02:21 -0800, Florian Fainelli wrote:
+> Conver the iProc PCIe controller Device Tree binding to YAML now that
+> all DTS in arch/arm and arch/arm64 have been fixed to be compliant.
 > 
->>   static blk_status_t nvme_pci_setup_sgls(struct nvme_dev *dev,
->> -		struct request *req, struct nvme_rw_command *cmd, int entries)
->> +		struct request *req, struct nvme_rw_command *cmd)
->>   {
->>   	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
->>   	struct dma_pool *pool;
->>   	struct nvme_sgl_desc *sg_list;
->> -	struct scatterlist *sg = iod->sg;
->> +	struct scatterlist *sg = iod->sgt.sgl;
->> +	int entries = iod->sgt.nents;
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../bindings/pci/brcm,iproc-pcie.txt          | 133 -------------
+>  .../bindings/pci/brcm,iproc-pcie.yaml         | 184 ++++++++++++++++++
+>  2 files changed, 184 insertions(+), 133 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
 > 
-> I don't see use of newly added entries variable anywhere in
-> nvme_pci_setup_sgls(), what am I missing ?
 
-'entries' is being moved out from the argument list of
-nvme_pci_setup_sgls(), so there are already uses in the function that
-don't show in the diff.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-> Also, type of entries variable should be unsigned int to match
-> the iod->sgt.nents.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml:97:34: [warning] too few spaces after comma (commas)
 
-Sure, I will fix that in the next version.
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.example.dt.yaml: pcie@18012000: 'brcm' is a dependency of 'brcm,pcie-ob-axi-offset'
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.example.dt.yaml: pcie@18012000: 'pcie-ob' is a dependency of 'brcm,pcie-ob-axi-offset'
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
 
-Thanks for the reviews!
+doc reference errors (make refcheckdocs):
 
-Logan
+See https://patchwork.ozlabs.org/patch/1567483
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
