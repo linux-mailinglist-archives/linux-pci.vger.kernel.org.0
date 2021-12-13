@@ -2,76 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE6184734CA
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 20:18:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3514C473563
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Dec 2021 20:58:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235524AbhLMTSU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Dec 2021 14:18:20 -0500
-Received: from mail-oi1-f182.google.com ([209.85.167.182]:37690 "EHLO
-        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235389AbhLMTST (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Dec 2021 14:18:19 -0500
-Received: by mail-oi1-f182.google.com with SMTP id bj13so24526648oib.4;
-        Mon, 13 Dec 2021 11:18:19 -0800 (PST)
+        id S242622AbhLMT6c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Dec 2021 14:58:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242627AbhLMT6a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Dec 2021 14:58:30 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0407CC06173F
+        for <linux-pci@vger.kernel.org>; Mon, 13 Dec 2021 11:58:30 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id 133so15475307pgc.12
+        for <linux-pci@vger.kernel.org>; Mon, 13 Dec 2021 11:58:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cmtlwaoKecb3OjlTS1+QUQgYom0U7BYI17ypi8x6kXI=;
+        b=GnrjInCguT1hYvRxEFp2FFlcWJk+X6scQ0TguTZJYVs5btZvLe4+YCVtdB1wZBA4ql
+         lPf7oCvJEdd0G+oUe5yfcRXur4cxWEXfxcjyEJoITH2W9As4AMyaF/6oqsEcsNBAgWD/
+         UBIucA6BcyhNjSnCqT/ISHXWrlgFdN+ILDONTu1HlNwv1vdXyPxGBU9vO+59APihDv/L
+         /nwhYbGPq5FxpkV4Q212xLuEDTP4CAF4U5LzT8KXzoBVVzuau0xfXfTisMvTpfIsPlgw
+         +17xll8EDuD0UqXiCAsNXUxf++d7lYacez0U09SFm2L5hSCMz5JIZS3+Y+DKV/2HHGL6
+         Pi6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R/zNofg9s1DxdI5VeTHZvff8L4CaAo1nQD16KrTGNeo=;
-        b=xfWbCDbMkLPxjauAS2rFgE0Jc7ECFyH2cLsNKd6rQon+zEhXpSJZBiHyzGcKAquN1Q
-         U25t7tKKicxlhb31XBa4IvNRxaWVK7bf9EnwXF8RnicLSWl+zqw6N5ByiSm7fm94Cl60
-         ERH4jD6kDySJrPQBISj4gF6sZ4674QIiCNL3m+94JSBDDz4XfjtnWfGhszf3fWtYRRZk
-         1mOzBjnGNmf1URvimDF6VEYRIPJf/Wem10NnkeqaiH9xLfGL77b3r7RxFHhlNyR79yWv
-         NjadocXZUjBNqbLsFQePm9E1gnpowO2sB5wOKVVls1yHR+RgHM1dh9+JaY6yUpISdIb5
-         8usA==
-X-Gm-Message-State: AOAM533wwY1IU7kWhnKL7OijAO5B4HsfY8OIBqKfD2vPnvOqBgvoP9oO
-        sjvQOeOENKrAolBQbHUCFQ==
-X-Google-Smtp-Source: ABdhPJxgR3bMAASLLVa1GRLK96PgQv2XYW3WIaufufWwqdTssF9f7ALWr0YgiR70uVViS38+5kzRVQ==
-X-Received: by 2002:a05:6808:2016:: with SMTP id q22mr475655oiw.81.1639423098988;
-        Mon, 13 Dec 2021 11:18:18 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id v20sm2286544otj.27.2021.12.13.11.18.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 11:18:18 -0800 (PST)
-Received: (nullmailer pid 1410569 invoked by uid 1000);
-        Mon, 13 Dec 2021 19:18:17 -0000
-Date:   Mon, 13 Dec 2021 13:18:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 4/4] dt-bindings: pci: layerscape-pci: define AER/PME
- interrupts
-Message-ID: <YbececugsiFdOh0H@robh.at.kernel.org>
-References: <20211202004636.5276-1-leoyang.li@nxp.com>
- <20211202004636.5276-5-leoyang.li@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cmtlwaoKecb3OjlTS1+QUQgYom0U7BYI17ypi8x6kXI=;
+        b=GUHzQtPz59aVyNf0ab0zKzCKRUk7KKxaXE7QZqoAqy26cPCYf9z9+5X+Cd57P5T12a
+         TLfoe7FY//PUtN9PJxkwa59zWF3TWrPOdinYRNRzeCSDW62XdQ5Ino7CHPLyfRp0ZnQa
+         ErB4IeAfU/LwhuER9Ke/fRnlfD0qFiib3V8NW3eZK8RsB24a55zv9Gfuu7ogeHwc0mzs
+         TKvdGJY8VJapRko3QpZ+tyX3D4iwa2ZinF9Gr7SSGxZjgdou9fB64H0LpQI5v0YXJSGJ
+         tls/sRZYmwJsyQiMsxIdqvGgueyTDIRBioVtj3LaxkGSBNBc0cUR0aenPc1XU835cs6B
+         /8KA==
+X-Gm-Message-State: AOAM530A49YKbPfVsVYhaeqWC3ofe9qwGUWqukq3zLv1FWrXGQ2lDgzB
+        d0ZKwgVAKSuCY7RzWL+6wtTrn8ONCPyJsWtDoRBDnA==
+X-Google-Smtp-Source: ABdhPJyxdpF8yw1Mfppja7TttKdq2KytY/u0mapNh2UceVCKIokfMXDLBzkp5pk5YhzPAhPmfct2uhkiNfnabLvww9s=
+X-Received: by 2002:a63:ef44:: with SMTP id c4mr564190pgk.146.1639425509218;
+ Mon, 13 Dec 2021 11:58:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211202004636.5276-5-leoyang.li@nxp.com>
+References: <20211209094556.2085357-1-jiasheng@iscas.ac.cn> <20211211175450.GA398271@bhelgaas>
+In-Reply-To: <20211211175450.GA398271@bhelgaas>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Mon, 13 Dec 2021 11:57:52 -0800
+Message-ID: <CACK8Z6EntHP0TWfq=JdQ7QS8vCgXoRUJOWqbGYLvD6R2Mq0paw@mail.gmail.com>
+Subject: Re: [PATCH] PCI/AER: potential dereference of null pointer
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jiasheng Jiang <jiasheng@iscas.ac.cn>, ruscur@russell.cc,
+        oohall@gmail.com, bhelgaas@google.com,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 01 Dec 2021 18:46:36 -0600, Li Yang wrote:
-> Different platforms using this controller are using different numbers of
-> interrupt lines and the routing of events to these interrupt lines are
-> different too.  So instead of trying to define names for these interrupt
-> lines, we define the more specific AER/PME events that are routed to
-> these interrupt lines.
-> 
-> For platforms which only has a single interrupt line for miscellaneous
-> controller events, we can keep using the original "intr" name for
-> backward compatibility.
-> 
-> Also change the example from ls1021a to ls2088a for better representation.
-> 
-> Signed-off-by: Li Yang <leoyang.li@nxp.com>
-> ---
->  .../bindings/pci/layerscape-pci.txt           | 40 +++++++++++--------
->  1 file changed, 24 insertions(+), 16 deletions(-)
-> 
+Hello
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Sat, Dec 11, 2021 at 9:54 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Rajat, author of aer_stats:
+> db89ccbe52c7 ("PCI/AER: Define aer_stats structure for AER capable devices"
+> 81aa5206f9a7 ("PCI/AER: Add sysfs attributes to provide AER stats and breakdown"]
+>
+> On Thu, Dec 09, 2021 at 05:45:56PM +0800, Jiasheng Jiang wrote:
+> > he return value of kzalloc() needs to be checked.
+> > To avoid use of null pointer in case of the failure of alloc.
+> >
+> > Fixes: db89ccbe52c7 ("PCI/AER: Define aer_stats structure for AER capable devices")
+> > Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+> > ---
+> >  drivers/pci/pcie/aer.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index ec943cee5ecc..d04303edf468 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -376,6 +376,8 @@ void pci_aer_init(struct pci_dev *dev)
+> >               return;
+> >
+> >       dev->aer_stats = kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
+> > +     if (!dev->aer_stats)
+> > +             return;
+>
+> Did you actually trip over a null pointer dereference, and if so,
+> where was it?
+>
+> I think the intent here was that aer_stats is a non-essential feature,
+> and if we can't allocate space to keep the statistics, we can still
+> use the device without the stats.
+
+Ack. Yes, this was my intention.
+
+Practically speaking though, if a system cannot allocate space for
+aer_stats (608 bytes), I would think it is under an extreme memory
+pressure so not really sure if will be able to really do anything with
+the PCI device (probe the driver which may want to allocate more
+memory etc). But that isn't anything that we can help with.
+
+The current patch AFAICS looks like a no-op to me.
+
+Thanks,
+
+Rajat
+
+>
+> I *think* all the users of dev->aer_stats check for NULL before
+> dereferencing it, but if you found a case that doesn't do that, we
+> should definitely fix it.
+>
+> In a few cases (aer_stats_dev_attr, aer_stats_rootport_attr), the
+> check isn't obvious -- it happens in aer_stats_attrs_are_visible().
+> If aer_stats_attrs_are_visible() finds that aer_stats is NULL, those
+> sysfs attributes should not be visible, and the corresponding *_show()
+> functions should never be called.
+>
+> >       /*
+> >        * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
+> > --
+> > 2.25.1
+> >
