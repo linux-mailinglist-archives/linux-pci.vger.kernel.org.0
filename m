@@ -2,112 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BDBF474DD1
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 23:16:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13630474E03
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 23:43:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233216AbhLNWQr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Dec 2021 17:16:47 -0500
-Received: from mail-oi1-f169.google.com ([209.85.167.169]:34589 "EHLO
-        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231132AbhLNWQr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 17:16:47 -0500
-Received: by mail-oi1-f169.google.com with SMTP id t19so29140811oij.1;
-        Tue, 14 Dec 2021 14:16:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/P7WdlopaK3BJckMeyOdCZ27ARBVlWa5L1sm5URTLic=;
-        b=77V5S+OyvnEEsSaVuIftdzxbF8nj0A5jnUX0ZJ/3QsHSSmd4RmQSsb5+LtL7mEEiJg
-         Sj4tqNH0zmBpEOGl+qMZQW9YMVR3UfM81MlzgLacKmmlMTz9vIcXrZcwaj8HxehxilL1
-         TxbPaGchQ01FVLJmxdz1ERkrCDOmVUp/i56v+pMZOt1gTZtW47PLZTJ5yg5pusoTCYyN
-         P+NXU4Qyf5/pDNuxyUssmvwJLil6ZM1uRB1/k8XY7qx9rc2Q9DauULLzEq4YCbYbIoLr
-         ySCiccqPKRUOUbzzTYphXjS5ZjBbLridHGjiRrfckKrjYL1mMnML9e3rpyWWzrBOkG4l
-         2g+w==
-X-Gm-Message-State: AOAM530nitvXX+YMYismfXWgedLwZIOj+VKRS1XZZyLyhxI9uuMprijb
-        tZSOCqplRYzZDcHJnRwSWA==
-X-Google-Smtp-Source: ABdhPJwW4S9aXKgQmc4ylqmSsIukwflmXezSDLsLGo9bKW6HtV2kspuhgVhb1ZvRlT55hVXDVSM3Kw==
-X-Received: by 2002:aca:1b15:: with SMTP id b21mr35225195oib.64.1639520206668;
-        Tue, 14 Dec 2021 14:16:46 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id g7sm40352oon.27.2021.12.14.14.16.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Dec 2021 14:16:45 -0800 (PST)
-Received: (nullmailer pid 4053556 invoked by uid 1000);
-        Tue, 14 Dec 2021 22:16:44 -0000
-Date:   Tue, 14 Dec 2021 16:16:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Jingoo Han <jingoohan1@gmail.com>, devicetree@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        linux-riscv@lists.infradead.org,
-        Xiaowei Song <songxiaowei@hisilicon.com>
-Subject: Re: [PATCH] dt-bindings: PCI: designware: Fix
- 'unevaluatedProperties' warnings
-Message-ID: <YbkXzPqy8gNwKDWR@robh.at.kernel.org>
-References: <20211206194426.2470080-1-robh@kernel.org>
+        id S234268AbhLNWnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Dec 2021 17:43:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234225AbhLNWnK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 17:43:10 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C14C061574;
+        Tue, 14 Dec 2021 14:43:09 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C1E30B81D5B;
+        Tue, 14 Dec 2021 22:43:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 935BAC34606;
+        Tue, 14 Dec 2021 22:43:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639521786;
+        bh=rhM5XuQgjU0FB5J77l3eetVj/6euawt62QZltfdep4M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=D9pgqehZL3xhnR2EKCxcwA0XCCtDeCQ8+Yk0jCnEwUG9V+RNmZQymhBqiG1aGnaN8
+         Kh/5d/kh0f7ItSvCUZXalJmx0b8wUPl2pSv/KCIPFnDlBnaXWPrboPsFRjmpcXTnPR
+         MT+EvO2maua+zKHSPsClnruL0KLHWPpU82bhMgjPUSQM1GdTgKLvnG921WGoU4mwrU
+         fO40nqOjJUd/v85SrD12SOgOYFyVHuZsLyb4jczeKgtwVg7XJCNkWLjnQLCzzhGMVD
+         Mqc9fxn9OQi7qME9osvMsjgPS0kpgHLZ/05Eys7lUHDsOIlfnVfloatESJlSRMoq/O
+         eLsWjkl0jL5tw==
+Received: by mail-ed1-f46.google.com with SMTP id r11so67443720edd.9;
+        Tue, 14 Dec 2021 14:43:06 -0800 (PST)
+X-Gm-Message-State: AOAM530Y49gie4g7PVrT0oTf8DYlOdnP0rgfmABEmyM9YI9x0nP1w/CW
+        TqRD35YrX2JiDTM0BSPpesd6K2FdJ3FfZ36CyA==
+X-Google-Smtp-Source: ABdhPJyLBisQ8v76tCGHaz4gb1oLFNf6AtEmBHSgFdgVVTp+4GenpNAUoex9e1Nwoja/jxIU+cUU7wDryEL42sk8Ak0=
+X-Received: by 2002:a17:906:3b18:: with SMTP id g24mr8501893ejf.27.1639521784863;
+ Tue, 14 Dec 2021 14:43:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211206194426.2470080-1-robh@kernel.org>
+References: <20211214221450.589884-1-luca@lucaceresoli.net>
+In-Reply-To: <20211214221450.589884-1-luca@lucaceresoli.net>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Dec 2021 16:42:53 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+GQTcx1EGKHug2ZcDZufrKM-4k6PB0vQeTCTG42MHzvA@mail.gmail.com>
+Message-ID: <CAL_Jsq+GQTcx1EGKHug2ZcDZufrKM-4k6PB0vQeTCTG42MHzvA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI: dra7xx: Fix link removal on probe error
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sekhar Nori <nsekhar@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 06 Dec 2021 13:44:25 -0600, Rob Herring wrote:
-> With 'unevaluatedProperties' support implemented, there's a number of
-> warnings from the Designware PCIe based bindings:
-> 
-> Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.example.dt.yaml: pcie@1ffc000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'device_type', 'bus-range', 'ranges', '#interrupt-cells', 'interrupt-map-mask', 'interrupt-map' were unexpected)
-> Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.example.dt.yaml: pcie@1ffc000: Unevaluated properties are not allowed ('clock-names' was unexpected)
-> Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@f4000000: Unevaluated properties are not allowed ('bus-range', '#address-cells', '#size-cells', 'device_type', 'ranges', 'num-lanes', '#interrupt-cells', 'interrupts', 'interrupt-names', 'interrupt-map-mask', 'interrupt-map', 'clocks', 'clock-names' were unexpected)
-> Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@f4000000: Unevaluated properties are not allowed ('clock-names' was unexpected)
-> Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@f5000000: Unevaluated properties are not allowed ('bus-range', '#address-cells', '#size-cells', 'device_type', 'phys', 'ranges', 'num-lanes', '#interrupt-cells', 'interrupts', 'interrupt-names', 'interrupt-map-mask', 'interrupt-map', 'reset-gpios', 'pcie@0,0' were unexpected)
-> Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@f5000000: Unevaluated properties are not allowed ('phys', 'hisilicon,clken-gpios' were unexpected)
-> Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml: pcie@d0e00000: Unevaluated properties are not allowed ('device_type', '#address-cells', '#size-cells', 'linux,pci-domain', 'bus-range', '#interrupt-cells', 'interrupt-map-mask', 'interrupt-map' were unexpected)
-> Documentation/devicetree/bindings/pci/intel-gw-pcie.example.dt.yaml: pcie@d0e00000: Unevaluated properties are not allowed ('resets', 'phys', 'phy-names', 'reset-assert-ms' were unexpected)
-> Documentation/devicetree/bindings/pci/rockchip-dw-pcie.example.dt.yaml: pcie@fe280000: Unevaluated properties are not allowed ('clock-names', 'msi-map', 'phys', 'phy-names', 'power-domains', 'resets', 'reset-names' were unexpected)
-> Documentation/devicetree/bindings/pci/samsung,exynos-pcie.example.dt.yaml: pcie@15700000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', '#interrupt-cells', 'device_type', 'bus-range', 'ranges', 'interrupt-map-mask', 'interrupt-map' were unexpected)
-> Documentation/devicetree/bindings/pci/samsung,exynos-pcie.example.dt.yaml: pcie@15700000: Unevaluated properties are not allowed ('clock-names', 'phys', 'vdd10-supply', 'vdd18-supply' were unexpected)
-> Documentation/devicetree/bindings/pci/sifive,fu740-pcie.example.dt.yaml: pcie@e00000000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', '#interrupt-cells', 'device_type', 'dma-coherent', 'bus-range', 'ranges', 'interrupts', 'interrupt-parent', 'interrupt-map-mask', 'interrupt-map', 'clock-names', 'clocks' were unexpected)
-> Documentation/devicetree/bindings/pci/sifive,fu740-pcie.example.dt.yaml: pcie@e00000000: Unevaluated properties are not allowed ('dma-coherent', 'clock-names', 'resets', 'pwren-gpios' were unexpected)
-> Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.example.dt.yaml: pcie-ep@66000000: Unevaluated properties are not allowed ('clock-names', 'clocks', 'reset-names', 'resets', 'phy-names', 'phys' were unexpected)
-> Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.example.dt.yaml: pcie@28400000: Unevaluated properties are not allowed ('clock-names' was unexpected)
-> Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.example.dt.yaml: pcie@28400000: Unevaluated properties are not allowed ('device_type', 'bus-range', 'num-viewport', '#address-cells', '#size-cells', '#interrupt-cells', 'ranges', 'interrupt-names', 'interrupt-map-mask', 'interrupt-map', 'max-link-speed' were unexpected)
-> 
-> The main problem is that snps,dw-pcie.yaml and snps,dw-pcie-ep.yaml
-> shouldn't set 'unevaluatedProperties: false'. Otherwise, bindings that
-> reference them cannot add additional properties. With that addressed,
-> there's a handful of other undocumented properties to add.
-> 
-> Cc: Xiaowei Song <songxiaowei@hisilicon.com>
-> Cc: Binghui Wang <wangbinghui@hisilicon.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Greentime Hu <greentime.hu@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
-> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+On Tue, Dec 14, 2021 at 4:15 PM Luca Ceresoli <luca@lucaceresoli.net> wrote:
+>
+> If a devm_phy_get() calls fails with phy_count==N (N > 0), then N links
+> have already been added by device_link_add() and won't be deleted by
+> device_link_del() because the code calls 'return' and not 'goto err_link'.
+>
+> Fix in a very simple way by doing all the devm_phy_get() calls before all
+> the device_link_add() calls.
+>
+> Fixes: 7a4db656a635 ("PCI: dra7xx: Create functional dependency between PCIe and PHY")
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 > ---
->  .../bindings/pci/hisilicon,kirin-pcie.yaml          | 13 +++++++++++++
->  .../devicetree/bindings/pci/sifive,fu740-pcie.yaml  |  4 ++--
->  .../devicetree/bindings/pci/snps,dw-pcie-ep.yaml    |  2 +-
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml       |  2 +-
->  .../bindings/pci/socionext,uniphier-pcie-ep.yaml    |  2 +-
->  5 files changed, 18 insertions(+), 5 deletions(-)
-> 
+>  drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+> index f7f1490e7beb..2ccc53869e13 100644
+> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+> @@ -757,7 +757,9 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
+>                 phy[i] = devm_phy_get(dev, name);
+>                 if (IS_ERR(phy[i]))
+>                         return PTR_ERR(phy[i]);
+> +       }
+>
+> +       for (i = 0; i < phy_count; i++) {
+>                 link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
 
-Applied, thanks!
+I think this should happen automatically now with fw_devlink being
+enabled by default. Can you try?
+
+>                 if (!link[i]) {
+>                         ret = -EINVAL;
+> --
+> 2.25.1
+>
