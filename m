@@ -2,76 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6306474976
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 18:33:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BF1E474C85
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 21:15:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233755AbhLNRdg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Dec 2021 12:33:36 -0500
-Received: from mga11.intel.com ([192.55.52.93]:47233 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229673AbhLNRdg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 14 Dec 2021 12:33:36 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="236568373"
-X-IronPort-AV: E=Sophos;i="5.88,205,1635231600"; 
-   d="scan'208";a="236568373"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2021 09:33:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,205,1635231600"; 
-   d="scan'208";a="609958335"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Dec 2021 09:33:12 -0800
-Received: from MAHMED6-mobl.amr.corp.intel.com (MAHMED6-mobl.amr.corp.intel.com [10.212.180.156])
-        by linux.intel.com (Postfix) with ESMTP id 334F858095D;
-        Tue, 14 Dec 2021 09:33:12 -0800 (PST)
-Message-ID: <afc2e96167db7e1602a39f8b9aab42a860b0c654.camel@linux.intel.com>
-Subject: Re: [PATCH V3 2/2] PCI: vmd: Override ASPM on TGL/ADL VMD devices
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, michael.a.bottini@linux.intel.com,
-        rafael@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Adhitya Mohan <me@adhityamohan.in>
-Date:   Tue, 14 Dec 2021 09:33:11 -0800
-In-Reply-To: <YbhOQx60Qz/tLUKU@infradead.org>
-References: <20211209201235.1314584-1-david.e.box@linux.intel.com>
-         <20211209201235.1314584-2-david.e.box@linux.intel.com>
-         <YbhOQx60Qz/tLUKU@infradead.org>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        id S237594AbhLNUPj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Dec 2021 15:15:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229795AbhLNUPi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 15:15:38 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796D9C061574;
+        Tue, 14 Dec 2021 12:15:38 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1639512936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=d4wqcXY+MET+Bv0FcRzIRIc5XGvbPUI2bHV9pxD9Ydo=;
+        b=moChZUSho9BA78Zeq1WI5tu/U00oT82AtvfenvZ7wj4+/rbRuMvnEvgp06APrkesXoQIzl
+        7RPpBe3m0oONdQpdS7DAAUNLaW0sDBUgC0jenFPjG7Wr9CEB6Oy4B9l4Iuq/IfEVofBt4t
+        vnaGOWsnREceAU8uxY8NAKpNhml+AgXrJsZ6gKqMSiQL7bA9CFgw8w2TYZeEYT8V3NhbQ8
+        JAqpROxGWfe9cCXptM9xGI/fDzxgqMZx8ZITW8fq90knUugjlJY38p2e8sp+HmqqufWXbS
+        n3mRyaNC3MmjNNomr7JUos4qRao6JylFxbVwVGdREF91hazpGg2c9oB6BzqE4w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1639512936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=d4wqcXY+MET+Bv0FcRzIRIc5XGvbPUI2bHV9pxD9Ydo=;
+        b=+ecmdjzCvUtoz/ixJ5pxFaVr7F21Ajeaa5ilYhIAuSfZy+n3tm1NOnNdHltlRFCs+3G/Mc
+        B5RpqeVcmdLBkuDA==
+To:     Nishanth Menon <nm@ti.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Cedric Le Goater <clg@kaod.org>,
+        Juergen Gross <jgross@suse.com>,
+        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-wireless@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
+In-Reply-To: <87tufbrudl.ffs@tglx>
+References: <20211210221642.869015045@linutronix.de>
+ <20211213182958.ytj4m6gsg35u77cv@detonator> <87fsqvttfv.ffs@tglx>
+ <20211214162247.ocjm7ihg5oi7uiuv@slider> <87wnk7rvnz.ffs@tglx>
+ <87tufbrudl.ffs@tglx>
+Date:   Tue, 14 Dec 2021 21:15:34 +0100
+Message-ID: <87mtl3rli1.ffs@tglx>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 2021-12-13 at 23:56 -0800, Christoph Hellwig wrote:
-> On Thu, Dec 09, 2021 at 12:12:35PM -0800, David E. Box wrote:
-> > +static int vmd_enable_aspm(struct pci_dev *pdev, void *userdata)
-> > +{
-> > +	int features = *(int *)userdata;
-> > +
-> > +	if (features & VMD_FEAT_QUIRK_OVERRIDE_ASPM &&
-> > +	    pdev->class == PCI_CLASS_STORAGE_EXPRESS) {
-> > +		int pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-> > +
-> > +		if (pos) {
-> > +			pci_write_config_word(pdev, pos + PCI_LTR_MAX_SNOOP_LAT,
-> > 0x1003);
-> > +			pci_write_config_word(pdev, pos +
-> > PCI_LTR_MAX_NOSNOOP_LAT, 0x1003);
-> > +			if (pcie_aspm_policy_override(pdev))
-> > +				pci_info(pdev, "Unable of override ASPM
-> > policy\n");
-> > +		}
-> 
-> This is completely unredable due to the long lines.  Just return early on
-> the two conditionals and it will all be fine.
+Nishanth,
 
-Sure.
+On Tue, Dec 14 2021 at 18:03, Thomas Gleixner wrote:
+>     msi_device_data_release()
+>     ...
+>     pcim_release()
+>        pci_disable_msi[x]()
+>
+> Groan....
 
-Thanks.
+I think I managed to distangle this. Can you please give:
 
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v4-part-2
+
+and/or the full pile:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v4-part-3
+
+a test ride?
+
+Thanks,
+
+        tglx
