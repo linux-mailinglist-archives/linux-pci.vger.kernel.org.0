@@ -2,96 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0A26474DC6
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 23:15:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D547B474DC9
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 23:16:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233170AbhLNWPU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Dec 2021 17:15:20 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:40596 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232252AbhLNWPQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 17:15:16 -0500
-Received: from [77.244.183.192] (port=63782 helo=melee.fritz.box)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.94.2)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1mxG4n-000AP5-2s; Tue, 14 Dec 2021 23:15:13 +0100
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-pci@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        id S232919AbhLNWQJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Dec 2021 17:16:09 -0500
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:37531 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233024AbhLNWQI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 17:16:08 -0500
+Received: by mail-ot1-f46.google.com with SMTP id h19-20020a9d3e53000000b0056547b797b2so22519684otg.4;
+        Tue, 14 Dec 2021 14:16:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SX/9YrUtplncL5wWQZap08LTDJOW0Q9uZQc36gCy2Uw=;
+        b=jKYiF0WsPh4QiR4ZH+0M2Y064HsNRLe3ND/OFH4IjDkwo+CrECniDoJH4rcy/r6tM7
+         B27AfDwc6wnCNQd0DBg2Rp0iDhfJRMqhJQQBCKKt7RucM5j8D30S37q2cXRJt0cWa97X
+         v/8AjZQyxJip5//SzTzEobX+nqHPDPiyODwWzBukn+uw4cw7CYafVXn2cyvvN8Cezq7G
+         vENGouD67nkPFFnqUVAb57lZIH9gBmBR7nkqwrZD96VZlWsHOBR+qBTFIKONRwaBFx8O
+         ZmTyG+crN+Dq/UBda2j0pmDNueu5m3iKuJCmfnRodKliPR21WW2/xLv8Kn4iHH54vQh/
+         sM7g==
+X-Gm-Message-State: AOAM532Ay0Zr8jkUeMWDd0cZTyrOeAz+qdBe+Q37edwbghtpJk2xnYIu
+        mSWKW8OHehg8KVGicDBIGQ==
+X-Google-Smtp-Source: ABdhPJzbjxO0Xl93R1cCScNoNZllcabCBzDCPy+fKLXaQ6Ybf6LBpMdoCbxJyE/cwv4O1OzllFTbIg==
+X-Received: by 2002:a05:6830:442a:: with SMTP id q42mr6534523otv.385.1639520167393;
+        Tue, 14 Dec 2021 14:16:07 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id 109sm16294otv.30.2021.12.14.14.16.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Dec 2021 14:16:06 -0800 (PST)
+Received: (nullmailer pid 4052260 invoked by uid 1000);
+        Tue, 14 Dec 2021 22:16:05 -0000
+Date:   Tue, 14 Dec 2021 16:16:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Abraham I <kishon@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sekhar Nori <nsekhar@ti.com>, kernel test robot <lkp@intel.com>
-Subject: [PATCH 2/2] PCI: dra7xx: Fix clk disabling in some error paths
-Date:   Tue, 14 Dec 2021 23:14:50 +0100
-Message-Id: <20211214221450.589884-2-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211214221450.589884-1-luca@lucaceresoli.net>
-References: <20211214221450.589884-1-luca@lucaceresoli.net>
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] dt-bindings: PCI: Fix 'unevaluatedProperties' warnings
+Message-ID: <YbkXpXFFPjmRmpXk@robh.at.kernel.org>
+References: <20211206194406.2469361-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211206194406.2469361-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-dra7xx->clk is not disabled+unprepared in some one the error paths,
-specifically devm_phy_get() fails.
+On Mon, 06 Dec 2021 13:44:05 -0600, Rob Herring wrote:
+> With 'unevaluatedProperties' support implemented, there's several
+> warnings due to undocumented properties:
+> 
+> Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dt.yaml: pcie@1e140000: pcie@0,0: Unevaluated properties are not allowed ('phy-names' was unexpected)
+> Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dt.yaml: pcie@1e140000: pcie@1,0: Unevaluated properties are not allowed ('phy-names' was unexpected)
+> Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.example.dt.yaml: pcie@1e140000: pcie@2,0: Unevaluated properties are not allowed ('phy-names' was unexpected)
+> Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.example.dt.yaml: pcie@11230000: Unevaluated properties are not allowed ('phy-names' was unexpected)
+> Documentation/devicetree/bindings/pci/microchip,pcie-host.example.dt.yaml: pcie@2030000000: Unevaluated properties are not allowed ('interrupt-controller' was unexpected)
+> Documentation/devicetree/bindings/pci/ti,am65-pci-ep.example.dt.yaml: pcie-ep@5500000: Unevaluated properties are not allowed ('num-ib-windows', 'num-ob-windows' were unexpected)
+> Documentation/devicetree/bindings/pci/ti,am65-pci-host.example.dt.yaml: pcie@5500000: Unevaluated properties are not allowed ('num-viewport', 'interrupts' were unexpected)
+> Documentation/devicetree/bindings/pci/ti,j721e-pci-host.example.dt.yaml: pcie@2900000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
+> 
+> Add the necessary property definitions or remove the properties from the
+> examples to fix these warnings.
+> 
+> Cc: Ryder Lee <ryder.lee@mediatek.com>
+> Cc: Jianjun Wang <jianjun.wang@mediatek.com>
+> Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Daire McNamara <daire.mcnamara@microchip.com>
+> Cc: Abraham I <kishon@ti.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-mediatek@lists.infradead.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/pci/mediatek,mt7621-pcie.yaml     |  3 +++
+>  .../bindings/pci/mediatek-pcie-gen3.yaml       |  4 ++++
+>  .../bindings/pci/microchip,pcie-host.yaml      | 18 ++++++++++++++++++
+>  .../bindings/pci/ti,am65-pci-ep.yaml           |  2 --
+>  .../bindings/pci/ti,am65-pci-host.yaml         |  4 +++-
+>  .../bindings/pci/ti,j721e-pci-host.yaml        |  2 ++
+>  6 files changed, 30 insertions(+), 3 deletions(-)
+> 
 
-Fix by moving the clk_prepare_enable() stanza after all the devm_*()
-resource grabbing but before all the goto-based error management. This way
-it is possible to keep the 'return err' without the need to replace it with
-a new goto statement.
-
-Fixes: 5af9405397bf ("PCI: dra7xx: Get an optional clock")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/202111301803.NOwoj4Jd-lkp@intel.com/
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
----
- drivers/pci/controller/dwc/pci-dra7xx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 2ccc53869e13..d17cc088d07e 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -748,10 +748,6 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(dra7xx->clk),
- 				     "clock request failed");
- 
--	ret = clk_prepare_enable(dra7xx->clk);
--	if (ret)
--		return ret;
--
- 	for (i = 0; i < phy_count; i++) {
- 		snprintf(name, sizeof(name), "pcie-phy%d", i);
- 		phy[i] = devm_phy_get(dev, name);
-@@ -759,6 +755,10 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
- 			return PTR_ERR(phy[i]);
- 	}
- 
-+	ret = clk_prepare_enable(dra7xx->clk);
-+	if (ret)
-+		return ret;
-+
- 	for (i = 0; i < phy_count; i++) {
- 		link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
- 		if (!link[i]) {
--- 
-2.25.1
-
+Applied, thanks!
