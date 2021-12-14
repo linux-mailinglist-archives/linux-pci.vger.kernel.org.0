@@ -2,99 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13630474E03
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 23:43:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 097C4474E40
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 23:58:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234268AbhLNWnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Dec 2021 17:43:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        id S231574AbhLNW6z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Dec 2021 17:58:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234225AbhLNWnK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 17:43:10 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C14C061574;
-        Tue, 14 Dec 2021 14:43:09 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C1E30B81D5B;
-        Tue, 14 Dec 2021 22:43:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 935BAC34606;
-        Tue, 14 Dec 2021 22:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639521786;
-        bh=rhM5XuQgjU0FB5J77l3eetVj/6euawt62QZltfdep4M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=D9pgqehZL3xhnR2EKCxcwA0XCCtDeCQ8+Yk0jCnEwUG9V+RNmZQymhBqiG1aGnaN8
-         Kh/5d/kh0f7ItSvCUZXalJmx0b8wUPl2pSv/KCIPFnDlBnaXWPrboPsFRjmpcXTnPR
-         MT+EvO2maua+zKHSPsClnruL0KLHWPpU82bhMgjPUSQM1GdTgKLvnG921WGoU4mwrU
-         fO40nqOjJUd/v85SrD12SOgOYFyVHuZsLyb4jczeKgtwVg7XJCNkWLjnQLCzzhGMVD
-         Mqc9fxn9OQi7qME9osvMsjgPS0kpgHLZ/05Eys7lUHDsOIlfnVfloatESJlSRMoq/O
-         eLsWjkl0jL5tw==
-Received: by mail-ed1-f46.google.com with SMTP id r11so67443720edd.9;
-        Tue, 14 Dec 2021 14:43:06 -0800 (PST)
-X-Gm-Message-State: AOAM530Y49gie4g7PVrT0oTf8DYlOdnP0rgfmABEmyM9YI9x0nP1w/CW
-        TqRD35YrX2JiDTM0BSPpesd6K2FdJ3FfZ36CyA==
-X-Google-Smtp-Source: ABdhPJyLBisQ8v76tCGHaz4gb1oLFNf6AtEmBHSgFdgVVTp+4GenpNAUoex9e1Nwoja/jxIU+cUU7wDryEL42sk8Ak0=
-X-Received: by 2002:a17:906:3b18:: with SMTP id g24mr8501893ejf.27.1639521784863;
- Tue, 14 Dec 2021 14:43:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20211214221450.589884-1-luca@lucaceresoli.net>
-In-Reply-To: <20211214221450.589884-1-luca@lucaceresoli.net>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Dec 2021 16:42:53 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+GQTcx1EGKHug2ZcDZufrKM-4k6PB0vQeTCTG42MHzvA@mail.gmail.com>
-Message-ID: <CAL_Jsq+GQTcx1EGKHug2ZcDZufrKM-4k6PB0vQeTCTG42MHzvA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: dra7xx: Fix link removal on probe error
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     PCI <linux-pci@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        with ESMTP id S232144AbhLNW6z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 17:58:55 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EACC06173E
+        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 14:58:54 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id cf39so27559868lfb.8
+        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 14:58:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/ElhjSQRkBAVirJx6rQQ9wOPmR/xdLQ5Y4DtXvBrY/A=;
+        b=IP/SqCET/cIDz5W/tkTOoRj//JrcmN0RGsWN5l+Ru0RjNNGNm6ClYB9vI2+EGEZHzo
+         Yld3FVUuv6trAPU46mrts0q3WibtZansba+FfL44V2ESZjScqHEFz7M8rQN2txxULIOc
+         9u6JUrF6UZt7vrrJXn9Ndrfw4IY2PtfXwMyBQnivXoAN7/I5YjV8a4mZIaWXkEPCllrb
+         EquvQ/ZhfcBIdAdKjJ5BeYcwVoY+9CBxcjwMD5wGP4E5gdQ8PQYXDAX7tDi38kEX9xGs
+         nfRwb9N7gZcz0x785KK9DYFOPc+XEGfAtttIccE6n7IL/m0CUg91CtQPucJuvzonhkL+
+         +7Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/ElhjSQRkBAVirJx6rQQ9wOPmR/xdLQ5Y4DtXvBrY/A=;
+        b=mKStXiLZ0iH+w1xY1mJyYq2Q5LZU3CifBRuLC+N0n5bYB1a+oNVp/JAXQGYdilwQWe
+         jR0mSsKelXH3QhB9S6A4zoWjeUzPzFuGY7nmza7X7neJZH2Iz7AYnOjkMpAu0ZNojtti
+         G/4JEcikf1/mhaBn9r+uFfbKI2LcaWfsQgWN6zvREWLawHdTvOJQ8GTnnY7GhRULRPBg
+         gJgkxWc4qOoeOwa2QDIBRygW+KRbkN3E2aVZpK1wFyFAUfQuBCJMNVG8kqrUJQilRVpj
+         KFkXMlggc24DDHgBDld21+3HVx5J7tVBmZbYoFthaK1ZXjhAuYgBBdA0oPcnEd0zyktl
+         y5bA==
+X-Gm-Message-State: AOAM531utYBcEspY5stmvi53H6+e9uLEKGQH4hWK0eUZO+K6HZZcPpIe
+        iWgoxwkkEKcTX8Zkz3QxOpk5+w==
+X-Google-Smtp-Source: ABdhPJx0SgvSJtbcVOQeXt6YA544j26Avfy58G+7BFNLy9a2hL9JByO623Fq0Qfn+4yZMNVbtkM17Q==
+X-Received: by 2002:a05:6512:11e5:: with SMTP id p5mr7001672lfs.537.1639522732735;
+        Tue, 14 Dec 2021 14:58:52 -0800 (PST)
+Received: from eriador.lan ([2001:470:dd84:abc0::8a5])
+        by smtp.gmail.com with ESMTPSA id t10sm45115lja.105.2021.12.14.14.58.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Dec 2021 14:58:52 -0800 (PST)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sekhar Nori <nsekhar@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: [PATCH v4 00/10] qcom: add support for PCIe0 on SM8450 platform
+Date:   Wed, 15 Dec 2021 01:58:36 +0300
+Message-Id: <20211214225846.2043361-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.33.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 14, 2021 at 4:15 PM Luca Ceresoli <luca@lucaceresoli.net> wrote:
->
-> If a devm_phy_get() calls fails with phy_count==N (N > 0), then N links
-> have already been added by device_link_add() and won't be deleted by
-> device_link_del() because the code calls 'return' and not 'goto err_link'.
->
-> Fix in a very simple way by doing all the devm_phy_get() calls before all
-> the device_link_add() calls.
->
-> Fixes: 7a4db656a635 ("PCI: dra7xx: Create functional dependency between PCIe and PHY")
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
->  drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index f7f1490e7beb..2ccc53869e13 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -757,7 +757,9 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
->                 phy[i] = devm_phy_get(dev, name);
->                 if (IS_ERR(phy[i]))
->                         return PTR_ERR(phy[i]);
-> +       }
->
-> +       for (i = 0; i < phy_count; i++) {
->                 link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
+There are two different PCIe controllers and PHYs on SM8450, one having
+one lane and another with two lanes. This set of patches adds support
+for the first PCIe phy and controller only, support for the second PCIe
+part will come later.
 
-I think this should happen automatically now with fw_devlink being
-enabled by default. Can you try?
+Changes since v3:
+ - Fix pcie gpios to follow defined schema as noted by Rob
+ - Fix commit message according to Bjorn's suggestions
 
->                 if (!link[i]) {
->                         ret = -EINVAL;
-> --
-> 2.25.1
->
+Changes since v2:
+ - Remove unnecessary comment in struct qcom_pcie_cfg
+
+Changes since v1:
+ - Fix capitalization/wording of PCI patch subjects
+ - Add missing gen3x1 specification to PHY table names
+
+----------------------------------------------------------------
+Dmitry Baryshkov (10):
+      dt-bindings: pci: qcom: Document PCIe bindings for SM8450
+      dt-bindings: phy: qcom,qmp: Add SM8450 PCIe PHY bindings
+      phy: qcom-qmp: Add SM8450 PCIe0 PHY support
+      PCI: qcom: Remove redundancy between qcom_pcie and qcom_pcie_cfg
+      PCI: qcom: Add ddrss_sf_tbu flag
+      PCI: qcom: Add SM8450 PCIe support
+      arm64: dts: qcom: sm8450: add PCIe0 PHY node
+      arm64: dts: qcom: sm8450: add PCIe0 RC device
+      arm64: dts: qcom: sm8450-qrd: enable PCIe0 PHY device
+      arm64: dts: qcom: sm8450-qrd: enable PCIe0 host
+
+ .../devicetree/bindings/pci/qcom,pcie.txt          |  21 ++-
+ .../devicetree/bindings/phy/qcom,qmp-phy.yaml      |   2 +
+ arch/arm64/boot/dts/qcom/sm8450-qrd.dts            |  14 ++
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               | 143 ++++++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c             |  88 ++++++++-----
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 125 ++++++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |  33 +++++
+ 7 files changed, 388 insertions(+), 38 deletions(-)
+
+
