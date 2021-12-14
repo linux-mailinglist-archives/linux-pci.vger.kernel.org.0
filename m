@@ -2,103 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 549E4473FAD
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 10:41:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6857447402D
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 11:13:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232596AbhLNJlM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Dec 2021 04:41:12 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40482 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbhLNJlL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 04:41:11 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639474869;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QERmxLNSvvFx6vzNSYmMrsv0e2X5CmwuAGyK1bazfj4=;
-        b=uVT3SzBcceVfCKVd9bfwP/mkrBbU6i6CXo8B0uqt0K0CoD5a4qXyBj1twarA7qhg9DUpCf
-        OrVbNB7kcn9ckbfr0CT2aeLTQTe7pl003+0ptW2EbYL49mtlKdiGcdgbTrY3LmUvHIDRVO
-        oUyYJTCLGbEKPL3lyqY4wNdexzr+WwLkloa+hbSAnazTQRKYFU/bmsDlS0IKdiZ6tW9GGx
-        HiqEkWnh0eDq6pt7S9pHkclWGxZU61oDJv8S9DVEIUgIkiP6c3yxVlpBmL8rJzB+H4TNe6
-        G8+D7456TbPXVtBVebfm1EMXeWbrmmtdvroOCyBCNYYLr4GmBNBW77LIxVu6Kg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639474869;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QERmxLNSvvFx6vzNSYmMrsv0e2X5CmwuAGyK1bazfj4=;
-        b=KbnnQxJjrjwD3AUzOdrDHb83i5GFD5BYZ+EuPZBYHEXZFSMZ3bN/5+CPOSNQTQ/bGXXBRZ
-        h+7rXr2HbjWxd5Dw==
-To:     Nishanth Menon <nm@ti.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        Juergen Gross <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
-In-Reply-To: <20211213182958.ytj4m6gsg35u77cv@detonator>
-References: <20211210221642.869015045@linutronix.de>
- <20211213182958.ytj4m6gsg35u77cv@detonator>
-Date:   Tue, 14 Dec 2021 10:41:08 +0100
-Message-ID: <87fsqvttfv.ffs@tglx>
+        id S232891AbhLNKNi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Dec 2021 05:13:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232865AbhLNKNg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 05:13:36 -0500
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E436C06173F
+        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 02:13:36 -0800 (PST)
+Received: by mail-pg1-x52e.google.com with SMTP id f125so17026777pgc.0
+        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 02:13:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2rug4EuC9Ad8IFEiNCmMA6aYrYVML8F4r4iVetDTwr0=;
+        b=mwUnYoVqZeRIOlk3PSDwFfqhSLX+8xyxryjI6XRaL0TW8dzaheEvY6tw9NYijXSK53
+         bQRc9WqmUyRYE01lzA8RwVVwxfDhpHVeWFlT0UG2kEzMgxxFv1CvdN1OZ4tiz/YEML9l
+         Abd9VfhQkm46A2wnXsyf+HlGNK9+j416yRIbNeniVmIbitHlRqVF/cObYjvqywKKZKJq
+         jilG0TK5mofdbqF4US4Ka5bKSfnX/9U3J6l5MV/uYEM7aKTisIbVOfOoi79+OBqwgTq2
+         HAkTAEqe+I5+XfjqNc4AxpYzYDg1Lz3JL9YrTrEsJMKTB+Xwph7IA5kwImdd2oIwCp7L
+         0fPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2rug4EuC9Ad8IFEiNCmMA6aYrYVML8F4r4iVetDTwr0=;
+        b=bpkVSPQQLqjsV5X42aYxfDyRnlZojCg0B1DjOAIxkk+V8BZcak03XMZ/EgTMgepdIB
+         X7DFLUkBHv4wS8s24oT0I64YOess9RYQIFzKAwnmMGwMsixYy3kkKFAeLuhj/q/GwVDZ
+         4Zc3LAr4vdUFv4li3qZgS193tnFrfxXNxPUjCgcajWQrYo2PF82z74f7r9Fe+ZpzdTVP
+         HhVNsuKG+zR56ea0NV54GhgMWWLe4IqECW6lh+uWCnhk/YYfj5BIf/CB/GbZs73b4j8R
+         Z66ZIot2XceSUTDPGSvR6G6Ou/A730nLfVHD7AYAfVLaO0lEyeSEpSXNpdLxefgobOAY
+         xjpQ==
+X-Gm-Message-State: AOAM5319wLveCQEXWGopVARYiqYSt5qQBo94DilhYabUa2ISBYZ2ecWH
+        cShn1gVc36bW+mBHWkoeoL0FKhWVv7xB
+X-Google-Smtp-Source: ABdhPJxDKkg6hQUK1gsiN0fln+nUoRMFYCqFfoMwgPUn4A3o6KYCEMUlQqhnVT0bpXwTtmU4JUO7CA==
+X-Received: by 2002:a63:754c:: with SMTP id f12mr3173578pgn.161.1639476815884;
+        Tue, 14 Dec 2021 02:13:35 -0800 (PST)
+Received: from localhost.localdomain ([117.193.214.199])
+        by smtp.gmail.com with ESMTPSA id s3sm1922229pjk.41.2021.12.14.02.13.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Dec 2021 02:13:35 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com
+Cc:     svarbanov@mm-sol.com, bjorn.andersson@linaro.org, robh@kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH] PCI: qcom: Add support for handling MSIs from 8 endpoints
+Date:   Tue, 14 Dec 2021 15:43:19 +0530
+Message-Id: <20211214101319.25258-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 13 2021 at 12:29, Nishanth Menon wrote:
-> On 23:18-20211210, Thomas Gleixner wrote:
-> Also while testing on TI K3 platforms, I noticed:
->
-> msi_device_data_release/msi_device_destroy_sysfs in am64xx-evm / j7200
+The DWC controller used in the Qcom Platforms are capable of addressing the
+MSIs generated from 8 different endpoints each with 32 vectors (256 in
+total). Currently the driver is using the default value of addressing the
+MSIs from 1 endpoint only. Extend it by passing the MAX_MSI_IRQS to the
+num_vectors field of pcie_port structure.
 
-The warning complains about a device being released with MSI descriptors
-still attached to the device. This was added by:
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-  5b012cede0f7 ("device: Add device::msi_data pointer and struct msi_device_data")
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 1c3d1116bb60..8a4c08d815a5 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1550,6 +1550,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 	pci->dev = dev;
+ 	pci->ops = &dw_pcie_ops;
+ 	pp = &pci->pp;
++	pp->num_vectors = MAX_MSI_IRQS;
+ 
+ 	pcie->pci = pci;
+ 
+-- 
+2.25.1
 
-That's not a regression caused by this commit. The warning is just
-exposing an already existing problem in the iwlwifi driver, which seems
-to do:
-
-   probe()
-     setup_pci_msi[x]_interrupts()
-     start_drv()
-       if (try_to_load_firmware() == FAIL)
-       	   device_release_driver()
-                ...
-                msi_device_data_release()
-                    WARN()
-
-Thanks,
-
-        tglx
