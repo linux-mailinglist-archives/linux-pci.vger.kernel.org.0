@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F9FE473BC7
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 04:58:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FE7F473BC9
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 04:58:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233573AbhLND6c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Dec 2021 22:58:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58464 "EHLO
+        id S233663AbhLND6e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Dec 2021 22:58:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233558AbhLND6a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Dec 2021 22:58:30 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4409C0613F8;
-        Mon, 13 Dec 2021 19:58:29 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id y7so12702981plp.0;
-        Mon, 13 Dec 2021 19:58:29 -0800 (PST)
+        with ESMTP id S233553AbhLND6b (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Dec 2021 22:58:31 -0500
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9DAC061748;
+        Mon, 13 Dec 2021 19:58:31 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id l18so11594119pgj.9;
+        Mon, 13 Dec 2021 19:58:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1v15Gl8TJzLJfCjgx7PA4whHDDqL64AFLHw1EUfuQI4=;
-        b=LB04x1mOY0EfpsXQFHT0385OPgqMxqnezuCSRKRQIYyV6pHq07SFep9Rt02ThAbs2I
-         DxTXNnwE4be66eoZQNGf7cra+MMNFl8RRYSPC4RfH4zQfjUdy8h++hK4GdetaNgWK2c+
-         fP9bQl2Sb7Lcy8MABVfDISe7k7SK+XvQwdp0Edb+vFX5vr/5YoYMxY9w7maK2JXr/8jM
-         DUrtVTWQywQBYdGZjgJ3SmAGHoCXzUQXIjaJMvi5QvtEcILy7kEfYHPCXSx+BC0GRdI9
-         CJWMR6AyVZ6fr4eNQn3XwdrnbHe3sDntjgXNCvhpNwOuoF4YIZsjUoedxspVQbKtCzdH
-         qAlg==
+        bh=6PtQ+iCOtg8wKI/383IxFyqZ9i0rudNbH4n4NHCffbA=;
+        b=DZhJTuI7YzW03odBx/bNqEurSo33emVPAj/azvE7XrsemmvRymdUBsKJBff4HbXKL2
+         cnSjxAD0V8TCBQegRSQlL+p0cgFJMvRJ1wJbXAfZi1y34kZYEk6AwnM+89LQBT5BG/Gx
+         TLDlsGdZNcSXZghV/JbjO+CQKgmkVmsk29Qqdk2nWMy5rLqJlV2/U0pE6Jv9gEk4xq+/
+         3KHIYynY4PhX/vuw3djmgN7GA/Q39Zc65HDLyr0AXnaEkHd13V65VJyfbC4/rgGQZ9DT
+         YmJHkEVbcALis4r63k2ABnepHaAqCawCwDzISMYVrtVLoOHh3CzPgDf486gRtqKM0MlI
+         Oh3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1v15Gl8TJzLJfCjgx7PA4whHDDqL64AFLHw1EUfuQI4=;
-        b=a1LHWgc0WDaco6VEIsZv0e02c3jdwZpW4bcR9sSpah6gmwQQNFkhuufLhdzGIneSle
-         5SZMd+u9zPlk1c4jK8EepB6+45WWPbW6vYw1MErMBCEZGg/PnK5FHizbJKT6TSVRkQ/5
-         Gdbjl8qD7w8jmKKPEl+ymlq04nNIW6Zu9UzD8USTaVHAAuNnhfo1PbtLXzcBI3o046Zd
-         SGiViAWvzrxf0DA1zEvynedaPfH0SIZcCtDPwgUvM+olXJflUgK+H25zMQbv6RX8PaSg
-         erPCI6T0W3Xh788+V6FCjUSp85eZI+qPCRb+/CFF9AfM/GQiImmkx2VwJYQQ0DwuayCS
-         Jbuw==
-X-Gm-Message-State: AOAM530LdBxwg915zKICxaaAi1QlFUo4mU7OA4NOdjwrcNO2ESZXxsFH
-        O7Uwrz/j+u+y+d2YdaYBSFyPymuKAPw=
-X-Google-Smtp-Source: ABdhPJzVRDHpnHWBHT00swMJfpAiOoxy6pc2oZirFVhtc9kKMEzF7ReJK7ShOmRr8oRz3H+yHDc36g==
-X-Received: by 2002:a17:903:408c:b0:142:45a9:672c with SMTP id z12-20020a170903408c00b0014245a9672cmr3379296plc.7.1639454308767;
-        Mon, 13 Dec 2021 19:58:28 -0800 (PST)
+        bh=6PtQ+iCOtg8wKI/383IxFyqZ9i0rudNbH4n4NHCffbA=;
+        b=LBrxgmlMFljoeW2wuMWurXOSk1e9H1oOfhe0TfctjQDkF3Atyo0CE6CAtJ/fq7Gs9c
+         whgihaB6gVxHBEirXiwL0EXDdeXz3qjXXCT9X34NsyEC6l+bd4HxLgKBnPBrXhlZc5wa
+         KievA+H56kS5DGsGTbjGXA9uoP8lohnLlt2gkY0RzfbRJb8EeawTKjl2LhdbLhH1uoQA
+         MgwKM3tJbm7n8vysAEJdP1QhVTvdRHltJ/Kjo6AX8kvgbMv071eBHIgpQWBBR5Zo60TN
+         iYCcrLmJZnmfc1xwNtDhN5kubTpVSpJZc81L8fecB1Ip4gUWSns3vZjWbPNJqyTBlpR2
+         e4gw==
+X-Gm-Message-State: AOAM533w0ZK/8xs3GjjP6ouodS/irOxQsyVk24Uh2GgJVPtTOJW+4Alz
+        2bBpzahhF0eS2II5GlNerjJOJIBzaMQ=
+X-Google-Smtp-Source: ABdhPJxV9k0ZL4Gqs67Vg9VKizi/lSyC7nsQ/hfmdjfPA6IUerHTOc5040md/BDFUMBR4ca4StXqUg==
+X-Received: by 2002:a62:8103:0:b0:4ae:d63e:9d85 with SMTP id t3-20020a628103000000b004aed63e9d85mr2108727pfd.69.1639454310360;
+        Mon, 13 Dec 2021 19:58:30 -0800 (PST)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id o17sm11430356pgb.42.2021.12.13.19.58.27
+        by smtp.gmail.com with ESMTPSA id o17sm11430356pgb.42.2021.12.13.19.58.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 19:58:28 -0800 (PST)
+        Mon, 13 Dec 2021 19:58:29 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     devicetree@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -58,9 +58,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM IPROC ARM
         ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 3/6] ARM: dts: HR2: Fixed iProc PCIe MSI sub-node
-Date:   Mon, 13 Dec 2021 19:58:17 -0800
-Message-Id: <20211214035820.2984289-4-f.fainelli@gmail.com>
+Subject: [PATCH v6 4/6] ARM: dts: NSP: Fixed iProc PCIe MSI sub-node
+Date:   Mon, 13 Dec 2021 19:58:18 -0800
+Message-Id: <20211214035820.2984289-5-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211214035820.2984289-1-f.fainelli@gmail.com>
 References: <20211214035820.2984289-1-f.fainelli@gmail.com>
@@ -75,14 +75,14 @@ the 'msi-controller' boolean property.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/bcm-hr2.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/bcm-nsp.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm-hr2.dtsi b/arch/arm/boot/dts/bcm-hr2.dtsi
-index 84cda16f68a2..33e6ba63a1ee 100644
---- a/arch/arm/boot/dts/bcm-hr2.dtsi
-+++ b/arch/arm/boot/dts/bcm-hr2.dtsi
-@@ -318,7 +318,7 @@ pcie0: pcie@18012000 {
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index 1c08daa18858..f242763c3bde 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -587,7 +587,7 @@ pcie0: pcie@18012000 {
  		status = "disabled";
  
  		msi-parent = <&msi0>;
@@ -91,12 +91,21 @@ index 84cda16f68a2..33e6ba63a1ee 100644
  			compatible = "brcm,iproc-msi";
  			msi-controller;
  			interrupt-parent = <&gic>;
-@@ -354,7 +354,7 @@ pcie1: pcie@18013000 {
+@@ -624,7 +624,7 @@ pcie1: pcie@18013000 {
  		status = "disabled";
  
  		msi-parent = <&msi1>;
 -		msi1: msi-controller {
 +		msi1: msi {
+ 			compatible = "brcm,iproc-msi";
+ 			msi-controller;
+ 			interrupt-parent = <&gic>;
+@@ -661,7 +661,7 @@ pcie2: pcie@18014000 {
+ 		status = "disabled";
+ 
+ 		msi-parent = <&msi2>;
+-		msi2: msi-controller {
++		msi2: msi {
  			compatible = "brcm,iproc-msi";
  			msi-controller;
  			interrupt-parent = <&gic>;
