@@ -2,66 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD279473DD7
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 08:57:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 506B6473E5B
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 09:40:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231611AbhLNH5E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Dec 2021 02:57:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231621AbhLNH5D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 02:57:03 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74653C061574;
-        Mon, 13 Dec 2021 23:57:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=no8JKGCvChBkQWrs+AsGfzyWb9saA1grQmCWxF8NUHE=; b=ni235uJZ33bhmBUV5a9kLT3C07
-        GB2Cg7YVvCyUj+86tix3/YYKpUMZvtRSPPrK891OdF1QbsqeO+383O5i95xTU9XXETVWxlItRbpdX
-        dKEQ781vE0LWT7QKTwDTgOonAMEWOkg6aoi5nCh7NhX5+atQD4UTdayPVz26C7pEuxy7u2FfqrmXW
-        RDMrGn54hlyfDQfS6HKpJGes3OJz07t9Y9AY+Rnd7nBa5s63XBsMt9jVKELpBxMX7UadI8KWdjeMC
-        LXiIOhkwEWy3YB+KbjH0J80aubBp0ZVKpNmZtMKr7VhS1ba7tX+5kOWjIciE7PkG4ACXUAaqYK2YC
-        DnLXHVlw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mx2g7-00CwXu-PN; Tue, 14 Dec 2021 07:56:51 +0000
-Date:   Mon, 13 Dec 2021 23:56:51 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, michael.a.bottini@linux.intel.com,
-        rafael@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Adhitya Mohan <me@adhityamohan.in>
-Subject: Re: [PATCH V3 2/2] PCI: vmd: Override ASPM on TGL/ADL VMD devices
-Message-ID: <YbhOQx60Qz/tLUKU@infradead.org>
-References: <20211209201235.1314584-1-david.e.box@linux.intel.com>
- <20211209201235.1314584-2-david.e.box@linux.intel.com>
+        id S231877AbhLNIkl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Dec 2021 03:40:41 -0500
+Received: from mail.thebizzie.pl ([192.236.147.111]:41074 "EHLO
+        mail.thebizzie.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231878AbhLNIkk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 03:40:40 -0500
+Received: by mail.thebizzie.pl (Postfix, from userid 1002)
+        id 4380B18126B; Tue, 14 Dec 2021 08:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=thebizzie.pl; s=mail;
+        t=1639470830; bh=kU+//Lu71IqgcFfjayWXuIc0mZtoyrYJc2YuqyU8eS8=;
+        h=Date:From:To:Subject:From;
+        b=a/WtEmvmjEKystgyeyXC9D2HE/c8qJ4eHgGw8C1Fx908iBnE3tMcR9WQgMPQBds4F
+         Fu0XAJGcymU0IJ4VMRXPMc/Ha3PGqRBd9W/Osa3NEGKezrsWi/ZFXFqGCNe/UAYzWk
+         q4HlAas64kLbivZY1l7zTNrd8iJKvmcxzA7qgfYarejqqhm9yuUkrRcMz2lBGx9iTi
+         kgmksJkFmgyoQQTVBAsRp2pVI2H7hFhFoZjBzShuYAoCTBtXNDRBTsXHuOAmbv2BoI
+         s/xjtzFDoWO/f8R65RTRoIOzymfp0gTYRY9Fq4e4B2IOkIdZw8aZ/QeHm2MVWISfpf
+         JLB661WUAZPeA==
+Received: by mail.thebizzie.pl for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 08:32:04 GMT
+Message-ID: <20211214074500-0.1.7.2n0.0.bp908ie5fg@thebizzie.pl>
+Date:   Tue, 14 Dec 2021 08:32:04 GMT
+From:   "Mateusz Adamczyk" <mateusz.adamczyk@thebizzie.pl>
+To:     <linux-pci@vger.kernel.org>
+Subject: Wycena paneli fotowoltaicznych
+X-Mailer: mail.thebizzie.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211209201235.1314584-2-david.e.box@linux.intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 09, 2021 at 12:12:35PM -0800, David E. Box wrote:
-> +static int vmd_enable_aspm(struct pci_dev *pdev, void *userdata)
-> +{
-> +	int features = *(int *)userdata;
-> +
-> +	if (features & VMD_FEAT_QUIRK_OVERRIDE_ASPM &&
-> +	    pdev->class == PCI_CLASS_STORAGE_EXPRESS) {
-> +		int pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-> +
-> +		if (pos) {
-> +			pci_write_config_word(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, 0x1003);
-> +			pci_write_config_word(pdev, pos + PCI_LTR_MAX_NOSNOOP_LAT, 0x1003);
-> +			if (pcie_aspm_policy_override(pdev))
-> +				pci_info(pdev, "Unable of override ASPM policy\n");
-> +		}
+Dzie=C5=84 dobry,
 
-This is completely unredable due to the long lines.  Just return early on
-the two conditionals and it will all be fine.
+dostrzegam mo=C5=BCliwo=C5=9B=C4=87 wsp=C3=B3=C5=82pracy z Pa=C5=84stwa f=
+irm=C4=85.
+
+=C5=9Awiadczymy kompleksow=C4=85 obs=C5=82ug=C4=99 inwestycji w fotowolta=
+ik=C4=99, kt=C3=B3ra obni=C5=BCa koszty energii elektrycznej nawet o 90%.
+
+Czy s=C4=85 Pa=C5=84stwo zainteresowani weryfikacj=C4=85 wst=C4=99pnych p=
+ropozycji?
+
+
+Pozdrawiam,
+Mateusz Adamczyk
