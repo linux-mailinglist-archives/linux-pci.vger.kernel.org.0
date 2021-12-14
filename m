@@ -2,108 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97057474D28
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 22:20:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EB8B474DC4
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 23:15:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230295AbhLNVUC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Dec 2021 16:20:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229990AbhLNVUC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 16:20:02 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C72FCC061574;
-        Tue, 14 Dec 2021 13:20:01 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639516798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UY5SIbLiQJhNf3IcwLAaYT3af81CnBCUSA3qSWP4dj0=;
-        b=EzQFCHRvraOq6euqkQn1B+tUeoQ1uw1bo4mwk9Q+vKSF8S8PO4nMGeLKZ/WNHEDZ5eJhpq
-        mjggZFTuoIKEO/OrzzxxfitzasNIFFxeDKcRyrdk7DdmUaNmMFC1unLIMtUfaK38TWwXYn
-        h2orgm5VCZyrGWnjQirGszYr8438eZQal4q/1iuBvD2zWg9nOeapYD6mAyJQRKxCWoQSAd
-        enz2/bCSy9StMuvCnU8bbCEhKsc+iX17V3lbzwiD4WPpGEDgVUswHFbLH8z54QbwfbJl42
-        iPxl/XpXV7+3L/A3q2mlzAY6VVHUHz35mnJZ8s3Ze10jfDmKSXRCDaOkhFkkdQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639516798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UY5SIbLiQJhNf3IcwLAaYT3af81CnBCUSA3qSWP4dj0=;
-        b=lDR2zL85oMI4BdOLKEJ1Arl/dti0X9kWdevk0BKKPLGWBqf9hwgLOpBluOuP1fE4iBCR8Y
-        5fOFMFfQxW57zEAA==
-To:     Nishanth Menon <nm@ti.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        Juergen Gross <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S232770AbhLNWPM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Dec 2021 17:15:12 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:50789 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232252AbhLNWPL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 17:15:11 -0500
+Received: from [77.244.183.192] (port=63782 helo=melee.fritz.box)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.94.2)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1mxG4j-000AP5-UT; Tue, 14 Dec 2021 23:15:10 +0100
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-pci@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
-In-Reply-To: <20211214205626.lrnddha6bd6d6es5@possibly>
-References: <20211210221642.869015045@linutronix.de>
- <20211213182958.ytj4m6gsg35u77cv@detonator> <87fsqvttfv.ffs@tglx>
- <20211214162247.ocjm7ihg5oi7uiuv@slider> <87wnk7rvnz.ffs@tglx>
- <87tufbrudl.ffs@tglx> <87mtl3rli1.ffs@tglx>
- <20211214205626.lrnddha6bd6d6es5@possibly>
-Date:   Tue, 14 Dec 2021 22:19:57 +0100
-Message-ID: <87h7basx36.ffs@tglx>
+        Sekhar Nori <nsekhar@ti.com>
+Subject: [PATCH 1/2] PCI: dra7xx: Fix link removal on probe error
+Date:   Tue, 14 Dec 2021 23:14:49 +0100
+Message-Id: <20211214221450.589884-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Nishanth,
+If a devm_phy_get() calls fails with phy_count==N (N > 0), then N links
+have already been added by device_link_add() and won't be deleted by
+device_link_del() because the code calls 'return' and not 'goto err_link'.
 
-On Tue, Dec 14 2021 at 14:56, Nishanth Menon wrote:
-> On 21:15-20211214, Thomas Gleixner wrote:
->> I think I managed to distangle this. Can you please give:
->> 
->>    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v4-part-2
->
->
-> Umm.. I am not entirely sure what is going on.. but all kinds of weird
-> corruption seems to occur with msi-v4-part-2 that does'nt seem to be
-> present in v5.16-rc5. (I use NFS since ethernet in K3 platforms use
-> inta/intr and dma that is impacted by this series).
->
-> I will try and rebase your patches on v5.16-rc4 to be sure as well and
-> report back later today once i get some time.
->
-> [1] https://gist.github.com/nmenon/a66e022926c4c15313c45d44313d860c msi-v4-part-2
-> [2] https://gist.github.com/nmenon/43085664d69ad846d596e76a06ed0656  v5.16-rc5
+Fix in a very simple way by doing all the devm_phy_get() calls before all
+the device_link_add() calls.
 
-thanks for trying. I'll have a look again with brain awake tomorrow
-morning.
+Fixes: 7a4db656a635 ("PCI: dra7xx: Create functional dependency between PCIe and PHY")
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+---
+ drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks,
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index f7f1490e7beb..2ccc53869e13 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -757,7 +757,9 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
+ 		phy[i] = devm_phy_get(dev, name);
+ 		if (IS_ERR(phy[i]))
+ 			return PTR_ERR(phy[i]);
++	}
+ 
++	for (i = 0; i < phy_count; i++) {
+ 		link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
+ 		if (!link[i]) {
+ 			ret = -EINVAL;
+-- 
+2.25.1
 
-        tglx
