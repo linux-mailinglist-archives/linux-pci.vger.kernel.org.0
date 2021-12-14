@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1013474E53
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 23:59:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05CC8474E56
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 23:59:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235100AbhLNW7G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Dec 2021 17:59:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37860 "EHLO
+        id S235104AbhLNW7H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Dec 2021 17:59:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235047AbhLNW7F (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 17:59:05 -0500
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A6EC06173E
-        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 14:59:04 -0800 (PST)
-Received: by mail-lf1-x136.google.com with SMTP id b1so39589637lfs.13
-        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 14:59:04 -0800 (PST)
+        with ESMTP id S235047AbhLNW7G (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 17:59:06 -0500
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B5FFC06173F
+        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 14:59:06 -0800 (PST)
+Received: by mail-lj1-x22c.google.com with SMTP id p8so30608845ljo.5
+        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 14:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=L4pIImixrdWMTKaYWRmzrWP1bf+OcXW6Av2PMVI53nk=;
-        b=qyndXVPHUhhWwxY5Zzbkg3x5vUsiEK+u9FdWj8n7VtMK3HVs1hkf7hHqqOADZwZgOU
-         BGobVzKnTnbZ0axjo9BbUVen8+6QfmwCUpEoGaeZjGlFV0PP5hDeFTmZnk/eIvL6Wkmo
-         z+URfNuB9udJQW4r3OY+3W1pHYKadql3zEfKSXBe+yMqeuS9ofPvCbp2fSpbIe2A2SJx
-         gGNCNWiGFCqPZqDwd+ZNJaHm+8x6zwXhJ2ubWYBrmSjD+HSaSU9Wa4fm9s0ETzOHP+1H
-         Xm2aszqHgACWgA7qMmKM7co8Z0gy8bvykT42m7bPTlGteggnRu2Mscp3wvDwjg0qtpeA
-         mnNg==
+        bh=Wy6PRuTmEIMuhgtUQE9Eh1epb/l1hlZtagcw8/LrEbU=;
+        b=R/Q1qLweiMg0Zg8xw8/ozd5KkUXh+rN8xbCem+FVbK/T1ZJdrb02PUcny/52ZtLB6o
+         at3kTysu4Prk36hXg/mexDkQHcs/fyqnJti2fAyKTnAmMNtXuPS1qaQsL7sv/pi3fSng
+         Ym6IAypWRN272NzDA6X1CBymfHqGP2GGYxkzv0ZReNUDNcI5+/p2hieqnKFCTc214ZII
+         WQd6jsaPTSoNg366XLjscfaKXBSHzpDltyCWBefDexCoXlj66vlqfMX0lywcEbDzrZYe
+         C555Wr3bdrbVH8w+NiM2VpPNWGvjUql270YLuJFsLi35XTy5e4EZH07JbsR7fRxwMNh+
+         r5qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=L4pIImixrdWMTKaYWRmzrWP1bf+OcXW6Av2PMVI53nk=;
-        b=lLmOc+MpGV+O44bmzzh9dY4RjXr5ZQIXD72B5BdTGpgiCZH4P9RxjmeBhC2JFS1Av0
-         SyKBAfngh7kj/RHs9DSdc00/hU73bTeHBOI8+RrdydL4HBH5Yg/rZ2UGxSMv1Orsxz/X
-         UmQv52gZ7tt/aMmAIXhUpXtigOArqxJzbvq5vgJqee9epFLEl9HMAk0kVjXTtJgaPbB/
-         sU0bqRNAYU0tKJkunsP+wmuS/EkES3P5nni5dcVRU50p0FvUw0yAWEKie47aA8Qc60O5
-         P/o+IF3PbKKta8994sO/PH2lgtnn8D8HuL43GMY7oSI7qMSuZNldbGv9k7GF57FzbM3i
-         SbKQ==
-X-Gm-Message-State: AOAM530QwbwM2ZG5bxFIyDSF3A6C7xcdTYPgwBkjbb9MCfn64NSoBTuk
-        bFMWAnTrcHOSduesSXxG+d1TpQ==
-X-Google-Smtp-Source: ABdhPJyJXAvWYZFxmg3G09HUfR3xVYI4mAt3CKh5QbK0T+O/+Uzv1Df00bkHlb03AoXgbUQZfrZNGg==
-X-Received: by 2002:a05:6512:33a9:: with SMTP id i9mr7319218lfg.30.1639522743123;
-        Tue, 14 Dec 2021 14:59:03 -0800 (PST)
+        bh=Wy6PRuTmEIMuhgtUQE9Eh1epb/l1hlZtagcw8/LrEbU=;
+        b=eyQhkelJU0Z4s0HhMGrgRugckUcUxE8r14k4C+LKWuhIM8ypobwqA4Re0Q5J2sqZLv
+         bryYsqKxwAC3vq63zTjh7Vah8mPud9JV2ap8A7UP/Nr3ghnkriwXVi27VqhY+0N71x2X
+         mOOXgNvuae1ZM+OPKx96A84I7V88Ib4KfidfXrcxLyLKcu1KnnNju5aIIhe+e1lBlLxB
+         PLzeD5rPx70NlzBPFJBS0Zn+XrqhUNN6ljyixUynqn2IaoRKOvgdG2U3SGvkwBLt3V45
+         tMFSbBWk5OnxtGNkr3A92QeKivjF38dq0zRWC/JN2+nld5/DP1al4fATatrGTgAUzyAD
+         R4AQ==
+X-Gm-Message-State: AOAM531c7JCVDz5C00Uu7gQtNgG/tiuL4HeFOB4sDxFKbCbO+M56Pcdt
+        9V6EAAJxgR65u22xU5nIrmtYAg==
+X-Google-Smtp-Source: ABdhPJyjdqL7mJ7Cld7u5cyp/CtCpC4tLposHIT80fAf5Jt7jLr8cc3MS9MDNcOerLIXwxsnhh90SA==
+X-Received: by 2002:a05:651c:50c:: with SMTP id o12mr7664423ljp.88.1639522744780;
+        Tue, 14 Dec 2021 14:59:04 -0800 (PST)
 Received: from eriador.lan ([2001:470:dd84:abc0::8a5])
-        by smtp.gmail.com with ESMTPSA id t10sm45115lja.105.2021.12.14.14.59.01
+        by smtp.gmail.com with ESMTPSA id t10sm45115lja.105.2021.12.14.14.59.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Dec 2021 14:59:02 -0800 (PST)
+        Tue, 14 Dec 2021 14:59:04 -0800 (PST)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -59,9 +59,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: [PATCH v4 06/10] PCI: qcom: Add SM8450 PCIe support
-Date:   Wed, 15 Dec 2021 01:58:42 +0300
-Message-Id: <20211214225846.2043361-7-dmitry.baryshkov@linaro.org>
+Subject: [PATCH v4 07/10] arm64: dts: qcom: sm8450: add PCIe0 PHY node
+Date:   Wed, 15 Dec 2021 01:58:43 +0300
+Message-Id: <20211214225846.2043361-8-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211214225846.2043361-1-dmitry.baryshkov@linaro.org>
 References: <20211214225846.2043361-1-dmitry.baryshkov@linaro.org>
@@ -71,117 +71,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On SM8450 platform PCIe hosts do not use all the clocks (and add several
-additional clocks), so expand the driver to handle these requirements.
+Add device tree node for the first PCIe PHY device found on the Qualcomm
+SM8450 platform.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 47 +++++++++++++++++++-------
- 1 file changed, 34 insertions(+), 13 deletions(-)
+ arch/arm64/boot/dts/qcom/sm8450.dtsi | 42 ++++++++++++++++++++++++++--
+ 1 file changed, 40 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 2f9a9497733e..d129729bb2a6 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -161,7 +161,7 @@ struct qcom_pcie_resources_2_3_3 {
+diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+index 16a789cacb65..a047d8a22897 100644
+--- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+@@ -558,8 +558,12 @@ gcc: clock-controller@100000 {
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
+-			clock-names = "bi_tcxo", "sleep_clk";
+-			clocks = <&rpmhcc RPMH_CXO_CLK>, <&sleep_clk>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&pcie0_lane>,
++				 <&sleep_clk>;
++			clock-names = "bi_tcxo",
++				      "pcie_0_pipe_clk",
++				      "sleep_clk";
+ 		};
  
- /* 6 clocks typically, 7 for sm8250 */
- struct qcom_pcie_resources_2_7_0 {
--	struct clk_bulk_data clks[7];
-+	struct clk_bulk_data clks[9];
- 	int num_clks;
- 	struct regulator_bulk_data supplies[2];
- 	struct reset_control *pci_reset;
-@@ -195,7 +195,10 @@ struct qcom_pcie_ops {
- struct qcom_pcie_cfg {
- 	const struct qcom_pcie_ops *ops;
- 	unsigned int pipe_clk_need_muxing:1;
-+	unsigned int has_tbu_clk:1;
- 	unsigned int has_ddrss_sf_tbu_clk:1;
-+	unsigned int has_aggre0_clk:1;
-+	unsigned int has_aggre1_clk:1;
- };
+ 		qupv3_id_0: geniqup@9c0000 {
+@@ -625,6 +629,40 @@ i2c14: i2c@a98000 {
+ 			};
+ 		};
  
- struct qcom_pcie {
-@@ -1146,6 +1149,7 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
-+	unsigned int idx;
- 	int ret;
- 
- 	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
-@@ -1159,18 +1163,22 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	if (ret)
- 		return ret;
- 
--	res->clks[0].id = "aux";
--	res->clks[1].id = "cfg";
--	res->clks[2].id = "bus_master";
--	res->clks[3].id = "bus_slave";
--	res->clks[4].id = "slave_q2a";
--	res->clks[5].id = "tbu";
--	if (pcie->cfg->has_ddrss_sf_tbu_clk) {
--		res->clks[6].id = "ddrss_sf_tbu";
--		res->num_clks = 7;
--	} else {
--		res->num_clks = 6;
--	}
-+	idx = 0;
-+	res->clks[idx++].id = "aux";
-+	res->clks[idx++].id = "cfg";
-+	res->clks[idx++].id = "bus_master";
-+	res->clks[idx++].id = "bus_slave";
-+	res->clks[idx++].id = "slave_q2a";
-+	if (pcie->cfg->has_tbu_clk)
-+		res->clks[idx++].id = "tbu";
-+	if (pcie->cfg->has_ddrss_sf_tbu_clk)
-+		res->clks[idx++].id = "ddrss_sf_tbu";
-+	if (pcie->cfg->has_aggre0_clk)
-+		res->clks[idx++].id = "aggre0";
-+	if (pcie->cfg->has_aggre1_clk)
-+		res->clks[idx++].id = "aggre1";
++		pcie0_phy: phy@1c06000 {
++			compatible = "qcom,sm8450-qmp-gen3x1-pcie-phy";
++			reg = <0 0x01c06000 0 0x200>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
++				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
++				 <&gcc GCC_PCIE_0_CLKREF_EN>,
++				 <&gcc GCC_PCIE_0_PHY_RCHNG_CLK>;
++			clock-names = "aux", "cfg_ahb", "ref", "refgen";
 +
-+	res->num_clks = idx;
- 
- 	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
- 	if (ret < 0)
-@@ -1509,15 +1517,27 @@ static const struct qcom_pcie_cfg ipq4019_cfg = {
- 
- static const struct qcom_pcie_cfg sdm845_cfg = {
- 	.ops = &ops_2_7_0,
-+	.has_tbu_clk = true,
- };
- 
- static const struct qcom_pcie_cfg sm8250_cfg = {
- 	.ops = &ops_1_9_0,
-+	.has_tbu_clk = true,
- 	.has_ddrss_sf_tbu_clk = true,
- };
- 
-+/* Only for the PCIe0! */
-+static const struct qcom_pcie_cfg sm8450_cfg = {
-+	.ops = &ops_1_9_0,
-+	.has_ddrss_sf_tbu_clk = true,
-+	.pipe_clk_need_muxing = true,
-+	.has_aggre0_clk = true,
-+	.has_aggre1_clk = true,
-+};
++			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
++			reset-names = "phy";
 +
- static const struct qcom_pcie_cfg sc7280_cfg = {
- 	.ops = &ops_1_9_0,
-+	.has_tbu_clk = true,
- 	.pipe_clk_need_muxing = true,
- };
- 
-@@ -1625,6 +1645,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-sdm845", .data = &sdm845_cfg },
- 	{ .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
- 	{ .compatible = "qcom,pcie-sc8180x", .data = &sm8250_cfg },
-+	{ .compatible = "qcom,pcie-sm8450", .data = &sm8450_cfg },
- 	{ .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
- 	{ }
- };
++			assigned-clocks = <&gcc GCC_PCIE_0_PHY_RCHNG_CLK>;
++			assigned-clock-rates = <100000000>;
++
++			status = "disabled";
++
++			pcie0_lane: lanes@1c06200 {
++				reg = <0 0x1c06e00 0 0x200>, /* tx */
++				      <0 0x1c07000 0 0x200>, /* rx */
++				      <0 0x1c06200 0 0x200>, /* pcs */
++				      <0 0x1c06600 0 0x200>; /* pcs_pcie */
++				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
++				clock-names = "pipe0";
++
++				#clock-cells = <0>;
++				#phy-cells = <0>;
++				clock-output-names = "pcie_0_pipe_clk";
++			};
++		};
++
+ 		config_noc: interconnect@1500000 {
+ 			compatible = "qcom,sm8450-config-noc";
+ 			reg = <0 0x01500000 0 0x1c000>;
 -- 
 2.33.0
 
