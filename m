@@ -2,90 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6857447402D
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 11:13:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F07E474128
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Dec 2021 12:10:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232891AbhLNKNi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Dec 2021 05:13:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57964 "EHLO
+        id S233426AbhLNLKe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Dec 2021 06:10:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232865AbhLNKNg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 05:13:36 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E436C06173F
-        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 02:13:36 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id f125so17026777pgc.0
-        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 02:13:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2rug4EuC9Ad8IFEiNCmMA6aYrYVML8F4r4iVetDTwr0=;
-        b=mwUnYoVqZeRIOlk3PSDwFfqhSLX+8xyxryjI6XRaL0TW8dzaheEvY6tw9NYijXSK53
-         bQRc9WqmUyRYE01lzA8RwVVwxfDhpHVeWFlT0UG2kEzMgxxFv1CvdN1OZ4tiz/YEML9l
-         Abd9VfhQkm46A2wnXsyf+HlGNK9+j416yRIbNeniVmIbitHlRqVF/cObYjvqywKKZKJq
-         jilG0TK5mofdbqF4US4Ka5bKSfnX/9U3J6l5MV/uYEM7aKTisIbVOfOoi79+OBqwgTq2
-         HAkTAEqe+I5+XfjqNc4AxpYzYDg1Lz3JL9YrTrEsJMKTB+Xwph7IA5kwImdd2oIwCp7L
-         0fPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2rug4EuC9Ad8IFEiNCmMA6aYrYVML8F4r4iVetDTwr0=;
-        b=bpkVSPQQLqjsV5X42aYxfDyRnlZojCg0B1DjOAIxkk+V8BZcak03XMZ/EgTMgepdIB
-         X7DFLUkBHv4wS8s24oT0I64YOess9RYQIFzKAwnmMGwMsixYy3kkKFAeLuhj/q/GwVDZ
-         4Zc3LAr4vdUFv4li3qZgS193tnFrfxXNxPUjCgcajWQrYo2PF82z74f7r9Fe+ZpzdTVP
-         HhVNsuKG+zR56ea0NV54GhgMWWLe4IqECW6lh+uWCnhk/YYfj5BIf/CB/GbZs73b4j8R
-         Z66ZIot2XceSUTDPGSvR6G6Ou/A730nLfVHD7AYAfVLaO0lEyeSEpSXNpdLxefgobOAY
-         xjpQ==
-X-Gm-Message-State: AOAM5319wLveCQEXWGopVARYiqYSt5qQBo94DilhYabUa2ISBYZ2ecWH
-        cShn1gVc36bW+mBHWkoeoL0FKhWVv7xB
-X-Google-Smtp-Source: ABdhPJxDKkg6hQUK1gsiN0fln+nUoRMFYCqFfoMwgPUn4A3o6KYCEMUlQqhnVT0bpXwTtmU4JUO7CA==
-X-Received: by 2002:a63:754c:: with SMTP id f12mr3173578pgn.161.1639476815884;
-        Tue, 14 Dec 2021 02:13:35 -0800 (PST)
-Received: from localhost.localdomain ([117.193.214.199])
-        by smtp.gmail.com with ESMTPSA id s3sm1922229pjk.41.2021.12.14.02.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Dec 2021 02:13:35 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lorenzo.pieralisi@arm.com, bhelgaas@google.com
-Cc:     svarbanov@mm-sol.com, bjorn.andersson@linaro.org, robh@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] PCI: qcom: Add support for handling MSIs from 8 endpoints
-Date:   Tue, 14 Dec 2021 15:43:19 +0530
-Message-Id: <20211214101319.25258-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229502AbhLNLKd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Dec 2021 06:10:33 -0500
+Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:1::465:107])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41501C061574
+        for <linux-pci@vger.kernel.org>; Tue, 14 Dec 2021 03:10:33 -0800 (PST)
+Received: from smtp2.mailbox.org (unknown [91.198.250.124])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4JCwdw6zHgzQlFs;
+        Tue, 14 Dec 2021 12:10:28 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Message-ID: <c3bc7444-7079-9995-dd7f-8bfe214df4b1@denx.de>
+Date:   Tue, 14 Dec 2021 12:10:20 +0100
 MIME-Version: 1.0
+Subject: Re: [RFC PATCH] PCI/MSI: Only mask all MSI-X entries when MSI-X is
+ used
+Content-Language: en-US
+To:     Thomas Gleixner <tglx@linutronix.de>, linux-pci@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Marek Vasut <marex@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20211210161025.3287927-1-sr@denx.de> <87czm3wimf.ffs@tglx>
+ <ee612558-18e6-1ef0-3a48-7a971fdd57f2@denx.de> <87tufevoqx.ffs@tglx>
+From:   Stefan Roese <sr@denx.de>
+In-Reply-To: <87tufevoqx.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The DWC controller used in the Qcom Platforms are capable of addressing the
-MSIs generated from 8 different endpoints each with 32 vectors (256 in
-total). Currently the driver is using the default value of addressing the
-MSIs from 1 endpoint only. Extend it by passing the MAX_MSI_IRQS to the
-num_vectors field of pcie_port structure.
+Hi Thomas,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 1 +
- 1 file changed, 1 insertion(+)
+On 12/11/21 22:02, Thomas Gleixner wrote:
+> Stefan,
+> 
+> On Sat, Dec 11 2021 at 14:58, Stefan Roese wrote:
+>> On 12/11/21 11:17, Thomas Gleixner wrote:
+>>> Can you try the patch below?
+>>
+>> Sure, please see below.
+>>
+>>> It might still be that this Marvell part really combines the per entry
+>>> mask bits from MSI-X with MSI, then we need both.
+>>
+>> With your patch applied only (mine not), the Masked+ is gone but still
+>> the MSI interrupts are not received in the system. So you seem to have
+>> guessed correctly, that we need both changes.
+> 
+> Groan. How is that device specification compliant?
+> 
+> Vector Control for MSI-X Table Entries
+> --------------------------------------
+> 
+> "00: Mask bit:  When this bit is set, the function is prohibited from
+>                  sending a message using this MSI-X Table entry.
+>                  ....
+>                  This bit’s state after reset is 1 (entry is masked)."
+> 
+> So how can that work in the first place if that device is PCI
+> specification compliant? Seems that PCI/SIG compliance program is just
+> another rubberstamping nonsense.
+> 
+> Can someone who has access to that group please ask them what their
+> specification compliance stuff is actualy testing?
+> 
+> Sure, that went unnoticed so far on that marvelous device because the
+> kernel was missing a defense line, but sigh...
+> 
+>> How to continue? Should I integrate your patch into mine and send a new
+>> version? Or will you send it separately to the list for integration?
+> 
+> Your patch is incomplete. The function can fail later on, which results
+> in the same problem, no?
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 1c3d1116bb60..8a4c08d815a5 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1550,6 +1550,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	pci->dev = dev;
- 	pci->ops = &dw_pcie_ops;
- 	pp = &pci->pp;
-+	pp->num_vectors = MAX_MSI_IRQS;
- 
- 	pcie->pci = pci;
- 
+Yes, agreed.
+
+> So we need something like the below.
+
+The patch below works fine on my ZynqMP platform. MSI interrupts are now
+received okay.
+
+> Just to satisfy my curiosity:
+> 
+>    The device supports obviously MSI-X, which is preferred over MSI.
+
+I would gladly use MSI-X interrupts, if easily possible. But...
+
+>    So why is the MSI-X initialization failing in the first place on this
+>    platform?
+
+... the ZyqnMP PCIe rootport driver only support legacy and MSI
+interrupts but not MSI-X (yet) [1].
+
+Thanks,
+Stefan
+
+[1] 
+https://elixir.bootlin.com/linux/latest/source/drivers/pci/controller/pcie-xilinx-nwl.c
+
+> Thanks,
+> 
+>          tglx
+> ---
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -722,9 +722,6 @@ static int msix_capability_init(struct p
+>   		goto out_disable;
+>   	}
+>   
+> -	/* Ensure that all table entries are masked. */
+> -	msix_mask_all(base, tsize);
+> -
+>   	ret = msix_setup_entries(dev, base, entries, nvec, affd);
+>   	if (ret)
+>   		goto out_disable;
+> @@ -751,6 +748,9 @@ static int msix_capability_init(struct p
+>   	/* Set MSI-X enabled bits and unmask the function */
+>   	pci_intx_for_msi(dev, 0);
+>   	dev->msix_enabled = 1;
+> +
+> +	/* Ensure that all table entries are masked. */
+> +	msix_mask_all(base, tsize);
+>   	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+>   
+>   	pcibios_free_irq(dev);
+> @@ -777,7 +777,7 @@ static int msix_capability_init(struct p
+>   	free_msi_irqs(dev);
+>   
+>   out_disable:
+> -	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
+> +	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL | PCI_MSIX_FLAGS_ENABLE, 0);
+>   
+>   	return ret;
+>   }
+> 
+
+Viele Grüße,
+Stefan Roese
+
 -- 
-2.25.1
-
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de
