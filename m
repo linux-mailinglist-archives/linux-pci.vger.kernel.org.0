@@ -2,233 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16BB04764A3
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 22:36:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDA6B4764A9
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 22:37:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229867AbhLOVgH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Dec 2021 16:36:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229771AbhLOVgH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 16:36:07 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87AD3C061574
-        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 13:36:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A0482B82156
-        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 21:36:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A349C36AE4;
-        Wed, 15 Dec 2021 21:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639604163;
-        bh=M8FpFdfI5PQCLRMAnLjI3lYzO7J6aNRBBehokrUzzHY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GQ05uZOfNT+magnKpCrtTJO5piS/oDVa+5tlsJwFzVqYggPjcv5vdnXv+nanBZCem
-         K7FRCNaScrWGJBNzyGHE3nnCMi1lHMmmupv9B+Vg4C2j0Y2hvEhYWSE6Fl9+LA3ixQ
-         VOwtZzv20qeVl9NX94NB4TwilMzKkr71tvMsKjhaQ3dAlF0vA4ATWvCH9Q+gwDJUML
-         kQLVL5WZn5I0cU8V8ZiKCRRgzQ9vxVgdxBQSYAEN4Tq/WzLlML58JGQ7BfFmVygKsl
-         hoRxpwOPKRVGJRs0JNSSMBFxzsGT2DBPw/CEVXOmJEpHZPF7YKaXITDiLlVf/ZrI/5
-         Bun3/Y3dSwDlw==
-Date:   Wed, 15 Dec 2021 15:36:01 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Change PCIe capability registers offset to hex
-Message-ID: <20211215213601.GA714569@bhelgaas>
+        id S229708AbhLOVhY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Dec 2021 16:37:24 -0500
+Received: from mail-ot1-f50.google.com ([209.85.210.50]:37795 "EHLO
+        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229726AbhLOVhY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 16:37:24 -0500
+Received: by mail-ot1-f50.google.com with SMTP id h19-20020a9d3e53000000b0056547b797b2so26513476otg.4;
+        Wed, 15 Dec 2021 13:37:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tiVd6i1mSOf4f84+8yVBYJ1g96mSqYbzqmAOlstb8S8=;
+        b=p6YjnGkRkCCnA8/hXlocB55PGOE4Goev27CBj/93Y9C/2+usEp8DKH7XS/dCVcz1y+
+         cFNUqcfQ4xnVOCpnEXzpJsMqpdg7ZFiwA/I+OZz0701AJ5S+fJZrd5LBaiK8nIH4GYlQ
+         6EJ7ynVp5geVAm8M3SlnveDXmObyo0P09jrNsl3jf8RgpWuXBnY5tG3jawIqpWqa0iPA
+         vlpUhuAX/zR0zApsGTK6yMzIW/ne67MpuGij4yaNgSU/j1VfuvQ0zRmH8FcT+HH/SVex
+         l4Rl/oIcDEwXTOZfd3yNzzzAX6LN1EptTzHyyY4luwIUfKt5RwmAOMUro2xByiOCr8Z/
+         /DkQ==
+X-Gm-Message-State: AOAM531B9L/aVf5jyIiRzJpm34AtUOyfY6AduXuHIAMIHXFIdJ+kELK7
+        N6tSqfJoVReALeIOgxpz3Q==
+X-Google-Smtp-Source: ABdhPJwHU9bys0Ld9Zwop7bOlHmKE70OIYouBaZ09r1gBb0zvlpKTs6gyHZUnDytfQ0lyR1Ac6L0IQ==
+X-Received: by 2002:a9d:6254:: with SMTP id i20mr10433919otk.343.1639604243374;
+        Wed, 15 Dec 2021 13:37:23 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id 9sm555096oij.16.2021.12.15.13.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Dec 2021 13:37:22 -0800 (PST)
+Received: (nullmailer pid 1883028 invoked by uid 1000);
+        Wed, 15 Dec 2021 21:37:21 -0000
+Date:   Wed, 15 Dec 2021 15:37:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-phy@lists.infradead.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v4 01/10] dt-bindings: pci: qcom: Document PCIe bindings
+ for SM8450
+Message-ID: <YbpgEQkPBG8QS/0w@robh.at.kernel.org>
+References: <20211214225846.2043361-1-dmitry.baryshkov@linaro.org>
+ <20211214225846.2043361-2-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aa067278adacbb59a675366052714081f4980f26.1637244780.git.baruch@tkos.co.il>
+In-Reply-To: <20211214225846.2043361-2-dmitry.baryshkov@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 04:13:00PM +0200, Baruch Siach wrote:
-> Hex notation matches the spec documents, and is less error prone.
+On Wed, Dec 15, 2021 at 01:58:37AM +0300, Dmitry Baryshkov wrote:
+> Document the PCIe DT bindings for SM8450 SoC.The PCIe IP is similar
+> to the one used on SM8250. Add the compatible for SM8450.
 > 
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> Link: https://lore.kernel.org/r/20210825160516.GA3576414@bjorn-Precision-5520/
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-
-Applied to pci/misc for v5.17, thanks!
-
-I also converted some other capabilities that had offsets > 8.
-
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  include/uapi/linux/pci_regs.h | 44 +++++++++++++++++------------------
->  1 file changed, 22 insertions(+), 22 deletions(-)
+>  .../devicetree/bindings/pci/qcom,pcie.txt     | 21 ++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+
+I hope someone decides to convert this to schema soon...
+
 > 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index ff6ccbc6efe9..81a972368f2a 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -470,7 +470,7 @@
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> index a0ae024c2d0c..73bc763c5009 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> @@ -15,6 +15,7 @@
+>  			- "qcom,pcie-sc8180x" for sc8180x
+>  			- "qcom,pcie-sdm845" for sdm845
+>  			- "qcom,pcie-sm8250" for sm8250
+> +			- "qcom,pcie-sm8450" for sm8450
+>  			- "qcom,pcie-ipq6018" for ipq6018
 >  
->  /* PCI Express capability registers */
+>  - reg:
+> @@ -169,6 +170,24 @@
+>  			- "ddrss_sf_tbu" PCIe SF TBU clock
+>  			- "pipe"	PIPE clock
 >  
-> -#define PCI_EXP_FLAGS		2	/* Capabilities register */
-> +#define PCI_EXP_FLAGS		0x02	/* Capabilities register */
->  #define  PCI_EXP_FLAGS_VERS	0x000f	/* Capability version */
->  #define  PCI_EXP_FLAGS_TYPE	0x00f0	/* Device/Port type */
->  #define   PCI_EXP_TYPE_ENDPOINT	   0x0	/* Express Endpoint */
-> @@ -484,7 +484,7 @@
->  #define   PCI_EXP_TYPE_RC_EC	   0xa	/* Root Complex Event Collector */
->  #define  PCI_EXP_FLAGS_SLOT	0x0100	/* Slot implemented */
->  #define  PCI_EXP_FLAGS_IRQ	0x3e00	/* Interrupt message number */
-> -#define PCI_EXP_DEVCAP		4	/* Device capabilities */
-> +#define PCI_EXP_DEVCAP		0x04	/* Device capabilities */
->  #define  PCI_EXP_DEVCAP_PAYLOAD	0x00000007 /* Max_Payload_Size */
->  #define  PCI_EXP_DEVCAP_PHANTOM	0x00000018 /* Phantom functions */
->  #define  PCI_EXP_DEVCAP_EXT_TAG	0x00000020 /* Extended tags */
-> @@ -497,7 +497,7 @@
->  #define  PCI_EXP_DEVCAP_PWR_VAL	0x03fc0000 /* Slot Power Limit Value */
->  #define  PCI_EXP_DEVCAP_PWR_SCL	0x0c000000 /* Slot Power Limit Scale */
->  #define  PCI_EXP_DEVCAP_FLR     0x10000000 /* Function Level Reset */
-> -#define PCI_EXP_DEVCTL		8	/* Device Control */
-> +#define PCI_EXP_DEVCTL		0x08	/* Device Control */
->  #define  PCI_EXP_DEVCTL_CERE	0x0001	/* Correctable Error Reporting En. */
->  #define  PCI_EXP_DEVCTL_NFERE	0x0002	/* Non-Fatal Error Reporting Enable */
->  #define  PCI_EXP_DEVCTL_FERE	0x0004	/* Fatal Error Reporting Enable */
-> @@ -522,7 +522,7 @@
->  #define  PCI_EXP_DEVCTL_READRQ_2048B 0x4000 /* 2048 Bytes */
->  #define  PCI_EXP_DEVCTL_READRQ_4096B 0x5000 /* 4096 Bytes */
->  #define  PCI_EXP_DEVCTL_BCR_FLR 0x8000  /* Bridge Configuration Retry / FLR */
-> -#define PCI_EXP_DEVSTA		10	/* Device Status */
-> +#define PCI_EXP_DEVSTA		0x0a	/* Device Status */
->  #define  PCI_EXP_DEVSTA_CED	0x0001	/* Correctable Error Detected */
->  #define  PCI_EXP_DEVSTA_NFED	0x0002	/* Non-Fatal Error Detected */
->  #define  PCI_EXP_DEVSTA_FED	0x0004	/* Fatal Error Detected */
-> @@ -530,7 +530,7 @@
->  #define  PCI_EXP_DEVSTA_AUXPD	0x0010	/* AUX Power Detected */
->  #define  PCI_EXP_DEVSTA_TRPND	0x0020	/* Transactions Pending */
->  #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V1	12	/* v1 endpoints without link end here */
-> -#define PCI_EXP_LNKCAP		12	/* Link Capabilities */
-> +#define PCI_EXP_LNKCAP		0x0c	/* Link Capabilities */
->  #define  PCI_EXP_LNKCAP_SLS	0x0000000f /* Supported Link Speeds */
->  #define  PCI_EXP_LNKCAP_SLS_2_5GB 0x00000001 /* LNKCAP2 SLS Vector bit 0 */
->  #define  PCI_EXP_LNKCAP_SLS_5_0GB 0x00000002 /* LNKCAP2 SLS Vector bit 1 */
-> @@ -549,7 +549,7 @@
->  #define  PCI_EXP_LNKCAP_DLLLARC	0x00100000 /* Data Link Layer Link Active Reporting Capable */
->  #define  PCI_EXP_LNKCAP_LBNC	0x00200000 /* Link Bandwidth Notification Capability */
->  #define  PCI_EXP_LNKCAP_PN	0xff000000 /* Port Number */
-> -#define PCI_EXP_LNKCTL		16	/* Link Control */
-> +#define PCI_EXP_LNKCTL		0x10	/* Link Control */
->  #define  PCI_EXP_LNKCTL_ASPMC	0x0003	/* ASPM Control */
->  #define  PCI_EXP_LNKCTL_ASPM_L0S 0x0001	/* L0s Enable */
->  #define  PCI_EXP_LNKCTL_ASPM_L1  0x0002	/* L1 Enable */
-> @@ -562,7 +562,7 @@
->  #define  PCI_EXP_LNKCTL_HAWD	0x0200	/* Hardware Autonomous Width Disable */
->  #define  PCI_EXP_LNKCTL_LBMIE	0x0400	/* Link Bandwidth Management Interrupt Enable */
->  #define  PCI_EXP_LNKCTL_LABIE	0x0800	/* Link Autonomous Bandwidth Interrupt Enable */
-> -#define PCI_EXP_LNKSTA		18	/* Link Status */
-> +#define PCI_EXP_LNKSTA		0x12	/* Link Status */
->  #define  PCI_EXP_LNKSTA_CLS	0x000f	/* Current Link Speed */
->  #define  PCI_EXP_LNKSTA_CLS_2_5GB 0x0001 /* Current Link Speed 2.5GT/s */
->  #define  PCI_EXP_LNKSTA_CLS_5_0GB 0x0002 /* Current Link Speed 5.0GT/s */
-> @@ -582,7 +582,7 @@
->  #define  PCI_EXP_LNKSTA_LBMS	0x4000	/* Link Bandwidth Management Status */
->  #define  PCI_EXP_LNKSTA_LABS	0x8000	/* Link Autonomous Bandwidth Status */
->  #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V1	20	/* v1 endpoints with link end here */
-> -#define PCI_EXP_SLTCAP		20	/* Slot Capabilities */
-> +#define PCI_EXP_SLTCAP		0x14	/* Slot Capabilities */
->  #define  PCI_EXP_SLTCAP_ABP	0x00000001 /* Attention Button Present */
->  #define  PCI_EXP_SLTCAP_PCP	0x00000002 /* Power Controller Present */
->  #define  PCI_EXP_SLTCAP_MRLSP	0x00000004 /* MRL Sensor Present */
-> @@ -595,7 +595,7 @@
->  #define  PCI_EXP_SLTCAP_EIP	0x00020000 /* Electromechanical Interlock Present */
->  #define  PCI_EXP_SLTCAP_NCCS	0x00040000 /* No Command Completed Support */
->  #define  PCI_EXP_SLTCAP_PSN	0xfff80000 /* Physical Slot Number */
-> -#define PCI_EXP_SLTCTL		24	/* Slot Control */
-> +#define PCI_EXP_SLTCTL		0x18	/* Slot Control */
->  #define  PCI_EXP_SLTCTL_ABPE	0x0001	/* Attention Button Pressed Enable */
->  #define  PCI_EXP_SLTCTL_PFDE	0x0002	/* Power Fault Detected Enable */
->  #define  PCI_EXP_SLTCTL_MRLSCE	0x0004	/* MRL Sensor Changed Enable */
-> @@ -617,7 +617,7 @@
->  #define  PCI_EXP_SLTCTL_EIC	0x0800	/* Electromechanical Interlock Control */
->  #define  PCI_EXP_SLTCTL_DLLSCE	0x1000	/* Data Link Layer State Changed Enable */
->  #define  PCI_EXP_SLTCTL_IBPD_DISABLE	0x4000 /* In-band PD disable */
-> -#define PCI_EXP_SLTSTA		26	/* Slot Status */
-> +#define PCI_EXP_SLTSTA		0x1a	/* Slot Status */
->  #define  PCI_EXP_SLTSTA_ABP	0x0001	/* Attention Button Pressed */
->  #define  PCI_EXP_SLTSTA_PFD	0x0002	/* Power Fault Detected */
->  #define  PCI_EXP_SLTSTA_MRLSC	0x0004	/* MRL Sensor Changed */
-> @@ -627,15 +627,15 @@
->  #define  PCI_EXP_SLTSTA_PDS	0x0040	/* Presence Detect State */
->  #define  PCI_EXP_SLTSTA_EIS	0x0080	/* Electromechanical Interlock Status */
->  #define  PCI_EXP_SLTSTA_DLLSC	0x0100	/* Data Link Layer State Changed */
-> -#define PCI_EXP_RTCTL		28	/* Root Control */
-> +#define PCI_EXP_RTCTL		0x1c	/* Root Control */
->  #define  PCI_EXP_RTCTL_SECEE	0x0001	/* System Error on Correctable Error */
->  #define  PCI_EXP_RTCTL_SENFEE	0x0002	/* System Error on Non-Fatal Error */
->  #define  PCI_EXP_RTCTL_SEFEE	0x0004	/* System Error on Fatal Error */
->  #define  PCI_EXP_RTCTL_PMEIE	0x0008	/* PME Interrupt Enable */
->  #define  PCI_EXP_RTCTL_CRSSVE	0x0010	/* CRS Software Visibility Enable */
-> -#define PCI_EXP_RTCAP		30	/* Root Capabilities */
-> +#define PCI_EXP_RTCAP		0x1e	/* Root Capabilities */
->  #define  PCI_EXP_RTCAP_CRSVIS	0x0001	/* CRS Software Visibility capability */
-> -#define PCI_EXP_RTSTA		32	/* Root Status */
-> +#define PCI_EXP_RTSTA		0x20	/* Root Status */
->  #define  PCI_EXP_RTSTA_PME	0x00010000 /* PME status */
->  #define  PCI_EXP_RTSTA_PENDING	0x00020000 /* PME pending */
->  /*
-> @@ -646,7 +646,7 @@
->   * Use pcie_capability_read_word() and similar interfaces to use them
->   * safely.
->   */
-> -#define PCI_EXP_DEVCAP2		36	/* Device Capabilities 2 */
-> +#define PCI_EXP_DEVCAP2		0x24	/* Device Capabilities 2 */
->  #define  PCI_EXP_DEVCAP2_COMP_TMOUT_DIS	0x00000010 /* Completion Timeout Disable supported */
->  #define  PCI_EXP_DEVCAP2_ARI		0x00000020 /* Alternative Routing-ID */
->  #define  PCI_EXP_DEVCAP2_ATOMIC_ROUTE	0x00000040 /* Atomic Op routing */
-> @@ -658,7 +658,7 @@
->  #define  PCI_EXP_DEVCAP2_OBFF_MSG	0x00040000 /* New message signaling */
->  #define  PCI_EXP_DEVCAP2_OBFF_WAKE	0x00080000 /* Re-use WAKE# for OBFF */
->  #define  PCI_EXP_DEVCAP2_EE_PREFIX	0x00200000 /* End-End TLP Prefix */
-> -#define PCI_EXP_DEVCTL2		40	/* Device Control 2 */
-> +#define PCI_EXP_DEVCTL2		0x28	/* Device Control 2 */
->  #define  PCI_EXP_DEVCTL2_COMP_TIMEOUT	0x000f	/* Completion Timeout Value */
->  #define  PCI_EXP_DEVCTL2_COMP_TMOUT_DIS	0x0010	/* Completion Timeout Disable */
->  #define  PCI_EXP_DEVCTL2_ARI		0x0020	/* Alternative Routing-ID */
-> @@ -670,9 +670,9 @@
->  #define  PCI_EXP_DEVCTL2_OBFF_MSGA_EN	0x2000	/* Enable OBFF Message type A */
->  #define  PCI_EXP_DEVCTL2_OBFF_MSGB_EN	0x4000	/* Enable OBFF Message type B */
->  #define  PCI_EXP_DEVCTL2_OBFF_WAKE_EN	0x6000	/* OBFF using WAKE# signaling */
-> -#define PCI_EXP_DEVSTA2		42	/* Device Status 2 */
-> +#define PCI_EXP_DEVSTA2		0x2a	/* Device Status 2 */
->  #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V2	44	/* v2 endpoints without link end here */
-> -#define PCI_EXP_LNKCAP2		44	/* Link Capabilities 2 */
-> +#define PCI_EXP_LNKCAP2		0x2c	/* Link Capabilities 2 */
->  #define  PCI_EXP_LNKCAP2_SLS_2_5GB	0x00000002 /* Supported Speed 2.5GT/s */
->  #define  PCI_EXP_LNKCAP2_SLS_5_0GB	0x00000004 /* Supported Speed 5GT/s */
->  #define  PCI_EXP_LNKCAP2_SLS_8_0GB	0x00000008 /* Supported Speed 8GT/s */
-> @@ -680,7 +680,7 @@
->  #define  PCI_EXP_LNKCAP2_SLS_32_0GB	0x00000020 /* Supported Speed 32GT/s */
->  #define  PCI_EXP_LNKCAP2_SLS_64_0GB	0x00000040 /* Supported Speed 64GT/s */
->  #define  PCI_EXP_LNKCAP2_CROSSLINK	0x00000100 /* Crosslink supported */
-> -#define PCI_EXP_LNKCTL2		48	/* Link Control 2 */
-> +#define PCI_EXP_LNKCTL2		0x30	/* Link Control 2 */
->  #define  PCI_EXP_LNKCTL2_TLS		0x000f
->  #define  PCI_EXP_LNKCTL2_TLS_2_5GT	0x0001 /* Supported Speed 2.5GT/s */
->  #define  PCI_EXP_LNKCTL2_TLS_5_0GT	0x0002 /* Supported Speed 5GT/s */
-> @@ -691,12 +691,12 @@
->  #define  PCI_EXP_LNKCTL2_ENTER_COMP	0x0010 /* Enter Compliance */
->  #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
->  #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
-> -#define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
-> +#define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
->  #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
-> -#define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
-> +#define PCI_EXP_SLTCAP2		0x34	/* Slot Capabilities 2 */
->  #define  PCI_EXP_SLTCAP2_IBPD	0x00000001 /* In-band PD Disable Supported */
-> -#define PCI_EXP_SLTCTL2		56	/* Slot Control 2 */
-> -#define PCI_EXP_SLTSTA2		58	/* Slot Status 2 */
-> +#define PCI_EXP_SLTCTL2		0x38	/* Slot Control 2 */
-> +#define PCI_EXP_SLTSTA2		0x3a	/* Slot Status 2 */
+> +- clock-names:
+> +	Usage: required for sm8450
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries
+> +			- "aux"         Auxiliary clock
+> +			- "cfg"         Configuration clock
+> +			- "bus_master"  Master AXI clock
+> +			- "bus_slave"   Slave AXI clock
+> +			- "slave_q2a"   Slave Q2A clock
+> +			- "tbu"         PCIe TBU clock
+> +			- "ddrss_sf_tbu" PCIe SF TBU clock
+> +			- "pipe"        PIPE clock
+> +			- "pipe_mux"    PIPE MUX
+> +			- "phy_pipe"    PIPE output clock
+> +			- "ref"         REFERENCE clock
+> +			- "aggre0"	Aggre NoC PCIe0 AXI clock
+> +			- "aggre1"	Aggre NoC PCIe1 AXI clock
+> +
+>  - resets:
+>  	Usage: required
+>  	Value type: <prop-encoded-array>
+> @@ -246,7 +265,7 @@
+>  			- "ahb"			AHB reset
 >  
->  /* Extended Capabilities (PCI-X 2.0 and Express) */
->  #define PCI_EXT_CAP_ID(header)		(header & 0x0000ffff)
+>  - reset-names:
+> -	Usage: required for sc8180x, sdm845 and sm8250
+> +	Usage: required for sc8180x, sdm845, sm8250 and sm8450
+>  	Value type: <stringlist>
+>  	Definition: Should contain the following entries
+>  			- "pci"			PCIe core reset
 > -- 
 > 2.33.0
+> 
 > 
