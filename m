@@ -2,151 +2,286 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A04B5475D59
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 17:27:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB0DE475D7D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 17:34:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244598AbhLOQ0t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Dec 2021 11:26:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235247AbhLOQ0t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 11:26:49 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF4B8C061574
-        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 08:26:48 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id f74so3784790pfa.3
-        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 08:26:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cTRbuI/6g5AXvWugU85g5gbhP7TTAqjknAxL9YJEtAE=;
-        b=JqGbzjGn+Ec5smoj95rmRBhpNTJewqtE3YrTn9VYiKlm0s2Lnw759T+sySM60GbGTQ
-         RWY9RXPiQxBTHY48MhgSKrpeweqDxV9DkRJgRWinpzrg93jgB54R3aweFHmFYBJXuStS
-         FQih2gnmkUOQ61ZjMcU5qfQQvhABS6tvWDsBazBaxOxyDyYVyR18tt4re+tuu2QI7hKv
-         uURujgOgLPcgY+NQvTtXZl4626OBVYHbBTaHeh9uPs2XM/ahuT3TFJxhAiCvGU8opksg
-         UYkwN5CUEm2ZRgc7czSID4uVZUlXFmurmQ+a5y5gWz+O2aD2Z9W9Q8iqq8xe1wfK3qPJ
-         d1ow==
+        id S244849AbhLOQdu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Dec 2021 11:33:50 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:40760 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230350AbhLOQdt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 11:33:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639586028;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rTWRI7IQ5pBShV73sl2YszfEDD/jUEjZHLTeNinnSZ4=;
+        b=QnO222aYcS3C9ju6i3IoYuKh9kIgEDSTyG0/5mkdvqjZXhTIOXQ6BxiJ74HzZ/TO95k1ZQ
+        Gd3Elu61LTvszyWTLBnMJCq8qKeOFCoef1+cNWL4m0UBll47Ol9SW0UN/0efPO3zBkX22v
+        TKMqjnk20DeciQrmME60YEreIZ9lbz8=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-447-iTzFmBuKNDiQbRt1Wcov9w-1; Wed, 15 Dec 2021 11:33:47 -0500
+X-MC-Unique: iTzFmBuKNDiQbRt1Wcov9w-1
+Received: by mail-ed1-f71.google.com with SMTP id t2-20020a056402524200b003f7ed6cf4f1so1646631edd.21
+        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 08:33:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cTRbuI/6g5AXvWugU85g5gbhP7TTAqjknAxL9YJEtAE=;
-        b=Y6FTXLEqTTSFk3Cl0ATo1D/WebdBjqs813UWLcgJcwwSKKGtK/73TF/4wOXFFCMh/W
-         p8oCtM1DQjUigB5sf8IFHKNgvxhGhRF39gsADD+m++1hHTPEHB7t0KGGzknkgmKlfHo8
-         vhxtlBXqgIydgJzq42ggFQAjAdRgC6gFS3jG1mjiyv180QFcMuVp34FJw2WacIi8whJM
-         EqyK0MIOGlbiDa48k7+lIEx6r3FaEwvV2toNJwIq1SQcTB6mu9mTIVCyPlDjCelRoFqg
-         itgPlBWSgiXHHjs419LWbXgTFymvJJ7RacfAL4H6RBR1PJHURGoHU/oGmcq1D81fJv+W
-         yiXg==
-X-Gm-Message-State: AOAM530WgVC2y38uU7/eQamphLNuSSwaGgBm8uN1EfIu9HdrIBMGO4lz
-        FtyVcDiNSufV9O1VE84PH2KjHk0ljazm7X9cLP3gLw==
-X-Google-Smtp-Source: ABdhPJw3EKwx98eRkVsM8cLAFAc9HWEt7P8Xqr1FUlNgASGNZeP+xf6ADzAIkY3xqbrGDAzyTCWijQSI6C4AxxTV7Mw=
-X-Received: by 2002:a63:5d57:: with SMTP id o23mr6284724pgm.115.1639585608269;
- Wed, 15 Dec 2021 08:26:48 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=rTWRI7IQ5pBShV73sl2YszfEDD/jUEjZHLTeNinnSZ4=;
+        b=djnNv85jkahl+rX2OmwUojSqIeElaNqfuuP1LZzla37BK3+wZTk1G+N+1UmytGceIO
+         wnE3b7BIqY24hlg1E8OoKqd7YQaFSSkFRBi+0EjWDsLygkjyY2V2uIy4eGNV96CpwWXG
+         rJe9TZgrHMqduV3662BoWgtuzQWXHZs7xoXiLC/gQr/rBXTfdJPn7mx94jkVGtlnRt2u
+         69Qk6xDU92zVYLIdy20SIkvNURmsjQg0MUvo8V/gV9O9dd2o95GSItWq3CBMejTZN2QQ
+         bylHqUptyeNws/Nm0Qm+RP6Z2lD+YMGw7KK2GP6UQ+kh9RfN07UbRT+HhbCMh4D5kgXi
+         lhCA==
+X-Gm-Message-State: AOAM530BiNqwEidS4QzngX3fGzicdyvvp3B0df9kawCYOrAH8qlSuguN
+        XnODL8vqm9Q4LMvI/oRzYV0vkdkbPVWSo7vYip2kLo2hYcKpnvI4p83A7XpLe2qPaVakdRV1Fve
+        TlsmmjZJhy9vFdusjYZcA
+X-Received: by 2002:a17:906:3a59:: with SMTP id a25mr11616009ejf.762.1639586024898;
+        Wed, 15 Dec 2021 08:33:44 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxBRcoWA/8+jmGqvNy+vOjrnVcNvuUG8Ih8zM6qxxp40c/111cdvP54IEIraKW+KE04Y1TNpw==
+X-Received: by 2002:a17:906:3a59:: with SMTP id a25mr11615977ejf.762.1639586024577;
+        Wed, 15 Dec 2021 08:33:44 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id i5sm871712ejw.121.2021.12.15.08.33.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Dec 2021 08:33:44 -0800 (PST)
+Message-ID: <cf988af8-64b3-c639-0ef2-678f8c08c52a@redhat.com>
+Date:   Wed, 15 Dec 2021 17:33:43 +0100
 MIME-Version: 1.0
-References: <CAJ+vNU0OZvy4RamHZ18aJ6+AiO3BxXQx-3-sQYop6sF1QRMmwA@mail.gmail.com>
- <20211203233131.GE3839336@dhcp-10-100-145-180.wdc.com>
-In-Reply-To: <20211203233131.GE3839336@dhcp-10-100-145-180.wdc.com>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Wed, 15 Dec 2021 08:26:37 -0800
-Message-ID: <CAJ+vNU3rEgc+G67ETAcSo6FaLc39AoMzwrxmY8jQLN0VOShkyA@mail.gmail.com>
-Subject: Re: IMX8MM PCIe performance evaluated with NVMe
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Barry Long <barry@epiqsolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH v5 1/2] x86/PCI: Ignore E820 reservations for bridge
+ windows on newer systems
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, stable@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+References: <20211215160145.GA695366@bhelgaas>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211215160145.GA695366@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 3, 2021 at 3:31 PM Keith Busch <kbusch@kernel.org> wrote:
->
-> On Fri, Dec 03, 2021 at 01:52:17PM -0800, Tim Harvey wrote:
-> > Greetings,
-> >
-> > I'm using PCIe on the IMX8M Mini and testing PCIe performance with a
-> > NVMe constrained to 1 lane. The NVMe in question is a Samsung SSD980
-> > 500GB which claims 3500MB/s read speed (with a gen3 x4 link).
-> >
-> > My understanding of PCIe performance would give the following
-> > theoretical max bandwidth based on clock and encoding:
-> > pcie gen1 x1 : 2500MT/s*1lane*80% (8B/10B encoding) = 2000Mbps = 250MB/s
-> > pcie gen2 x1 : 5000MT/s*1lane*80% (8B/10B encoding) = 4000Mbps = 500MB/s
-> > pcie gen3 x1 : 8000MT/s*1lane*98.75% (128B/130B encoding) = 7900Mbps = 987.5MB/s
-> > pcie gen3 x4 : 8000MT/s*4lane*98.75% (128B/130B encoding) = 31600Mbps = 3950MB/s
-> >
-> > My assumption is an NVMe would have very little data overhead and thus
-> > be a simple way to test PCIe bus performance.
->
-> Your 'dd' output is only reporting the user data throughput, but there
-> is more happening on the link than just user data.
->
-> You've accounted for the bit encoding, but there's more from the PCIe
-> protocol: the PHY layer (SOS), DLLP (Ack, FC), and TLP (headers,
-> sequences, checksums).
->
-> NVMe itself also adds some overhead in the form of SQE, CQE, PRP, and
-> MSIx.
->
-> All told, the best theoretical bandwidth that user data will be able to
-> utilize out of the link is going to end up being ~85-90%, depending on
-> your PCIe MPS (Max Payload Size) setting.
->
-> > Testing this NVMe with 'dd if=/dev/nvme0n1 of=/dev/null bs=1M
-> > count=500 iflag=nocache' on various systems gives me the following:
->
-> If using 'dd', I think you want to use 'iflag=direct' rather than 'nocache'.
->
-> > - x86 gen3 x4: 2700MB/s (vs theoretical max of ~4GB/s)
-> > - x86 gen3 x1: 840MB/s
-> > - x86 gen2 x1: 390MB/s
-> > - cn8030 gen3 x1: 352MB/s (Cavium OcteonTX)
-> > - cn8030 gen2 x1: 193MB/s (Cavium OcteonTX)
-> > - imx8mm gen2 x1: 266MB/s
-> >
-> > The various x86 tests were not all done on the same PC or the same
-> > kernel or kernel config... I used what I had around with whatever
-> > Linux OS was on them just to get a feel for performance and in all
-> > cases but the x4 case lanes 2/3/4 were masked off with kapton tape to
-> > force a 1-lane link.
-> >
-> > Why do you think the IMX8MM running at gen2 x1 would have such a lower
-> > than expected performance (266MB/s vs the 390MB/s an x86 gen2 x1 could
-> > get)?
-> >
-> > What would a more appropriate way of testing PCIe performance be?
->
-> Beyond the protocol overhead, 'dd' is probably not going to be the best
-> way to meausre a device's performance. This sends just one command at a
-> time, so you are also measuring the full software stack latency, which
-> includes a system call and interrupt driven context switches. The PCIe
-> traffic would be idle during this overhead when running at just qd1.
->
-> I am guessing your x86 is simply faster at executing through this
-> software stack than your imx8mm, so the software latency is lower.
->
-> A better approach may be to use higher queue depths with batched
-> submissions so that your software overhead can occur concurrently with
-> your PCIe traffic. Also, you can eliminate interrupt context switches if
-> you use polled IO queues.
+Hi Bjorn,
 
-Thanks for the response!
+On 12/15/21 17:01, Bjorn Helgaas wrote:
+> On Tue, Dec 07, 2021 at 05:52:40PM +0100, Hans de Goede wrote:
+>> On 11/10/21 14:05, Hans de Goede wrote:
+>>> On 11/10/21 09:45, Hans de Goede wrote:
+>>>> On 11/9/21 23:07, Bjorn Helgaas wrote:
+>>>>> On Sat, Nov 06, 2021 at 11:15:07AM +0100, Hans de Goede wrote:
+>>>>>> On 10/20/21 23:14, Bjorn Helgaas wrote:
+>>>>>>> On Wed, Oct 20, 2021 at 12:23:26PM +0200, Hans de Goede wrote:
+>>>>>>>> On 10/19/21 23:52, Bjorn Helgaas wrote:
+>>>>>>>>> On Thu, Oct 14, 2021 at 08:39:42PM +0200, Hans de Goede wrote:
+>>>>>>>>>> Some BIOS-es contain a bug where they add addresses which map to system
+>>>>>>>>>> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
+>>>>>>>>>> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+>>>>>>>>>> space").
+>>>>>>>>>>
+>>>>>>>>>> To work around this bug Linux excludes E820 reserved addresses when
+>>>>>>>>>> allocating addresses from the PCI host bridge window since 2010.
+>>>>>>>>>> ...
+>>>>>>>
+>>>>>>>>> I haven't seen anybody else eager to merge this, so I guess I'll stick
+>>>>>>>>> my neck out here.
+>>>>>>>>>
+>>>>>>>>> I applied this to my for-linus branch for v5.15.
+>>>>>>>>
+>>>>>>>> Thank you, and sorry about the build-errors which the lkp
+>>>>>>>> kernel-test-robot found.
+>>>>>>>>
+>>>>>>>> I've just send out a patch which fixes these build-errors
+>>>>>>>> (verified with both .config-s from the lkp reports).
+>>>>>>>> Feel free to squash this into the original patch (or keep
+>>>>>>>> them separate, whatever works for you).
+>>>>>>>
+>>>>>>> Thanks, I squashed the fix in.
+>>>>>>>
+>>>>>>> HOWEVER, I think it would be fairly risky to push this into v5.15.
+>>>>>>> We would be relying on the assumption that current machines have all
+>>>>>>> fixed the BIOS defect that 4dc2287c1805 addressed, and we have little
+>>>>>>> evidence for that.
+>>>>>>>
+>>>>>>> I'm not sure there's significant benefit to having this in v5.15.
+>>>>>>> Yes, the mainline v5.15 kernel would work on the affected machines,
+>>>>>>> but I suspect most people with those machines are running distro
+>>>>>>> kernels, not mainline kernels.
+>>>>>>
+>>>>>> I understand that you were reluctant to add this to 5.15 so close
+>>>>>> near the end of the 5.15 cycle, but can we please get this into
+>>>>>> 5.16 now ?
+>>>>>>
+>>>>>> I know you ultimately want to see if there is a better fix,
+>>>>>> but this is hitting a *lot* of users right now and if we come up
+>>>>>> with a better fix we can always use that to replace this one
+>>>>>> later.
+>>>>>
+>>>>> I don't know whether there's a "better" fix, but I do know that if we
+>>>>> merge what we have right now, nobody will be looking for a better
+>>>>> one.
+>>>>>
+>>>>> We're in the middle of the merge window, so the v5.16 development
+>>>>> cycle is over.  The v5.17 cycle is just starting, so we have time to
+>>>>> hit that.  Obviously a fix can be backported to older kernels as
+>>>>> needed.
+>>>>>
+>>>>>> So can we please just go with this fix now, so that we can
+>>>>>> fix the issues a lot of users are seeing caused by the current
+>>>>>> *wrong* behavior of taking the e820 reservations into account ?
+>>>>>
+>>>>> I think the fix on the table is "ignore E820 for BIOS date >= 2018"
+>>>>> plus the obvious parameters to force it both ways.
+>>>>
+>>>> Correct.
+>>>>
+>>>>> The thing I don't like is that this isn't connected at all to the
+>>>>> actual BIOS defect.  We have no indication that current BIOSes have
+>>>>> fixed the defect,
+>>>>
+>>>> We also have no indication that that defect from 10 years ago, from
+>>>> pre UEFI firmware is still present in modern day UEFI firmware which
+>>>> is basically an entire different code-base.
+>>>>
+>>>> And even 10 years ago the problem was only happening to a single
+>>>> family of laptop models (Dell Precision laptops) so this clearly
+>>>> was a bug in that specific implementation and not some generic
+>>>> issue which is likely to be carried forward.
+>>>>
+>>>>> and we have no assurance that future ones will not
+>>>>> have the defect.  It would be better if we had some algorithmic way of
+>>>>> figuring out what to do.
+>>>>
+>>>> You yourself have said that in hindsight taking E820 reservations
+>>>> into account for PCI bridge host windows was a mistake. So what
+>>>> the "ignore E820 for BIOS date >= 2018" is doing is letting the
+>>>> past be the past (without regressing on older models) while fixing
+>>>> that mistake on any hardware going forward.
+>>>>
+>>>> In the unlikely case that we hit that BIOS bug again on 1 or 2 models,
+>>>> we can simply DMI quirk those models, as we do for countless other
+>>>> BIOS issues.
+>>>>
+>>>>> Thank you very much for chasing down the dmesg log archive
+>>>>> (https://github.com/linuxhw/Dmesg; see
+>>>>> https://lore.kernel.org/r/82035130-d810-9f0b-259e-61280de1d81f@redhat.com).
+>>>>> Unfortunately I haven't had time to look through it myself, and I
+>>>>> haven't heard of anybody else doing it either.
+>>>>
+>>>> Right, I'm afraid that I already have spend way too much time on this
+>>>> myself. Note that I've been working with users on this bug on and off
+>>>> for over a year now.
+>>>>
+>>>> This is hitting many users and now that we have a viable fix, this
+>>>> really needs to be fixed now.
+>>>>
+>>>> I believe that the "ignore E820 for BIOS date >= 2018" fix is good
+>>>> enough and that you are letting perfect be the enemy of good here.
+>>>>
+>>>> As an upstream kernel maintainer myself, I'm sorry to say this,
+>>>> but if we don't get some fix for this merged soon you are leaving
+>>>> my no choice but to add my fix to the Fedora kernels as a downstream
+>>>> patch (and to advise other distros to do the same).
+>>>>
+>>>> Note that if you are still afraid of regressions going the downstream
+>>>> route is also an opportunity, Fedora will start testing moving users
+>>>> to 5.15.y soon, so I could add the patch to Fedora's 5.15.y builds and
+>>>> see how that goes ?
+>>>
+>>> So I've discussed this with the Fedora kernel maintainers and they have
+>>> agreed to add the patch to the Fedora 5.15 kernels, which we will ask
+>>> our users to start testing soon (we first run some voluntary testing
+>>> before eventually moving all users over).
+>>>
+>>> This will provide us with valuable feedback wrt this patch causing
+>>> regressions as you are worried about, or not.
+>>>
+>>> Assuming no regressions show up I hope that this will give you
+>>> some assurance that there the patch causes no regressions and that
+>>> you will then be willing to pick this up later during the 5.16
+>>> cycle so that Fedora only deviates from upstream for 1 cycle.
+>>
+>> 5.15.y kernels with this patch added have been in Fedora's
+>> stable updates repo for a while now without any reports of the
+>> regressions you feared this may cause.
+>>
+>> Bjorn, I hope that you are willing to merge this patch now that it has
+>> seen some more wide spread testing ?
+> 
+> I'm still not happy about the idea of basing this on BIOS dates.  I
+> did this with 7bc5e3f2be32 ("x86/PCI: use host bridge _CRS info by
+> default on 2008 and newer machines"), and it was a mistake.
+> 
+> Because of that mistake, we now have the use_crs/nocrs kernel
+> parameters, which confuse users and lead to them being passed around
+> as "fixes" on random bulletin boards.
+> 
+> Adding another BIOS date check and use_e820/no_e820 kernel parameters
+> feels like it's layering on more complexity to cover up another major
+> mistake I made, 4dc2287c1805 ("x86: avoid E820 regions when allocating
+> address space").
+> 
+> I think it would be better for the code to recognize the situation
+> addressed by 4dc2287c1805 and deal with it directly.  Is that
+> possible?  I dunno; I don't think we've really tried.
 
-The roughly 266MB/s performance results I've got on IMX8MM gen2 x1
-using NVMe and plain old 'dd' is on par with what another has found
-using a custom PCIe device of theirs and a simple loopback test so I
-feel that the 'software stack' isn't the bottleneck here (as that's
-removed in his situation). I'm leaning towards something like
-interrupt latency. I'll have to dig into the NVMe device driver and
-see if there is a way to hack it to poll to see what the difference
-is.
+So we are just going to leave a ton of users systems broken *for years*
+until someone has the time to try ? I've not seen anyone step up to
+try and address the issue worked around by 4dc2287c1805 (and no I'm not
+volunteering).
 
-Best regards,
+Also how are we going to come up with another fix for that without any
+of the hardware which was affected by the issue back then to test on?
 
-Tim
+AFAIK we agree that:
+
+1. In hindsight commit 4dc2287c1805 was not a good idea.
+2. We cannot just revert it without causing regressions
+
+So given these 2 things, disabling the problematic behavior introduced
+by commit 4dc2287c1805 on newer machines, to avoid the older machines
+which need it from regressions really seems like the obvious fix to me ?
+
+Especially since replacing commit 4dc2287c1805 seems impossible to me
+without access to the originally affected hardware to verify any fix.
+
+AFAIK there are a number of other places in the kernel where
+BIOS date checks are used, to e.g. not use ACPI on really early
+buggy ACPI implementations, so this is not unheard of.
+
+You seem to mainly be concerned about users cargo-culting
+the use_e820/no_e820 kernel parameters as workaround for issues
+which have a completely different root cause.
+
+Would my solution to disable the troublesome workaround from
+4dc2287c1805 be acceptable if I drop the new commandline options?
+
+I added those just in case, but so far no Fedora users have
+needed them, so I would be happy to drop them ?
+
+Regards,
+
+Hans
+
