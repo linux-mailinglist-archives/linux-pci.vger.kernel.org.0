@@ -2,95 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94865476390
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 21:42:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B8204763C0
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 21:52:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232564AbhLOUmK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Dec 2021 15:42:10 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:51558 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236374AbhLOUmJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 15:42:09 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 820D761A9D;
-        Wed, 15 Dec 2021 20:42:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9397CC36AE2;
-        Wed, 15 Dec 2021 20:42:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639600928;
-        bh=77j1aFKa3BKj9OCIas2iLnj9Txbm+/MSJFvVadJN+gc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=U0/niBIgwV0jq1JklZXB1TQnBOSGK19gh4zLFeQg0jhpgCYm5Jhtnfkj7QLn1ChUU
-         n+GIjv9gqJ9euoh5GdJRV6EC+3yA8IwUxE9nDQ40ula8hxJdd+C2V5n+W53VyMrNQR
-         EwmhjVwyqI8LhRGmSIWsxk8rFuhphINMmmuER2BekMJPZlgiY7G1mUPAhKFXi26aTy
-         nNOU1KwR/52k9gGBOzIfMYSAP4ZYNTVleTL8wh+NuwHH7RUQ08D+wr5dyia0jJ+1My
-         nknddiB2NoMQTC19/F6qyab5E7ecLzjDA3YAH8U9syQ51e0E1kjx0giXqhSZ6PNAXL
-         /VYn9/NTkHWwQ==
-Date:   Wed, 15 Dec 2021 14:42:07 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Toan Le <toan@os.amperecomputing.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 1/2] sizes.h: Add SZ_1T macro
-Message-ID: <20211215204207.GA710838@bhelgaas>
+        id S233979AbhLOUvF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Dec 2021 15:51:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233662AbhLOUvD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 15:51:03 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD17C061574;
+        Wed, 15 Dec 2021 12:51:02 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1639601459;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=77DCNiXl9B9x9ao8a3ckFicR+A7/8jsezE822YCoYkI=;
+        b=0MC08SjOyHUSb632XivZnR6xp+J+lhdSt8dO4cVV21Usd+LFkCWMDMI5c2zqdprtPX8VcT
+        Z63tf+3EiGKcUHte1/483d4Z/hf6cKDNCZfSHwK0n7HeyH7/U5ccqzZJxTdJSRVkjhfdtR
+        IiH4xihB3g4E9MBjV2NktVFtgbdOo75IOpoHPIb3/7VdumCnWORcJgrzfHtGplNM5fxLCo
+        lWD8Oek/DpAbTtzS5eZ0f2xj6cql1OA57lGXY/RPOvZpVY8gxierMi9GKVnemFayVy076Y
+        M6+9Lfqa20tO87mNob/FrOG2y8clrn6urg7hwKRz/nQ9j3qTabd4wVqNL/bu2w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1639601459;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=77DCNiXl9B9x9ao8a3ckFicR+A7/8jsezE822YCoYkI=;
+        b=SDPAxqej8tM3beNMTA3MRfQgMQzvFbRgGCzPLoilB6fEB/QgGtIDQRto0CY8QP/ghtYPeu
+        cjbHVwPoa9R9VUCQ==
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Cedric Le Goater <clg@kaod.org>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Nishanth Menon <nm@ti.com>
+Subject: Re: [patch V2 21/31] soc: ti: ti_sci_inta_msi: Rework MSI
+ descriptor allocation
+In-Reply-To: <20211206210748.737904583@linutronix.de>
+References: <20211206210600.123171746@linutronix.de>
+ <20211206210748.737904583@linutronix.de>
+Date:   Wed, 15 Dec 2021 21:50:58 +0100
+Message-ID: <87a6h1r3rh.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b03f5cf556f1a89ccb4d7ae2f56414520cfd9209.1638973836.git.christophe.leroy@csgroup.eu>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 08, 2021 at 02:32:42PM +0000, Christophe Leroy wrote:
-> Today drivers/pci/controller/pci-xgene.c defines SZ_1T
-> 
-> Move it into linux/sizes.h so that it can be re-used elsewhere.
-> 
-> Cc: Toan Le <toan@os.amperecomputing.com>
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+On Mon, Dec 06 2021 at 23:51, Thomas Gleixner wrote:
+>
+> No functional change intended.
 
-I guess this needs to go with the [2/2] patch, since it also uses
-SZ_1T.
+Famous last words.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  drivers/pci/controller/pci-xgene.c | 1 -
->  include/linux/sizes.h              | 2 ++
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-> index 56d0d50338c8..716dcab5ca47 100644
-> --- a/drivers/pci/controller/pci-xgene.c
-> +++ b/drivers/pci/controller/pci-xgene.c
-> @@ -49,7 +49,6 @@
->  #define EN_REG				0x00000001
->  #define OB_LO_IO			0x00000002
->  #define XGENE_PCIE_DEVICEID		0xE004
-> -#define SZ_1T				(SZ_1G*1024ULL)
->  #define PIPE_PHY_RATE_RD(src)		((0xc000 & (u32)(src)) >> 0xe)
+>  static int ti_sci_inta_msi_alloc_descs(struct device *dev,
+>  				       struct ti_sci_resource *res)
+>  {
+> -	struct msi_desc *msi_desc;
+> +	struct msi_desc msi_desc;
+>  	int set, i, count = 0;
 >  
->  #define XGENE_V1_PCI_EXP_CAP		0x40
-> diff --git a/include/linux/sizes.h b/include/linux/sizes.h
-> index 1ac79bcee2bb..84aa448d8bb3 100644
-> --- a/include/linux/sizes.h
-> +++ b/include/linux/sizes.h
-> @@ -47,6 +47,8 @@
->  #define SZ_8G				_AC(0x200000000, ULL)
->  #define SZ_16G				_AC(0x400000000, ULL)
->  #define SZ_32G				_AC(0x800000000, ULL)
-> +
-> +#define SZ_1T				_AC(0x10000000000, ULL)
->  #define SZ_64T				_AC(0x400000000000, ULL)
->  
->  #endif /* __LINUX_SIZES_H__ */
-> -- 
-> 2.33.1
+> +	memset(&msi_desc, 0, sizeof(msi_desc));
+
+This fails to initialize msi_desc.nvec_used which makes the subsequent
+interrupt allocation fail. Delta fix below.
+
+Thanks,
+
+        tglx
+---
+--- a/drivers/soc/ti/ti_sci_inta_msi.c
++++ b/drivers/soc/ti/ti_sci_inta_msi.c
+@@ -68,6 +68,7 @@ static int ti_sci_inta_msi_alloc_descs(s
+ 	int set, i, count = 0;
+ 
+ 	memset(&msi_desc, 0, sizeof(msi_desc));
++	msi_desc.nvec_used = 1;
+ 
+ 	for (set = 0; set < res->sets; set++) {
+ 		for (i = 0; i < res->desc[set].num; i++, count++) {
