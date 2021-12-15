@@ -2,74 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F264147622A
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 20:50:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0531947633D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 21:27:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233243AbhLOTuc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Dec 2021 14:50:32 -0500
-Received: from mail-oo1-f49.google.com ([209.85.161.49]:34417 "EHLO
-        mail-oo1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233276AbhLOTub (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 14:50:31 -0500
-Received: by mail-oo1-f49.google.com with SMTP id b1-20020a4a8101000000b002c659ab1342so6233479oog.1;
-        Wed, 15 Dec 2021 11:50:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vOnL6FtlkEPq4JwJbq4ZntR2PTCXZJH8UTvwELdoNOI=;
-        b=PdHc5bn37ERxno8DvjE2ID71906Sq+Pggl6mpuuO3bZ0XWEQAUqdmzXqY2JHNGhfuF
-         Vp1lQy+aUenTnuutKIDkKlyb9F8ffJuenbnDHGJ8Ybek4z8wS4iNydNL6gt80x5O1E4+
-         0dZkgE37MExkos3c5RkxoZP/WzpaC7UXkS4u18oWUVUcPOyOuQmIJ2lMsOV+aRkJiKFC
-         XDpxOv7oo7J+9uIljenKpvtPNsm0AUkQlNID/pBJdxUxrR87YwQki5nlvgX8UcQLi525
-         WDijWSNSyq7hj9A1J8lLIiVMSy2jJmXQ1K3WGVqKYqprcNggI+j5/GIt+Hj3DOEFl1+A
-         sABQ==
-X-Gm-Message-State: AOAM530syD1T0+Bmo9CJ2Fu3iKnB6cj079Q6LUv/NO90Gi7300rIiAp0
-        sFfUV4RNR+v6uWZLHVi6ow==
-X-Google-Smtp-Source: ABdhPJymhdbBzWTF6GqA7YjnSBH3BeiC4soK970pMrTFbTWw6FjPOrFhAxHrJr10lC2NEeX3H8uwYQ==
-X-Received: by 2002:a05:6820:30b:: with SMTP id l11mr8624417ooe.32.1639597830554;
-        Wed, 15 Dec 2021 11:50:30 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id t3sm609157otk.44.2021.12.15.11.50.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Dec 2021 11:50:29 -0800 (PST)
-Received: (nullmailer pid 1724400 invoked by uid 1000);
-        Wed, 15 Dec 2021 19:50:28 -0000
-Date:   Wed, 15 Dec 2021 13:50:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        devicetree@vger.kernel.org, Kevin Cernekee <cernekee@gmail.com>,
-        linux-mips@vger.kernel.org,
-        Saenz Julienne <nsaenzjulienne@suse.de>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>, james.quinlan@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] dt-bindings: PCI: Add compatible string for
- Brcmstb 74[23]5 MIPs SOCs
-Message-ID: <YbpHBJurUaoT4pZD@robh.at.kernel.org>
-References: <20211209204726.6676-1-jim2101024@gmail.com>
- <20211209204726.6676-2-jim2101024@gmail.com>
+        id S235915AbhLOU1I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Dec 2021 15:27:08 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:33942 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235880AbhLOU1I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 15:27:08 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BBF97B8212D;
+        Wed, 15 Dec 2021 20:27:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38935C36AE3;
+        Wed, 15 Dec 2021 20:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639600025;
+        bh=6STA8726cMv+Duxbu+Wzez636LPBUdJAClqIlVR6PD4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=RB6iglQmhGkjcRL0PdT2zhyTEeXfSURjjlw/7eT4pm+T+o8gQTcG5jYxRo9iS4lfY
+         dUznQIzQ/6G/v+0dUqKft/oOqNI9Nli0+9BSgrRkzHMCXgX8N4wPq7Eol+2lkBRSoh
+         CUDXr+HKXwTJIbd9sjWpXzLE4LVxRYujGYkSr9cSl3mT/11rh8oqz/czSG4FEFam3U
+         OUtn1bB7nSX+IeUyLToTHR92WayMrNO9a1sAkFG0un/4owzeQF9WYQu6yX/lWo1Rua
+         2Et4KwQQ0oxtLq+A+qx0299AE1+xCdcFxoPuUMCwTc45uJC2YYoqWBXT8UaVzwqd5f
+         pjhCh5bzNTLNw==
+Date:   Wed, 15 Dec 2021 14:27:03 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rajat Jain <rajatxjain@gmail.com>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-mmc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jesse Barnes <jsbarnes@google.com>, gwendal@google.com
+Subject: Re: [PATCH] pci/quirks: Add quirk for Bayhub O2 SD controller
+Message-ID: <20211215202703.GA708007@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211209204726.6676-2-jim2101024@gmail.com>
+In-Reply-To: <CAA93t1rQgfUP7jDKK+Gu80EyxQJpUDGz+=4LgjSfJUi77s_AeQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 09 Dec 2021 15:47:22 -0500, Jim Quinlan wrote:
-> The Broadcom STB Arm and MIPs SOCs use the same PCIe controller
-> HW, although the MIPs version is older.
+On Wed, Dec 15, 2021 at 10:15:02AM -0800, Rajat Jain wrote:
+> On Wed, Dec 15, 2021 at 10:04 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, Dec 07, 2021 at 04:09:48PM -0800, Rajat Jain wrote:
+> > > This particular SD controller from O2 / Bayhub only allows dword
+> > > accesses to its LTR max latency registers:
+> > > https://github.com/rajatxjain/public_shared/blob/main/OZ711LV2_appnote.pdf
+> >
+> > What happens if we use a non-dword access?  Unsupported Request?
+> > Invalid data returned?  Writes ignored?
 > 
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> Invalid data values are read / written.
 > 
+> > I guess word accesses must not cause PCIe errors, since we still do
+> > them in pci_save_ltr_state() and pci_restore_ltr_state() even with
+> > this patch.
+> 
+> Yes, that is correct.
+> 
+> > The app note says 0x234 (Max Latency registers), 0x248 (L1 PM
+> > Substates Control 1), and 0x24c (L1 PM Substates Control 2) are all
+> > broken, but the patch only mentions 0x234.
+> >
+> > I guess for 0x248 and 0x24c (the L1 PM Substates Control registers),
+> > we're just lucky because those are dword registers, and all current
+> > users already do dword accesses.
+> 
+> Yes, that is right.
+> 
+> > What if we instead changed pci_save_ltr_state() and
+> > pci_restore_ltr_state() to do a single dword access instead of two
+> > word accesses?  That kind of sweeps it under the rug, but we're
+> > already doing that for 0x248 and 0x24c.
+> 
+> Yes, that is what I had in mind originally, and actually I'd prefer
+> that too. I was afraid you might disagree :-). It sounds like we're on
+> the same page though, so should I send a patch with that approach?
 
-Acked-by: Rob Herring <robh@kernel.org>
+I think so.  I don't *like* papering over it, but the quirk only
+compensates for one situation (pci_save_ltr_state() and
+pci_restore_ltr_state()).  Any other places where we might read/write
+the LTR values will still fail.  We don't have any other places yet,
+but if/when we get ASPM L1.2 figured out, I think we will.
+
+If we had a quirk mechanism for filtering config accesses to certain
+devices, that would be ideal, but I don't think we have that.  If you
+squint hard enough, aer_inject.c has something like that, but it's not
+general purpose.
+
+> > If we did that, we shouldn't need a quirk at all, but the hardware bug
+> > is still lurking, and we should add a comment about it somewhere.
+> 
+> I can add a comment in pci_save_ltr_state() / pci_restore_ltr_state().
+
+Maybe also in pcie_aspm_cap_init() for the L1 PM part.  Just a
+one-liner should be enough.  All the details will be in the commit log
+and the app note.
+
+Bjorn
