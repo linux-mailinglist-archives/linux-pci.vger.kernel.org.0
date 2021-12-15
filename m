@@ -2,76 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67D834764AF
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 22:37:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C631B4764B3
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 22:37:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbhLOVho (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Dec 2021 16:37:44 -0500
-Received: from mail-oo1-f53.google.com ([209.85.161.53]:36431 "EHLO
-        mail-oo1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbhLOVhn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 16:37:43 -0500
-Received: by mail-oo1-f53.google.com with SMTP id g11-20020a4a754b000000b002c679a02b18so6310587oof.3;
-        Wed, 15 Dec 2021 13:37:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7ztWRpd0FY6iKQ7NWAfXJktIdvCg42gZ0zgIm9BLYH8=;
-        b=6KRqtm7dqDpPhwfa6NlEgwUoQhHUkPWb8eHDNhZTjBUgO0/Mom/LWAlIYVofifEEm2
-         YRd44/eIdvz7v2LcgvzOOIshGo/WzVmdPsGbZIGm0Ft6ve+JsaSn84gMrlvHCmoP3eJf
-         9S32hbPVK5X7CPM48clyXggTLVN92jeftSTV13rZMNhZr9zx1pc0JNpTJeIGvE+3GHbB
-         t6VHYCFvUvfbkDU556pVzLrJYSk9AVOEq+igt3PNzsrtqjAjvyTrDMiYZF2sc2pvgkpf
-         PplCxSgPLpxta4PIIYpyfr++VKfwl2N6UOja5GANLi6584pf39dMDEkdtPbqkAZtmv5x
-         bckw==
-X-Gm-Message-State: AOAM532BGp3xX/3qofOC0ZqCLoQz3LshjTn8NOvFnK0SbXH7LCxWMp17
-        d8M9RZSG4HWhJirRoZnhgQ==
-X-Google-Smtp-Source: ABdhPJxpCkrFLmOfCFQlTCLdJXSpNZUQUIngwMEwYrg97vjoo8t+JhDBR7ihep3lXctKWI328MCdqQ==
-X-Received: by 2002:a4a:430b:: with SMTP id k11mr4815836ooj.69.1639604263102;
-        Wed, 15 Dec 2021 13:37:43 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id x16sm684193otq.47.2021.12.15.13.37.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Dec 2021 13:37:42 -0800 (PST)
-Received: (nullmailer pid 1883612 invoked by uid 1000);
-        Wed, 15 Dec 2021 21:37:41 -0000
-Date:   Wed, 15 Dec 2021 15:37:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        devicetree@vger.kernel.org, linux-phy@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 02/10] dt-bindings: phy: qcom,qmp: Add SM8450 PCIe PHY
- bindings
-Message-ID: <YbpgJdXG/EJRNj49@robh.at.kernel.org>
-References: <20211214225846.2043361-1-dmitry.baryshkov@linaro.org>
- <20211214225846.2043361-3-dmitry.baryshkov@linaro.org>
+        id S229881AbhLOVh4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Dec 2021 16:37:56 -0500
+Received: from ale.deltatee.com ([204.191.154.188]:34846 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229878AbhLOVh4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 16:37:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=jWTj3wubn/0E/EwdQLFg156OS16E/EeY/O90DwhWuc8=; b=S/EAnnK6MO/X7SIASHuxJgMs3V
+        FIHpm1uuzGtao4cocaQsn80ed0jvqqUPIuSBExaeMwCl8qZzBWukIN26uAQYHOrR3Zco3njceTh8W
+        yyUWXRYnYbrCvU3/SadN/J+blhTlF3SLUZEE4NwRZyxfTne/oX0YLrXgK2ExCtzObs+jiARkkKsbY
+        QTL4JdcP3Rso5nICLz/C3uqbF1zwcWXf0Ii9MFAaUSEo3kk1A44SzIl7yxUGTjnqIBdLNnEwbfSts
+        4PydtjWXrMgnnCv/e1RHG+iiC9OTVhgXXD/p9q3lX07i4CY5SJosq+xQ1zu/Ml4ZcedBjYF8L38VI
+        orWEql3A==;
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1mxbyC-005fWQ-GJ; Wed, 15 Dec 2021 14:37:53 -0700
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>
+References: <20211215173556.GA702194@bhelgaas>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <e7676711-52c0-2ca4-f117-bea540d61cb1@deltatee.com>
+Date:   Wed, 15 Dec 2021 14:37:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211214225846.2043361-3-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20211215173556.GA702194@bhelgaas>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: edumazet@google.com, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, christophe.jaillet@wanadoo.fr, helgaas@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.5 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH] PCI/P2PDMA: Save a few cycles in 'pci_alloc_p2pmem()'
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 15 Dec 2021 01:58:38 +0300, Dmitry Baryshkov wrote:
-> There are two different PCIe PHYs on SM8450, one having one lane and
-> another with two lanes. Add DT bindings for the first one. Support for
-> second PCIe host and PHY will be submitted separately.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+On 2021-12-15 10:35 a.m., Bjorn Helgaas wrote:
+> [+cc Logan, Eric]
+> 
+> On Wed, Nov 03, 2021 at 10:16:53PM +0100, Christophe JAILLET wrote:
+>> Use 'percpu_ref_tryget_live_rcu()' instead of 'percpu_ref_tryget_live()' to
+>> save a few cycles when it is known that the rcu lock is already
+>> taken/released.
+>>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> 
+> Added Logan and Eric since Logan is the author and de facto maintainer
+> of this file and Eric recently converted this to RCU.
+
+Looks fine to me:
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+> Maybe we need a MAINTAINERS entry for P2PDMA?
+
+I'm not opposed to this. Would it be a duplicate of the PCI SUBSYSTEM
+just with my name added as maintainer? I could send a patch if so.
+
+Logan
