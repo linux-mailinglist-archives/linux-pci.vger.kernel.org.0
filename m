@@ -2,125 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83499475E73
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 18:20:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05E81475F6B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 18:36:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245252AbhLORTw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Dec 2021 12:19:52 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49386 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245248AbhLORTv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 12:19:51 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639588790;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8dWZtEdF7LamMiNHDQtUJa+ux0BuM6MSUIqH9b+Hvyo=;
-        b=wYhmWV2tAzCQfd9US7tK/sDWCnBbJEkh0toY9VDuwtDZ0a56PMo8BoccPtbLPELWo9I28H
-        HKc2neisW5z7nVF58H33hQ6I3JpDjp7x8Kvp/cCgjUvnYD8QdYGH61A1BeXSEXOYr4fYH5
-        DLBlYKQg7bDxik0O85eEeU6t0YgTJ460cdP5T6mA0DAEz4t2jvbnSoMRyHmCdRIsX+WU5+
-        q/5iZYQod3bSNBGwjqvNjip+w8Kzgei0iFMPfqmZqeU25htKL5R6ykYiRwqQfnG6lFz+mQ
-        r3FvWyI39vnZ4v4UgiVkKOdpkffYfcVyqNIiIF+3PGfZRf0ksOR9s1/A7ZSHGA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639588790;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8dWZtEdF7LamMiNHDQtUJa+ux0BuM6MSUIqH9b+Hvyo=;
-        b=lk+vW3OXeYaf8seyWIaOrmuYBvQZ09fZDnlpC9df3JMNaqJ74ZUxSByXPFwmhYxR0MLbL9
-        iLeRWTRdVJiovHBA==
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Juergen Gross <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org, Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>
-Subject: [patch V4 09-02/35] PCI/MSI: Allocate MSI device data on first use
-In-Reply-To: <87tuf9rdoj.ffs@tglx>
-References: <20211210221642.869015045@linutronix.de>
- <20211210221813.740644351@linutronix.de> <87tuf9rdoj.ffs@tglx>
-Date:   Wed, 15 Dec 2021 18:19:49 +0100
-Message-ID: <87r1adrdje.ffs@tglx>
+        id S234946AbhLORgP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Dec 2021 12:36:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233855AbhLORgA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 12:36:00 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E0FAC061751;
+        Wed, 15 Dec 2021 09:36:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0BC8DB82023;
+        Wed, 15 Dec 2021 17:35:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77DDAC36AE2;
+        Wed, 15 Dec 2021 17:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639589757;
+        bh=+PEUbCcnJjxmW6b62xG78kFVa8cCJ01ATRmyMBNcVBY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=H/+9Dw6FpI1m6P3T/x1znAStygSkRfQeWSYLyfx2MqYjlYxyV0RWcMqBYXwmaFVOz
+         A7qvQRaYKA5t+vbJYPLNgWA//MqkC+pdOaoFbxvnfcZsPP5sEHzVcYG1XCeNB8xWcr
+         /k3aTjKsqcfcCvMtl8ilLRCwogESIvlScU0ldhgJUrIvt8h62e9g4KA6a4Jnc7MUxh
+         V3EZ6EaF8l2D4AuA7WGoxNL5jJLJ7TZXUsKSWYPh8k9FE5WsezHJTRHMIqoRJqfRyM
+         6KaQEhqgRkGsKbpAYn08aSxv1TXDP47xv6/qsz/u7aqodid7kt39zOi95Ya/HyzoU9
+         KR1Arfl0By8oA==
+Date:   Wed, 15 Dec 2021 11:35:56 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH] PCI/P2PDMA: Save a few cycles in 'pci_alloc_p2pmem()'
+Message-ID: <20211215173556.GA702194@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab80164f4d5b32f9e6240aa4863c3a147ff9c89f.1635974126.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Allocate MSI device data on first use, i.e. when a PCI driver invokes one
-of the PCI/MSI enablement functions.
+[+cc Logan, Eric]
 
-Add a wrapper function to ensure that the ordering vs. pcim_msi_release()
-is correct.
+On Wed, Nov 03, 2021 at 10:16:53PM +0100, Christophe JAILLET wrote:
+> Use 'percpu_ref_tryget_live_rcu()' instead of 'percpu_ref_tryget_live()' to
+> save a few cycles when it is known that the rcu lock is already
+> taken/released.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
-V4: Adopted to ensure devres ordering
----
- drivers/pci/msi/msi.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+Added Logan and Eric since Logan is the author and de facto maintainer
+of this file and Eric recently converted this to RCU.
 
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -366,6 +366,19 @@ static int pcim_setup_msi_release(struct
- 	return ret;
- }
- 
-+/*
-+ * Ordering vs. devres: msi device data has to be installed first so that
-+ * pcim_msi_release() is invoked before it on device release.
-+ */
-+static int pci_setup_msi_context(struct pci_dev *dev)
-+{
-+	int ret = msi_setup_device_data(&dev->dev);
-+
-+	if (!ret)
-+		ret = pcim_setup_msi_release(dev);
-+	return ret;
-+}
-+
- static struct msi_desc *
- msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
- {
-@@ -909,7 +922,7 @@ static int __pci_enable_msi_range(struct
- 	if (nvec > maxvec)
- 		nvec = maxvec;
- 
--	rc = pcim_setup_msi_release(dev);
-+	rc = pci_setup_msi_context(dev);
- 	if (rc)
- 		return rc;
- 
-@@ -956,7 +969,7 @@ static int __pci_enable_msix_range(struc
- 	if (WARN_ON_ONCE(dev->msix_enabled))
- 		return -EINVAL;
- 
--	rc = pcim_setup_msi_release(dev);
-+	rc = pci_setup_msi_context(dev);
- 	if (rc)
- 		return rc;
- 
+Maybe we need a MAINTAINERS entry for P2PDMA?
+
+> ---
+>  drivers/pci/p2pdma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 8d47cb7218d1..081c391690d4 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -710,7 +710,7 @@ void *pci_alloc_p2pmem(struct pci_dev *pdev, size_t size)
+>  	if (!ret)
+>  		goto out;
+>  
+> -	if (unlikely(!percpu_ref_tryget_live(ref))) {
+> +	if (unlikely(!percpu_ref_tryget_live_rcu(ref))) {
+>  		gen_pool_free(p2pdma->pool, (unsigned long) ret, size);
+>  		ret = NULL;
+>  		goto out;
+> -- 
+> 2.30.2
+> 
