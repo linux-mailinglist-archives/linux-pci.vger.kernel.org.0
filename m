@@ -2,87 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58C3E475D9A
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 17:36:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 990A9475D9D
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 17:36:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234963AbhLOQfJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Dec 2021 11:35:09 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:50462 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235104AbhLOQfG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 11:35:06 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F147F619C9;
-        Wed, 15 Dec 2021 16:35:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F169C36AE2;
-        Wed, 15 Dec 2021 16:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639586105;
-        bh=+ZgCupjax4AhWP60VaWy3uMq6uc07rZ6Bxyiq5RqgUA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gPdDrSUcrBSvD8DLkN55ecG3pz7nToYJpdJg7SkDkQ5MKPp+SlsPYBEfrsM1dXJ8A
-         xil6sOsGMmM3687zy+O+7lRT4n9EpERJZwKKjo26KS40LHSgzxh6mDI8CafQwsOpiL
-         dKDww9swrZim8z9JJ9x6SjznjtbHyfOj7PiBoI2IsTZgpzbD4HRAqvVPXKd43AHHiH
-         ssUr+dpyIwMyLRqvGutprX8nBd77dhlCoxw72Oeux6lf4fEpEJhMxK7udCM76aDWux
-         Hx3ENHfmh2pQyne/F4mPwQAE9jU7VrYkl9jJWSiIIH3s23EK/fkSKw0BikwdcKYwgn
-         0+Zq8Ygvqq4YA==
-Date:   Wed, 15 Dec 2021 10:35:03 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, maz@kernel.org, decui@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, arnd@arndb.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-        Sunil Muthuswamy <sunilmut@microsoft.com>
-Subject: Re: [PATCH v6 0/2] PCI: hv: Hyper-V vPCI for arm64
-Message-ID: <20211215163503.GA698547@bhelgaas>
+        id S235104AbhLOQft (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Dec 2021 11:35:49 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49034 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234927AbhLOQfs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 11:35:48 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1639586146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3UB4Bw8MahD5M8h/NI3Qg8AnbGIqaExPOcnRrzmSiao=;
+        b=UJE/DKAABkBqFfjPbQnvYAH3rAoH/vlj0D3tBq02glY+Xwhi8IpuF/pdE8zOIh+LNq59Nl
+        kIqPjL89RcIzLEag1h7k2fjb+cwOgjLe2MPvqWGyX6pPIlfV1AnbJNO0RuBaUEb7/o0lvf
+        q7lAhQWh+jCRH3tIOsFsqmXut2p3+pY+woMjHpqHODXs3CqrcekUWtGDQ70j670MFnLBTT
+        aQ4wHJwfbR6HaCSKuK7oh9/3WwrmyLBIAATt4Nc3Q80k12NK8vG02zW6aIuT4FiJH5XBgo
+        uSp+QB7y3cnGolmhLgdyTIlgvw5ujoxSylCKtVjDQrixkhMxYakcLekWYL3jCQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1639586146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3UB4Bw8MahD5M8h/NI3Qg8AnbGIqaExPOcnRrzmSiao=;
+        b=FmacxqQdf9S6/zcHrLZoWNqKtU3gTCf8SLlCTPXPqPhR+QBO0MStt+qlts1rWvFXaKykO/
+        d3arXts9WnCbrmDA==
+To:     Nishanth Menon <nm@ti.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Cedric Le Goater <clg@kaod.org>,
+        Juergen Gross <jgross@suse.com>,
+        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-wireless@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
+In-Reply-To: <87zgp1rge4.ffs@tglx>
+References: <20211210221642.869015045@linutronix.de>
+ <20211213182958.ytj4m6gsg35u77cv@detonator> <87fsqvttfv.ffs@tglx>
+ <20211214162247.ocjm7ihg5oi7uiuv@slider> <87wnk7rvnz.ffs@tglx>
+ <87tufbrudl.ffs@tglx> <87mtl3rli1.ffs@tglx>
+ <20211214205626.lrnddha6bd6d6es5@possibly> <87h7basx36.ffs@tglx>
+ <87zgp1rge4.ffs@tglx>
+Date:   Wed, 15 Dec 2021 17:35:46 +0100
+Message-ID: <87wnk5rfkt.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1637225490-2213-1-git-send-email-sunilmut@linux.microsoft.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 12:51:28AM -0800, Sunil Muthuswamy wrote:
+On Wed, Dec 15 2021 at 17:18, Thomas Gleixner wrote:
 
-> Sunil Muthuswamy (2):
->   PCI: hv: Make the code arch neutral by adding arch specific interfaces
->   arm64: PCI: hv: Add support for Hyper-V vPCI
+> On Tue, Dec 14 2021 at 22:19, Thomas Gleixner wrote:
+>> On Tue, Dec 14 2021 at 14:56, Nishanth Menon wrote:
+>>
+>> thanks for trying. I'll have a look again with brain awake tomorrow
+>> morning.
+>
+> Morning was busy with other things, but I found what my sleepy brain
+> managed to do wrong yesterday evening.
+>
+> Let me reintegrate the pile and I'll send you an update.
 
-Both patches are primarily to drivers/pci/controller/pci-hyperv.c, so
-why do the subject lines look so different?
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v4.1-part-2
+   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v4.2-part-3
 
-Instead of making up a new format from scratch, look at the previous
-history and copy it:
+That should cure the problem.
 
-  $ git log --oneline drivers/pci/controller/pci-hyperv.c
-  f18312084300 ("PCI: hv: Remove unnecessary use of %hx")
-  41608b64b10b ("PCI: hv: Fix sleep while in non-sleep context when removing child devices from the bus")
-  88f94c7f8f40 ("PCI: hv: Turn on the host bridge probing on ARM64")
-  9e7f9178ab49 ("PCI: hv: Set up MSI domain at bridge probing time")
-  38c0d266dc80 ("PCI: hv: Set ->domain_nr of pci_host_bridge at probing time")
-  418cb6c8e051 ("PCI: hv: Generify PCI probing")
-  8f6a6b3c50ce ("PCI: hv: Support for create interrupt v3")
-  7d815f4afa87 ("PCI: hv: Add check for hyperv_initialized in init_hv_pci_drv()")
-  326dc2e1e59a ("PCI: hv: Remove bus device removal unused refcount/functions")
-  ...
-
-The second patch adds arm64 support, so it *should* mention arm64, but
-it can be something like this:
-
-  PCI: hv: Add arm64 Hyper-V vPCI support
-
->  arch/arm64/include/asm/hyperv-tlfs.h |   9 +
->  arch/x86/include/asm/hyperv-tlfs.h   |  33 ++++
->  arch/x86/include/asm/mshyperv.h      |   7 -
->  drivers/pci/Kconfig                  |   2 +-
->  drivers/pci/controller/Kconfig       |   2 +-
->  drivers/pci/controller/pci-hyperv.c  | 281 ++++++++++++++++++++++++---
->  include/asm-generic/hyperv-tlfs.h    |  33 ----
->  7 files changed, 300 insertions(+), 67 deletions(-)
