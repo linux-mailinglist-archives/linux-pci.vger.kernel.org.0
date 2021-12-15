@@ -2,52 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 432604765FE
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 23:35:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 770D2476604
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 23:37:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231391AbhLOWfL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Dec 2021 17:35:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52054 "EHLO
+        id S231395AbhLOWhE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Dec 2021 17:37:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231366AbhLOWfL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 17:35:11 -0500
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1128DC06173E
-        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 14:35:11 -0800 (PST)
-Received: by mail-ot1-x32f.google.com with SMTP id x3-20020a05683000c300b0057a5318c517so26614643oto.13
-        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 14:35:11 -0800 (PST)
+        with ESMTP id S231375AbhLOWhD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 17:37:03 -0500
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81807C06173F
+        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 14:37:03 -0800 (PST)
+Received: by mail-ot1-x333.google.com with SMTP id a23-20020a9d4717000000b0056c15d6d0caso26676122otf.12
+        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 14:37:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=DrRoCw7l3D7/9CGJqJ4R7z395m+W9pLZaas2T1HokPE=;
-        b=NnwvJspKiha/Rl8EShdutwtVGV78a5SwE6iiRfdpg6nh16rmzSM5gJ+/nO6Tec754s
-         Y+gJoXY+nfVXfAz/3jSJcy8Unl6Rw8RQz5Jdy9d8MJWogcfu6HTC6e7jn2GMnFzaytvS
-         ANdWDvAcvCzezpQfZyjstxUGM2sGNaOM2c/GCjxckEGdPtyFhQ14LNcivyUglq/kiTqH
-         dtEiNExkfzOR76VSEaKA6UjRyYsri8luOQqP/x+goQEfQaXyzSS63Oq83YDS99/u6hSA
-         XlPXEZOCDQl+aRKFln1e7XIGHlp+7GMjaIcUDysbTURnRzbzsvr/BioiCpCQjUrU+7yI
-         H+GQ==
+        bh=Y4sUs0+A2QrAfsLcONTL2l1w+yakS0WaCakUaSRDuNE=;
+        b=nWoG+XWnCUV3CrW+JySX4SmqVMAolDXkVdHj6UyxaE6uavGSGLG34erAdgFoQ47tzc
+         GTK7OFJGDsbJOINhn1j8igMwfNSbWLXPqVc5I4WicQXUwZXWiEYrhrdjCuXwHwE/yPHM
+         FMGzUzPP8peK75NT1SUn1NC01HpM11kIgyLVrfCBPcc9BDcHIlo+l11ixdfozifv2hq2
+         RZj5/7M0KSuVsp+Q1P3aUKrkuurBuAWHqgdUgH2UiXjhzrofXPfLWE1tFtkpQc4FfgmY
+         A5Kmk+sFdupDI0pjL0JbHv8XM63KLY9nxpv3qblfgjFQ+70V9/doEPJNTrYGmn3DqbCv
+         93PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=DrRoCw7l3D7/9CGJqJ4R7z395m+W9pLZaas2T1HokPE=;
-        b=EXKbxptIwX1Ir8Hq1EsKWBYwN6w2H1bA28VsIThEFzu8rbbteHLNWU3VLY3YObiXDm
-         RnRKlY3ihdMyE3/tMw4i53HF2TRFBB17bhy8xmzQI6tR5GIkmVF7JTZeimcTEby4ab9H
-         irs/E4izy+EZ45Bgw+6cpcFqYsdvkM+0TmXst10/wlpRI+r7DBycSMkUIgd2Ft8zW7e0
-         p0HYtdeHe8ghdcQ6w+A5Y9JMIwJ9xXld0P9EV5fyW0RaF9dMJcfK2ENvMWzYkWDqcRpc
-         y6KHLIlBAOFEy8BmShUzk3PIvh7pDc+/pP54Pg0tDv+Unliv+77DDvVDVp2gstDs5liJ
-         ttyw==
-X-Gm-Message-State: AOAM531QvBJ7LEjj5qu3uNidCQEAf1zfOUFAsKFd2vxZzhUXq25MCZ7M
-        Wz+sOinW1/L31Y8B33CmWR4K0nH386/ncA==
-X-Google-Smtp-Source: ABdhPJwOQVNpU4KGRwikBNvh7yK6qAC+L8kEQepBFOThQIcssf+d3eBXVXm/ezaqNUWvTeLv3TFMFQ==
-X-Received: by 2002:a9d:6653:: with SMTP id q19mr10861621otm.116.1639607710366;
-        Wed, 15 Dec 2021 14:35:10 -0800 (PST)
+        bh=Y4sUs0+A2QrAfsLcONTL2l1w+yakS0WaCakUaSRDuNE=;
+        b=zhiXCcl5G2Nfm8fJJ6mzZOvBpV9GRCLLHx/2UreTcH9NAyCmWuNUaZ/0N0i8FgQWaO
+         gt6oMlF10qVrCcFtgNaBg5HT207wAHW7vHlGXBtZtq1lXxlHr5eKE+xgWK4R5Fzbn7PA
+         kSkPk5ylcKwjIvlJWja5QncYny/Zi4it+W3pd74lMRYAHm/O9WKQm+Ds/5xJh0EuUDKO
+         xC4v0xHFV1RBrf1yi29P9Kq3bYUZt338fwN2YR17M2u76ec+B23q2TFhrlCIyipK5zrf
+         VvjwgWSjYcytzm8C3WlUAWK8zWDcWRzkE4GqyZGXFb/9qxFQYOtPaqfDA+K+jaIB0swR
+         TFDA==
+X-Gm-Message-State: AOAM533/tPZwCvD8MuU9be/1b6JcWxZjLUlTdi/qPc+rgdQzsV8JJWWg
+        M+F4ecXUnidOnqvSjTleFq/j8g==
+X-Google-Smtp-Source: ABdhPJwbQL+RmaPPLtS2Yg8IwoOo28WqiqZVuD2TYjU316H3bIf0RWlIafwFnF6EXlGsjT7+0wJ3dQ==
+X-Received: by 2002:a05:6830:1417:: with SMTP id v23mr10756136otp.367.1639607822752;
+        Wed, 15 Dec 2021 14:37:02 -0800 (PST)
 Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id p23sm696362otf.37.2021.12.15.14.35.09
+        by smtp.gmail.com with ESMTPSA id f12sm685373ote.75.2021.12.15.14.37.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Dec 2021 14:35:09 -0800 (PST)
-Date:   Wed, 15 Dec 2021 16:35:05 -0600
+        Wed, 15 Dec 2021 14:37:02 -0800 (PST)
+Date:   Wed, 15 Dec 2021 16:36:57 -0600
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
@@ -58,160 +58,261 @@ Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Krzysztof Wilczy??ski <kw@linux.com>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-phy@lists.infradead.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3 08/10] arm64: dts: qcom: sm8450: add PCIe0 RC device
-Message-ID: <YbptmeteGVt75NuO@builder.lan>
+        devicetree@vger.kernel.org, linux-phy@lists.infradead.org
+Subject: Re: [PATCH v3 03/10] phy: qcom-qmp: Add SM8450 PCIe0 PHY support
+Message-ID: <YbpuCRqCmMmiC6EM@builder.lan>
 References: <20211211021758.1712299-1-dmitry.baryshkov@linaro.org>
- <20211211021758.1712299-9-dmitry.baryshkov@linaro.org>
+ <20211211021758.1712299-4-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211211021758.1712299-9-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20211211021758.1712299-4-dmitry.baryshkov@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On Fri 10 Dec 20:17 CST 2021, Dmitry Baryshkov wrote:
 
-> Add device tree node for the first PCIe host found on the Qualcomm
-> SM8450 platform.
+> There are two different PCIe PHYs on SM8450, one having one lane (v5)
+> and another with two lanes (v5.20). This commit adds support for the
+> first PCIe phy only, support for the second PCIe PHY is coming in next
+> commits.
 > 
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8450.dtsi | 101 +++++++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> index a047d8a22897..09087a34a007 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> @@ -627,6 +627,84 @@ i2c14: i2c@a98000 {
->  				#size-cells = <0>;
->  				status = "disabled";
->  			};
-> +		];
-> +
-> +		pcie0: pci@1c00000 {
-> +			compatible = "qcom,pcie-sm8450";
-> +			reg = <0 0x01c00000 0 0x3000>,
-> +			      <0 0x60000000 0 0xf1d>,
-> +			      <0 0x60000f20 0 0xa8>,
-> +			      <0 0x60001000 0 0x1000>,
-> +			      <0 0x60100000 0 0x100000>;
-> +			reg-names = "parf", "dbi", "elbi", "atu", "config";
-> +			device_type = "pci";
-> +			linux,pci-domain = <0>;
-> +			bus-range = <0x00 0xff>;
-> +			num-lanes = <1>;
-> +
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +
-> +			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
-> +				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
-> +
-> +			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "msi";
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0x7>;
-> +			interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> +					<0 0 0 2 &intc 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> +					<0 0 0 3 &intc 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-> +					<0 0 0 4 &intc 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
 
-You need to pad these with a couple more zeros, see 0ac10b291bee
-("arm64: dts: qcom: Fix 'interrupt-map' parent address cells")
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> +
-> +			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
-> +				 <&gcc GCC_PCIE_0_PIPE_CLK_SRC>,
-> +				 <&pcie0_lane>,
-> +				 <&rpmhcc RPMH_CXO_CLK>,
-> +				 <&gcc GCC_PCIE_0_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
-> +				 <&gcc GCC_DDRSS_PCIE_SF_TBU_CLK>,
-> +				 <&gcc GCC_AGGRE_NOC_PCIE_0_AXI_CLK>,
-> +				 <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>;
-> +			clock-names = "pipe",
-> +				      "pipe_mux",
-> +				      "phy_pipe",
-> +				      "ref",
-> +				      "aux",
-> +				      "cfg",
-> +				      "bus_master",
-> +				      "bus_slave",
-> +				      "slave_q2a",
-> +				      "ddrss_sf_tbu",
-> +				      "aggre0",
-> +				      "aggre1";
-> +
-> +			iommus = <&apps_smmu 0x1c00 0x7f>;
-> +			iommu-map = <0x0   &apps_smmu 0x1c00 0x1>,
-> +				    <0x100 &apps_smmu 0x1c01 0x1>;
-> +
-> +			resets = <&gcc GCC_PCIE_0_BCR>;
-> +			reset-names = "pci";
-> +
-> +			power-domains = <&gcc PCIE_0_GDSC>;
-> +			power-domain-names = "gdsc";
-> +
-> +			phys = <&pcie0_lane>;
-> +			phy-names = "pciephy";
-> +
-> +			perst-gpio = <&tlmm 94 GPIO_ACTIVE_LOW>;
-> +			enable-gpio = <&tlmm 96 GPIO_ACTIVE_HIGH>;
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pcie0_default_state>;
-> +
-> +			interconnects = <&pcie_noc MASTER_PCIE_0 &mc_virt SLAVE_EBI1>;
-> +			interconnect-names = "pci";
-> +
-> +			status = "disabled";
->  		};
->  
->  		pcie0_phy: phy@1c06000 {
-> @@ -763,6 +841,29 @@ tlmm: pinctrl@f100000 {
->  			gpio-ranges = <&tlmm 0 0 211>;
->  			wakeup-parent = <&pdc>;
->  
-> +			pcie0_default_state: pcie0-default {
-
-Binding states that the node name needs to have the suffix "-state".
+Note that this is going to be merged separately from the PCIe controller
+patches, sending them in separate series would make that clearer to the
+maintainers.
 
 Regards,
 Bjorn
 
-> +				perst {
-> +					pins = "gpio94";
-> +					function = "gpio";
-> +					drive-strength = <2>;
-> +					bias-pull-down;
-> +				};
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 125 ++++++++++++++++++++++++++++
+>  drivers/phy/qualcomm/phy-qcom-qmp.h |  33 ++++++++
+>  2 files changed, 158 insertions(+)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index a959c97a699f..19c17678b999 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -2866,6 +2866,97 @@ static const struct qmp_phy_init_tbl qcm2290_usb3_pcs_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RX_SIGDET_LVL, 0x88),
+>  };
+>  
+> +static const struct qmp_phy_init_tbl sm8450_qmp_gen3x1_pcie_serdes_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYSCLK_EN_SEL, 0x08),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CLK_SELECT, 0x34),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CORECLK_DIV_MODE1, 0x08),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_IVCO, 0x0f),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP_EN, 0x42),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_TUNE1_MODE0, 0x24),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_TUNE2_MODE1, 0x03),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_TUNE1_MODE1, 0xb4),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_VCO_TUNE_MAP, 0x02),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIN_VCOCAL_HSCLK_SEL, 0x11),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE0, 0x82),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START3_MODE0, 0x03),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START2_MODE0, 0x55),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START1_MODE0, 0x55),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE0, 0x1a),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE0, 0x0a),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DEC_START_MODE1, 0x68),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START3_MODE1, 0x02),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START2_MODE1, 0xaa),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_DIV_FRAC_START1_MODE1, 0xab),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP2_MODE1, 0x34),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_LOCK_CMP1_MODE1, 0x14),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_HSCLK_SEL, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE0, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE0, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE0, 0x36),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CP_CTRL_MODE1, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_RCTRL_MODE1, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_PLL_CCTRL_MODE1, 0x36),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE2_MODE0, 0x1e),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE1_MODE0, 0xca),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE2_MODE1, 0x18),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE1_MODE1, 0xa2),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SYSCLK_BUF_ENABLE, 0x07),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_EN_CENTER, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_PER1, 0x31),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_PER2, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE1_MODE0, 0xde),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE2_MODE0, 0x07),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE1_MODE1, 0x4c),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_SSC_STEP_SIZE2_MODE1, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_COM_CLK_ENABLE1, 0x90),
+> +};
 > +
-> +				clkreq {
-> +					pins = "gpio95";
-> +					function = "pcie0_clkreqn";
-> +					drive-strength = <2>;
-> +					bias-pull-up;
-> +				};
+> +static const struct qmp_phy_init_tbl sm8450_qmp_gen3x1_pcie_tx_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_TX_PI_QEC_CTRL, 0x20),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_TX_LANE_MODE_1, 0x75),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_TX_LANE_MODE_4, 0x3f),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_TX_RES_CODE_LANE_OFFSET_TX, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_TX_RES_CODE_LANE_OFFSET_RX, 0x04),
+> +};
 > +
-> +				wake {
-> +					pins = "gpio96";
-> +					function = "gpio";
-> +					drive-strength = <2>;
-> +					bias-pull-up;
-> +				};
-> +			};
+> +static const struct qmp_phy_init_tbl sm8450_qmp_gen3x1_pcie_rx_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_00_LOW, 0x7f),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_00_HIGH, 0xff),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_00_HIGH2, 0xbf),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_00_HIGH3, 0x3f),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_00_HIGH4, 0xd8),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_01_LOW, 0xdc),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_01_HIGH, 0xdc),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_01_HIGH2, 0x5c),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_01_HIGH3, 0x34),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_01_HIGH4, 0xa6),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_10_HIGH3, 0x34),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_MODE_10_HIGH4, 0x38),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_VGA_CAL_CNTRL2, 0x07),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_GM_CAL, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_UCDR_SB2_THRESH1, 0x08),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_UCDR_SB2_THRESH2, 0x08),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_UCDR_PI_CONTROLS, 0xf0),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_DFE_CTLE_POST_CAL_OFFSET, 0x38),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_TX_ADAPT_POST_THRESH, 0xf0),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_RX_EQU_ADAPTOR_CNTRL4, 0x07),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_UCDR_FO_GAIN, 0x09),
+> +	QMP_PHY_INIT_CFG(QSERDES_V5_RX_UCDR_SO_GAIN, 0x05),
+> +};
 > +
->  			qup_i2c13_default_state: qup-i2c13-default-state {
->  				mux {
->  					pins = "gpio48", "gpio49";
+> +static const struct qmp_phy_init_tbl sm8450_qmp_gen3x1_pcie_pcs_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_RX_SIGDET_LVL, 0x77),
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_RATE_SLEW_CNTRL1, 0x0b),
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_REFGEN_REQ_CONFIG1, 0x05),
+> +};
+> +
+> +static const struct qmp_phy_init_tbl sm8450_qmp_gen3x1_pcie_pcs_misc_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_PCIE_OSC_DTCT_ACTIONS, 0x00),
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_PCIE_INT_AUX_CLK_CONFIG1, 0x00),
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_PCIE_EQ_CONFIG2, 0x0f),
+> +	QMP_PHY_INIT_CFG(QPHY_V5_PCS_PCIE_ENDPOINT_REFCLK_DRIVE, 0xc1),
+> +};
+> +
+>  struct qmp_phy;
+>  
+>  /* struct qmp_phy_cfg - per-PHY initialization config */
+> @@ -4116,6 +4207,37 @@ static const struct qmp_phy_cfg sm8450_ufsphy_cfg = {
+>  	.is_dual_lane_phy	= true,
+>  };
+>  
+> +static const struct qmp_phy_cfg sm8450_qmp_gen3x1_pciephy_cfg = {
+> +	.type = PHY_TYPE_PCIE,
+> +	.nlanes = 1,
+> +
+> +	.serdes_tbl		= sm8450_qmp_gen3x1_pcie_serdes_tbl,
+> +	.serdes_tbl_num		= ARRAY_SIZE(sm8450_qmp_gen3x1_pcie_serdes_tbl),
+> +	.tx_tbl			= sm8450_qmp_gen3x1_pcie_tx_tbl,
+> +	.tx_tbl_num		= ARRAY_SIZE(sm8450_qmp_gen3x1_pcie_tx_tbl),
+> +	.rx_tbl			= sm8450_qmp_gen3x1_pcie_rx_tbl,
+> +	.rx_tbl_num		= ARRAY_SIZE(sm8450_qmp_gen3x1_pcie_rx_tbl),
+> +	.pcs_tbl		= sm8450_qmp_gen3x1_pcie_pcs_tbl,
+> +	.pcs_tbl_num		= ARRAY_SIZE(sm8450_qmp_gen3x1_pcie_pcs_tbl),
+> +	.pcs_misc_tbl		= sm8450_qmp_gen3x1_pcie_pcs_misc_tbl,
+> +	.pcs_misc_tbl_num	= ARRAY_SIZE(sm8450_qmp_gen3x1_pcie_pcs_misc_tbl),
+> +	.clk_list		= sdm845_pciephy_clk_l,
+> +	.num_clks		= ARRAY_SIZE(sdm845_pciephy_clk_l),
+> +	.reset_list		= sdm845_pciephy_reset_l,
+> +	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
+> +	.vreg_list		= qmp_phy_vreg_l,
+> +	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+> +	.regs			= sm8250_pcie_regs_layout,
+> +
+> +	.start_ctrl             = SERDES_START | PCS_START,
+> +	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+> +	.phy_status		= PHYSTATUS,
+> +
+> +	.has_pwrdn_delay	= true,
+> +	.pwrdn_delay_min	= 995,		/* us */
+> +	.pwrdn_delay_max	= 1005,		/* us */
+> +};
+> +
+>  static const struct qmp_phy_cfg qcm2290_usb3phy_cfg = {
+>  	.type			= PHY_TYPE_USB3,
+>  	.nlanes			= 1,
+> @@ -5774,6 +5896,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+>  	}, {
+>  		.compatible = "qcom,sm8350-qmp-usb3-uni-phy",
+>  		.data = &sm8350_usb3_uniphy_cfg,
+> +	}, {
+> +		.compatible = "qcom,sm8450-qmp-gen3x1-pcie-phy",
+> +		.data = &sm8450_qmp_gen3x1_pciephy_cfg,
+>  	}, {
+>  		.compatible = "qcom,sm8450-qmp-ufs-phy",
+>  		.data = &sm8450_ufsphy_cfg,
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
+> index e15f461065bb..08422037f81b 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.h
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
+> @@ -1069,6 +1069,15 @@
+>  #define QPHY_V4_20_PCS_LANE1_INSIG_MX_CTRL2		0x828
+>  
+>  /* Only for QMP V5 PHY - QSERDES COM registers */
+> +#define QSERDES_V5_COM_SSC_EN_CENTER			0x010
+> +#define QSERDES_V5_COM_SSC_PER1				0x01c
+> +#define QSERDES_V5_COM_SSC_PER2				0x020
+> +#define QSERDES_V5_COM_SSC_STEP_SIZE1_MODE0		0x024
+> +#define QSERDES_V5_COM_SSC_STEP_SIZE2_MODE0		0x028
+> +#define QSERDES_V5_COM_SSC_STEP_SIZE1_MODE1		0x030
+> +#define QSERDES_V5_COM_SSC_STEP_SIZE2_MODE1		0x034
+> +#define QSERDES_V5_COM_CLK_ENABLE1			0x048
+> +#define QSERDES_V5_COM_SYSCLK_BUF_ENABLE		0x050
+>  #define QSERDES_V5_COM_PLL_IVCO				0x058
+>  #define QSERDES_V5_COM_CP_CTRL_MODE0			0x074
+>  #define QSERDES_V5_COM_CP_CTRL_MODE1			0x078
+> @@ -1084,10 +1093,22 @@
+>  #define QSERDES_V5_COM_DEC_START_MODE0			0x0bc
+>  #define QSERDES_V5_COM_LOCK_CMP2_MODE1			0x0b8
+>  #define QSERDES_V5_COM_DEC_START_MODE1			0x0c4
+> +#define QSERDES_V5_COM_DIV_FRAC_START1_MODE0		0x0cc
+> +#define QSERDES_V5_COM_DIV_FRAC_START2_MODE0		0x0d0
+> +#define QSERDES_V5_COM_DIV_FRAC_START3_MODE0		0x0d4
+> +#define QSERDES_V5_COM_DIV_FRAC_START1_MODE1		0x0d8
+> +#define QSERDES_V5_COM_DIV_FRAC_START2_MODE1		0x0dc
+> +#define QSERDES_V5_COM_DIV_FRAC_START3_MODE1		0x0e0
+>  #define QSERDES_V5_COM_VCO_TUNE_MAP			0x10c
+> +#define QSERDES_V5_COM_VCO_TUNE1_MODE0			0x110
+> +#define QSERDES_V5_COM_VCO_TUNE2_MODE0			0x114
+> +#define QSERDES_V5_COM_VCO_TUNE1_MODE1			0x118
+> +#define QSERDES_V5_COM_VCO_TUNE2_MODE1			0x11c
+>  #define QSERDES_V5_COM_VCO_TUNE_INITVAL2		0x124
+> +#define QSERDES_V5_COM_CLK_SELECT			0x154
+>  #define QSERDES_V5_COM_HSCLK_SEL			0x158
+>  #define QSERDES_V5_COM_HSCLK_HS_SWITCH_SEL		0x15c
+> +#define QSERDES_V5_COM_CORECLK_DIV_MODE1		0x16c
+>  #define QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE1_MODE0	0x1ac
+>  #define QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE2_MODE0	0x1b0
+>  #define QSERDES_V5_COM_BIN_VCOCAL_CMP_CODE1_MODE1	0x1b4
+> @@ -1130,6 +1151,7 @@
+>  #define QSERDES_V5_RX_AC_JTAG_ENABLE			0x068
+>  #define QSERDES_V5_RX_AC_JTAG_MODE			0x078
+>  #define QSERDES_V5_RX_RX_TERM_BW			0x080
+> +#define QSERDES_V5_RX_TX_ADAPT_POST_THRESH		0x0cc
+>  #define QSERDES_V5_RX_VGA_CAL_CNTRL1			0x0d4
+>  #define QSERDES_V5_RX_VGA_CAL_CNTRL2			0x0d8
+>  #define QSERDES_V5_RX_GM_CAL				0x0dc
+> @@ -1167,6 +1189,17 @@
+>  #define QSERDES_V5_RX_DCC_CTRL1				0x1a8
+>  #define QSERDES_V5_RX_VTH_CODE				0x1b0
+>  
+> +/* Only for QMP V5 PHY - USB/PCIe PCS registers */
+> +#define QPHY_V5_PCS_REFGEN_REQ_CONFIG1			0x0dc
+> +#define QPHY_V5_PCS_RX_SIGDET_LVL			0x188
+> +#define QPHY_V5_PCS_RATE_SLEW_CNTRL1			0x198
+> +
+> +/* Only for QMP V5 PHY - PCS_PCIE registers */
+> +#define QPHY_V5_PCS_PCIE_ENDPOINT_REFCLK_DRIVE		0x20
+> +#define QPHY_V5_PCS_PCIE_INT_AUX_CLK_CONFIG1		0x54
+> +#define QPHY_V5_PCS_PCIE_OSC_DTCT_ACTIONS		0x94
+> +#define QPHY_V5_PCS_PCIE_EQ_CONFIG2			0xa8
+> +
+>  /* Only for QMP V5 PHY - UFS PCS registers */
+>  #define QPHY_V5_PCS_UFS_TIMER_20US_CORECLK_STEPS_MSB	0x00c
+>  #define QPHY_V5_PCS_UFS_TIMER_20US_CORECLK_STEPS_LSB	0x010
 > -- 
 > 2.33.0
 > 
