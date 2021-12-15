@@ -2,128 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E52A44763C7
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 21:53:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16BB04764A3
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Dec 2021 22:36:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234977AbhLOUxY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Dec 2021 15:53:24 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:56492 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231524AbhLOUxY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 15:53:24 -0500
+        id S229867AbhLOVgH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Dec 2021 16:36:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229771AbhLOVgH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Dec 2021 16:36:07 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87AD3C061574
+        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 13:36:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D58FC61A11
-        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 20:53:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E601EC36AE3;
-        Wed, 15 Dec 2021 20:53:22 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A0482B82156
+        for <linux-pci@vger.kernel.org>; Wed, 15 Dec 2021 21:36:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A349C36AE4;
+        Wed, 15 Dec 2021 21:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639601603;
-        bh=qslj5YDJT/oziXcGFmt8xCHZmUTsCgb8jHBhRsYSXDE=;
+        s=k20201202; t=1639604163;
+        bh=M8FpFdfI5PQCLRMAnLjI3lYzO7J6aNRBBehokrUzzHY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=P0jQKoE+XdsOHo60qoB7J+yCaElAF4sq/kuA17Jkr/BH7hyUpNy6RRvVrNLCDBpFh
-         b73XtBAAGyLbqTQgHYLkvxv5oE0X/1MJzOoGI/q9Svku69Q13Qev/bSCAxRfW9xQ6f
-         yeVJJbhC0QKBhcpZMbnKz7LqYbTHSvPUoHPu/E+q/hr5jpb+Wfi+k7d1ZKdSgNWBNO
-         hlvHQXkblR6hZo2tFbwP2kd5B0Klt89+kCPU85Wl/FlFXfNyuoWsEbe0sTfb+Iq5ld
-         R5ahvTJeAgOrG+UYGbil3pnPtgxZLdSec87UZEtyXBI8mDyhZEt6K7n2fkDWxyjBxN
-         CSBWd7W9yJ1sw==
-Date:   Wed, 15 Dec 2021 14:53:21 -0600
+        b=GQ05uZOfNT+magnKpCrtTJO5piS/oDVa+5tlsJwFzVqYggPjcv5vdnXv+nanBZCem
+         K7FRCNaScrWGJBNzyGHE3nnCMi1lHMmmupv9B+Vg4C2j0Y2hvEhYWSE6Fl9+LA3ixQ
+         VOwtZzv20qeVl9NX94NB4TwilMzKkr71tvMsKjhaQ3dAlF0vA4ATWvCH9Q+gwDJUML
+         kQLVL5WZn5I0cU8V8ZiKCRRgzQ9vxVgdxBQSYAEN4Tq/WzLlML58JGQ7BfFmVygKsl
+         hoRxpwOPKRVGJRs0JNSSMBFxzsGT2DBPw/CEVXOmJEpHZPF7YKaXITDiLlVf/ZrI/5
+         Bun3/Y3dSwDlw==
+Date:   Wed, 15 Dec 2021 15:36:01 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH RESEND] PCI/VPD: Add simple VPD read cache
-Message-ID: <20211215205321.GA711087@bhelgaas>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Change PCIe capability registers offset to hex
+Message-ID: <20211215213601.GA714569@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8dd245a0-c088-c5e1-a2be-913c96f44bc9@gmail.com>
+In-Reply-To: <aa067278adacbb59a675366052714081f4980f26.1637244780.git.baruch@tkos.co.il>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 10:10:20PM +0100, Heiner Kallweit wrote:
-> VPD reads can be time-consuming operations, and when reading bytes
-> sequentially then worst-case we may read the same VPD dword four times.
-> Typically it happens in pci_vpd_size() already that the same VPD dword
-> is read more than once. Therefore let's add a simple read cache that
-> caches the last read VPD dword.
-
-This adds 8 more bytes to pci_dev for everybody.  Can you quantify the
-benefit?  It seems like well-formed VPD typically has 3-4 tags, so
-we'd be talking about maybe optimizing 20ish reads (4 bytes per tag,
-reading the same dword 4 times per tag) down to 3-4 dword reads.  Not
-sure the cost/benefit really pays off here.
-
-For crappy devices with junk in their VPD, I certainly see how we
-could do a huge number of reads.  But that doesn't seem like it would
-be worth optimizing.
-
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  drivers/pci/vpd.c   | 13 +++++++++++++
->  include/linux/pci.h |  2 ++
->  2 files changed, 15 insertions(+)
+On Thu, Nov 18, 2021 at 04:13:00PM +0200, Baruch Siach wrote:
+> Hex notation matches the spec documents, and is less error prone.
 > 
-> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-> index 75e48df2e..2315e45f6 100644
-> --- a/drivers/pci/vpd.c
-> +++ b/drivers/pci/vpd.c
-> @@ -194,6 +194,11 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
->  			break;
->  		}
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Link: https://lore.kernel.org/r/20210825160516.GA3576414@bjorn-Precision-5520/
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+
+Applied to pci/misc for v5.17, thanks!
+
+I also converted some other capabilities that had offsets > 8.
+
+> ---
+>  include/uapi/linux/pci_regs.h | 44 +++++++++++++++++------------------
+>  1 file changed, 22 insertions(+), 22 deletions(-)
+> 
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index ff6ccbc6efe9..81a972368f2a 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -470,7 +470,7 @@
 >  
-> +		if (vpd->cached_offset == (pos & ~3)) {
-> +			val = vpd->cached_val;
-> +			goto process;
-> +		}
-> +
->  		ret = pci_user_write_config_word(dev, vpd->cap + PCI_VPD_ADDR,
->  						 pos & ~3);
->  		if (ret < 0)
-> @@ -206,6 +211,9 @@ static ssize_t pci_vpd_read(struct pci_dev *dev, loff_t pos, size_t count,
->  		if (ret < 0)
->  			break;
+>  /* PCI Express capability registers */
 >  
-> +		vpd->cached_val = val;
-> +		vpd->cached_offset = pos & ~3;
-> +process:
->  		skip = pos & 3;
->  		for (i = 0;  i < sizeof(u32); i++) {
->  			if (i >= skip) {
-> @@ -242,6 +250,10 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
->  		return -EINTR;
+> -#define PCI_EXP_FLAGS		2	/* Capabilities register */
+> +#define PCI_EXP_FLAGS		0x02	/* Capabilities register */
+>  #define  PCI_EXP_FLAGS_VERS	0x000f	/* Capability version */
+>  #define  PCI_EXP_FLAGS_TYPE	0x00f0	/* Device/Port type */
+>  #define   PCI_EXP_TYPE_ENDPOINT	   0x0	/* Express Endpoint */
+> @@ -484,7 +484,7 @@
+>  #define   PCI_EXP_TYPE_RC_EC	   0xa	/* Root Complex Event Collector */
+>  #define  PCI_EXP_FLAGS_SLOT	0x0100	/* Slot implemented */
+>  #define  PCI_EXP_FLAGS_IRQ	0x3e00	/* Interrupt message number */
+> -#define PCI_EXP_DEVCAP		4	/* Device capabilities */
+> +#define PCI_EXP_DEVCAP		0x04	/* Device capabilities */
+>  #define  PCI_EXP_DEVCAP_PAYLOAD	0x00000007 /* Max_Payload_Size */
+>  #define  PCI_EXP_DEVCAP_PHANTOM	0x00000018 /* Phantom functions */
+>  #define  PCI_EXP_DEVCAP_EXT_TAG	0x00000020 /* Extended tags */
+> @@ -497,7 +497,7 @@
+>  #define  PCI_EXP_DEVCAP_PWR_VAL	0x03fc0000 /* Slot Power Limit Value */
+>  #define  PCI_EXP_DEVCAP_PWR_SCL	0x0c000000 /* Slot Power Limit Scale */
+>  #define  PCI_EXP_DEVCAP_FLR     0x10000000 /* Function Level Reset */
+> -#define PCI_EXP_DEVCTL		8	/* Device Control */
+> +#define PCI_EXP_DEVCTL		0x08	/* Device Control */
+>  #define  PCI_EXP_DEVCTL_CERE	0x0001	/* Correctable Error Reporting En. */
+>  #define  PCI_EXP_DEVCTL_NFERE	0x0002	/* Non-Fatal Error Reporting Enable */
+>  #define  PCI_EXP_DEVCTL_FERE	0x0004	/* Fatal Error Reporting Enable */
+> @@ -522,7 +522,7 @@
+>  #define  PCI_EXP_DEVCTL_READRQ_2048B 0x4000 /* 2048 Bytes */
+>  #define  PCI_EXP_DEVCTL_READRQ_4096B 0x5000 /* 4096 Bytes */
+>  #define  PCI_EXP_DEVCTL_BCR_FLR 0x8000  /* Bridge Configuration Retry / FLR */
+> -#define PCI_EXP_DEVSTA		10	/* Device Status */
+> +#define PCI_EXP_DEVSTA		0x0a	/* Device Status */
+>  #define  PCI_EXP_DEVSTA_CED	0x0001	/* Correctable Error Detected */
+>  #define  PCI_EXP_DEVSTA_NFED	0x0002	/* Non-Fatal Error Detected */
+>  #define  PCI_EXP_DEVSTA_FED	0x0004	/* Fatal Error Detected */
+> @@ -530,7 +530,7 @@
+>  #define  PCI_EXP_DEVSTA_AUXPD	0x0010	/* AUX Power Detected */
+>  #define  PCI_EXP_DEVSTA_TRPND	0x0020	/* Transactions Pending */
+>  #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V1	12	/* v1 endpoints without link end here */
+> -#define PCI_EXP_LNKCAP		12	/* Link Capabilities */
+> +#define PCI_EXP_LNKCAP		0x0c	/* Link Capabilities */
+>  #define  PCI_EXP_LNKCAP_SLS	0x0000000f /* Supported Link Speeds */
+>  #define  PCI_EXP_LNKCAP_SLS_2_5GB 0x00000001 /* LNKCAP2 SLS Vector bit 0 */
+>  #define  PCI_EXP_LNKCAP_SLS_5_0GB 0x00000002 /* LNKCAP2 SLS Vector bit 1 */
+> @@ -549,7 +549,7 @@
+>  #define  PCI_EXP_LNKCAP_DLLLARC	0x00100000 /* Data Link Layer Link Active Reporting Capable */
+>  #define  PCI_EXP_LNKCAP_LBNC	0x00200000 /* Link Bandwidth Notification Capability */
+>  #define  PCI_EXP_LNKCAP_PN	0xff000000 /* Port Number */
+> -#define PCI_EXP_LNKCTL		16	/* Link Control */
+> +#define PCI_EXP_LNKCTL		0x10	/* Link Control */
+>  #define  PCI_EXP_LNKCTL_ASPMC	0x0003	/* ASPM Control */
+>  #define  PCI_EXP_LNKCTL_ASPM_L0S 0x0001	/* L0s Enable */
+>  #define  PCI_EXP_LNKCTL_ASPM_L1  0x0002	/* L1 Enable */
+> @@ -562,7 +562,7 @@
+>  #define  PCI_EXP_LNKCTL_HAWD	0x0200	/* Hardware Autonomous Width Disable */
+>  #define  PCI_EXP_LNKCTL_LBMIE	0x0400	/* Link Bandwidth Management Interrupt Enable */
+>  #define  PCI_EXP_LNKCTL_LABIE	0x0800	/* Link Autonomous Bandwidth Interrupt Enable */
+> -#define PCI_EXP_LNKSTA		18	/* Link Status */
+> +#define PCI_EXP_LNKSTA		0x12	/* Link Status */
+>  #define  PCI_EXP_LNKSTA_CLS	0x000f	/* Current Link Speed */
+>  #define  PCI_EXP_LNKSTA_CLS_2_5GB 0x0001 /* Current Link Speed 2.5GT/s */
+>  #define  PCI_EXP_LNKSTA_CLS_5_0GB 0x0002 /* Current Link Speed 5.0GT/s */
+> @@ -582,7 +582,7 @@
+>  #define  PCI_EXP_LNKSTA_LBMS	0x4000	/* Link Bandwidth Management Status */
+>  #define  PCI_EXP_LNKSTA_LABS	0x8000	/* Link Autonomous Bandwidth Status */
+>  #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V1	20	/* v1 endpoints with link end here */
+> -#define PCI_EXP_SLTCAP		20	/* Slot Capabilities */
+> +#define PCI_EXP_SLTCAP		0x14	/* Slot Capabilities */
+>  #define  PCI_EXP_SLTCAP_ABP	0x00000001 /* Attention Button Present */
+>  #define  PCI_EXP_SLTCAP_PCP	0x00000002 /* Power Controller Present */
+>  #define  PCI_EXP_SLTCAP_MRLSP	0x00000004 /* MRL Sensor Present */
+> @@ -595,7 +595,7 @@
+>  #define  PCI_EXP_SLTCAP_EIP	0x00020000 /* Electromechanical Interlock Present */
+>  #define  PCI_EXP_SLTCAP_NCCS	0x00040000 /* No Command Completed Support */
+>  #define  PCI_EXP_SLTCAP_PSN	0xfff80000 /* Physical Slot Number */
+> -#define PCI_EXP_SLTCTL		24	/* Slot Control */
+> +#define PCI_EXP_SLTCTL		0x18	/* Slot Control */
+>  #define  PCI_EXP_SLTCTL_ABPE	0x0001	/* Attention Button Pressed Enable */
+>  #define  PCI_EXP_SLTCTL_PFDE	0x0002	/* Power Fault Detected Enable */
+>  #define  PCI_EXP_SLTCTL_MRLSCE	0x0004	/* MRL Sensor Changed Enable */
+> @@ -617,7 +617,7 @@
+>  #define  PCI_EXP_SLTCTL_EIC	0x0800	/* Electromechanical Interlock Control */
+>  #define  PCI_EXP_SLTCTL_DLLSCE	0x1000	/* Data Link Layer State Changed Enable */
+>  #define  PCI_EXP_SLTCTL_IBPD_DISABLE	0x4000 /* In-band PD disable */
+> -#define PCI_EXP_SLTSTA		26	/* Slot Status */
+> +#define PCI_EXP_SLTSTA		0x1a	/* Slot Status */
+>  #define  PCI_EXP_SLTSTA_ABP	0x0001	/* Attention Button Pressed */
+>  #define  PCI_EXP_SLTSTA_PFD	0x0002	/* Power Fault Detected */
+>  #define  PCI_EXP_SLTSTA_MRLSC	0x0004	/* MRL Sensor Changed */
+> @@ -627,15 +627,15 @@
+>  #define  PCI_EXP_SLTSTA_PDS	0x0040	/* Presence Detect State */
+>  #define  PCI_EXP_SLTSTA_EIS	0x0080	/* Electromechanical Interlock Status */
+>  #define  PCI_EXP_SLTSTA_DLLSC	0x0100	/* Data Link Layer State Changed */
+> -#define PCI_EXP_RTCTL		28	/* Root Control */
+> +#define PCI_EXP_RTCTL		0x1c	/* Root Control */
+>  #define  PCI_EXP_RTCTL_SECEE	0x0001	/* System Error on Correctable Error */
+>  #define  PCI_EXP_RTCTL_SENFEE	0x0002	/* System Error on Non-Fatal Error */
+>  #define  PCI_EXP_RTCTL_SEFEE	0x0004	/* System Error on Fatal Error */
+>  #define  PCI_EXP_RTCTL_PMEIE	0x0008	/* PME Interrupt Enable */
+>  #define  PCI_EXP_RTCTL_CRSSVE	0x0010	/* CRS Software Visibility Enable */
+> -#define PCI_EXP_RTCAP		30	/* Root Capabilities */
+> +#define PCI_EXP_RTCAP		0x1e	/* Root Capabilities */
+>  #define  PCI_EXP_RTCAP_CRSVIS	0x0001	/* CRS Software Visibility capability */
+> -#define PCI_EXP_RTSTA		32	/* Root Status */
+> +#define PCI_EXP_RTSTA		0x20	/* Root Status */
+>  #define  PCI_EXP_RTSTA_PME	0x00010000 /* PME status */
+>  #define  PCI_EXP_RTSTA_PENDING	0x00020000 /* PME pending */
+>  /*
+> @@ -646,7 +646,7 @@
+>   * Use pcie_capability_read_word() and similar interfaces to use them
+>   * safely.
+>   */
+> -#define PCI_EXP_DEVCAP2		36	/* Device Capabilities 2 */
+> +#define PCI_EXP_DEVCAP2		0x24	/* Device Capabilities 2 */
+>  #define  PCI_EXP_DEVCAP2_COMP_TMOUT_DIS	0x00000010 /* Completion Timeout Disable supported */
+>  #define  PCI_EXP_DEVCAP2_ARI		0x00000020 /* Alternative Routing-ID */
+>  #define  PCI_EXP_DEVCAP2_ATOMIC_ROUTE	0x00000040 /* Atomic Op routing */
+> @@ -658,7 +658,7 @@
+>  #define  PCI_EXP_DEVCAP2_OBFF_MSG	0x00040000 /* New message signaling */
+>  #define  PCI_EXP_DEVCAP2_OBFF_WAKE	0x00080000 /* Re-use WAKE# for OBFF */
+>  #define  PCI_EXP_DEVCAP2_EE_PREFIX	0x00200000 /* End-End TLP Prefix */
+> -#define PCI_EXP_DEVCTL2		40	/* Device Control 2 */
+> +#define PCI_EXP_DEVCTL2		0x28	/* Device Control 2 */
+>  #define  PCI_EXP_DEVCTL2_COMP_TIMEOUT	0x000f	/* Completion Timeout Value */
+>  #define  PCI_EXP_DEVCTL2_COMP_TMOUT_DIS	0x0010	/* Completion Timeout Disable */
+>  #define  PCI_EXP_DEVCTL2_ARI		0x0020	/* Alternative Routing-ID */
+> @@ -670,9 +670,9 @@
+>  #define  PCI_EXP_DEVCTL2_OBFF_MSGA_EN	0x2000	/* Enable OBFF Message type A */
+>  #define  PCI_EXP_DEVCTL2_OBFF_MSGB_EN	0x4000	/* Enable OBFF Message type B */
+>  #define  PCI_EXP_DEVCTL2_OBFF_WAKE_EN	0x6000	/* OBFF using WAKE# signaling */
+> -#define PCI_EXP_DEVSTA2		42	/* Device Status 2 */
+> +#define PCI_EXP_DEVSTA2		0x2a	/* Device Status 2 */
+>  #define PCI_CAP_EXP_RC_ENDPOINT_SIZEOF_V2	44	/* v2 endpoints without link end here */
+> -#define PCI_EXP_LNKCAP2		44	/* Link Capabilities 2 */
+> +#define PCI_EXP_LNKCAP2		0x2c	/* Link Capabilities 2 */
+>  #define  PCI_EXP_LNKCAP2_SLS_2_5GB	0x00000002 /* Supported Speed 2.5GT/s */
+>  #define  PCI_EXP_LNKCAP2_SLS_5_0GB	0x00000004 /* Supported Speed 5GT/s */
+>  #define  PCI_EXP_LNKCAP2_SLS_8_0GB	0x00000008 /* Supported Speed 8GT/s */
+> @@ -680,7 +680,7 @@
+>  #define  PCI_EXP_LNKCAP2_SLS_32_0GB	0x00000020 /* Supported Speed 32GT/s */
+>  #define  PCI_EXP_LNKCAP2_SLS_64_0GB	0x00000040 /* Supported Speed 64GT/s */
+>  #define  PCI_EXP_LNKCAP2_CROSSLINK	0x00000100 /* Crosslink supported */
+> -#define PCI_EXP_LNKCTL2		48	/* Link Control 2 */
+> +#define PCI_EXP_LNKCTL2		0x30	/* Link Control 2 */
+>  #define  PCI_EXP_LNKCTL2_TLS		0x000f
+>  #define  PCI_EXP_LNKCTL2_TLS_2_5GT	0x0001 /* Supported Speed 2.5GT/s */
+>  #define  PCI_EXP_LNKCTL2_TLS_5_0GT	0x0002 /* Supported Speed 5GT/s */
+> @@ -691,12 +691,12 @@
+>  #define  PCI_EXP_LNKCTL2_ENTER_COMP	0x0010 /* Enter Compliance */
+>  #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
+>  #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
+> -#define PCI_EXP_LNKSTA2		50	/* Link Status 2 */
+> +#define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
+>  #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	52	/* v2 endpoints with link end here */
+> -#define PCI_EXP_SLTCAP2		52	/* Slot Capabilities 2 */
+> +#define PCI_EXP_SLTCAP2		0x34	/* Slot Capabilities 2 */
+>  #define  PCI_EXP_SLTCAP2_IBPD	0x00000001 /* In-band PD Disable Supported */
+> -#define PCI_EXP_SLTCTL2		56	/* Slot Control 2 */
+> -#define PCI_EXP_SLTSTA2		58	/* Slot Status 2 */
+> +#define PCI_EXP_SLTCTL2		0x38	/* Slot Control 2 */
+> +#define PCI_EXP_SLTSTA2		0x3a	/* Slot Status 2 */
 >  
->  	while (pos < end) {
-> +		/* invalidate read cache */
-> +		if (vpd->cached_offset == pos)
-> +			vpd->cached_offset = -1;
-> +
->  		ret = pci_user_write_config_dword(dev, vpd->cap + PCI_VPD_DATA,
->  						  get_unaligned_le32(buf));
->  		if (ret < 0)
-> @@ -270,6 +282,7 @@ void pci_vpd_init(struct pci_dev *dev)
->  
->  	dev->vpd.cap = pci_find_capability(dev, PCI_CAP_ID_VPD);
->  	mutex_init(&dev->vpd.lock);
-> +	dev->vpd.cached_offset = -1;
->  }
->  
->  static ssize_t vpd_read(struct file *filp, struct kobject *kobj,
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cd8aa6fce..fb123c248 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -297,6 +297,8 @@ enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
->  struct pci_vpd {
->  	struct mutex	lock;
->  	unsigned int	len;
-> +	u32		cached_val;
-> +	int		cached_offset;
->  	u8		cap;
->  };
->  
+>  /* Extended Capabilities (PCI-X 2.0 and Express) */
+>  #define PCI_EXT_CAP_ID(header)		(header & 0x0000ffff)
 > -- 
 > 2.33.0
 > 
