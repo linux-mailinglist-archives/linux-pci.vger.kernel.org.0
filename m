@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 256E8477205
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 13:42:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E634147720C
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 13:43:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236855AbhLPMmD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Dec 2021 07:42:03 -0500
-Received: from mga17.intel.com ([192.55.52.151]:17579 "EHLO mga17.intel.com"
+        id S236876AbhLPMnD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Dec 2021 07:43:03 -0500
+Received: from mga18.intel.com ([134.134.136.126]:1303 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236858AbhLPMmD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Dec 2021 07:42:03 -0500
+        id S236873AbhLPMnD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 16 Dec 2021 07:43:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639658523; x=1671194523;
+  t=1639658583; x=1671194583;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=1yDc3VT+jn0+25tCfj5PePnYiwX3b2hH4QG2cMRLzmw=;
-  b=SHUrciODt/hyc1ql8O4/CH0+ZTeC2ap/kftVDHSxO9pVvi5n7hITmhVF
-   7ce8lDoYuebI+hHjH5IaadxWeXYR1HMNwXLvebM8QgyowW1csuJ/ohfhb
-   k0bE3bLHBR5U52bzpOavoaIZ1Q3M5cX+C/yh9E+SgLwEocskB9LrlvVuz
-   7/DEPUYAA7tNyYEvwXTKhY4A627Vxw/g8b6NsQWIQ4cwrcReZjKBqj4nP
-   2WqXEhNJVyCLlzxJLE6VDIHOOqU+ns4fRjA5MLohJldhflq+GYWjsFI8W
-   8WpFpK8TgrclltC7q1ha7M5PfulsIOHcW3V7vN94kTk+uPGLrYX0ZHRzI
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="220156892"
+  bh=xcarTG7TnDi1aMAe5EN0TKCEuVFlxBQM+Twg+azo7EM=;
+  b=nun+Rrc8lY4aAjyIiCKUJUjjS1qaxwpWCIw3PiMsxhQMcyB2bGkY/2Cb
+   VbZ0rvxc2qZjkV9Z29RCreSWWWCb10DCM/+Q4SkaOC2tjQm+GLaC1KDc1
+   MkHy84unqneCKXzHv9Mlwt8JQcpRBQ2+KU2yq5irquR7t/o73M9IJijw+
+   +YVhU9cPRp4Lwu8EKHw8iPlNiJ/zxkirW+BlJFloilUJK4o02H7ibAomy
+   ZfVR1oiNHQws5F8ukD/ifHkeOVJxsznhs/5gjL4QU733WBT/amziIavrs
+   Mxg3Z+RqtgQmmjPPVFuQ4gKr8Xqvjq0ILPLjU1eJZ2x8crK3eXK3BiJOM
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="226338355"
 X-IronPort-AV: E=Sophos;i="5.88,211,1635231600"; 
-   d="scan'208";a="220156892"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 04:42:02 -0800
+   d="scan'208";a="226338355"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 04:43:02 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,211,1635231600"; 
-   d="scan'208";a="482808654"
+   d="scan'208";a="466035363"
 Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 16 Dec 2021 04:42:01 -0800
+  by orsmga006.jf.intel.com with ESMTP; 16 Dec 2021 04:43:01 -0800
 Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mxq5A-00038B-Ne; Thu, 16 Dec 2021 12:42:00 +0000
-Date:   Thu, 16 Dec 2021 20:41:24 +0800
+        id 1mxq69-00038t-0j; Thu, 16 Dec 2021 12:43:01 +0000
+Date:   Thu, 16 Dec 2021 20:42:20 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/virtualization] BUILD SUCCESS
- e445375882883f69018aa669b67cbb37ec873406
-Message-ID: <61bb33f4.C/Ks9Zm9hwylbfeX%lkp@intel.com>
+Subject: [helgaas-pci:pci/misc] BUILD SUCCESS
+ fb82437fdd8cd8ac41b1265e40a96668e33c3a8d
+Message-ID: <61bb342c.R6pTmteA8Wn9lmxW%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,12 +52,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/virtualization
-branch HEAD: e445375882883f69018aa669b67cbb37ec873406  PCI: Add function 1 DMA alias quirk for Marvell 88SE9125 SATA controller
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
+branch HEAD: fb82437fdd8cd8ac41b1265e40a96668e33c3a8d  PCI: Change capability register offsets to hex
 
-elapsed time: 737m
+elapsed time: 739m
 
-configs tested: 139
+configs tested: 140
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -139,11 +139,11 @@ m68k                             allyesconfig
 nios2                               defconfig
 arc                              allyesconfig
 nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
 csky                                defconfig
 alpha                               defconfig
-nds32                               defconfig
 alpha                            allyesconfig
-nios2                            allyesconfig
 xtensa                           allyesconfig
 h8300                            allyesconfig
 arc                                 defconfig
@@ -175,6 +175,7 @@ i386                 randconfig-a005-20211216
 i386                 randconfig-a003-20211216
 i386                 randconfig-a006-20211216
 i386                 randconfig-a004-20211216
+arc                  randconfig-r043-20211216
 riscv                    nommu_k210_defconfig
 riscv                            allyesconfig
 riscv                    nommu_virt_defconfig
