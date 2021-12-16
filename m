@@ -2,60 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DD76476EEF
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 11:34:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE332477099
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 12:42:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236102AbhLPKeH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Dec 2021 05:34:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:41680 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231292AbhLPKeG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Dec 2021 05:34:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16C8A1474;
-        Thu, 16 Dec 2021 02:34:06 -0800 (PST)
-Received: from e123427-lin.arm.com (unknown [10.57.36.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 450473F774;
-        Thu, 16 Dec 2021 02:34:02 -0800 (PST)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     vkoul@kernel.org, tharvey@gateworks.com, robh@kernel.org,
-        l.stach@pengutronix.de, galak@kernel.crashing.org,
-        shawnguo@kernel.org, Richard Zhu <hongxing.zhu@nxp.com>,
-        bhelgaas@google.com, marcel.ziswiler@toradex.com, kishon@ti.com
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-phy@lists.infradead.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: (subset) [PATCH v7 0/8] Add the imx8m pcie phy driver and imx8mm pcie support
-Date:   Thu, 16 Dec 2021 10:33:51 +0000
-Message-Id: <163965080404.20006.5241609551643501749.b4-ty@arm.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <1638432158-4119-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1638432158-4119-1-git-send-email-hongxing.zhu@nxp.com>
+        id S231705AbhLPLmg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Dec 2021 06:42:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233387AbhLPLm3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Dec 2021 06:42:29 -0500
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3074AC06175A
+        for <linux-pci@vger.kernel.org>; Thu, 16 Dec 2021 03:42:28 -0800 (PST)
+Received: by mail-io1-xd36.google.com with SMTP id q72so34713335iod.12
+        for <linux-pci@vger.kernel.org>; Thu, 16 Dec 2021 03:42:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=xre5um49Rnqa1tZMCD58Cd6UlD4MleswKAp3tzt2gjo=;
+        b=RYToo8NyNPhlgiHYmZ1ikup312GHYFKKh+SoiQn5DFM08VhX1fCTukNf+Ub7gXZH+R
+         Fdt5I+ZO38LiZ7aX4HrBDtCguvWjGt4+jG/EN+k0G3h02B6emUjwzPzxnL4uWQz6AWTD
+         WqO7wKZcX2hj88TEq1skHq9q03JmZTMsDYFAuzRyTE65aq8YfmTLKW6klN/Aemrjl5Su
+         VOqZm/oCKsPxxvibvSdyBq0qcyBC7yt8asycNVxLymhtuzVbvkdkv8HRw/7WHA5ZhBTe
+         lfMRM7TjowGzvp5BFYZjQfF4jcwfD0Oa7xMNuJL1tGpMndUewyeeM3+DNYanGu61M7GC
+         kNpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=xre5um49Rnqa1tZMCD58Cd6UlD4MleswKAp3tzt2gjo=;
+        b=NpMkdFj3Tclf72ZxxJO7VFfnX3kuzKOPxR10+fzwl62YIG6XiJNaApi1me+d5r6gFA
+         dr6LSnAkFxKusXMjXOMLb3vtvgctGTwYhFSxG8ROi2Mi7DxXOUcaFLrhsXL7rzePAbiN
+         07ZdM+kuWGV29WucoY50napNzkG9rWaIX778epMJGf2SICzg4e2uyUqWC/T4X1xJLad1
+         4jWoYj5p6hEW3fIphFzkHynwFcBM1DV3NEJ+wmwELxyrMugTx1b7XyqDbkBD1+ErccAh
+         R4a/v5fie1H8fYn9BkMJmEQnCjhIIMTwVafmKLr8Jw5lHdhUD6vh5VB1KqjnVPsntGez
+         iU2A==
+X-Gm-Message-State: AOAM532pSDnCUBzsR7ahbLtGs8hgP6tT/h1920/BkOi8M4gJKj/PSmt/
+        izaTTxjz2JcPiGI7OVIL7BBfxW/LBHrAu95u9KAuf1WylJc=
+X-Google-Smtp-Source: ABdhPJxYJ2zBl8EMgF/vH/Si0uACMgpOTf1urUCOAwYb4fXYvwfKJa3PKYFOZBbaDpp9AFOjwJ3sIeVfeVjNcnbyBfg=
+X-Received: by 2002:a05:620a:bc3:: with SMTP id s3mr11727889qki.197.1639654936129;
+ Thu, 16 Dec 2021 03:42:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:622a:199c:0:0:0:0 with HTTP; Thu, 16 Dec 2021 03:42:15
+ -0800 (PST)
+Reply-To: selviasantiago1@gmail.com
+From:   Selvia Santiago <mariamatinez119@gmail.com>
+Date:   Thu, 16 Dec 2021 11:42:15 +0000
+Message-ID: <CAONDhKPUij_8sWOmcDAVKuHSL7avy+Ti7bOVRu6x__3ouvD7kw@mail.gmail.com>
+Subject: Urgent
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2 Dec 2021 16:02:30 +0800, Richard Zhu wrote:
-> Refer to the discussion [1] when try to enable i.MX8MM PCIe support,
-> one standalone PCIe PHY driver should be seperated from i.MX PCIe
-> driver when enable i.MX8MM PCIe support.
-> 
-> This patch-set adds the standalone PCIe PHY driver suport[1-5], and i.MX8MM
-> PCIe support[6-8] to have whole view to review this patch-set.
-> 
-> [...]
+-- 
+Urgent
 
-Applied to pci/dwc, thanks!
+I am Mrs. Selvia Santiago from Abidjan, Cote D'Ivoire, I am a widow
+suffering from long time illness (Cancer), there is funds I inherited
+from my late loving husband Mr. Santiago Carlos, the sum of (US$2.7
+Million Dollars) which he deposited in bank before his death, I need a
+honest and Faithful person that can use these funds for humanity work.
 
-[3/8] dt-bindings: imx6q-pcie: Add PHY phandles and name properties
-      https://git.kernel.org/lpieralisi/pci/c/3e15f623bb
-[8/8] PCI: imx: Add the imx8mm pcie support
-      https://git.kernel.org/lpieralisi/pci/c/d5a8dec49b
+I took this decision because I don't have any child that will inherit
+this money and I don't want a situation where this money will be used
+in an ungodly way. That is why I am taking this decision, and my
+doctor has confirmed to me that I have less than two weeks to live,
+having known my condition I decided to donate this fund to a charity
+or individual that will utilize this money to assist the poor and the
+needy in accordance to my instructions.
 
-Thanks,
-Lorenzo
+I want you to use 70% of this funds for orphanages, school, church,
+widows, propagating the word and other humanity works,The remaining
+30% should be yours for your efforts as the new beneficiary.
+
+Please if you would be able to use these funds for humanity work
+kindly reply me. As soon as I have received your response, I will give
+you further directives on how you are to go about the claims of the
+said funds.
+
+Remain blessed.
+Mrs Selvia Santiago.
