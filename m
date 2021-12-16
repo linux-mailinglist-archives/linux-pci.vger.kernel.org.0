@@ -2,157 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EA164779B4
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 17:51:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C393A4779FE
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 18:06:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239767AbhLPQvz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Dec 2021 11:51:55 -0500
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:45933 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235311AbhLPQvv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Dec 2021 11:51:51 -0500
-Received: by mail-wr1-f47.google.com with SMTP id o13so45236897wrs.12;
-        Thu, 16 Dec 2021 08:51:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4Ba3x56xjocitS2MZSEfS0BywGmujU1rIxnCuO82Q5A=;
-        b=BgiZyDfNAKNGTyBRpUapJs0oDbQhg+JP0iWm4FwXW2TfBg4VZBfkWWCi84lbhwNF1J
-         SQ+2sH0nTKnM0+ZoMU78D4TK6K1CMuyZc5crectlfMBsznJ4X1HYtABh+lR1OzoLZ3uI
-         vVgGC28ThDt0R5OF6HfOdrTCTlBF8CrgKrQx0J/dH0PMzbpkUr1lX6HYJuGBkTCbv/1A
-         JYPqw73Kfd0O7SKX59ZU6mk3/M86m5eosEyQQYibDwNWn9E5Eu7cY2DAPqxvEVM6NDzf
-         eJmhOrdNAwHtuboUc2rR6dS7UsbkVQo+yJLAJdQXuBRod5hAe6JdUvqHSx83ReNv8b8M
-         MJ+g==
-X-Gm-Message-State: AOAM531ldrGcyxydKRFtpIFj5hCx58Zbf8MwuBpi7ZnivSahdEK/Bm+G
-        brtlmVXoW2Esmg3w8yaZM2M=
-X-Google-Smtp-Source: ABdhPJzv8g3rSkXzJ5+wU0BtvmOWy+ft4bUfk3k7rdWIj2p3tp/0xgZynAgZR2kYv7SYsOxhwFve4Q==
-X-Received: by 2002:adf:f9cf:: with SMTP id w15mr9525086wrr.456.1639673509542;
-        Thu, 16 Dec 2021 08:51:49 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id b13sm5384793wrh.32.2021.12.16.08.51.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 08:51:48 -0800 (PST)
-Date:   Thu, 16 Dec 2021 17:51:47 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, marcel.ziswiler@toradex.com,
-        tharvey@gateworks.com, kishon@ti.com, vkoul@kernel.org,
-        robh@kernel.org, galak@kernel.crashing.org, shawnguo@kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: Re: [PATCH v7 8/8] PCI: imx: Add the imx8mm pcie support
-Message-ID: <Ybtuo0CzfUhoJwsT@rocinante>
-References: <1638432158-4119-1-git-send-email-hongxing.zhu@nxp.com>
- <1638432158-4119-9-git-send-email-hongxing.zhu@nxp.com>
+        id S235647AbhLPRGv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Dec 2021 12:06:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235622AbhLPRGv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Dec 2021 12:06:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB74C061574;
+        Thu, 16 Dec 2021 09:06:51 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BD54461ECF;
+        Thu, 16 Dec 2021 17:06:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8416EC36AE0;
+        Thu, 16 Dec 2021 17:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639674410;
+        bh=QbH2wf6ZQw+Rj1To0Zs1NCj0dJZADSpL6SQawpbST3U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ev00SHoYu4PNT4pQVmjlvU2bOSLQj/YBgtHPc6sHSHYeHd8T/ihfTzOjfLN0RT7ZK
+         nMXKUxVsJakWJ+cPrWL3AlqXhOXRCoRQb3+MHCldp1VEQ+06kpH/KfsN2a51s/0bxd
+         4HuFFBOtipboPKxna7ms+gbU8zdMoTml2TKF5OWWpD8yG6CUcoDCz74ttWiGPfC/FG
+         mFemT/RkamVNUNwSUUBSqA4jNa/p8r8LeVmdf+h4xdUWr/YEiY26ei3q+OCsNXsyT/
+         fQgzSJnRYEjgRWKvvIOmySFCoK7grwnbsZd3p++WmctGZiP37gGitbxC064qLmOLmq
+         TOcsryvpnoOiw==
+Date:   Thu, 16 Dec 2021 11:06:47 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
+        robh@kernel.org, bhelgaas@google.com,
+        michael.a.bottini@linux.intel.com, rafael@kernel.org,
+        me@adhityamohan.in, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 1/2] PCI/ASPM: Add ASPM BIOS override function
+Message-ID: <20211216170647.GA773917@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1638432158-4119-9-git-send-email-hongxing.zhu@nxp.com>
+In-Reply-To: <20211216055600.2425362-1-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Richard,
+On Wed, Dec 15, 2021 at 09:55:59PM -0800, David E. Box wrote:
+> From: Michael Bottini <michael.a.bottini@linux.intel.com>
+> 
+> Devices that appear under the Intel VMD host bridge are not visible to BIOS
+> and therefore not programmed by BIOS with ASPM settings. For these devices,
+> it is necessary for the driver to configure ASPM. 
 
-Apologies for a very late review!  Especially since Lorenzo already took
-patches as per:
+The VMD-related parts of this commit log belong in the next patch,
+because this patch has nothing in particular to do with VMD.
 
-  https://lore.kernel.org/linux-pci/163965080404.20006.5241609551643501749.b4-ty@arm.com/
+> Since ASPM settings are adjustable at runtime by module parameter,
+> use the same mechanism to allow drivers to override the default (in
+> this case never configured) BIOS policy to ASPM_STATE_ALL. Then,
+> reconfigure ASPM on the link. Do not override if ASPM control is
+> disabled.
 
-However, perhaps it's not too late.
+The module parameter ("policy") has global effect: it runs
+pcie_aspm_set_policy(), which assigns the global "aspm_policy" and
+then reconfigures all links in the system.
 
-[...]
-> @@ -446,6 +452,13 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
->  		break;
->  	case IMX7D:
->  		break;
-> +	case IMX8MM:
-> +		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
-> +		if (ret) {
-> +			dev_err(dev, "unable to enable pcie_aux clock\n");
-> +			break;
-> +		}
-> +		break;
+This is not that; it's a link-based thing that doesn't change
+"aspm_policy" and only affects a single link.  This is more like
+aspm_attr_store_common() for the sysfs "l0s_aspm" and similar
+attributes, or the pci_disable_link_state() interface for drivers.
 
-You can drop the inner break, it wouldn't do much here, unless this was
-intended to be a return?
-
-> @@ -538,6 +559,10 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  	case IMX8MQ:
->  		reset_control_deassert(imx6_pcie->pciephy_reset);
->  		break;
-> +	case IMX8MM:
-> +		if (phy_init(imx6_pcie->phy) != 0)
-> +			dev_err(dev, "Waiting for PHY ready timeout!\n");
-> +		break;
-
-If the above, you can keep the same style as used throughout the file
-already, so it would just simply be:
-
-  if (phy_init(imx6_pcie->phy))
-
-Also, a nitpick: to be consistent with other such messages here, the error
-message would be all lower-case letters.
-
-[...]
-> @@ -614,6 +639,8 @@ static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
->  static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
->  {
->  	switch (imx6_pcie->drvdata->variant) {
-> +	case IMX8MM:
-> +		break;
->  	case IMX8MQ:
-
-Would it warrant a comment that adds a note there to this single bare
-break?  Perhaps this version is not support, lack this particular
-functionality, etc.
-
-[...]
-> @@ -1089,10 +1122,39 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  			dev_err(dev, "Failed to get PCIE APPS reset control\n");
->  			return PTR_ERR(imx6_pcie->apps_reset);
->  		}
-> +		break;
-> +	case IMX8MM:
-> +		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
-> +		if (IS_ERR(imx6_pcie->pcie_aux))
-> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
-> +					     "pcie_aux clock source missing or invalid\n");
-> +		imx6_pcie->apps_reset = devm_reset_control_get_exclusive(dev,
-> +									 "apps");
-> +		if (IS_ERR(imx6_pcie->apps_reset)) {
-> +			dev_err(dev, "Failed to get PCIE APPS reset control\n");
-> +			return PTR_ERR(imx6_pcie->apps_reset);
-> +		}
+> Signed-off-by: Michael Bottini <michael.a.bottini@linux.intel.com>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> V4
+>  - No changes.
+> V3
+>  - Fix missing semicolon in static inline function.
+> 
+> V2
+>  - Change return type to int so caller can determine if override was
+>    successful.
+>  - Return immediately if link is not found so that lock it not
+>    unecessarily taken, suggested by kw@linux.com.
+>  - Don't override if aspm_disabled is true.
+> 
+>  drivers/pci/pci.h       |  2 ++
+>  drivers/pci/pcie/aspm.c | 19 +++++++++++++++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 3d60cabde1a1..c9c55d43cd8a 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -562,11 +562,13 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+>  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+>  void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+> +int pcie_aspm_policy_override(struct pci_dev *dev);
+>  #else
+>  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+> +static inline int pcie_aspm_policy_override(struct pci_dev *dev) { return -EINVAL; }
+>  #endif
+>  
+>  #ifdef CONFIG_PCIE_ECRC
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 52c74682601a..e2c61e14e724 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -1140,6 +1140,25 @@ int pci_disable_link_state(struct pci_dev *pdev, int state)
+>  }
+>  EXPORT_SYMBOL(pci_disable_link_state);
+>  
+> +int pcie_aspm_policy_override(struct pci_dev *pdev)
+> +{
+> +	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
 > +
-> +		imx6_pcie->phy = devm_phy_get(dev, "pcie-phy");
-> +		if (IS_ERR(imx6_pcie->phy)) {
-> +			if (PTR_ERR(imx6_pcie->phy) == -EPROBE_DEFER)
-> +				return -EPROBE_DEFER;
-> +			dev_err(dev, "Failed to get PCIE PHY\n");
-> +			return PTR_ERR(imx6_pcie->phy);
-> +		}
+> +	if (!link || aspm_disabled)
+> +		return -EINVAL;
+> +
+> +	down_read(&pci_bus_sem);
+> +	mutex_lock(&aspm_lock);
+> +	link->aspm_default = ASPM_STATE_ALL;
+> +	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> +	pcie_set_clkpm(link, policy_to_clkpm_state(link));
+> +	mutex_unlock(&aspm_lock);
+> +	up_read(&pci_bus_sem);
 
-A question about handling of the -EPROBE_DEFER above: why not to use the
-dev_err_probe() helper similarly to the code above and below?  Would there
-be something different preventing the use of dev_err_probe() here too?
+This is essentially the inverse of pci_disable_link_state().  Why not
+name it so the connection is obvious?  Probably also make the
+signature ("int state") similar.
 
->  		break;
->  	default:
->  		break;
->  	}
-> +	/* Don't fetch the pcie_phy clock, if it has abstract PHY driver */
-> +	if (imx6_pcie->phy == NULL) {
-> +		imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
-> +		if (IS_ERR(imx6_pcie->pcie_phy))
-> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_phy),
-> +					     "pcie_phy clock source missing or invalid\n");
-> +	}
-
-Thank you for another amazing patch!
-
-	Krzysztof
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(pcie_aspm_policy_override);
+> +
+>  static int pcie_aspm_set_policy(const char *val,
+>  				const struct kernel_param *kp)
+>  {
+> -- 
+> 2.25.1
+> 
