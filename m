@@ -2,71 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AFD347721E
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 13:47:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 368DC477249
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 13:55:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236913AbhLPMrW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Dec 2021 07:47:22 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:55828 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S236916AbhLPMrT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 16 Dec 2021 07:47:19 -0500
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx2ZZANbth3HABAA--.3145S3;
-        Thu, 16 Dec 2021 20:46:57 +0800 (CST)
-Subject: Re: [PATCH v3 5/6] MIPS: implement architecture-specific
- 'pci_remap_iospace()'
-To:     Xi Ruoyao <xry111@mengyan1223.wang>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        tsbogend@alpha.franken.de
-References: <20210925203224.10419-1-sergio.paracuellos@gmail.com>
- <20210925203224.10419-6-sergio.paracuellos@gmail.com>
- <67687e579e633d42dc501cfb6746c1cb9f600112.camel@mengyan1223.wang>
-Cc:     robh@kernel.org, arnd@arndb.de, catalin.marinas@arm.com,
-        Liviu.Dudau@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com,
-        gregkh@linuxfoundation.org, linux-mips@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-staging@lists.linux.dev,
-        neil@brown.name, linux-kernel@vger.kernel.org,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <16146bda-317b-0f4e-d5eb-7dd0583f559f@loongson.cn>
-Date:   Thu, 16 Dec 2021 20:46:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        id S234209AbhLPMzY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Dec 2021 07:55:24 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:34021 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232067AbhLPMzY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Dec 2021 07:55:24 -0500
+Received: from mail-wr1-f50.google.com ([209.85.221.50]) by
+ mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MAOVx-1mlzNZ2kV1-00BsAi; Thu, 16 Dec 2021 13:55:22 +0100
+Received: by mail-wr1-f50.google.com with SMTP id i22so14247484wrb.13;
+        Thu, 16 Dec 2021 04:55:22 -0800 (PST)
+X-Gm-Message-State: AOAM530pawN72ypZWEbCYeHsrrrI8SzVJ3p+7BeT4qqPvJaMLnvpRKwA
+        Ow9aYWyoQSCy85JjR9Cb2fRRr4VtNi133pXMVso=
+X-Google-Smtp-Source: ABdhPJxqiJNKIPDPxQiAYD/ADzEnUGacnfrfwb+mwnEiDpqRpaRAA43q41TWNAdS96RDEsxEkkrg/T9kHUnFSTm357Y=
+X-Received: by 2002:adf:a352:: with SMTP id d18mr4393837wrb.317.1639659322216;
+ Thu, 16 Dec 2021 04:55:22 -0800 (PST)
 MIME-Version: 1.0
+References: <20210925203224.10419-1-sergio.paracuellos@gmail.com>
+ <20210925203224.10419-6-sergio.paracuellos@gmail.com> <67687e579e633d42dc501cfb6746c1cb9f600112.camel@mengyan1223.wang>
 In-Reply-To: <67687e579e633d42dc501cfb6746c1cb9f600112.camel@mengyan1223.wang>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dx2ZZANbth3HABAA--.3145S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xr1fKF1UtF47Gr1kXFWrZrb_yoWkAFX_AF
-        WkKa18Ww4UJr43Gr13trnxuryjva43AFyUAw1kta1Svrn3C3WDG3W0vrWqvw15XrsxGFZr
-        Gan5Gw1kA3W7KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-AYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
-        c7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_Xr1l42xK82IYc2Ij64vIr41l4I8I3I
-        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-        rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jrqXQUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 Dec 2021 13:55:06 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3R67D+0KLrTncr+SiHg79itRkxbG9caDo6YsHKzRwwkA@mail.gmail.com>
+Message-ID: <CAK8P3a3R67D+0KLrTncr+SiHg79itRkxbG9caDo6YsHKzRwwkA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] MIPS: implement architecture-specific 'pci_remap_iospace()'
+To:     Xi Ruoyao <xry111@mengyan1223.wang>
+Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-staging@lists.linux.dev, NeilBrown <neil@brown.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:k+dzuHUBnxmp237dTZgU2vdCf9nLIyQgN0u/kJd9ELDeLol0Xex
+ oV4FQGnqqG6j0hjc75YGtmVtDhFTaZVTgGF4I2Z5rPrc6yooEf+AwPt/gHqdVgNRZwFz3i1
+ vwaEEDimGLrIMDxuanD+JbkO/0bC7nOK7reDhNR7HGzuVx6M1GYYqIBnBkDL5ogqGfmWzBd
+ /yaID8wU/3lb3sZ7ywHSg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AWZt9FKW1SM=:77i+za3GB8YmkKaN10J2ac
+ uW3uAUxFoptCsMT/t3ARo2B/u/ylFW01dODUFD2Z97W5d8uC9EZYo3IwBQb42ajjegQ2G3BcP
+ /TckwGBgJVbnn/SFU3iYr8TNqFcqC5evqExqlha8KP+s8KtwL9zhJrCpnTZ3FRgIBFoPC8Jiu
+ loZgI2+a+KTUIYMDAuwPYISVbEA0rHDVDrKBH3kYlBqFxqZSxS6CRE55gobAin2yVqsLRNefK
+ Y/KPUuG6WX7xTqn5L1jpXda5ot0m1qpECNjDtXyTU+5QuK5NXK38dSzAUuCT5zJbM2P5CeRmI
+ vkfb+E8vJyU1PgW6OoH2wqv/3pmLRW0sHkpJAzGIzDonEYvV//pUBBjWpPfIzrJQICyD3MHKi
+ JWOi0wHoTDWQkT8RhdweHPvf6z7tlgJkTXVCPmdZJltXguC3BpuHRkW+Vgcbi+Del0WqTI5Ux
+ +cBKfyCEnsui/zi010OlUUcGQgWHKJmRI5E+dc7srXW+ckjDyOY2fQEGkHZL+DVYrDUEErpE9
+ RFPTqZy35KEmH4r4qcRMHX8C1ViRoXg++cYdNKhXO+Ix+XEd+/SNZwfymhDZCrJ14UyXDoMiO
+ FypaXu4DnQlzMhStP/drcslgnak1Pf6VS8J4Pb4hFEyVd8a5y4cjqNDAoiHgD8BOAXgFmnyqv
+ SUHsKIyzM8q79Ei7rKnujDx8OQO2b3ZvbPBlkCIKPVPzSWujjfiIzPJh32LEdp/IEGL0=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/16/2021 07:44 PM, Xi Ruoyao wrote:
+On Thu, Dec 16, 2021 at 12:44 PM Xi Ruoyao <xry111@mengyan1223.wang> wrote:
+>
 > On Sat, 2021-09-25 at 22:32 +0200, Sergio Paracuellos wrote:
->> To make PCI IO work we need to properly virtually map IO cpu physical address
->> and set this virtual address as the address of the first PCI IO port which
->> is set using function 'set_io_port_base()'.
->>
->> Acked-by: Arnd Bergmann <arnd@arndb.de>
->> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > To make PCI IO work we need to properly virtually map IO cpu physical address
+> > and set this virtual address as the address of the first PCI IO port which
+> > is set using function 'set_io_port_base()'.
+> >
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 >
 > Hi,
 >
@@ -81,9 +88,11 @@ On 12/16/2021 07:44 PM, Xi Ruoyao wrote:
 > [    0.105815] resource start address is not zero
 >
 > I'm not sure how to fix this one.
->
 
-MIPS: Only define pci_remap_iospace() for Ralink
+It looks like this machine has two I/O spaces, one for ISA at 0x18000000/0x00000
+and one for PCI at 0x18020000/0x20000, but the implementation assumes there
+is only one. If you want to use pci_remap_iospace() on this platform,
+it needs to
+be extended to allow more than one such space.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/commit/?h=mips-fixes&id=09d97da660ff77df20984496aa0abcd6b88819f2
-
+       Arnd
