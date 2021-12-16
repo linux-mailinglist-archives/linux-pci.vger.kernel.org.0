@@ -2,135 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62F0047799F
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 17:50:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EA164779B4
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 17:51:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235187AbhLPQuF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Dec 2021 11:50:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232590AbhLPQuE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Dec 2021 11:50:04 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523B8C061574
-        for <linux-pci@vger.kernel.org>; Thu, 16 Dec 2021 08:50:04 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id c4so45296193wrd.9
-        for <linux-pci@vger.kernel.org>; Thu, 16 Dec 2021 08:50:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vhmTL0KZO8xE1Q1ZtB8enyE8YIQf8VRnDYjk8oCQEbI=;
-        b=x9x1R+hpjqWToV04byDktZCxaoqf3vIvvGK0kVWYSJhH1YmETUz7VAzd/khtHyGWqQ
-         gPfbYfXMsfO7dJuxOVxNL3T5Jc7QQteRey9X2Dn7cXEJQlXeh1MY5AuQGzMS9E03wak6
-         M8kxQs1NV14Hshv9ZJrLxSWSMiURcNbyu39JUIvWo7BDmPMcD/PGrZX9wKEHh8MO5vlX
-         GR4A8mfRWUtEfDJzcKKh2MDffSAbvuagzqkv7bVEP+5RV5O21GKu5KnCunAGHdYgTyfw
-         xB+WEeW1ydrbDsykzHiLtUU3gK4px44V//3eX8sE3r2xb61J/CVpkbo6WlMMsTYfKX9w
-         8cZg==
+        id S239767AbhLPQvz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Dec 2021 11:51:55 -0500
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:45933 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235311AbhLPQvv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Dec 2021 11:51:51 -0500
+Received: by mail-wr1-f47.google.com with SMTP id o13so45236897wrs.12;
+        Thu, 16 Dec 2021 08:51:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vhmTL0KZO8xE1Q1ZtB8enyE8YIQf8VRnDYjk8oCQEbI=;
-        b=hrjL3ti6HSWDfibe+GgVziq0eaV9aHGymivzqJ1jj0FsYVOiuE0k+Z0geYi5085eWs
-         1OGBaZWNnmvV1gNzDftpHbTxjAPu1q3RZE+R+Xx0APA5dmRNSVaB1LNet1cCvZlkJ1TZ
-         I+8l3pNwCdEaRh7bw6kMDeA7/7FeDBVWIZl8srfxjIML5ffxiM6qZEpo1ZGlZslBuUHo
-         IbKSD9rwbgiCyEeT9TmUyNlnz7/3Rxv7dwiU0kk2ZWZJ8vgE81S/xuWLnM9DCPy1pWsv
-         Cm8/NKK7TYAXVWT/65l2ehjrmsTXBKTZFvC9/0pUw8fRamAm6sPqgYkPHw0tFG2wSguE
-         6GPQ==
-X-Gm-Message-State: AOAM533bzQ4/oPJX3dW3EpCDQSH63MafaB7PVU7gzqvOzwPqjzO3rdVq
-        VLUt29ayhbkUogmWGe1In/L2WdKuBfWqCw==
-X-Google-Smtp-Source: ABdhPJzMz7Qf3P70HSBUowYpb4vvHhmtQGskdnpHrddYIGSWQ8UV22/MLXpL+8qlJ8Bu8mYFMMDPig==
-X-Received: by 2002:adf:e4cc:: with SMTP id v12mr5673535wrm.653.1639673402819;
-        Thu, 16 Dec 2021 08:50:02 -0800 (PST)
-Received: from google.com ([2.31.167.18])
-        by smtp.gmail.com with ESMTPSA id p2sm8106752wmq.23.2021.12.16.08.49.57
+         :mime-version:content-disposition:in-reply-to;
+        bh=4Ba3x56xjocitS2MZSEfS0BywGmujU1rIxnCuO82Q5A=;
+        b=BgiZyDfNAKNGTyBRpUapJs0oDbQhg+JP0iWm4FwXW2TfBg4VZBfkWWCi84lbhwNF1J
+         SQ+2sH0nTKnM0+ZoMU78D4TK6K1CMuyZc5crectlfMBsznJ4X1HYtABh+lR1OzoLZ3uI
+         vVgGC28ThDt0R5OF6HfOdrTCTlBF8CrgKrQx0J/dH0PMzbpkUr1lX6HYJuGBkTCbv/1A
+         JYPqw73Kfd0O7SKX59ZU6mk3/M86m5eosEyQQYibDwNWn9E5Eu7cY2DAPqxvEVM6NDzf
+         eJmhOrdNAwHtuboUc2rR6dS7UsbkVQo+yJLAJdQXuBRod5hAe6JdUvqHSx83ReNv8b8M
+         MJ+g==
+X-Gm-Message-State: AOAM531ldrGcyxydKRFtpIFj5hCx58Zbf8MwuBpi7ZnivSahdEK/Bm+G
+        brtlmVXoW2Esmg3w8yaZM2M=
+X-Google-Smtp-Source: ABdhPJzv8g3rSkXzJ5+wU0BtvmOWy+ft4bUfk3k7rdWIj2p3tp/0xgZynAgZR2kYv7SYsOxhwFve4Q==
+X-Received: by 2002:adf:f9cf:: with SMTP id w15mr9525086wrr.456.1639673509542;
+        Thu, 16 Dec 2021 08:51:49 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id b13sm5384793wrh.32.2021.12.16.08.51.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 08:50:02 -0800 (PST)
-Date:   Thu, 16 Dec 2021 16:49:53 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     hdegoede@redhat.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        srinivas.pandruvada@intel.com, mgross@linux.intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org, Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH V4 3/6] platform/x86/intel: Move intel_pmt from MFD to
- Auxiliary Bus
-Message-ID: <YbtuMVoTbCUi82cm@google.com>
-References: <20211216023146.2361174-1-david.e.box@linux.intel.com>
- <20211216023146.2361174-4-david.e.box@linux.intel.com>
+        Thu, 16 Dec 2021 08:51:48 -0800 (PST)
+Date:   Thu, 16 Dec 2021 17:51:47 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     l.stach@pengutronix.de, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, marcel.ziswiler@toradex.com,
+        tharvey@gateworks.com, kishon@ti.com, vkoul@kernel.org,
+        robh@kernel.org, galak@kernel.crashing.org, shawnguo@kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: Re: [PATCH v7 8/8] PCI: imx: Add the imx8mm pcie support
+Message-ID: <Ybtuo0CzfUhoJwsT@rocinante>
+References: <1638432158-4119-1-git-send-email-hongxing.zhu@nxp.com>
+ <1638432158-4119-9-git-send-email-hongxing.zhu@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211216023146.2361174-4-david.e.box@linux.intel.com>
+In-Reply-To: <1638432158-4119-9-git-send-email-hongxing.zhu@nxp.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 15 Dec 2021, David E. Box wrote:
+Hi Richard,
 
-> Intel Platform Monitoring Technology (PMT) support is indicated by presence
-> of an Intel defined PCIe Designated Vendor Specific Extended Capabilities
-> (DVSEC) structure with a PMT specific ID. The current MFD implementation
-> creates child devices for each PMT feature, currently telemetry, watcher,
-> and crashlog. However DVSEC structures may also be used by Intel to
-> indicate support for other features. The Out Of Band Management Services
-> Module (OOBMSM) uses DVSEC to enumerate several features, including PMT.
-> In order to support them it is necessary to modify the intel_pmt driver to
-> handle the creation of the child devices more generically. To that end,
-> modify the driver to create child devices for any VSEC/DVSEC features on
-> supported devices (indicated by PCI ID).  Additionally, move the
-> implementation from MFD to the Auxiliary bus.  VSEC/DVSEC features are
-> really multifunctional PCI devices, not platform devices as MFD was
-> designed for. Auxiliary bus gives more flexibility by allowing the
-> definition of custom structures that can be shared between associated
-> auxiliary devices and the parent device. Also, rename the driver from
-> intel_pmt to intel_vsec to better reflect the purpose.
-> 
-> This series also removes the current runtime pm support which was not
-> complete to begin with. None of the current devices require runtime pm.
-> However the support will be replaced when a device is added that requires
-> it.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Mark Gross <markgross@kernel.org>
-> ---
-> V4
->   - Add intel_vsec_extract_vsec() to combine common code and simplify
->     the extended capability loops. Suggested by Andy.
-> V3
->   - Add comment clarifying how driver cleanup is handled without remove().
-> 
-> V2
->   - Clarify status of missing pm support in commit message.
->   - Clarify why auxiliary bus is preferred in commit message.
-> 
->  MAINTAINERS                                |  12 +-
->  drivers/mfd/Kconfig                        |  10 -
->  drivers/mfd/Makefile                       |   1 -
->  drivers/mfd/intel_pmt.c                    | 261 -------------
+Apologies for a very late review!  Especially since Lorenzo already took
+patches as per:
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+  https://lore.kernel.org/linux-pci/163965080404.20006.5241609551643501749.b4-ty@arm.com/
 
->  drivers/platform/x86/intel/Kconfig         |  11 +
->  drivers/platform/x86/intel/Makefile        |   2 +
->  drivers/platform/x86/intel/pmt/Kconfig     |   4 +-
->  drivers/platform/x86/intel/pmt/class.c     |  21 +-
->  drivers/platform/x86/intel/pmt/class.h     |   5 +-
->  drivers/platform/x86/intel/pmt/crashlog.c  |  47 +--
->  drivers/platform/x86/intel/pmt/telemetry.c |  46 +--
->  drivers/platform/x86/intel/vsec.c          | 405 +++++++++++++++++++++
->  drivers/platform/x86/intel/vsec.h          |  43 +++
->  13 files changed, 533 insertions(+), 335 deletions(-)
->  delete mode 100644 drivers/mfd/intel_pmt.c
->  create mode 100644 drivers/platform/x86/intel/vsec.c
->  create mode 100644 drivers/platform/x86/intel/vsec.h
+However, perhaps it's not too late.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+[...]
+> @@ -446,6 +452,13 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  		break;
+>  	case IMX7D:
+>  		break;
+> +	case IMX8MM:
+> +		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
+> +		if (ret) {
+> +			dev_err(dev, "unable to enable pcie_aux clock\n");
+> +			break;
+> +		}
+> +		break;
+
+You can drop the inner break, it wouldn't do much here, unless this was
+intended to be a return?
+
+> @@ -538,6 +559,10 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  	case IMX8MQ:
+>  		reset_control_deassert(imx6_pcie->pciephy_reset);
+>  		break;
+> +	case IMX8MM:
+> +		if (phy_init(imx6_pcie->phy) != 0)
+> +			dev_err(dev, "Waiting for PHY ready timeout!\n");
+> +		break;
+
+If the above, you can keep the same style as used throughout the file
+already, so it would just simply be:
+
+  if (phy_init(imx6_pcie->phy))
+
+Also, a nitpick: to be consistent with other such messages here, the error
+message would be all lower-case letters.
+
+[...]
+> @@ -614,6 +639,8 @@ static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
+>  static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+>  {
+>  	switch (imx6_pcie->drvdata->variant) {
+> +	case IMX8MM:
+> +		break;
+>  	case IMX8MQ:
+
+Would it warrant a comment that adds a note there to this single bare
+break?  Perhaps this version is not support, lack this particular
+functionality, etc.
+
+[...]
+> @@ -1089,10 +1122,39 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  			dev_err(dev, "Failed to get PCIE APPS reset control\n");
+>  			return PTR_ERR(imx6_pcie->apps_reset);
+>  		}
+> +		break;
+> +	case IMX8MM:
+> +		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
+> +		if (IS_ERR(imx6_pcie->pcie_aux))
+> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
+> +					     "pcie_aux clock source missing or invalid\n");
+> +		imx6_pcie->apps_reset = devm_reset_control_get_exclusive(dev,
+> +									 "apps");
+> +		if (IS_ERR(imx6_pcie->apps_reset)) {
+> +			dev_err(dev, "Failed to get PCIE APPS reset control\n");
+> +			return PTR_ERR(imx6_pcie->apps_reset);
+> +		}
+> +
+> +		imx6_pcie->phy = devm_phy_get(dev, "pcie-phy");
+> +		if (IS_ERR(imx6_pcie->phy)) {
+> +			if (PTR_ERR(imx6_pcie->phy) == -EPROBE_DEFER)
+> +				return -EPROBE_DEFER;
+> +			dev_err(dev, "Failed to get PCIE PHY\n");
+> +			return PTR_ERR(imx6_pcie->phy);
+> +		}
+
+A question about handling of the -EPROBE_DEFER above: why not to use the
+dev_err_probe() helper similarly to the code above and below?  Would there
+be something different preventing the use of dev_err_probe() here too?
+
+>  		break;
+>  	default:
+>  		break;
+>  	}
+> +	/* Don't fetch the pcie_phy clock, if it has abstract PHY driver */
+> +	if (imx6_pcie->phy == NULL) {
+> +		imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
+> +		if (IS_ERR(imx6_pcie->pcie_phy))
+> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_phy),
+> +					     "pcie_phy clock source missing or invalid\n");
+> +	}
+
+Thank you for another amazing patch!
+
+	Krzysztof
