@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02A46477204
+	by mail.lfdr.de (Postfix) with ESMTP id 256E8477205
 	for <lists+linux-pci@lfdr.de>; Thu, 16 Dec 2021 13:42:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236862AbhLPMmD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S236855AbhLPMmD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 16 Dec 2021 07:42:03 -0500
 Received: from mga17.intel.com ([192.55.52.151]:17579 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236857AbhLPMmD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S236858AbhLPMmD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Thu, 16 Dec 2021 07:42:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639658522; x=1671194522;
+  t=1639658523; x=1671194523;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=RTtWjeHrecW7aynJBFD/IDyqCj4KkylTTZxMF13Sys4=;
-  b=Uz77ZyiiX5DmGoi8oKKhvnI7UD5M0wwIlTQ97X3jFjZhEIKHaZLjltUW
-   2X3+y59DfirPWXyd9GMvjMbezSzU4ac0z7+FgBhNvGDSj9b/Pdt0eyK2z
-   bn3N+7Jx205kETdcxvlDuedS4yAOnGThkpsJz2GMw0IjXCYB9g5lrpMvw
-   PtvUGQ3qPJUuPw5frx7yc4AA0EhPfAIA8jAau2E9Tpm4C27A6eyS74dRf
-   tiH/OtDkaxGY1HrQ1KOP+N4hWhRRV0XWxfdgTUmAV/kHjlU/pqLmpdzxL
-   yF+VJUrc8++Z6I7mtKH8ilSmDLkN03rlBx2S5vGionGtPO+E8kuzAvkBR
+  bh=1yDc3VT+jn0+25tCfj5PePnYiwX3b2hH4QG2cMRLzmw=;
+  b=SHUrciODt/hyc1ql8O4/CH0+ZTeC2ap/kftVDHSxO9pVvi5n7hITmhVF
+   7ce8lDoYuebI+hHjH5IaadxWeXYR1HMNwXLvebM8QgyowW1csuJ/ohfhb
+   k0bE3bLHBR5U52bzpOavoaIZ1Q3M5cX+C/yh9E+SgLwEocskB9LrlvVuz
+   7/DEPUYAA7tNyYEvwXTKhY4A627Vxw/g8b6NsQWIQ4cwrcReZjKBqj4nP
+   2WqXEhNJVyCLlzxJLE6VDIHOOqU+ns4fRjA5MLohJldhflq+GYWjsFI8W
+   8WpFpK8TgrclltC7q1ha7M5PfulsIOHcW3V7vN94kTk+uPGLrYX0ZHRzI
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="220156891"
+X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="220156892"
 X-IronPort-AV: E=Sophos;i="5.88,211,1635231600"; 
-   d="scan'208";a="220156891"
+   d="scan'208";a="220156892"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 04:42:02 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,211,1635231600"; 
-   d="scan'208";a="482808655"
+   d="scan'208";a="482808654"
 Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
   by orsmga002.jf.intel.com with ESMTP; 16 Dec 2021 04:42:01 -0800
 Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mxq5A-00038F-OY; Thu, 16 Dec 2021 12:42:00 +0000
-Date:   Thu, 16 Dec 2021 20:41:18 +0800
+        id 1mxq5A-00038B-Ne; Thu, 16 Dec 2021 12:42:00 +0000
+Date:   Thu, 16 Dec 2021 20:41:24 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/p2pdma] BUILD SUCCESS
- 69f457b18fa2b9a793ce61e8d1cf295983aca3a9
-Message-ID: <61bb33ee.wS44kcNPdPs3ajCp%lkp@intel.com>
+Subject: [helgaas-pci:pci/virtualization] BUILD SUCCESS
+ e445375882883f69018aa669b67cbb37ec873406
+Message-ID: <61bb33f4.C/Ks9Zm9hwylbfeX%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,8 +52,8 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/p2pdma
-branch HEAD: 69f457b18fa2b9a793ce61e8d1cf295983aca3a9  PCI/P2PDMA: Use percpu_ref_tryget_live_rcu() inside RCU critical section
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/virtualization
+branch HEAD: e445375882883f69018aa669b67cbb37ec873406  PCI: Add function 1 DMA alias quirk for Marvell 88SE9125 SATA controller
 
 elapsed time: 737m
 
@@ -139,11 +139,11 @@ m68k                             allyesconfig
 nios2                               defconfig
 arc                              allyesconfig
 nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
 csky                                defconfig
 alpha                               defconfig
+nds32                               defconfig
 alpha                            allyesconfig
+nios2                            allyesconfig
 xtensa                           allyesconfig
 h8300                            allyesconfig
 arc                                 defconfig
