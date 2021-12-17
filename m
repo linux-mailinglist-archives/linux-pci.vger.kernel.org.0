@@ -2,495 +2,251 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1DA2479308
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Dec 2021 18:45:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29C954793DC
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Dec 2021 19:18:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236274AbhLQRpt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Dec 2021 12:45:49 -0500
-Received: from mga05.intel.com ([192.55.52.43]:17635 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235821AbhLQRps (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Dec 2021 12:45:48 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10201"; a="326090962"
-X-IronPort-AV: E=Sophos;i="5.88,214,1635231600"; 
-   d="txt'?scan'208";a="326090962"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 09:45:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,214,1635231600"; 
-   d="txt'?scan'208";a="506846708"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.171])
-  by orsmga007.jf.intel.com with SMTP; 17 Dec 2021 09:45:44 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Fri, 17 Dec 2021 19:45:44 +0200
-Date:   Fri, 17 Dec 2021 19:45:44 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>, linux-pci@vger.kernel.org
-Subject: Re: [REGRESSION] 527139d738d7 ("PCI/sysfs: Convert "rom" to static
- attribute")
-Message-ID: <YbzMyDm+5PCer8Fj@intel.com>
-References: <YbxqIyrkv3GhZVxx@intel.com>
- <20211217172928.GA900484@bhelgaas>
+        id S240378AbhLQSSY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Dec 2021 13:18:24 -0500
+Received: from mail-oo1-f53.google.com ([209.85.161.53]:38588 "EHLO
+        mail-oo1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240308AbhLQSSH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Dec 2021 13:18:07 -0500
+Received: by mail-oo1-f53.google.com with SMTP id w15-20020a4a9d0f000000b002c5cfa80e84so962274ooj.5;
+        Fri, 17 Dec 2021 10:18:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DUagVimgw1ApcmF6AvhiSrgCHf1EYrO6dU3mHWhYaBI=;
+        b=J7fe+K5+xEvEjNjYqf1Iqz2/hCraAfWe6GelGAjVek3VirPIaRQ2K6kXX5GsOY699v
+         pk2WfWz2rMZS9u4JVrzg6FBOhwww0vsZBG8Jgkwfx0cDt7JCStzqoILn1HAyoddPyKgb
+         +6u58OratXKaMeSzz1glA6OUmWz368MBiURT36VOeag/IPV0o6hh/NKqt3wnbbOfL+aE
+         NeP7O8b/U7gKby6Z0zEADHcahwkN/5lLB+0gIFTHC28pbRsdD3kK6r6xK7ESsIQvBrmH
+         hvttru4xR/Kzb1OMS5KtPZ6Obs/Xc1crSZBTk0aHrIZiSLAJdbC1o+sZfVI9KHqrRD6X
+         HK3w==
+X-Gm-Message-State: AOAM533E3VSbK+00v3MNKzr32MPm1lckbRvTV59hSfU4e81bFc/M6V0P
+        XEGeJBWZLSlT12t+FG9nX60bcuwMVtLIb7e0OcE=
+X-Google-Smtp-Source: ABdhPJxdtHox8im6N2bQJtox/rqL0AaE1E1T54JWTcRsHYfMYCuIHuossNZx+mCc+saoVsCXQ5Btp2rpBHdTG5WMq9c=
+X-Received: by 2002:a4a:ead8:: with SMTP id s24mr2769632ooh.89.1639765086838;
+ Fri, 17 Dec 2021 10:18:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="K44hUyPxft0DTokU"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211217172928.GA900484@bhelgaas>
-X-Patchwork-Hint: comment
+References: <20211126070422.73234-1-xueshuai@linux.alibaba.com> <20211216133456.21002-1-xueshuai@linux.alibaba.com>
+In-Reply-To: <20211216133456.21002-1-xueshuai@linux.alibaba.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 17 Dec 2021 19:17:56 +0100
+Message-ID: <CAJZ5v0jOnA90BX0ZisY4Gm4tKTjQMcxOqEOa2FVZsuec0e_mSw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v4] ACPI: Move sdei_init and ghes_init ahead to
+ handle platform errors earlier
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        luanshi <zhangliguang@linux.alibaba.com>,
+        zhuo.song@linux.alibaba.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Dec 16, 2021 at 2:35 PM Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+>
+> On an ACPI system, ACPI is initialised very early from a subsys_initcall(),
+> while SDEI is not ready until a subsys_initcall_sync().
+>
+> The SDEI driver provides functions (e.g. apei_sdei_register_ghes,
+> apei_sdei_unregister_ghes) to register or unregister event callback for
+> dispatcher in firmware. When the GHES driver probing, it registers the
+> corresponding callback according to the notification type specified by
+> GHES. If the GHES notification type is SDEI, the GHES driver will call
+> apei_sdei_register_ghes to register event call.
+>
+> When the firmware emits an event, it migrates the handling of the event
+> into the kernel at the registered entry-point __sdei_asm_handler. And
+> finally, the kernel will call the registered event callback and return
+> status_code to indicate the status of event handling. SDEI_EV_FAILED
+> indicates that the kernel failed to handle the event.
+>
+> Consequently, when an error occurs during kernel booting, the kernel is
+> unable to handle and report errors until the GHES driver is initialized by
+> device_initcall(), in which the event callback is registered. All errors
+> that occurred before GHES initialization are missed and there is no chance
+> to report and find them again.
+>
+> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
+> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
+> the estatus memory pool. On the other hand, ghes_init() relies on
+> sdei_init() to detect the SDEI version and the framework for registering
+> and unregistering events. By the way, I don't figure out why acpi_hest_init
+> is called in acpi_pci_root_init, it don't rely on any other thing. May it
+> could be moved further, following acpi_iort_init in acpi_init.
+>
+> sdei_init() relies on ACPI table which is initialized subsys_initcall():
+> acpi_init(), acpi_bus_init(), acpi_load_tables(), acpi_tb_laod_namespace().
+> May it should be also moved further, after acpi_load_tables.
+>
+> In this patch, move sdei_init and ghes_init as far ahead as possible, right
+> after acpi_hest_init().
+>
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 
---K44hUyPxft0DTokU
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+This needs ACKs from Bjorn and Boris/Tony/James/.
 
-On Fri, Dec 17, 2021 at 11:29:28AM -0600, Bjorn Helgaas wrote:
-> Hi Ville,
-> 
-> Thanks for the report!
-> 
-> On Fri, Dec 17, 2021 at 12:44:51PM +0200, Ville Syrjälä wrote:
-> > Hi,
-> > 
-> > The pci sysfs "rom" file has disappeared for VGA devices.
-> > Looks to be a regression from commit 527139d738d7 ("PCI/sysfs:
-> > Convert "rom" to static attribute").
-> > 
-> > Some kind of ordering issue between the sysfs file creation 
-> > vs. pci_fixup_video() perhaps?
-> 
-> Can you attach your complete "lspci -vv" output?  Also, which is the
-> default device?  I think there's a "boot_vga" sysfs file that shows
-> this.  "find /sys -name boot_vga | xargs grep ."
-
-All I have is Intel iGPUs so it's always 00:02.0. 
-
-$ cat /sys/bus/pci/devices/0000\:00\:02.0/boot_vga 
-1
-$ cat /sys/bus/pci/devices/0000\:00\:02.0/rom
-cat: '/sys/bus/pci/devices/0000:00:02.0/rom': No such file or directory
-
-I've attached the full lspci from my IVB laptop, but the problem
-happens on every machine (with an iGPU at least).
-
-I presume with a discrete GPU it might not happen since they
-actually have a real ROM.
-
-> 
-> I think the relevant path is something like this:
-> 
->   acpi_pci_root_add
->     pci_acpi_scan_root
->       ...
->         pci_scan_single_device
->           pci_device_add
->             device_add
->               ...
->                 sysfs_create_groups
->                   ...
->                     if (grp->is_visible())
->                       pci_dev_rom_attr_is_visible  # after 527139d738d7
->                         if (pci_resource_len(pdev, PCI_ROM_RESOURCE))
->                           ...
->     pci_bus_add_devices
->       pci_bus_add_device
->         pci_fixup_device(pci_fixup_final)
->           pci_fixup_video
->             if (vga_default_device() ...)
->               # update PCI_ROM_RESOURCE
->         pci_create_sysfs_dev_files
->           if (pci_resource_len(pdev, PCI_ROM_RESOURCE))
->             sysfs_create_bin_file("rom")           # before 527139d738d7
-> 
-> Prior to 527139d738d7, we ran pci_fixup_video() in
-> pci_bus_add_devices().  The vga_default_device() there might depend on
-> the fact that we've discovered all the PCI devices.  
-> 
-> After 527139d738d7, we create the "rom" file in pci_device_add(),
-> which happens as we discover each device, so maybe we don't yet know
-> which device is the default VGA device.
-> 
-> Bjorn
-
--- 
-Ville Syrjälä
-Intel
-
---K44hUyPxft0DTokU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="lspci.txt"
-
-00:00.0 Host bridge: Intel Corporation 3rd Gen Core processor DRAM Controller (rev 09)
-	Subsystem: Lenovo 3rd Gen Core processor DRAM Controller
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort+ >SERR- <PERR- INTx-
-	Latency: 0
-	Capabilities: [e0] Vendor Specific Information: Len=0c <?>
-	Kernel driver in use: ivb_uncore
-
-00:02.0 VGA compatible controller: Intel Corporation 3rd Gen Core processor Graphics Controller (rev 09) (prog-if 00 [VGA controller])
-	Subsystem: Lenovo 3rd Gen Core processor Graphics Controller
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 27
-	Region 0: Memory at f0000000 (64-bit, non-prefetchable) [size=4M]
-	Region 2: Memory at e0000000 (64-bit, prefetchable) [size=256M]
-	Region 4: I/O ports at 4000 [size=64]
-	Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
-	Capabilities: [90] MSI: Enable+ Count=1/1 Maskable- 64bit-
-		Address: fee01004  Data: 002b
-	Capabilities: [d0] Power Management version 2
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [a4] PCI Advanced Features
-		AFCap: TP+ FLR+
-		AFCtrl: FLR-
-		AFStatus: TP-
-	Kernel driver in use: i915
-	Kernel modules: i915
-
-00:14.0 USB controller: Intel Corporation 7 Series/C210 Series Chipset Family USB xHCI Host Controller (rev 04) (prog-if 30 [XHCI])
-	Subsystem: Lenovo 7 Series/C210 Series Chipset Family USB xHCI Host Controller
-	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Interrupt: pin A routed to IRQ 25
-	Region 0: Memory at f1500000 (64-bit, non-prefetchable) [size=64K]
-	Capabilities: [70] Power Management version 2
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot+,D3cold+)
-		Status: D3 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
-	Capabilities: [80] MSI: Enable+ Count=1/8 Maskable- 64bit+
-		Address: 00000000fee01004  Data: 0029
-	Kernel driver in use: xhci_hcd
-	Kernel modules: xhci_pci
-
-00:16.0 Communication controller: Intel Corporation 7 Series/C216 Chipset Family MEI Controller #1 (rev 04)
-	Subsystem: Lenovo 7 Series/C216 Chipset Family MEI Controller
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx+
-	Latency: 0
-	Interrupt: pin A routed to IRQ 255
-	Region 0: Memory at f1515000 (64-bit, non-prefetchable) [size=16]
-	Capabilities: [50] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
-	Capabilities: [8c] MSI: Enable- Count=1/1 Maskable- 64bit+
-		Address: 0000000000000000  Data: 0000
-
-00:1a.0 USB controller: Intel Corporation 7 Series/C216 Chipset Family USB Enhanced Host Controller #2 (rev 04) (prog-if 20 [EHCI])
-	Subsystem: Lenovo 7 Series/C216 Chipset Family USB Enhanced Host Controller
-	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at f151a000 (32-bit, non-prefetchable) [size=1K]
-	Capabilities: [50] Power Management version 2
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D3 NoSoftRst- PME-Enable+ DSel=0 DScale=0 PME-
-	Capabilities: [58] Debug port: BAR=1 offset=00a0
-	Capabilities: [98] PCI Advanced Features
-		AFCap: TP+ FLR+
-		AFCtrl: FLR-
-		AFStatus: TP-
-	Kernel driver in use: ehci-pci
-	Kernel modules: ehci_pci
-
-00:1b.0 Audio device: Intel Corporation 7 Series/C216 Chipset Family High Definition Audio Controller (rev 04)
-	Subsystem: Lenovo 7 Series/C216 Chipset Family High Definition Audio Controller
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 28
-	Region 0: Memory at f1510000 (64-bit, non-prefetchable) [size=16K]
-	Capabilities: [50] Power Management version 2
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
-		Address: 00000000fee02004  Data: 0021
-	Capabilities: [70] Express (v1) Root Complex Integrated Endpoint, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE- FLReset+
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop- FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-	Capabilities: [100 v1] Virtual Channel
-		Caps:	LPEVC=0 RefClk=100ns PATEntryBits=1
-		Arb:	Fixed- WRR32- WRR64- WRR128-
-		Ctrl:	ArbSelect=Fixed
-		Status:	InProgress-
-		VC0:	Caps:	PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
-			Arb:	Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
-			Ctrl:	Enable+ ID=0 ArbSelect=Fixed TC/VC=01
-			Status:	NegoPending- InProgress-
-		VC1:	Caps:	PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
-			Arb:	Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
-			Ctrl:	Enable+ ID=1 ArbSelect=Fixed TC/VC=22
-			Status:	NegoPending- InProgress-
-	Capabilities: [130 v1] Root Complex Link
-		Desc:	PortNumber=0f ComponentID=00 EltType=Config
-		Link0:	Desc:	TargetPort=00 TargetComponent=00 AssocRCRB- LinkType=MemMapped LinkValid+
-			Addr:	00000000fed1c000
-	Kernel driver in use: snd_hda_intel
-	Kernel modules: snd_hda_intel
-
-00:1c.0 PCI bridge: Intel Corporation 7 Series/C216 Chipset Family PCI Express Root Port 1 (rev c4) (prog-if 00 [Normal decode])
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 16
-	Bus: primary=00, secondary=02, subordinate=02, sec-latency=0
-	I/O behind bridge: 00003000-00003fff [size=4K]
-	Memory behind bridge: f0d00000-f14fffff [size=8M]
-	Prefetchable memory behind bridge: 00000000f0400000-00000000f0bfffff [size=8M]
-	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
-		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-	Capabilities: [40] Express (v2) Root Port (Slot+), MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE+
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #1, Speed 5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <512ns, L1 <16us
-			ClockPM- Surprise- LLActRep+ BwNot- ASPMOptComp-
-		LnkCtl:	ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk+
-			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-		LnkSta:	Speed 2.5GT/s (downgraded), Width x1 (ok)
-			TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt-
-		SltCap:	AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+
-			Slot #0, PowerLimit 10.000W; Interlock- NoCompl+
-		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet+ CmdCplt- HPIrq- LinkChg-
-			Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
-		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet+ Interlock-
-			Changed: MRL- PresDet- LinkState-
-		RootCap: CRSVisible-
-		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna- CRSVisible-
-		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-		DevCap2: Completion Timeout: Range BC, TimeoutDis+ NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS- LN System CLS Not Supported, TPHComp- ExtTPHComp- ARIFwd-
-			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled, ARIFwd-
-			 AtomicOpsCtl: ReqEn- EgressBlck-
-		LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance De-emphasis: -6dB
-		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
-			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-			 Retimer- 2Retimers- CrosslinkRes: unsupported
-	Capabilities: [80] MSI: Enable- Count=1/1 Maskable- 64bit-
-		Address: 00000000  Data: 0000
-	Capabilities: [90] Subsystem: Lenovo 7 Series/C216 Chipset Family PCI Express Root Port 1
-	Capabilities: [a0] Power Management version 2
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Kernel driver in use: pcieport
-
-00:1c.1 PCI bridge: Intel Corporation 7 Series/C210 Series Chipset Family PCI Express Root Port 2 (rev c4) (prog-if 00 [Normal decode])
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin B routed to IRQ 17
-	Bus: primary=00, secondary=03, subordinate=03, sec-latency=0
-	I/O behind bridge: [disabled]
-	Memory behind bridge: f0c00000-f0cfffff [size=1M]
-	Prefetchable memory behind bridge: [disabled]
-	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
-	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
-		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
-	Capabilities: [40] Express (v2) Root Port (Slot+), MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0
-			ExtTag- RBE+
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #2, Speed 5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <512ns, L1 <16us
-			ClockPM- Surprise- LLActRep+ BwNot- ASPMOptComp-
-		LnkCtl:	ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk+
-			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-		LnkSta:	Speed 2.5GT/s (downgraded), Width x1 (ok)
-			TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt-
-		SltCap:	AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug- Surprise-
-			Slot #1, PowerLimit 10.000W; Interlock- NoCompl+
-		SltCtl:	Enable: AttnBtn- PwrFlt- MRL- PresDet- CmdCplt- HPIrq- LinkChg-
-			Control: AttnInd Unknown, PwrInd Unknown, Power- Interlock-
-		SltSta:	Status: AttnBtn- PowerFlt- MRL- CmdCplt- PresDet+ Interlock-
-			Changed: MRL- PresDet- LinkState+
-		RootCap: CRSVisible-
-		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna- CRSVisible-
-		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
-		DevCap2: Completion Timeout: Range BC, TimeoutDis+ NROPrPrP- LTR-
-			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-			 FRS- LN System CLS Not Supported, TPHComp- ExtTPHComp- ARIFwd-
-			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled, ARIFwd-
-			 AtomicOpsCtl: ReqEn- EgressBlck-
-		LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
-			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-			 Compliance De-emphasis: -6dB
-		LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete- EqualizationPhase1-
-			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-			 Retimer- 2Retimers- CrosslinkRes: unsupported
-	Capabilities: [80] MSI: Enable- Count=1/1 Maskable- 64bit-
-		Address: 00000000  Data: 0000
-	Capabilities: [90] Subsystem: Lenovo 7 Series/C210 Series Chipset Family PCI Express Root Port 2
-	Capabilities: [a0] Power Management version 2
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Kernel driver in use: pcieport
-
-00:1d.0 USB controller: Intel Corporation 7 Series/C216 Chipset Family USB Enhanced Host Controller #1 (rev 04) (prog-if 20 [EHCI])
-	Subsystem: Lenovo 7 Series/C216 Chipset Family USB Enhanced Host Controller
-	Control: I/O- Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Interrupt: pin A routed to IRQ 23
-	Region 0: Memory at f1519000 (32-bit, non-prefetchable) [size=1K]
-	Capabilities: [50] Power Management version 2
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D3 NoSoftRst- PME-Enable+ DSel=0 DScale=0 PME-
-	Capabilities: [58] Debug port: BAR=1 offset=00a0
-	Capabilities: [98] PCI Advanced Features
-		AFCap: TP+ FLR+
-		AFCtrl: FLR-
-		AFStatus: TP-
-	Kernel driver in use: ehci-pci
-	Kernel modules: ehci_pci
-
-00:1f.0 ISA bridge: Intel Corporation QS77 Express Chipset LPC Controller (rev 04)
-	Subsystem: Lenovo QS77 Express Chipset LPC Controller
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Capabilities: [e0] Vendor Specific Information: Len=0c <?>
-	Kernel driver in use: lpc_ich
-	Kernel modules: lpc_ich
-
-00:1f.2 SATA controller: Intel Corporation 7 Series Chipset Family 6-port SATA Controller [AHCI mode] (rev 04) (prog-if 01 [AHCI 1.0])
-	Subsystem: Lenovo 7 Series Chipset Family 6-port SATA Controller [AHCI mode]
-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin B routed to IRQ 24
-	Region 0: I/O ports at 4088 [size=8]
-	Region 1: I/O ports at 4094 [size=4]
-	Region 2: I/O ports at 4080 [size=8]
-	Region 3: I/O ports at 4090 [size=4]
-	Region 4: I/O ports at 4060 [size=32]
-	Region 5: Memory at f1518000 (32-bit, non-prefetchable) [size=2K]
-	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
-		Address: fee01004  Data: 0025
-	Capabilities: [70] Power Management version 3
-		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot+,D3cold-)
-		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [a8] SATA HBA v1.0 BAR4 Offset=00000004
-	Capabilities: [b0] PCI Advanced Features
-		AFCap: TP+ FLR+
-		AFCtrl: FLR-
-		AFStatus: TP-
-	Kernel driver in use: ahci
-
-00:1f.3 SMBus: Intel Corporation 7 Series/C216 Chipset Family SMBus Controller (rev 04)
-	Subsystem: Lenovo 7 Series/C216 Chipset Family SMBus Controller
-	Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Interrupt: pin C routed to IRQ 18
-	Region 0: Memory at f1514000 (64-bit, non-prefetchable) [size=256]
-	Region 4: I/O ports at efa0 [size=32]
-	Kernel driver in use: i801_smbus
-	Kernel modules: i2c_i801
-
-02:00.0 System peripheral: Ricoh Co Ltd MMC/SD Host Controller (rev 07) (prog-if 01)
-	Subsystem: Lenovo MMC/SD Host Controller
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 16
-	Region 0: Memory at f0d00000 (32-bit, non-prefetchable) [size=256]
-	Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit+
-		Address: 0000000000000000  Data: 0000
-	Capabilities: [78] Power Management version 3
-		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=0mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=2 PME-
-	Capabilities: [80] Express (v1) Endpoint, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
-			ExtTag- AttnBtn+ AttnInd+ PwrInd+ RBE+ FLReset- SlotPowerLimit 10.000W
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
-			MaxPayload 128 bytes, MaxReadReq 512 bytes
-		DevSta:	CorrErr+ NonFatalErr- FatalErr- UnsupReq+ AuxPwr- TransPend-
-		LnkCap:	Port #1, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <4us, L1 unlimited
-			ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp-
-		LnkCtl:	ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk+
-			ExtSynch- ClockPM+ AutWidDis- BWInt- AutBWInt-
-		LnkSta:	Speed 2.5GT/s (ok), Width x1 (ok)
-			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-	Capabilities: [100 v1] Virtual Channel
-		Caps:	LPEVC=0 RefClk=100ns PATEntryBits=1
-		Arb:	Fixed- WRR32- WRR64- WRR128-
-		Ctrl:	ArbSelect=Fixed
-		Status:	InProgress-
-		VC0:	Caps:	PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
-			Arb:	Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
-			Ctrl:	Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
-			Status:	NegoPending- InProgress-
-	Capabilities: [800 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr+ BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-		AERCap:	First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Kernel driver in use: sdhci-pci
-	Kernel modules: sdhci_pci
-
-03:00.0 Network controller: Intel Corporation Centrino Advanced-N 6205 [Taylor Peak] (rev 96)
-	Subsystem: Intel Corporation Centrino Advanced-N 6205 [Taylor Peak]
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 26
-	Region 0: Memory at f0c00000 (64-bit, non-prefetchable) [size=8K]
-	Capabilities: [c8] Power Management version 3
-		Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-	Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
-		Address: 00000000fee01004  Data: 002a
-	Capabilities: [e0] Express (v1) Endpoint, MSI 00
-		DevCap:	MaxPayload 128 bytes, PhantFunc 0, Latency L0s <512ns, L1 unlimited
-			ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 0.000W
-		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-			RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+ FLReset-
-			MaxPayload 128 bytes, MaxReadReq 128 bytes
-		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-		LnkCap:	Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <4us, L1 <32us
-			ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp-
-		LnkCtl:	ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk+
-			ExtSynch- ClockPM+ AutWidDis- BWInt- AutBWInt-
-		LnkSta:	Speed 2.5GT/s (ok), Width x1 (ok)
-			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-	Capabilities: [100 v1] Advanced Error Reporting
-		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-		UESvrt:	DLP+ SDES- TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-		HeaderLog: 00000000 00000000 00000000 00000000
-	Capabilities: [140 v1] Device Serial Number 84-3a-4b-ff-ff-46-a9-10
-	Kernel driver in use: iwlwifi
-	Kernel modules: iwlwifi
-
-
---K44hUyPxft0DTokU--
+> ---
+>  drivers/acpi/apei/ghes.c    | 18 ++++++++----------
+>  drivers/acpi/pci_root.c     |  5 ++++-
+>  drivers/firmware/arm_sdei.c | 13 ++-----------
+>  include/acpi/apei.h         |  2 ++
+>  include/linux/arm_sdei.h    |  2 ++
+>  5 files changed, 18 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 0c8330ed1ffd..b11e46fb4b3d 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -1457,27 +1457,26 @@ static struct platform_driver ghes_platform_driver = {
+>         .remove         = ghes_remove,
+>  };
+>
+> -static int __init ghes_init(void)
+> +void __init ghes_init(void)
+>  {
+>         int rc;
+>
+>         if (acpi_disabled)
+> -               return -ENODEV;
+> +               return;
+>
+>         switch (hest_disable) {
+>         case HEST_NOT_FOUND:
+> -               return -ENODEV;
+> +               pr_info(GHES_PFX "HEST is not found!\n");
+> +               return;
+>         case HEST_DISABLED:
+>                 pr_info(GHES_PFX "HEST is not enabled!\n");
+> -               return -EINVAL;
+> +               return;
+>         default:
+>                 break;
+>         }
+>
+> -       if (ghes_disable) {
+> +       if (ghes_disable)
+>                 pr_info(GHES_PFX "GHES is not enabled!\n");
+> -               return -EINVAL;
+> -       }
+>
+>         ghes_nmi_init_cxt();
+>
+> @@ -1495,8 +1494,7 @@ static int __init ghes_init(void)
+>         else
+>                 pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
+>
+> -       return 0;
+> +       return;
+>  err:
+> -       return rc;
+> +       ghes_disable = 1;
+>  }
+> -device_initcall(ghes_init);
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index ab2f7dfb0c44..1260bb556184 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -23,7 +23,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/platform_data/x86/apple.h>
+>  #include <acpi/apei.h> /* for acpi_hest_init() */
+> -
+> +#include <linux/arm_sdei.h> /* for sdei_init() */
+>  #include "internal.h"
+>
+>  #define ACPI_PCI_ROOT_CLASS            "pci_bridge"
+> @@ -946,6 +946,9 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>  void __init acpi_pci_root_init(void)
+>  {
+>         acpi_hest_init();
+> +       sdei_init();
+> +       ghes_init();
+> +
+>         if (acpi_pci_disabled)
+>                 return;
+>
+> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+> index a7e762c352f9..1e1a51510e83 100644
+> --- a/drivers/firmware/arm_sdei.c
+> +++ b/drivers/firmware/arm_sdei.c
+> @@ -1059,14 +1059,14 @@ static bool __init sdei_present_acpi(void)
+>         return true;
+>  }
+>
+> -static int __init sdei_init(void)
+> +void __init sdei_init(void)
+>  {
+>         struct platform_device *pdev;
+>         int ret;
+>
+>         ret = platform_driver_register(&sdei_driver);
+>         if (ret || !sdei_present_acpi())
+> -               return ret;
+> +               return;
+>
+>         pdev = platform_device_register_simple(sdei_driver.driver.name,
+>                                                0, NULL, 0);
+> @@ -1076,17 +1076,8 @@ static int __init sdei_init(void)
+>                 pr_info("Failed to register ACPI:SDEI platform device %d\n",
+>                         ret);
+>         }
+> -
+> -       return ret;
+>  }
+>
+> -/*
+> - * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
+> - * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
+> - * by device_initcall(). We want to be called in the middle.
+> - */
+> -subsys_initcall_sync(sdei_init);
+> -
+>  int sdei_event_handler(struct pt_regs *regs,
+>                        struct sdei_registered_event *arg)
+>  {
+> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
+> index ece0a8af2bae..7dbd6363fda7 100644
+> --- a/include/acpi/apei.h
+> +++ b/include/acpi/apei.h
+> @@ -27,8 +27,10 @@ extern int hest_disable;
+>  extern int erst_disable;
+>  #ifdef CONFIG_ACPI_APEI_GHES
+>  extern bool ghes_disable;
+> +void __init ghes_init(void);
+>  #else
+>  #define ghes_disable 1
+> +static inline void ghes_init(void) { return; }
+>  #endif
+>
+>  #ifdef CONFIG_ACPI_APEI
+> diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
+> index 0a241c5c911d..9c987188b692 100644
+> --- a/include/linux/arm_sdei.h
+> +++ b/include/linux/arm_sdei.h
+> @@ -46,9 +46,11 @@ int sdei_unregister_ghes(struct ghes *ghes);
+>  /* For use by arch code when CPU hotplug notifiers are not appropriate. */
+>  int sdei_mask_local_cpu(void);
+>  int sdei_unmask_local_cpu(void);
+> +void __init sdei_init(void);
+>  #else
+>  static inline int sdei_mask_local_cpu(void) { return 0; }
+>  static inline int sdei_unmask_local_cpu(void) { return 0; }
+> +static inline void sdei_init(void) { return ; }
+>  #endif /* CONFIG_ARM_SDE_INTERFACE */
+>
+>
+> --
+> 2.20.1.12.g72788fdb
+>
