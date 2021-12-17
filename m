@@ -2,88 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 107AC479169
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Dec 2021 17:25:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77E5647917F
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Dec 2021 17:30:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238569AbhLQQZa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Dec 2021 11:25:30 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:58750 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238005AbhLQQZa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Dec 2021 11:25:30 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C886A622F0;
-        Fri, 17 Dec 2021 16:25:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E51AEC36AE8;
-        Fri, 17 Dec 2021 16:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639758329;
-        bh=K2+x1WBF60nqGDXE3hSHxTF/9S7av35S8BbzdwS/bII=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=l8hwWpJtkqVosVL1Kl9DrJR9eNeTjGsOabJ1jmqTyRBnOdLlGFscPuQAyytPGUMMW
-         2fmAkkhuPt4g5lEQJlqW/8B+8zyfLPpzInlCtXQ0SV2ZNwCV9FoHzgVPXRmJfv6x9A
-         BdxclGi+welPPl4Y+1Ns2caPVXlnfbmURx8QDbMThG/ant8ydu07RMYr9REQFpIHMd
-         C+vf0gZGuJ07uEnz6Bi2jkwNLhbE7b/clp/fVKVjOhADCpHEaUyLhPni4D++wWGFX7
-         8VUiu/sYaWCWz2N8UeGQR0bhxbm6eRP4WHy2nti+di5Z91/eJnIy4XjbSNO5e0342r
-         05TvmL0xbe+Lw==
-Date:   Fri, 17 Dec 2021 10:25:27 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Felix Fietkau <nbd@nbd.name>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>, john@phrozen.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v7 10/14] PCI: mediatek: Allow selecting controller
- driver for airoha arch
-Message-ID: <20211217162527.GA895301@bhelgaas>
+        id S239131AbhLQQan (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Dec 2021 11:30:43 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4305 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231193AbhLQQam (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Dec 2021 11:30:42 -0500
+Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JFvVs4yb0z67gb0;
+        Sat, 18 Dec 2021 00:26:13 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Fri, 17 Dec 2021 17:30:40 +0100
+Received: from [10.47.26.158] (10.47.26.158) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Fri, 17 Dec
+ 2021 16:30:39 +0000
+Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
+To:     Arnd Bergmann <arnd@kernel.org>
+CC:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
+ <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com>
+ <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
+ <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com>
+ <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
+ <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com>
+ <CAK8P3a08Zcyx0J4_LGAfU_AtUyEK+XtQJxYBQ52VXfWu8-o8_w@mail.gmail.com>
+ <dd2d49ef-3154-3c87-67b9-c134567ba947@huawei.com>
+ <CAK8P3a3KTaa-AwCOjhaASMx63B3DUBZCZe6RKWk-=Qu7xr_ijQ@mail.gmail.com>
+ <47744c7bce7b7bb37edee7f249d61dc57ac1fbc5.camel@linux.ibm.com>
+ <CAK8P3a2eZ25PLSqEf_wmGs912WK8xRMuQHik2yAKj-WRQnDuRg@mail.gmail.com>
+ <849d70bddde1cfcb3ab1163970a148ff447ee94b.camel@linux.ibm.com>
+ <53746e42-23a2-049d-9b38-dcfbaaae728f@huawei.com>
+ <CAK8P3a0dnXX7Cx_kJ_yLAoQFCxoM488Ze-L+5v1m0YeyjF4zqw@mail.gmail.com>
+ <cd9310ab-6012-a410-2bfc-a2f8dd8d62f9@huawei.com>
+ <CAK8P3a23jsT-=v8QDxSZYcj=ujhtBFXjACNLKxQybaThiBsFig@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <d45ee18a-1faa-9c56-071d-18f5737d225c@huawei.com>
+Date:   Fri, 17 Dec 2021 16:30:15 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211217112345.14029-11-nbd@nbd.name>
+In-Reply-To: <CAK8P3a23jsT-=v8QDxSZYcj=ujhtBFXjACNLKxQybaThiBsFig@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.26.158]
+X-ClientProxiedBy: lhreml751-chm.china.huawei.com (10.201.108.201) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 12:23:40PM +0100, Felix Fietkau wrote:
-> This patch allows selecting the pcie-mediatek driver if ARCH_AIROHA is set,
-> because the Airoha EN7523 SoC uses the same controller as MT7622.
-> The driver itself is not modified. The PCIe controller DT node should use
-> mediatek,mt7622-pcie after airoha,en7523-pcie.
+On 17/12/2021 15:55, Arnd Bergmann wrote:
+>> > If you have a better way of finding the affected drivers,
+>>   > that would be great.
+>>
+>> Assuming arm64 should select HAS_IOPORT, I am talking about f71805f as
+>> an example. According to that patch, this driver additionally depends on
+>> HAS_IOPORT; however I would rather arm64, like powerpc, should not allow
+>> that driver to be built at all.
+> Agreed, I missed these when I looked through the HAS_IOPORT users,
+> that's why I suggested to split up that part of the patch per subsystem
+> so they can be inspected more carefully.
 
-s/This patch allows/Allow/ ("This patch" is redundant)
+ok
 
-For the subject:
+ >
+ > My feeling is that in this case we want some other dependency, e.g. a
+ > new CONFIG_LPC. It should actually be possible to use this driver on
+ > any machine with an LPC bus, which would by definition be the primary
+ > I/O space, so it should be possible to load it on Arm64.
 
-  PCI: mediatek: Allow building for ARCH_AIROHA
+You did suggest HARDCODED_IOPORT earlier in this thread, and the 
+definition/premise there seemed sensible to me.
 
-since "controller driver" is similarly redundant and this earlier patch
-does essentially the same for a different case:
+Anyway it seems practical to make all these changes in a single series, 
+so need a way forward as Niklas has no such changes for this additional 
+kconfig option.
 
-  70060ee313be ("PCI: brcmstb: Allow building for BMIPS_GENERIC")
+As a start, may I suggest we at least have Niklas' patch committed to a 
+dev branch based on -next or latest mainline release for further analysis?
 
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> ---
->  drivers/pci/controller/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 93b141110537..f1342059c2a3 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -233,7 +233,7 @@ config PCIE_ROCKCHIP_EP
->  
->  config PCIE_MEDIATEK
->  	tristate "MediaTek PCIe controller"
-> -	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	depends on ARCH_AIROHA || ARCH_MEDIATEK || COMPILE_TEST
->  	depends on OF
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	help
-> -- 
-> 2.34.1
-> 
+Thanks,
+John
+
+
