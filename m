@@ -2,172 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2EED478C4F
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Dec 2021 14:28:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A108478C5C
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Dec 2021 14:32:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229830AbhLQN2I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Dec 2021 08:28:08 -0500
-Received: from mga18.intel.com ([134.134.136.126]:17923 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229543AbhLQN2H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 17 Dec 2021 08:28:07 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10200"; a="226611249"
-X-IronPort-AV: E=Sophos;i="5.88,213,1635231600"; 
-   d="scan'208";a="226611249"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 05:28:07 -0800
-X-IronPort-AV: E=Sophos;i="5.88,213,1635231600"; 
-   d="scan'208";a="615561055"
-Received: from kmcgonig-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.8.181])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 05:28:02 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>,
-        intel-gfx@lists.freedesktop.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [Intel-gfx] [PATCH V3] drm/i915/adl-n: Enable ADL-N platform
-In-Reply-To: <20211210051802.4063958-1-tejaskumarx.surendrakumar.upadhyay@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20211210051802.4063958-1-tejaskumarx.surendrakumar.upadhyay@intel.com>
-Date:   Fri, 17 Dec 2021 15:27:57 +0200
-Message-ID: <87r1ab1huq.fsf@intel.com>
+        id S230331AbhLQNcT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Dec 2021 08:32:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231836AbhLQNcT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Dec 2021 08:32:19 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05530C061574;
+        Fri, 17 Dec 2021 05:32:19 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 900C1621CB;
+        Fri, 17 Dec 2021 13:32:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 020BDC36AE9;
+        Fri, 17 Dec 2021 13:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639747938;
+        bh=KZBW/rMRU7rbSYZKD21VWSmK7jy1zknvA7ySAbpvyQM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K7WCtPVY0A9VZOZe2jFkFkse710KUy20VqS6w1h1n9n8Cz2Z6W5jOpdqsIo+9uh7F
+         hhHwTrSSW3dUtB6+eYe4spSYjDPwfAzce/Fd0GfR7dS5hFTCsrccn+rM0dKGF9c5Ad
+         z703Jm0mlj/S7YVKsW1Zd/a4o+859BtRaboRVnjd87jzUPkK5B3M9KVpjILNXfbZlX
+         4KJpM+yUrsv29ZO108a+5+jTqLFWUFDNfJ6kiXtnMmy5lrRsaXvL13Hv32pqkfPV9j
+         HlGR9A0a+vLjmLolOJ8nhcYeccIsLg+Turp9M+igViBJR2qknRo6pbz1Qx/TDS9/1u
+         JtPlQpg3PmLnA==
+Received: by mail-wm1-f47.google.com with SMTP id o29so1621517wms.2;
+        Fri, 17 Dec 2021 05:32:17 -0800 (PST)
+X-Gm-Message-State: AOAM5303Qh35AobgfC+lVzv2JNHvXyWvyOlRlT7v68+vkGr/H2+WGt8l
+        Zz8RdxoIPbHee+RN7taHZZHzyA066Wubt+8AaPQ=
+X-Google-Smtp-Source: ABdhPJyN5DNEhvLGFTImA30gbFFS/WJp4c3OYiR9lFPuHGjDZB9fpOGTxL15fXeiP02eK+er19UnuH/joPbaDKx/YH8=
+X-Received: by 2002:a7b:c198:: with SMTP id y24mr7343815wmi.1.1639747936299;
+ Fri, 17 Dec 2021 05:32:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
+ <CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com>
+ <CAK8P3a1D5DzmNGsEPQomkyMCmMrtD6pQ11JRMh78vbY53edp-Q@mail.gmail.com>
+ <CAK8P3a0MNbx-iuzW_-=0ab6-TTZzwV-PT_6gAC1Gp5PgYyHcrA@mail.gmail.com>
+ <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com> <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
+ <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com> <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
+ <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com> <CAK8P3a08Zcyx0J4_LGAfU_AtUyEK+XtQJxYBQ52VXfWu8-o8_w@mail.gmail.com>
+ <dd2d49ef-3154-3c87-67b9-c134567ba947@huawei.com> <CAK8P3a3KTaa-AwCOjhaASMx63B3DUBZCZe6RKWk-=Qu7xr_ijQ@mail.gmail.com>
+ <47744c7bce7b7bb37edee7f249d61dc57ac1fbc5.camel@linux.ibm.com>
+In-Reply-To: <47744c7bce7b7bb37edee7f249d61dc57ac1fbc5.camel@linux.ibm.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Fri, 17 Dec 2021 14:32:00 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2eZ25PLSqEf_wmGs912WK8xRMuQHik2yAKj-WRQnDuRg@mail.gmail.com>
+Message-ID: <CAK8P3a2eZ25PLSqEf_wmGs912WK8xRMuQHik2yAKj-WRQnDuRg@mail.gmail.com>
+Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     John Garry <john.garry@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 10 Dec 2021, Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com> wrote:
-> Adding PCI device ids and enabling ADL-N platform.
-> ADL-N from i915 point of view is subplatform of ADL-P.
+On Fri, Dec 17, 2021 at 2:19 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
 >
-> BSpec: 68397
+> I've had some time to look into this a bit. As a refreshed starting
+> point I have rebased Arnd's patch to v5.16-rc5. Since I'm not sure how
+> to handle authorship and it's very early I haven't sent it as RFC but
+> it's available as a patch from my GitHub here:
+> https://gist.github.com/niklas88/a08fe76bdf9f5798500fccea6583e275
 >
-> Changes since V2:
-> 	- Added version log history
-> Changes since V1:
-> 	- replace IS_ALDERLAKE_N with IS_ADLP_N - Jani Nikula
+> I have incorporated the following findings from this thread already:
 >
-> Signed-off-by: Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
-
-Cc: x86 maintainers & lists
-
-Ack for merging the arch/x86/kernel/early-quirks.c PCI ID update via
-drm-intel?
-
-I note not all such changes in git log have your acks recorded, though
-most do. Do you want us to be more careful about Cc'ing you for acks on
-PCI ID changes every time going forward?
-
-BR,
-Jani.
-
-
-> ---
->  arch/x86/kernel/early-quirks.c           | 1 +
->  drivers/gpu/drm/i915/i915_drv.h          | 2 ++
->  drivers/gpu/drm/i915/i915_pci.c          | 1 +
->  drivers/gpu/drm/i915/intel_device_info.c | 7 +++++++
->  drivers/gpu/drm/i915/intel_device_info.h | 3 +++
->  include/drm/i915_pciids.h                | 6 ++++++
->  6 files changed, 20 insertions(+)
+> - Added HAS_IOPORT to arch Kconfigs
+> - Added "config LEGACY_PCI" to drivers/pci/Kconfig
+> - Fixed CONFIG_HAS_IOPORT typo in asm-generic/io.h
+> - Removed LEGACY_PCI dependency of i2c-i801.
+>   Which is also used in current gen Intel platforms
+>   and depends on x86 anyway.
 >
-> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-> index fd2d3ab38ebb..1ca3a56fdc2d 100644
-> --- a/arch/x86/kernel/early-quirks.c
-> +++ b/arch/x86/kernel/early-quirks.c
-> @@ -554,6 +554,7 @@ static const struct pci_device_id intel_early_ids[] __initconst = {
->  	INTEL_RKL_IDS(&gen11_early_ops),
->  	INTEL_ADLS_IDS(&gen11_early_ops),
->  	INTEL_ADLP_IDS(&gen11_early_ops),
-> +	INTEL_ADLN_IDS(&gen11_early_ops),
->  	INTEL_RPLS_IDS(&gen11_early_ops),
->  };
->  
-> diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
-> index a0f54a69b11d..b2ec85a3e40a 100644
-> --- a/drivers/gpu/drm/i915/i915_drv.h
-> +++ b/drivers/gpu/drm/i915/i915_drv.h
-> @@ -1283,6 +1283,8 @@ IS_SUBPLATFORM(const struct drm_i915_private *i915,
->  	IS_SUBPLATFORM(dev_priv, INTEL_DG2, INTEL_SUBPLATFORM_G11)
->  #define IS_ADLS_RPLS(dev_priv) \
->  	IS_SUBPLATFORM(dev_priv, INTEL_ALDERLAKE_S, INTEL_SUBPLATFORM_RPL_S)
-> +#define IS_ADLP_N(dev_priv) \
-> +	IS_SUBPLATFORM(dev_priv, INTEL_ALDERLAKE_P, INTEL_SUBPLATFORM_N)
->  #define IS_HSW_EARLY_SDV(dev_priv) (IS_HASWELL(dev_priv) && \
->  				    (INTEL_DEVID(dev_priv) & 0xFF00) == 0x0C00)
->  #define IS_BDW_ULT(dev_priv) \
-> diff --git a/drivers/gpu/drm/i915/i915_pci.c b/drivers/gpu/drm/i915/i915_pci.c
-> index 708a23415e9c..6a19e9da53cc 100644
-> --- a/drivers/gpu/drm/i915/i915_pci.c
-> +++ b/drivers/gpu/drm/i915/i915_pci.c
-> @@ -1132,6 +1132,7 @@ static const struct pci_device_id pciidlist[] = {
->  	INTEL_RKL_IDS(&rkl_info),
->  	INTEL_ADLS_IDS(&adl_s_info),
->  	INTEL_ADLP_IDS(&adl_p_info),
-> +	INTEL_ADLN_IDS(&adl_p_info),
->  	INTEL_DG1_IDS(&dg1_info),
->  	INTEL_RPLS_IDS(&adl_s_info),
->  	{0, 0, 0}
-> diff --git a/drivers/gpu/drm/i915/intel_device_info.c b/drivers/gpu/drm/i915/intel_device_info.c
-> index a3446a2abcb2..54944d87cd3c 100644
-> --- a/drivers/gpu/drm/i915/intel_device_info.c
-> +++ b/drivers/gpu/drm/i915/intel_device_info.c
-> @@ -170,6 +170,10 @@ static const u16 subplatform_portf_ids[] = {
->  	INTEL_ICL_PORT_F_IDS(0),
->  };
->  
-> +static const u16 subplatform_n_ids[] = {
-> +	INTEL_ADLN_IDS(0),
-> +};
-> +
->  static const u16 subplatform_rpls_ids[] = {
->  	INTEL_RPLS_IDS(0),
->  };
-> @@ -210,6 +214,9 @@ void intel_device_info_subplatform_init(struct drm_i915_private *i915)
->  	} else if (find_devid(devid, subplatform_portf_ids,
->  			      ARRAY_SIZE(subplatform_portf_ids))) {
->  		mask = BIT(INTEL_SUBPLATFORM_PORTF);
-> +	} else if (find_devid(devid, subplatform_n_ids,
-> +				ARRAY_SIZE(subplatform_n_ids))) {
-> +		mask = BIT(INTEL_SUBPLATFORM_N);
->  	} else if (find_devid(devid, subplatform_rpls_ids,
->  			      ARRAY_SIZE(subplatform_rpls_ids))) {
->  		mask = BIT(INTEL_SUBPLATFORM_RPL_S);
-> diff --git a/drivers/gpu/drm/i915/intel_device_info.h b/drivers/gpu/drm/i915/intel_device_info.h
-> index 213ae2c07126..e341d90f28a2 100644
-> --- a/drivers/gpu/drm/i915/intel_device_info.h
-> +++ b/drivers/gpu/drm/i915/intel_device_info.h
-> @@ -113,6 +113,9 @@ enum intel_platform {
->  /* ADL-S */
->  #define INTEL_SUBPLATFORM_RPL_S	0
->  
-> +/* ADL-P */
-> +#define INTEL_SUBPLATFORM_N    0
-> +
->  enum intel_ppgtt_type {
->  	INTEL_PPGTT_NONE = I915_GEM_PPGTT_NONE,
->  	INTEL_PPGTT_ALIASING = I915_GEM_PPGTT_ALIASING,
-> diff --git a/include/drm/i915_pciids.h b/include/drm/i915_pciids.h
-> index baf3d1d3d566..533890dc9da1 100644
-> --- a/include/drm/i915_pciids.h
-> +++ b/include/drm/i915_pciids.h
-> @@ -666,6 +666,12 @@
->  	INTEL_VGA_DEVICE(0x46C2, info), \
->  	INTEL_VGA_DEVICE(0x46C3, info)
->  
-> +/* ADL-N */
-> +#define INTEL_ADLN_IDS(info) \
-> +	INTEL_VGA_DEVICE(0x46D0, info), \
-> +	INTEL_VGA_DEVICE(0x46D1, info), \
-> +	INTEL_VGA_DEVICE(0x46D2, info)
-> +
->  /* RPL-S */
->  #define INTEL_RPLS_IDS(info) \
->  	INTEL_VGA_DEVICE(0xA780, info), \
+> I have tested this on s390 with HAS_IOPORT=n and allyesconfig as well
+> as running it with defconfig. I've also been using it on my Ryzen 3990X
+> workstation with LEGACY_PCI=n for a few days. I do get about 60 MiB
+> fewer modules compared with a similar config of v5.15.8. Hard to say
+> which other systems might miss things of course.
+>
+> I have not yet worked on the discussed IOPORT_NATIVE flag. Mostly I'm
+> wondering two things. For one it feels like that could be a separate
+> change on top since HAS_IOPORT + LEGACY_PCI is already quite big.
+> Secondly I'm wondering about good ways of identifying such drivers and
+> how much this overlaps with the ISA config flag.
+>
+> I'd of course appreciate feedback. If you agree this is still
+> worthwhile to persue I'd think the next step would be trying to
+> refactor this into more manageable patches.
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Thanks a lot for restarting this work! I think this all looks reasonable
+(a lot was my original patch anyway, so of course I think that ;)), but
+it would be good to split it up into multiple patches.
+
+The CONFIG_LEGACY_PCI should take care of a lot of it, and I
+think that can be a single patch. I'd expand the Kconfig description
+to explain that this also covers PCIe devices that use the legacy
+I/O space even if they do not have a PCIe-to-PCI bridge in them.
+
+The introduction of CONFIG_HAS_IOPORT, plus selecting it from
+the respective architectures makes sense as another patch, but
+I would make that separate from the #ifdef and 'depends on'
+changes to individual subsystems or drivers, as they are
+better reviewed separately.
+
+        Arnd
