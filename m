@@ -2,103 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36EBF478F9A
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Dec 2021 16:27:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D9B147901F
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Dec 2021 16:41:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237803AbhLQP1l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Dec 2021 10:27:41 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4304 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbhLQP1l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Dec 2021 10:27:41 -0500
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JFt6764x3z67HV7;
-        Fri, 17 Dec 2021 23:23:11 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.20; Fri, 17 Dec 2021 16:27:38 +0100
-Received: from [10.47.26.158] (10.47.26.158) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Fri, 17 Dec
- 2021 15:27:37 +0000
-Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
-To:     Arnd Bergmann <arnd@kernel.org>
-CC:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
- <CAK8P3a0MNbx-iuzW_-=0ab6-TTZzwV-PT_6gAC1Gp5PgYyHcrA@mail.gmail.com>
- <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com>
- <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
- <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com>
- <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
- <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com>
- <CAK8P3a08Zcyx0J4_LGAfU_AtUyEK+XtQJxYBQ52VXfWu8-o8_w@mail.gmail.com>
- <dd2d49ef-3154-3c87-67b9-c134567ba947@huawei.com>
- <CAK8P3a3KTaa-AwCOjhaASMx63B3DUBZCZe6RKWk-=Qu7xr_ijQ@mail.gmail.com>
- <47744c7bce7b7bb37edee7f249d61dc57ac1fbc5.camel@linux.ibm.com>
- <CAK8P3a2eZ25PLSqEf_wmGs912WK8xRMuQHik2yAKj-WRQnDuRg@mail.gmail.com>
- <849d70bddde1cfcb3ab1163970a148ff447ee94b.camel@linux.ibm.com>
- <53746e42-23a2-049d-9b38-dcfbaaae728f@huawei.com>
- <CAK8P3a0dnXX7Cx_kJ_yLAoQFCxoM488Ze-L+5v1m0YeyjF4zqw@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <cd9310ab-6012-a410-2bfc-a2f8dd8d62f9@huawei.com>
-Date:   Fri, 17 Dec 2021 15:27:09 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        id S234703AbhLQPlE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Dec 2021 10:41:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234640AbhLQPlC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Dec 2021 10:41:02 -0500
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11907C06173E
+        for <linux-pci@vger.kernel.org>; Fri, 17 Dec 2021 07:41:02 -0800 (PST)
+Received: by mail-wm1-x344.google.com with SMTP id z4-20020a1c7e04000000b0032fb900951eso4312407wmc.4
+        for <linux-pci@vger.kernel.org>; Fri, 17 Dec 2021 07:41:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=xQrYULKok+hL+AIRGJuG9CojAZcnV9Xr+it7yxQJVlY=;
+        b=ljOQPBXgp9Smquj8Ng29odlWvElKpDTqPPRQidAvnJdl86g5nPxdxVOZaobu1aloU+
+         BxF5ZdXve/fC4OuYzbHgAUFAehuKXONKOPKgrIHUWfGLCcOJX/U/gOYdmBq6WyLeERdT
+         ozYUTpfSpt07FF5ffiTm4B7CQSEO1ZBiQTa06KV8GgCOIdCJFutYQjrAan6yxWHvjBqu
+         s3jFIVsLoZ/IZoqi6JKr/nIv3vj8GNx282V5ptrp/uJp9JZwAiAOsq6cpABPaCV7OhgW
+         cmo1ALjk+DwDVXAHtO3FpoIc4cmbInE/sdkNMZBNe1A/Dl1L5RcE6GwljTHvXJv+iTxY
+         +fzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=xQrYULKok+hL+AIRGJuG9CojAZcnV9Xr+it7yxQJVlY=;
+        b=QntBacuIFuDD8Eugh5cmGnFAYcoE/1R+R7nqoA1u8dsmks3YahFrwAIjNGRErSXZGM
+         iQ1jg1WIhz27DbhSo+XhjKyOdoWrNvD5nrrDpc5soX9JMntLD5jfkodvsaQ+Migt46gp
+         3VlGyXxrRzgvIFGYeidXU5HWBo+c60AZoDesuRx8Btkm/qKjirU8NIZme193wFOtvrcx
+         /h0qDM5LJhWgebzFpnwF4znXfifRcNaM0TdZ+82PJGsvcwRS4FyMcf9gE8NFeSJnLKDK
+         Ke9xiltMfMxM43TQsNssy2Hmqqj6PRpqbxYCnj/e3RBVjPzoNeWbnpcurulPpQQmuYZk
+         i+hg==
+X-Gm-Message-State: AOAM533+NgBLqP970l1f8bN4xeXo66b0C0DTTRtuPsYvfW/SlPQwNCAz
+        SsKlAcfainRB9ameHWM0laYDhPJH/xc803+0pdQ=
+X-Google-Smtp-Source: ABdhPJxfsjQgHDN6hfp0UDJtilGfevXXUtMuuj2tGJDfuwC3m9wsAQWz0ZAPQHNXJPjD271t7JZ3GM4XtKA/wSbdlVU=
+X-Received: by 2002:a7b:c256:: with SMTP id b22mr9903656wmj.176.1639755660466;
+ Fri, 17 Dec 2021 07:41:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0dnXX7Cx_kJ_yLAoQFCxoM488Ze-L+5v1m0YeyjF4zqw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.26.158]
-X-ClientProxiedBy: lhreml751-chm.china.huawei.com (10.201.108.201) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Received: by 2002:a5d:5284:0:0:0:0:0 with HTTP; Fri, 17 Dec 2021 07:41:00
+ -0800 (PST)
+Reply-To: mrsaishag45@gmail.com
+From:   Mrs Aisha Al-Qaddafi <mrsaishag88@gmail.com>
+Date:   Fri, 17 Dec 2021 07:41:00 -0800
+Message-ID: <CAFGDMRtKGyZiiTfzULTKo4ohvL3kRgZ2x9vYGqnnjd75dhsEEw@mail.gmail.com>
+Subject: Dear Friend,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 17/12/2021 14:32, Arnd Bergmann wrote:
->> I was interesting in the IOPORT_NATIVE flag (or whatever we call it) as
->> it solves the problem of drivers which "unconditionally do inb()/outb()
->> without checking the validity of the address using firmware or other
->> methods first" being built for (and loaded on and crashing) unsuitable
->> systems. Such a problem is in [0]
->>
->> So if we want to support that later, then it seems that someone would
->> need to go back and re-edit many same driver Kconfigs – like hwmon, for
->> example. I think it's better to avoid that and do it now.
->>
->> Arnd, any opinion on that?
->>
->> I'm happy to help with that effort.
-> I looked at the options the other day and couldn't really find any that
-> fell into this category, so I suggested that Niklas would skip that for the
-> moment. 
+Dear Friend,
 
- From looking at the patch Niklas directed us at, as I understand, 
-HAS_IOPORT is to decide whether the arch/platform may support PIO 
-accessors - inb et al. And on that basis I am confused why it is not 
-selected for arm64. And further compounded by:
+I came across your e-mail contact prior to a private search while in
+need of your assistance. I am Aisha Al-Qaddafi, the only biological
+Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
+single Mother and a Widow with three Children.
 
-  config INDIRECT_PIO
-	 	bool "Access I/O in non-MMIO mode"
-	 	depends on ARM64
-	+	depends on HAS_IOPORT
+I have investment funds worth Twenty Seven Million Five Hundred
+Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
+investment Manager/Partner because of my current refugee status,
+however, I am interested in you for investment project assistance in
+your country, may be from there, we can build business relationship in
+the nearest future.
 
-If arm64 does not select, then why depend on it?
+I am willing to negotiate an investment/business profit sharing ratio
+with you based on the future investment earning profits.
 
- > If you have a better way of finding the affected drivers,
- > that would be great.
+If you are willing to handle this project on my behalf kindly reply
+urgently to enable me to provide you more information about the
+investment funds.
 
-Assuming arm64 should select HAS_IOPORT, I am talking about f71805f as 
-an example. According to that patch, this driver additionally depends on 
-HAS_IOPORT; however I would rather arm64, like powerpc, should not allow 
-that driver to be built at all.
+Your Urgent Reply Will Be Appreciated
 
-Thanks,
-John
+Best Regards
+Mrs Aisha Al-Qaddafi
