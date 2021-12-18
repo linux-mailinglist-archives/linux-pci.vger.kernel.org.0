@@ -2,67 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B222447990E
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Dec 2021 06:56:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFCEA47991C
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Dec 2021 07:10:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232136AbhLRF4V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Dec 2021 00:56:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54154 "EHLO
+        id S232155AbhLRGKp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Dec 2021 01:10:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232131AbhLRF4U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Dec 2021 00:56:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C6BC061574;
-        Fri, 17 Dec 2021 21:56:20 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 83D64B81211;
-        Sat, 18 Dec 2021 05:56:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DB67C36AE1;
-        Sat, 18 Dec 2021 05:56:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639806977;
-        bh=40BD0rEeUxsyZeXLtNYWQWdpEdH5tJKZ6kJAeyeq0fk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DpNBgpsHsn3npz9NyHeNUrO90r/hXNp86DEDH6o5VhcquHXwQ4ucf63+L9fNswtCC
-         57CNtEhrRkJNE3Vzcb14O9HL7znZqTQQONewTIao0f1KBomDU3PWJpwigFRP0Zoa4e
-         ILAKadMdf0yw2frm8HGs7mN1HgexU7d04d0WznPrDiIaNbFldd/nymER9wiyrLCQFr
-         rGf7qQbiG4YLtYPVesp6qpb5SONEPc8bUNsrRnnik+eJhny5M7Lmr/cGwdfm6JqjCd
-         fXTP43JMNql2sRpzMZn8blmr4VYc9JdAiNrG2RSTxRyIQ677Sr2M/fAtixSvk9S0Jl
-         +TqBcFgAjL3iA==
-Date:   Sat, 18 Dec 2021 11:26:13 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH v4 03/10] phy: qcom-qmp: Add SM8450 PCIe0 PHY support
-Message-ID: <Yb13/fIR1vaaWIZB@matsya>
-References: <20211214225846.2043361-1-dmitry.baryshkov@linaro.org>
- <20211214225846.2043361-4-dmitry.baryshkov@linaro.org>
+        with ESMTP id S229741AbhLRGKp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Dec 2021 01:10:45 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC19C061574
+        for <linux-pci@vger.kernel.org>; Fri, 17 Dec 2021 22:10:45 -0800 (PST)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1mySvZ-0008Ax-Kl; Sat, 18 Dec 2021 07:10:41 +0100
+Message-ID: <9cf971a2-1278-1438-5f72-fd7042668e6b@leemhuis.info>
+Date:   Sat, 18 Dec 2021 07:10:41 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211214225846.2043361-4-dmitry.baryshkov@linaro.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [REGRESSION] 527139d738d7 ("PCI/sysfs: Convert "rom" to static
+ attribute")
+Content-Language: en-BW
+To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linux-pci@vger.kernel.org,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <YbxqIyrkv3GhZVxx@intel.com>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <YbxqIyrkv3GhZVxx@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639807845;f1a3af24;
+X-HE-SMSGID: 1mySvZ-0008Ax-Kl
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 15-12-21, 01:58, Dmitry Baryshkov wrote:
-> There are two different PCIe PHYs on SM8450, one having one lane (v5)
-> and another with two lanes (v5.20). This commit adds support for the
-> first PCIe phy only, support for the second PCIe PHY is coming in next
-> commits.
+On 17.12.21 11:44, Ville Syrjälä wrote:
+> Hi,
+> 
+> The pci sysfs "rom" file has disappeared for VGA devices.
+> Looks to be a regression from commit 527139d738d7 ("PCI/sysfs:
+> Convert "rom" to static attribute").
+> 
+> Some kind of ordering issue between the sysfs file creation 
+> vs. pci_fixup_video() perhaps?
+[TLDR: adding this regression to regzbot; most text you find below is
+compiled from a few templates paragraphs some of you might have seen
+already.]
 
-Applied to phy-next, thanks
+Hi, this is your Linux kernel regression tracker speaking.
 
--- 
-~Vinod
+Thanks for the report.
+
+Adding the regression mailing list to the list of recipients, as it
+should be in the loop for all regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced 527139d738d7
+#regzbot title pci: the pci sysfs "rom" file has disappeared for VGA devices
+#regzbot ignore-activity
+
+Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+to the report (the parent of this mail), as explained in
+'Documentaiton/process/submitting-patches.rst'. Regzbot then will
+automatically mark the regression as resolved once the fix lands in the
+appropriate tree. For more details about regzbot see footer.
+
+Sending this to everyone that got the initial report, to make all aware
+of the tracking. I also hope that messages like this motivate people to
+directly get at least the regression mailing list and ideally even
+regzbot involved when dealing with regressions, as messages like this
+wouldn't be needed then.
+
+Don't worry, I'll send further messages wrt to this regression just to
+the lists (with a tag in the subject so people can filter them away), as
+long as they are intended just for regzbot. With a bit of luck no such
+messages will be needed anyway.
+
+Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
+
+P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+on my table. I can only look briefly into most of them. Unfortunately
+therefore I sometimes will get things wrong or miss something important.
+I hope that's not the case here; if you think it is, don't hesitate to
+tell me about it in a public reply. That's in everyone's interest, as
+what I wrote above might be misleading to everyone reading this; any
+suggestion I gave thus might sent someone reading this down the wrong
+rabbit hole, which none of us wants.
+
+BTW, I have no personal interest in this issue, which is tracked using
+regzbot, my Linux kernel regression tracking bot
+(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+this mail to get things rolling again and hence don't need to be CC on
+all further activities wrt to this regression.
+
+---
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and/or the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+tell #regzbot about it in the report, as that will ensure the regression
+gets on the radar of regzbot and the regression tracker. That's in your
+interest, as they will make sure the report won't fall through the
+cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include a 'Link:' tag to the report in the commit message, as explained
+in Documentation/process/submitting-patches.rst
+That aspect was recently was made more explicit in commit 1f57bd42b77c:
+https://git.kernel.org/linus/1f57bd42b77c
