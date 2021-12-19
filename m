@@ -2,132 +2,256 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 896B1479C9C
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Dec 2021 21:42:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A9F8479F10
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Dec 2021 05:04:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230130AbhLRUmX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Dec 2021 15:42:23 -0500
-Received: from 5.mo548.mail-out.ovh.net ([188.165.49.213]:38651 "EHLO
-        5.mo548.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234150AbhLRUmX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Dec 2021 15:42:23 -0500
-Received: from mxplan5.mail.ovh.net (unknown [10.109.138.121])
-        by mo548.mail-out.ovh.net (Postfix) with ESMTPS id 3A38A20143;
-        Sat, 18 Dec 2021 20:25:43 +0000 (UTC)
-Received: from kaod.org (37.59.142.97) by DAG4EX1.mxp5.local (172.16.2.31)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Sat, 18 Dec
- 2021 21:25:41 +0100
-Authentication-Results: garm.ovh; auth=pass (GARM-97G0022d2cf51f-56be-41f7-b9ac-2c271cc1d1bb,
-                    B1F2FCB93787BB0875C07E604CDE73E7ADF677F7) smtp.auth=clg@kaod.org
-X-OVh-ClientIp: 90.11.79.163
-Message-ID: <ee5db32f-c21e-287f-2a19-94c1ba6e8217@kaod.org>
-Date:   Sat, 18 Dec 2021 21:25:40 +0100
+        id S235187AbhLSEEo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Dec 2021 23:04:44 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:52739 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235181AbhLSEEn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Dec 2021 23:04:43 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0V.0OBJf_1639886679;
+Received: from 30.30.108.164(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0V.0OBJf_1639886679)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 19 Dec 2021 12:04:40 +0800
+Message-ID: <91fb8cb3-71fa-e8d7-163f-f88c4ff3357f@linux.alibaba.com>
+Date:   Sun, 19 Dec 2021 12:04:38 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [patch V3 28/35] PCI/MSI: Simplify pci_irq_get_affinity()
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.3.2
+Subject: Re: [RESEND PATCH v4] ACPI: Move sdei_init and ghes_init ahead to
+ handle platform errors earlier
 Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Nathan Chancellor <nathan@kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, <linux-pci@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Juergen Gross <jgross@suse.com>,
-        <xen-devel@lists.xenproject.org>, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <linuxppc-dev@lists.ozlabs.org>,
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        <iommu@lists.linux-foundation.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>
-References: <20211210221642.869015045@linutronix.de>
- <20211210221814.900929381@linutronix.de> <Yb0PaCyo/6z3XOlf@archlinux-ax161>
- <87v8zm9pmd.ffs@tglx>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-In-Reply-To: <87v8zm9pmd.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [37.59.142.97]
-X-ClientProxiedBy: DAG1EX1.mxp5.local (172.16.2.1) To DAG4EX1.mxp5.local
- (172.16.2.31)
-X-Ovh-Tracer-GUID: 2aa807ab-02a3-4ad6-8447-d206fc92c88e
-X-Ovh-Tracer-Id: 4883872323797683005
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddrleekgddufeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvfhfhjggtgfhisehtkeertddtfeejnecuhfhrohhmpeevrogurhhitggpnfgvpgfiohgrthgvrhcuoegtlhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhepieegvdffkeegfeetuddttddtveduiefhgeduffekiedtkeekteekhfffleevleelnecukfhppedtrddtrddtrddtpdefjedrheelrddugedvrdeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegtlhhgsehkrghougdrohhrghdprhgtphhtthhopehokhgrhigrsehkvghrnhgvlhdrohhrgh
+        luanshi <zhangliguang@linux.alibaba.com>,
+        zhuo.song@linux.alibaba.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <20211126070422.73234-1-xueshuai@linux.alibaba.com>
+ <20211216133456.21002-1-xueshuai@linux.alibaba.com>
+ <CAJZ5v0jOnA90BX0ZisY4Gm4tKTjQMcxOqEOa2FVZsuec0e_mSw@mail.gmail.com>
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <CAJZ5v0jOnA90BX0ZisY4Gm4tKTjQMcxOqEOa2FVZsuec0e_mSw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/18/21 11:25, Thomas Gleixner wrote:
-> On Fri, Dec 17 2021 at 15:30, Nathan Chancellor wrote:
->> On Fri, Dec 10, 2021 at 11:19:26PM +0100, Thomas Gleixner wrote:
->> I just bisected a boot failure on my AMD test desktop to this patch as
->> commit f48235900182 ("PCI/MSI: Simplify pci_irq_get_affinity()") in
->> -next. It looks like there is a problem with the NVMe drive after this
->> change according to the logs. Given that the hard drive is not getting
->> mounted for journald to write logs to, I am not really sure how to get
->> them from the machine so I have at least taken a picture of what I see
->> on my screen; open to ideas on that front!
+Hi Rafeal,
+
+Thank you for your reply.
+
+On 2021/12/18 AM2:17, Rafael J. Wysocki wrote:
+> On Thu, Dec 16, 2021 at 2:35 PM Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+>>
+>> On an ACPI system, ACPI is initialised very early from a subsys_initcall(),
+>> while SDEI is not ready until a subsys_initcall_sync().
+>>
+>> The SDEI driver provides functions (e.g. apei_sdei_register_ghes,
+>> apei_sdei_unregister_ghes) to register or unregister event callback for
+>> dispatcher in firmware. When the GHES driver probing, it registers the
+>> corresponding callback according to the notification type specified by
+>> GHES. If the GHES notification type is SDEI, the GHES driver will call
+>> apei_sdei_register_ghes to register event call.
+>>
+>> When the firmware emits an event, it migrates the handling of the event
+>> into the kernel at the registered entry-point __sdei_asm_handler. And
+>> finally, the kernel will call the registered event callback and return
+>> status_code to indicate the status of event handling. SDEI_EV_FAILED
+>> indicates that the kernel failed to handle the event.
+>>
+>> Consequently, when an error occurs during kernel booting, the kernel is
+>> unable to handle and report errors until the GHES driver is initialized by
+>> device_initcall(), in which the event callback is registered. All errors
+>> that occurred before GHES initialization are missed and there is no chance
+>> to report and find them again.
+>>
+>> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
+>> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
+>> the estatus memory pool. On the other hand, ghes_init() relies on
+>> sdei_init() to detect the SDEI version and the framework for registering
+>> and unregistering events. By the way, I don't figure out why acpi_hest_init
+>> is called in acpi_pci_root_init, it don't rely on any other thing. May it
+>> could be moved further, following acpi_iort_init in acpi_init.
+>>
+>> sdei_init() relies on ACPI table which is initialized subsys_initcall():
+>> acpi_init(), acpi_bus_init(), acpi_load_tables(), acpi_tb_laod_namespace().
+>> May it should be also moved further, after acpi_load_tables.
+>>
+>> In this patch, move sdei_init and ghes_init as far ahead as possible, right
+>> after acpi_hest_init().
+>>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 > 
-> Bah. Fix below.
+> This needs ACKs from Bjorn and Boris/Tony/James/.
 
-That's a fix for the issue I was seeing on pseries with NVMe.
+OK, I will keep an eye on their response.
+I am wondering that do you have any comments for revision?
 
-Tested-by: Cédric Le Goater <clg@kaod.org>
+Thank you.
 
-Thanks,
+Best Regrads,
+Shuai
 
-C.
-
-
-> Thanks,
-> 
->          tglx
-> ---
-> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-> index 71802410e2ab..9b4910befeda 100644
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -1100,7 +1100,7 @@ EXPORT_SYMBOL(pci_irq_vector);
->    */
->   const struct cpumask *pci_irq_get_affinity(struct pci_dev *dev, int nr)
->   {
-> -	int irq = pci_irq_vector(dev, nr);
-> +	int idx, irq = pci_irq_vector(dev, nr);
->   	struct msi_desc *desc;
->   
->   	if (WARN_ON_ONCE(irq <= 0))
-> @@ -1113,7 +1113,10 @@ const struct cpumask *pci_irq_get_affinity(struct pci_dev *dev, int nr)
->   
->   	if (WARN_ON_ONCE(!desc->affinity))
->   		return NULL;
-> -	return &desc->affinity[nr].mask;
-> +
-> +	/* MSI has a mask array in the descriptor. */
-> +	idx = dev->msi_enabled ? nr : 0;
-> +	return &desc->affinity[idx].mask;
->   }
->   EXPORT_SYMBOL(pci_irq_get_affinity);
->   
-> 
-
+>> ---
+>>  drivers/acpi/apei/ghes.c    | 18 ++++++++----------
+>>  drivers/acpi/pci_root.c     |  5 ++++-
+>>  drivers/firmware/arm_sdei.c | 13 ++-----------
+>>  include/acpi/apei.h         |  2 ++
+>>  include/linux/arm_sdei.h    |  2 ++
+>>  5 files changed, 18 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+>> index 0c8330ed1ffd..b11e46fb4b3d 100644
+>> --- a/drivers/acpi/apei/ghes.c
+>> +++ b/drivers/acpi/apei/ghes.c
+>> @@ -1457,27 +1457,26 @@ static struct platform_driver ghes_platform_driver = {
+>>         .remove         = ghes_remove,
+>>  };
+>>
+>> -static int __init ghes_init(void)
+>> +void __init ghes_init(void)
+>>  {
+>>         int rc;
+>>
+>>         if (acpi_disabled)
+>> -               return -ENODEV;
+>> +               return;
+>>
+>>         switch (hest_disable) {
+>>         case HEST_NOT_FOUND:
+>> -               return -ENODEV;
+>> +               pr_info(GHES_PFX "HEST is not found!\n");
+>> +               return;
+>>         case HEST_DISABLED:
+>>                 pr_info(GHES_PFX "HEST is not enabled!\n");
+>> -               return -EINVAL;
+>> +               return;
+>>         default:
+>>                 break;
+>>         }
+>>
+>> -       if (ghes_disable) {
+>> +       if (ghes_disable)
+>>                 pr_info(GHES_PFX "GHES is not enabled!\n");
+>> -               return -EINVAL;
+>> -       }
+>>
+>>         ghes_nmi_init_cxt();
+>>
+>> @@ -1495,8 +1494,7 @@ static int __init ghes_init(void)
+>>         else
+>>                 pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
+>>
+>> -       return 0;
+>> +       return;
+>>  err:
+>> -       return rc;
+>> +       ghes_disable = 1;
+>>  }
+>> -device_initcall(ghes_init);
+>> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+>> index ab2f7dfb0c44..1260bb556184 100644
+>> --- a/drivers/acpi/pci_root.c
+>> +++ b/drivers/acpi/pci_root.c
+>> @@ -23,7 +23,7 @@
+>>  #include <linux/dmi.h>
+>>  #include <linux/platform_data/x86/apple.h>
+>>  #include <acpi/apei.h> /* for acpi_hest_init() */
+>> -
+>> +#include <linux/arm_sdei.h> /* for sdei_init() */
+>>  #include "internal.h"
+>>
+>>  #define ACPI_PCI_ROOT_CLASS            "pci_bridge"
+>> @@ -946,6 +946,9 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+>>  void __init acpi_pci_root_init(void)
+>>  {
+>>         acpi_hest_init();
+>> +       sdei_init();
+>> +       ghes_init();
+>> +
+>>         if (acpi_pci_disabled)
+>>                 return;
+>>
+>> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
+>> index a7e762c352f9..1e1a51510e83 100644
+>> --- a/drivers/firmware/arm_sdei.c
+>> +++ b/drivers/firmware/arm_sdei.c
+>> @@ -1059,14 +1059,14 @@ static bool __init sdei_present_acpi(void)
+>>         return true;
+>>  }
+>>
+>> -static int __init sdei_init(void)
+>> +void __init sdei_init(void)
+>>  {
+>>         struct platform_device *pdev;
+>>         int ret;
+>>
+>>         ret = platform_driver_register(&sdei_driver);
+>>         if (ret || !sdei_present_acpi())
+>> -               return ret;
+>> +               return;
+>>
+>>         pdev = platform_device_register_simple(sdei_driver.driver.name,
+>>                                                0, NULL, 0);
+>> @@ -1076,17 +1076,8 @@ static int __init sdei_init(void)
+>>                 pr_info("Failed to register ACPI:SDEI platform device %d\n",
+>>                         ret);
+>>         }
+>> -
+>> -       return ret;
+>>  }
+>>
+>> -/*
+>> - * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
+>> - * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
+>> - * by device_initcall(). We want to be called in the middle.
+>> - */
+>> -subsys_initcall_sync(sdei_init);
+>> -
+>>  int sdei_event_handler(struct pt_regs *regs,
+>>                        struct sdei_registered_event *arg)
+>>  {
+>> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
+>> index ece0a8af2bae..7dbd6363fda7 100644
+>> --- a/include/acpi/apei.h
+>> +++ b/include/acpi/apei.h
+>> @@ -27,8 +27,10 @@ extern int hest_disable;
+>>  extern int erst_disable;
+>>  #ifdef CONFIG_ACPI_APEI_GHES
+>>  extern bool ghes_disable;
+>> +void __init ghes_init(void);
+>>  #else
+>>  #define ghes_disable 1
+>> +static inline void ghes_init(void) { return; }
+>>  #endif
+>>
+>>  #ifdef CONFIG_ACPI_APEI
+>> diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
+>> index 0a241c5c911d..9c987188b692 100644
+>> --- a/include/linux/arm_sdei.h
+>> +++ b/include/linux/arm_sdei.h
+>> @@ -46,9 +46,11 @@ int sdei_unregister_ghes(struct ghes *ghes);
+>>  /* For use by arch code when CPU hotplug notifiers are not appropriate. */
+>>  int sdei_mask_local_cpu(void);
+>>  int sdei_unmask_local_cpu(void);
+>> +void __init sdei_init(void);
+>>  #else
+>>  static inline int sdei_mask_local_cpu(void) { return 0; }
+>>  static inline int sdei_unmask_local_cpu(void) { return 0; }
+>> +static inline void sdei_init(void) { return ; }
+>>  #endif /* CONFIG_ARM_SDE_INTERFACE */
+>>
+>>
+>> --
+>> 2.20.1.12.g72788fdb
+>>
