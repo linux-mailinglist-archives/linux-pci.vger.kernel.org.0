@@ -2,195 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63A27479FF0
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Dec 2021 09:49:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD6C947A0E5
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Dec 2021 15:23:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231901AbhLSItT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 19 Dec 2021 03:49:19 -0500
-Received: from mga12.intel.com ([192.55.52.136]:55569 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229585AbhLSItT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 19 Dec 2021 03:49:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639903759; x=1671439759;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9DtOtcOa1nNCgYvBj5NsZNl2k2Q+7Los0wZBqYsoAi4=;
-  b=Uu7EOrCvEBVZJPYKaoGeTYPvMQ8gbYCwxYMe033EZ+PozpqtJ3NqgMzI
-   72b7umwwnbHCt8SW6rWd1KPCjSSi5GiBPNCbrb2nSbn6TDVR5n3fxA3Go
-   fbIyx11iTbbcde9weV+ehUYLN9bVM0BLXmiK1v+PuAvN5lrIpmt3wDYfZ
-   0rIT0kcTsEK6yYPfPfriqPD22/hLv/wvw/dXTpmG2TmOX//a9QlLP8X2D
-   cp1bw3XGmIn4m5UjPthZYNnVdRIDGH+3WFPkyDsp3NPaE95Mk4czt5fGN
-   ISzizvFPX+5sZe1Dcz20ToZxn4MGXaNfvI49yTRE1F31nMYoSmKuuKgfJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10202"; a="220006360"
-X-IronPort-AV: E=Sophos;i="5.88,217,1635231600"; 
-   d="scan'208";a="220006360"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2021 00:49:14 -0800
-X-IronPort-AV: E=Sophos;i="5.88,217,1635231600"; 
-   d="scan'208";a="683896274"
-Received: from prgreen-mobl2.amr.corp.intel.com (HELO ldmartin-desk2) ([10.252.135.91])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2021 00:49:14 -0800
-Date:   Sun, 19 Dec 2021 00:49:21 -0800
-From:   Lucas De Marchi <lucas.demarchi@intel.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>,
-        intel-gfx@lists.freedesktop.org, x86@kernel.org,
-        linux-pci@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [Intel-gfx] [PATCH V3] drm/i915/adl-n: Enable ADL-N platform
-Message-ID: <20211219084921.lgd47srpzepspdpv@ldmartin-desk2>
-X-Patchwork-Hint: comment
-References: <20211210051802.4063958-1-tejaskumarx.surendrakumar.upadhyay@intel.com>
- <87r1ab1huq.fsf@intel.com>
+        id S235906AbhLSOXf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 19 Dec 2021 09:23:35 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:23986 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234846AbhLSOXd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 19 Dec 2021 09:23:33 -0500
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-47-lARwkb-CPHSriFWVJJMrNw-1; Sun, 19 Dec 2021 14:23:30 +0000
+X-MC-Unique: lARwkb-CPHSriFWVJJMrNw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.26; Sun, 19 Dec 2021 14:23:29 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.026; Sun, 19 Dec 2021 14:23:29 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'John Garry' <john.garry@huawei.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Arnd Bergmann <arnd@kernel.org>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: RE: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
+Thread-Topic: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
+Thread-Index: AQHX81JQISxKPCuGHU2T1v53saw8BKw53sKg
+Date:   Sun, 19 Dec 2021 14:23:29 +0000
+Message-ID: <3a10b91258bf432baf51932a08335f6e@AcuMS.aculab.com>
+References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
+ <CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com>
+ <CAK8P3a1D5DzmNGsEPQomkyMCmMrtD6pQ11JRMh78vbY53edp-Q@mail.gmail.com>
+ <CAK8P3a0MNbx-iuzW_-=0ab6-TTZzwV-PT_6gAC1Gp5PgYyHcrA@mail.gmail.com>
+ <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com>
+ <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
+ <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com>
+ <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
+ <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com>
+ <CAK8P3a08Zcyx0J4_LGAfU_AtUyEK+XtQJxYBQ52VXfWu8-o8_w@mail.gmail.com>
+ <dd2d49ef-3154-3c87-67b9-c134567ba947@huawei.com>
+ <CAK8P3a3KTaa-AwCOjhaASMx63B3DUBZCZe6RKWk-=Qu7xr_ijQ@mail.gmail.com>
+ <47744c7bce7b7bb37edee7f249d61dc57ac1fbc5.camel@linux.ibm.com>
+ <CAK8P3a2eZ25PLSqEf_wmGs912WK8xRMuQHik2yAKj-WRQnDuRg@mail.gmail.com>
+ <849d70bddde1cfcb3ab1163970a148ff447ee94b.camel@linux.ibm.com>
+ <53746e42-23a2-049d-9b38-dcfbaaae728f@huawei.com>
+In-Reply-To: <53746e42-23a2-049d-9b38-dcfbaaae728f@huawei.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <87r1ab1huq.fsf@intel.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 03:27:57PM +0200, Jani Nikula wrote:
->On Fri, 10 Dec 2021, Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com> wrote:
->> Adding PCI device ids and enabling ADL-N platform.
->> ADL-N from i915 point of view is subplatform of ADL-P.
->>
->> BSpec: 68397
->>
->> Changes since V2:
->> 	- Added version log history
->> Changes since V1:
->> 	- replace IS_ALDERLAKE_N with IS_ADLP_N - Jani Nikula
->>
->> Signed-off-by: Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
->
->Cc: x86 maintainers & lists
->
->Ack for merging the arch/x86/kernel/early-quirks.c PCI ID update via
->drm-intel?
->
->I note not all such changes in git log have your acks recorded, though
->most do. Do you want us to be more careful about Cc'ing you for acks on
->PCI ID changes every time going forward?
+RnJvbTogSm9obiBHYXJyeQ0KPiBTZW50OiAxNyBEZWNlbWJlciAyMDIxIDE0OjI4DQo+IA0KPiBP
+biAxNy8xMi8yMDIxIDEzOjUyLCBOaWtsYXMgU2NobmVsbGUgd3JvdGU6DQo+IA0KPiBUaGFua3Mg
+Zm9yIGxvb2tpbmcgYXQgdGhpcyBhZ2Fpbi4NCj4gDQo+ID4+PiBJIGhhdmUgdGVzdGVkIHRoaXMg
+b24gczM5MCB3aXRoIEhBU19JT1BPUlQ9biBhbmQgYWxseWVzY29uZmlnIGFzIHdlbGwNCj4gPj4+
+IGFzIHJ1bm5pbmcgaXQgd2l0aCBkZWZjb25maWcuIEkndmUgYWxzbyBiZWVuIHVzaW5nIGl0IG9u
+IG15IFJ5emVuIDM5OTBYDQo+ID4+PiB3b3Jrc3RhdGlvbiB3aXRoIExFR0FDWV9QQ0k9biBmb3Ig
+YSBmZXcgZGF5cy4gSSBkbyBnZXQgYWJvdXQgNjAgTWlCDQo+ID4+PiBmZXdlciBtb2R1bGVzIGNv
+bXBhcmVkIHdpdGggYSBzaW1pbGFyIGNvbmZpZyBvZiB2NS4xNS44LiBIYXJkIHRvIHNheQ0KPiA+
+Pj4gd2hpY2ggb3RoZXIgc3lzdGVtcyBtaWdodCBtaXNzIHRoaW5ncyBvZiBjb3Vyc2UuDQo+ID4+
+Pg0KPiA+Pj4gSSBoYXZlIG5vdCB5ZXQgd29ya2VkIG9uIHRoZSBkaXNjdXNzZWQgSU9QT1JUX05B
+VElWRSBmbGFnLiBNb3N0bHkgSSdtDQo+ID4+PiB3b25kZXJpbmcgdHdvIHRoaW5ncy4gRm9yIG9u
+ZSBpdCBmZWVscyBsaWtlIHRoYXQgY291bGQgYmUgYSBzZXBhcmF0ZQ0KPiA+Pj4gY2hhbmdlIG9u
+IHRvcCBzaW5jZSBIQVNfSU9QT1JUICsgTEVHQUNZX1BDSSBpcyBhbHJlYWR5IHF1aXRlIGJpZy4N
+Cj4gPj4+IFNlY29uZGx5IEknbSB3b25kZXJpbmcgYWJvdXQgZ29vZCB3YXlzIG9mIGlkZW50aWZ5
+aW5nIHN1Y2ggZHJpdmVycyBhbmQNCj4gPj4+IGhvdyBtdWNoIHRoaXMgb3ZlcmxhcHMgd2l0aCB0
+aGUgSVNBIGNvbmZpZyBmbGFnLg0KPiANCj4gSSB3YXMgaW50ZXJlc3RpbmcgaW4gdGhlIElPUE9S
+VF9OQVRJVkUgZmxhZyAob3Igd2hhdGV2ZXIgd2UgY2FsbCBpdCkgYXMNCj4gaXQgc29sdmVzIHRo
+ZSBwcm9ibGVtIG9mIGRyaXZlcnMgd2hpY2ggInVuY29uZGl0aW9uYWxseSBkbyBpbmIoKS9vdXRi
+KCkNCj4gd2l0aG91dCBjaGVja2luZyB0aGUgdmFsaWRpdHkgb2YgdGhlIGFkZHJlc3MgdXNpbmcg
+ZmlybXdhcmUgb3Igb3RoZXINCj4gbWV0aG9kcyBmaXJzdCIgYmVpbmcgYnVpbHQgZm9yIChhbmQg
+bG9hZGVkIG9uIGFuZCBjcmFzaGluZykgdW5zdWl0YWJsZQ0KPiBzeXN0ZW1zLiBTdWNoIGEgcHJv
+YmxlbSBpcyBpbiBbMF0NCj4gDQo+IFNvIGlmIHdlIHdhbnQgdG8gc3VwcG9ydCB0aGF0IGxhdGVy
+LCB0aGVuIGl0IHNlZW1zIHRoYXQgc29tZW9uZSB3b3VsZA0KPiBuZWVkIHRvIGdvIGJhY2sgYW5k
+IHJlLWVkaXQgbWFueSBzYW1lIGRyaXZlciBLY29uZmlncyDigJMgbGlrZSBod29uLCBmb3INCj4g
+ZXhhbXBsZS4gSSB0aGluayBpdCdzIGJldHRlciB0byBhdm9pZCB0aGF0IGFuZCBkbyBpdCBub3cu
+DQoNCkNvdWxkIHlvdSBkbyBzb21ldGhpbmcgd2hlcmUgdmFsaWQgYXJndW1lbnRzIHRvIGluYigp
+IGhhdmUgdG8gY29tZQ0KZnJvbSBzb21lIGtlcm5lbCBtYXBwaW5nL3ZhbGlkYXRpb24gZnVuY3Rp
+b24gYW5kIGFyZSBuZXZlciBpbiB0aGUNCnJhbmdlIFsweDAsIDB4MTAwMDApLg0KVGhlbiBkcml2
+ZXJzIHRoYXQgYXJlIGNoZWF0aW5nIHRoZSBzeXN0ZW0gd2lsbCBmYWlsLg0KDQpPciwgbWF5YmUs
+IG9ubHkgYWxsb3cgWzB4MCwgMHgxMDAwMCkgb24gc3lzdGVtcyB0aGF0IGhhdmUgYSBzdWl0YWJs
+ZSBidXMuDQpXaXRoIHRoZSBtYXBwaW5nIGZ1bmN0aW9ucyByZXR1cm5pbmcgYSBkaWZmZXJlbnQg
+dmFsdWUgKGVnIHRoZSBLVkEgaW50bw0KdGhlIFBDSSBtYXN0ZXIgd2luZG93KSB0aGF0IGNhbiBi
+ZSBzZXBhcmF0ZWx5IHZlcmlmaWVkLg0KVGhhdCB3b3VsZCBsZXQgZHJpdmVycyBkbyAoc2F5KSBp
+bmIoMHgxMjApIG9uIHN5c3RlbXMgdGhhdCBoYXZlIChzb21ldGhpbmcNCmxpa2UpIGFuZCBJU0Eg
+YnVzLCBidXQgbm90IG9uIFBDSS1vbmx5IHN5c3RlbXMgd2hpY2ggc3VwcG9ydCBQQ0kgSU8NCmFj
+Y2Vzc2VzIHRocm91Z2ggYSBwaHlzaWNhbCBhZGRyZXNzIHdpbmRvdy4NCg0KCURhdmlkDQoNCi0N
+ClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBN
+aWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxl
+cykNCg==
 
-That's what Borislav asked in
-https://lore.kernel.org/all/20200520093025.GD1457@zn.tnic/
-
-Lucas De Marchi
-
->
->BR,
->Jani.
->
->
->> ---
->>  arch/x86/kernel/early-quirks.c           | 1 +
->>  drivers/gpu/drm/i915/i915_drv.h          | 2 ++
->>  drivers/gpu/drm/i915/i915_pci.c          | 1 +
->>  drivers/gpu/drm/i915/intel_device_info.c | 7 +++++++
->>  drivers/gpu/drm/i915/intel_device_info.h | 3 +++
->>  include/drm/i915_pciids.h                | 6 ++++++
->>  6 files changed, 20 insertions(+)
->>
->> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
->> index fd2d3ab38ebb..1ca3a56fdc2d 100644
->> --- a/arch/x86/kernel/early-quirks.c
->> +++ b/arch/x86/kernel/early-quirks.c
->> @@ -554,6 +554,7 @@ static const struct pci_device_id intel_early_ids[] __initconst = {
->>  	INTEL_RKL_IDS(&gen11_early_ops),
->>  	INTEL_ADLS_IDS(&gen11_early_ops),
->>  	INTEL_ADLP_IDS(&gen11_early_ops),
->> +	INTEL_ADLN_IDS(&gen11_early_ops),
->>  	INTEL_RPLS_IDS(&gen11_early_ops),
->>  };
->>
->> diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
->> index a0f54a69b11d..b2ec85a3e40a 100644
->> --- a/drivers/gpu/drm/i915/i915_drv.h
->> +++ b/drivers/gpu/drm/i915/i915_drv.h
->> @@ -1283,6 +1283,8 @@ IS_SUBPLATFORM(const struct drm_i915_private *i915,
->>  	IS_SUBPLATFORM(dev_priv, INTEL_DG2, INTEL_SUBPLATFORM_G11)
->>  #define IS_ADLS_RPLS(dev_priv) \
->>  	IS_SUBPLATFORM(dev_priv, INTEL_ALDERLAKE_S, INTEL_SUBPLATFORM_RPL_S)
->> +#define IS_ADLP_N(dev_priv) \
->> +	IS_SUBPLATFORM(dev_priv, INTEL_ALDERLAKE_P, INTEL_SUBPLATFORM_N)
->>  #define IS_HSW_EARLY_SDV(dev_priv) (IS_HASWELL(dev_priv) && \
->>  				    (INTEL_DEVID(dev_priv) & 0xFF00) == 0x0C00)
->>  #define IS_BDW_ULT(dev_priv) \
->> diff --git a/drivers/gpu/drm/i915/i915_pci.c b/drivers/gpu/drm/i915/i915_pci.c
->> index 708a23415e9c..6a19e9da53cc 100644
->> --- a/drivers/gpu/drm/i915/i915_pci.c
->> +++ b/drivers/gpu/drm/i915/i915_pci.c
->> @@ -1132,6 +1132,7 @@ static const struct pci_device_id pciidlist[] = {
->>  	INTEL_RKL_IDS(&rkl_info),
->>  	INTEL_ADLS_IDS(&adl_s_info),
->>  	INTEL_ADLP_IDS(&adl_p_info),
->> +	INTEL_ADLN_IDS(&adl_p_info),
->>  	INTEL_DG1_IDS(&dg1_info),
->>  	INTEL_RPLS_IDS(&adl_s_info),
->>  	{0, 0, 0}
->> diff --git a/drivers/gpu/drm/i915/intel_device_info.c b/drivers/gpu/drm/i915/intel_device_info.c
->> index a3446a2abcb2..54944d87cd3c 100644
->> --- a/drivers/gpu/drm/i915/intel_device_info.c
->> +++ b/drivers/gpu/drm/i915/intel_device_info.c
->> @@ -170,6 +170,10 @@ static const u16 subplatform_portf_ids[] = {
->>  	INTEL_ICL_PORT_F_IDS(0),
->>  };
->>
->> +static const u16 subplatform_n_ids[] = {
->> +	INTEL_ADLN_IDS(0),
->> +};
->> +
->>  static const u16 subplatform_rpls_ids[] = {
->>  	INTEL_RPLS_IDS(0),
->>  };
->> @@ -210,6 +214,9 @@ void intel_device_info_subplatform_init(struct drm_i915_private *i915)
->>  	} else if (find_devid(devid, subplatform_portf_ids,
->>  			      ARRAY_SIZE(subplatform_portf_ids))) {
->>  		mask = BIT(INTEL_SUBPLATFORM_PORTF);
->> +	} else if (find_devid(devid, subplatform_n_ids,
->> +				ARRAY_SIZE(subplatform_n_ids))) {
->> +		mask = BIT(INTEL_SUBPLATFORM_N);
->>  	} else if (find_devid(devid, subplatform_rpls_ids,
->>  			      ARRAY_SIZE(subplatform_rpls_ids))) {
->>  		mask = BIT(INTEL_SUBPLATFORM_RPL_S);
->> diff --git a/drivers/gpu/drm/i915/intel_device_info.h b/drivers/gpu/drm/i915/intel_device_info.h
->> index 213ae2c07126..e341d90f28a2 100644
->> --- a/drivers/gpu/drm/i915/intel_device_info.h
->> +++ b/drivers/gpu/drm/i915/intel_device_info.h
->> @@ -113,6 +113,9 @@ enum intel_platform {
->>  /* ADL-S */
->>  #define INTEL_SUBPLATFORM_RPL_S	0
->>
->> +/* ADL-P */
->> +#define INTEL_SUBPLATFORM_N    0
->> +
->>  enum intel_ppgtt_type {
->>  	INTEL_PPGTT_NONE = I915_GEM_PPGTT_NONE,
->>  	INTEL_PPGTT_ALIASING = I915_GEM_PPGTT_ALIASING,
->> diff --git a/include/drm/i915_pciids.h b/include/drm/i915_pciids.h
->> index baf3d1d3d566..533890dc9da1 100644
->> --- a/include/drm/i915_pciids.h
->> +++ b/include/drm/i915_pciids.h
->> @@ -666,6 +666,12 @@
->>  	INTEL_VGA_DEVICE(0x46C2, info), \
->>  	INTEL_VGA_DEVICE(0x46C3, info)
->>
->> +/* ADL-N */
->> +#define INTEL_ADLN_IDS(info) \
->> +	INTEL_VGA_DEVICE(0x46D0, info), \
->> +	INTEL_VGA_DEVICE(0x46D1, info), \
->> +	INTEL_VGA_DEVICE(0x46D2, info)
->> +
->>  /* RPL-S */
->>  #define INTEL_RPLS_IDS(info) \
->>  	INTEL_VGA_DEVICE(0xA780, info), \
->
->-- 
->Jani Nikula, Intel Open Source Graphics Center
