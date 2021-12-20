@@ -2,131 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8657747B219
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Dec 2021 18:28:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 320E447B24A
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Dec 2021 18:43:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232505AbhLTR2y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Dec 2021 12:28:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbhLTR2y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Dec 2021 12:28:54 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA2A7C061574;
-        Mon, 20 Dec 2021 09:28:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        id S233373AbhLTRnH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Dec 2021 12:43:07 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:53759 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229459AbhLTRnG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Dec 2021 12:43:06 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 774E0B81038;
-        Mon, 20 Dec 2021 17:28:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED387C36AEA;
-        Mon, 20 Dec 2021 17:28:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640021330;
-        bh=HtxJW1aGRyANiNJ/JEzvWBH30x0/FnOKHutc3073TbQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jE3Tgn7I9iEHdQIAf5yH1Xls3yup7ZARMr+YoxYRkmuE+WtbjL6uggRSu3wzaCuKO
-         A+zhrv/3T4N2K1l29T2KSdKNqmzw6qnxI5Kq0s2P0PSOj36PHaqtIihgx2vhCZxfXR
-         9tFUPDRI7B+Qqsbh5yVsuIE68OdZY9GpXFthv6auMAhCj9ecS+BwV5SmQaWfyMWhhW
-         GkHI2xiI5g3RWjB6hiPPIDiM260bgs+Oz5pcOe6cN5XDVRd8UlPTE7AJZhDdZdAJrp
-         En2k2o0HFbpDvrqsO0sHtQnHfxFjF5EHEq5weyGsFNYqm0txc7HiQmaEyWAFWzekDX
-         ctJ3ueQTs8BuA==
-Date:   Mon, 20 Dec 2021 11:28:48 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com,
-        michael.a.bottini@linux.intel.com, rafael@kernel.org,
-        me@adhityamohan.in, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH V4 2/2] PCI: vmd: Override ASPM on TGL/ADL VMD devices
-Message-ID: <20211220172848.GA1006510@bhelgaas>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id B1262223ED;
+        Mon, 20 Dec 2021 18:43:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1640022184;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wx3LrtaXSfVMg5DkRfr+bITD7CYJEQTXTjdrw+TkxiU=;
+        b=CZWxt1SBph3/prxmlscOHwg0K5NZst/0NW51/1ZwV+ycbDAQNDfqubQV3Jfl2uj8Il6AOD
+        UFkGSSuEDOfvPTGDy3fgrTN6pz2UJq7N0hUSQ4EIgQ80p15o1UnykGpw9NML7Z0cbIKQk9
+        6cnamI4TV390/SQ7MTG3zKOHX8+ec5k=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5432c30fd597a68feaa935054205da90519a769f.camel@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Dec 2021 18:43:03 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Re: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
+In-Reply-To: <5d41bad0e0607e68d9189667a45f7519@walle.cc>
+References: <20210201222010.GA31234@bjorn-Precision-5520>
+ <d2c7ec0e416dd6bb6818892750bff6d7@walle.cc>
+ <5d41bad0e0607e68d9189667a45f7519@walle.cc>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <9303c33a8faa83597db807a8c418ef17@walle.cc>
+X-Sender: michael@walle.cc
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 16, 2021 at 01:24:00PM -0800, David E. Box wrote:
-> On Thu, 2021-12-16 at 11:26 -0600, Bjorn Helgaas wrote:
-> > On Wed, Dec 15, 2021 at 09:56:00PM -0800, David E. Box wrote:
-> > > From: Michael Bottini <michael.a.bottini@linux.intel.com>
-> > > 
-> > > On Tiger Lake and Alder Lake platforms, VMD controllers do not have ASPM
-> > > enabled nor LTR values set by BIOS. This leads high power consumption on
-> > > these platforms when VMD is enabled as reported in bugzilla [1].  Enable
-> > > these features in the VMD driver using pcie_aspm_policy_override() to set
-> > > the ASPM policy for the root ports.
-> > > ...
-
-> > > To do this, add an additional flag in VMD features to specify
-> > > devices that must have their respective policies overridden.
-> > 
-> > I'm not clear on why you want this to apply to only certain VMDs
-> > and not others.  Do some BIOSes configure ASPM for devices below
-> > some VMDs?
+Am 2021-08-20 17:12, schrieb Michael Walle:
+> Am 2021-03-15 22:51, schrieb Michael Walle:
+>> Am 2021-02-01 23:20, schrieb Bjorn Helgaas:
+>>> On Mon, Feb 01, 2021 at 08:49:16PM +0100, Michael Walle wrote:
+>>>> Am 2021-01-17 20:27, schrieb Michael Walle:
+>>>> > Am 2021-01-16 00:57, schrieb Bjorn Helgaas:
+>>>> > > On Wed, Jan 13, 2021 at 12:32:32AM +0100, Michael Walle wrote:
+>>>> > > > Am 2021-01-12 23:58, schrieb Bjorn Helgaas:
+>>>> > > > > On Sat, Jan 09, 2021 at 07:31:46PM +0100, Michael Walle wrote:
+>>>> > > > > > Am 2021-01-08 22:20, schrieb Bjorn Helgaas:
+>>>> > >
+>>>> > > > > > > 3) If the Intel i210 is defective in how it handles an Expansion ROM
+>>>> > > > > > > that overlaps another BAR, a quirk might be the right fix. But my
+>>>> > > > > > > guess is the device is working correctly per spec and there's
+>>>> > > > > > > something wrong in how firmware/Linux is assigning things.  That would
+>>>> > > > > > > mean we need a more generic fix that's not a quirk and not tied to the
+>>>> > > > > > > Intel i210.
+>>>> > > > > >
+>>>> > > > > > Agreed, but as you already stated (and I've also found that in
+>>>> > > > > > the PCI spec) the Expansion ROM address decoder can be shared by
+>>>> > > > > > the other BARs and it shouldn't matter as long as the ExpROM BAR
+>>>> > > > > > is disabled, which is the case here.
+>>>> > > > >
+>>>> > > > > My point is just that if this could theoretically affect devices
+>>>> > > > > other than the i210, the fix should not be an i210-specific quirk.
+>>>> > > > > I'll assume this is a general problem and wait for a generic PCI
+>>>> > > > > core solution unless it's i210-specific.
+>>>> > > >
+>>>> > > > I guess the culprit here is that linux skips the programming of the
+>>>> > > > BAR because of some broken Matrox card. That should have been a
+>>>> > > > quirk instead, right? But I don't know if we want to change that, do
+>>>> > > > we? How many other cards depend on that?
+>>>> > >
+>>>> > > Oh, right.  There's definitely some complicated history there that
+>>>> > > makes me a little scared to change things.  But it's also unfortunate
+>>>> > > if we have to pile quirks on top of quirks.
+>>>> > >
+>>>> > > > And still, how do we find out that the i210 is behaving correctly?
+>>>> > > > In my opinion it is clearly not. You can change the ExpROM BAR value
+>>>> > > > during runtime and it will start working (while keeping it
+>>>> > > > disabled).  Am I missing something here?
+>>>> > >
+>>>> > > I agree; if the ROM BAR is disabled, I don't think it should matter at
+>>>> > > all what it contains, so this does look like an i210 defect.
+>>>> > >
+>>>> > > Would you mind trying the patch below?  It should update the ROM BAR
+>>>> > > value even when it is disabled.  With the current pci_enable_rom()
+>>>> > > code that doesn't rely on the value read from the BAR, I *think* this
+>>>> > > should be safe even on the Matrox and similar devices.
+>>>> >
+>>>> > Your patch will fix my issue:
+>>>> >
+>>>> > Tested-by: Michael Walle <michael@walle.cc>
+>>>> 
+>>>> any news on this?
+>>> 
+>>> Thanks for the reminder.  I was thinking this morning that I need to
+>>> get back to this.  I'm trying to convince myself that doing this
+>>> wouldn't break the problem fixed by 755528c860b0 ("Ignore disabled 
+>>> ROM
+>>> resources at setup").  So far I haven't quite succeeded.
+>> 
+>> ping #2 ;)
 > 
-> Not currently. But the plan is for future devices to move back to
-> having BIOS do the programming.
+> ping #3, soon we can celebrate our first one year anniversary :p
 
-Since this is apparently a BIOS design choice, it seems wrong to base
-the functionality on the Device ID instead of some signal that tells
-us what the BIOS is doing.
+ping #4
 
-> > > + * Override the BIOS ASPM policy and set the LTR value for PCI storage
-> > > + * devices on the VMD bride.
-> > 
-> > I don't think there's any BIOS "policy" here.  At this point BIOS
-> > is no longer involved at all, so all that's left is whatever ASPM
-> > config the BIOS did or did not do.
-> > 
-> > Why only storage?
-> 
-> Only storage devices will be on these root ports.
+In a few days this is a year old. Please have a look at it and either 
+add
+my quirk patch or apply your patch. This is still breaking i210 on
+my board.
 
-How do you know this?  You say below that there's an M.2 slot, so
-surely the slot could contain a non-storage device?  Couldn't somebody
-build a platform with a VMD root port connected to a regular PCIe x4
-slot?  Couldn't such a slot support hotplug?
+TBH, this is really frustrating.
 
-It would be very unusual to hard-code topology knowledge like this
-into the kernel, since plug-and-play has always been a major goal of
-PCI.
-
-> > > +static int vmd_enable_aspm(struct pci_dev *pdev, void *userdata)
-> > > +{
-> > > +       int features = *(int *)userdata, pos;
-> > > +
-> > > +       if (!(features & VMD_FEAT_QUIRK_OVERRIDE_ASPM) ||
-> > > +           pdev->class != PCI_CLASS_STORAGE_EXPRESS)
-> > > +               return 0;
-
-> > > +       pci_write_config_word(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, 0x1003);
-> > > +       pci_write_config_word(pdev, pos + PCI_LTR_MAX_NOSNOOP_LAT, 0x1003);
-> > 
-> > 1) Where did this magic 0x1003 value come from?  Does that depend
-> > on the VMD device?  The endpoint?  The circuit design?  The path
-> > between endpoint and VMD?  What if there are switches in the path?
-> 
-> The number comes from the BIOS team. They are tied to the SoC. I
-> don't believe there can be switches in the path but Nirmal and
-> Jonathan should know for sure. From what I've seen these root ports
-> are wired directly to M.2 slots on boards that are intended for
-> storage devices.
-
-I guess you're saying that 0x1003 is determined by the SoC.  If so, I
-think this value should be in your .driver_data (which would mean
-converting it from a scalar to a struct, as many other drivers do).
-The current code suggests that 0x1003 is the correct value for *all*
-VMDs and all configurations.
-
-I don't understand LTR well enough to be convinced that this static
-value would be the correct value for all possible hierarchies and
-devices that could appear below a VMD root port.  I would love to be
-educated about this.
-
-Bjorn
+-michael
