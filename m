@@ -2,104 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9B3547A91B
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Dec 2021 12:55:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37C2C47AB5E
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Dec 2021 15:36:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230300AbhLTLzy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Dec 2021 06:55:54 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:47564 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232119AbhLTLzy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Dec 2021 06:55:54 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1640001352;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/CUTvkF0ZJD/0bUX2KphRLF8+ED9CK1uoT06irTMlA8=;
-        b=HSeZ4MSHoOtA7+F6FETI6mp8k3+faOYIGAz2lfvwDy1sSASh6hTd2VQBM/xtD9dWQ6/+it
-        Xx1QiktSyrVJW+s/MoE14UBVxgCvvz4QKIShLntOLlYBJxOVA077qH2vgT/zKoawye+Uqx
-        snVV6hWDoQFRr82vrxuTiQA6fWGNWW8AQwrmHtXAqARcz5dCEF253M2O/8L7qxll49Y14E
-        5fSXcstjpAFKPqGx7Ea82OtzbwbxPCD/3HPgDpfoxqEWUh14UdrFA6upqctLwnFjwYbD3a
-        oi0s+ejfwagnJisgRBLJVVnUWCRjx+V6vSjMsZE6J9vLkzoXsCRI261DIG6qXg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1640001352;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/CUTvkF0ZJD/0bUX2KphRLF8+ED9CK1uoT06irTMlA8=;
-        b=xrSZ1J5EcwueXFBw2+PxkXfD7FQuFpsVSXWU/APxdJHshmEM2RfAp9OAgcYlk78X64Avva
-        QQ/LsT2krF+p+kDg==
-To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-        Nathan Chancellor <nathan@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Juergen Gross <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [patch V3 28/35] PCI/MSI: Simplify pci_irq_get_affinity()
-In-Reply-To: <ee5db32f-c21e-287f-2a19-94c1ba6e8217@kaod.org>
-References: <20211210221642.869015045@linutronix.de>
- <20211210221814.900929381@linutronix.de>
- <Yb0PaCyo/6z3XOlf@archlinux-ax161> <87v8zm9pmd.ffs@tglx>
- <ee5db32f-c21e-287f-2a19-94c1ba6e8217@kaod.org>
-Date:   Mon, 20 Dec 2021 12:55:51 +0100
-Message-ID: <87pmpra3so.ffs@tglx>
+        id S233744AbhLTOgO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Dec 2021 09:36:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233736AbhLTOgL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Dec 2021 09:36:11 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC182C061401;
+        Mon, 20 Dec 2021 06:36:10 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A6C4EB80EDF;
+        Mon, 20 Dec 2021 14:36:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED211C36AE7;
+        Mon, 20 Dec 2021 14:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1640010968;
+        bh=8x7nrGdeB4VucBH0UngkFFoBwwf8YtqrxYRuyR8zC0k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NDy5Fd91fC9YgX8kblSyHNQsX1VUzfzST4OtQrwyJkikJuMSMwLWXWODmQa0TSnm+
+         MQojc6sdqD7i3kNOQAhVeHqsR31LJ9TJ2qxsq6+lpw88BpxOj2Q4V3Q0oDNSX/30NP
+         qILmhmqeRUXFSnoS4KadyitlVfQKLsrWPFasaWcQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Marek Vasut <marex@denx.de>
+Subject: [PATCH 4.4 13/23] PCI/MSI: Clear PCI_MSIX_FLAGS_MASKALL on error
+Date:   Mon, 20 Dec 2021 15:34:14 +0100
+Message-Id: <20211220143018.285669664@linuxfoundation.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20211220143017.842390782@linuxfoundation.org>
+References: <20211220143017.842390782@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Dec 18 2021 at 21:25, C=C3=A9dric Le Goater wrote:
+From: Thomas Gleixner <tglx@linutronix.de>
 
-> On 12/18/21 11:25, Thomas Gleixner wrote:
->> On Fri, Dec 17 2021 at 15:30, Nathan Chancellor wrote:
->>> On Fri, Dec 10, 2021 at 11:19:26PM +0100, Thomas Gleixner wrote:
->>> I just bisected a boot failure on my AMD test desktop to this patch as
->>> commit f48235900182 ("PCI/MSI: Simplify pci_irq_get_affinity()") in
->>> -next. It looks like there is a problem with the NVMe drive after this
->>> change according to the logs. Given that the hard drive is not getting
->>> mounted for journald to write logs to, I am not really sure how to get
->>> them from the machine so I have at least taken a picture of what I see
->>> on my screen; open to ideas on that front!
->>=20
->> Bah. Fix below.
->
-> That's a fix for the issue I was seeing on pseries with NVMe.
->
-> Tested-by: C=C3=A9dric Le Goater <clg@kaod.org>
+commit 94185adbfad56815c2c8401e16d81bdb74a79201 upstream.
 
-I had a faint memory that I've seen that issue before, but couldn't find
-the mail in those massive threads.
+PCI_MSIX_FLAGS_MASKALL is set in the MSI-X control register at MSI-X
+interrupt setup time. It's cleared on success, but the error handling path
+only clears the PCI_MSIX_FLAGS_ENABLE bit.
 
-Thanks for confirming!
+That's incorrect as the reset state of the PCI_MSIX_FLAGS_MASKALL bit is
+zero. That can be observed via lspci:
 
-       tglx
+        Capabilities: [b0] MSI-X: Enable- Count=67 Masked+
+
+Clear the bit in the error path to restore the reset state.
+
+Fixes: 438553958ba1 ("PCI/MSI: Enable and mask MSI-X early")
+Reported-by: Stefan Roese <sr@denx.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Stefan Roese <sr@denx.de>
+Cc: linux-pci@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: Marek Vasut <marex@denx.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/87tufevoqx.ffs@tglx
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/pci/msi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -840,7 +840,7 @@ out_free:
+ 	free_msi_irqs(dev);
+ 
+ out_disable:
+-	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
++	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL | PCI_MSIX_FLAGS_ENABLE, 0);
+ 
+ 	return ret;
+ }
+
+
