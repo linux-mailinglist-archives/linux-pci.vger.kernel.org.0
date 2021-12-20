@@ -2,32 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37C2C47AB5E
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Dec 2021 15:36:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA2F47AB94
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Dec 2021 15:38:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233744AbhLTOgO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Dec 2021 09:36:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59046 "EHLO
+        id S233983AbhLTOhu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Dec 2021 09:37:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233736AbhLTOgL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Dec 2021 09:36:11 -0500
+        with ESMTP id S233984AbhLTOh2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Dec 2021 09:37:28 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC182C061401;
-        Mon, 20 Dec 2021 06:36:10 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F7FC061397;
+        Mon, 20 Dec 2021 06:37:27 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A6C4EB80EDF;
-        Mon, 20 Dec 2021 14:36:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED211C36AE7;
-        Mon, 20 Dec 2021 14:36:07 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E9722B80EDE;
+        Mon, 20 Dec 2021 14:37:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B8E6C36AE9;
+        Mon, 20 Dec 2021 14:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1640010968;
-        bh=8x7nrGdeB4VucBH0UngkFFoBwwf8YtqrxYRuyR8zC0k=;
+        s=korg; t=1640011044;
+        bh=rPvE5tFwzB7OCyCZXsM5MuJHHLIbWJ97G3K3UpFNol8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NDy5Fd91fC9YgX8kblSyHNQsX1VUzfzST4OtQrwyJkikJuMSMwLWXWODmQa0TSnm+
-         MQojc6sdqD7i3kNOQAhVeHqsR31LJ9TJ2qxsq6+lpw88BpxOj2Q4V3Q0oDNSX/30NP
-         qILmhmqeRUXFSnoS4KadyitlVfQKLsrWPFasaWcQ=
+        b=BIdCOR3auH1oKcjlxXGWWrNSYmf7YZm++eLDIgR9txvRw0iuuQJf6r/5Ih+oEpViS
+         RU9bDaAlIG6oIm/QDe0owqNGLe3xTuvB1JL42t52J3OOp2xJLUan8zC/W9cKL04ufR
+         ZKempF1SAZ9I6xu5sB6ktCaBcaBlRLQaunbrxqLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -36,12 +36,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Michal Simek <michal.simek@xilinx.com>,
         Marek Vasut <marex@denx.de>
-Subject: [PATCH 4.4 13/23] PCI/MSI: Clear PCI_MSIX_FLAGS_MASKALL on error
-Date:   Mon, 20 Dec 2021 15:34:14 +0100
-Message-Id: <20211220143018.285669664@linuxfoundation.org>
+Subject: [PATCH 4.9 16/31] PCI/MSI: Clear PCI_MSIX_FLAGS_MASKALL on error
+Date:   Mon, 20 Dec 2021 15:34:16 +0100
+Message-Id: <20211220143020.501149161@linuxfoundation.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211220143017.842390782@linuxfoundation.org>
-References: <20211220143017.842390782@linuxfoundation.org>
+In-Reply-To: <20211220143019.974513085@linuxfoundation.org>
+References: <20211220143019.974513085@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -82,7 +82,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/pci/msi.c
 +++ b/drivers/pci/msi.c
-@@ -840,7 +840,7 @@ out_free:
+@@ -871,7 +871,7 @@ out_free:
  	free_msi_irqs(dev);
  
  out_disable:
