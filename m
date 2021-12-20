@@ -2,70 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4D1747B0D0
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Dec 2021 17:02:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E012547B100
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Dec 2021 17:22:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238030AbhLTQC1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Dec 2021 11:02:27 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:44444 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234484AbhLTQC0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Dec 2021 11:02:26 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        id S237601AbhLTQVz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Dec 2021 11:21:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232820AbhLTQVy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Dec 2021 11:21:54 -0500
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3F0C061574
+        for <linux-pci@vger.kernel.org>; Mon, 20 Dec 2021 08:21:54 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E0555B80EEA
-        for <linux-pci@vger.kernel.org>; Mon, 20 Dec 2021 16:02:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BDA2C36AE7;
-        Mon, 20 Dec 2021 16:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640016144;
-        bh=moxR4H5LroCD4Y/ELWw28W1oRGFu68ApFXCw0fKLws4=;
-        h=From:To:Subject:Date:From;
-        b=FEfaLf1vz2kITcwZuuOediDOSWcmXslrW3elh0mNkDY5BNgr4FiVu8/hNCdA07S7i
-         qNyV8nXnvQtIF3ltOxC0rfN9TSkpDaU3KKGu05UAtZXXzNP6N21iMWExgu3JKuHKKz
-         IkzJJhpSid/OivGywNCMWa51dNAu7BQnxfj/+qXHigebeDj3r1Q8pltjL3K0HIHWT+
-         Txj7l/0ESZvlhisJLtFoZTT+fIMFFsUmFn+CaloVi7CceCyuLtIimbE5FU341htfQB
-         7Ynjh320QsmDYMmsYV3J70bnG62/4nmLkyzyy2CAjExL7gNgjayAxeJi6KXiPZvho8
-         Z0/+0dNm3hOug==
-Received: by pali.im (Postfix)
-        id 4833687B; Mon, 20 Dec 2021 17:02:22 +0100 (CET)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Martin Mares <mj@ucw.cz>, Bjorn Helgaas <helgaas@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-pci@vger.kernel.org
-Subject: [PATCH pciutils] dump: Allow more leading zeros in dump line number
-Date:   Mon, 20 Dec 2021 16:56:59 +0100
-Message-Id: <20211220155659.1343-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 661B5300002D0;
+        Mon, 20 Dec 2021 17:21:50 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 527C6294C61; Mon, 20 Dec 2021 17:21:50 +0100 (CET)
+Date:   Mon, 20 Dec 2021 17:21:50 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Add defines for normal and subtractive PCI
+ bridges
+Message-ID: <20211220162150.GA706@wunner.de>
+References: <20211210145352.16323-1-pali@kernel.org>
+ <20211220145140.31898-1-pali@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211220145140.31898-1-pali@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-U-Boot's "pci display.b" command prints pci config space dump with 8 digits
-in line number. So allow up to the 8 digits in line number to easily parse
-U-Boot's pci config space dumps.
----
- lib/dump.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On Mon, Dec 20, 2021 at 03:51:40PM +0100, Pali Rohár wrote:
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -178,9 +178,9 @@ static pci_ers_result_t pcie_portdrv_mmio_enabled(struct pci_dev *dev)
+>   */
+>  static const struct pci_device_id port_pci_ids[] = {
+>  	/* handle any PCI-Express port */
+> -	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
+> +	{ PCI_DEVICE_CLASS(PCI_CLASS_BRIDGE_PCI_NORMAL, ~0) },
+>  	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
+> -	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
+> +	{ PCI_DEVICE_CLASS(PCI_CLASS_BRIDGE_PCI_SUBTRACTIVE, ~0) },
 
-diff --git a/lib/dump.c b/lib/dump.c
-index 879c62449b27..c0f929133973 100644
---- a/lib/dump.c
-+++ b/lib/dump.c
-@@ -90,7 +90,9 @@ dump_init(struct pci_access *a)
-       else if (!len)
- 	dev = NULL;
-       else if (dev &&
--	       (dump_validate(buf, "##: ") || dump_validate(buf, "###: ")) &&
-+	       (dump_validate(buf, "##: ") || dump_validate(buf, "###: ") || dump_validate(buf, "####: ") ||
-+		dump_validate(buf, "#####: ") || dump_validate(buf, "######: ") ||
-+		dump_validate(buf, "#######: ") || dump_validate(buf, "########: ")) &&
- 	       sscanf(buf, "%x: ", &i) == 1)
- 	{
- 	  struct dump_data *dd = dev->aux;
--- 
-2.20.1
-
+Any harm in simply matching for 0x060400 with mask 0xffff00?
