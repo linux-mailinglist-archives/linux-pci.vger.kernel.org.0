@@ -2,281 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDEBA47C8AD
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 22:12:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA9B647C99C
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Dec 2021 00:17:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236006AbhLUVMC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 16:12:02 -0500
-Received: from mga07.intel.com ([134.134.136.100]:16026 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230326AbhLUVMC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Dec 2021 16:12:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640121122; x=1671657122;
-  h=message-id:subject:from:reply-to:to:cc:in-reply-to:
-   references:mime-version:date:content-transfer-encoding;
-  bh=6sWzQDDbAyPSBNpdULYG2Fce+yiVkeUsYUCIGw1P19A=;
-  b=ATr0GAqw8DoBog4x6Cgct6Xa+OWTmkr62BDhH1MVGzcIdroogcCtGNDz
-   x4xyIjOeqz0DTV+ZKFo7WMh2mAOa3wR5BqC+vHdCKKOz/d5ZXLUqkmmgv
-   2XcKMyAgy0FX8ecs7SuznNjTws36/k1k26zAhGVsK6GqPxZurZEPMuUFT
-   OSZnrcYF7UlY9zSGjJwanaw9Clq6HSSS1rL8M4jtgmnMioK8aZ8ydgwvg
-   z0COPe7JMLdrT67qZnQRFLr5j+BsL6hcsd9EYBJTo0XRZHDVgaKIysmlw
-   qUakABxFQnpUxAxPUPdANT4MYN6V+pQBeALEQaGRIuJ8uBu0sRTCQL8ct
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10205"; a="303864345"
-X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
-   d="scan'208";a="303864345"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 13:11:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
-   d="scan'208";a="586818508"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Dec 2021 13:11:50 -0800
-Received: from rbambrou-mobl.amr.corp.intel.com (unknown [10.209.90.33])
-        by linux.intel.com (Postfix) with ESMTP id 35919580684;
-        Tue, 21 Dec 2021 13:11:50 -0800 (PST)
-Message-ID: <9b540d4f11bb4e2e1422b641df1f5e84aa68602f.camel@linux.intel.com>
-Subject: Re: [PATCH V4 2/2] PCI: vmd: Override ASPM on TGL/ADL VMD devices
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        francisco.munoz.ruiz@linux.intel.com, nirmal.patel@linux.intel.com,
-        jonathan.derrick@linux.dev, lorenzo.pieralisi@arm.com,
-        hch@infradead.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, michael.a.bottini@linux.intel.com,
-        rafael@kernel.org, me@adhityamohan.in, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <CACK8Z6F812_DYVr=sxRXxhtPxyCw206U=jW6CFt6T-MyKJXMgQ@mail.gmail.com>
-References: <20211220172848.GA1006510@bhelgaas>
-         <e87a297cc74cca02fa1a8f5aa9562489a4db26b3.camel@linux.intel.com>
-         <CACK8Z6F812_DYVr=sxRXxhtPxyCw206U=jW6CFt6T-MyKJXMgQ@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
+        id S236900AbhLUXRG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 18:17:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236827AbhLUXRF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 18:17:05 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938FBC061574;
+        Tue, 21 Dec 2021 15:17:05 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 65371B817D0;
+        Tue, 21 Dec 2021 23:17:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3ED1C36AE9;
+        Tue, 21 Dec 2021 23:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640128623;
+        bh=eLpwNszMuOuFEkO+RZzNfIdGgdQR36iwWtCmciSz6/M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PSk8Xv5BtvoaVFwebGYKgMvw8X8f2J268mCFiUliSj7V8seeRzBhRP26sn3TaPtiO
+         t2EKjS4LmdBFZpVZMhDyxhtFJq2As+KZKrqyZugS2IGWUUQFEXa8WBQ8a6RIOqC5E0
+         Ct7KS1kPcuxcCjtTQomDaLYUwSY+kkBHKfvVDigsWiAoqam/3ncqtEXGBj11BmiTmu
+         CImW9ns+J1zL9R+i/h0zaRWIH8homEVTVX15SP0n6bQhMMcfXR0U7Q2XlDwFf+Fmeq
+         apI2M6zrudl1fOrMgzhcFA8Z9NjaMK0xO9/u6s+TzL/NyLc6A1yr8LI3Xf9sf5yVqA
+         SuVfgP+j7oJxg==
+Date:   Tue, 21 Dec 2021 17:17:01 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
+        lenb@kernel.org, rjw@rjwysocki.net, bhelgaas@google.com,
+        zhangliguang@linux.alibaba.com, zhuo.song@linux.alibaba.com,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [RESEND PATCH v4] ACPI: Move sdei_init and ghes_init ahead to
+ handle platform errors earlier
+Message-ID: <20211221231701.GA1125162@bhelgaas>
 MIME-Version: 1.0
-Date:   Tue, 21 Dec 2021 13:11:26 -0800
-User-Agent: Evolution 3.36.5-0ubuntu1 
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211216133456.21002-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Thu, Dec 16, 2021 at 09:34:56PM +0800, Shuai Xue wrote:
+> On an ACPI system, ACPI is initialised very early from a subsys_initcall(),
+> while SDEI is not ready until a subsys_initcall_sync().
+> 
+> The SDEI driver provides functions (e.g. apei_sdei_register_ghes,
+> apei_sdei_unregister_ghes) to register or unregister event callback for
+> dispatcher in firmware. When the GHES driver probing, it registers the
+> corresponding callback according to the notification type specified by
+> GHES. If the GHES notification type is SDEI, the GHES driver will call
+> apei_sdei_register_ghes to register event call.
+>
+> When the firmware emits an event, it migrates the handling of the event
+> into the kernel at the registered entry-point __sdei_asm_handler. And
+> finally, the kernel will call the registered event callback and return
+> status_code to indicate the status of event handling. SDEI_EV_FAILED
+> indicates that the kernel failed to handle the event.
+> 
+> Consequently, when an error occurs during kernel booting, the kernel is
+> unable to handle and report errors until the GHES driver is initialized by
+> device_initcall(), in which the event callback is registered. All errors
+> that occurred before GHES initialization are missed and there is no chance
+> to report and find them again.
+> 
+> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
+> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
+> the estatus memory pool. On the other hand, ghes_init() relies on
+> sdei_init() to detect the SDEI version and the framework for registering
+> and unregistering events.
 
-On Mon, 2021-12-20 at 18:14 -0800, Rajat Jain wrote:
-> Hello,
-> 
-> On Mon, Dec 20, 2021 at 3:06 PM David E. Box
-> <david.e.box@linux.intel.com> wrote:
-> > Hi Born,
-> > 
-> > So you know this patch comes from our platform power management team to
-> > address several VMD bugs
-> > affecting power. The VMD driver developers are already cc'd but also adding
-> > Francisco from the VMD
-> > team who can maybe help clarify.
-> > 
-> > On Mon, 2021-12-20 at 11:28 -0600, Bjorn Helgaas wrote:
-> > > On Thu, Dec 16, 2021 at 01:24:00PM -0800, David E. Box wrote:
-> > > > On Thu, 2021-12-16 at 11:26 -0600, Bjorn Helgaas wrote:
-> > > > > On Wed, Dec 15, 2021 at 09:56:00PM -0800, David E. Box wrote:
-> > > > > > From: Michael Bottini <michael.a.bottini@linux.intel.com>
-> > > > > > 
-> > > > > > On Tiger Lake and Alder Lake platforms, VMD controllers do not have
-> > > > > > ASPM
-> > > > > > enabled nor LTR values set by BIOS. This leads high power
-> > > > > > consumption on
-> > > > > > these platforms when VMD is enabled as reported in bugzilla
-> > > > > > [1].  Enable
-> > > > > > these features in the VMD driver using pcie_aspm_policy_override()
-> > > > > > to set
-> > > > > > the ASPM policy for the root ports.
-> > > > > > ...
-> > > > > > To do this, add an additional flag in VMD features to specify
-> > > > > > devices that must have their respective policies overridden.
-> > > > > 
-> > > > > I'm not clear on why you want this to apply to only certain VMDs
-> > > > > and not others.  Do some BIOSes configure ASPM for devices below
-> > > > > some VMDs?
-> > > > 
-> > > > Not currently. But the plan is for future devices to move back to
-> > > > having BIOS do the programming.
-> > > 
-> > > Since this is apparently a BIOS design choice, it seems wrong to base
-> > > the functionality on the Device ID instead of some signal that tells
-> > > us what the BIOS is doing.
-> > 
-> > I don't know if there is another way to tell what the BIOS is _not_ doing.
-> > DID is tied to the SoC so
-> > it's our best method of inferring this. We know the firmware team has said
-> > they will not support
-> > programming these values for the mentioned platforms so there's no BIOS
-> > update coming to change
-> > this.
-> 
-> I'd like to mention here that ChromeOS also runs linux kernel on TGL
-> and ADL platforms, and we may run a different BIOS altogether, so yes,
-> we'd greatly appreciate if you do not assume BIOS setting from device
-> ID / SOC ID, if the setting is *not tied to device ID / SOC ID*.
-> Perhaps you use ACPI or device trees to convey what BIOS has or hasn't
-> configured?
+> By the way, I don't figure out why acpi_hest_init is called in
+> acpi_pci_root_init, it don't rely on any other thing. May it could
+> be moved further, following acpi_iort_init in acpi_init.
 
-The reason why BIOS is not programming these values is because when VMD is
-enabled the ports are not visible to BIOS. This would apply to any BIOS
-including those used by ChromeOS.
+I think you should drop the "By the way ..." text or move it after the
+"---" at the bottom of your commit log.  It doesn't help understand
+this patch.
 
+> sdei_init() relies on ACPI table which is initialized
+> subsys_initcall(): acpi_init(), acpi_bus_init(), acpi_load_tables(),
+> acpi_tb_laod_namespace().  May it should be also moved further,
+> after acpi_load_tables.
 
-And because BIOS doesn't see these ports ...
+This text also doesn't seem relevant to this patch.
 
-> 
-> > But to be sure, we can add a check first to confirm that these values have
-> > not been programmed
-> > (ASPM is disabled and LTRs are 0).
-> 
-> Yes, reading the ASPM configuration from hardware sounds OK to me.
-> 
-> > > > > > + * Override the BIOS ASPM policy and set the LTR value for PCI
-> > > > > > storage
-> > > > > > + * devices on the VMD bride.
-> > > > > 
-> > > > > I don't think there's any BIOS "policy" here.  At this point BIOS
-> > > > > is no longer involved at all, so all that's left is whatever ASPM
-> > > > > config the BIOS did or did not do.
-> 
-> Should the Policy override really take place if aspm_policy =
-> POLICY_DEFAULT which seems to suggest we leave it to whatever BIOS
-> left it at?
+> In this patch, move sdei_init and ghes_init as far ahead as
+> possible, right after acpi_hest_init().
 
-... we cannot rely on POLICY_DEFAULT for their ASPM setting. This leaves the
-devices with ASPM disabled.
+I'm having a hard time figuring out the reason for this patch.
 
-That said, we do honor the PCI aspm_disabled flag which is tied to both the FADT
-bit and module parameter. So we only enable it if OS control is allowed.
+Apparently the relevant parts are sdei_init() and ghes_init().
+Today they are executed in that order:
 
-> 
-> Perhaps for this override to take place, aspm_policy needs to be the
-> policy needs to be POLICY_POWERSAVE?
-> 
-> #define POLICY_DEFAULT 0        /* BIOS default setting */
-> #define POLICY_PERFORMANCE 1    /* high performance */
-> #define POLICY_POWERSAVE 2      /* high power saving */
-> #define POLICY_POWER_SUPERSAVE 3 /* possibly even more power saving */
+  subsys_initcall_sync(sdei_init);
+  device_initcall(ghes_init);
 
-We do have to set a default in place of the missing BIOS configuration. We chose
-to do ASPM_STATE_ALL, allowing all ASPM settings supported by the endpoint.
+After this patch, they would be executed in the same order, but called
+explicitly instead of as initcalls:
 
-> 
-> 
-> > > > > Why only storage?
-> > > > 
-> > > > Only storage devices will be on these root ports.
-> > > 
-> > > How do you know this?  You say below that there's an M.2 slot, so
-> > > surely the slot could contain a non-storage device?  Couldn't somebody
-> > > build a platform with a VMD root port connected to a regular PCIe x4
-> > > slot?
-> > 
-> > In VMD mode the root ports under the VMD bridge are used specifically to
-> > manage storage devices. So
-> > only storage devices should be attached to these ports.
-> 
-> Bjorn: from 
-> https://www.intel.com/content/www/us/en/architecture-and-technology/intel-volume-management-device-overview.html
-> "Intel® Volume Management Device (Intel® VMD) is specifically designed
-> for enterprise-grade management of NVMe SSDs connected to Intel® Xeon®
-> CPUs."
-> 
-> I think what David means is that any other device other than an NVME
-> SSD showing up under VMD might be an error / bad device.
+  acpi_pci_root_init()
+  {
+    acpi_hest_init();
+    sdei_init();
+    ghes_init();
+    ...
 
-I don't know if that would happen. It certainly would not be used as intended.
+Explicit calls are certainly better than initcalls, but that doesn't
+seem to be the reason for this patch.
 
-> 
-> 
-> > >   Couldn't such a slot support hotplug?
-> > 
-> > The answer I just learned is yes. It may be possible to have a switch too.
-> > So both of those would
-> > need to be addressed though I'm note quite sure how yet.
-> > 
-> > > It would be very unusual to hard-code topology knowledge like this
-> > > into the kernel, since plug-and-play has always been a major goal of
-> > > PCI.
-> > > 
-> > > > > > +static int vmd_enable_aspm(struct pci_dev *pdev, void *userdata)
-> > > > > > +{
-> > > > > > +       int features = *(int *)userdata, pos;
-> > > > > > +
-> > > > > > +       if (!(features & VMD_FEAT_QUIRK_OVERRIDE_ASPM) ||
-> > > > > > +           pdev->class != PCI_CLASS_STORAGE_EXPRESS)
-> > > > > > +               return 0;
-> > > > > > +       pci_write_config_word(pdev, pos + PCI_LTR_MAX_SNOOP_LAT,
-> > > > > > 0x1003);
-> > > > > > +       pci_write_config_word(pdev, pos + PCI_LTR_MAX_NOSNOOP_LAT,
-> > > > > > 0x1003);
-> > > > > 
-> > > > > 1) Where did this magic 0x1003 value come from?  Does that depend
-> > > > > on the VMD device?  The endpoint?  The circuit design?  The path
-> > > > > between endpoint and VMD?  What if there are switches in the path?
-> > > > 
-> > > > The number comes from the BIOS team. They are tied to the SoC. I
-> > > > don't believe there can be switches in the path but Nirmal and
-> > > > Jonathan should know for sure. From what I've seen these root ports
-> > > > are wired directly to M.2 slots on boards that are intended for
-> > > > storage devices.
-> > > 
-> > > I guess you're saying that 0x1003 is determined by the SoC.  If so, I
-> > > think this value should be in your .driver_data (which would mean
-> > > converting it from a scalar to a struct, as many other drivers do).
-> > > The current code suggests that 0x1003 is the correct value for *all*
-> > > VMDs and all configurations.
-> > 
-> > Okay
-> > 
-> > > I don't understand LTR well enough to be convinced that this static
-> > > value would be the correct value for all possible hierarchies and
-> > > devices that could appear below a VMD root port.  I would love to be
-> > > educated about this.
-> > 
-> > I am not an LTR expert either, but LTRs are "conglomerated" per spec.
-> > Switches subtract their own
-> > latency from the minimum LTR of the downstream ports and report this
-> > conglomerated value upstream.
-> > So the value will decrease as needed to account for latency in the
-> > hierarchy.
-> > 
-> > PCI 5.0 Version 1.0, Section 6.18 (pg 611)
-> 
-> As described here and as much as I understand, I think these LTR
-> values (0x1003 here) depend on the platform topology. So what works
-> for David's platform may not work for another one that may have
-> Switched for e.g., or for perhaps for another NVME that is hotplugged
-> later (and has different characteristics than what is on board).
-> Technically tying the LTR values to a SOC or VID/DID sounds incorrect
-> to me, and instead should be tied to the platform. Ideally I *thiink*
-> they should come from ACPI or device tree. However, I wouldn't protest
-> putting them in driver_data for now given that there aren't any other
-> users. We may have to find a solution once there are more platforms
-> that begin to use this driver. I think this is a bigger problem that
-> needs to be addressed w.r.t. ASPM in general.
+Does this patch fix a bug?  If so, what is the bug?
 
-I'll seek more clarification from firmware team on the LTR. But again the fact
-that switches can reduce the reported LTR seems to allow for at least some
-decoupling of the endpoint LTR value from the topology.
+You say that currently "errors that occur before GHES initialization
+are missed".  Isn't that still true after this patch?  Does this patch
+merely reduce the time before GHES initialization?  If so, I'm
+dubious, because we have to tolerate an arbitrary amount of time
+there.
 
-David
+s/acpi_tb_laod_namespace/acpi_tb_load_namespace/
 
-> 
-> Thanks & Best Regards,
-> 
-> Rajat
-> 
-> 
-> > Thanks
-> > 
-> > David
-> > 
-> > > Bjorn
+You use "()" after function names sometimes, but not always.  Please
+do it consistently.
 
+> -device_initcall(ghes_init);
+
+>  void __init acpi_pci_root_init(void)
+>  {
+>  	acpi_hest_init();
+> +	sdei_init();
+> +	ghes_init();
+
+What's the connection between PCI, SDEI, and GHES?  As far as I can
+tell, SDEI and GHES are not PCI-specific, so it doesn't seem like they
+should be initialized here in acpi_pci_root_init().
+
+> -subsys_initcall_sync(sdei_init);
