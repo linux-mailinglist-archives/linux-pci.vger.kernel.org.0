@@ -2,56 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5591847BCC2
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 10:20:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 802CA47C1F4
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 15:56:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233940AbhLUJUN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 04:20:13 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:42588 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232251AbhLUJUM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 04:20:12 -0500
+        id S235023AbhLUO4t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 09:56:49 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:43878 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238680AbhLUO4t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 09:56:49 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 51B02B8122D;
-        Tue, 21 Dec 2021 09:20:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97C04C36AE2;
-        Tue, 21 Dec 2021 09:20:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1640078410;
-        bh=P1yCCErD4lYWu0EijWCZ4FDcQAXFbefAwLxWZZoGCyg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hs9Q/TkC/LQxeWIhrP+QGH0wT//ifVTvZ8zutDvv/3S0EFcP3/b91tttMUGsxDwgF
-         2sg0bnBwJfURz6LbptKTJX7t+jbuZaOpHg52F4OKK9vc2QHpWpCRn98/qqN7mZw0+b
-         5ab3vh9tZCWkCwKNk0ADZG9pZj1dhmT4td6xi1eU=
-Date:   Tue, 21 Dec 2021 10:20:07 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH V4 2/6] driver core: auxiliary bus: Add driver data
- helpers
-Message-ID: <YcGcR7dLDD7avsnn@kroah.com>
-References: <20211216023146.2361174-1-david.e.box@linux.intel.com>
- <20211216023146.2361174-3-david.e.box@linux.intel.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AA14B61633;
+        Tue, 21 Dec 2021 14:56:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF9C1C36AE8;
+        Tue, 21 Dec 2021 14:56:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640098608;
+        bh=936LdB+AWw/0Sbf+/HopvGtMqTMu5gUY3UB8Pad1fPE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Zw6zbfmF594hw9C6R73I/DNFo2cUmYhrDIK0uLtY6y8Ax2mT0cdkL0OjPPSDMN/qV
+         p3ig1npFgp8dZRJpnGtx45tMPk7PAbMwCxcmSIAZMKxaNKHXnJ+1FDZKKWUFUubrEC
+         XhjvLhl62PJdxyHXWf1wbG3BjdNA+HJsKpHFG04krscLrYfecjToS1r+oKZxWw/tTK
+         B2ewVWdqBgr+aFa0kuhek0KufTtqf3R10AysMSX2MTQw7OEo1+4brZAwzbliQicF4p
+         YLzWonGURJC1QlCI6XHxe4hgKGmN5955CIxPr2lvfFNOfoWvbWyAtgnfGPJV7Wuf09
+         fmv6BmmBg50lQ==
+Received: by pali.im (Postfix)
+        id A8D2D778; Tue, 21 Dec 2021 15:18:11 +0100 (CET)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        "Rob Herring" <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/11] PCI: Small improvements for pci-bridge-emul and mvebu
+Date:   Tue, 21 Dec 2021 15:14:44 +0100
+Message-Id: <20211221141455.30011-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211216023146.2361174-3-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 15, 2021 at 06:31:42PM -0800, David E. Box wrote:
-> Adds get/set driver data helpers for auxiliary devices.
-> 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Mark Gross <markgross@kernel.org>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+This patch series contains small improvements for pci-bridge-emul and
+mvebu drivers. This patch series is based on top of the patches:
+https://lore.kernel.org/linux-pci/20211125124605.25915-1-pali@kernel.org/
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Pali Rohár (11):
+  MAINTAINERS: Add Pali Rohár as pci-mvebu.c maintainer
+  PCI: pci-bridge-emul: Make struct pci_bridge_emul_ops as const
+  PCI: pci-bridge-emul: Rename PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR to
+    PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD
+  PCI: pci-bridge-emul: Add support for new flag
+    PCI_BRIDGE_EMUL_NO_IO_FORWARD
+  PCI: mvebu: Add help string for CONFIG_PCI_MVEBU option
+  PCI: mvebu: Remove duplicate nports assignment
+  PCI: mvebu: Set PCI_BRIDGE_EMUL_NO_IO_FORWARD when IO is unsupported
+  PCI: mvebu: Properly initialize vendor, device and revision of
+    emulated bridge
+  PCI: mvebu: Update comment for PCI_EXP_LNKCAP register on emulated
+    bridge
+  PCI: mvebu: Update comment for PCI_EXP_LNKCTL register on emulated
+    bridge
+  PCI: mvebu: Fix reporting Data Link Layer Link Active on emulated
+    bridge
+
+ MAINTAINERS                           |  1 +
+ drivers/pci/controller/Kconfig        |  4 ++
+ drivers/pci/controller/pci-aardvark.c |  2 +-
+ drivers/pci/controller/pci-mvebu.c    | 64 ++++++++++++---------------
+ drivers/pci/pci-bridge-emul.c         | 11 ++++-
+ drivers/pci/pci-bridge-emul.h         |  5 ++-
+ 6 files changed, 48 insertions(+), 39 deletions(-)
+
+-- 
+2.20.1
+
