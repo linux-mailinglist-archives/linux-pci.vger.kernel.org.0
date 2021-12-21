@@ -2,61 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78C4A47C335
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 16:42:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F8BA47C341
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 16:43:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236241AbhLUPmZ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 21 Dec 2021 10:42:25 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35123 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234659AbhLUPmY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 10:42:24 -0500
-Received: (Authenticated sender: thomas.petazzoni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id ADB15FF819;
-        Tue, 21 Dec 2021 15:42:21 +0000 (UTC)
-Date:   Tue, 21 Dec 2021 16:42:20 +0100
-From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        "Rob Herring" <robh@kernel.org>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/11] PCI: pci-bridge-emul: Add support for new flag
- PCI_BRIDGE_EMUL_NO_IO_FORWARD
-Message-ID: <20211221164220.33d1589a@windsurf>
-In-Reply-To: <20211221141455.30011-5-pali@kernel.org>
-References: <20211221141455.30011-1-pali@kernel.org>
-        <20211221141455.30011-5-pali@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S236422AbhLUPno (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 10:43:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236412AbhLUPno (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 10:43:44 -0500
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A96C6C061574
+        for <linux-pci@vger.kernel.org>; Tue, 21 Dec 2021 07:43:43 -0800 (PST)
+Received: by mail-qk1-x734.google.com with SMTP id 131so1663073qkk.2
+        for <linux-pci@vger.kernel.org>; Tue, 21 Dec 2021 07:43:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TM/EYNiDRj3pjelGxdOL0frKQz44QCfMf7gv+XrXNos=;
+        b=F1zsFtSE/NrsuidTSveNM0gDl67h08lj4dDeshbc+YE7OSUlu8s+0Y5iQn23G3bhNF
+         L7/wa0r6XY1bE9rXMFZfTu+Fly1u4zwbeabaGym5nNemI2EFNhoiXlaiBafNGzJ1pQTP
+         2NOR8VcChlrzxpu+4bESwQClbVMPNNWZEmiSRYvtoPxULTf3nt37FlKW9Q6pfO9iYgbF
+         RF4ZUgWzsXH2D1zT2fqvqSyfy+nAKOb2IS+rLrdYuLLa6toakJZdsUj51MwzHzPBkLlL
+         HjQtQKKZ5i8anDKE5BUSwmBMZOsyOFDsDI7yRi2g62QjU2REivitJy90PH6tgx9HdEAF
+         0qog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TM/EYNiDRj3pjelGxdOL0frKQz44QCfMf7gv+XrXNos=;
+        b=o/Yq1ak7aCW3HqgGAMk0K6taTzGgFcmCG7phOff1eVZX0gH9x+lDZdjio/eB+/rCok
+         HUjiTbHSZkEFZKOKmGZzKOr3dS/PYjsJN40lm+ChXQWXinZ5DkM5tZXeAzOB1W+4vmqC
+         9usP191blkT4WliI9JA0uql06OZkNNRY00fh5CpBtJxxNHytgBk7/L8q5YpwlenF/QHl
+         H6zqUiY5xUzXatem/ruV1SI8FDnTIBr690nKHkF7V5Eze0TIATVLKorrFKQReq9CgCEf
+         7w7H9oHqKKioeDmmbTumKsUc8/maT4uikarVTqAsKaTuOD1x0wQKicdEDeB3pMYjZSPR
+         9Nog==
+X-Gm-Message-State: AOAM530wkhv+Jo2jVzG/2YZ2z/mwio5A6ug2kmg275d00CZ28ps4oJLy
+        U4jigENUzsRKZI99UQEXQ/0LUOAzI6CYImAdaCXhSg==
+X-Google-Smtp-Source: ABdhPJwWSdSLT82NkDeKpmGZRZMmiKAk2WV6/DtmpRrClrcP7y9OglFbZ/77UwSWGk2t4gOg0h3W0exFjn2hG+lTn5U=
+X-Received: by 2002:a05:620a:4101:: with SMTP id j1mr2357042qko.593.1640101422825;
+ Tue, 21 Dec 2021 07:43:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20211218141024.500952-1-dmitry.baryshkov@linaro.org>
+ <20211218141024.500952-2-dmitry.baryshkov@linaro.org> <YcHr0/W0QqRlj1Ji@robh.at.kernel.org>
+In-Reply-To: <YcHr0/W0QqRlj1Ji@robh.at.kernel.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Tue, 21 Dec 2021 18:43:31 +0300
+Message-ID: <CAA8EJpr1wfW2CLSjBjJdMhhgBmcnMRkx=x5SAC_4LDQCHw1_qA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] dt-bindings: pci: qcom: Document PCIe bindings for SM8450
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-phy@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 21 Dec 2021 15:14:48 +0100
-Pali Rohár <pali@kernel.org> wrote:
+On Tue, 21 Dec 2021 at 17:59, Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, Dec 18, 2021 at 05:10:20PM +0300, Dmitry Baryshkov wrote:
+> > Document the PCIe DT bindings for SM8450 SoC. The PCIe IP is similar
+> > to the one used on SM8250, however unlike SM8250, PCIe0 and PCIe1 use
+> > different set of clocks, so two compatible entries are required.
+> >
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >  .../devicetree/bindings/pci/qcom,pcie.txt     | 22 ++++++++++++++++++-
+> >  1 file changed, 21 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> > index a0ae024c2d0c..0adb56d5645e 100644
+> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> > @@ -15,6 +15,8 @@
+> >                       - "qcom,pcie-sc8180x" for sc8180x
+> >                       - "qcom,pcie-sdm845" for sdm845
+> >                       - "qcom,pcie-sm8250" for sm8250
+> > +                     - "qcom,pcie-sm8450-pcie0" for PCIe0 on sm8450
+> > +                     - "qcom,pcie-sm8450-pcie1" for PCIe1 on sm8450
+>
+> What's the difference between the two?
 
-> Like PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD, this new flag specifies that
-> emulated PCI bridge does not support forwarding of IO requests in given
-> range between primary and secondary buses. This flag should be used as
-> argument for pci_bridge_emul_init() for hardware setup without IO support.
-> 
-> Setting this flag cause that IO base and limit registers are read-only.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
+Clocks used by these hosts. Quoting the definition:
 
-Looks good. As said on PATCH 03/11, perhaps just a snippet of
-documentation in pci-bridge-emul.h to describe the semantic of the new
-flag.
++                     - "aggre0"      Aggre NoC PCIe0 AXI clock, only
+for sm8450-pcie0
++                     - "aggre1"      Aggre NoC PCIe1 AXI clock
 
-Thomas
+aggre1 is used by both pcie0 and pcie1, while aggre0 is used only by pcie0.
+
+>
+> >                       - "qcom,pcie-ipq6018" for ipq6018
+> >
+> >  - reg:
+> > @@ -169,6 +171,24 @@
+> >                       - "ddrss_sf_tbu" PCIe SF TBU clock
+> >                       - "pipe"        PIPE clock
+> >
+> > +- clock-names:
+> > +     Usage: required for sm8450-pcie0 and sm8450-pcie1
+> > +     Value type: <stringlist>
+> > +     Definition: Should contain the following entries
+> > +                     - "aux"         Auxiliary clock
+> > +                     - "cfg"         Configuration clock
+> > +                     - "bus_master"  Master AXI clock
+> > +                     - "bus_slave"   Slave AXI clock
+> > +                     - "slave_q2a"   Slave Q2A clock
+> > +                     - "tbu"         PCIe TBU clock
+> > +                     - "ddrss_sf_tbu" PCIe SF TBU clock
+> > +                     - "pipe"        PIPE clock
+> > +                     - "pipe_mux"    PIPE MUX
+> > +                     - "phy_pipe"    PIPE output clock
+> > +                     - "ref"         REFERENCE clock
+> > +                     - "aggre0"      Aggre NoC PCIe0 AXI clock, only for sm8450-pcie0
+> > +                     - "aggre1"      Aggre NoC PCIe1 AXI clock
+> > +
+> >  - resets:
+> >       Usage: required
+> >       Value type: <prop-encoded-array>
+> > @@ -246,7 +266,7 @@
+> >                       - "ahb"                 AHB reset
+> >
+> >  - reset-names:
+> > -     Usage: required for sc8180x, sdm845 and sm8250
+> > +     Usage: required for sc8180x, sdm845, sm8250 and sm8450
+> >       Value type: <stringlist>
+> >       Definition: Should contain the following entries
+> >                       - "pci"                 PCIe core reset
+> > --
+> > 2.34.1
+> >
+> >
+
+
+
 -- 
-Thomas Petazzoni, co-owner and CEO, Bootlin
-Embedded Linux and Kernel engineering and training
-https://bootlin.com
+With best wishes
+Dmitry
