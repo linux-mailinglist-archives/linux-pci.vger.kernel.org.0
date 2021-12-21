@@ -2,59 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D65947BC8B
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 10:08:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5591847BCC2
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 10:20:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236123AbhLUJHu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 04:07:50 -0500
-Received: from verein.lst.de ([213.95.11.211]:46099 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236118AbhLUJHu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Dec 2021 04:07:50 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 362B168B05; Tue, 21 Dec 2021 10:07:47 +0100 (CET)
-Date:   Tue, 21 Dec 2021 10:07:46 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Subject: Re: [PATCH v4 23/23] nvme-pci: allow mmaping the CMB in userspace
-Message-ID: <20211221090746.GF7949@lst.de>
-References: <20211117215410.3695-1-logang@deltatee.com> <20211117215410.3695-24-logang@deltatee.com>
+        id S233940AbhLUJUN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 04:20:13 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:42588 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232251AbhLUJUM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 04:20:12 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 51B02B8122D;
+        Tue, 21 Dec 2021 09:20:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97C04C36AE2;
+        Tue, 21 Dec 2021 09:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1640078410;
+        bh=P1yCCErD4lYWu0EijWCZ4FDcQAXFbefAwLxWZZoGCyg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hs9Q/TkC/LQxeWIhrP+QGH0wT//ifVTvZ8zutDvv/3S0EFcP3/b91tttMUGsxDwgF
+         2sg0bnBwJfURz6LbptKTJX7t+jbuZaOpHg52F4OKK9vc2QHpWpCRn98/qqN7mZw0+b
+         5ab3vh9tZCWkCwKNk0ADZG9pZj1dhmT4td6xi1eU=
+Date:   Tue, 21 Dec 2021 10:20:07 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>
+Subject: Re: [PATCH V4 2/6] driver core: auxiliary bus: Add driver data
+ helpers
+Message-ID: <YcGcR7dLDD7avsnn@kroah.com>
+References: <20211216023146.2361174-1-david.e.box@linux.intel.com>
+ <20211216023146.2361174-3-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211117215410.3695-24-logang@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20211216023146.2361174-3-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
->  	file->private_data = ctrl;
-> +
-> +	if (ctrl->ops->mmap_file_open)
-> +		ctrl->ops->mmap_file_open(ctrl, file);
-> +
+On Wed, Dec 15, 2021 at 06:31:42PM -0800, David E. Box wrote:
+> Adds get/set driver data helpers for auxiliary devices.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Mark Gross <markgross@kernel.org>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
 
-The callout doesn't really have anything to do with mmap, that is just
-how you use it.
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
