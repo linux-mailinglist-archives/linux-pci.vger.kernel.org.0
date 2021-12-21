@@ -2,145 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA9B647C99C
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Dec 2021 00:17:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F01147C9C7
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Dec 2021 00:35:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236900AbhLUXRG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 18:17:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236827AbhLUXRF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 18:17:05 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938FBC061574;
-        Tue, 21 Dec 2021 15:17:05 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 65371B817D0;
-        Tue, 21 Dec 2021 23:17:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3ED1C36AE9;
-        Tue, 21 Dec 2021 23:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640128623;
-        bh=eLpwNszMuOuFEkO+RZzNfIdGgdQR36iwWtCmciSz6/M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PSk8Xv5BtvoaVFwebGYKgMvw8X8f2J268mCFiUliSj7V8seeRzBhRP26sn3TaPtiO
-         t2EKjS4LmdBFZpVZMhDyxhtFJq2As+KZKrqyZugS2IGWUUQFEXa8WBQ8a6RIOqC5E0
-         Ct7KS1kPcuxcCjtTQomDaLYUwSY+kkBHKfvVDigsWiAoqam/3ncqtEXGBj11BmiTmu
-         CImW9ns+J1zL9R+i/h0zaRWIH8homEVTVX15SP0n6bQhMMcfXR0U7Q2XlDwFf+Fmeq
-         apI2M6zrudl1fOrMgzhcFA8Z9NjaMK0xO9/u6s+TzL/NyLc6A1yr8LI3Xf9sf5yVqA
-         SuVfgP+j7oJxg==
-Date:   Tue, 21 Dec 2021 17:17:01 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
-        lenb@kernel.org, rjw@rjwysocki.net, bhelgaas@google.com,
-        zhangliguang@linux.alibaba.com, zhuo.song@linux.alibaba.com,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [RESEND PATCH v4] ACPI: Move sdei_init and ghes_init ahead to
- handle platform errors earlier
-Message-ID: <20211221231701.GA1125162@bhelgaas>
+        id S238025AbhLUXfQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 18:35:16 -0500
+Received: from mail-qk1-f170.google.com ([209.85.222.170]:34530 "EHLO
+        mail-qk1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238006AbhLUXfP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 18:35:15 -0500
+Received: by mail-qk1-f170.google.com with SMTP id b85so671943qkc.1;
+        Tue, 21 Dec 2021 15:35:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qyanZg8s5W+8gtKaR/fQ6jVlMg3RFbNcdfj1FBUpzJQ=;
+        b=DPVHK3eKQrymXoErnB8m5AhrpH7IRASf1UGpCud5hyfJO06v3CaKIuaT3tNHykBHzR
+         MkQe54TvD5lnwm0PD5h+hINVjA08hqWNd7IGxAnjf7SE095JKJaaX26VL9Eu25uSFtA8
+         lS1fgHmvVWCLcojeMa+ZJbaNPHsqs1u06a1iD5rripWwe2eL0xyyQDC4HZ70poqm7ofT
+         tXRWmoXvaiZt7SoM+9FUIHLWg2RcTyNLYEskbrG9AwnJpERyNmfAL15+FsemD1U283NF
+         KFryL/8crGcivMGkmzdCq59Yb5vwATspy/87z4A0aC85iFabSea8RfYv1s8iGaXMbbLy
+         FTvw==
+X-Gm-Message-State: AOAM530hN7CVXYvXKZhrm1pfVP8Kk8AQGbM87KfU+EUgsJvNNptOK6up
+        SfxBP6Na75JINXhTTFGWuw==
+X-Google-Smtp-Source: ABdhPJyTptN0ibMFOYgCQ8c+Nvty9jYcqWQQe8SaV4rLqX5MHk6Wc/d9/bxsLWY/7Ky6+nkDa/9Yqw==
+X-Received: by 2002:a37:34c:: with SMTP id 73mr507439qkd.726.1640129714870;
+        Tue, 21 Dec 2021 15:35:14 -0800 (PST)
+Received: from robh.at.kernel.org ([24.55.105.145])
+        by smtp.gmail.com with ESMTPSA id c22sm312771qtd.76.2021.12.21.15.35.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Dec 2021 15:35:14 -0800 (PST)
+Received: (nullmailer pid 1725609 invoked by uid 1000);
+        Tue, 21 Dec 2021 23:35:12 -0000
+Date:   Tue, 21 Dec 2021 19:35:12 -0400
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        devicetree@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-phy@lists.infradead.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Andy Gross <agross@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] dt-bindings: pci: qcom: Document PCIe bindings
+ for SM8450
+Message-ID: <YcJksCyV11ssaRIF@robh.at.kernel.org>
+References: <20211218141024.500952-1-dmitry.baryshkov@linaro.org>
+ <20211218141024.500952-2-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211216133456.21002-1-xueshuai@linux.alibaba.com>
+In-Reply-To: <20211218141024.500952-2-dmitry.baryshkov@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 16, 2021 at 09:34:56PM +0800, Shuai Xue wrote:
-> On an ACPI system, ACPI is initialised very early from a subsys_initcall(),
-> while SDEI is not ready until a subsys_initcall_sync().
+On Sat, 18 Dec 2021 17:10:20 +0300, Dmitry Baryshkov wrote:
+> Document the PCIe DT bindings for SM8450 SoC. The PCIe IP is similar
+> to the one used on SM8250, however unlike SM8250, PCIe0 and PCIe1 use
+> different set of clocks, so two compatible entries are required.
 > 
-> The SDEI driver provides functions (e.g. apei_sdei_register_ghes,
-> apei_sdei_unregister_ghes) to register or unregister event callback for
-> dispatcher in firmware. When the GHES driver probing, it registers the
-> corresponding callback according to the notification type specified by
-> GHES. If the GHES notification type is SDEI, the GHES driver will call
-> apei_sdei_register_ghes to register event call.
->
-> When the firmware emits an event, it migrates the handling of the event
-> into the kernel at the registered entry-point __sdei_asm_handler. And
-> finally, the kernel will call the registered event callback and return
-> status_code to indicate the status of event handling. SDEI_EV_FAILED
-> indicates that the kernel failed to handle the event.
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie.txt     | 22 ++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
 > 
-> Consequently, when an error occurs during kernel booting, the kernel is
-> unable to handle and report errors until the GHES driver is initialized by
-> device_initcall(), in which the event callback is registered. All errors
-> that occurred before GHES initialization are missed and there is no chance
-> to report and find them again.
-> 
-> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
-> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
-> the estatus memory pool. On the other hand, ghes_init() relies on
-> sdei_init() to detect the SDEI version and the framework for registering
-> and unregistering events.
 
-> By the way, I don't figure out why acpi_hest_init is called in
-> acpi_pci_root_init, it don't rely on any other thing. May it could
-> be moved further, following acpi_iort_init in acpi_init.
-
-I think you should drop the "By the way ..." text or move it after the
-"---" at the bottom of your commit log.  It doesn't help understand
-this patch.
-
-> sdei_init() relies on ACPI table which is initialized
-> subsys_initcall(): acpi_init(), acpi_bus_init(), acpi_load_tables(),
-> acpi_tb_laod_namespace().  May it should be also moved further,
-> after acpi_load_tables.
-
-This text also doesn't seem relevant to this patch.
-
-> In this patch, move sdei_init and ghes_init as far ahead as
-> possible, right after acpi_hest_init().
-
-I'm having a hard time figuring out the reason for this patch.
-
-Apparently the relevant parts are sdei_init() and ghes_init().
-Today they are executed in that order:
-
-  subsys_initcall_sync(sdei_init);
-  device_initcall(ghes_init);
-
-After this patch, they would be executed in the same order, but called
-explicitly instead of as initcalls:
-
-  acpi_pci_root_init()
-  {
-    acpi_hest_init();
-    sdei_init();
-    ghes_init();
-    ...
-
-Explicit calls are certainly better than initcalls, but that doesn't
-seem to be the reason for this patch.
-
-Does this patch fix a bug?  If so, what is the bug?
-
-You say that currently "errors that occur before GHES initialization
-are missed".  Isn't that still true after this patch?  Does this patch
-merely reduce the time before GHES initialization?  If so, I'm
-dubious, because we have to tolerate an arbitrary amount of time
-there.
-
-s/acpi_tb_laod_namespace/acpi_tb_load_namespace/
-
-You use "()" after function names sometimes, but not always.  Please
-do it consistently.
-
-> -device_initcall(ghes_init);
-
->  void __init acpi_pci_root_init(void)
->  {
->  	acpi_hest_init();
-> +	sdei_init();
-> +	ghes_init();
-
-What's the connection between PCI, SDEI, and GHES?  As far as I can
-tell, SDEI and GHES are not PCI-specific, so it doesn't seem like they
-should be initialized here in acpi_pci_root_init().
-
-> -subsys_initcall_sync(sdei_init);
+Reviewed-by: Rob Herring <robh@kernel.org>
