@@ -2,46 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D99447C5F9
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 19:10:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF19A47C676
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 19:23:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236979AbhLUSKi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 13:10:38 -0500
-Received: from mga02.intel.com ([134.134.136.20]:29388 "EHLO mga02.intel.com"
+        id S241278AbhLUSXc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 13:23:32 -0500
+Received: from mga03.intel.com ([134.134.136.65]:44983 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236910AbhLUSKh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Dec 2021 13:10:37 -0500
+        id S241271AbhLUSXb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Dec 2021 13:23:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640110237; x=1671646237;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5rAkGo7m3btbz/rVfCE7AaZjZ9uyiTmkMcIFoB+AHtw=;
-  b=HRz7We4tjYDxmxn/m/qNkL4MlSekvmCG4y6J/KRUXUdDx2OIiiWzn4/V
-   vmevis2iRe/7aflkySb4nnZhbN5NpVAjrVBX3qvjJfO+SuISoner5ZND/
-   nZGOa4iLBm6MjyUCH8lfw4xxtQY7O1NiaX2zU3TVTRbRMI2TiJE7VfBlg
-   YGXeBRa+OaNZcJz6wTMtJmZKqF7++RJoDDyip82ibe9S0PH8guNUCfKZT
-   /BhBZtRQtpP3lKKb4xtDRyPnoriFLtpiOoMKTWTXLSlBFbXl70J+ibcYq
-   l2EoZ2ZplJhgyEFfz26DEz1rzSymoJRURG03KGIoJUZrKJOlYcAEMixaC
+  t=1640111010; x=1671647010;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7+5zVsIZ/ITzZCzzI7K9rUDfhR9Qdw/EbbOne19K668=;
+  b=gVs8+190OiL8EQPn7U2X7kAYX2f7tb7ofUAqLUbl3h9SL7fE6vU/1Yv5
+   kGhegiWN8c4OWCZqAtbqQEdvxW3u/2/wFIoBtdWSCRKjlLv+j2PEqt7oc
+   eRq7z4S9hm3OySKM9JBdgG9RwN30Uy6VOywzrmw0qxU/IQLMmAD8Iyv85
+   fZGV2uhPtPeyRq4WfsSxZsnK8U7bpfxlsXuDc16NJ1OnWZtx/UiYvPydV
+   g7xNi1rC/0FPLFl0N3pwztd32X//F7o/gM0hu3XecDLAJIWPYS3nf7k3q
+   P6BdgAZhG/Kb25XdjQi3jWr4ivlX0ALzrr5fXpXNDFn0voAtkpAGmxAKa
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10205"; a="227753031"
+X-IronPort-AV: E=McAfee;i="6200,9189,10205"; a="240418045"
 X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
-   d="scan'208";a="227753031"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 09:50:36 -0800
+   d="scan'208";a="240418045"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 10:15:37 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
-   d="scan'208";a="586768160"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 09:50:32 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mzjG5-000WYP-OM;
-        Tue, 21 Dec 2021 19:49:05 +0200
-Date:   Tue, 21 Dec 2021 19:49:05 +0200
+   d="scan'208";a="548200384"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 21 Dec 2021 10:15:31 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id D30F9190; Tue, 21 Dec 2021 20:15:39 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Tan Jui Nee <jui.nee.tan@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -54,34 +53,100 @@ To:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
 Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
         Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v2 1/8] PCI: Introduce pci_bus_*() printing macros when
- device is not available
-Message-ID: <YcITkYx6dnjRjdCd@smile.fi.intel.com>
-References: <20211221173945.53674-1-andriy.shevchenko@linux.intel.com>
+        Mark Gross <markgross@kernel.org>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
+Date:   Tue, 21 Dec 2021 20:15:18 +0200
+Message-Id: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211221173945.53674-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 07:39:38PM +0200, Andy Shevchenko wrote:
-> In some cases PCI device structure is not available and we want to print
-> information based on the bus and devfn parameters. For this cases introduce
-> pci_bus_*() printing macros and replace in existing users.
+There are a few users and at least one more is coming that would
+like to utilize P2SB mechanism of hiding and unhiding a device from
+the PCI configuration space.
 
-Please, ignore this version (the code will be kept the same in v3, but what
-is missed is cover letter and changelog).
+Here is the series to deduplicate existing users and provide
+a generic way for new comers.
 
-I will send it as soon as I prepare the cover letter.
+It also includes a patch to enable GPIO controllers on Apollo Lake
+when it's used with ABL bootloader w/o ACPI support.
 
-It also missed Henning in the Cc list.
+The patch that bring the helper ("platform/x86/intel: Add Primary
+to Sideband (P2SB) bridge support") has a commit message that
+sheds a light on what the P2SB is and why this is needed.
+
+Please, comment on the approach and individual patches.
+
+The changes made in v2 do not change the main idea and the functionality
+in a big scale. What we need is probably one more (RE-)test done by Henning.
+I hope to have it merged to v5.17-rc1 that Siemens can develop their changes
+based on this series.
+
+I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+since we have an ACPI device for GPIO I do not see any attempts to recreate
+one).
+
+(Since it's cross subsystem, the PDx86 seems the main one and
+I think it makes sense to route it throught it with immutable
+tag or branch provided for the others).
+
+Bjorn, are you okay with this approach and the commit message in the main
+patch?
+
+Changes in v3:
+- resent with cover letter
+
+Changes in v2:
+- added parentheses around bus in macros (Joe)
+- added tag (Jean)
+- fixed indentation and wrapping in the header (Christoph)
+- moved out of PCI realm to PDx86 as the best common denominator (Bjorn)
+- added a verbose commit message to explain P2SB thingy (Bjorn)
+- converted first parameter from pci_dev to pci_bus
+- made first two parameters (bus and devfn) optional (Henning, Lee)
+- added Intel pin control patch to the series (Henning, Mika)
+- fixed English style in the commit message of one of MFD patch (Lee)
+- added tags to my MFD LPC ICH patches (Lee)
+- used consistently (c) (Lee)
+- made indexing for MFD cell and resource arrays (Lee)
+- fixed the resource size in i801 (Jean)
+
+Andy Shevchenko (6):
+  PCI: Introduce pci_bus_*() printing macros when device is not
+    available
+  PCI: Convert __pci_read_base() to __pci_bus_read_base()
+  pinctrl: intel: Check against matching data instead of ACPI companion
+  mfd: lpc_ich: Factor out lpc_ich_enable_spi_write()
+  mfd: lpc_ich: Switch to generic p2sb_bar()
+  i2c: i801: convert to use common P2SB accessor
+
+Jonathan Yong (1):
+  platform/x86/intel: Add Primary to Sideband (P2SB) bridge support
+
+Tan Jui Nee (1):
+  mfd: lpc_ich: Add support for pinctrl in non-ACPI system
+
+ drivers/i2c/busses/Kconfig             |   1 +
+ drivers/i2c/busses/i2c-i801.c          |  39 ++-----
+ drivers/mfd/Kconfig                    |   1 +
+ drivers/mfd/lpc_ich.c                  | 136 +++++++++++++++++++++----
+ drivers/pci/pci.h                      |  16 ++-
+ drivers/pci/probe.c                    |  81 +++++++--------
+ drivers/pinctrl/intel/pinctrl-intel.c  |  14 ++-
+ drivers/platform/x86/intel/Kconfig     |  12 +++
+ drivers/platform/x86/intel/Makefile    |   2 +
+ drivers/platform/x86/intel/p2sb.c      |  99 ++++++++++++++++++
+ include/linux/pci.h                    |   8 ++
+ include/linux/platform_data/x86/p2sb.h |  27 +++++
+ 12 files changed, 335 insertions(+), 101 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/p2sb.c
+ create mode 100644 include/linux/platform_data/x86/p2sb.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
