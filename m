@@ -2,144 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6B0747C40C
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 17:45:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C5F247C41D
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 17:49:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239962AbhLUQpA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 11:45:00 -0500
-Received: from mga18.intel.com ([134.134.136.126]:55770 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239955AbhLUQo7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Dec 2021 11:44:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640105099; x=1671641099;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Q4tyfixgHyEhzlQ+wu6MKp8Bif+Yw8I7N5uaDrDgfl8=;
-  b=Ol1VccmRHudcHXUXwS9xA2vQYDu3GvVYGROcHaHCrot1/yXnwFFItNAZ
-   ngLK4HhVdF+o+una7YhVxCdy8QKV1zNmkdgNtbW7gYkbGlwXSuoGHjY1f
-   galsDjf2O/QXOLp58hDcWYbUBAEZu+KQ5tucDryMB4O0GdHoKKUw9gqcm
-   r3VVIIJLdTvDHQwRYJTtT+7MbEmdeuCeZwriQ4Npfur9f+/zUkmE+g/M0
-   nAH96Pd2wmYVetQgpwcXucKya9+D/J/Z6vdx/Y4eE6VigBftseVpEQy4S
-   0UhsVKSX5AcjkADijYo9fnO7snm0lVEn3erZD7rvz/mX2hBSa29TDrH3q
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10205"; a="227279235"
-X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
-   d="scan'208";a="227279235"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 08:44:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
-   d="scan'208";a="755869271"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Dec 2021 08:44:57 -0800
-Received: from abailey-MOBL.amr.corp.intel.com (unknown [10.209.52.201])
-        by linux.intel.com (Postfix) with ESMTP id 74F865807C5;
-        Tue, 21 Dec 2021 08:44:57 -0800 (PST)
-Message-ID: <e9648546c3fb751954e411dfa392f0e0f90f0c85.camel@linux.intel.com>
-Subject: Re: [PATCH RESEND V2 3/6] platform/x86/intel: Move intel_pmt from
- MFD to Auxiliary Bus
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
-        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
-        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Mark Gross <markgross@kernel.org>
-Date:   Tue, 21 Dec 2021 08:44:57 -0800
-In-Reply-To: <YcGEaH0oAAocziU2@kroah.com>
-References: <20211208015015.891275-1-david.e.box@linux.intel.com>
-         <20211208015015.891275-4-david.e.box@linux.intel.com>
-         <YbDbql39x7Kw6iAC@kroah.com>
-         <7e78e6311cb0d261892f7361a1ef10130436f358.camel@linux.intel.com>
-         <YbD1NsYHbU8FvtTN@kroah.com>
-         <a70956e1c4da10603e29087e893cbae62ce82631.camel@linux.intel.com>
-         <YbEFuN7fwdiNI8vW@kroah.com>
-         <622887d53eaf6e6ae36354bfa0ed483df1cd9214.camel@linux.intel.com>
-         <YcGEaH0oAAocziU2@kroah.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        id S239999AbhLUQtC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 11:49:02 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4317 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236468AbhLUQtB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 11:49:01 -0500
+Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JJMnD4ZC8z6GDFT;
+        Wed, 22 Dec 2021 00:47:12 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Tue, 21 Dec 2021 17:48:59 +0100
+Received: from [10.195.32.222] (10.195.32.222) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Tue, 21 Dec 2021 16:48:58 +0000
+Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
+To:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Arnd Bergmann <arnd@kernel.org>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
+ <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com>
+ <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
+ <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com>
+ <CAK8P3a08Zcyx0J4_LGAfU_AtUyEK+XtQJxYBQ52VXfWu8-o8_w@mail.gmail.com>
+ <dd2d49ef-3154-3c87-67b9-c134567ba947@huawei.com>
+ <CAK8P3a3KTaa-AwCOjhaASMx63B3DUBZCZe6RKWk-=Qu7xr_ijQ@mail.gmail.com>
+ <47744c7bce7b7bb37edee7f249d61dc57ac1fbc5.camel@linux.ibm.com>
+ <CAK8P3a2eZ25PLSqEf_wmGs912WK8xRMuQHik2yAKj-WRQnDuRg@mail.gmail.com>
+ <849d70bddde1cfcb3ab1163970a148ff447ee94b.camel@linux.ibm.com>
+ <53746e42-23a2-049d-9b38-dcfbaaae728f@huawei.com>
+ <CAK8P3a0dnXX7Cx_kJ_yLAoQFCxoM488Ze-L+5v1m0YeyjF4zqw@mail.gmail.com>
+ <cd9310ab-6012-a410-2bfc-a2f8dd8d62f9@huawei.com>
+ <CAK8P3a23jsT-=v8QDxSZYcj=ujhtBFXjACNLKxQybaThiBsFig@mail.gmail.com>
+ <d45ee18a-1faa-9c56-071d-18f5737d225c@huawei.com>
+ <11e180449d82e5276586cdaab5e70a1c1b3adb42.camel@linux.ibm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <3d543c90-383f-647a-5cd4-f7fd4e7246ad@huawei.com>
+Date:   Tue, 21 Dec 2021 16:48:57 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
+In-Reply-To: <11e180449d82e5276586cdaab5e70a1c1b3adb42.camel@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.195.32.222]
+X-ClientProxiedBy: lhreml750-chm.china.huawei.com (10.201.108.200) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2021-12-21 at 08:38 +0100, Greg KH wrote:
-> On Wed, Dec 08, 2021 at 01:30:06PM -0800, David E. Box wrote:
-> > On Wed, 2021-12-08 at 20:21 +0100, Greg KH wrote:
-> > > On Wed, Dec 08, 2021 at 11:09:48AM -0800, David E. Box wrote:
-> > > > On Wed, 2021-12-08 at 19:11 +0100, Greg KH wrote:
-> > > > > On Wed, Dec 08, 2021 at 09:47:26AM -0800, David E. Box wrote:
-> > > > > > On Wed, 2021-12-08 at 17:22 +0100, Greg KH wrote:
-> > > > > > > On Tue, Dec 07, 2021 at 05:50:12PM -0800, David E. Box wrote:
-> > > > > > > > +static struct pci_driver intel_vsec_pci_driver = {
-> > > > > > > > +       .name = "intel_vsec",
-> > > > > > > > +       .id_table = intel_vsec_pci_ids,
-> > > > > > > > +       .probe = intel_vsec_pci_probe,
-> > > > > > > > +};
-> > > > > > > 
-> > > > > > > So when the PCI device is removed from the system you leak
-> > > > > > > resources and
-> > > > > > > have dangling devices?
-> > > > > > 
-> > > > > > No.
-> > > > > > 
-> > > > > > > Why no PCI remove driver callback?
-> > > > > > 
-> > > > > > After probe all resources are device managed. There's nothing to
-> > > > > > explicitly clean up. When
-> > > > > > the
-> > > > > > PCI
-> > > > > > device is removed, all aux devices are automatically removed. This
-> > > > > > is the case for the SDSi
-> > > > > > driver
-> > > > > > as well.
-> > > > > 
-> > > > > Where is the "automatic cleanup" happening?  As this pci driver is
-> > > > > bound
-> > > > > to the PCI device, when the device is removed, what is called in this
-> > > > > driver to remove the resources allocated in the probe callback?
-> > > > > 
-> > > > > confused,
-> > > > 
-> > > > devm_add_action_or_reset(&pdev->dev, intel_vsec_remove_aux, auxdev)
-> > > 
-> > > Wow that is opaque.  Why not do it on remove instead?
-> > 
-> > This code is common for auxdev cleanup. AFAICT most auxiliary bus code is
-> > done by drivers that have
-> > some other primary function. They clean up their primary function resources
-> > in remove, but they
-> > clean up the auxdev using the method above. In this case the sole purpose of
-> > this driver is to
-> > create the auxdev. There are no other resources beyond what the auxdev is
-> > using.
-> > 
-> > Adding runtime pm to the pci driver will change this. Remove will be needed
-> > then.
-> 
-> And who will notice that being required when that happens?
-> 
-> Why is there no runtime PM for this driver?  Do you not care about power
-> consumption?  :)
+On 20/12/2021 09:27, Niklas Schnelle wrote:
+>>   > My feeling is that in this case we want some other dependency, e.g. a
+>>   > new CONFIG_LPC. It should actually be possible to use this driver on
+>>   > any machine with an LPC bus, which would by definition be the primary
+>>   > I/O space, so it should be possible to load it on Arm64.
+>>
+>> You did suggest HARDCODED_IOPORT earlier in this thread, and the
+>> definition/premise there seemed sensible to me.
+>>
+>> Anyway it seems practical to make all these changes in a single series,
+>> so need a way forward as Niklas has no such changes for this additional
+>> kconfig option.
+>>
+>> As a start, may I suggest we at least have Niklas' patch committed to a
+>> dev branch based on -next or latest mainline release for further analysis?
+>>
+>> Thanks,
+>> John
+>>
+>>
+> My plan would be to split the patch up into more manageable pieces as
+> suggested by Arnd plus of course fixes like the missing ARM select. As
+> Arnd suggested I'll split the HAS_IOPORT additions into the initial
+> introduction plus arch selects and then the HAS_IOPORT dependencies per
+> subsytem. I think these per subsystem dependency patches then would be
+> a great place to find drivers which should have a different dependency
+> be it on LPC or a newly introduced HARDCODED_IOPORT. The thing is we
+> can find and check HAS_IOPORT dependencies easily but it's hard to find
+> HARDCODED_IOPORT so I think the lattter should be a refinement of the
+> former. It can of course still go in as a single series. I'll
+> definitely make the next iteration available as a git branch.
 
-Of course. :)
+I'll do an audit for what would require HARDCODED_IOPORT to understand 
+the scope while you can continue the work on your current path.
 
-There's a backlog of patches waiting for this series. One adds support for the
-telemetry device (an auxdev) on the DG2 GPU. This device requires runtime pm in
-order for the slot to go D3. But this also requires changes to the telemetry
-driver in order for runtime pm to be handled correctly. These and other patches,
-including a series to have all current aux drivers use the new drvdata helpers,
-are waiting for this.
-
-David
-
-> 
-> thanks,
-> 
-> greg k-h
+Thanks,
+john
 
