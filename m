@@ -2,126 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B38E147C215
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 15:59:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9871447C246
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 16:10:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235665AbhLUO7g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 09:59:36 -0500
-Received: from mail-qt1-f169.google.com ([209.85.160.169]:44883 "EHLO
-        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238768AbhLUO7f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 09:59:35 -0500
-Received: by mail-qt1-f169.google.com with SMTP id a1so13018085qtx.11;
-        Tue, 21 Dec 2021 06:59:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KdY8eJ3b8gIHmOjY8jOpNQudFdqG5PeN9eLzoM3qKnw=;
-        b=Ka4G39Yt6Dtn8rdp/9o4zCt6qlVpvjWtA3kZba9NKcAWVB9v2WwEyxOucQNmD2B7hB
-         oJglnGreoxtYS0Njyl56jSxXB04UwZpa3Jmkb0BxQnKg3PMyNsGqvapzgFOo4oViTJHP
-         1mi4rCToho4XsdqqNpBP485QewQIKFUsn/3zdx1bOZKxlwQc+jK0ny6h3QhYvDet7t/Y
-         OYo1ksEmsbVyxj+ryVHC5Y/Yd77sVthpwvaG2mGJxlKdLZS/vJWbFV1QbuD16E+EZkRA
-         qmO853ChLNjljvK+nZIMSgL3dmNYX5T0ckBYcWF4bcWZ4Y2pg4d1xhhdnQRTQ/Iygj06
-         qIWQ==
-X-Gm-Message-State: AOAM533xTmz2VnpY7z9+r/blkz3xabYJaIC8A+GsNePl2jPOJrCL9glG
-        qZLrh4XqchCh+MXEzh9ixqbP2AWjhNMP
-X-Google-Smtp-Source: ABdhPJwz8IpgYskPYVVDXd8Hm6lcmXvWy1o3h4wh8B+dYaiYsY9n+91H5bL0oPXDn0Bz3Q9J61mRvQ==
-X-Received: by 2002:ac8:5881:: with SMTP id t1mr2510729qta.414.1640098774575;
-        Tue, 21 Dec 2021 06:59:34 -0800 (PST)
-Received: from robh.at.kernel.org ([24.55.105.145])
-        by smtp.gmail.com with ESMTPSA id e14sm532762qts.15.2021.12.21.06.59.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Dec 2021 06:59:33 -0800 (PST)
-Received: (nullmailer pid 1408248 invoked by uid 1000);
-        Tue, 21 Dec 2021 14:59:31 -0000
-Date:   Tue, 21 Dec 2021 10:59:31 -0400
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S238956AbhLUPKJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 10:10:09 -0500
+Received: from mga02.intel.com ([134.134.136.20]:9532 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235683AbhLUPKI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Dec 2021 10:10:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640099408; x=1671635408;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=P3XoF6yKs58kRefwZIbHOEan+69dqpkFZ2rWnl4oE7c=;
+  b=RPO9O5aiZmmEwEHzQeXA+TwjZBsnrSAAZ8fVovKKjvf9xkfdEEhqINSA
+   DW8iPX82wbXe545PzFMgnKFLMG1CWcx5MqhQnOWUPAtY4NDpHe5kb9utw
+   OmRoJThj7TkV7faVOWoFitK2eD5LVo1PVfGOhaiPZhtS8qlSHuAY4M/ku
+   oeQbmJxwm1cC7A/ihySldIEhOntjkhEVSmRg9B3EJex1hjQnZ2vYBslZs
+   RoycSREzX0vZ24HS6FSz8fgfbRwBtskHY0hi33M9ITk7gjUeqIaxIw8w+
+   ZuLgvIg3P6Vv3ZYjNGkge2qxMVrqDmOqfHquWCxRrbO0YD13xV05cufLy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10204"; a="227703433"
+X-IronPort-AV: E=Sophos;i="5.88,223,1635231600"; 
+   d="scan'208";a="227703433"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 07:09:58 -0800
+X-IronPort-AV: E=Sophos;i="5.88,223,1635231600"; 
+   d="scan'208";a="548094670"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 07:09:55 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mzgkf-000T09-Ak;
+        Tue, 21 Dec 2021 17:08:29 +0200
+Date:   Tue, 21 Dec 2021 17:08:29 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH v5 1/5] dt-bindings: pci: qcom: Document PCIe bindings
- for SM8450
-Message-ID: <YcHr0/W0QqRlj1Ji@robh.at.kernel.org>
-References: <20211218141024.500952-1-dmitry.baryshkov@linaro.org>
- <20211218141024.500952-2-dmitry.baryshkov@linaro.org>
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, Peter Tyser <ptyser@xes-inc.com>,
+        hdegoede@redhat.com, henning.schild@siemens.com
+Subject: Re: [PATCH v1 7/7] i2c: i801: convert to use common P2SB accessor
+Message-ID: <YcHt7YWCjFaNPBw9@smile.fi.intel.com>
+References: <20210308122020.57071-1-andriy.shevchenko@linux.intel.com>
+ <20210308122020.57071-8-andriy.shevchenko@linux.intel.com>
+ <20210310155145.513a7165@endymion>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211218141024.500952-2-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20210310155145.513a7165@endymion>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Dec 18, 2021 at 05:10:20PM +0300, Dmitry Baryshkov wrote:
-> Document the PCIe DT bindings for SM8450 SoC. The PCIe IP is similar
-> to the one used on SM8250, however unlike SM8250, PCIe0 and PCIe1 use
-> different set of clocks, so two compatible entries are required.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie.txt     | 22 ++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> index a0ae024c2d0c..0adb56d5645e 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> @@ -15,6 +15,8 @@
->  			- "qcom,pcie-sc8180x" for sc8180x
->  			- "qcom,pcie-sdm845" for sdm845
->  			- "qcom,pcie-sm8250" for sm8250
-> +			- "qcom,pcie-sm8450-pcie0" for PCIe0 on sm8450
-> +			- "qcom,pcie-sm8450-pcie1" for PCIe1 on sm8450
+On Wed, Mar 10, 2021 at 03:51:45PM +0100, Jean Delvare wrote:
+> On Mon,  8 Mar 2021 14:20:20 +0200, Andy Shevchenko wrote:
 
-What's the difference between the two?
+...
 
->  			- "qcom,pcie-ipq6018" for ipq6018
->  
->  - reg:
-> @@ -169,6 +171,24 @@
->  			- "ddrss_sf_tbu" PCIe SF TBU clock
->  			- "pipe"	PIPE clock
->  
-> +- clock-names:
-> +	Usage: required for sm8450-pcie0 and sm8450-pcie1
-> +	Value type: <stringlist>
-> +	Definition: Should contain the following entries
-> +			- "aux"         Auxiliary clock
-> +			- "cfg"         Configuration clock
-> +			- "bus_master"  Master AXI clock
-> +			- "bus_slave"   Slave AXI clock
-> +			- "slave_q2a"   Slave Q2A clock
-> +			- "tbu"         PCIe TBU clock
-> +			- "ddrss_sf_tbu" PCIe SF TBU clock
-> +			- "pipe"        PIPE clock
-> +			- "pipe_mux"    PIPE MUX
-> +			- "phy_pipe"    PIPE output clock
-> +			- "ref"         REFERENCE clock
-> +			- "aggre0"	Aggre NoC PCIe0 AXI clock, only for sm8450-pcie0
-> +			- "aggre1"	Aggre NoC PCIe1 AXI clock
-> +
->  - resets:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> @@ -246,7 +266,7 @@
->  			- "ahb"			AHB reset
->  
->  - reset-names:
-> -	Usage: required for sc8180x, sdm845 and sm8250
-> +	Usage: required for sc8180x, sdm845, sm8250 and sm8450
->  	Value type: <stringlist>
->  	Definition: Should contain the following entries
->  			- "pci"			PCIe core reset
-> -- 
-> 2.34.1
+> > -	res->end = res->start + 3;
+> > -	res->flags = IORESOURCE_MEM;
+> > +		res->start += SBREG_SMBCTRL;
 > 
+> I can't see why you no longer set res->end and res->flags here. I can
+> imagine that pci_p2sb_bar() may have set the flags for us, but not that
+> ->end is still correct after you fixed up ->start. Am I missing
+> something?
+
+Good catch of the res->end! But flags actually may be MEM64, which the
+original code doesn't properly handle.
+
+...
+
+> >  static const struct x86_cpu_id p2sb_cpu_ids[] = {
+> >  	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	PCI_DEVFN(13, 0)),
+> > +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,	PCI_DEVFN(31, 1)),
+> > +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_D,	PCI_DEVFN(31, 1)),
+> > +	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		PCI_DEVFN(31, 1)),
+> > +	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		PCI_DEVFN(31, 1)),
+> > +	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		PCI_DEVFN(31, 1)),
+> > +	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		PCI_DEVFN(31, 1)),
+> >  	{}
+> >  };
 > 
+> Any reason why this is added in this patch instead of [3/7] (PCI: New
+> Primary to Sideband (P2SB) bridge support library)?
+
+Filling this on demand, no user no entry. I think it's how we assume the code
+to be applied in the kernel.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
