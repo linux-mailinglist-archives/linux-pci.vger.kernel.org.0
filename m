@@ -2,34 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D5CB47C1F9
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 15:56:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C385E47C1F6
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 15:56:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238709AbhLUO4w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 09:56:52 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:38040 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238696AbhLUO4u (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 09:56:50 -0500
+        id S238701AbhLUO4u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 09:56:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238698AbhLUO4t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 09:56:49 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A61C061574;
+        Tue, 21 Dec 2021 06:56:49 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1C523B8171F;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4DBB761642;
         Tue, 21 Dec 2021 14:56:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEDB9C36AE9;
-        Tue, 21 Dec 2021 14:56:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86465C36AFB;
+        Tue, 21 Dec 2021 14:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640098607;
-        bh=xxyZnGOuH63mToYeFJtMrqvVZxip4BN1x7ap3lhZeHA=;
+        s=k20201202; t=1640098608;
+        bh=GN5jKZEodCfeZz6pv/k5h1jk1jhWdZrxDcJsdMUC48E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=idtSM6rMG+OrXmXorvmrw2fZYYLnc+eEStSm/wS7s1kslRoLHbzSL6Sty8lOYWrnq
-         L6ET6iT/H+SBW6t2KdOrIqQI2Ne6+WU4s5sKaZF03lRZD3BfxbacrSlD2vLtd0/SR6
-         YdB5MWPvwMBivOufHymMy83vf27qs9XjPseSXHzaB7T/wGzBq8+ndkeJPoQk8qZpzB
-         fqNdiCauJAN3khpLKyNQAq0vmA6G/N13omI+xyLEGV7Uk3J3S5CkW+FVscRVcQ4BHx
-         0GVWk2kO30/4Zk8SFBLQB7+KOSPx63p4TlkwGzQTosuG5SxLqPVKbaukSpjhQ9Aon4
-         l0uPHjpF1C3Ag==
+        b=AzSpo5/3vAT9c3YzIf6tWgRlrYUm0hDpposd0f4C7oA+n5ZQWEyMwdgt+aFKQb1ii
+         f2mzl8K0g4yEZ+IAd2BxAdR69TT2a2xA/fRULXXaG+P2oyy7mGSt5l9wW43yWa9/l4
+         LjvyAWHeDW7uKM8diu851K6taRP3OcMYugnnPzeZGElH61nY6N+FsuRNY9eKTA+CO9
+         5efYElAR1xwawFQJjpMPytbw4mHAu+walgbPqQ2m0N0Y2WOCWsNrvxXobH3MBSHGg2
+         fiMppdAiyeBg1GY4Wtn5BMfqmVXyutId4PtxlhJmJWd+aVBEwBlRHA03vP9Bm5dgMM
+         GrdQ6r1U4fo/w==
 Received: by pali.im (Postfix)
-        id AAFD62ABF; Tue, 21 Dec 2021 15:18:16 +0100 (CET)
+        id 222672AC1; Tue, 21 Dec 2021 15:18:17 +0100 (CET)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
         "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
@@ -39,9 +42,9 @@ To:     "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 10/11] PCI: mvebu: Update comment for PCI_EXP_LNKCTL register on emulated bridge
-Date:   Tue, 21 Dec 2021 15:14:54 +0100
-Message-Id: <20211221141455.30011-11-pali@kernel.org>
+Subject: [PATCH 11/11] PCI: mvebu: Fix reporting Data Link Layer Link Active on emulated bridge
+Date:   Tue, 21 Dec 2021 15:14:55 +0100
+Message-Id: <20211221141455.30011-12-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20211221141455.30011-1-pali@kernel.org>
 References: <20211221141455.30011-1-pali@kernel.org>
@@ -52,33 +55,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Logic and code for clearing PCI_EXP_LNKCTL_CLKREQ_EN bit is correct, but
-comment describing it is misleading. PCI_EXP_LNKCTL_CLKREQ_EN bit should be
-hardwired to zero but mvebu hw allows to change it.
+Add support for reporting PCI_EXP_LNKSTA_DLLLA bit in Link Control register
+on emulated bridge via PCIE_STAT_OFF reg. Function mvebu_pcie_link_up()
+already parses this register and returns if Data Link is Active or not.
+
+Also correctly indicate DLLLA capability via PCI_EXP_LNKCAP_DLLLARC bit in
+Link Control Capability register which is required for reporting DLLLA bit.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- drivers/pci/controller/pci-mvebu.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pci-mvebu.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index 1aac65977b97..dffa330de174 100644
+index dffa330de174..a075ba26cff1 100644
 --- a/drivers/pci/controller/pci-mvebu.c
 +++ b/drivers/pci/controller/pci-mvebu.c
-@@ -663,10 +663,9 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+@@ -548,13 +548,18 @@ mvebu_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+ 		/*
+ 		 * PCIe requires that the Clock Power Management capability bit
+ 		 * is hard-wired to zero for downstream ports but HW returns 1.
++		 * Additionally enable Data Link Layer Link Active Reporting
++		 * Capable bit as DL_Active indication is provided too.
+ 		 */
+-		*value = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP) &
+-			 ~PCI_EXP_LNKCAP_CLKPM;
++		*value = (mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP) &
++			  ~PCI_EXP_LNKCAP_CLKPM) | PCI_EXP_LNKCAP_DLLLARC;
+ 		break;
  
  	case PCI_EXP_LNKCTL:
- 		/*
--		 * If we don't support CLKREQ, we must ensure that the
--		 * CLKREQ enable bit always reads zero.  Since we haven't
--		 * had this capability, and it's dependent on board wiring,
--		 * disable it for the time being.
-+		 * PCIe requires that the Enable Clock Power Management bit
-+		 * is hard-wired to zero for downstream ports but HW allows
-+		 * to change it.
- 		 */
- 		new &= ~PCI_EXP_LNKCTL_CLKREQ_EN;
+-		*value = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL);
++		/* DL_Active indication is provided via PCIE_STAT_OFF */
++		*value = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCTL) |
++			 (mvebu_pcie_link_up(port) ?
++			  (PCI_EXP_LNKSTA_DLLLA << 16) : 0);
+ 		break;
  
+ 	case PCI_EXP_SLTCTL:
 -- 
 2.20.1
 
