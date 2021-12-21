@@ -2,111 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7883F47C3A9
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 17:21:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6B0747C40C
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 17:45:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239679AbhLUQVP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 11:21:15 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4316 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236213AbhLUQVO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 11:21:14 -0500
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JJM602BDQz67M3D;
-        Wed, 22 Dec 2021 00:16:40 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.20; Tue, 21 Dec 2021 17:21:12 +0100
-Received: from [10.195.32.222] (10.195.32.222) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 21 Dec 2021 16:21:11 +0000
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@kernel.org>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
- <CAK8P3a1D5DzmNGsEPQomkyMCmMrtD6pQ11JRMh78vbY53edp-Q@mail.gmail.com>
- <CAK8P3a0MNbx-iuzW_-=0ab6-TTZzwV-PT_6gAC1Gp5PgYyHcrA@mail.gmail.com>
- <db043b76-880d-5fad-69cf-96abcd9cd34f@huawei.com>
- <CAK8P3a3HHeP+Gw_k2P7Qtig0OmErf0HN30G22+qHic_uZTh11Q@mail.gmail.com>
- <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com>
- <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
- <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com>
- <CAK8P3a08Zcyx0J4_LGAfU_AtUyEK+XtQJxYBQ52VXfWu8-o8_w@mail.gmail.com>
- <dd2d49ef-3154-3c87-67b9-c134567ba947@huawei.com>
- <CAK8P3a3KTaa-AwCOjhaASMx63B3DUBZCZe6RKWk-=Qu7xr_ijQ@mail.gmail.com>
- <47744c7bce7b7bb37edee7f249d61dc57ac1fbc5.camel@linux.ibm.com>
- <CAK8P3a2eZ25PLSqEf_wmGs912WK8xRMuQHik2yAKj-WRQnDuRg@mail.gmail.com>
- <849d70bddde1cfcb3ab1163970a148ff447ee94b.camel@linux.ibm.com>
- <53746e42-23a2-049d-9b38-dcfbaaae728f@huawei.com>
- <3a10b91258bf432baf51932a08335f6e@AcuMS.aculab.com>
-Message-ID: <192745f2-776b-f099-f428-c142b04d9a14@huawei.com>
-Date:   Tue, 21 Dec 2021 16:21:10 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        id S239962AbhLUQpA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 11:45:00 -0500
+Received: from mga18.intel.com ([134.134.136.126]:55770 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239955AbhLUQo7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Dec 2021 11:44:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640105099; x=1671641099;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Q4tyfixgHyEhzlQ+wu6MKp8Bif+Yw8I7N5uaDrDgfl8=;
+  b=Ol1VccmRHudcHXUXwS9xA2vQYDu3GvVYGROcHaHCrot1/yXnwFFItNAZ
+   ngLK4HhVdF+o+una7YhVxCdy8QKV1zNmkdgNtbW7gYkbGlwXSuoGHjY1f
+   galsDjf2O/QXOLp58hDcWYbUBAEZu+KQ5tucDryMB4O0GdHoKKUw9gqcm
+   r3VVIIJLdTvDHQwRYJTtT+7MbEmdeuCeZwriQ4Npfur9f+/zUkmE+g/M0
+   nAH96Pd2wmYVetQgpwcXucKya9+D/J/Z6vdx/Y4eE6VigBftseVpEQy4S
+   0UhsVKSX5AcjkADijYo9fnO7snm0lVEn3erZD7rvz/mX2hBSa29TDrH3q
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10205"; a="227279235"
+X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
+   d="scan'208";a="227279235"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 08:44:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
+   d="scan'208";a="755869271"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 21 Dec 2021 08:44:57 -0800
+Received: from abailey-MOBL.amr.corp.intel.com (unknown [10.209.52.201])
+        by linux.intel.com (Postfix) with ESMTP id 74F865807C5;
+        Tue, 21 Dec 2021 08:44:57 -0800 (PST)
+Message-ID: <e9648546c3fb751954e411dfa392f0e0f90f0c85.camel@linux.intel.com>
+Subject: Re: [PATCH RESEND V2 3/6] platform/x86/intel: Move intel_pmt from
+ MFD to Auxiliary Bus
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     lee.jones@linaro.org, hdegoede@redhat.com, bhelgaas@google.com,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>
+Date:   Tue, 21 Dec 2021 08:44:57 -0800
+In-Reply-To: <YcGEaH0oAAocziU2@kroah.com>
+References: <20211208015015.891275-1-david.e.box@linux.intel.com>
+         <20211208015015.891275-4-david.e.box@linux.intel.com>
+         <YbDbql39x7Kw6iAC@kroah.com>
+         <7e78e6311cb0d261892f7361a1ef10130436f358.camel@linux.intel.com>
+         <YbD1NsYHbU8FvtTN@kroah.com>
+         <a70956e1c4da10603e29087e893cbae62ce82631.camel@linux.intel.com>
+         <YbEFuN7fwdiNI8vW@kroah.com>
+         <622887d53eaf6e6ae36354bfa0ed483df1cd9214.camel@linux.intel.com>
+         <YcGEaH0oAAocziU2@kroah.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <3a10b91258bf432baf51932a08335f6e@AcuMS.aculab.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.195.32.222]
-X-ClientProxiedBy: lhreml750-chm.china.huawei.com (10.201.108.200) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 19/12/2021 14:23, David Laight wrote:
->>>>> I have tested this on s390 with HAS_IOPORT=n and allyesconfig as well
->>>>> as running it with defconfig. I've also been using it on my Ryzen 3990X
->>>>> workstation with LEGACY_PCI=n for a few days. I do get about 60 MiB
->>>>> fewer modules compared with a similar config of v5.15.8. Hard to say
->>>>> which other systems might miss things of course.
->>>>>
->>>>> I have not yet worked on the discussed IOPORT_NATIVE flag. Mostly I'm
->>>>> wondering two things. For one it feels like that could be a separate
->>>>> change on top since HAS_IOPORT + LEGACY_PCI is already quite big.
->>>>> Secondly I'm wondering about good ways of identifying such drivers and
->>>>> how much this overlaps with the ISA config flag.
->> I was interesting in the IOPORT_NATIVE flag (or whatever we call it) as
->> it solves the problem of drivers which "unconditionally do inb()/outb()
->> without checking the validity of the address using firmware or other
->> methods first" being built for (and loaded on and crashing) unsuitable
->> systems. Such a problem is in [0]
->>
->> So if we want to support that later, then it seems that someone would
->> need to go back and re-edit many same driver Kconfigs – like hwmon, for
->> example. I think it's better to avoid that and do it now.
-> Could you do something where valid arguments to inb() have to come
-> from some kernel mapping/validation function and are never in the
-> range [0x0, 0x10000).
-> Then drivers that are cheating the system will fail.
+On Tue, 2021-12-21 at 08:38 +0100, Greg KH wrote:
+> On Wed, Dec 08, 2021 at 01:30:06PM -0800, David E. Box wrote:
+> > On Wed, 2021-12-08 at 20:21 +0100, Greg KH wrote:
+> > > On Wed, Dec 08, 2021 at 11:09:48AM -0800, David E. Box wrote:
+> > > > On Wed, 2021-12-08 at 19:11 +0100, Greg KH wrote:
+> > > > > On Wed, Dec 08, 2021 at 09:47:26AM -0800, David E. Box wrote:
+> > > > > > On Wed, 2021-12-08 at 17:22 +0100, Greg KH wrote:
+> > > > > > > On Tue, Dec 07, 2021 at 05:50:12PM -0800, David E. Box wrote:
+> > > > > > > > +static struct pci_driver intel_vsec_pci_driver = {
+> > > > > > > > +       .name = "intel_vsec",
+> > > > > > > > +       .id_table = intel_vsec_pci_ids,
+> > > > > > > > +       .probe = intel_vsec_pci_probe,
+> > > > > > > > +};
+> > > > > > > 
+> > > > > > > So when the PCI device is removed from the system you leak
+> > > > > > > resources and
+> > > > > > > have dangling devices?
+> > > > > > 
+> > > > > > No.
+> > > > > > 
+> > > > > > > Why no PCI remove driver callback?
+> > > > > > 
+> > > > > > After probe all resources are device managed. There's nothing to
+> > > > > > explicitly clean up. When
+> > > > > > the
+> > > > > > PCI
+> > > > > > device is removed, all aux devices are automatically removed. This
+> > > > > > is the case for the SDSi
+> > > > > > driver
+> > > > > > as well.
+> > > > > 
+> > > > > Where is the "automatic cleanup" happening?  As this pci driver is
+> > > > > bound
+> > > > > to the PCI device, when the device is removed, what is called in this
+> > > > > driver to remove the resources allocated in the probe callback?
+> > > > > 
+> > > > > confused,
+> > > > 
+> > > > devm_add_action_or_reset(&pdev->dev, intel_vsec_remove_aux, auxdev)
+> > > 
+> > > Wow that is opaque.  Why not do it on remove instead?
+> > 
+> > This code is common for auxdev cleanup. AFAICT most auxiliary bus code is
+> > done by drivers that have
+> > some other primary function. They clean up their primary function resources
+> > in remove, but they
+> > clean up the auxdev using the method above. In this case the sole purpose of
+> > this driver is to
+> > create the auxdev. There are no other resources beyond what the auxdev is
+> > using.
+> > 
+> > Adding runtime pm to the pci driver will change this. Remove will be needed
+> > then.
+> 
+> And who will notice that being required when that happens?
+> 
+> Why is there no runtime PM for this driver?  Do you not care about power
+> consumption?  :)
 
-That sounds like the solution which I had here:
+Of course. :)
 
-https://lore.kernel.org/lkml/1610729929-188490-2-git-send-email-john.garry@huawei.com/
+There's a backlog of patches waiting for this series. One adds support for the
+telemetry device (an auxdev) on the DG2 GPU. This device requires runtime pm in
+order for the slot to go D3. But this also requires changes to the telemetry
+driver in order for runtime pm to be handled correctly. These and other patches,
+including a series to have all current aux drivers use the new drvdata helpers,
+are waiting for this.
 
-It worked for the scenario I was interested in, but Arnd had some 
-concerns, which you can check there.
+David
 
 > 
-> Or, maybe, only allow [0x0, 0x10000) on systems that have a suitable bus.
-> With the mapping functions returning a different value (eg the KVA into
-> the PCI master window) that can be separately verified.
-> That would let drivers do (say) inb(0x120) on systems that have (something
-> like) and ISA bus, but not on PCI-only systems which support PCI IO
-> accesses through a physical address window.
+> thanks,
+> 
+> greg k-h
 
-I'm not sure how this would look in practice. What would the check for 
-the suitable bus be?
-
-Thanks,
-John
