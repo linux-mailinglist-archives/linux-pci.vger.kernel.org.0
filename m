@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5640247C202
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 15:57:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC69247C1F5
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 15:56:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238744AbhLUO44 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 09:56:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52112 "EHLO
+        id S238692AbhLUO4t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 09:56:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238707AbhLUO4w (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 09:56:52 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAD9AC061574;
-        Tue, 21 Dec 2021 06:56:51 -0800 (PST)
+        with ESMTP id S238683AbhLUO4t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 09:56:49 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 147CCC061574;
+        Tue, 21 Dec 2021 06:56:49 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DC886B8171C;
-        Tue, 21 Dec 2021 14:56:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C20AC36AF8;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A50D46163B;
         Tue, 21 Dec 2021 14:56:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCBD8C36AEC;
+        Tue, 21 Dec 2021 14:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1640098608;
-        bh=JtEZRkg2SAAc4D3UAOmtCOS7Vb63QZjN6gULYttb+eQ=;
+        bh=zB+LhZA/mMW0h3avW6Wp5dGr4zLsowcd1TtLd2uAcf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k4GjjhHppEj0/3o4n9w43Kb+FxOrJnc96/qoZoZrd0Sy+P9/K+w8rx2216ax6WUeB
-         Ef7gu+sI00xV00V9wMjCAepI1BTloSMxfLRzSIcw4Nud/B0aMjLATIpJCOlPTj2bB1
-         4oQKnJSUrlDmkI8nTnYPg1gh0SnJGIHDu9jDwdd8zfaLE6ihLQiDU7UYkTONMsI5ro
-         56JQw55A6z6wpkZ8o1IRyi5nP9fRn0kWnsczsP6NT/R1y0GNnQLFjENX1LjyIVAyVH
-         wRlXxCoXXHId8fILqFrtapXu+apIrJTXY663toSB8ODBKRn4FMH9jpR5gKmHlhyF4I
-         3fiN951ufB9Gg==
+        b=qe+GY47Bi2ExCyR8FnxN8h/z5Qne05/DB2EqjLqhav+pZYXofgYtxbVawiyZVBkUJ
+         XLtkour7BtiJCZn8yRjgJhKwIT7t1XBUtb+JZuLmGqq0l1R43+zE46RpLtrpFgPQ+9
+         N4FmYDfTJG7hBHEfYEmQGTFMJyQ67U3SvcJKU9cV4mFat6ZH9XixU8HB2e7G97i99L
+         N84P2NufEzDV8cRoeb3xYwat6oRypLmBADusIENzwIFlPiaLSk4SzJwudmWPQPfhAI
+         sOI2/NOE9Wt+uzX/WgWjarVYN5+CQpiH3gFyksd18Y+o9DVTOPwzW9qbDt9QazkmcV
+         zDSjdorzUBZnA==
 Received: by pali.im (Postfix)
-        id 330152857; Tue, 21 Dec 2021 15:18:13 +0100 (CET)
+        id AA7A62862; Tue, 21 Dec 2021 15:18:13 +0100 (CET)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
         "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
@@ -42,9 +42,9 @@ To:     "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 03/11] PCI: pci-bridge-emul: Rename PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR to PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD
-Date:   Tue, 21 Dec 2021 15:14:47 +0100
-Message-Id: <20211221141455.30011-4-pali@kernel.org>
+Subject: [PATCH 04/11] PCI: pci-bridge-emul: Add support for new flag PCI_BRIDGE_EMUL_NO_IO_FORWARD
+Date:   Tue, 21 Dec 2021 15:14:48 +0100
+Message-Id: <20211221141455.30011-5-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20211221141455.30011-1-pali@kernel.org>
 References: <20211221141455.30011-1-pali@kernel.org>
@@ -55,56 +55,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This flag describe whether PCI bridge supports forwarding of prefetchable
-memory requests in given range between primary and secondary buses. It does
-not specify if bridge has support for prefetchable memory BAR (moreover
-this pci-bridge-emul.c driver does not provide support for BARs).
+Like PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD, this new flag specifies that
+emulated PCI bridge does not support forwarding of IO requests in given
+range between primary and secondary buses. This flag should be used as
+argument for pci_bridge_emul_init() for hardware setup without IO support.
 
-So change name of this flag to be less misleading.
+Setting this flag cause that IO base and limit registers are read-only.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- drivers/pci/controller/pci-mvebu.c | 2 +-
- drivers/pci/pci-bridge-emul.c      | 2 +-
- drivers/pci/pci-bridge-emul.h      | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/pci/pci-bridge-emul.c | 9 +++++++++
+ drivers/pci/pci-bridge-emul.h | 1 +
+ 2 files changed, 10 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index 2ecc1ab12249..2e10ade660a1 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -747,7 +747,7 @@ static int mvebu_pci_bridge_emul_init(struct mvebu_pcie_port *port)
- 	bridge->data = port;
- 	bridge->ops = &mvebu_pci_bridge_emul_ops;
- 
--	return pci_bridge_emul_init(bridge, PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR);
-+	return pci_bridge_emul_init(bridge, PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD);
- }
- 
- static inline struct mvebu_pcie *sys_to_pcie(struct pci_sys_data *sys)
 diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-index 79b947528455..432b1bec2e22 100644
+index 432b1bec2e22..033bbeb99176 100644
 --- a/drivers/pci/pci-bridge-emul.c
 +++ b/drivers/pci/pci-bridge-emul.c
-@@ -373,7 +373,7 @@ int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
- 			~(BIT(10) << 16);
- 	}
- 
--	if (flags & PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR) {
-+	if (flags & PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD) {
- 		bridge->pci_regs_behavior[PCI_PREF_MEMORY_BASE / 4].ro = ~0;
+@@ -378,6 +378,15 @@ int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
  		bridge->pci_regs_behavior[PCI_PREF_MEMORY_BASE / 4].rw = 0;
  	}
+ 
++	if (flags & PCI_BRIDGE_EMUL_NO_IO_FORWARD) {
++		bridge->pci_regs_behavior[PCI_COMMAND / 4].ro |= PCI_COMMAND_IO;
++		bridge->pci_regs_behavior[PCI_COMMAND / 4].rw &= ~PCI_COMMAND_IO;
++		bridge->pci_regs_behavior[PCI_IO_BASE / 4].ro |= GENMASK(15, 0);
++		bridge->pci_regs_behavior[PCI_IO_BASE / 4].rw &= ~GENMASK(15, 0);
++		bridge->pci_regs_behavior[PCI_IO_BASE_UPPER16 / 4].ro = ~0;
++		bridge->pci_regs_behavior[PCI_IO_BASE_UPPER16 / 4].rw = 0;
++	}
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(pci_bridge_emul_init);
 diff --git a/drivers/pci/pci-bridge-emul.h b/drivers/pci/pci-bridge-emul.h
-index 0690b6369755..88877ebefbac 100644
+index 88877ebefbac..ab33609c598b 100644
 --- a/drivers/pci/pci-bridge-emul.h
 +++ b/drivers/pci/pci-bridge-emul.h
-@@ -120,7 +120,7 @@ struct pci_bridge_emul {
- };
+@@ -121,6 +121,7 @@ struct pci_bridge_emul {
  
  enum {
--	PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR = BIT(0),
-+	PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD = BIT(0),
+ 	PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD = BIT(0),
++	PCI_BRIDGE_EMUL_NO_IO_FORWARD = BIT(1),
  };
  
  int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
