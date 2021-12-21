@@ -2,147 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2DB247C446
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 17:57:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B54647C49C
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 18:04:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236586AbhLUQ5W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 11:57:22 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14672 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236459AbhLUQ5W (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 11:57:22 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BLGJhfB025203;
-        Tue, 21 Dec 2021 16:57:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=nspNtTvRFgrrocR08r+32AK/5lxo2m/NNV5yaLOPS8g=;
- b=SSgVim+fUs1YoJ30X+lajJ5qc6wAs11MU0Vek1pjxPwqn7QGir0l1dhW01az5iPYQZ2b
- Ezr1Dvq4QA+aQygEkYeWbJmgoTAc1nMByJMQ8fMI1fuxS2LAWlIwAZmGKNHRzFpJYhhH
- 7xQ0fcVHPZI2aUU47x1ZXyZtahIvTEoq1PH+cShmNVWwyCTjsUgE36CPg7VnBTw/QM4e
- 41RFJM3deNXlB3I2Sa54Z5f+ecl4nUQsBNxgvlTIKYiySIDVDGqQDKNYrhO3pEoju+2Q
- fv0yNuN9Bs5Uu9CLx0QetxWw0gujtZXUw3uzZVgeH1lTsRjD4hyDQw86cKTiSxy/B44L kw== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3d3g6w3qgk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Dec 2021 16:57:14 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1BLGqh4b004025;
-        Tue, 21 Dec 2021 16:57:09 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 3d179afu7c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Dec 2021 16:57:09 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1BLGv63F29884770
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Dec 2021 16:57:07 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4EF9A4065;
-        Tue, 21 Dec 2021 16:57:06 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70691A405B;
-        Tue, 21 Dec 2021 16:57:06 +0000 (GMT)
-Received: from sig-9-145-95-56.uk.ibm.com (unknown [9.145.95.56])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Dec 2021 16:57:06 +0000 (GMT)
-Message-ID: <3b1b7881bbecc25a2d70f54743f1f6a9decbaa45.camel@linux.ibm.com>
-Subject: Re: [GIT PULL 1/2] asm-generic: rework PCI I/O space access
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     John Garry <john.garry@huawei.com>, Arnd Bergmann <arnd@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 21 Dec 2021 17:57:06 +0100
-In-Reply-To: <3d543c90-383f-647a-5cd4-f7fd4e7246ad@huawei.com>
-References: <CAK8P3a2oZ-+qd3Nhpy9VVXCJB3DU5N-y-ta2JpP0t6NHh=GVXw@mail.gmail.com>
-         <a74dfb1f-befd-92ce-4c30-233cb08e04d3@huawei.com>
-         <CAK8P3a3B4FCaPPHhzBdpkv0fsjE0jREwGFCdPeHEDHxxRBEjng@mail.gmail.com>
-         <5e8dfbd2-a6c0-6d02-53e9-1f29aebcc44e@huawei.com>
-         <CAK8P3a08Zcyx0J4_LGAfU_AtUyEK+XtQJxYBQ52VXfWu8-o8_w@mail.gmail.com>
-         <dd2d49ef-3154-3c87-67b9-c134567ba947@huawei.com>
-         <CAK8P3a3KTaa-AwCOjhaASMx63B3DUBZCZe6RKWk-=Qu7xr_ijQ@mail.gmail.com>
-         <47744c7bce7b7bb37edee7f249d61dc57ac1fbc5.camel@linux.ibm.com>
-         <CAK8P3a2eZ25PLSqEf_wmGs912WK8xRMuQHik2yAKj-WRQnDuRg@mail.gmail.com>
-         <849d70bddde1cfcb3ab1163970a148ff447ee94b.camel@linux.ibm.com>
-         <53746e42-23a2-049d-9b38-dcfbaaae728f@huawei.com>
-         <CAK8P3a0dnXX7Cx_kJ_yLAoQFCxoM488Ze-L+5v1m0YeyjF4zqw@mail.gmail.com>
-         <cd9310ab-6012-a410-2bfc-a2f8dd8d62f9@huawei.com>
-         <CAK8P3a23jsT-=v8QDxSZYcj=ujhtBFXjACNLKxQybaThiBsFig@mail.gmail.com>
-         <d45ee18a-1faa-9c56-071d-18f5737d225c@huawei.com>
-         <11e180449d82e5276586cdaab5e70a1c1b3adb42.camel@linux.ibm.com>
-         <3d543c90-383f-647a-5cd4-f7fd4e7246ad@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: _33tp7oQ7N0Bps4JSIqF5ZenFLSp0j8M
-X-Proofpoint-GUID: _33tp7oQ7N0Bps4JSIqF5ZenFLSp0j8M
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        id S231935AbhLURET (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 12:04:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:23979 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231266AbhLURES (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 12:04:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1640106258;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yl3Vp8QjwavG3f+ohEPxYXZer5SzEY7eKto2Guu34dg=;
+        b=EJ7fuezrdgBu3bR0mbQ2NxNW7/e+IJto4muBEWvGLqaVo6MT/8qZ/3WPIzjCFD/TyOuBCS
+        1OGMp3jurM1EE5vA/UoUM3V1lpIfR+pg1fs74eaFxCqduwQzKmwSpGMo13DCI8ZUc8dxbU
+        FEwLMD8lPpGSWalJ8t1wF8eZIhfvYjs=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-623-gEQPQ6npMB-Uau9b3zTwUw-1; Tue, 21 Dec 2021 12:04:17 -0500
+X-MC-Unique: gEQPQ6npMB-Uau9b3zTwUw-1
+Received: by mail-ed1-f72.google.com with SMTP id s7-20020a056402520700b003f841380832so6564059edd.5
+        for <linux-pci@vger.kernel.org>; Tue, 21 Dec 2021 09:04:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=yl3Vp8QjwavG3f+ohEPxYXZer5SzEY7eKto2Guu34dg=;
+        b=xB/7AZfV8mpb/sUSvM7mWPJwAo2y18UPzkFH+llXjImoUz/gF7va+9AR8PvVjKHvln
+         AWdB1ACpiVFe/QwEpqrJMbZYFOgnMW8eWk3b3Lz68CSHGDA7TKVJtt7m4s54teXGFwiJ
+         KSAPsmiZKvn0lSSDNsotLaWeweFYs6O4GcAFE5wFKwIynonaE+oX8Fb8mzBo9ryCqddw
+         t4TdJVaeUBuSW2hXgzWimm2lPTw6/HSxwMklKLAfbFCzV6m+ei3NfgKb/U88gt9Ldyzk
+         BcKtiFS1b51PlClNyqfsz3/m1/x4sl2uM7xGlxGP0QfB6U0Sc4H+n2/aDifscNmI2qZG
+         6KOw==
+X-Gm-Message-State: AOAM532KgXoCxLflqNZS4Nqna5ApEa02v3jjFQcBrQDEoDLrAnE4vA0u
+        7A7eR+ilYsXFlN3IQ5wushtidFR7DufskkDHmx2WD7d9Lpa7Z2M3r5/Q8eosQgEtxF6LfQQmaka
+        cgn3vrV40wMzCc+a2SZq7
+X-Received: by 2002:a17:906:abc8:: with SMTP id kq8mr3305395ejb.643.1640106254746;
+        Tue, 21 Dec 2021 09:04:14 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJykzGfLApBGKkOJE2ylZ9A5UcRtimHTwwP3RPrPiKxQzVhnSXHE8vf9wsNFBRnLgzSevKdx6w==
+X-Received: by 2002:a17:906:abc8:: with SMTP id kq8mr3305365ejb.643.1640106254488;
+        Tue, 21 Dec 2021 09:04:14 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id cn8sm2564736edb.13.2021.12.21.09.04.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Dec 2021 09:04:12 -0800 (PST)
+Message-ID: <3913dfd7-3872-7d69-24af-eba747a7a92d@redhat.com>
+Date:   Tue, 21 Dec 2021 18:04:11 +0100
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-21_04,2021-12-21_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- mlxlogscore=999 clxscore=1015 phishscore=0 bulkscore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2112210081
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH RESEND V2 3/6] platform/x86/intel: Move intel_pmt from MFD
+ to Auxiliary Bus
+Content-Language: en-US
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, bhelgaas@google.com,
+        andriy.shevchenko@linux.intel.com, srinivas.pandruvada@intel.com,
+        mgross@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+        Mark Gross <markgross@kernel.org>
+References: <20211208015015.891275-1-david.e.box@linux.intel.com>
+ <20211208015015.891275-4-david.e.box@linux.intel.com>
+ <YbDbql39x7Kw6iAC@kroah.com>
+ <7e78e6311cb0d261892f7361a1ef10130436f358.camel@linux.intel.com>
+ <YbD1NsYHbU8FvtTN@kroah.com>
+ <a70956e1c4da10603e29087e893cbae62ce82631.camel@linux.intel.com>
+ <YbEFuN7fwdiNI8vW@kroah.com>
+ <622887d53eaf6e6ae36354bfa0ed483df1cd9214.camel@linux.intel.com>
+ <YcGEaH0oAAocziU2@kroah.com>
+ <e9648546c3fb751954e411dfa392f0e0f90f0c85.camel@linux.intel.com>
+ <YcIGwZqm2sfIixkH@kroah.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <YcIGwZqm2sfIixkH@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2021-12-21 at 16:48 +0000, John Garry wrote:
-> On 20/12/2021 09:27, Niklas Schnelle wrote:
-> > >   > My feeling is that in this case we want some other dependency, e.g. a
-> > >   > new CONFIG_LPC. It should actually be possible to use this driver on
-> > >   > any machine with an LPC bus, which would by definition be the primary
-> > >   > I/O space, so it should be possible to load it on Arm64.
-> > > 
-> > > You did suggest HARDCODED_IOPORT earlier in this thread, and the
-> > > definition/premise there seemed sensible to me.
-> > > 
-> > > Anyway it seems practical to make all these changes in a single series,
-> > > so need a way forward as Niklas has no such changes for this additional
-> > > kconfig option.
-> > > 
-> > > As a start, may I suggest we at least have Niklas' patch committed to a
-> > > dev branch based on -next or latest mainline release for further analysis?
-> > > 
-> > > Thanks,
-> > > John
-> > > 
-> > > 
-> > My plan would be to split the patch up into more manageable pieces as
-> > suggested by Arnd plus of course fixes like the missing ARM select. As
-> > Arnd suggested I'll split the HAS_IOPORT additions into the initial
-> > introduction plus arch selects and then the HAS_IOPORT dependencies per
-> > subsytem. I think these per subsystem dependency patches then would be
-> > a great place to find drivers which should have a different dependency
-> > be it on LPC or a newly introduced HARDCODED_IOPORT. The thing is we
-> > can find and check HAS_IOPORT dependencies easily but it's hard to find
-> > HARDCODED_IOPORT so I think the lattter should be a refinement of the
-> > former. It can of course still go in as a single series. I'll
-> > definitely make the next iteration available as a git branch.
-> 
-> I'll do an audit for what would require HARDCODED_IOPORT to understand 
-> the scope while you can continue the work on your current path.
-> 
-> Thanks,
-> john
-> 
+Hi,
 
-Sounds good, I'm open to adding such a config option given a clear
-enough picture of what drivers it would affect. Meanwhile I've made
-some progress splitting things up. I still need to do a bit more
-testing and refining of comments before sending an RFC but if you're
-curious you can check out the 'has_ioport' branch on my GitHub here:
+On 12/21/21 17:54, Greg KH wrote:
+> On Tue, Dec 21, 2021 at 08:44:57AM -0800, David E. Box wrote:
+>> On Tue, 2021-12-21 at 08:38 +0100, Greg KH wrote:
+>>> On Wed, Dec 08, 2021 at 01:30:06PM -0800, David E. Box wrote:
+>>>> On Wed, 2021-12-08 at 20:21 +0100, Greg KH wrote:
+>>>>> On Wed, Dec 08, 2021 at 11:09:48AM -0800, David E. Box wrote:
+>>>>>> On Wed, 2021-12-08 at 19:11 +0100, Greg KH wrote:
+>>>>>>> On Wed, Dec 08, 2021 at 09:47:26AM -0800, David E. Box wrote:
+>>>>>>>> On Wed, 2021-12-08 at 17:22 +0100, Greg KH wrote:
+>>>>>>>>> On Tue, Dec 07, 2021 at 05:50:12PM -0800, David E. Box wrote:
+>>>>>>>>>> +static struct pci_driver intel_vsec_pci_driver = {
+>>>>>>>>>> +       .name = "intel_vsec",
+>>>>>>>>>> +       .id_table = intel_vsec_pci_ids,
+>>>>>>>>>> +       .probe = intel_vsec_pci_probe,
+>>>>>>>>>> +};
+>>>>>>>>>
+>>>>>>>>> So when the PCI device is removed from the system you leak
+>>>>>>>>> resources and
+>>>>>>>>> have dangling devices?
+>>>>>>>>
+>>>>>>>> No.
+>>>>>>>>
+>>>>>>>>> Why no PCI remove driver callback?
+>>>>>>>>
+>>>>>>>> After probe all resources are device managed. There's nothing to
+>>>>>>>> explicitly clean up. When
+>>>>>>>> the
+>>>>>>>> PCI
+>>>>>>>> device is removed, all aux devices are automatically removed. This
+>>>>>>>> is the case for the SDSi
+>>>>>>>> driver
+>>>>>>>> as well.
+>>>>>>>
+>>>>>>> Where is the "automatic cleanup" happening?  As this pci driver is
+>>>>>>> bound
+>>>>>>> to the PCI device, when the device is removed, what is called in this
+>>>>>>> driver to remove the resources allocated in the probe callback?
+>>>>>>>
+>>>>>>> confused,
+>>>>>>
+>>>>>> devm_add_action_or_reset(&pdev->dev, intel_vsec_remove_aux, auxdev)
+>>>>>
+>>>>> Wow that is opaque.  Why not do it on remove instead?
+>>>>
+>>>> This code is common for auxdev cleanup. AFAICT most auxiliary bus code is
+>>>> done by drivers that have
+>>>> some other primary function. They clean up their primary function resources
+>>>> in remove, but they
+>>>> clean up the auxdev using the method above. In this case the sole purpose of
+>>>> this driver is to
+>>>> create the auxdev. There are no other resources beyond what the auxdev is
+>>>> using.
+>>>>
+>>>> Adding runtime pm to the pci driver will change this. Remove will be needed
+>>>> then.
+>>>
+>>> And who will notice that being required when that happens?
+>>>
+>>> Why is there no runtime PM for this driver?  Do you not care about power
+>>> consumption?  :)
+>>
+>> Of course. :)
+>>
+>> There's a backlog of patches waiting for this series. One adds support for the
+>> telemetry device (an auxdev) on the DG2 GPU. This device requires runtime pm in
+>> order for the slot to go D3. But this also requires changes to the telemetry
+>> driver in order for runtime pm to be handled correctly. These and other patches,
+>> including a series to have all current aux drivers use the new drvdata helpers,
+>> are waiting for this.
+> 
+> I can take the aux driver drvdata patch now, through my tree, if you
+> want, no need to make it wait for this tiny driver.
+> 
+> Feel free to send it independant of the existing patchset, and with the
+> cleanup patches at the same time, should be quite easy to get merged.
 
-https://github.com/niklas88/linux.git  (still figuring out if/how I can
-get a proper git.kernel.org branch/repository).
+If you're going to take that one, can you perhaps take patches
+1-3 for 5.17 through your tree as well (patch 3 depends on 2/it) ?
 
-Thanks,
-Niklas
+Note there is a v4 of this series, see please use that :)
+
+I assume the follow up patches are also going to need patch 3
+(the actual conversion of the driver to aux-bus).
+
+Here is my Ack for the pdx86 bits in patch 3:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+And patch 1 and 3 also have acks from the PCI resp. MFD subsys maintainers,
+so I guess taking this all upstream through your tree is fine.
+
+That leaves patches 4-6, 4 is the patching adding the new
+"Intel Software Defined Silicon driver" sysfs API and I would
+like to take some time to thoroughly review the new
+userspace API, which I don't see happening before the
+Christmas Holidays, so I don't plan to merge 4-6 (which
+depends on 3) until after 5.17-rc1.
+
+Regards,
+
+Hans
 
