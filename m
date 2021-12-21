@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9533147BC5D
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 10:02:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2B9347BC61
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Dec 2021 10:04:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235986AbhLUJCz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 04:02:55 -0500
-Received: from verein.lst.de ([213.95.11.211]:45998 "EHLO verein.lst.de"
+        id S235964AbhLUJEu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 04:04:50 -0500
+Received: from verein.lst.de ([213.95.11.211]:46026 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233775AbhLUJCy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 21 Dec 2021 04:02:54 -0500
+        id S233775AbhLUJEu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Dec 2021 04:04:50 -0500
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3BC4968B05; Tue, 21 Dec 2021 10:02:49 +0100 (CET)
-Date:   Tue, 21 Dec 2021 10:02:48 +0100
+        id 492B168BEB; Tue, 21 Dec 2021 10:04:42 +0100 (CET)
+Date:   Tue, 21 Dec 2021 10:04:41 +0100
 From:   Christoph Hellwig <hch@lst.de>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -38,27 +38,19 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Robin Murphy <robin.murphy@arm.com>,
         Martin Oliveira <martin.oliveira@eideticom.com>,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>
-Subject: Re: [PATCH v4 02/23] lib/scatterlist: add flag for indicating
- P2PDMA segments in an SGL
-Message-ID: <20211221090248.GB7949@lst.de>
-References: <20211117215410.3695-1-logang@deltatee.com> <20211117215410.3695-3-logang@deltatee.com>
+Subject: Re: [PATCH v4 16/23] iov_iter: introduce
+ iov_iter_get_pages_[alloc_]flags()
+Message-ID: <20211221090441.GC7949@lst.de>
+References: <20211117215410.3695-1-logang@deltatee.com> <20211117215410.3695-17-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211117215410.3695-3-logang@deltatee.com>
+In-Reply-To: <20211117215410.3695-17-logang@deltatee.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> +	#
-> +	# The need for the scatterlist DMA bus address flag means PCI P2PDMA
-> +	# requires 64bit
-> +	#
-> +	select NEED_SG_DMA_BUS_ADDR_FLAG
-
-> +config NEED_SG_DMA_BUS_ADDR_FLAG
-> +	depends on 64BIT
-> +	bool
-
-depends does not work for symbols that are selected using select.
+All these new helpers should be _GPL exports, keeping the existing
+ones (which should never have been non-GPL exports as tiny wrappers
+around GUP-fast) as out of line wrappers.
