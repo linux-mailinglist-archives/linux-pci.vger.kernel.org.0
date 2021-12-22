@@ -2,85 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1B4747CB68
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Dec 2021 03:48:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBA2847CC0D
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Dec 2021 05:22:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239099AbhLVCs3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Dec 2021 21:48:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238758AbhLVCs2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Dec 2021 21:48:28 -0500
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864F5C061401
-        for <linux-pci@vger.kernel.org>; Tue, 21 Dec 2021 18:48:28 -0800 (PST)
-Received: by mail-oi1-x230.google.com with SMTP id s73so1766006oie.5
-        for <linux-pci@vger.kernel.org>; Tue, 21 Dec 2021 18:48:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/FZUFL2wLkEGZGFTbPONkk6mLWd8J6cDzMFXomn323A=;
-        b=Niimf1jllbIyv3wnG8/DrqRRpShYICD8EWAfwYqJY8qcVGHPp/f2EqajPpp/OQ55iX
-         7avYtd0TmboDXiqV4tshfdp7cv/Y4/zbfmr6GhPhXYMEd3RJyNmCADsOeW/Vpwl+ZvIT
-         LCNinerXlMPpFLuJvTQh3YrZ3jK8M543vM7IfidOglerQpDjrYzdYHBP6gSN8eYW9nG8
-         ezvZHL4Eh4mkMiiOTgSwT3gL+IUApU4GILXtkZatXC0KV1jRk+jCLVJ86BMVK9p+m7zu
-         F5KqUESKLmMKEKql51KlJO9x+//yei5FefBnN6rCNbYCyK6dNQmRq+6xk8cp/8TH+Z84
-         sG1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/FZUFL2wLkEGZGFTbPONkk6mLWd8J6cDzMFXomn323A=;
-        b=I5VjEP8pIKvYniN5onoW5+gntj60D7lqG8m1VDnq/5lyayC/QjLG7E69v///MKctOM
-         OqCwSv8J2nxeTFqsx4HqFh6bd+qTZ8bnSTxw4SqJSo4iUYIW1GlnLKLFTASDz8hSc2JG
-         32AOfwV3r6jbj/q//D5suBjHngosmYGftQinLczrWE7EEfH+WZUBHAJp1nxKa0D5yW5V
-         WadGOX4YuPJvzfmN14T3z2431Qmzf+et8cfYVdZtPNMK0O2Wi3dO3BuKOVyw+tr8rQ7f
-         EpTlDHyFX0G3dsoMPd+6EfDtjrPjSDXDXpT0sgXgaS8JAGn/X2KFKgp9SF6uBQGfx/tt
-         687w==
-X-Gm-Message-State: AOAM532UfjLIM59pQ7Iuzinw3bm/N/Kjbb45ujcYZCxqKuvLsP90ljSf
-        phYJhltf1D8WX8RuGBNs2M70lcox0dq5l7OA5OHaJA==
-X-Google-Smtp-Source: ABdhPJzgjgZvCZer+0qK1pclgej1TT1RDlfQKfCQvqjVS3qOHMzJGGAXe5nK0e/t6ph4iTgc1ECudtqKVJBwg9u1Q/o=
-X-Received: by 2002:aca:120f:: with SMTP id 15mr742282ois.132.1640141307641;
- Tue, 21 Dec 2021 18:48:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 22 Dec 2021 03:48:15 +0100
-Message-ID: <CACRpkdbLk1aHEaiumq3d4qmg007QtZcitmCwdyFyLxyY=H7MXQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
+        id S232729AbhLVEWm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Dec 2021 23:22:42 -0500
+Received: from mga11.intel.com ([192.55.52.93]:35737 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232658AbhLVEWl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 21 Dec 2021 23:22:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640146961; x=1671682961;
+  h=cc:subject:to:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=Cyl3EnNuBUB+YdjCSptEMAFJt9rmebRqepgSebgdx4Q=;
+  b=LtVgxlrocd0EMvyq+oCmRBTDZTP9+aOyjHav4HhYp3VnPIs8MiKtGJWp
+   rLFxhAqqfnpuvnWFAYqn3Z3aR+UXC7mXeQpbS4iQWtVrbk/iEXqMWAmKS
+   DFm0diAF5oj9C0rXxpq1vMZnttTAj+jRQDcwSU90TAIfYuMI3qPwO9oI4
+   PMZfhGTlYIfCjSBGn1ZkgfgW+cv+EOa7V+BAUGVmayd1s4feRarkY5Ej2
+   JpEv8yO7g1g2625OT6uGUaAtCo3EZLfS4dCN0Uho5KYpXCY10PcKzm0JF
+   H46gsMNRgTBjTiHPIstzbzWn3dlLeNejKrW4L70zNa97X1e1VJqEV8uMW
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10205"; a="238078551"
+X-IronPort-AV: E=Sophos;i="5.88,225,1635231600"; 
+   d="scan'208";a="238078551"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 20:22:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,225,1635231600"; 
+   d="scan'208";a="664154927"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Dec 2021 20:22:34 -0800
+Cc:     baolu.lu@linux.intel.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Content-Type: text/plain; charset="UTF-8"
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 07/13] iommu: Add iommu_at[de]tach_device_shared() for
+ multi-device groups
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20211217063708.1740334-1-baolu.lu@linux.intel.com>
+ <20211217063708.1740334-8-baolu.lu@linux.intel.com>
+ <dd797dcd-251a-1980-ca64-bb38e67a526f@arm.com>
+ <20211221184609.GF1432915@nvidia.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <ced7f89a-8857-a8bb-be06-aaaabb4cdf09@linux.intel.com>
+Date:   Wed, 22 Dec 2021 12:22:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <20211221184609.GF1432915@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 7:21 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On 12/22/21 2:46 AM, Jason Gunthorpe wrote:
+>> It's worth taking a step back and realising that overall, this is really
+>> just a more generalised and finer-grained extension of what 426a273834ea
+>> already did for non-group-aware code, so it makes little sense*not*  to
+>> integrate it into the existing interfaces.
+> This is taking 426a to it's logical conclusion and*removing*  the
+> group API from the drivers entirely. This is desirable because drivers
+> cannot do anything sane with the group.
+> 
+> The drivers have struct devices, and so we provide APIs that work in
+> terms of struct devices to cover both driver use cases today, and do
+> so more safely than what is already implemented.
+> 
+> Do not mix up VFIO with the driver interface, these are different
+> things. It is better VFIO stay on its own and not complicate the
+> driver world.
 
-> Please, comment on the approach and individual patches.
+Per Joerg's previous comments:
 
-This approach looks reasonable to me so FWIW:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-for the series.
+https://lore.kernel.org/linux-iommu/20211119150612.jhsvsbzisvux2lga@8bytes.org/
 
-Yours,
-Linus Walleij
+The commit 426a273834ea came only in order to disallow attaching a
+single device within a group to a different iommu_domain. So it's
+reasonable to improve the existing iommu_attach/detach_device() to cover
+all cases. How about below code? Did I miss anything?
+
+int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
+{
+         struct iommu_group *group;
+         int ret = 0;
+
+         group = iommu_group_get(dev);
+         if (!group)
+                 return -ENODEV;
+
+         mutex_lock(&group->mutex);
+         if (group->attach_cnt) {
+                 if (group->domain != domain) {
+                         ret = -EBUSY;
+                         goto unlock_out;
+                 }
+         } else {
+                 ret = __iommu_attach_group(domain, group);
+                 if (ret)
+                         goto unlock_out;
+         }
+
+         group->attach_cnt++;
+unlock_out:
+         mutex_unlock(&group->mutex);
+         iommu_group_put(group);
+
+         return ret;
+}
+EXPORT_SYMBOL_GPL(iommu_attach_device);
+
+void iommu_detach_device_shared(struct iommu_domain *domain, struct 
+device *dev)
+{
+         struct iommu_group *group;
+
+         group = iommu_group_get(dev);
+         if (WARN_ON(!group))
+                 return;
+
+         mutex_lock(&group->mutex);
+         if (WARN_ON(!group->attach_cnt || group->domain != domain)
+                 goto unlock_out;
+
+         if (--group->attach_cnt == 0)
+                 __iommu_detach_group(domain, group);
+
+unlock_out:
+         mutex_unlock(&group->mutex);
+         iommu_group_put(group);
+}
+EXPORT_SYMBOL_GPL(iommu_detach_device);
+
+Best regards,
+baolu
