@@ -2,60 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAD4A47CE00
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Dec 2021 09:22:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4167647D0A2
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Dec 2021 12:15:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243278AbhLVIWP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Dec 2021 03:22:15 -0500
-Received: from verein.lst.de ([213.95.11.211]:49648 "EHLO verein.lst.de"
+        id S244500AbhLVLPP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Dec 2021 06:15:15 -0500
+Received: from mga02.intel.com ([134.134.136.20]:35056 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243282AbhLVIWP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 22 Dec 2021 03:22:15 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0144B68B05; Wed, 22 Dec 2021 09:22:10 +0100 (CET)
-Date:   Wed, 22 Dec 2021 09:22:09 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Martin Oliveira <martin.oliveira@eideticom.com>,
-        Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v4 01/23] lib/scatterlist: cleanup macros into static
- inline functions
-Message-ID: <20211222082209.GA22606@lst.de>
-References: <20211117215410.3695-1-logang@deltatee.com> <20211117215410.3695-2-logang@deltatee.com> <20211221090003.GA7949@lst.de> <05095125-464e-4e85-f609-c7bc93d2f479@deltatee.com>
+        id S244469AbhLVLPL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 22 Dec 2021 06:15:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640171711; x=1671707711;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=db1sx17QDaZa2BUBsB+jMc5FrPgUGSuAsy9wXBqkqK8=;
+  b=TGYKejomT1PcEzrArn6tNvbwWhj86fZGq6jtbtfVgbsUi0oNiuRPfZx0
+   2RFpdCxhzVocOnZC7wZ+kvCfJ1dNmKIpnLNTx5wELJA4tP+BwLhaezxIp
+   iGpqQGkstwFAIaYR5dLYZZyw80bwMKB5xG5EhbFJ9326j76T7kGBU2eY+
+   mlYMw1xiW5Q9I3l9mAJ0oHoE2lY62OLnwFOF0NM3MjtnwuIHB4fJg+hly
+   THpVnXu6uibeC9QKnJPYszamPrssyOseBSH7audGJOTkQi1Iome94s4Yw
+   qDBHlrfX6Eq3613UFnABSb7Y/oSmrwqejaD/LB+7G7IMMfwFCnQxX2Q93
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10205"; a="227894642"
+X-IronPort-AV: E=Sophos;i="5.88,226,1635231600"; 
+   d="scan'208";a="227894642"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2021 03:15:09 -0800
+X-IronPort-AV: E=Sophos;i="5.88,226,1635231600"; 
+   d="scan'208";a="664243692"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2021 03:15:04 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mzzYw-000jjn-PK;
+        Wed, 22 Dec 2021 13:13:38 +0200
+Date:   Wed, 22 Dec 2021 13:13:38 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
+Message-ID: <YcMIYn+jV7ConPPE@smile.fi.intel.com>
+References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdbLk1aHEaiumq3d4qmg007QtZcitmCwdyFyLxyY=H7MXQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <05095125-464e-4e85-f609-c7bc93d2f479@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CACRpkdbLk1aHEaiumq3d4qmg007QtZcitmCwdyFyLxyY=H7MXQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 10:23:24AM -0700, Logan Gunthorpe wrote:
-> > scatterlist.h doesn't have a real maintainer, do you want me to pick
-> > this up through the DMA tree?
+On Wed, Dec 22, 2021 at 03:48:15AM +0100, Linus Walleij wrote:
+> On Tue, Dec 21, 2021 at 7:21 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> Sure, that would be great!
+> > Please, comment on the approach and individual patches.
+> 
+> This approach looks reasonable to me so FWIW:
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> for the series.
 
-Done.
+Thank you!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
