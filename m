@@ -2,35 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6AEA47DCBC
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 02:13:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D32447DCBD
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 02:13:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345793AbhLWBM6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Dec 2021 20:12:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345806AbhLWBLv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Dec 2021 20:11:51 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE5AC061756;
-        Wed, 22 Dec 2021 17:11:51 -0800 (PST)
+        id S1345799AbhLWBM7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Dec 2021 20:12:59 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:50010 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345794AbhLWBLu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Dec 2021 20:11:50 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id B1CA3CE1F05;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7A89961C1E;
+        Thu, 23 Dec 2021 01:11:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98242C36AEB;
         Thu, 23 Dec 2021 01:11:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF7BEC36AEA;
-        Thu, 23 Dec 2021 01:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640221908;
-        bh=nS4jZXintt2/E8Abk/nP0Fk/9b5PD0tHeYSlLq6cHOI=;
+        s=k20201202; t=1640221909;
+        bh=9UKJBUxEZvoZo/e15jpwBlXdUhaenan804n2bqh7j4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MUvff4NOpoMHiKn9owcavbgXndI9pASWDCl9B285UyXHqdoSbo6qPW4Z9MsyvTiDQ
-         bd9kL/nfDFHosHieTg58wCePz9FGJLioHc7HEq2GWSAH8fYV51dTu7hottYqZwN8KT
-         R/kzDUomx0ZPFiYpYN7Gl4tKrYbcGYnwMU8YbkN9usgJVgXzDvC6SpGEfkQMtzfQJJ
-         okMa7epMeY2E3jrtkKcQkZyCPwEBhu4/GK3S5Xcbvv420dz90ctsy6rM0s8D5cp8SQ
-         PHWM6+wGzZXKdBzA37/t+AGbsI/qYA/1h96nSJRP/pl/kwrcoS2DD4Ed9m43/9RkJW
-         v3c7WSEl6j2CA==
+        b=NoBsavntB5D3fKWBYETvLiz82gYYnkMuytuRu/vEhVQKQtZPLIuvEVso7db5+NgLQ
+         WPRybHSbXsR5A1+5uzlRueT+Qmheghwl/JRdb3JyYWA5C4o5oIeQV1vgZBCzKaLR74
+         h/DFD56xIM3nO/haaPXz3DXLHhK9ONbP/4XXQ8/kNQwr+yC3Q0TaGQJWsL3RDW/d52
+         3ySdJAy+8DdV1C5/DXE/N6z2ZD8+ClIyFyo4rJHE+Uh6euH9Phi1vFm1Dj0frk2foy
+         JE7DhF/l4+MFfMfiYqbhnKwn6H9A1pgp9X0GxrtnO5D575WV5ZBIzDbDoXQ+dgUIhL
+         vKUEPzF7L1gcA==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org, Fan Fei <ffclaire1224@gmail.com>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -38,11 +35,11 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Toan Le <toan@os.amperecomputing.com>,
+        Michal Simek <michal.simek@xilinx.com>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 21/23] PCI: xgene: Rename xgene_pcie_port to xgene_pcie
-Date:   Wed, 22 Dec 2021 19:10:52 -0600
-Message-Id: <20211223011054.1227810-22-helgaas@kernel.org>
+Subject: [PATCH v2 22/23] PCI: xilinx: Rename xilinx_pcie_port to xilinx_pcie
+Date:   Wed, 22 Dec 2021 19:10:53 -0600
+Message-Id: <20211223011054.1227810-23-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211223011054.1227810-1-helgaas@kernel.org>
 References: <20211223011054.1227810-1-helgaas@kernel.org>
@@ -54,217 +51,438 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Fan Fei <ffclaire1224@gmail.com>
 
-Rename struct xgene_pcie_port to xgene_pcie to match the convention of
+Rename struct xilinx_pcie_port to xilinx_pcie to match the convention of
 <driver>_pcie. No functional change intended.
 
 Signed-off-by: Fan Fei <ffclaire1224@gmail.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Toan Le <toan@os.amperecomputing.com>
+Cc: Michal Simek <michal.simek@xilinx.com>
 Cc: linux-arm-kernel@lists.infradead.org
 ---
- drivers/pci/controller/pci-xgene.c | 46 +++++++++++++++---------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ drivers/pci/controller/pcie-xilinx.c | 158 +++++++++++++--------------
+ 1 file changed, 79 insertions(+), 79 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-index 56d0d50338c8..ba11f369a1c9 100644
---- a/drivers/pci/controller/pci-xgene.c
-+++ b/drivers/pci/controller/pci-xgene.c
-@@ -60,7 +60,7 @@
- #define XGENE_PCIE_IP_VER_2		2
+diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
+index aa9bdcebc838..cb6e9f7b0152 100644
+--- a/drivers/pci/controller/pcie-xilinx.c
++++ b/drivers/pci/controller/pcie-xilinx.c
+@@ -91,18 +91,18 @@
+ #define XILINX_NUM_MSI_IRQS		128
  
- #if defined(CONFIG_PCI_XGENE) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
--struct xgene_pcie_port {
-+struct xgene_pcie {
- 	struct device_node	*node;
- 	struct device		*dev;
- 	struct clk		*clk;
-@@ -71,12 +71,12 @@ struct xgene_pcie_port {
- 	u32			version;
+ /**
+- * struct xilinx_pcie_port - PCIe port information
+- * @reg_base: IO Mapped Register Base
++ * struct xilinx_pcie - PCIe port information
+  * @dev: Device pointer
++ * @reg_base: IO Mapped Register Base
+  * @msi_map: Bitmap of allocated MSIs
+  * @map_lock: Mutex protecting the MSI allocation
+  * @msi_domain: MSI IRQ domain pointer
+  * @leg_domain: Legacy IRQ domain pointer
+  * @resources: Bus Resources
+  */
+-struct xilinx_pcie_port {
+-	void __iomem *reg_base;
++struct xilinx_pcie {
+ 	struct device *dev;
++	void __iomem *reg_base;
+ 	unsigned long msi_map[BITS_TO_LONGS(XILINX_NUM_MSI_IRQS)];
+ 	struct mutex map_lock;
+ 	struct irq_domain *msi_domain;
+@@ -110,35 +110,35 @@ struct xilinx_pcie_port {
+ 	struct list_head resources;
  };
  
--static u32 xgene_pcie_readl(struct xgene_pcie_port *port, u32 reg)
-+static u32 xgene_pcie_readl(struct xgene_pcie *port, u32 reg)
+-static inline u32 pcie_read(struct xilinx_pcie_port *port, u32 reg)
++static inline u32 pcie_read(struct xilinx_pcie *pcie, u32 reg)
  {
- 	return readl(port->csr_base + reg);
+-	return readl(port->reg_base + reg);
++	return readl(pcie->reg_base + reg);
  }
  
--static void xgene_pcie_writel(struct xgene_pcie_port *port, u32 reg, u32 val)
-+static void xgene_pcie_writel(struct xgene_pcie *port, u32 reg, u32 val)
+-static inline void pcie_write(struct xilinx_pcie_port *port, u32 val, u32 reg)
++static inline void pcie_write(struct xilinx_pcie *pcie, u32 val, u32 reg)
  {
- 	writel(val, port->csr_base + reg);
- }
-@@ -86,15 +86,15 @@ static inline u32 pcie_bar_low_val(u32 addr, u32 flags)
- 	return (addr & PCI_BASE_ADDRESS_MEM_MASK) | flags;
+-	writel(val, port->reg_base + reg);
++	writel(val, pcie->reg_base + reg);
  }
  
--static inline struct xgene_pcie_port *pcie_bus_to_port(struct pci_bus *bus)
-+static inline struct xgene_pcie *pcie_bus_to_port(struct pci_bus *bus)
+-static inline bool xilinx_pcie_link_up(struct xilinx_pcie_port *port)
++static inline bool xilinx_pcie_link_up(struct xilinx_pcie *pcie)
  {
- 	struct pci_config_window *cfg;
- 
- 	if (acpi_disabled)
--		return (struct xgene_pcie_port *)(bus->sysdata);
-+		return (struct xgene_pcie *)(bus->sysdata);
- 
- 	cfg = bus->sysdata;
--	return (struct xgene_pcie_port *)(cfg->priv);
-+	return (struct xgene_pcie *)(cfg->priv);
+-	return (pcie_read(port, XILINX_PCIE_REG_PSCR) &
++	return (pcie_read(pcie, XILINX_PCIE_REG_PSCR) &
+ 		XILINX_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
  }
  
- /*
-@@ -103,7 +103,7 @@ static inline struct xgene_pcie_port *pcie_bus_to_port(struct pci_bus *bus)
+ /**
+  * xilinx_pcie_clear_err_interrupts - Clear Error Interrupts
+- * @port: PCIe port information
++ * @pcie: PCIe port information
   */
- static void __iomem *xgene_pcie_get_cfg_base(struct pci_bus *bus)
+-static void xilinx_pcie_clear_err_interrupts(struct xilinx_pcie_port *port)
++static void xilinx_pcie_clear_err_interrupts(struct xilinx_pcie *pcie)
  {
--	struct xgene_pcie_port *port = pcie_bus_to_port(bus);
-+	struct xgene_pcie *port = pcie_bus_to_port(bus);
+-	struct device *dev = port->dev;
+-	unsigned long val = pcie_read(port, XILINX_PCIE_REG_RPEFR);
++	struct device *dev = pcie->dev;
++	unsigned long val = pcie_read(pcie, XILINX_PCIE_REG_RPEFR);
  
- 	if (bus->number >= (bus->primary + 1))
- 		return port->cfg_base + AXI_EP_CFG_ACCESS;
-@@ -117,7 +117,7 @@ static void __iomem *xgene_pcie_get_cfg_base(struct pci_bus *bus)
-  */
- static void xgene_pcie_set_rtdid_reg(struct pci_bus *bus, uint devfn)
- {
--	struct xgene_pcie_port *port = pcie_bus_to_port(bus);
-+	struct xgene_pcie *port = pcie_bus_to_port(bus);
- 	unsigned int b, d, f;
- 	u32 rtdid_val = 0;
- 
-@@ -164,7 +164,7 @@ static void __iomem *xgene_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
- static int xgene_pcie_config_read32(struct pci_bus *bus, unsigned int devfn,
- 				    int where, int size, u32 *val)
- {
--	struct xgene_pcie_port *port = pcie_bus_to_port(bus);
-+	struct xgene_pcie *port = pcie_bus_to_port(bus);
- 
- 	if (pci_generic_config_read32(bus, devfn, where & ~0x3, 4, val) !=
- 	    PCIBIOS_SUCCESSFUL)
-@@ -227,7 +227,7 @@ static int xgene_pcie_ecam_init(struct pci_config_window *cfg, u32 ipversion)
- {
- 	struct device *dev = cfg->parent;
- 	struct acpi_device *adev = to_acpi_device(dev);
--	struct xgene_pcie_port *port;
-+	struct xgene_pcie *port;
- 	struct resource csr;
- 	int ret;
- 
-@@ -281,7 +281,7 @@ const struct pci_ecam_ops xgene_v2_pcie_ecam_ops = {
- #endif
- 
- #if defined(CONFIG_PCI_XGENE)
--static u64 xgene_pcie_set_ib_mask(struct xgene_pcie_port *port, u32 addr,
-+static u64 xgene_pcie_set_ib_mask(struct xgene_pcie *port, u32 addr,
- 				  u32 flags, u64 size)
- {
- 	u64 mask = (~(size - 1) & PCI_BASE_ADDRESS_MEM_MASK) | flags;
-@@ -307,7 +307,7 @@ static u64 xgene_pcie_set_ib_mask(struct xgene_pcie_port *port, u32 addr,
- 	return mask;
- }
- 
--static void xgene_pcie_linkup(struct xgene_pcie_port *port,
-+static void xgene_pcie_linkup(struct xgene_pcie *port,
- 			      u32 *lanes, u32 *speed)
- {
- 	u32 val32;
-@@ -322,7 +322,7 @@ static void xgene_pcie_linkup(struct xgene_pcie_port *port,
+ 	if (val & XILINX_PCIE_RPEFR_ERR_VALID) {
+ 		dev_dbg(dev, "Requester ID %lu\n",
+ 			val & XILINX_PCIE_RPEFR_REQ_ID);
+-		pcie_write(port, XILINX_PCIE_RPEFR_ALL_MASK,
++		pcie_write(pcie, XILINX_PCIE_RPEFR_ALL_MASK,
+ 			   XILINX_PCIE_REG_RPEFR);
  	}
  }
- 
--static int xgene_pcie_init_port(struct xgene_pcie_port *port)
-+static int xgene_pcie_init_port(struct xgene_pcie *port)
+@@ -152,11 +152,11 @@ static void xilinx_pcie_clear_err_interrupts(struct xilinx_pcie_port *port)
+  */
+ static bool xilinx_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
  {
- 	struct device *dev = port->dev;
- 	int rc;
-@@ -342,7 +342,7 @@ static int xgene_pcie_init_port(struct xgene_pcie_port *port)
+-	struct xilinx_pcie_port *port = bus->sysdata;
++	struct xilinx_pcie *pcie = bus->sysdata;
+ 
+-	/* Check if link is up when trying to access downstream ports */
++	/* Check if link is up when trying to access downstream pcie ports */
+ 	if (!pci_is_root_bus(bus)) {
+-		if (!xilinx_pcie_link_up(port))
++		if (!xilinx_pcie_link_up(pcie))
+ 			return false;
+ 	} else if (devfn > 0) {
+ 		/* Only one device down on each root port */
+@@ -177,12 +177,12 @@ static bool xilinx_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+ static void __iomem *xilinx_pcie_map_bus(struct pci_bus *bus,
+ 					 unsigned int devfn, int where)
+ {
+-	struct xilinx_pcie_port *port = bus->sysdata;
++	struct xilinx_pcie *pcie = bus->sysdata;
+ 
+ 	if (!xilinx_pcie_valid_device(bus, devfn))
+ 		return NULL;
+ 
+-	return port->reg_base + PCIE_ECAM_OFFSET(bus->number, devfn, where);
++	return pcie->reg_base + PCIE_ECAM_OFFSET(bus->number, devfn, where);
+ }
+ 
+ /* PCIe operations */
+@@ -215,7 +215,7 @@ static int xilinx_msi_set_affinity(struct irq_data *d, const struct cpumask *mas
+ 
+ static void xilinx_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+-	struct xilinx_pcie_port *pcie = irq_data_get_irq_chip_data(data);
++	struct xilinx_pcie *pcie = irq_data_get_irq_chip_data(data);
+ 	phys_addr_t pa = ALIGN_DOWN(virt_to_phys(pcie), SZ_4K);
+ 
+ 	msg->address_lo = lower_32_bits(pa);
+@@ -232,14 +232,14 @@ static struct irq_chip xilinx_msi_bottom_chip = {
+ static int xilinx_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 				  unsigned int nr_irqs, void *args)
+ {
+-	struct xilinx_pcie_port *port = domain->host_data;
++	struct xilinx_pcie *pcie = domain->host_data;
+ 	int hwirq, i;
+ 
+-	mutex_lock(&port->map_lock);
++	mutex_lock(&pcie->map_lock);
+ 
+-	hwirq = bitmap_find_free_region(port->msi_map, XILINX_NUM_MSI_IRQS, order_base_2(nr_irqs));
++	hwirq = bitmap_find_free_region(pcie->msi_map, XILINX_NUM_MSI_IRQS, order_base_2(nr_irqs));
+ 
+-	mutex_unlock(&port->map_lock);
++	mutex_unlock(&pcie->map_lock);
+ 
+ 	if (hwirq < 0)
+ 		return -ENOSPC;
+@@ -256,13 +256,13 @@ static void xilinx_msi_domain_free(struct irq_domain *domain, unsigned int virq,
+ 				  unsigned int nr_irqs)
+ {
+ 	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+-	struct xilinx_pcie_port *port = domain->host_data;
++	struct xilinx_pcie *pcie = domain->host_data;
+ 
+-	mutex_lock(&port->map_lock);
++	mutex_lock(&pcie->map_lock);
+ 
+-	bitmap_release_region(port->msi_map, d->hwirq, order_base_2(nr_irqs));
++	bitmap_release_region(pcie->msi_map, d->hwirq, order_base_2(nr_irqs));
+ 
+-	mutex_unlock(&port->map_lock);
++	mutex_unlock(&pcie->map_lock);
+ }
+ 
+ static const struct irq_domain_ops xilinx_msi_domain_ops = {
+@@ -275,7 +275,7 @@ static struct msi_domain_info xilinx_msi_info = {
+ 	.chip	= &xilinx_msi_top_chip,
+ };
+ 
+-static int xilinx_allocate_msi_domains(struct xilinx_pcie_port *pcie)
++static int xilinx_allocate_msi_domains(struct xilinx_pcie *pcie)
+ {
+ 	struct fwnode_handle *fwnode = dev_fwnode(pcie->dev);
+ 	struct irq_domain *parent;
+@@ -298,7 +298,7 @@ static int xilinx_allocate_msi_domains(struct xilinx_pcie_port *pcie)
  	return 0;
  }
  
--static int xgene_pcie_map_reg(struct xgene_pcie_port *port,
-+static int xgene_pcie_map_reg(struct xgene_pcie *port,
- 			      struct platform_device *pdev)
+-static void xilinx_free_msi_domains(struct xilinx_pcie_port *pcie)
++static void xilinx_free_msi_domains(struct xilinx_pcie *pcie)
  {
- 	struct device *dev = port->dev;
-@@ -362,7 +362,7 @@ static int xgene_pcie_map_reg(struct xgene_pcie_port *port,
- 	return 0;
+ 	struct irq_domain *parent = pcie->msi_domain->parent;
+ 
+@@ -342,13 +342,13 @@ static const struct irq_domain_ops intx_domain_ops = {
+  */
+ static irqreturn_t xilinx_pcie_intr_handler(int irq, void *data)
+ {
+-	struct xilinx_pcie_port *port = (struct xilinx_pcie_port *)data;
+-	struct device *dev = port->dev;
++	struct xilinx_pcie *pcie = (struct xilinx_pcie *)data;
++	struct device *dev = pcie->dev;
+ 	u32 val, mask, status;
+ 
+ 	/* Read interrupt decode and mask registers */
+-	val = pcie_read(port, XILINX_PCIE_REG_IDR);
+-	mask = pcie_read(port, XILINX_PCIE_REG_IMR);
++	val = pcie_read(pcie, XILINX_PCIE_REG_IDR);
++	mask = pcie_read(pcie, XILINX_PCIE_REG_IMR);
+ 
+ 	status = val & mask;
+ 	if (!status)
+@@ -371,23 +371,23 @@ static irqreturn_t xilinx_pcie_intr_handler(int irq, void *data)
+ 
+ 	if (status & XILINX_PCIE_INTR_CORRECTABLE) {
+ 		dev_warn(dev, "Correctable error message\n");
+-		xilinx_pcie_clear_err_interrupts(port);
++		xilinx_pcie_clear_err_interrupts(pcie);
+ 	}
+ 
+ 	if (status & XILINX_PCIE_INTR_NONFATAL) {
+ 		dev_warn(dev, "Non fatal error message\n");
+-		xilinx_pcie_clear_err_interrupts(port);
++		xilinx_pcie_clear_err_interrupts(pcie);
+ 	}
+ 
+ 	if (status & XILINX_PCIE_INTR_FATAL) {
+ 		dev_warn(dev, "Fatal error message\n");
+-		xilinx_pcie_clear_err_interrupts(port);
++		xilinx_pcie_clear_err_interrupts(pcie);
+ 	}
+ 
+ 	if (status & (XILINX_PCIE_INTR_INTX | XILINX_PCIE_INTR_MSI)) {
+ 		struct irq_domain *domain;
+ 
+-		val = pcie_read(port, XILINX_PCIE_REG_RPIFR1);
++		val = pcie_read(pcie, XILINX_PCIE_REG_RPIFR1);
+ 
+ 		/* Check whether interrupt valid */
+ 		if (!(val & XILINX_PCIE_RPIFR1_INTR_VALID)) {
+@@ -397,17 +397,17 @@ static irqreturn_t xilinx_pcie_intr_handler(int irq, void *data)
+ 
+ 		/* Decode the IRQ number */
+ 		if (val & XILINX_PCIE_RPIFR1_MSI_INTR) {
+-			val = pcie_read(port, XILINX_PCIE_REG_RPIFR2) &
++			val = pcie_read(pcie, XILINX_PCIE_REG_RPIFR2) &
+ 				XILINX_PCIE_RPIFR2_MSG_DATA;
+-			domain = port->msi_domain->parent;
++			domain = pcie->msi_domain->parent;
+ 		} else {
+ 			val = (val & XILINX_PCIE_RPIFR1_INTR_MASK) >>
+ 				XILINX_PCIE_RPIFR1_INTR_SHIFT;
+-			domain = port->leg_domain;
++			domain = pcie->leg_domain;
+ 		}
+ 
+ 		/* Clear interrupt FIFO register 1 */
+-		pcie_write(port, XILINX_PCIE_RPIFR1_ALL_MASK,
++		pcie_write(pcie, XILINX_PCIE_RPIFR1_ALL_MASK,
+ 			   XILINX_PCIE_REG_RPIFR1);
+ 
+ 		generic_handle_domain_irq(domain, val);
+@@ -442,20 +442,20 @@ static irqreturn_t xilinx_pcie_intr_handler(int irq, void *data)
+ 
+ error:
+ 	/* Clear the Interrupt Decode register */
+-	pcie_write(port, status, XILINX_PCIE_REG_IDR);
++	pcie_write(pcie, status, XILINX_PCIE_REG_IDR);
+ 
+ 	return IRQ_HANDLED;
  }
  
--static void xgene_pcie_setup_ob_reg(struct xgene_pcie_port *port,
-+static void xgene_pcie_setup_ob_reg(struct xgene_pcie *port,
- 				    struct resource *res, u32 offset,
- 				    u64 cpu_addr, u64 pci_addr)
+ /**
+  * xilinx_pcie_init_irq_domain - Initialize IRQ domain
+- * @port: PCIe port information
++ * @pcie: PCIe port information
+  *
+  * Return: '0' on success and error value on failure
+  */
+-static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
++static int xilinx_pcie_init_irq_domain(struct xilinx_pcie *pcie)
  {
-@@ -394,7 +394,7 @@ static void xgene_pcie_setup_ob_reg(struct xgene_pcie_port *port,
- 	xgene_pcie_writel(port, offset + 0x14, upper_32_bits(pci_addr));
- }
- 
--static void xgene_pcie_setup_cfg_reg(struct xgene_pcie_port *port)
-+static void xgene_pcie_setup_cfg_reg(struct xgene_pcie *port)
- {
- 	u64 addr = port->cfg_addr;
- 
-@@ -403,7 +403,7 @@ static void xgene_pcie_setup_cfg_reg(struct xgene_pcie_port *port)
- 	xgene_pcie_writel(port, CFGCTL, EN_REG);
- }
- 
--static int xgene_pcie_map_ranges(struct xgene_pcie_port *port)
-+static int xgene_pcie_map_ranges(struct xgene_pcie *port)
- {
- 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(port);
- 	struct resource_entry *window;
-@@ -444,7 +444,7 @@ static int xgene_pcie_map_ranges(struct xgene_pcie_port *port)
- 	return 0;
- }
- 
--static void xgene_pcie_setup_pims(struct xgene_pcie_port *port, u32 pim_reg,
-+static void xgene_pcie_setup_pims(struct xgene_pcie *port, u32 pim_reg,
- 				  u64 pim, u64 size)
- {
- 	xgene_pcie_writel(port, pim_reg, lower_32_bits(pim));
-@@ -478,7 +478,7 @@ static int xgene_pcie_select_ib_reg(u8 *ib_reg_mask, u64 size)
- 	return -EINVAL;
- }
- 
--static void xgene_pcie_setup_ib_reg(struct xgene_pcie_port *port,
-+static void xgene_pcie_setup_ib_reg(struct xgene_pcie *port,
- 				    struct resource_entry *entry,
- 				    u8 *ib_reg_mask)
- {
-@@ -529,7 +529,7 @@ static void xgene_pcie_setup_ib_reg(struct xgene_pcie_port *port,
- 	xgene_pcie_setup_pims(port, pim_reg, pci_addr, ~(size - 1));
- }
- 
--static int xgene_pcie_parse_map_dma_ranges(struct xgene_pcie_port *port)
-+static int xgene_pcie_parse_map_dma_ranges(struct xgene_pcie *port)
- {
- 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(port);
- 	struct resource_entry *entry;
-@@ -542,7 +542,7 @@ static int xgene_pcie_parse_map_dma_ranges(struct xgene_pcie_port *port)
- }
- 
- /* clear BAR configuration which was done by firmware */
--static void xgene_pcie_clear_config(struct xgene_pcie_port *port)
-+static void xgene_pcie_clear_config(struct xgene_pcie *port)
- {
- 	int i;
- 
-@@ -550,7 +550,7 @@ static void xgene_pcie_clear_config(struct xgene_pcie_port *port)
- 		xgene_pcie_writel(port, i, 0);
- }
- 
--static int xgene_pcie_setup(struct xgene_pcie_port *port)
-+static int xgene_pcie_setup(struct xgene_pcie *port)
- {
- 	struct device *dev = port->dev;
- 	u32 val, lanes = 0, speed = 0;
-@@ -588,7 +588,7 @@ static int xgene_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *dn = dev->of_node;
--	struct xgene_pcie_port *port;
-+	struct xgene_pcie *port;
- 	struct pci_host_bridge *bridge;
+-	struct device *dev = port->dev;
++	struct device *dev = pcie->dev;
+ 	struct device_node *pcie_intc_node;
  	int ret;
  
+@@ -466,25 +466,25 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+ 		return -ENODEV;
+ 	}
+ 
+-	port->leg_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
++	pcie->leg_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
+ 						 &intx_domain_ops,
+-						 port);
++						 pcie);
+ 	of_node_put(pcie_intc_node);
+-	if (!port->leg_domain) {
++	if (!pcie->leg_domain) {
+ 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	/* Setup MSI */
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+-		phys_addr_t pa = ALIGN_DOWN(virt_to_phys(port), SZ_4K);
++		phys_addr_t pa = ALIGN_DOWN(virt_to_phys(pcie), SZ_4K);
+ 
+-		ret = xilinx_allocate_msi_domains(port);
++		ret = xilinx_allocate_msi_domains(pcie);
+ 		if (ret)
+ 			return ret;
+ 
+-		pcie_write(port, upper_32_bits(pa), XILINX_PCIE_REG_MSIBASE1);
+-		pcie_write(port, lower_32_bits(pa), XILINX_PCIE_REG_MSIBASE2);
++		pcie_write(pcie, upper_32_bits(pa), XILINX_PCIE_REG_MSIBASE1);
++		pcie_write(pcie, lower_32_bits(pa), XILINX_PCIE_REG_MSIBASE2);
+ 	}
+ 
+ 	return 0;
+@@ -492,44 +492,44 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+ 
+ /**
+  * xilinx_pcie_init_port - Initialize hardware
+- * @port: PCIe port information
++ * @pcie: PCIe port information
+  */
+-static void xilinx_pcie_init_port(struct xilinx_pcie_port *port)
++static void xilinx_pcie_init_port(struct xilinx_pcie *pcie)
+ {
+-	struct device *dev = port->dev;
++	struct device *dev = pcie->dev;
+ 
+-	if (xilinx_pcie_link_up(port))
++	if (xilinx_pcie_link_up(pcie))
+ 		dev_info(dev, "PCIe Link is UP\n");
+ 	else
+ 		dev_info(dev, "PCIe Link is DOWN\n");
+ 
+ 	/* Disable all interrupts */
+-	pcie_write(port, ~XILINX_PCIE_IDR_ALL_MASK,
++	pcie_write(pcie, ~XILINX_PCIE_IDR_ALL_MASK,
+ 		   XILINX_PCIE_REG_IMR);
+ 
+ 	/* Clear pending interrupts */
+-	pcie_write(port, pcie_read(port, XILINX_PCIE_REG_IDR) &
++	pcie_write(pcie, pcie_read(pcie, XILINX_PCIE_REG_IDR) &
+ 			 XILINX_PCIE_IMR_ALL_MASK,
+ 		   XILINX_PCIE_REG_IDR);
+ 
+ 	/* Enable all interrupts we handle */
+-	pcie_write(port, XILINX_PCIE_IMR_ENABLE_MASK, XILINX_PCIE_REG_IMR);
++	pcie_write(pcie, XILINX_PCIE_IMR_ENABLE_MASK, XILINX_PCIE_REG_IMR);
+ 
+ 	/* Enable the Bridge enable bit */
+-	pcie_write(port, pcie_read(port, XILINX_PCIE_REG_RPSC) |
++	pcie_write(pcie, pcie_read(pcie, XILINX_PCIE_REG_RPSC) |
+ 			 XILINX_PCIE_REG_RPSC_BEN,
+ 		   XILINX_PCIE_REG_RPSC);
+ }
+ 
+ /**
+  * xilinx_pcie_parse_dt - Parse Device tree
+- * @port: PCIe port information
++ * @pcie: PCIe port information
+  *
+  * Return: '0' on success and error value on failure
+  */
+-static int xilinx_pcie_parse_dt(struct xilinx_pcie_port *port)
++static int xilinx_pcie_parse_dt(struct xilinx_pcie *pcie)
+ {
+-	struct device *dev = port->dev;
++	struct device *dev = pcie->dev;
+ 	struct device_node *node = dev->of_node;
+ 	struct resource regs;
+ 	unsigned int irq;
+@@ -541,14 +541,14 @@ static int xilinx_pcie_parse_dt(struct xilinx_pcie_port *port)
+ 		return err;
+ 	}
+ 
+-	port->reg_base = devm_pci_remap_cfg_resource(dev, &regs);
+-	if (IS_ERR(port->reg_base))
+-		return PTR_ERR(port->reg_base);
++	pcie->reg_base = devm_pci_remap_cfg_resource(dev, &regs);
++	if (IS_ERR(pcie->reg_base))
++		return PTR_ERR(pcie->reg_base);
+ 
+ 	irq = irq_of_parse_and_map(node, 0);
+ 	err = devm_request_irq(dev, irq, xilinx_pcie_intr_handler,
+ 			       IRQF_SHARED | IRQF_NO_THREAD,
+-			       "xilinx-pcie", port);
++			       "xilinx-pcie", pcie);
+ 	if (err) {
+ 		dev_err(dev, "unable to request irq %d\n", irq);
+ 		return err;
+@@ -566,41 +566,41 @@ static int xilinx_pcie_parse_dt(struct xilinx_pcie_port *port)
+ static int xilinx_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct xilinx_pcie_port *port;
++	struct xilinx_pcie *pcie;
+ 	struct pci_host_bridge *bridge;
+ 	int err;
+ 
+ 	if (!dev->of_node)
+ 		return -ENODEV;
+ 
+-	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
++	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+ 	if (!bridge)
+ 		return -ENODEV;
+ 
+-	port = pci_host_bridge_priv(bridge);
+-	mutex_init(&port->map_lock);
+-	port->dev = dev;
++	pcie = pci_host_bridge_priv(bridge);
++	mutex_init(&pcie->map_lock);
++	pcie->dev = dev;
+ 
+-	err = xilinx_pcie_parse_dt(port);
++	err = xilinx_pcie_parse_dt(pcie);
+ 	if (err) {
+ 		dev_err(dev, "Parsing DT failed\n");
+ 		return err;
+ 	}
+ 
+-	xilinx_pcie_init_port(port);
++	xilinx_pcie_init_port(pcie);
+ 
+-	err = xilinx_pcie_init_irq_domain(port);
++	err = xilinx_pcie_init_irq_domain(pcie);
+ 	if (err) {
+ 		dev_err(dev, "Failed creating IRQ Domain\n");
+ 		return err;
+ 	}
+ 
+-	bridge->sysdata = port;
++	bridge->sysdata = pcie;
+ 	bridge->ops = &xilinx_pcie_ops;
+ 
+ 	err = pci_host_probe(bridge);
+ 	if (err)
+-		xilinx_free_msi_domains(port);
++		xilinx_free_msi_domains(pcie);
+ 
+ 	return err;
+ }
 -- 
 2.25.1
 
