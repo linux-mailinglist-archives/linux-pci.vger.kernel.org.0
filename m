@@ -2,35 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEBFA47DCAD
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 02:12:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DEFF647DCB2
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 02:12:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345911AbhLWBMH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Dec 2021 20:12:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345754AbhLWBLm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Dec 2021 20:11:42 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7B8C061746;
-        Wed, 22 Dec 2021 17:11:41 -0800 (PST)
+        id S1346013AbhLWBMg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Dec 2021 20:12:36 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:57946 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345786AbhLWBLq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Dec 2021 20:11:46 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5FF4761C04;
-        Thu, 23 Dec 2021 01:11:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB67C36AE8;
-        Thu, 23 Dec 2021 01:11:40 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 4859BCE1EFD;
+        Thu, 23 Dec 2021 01:11:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53991C36AEB;
+        Thu, 23 Dec 2021 01:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640221900;
-        bh=JEMd6rbvAJo5/E0VVbBCtxpY1OwkDouz6ExYkZiuVQU=;
+        s=k20201202; t=1640221902;
+        bh=LFg3f+vxhc16OiGKNO9DQqvVW+Fx4PcKl6aq6BZtG3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hW0hvav0Nme8bJkjVlYbJCp4QsLxXxZtPVZphM7W3oFDqz+0Dwc7l6amya0PB4RNc
-         9hdMc9o3yDOCsEzZtWGM04BvH+GbSb1qS/dxZNFDYS/3SAIyfSPsY4jTq/9+KDq9ys
-         lMG3FQwHF8i8YXznN9YQT7zJSjctduMwkNpRpbytk2IkJFk5qkcI38p2xxfMEyT7er
-         owdv/I6d6/oReZn5tuXFKN4xP4GUzQ20V3QRO6CmhP9TIINcey+ZwuZJQPkt3Gm3cV
-         g8R8kAHaMKKOz0R0/1H7iMiwdMSImmzIcU1ymEdE0QxsCiRIC7FqTjuF8tqPI736XI
-         dHGJ2KzX33Byg==
+        b=qHjAgDrE+WWnLnH/YfCSYiGYmFP3MNAlBQLYffSYSwj/hC0+g4Nac7mY7Ivkg1bvu
+         i1hQ/QFtSXiJ48k7TmMab4HNFvF+oJVd0Ttq1d9hHc6sj8H6i0Ui1sNgAJNSz27xxO
+         1DVyZNiLxkrltMG1hq1AKGjYtFUnghQAy0Mq9OSvx+sjkxz2AnHeWkrMfxYOK3yn9L
+         PbEDJQoxiu//L0qhhx8Vpu3wv1mG2tIOeVk1NRUz/qMOdtwiPvka92S5Xo0Jdj/NDz
+         BbYbaZp7gQxazMfRVqveTm50lS3eupXkIkXCUIKMCS6FjEo7HrxksPhjs1JKcvaj16
+         Xa4Maj8K2MEWA==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org, Fan Fei <ffclaire1224@gmail.com>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -38,13 +35,12 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 17/23] PCI: mt7621: Rename mt7621_pci_ to mt7621_pcie_
-Date:   Wed, 22 Dec 2021 19:10:48 -0600
-Message-Id: <20211223011054.1227810-18-helgaas@kernel.org>
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v2 18/23] PCI: rcar-gen2: Rename rcar_pci_priv to rcar_pci
+Date:   Wed, 22 Dec 2021 19:10:49 -0600
+Message-Id: <20211223011054.1227810-19-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211223011054.1227810-1-helgaas@kernel.org>
 References: <20211223011054.1227810-1-helgaas@kernel.org>
@@ -56,141 +52,80 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Rename mt7621_pci_* structs and functions to mt7621_pcie_* for consistency
-with the rest of the file.
+Rename struct rcar_pci_priv to rcar_pci to match the convention of
+<driver>_pci. No functional change intended.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
+Cc: Marek Vasut <marek.vasut+renesas@gmail.com>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org
 ---
- drivers/pci/controller/pcie-mt7621.c | 36 ++++++++++++++--------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ drivers/pci/controller/pci-rcar-gen2.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
-index 4138c0e83513..b8fea7afdb1b 100644
---- a/drivers/pci/controller/pcie-mt7621.c
-+++ b/drivers/pci/controller/pcie-mt7621.c
-@@ -93,8 +93,8 @@ struct mt7621_pcie_port {
-  * reset lines are inverted.
-  */
- struct mt7621_pcie {
--	void __iomem *base;
+diff --git a/drivers/pci/controller/pci-rcar-gen2.c b/drivers/pci/controller/pci-rcar-gen2.c
+index afde4aa8f6dc..35804ea394fd 100644
+--- a/drivers/pci/controller/pci-rcar-gen2.c
++++ b/drivers/pci/controller/pci-rcar-gen2.c
+@@ -93,7 +93,7 @@
+ 
+ #define RCAR_PCI_UNIT_REV_REG		(RCAR_AHBPCI_PCICOM_OFFSET + 0x48)
+ 
+-struct rcar_pci_priv {
++struct rcar_pci {
  	struct device *dev;
-+	void __iomem *base;
- 	struct list_head ports;
- 	bool resets_inverted;
- };
-@@ -129,7 +129,7 @@ static inline void pcie_port_write(struct mt7621_pcie_port *port,
- 	writel_relaxed(val, port->base + reg);
+ 	void __iomem *reg;
+ 	struct resource mem_res;
+@@ -105,7 +105,7 @@ struct rcar_pci_priv {
+ static void __iomem *rcar_pci_cfg_base(struct pci_bus *bus, unsigned int devfn,
+ 				       int where)
+ {
+-	struct rcar_pci_priv *priv = bus->sysdata;
++	struct rcar_pci *priv = bus->sysdata;
+ 	int slot, val;
+ 
+ 	if (!pci_is_root_bus(bus) || PCI_FUNC(devfn))
+@@ -132,7 +132,7 @@ static void __iomem *rcar_pci_cfg_base(struct pci_bus *bus, unsigned int devfn,
+ 
+ static irqreturn_t rcar_pci_err_irq(int irq, void *pw)
+ {
+-	struct rcar_pci_priv *priv = pw;
++	struct rcar_pci *priv = pw;
+ 	struct device *dev = priv->dev;
+ 	u32 status = ioread32(priv->reg + RCAR_PCI_INT_STATUS_REG);
+ 
+@@ -148,7 +148,7 @@ static irqreturn_t rcar_pci_err_irq(int irq, void *pw)
+ 	return IRQ_NONE;
  }
  
--static inline u32 mt7621_pci_get_cfgaddr(unsigned int bus, unsigned int slot,
-+static inline u32 mt7621_pcie_get_cfgaddr(unsigned int bus, unsigned int slot,
- 					 unsigned int func, unsigned int where)
+-static void rcar_pci_setup_errirq(struct rcar_pci_priv *priv)
++static void rcar_pci_setup_errirq(struct rcar_pci *priv)
  {
- 	return (((where & 0xf00) >> 8) << 24) | (bus << 16) | (slot << 11) |
-@@ -140,7 +140,7 @@ static void __iomem *mt7621_pcie_map_bus(struct pci_bus *bus,
- 					 unsigned int devfn, int where)
- {
- 	struct mt7621_pcie *pcie = bus->sysdata;
--	u32 address = mt7621_pci_get_cfgaddr(bus->number, PCI_SLOT(devfn),
-+	u32 address = mt7621_pcie_get_cfgaddr(bus->number, PCI_SLOT(devfn),
- 					     PCI_FUNC(devfn), where);
- 
- 	writel_relaxed(address, pcie->base + RALINK_PCI_CONFIG_ADDR);
-@@ -148,7 +148,7 @@ static void __iomem *mt7621_pcie_map_bus(struct pci_bus *bus,
- 	return pcie->base + RALINK_PCI_CONFIG_DATA + (where & 3);
+ 	struct device *dev = priv->dev;
+ 	int ret;
+@@ -166,11 +166,11 @@ static void rcar_pci_setup_errirq(struct rcar_pci_priv *priv)
+ 	iowrite32(val, priv->reg + RCAR_PCI_INT_ENABLE_REG);
  }
+ #else
+-static inline void rcar_pci_setup_errirq(struct rcar_pci_priv *priv) { }
++static inline void rcar_pci_setup_errirq(struct rcar_pci *priv) { }
+ #endif
  
--static struct pci_ops mt7621_pci_ops = {
-+static struct pci_ops mt7621_pcie_ops = {
- 	.map_bus	= mt7621_pcie_map_bus,
- 	.read		= pci_generic_config_read,
- 	.write		= pci_generic_config_write,
-@@ -156,7 +156,7 @@ static struct pci_ops mt7621_pci_ops = {
- 
- static u32 read_config(struct mt7621_pcie *pcie, unsigned int dev, u32 reg)
+ /* PCI host controller setup */
+-static void rcar_pci_setup(struct rcar_pci_priv *priv)
++static void rcar_pci_setup(struct rcar_pci *priv)
  {
--	u32 address = mt7621_pci_get_cfgaddr(0, dev, 0, reg);
-+	u32 address = mt7621_pcie_get_cfgaddr(0, dev, 0, reg);
- 
- 	pcie_write(pcie, address, RALINK_PCI_CONFIG_ADDR);
- 	return pcie_read(pcie, RALINK_PCI_CONFIG_DATA);
-@@ -165,7 +165,7 @@ static u32 read_config(struct mt7621_pcie *pcie, unsigned int dev, u32 reg)
- static void write_config(struct mt7621_pcie *pcie, unsigned int dev,
- 			 u32 reg, u32 val)
- {
--	u32 address = mt7621_pci_get_cfgaddr(0, dev, 0, reg);
-+	u32 address = mt7621_pcie_get_cfgaddr(0, dev, 0, reg);
- 
- 	pcie_write(pcie, address, RALINK_PCI_CONFIG_ADDR);
- 	pcie_write(pcie, val, RALINK_PCI_CONFIG_DATA);
-@@ -505,16 +505,16 @@ static int mt7621_pcie_register_host(struct pci_host_bridge *host)
- {
- 	struct mt7621_pcie *pcie = pci_host_bridge_priv(host);
- 
--	host->ops = &mt7621_pci_ops;
-+	host->ops = &mt7621_pcie_ops;
- 	host->sysdata = pcie;
- 	return pci_host_probe(host);
- }
- 
--static const struct soc_device_attribute mt7621_pci_quirks_match[] = {
-+static const struct soc_device_attribute mt7621_pcie_quirks_match[] = {
- 	{ .soc_id = "mt7621", .revision = "E2" }
- };
- 
--static int mt7621_pci_probe(struct platform_device *pdev)
-+static int mt7621_pcie_probe(struct platform_device *pdev)
+ 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(priv);
+ 	struct device *dev = priv->dev;
+@@ -279,7 +279,7 @@ static int rcar_pci_probe(struct platform_device *pdev)
  {
  	struct device *dev = &pdev->dev;
- 	const struct soc_device_attribute *attr;
-@@ -535,7 +535,7 @@ static int mt7621_pci_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, pcie);
- 	INIT_LIST_HEAD(&pcie->ports);
+ 	struct resource *cfg_res, *mem_res;
+-	struct rcar_pci_priv *priv;
++	struct rcar_pci *priv;
+ 	struct pci_host_bridge *bridge;
+ 	void __iomem *reg;
  
--	attr = soc_device_match(mt7621_pci_quirks_match);
-+	attr = soc_device_match(mt7621_pcie_quirks_match);
- 	if (attr)
- 		pcie->resets_inverted = true;
- 
-@@ -572,7 +572,7 @@ static int mt7621_pci_probe(struct platform_device *pdev)
- 	return err;
- }
- 
--static int mt7621_pci_remove(struct platform_device *pdev)
-+static int mt7621_pcie_remove(struct platform_device *pdev)
- {
- 	struct mt7621_pcie *pcie = platform_get_drvdata(pdev);
- 	struct mt7621_pcie_port *port;
-@@ -583,18 +583,18 @@ static int mt7621_pci_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id mt7621_pci_ids[] = {
-+static const struct of_device_id mt7621_pcie_ids[] = {
- 	{ .compatible = "mediatek,mt7621-pci" },
- 	{},
- };
--MODULE_DEVICE_TABLE(of, mt7621_pci_ids);
-+MODULE_DEVICE_TABLE(of, mt7621_pcie_ids);
- 
--static struct platform_driver mt7621_pci_driver = {
--	.probe = mt7621_pci_probe,
--	.remove = mt7621_pci_remove,
-+static struct platform_driver mt7621_pcie_driver = {
-+	.probe = mt7621_pcie_probe,
-+	.remove = mt7621_pcie_remove,
- 	.driver = {
- 		.name = "mt7621-pci",
--		.of_match_table = of_match_ptr(mt7621_pci_ids),
-+		.of_match_table = of_match_ptr(mt7621_pcie_ids),
- 	},
- };
--builtin_platform_driver(mt7621_pci_driver);
-+builtin_platform_driver(mt7621_pcie_driver);
 -- 
 2.25.1
 
