@@ -2,223 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F7ED47E55C
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 16:14:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA44047E617
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 16:55:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244160AbhLWPOP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Dec 2021 10:14:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239868AbhLWPOO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Dec 2021 10:14:14 -0500
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AF2EC061401
-        for <linux-pci@vger.kernel.org>; Thu, 23 Dec 2021 07:14:14 -0800 (PST)
-Received: by mail-qt1-x832.google.com with SMTP id m18so4665425qtk.3
-        for <linux-pci@vger.kernel.org>; Thu, 23 Dec 2021 07:14:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t/trXJx8RMPAN3LWudnaUQxfD3uy1w2bAsHfBMgTUD4=;
-        b=fRFCt19eMNuoU6PtktXS7n1jOThMCMfDUdupLVqGWLLRLo37s/AnQ6Fy5/pHuxQUd6
-         zgx1aHowl6rAzUxtffE+zbjOdfcezueIRzTm2vLPGFHg64asQp1rBfZmzfqdnlWiEaK/
-         5y/MsoJA7Bm/fL9BtN5O/6oeIAapMuMeEuuLTZQEm+hqPlCu80Td+bYNqjFMC+Dpg7rW
-         mZkmTMBMKpTsY61ma0kPQrkKHCrZCjgP9oXwO0yJjxgkriQioWZvyff6+eZw/+yPS8dS
-         m1vKZJAGjPm5JdGB88cFB28/Q304zxS5JbN+DFl8dIplqLvoxM9rqMgOddej7TGjdPPN
-         b83Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t/trXJx8RMPAN3LWudnaUQxfD3uy1w2bAsHfBMgTUD4=;
-        b=l0OHoYrlWuEcbYTAEofl7CT1IxJ85MzNHvaCSoIAt8pI/+oMmhaDvM8QkP7wlDHzpP
-         GZJVl3+v0aR7Msd4Lk5+jBrI8D6P3KJgGIZa4Yk3AQax8BTA2q4IhoaFL7APX0rx5RhG
-         UrsemF04Pr8abs6edl8PSuoZBtLRwdnbHbMlq0SfQRFwAA9+0fh2m6vthYkCS9VDxVuy
-         MN85GcGNnxnh8C2VjqDcdojW02hO7gPk/0KnGccf62I1Y3VnvqsdIwbh/ZbOMp1ZLNVh
-         pzm1zzlhSmzf666KwZUDsUnn/5KCU81rNRXJiqc/CiA+RPqoHYpzWZhGWyNXvCz9c5z1
-         a6sw==
-X-Gm-Message-State: AOAM533C8q2a7oA7qtW7XVJEykYaBjrOWVpH+5KXVzSwNHYLkJ8idka1
-        WWcLwt3TPorQKF3RGlj4n5hAWkp3BUNawJtscepSLg==
-X-Google-Smtp-Source: ABdhPJzo5jfo5EIyTNbDJSgwmDIgON2Qh/6AVrAP6YjCcBIc4AmF0ZPAPrBaCJHusO72lnkIuFbgN/2EcyzhZHf4g8k=
-X-Received: by 2002:ac8:47d3:: with SMTP id d19mr2039424qtr.72.1640272453114;
- Thu, 23 Dec 2021 07:14:13 -0800 (PST)
+        id S244488AbhLWPzc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Dec 2021 10:55:32 -0500
+Received: from mga05.intel.com ([192.55.52.43]:47181 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231974AbhLWPzb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Dec 2021 10:55:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640274931; x=1671810931;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Eoq3IQ3HEs2cTlYpYY/HXtuejXWzsO7qZJoQ6uinrMU=;
+  b=KpkDSfxkMD/+eOjwDqvI78OB9nfKqhTpr4RDlct/Y3LTtFZFPL4MFt64
+   9ettBKW0nxTL3p/OF8m1hMwmcB/ttYKTvsFrMoRlD65GHHjMNWOkBnWbm
+   XY1QNa94lqIt6SjIW4MdUmeHmTH6vWue5zDygOAFE+3rR1mLAQuCXPek+
+   XgJ5jUN11wmWE+Efh30O+s5IeMlNJoxLsvEX6x13/VqmUJVEpeJVcrPjf
+   mXVQmzaS141mYwc4ekbYldrzXVmNtxB7tdurTTOHYrFblqxN3Ti0ZBFMu
+   QV9PDvw1rMTpIjh5F4+hQ2nTXJ3RCDBWIWV/SlytoOM+p9tCIC4Cce4vi
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10206"; a="327157245"
+X-IronPort-AV: E=Sophos;i="5.88,229,1635231600"; 
+   d="scan'208";a="327157245"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 07:55:31 -0800
+X-IronPort-AV: E=Sophos;i="5.88,229,1635231600"; 
+   d="scan'208";a="587346317"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 07:55:26 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1n0QPp-001Iqq-B3;
+        Thu, 23 Dec 2021 17:54:01 +0200
+Date:   Thu, 23 Dec 2021 17:54:01 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Gross <markgross@kernel.org>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
+Message-ID: <YcSbmQq4sCd9Dshy@smile.fi.intel.com>
+References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <1640189262-9699-1-git-send-email-quic_c_pmaliset@quicinc.com>
-In-Reply-To: <1640189262-9699-1-git-send-email-quic_c_pmaliset@quicinc.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Thu, 23 Dec 2021 18:14:02 +0300
-Message-ID: <CAA8EJpoq1xPj3nkZfjjviCQdLq-LcMVThTK6HzrW7AdmfebuhA@mail.gmail.com>
-Subject: Re: [PATCH v1] PCI: qcom: Add system PM support
-To:     Prasad Malisetty <quic_c_pmaliset@quicinc.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-        manivannan.sadhasivam@linaro.org, swboyd@chromium.org,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 22 Dec 2021 at 19:08, Prasad Malisetty
-<quic_c_pmaliset@quicinc.com> wrote:
->
-> From: Prasad Malisetty <quic_pmaliset@quicinc.com>
->
-> Add suspend_noirq and resume_noirq callbacks to handle
-> System suspend and resume in dwc pcie controller driver.
->
-> When system suspends, send PME turnoff message to enter
-> link into L2 state. Along with powerdown the PHY, disable
-> pipe clock, switch gcc_pcie_1_pipe_clk_src to XO if mux is
-> supported and disable the pcie clocks, regulators.
+On Tue, Dec 21, 2021 at 08:15:18PM +0200, Andy Shevchenko wrote:
+> There are a few users and at least one more is coming that would
+> like to utilize P2SB mechanism of hiding and unhiding a device from
+> the PCI configuration space.
+> 
+> Here is the series to deduplicate existing users and provide
+> a generic way for new comers.
+> 
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support.
+> 
+> The patch that bring the helper ("platform/x86/intel: Add Primary
+> to Sideband (P2SB) bridge support") has a commit message that
+> sheds a light on what the P2SB is and why this is needed.
+> 
+> Please, comment on the approach and individual patches.
+> 
+> The changes made in v2 do not change the main idea and the functionality
+> in a big scale. What we need is probably one more (RE-)test done by Henning.
+> I hope to have it merged to v5.17-rc1 that Siemens can develop their changes
+> based on this series.
+> 
+> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> since we have an ACPI device for GPIO I do not see any attempts to recreate
+> one).
+> 
+> (Since it's cross subsystem, the PDx86 seems the main one and
+> I think it makes sense to route it throught it with immutable
+> tag or branch provided for the others).
+> 
+> Bjorn, are you okay with this approach and the commit message in the main
+> patch?
+> 
+> Changes in v3:
+> - resent with cover letter
+> 
+> Changes in v2:
+> - added parentheses around bus in macros (Joe)
+> - added tag (Jean)
+> - fixed indentation and wrapping in the header (Christoph)
+> - moved out of PCI realm to PDx86 as the best common denominator (Bjorn)
+> - added a verbose commit message to explain P2SB thingy (Bjorn)
+> - converted first parameter from pci_dev to pci_bus
+> - made first two parameters (bus and devfn) optional (Henning, Lee)
+> - added Intel pin control patch to the series (Henning, Mika)
+> - fixed English style in the commit message of one of MFD patch (Lee)
+> - added tags to my MFD LPC ICH patches (Lee)
+> - used consistently (c) (Lee)
+> - made indexing for MFD cell and resource arrays (Lee)
+> - fixed the resource size in i801 (Jean)
 
-The GDSC stays on, if I'm not mistaken. Is this an expected behaviour
-for the suspend procedure?
+I'm going to be on vacation till 2022-01-03, I'll address comments if any
+during the first week of January and I hope it can make v5.17. Hans, what
+do you think?
 
-Also as a side note, the qcom-pcie driver supports a variety of SoCs
-from different generations. Which platforms were really tested?
-Judging from your patch I suppose that you did not test this on any
-non-recent platform.
-
-> When system resumes, PCIe link will be re-established and
-> setup rc settings.
->
-> Signed-off-by: Prasad Malisetty <quic_pmaliset@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 103 +++++++++++++++++++++++++++++++++
->  1 file changed, 103 insertions(+)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index c19cd506..24dcf5a 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -73,6 +73,8 @@
->
->  #define PCIE20_PARF_Q2A_FLUSH                  0x1AC
->
-> +#define PCIE20_PARF_PM_STTS                     0x24
-> +
->  #define PCIE20_MISC_CONTROL_1_REG              0x8BC
->  #define DBI_RO_WR_EN                           1
->
-> @@ -1616,6 +1618,107 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->         return ret;
->  }
->
-> +static int qcom_pcie_send_pme_turnoff_msg(struct qcom_pcie *pcie)
-> +{
-> +       int ret = 0;
-> +       u32 val = 0, poll_val = 0;
-> +       uint64_t l23_rdy_poll_timeout = 100000;
-> +       struct dw_pcie *pci = pcie->pci;
-> +       struct device *dev = pci->dev;
-> +
-> +       val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +       val |= BIT(4);
-> +       writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +
-> +       ret = readl_poll_timeout((pcie->parf + PCIE20_PARF_PM_STTS), poll_val,
-> +                       (poll_val & BIT(5)), 10000, l23_rdy_poll_timeout);
-> +       if (!ret)
-> +               dev_dbg(dev, "PCIe: PM_Enter_L23 is received\n");
-> +       else
-> +               dev_err(dev, "PM_Enter_L23 is NOT received.PARF_PM_STTS 0x%x\n",
-> +                       readl_relaxed(pcie->parf + PCIE20_PARF_PM_STTS));
-> +
-> +       return ret;
-> +}
-> +
-> +static void qcom_pcie_host_disable(struct qcom_pcie *pcie)
-> +{
-> +       struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-> +
-> +       /*Assert the reset of endpoint */
-> +       qcom_ep_reset_assert(pcie);
-> +
-> +       /* Put PHY into POWER DOWN state */
-> +       phy_power_off(pcie->phy);
-> +
-> +       writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
-> +       /* Disable pipe clock */
-> +       pcie->ops->post_deinit(pcie);
-> +
-> +       /* Change GCC_PCIE_1_PIPE_MUXR register to 0x2 for XO as parent */
-> +       if (pcie->pipe_clk_need_muxing)
-> +               clk_set_parent(res->pipe_clk_src, res->ref_clk_src);
-> +
-> +       /* Disable PCIe clocks and regulators*/
-> +       pcie->ops->deinit(pcie);
-> +}
-> +
-> +static int __maybe_unused qcom_pcie_pm_suspend_noirq(struct device *dev)
-> +{
-> +       int ret = 0;
-> +       struct qcom_pcie *pcie = dev_get_drvdata(dev);
-> +       struct dw_pcie *pci = pcie->pci;
-> +
-> +       if (!dw_pcie_link_up(pci)) {
-> +               dev_err(dev, "Power has been turned off already\n");
-> +               return ret;
-> +       }
-> +
-> +       /* Send PME turnoff msg */
-> +       ret = qcom_pcie_send_pme_turnoff_msg(pcie);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Power down the PHY, disable clock and regulators */
-> +       qcom_pcie_host_disable(pcie);
-> +
-> +       dev_info(dev, "PM: PCI is suspended\n");
-> +       return ret;
-> +}
-> +
-> +/* Resume the PCIe link */
-> +static int __maybe_unused qcom_pcie_pm_resume_noirq(struct device *dev)
-> +{
-> +       int ret = 0;
-> +       struct qcom_pcie *pcie = dev_get_drvdata(dev);
-> +       struct dw_pcie *pci = pcie->pci;
-> +       struct pcie_port *pp = &pci->pp;
-> +
-> +       dev_info(dev, "PM: Resuming\n");
-> +
-> +       /* Initialize PCIe host */
-> +       ret = qcom_pcie_host_init(pp);
-> +       if (ret)
-> +               dev_err(dev, "cannot initialize host\n");
-> +
-> +       dw_pcie_iatu_detect(pci);
-> +       dw_pcie_setup_rc(pp);
-> +
-> +       /* Start the PCIe link */
-> +       qcom_pcie_start_link(pci);
-> +
-> +       ret = dw_pcie_wait_for_link(pci);
-> +       if (ret)
-> +               dev_err(dev, "Link never came up, Resume failed\n");
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct dev_pm_ops qcom_pcie_pm_ops = {
-> +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(qcom_pcie_pm_suspend_noirq, qcom_pcie_pm_resume_noirq)
-> +};
-> +
->  static const struct of_device_id qcom_pcie_match[] = {
->         { .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
->         { .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
-
+(Meanwhile I'm expecting that my patch to fix dependencies will be applied,
+ so kbuild bot won't complain anymore on them being broken)
 
 -- 
-With best wishes
-Dmitry
+With Best Regards,
+Andy Shevchenko
+
+
