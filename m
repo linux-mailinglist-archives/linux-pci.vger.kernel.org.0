@@ -2,203 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10BF647E02E
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 09:11:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA12447E0D6
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 10:27:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242944AbhLWILS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Dec 2021 03:11:18 -0500
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:45209 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243034AbhLWILR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Dec 2021 03:11:17 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0V.Wa1Z2_1640247072;
-Received: from 30.240.114.155(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0V.Wa1Z2_1640247072)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 23 Dec 2021 16:11:14 +0800
-Message-ID: <8d415145-01bc-ce57-fd00-91ca63090caa@linux.alibaba.com>
-Date:   Thu, 23 Dec 2021 16:11:11 +0800
+        id S235997AbhLWJ1U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Dec 2021 04:27:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235992AbhLWJ1T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Dec 2021 04:27:19 -0500
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7050BC061401;
+        Thu, 23 Dec 2021 01:27:19 -0800 (PST)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C010522246;
+        Thu, 23 Dec 2021 10:27:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1640251636;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hlMDJ9bXqxykliuXyFIOvVoMPRwjLuBybvKEe/SqbUk=;
+        b=Ds/DAzbwBso52saig2DEac2R4aIvhEuSvqPkoTAm1T3t7wIODivddoIjTk4gKwpTOgyqgQ
+        vZ0M847HjhMQXYxXwc6ojzp6BWp+2MWlCDfPd+gUb77AqyttirpbHl9WXkh3LGFX01HuVA
+        OiCMLg97ao3XYo1joApgu2CIJoHIPXY=
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.4.0
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [RESEND PATCH v4] ACPI: Move sdei_init and ghes_init ahead to
- handle platform errors earlier
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 23 Dec 2021 10:27:15 +0100
+From:   Michael Walle <michael@walle.cc>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
-        lenb@kernel.org, rjw@rjwysocki.net, bhelgaas@google.com,
-        zhangliguang@linux.alibaba.com, zhuo.song@linux.alibaba.com,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-References: <20211221231701.GA1125162@bhelgaas>
-Content-Language: en-US
-In-Reply-To: <20211221231701.GA1125162@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Re: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
+In-Reply-To: <20211221174808.GA1094860@bhelgaas>
+References: <20211221174808.GA1094860@bhelgaas>
+User-Agent: Roundcube Webmail/1.4.12
+Message-ID: <39ecedffaf8e2ee931379de7e2f7924f@walle.cc>
+X-Sender: michael@walle.cc
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
+Hi Bjorn,
 
-Thank you for your comments.
-
-在 2021/12/22 AM7:17, Bjorn Helgaas 写道:
-> On Thu, Dec 16, 2021 at 09:34:56PM +0800, Shuai Xue wrote:
->> On an ACPI system, ACPI is initialised very early from a subsys_initcall(),
->> while SDEI is not ready until a subsys_initcall_sync().
->>
->> The SDEI driver provides functions (e.g. apei_sdei_register_ghes,
->> apei_sdei_unregister_ghes) to register or unregister event callback for
->> dispatcher in firmware. When the GHES driver probing, it registers the
->> corresponding callback according to the notification type specified by
->> GHES. If the GHES notification type is SDEI, the GHES driver will call
->> apei_sdei_register_ghes to register event call.
->>
->> When the firmware emits an event, it migrates the handling of the event
->> into the kernel at the registered entry-point __sdei_asm_handler. And
->> finally, the kernel will call the registered event callback and return
->> status_code to indicate the status of event handling. SDEI_EV_FAILED
->> indicates that the kernel failed to handle the event.
->>
->> Consequently, when an error occurs during kernel booting, the kernel is
->> unable to handle and report errors until the GHES driver is initialized by
->> device_initcall(), in which the event callback is registered. All errors
->> that occurred before GHES initialization are missed and there is no chance
->> to report and find them again.
->>
->> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
->> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
->> the estatus memory pool. On the other hand, ghes_init() relies on
->> sdei_init() to detect the SDEI version and the framework for registering
->> and unregistering events.
+Am 2021-12-21 18:48, schrieb Bjorn Helgaas:
+> [+to Jesse, Tony for Intel advice;
+> beginning of thread:
+> https://lore.kernel.org/all/20201230185317.30915-1-michael@walle.cc/]
 > 
->> By the way, I don't figure out why acpi_hest_init is called in
->> acpi_pci_root_init, it don't rely on any other thing. May it could
->> be moved further, following acpi_iort_init in acpi_init.
+> On Mon, Dec 20, 2021 at 06:43:03PM +0100, Michael Walle wrote:
+>> ...
+>> ping #4
+>> 
+>> In a few days this is a year old. Please have a look at it and
+>> either add my quirk patch or apply your patch. This is still
+>> breaking i210 on my board.
+>> 
+>> TBH, this is really frustrating.
 > 
-> I think you should drop the "By the way ..." text or move it after the
-> "---" at the bottom of your commit log.  It doesn't help understand
-> this patch.
-
-I will fix it in next version.
-
->> sdei_init() relies on ACPI table which is initialized
->> subsys_initcall(): acpi_init(), acpi_bus_init(), acpi_load_tables(),
->> acpi_tb_laod_namespace().  May it should be also moved further,
->> after acpi_load_tables.
+> You are right to be frustrated.  I'm very sorry that I have dropped
+> the ball on this.  Thanks for reminding me *again*.
 > 
-> This text also doesn't seem relevant to this patch.
-
-I will delete it in next version.
-
->> In this patch, move sdei_init and ghes_init as far ahead as
->> possible, right after acpi_hest_init().
+> I think we agree that this looks like an I210 defect.  I210 should
+> ignore the ROM BAR contents unless PCI_ROM_ADDRESS_ENABLE is set.  It
+> would be great if an Intel person could confirm/deny this and supply
+> an erratum reference and verify the affected device IDs.
 > 
-> I'm having a hard time figuring out the reason for this patch.
+> It seems that when the BARs are programmed like this:
 > 
-> Apparently the relevant parts are sdei_init() and ghes_init().
-> Today they are executed in that order:
+>   BAR 0: 0x40000000 (32-bit, non-prefetchable) [size=1M]
+>   BAR 3: 0x40200000 (32-bit, non-prefetchable) [size=16K]
+>   ROM:   0x40200000 (disabled) [size=1M]
 > 
->   subsys_initcall_sync(sdei_init);
->   device_initcall(ghes_init);
+> networking doesn't work at all and the transmit queue times out.
 > 
-> After this patch, they would be executed in the same order, but called
-> explicitly instead of as initcalls:
+> Linux assigns non-overlapping address space to the ROM BAR, but
+> pci_std_update_resource() currently doesn't update the BAR itself
+> unless it is enabled.
 > 
->   acpi_pci_root_init()
->   {
->     acpi_hest_init();
->     sdei_init();
->     ghes_init();
+> My proposal [1] worked around the defect by always updating the BAR,
+> but there's no clue that this covers up the I210 issue, so it remains
+> as sort of a land mine.  A future change could re-expose the problem,
+> so I don't think this was a good approach.
+> 
+> Your original patch [2] makes it clear that it's an issue with I210,
+> but there's an implicit connection between the normal BAR update path
+> (which skips the actual BAR write) and the quirk that does the BAR
+> write:
+> 
+>   <enumeration resource assignment>
 >     ...
+>       pci_assign_resource
+>         pci_update_resource
+>           pci_std_update_resource
+>             if (ROM && ROM-disabled)
+>               return
+>             pci_write_config_dword      # ROM BAR update (skipped)
 > 
-> Explicit calls are certainly better than initcalls, but that doesn't
-> seem to be the reason for this patch.
+>   pci_fixup_write_rom_bar               # final fixup
+>     pci_write_config_dword              # ROM BAR update
 > 
-> Does this patch fix a bug?  If so, what is the bug?
+> In the boot-time resource assignment path, this works fine, but if
+> pci_assign_resource() is called from pci_map_rom(), the fixup will not
+> happen, so we could still have problem.
 
-Yes. When the kernel booting, the console logs many times from firmware
-before GHES drivers init:
+I'm not sure I follow. pci_map_rom() should work fine. That was also
+the workaround IIRC, that is, enable the rom via sysfs. pci_map_rom()
+will call pci_enable_rom(), which should be the same as the fixup.
+If memory serves correctly, that is where I shamelessly copied the
+code from ;)
 
-	Trip in MM PCIe RAS handle(Intr:910)
-  	Clean PE[1.1.1] ERR_STS:0x4000100 -> 0 INT_STS:F0000000
-	Find RP(98:1.0)
-	--Walk dev(98:1.0) CE:0 UCE:4000
-	...
-	ERROR:   sdei_dispatch_event(32a) ret:-1
-	--handler(910) end
+btw. the problem is not in pci_assign_resource() which assigns the
+correct offsets, but that they are not written to the PCI card.
+Eg. see lspci:
 
-This is because the callback function has not been registered yet.
-Previously reported errors will be overwritten by new ones. Therefore,
-all errors that occurred before GHES initialization are missed
-and there is no chance to report and find them again.
+# lspci -s 2:1:0 -v
+0002:01:00.0 Ethernet controller: Intel Corporation I210 Gigabit Network 
+Connection (rev 03)
+	Subsystem: Hewlett-Packard Company Ethernet I210-T1 GbE NIC
+	Flags: bus master, fast devsel, latency 0, IRQ 34, IOMMU group 8
+	Memory at 8840000000 (32-bit, non-prefetchable) [size=1M]
+	Memory at 8840200000 (32-bit, non-prefetchable) [size=16K]
+	Expansion ROM at 8840100000 [disabled] [size=1M]
+	Capabilities: [40] Power Management version 3
+	Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
+	Capabilities: [70] MSI-X: Enable+ Count=5 Masked-
+	Capabilities: [a0] Express Endpoint, MSI 00
+	Capabilities: [100] Advanced Error Reporting
+	Capabilities: [140] Device Serial Number 00-de-ad-ff-ff-be-ef-04
+	Capabilities: [1a0] Transaction Processing Hints
+	Kernel driver in use: igb
+lspci: Unable to load libkmod resources: error -2
 
+# lspci -s 2:1:0 -xx
+0002:01:00.0 Ethernet controller: Intel Corporation I210 Gigabit Network 
+Connection (rev 03)
+00: 86 80 33 15 06 04 10 00 03 00 00 02 08 00 00 00
+10: 00 00 00 40 00 00 00 00 00 00 00 00 00 00 20 40
+20: 00 00 00 00 00 00 00 00 00 00 00 00 3c 10 03 00
+30: 00 00 20 40 40 00 00 00 00 00 00 00 22 01 00 00
 
-> You say that currently "errors that occur before GHES initialization
-> are missed".  Isn't that still true after this patch?  Does this patch
-> merely reduce the time before GHES initialization?  If so, I'm
-> dubious, because we have to tolerate an arbitrary amount of time
-> there.
-After this patch, there are still errors missing. As you mentioned,
-we have to tolerate it until the software reporting capability is built.
+Note the difference between "Expansion ROM at 8840100000" (assigned
+by pci_assign_resource() I guess) and the actual value at offset
+0x30: 0x40200000. The latter will be updated either by pci_enable_rom()
+or my pci fixup quirk.
 
-Yes, this patch merely reduce the time before GHES initialization. The boot
-dmesg before this patch:
-
-	[    3.688586] HEST: Table parsing has been initialized.
-	...
-	[   33.204340] calling  sdei_init+0x0/0x120 @ 1
-	[   33.208645] sdei: SDEIv1.0 (0x0) detected in firmware.
-	...
-	[   36.005390] calling  ghes_init+0x0/0x11c @ 1
-	[   36.190021] GHES: APEI firmware first mode is enabled by APEI bit and WHEA _OSC.
-
-
-After this patch, the boot dmesg like bellow:
-
-	[    3.688664] HEST: Table parsing has been initialized.
-	[    3.688691] sdei: SDEIv1.0 (0x0) detected in firmware.
-	[    3.694557] GHES: APEI firmware first mode is enabled by APEI bit and WHEA _OSC.
-
-As we can see, the initialization of GHES is advanced by 33 seconds.
-So, in my opinion, this patch is necessary, right?
-(It should be noted that the effect of optimization varies with the platform.)
-
-> s/acpi_tb_laod_namespace/acpi_tb_load_namespace/
-
-> You use "()" after function names sometimes, but not always.  Please
-> do it consistently.
-
-Thank you for pointing this out. I will fix it in next version.
-
-
->> -device_initcall(ghes_init);
+> If we tweaked pci_std_update_resource() to take account of this
+> defect, I think we could cover that path, too.
 > 
->>  void __init acpi_pci_root_init(void)
->>  {
->>  	acpi_hest_init();
->> +	sdei_init();
->> +	ghes_init();
-> 
-> What's the connection between PCI, SDEI, and GHES?  As far as I can
-> tell, SDEI and GHES are not PCI-specific, so it doesn't seem like they
-> should be initialized here in acpi_pci_root_init().
+> Can you try the patch below?
 
-The only reason is that acpi_hest_init() is initialized here.
+I tried, but it doesn't work because the fixup function is called
+after pci_std_update_resource(), thus dev->rom_bar_overlap is still
+0.
 
-From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
-memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
-the estatus memory pool. On the other hand, ghes_init() relies on
-sdei_init() to detect the SDEI version and the framework for registering
-and unregistering events. The dependencies are as follows
-
-	ghes_init() => acpi_hest_init()
-	ghes_init() => sdei_init()
-
-I don't figure out why acpi_hest_init() is called in
-acpi_pci_root_init(), it don't rely on any other thing.
-I am wondering that should we moved all of them further? e.g.
-following acpi_iort_init() in acpi_init().
-
-Best Regards,
-Shuai
+Thanks,
+-michael
