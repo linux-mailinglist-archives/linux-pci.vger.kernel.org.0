@@ -2,35 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52D4947DC8C
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 02:11:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB5B947DC8F
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 02:11:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241312AbhLWBLP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Dec 2021 20:11:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241236AbhLWBLO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Dec 2021 20:11:14 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4AC2C06173F;
-        Wed, 22 Dec 2021 17:11:14 -0800 (PST)
+        id S1345551AbhLWBLQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Dec 2021 20:11:16 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:49372 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345529AbhLWBLQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Dec 2021 20:11:16 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F49B61D92;
-        Thu, 23 Dec 2021 01:11:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 619B6C36AE5;
-        Thu, 23 Dec 2021 01:11:13 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DFBEF61C2C;
+        Thu, 23 Dec 2021 01:11:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28D20C36AE5;
+        Thu, 23 Dec 2021 01:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640221873;
-        bh=yGisiihGA/0OfiY28lJ4w5wj7xm0xhnIxa3qRAa2Or0=;
+        s=k20201202; t=1640221875;
+        bh=Ibnjc1Ag3vn7A29RC/T0gZzNpyuQKYqn+Ff07SRVx4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nh7C33QdMOtYnnjcLl+Y2Lp4VQGd0KokjCLyM241tdCQV9G7v2jYT7viPYs82LtE4
-         5bUHLojVXLleeOG9QadcLshFK3EPoMa3/mVb2olLZxD+eMo/3izvtRQXfs9R9lI9Eb
-         LX7bEEkmjFHm6TmJWXqyQgeIqa8KxmFd2S/bfCrkBdPLL5wSEXXYzLf3jnfWx9waV1
-         JLupjK4rhNymbkWWUZVQjkdie3e2bdApEfBJJI7VXZapqZjZlkCB1gnyZqgc9Ewbm+
-         OA+zwZw/TjPE/6p3TutKLCP039AZMub9wBt8W3WqNqQsAOhaFLqIH1tMEx1Rdqgmjx
-         T/pHQw66mV1Vg==
+        b=ZcfHxOmKbAHh1dur48h2G343diWQd0rLaQKK+YfADYBNoQA2tvOZSKISdBUNvGyH/
+         mgi+Yeq0GCAzdt8cqaZ26PJ0n/PjZnT2loDxzVws1dNNYCwaKjwudaxLmCLcqyLUtF
+         ElJt7+6TAtmb+U6U1/m46/m0UiO/prtTQQxh0iPXWY5vXpPMKp2alyxdFBzansjmyX
+         JB1QSS9u938+RS3a0OICI4q2lm2T6XjKGWpuvw2SwH8PhUO3N+juflm85M/JS/O9cP
+         OBhwax0V+HAv4vnKjtKWyK3wsAOMtaLYI4uMBZYwyGQJMZHaR46bXJcHkERc006RCq
+         thqnbKcuXwSxA==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org, Fan Fei <ffclaire1224@gmail.com>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -38,11 +35,10 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        linux-arm-kernel@axis.com
-Subject: [PATCH v2 02/23] PCI: artpec6: Prefer of_device_get_match_data()
-Date:   Wed, 22 Dec 2021 19:10:33 -0600
-Message-Id: <20211223011054.1227810-3-helgaas@kernel.org>
+        Tom Joseph <tjoseph@cadence.com>
+Subject: [PATCH v2 03/23] PCI: cadence: Prefer of_device_get_match_data()
+Date:   Wed, 22 Dec 2021 19:10:34 -0600
+Message-Id: <20211223011054.1227810-4-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211223011054.1227810-1-helgaas@kernel.org>
 References: <20211223011054.1227810-1-helgaas@kernel.org>
@@ -54,43 +50,44 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Fan Fei <ffclaire1224@gmail.com>
 
-The artpec6 driver only needs the device data, not the whole struct
+The cadence driver only needs the device data, not the whole struct
 of_device_id.  Use of_device_get_match_data() instead of of_match_device().
 No functional change intended.
 
 [bhelgaas: commit log]
 Signed-off-by: Fan Fei <ffclaire1224@gmail.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: linux-arm-kernel@axis.com
+Cc: Tom Joseph <tjoseph@cadence.com>
 ---
- drivers/pci/controller/dwc/pcie-artpec6.c | 6 ++----
+ drivers/pci/controller/cadence/pcie-cadence-plat.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index c91fc1954432..2f15441770e1 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -380,17 +380,15 @@ static int artpec6_pcie_probe(struct platform_device *pdev)
- 	struct dw_pcie *pci;
- 	struct artpec6_pcie *artpec6_pcie;
- 	int ret;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-plat.c b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+index a224afadbcc0..bac0541317c1 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-plat.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-plat.c
+@@ -45,7 +45,6 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
+ {
+ 	const struct cdns_plat_pcie_of_data *data;
+ 	struct cdns_plat_pcie *cdns_plat_pcie;
 -	const struct of_device_id *match;
- 	const struct artpec_pcie_of_data *data;
- 	enum artpec_pcie_variants variant;
- 	enum dw_pcie_device_mode mode;
- 	u32 val;
+ 	struct device *dev = &pdev->dev;
+ 	struct pci_host_bridge *bridge;
+ 	struct cdns_pcie_ep *ep;
+@@ -54,11 +53,10 @@ static int cdns_plat_pcie_probe(struct platform_device *pdev)
+ 	bool is_rc;
+ 	int ret;
  
--	match = of_match_device(artpec6_pcie_of_match, dev);
+-	match = of_match_device(cdns_plat_pcie_of_match, dev);
 -	if (!match)
 +	data = of_device_get_match_data(dev);
 +	if (!data)
  		return -EINVAL;
  
--	data = (struct artpec_pcie_of_data *)match->data;
- 	variant = (enum artpec_pcie_variants)data->variant;
- 	mode = (enum dw_pcie_device_mode)data->mode;
+-	data = (struct cdns_plat_pcie_of_data *)match->data;
+ 	is_rc = data->is_rc;
  
+ 	pr_debug(" Started %s with is_rc: %d\n", __func__, is_rc);
 -- 
 2.25.1
 
