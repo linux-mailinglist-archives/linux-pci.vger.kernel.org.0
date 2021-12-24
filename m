@@ -2,114 +2,256 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40FFA47EDFD
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Dec 2021 10:47:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B00F47EE0E
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Dec 2021 10:49:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352319AbhLXJrV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Dec 2021 04:47:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343906AbhLXJrV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Dec 2021 04:47:21 -0500
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50536C061757
-        for <linux-pci@vger.kernel.org>; Fri, 24 Dec 2021 01:47:21 -0800 (PST)
-Received: by mail-qt1-x844.google.com with SMTP id v4so4604774qtk.0
-        for <linux-pci@vger.kernel.org>; Fri, 24 Dec 2021 01:47:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=DA2RfWm5BfTc8dY4tRUxJejPvziWb2AgHmDwtjqgqi8=;
-        b=d0P95Noqmdkxw0/wvctJYkwBfzFrfj3y8CNvvnS1mBxqO9psTiil8v0OeCJYLHZFUR
-         D0x+rt0IbfPcb7Z2sneOnrnaMOuyeZf2e2u4ZK/W+bxMNdffdpmT8JPmt1opho1oYHhj
-         kl2jd9HJPXOBlPkgXGNwEWwawFVLTS0XTELHL3Mx8DQq1yLAguDXcFQilrtuWcLkmxvU
-         qITXCyf0otYbrATA6BjAC9WRApKTlb9I7wDPlr8jIu2f/xri4PMBsMO0G2c/BpzYC/P2
-         tZGCWMgZHqI83eyWd+tZblBQ+wiiiGOGfGoqpfmXV3CNoy/bP0Syz6wXjb9xOoVYERoi
-         iwyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=DA2RfWm5BfTc8dY4tRUxJejPvziWb2AgHmDwtjqgqi8=;
-        b=HelqCedYbc2VTSXKyWg//qYvnUVo/VDCHHmr5K07UYclBo0PYFhEWVHq9MyrNS4EZ5
-         Qu414Inx8wsFHn4aadrvcR5XWZ9ceT2C7mftyw7jGgycIsUKYtezzHlnZOK27h+GttCJ
-         +v+c4+1KnonfOuHYXqJVEwxCHC9IhuBdsDfhDyCGBW9bxiApTLDBJ1wMeOWxW/KPNs5l
-         rI4QHRz/TfWYLexeg9QvvX6Pguh9LsKVh/59SMxF8zNuWCZj5Lzpvadx0EfVIek+CVKM
-         4VmXNzwW1Jg3Im3ULO3RzIv64khh1RHrk4VtuxCdFZt/t8cZidcWLzK2Di6zn3BEpU3x
-         QuQQ==
-X-Gm-Message-State: AOAM531NQtuI20oJraAkPVuaznmPfdf+nbIgHYvqGcl8jCZNrVzYntNa
-        8e2V+4NfQFjnKEIae6eeP/14A8aTn84vF5/NphE=
-X-Google-Smtp-Source: ABdhPJzFYcWIQAextfeVNI3JhN76YDHYSHJ6/KsFEUtGG0jw0c/SsdfCy/5v6o09uan6oJ8LP4iSc4zyz4L3Me4XJuQ=
-X-Received: by 2002:a05:622a:120b:: with SMTP id y11mr4954728qtx.544.1640339240386;
- Fri, 24 Dec 2021 01:47:20 -0800 (PST)
+        id S1352329AbhLXJts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Dec 2021 04:49:48 -0500
+Received: from mga11.intel.com ([192.55.52.93]:39566 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1343853AbhLXJts (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 24 Dec 2021 04:49:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640339388; x=1671875388;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sZpph6TdL31ELELq38jHCmBu6KiZbnwVdRzH33cPPeA=;
+  b=GQ8Pw9E89RpmuC07YKwNy2caDuQoQckxu/kb80wgE2NcjEG5ghH4gaI4
+   IaoV5DMQrGkzLR2ITZ5tzjn86lVku8oJwG+5ramJx6X5efVz/RDTOjWT3
+   GIX6+RB87YgmA2VAGxIhjuYdjpQX6KhpFcues7qX7ziZyxyaRWFqqpO/b
+   UIHkEd1V5nrGfxluREYUizsyJ0cJ8V63oGNzCPobSLu4a8j5Xt6ncWmYA
+   Ip5h8fipO1cxqdpGiOiQH/gUQSvEEkk6ZuCBGO6WrRThv1Okk7QtUaipj
+   fh+3HX/TfVsOZuU0BZxSVK04Ppml/CsgBbR3Bsd6TJAsy8WOydoqqxCcp
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10207"; a="238495103"
+X-IronPort-AV: E=Sophos;i="5.88,232,1635231600"; 
+   d="scan'208";a="238495103"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2021 01:49:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,232,1635231600"; 
+   d="scan'208";a="509119057"
+Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 24 Dec 2021 01:49:46 -0800
+Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1n0hCr-0002sS-HT; Fri, 24 Dec 2021 09:49:45 +0000
+Date:   Fri, 24 Dec 2021 17:49:24 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/driver-cleanup] BUILD SUCCESS
+ f1b3feeb052bfdfe7dfba3239916a264a26287eb
+Message-ID: <61c597a4.QElLRRDJdaAybQOw%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Received: by 2002:ad4:5c62:0:0:0:0:0 with HTTP; Fri, 24 Dec 2021 01:47:20
- -0800 (PST)
-Reply-To: williamsreneta2019@gmail.com
-From:   MISS WILLIAMS <info.turvateealfastar@gmail.com>
-Date:   Fri, 24 Dec 2021 01:47:20 -0800
-Message-ID: <CAM-qQYbyS52hhue8emitRciCztz=jNBFMsC4cqLE8weW69AgaA@mail.gmail.com>
-Subject: Greetings Dearest One,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Greetings Dearest One,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/driver-cleanup
+branch HEAD: f1b3feeb052bfdfe7dfba3239916a264a26287eb  PCI: spear13xx: Avoid invalid address space conversions
 
-How are you today, together with your family?Hope fine.I would like to
-use this opportunity to introduce myself to you. I am Miss Reneta
-Williams, From Benin Republic, West Africa. And my late parents are
-Mr. and Mrs. Dikko Williams; my father was a highly reputable business
-magnet who operated in Benin Republic during his days.
+elapsed time: 720m
 
-I am writing this mail to you with tears and sorrow from my heart.
-With due respect trust and humanity, I know this mail will come to you
-as a surprise since we haven't known or come across each other before,
-considering the fact that I sourced your email contact through the
-Internet in search of trusted person who can be trusted and will
-assist me.
+configs tested: 185
+configs skipped: 3
 
-It is sad to say that he passed away mysteriously in France during one
-of his business trips abroad. Though his sudden death was linked or
-rather suspected to have been masterminded by an uncle of his who
-traveled with him at that time. But God knows the truth! My mother
-died when I was just 6yrs old, and since then my father took me so
-special.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Before his death, he called me and informed me that he has the sum of
-Eighteen Million Five Hundred , United State Dollar
-(USD$18.500,000.00) left in fixed deposit account in one of the
-leading banks in Africa. He further told me that he deposited the
-money in my name, and also gave me all the necessary but legal
-documents to this fund with the bank.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211223
+xtensa                         virt_defconfig
+m68k                        m5307c3_defconfig
+csky                             alldefconfig
+sh                              ul2_defconfig
+sh                      rts7751r2d1_defconfig
+arm                         lubbock_defconfig
+arm                   milbeaut_m10v_defconfig
+mips                             allmodconfig
+m68k                        mvme147_defconfig
+arm                            qcom_defconfig
+arm                          iop32x_defconfig
+arc                          axs103_defconfig
+powerpc                      mgcoge_defconfig
+um                           x86_64_defconfig
+powerpc                    mvme5100_defconfig
+m68k                         amcore_defconfig
+mips                           ip27_defconfig
+arc                              alldefconfig
+sh                            migor_defconfig
+sh                            hp6xx_defconfig
+arm                       spear13xx_defconfig
+arm                          gemini_defconfig
+arm                         bcm2835_defconfig
+powerpc                     rainier_defconfig
+sh                            shmin_defconfig
+sh                           se7721_defconfig
+alpha                            alldefconfig
+sh                           se7343_defconfig
+arm                      integrator_defconfig
+mips                        vocore2_defconfig
+arm                          simpad_defconfig
+powerpc                      ep88xc_defconfig
+mips                     decstation_defconfig
+arc                            hsdk_defconfig
+powerpc                      pmac32_defconfig
+arm                        oxnas_v6_defconfig
+powerpc                     ppa8548_defconfig
+mips                         tb0219_defconfig
+powerpc                      pcm030_defconfig
+powerpc                    amigaone_defconfig
+powerpc                      arches_defconfig
+sh                        apsh4ad0a_defconfig
+arm                           sunxi_defconfig
+powerpc                 mpc8313_rdb_defconfig
+arm                         s3c2410_defconfig
+arm                              alldefconfig
+sh                           se7619_defconfig
+arm                           corgi_defconfig
+powerpc                     redwood_defconfig
+powerpc                 mpc836x_mds_defconfig
+powerpc                 linkstation_defconfig
+arm                           u8500_defconfig
+arm                            xcep_defconfig
+um                               alldefconfig
+mips                 decstation_r4k_defconfig
+powerpc                     powernv_defconfig
+powerpc                 mpc832x_rdb_defconfig
+sh                        edosk7760_defconfig
+mips                     cu1000-neo_defconfig
+arm                           stm32_defconfig
+powerpc                       ppc64_defconfig
+mips                         rt305x_defconfig
+powerpc                       maple_defconfig
+powerpc                      obs600_defconfig
+sh                          rsk7203_defconfig
+mips                       capcella_defconfig
+mips                         tb0226_defconfig
+xtensa                           alldefconfig
+ia64                             allmodconfig
+sh                           se7724_defconfig
+mips                     loongson1b_defconfig
+powerpc                      chrp32_defconfig
+powerpc                     tqm5200_defconfig
+powerpc                      cm5200_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                            alldefconfig
+arm                     eseries_pxa_defconfig
+powerpc64                           defconfig
+arm                        neponset_defconfig
+arm                         lpc18xx_defconfig
+sh                ecovec24-romimage_defconfig
+m68k                            mac_defconfig
+arm                          exynos_defconfig
+sh                          lboxre2_defconfig
+nios2                               defconfig
+x86_64                           allyesconfig
+arm                            mmp2_defconfig
+arm                         palmz72_defconfig
+arm                  randconfig-c002-20211224
+arm                  randconfig-c002-20211223
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a013-20211223
+x86_64               randconfig-a015-20211223
+x86_64               randconfig-a014-20211223
+x86_64               randconfig-a011-20211223
+x86_64               randconfig-a012-20211223
+x86_64               randconfig-a016-20211223
+i386                 randconfig-a012-20211223
+i386                 randconfig-a011-20211223
+i386                 randconfig-a013-20211223
+i386                 randconfig-a015-20211223
+i386                 randconfig-a014-20211223
+i386                 randconfig-a016-20211223
+arc                  randconfig-r043-20211223
+s390                 randconfig-r044-20211223
+riscv                randconfig-r042-20211223
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
 
-I am 21 years old and a university undergraduate and really don't know
-what to do. Now I want an account overseas where I can transfer this
-funds and after the transaction I will come and reside permanently in
-your country till such a time that it will be convenient for me to
-return back home if I so desire.
+clang tested configs:
+x86_64               randconfig-a001-20211223
+x86_64               randconfig-a003-20211223
+x86_64               randconfig-a002-20211223
+x86_64               randconfig-a004-20211223
+x86_64               randconfig-a005-20211223
+x86_64               randconfig-a006-20211223
+i386                 randconfig-a006-20211223
+i386                 randconfig-a004-20211223
+i386                 randconfig-a002-20211223
+i386                 randconfig-a003-20211223
+i386                 randconfig-a005-20211223
+i386                 randconfig-a001-20211223
+x86_64               randconfig-a013-20211224
+x86_64               randconfig-a014-20211224
+x86_64               randconfig-a015-20211224
+x86_64               randconfig-a012-20211224
+x86_64               randconfig-a011-20211224
+x86_64               randconfig-a016-20211224
+i386                 randconfig-a012-20211224
+i386                 randconfig-a011-20211224
+i386                 randconfig-a014-20211224
+i386                 randconfig-a016-20211224
+i386                 randconfig-a015-20211224
+i386                 randconfig-a013-20211224
+hexagon              randconfig-r041-20211224
+hexagon              randconfig-r045-20211224
+s390                 randconfig-r044-20211224
+riscv                randconfig-r042-20211224
+hexagon              randconfig-r041-20211223
+hexagon              randconfig-r045-20211223
 
-The death of my father actually brought sorrow to my life. I also want
-to invest the fund under your care because I am ignorant of business
-world. I am in a sincere desire of your humble assistance in this
-regards. Your suggestions and ideas will be highly regarded.
-
-Now permit me to ask these few questions:
-
-1. Can you honestly help me from your heart?
-
-2. Can I completely trust you?
-
-3. What percentage of the total amount in question will be good for
-you after the money is in your account?
-
-Please, consider this and get back to me as soon as
-possible.Immediately and confirm your willingness on this my
-email(williamsreneta2019@gmail.com), here is one of my Picture and
-also i will inform you more details involved in this matter.
-
-Regards,
-
-Miss Reneta Williams.
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
