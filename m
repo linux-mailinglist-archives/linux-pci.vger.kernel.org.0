@@ -2,118 +2,232 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7DC347E926
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Dec 2021 22:38:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABB3747E9D3
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Dec 2021 01:17:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350374AbhLWViB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Dec 2021 16:38:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56976 "EHLO
+        id S236752AbhLXARW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Dec 2021 19:17:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350360AbhLWViB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Dec 2021 16:38:01 -0500
+        with ESMTP id S229995AbhLXARW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Dec 2021 19:17:22 -0500
 Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F58BC061756;
-        Thu, 23 Dec 2021 13:38:01 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34474C061401;
+        Thu, 23 Dec 2021 16:17:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 53E4ECE2200;
-        Thu, 23 Dec 2021 21:37:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AE86C36AE9;
-        Thu, 23 Dec 2021 21:37:57 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id DCA99CE2208;
+        Fri, 24 Dec 2021 00:17:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA228C36AE9;
+        Fri, 24 Dec 2021 00:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640295477;
-        bh=44GMKBWOMz8CYw7hOFvtvXHi1D2y4pTa6iH6EqHFN9s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oB6RVHIFmFVg4Zy7m8F1ScDCmnhFSsKsfVz9m94zXw3ZMjvvROSubpQW31hC3GQ2k
-         5cyFOPeQ+qDcr6VbrlBLHkjXuma26s6ECtHfgyzLNCVHlabNrhzWbWACQ4Pv5HZtbA
-         XJ6zyFpxXE4bjxbyLK271TwjBz+SuQ5dhHq66hVcFbyOc5B4NnepWjXy5GPf+0FXuj
-         U1gso8lasZHIjYZiWMXAwmrmUo0gnKk85sL2oHXcL5VZ7RwqqRVyOsCtBZkZMwj/Ja
-         u2DKF/NXKv8h5l/f7DyJiMRQ1xQfclNx4u6F/LI8Ln0B5+gdCTJDY3C6DcE2aW3jkA
-         H4m8YRL1eGV6w==
+        s=k20201202; t=1640305038;
+        bh=Lsn+SJr4zh4UngfpfSCZSK7Cx8HFzr3Btzb07JER74A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=e8qfm14ZXBBPAovJ7Lz14Jh2N+BIwWPCrhp/J9Oq4q1kzmOhI5czSBRUuDSY9eB05
+         XmyMFIn+ynDw3MZVqQJvZw1/EK2Ogf6yiSdGzXMdEQQ71ms3TRmssK17Fz/xVrkr6z
+         Tw2kg1cFq6raVDqB0eT1W9+ksOqB1nQG+AB4qjVpn8JWwAzkIr4/lsfJngbvJ7VTXt
+         StH7OChZ66aECg/QqxF+TcgthAYl9ITz8khtIeW91b+UxelJ8wIRvCgKvMVBANMwPU
+         fWSNQ9av2ealcc6u+40b6oB6agt9wIrXo+adjmU4Kv6GGcVI+zahYSIpJvdFThBV4t
+         D5qTkU5rIxtjg==
+Date:   Thu, 23 Dec 2021 18:17:16 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Pratyush Anand <pratyush.anand@gmail.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/2] PCI: spear13xx: Avoid invalid address space conversions
-Date:   Thu, 23 Dec 2021 15:37:49 -0600
-Message-Id: <20211223213749.1314142-3-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211223213749.1314142-1-helgaas@kernel.org>
-References: <20211223213749.1314142-1-helgaas@kernel.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
+        lenb@kernel.org, bhelgaas@google.com,
+        zhangliguang@linux.alibaba.com, zhuo.song@linux.alibaba.com,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: [RESEND PATCH v4] ACPI: Move sdei_init and ghes_init ahead to
+ handle platform errors earlier
+Message-ID: <20211224001716.GA1324143@bhelgaas>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8d415145-01bc-ce57-fd00-91ca63090caa@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+[+to Rafael, question about HEST/GHES/SDEI init]
 
-The sparse checker complains about converting pointers between address
-spaces.  We correctly stored an __iomem pointer in struct spear13xx_pcie,
-but discarded the __iomem when extracting app_base, causing one warning.
-Then we passed the non-__iomem pointer to writel(), which expects an
-__iomem pointer, causing another warning.
+On Thu, Dec 23, 2021 at 04:11:11PM +0800, Shuai Xue wrote:
+> 在 2021/12/22 AM7:17, Bjorn Helgaas 写道:
+> > On Thu, Dec 16, 2021 at 09:34:56PM +0800, Shuai Xue wrote:
+> >> On an ACPI system, ACPI is initialised very early from a subsys_initcall(),
+> >> while SDEI is not ready until a subsys_initcall_sync().
+> >>
+> >> The SDEI driver provides functions (e.g. apei_sdei_register_ghes,
+> >> apei_sdei_unregister_ghes) to register or unregister event callback for
+> >> dispatcher in firmware. When the GHES driver probing, it registers the
+> >> corresponding callback according to the notification type specified by
+> >> GHES. If the GHES notification type is SDEI, the GHES driver will call
+> >> apei_sdei_register_ghes to register event call.
+> >>
+> >> When the firmware emits an event, it migrates the handling of the event
+> >> into the kernel at the registered entry-point __sdei_asm_handler. And
+> >> finally, the kernel will call the registered event callback and return
+> >> status_code to indicate the status of event handling. SDEI_EV_FAILED
+> >> indicates that the kernel failed to handle the event.
+> >>
+> >> Consequently, when an error occurs during kernel booting, the kernel is
+> >> unable to handle and report errors until the GHES driver is initialized by
+> >> device_initcall(), in which the event callback is registered. All errors
+> >> that occurred before GHES initialization are missed and there is no chance
+> >> to report and find them again.
+> >>
+> >> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
+> >> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
+> >> the estatus memory pool. On the other hand, ghes_init() relies on
+> >> sdei_init() to detect the SDEI version and the framework for registering
+> >> and unregistering events.
+> > 
+> >> By the way, I don't figure out why acpi_hest_init is called in
+> >> acpi_pci_root_init, it don't rely on any other thing. May it could
+> >> be moved further, following acpi_iort_init in acpi_init.
 
-Add the appropriate annotations.
+> >> sdei_init() relies on ACPI table which is initialized
+> >> subsys_initcall(): acpi_init(), acpi_bus_init(), acpi_load_tables(),
+> >> acpi_tb_laod_namespace().  May it should be also moved further,
+> >> after acpi_load_tables.
 
-The sparse warnings look like this:
+> >> In this patch, move sdei_init and ghes_init as far ahead as
+> >> possible, right after acpi_hest_init().
+> > 
+> > I'm having a hard time figuring out the reason for this patch.
+> > 
+> > Apparently the relevant parts are sdei_init() and ghes_init().
+> > Today they are executed in that order:
+> > 
+> >   subsys_initcall_sync(sdei_init);
+> >   device_initcall(ghes_init);
+> > 
+> > After this patch, they would be executed in the same order, but called
+> > explicitly instead of as initcalls:
+> > 
+> >   acpi_pci_root_init()
+> >   {
+> >     acpi_hest_init();
+> >     sdei_init();
+> >     ghes_init();
+> >     ...
+> > 
+> > Explicit calls are certainly better than initcalls, but that doesn't
+> > seem to be the reason for this patch.
+> > 
+> > Does this patch fix a bug?  If so, what is the bug?
+> 
+> Yes. When the kernel booting, the console logs many times from firmware
+> before GHES drivers init:
+> 
+> 	Trip in MM PCIe RAS handle(Intr:910)
+>   	Clean PE[1.1.1] ERR_STS:0x4000100 -> 0 INT_STS:F0000000
+> 	Find RP(98:1.0)
+> 	--Walk dev(98:1.0) CE:0 UCE:4000
+> 	...
+> 	ERROR:   sdei_dispatch_event(32a) ret:-1
+> 	--handler(910) end
+> 
+> This is because the callback function has not been registered yet.
+> Previously reported errors will be overwritten by new ones. Therefore,
+> all errors that occurred before GHES initialization are missed
+> and there is no chance to report and find them again.
+> 
+> > You say that currently "errors that occur before GHES initialization
+> > are missed".  Isn't that still true after this patch?  Does this patch
+> > merely reduce the time before GHES initialization?  If so, I'm
+> > dubious, because we have to tolerate an arbitrary amount of time
+> > there.
+> 
+> After this patch, there are still errors missing. As you mentioned,
+> we have to tolerate it until the software reporting capability is built.
+> 
+> Yes, this patch merely reduce the time before GHES initialization.
 
-  $ make C=2 drivers/pci/controller/
-  drivers/pci/controller/dwc/pcie-spear13xx.c:72:54: warning: incorrect type in initializer (different address spaces)
-  drivers/pci/controller/dwc/pcie-spear13xx.c:72:54:    expected struct pcie_app_reg *app_reg
-  drivers/pci/controller/dwc/pcie-spear13xx.c:72:54:    got void [noderef] __iomem *app_base
-  drivers/pci/controller/dwc/pcie-spear13xx.c:78:26: warning: incorrect type in argument 2 (different address spaces)
-  drivers/pci/controller/dwc/pcie-spear13xx.c:78:26:    expected void volatile [noderef] __iomem *addr
-  drivers/pci/controller/dwc/pcie-spear13xx.c:78:26:    got unsigned int *
+It's not a bug that errors that happen before the callback are lost.
+At least, it's not a *Linux* bug.  It might be a poor design of the
+firmware error reporting interface.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Pratyush Anand <pratyush.anand@gmail.com>
----
- drivers/pci/controller/dwc/pcie-spear13xx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+If the only point of this patch is to reduce the time before GHES
+initialization, the commit log should clearly say that.
 
-diff --git a/drivers/pci/controller/dwc/pcie-spear13xx.c b/drivers/pci/controller/dwc/pcie-spear13xx.c
-index 1a9e353bef55..1569e82b5568 100644
---- a/drivers/pci/controller/dwc/pcie-spear13xx.c
-+++ b/drivers/pci/controller/dwc/pcie-spear13xx.c
-@@ -69,7 +69,7 @@ struct pcie_app_reg {
- static int spear13xx_pcie_start_link(struct dw_pcie *pci)
- {
- 	struct spear13xx_pcie *spear13xx_pcie = to_spear13xx_pcie(pci);
--	struct pcie_app_reg *app_reg = spear13xx_pcie->app_base;
-+	struct pcie_app_reg __iomem *app_reg = spear13xx_pcie->app_base;
- 
- 	/* enable ltssm */
- 	writel(DEVICE_TYPE_RC | (1 << MISCTRL_EN_ID)
-@@ -83,7 +83,7 @@ static int spear13xx_pcie_start_link(struct dw_pcie *pci)
- static irqreturn_t spear13xx_pcie_irq_handler(int irq, void *arg)
- {
- 	struct spear13xx_pcie *spear13xx_pcie = arg;
--	struct pcie_app_reg *app_reg = spear13xx_pcie->app_base;
-+	struct pcie_app_reg __iomem *app_reg = spear13xx_pcie->app_base;
- 	struct dw_pcie *pci = spear13xx_pcie->pci;
- 	struct pcie_port *pp = &pci->pp;
- 	unsigned int status;
-@@ -102,7 +102,7 @@ static irqreturn_t spear13xx_pcie_irq_handler(int irq, void *arg)
- 
- static void spear13xx_pcie_enable_interrupts(struct spear13xx_pcie *spear13xx_pcie)
- {
--	struct pcie_app_reg *app_reg = spear13xx_pcie->app_base;
-+	struct pcie_app_reg __iomem *app_reg = spear13xx_pcie->app_base;
- 
- 	/* Enable MSI interrupt */
- 	if (IS_ENABLED(CONFIG_PCI_MSI))
-@@ -113,7 +113,7 @@ static void spear13xx_pcie_enable_interrupts(struct spear13xx_pcie *spear13xx_pc
- static int spear13xx_pcie_link_up(struct dw_pcie *pci)
- {
- 	struct spear13xx_pcie *spear13xx_pcie = to_spear13xx_pcie(pci);
--	struct pcie_app_reg *app_reg = spear13xx_pcie->app_base;
-+	struct pcie_app_reg __iomem *app_reg = spear13xx_pcie->app_base;
- 
- 	if (readl(&app_reg->app_status_1) & XMLH_LINK_UP)
- 		return 1;
--- 
-2.25.1
+> The boot dmesg before this patch:
+> 
+> 	[    3.688586] HEST: Table parsing has been initialized.
+> 	...
+> 	[   33.204340] calling  sdei_init+0x0/0x120 @ 1
+> 	[   33.208645] sdei: SDEIv1.0 (0x0) detected in firmware.
+> 	...
+> 	[   36.005390] calling  ghes_init+0x0/0x11c @ 1
+> 	[   36.190021] GHES: APEI firmware first mode is enabled by APEI bit and WHEA _OSC.
+> 
+> 
+> After this patch, the boot dmesg like bellow:
+> 
+> 	[    3.688664] HEST: Table parsing has been initialized.
+> 	[    3.688691] sdei: SDEIv1.0 (0x0) detected in firmware.
+> 	[    3.694557] GHES: APEI firmware first mode is enabled by APEI bit and WHEA _OSC.
 
+[Tangent: I think this GHES message is confusing.  What "APEI bit"
+does this refer to?  The only bits I remember are the Flags bits in
+HEST Error Source Descriptor Entries, e.g., ACPI v6.3, sec 18.3.2.
+
+"WHEA _OSC" means nothing to me, and I didn't find anything useful
+with grep, other than that "WHEA" might be an obsolete name for what
+we now call "APEI".
+
+I don't think there's anything in _OSC that mentions "firmware first."
+
+I don't remember anything in the spec about a way to *enable* Firmware
+First Error Handling needing (I'm looking at ACPI v6.3, sec 18.4).
+
+I think the "firmware first" information is useless to the OS -- as
+far as I can tell, the spec says nothing about anything the OS should
+do based on the FIRMWARE_FIRST bits.]
+
+> As we can see, the initialization of GHES is advanced by 33 seconds.
+> So, in my opinion, this patch is necessary, right?
+> (It should be noted that the effect of optimization varies with the platform.)
+
+> >> -device_initcall(ghes_init);
+> > 
+> >>  void __init acpi_pci_root_init(void)
+> >>  {
+> >>  	acpi_hest_init();
+> >> +	sdei_init();
+> >> +	ghes_init();
+> > 
+> > What's the connection between PCI, SDEI, and GHES?  As far as I can
+> > tell, SDEI and GHES are not PCI-specific, so it doesn't seem like they
+> > should be initialized here in acpi_pci_root_init().
+> 
+> The only reason is that acpi_hest_init() is initialized here.
+> 
+> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
+> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
+> the estatus memory pool. On the other hand, ghes_init() relies on
+> sdei_init() to detect the SDEI version and the framework for registering
+> and unregistering events. The dependencies are as follows
+> 
+> 	ghes_init() => acpi_hest_init()
+> 	ghes_init() => sdei_init()
+> 
+> I don't figure out why acpi_hest_init() is called in
+> acpi_pci_root_init(), it don't rely on any other thing.
+> I am wondering that should we moved all of them further? e.g.
+> following acpi_iort_init() in acpi_init().
+
+I don't know why acpi_hest_init() is called from acpi_pci_root_init().
+It looks like HEST can support error sources other than PCI (IA-32
+Machine Checks, NMIs, GHES, etc.)  It was added by 415e12b23792
+("PCI/ACPI: Request _OSC control once for each root bridge (v3)");
+maybe Rafael remembers why.
+
+Seem like acpi_hest_init(), sdei_init(), and ghes_init() should all go
+somewhere else, but I don't know where.  Maybe somewhere in
+acpi_init()?
+
+Bjorn
