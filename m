@@ -2,87 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79BE447EA35
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Dec 2021 02:25:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1405947EA4F
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Dec 2021 02:30:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350708AbhLXBZN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Dec 2021 20:25:13 -0500
-Received: from esa.microchip.iphmx.com ([68.232.154.123]:25932 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350649AbhLXBZK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Dec 2021 20:25:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1640309109; x=1671845109;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Wu5IURmBwZeW3y4oSE+nzpn5LdHJ/yuuFONebUzH3pY=;
-  b=kjpUkkqfeIxRw4ZGpFji0DdbibsBhi3IlsdiGaB9nEyNdbbUNuumORnU
-   GQXakSkPXxlZH7yhVvahyle1iGWfw5Q/GiItrBv08JZn9Br15f3w1eumS
-   OS8BTiSR1HA8Yd1gqHni8o19lgzw3zkLdXzXby2mSrFGu/PsgTiKlO7zh
-   7rIBF6XeAB2QllsWjBCRmdB/P4c/uBaN87HpS/bT9urr1yM/TOWL6DcMo
-   iFIqtKXRwQ7AgPZgU3ToCQVlmW63RVe5seo8vyTX9WRyMBup/g3s8e3u+
-   bX4GIr9iU1a5w8g93Tq4J0NQ53HJvHxaN+eEcre9XkG+5hPIg/beWkuzU
+        id S1350782AbhLXBav (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Dec 2021 20:30:51 -0500
+Received: from mga06.intel.com ([134.134.136.31]:4950 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S245122AbhLXBav (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 23 Dec 2021 20:30:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640309451; x=1671845451;
+  h=cc:subject:to:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=JjtBgOF28/vwd8lH1VxYSdGqqqEZptc6KfCcvvY2TOw=;
+  b=DatNdB+9cyIoUt+WPoqDxJLeyOd4mhonXbno6RkONRcX1/71sKCOHAe6
+   u2lyY4DtLj2FmqWh3YzWgBRCUPsTcXapn47b1MbwLL8Hqh6gKAQnB30AD
+   YrPNvabyyyndzBlpPD5/3uYJoHVq/RjPb4H4s2LrkRbVPXvttC6x+d5oV
+   oetLYr7AaR0flVNxm3SfLDmBqAFONB9Sm/pR8S8Nv+xHy460eeyW3IZqb
+   MD0WsYvR7Nun1lTIuZtaTthBEnLxAEV66JhJ+lmlPCLS6uBq/lDSQlqxa
+   hvwxK5RvqXcO3I6s8yPmjRGkJ1bIqtZYWMAj8u7XQST8GCnfpHdFsNylt
    Q==;
-IronPort-SDR: E/zcbyMnMFuwNuUq0taYrhkGjjVLQ1MBCYrKzui2gwba1TRoQbpqMLfXujojIgC3LnNpnZB5Op
- sPYR8XydPIt5jp+0T5RHCqXhRKqNWcj89xYrOznzk/Z1BkCmkzcaiGl+l1L97DnUKPlScoWA4m
- O6y5/8XL3k49/okNGo3wx+qVwIpVQ4mqqjsWGc9cUUVEALodqwDZNggSNxuTGOOr/3H0WanmHz
- BS1RihxjQ5NdC4L2bBJOb/p+7KfCqQUpanhIQts2HvvwZ1QakvbDkFvyHPSo0POJwIK6bLq42D
- lDvaK3+BqsCn4XXMHIZvWsRz
+X-IronPort-AV: E=McAfee;i="6200,9189,10207"; a="301672017"
 X-IronPort-AV: E=Sophos;i="5.88,231,1635231600"; 
-   d="scan'208";a="80533989"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Dec 2021 18:25:08 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Thu, 23 Dec 2021 18:25:07 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Thu, 23 Dec 2021 18:25:07 -0700
-From:   Kelvin Cao <kelvin.cao@microchip.com>
-To:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-ntb@googlegroups.com>, <linux-kernel@vger.kernel.org>
-CC:     Kelvin Cao <kelvin.cao@microchip.com>, <kelvincao@outlook.com>,
-        "Jeremy Pallotta" <jmpallotta@gmail.com>
-Subject: [PATCH 6/6] ntb_hw_switchtec: Fix a minor issue in config_req_id_table()
-Date:   Thu, 23 Dec 2021 17:23:34 -0800
-Message-ID: <20211224012334.89173-7-kelvin.cao@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211224012334.89173-1-kelvin.cao@microchip.com>
-References: <20211224012334.89173-1-kelvin.cao@microchip.com>
+   d="scan'208";a="301672017"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 17:30:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,231,1635231600"; 
+   d="scan'208";a="664737519"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Dec 2021 17:30:43 -0800
+Cc:     baolu.lu@linux.intel.com, Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 07/13] iommu: Add iommu_at[de]tach_device_shared() for
+ multi-device groups
+To:     Jason Gunthorpe <jgg@nvidia.com>
+References: <20211217063708.1740334-1-baolu.lu@linux.intel.com>
+ <20211217063708.1740334-8-baolu.lu@linux.intel.com>
+ <dd797dcd-251a-1980-ca64-bb38e67a526f@arm.com>
+ <20211221184609.GF1432915@nvidia.com>
+ <aebbd9c7-a239-0f89-972b-a9059e8b218b@arm.com>
+ <20211223005712.GA1779224@nvidia.com>
+ <fea0fc91-ac4c-dfe4-f491-5f906bea08bd@linux.intel.com>
+ <20211223140300.GC1779224@nvidia.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <50b8bb0f-3873-b128-48e8-22f6142f7118@linux.intel.com>
+Date:   Fri, 24 Dec 2021 09:30:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <20211223140300.GC1779224@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The req_id_table_size field is 16-bit wide, use ioread16() to read the
-value.
+Hi Jason,
 
-Signed-off-by: Kelvin Cao <kelvin.cao@microchip.com>
----
- drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 12/23/21 10:03 PM, Jason Gunthorpe wrote:
+>>> I think it would be clear why iommu_group_set_dma_owner(), which
+>>> actually does detatch, is not the same thing as iommu_attach_device().
+>> iommu_device_set_dma_owner() will eventually call
+>> iommu_group_set_dma_owner(). I didn't get why
+>> iommu_group_set_dma_owner() is special and need to keep.
+> Not quite, they would not call each other, they have different
+> implementations:
+> 
+> int iommu_device_use_dma_api(struct device *device)
+> {
+> 	struct iommu_group *group = device->iommu_group;
+> 
+> 	if (!group)
+> 		return 0;
+> 
+> 	mutex_lock(&group->mutex);
+> 	if (group->owner_cnt != 0 ||
+> 	    group->domain != group->default_domain) {
+> 		mutex_unlock(&group->mutex);
+> 		return -EBUSY;
+> 	}
+> 	group->owner_cnt = 1;
+> 	group->owner = NULL;
+> 	mutex_unlock(&group->mutex);
+> 	return 0;
+> }
 
-diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-index 0e33eef64ec6..189faad0d0d5 100644
---- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-+++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-@@ -955,7 +955,7 @@ static int config_req_id_table(struct switchtec_ntb *sndev,
- 	u32 error;
- 	u32 proxy_id;
- 
--	if (ioread32(&mmio_ctrl->req_id_table_size) < count) {
-+	if (ioread16(&mmio_ctrl->req_id_table_size) < count) {
- 		dev_err(&sndev->stdev->dev,
- 			"Not enough requester IDs available.\n");
- 		return -EFAULT;
--- 
-2.25.1
+It seems that this function doesn't work for multi-device groups. When
+the user unbinds all native drivers from devices in the group and start
+to bind them with vfio-pci and assign them to user, how could iommu know
+whether the group is viable for user?
 
+> 
+> int iommu_group_set_dma_owner(struct iommu_group *group, struct file *owner)
+> {
+> 	mutex_lock(&group->mutex);
+> 	if (group->owner_cnt != 0) {
+> 		if (group->owner != owner)
+> 			goto err_unlock;
+> 		group->owner_cnt++;
+> 		mutex_unlock(&group->mutex);
+> 		return 0;
+> 	}
+> 	if (group->domain && group->domain != group->default_domain)
+> 		goto err_unlock;
+> 
+> 	__iommu_detach_group(group->domain, group);
+> 	group->owner_cnt = 1;
+> 	group->owner = owner;
+> 	mutex_unlock(&group->mutex);
+> 	return 0;
+> 
+> err_unlock;
+> 	mutex_unlock(&group->mutex);
+> 	return -EBUSY;
+> }
+> 
+> It is the same as how we ended up putting the refcounting logic
+> directly into the iommu_attach_device().
+> 
+> See, we get rid of the enum as a multiplexor parameter, each API does
+> only wnat it needs, they don't call each other.
+
+I like the idea of removing enum parameter and make the API name
+specific. But I didn't get why they can't call each other even the
+data in group is the same.
+
+> 
+> We don't need _USER anymore because iommu_group_set_dma_owner() always
+> does detatch, and iommu_replace_group_domain() avoids ever reassigning
+> default_domain. The sepecial USER behavior falls out automatically.
+
+This means we will grow more group-centric interfaces. My understanding
+is the opposite that we should hide the concept of group in IOMMU
+subsystem, and the device drivers only faces device specific interfaces.
+
+The iommu groups are created by the iommu subsystem. The device drivers
+don't play any role in determining which device belongs to which group.
+So the iommu interfaces for device driver shouldn't rely on the group.
+
+Best regards,
+baolu
