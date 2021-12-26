@@ -2,52 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D166A47F96E
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Dec 2021 23:49:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1B1747F96D
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Dec 2021 23:47:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234749AbhLZWt1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Dec 2021 17:49:27 -0500
-Received: from nikam.ms.mff.cuni.cz ([195.113.20.16]:60300 "EHLO
-        nikam.ms.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234729AbhLZWt0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 26 Dec 2021 17:49:26 -0500
-X-Greylist: delayed 375 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Dec 2021 17:49:26 EST
-Received: by nikam.ms.mff.cuni.cz (Postfix, from userid 2587)
-        id 08ED6280874; Sun, 26 Dec 2021 23:43:09 +0100 (CET)
-Date:   Sun, 26 Dec 2021 23:43:09 +0100
-From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
-To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        id S234746AbhLZWrT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Dec 2021 17:47:19 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:42078 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234729AbhLZWrT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 26 Dec 2021 17:47:19 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B9E0560E17
+        for <linux-pci@vger.kernel.org>; Sun, 26 Dec 2021 22:47:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E30D6C36AE8;
+        Sun, 26 Dec 2021 22:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640558838;
+        bh=oRabUiyLCcQ/aJz5HYD2V+SpSEZKExXrnFhBJFCLUP4=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=olCIiuTwpZud/ylFO9kvGbB6JHJFKPGZCZGvBzyKGjW8ygnqjGrK1wQistBUpv8rx
+         JyLVSzYMPIC8Bmu2hyiFI9zvTWcmZbGgyVPEp8DXwvIRVgnFWRnuyGlpPPMrCRD+V1
+         SrERtYhhXSSj+nUQbszVfVBnvHU9hh2hXAPhPKwKfkq4hX7CtwGCzkdhPW2Vq0tfK2
+         fa0ejcED8YRMtWCPKXLGBYBVbagwmfnxEB1y/1Z+FaLpaZaY59fmGFGH8YndK4xDwr
+         +KA/ZGdS8g05vRkdsB4Jstc0K8V7i1WwuJ+Erf3S2KUVKo8Km4gl+x+CwAQYZeWs0X
+         rUk9fv8J1eS2Q==
+Received: by pali.im (Postfix)
+        id A7F529D0; Sun, 26 Dec 2021 23:47:15 +0100 (CET)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Martin Mares <mj@ucw.cz>, Bjorn Helgaas <helgaas@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Matthew Wilcox <willy@infradead.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 pciutils] lspci: Show Slot Power Limit values above EFh
-Message-ID: <mj+md-20211226.224245.85126.nikam@ucw.cz>
-References: <20210403114857.n3h2wr3e3bpdsgnl@pali>
- <20211101144740.14256-1-pali@kernel.org>
- <YYABw84admN1+8Ly@casper.infradead.org>
- <20211124124611.wi6u77pnparg2563@pali>
- <mj+md-20211226.220617.62062.albireo@ucw.cz>
- <20211226224147.19960-1-pali@kernel.org>
+Subject: [PATCH v2 pciutils] libpci: Fix intel_sanity_check() function
+Date:   Sun, 26 Dec 2021 23:47:03 +0100
+Message-Id: <20211226224703.20445-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <mj+md-20211226.215029.60895.albireo@ucw.cz>
+References: <mj+md-20211226.215029.60895.albireo@ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211226224147.19960-1-pali@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> +  if (scale == 0 && value >= 0xF0) {
-> +    /* F3h to FFh = Reserved for Slot Power Limit values above 300 W */
-> +    if (value >= 0xF3) {
-> +      printf(">300W");
-> +      return;
-> +    }
-> +    value = scale0_values[value - 0xF0];
-> +  }
+Function intel_sanity_check() calls conf1_read() which access d->domain
+field. But intel_sanity_check() does not initialize this field and so
+conf1_read() access some random data on stack.
 
-Thanks!
+Tests showed that intel_sanity_check() always fails as in d->domain is
+stored some non-zero number.
 
-One more request: please fix coding style to match the rest of lspci.
+Fix this issue by zeroing struct pci_dev d in intel_sanity_check() as
+sanity check is verifying PCI devices at domain 0.
+---
+v2: Remove explicit set of d->domain to zero.
+---
+ lib/i386-ports.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-				Martin
+diff --git a/lib/i386-ports.c b/lib/i386-ports.c
+index b3b752cb1f3f..2f90aa4cee0a 100644
+--- a/lib/i386-ports.c
++++ b/lib/i386-ports.c
+@@ -72,6 +72,7 @@ intel_sanity_check(struct pci_access *a, struct pci_methods *m)
+ {
+   struct pci_dev d;
+ 
++  memset(&d, 0, sizeof(d));
+   a->debug("...sanity check");
+   d.bus = 0;
+   d.func = 0;
+-- 
+2.20.1
+
