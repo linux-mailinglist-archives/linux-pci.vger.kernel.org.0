@@ -2,47 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 427DE47F912
-	for <lists+linux-pci@lfdr.de>; Sun, 26 Dec 2021 22:51:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4CD047F92A
+	for <lists+linux-pci@lfdr.de>; Sun, 26 Dec 2021 22:57:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234617AbhLZVvK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 26 Dec 2021 16:51:10 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50400 "EHLO
+        id S233578AbhLZV5i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 26 Dec 2021 16:57:38 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51224 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234563AbhLZVvJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 26 Dec 2021 16:51:09 -0500
+        with ESMTP id S234606AbhLZV5h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 26 Dec 2021 16:57:37 -0500
 Received: from albireo.burrow.ucw.cz (albireo.ucw.cz [91.219.245.20])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-         client-signature RSA-PSS (1024 bits) client-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits)
+         client-signature RSA-PSS (1024 bits))
         (Client CN "albireo.ucw.cz", Issuer "ucw.cz" (verified OK))
-        by jabberwock.ucw.cz (Postfix) with ESMTPS id 1ED991C0B82
-        for <linux-pci@vger.kernel.org>; Sun, 26 Dec 2021 22:51:08 +0100 (CET)
+        by jabberwock.ucw.cz (Postfix) with ESMTPS id AB0771C0B98
+        for <linux-pci@vger.kernel.org>; Sun, 26 Dec 2021 22:57:36 +0100 (CET)
 Received: by albireo.burrow.ucw.cz (Postfix, from userid 1000)
-        id 0FD861A1FC4; Sun, 26 Dec 2021 22:51:07 +0100 (CET)
-Date:   Sun, 26 Dec 2021 22:51:06 +0100
+        id 853BF1A1FC4; Sun, 26 Dec 2021 22:57:36 +0100 (CET)
+Date:   Sun, 26 Dec 2021 22:57:36 +0100
 From:   Martin =?iso-8859-2?Q?Mare=B9?= <mj@ucw.cz>
 To:     Pali =?iso-8859-2?Q?Roh=E1r?= <pali@kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         Krzysztof =?iso-8859-2?Q?Wilczy=F1ski?= <kw@linux.com>,
         Matthew Wilcox <willy@infradead.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH pciutils] libpci: Fix intel_sanity_check() function
-Message-ID: <mj+md-20211226.215029.60895.albireo@ucw.cz>
-References: <20211221204750.11169-1-pali@kernel.org>
+Subject: Re: [PATCH pciutils] lspci: Print buses of multibus PCI domain in
+ ascending order
+Message-ID: <mj+md-20211226.215722.61425.albireo@ucw.cz>
+References: <20211220195349.16316-1-pali@kernel.org>
+ <20211226130429.n2p2d5piwtnhwwmr@pali>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211221204750.11169-1-pali@kernel.org>
+In-Reply-To: <20211226130429.n2p2d5piwtnhwwmr@pali>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Rspamd-Queue-Id: 1ED991C0B82
-X-Spam-Status: No, score=-0.87
+X-Rspamd-Queue-Id: AB0771C0B98
+X-Spam-Status: No, score=-0.98
 Authentication-Results: jabberwock.ucw.cz;
         dkim=none;
         dmarc=none;
         spf=none (jabberwock.ucw.cz: domain of mj@ucw.cz has no SPF policy when checking 91.219.245.20) smtp.mailfrom=mj@ucw.cz
 X-Spamd-Bar: /
-X-Spamd-Result: default: False [-0.87 / 15.00];
-         MID_RHS_MATCH_FROM(0.00)[];
+X-Spamd-Result: default: False [-0.98 / 15.00];
          ARC_NA(0.00)[];
          BAYES_HAM(-3.00)[99.99%];
          FROM_HAS_DN(0.00)[];
@@ -62,27 +63,18 @@ X-Spamd-Result: default: False [-0.87 / 15.00];
          R_DKIM_NA(0.00)[];
          MIME_TRACE(0.00)[0:+];
          ASN(0.00)[asn:51744, ipnet:91.219.244.0/22, country:CZ];
-         TAGGED_FROM(0.00)[f-261221,linux-pci=vger.kernel.org];
-         R_MIXED_CHARSET(0.11)[subject]
+         MID_RHS_MATCH_FROM(0.00)[];
+         TAGGED_FROM(0.00)[f-261221,linux-pci=vger.kernel.org]
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+Hi!
 
-> Function intel_sanity_check() calls conf1_read() which access d->domain
-> field. But intel_sanity_check() does not initialize this field and so
-> conf1_read() access some random data on stack.
-> 
-> Tests showed that intel_sanity_check() always fails as in d->domain is
-> stored some non-zero number.
-> 
-> Fix this issue by properly initializing struct pci_dev d and explicitly set
-> d->domain to zero in intel_sanity_check() as sanity check is verifying PCI
-> devices at domain 0.
+> Oops, this is a mistake. Default value for bus->sibling needs to be
+> explicitly set because xmalloc() wrapper does not return zero
+> initialized memory. So correct change for above line should be:
 
-Thanks for finding the bug, but it makes little sense to initialize the fields
-twice (once by memset, second time by zeroing out individual members). Just
-keep the memset.
+Fine, could you please re-submit the whole patch.
 
-				Martin
+					Martin
