@@ -2,81 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A979F47FCA1
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Dec 2021 13:30:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 133CD47FD6B
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Dec 2021 14:32:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236677AbhL0MaO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Dec 2021 07:30:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233041AbhL0MaN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Dec 2021 07:30:13 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 490B8C06173E;
-        Mon, 27 Dec 2021 04:30:13 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id B55CECE0FF4;
-        Mon, 27 Dec 2021 12:30:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 33FF7C36AE7;
-        Mon, 27 Dec 2021 12:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640608210;
-        bh=OJ6prfhyyVzwfIrAvvDPIlzez3h/9MrKXfuEfKXmuN8=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=aqbpTbwxRovTuLfrbHstFuqbTR1ylsLRFQ9B3DpsOWHTpx8YCcVbYs2Va2G6Oa1uP
-         VPTaBoqMO0R+R//6mBYj0864otaTQEWB66AvFKsvY31CbZvDnJvPyVRgEzGsNlfWLZ
-         9ks+IPcfF+MJxcxSpvRo8aK66XXnu78m4FLuf+01sTi0onx+289zyAOAo30z4GHvZa
-         PC442wIRqaQeJdAgXat/Itc4/f0HexJMcx1qHhQKtyiLPYo/Ud9Xb318k/kGuCy4zF
-         cNBsYkFtYZJKRjeJigq2atQ9p1EWS8aZZDe/e4lbYlPL27OYc/OCvPaAcPmAQEuuHl
-         VQqIWDnQZTxeA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 22AAFC395DD;
-        Mon, 27 Dec 2021 12:30:10 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        id S236833AbhL0Ncd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Dec 2021 08:32:33 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:35196 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S234252AbhL0Nca (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Dec 2021 08:32:30 -0500
+X-UUID: f8a1a67419d24370806767d290e5d387-20211227
+X-UUID: f8a1a67419d24370806767d290e5d387-20211227
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <qizhong.cheng@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 858993418; Mon, 27 Dec 2021 21:32:26 +0800
+Received: from mtkexhb02.mediatek.inc (172.21.101.103) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 27 Dec 2021 21:32:25 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 27 Dec
+ 2021 21:32:24 +0800
+Received: from localhost.localdomain (10.17.3.154) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 27 Dec 2021 21:32:23 +0800
+From:   qizhong cheng <qizhong.cheng@mediatek.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <qizhong.cheng@mediatek.com>, <chuanjia.liu@mediatek.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Subject: [PATCH v3] PCI: mediatek: Assert PERST# for 100ms for power and clock to stabilize
+Date:   Mon, 27 Dec 2021 21:31:10 +0800
+Message-ID: <20211227133110.14500-1-qizhong.cheng@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 1/2] net: wwan: iosm: Let PCI core handle PCI power transition
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <164060821013.30571.10900183755191915748.git-patchwork-notify@kernel.org>
-Date:   Mon, 27 Dec 2021 12:30:10 +0000
-References: <20211224081914.345292-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20211224081914.345292-1-kai.heng.feng@canonical.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     m.chetan.kumar@intel.com, linuxwwan@intel.com,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        loic.poulain@linaro.org, ryazanov.s.a@gmail.com,
-        johannes@sipsolutions.net, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello:
+Described in PCIe CEM specification sections 2.2 (PERST# Signal) and
+2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
+be delayed 100ms (TPVPERL) for the power and clock to become stable.
 
-This series was applied to netdev/net-next.git (master)
-by David S. Miller <davem@davemloft.net>:
+Signed-off-by: qizhong cheng <qizhong.cheng@mediatek.com>
+Acked-by: Pali Rohár <pali@kernel.org>
+---
 
-On Fri, 24 Dec 2021 16:19:13 +0800 you wrote:
-> pci_pm_suspend_noirq() and pci_pm_resume_noirq() already handle power
-> transition for system-wide suspend and resume, so it's not necessary to
-> do it in the driver.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/net/wwan/iosm/iosm_ipc_pcie.c | 49 ++-------------------------
->  1 file changed, 2 insertions(+), 47 deletions(-)
+v3:
+ - Change subject.
 
-Here is the summary with links:
-  - [1/2] net: wwan: iosm: Let PCI core handle PCI power transition
-    https://git.kernel.org/netdev/net-next/c/8f58e29ed7fc
-  - [2/2] net: wwan: iosm: Keep device at D0 for s2idle case
-    https://git.kernel.org/netdev/net-next/c/f4dd5174e273
+v2:
+ - Typo fix.
+ - Rewrap into one paragraph.
 
-You are awesome, thank you!
+ drivers/pci/controller/pcie-mediatek.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 2f3f974977a3..b18935e8da89 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -702,6 +702,13 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 	 */
+ 	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
+ 
++	/*
++	 * Described in PCIe CEM specification sections 2.2 (PERST# Signal) and
++	 * 2.2.1 (Initial Power-Up (G3 to S0)). The deassertion of PERST# should
++	 * be delayed 100ms (TPVPERL) for the power and clock to become stable.
++	 */
++	msleep(100);
++
+ 	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
+ 	val = readl(port->base + PCIE_RST_CTRL);
+ 	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.25.1
 
