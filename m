@@ -2,34 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1706147FA95
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Dec 2021 07:46:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 548B047FA9B
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Dec 2021 07:46:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235372AbhL0GqM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Dec 2021 01:46:12 -0500
-Received: from guitar.tcltek.co.il ([84.110.109.230]:53437 "EHLO mx.tkos.co.il"
+        id S235375AbhL0GqO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Dec 2021 01:46:14 -0500
+Received: from guitar.tcltek.co.il ([84.110.109.230]:53450 "EHLO mx.tkos.co.il"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235366AbhL0GqM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S235367AbhL0GqM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Mon, 27 Dec 2021 01:46:12 -0500
 Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id E36234405B0;
-        Mon, 27 Dec 2021 08:45:58 +0200 (IST)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 9FE4144066E;
+        Mon, 27 Dec 2021 08:45:59 +0200 (IST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-        s=default; t=1640587559;
-        bh=v4vtQdbtJGJ4z3e70Ewov7SB+hmi3tHkxZRYAVgoeM8=;
+        s=default; t=1640587560;
+        bh=Ztwqjvo8hT2FiIK1PcXrHCs9IJPR3RveZxZjfCdaqus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XAe9bh2vJHXby9P12x4UIwvnDilOG7Z26L0Xe6TQ/Hp4NrHXTBF7wKzB1ugDdCLqW
-         lc117XRJRIZs88L/1/cVn8xDicMl7ny9V3EIu+6cNCPmMs5Iaoul9CsZsJBTEJMxHT
-         jldrLdPm1XxgQOFaxShIsNa86fDj0fbB6RmGIyAoEFQK1zRCPnIQfXWvnz1mp8fbN1
-         VLsizx6szLiAsW4crYsQxeqroTwI6ulxMLbx+Gbg6ZmWvIH63xsI7ZK1rTLkMy121T
-         twqYhukrawAwnR0vDzo8WoVCE/emETTrIH7OXqXKZQHk5hnzTKT9KpSSSmWyknWjYI
-         5OTRb+qPOLAGA==
+        b=sMfiilkGPqzBpHugvUxxQMKBcGowsUXt4/ETfK34+FXTdCOM452zeNwBpegcz8U0y
+         qRL9G9kkYJhNXsMbsPA3tYCugOs2uzbxHi8DCZgzT8MaI689q0+w6olF+wNpD1faAj
+         7aA3HQp6HNhsRVYiNjUuWmOJ576ucCB5PbumBslP6/UkbheHuDwg2HJCMO+J3hzgxb
+         pQ/ws73w/6ExYjBQkZqRC3Zxs32CfuRwzVNwrrMdyZfOmh+SS3cW3UM/AGdHvIxFQQ
+         lLNuV6ei+z+qMt812CGlfZ1M/GB+r7Z3d9CwhyLS1M30d21SRzNvim+/qxzNPs3a9v
+         aqtX3xHdAuOIg==
 From:   Baruch Siach <baruch@tkos.co.il>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Baruch Siach <baruch.siach@siklu.com>,
+        Rob Herring <robh@kernel.org>,
         Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
         Kathiravan T <kathirav@codeaurora.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -41,9 +42,9 @@ Cc:     Baruch Siach <baruch.siach@siklu.com>,
         Robert Marko <robert.marko@sartura.hr>,
         linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v4 1/3] arm64: dts: qcom: ipq6018: add pcie max-link-speed
-Date:   Mon, 27 Dec 2021 08:46:03 +0200
-Message-Id: <fcf41277cf8529437374a5c10b2b1fcad30cd7c2.1640587131.git.baruch@tkos.co.il>
+Subject: [PATCH v4 2/3] PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
+Date:   Mon, 27 Dec 2021 08:46:04 +0200
+Message-Id: <a81f7a7caf16dc8692019e9ed5f8cba15013ce30.1640587131.git.baruch@tkos.co.il>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1640587131.git.baruch@tkos.co.il>
 References: <cover.1640587131.git.baruch@tkos.co.il>
@@ -55,27 +56,49 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Baruch Siach <baruch.siach@siklu.com>
 
-Add the generic 'max-link-speed' property to describe the IPQ6018 PCIe
-link generation limit. This allows the generic dwc code to configure the
-link speed correctly.
+These are common dwc macros that will be used for other platforms.
 
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
 ---
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/pcie-designware.h | 6 ++++++
+ drivers/pci/controller/dwc/pcie-tegra194.c   | 6 ------
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index a717fc17523d..665ee301b85d 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -438,6 +438,7 @@ pcie0: pci@20000000 {
- 			linux,pci-domain = <0>;
- 			bus-range = <0x00 0xff>;
- 			num-lanes = <1>;
-+			max-link-speed = <3>;
- 			#address-cells = <3>;
- 			#size-cells = <2>;
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 7d6e9b7576be..ea87809ee298 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -74,6 +74,12 @@
+ #define PCIE_MSI_INTR0_MASK		0x82C
+ #define PCIE_MSI_INTR0_STATUS		0x830
  
++#define GEN3_RELATED_OFF			0x890
++#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
++#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
++#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
++#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
++
+ #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
+ #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 904976913081..846c9d154f49 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -193,12 +193,6 @@
+ #define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK	GENMASK(23, 8)
+ #define GEN3_EQ_CONTROL_OFF_FB_MODE_MASK	GENMASK(3, 0)
+ 
+-#define GEN3_RELATED_OFF			0x890
+-#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
+-#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
+-#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
+-#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
+-
+ #define PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT	0x8D0
+ #define AMBA_ERROR_RESPONSE_CRS_SHIFT		3
+ #define AMBA_ERROR_RESPONSE_CRS_MASK		GENMASK(1, 0)
 -- 
 2.34.1
 
