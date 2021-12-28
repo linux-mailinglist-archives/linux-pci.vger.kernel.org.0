@@ -2,93 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C4E9480C10
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Dec 2021 18:28:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD727480CCD
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Dec 2021 20:38:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236609AbhL1R2b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Dec 2021 12:28:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40222 "EHLO
+        id S234004AbhL1TiG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Dec 2021 14:38:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231489AbhL1R2b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Dec 2021 12:28:31 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8608C061574;
-        Tue, 28 Dec 2021 09:28:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 20405B8111E;
-        Tue, 28 Dec 2021 17:28:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D8C2C36AE8;
-        Tue, 28 Dec 2021 17:28:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640712507;
-        bh=dXA+jtJKXsZeuGL+gqW27tuo78x2G9m366Sa3KzPs/Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=crA/K81U+X4as89k12VFJhq7l5G6mmRiyHJCr7rvQuKaJSWdRD8HsUWMtEiR6YiT9
-         xkh3fc1SixiPjDrMU7N3s05mIn5FkXwJyvfvz2HzU6vrRz2riOGV87mq/O3z4d8tQl
-         l3wzHW2xFwKfv/dalFrjV7NW+fNDw/8hVQWXM7ZxJJ/MA9xQMMsO/9gsZW7o3NqZJ4
-         IikED5UaPWdt+nNRLG32gAEABqEKOfGQmWnJ51QmGxTBRsSymGbPiYQxhpnJTOsMHR
-         ZQBcfSywIaDJPWsFdgoWCxTk5qfXOwl/2CtDSh3spa9fUbjDU36CMRuAVLEtAj2MBM
-         dc88VkjPVXadA==
-Date:   Tue, 28 Dec 2021 11:28:25 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Arnd Bergmann <arnd@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-csky@vger.kernel.org
-Subject: Re: [RFC 28/32] PCI: make quirk using inw() depend on HAS_IOPORT
-Message-ID: <20211228172825.GA1604151@bhelgaas>
+        with ESMTP id S232587AbhL1TiG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Dec 2021 14:38:06 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2904BC061574
+        for <linux-pci@vger.kernel.org>; Tue, 28 Dec 2021 11:38:06 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id v11so40163781wrw.10
+        for <linux-pci@vger.kernel.org>; Tue, 28 Dec 2021 11:38:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fBuUeVesUS1PoSZN8nRBKiFEAPI9FGS1xzz++h6eACM=;
+        b=LFJkufFgaCdh8BLwxSuPh24+kBGWzf8JE1vtcK+7TdeXeJyF6tMuRRT1sAvvqfn8bQ
+         29kfGUC5UycAl6WBKnIhPPoXOtQ1vyMsiSywY7c/fz5dEjp/d7FSFd+Y2Vt2RvKfwhiH
+         s12nDuTWq/58V0mWAf/m85eRl7m0NSSK+nLvqvFSWe6OVu2UUvSUEoHo9GsK2ysGTXXM
+         +Gy7IWvma+S3X91qs5i/49IZlZvhk/dQ/hcBhyUNtMi0FxHFvxVQJ4oITBcYDgfhBo25
+         GGm7we4YN9pFbptIBGq3khvHqOqEG+mcqpVOPyf50XBVZYq4XrANzsv5iSCR0m7dcus8
+         QkNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fBuUeVesUS1PoSZN8nRBKiFEAPI9FGS1xzz++h6eACM=;
+        b=WzkuPxsiuZZcwopK6rfNwAAEPzHRnLpOCCBpDXfqY5lUVRNw8dIKJgyVilQnZZnrTO
+         xda4Kx2vKlJ/8ztOi8TvF4BGxAn8m5oP7eXtc3kYPSamAVJZFoq4bj6NdULiqxk7rsDf
+         TUSiLETCrTL5MwkT3asF6jy3OW/IOgXR3Crhk3k14LEFKIES1kwL5Jm3FcwdE/GsZZEc
+         78W66mYH7xoRXoD4JmfIPGG8VOSvtxIZCTg7Yj1WuUwj+5vd2QiKKqT6wcZC9Vrf+C+G
+         ZYMJyU7ygOK4aY6ZKbYcBWnc4UFrSwfPoPCbqAqnpaodNFvRcLfbVCQTnW9Au3O9VSDc
+         HxNg==
+X-Gm-Message-State: AOAM532DiYQP8qkGvCyFdrWmD+PewnlWKQ3Z2nRGsBRBkRxT4WNAbWS1
+        TDMFQOU/yXBajxIZFQNjgHxJOd9udBy/Xg==
+X-Google-Smtp-Source: ABdhPJyJ4OEePDIhgYKz0THvI/kJneAnPM6xpDBmrWCnXiVhuuZNH9Ng02WZ0MOjrll7aLZuF2CfAw==
+X-Received: by 2002:a5d:6a81:: with SMTP id s1mr18233686wru.36.1640720284617;
+        Tue, 28 Dec 2021 11:38:04 -0800 (PST)
+Received: from claire-ThinkPad-T470 (ip-109-42-114-192.web.vodafone.de. [109.42.114.192])
+        by smtp.gmail.com with ESMTPSA id k6sm18305462wmj.16.2021.12.28.11.38.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Dec 2021 11:38:04 -0800 (PST)
+Date:   Tue, 28 Dec 2021 20:38:01 +0100
+From:   Fan Fei <ffclaire1224@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, bjorn@helgaas.com
+Subject: Re: [PATCH 00/13] Unify device * to platform_device *
+Message-ID: <20211228193801.GA54107@claire-ThinkPad-T470>
+References: <cover.1638022048.git.ffclaire1224@gmail.com>
+ <20211223004337.GA1222509@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5112a787b635d5d2fc80a7f126c28176ad151098.camel@linux.ibm.com>
+In-Reply-To: <20211223004337.GA1222509@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 28, 2021 at 05:52:05PM +0100, Niklas Schnelle wrote:
-> On Tue, 2021-12-28 at 10:35 -0600, Bjorn Helgaas wrote:
-> > On Tue, Dec 28, 2021 at 04:25:25PM +0100, Niklas Schnelle wrote:
-> > > On Mon, 2021-12-27 at 16:33 -0600, Bjorn Helgaas wrote:
-
-> > > > BTW, git complains about some whitespace errors in other patches:
-> > > > 
-> > > >   Applying: char: impi, tpm: depend on HAS_IOPORT
-> > > >   .git/rebase-apply/patch:92: trailing whitespace.
-> > > > 	    If you have a TPM security chip from Atmel say Yes and it
-> > > >   .git/rebase-apply/patch:93: trailing whitespace.
-> > > > 	    will be accessible from within Linux.  To compile this driver
-> > > >   warning: 2 lines add whitespace errors.
-> > > >   Applying: video: handle HAS_IOPORT dependencies
-> > > >   .git/rebase-apply/patch:23: trailing whitespace.
-> > > > 
-> > > >   warning: 1 line adds whitespace errors.
-> > > 
-> > > ... But I just tried fetching the patches with b4 on top of
-> > > v5.16-rc7 and the resulting tree passes "./scripts/checkpatch.pl
-> > > --git v5.16-rc7..HEAD" and has an empty diff to my branch. What
-> > > tool did you use to check?
-> > 
-> > "git am" is what complained.  Here's what I did:
-> > 
-> >   $ git checkout -b wip/niklas v5.16-rc1
+On Wed, Dec 22, 2021 at 06:43:37PM -0600, Bjorn Helgaas wrote:
+Hi, Bjorn
+> On Sat, Nov 27, 2021 at 03:11:08PM +0100, Fan Fei wrote:
+> > Some PCI controller structs contain "device *", while others contain
+> > "platform_device *". These patches unify "device *dev" to
+> > "platform_device *pdev" in 13 controller struct, to make the controller
+> > struct more consistent. Consider that PCI controllers interact with
+> > platform_device directly, not device, to enumerate the controlled
+> > device.
 > 
-> Ah this seems to be because my patches are against v5.16-rc7. I
-> noted that in the cover letter but I guess that is easy to miss and
-> might not match expectations.
-
-I get the same complaints when applying to v5.16-rc7:
-
-  $ git checkout -b wip/niklas3 v5.16-rc7
-  $ b4 am -om/ 20211227164317.4146918-1-schnelle@linux.ibm.com
-  $ git am m/20211227_schnelle_kconfig_introduce_has_ioport_and_legacy_pci_options.mbx
+> I went through all the controller drivers using a command like this:
+> 
+>   git grep -A4 -E "^struct .*_pci.?\> \{$" drivers/pci/controller/
+> 
+> and found that almost all of them hang onto the "struct device *", not
+> the "struct platform_device *".  Many of these are buried inside struct
+> dw_pcie and struct cdns_pcie.
+>
+Do you mean most of these structs contain dw_pcie and cdns_pcie, both of
+which contain "sturct device *"? I did realize this is not consistent with
+other controller device if we make this change.
+> I know I've gone back and forth on this, but I don't think the churn of
+> converting some of them to keep the "struct platform_device *" would be
+> worthwhile.
+> 
+I could convert "platform_device *" back to "device *", e.g. in the
+pcie-altear.c. What do you think?
+> The preceding series that renamed the controller structs made this
+> exploration quite a bit easier, so I do plan to apply that series.
+> 
+> > Fan Fei (13): PCI: xilinx: Replace device * with platform_device * PCI:
+> > mediatek: Replace device * with platform_device * PCI: tegra: Replace
+> > device * with platform_device * PCI: xegene: Replace device * with
+> > platform_device * PCI: microchip: Replace device * with platform_device
+> > * PCI: brcmstb: Replace device * with platform_device * PCI:
+> > mediatek-gen3: Replace device * with platform_device * PCI: rcar-gen2:
+> > Replace device * with platform_device * PCI: ftpci100: Replace device *
+> > with platform_device * PCI: v3-semi: Replace device * with
+> > platform_device * PCI: ixp4xx: Replace device * with platform_device *
+> > PCI: xilinx-nwl: Replace device * with platform_device * PCI: rcar:
+> > Replace device * with platform_device *
+> > 
+> >  drivers/pci/controller/pci-ftpci100.c        |  15 +-
+> >  drivers/pci/controller/pci-ixp4xx.c          |  47 ++--
+> >  drivers/pci/controller/pci-rcar-gen2.c       |  10 +-
+> >  drivers/pci/controller/pci-tegra.c           |  85 +++----
+> >  drivers/pci/controller/pci-v3-semi.c         |  19 +-
+> >  drivers/pci/controller/pci-xgene.c           | 222 +++++++++----------
+> >  drivers/pci/controller/pcie-brcmstb.c        |  35 +--
+> >  drivers/pci/controller/pcie-mediatek-gen3.c  |  36 +--
+> >  drivers/pci/controller/pcie-mediatek.c       |  31 +--
+> >  drivers/pci/controller/pcie-microchip-host.c |  18 +-
+> >  drivers/pci/controller/pcie-rcar-ep.c        |  40 ++--
+> >  drivers/pci/controller/pcie-rcar-host.c      |  27 +--
+> >  drivers/pci/controller/pcie-rcar.h           |   2 +-
+> >  drivers/pci/controller/pcie-xilinx-nwl.c     |  28 +--
+> >  drivers/pci/controller/pcie-xilinx.c         |  21 +- 15 files
+> >  changed, 328 insertions(+), 308 deletions(-)
+> > 
+> > -- 2.25.1
+> > 
