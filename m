@@ -2,90 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9838C4815EB
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 18:46:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CAD6481674
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 20:53:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237535AbhL2RqJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Dec 2021 12:46:09 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:58996 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231784AbhL2RqJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 12:46:09 -0500
+        id S231400AbhL2Txl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Dec 2021 14:53:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230494AbhL2Txl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 14:53:41 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 067B7C061574;
+        Wed, 29 Dec 2021 11:53:40 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D0598B818A5;
-        Wed, 29 Dec 2021 17:46:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 590C8C36AE1;
-        Wed, 29 Dec 2021 17:46:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 89A3BB81A07;
+        Wed, 29 Dec 2021 19:53:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDDAEC36AE9;
+        Wed, 29 Dec 2021 19:53:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640799966;
-        bh=NmRZzJM7Km/x83/A2i7bH4gxbcS51Gr3Mu4O09ilUmE=;
+        s=k20201202; t=1640807618;
+        bh=3xKmMCx2enRDWAiWh/qr4iF+67cL5V1MVZFQOA249zM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VxZPR6x4B5BGfCvyFp6FfsQghkScX7nlmRkPQukrWbLjhpfHAmlgTRBsfy50ztm3D
-         FS5bfriPXeSt+NS3r0EXvWhPBhA/7a7MIUMzn+YYGVUq6CuuSUA7ZOkwi9iBod13jE
-         FJ0JS24eDMlhYzeQxT7tPSREyEsbfpu5ZB6+wf6KQPB/20RZROtsB6aW+UqgBRqv9u
-         hSbxo0KIfACoRhosssFdhxLLW/edqymvbR4G42i9cw0p7fdWpKmUv3MSmQCWpPRkrS
-         IfqbdYTkLUm8SBfjLilqLxQfVxswBaj3ApBIB35ZkNt2SGOTHb/Ah/DhTZoQL64kEp
-         r06hzLAk2FQWg==
-Date:   Wed, 29 Dec 2021 11:46:05 -0600
+        b=nFvGxfdDHW1NCKzpjvB1CObAOB3Dyk2uPMdjSZ1SowsnzpHGae3Mw5KQoS2yHlVPy
+         3qbRcxIVbkxgf0gp/9a89NCvwjUs93FkOSYAhPbKsf29f3vuWv+SJbAJIN5+8c8iWu
+         p1sAzp21Hw/ZPdi/qxYgUCpVxx35nm9uE4aWYkOTRH+V6bbqy2BsJsBQSG9MTnBZUP
+         /l5dnqK1LhzlAuVmC5ZHFL39VD/lS40efzNGISlQKBCZ7vdUnUT9E9WrcJkWzaoKYu
+         tJqTqMRW6e/QqsnSRvESei8dpoerdy1XxDbzLz3X/XoNqnVTM2uiXSLeQz8V1B1LjJ
+         0AELG4tQr2rag==
+Date:   Wed, 29 Dec 2021 13:53:36 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     slark_xiao@163.com
-Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Bug 215433] New: data connection lost on Qualcomm SDX55 PCIe
- device
-Message-ID: <20211229174605.GA1689297@bhelgaas>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: slot: use default_groups in kobj_type
+Message-ID: <20211229195336.GA1697694@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bug-215433-41252@https.bugzilla.kernel.org/>
+In-Reply-To: <20211228135722.381023-1-gregkh@linuxfoundation.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc MHI folks]
-
-On Tue, Dec 28, 2021 at 11:26:02AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=215433
+On Tue, Dec 28, 2021 at 02:57:22PM +0100, Greg Kroah-Hartman wrote:
+> There are currently 2 ways to create a set of sysfs files for a
+> kobj_type, through the default_attrs field, and the default_groups
+> field.  Move the PCI slot code to use default_groups field which has
+> been the preferred way since aa30f47cf666 ("kobject: Add support for
+> default attribute groups to kobj_type") so that we can soon get rid of
+> the obsolete default_attrs field.
 > 
->            Summary: data connection lost on Qualcomm SDX55 PCIe device
->     Kernel Version: 5.13.0,5.15.0
-> ...
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> For Qualcomm based modem devices, with PCIE interface, and mhi driver based on
-> kernel 5.13.0, it will lose data connection. Details as below:
+Applied to pci/enumeration for v5.17, thanks!
+
+> ---
+>  drivers/pci/slot.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
->     Phenomenon:
->         1) Can NOT connect to Internet
->         2) /dev/wwan0p1QCDM, /dev/wwan0p2MBIM, /dev/wwan0p3AT NOT response
+> diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+> index 751a26668e3a..a0c67191a8b9 100644
+> --- a/drivers/pci/slot.c
+> +++ b/drivers/pci/slot.c
+> @@ -96,11 +96,12 @@ static struct attribute *pci_slot_default_attrs[] = {
+>  	&pci_slot_attr_cur_speed.attr,
+>  	NULL,
+>  };
+> +ATTRIBUTE_GROUPS(pci_slot_default);
+>  
+>  static struct kobj_type pci_slot_ktype = {
+>  	.sysfs_ops = &pci_slot_sysfs_ops,
+>  	.release = &pci_slot_release,
+> -	.default_attrs = pci_slot_default_attrs,
+> +	.default_groups = pci_slot_default_groups,
+>  };
+>  
+>  static char *make_slot_name(const char *name)
+> -- 
+> 2.34.1
 > 
->     Reproduce steps
->         1) Connect Internet via cellular
->         2) Do speedtest(https://www.speedtest.net/) or download a 1GB file
-> (ipv4.download.thinkbroadband.com/1GB.zip)
-> 
->     Recovery method
->         Only can be recovered by reboot host
-> 
->     Others
->         It can NOT be reproduced in Windows 10/11.
-
-Thanks very much for the report.  I'm not familiar with the mhi
-driver, so I added some folks who might be.
-
-Can you please collect the complete dmesg log and output of
-"sudo lspci -vv" and attach both to the bugzilla?
-
-Does the network connection work for a while, then stop working?  If
-so, is there anything logged in the dmesg log when it stops working?
-
-Do you know of any Linux versions that do not have this problem?  If
-it used to work but it got broken, that would help narrow things down.
-
-Thanks,
-  Bjorn
