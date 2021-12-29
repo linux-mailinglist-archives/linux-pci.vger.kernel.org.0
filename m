@@ -2,193 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E2B2480F94
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 05:15:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B38548103F
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 07:07:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238711AbhL2EPw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Dec 2021 23:15:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234127AbhL2EPv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Dec 2021 23:15:51 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8C94C061574;
-        Tue, 28 Dec 2021 20:15:50 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id y16-20020a17090a6c9000b001b13ffaa625so23422714pjj.2;
-        Tue, 28 Dec 2021 20:15:50 -0800 (PST)
+        id S234500AbhL2GHj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Dec 2021 01:07:39 -0500
+Received: from mx0a-00622301.pphosted.com ([205.220.163.205]:29646 "EHLO
+        mx0a-00622301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234520AbhL2GHj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 01:07:39 -0500
+Received: from pps.filterd (m0241924.ppops.net [127.0.0.1])
+        by mx0a-00622301.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BT64lSW012466;
+        Tue, 28 Dec 2021 22:07:27 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ambarella.com; h=from : to :
+ subject : date : message-id : content-transfer-encoding : mime-version :
+ content-type; s=com20210415pp;
+ bh=/omBWCIbafD8kLqQUOsGPJqVxH+KzYGJXQcIPMYS5zM=;
+ b=XT1U/au0Wc0rf5UOO8ekh3psNmVAiUR5oY8EQ4Bgm/ETi3b7/fetc+g5NNkKKBZFJOPd
+ HocVLHQHf5Di6mIsOiBLibpocCydVY/2HaTkTS/xGDUxNzl8eLZ/dV68c23dbGcZDzU5
+ aHT2MwvDkTRMKMlF2AC59RZrkdbKPE/shQmq8UjgpAUy4C97hwxySsVFloCH+PM1Nqv2
+ gRlga/LqNe+tROEMzGEypBzWDTMlx0K0kMzM7jHHsubQBOvsNtJX/2eJLfrq9ATcldqW
+ iL1/ULUhTMa0S1rxv65casg4CmIUDsS/2uAEV9RfiZ6f4qtkL8GdkIcW5jkQJ0wjRPPR QQ== 
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2170.outbound.protection.outlook.com [104.47.58.170])
+        by mx0a-00622301.pphosted.com (PPS) with ESMTPS id 3d7f1dh3hv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Dec 2021 22:07:26 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dw0whSiJ1pVsCI50ngKk1H67j210Oe4/8/1MTqhKkeWY7FG+S29xIzpAtlYzjVr8f+lckoEsB6Wbjsb/Cn55qYb2D5k94Ew1ObHH3zlnHQrcajoCIuRxyuEjdApWRflu5tbnFZi5eNhkLNe5Lu60+V3c8M30Z8pb/fhf2lbN03kjd74eX0AF5yclhShAfV1zJea5oC8TkFhcwV8HUEm31BrDh0e3VX752ounbRnk3J4SeAxsR4bY4oTxvFe+/YpAv5mrndD7CwuY9qvu72gRXUj1vvXa3qor91OJcSWJ/eIAR4TpC6jCTNLrJFNzrHOq4kq5I9go4td+jqGAD4vL3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1Wfc8iZEqgIgTegNd+W4/c7w283MftuSwCA8nPVXm7w=;
+ b=C9M/utajHhBnefuYuLj1yRRCIFQhp6eil4+yac8fRMdw3V7tVmXN6f8CDObZkHwPaJrU3w+iM7XuPyuqj8+2AfXWcUV75uzlkD9vIdeITjv4UbMv5xoJ/EEb3WXzrscfL1gzqOnxZeZYm4UdqMkGWjSqcBuJJbodq9yF9xwAFSuwRyArHxiw7hHiE4P9S/7jkCNedV1+IJvbHEHItIpAu+LWaleshsYdJZPVue5X1pyqTJ8a3SZ9kUlYRkN+LpBcrOGxpK1C1A2Atb0P/jtCICLywq9CLuWT50esdGxgZ+G1KuuNB0xAlK4ZiCBDWc53pWy/TK2je97a+HNvY308Vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ambarella.com; dmarc=pass action=none
+ header.from=ambarella.com; dkim=pass header.d=ambarella.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=oo7gGMOkpKZtsifyQrF9uAkP4p/YBx2m/GIQa4Tq0YE=;
-        b=SgUGGN6VhsGuSJ4+x7BV8WmUFGnq6AU/S3MGIbRuvgcmK5iemLDPInHX4HtGqsDBOP
-         X+ShdKiY6WGvZxZzGll6Lp9gXc9Iofh3zmxzNCmw3Dn3KgxWg++og+5/hcFLsP9lz2Xr
-         2GF2kpRya+BTKsokuDFYluzgdLN+9R6oDmfEeq5seHlKkuDQoWmHZpB5lsfFQJLsHHhA
-         J+6fOy7KSqTSf4RHl5+/z/3kvG8PPaQjjUrbxIO/1twWStmOPd1O5hfeFSFRI+7/1KDQ
-         V6duyLcOszOYryU8sc+sZAK9TuMnZyNEumxgE9K0xpEM2ht/1sy9t9bhV6U0QsHIl9qG
-         4r0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=oo7gGMOkpKZtsifyQrF9uAkP4p/YBx2m/GIQa4Tq0YE=;
-        b=KBzGL3s6jpYh+zXFhoNlooew1/s2GIKYj5wfouCPH52rXnr7OLq4aIlM9+vyDkDQCd
-         IpiAzfROzeAL+RaHmxRt4fQg0ufpGoqkoc+B7E1ztllRb0oZRIn0Fuqwikmg5sTDz7UX
-         auuBwKPJy1Zw7LwGNj/yBVs1wB0NX7XhKCpQ/+3PZjfpx1qjNThDu6bb9jBB17m+E4OD
-         J+IX+YHJSHEZ3odqwLIYkjOr1a9rduBLYr2MDq9pv/a8dboDTFxQo0tYvmlWi56MKCLB
-         r84H/bcbmM29qT19TbQ1N72096xP2NTeXQbo3fWS48Zk44qUqT7Ar/nYZsdw97ZbOd9g
-         aKEA==
-X-Gm-Message-State: AOAM531I4wokCnYgtKI2zEtEXZOhBV7RmIehnSoVPQ5d3n7itvOZeaVa
-        X8yVj//7LWOtrWR33DZPFyg=
-X-Google-Smtp-Source: ABdhPJyjCqGNhQip5lk1bKe/Q9ifrO91rL0XFrD4WiMDGXXaVLZjRe+Yr2Tq1lIfNgSSQkzYLSFwkQ==
-X-Received: by 2002:a17:902:d48a:b0:148:a8ae:7ab7 with SMTP id c10-20020a170902d48a00b00148a8ae7ab7mr24900237plg.171.1640751350387;
-        Tue, 28 Dec 2021 20:15:50 -0800 (PST)
-Received: from [10.1.1.24] (222-155-5-102-adsl.sparkbb.co.nz. [222.155.5.102])
-        by smtp.gmail.com with ESMTPSA id k9sm13406563pgr.47.2021.12.28.20.15.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Dec 2021 20:15:49 -0800 (PST)
-Subject: Re: [RFC 02/32] Kconfig: introduce HAS_IOPORT option and select it as
- necessary
-To:     Arnd Bergmann <arnd@kernel.org>
-References: <20211227164317.4146918-1-schnelle@linux.ibm.com>
- <20211227164317.4146918-3-schnelle@linux.ibm.com>
- <CAMuHMdXk6VcDryekkMJ3aGFnw4LLWOWMi8M2PwjT81PsOsOBMQ@mail.gmail.com>
- <d406b93a-0f76-d056-3380-65d459d05ea9@gmail.com>
- <CAK8P3a2j-OFUUp+haHoV4PyL-On4EASZ9+59SDqNqmL8Gv_k7Q@mail.gmail.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Chris Zankel <chris@zankel.net>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Brian Cain <bcain@codeaurora.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Vineet Gupta <vgupta@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Michal Simek <monstr@monstr.eu>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, openrisc@lists.librecores.org,
-        linux-s390@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        Greg Ungerer <gerg@linux-m68k.org>
-From:   Michael Schmitz <schmitzmic@gmail.com>
-Message-ID: <1f90f145-219e-1cad-6162-9959d43a27ad@gmail.com>
-Date:   Wed, 29 Dec 2021 17:15:23 +1300
-User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
- Icedove/45.4.0
+ d=ambarella.onmicrosoft.com; s=selector1-ambarella-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1Wfc8iZEqgIgTegNd+W4/c7w283MftuSwCA8nPVXm7w=;
+ b=DmgXo3FJKMWxqWxUNdrwUnNZ/66BHjyW+shlX06EeuNY0VL2rhpJRVNGGnjNKxfG//yGk8OdowwZoAKys/aDbIGHjLnQbCiBa0CTdJpoC/faVMrBXA4wtkfHN/591tKZxJoTZshFgCaANiFD2ci9P+yOcvxKrdfZo8lDNw0fIqs=
+Received: from PH7PR19MB5562.namprd19.prod.outlook.com (2603:10b6:510:132::22)
+ by PH0PR19MB5441.namprd19.prod.outlook.com (2603:10b6:510:fb::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.14; Wed, 29 Dec
+ 2021 06:07:24 +0000
+Received: from PH7PR19MB5562.namprd19.prod.outlook.com
+ ([fe80::8c3a:e80f:9fe7:959]) by PH7PR19MB5562.namprd19.prod.outlook.com
+ ([fe80::8c3a:e80f:9fe7:959%5]) with mapi id 15.20.4823.022; Wed, 29 Dec 2021
+ 06:07:24 +0000
+From:   Li Chen <lchen@ambarella.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] misc: pci_endpoint_test: fix misuse of COMMAND_READ/WRITE
+Thread-Topic: [PATCH] misc: pci_endpoint_test: fix misuse of
+ COMMAND_READ/WRITE
+Thread-Index: Adf8ec9MVzgZ+shNToay1AX1NAaMGA==
+Date:   Wed, 29 Dec 2021 06:07:24 +0000
+Message-ID: <PH7PR19MB55623C78565E9CEA2A98D237A0449@PH7PR19MB5562.namprd19.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 182edb38-6253-43a8-563c-08d9ca917bb0
+x-ms-traffictypediagnostic: PH0PR19MB5441:EE_
+x-microsoft-antispam-prvs: <PH0PR19MB54410575D8BB1F69F0BA5611A0449@PH0PR19MB5441.namprd19.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1824;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nkXvhdpyGCPtsfDXFhclpA8/ljoRVJJl2/0A7n1pVO0c08ypIDeDK3PowcyjciO9Pnw3yONhb66SfJEdZ+a01jxuRbkNLWWKP9Bp1PbE4LR/3HF2foUOA0Hlpw7eM1SlPqAsYqY4YtIf8DavChmKX+0792yzzNI6iHZS2lCNPWAoEDvUwXiy3kZ4zFnl+xWFyvQI32EDj2OlsNTWb+IGf4ajqsgh/rW7YkcF7IKMVl9u0B9Efp8/o7LWCxzhglyFQTxm6y8wtXmZlawgDJKkng8ENQz6ZfjX69hBUlEY3GxOYHaLMy/TbRN5LgkLUGyoc/6lStYtwaax6KBcc1rAuSjvsOP7mC2zdACvIDjzHPsBFgoRJQFTvNwCvX/EGg4Yw4jkraFEVtni8OrObW2FsYzR/ogpFHfZT7gOCFW3kDqaReCHz4QLJ/nL5S7hrD/q+6tCEWLW+cvmRXGilMMuZ5hTL264+L5Q9lWO5khSWXzmKDgk7exuvKaa2+1MqWEEkItlkozMihz0ArMl+Q0DwRPC35awLJD4K8DSCOivyGzeTWSqoJanx6xvjYaxmUEaDZ9ICWjX6/0JLGaPpGqtKM6jOD09kQJy+XtgH7yNHmXlGsfJlqumJzTEEYbtOpJjuWf1+y6/p8dr4ZghSPFRww==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR19MB5562.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(86362001)(66556008)(66476007)(66946007)(5660300002)(52536014)(64756008)(66446008)(2906002)(508600001)(88996005)(122000001)(38100700002)(9686003)(110136005)(316002)(8676002)(8936002)(26005)(55016003)(83380400001)(186003)(33656002)(6506007)(71200400001)(7696005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?pvCJl1wyrVDQzlAsiyu3p1KGFGCbWpXq1y79AG9CI7noqv9gIYOci8AyIm?=
+ =?iso-8859-2?Q?fiwgvfzbOOLspxSrKryM+zPNeGeRIdhTt2pQOlCo610G7Fz1jXH17XWVFZ?=
+ =?iso-8859-2?Q?PKqEH6L8948dv4N72Y781gur86SE833q7QJ7WKxNuSnIvPrUZihX22AeaZ?=
+ =?iso-8859-2?Q?nECxvDnXFKrc/R2KlLZFlSy4MgwJbbfkYlfZCL9gwKtU+Z0g4MY0iRswn4?=
+ =?iso-8859-2?Q?EeTe6W8LxoSDofmc6s7OG8kASD43M9jcY1ZO88/qdRWROfYTzyBGhL7CTA?=
+ =?iso-8859-2?Q?B734PCvl8391VoVsaBcVtXQARzWs0Ry0xnr9dXzIEfBwwMkr9qgc8UrWUC?=
+ =?iso-8859-2?Q?Uujutgxdz9ZMT2wEcPaMpwE3LyGJpSzYVqiy7q1R2WcMJ6f2DMYpB80Nq8?=
+ =?iso-8859-2?Q?4BqGfI6bZKsgbTKx8gumuMHjc0dWae65/i+PyswGv1FsHsTdr8YijmVii+?=
+ =?iso-8859-2?Q?Lhn43DljSfuznOhCsGwF/779jS7hL6SD/YXHbLyJSGcqU5vzgapeJ+NkNt?=
+ =?iso-8859-2?Q?CYn1Rjt2D8auh7w//QW3noHfIw2dFYoLpX3PEIkXcYV4Yz5cHwI6d2v78D?=
+ =?iso-8859-2?Q?xnEFw4eGjTrDkylXzQk8MYSk5McUkuL0fSHLvUNvjxCxr6LEljnaXdzEgX?=
+ =?iso-8859-2?Q?4/2OKXOwW/azuWUBUBhpf/bD1FgQK0pr76fJcpLLf3d0pz8Fs+Lni9LmvW?=
+ =?iso-8859-2?Q?+dnm+xMEIUv1JwkBX9kTphindlHUVjdRLEgjHFmbnkQYsmA+Yy6hsDcp/X?=
+ =?iso-8859-2?Q?K1ASQrcr+Qn2ZF6ahCG4I75s4UTTEnn5ops7VFhRNRRLIXLb9rCjxrhpen?=
+ =?iso-8859-2?Q?4qCNDTXK0MiTtfCshhhJ1RTqqMMP5jbG4wiYpTcAZ5vr8u6a956TQlQuUG?=
+ =?iso-8859-2?Q?MEIdsN6vGU8SGrABAxekH4v++1cg3G3tq1+Ex6mJ8zOOdHOxXFAKCXZovi?=
+ =?iso-8859-2?Q?CkXA6nVUCCj2O+v9VE+Tfdq3/pDOhln6+06S51+Nq2x9GtPZTin6lCdfEE?=
+ =?iso-8859-2?Q?rSyaoJ0h9QWYBaoxdl7e6+BmVWF3wRVL4DdFWpuBDNM2WZedzt6Ty7+1bN?=
+ =?iso-8859-2?Q?gl6+f9+KEAr7nOgxEXZsE05+t/a70pfK40yK5G09022jB5N4rT3mOhMVST?=
+ =?iso-8859-2?Q?7Jeab9sRDOabGSnihSi9qZzUejlHYGGlcEQh4gDouZxo8aCu6gi2Egsmkm?=
+ =?iso-8859-2?Q?DZAkE7zJFq0gjNBf6hKUh8APplLTPQg56QRvNGYG5pkI+U/Pr4kY39ZGWw?=
+ =?iso-8859-2?Q?WuF8Q1ik/ezHMeUy13xU6hydqgqVIlQa3xEKFTseovd0DZg32pRdUazNkd?=
+ =?iso-8859-2?Q?oNyFE6HFKKQ3bmYHWwKiPmSLLAGdmehlR5NxgLoKevgITV6jFHsgDOSHGM?=
+ =?iso-8859-2?Q?5hCvb8VzXCJRxYhkbXirKSuDG29Gj6PjL1C3j5MUxpRV27cmGTuhmnYhto?=
+ =?iso-8859-2?Q?sx0kglVzQJNJY9RbxSLEtWfKaIhvxBVXhcJjM89yfNFdylAcRmJiQmlTJM?=
+ =?iso-8859-2?Q?5M489nd2XrVEGdAO3lt1pQBlIcdSlU+zzIhdLG4xIMaqfD6x/7al7rHJIB?=
+ =?iso-8859-2?Q?T12eGgQe043/+HpERxuyRaIby4QmrMcVuRVSCJnL1IcN5BHkZ3uwslSGVA?=
+ =?iso-8859-2?Q?RKUL2saZp1yQq0tGcRbDZw0pHfcVeTcWYrswQq4mQSWRfQmdgNMENI0/C/?=
+ =?iso-8859-2?Q?/skQYFr8HuySfBkLWpc=3D?=
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2j-OFUUp+haHoV4PyL-On4EASZ9+59SDqNqmL8Gv_k7Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: ambarella.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR19MB5562.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 182edb38-6253-43a8-563c-08d9ca917bb0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Dec 2021 06:07:24.2296
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3ccd3c8d-5f7c-4eb4-ae6f-32d8c106402c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: W+KomdcPLSDgjKXcIuvS4MsPv7vNBkHRA82tqJbSg2+6y6kpOCtKSdSEFkyJdbXxjpL5QfO71Xw/xWh4VGwnVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR19MB5441
+X-Proofpoint-ORIG-GUID: 5tCJon9bp0jlRkfRGc5keGezCdVsmh2V
+X-Proofpoint-GUID: 5tCJon9bp0jlRkfRGc5keGezCdVsmh2V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2021-12-29_02,2021-12-28_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 adultscore=0 bulkscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 clxscore=1011 impostorscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112290033
+Content-Type: text/plain; charset="iso-8859-2"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Arnd,
+IIUC, COMMAND_WRITE should be set for pci_endpoint_test_write,
+and COMMAND_READ should be set for pci_endpoint_test_read.
 
-Am 29.12.2021 um 16:41 schrieb Arnd Bergmann:
-> On Tue, Dec 28, 2021 at 8:20 PM Michael Schmitz <schmitzmic@gmail.com> wrote:
->> Am 28.12.2021 um 23:08 schrieb Geert Uytterhoeven:
->>> On Mon, Dec 27, 2021 at 5:44 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
->>>> We introduce a new HAS_IOPORT Kconfig option to gate support for
->>>> I/O port access. In a future patch HAS_IOPORT=n will disable compilation
->>>> of the I/O accessor functions inb()/outb() and friends on architectures
->>>> which can not meaningfully support legacy I/O spaces. On these platforms
->>>> inb()/outb() etc are currently just stubs in asm-generic/io.h which when
->>>> called will cause a NULL pointer access which some compilers actually
->>>> detect and warn about.
->>>>
->>>> The dependencies on HAS_IOPORT in drivers as well as ifdefs for
->>>> HAS_IOPORT specific sections will be added in subsequent patches on
->>>> a per subsystem basis. Then a final patch will ifdef the I/O access
->>>> functions on HAS_IOPORT thus turning any use not gated by HAS_IOPORT
->>>> into a compile-time warning.
->>>>
->>>> Link: https://lore.kernel.org/lkml/CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com/
->>>> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
->>>> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
->>>> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
->>>
->>> Thanks for your patch!
->>>
->>>> --- a/arch/m68k/Kconfig
->>>> +++ b/arch/m68k/Kconfig
->>>> @@ -16,6 +16,7 @@ config M68K
->>>>         select GENERIC_CPU_DEVICES
->>>>         select GENERIC_IOMAP
->>>>         select GENERIC_IRQ_SHOW
->>>> +       select HAS_IOPORT
->>>>         select HAVE_AOUT if MMU
->>>>         select HAVE_ASM_MODVERSIONS
->>>>         select HAVE_DEBUG_BUGVERBOSE
->>>
->>> This looks way too broad to me: most m68k platform do not have I/O
->>> port access support.
->>>
->>> My gut feeling says:
->>>
->>>     select HAS_IOPORT if PCI || ISA
->>>
->>> but that might miss some intricate details...
->>
->> In particular, this misses the Atari ROM port ISA adapter case -
->>
->>         select HAS_IOPORT if PCI || ISA || ATARI_ROM_ISA
->>
->> might do instead.
->
-> Right, makes sense. I had suggested to go the easy way and assume that
-> each architecture would select HAS_IOPORT if any configuration supports
-> it, but it looks like for m68k there is a clearly defined set of platforms that
-> do.
->
-> Note that for the platforms that don't set any of the three symbols, the
-> fallback makes inb() an alias for readb() with a different argument type,
-> so there may be m68k specific drivers that rely on this, but those would
-> already be broken if ATARI_ROM_ISA is set.
+Signed-off-by: Li Chen <lchen@ambarella.com>
+---
+ drivers/misc/pci_endpoint_test.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-I'd hope not - we spent some effort to make sure setting ATARI_ROM_ISA 
-does not affect other m68k platforms when e.g. building multiplatform 
-kernels.
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_t=
+est.c
+index 2ed7e3aaff3a8..ea7a90830932d 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -551,12 +551,12 @@ static bool pci_endpoint_test_write(struct pci_endpoi=
+nt_test *test,
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
+-				 COMMAND_READ);
++				 COMMAND_WRITE);
+=20
+ 	wait_for_completion(&test->irq_raised);
+=20
+ 	reg =3D pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
+-	if (reg & STATUS_READ_SUCCESS)
++	if (reg & STATUS_WRITE_SUCCESS)
+ 		ret =3D true;
+=20
+ 	dma_unmap_single(dev, orig_phys_addr, size + alignment,
+@@ -643,7 +643,7 @@ static bool pci_endpoint_test_read(struct pci_endpoint_=
+test *test,
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
+ 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
+-				 COMMAND_WRITE);
++				 COMMAND_READ);
+=20
+ 	wait_for_completion(&test->irq_raised);
+=20
+--=20
+2.34.1
 
-Replacing inb() by readb() without any address translation won't do much 
-good for m68k though - addresses in the traditional ISA I/O port range 
-would hit the (unmapped) zero page.
-
-Cheers,
-
-	Michael
-
->
->           Arnd
->
+**********************************************************************
+This email and attachments contain Ambarella Proprietary and/or Confidentia=
+l Information and is intended solely for the use of the individual(s) to wh=
+om it is addressed. Any unauthorized review, use, disclosure, distribute, c=
+opy, or print is prohibited. If you are not an intended recipient, please c=
+ontact the sender by reply email and destroy all copies of the original mes=
+sage. Thank you.
