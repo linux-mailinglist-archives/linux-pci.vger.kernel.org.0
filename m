@@ -2,86 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CAD6481674
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 20:53:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 861C8481681
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 21:00:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231400AbhL2Txl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Dec 2021 14:53:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230494AbhL2Txl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 14:53:41 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 067B7C061574;
-        Wed, 29 Dec 2021 11:53:40 -0800 (PST)
+        id S231633AbhL2UAR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Dec 2021 15:00:17 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:52092 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231419AbhL2UAQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 15:00:16 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 89A3BB81A07;
-        Wed, 29 Dec 2021 19:53:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDDAEC36AE9;
-        Wed, 29 Dec 2021 19:53:37 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7CB31B81A02;
+        Wed, 29 Dec 2021 20:00:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF052C36AEA;
+        Wed, 29 Dec 2021 20:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640807618;
-        bh=3xKmMCx2enRDWAiWh/qr4iF+67cL5V1MVZFQOA249zM=;
+        s=k20201202; t=1640808014;
+        bh=wqhMfCvA9zj0zXkZZQhJ9lSi8r+UeURgf/ajHSematg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nFvGxfdDHW1NCKzpjvB1CObAOB3Dyk2uPMdjSZ1SowsnzpHGae3Mw5KQoS2yHlVPy
-         3qbRcxIVbkxgf0gp/9a89NCvwjUs93FkOSYAhPbKsf29f3vuWv+SJbAJIN5+8c8iWu
-         p1sAzp21Hw/ZPdi/qxYgUCpVxx35nm9uE4aWYkOTRH+V6bbqy2BsJsBQSG9MTnBZUP
-         /l5dnqK1LhzlAuVmC5ZHFL39VD/lS40efzNGISlQKBCZ7vdUnUT9E9WrcJkWzaoKYu
-         tJqTqMRW6e/QqsnSRvESei8dpoerdy1XxDbzLz3X/XoNqnVTM2uiXSLeQz8V1B1LjJ
-         0AELG4tQr2rag==
-Date:   Wed, 29 Dec 2021 13:53:36 -0600
+        b=OeanErZL1YBoL2iej/Q6v/kFInv0fHpYLmYObk2wxWdBt2h+8GWvSP+rl1859P83K
+         wg8idnGLOOKehP0qVfyIuQrYZ4e0xpOXgjdVC29cC7NeSExLhqUdkgGACryaQpS9RR
+         qs1b9cOYEF6kxgPW7IbRDo02BPEV+aQDMknx1fMdvDc0Aqjc1kiGPhfF3laP1Tmrpt
+         4i2hkZ8qbfhmhfhFg2dYtD0zlagIzF3NURvCUPM3ogKoktKR8DcOryJYVE0+NAMurD
+         IkEd5jhKOsI0a9P0qo0LeMgzLqFML2VVI9IM6HidIsRnT8+S/79s453MxRdWLdbhxj
+         ZipaUu/2rHZeQ==
+Date:   Wed, 29 Dec 2021 14:00:12 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: slot: use default_groups in kobj_type
-Message-ID: <20211229195336.GA1697694@bhelgaas>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] PCI: Add device code for AMD FCH SATA Controller
+ in AHCI mode
+Message-ID: <20211229200012.GA1698594@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211228135722.381023-1-gregkh@linuxfoundation.org>
+In-Reply-To: <20211227162658.11314-1-pmenzel@molgen.mpg.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 28, 2021 at 02:57:22PM +0100, Greg Kroah-Hartman wrote:
-> There are currently 2 ways to create a set of sysfs files for a
-> kobj_type, through the default_attrs field, and the default_groups
-> field.  Move the PCI slot code to use default_groups field which has
-> been the preferred way since aa30f47cf666 ("kobject: Add support for
-> default attribute groups to kobj_type") so that we can soon get rid of
-> the obsolete default_attrs field.
+On Mon, Dec 27, 2021 at 05:26:56PM +0100, Paul Menzel wrote:
+> The ASUS F2A85-M PRO with the fusion controller hub (FCH) AMD A85
+> (Hudson D4) has the SATA controller below.
 > 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     $ lspci -s 00:11.0
+>     00:11.0 SATA controller [0106]: Advanced Micro Devices, Inc. [AMD] FCH SATA Controller [AHCI mode] [1022:7801] (rev 40)
+> 
+> Add the ID for it, when in AHCI mode.
+> 
+> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
 
-Applied to pci/enumeration for v5.17, thanks!
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
 > ---
->  drivers/pci/slot.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  include/linux/pci_ids.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-> index 751a26668e3a..a0c67191a8b9 100644
-> --- a/drivers/pci/slot.c
-> +++ b/drivers/pci/slot.c
-> @@ -96,11 +96,12 @@ static struct attribute *pci_slot_default_attrs[] = {
->  	&pci_slot_attr_cur_speed.attr,
->  	NULL,
->  };
-> +ATTRIBUTE_GROUPS(pci_slot_default);
->  
->  static struct kobj_type pci_slot_ktype = {
->  	.sysfs_ops = &pci_slot_sysfs_ops,
->  	.release = &pci_slot_release,
-> -	.default_attrs = pci_slot_default_attrs,
-> +	.default_groups = pci_slot_default_groups,
->  };
->  
->  static char *make_slot_name(const char *name)
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 011f2f1ea5bb..fe944b44858a 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -602,6 +602,7 @@
+>  #define PCI_DEVICE_ID_AMD_LX_VIDEO  0x2081
+>  #define PCI_DEVICE_ID_AMD_LX_AES    0x2082
+>  #define PCI_DEVICE_ID_AMD_HUDSON2_SATA_IDE	0x7800
+> +#define PCI_DEVICE_ID_AMD_HUDSON2_SATA_AHCI	0x7801
+>  #define PCI_DEVICE_ID_AMD_HUDSON2_SMBUS		0x780b
+>  #define PCI_DEVICE_ID_AMD_HUDSON2_IDE		0x780c
+>  #define PCI_DEVICE_ID_AMD_KERNCZ_SMBUS  0x790b
 > -- 
-> 2.34.1
+> 2.30.2
 > 
