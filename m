@@ -2,77 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 861C8481681
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 21:00:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4539448168F
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 21:12:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231633AbhL2UAR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Dec 2021 15:00:17 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:52092 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231419AbhL2UAQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 15:00:16 -0500
+        id S231724AbhL2UMd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Dec 2021 15:12:33 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:60692 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231701AbhL2UMc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 15:12:32 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7CB31B81A02;
-        Wed, 29 Dec 2021 20:00:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF052C36AEA;
-        Wed, 29 Dec 2021 20:00:13 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2C294614B3;
+        Wed, 29 Dec 2021 20:12:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41703C36AE9;
+        Wed, 29 Dec 2021 20:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640808014;
-        bh=wqhMfCvA9zj0zXkZZQhJ9lSi8r+UeURgf/ajHSematg=;
+        s=k20201202; t=1640808751;
+        bh=vWtanjbewujinnsoAkIMuVPTzg/CYmtOfG32HMGoOIM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OeanErZL1YBoL2iej/Q6v/kFInv0fHpYLmYObk2wxWdBt2h+8GWvSP+rl1859P83K
-         wg8idnGLOOKehP0qVfyIuQrYZ4e0xpOXgjdVC29cC7NeSExLhqUdkgGACryaQpS9RR
-         qs1b9cOYEF6kxgPW7IbRDo02BPEV+aQDMknx1fMdvDc0Aqjc1kiGPhfF3laP1Tmrpt
-         4i2hkZ8qbfhmhfhFg2dYtD0zlagIzF3NURvCUPM3ogKoktKR8DcOryJYVE0+NAMurD
-         IkEd5jhKOsI0a9P0qo0LeMgzLqFML2VVI9IM6HidIsRnT8+S/79s453MxRdWLdbhxj
-         ZipaUu/2rHZeQ==
-Date:   Wed, 29 Dec 2021 14:00:12 -0600
+        b=ri2QRYB/7J/7LVZ8rfiwgnIizpgwLsLMSsLF3cm4tBjkhVFJrtTto93EM18va0Yqr
+         FYhWUXtXuIcM5kYowDEonIa23f+MV8wNNdNhi9rHljv2F64NfNznxlJP5uuPmNlxN3
+         we4bma2po+ck6Pxx3nWUGOX/bl5iZ9kbKO+I3mXRKGGsoqNBYEE3+9mpXYmfRvkSmb
+         MfKwkkCRLPNJZ8WvnSrldTdF07hOG1th8BRnvWCOm5BW7Y2d41ctz6KoEjpnWDCJEo
+         NznV53lorTyejhVUqJgmARWf/NOxYjP1+bea/FKfvni2Hr302VZXjHejIp1Vx/FSdd
+         JMKiG/5vDQgag==
+Date:   Wed, 29 Dec 2021 14:12:29 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] PCI: Add device code for AMD FCH SATA Controller
- in AHCI mode
-Message-ID: <20211229200012.GA1698594@bhelgaas>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     m.chetan.kumar@intel.com, linuxwwan@intel.com,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 1/2] net: wwan: iosm: Let PCI core handle PCI power
+ transition
+Message-ID: <20211229201229.GA1698801@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211227162658.11314-1-pmenzel@molgen.mpg.de>
+In-Reply-To: <20211224081914.345292-1-kai.heng.feng@canonical.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 27, 2021 at 05:26:56PM +0100, Paul Menzel wrote:
-> The ASUS F2A85-M PRO with the fusion controller hub (FCH) AMD A85
-> (Hudson D4) has the SATA controller below.
-> 
->     $ lspci -s 00:11.0
->     00:11.0 SATA controller [0106]: Advanced Micro Devices, Inc. [AMD] FCH SATA Controller [AHCI mode] [1022:7801] (rev 40)
-> 
-> Add the ID for it, when in AHCI mode.
-> 
-> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+[+cc Rafael, in case you have insight about the PCI_D0 question below;
+Vaibhav, since this is related to your generic PM conversions]
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+On Fri, Dec 24, 2021 at 04:19:13PM +0800, Kai-Heng Feng wrote:
+> pci_pm_suspend_noirq() and pci_pm_resume_noirq() already handle power
+> transition for system-wide suspend and resume, so it's not necessary to
+> do it in the driver.
 
+I see DaveM has already applied this, but it looks good to me, thanks
+for doing this!
+
+One minor question below...
+
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
->  include/linux/pci_ids.h | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/net/wwan/iosm/iosm_ipc_pcie.c | 49 ++-------------------------
+>  1 file changed, 2 insertions(+), 47 deletions(-)
 > 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 011f2f1ea5bb..fe944b44858a 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -602,6 +602,7 @@
->  #define PCI_DEVICE_ID_AMD_LX_VIDEO  0x2081
->  #define PCI_DEVICE_ID_AMD_LX_AES    0x2082
->  #define PCI_DEVICE_ID_AMD_HUDSON2_SATA_IDE	0x7800
-> +#define PCI_DEVICE_ID_AMD_HUDSON2_SATA_AHCI	0x7801
->  #define PCI_DEVICE_ID_AMD_HUDSON2_SMBUS		0x780b
->  #define PCI_DEVICE_ID_AMD_HUDSON2_IDE		0x780c
->  #define PCI_DEVICE_ID_AMD_KERNCZ_SMBUS  0x790b
+> diff --git a/drivers/net/wwan/iosm/iosm_ipc_pcie.c b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+> index 2fe88b8be3481..d73894e2a84ed 100644
+> --- a/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+> +++ b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+> @@ -363,67 +363,22 @@ static int __maybe_unused ipc_pcie_resume_s2idle(struct iosm_pcie *ipc_pcie)
+>  
+>  int __maybe_unused ipc_pcie_suspend(struct iosm_pcie *ipc_pcie)
+>  {
+> -	struct pci_dev *pdev;
+> -	int ret;
+> -
+> -	pdev = ipc_pcie->pci;
+> -
+> -	/* Execute D3 one time. */
+> -	if (pdev->current_state != PCI_D0) {
+> -		dev_dbg(ipc_pcie->dev, "done for PM=%d", pdev->current_state);
+> -		return 0;
+> -	}
+
+I don't understand the intent of this early exit, and it's not obvious
+to me that pci_pm_suspend_noirq() bails out early when
+(pdev->current_state != PCI_D0).
+
+>  	/* The HAL shall ask the shared memory layer whether D3 is allowed. */
+>  	ipc_imem_pm_suspend(ipc_pcie->imem);
+>  
+> -	/* Save the PCI configuration space of a device before suspending. */
+> -	ret = pci_save_state(pdev);
+> -
+> -	if (ret) {
+> -		dev_err(ipc_pcie->dev, "pci_save_state error=%d", ret);
+> -		return ret;
+> -	}
+> -
+> -	/* Set the power state of a PCI device.
+> -	 * Transition a device to a new power state, using the device's PCI PM
+> -	 * registers.
+> -	 */
+> -	ret = pci_set_power_state(pdev, PCI_D3cold);
+> -
+> -	if (ret) {
+> -		dev_err(ipc_pcie->dev, "pci_set_power_state error=%d", ret);
+> -		return ret;
+> -	}
+> -
+>  	dev_dbg(ipc_pcie->dev, "SUSPEND done");
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  int __maybe_unused ipc_pcie_resume(struct iosm_pcie *ipc_pcie)
+>  {
+> -	int ret;
+> -
+> -	/* Set the power state of a PCI device.
+> -	 * Transition a device to a new power state, using the device's PCI PM
+> -	 * registers.
+> -	 */
+> -	ret = pci_set_power_state(ipc_pcie->pci, PCI_D0);
+> -
+> -	if (ret) {
+> -		dev_err(ipc_pcie->dev, "pci_set_power_state error=%d", ret);
+> -		return ret;
+> -	}
+> -
+> -	pci_restore_state(ipc_pcie->pci);
+> -
+>  	/* The HAL shall inform the shared memory layer that the device is
+>  	 * active.
+>  	 */
+>  	ipc_imem_pm_resume(ipc_pcie->imem);
+>  
+>  	dev_dbg(ipc_pcie->dev, "RESUME done");
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int __maybe_unused ipc_pcie_suspend_cb(struct device *dev)
 > -- 
-> 2.30.2
+> 2.33.1
 > 
