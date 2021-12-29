@@ -2,160 +2,398 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72B5C481704
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 22:16:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C60AD4817B6
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 00:27:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231682AbhL2VQb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Dec 2021 16:16:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231322AbhL2VQa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 16:16:30 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D6DBC061574;
-        Wed, 29 Dec 2021 13:16:30 -0800 (PST)
+        id S233220AbhL2X15 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Dec 2021 18:27:57 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:49334 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233131AbhL2X15 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 18:27:57 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E73FCB81A10;
-        Wed, 29 Dec 2021 21:16:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AEF2C36AE9;
-        Wed, 29 Dec 2021 21:16:27 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F0A72B819C4
+        for <linux-pci@vger.kernel.org>; Wed, 29 Dec 2021 23:27:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CD93C36AE9;
+        Wed, 29 Dec 2021 23:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640812587;
-        bh=cjyr8peC0EwKteN+JSIctBlIqiolVktDfzhMSIQZ+DE=;
+        s=k20201202; t=1640820474;
+        bh=x7P2ch0i4etowWpkGZ5rKwTj5AaloLivOslxZTTtxS8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Vgjmo1GhUSsmFHn1ckCJL8DqIveMa8+rBwPsRn5zv8bVRjfHGKxuXoTqGU7lkBDcH
-         VxbG80fnd8XvvOHDQrOfcxku0d0kA7WCKHxhu1xWCJV3N9TBgcT3niy8ikUAbvm99R
-         eU1BQX2u8bfnOCGnANyuGPryT4/Ewh7P1kCLMoOo6OFhb0wMNPbN9iDsVGi8QZfMUG
-         hraBTiBhEB0ReFcNZfltH+Eja2O+oRLVWJbrBgx43iW7ZKkft1V1bNo/JfvCAY8gwb
-         0vX25amhqPnnn/8AI2Ngh6pUNxjlpbo75eFj5F1tK9Tnbv86AFwdGy+NarfhfhNkw9
-         wJOJpc9lzNytA==
-Date:   Wed, 29 Dec 2021 15:16:26 -0600
+        b=JQsMt6J95GbH7RN2TlypeICZ2zOWDDs7GYNNTpMBl9mMcBOAxJrCLRm6X4h9Wxv4V
+         SBHmzgjjgZr9vly5cd4ijfjIQpm9whEMG0H2sSm1AGBJWqOqiopGBysOcahMK+p3pl
+         NzrifbQbF9Z/y5OvPIKU4c9Ahfc6bSruByXIX2KAb7StQWs3cBdRUGs0GaBiiHC1YJ
+         iD67BCOi4jFGKWN0u7jOHvLOHPBK580NClFlro8eHIvmkl2CHNNFZtmnd/IahAz0D/
+         Aw99Gnho4WWpxG0vR6s3m+0AbHJEXSzbAHjpDVD2LLoam24iBhqsfv2WSnDFo4u1Je
+         mQddPfpQjAqcg==
+Date:   Wed, 29 Dec 2021 17:27:52 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 04/13] PCI: portdrv: Suppress kernel DMA ownership
- auto-claiming
-Message-ID: <20211229211626.GA1701512@bhelgaas>
+To:     Lucas De Marchi <lucas.demarchi@intel.com>
+Cc:     x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH] x86/quirks: Fix logic to apply quirk once
+Message-ID: <20211229232752.GA1712676@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211217063708.1740334-5-baolu.lu@linux.intel.com>
+In-Reply-To: <20211218061313.100571-1-lucas.demarchi@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 02:36:59PM +0800, Lu Baolu wrote:
-> IOMMU grouping on PCI necessitates that if we lack isolation on a bridge
-> then all of the downstream devices will be part of the same IOMMU group
-> as the bridge. The existing vfio framework allows the portdrv driver to
-> be bound to the bridge while its downstream devices are assigned to user
-> space. The pci_dma_configure() marks the iommu_group as containing only
-> devices with kernel drivers that manage DMA. Avoid this default behavior
-> for the portdrv driver in order for compatibility with the current vfio
-> policy.
+On Fri, Dec 17, 2021 at 10:13:13PM -0800, Lucas De Marchi wrote:
+> When using QFLAG_APPLY_ONCE we make sure the quirk is applied only once.
 
-A word about the isolation would be useful.  I think you're referring
-to some specific ACS controls, probably P2P Request Redirect?
+Maybe "called" only once, since you're about to add a distinction
+between "called" and "applied"?
 
-I guess this is just a wording issue, but I think it's actually the
-*lack* of some ACS controls that forces us to put several devices in
-the same IOMMU group, isn't it?  It's not that we start with "IOMMU
-grouping" and that necessitates something else.
+I'm not really sure the concept of QFLAG_APPLY_ONCE, QFLAG_APPLIED,
+QFLAG_DONE is general purpose enough to be handled at the level of
+check_dev_quirk().
 
-Maybe something like this?
+We don't have anything like that for the regular PCI fixups (see
+pci_do_fixups()).  If a regular fixup needed something like that, it
+would use a static local variable.  Maybe that would be simpler
+overall here, too, since the quirk would be *always* called for
+matching devices, and the "one-time" logic would be encapsulated in
+the quirk itself where it's more obvious?
 
-  If a switch lacks ACS P2P Request Redirect (and possibly other
-  controls?), a device below the switch can bypass the IOMMU and DMA
-  directly to other devices below the switch, so all the downstream
-  devices must be in the same IOMMU group as the switch itself.
-
-> The commit 5f096b14d421b ("vfio: Whitelist PCI bridges") extended above
-> policy to all kernel drivers of bridge class. This is not always safe.
-> For example, The shpchp_core driver relies on the PCI MMIO access for the
-> controller functionality. With its downstream devices assigned to the
-> userspace, the MMIO might be changed through user initiated P2P accesses
-> without any notification. This might break the kernel driver integrity
-> and lead to some unpredictable consequences.
+> This is useful when it's enough one device to trigger a certain
+> condition or when the resource in each that applies is global to the
+> system rather than local to the device.
 > 
-> For any bridge driver, in order to avoiding default kernel DMA ownership
-> claiming, we should consider:
+> However we call the quirk handler based on vendor, class, and device,
+> allowing the specific handler to do additional filtering. In that case
+> check_dev_quirk() may incorrectly mark the quirk as applied when it's
+> not. This is particularly bad for intel_graphics_quirks() that uses
+> PCI_ANY_ID and then compares with a long list of devices. This hasn't
+> been problematic so far because those devices are integrated GPUs and
+> there can only be one in the system.  However as Intel starts to
+> release discrete cards, this condition is no longer true and we fail to
+> reserve the stolen memory (for the integrated gpu) depending on the bus
+> topology: if the traversal finds the discrete card first, for which
+> there is no system stolen memory, we will fail to reserve it for the
+> integrated card.
+
+s/integrated gpu/integrated GPU/ (to match previous use)
+
+> This fixes the stolen memory reservation for an Alderlake-P system with
+> one additional DG2. In this system we have:
+
+DG2?
+
+> 	- 00:01.0 Bridge
+> 	  `- 03:00.0 DG2
+> 	- Alderklake-P's integrated graphics
+
+s/Alderklake-P/Alderlake-P/
+
+Might be nice to include the integrated GPU PCI address to be parallel
+with the bridge and DG2.
+
+> Since we do a depth-first traversal, when we call the handler because of
+> DG2 we were marking it as already being applied and never reserving the
+> stolen memory for Alderlake-P.
 > 
->  1) Does the bridge driver use DMA? Calling pci_set_master() or
->     a dma_map_* API is a sure indicate the driver is doing DMA
-> 
->  2) If the bridge driver uses MMIO, is it tolerant to hostile
->     userspace also touching the same MMIO registers via P2P DMA
->     attacks?
-> 
-> Conservatively if the driver maps an MMIO region at all, we can say that
-> it fails the test.
+> Here we change the quirk fucntions to return bool in case it applied a
+> quirk so we only flag it as applied when that really happened. This only
+> makes a difference for quirks using QFLAG_APPLY_ONCE, so all the others
+> simply returns true in order to avoid unnecessary complication.
 
-I'm not sure what all this explanation is telling me.  It says
-something done by 5f096b14d421 is not always safe, but this patch
-doesn't fix any of those unsafe things.
+s/fucntions/functions/
+s/returns true/return true/
 
-If it doesn't explain why we need this patch or how this patch works,
-I don't think we need it in the commit log.
+I would consider splitting this into two patches:
 
-Maybe this is an explanation for why you didn't set
-.suppress_auto_claim_dma_owner for shpc_driver?
+  1) Change the quirk signature, make them all return "true", and
+  update check_dev_quirk().  This would have no functional impact.
 
-Minor typos above:
-  s/in order to avoiding default/before avoiding default/
-  s/relies on the PCI MMIO access/relies on PCI MMIO access/
-  s/For example, The/For example, the/
-  s/is a sure indicate the/is a sure indication the/
+  2) Update intel_graphics_quirks() to return "false" when it doesn't
+  reserve the stolen memory.
 
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Suggested-by: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Then the important change will be in a small patch by itself and will
+be easier to understand and revert if that should be necessary.
+
+> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
 > ---
->  drivers/pci/pcie/portdrv_pci.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  arch/x86/kernel/early-quirks.c | 75 ++++++++++++++++++++++------------
+>  1 file changed, 49 insertions(+), 26 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 35eca6277a96..c48a8734f9c4 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -202,7 +202,10 @@ static struct pci_driver pcie_portdriver = {
+> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+> index 391a4e2b8604..5d235fe2a07a 100644
+> --- a/arch/x86/kernel/early-quirks.c
+> +++ b/arch/x86/kernel/early-quirks.c
+> @@ -28,7 +28,7 @@
+>  #include <asm/irq_remapping.h>
+>  #include <asm/early_ioremap.h>
 >  
->  	.err_handler	= &pcie_portdrv_err_handler,
+> -static void __init fix_hypertransport_config(int num, int slot, int func)
+> +static bool __init fix_hypertransport_config(int num, int slot, int func)
+>  {
+>  	u32 htcfg;
+>  	/*
+> @@ -51,10 +51,10 @@ static void __init fix_hypertransport_config(int num, int slot, int func)
+>  		}
+>  	}
 >  
-> -	.driver.pm	= PCIE_PORTDRV_PM_OPS,
-> +	.driver		= {
-> +		.pm = PCIE_PORTDRV_PM_OPS,
-> +		.suppress_auto_claim_dma_owner = true,
-> +	},
+> -
+> +	return true;
+>  }
+>  
+> -static void __init via_bugs(int  num, int slot, int func)
+> +static bool __init via_bugs(int  num, int slot, int func)
+>  {
+>  #ifdef CONFIG_GART_IOMMU
+>  	if ((max_pfn > MAX_DMA32_PFN ||  force_iommu) &&
+> @@ -63,8 +63,12 @@ static void __init via_bugs(int  num, int slot, int func)
+>  		       "Looks like a VIA chipset. Disabling IOMMU."
+>  		       " Override with iommu=allowed\n");
+>  		gart_iommu_aperture_disabled = 1;
+> +
+> +		return true;
+>  	}
+>  #endif
+> +
+> +	return false;
+>  }
+>  
+>  #ifdef CONFIG_ACPI
+> @@ -77,7 +81,7 @@ static int __init nvidia_hpet_check(struct acpi_table_header *header)
+>  #endif /* CONFIG_X86_IO_APIC */
+>  #endif /* CONFIG_ACPI */
+>  
+> -static void __init nvidia_bugs(int num, int slot, int func)
+> +static bool __init nvidia_bugs(int num, int slot, int func)
+>  {
+>  #ifdef CONFIG_ACPI
+>  #ifdef CONFIG_X86_IO_APIC
+> @@ -86,7 +90,7 @@ static void __init nvidia_bugs(int num, int slot, int func)
+>  	 * Nvidia graphics cards with PCI ports on secondary buses.
+>  	 */
+>  	if (num)
+> -		return;
+> +		return false;
+>  
+>  	/*
+>  	 * All timer overrides on Nvidia are
+> @@ -96,7 +100,7 @@ static void __init nvidia_bugs(int num, int slot, int func)
+>  	 * at least allow a command line override.
+>  	 */
+>  	if (acpi_use_timer_override)
+> -		return;
+> +		return false;
+>  
+>  	if (acpi_table_parse(ACPI_SIG_HPET, nvidia_hpet_check)) {
+>  		acpi_skip_timer_override = 1;
+> @@ -105,11 +109,14 @@ static void __init nvidia_bugs(int num, int slot, int func)
+>  		       "timer override.\n");
+>  		printk(KERN_INFO "If you got timer trouble "
+>  			"try acpi_use_timer_override\n");
+> +
+> +		return true;
+>  	}
+>  #endif
+>  #endif
+>  	/* RED-PEN skip them on mptables too? */
+>  
+> +	return false;
+>  }
+>  
+>  #if defined(CONFIG_ACPI) && defined(CONFIG_X86_IO_APIC)
+> @@ -131,13 +138,13 @@ static u32 __init ati_ixp4x0_rev(int num, int slot, int func)
+>  	return d;
+>  }
+>  
+> -static void __init ati_bugs(int num, int slot, int func)
+> +static bool __init ati_bugs(int num, int slot, int func)
+>  {
+>  	u32 d;
+>  	u8  b;
+>  
+>  	if (acpi_use_timer_override)
+> -		return;
+> +		return true;
+>  
+>  	d = ati_ixp4x0_rev(num, slot, func);
+>  	if (d  < 0x82)
+> @@ -155,6 +162,8 @@ static void __init ati_bugs(int num, int slot, int func)
+>  		printk(KERN_INFO "If you got timer trouble "
+>  		       "try acpi_use_timer_override\n");
+>  	}
+> +
+> +	return true;
+>  }
+>  
+>  static u32 __init ati_sbx00_rev(int num, int slot, int func)
+> @@ -167,7 +176,7 @@ static u32 __init ati_sbx00_rev(int num, int slot, int func)
+>  	return d;
+>  }
+>  
+> -static void __init ati_bugs_contd(int num, int slot, int func)
+> +static bool __init ati_bugs_contd(int num, int slot, int func)
+>  {
+>  	u32 d, rev;
+>  
+> @@ -181,10 +190,10 @@ static void __init ati_bugs_contd(int num, int slot, int func)
+>  	 * SB800: revisions 0x40, 0x41, ...
+>  	 */
+>  	if (rev >= 0x39)
+> -		return;
+> +		return true;
+>  
+>  	if (acpi_use_timer_override)
+> -		return;
+> +		return true;
+>  
+>  	/* check for IRQ0 interrupt swap */
+>  	d = read_pci_config(num, slot, func, 0x64);
+> @@ -197,18 +206,22 @@ static void __init ati_bugs_contd(int num, int slot, int func)
+>  		printk(KERN_INFO "If you got timer trouble "
+>  		       "try acpi_use_timer_override\n");
+>  	}
+> +
+> +	return true;
+>  }
+>  #else
+> -static void __init ati_bugs(int num, int slot, int func)
+> +static bool __init ati_bugs(int num, int slot, int func)
+>  {
+> +	return true;
+>  }
+>  
+> -static void __init ati_bugs_contd(int num, int slot, int func)
+> +static bool __init ati_bugs_contd(int num, int slot, int func)
+>  {
+> +	return true;
+>  }
+>  #endif
+>  
+> -static void __init intel_remapping_check(int num, int slot, int func)
+> +static bool __init intel_remapping_check(int num, int slot, int func)
+>  {
+>  	u8 revision;
+>  	u16 device;
+> @@ -226,6 +239,8 @@ static void __init intel_remapping_check(int num, int slot, int func)
+>  		set_irq_remapping_broken();
+>  	else if (device == 0x3405 && revision == 0x22)
+>  		set_irq_remapping_broken();
+> +
+> +	return true;
+>  }
+>  
+>  /*
+> @@ -585,7 +600,7 @@ intel_graphics_stolen(int num, int slot, int func,
+>  	e820__update_table(e820_table);
+>  }
+>  
+> -static void __init intel_graphics_quirks(int num, int slot, int func)
+> +static bool __init intel_graphics_quirks(int num, int slot, int func)
+>  {
+>  	const struct intel_early_ops *early_ops;
+>  	u16 device;
+> @@ -603,16 +618,20 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
+>  
+>  		intel_graphics_stolen(num, slot, func, early_ops);
+>  
+> -		return;
+> +		return true;
+>  	}
+> +
+> +	return false;
+>  }
+>  
+> -static void __init force_disable_hpet(int num, int slot, int func)
+> +static bool __init force_disable_hpet(int num, int slot, int func)
+>  {
+>  #ifdef CONFIG_HPET_TIMER
+>  	boot_hpet_disable = true;
+>  	pr_info("x86/hpet: Will disable the HPET for this platform because it's not reliable\n");
+>  #endif
+> +
+> +	return true;
+>  }
+>  
+>  #define BCM4331_MMIO_SIZE	16384
+> @@ -620,7 +639,7 @@ static void __init force_disable_hpet(int num, int slot, int func)
+>  #define bcma_aread32(reg)	ioread32(mmio + 1 * BCMA_CORE_SIZE + reg)
+>  #define bcma_awrite32(reg, val)	iowrite32(val, mmio + 1 * BCMA_CORE_SIZE + reg)
+>  
+> -static void __init apple_airport_reset(int bus, int slot, int func)
+> +static bool __init apple_airport_reset(int bus, int slot, int func)
+>  {
+>  	void __iomem *mmio;
+>  	u16 pmcsr;
+> @@ -628,7 +647,7 @@ static void __init apple_airport_reset(int bus, int slot, int func)
+>  	int i;
+>  
+>  	if (!x86_apple_machine)
+> -		return;
+> +		return true;
+>  
+>  	/* Card may have been put into PCI_D3hot by grub quirk */
+>  	pmcsr = read_pci_config_16(bus, slot, func, BCM4331_PM_CAP + PCI_PM_CTRL);
+> @@ -642,7 +661,7 @@ static void __init apple_airport_reset(int bus, int slot, int func)
+>  		if ((pmcsr & PCI_PM_CTRL_STATE_MASK) != PCI_D0) {
+>  			pr_err("pci 0000:%02x:%02x.%d: Cannot power up Apple AirPort card\n",
+>  			       bus, slot, func);
+> -			return;
+> +			return true;
+>  		}
+>  	}
+>  
+> @@ -654,7 +673,7 @@ static void __init apple_airport_reset(int bus, int slot, int func)
+>  	if (!mmio) {
+>  		pr_err("pci 0000:%02x:%02x.%d: Cannot iomap Apple AirPort card\n",
+>  		       bus, slot, func);
+> -		return;
+> +		return true;
+>  	}
+>  
+>  	pr_info("Resetting Apple AirPort card (left enabled by EFI)\n");
+> @@ -671,6 +690,8 @@ static void __init apple_airport_reset(int bus, int slot, int func)
+>  	udelay(10);
+>  
+>  	early_iounmap(mmio, BCM4331_MMIO_SIZE);
+> +
+> +	return true;
+>  }
+>  
+>  #define QFLAG_APPLY_ONCE 	0x1
+> @@ -682,7 +703,7 @@ struct chipset {
+>  	u32 class;
+>  	u32 class_mask;
+>  	u32 flags;
+> -	void (*f)(int num, int slot, int func);
+> +	bool (*f)(int num, int slot, int func);
 >  };
 >  
->  static int __init dmi_pcie_pme_disable_msi(const struct dmi_system_id *d)
+>  static struct chipset early_qrk[] __initdata = {
+> @@ -757,11 +778,13 @@ static int __init check_dev_quirk(int num, int slot, int func)
+>  			(early_qrk[i].device == device)) &&
+>  			(!((early_qrk[i].class ^ class) &
+>  			    early_qrk[i].class_mask))) {
+> -				if ((early_qrk[i].flags &
+> -				     QFLAG_DONE) != QFLAG_DONE)
+> -					early_qrk[i].f(num, slot, func);
+> -				early_qrk[i].flags |= QFLAG_APPLIED;
+> +			if ((early_qrk[i].flags & QFLAG_DONE) != QFLAG_DONE) {
+> +				bool applied = early_qrk[i].f(num, slot, func);
+> +
+> +				if (applied)
+> +					early_qrk[i].flags |= QFLAG_APPLIED;
+>  			}
+> +		}
+>  	}
+>  
+>  	type = read_pci_config_byte(num, slot, func,
 > -- 
-> 2.25.1
+> 2.34.1
 > 
