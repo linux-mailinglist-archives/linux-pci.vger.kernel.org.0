@@ -2,92 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BDE848169D
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 21:18:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D13EB4816B4
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Dec 2021 21:42:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231865AbhL2USU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Dec 2021 15:18:20 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:42284 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231773AbhL2USU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 15:18:20 -0500
+        id S230319AbhL2UmG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Dec 2021 15:42:06 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:42830 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229767AbhL2UmG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 15:42:06 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 6BC63CE1A32;
-        Wed, 29 Dec 2021 20:18:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D4F6C36AE9;
-        Wed, 29 Dec 2021 20:18:16 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F28B1B81A0C;
+        Wed, 29 Dec 2021 20:42:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4842CC36AEA;
+        Wed, 29 Dec 2021 20:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640809096;
-        bh=OO/7H+q1tJgl+UkE2VDhBPwDsy+1vjPE6DQfF6j9qh0=;
+        s=k20201202; t=1640810523;
+        bh=Rw2gOb2/8KzlEQNxczhYbxeUYfMz9rcfWKTvcBef+uU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=F+Plc0rWh9Hck56YGRXWzhcF6epaqqsaGxlZKhJf/NeCFraR983xCbxZDBKcRbZkx
-         juf5NnrJY1i/98V7kQj68uTTQLMxwlr+/R9eLPlbzzk2kFei4csC47gNrNaEF5DZOO
-         XY/lu9IIGzN4bMtI9XYsV61B0yi2x9pXI9xzWs38prFy/SbMvwEDMxP4Lj6cX1QF09
-         mhaFPtq8mWPwjj59u+d+KOcAh6SdqiZ4iE/gRCACCYmGTXGk9PbzVnt2utVHgAq7Tc
-         +KQYvJ3/1hyVXCQknQ2K3B3gvKSWZsUTc23UPMJ1ih+RYV/IgIkve9qqF252408jiW
-         BFED9/DlyB9ag==
-Date:   Wed, 29 Dec 2021 14:18:14 -0600
+        b=Z8libg51KX2kY+CIF2+bXUsg0EIcNN5yMgxTuiaYdAhsx5bwEoib7kJks3+pCa4tH
+         EpOL6ai2kwnLyrXdG6uD93x+1IaXqDX8sHPxD8RVGF6K9c8qySePI19RLG2NCr9aTU
+         dap8mwqCB1JHL1MXEG4LcXJooB3Jwt0RGlWNIXftfvgABMADN/tSR0Z53Lh1Emo1dj
+         /XgphNYqxVU4RAE8i7+DSqpogbiH3+2+K5WMl3bqkwbtTvPk4wtlayEyvi/0/yuMJj
+         y2FDN1dzMmy++2YtlZDujx+6DwDo8DalV/gJKTydVtRP7aUcTpCIpdJdKMT8XG/i3v
+         o+SRMFCe8Uk2Q==
+Date:   Wed, 29 Dec 2021 14:42:02 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     m.chetan.kumar@intel.com, linuxwwan@intel.com,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Subject: Re: [PATCH 2/2] net: wwan: iosm: Keep device at D0 for s2idle case
-Message-ID: <20211229201814.GA1699315@bhelgaas>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 03/13] PCI: pci_stub: Suppress kernel DMA ownership
+ auto-claiming
+Message-ID: <20211229204202.GA1700874@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211224081914.345292-2-kai.heng.feng@canonical.com>
+In-Reply-To: <20211217063708.1740334-4-baolu.lu@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rafael, Vaibhav]
+On Fri, Dec 17, 2021 at 02:36:58PM +0800, Lu Baolu wrote:
+> The pci_dma_configure() marks the iommu_group as containing only devices
+> with kernel drivers that manage DMA.
 
-On Fri, Dec 24, 2021 at 04:19:14PM +0800, Kai-Heng Feng wrote:
-> We are seeing spurious wakeup caused by Intel 7560 WWAN on AMD laptops.
-> This prevent those laptops to stay in s2idle state.
+I'm looking at pci_dma_configure(), and I don't see the connection to
+iommu_groups.
+
+> Avoid this default behavior for the
+> pci_stub because it does not program any DMA itself.  This allows the
+> pci_stub still able to be used by the admin to block driver binding after
+> applying the DMA ownership to vfio.
+
 > 
-> From what I can understand, the intention of ipc_pcie_suspend() is to
-> put the device to D3cold, and ipc_pcie_suspend_s2idle() is to keep the
-> device at D0. However, the device can still be put to D3hot/D3cold by
-> PCI core.
-> 
-> So explicitly let PCI core know this device should stay at D0, to solve
-> the spurious wakeup.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 > ---
->  drivers/net/wwan/iosm/iosm_ipc_pcie.c | 3 +++
+>  drivers/pci/pci-stub.c | 3 +++
 >  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/net/wwan/iosm/iosm_ipc_pcie.c b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
-> index d73894e2a84ed..af1d0e837fe99 100644
-> --- a/drivers/net/wwan/iosm/iosm_ipc_pcie.c
-> +++ b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
-> @@ -340,6 +340,9 @@ static int __maybe_unused ipc_pcie_suspend_s2idle(struct iosm_pcie *ipc_pcie)
->  
->  	ipc_imem_pm_s2idle_sleep(ipc_pcie->imem, true);
->  
-> +	/* Let PCI core know this device should stay at D0 */
-> +	pci_save_state(ipc_pcie->pci);
+> diff --git a/drivers/pci/pci-stub.c b/drivers/pci/pci-stub.c
+> index e408099fea52..6324c68602b4 100644
+> --- a/drivers/pci/pci-stub.c
+> +++ b/drivers/pci/pci-stub.c
+> @@ -36,6 +36,9 @@ static struct pci_driver stub_driver = {
+>  	.name		= "pci-stub",
+>  	.id_table	= NULL,	/* only dynamic id's */
+>  	.probe		= pci_stub_probe,
+> +	.driver		= {
+> +		.suppress_auto_claim_dma_owner = true,
 
-This is a weird and non-obvious way to say "this device should stay at
-D0".  It's also fairly expensive since pci_save_state() does a lot of
-slow PCI config reads.
+The new .suppress_auto_claim_dma_owner controls whether we call
+iommu_device_set_dma_owner().  I guess you added
+.suppress_auto_claim_dma_owner because iommu_device_set_dma_owner()
+must be done *before* we call the driver's .probe() method?
 
->  	return 0;
->  }
+Otherwise, we could call some new interface from .probe() instead of
+adding the flag to struct device_driver.
+
+> +	},
+>  };
 >  
+>  static int __init pci_stub_init(void)
 > -- 
-> 2.33.1
+> 2.25.1
 > 
