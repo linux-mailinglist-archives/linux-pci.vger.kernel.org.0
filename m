@@ -2,84 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 651EF481E12
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 17:28:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A273D481E2A
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 17:36:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241257AbhL3Q24 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Dec 2021 11:28:56 -0500
-Received: from mail-qt1-f180.google.com ([209.85.160.180]:38755 "EHLO
-        mail-qt1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239850AbhL3Q24 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Dec 2021 11:28:56 -0500
-Received: by mail-qt1-f180.google.com with SMTP id 8so22141378qtx.5;
-        Thu, 30 Dec 2021 08:28:56 -0800 (PST)
+        id S241253AbhL3QgU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Dec 2021 11:36:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241290AbhL3QgT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Dec 2021 11:36:19 -0500
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE683C06175A
+        for <linux-pci@vger.kernel.org>; Thu, 30 Dec 2021 08:36:18 -0800 (PST)
+Received: by mail-ed1-x541.google.com with SMTP id l5so65410442edj.13
+        for <linux-pci@vger.kernel.org>; Thu, 30 Dec 2021 08:36:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=tJuk50ldQ3muMSuXbgoS9j25a+T88Kj8cRwalO+iQW8=;
+        b=Tl2guSR4m3xEw3rpULIHJ++wqFW/SYEQmQ7WMIbnHy2zYaUoARg7cK9PknZf6cN0W3
+         Peuy4aLjRGAefGaAUwuauVVgDEtZLCzlwjNxLtx80PQlCxoGSnVjxl5sdsVysUIYKcXe
+         ZHEvY5FhgjEl58lOLJ1A9t4h30umP/Ypa+sfhqsYwU7Yrt1WkeUurBVz0ENELi+zsR3u
+         BJQNY1VfxHUUaE/8TT5cdKRGj8c4KYFh+H7dGlxuQ+DG6onDg8Jr518b+Y5yocGrGcCe
+         yh+h+XVHDxXODtQ3qlmex9RXZy1vi5EDfVkrKOrMBn882gkRab822AE3oOXEEvSNp6yc
+         Cq3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=594xPajnx1lQ2Gq+QQhoW7EPw32DH5yt64jS4MfoP8Q=;
-        b=X2DgoHHdh4uWuiFTWgrYzyNYwpnnEoDiNVX7kC76tHs6Dyzx+zbHgKiGhTBZQqJimX
-         RIHQKKg80/i58M1Bsy4qnywxdl3tt1IKptd7DKTg3R1ITqXEuhWgvOYT8fMg5kU9EFeg
-         nrgK37chFklaFOITZayQRISMhv+//q8grxKGZdGu4ji9H47HjB9HVb1HTZ7nj9/8esDq
-         49yaW5lgBXd2VbE4iiJRAyiAIXVoTxVsNaNvsRdPo7THApo4gbo9dorMMfayICulQWZL
-         5Dnd0HI+CsTk7xEYiwi1HK3EaON5O7taH00B27vSgxUwwFGLcFm1tUEcQOTFSZwrHcH5
-         flsQ==
-X-Gm-Message-State: AOAM530NT5q8QQrqSqUDcJL1Iz1po1hLvkx/3J2gvcSzwjdirqnkWFwq
-        /7DWQoYEXw6ysjaGYY+Bs0OY3U4b56xWKE3Nk5Jf7FSJ
-X-Google-Smtp-Source: ABdhPJx1pG/geFzyTx2rrs7JE51T0xN/ij5gLcEYrADz0jW4p2FFp+l9lNnuSXYW2NeaAY/EUHQlXZnmTcqzKqbNpe8=
-X-Received: by 2002:ac8:5f4e:: with SMTP id y14mr26831737qta.305.1640881725489;
- Thu, 30 Dec 2021 08:28:45 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=tJuk50ldQ3muMSuXbgoS9j25a+T88Kj8cRwalO+iQW8=;
+        b=lmMC+Foq4mtCcGQFNWAH/iAS7T9/XpmS4OCB49AJcsyqGiEtTkPVG0bhyb15sd6bYh
+         MI1VYA82hkdCiWMw6NGEKPDPy1qS0btK0wnYLnMweSc90xA05ZypENAfNiKmAd49Y2Rk
+         bbu419bIO6/fDGxhw6xjPriXaVa7fMTAOlnzJyO0R863VXTDnB8OT2NttlyqF/9031ib
+         zZTZ8EQxxwTfkyK2gjypb7Lb03PGzDMe0nkBAjlY6JKNcOPwZ2Qqm4rO5Vv+fXumCxgO
+         e3iF2efdTXFREbgfqJGqtK6lpq8EoM6MQB3BZWceEawh+DJ7rdK9/kZkMzderz6dyE1x
+         bBsQ==
+X-Gm-Message-State: AOAM531Cl9AF3+DqdtykFQFE6im+sZ0v1DzomqLzJfCmf4qmtpQvtSzw
+        eAtRVc2Hr5kcjlh79/Qaq2dP2Vq3ksjQqjoSaVg=
+X-Google-Smtp-Source: ABdhPJzOomp7dfsSHzp32oQmbyN2PzdvUl16PkfjdGA/zQ1JLDHrj2HPGycg1+BKCtW6WdYSjbqXMvD8Y4OnayGP3mo=
+X-Received: by 2002:a17:907:9805:: with SMTP id ji5mr25733798ejc.431.1640882176818;
+ Thu, 30 Dec 2021 08:36:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20211223022856.27822-1-yang.lee@linux.alibaba.com>
-In-Reply-To: <20211223022856.27822-1-yang.lee@linux.alibaba.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 30 Dec 2021 17:28:34 +0100
-Message-ID: <CAJZ5v0h4u6+4N5ZBSu6CRKn4GCBPgPHC_5-crzULozhzCTCh6w@mail.gmail.com>
-Subject: Re: [PATCH -next] PCI/ACPI: Fix acpi_pci_osc_control_set() kernel-doc comment
-To:     Yang Li <yang.lee@linux.alibaba.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abaci Robot <abaci@linux.alibaba.com>
+Received: by 2002:a05:6402:524a:0:0:0:0 with HTTP; Thu, 30 Dec 2021 08:36:16
+ -0800 (PST)
+From:   saleem norman <norsaleem74@gmail.com>
+Date:   Thu, 30 Dec 2021 08:36:16 -0800
+Message-ID: <CALzdWh_x5jjnnv1r9eGK9qr1a48HO-KCPT0FhG6Jv8RmohjA0g@mail.gmail.com>
+Subject: DEAR FRIEND CONTACTS MY SECRETARY HIS E-MAIL nelson_salah@aol.com.
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 23, 2021 at 3:29 AM Yang Li <yang.lee@linux.alibaba.com> wrote:
->
-> Add the description of @support and remove @req in
-> acpi_pci_osc_control_set() kernel-doc comment to remove warnings found
-> by running scripts/kernel-doc, which is caused by using 'make W=1'.
->
-> drivers/acpi/pci_root.c:337: warning: Excess function parameter 'req'
-> description in 'acpi_pci_osc_control_set'
-> drivers/acpi/pci_root.c:337: warning: Function parameter or member
-> 'support' not described in 'acpi_pci_osc_control_set'
->
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Fixes: 6bc779ee05d4 ("PCI/ACPI: Check for _OSC support in acpi_pci_osc_control_set()")
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
-> ---
->  drivers/acpi/pci_root.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index 41a8fef06534..084916604f3c 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -322,7 +322,7 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
->   * acpi_pci_osc_control_set - Request control of PCI root _OSC features.
->   * @handle: ACPI handle of a PCI root bridge (or PCIe Root Complex).
->   * @mask: Mask of _OSC bits to request control of, place to store control mask.
-> - * @req: Mask of _OSC bits the control of is essential to the caller.
-> + * @support: _OSC supported capability.
->   *
->   * Run _OSC query for @mask and if that is successful, compare the returned
->   * mask of control bits with @req.  If all of the @req bits are set in the
-> --
+I'M SORRY BUT HAPPY TO INFORM YOU ABOUT MY SUCCESS IN GETTING THOSE
+FUNDS TRANSFERRED UNDER THE CO-OPERATION OF A NEW PARTNER FROM
+PARAGUAY THOUGH I TRIED MY BEST TO INVOLVE YOU IN THE GOLD/DIAMOND
+BUSINESS BUT GOD DECIDED THE WHOLE SITUATIONS. PRESENTLY AM IN UNITED
+ARAB EMIRATES FOR INVESTMENT PROJECTS WITH MY OWN SHARE OF THE TOTAL
+SUM OF THE MONEY. MEANWHILE, I DIDN'T FORGET YOU=E2=80=99RE PAST EFFORTS AN=
+D
+ATTEMPTS TO ASSIST ME IN TRANSFERRING THOSE FUNDS DESPITE THAT
+EVERYTHING FAILED US SOMEHOW. NOW CONTACT MY SECRETARY IN BURKINA
+FASO. MR. NELSON SALAH BY NAME: HIS E-MAIL nelson_salah@aol.com.
 
-Applied as 5.17 material, thanks!
+ASK HIM TO SEND YOU THE VISA CARD TOTAL SUM OF $2.500, 000.00.USD
+WHICH I KEPT FOR YOUR COMPENSATION FOR ALL THE PAST EFFORTS AND
+ATTEMPT TO ASSIST ME IN THIS MATTER. I DEEPLY APPRECIATED YOUR EFFORTS
+AT THAT TIME VERY MUCH. SO FEEL FREE AND KEEP IN TOUCHED WITH MY
+SECRETARY; MR. NELSON SALAH AND INSTRUCT HIM WHERE TO SEND THE VISA
+CARD VALUE SUM OF $2.500, 000.00.USD TO YOU. NOW THIS AMOUNT IS ME AND
+THE NEW PARTNER CONTRIBUTE AND OFFER YOU THIS AMOUNT
+$1.500.000.00.USD. IS FROM MY OWN SHARE WHILE MY NEW PARTNER SUPPORTED
+YOU ALSO WITH SUM OF $ 1000000.USD. FROM HIS OWN SHARE ALSO BECAUSE I
+EXPLAIN THE WHOLE FACTS TO HIM THAT YOU ARE THE FIRST PERSON I
+CONTACTED THAT WANTED TO ASSIST ME WHILE YOU COULD NOT MAKE IT AND HE
+SAID OKAY THERE'S NO PROBLEM.
+
+SO YOU HAVE TO KEEP THE WHOLE SECRET ABOUT MY SUCCESS, BECAUSE I
+BELIEVE ONLY YOU KNOW HOW I MADE THIS MONEY SO TRY TO KEEP EVERYTHING
+SECRET. I HOPE YOU UNDERSTAND THE REASON WHY THIS HUGE AMOUNT OF FUNDS
+WAS KEPT FOR YOU? PLEASE DO LET ME KNOW IMMEDIATELY YOU RECEIVE THE
+VISA CARD SO THAT WE CAN SHARE THE JOY AFTER ALL THE SUFFERINGS AT
+THAT TIME; IN THIS MOMENT OF TIME, I'M VERY BUSY HERE BECAUSE OF THE
+INVESTMENT PROJECTS WHICH MYSELF AND THE NEW PARTNER ARE HAVING AT
+HAND, FINALLY;
+
+REMEMBER THAT I HAVE ALREADY FORWARD THE INSTRUCTION TO THE SECRETARY
+ON YOUR BEHALF TO RECEIVE THAT MONEY, SO FEEL FREE TO KEEP IN TOUCH
+WITH HIM, SO THAT HE WILL SEND THE VISA CARD VALUE SUM OF
+$2.500,000.00.USD. TWO MILLION FIVE HUNDRED THOUSAND UNITED STATE
+DOLLARS TO YOU WITHOUT ANY DELAY.
+
+BEST REGARDS,
+MR. NORMAN SALEEM.
