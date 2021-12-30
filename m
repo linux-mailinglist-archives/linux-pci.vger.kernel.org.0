@@ -2,118 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6338481B1F
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 10:30:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8E53481E0B
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 17:19:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238170AbhL3JaY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Dec 2021 04:30:24 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:59009 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238157AbhL3JaX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Dec 2021 04:30:23 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=yaohongbo@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0V0Kk1AW_1640856613;
-Received: from localhost(mailfrom:yaohongbo@linux.alibaba.com fp:SMTPD_---0V0Kk1AW_1640856613)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 30 Dec 2021 17:30:21 +0800
-From:   Yao Hongbo <yaohongbo@linux.alibaba.com>
-To:     bhelgaas@google.com
-Cc:     yaohongbo@linux.alibaba.com, zhangliguang@linux.alibaba.com,
-        alikernel-developer@linux.alibaba.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] PCI: Add "pci=reassign_all_bus" boot parameter
-Date:   Thu, 30 Dec 2021 17:30:13 +0800
-Message-Id: <1640856613-101412-1-git-send-email-yaohongbo@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S241243AbhL3QT0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Dec 2021 11:19:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241231AbhL3QT0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Dec 2021 11:19:26 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19865C06173E;
+        Thu, 30 Dec 2021 08:19:26 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6743061700;
+        Thu, 30 Dec 2021 16:19:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C891DC36AEF;
+        Thu, 30 Dec 2021 16:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640881164;
+        bh=arlWW/UtCGQmMH5E2Pogag5ZNNfDUyUhSMYEtoB3GwU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nallgZfdxZjoVCuHYZ4XlZvCFvFjCagAjfY/7DnXl6uLT3rQXZhTqfX8CxA2KfD5s
+         ggMTdGtk4qkhT64rRpeqYTGP0AX7rd5U9SpMvtI5EA3ixEunFcmItWDP+Dny71TOkU
+         2N+6dF/itqqOSChjsVTnbC/RnZjqsumYlT6QDIepmBYHjzM3WHIoXjPTsXx998T4MH
+         AbHzEa9iCb3R8ZQuSPQxkbKl22DO8o6HOrukaINf9SUG+j2QRXNBifWfkcqIVJpn3F
+         2oqxztcYkbMDMWDWXHLWL9/qwAxBjNURJG+yFFF4BLBbRogQN0MJupw1+goKz9KbcM
+         BfBhOeAdyvsxQ==
+Received: by mail-wr1-f52.google.com with SMTP id d9so51458108wrb.0;
+        Thu, 30 Dec 2021 08:19:24 -0800 (PST)
+X-Gm-Message-State: AOAM532osZQpPnndUEtZIgzOHkp5U++kfLnr7S6WN14jxOZUNNgk0gXd
+        6EjB9ZFeEYfDz+9kg/nTx6c548y3b0UM/JrdXSE=
+X-Google-Smtp-Source: ABdhPJzh0JRUZ8uDOReUUyLcA2Hj2LVO0R3PZ4wX3Eigt9m04vC/yXSrbqUBq3MAhxfR6QKgikfyV3h0Maj9zD2gdAs=
+X-Received: by 2002:a5d:6989:: with SMTP id g9mr25095895wru.12.1640881163018;
+ Thu, 30 Dec 2021 08:19:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20211227164317.4146918-1-schnelle@linux.ibm.com>
+ <20211227164317.4146918-31-schnelle@linux.ibm.com> <YcrIHxTDipVNUuCA@kroah.com>
+ <b9d0c0b88ef66f9beb51a880e765177670a76394.camel@linux.ibm.com> <Ycw6kXhd+NV0GMWc@kroah.com>
+In-Reply-To: <Ycw6kXhd+NV0GMWc@kroah.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Thu, 30 Dec 2021 11:19:05 -0500
+X-Gmail-Original-Message-ID: <CAK8P3a1p6_=s4XcJiJSkuZJBrCpwCXQ1MX6EadY00KdypVQisg@mail.gmail.com>
+Message-ID: <CAK8P3a1p6_=s4XcJiJSkuZJBrCpwCXQ1MX6EadY00KdypVQisg@mail.gmail.com>
+Subject: Re: [RFC 30/32] /dev/port: don't compile file operations without CONFIG_DEVPORT
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-csky@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI bridges may be misconfigured by te system BIOS, and then the OS
-scan the bridges that need to be reconfigured.
-However, the PCI bus topology configured by the bios may be wrong:
+On Wed, Dec 29, 2021 at 5:38 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> > > > -static const struct file_operations __maybe_unused port_fops = {
+> > > > +#ifdef CONFIG_DEVPORT
+> > > > +static const struct file_operations port_fops = {
+> > > >   .llseek         = memory_lseek,
+> > > >   .read           = read_port,
+> > > >   .write          = write_port,
+> > > >   .open           = open_port,
+> > > >  };
+> > > > +#endif
+> > >
+> > > Why is this #ifdef needed if it is already __maybe_unused?
+> >
+> > Because read_port() calls inb() and write_port() calls outb() they
+> > wouldn't compile once these are no longer defined. Then however the
+> > read_port/write_port symbols in the struct initialization above
+> > couldn't be resolved.
+> >
+> > >
+> > > In looking closer, this change could be taken now as the use of this
+> > > variable already is behind this same #ifdef statement, right?
+> >
+> > Yes
+>
+> Great, feel free to send this individually, not as a RFC patch, and I
+> will be glad to queue it up.
 
-[   19.376273] pci 0000:40:00.0: bridge configuration invalid ([bus
-00-00]), reconfiguring
-[   19.384443] pci_bus 0000:47: busn_res: can not insert [bus 47-46]
-under [bus 40-46] (conflicts with (null) [bus 40-46])
+I think this patch should contain the 'depends on HAS_IOPORT' that
+is currently added in a different patch (char: impi, tpm: depend on
+HAS_IOPORT).
 
-The primary bus number and subordinate bus number written by the bios
-were wrong, and the OS continues to add bridges on the wrong bus
-topology.
+However, we can't merge that version until HAS_IOPORT is actually
+added to the kernel.
 
-In order to avoid such problems, a kernel cmdline needs to be
-added to support the os to fully configure the pci bus.
-
-Signed-off-by: Yao Hongbo <yaohongbo@linux.alibaba.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 1 +
- drivers/acpi/pci_root.c                         | 3 +++
- drivers/pci/pci.c                               | 5 +++++
- include/linux/pci.h                             | 2 ++
- 4 files changed, 11 insertions(+)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 2fba824..c83a2e5 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4084,6 +4084,7 @@
- 		nomio		[S390] Do not use MIO instructions.
- 		norid		[S390] ignore the RID field and force use of
- 				one PCI domain per PCI function
-+		reassign_all_bus	The OS fully configure the PCI bus.
- 
- 	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
- 			Management.
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index ab2f7df..e21ac25 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -592,6 +592,9 @@ static int acpi_pci_root_add(struct acpi_device *device,
- 	is_pcie = strcmp(acpi_device_hid(device), "PNP0A08") == 0;
- 	negotiate_os_control(root, &no_aspm, is_pcie);
- 
-+	if (pci_reassign_all_bus)
-+		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-+
- 	/*
- 	 * TBD: Need PCI interface for enumeration/configuration of roots.
- 	 */
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 3d2fb39..5746e88 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -142,6 +142,9 @@ bool pci_reset_supported(struct pci_dev *dev)
- /* If set, the PCI config space of each device is printed during boot. */
- bool pci_early_dump;
- 
-+/* If set, the pci will reassign resources*/
-+bool pci_reassign_all_bus;
-+
- bool pci_ats_disabled(void)
- {
- 	return pcie_ats_disabled;
-@@ -6846,6 +6849,8 @@ static int __init pci_setup(char *str)
- 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
- 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
- 				disable_acs_redir_param = str + 18;
-+			} else if (!strncmp(str, "reassign_all_bus", 16)) {
-+				pci_reassign_all_bus = true;
- 			} else {
- 				pr_err("PCI: Unknown option `%s'\n", str);
- 			}
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 18a75c8e..ad0e3e9 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2119,6 +2119,8 @@ int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
- extern u8 pci_dfl_cache_line_size;
- extern u8 pci_cache_line_size;
- 
-+extern bool pci_reassign_all_bus;
-+
- /* Architecture-specific versions may override these (weak) */
- void pcibios_disable_device(struct pci_dev *dev);
- void pcibios_set_master(struct pci_dev *dev);
--- 
-1.8.3.1
-
+      Arnd
