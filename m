@@ -2,433 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E7D6481A59
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 08:26:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E116481A7C
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 08:46:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233295AbhL3H0o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Dec 2021 02:26:44 -0500
-Received: from mga01.intel.com ([192.55.52.88]:10219 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232304AbhL3H0n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Dec 2021 02:26:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640849203; x=1672385203;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=k8WGAbsybQdI6LfRoo0Afzs76mJwbUDqrwT3zYcjOpA=;
-  b=LqO3z0t8QNpvG1NXozgvVYGK2Y69SL0RsdQPtXsWrSGnKk/5Sb5CKeo3
-   zVvJzDv5sBfLrx6Swe+Hu5g3n1jjCte70PINFQL5gVyTaofWka7o1YLId
-   Zuf8GekR2m4JSjhqRcBpYKj8cMsO7YO/KcELpQrawt4TsVlIVQwuBK3BB
-   x4kdzkMqV59WrspXLHwCmfH5ASAekzi3fU1YLNO40QJInGtzPBTDmtLim
-   lkkzAfOPmliFmNOdcDOnKKrRAvZylu3xhtWmRAXnDQm3F3os2NH+le3Y9
-   0UL5WvkcsnC8LWr2JXCK95xjLDvfqNuUZVNqkGqZgLAGctRmRBEPAIBAn
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10212"; a="265873760"
-X-IronPort-AV: E=Sophos;i="5.88,247,1635231600"; 
-   d="scan'208";a="265873760"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2021 23:26:43 -0800
-X-IronPort-AV: E=Sophos;i="5.88,247,1635231600"; 
-   d="scan'208";a="470574501"
-Received: from dcdeshpa-mobl1.amr.corp.intel.com (HELO ldmartin-desk2) ([10.212.182.202])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2021 23:26:42 -0800
-Date:   Wed, 29 Dec 2021 23:26:41 -0800
-From:   Lucas De Marchi <lucas.demarchi@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH] x86/quirks: Fix logic to apply quirk once
-Message-ID: <20211230072641.dlbf6ckyooajmdxi@ldmartin-desk2>
-References: <20211218061313.100571-1-lucas.demarchi@intel.com>
- <20211229232752.GA1712676@bhelgaas>
+        id S233273AbhL3Hq6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Dec 2021 02:46:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231688AbhL3Hq6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Dec 2021 02:46:58 -0500
+Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D403AC061574
+        for <linux-pci@vger.kernel.org>; Wed, 29 Dec 2021 23:46:57 -0800 (PST)
+Received: by mail-ua1-x92f.google.com with SMTP id p2so41032428uad.11
+        for <linux-pci@vger.kernel.org>; Wed, 29 Dec 2021 23:46:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P6Nx7pKRfOXxRTDSc5fat2rVIi8irKZ4fTXz3GCHr54=;
+        b=BDAiEUW5tNIC/4GAd86omeehgKxD48uR8TmGZGn/iiCiixLroQFa6GcpzDo2kmZb+K
+         LbxOHqUTXjNFNvSrmgm299A1WopwPJo3g00imtqEHXsTCIKAH+z9Efj6Y3i27lP/+yBH
+         Be6uPZe+gDjyeyFoHkb3nU+a2LiX9fVlrLmNzixpRJVVxGy7WSdk/nkiDWJGcRcucxcK
+         /7yX0dnto2qBekZwgPI0XHAI4hjBS8mnuqtoniNsO3EZhlTEd1wBZSsXdoSNlZEpwQwU
+         IHsO0z7GWi6zgWijQimya8x6/svceecZhHDDRgx8EotGVHFVW+cXe3E9TRnHe66A8HhQ
+         RfYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P6Nx7pKRfOXxRTDSc5fat2rVIi8irKZ4fTXz3GCHr54=;
+        b=pRV6bxe3b1aDth3IMejwmwkanI21VK10AbRVGMSGgqnOaWhIayzeePPPRgfoyyVFSl
+         9nboauufl3KA0LhK83AUAHFowNg5eL/qAWxZzgack9s8Y6YZZt44mAZJzCfQEMFHAwRl
+         3RezZJZgwRlQ4fwmyO4AAxFLI5uILpP+m91F7XB0vF/J5R9dlHviDUQ4vdoSE3fmx5iJ
+         HzyzEwxEQjER3yuASwXkLLGSbc08u95CPPhsWN3HQXb8OXQMnwObYxbrDGG5w/RrqgTQ
+         Bqhx6rcl9Fr8xlBy17nvTcGvsoWFFoMIrTq/Fgx5MfhbuDhb81Bgb/tEJnTMK7OIaWib
+         aSlQ==
+X-Gm-Message-State: AOAM5307dExl6P4B/FUhOzbBa55C29VDlb8vbdWnGXQwUWkSJ6uT16V8
+        HRUzu/YR+1Av7L//qvceUDjMoFtqvLInRFKKaJbls7ARdoI=
+X-Google-Smtp-Source: ABdhPJyyCo2cFRBQb0L9ZLLc77idUgVs/rT6BSBTdxr/nqpqkiJhQgmw5IageaCQOu8a6tiFmF0ymDxKDlGSWOZTZ30=
+X-Received: by 2002:a05:6102:38ce:: with SMTP id k14mr9013310vst.70.1640850416912;
+ Wed, 29 Dec 2021 23:46:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20211229232752.GA1712676@bhelgaas>
+References: <20211230054713.1562260-1-weirongguang@kylinos.cn>
+In-Reply-To: <20211230054713.1562260-1-weirongguang@kylinos.cn>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Thu, 30 Dec 2021 08:46:45 +0100
+Message-ID: <CAMhs-H-79=2v1oS1640HQRmdxQk3rAGi-YXb8A3OLN0Oc33WHw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mt7621: Fix the compile error in cross complication
+To:     weirongguang <weirongguang@kylinos.cn>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 29, 2021 at 05:27:52PM -0600, Bjorn Helgaas wrote:
->On Fri, Dec 17, 2021 at 10:13:13PM -0800, Lucas De Marchi wrote:
->> When using QFLAG_APPLY_ONCE we make sure the quirk is applied only once.
->
->Maybe "called" only once, since you're about to add a distinction
->between "called" and "applied"?
+Hi weirongguang,
 
-ok... yeah, the current issue is that the logic here considers
-"called" as "applied", and it's not true since the called function may
-do additional checks
+[+cc linux-pci]
 
->
->I'm not really sure the concept of QFLAG_APPLY_ONCE, QFLAG_APPLIED,
->QFLAG_DONE is general purpose enough to be handled at the level of
->check_dev_quirk().
->
->We don't have anything like that for the regular PCI fixups (see
->pci_do_fixups()).  If a regular fixup needed something like that, it
->would use a static local variable.  Maybe that would be simpler
->overall here, too, since the quirk would be *always* called for
->matching devices, and the "one-time" logic would be encapsulated in
->the quirk itself where it's more obvious?
+On Thu, Dec 30, 2021 at 6:47 AM weirongguang <weirongguang@kylinos.cn> wrote:
 
-so would that mean an alternative solution, removing all the logic using
-flags and just embed it in the few quirks that make use of it?
+Your subject is a bit generic I think it would be better:
 
-yeah, I guess that would work too. Not sure what solution is preferred
-though.
-
->> This is useful when it's enough one device to trigger a certain
->> condition or when the resource in each that applies is global to the
->> system rather than local to the device.
->>
->> However we call the quirk handler based on vendor, class, and device,
->> allowing the specific handler to do additional filtering. In that case
->> check_dev_quirk() may incorrectly mark the quirk as applied when it's
->> not. This is particularly bad for intel_graphics_quirks() that uses
->> PCI_ANY_ID and then compares with a long list of devices. This hasn't
->> been problematic so far because those devices are integrated GPUs and
->> there can only be one in the system.  However as Intel starts to
->> release discrete cards, this condition is no longer true and we fail to
->> reserve the stolen memory (for the integrated gpu) depending on the bus
->> topology: if the traversal finds the discrete card first, for which
->> there is no system stolen memory, we will fail to reserve it for the
->> integrated card.
->
->s/integrated gpu/integrated GPU/ (to match previous use)
->
->> This fixes the stolen memory reservation for an Alderlake-P system with
->> one additional DG2. In this system we have:
->
->DG2?
-
-that is its name, not an abbreviation. It's one of Intel's discrete
-graphics cards. See for example 9e22cfc5e9b9 ("drm/i915/dg2: add DG2 platform info")
-
-maybe reword this as "one additional Intel GPU, DG2"?
+s/Fix the compile error in cross complication/Add missing arch include
+'asm/mips-cps.h' to avoid implicit function declarations/
 
 >
->> 	- 00:01.0 Bridge
->> 	  `- 03:00.0 DG2
->> 	- Alderklake-P's integrated graphics
+> When I was compile the latest kernel in x86 platform and
+> the build environment like this:
 >
->s/Alderklake-P/Alderlake-P/
+> Compiler: gcc
+> Compiler version: 10
+> Compiler string: mips-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
+> Cross-compile: mips-linux-gnu-
 >
->Might be nice to include the integrated GPU PCI address to be parallel
->with the bridge and DG2.
+> It make a compile error:
+>
+> drivers/pci/controller/pcie-mt7621.c: In function 'setup_cm_memory_region':
+> drivers/pci/controller/pcie-mt7621.c:224:6: error: implicit declaration of function 'mips_cps_numiocu' [-Werror=implicit-function-declaration]
+>   224 |  if (mips_cps_numiocu(0)) {
+>       |      ^~~~~~~~~~~~~~~~
+> drivers/pci/controller/pcie-mt7621.c:232:3: error: implicit declaration of function 'write_gcr_reg1_base'; did you mean 'write_gc0_ebase'? [-Werror=implicit-function-declaration]
+>   232 |   write_gcr_reg1_base(entry->res->start);
+>       |   ^~~~~~~~~~~~~~~~~~~
+>       |   write_gc0_ebase
+> drivers/pci/controller/pcie-mt7621.c:233:3: error: implicit declaration of function 'write_gcr_reg1_mask'; did you mean 'write_gc0_pagemask'? [-Werror=implicit-function-declaration]
+>   233 |   write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
+>       |   ^~~~~~~~~~~~~~~~~~~
+>       |   write_gc0_pagemask
+> drivers/pci/controller/pcie-mt7621.c:233:30: error: 'CM_GCR_REGn_MASK_CMTGT_IOCU0' undeclared (first use in this function)
+>   233 |   write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
+>       |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/pci/controller/pcie-mt7621.c:233:30: note: each undeclared identifier is reported only once for each function it appears in
+> In file included from ./include/linux/device.h:15,
+>                  from ./include/linux/of_platform.h:9,
+>                  from drivers/pci/controller/pcie-mt7621.c:26:
+> drivers/pci/controller/pcie-mt7621.c:235:25: error: implicit declaration of function 'read_gcr_reg1_base'; did you mean 'read_gc0_ebase'? [-Werror=implicit-function-declaration]
+>   235 |     (unsigned long long)read_gcr_reg1_base(),
+>       |                         ^~~~~~~~~~~~~~~~~~
+> ./include/linux/dev_printk.h:110:23: note: in definition of macro 'dev_printk_index_wrap'
+>   110 |   _p_func(dev, fmt, ##__VA_ARGS__);   \
+>       |                       ^~~~~~~~~~~
+> drivers/pci/controller/pcie-mt7621.c:234:3: note: in expansion of macro 'dev_info'
+>   234 |   dev_info(dev, "PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
+>       |   ^~~~~~~~
+> drivers/pci/controller/pcie-mt7621.c:236:25: error: implicit declaration of function 'read_gcr_reg1_mask'; did you mean 'read_gc0_pagemask'? [-Werror=implicit-function-declaration]
+>   236 |     (unsigned long long)read_gcr_reg1_mask());
+>       |                         ^~~~~~~~~~~~~~~~~~
+> ./include/linux/dev_printk.h:110:23: note: in definition of macro 'dev_printk_index_wrap'
+>   110 |   _p_func(dev, fmt, ##__VA_ARGS__);   \
+>       |                       ^~~~~~~~~~~
+> drivers/pci/controller/pcie-mt7621.c:234:3: note: in expansion of macro 'dev_info'
+>   234 |   dev_info(dev, "PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
+>       |   ^~~~~~~~
+> cc1: all warnings being treated as errors
+>
+> The problem is that the <asm/mips-cps.h> head file was missing
+> and it can resolved when include the file.
 
-ok
+True. This include header is not explicitly included because platform
+Makefiles seems to add include paths for MIPS. I am using:
+
+mipsel-unknown-linux-gnu-gcc (GCC) 9.4.1 20211208 compiled as:
+
+../configure --target=mipsel-unknown-linux-gnu --prefix=/opt/cross \
+    --enable-languages=c --without-headers \
+    --with-gnu-ld --with-gnu-as \
+    --disable-shared --disable-threads \
+    --disable-libmudflap --disable-libgomp \
+    --disable-libssp --disable-libquadmath \
+    --disable-libatomic
+
+and don't get any warning with normal compilation, but it looks like
+other toolchains complain about this and fails if -Werror is set, like
+your case here.
+This was already reported once by kernel test robot, so I think you
+should add 'Reported-by' tag also:
+
+Reported-by: kernel test robot <lkp@intel.com>
+
+I could not find Kernel Test Robot complaining about lore's link but
+it was in a randconfig W=1 build using mips64-linux-gcc (GCC) 11.2.0.
+
+IMHO, the correct thing to do is remove architecture specific code
+from the driver side. See [0] (I mention this in PATCH 3 of the series
+where Reported-by is also added [1]).
 
 >
->> Since we do a depth-first traversal, when we call the handler because of
->> DG2 we were marking it as already being applied and never reserving the
->> stolen memory for Alderlake-P.
->>
->> Here we change the quirk fucntions to return bool in case it applied a
->> quirk so we only flag it as applied when that really happened. This only
->> makes a difference for quirks using QFLAG_APPLY_ONCE, so all the others
->> simply returns true in order to avoid unnecessary complication.
->
->s/fucntions/functions/
->s/returns true/return true/
->
->I would consider splitting this into two patches:
->
->  1) Change the quirk signature, make them all return "true", and
->  update check_dev_quirk().  This would have no functional impact.
->
->  2) Update intel_graphics_quirks() to return "false" when it doesn't
->  reserve the stolen memory.
->
->Then the important change will be in a small patch by itself and will
->be easier to understand and revert if that should be necessary.
+> Fix: <2bdd5238e756> ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver")
 
-makes sense. I will take a look on what the other alternative you gave
-looks like, too.
+This is not the correct way of "Fixes" tag. It should be:
 
-thanks for the review
+Fixes: 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host
+controller driver").
 
-Lucas De Marchi
+> Signed-off-by: weirongguang <weirongguang@kylinos.cn>
+
+I don't know if "weirongguang" is a valid name or not for a
+'Signed-off-by' tag, but just in case I mention it. Is this the name
+you use to sign documents? (sorry, I don't want to be rude, but I
+don't really know the way chinese names should be used in kernel).
+
+
+> ---
+>  drivers/pci/controller/pcie-mt7621.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
+> index b60dfb45ef7b..8a009e427a25 100644
+> --- a/drivers/pci/controller/pcie-mt7621.c
+> +++ b/drivers/pci/controller/pcie-mt7621.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/reset.h>
+>  #include <linux/sys_soc.h>
+> +#include <asm/mips-cps.h>
+>
+>  /* MediaTek-specific configuration registers */
+>  #define PCIE_FTS_NUM                   0x70c
+> --
+> 2.25.1
+
+As I said, there is a proper approach of removing all the MIPS
+specific code from the driver and moving into RALINK platform code
+which is the proper place for this arch code here [0]. This should be
+material for 5.17. If Lorenzo or Bjorn prefer to add this PATCH
+before, you can add my:
+
+Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+
+when you submit v2 and I will send a revert when the real fix is added.
+
+[0]: https://lore.kernel.org/linux-pci/20211207104924.21327-1-sergio.paracuellos@gmail.com/
+[1]: https://lore.kernel.org/linux-pci/20211207104924.21327-4-sergio.paracuellos@gmail.com/
+
+Best regards,
+    Sergio Paracuellos
+
+
 
 >
->> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
->> ---
->>  arch/x86/kernel/early-quirks.c | 75 ++++++++++++++++++++++------------
->>  1 file changed, 49 insertions(+), 26 deletions(-)
->>
->> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
->> index 391a4e2b8604..5d235fe2a07a 100644
->> --- a/arch/x86/kernel/early-quirks.c
->> +++ b/arch/x86/kernel/early-quirks.c
->> @@ -28,7 +28,7 @@
->>  #include <asm/irq_remapping.h>
->>  #include <asm/early_ioremap.h>
->>
->> -static void __init fix_hypertransport_config(int num, int slot, int func)
->> +static bool __init fix_hypertransport_config(int num, int slot, int func)
->>  {
->>  	u32 htcfg;
->>  	/*
->> @@ -51,10 +51,10 @@ static void __init fix_hypertransport_config(int num, int slot, int func)
->>  		}
->>  	}
->>
->> -
->> +	return true;
->>  }
->>
->> -static void __init via_bugs(int  num, int slot, int func)
->> +static bool __init via_bugs(int  num, int slot, int func)
->>  {
->>  #ifdef CONFIG_GART_IOMMU
->>  	if ((max_pfn > MAX_DMA32_PFN ||  force_iommu) &&
->> @@ -63,8 +63,12 @@ static void __init via_bugs(int  num, int slot, int func)
->>  		       "Looks like a VIA chipset. Disabling IOMMU."
->>  		       " Override with iommu=allowed\n");
->>  		gart_iommu_aperture_disabled = 1;
->> +
->> +		return true;
->>  	}
->>  #endif
->> +
->> +	return false;
->>  }
->>
->>  #ifdef CONFIG_ACPI
->> @@ -77,7 +81,7 @@ static int __init nvidia_hpet_check(struct acpi_table_header *header)
->>  #endif /* CONFIG_X86_IO_APIC */
->>  #endif /* CONFIG_ACPI */
->>
->> -static void __init nvidia_bugs(int num, int slot, int func)
->> +static bool __init nvidia_bugs(int num, int slot, int func)
->>  {
->>  #ifdef CONFIG_ACPI
->>  #ifdef CONFIG_X86_IO_APIC
->> @@ -86,7 +90,7 @@ static void __init nvidia_bugs(int num, int slot, int func)
->>  	 * Nvidia graphics cards with PCI ports on secondary buses.
->>  	 */
->>  	if (num)
->> -		return;
->> +		return false;
->>
->>  	/*
->>  	 * All timer overrides on Nvidia are
->> @@ -96,7 +100,7 @@ static void __init nvidia_bugs(int num, int slot, int func)
->>  	 * at least allow a command line override.
->>  	 */
->>  	if (acpi_use_timer_override)
->> -		return;
->> +		return false;
->>
->>  	if (acpi_table_parse(ACPI_SIG_HPET, nvidia_hpet_check)) {
->>  		acpi_skip_timer_override = 1;
->> @@ -105,11 +109,14 @@ static void __init nvidia_bugs(int num, int slot, int func)
->>  		       "timer override.\n");
->>  		printk(KERN_INFO "If you got timer trouble "
->>  			"try acpi_use_timer_override\n");
->> +
->> +		return true;
->>  	}
->>  #endif
->>  #endif
->>  	/* RED-PEN skip them on mptables too? */
->>
->> +	return false;
->>  }
->>
->>  #if defined(CONFIG_ACPI) && defined(CONFIG_X86_IO_APIC)
->> @@ -131,13 +138,13 @@ static u32 __init ati_ixp4x0_rev(int num, int slot, int func)
->>  	return d;
->>  }
->>
->> -static void __init ati_bugs(int num, int slot, int func)
->> +static bool __init ati_bugs(int num, int slot, int func)
->>  {
->>  	u32 d;
->>  	u8  b;
->>
->>  	if (acpi_use_timer_override)
->> -		return;
->> +		return true;
->>
->>  	d = ati_ixp4x0_rev(num, slot, func);
->>  	if (d  < 0x82)
->> @@ -155,6 +162,8 @@ static void __init ati_bugs(int num, int slot, int func)
->>  		printk(KERN_INFO "If you got timer trouble "
->>  		       "try acpi_use_timer_override\n");
->>  	}
->> +
->> +	return true;
->>  }
->>
->>  static u32 __init ati_sbx00_rev(int num, int slot, int func)
->> @@ -167,7 +176,7 @@ static u32 __init ati_sbx00_rev(int num, int slot, int func)
->>  	return d;
->>  }
->>
->> -static void __init ati_bugs_contd(int num, int slot, int func)
->> +static bool __init ati_bugs_contd(int num, int slot, int func)
->>  {
->>  	u32 d, rev;
->>
->> @@ -181,10 +190,10 @@ static void __init ati_bugs_contd(int num, int slot, int func)
->>  	 * SB800: revisions 0x40, 0x41, ...
->>  	 */
->>  	if (rev >= 0x39)
->> -		return;
->> +		return true;
->>
->>  	if (acpi_use_timer_override)
->> -		return;
->> +		return true;
->>
->>  	/* check for IRQ0 interrupt swap */
->>  	d = read_pci_config(num, slot, func, 0x64);
->> @@ -197,18 +206,22 @@ static void __init ati_bugs_contd(int num, int slot, int func)
->>  		printk(KERN_INFO "If you got timer trouble "
->>  		       "try acpi_use_timer_override\n");
->>  	}
->> +
->> +	return true;
->>  }
->>  #else
->> -static void __init ati_bugs(int num, int slot, int func)
->> +static bool __init ati_bugs(int num, int slot, int func)
->>  {
->> +	return true;
->>  }
->>
->> -static void __init ati_bugs_contd(int num, int slot, int func)
->> +static bool __init ati_bugs_contd(int num, int slot, int func)
->>  {
->> +	return true;
->>  }
->>  #endif
->>
->> -static void __init intel_remapping_check(int num, int slot, int func)
->> +static bool __init intel_remapping_check(int num, int slot, int func)
->>  {
->>  	u8 revision;
->>  	u16 device;
->> @@ -226,6 +239,8 @@ static void __init intel_remapping_check(int num, int slot, int func)
->>  		set_irq_remapping_broken();
->>  	else if (device == 0x3405 && revision == 0x22)
->>  		set_irq_remapping_broken();
->> +
->> +	return true;
->>  }
->>
->>  /*
->> @@ -585,7 +600,7 @@ intel_graphics_stolen(int num, int slot, int func,
->>  	e820__update_table(e820_table);
->>  }
->>
->> -static void __init intel_graphics_quirks(int num, int slot, int func)
->> +static bool __init intel_graphics_quirks(int num, int slot, int func)
->>  {
->>  	const struct intel_early_ops *early_ops;
->>  	u16 device;
->> @@ -603,16 +618,20 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
->>
->>  		intel_graphics_stolen(num, slot, func, early_ops);
->>
->> -		return;
->> +		return true;
->>  	}
->> +
->> +	return false;
->>  }
->>
->> -static void __init force_disable_hpet(int num, int slot, int func)
->> +static bool __init force_disable_hpet(int num, int slot, int func)
->>  {
->>  #ifdef CONFIG_HPET_TIMER
->>  	boot_hpet_disable = true;
->>  	pr_info("x86/hpet: Will disable the HPET for this platform because it's not reliable\n");
->>  #endif
->> +
->> +	return true;
->>  }
->>
->>  #define BCM4331_MMIO_SIZE	16384
->> @@ -620,7 +639,7 @@ static void __init force_disable_hpet(int num, int slot, int func)
->>  #define bcma_aread32(reg)	ioread32(mmio + 1 * BCMA_CORE_SIZE + reg)
->>  #define bcma_awrite32(reg, val)	iowrite32(val, mmio + 1 * BCMA_CORE_SIZE + reg)
->>
->> -static void __init apple_airport_reset(int bus, int slot, int func)
->> +static bool __init apple_airport_reset(int bus, int slot, int func)
->>  {
->>  	void __iomem *mmio;
->>  	u16 pmcsr;
->> @@ -628,7 +647,7 @@ static void __init apple_airport_reset(int bus, int slot, int func)
->>  	int i;
->>
->>  	if (!x86_apple_machine)
->> -		return;
->> +		return true;
->>
->>  	/* Card may have been put into PCI_D3hot by grub quirk */
->>  	pmcsr = read_pci_config_16(bus, slot, func, BCM4331_PM_CAP + PCI_PM_CTRL);
->> @@ -642,7 +661,7 @@ static void __init apple_airport_reset(int bus, int slot, int func)
->>  		if ((pmcsr & PCI_PM_CTRL_STATE_MASK) != PCI_D0) {
->>  			pr_err("pci 0000:%02x:%02x.%d: Cannot power up Apple AirPort card\n",
->>  			       bus, slot, func);
->> -			return;
->> +			return true;
->>  		}
->>  	}
->>
->> @@ -654,7 +673,7 @@ static void __init apple_airport_reset(int bus, int slot, int func)
->>  	if (!mmio) {
->>  		pr_err("pci 0000:%02x:%02x.%d: Cannot iomap Apple AirPort card\n",
->>  		       bus, slot, func);
->> -		return;
->> +		return true;
->>  	}
->>
->>  	pr_info("Resetting Apple AirPort card (left enabled by EFI)\n");
->> @@ -671,6 +690,8 @@ static void __init apple_airport_reset(int bus, int slot, int func)
->>  	udelay(10);
->>
->>  	early_iounmap(mmio, BCM4331_MMIO_SIZE);
->> +
->> +	return true;
->>  }
->>
->>  #define QFLAG_APPLY_ONCE 	0x1
->> @@ -682,7 +703,7 @@ struct chipset {
->>  	u32 class;
->>  	u32 class_mask;
->>  	u32 flags;
->> -	void (*f)(int num, int slot, int func);
->> +	bool (*f)(int num, int slot, int func);
->>  };
->>
->>  static struct chipset early_qrk[] __initdata = {
->> @@ -757,11 +778,13 @@ static int __init check_dev_quirk(int num, int slot, int func)
->>  			(early_qrk[i].device == device)) &&
->>  			(!((early_qrk[i].class ^ class) &
->>  			    early_qrk[i].class_mask))) {
->> -				if ((early_qrk[i].flags &
->> -				     QFLAG_DONE) != QFLAG_DONE)
->> -					early_qrk[i].f(num, slot, func);
->> -				early_qrk[i].flags |= QFLAG_APPLIED;
->> +			if ((early_qrk[i].flags & QFLAG_DONE) != QFLAG_DONE) {
->> +				bool applied = early_qrk[i].f(num, slot, func);
->> +
->> +				if (applied)
->> +					early_qrk[i].flags |= QFLAG_APPLIED;
->>  			}
->> +		}
->>  	}
->>
->>  	type = read_pci_config_byte(num, slot, func,
->> --
->> 2.34.1
->>
+>
+> No virus found
+>                 Checked by Hillstone Network AntiVirus
