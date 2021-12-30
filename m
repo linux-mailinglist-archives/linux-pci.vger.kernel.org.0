@@ -2,138 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 914804817E4
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 01:21:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77ECE4817F5
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 01:58:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233594AbhL3AVV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Dec 2021 19:21:21 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:52470 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230083AbhL3AVV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 19:21:21 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S233803AbhL3A56 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Dec 2021 19:57:58 -0500
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:47792
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231290AbhL3A55 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Dec 2021 19:57:57 -0500
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com [209.85.210.72])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A91D615B1;
-        Thu, 30 Dec 2021 00:21:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24313C36AEA;
-        Thu, 30 Dec 2021 00:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640823680;
-        bh=OM8FADTZVaGNNxsuvbX2jzyT1YNPuBV7MwXBf2jO49w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qX+X0xYm8PbaX17wb/R1gATM3gDotmaQQ2Em7IuBUdRpKt7BcuHfaR6KhaFamhWiS
-         fTs9tu4L5uO1Aq/qyhDcxrcWJYzgsDE7cH14YvN4P1LKMHzzJNoWvYAqvQmbY19dMW
-         dNCLXMoDEEIucjeUq/5Wrs+Kzw6TH6YxQpBD6YCoj/IJv9rVMCmfubCYlAJwsr1deo
-         cKeZIUehmX7EHZ8m4NBgDJ9C4HmHWlflp1Q6M4sZN2Es3ru2OkX0DPC3rcHqHcFhGQ
-         mQgRwwa81QAOwMYNjKqONUCy/bbhBFiEW/pYv0ho4C2o99nZLHtPbEkC7O659miwEa
-         xj/lqG7ABd4zg==
-Date:   Wed, 29 Dec 2021 18:21:18 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc:     =?iso-8859-1?B?zfFpZ28=?= Huguet <ihuguet@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        sean.wang@mediatek.com,
-        Linux List Kernel Mailing <linux-wireless@vger.kernel.org>,
-        objelf@gmail.com, lorenzo@kernel.org, Soul.Huang@mediatek.com,
-        Felix Fietkau <nbd@nbd.name>, linux-pci@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [Bug] Driver mt7921e cause computer reboot.
-Message-ID: <20211230002118.GA1717394@bhelgaas>
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 81F263F1BA
+        for <linux-pci@vger.kernel.org>; Thu, 30 Dec 2021 00:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1640825876;
+        bh=9Hwlmcj0whxK49ykZw434uUikfx+0hXzEWWfpG3itis=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=tITYeT6KcBWIVEN2XOBh+4Y+l4Yf8zDaTEO+PnPyl3uzRwyxDyiNjwOjJGZIDLpzV
+         CuO54i6BhsW0f5eEzqfZEQfvBXfuhyrB9eK2NFuPGj8WMX3ue8mgnAyN6IKB7a53uz
+         TP3lgEC1lQ18adV0z9C8hpGk6pVUryxp9uU2IPDdxew5xskvnb85v2nACQyhRrutVx
+         JPM5I0Abz2Krd/FQZjhTLbN9VJ0EXTTzYMgbk6jwWe55/O7DC1z2kDulb2fw38zR1J
+         jINBzByB0S9u1Xho6IKh+ETsZftpLMHuOIqw5M+ILheji3cn3r97AxQBkQjlC3hp+S
+         IQ9PFmczyHpDQ==
+Received: by mail-ot1-f72.google.com with SMTP id l13-20020a0568302b0d00b00570d0da96a5so7110979otv.16
+        for <linux-pci@vger.kernel.org>; Wed, 29 Dec 2021 16:57:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Hwlmcj0whxK49ykZw434uUikfx+0hXzEWWfpG3itis=;
+        b=o7ToK+BZpO8pz+0HlQ79xCvPKD8JvOKMurpAbZ1DcXbWA2VIgyYSPevGyIFn9FXTTP
+         MU/Xlr3aZT86OOWLFai0oL3qRlkxOsCY4ummoLDXIygKc2d5lIlzSHRzMK7fZWXfrPcr
+         mSNkSZ8sznPho7Fyh6lWO6UDDRdUM6Fdy2fchDYHg0qVdOBQhC1fciirRsfaUPU6Eiof
+         h9EZbSjPB6Ho4vd1Dtq0JHnMbjbS1uDc4kY4qbfLgMMcwzkQF9PVIG7kxF0buvb1cs9+
+         SnGXNfglcBixxh7rKy4ec5Osij3qpA1TmrG6pRFq9oJDpR/mv1buK1RgCJ6lPCWwCqUV
+         cQsg==
+X-Gm-Message-State: AOAM531CY1wIAjRk7Ml1TEM/opsdnlS6fnG8RUtVBIz6HNujBf2jDc4f
+        a+8rJVToA4nKzUNMEpdkPmY9AI6LGTv0fANqVwIUYZx1K4NWWwtDeVJ6lS0OYKbvNxPlIo3WyLJ
+        ZTPJbI4Yot2W8dPpXWrd7nB00FRu1y1703ghd9VdvoSTzRgZTx30J7w==
+X-Received: by 2002:a4a:9406:: with SMTP id h6mr17864668ooi.80.1640825875120;
+        Wed, 29 Dec 2021 16:57:55 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwCOxmVFWE0YLjVd6KBaomVjMm7A0pPvlpZY/iwXtxTaHI020iaE+lbr1yOC/2PkujCMzC8WJeCzYUhLg1b854=
+X-Received: by 2002:a4a:9406:: with SMTP id h6mr17864647ooi.80.1640825874776;
+ Wed, 29 Dec 2021 16:57:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABXGCsOX72u3yDcGNF64zbm5mC+Z=_8rxKM0cu7m4i1D8iWvbA@mail.gmail.com>
+References: <20211224081914.345292-1-kai.heng.feng@canonical.com> <20211229201229.GA1698801@bhelgaas>
+In-Reply-To: <20211229201229.GA1698801@bhelgaas>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Thu, 30 Dec 2021 08:57:42 +0800
+Message-ID: <CAAd53p5GJRqRUvNSqNBLq2yTjjvJnSq5hFPSJYv08wuSLExx_w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] net: wwan: iosm: Let PCI core handle PCI power transition
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     m.chetan.kumar@intel.com, linuxwwan@intel.com,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Lorenzo, Ryder (the rest of the mt7921 maintainers)]
-
-Thread: https://lore.kernel.org/all/CABXGCsODP8ze_mvzfJKcRYxuS-esVgHXAvDXS5KN3xFUN6bWgA@mail.gmail.com/T/#u
-
-On Mon, Dec 27, 2021 at 04:30:11PM +0500, Mikhail Gavrilov wrote:
-> On Mon, 27 Dec 2021 at 15:11, Íñigo Huguet <ihuguet@redhat.com> wrote:
-> > I've been experiencing similar problems, but they're solved at v5.15
-> > version, at least for me.
+On Thu, Dec 30, 2021 at 4:12 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Rafael, in case you have insight about the PCI_D0 question below;
+> Vaibhav, since this is related to your generic PM conversions]
+>
+> On Fri, Dec 24, 2021 at 04:19:13PM +0800, Kai-Heng Feng wrote:
+> > pci_pm_suspend_noirq() and pci_pm_resume_noirq() already handle power
+> > transition for system-wide suspend and resume, so it's not necessary to
+> > do it in the driver.
+>
+> I see DaveM has already applied this, but it looks good to me, thanks
+> for doing this!
+>
+> One minor question below...
+>
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> >  drivers/net/wwan/iosm/iosm_ipc_pcie.c | 49 ++-------------------------
+> >  1 file changed, 2 insertions(+), 47 deletions(-)
 > >
-> > How are you installing the kernel? Custom build? Have you updated the
-> > firmware to latest versions, as well?
-> 
-> I use Fedora Rawhide with default kernel and firmware packages.
-> 
-> $ uname -r
-> 5.16.0-0.rc6.20211223gitbc491fb12513.44.fc36.x86_64
-> $ rpm -q linux-firmware
-> linux-firmware-20211027-126.fc36.noarch
-> 
+> > diff --git a/drivers/net/wwan/iosm/iosm_ipc_pcie.c b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+> > index 2fe88b8be3481..d73894e2a84ed 100644
+> > --- a/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+> > +++ b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+> > @@ -363,67 +363,22 @@ static int __maybe_unused ipc_pcie_resume_s2idle(struct iosm_pcie *ipc_pcie)
 > >
-> > For me, these differences seem to be the normal effect of the driver
-> > not recognizing the device.
-> 
-> By the kernel logs, it looks like this:
-> After reboot:
-> $ dmesg | grep mt7921e
-> [    8.629358] mt7921e 0000:05:00.0: enabling device (0000 -> 0002)
-> [    8.630229] mt7921e 0000:05:00.0: ASIC revision: 79610010
-> [    9.687652] mt7921e: probe of 0000:05:00.0 failed with error -110
-> 
-> # rmmod mt7921e
-> # modprobe mt7921e
-> 
-> [  215.514503] mt7921e 0000:05:00.0: ASIC revision: feed0000
-> [  216.604741] mt7921e: probe of 0000:05:00.0 failed with error -110
-> 
-> After cold boot after shutdown:
-> $ dmesg | grep mt7921e
-> [    8.545171] mt7921e 0000:05:00.0: enabling device (0000 -> 0002)
-> [    8.545757] mt7921e 0000:05:00.0: ASIC revision: 79610010
-> [    8.631156] mt7921e 0000:05:00.0: HW/SW Version: 0x8a108a10, Build
-> Time: 20211014150838a
-> [    8.912687] mt7921e 0000:05:00.0: WM Firmware Version: ____010000,
-> Build Time: 20211014150922
-> [    8.938756] mt7921e 0000:05:00.0: Firmware init done
-> [    9.753257] mt7921e 0000:05:00.0 wlp5s0: renamed from wlan0
-> 
-> It looks like something is not re-initialized after a reboot.
-> Laptop BIOS is latest: Version 316
-> https://dlcdnets.asus.com/pub/ASUS/GamingNB/G513QY/G513QYAS316.zip
-> 
-> Maybe anyone from the pci mailing list can lid some light why pci
-> device not re-initialized after a reboot?
+> >  int __maybe_unused ipc_pcie_suspend(struct iosm_pcie *ipc_pcie)
+> >  {
+> > -     struct pci_dev *pdev;
+> > -     int ret;
+> > -
+> > -     pdev = ipc_pcie->pci;
+> > -
+> > -     /* Execute D3 one time. */
+> > -     if (pdev->current_state != PCI_D0) {
+> > -             dev_dbg(ipc_pcie->dev, "done for PM=%d", pdev->current_state);
+> > -             return 0;
+> > -     }
+>
+> I don't understand the intent of this early exit, and it's not obvious
+> to me that pci_pm_suspend_noirq() bails out early when
+> (pdev->current_state != PCI_D0).
 
-Sorry for the inconvenience and thank you very much for the report!
+Yes, I think this can be removed too. Please let me send v2.
 
-If I understand correctly, when you do a cold boot, the mt7921e device
-works properly.
+Kai-Heng
 
-But when you simply reboot, without a power off, the device does not
-work, and the dmesg log contains:
-
-  pci 0000:05:00.0: [14c3:7961] type 00 class 0x028000
-  pci 0000:05:00.0: reg 0x10: [mem 0xfc30300000-0xfc303fffff 64bit pref]
-  pci 0000:05:00.0: reg 0x18: [mem 0xfc30400000-0xfc30403fff 64bit pref]
-  pci 0000:05:00.0: reg 0x20: [mem 0xfc30404000-0xfc30404fff 64bit pref]
-  ...
-  mt7921e 0000:05:00.0: enabling device (0000 -> 0002)
-  mt7921e 0000:05:00.0: ASIC revision: 79610010
-  mt7921e: probe of 0000:05:00.0 failed with error -110
-
-That means the device responds to PCI config reads and writes, but the
-probe failed with -ETIMEDOUT after printing the ASIC revision [1].
-
-devm_request_irq() should not return -ETIMEDOUT, but it looks like
-mt7921_dma_init() can (via mt7921_dma_disable()).  Maybe the mt7921e
-driver can't tolerate some state the device was left in by reboot?
-
-I don't see anything obviously wrong from a PCI core perspective.  The
-PCI core does not reset devices either when going down for a reboot or
-when coming up at boot-time.
-
-Bjorn
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/wireless/mediatek/mt76/mt7921/pci.c?id=v5.16-rc6#n187
-
-
+>
+> >       /* The HAL shall ask the shared memory layer whether D3 is allowed. */
+> >       ipc_imem_pm_suspend(ipc_pcie->imem);
+> >
+> > -     /* Save the PCI configuration space of a device before suspending. */
+> > -     ret = pci_save_state(pdev);
+> > -
+> > -     if (ret) {
+> > -             dev_err(ipc_pcie->dev, "pci_save_state error=%d", ret);
+> > -             return ret;
+> > -     }
+> > -
+> > -     /* Set the power state of a PCI device.
+> > -      * Transition a device to a new power state, using the device's PCI PM
+> > -      * registers.
+> > -      */
+> > -     ret = pci_set_power_state(pdev, PCI_D3cold);
+> > -
+> > -     if (ret) {
+> > -             dev_err(ipc_pcie->dev, "pci_set_power_state error=%d", ret);
+> > -             return ret;
+> > -     }
+> > -
+> >       dev_dbg(ipc_pcie->dev, "SUSPEND done");
+> > -     return ret;
+> > +     return 0;
+> >  }
+> >
+> >  int __maybe_unused ipc_pcie_resume(struct iosm_pcie *ipc_pcie)
+> >  {
+> > -     int ret;
+> > -
+> > -     /* Set the power state of a PCI device.
+> > -      * Transition a device to a new power state, using the device's PCI PM
+> > -      * registers.
+> > -      */
+> > -     ret = pci_set_power_state(ipc_pcie->pci, PCI_D0);
+> > -
+> > -     if (ret) {
+> > -             dev_err(ipc_pcie->dev, "pci_set_power_state error=%d", ret);
+> > -             return ret;
+> > -     }
+> > -
+> > -     pci_restore_state(ipc_pcie->pci);
+> > -
+> >       /* The HAL shall inform the shared memory layer that the device is
+> >        * active.
+> >        */
+> >       ipc_imem_pm_resume(ipc_pcie->imem);
+> >
+> >       dev_dbg(ipc_pcie->dev, "RESUME done");
+> > -     return ret;
+> > +     return 0;
+> >  }
+> >
+> >  static int __maybe_unused ipc_pcie_suspend_cb(struct device *dev)
+> > --
+> > 2.33.1
+> >
