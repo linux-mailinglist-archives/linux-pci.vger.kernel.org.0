@@ -2,69 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76CF6481E58
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 17:50:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 871E4481FD0
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 20:21:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241368AbhL3Qul (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Dec 2021 11:50:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42486 "EHLO
+        id S240479AbhL3TVd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Dec 2021 14:21:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240222AbhL3Qul (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Dec 2021 11:50:41 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2F59C061574;
-        Thu, 30 Dec 2021 08:50:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=KCIuKfYCj4UNj6Bbz3o+wzTEwkTdr3miPJh0cjsBii0=; b=PyDcTfTYoXlY89XosfCrZV15Xb
-        4dgELtnkGLeUg+RtHdl+gCYTyGRsOzt3e/nu7+NApB97KfCyumzwt/OlrIpGKf7XixRZWN1HbZO76
-        636OoDykHk+6GyV+WhdCb6kBaTs7A6QRzZui2+wdwYuRu9cKIO89Dc9bFR4jz8yD/CRGPyZzCHQzu
-        4z2Lzol2f8mu1JdijQULmc5K9KNjSMDdZzwFzKTglrp+AlciaElI1PbnvNzPVxjtICLwX0ndfefWx
-        9G2/N9gMHBfd6h/yIV2nrL8rOKvB2829tOM1dMkRwHVaGiJS/cGq9V6ugSpk6qS5K/dwUNDczBZXV
-        jIpmn+0Q==;
-Received: from [2601:1c0:6280:3f0::aa0b]
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1n2ydQ-009vPU-Ri; Thu, 30 Dec 2021 16:50:37 +0000
-Message-ID: <1e32a809-013d-fea5-2f9c-eee382afc3cc@infradead.org>
-Date:   Thu, 30 Dec 2021 08:50:32 -0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Subject: Re: [RFC PATCH] PCI: Add "pci=reassign_all_bus" boot parameter
-Content-Language: en-US
-To:     Yao Hongbo <yaohongbo@linux.alibaba.com>, bhelgaas@google.com
-Cc:     zhangliguang@linux.alibaba.com,
-        alikernel-developer@linux.alibaba.com, linux-pci@vger.kernel.org,
+        with ESMTP id S240217AbhL3TVd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Dec 2021 14:21:33 -0500
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9D1BC061574;
+        Thu, 30 Dec 2021 11:21:32 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id h15so28650667ljh.12;
+        Thu, 30 Dec 2021 11:21:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=29ZCKi+UYzfbhhlJGwYUn8LArOBBrJMbEQDCucP9wW0=;
+        b=oYK77syPVHf9WjJUqDaa/+9viAoEgnBaoIHI1uQSzo0DU7cyoWXv8Asdj1r6GFy4n6
+         UPCotKGpU02eUvPmNsFG4drmFRZlq8LPztA8D6BDReSTVnyJVNFn8q7+ZRpHcEI9X4KC
+         pB/Fl8iB7mYDsuKRuaZi5d6Ga10am9ikNtDVJMAi39HN35MRVCVa06nFdIcGGg1XVWrG
+         BdAEhqlSsVRFdufxzT4DypO3AVaNrvbXMZNfltO2b4zQuLNWNnw0QsmpJ8sY9WKQ6/9k
+         tbufgpZgKJdJViikuQ5JA7v/DusFQIY70J/JJ7KcX7G+OKtyzIIRTKOxTwYzLPQxVvz2
+         RoRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=29ZCKi+UYzfbhhlJGwYUn8LArOBBrJMbEQDCucP9wW0=;
+        b=aCKIt1relVwsqKYt1qP/T6pe+h/W9fb4K/qQ0HqSmmJiZlzf6PcZqcZgoJPniX0gJ4
+         qJbLz7HbjW4TFphQYhHGaZqFecM8RZncd3yjpO1pN9Hujdb6LzCNO0Iwa73tLtpiV+F6
+         jWju1mcQdyj0wDTJ5w8jnA1kYUzGqOyH6ENOLWpuhcv5VxcCsg1lsAfd9fowalXOgFlT
+         zFOusuF614jCuUrxCLur4j1uALoKdpNY3EAtRajxe9kNQLqtXSGUw5KegwQouyaiLUn9
+         WFnaz8EWJ1ZK0PUULE0fRcrf7Sv5+J9lsUtwqp8Fd0nzl3+7u/ILRG9ghtmZQjOS4JUJ
+         SCgA==
+X-Gm-Message-State: AOAM530lzqHWXHzcgzO8SIUxxvjP5AkSqQy623oF37rm18p+pUsB5R5S
+        DlyXnTYxlKgbNtDE4SJBHhDgxmrfkpo=
+X-Google-Smtp-Source: ABdhPJzPf/616b1vKZjygFJ9jDrkf1rprCIdL5VRNA9yIBZcjKjShCOpY6FdvEkErC1hZwDxUhPfVA==
+X-Received: by 2002:a2e:990:: with SMTP id 138mr26702257ljj.507.1640892090620;
+        Thu, 30 Dec 2021 11:21:30 -0800 (PST)
+Received: from [192.168.1.103] ([178.176.75.215])
+        by smtp.gmail.com with ESMTPSA id br31sm2558552lfb.279.2021.12.30.11.21.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Dec 2021 11:21:30 -0800 (PST)
+Subject: Re: [PATCH v3 1/3] PCI: Add device code for AMD FCH SATA Controller
+ in AHCI mode
+To:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        linux-ide@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <1640856613-101412-1-git-send-email-yaohongbo@linux.alibaba.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <1640856613-101412-1-git-send-email-yaohongbo@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20211229161119.1006-1-pmenzel@molgen.mpg.de>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <0df4ec50-b986-6a9b-3908-1cf62b53341b@gmail.com>
+Date:   Thu, 30 Dec 2021 22:21:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
+MIME-Version: 1.0
+In-Reply-To: <20211229161119.1006-1-pmenzel@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi--
+Hello!
 
-On 12/30/21 01:30, Yao Hongbo wrote:
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 2fba824..c83a2e5 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4084,6 +4084,7 @@
->  		nomio		[S390] Do not use MIO instructions.
->  		norid		[S390] ignore the RID field and force use of
->  				one PCI domain per PCI function
-> +		reassign_all_bus	The OS fully configure the PCI bus.
+On 12/29/21 7:11 PM, Paul Menzel wrote:
 
-		                                     configures
->  
->  	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
->  			Management.
+> The ASUS F2A85-M PRO with the fusion controller hub (FCH) AMD A85
+> (Hudson D4) has the SATA controller below.
+> 
+>     $ lspci -s 00:11.0
+>     00:11.0 SATA controller [0106]: Advanced Micro Devices, Inc. [AMD] FCH SATA Controller [AHCI mode] [1022:7801] (rev 40)
+> 
+> Add the ID for it, when in AHCI mode.
+> 
+> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> ---
+>  include/linux/pci_ids.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 011f2f1ea5bb..fe944b44858a 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -602,6 +602,7 @@
+>  #define PCI_DEVICE_ID_AMD_LX_VIDEO  0x2081
+>  #define PCI_DEVICE_ID_AMD_LX_AES    0x2082
+>  #define PCI_DEVICE_ID_AMD_HUDSON2_SATA_IDE	0x7800
+> +#define PCI_DEVICE_ID_AMD_HUDSON2_SATA_AHCI	0x7801
 
-thanks.
--- 
-~Randy
+   We only add device IDs to this file if they are used in 2+ places.
+
+[...]
+
+MBR, Sergey
