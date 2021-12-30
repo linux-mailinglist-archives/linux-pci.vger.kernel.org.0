@@ -2,106 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8E53481E0B
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 17:19:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 651EF481E12
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 17:28:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241243AbhL3QT0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Dec 2021 11:19:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241231AbhL3QT0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Dec 2021 11:19:26 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19865C06173E;
-        Thu, 30 Dec 2021 08:19:26 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6743061700;
-        Thu, 30 Dec 2021 16:19:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C891DC36AEF;
-        Thu, 30 Dec 2021 16:19:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640881164;
-        bh=arlWW/UtCGQmMH5E2Pogag5ZNNfDUyUhSMYEtoB3GwU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nallgZfdxZjoVCuHYZ4XlZvCFvFjCagAjfY/7DnXl6uLT3rQXZhTqfX8CxA2KfD5s
-         ggMTdGtk4qkhT64rRpeqYTGP0AX7rd5U9SpMvtI5EA3ixEunFcmItWDP+Dny71TOkU
-         2N+6dF/itqqOSChjsVTnbC/RnZjqsumYlT6QDIepmBYHjzM3WHIoXjPTsXx998T4MH
-         AbHzEa9iCb3R8ZQuSPQxkbKl22DO8o6HOrukaINf9SUG+j2QRXNBifWfkcqIVJpn3F
-         2oqxztcYkbMDMWDWXHLWL9/qwAxBjNURJG+yFFF4BLBbRogQN0MJupw1+goKz9KbcM
-         BfBhOeAdyvsxQ==
-Received: by mail-wr1-f52.google.com with SMTP id d9so51458108wrb.0;
-        Thu, 30 Dec 2021 08:19:24 -0800 (PST)
-X-Gm-Message-State: AOAM532osZQpPnndUEtZIgzOHkp5U++kfLnr7S6WN14jxOZUNNgk0gXd
-        6EjB9ZFeEYfDz+9kg/nTx6c548y3b0UM/JrdXSE=
-X-Google-Smtp-Source: ABdhPJzh0JRUZ8uDOReUUyLcA2Hj2LVO0R3PZ4wX3Eigt9m04vC/yXSrbqUBq3MAhxfR6QKgikfyV3h0Maj9zD2gdAs=
-X-Received: by 2002:a5d:6989:: with SMTP id g9mr25095895wru.12.1640881163018;
- Thu, 30 Dec 2021 08:19:23 -0800 (PST)
+        id S241257AbhL3Q24 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Dec 2021 11:28:56 -0500
+Received: from mail-qt1-f180.google.com ([209.85.160.180]:38755 "EHLO
+        mail-qt1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239850AbhL3Q24 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Dec 2021 11:28:56 -0500
+Received: by mail-qt1-f180.google.com with SMTP id 8so22141378qtx.5;
+        Thu, 30 Dec 2021 08:28:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=594xPajnx1lQ2Gq+QQhoW7EPw32DH5yt64jS4MfoP8Q=;
+        b=X2DgoHHdh4uWuiFTWgrYzyNYwpnnEoDiNVX7kC76tHs6Dyzx+zbHgKiGhTBZQqJimX
+         RIHQKKg80/i58M1Bsy4qnywxdl3tt1IKptd7DKTg3R1ITqXEuhWgvOYT8fMg5kU9EFeg
+         nrgK37chFklaFOITZayQRISMhv+//q8grxKGZdGu4ji9H47HjB9HVb1HTZ7nj9/8esDq
+         49yaW5lgBXd2VbE4iiJRAyiAIXVoTxVsNaNvsRdPo7THApo4gbo9dorMMfayICulQWZL
+         5Dnd0HI+CsTk7xEYiwi1HK3EaON5O7taH00B27vSgxUwwFGLcFm1tUEcQOTFSZwrHcH5
+         flsQ==
+X-Gm-Message-State: AOAM530NT5q8QQrqSqUDcJL1Iz1po1hLvkx/3J2gvcSzwjdirqnkWFwq
+        /7DWQoYEXw6ysjaGYY+Bs0OY3U4b56xWKE3Nk5Jf7FSJ
+X-Google-Smtp-Source: ABdhPJx1pG/geFzyTx2rrs7JE51T0xN/ij5gLcEYrADz0jW4p2FFp+l9lNnuSXYW2NeaAY/EUHQlXZnmTcqzKqbNpe8=
+X-Received: by 2002:ac8:5f4e:: with SMTP id y14mr26831737qta.305.1640881725489;
+ Thu, 30 Dec 2021 08:28:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20211227164317.4146918-1-schnelle@linux.ibm.com>
- <20211227164317.4146918-31-schnelle@linux.ibm.com> <YcrIHxTDipVNUuCA@kroah.com>
- <b9d0c0b88ef66f9beb51a880e765177670a76394.camel@linux.ibm.com> <Ycw6kXhd+NV0GMWc@kroah.com>
-In-Reply-To: <Ycw6kXhd+NV0GMWc@kroah.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Thu, 30 Dec 2021 11:19:05 -0500
-X-Gmail-Original-Message-ID: <CAK8P3a1p6_=s4XcJiJSkuZJBrCpwCXQ1MX6EadY00KdypVQisg@mail.gmail.com>
-Message-ID: <CAK8P3a1p6_=s4XcJiJSkuZJBrCpwCXQ1MX6EadY00KdypVQisg@mail.gmail.com>
-Subject: Re: [RFC 30/32] /dev/port: don't compile file operations without CONFIG_DEVPORT
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+References: <20211223022856.27822-1-yang.lee@linux.alibaba.com>
+In-Reply-To: <20211223022856.27822-1-yang.lee@linux.alibaba.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 30 Dec 2021 17:28:34 +0100
+Message-ID: <CAJZ5v0h4u6+4N5ZBSu6CRKn4GCBPgPHC_5-crzULozhzCTCh6w@mail.gmail.com>
+Subject: Re: [PATCH -next] PCI/ACPI: Fix acpi_pci_osc_control_set() kernel-doc comment
+To:     Yang Li <yang.lee@linux.alibaba.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-csky@vger.kernel.org
+        Abaci Robot <abaci@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 29, 2021 at 5:38 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> > > > -static const struct file_operations __maybe_unused port_fops = {
-> > > > +#ifdef CONFIG_DEVPORT
-> > > > +static const struct file_operations port_fops = {
-> > > >   .llseek         = memory_lseek,
-> > > >   .read           = read_port,
-> > > >   .write          = write_port,
-> > > >   .open           = open_port,
-> > > >  };
-> > > > +#endif
-> > >
-> > > Why is this #ifdef needed if it is already __maybe_unused?
-> >
-> > Because read_port() calls inb() and write_port() calls outb() they
-> > wouldn't compile once these are no longer defined. Then however the
-> > read_port/write_port symbols in the struct initialization above
-> > couldn't be resolved.
-> >
-> > >
-> > > In looking closer, this change could be taken now as the use of this
-> > > variable already is behind this same #ifdef statement, right?
-> >
-> > Yes
+On Thu, Dec 23, 2021 at 3:29 AM Yang Li <yang.lee@linux.alibaba.com> wrote:
 >
-> Great, feel free to send this individually, not as a RFC patch, and I
-> will be glad to queue it up.
+> Add the description of @support and remove @req in
+> acpi_pci_osc_control_set() kernel-doc comment to remove warnings found
+> by running scripts/kernel-doc, which is caused by using 'make W=1'.
+>
+> drivers/acpi/pci_root.c:337: warning: Excess function parameter 'req'
+> description in 'acpi_pci_osc_control_set'
+> drivers/acpi/pci_root.c:337: warning: Function parameter or member
+> 'support' not described in 'acpi_pci_osc_control_set'
+>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Fixes: 6bc779ee05d4 ("PCI/ACPI: Check for _OSC support in acpi_pci_osc_control_set()")
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> ---
+>  drivers/acpi/pci_root.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index 41a8fef06534..084916604f3c 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -322,7 +322,7 @@ EXPORT_SYMBOL_GPL(acpi_get_pci_dev);
+>   * acpi_pci_osc_control_set - Request control of PCI root _OSC features.
+>   * @handle: ACPI handle of a PCI root bridge (or PCIe Root Complex).
+>   * @mask: Mask of _OSC bits to request control of, place to store control mask.
+> - * @req: Mask of _OSC bits the control of is essential to the caller.
+> + * @support: _OSC supported capability.
+>   *
+>   * Run _OSC query for @mask and if that is successful, compare the returned
+>   * mask of control bits with @req.  If all of the @req bits are set in the
+> --
 
-I think this patch should contain the 'depends on HAS_IOPORT' that
-is currently added in a different patch (char: impi, tpm: depend on
-HAS_IOPORT).
-
-However, we can't merge that version until HAS_IOPORT is actually
-added to the kernel.
-
-      Arnd
+Applied as 5.17 material, thanks!
