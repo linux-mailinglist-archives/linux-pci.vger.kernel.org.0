@@ -2,209 +2,293 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E116481A7C
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 08:46:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9375481B03
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Dec 2021 10:15:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233273AbhL3Hq6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Dec 2021 02:46:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231688AbhL3Hq6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Dec 2021 02:46:58 -0500
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D403AC061574
-        for <linux-pci@vger.kernel.org>; Wed, 29 Dec 2021 23:46:57 -0800 (PST)
-Received: by mail-ua1-x92f.google.com with SMTP id p2so41032428uad.11
-        for <linux-pci@vger.kernel.org>; Wed, 29 Dec 2021 23:46:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P6Nx7pKRfOXxRTDSc5fat2rVIi8irKZ4fTXz3GCHr54=;
-        b=BDAiEUW5tNIC/4GAd86omeehgKxD48uR8TmGZGn/iiCiixLroQFa6GcpzDo2kmZb+K
-         LbxOHqUTXjNFNvSrmgm299A1WopwPJo3g00imtqEHXsTCIKAH+z9Efj6Y3i27lP/+yBH
-         Be6uPZe+gDjyeyFoHkb3nU+a2LiX9fVlrLmNzixpRJVVxGy7WSdk/nkiDWJGcRcucxcK
-         /7yX0dnto2qBekZwgPI0XHAI4hjBS8mnuqtoniNsO3EZhlTEd1wBZSsXdoSNlZEpwQwU
-         IHsO0z7GWi6zgWijQimya8x6/svceecZhHDDRgx8EotGVHFVW+cXe3E9TRnHe66A8HhQ
-         RfYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P6Nx7pKRfOXxRTDSc5fat2rVIi8irKZ4fTXz3GCHr54=;
-        b=pRV6bxe3b1aDth3IMejwmwkanI21VK10AbRVGMSGgqnOaWhIayzeePPPRgfoyyVFSl
-         9nboauufl3KA0LhK83AUAHFowNg5eL/qAWxZzgack9s8Y6YZZt44mAZJzCfQEMFHAwRl
-         3RezZJZgwRlQ4fwmyO4AAxFLI5uILpP+m91F7XB0vF/J5R9dlHviDUQ4vdoSE3fmx5iJ
-         HzyzEwxEQjER3yuASwXkLLGSbc08u95CPPhsWN3HQXb8OXQMnwObYxbrDGG5w/RrqgTQ
-         Bqhx6rcl9Fr8xlBy17nvTcGvsoWFFoMIrTq/Fgx5MfhbuDhb81Bgb/tEJnTMK7OIaWib
-         aSlQ==
-X-Gm-Message-State: AOAM5307dExl6P4B/FUhOzbBa55C29VDlb8vbdWnGXQwUWkSJ6uT16V8
-        HRUzu/YR+1Av7L//qvceUDjMoFtqvLInRFKKaJbls7ARdoI=
-X-Google-Smtp-Source: ABdhPJyyCo2cFRBQb0L9ZLLc77idUgVs/rT6BSBTdxr/nqpqkiJhQgmw5IageaCQOu8a6tiFmF0ymDxKDlGSWOZTZ30=
-X-Received: by 2002:a05:6102:38ce:: with SMTP id k14mr9013310vst.70.1640850416912;
- Wed, 29 Dec 2021 23:46:56 -0800 (PST)
+        id S238086AbhL3JP4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Dec 2021 04:15:56 -0500
+Received: from mga14.intel.com ([192.55.52.115]:62082 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237961AbhL3JP4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 30 Dec 2021 04:15:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1640855756; x=1672391756;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0sD+ixvvsw5WB5Q3AyZGkdXnTumVJiXDG1cdBiSLA50=;
+  b=ORxvP8z3QUtbYo7jXJOBTUMptjMt2mDajvYoICfgYp6vqvr1GWMjfsvt
+   onE1lnRQPGEjST9M/t/vpMsXy/uH41clckSc4TL+8xgxCpDmg+3v8mim2
+   njvSyTvDbdTBVSs28JburzIWTuXhuxpLret3w0MmLVYNhANGelVnnBzum
+   G3hjXdbSkgJZICrCQlfcuSTmk03PGmJ7OUHACPqlBmWBdILMwiQPjW9Um
+   lmKiss/zi8Q9m7AMGeOWdZm9mjHgibWmgy3fI66D0mU7OP8wzYTdrieO7
+   DcfYV1cBDzDbhJo4bWnxG9h+18auIpd65EUPlq0OIfJAyw+oin+SfvjVO
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10212"; a="241855158"
+X-IronPort-AV: E=Sophos;i="5.88,248,1635231600"; 
+   d="scan'208";a="241855158"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2021 01:15:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,248,1635231600"; 
+   d="scan'208";a="687165298"
+Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 30 Dec 2021 01:15:48 -0800
+Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1n2rXI-0009xn-9P; Thu, 30 Dec 2021 09:15:48 +0000
+Date:   Thu, 30 Dec 2021 17:15:14 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/enumeration] BUILD SUCCESS
+ 0cf948aab9a0049456d9a498af3da6b403e2a0ed
+Message-ID: <61cd78a2.8ltt4LzMHxTiuTIm%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20211230054713.1562260-1-weirongguang@kylinos.cn>
-In-Reply-To: <20211230054713.1562260-1-weirongguang@kylinos.cn>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Thu, 30 Dec 2021 08:46:45 +0100
-Message-ID: <CAMhs-H-79=2v1oS1640HQRmdxQk3rAGi-YXb8A3OLN0Oc33WHw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: mt7621: Fix the compile error in cross complication
-To:     weirongguang <weirongguang@kylinos.cn>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi weirongguang,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
+branch HEAD: 0cf948aab9a0049456d9a498af3da6b403e2a0ed  PCI/sysfs: Use default_groups in kobj_type for slot attrs
 
-[+cc linux-pci]
+elapsed time: 725m
 
-On Thu, Dec 30, 2021 at 6:47 AM weirongguang <weirongguang@kylinos.cn> wrote:
+configs tested: 221
+configs skipped: 5
 
-Your subject is a bit generic I think it would be better:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-s/Fix the compile error in cross complication/Add missing arch include
-'asm/mips-cps.h' to avoid implicit function declarations/
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211229
+i386                 randconfig-c001-20211228
+i386                 randconfig-c001-20211230
+mips                 randconfig-c004-20211230
+arm                        mvebu_v5_defconfig
+mips                        qi_lb60_defconfig
+sh                        apsh4ad0a_defconfig
+sh                            hp6xx_defconfig
+sh                     sh7710voipgw_defconfig
+powerpc                 mpc834x_mds_defconfig
+powerpc                      pasemi_defconfig
+arm                        shmobile_defconfig
+powerpc                 linkstation_defconfig
+mips                         bigsur_defconfig
+powerpc                 mpc832x_mds_defconfig
+nios2                               defconfig
+arm                  colibri_pxa300_defconfig
+mips                           ip28_defconfig
+arm                      tct_hammer_defconfig
+arm                         s3c6400_defconfig
+powerpc                     pseries_defconfig
+arm                         lpc18xx_defconfig
+arm                     eseries_pxa_defconfig
+arc                     nsimosci_hs_defconfig
+sh                        edosk7705_defconfig
+powerpc                   bluestone_defconfig
+sh                          landisk_defconfig
+arm                          moxart_defconfig
+arm                       imx_v6_v7_defconfig
+alpha                               defconfig
+powerpc                     tqm8541_defconfig
+s390                          debug_defconfig
+mips                       capcella_defconfig
+powerpc                         wii_defconfig
+powerpc                mpc7448_hpc2_defconfig
+powerpc                     akebono_defconfig
+arc                          axs101_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc                    ge_imp3a_defconfig
+sh                         ap325rxa_defconfig
+arm                        oxnas_v6_defconfig
+mips                        workpad_defconfig
+alpha                            alldefconfig
+mips                      pic32mzda_defconfig
+powerpc                        fsp2_defconfig
+powerpc                  iss476-smp_defconfig
+mips                malta_qemu_32r6_defconfig
+arm                            pleb_defconfig
+arm                           sama7_defconfig
+mips                        vocore2_defconfig
+arm                      jornada720_defconfig
+powerpc                      pcm030_defconfig
+powerpc                 mpc832x_rdb_defconfig
+powerpc                     ep8248e_defconfig
+ia64                            zx1_defconfig
+powerpc                     pq2fads_defconfig
+sh                          sdk7786_defconfig
+arc                            hsdk_defconfig
+arm                        multi_v7_defconfig
+sh                                  defconfig
+s390                             allmodconfig
+mips                            e55_defconfig
+mips                         cobalt_defconfig
+arm                         at91_dt_defconfig
+arc                      axs103_smp_defconfig
+mips                           xway_defconfig
+powerpc                 mpc837x_rdb_defconfig
+i386                             alldefconfig
+arm                            qcom_defconfig
+sh                             sh03_defconfig
+powerpc                    klondike_defconfig
+powerpc                 mpc834x_itx_defconfig
+powerpc                       eiger_defconfig
+xtensa                          iss_defconfig
+arm                       spear13xx_defconfig
+mips                   sb1250_swarm_defconfig
+mips                     loongson1b_defconfig
+sh                           se7721_defconfig
+openrisc                         alldefconfig
+powerpc                    adder875_defconfig
+arc                        nsim_700_defconfig
+arm                           omap1_defconfig
+arm                          ixp4xx_defconfig
+arm                           sunxi_defconfig
+nios2                         10m50_defconfig
+arm                           sama5_defconfig
+mips                            ar7_defconfig
+xtensa                       common_defconfig
+arm                        clps711x_defconfig
+arm                             ezx_defconfig
+parisc                           alldefconfig
+mips                       rbtx49xx_defconfig
+mips                       bmips_be_defconfig
+powerpc                  mpc866_ads_defconfig
+arm                             pxa_defconfig
+arm                        vexpress_defconfig
+powerpc                          allmodconfig
+powerpc                      arches_defconfig
+sparc                       sparc64_defconfig
+powerpc                   microwatt_defconfig
+powerpc                      ppc44x_defconfig
+xtensa                  nommu_kc705_defconfig
+m68k                          atari_defconfig
+arm                         s5pv210_defconfig
+arm                        mvebu_v7_defconfig
+mips                         tb0226_defconfig
+m68k                        stmark2_defconfig
+arc                        nsimosci_defconfig
+powerpc                      cm5200_defconfig
+mips                           rs90_defconfig
+arm                      pxa255-idp_defconfig
+powerpc                 mpc837x_mds_defconfig
+powerpc                     tqm8560_defconfig
+arm                  randconfig-c002-20211229
+arm                  randconfig-c002-20211230
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20211228
+i386                 randconfig-a004-20211228
+i386                 randconfig-a002-20211228
+i386                 randconfig-a003-20211228
+i386                 randconfig-a001-20211228
+i386                 randconfig-a005-20211228
+x86_64               randconfig-a013-20211230
+x86_64               randconfig-a015-20211230
+x86_64               randconfig-a012-20211230
+x86_64               randconfig-a011-20211230
+x86_64               randconfig-a016-20211230
+x86_64               randconfig-a014-20211230
+i386                 randconfig-a016-20211230
+i386                 randconfig-a011-20211230
+i386                 randconfig-a012-20211230
+i386                 randconfig-a013-20211230
+i386                 randconfig-a014-20211230
+i386                 randconfig-a015-20211230
+arc                  randconfig-r043-20211230
+riscv                randconfig-r042-20211230
+s390                 randconfig-r044-20211230
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                          rv32_defconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
->
-> When I was compile the latest kernel in x86 platform and
-> the build environment like this:
->
-> Compiler: gcc
-> Compiler version: 10
-> Compiler string: mips-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
-> Cross-compile: mips-linux-gnu-
->
-> It make a compile error:
->
-> drivers/pci/controller/pcie-mt7621.c: In function 'setup_cm_memory_region':
-> drivers/pci/controller/pcie-mt7621.c:224:6: error: implicit declaration of function 'mips_cps_numiocu' [-Werror=implicit-function-declaration]
->   224 |  if (mips_cps_numiocu(0)) {
->       |      ^~~~~~~~~~~~~~~~
-> drivers/pci/controller/pcie-mt7621.c:232:3: error: implicit declaration of function 'write_gcr_reg1_base'; did you mean 'write_gc0_ebase'? [-Werror=implicit-function-declaration]
->   232 |   write_gcr_reg1_base(entry->res->start);
->       |   ^~~~~~~~~~~~~~~~~~~
->       |   write_gc0_ebase
-> drivers/pci/controller/pcie-mt7621.c:233:3: error: implicit declaration of function 'write_gcr_reg1_mask'; did you mean 'write_gc0_pagemask'? [-Werror=implicit-function-declaration]
->   233 |   write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
->       |   ^~~~~~~~~~~~~~~~~~~
->       |   write_gc0_pagemask
-> drivers/pci/controller/pcie-mt7621.c:233:30: error: 'CM_GCR_REGn_MASK_CMTGT_IOCU0' undeclared (first use in this function)
->   233 |   write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
->       |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/pci/controller/pcie-mt7621.c:233:30: note: each undeclared identifier is reported only once for each function it appears in
-> In file included from ./include/linux/device.h:15,
->                  from ./include/linux/of_platform.h:9,
->                  from drivers/pci/controller/pcie-mt7621.c:26:
-> drivers/pci/controller/pcie-mt7621.c:235:25: error: implicit declaration of function 'read_gcr_reg1_base'; did you mean 'read_gc0_ebase'? [-Werror=implicit-function-declaration]
->   235 |     (unsigned long long)read_gcr_reg1_base(),
->       |                         ^~~~~~~~~~~~~~~~~~
-> ./include/linux/dev_printk.h:110:23: note: in definition of macro 'dev_printk_index_wrap'
->   110 |   _p_func(dev, fmt, ##__VA_ARGS__);   \
->       |                       ^~~~~~~~~~~
-> drivers/pci/controller/pcie-mt7621.c:234:3: note: in expansion of macro 'dev_info'
->   234 |   dev_info(dev, "PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
->       |   ^~~~~~~~
-> drivers/pci/controller/pcie-mt7621.c:236:25: error: implicit declaration of function 'read_gcr_reg1_mask'; did you mean 'read_gc0_pagemask'? [-Werror=implicit-function-declaration]
->   236 |     (unsigned long long)read_gcr_reg1_mask());
->       |                         ^~~~~~~~~~~~~~~~~~
-> ./include/linux/dev_printk.h:110:23: note: in definition of macro 'dev_printk_index_wrap'
->   110 |   _p_func(dev, fmt, ##__VA_ARGS__);   \
->       |                       ^~~~~~~~~~~
-> drivers/pci/controller/pcie-mt7621.c:234:3: note: in expansion of macro 'dev_info'
->   234 |   dev_info(dev, "PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
->       |   ^~~~~~~~
-> cc1: all warnings being treated as errors
->
-> The problem is that the <asm/mips-cps.h> head file was missing
-> and it can resolved when include the file.
+clang tested configs:
+riscv                randconfig-c006-20211228
+mips                 randconfig-c004-20211228
+powerpc              randconfig-c003-20211228
+arm                  randconfig-c002-20211228
+x86_64               randconfig-c007-20211228
+i386                 randconfig-c001-20211228
+x86_64               randconfig-a002-20211230
+x86_64               randconfig-a001-20211230
+x86_64               randconfig-a003-20211230
+x86_64               randconfig-a006-20211230
+x86_64               randconfig-a004-20211230
+x86_64               randconfig-a005-20211230
+i386                 randconfig-a001-20211230
+i386                 randconfig-a005-20211230
+i386                 randconfig-a004-20211230
+i386                 randconfig-a002-20211230
+i386                 randconfig-a006-20211230
+i386                 randconfig-a003-20211230
+x86_64               randconfig-a015-20211228
+x86_64               randconfig-a014-20211228
+x86_64               randconfig-a013-20211228
+x86_64               randconfig-a012-20211228
+x86_64               randconfig-a011-20211228
+x86_64               randconfig-a016-20211228
+i386                 randconfig-a012-20211228
+i386                 randconfig-a011-20211228
+i386                 randconfig-a014-20211228
+i386                 randconfig-a016-20211228
+i386                 randconfig-a013-20211228
+i386                 randconfig-a015-20211228
+hexagon              randconfig-r041-20211228
+riscv                randconfig-r042-20211228
+s390                 randconfig-r044-20211228
+hexagon              randconfig-r045-20211228
+hexagon              randconfig-r041-20211230
+hexagon              randconfig-r045-20211230
 
-True. This include header is not explicitly included because platform
-Makefiles seems to add include paths for MIPS. I am using:
-
-mipsel-unknown-linux-gnu-gcc (GCC) 9.4.1 20211208 compiled as:
-
-../configure --target=mipsel-unknown-linux-gnu --prefix=/opt/cross \
-    --enable-languages=c --without-headers \
-    --with-gnu-ld --with-gnu-as \
-    --disable-shared --disable-threads \
-    --disable-libmudflap --disable-libgomp \
-    --disable-libssp --disable-libquadmath \
-    --disable-libatomic
-
-and don't get any warning with normal compilation, but it looks like
-other toolchains complain about this and fails if -Werror is set, like
-your case here.
-This was already reported once by kernel test robot, so I think you
-should add 'Reported-by' tag also:
-
-Reported-by: kernel test robot <lkp@intel.com>
-
-I could not find Kernel Test Robot complaining about lore's link but
-it was in a randconfig W=1 build using mips64-linux-gcc (GCC) 11.2.0.
-
-IMHO, the correct thing to do is remove architecture specific code
-from the driver side. See [0] (I mention this in PATCH 3 of the series
-where Reported-by is also added [1]).
-
->
-> Fix: <2bdd5238e756> ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver")
-
-This is not the correct way of "Fixes" tag. It should be:
-
-Fixes: 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host
-controller driver").
-
-> Signed-off-by: weirongguang <weirongguang@kylinos.cn>
-
-I don't know if "weirongguang" is a valid name or not for a
-'Signed-off-by' tag, but just in case I mention it. Is this the name
-you use to sign documents? (sorry, I don't want to be rude, but I
-don't really know the way chinese names should be used in kernel).
-
-
-> ---
->  drivers/pci/controller/pcie-mt7621.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
-> index b60dfb45ef7b..8a009e427a25 100644
-> --- a/drivers/pci/controller/pcie-mt7621.c
-> +++ b/drivers/pci/controller/pcie-mt7621.c
-> @@ -29,6 +29,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/reset.h>
->  #include <linux/sys_soc.h>
-> +#include <asm/mips-cps.h>
->
->  /* MediaTek-specific configuration registers */
->  #define PCIE_FTS_NUM                   0x70c
-> --
-> 2.25.1
-
-As I said, there is a proper approach of removing all the MIPS
-specific code from the driver and moving into RALINK platform code
-which is the proper place for this arch code here [0]. This should be
-material for 5.17. If Lorenzo or Bjorn prefer to add this PATCH
-before, you can add my:
-
-Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-
-when you submit v2 and I will send a revert when the real fix is added.
-
-[0]: https://lore.kernel.org/linux-pci/20211207104924.21327-1-sergio.paracuellos@gmail.com/
-[1]: https://lore.kernel.org/linux-pci/20211207104924.21327-4-sergio.paracuellos@gmail.com/
-
-Best regards,
-    Sergio Paracuellos
-
-
-
->
->
-> No virus found
->                 Checked by Hillstone Network AntiVirus
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
