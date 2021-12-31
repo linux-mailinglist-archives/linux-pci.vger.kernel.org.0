@@ -2,120 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8E2348215A
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Dec 2021 02:58:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DD41482315
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Dec 2021 10:49:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240982AbhLaB6x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Dec 2021 20:58:53 -0500
-Received: from mga07.intel.com ([134.134.136.100]:20260 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229890AbhLaB6w (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 30 Dec 2021 20:58:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640915932; x=1672451932;
-  h=cc:subject:to:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=5DUIS3fYDXtA8WzqPnxiZ6jJAXuU/rSnDLDZK5j56bA=;
-  b=mIuKVIkEPjHCGEh5mu16SS6FQJ85IAmbWulyiyHJhOscm+2JUtbH3lOx
-   D594wIiMjGz3atlBQOf9gDZhbX3JyifUYFWo0cI+Z9Eebki2kE/w8pEW5
-   Clw20mzVKcz3KpludUVxxUGn2hcsNLkyi1fYAurUBCi9FlIn4XTXqShr7
-   WAH7s85xUz/IvA7qHX1oBEcItqnTxcWSaNnpL3nCDoXIDKFHK8tQwai2Y
-   cgaH/TJLT+0fla2xHG3qHgZZk6Gn2FyLymWf+Ln9jbDulU6M73DKQA28u
-   o8EaiAYE1Fu+KO2IuWtELZDzalJM+1ab/NlcvVlo0WOdAb5fgTfpRjPV5
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10213"; a="305119217"
-X-IronPort-AV: E=Sophos;i="5.88,250,1635231600"; 
-   d="scan'208";a="305119217"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2021 17:58:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,250,1635231600"; 
-   d="scan'208";a="524583164"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
-  by orsmga008.jf.intel.com with ESMTP; 30 Dec 2021 17:58:43 -0800
-Cc:     baolu.lu@linux.intel.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 03/13] PCI: pci_stub: Suppress kernel DMA ownership
- auto-claiming
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <568b6d1d-69df-98ad-a864-dd031bedd081@linux.intel.com>
- <20211230222414.GA1805873@bhelgaas> <20211231004019.GH1779224@nvidia.com>
- <5eb8650c-432f-bf06-c63d-6320199ef894@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <9daec0aa-b58f-93b3-c8bb-b67ec6d84596@linux.intel.com>
-Date:   Fri, 31 Dec 2021 09:58:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S229757AbhLaJtW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 Dec 2021 04:49:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229498AbhLaJtW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Dec 2021 04:49:22 -0500
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC178C061574
+        for <linux-pci@vger.kernel.org>; Fri, 31 Dec 2021 01:49:21 -0800 (PST)
+Received: by mail-ed1-x542.google.com with SMTP id m21so108508204edc.0
+        for <linux-pci@vger.kernel.org>; Fri, 31 Dec 2021 01:49:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=FCAlHwKghI205wTZ5Z0xQp3SR9+6820WRK8lRLKqL7g=;
+        b=PBbMeMtPDNfjy6/YrkvNXHKuTSc4nPVbuzRgjvvhaN8dJ4yI/Xd/Y5cnk+jh1Y2QgY
+         G/BwyELsKhGjfG7MK5TMJjUlWmbcawewD2MtItDmB69d2m+PaJ+WrqYfmNN/cO/XsKyw
+         8xi4O1YzgJ7yYwWKoh3wQEubZxQV/gwxQ9kga43TnIJwC3B1AjKCkGdAVobJW7WjY/nO
+         V3hTDpu/Xi0c2ongZjctLA78Qm0IHAIGvhjjLFo9BltfNplK6CqSqh6UWUbAwszpXSH+
+         YmxPVOLn671HKAX5L/IrAnOIJCroLLGjgNIDrlZxCckUYc4/et69i6pevuZZGtjsapwx
+         HoLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=FCAlHwKghI205wTZ5Z0xQp3SR9+6820WRK8lRLKqL7g=;
+        b=feh4BvhB/5CBG+CsX2yvf1n6F+ff8RKQ/U+NJMPo9iKgGM4LFOKq0jti3igFOMZey/
+         gdqLa37KpUekhEwzbYl7j0W19w50L8N8sFNTqo0Dy8q76KaVf8UI5/gDUOpf4WMa4T89
+         DKN3O4OTSsM3GuuI3ZSVkyQ5wJ30B0hr6Z4so5ky5Cc5Vj+iIYePFIfPZHUvi5fRWpdI
+         aNTkz1BprYW24TLkKoBe4yJ+6L0neN2i1N/yvhEZW7JDvsWEHpGpS7rFHGBcpbnDpMfH
+         eRnoBfC7DvszTw3Rhvr+ZXNPCbYmVSBhgaaTaOcOl4zJzPRRakoHkMQO9G4cY7Ko0tmg
+         3Svg==
+X-Gm-Message-State: AOAM532vYuQ11VjT5tfsl4NTgq45Af2kPTowT4lC8snnSDPa60gMkdaD
+        cRwwO9cRBkmN9Ax5tvkbPllcpNobEe0zZfmHb6w=
+X-Google-Smtp-Source: ABdhPJw6Pv16tMcksPSb8lhKW/QFnEHrr/tCB9NByl4hEogYmbX7SvsrqLUuHw02SaC/QWSOO1rKwjcfXtvXiSfV1LQ=
+X-Received: by 2002:a17:907:96a6:: with SMTP id hd38mr27791105ejc.479.1640944159964;
+ Fri, 31 Dec 2021 01:49:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <5eb8650c-432f-bf06-c63d-6320199ef894@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Reply-To: davidschantal90@gmail.com
+Sender: phaeboon750@gmail.com
+Received: by 2002:aa7:cd04:0:0:0:0:0 with HTTP; Fri, 31 Dec 2021 01:49:19
+ -0800 (PST)
+From:   "Dr. Abu Salam" <abu347454@gmail.com>
+Date:   Fri, 31 Dec 2021 01:49:19 -0800
+X-Google-Sender-Auth: Sx2VUbkJMW3t7BQQpFKQV1nQeos
+Message-ID: <CAKrA9cOgYzTv_R0DG0juU0w2ErjocQTORW0reif7ajB7SefojA@mail.gmail.com>
+Subject: GREETINGS FROM ABU SALAM.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/31/21 9:10 AM, Lu Baolu wrote:
-> 
-> On 12/31/21 8:40 AM, Jason Gunthorpe wrote:
->> On Thu, Dec 30, 2021 at 04:24:14PM -0600, Bjorn Helgaas wrote:
->>
->>> I was speculating that maybe the DMA ownership claiming must be done
->>> *before* the driver's .probe() method?
->>
->> This is correct.
->>
->>> If DMA ownership could be claimed by the .probe() method, we
->>> wouldn't need the new flag in struct device_driver.
->>
->> The other requirement is that every existing driver must claim
->> ownership, so pushing this into the device driver's probe op would
->> require revising almost every driver in Linux...
->>
->> In effect the new flag indicates if the driver will do the DMA
->> ownership claim in it's probe, or should use the default claim the
->> core code does.
->>
->> In almost every case a driver should do a claim. A driver like
->> pci-stub, or a bridge, that doesn't actually operate MMIO on the
->> device would be the exception.
-> 
-> We still need to call iommu_device_use_dma_api() in bus dma_configure()
-> callback. But we can call iommu_device_unuse_dma_api() in the .probe()
-> of vfio (and vfio-approved) drivers, so that we don't need the new flag
-> anymore.
+Dear Friend,
 
-Oh, wait. I didn't think about the hot-plug case. If we call
-iommu_device_use_dma_api() in bus dma_configure() anyway, we can't bind
-any (no matter vfio or none-vfio) driver to a device if it's group has
-already been assigned to user space. It seems that we can't omit this
-flag.
+I'm sorry but happy to inform you about my success in getting those
+funds transferred under the cooperation of a new partner from Vietnam,
+though I tried my best to involve you in the business but God decided
+the whole situations. Presently I=E2=80=99m in Vietnam for investment proje=
+cts
+with my own share of the total sum. Meanwhile, I didn't forget your
+past efforts and attempts to assist me in transferring those funds
+despite that it failed us some how.
 
-Best regards,
-baolu
+Now contact my secretary in Burkina Faso her name is Ms. Chantal
+Davids on her e-mail address below (davidschantal90@gmail.com) ask her
+to send you the total of $1.450,000.00 (One million four hundred and
+fifty thousand united state of America dollars) which I kept for your
+compensation for all the past efforts and attempts to assist me in
+this matter. I appreciated your efforts at that time very much. So
+feel free and get in touched with my secretary Ms. Chantal Davids and
+instruct her where to send the amount to you. Please do let me know
+immediately you receive it so that we can share joy after all the
+sufferness at that time.
+
+In the moment, I=E2=80=99m very busy here because of the investment project=
+s
+which I and the new partner are having at hand, finally, remember that
+I had forwarded instruction to the secretary on your behalf to receive
+that money, so feel free to get in touch with Ms. Chantal Davids she
+will send the amount to you without any delay OK. Extend my greetings
+to your family.
+
+My Best regards
+
+Yours brother
+Dr. Abu Salam
+Greetings from Vietnam.
