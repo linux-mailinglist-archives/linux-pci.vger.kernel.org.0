@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AB51482D2B
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jan 2022 00:32:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 164F2482D35
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jan 2022 00:33:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229757AbiABXcy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 Jan 2022 18:32:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41946 "EHLO
+        id S231167AbiABXc6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 Jan 2022 18:32:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbiABXcx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Jan 2022 18:32:53 -0500
+        with ESMTP id S231139AbiABXcz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Jan 2022 18:32:55 -0500
 Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 851E8C061784
-        for <linux-pci@vger.kernel.org>; Sun,  2 Jan 2022 15:32:53 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8EC6BC061784
+        for <linux-pci@vger.kernel.org>; Sun,  2 Jan 2022 15:32:54 -0800 (PST)
 Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 8CEB89200CD; Mon,  3 Jan 2022 00:24:59 +0100 (CET)
+        id 228549200CF; Mon,  3 Jan 2022 00:25:05 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 868AA9200CC;
-        Sun,  2 Jan 2022 23:24:59 +0000 (GMT)
-Date:   Sun, 2 Jan 2022 23:24:59 +0000 (GMT)
+        by angie.orcam.me.uk (Postfix) with ESMTP id 1F6B29200CE;
+        Sun,  2 Jan 2022 23:25:05 +0000 (GMT)
+Date:   Sun, 2 Jan 2022 23:25:05 +0000 (GMT)
 From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
 To:     Nikolai Zhubr <zhubr.2@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -28,8 +28,11 @@ To:     Nikolai Zhubr <zhubr.2@gmail.com>,
         "H. Peter Anvin" <hpa@zytor.com>
 cc:     Arnd Bergmann <arnd@kernel.org>, x86@kernel.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] x86/PCI: SiS PIRQ router updates
-Message-ID: <alpine.DEB.2.21.2201022040130.56863@angie.orcam.me.uk>
+Subject: [PATCH v2 1/2] x86/PCI: Disambiguate SiS85C503 PIRQ router code
+ entities
+In-Reply-To: <alpine.DEB.2.21.2201022040130.56863@angie.orcam.me.uk>
+Message-ID: <alpine.DEB.2.21.2201022044250.56863@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2201022040130.56863@angie.orcam.me.uk>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -37,26 +40,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+In preparation to adding support for the SiS85C497 PIRQ router add `503' 
+to the names of SiS85C503 PIRQ router code entities so that they clearly 
+indicate which device they refer to.
 
- Reposting as this has gone nowhere.  Regenerated for line changes and 
-with Nikolai's Tested-by annotation for 2/2, which now have been verified 
-in combination with generic PIRQ router updates posted separately (there's 
-no ordering dependency between the two patch series).
+Also restructure `sis_router_probe' such that new device IDs will be 
+just new switch cases.
 
- Nikolai has observed the trigger mode not being fixed up once it has been 
-incorrectly set by the BIOS for PCI devices, causing all kinds of usual 
-issues.  As it turns out we don't have a PIRQ router defined for the 
-SiS85C497 southbridge, which Nikolai's system uses, and which is different 
-from the SiS85C503 southbridge we have support for.
+No functional change.
 
- As we use the generic `sis' infix (capitalised or not) for the SiS85C503 
-southbridge I have prepared this small patch series to first make the 
-existing SiS program entities use a more specific `sis503' infix, and then
-provide a suitable PIRQ router for the SiS85C497 device.
+Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+---
+No change from v1.
+---
+ arch/x86/pci/irq.c |   33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
- See individual change descriptions for further details.
-
- Please apply.
-
-  Maciej
+linux-x86-pirq-router-sis85c503.diff
+Index: linux-macro/arch/x86/pci/irq.c
+===================================================================
+--- linux-macro.orig/arch/x86/pci/irq.c
++++ linux-macro/arch/x86/pci/irq.c
+@@ -641,11 +641,12 @@ static int pirq_cyrix_set(struct pci_dev
+  *				bit 6-4 are probably unused, not like 5595
+  */
+ 
+-#define PIRQ_SIS_IRQ_MASK	0x0f
+-#define PIRQ_SIS_IRQ_DISABLE	0x80
+-#define PIRQ_SIS_USB_ENABLE	0x40
++#define PIRQ_SIS503_IRQ_MASK	0x0f
++#define PIRQ_SIS503_IRQ_DISABLE	0x80
++#define PIRQ_SIS503_USB_ENABLE	0x40
+ 
+-static int pirq_sis_get(struct pci_dev *router, struct pci_dev *dev, int pirq)
++static int pirq_sis503_get(struct pci_dev *router, struct pci_dev *dev,
++			   int pirq)
+ {
+ 	u8 x;
+ 	int reg;
+@@ -654,10 +655,11 @@ static int pirq_sis_get(struct pci_dev *
+ 	if (reg >= 0x01 && reg <= 0x04)
+ 		reg += 0x40;
+ 	pci_read_config_byte(router, reg, &x);
+-	return (x & PIRQ_SIS_IRQ_DISABLE) ? 0 : (x & PIRQ_SIS_IRQ_MASK);
++	return (x & PIRQ_SIS503_IRQ_DISABLE) ? 0 : (x & PIRQ_SIS503_IRQ_MASK);
+ }
+ 
+-static int pirq_sis_set(struct pci_dev *router, struct pci_dev *dev, int pirq, int irq)
++static int pirq_sis503_set(struct pci_dev *router, struct pci_dev *dev,
++			   int pirq, int irq)
+ {
+ 	u8 x;
+ 	int reg;
+@@ -666,8 +668,8 @@ static int pirq_sis_set(struct pci_dev *
+ 	if (reg >= 0x01 && reg <= 0x04)
+ 		reg += 0x40;
+ 	pci_read_config_byte(router, reg, &x);
+-	x &= ~(PIRQ_SIS_IRQ_MASK | PIRQ_SIS_IRQ_DISABLE);
+-	x |= irq ? irq: PIRQ_SIS_IRQ_DISABLE;
++	x &= ~(PIRQ_SIS503_IRQ_MASK | PIRQ_SIS503_IRQ_DISABLE);
++	x |= irq ? irq : PIRQ_SIS503_IRQ_DISABLE;
+ 	pci_write_config_byte(router, reg, x);
+ 	return 1;
+ }
+@@ -966,13 +968,14 @@ static __init int serverworks_router_pro
+ 
+ static __init int sis_router_probe(struct irq_router *r, struct pci_dev *router, u16 device)
+ {
+-	if (device != PCI_DEVICE_ID_SI_503)
+-		return 0;
+-
+-	r->name = "SIS";
+-	r->get = pirq_sis_get;
+-	r->set = pirq_sis_set;
+-	return 1;
++	switch (device) {
++	case PCI_DEVICE_ID_SI_503:
++		r->name = "SiS85C503";
++		r->get = pirq_sis503_get;
++		r->set = pirq_sis503_set;
++		return 1;
++	}
++	return 0;
+ }
+ 
+ static __init int cyrix_router_probe(struct irq_router *r, struct pci_dev *router, u16 device)
