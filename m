@@ -2,22 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE002482D2E
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jan 2022 00:32:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96460482D34
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jan 2022 00:33:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbiABXc4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 Jan 2022 18:32:56 -0500
-Received: from angie.orcam.me.uk ([78.133.224.34]:38400 "EHLO
+        id S231174AbiABXc6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 Jan 2022 18:32:58 -0500
+Received: from angie.orcam.me.uk ([78.133.224.34]:38432 "EHLO
         angie.orcam.me.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbiABXcy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Jan 2022 18:32:54 -0500
-X-Greylist: delayed 553 seconds by postgrey-1.27 at vger.kernel.org; Sun, 02 Jan 2022 18:32:53 EST
+        with ESMTP id S230128AbiABXc4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Jan 2022 18:32:56 -0500
 Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id DBD2E9200C1; Mon,  3 Jan 2022 00:24:19 +0100 (CET)
+        id B25549200C4; Mon,  3 Jan 2022 00:24:23 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id D8CD09200BF;
-        Sun,  2 Jan 2022 23:24:19 +0000 (GMT)
-Date:   Sun, 2 Jan 2022 23:24:19 +0000 (GMT)
+        by angie.orcam.me.uk (Postfix) with ESMTP id A49749200C3;
+        Sun,  2 Jan 2022 23:24:23 +0000 (GMT)
+Date:   Sun, 2 Jan 2022 23:24:23 +0000 (GMT)
 From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -25,8 +24,11 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
         "H. Peter Anvin" <hpa@zytor.com>
 cc:     x86@kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/4] x86/PCI: Odd generic PIRQ router improvements
-Message-ID: <alpine.DEB.2.21.2201020142430.56863@angie.orcam.me.uk>
+Subject: [PATCH v2 1/4] x86/PCI: Show the physical address of the $PIR
+ table
+In-Reply-To: <alpine.DEB.2.21.2201020142430.56863@angie.orcam.me.uk>
+Message-ID: <alpine.DEB.2.21.2201020151450.56863@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2201020142430.56863@angie.orcam.me.uk>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -34,38 +36,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+It makes no sense to hide the address of the $PIR table in a debug dump:
 
- Resending as this has gone into void.  Also there is a context dependency 
-with a change developed later possibly causing a merge conflict, so to 
-make it easier to queue the incoming patches I have folded the follow-up 
-change into this series, expanding it to 4 patches from the original 3 and 
-mechanically regenerating according to upstream changes.  I have updated 
-the cover letter accordingly.
+PCI: Interrupt Routing Table found at 0x(ptrval)
 
- While working on the SiS85C497 PIRQ router I have noticed an odd
-phenomenon with my venerable Tyan Tomcat IV S1564D board, where the PCI 
-INTD# line of the USB host controller included as function 3 of the PIIX3 
-southbridge cannot be routed in the `noapic' mode.  As it turns out the 
-reason for this is the BIOS has two individual entries in its PIRQ table 
-for two of its three functions, and the wrong one is chosen for routing 
-said line.
+let alone print its virtual address, given that this is a BIOS entity at 
+a fixed location in the system's memory map.  Show the physical address 
+instead then, e.g.:
 
- Strictly speaking this violates the PCI BIOS specification, but it can be 
-easily worked around while preserving the semantics for compliant systems.
+PCI: Interrupt Routing Table found at 0xfde10
 
- Therefore I have come up with this patch series, which addresses this 
-problem with 3/4, adds function reporting to the debug PIRQ table dump 
-with 2/4 and also prints a usable physical memory address of the PIRQ 
-table in a debug message with 1/4.
+Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+---
+No change from v1.
+---
+ arch/x86/pci/irq.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- Then 4/4 follows, addressing the inability to use a PIRQ table to route 
-interrupts for devices placed behind PCI-to-PCI bridges on option cards, 
-and especially where the BIOS has failed to enumerate the whole bus tree 
-in the first place.
-
- See individual change descriptions for further details.
-
- Please apply.
-
-  Maciej
+linux-x86-debug-pirq-addr.diff
+Index: linux-macro/arch/x86/pci/irq.c
+===================================================================
+--- linux-macro.orig/arch/x86/pci/irq.c
++++ linux-macro/arch/x86/pci/irq.c
+@@ -84,8 +84,8 @@ static inline struct irq_routing_table *
+ 	for (i = 0; i < rt->size; i++)
+ 		sum += addr[i];
+ 	if (!sum) {
+-		DBG(KERN_DEBUG "PCI: Interrupt Routing Table found at 0x%p\n",
+-			rt);
++		DBG(KERN_DEBUG "PCI: Interrupt Routing Table found at 0x%lx\n",
++		    __pa(rt));
+ 		return rt;
+ 	}
+ 	return NULL;
