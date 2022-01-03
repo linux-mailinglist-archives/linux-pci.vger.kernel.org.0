@@ -2,55 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D9EB482F64
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Jan 2022 10:23:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C362483025
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Jan 2022 12:00:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232082AbiACJXQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jan 2022 04:23:16 -0500
-Received: from mail.tomediacase.pl ([151.236.18.187]:59122 "EHLO
-        mail.tomediacase.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231224AbiACJXP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jan 2022 04:23:15 -0500
-X-Greylist: delayed 482 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Jan 2022 04:23:15 EST
-Received: by mail.tomediacase.pl (Postfix, from userid 1001)
-        id 336B540B97; Mon,  3 Jan 2022 10:15:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tomediacase.pl;
-        s=mail; t=1641201312;
-        bh=1KDTsB3nJcWAjbNGIw57IBVNLXBfvIhwZJ5safZoOHQ=;
-        h=Date:From:To:Subject:From;
-        b=hkOWjngacxsI3W/nG3hvV4lXphlVcRw9J5agNyPWwvUpNS0HYg3Gb1dhHEvhoM1Z6
-         s26AW3FxzfbTPiGKZuSz+eitVvlOIHKnfkNgEOBkC1sieaA1ZUM95sGVXYWMLt2kk2
-         bzaPFB0zeIA3xN7h1Sjb4wEzZp2yDUPzo0fZiTwysWzf11V4QQaBajgGzR8MvFc+q5
-         r73cyAjbOaaVAokKFK4xgXh61NfzosFwNX3WPKRurKrhfF4ztMzA6LkFA5Zn1p5tNn
-         JRRPeR5XxR+ZJA4RyW9W3eDKKCM2opmtEiy9mv6OUn9DhAmHZuD0nJVWRMg22AUzoV
-         /impzQnTfvxWg==
-Received: by mail.tomediacase.pl for <linux-pci@vger.kernel.org>; Mon,  3 Jan 2022 09:15:12 GMT
-Message-ID: <20220103084500-0.1.z.2qjm.0.xei28nu3j8@tomediacase.pl>
-Date:   Mon,  3 Jan 2022 09:15:12 GMT
-From:   "Adam Charachuta" <adam.charachuta@tomediacase.pl>
-To:     <linux-pci@vger.kernel.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.tomediacase.pl
+        id S232798AbiACLAo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jan 2022 06:00:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229651AbiACLAn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jan 2022 06:00:43 -0500
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A295C061761;
+        Mon,  3 Jan 2022 03:00:43 -0800 (PST)
+Received: by mail-lj1-x234.google.com with SMTP id s4so37229758ljd.5;
+        Mon, 03 Jan 2022 03:00:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:from:user-agent:mime-version:to:cc:subject
+         :references:in-reply-to:content-transfer-encoding;
+        bh=RnaPEQ+GyYbouV07jQ/IDGsy7R+lQFdvlf3G6ZfyaFc=;
+        b=Ay/XTzWWTXvXdqT7IwGdNk+yxkvX6sKycrg4hnxQ+GO2J3WdleMQ+t8KT8M0NAenWl
+         fySEaxaEu20d4dnFodKIk35SoPr0f3MOJ5pLdkTe61mICEhRnz1pBBFx+leug6dp50Ta
+         MiHqr0z9n9TKlG6XU+J6Lr8PSmJ/mDeq4KQn6n62hxNxsvBGhVSfDcHrJhTR4g6XVxYz
+         DJFcNyoDIQprap5fyJbVBgmo5ADfWkDnca+d2Q1PeZICWsc5IxGPJebW+VC7OThfuWPT
+         LNzqJP2U6v5uLN1IK36zxhx/V8U2eUotOOvNbe935QQ9LAnl4xZZhfSdj63HaxJqkG2W
+         N4KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:from:user-agent:mime-version:to
+         :cc:subject:references:in-reply-to:content-transfer-encoding;
+        bh=RnaPEQ+GyYbouV07jQ/IDGsy7R+lQFdvlf3G6ZfyaFc=;
+        b=IwvQ92au6SK/zFsgrjnAT/57fa+BedeoLpddEu2eCfGOptuAuF6MtP0zY9LXV5Wu53
+         2YuxjkdyxfA8P3E2J9EUxKu6uwTdDHsWkPN8Bnb2d5BnvtJiqrmpSSJ9fymYRENcKBxH
+         ozbjg/o3GR4qyFIZLmJadhu+GLEbp+a/hNqmmqBrI9hMOfah/lILeC5UxC7ERxQXxOqg
+         y9Wk/RnfSrMCTf434VQTfYJrh0r2aAjjUx4pK3K4n+Qyp9khAO/i34IBv+6fIf3YOcXP
+         Qdikfy/a9826dtVG4udpxRsUfy92xDVb4hh24EoOMPMBldfGSn+YwbAfP5MJnVwxr3D+
+         x7oQ==
+X-Gm-Message-State: AOAM533bAyI65TeHANV6X5LLsYGadDcjG8qzx3qW2dcNvBdRmzK+8P2v
+        49kXGL/uGbl0wg1VoiRu/cs=
+X-Google-Smtp-Source: ABdhPJycAZukdzBB1w2zWJkGxFA8SthDX9yApe13iw6iQ3W3TTUUwlVClmkH6dKoKHYs1efB2lgPNg==
+X-Received: by 2002:a05:651c:1993:: with SMTP id bx19mr21135430ljb.472.1641207641510;
+        Mon, 03 Jan 2022 03:00:41 -0800 (PST)
+Received: from [192.168.0.91] ([188.242.181.97])
+        by smtp.googlemail.com with ESMTPSA id q2sm1322382lfr.64.2022.01.03.03.00.40
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Mon, 03 Jan 2022 03:00:40 -0800 (PST)
+Message-ID: <61D2D9B5.7080401@gmail.com>
+Date:   Mon, 03 Jan 2022 14:10:45 +0300
+From:   Nikolai Zhubr <zhubr.2@gmail.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.2.4) Gecko/20100608 Thunderbird/3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@kernel.org>,
+        x86@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] x86/PCI: SiS PIRQ router updates
+References: <alpine.DEB.2.21.2201022040130.56863@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2201022040130.56863@angie.orcam.me.uk>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Hello Maciej,
 
-zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
-=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
-o dalszych rozm=C3=B3w.=20
+Apparently, my previous replies (of 11-sep-2021 to 16-sep-2021) with 
+some observations somehow went to spam box or whatever. I was going to 
+retry but got too busy with unrelated stuff at that time. I can re-send 
+them if necessary.
 
-Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
-=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
-=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
-strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
+Anyway. Yes, your patch is very usefull. I've tested it quite thoroughly 
+back then, including sharing IRQs for 2 unrelated PCI devices etc. I 
+have it always automatically applied in my private trees since then.
 
-Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
+One peculiarity with my specific board is that I had to also patch ROM 
+BIOS because it included some non-standard $IRT table instead of $PIR 
+table. With that in place, it now Just Works.
+
+Thank you again for your effort,
+
+Regards,
+
+Nikolai
 
 
-Pozdrawiam,
-Adam Charachuta
+03.01.2022 2:24, Maciej W. Rozycki:
+> Hi,
+>
+>   Reposting as this has gone nowhere.  Regenerated for line changes and
+> with Nikolai's Tested-by annotation for 2/2, which now have been verified
+> in combination with generic PIRQ router updates posted separately (there's
+> no ordering dependency between the two patch series).
+>
+>   Nikolai has observed the trigger mode not being fixed up once it has been
+> incorrectly set by the BIOS for PCI devices, causing all kinds of usual
+> issues.  As it turns out we don't have a PIRQ router defined for the
+> SiS85C497 southbridge, which Nikolai's system uses, and which is different
+> from the SiS85C503 southbridge we have support for.
+>
+>   As we use the generic `sis' infix (capitalised or not) for the SiS85C503
+> southbridge I have prepared this small patch series to first make the
+> existing SiS program entities use a more specific `sis503' infix, and then
+> provide a suitable PIRQ router for the SiS85C497 device.
+>
+>   See individual change descriptions for further details.
+>
+>   Please apply.
+>
+>    Maciej
+>
+
