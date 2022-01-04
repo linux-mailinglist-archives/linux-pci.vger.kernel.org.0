@@ -2,274 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 885EA483A47
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jan 2022 02:59:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 860A7483A8F
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jan 2022 03:24:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231187AbiADB7N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Jan 2022 20:59:13 -0500
-Received: from mga05.intel.com ([192.55.52.43]:37557 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229757AbiADB7M (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 3 Jan 2022 20:59:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641261552; x=1672797552;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=QSJSuixQj2c2RVpXtE8IShxwGNkHMzp6PO0/hCqGO3I=;
-  b=jUj3T7vnm9j+nNohbkRaWcTJdkiqeoeI2ZWV06arPhlKCfXgxSrIp+Ph
-   58IReFiURxbs0KzLX2sYxg7U1jlz8M7XngJ0a54brJHuNTLAwd78IFUvE
-   fr/sGZfkqds52KhmLDKmVw68iif/Lg3JkPGD50wTZe4bEbmabbekq/IGI
-   rhx9u06pQiCjMpUQH6MAjCFOmkR/+HHkRVeld0o//4Y4y07wx7JTF9vVf
-   4hZY0OnF5ZHFI6GfIYewHLMQQwjpZcC9VHUeuMrUQL/3CcDtFB95pYOYO
-   I43DF7WfNbM/LzuGpfrycQwNOL/pBSQuS6Mb7AJtWQvfW2SaDowgs+2jO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="328482055"
-X-IronPort-AV: E=Sophos;i="5.88,258,1635231600"; 
-   d="scan'208";a="328482055"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2022 17:59:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,258,1635231600"; 
-   d="scan'208";a="667573411"
-Received: from allen-box.sh.intel.com ([10.239.159.118])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Jan 2022 17:58:54 -0800
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v5 14/14] iommu: Remove iommu group changes notifier
-Date:   Tue,  4 Jan 2022 09:56:44 +0800
-Message-Id: <20220104015644.2294354-15-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220104015644.2294354-1-baolu.lu@linux.intel.com>
-References: <20220104015644.2294354-1-baolu.lu@linux.intel.com>
+        id S232198AbiADCX7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Jan 2022 21:23:59 -0500
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:40808
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232193AbiADCX7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Jan 2022 21:23:59 -0500
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com [209.85.167.197])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 29E7D3FFD5
+        for <linux-pci@vger.kernel.org>; Tue,  4 Jan 2022 02:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1641263033;
+        bh=5cazmRarXDvXEd4JyRxvrVTfaRwqdqkKmDWF6lTNaUE=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=eZ5pKBYTjmfyY/BFgck2Nk/sQafGiMzejHgUYLo04UDZJGLVfGjFKizPzLEQR7nsk
+         fN5k0eGnYPeaKOgUng9PAzu0WkPXn/9pa1JpIp6XOA2K4pK9WLqnFLDTz56Vn4z3Ul
+         fB3l8BpgAqg9TxfykS5chXaTwgTQnsOFgiSftpuinQABm3xshhAGGbnYo8l25A7Ov/
+         SVd5zCItbbb/wjm4607RFlcauTQL8Fr+Kg4B8H81zsTwyKLnW3eQnP3VdQeFr0O0mX
+         Q9aWSedJGU+Dhr557WjHSSFles0fipVpFKRMbubZgLk36Xy3MSqVdh4Vp9RlNAqvqm
+         c0hWR3inNLhKw==
+Received: by mail-oi1-f197.google.com with SMTP id w130-20020aca6288000000b002c6b2ccddaeso23337048oib.12
+        for <linux-pci@vger.kernel.org>; Mon, 03 Jan 2022 18:23:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5cazmRarXDvXEd4JyRxvrVTfaRwqdqkKmDWF6lTNaUE=;
+        b=26XckDw7EzzUkdWGvjoNFyPhJPggcdvuLG/JKgd7Xuu/ZQ9hEwIVNSonfogM/p93pR
+         jVirE4QY7VOtMjYEveB6942qNxEb0gNMC6VF+akHUAxbE0nvw2+RkQqO5xtzDDRNkbqN
+         k1d2+MOE6OPlm9enCgaF5WknBrGVlVfw3nD0SGmlO5UCOc3WPilikaVdWiOcslEpJBk/
+         VNJZmfN9ISpswQnjrwqPRhud3FkZ7/itUEJ1O++wwuYXxGSYq/oOWnW8F+gpRNZuhGX/
+         SMWU6lXTQEBjyVr6rs8PK+4rhBZuQ4gB8IGNbsLnMV73yo8+2gdY2eVusG4FF6x28h6t
+         gCRQ==
+X-Gm-Message-State: AOAM532Ig/DhUNIIUrvoVH7xXDgAnXunSQpEg6/3RTPiI1wKZt8LhgU8
+        pPrIXX2Qjx6Mw61z8lKfTpv8bb+tTQaa7R99Sh6Oyvv51QQVlG8fugal+1aihvmagGo2eBxiEvx
+        2zv+iji2+ciFJyo1LZKCePDsJBGfrpLYqx9mWVegY7l8+037vo4x/wg==
+X-Received: by 2002:a9d:24e4:: with SMTP id z91mr33904517ota.11.1641263030936;
+        Mon, 03 Jan 2022 18:23:50 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzPidDUDT7zkVJQH32VyKsgWKAjH6fZz3mxUzBG8x2j81B9Qp88ucqAoNaI+qAUs/lvK97Qw+QQyoy3s0UZ3/4=
+X-Received: by 2002:a9d:24e4:: with SMTP id z91mr33904498ota.11.1641263030633;
+ Mon, 03 Jan 2022 18:23:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211224081914.345292-2-kai.heng.feng@canonical.com>
+ <20211229201814.GA1699315@bhelgaas> <CAAd53p74bHYmQJzKuriDrRWpJwXivfYCfNCsUjC47d1WKUZ=gQ@mail.gmail.com>
+ <SJ0PR11MB500869254A4E9DEEC1DF3B5DD7499@SJ0PR11MB5008.namprd11.prod.outlook.com>
+In-Reply-To: <SJ0PR11MB500869254A4E9DEEC1DF3B5DD7499@SJ0PR11MB5008.namprd11.prod.outlook.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Tue, 4 Jan 2022 10:23:38 +0800
+Message-ID: <CAAd53p4-Sxx+8bF4ZTA9R7L=bJHv2yTCPSoFHmPpHHPFd1Bx+g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] net: wwan: iosm: Keep device at D0 for s2idle case
+To:     "Kumar, M Chetan" <m.chetan.kumar@intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linuxwwan <linuxwwan@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The iommu group changes notifer is not referenced in the tree. Remove it
-to avoid dead code.
+On Mon, Jan 3, 2022 at 11:28 PM Kumar, M Chetan
+<m.chetan.kumar@intel.com> wrote:
+>
+> > -----Original Message-----
+> > From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > Sent: Thursday, December 30, 2021 6:31 AM
+> > To: Bjorn Helgaas <helgaas@kernel.org>
+> > Cc: Kumar, M Chetan <m.chetan.kumar@intel.com>; linuxwwan
+> > <linuxwwan@intel.com>; linux-pci@vger.kernel.org; linux-
+> > pm@vger.kernel.org; Loic Poulain <loic.poulain@linaro.org>; Sergey
+> > Ryazanov <ryazanov.s.a@gmail.com>; Johannes Berg
+> > <johannes@sipsolutions.net>; David S. Miller <davem@davemloft.net>;
+> > Jakub Kicinski <kuba@kernel.org>; netdev@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Rafael J. Wysocki <rjw@rjwysocki.net>; Vaibhav
+> > Gupta <vaibhavgupta40@gmail.com>
+> > Subject: Re: [PATCH 2/2] net: wwan: iosm: Keep device at D0 for s2idle case
+> >
+> > On Thu, Dec 30, 2021 at 4:18 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > [+cc Rafael, Vaibhav]
+> > >
+> > > On Fri, Dec 24, 2021 at 04:19:14PM +0800, Kai-Heng Feng wrote:
+> > > > We are seeing spurious wakeup caused by Intel 7560 WWAN on AMD
+> > laptops.
+> > > > This prevent those laptops to stay in s2idle state.
+> > > >
+> > > > From what I can understand, the intention of ipc_pcie_suspend() is
+> > > > to put the device to D3cold, and ipc_pcie_suspend_s2idle() is to
+> > > > keep the device at D0. However, the device can still be put to
+> > > > D3hot/D3cold by PCI core.
+> > > >
+> > > > So explicitly let PCI core know this device should stay at D0, to
+> > > > solve the spurious wakeup.
+>
+> Did you get a chance to check the cause of spurious wakeup ? Was there any
+> information device is trying to send while platform is entering suspend/
+> host sw missed to unsubscribe certain notifications which resulted in wake event.
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- include/linux/iommu.h | 23 -------------
- drivers/iommu/iommu.c | 75 -------------------------------------------
- 2 files changed, 98 deletions(-)
+Can you please let me know how to check it?
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 568f285468cf..408a6d2b3034 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -403,13 +403,6 @@ static inline void iommu_iotlb_gather_init(struct iommu_iotlb_gather *gather)
- 	};
- }
- 
--#define IOMMU_GROUP_NOTIFY_ADD_DEVICE		1 /* Device added */
--#define IOMMU_GROUP_NOTIFY_DEL_DEVICE		2 /* Pre Device removed */
--#define IOMMU_GROUP_NOTIFY_BIND_DRIVER		3 /* Pre Driver bind */
--#define IOMMU_GROUP_NOTIFY_BOUND_DRIVER		4 /* Post Driver bind */
--#define IOMMU_GROUP_NOTIFY_UNBIND_DRIVER	5 /* Pre Driver unbind */
--#define IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER	6 /* Post Driver unbind */
--
- extern int bus_set_iommu(struct bus_type *bus, const struct iommu_ops *ops);
- extern int bus_iommu_probe(struct bus_type *bus);
- extern bool iommu_present(struct bus_type *bus);
-@@ -482,10 +475,6 @@ extern int iommu_group_for_each_dev(struct iommu_group *group, void *data,
- extern struct iommu_group *iommu_group_get(struct device *dev);
- extern struct iommu_group *iommu_group_ref_get(struct iommu_group *group);
- extern void iommu_group_put(struct iommu_group *group);
--extern int iommu_group_register_notifier(struct iommu_group *group,
--					 struct notifier_block *nb);
--extern int iommu_group_unregister_notifier(struct iommu_group *group,
--					   struct notifier_block *nb);
- extern int iommu_register_device_fault_handler(struct device *dev,
- 					iommu_dev_fault_handler_t handler,
- 					void *data);
-@@ -885,18 +874,6 @@ static inline void iommu_group_put(struct iommu_group *group)
- {
- }
- 
--static inline int iommu_group_register_notifier(struct iommu_group *group,
--						struct notifier_block *nb)
--{
--	return -ENODEV;
--}
--
--static inline int iommu_group_unregister_notifier(struct iommu_group *group,
--						  struct notifier_block *nb)
--{
--	return 0;
--}
--
- static inline
- int iommu_register_device_fault_handler(struct device *dev,
- 					iommu_dev_fault_handler_t handler,
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index ff0c8c1ad5af..72a95dea688e 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -18,7 +18,6 @@
- #include <linux/errno.h>
- #include <linux/iommu.h>
- #include <linux/idr.h>
--#include <linux/notifier.h>
- #include <linux/err.h>
- #include <linux/pci.h>
- #include <linux/bitops.h>
-@@ -40,7 +39,6 @@ struct iommu_group {
- 	struct kobject *devices_kobj;
- 	struct list_head devices;
- 	struct mutex mutex;
--	struct blocking_notifier_head notifier;
- 	void *iommu_data;
- 	void (*iommu_data_release)(void *iommu_data);
- 	char *name;
-@@ -627,7 +625,6 @@ struct iommu_group *iommu_group_alloc(void)
- 	mutex_init(&group->mutex);
- 	INIT_LIST_HEAD(&group->devices);
- 	INIT_LIST_HEAD(&group->entry);
--	BLOCKING_INIT_NOTIFIER_HEAD(&group->notifier);
- 
- 	ret = ida_simple_get(&iommu_group_ida, 0, 0, GFP_KERNEL);
- 	if (ret < 0) {
-@@ -902,10 +899,6 @@ int iommu_group_add_device(struct iommu_group *group, struct device *dev)
- 	if (ret)
- 		goto err_put_group;
- 
--	/* Notify any listeners about change to group. */
--	blocking_notifier_call_chain(&group->notifier,
--				     IOMMU_GROUP_NOTIFY_ADD_DEVICE, dev);
--
- 	trace_add_device_to_group(group->id, dev);
- 
- 	dev_info(dev, "Adding to iommu group %d\n", group->id);
-@@ -947,10 +940,6 @@ void iommu_group_remove_device(struct device *dev)
- 
- 	dev_info(dev, "Removing from iommu group %d\n", group->id);
- 
--	/* Pre-notify listeners that a device is being removed. */
--	blocking_notifier_call_chain(&group->notifier,
--				     IOMMU_GROUP_NOTIFY_DEL_DEVICE, dev);
--
- 	mutex_lock(&group->mutex);
- 	list_for_each_entry(tmp_device, &group->devices, list) {
- 		if (tmp_device->dev == dev) {
-@@ -1073,36 +1062,6 @@ void iommu_group_put(struct iommu_group *group)
- }
- EXPORT_SYMBOL_GPL(iommu_group_put);
- 
--/**
-- * iommu_group_register_notifier - Register a notifier for group changes
-- * @group: the group to watch
-- * @nb: notifier block to signal
-- *
-- * This function allows iommu group users to track changes in a group.
-- * See include/linux/iommu.h for actions sent via this notifier.  Caller
-- * should hold a reference to the group throughout notifier registration.
-- */
--int iommu_group_register_notifier(struct iommu_group *group,
--				  struct notifier_block *nb)
--{
--	return blocking_notifier_chain_register(&group->notifier, nb);
--}
--EXPORT_SYMBOL_GPL(iommu_group_register_notifier);
--
--/**
-- * iommu_group_unregister_notifier - Unregister a notifier
-- * @group: the group to watch
-- * @nb: notifier block to signal
-- *
-- * Unregister a previously registered group notifier block.
-- */
--int iommu_group_unregister_notifier(struct iommu_group *group,
--				    struct notifier_block *nb)
--{
--	return blocking_notifier_chain_unregister(&group->notifier, nb);
--}
--EXPORT_SYMBOL_GPL(iommu_group_unregister_notifier);
--
- /**
-  * iommu_register_device_fault_handler() - Register a device fault handler
-  * @dev: the device
-@@ -1651,14 +1610,8 @@ static int remove_iommu_group(struct device *dev, void *data)
- static int iommu_bus_notifier(struct notifier_block *nb,
- 			      unsigned long action, void *data)
- {
--	unsigned long group_action = 0;
- 	struct device *dev = data;
--	struct iommu_group *group;
- 
--	/*
--	 * ADD/DEL call into iommu driver ops if provided, which may
--	 * result in ADD/DEL notifiers to group->notifier
--	 */
- 	if (action == BUS_NOTIFY_ADD_DEVICE) {
- 		int ret;
- 
-@@ -1669,34 +1622,6 @@ static int iommu_bus_notifier(struct notifier_block *nb,
- 		return NOTIFY_OK;
- 	}
- 
--	/*
--	 * Remaining BUS_NOTIFYs get filtered and republished to the
--	 * group, if anyone is listening
--	 */
--	group = iommu_group_get(dev);
--	if (!group)
--		return 0;
--
--	switch (action) {
--	case BUS_NOTIFY_BIND_DRIVER:
--		group_action = IOMMU_GROUP_NOTIFY_BIND_DRIVER;
--		break;
--	case BUS_NOTIFY_BOUND_DRIVER:
--		group_action = IOMMU_GROUP_NOTIFY_BOUND_DRIVER;
--		break;
--	case BUS_NOTIFY_UNBIND_DRIVER:
--		group_action = IOMMU_GROUP_NOTIFY_UNBIND_DRIVER;
--		break;
--	case BUS_NOTIFY_UNBOUND_DRIVER:
--		group_action = IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER;
--		break;
--	}
--
--	if (group_action)
--		blocking_notifier_call_chain(&group->notifier,
--					     group_action, dev);
--
--	iommu_group_put(group);
- 	return 0;
- }
- 
--- 
-2.25.1
+>
+> In our internal test (x86 platform) we had not noticed such spurious wakeup but would
+> like to cross check by running few more tests.
 
+Sure, let me know what tests you want me to run.
+
+>
+> > > >
+> > > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > > ---
+> > > >  drivers/net/wwan/iosm/iosm_ipc_pcie.c | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > >
+> > > > diff --git a/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+> > > > b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+> > > > index d73894e2a84ed..af1d0e837fe99 100644
+> > > > --- a/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+> > > > +++ b/drivers/net/wwan/iosm/iosm_ipc_pcie.c
+> > > > @@ -340,6 +340,9 @@ static int __maybe_unused
+> > > > ipc_pcie_suspend_s2idle(struct iosm_pcie *ipc_pcie)
+> > > >
+> > > >       ipc_imem_pm_s2idle_sleep(ipc_pcie->imem, true);
+> > > >
+> > > > +     /* Let PCI core know this device should stay at D0 */
+> > > > +     pci_save_state(ipc_pcie->pci);
+> > >
+> > > This is a weird and non-obvious way to say "this device should stay at
+> > > D0".  It's also fairly expensive since pci_save_state() does a lot of
+> > > slow PCI config reads.
+> >
+> > Yes, so I was waiting for feedback from IOSM devs what's the expected PCI
+> > state for the s2idle case.
+>
+> D3 is the expected state.
+
+Is it D3hot or D3cold?
+
+Kai-Heng
+
+>
+> > Dave, can you drop it from netdev until IOSM devs confirm this patch is
+> > correct?
+>
+> Dave, please drop this patch from netdev.
