@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AD404847EE
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jan 2022 19:34:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B131D4847F0
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jan 2022 19:35:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236358AbiADSes (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jan 2022 13:34:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55294 "EHLO
+        id S236366AbiADSfA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jan 2022 13:35:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233271AbiADSer (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jan 2022 13:34:47 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5411BC061784
-        for <linux-pci@vger.kernel.org>; Tue,  4 Jan 2022 10:34:47 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id 8so32958291pfo.4
-        for <linux-pci@vger.kernel.org>; Tue, 04 Jan 2022 10:34:47 -0800 (PST)
+        with ESMTP id S236362AbiADSfA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jan 2022 13:35:00 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C2DC061761
+        for <linux-pci@vger.kernel.org>; Tue,  4 Jan 2022 10:34:59 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id o63-20020a17090a0a4500b001b1c2db8145so374562pjo.5
+        for <linux-pci@vger.kernel.org>; Tue, 04 Jan 2022 10:34:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=message-id:date:mime-version:user-agent:subject:to:cc:references
          :from:in-reply-to;
-        bh=GzEVmErBJKRI0yBChgZfu8dZqEDJdECzAPzSwAyx5Dc=;
-        b=Vwpu5UCyxnDdX5/p7kjwjsRJTGa2X2cEuIFxj3B0XFnmuDdra6pDA5uMUX4Q983CQN
-         GPecLFNeJQ718nOWTu7vSj+0ZjJRXBBnC1rUrf8B2kz/tWIHIC28aX/0ON6I81CKbE7j
-         wZshSH994LpYxcT1Has5aPkvLg4j/dlKCsuMk=
+        bh=1vPkhoAmu6xujyyZqkSCypZZt7iVMBrSLKU4icfyTzs=;
+        b=A/7vdr76ac/YTFEfkt/cHqYz4RnTelQzDTWLl6Ot8GEN5MAvA3TOdQKHW5heTlwwij
+         rZT874C1TGKb9c+El9ahvsB2/v7+wvT3Gi+8WFngbtCPtRvP5HBqyOVo23L6NVGS/l0q
+         lp48INNY9jIJgNjC2RbGQDMQI0DAQ8JwoQsV0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :to:cc:references:from:in-reply-to;
-        bh=GzEVmErBJKRI0yBChgZfu8dZqEDJdECzAPzSwAyx5Dc=;
-        b=o0AWGyAlBZKqZ6mith92Q6J2sOx50a8T0BFLOloA6Tz60RheLfUlojMd1W7KgklixP
-         T6GA5vQ0xKeP3NienLMlWbyBXscBfMJDQItb7QCuNb49oCBKFLMxvhDJGQD0cEJ4nIsR
-         ZVXDwmkR5+McWYzLjIe+RcYdKqlW4xW7qyEupQ3bjWzRjN03o8h8KURJYF6gAeiN8FFI
-         jyeRtSp8g7u2ryYwlMnOTxbzEkIrwgKKKzc5qqSYsw9Fp41N4/LrOle9+Opbj7FLAdvy
-         UqmSPeN9AbYRcn3DMB18Nk4SM67cNpyV7/hu4lHkejIcEog0YpiYaXNRLTIuazDXE/eV
-         p9pQ==
-X-Gm-Message-State: AOAM530cQjNeE8VEjQiMoBLh3dpaMspIM+H/JSFlFA1NXP4ntFFJNHkb
-        TI4UciaBaLC0ZkVMWxamR5H02g==
-X-Google-Smtp-Source: ABdhPJz4uLAkhfLyR6EYx6OhDFJcpP0WSq2qKGbxiQzIg90flakGxqxoI+j4LAOlcfqeekTtmmcpYg==
-X-Received: by 2002:a62:75c6:0:b0:4bb:6e45:89c1 with SMTP id q189-20020a6275c6000000b004bb6e4589c1mr51991843pfc.6.1641321286735;
-        Tue, 04 Jan 2022 10:34:46 -0800 (PST)
+        bh=1vPkhoAmu6xujyyZqkSCypZZt7iVMBrSLKU4icfyTzs=;
+        b=NwwErwNGAAWB4fNDgU7/V1JkhuQbqbuRfxfo67NzmiNgWvjXcDpmR5eFs98V+FRIkp
+         1ibiHgYLeGgtApCc7Lrxd+AxZ5GjS+rl9bjvbjGyscC/Kl2uovgNv2xxBLkU8/s01Jpr
+         mjhIvJRii2kSq2Kpup1JJjwd0cBLzZjF6yoyjftCWVfTDpohrmBvOE1zd+X+wv/KYzEz
+         de7ZEqu8msTQfFbgRwaPN3DzrdyZHvJeaKkaxyNCO0cTdTSTHf6wBJtmY3JSr1SHw29Y
+         g/ZrjivwBRbXyeeKR2JUEgwus3iBx54BCU/gGID9AhFsOzFo7l32lGZuizbEiDQg7MRR
+         KW6A==
+X-Gm-Message-State: AOAM530TZh9doEH082iyMRAyxQUp+SbzQMACIkzyFvXcAZf3t+5wq2Sx
+        jJSi5cBtYovf1PZy1as4BcFleg==
+X-Google-Smtp-Source: ABdhPJwfanKPKjVi/4Eq4QtNwbpa7bU90y0Uc3G2cisLOEel4H1i+bNR1YWHNRYBD8G3oNLfII+keg==
+X-Received: by 2002:a17:90b:4c48:: with SMTP id np8mr62085778pjb.51.1641321299317;
+        Tue, 04 Jan 2022 10:34:59 -0800 (PST)
 Received: from [10.136.8.222] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id h10sm18442923pgi.56.2022.01.04.10.34.44
+        by smtp.gmail.com with ESMTPSA id j4sm11274395pfa.149.2022.01.04.10.34.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jan 2022 10:34:45 -0800 (PST)
-Message-ID: <c8c8942a-3247-4ac8-8878-9a5406480316@broadcom.com>
-Date:   Tue, 4 Jan 2022 10:34:43 -0800
+        Tue, 04 Jan 2022 10:34:59 -0800 (PST)
+Message-ID: <567c6e66-1baf-2942-87fc-17c5e0f4b0b9@broadcom.com>
+Date:   Tue, 4 Jan 2022 10:34:57 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.2
-Subject: Re: [PATCH v2 11/23] PCI: iproc: Rename iproc_pcie_bcma_ to
- iproc_bcma_pcie_
+Subject: Re: [PATCH v2 12/23] PCI: iproc: Rename iproc_pcie_pltfm_ to
+ iproc_pltfm_pcie_
 To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
         Fan Fei <ffclaire1224@gmail.com>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -63,16 +63,16 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org
 References: <20211223011054.1227810-1-helgaas@kernel.org>
- <20211223011054.1227810-12-helgaas@kernel.org>
+ <20211223011054.1227810-13-helgaas@kernel.org>
 From:   Ray Jui <ray.jui@broadcom.com>
-In-Reply-To: <20211223011054.1227810-12-helgaas@kernel.org>
+In-Reply-To: <20211223011054.1227810-13-helgaas@kernel.org>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="00000000000047902305d4c5e4a3"
+        boundary="00000000000007db8005d4c5e5f4"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---00000000000047902305d4c5e4a3
+--00000000000007db8005d4c5e5f4
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
@@ -82,7 +82,7 @@ Content-Transfer-Encoding: 7bit
 On 12/22/2021 5:10 PM, Bjorn Helgaas wrote:
 > From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Rename iproc_pcie_bcma_* to iproc_bcma_pcie_* for consistency with other
+> Rename iproc_pcie_pltfm_* to iproc_pltfm_pcie_* for consistency with other
 > drivers.  No functional change intended.
 > 
 > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
@@ -91,79 +91,65 @@ On 12/22/2021 5:10 PM, Bjorn Helgaas wrote:
 > Cc: bcm-kernel-feedback-list@broadcom.com
 > Cc: linux-arm-kernel@lists.infradead.org
 > ---
->  drivers/pci/controller/pcie-iproc-bcma.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
+>  drivers/pci/controller/pcie-iproc-platform.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-iproc-bcma.c b/drivers/pci/controller/pcie-iproc-bcma.c
-> index f918c713afb0..54b6e6d5bc64 100644
-> --- a/drivers/pci/controller/pcie-iproc-bcma.c
-> +++ b/drivers/pci/controller/pcie-iproc-bcma.c
-> @@ -23,7 +23,7 @@ static void bcma_pcie2_fixup_class(struct pci_dev *dev)
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x8011, bcma_pcie2_fixup_class);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_BROADCOM, 0x8012, bcma_pcie2_fixup_class);
+> diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
+> index b93e7bda101b..538115246c79 100644
+> --- a/drivers/pci/controller/pcie-iproc-platform.c
+> +++ b/drivers/pci/controller/pcie-iproc-platform.c
+> @@ -37,7 +37,7 @@ static const struct of_device_id iproc_pcie_of_match_table[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, iproc_pcie_of_match_table);
 >  
-> -static int iproc_pcie_bcma_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> +static int iproc_bcma_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> -static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
+> +static int iproc_pltfm_pcie_probe(struct platform_device *pdev)
 >  {
->  	struct iproc_pcie *pcie = dev->sysdata;
->  	struct bcma_device *bdev = container_of(pcie->dev, struct bcma_device, dev);
-> @@ -31,7 +31,7 @@ static int iproc_pcie_bcma_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
->  	return bcma_core_irq(bdev, 5);
->  }
->  
-> -static int iproc_pcie_bcma_probe(struct bcma_device *bdev)
-> +static int iproc_bcma_pcie_probe(struct bcma_device *bdev)
->  {
->  	struct device *dev = &bdev->dev;
+>  	struct device *dev = &pdev->dev;
 >  	struct iproc_pcie *pcie;
-> @@ -64,33 +64,33 @@ static int iproc_pcie_bcma_probe(struct bcma_device *bdev)
->  	if (ret)
->  		return ret;
->  
-> -	pcie->map_irq = iproc_pcie_bcma_map_irq;
-> +	pcie->map_irq = iproc_bcma_pcie_map_irq;
->  
->  	bcma_set_drvdata(bdev, pcie);
->  
->  	return iproc_pcie_setup(pcie, &bridge->windows);
+> @@ -115,30 +115,30 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
+>  	return 0;
 >  }
 >  
-> -static void iproc_pcie_bcma_remove(struct bcma_device *bdev)
-> +static void iproc_bcma_pcie_remove(struct bcma_device *bdev)
+> -static int iproc_pcie_pltfm_remove(struct platform_device *pdev)
+> +static int iproc_pltfm_pcie_remove(struct platform_device *pdev)
 >  {
->  	struct iproc_pcie *pcie = bcma_get_drvdata(bdev);
+>  	struct iproc_pcie *pcie = platform_get_drvdata(pdev);
 >  
->  	iproc_pcie_remove(pcie);
+>  	return iproc_pcie_remove(pcie);
 >  }
 >  
-> -static const struct bcma_device_id iproc_pcie_bcma_table[] = {
-> +static const struct bcma_device_id iproc_bcma_pcie_table[] = {
->  	BCMA_CORE(BCMA_MANUF_BCM, BCMA_CORE_NS_PCIEG2, BCMA_ANY_REV, BCMA_ANY_CLASS),
->  	{},
->  };
-> -MODULE_DEVICE_TABLE(bcma, iproc_pcie_bcma_table);
-> +MODULE_DEVICE_TABLE(bcma, iproc_bcma_pcie_table);
+> -static void iproc_pcie_pltfm_shutdown(struct platform_device *pdev)
+> +static void iproc_pltfm_pcie_shutdown(struct platform_device *pdev)
+>  {
+>  	struct iproc_pcie *pcie = platform_get_drvdata(pdev);
 >  
-> -static struct bcma_driver iproc_pcie_bcma_driver = {
-> +static struct bcma_driver iproc_bcma_pcie_driver = {
->  	.name		= KBUILD_MODNAME,
-> -	.id_table	= iproc_pcie_bcma_table,
-> -	.probe		= iproc_pcie_bcma_probe,
-> -	.remove		= iproc_pcie_bcma_remove,
-> +	.id_table	= iproc_bcma_pcie_table,
-> +	.probe		= iproc_bcma_pcie_probe,
-> +	.remove		= iproc_bcma_pcie_remove,
->  };
-> -module_bcma_driver(iproc_pcie_bcma_driver);
-> +module_bcma_driver(iproc_bcma_pcie_driver);
+>  	iproc_pcie_shutdown(pcie);
+>  }
 >  
->  MODULE_AUTHOR("Hauke Mehrtens");
->  MODULE_DESCRIPTION("Broadcom iProc PCIe BCMA driver");
+> -static struct platform_driver iproc_pcie_pltfm_driver = {
+> +static struct platform_driver iproc_pltfm_pcie_driver = {
+>  	.driver = {
+>  		.name = "iproc-pcie",
+>  		.of_match_table = of_match_ptr(iproc_pcie_of_match_table),
+>  	},
+> -	.probe = iproc_pcie_pltfm_probe,
+> -	.remove = iproc_pcie_pltfm_remove,
+> -	.shutdown = iproc_pcie_pltfm_shutdown,
+> +	.probe = iproc_pltfm_pcie_probe,
+> +	.remove = iproc_pltfm_pcie_remove,
+> +	.shutdown = iproc_pltfm_pcie_shutdown,
+>  };
+> -module_platform_driver(iproc_pcie_pltfm_driver);
+> +module_platform_driver(iproc_pltfm_pcie_driver);
+>  
+>  MODULE_AUTHOR("Ray Jui <rjui@broadcom.com>");
+>  MODULE_DESCRIPTION("Broadcom iPROC PCIe platform driver");
 > 
 
 Acked-by: Ray Jui <ray.jui@broadcom.com>
 
---00000000000047902305d4c5e4a3
+--00000000000007db8005d4c5e5f4
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -234,13 +220,13 @@ B6ni+9NcOot0MbKF2A1TnzJjWyd127CVyU5vL3un1/tbtmjiT4Ku8ZDoBEViuuWyhdB6TTEQiwDo
 NbsYBZGZlcox4dHWayCpn4sK+41xyJsmGrygY3zghqBuHPUxggJtMIICaQIBATBrMFsxCzAJBgNV
 BAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdD
 QyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgxnTAexrtwIst251kUwDQYJYIZIAWUDBAIBBQCg
-gdQwLwYJKoZIhvcNAQkEMSIEIGSFPRXbJr5a3o7/4TKevaTeaWlXSB9fw9q6x/+r/dLBMBgGCSqG
-SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIyMDEwNDE4MzQ0N1owaQYJKoZI
+gdQwLwYJKoZIhvcNAQkEMSIEIJRhmUaHY+2JMT5qIvcG3UkHZDCjQmDf2m3IFF3dinMoMBgGCSqG
+SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIyMDEwNDE4MzQ1OVowaQYJKoZI
 hvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG
 9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEF
-AASCAQAxat8Z2BKU37XpuvmL/9WtRznwIFZszkdCJ9fu8vtlLM7HLHvkTZTEZCTT5Ivkc+irkCGq
-ImnM1QiBSLanbTk7WqmZWFsBuicaik9ROSZxlMKpIiMBeUKUDOwUGtr8CPNQ2zTh8eHTdE5H8xnS
-0sjI3mhvgEzULaoXxWyFY4DRxeSm1NuIbS4qFJ6+BTZczfm7Jz9hIkFYHZMMGuvkMmm0bX0HZmIg
-Um7BIktmgkZhKSMSpTOXD/uJF+9GIbaGT8FkcYauRTn64GRwydRA8FugsVSvNwyCMzAqtR3VAC4M
-UbCvEWiHazvNc7gg89t8fYlfL2bFmhkrHq/PlkRczoJq
---00000000000047902305d4c5e4a3--
+AASCAQAdkebe6erwSxLSP6qg+JpvRhte6S5Ts8kRJW5b6kZbOkwKjCWSknUw3eWJtljFleYNeYRI
++el3kGROhq+hz9MAGkZ4d72k1RcNq21RFTs3iRAo1xct6pIRnMCsCTluc2n4m+CHDw59qrbLW+qF
+8lRw30GKgNOr9N9xRp5jWDvUuTE/IJJkYXU0RRHf/uXnmERPHjo68bj9/WkOLEAtVauEPwZozBKf
+emD6nHPCtwBHGnVp/tyrG2NuH2ysZrRm50Lb9nVzKWg4Bh34lOCa67HZY/AN3V0LQ7DH1WsK2OcW
+7gFzBWr3Ny+XFcHEYxThP8BOZnAx/nyVYx7vn1Iztsyf
+--00000000000007db8005d4c5e5f4--
