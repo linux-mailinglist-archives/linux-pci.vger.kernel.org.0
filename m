@@ -2,97 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A5EB4848F8
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jan 2022 20:51:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 986004849B8
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jan 2022 22:13:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231673AbiADTvf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jan 2022 14:51:35 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:43666 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230330AbiADTvf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jan 2022 14:51:35 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A9EF5B817E6;
-        Tue,  4 Jan 2022 19:51:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D451EC36AE0;
-        Tue,  4 Jan 2022 19:51:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641325892;
-        bh=cQ/rc+xgMIav90Ds4PeJcvf7zZYgv1fP8vCoGLbssPg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=puPO3nqx7d+GmkSnNXC9G/AwtAKKKIx5FFMh2BSWETEC8piTt3HhpmhgJCm98QHVH
-         y/XMmpOWMLQV8NituJS5gbr6X5opgeZDKv81GLIIKzxu+/Jra8SMb6aapkAAvdBWm/
-         CBfIMrzJHV7jgzQMomqmxIKesqm7U0pSQzrk2vLUzv1DJ16bzodSZl8Bg7EbEl+a33
-         OID1XSa9lqITxrbok2oLDQvq3jfbrRTLbdzRZYwAZduED5Bq/h2mV7r6YLmoa8TlEY
-         NqK/Hjk3Od+jbelNeGl+AIUlO71/UfaQ7hGOF44Az+k9Do/OaPiQqToVBZucqfYKrw
-         NEQV0vU3TNw6Q==
-Date:   Tue, 4 Jan 2022 13:51:30 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 09/14] PCI: portdrv: Suppress kernel DMA ownership
- auto-claiming
-Message-ID: <20220104195130.GA117830@bhelgaas>
+        id S233876AbiADVNJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jan 2022 16:13:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232036AbiADVNJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jan 2022 16:13:09 -0500
+Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2DEDC061761
+        for <linux-pci@vger.kernel.org>; Tue,  4 Jan 2022 13:13:08 -0800 (PST)
+Received: by mail-oi1-x234.google.com with SMTP id w80so22903600oie.9
+        for <linux-pci@vger.kernel.org>; Tue, 04 Jan 2022 13:13:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=rTpG6hLvRpaJSWI88TtkKynE1BsLzIOW3d2Z4QTbNzI=;
+        b=SSqcPuw3/E4RLompmRdtSFUJNOtWPwiy2aenS2GVpHAr6rxbgTcYCCOvfBCXs6HS73
+         GG3WaKSDwoRjgVzaTecTuAp1GHVLRSe+zOvHTbQDVcmHY+t8FKoh5+DtQxciEbiAfIBy
+         TPsTcyTzJurBa3cqxXCXCkB1pCgiJevfJqlBVcoQzj/Yadj7HmszHoyXkFM9R8Gl7JAU
+         /0wz2Wy3DeECweeHIzqC62XTPqkR2+W5Ga43uHg+h6XtV1xHyOsgT/K/nD4LR7CQU9Xo
+         NlN9AKbLjlgOcfyKrUTbZ+wPo/zSY7uhqJ6CeOwpMIpq26YevF3ynlLA+c09v/agNBqE
+         0hgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=rTpG6hLvRpaJSWI88TtkKynE1BsLzIOW3d2Z4QTbNzI=;
+        b=pq3ORv0s0NQ9LmOTfzsQeZyGJNSRIHISQV9OZ8unS7ct3tnj8ddACJDkzwUEHHGiHq
+         FgZAyAXXJvHAack9fkcG1OgiN1Dqlfn4U1kizMq0cAlrXUSYRn/4g4MqzR2lU22CIA82
+         L2yzhptDsykCJNqFtnTD1JqPlpJRRHQgfz2k4nLuSfTalyjdyq9i8ZSzKyt1SRP9h/lv
+         tpahdb3a30WAehI2ig0VzAdLbxoNjL8pK4XAF+G36avplB6Xm0uET/YHlocMwiWfDTn8
+         8LIOHgJeznRm3eTVl6Sv6QOpw6i4Ot4hKpwDOLw/AG3QzCyQDiU915P7yKKfJPDm7CV6
+         GQrQ==
+X-Gm-Message-State: AOAM530Z3IN02r45c8Y1pkxplrpB+zVBkZS0dJ2+K52OaJ9wvo4mPuUA
+        ugQLjmwEmbiFmb0ERgfSttV+KN5i21bu9rYQ6nQ=
+X-Google-Smtp-Source: ABdhPJxZ/eGzC+UuGzOcy6S6L++6hk9+Z+MQn3rg9r7izytSPC6i0epaatMmhFKSzNaCGEQOIHq+0yH9l29ymTBu7N8=
+X-Received: by 2002:a54:4418:: with SMTP id k24mr178829oiw.23.1641330788040;
+ Tue, 04 Jan 2022 13:13:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220104192614.GL2328285@nvidia.com>
+Received: by 2002:ac9:5314:0:0:0:0:0 with HTTP; Tue, 4 Jan 2022 13:13:07 -0800 (PST)
+Reply-To: mrs.diezani.k.alisonmadueke1960@accountant.com
+From:   "Mrs. Diezani K. Alison-Madueke" <infoffiice1984@gmail.com>
+Date:   Tue, 4 Jan 2022 13:13:07 -0800
+Message-ID: <CAJ0hyAVxG_Yj1Pma6V3A8wVY6LUtv_uv0c+TEfbrnyL8mfNiUA@mail.gmail.com>
+Subject: Hello My Dear(Your urgent and important respond)
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 04, 2022 at 03:26:14PM -0400, Jason Gunthorpe wrote:
-> On Tue, Jan 04, 2022 at 11:06:31AM -0600, Bjorn Helgaas wrote:
-> 
-> > > The existing vfio framework allows the portdrv driver to be bound
-> > > to the bridge while its downstream devices are assigned to user space.
-> > 
-> > I.e., the existing VFIO framework allows a switch to be in the same
-> > IOMMU group as the devices below it, even though the switch has a
-> > kernel driver and the other devices may have userspace drivers?
-> 
-> Yes, this patch exists to maintain current VFIO behavior which has this
-> same check.
-> 
-> I belive the basis for VFIO doing this is that the these devices
-> cannot do DMA, so don't care about the DMA API or the group->domain,
-> and do not expose MMIO memory so do not care about the P2P attack.
+Hello My Dear,
 
-"These devices" means bridges, right?  Not sure why we wouldn't care
-about the P2P attack.
+I am in need of your assistance, I want to make a donation to the poor
+and; needy through you.My name is Mrs.Diezani K. Alison-Madueke,I
+studied architecture in England and then at Howard University in the
+United States and the former Minister for Petroleum Federal Republic
+of Nigeria.
 
-PCIe switches use MSI or MSI-X for hotplug, PME, etc, so they do DMA
-for that.  Is that not relevant here?
+Right now i am in a hospital in London,United Kingdom.I have been
+undergoing treatment for esophageal cancer.I have since lost my
+ability to talk and my Doctors have told  me that I have only a few
+months to live.Before I became ill, I kept US$65 Million in a
+long-term deposit account in a finance company in Europe and another
+US$35 Million with First Bank Nig.Plc.
 
-Is there something that *prohibits* a bridge from having
-device-specific functionality including DMA?
+Now that it is clear that i will not survive this sickness, I have
+decided that i must give my wealth to the poor and needy just for
+assistance. Mostly if you can donate to the motherless,the widows and
+hurricane victims I will highly appreciate.
 
-I know some bridges have device-specific BARs for performance counters
-and the like.
+You can read more about my present health condition through this
+website: http://saharareporters.com/2015/11/14/photos-cancer-stricken-diezani-alison-madueke-released
+
+Yours sincerely,
+Mrs. Diezani K. Alison-Madueke
+E-mail: mrs.diezani.k.alisonmadueke1960@accountant.com)
