@@ -2,187 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B02D483B7F
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Jan 2022 06:23:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D98AA483EA0
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Jan 2022 10:01:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229577AbiADFXs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Jan 2022 00:23:48 -0500
-Received: from mga06.intel.com ([134.134.136.31]:55289 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230071AbiADFXr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 4 Jan 2022 00:23:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641273827; x=1672809827;
-  h=cc:subject:to:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=uXKPyRWOnxNU5FJs1OVLLK8xkyzVa8K8E1f+yzjqR1k=;
-  b=K7kmWI0+BmIMTL172ZO1Kzbt9oorCc1+11QIYhH8qb0AcyWp9aIqKafa
-   ELlNynP5lec9UwxhOuSreWdAryLstqtKsOdLAGjzdjJrPxf0xFl2/ocHx
-   pbVr4m5ttj7NK9YLIYQgMMMHeqImV+pGSQZcnID4B845AfhiDWdcUbcau
-   EGdCD6v3Yg0UZAwIiRex+u8BynLyDxdHmZNsOkN3pQfyMqweR3lo2R//h
-   ebtLGqSqeZ62eMyZ1wn//Di2+PdL2T/H5Qu9uoWYg0HUbfjtbui30X5hG
-   LZwsk2tqCjwJ5r8u9deCdorO6cnnsbvOYI3XtRHyUg4y2/PNcyXmpF7QB
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="302911991"
-X-IronPort-AV: E=Sophos;i="5.88,260,1635231600"; 
-   d="scan'208";a="302911991"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2022 21:23:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,260,1635231600"; 
-   d="scan'208";a="525866862"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
-  by orsmga008.jf.intel.com with ESMTP; 03 Jan 2022 21:23:39 -0800
-Cc:     baolu.lu@linux.intel.com, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/13] Fix BUG_ON in vfio_iommu_group_notifier()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-References: <20211217063708.1740334-1-baolu.lu@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <d7ca046e-37fe-937b-d7cf-55af3839f0a0@linux.intel.com>
-Date:   Tue, 4 Jan 2022 13:23:02 +0800
+        id S229699AbiADJBB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Jan 2022 04:01:01 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33830 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229545AbiADJBA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Jan 2022 04:01:00 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 20490q8s079900;
+        Tue, 4 Jan 2022 03:00:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1641286852;
+        bh=QzqYOpt5aR+OmNUiSd78gneDVOkaKDiIx46QNcZXmG8=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=ewAhhh1EnRf8G6/MNrzYvybEuLWQudURIuEr2bV2jBpfbiDIxfBC/tZb61ne/ijz/
+         PFE7gxNZNAvWc/HWZFHv+KKOmIRn09Lug3vO71G1r6nf7KGSUVmLdND3ZVFW71tGPx
+         Qa9YfJjNVEt4XLVljjvawOMOk8+tvo8FzI36cssg=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 20490qqU097638
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 4 Jan 2022 03:00:52 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Tue, 4
+ Jan 2022 03:00:52 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Tue, 4 Jan 2022 03:00:52 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 20490o3D105643;
+        Tue, 4 Jan 2022 03:00:51 -0600
+Subject: Re: [PATCH] PCI: endpoint: Fix alignment fault error in copy tests
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lorenzo.pieralisi@arm.com>
+References: <20211217094708.28678-1-Zhiqiang.Hou@nxp.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <db9d1418-46eb-94b3-5003-1add9b2b8dc8@ti.com>
+Date:   Tue, 4 Jan 2022 14:30:50 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20211217063708.1740334-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20211217094708.28678-1-Zhiqiang.Hou@nxp.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/17/21 2:36 PM, Lu Baolu wrote:
-> Hi folks,
-> 
-> The iommu group is the minimal isolation boundary for DMA. Devices in
-> a group can access each other's MMIO registers via peer to peer DMA
-> and also need share the same I/O address space.
-> 
-> Once the I/O address space is assigned to user control it is no longer
-> available to the dma_map* API, which effectively makes the DMA API
-> non-working.
-> 
-> Second, userspace can use DMA initiated by a device that it controls
-> to access the MMIO spaces of other devices in the group. This allows
-> userspace to indirectly attack any kernel owned device and it's driver.
-> 
-> Therefore groups must either be entirely under kernel control or
-> userspace control, never a mixture. Unfortunately some systems have
-> problems with the granularity of groups and there are a couple of
-> important exceptions:
-> 
->   - pci_stub allows the admin to block driver binding on a device and
->     make it permanently shared with userspace. Since PCI stub does not
->     do DMA it is safe, however the admin must understand that using
->     pci_stub allows userspace to attack whatever device it was bound
->     it.
-> 
->   - PCI bridges are sometimes included in groups. Typically PCI bridges
->     do not use DMA, and generally do not have MMIO regions.
-> 
-> Generally any device that does not have any MMIO registers is a
-> possible candidate for an exception.
-> 
-> Currently vfio adopts a workaround to detect violations of the above
-> restrictions by monitoring the driver core BOUND event, and hardwiring
-> the above exceptions. Since there is no way for vfio to reject driver
-> binding at this point, BUG_ON() is triggered if a violation is
-> captured (kernel driver BOUND event on a group which already has some
-> devices assigned to userspace). Aside from the bad user experience
-> this opens a way for root userspace to crash the kernel, even in high
-> integrity configurations, by manipulating the module binding and
-> triggering the BUG_ON.
-> 
-> This series solves this problem by making the user/kernel ownership a
-> core concept at the IOMMU layer. The driver core enforces kernel
-> ownership while drivers are bound and violations now result in a error
-> codes during probe, not BUG_ON failures.
-> 
-> Patch partitions:
->    [PATCH 1-4]: Detect DMA ownership conflicts during driver binding;
->    [PATCH 5-8]: Add security context management for assigned devices;
->    [PATCH 9-13]: Various cleanups.
-> 
-> This is also part one of three initial series for IOMMUFD:
->   * Move IOMMU Group security into the iommu layer
->   - Generic IOMMUFD implementation
->   - VFIO ability to consume IOMMUFD
-> 
-> Change log:
-> v1: initial post
->    - https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/
-> 
-> v2:
->    - https://lore.kernel.org/linux-iommu/20211128025051.355578-1-baolu.lu@linux.intel.com/
-> 
->    - Move kernel dma ownership auto-claiming from driver core to bus
->      callback. [Greg/Christoph/Robin/Jason]
->      https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#m153706912b770682cb12e3c28f57e171aa1f9d0c
-> 
->    - Code and interface refactoring for iommu_set/release_dma_owner()
->      interfaces. [Jason]
->      https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#mea70ed8e4e3665aedf32a5a0a7db095bf680325e
-> 
->    - [NEW]Add new iommu_attach/detach_device_shared() interfaces for
->      multiple devices group. [Robin/Jason]
->      https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#mea70ed8e4e3665aedf32a5a0a7db095bf680325e
-> 
->    - [NEW]Use iommu_attach/detach_device_shared() in drm/tegra drivers.
-> 
->    - Refactoring and description refinement.
-> 
-> v3:
->    - https://lore.kernel.org/linux-iommu/20211206015903.88687-1-baolu.lu@linux.intel.com/
-> 
->    - Rename bus_type::dma_unconfigure to bus_type::dma_cleanup. [Greg]
->      https://lore.kernel.org/linux-iommu/c3230ace-c878-39db-1663-2b752ff5384e@linux.intel.com/T/#m6711e041e47cb0cbe3964fad0a3466f5ae4b3b9b
-> 
->    - Avoid _platform_dma_configure for platform_bus_type::dma_configure.
->      [Greg]
->      https://lore.kernel.org/linux-iommu/c3230ace-c878-39db-1663-2b752ff5384e@linux.intel.com/T/#m43fc46286611aa56a5c0eeaad99d539e5519f3f6
-> 
->    - Patch "0012-iommu-Add-iommu_at-de-tach_device_shared-for-mult.patch"
->      and "0018-drm-tegra-Use-the-iommu-dma_owner-mechanism.patch" have
->      been tested by Dmitry Osipenko <digetx@gmail.com>.
-> 
-> v4:
->    - Remove unnecessary tegra->domain chech in the tegra patch. (Jason)
->    - Remove DMA_OWNER_NONE. (Joerg)
->    - Change refcount to unsigned int. (Christoph)
->    - Move mutex lock into group set_dma_owner functions. (Christoph)
->    - Add kernel doc for iommu_attach/detach_domain_shared(). (Christoph)
->    - Move dma auto-claim into driver core. (Jason/Christoph)
 
-Thank you very much for the review comments. A new version has been
-posted.
 
-https://lore.kernel.org/linux-iommu/20220104015644.2294354-1-baolu.lu@linux.intel.com/
+On 17/12/21 3:17 pm, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> In the copy tests, it uses the memcpy() to copy data between
+> IO memory space. This can cause the alignment fualt error
+> (pasted the error logs below) due to the memcpy() may use
+> unaligned accesses.
+> 
+> Alignment fault error logs:
+>    Unable to handle kernel paging request at virtual address ffff8000101cd3c1
+>    Mem abort info:
+>      ESR = 0x96000021
+>      EC = 0x25: DABT (current EL), IL = 32 bits
+>      SET = 0, FnV = 0
+>      EA = 0, S1PTW = 0
+>      FSC = 0x21: alignment fault
+>    Data abort info:
+>      ISV = 0, ISS = 0x00000021
+>      CM = 0, WnR = 0
+>    swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000081773000
+>    [ffff8000101cd3c1] pgd=1000000082410003, p4d=1000000082410003, pud=1000000082411003, pmd=1000000082412003, pte=0068004000001f13
+>    Internal error: Oops: 96000021 [#1] PREEMPT SMP
+>    Modules linked in:
+>    CPU: 0 PID: 6 Comm: kworker/0:0H Not tainted 5.15.0-rc1-next-20210914-dirty #2
+>    Hardware name: LS1012A RDB Board (DT)
+>    Workqueue: kpcitest pci_epf_test_cmd_handler
+>    pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>    pc : __memcpy+0x168/0x230
+>    lr : pci_epf_test_cmd_handler+0x6f0/0xa68
+>    sp : ffff80001003bce0
+>    x29: ffff80001003bce0 x28: ffff800010135000 x27: ffff8000101e5000
+>    x26: ffff8000101cd000 x25: ffff6cda941cf6c8 x24: 0000000000000000
+>    x23: ffff6cda863f2000 x22: ffff6cda9096c800 x21: ffff800010135000
+>    x20: ffff6cda941cf680 x19: ffffaf39fd999000 x18: 0000000000000000
+>    x17: 0000000000000000 x16: 0000000000000000 x15: ffffaf39fd2b6000
+>    x14: 0000000000000000 x13: 15f5c8fa2f984d57 x12: 604d132b60275454
+>    x11: 065cee5e5fb428b6 x10: aae662eb17d0cf3e x9 : 1d97c9a1b4ddef37
+>    x8 : 7541b65edebf928c x7 : e71937c4fc595de0 x6 : b8a0e09562430d1c
+>    x5 : ffff8000101e5401 x4 : ffff8000101cd401 x3 : ffff8000101e5380
+>    x2 : fffffffffffffff1 x1 : ffff8000101cd3c0 x0 : ffff8000101e5000
+>    Call trace:
+>     __memcpy+0x168/0x230
+>     process_one_work+0x1ec/0x370
+>     worker_thread+0x44/0x478
+>     kthread+0x154/0x160
+>     ret_from_fork+0x10/0x20
+>    Code: a984346c a9c4342c f1010042 54fffee8 (a97c3c8e)
+>    ---[ end trace 568c28c7b6336335 ]---
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Best regards,
-baolu
+Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 90d84d3bc868..c7e45633beaf 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -285,7 +285,17 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+>  		if (ret)
+>  			dev_err(dev, "Data transfer failed\n");
+>  	} else {
+> -		memcpy(dst_addr, src_addr, reg->size);
+> +		void *buf;
+> +
+> +		buf = kzalloc(reg->size, GFP_KERNEL);
+> +		if (!buf) {
+> +			ret = -ENOMEM;
+> +			goto err_map_addr;
+> +		}
+> +
+> +		memcpy_fromio(buf, src_addr, reg->size);
+> +		memcpy_toio(dst_addr, buf, reg->size);
+> +		kfree(buf);
+>  	}
+>  	ktime_get_ts64(&end);
+>  	pci_epf_test_print_rate("COPY", reg->size, &start, &end, use_dma);
+> 
