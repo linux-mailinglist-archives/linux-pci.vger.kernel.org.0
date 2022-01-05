@@ -2,83 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 191FF484DFB
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 07:07:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 752B9484E7A
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 07:52:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229934AbiAEGHB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jan 2022 01:07:01 -0500
-Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:60920
-        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229543AbiAEGHA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jan 2022 01:07:00 -0500
-Received: from HP-EliteBook-840-G7.. (1-171-96-105.dynamic-ip.hinet.net [1.171.96.105])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id DEDEB3F12E;
-        Wed,  5 Jan 2022 06:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1641362819;
-        bh=rkzYQXNy5rSfOPX4/VcFQGCzZzvGgGGcJg/Utakq9Ig=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=RA6vgZ4zAnDV0NxjbpJmu/hejgidurEKb7IflDVHHj+vmOcK1KTwlWQXlhP2xLqXb
-         76sMAF/idcSs07qtftBwrawJsHCRZWniMWmMrmVIVtORHkBvuEiLTDNRXjStYwJ/cd
-         vNSuc66j5HjlMkxE+B237TQnhkjootj+PstPQups2G1fiKu4XQ8UkGCYPU+n1sx+qR
-         VpthRWHnFGlmVadsHyNxtS+3S94eysX9mB3SACwjurURnWAWC02ZjYTibBrJxzGBUC
-         uvraEZ7FVQDh6H/DXmHzDdCCEwkYbscFgR0jvcy6K8IT0UknGHDTAPSyxUGw2IAOXW
-         Cg5VjbR0Gi68w==
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     bhelgaas@google.com
-Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI/portdrv: Skip enabling AER on external facing ports
-Date:   Wed,  5 Jan 2022 14:06:41 +0800
-Message-Id: <20220105060643.822111-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.33.1
+        id S237763AbiAEGw5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jan 2022 01:52:57 -0500
+Received: from mga06.intel.com ([134.134.136.31]:17379 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229759AbiAEGw4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Jan 2022 01:52:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641365576; x=1672901576;
+  h=cc:subject:to:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=NfLc3B58P2xIUXLczC9zkU0pb72XnW/r7ysxWZe4Nnw=;
+  b=ShMpdl0jmPfZmtTtFE04uwMekIluZUELtKLmOHatMLNy/BfzxFmDMaue
+   D3OH4xBc3E7ygmU+Dh68R5tRq6qLVUtgyuEdsnYNSTu6w6WJYJ5jUpNUx
+   SsBJJ30ZvM71Untl57j/YQkreI6AvGr++DBOyG4N4zmlJtMVkcfxnC+Pv
+   8kO6sw6D0CoX9JvP9Iv3Jhub9Sy35VPAM1uMhhfXvcrXx6OZtmqq95whn
+   HRb0O6KTHLwP3C/mCfCMv894Ng+7CwH2HGY+rm8Womt06DBgTfoUjy5lA
+   gn9749xxdzZa9PUhI69399y6EUfJf9IL7SIioPwPyFeKT+3q/9UkqlqlQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="303134244"
+X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
+   d="scan'208";a="303134244"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 22:52:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
+   d="scan'208";a="526391598"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by orsmga008.jf.intel.com with ESMTP; 04 Jan 2022 22:52:48 -0800
+Cc:     baolu.lu@linux.intel.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 00/14] Fix BUG_ON in vfio_iommu_group_notifier()
+To:     Jason Gunthorpe <jgg@nvidia.com>
+References: <20220104015644.2294354-1-baolu.lu@linux.intel.com>
+ <20220104124800.GF2328285@nvidia.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <f42e5d09-6578-98a4-a0f3-097f69bb7c3a@linux.intel.com>
+Date:   Wed, 5 Jan 2022 14:52:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220104124800.GF2328285@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Thunderbolt root ports may constantly spew out uncorrected errors
-from AER service:
-[   30.100211] pcieport 0000:00:1d.0: AER: Uncorrected (Non-Fatal) error received: 0000:00:1d.0
-[   30.100251] pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-[   30.100256] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
-[   30.100262] pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-[   30.100267] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
-[   30.100372] thunderbolt 0000:0a:00.0: AER: can't recover (no error_detected callback)
-[   30.100401] xhci_hcd 0000:3e:00.0: AER: can't recover (no error_detected callback)
-[   30.100427] pcieport 0000:00:1d.0: AER: device recovery failed
+Hi Jason,
 
-The link may not be reliable on external facing ports, so don't enable
-AER on those ports.
+On 1/4/22 8:48 PM, Jason Gunthorpe wrote:
+> On Tue, Jan 04, 2022 at 09:56:30AM +0800, Lu Baolu wrote:
+> 
+>> v5:
+>>    - Move kernel dma ownership auto-claiming from driver core to bus
+>>      callback. (Greg)
+>>    - Refactor the iommu interfaces to make them more specific.
+>>      (Jason/Robin)
+>>    - Simplify the dma ownership implementation by removing the owner
+>>      type. (Jason)
+>>    - Commit message refactoring for PCI drivers. (Bjorn)
+>>    - Move iommu_attach/detach_device() improvement patches into another
+>>      series as there are a lot of code refactoring and cleanup staffs
+>>      in various device drivers.
+> 
+> Since you already have the code you should make this 'other series'
+> right now. It should delete iommu_group_attach() and fix
+> iommu_device_attach().
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/pci/pcie/portdrv_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Yes. I am doing the functional and compile tests. I will post it once I
+complete the testing.
 
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index bda630889f955..d464d00ade8f2 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -219,7 +219,8 @@ static int get_port_device_capability(struct pci_dev *dev)
- 
- #ifdef CONFIG_PCIEAER
- 	if (dev->aer_cap && pci_aer_available() &&
--	    (pcie_ports_native || host->native_aer)) {
-+	    (pcie_ports_native || host->native_aer) &&
-+	    !dev->external_facing) {
- 		services |= PCIE_PORT_SERVICE_AER;
- 
- 		/*
--- 
-2.33.1
+> 
+> You also didn't really do my suggestion, this messes up the normal
+> __iommu_attach_group()/__iommu_detach_group() instead of adding the
+> clear to purpose iommu_replace_group() for VFIO to use. This just
+> makes it more difficult to normalize the APIs.
 
+I didn't forget that. :-) It's part of the new series.
+
+> 
+> Otherwise it does seem to have turned out to be more understandable.
+> 
+> Jason
+> 
+
+Best regards,
+baolu
