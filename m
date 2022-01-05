@@ -2,146 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73D2A485800
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 19:13:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DE6D485817
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 19:22:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242780AbiAESNM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jan 2022 13:13:12 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:39022 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242736AbiAESNK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jan 2022 13:13:10 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 28B3861803;
-        Wed,  5 Jan 2022 18:13:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43054C36AE0;
-        Wed,  5 Jan 2022 18:13:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641406389;
-        bh=XFXjmqXYuibwyK92ypw+JHMrcOAcsGTLlMLcfXAm7/k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hRDmFBL13tN6aEFFUwG14hsTkcsWsb3or9njILqk98ZaK6fwcemv3aDdQ/d4rn5vv
-         OI3nqTeKZk+csF7hvZ9irjsoXlkJntNnqikhP6hXr/HnG+q9VTb0Hxhb9jFyAeTRP/
-         rdjmjlXYiTqB0Plwh4gtxN7RhcU96vhAzKjvne/LSCvQH2vvn6incXxjzGLPfRt36t
-         iUY3dZZdgdQktg4EbZdOjwx8z+kfh8vOsB5Lf3yEzExBhtutbjoMREKhRjLvXvMJRn
-         r3yV6wb2L7rOPmZXIn6OvZ7m0Pby19QOiap+wUhXJRWxkrcy4cE/E4eljFz9dZQ4EL
-         l0OY3UopQrN6Q==
-Received: by pali.im (Postfix)
-        id 7629A82A; Wed,  5 Jan 2022 19:13:06 +0100 (CET)
-Date:   Wed, 5 Jan 2022 19:13:06 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Roman Bacik <roman.bacik@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: iproc: Set all 24 bits of PCI class code
-Message-ID: <20220105181306.mkratasqg36tjf4e@pali>
-References: <20220105093552.27542-1-pali@kernel.org>
- <244e74d9-1b46-2abc-6c2a-c089fa5b68b4@broadcom.com>
+        id S242836AbiAESWA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jan 2022 13:22:00 -0500
+Received: from mga14.intel.com ([192.55.52.115]:47359 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242844AbiAESV5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Jan 2022 13:21:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641406917; x=1672942917;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=08NBb+fNeOyFFeTNOn2L1SUThdTbNcvyZrPR1Dwmto4=;
+  b=nDqVJlW99xYuVF9R4i/PNytC9AUDVEkX4tsx23nru4TIYHcw4kOAa5+J
+   ICYNvFJ1YDUd68LCyIYlGtj5CtMasJVT0NkZIuxOTMapwoxqhoeAV2Afg
+   ZycBo/Tqmo1kzLyHLTVIR4nZALcbmPX3mxRLDCNfobjUdXnk4/l+059WB
+   3aLkCKb+lUd1qEk0OqYIzJlVslQengS+jdRbM88nxxSDZFR922iqnWCyE
+   RaOpDAEtWWqp1GxQTOBmBP3qrjmeycpvBsOhf8mVj3An4JVhd6+JeKuMM
+   lT3myrGlP7ID9Qz3CMP9cVU+Jep52VQAlNYLaWMBUsq4909MFk6WsqSSw
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="242711797"
+X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
+   d="scan'208";a="242711797"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 10:21:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
+   d="scan'208";a="472593863"
+Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 05 Jan 2022 10:21:49 -0800
+Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1n5Auy-000GvZ-Ag; Wed, 05 Jan 2022 18:21:48 +0000
+Date:   Thu, 06 Jan 2022 02:21:13 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/vga2] BUILD SUCCESS
+ 91ca1c7c1e057c0bddffe043c0e74ae9f9ec756e
+Message-ID: <61d5e199.9mAk8blNBhF+by5K%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <244e74d9-1b46-2abc-6c2a-c089fa5b68b4@broadcom.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vga2
+branch HEAD: 91ca1c7c1e057c0bddffe043c0e74ae9f9ec756e  vgaarb: Use disabled device as last resort
 
-On Wednesday 05 January 2022 09:51:48 Ray Jui wrote:
-> Hi Pali,
-> 
-> On 1/5/2022 1:35 AM, Pali Rohár wrote:
-> > Register 0x43c in its low 24 bits contains PCI class code.
-> > 
-> > Update code to set all 24 bits of PCI class code and not only upper 16 bits
-> > of PCI class code.
-> > 
-> > Use a new macro PCI_CLASS_BRIDGE_PCI_NORMAL which represents whole 24 bits
-> > of normal PCI bridge class.
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > 
-> > ---
-> > Roman helped me with this change and confirmed that class code is stored
-> > really in bits [23:0] of custom register 0x43c (normally class code is
-> > stored in bits [31:8] of pci register 0x08).
-> > 
-> > This patch depends on patch which adds PCI_CLASS_BRIDGE_PCI_NORMAL macro:
-> > https://lore.kernel.org/linux-pci/20211220145140.31898-1-pali@kernel.org/
-> > ---
-> >  drivers/pci/controller/pcie-iproc.c | 9 ++++-----
-> >  1 file changed, 4 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> > index 3df4ab209253..2519201b0e51 100644
-> > --- a/drivers/pci/controller/pcie-iproc.c
-> > +++ b/drivers/pci/controller/pcie-iproc.c
-> > @@ -789,14 +789,13 @@ static int iproc_pcie_check_link(struct iproc_pcie *pcie)
-> >  		return -EFAULT;
-> >  	}
-> >  
-> > -	/* force class to PCI_CLASS_BRIDGE_PCI (0x0604) */
-> > +	/* force class to PCI_CLASS_BRIDGE_PCI_NORMAL (0x060400) */
-> >  #define PCI_BRIDGE_CTRL_REG_OFFSET	0x43c
-> > -#define PCI_CLASS_BRIDGE_MASK		0xffff00
-> > -#define PCI_CLASS_BRIDGE_SHIFT		8
-> > +#define PCI_BRIDGE_CTRL_REG_CLASS_MASK	0xffffff
-> >  	iproc_pci_raw_config_read32(pcie, 0, PCI_BRIDGE_CTRL_REG_OFFSET,
-> >  				    4, &class);
-> > -	class &= ~PCI_CLASS_BRIDGE_MASK;
-> > -	class |= (PCI_CLASS_BRIDGE_PCI << PCI_CLASS_BRIDGE_SHIFT);
-> > +	class &= ~PCI_BRIDGE_CTRL_REG_CLASS_MASK;
-> > +	class |= PCI_CLASS_BRIDGE_PCI_NORMAL;
-> >  	iproc_pci_raw_config_write32(pcie, 0, PCI_BRIDGE_CTRL_REG_OFFSET,
-> >  				     4, class);
-> >  
-> 
-> I have two comments:
-> 
-> 1. You do not seem to generate the email list using the
-> get_maintainer.pl script, so the two maintainers for Broadcom ARM
-> architecture (Ray Jui and Scott Branden) are left out.
+elapsed time: 724m
 
-Ou, sorry for that! I have generated this patch for U-Boot and Linux
-kernel and probably mixed or forgot to include correct recipients for
-correct project.
+configs tested: 141
+configs skipped: 4
 
-> 2. I suppose 'PCI_CLASS_BRIDGE_PCI_NORMAL' is defined in some common PCI
-> header in a separate patch as described in the commit message. Then how
-> come these patches are not constructed with a patch series?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Yes, PCI_CLASS_BRIDGE_PCI_NORMAL is a new constant for common pci header
-file defined in patch linked in commit message.
-https://lore.kernel.org/linux-pci/20211220145140.31898-1-pali@kernel.org/
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20220105
+mips                         db1xxx_defconfig
+sh                         apsh4a3a_defconfig
+sh                         microdev_defconfig
+arc                            hsdk_defconfig
+powerpc                 mpc834x_mds_defconfig
+arm                            xcep_defconfig
+ia64                            zx1_defconfig
+sh                           se7705_defconfig
+sh                 kfr2r09-romimage_defconfig
+sh                            migor_defconfig
+xtensa                  cadence_csp_defconfig
+mips                         rt305x_defconfig
+sh                                  defconfig
+arc                        vdk_hs38_defconfig
+mips                             allyesconfig
+sh                        edosk7760_defconfig
+arm                            pleb_defconfig
+xtensa                           alldefconfig
+microblaze                      mmu_defconfig
+sh                  sh7785lcr_32bit_defconfig
+arm                            zeus_defconfig
+ia64                                defconfig
+arm                           sunxi_defconfig
+powerpc                      tqm8xx_defconfig
+powerpc                 linkstation_defconfig
+arm                           stm32_defconfig
+powerpc                        warp_defconfig
+arm                          lpd270_defconfig
+m68k                       m5475evb_defconfig
+m68k                         apollo_defconfig
+m68k                             allmodconfig
+arm                             rpc_defconfig
+sh                        apsh4ad0a_defconfig
+arm                        shmobile_defconfig
+mips                      fuloong2e_defconfig
+arm                           u8500_defconfig
+h8300                               defconfig
+powerpc                           allnoconfig
+powerpc                    klondike_defconfig
+arm                        realview_defconfig
+powerpc                     sequoia_defconfig
+powerpc                      makalu_defconfig
+arm                        spear6xx_defconfig
+powerpc                       ppc64_defconfig
+powerpc                  iss476-smp_defconfig
+i386                             alldefconfig
+nds32                               defconfig
+mips                  maltasmvp_eva_defconfig
+powerpc                 mpc85xx_cds_defconfig
+h8300                            allyesconfig
+sh                   sh7770_generic_defconfig
+powerpc                     tqm8555_defconfig
+sh                            shmin_defconfig
+arm                  randconfig-c002-20220105
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allmodconfig
+s390                                defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+x86_64               randconfig-a005-20220105
+x86_64               randconfig-a001-20220105
+x86_64               randconfig-a004-20220105
+x86_64               randconfig-a006-20220105
+x86_64               randconfig-a003-20220105
+x86_64               randconfig-a002-20220105
+i386                 randconfig-a003-20220105
+i386                 randconfig-a005-20220105
+i386                 randconfig-a004-20220105
+i386                 randconfig-a006-20220105
+i386                 randconfig-a002-20220105
+i386                 randconfig-a001-20220105
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-Originally I included this change in v1 of linked patch in December but
-I realized that it does not match standard PCI config space (different
-offset 0x43c vs 0x08 and also different shift 0x8 vs 0x0) and probably
-there is something either incorrect or really non-standard. So later in
-December I dropped iproc_pcie_check_link() change in v2 of the linked
-patch where is introduced PCI_CLASS_BRIDGE_PCI_NORMAL and now sent new
-change for iproc_pcie_check_link() separately.
+clang tested configs:
+powerpc                  mpc885_ads_defconfig
+arm                        multi_v5_defconfig
+riscv                          rv32_defconfig
+powerpc                 mpc8313_rdb_defconfig
+powerpc                     akebono_defconfig
+arm                         hackkit_defconfig
+arm                              alldefconfig
+powerpc                   lite5200b_defconfig
+arm                            dove_defconfig
+mips                        qi_lb60_defconfig
+arm                           spitz_defconfig
+arm                         s3c2410_defconfig
+x86_64               randconfig-a012-20220105
+x86_64               randconfig-a015-20220105
+x86_64               randconfig-a014-20220105
+x86_64               randconfig-a013-20220105
+x86_64               randconfig-a011-20220105
+x86_64               randconfig-a016-20220105
+i386                 randconfig-a012-20220105
+i386                 randconfig-a016-20220105
+i386                 randconfig-a015-20220105
+i386                 randconfig-a014-20220105
+i386                 randconfig-a011-20220105
+i386                 randconfig-a013-20220105
+hexagon              randconfig-r041-20220105
+hexagon              randconfig-r045-20220105
+riscv                randconfig-r042-20220105
 
-Technically, linked patch in commit message is just extracting code into
-the common macros without any functional changed. But change in this
-iproc_pcie_check_link() has also functional change as now also lower 8
-bits of class code are changed. So in my opinion this patch should be
-really separate of linked patch.
-
-I hope that Lorenzo and Bjorn take patches in correct order...
-
-> Other than, the change itself is exactly what I sent to Roman and looks
-> good to me. Thanks.
-> 
-> Acked-by: Ray Jui <ray.jui@broadcom.com>
-
-Perfect!
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
