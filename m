@@ -2,57 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ECDB48519B
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 12:07:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E72734853FF
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 15:01:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235119AbiAELHS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jan 2022 06:07:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231725AbiAELHS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jan 2022 06:07:18 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1761C061761
-        for <linux-pci@vger.kernel.org>; Wed,  5 Jan 2022 03:07:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 93040B81A1C
-        for <linux-pci@vger.kernel.org>; Wed,  5 Jan 2022 11:07:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2685EC36AE9;
-        Wed,  5 Jan 2022 11:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641380835;
-        bh=sTvjvc7SRhPO4NpWeCF5i9nrWPX91RVbSa286ZY+GSw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FqHWsXp22xTnGpizgEoVv9W8Q9FYvvrG0wU36dgoa32LxxhHgWKbJpFwxUAEVN5Ny
-         h+N9Q/z54JY3H1O5n6X3tcCmIH50vhUDrYAPCnBI3SqP15EILp2C6dRKtPIbswedto
-         7qJgk4TzLF13UMuUvT6T3MO4Pppxu/zWgmeNM4z1IiXkxLQlnv7uJ9u4Summvnr/Np
-         Pld485erRUtuNyLXhgxWRPt/x0VF35IrHb5DqSh5DY6fGH8afLC1mBsmWGwWP0/uMl
-         TJd99CMwbsurRqeHLZstykXyKNIRaNRRYvpj7k4HWgL6gGt6aAWtzMmMl7E9BACpEK
-         yVV3jHm2Bru0A==
-Date:   Wed, 5 Jan 2022 12:07:10 +0100
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     linux-pci@vger.kernel.org, pali@kernel.org
-Subject: Re: [PATCH 13/17] PCI: aardvark: Fix support for PME requester on
- emulated bridge
-Message-ID: <20220105120710.2d44def8@thinkpad>
-In-Reply-To: <20211208061851.31867-14-kabel@kernel.org>
-References: <20211208061851.31867-1-kabel@kernel.org>
-        <20211208061851.31867-14-kabel@kernel.org>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        id S235954AbiAEOBm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jan 2022 09:01:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:44758 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235724AbiAEOBk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Jan 2022 09:01:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E258B1FB;
+        Wed,  5 Jan 2022 06:01:39 -0800 (PST)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E18D13F5A1;
+        Wed,  5 Jan 2022 06:01:38 -0800 (PST)
+Date:   Wed, 5 Jan 2022 14:01:32 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     linux-pci@vger.kernel.org, tsbogend@alpha.franken.de,
+        bhelgaas@google.com, arnd@arndb.de, linux@roeck-us.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: mt7621: Convert driver into 'bool'
+Message-ID: <20220105140132.GA7208@lpieralisi>
+References: <20211203192454.32624-1-sergio.paracuellos@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211203192454.32624-1-sergio.paracuellos@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed,  8 Dec 2021 07:18:47 +0100
-Marek Beh=C3=BAn <kabel@kernel.org> wrote:
+On Fri, Dec 03, 2021 at 08:24:54PM +0100, Sergio Paracuellos wrote:
+> Driver is not ready yet to be compiled as a module since it depends on some
+> MIPS not exported symbols. We have the following current problems:
+> 
+> Building mips:allmodconfig ... failed
+> --------------
+> Error log:
+> ERROR: modpost: missing MODULE_LICENSE() in drivers/pci/controller/pcie-mt7621.o
+> ERROR: modpost: "mips_cm_unlock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
+> ERROR: modpost: "mips_cpc_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
+> ERROR: modpost: "mips_cm_lock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
+> ERROR: modpost: "mips_cm_is64" [drivers/pci/controller/pcie-mt7621.ko] undefined!
+> ERROR: modpost: "mips_gcr_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
+> 
+> Temporarily move from 'tristate' to 'bool' until a better solution is ready.
+> 
+> Also RALINK is redundant because SOC_MT7621 already depends on it. Hence,
+> simplify condition.
+> 
+> Fixes: 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver").
+> Reviewed-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> ---
+> Changes in v3:
+>  - Adjust subject to follow convention:
+>     s/PCI: mt7621: Kconfig:/PCI: mt7621:/
+> Changes in v2:
+>  - Add Guenter's 'Reviewed-and-tested-by'.
+>  - s/after/until
+>  drivers/pci/controller/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 93b141110537..7fc5135ffbbf 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -332,8 +332,8 @@ config PCIE_APPLE
+>  	  If unsure, say Y if you have an Apple Silicon system.
+>  
+>  config PCIE_MT7621
+> -	tristate "MediaTek MT7621 PCIe Controller"
+> -	depends on (RALINK && SOC_MT7621) || (MIPS && COMPILE_TEST)
+> +	bool "MediaTek MT7621 PCIe Controller"
+> +	depends on SOC_MT7621 || (MIPS && COMPILE_TEST)
+>  	select PHY_MT7621_PCI
+>  	default SOC_MT7621
+>  	help
+> -- 
+> 2.33.0
+> 
 
-> +				dev_err_ratelimited(&pcie->pdev->dev, "unhandled ERR IRQ\n");
+Hi Sergio,
 
-This should say "unhandled PME IRQ\n". Ah.
+I believe this is still to be pulled in some tree, just asking for
+confirmation, please let me know and I will queue it.
+
+Thanks,
+Lorenzo
