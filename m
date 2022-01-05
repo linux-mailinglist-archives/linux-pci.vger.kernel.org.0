@@ -2,134 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB49948540F
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 15:06:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CE17485427
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 15:14:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240532AbiAEOGW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jan 2022 09:06:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236938AbiAEOGU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jan 2022 09:06:20 -0500
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D3B8C061761;
-        Wed,  5 Jan 2022 06:06:20 -0800 (PST)
-Received: by mail-ua1-x934.google.com with SMTP id u6so61838456uaq.0;
-        Wed, 05 Jan 2022 06:06:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TXzc+NNhHR7zkiqOhJjsY/heE4Nlk/EZ4wy3/3ZxxcY=;
-        b=ICLs3I8qx/pXJEJVCvyD+a2RrTir/BHMm2narjNq4HebsRI5t0eGBH2dInNDq45nhi
-         jmRVZWT8PhoRoclMO+/4L2wNUPSNuv4l9POAzMsxYhgd+/dK29R1V47BvYLmPecSBFpq
-         6X3dvWWFeeKmqqO72MdLsrKytYQne9PgkJTG8fD7oJbk7KYcBw/mmVp+Pkd7UNR4GhuS
-         vwqSmdPtgp7CYWiijdwlOvdq5wdxxzI1GZ18nLpQfDkXrGkIbP/+wlE91LIgG2U1fjim
-         0emZZUitvFi0nqczjymI7aj2IVHrtmw105YuaoH1ygAH3UV+iGxQVv1iYbuo2XMJLDa2
-         UQZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TXzc+NNhHR7zkiqOhJjsY/heE4Nlk/EZ4wy3/3ZxxcY=;
-        b=2wJNNlKZWWKiFOBa2ac87Bd3agJTPHUj/5vHuL0T+j+NNPqH8c6yWKoeqsQecE/Wfn
-         KczOVa+AEeow/j/JEIykWdlE9p8dTHhJ/t8qoxC10TukfH0bBOOrxPKTJehDaQScsAO6
-         qrgz1wcP9iOP6SC8pDs0AoN75RsOeUmS1diHKCsA9a9RgDPSYELvntho/B78Uk8LH3T3
-         ia7GBm+hrmx+CCmnmLVJ47UijJ/IjZZA6LBVrBiZzJFcIRPz3X135Uh7ZhlJV0wOAskC
-         jud0hI9iQMk2sbxISyvxJMb+OYI2s4RqlhffaZcONqtrOotRICd/sFYQc/6lR1VIBUuy
-         EOIA==
-X-Gm-Message-State: AOAM530dz4eGAfjPkka6qrrXOUFUw9j7Ha5eI8NABfoRwZmBYDlkhxhU
-        AskO1fW5DYQcToFSl5D6qVbnEvBqMZ38tZ1u8IM=
-X-Google-Smtp-Source: ABdhPJzNGCQQ3JRtn8gm/Jq+m9bvCIx7w7LsXCDZGYAJQPObX1tdlEpbjCWGmGefVUDLrEEHVNhotR6kU23+Flxa3z4=
-X-Received: by 2002:a05:6102:dc9:: with SMTP id e9mr16237622vst.17.1641391579464;
- Wed, 05 Jan 2022 06:06:19 -0800 (PST)
+        id S240593AbiAEOOv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jan 2022 09:14:51 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:33726 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237013AbiAEOOv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jan 2022 09:14:51 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E519CB81B47;
+        Wed,  5 Jan 2022 14:14:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 978AFC36AE0;
+        Wed,  5 Jan 2022 14:14:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641392088;
+        bh=GA7ovUxKYBchYJOH3FkaGA5P4F4/IBalqgPAq/ToXJ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dvfg4TbOa7DVq8lUiXN9af+9Bm//8I2cOinTJXF5zqSU3x6DYU/+wYMBcNrbNI48M
+         eaj0mXqJl6zc4FFd7pmptFA0ncqXJoaRK8cbXmCuTMMMyN4OeMOMdedXpo58K+L4js
+         bXY/jqXOjl1U/Z3fj0siswj47uCgYLTR85zy7D7ubfeBJ7imdjWvJRMOsIL2OpuQd1
+         hgZNhlIsL3anrYVNv9UHizdThOh5mg+tlwg9Fu53F3yY7uw2huhwwwF60euTUkxGfO
+         DGWigpeThptgHDESg3yvi6c6m8Dazu1sw7x1rhArJjLX3hfjQktajQu1eMHSG3FYkg
+         tcSOflg8ywv0Q==
+Date:   Wed, 5 Jan 2022 15:14:44 +0100
+From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
+Subject: Re: [PATCH dt + pci 1/2] dt-bindings: Add
+ 'slot-power-limit-milliwatt' PCIe port property
+Message-ID: <20220105151444.7b0b216e@thinkpad>
+In-Reply-To: <YY6HYM4T+A+tm85P@robh.at.kernel.org>
+References: <20211031150706.27873-1-kabel@kernel.org>
+        <YY6HYM4T+A+tm85P@robh.at.kernel.org>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20211203192454.32624-1-sergio.paracuellos@gmail.com> <20220105140132.GA7208@lpieralisi>
-In-Reply-To: <20220105140132.GA7208@lpieralisi>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Wed, 5 Jan 2022 15:06:08 +0100
-Message-ID: <CAMhs-H-zCpc0GnogKHKfMOBM_FcSKxvewzi7us0eHUay7g8ZaA@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: mt7621: Convert driver into 'bool'
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo,
+On Fri, 12 Nov 2021 09:25:20 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-On Wed, Jan 5, 2022 at 3:01 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Fri, Dec 03, 2021 at 08:24:54PM +0100, Sergio Paracuellos wrote:
-> > Driver is not ready yet to be compiled as a module since it depends on some
-> > MIPS not exported symbols. We have the following current problems:
-> >
-> > Building mips:allmodconfig ... failed
-> > --------------
-> > Error log:
-> > ERROR: modpost: missing MODULE_LICENSE() in drivers/pci/controller/pcie-mt7621.o
-> > ERROR: modpost: "mips_cm_unlock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > ERROR: modpost: "mips_cpc_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > ERROR: modpost: "mips_cm_lock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > ERROR: modpost: "mips_cm_is64" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> > ERROR: modpost: "mips_gcr_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!
-> >
-> > Temporarily move from 'tristate' to 'bool' until a better solution is ready.
-> >
-> > Also RALINK is redundant because SOC_MT7621 already depends on it. Hence,
-> > simplify condition.
-> >
-> > Fixes: 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver").
-> > Reviewed-and-tested-by: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> On Sun, Oct 31, 2021 at 04:07:05PM +0100, Marek Beh=C3=BAn wrote:
+> > From: Pali Roh=C3=A1r <pali@kernel.org>
+> >=20
+> > This property specifies slot power limit in mW unit. It is a form-factor
+> > and board specific value and must be initialized by hardware.
+> >=20
+> > Some PCIe controllers delegate this work to software to allow hardware
+> > flexibility and therefore this property basically specifies what should
+> > host bridge program into PCIe Slot Capabilities registers.
+> >=20
+> > The property needs to be specified in mW unit instead of the special fo=
+rmat
+> > defined by Slot Capabilities (which encodes scaling factor or different
+> > unit). Host drivers should convert the value from mW to needed format.
+> >=20
+> > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> > Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
 > > ---
-> > Changes in v3:
-> >  - Adjust subject to follow convention:
-> >     s/PCI: mt7621: Kconfig:/PCI: mt7621:/
-> > Changes in v2:
-> >  - Add Guenter's 'Reviewed-and-tested-by'.
-> >  - s/after/until
-> >  drivers/pci/controller/Kconfig | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > index 93b141110537..7fc5135ffbbf 100644
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -332,8 +332,8 @@ config PCIE_APPLE
-> >         If unsure, say Y if you have an Apple Silicon system.
-> >
-> >  config PCIE_MT7621
-> > -     tristate "MediaTek MT7621 PCIe Controller"
-> > -     depends on (RALINK && SOC_MT7621) || (MIPS && COMPILE_TEST)
-> > +     bool "MediaTek MT7621 PCIe Controller"
-> > +     depends on SOC_MT7621 || (MIPS && COMPILE_TEST)
-> >       select PHY_MT7621_PCI
-> >       default SOC_MT7621
-> >       help
-> > --
-> > 2.33.0
-> >
->
-> Hi Sergio,
->
-> I believe this is still to be pulled in some tree, just asking for
-> confirmation, please let me know and I will queue it.
+> >  Documentation/devicetree/bindings/pci/pci.txt | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentat=
+ion/devicetree/bindings/pci/pci.txt
+> > index 6a8f2874a24d..7296d599c5ac 100644
+> > --- a/Documentation/devicetree/bindings/pci/pci.txt
+> > +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> > @@ -32,6 +32,12 @@ driver implementation may support the following prop=
+erties:
+> >     root port to downstream device and host bridge drivers can do progr=
+amming
+> >     which depends on CLKREQ signal existence. For example, programming =
+root port
+> >     not to advertise ASPM L1 Sub-States support if there is no CLKREQ s=
+ignal.
+> > +- slot-power-limit-miliwatt: =20
+>=20
+> Typo.
+>=20
+> But we shouldn't be adding to pci.txt. This needs to go in the=20
+> schema[1]. Patch to devicetree-spec list or GH PR is fine.
 
-This is already in Linus'tree [0].
+Hello Rob,
 
->
-> Thanks,
-> Lorenzo
+Pali's PR draft https://github.com/devicetree-org/dt-schema/pull/64
+looks like it's going to take some time to work out.
 
-Best regards,
-    Sergio Paracuellos
+In the meantime, is it possible to somehow get the
+slot-power-limit-milliwatt property merged into pci.txt so that we can start
+putting it into existing device-trees?
 
-[0]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/pci/controller?id=aa50faff4416c869b52dff68a937c84d29e12f4b
+Or would it break dt_bindings_check if it isn't put into dt-schema's
+pci-bus.yaml?
+
+Or should we simply put it into current version of pci-bus.yaml and
+work out the split proposed by Pali's PR afterwards?
+
+Marek
