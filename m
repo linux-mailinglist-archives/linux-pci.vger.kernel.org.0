@@ -2,145 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 475FF484F14
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 09:13:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6516484F3A
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 09:23:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238378AbiAEINI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jan 2022 03:13:08 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:39624 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238361AbiAEINE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 5 Jan 2022 03:13:04 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1FE311A12AA;
-        Wed,  5 Jan 2022 09:12:58 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B15301A2374;
-        Wed,  5 Jan 2022 09:12:57 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 6D6FE183AD6D;
-        Wed,  5 Jan 2022 16:12:56 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, bhelgaas@google.com, broonie@kernel.org,
-        lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, festevam@gmail.com
-Cc:     hongxing.zhu@nxp.com, stable@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH v5 6/6] PCI: imx6: Add the compliance tests mode support
-Date:   Wed,  5 Jan 2022 15:43:22 +0800
-Message-Id: <1641368602-20401-7-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1641368602-20401-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1641368602-20401-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S238450AbiAEIXV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jan 2022 03:23:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230407AbiAEIXT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jan 2022 03:23:19 -0500
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CFC4C061785
+        for <linux-pci@vger.kernel.org>; Wed,  5 Jan 2022 00:23:19 -0800 (PST)
+Received: by mail-ua1-x92e.google.com with SMTP id o1so67676219uap.4
+        for <linux-pci@vger.kernel.org>; Wed, 05 Jan 2022 00:23:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=zOHJbgxEeKcTUS1M3dbg/CCHL8zxNc7o7Y1pwSiNVNQ=;
+        b=etO+9O2WZSyUQ3n8VcO/RO9xIoTnk6xZ78BDsoRs08dz/9jNUbxrk1xTgatV1eLV3j
+         xttA7SeBsey0kwN6L1pv7ycBolEgOVH+4WLzuaadgJzXzgFxFhRt7LPvcKMKFrhudoOy
+         UMsuCBr8nvo4Kra3qZAM7obU0jMnDVmQGb08AeEkH49bD4gBIHy/dS0NjeqVKOPIHddU
+         2T4kBVvOZfHwiBmDU2HibBu9mXxPGSziy0nCr+PQXvRvUSRmvJ62JpaM7/oPEcswmydh
+         bcWRFmLC1xu1cjb1gngySb/tpKsEVzCs/hnzwwDySRYjUi+084F8GC4WGEpPyZXbHbBl
+         lwsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to:content-transfer-encoding;
+        bh=zOHJbgxEeKcTUS1M3dbg/CCHL8zxNc7o7Y1pwSiNVNQ=;
+        b=UCjaofXD8Oypfe943t48Fbq/gntQJA0MLm3rHWUDw9z6yb684MBWfM3dcHrZsr86N4
+         ERziNYzPH1kg/2HnGJ+TVCBNajLPYIx3YyfL4YtaIcLIdp3wIaKLFkUN+YP6j0zQPfaI
+         6QhifdV8kWeKUpn4Csv534xUXTNJd3G0f8cIPQ2i9szl48gw9y5sFXVgH1hIEowIkfwT
+         tB8x6Cz8nv8iLNQQ0MRBCGsJVKIYC7RBba2Ffac3cVD3/crbzIDi0Zumb5Fba7XlTntp
+         GIdHWphVLRFHjf0CiAUUGnBRBzwBq9+f4h4/i/EpWY/nX2wTJbbUSaSJNliRzJm8hUuw
+         7i1w==
+X-Gm-Message-State: AOAM533WPW7lRmHFdLqCB6JKF5WCfZbANJL2IRj7MJGeGRf6sl8iLoAD
+        MuAF8nhkwki1ySwpZto1KVRaauaCRkejyyalIxw=
+X-Google-Smtp-Source: ABdhPJzWGm0bfO2hNgUeIFToQwxC0kXs1Pt5B0ieuR6ie3pjsKwA+1/m9Nx2CLbhH8pWgQvYum6DSDI4CWj32srKiOE=
+X-Received: by 2002:a67:bd02:: with SMTP id y2mr16953270vsq.56.1641370998414;
+ Wed, 05 Jan 2022 00:23:18 -0800 (PST)
+MIME-Version: 1.0
+Sender: aishagaddafi1056@gmail.com
+Received: by 2002:a05:612c:1a3:b0:273:a2dd:3116 with HTTP; Wed, 5 Jan 2022
+ 00:23:17 -0800 (PST)
+From:   DINA MCKENNA <dinamckennahowley@gmail.com>
+Date:   Wed, 5 Jan 2022 08:23:17 +0000
+X-Google-Sender-Auth: Ivoxnb9zGfHcIwSLYw3y8ri9O58
+Message-ID: <CANtwLy20u-T31pkp4RCu431sNSV8aHTuR90xjtzLkuhMRrL-rQ@mail.gmail.com>
+Subject: Calvary greetings.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Refer to the system board signal Quality of PCIe archiecture PHY test
-specification. Signal quality tests(for example: jitters,  differential
-eye opening and so on ) can be executed with devices in the
-polling.compliance state.
+Hello my dear,
 
-To let the device support polling.compliance stat, the clocks and powers
-shouldn't be turned off when the probe of device driver is failed.
+ I sent this mail praying it will get to you in a good condition of
+health, since I myself are in a very critical health condition in
+which I sleep every night without knowing if I may be alive to see the
+next day. I bring peace and love to you. It is by the grace of God, I
+had no choice than to do what is lawful and right in the sight of God
+for eternal life and in the sight of man, for witness of God=E2=80=99s merc=
+y
+and glory upon my life. I am Mrs. Dina. Howley Mckenna, a widow. I am
+suffering from a long time brain tumor, It has defiled all forms of
+medical treatment, and right now I have about a few months to leave,
+according to medical experts. The situation has gotten complicated
+recently with my inability to hear proper, am communicating with you
+with the help of the chief nurse herein the hospital, from all
+indication my conditions is really deteriorating and it is quite
+obvious that, according to my doctors they have advised me that I may
+not live too long, Because this illness has gotten to a very bad
+stage. I plead that you will not expose or betray this trust and
+confidence that I am about to repose on you for the mutual benefit of
+the orphans and the less privilege. I have some funds I inherited from
+my late husband, the sum of ($ 11,000,000.00, Eleven Million Dollars).
+Having known my condition, I decided to donate this fund to you
+believing that you will utilize it the way i am going to instruct
+herein. I need you to assist me and reclaim this money and use it for
+Charity works therein your country  for orphanages and gives justice
+and help to the poor, needy and widows says The Lord." Jeremiah
+22:15-16.=E2=80=9C and also build schools for less privilege that will be
+named after my late husband if possible and to promote the word of God
+and the effort that the house of God is maintained. I do not want a
+situation where this money will be used in an ungodly manner. That's
+why I'm taking this decision. I'm not afraid of death, so I know where
+I'm going. I accept this decision because I do not have any child who
+will inherit this money after I die.. Please I want your sincerely and
+urgent answer to know if you will be able to execute this project for
+the glory of God, and I will give you more information on how the fund
+will be transferred to your bank account. May the grace, peace, love
+and the truth in the Word of God be with you and all those that you
+love and care for.
 
-Based on CLB(Compliance Load Board) Test Fixture and so on test
-equipments, the PHY link would be down during the compliance tests.
-Refer to this scenario, add the i.MX PCIe compliance tests mode enable
-support, and keep the clocks and powers on, and finish the driver probe
-without error return.
+I'm waiting for your immediate reply..
 
-Use the "pci_imx6.compliance=1" in kernel command line to enable the
-compliance tests mode.
-
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 47 ++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 61b25f5cbf5c..773b9e45806b 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -146,6 +146,10 @@ struct imx6_pcie {
- #define PHY_RX_OVRD_IN_LO_RX_DATA_EN		BIT(5)
- #define PHY_RX_OVRD_IN_LO_RX_PLL_EN		BIT(3)
- 
-+static bool imx6_pcie_cmp_mode;
-+module_param_named(compliance, imx6_pcie_cmp_mode, bool, 0644);
-+MODULE_PARM_DESC(compliance, "i.MX PCIe compliance test mode (1=compliance test mode enabled)");
-+
- static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
- {
- 	struct dw_pcie *pci = imx6_pcie->pci;
-@@ -832,10 +836,12 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
- 	 * started in Gen2 mode, there is a possibility the devices on the
- 	 * bus will not be detected at all.  This happens with PCIe switches.
- 	 */
--	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
--	tmp &= ~PCI_EXP_LNKCAP_SLS;
--	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
--	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-+	if (!imx6_pcie_cmp_mode) {
-+		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-+		tmp &= ~PCI_EXP_LNKCAP_SLS;
-+		tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-+		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-+	}
- 
- 	/* Start LTSSM. */
- 	imx6_pcie_ltssm_enable(dev);
-@@ -924,18 +930,20 @@ static void imx6_pcie_host_exit(struct pcie_port *pp)
- 	struct device *dev = pci->dev;
- 	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
- 
--	imx6_pcie_reset_phy(imx6_pcie);
--	imx6_pcie_clk_disable(imx6_pcie);
--	switch (imx6_pcie->drvdata->variant) {
--	case IMX8MM:
--		if (phy_power_off(imx6_pcie->phy))
--			dev_err(dev, "unable to power off phy\n");
--		break;
--	default:
--		break;
-+	if (!imx6_pcie_cmp_mode) {
-+		imx6_pcie_reset_phy(imx6_pcie);
-+		imx6_pcie_clk_disable(imx6_pcie);
-+		switch (imx6_pcie->drvdata->variant) {
-+		case IMX8MM:
-+			if (phy_power_off(imx6_pcie->phy))
-+				dev_err(dev, "unable to power off phy\n");
-+			break;
-+		default:
-+			break;
-+		}
-+		if (imx6_pcie->vpcie)
-+			regulator_disable(imx6_pcie->vpcie);
- 	}
--	if (imx6_pcie->vpcie)
--		regulator_disable(imx6_pcie->vpcie);
- }
- 
- static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
-@@ -1250,8 +1258,15 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	ret = dw_pcie_host_init(&pci->pp);
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (imx6_pcie_cmp_mode) {
-+			dev_info(dev, "Driver loaded with compliance test mode enabled.\n");
-+			ret = 0;
-+		} else {
-+			dev_err(dev, "Unable to add pcie port.\n");
-+		}
- 		return ret;
-+	}
- 
- 	if (pci_msi_enabled()) {
- 		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
--- 
-2.25.1
-
+May God Bless you,
+Mrs. Dina. Howley Mckenna.
