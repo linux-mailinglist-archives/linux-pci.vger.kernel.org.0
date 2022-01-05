@@ -2,97 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AB97485630
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 16:50:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FFA048569F
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Jan 2022 17:26:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241677AbiAEPt7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Jan 2022 10:49:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241661AbiAEPt7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Jan 2022 10:49:59 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C107C061245;
-        Wed,  5 Jan 2022 07:49:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E8EC6179C;
-        Wed,  5 Jan 2022 15:49:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC910C36AE9;
-        Wed,  5 Jan 2022 15:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641397798;
-        bh=uDYG/IJoBKEoZh832BQxUsG+vyQ8MDYSgq+gprMQZjs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tWN45LEnYa4XxwE0cD1n4KegcPxZSM9z2lAbWG9UBdGAgXFBg+5YcpOPMGuJUIwMm
-         xsL49YKwMER98DdIlcm30OeFOm0aW9xmE6nbry7vpR6aHBGPCxUCqlWCrV5ZPXYq5j
-         s/xoe+ecZ0c5p9Fa/4WPcEP/4Ay6B7o0rhKD3ncYX+s/fB4b8ijsz+miGLJajeDvB5
-         0ibjN/pn3YIgO/qkvTkVFM4ilEa0MYQip2BPzqeQgy/1waafTPBbOHzu3oOE0oFnn2
-         ZckkEYN6Hw2V1yJZbjj4CK4Byiiy/25ISTChN8d2jsD45VsyXIkwCgc1hJT4SZagwo
-         JbQYrVIRmW86A==
-Received: by pali.im (Postfix)
-        id 5035782A; Wed,  5 Jan 2022 16:49:55 +0100 (CET)
-Date:   Wed, 5 Jan 2022 16:49:55 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
+        id S241911AbiAEQ0H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Jan 2022 11:26:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:45784 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231290AbiAEQ0G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 5 Jan 2022 11:26:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5835711D4;
+        Wed,  5 Jan 2022 08:26:06 -0800 (PST)
+Received: from e123427-lin.arm.com (unknown [10.57.39.27])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 478753F774;
+        Wed,  5 Jan 2022 08:26:04 -0800 (PST)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     helgaas@kernel.org, francisco.munoz.ruiz@linux.intel.com
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 08/11] PCI: mvebu: Use child_ops API
-Message-ID: <20220105154955.lxhnhjgjsiwhuffq@pali>
-References: <20220105150239.9628-1-pali@kernel.org>
- <20220105150239.9628-9-pali@kernel.org>
- <CAL_Jsq+1hoAUVOzyOGZ1vVMsChhHJJpzk5HNU4Gi=Luy_8LArA@mail.gmail.com>
+        linux-pci@vger.kernel.org, dan.j.williams@intel.com,
+        nirmal.patel@linux.intel.com,
+        Karthik L Gopalakrishnan <karthik.l.gopalakrishnan@intel.com>,
+        jonathan.derrick@linux.dev
+Subject: Re: [PATCH V2] PCI: vmd: Add DID 8086:A77F for all Intel Raptor Lake SKU's
+Date:   Wed,  5 Jan 2022 16:25:52 +0000
+Message-Id: <164139992200.22541.3683009307717549521.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20211217231211.46018-1-francisco.munoz.ruiz@linux.intel.com>
+References: <20211129195302.GA2686292@bhelgaas> <20211217231211.46018-1-francisco.munoz.ruiz@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+1hoAUVOzyOGZ1vVMsChhHJJpzk5HNU4Gi=Luy_8LArA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 05 January 2022 09:41:51 Rob Herring wrote:
-> > @@ -347,6 +375,11 @@ static int mvebu_pcie_hw_wr_conf(struct mvebu_pcie_port *port,
-> >         return PCIBIOS_SUCCESSFUL;
-> >  }
-> >
-> > +static struct pci_ops mvebu_pcie_child_ops = {
-> > +       .read = mvebu_pcie_child_rd_conf,
-> > +       .write = mvebu_pcie_child_wr_conf,
-> > +};
-> > +
-> >  /*
-> >   * Remove windows, starting from the largest ones to the smallest
-> >   * ones.
-> > @@ -862,25 +895,12 @@ static int mvebu_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
-> >  {
-> >         struct mvebu_pcie *pcie = bus->sysdata;
-> >         struct mvebu_pcie_port *port;
-> > -       int ret;
-> >
-> >         port = mvebu_pcie_find_port(pcie, bus, devfn);
-> >         if (!port)
-> >                 return PCIBIOS_DEVICE_NOT_FOUND;
+On Fri, 17 Dec 2021 15:12:11 -0800, francisco.munoz.ruiz@linux.intel.com wrote:
+> From: Karthik L Gopalakrishnan <karthik.l.gopalakrishnan@intel.com>
 > 
-> It would be nice to go from 'bus' to 'bridge' ptr directly, but I
-> still had this in my version. I guess a standard RP struct as part of
-> decoupling host bridges from RPs would solve this issue.
+> Add support for this VMD device which supports the bus restriction mode.
+> The feature that turns off vector 0 for MSI-X remapping is also enabled.
+> 
+> 
 
-Hello!
+Applied to pci/vmd, thanks!
 
-The problem is somewhere else. This driver is misusing bus 0 for doing
-non-transparent bus-bridging between multiple PCI domains by registering
-roots ports across all domains into domain 0, bus 0. All details are
-in this my patch which documents this strange driver behavior:
-https://lore.kernel.org/linux-pci/20211125124605.25915-12-pali@kernel.org/
+[1/1] PCI: vmd: Add DID 8086:A77F for all Intel Raptor Lake SKU's
+      https://git.kernel.org/lpieralisi/pci/c/922bfd001d
 
-So the correct solution is is split these multidomain mixing and then
-every domain would have exactly one root port (as it is designed in HW).
+Thanks,
+Lorenzo
