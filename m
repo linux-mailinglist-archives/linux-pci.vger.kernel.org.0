@@ -2,154 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA004867AD
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 17:30:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F4F648681D
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 18:06:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241184AbiAFQai (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 11:30:38 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:42164 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241130AbiAFQai (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 11:30:38 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D59461D17;
-        Thu,  6 Jan 2022 16:30:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DBB8C36AEB;
-        Thu,  6 Jan 2022 16:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641486637;
-        bh=VwzxlywbuRFhErv9Kwojn/ALeD7Ym5OuRWIkT52COFc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=s1Ds1PuDWp54mthBB3Df0U9FaSLR9yMCFT3ojsHwiDSV0W1Z/Wkh9LdnU9fHAB/3K
-         OsCXSgobyd0UcosuOCuxzxpkNWf/ZOm21I30sn/nTY1v1M6xxZyUvj5u5HIC2NgiWD
-         ueKUj0Q7P9WyUgQOFFCeWaaaB2UANG2GyZhgeZ/iRMNucL77k96CqbIq0DBmGWrX9I
-         cRow3owjVT+86SwnhZ9Pjjd9oVdNNNcBV/1o4gBEy2SqBT42x5NqGS/Pc2fx5QI78i
-         8FE11YudQrYNDflkIK9FuJWiVsyGIRhRLPam5I27dQANSUVTEb99fJJmB+OIn7gxZa
-         Zi/PMpXjwWw+Q==
-Date:   Thu, 6 Jan 2022 10:30:35 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v8 00/10] vgaarb: Rework default VGA device selection
-Message-ID: <20220106163035.GA292309@bhelgaas>
-MIME-Version: 1.0
+        id S241533AbiAFRGN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 12:06:13 -0500
+Received: from mail-dm6nam11on2082.outbound.protection.outlook.com ([40.107.223.82]:15595
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S241500AbiAFRGM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jan 2022 12:06:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VXk2r9xYFNLxvlk7/AAo8Ls77zQ6WaTBIDqENYibt7nB1IdBgULGJB+jB2heNsitkItZGDvnktPrheaWqGxSIquPsEAJ1PbKux2DErPTjP0oReL0BAQrjvHQPJhxfgNgNbgfmLZJOgHAQhBvLJxsT1J4zktcDmvdDz/s/0iDab0MxxiRR6UbKNaC/PKxme5h7xoa8s9gKRxpdRubTAwVHFfG++14yfz/NYCyWhQg5ttsDiGRma72t3OKHTqjplDjdVdSIhR5pw82h19FSLzjaFZtL1viZ5LBMeLEG6tkRfPseq3/ZvBz0puMAMY3q+jadh7qSpn4iZvhdpe7JQc3LQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8ysKE/w9/wTjfrhNi27h9c3SdhKzczQ4LaUmH0DzTjs=;
+ b=jFPWA+yNY0ebaIh9Z10x7fIBd0u3rA3xC0aSEkZ6i0Pmrh3fGRLDemfVS1El7KQdv4/ffwYZMYY8qKBo+8vC4nX5PheDU2uKMtPnqPMRktaydIgAthUMYn1QUw9IzNw3aHwGixFeedn6K01N//8TAyTMIiNbzFgfLKlfBdwOak4JwRh1zRUxRhreZIVgDeqqsXWvroEolI2AEvm8pRDniLA0mhteHPOs7j7UGvRjV64IMri4tKpU1kKUIVKuYqRCi5wc9z3+5qP32J5lzd/otzYHhcHw+9TajMAW9psZz0VDT7HZp7HqXb5abLKkvOD6zFF+ypPNBxhuudPwjdLLAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8ysKE/w9/wTjfrhNi27h9c3SdhKzczQ4LaUmH0DzTjs=;
+ b=Yndn8ENvSPbfpDoOnRW9UD7kDm83/QoWCVoq3a9SaK2NqWQ6PhN/+kb+C8T/IFrbOCKp3Yzaqbar+jn51UVTlgyDfxdooi2ruOMTRdA4upZSOpb+muJE9Pf77ji0tnDpVGBhSsz4UhzCT13+3mZFH4kvBN85nWvaAdUegATa3/hYeJgLRkAloV2JC5GW9fcEo32NRv/w0rhV7FfTMGv6v3zBZCj//7AlrIkti6ab/Ei+XVAyhZaEkVwMKvQcvfw57GaondnMJPfQuQIxW4z3Ul36GIkXWs4qDDSDARS3cUPwAmRckYuj/JdqQy9PTwl4bbhA/hW0qszeW+LVGoQU8g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL0PR12MB5508.namprd12.prod.outlook.com (2603:10b6:208:1c1::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.9; Thu, 6 Jan
+ 2022 17:06:11 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::464:eb3d:1fde:e6af]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::464:eb3d:1fde:e6af%5]) with mapi id 15.20.4867.009; Thu, 6 Jan 2022
+ 17:06:10 +0000
+Date:   Thu, 6 Jan 2022 13:06:08 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/8] iommu: Add iommu_group_replace_domain()
+Message-ID: <20220106170608.GI2328285@nvidia.com>
+References: <20220106022053.2406748-1-baolu.lu@linux.intel.com>
+ <20220106022053.2406748-2-baolu.lu@linux.intel.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220106000658.243509-1-helgaas@kernel.org>
+In-Reply-To: <20220106022053.2406748-2-baolu.lu@linux.intel.com>
+X-ClientProxiedBy: CH0PR03CA0324.namprd03.prod.outlook.com
+ (2603:10b6:610:118::18) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1053064c-5cc7-4327-7b93-08d9d136d642
+X-MS-TrafficTypeDiagnostic: BL0PR12MB5508:EE_
+X-Microsoft-Antispam-PRVS: <BL0PR12MB55080D1690B14FDE9F121EAEC24C9@BL0PR12MB5508.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8rB8XNFRkzR0kdmqwihZ+B18+O+0gU3kFdp/r1+pDb1uaX/qMgfZiDVk/zUFbKjbtS9f8yhtB6uUh+kguJt1q6EAcaZxD2YvJPVK+aVaNmGP575KIfVyVP7p3uHQP/0rF70MdqASP4Q5beMAn7B6uuIP1VlMbd9fC1j4n9MD68wj0XEW84+uVc2q+GKSGqgFa9faGbTzhW7CexNX4ckgVxrrzXH8m6geHKkjtjrsbr3+H3MqW0QnjUfNZUUXUW87H72pLrcj7ruo9YgjO97KZtCEPmmlnmGDRLWB+0KnKojZQH6cXEH7ato0zPRQeXNTbWcvcZXJdeaxlBYG5+695dTyIjE+E50W/U+sXVFYith4Ijmf2iqy4X5S8TM3jRxpJ76nIEHtVkacRAd5sdknr9zvOcfBz0s5GjQzDrqLGrZb5TMvljPo/oKtjVgudStkucHkU4qVEHWNpeWVSE7rQ7O47cw9gNGaTy14MY8qfJyBuOJRp5E3ntw1jjimbDG0vYxoJI4EALP/ZxQa2DJHEduLmm8KCBCTyk/qGjAB59Djf70J3vJAqs3cM2WBecjO44qcAoToFsuRdApQgNlYQKO6qNPvFCCuzwQ8IS1LpAOu9vnrSIwVO1VukI2ckPRf+jQ/0jbpD2AsaAAOJIgV4A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(54906003)(33656002)(6486002)(8936002)(508600001)(5660300002)(186003)(2906002)(38100700002)(8676002)(26005)(4326008)(66946007)(6512007)(7416002)(66476007)(6506007)(2616005)(86362001)(1076003)(83380400001)(36756003)(6916009)(66556008)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kJbI9KLTDBTVVI4yqx99S3VkI5YkQYTPo43BbR8C0GHOToZSA33pzh3zJtUj?=
+ =?us-ascii?Q?y2ha9ng3/tTIPejoZCy2/IGb0cYIgsiRpwu6meqThVguoalNEPeg/ThMdAFW?=
+ =?us-ascii?Q?Zm13MuuB8kdXyL9eXQFS+kuXMfJbAFIA8okmzLSPuH/Q8hVqAaqonLeQpujI?=
+ =?us-ascii?Q?VKKufpNWuGE4L12vr5XVKqO8EKM5t449R57Mc8VWC+5G+jQojsW8IqxZGD9/?=
+ =?us-ascii?Q?SClS84j0M0u7/rvRX2q2aMXh6fDc1DblE7IC50hiDVWq2OnMWfJR2k4kgeCt?=
+ =?us-ascii?Q?rz2vjGIiHCbNR/fJdR6FatU6LmlYjrIeb1+BjJMiAgKlZSHIPyd9Fpw+AcCY?=
+ =?us-ascii?Q?Bn4yywDjyozGaA4Ehfs8OFvapzppzQtc4cm/vA9QHdB5UdRFR9PCBtoNnjY2?=
+ =?us-ascii?Q?VpbGa0LmTMZpuPajA/vDFb65V3sJA7Lzyg8kb6GRL9ogk0FAgYhIMX/UqNZF?=
+ =?us-ascii?Q?WtHtW3gfwZn/iEDNHLtZhzEQPQ8nLoRMIGhUQ55jMm/hNCuLyt/Ame689usJ?=
+ =?us-ascii?Q?14Op0VqhsuLipf4UOdlHXpARgM3nW2fIga7GI1FB6ZOmOlDU2akndCdLvxK9?=
+ =?us-ascii?Q?/olAM9GE45985ZsMs8p0rfbU4bDfibw4mHX3GwJFAND+IHgXRcsR45DgPPpT?=
+ =?us-ascii?Q?6/VDIhw8qxwqUrY1ywTKJPW+8BDWYMIDpo/BN3xjh5mI4Oay4Q6rwDzgXEsT?=
+ =?us-ascii?Q?0YkTlb5cRnOsQgP4ANk4HDJCVpqYrrkuEBJCDC7IPPowF05pG8R0HCBxVv/X?=
+ =?us-ascii?Q?NT6SXWCrycD+1lRa2GF3kYNbPfeURPE0iFMcgG1KgIKfnFyH2MoktRIPm/R6?=
+ =?us-ascii?Q?D5ezWzp4XWSe28pvDtEGaVqNBbhnvHym8y8DrTIwViCJR8BlnZ5cQ2s13tyA?=
+ =?us-ascii?Q?l7r46H0eeQayVTHPZt0l7Toz4l7nOf8JoseabVG75h1iC+l6Jw0OjiJkaMlM?=
+ =?us-ascii?Q?wJ0RvghMgZc2qGMDE6i0ZMLCHknYk6Sw+NMIh22yB/GnmgnU34KpNZJu7ynO?=
+ =?us-ascii?Q?rc7yPWGytUQZFHzacv9i6ZXv0fIQ4yEuGTuzIpECCPtTVKlB2jHtp9BMBpkD?=
+ =?us-ascii?Q?JHNfEVZCK9X2bXLoMUogoNLzbSSdkPW1xN0fXxMIuELz0T/sNOf+nd0zpHLg?=
+ =?us-ascii?Q?D3xI2ZuT/ik00rknil/Ho4b19QbY4yEEnZNKqBG1VNT85LblqGCsZl1nAWK5?=
+ =?us-ascii?Q?c9YLPylge9Q9LxwXCjhWSA+7gkclhJnbZskN2UAEjVAyqkThUNK9GCtQsHOE?=
+ =?us-ascii?Q?lXII0EVlYVyvkTxjN4/d+P5Y6nyKX2aKyCyYJuzKA4Sjdd90LPL1CPOkcahs?=
+ =?us-ascii?Q?3WJJoJ5DZSqJoQBVPhQhdwXzxFQoMeoEdLrn5xvyET8G8ZJCVJIDQ8t0AYPX?=
+ =?us-ascii?Q?WH1FCL3PT+c02CHMyoO8Okwz63bMUOsFs6tBmppRl0PBeQhp1SbKQ0nk2rSi?=
+ =?us-ascii?Q?keVIb2Xh7yDpDNIVGHiHB7uk5K7+t8blNsSmqct96MkGYBYbpgXRXpWIDkbl?=
+ =?us-ascii?Q?d2w/uy/QqpkIfYj3mSOphp2jdkB1J/Tgae9AHoWS+xHklg59vf1I14+b+wns?=
+ =?us-ascii?Q?j9ZlfQdvATyiinmh4gc=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1053064c-5cc7-4327-7b93-08d9d136d642
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2022 17:06:10.6050
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NYbmpdyGFota9hUPWkUDQ/udmdPirjV5yq1elHp3oD5jayzHraTtIiB5ynXnpIRz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB5508
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+to Maarten, Maxime, Thomas: sorry, I forgot to use
-get_maintainer.pl so I missed you the first time.  Beginning of thread:
-https://lore.kernel.org/all/20220106000658.243509-1-helgaas@kernel.org/#t
-Git branch with this v8 + a couple trivial renames, based on v5.16-rc1:
-https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=0f4caffa1297]
+On Thu, Jan 06, 2022 at 10:20:46AM +0800, Lu Baolu wrote:
+> Expose an interface to replace the domain of an iommu group for frameworks
+> like vfio which claims the ownership of the whole iommu group.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>  include/linux/iommu.h | 10 ++++++++++
+>  drivers/iommu/iommu.c | 37 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 47 insertions(+)
+> 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 408a6d2b3034..66ebce3d1e11 100644
+> +++ b/include/linux/iommu.h
+> @@ -677,6 +677,9 @@ void iommu_device_unuse_dma_api(struct device *dev);
+>  int iommu_group_set_dma_owner(struct iommu_group *group, void *owner);
+>  void iommu_group_release_dma_owner(struct iommu_group *group);
+>  bool iommu_group_dma_owner_claimed(struct iommu_group *group);
+> +int iommu_group_replace_domain(struct iommu_group *group,
+> +			       struct iommu_domain *old,
+> +			       struct iommu_domain *new);
+>  
+>  #else /* CONFIG_IOMMU_API */
+>  
+> @@ -1090,6 +1093,13 @@ static inline bool iommu_group_dma_owner_claimed(struct iommu_group *group)
+>  {
+>  	return false;
+>  }
+> +
+> +static inline int
+> +iommu_group_replace_domain(struct iommu_group *group, struct iommu_domain *old,
+> +			   struct iommu_domain *new)
+> +{
+> +	return -ENODEV;
+> +}
+>  #endif /* CONFIG_IOMMU_API */
+>  
+>  /**
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 72a95dea688e..ab8ab95969f5 100644
+> +++ b/drivers/iommu/iommu.c
+> @@ -3431,3 +3431,40 @@ bool iommu_group_dma_owner_claimed(struct iommu_group *group)
+>  	return user;
+>  }
+>  EXPORT_SYMBOL_GPL(iommu_group_dma_owner_claimed);
+> +
+> +/**
+> + * iommu_group_replace_domain() - Replace group's domain
+> + * @group: The group.
+> + * @old: The previous attached domain. NULL for none.
+> + * @new: The new domain about to be attached.
+> + *
+> + * This is to support backward compatibility for vfio which manages the dma
+> + * ownership in iommu_group level.
 
-On Wed, Jan 05, 2022 at 06:06:48PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Current default VGA device selection fails in some cases because part of it
-> is done in the vga_arb_device_init() subsys_initcall, and some arches
-> enumerate PCI devices in pcibios_init(), which runs *after* that.
-> 
-> For example:
-> 
->   - On BMC system, the AST2500 bridge [1a03:1150] does not implement
->     PCI_BRIDGE_CTL_VGA.  This is perfectly legal but means the legacy VGA
->     resources won't reach downstream devices unless they're included in the
->     usual bridge windows.
-> 
->   - vga_arb_select_default_device() will set a device below such a bridge
->     as the default VGA device as long as it has PCI_COMMAND_IO and
->     PCI_COMMAND_MEMORY enabled.
-> 
->   - vga_arbiter_add_pci_device() is called for every VGA device, either at
->     boot-time or at hot-add time, and it will also set the device as the
->     default VGA device, but ONLY if all bridges leading to it implement
->     PCI_BRIDGE_CTL_VGA.
-> 
->   - This difference between vga_arb_select_default_device() and
->     vga_arbiter_add_pci_device() means that a device below an AST2500 or
->     similar bridge can only be set as the default if it is enumerated
->     before vga_arb_device_init().
-> 
->   - On ACPI-based systems, PCI devices are enumerated by acpi_init(), which
->     runs before vga_arb_device_init().
-> 
->   - On non-ACPI systems, like on MIPS system, they are enumerated by
->     pcibios_init(), which typically runs *after* vga_arb_device_init().
-> 
-> This series consolidates all the default VGA device selection in
-> vga_arbiter_add_pci_device(), which is always called after enumerating a
-> PCI device.
-> 
-> Almost all the work here is Huacai's.  I restructured it a little bit and
-> added a few trivial patches on top.
-> 
-> I'd like to move vgaarb.c to drivers/pci eventually, but there's another
-> initcall ordering snag that needs to be resolved first, so this leaves 
-> it where it is.
-> 
-> Bjorn
-> 
-> Version history:
-> V0 original implementation as final quirk to set default device.
-> https://lore.kernel.org/r/20210514080025.1828197-6-chenhuacai@loongson.cn
-> 
-> V1 rework vgaarb to do all default device selection in
-> vga_arbiter_add_pci_device().
-> https://lore.kernel.org/r/20210705100503.1120643-1-chenhuacai@loongson.cn
-> 
-> V2 move arbiter to PCI subsystem, fix nits.
-> https://lore.kernel.org/r/20210722212920.347118-1-helgaas@kernel.org
-> 
-> V3 rewrite the commit log of the last patch (which is also summarized
-> by Bjorn).
-> https://lore.kernel.org/r/20210820100832.663931-1-chenhuacai@loongson.cn
-> 
-> V4 split the last patch to two steps.
-> https://lore.kernel.org/r/20210827083129.2781420-1-chenhuacai@loongson.cn
-> 
-> V5 split Patch-9 again and sort the patches.
-> https://lore.kernel.org/r/20210911093056.1555274-1-chenhuacai@loongson.cn
-> 
-> V6 split Patch-5 again and sort the patches again.
-> https://lore.kernel.org/r/20210916082941.3421838-1-chenhuacai@loongson.cn
-> 
-> V7 stop moving vgaarb to drivers/pci because of ordering issues with
-> misc_init().
-> https://lore.kernel.org/r/20211015061512.2941859-1-chenhuacai@loongson.cn
-> https://lore.kernel.org/r/CAAhV-H7FhAjM-Ha42Z1dLrE4PvC9frfyeU27KHWcyWKkMftEsA@mail.gmail.com
-> 
-> 
-> Bjorn Helgaas (8):
->   vgaarb: Factor out vga_select_framebuffer_device()
->   vgaarb: Factor out default VGA device selection
->   vgaarb: Move framebuffer detection to ADD_DEVICE path
->   vgaarb: Move non-legacy VGA detection to ADD_DEVICE path
->   vgaarb: Move disabled VGA device detection to ADD_DEVICE path
->   vgaarb: Remove empty vga_arb_device_card_gone()
->   vgaarb: Use unsigned format string to print lock counts
->   vgaarb: Replace full MIT license text with SPDX identifier
-> 
-> Huacai Chen (2):
->   vgaarb: Move vga_arb_integrated_gpu() earlier in file
->   vgaarb: Log bridge control messages when adding devices
-> 
->  drivers/gpu/vga/vgaarb.c | 311 +++++++++++++++++++--------------------
->  1 file changed, 154 insertions(+), 157 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
-> 
+This should mention it can only be used with iommu_group_set_dma_owner()
+
+> +	if (old)
+> +		__iommu_detach_group(old, group);
+> +
+> +	if (new) {
+> +		ret = __iommu_attach_group(new, group);
+> +		if (ret && old)
+> +			__iommu_attach_group(old, group);
+> +	}
+
+The sketchy error unwind here gives me some pause for sure. Maybe we
+should define that on error this leaves the domain as NULL
+
+Complicates vfio a tiny bit to cope with this failure but seems
+cleaner than leaving it indeterminate.
+
+Jason
