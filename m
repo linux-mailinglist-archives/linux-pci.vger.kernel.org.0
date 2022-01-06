@@ -2,68 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA52B486D1D
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 23:18:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6259A486D25
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 23:23:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244692AbiAFWS7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 17:18:59 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:50324 "EHLO
+        id S244710AbiAFWX2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 17:23:28 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:52486 "EHLO
         dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244435AbiAFWS6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 17:18:58 -0500
+        with ESMTP id S244638AbiAFWX2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 17:23:28 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8D80D61E14
-        for <linux-pci@vger.kernel.org>; Thu,  6 Jan 2022 22:18:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCF4C36AE3;
-        Thu,  6 Jan 2022 22:18:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D337F61E14
+        for <linux-pci@vger.kernel.org>; Thu,  6 Jan 2022 22:23:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8807C36AE3;
+        Thu,  6 Jan 2022 22:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641507538;
-        bh=oqJnClv8j3Vg4YqT5VzR+Aon163hN3H14XMtTvChIGg=;
+        s=k20201202; t=1641507807;
+        bh=BUZA4PkjJue9aKMuM71VSU82nzvtFBnl9gq1O7WyGOE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=RO7IVrFex0++Vn3oN2tz9BBClaIYY3H1Co9qjk6l7kPCC1roaoKtnEh2Q07bg8SV+
-         Hxrgd2MzdttMKYSDUW/aU/MQyuL0LV4je1w9UryLCNX1TT1o3EZIOtP/kThhKI7npD
-         zvijlR36C3L9xBDiAKFkxv83M6Pd++SI4sxC0c2n1BXajPKyq4uqHMCOX7OHzSL4IJ
-         PHif/CBlDUBDqcEYd/ZweTxxVOEYOWfL0Dad1TN5TTlyBrZpYjnKFvvhPiqHxcHhNn
-         2pRtsnXt0p68Jd65N4m+dNh1767d4hVh3yUoKMfdckMClzs9x5d8agL3Nxx2oBQ8un
-         y4d2uk3GgH4/w==
-Date:   Thu, 6 Jan 2022 16:18:56 -0600
+        b=XVtgSVJwrkzSp+bFvxgSkD8e29Jcy1AT1FqJYepwIKoEaRbxmJZKktWzk+HzVHPnf
+         4PnPiggao7S29xY/woy0UEk2/kqAbjvLz/fdH1fKYlfFala0+VWXAuWERlW6OQNE5/
+         yVq0qpk3oJHmVkm9mVq5r2iz1y+xO+Ol3e8f4KPy0H/noBqwFXBpMahSPx3ukbMU1J
+         l2ZZT4ki9365RMqWXrKQIBneRXBQ2KN1pvJ+1QspGmEPkSeuHWN1WRamP5ArrRTaon
+         p7SNVFMCBt7jpMcx785wNpzuzMW/3opIYKcU+Q+p4ShSYFhqG0i3+70+4upIo4pa9S
+         QaMUp2tnnYVaA==
+Date:   Thu, 6 Jan 2022 16:23:25 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Muni Sekhar <munisekharrms@gmail.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: PCIe: readl()
-Message-ID: <20220106221856.GA328650@bhelgaas>
+To:     Lucas De Marchi <lucas.demarchi@intel.com>
+Cc:     x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v2 2/2] x86/quirks: better wrap quirk conditions
+Message-ID: <20220106222325.GA329826@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHhAz+jFFqD=M=F8y6V_M1f6HDnBnzZDhOJt-G-pzWLHC4idFA@mail.gmail.com>
+In-Reply-To: <20220106003654.770316-2-lucas.demarchi@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 06, 2022 at 10:43:52PM +0530, Muni Sekhar wrote:
-> Hi all,
-> 
-> We have a free-running counter on x86 PCIe bus and plan to use it as a
-> clocksource. The 'read' field of the clocksource structure reads from
-> this free-running counter and returns this value.
-> 
-> Since PCIe reads are synchronous, is it safe to use readl() API to
-> read this free-running counter value in struct clocksource.read()? If
-> not, what's the best way to read the counter value from the struct
-> clocksource read field?
+On Wed, Jan 05, 2022 at 04:36:54PM -0800, Lucas De Marchi wrote:
+> Remove extra parenthesis and wrap lines so it's easier to read what are
+> the conditions being checked. The call to the hook also had an extra
+> indentation: remove here to conform to coding style.
 
-Yes, you can use readl().  Of course, the driver for your PCIe device
-will have to do the usual setup, e.g.,
+It's nice when your subject lines are consistent.  These look like:
 
-  probe(struct pci_dev *dev)
-  {
-    pci_request_regions(dev, "name");
-    addr = pci_ioremap_bar(dev, 0);
-    readl(addr);
+  x86/quirks: Fix logic to apply quirk once
+  x86/quirks: better wrap quirk conditions
 
-The readl() should give you a single PCIe transaction, which is the
-best you can do.
+The second isn't capitalized like the first.  Obviously if you split
+the first patch, you'll have three subject lines, and one will mention
+Alderlake.
 
 Bjorn
