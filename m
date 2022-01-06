@@ -2,274 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AD9F486787
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 17:21:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12E0748678B
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 17:21:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241139AbiAFQU6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 11:20:58 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:38058 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241118AbiAFQUv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 11:20:51 -0500
+        id S241150AbiAFQVE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 11:21:04 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:37972 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241154AbiAFQVD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 11:21:03 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2EE6D61ADE;
-        Thu,  6 Jan 2022 16:20:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B8CAC36AEB;
-        Thu,  6 Jan 2022 16:20:50 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 523EAB82293;
+        Thu,  6 Jan 2022 16:21:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC0DC36AEB;
+        Thu,  6 Jan 2022 16:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641486050;
-        bh=tEtW2h+2Lml3QZ0awOJ4+V2sW+V5FDCEQIaq2JbAx0o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n4X4ukKFQf952HWj5iECZCl5uLe4XzoulaI9hdKT2MdnvMADMHd/YT7YbBZhhX2Rq
-         zkKwiyNyZoNtWz6OApbp8yrImV2OE+wn0o97HFRqOcNVkzY9orQT38mQsUFw8HeNYy
-         +yWKqkMNKmucsEUUB/lVDq+tnz5ZCh0xRxOS+1QZ2Fz0mcJp3ZErzWAiIfm9EXq+YZ
-         LvNW8V+JisCaCdQjh2GZl7JKB917EkjJdaFEASA7+vAkYiWrOTI+9I23Rmug/DRebY
-         OMrpvISDlaDFRQqeTVEl/3S7lVZpYkJdZWOpWIkJzNhMudrNPG79gLLQSEseobCttc
-         2vw11mqcUSUCg==
-Received: by pali.im (Postfix)
-        id A4959BFF; Thu,  6 Jan 2022 17:20:47 +0100 (CET)
-Date:   Thu, 6 Jan 2022 17:20:47 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 10/11] PCI: mvebu: Implement support for legacy INTx
- interrupts
-Message-ID: <20220106162047.vqykmygs75eimfgy@pali>
-References: <20220105150239.9628-1-pali@kernel.org>
- <20220105150239.9628-11-pali@kernel.org>
- <87bl0ovq7f.wl-maz@kernel.org>
- <20220106154447.aie6taiuvav5wu6y@pali>
- <878rvsvoyo.wl-maz@kernel.org>
+        s=k20201202; t=1641486059;
+        bh=+eu0kFS5XuECOf38/1qOb3kYT6FMacBFZqWduz0+JaA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=QQxVbOuDAyqEEdJWiTrDtvzwG7bjz4d5kmj08f9Rd/17nSlrIgtMEO/xCK2KHFS5U
+         wd4RlZ9rXyZQX3UwecojYbZGSF62eIlOWNoEfcInxlYwbGeP0e+Fcpy9RUxZQl5o/y
+         zu66aTxlMYgtTw1w6O4xGA8LMSHtuOtH2IM3IvkwSrJNiL5faP5NoUm6yRyGA53d1a
+         UTvsA/AomGGHkcctJ49LmPd9vEc9TWH05OpnfHNT8lQ2Ct8o2+bp+AUp2uTJ+xSskS
+         2U2SwNCaG/hW5PwvlDRvE6EmtTBZyyzObR0KzL9bogebqWYtlppfVdAECplJimvHyU
+         n12jBhUb3VcPw==
+Date:   Thu, 6 Jan 2022 10:20:58 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Huacai Chen <chenhuacai@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Bruno =?iso-8859-1?Q?Pr=E9mont?= <bonbons@linux-vserver.org>
+Subject: Re: [PATCH v8 04/10] vgaarb: Move framebuffer detection to
+ ADD_DEVICE path
+Message-ID: <20220106162058.GA284940@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <878rvsvoyo.wl-maz@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAAhV-H4BTAKdRwv+Wq7QRfMQRajQYzz3CqjvoGTrKujn47F3Yg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 06 January 2022 15:55:11 Marc Zyngier wrote:
-> On Thu, 06 Jan 2022 15:44:47 +0000,
-> Pali Rohár <pali@kernel.org> wrote:
-> > 
-> > On Thursday 06 January 2022 15:28:20 Marc Zyngier wrote:
-> > > On Wed, 05 Jan 2022 15:02:38 +0000,
-> > > Pali Rohár <pali@kernel.org> wrote:
-> > > > 
-> > > > This adds support for legacy INTx interrupts received from other PCIe
-> > > > devices and which are reported by a new INTx irq chip.
-> > > > 
-> > > > With this change, kernel can distinguish between INTA, INTB, INTC and INTD
-> > > > interrupts.
-> > > > 
-> > > > Note that for this support, device tree files has to be properly adjusted
-> > > > to provide "interrupts" or "interrupts-extended" property with intx
-> > > > interrupt source, "interrupt-names" property with "intx" string and also
-> > > > 'interrupt-controller' subnode must be defined.
-> > > > 
-> > > > If device tree files do not provide these nodes then driver would work as
-> > > > before.
-> > > > 
-> > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > ---
-> > > >  drivers/pci/controller/pci-mvebu.c | 182 +++++++++++++++++++++++++++--
-> > > >  1 file changed, 174 insertions(+), 8 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> > > > index 1e90ab888075..04bcdd7b7a6d 100644
-> > > > --- a/drivers/pci/controller/pci-mvebu.c
-> > > > +++ b/drivers/pci/controller/pci-mvebu.c
-> > > > @@ -54,9 +54,10 @@
-> > > >  	 PCIE_CONF_ADDR_EN)
-> > > >  #define PCIE_CONF_DATA_OFF	0x18fc
-> > > >  #define PCIE_INT_CAUSE_OFF	0x1900
-> > > > +#define PCIE_INT_UNMASK_OFF	0x1910
-> > > > +#define  PCIE_INT_INTX(i)		BIT(24+i)
-> > > >  #define  PCIE_INT_PM_PME		BIT(28)
-> > > > -#define PCIE_MASK_OFF		0x1910
-> > > > -#define  PCIE_MASK_ENABLE_INTS          0x0f000000
-> > > > +#define  PCIE_INT_ALL_MASK		GENMASK(31, 0)
-> > > >  #define PCIE_CTRL_OFF		0x1a00
-> > > >  #define  PCIE_CTRL_X1_MODE		0x0001
-> > > >  #define  PCIE_CTRL_RC_MODE		BIT(1)
-> > > > @@ -110,6 +111,10 @@ struct mvebu_pcie_port {
-> > > >  	struct mvebu_pcie_window iowin;
-> > > >  	u32 saved_pcie_stat;
-> > > >  	struct resource regs;
-> > > > +	struct irq_domain *intx_irq_domain;
-> > > > +	struct irq_chip intx_irq_chip;
-> > > 
-> > > Why is this structure per port? It really should be global. Printing
-> > > the port number in the name isn't enough of a reason.
-> > 
-> > Because each port has its own independent set of INTA-INTD
-> > interrupts.
-> 
-> That doesn't warrant a copy of an irq_chip structure that contains the
-> exact same callbacks, and only differs by *a string*. And the use of
-> this string is only to end-up in /proc/interrupts, which is totally
-> pointless.
-> 
-> > 
-> > > > +	raw_spinlock_t irq_lock;
-> > > > +	int intx_irq;
-> > > >  };
-> > > >  
-> > > >  static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u32 reg)
-> > > > @@ -235,7 +240,7 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
-> > > >  
-> > > >  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
-> > > >  {
-> > > > -	u32 ctrl, lnkcap, cmd, dev_rev, mask;
-> > > > +	u32 ctrl, lnkcap, cmd, dev_rev, unmask;
-> > > >  
-> > > >  	/* Setup PCIe controller to Root Complex mode. */
-> > > >  	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
-> > > > @@ -288,10 +293,30 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
-> > > >  	/* Point PCIe unit MBUS decode windows to DRAM space. */
-> > > >  	mvebu_pcie_setup_wins(port);
-> > > >  
-> > > > -	/* Enable interrupt lines A-D. */
-> > > > -	mask = mvebu_readl(port, PCIE_MASK_OFF);
-> > > > -	mask |= PCIE_MASK_ENABLE_INTS;
-> > > > -	mvebu_writel(port, mask, PCIE_MASK_OFF);
-> > > > +	/* Mask all interrupt sources. */
-> > > > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
-> > > > +
-> > > > +	/* Clear all interrupt causes. */
-> > > > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
-> > > > +
-> > > > +	if (port->intx_irq <= 0) {
-> > > > +		/*
-> > > > +		 * When neither "summary" interrupt, nor "intx" interrupt was
-> > > > +		 * specified in DT then unmask all legacy INTx interrupts as in
-> > > > +		 * this case driver does not provide a way for masking and
-> > > > +		 * unmasking of individual legacy INTx interrupts. In this case
-> > > > +		 * all interrupts, including legacy INTx are reported via one
-> > > > +		 * shared GIC source and therefore kernel cannot distinguish
-> > > > +		 * which individual legacy INTx was triggered. These interrupts
-> > > > +		 * are shared, so it should not cause any issue. Just
-> > > > +		 * performance penalty as every PCIe interrupt handler needs to
-> > > > +		 * be called when some interrupt is triggered.
-> > > > +		 */
-> > > > +		unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> > > > +		unmask |= PCIE_INT_INTX(0) | PCIE_INT_INTX(1) |
-> > > > +			  PCIE_INT_INTX(2) | PCIE_INT_INTX(3);
-> > > > +		mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
-> > > 
-> > > Maybe worth printing a warning here, so that the user knows they are
-> > > on thin ice.
-> > 
-> > Ok. I can add it here. Anyway, this is default current state without
-> > this patch.
-> > 
-> > > > +	}
-> > > >  }
-> > > >  
-> > > >  static struct mvebu_pcie_port *mvebu_pcie_find_port(struct mvebu_pcie *pcie,
-> > > > @@ -924,6 +949,109 @@ static struct pci_ops mvebu_pcie_ops = {
-> > > >  	.write = mvebu_pcie_wr_conf,
-> > > >  };
-> > > >  
-> > > > +static void mvebu_pcie_intx_irq_mask(struct irq_data *d)
-> > > > +{
-> > > > +	struct mvebu_pcie_port *port = d->domain->host_data;
-> > > > +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> > > > +	unsigned long flags;
-> > > > +	u32 unmask;
-> > > > +
-> > > > +	raw_spin_lock_irqsave(&port->irq_lock, flags);
-> > > > +	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> > > > +	unmask &= ~PCIE_INT_INTX(hwirq);
-> > > > +	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
-> > > > +	raw_spin_unlock_irqrestore(&port->irq_lock, flags);
-> > > > +}
-> > > > +
-> > > > +static void mvebu_pcie_intx_irq_unmask(struct irq_data *d)
-> > > > +{
-> > > > +	struct mvebu_pcie_port *port = d->domain->host_data;
-> > > > +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> > > > +	unsigned long flags;
-> > > > +	u32 unmask;
-> > > > +
-> > > > +	raw_spin_lock_irqsave(&port->irq_lock, flags);
-> > > > +	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> > > > +	unmask |= PCIE_INT_INTX(hwirq);
-> > > > +	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
-> > > > +	raw_spin_unlock_irqrestore(&port->irq_lock, flags);
-> > > > +}
-> > > > +
-> > > > +static int mvebu_pcie_intx_irq_map(struct irq_domain *h,
-> > > > +				   unsigned int virq, irq_hw_number_t hwirq)
-> > > > +{
-> > > > +	struct mvebu_pcie_port *port = h->host_data;
-> > > > +
-> > > > +	irq_set_status_flags(virq, IRQ_LEVEL);
-> > > > +	irq_set_chip_and_handler(virq, &port->intx_irq_chip, handle_level_irq);
-> > > > +	irq_set_chip_data(virq, port);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static const struct irq_domain_ops mvebu_pcie_intx_irq_domain_ops = {
-> > > > +	.map = mvebu_pcie_intx_irq_map,
-> > > > +	.xlate = irq_domain_xlate_onecell,
-> > > > +};
-> > > > +
-> > > > +static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *port)
-> > > > +{
-> > > > +	struct device *dev = &port->pcie->pdev->dev;
-> > > > +	struct device_node *pcie_intc_node;
-> > > > +
-> > > > +	raw_spin_lock_init(&port->irq_lock);
-> > > > +
-> > > > +	port->intx_irq_chip.name = devm_kasprintf(dev, GFP_KERNEL,
-> > > > +						  "mvebu-%s-INTx",
-> > > > +						  port->name);
-> > > 
-> > > That's exactly what I really don't want to see. It prevents sharing of
-> > > the irq_chip structure, and gets in the way of making it const in the
-> > > future. Yes, I know that some drivers do that. I can't fix those,
-> > > because /proc/interrupts is ABI. But I really don't want to see more
-> > > of these.
-> > 
-> > Well, I do not understand why it should be shared and with who. HW has N
-> > independent IRQ chips for legacy interrupts. And each one will be
-> > specified in DT per HW layout / design.
-> 
-> If you have multiple ports, all the ports can share the irq_chip
-> structure. Actually scratch that. They *MUST* share the structure. The
-> only reason you're not sharing it is to be able to print this useless
-> string in /proc/interrupts.
+On Thu, Jan 06, 2022 at 02:44:42PM +0800, Huacai Chen wrote:
+> On Thu, Jan 6, 2022 at 8:07 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > Previously we selected a device that owns the boot framebuffer as the
+> > default device in vga_arb_select_default_device().  This was only done in
+> > the vga_arb_device_init() subsys_initcall, so devices enumerated later,
+> > e.g., by pcibios_init(), were not eligible.
+> >
+> > Fix this by moving the framebuffer device selection from
+> > vga_arb_select_default_device() to vga_arbiter_add_pci_device(), which is
+> > called after every PCI device is enumerated, either by the
+> > vga_arb_device_init() subsys_initcall or as an ADD_DEVICE notifier.
+> >
+> > Note that if vga_arb_select_default_device() found a device owning the boot
+> > framebuffer, it unconditionally set it to be the default VGA device, and no
+> > subsequent device could replace it.
+> >
+> > Link: https://lore.kernel.org/r/20211015061512.2941859-7-chenhuacai@loongson.cn
+> > Based-on-patch-by: Huacai Chen <chenhuacai@loongson.cn>
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Bruno Pr�mont <bonbons@linux-vserver.org>
+> > ---
+> >  drivers/gpu/vga/vgaarb.c | 37 +++++++++++++++++--------------------
+> >  1 file changed, 17 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/gpu/vga/vgaarb.c b/drivers/gpu/vga/vgaarb.c
+> > index b0ae0f177c6f..aefa4f406f7d 100644
+> > --- a/drivers/gpu/vga/vgaarb.c
+> > +++ b/drivers/gpu/vga/vgaarb.c
+> > @@ -72,6 +72,7 @@ struct vga_device {
+> >         unsigned int io_norm_cnt;       /* normal IO count */
+> >         unsigned int mem_norm_cnt;      /* normal MEM count */
+> >         bool bridge_has_one_vga;
+> > +       bool is_framebuffer;    /* BAR covers firmware framebuffer */
+> >         unsigned int (*set_decode)(struct pci_dev *pdev, bool decode);
+> >  };
+> >
+> > @@ -565,10 +566,9 @@ void vga_put(struct pci_dev *pdev, unsigned int rsrc)
+> >  }
+> >  EXPORT_SYMBOL(vga_put);
+> >
+> > -static void __init vga_select_framebuffer_device(struct pci_dev *pdev)
+> > +static bool vga_is_framebuffer_device(struct pci_dev *pdev)
+> >  {
+> >  #if defined(CONFIG_X86) || defined(CONFIG_IA64)
+> > -       struct device *dev = &pdev->dev;
+> >         u64 base = screen_info.lfb_base;
+> >         u64 size = screen_info.lfb_size;
+> >         u64 limit;
+> > @@ -583,15 +583,6 @@ static void __init vga_select_framebuffer_device(struct pci_dev *pdev)
+> >
+> >         limit = base + size;
+> >
+> > -       /*
+> > -        * Override vga_arbiter_add_pci_device()'s I/O based detection
+> > -        * as it may take the wrong device (e.g. on Apple system under
+> > -        * EFI).
+> > -        *
+> > -        * Select the device owning the boot framebuffer if there is
+> > -        * one.
+> > -        */
+> > -
+> >         /* Does firmware framebuffer belong to us? */
+> >         for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
+> >                 flags = pci_resource_flags(pdev, i);
+> > @@ -608,13 +599,10 @@ static void __init vga_select_framebuffer_device(struct pci_dev *pdev)
+> >                 if (base < start || limit >= end)
+> >                         continue;
+> >
+> > -               if (!vga_default_device())
+> > -                       vgaarb_info(dev, "setting as boot device\n");
+> > -               else if (pdev != vga_default_device())
+> > -                       vgaarb_info(dev, "overriding boot device\n");
+> > -               vga_set_default_device(pdev);
+> > +               return true;
+> >         }
+> >  #endif
+> > +       return false;
+> >  }
+> >
+> >  static bool vga_arb_integrated_gpu(struct device *dev)
+> > @@ -635,6 +623,7 @@ static bool vga_arb_integrated_gpu(struct device *dev)
+> >  static bool vga_is_boot_device(struct vga_device *vgadev)
+> >  {
+> >         struct vga_device *boot_vga = vgadev_find(vga_default_device());
+> > +       struct pci_dev *pdev = vgadev->pdev;
+> >
+> >         /*
+> >          * We select the default VGA device in this order:
+> > @@ -645,6 +634,18 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
+> >          *   Other device (see vga_arb_select_default_device())
+> >          */
+> >
+> > +       /*
+> > +        * We always prefer a firmware framebuffer, so if we've already
+> > +        * found one, there's no need to consider vgadev.
+> > +        */
+> > +       if (boot_vga && boot_vga->is_framebuffer)
+> > +               return false;
+> > +
+> > +       if (vga_is_framebuffer_device(pdev)) {
+> > +               vgadev->is_framebuffer = true;
+> > +               return true;
+> > +       }
+> Maybe it is better to rename vga_is_framebuffer_device() to
+> vga_is_firmware_device() and rename is_framebuffer to
+> is_fw_framebuffer?
 
-What is the point of sharing one irq chip if HW has N independent irq
-chips (for legacy interrupts)? I do not catch it yet. And I do not care
-here for /proc/interrupts, so also I have not caught what do you mean be
-last sentence with "the only reason".
+That's a great point, thanks!
 
-And I still do not see how it could even work to have just one irq chip
-and one irq domain as each irq domain needs to know to which port it
-belongs, so it can mask/unmask interrupts from correct port. Also
-initialization of domain is taking DT node and for each port it is
-different.
+The "framebuffer" term is way too generic.  *All* VGA devices have a
+framebuffer, so it adds no information.  This is really about finding
+the device that was used by firmware.
 
-So I'm somehow confused here...
+I renamed:
 
-The improvement in this patch is to be able to mask INTA interrupts on
-port 1 and let INTA interrupts unmasked on port 2 if there drivers are
-interested only for interrupts from device connected to port 2.
+  vga_is_framebuffer_device() -> vga_is_firmware_default()
+  vga_device.is_framebuffer   -> vga_device.is_firmware_default
 
-And if all interrupts are going to be shared (again) then it does not
-solve any problem.
+I updated my local branch and pushed it to:
+https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/vga
+with head 0f4caffa1297 ("vgaarb: Replace full MIT license text with
+SPDX identifier").
+
+I don't maintain drivers/gpu/vga/vgaarb.c, so this branch is just for
+reference.  It'll ultimately be up to the DRM folks to handle this.
+
+I'll wait for any other comments or testing reports before reposting.
+
+> >         /*
+> >          * A legacy VGA device has MEM and IO enabled and any bridges
+> >          * leading to it have PCI_BRIDGE_CTL_VGA enabled so the legacy
+> > @@ -1531,10 +1532,6 @@ static void __init vga_arb_select_default_device(void)
+> >         struct pci_dev *pdev, *found = NULL;
+> >         struct vga_device *vgadev;
+> >
+> > -       list_for_each_entry(vgadev, &vga_list, list) {
+> > -               vga_select_framebuffer_device(vgadev->pdev);
+> > -       }
+> > -
+> >         if (!vga_default_device()) {
+> >                 list_for_each_entry_reverse(vgadev, &vga_list, list) {
+> >                         struct device *dev = &vgadev->pdev->dev;
+> > --
+> > 2.25.1
+> >
