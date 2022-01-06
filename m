@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C02E54863AE
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 12:24:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C6F54863B0
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 12:24:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238432AbiAFLYK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 06:24:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43652 "EHLO
+        id S238443AbiAFLYN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 06:24:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238430AbiAFLYJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 06:24:09 -0500
+        with ESMTP id S238430AbiAFLYM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 06:24:12 -0500
 Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B3560C061245;
-        Thu,  6 Jan 2022 03:24:08 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7D91FC061245;
+        Thu,  6 Jan 2022 03:24:12 -0800 (PST)
 Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 5590A92009E; Thu,  6 Jan 2022 12:24:06 +0100 (CET)
+        id CE8FE92009C; Thu,  6 Jan 2022 12:24:11 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 4F37692009D;
-        Thu,  6 Jan 2022 11:24:06 +0000 (GMT)
-Date:   Thu, 6 Jan 2022 11:24:06 +0000 (GMT)
+        by angie.orcam.me.uk (Postfix) with ESMTP id C764292009B;
+        Thu,  6 Jan 2022 11:24:11 +0000 (GMT)
+Date:   Thu, 6 Jan 2022 11:24:11 +0000 (GMT)
 From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
 To:     Nikolai Zhubr <zhubr.2@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -29,10 +29,9 @@ To:     Nikolai Zhubr <zhubr.2@gmail.com>,
 cc:     Arnd Bergmann <arnd@kernel.org>,
         Michal Necasek <mnecasek@yahoo.com>, x86@kernel.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/4] x86/PCI: Handle PIRQ routing tables with no router
- device given
+Subject: [PATCH v3 2/4] x86/PCI: Add $IRT PIRQ routing table support
 In-Reply-To: <alpine.DEB.2.21.2201021821480.56863@angie.orcam.me.uk>
-Message-ID: <alpine.DEB.2.21.2201022007170.56863@angie.orcam.me.uk>
+Message-ID: <alpine.DEB.2.21.2201022058050.56863@angie.orcam.me.uk>
 References: <alpine.DEB.2.21.2201021821480.56863@angie.orcam.me.uk>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
@@ -41,137 +40,150 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PIRQ routing tables provided by the PCI BIOS usually specify the PCI 
-vendor:device ID as well as the bus address of the device implementing 
-the PIRQ router, e.g.:
+Handle the $IRT PCI IRQ Routing Table format used by AMI for its BCP 
+(BIOS Configuration Program) external tool meant for tweaking BIOS 
+structures without the need to rebuild it from sources[1].
 
-PCI: Interrupt Routing Table found at 0xc00fde10
-[...]
-PCI: Attempting to find IRQ router for [8086:7000]
-pci 0000:00:07.0: PIIX/ICH IRQ router [8086:7000]
+The $IRT format has been invented by AMI before Microsoft has come up 
+with its $PIR format and a $IRT table is therefore there in some systems 
+that lack a $PIR table, such as the DataExpert EXP8449 mainboard based 
+on the ALi FinALi 486 chipset (M1489/M1487), which predates DMI 2.0 and 
+cannot therefore be easily identified at run time.
 
-however in some cases they do not, in which case we fail to match the 
-router handler, e.g.:
+Unlike with the $PIR format there is no alignment guarantee as to the 
+placement of the $IRT table, so scan the whole BIOS area bytewise.
 
-PCI: Interrupt Routing Table found at 0xc00fdae0
-[...]
-PCI: Attempting to find IRQ router for [0000:0000]
-PCI: Interrupt router not found at 00:00
+Credit to Michal Necasek for helping me chase documentation for the 
+format.
 
-This is because we always match the vendor:device ID and the bus address 
-literally, even if they are all zeros.
+References:
 
-Handle this case then and iterate over all PCI devices until we find a 
-matching router handler if the vendor ID given by the routing table is 
-the invalid value of zero:
-
-PCI: Attempting to find IRQ router for [0000:0000]
-PCI: Trying IRQ router for [1039:0496]
-pci 0000:00:05.0: SiS85C497 IRQ router [1039:0496]
+[1] "What is BCP? - AMI", <https://www.ami.com/what-is-bcp/>
 
 Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
-Tested-by: Nikolai Zhubr <zhubr.2@gmail.com>
+Cc: Michal Necasek <mnecasek@yahoo.com>
 ---
-Changes from v2:
-
-- document new output in the change description,
-
-- add Nikolai's Tested-by annotation.
-
-Changes from v1:
-
-- preinitialise `dev' in `pirq_find_router' for `for_each_pci_dev',
-
-- avoid calling `pirq_try_router' with null `dev'.
+New change in v3.
 ---
- arch/x86/pci/irq.c |   64 ++++++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 44 insertions(+), 20 deletions(-)
+ arch/x86/include/asm/pci_x86.h |    9 +++++
+ arch/x86/pci/irq.c             |   71 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+)
 
-linux-x86-pirq-router-nodev.diff
+linux-x86-pirq-irt.diff
+Index: linux-macro/arch/x86/include/asm/pci_x86.h
+===================================================================
+--- linux-macro.orig/arch/x86/include/asm/pci_x86.h
++++ linux-macro/arch/x86/include/asm/pci_x86.h
+@@ -90,6 +90,15 @@ struct irq_routing_table {
+ 	struct irq_info slots[0];
+ } __attribute__((packed));
+ 
++struct irt_routing_table {
++	u32 signature;			/* IRT_SIGNATURE should be here */
++	u8 size;			/* Number of entries provided */
++	u8 used;			/* Number of entries actually used */
++	u16 exclusive_irqs;		/* IRQs devoted exclusively to
++					   PCI usage */
++	struct irq_info slots[0];
++} __attribute__((packed));
++
+ extern unsigned int pcibios_irq_mask;
+ 
+ extern raw_spinlock_t pci_config_lock;
 Index: linux-macro/arch/x86/pci/irq.c
 ===================================================================
 --- linux-macro.orig/arch/x86/pci/irq.c
 +++ linux-macro/arch/x86/pci/irq.c
-@@ -1175,10 +1175,32 @@ static struct pci_dev *pirq_router_dev;
-  *	chipset" ?
-  */
+@@ -25,6 +25,8 @@
+ #define PIRQ_SIGNATURE	(('$' << 0) + ('P' << 8) + ('I' << 16) + ('R' << 24))
+ #define PIRQ_VERSION 0x0100
  
-+static bool __init pirq_try_router(struct irq_router *r,
-+				   struct irq_routing_table *rt,
-+				   struct pci_dev *dev)
-+{
-+	struct irq_router_handler *h;
++#define IRT_SIGNATURE	(('$' << 0) + ('I' << 8) + ('R' << 16) + ('T' << 24))
 +
-+	DBG(KERN_DEBUG "PCI: Trying IRQ router for [%04x:%04x]\n",
-+	    dev->vendor, dev->device);
-+
-+	for (h = pirq_routers; h->vendor; h++) {
-+		/* First look for a router match */
-+		if (rt->rtr_vendor == h->vendor &&
-+		    h->probe(r, dev, rt->rtr_device))
-+			return true;
-+		/* Fall back to a device match */
-+		if (dev->vendor == h->vendor &&
-+		    h->probe(r, dev, dev->device))
-+			return true;
-+	}
-+	return false;
-+}
-+
- static void __init pirq_find_router(struct irq_router *r)
- {
- 	struct irq_routing_table *rt = pirq_table;
--	struct irq_router_handler *h;
-+	struct pci_dev *dev;
+ static int broken_hp_bios_irq9;
+ static int acer_tm360_irqrouting;
  
- #ifdef CONFIG_PCI_BIOS
- 	if (!rt->signature) {
-@@ -1197,27 +1219,29 @@ static void __init pirq_find_router(stru
- 	DBG(KERN_DEBUG "PCI: Attempting to find IRQ router for [%04x:%04x]\n",
- 	    rt->rtr_vendor, rt->rtr_device);
- 
--	pirq_router_dev = pci_get_domain_bus_and_slot(0, rt->rtr_bus,
--						      rt->rtr_devfn);
--	if (!pirq_router_dev) {
--		DBG(KERN_DEBUG "PCI: Interrupt router not found at "
--			"%02x:%02x\n", rt->rtr_bus, rt->rtr_devfn);
--		return;
-+	/* Use any vendor:device provided by the routing table or try all.  */
-+	if (rt->rtr_vendor) {
-+		dev = pci_get_domain_bus_and_slot(0, rt->rtr_bus,
-+						  rt->rtr_devfn);
-+		if (dev && pirq_try_router(r, rt, dev))
-+			pirq_router_dev = dev;
-+	} else {
-+		dev = NULL;
-+		for_each_pci_dev(dev) {
-+			if (pirq_try_router(r, rt, dev)) {
-+				pirq_router_dev = dev;
-+				break;
-+			}
-+		}
- 	}
- 
--	for (h = pirq_routers; h->vendor; h++) {
--		/* First look for a router match */
--		if (rt->rtr_vendor == h->vendor &&
--			h->probe(r, pirq_router_dev, rt->rtr_device))
--			break;
--		/* Fall back to a device match */
--		if (pirq_router_dev->vendor == h->vendor &&
--			h->probe(r, pirq_router_dev, pirq_router_dev->device))
--			break;
--	}
--	dev_info(&pirq_router_dev->dev, "%s IRQ router [%04x:%04x]\n",
--		 pirq_router.name,
--		 pirq_router_dev->vendor, pirq_router_dev->device);
-+	if (pirq_router_dev)
-+		dev_info(&pirq_router_dev->dev, "%s IRQ router [%04x:%04x]\n",
-+			 pirq_router.name,
-+			 pirq_router_dev->vendor, pirq_router_dev->device);
-+	else
-+		DBG(KERN_DEBUG "PCI: Interrupt router not found at "
-+		    "%02x:%02x\n", rt->rtr_bus, rt->rtr_devfn);
- 
- 	/* The device remains referenced for the kernel lifetime */
+@@ -91,7 +93,69 @@ static inline struct irq_routing_table *
+ 	return NULL;
  }
+ 
++/*
++ * Handle the $IRT PCI IRQ Routing Table format used by AMI for its BCP
++ * (BIOS Configuration Program) external tool meant for tweaking BIOS
++ * structures without the need to rebuild it from sources.  The $IRT
++ * format has been invented by AMI before Microsoft has come up with its
++ * $PIR format and a $IRT table is therefore there in some systems that
++ * lack a $PIR table.
++ *
++ * It uses the same PCI BIOS 2.1 format for interrupt routing entries
++ * themselves but has a different simpler header prepended instead,
++ * occupying 8 bytes, where a `$IRT' signature is followed by one byte
++ * specifying the total number of interrupt routing entries allocated in
++ * the table, then one byte specifying the actual number of entries used
++ * (which the BCP tool can take advantage of when modifying the table),
++ * and finally a 16-bit word giving the IRQs devoted exclusively to PCI.
++ * Unlike with the $PIR table there is no alignment guarantee.
++ *
++ * Given the similarity of the two formats the $IRT one is trivial to
++ * convert to the $PIR one, which we do here, except that obviously we
++ * have no information as to the router device to use, but we can handle
++ * it by matching PCI device IDs actually seen on the bus against ones
++ * that our individual routers recognise.
++ *
++ * Reportedly there is another $IRT table format where a 16-bit word
++ * follows the header instead that points to interrupt routing entries
++ * in a $PIR table provided elsewhere.  In that case this code will not
++ * be reached though as the $PIR table will have been chosen instead.
++ */
++static inline struct irq_routing_table *pirq_convert_irt_table(u8 *addr)
++{
++	struct irt_routing_table *ir;
++	struct irq_routing_table *rt;
++	u16 size;
++	u8 sum;
++	int i;
++
++	ir = (struct irt_routing_table *)addr;
++	if (ir->signature != IRT_SIGNATURE || !ir->used || ir->size < ir->used)
++		return NULL;
+ 
++	DBG(KERN_DEBUG "PCI: $IRT Interrupt Routing Table found at 0x%lx\n",
++	    __pa(ir));
++
++	size = sizeof(*rt) + ir->used * sizeof(rt->slots[0]);
++	rt = kzalloc(size, GFP_KERNEL);
++	if (!rt)
++		return NULL;
++
++	rt->signature = PIRQ_SIGNATURE;
++	rt->version = PIRQ_VERSION;
++	rt->size = size;
++	rt->exclusive_irqs = ir->exclusive_irqs;
++	for (i = 0; i < ir->used; i++)
++		rt->slots[i] = ir->slots[i];
++
++	addr = (u8 *)rt;
++	sum = 0;
++	for (i = 0; i < size; i++)
++		sum += addr[i];
++	rt->checksum = -sum;
++
++	return rt;
++}
+ 
+ /*
+  *  Search 0xf0000 -- 0xfffff for the PCI IRQ Routing Table.
+@@ -113,6 +177,13 @@ static struct irq_routing_table * __init
+ 		if (rt)
+ 			return rt;
+ 	}
++	for (addr = (u8 *)__va(0xf0000);
++	     addr < (u8 *)__va(0x100000);
++	     addr++) {
++		rt = pirq_convert_irt_table(addr);
++		if (rt)
++			return rt;
++	}
+ 	return NULL;
+ }
+ 
