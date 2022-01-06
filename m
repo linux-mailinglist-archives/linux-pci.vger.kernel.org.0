@@ -2,118 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54C57486D51
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 23:43:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8FAD486D58
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 23:45:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245211AbiAFWnQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 17:43:16 -0500
-Received: from mga02.intel.com ([134.134.136.20]:40617 "EHLO mga02.intel.com"
+        id S245187AbiAFWpt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 17:45:49 -0500
+Received: from mga05.intel.com ([192.55.52.43]:22026 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245174AbiAFWnQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Jan 2022 17:43:16 -0500
+        id S245167AbiAFWps (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jan 2022 17:45:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641508996; x=1673044996;
-  h=from:to:cc:subject:date:message-id;
-  bh=J0lYaPKiO3Z2fUqHbeBLy4j704xQ/+PqCtoBeTZQGlQ=;
-  b=STg+x+QLdY4/6V77pNZ/IbgMQtmbG2e4tdzkFD3EOWLA0ZtQhE8wF713
-   0vYKzSV3DP9lEvLjHdaUuKKHuPC1b9JMac8VNliw4RNc9cuXqr2QMpJgL
-   Ji4K3gYXwPwwMHcRSSRMaAmTFXHElXy1JkNcDl0gDvNqOMFmUSzHf9SjC
-   GSxE0nFch0SgWmoJ330QqKceOMqwkNNKJPnNHkuho6E5bbN8AyKtKe8HY
-   NqTikBBTTd84/GcHt/NunMTmfi+tj9eOvSyCXHXtYW9SYBsO8STLv3Pdl
-   QqVODRjzR2RYxB6iEHjULxZTeKzdNsLbYjE25jxJ/6oLhcd6bPwVmzp33
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="230095719"
+  t=1641509148; x=1673045148;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2yKiysNW48zWRq0SqZnWVCLvA8i0IgkDGR/I+OUaIsk=;
+  b=T5nhqUvAMH7l/zOKzc2a8INOep/rIeuKTA7ufpEU+pht+p5Rn48px8n3
+   f/mc3x0sRCQ4YRpI/kyVh7r8VMXrtFP3XFIAVgntXxe69R0ExBTksMBdh
+   JM+V0Sq9qeVC5AIeHOU/FYNAs5nr0FCgyi9UHcF5u3XfY+OxKp2g7/i8d
+   4F9Q2W0iCH+kErkMKV5pOrjxTz0u6FHO++pSgzltS+UxdggDjJrkSGsRM
+   p/iboHoQoAtxLDISezLLozjO190ia6yH0uh+QBArIKHifqHK8mt+d3Vse
+   wOiptFNEbHBshJqyW7bsGyIe2wD63Dc981pnRU8XxfyqkoQIIq/a+Wn+9
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="329098097"
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="230095719"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 14:43:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,267,1635231600"; 
-   d="scan'208";a="489092865"
-Received: from brillo-chrome.jf.intel.com ([10.54.77.27])
-  by orsmga002.jf.intel.com with ESMTP; 06 Jan 2022 14:43:12 -0800
-From:   Sanrio Alvares <sanrio.alvares@intel.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     mika.westerberg@linux.intel.com,
-        Sanrio Alvares <sanrio.alvares@intel.com>
-Subject: [PATCH] PCI / thunderbolt: Add quirk to handle incorrect Supported Link Speeds
-Date:   Thu,  6 Jan 2022 22:42:40 +0000
-Message-Id: <20220106224240.31052-1-sanrio.alvares@intel.com>
-X-Mailer: git-send-email 2.17.1
+   d="scan'208";a="329098097"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 14:45:47 -0800
+X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
+   d="scan'208";a="513566624"
+Received: from sumedhrr-mobl2.amr.corp.intel.com (HELO ldmartin-desk2) ([10.209.102.95])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 14:45:46 -0800
+Date:   Thu, 6 Jan 2022 14:45:45 -0800
+From:   Lucas De Marchi <lucas.demarchi@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v2 2/2] x86/quirks: better wrap quirk conditions
+Message-ID: <20220106224545.hfrxehkztm5eht7s@ldmartin-desk2>
+X-Patchwork-Hint: comment
+References: <20220106003654.770316-2-lucas.demarchi@intel.com>
+ <20220106222325.GA329826@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20220106222325.GA329826@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In PCIe config space the "Supported Link Speeds" Vector value is 0x07,
-in all downstream ports for Intel Titan Ridge. Which means link
-supports Gen1, Gen2 and Gen3. While actually max link speed is 2.5GT/s
-so the value of this vector should be 0x01.
+On Thu, Jan 06, 2022 at 04:23:25PM -0600, Bjorn Helgaas wrote:
+>On Wed, Jan 05, 2022 at 04:36:54PM -0800, Lucas De Marchi wrote:
+>> Remove extra parenthesis and wrap lines so it's easier to read what are
+>> the conditions being checked. The call to the hook also had an extra
+>> indentation: remove here to conform to coding style.
+>
+>It's nice when your subject lines are consistent.  These look like:
+>
+>  x86/quirks: Fix logic to apply quirk once
+>  x86/quirks: better wrap quirk conditions
+>
+>The second isn't capitalized like the first.  Obviously if you split
 
-As a consequence of reporting >2.5GT/s, we need to delay the full 1s
-which makes resuming longer than needed.
+trying to maintain the entropy from
 
-Signed-off-by: Sanrio Alvares <sanrio.alvares@intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/pci/pci.c    |  4 ++++
- drivers/pci/quirks.c | 14 ++++++++++++++
- include/linux/pci.h  |  1 +
- 3 files changed, 19 insertions(+)
+	git log --oneline --no-merges -- arch/x86/kernel/early-quirks.c
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 3d2fb394986a..92401552d385 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6136,6 +6136,10 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
- {
- 	u32 lnkcap2, lnkcap;
- 
-+	/* Use overridden value of Supported Link Speed */
-+	if (dev->supported_link_speed)
-+		return dev->supported_link_speed;
-+
- 	/*
- 	 * Link Capabilities 2 was added in PCIe r3.0, sec 7.8.18.  The
- 	 * implementation note there recommends using the Supported Link
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 003950c738d2..f1c11a3bb56c 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5293,6 +5293,20 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
- }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
- 
-+/*
-+ * Intel Titan Ridge returns incorrect Supported Link Speeds Vector
-+ * when max Link Speed is 2.5GT/s. This results in an extra 1s delay during
-+ * resume_noirq with pcie tunneling enabled. Override that value:
-+ */
-+void quirk_intel_tbt_supported_link_speeds(struct pci_dev *pdev)
-+{
-+	pci_info(pdev, "applying Supported Link Speeds quirk\n");
-+	pdev->supported_link_speed = PCIE_SPEED_2_5GT;
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15e7, quirk_intel_tbt_supported_link_speeds);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15ea, quirk_intel_tbt_supported_link_speeds);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15ef, quirk_intel_tbt_supported_link_speeds);
-+
- /*
-  * FLR may cause the following to devices to hang:
-  *
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 18a75c8e615c..633e81e9fe3b 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -502,6 +502,7 @@ struct pci_dev {
- 	struct pci_p2pdma __rcu *p2pdma;
- #endif
- 	u16		acs_cap;	/* ACS Capability offset */
-+	u8		supported_link_speed; /* Override Supported Link Speed value from device */
- 	phys_addr_t	rom;		/* Physical address if not from BAR */
- 	size_t		romlen;		/* Length if not from BAR */
- 	char		*driver_override; /* Driver name to force a match */
--- 
-2.17.1
+:). Jokes aside, yeah, my bad.
 
+>the first patch, you'll have three subject lines, and one will mention
+>Alderlake.
+
+See my reply to the first patch - Alderlake is only the reproducer, but
+it's broken in other platforms as well, as long as it's paired with an
+Intel discrete gpu in the "right" pci slot.
+
+It would be weird to send a patch "Fix xyz in Alderlake" and then
+telling people with the same problem in Icelake that they are
+missing that fix. So I went with the approach: 1) what is the generic
+problem; 2) where it was initially reproduced.
+
+thanks
+Lucas De Marchi
+
+>
+>Bjorn
