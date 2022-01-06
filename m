@@ -2,74 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8311E486903
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 18:45:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CC70486951
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 19:00:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242233AbiAFRpn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 12:45:43 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4361 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242161AbiAFRpn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 12:45:43 -0500
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JVDFV64LGz67PH4;
-        Fri,  7 Jan 2022 01:42:22 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 6 Jan 2022 18:45:40 +0100
-Received: from [10.47.27.56] (10.47.27.56) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Thu, 6 Jan
- 2022 17:45:39 +0000
-Subject: Re: [RFC 00/32] Kconfig: Introduce HAS_IOPORT and LEGACY_PCI options
-To:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@kernel.org>,
+        id S242481AbiAFSAd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 13:00:33 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:52790 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242478AbiAFSAa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 13:00:30 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5CA7761CF7;
+        Thu,  6 Jan 2022 18:00:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 992D8C36AEB;
+        Thu,  6 Jan 2022 18:00:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641492028;
+        bh=DYydbgnS2Q5LXHtJFrES1pqwbao4Pez939AcN9KBnvw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=EOsILy3tM+xI/hjivi2NyurzDUrBiXloFSZzBXiTaFxplMSJHHuDMSw/uveKJpPko
+         xjglSC2viJAaYds5RhVnMvlQi7OtPw91HxCXBINDMvmOyXmKm9OuBe0RMU4El8CPcs
+         aZJS+/6iNnuhH2bqTohmg8FJXELmIs30dp76K1eOAVtk4kdA60kk0nAWbP1sD6ayvM
+         4XwHnnprTyOy+QtE3YtAMpyGLvuIud1axMj4fnNUzmjMQ6E7U+nxwL4vSKykxHf+E6
+         qknivFyA+YuMfvPPyLbpbW4q/MSHCr4JSWIKIVHjKnSkuzkLlfvOKSlLrvJBMA2QNA
+         AEUBfAQuLA//Q==
+Date:   Thu, 6 Jan 2022 12:00:26 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Ray Jui <ray.jui@broadcom.com>,
+        Roman Bacik <roman.bacik@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-csky@vger.kernel.org>
-References: <20211227164317.4146918-1-schnelle@linux.ibm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <00c5a9e2-1876-e8d1-68f3-2be6d3bd38cb@huawei.com>
-Date:   Thu, 6 Jan 2022 17:45:24 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: iproc: Set all 24 bits of PCI class code
+Message-ID: <20220106180026.GA295674@bhelgaas>
 MIME-Version: 1.0
-In-Reply-To: <20211227164317.4146918-1-schnelle@linux.ibm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.27.56]
-X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220105181306.mkratasqg36tjf4e@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Niklas,
+On Wed, Jan 05, 2022 at 07:13:06PM +0100, Pali Rohár wrote:
+> On Wednesday 05 January 2022 09:51:48 Ray Jui wrote:
+> > On 1/5/2022 1:35 AM, Pali Rohár wrote:
 
-On 27/12/2021 16:42, Niklas Schnelle wrote:
-> I performed the following testing:
+> > 2. I suppose 'PCI_CLASS_BRIDGE_PCI_NORMAL' is defined in some common PCI
+> > header in a separate patch as described in the commit message. Then how
+> > come these patches are not constructed with a patch series?
 > 
-> - On s390 this series on top of v5.16-rc7 builds with allyesconfig i.e. the
->    HAS_IOPORT=n case.
+> Yes, PCI_CLASS_BRIDGE_PCI_NORMAL is a new constant for common pci header
+> file defined in patch linked in commit message.
+> https://lore.kernel.org/linux-pci/20211220145140.31898-1-pali@kernel.org/
+> 
+> Originally I included this change in v1 of linked patch in December but
+> I realized that it does not match standard PCI config space (different
+> offset 0x43c vs 0x08 and also different shift 0x8 vs 0x0) and probably
+> there is something either incorrect or really non-standard. So later in
+> December I dropped iproc_pcie_check_link() change in v2 of the linked
+> patch where is introduced PCI_CLASS_BRIDGE_PCI_NORMAL and now sent new
+> change for iproc_pcie_check_link() separately.
+> 
+> Technically, linked patch in commit message is just extracting code into
+> the common macros without any functional changed. But change in this
+> iproc_pcie_check_link() has also functional change as now also lower 8
+> bits of class code are changed. So in my opinion this patch should be
+> really separate of linked patch.
+> 
+> I hope that Lorenzo and Bjorn take patches in correct order...
 
-Are you sure that allyesconfig gives HAS_IOPORT=n? Indeed I see no 
-mechanism is always disallow HAS_IOPORT for s390 (which I think we would 
-want).
+If patches are not sent together in a series, you can't assume
+anything about the order they'll be applied in.  Adding a note about
+"this patch depends patch X" helps a little but adds a fair amount of
+friction to the process.
 
-> It also builds with defconfig and the resulting kernel
->    appears fully functional including tests with PCI devices.
-
-Thanks,
-Johnw
-
-
+Bjorn
