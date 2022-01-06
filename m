@@ -2,83 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21C544863B4
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 12:24:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 446EF4863C9
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 12:39:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231355AbiAFLYY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 06:24:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238430AbiAFLYW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 06:24:22 -0500
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9A98EC061201;
-        Thu,  6 Jan 2022 03:24:22 -0800 (PST)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id F41FE92009C; Thu,  6 Jan 2022 12:24:21 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id ED12192009B;
-        Thu,  6 Jan 2022 11:24:21 +0000 (GMT)
-Date:   Thu, 6 Jan 2022 11:24:21 +0000 (GMT)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Nikolai Zhubr <zhubr.2@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-cc:     Arnd Bergmann <arnd@kernel.org>,
-        Michal Necasek <mnecasek@yahoo.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] x86/PCI: Fix coding style in PIRQ table search
- functions
-In-Reply-To: <alpine.DEB.2.21.2201021821480.56863@angie.orcam.me.uk>
-Message-ID: <alpine.DEB.2.21.2201022143470.56863@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2201021821480.56863@angie.orcam.me.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        id S238560AbiAFLjg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 06:39:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:52276 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238526AbiAFLjg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jan 2022 06:39:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8744811D4;
+        Thu,  6 Jan 2022 03:39:35 -0800 (PST)
+Received: from e123427-lin.Home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 034723F774;
+        Thu,  6 Jan 2022 03:39:30 -0800 (PST)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     bp@alien8.de, robh@kernel.org, arnd@arndb.de, bhelgaas@google.com,
+        tglx@linutronix.de, maz@kernel.org, wei.liu@kernel.org,
+        Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
+        sthemmin@microsoft.com, decui@microsoft.com,
+        haiyangz@microsoft.com, kw@linux.com, hpa@zytor.com,
+        mingo@redhat.com, kys@microsoft.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-hyperv@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        linux-arch@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v8 0/2] PCI: hv: Hyper-V vPCI for arm64
+Date:   Thu,  6 Jan 2022 11:39:24 +0000
+Message-Id: <164146914675.4069.11121648725605783394.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <1641411156-31705-1-git-send-email-sunilmut@linux.microsoft.com>
+References: <1641411156-31705-1-git-send-email-sunilmut@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove extraneous spaces around casts and wrap an overlong line in 
-`pirq_check_routing_table' and `pirq_find_routing_table'.
+On Wed, 5 Jan 2022 11:32:34 -0800, Sunil Muthuswamy wrote:
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
+> 
+> Current Hyper-V vPCI code only compiles and works for x86. There are some
+> hardcoded assumptions about the architectural IRQ chip and other arch
+> defines.
+> 
+> Add support for Hyper-V vPCI for arm64 by first breaking the current hard
+> coded dependency using a set of new interfaces and implementing those for
+> x86 first. That is in the first patch. The second patch adds support for
+> Hyper-V vPCI for arm64 by implementing the above mentioned interfaces. That
+> is done by introducing a Hyper-V vPCI specific MSI IRQ domain & chip for
+> allocating SPI vectors.
+> 
+> [...]
 
-Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
----
-New change in v3.
----
- arch/x86/pci/irq.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Applied to pci/hv, thanks!
 
-linux-x86-pirq-format.diff
-Index: linux-macro/arch/x86/pci/irq.c
-===================================================================
---- linux-macro.orig/arch/x86/pci/irq.c
-+++ linux-macro/arch/x86/pci/irq.c
-@@ -76,7 +76,7 @@ static inline struct irq_routing_table *
- 	int i;
- 	u8 sum;
- 
--	rt = (struct irq_routing_table *) addr;
-+	rt = (struct irq_routing_table *)addr;
- 	if (rt->signature != PIRQ_SIGNATURE ||
- 	    rt->version != PIRQ_VERSION ||
- 	    rt->size % 16 ||
-@@ -167,12 +167,14 @@ static struct irq_routing_table * __init
- 	struct irq_routing_table *rt;
- 
- 	if (pirq_table_addr) {
--		rt = pirq_check_routing_table((u8 *) __va(pirq_table_addr));
-+		rt = pirq_check_routing_table((u8 *)__va(pirq_table_addr));
- 		if (rt)
- 			return rt;
- 		printk(KERN_WARNING "PCI: PIRQ table NOT found at pirqaddr\n");
- 	}
--	for (addr = (u8 *) __va(0xf0000); addr < (u8 *) __va(0x100000); addr += 16) {
-+	for (addr = (u8 *)__va(0xf0000);
-+	     addr < (u8 *)__va(0x100000);
-+	     addr += 16) {
- 		rt = pirq_check_routing_table(addr);
- 		if (rt)
- 			return rt;
+[1/2] PCI: hv: Make the code arch neutral by adding arch specific interfaces
+      https://git.kernel.org/lpieralisi/pci/c/6c63f4da30
+[2/2] PCI: hv: Add arm64 Hyper-V vPCI support
+      https://git.kernel.org/lpieralisi/pci/c/c10bdb758c
+
+Thanks,
+Lorenzo
