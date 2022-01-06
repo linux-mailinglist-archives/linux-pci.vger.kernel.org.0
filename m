@@ -2,335 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CCCF48684F
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 18:20:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F1A0486858
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 18:22:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241668AbiAFRUz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 12:20:55 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:45684 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241633AbiAFRUz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 12:20:55 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 8573DCE265F;
-        Thu,  6 Jan 2022 17:20:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA2A7C36AE3;
-        Thu,  6 Jan 2022 17:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641489651;
-        bh=6hGkG8sCapfiKE5GsYhVlbIB0Sw85pSQfdIq/VJCMOY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=j90KTY3hiwGxIaKHuOMWXUbepPuhljaZHQEr8eV1Z4BaoMm5W6fMj8WaRMbAcZkmm
-         UO0mz98oaA8ZOqWRE9BH4dlc1gcoMvFJGN4n8qhQT5l9wbr1NvogdQauJKR3FO35HJ
-         FvOQr4FdWSbD7imtIKiKjaKY2Ym6iwABwomYEPCrviGjeFz4C0LIj6+rnKO7URsj2W
-         2etjKhUdx7sz1b23A9Gr5ku3MRFmJUj0zm2EpDyBBGBpPhSgEOKabx/pg02vq8NESd
-         MpPeEPD2eDjMCfexrPV1s2ymNOwP6qEQPAXoOpWLVj7Mhz0l1zs0BeONKiSbB6rcr9
-         sdw+mwav3CB5A==
-Date:   Thu, 6 Jan 2022 18:20:44 +0100
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S241650AbiAFRWz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 12:22:55 -0500
+Received: from mail-dm6nam10on2046.outbound.protection.outlook.com ([40.107.93.46]:62499
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S241633AbiAFRWy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jan 2022 12:22:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UpiB77ntcxFS6xrkz0LJaTIjX8oUe5DdteT3CYtu+STqCVuhKO5UiFHwBh3bV21mYXtGtSkocHwil1oMOEhOf75kdUc+o1rFQM0z4P3QAZhC2Ol4YbwK+zaL+wDnM6ARBFsJL5Xr6r7uswD3FKuKfHA6uQ+9IFO30QqOJMjz0wY6PmKPORjz9vb3vkZJuosmVizZYQz8o12DSm+9SkGK3vboFc6brFRLPiV0uyDPhAUivgLZCLVrptRgqsxUJmuqOiVOvg6FB4C7YD5Z9aAj5mdRcplro+0oOtTIyCRhJgcwB5pXGKhW1A/zJWCQIeppCUAuJxsG0lMZKpZiIQzRhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xO3ZX4/IJuvy6YJB7dKW1EEoy/wEJ9lxPQERUhZtvDY=;
+ b=i5CZjCzw5fkNxqWGLHMcBcgY0aLv2ozfkGzsgcGwYwIIevALfZGccaUX6MSGbYM8KDHsdjoG3tO1dcq4i22bnK3IJldn/vv/DjkorP9/GUR0gdmv8DvHJ1WKu4pNX8IoNLIJjCxhdjjDi8wq8m9XYc56o4cygea0ECmZsYIPH7GzNds6XimRfKqvRg8spbFLzDIM8M6ipXAmzjpg8yxObEaLOfHLtlNEj6s9Onbm2NCpbx3GZJNd9V7spzlA+i3AHtJUFY/fBwLqzm3phKSEmdpncaJOO7Qmq+wPLTTdOVNZw7W2u/q9y8+JsQJBF4Gl+xESE8EkEfv6CT5z7pXy5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xO3ZX4/IJuvy6YJB7dKW1EEoy/wEJ9lxPQERUhZtvDY=;
+ b=Q+uRr8D0epIrcB3lxDuIDQClUYY8mlwn+VGzNqv+eLUeSHhB4hVrdSdhrT3O/seBj6A/Ya1mB2NXlMeIJPsFBD4uj2FmnD0pQJnxe0CKra7UD1oH1Dvmkr+ceY6lqOATxDfOe0EaZGsldjacqfhDoESci0Gn+wqrnBcaiG5jHBBwZza498srZL674M/zOPK4tpJ3pdZ2p8BZBsEImnM188T2Qv0qeKzeJEMGP/ZnBBkWvw9kXMbq/7RPL2gykY95youmn1MKl6liAOmQe/7sNI3wFhSaJuHBWY9/jzUuZRa/SiphVEITtOxy4ijQQ8jtUqXadl1x+MAlpnN7LYtGJg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5256.namprd12.prod.outlook.com (2603:10b6:208:319::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.7; Thu, 6 Jan
+ 2022 17:22:52 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::464:eb3d:1fde:e6af]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::464:eb3d:1fde:e6af%5]) with mapi id 15.20.4867.009; Thu, 6 Jan 2022
+ 17:22:52 +0000
+Date:   Thu, 6 Jan 2022 13:22:49 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 10/11] PCI: mvebu: Implement support for legacy INTx
- interrupts
-Message-ID: <20220106182044.3ff0828c@thinkpad>
-In-Reply-To: <877dbcvngf.wl-maz@kernel.org>
-References: <20220105150239.9628-1-pali@kernel.org>
-        <20220105150239.9628-11-pali@kernel.org>
-        <87bl0ovq7f.wl-maz@kernel.org>
-        <20220106154447.aie6taiuvav5wu6y@pali>
-        <878rvsvoyo.wl-maz@kernel.org>
-        <20220106162047.vqykmygs75eimfgy@pali>
-        <877dbcvngf.wl-maz@kernel.org>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/8] iommu: Extend iommu_at[de]tach_device() for
+ multi-device groups
+Message-ID: <20220106172249.GJ2328285@nvidia.com>
+References: <20220106022053.2406748-1-baolu.lu@linux.intel.com>
+ <20220106022053.2406748-4-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220106022053.2406748-4-baolu.lu@linux.intel.com>
+X-ClientProxiedBy: BYAPR06CA0053.namprd06.prod.outlook.com
+ (2603:10b6:a03:14b::30) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: fa0ac544-07c2-4ab2-c7bf-08d9d1392b7a
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5256:EE_
+X-Microsoft-Antispam-PRVS: <BL1PR12MB52561791D90A755292839434C24C9@BL1PR12MB5256.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:546;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: e7vzGJeBsAYCbPKdWM2I2uz100L6d8Hpo+HAvRSnfZg5qozCrw27JOZey6QGyVzFOupEmSwLbF5ffU1suWAEzYoGKS5R3xvOYnkNypxSUZKxUfNrE5zm2UWzkdJ27006G0yrz/1/G0eV4AjorU8W6r6WRV8SnJwhGxqmTvNJwwisQrlvP2m1GAHJDps/GJWm12pc5uctNZm7+kFqWi+wwZVT2nTnQG4nVp8scs5fbTZXt9SSk7+i65qHHeZ2vLrpC2aL+GQ137J8FoV/7jJWcIptgpmU9HEEAIoCkyXZFKN2H1YFbHF32s61ky9jSg/b9wwWZvk1TivTwPy+bDKSQLXFUPiAYFsqSOWoIunSMtpVCiYRUGzF7CnZlgoa1/ty+LzKUZ47jT1bYyj2LkcWvzbHnAXT2j6ivVaJd5B8Fc9KTHG8RBIoyONeRjFYnT/pvNAM8V73FcsHzTX+/BwLbdQ/utbhFIvLz1gBk52bDxihKxRSP0somvHnjYrYQemw0VFk+irTi2D9MBcxLVgPVO8xcpxJSCzE3J/OORte6XiMHnQ/XjWyS8vubUHh+2r5jI+HlTrZ39mW/+lBQIyb+nPn76JSe4/2xZj2e8fxslnMca1uxWLJE8NM2UIiZ4SEgrzWux+CdUx/bBE0HWYuew==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(2906002)(8676002)(38100700002)(2616005)(54906003)(7416002)(6506007)(4326008)(1076003)(66946007)(5660300002)(8936002)(6916009)(66476007)(66556008)(33656002)(83380400001)(316002)(6486002)(6666004)(6512007)(26005)(186003)(508600001)(86362001)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0m6kuAdIIIMZMmc/lNxDGarbup1AP/dUEOX+FwIV9iA5f92737Sbj2ID39gN?=
+ =?us-ascii?Q?pllP0bcXD9QUA4Dd8Xt33TIH7wc8UknsESCd6S6UTAucF4eVqD93h0lxFbVQ?=
+ =?us-ascii?Q?DUUMEgFpHFCQZHYaqTVYnjnKZjMueHEv7jsiou/+BJVTLNdFUdCpNqySLDcH?=
+ =?us-ascii?Q?WF2c5FF+nbb8E3yDnBmUKn25nuE1NTIcovPzje4sMiCz0cP/dHm3J8wMSxdf?=
+ =?us-ascii?Q?sF6wvVVDSP1bTPVcsC8A3eAk2yX6BoFg5qg63erHRSGYRPe9FOyYsPpCdSxh?=
+ =?us-ascii?Q?zAoWuy32GoHNGpGktGgyuDAdlFSu9CmkyxLwLh9wM76FPYpMyXqNv2g8eZfj?=
+ =?us-ascii?Q?zYVGq/XQdwY/pEWSr5CWLFNsAkUIb+HxDUb/PTN1gxi2X/GdZIj1k2hU4uLH?=
+ =?us-ascii?Q?ptaTAe8Blw2x8xyXOhn3ThV0Fp0PmsaCQigbgkmVK0t87fAsv45VOhBuukfR?=
+ =?us-ascii?Q?JppTVAh39ggTN41vX8FpQtVgYV6Ytv5C4zaHF2CyAES0huFPoAtRZax5NiNE?=
+ =?us-ascii?Q?3w5uSNqtX728zmGBPETcEqAlaD6HmgruQa2hkYytk/dNweNWPSWak9nT9DQN?=
+ =?us-ascii?Q?wrPviKMDbM14RTB23z3HVFrVN6p8FEOw1WRtWGV6pyPB7LUNeO2c5Hufq3II?=
+ =?us-ascii?Q?b9DgwarcZrt8RgAScg5eVx3MAnWLY9fY/co9Zgs2DmbWyo4gOiJDdkfDRqp8?=
+ =?us-ascii?Q?rubs9V1teQSSsG1HlXF5lQfcAp0OUVI1pZzyT+h4hrUY9g5htpjgLultnsFr?=
+ =?us-ascii?Q?rQ7+ruD2pIyTx8sABqUApneBLErIcyMD9zZc4h3p2pPcq24YXIasr7m64xvc?=
+ =?us-ascii?Q?dVhSdHr15KDHlYMCLiUjRfMZGnMthA/iVHMifxKp2SPL+pWarST3f7Eybx9I?=
+ =?us-ascii?Q?zAuYqkxROJPvlFBHpSyKz5P/cViI9APPvVhaSSfSIZOJbPmXHd6qVsAqU30C?=
+ =?us-ascii?Q?uLT4OKxuaif40IJfjkoRR+mNbU02td+anPPA/Naq/HDoUGQOfimb/Wlu0U5e?=
+ =?us-ascii?Q?bds4ABIWSbMn6uU9hxQMByd26PPo4086DIkfjXDiK81Sg/Wyh/ui7tLz6IPo?=
+ =?us-ascii?Q?wTSYfoLZkdpOAne9qJTCTnPcJDT3emdOz/NzpSW1IjI7E95lDw8Z328ZaeQk?=
+ =?us-ascii?Q?pJbMkTcuRLsMkF1BvQmgXahJjT+Jb91q89misfc0gYxRaIDgZW8RN75yXiwI?=
+ =?us-ascii?Q?94iIF7Ml7i+w19BNDy3XXJ0097aq5JhiCEuw5c6MgueYaqSDyrJTOAmNwNEL?=
+ =?us-ascii?Q?ZN66QOaJLNz1fT0HdxVJz9sJ/TMWxZMkTleX4Sh8XGo53xiUzLlYG0rxiwoS?=
+ =?us-ascii?Q?USuCm0cx/G+WR3xBDZ56G+Anjc8VLJd6JIG4gno1TAgsPxywQNZ2k1ayloqB?=
+ =?us-ascii?Q?t4E9jT3+1R8uK4okCm8kOMW6j4yfZ3bCQTxrV3ecdE12Gk/ncE2MZa+lk/5I?=
+ =?us-ascii?Q?iHdsKw7vIdsgiIjx5fKfy2DdHn35dwjnagLvY/+UHnXfSXmrCKfK7uRjdXaW?=
+ =?us-ascii?Q?KiW20IY70nmZI4qFI30kAjFdhCL1OSor6vawFISTP6llGh4+4bmGc59TJOM1?=
+ =?us-ascii?Q?zYapY2qXGK5pBZk/z4w=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa0ac544-07c2-4ab2-c7bf-08d9d1392b7a
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2022 17:22:52.4630
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6rgfx+GwePA8y6nHiwhc6tgDS47aO9pkJ4hfiCYlysFwgY0g/70xqvPJ4wmdK9++
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5256
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 06 Jan 2022 16:27:44 +0000
-Marc Zyngier <maz@kernel.org> wrote:
+On Thu, Jan 06, 2022 at 10:20:48AM +0800, Lu Baolu wrote:
+> The iommu_attach/detach_device() interfaces were exposed for the device
+> drivers to attach/detach their own domains. The commit <426a273834eae>
+> ("iommu: Limit iommu_attach/detach_device to device with their own group")
+> restricted them to singleton groups to avoid different device in a group
+> attaching different domain.
+> 
+> As we've introduced device DMA ownership into the iommu core. We can now
+> extend these interfaces for muliple-device groups, and "all devices are in
+> the same address space" is still guaranteed.
+> 
+> For multiple devices belonging to a same group, iommu_device_use_dma_api()
+> and iommu_attach_device() are exclusive. Therefore, when drivers decide to
+> use iommu_attach_domain(), they cannot call iommu_device_use_dma_api() at
+> the same time.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>  drivers/iommu/iommu.c | 79 +++++++++++++++++++++++++++++++++----------
+>  1 file changed, 62 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index ab8ab95969f5..2c9efd85e447 100644
+> +++ b/drivers/iommu/iommu.c
+> @@ -47,6 +47,7 @@ struct iommu_group {
+>  	struct iommu_domain *domain;
+>  	struct list_head entry;
+>  	unsigned int owner_cnt;
+> +	unsigned int attach_cnt;
 
-> On Thu, 06 Jan 2022 16:20:47 +0000,
-> Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> >=20
-> > On Thursday 06 January 2022 15:55:11 Marc Zyngier wrote: =20
-> > > On Thu, 06 Jan 2022 15:44:47 +0000,
-> > > Pali Roh=C3=A1r <pali@kernel.org> wrote: =20
-> > > >=20
-> > > > On Thursday 06 January 2022 15:28:20 Marc Zyngier wrote: =20
-> > > > > On Wed, 05 Jan 2022 15:02:38 +0000,
-> > > > > Pali Roh=C3=A1r <pali@kernel.org> wrote: =20
-> > > > > >=20
-> > > > > > This adds support for legacy INTx interrupts received from othe=
-r PCIe
-> > > > > > devices and which are reported by a new INTx irq chip.
-> > > > > >=20
-> > > > > > With this change, kernel can distinguish between INTA, INTB, IN=
-TC and INTD
-> > > > > > interrupts.
-> > > > > >=20
-> > > > > > Note that for this support, device tree files has to be properl=
-y adjusted
-> > > > > > to provide "interrupts" or "interrupts-extended" property with =
-intx
-> > > > > > interrupt source, "interrupt-names" property with "intx" string=
- and also
-> > > > > > 'interrupt-controller' subnode must be defined.
-> > > > > >=20
-> > > > > > If device tree files do not provide these nodes then driver wou=
-ld work as
-> > > > > > before.
-> > > > > >=20
-> > > > > > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> > > > > > ---
-> > > > > >  drivers/pci/controller/pci-mvebu.c | 182 +++++++++++++++++++++=
-++++++--
-> > > > > >  1 file changed, 174 insertions(+), 8 deletions(-)
-> > > > > >=20
-> > > > > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/c=
-ontroller/pci-mvebu.c
-> > > > > > index 1e90ab888075..04bcdd7b7a6d 100644
-> > > > > > --- a/drivers/pci/controller/pci-mvebu.c
-> > > > > > +++ b/drivers/pci/controller/pci-mvebu.c
-> > > > > > @@ -54,9 +54,10 @@
-> > > > > >  	 PCIE_CONF_ADDR_EN)
-> > > > > >  #define PCIE_CONF_DATA_OFF	0x18fc
-> > > > > >  #define PCIE_INT_CAUSE_OFF	0x1900
-> > > > > > +#define PCIE_INT_UNMASK_OFF	0x1910
-> > > > > > +#define  PCIE_INT_INTX(i)		BIT(24+i)
-> > > > > >  #define  PCIE_INT_PM_PME		BIT(28)
-> > > > > > -#define PCIE_MASK_OFF		0x1910
-> > > > > > -#define  PCIE_MASK_ENABLE_INTS          0x0f000000
-> > > > > > +#define  PCIE_INT_ALL_MASK		GENMASK(31, 0)
-> > > > > >  #define PCIE_CTRL_OFF		0x1a00
-> > > > > >  #define  PCIE_CTRL_X1_MODE		0x0001
-> > > > > >  #define  PCIE_CTRL_RC_MODE		BIT(1)
-> > > > > > @@ -110,6 +111,10 @@ struct mvebu_pcie_port {
-> > > > > >  	struct mvebu_pcie_window iowin;
-> > > > > >  	u32 saved_pcie_stat;
-> > > > > >  	struct resource regs;
-> > > > > > +	struct irq_domain *intx_irq_domain;
-> > > > > > +	struct irq_chip intx_irq_chip; =20
-> > > > >=20
-> > > > > Why is this structure per port? It really should be global. Print=
-ing
-> > > > > the port number in the name isn't enough of a reason. =20
-> > > >=20
-> > > > Because each port has its own independent set of INTA-INTD
-> > > > interrupts. =20
-> > >=20
-> > > That doesn't warrant a copy of an irq_chip structure that contains the
-> > > exact same callbacks, and only differs by *a string*. And the use of
-> > > this string is only to end-up in /proc/interrupts, which is totally
-> > > pointless.
-> > >  =20
-> > > >  =20
-> > > > > > +	raw_spinlock_t irq_lock;
-> > > > > > +	int intx_irq;
-> > > > > >  };
-> > > > > > =20
-> > > > > >  static inline void mvebu_writel(struct mvebu_pcie_port *port, =
-u32 val, u32 reg)
-> > > > > > @@ -235,7 +240,7 @@ static void mvebu_pcie_setup_wins(struct mv=
-ebu_pcie_port *port)
-> > > > > > =20
-> > > > > >  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
-> > > > > >  {
-> > > > > > -	u32 ctrl, lnkcap, cmd, dev_rev, mask;
-> > > > > > +	u32 ctrl, lnkcap, cmd, dev_rev, unmask;
-> > > > > > =20
-> > > > > >  	/* Setup PCIe controller to Root Complex mode. */
-> > > > > >  	ctrl =3D mvebu_readl(port, PCIE_CTRL_OFF);
-> > > > > > @@ -288,10 +293,30 @@ static void mvebu_pcie_setup_hw(struct mv=
-ebu_pcie_port *port)
-> > > > > >  	/* Point PCIe unit MBUS decode windows to DRAM space. */
-> > > > > >  	mvebu_pcie_setup_wins(port);
-> > > > > > =20
-> > > > > > -	/* Enable interrupt lines A-D. */
-> > > > > > -	mask =3D mvebu_readl(port, PCIE_MASK_OFF);
-> > > > > > -	mask |=3D PCIE_MASK_ENABLE_INTS;
-> > > > > > -	mvebu_writel(port, mask, PCIE_MASK_OFF);
-> > > > > > +	/* Mask all interrupt sources. */
-> > > > > > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
-> > > > > > +
-> > > > > > +	/* Clear all interrupt causes. */
-> > > > > > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
-> > > > > > +
-> > > > > > +	if (port->intx_irq <=3D 0) {
-> > > > > > +		/*
-> > > > > > +		 * When neither "summary" interrupt, nor "intx" interrupt was
-> > > > > > +		 * specified in DT then unmask all legacy INTx interrupts as=
- in
-> > > > > > +		 * this case driver does not provide a way for masking and
-> > > > > > +		 * unmasking of individual legacy INTx interrupts. In this c=
-ase
-> > > > > > +		 * all interrupts, including legacy INTx are reported via one
-> > > > > > +		 * shared GIC source and therefore kernel cannot distinguish
-> > > > > > +		 * which individual legacy INTx was triggered. These interru=
-pts
-> > > > > > +		 * are shared, so it should not cause any issue. Just
-> > > > > > +		 * performance penalty as every PCIe interrupt handler needs=
- to
-> > > > > > +		 * be called when some interrupt is triggered.
-> > > > > > +		 */
-> > > > > > +		unmask =3D mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> > > > > > +		unmask |=3D PCIE_INT_INTX(0) | PCIE_INT_INTX(1) |
-> > > > > > +			  PCIE_INT_INTX(2) | PCIE_INT_INTX(3);
-> > > > > > +		mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF); =20
-> > > > >=20
-> > > > > Maybe worth printing a warning here, so that the user knows they =
-are
-> > > > > on thin ice. =20
-> > > >=20
-> > > > Ok. I can add it here. Anyway, this is default current state without
-> > > > this patch.
-> > > >  =20
-> > > > > > +	}
-> > > > > >  }
-> > > > > > =20
-> > > > > >  static struct mvebu_pcie_port *mvebu_pcie_find_port(struct mve=
-bu_pcie *pcie,
-> > > > > > @@ -924,6 +949,109 @@ static struct pci_ops mvebu_pcie_ops =3D {
-> > > > > >  	.write =3D mvebu_pcie_wr_conf,
-> > > > > >  };
-> > > > > > =20
-> > > > > > +static void mvebu_pcie_intx_irq_mask(struct irq_data *d)
-> > > > > > +{
-> > > > > > +	struct mvebu_pcie_port *port =3D d->domain->host_data;
-> > > > > > +	irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
-> > > > > > +	unsigned long flags;
-> > > > > > +	u32 unmask;
-> > > > > > +
-> > > > > > +	raw_spin_lock_irqsave(&port->irq_lock, flags);
-> > > > > > +	unmask =3D mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> > > > > > +	unmask &=3D ~PCIE_INT_INTX(hwirq);
-> > > > > > +	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
-> > > > > > +	raw_spin_unlock_irqrestore(&port->irq_lock, flags);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void mvebu_pcie_intx_irq_unmask(struct irq_data *d)
-> > > > > > +{
-> > > > > > +	struct mvebu_pcie_port *port =3D d->domain->host_data;
-> > > > > > +	irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
-> > > > > > +	unsigned long flags;
-> > > > > > +	u32 unmask;
-> > > > > > +
-> > > > > > +	raw_spin_lock_irqsave(&port->irq_lock, flags);
-> > > > > > +	unmask =3D mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> > > > > > +	unmask |=3D PCIE_INT_INTX(hwirq);
-> > > > > > +	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
-> > > > > > +	raw_spin_unlock_irqrestore(&port->irq_lock, flags);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static int mvebu_pcie_intx_irq_map(struct irq_domain *h,
-> > > > > > +				   unsigned int virq, irq_hw_number_t hwirq)
-> > > > > > +{
-> > > > > > +	struct mvebu_pcie_port *port =3D h->host_data;
-> > > > > > +
-> > > > > > +	irq_set_status_flags(virq, IRQ_LEVEL);
-> > > > > > +	irq_set_chip_and_handler(virq, &port->intx_irq_chip, handle_l=
-evel_irq);
-> > > > > > +	irq_set_chip_data(virq, port);
-> > > > > > +
-> > > > > > +	return 0;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static const struct irq_domain_ops mvebu_pcie_intx_irq_domain_=
-ops =3D {
-> > > > > > +	.map =3D mvebu_pcie_intx_irq_map,
-> > > > > > +	.xlate =3D irq_domain_xlate_onecell,
-> > > > > > +};
-> > > > > > +
-> > > > > > +static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *=
-port)
-> > > > > > +{
-> > > > > > +	struct device *dev =3D &port->pcie->pdev->dev;
-> > > > > > +	struct device_node *pcie_intc_node;
-> > > > > > +
-> > > > > > +	raw_spin_lock_init(&port->irq_lock);
-> > > > > > +
-> > > > > > +	port->intx_irq_chip.name =3D devm_kasprintf(dev, GFP_KERNEL,
-> > > > > > +						  "mvebu-%s-INTx",
-> > > > > > +						  port->name); =20
-> > > > >=20
-> > > > > That's exactly what I really don't want to see. It prevents shari=
-ng of
-> > > > > the irq_chip structure, and gets in the way of making it const in=
- the
-> > > > > future. Yes, I know that some drivers do that. I can't fix those,
-> > > > > because /proc/interrupts is ABI. But I really don't want to see m=
-ore
-> > > > > of these. =20
-> > > >=20
-> > > > Well, I do not understand why it should be shared and with who. HW =
-has N
-> > > > independent IRQ chips for legacy interrupts. And each one will be
-> > > > specified in DT per HW layout / design. =20
-> > >=20
-> > > If you have multiple ports, all the ports can share the irq_chip
-> > > structure. Actually scratch that. They *MUST* share the structure. The
-> > > only reason you're not sharing it is to be able to print this useless
-> > > string in /proc/interrupts. =20
-> >=20
-> > What is the point of sharing one irq chip if HW has N independent irq
-> > chips (for legacy interrupts)? I do not catch it yet. And I do not care
-> > here for /proc/interrupts, so also I have not caught what do you mean be
-> > last sentence with "the only reason".
-> >=20
-> > And I still do not see how it could even work to have just one irq chip
-> > and one irq domain as each irq domain needs to know to which port it
-> > belongs, so it can mask/unmask interrupts from correct port. Also
-> > initialization of domain is taking DT node and for each port it is
-> > different.
-> >=20
-> > So I'm somehow confused here...
-> >=20
-> > The improvement in this patch is to be able to mask INTA interrupts on
-> > port 1 and let INTA interrupts unmasked on port 2 if there drivers are
-> > interested only for interrupts from device connected to port 2.
-> >=20
-> > And if all interrupts are going to be shared (again) then it does not
-> > solve any problem. =20
->=20
-> You are completely missing my point. I'm talking about data
-> structures, you're talking about interrupts. You have this:
->=20
-> struct mvebu_pcie_port {
->        // Tons of stuff
->        struct irq_chip intx_chip;
-> };
->=20
-> What I want you to do is:
->=20
-> struct mvebu_pcie_port {
->        // Tons of stuff
-> };
->=20
-> static struct irq_chip intx_chip =3D {
-> 	.name		=3D "INTx",
-> 	.irq_mask	=3D mvebu_pcie_intx_irq_mask,
-> 	.irq_unmask	=3D mvebu_pcie_intx_irq_unmask;
-> };
->=20
-> That's it. No more, no less.
->=20
-> 	M.
->=20
+Why did we suddenly need another counter? None of the prior versions
+needed this. I suppose this is being used a some flag to indicate if
+owner_cnt == 1 or owner_cnt == 0 should restore the default domain?
+Would rather a flag 'auto_no_kernel_dma_api_compat' or something
 
-Hmm, but struct irq_chip contains a dynamic member,
-  struct device *parent_device;
-Isn't that used? Or are you planning to kill it?
 
-Marek
+> +/**
+> + * iommu_attach_device() - attach external or UNMANAGED domain to device
+> + * @domain: the domain about to attach
+> + * @dev: the device about to be attached
+> + *
+> + * For devices belonging to the same group, iommu_device_use_dma_api() and
+> + * iommu_attach_device() are exclusive. Therefore, when drivers decide to
+> + * use iommu_attach_domain(), they cannot call iommu_device_use_dma_api()
+> + * at the same time.
+> + */
+>  int iommu_attach_device(struct iommu_domain *domain, struct device *dev)
+>  {
+>  	struct iommu_group *group;
+> +	int ret = 0;
+> +
+> +	if (domain->type != IOMMU_DOMAIN_UNMANAGED)
+> +		return -EINVAL;
+>  
+>  	group = iommu_group_get(dev);
+>  	if (!group)
+>  		return -ENODEV;
+>  
+> +	if (group->owner_cnt) {
+> +		/*
+> +		 * Group has been used for kernel-api dma or claimed explicitly
+> +		 * for exclusive occupation. For backward compatibility, device
+> +		 * in a singleton group is allowed to ignore setting the
+> +		 * drv.no_kernel_api_dma field.
+
+BTW why is this call 'no kernel api dma' ? That reads backwards 'no
+kernel dma api' right?
+
+Aother appeal of putting no_kernel_api_dma in the struct device_driver
+is that this could could simply do 'dev->driver->no_kernel_api_dma' to
+figure out how it is being called and avoid this messy implicitness.
+
+Once we know our calling context we can always automatic switch from
+DMA API mode to another domain without any trouble or special
+counters:
+
+if (!dev->driver->no_kernel_api_dma) {
+    if (group->owner_cnt > 1 || group->owner)
+        return -EBUSY;
+    return __iommu_attach_group(domain, group);
+}
+
+if (!group->owner_cnt) {
+    ret = __iommu_attach_group(domain, group);
+    if (ret)
+        return ret;
+} else if (group->owner || group->domain != domain)
+    return -EBUSY;
+group->owner_cnt++;
+
+Right?
+
+> +	if (!group->attach_cnt) {
+> +		ret = __iommu_attach_group(domain, group);
+
+How come we don't have to detatch the default domain here? Doesn't
+that mean that the iommu_replace_group could also just call attach
+directly without going through detatch?
+
+Jason
