@@ -2,175 +2,311 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB34748661A
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 15:33:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF4F9486644
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 15:45:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240147AbiAFOdu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 09:33:50 -0500
-Received: from mail-dm6nam10on2063.outbound.protection.outlook.com ([40.107.93.63]:35388
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S240116AbiAFOdu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Jan 2022 09:33:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=myUrSXXkI3aC4Edx8d2eRZU+BuA7bFTa9Hjhh+2TbTv4Q+u7wcXNvsfTt/hCjtxA18OEf5qlUvGw3CRLzPzKJ6A8flP15xC46knq7PTt/T/u4ghKh86Kltwdge3+yCzolbx5lVYSbTbdYf92B308I1/UF5Ui18IjTSR7VHhwSU/5kxQjErsfGT0T1k10KH94ZjMf1OYbb4CUsN5YlWWProUXghr5EPOD+ZP2Ei0ERvuijfQyuzFgj7qUO43IVUxXxUDsFB52b4hs7q4xuIisjzOPq57fcDfc8UMoLd1XrQ32KRtrBJXCusnM1+e84EYf8T3JF5+VK1K74oH+if0MaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uHxCmI8jTjeg6+fhOiuhdFJgFeW45Y3InVFyBiQpEvg=;
- b=c4SrUDQ4VX0oppFB2JN2BE89zP42kvEDUFVem0ApZsEui+v2TE3HBdjKDzmBcvh3Dtp0xrQzykfeMFuHNXsoYSznoIu7aSOJAH720uCDbpEhmrKgLvdP5PDfsZrmXt+03uBW8XpPeQvHvdnTd3rrVospxBQ/As6oFicg+zgdPw8phxmDGuAAf6RiMugB5ZzwuxT0yk2uV79Pe9Re+gP40T7Vr4VKTESjhLWOdGu+fSLaIjxXJHsBcMwsxSaSk9AJ6galsegkqtRswKcbTw/+fp0EIeMOfUBq7HuKDd62qd2JrJp1Pvy/yJv6zV98DB3nau6ZmTOeps8RuFUa97122g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uHxCmI8jTjeg6+fhOiuhdFJgFeW45Y3InVFyBiQpEvg=;
- b=k5VgF4x9xFfjH+Cb/6S/EiakM2aYvJOw3aAEmiQfOKrAh4+d9taSKDfDCEmEaCsRNiZJIa2LpqOAFX0hZmLicqn41KXEtMN/D8AanhkmKTuRPBtELD6uIAe3Frsn5rpPNo7hSn7ToulDtSO6ulJvkdcNv3anuGLOukf3RqYhN2BOu6OCGVLkLcJRyJVWOwPQPmmmWJTqRLYqzNbIK8YQFvjs33VWhFTX1wiOZ8vcwBMefcMH+S/idFuJIAdBOfmtm5ZakQVL5VVn6h3ufSY1DncHVgs9imbIOXFMVqNBsQN9SVHaHfYihITEp2zyWEgA9V15QtIPb/LA03BPudUufg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5361.namprd12.prod.outlook.com (2603:10b6:208:31f::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.9; Thu, 6 Jan
- 2022 14:33:48 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::464:eb3d:1fde:e6af]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::464:eb3d:1fde:e6af%5]) with mapi id 15.20.4867.009; Thu, 6 Jan 2022
- 14:33:48 +0000
-Date:   Thu, 6 Jan 2022 10:33:45 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S240201AbiAFOpd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 09:45:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:55056 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240229AbiAFOpa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jan 2022 09:45:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC9181042;
+        Thu,  6 Jan 2022 06:45:28 -0800 (PST)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CA5D3F5A1;
+        Thu,  6 Jan 2022 06:45:26 -0800 (PST)
+Date:   Thu, 6 Jan 2022 14:45:18 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        Baruch Siach <baruch.siach@siklu.com>,
+        Kathiravan T <kathirav@codeaurora.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/8] iommu/amd: Use iommu_attach/detach_device()
-Message-ID: <20220106143345.GC2328285@nvidia.com>
-References: <20220106022053.2406748-1-baolu.lu@linux.intel.com>
- <20220106022053.2406748-6-baolu.lu@linux.intel.com>
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Robert Marko <robert.marko@sartura.hr>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+        pali@kernel.org
+Subject: Re: [PATCH v4 3/3] PCI: qcom: add support for IPQ60xx PCIe controller
+Message-ID: <20220106144518.GA15482@lpieralisi>
+References: <cover.1640587131.git.baruch@tkos.co.il>
+ <a2406bf515124afad50ca3c947e2cd758c0896b1.1640587131.git.baruch@tkos.co.il>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220106022053.2406748-6-baolu.lu@linux.intel.com>
-X-ClientProxiedBy: BY5PR13CA0003.namprd13.prod.outlook.com
- (2603:10b6:a03:180::16) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5ddb3386-d0a3-4710-81fa-08d9d1218cff
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5361:EE_
-X-Microsoft-Antispam-PRVS: <BL1PR12MB536140221A3214DFF11DCE5DC24C9@BL1PR12MB5361.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:568;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TJ2fHasLfDWflXlo4WCpLS2sGbsEsiIADjls92GbOK7p0BMmVXf8UPupSgXOgtvlHh2AjSsPDvjOv9GOqYHsaKlvYkw5DnBDGkZCvo39wUyW2m2IL76BmIJ6G65wINJ75a4RGdI/iSOPPZ+CHQPfNbMONf37JZkXkbOlYm09Iii+r6bAuwUWdd3XUixMVL7heW5P57VbzrRDn6Nfhlyc4AJwiyftJDL6nenR9zB2lWPqniIWXx8qpOMjDrykwtKaEWIkfMTEbRXR5RPhiZK8ILrIlkW4ydaHyZX+dVTbbMoPBsjYi1wVt29sLXKna3j4vnQ0gmn0hCMgnWUlIdNpt8aAlXZ0fdYK/1uP9oMUL938s4H5bpPjVx7qckRJCKPf8mWbyhEoJK3ZJS3Asv5153stE3hjOw2gX/4mskOpTSNReGQWfhzDQDhZCcNpm49EXReeABxvgIKlUiAiGKIXZ6IcGpv3e0QsGGKMT8lXF/L/TMIiP0OOMADQMk9VaDamFvLEnEQMLV+JWpS7ZwMVUd7C9itrmQYCyWAoXWTo4jgIbH+B4Z4NMXowOnt2VRfmvTNqLmAmmoW9eMVM6mb5HNbRg28reKPeZDw9C6yNT9i2OaUl2R5I4IuBmj5yMKHeCPBOzSy8tf1fs7gYVy8UBA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6506007)(38100700002)(33656002)(6512007)(8676002)(26005)(86362001)(6486002)(316002)(66556008)(66476007)(8936002)(7416002)(6666004)(54906003)(508600001)(36756003)(66946007)(83380400001)(4326008)(6916009)(5660300002)(2616005)(1076003)(2906002)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NpUuKpsl3cTNefstmlUetmgI/g4OT34PbITmxibRUAnYXsCrR9Mj6LK1OgKx?=
- =?us-ascii?Q?5TrlylD7njBf3A0/ug/tzyr6Rqms+H15wTbxN86/XMu/0AvnRqOX+LBU2YxO?=
- =?us-ascii?Q?5IhblVpgQHahMT2DwGNl91VTpY4IFMPUWpX3fGj+pOBiCHripYXJhqYnct07?=
- =?us-ascii?Q?pgWC7sxevpZ1pkZkGmed5OEwoTUMuIZD/5yMFRbFasynx1aO5LtMPzYjk60O?=
- =?us-ascii?Q?ax83EqiqaNS7SD9eIApB0okIgdqYyqVZ6HrgWcGBhJnAV00oNqetuVDS8x8O?=
- =?us-ascii?Q?o3jzXIbvUlGr6UygG7gySnYb2zsCHsRcStnT2hq8lXiwMF2wbuxkZZrLDe5K?=
- =?us-ascii?Q?em1/5Cb1lL0FzmzBaouWP2HxJ/aziWg+e/WayL3ntVGB4DlEXy8LjM6XqdBX?=
- =?us-ascii?Q?NOkgFDFHNgDdV7SCvzQDgNWHsP34Yqd7JMAd9CAY2IRrwH6t3ANuxY6YGmuW?=
- =?us-ascii?Q?iUJKSAXmAN8Go5pjZWNchiQicHt5hFYvGt2vgLS68OO08WbsKIITTzXjkAoQ?=
- =?us-ascii?Q?5Kvo6bOcE9PPWRX47jYedrTztfxl3oD5LGp5BZxYRGlDLQdLoYDfvi7T3iF0?=
- =?us-ascii?Q?XjJRKTp3K8l1MkKH3RFwD+cRwDpCo2pEvrTiGn1Tuunc6Hwb1RByqWRN1mwc?=
- =?us-ascii?Q?N8hdLnxAUubJV8sL4tSMME6KfF7syQcy4BHo5FiDMOHCnFtflE4e9gxVSbhe?=
- =?us-ascii?Q?jNt5SU+eQnnhmjMSv8tN1VZra/lOD5AN63aNxzeoSLmYcjAgETHG3zcr/lc8?=
- =?us-ascii?Q?aq1bdW75vvb6vlACb1ia8GT37RmVCypRb5PZplLTyxvexMjLtW+ueRnWPrum?=
- =?us-ascii?Q?YyZ4Abdl6OMBxXS9sXzLBh+RJNLmzeD5s6X+ZL650eTs0u7i+P0peFTUWvbM?=
- =?us-ascii?Q?LVXmAAiMU+9CPWHayj93JR4+D82SocJO8cQ0RwnDwa05uTI3ljjZg/309SDN?=
- =?us-ascii?Q?Y1SZmZGEtDrjSfU+WLT3gwqV1SRQADNb1xAV1NpQyWwdow6o/HyrJIi8wSYO?=
- =?us-ascii?Q?ORL7kraftf+rFTxISVFGe+fAAsFlA7bm082yGecQcsY70kHBUUfiBCecQmTo?=
- =?us-ascii?Q?bsdGSJ/tG/5WfqdBItJo5ItN2pZl9hU60LNlcSm9htauy3czOB/du8RIXlVA?=
- =?us-ascii?Q?q8VrsNbouMBL3Q3DRZrwc7rBgqyIhkmYy28X7SqsZNumlpa/a4PsmTH5Uw70?=
- =?us-ascii?Q?UsNn56CHDonKV/WjaNizko33s4LtCo1flNA7IF6AL4q/nHFYacM6JscPWVNk?=
- =?us-ascii?Q?Nt+9D37vUTtGlAATCaV3ANSupwJ8Y+cQroiNGt3QUzNOjuU0IZcuUIZBS21N?=
- =?us-ascii?Q?zMBzttprn1upmv2SHnHuGgyL9BYnkDsADlzY0sNiH/Vh2wBdDxOFj0PmsXhm?=
- =?us-ascii?Q?B8rNUpq0VzC/Zc9XKHzxq3Bn04dNKPwL7aDAlFWZSkcNRv8XYx9GdYYLVZn+?=
- =?us-ascii?Q?fpiWVjwcjYDx2rzhrkWJK3pqgckXkGy8o1LGx0JhHl/CTfxOqS5H7H88m7RR?=
- =?us-ascii?Q?IWKdQJx0YuSZgT0SKVkBw6jGWzxS3a4AGei8pM+sVgIUeEg+KJXpv+pjuQ8o?=
- =?us-ascii?Q?fi6aq1T7+acXFBfIdzY=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ddb3386-d0a3-4710-81fa-08d9d1218cff
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2022 14:33:48.2597
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sksqKbXm9VKThLfOg0GJVVXomSjkHEeDMbm3cY0E5pKvpApUD/MaaOF7uMewXdik
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5361
+In-Reply-To: <a2406bf515124afad50ca3c947e2cd758c0896b1.1640587131.git.baruch@tkos.co.il>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 06, 2022 at 10:20:50AM +0800, Lu Baolu wrote:
-> The individual device driver should use iommu_attach/detach_device()
-> for domain attachment/detachment.
+[+Pali - query on reset delay]
+
+On Mon, Dec 27, 2021 at 08:46:05AM +0200, Baruch Siach wrote:
+> From: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
 > 
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->  drivers/iommu/amd/iommu_v2.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> IPQ60xx series of SoCs have one port of PCIe gen 3. Add support for that
+> platform.
 > 
-> diff --git a/drivers/iommu/amd/iommu_v2.c b/drivers/iommu/amd/iommu_v2.c
-> index 58da08cc3d01..7d9d0fe89064 100644
-> +++ b/drivers/iommu/amd/iommu_v2.c
-> @@ -133,7 +133,7 @@ static void free_device_state(struct device_state *dev_state)
->  	if (WARN_ON(!group))
->  		return;
+> The code is based on downstream[1] Codeaurora kernel v5.4 (branch
+> win.linuxopenwrt.2.0).
+> 
+> Split out the DBI registers access part from .init into .post_init. DBI
+> registers are only accessible after phy_power_on().
+> 
+> [1] https://source.codeaurora.org/quic/qsdk/oss/kernel/linux-ipq-5.4/
+> 
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
+> ---
+> v4:
+> 
+>   * Rebase on v5.16-rc1
+> 
+> v3:
+>   * Drop speed setup; rely on generic code (Rob Herring)
+> 
+>   * Drop unused CLK_RATE macros (Bjorn Helgaas)
+> 
+>   * Minor formatting fixes (Bjorn Helgaas)
+> 
+>   * Add reference to downstream Codeaurora kernel tree (Bjorn Helgaas)
+> 
+> v2:
+>   * Drop ATU configuration; rely on common code instead
+> 
+>   * Use more common register macros
+> 
+>   * Use bulk clk and reset APIs
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.h |   1 +
+>  drivers/pci/controller/dwc/pcie-qcom.c       | 145 +++++++++++++++++++
+>  2 files changed, 146 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index ea87809ee298..279c3778a13b 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -76,6 +76,7 @@
 >  
-> -	iommu_detach_group(dev_state->domain, group);
-> +	iommu_detach_device(dev_state->domain, &dev_state->pdev->dev);
+>  #define GEN3_RELATED_OFF			0x890
+>  #define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
+> +#define GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS	BIT(13)
+>  #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
+>  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
+>  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 1c3d1116bb60..14f86c45a8d9 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -52,6 +52,10 @@
+>  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+>  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+>  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+> +#define AHB_CLK_EN				BIT(0)
+> +#define MSTR_AXI_CLK_EN				BIT(1)
+> +#define BYPASS					BIT(4)
+> +
+>  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT	0x178
+>  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2	0x1A8
+>  #define PCIE20_PARF_LTSSM			0x1B0
+> @@ -171,6 +175,11 @@ struct qcom_pcie_resources_2_7_0 {
+>  	struct clk *ref_clk_src;
+>  };
 >  
->  	iommu_group_put(group);
-
-This is the only user of the group in the function all the
-group_get/put should be deleted too.
-
-Joerg said in commit 55c99a4dc50f ("iommu/amd: Use
-iommu_attach_group()") that the device API doesn't work here because
-there are multi-device groups?
-
-But I'm not sure how this can work with multi-device groups - this
-seems to assigns a domain setup for direct map, so perhaps this only
-works if all devices are setup for direct map?
-
-> @@ -791,7 +791,7 @@ int amd_iommu_init_device(struct pci_dev *pdev, int pasids)
->  		goto out_free_domain;
->  	}
+> +struct qcom_pcie_resources_2_9_0 {
+> +	struct clk_bulk_data clks[5];
+> +	struct reset_control *rst;
+> +};
+> +
+>  union qcom_pcie_resources {
+>  	struct qcom_pcie_resources_1_0_0 v1_0_0;
+>  	struct qcom_pcie_resources_2_1_0 v2_1_0;
+> @@ -178,6 +187,7 @@ union qcom_pcie_resources {
+>  	struct qcom_pcie_resources_2_3_3 v2_3_3;
+>  	struct qcom_pcie_resources_2_4_0 v2_4_0;
+>  	struct qcom_pcie_resources_2_7_0 v2_7_0;
+> +	struct qcom_pcie_resources_2_9_0 v2_9_0;
+>  };
 >  
-> -	ret = iommu_attach_group(dev_state->domain, group);
-> +	ret = iommu_attach_device(dev_state->domain, &pdev->dev);
->  	if (ret != 0)
->  		goto out_drop_group;
+>  struct qcom_pcie;
+> @@ -1297,6 +1307,127 @@ static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
+>  	clk_disable_unprepare(res->pipe_clk);
+>  }
+>  
+> +static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
+> +{
+> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct device *dev = pci->dev;
+> +	int ret;
+> +
+> +	res->clks[0].id = "iface";
+> +	res->clks[1].id = "axi_m";
+> +	res->clks[2].id = "axi_s";
+> +	res->clks[3].id = "axi_bridge";
+> +	res->clks[4].id = "rchng";
+> +
+> +	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	res->rst = devm_reset_control_array_get_exclusive(dev);
+> +	if (IS_ERR(res->rst))
+> +		return PTR_ERR(res->rst);
+> +
+> +	return 0;
+> +}
+> +
+> +static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
+> +{
+> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+> +
+> +	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
+> +}
+> +
+> +static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
+> +{
+> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+> +	struct device *dev = pcie->pci->dev;
+> +	int ret;
+> +
+> +	ret = reset_control_assert(res->rst);
+> +	if (ret) {
+> +		dev_err(dev, "reset assert failed (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	usleep_range(2000, 2500);
+> +
+> +	ret = reset_control_deassert(res->rst);
+> +	if (ret) {
+> +		dev_err(dev, "reset deassert failed (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Don't have a way to see if the reset has completed.
+> +	 * Wait for some time.
 
-Same comment here
+Is this arbitrary ? What does this reset represent ?
 
-Jason
+Thanks,
+Lorenzo
+
+> +	 */
+> +	usleep_range(2000, 2500);
+> +
+> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+> +	if (ret)
+> +		goto err_reset;
+> +
+> +	return 0;
+> +
+> +	/*
+> +	 * Not checking for failure, will anyway return
+> +	 * the original failure in 'ret'.
+> +	 */
+> +err_reset:
+> +	reset_control_assert(res->rst);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +	u32 val;
+> +	int i;
+> +
+> +	writel(SLV_ADDR_SPACE_SZ,
+> +		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
+> +
+> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +	val &= ~BIT(0);
+> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +
+> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> +
+> +	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
+> +	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
+> +		pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> +	writel(GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS
+> +		| GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL,
+> +		pci->dbi_base + GEN3_RELATED_OFF);
+> +
+> +	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
+> +		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
+> +		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
+> +		pcie->parf + PCIE20_PARF_SYS_CTRL);
+> +
+> +	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
+> +
+> +	dw_pcie_dbi_ro_wr_en(pci);
+> +	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
+> +
+> +	/* Configure PCIe link capabilities for ASPM */
+> +	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
+> +	val &= ~PCI_EXP_LNKCAP_ASPMS;
+> +	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
+> +
+> +	writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
+> +			PCI_EXP_DEVCTL2);
+> +
+> +	for (i = 0; i < 256; i++)
+> +		writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N
+> +				+ (4 * i));
+> +
+> +	return 0;
+> +}
+> +
+>  static int qcom_pcie_link_up(struct dw_pcie *pci)
+>  {
+>  	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> @@ -1487,6 +1618,15 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
+>  	.config_sid = qcom_pcie_config_sid_sm8250,
+>  };
+>  
+> +/* Qcom IP rev.: 2.9.0  Synopsys IP rev.: 5.00a */
+> +static const struct qcom_pcie_ops ops_2_9_0 = {
+> +	.get_resources = qcom_pcie_get_resources_2_9_0,
+> +	.init = qcom_pcie_init_2_9_0,
+> +	.post_init = qcom_pcie_post_init_2_9_0,
+> +	.deinit = qcom_pcie_deinit_2_9_0,
+> +	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+> +};
+> +
+>  static const struct qcom_pcie_cfg apq8084_cfg = {
+>  	.ops = &ops_1_0_0,
+>  };
+> @@ -1520,6 +1660,10 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
+>  	.pipe_clk_need_muxing = true,
+>  };
+>  
+> +static const struct qcom_pcie_cfg ipq6018_cfg = {
+> +	.ops = &ops_2_9_0,
+> +};
+> +
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.link_up = qcom_pcie_link_up,
+>  	.start_link = qcom_pcie_start_link,
+> @@ -1629,6 +1773,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
+>  	{ .compatible = "qcom,pcie-sc8180x", .data = &sm8250_cfg },
+>  	{ .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
+> +	{ .compatible = "qcom,pcie-ipq6018", .data = &ipq6018_cfg },
+>  	{ }
+>  };
+>  
+> -- 
+> 2.34.1
+> 
