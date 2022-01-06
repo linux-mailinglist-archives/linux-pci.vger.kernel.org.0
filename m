@@ -2,391 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED27C4866E2
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 16:44:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31DC8486701
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 16:46:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240563AbiAFPoy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 10:44:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229726AbiAFPoy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 10:44:54 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17014C061245;
-        Thu,  6 Jan 2022 07:44:54 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C6A19B8224F;
-        Thu,  6 Jan 2022 15:44:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23AAFC36AE0;
-        Thu,  6 Jan 2022 15:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641483891;
-        bh=SKGy+AHODodXaXimOBt9iqG18ZJR+nt3b+A1v5FyIjI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hg92c79hinepMxjVYpZkneNPyG/6S+jyeJkq8p/L0ZahwFDoivjpVSQLSE8l1ziQW
-         8YE7IPaTut7yk+EqgqEIpnSD3tItRBSMHMUN4NZ6oaB/H2zIUWECbwmtlxBB14UaK3
-         uWJ+B3STbQc+GeMRynzp8VTqREg9mvFKiihhKHRY+5o9V1cPsej0At02NIHRTa7q9U
-         ZQhMnPD5Cuv58DxG7h8IPXDoWmQg9pH7T9zEdLcF8W2H7hr1+hJI1dr1SNqfCe7F4B
-         Lx/CTOD07tR2wISsQ1hQvKeb/aUssgfE0QVoDHAWZBprwt++6LAYK9rc9I0dfc3Ouj
-         rm0SoUd+ros3w==
-Received: by pali.im (Postfix)
-        id 0B2E9BFF; Thu,  6 Jan 2022 16:44:47 +0100 (CET)
-Date:   Thu, 6 Jan 2022 16:44:47 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S240588AbiAFPqj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 10:46:39 -0500
+Received: from mail-sn1anam02on2051.outbound.protection.outlook.com ([40.107.96.51]:23877
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S240585AbiAFPqj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jan 2022 10:46:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PS685DgaCEZf8KJypa5yYgCVH6t2efTr8aWTUQofKwd4ZwEDfWXimBAYjP2GRbEOxN1gj5vx3LOmvw++3dSvjEYhmOq+dRkB56BTLG8vuh0xus+b8JwtEL11wAHAAc7wivTl0bHgX2f3VNgjUvJRw8QxJwV8qCS0YPcZSMa5AZKrfG+5L4UFqPe312/nFn4Yba95WF80lrB8k7PHoJa+9e0BBOMzgubUDgFbA90LtHgibIily748OJJSXvDqAYammyrkPn+66mjMfstMD3t2Ad1cw7vpJiCuhU7J/4ffCLSzlk1Z1meO8ENwb0MZPZeDVLmNgXZXYt6M0HxbKAGiaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+2Vb9In5MqzI8+JU2yjUYDuP73Nr//hfKa8NH5aWmyc=;
+ b=eKTrSjXWFquxCGpJJR0I1MjJovOmvyP92ecZedNwrs3YDRx5AYQK/TrfALtPCnpW9Tbwoe4OnhrqzaVLWGPxT5VTkKX+VSIMZJshbHlTieRL8ns9YJfBsO0osrdzn0nUmFD3oxLjygovWbkrwtI/h8xjuupr1MikzPYW+hsViKK7oF64Ym1Py5P6zJn/vhIKH8t3lBcitMBsZR2AD74PpCb7/mV/Hfy1IV0mxCbqxh9FAPUZDhm8D5G0c9yWdgzxISrbt2mZU8t5HpuyCtW15dRcuYzf2yt0lqJsN/CkO9IJ8por4Wh7ko8fS0v2IWeYBfgSyrU0Xd3FGl9ZVFmEnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+2Vb9In5MqzI8+JU2yjUYDuP73Nr//hfKa8NH5aWmyc=;
+ b=QmVE9mxv1fWU6djdrTjqAoyCqSzfVu3GyM/7oqXEU2yEhPwyPSUU/Fe3o6ok6Xs3GUEWZvYDsCQ7Ori9U9r0xpNg4axgbG9sPJFCbO3pWOPEzCC3w7AVgwaZCOOx+/+yHTC6b6MOW83DUHR/sXz5yEJ0+OKrA36VHQyU3nBECMkReNYD4AV8UF7PXNOaP59D82ubkv4tZurPs9O8LE/0ewD347SSx3llT/Ej4kEYSPgMirqUKrnGGh39507IEnkjH9BxrXPJFAepeOW/8eO2wDIG2W3O/3CA5JS2R6Nld76CIPqXsc/xrJxRGSnsj2CAagLJmWuADEBTRuOw/PgEjA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5335.namprd12.prod.outlook.com (2603:10b6:208:317::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.7; Thu, 6 Jan
+ 2022 15:46:37 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::464:eb3d:1fde:e6af]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::464:eb3d:1fde:e6af%5]) with mapi id 15.20.4867.009; Thu, 6 Jan 2022
+ 15:46:37 +0000
+Date:   Thu, 6 Jan 2022 11:46:35 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 10/11] PCI: mvebu: Implement support for legacy INTx
- interrupts
-Message-ID: <20220106154447.aie6taiuvav5wu6y@pali>
-References: <20220105150239.9628-1-pali@kernel.org>
- <20220105150239.9628-11-pali@kernel.org>
- <87bl0ovq7f.wl-maz@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 01/14] iommu: Add dma ownership management interfaces
+Message-ID: <20220106154635.GG2328285@nvidia.com>
+References: <YdQcgFhIMYvUwABV@infradead.org>
+ <20220104164100.GA101735@bhelgaas>
+ <20220104192348.GK2328285@nvidia.com>
+ <9486face-0778-b8d0-6989-94c2e876446b@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87bl0ovq7f.wl-maz@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <9486face-0778-b8d0-6989-94c2e876446b@linux.intel.com>
+X-ClientProxiedBy: CH2PR10CA0012.namprd10.prod.outlook.com
+ (2603:10b6:610:4c::22) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 97c0ed50-8564-4aba-5b20-08d9d12bb947
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5335:EE_
+X-Microsoft-Antispam-PRVS: <BL1PR12MB5335DCF94BE471225E85409DC24C9@BL1PR12MB5335.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +LV3XZY+hU9KilSDBivNLIVZzdFLkbDFOmXYaVQK3ecWEKJyBKHqwvKfK+kRv+9tuXbxTA1I4rzRWakAYfguSgClRw7tzL4/hF/fr6rBCbltmcpPtR11C2Qv8dmxUeJmTm3XIYLzx9+8CPjlHtD+q0TAkmYaMurhAfoxPbRUAyoGiE00WtHqjOK0UM1rtV74d9VHnjB4FIewZ9bfpYGcUjsiHeCC+ZkSy3YszByAEzE5eD/Fanfug65mTlORzCSAuIIVOfB3x02Q//wUmEuLBsJUu4WU1gwNJ0KCfFSbSdLM79TtJ3Lo9vAwT1hEfDEO7GYdz+OIAfdSkGag5cun/H9e7KWy6XF3rVs8HdWwEhxa8Ig3kDnMIPfIFwgVsOAGKkZISvMkDDK9vqGu1IOkv0XOD3pGc3KF7d+wmJViLsIctv4TBb4paXAwQZN16mmRYNjh3KW4mqfPyB2lPZOtr3Pw6knG5f3mkv+626PBysYFxzraH15mJ5ECtkHdnR44iJW7BeYo4FUorBXrjEx6BxgSScCOzh7nv3KKrh+L5W9QsIlAB8OYaRBPlf58HGb7cHhlHbXbODMEg/VmaKwJQTPD1j8+sXamEcUPd93uOayaeDlKoWwWwK/5+9hR+01/yyXsdil3QsYS/lj//nHUqg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66946007)(66556008)(66476007)(83380400001)(38100700002)(316002)(6916009)(2616005)(6512007)(1076003)(6486002)(8936002)(508600001)(8676002)(53546011)(6506007)(26005)(186003)(33656002)(36756003)(5660300002)(4326008)(2906002)(86362001)(54906003)(7416002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lT4KlXRUX2iAnj1SvP+X1X5i1rLB1Id0qwnbzfzLjtvGQgUeAjC2YEUov6hj?=
+ =?us-ascii?Q?JZFYgI7DBa7wwOnr8ULoXUWzd+6ICB9LHUBK9KNurPNMKU0KIxWeZwRrruwL?=
+ =?us-ascii?Q?92+jEg/S1jOrAMJUwXVpip+stHn7lvoRUTMsEQWXHcv/Nr+OFMP7MLX2/f5v?=
+ =?us-ascii?Q?ILBdRm9uA70uEw80PGTLRb7oy/QnWW/+67uvs5SrODt8vSKLojANHjtCfkwE?=
+ =?us-ascii?Q?HlGeDRtmpVWkXS1hBIjWtHHGUlXyFV9DQ02M35BeyTBtfTJ/jHtJ5PM/qotQ?=
+ =?us-ascii?Q?IOyPBwyl4/ZYmNSX5eOcPewG8CWZWsQjQ0SoaQmqjhLu9pnI2vUolpsg9lMa?=
+ =?us-ascii?Q?77rT2+kbkKA6dJ0SjKRf+7O/83U5+X8Sa2O+/I5Aab876Ajfnh17CDPWwK3r?=
+ =?us-ascii?Q?jHz6Lt1MdNfk6eGJcQpVT0qq9ysyXesBa4XS4LJx92Z2vQ0yZyw0vq38k1QX?=
+ =?us-ascii?Q?J5C7zKr6O3XENp3K0tgPJWSfCk+CdGwPy6vlOczPAjBS10Orxx0q1THn5DQH?=
+ =?us-ascii?Q?SsK9b3bAotNUD97QKMvTozygseJLS3pt7/aYO1R68rN8vb5cDmsdLL04M/+P?=
+ =?us-ascii?Q?hnpfRxvM0x13Nx2fVyOErZ5lmWpXdScQs7Uk4S5gZtqAiXvjNJojaULufeeI?=
+ =?us-ascii?Q?jXlnNf/mFwttQX8mF5pWtnBkzh4KlFfOvz7NwWlxiDvmyNHoJpcBSPgay2zo?=
+ =?us-ascii?Q?+IqbaYC0pu7jUfGjYw6uKyX6R2It3tFMn90qM2bhU07F/5Pev68tK4clEPn6?=
+ =?us-ascii?Q?Jtb8U1vy2ufngySqbTDfocVWO8phCJRSVjDXudao9T3xEqklfpk9ryHxyD+H?=
+ =?us-ascii?Q?hnH9GhpmOXms569pX0c2JokaJZF2HCshmS4iFgloIvCfUdF16J6DSmPpyrcf?=
+ =?us-ascii?Q?J4B10YXU8/kec+B3tGvMIG5NWIOvM2mRiRL5sgAlMHftlBN7qpeiZz+Bv6TW?=
+ =?us-ascii?Q?6wsenxsKUUTGVKHNhlj6uaQv8jx3m5NXRnXj/BGFekxqVkuwcYWKanL/Xjv/?=
+ =?us-ascii?Q?0aDNoDocbmb8xWk1Dx47SvAKxbVzgrOfwGnYz3E7JIl803k5OwVGRfWvNQeU?=
+ =?us-ascii?Q?J0gPY9nxuW9UvC1Rrxwe7/HcQjlld/VAPVT8g3CZBSchxhjul/nRM4+juwWS?=
+ =?us-ascii?Q?Npx8JDH4U0du4pRQg/VeVXmdG3ypdUBQqgAzPJA5K3v5AOzmSOZOpm9Ky7uD?=
+ =?us-ascii?Q?BxWMYzAOjQeiWx3Cz2OsdYTgNuNaPXNkmIyx4W3tx0+IMSlCSuYJ0sJ8wZB6?=
+ =?us-ascii?Q?JIb++lf9A1PlR3yRRDXZyXFGUk8VfTr1ZI40kDisSu1tcjGqEmLxfn/lq+yQ?=
+ =?us-ascii?Q?FNfCfEsdL6EQUyCp0rug4OMCYoyhsQuDKftgyaop9KkKOInoNpxv/hyF3c9v?=
+ =?us-ascii?Q?FFGIxKS6NEdEzE/GInpzQgIN4PUv9QCb2l3Q587R4tahV2oPueJzFGlNfipJ?=
+ =?us-ascii?Q?k+7ncH6AqGVeocRIGdO0ZJgF4AgufVNSrwzIHcJp5TFZwvDKK56mN7xAGdt+?=
+ =?us-ascii?Q?haBRKMcNXoz6iI0GsrS7zApLRbZE0uU63JwDpcXJTJoP4CL78gzuF1D1vpVK?=
+ =?us-ascii?Q?QrwHRezt/yx40PbvKlk=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97c0ed50-8564-4aba-5b20-08d9d12bb947
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2022 15:46:37.3614
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6+NkjPADbb2WlLeh/23x8l+WmRXTx0E73GJgGLDLgyfcNmUi4wMNCseqh4b7qMCj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5335
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 06 January 2022 15:28:20 Marc Zyngier wrote:
-> On Wed, 05 Jan 2022 15:02:38 +0000,
-> Pali Rohár <pali@kernel.org> wrote:
+On Thu, Jan 06, 2022 at 11:54:06AM +0800, Lu Baolu wrote:
+> On 1/5/22 3:23 AM, Jason Gunthorpe wrote:
+> > > > > The device driver oriented interfaces are,
+> > > > > 
+> > > > > 	int iommu_device_use_dma_api(struct device *dev);
+> > > > > 	void iommu_device_unuse_dma_api(struct device *dev);
+> > > Nit, do we care whether it uses the actual DMA API?  Or is it just
+> > > that iommu_device_use_dma_api() tells us the driver may program the
+> > > device to do DMA?
+> > As the main purpose, yes this is all about the DMA API because it
+> > asserts the group domain is the DMA API's domain.
 > > 
-> > This adds support for legacy INTx interrupts received from other PCIe
-> > devices and which are reported by a new INTx irq chip.
+> > There is a secondary purpose that has to do with the user/kernel
+> > attack you mentioned above. Maintaining the DMA API domain also
+> > prevents VFIO from allowing userspace to operate any device in the
+> > group which blocks P2P attacks to MMIO of other devices.
 > > 
-> > With this change, kernel can distinguish between INTA, INTB, INTC and INTD
-> > interrupts.
+> > This is why, even if the driver doesn't use DMA, it should still do a
+> > iommu_device_use_dma_api(), except in the special cases where we don't
+> > care about P2P attacks (eg pci-stub, bridges, etc).
 > > 
-> > Note that for this support, device tree files has to be properly adjusted
-> > to provide "interrupts" or "interrupts-extended" property with intx
-> > interrupt source, "interrupt-names" property with "intx" string and also
-> > 'interrupt-controller' subnode must be defined.
-> > 
-> > If device tree files do not provide these nodes then driver would work as
-> > before.
-> > 
-> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > ---
-> >  drivers/pci/controller/pci-mvebu.c | 182 +++++++++++++++++++++++++++--
-> >  1 file changed, 174 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> > index 1e90ab888075..04bcdd7b7a6d 100644
-> > --- a/drivers/pci/controller/pci-mvebu.c
-> > +++ b/drivers/pci/controller/pci-mvebu.c
-> > @@ -54,9 +54,10 @@
-> >  	 PCIE_CONF_ADDR_EN)
-> >  #define PCIE_CONF_DATA_OFF	0x18fc
-> >  #define PCIE_INT_CAUSE_OFF	0x1900
-> > +#define PCIE_INT_UNMASK_OFF	0x1910
-> > +#define  PCIE_INT_INTX(i)		BIT(24+i)
-> >  #define  PCIE_INT_PM_PME		BIT(28)
-> > -#define PCIE_MASK_OFF		0x1910
-> > -#define  PCIE_MASK_ENABLE_INTS          0x0f000000
-> > +#define  PCIE_INT_ALL_MASK		GENMASK(31, 0)
-> >  #define PCIE_CTRL_OFF		0x1a00
-> >  #define  PCIE_CTRL_X1_MODE		0x0001
-> >  #define  PCIE_CTRL_RC_MODE		BIT(1)
-> > @@ -110,6 +111,10 @@ struct mvebu_pcie_port {
-> >  	struct mvebu_pcie_window iowin;
-> >  	u32 saved_pcie_stat;
-> >  	struct resource regs;
-> > +	struct irq_domain *intx_irq_domain;
-> > +	struct irq_chip intx_irq_chip;
 > 
-> Why is this structure per port? It really should be global. Printing
-> the port number in the name isn't enough of a reason.
-
-Because each port has its own independent set of INTA-INTD interrupts.
-
-> > +	raw_spinlock_t irq_lock;
-> > +	int intx_irq;
-> >  };
-> >  
-> >  static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u32 reg)
-> > @@ -235,7 +240,7 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
-> >  
-> >  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
-> >  {
-> > -	u32 ctrl, lnkcap, cmd, dev_rev, mask;
-> > +	u32 ctrl, lnkcap, cmd, dev_rev, unmask;
-> >  
-> >  	/* Setup PCIe controller to Root Complex mode. */
-> >  	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
-> > @@ -288,10 +293,30 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
-> >  	/* Point PCIe unit MBUS decode windows to DRAM space. */
-> >  	mvebu_pcie_setup_wins(port);
-> >  
-> > -	/* Enable interrupt lines A-D. */
-> > -	mask = mvebu_readl(port, PCIE_MASK_OFF);
-> > -	mask |= PCIE_MASK_ENABLE_INTS;
-> > -	mvebu_writel(port, mask, PCIE_MASK_OFF);
-> > +	/* Mask all interrupt sources. */
-> > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
-> > +
-> > +	/* Clear all interrupt causes. */
-> > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
-> > +
-> > +	if (port->intx_irq <= 0) {
-> > +		/*
-> > +		 * When neither "summary" interrupt, nor "intx" interrupt was
-> > +		 * specified in DT then unmask all legacy INTx interrupts as in
-> > +		 * this case driver does not provide a way for masking and
-> > +		 * unmasking of individual legacy INTx interrupts. In this case
-> > +		 * all interrupts, including legacy INTx are reported via one
-> > +		 * shared GIC source and therefore kernel cannot distinguish
-> > +		 * which individual legacy INTx was triggered. These interrupts
-> > +		 * are shared, so it should not cause any issue. Just
-> > +		 * performance penalty as every PCIe interrupt handler needs to
-> > +		 * be called when some interrupt is triggered.
-> > +		 */
-> > +		unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> > +		unmask |= PCIE_INT_INTX(0) | PCIE_INT_INTX(1) |
-> > +			  PCIE_INT_INTX(2) | PCIE_INT_INTX(3);
-> > +		mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
+> By the way, use_dma_api seems hard to read. How about
 > 
-> Maybe worth printing a warning here, so that the user knows they are
-> on thin ice.
+> 	iommu_device_use_default_dma()?
 
-Ok. I can add it here. Anyway, this is default current state without
-this patch.
+You could just say "use default domain"
 
-> > +	}
-> >  }
-> >  
-> >  static struct mvebu_pcie_port *mvebu_pcie_find_port(struct mvebu_pcie *pcie,
-> > @@ -924,6 +949,109 @@ static struct pci_ops mvebu_pcie_ops = {
-> >  	.write = mvebu_pcie_wr_conf,
-> >  };
-> >  
-> > +static void mvebu_pcie_intx_irq_mask(struct irq_data *d)
-> > +{
-> > +	struct mvebu_pcie_port *port = d->domain->host_data;
-> > +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> > +	unsigned long flags;
-> > +	u32 unmask;
-> > +
-> > +	raw_spin_lock_irqsave(&port->irq_lock, flags);
-> > +	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> > +	unmask &= ~PCIE_INT_INTX(hwirq);
-> > +	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
-> > +	raw_spin_unlock_irqrestore(&port->irq_lock, flags);
-> > +}
-> > +
-> > +static void mvebu_pcie_intx_irq_unmask(struct irq_data *d)
-> > +{
-> > +	struct mvebu_pcie_port *port = d->domain->host_data;
-> > +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> > +	unsigned long flags;
-> > +	u32 unmask;
-> > +
-> > +	raw_spin_lock_irqsave(&port->irq_lock, flags);
-> > +	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> > +	unmask |= PCIE_INT_INTX(hwirq);
-> > +	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
-> > +	raw_spin_unlock_irqrestore(&port->irq_lock, flags);
-> > +}
-> > +
-> > +static int mvebu_pcie_intx_irq_map(struct irq_domain *h,
-> > +				   unsigned int virq, irq_hw_number_t hwirq)
-> > +{
-> > +	struct mvebu_pcie_port *port = h->host_data;
-> > +
-> > +	irq_set_status_flags(virq, IRQ_LEVEL);
-> > +	irq_set_chip_and_handler(virq, &port->intx_irq_chip, handle_level_irq);
-> > +	irq_set_chip_data(virq, port);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct irq_domain_ops mvebu_pcie_intx_irq_domain_ops = {
-> > +	.map = mvebu_pcie_intx_irq_map,
-> > +	.xlate = irq_domain_xlate_onecell,
-> > +};
-> > +
-> > +static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *port)
-> > +{
-> > +	struct device *dev = &port->pcie->pdev->dev;
-> > +	struct device_node *pcie_intc_node;
-> > +
-> > +	raw_spin_lock_init(&port->irq_lock);
-> > +
-> > +	port->intx_irq_chip.name = devm_kasprintf(dev, GFP_KERNEL,
-> > +						  "mvebu-%s-INTx",
-> > +						  port->name);
-> 
-> That's exactly what I really don't want to see. It prevents sharing of
-> the irq_chip structure, and gets in the way of making it const in the
-> future. Yes, I know that some drivers do that. I can't fix those,
-> because /proc/interrupts is ABI. But I really don't want to see more
-> of these.
+IMHO the way the iommu subsystem has its own wonky language is a
+little troublesome. In the rest of the kernel we call this the DMA
+API, while the iommu subsystem calls the domain that the DMA API uses
+the 'default domain' not the 'DMA API' domain.
 
-Well, I do not understand why it should be shared and with who. HW has N
-independent IRQ chips for legacy interrupts. And each one will be
-specified in DT per HW layout / design.
+Still, it is probably better to align to the iommu language - just be
+sure to put in the function comment that this API 'allows the driver
+to use the DMA API eg dma_map_sg()'
 
-> /sys/kernel/debug/irqs already has all the information you need, as it
-> will happily give you the domain name and the interrupt topology.
-> 
-> > +	port->intx_irq_chip.irq_mask = mvebu_pcie_intx_irq_mask;
-> > +	port->intx_irq_chip.irq_unmask = mvebu_pcie_intx_irq_unmask;
-> > +
-> > +	pcie_intc_node = of_get_next_child(port->dn, NULL);
-> > +	if (!pcie_intc_node) {
-> > +		dev_err(dev, "No PCIe Intc node found for %s\n", port->name);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	port->intx_irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
-> > +						      &mvebu_pcie_intx_irq_domain_ops,
-> > +						      port);
-> > +	of_node_put(pcie_intc_node);
-> > +	if (!port->intx_irq_domain) {
-> > +		devm_kfree(dev, port->intx_irq_chip.name);
-> > +		dev_err(dev, "Failed to get INTx IRQ domain for %s\n", port->name);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void mvebu_pcie_irq_handler(struct irq_desc *desc)
-> > +{
-> > +	struct mvebu_pcie_port *port = irq_desc_get_handler_data(desc);
-> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> > +	struct device *dev = &port->pcie->pdev->dev;
-> > +	u32 cause, unmask, status;
-> > +	int i;
-> > +
-> > +	chained_irq_enter(chip, desc);
-> > +
-> > +	cause = mvebu_readl(port, PCIE_INT_CAUSE_OFF);
-> > +	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-> 
-> Why do you need to read this? If the CAUSE register also returns the
-> masked interrupts that are pending,
-
-Yes, it returns all interrupts, even those which are masked for which is
-not system interested.
-
-> it may be worth keeping a shadow
-> copy of the this register, as you end-up having an extra MMIO read on
-> each and every interrupt, which can't be great for performance.
-
-Ok. I can set shadow copy of unmask register into port structure. But it
-has really performance impact when reading directly unmask register from
-hw and when reading it from port shadow copy structure?
-
-> > +	status = cause & unmask;
-> > +
-> > +	/* Process legacy INTx interrupts */
-> > +	for (i = 0; i < PCI_NUM_INTX; i++) {
-> > +		if (!(status & PCIE_INT_INTX(i)))
-> > +			continue;
-> > +
-> > +		if (generic_handle_domain_irq(port->intx_irq_domain, i) == -EINVAL)
-> > +			dev_err_ratelimited(dev, "unexpected INT%c IRQ\n", (char)i+'A');
-> > +	}
-> > +
-> > +	chained_irq_exit(chip, desc);
-> > +}
-> > +
-> >  static int mvebu_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
-> >  {
-> >  	/* Interrupt support on mvebu emulated bridges is not implemented yet */
-> > @@ -1121,6 +1249,16 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
-> >  		port->io_attr = -1;
-> >  	}
-> >  
-> > +	/*
-> > +	 * Old DT bindings do not contain "intx" interrupt
-> > +	 * so do not fail probing driver when interrupt does not exist.
-> > +	 */
-> > +	port->intx_irq = of_irq_get_byname(child, "intx");
-> > +	if (port->intx_irq == -EPROBE_DEFER) {
-> > +		ret = port->intx_irq;
-> > +		goto err;
-> > +	}
-> > +
-> >  	reset_gpio = of_get_named_gpio_flags(child, "reset-gpios", 0, &flags);
-> >  	if (reset_gpio == -EPROBE_DEFER) {
-> >  		ret = reset_gpio;
-> > @@ -1317,6 +1455,7 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
-> >  
-> >  	for (i = 0; i < pcie->nports; i++) {
-> >  		struct mvebu_pcie_port *port = &pcie->ports[i];
-> > +		int irq = port->intx_irq;
-> >  
-> >  		child = port->dn;
-> >  		if (!child)
-> > @@ -1344,6 +1483,22 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
-> >  			continue;
-> >  		}
-> >  
-> > +		if (irq > 0) {
-> > +			ret = mvebu_pcie_init_irq_domain(port);
-> > +			if (ret) {
-> > +				dev_err(dev, "%s: cannot init irq domain\n",
-> > +					port->name);
-> > +				pci_bridge_emul_cleanup(&port->bridge);
-> > +				devm_iounmap(dev, port->base);
-> > +				port->base = NULL;
-> > +				mvebu_pcie_powerdown(port);
-> > +				continue;
-> > +			}
-> > +			irq_set_chained_handler_and_data(irq,
-> > +							 mvebu_pcie_irq_handler,
-> > +							 port);
-> > +		}
-> > +
-> >  		/*
-> >  		 * PCIe topology exported by mvebu hw is quite complicated. In
-> >  		 * reality has something like N fully independent host bridges
-> > @@ -1448,6 +1603,7 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
-> >  
-> >  	for (i = 0; i < pcie->nports; i++) {
-> >  		struct mvebu_pcie_port *port = &pcie->ports[i];
-> > +		int irq = port->intx_irq;
-> >  
-> >  		if (!port->base)
-> >  			continue;
-> > @@ -1458,7 +1614,17 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
-> >  		mvebu_writel(port, cmd, PCIE_CMD_OFF);
-> >  
-> >  		/* Mask all interrupt sources. */
-> > -		mvebu_writel(port, 0, PCIE_MASK_OFF);
-> > +		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
-> > +
-> > +		/* Clear all interrupt causes. */
-> > +		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
-> > +
-> > +		/* Remove IRQ domains. */
-> > +		if (port->intx_irq_domain)
-> > +			irq_domain_remove(port->intx_irq_domain);
-> > +
-> > +		if (irq > 0)
-> > +			irq_set_chained_handler_and_data(irq, NULL, NULL);
-> >  
-> >  		/* Free config space for emulated root bridge. */
-> >  		pci_bridge_emul_cleanup(&port->bridge);
-> 
-> Thanks,
-> 
-> 	M.
-> 
-> -- 
-> Without deviation from the norm, progress is not possible.
+Jason
