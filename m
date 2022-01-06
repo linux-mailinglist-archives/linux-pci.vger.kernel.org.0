@@ -2,259 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F6D6486B53
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 21:42:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 399B6486C19
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 22:45:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243837AbiAFUmh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 15:42:37 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:55998 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232673AbiAFUmh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 15:42:37 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0D5F5B8175C
-        for <linux-pci@vger.kernel.org>; Thu,  6 Jan 2022 20:42:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79EBCC36AE5;
-        Thu,  6 Jan 2022 20:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641501754;
-        bh=sJKuQbS3Ft0ZGo+OgWA0Su0KlgABiR9BBrhNFH+s8sI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GPeiRQTIYEtlUoIwjEO9AoQqMX1o7hQzp+a6knq/HJD6XPL7ph0r6vNaYu0KKi3bt
-         6qMP2d4DkrcTfVB/aDib6sTPmOHrt4IwdJFhMwdwQEL5GHQGMm4uMWcSP4B2JmVSwI
-         IpoGbI+8FBYna93Brb1LuaARRiP+vyye/BEDVjz8y0nZpHkft9EE86aQZegmerWgkT
-         QkGka9Xq2CgI49e/hlGUxXeNnnnpyiGCRWERSxU1iy91GF4uT4D1NfmU8WQCiW3xaX
-         Wrz2mx0geG9TIXzlv/wWrXMiL0S8p9zhVqHxNjizbo7X8f1hosErgy6yNyQ8rKDh00
-         ficgbsi+gdvgQ==
-Date:   Thu, 6 Jan 2022 14:42:32 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Cc:     linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, bhelgaas@google.com, minghuan.Lian@nxp.com,
-        leoyang.li@nxp.com
-Subject: Re: [PATCHv6] PCI: layerscape: Change to use the DWC common link-up
- check function
-Message-ID: <20220106204232.GA306585@bhelgaas>
+        id S244392AbiAFVpb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 16:45:31 -0500
+Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:60355 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244384AbiAFVpa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 16:45:30 -0500
+Received: from pop-os.home ([90.11.185.88])
+        by smtp.orange.fr with ESMTPA
+        id 5aZQntTbg2lVY5aZRnSkzN; Thu, 06 Jan 2022 22:45:28 +0100
+X-ME-Helo: pop-os.home
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Thu, 06 Jan 2022 22:45:28 +0100
+X-ME-IP: 90.11.185.88
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     arnd@arndb.de, hch@infradead.org, akpm@linux-foundation.org,
+        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        davem@davemloft.net, airlied@linux.ie, vkoul@kernel.org,
+        hao.wu@intel.com, trix@redhat.com, mdf@kernel.org,
+        yilun.xu@intel.com, awalls@md.metrocast.net, mchehab@kernel.org,
+        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, mporter@kernel.crashing.org,
+        alex.bou9@gmail.com, bhelgaas@google.com
+Cc:     linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-media@vger.kernel.org,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 00/16] Remove usage of the deprecated "pci-dma-compat.h" API
+Date:   Thu,  6 Jan 2022 22:45:13 +0100
+Message-Id: <cover.1641500561.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211224094000.8513-1-Zhiqiang.Hou@nxp.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 24, 2021 at 05:40:00PM +0800, Zhiqiang Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The current Layerscape PCIe driver directly uses the physical layer
-> LTSSM code to check the link-up state, which treats the > L0 states
-> as link-up. This is not correct, since there is not explicit map
-> between link-up state and LTSSM. So this patch changes to use the
-> DWC common link-up check function.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> V6:
->  - This patch is splited from the V5 version of Layerscape PCIe Power
->    Management support series.
->  - Removed the driver data structure.
-> 
->  drivers/pci/controller/dwc/pci-layerscape.c | 152 ++------------------
->  1 file changed, 11 insertions(+), 141 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index 5b9c625df7b8..6a4f0619bb1c 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -3,6 +3,7 @@
->   * PCIe host controller driver for Freescale Layerscape SoCs
->   *
->   * Copyright (C) 2014 Freescale Semiconductor.
-> + * Copyright 2021 NXP
->   *
->   * Author: Minghuan Lian <Minghuan.Lian@freescale.com>
->   */
-> @@ -22,12 +23,6 @@
->  
->  #include "pcie-designware.h"
->  
-> -/* PEX1/2 Misc Ports Status Register */
-> -#define SCFG_PEXMSCPORTSR(pex_idx)	(0x94 + (pex_idx) * 4)
-> -#define LTSSM_STATE_SHIFT	20
-> -#define LTSSM_STATE_MASK	0x3f
-> -#define LTSSM_PCIE_L0		0x11 /* L0 state */
-> -
->  /* PEX Internal Configuration Registers */
->  #define PCIE_STRFMR1		0x71c /* Symbol Timer & Filter Mask Register1 */
->  #define PCIE_ABSERR		0x8d0 /* Bridge Slave Error Response Register */
-> @@ -35,20 +30,8 @@
->  
->  #define PCIE_IATU_NUM		6
->  
-> -struct ls_pcie_drvdata {
-> -	u32 lut_offset;
-> -	u32 ltssm_shift;
-> -	u32 lut_dbg;
-> -	const struct dw_pcie_host_ops *ops;
-> -	const struct dw_pcie_ops *dw_pcie_ops;
-> -};
-> -
->  struct ls_pcie {
->  	struct dw_pcie *pci;
-> -	void __iomem *lut;
-> -	struct regmap *scfg;
-> -	const struct ls_pcie_drvdata *drvdata;
-> -	int index;
->  };
->  
->  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
-> @@ -83,38 +66,6 @@ static void ls_pcie_drop_msg_tlp(struct ls_pcie *pcie)
->  	iowrite32(val, pci->dbi_base + PCIE_STRFMR1);
->  }
->  
-> -static int ls1021_pcie_link_up(struct dw_pcie *pci)
-> -{
-> -	u32 state;
-> -	struct ls_pcie *pcie = to_ls_pcie(pci);
-> -
-> -	if (!pcie->scfg)
-> -		return 0;
-> -
-> -	regmap_read(pcie->scfg, SCFG_PEXMSCPORTSR(pcie->index), &state);
-> -	state = (state >> LTSSM_STATE_SHIFT) & LTSSM_STATE_MASK;
-> -
-> -	if (state < LTSSM_PCIE_L0)
-> -		return 0;
-> -
-> -	return 1;
-> -}
-> -
-> -static int ls_pcie_link_up(struct dw_pcie *pci)
-> -{
-> -	struct ls_pcie *pcie = to_ls_pcie(pci);
-> -	u32 state;
-> -
-> -	state = (ioread32(pcie->lut + pcie->drvdata->lut_dbg) >>
-> -		 pcie->drvdata->ltssm_shift) &
-> -		 LTSSM_STATE_MASK;
-> -
-> -	if (state < LTSSM_PCIE_L0)
-> -		return 0;
-> -
-> -	return 1;
-> -}
-> -
->  /* Forward error response of outbound non-posted requests */
->  static void ls_pcie_fix_error_response(struct ls_pcie *pcie)
->  {
-> @@ -139,96 +90,20 @@ static int ls_pcie_host_init(struct pcie_port *pp)
->  	return 0;
->  }
->  
-> -static int ls1021_pcie_host_init(struct pcie_port *pp)
-> -{
-> -	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> -	struct ls_pcie *pcie = to_ls_pcie(pci);
-> -	struct device *dev = pci->dev;
-> -	u32 index[2];
-> -	int ret;
-> -
-> -	pcie->scfg = syscon_regmap_lookup_by_phandle(dev->of_node,
-> -						     "fsl,pcie-scfg");
-> -	if (IS_ERR(pcie->scfg)) {
-> -		ret = PTR_ERR(pcie->scfg);
-> -		dev_err(dev, "No syscfg phandle specified\n");
-> -		pcie->scfg = NULL;
-> -		return ret;
-> -	}
-> -
-> -	if (of_property_read_u32_array(dev->of_node,
-> -				       "fsl,pcie-scfg", index, 2)) {
-> -		pcie->scfg = NULL;
-> -		return -EINVAL;
-> -	}
-> -	pcie->index = index[1];
-> -
-> -	return ls_pcie_host_init(pp);
-> -}
-> -
-> -static const struct dw_pcie_host_ops ls1021_pcie_host_ops = {
-> -	.host_init = ls1021_pcie_host_init,
-> -};
-> -
->  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
->  	.host_init = ls_pcie_host_init,
->  };
->  
-> -static const struct dw_pcie_ops dw_ls1021_pcie_ops = {
-> -	.link_up = ls1021_pcie_link_up,
-> -};
-> -
-> -static const struct dw_pcie_ops dw_ls_pcie_ops = {
-> -	.link_up = ls_pcie_link_up,
-> -};
-> -
-> -static const struct ls_pcie_drvdata ls1021_drvdata = {
-> -	.ops = &ls1021_pcie_host_ops,
-> -	.dw_pcie_ops = &dw_ls1021_pcie_ops,
-> -};
-> -
-> -static const struct ls_pcie_drvdata ls1043_drvdata = {
-> -	.lut_offset = 0x10000,
-> -	.ltssm_shift = 24,
-> -	.lut_dbg = 0x7fc,
-> -	.ops = &ls_pcie_host_ops,
-> -	.dw_pcie_ops = &dw_ls_pcie_ops,
-> -};
-> -
-> -static const struct ls_pcie_drvdata ls1046_drvdata = {
-> -	.lut_offset = 0x80000,
-> -	.ltssm_shift = 24,
-> -	.lut_dbg = 0x407fc,
-> -	.ops = &ls_pcie_host_ops,
-> -	.dw_pcie_ops = &dw_ls_pcie_ops,
-> -};
-> -
-> -static const struct ls_pcie_drvdata ls2080_drvdata = {
-> -	.lut_offset = 0x80000,
-> -	.ltssm_shift = 0,
-> -	.lut_dbg = 0x7fc,
-> -	.ops = &ls_pcie_host_ops,
-> -	.dw_pcie_ops = &dw_ls_pcie_ops,
-> -};
-> -
-> -static const struct ls_pcie_drvdata ls2088_drvdata = {
-> -	.lut_offset = 0x80000,
-> -	.ltssm_shift = 0,
-> -	.lut_dbg = 0x407fc,
-> -	.ops = &ls_pcie_host_ops,
-> -	.dw_pcie_ops = &dw_ls_pcie_ops,
-> -};
-> -
->  static const struct of_device_id ls_pcie_of_match[] = {
-> -	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
-> -	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
-> -	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
-> -	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
-> -	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
-> -	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
-> -	{ .compatible = "fsl,ls2085a-pcie", .data = &ls2080_drvdata },
-> -	{ .compatible = "fsl,ls2088a-pcie", .data = &ls2088_drvdata },
-> -	{ .compatible = "fsl,ls1088a-pcie", .data = &ls2088_drvdata },
-> +	{ .compatible = "fsl,ls1012a-pcie", },
-> +	{ .compatible = "fsl,ls1021a-pcie", },
-> +	{ .compatible = "fsl,ls1028a-pcie", },
-> +	{ .compatible = "fsl,ls1043a-pcie", },
-> +	{ .compatible = "fsl,ls1046a-pcie", },
-> +	{ .compatible = "fsl,ls2080a-pcie", },
-> +	{ .compatible = "fsl,ls2085a-pcie", },
-> +	{ .compatible = "fsl,ls2088a-pcie", },
-> +	{ .compatible = "fsl,ls1088a-pcie", },
+This serie axes all the remaining usages of the deprecated "pci-dma-compat.h"
+API.
 
-This is BEAUTIFUL!  Look at all that unnecessarily layerscape-specific
-code that went away!  Thank you!
+All these patches have already been posted.
 
-Bjorn
+They have been generated with a coccinelle script.
+The tricky parts are patches that use dma_alloc_coherent() because the correct
+GFP flag has to be used in place of the previous embedded GFP_ATOMIC.
+
+Patches 1-3 are already Reviewed. References to the corresponding mail is
+given below the ---
+
+Patch 1-2,4-10 are just generated from the coccinelle script. Only too long
+lines have been hand modified. dma_alloc_coherent() modification are NOT part
+of these patches.
+
+Patch 3 also includes some 'dma_set_mask_and_coherent()' instead of
+'pci_set_dma_mask()/pci_set_consistent_dma_mask()'.
+I've left this additional modification because it was reviewed with it.
+
+Patch 10-15 are the tricky parts. Explanation of which GFP flag is the right one
+is given in each patch. It has been divided in several patches to ease review.
+
+Patch 15 is the only one I'm slighly unsure with. The old code was using a
+GFP_USER flag in the function. I'm not familiar with it.
+I *guess*  that GFP_KERNEL is fine, but maybe it should also be GFP_USER or left
+as GFP_ATOMIC so that nothing is changed.
+
+Patch 16 is the last step that remove "pci-dma-compat.h" and its only usage.
+
+
+All patches, exept 1-2,6 that are architecture specific, have been compile tested.
+
+
+After all that, a few rst files, 1 or 2 strings in error messages and some
+error branching labels should still need some attention. 
+This is some minor issues.
+
+
+Only the cover letter is sent to every one. Each patch is sent to the
+corresponding maintainer(s) + Andrew Morton, Christoph Hellwig and Arnd Bergmann.
+
+
+Best regards.
+
+
+Christophe JAILLET (16):
+  alpha: Remove usage of the deprecated "pci-dma-compat.h" API
+  floppy: Remove usage of the deprecated "pci-dma-compat.h" API
+  fpga: dfl: pci: Remove usage of the deprecated "pci-dma-compat.h" API
+  media: Remove usage of the deprecated "pci-dma-compat.h" API
+  agp/intel: Remove usage of the deprecated "pci-dma-compat.h" API
+  sparc: Remove usage of the deprecated "pci-dma-compat.h" API
+  dmaengine: pch_dma: Remove usage of the deprecated "pci-dma-compat.h"
+    API
+  rapidio/tsi721: Remove usage of the deprecated "pci-dma-compat.h" API
+  media: v4l2-pci-skeleton: Remove usage of the deprecated
+    "pci-dma-compat.h" API
+  scsi: message: fusion: Remove usage of the deprecated
+    "pci-dma-compat.h" API
+  scsi: mptbase: Use dma_alloc_coherent() in 'mpt_alloc_fw_memory()'
+  scsi: mptbase: Use dma_alloc_coherent()
+  scsi: mptsas: Use dma_alloc_coherent() in
+    mptsas_exp_repmanufacture_info()
+  scsi: mptsas: Use dma_alloc_coherent()
+  scsi: mptctl: Use dma_alloc_coherent()
+  PCI: Remove usage of the deprecated "pci-dma-compat.h" API
+
+ arch/alpha/include/asm/floppy.h     |   7 +-
+ arch/alpha/kernel/pci_iommu.c       |  12 +--
+ arch/powerpc/include/asm/floppy.h   |   8 +-
+ arch/sparc/kernel/ioport.c          |   2 +-
+ drivers/char/agp/intel-gtt.c        |  26 ++---
+ drivers/dma/pch_dma.c               |   2 +-
+ drivers/fpga/dfl-pci.c              |  14 +--
+ drivers/media/pci/cx18/cx18-queue.h |   6 +-
+ drivers/media/pci/ivtv/ivtv-queue.h |  25 +++--
+ drivers/media/pci/ivtv/ivtv-udma.h  |   8 +-
+ drivers/message/fusion/mptbase.c    | 149 ++++++++++++++++------------
+ drivers/message/fusion/mptctl.c     |  82 +++++++++------
+ drivers/message/fusion/mptlan.c     |  90 +++++++++--------
+ drivers/message/fusion/mptsas.c     |  94 +++++++++---------
+ drivers/rapidio/devices/tsi721.c    |   8 +-
+ include/linux/pci-dma-compat.h      | 129 ------------------------
+ include/linux/pci.h                 |   3 -
+ samples/v4l/v4l2-pci-skeleton.c     |   2 +-
+ 18 files changed, 289 insertions(+), 378 deletions(-)
+ delete mode 100644 include/linux/pci-dma-compat.h
+
+-- 
+2.32.0
+
