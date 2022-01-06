@@ -2,311 +2,389 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF4F9486644
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 15:45:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36A7E4866B4
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 16:28:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240201AbiAFOpd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 09:45:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:55056 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240229AbiAFOpa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Jan 2022 09:45:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC9181042;
-        Thu,  6 Jan 2022 06:45:28 -0800 (PST)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CA5D3F5A1;
-        Thu,  6 Jan 2022 06:45:26 -0800 (PST)
-Date:   Thu, 6 Jan 2022 14:45:18 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
-        Baruch Siach <baruch.siach@siklu.com>,
-        Kathiravan T <kathirav@codeaurora.org>,
+        id S240444AbiAFP21 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 10:28:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240432AbiAFP20 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 10:28:26 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5280BC061245;
+        Thu,  6 Jan 2022 07:28:26 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DC1F8B82202;
+        Thu,  6 Jan 2022 15:28:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D58C36AE3;
+        Thu,  6 Jan 2022 15:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641482903;
+        bh=gfZwgbxIfXJ7FOML0P8Y3zm7pmv4Wj/QAfnSTAvGnvU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FDqKR90ERkOmBPIGWrpv/KbtqmwnKYLRKuyrx3kdVe6P7eq9Y8dIfzWEzJMh1JrGy
+         +HunOYdmRdAuqlw9lIcgRNPvoMZE28ZtoppoFXBJJowQ7PNGRkkthYuU+DGIz2J4p8
+         xPJzW8mstEIct0MBjybDun9MnhYJPDaOlCt8fce1ASfYNm6Vs/gKMoUy+ICsgd+XRF
+         DTjoC2yNJ+DougIcb+LKkRRwPJilLW7rYwMry7nsPiaCSsqIm2gaofGBqluIjRipMe
+         DZUHq9ko7IvgU1DJ/subjfB/uRouoz7VCJ3aWTViLTXDTxs/egCwjPSErDTNoBd3BQ
+         nbXaV7CWGIA8w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1n5Ugf-00GNTe-5W; Thu, 06 Jan 2022 15:28:21 +0000
+Date:   Thu, 06 Jan 2022 15:28:20 +0000
+Message-ID: <87bl0ovq7f.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Robert Marko <robert.marko@sartura.hr>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-        pali@kernel.org
-Subject: Re: [PATCH v4 3/3] PCI: qcom: add support for IPQ60xx PCIe controller
-Message-ID: <20220106144518.GA15482@lpieralisi>
-References: <cover.1640587131.git.baruch@tkos.co.il>
- <a2406bf515124afad50ca3c947e2cd758c0896b1.1640587131.git.baruch@tkos.co.il>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a2406bf515124afad50ca3c947e2cd758c0896b1.1640587131.git.baruch@tkos.co.il>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 10/11] PCI: mvebu: Implement support for legacy INTx interrupts
+In-Reply-To: <20220105150239.9628-11-pali@kernel.org>
+References: <20220105150239.9628-1-pali@kernel.org>
+        <20220105150239.9628-11-pali@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: pali@kernel.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, thomas.petazzoni@bootlin.com, kw@linux.com, kabel@kernel.org, rmk+kernel@armlinux.org.uk, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+Pali - query on reset delay]
+On Wed, 05 Jan 2022 15:02:38 +0000,
+Pali Roh=C3=A1r <pali@kernel.org> wrote:
+>=20
+> This adds support for legacy INTx interrupts received from other PCIe
+> devices and which are reported by a new INTx irq chip.
+>=20
+> With this change, kernel can distinguish between INTA, INTB, INTC and INTD
+> interrupts.
+>=20
+> Note that for this support, device tree files has to be properly adjusted
+> to provide "interrupts" or "interrupts-extended" property with intx
+> interrupt source, "interrupt-names" property with "intx" string and also
+> 'interrupt-controller' subnode must be defined.
+>=20
+> If device tree files do not provide these nodes then driver would work as
+> before.
+>=20
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-mvebu.c | 182 +++++++++++++++++++++++++++--
+>  1 file changed, 174 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/=
+pci-mvebu.c
+> index 1e90ab888075..04bcdd7b7a6d 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -54,9 +54,10 @@
+>  	 PCIE_CONF_ADDR_EN)
+>  #define PCIE_CONF_DATA_OFF	0x18fc
+>  #define PCIE_INT_CAUSE_OFF	0x1900
+> +#define PCIE_INT_UNMASK_OFF	0x1910
+> +#define  PCIE_INT_INTX(i)		BIT(24+i)
+>  #define  PCIE_INT_PM_PME		BIT(28)
+> -#define PCIE_MASK_OFF		0x1910
+> -#define  PCIE_MASK_ENABLE_INTS          0x0f000000
+> +#define  PCIE_INT_ALL_MASK		GENMASK(31, 0)
+>  #define PCIE_CTRL_OFF		0x1a00
+>  #define  PCIE_CTRL_X1_MODE		0x0001
+>  #define  PCIE_CTRL_RC_MODE		BIT(1)
+> @@ -110,6 +111,10 @@ struct mvebu_pcie_port {
+>  	struct mvebu_pcie_window iowin;
+>  	u32 saved_pcie_stat;
+>  	struct resource regs;
+> +	struct irq_domain *intx_irq_domain;
+> +	struct irq_chip intx_irq_chip;
 
-On Mon, Dec 27, 2021 at 08:46:05AM +0200, Baruch Siach wrote:
-> From: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-> 
-> IPQ60xx series of SoCs have one port of PCIe gen 3. Add support for that
-> platform.
-> 
-> The code is based on downstream[1] Codeaurora kernel v5.4 (branch
-> win.linuxopenwrt.2.0).
-> 
-> Split out the DBI registers access part from .init into .post_init. DBI
-> registers are only accessible after phy_power_on().
-> 
-> [1] https://source.codeaurora.org/quic/qsdk/oss/kernel/linux-ipq-5.4/
-> 
-> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
-> ---
-> v4:
-> 
->   * Rebase on v5.16-rc1
-> 
-> v3:
->   * Drop speed setup; rely on generic code (Rob Herring)
-> 
->   * Drop unused CLK_RATE macros (Bjorn Helgaas)
-> 
->   * Minor formatting fixes (Bjorn Helgaas)
-> 
->   * Add reference to downstream Codeaurora kernel tree (Bjorn Helgaas)
-> 
-> v2:
->   * Drop ATU configuration; rely on common code instead
-> 
->   * Use more common register macros
-> 
->   * Use bulk clk and reset APIs
-> ---
->  drivers/pci/controller/dwc/pcie-designware.h |   1 +
->  drivers/pci/controller/dwc/pcie-qcom.c       | 145 +++++++++++++++++++
->  2 files changed, 146 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index ea87809ee298..279c3778a13b 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -76,6 +76,7 @@
->  
->  #define GEN3_RELATED_OFF			0x890
->  #define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
-> +#define GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS	BIT(13)
->  #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
->  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
->  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 1c3d1116bb60..14f86c45a8d9 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -52,6 +52,10 @@
->  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
->  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
->  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
-> +#define AHB_CLK_EN				BIT(0)
-> +#define MSTR_AXI_CLK_EN				BIT(1)
-> +#define BYPASS					BIT(4)
-> +
->  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT	0x178
->  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2	0x1A8
->  #define PCIE20_PARF_LTSSM			0x1B0
-> @@ -171,6 +175,11 @@ struct qcom_pcie_resources_2_7_0 {
->  	struct clk *ref_clk_src;
+Why is this structure per port? It really should be global. Printing
+the port number in the name isn't enough of a reason.
+
+> +	raw_spinlock_t irq_lock;
+> +	int intx_irq;
 >  };
->  
-> +struct qcom_pcie_resources_2_9_0 {
-> +	struct clk_bulk_data clks[5];
-> +	struct reset_control *rst;
+> =20
+>  static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u=
+32 reg)
+> @@ -235,7 +240,7 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_p=
+ort *port)
+> =20
+>  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+>  {
+> -	u32 ctrl, lnkcap, cmd, dev_rev, mask;
+> +	u32 ctrl, lnkcap, cmd, dev_rev, unmask;
+> =20
+>  	/* Setup PCIe controller to Root Complex mode. */
+>  	ctrl =3D mvebu_readl(port, PCIE_CTRL_OFF);
+> @@ -288,10 +293,30 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_p=
+ort *port)
+>  	/* Point PCIe unit MBUS decode windows to DRAM space. */
+>  	mvebu_pcie_setup_wins(port);
+> =20
+> -	/* Enable interrupt lines A-D. */
+> -	mask =3D mvebu_readl(port, PCIE_MASK_OFF);
+> -	mask |=3D PCIE_MASK_ENABLE_INTS;
+> -	mvebu_writel(port, mask, PCIE_MASK_OFF);
+> +	/* Mask all interrupt sources. */
+> +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
+> +
+> +	/* Clear all interrupt causes. */
+> +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
+> +
+> +	if (port->intx_irq <=3D 0) {
+> +		/*
+> +		 * When neither "summary" interrupt, nor "intx" interrupt was
+> +		 * specified in DT then unmask all legacy INTx interrupts as in
+> +		 * this case driver does not provide a way for masking and
+> +		 * unmasking of individual legacy INTx interrupts. In this case
+> +		 * all interrupts, including legacy INTx are reported via one
+> +		 * shared GIC source and therefore kernel cannot distinguish
+> +		 * which individual legacy INTx was triggered. These interrupts
+> +		 * are shared, so it should not cause any issue. Just
+> +		 * performance penalty as every PCIe interrupt handler needs to
+> +		 * be called when some interrupt is triggered.
+> +		 */
+> +		unmask =3D mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> +		unmask |=3D PCIE_INT_INTX(0) | PCIE_INT_INTX(1) |
+> +			  PCIE_INT_INTX(2) | PCIE_INT_INTX(3);
+> +		mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
+
+Maybe worth printing a warning here, so that the user knows they are
+on thin ice.
+
+> +	}
+>  }
+> =20
+>  static struct mvebu_pcie_port *mvebu_pcie_find_port(struct mvebu_pcie *p=
+cie,
+> @@ -924,6 +949,109 @@ static struct pci_ops mvebu_pcie_ops =3D {
+>  	.write =3D mvebu_pcie_wr_conf,
+>  };
+> =20
+> +static void mvebu_pcie_intx_irq_mask(struct irq_data *d)
+> +{
+> +	struct mvebu_pcie_port *port =3D d->domain->host_data;
+> +	irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
+> +	unsigned long flags;
+> +	u32 unmask;
+> +
+> +	raw_spin_lock_irqsave(&port->irq_lock, flags);
+> +	unmask =3D mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> +	unmask &=3D ~PCIE_INT_INTX(hwirq);
+> +	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
+> +	raw_spin_unlock_irqrestore(&port->irq_lock, flags);
+> +}
+> +
+> +static void mvebu_pcie_intx_irq_unmask(struct irq_data *d)
+> +{
+> +	struct mvebu_pcie_port *port =3D d->domain->host_data;
+> +	irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
+> +	unsigned long flags;
+> +	u32 unmask;
+> +
+> +	raw_spin_lock_irqsave(&port->irq_lock, flags);
+> +	unmask =3D mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+> +	unmask |=3D PCIE_INT_INTX(hwirq);
+> +	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
+> +	raw_spin_unlock_irqrestore(&port->irq_lock, flags);
+> +}
+> +
+> +static int mvebu_pcie_intx_irq_map(struct irq_domain *h,
+> +				   unsigned int virq, irq_hw_number_t hwirq)
+> +{
+> +	struct mvebu_pcie_port *port =3D h->host_data;
+> +
+> +	irq_set_status_flags(virq, IRQ_LEVEL);
+> +	irq_set_chip_and_handler(virq, &port->intx_irq_chip, handle_level_irq);
+> +	irq_set_chip_data(virq, port);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops mvebu_pcie_intx_irq_domain_ops =3D {
+> +	.map =3D mvebu_pcie_intx_irq_map,
+> +	.xlate =3D irq_domain_xlate_onecell,
 > +};
 > +
->  union qcom_pcie_resources {
->  	struct qcom_pcie_resources_1_0_0 v1_0_0;
->  	struct qcom_pcie_resources_2_1_0 v2_1_0;
-> @@ -178,6 +187,7 @@ union qcom_pcie_resources {
->  	struct qcom_pcie_resources_2_3_3 v2_3_3;
->  	struct qcom_pcie_resources_2_4_0 v2_4_0;
->  	struct qcom_pcie_resources_2_7_0 v2_7_0;
-> +	struct qcom_pcie_resources_2_9_0 v2_9_0;
->  };
->  
->  struct qcom_pcie;
-> @@ -1297,6 +1307,127 @@ static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
->  	clk_disable_unprepare(res->pipe_clk);
->  }
->  
-> +static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
+> +static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *port)
 > +{
-> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	int ret;
+> +	struct device *dev =3D &port->pcie->pdev->dev;
+> +	struct device_node *pcie_intc_node;
 > +
-> +	res->clks[0].id = "iface";
-> +	res->clks[1].id = "axi_m";
-> +	res->clks[2].id = "axi_s";
-> +	res->clks[3].id = "axi_bridge";
-> +	res->clks[4].id = "rchng";
+> +	raw_spin_lock_init(&port->irq_lock);
 > +
-> +	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-> +	if (ret < 0)
-> +		return ret;
+> +	port->intx_irq_chip.name =3D devm_kasprintf(dev, GFP_KERNEL,
+> +						  "mvebu-%s-INTx",
+> +						  port->name);
+
+That's exactly what I really don't want to see. It prevents sharing of
+the irq_chip structure, and gets in the way of making it const in the
+future. Yes, I know that some drivers do that. I can't fix those,
+because /proc/interrupts is ABI. But I really don't want to see more
+of these.
+
+/sys/kernel/debug/irqs already has all the information you need, as it
+will happily give you the domain name and the interrupt topology.
+
+> +	port->intx_irq_chip.irq_mask =3D mvebu_pcie_intx_irq_mask;
+> +	port->intx_irq_chip.irq_unmask =3D mvebu_pcie_intx_irq_unmask;
 > +
-> +	res->rst = devm_reset_control_array_get_exclusive(dev);
-> +	if (IS_ERR(res->rst))
-> +		return PTR_ERR(res->rst);
+> +	pcie_intc_node =3D of_get_next_child(port->dn, NULL);
+> +	if (!pcie_intc_node) {
+> +		dev_err(dev, "No PCIe Intc node found for %s\n", port->name);
+> +		return -ENODEV;
+> +	}
+> +
+> +	port->intx_irq_domain =3D irq_domain_add_linear(pcie_intc_node, PCI_NUM=
+_INTX,
+> +						      &mvebu_pcie_intx_irq_domain_ops,
+> +						      port);
+> +	of_node_put(pcie_intc_node);
+> +	if (!port->intx_irq_domain) {
+> +		devm_kfree(dev, port->intx_irq_chip.name);
+> +		dev_err(dev, "Failed to get INTx IRQ domain for %s\n", port->name);
+> +		return -ENOMEM;
+> +	}
 > +
 > +	return 0;
 > +}
 > +
-> +static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
+> +static void mvebu_pcie_irq_handler(struct irq_desc *desc)
 > +{
-> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-> +
-> +	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
-> +}
-> +
-> +static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-> +	struct device *dev = pcie->pci->dev;
-> +	int ret;
-> +
-> +	ret = reset_control_assert(res->rst);
-> +	if (ret) {
-> +		dev_err(dev, "reset assert failed (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	usleep_range(2000, 2500);
-> +
-> +	ret = reset_control_deassert(res->rst);
-> +	if (ret) {
-> +		dev_err(dev, "reset deassert failed (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * Don't have a way to see if the reset has completed.
-> +	 * Wait for some time.
-
-Is this arbitrary ? What does this reset represent ?
-
-Thanks,
-Lorenzo
-
-> +	 */
-> +	usleep_range(2000, 2500);
-> +
-> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-> +	if (ret)
-> +		goto err_reset;
-> +
-> +	return 0;
-> +
-> +	/*
-> +	 * Not checking for failure, will anyway return
-> +	 * the original failure in 'ret'.
-> +	 */
-> +err_reset:
-> +	reset_control_assert(res->rst);
-> +
-> +	return ret;
-> +}
-> +
-> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	u32 val;
+> +	struct mvebu_pcie_port *port =3D irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip =3D irq_desc_get_chip(desc);
+> +	struct device *dev =3D &port->pcie->pdev->dev;
+> +	u32 cause, unmask, status;
 > +	int i;
 > +
-> +	writel(SLV_ADDR_SPACE_SZ,
-> +		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
+> +	chained_irq_enter(chip, desc);
 > +
-> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +	val &= ~BIT(0);
-> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +	cause =3D mvebu_readl(port, PCIE_INT_CAUSE_OFF);
+> +	unmask =3D mvebu_readl(port, PCIE_INT_UNMASK_OFF);
+
+Why do you need to read this? If the CAUSE register also returns the
+masked interrupts that are pending, it may be worth keeping a shadow
+copy of the this register, as you end-up having an extra MMIO read on
+each and every interrupt, which can't be great for performance.
+
+> +	status =3D cause & unmask;
 > +
-> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> +	/* Process legacy INTx interrupts */
+> +	for (i =3D 0; i < PCI_NUM_INTX; i++) {
+> +		if (!(status & PCIE_INT_INTX(i)))
+> +			continue;
 > +
-> +	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
-> +	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
-> +		pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-> +	writel(GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS
-> +		| GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL,
-> +		pci->dbi_base + GEN3_RELATED_OFF);
+> +		if (generic_handle_domain_irq(port->intx_irq_domain, i) =3D=3D -EINVAL)
+> +			dev_err_ratelimited(dev, "unexpected INT%c IRQ\n", (char)i+'A');
+> +	}
 > +
-> +	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
-> +		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-> +		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
-> +		pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +
-> +	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
-> +
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
-> +
-> +	/* Configure PCIe link capabilities for ASPM */
-> +	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
-> +	val &= ~PCI_EXP_LNKCAP_ASPMS;
-> +	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
-> +
-> +	writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
-> +			PCI_EXP_DEVCTL2);
-> +
-> +	for (i = 0; i < 256; i++)
-> +		writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N
-> +				+ (4 * i));
-> +
-> +	return 0;
+> +	chained_irq_exit(chip, desc);
 > +}
 > +
->  static int qcom_pcie_link_up(struct dw_pcie *pci)
+>  static int mvebu_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
 >  {
->  	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> @@ -1487,6 +1618,15 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
->  	.config_sid = qcom_pcie_config_sid_sm8250,
->  };
->  
-> +/* Qcom IP rev.: 2.9.0  Synopsys IP rev.: 5.00a */
-> +static const struct qcom_pcie_ops ops_2_9_0 = {
-> +	.get_resources = qcom_pcie_get_resources_2_9_0,
-> +	.init = qcom_pcie_init_2_9_0,
-> +	.post_init = qcom_pcie_post_init_2_9_0,
-> +	.deinit = qcom_pcie_deinit_2_9_0,
-> +	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-> +};
+>  	/* Interrupt support on mvebu emulated bridges is not implemented yet */
+> @@ -1121,6 +1249,16 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie=
+ *pcie,
+>  		port->io_attr =3D -1;
+>  	}
+> =20
+> +	/*
+> +	 * Old DT bindings do not contain "intx" interrupt
+> +	 * so do not fail probing driver when interrupt does not exist.
+> +	 */
+> +	port->intx_irq =3D of_irq_get_byname(child, "intx");
+> +	if (port->intx_irq =3D=3D -EPROBE_DEFER) {
+> +		ret =3D port->intx_irq;
+> +		goto err;
+> +	}
 > +
->  static const struct qcom_pcie_cfg apq8084_cfg = {
->  	.ops = &ops_1_0_0,
->  };
-> @@ -1520,6 +1660,10 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
->  	.pipe_clk_need_muxing = true,
->  };
->  
-> +static const struct qcom_pcie_cfg ipq6018_cfg = {
-> +	.ops = &ops_2_9_0,
-> +};
+>  	reset_gpio =3D of_get_named_gpio_flags(child, "reset-gpios", 0, &flags);
+>  	if (reset_gpio =3D=3D -EPROBE_DEFER) {
+>  		ret =3D reset_gpio;
+> @@ -1317,6 +1455,7 @@ static int mvebu_pcie_probe(struct platform_device =
+*pdev)
+> =20
+>  	for (i =3D 0; i < pcie->nports; i++) {
+>  		struct mvebu_pcie_port *port =3D &pcie->ports[i];
+> +		int irq =3D port->intx_irq;
+> =20
+>  		child =3D port->dn;
+>  		if (!child)
+> @@ -1344,6 +1483,22 @@ static int mvebu_pcie_probe(struct platform_device=
+ *pdev)
+>  			continue;
+>  		}
+> =20
+> +		if (irq > 0) {
+> +			ret =3D mvebu_pcie_init_irq_domain(port);
+> +			if (ret) {
+> +				dev_err(dev, "%s: cannot init irq domain\n",
+> +					port->name);
+> +				pci_bridge_emul_cleanup(&port->bridge);
+> +				devm_iounmap(dev, port->base);
+> +				port->base =3D NULL;
+> +				mvebu_pcie_powerdown(port);
+> +				continue;
+> +			}
+> +			irq_set_chained_handler_and_data(irq,
+> +							 mvebu_pcie_irq_handler,
+> +							 port);
+> +		}
 > +
->  static const struct dw_pcie_ops dw_pcie_ops = {
->  	.link_up = qcom_pcie_link_up,
->  	.start_link = qcom_pcie_start_link,
-> @@ -1629,6 +1773,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
->  	{ .compatible = "qcom,pcie-sc8180x", .data = &sm8250_cfg },
->  	{ .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
-> +	{ .compatible = "qcom,pcie-ipq6018", .data = &ipq6018_cfg },
->  	{ }
->  };
->  
-> -- 
-> 2.34.1
-> 
+>  		/*
+>  		 * PCIe topology exported by mvebu hw is quite complicated. In
+>  		 * reality has something like N fully independent host bridges
+> @@ -1448,6 +1603,7 @@ static int mvebu_pcie_remove(struct platform_device=
+ *pdev)
+> =20
+>  	for (i =3D 0; i < pcie->nports; i++) {
+>  		struct mvebu_pcie_port *port =3D &pcie->ports[i];
+> +		int irq =3D port->intx_irq;
+> =20
+>  		if (!port->base)
+>  			continue;
+> @@ -1458,7 +1614,17 @@ static int mvebu_pcie_remove(struct platform_devic=
+e *pdev)
+>  		mvebu_writel(port, cmd, PCIE_CMD_OFF);
+> =20
+>  		/* Mask all interrupt sources. */
+> -		mvebu_writel(port, 0, PCIE_MASK_OFF);
+> +		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
+> +
+> +		/* Clear all interrupt causes. */
+> +		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
+> +
+> +		/* Remove IRQ domains. */
+> +		if (port->intx_irq_domain)
+> +			irq_domain_remove(port->intx_irq_domain);
+> +
+> +		if (irq > 0)
+> +			irq_set_chained_handler_and_data(irq, NULL, NULL);
+> =20
+>  		/* Free config space for emulated root bridge. */
+>  		pci_bridge_emul_cleanup(&port->bridge);
+
+Thanks,
+
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
