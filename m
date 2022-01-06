@@ -2,49 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89E05486738
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 17:03:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2C2748673A
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Jan 2022 17:03:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240749AbiAFQDk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 11:03:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49878 "EHLO
+        id S233888AbiAFQDo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 11:03:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233888AbiAFQDk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 11:03:40 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12460C061245;
-        Thu,  6 Jan 2022 08:03:40 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id rj2-20020a17090b3e8200b001b1944bad25so3643568pjb.5;
-        Thu, 06 Jan 2022 08:03:40 -0800 (PST)
+        with ESMTP id S240848AbiAFQDn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 11:03:43 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1324C061245;
+        Thu,  6 Jan 2022 08:03:42 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id lr15-20020a17090b4b8f00b001b19671cbebso3667195pjb.1;
+        Thu, 06 Jan 2022 08:03:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=vZ1hU02zThylc5oYTKh5rr5vHLgNirnG5Lz5LwIAWOk=;
-        b=m9x8CDmiuIYEeFgaEFyBKZllmK1fdYOmB47pfdBuCvReRNC2HamCsaEVKi4OUXqRmI
-         uwh4lN/kkiHvzzj06qn1WALt5rW9TjdXpa6EU76Nl64gcXDM8httAph8kEleMOILf32E
-         0pZLV7f4iY4JO04ownwPyVNf1WOKx7c5EKPwCmlJhxu7M/DEiTVi6xsiME0RKI+RSUHR
-         eyVjJobRZfIm6x2zJ41lmNU+RLrE/V3LXccTVGc1GJHl9rpC3PRThHd35SCs7Byzw69+
-         YiJmU15lzA9uWCh/CwrVJ3V7GfaCDb4cbc6pAnbj/P4u0HJJ3qCLCfTxYhMOXB1beQI8
-         WJmw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ny451XICFZwmv/3fN6tVd1MtvFhizeu82dbPq5GZyWM=;
+        b=B/bJAL+9WSowS7PoK06mmDrVzgt02eyDNMsOWEOFLOz29VKdblVemN9wxL2Ccjd95k
+         EAIK7FXwe8LOSzGZwiPhVH+P4sFunR8RsBApeS62FyHromHaN5VBGkMdkGuks/1RbBWB
+         md2Z0Q/otAyw2fW31yMaY4NE5wkXrgPE7cLxV9PmbhumzUzbhz5sOlJKIz3G+93dr0g7
+         1xWVLRyy8kCXpTCrueZEUpklpuzpEIjVXARZ5rUNbhT14JVnann1dvfVOcNqyFHI8FpP
+         uFFfRSgE89MaJ018xedf63DocBR1C+/enZpDOa09Y5jKPChPe/wzRkUeinHhUGYZuRCq
+         d/5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vZ1hU02zThylc5oYTKh5rr5vHLgNirnG5Lz5LwIAWOk=;
-        b=M5NtVNsyHOMETxiYgpJtzf0IV/SVj+PMo9IwR1UvkNqhLc+HXGNHz7mVdqUsXFSZZ/
-         5ESmT9HFNGkr8BCXaGsA4bpC1X3KPM1QOLUzxzOp4Ci/qGkS0Vpf+9pp1wjKEJW/449D
-         Lc5aMBtfKIvRchljWBm/A+hTDItet1XSqP85mVNfelEz8oQiz/i0KfQqHPS3UQQIl9+5
-         Z/chc0q+ZWAUWpzgUro6cQ7iQSR8z1e72KYeQMvZcVvwm+uJm8IwUq0EWoOh2enZSZeF
-         dCpnBsM1uTOM5O7iUfO1EQ6v25cGDHPvqImsFpuSH2RB2n+skM8e7Ge253W7mOqzmond
-         v7wQ==
-X-Gm-Message-State: AOAM533xlaltPfu/iutesfUH8AIDRyYKmA5/jEsYOG0m8NxQsMcOjQe5
-        cEeLSb2lWucRSjhBZRTZlbg36ggB8Kk=
-X-Google-Smtp-Source: ABdhPJwysjwSYBX9Mx+JYvmVZ+uqg4OqmqflAOO9+CZm5Oln+DLUajQmC1b8s/Ivyo2pZGVfEHUSiw==
-X-Received: by 2002:a17:90b:3ec4:: with SMTP id rm4mr11015910pjb.104.1641485018419;
-        Thu, 06 Jan 2022 08:03:38 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ny451XICFZwmv/3fN6tVd1MtvFhizeu82dbPq5GZyWM=;
+        b=To9LjY+wPga3p6egTkT36mhBhQVu1YkIudGsZBcS9lESgH07LavIV67LfYF/wBrpD+
+         /BAEzjJ/4LkqqAsAixax8Z4in6sRRKTaJYgH8thNyCrexp4fAx0ZpiTMOkduWjzJ3v/j
+         1J7b+GOA350dd42k8ZQXF0cekgLnEkacWDK0QB3hUGjSjvJy5FRppZJ+j7WmoVFWA1Pu
+         LXAIfLK45MNMX8vn0smWBQRBDGymVEz/KTKxJwVKDH0ilWyPwcDvcrNnesnOaK40ys+i
+         zX0GHsxm4dznFxBDhqv7suFDU6x7F+FXp529d/ZbtDLu2wtCmvP8atvhXpZ37YIn3MwM
+         AvNg==
+X-Gm-Message-State: AOAM532Is5PPr7yRdvcZO2+dm3ibZl8RAqg7SwfNoTDH8c6INu3SOHU2
+        jjrrsMbcLa66lDPUv8KzruRdD9djCYo=
+X-Google-Smtp-Source: ABdhPJwVNSM8XJAXkqDKNJQgq2zUYGKTki3fMD3qLUZ5nTowM5+y0ryglm3I1q3luY/LPCHnXG++bg==
+X-Received: by 2002:a17:903:244f:b0:149:873:e17c with SMTP id l15-20020a170903244f00b001490873e17cmr58362526pls.133.1641485021987;
+        Thu, 06 Jan 2022 08:03:41 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
-        by smtp.gmail.com with ESMTPSA id q19sm2376316pgb.77.2022.01.06.08.03.35
+        by smtp.gmail.com with ESMTPSA id q19sm2376316pgb.77.2022.01.06.08.03.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jan 2022 08:03:37 -0800 (PST)
+        Thu, 06 Jan 2022 08:03:40 -0800 (PST)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -52,202 +53,89 @@ To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
         bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
         james.quinlan@broadcom.com
-Cc:     devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list),
+        Philipp Zabel <p.zabel@pengutronix.de>,
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
-        Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v11 0/7] PCI: brcmstb: root port turns on sub-device power
-Date:   Thu,  6 Jan 2022 11:03:23 -0500
-Message-Id: <20220106160332.2143-1-jim2101024@gmail.com>
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v11 1/7] PCI: brcmstb: Fix function return value handling
+Date:   Thu,  6 Jan 2022 11:03:24 -0500
+Message-Id: <20220106160332.2143-2-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220106160332.2143-1-jim2101024@gmail.com>
+References: <20220106160332.2143-1-jim2101024@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-v11 -- Only one commit has changed from v10: "PCI: brcmstb: Add mechanism
-       to turn on subdev regulators". Lorenzo requested that this commit's
-       code be moved from pci/pci.h and pci/bus.c to
-       pci/controller/pcie-brcmstb.c as a stopgap measure until we figure
-       out a better way of offering this feature for all.  This will most
-       likely involve Pali's upcoming changes to refactor PCI host probe
-       code.
+Do at least a dev_err() on some calls to reset_control_rearm() and
+brcm_phy_stop().  In some cases it may not make sense to return this error
+value "above" as doing so will cause more trouble than is warranted.
 
-v10 -- Bindings commit example: in comment, refer to bridge under
-       controller node as a root port. (Pali)
-    -- Bindings commit example: remove three properties that are not
-       appropriate for a PCIe endpoint node. (Rob)
+Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 28 +++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-v9  -- Simplify where this mechanism works: instead of looking for
-       regulators below every bridge, just look for them at the
-       bridge under the root bus (root port).  Now there is no
-       modification of portdrv_{pci,core}.c in this submission.
-    -- Although Pali is working on support for probing native
-       PCIe controller drivers, this work may take some time to
-       implement and it still might not be able to accomodate
-       our driver's requirements (e.g. vreg suspend/resume control).
-    -- Move regulator suspend/resume control to Brcm RC driver.  It
-       must reside there because (a) in order to know when to
-       initiate linkup during resume and (b) to turn on the
-       regulators before any config-space accesses occur.
-    -- Commit message spelling, word choice (Bjorn, Krzysztof)
-    -- Refactor a small commit that was ignoring a funcs' return
-       values (Bjorn).
-    -- Here is a summary of this mechanism:
-
-       If:
-           -- PCIe RC driver sets pci_ops {add,remove)_bus to
-              pci_subdev_regulators_{add,remove}_bus during its probe.
-           -- There is a DT node "RB" under the host bridge DT node.
-           -- During the RC driver's pci_host_probe() the add_bus callback
-              is invoked where (bus->parent && pci_is_root_bus(bus->parent)
-              is true
-
-       Then:
-           -- A struct subdev_regulators structure will be allocated and
-              assigned to bus->dev.driver_data.
-           -- regulator_bulk_{get,enable}() will be invoked on &bus->dev
-              and the former will search for and process any
-              vpcie{12v,3v3,3v3aux}-supply properties that reside in node "RB".
-           -- The regulators will be turned off/on for any unbind/bind operations.
-           -- The regulators will be turned off/on for any suspend/resumes, but
-              only if the RC driver handles this on its own.  This will appear
-              in a later commit for the pcie-brcmstb.c driver.
-
-v8  -- Only the two binding commits and the "Change brcm_phy_stop()" commit
-       are unchanged.
-    -- The code has been moved to portdrv_pci.c and bus.c.  The regulators   
-       are placed in bus->dev.driver_data (bus->sysdata is already occupied
-       by the Broadcom PCIe).  Two functions, pci_subdev_regulators_{add,remove}_bus()
-       are created to turn the regulators on/off.  The pcie_portdriver also sets
-       its pci_driver methods suspend and resume when the conditions are
-       right for this feature.  (Robh for suggestions, although I probably
-       erred in following them).
-    -- Have the root complex return 0xffffffff on accesses even when
-       the link is down and the HW doesn't support such accesses (PaliR).
-    -- Just call devm_bulk_regulator_get() on standard supplies; don't
-       bother pre-scanning the DT for them (MarkB).
-
-v7  -- RobH suggested putting the "vpcixxx-supply" property under the
-       bridge-node rather than the endpoint device node.  Also, he said to
-       use the pci-ops add_bus/remove methods.  Doing so simplifies the
-       code greatly and three commits were dropped.  Thanks!
-
-    -- Rob also suggested (I think) having this patchset be a general
-       feature which is activated by an OF property under the bridge node.
-       I tried to do that but realized that our root complex driver
-       controls the regulators with its dev_pm_ops and there is no way to
-       transfer this control when using general mechanism.  Note that
-       although the regulator core deals with suspend, our RC driver wants
-       the right to sometimes to preclude this for WOL scenarios.
-
-    -- One commit was added to change the response to the return value of
-       the pci_ops add_bus() method.  Currently, an error causes a WARNING,
-       a dev_err(...), and continues to return the child bus.  The
-       modification was, for returning -ENOLINK only, to skip WARNING &
-       dev_err() and return NULL.  This is necessary for our RC HW, as if
-       the code continues on it will do a pci_read_config_dword() for the
-       vendor/id, and our HW flags a CPU abort (instead of returning
-       0xffffffff) when the is no pcie-link established.
-
-       [NOTE: MarkB, I did not add one of your two "Reviewed-by"s
-              because the commit had a decent amount of change.]
-
-v6   -- Dropped the idea of a placeholder regulator
-        property (brcm-ep-a-supply). (MarkB)
-     -- device_initialize() now called once.  Two
-        commits were added for this.  (GKH)
-     -- In two cases, separated a single function 
-        into two or more functions (MarkB)
-     -- "(void)foo();" => "foo()".  Note that although
-        foo() returns an int, in this instance it is being
-	invoked within a function returning void, and foo()
-	already executes a dev_err() on error. (MarkB)
-     -- Added a commit to correct PCIe interrupts in YAML.
-     -- Removed "device_type = "pci";" for the EP node
-        in the YAML example.
-     -- Updated the URL related to the voltage regulator
-        names on GitHub.  Note that I added vpciev3v3aux.
-
-v5 [NOTE: It has been a while since v4.  Sorry]
-     -- See "PCI: allow for callback to prepare nascent subdev"
-        commit message for the cornerstone of this patchset
-        and the reasons behind it.  This is a new commit.
-     -- The RC driver now looks into its DT children and
-        turns on regulators for a sub-device, and this occurs
-	prior to PCIe link as it must.
-     -- Dropped commits not related to the focus of this patchset.
-
-v4 [NOTE: I'm not sure this fixes RobH and MarkB constraints but I'd
-          like to use this pullreq as a basis for future discussion.]
-   [Commit: Add bindings for ...]
-     -- Fix syntax error in YAML bindings example (RobH)
-     -- {vpcie12v,vpcie3v3}-supply props are back in root complex DT node
-        (I believe RobH said this was okay)
-   [Commit: Add control of ..]
-     -- Do not do global search for regulator; now we look specifically
-        for the property {vpcie12v,vpcie3v3}-supply in the root complex
-	DT node and then call devm_regulator_bulk_get() (MarkB)
-     -- Use devm_regulator_bulk_get() (Bjorn)
-     -- s/EP/slot0 device/ (Bjorn)
-     -- Spelling, capitalization (Bjorn)
-     -- Have brcm_phy_stop() return a void (Bjorn)
-   [Commit: Do not turn off ...]
-     -- Capitalization (Bjorn)
-   [Commit: Check return value ...]
-     -- Commit message content (Bjorn)
-     -- Move 6/6 hunk to 2/6 where it belongs (Bjorn)
-     -- Move the rest of 6/6 before all other commits (Bjorn)
-
-v3 -- Driver now searches for EP DT subnode for any regulators to turn on.
-      If present, these regulators have the property names
-      "vpcie12v-supply" and "vpcie3v3-supply".  The existence of these
-      regulators in the EP subnode are currently pending as a pullreq
-      in pci-bus.yaml at
-      https://github.com/devicetree-org/dt-schema/pull/54
-      (MarkB, RobH).
-   -- Check return of brcm_set_regulators() (Florian)
-   -- Specify one regulator string per line for easier update (Florian)
-   -- Author/Committer/Signoff email changed from that of V2 from
-      'james.quinlan@broadcom.com' to 'jim2101024@gmail.com'.
-
-v2 -- Use regulator bulk API rather than multiple calls (MarkB).
-
-v1 -- Bindings are added for fixed regulators that may power the EP device.
-   -- The brcmstb RC driver is modified to control these regulators
-      during probe, suspend, and resume.
-   -- 7216 type SOCs have additional error reporting HW and a
-      panic handler is added to dump its info.
-   -- A missing return value check is added.
-
-Jim Quinlan (7):
-  PCI: brcmstb: Fix function return value handling
-  dt-bindings: PCI: Correct brcmstb interrupts, interrupt-map.
-  dt-bindings: PCI: Add bindings for Brcmstb EP voltage regulators
-  PCI: brcmstb: Split brcm_pcie_setup() into two funcs
-  PCI: brcmstb: Add mechanism to turn on subdev regulators
-  PCI: brcmstb: Add control of subdevice voltage regulators
-  PCI: brcmstb: Do not turn off WOL regulators on suspend
-
- .../bindings/pci/brcm,stb-pcie.yaml           |  27 +-
- drivers/pci/controller/pcie-brcmstb.c         | 284 +++++++++++++++---
- 2 files changed, 273 insertions(+), 38 deletions(-)
-
-
-base-commit: c9e6606c7fe92b50a02ce51dda82586ebdf99b48
-prerequisite-patch-id: 0905430e81a95900a1366916fe2940b848317a7c
-prerequisite-patch-id: 710896210c50354d87f6025fe0bd1b89981138eb
-prerequisite-patch-id: 97d3886cb911cb12ef3d514fdfff2a0ab11e8570
-prerequisite-patch-id: 241f1e1878fc177d941f4982ca12779a29feb62b
-prerequisite-patch-id: d856608825e2294297db5d7f88f8c180f3e5a1f2
-prerequisite-patch-id: 92bcbc9772fb4d248157bcf35e799ac37be8ee45
-prerequisite-patch-id: 6f4b1aac459bb54523ade0e87c04e9d6c45bd9f5
-prerequisite-patch-id: 090ee7a3112a4ecb03805b23ed10e2c96b3b34ed
-prerequisite-patch-id: b3de6b4a4dd7a2f57b86e6548eb345df59de497b
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 1fc7bd49a7ad..9ed79ddb6a83 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -1146,11 +1146,23 @@ static int brcm_pcie_suspend(struct device *dev)
+ 	int ret;
+ 
+ 	brcm_pcie_turn_off(pcie);
+-	ret = brcm_phy_stop(pcie);
+-	reset_control_rearm(pcie->rescal);
++	/*
++	 * If brcm_phy_stop() returns an error, just dev_err(). If we
++	 * return the error it will cause the suspend to fail and this is a
++	 * forgivable offense that will probably be erased on resume.
++	 */
++	if (brcm_phy_stop(pcie))
++		dev_err(dev, "Could not stop phy for suspend\n");
++
++	ret = reset_control_rearm(pcie->rescal);
++	if (ret) {
++		dev_err(dev, "Could not rearm rescal reset\n");
++		return ret;
++	}
++
+ 	clk_disable_unprepare(pcie->clk);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int brcm_pcie_resume(struct device *dev)
+@@ -1161,7 +1173,9 @@ static int brcm_pcie_resume(struct device *dev)
+ 	int ret;
+ 
+ 	base = pcie->base;
+-	clk_prepare_enable(pcie->clk);
++	ret = clk_prepare_enable(pcie->clk);
++	if (ret)
++		return ret;
+ 
+ 	ret = reset_control_reset(pcie->rescal);
+ 	if (ret)
+@@ -1202,8 +1216,10 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+ {
+ 	brcm_msi_remove(pcie);
+ 	brcm_pcie_turn_off(pcie);
+-	brcm_phy_stop(pcie);
+-	reset_control_rearm(pcie->rescal);
++	if (brcm_phy_stop(pcie))
++		dev_err(pcie->dev, "Could not stop phy\n");
++	if (reset_control_rearm(pcie->rescal))
++		dev_err(pcie->dev, "Could not rearm rescal reset\n");
+ 	clk_disable_unprepare(pcie->clk);
+ }
+ 
 -- 
 2.17.1
 
