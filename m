@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B4B9486EF3
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 01:38:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E88E486EF5
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 01:38:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344305AbiAGAiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 19:38:11 -0500
-Received: from mga18.intel.com ([134.134.136.126]:59426 "EHLO mga18.intel.com"
+        id S1344331AbiAGAiM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 19:38:12 -0500
+Received: from mga18.intel.com ([134.134.136.126]:59433 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344112AbiAGAiK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Jan 2022 19:38:10 -0500
+        id S1344302AbiAGAiL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jan 2022 19:38:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641515890; x=1673051890;
+  t=1641515891; x=1673051891;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RN9M3F/1IKA4m4L9Hh4iWFeC1JI6OdIzY1su0XKvB4Q=;
-  b=nH8e2jBYMwoiiDUNkuJVnBfOQX0PrxR4QhOcyPcZq7EHH/ATPQeYn1IC
-   WQ42qy/9O/RIyKBu4mJrW9tl/S8M0h9Zv99LznPxmo7ItgBsUAK2Bm+rG
-   3ksz+s5on5k438MtvnrvfpbPxKir4ZYB8gkqA5chcz6SSJFToem4tqjfm
-   LZLa4VZl5zZkPEz5anxofCzm6foiqwo9ZgDFHCkQthmiHc3cBppPDyP7+
-   83etQaxPhHEZyFGBuizcNsmG5t/v+uRBye7cD+1NSTv5ot/BzlWPtJWFK
-   rExl/D5K9ODjXjcF8AXG8ZKykYPaGdJmmT2QV9xB0XbdSVBLmgQ0HdRq3
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="229582018"
+  bh=/syylZOo14vYlDQHHSE6X2vUG3CE228h/UN0o3Wv7+0=;
+  b=PWIUDRcIDCa1jnqQdDOi50SKV1RaozOFLLUlrIq8Kib+XgeGgzx4ZlFD
+   yj5l3gRBPrLo/YeNcQJCfIAzczeatsTMynrtgLLiVRIOUEPK+tUe/XKmz
+   pGOibteo1aWUvqrwGe1UJBEIWp5I5Cm8Y/E8rM0TXoDrJCM9y/zQ+ResT
+   qQNs47eTuT2TkeCJJpWEJpXy7+pI4uHrgwggXib2e0INqX5CZBuIOTizu
+   s/jlmjVhkrVQC/WMUfzyQ1Go88MqJxIvBUHRdbz+YqGEplkMeWB+rOAYo
+   nrDjKGwy+6IVEnGoMGSPWdYzoFh+aR7VfYYNmiEKrvBcmnDevWOsEvkez
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="229582023"
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="229582018"
+   d="scan'208";a="229582023"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:38:10 -0800
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="471123189"
+   d="scan'208";a="471123198"
 Received: from elenawei-mobl2.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.138.104])
   by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:38:10 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
@@ -43,485 +43,424 @@ Cc:     patches@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 03/13] cxl/region: Add region creation ABI
-Date:   Thu,  6 Jan 2022 16:37:46 -0800
-Message-Id: <20220107003756.806582-4-ben.widawsky@intel.com>
+Subject: [PATCH 04/13] cxl/region: Introduce concept of region configuration
+Date:   Thu,  6 Jan 2022 16:37:47 -0800
+Message-Id: <20220107003756.806582-5-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220107003756.806582-1-ben.widawsky@intel.com>
 References: <20220107003756.806582-1-ben.widawsky@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Regions are created as a child of the decoder that encompasses an
-address space with constraints. Regions have a number of attributes that
-must be configured before the region can be activated.
+The region creation APIs create a vacant region. Configuring the region
+works in the same way as similar subsystems such as devdax. Sysfs attrs
+will be provided to allow userspace to configure the region.  Finally
+once all configuration is complete, userspace may activate the region.
 
-The ABI is not meant to be secure, but is meant to avoid accidental
-races. As a result, a buggy process may create a region by name that was
-allocated by a different process. However, multiple processes which are
-trying not to race with each other shouldn't need special
-synchronization to do so.
+Introduced here are the most basic attributes needed to configure a
+region. Details of these attribute are described in the ABI
+Documentation.
 
-// Allocate a new region name
-region=$(cat /sys/bus/cxl/devices/decoder0.0/create_region)
+A example is provided below:
 
-// Create a new region by name
-echo $region > /sys/bus/cxl/devices/decoder0.0/create_region
-
-// Region now exists in sysfs
-stat -t /sys/bus/cxl/devices/decoder0.0/$region
-
-// Delete the region, and name
-echo $region > /sys/bus/cxl/devices/decoder0.0/delete_region
+/sys/bus/cxl/devices/region0.0:0
+├── interleave_granularity
+├── interleave_ways
+├── offset
+├── size
+├── subsystem -> ../../../../../../bus/cxl
+├── target0
+├── uevent
+└── uuid
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- Documentation/ABI/testing/sysfs-bus-cxl       |  23 ++
- .../driver-api/cxl/memory-devices.rst         |  11 +
- drivers/cxl/core/Makefile                     |   1 +
- drivers/cxl/core/core.h                       |   3 +
- drivers/cxl/core/port.c                       |  16 ++
- drivers/cxl/core/region.c                     | 209 ++++++++++++++++++
- drivers/cxl/cxl.h                             |   9 +
- drivers/cxl/region.h                          |  38 ++++
- tools/testing/cxl/Kbuild                      |   1 +
- 9 files changed, 311 insertions(+)
- create mode 100644 drivers/cxl/core/region.c
- create mode 100644 drivers/cxl/region.h
+ Documentation/ABI/testing/sysfs-bus-cxl |  40 ++++
+ drivers/cxl/core/region.c               | 295 ++++++++++++++++++++++++
+ 2 files changed, 335 insertions(+)
 
 diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 498ae288e143..0fbdd8613654 100644
+index 0fbdd8613654..1a938ad26621 100644
 --- a/Documentation/ABI/testing/sysfs-bus-cxl
 +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -136,3 +136,26 @@ Description:
- 		memory (type-3). The 'target_type' attribute indicates the
- 		current setting which may dynamically change based on what
- 		memory regions are activated in this decode hierarchy.
+@@ -159,3 +159,43 @@ Description:
+ 		region driver before being deleted. The attributes expects a
+ 		region in the form "regionX.Y:Z". The region's name, allocated
+ 		by reading create_region, will also be released.
 +
-+What:		/sys/bus/cxl/devices/decoderX.Y/create_region
++What:		/sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/offset
 +Date:		November, 2021
 +KernelVersion:	v5.17
 +Contact:	linux-cxl@vger.kernel.org
 +Description:
-+		Creates a new CXL region. Writing a value of the form
-+		"regionX.Y:Z" will create a new uninitialized region that will
-+		be mapped by the CXL decoderX.Y. Reading from this node will
-+		return a newly allocated region name. In order to create a
-+		region (writing) you must use a value returned from reading the
-+		node. Regions must be subsequently configured and bound to a
-+		region driver before they can be used.
++		(RO) A region resides within an address space that is claimed by
++		a decoder. Region space allocation is handled by the driver, but
++		the offset may be read by userspace tooling in order to
++		determine fragmentation, and available size for new regions.
 +
-+What:		/sys/bus/cxl/devices/decoderX.Y/delete_region
++What:
++/sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/{interleave,size,uuid,target[0-15]}
 +Date:		November, 2021
 +KernelVersion:	v5.17
 +Contact:	linux-cxl@vger.kernel.org
 +Description:
-+		Deletes the named region. A region must be unbound from the
-+		region driver before being deleted. The attributes expects a
-+		region in the form "regionX.Y:Z". The region's name, allocated
-+		by reading create_region, will also be released.
-diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-index e101ef02b547..dc756ed23a3a 100644
---- a/Documentation/driver-api/cxl/memory-devices.rst
-+++ b/Documentation/driver-api/cxl/memory-devices.rst
-@@ -71,6 +71,17 @@ CXL Core
- .. kernel-doc:: drivers/cxl/core/mbox.c
-    :doc: cxl mbox
- 
-+CXL Regions
-+-----------
-+.. kernel-doc:: drivers/cxl/region.h
-+   :identifiers:
++		(RW) Configuring regions requires a minimal set of parameters in
++		order for the subsequent bind operation to succeed. The
++		following parameters are defined:
 +
-+.. kernel-doc:: drivers/cxl/core/region.c
-+   :doc: cxl core region
-+
-+.. kernel-doc:: drivers/cxl/core/region.c
-+   :identifiers:
-+
- External Interfaces
- ===================
- 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 6d37cd78b151..39ce8f2f2373 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_CXL_BUS) += cxl_core.o
- ccflags-y += -I$(srctree)/drivers/cxl
- cxl_core-y := port.o
- cxl_core-y += pmem.o
-+cxl_core-y += region.o
- cxl_core-y += regs.o
- cxl_core-y += memdev.o
- cxl_core-y += mbox.o
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 19d1f9d8ceba..1d4d1699b479 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -10,6 +10,9 @@ extern const struct device_type cxl_memdev_type;
- 
- extern struct attribute_group cxl_base_attribute_group;
- 
-+extern struct device_attribute dev_attr_create_region;
-+extern struct device_attribute dev_attr_delete_region;
-+
- struct cxl_send_command;
- struct cxl_mem_query_commands;
- int cxl_query_cmd(struct cxl_memdev *cxlmd,
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index ecab7cfa88f0..ef3840c50e3e 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -196,6 +196,8 @@ static struct attribute_group cxl_decoder_base_attribute_group = {
- };
- 
- static struct attribute *cxl_decoder_root_attrs[] = {
-+	&dev_attr_create_region.attr,
-+	&dev_attr_delete_region.attr,
- 	&dev_attr_cap_pmem.attr,
- 	&dev_attr_cap_ram.attr,
- 	&dev_attr_cap_type2.attr,
-@@ -236,11 +238,23 @@ static const struct attribute_group *cxl_decoder_endpoint_attribute_groups[] = {
- 	NULL,
- };
- 
-+static int delete_region(struct device *dev, void *arg)
-+{
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
-+
-+	return cxl_delete_region(cxld, dev_name(dev));
-+}
-+
- static void cxl_decoder_release(struct device *dev)
- {
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
- 	struct cxl_port *port = to_cxl_port(dev->parent);
- 
-+	device_for_each_child(&cxld->dev, cxld, delete_region);
-+
-+	dev_WARN_ONCE(dev, !ida_is_empty(&cxld->region_ida),
-+		      "Lost track of a region");
-+
- 	ida_free(&port->decoder_ida, cxld->id);
- 	kfree(cxld);
- }
-@@ -1021,6 +1035,8 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
- 	cxld->target_type = CXL_DECODER_EXPANDER;
- 	cxld->platform_res = (struct resource)DEFINE_RES_MEM(0, 0);
- 
-+	ida_init(&cxld->region_ida);
-+
- 	return cxld;
- err:
- 	kfree(cxld);
++		==	========================================================
++		interleave_granularity Mandatory. Number of consecutive bytes
++			each device in the interleave set will claim. The
++			possible interleave granularity values are determined by
++			the CXL spec and the participating devices.
++		interleave_ways Mandatory. Number of devices participating in the
++			region. Each device will provide 1/interleave of storage
++			for the region.
++		size	Manadatory. Phsyical address space the region will
++			consume.
++		target  Mandatory. Memory devices are the backing storage for a
++			region. There will be N targets based on the number of
++			interleave ways that the top level decoder is configured
++			for. Each target must be set with a memdev device ie.
++			'mem1'. This attribute only becomes available after
++			setting the 'interleave' attribute.
++		uuid	Optional. A unique identifier for the region. If none is
++			selected, the kernel will create one.
++		==	========================================================
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-new file mode 100644
-index 000000000000..e3a82f3c118e
---- /dev/null
+index e3a82f3c118e..26b5ad389cd2 100644
+--- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -0,0 +1,209 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/idr.h>
-+#include <region.h>
-+#include <cxl.h>
-+#include "core.h"
+@@ -3,9 +3,12 @@
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/device.h>
+ #include <linux/module.h>
++#include <linux/sizes.h>
+ #include <linux/slab.h>
++#include <linux/uuid.h>
+ #include <linux/idr.h>
+ #include <region.h>
++#include <cxlmem.h>
+ #include <cxl.h>
+ #include "core.h"
+ 
+@@ -18,11 +21,300 @@
+  * (programming the hardware) is handled by a separate region driver.
+  */
+ 
++struct cxl_region *to_cxl_region(struct device *dev);
++static const struct attribute_group region_interleave_group;
 +
-+/**
-+ * DOC: cxl core region
-+ *
-+ * Regions are managed through the Linux device model. Each region instance is a
-+ * unique struct device. CXL core provides functionality to create, destroy, and
-+ * configure regions. This is all implemented here. Binding a region
-+ * (programming the hardware) is handled by a separate region driver.
-+ */
-+
-+static void cxl_region_release(struct device *dev);
-+
-+static const struct device_type cxl_region_type = {
-+	.name = "cxl_region",
-+	.release = cxl_region_release,
-+};
-+
-+static ssize_t create_region_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
++static bool is_region_active(struct cxl_region *region)
 +{
-+	struct cxl_port *port = to_cxl_port(dev->parent);
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+	int rc;
-+
-+	if (dev_WARN_ONCE(dev, !is_root_decoder(dev),
-+			  "Invalid decoder selected for region.")) {
-+		return -ENODEV;
-+	}
-+
-+	rc = ida_alloc(&cxld->region_ida, GFP_KERNEL);
-+	if (rc < 0) {
-+		dev_err(&cxld->dev, "Couldn't get a new id\n");
-+		return rc;
-+	}
-+
-+	return sysfs_emit(buf, "region%d.%d:%d\n", port->id, cxld->id, rc);
++	/* TODO: Regions can't be activated yet. */
++	return false;
 +}
 +
-+static ssize_t create_region_store(struct device *dev,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t len)
++static void remove_target(struct cxl_region *region, int target)
 +{
-+	struct cxl_port *port = to_cxl_port(dev->parent);
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+	int decoder_id, port_id, region_id;
-+	struct cxl_region *region;
-+	ssize_t rc;
++	struct cxl_memdev *cxlmd;
 +
-+	if (sscanf(buf, "region%d.%d:%d", &port_id, &decoder_id, &region_id) != 3)
-+		return -EINVAL;
-+
-+	if (decoder_id != cxld->id)
-+		return -EINVAL;
-+
-+	if (port_id != port->id)
-+		return -EINVAL;
-+
-+	region = cxl_alloc_region(cxld, region_id);
-+	if (IS_ERR(region))
-+		return PTR_ERR(region);
-+
-+	rc = cxl_add_region(cxld, region);
-+	if (rc) {
-+		kfree(region);
-+		return rc;
-+	}
-+
-+	return len;
++	cxlmd = region->config.targets[target];
++	if (cxlmd)
++		put_device(&cxlmd->dev);
++	region->config.targets[target] = NULL;
 +}
-+DEVICE_ATTR_RW(create_region);
 +
-+static ssize_t delete_region_store(struct device *dev,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t len)
++static ssize_t interleave_ways_show(struct device *dev,
++				    struct device_attribute *attr, char *buf)
 +{
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+	int rc;
-+
-+	rc = cxl_delete_region(cxld, buf);
-+	if (rc)
-+		return rc;
-+
-+	return len;
-+}
-+DEVICE_ATTR_WO(delete_region);
-+
-+struct cxl_region *to_cxl_region(struct device *dev)
-+{
-+	if (dev_WARN_ONCE(dev, dev->type != &cxl_region_type,
-+			  "not a cxl_region device\n"))
-+		return NULL;
-+
-+	return container_of(dev, struct cxl_region, dev);
-+}
-+EXPORT_SYMBOL_GPL(to_cxl_region);
-+
-+static void cxl_region_release(struct device *dev)
-+{
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
 +	struct cxl_region *region = to_cxl_region(dev);
 +
-+	ida_free(&cxld->region_ida, region->id);
-+	kfree(region);
++	return sysfs_emit(buf, "%d\n", region->config.eniw);
 +}
 +
-+struct cxl_region *cxl_alloc_region(struct cxl_decoder *cxld, int id)
++static ssize_t interleave_ways_store(struct device *dev,
++				     struct device_attribute *attr,
++				     const char *buf, size_t len)
 +{
-+	struct cxl_region *region;
++	struct cxl_region *region = to_cxl_region(dev);
++	int ret, prev_eniw;
++	int val;
 +
-+	region = kzalloc(sizeof(*region), GFP_KERNEL);
-+	if (!region)
-+		return ERR_PTR(-ENOMEM);
++	prev_eniw = region->config.eniw;
++	ret = kstrtoint(buf, 0, &val);
++	if (ret)
++		return ret;
++	if (ret < 0 || ret > CXL_DECODER_MAX_INTERLEAVE)
++		return -EINVAL;
 +
-+	region->id = id;
++	region->config.eniw = val;
 +
-+	return region;
-+}
-+
-+/**
-+ * cxl_add_region - Adds a region to a decoder
-+ * @cxld: Parent decoder.
-+ * @region: Region to be added to the decoder.
-+ *
-+ * This is the second step of region initialization. Regions exist within an
-+ * address space which is mapped by a @cxld. That @cxld must be a root decoder,
-+ * and it enforces constraints upon the region as it is configured.
-+ *
-+ * Return: 0 if the region was added to the @cxld, else returns negative error
-+ * code. The region will be named "regionX.Y.Z" where X is the port, Y is the
-+ * decoder id, and Z is the region number.
-+ */
-+int cxl_add_region(struct cxl_decoder *cxld, struct cxl_region *region)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+	struct device *dev = &region->dev;
-+	int rc;
-+
-+	device_initialize(dev);
-+	dev->parent = &cxld->dev;
-+	device_set_pm_not_required(dev);
-+	dev->bus = &cxl_bus_type;
-+	dev->type = &cxl_region_type;
-+	rc = dev_set_name(dev, "region%d.%d:%d", port->id, cxld->id,
-+			  region->id);
-+	if (rc)
++	ret = sysfs_update_group(&dev->kobj, &region_interleave_group);
++	if (ret < 0)
 +		goto err;
 +
-+	rc = device_add(dev);
-+	if (rc)
-+		goto err;
++	sysfs_notify(&dev->kobj, NULL, "target_interleave");
 +
-+	dev_dbg(dev, "Added %s to %s\n", dev_name(dev), dev_name(&cxld->dev));
++	while (prev_eniw > region->config.eniw)
++		remove_target(region, --prev_eniw);
 +
-+	return 0;
++	return len;
 +
 +err:
-+	put_device(dev);
-+	return rc;
++	region->config.eniw = prev_eniw;
++	return ret;
 +}
++static DEVICE_ATTR_RW(interleave_ways);
 +
-+static struct cxl_region *cxl_find_region_by_name(struct cxl_decoder *cxld,
-+						  const char *name)
++static ssize_t interleave_granularity_show(struct device *dev,
++					   struct device_attribute *attr,
++					   char *buf)
 +{
-+	struct device *region_dev;
++	struct cxl_region *region = to_cxl_region(dev);
 +
-+	region_dev = device_find_child_by_name(&cxld->dev, name);
-+	if (!region_dev)
-+		return ERR_PTR(-ENOENT);
-+
-+	return to_cxl_region(region_dev);
++	return sysfs_emit(buf, "%d\n", region->config.ig);
 +}
 +
-+/**
-+ * cxl_delete_region - Deletes a region
-+ * @cxld: Parent decoder
-+ * @region_name: Named region, ie. regionX.Y:Z
-+ */
-+int cxl_delete_region(struct cxl_decoder *cxld, const char *region_name)
++static ssize_t interleave_granularity_store(struct device *dev,
++					    struct device_attribute *attr,
++					    const char *buf, size_t len)
 +{
-+	struct cxl_region *region;
++	struct cxl_region *region = to_cxl_region(dev);
++	int val, ret;
 +
-+	device_lock(&cxld->dev);
++	ret = kstrtoint(buf, 0, &val);
++	if (ret)
++		return ret;
++	region->config.ig = val;
 +
-+	region = cxl_find_region_by_name(cxld, region_name);
-+	if (IS_ERR(region)) {
-+		device_unlock(&cxld->dev);
-+		return PTR_ERR(region);
-+	}
-+
-+	dev_dbg(&cxld->dev, "Requested removal of %s from %s\n",
-+		dev_name(&region->dev), dev_name(&cxld->dev));
-+
-+	device_unregister(&region->dev);
-+	device_unlock(&cxld->dev);
-+
-+	put_device(&region->dev);
-+
-+	return 0;
++	return len;
 +}
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 6eeb82711443..79c5781b6173 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -202,6 +202,7 @@ enum cxl_decoder_type {
-  * @interleave_granularity: data stride per dport
-  * @target_type: accelerator vs expander (type2 vs type3) selector
-  * @flags: memory type capabilities and locking
-+ * @region_ida: allocator for region ids.
-  * @nr_targets: number of elements in @target
-  * @target: active ordered target list in current decoder configuration
-  */
-@@ -216,6 +217,7 @@ struct cxl_decoder {
- 	int interleave_granularity;
- 	enum cxl_decoder_type target_type;
- 	unsigned long flags;
-+	struct ida region_ida;
- 	const int nr_targets;
- 	struct cxl_dport *target[];
- };
-@@ -315,6 +317,13 @@ struct cxl_ep {
- 	struct list_head list;
- };
- 
-+bool is_cxl_region(struct device *dev);
-+struct cxl_region *to_cxl_region(struct device *dev);
-+struct cxl_region *cxl_alloc_region(struct cxl_decoder *cxld,
-+				    int interleave_ways);
-+int cxl_add_region(struct cxl_decoder *cxld, struct cxl_region *region);
-+int cxl_delete_region(struct cxl_decoder *cxld, const char *region);
++static DEVICE_ATTR_RW(interleave_granularity);
 +
- static inline bool is_cxl_root(struct cxl_port *port)
- {
- 	return port->uport == port->dev.parent;
-diff --git a/drivers/cxl/region.h b/drivers/cxl/region.h
-new file mode 100644
-index 000000000000..3e6e5fb35822
---- /dev/null
-+++ b/drivers/cxl/region.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright(c) 2021 Intel Corporation. */
-+#ifndef __CXL_REGION_H__
-+#define __CXL_REGION_H__
++static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
++			   char *buf)
++{
++	struct cxl_region *region = to_cxl_region(dev);
++	struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
 +
-+#include <linux/uuid.h>
++	if (!region->res)
++		return sysfs_emit(buf, "\n");
 +
-+#include "cxl.h"
++	return sysfs_emit(buf, "%#llx\n", cxld->platform_res.start - region->res->start);
++}
++static DEVICE_ATTR_RO(offset);
 +
-+/**
-+ * struct cxl_region - CXL region
-+ * @dev: This region's device.
-+ * @id: This regions id. Id is globally unique across all regions.
-+ * @list: Node in decoder's region list.
-+ * @res: Resource this region carves out of the platform decode range.
-+ * @config: HDM decoder program config
-+ * @config.size: Size of the region determined from LSA or userspace.
-+ * @config.uuid: The UUID for this region.
-+ * @config.eniw: Number of interleave ways this region is configured for.
-+ * @config.ig: Interleave granularity of region
-+ * @config.targets: The memory devices comprising the region.
-+ */
-+struct cxl_region {
-+	struct device dev;
-+	int id;
-+	struct list_head list;
-+	struct resource *res;
++static ssize_t size_show(struct device *dev, struct device_attribute *attr,
++			 char *buf)
++{
++	struct cxl_region *region = to_cxl_region(dev);
 +
-+	struct {
-+		u64 size;
-+		uuid_t uuid;
-+		int eniw;
-+		int ig;
-+		struct cxl_memdev *targets[CXL_DECODER_MAX_INTERLEAVE];
-+	} config;
++	return sysfs_emit(buf, "%llu\n", region->config.size);
++}
++
++static ssize_t size_store(struct device *dev, struct device_attribute *attr,
++			  const char *buf, size_t len)
++{
++	struct cxl_region *region = to_cxl_region(dev);
++	unsigned long long val;
++	ssize_t rc;
++
++	rc = kstrtoull(buf, 0, &val);
++	if (rc)
++		return rc;
++
++	device_lock(&region->dev);
++	if (is_region_active(region))
++		rc = -EBUSY;
++	else
++		region->config.size = val;
++	device_unlock(&region->dev);
++
++	return rc ? rc : len;
++}
++static DEVICE_ATTR_RW(size);
++
++static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
++			 char *buf)
++{
++	struct cxl_region *region = to_cxl_region(dev);
++
++	return sysfs_emit(buf, "%pUb\n", &region->config.uuid);
++}
++
++static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
++			  const char *buf, size_t len)
++{
++	struct cxl_region *region = to_cxl_region(dev);
++	ssize_t rc;
++
++	if (len != UUID_STRING_LEN + 1)
++		return -EINVAL;
++
++	device_lock(&region->dev);
++	if (is_region_active(region))
++		rc = -EBUSY;
++	else
++		rc = uuid_parse(buf, &region->config.uuid);
++	device_unlock(&region->dev);
++
++	return rc ? rc : len;
++}
++static DEVICE_ATTR_RW(uuid);
++
++static struct attribute *region_attrs[] = {
++	&dev_attr_interleave_ways.attr,
++	&dev_attr_interleave_granularity.attr,
++	&dev_attr_offset.attr,
++	&dev_attr_size.attr,
++	&dev_attr_uuid.attr,
++	NULL,
 +};
 +
-+#endif
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 8b20e34090f7..73735f561c89 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -43,6 +43,7 @@ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
- cxl_core-y += $(CXL_CORE_SRC)/mbox.o
- cxl_core-y += $(CXL_CORE_SRC)/pci.o
- cxl_core-y += $(CXL_CORE_SRC)/hdm.o
-+cxl_core-y += $(CXL_CORE_SRC)/region.o
- cxl_core-y += config_check.o
++static const struct attribute_group region_group = {
++	.attrs = region_attrs,
++};
++
++static size_t show_targetN(struct cxl_region *region, char *buf, int n)
++{
++	int ret;
++
++	device_lock(&region->dev);
++	if (!region->config.targets[n])
++		ret = sysfs_emit(buf, "\n");
++	else
++		ret = sysfs_emit(buf, "%s\n",
++				 dev_name(&region->config.targets[n]->dev));
++	device_unlock(&region->dev);
++
++	return ret;
++}
++
++static size_t set_targetN(struct cxl_region *region, const char *buf, int n,
++			  size_t len)
++{
++	struct device *memdev_dev;
++	struct cxl_memdev *cxlmd;
++
++	device_lock(&region->dev);
++
++	if (len == 1 || region->config.targets[n])
++		remove_target(region, n);
++
++	/* Remove target special case */
++	if (len == 1) {
++		device_unlock(&region->dev);
++		return len;
++	}
++
++	memdev_dev = bus_find_device_by_name(&cxl_bus_type, NULL, buf);
++	if (!memdev_dev)
++		return -ENOENT;
++
++	/* reference to memdev held until target is unset or region goes away */
++
++	cxlmd = to_cxl_memdev(memdev_dev);
++	region->config.targets[n] = cxlmd;
++
++	device_unlock(&region->dev);
++
++	return len;
++}
++
++#define TARGET_ATTR_RW(n)                                                      \
++	static ssize_t target##n##_show(                                       \
++		struct device *dev, struct device_attribute *attr, char *buf)  \
++	{                                                                      \
++		return show_targetN(to_cxl_region(dev), buf, (n));             \
++	}                                                                      \
++	static ssize_t target##n##_store(struct device *dev,                   \
++					 struct device_attribute *attr,        \
++					 const char *buf, size_t len)          \
++	{                                                                      \
++		return set_targetN(to_cxl_region(dev), buf, (n), len);         \
++	}                                                                      \
++	static DEVICE_ATTR_RW(target##n)
++
++TARGET_ATTR_RW(0);
++TARGET_ATTR_RW(1);
++TARGET_ATTR_RW(2);
++TARGET_ATTR_RW(3);
++TARGET_ATTR_RW(4);
++TARGET_ATTR_RW(5);
++TARGET_ATTR_RW(6);
++TARGET_ATTR_RW(7);
++TARGET_ATTR_RW(8);
++TARGET_ATTR_RW(9);
++TARGET_ATTR_RW(10);
++TARGET_ATTR_RW(11);
++TARGET_ATTR_RW(12);
++TARGET_ATTR_RW(13);
++TARGET_ATTR_RW(14);
++TARGET_ATTR_RW(15);
++
++static struct attribute *interleave_attrs[] = {
++	&dev_attr_target0.attr,
++	&dev_attr_target1.attr,
++	&dev_attr_target2.attr,
++	&dev_attr_target3.attr,
++	&dev_attr_target4.attr,
++	&dev_attr_target5.attr,
++	&dev_attr_target6.attr,
++	&dev_attr_target7.attr,
++	&dev_attr_target8.attr,
++	&dev_attr_target9.attr,
++	&dev_attr_target10.attr,
++	&dev_attr_target11.attr,
++	&dev_attr_target12.attr,
++	&dev_attr_target13.attr,
++	&dev_attr_target14.attr,
++	&dev_attr_target15.attr,
++	NULL,
++};
++
++static umode_t visible_targets(struct kobject *kobj, struct attribute *a, int n)
++{
++	struct device *dev = container_of(kobj, struct device, kobj);
++	struct cxl_region *region = to_cxl_region(dev);
++
++	if (n < region->config.eniw)
++		return a->mode;
++	return 0;
++}
++
++static const struct attribute_group region_interleave_group = {
++	.attrs = interleave_attrs,
++	.is_visible = visible_targets,
++};
++
++static const struct attribute_group *region_groups[] = {
++	&region_group,
++	&region_interleave_group,
++	NULL,
++};
++
+ static void cxl_region_release(struct device *dev);
  
- obj-m += test/
+ static const struct device_type cxl_region_type = {
+ 	.name = "cxl_region",
+ 	.release = cxl_region_release,
++	.groups = region_groups
+ };
+ 
+ static ssize_t create_region_show(struct device *dev,
+@@ -108,8 +400,11 @@ static void cxl_region_release(struct device *dev)
+ {
+ 	struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
+ 	struct cxl_region *region = to_cxl_region(dev);
++	int i;
+ 
+ 	ida_free(&cxld->region_ida, region->id);
++	for (i = 0; i < region->config.eniw; i++)
++		remove_target(region, i);
+ 	kfree(region);
+ }
+ 
 -- 
 2.34.1
 
