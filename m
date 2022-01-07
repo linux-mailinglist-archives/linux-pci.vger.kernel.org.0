@@ -2,197 +2,252 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 127DF4874BA
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 10:31:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 420764874E0
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 10:40:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346465AbiAGJbn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 04:31:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346459AbiAGJbn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 04:31:43 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC80C061212
-        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 01:31:42 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id c71so8302110edf.6
-        for <linux-pci@vger.kernel.org>; Fri, 07 Jan 2022 01:31:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TezwQvy/GrVo/VcXl6Kmghnct9UHJH58seMMxyEI02A=;
-        b=w2V+iJUefGp3KlCNcBsEDN8BorejU5hp+6CahknIVFUn1oU3ZtxwjYoPDxNPziGlUz
-         a0NH22cY2sthTfr8gRtlzr68GQu94z9Vv96M1sr/BVNCzMP7KwH1oLc7Y7uPIprMBJGp
-         jTor+uLGWD9ND97HWJEqboKIKTNtxd8Zvqy6BGjuUSvq1G+ejn9P6ls5DRx/e8AnqPY1
-         oaAsTxnPIOOhhcMRfiaCuwrI7HEMhNpBw6z8s5N4t1kc9kc1BvoA7/mW0OOcWAqSy0qI
-         cnNGy3ahX/tVMOrHF3dRzQQbbFBVtWLE/ojZIbe0r6fp77jLr7sD41Ov5rETXekX5g/5
-         kEfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TezwQvy/GrVo/VcXl6Kmghnct9UHJH58seMMxyEI02A=;
-        b=oaHxzgV1a4OLjFAOw+aunGAR4U8vX8vcI68/ty06AEeJGS6o5zNWWsnEnJ2h53zoay
-         NdjEFSyUKLPWuFPSFEa9NBLyaLRGsG82gGJOj8zx7sP7L6hDDtJxoLLrE06+zsunWi6C
-         bBbDq6eveXGrp7ggskYUOjlrUpniUGQXSQiLdYJjlJ/LtCEj6mg9NYN7oPRmuvbH3kLs
-         BuQQPxr8eHp/tRnjyvJFGiJKLv6BwNOMNkkurgCmFW79qKLsw1S5Q3IDDstxONai6giR
-         R8//UYfWjMincK5wf4ZMM63VZ6ARnC/g1uHmq+GQh0qIqBT/CDMRetbpKkLmPuoXOf2B
-         KPUA==
-X-Gm-Message-State: AOAM533IaMwUVGe0T/vyV/t3tNjQILO1ogKPrbVC5J1uRXBV1HUZsJLE
-        CHCXWAze3uygc6ZswmF8ExsRuUZw90wq1LZRoUPWHA==
-X-Google-Smtp-Source: ABdhPJy6Pd5StasJd8Vr9TrAn4EyS2U33Mwnkud6vbrw4HpmRdCGAwwGrmolTePbriBG/I8s4Z7aITOOhf8mDSkaceA=
-X-Received: by 2002:a17:907:386:: with SMTP id ss6mr6976366ejb.101.1641547901133;
- Fri, 07 Jan 2022 01:31:41 -0800 (PST)
+        id S237001AbiAGJkx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 04:40:53 -0500
+Received: from mga06.intel.com ([134.134.136.31]:29051 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236952AbiAGJkx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 Jan 2022 04:40:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641548452; x=1673084452;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jRYJegt5AAojK6irwBTOV1j9rPLDKGl+Je1EUI5Jyw8=;
+  b=Ue+vMbmisjyjKkA7xqqBYstgxX/Ac5QLU8t9n7/0QhircrU51ZsyTYj5
+   F6VE3ZTSY3Yz1GIimwaR4+3FTj9oNF/aiSXs4MkrgSH6N8LHu4SamjnHe
+   Z08qFARhrGJDcVCty2mWvbKPHgBm1d9G+Ljn73JAsZRFnYMift61Ug8q8
+   OpFJD8HNkPPZuOWz0RBmPJDEgnBPHsQm8L9NtP5tHCIoosogb/98MC2yY
+   OXdzZDffXQ/jOT6+div7j01kPdcF+USn4chRQYDYPcGynVqFcqgqQtUDw
+   ZV5nztvs8NNfLZi/2m/A+ezLUBhiWlJdziZN6IPLI5yVRT65IVlvTC15M
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10219"; a="303588204"
+X-IronPort-AV: E=Sophos;i="5.88,269,1635231600"; 
+   d="scan'208";a="303588204"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 01:40:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,269,1635231600"; 
+   d="scan'208";a="689736125"
+Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 07 Jan 2022 01:40:50 -0800
+Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1n5ljt-000IVW-E6; Fri, 07 Jan 2022 09:40:49 +0000
+Date:   Fri, 07 Jan 2022 17:40:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/vga] BUILD SUCCESS
+ 0f4caffa12979152d2378edf5e88ea6b7fb6befd
+Message-ID: <61d80a87.dKE2lQsDRVzBm9oB%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20220107031905.2406176-1-robh@kernel.org>
-In-Reply-To: <20220107031905.2406176-1-robh@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 7 Jan 2022 10:31:30 +0100
-Message-ID: <CAMRc=MdmOMfyyiguowrU52BvoxMr8u3sLQfzCiY_Rqs=qUsX-Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Drop required 'interrupt-parent'
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Suman Anna <s-anna@ti.com>, - <patches@opensource.cirrus.com>,
-        John Crispin <john@phrozen.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 7, 2022 at 4:19 AM Rob Herring <robh@kernel.org> wrote:
->
-> 'interrupt-parent' is never required as it can be in a parent node or a
-> parent node itself can be an interrupt provider. Where exactly it lives is
-> outside the scope of a binding schema.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/gpio/toshiba,gpio-visconti.yaml  | 1 -
->  .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml     | 9 ---------
->  Documentation/devicetree/bindings/mfd/cirrus,madera.yaml | 1 -
->  .../devicetree/bindings/net/lantiq,etop-xway.yaml        | 1 -
->  .../devicetree/bindings/net/lantiq,xrx200-net.yaml       | 1 -
->  .../devicetree/bindings/pci/sifive,fu740-pcie.yaml       | 1 -
->  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml       | 1 -
->  7 files changed, 15 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
-> index 9ad470e01953..b085450b527f 100644
-> --- a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
-> @@ -43,7 +43,6 @@ required:
->    - gpio-controller
->    - interrupt-controller
->    - "#interrupt-cells"
-> -  - interrupt-parent
->
->  additionalProperties: false
->
-> diff --git a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
-> index e864d798168d..d433e496ec6e 100644
-> --- a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
-> +++ b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
-> @@ -175,15 +175,6 @@ required:
->    - ti,mbox-num-fifos
->
->  allOf:
-> -  - if:
-> -      properties:
-> -        compatible:
-> -          enum:
-> -            - ti,am654-mailbox
-> -    then:
-> -      required:
-> -        - interrupt-parent
-> -
->    - if:
->        properties:
->          compatible:
-> diff --git a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
-> index 499c62c04daa..5dce62a7eff2 100644
-> --- a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
-> @@ -221,7 +221,6 @@ required:
->    - '#gpio-cells'
->    - interrupt-controller
->    - '#interrupt-cells'
-> -  - interrupt-parent
->    - interrupts
->    - AVDD-supply
->    - DBVDD1-supply
-> diff --git a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
-> index 437502c5ca96..3ce9f9a16baf 100644
-> --- a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
-> +++ b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
-> @@ -46,7 +46,6 @@ properties:
->  required:
->    - compatible
->    - reg
-> -  - interrupt-parent
->    - interrupts
->    - interrupt-names
->    - lantiq,tx-burst-length
-> diff --git a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
-> index 7bc074a42369..5bc1a21ca579 100644
-> --- a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
-> +++ b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
-> @@ -38,7 +38,6 @@ properties:
->  required:
->    - compatible
->    - reg
-> -  - interrupt-parent
->    - interrupts
->    - interrupt-names
->    - "#address-cells"
-> diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> index 2b9d1d6fc661..72c78f4ec269 100644
-> --- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> @@ -61,7 +61,6 @@ required:
->    - num-lanes
->    - interrupts
->    - interrupt-names
-> -  - interrupt-parent
->    - interrupt-map-mask
->    - interrupt-map
->    - clock-names
-> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> index a2bbc0eb7220..32f4641085bc 100644
-> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> @@ -55,7 +55,6 @@ required:
->    - reg-names
->    - "#interrupt-cells"
->    - interrupts
-> -  - interrupt-parent
->    - interrupt-map
->    - interrupt-map-mask
->    - bus-range
-> --
-> 2.32.0
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vga
+branch HEAD: 0f4caffa12979152d2378edf5e88ea6b7fb6befd  vgaarb: Replace full MIT license text with SPDX identifier
 
-For GPIO:
+elapsed time: 953m
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+configs tested: 176
+configs skipped: 4
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20220107
+i386                 randconfig-c001-20220106
+parisc                           alldefconfig
+arm                           stm32_defconfig
+mips                        bcm47xx_defconfig
+powerpc                      ppc40x_defconfig
+s390                       zfcpdump_defconfig
+arm                     eseries_pxa_defconfig
+powerpc                    adder875_defconfig
+sh                        sh7785lcr_defconfig
+arm                       omap2plus_defconfig
+arm                            lart_defconfig
+sh                        sh7763rdp_defconfig
+sh                           se7343_defconfig
+sh                           se7721_defconfig
+sh                     sh7710voipgw_defconfig
+sh                            shmin_defconfig
+arc                          axs101_defconfig
+powerpc                     taishan_defconfig
+sh                        edosk7705_defconfig
+sh                          r7780mp_defconfig
+mips                      loongson3_defconfig
+ia64                      gensparse_defconfig
+openrisc                    or1ksim_defconfig
+xtensa                  cadence_csp_defconfig
+m68k                        mvme147_defconfig
+sh                          lboxre2_defconfig
+sh                         ap325rxa_defconfig
+m68k                       m5275evb_defconfig
+arc                        nsimosci_defconfig
+xtensa                    smp_lx200_defconfig
+sparc64                          alldefconfig
+arm                           h5000_defconfig
+arm                          badge4_defconfig
+sh                        dreamcast_defconfig
+sh                          polaris_defconfig
+m68k                       m5208evb_defconfig
+m68k                          sun3x_defconfig
+sh                            migor_defconfig
+mips                         cobalt_defconfig
+m68k                       m5475evb_defconfig
+openrisc                            defconfig
+arm                        realview_defconfig
+powerpc                       ppc64_defconfig
+arm                        trizeps4_defconfig
+arm                  randconfig-c002-20220106
+arm                  randconfig-c002-20220107
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                   debian-10.3-kselftests
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a005-20220107
+x86_64               randconfig-a001-20220107
+x86_64               randconfig-a004-20220107
+x86_64               randconfig-a006-20220107
+x86_64               randconfig-a002-20220107
+x86_64               randconfig-a003-20220107
+i386                 randconfig-a003-20220107
+i386                 randconfig-a005-20220107
+i386                 randconfig-a004-20220107
+i386                 randconfig-a006-20220107
+i386                 randconfig-a002-20220107
+i386                 randconfig-a001-20220107
+x86_64               randconfig-a012-20220106
+x86_64               randconfig-a015-20220106
+x86_64               randconfig-a014-20220106
+x86_64               randconfig-a013-20220106
+x86_64               randconfig-a011-20220106
+x86_64               randconfig-a016-20220106
+i386                 randconfig-a012-20220106
+i386                 randconfig-a016-20220106
+i386                 randconfig-a014-20220106
+i386                 randconfig-a015-20220106
+i386                 randconfig-a011-20220106
+i386                 randconfig-a013-20220106
+s390                 randconfig-r044-20220106
+riscv                randconfig-r042-20220106
+arc                  randconfig-r043-20220106
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+
+clang tested configs:
+mips                 randconfig-c004-20220107
+arm                  randconfig-c002-20220107
+i386                 randconfig-c001-20220107
+riscv                randconfig-c006-20220107
+powerpc              randconfig-c003-20220107
+x86_64               randconfig-c007-20220107
+mips                 randconfig-c004-20220106
+arm                  randconfig-c002-20220106
+i386                 randconfig-c001-20220106
+riscv                randconfig-c006-20220106
+powerpc              randconfig-c003-20220106
+s390                 randconfig-c005-20220106
+x86_64               randconfig-c007-20220106
+mips                      malta_kvm_defconfig
+arm                      pxa255-idp_defconfig
+mips                       lemote2f_defconfig
+mips                        qi_lb60_defconfig
+arm                          collie_defconfig
+powerpc                          allyesconfig
+arm                         s5pv210_defconfig
+arm                         palmz72_defconfig
+powerpc                 xes_mpc85xx_defconfig
+mips                         tb0219_defconfig
+s390                             alldefconfig
+mips                      bmips_stb_defconfig
+i386                 randconfig-a003-20220106
+i386                 randconfig-a005-20220106
+i386                 randconfig-a004-20220106
+i386                 randconfig-a006-20220106
+i386                 randconfig-a002-20220106
+i386                 randconfig-a001-20220106
+x86_64               randconfig-a012-20220107
+x86_64               randconfig-a015-20220107
+x86_64               randconfig-a014-20220107
+x86_64               randconfig-a013-20220107
+x86_64               randconfig-a011-20220107
+x86_64               randconfig-a016-20220107
+i386                 randconfig-a012-20220107
+i386                 randconfig-a016-20220107
+i386                 randconfig-a014-20220107
+i386                 randconfig-a015-20220107
+i386                 randconfig-a011-20220107
+i386                 randconfig-a013-20220107
+x86_64               randconfig-a005-20220106
+x86_64               randconfig-a001-20220106
+x86_64               randconfig-a004-20220106
+x86_64               randconfig-a006-20220106
+x86_64               randconfig-a002-20220106
+x86_64               randconfig-a003-20220106
+s390                 randconfig-r044-20220107
+hexagon              randconfig-r041-20220107
+hexagon              randconfig-r045-20220107
+riscv                randconfig-r042-20220107
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
