@@ -2,115 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DD25487C4F
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 19:45:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ABF0487C77
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 19:53:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbiAGSpw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 13:45:52 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:49794 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbiAGSpv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 13:45:51 -0500
+        id S230504AbiAGSxx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 13:53:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229763AbiAGSxx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 13:53:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BD5C061574;
+        Fri,  7 Jan 2022 10:53:53 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F71D6171F;
-        Fri,  7 Jan 2022 18:45:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C3BC36AE9;
-        Fri,  7 Jan 2022 18:45:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EBF5860C08;
+        Fri,  7 Jan 2022 18:53:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F2DFC36AE0;
+        Fri,  7 Jan 2022 18:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641581150;
-        bh=ldytF5XvdxNK25AZ/Rg8qis5NU/+Yn1ZpYM0pkB0Gdo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jlD4gPcExL33TD3RD5A3nYCDHSnixX9+PDt9isYN1GMzPah1POJVkEYto52BrCKab
-         JPEq+L2/1tkyOmdohrl+MxGV0MjO5iQ8GzbqokF91D2cZGl+/f4jievzZMj1t6xPkC
-         uW2WgTCrgM1ChY9nCpESLYXq/HX0gjZcURkcP/3PGn9P1e6f0NPUJW/AA/Kuu2q08p
-         lkFjRAv3UY+zUyvxxnlo+CuiL4Z38yvaqjSunxXmC1m6ZBYa6zEW+c2RTwSeK86PQC
-         IMmX68TUeOLGrqHr6vYKMC63w7CyU538LQx01ZM7qIuGvkhJujy2Oh45Ywkl4gM6EQ
-         2KVRxASnQManw==
-Date:   Fri, 7 Jan 2022 12:45:48 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        s=k20201202; t=1641581632;
+        bh=foOMKyQ7PGZKwf86IMQUEEvCUUdpdeI7caXXChqQ+Lw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qlEmySjN1PoChrh9Gf4yY0T1w4ss/KdXpzpvt5Ldks1IzeRRtdHV/xevjYsBY3pu4
+         t/k4EiMlsTbzT9n2Y3N1WqQIYDnXJB5X/4iejp+n7NWKVFmljTgNITWCGdtgxZkJrU
+         m5SjfxC8nNhyQaX3t3HmqH2MJ73/6Y2uUvcgZj5n/Jjw0x8nlh/AWuPGWkQ+kRIVfh
+         2QCg8p5LWkQi5tqdB6Pae7JUuRy0Mm13jbzLJvHY+7qFSh5u1bPSCWsc8jPJ1eOPgh
+         18Vd78fx4yPvLZEotV1P5eUWoWVKxEEH8t3wKeTc+90yMwGmRl5CtKCFnXxVv+nvPV
+         aBI81sF3/qmaw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1n5uN4-00GdIn-D6; Fri, 07 Jan 2022 18:53:50 +0000
+Date:   Fri, 07 Jan 2022 18:53:50 +0000
+Message-ID: <87wnjbtm0x.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/15] PCI: mvebu: Handle invalid size of read config
- request
-Message-ID: <20220107184548.GA390934@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211125124605.25915-5-pali@kernel.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 10/11] PCI: mvebu: Implement support for legacy INTx interrupts
+In-Reply-To: <20220107115053.k5d2uv7yrftrpcez@pali>
+References: <20220105150239.9628-1-pali@kernel.org>
+        <20220105150239.9628-11-pali@kernel.org>
+        <87bl0ovq7f.wl-maz@kernel.org>
+        <20220106154447.aie6taiuvav5wu6y@pali>
+        <878rvsvoyo.wl-maz@kernel.org>
+        <20220106162047.vqykmygs75eimfgy@pali>
+        <877dbcvngf.wl-maz@kernel.org>
+        <20220106182044.3ff0828c@thinkpad>
+        <874k6gvkhz.wl-maz@kernel.org>
+        <20220107115053.k5d2uv7yrftrpcez@pali>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: pali@kernel.org, kabel@kernel.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, thomas.petazzoni@bootlin.com, kw@linux.com, rmk+kernel@armlinux.org.uk, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 25, 2021 at 01:45:54PM +0100, Pali Rohár wrote:
-> Function mvebu_pcie_hw_rd_conf() does not handle invalid size. So correctly
-> set read value to all-ones and return appropriate error return value
-> PCIBIOS_BAD_REGISTER_NUMBER like in mvebu_pcie_hw_wr_conf() function.
-> 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Cc: stable@vger.kernel.org
+On Fri, 07 Jan 2022 11:50:53 +0000,
+Pali Roh=C3=A1r <pali@kernel.org> wrote:
+>=20
+> On Thursday 06 January 2022 17:31:36 Marc Zyngier wrote:
+> > On Thu, 06 Jan 2022 17:20:44 +0000,
+> > Marek Beh=C3=BAn <kabel@kernel.org> wrote:
+> > >=20
+> > > On Thu, 06 Jan 2022 16:27:44 +0000
+> > > Marc Zyngier <maz@kernel.org> wrote:
+> > > > You are completely missing my point. I'm talking about data
+> > > > structures, you're talking about interrupts. You have this:
+> > > >=20
+> > > > struct mvebu_pcie_port {
+> > > >        // Tons of stuff
+> > > >        struct irq_chip intx_chip;
+> > > > };
+> > > >=20
+> > > > What I want you to do is:
+> > > >=20
+> > > > struct mvebu_pcie_port {
+> > > >        // Tons of stuff
+> > > > };
+> > > >=20
+> > > > static struct irq_chip intx_chip =3D {
+> > > > 	.name		=3D "INTx",
+> > > > 	.irq_mask	=3D mvebu_pcie_intx_irq_mask,
+> > > > 	.irq_unmask	=3D mvebu_pcie_intx_irq_unmask;
+> > > > };
+> > > >=20
+> > > > That's it. No more, no less.
+> > > >=20
+> > > > 	M.
+> > > >=20
+> > >=20
+> > > Hmm, but struct irq_chip contains a dynamic member,
+> > >   struct device *parent_device;
+> > > Isn't that used? Or are you planning to kill it?
+> >=20
+> > Indeed, and I am definitely planning to kill it. This is the wrong
+> > place for this stuff, and I want it gone. There are thankfully very
+> > few users of this misfeature.
+>=20
+> Ok, so what about this change?
+>=20
+> @@ -1458,7 +1617,17 @@ static int mvebu_pcie_remove(struct platform_devic=
+e *pdev)
+>  		mvebu_writel(port, cmd, PCIE_CMD_OFF);
+> =20
+>  		/* Mask all interrupt sources. */
+> -		mvebu_writel(port, 0, PCIE_MASK_OFF);
+> +		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
+> +
+> +		/* Clear all interrupt causes. */
+> +		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
+> +
+> +		/* Remove IRQ domains. */
+> +		if (port->intx_irq_domain)
+> +			irq_domain_remove(port->intx_irq_domain);
+> +
+> +		if (irq > 0)
+> +			irq_set_chained_handler_and_data(irq, NULL, NULL);
 
-Is there a bug that this fixes?  If not, I would drop the stable tag
-(as I see Lorenzo already did, thanks!).
+You really want this to be done *before* you remove the domain, as
+there still could be interrupts in flight at this point.
 
-> ---
->  drivers/pci/controller/pci-mvebu.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index 08274132cdfb..19c6ee298442 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -261,6 +261,9 @@ static int mvebu_pcie_hw_rd_conf(struct mvebu_pcie_port *port,
->  	case 4:
->  		*val = readl_relaxed(conf_data);
->  		break;
-> +	default:
-> +		*val = 0xffffffff;
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
+	M.
 
-Might be the right thing to do, but there are many config accessors
-that do not set *val to ~0 before returning
-PCIBIOS_BAD_REGISTER_NUMBER:
-
-  pci_bus_read_config_byte (and word, dword)  # PCI_OP_READ(), *val unchanged
-  pci_generic_config_read                     # *val = 32-bit value
-  pci_user_read_config_byte (...)             # PCI_USER_READ_CONFIG(), *val unchanged
-  sh7786_pcie_read                            # *val unchanged
-  dw_pcie_read                                # *val = 0
-  mobiveil_pcie_read                          # *val = 0
-  faraday_raw_pci_read_config                 # *val = 32-bit value
-  ixp4xx_pci_read_config                      # *val unchanged
-  orion5x_pci_hw_rd_conf                      # *val = 32-bit value
-  orion_pcie_rd_conf                          # *val = 32-bit value
-  bonito64_pcibios_read                       # *val = 32-bit value
-  loongson_pcibios_read                       # *val = 32-bit value
-  msc_pcibios_read                            # *val = 32-bit value
-  ar724x_pci_read                             # *val unchanged
-  bcm1480_pcibios_read                        # *val = 32-bit value
-  _altera_pcie_cfg_read                       # *val = 32-bit value
-  rockchip_pcie_rd_own_conf                   # *val = 0
-  rockchip_pcie_rd_other_conf                 # *val = 0
-  pci_bridge_emul_conf_read                   # may depend on op?
-
-There are more, but I got tired of looking.  I actually didn't see any
-that set *val to ~0.
-
-I think the check in PCI_OP_READ() means that most accessors will
-never see an invalid "size".
-
->  	}
->  
->  	return PCIBIOS_SUCCESSFUL;
-> -- 
-> 2.20.1
-> 
+--=20
+Without deviation from the norm, progress is not possible.
