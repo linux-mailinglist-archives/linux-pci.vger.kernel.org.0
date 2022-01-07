@@ -2,129 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 170FF487373
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 08:22:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 127DF4874BA
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 10:31:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234265AbiAGHW3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 02:22:29 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27468 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S231975AbiAGHW3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 02:22:29 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20756Xbs011438;
-        Fri, 7 Jan 2022 07:21:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=vEkORE+Epga5s7ASjVd+4jgI0LEIOYrUZHM9uSEuFS4=;
- b=AtY/muleo+xSFpG6X+/Qts7oPrSBNHVz6kRu78nlQUj/NKgkvchx1PfVctrHZYpzqA3r
- LsneJD6mu3wXvlwkU0QRE1Cx6xg7cYU/38OYxEMzW6SEA3j8fm9BMT3ZymXeN9SyU+w2
- G5oq+aQ6FPktL0MaHhd0eqpU/n/EqwVHZeduLLzjLuo3nnZI8kwkSCWrjxH92IutQtyg
- jLoM9/AlHZnso8Pn2fxpikdkGOdL1SFHU1mYEx7GsvkKI0n8mganA9PNzO63QjRAiSs/
- CJh3SXJjnHlpkmdph1jK2bVyyCr0MdvX13x2lV3G9vdc4rHpqz91HMI9XF64AxnRFuAs +g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3de4y7u30f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Jan 2022 07:21:47 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 2076qs9i009364;
-        Fri, 7 Jan 2022 07:21:47 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3de4y7u2yx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Jan 2022 07:21:46 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2077CAqg018540;
-        Fri, 7 Jan 2022 07:21:45 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 3de5gfupb2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Jan 2022 07:21:44 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2077LgvQ39125256
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Jan 2022 07:21:42 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7CF7A4C05A;
-        Fri,  7 Jan 2022 07:21:42 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9B09C4C04E;
-        Fri,  7 Jan 2022 07:21:41 +0000 (GMT)
-Received: from sig-9-145-3-155.uk.ibm.com (unknown [9.145.3.155])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Jan 2022 07:21:41 +0000 (GMT)
-Message-ID: <64d4b0d66379affd59c5a24ddb71a8f208330362.camel@linux.ibm.com>
-Subject: Re: [RFC 00/32] Kconfig: Introduce HAS_IOPORT and LEGACY_PCI options
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     John Garry <john.garry@huawei.com>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
+        id S1346465AbiAGJbn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 04:31:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346459AbiAGJbn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 04:31:43 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC80C061212
+        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 01:31:42 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id c71so8302110edf.6
+        for <linux-pci@vger.kernel.org>; Fri, 07 Jan 2022 01:31:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TezwQvy/GrVo/VcXl6Kmghnct9UHJH58seMMxyEI02A=;
+        b=w2V+iJUefGp3KlCNcBsEDN8BorejU5hp+6CahknIVFUn1oU3ZtxwjYoPDxNPziGlUz
+         a0NH22cY2sthTfr8gRtlzr68GQu94z9Vv96M1sr/BVNCzMP7KwH1oLc7Y7uPIprMBJGp
+         jTor+uLGWD9ND97HWJEqboKIKTNtxd8Zvqy6BGjuUSvq1G+ejn9P6ls5DRx/e8AnqPY1
+         oaAsTxnPIOOhhcMRfiaCuwrI7HEMhNpBw6z8s5N4t1kc9kc1BvoA7/mW0OOcWAqSy0qI
+         cnNGy3ahX/tVMOrHF3dRzQQbbFBVtWLE/ojZIbe0r6fp77jLr7sD41Ov5rETXekX5g/5
+         kEfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TezwQvy/GrVo/VcXl6Kmghnct9UHJH58seMMxyEI02A=;
+        b=oaHxzgV1a4OLjFAOw+aunGAR4U8vX8vcI68/ty06AEeJGS6o5zNWWsnEnJ2h53zoay
+         NdjEFSyUKLPWuFPSFEa9NBLyaLRGsG82gGJOj8zx7sP7L6hDDtJxoLLrE06+zsunWi6C
+         bBbDq6eveXGrp7ggskYUOjlrUpniUGQXSQiLdYJjlJ/LtCEj6mg9NYN7oPRmuvbH3kLs
+         BuQQPxr8eHp/tRnjyvJFGiJKLv6BwNOMNkkurgCmFW79qKLsw1S5Q3IDDstxONai6giR
+         R8//UYfWjMincK5wf4ZMM63VZ6ARnC/g1uHmq+GQh0qIqBT/CDMRetbpKkLmPuoXOf2B
+         KPUA==
+X-Gm-Message-State: AOAM533IaMwUVGe0T/vyV/t3tNjQILO1ogKPrbVC5J1uRXBV1HUZsJLE
+        CHCXWAze3uygc6ZswmF8ExsRuUZw90wq1LZRoUPWHA==
+X-Google-Smtp-Source: ABdhPJy6Pd5StasJd8Vr9TrAn4EyS2U33Mwnkud6vbrw4HpmRdCGAwwGrmolTePbriBG/I8s4Z7aITOOhf8mDSkaceA=
+X-Received: by 2002:a17:907:386:: with SMTP id ss6mr6976366ejb.101.1641547901133;
+ Fri, 07 Jan 2022 01:31:41 -0800 (PST)
+MIME-Version: 1.0
+References: <20220107031905.2406176-1-robh@kernel.org>
+In-Reply-To: <20220107031905.2406176-1-robh@kernel.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 7 Jan 2022 10:31:30 +0100
+Message-ID: <CAMRc=MdmOMfyyiguowrU52BvoxMr8u3sLQfzCiY_Rqs=qUsX-Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Drop required 'interrupt-parent'
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-csky@vger.kernel.org
-Date:   Fri, 07 Jan 2022 08:21:41 +0100
-In-Reply-To: <00c5a9e2-1876-e8d1-68f3-2be6d3bd38cb@huawei.com>
-References: <20211227164317.4146918-1-schnelle@linux.ibm.com>
-         <00c5a9e2-1876-e8d1-68f3-2be6d3bd38cb@huawei.com>
+        Michal Simek <michal.simek@xilinx.com>,
+        Suman Anna <s-anna@ti.com>, - <patches@opensource.cirrus.com>,
+        John Crispin <john@phrozen.org>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: cynwMk4apZ0bHAkiwK6hO9RNLLeiN4I_
-X-Proofpoint-ORIG-GUID: jonzyFcjLIyJ-g8t0bSxk_jRV-DRUS3W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-01-07_01,2022-01-06_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
- bulkscore=0 impostorscore=0 malwarescore=0 clxscore=1015
- priorityscore=1501 mlxlogscore=936 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2110150000 definitions=main-2201070051
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2022-01-06 at 17:45 +0000, John Garry wrote:
-> Hi Niklas,
-> 
-> On 27/12/2021 16:42, Niklas Schnelle wrote:
-> > I performed the following testing:
-> > 
-> > - On s390 this series on top of v5.16-rc7 builds with allyesconfig i.e. the
-> >    HAS_IOPORT=n case.
-> 
-> Are you sure that allyesconfig gives HAS_IOPORT=n? Indeed I see no 
-> mechanism is always disallow HAS_IOPORT for s390 (which I think we would 
-> want).
-> 
-> > It also builds with defconfig and the resulting kernel
-> >    appears fully functional including tests with PCI devices.
-> 
-> Thanks,
-> Johnw
-> 
+On Fri, Jan 7, 2022 at 4:19 AM Rob Herring <robh@kernel.org> wrote:
+>
+> 'interrupt-parent' is never required as it can be in a parent node or a
+> parent node itself can be an interrupt provider. Where exactly it lives is
+> outside the scope of a binding schema.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/gpio/toshiba,gpio-visconti.yaml  | 1 -
+>  .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml     | 9 ---------
+>  Documentation/devicetree/bindings/mfd/cirrus,madera.yaml | 1 -
+>  .../devicetree/bindings/net/lantiq,etop-xway.yaml        | 1 -
+>  .../devicetree/bindings/net/lantiq,xrx200-net.yaml       | 1 -
+>  .../devicetree/bindings/pci/sifive,fu740-pcie.yaml       | 1 -
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml       | 1 -
+>  7 files changed, 15 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> index 9ad470e01953..b085450b527f 100644
+> --- a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> @@ -43,7 +43,6 @@ required:
+>    - gpio-controller
+>    - interrupt-controller
+>    - "#interrupt-cells"
+> -  - interrupt-parent
+>
+>  additionalProperties: false
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> index e864d798168d..d433e496ec6e 100644
+> --- a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> +++ b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> @@ -175,15 +175,6 @@ required:
+>    - ti,mbox-num-fifos
+>
+>  allOf:
+> -  - if:
+> -      properties:
+> -        compatible:
+> -          enum:
+> -            - ti,am654-mailbox
+> -    then:
+> -      required:
+> -        - interrupt-parent
+> -
+>    - if:
+>        properties:
+>          compatible:
+> diff --git a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> index 499c62c04daa..5dce62a7eff2 100644
+> --- a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> @@ -221,7 +221,6 @@ required:
+>    - '#gpio-cells'
+>    - interrupt-controller
+>    - '#interrupt-cells'
+> -  - interrupt-parent
+>    - interrupts
+>    - AVDD-supply
+>    - DBVDD1-supply
+> diff --git a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> index 437502c5ca96..3ce9f9a16baf 100644
+> --- a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> +++ b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> @@ -46,7 +46,6 @@ properties:
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupt-parent
+>    - interrupts
+>    - interrupt-names
+>    - lantiq,tx-burst-length
+> diff --git a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> index 7bc074a42369..5bc1a21ca579 100644
+> --- a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> +++ b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> @@ -38,7 +38,6 @@ properties:
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupt-parent
+>    - interrupts
+>    - interrupt-names
+>    - "#address-cells"
+> diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> index 2b9d1d6fc661..72c78f4ec269 100644
+> --- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> @@ -61,7 +61,6 @@ required:
+>    - num-lanes
+>    - interrupts
+>    - interrupt-names
+> -  - interrupt-parent
+>    - interrupt-map-mask
+>    - interrupt-map
+>    - clock-names
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index a2bbc0eb7220..32f4641085bc 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -55,7 +55,6 @@ required:
+>    - reg-names
+>    - "#interrupt-cells"
+>    - interrupts
+> -  - interrupt-parent
+>    - interrupt-map
+>    - interrupt-map-mask
+>    - bus-range
+> --
+> 2.32.0
+>
 
-I checked again by adding
+For GPIO:
 
-config HAS_IOPORT
-       def_bool n
-
-in arch/s390/Kconfig and that doesn't seem to make a difference,
-allyesconfig builds all the same. Also checked for CONFIG_HAS_IOPORT in
-my .config and that isn't listed with or without the above addition.
-
-I think this is because without a help text there is no "config
-question" and thus nothing that allyesconfig would set to yes. I do
-agree though that it's better to be explicit and add the above to those
-Kconfigs that don't support HAS_IOPORT.
-Thanks,
-Niklas
-
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
