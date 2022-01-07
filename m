@@ -2,128 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB1E34872EC
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 07:03:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1395348731C
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 07:34:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232837AbiAGGDP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 01:03:15 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:47255 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232763AbiAGGDO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 01:03:14 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yaohongbo@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0V19Yyfg_1641535391;
-Received: from 30.225.24.141(mailfrom:yaohongbo@linux.alibaba.com fp:SMTPD_---0V19Yyfg_1641535391)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 07 Jan 2022 14:03:12 +0800
-Message-ID: <24d3294b-2d22-3f68-e280-a833879c69b1@linux.alibaba.com>
-Date:   Fri, 7 Jan 2022 14:03:10 +0800
+        id S231994AbiAGGeS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 01:34:18 -0500
+Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:51097 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231968AbiAGGeR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 01:34:17 -0500
+Received: from [192.168.1.18] ([90.11.185.88])
+        by smtp.orange.fr with ESMTPA
+        id 5ipCnH3Mvw2Xx5ipDnF54V; Fri, 07 Jan 2022 07:34:16 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Fri, 07 Jan 2022 07:34:16 +0100
+X-ME-IP: 90.11.185.88
+Message-ID: <0e381699-8bfa-186b-3688-5346e42a63cd@wanadoo.fr>
+Date:   Fri, 7 Jan 2022 07:34:06 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.4.1
-Subject: Re: [RFC PATCH] PCI: Add "pci=reassign_all_bus" boot parameter
-To:     bhelgaas@google.com
-Cc:     zhangliguang@linux.alibaba.com,
-        alikernel-developer@linux.alibaba.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1640856613-101412-1-git-send-email-yaohongbo@linux.alibaba.com>
-From:   Yao Hongbo <yaohongbo@linux.alibaba.com>
-In-Reply-To: <1640856613-101412-1-git-send-email-yaohongbo@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH 16/16] PCI: Remove usage of the deprecated
+ "pci-dma-compat.h" API
+Content-Language: fr
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     arnd@arndb.de, hch@infradead.org, akpm@linux-foundation.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <e965573211f8c81c8ba978cfbc21925810a662b1.1641500561.git.christophe.jaillet@wanadoo.fr>
+ <20220106222804.GA330366@bhelgaas>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20220106222804.GA330366@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
-Gentel ping! Any comments on this patch?
+Le 06/01/2022 à 23:28, Bjorn Helgaas a écrit :
+> On Thu, Jan 06, 2022 at 10:55:33PM +0100, Christophe JAILLET wrote:
+>> Final step, remove pci-dma-compat.h
+>>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Obviously this has to be applied after all the others, so I assume
+> somebody else will take this.
+> 
+>> ---
+>>   include/linux/pci-dma-compat.h | 129 ---------------------------------
+>>   include/linux/pci.h            |   3 -
+>>   2 files changed, 132 deletions(-)
+>>   delete mode 100644 include/linux/pci-dma-compat.h
+>>
+>> diff --git a/include/linux/pci-dma-compat.h b/include/linux/pci-dma-compat.h
+>> deleted file mode 100644
+>> index 249d4d7fbf18..000000000000
+>> --- a/include/linux/pci-dma-compat.h
+>> +++ /dev/null
+>> @@ -1,129 +0,0 @@
+>> -/* SPDX-License-Identifier: GPL-2.0 */
+>> -/* include this file if the platform implements the dma_ DMA Mapping API
+>> - * and wants to provide the pci_ DMA Mapping API in terms of it */
+>> -
+>> -#ifndef _ASM_GENERIC_PCI_DMA_COMPAT_H
+>> -#define _ASM_GENERIC_PCI_DMA_COMPAT_H
+>> -
+>> -#include <linux/dma-mapping.h>
+>> -
+>> -/* This defines the direction arg to the DMA mapping routines. */
+>> -#define PCI_DMA_BIDIRECTIONAL	DMA_BIDIRECTIONAL
+>> -#define PCI_DMA_TODEVICE	DMA_TO_DEVICE
+>> -#define PCI_DMA_FROMDEVICE	DMA_FROM_DEVICE
+>> -#define PCI_DMA_NONE		DMA_NONE
+>> -
+>> -static inline void *
+>> -pci_alloc_consistent(struct pci_dev *hwdev, size_t size,
+>> -		     dma_addr_t *dma_handle)
+>> -{
+>> -	return dma_alloc_coherent(&hwdev->dev, size, dma_handle, GFP_ATOMIC);
+>> -}
+>> -
+>> -static inline void *
+>> -pci_zalloc_consistent(struct pci_dev *hwdev, size_t size,
+>> -		      dma_addr_t *dma_handle)
+>> -{
+>> -	return dma_alloc_coherent(&hwdev->dev, size, dma_handle, GFP_ATOMIC);
+>> -}
+>> -
+>> -static inline void
+>> -pci_free_consistent(struct pci_dev *hwdev, size_t size,
+>> -		    void *vaddr, dma_addr_t dma_handle)
+>> -{
+>> -	dma_free_coherent(&hwdev->dev, size, vaddr, dma_handle);
+>> -}
+>> -
+>> -static inline dma_addr_t
+>> -pci_map_single(struct pci_dev *hwdev, void *ptr, size_t size, int direction)
+>> -{
+>> -	return dma_map_single(&hwdev->dev, ptr, size, (enum dma_data_direction)direction);
+>> -}
+>> -
+>> -static inline void
+>> -pci_unmap_single(struct pci_dev *hwdev, dma_addr_t dma_addr,
+>> -		 size_t size, int direction)
+>> -{
+>> -	dma_unmap_single(&hwdev->dev, dma_addr, size, (enum dma_data_direction)direction);
+>> -}
+>> -
+>> -static inline dma_addr_t
+>> -pci_map_page(struct pci_dev *hwdev, struct page *page,
+>> -	     unsigned long offset, size_t size, int direction)
+>> -{
+>> -	return dma_map_page(&hwdev->dev, page, offset, size, (enum dma_data_direction)direction);
+>> -}
+>> -
+>> -static inline void
+>> -pci_unmap_page(struct pci_dev *hwdev, dma_addr_t dma_address,
+>> -	       size_t size, int direction)
+>> -{
+>> -	dma_unmap_page(&hwdev->dev, dma_address, size, (enum dma_data_direction)direction);
+>> -}
+>> -
+>> -static inline int
+>> -pci_map_sg(struct pci_dev *hwdev, struct scatterlist *sg,
+>> -	   int nents, int direction)
+>> -{
+>> -	return dma_map_sg(&hwdev->dev, sg, nents, (enum dma_data_direction)direction);
+>> -}
+>> -
+>> -static inline void
+>> -pci_unmap_sg(struct pci_dev *hwdev, struct scatterlist *sg,
+>> -	     int nents, int direction)
+>> -{
+>> -	dma_unmap_sg(&hwdev->dev, sg, nents, (enum dma_data_direction)direction);
+>> -}
+>> -
+>> -static inline void
+>> -pci_dma_sync_single_for_cpu(struct pci_dev *hwdev, dma_addr_t dma_handle,
+>> -		    size_t size, int direction)
+>> -{
+>> -	dma_sync_single_for_cpu(&hwdev->dev, dma_handle, size, (enum dma_data_direction)direction);
+>> -}
+>> -
+>> -static inline void
+>> -pci_dma_sync_single_for_device(struct pci_dev *hwdev, dma_addr_t dma_handle,
+>> -		    size_t size, int direction)
+>> -{
+>> -	dma_sync_single_for_device(&hwdev->dev, dma_handle, size, (enum dma_data_direction)direction);
+>> -}
+>> -
+>> -static inline void
+>> -pci_dma_sync_sg_for_cpu(struct pci_dev *hwdev, struct scatterlist *sg,
+>> -		int nelems, int direction)
+>> -{
+>> -	dma_sync_sg_for_cpu(&hwdev->dev, sg, nelems, (enum dma_data_direction)direction);
+>> -}
+>> -
+>> -static inline void
+>> -pci_dma_sync_sg_for_device(struct pci_dev *hwdev, struct scatterlist *sg,
+>> -		int nelems, int direction)
+>> -{
+>> -	dma_sync_sg_for_device(&hwdev->dev, sg, nelems, (enum dma_data_direction)direction);
+>> -}
+>> -
+>> -static inline int
+>> -pci_dma_mapping_error(struct pci_dev *pdev, dma_addr_t dma_addr)
+>> -{
+>> -	return dma_mapping_error(&pdev->dev, dma_addr);
+>> -}
+>> -
+>> -#ifdef CONFIG_PCI
+>> -static inline int pci_set_dma_mask(struct pci_dev *dev, u64 mask)
+>> -{
+>> -	return dma_set_mask(&dev->dev, mask);
+>> -}
+>> -
+>> -static inline int pci_set_consistent_dma_mask(struct pci_dev *dev, u64 mask)
+>> -{
+>> -	return dma_set_coherent_mask(&dev->dev, mask);
+>> -}
+>> -#else
+>> -static inline int pci_set_dma_mask(struct pci_dev *dev, u64 mask)
+>> -{ return -EIO; }
+>> -static inline int pci_set_consistent_dma_mask(struct pci_dev *dev, u64 mask)
+>> -{ return -EIO; }
+>> -#endif
+>> -
+>> -#endif
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index d4308f847e58..ba8771eaf380 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -2455,9 +2455,6 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
+>>   void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+>>   #endif
+>>   
+>> -/* Provide the legacy pci_dma_* API */
+>> -#include <linux/pci-dma-compat.h>
+>> -
 
-I think this is useful to find whether there is a problem with
-the PCI enumeration of the bios or the OS.
+After one more night, I should have mentionned that the way have removed 
+"pci-dma-compat.h" may break OTHER drives because of indirect include.
 
-在 2021/12/30 下午5:30, Yao Hongbo 写道:
-> PCI bridges may be misconfigured by te system BIOS, and then the OS
-> scan the bridges that need to be reconfigured.
-> However, the PCI bus topology configured by the bios may be wrong:
+The line above should maybe be replaced by:
+   #include <linux/dma-mapping.h>
+which is hidden in "pci-dma-compat.h".
+
+Will see if built-bots complain.
+
+CJ
+
+>>   #define pci_printk(level, pdev, fmt, arg...) \
+>>   	dev_printk(level, &(pdev)->dev, fmt, ##arg)
+>>   
+>> -- 
+>> 2.32.0
+>>
 > 
-> [   19.376273] pci 0000:40:00.0: bridge configuration invalid ([bus
-> 00-00]), reconfiguring
-> [   19.384443] pci_bus 0000:47: busn_res: can not insert [bus 47-46]
-> under [bus 40-46] (conflicts with (null) [bus 40-46])
-> 
-> The primary bus number and subordinate bus number written by the bios
-> were wrong, and the OS continues to add bridges on the wrong bus
-> topology.
-> 
-> In order to avoid such problems, a kernel cmdline needs to be
-> added to support the os to fully configure the pci bus.
-> 
-> Signed-off-by: Yao Hongbo <yaohongbo@linux.alibaba.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 1 +
->  drivers/acpi/pci_root.c                         | 3 +++
->  drivers/pci/pci.c                               | 5 +++++
->  include/linux/pci.h                             | 2 ++
->  4 files changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 2fba824..c83a2e5 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4084,6 +4084,7 @@
->  		nomio		[S390] Do not use MIO instructions.
->  		norid		[S390] ignore the RID field and force use of
->  				one PCI domain per PCI function
-> +		reassign_all_bus	The OS fully configure the PCI bus.
->  
->  	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
->  			Management.
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index ab2f7df..e21ac25 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -592,6 +592,9 @@ static int acpi_pci_root_add(struct acpi_device *device,
->  	is_pcie = strcmp(acpi_device_hid(device), "PNP0A08") == 0;
->  	negotiate_os_control(root, &no_aspm, is_pcie);
->  
-> +	if (pci_reassign_all_bus)
-> +		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-> +
->  	/*
->  	 * TBD: Need PCI interface for enumeration/configuration of roots.
->  	 */
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 3d2fb39..5746e88 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -142,6 +142,9 @@ bool pci_reset_supported(struct pci_dev *dev)
->  /* If set, the PCI config space of each device is printed during boot. */
->  bool pci_early_dump;
->  
-> +/* If set, the pci will reassign resources*/
-> +bool pci_reassign_all_bus;
-> +
->  bool pci_ats_disabled(void)
->  {
->  	return pcie_ats_disabled;
-> @@ -6846,6 +6849,8 @@ static int __init pci_setup(char *str)
->  				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
->  			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
->  				disable_acs_redir_param = str + 18;
-> +			} else if (!strncmp(str, "reassign_all_bus", 16)) {
-> +				pci_reassign_all_bus = true;
->  			} else {
->  				pr_err("PCI: Unknown option `%s'\n", str);
->  			}
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 18a75c8e..ad0e3e9 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2119,6 +2119,8 @@ int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
->  extern u8 pci_dfl_cache_line_size;
->  extern u8 pci_cache_line_size;
->  
-> +extern bool pci_reassign_all_bus;
-> +
->  /* Architecture-specific versions may override these (weak) */
->  void pcibios_disable_device(struct pci_dev *dev);
->  void pcibios_set_master(struct pci_dev *dev);
+
