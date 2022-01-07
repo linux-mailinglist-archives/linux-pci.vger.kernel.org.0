@@ -2,136 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 462E84871B2
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 05:10:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4878E4871CD
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 05:36:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346033AbiAGEKS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 23:10:18 -0500
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:40948
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1346030AbiAGEKS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 23:10:18 -0500
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com [209.85.167.200])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 6263140027
-        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 04:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1641528610;
-        bh=QJzzNLVJdeEzMCALhcgJhqj9s9pIDKzQHnLx0JleHBo=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=qdp6xoWKoeXqjSsZ0HuHFI9OPS6/G+0ybtjpyozCkR8E/B29RLinTEg80YSrdukGN
-         e/ChbWnwvsYSLE1T+YtblJe3fOlCJ3guIW9LCnYbE+hkE2BxOsNIcHmzeskPuS+pgJ
-         1okormY2TS38JvyMAzD8ZcIlI9Xx7k6UkrlnFszVJFBsndAsTAt6+Ytl9/KsMcohsC
-         fMCtimYDa1JHTZ3pHcwOeDRb+rMI/P9MLIDzz6LKLYRySJb2OQVFSQZng3Cfcs8AYI
-         Jx91nf2nvMyfWBwzmYPQGggMDCrwWv1gsdXvjl06DV7vOFcIq7N2wROrkxRPX4vTjB
-         gRKuuNEWeN6Hg==
-Received: by mail-oi1-f200.google.com with SMTP id y74-20020aca4b4d000000b002c6fd8df444so3178657oia.22
-        for <linux-pci@vger.kernel.org>; Thu, 06 Jan 2022 20:10:10 -0800 (PST)
+        id S229779AbiAGEgR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 23:36:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232975AbiAGEgQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Jan 2022 23:36:16 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 899FAC061201
+        for <linux-pci@vger.kernel.org>; Thu,  6 Jan 2022 20:36:16 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id u16so3993107plg.9
+        for <linux-pci@vger.kernel.org>; Thu, 06 Jan 2022 20:36:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fungible.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=j+b7MRmIj2h+lxy852w49nsLYegYd0GVjsA4LYtvXcE=;
+        b=b4NPxRdiCwy3a9d/lZQGDBAe8a+Km2NijpsQOU6UdWAStOZgf53s/bKUQ6a50tlx5Y
+         dyN88w1YOVEDHbeZEk2XTVpS58LqSPl269KATYI/xo66Vd/bdy757hxHj7WDTJ1IWVrt
+         u78/TAK2g9mNAGGc3Em7AG+yNRpIB7AxGVIQA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QJzzNLVJdeEzMCALhcgJhqj9s9pIDKzQHnLx0JleHBo=;
-        b=uIWIvnns4098kzdtPsiM1cHmHz3lC5uNuxJNQttYc4Ra+9GJEnDaDRW1RmLcLSImb+
-         HlokhWlJzFN8DvDHI3rphmrU9pvWct/LoK/AjErMLZOCWSVBCvgZzy5cOvSRfS5gRsaz
-         KZVmZxJqCes9U4HhPzFfUcpP0KdNvfZOuTjV91fOBQN26CYw9vVQpq9XwcAvXVcfngX8
-         r/A5tACnPbT8PiIYGIAJfcxCAAPqHYM+G7rL+aQwuuBxLitgUC3YeAKGm9oU9H0iniFm
-         IxjyObUVkV13h2H0eHkwx7BOXgLRhrd1L/uqpvVpaYPcqyTkdThO8WkPN+WqJyT7wxKM
-         +x/Q==
-X-Gm-Message-State: AOAM531XU9ndKs5DfwfwLcgvxyS7N2FlanVdVSyET9hytROMOwRnYgtq
-        zrqcM5v3l8yLKFyn1BWr9hAFZDYsgwHXaiz5GffDbmYCBZ/yiujZ3bYnEqKWvRREP1EaikitrT+
-        hl69DUyonNYNVrGL2UXPQ3dIZ1tttI0Kj/GnSq07W5aKxLR2Hw1BNVw==
-X-Received: by 2002:aca:ad05:: with SMTP id w5mr8392355oie.41.1641528609020;
-        Thu, 06 Jan 2022 20:10:09 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxdEZ+rc2MIn8zBEdFL3Rf+HORQPJPpZcxVwALWgc4hSR4ldGxWOKbcmjv6XPDtRqm6MF+zOMoe66faNt/pcF0=
-X-Received: by 2002:aca:ad05:: with SMTP id w5mr8392338oie.41.1641528608746;
- Thu, 06 Jan 2022 20:10:08 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=j+b7MRmIj2h+lxy852w49nsLYegYd0GVjsA4LYtvXcE=;
+        b=HbQgCRudfwf0L6BM58qDnSu1nUWi3ae4uTmpkE+alHauuKocc5CCpACC59zLNJ7Irb
+         fYZ5otJX4VL2qZuk/xZkCXLC3YIpRL+azYZzHtXkrLFPQ0Qadk36vA97fJyyS5avpP8s
+         +QffdRkwbw9QeSr8xB1cslLr50gWnSc/JIA+noLxRWU0/+G+K6UuMLbXFqBz4mse1dHL
+         TXuLcYqjT/fEjMhQ5du+cOQz1TsBYP/5MdNOlB5SgrU4cEloEXO17A7v+iQN/sdtjAne
+         7BDC1BiQOMMp1wkWQ8YRph5pjYBGgdpkCGcH5CqYUIgU+LkBtwVjvN5UdccoXx05n2nL
+         4vlQ==
+X-Gm-Message-State: AOAM532mCTr7ZSxF41KTXzDm+EkZWPdjpxyj2ZWw80/fAMKoezcvgvRl
+        n/R29B46QEjVGmXVkF+sNvkneQ==
+X-Google-Smtp-Source: ABdhPJxq/46+nHIs8A1H3QEid2vNflCfJd6JzTrAOE/e/7gxCMRyu8UUbz1ZV4qLwJlqdcWLJlXB6A==
+X-Received: by 2002:a17:90b:1d02:: with SMTP id on2mr13887561pjb.204.1641530176048;
+        Thu, 06 Jan 2022 20:36:16 -0800 (PST)
+Received: from cab09-qa-09.fungible.local ([12.190.10.11])
+        by smtp.gmail.com with ESMTPSA id p12sm4297877pfo.95.2022.01.06.20.36.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jan 2022 20:36:15 -0800 (PST)
+From:   Dimitris Michailidis <d.michailidis@fungible.com>
+X-Google-Original-From: Dimitris Michailidis <dmichail@fungible.com>
+To:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        andrew@lunn.ch, d.michailidis@fungible.com
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH net-next v5 1/8] PCI: add Fungible vendor ID to pci_ids.h
+Date:   Thu,  6 Jan 2022 20:36:05 -0800
+Message-Id: <20220107043612.21342-2-dmichail@fungible.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220107043612.21342-1-dmichail@fungible.com>
+References: <20220107043612.21342-1-dmichail@fungible.com>
 MIME-Version: 1.0
-References: <20220105060643.822111-1-kai.heng.feng@canonical.com> <20220105201226.GA218998@bhelgaas>
-In-Reply-To: <20220105201226.GA218998@bhelgaas>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Fri, 7 Jan 2022 12:09:57 +0800
-Message-ID: <CAAd53p5V9gCCc6v9Wdo-bONYfASnhtyGHVPPb6vOneft2XewQQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI/portdrv: Skip enabling AER on external facing ports
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, mika.westerberg@linux.intel.com,
-        koba.ko@canonical.com, Lukas Wunner <lukas@wunner.de>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 6, 2022 at 4:12 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Jan 05, 2022 at 02:06:41PM +0800, Kai-Heng Feng wrote:
-> > The Thunderbolt root ports may constantly spew out uncorrected errors
-> > from AER service:
-> > [   30.100211] pcieport 0000:00:1d.0: AER: Uncorrected (Non-Fatal) error received: 0000:00:1d.0
-> > [   30.100251] pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-> > [   30.100256] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
-> > [   30.100262] pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-> > [   30.100267] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
-> > [   30.100372] thunderbolt 0000:0a:00.0: AER: can't recover (no error_detected callback)
-> > [   30.100401] xhci_hcd 0000:3e:00.0: AER: can't recover (no error_detected callback)
-> > [   30.100427] pcieport 0000:00:1d.0: AER: device recovery failed
->
-> No timestamps needed here; they don't add to understanding the
-> problem.
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Dimitris Michailidis <dmichail@fungible.com>
+---
+ include/linux/pci_ids.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Got it. Will remove it for later iteration.
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 011f2f1ea5bb..c4299dbade98 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2578,6 +2578,8 @@
+ 
+ #define PCI_VENDOR_ID_HYGON		0x1d94
+ 
++#define PCI_VENDOR_ID_FUNGIBLE		0x1dad
++
+ #define PCI_VENDOR_ID_HXT		0x1dbf
+ 
+ #define PCI_VENDOR_ID_TEKRAM		0x1de1
+-- 
+2.25.1
 
->
-> > The link may not be reliable on external facing ports, so don't enable
-> > AER on those ports.
->
-> I'm not sure what you want to accomplish here.  If the errors are
-> legitimate and the result of some hardware issue like a bad cable, why
-> should we ignore them?  If they're caused by a software problem, we
-> should figure that out and fix it.
->
-> Does this occur on a specific instance of possibly flaky hardware?
-
-Only from root ports of thunderbolt devices.
-
-The error occurs as soon as the root port is runtime suspended to D3cold.
-
-Runtime suspend the AER service can resolve the issue. I wonder if
-it's the right thing to do here?
-D3cold should also mean the PCI link is gone, disabling AER seems to
-be a reasonable approach.
-
-Kai-Heng
-
->
-> You mention a spew of errors; do you think this is a single error that
-> we fail to clear correctly?  Or is it really many separate errors?
->
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> >  drivers/pci/pcie/portdrv_core.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> > index bda630889f955..d464d00ade8f2 100644
-> > --- a/drivers/pci/pcie/portdrv_core.c
-> > +++ b/drivers/pci/pcie/portdrv_core.c
-> > @@ -219,7 +219,8 @@ static int get_port_device_capability(struct pci_dev *dev)
-> >
-> >  #ifdef CONFIG_PCIEAER
-> >       if (dev->aer_cap && pci_aer_available() &&
-> > -         (pcie_ports_native || host->native_aer)) {
-> > +         (pcie_ports_native || host->native_aer) &&
-> > +         !dev->external_facing) {
-> >               services |= PCIE_PORT_SERVICE_AER;
-> >
-> >               /*
-> > --
-> > 2.33.1
-> >
