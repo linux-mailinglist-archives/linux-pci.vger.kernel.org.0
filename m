@@ -2,162 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0D4B487B54
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 18:23:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5764A487B78
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 18:32:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348563AbiAGRXk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 12:23:40 -0500
-Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:57422 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348558AbiAGRXj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 12:23:39 -0500
-Received: from [192.168.1.18] ([90.11.185.88])
-        by smtp.orange.fr with ESMTPA
-        id 5sxancGFrwEZf5sxgnfr6r; Fri, 07 Jan 2022 18:23:36 +0100
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
-X-ME-Date: Fri, 07 Jan 2022 18:23:36 +0100
-X-ME-IP: 90.11.185.88
-Message-ID: <cfabcc1c-16cd-80f7-7d28-6d817c29a7a0@wanadoo.fr>
-Date:   Fri, 7 Jan 2022 18:23:25 +0100
+        id S1348586AbiAGRcu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 12:32:50 -0500
+Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:59050
+        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237699AbiAGRct (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 12:32:49 -0500
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 44E8B40A58
+        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 17:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1641576762;
+        bh=reiJbrHsd6HUY73y6dW3uK1fLpWZ0z6nBvTr3IYdF1I=;
+        h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type;
+        b=CDBbniOLG2fzCedU1W1uGhuW1uSYpVieoy9rDDZ7SmyfeNfMGQBJZUvWW8KoFK2Bp
+         fVN+3zZvlLhhDRgxvwrgU667tXL8OuunNBMsICFGYyMq2X2u4hpGSnF9wiwKSPcoyu
+         hoSl9wZDDctBJGrVOpG/SSlLOe293XpBcqYpLTVH56gt1SEGOm2nLBMlVDECMitUMu
+         +J7HfBPfhY2lGqY3u02eyzE+l+J3X7uellmANesYi+ieq9ZCmoy3L2WDrnNiXz5EDq
+         /ubwIc6DmKYgcQpWbbwYL0nq4zY71BFOX9rXNyad+qBUqwxk98kly3hW0234SiydNy
+         w8kOu3ViI+3Ig==
+Received: by mail-ed1-f69.google.com with SMTP id x19-20020a05640226d300b003f8b80f5729so5176363edd.13
+        for <linux-pci@vger.kernel.org>; Fri, 07 Jan 2022 09:32:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=reiJbrHsd6HUY73y6dW3uK1fLpWZ0z6nBvTr3IYdF1I=;
+        b=JR59BJ729LMlSNOM+NSXt/PUdt9E9ODqFsncrcBmMa3o03xhHSTgx310UOq2OGvb0D
+         5qxd+teGBRQAd2VdqRfbGCTkgUcLC7rI16JJwfRlmo/CymbLIHEOD3ERrkXnWYSU8NtX
+         Isxc25ztz2yo3qencTbnz3sDExy1BsVQQ2lUv+pO8FRfl/0Aq+cmTVlmw+kOk2sknm/X
+         JAsWCZvj3g1YKJ4dKkBXGyGXBQz1gRhcGxDIFcrHte1c8dZonSEaVegW4DU8VIqaxlxj
+         RVdDjw60+2lOffRosNH8KrRV7G6SLP62/+5GbNSKA9RYXetdYFghSepjT8pl+AwUNbqL
+         846w==
+X-Gm-Message-State: AOAM5318epcQRELuU8jcvvLgpUymyP3jXSXIuC5X6sRU9qvRsqGazQoU
+        w8R761U1mv7g/j9U5+q5vbxzCP48bAIyJ6WkJVVzch0JbbsUCYkrNKeWRwDCFWI9cIAEnVgPzMC
+        Jn8HVhn04hrjefSix56NlEvAZsttygr/IXBk1Ow==
+X-Received: by 2002:a05:6402:1e88:: with SMTP id f8mr58042946edf.2.1641576761933;
+        Fri, 07 Jan 2022 09:32:41 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJymgxobe9HSGQM+bXdtE+Ng/EHT7YtrMrHAaqPUP6/VX7AeRCAV/M1g3xczPO8LehBpBNlmtA==
+X-Received: by 2002:a05:6402:1e88:: with SMTP id f8mr58042935edf.2.1641576761781;
+        Fri, 07 Jan 2022 09:32:41 -0800 (PST)
+Received: from localhost ([2001:67c:1560:8007::aac:c1b6])
+        by smtp.gmail.com with ESMTPSA id dd5sm1583151ejc.59.2022.01.07.09.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jan 2022 09:32:41 -0800 (PST)
+Date:   Fri, 7 Jan 2022 18:32:40 +0100
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Stefan Roese <sr@denx.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Marek Vasut <marex@denx.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: "PCI/MSI: Mask MSI-X vectors only on success" (boot problem on
+ c4.large)
+Message-ID: <Ydh5OCudJKz5Y7jc@arighi-desktop>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH 16/16] PCI: Remove usage of the deprecated
- "pci-dma-compat.h" API
-Content-Language: en-US
-From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     arnd@arndb.de, hch@infradead.org, akpm@linux-foundation.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <e965573211f8c81c8ba978cfbc21925810a662b1.1641500561.git.christophe.jaillet@wanadoo.fr>
- <20220106222804.GA330366@bhelgaas>
- <0e381699-8bfa-186b-3688-5346e42a63cd@wanadoo.fr>
-In-Reply-To: <0e381699-8bfa-186b-3688-5346e42a63cd@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Stefan,
 
+I'm experiencing some boot problems on c4.large instances on AWS with
+this commit applied (system stuck at boot - no oops or panic, just
+stuck):
 
-Le 07/01/2022 à 07:34, Christophe JAILLET a écrit :
-> Le 06/01/2022 à 23:28, Bjorn Helgaas a écrit :
->> On Thu, Jan 06, 2022 at 10:55:33PM +0100, Christophe JAILLET wrote:
->>> Final step, remove pci-dma-compat.h
->>>
->>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->>
->> Obviously this has to be applied after all the others, so I assume
->> somebody else will take this.
->>
->>> ---
->>>   include/linux/pci-dma-compat.h | 129 ---------------------------------
->>>   include/linux/pci.h            |   3 -
->>>   2 files changed, 132 deletions(-)
->>>   delete mode 100644 include/linux/pci-dma-compat.h
->>>
->>> diff --git a/include/linux/pci-dma-compat.h 
->>> b/include/linux/pci-dma-compat.h
->>> deleted file mode 100644
->>> index 249d4d7fbf18..000000000000
->>> --- a/include/linux/pci-dma-compat.h
->>> +++ /dev/null
->>> @@ -1,129 +0,0 @@
->>> -/* SPDX-License-Identifier: GPL-2.0 */
->>> -/* include this file if the platform implements the dma_ DMA Mapping 
->>> API
->>> - * and wants to provide the pci_ DMA Mapping API in terms of it */
->>> -
->>> -#ifndef _ASM_GENERIC_PCI_DMA_COMPAT_H
->>> -#define _ASM_GENERIC_PCI_DMA_COMPAT_H
->>> -
->>> -#include <linux/dma-mapping.h>
->>> -
->>> [...]
->>>  >>> diff --git a/include/linux/pci.h b/include/linux/pci.h
->>> index d4308f847e58..ba8771eaf380 100644
->>> --- a/include/linux/pci.h
->>> +++ b/include/linux/pci.h
->>> @@ -2455,9 +2455,6 @@ static inline bool 
->>> pci_is_thunderbolt_attached(struct pci_dev *pdev)
->>>   void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result 
->>> err_type);
->>>   #endif
->>> -/* Provide the legacy pci_dma_* API */
->>> -#include <linux/pci-dma-compat.h>
->>> -
-> 
-> After one more night, I should have mentionned that the way have removed 
-> "pci-dma-compat.h" may break OTHER drives because of indirect include.
-> 
-> The line above should maybe be replaced by:
->    #include <linux/dma-mapping.h>
-> which is hidden in "pci-dma-compat.h".
-> 
-> Will see if built-bots complain.
+ 83dbf898a2d4 ("PCI/MSI: Mask MSI-X vectors only on success")
 
-And so they did.
+If I revert this commit the boot completes correctly (found doing a
+bisect).
 
-What is the best option?
-1. Add    #include <linux/dma-mapping.h>?		or
-2. Add this "missing" include in needed place?
+I'm using a 5.15.12 kernel. Let me know if there's anything I can do to
+better track down the issue. For now I've just reverted the commit.
 
-I would say 2, but I would need help, because I don't have a built farm 
-at home! :)
-
-
-
-This breaks:
-
-    drivers/s390/net/ism_drv.c: In function 'register_sba':
-    drivers/s390/net/ism_drv.c:93:15: error: implicit declaration of 
-function 'dma_alloc_coherent' [-Werror=implicit-function-declaration]
-       93 |         sba = dma_alloc_coherent(&ism->pdev->dev, PAGE_SIZE, 
-&dma_handle,
-          |               ^~~~~~~~~~~~~~~~~~
-[...]
-
-
-
-I got another built failure that I don't understand:
-
-    In file included from drivers/scsi/fdomain.c:87:
- >> include/scsi/scsicam.h:16:31: warning: 'struct block_device' 
-declared inside parameter list will not be visible outside of this 
-definition or declaration
-       16 | int scsicam_bios_param(struct block_device *bdev, sector_t 
-capacity, int *ip);
-          |                               ^~~~~~~~~~~~
-    include/scsi/scsicam.h:17:27: warning: 'struct block_device' 
-declared inside parameter list will not be visible outside of this 
-definition or declaration
-       17 | bool scsi_partsize(struct block_device *bdev, sector_t 
-capacity, int geom[3]);
-          |                           ^~~~~~~~~~~~
-    include/scsi/scsicam.h:18:40: warning: 'struct block_device' 
-declared inside parameter list will not be visible outside of this 
-definition or declaration
-       18 | unsigned char *scsi_bios_ptable(struct block_device *bdev);
-          |                                        ^~~~~~~~~~~~
-    drivers/scsi/fdomain.c: In function 'fdomain_biosparam':
- >> drivers/scsi/fdomain.c:468:45: error: passing argument 1 of 
-'scsi_bios_ptable' from incompatible pointer type 
-[-Werror=incompatible-pointer-types]
-      468 |         unsigned char *p = scsi_bios_ptable(bdev);
-          |                                             ^~~~
-          |                                             |
-          |                                             struct 
-block_device *
-    In file included from drivers/scsi/fdomain.c:87:
-    include/scsi/scsicam.h:18:54: note: expected 'struct block_device *' 
-but argument is of type 'struct block_device *'
-       18 | unsigned char *scsi_bios_ptable(struct block_device *bdev);
-          |                                 ~~~~~~~~~~~~~~~~~~~~~^~~~
-
-
-CJ
+Thanks,
+-Andrea
