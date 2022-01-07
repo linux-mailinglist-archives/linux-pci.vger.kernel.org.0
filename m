@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85FAE486EBE
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 01:27:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 805D9486EEC
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 01:36:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344093AbiAGA1i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 19:27:38 -0500
-Received: from mga17.intel.com ([192.55.52.151]:2934 "EHLO mga17.intel.com"
+        id S1343919AbiAGAgW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 19:36:22 -0500
+Received: from mga04.intel.com ([192.55.52.120]:21290 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343753AbiAGA1h (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Jan 2022 19:27:37 -0500
+        id S1343881AbiAGAgV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jan 2022 19:36:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641515257; x=1673051257;
+  t=1641515781; x=1673051781;
   h=cc:subject:to:references:from:message-id:date:
    mime-version:in-reply-to:content-transfer-encoding;
-  bh=DHF9LNBkwjjdXkY2HtbzusqrhjTjnQLSGj+vV2UJQkc=;
-  b=PJ0GyA693KFE5CU2BlIP22yksGPDRI/LiYl70Q/moZieMDe2ZOo1RYmP
-   M8pPmXE5shZ6Wi0hCfWzeE9AjNFgYGXnJ/Pi5/yVSy2WjtNMozfW46HKF
-   SHcTBB9b+tDCThMA4B7D5zdR5e9tYTCwOm83uM0l5FAC/vwNhhEUBbFPR
-   sktfMj2LUK/ovNzNKOmNHwpT19noqlG4V5WC3qOnkJ1UEUsUAcqeDaRlk
-   tBBBhWaGW4dfeUKBuY3YOx3sCWFuY5JLnyAvBn+xC1wgUrrspK4QJlzI8
-   DHbrN7wA8qJmqGTpx4iNYcDhlvDbzWKuk6c9qhGK7JPIReIexith5fP7d
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="223464221"
+  bh=EkfKPQpb+SxTuleKwyjV6r0f1bhBPsTCAoGe8AyQC4w=;
+  b=D0TCen4FESg0wVQFELmL3mFqto4PjM0A7f2vOtjUcdWZ09PkPPtoAjHl
+   yJ8xUjos2fMJmWH7CiRcaIZvVcNorQJQmyvyU0qKwlvJfnlVgXvWqjq/m
+   6Z+BlkK4gdao49XJZE7nkGhTiioET2DP+nQ+iJ9V/qSsKezSal8nI3xbY
+   rKjymDk2KhlKROoLQ9E47o5AieUGu4m6qv8pV9eZgURJBPgnSdIICUCgp
+   QA6WL3EXVJSCgkUxbBNUvyvsCLTz4KTExKjfdIsHVOZtzh5O8hzNFXWqh
+   LnFkZIRAfMBTTokUfnQLlSSOO4zN+kSo6b07R6FPwUp4S/5kEBIxK3Yzu
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="241586420"
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="223464221"
+   d="scan'208";a="241586420"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:27:37 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:36:21 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="527180734"
+   d="scan'208";a="527184334"
 Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
-  by orsmga008.jf.intel.com with ESMTP; 06 Jan 2022 16:27:30 -0800
+  by orsmga008.jf.intel.com with ESMTP; 06 Jan 2022 16:36:14 -0800
 Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
         Alex Williamson <alex.williamson@redhat.com>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -60,18 +60,18 @@ Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
         Dmitry Osipenko <digetx@gmail.com>,
         iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/8] iommu: Add iommu_group_replace_domain()
+Subject: Re: [PATCH v1 6/8] gpu/host1x: Use iommu_attach/detach_device()
 To:     Jason Gunthorpe <jgg@nvidia.com>
 References: <20220106022053.2406748-1-baolu.lu@linux.intel.com>
- <20220106022053.2406748-2-baolu.lu@linux.intel.com>
- <20220106170608.GI2328285@nvidia.com>
+ <20220106022053.2406748-7-baolu.lu@linux.intel.com>
+ <20220106153543.GD2328285@nvidia.com>
 From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <58e2d0d2-649a-a3f5-e8ae-9cbf2719015f@linux.intel.com>
-Date:   Fri, 7 Jan 2022 08:26:50 +0800
+Message-ID: <2befad17-05fe-3768-6fbb-67440a5befa3@linux.intel.com>
+Date:   Fri, 7 Jan 2022 08:35:34 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20220106170608.GI2328285@nvidia.com>
+In-Reply-To: <20220106153543.GD2328285@nvidia.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,82 +79,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/7/22 1:06 AM, Jason Gunthorpe wrote:
-> On Thu, Jan 06, 2022 at 10:20:46AM +0800, Lu Baolu wrote:
->> Expose an interface to replace the domain of an iommu group for frameworks
->> like vfio which claims the ownership of the whole iommu group.
+On 1/6/22 11:35 PM, Jason Gunthorpe wrote:
+> On Thu, Jan 06, 2022 at 10:20:51AM +0800, Lu Baolu wrote:
+>> Ordinary drivers should use iommu_attach/detach_device() for domain
+>> attaching and detaching.
 >>
 >> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->>   include/linux/iommu.h | 10 ++++++++++
->>   drivers/iommu/iommu.c | 37 +++++++++++++++++++++++++++++++++++++
->>   2 files changed, 47 insertions(+)
+>>   drivers/gpu/host1x/dev.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
 >>
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index 408a6d2b3034..66ebce3d1e11 100644
->> +++ b/include/linux/iommu.h
->> @@ -677,6 +677,9 @@ void iommu_device_unuse_dma_api(struct device *dev);
->>   int iommu_group_set_dma_owner(struct iommu_group *group, void *owner);
->>   void iommu_group_release_dma_owner(struct iommu_group *group);
->>   bool iommu_group_dma_owner_claimed(struct iommu_group *group);
->> +int iommu_group_replace_domain(struct iommu_group *group,
->> +			       struct iommu_domain *old,
->> +			       struct iommu_domain *new);
+>> diff --git a/drivers/gpu/host1x/dev.c b/drivers/gpu/host1x/dev.c
+>> index fbb6447b8659..6e08cb6202cc 100644
+>> +++ b/drivers/gpu/host1x/dev.c
+>> @@ -265,7 +265,7 @@ static struct iommu_domain *host1x_iommu_attach(struct host1x *host)
+>>   			goto put_cache;
+>>   		}
 >>   
->>   #else /* CONFIG_IOMMU_API */
->>   
->> @@ -1090,6 +1093,13 @@ static inline bool iommu_group_dma_owner_claimed(struct iommu_group *group)
+>> -		err = iommu_attach_group(host->domain, host->group);
+>> +		err = iommu_attach_device(host->domain, host->dev);
+>>   		if (err) {
+>>   			if (err == -ENODEV)
+>>   				err = 0;
+>> @@ -335,7 +335,7 @@ static void host1x_iommu_exit(struct host1x *host)
 >>   {
->>   	return false;
->>   }
->> +
->> +static inline int
->> +iommu_group_replace_domain(struct iommu_group *group, struct iommu_domain *old,
->> +			   struct iommu_domain *new)
->> +{
->> +	return -ENODEV;
->> +}
->>   #endif /* CONFIG_IOMMU_API */
+>>   	if (host->domain) {
+>>   		put_iova_domain(&host->iova);
+>> -		iommu_detach_group(host->domain, host->group);
+>> +		iommu_detach_device(host->domain, host->dev);
 >>   
->>   /**
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 72a95dea688e..ab8ab95969f5 100644
->> +++ b/drivers/iommu/iommu.c
->> @@ -3431,3 +3431,40 @@ bool iommu_group_dma_owner_claimed(struct iommu_group *group)
->>   	return user;
->>   }
->>   EXPORT_SYMBOL_GPL(iommu_group_dma_owner_claimed);
->> +
->> +/**
->> + * iommu_group_replace_domain() - Replace group's domain
->> + * @group: The group.
->> + * @old: The previous attached domain. NULL for none.
->> + * @new: The new domain about to be attached.
->> + *
->> + * This is to support backward compatibility for vfio which manages the dma
->> + * ownership in iommu_group level.
+>>   		iommu_domain_free(host->domain);
+>>   		host->domain = NULL;
 > 
-> This should mention it can only be used with iommu_group_set_dma_owner()
+> Shouldn't this add the flag to tegra_host1x_driver ?
 
-Sure.
+This is called for a single driver. The call trace looks like below:
+
+static struct platform_driver tegra_host1x_driver = {
+         .driver = {
+                 .name = "tegra-host1x",
+                 .of_match_table = host1x_of_match,
+         },
+         .probe = host1x_probe,
+         .remove = host1x_remove,
+};
+
+host1x_probe(dev)
+->host1x_iommu_init(host)	//host is a wrapper of dev
+-->host1x_iommu_attach(host)
+---->iommu_group_get(host->dev)
+      iommu_domain_alloc(&platform_bus_type)
+      iommu_attach_group(domain, group);
+
+It seems that the existing code only works for singleton group.
 
 > 
->> +	if (old)
->> +		__iommu_detach_group(old, group);
->> +
->> +	if (new) {
->> +		ret = __iommu_attach_group(new, group);
->> +		if (ret && old)
->> +			__iommu_attach_group(old, group);
->> +	}
-> 
-> The sketchy error unwind here gives me some pause for sure. Maybe we
-> should define that on error this leaves the domain as NULL
-> 
-> Complicates vfio a tiny bit to cope with this failure but seems
-> cleaner than leaving it indeterminate.
-
-Fair enough.
-
+> And do like we did in the other tegra stuff and switch to the dma api
+> when !host1x_wants_iommu() ?
 > 
 > Jason
 > 
