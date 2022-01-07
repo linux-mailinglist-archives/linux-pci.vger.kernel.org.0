@@ -2,142 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 805D9486EEC
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 01:36:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F461486EF0
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 01:38:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343919AbiAGAgW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 19:36:22 -0500
-Received: from mga04.intel.com ([192.55.52.120]:21290 "EHLO mga04.intel.com"
+        id S1343983AbiAGAiK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 19:38:10 -0500
+Received: from mga18.intel.com ([134.134.136.126]:59426 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343881AbiAGAgV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Jan 2022 19:36:21 -0500
+        id S1343881AbiAGAiJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jan 2022 19:38:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641515781; x=1673051781;
-  h=cc:subject:to:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=EkfKPQpb+SxTuleKwyjV6r0f1bhBPsTCAoGe8AyQC4w=;
-  b=D0TCen4FESg0wVQFELmL3mFqto4PjM0A7f2vOtjUcdWZ09PkPPtoAjHl
-   yJ8xUjos2fMJmWH7CiRcaIZvVcNorQJQmyvyU0qKwlvJfnlVgXvWqjq/m
-   6Z+BlkK4gdao49XJZE7nkGhTiioET2DP+nQ+iJ9V/qSsKezSal8nI3xbY
-   rKjymDk2KhlKROoLQ9E47o5AieUGu4m6qv8pV9eZgURJBPgnSdIICUCgp
-   QA6WL3EXVJSCgkUxbBNUvyvsCLTz4KTExKjfdIsHVOZtzh5O8hzNFXWqh
-   LnFkZIRAfMBTTokUfnQLlSSOO4zN+kSo6b07R6FPwUp4S/5kEBIxK3Yzu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="241586420"
+  t=1641515889; x=1673051889;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JTW2+0Slo7dKP7CwxOP9ODtSOY8+sQIm7TNbacS3M6g=;
+  b=OFC29+UgKCEX1q+4c/BhtaPHenNMHEZyjO2uiHjmStc4XtVnAnFTIY0o
+   Gazhb+NXLg7DUu81mDzjzvD33k39HqPa/dn4MTlhb5S1v88LhgCJTfpPV
+   gwd2ZLsFngIzMipRZ6/YvGKTynY+zUOP0xmsiQYsgX0eD6HlgZ1S2Eo4a
+   woLwUdDQuo6zsy4vTbH5ZTsZ7v8QvcNh1bpRMuiEY2bldSuCrsI5KcDlO
+   a1xKm772LHSvfW1aY/J0eSpYiBzgbNutaSbb0Y0b/R+zTJQ5JdXxzESjc
+   HBD0eq5fusKalu+EB6cqsFD1Rk+LzAvjholptUSqTEOix7Gtg1cboq/zW
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="229582012"
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="241586420"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:36:21 -0800
-X-ExtLoop1: 1
+   d="scan'208";a="229582012"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:38:09 -0800
 X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="527184334"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
-  by orsmga008.jf.intel.com with ESMTP; 06 Jan 2022 16:36:14 -0800
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 6/8] gpu/host1x: Use iommu_attach/detach_device()
-To:     Jason Gunthorpe <jgg@nvidia.com>
-References: <20220106022053.2406748-1-baolu.lu@linux.intel.com>
- <20220106022053.2406748-7-baolu.lu@linux.intel.com>
- <20220106153543.GD2328285@nvidia.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <2befad17-05fe-3768-6fbb-67440a5befa3@linux.intel.com>
-Date:   Fri, 7 Jan 2022 08:35:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+   d="scan'208";a="471123166"
+Received: from elenawei-mobl2.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.138.104])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:38:09 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org
+Cc:     patches@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH 00/13] CXL Region driver
+Date:   Thu,  6 Jan 2022 16:37:43 -0800
+Message-Id: <20220107003756.806582-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <20220106153543.GD2328285@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/6/22 11:35 PM, Jason Gunthorpe wrote:
-> On Thu, Jan 06, 2022 at 10:20:51AM +0800, Lu Baolu wrote:
->> Ordinary drivers should use iommu_attach/detach_device() for domain
->> attaching and detaching.
->>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->>   drivers/gpu/host1x/dev.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/host1x/dev.c b/drivers/gpu/host1x/dev.c
->> index fbb6447b8659..6e08cb6202cc 100644
->> +++ b/drivers/gpu/host1x/dev.c
->> @@ -265,7 +265,7 @@ static struct iommu_domain *host1x_iommu_attach(struct host1x *host)
->>   			goto put_cache;
->>   		}
->>   
->> -		err = iommu_attach_group(host->domain, host->group);
->> +		err = iommu_attach_device(host->domain, host->dev);
->>   		if (err) {
->>   			if (err == -ENODEV)
->>   				err = 0;
->> @@ -335,7 +335,7 @@ static void host1x_iommu_exit(struct host1x *host)
->>   {
->>   	if (host->domain) {
->>   		put_iova_domain(&host->iova);
->> -		iommu_detach_group(host->domain, host->group);
->> +		iommu_detach_device(host->domain, host->dev);
->>   
->>   		iommu_domain_free(host->domain);
->>   		host->domain = NULL;
-> 
-> Shouldn't this add the flag to tegra_host1x_driver ?
+This patch series introduces the CXL region driver as well as associated APIs in
+CXL core. The region driver enables the creation of "regions" which is a concept
+defined by the CXL 2.0 specification [1]. Region verification and programming
+state are owned by the cxl_region driver (implemented in the cxl_region module).
+It relies on cxl_mem to determine if devices are CXL routed, and cxl_port to
+actually handle the programming of the HDM decoders. Much of the region driver
+is an implementation of algorithms described in the CXL Type 3 Memory Device
+Software Guide [2].
 
-This is called for a single driver. The call trace looks like below:
+The region driver will be responsible for configuring regions found on
+persistent capacities in the Label Storage Area (LSA), it will also enumerate
+regions configured by BIOS, usually volatile capacities, and will allow for
+dynamic region creation (which can then be stored in the LSA). It is the primary
+consumer of the CXL Port [3] and CXL Mem drivers introduced previously [4]. Dan
+as reworked some of this which is required for this branch. A cached copy is
+included in the gitlab for this project [5]. Those patches will be posted
+shortly.
 
-static struct platform_driver tegra_host1x_driver = {
-         .driver = {
-                 .name = "tegra-host1x",
-                 .of_match_table = host1x_of_match,
-         },
-         .probe = host1x_probe,
-         .remove = host1x_remove,
-};
+The patches for the region driver could be squashed. They're broken out to aid
+review and because that's the order they were implemented in. My preference is
+to keep those as they are.
 
-host1x_probe(dev)
-->host1x_iommu_init(host)	//host is a wrapper of dev
--->host1x_iommu_attach(host)
----->iommu_group_get(host->dev)
-      iommu_domain_alloc(&platform_bus_type)
-      iommu_attach_group(domain, group);
+Some things are still missing and will be worked on while these are reviewed (in
+priority order):
+1. Connection to libnvdimm labels (No plan)
+2. Volatile regions/LSA regions (Have a plan)
+3. Switch ports (Have a plan)
+4. Decoder programming restrictions (No plan). The one know restriction I've
+   missed is to disallow programming HDM decoders that aren't in incremental
+   system physical address ranges.
+5. Stress testing
 
-It seems that the existing code only works for singleton group.
+Here is an example of output when programming a x2 interleave region:
+./cxlctl create-region -i2 -n -a -s $((512<<20)) /sys/bus/cxl/devices/decoder0.0
+[   42.971496][  T644] cxl_core:cxl_bus_probe:1384: cxl_region region0.0:0: probe: -19
+[   42.972400][  T644] cxl_core:cxl_add_region:478: cxl region0.0:0: Added region0.0:0 to decoder0.0
+[   42.979388][  T644] cxl_core:cxl_commit_decoder:394: cxl_port port1: decoder1.0
+[   42.979388][  T644] 	Base 0x0000004c00000000
+[   42.979388][  T644] 	Size 536870912
+[   42.979388][  T644] 	IG 8
+[   42.979388][  T644] 	IW 2
+[   42.979388][  T644] 	TargetList: 0 1 -1 -1 -1 -1 -1 -1
+[   42.982410][  T644] cxl_core:cxl_commit_decoder:394: cxl_port endpoint3: decoder3.0
+[   42.982410][  T644] 	Base 0x0000004c00000000
+[   42.982410][  T644] 	Size 536870912
+[   42.982410][  T644] 	IG 8
+[   42.982410][  T644] 	IW 2
+[   42.982410][  T644] 	TargetList: -1 -1 -1 -1 -1 -1 -1 -1
+[   42.985427][  T644] cxl_core:cxl_commit_decoder:394: cxl_port endpoint2: decoder2.0
+[   42.985427][  T644] 	Base 0x0000004c00000000
+[   42.985427][  T644] 	Size 536870912
+[   42.985427][  T644] 	IG 8
+[   42.985427][  T644] 	IW 2
+[   42.985427][  T644] 	TargetList: -1 -1 -1 -1 -1 -1 -1 -1
+[   42.987937][  T644] cxl_core:cxl_bus_probe:1384: cxl_region region0.0:0: probe: 0
 
-> 
-> And do like we did in the other tegra stuff and switch to the dma api
-> when !host1x_wants_iommu() ?
-> 
-> Jason
-> 
+If you're wondering how I tested this, I've baked it into my cxlctl app [6] and
+lib [7]. Eventually this will get absorbed by ndctl/cxl-cli/libcxl.
 
-Best regards,
-baolu
+To get the detailed errors, trace-cmd can be utilized. Until a region device
+exists, the region module will not be loaded, which means the region tracepoints
+will not exist. To get around this, modprobe cxl_region before anything.
+
+trace-cmd record -e cxl ./cxlctl create-region -n -a -s $((256<<20)) /sys/bus/cxl/devices/decoder0.0
+
+Branch can be found at gitlab [8].
+
+---
+
+[1]: https://www.computeexpresslink.org/download-the-specification
+[2]: https://cdrdv2.intel.com/v1/dl/getContent/643805?wapkw=CXL%20memory%20device%20sw%20guide
+[3]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-9-ben.widawsky@intel.com/
+[4]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-17-ben.widawsky@intel.com/
+[5]: https://gitlab.com/bwidawsk/linux/-/commit/126793e22427f7975a8f2fca373764be78012e88
+[6]: https://gitlab.com/bwidawsk-cxl/cxlctl
+[7]: https://gitlab.com/bwidawsk-cxl/cxl_rs
+[8]: https://gitlab.com/bwidawsk/linux/-/tree/cxl_region
+
+---
+
+Ben Widawsky (13):
+  cxl/core: Rename find_cxl_port
+  cxl/core: Track port depth
+  cxl/region: Add region creation ABI
+  cxl/region: Introduce concept of region configuration
+  cxl/mem: Cache port created by the mem dev
+  cxl/region: Introduce a cxl_region driver
+  cxl/acpi: Handle address space allocation
+  cxl/region: Address space allocation
+  cxl/region: Implement XHB verification
+  cxl/region: HB port config verification
+  cxl/region: Add infrastructure for decoder programming
+  cxl/region: Record host bridge target list
+  cxl: Program decoders for regions
+
+ .clang-format                                 |   3 +
+ Documentation/ABI/testing/sysfs-bus-cxl       |  63 ++
+ .../driver-api/cxl/memory-devices.rst         |  14 +
+ drivers/cxl/Makefile                          |   2 +
+ drivers/cxl/acpi.c                            |  30 +
+ drivers/cxl/core/Makefile                     |   1 +
+ drivers/cxl/core/core.h                       |   4 +
+ drivers/cxl/core/hdm.c                        | 198 +++++
+ drivers/cxl/core/port.c                       | 132 +++-
+ drivers/cxl/core/region.c                     | 525 +++++++++++++
+ drivers/cxl/cxl.h                             |  32 +
+ drivers/cxl/cxlmem.h                          |   9 +
+ drivers/cxl/mem.c                             |  16 +-
+ drivers/cxl/port.c                            |  42 +-
+ drivers/cxl/region.c                          | 695 ++++++++++++++++++
+ drivers/cxl/region.h                          |  47 ++
+ drivers/cxl/trace.h                           |  54 ++
+ tools/testing/cxl/Kbuild                      |   1 +
+ 18 files changed, 1849 insertions(+), 19 deletions(-)
+ create mode 100644 drivers/cxl/core/region.c
+ create mode 100644 drivers/cxl/region.c
+ create mode 100644 drivers/cxl/region.h
+ create mode 100644 drivers/cxl/trace.h
+
+
+base-commit: 03716ce2db3c17ba38f26a88d75049c0472a629e
+prerequisite-patch-id: af6a0315e22bfc1099d4f58610b8b897e6e5a060
+-- 
+2.34.1
+
