@@ -2,74 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E096487E16
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 22:17:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01E18487E40
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 22:27:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbiAGVRT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 16:17:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52150 "EHLO
+        id S229909AbiAGV1j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 16:27:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbiAGVRT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 16:17:19 -0500
+        with ESMTP id S229879AbiAGV1j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 16:27:39 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E76BC061574;
-        Fri,  7 Jan 2022 13:17:18 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA365C061574
+        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 13:27:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 695E061F70;
-        Fri,  7 Jan 2022 21:17:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5ADCC36AE9;
-        Fri,  7 Jan 2022 21:17:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8979462019
+        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 21:27:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F23C36AE5;
+        Fri,  7 Jan 2022 21:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641590237;
-        bh=ZyZSNdTdYKDM/PM4czKKe1vtoHFBDRhI//cIwqYKF/Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Guf5MgoNmqZVbW9SsYLmr1v1Iu00vtR9xSjSzecdPjOlKwZy3GLZaHuqbAxSK1IsH
-         aLVvHr4b/pX8HdkxsLfCLlvbKEOKOKx3c8Tzym1zZCktZLlvFlwuIJ9s5EgBkWlqVO
-         iQSZaR9tmTfKkO+v3jnTk5pmC4rNLFr1RgT7+Q97TOZVHANnuNcYSBeoLCK81JpZ3X
-         1Z9PvmJsuQzxEYTvxqMo3o5r0NCi91riEQNzlHTdeYtHBNwiBari0zA+f5iNWuvCE+
-         PLeBkIPprmk5KSTzX1H6/SfB9tU3iNywgA9SgvxzFNhsNqA1u7kIp+GfNVRQbp0fc3
-         YqqzVp8AlZ67A==
-Received: by mail-ed1-f42.google.com with SMTP id w16so26728015edc.11;
-        Fri, 07 Jan 2022 13:17:17 -0800 (PST)
-X-Gm-Message-State: AOAM532/yv3mGOPQMmavtt488cxtI6J4XZAVqZM+xEVRZcc0v/UTOP8W
-        TyTHgTSCvtXeBdUV/Xjrc4AhItlX01zBwaXIxA==
-X-Google-Smtp-Source: ABdhPJwhYP5L/D5FuTkCnrVBldJqIANuw983olD+mNWb51nUUcGUNWnQvmyrduk/ct0surZiW4Rgp7Q32BATVQ9MloQ=
-X-Received: by 2002:a17:906:5284:: with SMTP id c4mr50734997ejm.423.1641590236121;
- Fri, 07 Jan 2022 13:17:16 -0800 (PST)
+        s=k20201202; t=1641590858;
+        bh=O8L8frEPR6ADTtnoidH4cv+S5JH+gvpt/0dLHTkTmqI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=g8SKATUWnc60ODX1UIYn0yCqsB8WLouAN2c7XfsLrpLnokNgCMnVb7SPCnJ4xcwpA
+         tbTxEhUuv3j5pZr8e/UTKx2t5sosuaPakdRcir6cyUZ7jOiOimmyCJx9yaBFtw3FA2
+         i8dMRMFw2LrblkHqBg/KyyjQkvcf6saQ4RJ8b5EufY14y/Fh+Ov0dR9Ad3805IegAN
+         EbEryUqSJWAJC0gEU4Ki/Y7/hNfsOeJePrVGm3xhMpr/wbmSs+nR3oSCgvhWCIca7v
+         29hTSiHnx5yrFe99mPEWyY1kuXpRJATzHHQmRYx0BzWsXvscJkfQDISIzwQQcIoh5u
+         HgzNc9NhhQDEQ==
+Date:   Fri, 7 Jan 2022 15:27:36 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, Russell King <linux@arm.linux.org.uk>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Victor Gu <xigu@marvell.com>,
+        =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+        Zachary Zhang <zhangzg@marvell.com>,
+        Wilson Ding <dingwei@marvell.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] PCI: aardvark: Implement emulated root PCI bridge
+Message-ID: <20220107212736.GA404447@bhelgaas>
 MIME-Version: 1.0
-References: <20211031150706.27873-1-kabel@kernel.org> <20211031150706.27873-2-kabel@kernel.org>
-In-Reply-To: <20211031150706.27873-2-kabel@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 7 Jan 2022 15:17:04 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJkY3CPYUm3cXgnJJXVbOyxnd4fkkqLdH287sZ+nTJLNQ@mail.gmail.com>
-Message-ID: <CAL_JsqJkY3CPYUm3cXgnJJXVbOyxnd4fkkqLdH287sZ+nTJLNQ@mail.gmail.com>
-Subject: Re: [PATCH dt + pci 2/2] PCI: Add function for parsing
- `slot-power-limit-milliwatt` DT property
-To:     =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Cc:     devicetree@vger.kernel.org, PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180629092231.32207-4-thomas.petazzoni@bootlin.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Oct 31, 2021 at 10:07 AM Marek Beh=C3=BAn <kabel@kernel.org> wrote:
->
-> From: Pali Roh=C3=A1r <pali@kernel.org>
->
-> Add function of_pci_get_slot_power_limit(), which parses the
-> `slot-power-limit-milliwatt` DT property, returning the value in
-> milliwatts and in format ready for the PCIe Slot Capabilities Register.
->
-> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
-> ---
->  drivers/pci/of.c  | 64 +++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci.h | 15 +++++++++++
->  2 files changed, 79 insertions(+)
+On Fri, Jun 29, 2018 at 11:22:31AM +0200, Thomas Petazzoni wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> +static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+> +{
+> +	struct pci_sw_bridge *bridge = &pcie->bridge;
+
+> +	/* Support interrupt A for MSI feature */
+> +	bridge->conf.intpin = PCIE_CORE_INT_A_ASSERT_ENABLE;
+
+Only 3.5 years later, IIUC, this is the value you get when you read
+PCI_INTERRUPT_PIN, so I think this should be PCI_INTERRUPT_INTA, not
+PCIE_CORE_INT_A_ASSERT_ENABLE.
+
+Readers expect to get the values defined in the PCI spec, i.e.,
+
+  PCI_INTERRUPT_UNKNOWN
+  PCI_INTERRUPT_INTA
+  PCI_INTERRUPT_INTB
+  PCI_INTERRUPT_INTC
+  PCI_INTERRUPT_INTD
+
+Bjorn
