@@ -2,272 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB88B4876FA
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 12:55:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 199524878EC
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 15:27:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238272AbiAGLz3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 06:55:29 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4369 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238152AbiAGLz2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 06:55:28 -0500
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JVhP22HySz67Vmm;
-        Fri,  7 Jan 2022 19:50:30 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 7 Jan 2022 12:55:26 +0100
-Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Fri, 7 Jan
- 2022 11:55:25 +0000
-Date:   Fri, 7 Jan 2022 11:55:24 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
-        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 09/13] cxl/region: Implement XHB verification
-Message-ID: <20220107115524.0000344a@huawei.com>
-In-Reply-To: <20220107100714.00004461@Huawei.com>
-References: <20220107003756.806582-1-ben.widawsky@intel.com>
-        <20220107003756.806582-10-ben.widawsky@intel.com>
-        <20220107100714.00004461@Huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        id S239264AbiAGO1d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 09:27:33 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:45046 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239226AbiAGO1d (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 09:27:33 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 207EQahw093477;
+        Fri, 7 Jan 2022 08:26:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1641565596;
+        bh=bbpnL2bqMN5H6aNKxgvIvY9vGPdi1O8RpGftvud1Gx8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OBKsSOCXPMflYsrV1dtvfOQBQCM+dt8F3FowNuexaOIHWQXksqzPVDy0tCsNmKU2B
+         Cyo5sTcLNQCSGiL5++OUNoVs8GVUsnWwKJ7+dasTTs1eDbEXRaAXQ9VRVkgekvWx+v
+         LsAhce0fL/LqhXDcbeLszNQkVccx71MkVTOsZPw8=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 207EQZXO115620
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 7 Jan 2022 08:26:35 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 7
+ Jan 2022 08:26:35 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Fri, 7 Jan 2022 08:26:35 -0600
+Received: from [10.249.36.164] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 207EQZKj097440;
+        Fri, 7 Jan 2022 08:26:35 -0600
+Subject: Re: [PATCH] dt-bindings: Drop required 'interrupt-parent'
+To:     Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        - <patches@opensource.cirrus.com>,
+        John Crispin <john@phrozen.org>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <netdev@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>,
+        "Nagalla, Hari" <hnagalla@ti.com>
+References: <20220107031905.2406176-1-robh@kernel.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <cf75f1ee-8424-b6b2-f873-beea4676a29f@ti.com>
+Date:   Fri, 7 Jan 2022 08:26:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20220107031905.2406176-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 7 Jan 2022 10:07:14 +0000
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+Hi Rob,
 
-> On Thu,  6 Jan 2022 16:37:52 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
+On 1/6/22 9:19 PM, Rob Herring wrote:
+> 'interrupt-parent' is never required as it can be in a parent node or a
+> parent node itself can be an interrupt provider. Where exactly it lives is
+> outside the scope of a binding schema.
 > 
-> > Cross host bridge verification primarily determines if the requested
-> > interleave ordering can be achieved by the root decoder, which isn't as
-> > programmable as other decoders.
-> > 
-> > The algorithm implemented here is based on the CXL Type 3 Memory Device
-> > Software Guide, chapter 2.13.14
-> > 
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/gpio/toshiba,gpio-visconti.yaml  | 1 -
+>  .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml     | 9 ---------
+>  Documentation/devicetree/bindings/mfd/cirrus,madera.yaml | 1 -
+>  .../devicetree/bindings/net/lantiq,etop-xway.yaml        | 1 -
+>  .../devicetree/bindings/net/lantiq,xrx200-net.yaml       | 1 -
+>  .../devicetree/bindings/pci/sifive,fu740-pcie.yaml       | 1 -
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml       | 1 -
+>  7 files changed, 15 deletions(-)
 > 
-> Hi Ben,
-> 
-> A few things I'm carrying 'fixes' for in here.
-> 
-> Jonathan
-> 
-> > ---
-> >  .clang-format        |  2 +
-> >  drivers/cxl/region.c | 89 +++++++++++++++++++++++++++++++++++++++++++-
-> >  drivers/cxl/trace.h  |  3 ++
-> >  3 files changed, 93 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/.clang-format b/.clang-format
-> > index 15d4eaabc6b5..55f628f21722 100644
-> > --- a/.clang-format
-> > +++ b/.clang-format
-> > @@ -169,6 +169,8 @@ ForEachMacros:
-> >    - 'for_each_cpu_and'
-> >    - 'for_each_cpu_not'
-> >    - 'for_each_cpu_wrap'
-> > +  - 'for_each_cxl_decoder_target'
-> > +  - 'for_each_cxl_endpoint'
-> >    - 'for_each_dapm_widgets'
-> >    - 'for_each_dev_addr'
-> >    - 'for_each_dev_scope'
-> > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> > index c8e3c48dfbb9..ca559a4b5347 100644
-> > --- a/drivers/cxl/region.c
-> > +++ b/drivers/cxl/region.c
-> > @@ -28,6 +28,17 @@
-> >   */
-> >  
-> >  #define region_ways(region) ((region)->config.eniw)
-> > +#define region_ig(region) (ilog2((region)->config.ig))
-> > +
-> > +#define for_each_cxl_endpoint(ep, region, idx)                                 \
-> > +	for (idx = 0, ep = (region)->config.targets[idx];                      \
-> > +	     idx < region_ways(region);                                        \
-> > +	     idx++, ep = (region)->config.targets[idx])
-> > +
-> > +#define for_each_cxl_decoder_target(target, decoder, idx)                      \
-> > +	for (idx = 0, target = (decoder)->target[idx];                         \
-> > +	     idx < (decoder)->nr_targets;                                      \
-> > +	     idx++, target++)
-> >  
-> >  static struct cxl_decoder *rootd_from_region(struct cxl_region *r)
-> >  {
-> > @@ -175,6 +186,30 @@ static bool qtg_match(const struct cxl_decoder *rootd,
-> >  	return true;
-> >  }
-> >  
-> > +static int get_unique_hostbridges(const struct cxl_region *region,
-> > +				  struct cxl_port **hbs)
-> > +{
-> > +	struct cxl_memdev *ep;
-> > +	int i, hb_count = 0;
-> > +
-> > +	for_each_cxl_endpoint(ep, region, i) {
-> > +		struct cxl_port *hb = get_hostbridge(ep);
-> > +		bool found = false;
-> > +		int j;
-> > +
-> > +		BUG_ON(!hb);
-> > +
-> > +		for (j = 0; j < hb_count; j++) {
-> > +			if (hbs[j] == hb)
-> > +				found = true;
-> > +		}
-> > +		if (!found)
-> > +			hbs[hb_count++] = hb;
-> > +	}
-> > +
-> > +	return hb_count;
-> > +}
-> > +
-> >  /**
-> >   * region_xhb_config_valid() - determine cross host bridge validity
-> >   * @rootd: The root decoder to check against
-> > @@ -188,7 +223,59 @@ static bool qtg_match(const struct cxl_decoder *rootd,
-> >  static bool region_xhb_config_valid(const struct cxl_region *region,
-> >  				    const struct cxl_decoder *rootd)
-> >  {
-> > -	/* TODO: */
-> > +	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
-> > +	int rootd_ig, i;
-> > +	struct cxl_dport *target;
-> > +
-> > +	/* Are all devices in this region on the same CXL host bridge */
-> > +	if (get_unique_hostbridges(region, hbs) == 1)
-> > +		return true;
-> > +
-> > +	rootd_ig = rootd->interleave_granularity;
-> > +
-> > +	/* CFMWS.HBIG >= Device.Label.IG */
-> > +	if (rootd_ig < region_ig(region)) {
-> > +		trace_xhb_valid(region,
-> > +				"granularity does not support the region interleave granularity\n");
-> > +		return false;
-> > +	}
-> > +
-> > +	/* ((2^(CFMWS.HBIG - Device.RLabel.IG) * (2^CFMWS.ENIW)) > Device.RLabel.NLabel) */
-> > +	if (1 << (rootd_ig - region_ig(region)) * (1 << rootd->interleave_ways) >  
-> 
-> This maths isn't what the comment says it is.
-> ((1 << (rootd_ig - region_ig(region))) * rootd->interleaveways)
-> so brackets needed to avoid 2^( all the rest) and rootd->interleave_ways seems to the
-> actual number of ways not the log2 of it.
-> 
-> That feeds through below.
-> 
-> 
-> > +	    region_ways(region)) {
-> > +		trace_xhb_valid(region,
-> > +				"granularity to device granularity ratio requires a larger number of devices than currently configured");
-> > +		return false;
-> > +	}
-> > +
-> > +	/* Check that endpoints are hooked up in the correct order */
-> > +	for_each_cxl_decoder_target(target, rootd, i) {
-> > +		struct cxl_memdev *endpoint = region->config.targets[i];
-> > +
-> > +		if (get_hostbridge(endpoint) != target->port) {  
-> 
-> I think this should be
-> get_hostbridge(endpoint)->uport != target->dport
-> 
-> As it stands you are comparing the host bridge with the root object.
+> diff --git a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> index 9ad470e01953..b085450b527f 100644
+> --- a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> @@ -43,7 +43,6 @@ required:
+>    - gpio-controller
+>    - interrupt-controller
+>    - "#interrupt-cells"
+> -  - interrupt-parent
+>  
+>  additionalProperties: false
+>  
+> diff --git a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> index e864d798168d..d433e496ec6e 100644
+> --- a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> +++ b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> @@ -175,15 +175,6 @@ required:
+>    - ti,mbox-num-fifos
+>  
+>  allOf:
+> -  - if:
+> -      properties:
+> -        compatible:
+> -          enum:
+> -            - ti,am654-mailbox
+> -    then:
+> -      required:
+> -        - interrupt-parent
+> -
 
-On closer inspection this code doesn't do what it is meant to do at all
-if there are multiple EP below a given root bridge.
+There are multiple interrupt controllers on TI K3 devices, and we need this
+property to be defined _specifically_ to point to the relevant interrupt router
+parent node.
 
-You'd expect multiple endpoints to match to each target->port.
-Something along the lines of this should work:
+While what you state in general is true, I cannot have a node not define this on
+K3 devices, and end up using the wrong interrupt parent (GIC
+interrupt-controller). That's why the conditional compatible check.
 
-        {
-                struct cxl_memdev **epgroupstart = region->config.targets;
-                struct cxl_memdev **endpoint;
+regards
+Suman
 
-                for_each_cxl_decoder_target(target, rootd, i) {
-                        /* Find start of next endpoint group */
-                        endpoint = epgroupstart;
-                        if (*endpoint == NULL) {
-                                printk("No endpoints under decoder target\n");
-                                return false;
-                        }
-                        while (*epgroupstart &&
-                                get_hostbridge(*endpoint) == get_hostbridge(*epgroupstart))
-                                epgroupstart++;
-                }
-                if (*epgroupstart) {
-                        printk("still some entries left. boom\n");
-                        return false;
-                }
-        }
-
-Only lightly tested with correct inputs...
-
-Next up is figuring out why the EP HDM decoder won't commit. :)
-
-Jonathan
-
-
-> 
-> > +			trace_xhb_valid(region, "device ordering bad\n");
-> > +			return false;
-> > +		}
-> > +	}
-> > +
-> > +	/*
-> > +	 * CFMWS.InterleaveTargetList[n] must contain all devices, x where:
-> > +	 *	(Device[x],RegionLabel.Position >> (CFMWS.HBIG -
-> > +	 *	Device[x].RegionLabel.InterleaveGranularity)) &
-> > +	 *	((2^CFMWS.ENIW) - 1) = n
-> > +	 *
-> > +	 * Linux notes: All devices are known to have the same interleave
-> > +	 * granularity at this point.
-> > +	 */
-> > +	for_each_cxl_decoder_target(target, rootd, i) {
-> > +		if (((i >> (rootd_ig - region_ig(region)))) &
-> > +		    (((1 << rootd->interleave_ways) - 1) != target->port_id)) {
-> > +			trace_xhb_valid(region,
-> > +					"One or more devices are not connected to the correct hostbridge.");
-> > +			return false;
-> > +		}
-> > +	}
-> > +
-> >  	return true;
-> >  }
-> >  
-> > diff --git a/drivers/cxl/trace.h b/drivers/cxl/trace.h
-> > index a53f00ba5d0e..4de47d1111ac 100644
-> > --- a/drivers/cxl/trace.h
-> > +++ b/drivers/cxl/trace.h
-> > @@ -38,6 +38,9 @@ DEFINE_EVENT(cxl_region_template, sanitize_failed,
-> >  DEFINE_EVENT(cxl_region_template, allocation_failed,
-> >  	     TP_PROTO(const struct cxl_region *region, char *status),
-> >  	     TP_ARGS(region, status));
-> > +DEFINE_EVENT(cxl_region_template, xhb_valid,
-> > +	     TP_PROTO(const struct cxl_region *region, char *status),
-> > +	     TP_ARGS(region, status));
-> >  
-> >  #endif /* if !defined (__CXL_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ) */
-> >    
+>    - if:
+>        properties:
+>          compatible:
+> diff --git a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> index 499c62c04daa..5dce62a7eff2 100644
+> --- a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> @@ -221,7 +221,6 @@ required:
+>    - '#gpio-cells'
+>    - interrupt-controller
+>    - '#interrupt-cells'
+> -  - interrupt-parent
+>    - interrupts
+>    - AVDD-supply
+>    - DBVDD1-supply
+> diff --git a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> index 437502c5ca96..3ce9f9a16baf 100644
+> --- a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> +++ b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> @@ -46,7 +46,6 @@ properties:
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupt-parent
+>    - interrupts
+>    - interrupt-names
+>    - lantiq,tx-burst-length
+> diff --git a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> index 7bc074a42369..5bc1a21ca579 100644
+> --- a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> +++ b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> @@ -38,7 +38,6 @@ properties:
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupt-parent
+>    - interrupts
+>    - interrupt-names
+>    - "#address-cells"
+> diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> index 2b9d1d6fc661..72c78f4ec269 100644
+> --- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> @@ -61,7 +61,6 @@ required:
+>    - num-lanes
+>    - interrupts
+>    - interrupt-names
+> -  - interrupt-parent
+>    - interrupt-map-mask
+>    - interrupt-map
+>    - clock-names
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index a2bbc0eb7220..32f4641085bc 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -55,7 +55,6 @@ required:
+>    - reg-names
+>    - "#interrupt-cells"
+>    - interrupts
+> -  - interrupt-parent
+>    - interrupt-map
+>    - interrupt-map-mask
+>    - bus-range
 > 
 
