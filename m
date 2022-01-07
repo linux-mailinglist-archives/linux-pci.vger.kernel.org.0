@@ -2,123 +2,232 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4E71487530
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 11:05:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C523487535
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 11:07:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346620AbiAGKFC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 05:05:02 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:55788 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346627AbiAGKFC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 05:05:02 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 027CA61EDB
-        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 10:05:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ED2FC36AE9;
-        Fri,  7 Jan 2022 10:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641549901;
-        bh=E6gvoEl19nY9Ml1EKzn3gbPgZpPgOunf0VAlxsKIAxg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Sx+KPMy3xSaF9bMs0RaNlvjrPD7QLlJl+c2KWJxa3X6WA87qNPia25qBjA7N1ombj
-         ER015NQXZYrDe0tQ74zEHqNh+mojiZRE/jJlJeRv6lypZuIKgVAN2AQWyGU/mvqA7i
-         ZmzvG/9tNVPlza8/KYT/LmYyVk4qlkIj80udf0hZRdhrKq281LLQQpt1TdfJcytt5e
-         5XsR/3Li3uxuAUCfkxQkpQPunxhQ0QKJLlKLAsxLHyaYF9cBPEopQBv+3kepLJUBL6
-         /pNM/3zKOlw6/j0A53zvrK3c+VzaXdeHJN5Cp0cwHDChx7ERGmV8mIbYXuiBBURCHi
-         b48GnF3sU8T4Q==
-Received: by pali.im (Postfix)
-        id 46C1BB22; Fri,  7 Jan 2022 11:04:58 +0100 (CET)
-Date:   Fri, 7 Jan 2022 11:04:58 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Stefan Roese <sr@denx.de>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Bharat Kumar Gogada <bharatku@xilinx.com>
-Subject: Re: PCIe AER generates no interrupts on host (ZynqMP)
-Message-ID: <20220107100458.sfqcq7gy6nwwamjt@pali>
-References: <4736848c-7b3b-a99d-8fd3-540ec6eb920b@denx.de>
+        id S1346652AbiAGKHO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 05:07:14 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4364 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237203AbiAGKHO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 05:07:14 -0500
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JVf080sZ2z67wwW;
+        Fri,  7 Jan 2022 18:02:16 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Fri, 7 Jan 2022 11:07:11 +0100
+Received: from localhost (10.47.80.90) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Fri, 7 Jan
+ 2022 10:07:10 +0000
+Date:   Fri, 7 Jan 2022 10:07:14 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
+        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 09/13] cxl/region: Implement XHB verification
+Message-ID: <20220107100714.00004461@Huawei.com>
+In-Reply-To: <20220107003756.806582-10-ben.widawsky@intel.com>
+References: <20220107003756.806582-1-ben.widawsky@intel.com>
+        <20220107003756.806582-10-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4736848c-7b3b-a99d-8fd3-540ec6eb920b@denx.de>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.80.90]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello! You asked me in another email for comments to this email, so I'm
-replying directly to this email...
+On Thu,  6 Jan 2022 16:37:52 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-On Tuesday 04 January 2022 10:02:18 Stefan Roese wrote:
-> Hi,
+> Cross host bridge verification primarily determines if the requested
+> interleave ordering can be achieved by the root decoder, which isn't as
+> programmable as other decoders.
 > 
-> I'm trying to get the Kernel PCIe AER infrastructure to work on my
-> ZynqMP based system. E.g. handle the events (correctable, uncorrectable
-> etc). In my current tests, no AER interrupt is generated though. I'm
-> currently using the "surprise down error status" in the uncorrectable
-> error status register of the connected PCIe switch (PLX / Broadcom
-> PEX8718). Here the bit is correctly logged in the PEX switch
-> uncorrectable error status register but no interrupt is generated
-> to the root-port / system. And hence no AER message(s) reported.
+> The algorithm implemented here is based on the CXL Type 3 Memory Device
+> Software Guide, chapter 2.13.14
 > 
-> Does any one of you have some ideas on what might be missing? Why are
-> these events not reported to the PCIe rootport driver via IRQ? Might
-> this be a problem of the missing MSI-X support of the ZynqMP? The AER
-> interrupt is connected as legacy IRQ:
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+
+Hi Ben,
+
+A few things I'm carrying 'fixes' for in here.
+
+Jonathan
+
+> ---
+>  .clang-format        |  2 +
+>  drivers/cxl/region.c | 89 +++++++++++++++++++++++++++++++++++++++++++-
+>  drivers/cxl/trace.h  |  3 ++
+>  3 files changed, 93 insertions(+), 1 deletion(-)
 > 
-> cat /proc/interrupts | grep -i aer
->  58:          0          0          0          0  nwl_pcie:legacy   0 Level
-> PCIe PME, aerdrv
+> diff --git a/.clang-format b/.clang-format
+> index 15d4eaabc6b5..55f628f21722 100644
+> --- a/.clang-format
+> +++ b/.clang-format
+> @@ -169,6 +169,8 @@ ForEachMacros:
+>    - 'for_each_cpu_and'
+>    - 'for_each_cpu_not'
+>    - 'for_each_cpu_wrap'
+> +  - 'for_each_cxl_decoder_target'
+> +  - 'for_each_cxl_endpoint'
+>    - 'for_each_dapm_widgets'
+>    - 'for_each_dev_addr'
+>    - 'for_each_dev_scope'
+> diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+> index c8e3c48dfbb9..ca559a4b5347 100644
+> --- a/drivers/cxl/region.c
+> +++ b/drivers/cxl/region.c
+> @@ -28,6 +28,17 @@
+>   */
+>  
+>  #define region_ways(region) ((region)->config.eniw)
+> +#define region_ig(region) (ilog2((region)->config.ig))
+> +
+> +#define for_each_cxl_endpoint(ep, region, idx)                                 \
+> +	for (idx = 0, ep = (region)->config.targets[idx];                      \
+> +	     idx < region_ways(region);                                        \
+> +	     idx++, ep = (region)->config.targets[idx])
+> +
+> +#define for_each_cxl_decoder_target(target, decoder, idx)                      \
+> +	for (idx = 0, target = (decoder)->target[idx];                         \
+> +	     idx < (decoder)->nr_targets;                                      \
+> +	     idx++, target++)
+>  
+>  static struct cxl_decoder *rootd_from_region(struct cxl_region *r)
+>  {
+> @@ -175,6 +186,30 @@ static bool qtg_match(const struct cxl_decoder *rootd,
+>  	return true;
+>  }
+>  
+> +static int get_unique_hostbridges(const struct cxl_region *region,
+> +				  struct cxl_port **hbs)
+> +{
+> +	struct cxl_memdev *ep;
+> +	int i, hb_count = 0;
+> +
+> +	for_each_cxl_endpoint(ep, region, i) {
+> +		struct cxl_port *hb = get_hostbridge(ep);
+> +		bool found = false;
+> +		int j;
+> +
+> +		BUG_ON(!hb);
+> +
+> +		for (j = 0; j < hb_count; j++) {
+> +			if (hbs[j] == hb)
+> +				found = true;
+> +		}
+> +		if (!found)
+> +			hbs[hb_count++] = hb;
+> +	}
+> +
+> +	return hb_count;
+> +}
+> +
+>  /**
+>   * region_xhb_config_valid() - determine cross host bridge validity
+>   * @rootd: The root decoder to check against
+> @@ -188,7 +223,59 @@ static bool qtg_match(const struct cxl_decoder *rootd,
+>  static bool region_xhb_config_valid(const struct cxl_region *region,
+>  				    const struct cxl_decoder *rootd)
+>  {
+> -	/* TODO: */
+> +	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
+> +	int rootd_ig, i;
+> +	struct cxl_dport *target;
+> +
+> +	/* Are all devices in this region on the same CXL host bridge */
+> +	if (get_unique_hostbridges(region, hbs) == 1)
+> +		return true;
+> +
+> +	rootd_ig = rootd->interleave_granularity;
+> +
+> +	/* CFMWS.HBIG >= Device.Label.IG */
+> +	if (rootd_ig < region_ig(region)) {
+> +		trace_xhb_valid(region,
+> +				"granularity does not support the region interleave granularity\n");
+> +		return false;
+> +	}
+> +
+> +	/* ((2^(CFMWS.HBIG - Device.RLabel.IG) * (2^CFMWS.ENIW)) > Device.RLabel.NLabel) */
+> +	if (1 << (rootd_ig - region_ig(region)) * (1 << rootd->interleave_ways) >
 
-Error events (correctable, non-fatal and fatal) are reported by PCIe
-devices to the Root Complex via PCIe error messages (Message code of TLP
-is set to Error Message) and not via interrupts. Root Port is then
-responsible to "convert" these PCIe error messages to MSI(X) interrupt
-and report it to the system. According to PCIe spec, AER is supported
-only via MSI(X) interrupts, not legacy INTx.
+This maths isn't what the comment says it is.
+((1 << (rootd_ig - region_ig(region))) * rootd->interleaveways)
+so brackets needed to avoid 2^( all the rest) and rootd->interleave_ways seems to the
+actual number of ways not the log2 of it.
 
-Via Bridge Control register (SERR# enable bit) on the Root Port it is
-possible to enable / disable reporting of these errors from PCIe devices
-on the other end of PCIe link to the system. Then via Command register
-(SERR# enable bit) and Device Control register it is possible to enable
-/ disable reporting of all errors (from Root Port and also devices on
-other end of the link). And via AER registers on the Root Port it is
-also possible to disable generating MSI(X) interrupts when error is
-reported. And IIRC via PCIe Downstream Port Containment there is also
-way how to "mask" reporting of error events. But I do not have PCIe
-devices with DPC support, so I have not played with it yet. So there are
-many places where error event can be stopped. But important is that
-kernel AER driver should correctly enable all required bits to start
-receiving MSI(X) interrupts for error events.
+That feeds through below.
 
-On other devices I'm seeing following issues... Root Ports are not
-compliant to PCIe spec and do not implement error reporting at all. Or
-they do not implement those enable/disable bits correctly. Or they do
-not implement proper support for extended PCIe config space for Root
-Port (AER is in extended space). Or they report error events via custom
-proprietary interrupts and not via MSI(X) as required by PCIe spec. This
-is the case for (all?) Marvell PCIe controllers and I saw here on
-linux-pci list that it applies also for PCIe controllers from some other
-vendors. Also drivers for Marvell PCIe controllers requires additional
-code to access extended PCIe config space of Root Port (accessing config
-space of PCIe devices on the other end of PCIe link is working fine).
 
-So the first suspicious thing is why kernel AER driver is using legacy
-shared INTx interrupt as in most cases Root Port would not report any
-error event via INTx. And the second thing, try to look into
-documentation for used PCIe controller, just in case if vendor
-"invented" some proprietary and non-compliant way how to report error /
-AER events to OS...
+> +	    region_ways(region)) {
+> +		trace_xhb_valid(region,
+> +				"granularity to device granularity ratio requires a larger number of devices than currently configured");
+> +		return false;
+> +	}
+> +
+> +	/* Check that endpoints are hooked up in the correct order */
+> +	for_each_cxl_decoder_target(target, rootd, i) {
+> +		struct cxl_memdev *endpoint = region->config.targets[i];
+> +
+> +		if (get_hostbridge(endpoint) != target->port) {
 
-I saw more issues with PCIe controllers as with PCIe switches so in my
-opinion issue would be either in controller driver or controller hw
-itself. And if you see event status logged in PCIe switch register I
-would expect that switch correctly sent PCIe Error message to Root
-Complex.
+I think this should be
+get_hostbridge(endpoint)->uport != target->dport
 
-> BTW: This was tested on v5.10 and recent v5.16-rc6.
-> 
-> Thanks,
-> Stefan
+As it stands you are comparing the host bridge with the root object.
+
+> +			trace_xhb_valid(region, "device ordering bad\n");
+> +			return false;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * CFMWS.InterleaveTargetList[n] must contain all devices, x where:
+> +	 *	(Device[x],RegionLabel.Position >> (CFMWS.HBIG -
+> +	 *	Device[x].RegionLabel.InterleaveGranularity)) &
+> +	 *	((2^CFMWS.ENIW) - 1) = n
+> +	 *
+> +	 * Linux notes: All devices are known to have the same interleave
+> +	 * granularity at this point.
+> +	 */
+> +	for_each_cxl_decoder_target(target, rootd, i) {
+> +		if (((i >> (rootd_ig - region_ig(region)))) &
+> +		    (((1 << rootd->interleave_ways) - 1) != target->port_id)) {
+> +			trace_xhb_valid(region,
+> +					"One or more devices are not connected to the correct hostbridge.");
+> +			return false;
+> +		}
+> +	}
+> +
+>  	return true;
+>  }
+>  
+> diff --git a/drivers/cxl/trace.h b/drivers/cxl/trace.h
+> index a53f00ba5d0e..4de47d1111ac 100644
+> --- a/drivers/cxl/trace.h
+> +++ b/drivers/cxl/trace.h
+> @@ -38,6 +38,9 @@ DEFINE_EVENT(cxl_region_template, sanitize_failed,
+>  DEFINE_EVENT(cxl_region_template, allocation_failed,
+>  	     TP_PROTO(const struct cxl_region *region, char *status),
+>  	     TP_ARGS(region, status));
+> +DEFINE_EVENT(cxl_region_template, xhb_valid,
+> +	     TP_PROTO(const struct cxl_region *region, char *status),
+> +	     TP_ARGS(region, status));
+>  
+>  #endif /* if !defined (__CXL_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ) */
+>  
+
