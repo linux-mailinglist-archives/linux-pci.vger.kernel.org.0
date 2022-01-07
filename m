@@ -2,119 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7913A487F00
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 23:37:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BA5F487F27
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 23:59:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231209AbiAGWhJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 17:37:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229625AbiAGWhI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 17:37:08 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03AA1C061574
-        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 14:37:08 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id k18so13622290wrg.11
-        for <linux-pci@vger.kernel.org>; Fri, 07 Jan 2022 14:37:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6+ftPPg+mBtDFE1Rumj/v9cdHX74g8JsGDvIeuaB0sw=;
-        b=AP4vnWnjNZ0+FbyV/paMdWCoPqlJsNv7u/VAZmbyQPIQYIkKmM9xtluYweMfGDCwlx
-         M6xlF3WNOEXlhJIw5eYbOUznnu+94L5InBLgV7SPnjq7TeH+Tly04IZtkTcFGb0zS0Ry
-         30CmLfIo2fCaXdYowRSZPyRgSImplqOqzG+tI=
+        id S230155AbiAGW7w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 17:59:52 -0500
+Received: from mail-pl1-f174.google.com ([209.85.214.174]:43599 "EHLO
+        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229765AbiAGW7v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 17:59:51 -0500
+Received: by mail-pl1-f174.google.com with SMTP id j16so6060317pll.10
+        for <linux-pci@vger.kernel.org>; Fri, 07 Jan 2022 14:59:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6+ftPPg+mBtDFE1Rumj/v9cdHX74g8JsGDvIeuaB0sw=;
-        b=K1LrFNGKGuLYH0kojXPfLjQa5ALjjH+TUhyuMzPjKY1w6XeZfO1gViWTkm1B2AS9fm
-         0WLqU28JTODSJl1WGlA6YylHow/y49y0l7J3B8kspGzoICdyDHiixgw0I9zB2O6ByeAO
-         3LfiFCW/Fb02c87TYOAs1tYYbVdme6JhFDgpfGqlQyLVANtGzBSWu9XhiIoCvortT9Ud
-         s2rtud9M2w06QDYXtGBI0EjFr+YxSggJz7jzpPIUpVeMvpeQpJhyB9VT8QxqJAuG7wKb
-         K82goCoWze0z0oNa1enaU108n6dkRGnNootzXfic0lytU8E6X58KQigzWH6ED3F9FsZ6
-         TlJA==
-X-Gm-Message-State: AOAM531C0g2buiUmYGwm8RVxjwiu5QZmGRMqAbSztj9SHmHJfgrDyKuQ
-        cDvTjdxuUE8wqCLqDpWRKxKpI+/RT6OjN2sxcuE+zw==
-X-Google-Smtp-Source: ABdhPJxBgtZis30xOXNXG44kdaru7DxXX4kR8w0Gqb6L6sTYxtDqty53dbly3IotCoc7BxQNTyR5PLfs45h7sgxRwXM=
-X-Received: by 2002:a05:6000:18af:: with SMTP id b15mr56930329wri.616.1641595026619;
- Fri, 07 Jan 2022 14:37:06 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fLcfWCXKjz3xMBYPC/DnYWgLMsmC0IqAE+5F6pOJn0o=;
+        b=NWQjwhIStUQEpxe36+iP0JuGrVI43Uh6QXQjami3+v2ao9ECf4Q8snHM3xst+WfoDp
+         FqlamajYHgeJxL7gi3myzUWXDRz6e+AJp/pFZF/Ox3jKm2lPi8VYf6NvyjsJ2cjj6rRY
+         gXWNCdjd2MSlaRKL5xBNBB29zqSvDa9T8Ljy2jJTPtz8CyXmCMVNQkc3/lSjaxB0hb5L
+         ykZb1w9L0TZZ2LrqSR+ScQK+78XXGYq+mpmVV9A4uXmSG8h2SAbAlr33cksPooV+1CNc
+         xfRLDinCJyuwQfJZrVloXwJjCNM/G2JS2YrdL47ncuTPSd0q7iF1IXNUtBrfTQdUzl7s
+         o2WA==
+X-Gm-Message-State: AOAM530DUc9rBY43yKXwpyJdfBhdh26OmccT3yUjFV4nhZVSRms/VbdX
+        4b3lAyF0/DqfT3Jxax9DVgA=
+X-Google-Smtp-Source: ABdhPJypqZ1i92GyWdPK2GW7WhlIM3fab/bctseiuMrMUBm0YHE9du9rOj+aPwQxY72ROULPq0FqqQ==
+X-Received: by 2002:a17:902:a408:b0:149:9055:98b1 with SMTP id p8-20020a170902a40800b00149905598b1mr47438021plq.2.1641596391163;
+        Fri, 07 Jan 2022 14:59:51 -0800 (PST)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id o10sm40302pjp.16.2022.01.07.14.59.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jan 2022 14:59:50 -0800 (PST)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: Correct misspelled words
+Date:   Fri,  7 Jan 2022 22:59:42 +0000
+Message-Id: <20220107225942.121484-1-kw@linux.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20211209204726.6676-1-jim2101024@gmail.com> <20220105104202.GD7009@alpha.franken.de>
-In-Reply-To: <20220105104202.GD7009@alpha.franken.de>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Fri, 7 Jan 2022 17:36:55 -0500
-Message-ID: <CA+-6iNyjDvuTFo9usprg9OX9a-vsieoh2z2-KAfaxAAZ2cw_Og@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] PCI: brcmstb: Augment driver for MIPs SOCs
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, linux-mips@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        Saenz Julienne <nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 5, 2022 at 5:42 AM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
->
-> On Thu, Dec 09, 2021 at 03:47:21PM -0500, Jim Quinlan wrote:
-> > With this patchset, the Broadcom STB PCIe controller driver
-> > supports Arm, Arm64, and now MIPs.
-> >
-> > Jim Quinlan (4):
-> >   dt-bindings: PCI: Add compatible string for Brcmstb 74[23]5 MIPs SOCs
-> >   MIPS: bmips: Add support PCIe controller device nodes
-> >   MIPS: bmips: Remove obsolete DMA mapping support
-> >   PCI: brcmstb: Augment driver for MIPs SOCs
-> >
-> >  .../bindings/pci/brcm,stb-pcie.yaml           |   2 +
-> >  arch/mips/Kconfig                             |   1 -
-> >  arch/mips/bmips/dma.c                         | 106 +-----------------
-> >  arch/mips/boot/dts/brcm/bcm7425.dtsi          |  30 +++++
-> >  arch/mips/boot/dts/brcm/bcm7435.dtsi          |  30 +++++
-> >  arch/mips/boot/dts/brcm/bcm97425svmb.dts      |   9 ++
-> >  arch/mips/boot/dts/brcm/bcm97435svmb.dts      |   9 ++
-> >  drivers/pci/controller/Kconfig                |   2 +-
-> >  drivers/pci/controller/pcie-brcmstb.c         |  82 +++++++++++++-
-> >  9 files changed, 161 insertions(+), 110 deletions(-)
->
-> if nobody objects I'd like to add this series to mips-next.
-Hi Thomas,
+Fix a number misspelled words, and while at it, correct two phrases used
+to indicate a status of an operation where words used have been cleverly
+truncated and thus always trigger a spellchecking error while performing
+a static code analysis over the PCI tree.
 
-I have another pullreq in progress [1] that may possibly be accepted
-soon.  I have tested that
-these two pullreqs do not conflict or cause compiler errors regardless
-of their merge order.
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence.h | 2 +-
+ drivers/pci/controller/pcie-mediatek-gen3.c   | 2 +-
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2 +-
+ drivers/pci/of.c                              | 2 +-
+ drivers/pci/quirks.c                          | 4 ++--
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-Regards,
-Jim Quinlan
-Broadcom STB
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 262421e5d917..c8a27b6290ce 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -310,7 +310,7 @@ struct cdns_pcie {
+  *            single function at a time
+  * @vendor_id: PCI vendor ID
+  * @device_id: PCI device ID
+- * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and	RP_NO_BAR if it's free or
++ * @avail_ib_bar: Status of RP_BAR0, RP_BAR1 and RP_NO_BAR if it's free or
+  *                available
+  * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
+  * @quirk_detect_quiet_flag: LTSSM Detect Quiet min delay set as quirk
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index 17c59b0d6978..7de82da0bd6d 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -303,7 +303,7 @@ static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
+ 	writel_relaxed(val, port->base + PCIE_RST_CTRL_REG);
+ 
+ 	/*
+-	 * Described in PCIe CEM specification setctions 2.2 (PERST# Signal)
++	 * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
+ 	 * and 2.2.1 (Initial Power-Up (G3 to S0)).
+ 	 * The deassertion of PERST# should be delayed 100ms (TPVPERL)
+ 	 * for the power and clock to become stable.
+diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+index 5a03401f4571..9a00448c7e61 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+@@ -1262,7 +1262,7 @@ static void epf_ntb_db_mw_bar_cleanup(struct epf_ntb *ntb,
+ }
+ 
+ /**
+- * epf_ntb_configure_interrupt() - Configure MSI/MSI-X capaiblity
++ * epf_ntb_configure_interrupt() - Configure MSI/MSI-X capability
+  * @ntb: NTB device that facilitates communication between HOST1 and HOST2
+  * @type: PRIMARY interface or SECONDARY interface
+  *
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 0b1237cff239..cb2e8351c2cc 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -247,7 +247,7 @@ void of_pci_check_probe_only(void)
+ 	else
+ 		pci_clear_flags(PCI_PROBE_ONLY);
+ 
+-	pr_info("PROBE_ONLY %sabled\n", val ? "en" : "dis");
++	pr_info("PROBE_ONLY %s\n", val ? "enabled" : "disabled");
+ }
+ EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
+ 
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 003950c738d2..e16bde66e735 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -980,8 +980,8 @@ static void quirk_via_ioapic(struct pci_dev *dev)
+ 	else
+ 		tmp = 0x1f; /* all known bits (4-0) routed to external APIC */
+ 
+-	pci_info(dev, "%sbling VIA external APIC routing\n",
+-	       tmp == 0 ? "Disa" : "Ena");
++	pci_info(dev, "%s VIA external APIC routing\n",
++	       tmp == 0 ? "Disabling" : "Enabling");
+ 
+ 	/* Offset 0x58: External APIC IRQ output control */
+ 	pci_write_config_byte(dev, 0x58, tmp);
+-- 
+2.34.1
 
-[1] [PATCH v10 0/7] PCI: brcmstb: root port turns on sub-device power
-
-
-[PATCH v10 0/7] PCI: brcmstb: root port turns on sub-device power
-
->
-> Thomas.
->
-> --
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
