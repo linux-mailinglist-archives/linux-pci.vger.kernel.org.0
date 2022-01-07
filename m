@@ -2,369 +2,272 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 230324876CD
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 12:51:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB88B4876FA
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 12:55:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347228AbiAGLu7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 06:50:59 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:35262 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347221AbiAGLu6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 06:50:58 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7A186B825E5;
-        Fri,  7 Jan 2022 11:50:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2115C36AE5;
-        Fri,  7 Jan 2022 11:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641556256;
-        bh=tlSofhkr2jzdAYuwsla28s0MjyMWwGKIHX80B/VQRrM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XNWfyA+aLJEC6aM3jDiOTBffhJ0zbs0inYpMsvPonLfCnM947+z6kMNhixvYvA8t3
-         qLQxL9wWU7KuuR2m+D7Y3sZqME7ExvyezzgQ92Trad+bXjQLg55wIS5qMascwn+W51
-         tO2/fTSx2tgL9ILo4IOZmK6rEIdHTDQYpPTWSrK/OUvVCLGjVyPlUTphT5gTRGuRdN
-         zWZklTXgjpqCy1KKz5DUW6kPrhJ+SHEJnyOTMOJI98haCuBwTbSMqPzHvthsY5LDuu
-         8yZW/ykqTzcx0wmM9vbCumnpYaENQRNh8+YHAgMMCxYTSFUswl76gJU5Et4yhNUUkl
-         WKXg/8+TUyaMw==
-Received: by pali.im (Postfix)
-        id 44ABDB22; Fri,  7 Jan 2022 12:50:53 +0100 (CET)
-Date:   Fri, 7 Jan 2022 12:50:53 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 10/11] PCI: mvebu: Implement support for legacy INTx
- interrupts
-Message-ID: <20220107115053.k5d2uv7yrftrpcez@pali>
-References: <20220105150239.9628-1-pali@kernel.org>
- <20220105150239.9628-11-pali@kernel.org>
- <87bl0ovq7f.wl-maz@kernel.org>
- <20220106154447.aie6taiuvav5wu6y@pali>
- <878rvsvoyo.wl-maz@kernel.org>
- <20220106162047.vqykmygs75eimfgy@pali>
- <877dbcvngf.wl-maz@kernel.org>
- <20220106182044.3ff0828c@thinkpad>
- <874k6gvkhz.wl-maz@kernel.org>
+        id S238272AbiAGLz3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 06:55:29 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4369 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238152AbiAGLz2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 06:55:28 -0500
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JVhP22HySz67Vmm;
+        Fri,  7 Jan 2022 19:50:30 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Fri, 7 Jan 2022 12:55:26 +0100
+Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Fri, 7 Jan
+ 2022 11:55:25 +0000
+Date:   Fri, 7 Jan 2022 11:55:24 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
+        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 09/13] cxl/region: Implement XHB verification
+Message-ID: <20220107115524.0000344a@huawei.com>
+In-Reply-To: <20220107100714.00004461@Huawei.com>
+References: <20220107003756.806582-1-ben.widawsky@intel.com>
+        <20220107003756.806582-10-ben.widawsky@intel.com>
+        <20220107100714.00004461@Huawei.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <874k6gvkhz.wl-maz@kernel.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 06 January 2022 17:31:36 Marc Zyngier wrote:
-> On Thu, 06 Jan 2022 17:20:44 +0000,
-> Marek Behún <kabel@kernel.org> wrote:
-> > 
-> > On Thu, 06 Jan 2022 16:27:44 +0000
-> > Marc Zyngier <maz@kernel.org> wrote:
-> > > You are completely missing my point. I'm talking about data
-> > > structures, you're talking about interrupts. You have this:
-> > > 
-> > > struct mvebu_pcie_port {
-> > >        // Tons of stuff
-> > >        struct irq_chip intx_chip;
-> > > };
-> > > 
-> > > What I want you to do is:
-> > > 
-> > > struct mvebu_pcie_port {
-> > >        // Tons of stuff
-> > > };
-> > > 
-> > > static struct irq_chip intx_chip = {
-> > > 	.name		= "INTx",
-> > > 	.irq_mask	= mvebu_pcie_intx_irq_mask,
-> > > 	.irq_unmask	= mvebu_pcie_intx_irq_unmask;
-> > > };
-> > > 
-> > > That's it. No more, no less.
-> > > 
-> > > 	M.
-> > > 
-> > 
-> > Hmm, but struct irq_chip contains a dynamic member,
-> >   struct device *parent_device;
-> > Isn't that used? Or are you planning to kill it?
+On Fri, 7 Jan 2022 10:07:14 +0000
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+
+> On Thu,  6 Jan 2022 16:37:52 -0800
+> Ben Widawsky <ben.widawsky@intel.com> wrote:
 > 
-> Indeed, and I am definitely planning to kill it. This is the wrong
-> place for this stuff, and I want it gone. There are thankfully very
-> few users of this misfeature.
+> > Cross host bridge verification primarily determines if the requested
+> > interleave ordering can be achieved by the root decoder, which isn't as
+> > programmable as other decoders.
+> > 
+> > The algorithm implemented here is based on the CXL Type 3 Memory Device
+> > Software Guide, chapter 2.13.14
+> > 
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
+> 
+> Hi Ben,
+> 
+> A few things I'm carrying 'fixes' for in here.
+> 
+> Jonathan
+> 
+> > ---
+> >  .clang-format        |  2 +
+> >  drivers/cxl/region.c | 89 +++++++++++++++++++++++++++++++++++++++++++-
+> >  drivers/cxl/trace.h  |  3 ++
+> >  3 files changed, 93 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/.clang-format b/.clang-format
+> > index 15d4eaabc6b5..55f628f21722 100644
+> > --- a/.clang-format
+> > +++ b/.clang-format
+> > @@ -169,6 +169,8 @@ ForEachMacros:
+> >    - 'for_each_cpu_and'
+> >    - 'for_each_cpu_not'
+> >    - 'for_each_cpu_wrap'
+> > +  - 'for_each_cxl_decoder_target'
+> > +  - 'for_each_cxl_endpoint'
+> >    - 'for_each_dapm_widgets'
+> >    - 'for_each_dev_addr'
+> >    - 'for_each_dev_scope'
+> > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+> > index c8e3c48dfbb9..ca559a4b5347 100644
+> > --- a/drivers/cxl/region.c
+> > +++ b/drivers/cxl/region.c
+> > @@ -28,6 +28,17 @@
+> >   */
+> >  
+> >  #define region_ways(region) ((region)->config.eniw)
+> > +#define region_ig(region) (ilog2((region)->config.ig))
+> > +
+> > +#define for_each_cxl_endpoint(ep, region, idx)                                 \
+> > +	for (idx = 0, ep = (region)->config.targets[idx];                      \
+> > +	     idx < region_ways(region);                                        \
+> > +	     idx++, ep = (region)->config.targets[idx])
+> > +
+> > +#define for_each_cxl_decoder_target(target, decoder, idx)                      \
+> > +	for (idx = 0, target = (decoder)->target[idx];                         \
+> > +	     idx < (decoder)->nr_targets;                                      \
+> > +	     idx++, target++)
+> >  
+> >  static struct cxl_decoder *rootd_from_region(struct cxl_region *r)
+> >  {
+> > @@ -175,6 +186,30 @@ static bool qtg_match(const struct cxl_decoder *rootd,
+> >  	return true;
+> >  }
+> >  
+> > +static int get_unique_hostbridges(const struct cxl_region *region,
+> > +				  struct cxl_port **hbs)
+> > +{
+> > +	struct cxl_memdev *ep;
+> > +	int i, hb_count = 0;
+> > +
+> > +	for_each_cxl_endpoint(ep, region, i) {
+> > +		struct cxl_port *hb = get_hostbridge(ep);
+> > +		bool found = false;
+> > +		int j;
+> > +
+> > +		BUG_ON(!hb);
+> > +
+> > +		for (j = 0; j < hb_count; j++) {
+> > +			if (hbs[j] == hb)
+> > +				found = true;
+> > +		}
+> > +		if (!found)
+> > +			hbs[hb_count++] = hb;
+> > +	}
+> > +
+> > +	return hb_count;
+> > +}
+> > +
+> >  /**
+> >   * region_xhb_config_valid() - determine cross host bridge validity
+> >   * @rootd: The root decoder to check against
+> > @@ -188,7 +223,59 @@ static bool qtg_match(const struct cxl_decoder *rootd,
+> >  static bool region_xhb_config_valid(const struct cxl_region *region,
+> >  				    const struct cxl_decoder *rootd)
+> >  {
+> > -	/* TODO: */
+> > +	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
+> > +	int rootd_ig, i;
+> > +	struct cxl_dport *target;
+> > +
+> > +	/* Are all devices in this region on the same CXL host bridge */
+> > +	if (get_unique_hostbridges(region, hbs) == 1)
+> > +		return true;
+> > +
+> > +	rootd_ig = rootd->interleave_granularity;
+> > +
+> > +	/* CFMWS.HBIG >= Device.Label.IG */
+> > +	if (rootd_ig < region_ig(region)) {
+> > +		trace_xhb_valid(region,
+> > +				"granularity does not support the region interleave granularity\n");
+> > +		return false;
+> > +	}
+> > +
+> > +	/* ((2^(CFMWS.HBIG - Device.RLabel.IG) * (2^CFMWS.ENIW)) > Device.RLabel.NLabel) */
+> > +	if (1 << (rootd_ig - region_ig(region)) * (1 << rootd->interleave_ways) >  
+> 
+> This maths isn't what the comment says it is.
+> ((1 << (rootd_ig - region_ig(region))) * rootd->interleaveways)
+> so brackets needed to avoid 2^( all the rest) and rootd->interleave_ways seems to the
+> actual number of ways not the log2 of it.
+> 
+> That feeds through below.
+> 
+> 
+> > +	    region_ways(region)) {
+> > +		trace_xhb_valid(region,
+> > +				"granularity to device granularity ratio requires a larger number of devices than currently configured");
+> > +		return false;
+> > +	}
+> > +
+> > +	/* Check that endpoints are hooked up in the correct order */
+> > +	for_each_cxl_decoder_target(target, rootd, i) {
+> > +		struct cxl_memdev *endpoint = region->config.targets[i];
+> > +
+> > +		if (get_hostbridge(endpoint) != target->port) {  
+> 
+> I think this should be
+> get_hostbridge(endpoint)->uport != target->dport
+> 
+> As it stands you are comparing the host bridge with the root object.
 
-Ok, so what about this change?
+On closer inspection this code doesn't do what it is meant to do at all
+if there are multiple EP below a given root bridge.
 
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index 1e90ab888075..5c816338a569 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -54,9 +54,10 @@
- 	 PCIE_CONF_ADDR_EN)
- #define PCIE_CONF_DATA_OFF	0x18fc
- #define PCIE_INT_CAUSE_OFF	0x1900
-+#define PCIE_INT_UNMASK_OFF	0x1910
-+#define  PCIE_INT_INTX(i)		BIT(24+i)
- #define  PCIE_INT_PM_PME		BIT(28)
--#define PCIE_MASK_OFF		0x1910
--#define  PCIE_MASK_ENABLE_INTS          0x0f000000
-+#define  PCIE_INT_ALL_MASK		GENMASK(31, 0)
- #define PCIE_CTRL_OFF		0x1a00
- #define  PCIE_CTRL_X1_MODE		0x0001
- #define  PCIE_CTRL_RC_MODE		BIT(1)
-@@ -110,6 +111,9 @@ struct mvebu_pcie_port {
- 	struct mvebu_pcie_window iowin;
- 	u32 saved_pcie_stat;
- 	struct resource regs;
-+	struct irq_domain *intx_irq_domain;
-+	raw_spinlock_t irq_lock;
-+	int intx_irq;
- };
- 
- static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u32 reg)
-@@ -235,7 +239,7 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
- 
- static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
- {
--	u32 ctrl, lnkcap, cmd, dev_rev, mask;
-+	u32 ctrl, lnkcap, cmd, dev_rev, unmask;
- 
- 	/* Setup PCIe controller to Root Complex mode. */
- 	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
-@@ -288,10 +292,30 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
- 	/* Point PCIe unit MBUS decode windows to DRAM space. */
- 	mvebu_pcie_setup_wins(port);
- 
--	/* Enable interrupt lines A-D. */
--	mask = mvebu_readl(port, PCIE_MASK_OFF);
--	mask |= PCIE_MASK_ENABLE_INTS;
--	mvebu_writel(port, mask, PCIE_MASK_OFF);
-+	/* Mask all interrupt sources. */
-+	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
-+
-+	/* Clear all interrupt causes. */
-+	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
-+
-+	if (port->intx_irq <= 0) {
-+		/*
-+		 * When neither "summary" interrupt, nor "intx" interrupt was
-+		 * specified in DT then unmask all legacy INTx interrupts as in
-+		 * this case driver does not provide a way for masking and
-+		 * unmasking of individual legacy INTx interrupts. In this case
-+		 * all interrupts, including legacy INTx are reported via one
-+		 * shared GIC source and therefore kernel cannot distinguish
-+		 * which individual legacy INTx was triggered. These interrupts
-+		 * are shared, so it should not cause any issue. Just
-+		 * performance penalty as every PCIe interrupt handler needs to
-+		 * be called when some interrupt is triggered.
-+		 */
-+		unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-+		unmask |= PCIE_INT_INTX(0) | PCIE_INT_INTX(1) |
-+			  PCIE_INT_INTX(2) | PCIE_INT_INTX(3);
-+		mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
-+	}
- }
- 
- static struct mvebu_pcie_port *mvebu_pcie_find_port(struct mvebu_pcie *pcie,
-@@ -924,6 +948,108 @@ static struct pci_ops mvebu_pcie_ops = {
- 	.write = mvebu_pcie_wr_conf,
- };
- 
-+static void mvebu_pcie_intx_irq_mask(struct irq_data *d)
-+{
-+	struct mvebu_pcie_port *port = d->domain->host_data;
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	unsigned long flags;
-+	u32 unmask;
-+
-+	raw_spin_lock_irqsave(&port->irq_lock, flags);
-+	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-+	unmask &= ~PCIE_INT_INTX(hwirq);
-+	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
-+	raw_spin_unlock_irqrestore(&port->irq_lock, flags);
-+}
-+
-+static void mvebu_pcie_intx_irq_unmask(struct irq_data *d)
-+{
-+	struct mvebu_pcie_port *port = d->domain->host_data;
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	unsigned long flags;
-+	u32 unmask;
-+
-+	raw_spin_lock_irqsave(&port->irq_lock, flags);
-+	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-+	unmask |= PCIE_INT_INTX(hwirq);
-+	mvebu_writel(port, unmask, PCIE_INT_UNMASK_OFF);
-+	raw_spin_unlock_irqrestore(&port->irq_lock, flags);
-+}
-+
-+static struct irq_chip intx_irq_chip = {
-+	.name = "mvebu-INTx",
-+	.irq_mask = mvebu_pcie_intx_irq_mask,
-+	.irq_unmask = mvebu_pcie_intx_irq_unmask,
-+};
-+
-+static int mvebu_pcie_intx_irq_map(struct irq_domain *h,
-+				   unsigned int virq, irq_hw_number_t hwirq)
-+{
-+	struct mvebu_pcie_port *port = h->host_data;
-+
-+	irq_set_status_flags(virq, IRQ_LEVEL);
-+	irq_set_chip_and_handler(virq, &intx_irq_chip, handle_level_irq);
-+	irq_set_chip_data(virq, port);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops mvebu_pcie_intx_irq_domain_ops = {
-+	.map = mvebu_pcie_intx_irq_map,
-+	.xlate = irq_domain_xlate_onecell,
-+};
-+
-+static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *port)
-+{
-+	struct device *dev = &port->pcie->pdev->dev;
-+	struct device_node *pcie_intc_node;
-+
-+	raw_spin_lock_init(&port->irq_lock);
-+
-+	pcie_intc_node = of_get_next_child(port->dn, NULL);
-+	if (!pcie_intc_node) {
-+		dev_err(dev, "No PCIe Intc node found for %s\n", port->name);
-+		return -ENODEV;
-+	}
-+
-+	port->intx_irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
-+						      &mvebu_pcie_intx_irq_domain_ops,
-+						      port);
-+	of_node_put(pcie_intc_node);
-+	if (!port->intx_irq_domain) {
-+		dev_err(dev, "Failed to get INTx IRQ domain for %s\n", port->name);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void mvebu_pcie_irq_handler(struct irq_desc *desc)
-+{
-+	struct mvebu_pcie_port *port = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct device *dev = &port->pcie->pdev->dev;
-+	u32 cause, unmask, status;
-+	int i;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	cause = mvebu_readl(port, PCIE_INT_CAUSE_OFF);
-+	unmask = mvebu_readl(port, PCIE_INT_UNMASK_OFF);
-+	status = cause & unmask;
-+
-+	/* Process legacy INTx interrupts */
-+	for (i = 0; i < PCI_NUM_INTX; i++) {
-+		if (!(status & PCIE_INT_INTX(i)))
-+			continue;
-+
-+		if (generic_handle_domain_irq(port->intx_irq_domain, i) == -EINVAL)
-+			dev_err_ratelimited(dev, "unexpected INT%c IRQ\n", (char)i+'A');
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
- static int mvebu_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
- {
- 	/* Interrupt support on mvebu emulated bridges is not implemented yet */
-@@ -1121,6 +1247,21 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
- 		port->io_attr = -1;
- 	}
- 
-+	/*
-+	 * Old DT bindings do not contain "intx" interrupt
-+	 * so do not fail probing driver when interrupt does not exist.
-+	 */
-+	port->intx_irq = of_irq_get_byname(child, "intx");
-+	if (port->intx_irq == -EPROBE_DEFER) {
-+		ret = port->intx_irq;
-+		goto err;
-+	}
-+	if (port->intx_irq <= 0) {
-+		dev_warn(dev, "%s: legacy INTx interrupts cannot be masked individually, "
-+			      "%pOF does not contain intx interrupt\n",
-+			 port->name, child);
-+	}
-+
- 	reset_gpio = of_get_named_gpio_flags(child, "reset-gpios", 0, &flags);
- 	if (reset_gpio == -EPROBE_DEFER) {
- 		ret = reset_gpio;
-@@ -1317,6 +1458,7 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
- 
- 	for (i = 0; i < pcie->nports; i++) {
- 		struct mvebu_pcie_port *port = &pcie->ports[i];
-+		int irq = port->intx_irq;
- 
- 		child = port->dn;
- 		if (!child)
-@@ -1344,6 +1486,22 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
- 			continue;
- 		}
- 
-+		if (irq > 0) {
-+			ret = mvebu_pcie_init_irq_domain(port);
-+			if (ret) {
-+				dev_err(dev, "%s: cannot init irq domain\n",
-+					port->name);
-+				pci_bridge_emul_cleanup(&port->bridge);
-+				devm_iounmap(dev, port->base);
-+				port->base = NULL;
-+				mvebu_pcie_powerdown(port);
-+				continue;
-+			}
-+			irq_set_chained_handler_and_data(irq,
-+							 mvebu_pcie_irq_handler,
-+							 port);
-+		}
-+
- 		/*
- 		 * PCIe topology exported by mvebu hw is quite complicated. In
- 		 * reality has something like N fully independent host bridges
-@@ -1448,6 +1606,7 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
- 
- 	for (i = 0; i < pcie->nports; i++) {
- 		struct mvebu_pcie_port *port = &pcie->ports[i];
-+		int irq = port->intx_irq;
- 
- 		if (!port->base)
- 			continue;
-@@ -1458,7 +1617,17 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
- 		mvebu_writel(port, cmd, PCIE_CMD_OFF);
- 
- 		/* Mask all interrupt sources. */
--		mvebu_writel(port, 0, PCIE_MASK_OFF);
-+		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
-+
-+		/* Clear all interrupt causes. */
-+		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
-+
-+		/* Remove IRQ domains. */
-+		if (port->intx_irq_domain)
-+			irq_domain_remove(port->intx_irq_domain);
-+
-+		if (irq > 0)
-+			irq_set_chained_handler_and_data(irq, NULL, NULL);
- 
- 		/* Free config space for emulated root bridge. */
- 		pci_bridge_emul_cleanup(&port->bridge);
--- 
-2.20.1
+You'd expect multiple endpoints to match to each target->port.
+Something along the lines of this should work:
+
+        {
+                struct cxl_memdev **epgroupstart = region->config.targets;
+                struct cxl_memdev **endpoint;
+
+                for_each_cxl_decoder_target(target, rootd, i) {
+                        /* Find start of next endpoint group */
+                        endpoint = epgroupstart;
+                        if (*endpoint == NULL) {
+                                printk("No endpoints under decoder target\n");
+                                return false;
+                        }
+                        while (*epgroupstart &&
+                                get_hostbridge(*endpoint) == get_hostbridge(*epgroupstart))
+                                epgroupstart++;
+                }
+                if (*epgroupstart) {
+                        printk("still some entries left. boom\n");
+                        return false;
+                }
+        }
+
+Only lightly tested with correct inputs...
+
+Next up is figuring out why the EP HDM decoder won't commit. :)
+
+Jonathan
+
+
+> 
+> > +			trace_xhb_valid(region, "device ordering bad\n");
+> > +			return false;
+> > +		}
+> > +	}
+> > +
+> > +	/*
+> > +	 * CFMWS.InterleaveTargetList[n] must contain all devices, x where:
+> > +	 *	(Device[x],RegionLabel.Position >> (CFMWS.HBIG -
+> > +	 *	Device[x].RegionLabel.InterleaveGranularity)) &
+> > +	 *	((2^CFMWS.ENIW) - 1) = n
+> > +	 *
+> > +	 * Linux notes: All devices are known to have the same interleave
+> > +	 * granularity at this point.
+> > +	 */
+> > +	for_each_cxl_decoder_target(target, rootd, i) {
+> > +		if (((i >> (rootd_ig - region_ig(region)))) &
+> > +		    (((1 << rootd->interleave_ways) - 1) != target->port_id)) {
+> > +			trace_xhb_valid(region,
+> > +					"One or more devices are not connected to the correct hostbridge.");
+> > +			return false;
+> > +		}
+> > +	}
+> > +
+> >  	return true;
+> >  }
+> >  
+> > diff --git a/drivers/cxl/trace.h b/drivers/cxl/trace.h
+> > index a53f00ba5d0e..4de47d1111ac 100644
+> > --- a/drivers/cxl/trace.h
+> > +++ b/drivers/cxl/trace.h
+> > @@ -38,6 +38,9 @@ DEFINE_EVENT(cxl_region_template, sanitize_failed,
+> >  DEFINE_EVENT(cxl_region_template, allocation_failed,
+> >  	     TP_PROTO(const struct cxl_region *region, char *status),
+> >  	     TP_ARGS(region, status));
+> > +DEFINE_EVENT(cxl_region_template, xhb_valid,
+> > +	     TP_PROTO(const struct cxl_region *region, char *status),
+> > +	     TP_ARGS(region, status));
+> >  
+> >  #endif /* if !defined (__CXL_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ) */
+> >    
+> 
 
