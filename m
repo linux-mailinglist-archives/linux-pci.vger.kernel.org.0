@@ -2,135 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1F60487E48
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 22:31:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FDE3487E4B
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 22:32:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbiAGVbN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 16:31:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbiAGVbN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 16:31:13 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B3BC061574
-        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 13:31:12 -0800 (PST)
+        id S229845AbiAGVcT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 16:32:19 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:46336 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229530AbiAGVcT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 16:32:19 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9443EB82297
-        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 21:31:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01D78C36AE9;
-        Fri,  7 Jan 2022 21:31:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6829861FAD;
+        Fri,  7 Jan 2022 21:32:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D9C5C36AE5;
+        Fri,  7 Jan 2022 21:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641591070;
-        bh=qgKuj0c38YOyaoBkbX4AZdFSMBhAAnpCjFe+hCqraQo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EJZTVJ0F+axq7zpt/3yskMEfT5ouTgLlYUgCLh41/Ij1Py0x4SYGPn9qokxyH8fh4
-         ieuDfvkjowLtIHZdplLeFR8i6ZwupNfhRDe5kOVkk3YxZcy46lymGTcrsLKnLvcuBt
-         r5QJb+olDyRRy7m9TC4rseRhsYzokp4H89mkgYx16O4KgJr41opDMg5ouEuR9HfuYR
-         EO/1BJpaRPUKGL2PAh3kuoGv0vHO0cwLVbrrpNUxyob5+fkqUQuA6O8cO5R9BmPxA9
-         Eui2x4S3SrtBll6LVTspgp1Izc//NCqW2glO9BLil70g0YGGMELTw7PiwOdw7HofKO
-         RCmKS43iYT6Zw==
-Received: by pali.im (Postfix)
-        id 03AAEB22; Fri,  7 Jan 2022 22:31:06 +0100 (CET)
-Date:   Fri, 7 Jan 2022 22:31:06 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Stefan Roese <sr@denx.de>, linux-pci@vger.kernel.org,
+        s=k20201202; t=1641591137;
+        bh=+t2R3Ohhw3NiS9KLcOjXJS2woaFIxKyK3u0Q/DHZ/GM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=i65h0dWbwVgUwYFF4nVDOEanxTZdVhPWXcj0DbHGipm3udK+Oqgll1aYjtVA2ZxPX
+         TlpJ4x1lw+jYMF+HZe58TFTsCLpbr0X/5/DZCCorrBar8mm86mvQ7uTY3+HFajuT0j
+         dIflf78nw+evvXuJm1frhlgXN+pyK8xGsqA2ygyjxxTnzhIHEeJ7qnYmO87IZv2GsS
+         PyRUc1Jg8oj7XJdNDQoGkM/U/xPdMudNhN2AnOUdVuEao/MOLMcvAhkQZQp6zxS7qz
+         xklgfwPqW0FO0bJ5Xs964TS5niJrz7qsI1tjOiAsPR7Qkf07FGhYMdfrOAQzAob+Sv
+         Heq3GD6eOELpg==
+Date:   Fri, 7 Jan 2022 15:32:16 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Bharat Kumar Gogada <bharatku@xilinx.com>
-Subject: Re: PCIe AER generates no interrupts on host (ZynqMP)
-Message-ID: <20220107213106.7lvzvdlrfnbyhvbl@pali>
-References: <20220107100458.sfqcq7gy6nwwamjt@pali>
- <20220107203415.GA398389@bhelgaas>
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/15] PCI: mvebu: Disallow mapping interrupts on
+ emulated bridges
+Message-ID: <20220107213216.GA403555@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220107203415.GA398389@bhelgaas>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20211125124605.25915-6-pali@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 07 January 2022 14:34:15 Bjorn Helgaas wrote:
-> On Fri, Jan 07, 2022 at 11:04:58AM +0100, Pali RohÃ¡r wrote:
-> > Hello! You asked me in another email for comments to this email, so I'm
-> > replying directly to this email...
-> > 
-> > On Tuesday 04 January 2022 10:02:18 Stefan Roese wrote:
-> > > Hi,
-> > > 
-> > > I'm trying to get the Kernel PCIe AER infrastructure to work on my
-> > > ZynqMP based system. E.g. handle the events (correctable, uncorrectable
-> > > etc). In my current tests, no AER interrupt is generated though. I'm
-> > > currently using the "surprise down error status" in the uncorrectable
-> > > error status register of the connected PCIe switch (PLX / Broadcom
-> > > PEX8718). Here the bit is correctly logged in the PEX switch
-> > > uncorrectable error status register but no interrupt is generated
-> > > to the root-port / system. And hence no AER message(s) reported.
-> 
-> I think the error should also be logged in the Root Port AER
-> Capability.  And of course the interrupt enable bits in the Root Error
-> Command register would have to be set.
-> 
-> > > Does any one of you have some ideas on what might be missing? Why are
-> > > these events not reported to the PCIe rootport driver via IRQ? Might
-> > > this be a problem of the missing MSI-X support of the ZynqMP? The AER
-> > > interrupt is connected as legacy IRQ:
-> > > 
-> > > cat /proc/interrupts | grep -i aer
-> > >  58:          0          0          0          0  nwl_pcie:legacy   0 Level
-> > > PCIe PME, aerdrv
-> 
-> I guess this means whatever INTx the Root Port is using is connected
-> to IRQ 58?  Can you tell whether that INTx works if a device below the
-> Root Port uses it?  Or whether it is asserted for PMEs?
-> 
-> > Error events (correctable, non-fatal and fatal) are reported by PCIe
-> > devices to the Root Complex via PCIe error messages (Message code of TLP
-> > is set to Error Message) and not via interrupts. Root Port is then
-> > responsible to "convert" these PCIe error messages to MSI(X) interrupt
-> > and report it to the system. According to PCIe spec, AER is supported
-> > only via MSI(X) interrupts, not legacy INTx.
-> 
-> Where does it say that?  PCIe r5.0, sec 6.2.4.1.2 and 6.2.6, both
-> mention INTx, and the diagram in 6.2.6 even shows possible
-> platform-specific System Error signaling.
+On Thu, Nov 25, 2021 at 01:45:55PM +0100, Pali Rohár wrote:
+> Interrupt support on mvebu emulated bridges is not implemented yet.
 
-Kernel AER driver is not available when MSI is not supported:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/aer.c?h=v5.15#n112
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/portdrv_core.c?h=v5.15#n224
-Originally this was my primary indication that AER is MSI(X)-only.
+Is this mvebu-specific, or is aardvar also affected?
 
-And my understanding is that AER Root Error Status Register (7.8.4.10)
-specifies Advanced Error Interrupt Message Number which indicates which
-MSI(X) interrupt is used. And there is no information about INTx if you
-enable particular reporting category via AER Root Error Command Register.
-That is why I was in impression that AER interrupts are MSI-only.
+> So properly indicate return value to callers that they cannot request
+> interrupts from emulated bridge.
 
-But now I'm looking at 6.2.4.1.2 section and seems that AER can really
-use INTx. So I was wrong here.
+Pet peeve: descriptions that say "do this *properly*".  As though the
+previous authors were just ignorant or intentionally did something
+*improperly* :)
 
-But why then kernel AER driver has check that AER is available only when
-MSI is enabled? And not available when MSI is disabled?
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/pci/controller/pci-mvebu.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index 19c6ee298442..a3df352d440e 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -705,6 +705,15 @@ static struct pci_ops mvebu_pcie_ops = {
+>  	.write = mvebu_pcie_wr_conf,
+>  };
+>  
+> +static int mvebu_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> +{
+> +	/* Interrupt support on mvebu emulated bridges is not implemented yet */
+> +	if (dev->bus->number == 0)
+> +		return 0; /* Proper return code 0 == NO_IRQ */
+> +
+> +	return of_irq_parse_and_map_pci(dev, slot, pin);
 
-> But I doubt Linux is smart enough to configure this correctly for
-> INTx.  You could experiment by setting the AER control bits with
-> setpci.
-> 
-> There was some previous discussion, and it even mentions ZynqMP as a
-> device that has a dedicated non-MSI mechanism for AER signaling:
-> 
->   https://lore.kernel.org/linux-pci/1533141889-19962-1-git-send-email-bharat.kumar.gogada@xilinx.com/
->   https://lore.kernel.org/all/1464242406-20203-1-git-send-email-po.liu@nxp.com/T/#u
-> 
-> But I don't think it went anywhere.
-> 
-> It seems like maybe this *could* be made to work.  
-> 
-> Bjorn
+Is this something that could be done with a .read_base() op, e.g.,
+make PCI_INTERRUPT_PIN contain zero (PCI_INTERRUPT_UNKNOWN)?
 
-So, seems that this is anther PCIe controller which does not report AER
-interrupt via standard MSI interrupts but via some vendor-specific way.
+> +}
+> +
+>  static resource_size_t mvebu_pcie_align_resource(struct pci_dev *dev,
+>  						 const struct resource *res,
+>  						 resource_size_t start,
+> @@ -1119,6 +1128,7 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+>  	bridge->sysdata = pcie;
+>  	bridge->ops = &mvebu_pcie_ops;
+>  	bridge->align_resource = mvebu_pcie_align_resource;
+> +	bridge->map_irq = mvebu_pcie_map_irq;
+
+I assume this means INTx doesn't work for some devices?  Which ones?
+I guess anything on the root bus?  But INTx for devices *below* these
+emulated Root Ports *does* work?
+
+>  	return pci_host_probe(bridge);
+>  }
+> -- 
+> 2.20.1
+> 
