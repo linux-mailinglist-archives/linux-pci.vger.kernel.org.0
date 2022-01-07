@@ -2,115 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CF9C487DF9
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 22:05:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E15DC487E03
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 22:09:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229695AbiAGVFM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 16:05:12 -0500
-Received: from mga11.intel.com ([192.55.52.93]:64400 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229712AbiAGVFL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 7 Jan 2022 16:05:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641589511; x=1673125511;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BGkQZ9wJjtm6Ly24SCm04Vr1byx/zgNEgihwQDGEf9k=;
-  b=S4eo3903rALxYm3/ehF6XcM4FVYnz2NLYZ0UED4SqOTIzo8HcoKlLHLs
-   pQenFHnpE5gtTksv+Eml1Q4omYLhqVCwSWRy6dKLVOXp8rVxdwWv15itg
-   QyQR90BE6/ERhgH5O4JSRfoAqLvDgzVyQOCdPcR5IiXVS/l/SuI5V6sy5
-   R33BoAaNuem5xcApAyLErJOvgagJPhMpOgLlRiys2M+9MkJkX6n9AMa5L
-   OtTSRhYsUD+oX9fXNJoGSgUjvQ3bUz8XACza+/MgJJ0J1BewNwVCfvg/e
-   4OW/w0EsTvtS5o0Fluw+kjpx8lSKeInHB2P0o5S8U1CXE2InqrszIs58l
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10220"; a="240493450"
-X-IronPort-AV: E=Sophos;i="5.88,271,1635231600"; 
-   d="scan'208";a="240493450"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 13:04:51 -0800
-X-IronPort-AV: E=Sophos;i="5.88,271,1635231600"; 
-   d="scan'208";a="527506817"
-Received: from lucas-s2600cw.jf.intel.com ([10.165.21.202])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 13:04:51 -0800
-From:   Lucas De Marchi <lucas.demarchi@intel.com>
-To:     x86@kernel.org
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>
-Subject: [PATCH v3 3/3] x86/quirks: Fix stolen detection with integrated + discrete GPU
-Date:   Fri,  7 Jan 2022 13:05:16 -0800
-Message-Id: <20220107210516.907834-3-lucas.demarchi@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220107210516.907834-1-lucas.demarchi@intel.com>
-References: <20220107210516.907834-1-lucas.demarchi@intel.com>
+        id S229491AbiAGVJH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 16:09:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229749AbiAGVJH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 16:09:07 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEAD6C061574;
+        Fri,  7 Jan 2022 13:09:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 78A97B82604;
+        Fri,  7 Jan 2022 21:09:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E05A8C36AE9;
+        Fri,  7 Jan 2022 21:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641589744;
+        bh=K/JhrwqQbSMuUehTwf3TsC5iGJ5JuvB2mFD5WJYCTBw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=C687/ms8TsF5D5FYUSJ8JkUCZI2qUNUy6Ru/vxOD+KCd8ojQDMInY4fdY7dZkUTm0
+         QoMgHmVZyTsFCEyBqKzOQBmNumfOxV1MJNrmVJEm5YluP+MHXYWUZXt5l3mkJ1bBKJ
+         TXC8q4nctPDoyqUyAaCHBUMw+6dweoml6yoS4XhHDdFMqaoWpbMwTw1/Sb6CdE43M8
+         eI3NZ0R8inL/ni1eC+90YBJE9Jyl7GWB6/wHsj/xgbM3zgiBDqMNZgYaqmGIwMmtAZ
+         bBb9I2qz8QVHl+HR6ylBDhgFlV0qucRbMCzySXuvSPU7XEIAtWkGzWKLOyxkrAWZ0P
+         5CSI43yYmlNeQ==
+Date:   Fri, 7 Jan 2022 15:09:02 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/15] PCI: mvebu: Check that PCI bridge specified in DT
+ has function number zero
+Message-ID: <20220107210902.GA403155@bhelgaas>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220107181819.yiya3mxhtfsnubg4@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-early_pci_scan_bus() does a depth-first traversal, possibly calling
-the quirk functions for each device based on vendor, device and class
-from early_qrk table. intel_graphics_quirks() however uses PCI_ANY_ID
-and does additional filtering in the quirk.
+On Fri, Jan 07, 2022 at 07:18:19PM +0100, Pali Rohár wrote:
+> On Friday 07 January 2022 12:15:12 Bjorn Helgaas wrote:
+> > On Thu, Nov 25, 2021 at 01:45:53PM +0100, Pali Rohár wrote:
+> > > Driver cannot handle PCI bridges at non-zero function address. So add
+> > > appropriate check. Currently all in-tree kernel DTS files set PCI bridge
+> > > function to zero.
+> > 
+> > Why can the driver not handle bridges at non-zero function addresses?
+> > The PCI spec allows that, doesn't it?  Is this a hardware limitation?
+> 
+> It is software / kernel limitation.
+> 
+> Because this bridge is virtual, emulated by pci-bridge-emul.c driver and
+> this driver can emulate only single function PCI-to-PCI bridge device.
 
-If there is an Intel integrated + discrete GPU the quirk may be called
-first for the discrete GPU based on the PCI topology. Then we will fail
-to reserve the system stolen memory for the integrated GPU, because we
-will already have marked the quirk as "applied".
+That's weird.  Why does pci-bridge-emul.c care about the function
+number?  Or maybe you're saying that pci-mvebu.c isn't smart enough to
+build an emulated bridge at a non-zero function?  Or, since this is
+emulated, maybe there's just no *reason* to ever use a non-zero
+function?
 
-This was reproduced in a setup with Alderlake-P (integrated) + DG2
-(discrete), with the following PCI topology:
+It would really be nice to have the commit log and maybe even a
+comment allude to what's going on here .  Otherwise this check sort of
+dangles without having an obvious reason for existence.
 
-	- 00:01.0 Bridge
-	  `- 03:00.0 DG2
-	- 00:02.0 Integrated GPU
+Does this issue also affect pci-aardvark.c (which looks like the only
+other user of pci_bridge_emul_init())?
 
-Move the setting of quirk_applied in intel_graphics_quirks() so it's
-mark as applied only when we find the integrated GPU based on the
-intel_early_ids table.
-
-Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
----
-
-v3: now that we do the refactor before the fix, we can do a single line
-change to fix intel_graphics_quirks(). Also, we don't change
-intel_graphics_stolen() anymore as we did in v2: we don't have to check
-other devices anymore if there was a previous match causing
-intel_graphics_stolen() to be called (there can only be one integrated
-GPU reserving the stolen memory).
-
- arch/x86/kernel/early-quirks.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-index df34963e23bf..932f9087c324 100644
---- a/arch/x86/kernel/early-quirks.c
-+++ b/arch/x86/kernel/early-quirks.c
-@@ -609,8 +609,6 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
- 	if (quirk_applied)
- 		return;
- 
--	quirk_applied = true;
--
- 	device = read_pci_config_16(num, slot, func, PCI_DEVICE_ID);
- 
- 	for (i = 0; i < ARRAY_SIZE(intel_early_ids); i++) {
-@@ -623,6 +621,8 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
- 
- 		intel_graphics_stolen(num, slot, func, early_ops);
- 
-+		quirk_applied = true;
-+
- 		return;
- 	}
- }
--- 
-2.34.1
-
+> > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >  drivers/pci/controller/pci-mvebu.c | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> > > index 6197f7e7c317..08274132cdfb 100644
+> > > --- a/drivers/pci/controller/pci-mvebu.c
+> > > +++ b/drivers/pci/controller/pci-mvebu.c
+> > > @@ -864,6 +864,11 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
+> > >  	port->devfn = of_pci_get_devfn(child);
+> > >  	if (port->devfn < 0)
+> > >  		goto skip;
+> > > +	if (PCI_FUNC(port->devfn) != 0) {
+> > > +		dev_err(dev, "%s: invalid function number, must be zero\n",
+> > > +			port->name);
+> > > +		goto skip;
+> > > +	}
+> > >  
+> > >  	ret = mvebu_get_tgt_attr(dev->of_node, port->devfn, IORESOURCE_MEM,
+> > >  				 &port->mem_target, &port->mem_attr);
+> > > -- 
+> > > 2.20.1
+> > > 
