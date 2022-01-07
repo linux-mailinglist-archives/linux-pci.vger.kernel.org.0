@@ -2,104 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D6244875C3
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 11:38:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DD6B4875D0
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 11:41:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346832AbiAGKix (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 05:38:53 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4367 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237776AbiAGKib (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 05:38:31 -0500
-Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JVfhF33xyz67vrB;
-        Fri,  7 Jan 2022 18:33:33 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 7 Jan 2022 11:38:29 +0100
-Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Fri, 7 Jan
- 2022 10:38:28 +0000
-Date:   Fri, 7 Jan 2022 10:38:27 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
-        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 09/13] cxl/region: Implement XHB verification
-Message-ID: <20220107103827.00006e4c@huawei.com>
-In-Reply-To: <20220107103052.00006c4b@huawei.com>
-References: <20220107003756.806582-1-ben.widawsky@intel.com>
-        <20220107003756.806582-10-ben.widawsky@intel.com>
-        <20220107103052.00006c4b@huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        id S234435AbiAGKlH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 05:41:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:39272 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235996AbiAGKlH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 7 Jan 2022 05:41:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7A0913D5;
+        Fri,  7 Jan 2022 02:41:06 -0800 (PST)
+Received: from e123427-lin.arm.com (unknown [10.57.36.216])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88A003F66F;
+        Fri,  7 Jan 2022 02:41:05 -0800 (PST)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Li Chen <lchen@ambarella.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] PCI: endpoint: set_msi: return -EINVAL when interrupts num is smaller than 1
+Date:   Fri,  7 Jan 2022 10:41:00 +0000
+Message-Id: <164155195563.13819.16266334939063780280.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <CH2PR19MB402491B9E503694DBCAC6005A07C9@CH2PR19MB4024.namprd19.prod.outlook.com>
+References: <CH2PR19MB402491B9E503694DBCAC6005A07C9@CH2PR19MB4024.namprd19.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 7 Jan 2022 10:30:52 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-
-> On Thu,  6 Jan 2022 16:37:52 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Tue, 21 Dec 2021 02:59:56 +0000, Li Chen wrote:
+> There is no sense to go further if we have no interrupts.
 > 
-> > Cross host bridge verification primarily determines if the requested
-> > interleave ordering can be achieved by the root decoder, which isn't as
-> > programmable as other decoders.
-> > 
-> > The algorithm implemented here is based on the CXL Type 3 Memory Device
-> > Software Guide, chapter 2.13.14
-> > 
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
 > 
-> Trivial thing inline.
-> 
-> > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> > index c8e3c48dfbb9..ca559a4b5347 100644
-> > --- a/drivers/cxl/region.c
-> > +++ b/drivers/cxl/region.c
-> > @@ -28,6 +28,17 @@
-> >   */
-> >  
-> >  #define region_ways(region) ((region)->config.eniw)
-> > +#define region_ig(region) (ilog2((region)->config.ig))
-> > +
-> > +#define for_each_cxl_endpoint(ep, region, idx)                                 \
-> > +	for (idx = 0, ep = (region)->config.targets[idx];                      \
-> > +	     idx < region_ways(region);                                        \
-> > +	     idx++, ep = (region)->config.targets[idx])
-> > +
-> > +#define for_each_cxl_decoder_target(target, decoder, idx)                      \
-> > +	for (idx = 0, target = (decoder)->target[idx];                         \  
-> 
-> As target is used too often in here, you'll replace it in ->target[idx] as well.
-> It happens to work today because the parameter always happens to be target
-> 
-> > +	     idx < (decoder)->nr_targets;                                      \
-> > +	     idx++, target++)
-I should have read the next few lines :)
 
-target++ doesn't get (decoder)->target[idx] which is what we want - it indexes
-off the end of a particular instance rather than through the array.
+Applied to pci/endpoint, thanks!
 
-I'm guessing this was from my unclear comment yesterday. I should have spent
-a little more time being explicit there.
+[1/1] PCI: endpoint: Return -EINVAL when interrupts num is smaller than 1
+      https://git.kernel.org/lpieralisi/pci/c/50b620303a
 
-Jonathan
-
-> >    
-
+Thanks,
+Lorenzo
