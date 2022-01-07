@@ -2,390 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 893E2487B4D
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 18:22:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0D4B487B54
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 18:23:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348552AbiAGRW1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 12:22:27 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4374 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232691AbiAGRW0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 12:22:26 -0500
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JVqfJ4h6Fz67NKf;
-        Sat,  8 Jan 2022 01:17:28 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 7 Jan 2022 18:22:24 +0100
-Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Fri, 7 Jan
- 2022 17:22:24 +0000
-Date:   Fri, 7 Jan 2022 17:22:22 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
-        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 13/13] cxl: Program decoders for regions
-Message-ID: <20220107172222.000068ac@huawei.com>
-In-Reply-To: <20220107163341.mb7pchctbfcaev7r@intel.com>
-References: <20220107003756.806582-1-ben.widawsky@intel.com>
-        <20220107003756.806582-14-ben.widawsky@intel.com>
-        <20220107161812.00007956@huawei.com>
-        <20220107163341.mb7pchctbfcaev7r@intel.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        id S1348563AbiAGRXk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 12:23:40 -0500
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:57422 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348558AbiAGRXj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 12:23:39 -0500
+Received: from [192.168.1.18] ([90.11.185.88])
+        by smtp.orange.fr with ESMTPA
+        id 5sxancGFrwEZf5sxgnfr6r; Fri, 07 Jan 2022 18:23:36 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Fri, 07 Jan 2022 18:23:36 +0100
+X-ME-IP: 90.11.185.88
+Message-ID: <cfabcc1c-16cd-80f7-7d28-6d817c29a7a0@wanadoo.fr>
+Date:   Fri, 7 Jan 2022 18:23:25 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH 16/16] PCI: Remove usage of the deprecated
+ "pci-dma-compat.h" API
+Content-Language: en-US
+From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     arnd@arndb.de, hch@infradead.org, akpm@linux-foundation.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <e965573211f8c81c8ba978cfbc21925810a662b1.1641500561.git.christophe.jaillet@wanadoo.fr>
+ <20220106222804.GA330366@bhelgaas>
+ <0e381699-8bfa-186b-3688-5346e42a63cd@wanadoo.fr>
+In-Reply-To: <0e381699-8bfa-186b-3688-5346e42a63cd@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 7 Jan 2022 08:33:41 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-> On 22-01-07 16:18:12, Jonathan Cameron wrote:
-> > On Thu,  6 Jan 2022 16:37:56 -0800
-> > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >   
-> > > Do the HDM decoder programming for all endpoints and host bridges in a
-> > > region. Switches are currently unimplemented.
-> > > 
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > ---
-> > >  drivers/cxl/core/hdm.c | 198 +++++++++++++++++++++++++++++++++++++++++
-> > >  drivers/cxl/cxl.h      |   3 +
-> > >  drivers/cxl/region.c   |  39 +++++++-
-> > >  3 files changed, 237 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > > index 44e48cea8cd4..c7293cbd8547 100644
-> > > --- a/drivers/cxl/core/hdm.c
-> > > +++ b/drivers/cxl/core/hdm.c
-> > > @@ -242,3 +242,201 @@ int devm_cxl_enumerate_switch_decoders(struct cxl_port *port)
-> > >  	return 0;
-> > >  }
-> > >  EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_switch_decoders, CXL);
-> > > +
-> > > +#define COMMIT_TIMEOUT_MS 10
-> > > +static int wait_for_commit(struct cxl_decoder *cxld)
-> > > +{
-> > > +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> > > +	const unsigned long start = jiffies;
-> > > +	struct cxl_port_state *cxlps;
-> > > +	void __iomem *hdm_decoder;
-> > > +	unsigned long end = start;
-> > > +	u32 ctrl;
-> > > +
-> > > +	cxlps = dev_get_drvdata(&port->dev);
-> > > +	hdm_decoder = cxlps->regs.hdm_decoder;
-> > > +
-> > > +	do {
-> > > +		end = jiffies;
-> > > +		ctrl = readl(hdm_decoder +
-> > > +			     CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> > > +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-> > > +			break;
-> > > +
-> > > +		if (time_after(end, start + COMMIT_TIMEOUT_MS)) {
-> > > +			dev_err(&cxld->dev, "HDM decoder commit timeout %x\n", ctrl);
-> > > +			return -ETIMEDOUT;
-> > > +		}
-> > > +		if ((ctrl & CXL_HDM_DECODER0_CTRL_COMMIT_ERROR) != 0) {
-> > > +			dev_err(&cxld->dev, "HDM decoder commit error %x\n", ctrl);
-> > > +			return -ENXIO;
-> > > +		}
-> > > +	} while (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl));  
-> > 
-> > Hi Ben,
-> > 
-> > Thanks for posting this btw - it's very helpful indeed for hammering out bugs
-> > in the qemu code and to identify what isn't there yet.
-> > 
-> > Took me a while to work out how this seemed to succeed on QEMU with no
-> > implementation of the commit for the host bridges (just adding that now ;)
-> > Reason is this condition is inverse of what I think you intend.
-> > 
-> > Given you have an exit condition above this could probably just be a while (1)
-> > loop.
-> > 
-> > Jonathan  
+
+Le 07/01/2022 à 07:34, Christophe JAILLET a écrit :
+> Le 06/01/2022 à 23:28, Bjorn Helgaas a écrit :
+>> On Thu, Jan 06, 2022 at 10:55:33PM +0100, Christophe JAILLET wrote:
+>>> Final step, remove pci-dma-compat.h
+>>>
+>>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>>
+>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>
+>> Obviously this has to be applied after all the others, so I assume
+>> somebody else will take this.
+>>
+>>> ---
+>>>   include/linux/pci-dma-compat.h | 129 ---------------------------------
+>>>   include/linux/pci.h            |   3 -
+>>>   2 files changed, 132 deletions(-)
+>>>   delete mode 100644 include/linux/pci-dma-compat.h
+>>>
+>>> diff --git a/include/linux/pci-dma-compat.h 
+>>> b/include/linux/pci-dma-compat.h
+>>> deleted file mode 100644
+>>> index 249d4d7fbf18..000000000000
+>>> --- a/include/linux/pci-dma-compat.h
+>>> +++ /dev/null
+>>> @@ -1,129 +0,0 @@
+>>> -/* SPDX-License-Identifier: GPL-2.0 */
+>>> -/* include this file if the platform implements the dma_ DMA Mapping 
+>>> API
+>>> - * and wants to provide the pci_ DMA Mapping API in terms of it */
+>>> -
+>>> -#ifndef _ASM_GENERIC_PCI_DMA_COMPAT_H
+>>> -#define _ASM_GENERIC_PCI_DMA_COMPAT_H
+>>> -
+>>> -#include <linux/dma-mapping.h>
+>>> -
+>>> [...]
+>>>  >>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>>> index d4308f847e58..ba8771eaf380 100644
+>>> --- a/include/linux/pci.h
+>>> +++ b/include/linux/pci.h
+>>> @@ -2455,9 +2455,6 @@ static inline bool 
+>>> pci_is_thunderbolt_attached(struct pci_dev *pdev)
+>>>   void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result 
+>>> err_type);
+>>>   #endif
+>>> -/* Provide the legacy pci_dma_* API */
+>>> -#include <linux/pci-dma-compat.h>
+>>> -
 > 
-> Quick response without looking at code. I thought I did implement this in QEMU,
-> but you're correct that the logic is inverted. If you have a QEMU branch for me
-> to use when I fix this, please let me know.
-
-The branch I got from your gitlab has it specifically for the type3 device, but
-not more generally.
-
-Qemu wise will see if I can hammer something into a shape to share but might take
-a little while to hammer out remaining bugs.  I've made a few fiddly changes to
-try and simplify the setup + avoid fixed PA address ranges anywhere.
-
-Jonathan
-
+> After one more night, I should have mentionned that the way have removed 
+> "pci-dma-compat.h" may break OTHER drives because of indirect include.
 > 
-> >   
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +/**
-> > > + * cxl_commit_decoder() - Program a configured cxl_decoder
-> > > + * @cxld: The preconfigured cxl decoder.
-> > > + *
-> > > + * A cxl decoder that is to be committed should have been earmarked as enabled.
-> > > + * This mechanism acts as a soft reservation on the decoder.
-> > > + *
-> > > + * Returns 0 if commit was successful, negative error code otherwise.
-> > > + */
-> > > +int cxl_commit_decoder(struct cxl_decoder *cxld)
-> > > +{
-> > > +	u32 ctrl, tl_lo, tl_hi, base_lo, base_hi, size_lo, size_hi;
-> > > +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> > > +	struct cxl_port_state *cxlps;
-> > > +	void __iomem *hdm_decoder;
-> > > +	int rc;
-> > > +
-> > > +	/*
-> > > +	 * Decoder flags are entirely software controlled and therefore this
-> > > +	 * case is purely a driver bug.
-> > > +	 */
-> > > +	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_ENABLE) != 0,
-> > > +			  "Invalid %s enable state\n", dev_name(&cxld->dev)))
-> > > +		return -ENXIO;
-> > > +
-> > > +	cxlps = dev_get_drvdata(&port->dev);
-> > > +	hdm_decoder = cxlps->regs.hdm_decoder;
-> > > +	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> > > +
-> > > +	/*
-> > > +	 * A decoder that's currently active cannot be changed without the
-> > > +	 * system being quiesced. While the driver should prevent against this,
-> > > +	 * for a variety of reasons the hardware might not be in sync with the
-> > > +	 * hardware and so, do not splat on error.
-> > > +	 */
-> > > +	size_hi = readl(hdm_decoder +
-> > > +			CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-> > > +	size_lo =
-> > > +		readl(hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-> > > +	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl) &&
-> > > +	    (size_lo + size_hi)) {
-> > > +		dev_err(&port->dev, "Tried to change an active decoder (%s)\n",
-> > > +			dev_name(&cxld->dev));
-> > > +		return -EBUSY;
-> > > +	}
-> > > +
-> > > +	u32p_replace_bits(&ctrl, 8 - ilog2(cxld->interleave_granularity),
-> > > +			  CXL_HDM_DECODER0_CTRL_IG_MASK);
-> > > +	u32p_replace_bits(&ctrl, ilog2(cxld->interleave_ways),
-> > > +			  CXL_HDM_DECODER0_CTRL_IW_MASK);
-> > > +	u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_COMMIT);
-> > > +
-> > > +	/* TODO: set based on type */
-> > > +	u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_TYPE);
-> > > +
-> > > +	base_lo = FIELD_PREP(GENMASK(31, 28),
-> > > +			     (u32)(cxld->decoder_range.start & 0xffffffff));
-> > > +	base_hi = FIELD_PREP(~0, (u32)(cxld->decoder_range.start >> 32));
-> > > +
-> > > +	size_lo = (u32)(range_len(&cxld->decoder_range)) & GENMASK(31, 28);
-> > > +	size_hi = (u32)((range_len(&cxld->decoder_range) >> 32));
-> > > +
-> > > +	if (cxld->nr_targets > 0) {
-> > > +		tl_lo |= FIELD_PREP(GENMASK(7, 0), cxld->target[0]->port_id);
-> > > +		if (cxld->interleave_ways > 1)
-> > > +			tl_lo |= FIELD_PREP(GENMASK(15, 8),
-> > > +					    cxld->target[1]->port_id);
-> > > +		if (cxld->interleave_ways > 2)
-> > > +			tl_lo |= FIELD_PREP(GENMASK(23, 16),
-> > > +					    cxld->target[2]->port_id);
-> > > +		if (cxld->interleave_ways > 3)
-> > > +			tl_lo |= FIELD_PREP(GENMASK(31, 24),
-> > > +					    cxld->target[3]->port_id);
-> > > +		if (cxld->interleave_ways > 4)
-> > > +			tl_hi |= FIELD_PREP(GENMASK(7, 0),
-> > > +					    cxld->target[4]->port_id);
-> > > +		if (cxld->interleave_ways > 5)
-> > > +			tl_hi |= FIELD_PREP(GENMASK(15, 8),
-> > > +					    cxld->target[5]->port_id);
-> > > +		if (cxld->interleave_ways > 6)
-> > > +			tl_hi |= FIELD_PREP(GENMASK(23, 16),
-> > > +					    cxld->target[6]->port_id);
-> > > +		if (cxld->interleave_ways > 7)
-> > > +			tl_hi |= FIELD_PREP(GENMASK(31, 24),
-> > > +					    cxld->target[7]->port_id);
-> > > +
-> > > +		writel(tl_hi, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
-> > > +		writel(tl_lo, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
-> > > +	}
-> > > +
-> > > +	writel(size_hi,
-> > > +	       hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-> > > +	writel(size_lo,
-> > > +	       hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-> > > +	writel(base_hi,
-> > > +	       hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
-> > > +	writel(base_lo,
-> > > +	       hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
-> > > +	writel(ctrl, hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> > > +
-> > > +	rc = wait_for_commit(cxld);
-> > > +	if (rc)
-> > > +		return rc;
-> > > +
-> > > +	cxld->flags |= CXL_DECODER_F_ENABLE;
-> > > +
-> > > +#define DPORT_TL_STR "%d %d %d %d %d %d %d %d"
-> > > +#define DPORT(i)                                                               \
-> > > +	(cxld->nr_targets && cxld->interleave_ways > (i)) ?                    \
-> > > +		      cxld->target[(i)]->port_id :                                   \
-> > > +		      -1
-> > > +#define DPORT_TL                                                               \
-> > > +	DPORT(0), DPORT(1), DPORT(2), DPORT(3), DPORT(4), DPORT(5), DPORT(6),  \
-> > > +		DPORT(7)
-> > > +
-> > > +	dev_dbg(&port->dev,
-> > > +		"%s\n\tBase %pa\n\tSize %llu\n\tIG %u\n\tIW %u\n\tTargetList: " DPORT_TL_STR,
-> > > +		dev_name(&cxld->dev), &cxld->decoder_range.start,
-> > > +		range_len(&cxld->decoder_range), cxld->interleave_granularity,
-> > > +		cxld->interleave_ways, DPORT_TL);
-> > > +#undef DPORT_TL
-> > > +#undef DPORT
-> > > +#undef DPORT_TL_STR
-> > > +	return 0;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(cxl_commit_decoder);
-> > > +
-> > > +/**
-> > > + * cxl_disable_decoder() - Disables a decoder
-> > > + * @cxld: The active cxl decoder.
-> > > + *
-> > > + * CXL decoders (as of 2.0 spec) have no way to deactivate them other than to
-> > > + * set the size of the HDM to 0. This function will clear all registers, and if
-> > > + * the decoder is active, commit the 0'd out registers.
-> > > + */
-> > > +void cxl_disable_decoder(struct cxl_decoder *cxld)
-> > > +{
-> > > +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> > > +	struct cxl_port_state *cxlps;
-> > > +	void __iomem *hdm_decoder;
-> > > +	u32 ctrl;
-> > > +
-> > > +	cxlps = dev_get_drvdata(&port->dev);
-> > > +	hdm_decoder = cxlps->regs.hdm_decoder;
-> > > +	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> > > +
-> > > +	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_ENABLE) == 0,
-> > > +			  "Invalid decoder enable state\n"))
-> > > +		return;
-> > > +
-> > > +	/* There's no way to "uncommit" a committed decoder, only 0 size it */
-> > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
-> > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
-> > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-> > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-> > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
-> > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
-> > > +
-> > > +	/* If the device isn't actually active, just zero out all the fields */
-> > > +	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-> > > +		writel(CXL_HDM_DECODER0_CTRL_COMMIT,
-> > > +		       hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(cxl_disable_decoder);
-> > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > > index 79bca9a8246c..587b75f7fa53 100644
-> > > --- a/drivers/cxl/cxl.h
-> > > +++ b/drivers/cxl/cxl.h
-> > > @@ -54,6 +54,7 @@
-> > >  #define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
-> > >  #define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
-> > >  #define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
-> > > +#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
-> > >  #define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
-> > >  #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
-> > >  #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
-> > > @@ -364,6 +365,8 @@ int devm_cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
-> > >  struct cxl_dport *cxl_find_dport_by_dev(struct cxl_port *port,
-> > >  					const struct device *dev);
-> > >  struct cxl_port *ep_find_cxl_port(struct cxl_memdev *cxlmd, unsigned int depth);
-> > > +int cxl_commit_decoder(struct cxl_decoder *cxld);
-> > > +void cxl_disable_decoder(struct cxl_decoder *cxld);
-> > >  
-> > >  struct cxl_decoder *to_cxl_decoder(struct device *dev);
-> > >  bool is_cxl_decoder(struct device *dev);
-> > > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> > > index 3120b65b0bc5..fd82d37ba573 100644
-> > > --- a/drivers/cxl/region.c
-> > > +++ b/drivers/cxl/region.c
-> > > @@ -580,10 +580,30 @@ static void cleanup_staged_decoders(struct cxl_region *region)
-> > >  	}
-> > >  }
-> > >  
-> > > -static int bind_region(const struct cxl_region *region)
-> > > +static int bind_region(struct cxl_region *region)
-> > >  {
-> > > -	/* TODO: */
-> > > -	return 0;
-> > > +	struct cxl_decoder *cxld, *d;
-> > > +	int rc;
-> > > +
-> > > +	list_for_each_entry_safe(cxld, d, &region->staged_list, region_link) {
-> > > +		rc = cxl_commit_decoder(cxld);
-> > > +		if (!rc)
-> > > +			list_move_tail(&cxld->region_link, &region->commit_list);
-> > > +		else
-> > > +			break;
-> > > +	}
-> > > +
-> > > +	list_for_each_entry_safe(cxld, d, &region->commit_list, region_link) {
-> > > +		if (rc)
-> > > +			cxl_disable_decoder(cxld);
-> > > +		list_del(&cxld->region_link);
-> > > +	}
-> > > +
-> > > +	if (rc)
-> > > +		cleanup_staged_decoders((struct cxl_region *)region);
-> > > +
-> > > +	BUG_ON(!list_empty(&region->staged_list));
-> > > +	return rc;
-> > >  }
-> > >  
-> > >  static int cxl_region_probe(struct device *dev)
-> > > @@ -650,9 +670,22 @@ static int cxl_region_probe(struct device *dev)
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +static void cxl_region_remove(struct device *dev)
-> > > +{
-> > > +	struct cxl_region *region = to_cxl_region(dev);
-> > > +	struct cxl_decoder *cxld, *d;
-> > > +
-> > > +	list_for_each_entry_safe(cxld, d, &region->commit_list, region_link) {
-> > > +		cxl_disable_decoder(cxld);
-> > > +		list_del(&cxld->region_link);
-> > > +		cxl_put_decoder(cxld);
-> > > +	}
-> > > +}
-> > > +
-> > >  static struct cxl_driver cxl_region_driver = {
-> > >  	.name = "cxl_region",
-> > >  	.probe = cxl_region_probe,
-> > > +	.remove = cxl_region_remove,
-> > >  	.id = CXL_DEVICE_REGION,
-> > >  };
-> > >  module_cxl_driver(cxl_region_driver);  
-> >   
+> The line above should maybe be replaced by:
+>    #include <linux/dma-mapping.h>
+> which is hidden in "pci-dma-compat.h".
+> 
+> Will see if built-bots complain.
 
+And so they did.
+
+What is the best option?
+1. Add    #include <linux/dma-mapping.h>?		or
+2. Add this "missing" include in needed place?
+
+I would say 2, but I would need help, because I don't have a built farm 
+at home! :)
+
+
+
+This breaks:
+
+    drivers/s390/net/ism_drv.c: In function 'register_sba':
+    drivers/s390/net/ism_drv.c:93:15: error: implicit declaration of 
+function 'dma_alloc_coherent' [-Werror=implicit-function-declaration]
+       93 |         sba = dma_alloc_coherent(&ism->pdev->dev, PAGE_SIZE, 
+&dma_handle,
+          |               ^~~~~~~~~~~~~~~~~~
+[...]
+
+
+
+I got another built failure that I don't understand:
+
+    In file included from drivers/scsi/fdomain.c:87:
+ >> include/scsi/scsicam.h:16:31: warning: 'struct block_device' 
+declared inside parameter list will not be visible outside of this 
+definition or declaration
+       16 | int scsicam_bios_param(struct block_device *bdev, sector_t 
+capacity, int *ip);
+          |                               ^~~~~~~~~~~~
+    include/scsi/scsicam.h:17:27: warning: 'struct block_device' 
+declared inside parameter list will not be visible outside of this 
+definition or declaration
+       17 | bool scsi_partsize(struct block_device *bdev, sector_t 
+capacity, int geom[3]);
+          |                           ^~~~~~~~~~~~
+    include/scsi/scsicam.h:18:40: warning: 'struct block_device' 
+declared inside parameter list will not be visible outside of this 
+definition or declaration
+       18 | unsigned char *scsi_bios_ptable(struct block_device *bdev);
+          |                                        ^~~~~~~~~~~~
+    drivers/scsi/fdomain.c: In function 'fdomain_biosparam':
+ >> drivers/scsi/fdomain.c:468:45: error: passing argument 1 of 
+'scsi_bios_ptable' from incompatible pointer type 
+[-Werror=incompatible-pointer-types]
+      468 |         unsigned char *p = scsi_bios_ptable(bdev);
+          |                                             ^~~~
+          |                                             |
+          |                                             struct 
+block_device *
+    In file included from drivers/scsi/fdomain.c:87:
+    include/scsi/scsicam.h:18:54: note: expected 'struct block_device *' 
+but argument is of type 'struct block_device *'
+       18 | unsigned char *scsi_bios_ptable(struct block_device *bdev);
+          |                                 ~~~~~~~~~~~~~~~~~~~~~^~~~
+
+
+CJ
