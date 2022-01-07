@@ -2,113 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07BE2487EEA
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 23:28:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7913A487F00
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 23:37:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230459AbiAGW23 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 17:28:29 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:47346 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230394AbiAGW23 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 17:28:29 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3A7AA61FE3;
-        Fri,  7 Jan 2022 22:28:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E52C36AE9;
-        Fri,  7 Jan 2022 22:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641594508;
-        bh=lNOQMqnCqegfm8pumdQ9PFSskvp+/6nHG7AVVSzUDlY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=duUFMsPG4/A4PRLmBZaFjF5QaNS7r5JBpthzVRxH1hmaaWHyudmGfnXU5bf8oBQ9B
-         x2i4FwVOnc+AsPlCZaDGzJLOEYHkYdLfqIrKe9oDGX2VbT31/toJAzyGPfMCPHZlX9
-         Zt+mPCT3529H/r9C2Xs5M0EDhP2ateBhHXf0XGUa5D3IXPW6B3+JO2V2v8H4K3THZe
-         z9K5OculL6S4siuCKGRoQqPzKh8Bdg6gvDSESG3aQb+kka5WBYzR9gsAPGKakF7gfI
-         qYg5R4NbzP8OznsvlHjfKiRlKt7ruFtibjMUqqR+rs90iXYFJB1eAv8l8krUszfFi6
-         iq7idyAxUtCAQ==
-Received: by pali.im (Postfix)
-        id 2D900B22; Fri,  7 Jan 2022 23:28:26 +0100 (CET)
-Date:   Fri, 7 Jan 2022 23:28:26 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/15] PCI: mvebu: Propagate errors when updating
- PCI_IO_BASE and PCI_MEM_BASE registers
-Message-ID: <20220107222826.cv2bzywwayjwzy3c@pali>
-References: <20211125124605.25915-9-pali@kernel.org>
- <20220107215504.GA406217@bhelgaas>
+        id S231209AbiAGWhJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 17:37:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229625AbiAGWhI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 17:37:08 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03AA1C061574
+        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 14:37:08 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id k18so13622290wrg.11
+        for <linux-pci@vger.kernel.org>; Fri, 07 Jan 2022 14:37:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6+ftPPg+mBtDFE1Rumj/v9cdHX74g8JsGDvIeuaB0sw=;
+        b=AP4vnWnjNZ0+FbyV/paMdWCoPqlJsNv7u/VAZmbyQPIQYIkKmM9xtluYweMfGDCwlx
+         M6xlF3WNOEXlhJIw5eYbOUznnu+94L5InBLgV7SPnjq7TeH+Tly04IZtkTcFGb0zS0Ry
+         30CmLfIo2fCaXdYowRSZPyRgSImplqOqzG+tI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6+ftPPg+mBtDFE1Rumj/v9cdHX74g8JsGDvIeuaB0sw=;
+        b=K1LrFNGKGuLYH0kojXPfLjQa5ALjjH+TUhyuMzPjKY1w6XeZfO1gViWTkm1B2AS9fm
+         0WLqU28JTODSJl1WGlA6YylHow/y49y0l7J3B8kspGzoICdyDHiixgw0I9zB2O6ByeAO
+         3LfiFCW/Fb02c87TYOAs1tYYbVdme6JhFDgpfGqlQyLVANtGzBSWu9XhiIoCvortT9Ud
+         s2rtud9M2w06QDYXtGBI0EjFr+YxSggJz7jzpPIUpVeMvpeQpJhyB9VT8QxqJAuG7wKb
+         K82goCoWze0z0oNa1enaU108n6dkRGnNootzXfic0lytU8E6X58KQigzWH6ED3F9FsZ6
+         TlJA==
+X-Gm-Message-State: AOAM531C0g2buiUmYGwm8RVxjwiu5QZmGRMqAbSztj9SHmHJfgrDyKuQ
+        cDvTjdxuUE8wqCLqDpWRKxKpI+/RT6OjN2sxcuE+zw==
+X-Google-Smtp-Source: ABdhPJxBgtZis30xOXNXG44kdaru7DxXX4kR8w0Gqb6L6sTYxtDqty53dbly3IotCoc7BxQNTyR5PLfs45h7sgxRwXM=
+X-Received: by 2002:a05:6000:18af:: with SMTP id b15mr56930329wri.616.1641595026619;
+ Fri, 07 Jan 2022 14:37:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220107215504.GA406217@bhelgaas>
-User-Agent: NeoMutt/20180716
+References: <20211209204726.6676-1-jim2101024@gmail.com> <20220105104202.GD7009@alpha.franken.de>
+In-Reply-To: <20220105104202.GD7009@alpha.franken.de>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Fri, 7 Jan 2022 17:36:55 -0500
+Message-ID: <CA+-6iNyjDvuTFo9usprg9OX9a-vsieoh2z2-KAfaxAAZ2cw_Og@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] PCI: brcmstb: Augment driver for MIPs SOCs
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>, linux-mips@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Rob Herring <robh@kernel.org>,
+        Saenz Julienne <nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 07 January 2022 15:55:04 Bjorn Helgaas wrote:
-> On Thu, Nov 25, 2021 at 01:45:58PM +0100, Pali Rohár wrote:
-> > Properly propagate failure from mvebu_pcie_add_windows() function back to
-> > the caller mvebu_pci_bridge_emul_base_conf_write() and correctly updates
-> > PCI_IO_BASE, PCI_MEM_BASE and PCI_IO_BASE_UPPER16 registers on error.
-> > On error set base value higher than limit value which indicates that
-> > address range is disabled. 
-> 
-> Does the spec say that if software programs something invalid,
-> hardware should proactively set the base and limit registers to
-> disable the window?
+On Wed, Jan 5, 2022 at 5:42 AM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
+>
+> On Thu, Dec 09, 2021 at 03:47:21PM -0500, Jim Quinlan wrote:
+> > With this patchset, the Broadcom STB PCIe controller driver
+> > supports Arm, Arm64, and now MIPs.
+> >
+> > Jim Quinlan (4):
+> >   dt-bindings: PCI: Add compatible string for Brcmstb 74[23]5 MIPs SOCs
+> >   MIPS: bmips: Add support PCIe controller device nodes
+> >   MIPS: bmips: Remove obsolete DMA mapping support
+> >   PCI: brcmstb: Augment driver for MIPs SOCs
+> >
+> >  .../bindings/pci/brcm,stb-pcie.yaml           |   2 +
+> >  arch/mips/Kconfig                             |   1 -
+> >  arch/mips/bmips/dma.c                         | 106 +-----------------
+> >  arch/mips/boot/dts/brcm/bcm7425.dtsi          |  30 +++++
+> >  arch/mips/boot/dts/brcm/bcm7435.dtsi          |  30 +++++
+> >  arch/mips/boot/dts/brcm/bcm97425svmb.dts      |   9 ++
+> >  arch/mips/boot/dts/brcm/bcm97435svmb.dts      |   9 ++
+> >  drivers/pci/controller/Kconfig                |   2 +-
+> >  drivers/pci/controller/pcie-brcmstb.c         |  82 +++++++++++++-
+> >  9 files changed, 161 insertions(+), 110 deletions(-)
+>
+> if nobody objects I'd like to add this series to mips-next.
+Hi Thomas,
 
-No. But this patch address something totally different. Software can do
-fully valid operation, e.g. try to set forwarding memory window as large
-as possible. But because this driver "emulates" pci bridge by calling
-software/kernel function (mvebu_pcie_add_windows), some operations which
-in real HW cannot happen, are possible in software.
+I have another pullreq in progress [1] that may possibly be accepted
+soon.  I have tested that
+these two pullreqs do not conflict or cause compiler errors regardless
+of their merge order.
 
-For example there are limitations in sizes of forwarding memory windows,
-because it is done by mvebu-mbus driver, which is responsible for
-configuring mapping and forwarding of PCIe I/O and MEM windows. And due
-to Marvell HW, there are restrictions which are not in PCIe HW.
+Regards,
+Jim Quinlan
+Broadcom STB
 
-Currently if such error happens, obviously kernel is not able to set
-PCIe windows and it just print warnings to dmesg. Trying to access these
-windows would result in the worst case in crashes.
+[1] [PATCH v10 0/7] PCI: brcmstb: root port turns on sub-device power
 
-With this change when mvebu_pcie_add_windows() function fails then into
-emulated config space is put information that particular forwarding
-window is disabled. I think that it is better to indicate it in config
-space what is the current "reality" of hardware configuration. If window
-is disabled in real-HW (meaning in mvebu-mbus driver) then show it also
-in emulated config space of pci bridge.
 
-Do you have better idea what should emulated pci bridge do, if software
-try to set fully valid configuration of forwarding window, but it is not
-possible to achieve it (even compliant PCI bridge must be able to do
-it)?
+[PATCH v10 0/7] PCI: brcmstb: root port turns on sub-device power
 
-> I'm not sure I've seen hardware that does this, and it seems ... maybe
-> a little aggressive.
-> 
-> What happens if software writes the base and limit in the wrong order,
-> so the window is invalid after the first write but valid after the
-> second?  That actually sounds like it could be a sensible strategy to
-> prevent a partially-configured window from being active.
-> 
-> Bjorn
-
-Invalid window (limit < base) means that window is disabled. And
-pci-mvebu.c in its callbacks from pci-bridge-emul.c should correctly
-handle it and propagates information about disablement to mvebu-mbus
-driver.
-
-After window is valid again (limit > base) then pci-mvebu.c call
-mvebu-mbus to setup new mapping.
+>
+> Thomas.
+>
+> --
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
