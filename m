@@ -2,87 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5764A487B78
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 18:32:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8012487BA1
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 18:48:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348586AbiAGRcu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 12:32:50 -0500
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:59050
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237699AbiAGRct (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 12:32:49 -0500
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        id S1348623AbiAGRsj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 12:48:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230122AbiAGRsj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 12:48:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 040BFC061574;
+        Fri,  7 Jan 2022 09:48:39 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 44E8B40A58
-        for <linux-pci@vger.kernel.org>; Fri,  7 Jan 2022 17:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1641576762;
-        bh=reiJbrHsd6HUY73y6dW3uK1fLpWZ0z6nBvTr3IYdF1I=;
-        h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type;
-        b=CDBbniOLG2fzCedU1W1uGhuW1uSYpVieoy9rDDZ7SmyfeNfMGQBJZUvWW8KoFK2Bp
-         fVN+3zZvlLhhDRgxvwrgU667tXL8OuunNBMsICFGYyMq2X2u4hpGSnF9wiwKSPcoyu
-         hoSl9wZDDctBJGrVOpG/SSlLOe293XpBcqYpLTVH56gt1SEGOm2nLBMlVDECMitUMu
-         +J7HfBPfhY2lGqY3u02eyzE+l+J3X7uellmANesYi+ieq9ZCmoy3L2WDrnNiXz5EDq
-         /ubwIc6DmKYgcQpWbbwYL0nq4zY71BFOX9rXNyad+qBUqwxk98kly3hW0234SiydNy
-         w8kOu3ViI+3Ig==
-Received: by mail-ed1-f69.google.com with SMTP id x19-20020a05640226d300b003f8b80f5729so5176363edd.13
-        for <linux-pci@vger.kernel.org>; Fri, 07 Jan 2022 09:32:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=reiJbrHsd6HUY73y6dW3uK1fLpWZ0z6nBvTr3IYdF1I=;
-        b=JR59BJ729LMlSNOM+NSXt/PUdt9E9ODqFsncrcBmMa3o03xhHSTgx310UOq2OGvb0D
-         5qxd+teGBRQAd2VdqRfbGCTkgUcLC7rI16JJwfRlmo/CymbLIHEOD3ERrkXnWYSU8NtX
-         Isxc25ztz2yo3qencTbnz3sDExy1BsVQQ2lUv+pO8FRfl/0Aq+cmTVlmw+kOk2sknm/X
-         JAsWCZvj3g1YKJ4dKkBXGyGXBQz1gRhcGxDIFcrHte1c8dZonSEaVegW4DU8VIqaxlxj
-         RVdDjw60+2lOffRosNH8KrRV7G6SLP62/+5GbNSKA9RYXetdYFghSepjT8pl+AwUNbqL
-         846w==
-X-Gm-Message-State: AOAM5318epcQRELuU8jcvvLgpUymyP3jXSXIuC5X6sRU9qvRsqGazQoU
-        w8R761U1mv7g/j9U5+q5vbxzCP48bAIyJ6WkJVVzch0JbbsUCYkrNKeWRwDCFWI9cIAEnVgPzMC
-        Jn8HVhn04hrjefSix56NlEvAZsttygr/IXBk1Ow==
-X-Received: by 2002:a05:6402:1e88:: with SMTP id f8mr58042946edf.2.1641576761933;
-        Fri, 07 Jan 2022 09:32:41 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJymgxobe9HSGQM+bXdtE+Ng/EHT7YtrMrHAaqPUP6/VX7AeRCAV/M1g3xczPO8LehBpBNlmtA==
-X-Received: by 2002:a05:6402:1e88:: with SMTP id f8mr58042935edf.2.1641576761781;
-        Fri, 07 Jan 2022 09:32:41 -0800 (PST)
-Received: from localhost ([2001:67c:1560:8007::aac:c1b6])
-        by smtp.gmail.com with ESMTPSA id dd5sm1583151ejc.59.2022.01.07.09.32.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jan 2022 09:32:41 -0800 (PST)
-Date:   Fri, 7 Jan 2022 18:32:40 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Stefan Roese <sr@denx.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Marek Vasut <marex@denx.de>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: "PCI/MSI: Mask MSI-X vectors only on success" (boot problem on
- c4.large)
-Message-ID: <Ydh5OCudJKz5Y7jc@arighi-desktop>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A2C9461752;
+        Fri,  7 Jan 2022 17:48:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6F97C36AE0;
+        Fri,  7 Jan 2022 17:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641577718;
+        bh=SsjFNCidoubLbPKEUTCypbD6/AK0PkAfB7rfFG1sTl0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pLNwa3rEnjJGM4+Cv4xTQ/Vhy4DhdmtgttX2GtAQhrLP3JZpMbl4jsUSy3+Z+Mr5D
+         m4Y//jiDIO9wo0Nqz0fgPDR+iWfMotnl4X/m2NP4gA3WuzA3cZB/7w9nlu2Yr1lvd+
+         WLdoi46UZu158PIcu3a8IdLKiP7A7wysTbHxTVJHj+2b8HpVebR/36/AwUq7Hf/SRn
+         6YXbaVWMGYeSxyAe1m0D459w6Nt0M63v+10UU+QwpCodAtGLiK3m4ytE+Oy9dBQ18m
+         LuR/QORCIuaWwhaGq4HRYjXPAxX7r/v1U3qACyJArK2JY3lP9SyLlsCmV77JWD4M01
+         pVko+3LQ6+x9g==
+Date:   Fri, 7 Jan 2022 11:48:36 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dimitris Michailidis <d.michailidis@fungible.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        andrew@lunn.ch, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH net-next v5 1/8] PCI: add Fungible vendor ID to pci_ids.h
+Message-ID: <20220107174836.GA388004@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20220107043612.21342-2-dmichail@fungible.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Stefan,
+On Thu, Jan 06, 2022 at 08:36:05PM -0800, Dimitris Michailidis wrote:
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Dimitris Michailidis <dmichail@fungible.com>
 
-I'm experiencing some boot problems on c4.large instances on AWS with
-this commit applied (system stuck at boot - no oops or panic, just
-stuck):
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
- 83dbf898a2d4 ("PCI/MSI: Mask MSI-X vectors only on success")
+If you repost this for any reason, please capitalize the subject line
+so it matches the history, e.g.,
 
-If I revert this commit the boot completes correctly (found doing a
-bisect).
+  3375590623e4 ("PCI: Add Zhaoxin Vendor ID")
+  4460d68f0b2f ("PCI: Add Genesys Logic, Inc. Vendor ID")
 
-I'm using a 5.15.12 kernel. Let me know if there's anything I can do to
-better track down the issue. For now I've just reverted the commit.
-
-Thanks,
--Andrea
+> ---
+>  include/linux/pci_ids.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 011f2f1ea5bb..c4299dbade98 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2578,6 +2578,8 @@
+>  
+>  #define PCI_VENDOR_ID_HYGON		0x1d94
+>  
+> +#define PCI_VENDOR_ID_FUNGIBLE		0x1dad
+> +
+>  #define PCI_VENDOR_ID_HXT		0x1dbf
+>  
+>  #define PCI_VENDOR_ID_TEKRAM		0x1de1
+> -- 
+> 2.25.1
+> 
