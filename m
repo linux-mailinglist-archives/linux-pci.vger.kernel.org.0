@@ -2,357 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9B7E486EFC
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 01:38:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B037486F0A
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 01:48:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344419AbiAGAiP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Jan 2022 19:38:15 -0500
-Received: from mga18.intel.com ([134.134.136.126]:59449 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344398AbiAGAiO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 6 Jan 2022 19:38:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641515894; x=1673051894;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=s3YJ4k9WX1H2z3+76n68boGXnNFzvP0oVlTvKxnedTA=;
-  b=cRlkBNSh7xqagjKPfVWGDcgbdQhVhyJ4ogTew0SXJx902PxIZHsxMT1m
-   7NYj2aWLtDWAVtQgC+btwAUFn3qThAgYtVSRXRAxe1fk/3I0cPZwQ7x0Z
-   57PQdHZ9/tOokARgkSm9ifLkrqgAjlOdqCM8MO0OVU8g3RgRH7ECi4CeU
-   L54V/pt5XL0Qlhj6Rexk7Gr6zUvR/Br0uO+M+BNkq3008KbY7P8RqRcrt
-   P8za9+HVKRbEfYLdCI7TPIFeT/90+Qe5XbR0bJvGeyezg33zVgrTQHM56
-   vwK3WgGJyW003Wje3bWsVJJj59G+6azafgISPyrX+kNk6P8GNF8haxLzA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="229582046"
-X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="229582046"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:38:14 -0800
-X-IronPort-AV: E=Sophos;i="5.88,268,1635231600"; 
-   d="scan'208";a="471123252"
-Received: from elenawei-mobl2.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.138.104])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2022 16:38:14 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org
-Cc:     patches@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH 13/13] cxl: Program decoders for regions
-Date:   Thu,  6 Jan 2022 16:37:56 -0800
-Message-Id: <20220107003756.806582-14-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220107003756.806582-1-ben.widawsky@intel.com>
-References: <20220107003756.806582-1-ben.widawsky@intel.com>
+        id S1344275AbiAGAsa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Jan 2022 19:48:30 -0500
+Received: from mail-co1nam11on2048.outbound.protection.outlook.com ([40.107.220.48]:57148
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1343865AbiAGAs2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 6 Jan 2022 19:48:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dcnObL3XDoiz54QihZ8/YKn9yI4IZA7sUQ3MZ9rhQ85LDkDg6ltu4FRFybAzYf45J32eqrbW2rZx0gpJPtYaCt4Edctu7hjwQqySL9BSd8pPQlycT5wN0N3FoTD4tlm7an7aKBEVH1YS9wrMzGZeQBqpGVMcvDm7eMMzTpvkSr74/6+PVB1dFMYKjQli4Xu5YEgCTOmg88bOWpgiKOwR7nbGNGdjRos+7E/WBiNU22whslfy/BW4f8SiY0tSieQbhqdoSIe7krqdF5mbZZUA69X1mHnp9wGsmp4y0r8FsuitHQSLbMj9UjkL5WCe+h1F+/R6WMbgoVNl0iM+eJmu+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=U7Zo0oFWiU67oBUvM2a9TAC5dPweGhL4tajPyOOM5dQ=;
+ b=Cq1gFymuF9PxL55O/UROtDaocJqMZaeGYZ2FeR/vLmle/s3Ab3vnlZJ69KqW+w6XxC1Gc9c1kxUy1bdKmq7v7dWYFbjbqtv7Rl0VwiWYqVrsu2nT4FhgXfNAIz5+xyrvyclHBYNIn+Rc29XKoIMJCjz35aOluz5bYFe4tr4OE7qv8+wfMODFQ2zJkqRyeYXjPBnYi9ti+EbIx0gt7HpyQP+wrCYvIodrokWaB47ACHbhFBFVGV4encrs9BFiAE9eKCrqktF5wOOPCFoxYt1ny2QKk6KeG/DC39rRwFvxurUBh69tFbsoXDOA+fHNGbvYKvYh2hGfjyXfeh5Pp5zdaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U7Zo0oFWiU67oBUvM2a9TAC5dPweGhL4tajPyOOM5dQ=;
+ b=D8CncgIBMnmPC1vUG1Ev2K57QUbWSv7amYDJqVffXbHOfKvC+ALpkonVW5TJ+3dr9QqdvEvHOZDVm1BQtleV2Xoojz/J3CTLfxB7kSy+0RqlBmktq3IqIXtJYYbD20H4YLa5vr5cAP+pcXPm+2Uu6KRZWDBEXMlYMj90IODmW2txAH1UKtGrGVYReCzvyCS809aVyg4L14YbkQFh3JUhucVvH6mF54y7wr0icP/XJnMMaFtFZaTyU7apzTLoxlH0vRiJJqKC/D642g8TmcGDbFu50VVfqmkrZEhpdzrzPHNrVB5VccoxgF9pK/gs+8Oa9tK+od/rQ6QfhcFCWSt6hA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5062.namprd12.prod.outlook.com (2603:10b6:208:313::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.14; Fri, 7 Jan
+ 2022 00:48:26 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::464:eb3d:1fde:e6af]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::464:eb3d:1fde:e6af%5]) with mapi id 15.20.4867.011; Fri, 7 Jan 2022
+ 00:48:26 +0000
+Date:   Thu, 6 Jan 2022 20:48:25 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 6/8] gpu/host1x: Use iommu_attach/detach_device()
+Message-ID: <20220107004825.GP2328285@nvidia.com>
+References: <20220106022053.2406748-1-baolu.lu@linux.intel.com>
+ <20220106022053.2406748-7-baolu.lu@linux.intel.com>
+ <20220106153543.GD2328285@nvidia.com>
+ <2befad17-05fe-3768-6fbb-67440a5befa3@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2befad17-05fe-3768-6fbb-67440a5befa3@linux.intel.com>
+X-ClientProxiedBy: CH2PR19CA0006.namprd19.prod.outlook.com
+ (2603:10b6:610:4d::16) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d0db06e5-8d50-466d-c481-08d9d1776a28
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5062:EE_
+X-Microsoft-Antispam-PRVS: <BL1PR12MB50628F0084E41BED60FA4B42C24D9@BL1PR12MB5062.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: M9+ieWSucidEe2uwHlErPN6cOVz4WcCG/60OepQ+jkrS1AQ0abKjy/RZmNShje3EZE+aXlSAmDjOeOCj7wjDXIsmkYuPRnKzGP+TVq9LVKrxi3Peb7Loc4k6P5IPZ0jDxnIUTSAX4FXRpMsjxyGxXj8NqZmxzCOHS8fFqmrOt3peVIBltZItzOT690e2ii4rDE9IUGp4vRGRH63mfVh/Io11VZITTIMjJskzu3xKAbLzMFvi7BdyutPvs92lRO02dVTPj6tvtWjC+k5/pW3Ea8B1V87/+Vjmi2ew/Ol8XeE9YLLOc1Vc+tIbeQMwq2n6LEGb0Er/hgpVRlgahyNIOJMffB/VILoTWYIJJzSCUWNC0JW2ybGrD6fjtAEitfqktwOb38H/+Ff7YEYdg1nugKwHLdB4W9AGEt5yF1l2GSwlTkzr42gdoWvu6TjawiV+H8nas4jKsczV23AseLC+VLODq6zJsCqgXrp6qh9w9mJ5xGsA7Qf/jRYJLQ2IKVrM7rc4P+fOkPEakkwhAuNry7j6pPDjJHK/sfGShTdI5oh7PNQB25Ea8ewwM86sd2CF3t5w/h+KVpMIcrKOpd66uQl+hnqJdvtdBqwRLeGtEpp4UZo5YjcH+gv1rw5mO7n3wl8pAxC1sM+Z0AqWpZw6fe6+mxynYD9G+6hluFGfZJeqt2rteav+6cn4F1NqdkpGR0SAze2S4O2wEG50nAiLfA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(316002)(6486002)(6512007)(2616005)(86362001)(508600001)(66476007)(26005)(83380400001)(53546011)(4326008)(186003)(33656002)(66556008)(6506007)(1076003)(6916009)(8676002)(7416002)(38100700002)(5660300002)(66946007)(36756003)(54906003)(8936002)(2906002)(357404004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mEgAArPOLZR37MxcZgAfFo/0W0L/uX1JPXUaeqxob+xu42obubDbQWP3CCsf?=
+ =?us-ascii?Q?76I6lcTnNDCGFTFkLfu5UYpp32QkEIJAKbILINNDD80zkokgm7MDB7guJY9e?=
+ =?us-ascii?Q?k/SZNJUCU2NlLinc2oOU7rjS8HmNGOq21vXZjE172OR9Eekdtv9D0/9BgqQo?=
+ =?us-ascii?Q?Jth8rszDfCM1JwRv0T+YU/YKr24dFMka2qEB6sRJcIO41fCuaqR3+hRq1mNS?=
+ =?us-ascii?Q?8AbH34D48zeNZWF0te1VJaW6aGzJu+nsg6lPx/qMHjFBtvsEFa4YdCR0Wty1?=
+ =?us-ascii?Q?9knX5ZK1ceW4oBFrljYzG0uaSQplaSj1ADWNgu3IPEc+1YRrGaTiDJhOEjne?=
+ =?us-ascii?Q?Bs/zBXV0+iTN2FzXJ6dSBw6R7vVVzCcsVfww7JN9vxD/nPc6JYY1MjPIUiPh?=
+ =?us-ascii?Q?6CGxfU9fpO1kocuRxvpuB9IcXE+2nYDl2PlSU+Y3Z5qVX3X4L04Lx19qmHCD?=
+ =?us-ascii?Q?W2s0kjHRIkdAmuibQOe6SFKSwQb7T2s4jypKFrmCI0l5KKbihatTYIovP5sk?=
+ =?us-ascii?Q?HjshdkxTH78D52uyOwDT9zNjdJphOQjq+qJjsyWFlgxSuGcoavOXsEcvc4fp?=
+ =?us-ascii?Q?z7rvoDvQLTSUo0HfUe/5W5Xui5Qc3DZJmGhbLULlxG/VOlMAwEyPNkdcOS/3?=
+ =?us-ascii?Q?gdsu1wPehA++mkFhjCBlAzakodNzHh2b4A/JHlaPl94KTXfjEoNxfcHT6e4J?=
+ =?us-ascii?Q?8hnf4RRLOblU/y0V63oxdMcuzqJ+NKuOacyUTz89Id+TgyIZiXw8Nx0rkr8F?=
+ =?us-ascii?Q?C+UmwlGK1d2e7abl7evcgTrQajSm1yFpbhVeO+pGtc2/1wALXvSCNLkKXAI5?=
+ =?us-ascii?Q?NADJyXvX2TXczlDp4G3G4YfGm4PDKIoDMQKkcHSXs9hvdf6YWjON0H32gP74?=
+ =?us-ascii?Q?GHsbXbGzE4lKf9DPfa/Qiaa2YEK7/XLiIESLj9p68Ddd6r6rE9vlmij1B2eu?=
+ =?us-ascii?Q?n0ZpMpdFPwuQqi57azDAPCR7pw7/u+6+ugj0hu1p66AKgOlcnY7OKh9uWwpI?=
+ =?us-ascii?Q?dmZ8l/z7ocBAuhFsPgFf8eh8CgvBM3xJsCCElJV+QpYDr1uLGCfvQI8EITnB?=
+ =?us-ascii?Q?0SsKfzwX+YRdCHH1pL9MlxYF3edMMz3jSVobVhPzbz9v7ms4nXs2X4+rRGKl?=
+ =?us-ascii?Q?sVlL22IKcMUeIMhRNBIWDz3W3VZm3mKEEDejLzn3Tz+zw7/4yBsjqxo4AyQS?=
+ =?us-ascii?Q?FRSGQoWZt6KKicW2sHHA+j4GyLRxpauNrspoF6ZG8Ga2ksLoHf5YJ1yEZ2mq?=
+ =?us-ascii?Q?5L82HUZdlh+TfVRzgmife7K8W2d22CgGi0gF/zch7gLeOJ4i+zOOSnTKjovU?=
+ =?us-ascii?Q?AFdjXOKBFV67i9uYdV503Oi2pllhoDwI+WT8oBSad7it0Izj5HyEYXoAmZs8?=
+ =?us-ascii?Q?zBIwewhe3AwYJkFploDfwuvE+Gb3w0BF+EkE+t2A+GK98OHyzLM6fsrlEqHH?=
+ =?us-ascii?Q?4uoGGBJftGmWcAA2rSa8OECF60kqLMdfClSsZJmzspzorq3xNrgGRin7wlM2?=
+ =?us-ascii?Q?ZvlMvbQczNSUHq6re/B+WNi6JC9NpA5uY96IZcoauluQ0itIzfF0Gdjpll3z?=
+ =?us-ascii?Q?OF/WQnKEIXcR5Oh792A=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0db06e5-8d50-466d-c481-08d9d1776a28
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2022 00:48:26.4036
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: q8By8bQi5JZPsSGNl/sMrw7lrDpr3u4Clq74/hapl/2dsKFIa08be39wKBmZMIdk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5062
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Do the HDM decoder programming for all endpoints and host bridges in a
-region. Switches are currently unimplemented.
+On Fri, Jan 07, 2022 at 08:35:34AM +0800, Lu Baolu wrote:
+> On 1/6/22 11:35 PM, Jason Gunthorpe wrote:
+> > On Thu, Jan 06, 2022 at 10:20:51AM +0800, Lu Baolu wrote:
+> > > Ordinary drivers should use iommu_attach/detach_device() for domain
+> > > attaching and detaching.
+> > > 
+> > > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > >   drivers/gpu/host1x/dev.c | 4 ++--
+> > >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/host1x/dev.c b/drivers/gpu/host1x/dev.c
+> > > index fbb6447b8659..6e08cb6202cc 100644
+> > > +++ b/drivers/gpu/host1x/dev.c
+> > > @@ -265,7 +265,7 @@ static struct iommu_domain *host1x_iommu_attach(struct host1x *host)
+> > >   			goto put_cache;
+> > >   		}
+> > > -		err = iommu_attach_group(host->domain, host->group);
+> > > +		err = iommu_attach_device(host->domain, host->dev);
+> > >   		if (err) {
+> > >   			if (err == -ENODEV)
+> > >   				err = 0;
+> > > @@ -335,7 +335,7 @@ static void host1x_iommu_exit(struct host1x *host)
+> > >   {
+> > >   	if (host->domain) {
+> > >   		put_iova_domain(&host->iova);
+> > > -		iommu_detach_group(host->domain, host->group);
+> > > +		iommu_detach_device(host->domain, host->dev);
+> > >   		iommu_domain_free(host->domain);
+> > >   		host->domain = NULL;
+> > 
+> > Shouldn't this add the flag to tegra_host1x_driver ?
+> 
+> This is called for a single driver. The call trace looks like below:
+> 
+> static struct platform_driver tegra_host1x_driver = {
+>         .driver = {
+>                 .name = "tegra-host1x",
+>                 .of_match_table = host1x_of_match,
+>         },
+>         .probe = host1x_probe,
+>         .remove = host1x_remove,
+> };
+> 
+> host1x_probe(dev)
+> ->host1x_iommu_init(host)	//host is a wrapper of dev
+>      iommu_domain_alloc(&platform_bus_type)
+>      iommu_attach_group(domain, group);
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- drivers/cxl/core/hdm.c | 198 +++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h      |   3 +
- drivers/cxl/region.c   |  39 +++++++-
- 3 files changed, 237 insertions(+), 3 deletions(-)
+The main question is if the iommu group is being shared with other
+drivers, not the call chain for this function.
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 44e48cea8cd4..c7293cbd8547 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -242,3 +242,201 @@ int devm_cxl_enumerate_switch_decoders(struct cxl_port *port)
- 	return 0;
- }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_switch_decoders, CXL);
-+
-+#define COMMIT_TIMEOUT_MS 10
-+static int wait_for_commit(struct cxl_decoder *cxld)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+	const unsigned long start = jiffies;
-+	struct cxl_port_state *cxlps;
-+	void __iomem *hdm_decoder;
-+	unsigned long end = start;
-+	u32 ctrl;
-+
-+	cxlps = dev_get_drvdata(&port->dev);
-+	hdm_decoder = cxlps->regs.hdm_decoder;
-+
-+	do {
-+		end = jiffies;
-+		ctrl = readl(hdm_decoder +
-+			     CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-+			break;
-+
-+		if (time_after(end, start + COMMIT_TIMEOUT_MS)) {
-+			dev_err(&cxld->dev, "HDM decoder commit timeout %x\n", ctrl);
-+			return -ETIMEDOUT;
-+		}
-+		if ((ctrl & CXL_HDM_DECODER0_CTRL_COMMIT_ERROR) != 0) {
-+			dev_err(&cxld->dev, "HDM decoder commit error %x\n", ctrl);
-+			return -ENXIO;
-+		}
-+	} while (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl));
-+
-+	return 0;
-+}
-+
-+/**
-+ * cxl_commit_decoder() - Program a configured cxl_decoder
-+ * @cxld: The preconfigured cxl decoder.
-+ *
-+ * A cxl decoder that is to be committed should have been earmarked as enabled.
-+ * This mechanism acts as a soft reservation on the decoder.
-+ *
-+ * Returns 0 if commit was successful, negative error code otherwise.
-+ */
-+int cxl_commit_decoder(struct cxl_decoder *cxld)
-+{
-+	u32 ctrl, tl_lo, tl_hi, base_lo, base_hi, size_lo, size_hi;
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+	struct cxl_port_state *cxlps;
-+	void __iomem *hdm_decoder;
-+	int rc;
-+
-+	/*
-+	 * Decoder flags are entirely software controlled and therefore this
-+	 * case is purely a driver bug.
-+	 */
-+	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_ENABLE) != 0,
-+			  "Invalid %s enable state\n", dev_name(&cxld->dev)))
-+		return -ENXIO;
-+
-+	cxlps = dev_get_drvdata(&port->dev);
-+	hdm_decoder = cxlps->regs.hdm_decoder;
-+	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+
-+	/*
-+	 * A decoder that's currently active cannot be changed without the
-+	 * system being quiesced. While the driver should prevent against this,
-+	 * for a variety of reasons the hardware might not be in sync with the
-+	 * hardware and so, do not splat on error.
-+	 */
-+	size_hi = readl(hdm_decoder +
-+			CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-+	size_lo =
-+		readl(hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-+	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl) &&
-+	    (size_lo + size_hi)) {
-+		dev_err(&port->dev, "Tried to change an active decoder (%s)\n",
-+			dev_name(&cxld->dev));
-+		return -EBUSY;
-+	}
-+
-+	u32p_replace_bits(&ctrl, 8 - ilog2(cxld->interleave_granularity),
-+			  CXL_HDM_DECODER0_CTRL_IG_MASK);
-+	u32p_replace_bits(&ctrl, ilog2(cxld->interleave_ways),
-+			  CXL_HDM_DECODER0_CTRL_IW_MASK);
-+	u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_COMMIT);
-+
-+	/* TODO: set based on type */
-+	u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_TYPE);
-+
-+	base_lo = FIELD_PREP(GENMASK(31, 28),
-+			     (u32)(cxld->decoder_range.start & 0xffffffff));
-+	base_hi = FIELD_PREP(~0, (u32)(cxld->decoder_range.start >> 32));
-+
-+	size_lo = (u32)(range_len(&cxld->decoder_range)) & GENMASK(31, 28);
-+	size_hi = (u32)((range_len(&cxld->decoder_range) >> 32));
-+
-+	if (cxld->nr_targets > 0) {
-+		tl_lo |= FIELD_PREP(GENMASK(7, 0), cxld->target[0]->port_id);
-+		if (cxld->interleave_ways > 1)
-+			tl_lo |= FIELD_PREP(GENMASK(15, 8),
-+					    cxld->target[1]->port_id);
-+		if (cxld->interleave_ways > 2)
-+			tl_lo |= FIELD_PREP(GENMASK(23, 16),
-+					    cxld->target[2]->port_id);
-+		if (cxld->interleave_ways > 3)
-+			tl_lo |= FIELD_PREP(GENMASK(31, 24),
-+					    cxld->target[3]->port_id);
-+		if (cxld->interleave_ways > 4)
-+			tl_hi |= FIELD_PREP(GENMASK(7, 0),
-+					    cxld->target[4]->port_id);
-+		if (cxld->interleave_ways > 5)
-+			tl_hi |= FIELD_PREP(GENMASK(15, 8),
-+					    cxld->target[5]->port_id);
-+		if (cxld->interleave_ways > 6)
-+			tl_hi |= FIELD_PREP(GENMASK(23, 16),
-+					    cxld->target[6]->port_id);
-+		if (cxld->interleave_ways > 7)
-+			tl_hi |= FIELD_PREP(GENMASK(31, 24),
-+					    cxld->target[7]->port_id);
-+
-+		writel(tl_hi, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
-+		writel(tl_lo, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
-+	}
-+
-+	writel(size_hi,
-+	       hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-+	writel(size_lo,
-+	       hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-+	writel(base_hi,
-+	       hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
-+	writel(base_lo,
-+	       hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
-+	writel(ctrl, hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+
-+	rc = wait_for_commit(cxld);
-+	if (rc)
-+		return rc;
-+
-+	cxld->flags |= CXL_DECODER_F_ENABLE;
-+
-+#define DPORT_TL_STR "%d %d %d %d %d %d %d %d"
-+#define DPORT(i)                                                               \
-+	(cxld->nr_targets && cxld->interleave_ways > (i)) ?                    \
-+		      cxld->target[(i)]->port_id :                                   \
-+		      -1
-+#define DPORT_TL                                                               \
-+	DPORT(0), DPORT(1), DPORT(2), DPORT(3), DPORT(4), DPORT(5), DPORT(6),  \
-+		DPORT(7)
-+
-+	dev_dbg(&port->dev,
-+		"%s\n\tBase %pa\n\tSize %llu\n\tIG %u\n\tIW %u\n\tTargetList: " DPORT_TL_STR,
-+		dev_name(&cxld->dev), &cxld->decoder_range.start,
-+		range_len(&cxld->decoder_range), cxld->interleave_granularity,
-+		cxld->interleave_ways, DPORT_TL);
-+#undef DPORT_TL
-+#undef DPORT
-+#undef DPORT_TL_STR
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(cxl_commit_decoder);
-+
-+/**
-+ * cxl_disable_decoder() - Disables a decoder
-+ * @cxld: The active cxl decoder.
-+ *
-+ * CXL decoders (as of 2.0 spec) have no way to deactivate them other than to
-+ * set the size of the HDM to 0. This function will clear all registers, and if
-+ * the decoder is active, commit the 0'd out registers.
-+ */
-+void cxl_disable_decoder(struct cxl_decoder *cxld)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+	struct cxl_port_state *cxlps;
-+	void __iomem *hdm_decoder;
-+	u32 ctrl;
-+
-+	cxlps = dev_get_drvdata(&port->dev);
-+	hdm_decoder = cxlps->regs.hdm_decoder;
-+	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+
-+	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_ENABLE) == 0,
-+			  "Invalid decoder enable state\n"))
-+		return;
-+
-+	/* There's no way to "uncommit" a committed decoder, only 0 size it */
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
-+	writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
-+
-+	/* If the device isn't actually active, just zero out all the fields */
-+	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-+		writel(CXL_HDM_DECODER0_CTRL_COMMIT,
-+		       hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-+}
-+EXPORT_SYMBOL_GPL(cxl_disable_decoder);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 79bca9a8246c..587b75f7fa53 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -54,6 +54,7 @@
- #define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
- #define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
- #define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
-+#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
- #define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
- #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
- #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
-@@ -364,6 +365,8 @@ int devm_cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
- struct cxl_dport *cxl_find_dport_by_dev(struct cxl_port *port,
- 					const struct device *dev);
- struct cxl_port *ep_find_cxl_port(struct cxl_memdev *cxlmd, unsigned int depth);
-+int cxl_commit_decoder(struct cxl_decoder *cxld);
-+void cxl_disable_decoder(struct cxl_decoder *cxld);
- 
- struct cxl_decoder *to_cxl_decoder(struct device *dev);
- bool is_cxl_decoder(struct device *dev);
-diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-index 3120b65b0bc5..fd82d37ba573 100644
---- a/drivers/cxl/region.c
-+++ b/drivers/cxl/region.c
-@@ -580,10 +580,30 @@ static void cleanup_staged_decoders(struct cxl_region *region)
- 	}
- }
- 
--static int bind_region(const struct cxl_region *region)
-+static int bind_region(struct cxl_region *region)
- {
--	/* TODO: */
--	return 0;
-+	struct cxl_decoder *cxld, *d;
-+	int rc;
-+
-+	list_for_each_entry_safe(cxld, d, &region->staged_list, region_link) {
-+		rc = cxl_commit_decoder(cxld);
-+		if (!rc)
-+			list_move_tail(&cxld->region_link, &region->commit_list);
-+		else
-+			break;
-+	}
-+
-+	list_for_each_entry_safe(cxld, d, &region->commit_list, region_link) {
-+		if (rc)
-+			cxl_disable_decoder(cxld);
-+		list_del(&cxld->region_link);
-+	}
-+
-+	if (rc)
-+		cleanup_staged_decoders((struct cxl_region *)region);
-+
-+	BUG_ON(!list_empty(&region->staged_list));
-+	return rc;
- }
- 
- static int cxl_region_probe(struct device *dev)
-@@ -650,9 +670,22 @@ static int cxl_region_probe(struct device *dev)
- 	return ret;
- }
- 
-+static void cxl_region_remove(struct device *dev)
-+{
-+	struct cxl_region *region = to_cxl_region(dev);
-+	struct cxl_decoder *cxld, *d;
-+
-+	list_for_each_entry_safe(cxld, d, &region->commit_list, region_link) {
-+		cxl_disable_decoder(cxld);
-+		list_del(&cxld->region_link);
-+		cxl_put_decoder(cxld);
-+	}
-+}
-+
- static struct cxl_driver cxl_region_driver = {
- 	.name = "cxl_region",
- 	.probe = cxl_region_probe,
-+	.remove = cxl_region_remove,
- 	.id = CXL_DEVICE_REGION,
- };
- module_cxl_driver(cxl_region_driver);
--- 
-2.34.1
+For tegra you have to go look in each entry of the of_match_table:
 
+        { .compatible = "nvidia,tegra114-host1x", .data = &host1x02_info, },
+
+And find the DTS block:
+
+        host1x@50000000 {
+                compatible = "nvidia,tegra114-host1x";
+                reg = <0x50000000 0x00028000>;
+                interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>, /* syncpt */
+                             <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>; /* general */
+                interrupt-names = "syncpt", "host1x";
+                clocks = <&tegra_car TEGRA114_CLK_HOST1X>;
+                clock-names = "host1x";
+                resets = <&tegra_car 28>;
+                reset-names = "host1x";
+                iommus = <&mc TEGRA_SWGROUP_HC>;
+
+Then check if any other devices in the DTS use the same 'iommus' which
+is how the groups are setup.
+
+I checked everything and it does look like this is a single device
+group.
+
+Jason
