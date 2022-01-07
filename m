@@ -2,132 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BA5F487F27
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Jan 2022 23:59:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FD1C487F2F
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Jan 2022 00:02:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230155AbiAGW7w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Jan 2022 17:59:52 -0500
-Received: from mail-pl1-f174.google.com ([209.85.214.174]:43599 "EHLO
-        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229765AbiAGW7v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 17:59:51 -0500
-Received: by mail-pl1-f174.google.com with SMTP id j16so6060317pll.10
-        for <linux-pci@vger.kernel.org>; Fri, 07 Jan 2022 14:59:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fLcfWCXKjz3xMBYPC/DnYWgLMsmC0IqAE+5F6pOJn0o=;
-        b=NWQjwhIStUQEpxe36+iP0JuGrVI43Uh6QXQjami3+v2ao9ECf4Q8snHM3xst+WfoDp
-         FqlamajYHgeJxL7gi3myzUWXDRz6e+AJp/pFZF/Ox3jKm2lPi8VYf6NvyjsJ2cjj6rRY
-         gXWNCdjd2MSlaRKL5xBNBB29zqSvDa9T8Ljy2jJTPtz8CyXmCMVNQkc3/lSjaxB0hb5L
-         ykZb1w9L0TZZ2LrqSR+ScQK+78XXGYq+mpmVV9A4uXmSG8h2SAbAlr33cksPooV+1CNc
-         xfRLDinCJyuwQfJZrVloXwJjCNM/G2JS2YrdL47ncuTPSd0q7iF1IXNUtBrfTQdUzl7s
-         o2WA==
-X-Gm-Message-State: AOAM530DUc9rBY43yKXwpyJdfBhdh26OmccT3yUjFV4nhZVSRms/VbdX
-        4b3lAyF0/DqfT3Jxax9DVgA=
-X-Google-Smtp-Source: ABdhPJypqZ1i92GyWdPK2GW7WhlIM3fab/bctseiuMrMUBm0YHE9du9rOj+aPwQxY72ROULPq0FqqQ==
-X-Received: by 2002:a17:902:a408:b0:149:9055:98b1 with SMTP id p8-20020a170902a40800b00149905598b1mr47438021plq.2.1641596391163;
-        Fri, 07 Jan 2022 14:59:51 -0800 (PST)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id o10sm40302pjp.16.2022.01.07.14.59.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jan 2022 14:59:50 -0800 (PST)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: Correct misspelled words
-Date:   Fri,  7 Jan 2022 22:59:42 +0000
-Message-Id: <20220107225942.121484-1-kw@linux.com>
-X-Mailer: git-send-email 2.34.1
+        id S230466AbiAGXCA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Jan 2022 18:02:00 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:37276 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229765AbiAGXB7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Jan 2022 18:01:59 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 888D2B80B50;
+        Fri,  7 Jan 2022 23:01:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6867C36AE9;
+        Fri,  7 Jan 2022 23:01:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641596517;
+        bh=B0v7iGUci7GVYDzdLRx77A6fKfqdb4qSSCogIqDJ8Ec=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PpsUtqiQCt8YbFCwFZYodxNP6vINYMVpPjhATJ7rYrs4f2Pb02CYJSS8h9BEdDv9+
+         8Vx9ey3K0YfnP3JUpt962jGDFz66TfUix2SYLQGx9sP+tWbsd4RJLZfUCmLEzA/Avj
+         HseUDM8G3JHkZxORXrpAzkWmyoizld66HY1+Sug0EnulHI7MN6ixQxG/uvsCxjVs+V
+         f80Z4rWTylYcehWWN2hhomoR4+Xe5wg1BEGITEbn5wO89A/ZQk6ZxuxaoIZaJRX1vl
+         TQH2Ej6/KuQQQRxlbxE64V7HYN04mhqaM/ehreiIPFSx4n4izb0IJWiIrORyYSmOHe
+         zpQs6rLzoZP4Q==
+Date:   Fri, 7 Jan 2022 17:01:55 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/15] PCI: mvebu: Disallow mapping interrupts on
+ emulated bridges
+Message-ID: <20220107230155.GA425110@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220107221348.5s4ehqhxunmoacbm@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix a number misspelled words, and while at it, correct two phrases used
-to indicate a status of an operation where words used have been cleverly
-truncated and thus always trigger a spellchecking error while performing
-a static code analysis over the PCI tree.
+On Fri, Jan 07, 2022 at 11:13:48PM +0100, Pali Roh·r wrote:
+> On Friday 07 January 2022 15:32:16 Bjorn Helgaas wrote:
+> > On Thu, Nov 25, 2021 at 01:45:55PM +0100, Pali Roh·r wrote:
+> > > Interrupt support on mvebu emulated bridges is not implemented yet.
+> > 
+> > Is this mvebu-specific, or is aardvar also affected?
+> 
+> This is pci-mvebu.c driver specific, it does not implement emulation of
+> neither INTx, nor MSI interrupts for emulated pci bridge (root port). As
+> we know this HW does not have compliant pci root port, it needs to be
+> emulated in driver, and emulation for interrupts is missing. (it means
+> that also AER interrupt is missing).
+> 
+> And pci-aardvark.c driver has same issue and similar patch is required
+> for pci-aardvark.c too. Marek should take care of it. But for
+> pci-aardvark we already have implementation which emulates INTx
+> interrupts and it is waiting for review on the list:
+> https://lore.kernel.org/linux-pci/20211208061851.31867-1-kabel@kernel.org/
+> 
+> > > So properly indicate return value to callers that they cannot request
+> > > interrupts from emulated bridge.
+> > 
+> > Pet peeve: descriptions that say "do this *properly*".  As though the
+> > previous authors were just ignorant or intentionally did something
+> > *improperly* :)
+> > 
+> > > Signed-off-by: Pali Roh·r <pali@kernel.org>
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >  drivers/pci/controller/pci-mvebu.c | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> > > index 19c6ee298442..a3df352d440e 100644
+> > > --- a/drivers/pci/controller/pci-mvebu.c
+> > > +++ b/drivers/pci/controller/pci-mvebu.c
+> > > @@ -705,6 +705,15 @@ static struct pci_ops mvebu_pcie_ops = {
+> > >  	.write = mvebu_pcie_wr_conf,
+> > >  };
+> > >  
+> > > +static int mvebu_pcie_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> > > +{
+> > > +	/* Interrupt support on mvebu emulated bridges is not implemented yet */
+> > > +	if (dev->bus->number == 0)
+> > > +		return 0; /* Proper return code 0 == NO_IRQ */
+> > > +
+> > > +	return of_irq_parse_and_map_pci(dev, slot, pin);
+> > 
+> > Is this something that could be done with a .read_base() op, e.g.,
+> > make PCI_INTERRUPT_PIN contain zero (PCI_INTERRUPT_UNKNOWN)?
+> 
+> I'm not sure... maybe. I choose this style as after I implement
+> emulation of INTx interrupts it allows me just to replace "return 0;" by
+> "return my_mapping_function_for_root_port(...);". 
 
-Signed-off-by: Krzysztof Wilczy≈Ñski <kw@linux.com>
----
- drivers/pci/controller/cadence/pcie-cadence.h | 2 +-
- drivers/pci/controller/pcie-mediatek-gen3.c   | 2 +-
- drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2 +-
- drivers/pci/of.c                              | 2 +-
- drivers/pci/quirks.c                          | 4 ++--
- 5 files changed, 6 insertions(+), 6 deletions(-)
+OK, so even after you implement INTx for the emulated Root Ports, the
+default of_irq_parse_and_map_pci() is insufficient, and you will
+require an mvebu .map_irq() function.  That's reasonable.
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 262421e5d917..c8a27b6290ce 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -310,7 +310,7 @@ struct cdns_pcie {
-  *            single function at a time
-  * @vendor_id: PCI vendor ID
-  * @device_id: PCI device ID
-- * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and	RP_NO_BAR if it's free or
-+ * @avail_ib_bar: Status of RP_BAR0, RP_BAR1 and RP_NO_BAR if it's free or
-  *                available
-  * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
-  * @quirk_detect_quiet_flag: LTSSM Detect Quiet min delay set as quirk
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index 17c59b0d6978..7de82da0bd6d 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -303,7 +303,7 @@ static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
- 	writel_relaxed(val, port->base + PCIE_RST_CTRL_REG);
- 
- 	/*
--	 * Described in PCIe CEM specification setctions 2.2 (PERST# Signal)
-+	 * Described in PCIe CEM specification sections 2.2 (PERST# Signal)
- 	 * and 2.2.1 (Initial Power-Up (G3 to S0)).
- 	 * The deassertion of PERST# should be delayed 100ms (TPVPERL)
- 	 * for the power and clock to become stable.
-diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-index 5a03401f4571..9a00448c7e61 100644
---- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-@@ -1262,7 +1262,7 @@ static void epf_ntb_db_mw_bar_cleanup(struct epf_ntb *ntb,
- }
- 
- /**
-- * epf_ntb_configure_interrupt() - Configure MSI/MSI-X capaiblity
-+ * epf_ntb_configure_interrupt() - Configure MSI/MSI-X capability
-  * @ntb: NTB device that facilitates communication between HOST1 and HOST2
-  * @type: PRIMARY interface or SECONDARY interface
-  *
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 0b1237cff239..cb2e8351c2cc 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -247,7 +247,7 @@ void of_pci_check_probe_only(void)
- 	else
- 		pci_clear_flags(PCI_PROBE_ONLY);
- 
--	pr_info("PROBE_ONLY %sabled\n", val ? "en" : "dis");
-+	pr_info("PROBE_ONLY %s\n", val ? "enabled" : "disabled");
- }
- EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
- 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 003950c738d2..e16bde66e735 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -980,8 +980,8 @@ static void quirk_via_ioapic(struct pci_dev *dev)
- 	else
- 		tmp = 0x1f; /* all known bits (4-0) routed to external APIC */
- 
--	pci_info(dev, "%sbling VIA external APIC routing\n",
--	       tmp == 0 ? "Disa" : "Ena");
-+	pci_info(dev, "%s VIA external APIC routing\n",
-+	       tmp == 0 ? "Disabling" : "Enabling");
- 
- 	/* Offset 0x58: External APIC IRQ output control */
- 	pci_write_config_byte(dev, 0x58, tmp);
--- 
-2.34.1
+"PCI_INTERRUPT_PIN == 0" is the way software learns that a device
+doesn't use INTx, of course, and I suppose PCI_INTERRUPT_PIN already
+reads as zero, since mvebu_pci_bridge_emul_init() doesn't set
+bridge->conf.intpin, and I assume the default value would be zero?
 
+Bjorn
