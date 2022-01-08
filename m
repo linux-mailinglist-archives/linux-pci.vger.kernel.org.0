@@ -2,51 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4DB3488325
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Jan 2022 12:14:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7952348841C
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Jan 2022 16:00:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231464AbiAHLOz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 8 Jan 2022 06:14:55 -0500
-Received: from mga02.intel.com ([134.134.136.20]:14175 "EHLO mga02.intel.com"
+        id S234422AbiAHPAA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 8 Jan 2022 10:00:00 -0500
+Received: from mga11.intel.com ([192.55.52.93]:47073 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231459AbiAHLOy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 8 Jan 2022 06:14:54 -0500
+        id S229703AbiAHPAA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 8 Jan 2022 10:00:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641640494; x=1673176494;
+  t=1641654000; x=1673190000;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=v+IekTsQmQ/ksCj4H81MNQxrz7WPGupipOILz7V/o7o=;
-  b=dYhZHWwNRJPid1uBOf2y7MnZLhl9m1zRt3qLgYZR9BJw7+MsB9aDPHDi
-   mgdi+IYKhutbkmgBl6PLlLojtE1VMAqrV8JMm2Pf1D0Jed0DL+0jaonz/
-   KRiEbha+93ibmtIsl+u8OA/ucOWEgVI9ml/qp1hM5GqceVhsVS7lraHZq
-   JOgrgthAwYQYTZl5plFJstX33nFSkB3ygHu3Tbb9uNBdqGmJcFC88xTlk
-   JM+tRPewfr2gT1dxI/yWDXxNopZOJO3QICq4igIe8WrxvMYsgmfJm0M0j
-   he122J4Mmp1HDd5ZpdAgSUqOBhzd0nZ1Lqm8u+IdAvHvwro4pTaS8TuRT
+  bh=EDl2K8TuBODyo/rP2NekgRyZH6/0pbxe/iSdJtGGP48=;
+  b=WEfl5jC9IEIPUD3vRg4sGymeAajTz21LllWub6w81t4Y8MyzjkiJ7ge3
+   LSNcWhSS7ZXrKM2QSu48mfXsDnsW+4qZgNtZkc5zGhV8iAB+PKknvNGB0
+   aR6VAzOKhQqRrmW601BcbzWelv9wTLchHNVFWRy32fIw46AukyDluQqh4
+   0BBYULiQ7JKykPViIEt5eUglhGuXMWKG62nY6F89BbQsznMbMUcO6SiFW
+   N9a2sHgO9gpiLpUj58NMpK5yoHDsDEYp/bUZflTKYXiInNierXQIMSwqR
+   XqAhqvU7IaZP6rGbj33M61LpL9PM0MgVargWzp9X20aUdQyGbUn3LUTJG
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10220"; a="230347942"
+X-IronPort-AV: E=McAfee;i="6200,9189,10220"; a="240569086"
 X-IronPort-AV: E=Sophos;i="5.88,272,1635231600"; 
-   d="scan'208";a="230347942"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2022 03:14:54 -0800
+   d="scan'208";a="240569086"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2022 06:59:59 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,272,1635231600"; 
-   d="scan'208";a="473624106"
+   d="scan'208";a="489587440"
 Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 08 Jan 2022 03:14:52 -0800
+  by orsmga002.jf.intel.com with ESMTP; 08 Jan 2022 06:59:57 -0800
 Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1n69gR-0000ZA-Rt; Sat, 08 Jan 2022 11:14:51 +0000
-Date:   Sat, 8 Jan 2022 19:13:59 +0800
+        id 1n6DCH-0000i0-6i; Sat, 08 Jan 2022 14:59:57 +0000
+Date:   Sat, 8 Jan 2022 22:58:58 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Sanrio Alvares <sanrio.alvares@intel.com>, bhelgaas@google.com,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        mika.westerberg@linux.intel.com,
+Cc:     kbuild-all@lists.01.org, mika.westerberg@linux.intel.com,
         Sanrio Alvares <sanrio.alvares@intel.com>
 Subject: Re: [PATCH] PCI / thunderbolt: Add quirk to handle incorrect
  Supported Link Speeds
-Message-ID: <202201081937.sL6eGkBc-lkp@intel.com>
+Message-ID: <202201082217.CMkPI5k2-lkp@intel.com>
 References: <20220106224240.31052-1-sanrio.alvares@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -69,33 +68,28 @@ https://git-scm.com/docs/git-format-patch]
 
 url:    https://github.com/0day-ci/linux/commits/Sanrio-Alvares/PCI-thunderbolt-Add-quirk-to-handle-incorrect-Supported-Link-Speeds/20220107-064444
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-config: i386-randconfig-r024-20220107 (https://download.01.org/0day-ci/archive/20220108/202201081937.sL6eGkBc-lkp@intel.com/config)
-compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 32167bfe64a4c5dd4eb3f7a58e24f4cba76f5ac2)
-reproduce (this is a W=1 build):
+config: riscv-randconfig-s032-20220106 (https://download.01.org/0day-ci/archive/20220108/202201082217.CMkPI5k2-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 11.2.0
+reproduce:
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
+        # apt-get install sparse
+        # sparse version: v0.6.4-dirty
         # https://github.com/0day-ci/linux/commit/98f8f42acd1b8f46f3e6778fa58dd0d1cd005369
         git remote add linux-review https://github.com/0day-ci/linux
         git fetch --no-tags linux-review Sanrio-Alvares/PCI-thunderbolt-Add-quirk-to-handle-incorrect-Supported-Link-Speeds/20220107-064444
         git checkout 98f8f42acd1b8f46f3e6778fa58dd0d1cd005369
         # save the config file to linux build tree
         mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/pci/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=riscv SHELL=/bin/bash drivers/pci/ kernel/bpf/
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
-All warnings (new ones prefixed by >>):
 
->> drivers/pci/quirks.c:5304:6: warning: no previous prototype for function 'quirk_intel_tbt_supported_link_speeds' [-Wmissing-prototypes]
-   void quirk_intel_tbt_supported_link_speeds(struct pci_dev *pdev)
-        ^
-   drivers/pci/quirks.c:5304:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   void quirk_intel_tbt_supported_link_speeds(struct pci_dev *pdev)
-   ^
-   static 
-   1 warning generated.
-
+sparse warnings: (new ones prefixed by >>)
+   drivers/pci/quirks.c:2323:57: sparse: sparse: restricted pci_power_t degrades to integer
+>> drivers/pci/quirks.c:5304:6: sparse: sparse: symbol 'quirk_intel_tbt_supported_link_speeds' was not declared. Should it be static?
 
 vim +/quirk_intel_tbt_supported_link_speeds +5304 drivers/pci/quirks.c
 
