@@ -2,110 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA96C48966F
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 11:33:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 494CF4896C6
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 11:53:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244033AbiAJKdy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 05:33:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244016AbiAJKdW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 05:33:22 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350D4C061759
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 02:33:21 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id o3so25805385wrh.10
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 02:33:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Ux09BdvBfy5otBeH83si9wqeKjp8gHNJ9Zt3Er9zFxE=;
-        b=uXYTgRqNTmPW/huo6KEYGPOM4ISUhPLQBff/OQu1mryKVB8bfEA9SMGpAzs8WENMSr
-         fuyNQuevmAkNaM1DIBs9B5ePOxvg6kIQUNCfH4GFaXO0BAGjC6GgZqB5Fa+1alU087Z8
-         P+Vm7f+/pCXvExKs6et7iTpYsEWdwEv98+Oj1Ut/3CLURBSYQn8BBRcI2i4huO0Nyhig
-         jAh0PzBKkTaun4SPlD9rbsylUIDBnG5CqjHmWput0432gybnuR4m4QvkFs0RSDDvlb27
-         XDCH8P8FAS/PXCOIbQZcLNaqtzSULbKkPi6r/pLPsz//6OCjXG/9tpB7zbwtR5B9wtSf
-         7hog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Ux09BdvBfy5otBeH83si9wqeKjp8gHNJ9Zt3Er9zFxE=;
-        b=UNa9R3cJ0hU1eazT/76SFM94ipVeTDdqd3MiPE7S4vZ8144tsf5kGtT7Q2ihEQfhYM
-         MojB+H4sehxvHHFkgSA1z9fuoYRmsRwSR+ic4o3S2Vx/ttp8X3u/64cG5Esklj10fQsC
-         tuT/ym0wuj4cRoNaclOV1iQQpELuxCqJkpoNW2AkwM+GPiVZP4ZzfGCau2FW9JCGYOV7
-         CgfjBpakJakEXt1zzybrslpz1FNAK61bNIUl+I9oDxrdryODAZVeWsjPJkNhIrDr5vwp
-         GImtf63XMG09lgu3+DNqESgCoGyi/faC+bgffQg0ISJr/M1RNAAoY2vfwltGutFJsla5
-         EYvQ==
-X-Gm-Message-State: AOAM531sXQJTV8r+Pvf5bCrjd2/xNyQF35v9exSO+Zqp08nv4J3qJgu2
-        3jhSIHpocR+8YtvAYzzFOSQK7Q==
-X-Google-Smtp-Source: ABdhPJzMfF4X4m8rqBSMupPmJ6wMSv1HcNXmy8LWfHPif6guaPAHOVr+QYANksWrPaZREcLyZVwvuQ==
-X-Received: by 2002:a5d:6d06:: with SMTP id e6mr63672846wrq.273.1641810799760;
-        Mon, 10 Jan 2022 02:33:19 -0800 (PST)
-Received: from google.com ([31.124.24.179])
-        by smtp.gmail.com with ESMTPSA id ba18sm6324269wrb.40.2022.01.10.02.33.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jan 2022 02:33:19 -0800 (PST)
-Date:   Mon, 10 Jan 2022 10:33:23 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Suman Anna <s-anna@ti.com>, - <patches@opensource.cirrus.com>,
-        John Crispin <john@phrozen.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] dt-bindings: Drop required 'interrupt-parent'
-Message-ID: <YdwLc2ZTERBoXgxR@google.com>
-References: <20220107031905.2406176-1-robh@kernel.org>
+        id S244266AbiAJKxc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 05:53:32 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:52260 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244267AbiAJKx3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 05:53:29 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 75F866126C
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 10:53:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B17D6C36AE3;
+        Mon, 10 Jan 2022 10:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641812007;
+        bh=baxdOmir+8Iqu0s5A5fA3jLDu3CvZrMICRhLtAUmAwg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m/he2lQz56dE0sZBX0ilKLcnHPAt2OGC3BfLmiTw3f/A/o4iC5m2nzzLN2+0ivmp9
+         JsdWId8VrrNV/zDD5570qVmRznRmlgDywcV2Fl+bWKJfRXQBAA+A5AMuDPzMvAm9mL
+         pikLG0+g8TzBhR7Bq7jbIC03Dj9gVOeFsKs+EKsRJbea/ogCXRXN/oHceuW3x3j2XY
+         F3dAIrgacWsO2ed8qt+cyqSP2te0IYVDsPr3hohIGuUQVNVRR1tKCZ57edefAhL7Zc
+         /uMk0fmIl+zgRUlUgBRnbKFy1/3vOsw14kqp/m3expfGx5JpqOLXGm8Ho1e49ZsPno
+         sqzy4AYM+RyTQ==
+Received: by pali.im (Postfix)
+        id D07A2A52; Mon, 10 Jan 2022 11:53:24 +0100 (CET)
+Date:   Mon, 10 Jan 2022 11:53:24 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 23/23] PCI: aardvark: Make main irq_chip structure a
+ static driver structure
+Message-ID: <20220110105324.jud6bzdtmoiuvyas@pali>
+References: <20220110015018.26359-1-kabel@kernel.org>
+ <20220110015018.26359-24-kabel@kernel.org>
+ <bf65af53fe1a4e6b814b124b59ad3aa9@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220107031905.2406176-1-robh@kernel.org>
+In-Reply-To: <bf65af53fe1a4e6b814b124b59ad3aa9@kernel.org>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 06 Jan 2022, Rob Herring wrote:
-
-> 'interrupt-parent' is never required as it can be in a parent node or a
-> parent node itself can be an interrupt provider. Where exactly it lives is
-> outside the scope of a binding schema.
+On Monday 10 January 2022 09:28:39 Marc Zyngier wrote:
+> On 2022-01-10 01:50, Marek Behún wrote:
+> > Marc Zyngier says [1] that we should use struct irq_chip as a global
+> > static struct in the driver. Even though the structure currently
+> > contains a dynamic member (parent_device), Marc says [2] that he plans
+> > to kill it and make the structure completely static.
+> > 
+> > We have already converted others irq_chip structures in this driver in
+> > this way, but we omitted this one because the .name member is
+> > dynamically created from device's name, and the name is displayed in
+> > sysfs, so changing it would break sysfs ABI.
+> > 
+> > The rationale for changing the name (to "advk-INT") in spite of sysfs
+> > ABI, and thus allowing to convert to a static structure, is that after
+> > the other changes we made in this series, the IRQ chip is basically
+> > something different: it no logner generates ERR and PME interrupts (they
+> > are generated by emulated bridge's rp_irq_chip).
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/gpio/toshiba,gpio-visconti.yaml  | 1 -
->  .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml     | 9 ---------
->  Documentation/devicetree/bindings/mfd/cirrus,madera.yaml | 1 -
+> There is no 'is spite of the ABI'. If you don't understand why
+> we don't break the ABI, you have an even bigger problem.
+> 
+> So NAK to this patch, now and forever. Any change to the structure to
+> make it read-only must allow the preservation of the existing names
+> when they are generated by the driver.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Marc, you already presented that you do not like Armada 3720 platform
+and that you do not care about it.
 
->  .../devicetree/bindings/net/lantiq,etop-xway.yaml        | 1 -
->  .../devicetree/bindings/net/lantiq,xrx200-net.yaml       | 1 -
->  .../devicetree/bindings/pci/sifive,fu740-pcie.yaml       | 1 -
->  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml       | 1 -
->  7 files changed, 15 deletions(-)
+But please do not slowdown development for this platform.
 
--- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Arguments about ABIs, breaking it and similar are not relevant here as
+this current kernel implementation is broken. And has to be replaced by
+a working one. We are doing on it for more than year.
+
+It really does not make sense to try doing some backward compatibility
+with something which is broken by design and does not work. It just take
+lot of time without any value.
+
+We really need to more forward and fix driver as in current state is
+PCIe on Armada 3720 unusable.
