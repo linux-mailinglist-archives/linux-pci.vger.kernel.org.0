@@ -2,249 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 219224897B6
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 12:42:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B75B489866
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 13:17:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244914AbiAJLmv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 06:42:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:56803 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244926AbiAJLlo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 06:41:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641814901;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SsWQC8aTb+0uRe3yU+LwCtHB9iia3Osu0BBlRAz4Dj0=;
-        b=futY8jD0bx8u3ZSMnv4xgVIkFqrhmEe+8+MLM0VPZ3PsOL/6dk0pboyomFGeZd1a74uiu0
-        m+FwRJZPjaSuc8phiWgxZo3dFjL4tLc7fKpsb2qqPFc6SubbUA9M7f3crgEtNdlRCHF1ei
-        tNY8L593iJCCbF0goOuMUNWzHjTpnEA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-113-Cgvc8MmPMqGKtsmeoQZ0qg-1; Mon, 10 Jan 2022 06:41:40 -0500
-X-MC-Unique: Cgvc8MmPMqGKtsmeoQZ0qg-1
-Received: by mail-ed1-f71.google.com with SMTP id eg24-20020a056402289800b003fe7f91df01so873207edb.6
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 03:41:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=SsWQC8aTb+0uRe3yU+LwCtHB9iia3Osu0BBlRAz4Dj0=;
-        b=QYou/FpqD8EfHxypT1qoesab4/I2vF3lJVu8L65JDgx3uP7gIOS8Mc4MNGcMe6wSLJ
-         7vQD7X3VIf08M87QwDggHMgWDrQXmJV6LC0IRCkRf6HyN3OWB51QOzvY9UvkUixrzWSR
-         zp1S0b04WhdnYNWLrlLH6RSFtTrAy9P6Ndb+x7Hqa0eVdSd37nmW4sC9qAbEifsmqfDi
-         wIhnTv6/gtswAVOlNkeZ0OJhkTMPx7IDlG7wwEufLh5aXk6DZ8U/GT3biAsc+i7Ovc8V
-         CcZbF6OV5t9Dw7ggd6qIcpi4hofBr/2ME82CePLMIQmK3tHsSWxKUy9UZYj20ILQ5fom
-         cQXw==
-X-Gm-Message-State: AOAM5301YDVc3Bmq3T9/rIyNJEJ0qqiwoawdlznXq2nOg1io9EpvjqdG
-        Vu295YIb31NE/inquhlZa8DChRznQc8JARGmH1npIYaf5NlUyc6InjXLWO5pBYP7E43fG//7vG7
-        MquHY3avUqEWw/3GJcEzv
-X-Received: by 2002:a17:907:a420:: with SMTP id sg32mr1390941ejc.310.1641814899127;
-        Mon, 10 Jan 2022 03:41:39 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwa47UJCAu9cZOZqhb8987Jy+Gr9KRUjqDbs/oRBNFOeATkg186ylFpwptic1AlmBR/yUCuXg==
-X-Received: by 2002:a17:907:a420:: with SMTP id sg32mr1390927ejc.310.1641814898923;
-        Mon, 10 Jan 2022 03:41:38 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id j21sm2321879ejj.133.2022.01.10.03.41.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jan 2022 03:41:38 -0800 (PST)
-Message-ID: <c992ece7-6878-a39e-0386-5a499265c4cb@redhat.com>
-Date:   Mon, 10 Jan 2022 12:41:37 +0100
+        id S245307AbiAJMRA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 07:17:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239929AbiAJMQR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 07:16:17 -0500
+Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:1::465:107])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E48C061759
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 04:16:17 -0800 (PST)
+Received: from smtp102.mailbox.org (unknown [91.198.250.119])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4JXXqL6QCyzQjkl;
+        Mon, 10 Jan 2022 13:16:14 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Message-ID: <db802a46-b210-900e-25ad-25b31086b970@denx.de>
+Date:   Mon, 10 Jan 2022 13:16:09 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v6] x86/PCI: Ignore E820 reservations for bridge windows
- on newer systems
+Subject: Re: PCIe AER generates no interrupts on host (ZynqMP)
 Content-Language: en-US
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>, stable@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-References: <20211217141348.379461-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20211217141348.379461-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Bharat Kumar Gogada <bharatku@xilinx.com>
+References: <4736848c-7b3b-a99d-8fd3-540ec6eb920b@denx.de>
+ <20220107100458.sfqcq7gy6nwwamjt@pali>
+From:   Stefan Roese <sr@denx.de>
+In-Reply-To: <20220107100458.sfqcq7gy6nwwamjt@pali>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi All,
+On 1/7/22 11:04, Pali Rohár wrote:
+> Hello! You asked me in another email for comments to this email, so I'm
+> replying directly to this email...
 
-On 12/17/21 15:13, Hans de Goede wrote:
-> Some BIOS-es contain a bug where they add addresses which map to system
-> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
-> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
-> space").
-> 
-> To work around this bug Linux excludes E820 reserved addresses when
-> allocating addresses from the PCI host bridge window since 2010.
-> 
-> Recently (2019) some systems have shown-up with E820 reservations which
-> cover the entire _CRS returned PCI bridge memory window, causing all
-> attempts to assign memory to PCI BARs which have not been setup by the
-> BIOS to fail. For example here are the relevant dmesg bits from a
-> Lenovo IdeaPad 3 15IIL 81WE:
-> 
->  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
->  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
-> 
-> The ACPI specifications appear to allow this new behavior:
-> 
-> The relationship between E820 and ACPI _CRS is not really very clear.
-> ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
-> 
->   This range of addresses is in use or reserved by the system and is
->   not to be included in the allocatable memory pool of the operating
->   system's memory manager.
-> 
-> and it may be used when:
-> 
->   The address range is in use by a memory-mapped system device.
-> 
-> Furthermore, sec 15.2 says:
-> 
->   Address ranges defined for baseboard memory-mapped I/O devices, such
->   as APICs, are returned as reserved.
-> 
-> A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
-> and its apertures are in use and certainly should not be included in
-> the general allocatable pool, so the fact that some BIOS-es reports
-> the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
-> 
-> So it seems that the excluding of E820 reserved addresses is a mistake.
-> 
-> Ideally Linux would fully stop excluding E820 reserved addresses,
-> but then the old systems this was added for will regress.
-> Instead keep the old behavior for old systems, while ignoring
-> the E820 reservations for any systems from now on.
-> 
-> Old systems are defined here as BIOS year < 2018, this was chosen to make
-> sure that E820 reservations will not be used on the currently affected
-> systems, while at the same time also taking into account that the systems
-> for which the E820 checking was originally added may have received BIOS
-> updates for quite a while (esp. CVE related ones), giving them a more
-> recent BIOS year then 2010.
-> 
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-> BugLink: https://bugs.launchpad.net/bugs/1878279
-> BugLink: https://bugs.launchpad.net/bugs/1931715
-> BugLink: https://bugs.launchpad.net/bugs/1932069
-> BugLink: https://bugs.launchpad.net/bugs/1921649
-> Cc: Benoit Grégoire <benoitg@coeus.ca>
-> Cc: Hui Wang <hui.wang@canonical.com>
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v6:
-> - Remove the possibility to change the behavior from the commandline
->   because of worries that users may use this to paper over other problems
+Thanks a lot for you input here. Please find some comments below...
 
-ping ?
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
-> Changes in v5:
-> - Drop mention of Windows behavior from the commit msg, replace with a
->   reference to the specs
-> - Improve documentation in Documentation/admin-guide/kernel-parameters.txt
-> - Reword the big comment added, use "PCI host bridge window" in it and drop
->   all refences to Windows
+> On Tuesday 04 January 2022 10:02:18 Stefan Roese wrote:
+>> Hi,
+>>
+>> I'm trying to get the Kernel PCIe AER infrastructure to work on my
+>> ZynqMP based system. E.g. handle the events (correctable, uncorrectable
+>> etc). In my current tests, no AER interrupt is generated though. I'm
+>> currently using the "surprise down error status" in the uncorrectable
+>> error status register of the connected PCIe switch (PLX / Broadcom
+>> PEX8718). Here the bit is correctly logged in the PEX switch
+>> uncorrectable error status register but no interrupt is generated
+>> to the root-port / system. And hence no AER message(s) reported.
+>>
+>> Does any one of you have some ideas on what might be missing? Why are
+>> these events not reported to the PCIe rootport driver via IRQ? Might
+>> this be a problem of the missing MSI-X support of the ZynqMP? The AER
+>> interrupt is connected as legacy IRQ:
+>>
+>> cat /proc/interrupts | grep -i aer
+>>   58:          0          0          0          0  nwl_pcie:legacy   0 Level
+>> PCIe PME, aerdrv
 > 
-> Changes in v4:
-> - Rewrap the big comment block to fit in 80 columns
-> - Add Rafael's Acked-by
-> - Add Cc: stable@vger.kernel.org
-> 
-> Changes in v3:
-> - Commit msg tweaks (drop dmesg timestamps, typo fix)
-> - Use "defined(CONFIG_...)" instead of "defined CONFIG_..."
-> - Add Mika's Reviewed-by
-> 
-> Changes in v2:
-> - Replace the per model DMI quirk approach with disabling E820 reservations
->   checking for all systems with a BIOS year >= 2018
-> - Add documentation for the new kernel-parameters to
->   Documentation/admin-guide/kernel-parameters.txt
-> ---
-> Other patches trying to address the same issue:
-> https://lore.kernel.org/r/20210624095324.34906-1-hui.wang@canonical.com
-> https://lore.kernel.org/r/20200617164734.84845-1-mika.westerberg@linux.intel.com
-> V1 patch:
-> https://lore.kernel.org/r/20211005150956.303707-1-hdegoede@redhat.com
-> ---
->  arch/x86/kernel/resource.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-> index 9b9fb7882c20..9ae64f9af956 100644
-> --- a/arch/x86/kernel/resource.c
-> +++ b/arch/x86/kernel/resource.c
-> @@ -1,4 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +#include <linux/dmi.h>
->  #include <linux/ioport.h>
->  #include <asm/e820/api.h>
->  
-> @@ -23,11 +24,31 @@ static void resource_clip(struct resource *res, resource_size_t start,
->  		res->start = end + 1;
->  }
->  
-> +/*
-> + * Some BIOS-es contain a bug where they add addresses which map to
-> + * system RAM in the PCI host bridge window returned by the ACPI _CRS
-> + * method, see commit 4dc2287c1805 ("x86: avoid E820 regions when
-> + * allocating address space"). To avoid this Linux by default excludes
-> + * E820 reservations when allocating addresses since 2010.
-> + * In 2019 some systems have shown-up with E820 reservations which cover
-> + * the entire _CRS returned PCI host bridge window, causing all attempts
-> + * to assign memory to PCI BARs to fail if Linux uses E820 reservations.
-> + *
-> + * Ideally Linux would fully stop using E820 reservations, but then
-> + * the old systems this was added for will regress.
-> + * Instead keep the old behavior for old systems, while ignoring the
-> + * E820 reservations for any systems from now on.
-> + */
->  static void remove_e820_regions(struct resource *avail)
->  {
-> -	int i;
-> +	int i, year = dmi_get_bios_year();
->  	struct e820_entry *entry;
->  
-> +	if (year >= 2018)
-> +		return;
-> +
-> +	pr_info_once("PCI: Removing E820 reservations from host bridge windows\n");
-> +
->  	for (i = 0; i < e820_table->nr_entries; i++) {
->  		entry = &e820_table->entries[i];
->  
-> 
+> Error events (correctable, non-fatal and fatal) are reported by PCIe
+> devices to the Root Complex via PCIe error messages (Message code of TLP
+> is set to Error Message) and not via interrupts. Root Port is then
+> responsible to "convert" these PCIe error messages to MSI(X) interrupt
+> and report it to the system. According to PCIe spec, AER is supported
+> only via MSI(X) interrupts, not legacy INTx.
 
+This seems not correct. From the ML link reported by Bjorn, there seems
+to be a platform specific interrupt on ZynqMP, to report the AER events.
+At least this is how I interpret the patch from Bharat from that time.
+In the meantime Bharat from Xilinx has sent me a link to a newer,
+updated patch series to use this "misc" interrupts for AER instead. I'll
+get into more details on this in another reply.
+
+> Via Bridge Control register (SERR# enable bit) on the Root Port it is
+> possible to enable / disable reporting of these errors from PCIe devices
+> on the other end of PCIe link to the system.
+
+Here the BridgeCtl of the Root Port:
+   BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
+
+> Then via Command register
+> (SERR# enable bit) and Device Control register it is possible to enable
+> / disable reporting of all errors (from Root Port and also devices on
+> other end of the link).
+
+The command registers have SERR disabled on all PCIe devices:
+   Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- 
+Stepping- SERR- FastB2B- DisINTx-
+
+Not sure if this is a problem. I would expect the Kernel PCI subsystem
+and the AER driver to enable the necessary bits. So is 'SERR-' here
+a problem?
+
+Device Control has the error reporting enabled:
+   DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+
+> And via AER registers on the Root Port it is
+> also possible to disable generating MSI(X) interrupts when error is
+> reported.
+
+Here is what the Root Port reports:
+         Capabilities: [140 v1] Advanced Error Reporting
+                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- 
+UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- 
+UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- 
+UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- 
+AdvNonFatalErr-
+                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- 
+AdvNonFatalErr+
+                 AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- 
+ECRCChkCap+ ECRCChkEn-
+                         MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+                 HeaderLog: 00000000 00000000 00000000 00000000
+                 RootCmd: CERptEn+ NFERptEn+ FERptEn+
+                 RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
+                          FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
+
+Mask (..Msk) is set to "-" which is correct for not masking this error
+I assume.
+
+> And IIRC via PCIe Downstream Port Containment there is also
+> way how to "mask" reporting of error events. But I do not have PCIe
+> devices with DPC support, so I have not played with it yet.
+
+Me neither.
+
+> So there are
+> many places where error event can be stopped. But important is that
+> kernel AER driver should correctly enable all required bits to start
+> receiving MSI(X) interrupts for error events.
+
+Agreed.
+
+> On other devices I'm seeing following issues... Root Ports are not
+> compliant to PCIe spec and do not implement error reporting at all. Or
+> they do not implement those enable/disable bits correctly. Or they do
+> not implement proper support for extended PCIe config space for Root
+> Port (AER is in extended space). Or they report error events via custom
+> proprietary interrupts and not via MSI(X) as required by PCIe spec. This
+> is the case for (all?) Marvell PCIe controllers and I saw here on
+> linux-pci list that it applies also for PCIe controllers from some other
+> vendors. Also drivers for Marvell PCIe controllers requires additional
+> code to access extended PCIe config space of Root Port (accessing config
+> space of PCIe devices on the other end of PCIe link is working fine).
+> 
+> So the first suspicious thing is why kernel AER driver is using legacy
+> shared INTx interrupt as in most cases Root Port would not report any
+> error event via INTx. And the second thing, try to look into
+> documentation for used PCIe controller, just in case if vendor
+> "invented" some proprietary and non-compliant way how to report error /
+> AER events to OS...
+
+At least this seems to be the case. Even though I'm still not receiving
+the surprise down error status with additional change. More to this in
+the other mail.
+
+> I saw more issues with PCIe controllers as with PCIe switches so in my
+> opinion issue would be either in controller driver or controller hw
+> itself. And if you see event status logged in PCIe switch register I
+> would expect that switch correctly sent PCIe Error message to Root
+> Complex.
+
+That is my understanding and best guess right now as well.
+
+Thanks,
+Stefan
