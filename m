@@ -2,61 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 031BF489448
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 09:52:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0A18489508
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 10:17:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242507AbiAJIwJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 03:52:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39862 "EHLO
+        id S242839AbiAJJRi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 04:17:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242256AbiAJIuF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 03:50:05 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A089C06173F;
-        Mon, 10 Jan 2022 00:49:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AUTeW22BpNDDF1icPr7BlgZZ5aYLeEr/4W4bnlubcPs=; b=G0m6RiA4hux2kbGCSUhQXQ11tw
-        s7S9E+W8aBweUE3WZNR3lFPI1F7A39FH7CgF/5iG1K9jhQZDbTpHF3HuGfxaBaW/VqYdaAZ35IR53
-        GfO3TPYnnWtY3X8K8NJzU3aSio8bqUmlMGv9sC3EXplfUV6s83Y3Y1xCfhJEfLcfwcPAhbRxTegvv
-        PkzzA98gEVgcx8oYwxTHH30O090kK8Tb+MQPHsUXzgUY4KuDrBMCBXV7yp2jzrMTEDCGTDZbL3d+d
-        eo55GtAoMhB2aWkH2gb1tXsKzQoG/6M9gPUKpJtcdebnxVoAaJa40AP1o7zliTzyPOS5x2foCTQRR
-        fwkxdu3Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1n6qNH-00A2No-4x; Mon, 10 Jan 2022 08:49:55 +0000
-Date:   Mon, 10 Jan 2022 00:49:55 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, arnd@arndb.de,
-        hch@infradead.org, akpm@linux-foundation.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 16/16] PCI: Remove usage of the deprecated
- "pci-dma-compat.h" API
-Message-ID: <YdvzMz3aQzWfbjnu@infradead.org>
-References: <e965573211f8c81c8ba978cfbc21925810a662b1.1641500561.git.christophe.jaillet@wanadoo.fr>
- <20220106222804.GA330366@bhelgaas>
- <0e381699-8bfa-186b-3688-5346e42a63cd@wanadoo.fr>
- <cfabcc1c-16cd-80f7-7d28-6d817c29a7a0@wanadoo.fr>
+        with ESMTP id S242612AbiAJJRd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 04:17:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAAEDC061751
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 01:17:33 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4953561225
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 09:17:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85716C36AED;
+        Mon, 10 Jan 2022 09:17:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641806252;
+        bh=I6CA+wzhkholummADzrWOLHSeE/iqhS13t7Dpb5uFi8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ifTD9CZdUjAD/+ZOVp48sQrPq+x2B47ZgZtyjt5QT9/7YQrvvBnHqffzZ+saXWOtA
+         EXK/j5mHFQRCj2LBrqSqZ1sBD9nb4ypR6DjhCnfS7LnYREtbvsx2stCdIotVlpk8CS
+         8iE1+cwGiegfrHLSr+KE0ptFDRT0RFfW6AdptbilnYj0S0+7YRZYE5lQAs73P9SsdD
+         tVkigm3lhQWggPO5M8mJZJITf0DM/6CBoTuKPEnEF++Wiv8OP0wzL7tAkczAVwDKGQ
+         wRtRo0cas7/S8BN1PY3xVM62n3VZ+ZczXp2QJ1aw20nKW8kAKgHH8KZLGilQEhh7qv
+         +p6O7ylpnivCA==
+Received: by pali.im (Postfix)
+        id 18212A52; Mon, 10 Jan 2022 10:17:30 +0100 (CET)
+Date:   Mon, 10 Jan 2022 10:17:29 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, Russell King <linux@arm.linux.org.uk>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Victor Gu <xigu@marvell.com>,
+        =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+        Zachary Zhang <zhangzg@marvell.com>,
+        Wilson Ding <dingwei@marvell.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] PCI: aardvark: Implement emulated root PCI bridge
+Message-ID: <20220110091729.owxno5ck3bihlrzj@pali>
+References: <20220107212736.GA404447@bhelgaas>
+ <20220107231734.GA426583@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cfabcc1c-16cd-80f7-7d28-6d817c29a7a0@wanadoo.fr>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20220107231734.GA426583@bhelgaas>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 07, 2022 at 06:23:25PM +0100, Marion & Christophe JAILLET wrote:
-> What is the best option?
-> 1. Add    #include <linux/dma-mapping.h>?		or
-> 2. Add this "missing" include in needed place?
+On Friday 07 January 2022 17:17:34 Bjorn Helgaas wrote:
+> [+cc Pali; sorry, I meant to cc you on this but forgot]
 > 
-> I would say 2, but I would need help, because I don't have a built farm at
-> home! :)
+> On Fri, Jan 07, 2022 at 03:27:38PM -0600, Bjorn Helgaas wrote:
+> > On Fri, Jun 29, 2018 at 11:22:31AM +0200, Thomas Petazzoni wrote:
+> > 
+> > > +static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+> > > +{
+> > > +	struct pci_sw_bridge *bridge = &pcie->bridge;
+> > 
+> > > +	/* Support interrupt A for MSI feature */
+> > > +	bridge->conf.intpin = PCIE_CORE_INT_A_ASSERT_ENABLE;
+> > 
+> > Only 3.5 years later, IIUC, this is the value you get when you read
+> > PCI_INTERRUPT_PIN, so I think this should be PCI_INTERRUPT_INTA, not
+> > PCIE_CORE_INT_A_ASSERT_ENABLE.
+> > 
+> > Readers expect to get the values defined in the PCI spec, i.e.,
+> > 
+> >   PCI_INTERRUPT_UNKNOWN
+> >   PCI_INTERRUPT_INTA
+> >   PCI_INTERRUPT_INTB
+> >   PCI_INTERRUPT_INTC
+> >   PCI_INTERRUPT_INTD
+> > 
+> > Bjorn
 
-In the long run 2 is where we want to end up.  But I'd do 1 first to get
-the legacy API removal finished, and then do 2 later after a lot of test
-coverage from the build bot.
+Yes! We have a prepared patch for it and Marek now sent it:
+https://lore.kernel.org/linux-pci/20220110015018.26359-2-kabel@kernel.org/
