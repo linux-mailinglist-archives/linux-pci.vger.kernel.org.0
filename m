@@ -2,99 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28C22489E03
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 18:07:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5CE9489E13
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 18:11:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237835AbiAJRHI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 12:07:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237655AbiAJRHI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 12:07:08 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 435A8C06173F
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 09:07:08 -0800 (PST)
+        id S237960AbiAJRL3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 12:11:29 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:49110 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232637AbiAJRL3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 12:11:29 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D768761346
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 17:07:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F131AC36AE3;
-        Mon, 10 Jan 2022 17:07:06 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id D620CCE1677;
+        Mon, 10 Jan 2022 17:11:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 069ADC36AE3;
+        Mon, 10 Jan 2022 17:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641834427;
-        bh=uSRmcrk/rMxc6Y0vOkh+x1pTujA0vIxTYCIx+RH6btk=;
+        s=k20201202; t=1641834685;
+        bh=X4tXoAGC6EqJ6PYEuG6VCZ/OpyF8blgVmWjeySllZjQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XveBlLt+2AAkV+nD+QRtSqZ/vXLxzSuzYJL3V0LaWr8pJ8YEwOA7tFEJa2osk+aP8
-         6aVxOgWtkmzUpBHkO0UW43wPD0dvZTYZVjlTwqwRXNVSEZnOr+82lWnzG0ZVDyKDpK
-         H01spAQ4paisJjYOKj95Bh9LDrGoBHyUD3OhnGsgGP678BPj2xmiSExRXzF+WA8bJG
-         gMrCefqYApruZVsgRprxTdFXl2ybDJcae6r3FNNGx6wr49HIQ1OS5yTAA20rYPw6On
-         tM9lk4oOU+fLmDN8FAkfhs0X5P1TAheCHtiwVdVMaD1+4G/KdPhitUERUjD26QBDNb
-         rd8i0tff9gVVw==
-Date:   Mon, 10 Jan 2022 11:07:04 -0600
+        b=empKVpZSr2IPSLiNwSMhcQyNj0YdWaPaD1kHUE2YOI95Bc0/xHllJHIJ2w1eEzItk
+         /Ag9iEjQ3tvNVUjQAshIVIgB45mBrjIjVtKRi8YNTDjz+bQBRZ5zhIrAEbIfK2cl/O
+         nV/x3qj6KAdajx7F49Vj2GjPUATphHfNsrWBQDLX+v9iT6ERZGqZAYtL/h0G7KN8d2
+         rNnds4Y5qmTQl76eEdPBPUi5zK+i2Wv/Vrn1khMtXibf5x9NkOZuT+e5ti4YCF7yAT
+         V2HXSP8zsyVFd650EoK0kLpV1tLdSy+ICmWVXJYdIw1fKPjUe886ijAQihynoApjBy
+         jEAvK1ta7unvg==
+Date:   Mon, 10 Jan 2022 11:11:23 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, pali@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 01/23] PCI: aardvark: Replace custom PCIE_CORE_INT_*
- macros with PCI_INTERRUPT_*
-Message-ID: <20220110170704.GA60160@bhelgaas>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, stable@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v6] x86/PCI: Ignore E820 reservations for bridge windows
+ on newer systems
+Message-ID: <20220110171123.GA60297@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220110015018.26359-2-kabel@kernel.org>
+In-Reply-To: <c992ece7-6878-a39e-0386-5a499265c4cb@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 10, 2022 at 02:49:56AM +0100, Marek Behún wrote:
-> From: Pali Rohár <pali@kernel.org>
+On Mon, Jan 10, 2022 at 12:41:37PM +0100, Hans de Goede wrote:
+> Hi All,
 > 
-> Header file linux/pci.h defines enum pci_interrupt_pin with corresponding
-> PCI_INTERRUPT_* values.
+> On 12/17/21 15:13, Hans de Goede wrote:
+> > Some BIOS-es contain a bug where they add addresses which map to system
+> > RAM in the PCI host bridge window returned by the ACPI _CRS method, see
+> > commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+> > space").
+> > 
+> > To work around this bug Linux excludes E820 reserved addresses when
+> > allocating addresses from the PCI host bridge window since 2010.
+> > 
+> > Recently (2019) some systems have shown-up with E820 reservations which
+> > cover the entire _CRS returned PCI bridge memory window, causing all
+> > attempts to assign memory to PCI BARs which have not been setup by the
+> > BIOS to fail. For example here are the relevant dmesg bits from a
+> > Lenovo IdeaPad 3 15IIL 81WE:
+> > 
+> >  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
+> >  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
+> > 
+> > The ACPI specifications appear to allow this new behavior:
+> > 
+> > The relationship between E820 and ACPI _CRS is not really very clear.
+> > ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
+> > 
+> >   This range of addresses is in use or reserved by the system and is
+> >   not to be included in the allocatable memory pool of the operating
+> >   system's memory manager.
+> > 
+> > and it may be used when:
+> > 
+> >   The address range is in use by a memory-mapped system device.
+> > 
+> > Furthermore, sec 15.2 says:
+> > 
+> >   Address ranges defined for baseboard memory-mapped I/O devices, such
+> >   as APICs, are returned as reserved.
+> > 
+> > A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
+> > and its apertures are in use and certainly should not be included in
+> > the general allocatable pool, so the fact that some BIOS-es reports
+> > the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
+> > 
+> > So it seems that the excluding of E820 reserved addresses is a mistake.
+> > 
+> > Ideally Linux would fully stop excluding E820 reserved addresses,
+> > but then the old systems this was added for will regress.
+> > Instead keep the old behavior for old systems, while ignoring
+> > the E820 reservations for any systems from now on.
+> > 
+> > Old systems are defined here as BIOS year < 2018, this was chosen to make
+> > sure that E820 reservations will not be used on the currently affected
+> > systems, while at the same time also taking into account that the systems
+> > for which the E820 checking was originally added may have received BIOS
+> > updates for quite a while (esp. CVE related ones), giving them a more
+> > recent BIOS year then 2010.
+> > 
+> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
+> > BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+> > BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
+> > BugLink: https://bugs.launchpad.net/bugs/1878279
+> > BugLink: https://bugs.launchpad.net/bugs/1931715
+> > BugLink: https://bugs.launchpad.net/bugs/1932069
+> > BugLink: https://bugs.launchpad.net/bugs/1921649
+> > Cc: Benoit Grégoire <benoitg@coeus.ca>
+> > Cc: Hui Wang <hui.wang@canonical.com>
+> > Cc: stable@vger.kernel.org
+> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > ---
+> > Changes in v6:
+> > - Remove the possibility to change the behavior from the commandline
+> >   because of worries that users may use this to paper over other problems
 > 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Signed-off-by: Marek Behún <kabel@kernel.org>
+> ping ?
 
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+Thanks, Hans.  Maybe I'm quixotic, but I'm still hoping for an
+approach based on firmware behavior instead of firmware date.  If
+nobody else tries, I will eventually try myself, but I don't have any
+ETA.
 
-Thanks!
-
-> ---
->  drivers/pci/controller/pci-aardvark.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index ec0df426863d..62baddd2ca95 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -39,10 +39,6 @@
->  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX_EN			BIT(6)
->  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHCK			BIT(7)
->  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHCK_RCV			BIT(8)
-> -#define     PCIE_CORE_INT_A_ASSERT_ENABLE			1
-> -#define     PCIE_CORE_INT_B_ASSERT_ENABLE			2
-> -#define     PCIE_CORE_INT_C_ASSERT_ENABLE			3
-> -#define     PCIE_CORE_INT_D_ASSERT_ENABLE			4
->  /* PIO registers base address and register offsets */
->  #define PIO_BASE_ADDR				0x4000
->  #define PIO_CTRL				(PIO_BASE_ADDR + 0x0)
-> @@ -968,7 +964,7 @@ static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
->  	bridge->conf.pref_mem_limit = cpu_to_le16(PCI_PREF_RANGE_TYPE_64);
->  
->  	/* Support interrupt A for MSI feature */
-> -	bridge->conf.intpin = PCIE_CORE_INT_A_ASSERT_ENABLE;
-> +	bridge->conf.intpin = PCI_INTERRUPT_INTA;
->  
->  	/* Aardvark HW provides PCIe Capability structure in version 2 */
->  	bridge->pcie_conf.cap = cpu_to_le16(2);
-> -- 
-> 2.34.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Bjorn
