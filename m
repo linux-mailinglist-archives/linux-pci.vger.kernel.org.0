@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41CF3488E39
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 02:50:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA124488E3A
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 02:50:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237980AbiAJBu1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 9 Jan 2022 20:50:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59496 "EHLO
+        id S237988AbiAJBud (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 Jan 2022 20:50:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237983AbiAJBu1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Jan 2022 20:50:27 -0500
+        with ESMTP id S237985AbiAJBu3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Jan 2022 20:50:29 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D33F8C06173F
-        for <linux-pci@vger.kernel.org>; Sun,  9 Jan 2022 17:50:26 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A392BC06173F
+        for <linux-pci@vger.kernel.org>; Sun,  9 Jan 2022 17:50:28 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 57572B81118
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 01:50:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C978C36AE3;
-        Mon, 10 Jan 2022 01:50:22 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6B11BB8111F
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 01:50:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9517EC36AF4;
+        Mon, 10 Jan 2022 01:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641779424;
-        bh=B7sfen2UllzsVBzAuAws7MqogCv0oaPUjCj0ZlnHL0w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Nl5aBrsv1eSEgqfb9C4lv4zeCcYmPLIli/odFOs+PHOlZXKJ3CaOmBHFmRPR6HlR3
-         zWQY4kuoRXRH/OmLEndiZuy62YfZ1EsnxiN5pDgcC0oIzdeLf5XWt6fOmR2eWU8sA4
-         h8dXx1irCOWHqrVSABTOa75HYltItv9j9+f4VigAizR18FFUGicfWLmbXxs9bL54b5
-         DUX2RbOskVCVgwzYYxrwmGRbst0rbl8mLCgFQUaarsqyXnJelj+Hyc8uh+hNw6zBwu
-         PUFu8k82laIi8+pY0Lso19mzA+lR8KdigFZfVcB9en0W3aE/lyHyzDxYP0wsSmjztp
-         eKDS0OHF0NknQ==
+        s=k20201202; t=1641779426;
+        bh=WwwztMYPBfFsKPyVwryWqLcipuz5ybC+HCXaS8W85SI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fsQ+YgNoDwEpSD30cHIQrcJtyUvQqlfdNGpV25P8+4XrSZTfdZ/+XydTlQgrktHEk
+         3VNZZ8V4MwCKQYwgViJRcbgao6Drn9VMRWf2pbnOc3htZn9EODsLLKcOTSz163T5+M
+         ahBro/mG8So5mc7UJKamm3uhfb727oyej8Z3gx+JR7zEEkhkDLO6zvmrjL2toQNcgC
+         BfEtg9IErwSrl9JAbfLoV9YVyaYl0mbe2JxWoXtyhju8mDfbin/vDgzHL3r9ga9CIV
+         dHy6X7SvIc/V0SjWWI7Ld4Y4J7mCL4krCD+Ck/6Nb6K5jyhgtFd6XWDQyz2xksd9Yb
+         teGNq9ftsJGbg==
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 To:     Marc Zyngier <maz@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -38,10 +38,12 @@ To:     Marc Zyngier <maz@kernel.org>,
 Cc:     pali@kernel.org, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH v2 00/23] PCI: aardvark controller fixes BATCH 4
-Date:   Mon, 10 Jan 2022 02:49:55 +0100
-Message-Id: <20220110015018.26359-1-kabel@kernel.org>
+Subject: [PATCH v2 01/23] PCI: aardvark: Replace custom PCIE_CORE_INT_* macros with PCI_INTERRUPT_*
+Date:   Mon, 10 Jan 2022 02:49:56 +0100
+Message-Id: <20220110015018.26359-2-kabel@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220110015018.26359-1-kabel@kernel.org>
+References: <20220110015018.26359-1-kabel@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -49,67 +51,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Lorenzo, Bjorn and Marc,
+From: Pali Rohár <pali@kernel.org>
 
-this is v2 of fourth batch of fixes for the Aardvark PCIe controller
-driver.
+Header file linux/pci.h defines enum pci_interrupt_pin with corresponding
+PCI_INTERRUPT_* values.
 
-Stuff is converted to new interrupt APIs and recommendations from Marc.
-Marc, could you look at these and acknowledge or comment?
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Marek Behún <kabel@kernel.org>
+---
+ drivers/pci/controller/pci-aardvark.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-This series mainly fixes and adds support for stuff around interrupts:
-the most important thing is fixing MSI support.
-
-The series is rebased on helgaas/next.
-
-Marek
-
-Changes since v1:
-- added patches converting irq_chip and msi_domain_info structures into
-  static driver structures, instead of creating them dynamically, as
-  suggested by Marc
-- added some small patches that should be easy to review
-  - conversion to use constants from linux/pci.h instead of ad-hoc
-    constants int patch 1
-  - use dev_fwnode(dev) instead of of_node_to_fwnode(dev->of_node) in
-    patch 8
-  - fix of a comment in patch 22
-
-Marek Behún (6):
-  PCI: aardvark: Make MSI irq_chip structures static driver structures
-  PCI: aardvark: Make msi_domain_info structure a static driver
-    structure
-  PCI: aardvark: Use dev_fwnode() instead of
-    of_node_to_fwnode(dev->of_node)
-  PCI: aardvark: Drop __maybe_unused from advk_pcie_disable_phy()
-  PCI: aardvark: Update comment about link going down after link-up
-  PCI: aardvark: Make main irq_chip structure a static driver structure
-
-Pali Rohár (17):
-  PCI: aardvark: Replace custom PCIE_CORE_INT_* macros with
-    PCI_INTERRUPT_*
-  PCI: aardvark: Fix reading MSI interrupt number
-  PCI: aardvark: Fix support for MSI interrupts
-  PCI: aardvark: Rewrite IRQ code to chained IRQ handler
-  PCI: aardvark: Check return value of generic_handle_domain_irq() when
-    processing INTx IRQ
-  PCI: aardvark: Refactor unmasking summary MSI interrupt
-  PCI: aardvark: Add support for masking MSI interrupts
-  PCI: aardvark: Fix setting MSI address
-  PCI: aardvark: Enable MSI-X support
-  PCI: aardvark: Add support for ERR interrupt on emulated bridge
-  PCI: aardvark: Fix reading PCI_EXP_RTSTA_PME bit on emulated bridge
-  PCI: aardvark: Optimize writing PCI_EXP_RTCTL_PMEIE and
-    PCI_EXP_RTSTA_PME on emulated bridge
-  PCI: aardvark: Add support for PME interrupts
-  PCI: aardvark: Fix support for PME requester on emulated bridge
-  PCI: aardvark: Use separate INTA interrupt for emulated root bridge
-  PCI: aardvark: Remove irq_mask_ack callback for INTx interrupts
-  PCI: aardvark: Don't mask irq when mapping
-
- drivers/pci/controller/pci-aardvark.c | 415 +++++++++++++++++---------
- 1 file changed, 281 insertions(+), 134 deletions(-)
-
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index ec0df426863d..62baddd2ca95 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -39,10 +39,6 @@
+ #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX_EN			BIT(6)
+ #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHCK			BIT(7)
+ #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHCK_RCV			BIT(8)
+-#define     PCIE_CORE_INT_A_ASSERT_ENABLE			1
+-#define     PCIE_CORE_INT_B_ASSERT_ENABLE			2
+-#define     PCIE_CORE_INT_C_ASSERT_ENABLE			3
+-#define     PCIE_CORE_INT_D_ASSERT_ENABLE			4
+ /* PIO registers base address and register offsets */
+ #define PIO_BASE_ADDR				0x4000
+ #define PIO_CTRL				(PIO_BASE_ADDR + 0x0)
+@@ -968,7 +964,7 @@ static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+ 	bridge->conf.pref_mem_limit = cpu_to_le16(PCI_PREF_RANGE_TYPE_64);
+ 
+ 	/* Support interrupt A for MSI feature */
+-	bridge->conf.intpin = PCIE_CORE_INT_A_ASSERT_ENABLE;
++	bridge->conf.intpin = PCI_INTERRUPT_INTA;
+ 
+ 	/* Aardvark HW provides PCIe Capability structure in version 2 */
+ 	bridge->pcie_conf.cap = cpu_to_le16(2);
 -- 
 2.34.1
 
