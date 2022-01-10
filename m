@@ -2,152 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9C58489717
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 12:14:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64816489772
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 12:30:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244549AbiAJLOF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 06:14:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244485AbiAJLMh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 06:12:37 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3453C034005
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 03:12:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S244719AbiAJLad (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 06:30:33 -0500
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:47375 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S244760AbiAJL3t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 Jan 2022 06:29:49 -0500
+Received: from [192.168.0.5] (ip5f5aece2.dynamic.kabel-deutschland.de [95.90.236.226])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id EE225CE12F2
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 11:12:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFBCCC36AE5;
-        Mon, 10 Jan 2022 11:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641813134;
-        bh=T+OLgP6ZUCT9cXyxspkgBFms21paBB3f0bcN3WP441U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F2HQ7eb3hL5fxniDC2Ht5c7tEPw30NkYV1n45lbEUzGtaoft1phwwiT3FP9Td640d
-         1dRmcLPWf13SxflJKCjMEaqz1i3RnLGaa3iRdUD6eY4rK3VKyAqnrsOO95+7R8sdEt
-         5T5d8Ag34/lV//a1hvXshu6SdnjaQRhYNqlyhu47Sw0AUEejTck307WBk6rmc/cF6D
-         uyFNMlebVROtqofD1p47evE9+xhU3TZK9wToiaQnk6asdqkV9t5j+vsLyQJ5gZWgFy
-         4PB+OOsRrbZ8CLeww2QvrsiQrUU4Me49THpcq3MPJme6IVCKNfFYAegvv/VJoMLsjT
-         Q2GUW4ofWIdBw==
-Received: by pali.im (Postfix)
-        id 63106A52; Mon, 10 Jan 2022 12:12:11 +0100 (CET)
-Date:   Mon, 10 Jan 2022 12:12:11 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Stefan Roese <sr@denx.de>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Bharat Kumar Gogada <bharatku@xilinx.com>
-Subject: Re: PCIe AER generates no interrupts on host (ZynqMP)
-Message-ID: <20220110111211.l6lqmfmyu47dfhjh@pali>
-References: <20220107213106.7lvzvdlrfnbyhvbl@pali>
- <20220108031357.GA443744@bhelgaas>
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 879DE61E5FE02;
+        Mon, 10 Jan 2022 12:29:44 +0100 (CET)
+Message-ID: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
+Date:   Mon, 10 Jan 2022 12:29:44 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.1
+Content-Language: en-US
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: 100 ms boot time increase regression in acpi_init()/acpi_scan_bus()
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        regressions@lists.linux.dev
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220108031357.GA443744@bhelgaas>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 07 January 2022 21:13:57 Bjorn Helgaas wrote:
-> On Fri, Jan 07, 2022 at 10:31:06PM +0100, Pali Rohár wrote:
-> > On Friday 07 January 2022 14:34:15 Bjorn Helgaas wrote:
-> > > On Fri, Jan 07, 2022 at 11:04:58AM +0100, Pali Rohár wrote:
-> > > > Hello! You asked me in another email for comments to this email, so I'm
-> > > > replying directly to this email...
-> > > > 
-> > > > On Tuesday 04 January 2022 10:02:18 Stefan Roese wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > I'm trying to get the Kernel PCIe AER infrastructure to work on my
-> > > > > ZynqMP based system. E.g. handle the events (correctable, uncorrectable
-> > > > > etc). In my current tests, no AER interrupt is generated though. I'm
-> > > > > currently using the "surprise down error status" in the uncorrectable
-> > > > > error status register of the connected PCIe switch (PLX / Broadcom
-> > > > > PEX8718). Here the bit is correctly logged in the PEX switch
-> > > > > uncorrectable error status register but no interrupt is generated
-> > > > > to the root-port / system. And hence no AER message(s) reported.
-> > > 
-> > > I think the error should also be logged in the Root Port AER
-> > > Capability.  And of course the interrupt enable bits in the Root Error
-> > > Command register would have to be set.
-> > > 
-> > > > > Does any one of you have some ideas on what might be missing? Why are
-> > > > > these events not reported to the PCIe rootport driver via IRQ? Might
-> > > > > this be a problem of the missing MSI-X support of the ZynqMP? The AER
-> > > > > interrupt is connected as legacy IRQ:
-> > > > > 
-> > > > > cat /proc/interrupts | grep -i aer
-> > > > >  58:          0          0          0          0  nwl_pcie:legacy   0 Level
-> > > > > PCIe PME, aerdrv
-> > > 
-> > > I guess this means whatever INTx the Root Port is using is connected
-> > > to IRQ 58?  Can you tell whether that INTx works if a device below the
-> > > Root Port uses it?  Or whether it is asserted for PMEs?
-> > > 
-> > > > Error events (correctable, non-fatal and fatal) are reported by PCIe
-> > > > devices to the Root Complex via PCIe error messages (Message code of TLP
-> > > > is set to Error Message) and not via interrupts. Root Port is then
-> > > > responsible to "convert" these PCIe error messages to MSI(X) interrupt
-> > > > and report it to the system. According to PCIe spec, AER is supported
-> > > > only via MSI(X) interrupts, not legacy INTx.
-> > > 
-> > > Where does it say that?  PCIe r5.0, sec 6.2.4.1.2 and 6.2.6, both
-> > > mention INTx, and the diagram in 6.2.6 even shows possible
-> > > platform-specific System Error signaling.
-> > 
-> > Kernel AER driver is not available when MSI is not supported:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/aer.c?h=v5.15#n112
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/portdrv_core.c?h=v5.15#n224
-> > Originally this was my primary indication that AER is MSI(X)-only.
-> 
-> I think that is broken.  Looks like it was added by 3e77a3f7895e
-> ("PCI: Disable AER with pci=nomsi"), which says that with "pci=nomsi",
-> we see lost interrupts and lockdep inversions.
-> 
-> I don't know any more of the history behind that, but I suspect that
-> turning off AER in that case just covered up some other Linux issue.
+#regzbot introduced: v5.13..v5.14-rc1
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215419
 
-I have same feeling that something different is broken.
 
-And now it reminds me that I was testing AER interrupts about year ago
-and when booted kernel with pci=nomsi then AER kernel driver refused
-start and I realized that AER is probably MSI-only. I have checked spec
-for AER Root Error Status Register and I due to this I probably come to
-the conclusion that AER must be MSI-only...
+Dear Linux folks,
 
-Is kernel going to enable support for AER when MSI is disabled? Or we
-let it in current state forever?
 
-> > And my understanding is that AER Root Error Status Register (7.8.4.10)
-> > specifies Advanced Error Interrupt Message Number which indicates which
-> > MSI(X) interrupt is used. And there is no information about INTx if you
-> > enable particular reporting category via AER Root Error Command Register.
-> > That is why I was in impression that AER interrupts are MSI-only.
-> > 
-> > But now I'm looking at 6.2.4.1.2 section and seems that AER can really
-> > use INTx. So I was wrong here.
-> > 
-> > But why then kernel AER driver has check that AER is available only when
-> > MSI is enabled? And not available when MSI is disabled?
-> 
-> Apart from the issue behind 3e77a3f7895e, I think this is just because
-> the intersection of platforms that lack MSI and people with enough
-> interest in AER is small.
-> 
-> The interrupt configuration in portdrv is nasty.  Although it looks
-> like pcie_init_service_irqs() might now be smart enough to use the
-> legacy INTx when MSI is not available.
+On the Intel T4500 laptop Acer TravelMate 5735Z with Debian 
+sid/unstable, there is a 100 ms introduced between Linux 5.10.46 and 
+5.13.9, and is still present in Linux 5.15.5.
 
-In last pci-aardvark patches is added support for emulation of AER
-interrupt via virtual INTx and we tested that it is working. portdrv
-correctly allocates emulated INTx and when this interrupt is triggered
-then kernel AER driver see it and log error into dmesg.
+     [    0.000000] microcode: microcode updated early to revision 
+0xa0b, date = 2010-09-28
+     [    0.000000] Linux version 5.15.0-2-amd64 
+(debian-kernel@lists.debian.org) (gcc-11 (Debian 11.2.0-13) 11.2.0, GNU 
+ld (GNU Binutils for Debian) 2.37) #1 SMP Debian 5.15.5-2 (2021-12-18)
+     [    0.000000] Command line: 
+BOOT_IMAGE=/boot/vmlinuz-5.15.0-2-amd64 
+root=UUID=e17cec4f-d2b8-4cc3-bd39-39a10ed422f4 ro quiet noisapnp 
+cryptomgr.notests random.trust_cpu=on initcall_debug log_buf_len=4M
+     […]
+     [    0.262243] calling  acpi_init+0x0/0x487 @ 1
+     […]
+     [    0.281655] ACPI: Enabled 15 GPEs in block 00 to 3F
+     [    0.394855] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+     […]
+     [    0.570908] initcall acpi_init+0x0/0x487 returned 0 after 300781 
+usecs
 
-So I guess, it probably could work also with real INTx (if implemented
-in HW correctly).
+I attached all the log files to the Kernel.org Bugzilla bug report 
+#215419 [1].
+
+Unfortunately, I am unable to bisect the issue, as it’s not my machine, 
+and I do not have a lot of access to it.
+
+Using ftrace, unfortunately, I didn’t save all of them, I think the path is
+
+     acpi_init() → acpi_scan_init() → acpi_bus_scan(ACPI_ROOT_OBJECT)
+
+But this path hasn’t changed as far as I can see. Anyway, from that 
+path, somehow
+
+     acpi_bus_check_add_1() → acpi_bus_check_add() → … → 
+acpi_bus_check_add() → acpi_add_single_object() → acpi_bus_get_status()
+
+is called, and the `acpi_bus_get_status()` call takes 100 ms on the 
+system – also the cause for bug #208705 [2] –, but that code path wasn’t 
+taken before.
+
+Do you know from the top of your head, what changed? I am going to have 
+short access to the system every two weeks or so, so debugging is 
+unfortunately quite hard.
+
+What is already on my to-do list:
+
+1.  Use dynamic debug `drivers/acpi/scan.c`
+2.  Trace older Linux kernel (5.10.46) to see the differences
+3.  Booting some GNU/Linux system to test 5.11 (Ubuntu 20.10) and 5.12
+4.  Unrelated to the regression, but trace `acpi_bus_get_status()` to 
+understand the 100 ms delay to solve bug #208705 [2]
+
+
+Kind regards,
+
+Paul
+
+
+PS: Do you know of GNU/Linux live systems that are available for all 
+Linux kernel releases and have an initrd, that just stores/uploads the 
+output of `dmesg`?
+
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=215419
+      "100 ms regression in boottime before `ACPI: PCI Root Bridge [PCI0]"
+[2]: https://bugzilla.kernel.org/show_bug.cgi?id=208705
+      "boot performance: 100 ms delay in PCI initialization - Acer 
+TravelMate 5735Z"
