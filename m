@@ -2,127 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD2B048986B
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 13:17:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3288F489966
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 14:11:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245276AbiAJMRr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 07:17:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60062 "EHLO
+        id S231620AbiAJNLs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 08:11:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229677AbiAJMRr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 07:17:47 -0500
-Received: from mout-u-204.mailbox.org (mout-u-204.mailbox.org [IPv6:2001:67c:2050:1::465:204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BDC7C06173F
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 04:17:47 -0800 (PST)
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:105:465:1:4:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 4JXXs51lVwzQjgn;
-        Mon, 10 Jan 2022 13:17:45 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Message-ID: <590a3be9-6ef6-b93e-165d-d8269497eceb@denx.de>
-Date:   Mon, 10 Jan 2022 13:17:40 +0100
+        with ESMTP id S230512AbiAJNLq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 08:11:46 -0500
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 348B7C061212
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 05:11:46 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id k21so44247983lfu.0
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 05:11:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=STst/NZz7XpLuhkw/fjT1YooCLQUEgoChj9j28RAYfs=;
+        b=Bgie3w5lZXcUpEJsNUNnYT9D80sz6831OKMgWSWMpAMR4c04HQM1hwHkoZ1AqHgJ5M
+         pQJfhFBsNTGc+jfMsWTuSDXhNBe5XPwJ8/UQZKbYcWTDQ68Eu4MBBVsHf0V3Baa+27Pp
+         IUJW/950IUGNsTto2NnsTW49/Cy4Vf+KfgzDT0+KZ2gcb/QkEKg3LEIj8qPJpiII0Qbk
+         buE3CbPl0T8T6omQLXT3KYJBxN98pPIrfxDam1Qs0diPFN43pWVugWbd8LU8WaIGviK3
+         O/t/NLMKhR03EdE8rMi5c8T5epCw09Yzc4YmAU5QrO9ZaREbayNwAtpm1SWYSR1IiBuY
+         5w9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=STst/NZz7XpLuhkw/fjT1YooCLQUEgoChj9j28RAYfs=;
+        b=PHBSoVr6RuOcHs4xm+0Fatd9jBsQVZQGYm5XgkfGUM7Aeo672zIdnBDyfWz8tQSoV7
+         BzunaHpTBzuTEDseUwO67eQnV9oeRBbJPoE7E/swdcwh3sLvKNjyw7V4j6FoU2gg3wG1
+         RBC45ikRMnLK12Nd6njyjibj83l6z4fm6n0Ws1DjOFs3VmHrccleWxIUQRNQyADZNYMz
+         JPOaGDRmq8x+nM1mI8G35aLfqTJoQovRB4VbYW3B5Ikq61RM0NJ+9eNP7Bofqt5ju7oZ
+         BJ5xVR7s/DwTEeoO+M4rDvobAxAWZjvb2xaNtYZcyEhtDmW20t7cOtcIqU3EztiW5qWr
+         jkmA==
+X-Gm-Message-State: AOAM530sQV2kNpbE1EAO0wqWihp5QDR8K7DVytNhzDpfDiEw4qUMbfqB
+        7oh76CWfblTKURvfQf0AojUP7Q9gtkto46CvtDAiTQgMhPo=
+X-Google-Smtp-Source: ABdhPJyUuzfRq9+VAp3YIslVsNF7E8r6u+SDvjtiaFw6sfTA9uOxrmlrl9JDay/jDh10uqplhgk07a+YHTpM3Ge0znw=
+X-Received: by 2002:ac2:4c51:: with SMTP id o17mr60639917lfk.558.1641820293776;
+ Mon, 10 Jan 2022 05:11:33 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: PCIe AER generates no interrupts on host (ZynqMP)
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Bharat Kumar Gogada <bharatku@xilinx.com>
-References: <20220107203415.GA398389@bhelgaas>
-From:   Stefan Roese <sr@denx.de>
-In-Reply-To: <20220107203415.GA398389@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:6504:15d1:0:0:0:0 with HTTP; Mon, 10 Jan 2022 05:11:32
+ -0800 (PST)
+Reply-To: gtbank107@yahoo.com
+From:   Barr Robert Richter <westernunion.benin982@gmail.com>
+Date:   Mon, 10 Jan 2022 14:11:32 +0100
+Message-ID: <CAP=nHBK9zHzp_=-EVswWQiLxEoc+HV4oqddgtnEqf-9qYab_4Q@mail.gmail.com>
+Subject: Contact GT Bank-Benin to receive your transfer amount of $18.5m US Dollars.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/7/22 21:34, Bjorn Helgaas wrote:
-> On Fri, Jan 07, 2022 at 11:04:58AM +0100, Pali Rohár wrote:
->> Hello! You asked me in another email for comments to this email, so I'm
->> replying directly to this email...
->>
->> On Tuesday 04 January 2022 10:02:18 Stefan Roese wrote:
->>> Hi,
->>>
->>> I'm trying to get the Kernel PCIe AER infrastructure to work on my
->>> ZynqMP based system. E.g. handle the events (correctable, uncorrectable
->>> etc). In my current tests, no AER interrupt is generated though. I'm
->>> currently using the "surprise down error status" in the uncorrectable
->>> error status register of the connected PCIe switch (PLX / Broadcom
->>> PEX8718). Here the bit is correctly logged in the PEX switch
->>> uncorrectable error status register but no interrupt is generated
->>> to the root-port / system. And hence no AER message(s) reported.
-> 
-> I think the error should also be logged in the Root Port AER
-> Capability.  And of course the interrupt enable bits in the Root Error
-> Command register would have to be set.
+Attn,Dear
+I need you to know that the fear of the LORD is
+the beginning of wisdom, and knowledge of the Holy One is
+understanding. As power of God Most High. And This is the confidence
+we have in approaching God, that if we ask anything according to his
+will, he hears us. I will make you know that Slow and steady wins the race.
+It is your turn to receive your overdue compensation funds total
+amount $18.5Milion  USD.
+I actualized that you will receive your transfer today without any more delay
+No More fee OK, Believe me , I am your Attorney standing here on your favor.
+I just concluded conversation with the Gt Bank Director, Mrs Mary Gate
+And She told me that your transfer is ready today
 
-I'm seeing no change at all in the Root Port PCIe device after the
-surprise down on one of the PCIe switch downstream ports via
-"lspci -vvv".
+So the Bank Asked you to contact them immediately by re-confirming
+your Bank details asap.
+Because this is the Only thing holding this transfer
+If you did not trust me and Mrs Mary Gate,Who Else will you Trust?
+For we are the ones trying to protect your funds here
+and make sure that your funds is secure.
+So Promisingly, I am here to assure you, that Grate Miracle is coming on
+your way, and this funds total amount of $18.500,000 is your
+compensation, entitlement inheritance overdue funds on your name.
+Which you cannot let anything delay you from receiving your funds now,
 
->>> Does any one of you have some ideas on what might be missing? Why are
->>> these events not reported to the PCIe rootport driver via IRQ? Might
->>> this be a problem of the missing MSI-X support of the ZynqMP? The AER
->>> interrupt is connected as legacy IRQ:
->>>
->>> cat /proc/interrupts | grep -i aer
->>>   58:          0          0          0          0  nwl_pcie:legacy   0 Level
->>> PCIe PME, aerdrv
-> 
-> I guess this means whatever INTx the Root Port is using is connected
-> to IRQ 58?  Can you tell whether that INTx works if a device below the
-> Root Port uses it?  Or whether it is asserted for PMEs?
+Finally i advised you to try your possible best and contact Gt Bank Benin
+once you get this message to receive your transfer $18.5 USD today.
+I know that a journey of thousand miles begins with a single step.
+Always put your best foot forward
+Try as hard as you can, God give you best.
+take my advice and follow the due process of your payment, the
+transfer will be released to
+you smoothly without any hitches or hindrance.
 
-INTx works just fine for "normal" legacy interrupts, e.g. a PCIe
-driver requesting a non-MSI interrupt.
+Contact DR.MRS MARY GATE, Director Gt bank-Benin to receive your
+transfer amount of $18.5m US Dollars
+It was deposited and registered to your name this morning.
+Contact the Bank now to know when they will transfer to your
+country today
 
->> Error events (correctable, non-fatal and fatal) are reported by PCIe
->> devices to the Root Complex via PCIe error messages (Message code of TLP
->> is set to Error Message) and not via interrupts. Root Port is then
->> responsible to "convert" these PCIe error messages to MSI(X) interrupt
->> and report it to the system. According to PCIe spec, AER is supported
->> only via MSI(X) interrupts, not legacy INTx.
-> 
-> Where does it say that?  PCIe r5.0, sec 6.2.4.1.2 and 6.2.6, both
-> mention INTx, and the diagram in 6.2.6 even shows possible
-> platform-specific System Error signaling.
-> 
-> But I doubt Linux is smart enough to configure this correctly for
-> INTx.  You could experiment by setting the AER control bits with
-> setpci.
-> 
-> There was some previous discussion, and it even mentions ZynqMP as a
-> device that has a dedicated non-MSI mechanism for AER signaling:
-> 
->    https://lore.kernel.org/linux-pci/1533141889-19962-1-git-send-email-bharat.kumar.gogada@xilinx.com/
->    https://lore.kernel.org/all/1464242406-20203-1-git-send-email-po.liu@nxp.com/T/#u
-> 
-> But I don't think it went anywhere.
-> 
-> It seems like maybe this *could* be made to work.
+Email id: gtbank107@yahoo.com
+Tel/mobile, +229 99069872
+Contact person, Mrs Mary Gate,Director Gt bank-Benin.
+Among the blind the one-eyed man is king
 
-Thanks Bjorn for the reference. As already mentioned to Pali in the
-other mail, Bharat from Xilinx has sent me a link to a newer, updated
-patch series to use this "misc" interrupts for AER in the meantime:
+As you sow, so you shall reap, i want you to receive your funds
+Best things in life are free
+Send to her your Bank Details as i listed here.
 
-https://lore.kernel.org/lkml/1542206878-24587-1-git-send-email-bharat.kumar.gogada@xilinx.com/
+Your account name-------------
+Your Bank Name----------------
+Account Number----------
+your Bank address----------
+Country-----------
+Your private phone number---------
+Routing Numbers-------------
+Swift Code-----------
 
-AFAICT, this patch series was not really reviewed. At least I can't find
-any comments / replies.
+Note, Your funds is %100 Percent ready for
+transfer.
+Everything you do remember that Good things come to those who wait.
+I have done this work for you with my personally effort, Honesty is
+the best policy.
+now your transfer is currently deposited with paying bank this morning.
+It is by the grace of God that I received Christ, having known the truth.
+I had no choice than to do what is lawful and justice in the
+sight of God for eternal life and in the sight of man for witness of
+God & His Mercies and glory upon my life.
 
-I now applied this series (after some merge issues) to v5.16 and re-
-tested with this new MISC interrupts for AER. Still no cigar. No
-interrupt / AER event upon surprise down on the PEX switch received.
+send this needed bank details to the bank today, so that you receive
+your transfer today as
+it is available for your confirmation today.
+Please do your best as a serious person and send the fee urgent, Note
+that this transfer of $18.500.000 M USD is a Gift from God to Bless
+you.
 
-I might have missed something in the setup / configuration though. Is
-my understanding correct, that I don't need to "manually" tune the SERR
-in the Command register? And is my understanding correct that '0' / '-'
-in the AER mask register enables this AER event?
+If you did not contact the bank urgent, finally the Bank will release
+your transfer of $18.500.000M USD to  Mr. David Bollen as your
+representative.
+So not allow another to claim your Money.
+Thanks For your Understanding.
 
-Thanks,
-Stefan
+Barr Robert Richter, UN Attorney At Law Court-Benin
