@@ -2,92 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0A18489508
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 10:17:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0E4B489539
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 10:28:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242839AbiAJJRi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 04:17:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242612AbiAJJRd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 04:17:33 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAAEDC061751
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 01:17:33 -0800 (PST)
+        id S238618AbiAJJ2w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 04:28:52 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:43592 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238864AbiAJJ2o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 04:28:44 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4953561225
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 09:17:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85716C36AED;
-        Mon, 10 Jan 2022 09:17:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 58D6560F40
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 09:28:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B814CC36AEF;
+        Mon, 10 Jan 2022 09:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641806252;
-        bh=I6CA+wzhkholummADzrWOLHSeE/iqhS13t7Dpb5uFi8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ifTD9CZdUjAD/+ZOVp48sQrPq+x2B47ZgZtyjt5QT9/7YQrvvBnHqffzZ+saXWOtA
-         EXK/j5mHFQRCj2LBrqSqZ1sBD9nb4ypR6DjhCnfS7LnYREtbvsx2stCdIotVlpk8CS
-         8iE1+cwGiegfrHLSr+KE0ptFDRT0RFfW6AdptbilnYj0S0+7YRZYE5lQAs73P9SsdD
-         tVkigm3lhQWggPO5M8mJZJITf0DM/6CBoTuKPEnEF++Wiv8OP0wzL7tAkczAVwDKGQ
-         wRtRo0cas7/S8BN1PY3xVM62n3VZ+ZczXp2QJ1aw20nKW8kAKgHH8KZLGilQEhh7qv
-         +p6O7ylpnivCA==
-Received: by pali.im (Postfix)
-        id 18212A52; Mon, 10 Jan 2022 10:17:30 +0100 (CET)
-Date:   Mon, 10 Jan 2022 10:17:29 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Russell King <linux@arm.linux.org.uk>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Victor Gu <xigu@marvell.com>,
-        =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
-        Zachary Zhang <zhangzg@marvell.com>,
-        Wilson Ding <dingwei@marvell.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] PCI: aardvark: Implement emulated root PCI bridge
-Message-ID: <20220110091729.owxno5ck3bihlrzj@pali>
-References: <20220107212736.GA404447@bhelgaas>
- <20220107231734.GA426583@bhelgaas>
+        s=k20201202; t=1641806922;
+        bh=Zzw7XicHXwbphesdb2LPnS8aIVN7zN6lbm6VQJfpbPY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=V8DOh03saCM5Pf6E+a8EF5j3FVZbZbvt9xymzjGhNSQhMpWHQNTwwB0ZwfL1PYl9t
+         ZqHj9DWXe+OfqTMavzpqBylPEoqjKhlqMhfWZ7axOLeCaWb1NDgU2+LTqbigWXhGML
+         2l0FzG6MWYAWh44ApjeExardfdbDHYy5sfAkG9ZueOP50l/qDU3eUj/BzEpZ+83okX
+         xBm2SBtE0IbKCxdK7ze1DCnN9yiyOFB/re2fmMxhgeBJhNh3e3nqNzMbzu8DFmm7uQ
+         xGGYjRlAB/JtCFRN/M26GF/gCNr0VvEPnHmEJ7RAe8BvZ52CkC88NaYaKvaubX7QqN
+         sZrN8mOxh0IPQ==
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1n6qym-00H5tN-5A; Mon, 10 Jan 2022 09:28:40 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220107231734.GA426583@bhelgaas>
-User-Agent: NeoMutt/20180716
+Date:   Mon, 10 Jan 2022 09:28:39 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, pali@kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 23/23] PCI: aardvark: Make main irq_chip structure a
+ static driver structure
+In-Reply-To: <20220110015018.26359-24-kabel@kernel.org>
+References: <20220110015018.26359-1-kabel@kernel.org>
+ <20220110015018.26359-24-kabel@kernel.org>
+User-Agent: Roundcube Webmail/1.4.12
+Message-ID: <bf65af53fe1a4e6b814b124b59ad3aa9@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: kabel@kernel.org, lorenzo.pieralisi@arm.com, helgaas@kernel.org, pali@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 07 January 2022 17:17:34 Bjorn Helgaas wrote:
-> [+cc Pali; sorry, I meant to cc you on this but forgot]
+On 2022-01-10 01:50, Marek Behún wrote:
+> Marc Zyngier says [1] that we should use struct irq_chip as a global
+> static struct in the driver. Even though the structure currently
+> contains a dynamic member (parent_device), Marc says [2] that he plans
+> to kill it and make the structure completely static.
 > 
-> On Fri, Jan 07, 2022 at 03:27:38PM -0600, Bjorn Helgaas wrote:
-> > On Fri, Jun 29, 2018 at 11:22:31AM +0200, Thomas Petazzoni wrote:
-> > 
-> > > +static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
-> > > +{
-> > > +	struct pci_sw_bridge *bridge = &pcie->bridge;
-> > 
-> > > +	/* Support interrupt A for MSI feature */
-> > > +	bridge->conf.intpin = PCIE_CORE_INT_A_ASSERT_ENABLE;
-> > 
-> > Only 3.5 years later, IIUC, this is the value you get when you read
-> > PCI_INTERRUPT_PIN, so I think this should be PCI_INTERRUPT_INTA, not
-> > PCIE_CORE_INT_A_ASSERT_ENABLE.
-> > 
-> > Readers expect to get the values defined in the PCI spec, i.e.,
-> > 
-> >   PCI_INTERRUPT_UNKNOWN
-> >   PCI_INTERRUPT_INTA
-> >   PCI_INTERRUPT_INTB
-> >   PCI_INTERRUPT_INTC
-> >   PCI_INTERRUPT_INTD
-> > 
-> > Bjorn
+> We have already converted others irq_chip structures in this driver in
+> this way, but we omitted this one because the .name member is
+> dynamically created from device's name, and the name is displayed in
+> sysfs, so changing it would break sysfs ABI.
+> 
+> The rationale for changing the name (to "advk-INT") in spite of sysfs
+> ABI, and thus allowing to convert to a static structure, is that after
+> the other changes we made in this series, the IRQ chip is basically
+> something different: it no logner generates ERR and PME interrupts 
+> (they
+> are generated by emulated bridge's rp_irq_chip).
 
-Yes! We have a prepared patch for it and Marek now sent it:
-https://lore.kernel.org/linux-pci/20220110015018.26359-2-kabel@kernel.org/
+There is no 'is spite of the ABI'. If you don't understand why
+we don't break the ABI, you have an even bigger problem.
+
+So NAK to this patch, now and forever. Any change to the structure to
+make it read-only must allow the preservation of the existing names
+when they are generated by the driver.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
