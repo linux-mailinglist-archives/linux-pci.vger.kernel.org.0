@@ -2,139 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1115489E85
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 18:38:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5191C489EB9
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 19:01:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238457AbiAJRiq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 12:38:46 -0500
-Received: from mga03.intel.com ([134.134.136.65]:55909 "EHLO mga03.intel.com"
+        id S238663AbiAJSBO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 13:01:14 -0500
+Received: from mga09.intel.com ([134.134.136.24]:50374 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238197AbiAJRiq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 Jan 2022 12:38:46 -0500
+        id S238610AbiAJSBN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 Jan 2022 13:01:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641836326; x=1673372326;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DWPZuMth+MIE1cAaW/Lz+OiONq1rD6InuNNGj+Be908=;
-  b=ZNLWqGRY9ZBJGpubxGJLPwIzTfEwY6kEuFldI5Xxogv14OQ6oyozfBkU
-   mJlVRzeRyfvGy+LFt8mRMCab9qaRtu/WRUvf52UsMEkImcU6syDx7nkQY
-   B7Yxv5lWxW9VRXWU9XklDx1pvXKIJkg0Uyv9Ph6/BfpjbQ1dK/UgaXSES
-   hZO45pfSmCIesytCFaP+FhsOVKPoVO9x6/558IjL1eqhRwq8e0n9KU8pj
-   VQI5gdl7p+3TH54gCoxHBhlFucnVG/n4C4P7qSPV0ZtKdY3WpNMvYR4a4
-   3bkzmXTA0RZvcug75UNdPDiY3jKjL4VRE907Sx4H0plnhT9IfNGeyEbSR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10222"; a="243232697"
+  t=1641837673; x=1673373673;
+  h=from:to:cc:subject:date:message-id;
+  bh=4R4m2JnlhOfFaMJ6bSzrdmzLSKSTs3kFRvVCKFiCpOc=;
+  b=dtLVX2/PylD3egEqgrdme298tulv43juQ3z/uNMbCoLq/AKOoTjfeifS
+   vQcOszpbJcH4OuwiQBtmInK9iMnTIFXGkl5jdN2gkY4XHH3BJM7FD8gsl
+   nXdgwCX/YhAQt3+ZfPi03ukLK66mV4N4aPnlqxQdtUjoreCDjtjngRoAX
+   90b2Lj7LfAhzPFQt2bNJTFMeCe4oonCczp1EIQte/1beowjmRcLvbEvZb
+   0vnc1GdGQxmQbigoUPwpC192JLFN+bDRMml6ba184gZvsz8asXCnfmnZR
+   7GAIltdFg5SE+5tMfo5W+BK1GQ0iKDUtBcaq72rLpCkrT3yeJZxuvb7ND
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10222"; a="243079316"
 X-IronPort-AV: E=Sophos;i="5.88,277,1635231600"; 
-   d="scan'208";a="243232697"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2022 09:37:10 -0800
+   d="scan'208";a="243079316"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2022 10:00:51 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,277,1635231600"; 
-   d="scan'208";a="528361329"
-Received: from ryanjor-mobl.amr.corp.intel.com (HELO intel.com) ([10.255.36.174])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2022 09:37:09 -0800
-Date:   Mon, 10 Jan 2022 12:37:08 -0500
-From:   Rodrigo Vivi <rodrigo.vivi@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lucas De Marchi <lucas.demarchi@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-pci@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [Intel-gfx] [PATCH v3 3/3] x86/quirks: Fix stolen detection with
- integrated + discrete GPU
-Message-ID: <YdxuxIx7X8mncC/D@intel.com>
-References: <YdxoyHIYssuJjN4w@intel.com>
- <20220110173211.GA61717@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220110173211.GA61717@bhelgaas>
+   d="scan'208";a="622754694"
+Received: from brillo-chrome.jf.intel.com ([10.54.77.27])
+  by orsmga004.jf.intel.com with ESMTP; 10 Jan 2022 10:00:51 -0800
+From:   Sanrio Alvares <sanrio.alvares@intel.com>
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     mika.westerberg@linux.intel.com,
+        Sanrio Alvares <sanrio.alvares@intel.com>
+Subject: [PATCH v2] PCI / thunderbolt: Add quirk to handle incorrect Supported Link Speeds
+Date:   Mon, 10 Jan 2022 18:00:49 +0000
+Message-Id: <20220110180049.59403-1-sanrio.alvares@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 10, 2022 at 11:32:11AM -0600, Bjorn Helgaas wrote:
-> On Mon, Jan 10, 2022 at 12:11:36PM -0500, Rodrigo Vivi wrote:
-> > On Fri, Jan 07, 2022 at 08:57:32PM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Jan 07, 2022 at 01:05:16PM -0800, Lucas De Marchi wrote:
-> > > > early_pci_scan_bus() does a depth-first traversal, possibly calling
-> > > > the quirk functions for each device based on vendor, device and class
-> > > > from early_qrk table. intel_graphics_quirks() however uses PCI_ANY_ID
-> > > > and does additional filtering in the quirk.
-> > > > 
-> > > > If there is an Intel integrated + discrete GPU the quirk may be called
-> > > > first for the discrete GPU based on the PCI topology. Then we will fail
-> > > > to reserve the system stolen memory for the integrated GPU, because we
-> > > > will already have marked the quirk as "applied".
-> > > > 
-> > > > This was reproduced in a setup with Alderlake-P (integrated) + DG2
-> > > > (discrete), with the following PCI topology:
-> > > > 
-> > > > 	- 00:01.0 Bridge
-> > > > 	  `- 03:00.0 DG2
-> > > > 	- 00:02.0 Integrated GPU
-> > > > 
-> > > > Move the setting of quirk_applied in intel_graphics_quirks() so it's
-> > > > mark as applied only when we find the integrated GPU based on the
-> > > > intel_early_ids table.
-> > > > 
-> > > > Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> > > 
-> > > I don't know the details of stolen memory, but the implementation of
-> > > this quirk looks good to me.  Very nice that it's now very clear
-> > > exactly what the change is.
-> > 
-> > 
-> > Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> > 
-> > Bjorn, ack to merge through drm-intel?
-> 
-> This is a bit of a shared area between the x86 folks and me, but
-> certainly no objection from me.
+In PCIe config space the "Supported Link Speeds" Vector value is 0x07,
+in all downstream ports for Intel Titan Ridge. Which means link
+supports Gen1, Gen2 and Gen3. While actually max link speed is 2.5GT/s
+so the value of this vector should be 0x01.
 
-Lucas brought a good point about patch 1 touching more stuff than i915 one,
-so to minimize conflicts maybe the x86 tree would be better...
-also works for us if you prefer.
+As a consequence of reporting >2.5GT/s, we need to delay the full 1s
+which makes resuming longer than needed.
 
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> > > > ---
-> > > > 
-> > > > v3: now that we do the refactor before the fix, we can do a single line
-> > > > change to fix intel_graphics_quirks(). Also, we don't change
-> > > > intel_graphics_stolen() anymore as we did in v2: we don't have to check
-> > > > other devices anymore if there was a previous match causing
-> > > > intel_graphics_stolen() to be called (there can only be one integrated
-> > > > GPU reserving the stolen memory).
-> > > > 
-> > > >  arch/x86/kernel/early-quirks.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-> > > > index df34963e23bf..932f9087c324 100644
-> > > > --- a/arch/x86/kernel/early-quirks.c
-> > > > +++ b/arch/x86/kernel/early-quirks.c
-> > > > @@ -609,8 +609,6 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
-> > > >  	if (quirk_applied)
-> > > >  		return;
-> > > >  
-> > > > -	quirk_applied = true;
-> > > > -
-> > > >  	device = read_pci_config_16(num, slot, func, PCI_DEVICE_ID);
-> > > >  
-> > > >  	for (i = 0; i < ARRAY_SIZE(intel_early_ids); i++) {
-> > > > @@ -623,6 +621,8 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
-> > > >  
-> > > >  		intel_graphics_stolen(num, slot, func, early_ops);
-> > > >  
-> > > > +		quirk_applied = true;
-> > > > +
-> > > >  		return;
-> > > >  	}
-> > > >  }
-> > > > -- 
-> > > > 2.34.1
-> > > > 
+Signed-off-by: Sanrio Alvares <sanrio.alvares@intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+Changes from v1:
+- add static to quirk_intel_tbt_supported_link_speeds
+---
+ drivers/pci/pci.c    |  4 ++++
+ drivers/pci/quirks.c | 14 ++++++++++++++
+ include/linux/pci.h  |  1 +
+ 3 files changed, 19 insertions(+)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 3d2fb394986a..92401552d385 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6136,6 +6136,10 @@ enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev)
+ {
+ 	u32 lnkcap2, lnkcap;
+ 
++	/* Use overridden value of Supported Link Speed */
++	if (dev->supported_link_speed)
++		return dev->supported_link_speed;
++
+ 	/*
+ 	 * Link Capabilities 2 was added in PCIe r3.0, sec 7.8.18.  The
+ 	 * implementation note there recommends using the Supported Link
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 003950c738d2..2cbe0beeac08 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5293,6 +5293,20 @@ static void quirk_intel_qat_vf_cap(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+ 
++/*
++ * Intel Titan Ridge returns incorrect Supported Link Speeds Vector
++ * when max Link Speed is 2.5GT/s. This results in an extra 1s delay during
++ * resume_noirq with pcie tunneling enabled. Override that value:
++ */
++static void quirk_intel_tbt_supported_link_speeds(struct pci_dev *pdev)
++{
++	pci_info(pdev, "applying Supported Link Speeds quirk\n");
++	pdev->supported_link_speed = PCIE_SPEED_2_5GT;
++}
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15e7, quirk_intel_tbt_supported_link_speeds);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15ea, quirk_intel_tbt_supported_link_speeds);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x15ef, quirk_intel_tbt_supported_link_speeds);
++
+ /*
+  * FLR may cause the following to devices to hang:
+  *
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 18a75c8e615c..633e81e9fe3b 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -502,6 +502,7 @@ struct pci_dev {
+ 	struct pci_p2pdma __rcu *p2pdma;
+ #endif
+ 	u16		acs_cap;	/* ACS Capability offset */
++	u8		supported_link_speed; /* Override Supported Link Speed value from device */
+ 	phys_addr_t	rom;		/* Physical address if not from BAR */
+ 	size_t		romlen;		/* Length if not from BAR */
+ 	char		*driver_override; /* Driver name to force a match */
+-- 
+2.17.1
+
