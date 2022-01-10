@@ -2,106 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4735D489641
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 11:23:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA96C48966F
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 11:33:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243898AbiAJKXQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 05:23:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33592 "EHLO
+        id S244033AbiAJKdy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 05:33:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243887AbiAJKXH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 05:23:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476D8C061751
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 02:23:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DC9156124E
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 10:23:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06698C36AE9;
-        Mon, 10 Jan 2022 10:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641810186;
-        bh=52SGtoSXoHH5/gXeIjcW4u1oqUamKPxuDGP8DWpswyk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oopgaGtWWTvJOJd+5cECRJ3DZFgE28a/xrvInrVxjiTY6Jm8KD6qL1YrLC+UL7qm/
-         vGO40nuIh6hWP8g9By3gWBpPReklOQvb8gXvphuXIWPN9lpkH8BZS73X0LDYZbMxck
-         rj78pjD+DaeTotMA+dcv+Kr1O8xRbtoEyxmxv8SB0KHjfuDANyCFGZ99t3Irhwxh1Y
-         DI1OVVEXPX8zAvawKGFf9Y5MCX1pCReDBH+7YBMSTR5qIYpZab7JhoD/841enEE3bU
-         SiC9Vn0XD6HMsCFVO0iyMkeOwlVMZgNPPh/fo9Ck6fQ6GP4zS6LRAs1NnwMeKmhN/t
-         GjdfIznbRQMSQ==
-Date:   Mon, 10 Jan 2022 11:23:01 +0100
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, pali@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 23/23] PCI: aardvark: Make main irq_chip structure a
- static driver structure
-Message-ID: <20220110112301.7e13c716@thinkpad>
-In-Reply-To: <bf65af53fe1a4e6b814b124b59ad3aa9@kernel.org>
-References: <20220110015018.26359-1-kabel@kernel.org>
-        <20220110015018.26359-24-kabel@kernel.org>
-        <bf65af53fe1a4e6b814b124b59ad3aa9@kernel.org>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S244016AbiAJKdW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 05:33:22 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350D4C061759
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 02:33:21 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id o3so25805385wrh.10
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 02:33:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Ux09BdvBfy5otBeH83si9wqeKjp8gHNJ9Zt3Er9zFxE=;
+        b=uXYTgRqNTmPW/huo6KEYGPOM4ISUhPLQBff/OQu1mryKVB8bfEA9SMGpAzs8WENMSr
+         fuyNQuevmAkNaM1DIBs9B5ePOxvg6kIQUNCfH4GFaXO0BAGjC6GgZqB5Fa+1alU087Z8
+         P+Vm7f+/pCXvExKs6et7iTpYsEWdwEv98+Oj1Ut/3CLURBSYQn8BBRcI2i4huO0Nyhig
+         jAh0PzBKkTaun4SPlD9rbsylUIDBnG5CqjHmWput0432gybnuR4m4QvkFs0RSDDvlb27
+         XDCH8P8FAS/PXCOIbQZcLNaqtzSULbKkPi6r/pLPsz//6OCjXG/9tpB7zbwtR5B9wtSf
+         7hog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Ux09BdvBfy5otBeH83si9wqeKjp8gHNJ9Zt3Er9zFxE=;
+        b=UNa9R3cJ0hU1eazT/76SFM94ipVeTDdqd3MiPE7S4vZ8144tsf5kGtT7Q2ihEQfhYM
+         MojB+H4sehxvHHFkgSA1z9fuoYRmsRwSR+ic4o3S2Vx/ttp8X3u/64cG5Esklj10fQsC
+         tuT/ym0wuj4cRoNaclOV1iQQpELuxCqJkpoNW2AkwM+GPiVZP4ZzfGCau2FW9JCGYOV7
+         CgfjBpakJakEXt1zzybrslpz1FNAK61bNIUl+I9oDxrdryODAZVeWsjPJkNhIrDr5vwp
+         GImtf63XMG09lgu3+DNqESgCoGyi/faC+bgffQg0ISJr/M1RNAAoY2vfwltGutFJsla5
+         EYvQ==
+X-Gm-Message-State: AOAM531sXQJTV8r+Pvf5bCrjd2/xNyQF35v9exSO+Zqp08nv4J3qJgu2
+        3jhSIHpocR+8YtvAYzzFOSQK7Q==
+X-Google-Smtp-Source: ABdhPJzMfF4X4m8rqBSMupPmJ6wMSv1HcNXmy8LWfHPif6guaPAHOVr+QYANksWrPaZREcLyZVwvuQ==
+X-Received: by 2002:a5d:6d06:: with SMTP id e6mr63672846wrq.273.1641810799760;
+        Mon, 10 Jan 2022 02:33:19 -0800 (PST)
+Received: from google.com ([31.124.24.179])
+        by smtp.gmail.com with ESMTPSA id ba18sm6324269wrb.40.2022.01.10.02.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jan 2022 02:33:19 -0800 (PST)
+Date:   Mon, 10 Jan 2022 10:33:23 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Suman Anna <s-anna@ti.com>, - <patches@opensource.cirrus.com>,
+        John Crispin <john@phrozen.org>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: Drop required 'interrupt-parent'
+Message-ID: <YdwLc2ZTERBoXgxR@google.com>
+References: <20220107031905.2406176-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220107031905.2406176-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 10 Jan 2022 09:28:39 +0000
-Marc Zyngier <maz@kernel.org> wrote:
+On Thu, 06 Jan 2022, Rob Herring wrote:
 
-> On 2022-01-10 01:50, Marek Beh=C3=BAn wrote:
-> > Marc Zyngier says [1] that we should use struct irq_chip as a global
-> > static struct in the driver. Even though the structure currently
-> > contains a dynamic member (parent_device), Marc says [2] that he plans
-> > to kill it and make the structure completely static.
-> >=20
-> > We have already converted others irq_chip structures in this driver in
-> > this way, but we omitted this one because the .name member is
-> > dynamically created from device's name, and the name is displayed in
-> > sysfs, so changing it would break sysfs ABI.
-> >=20
-> > The rationale for changing the name (to "advk-INT") in spite of sysfs
-> > ABI, and thus allowing to convert to a static structure, is that after
-> > the other changes we made in this series, the IRQ chip is basically
-> > something different: it no logner generates ERR and PME interrupts=20
-> > (they
-> > are generated by emulated bridge's rp_irq_chip). =20
->=20
-> There is no 'is spite of the ABI'. If you don't understand why
-> we don't break the ABI, you have an even bigger problem.
->=20
-> So NAK to this patch, now and forever. Any change to the structure to
-> make it read-only must allow the preservation of the existing names
-> when they are generated by the driver.
+> 'interrupt-parent' is never required as it can be in a parent node or a
+> parent node itself can be an interrupt provider. Where exactly it lives is
+> outside the scope of a binding schema.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/gpio/toshiba,gpio-visconti.yaml  | 1 -
+>  .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml     | 9 ---------
+>  Documentation/devicetree/bindings/mfd/cirrus,madera.yaml | 1 -
 
-Dear Marc,
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-That's why I put it as a last patch here :)
+>  .../devicetree/bindings/net/lantiq,etop-xway.yaml        | 1 -
+>  .../devicetree/bindings/net/lantiq,xrx200-net.yaml       | 1 -
+>  .../devicetree/bindings/pci/sifive,fu740-pcie.yaml       | 1 -
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml       | 1 -
+>  7 files changed, 15 deletions(-)
 
-I have the questions
-
-1) the first is that this driver has only ever been used on Armada 37xx,
-   where there has always been only one PCIe controller, and it's name
-   always was d0070000.pcie, so the irq_chip was always called
-   d0070000.pcie-irq.
-   So we could theoretically infer from config options if we are
-   building for Armada 37xx: if ARM64 and ARMADA_37XX_CLK config options
-   are enabled, make the name d0070000.pcie-irq, otherwise advk-INT ?
-
-2) I tried to look for the name d0070000.pcie-irq in /proc and /sysfs,
-   but couldn't find it there (not in /proc/interrupts nor anywhere
-   else). It is possible that I omitted something, or that with other
-   PCIe card it will show up when corresponding driver is loaded.
-   But theoretically, if I could prove that until now this never
-   appeared anywhere in sysfs for some reason, then we could change it,
-   right? Becuase that way it isn't sysfs ABI change.
-
-Thanks.
-
-Marek
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
