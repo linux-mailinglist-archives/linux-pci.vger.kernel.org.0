@@ -2,150 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1408488E52
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 02:51:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63CD8488E76
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 02:56:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238030AbiAJBvS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 9 Jan 2022 20:51:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59700 "EHLO
+        id S238079AbiAJB4p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 Jan 2022 20:56:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238024AbiAJBvN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Jan 2022 20:51:13 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48398C06173F
-        for <linux-pci@vger.kernel.org>; Sun,  9 Jan 2022 17:51:13 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1357DB8111A
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 01:51:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51EE9C36AF6;
-        Mon, 10 Jan 2022 01:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641779470;
-        bh=X1/8z8rAB/tlb1Yq5h47dXJeVxei641JkvMqX1F0AAI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZU0S343hektF/Q245I0dBRq0Jj2qjjYSY0+pfz4HWbUqjq9ytEmTYfyDdBQBKmYW0
-         ZFATENkrvyagnNg3KHcTd1vQkXFbKDx/ZtbQGQRwGPfPsrxeHs7ZiQkEVK5aUvrJ6j
-         P2u0pdt97IccmWrSHTVODr6QOPi+taV0vlAYMXeSUqDdW2Z3UhbPMydR0W8qSseSxx
-         Zc1x1TUGEqic/VHDiTSGDjDPG5tJ0hLlGgo2rWcUybVMrp2DKB4rWnV4bN7tf9quCO
-         OuhAcw3Scs3vFWBBKs8o4xZjOO3AptfHE6EKrWtw64/rD3S/BeN+rBnvUy3J5nX9kf
-         7OhJqYzn1dDtA==
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     pali@kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH v2 23/23] PCI: aardvark: Make main irq_chip structure a static driver structure
-Date:   Mon, 10 Jan 2022 02:50:18 +0100
-Message-Id: <20220110015018.26359-24-kabel@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220110015018.26359-1-kabel@kernel.org>
-References: <20220110015018.26359-1-kabel@kernel.org>
+        with ESMTP id S238047AbiAJB4k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Jan 2022 20:56:40 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4436C06173F
+        for <linux-pci@vger.kernel.org>; Sun,  9 Jan 2022 17:56:39 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id p14so10663195plf.3
+        for <linux-pci@vger.kernel.org>; Sun, 09 Jan 2022 17:56:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fungible.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mkYHuJw67a3LbulvnX5SF5Jwp91Xp1LWbpzZ01T5e78=;
+        b=Y+pE1fqHcd+rDLcOYZjxlKuafsrt6n+9nLd8OWB/b8Ip8c1QX07h1F0vWc2fR5FbwR
+         kpl3JpsNXb0Acxqaf6dvuNwn7vlme6TwtR0EoXnh27FaADB7LKyZryzD/YgbxAWK3L0Q
+         rUWNTmO7yY06HN8lvxV9Bf8DJbJb2GlDDMSXs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mkYHuJw67a3LbulvnX5SF5Jwp91Xp1LWbpzZ01T5e78=;
+        b=Iw1WN0VX2VwrW4kOXbq/49FMpNfwcw1grvz82pC+M6FsLr86hCjZRE1ZaZxB2gKQjJ
+         zHBi1lKtYhtI5TPIArKd+ME/P1uIJzFiYD7lU/E6Mf3pToZno3959IivEnJ1NCj5DnG8
+         ujshHJylSJbJIFMzeqEC2SSHYv0DLC/nq5Glr9eHj1Lq65xqf5r3uIo6phkBT7MIIB2W
+         mNakc9tQVWEOZlNiI8flcrkd3gyiXPeQhuStHF/lmxOdBOXB54UDZi826QBNJT2+i2s7
+         wVPbCH8jTyM98SYHfwJZ/xdIue7qMQil1/EUxbn5hnAEEIH4YWLS3+dMjijYwgnQDwI7
+         FQaA==
+X-Gm-Message-State: AOAM531s+cpxh1SBIchcw2VK/vSYpejRvy+TAV6sCjWK1fChB1fU71WM
+        OUz2nGFqFj6HL4mSYGvYdTIaVgQggV+f+A==
+X-Google-Smtp-Source: ABdhPJx7N5pSatkNIjYxs21kxaRiwOfmy94ujvV5rWllmtNldh8/pzuz3CWpnzBmXiqm3A6bOAT7Yw==
+X-Received: by 2002:a17:90b:3b83:: with SMTP id pc3mr28155778pjb.3.1641779799446;
+        Sun, 09 Jan 2022 17:56:39 -0800 (PST)
+Received: from cab09-qa-09.fungible.local ([12.190.10.11])
+        by smtp.gmail.com with ESMTPSA id rm3sm6909535pjb.8.2022.01.09.17.56.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Jan 2022 17:56:38 -0800 (PST)
+From:   Dimitris Michailidis <d.michailidis@fungible.com>
+X-Google-Original-From: Dimitris Michailidis <dmichail@fungible.com>
+To:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        andrew@lunn.ch, d.michailidis@fungible.com
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH net-next v6 1/8] PCI: Add Fungible Vendor ID to pci_ids.h
+Date:   Sun,  9 Jan 2022 17:56:29 -0800
+Message-Id: <20220110015636.245666-2-dmichail@fungible.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220110015636.245666-1-dmichail@fungible.com>
+References: <20220110015636.245666-1-dmichail@fungible.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Marc Zyngier says [1] that we should use struct irq_chip as a global
-static struct in the driver. Even though the structure currently
-contains a dynamic member (parent_device), Marc says [2] that he plans
-to kill it and make the structure completely static.
-
-We have already converted others irq_chip structures in this driver in
-this way, but we omitted this one because the .name member is
-dynamically created from device's name, and the name is displayed in
-sysfs, so changing it would break sysfs ABI.
-
-The rationale for changing the name (to "advk-INT") in spite of sysfs
-ABI, and thus allowing to convert to a static structure, is that after
-the other changes we made in this series, the IRQ chip is basically
-something different: it no logner generates ERR and PME interrupts (they
-are generated by emulated bridge's rp_irq_chip).
-
-[1] https://lore.kernel.org/linux-pci/877dbcvngf.wl-maz@kernel.org/
-[2] https://lore.kernel.org/linux-pci/874k6gvkhz.wl-maz@kernel.org/
-
-Signed-off-by: Marek Behún <kabel@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Dimitris Michailidis <dmichail@fungible.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/controller/pci-aardvark.c | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
+ include/linux/pci_ids.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 2c5cc929b94f..087a0b22d573 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -276,7 +276,6 @@ struct advk_pcie {
- 	int irq;
- 	struct irq_domain *rp_irq_domain;
- 	struct irq_domain *irq_domain;
--	struct irq_chip irq_chip;
- 	raw_spinlock_t irq_lock;
- 	struct irq_domain *msi_domain;
- 	struct irq_domain *msi_inner_domain;
-@@ -1338,14 +1337,19 @@ static void advk_pcie_irq_unmask(struct irq_data *d)
- 	raw_spin_unlock_irqrestore(&pcie->irq_lock, flags);
- }
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 011f2f1ea5bb..c4299dbade98 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2578,6 +2578,8 @@
  
-+static struct irq_chip advk_irq_chip = {
-+	.name		= "advk-INT",
-+	.irq_mask	= advk_pcie_irq_mask,
-+	.irq_unmask	= advk_pcie_irq_unmask,
-+};
+ #define PCI_VENDOR_ID_HYGON		0x1d94
+ 
++#define PCI_VENDOR_ID_FUNGIBLE		0x1dad
 +
- static int advk_pcie_irq_map(struct irq_domain *h,
- 			     unsigned int virq, irq_hw_number_t hwirq)
- {
- 	struct advk_pcie *pcie = h->host_data;
+ #define PCI_VENDOR_ID_HXT		0x1dbf
  
- 	irq_set_status_flags(virq, IRQ_LEVEL);
--	irq_set_chip_and_handler(virq, &pcie->irq_chip,
--				 handle_level_irq);
-+	irq_set_chip_and_handler(virq, &advk_irq_chip, handle_level_irq);
- 	irq_set_chip_data(virq, pcie);
- 
- 	return 0;
-@@ -1404,7 +1408,6 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
- 	struct device *dev = &pcie->pdev->dev;
- 	struct device_node *node = dev->of_node;
- 	struct device_node *pcie_intc_node;
--	struct irq_chip *irq_chip;
- 	int ret = 0;
- 
- 	raw_spin_lock_init(&pcie->irq_lock);
-@@ -1415,28 +1418,14 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
- 		return -ENODEV;
- 	}
- 
--	irq_chip = &pcie->irq_chip;
--
--	irq_chip->name = devm_kasprintf(dev, GFP_KERNEL, "%s-irq",
--					dev_name(dev));
--	if (!irq_chip->name) {
--		ret = -ENOMEM;
--		goto out_put_node;
--	}
--
--	irq_chip->irq_mask = advk_pcie_irq_mask;
--	irq_chip->irq_unmask = advk_pcie_irq_unmask;
--
- 	pcie->irq_domain =
- 		irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
- 				      &advk_pcie_irq_domain_ops, pcie);
- 	if (!pcie->irq_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
- 		ret = -ENOMEM;
--		goto out_put_node;
- 	}
- 
--out_put_node:
- 	of_node_put(pcie_intc_node);
- 	return ret;
- }
+ #define PCI_VENDOR_ID_TEKRAM		0x1de1
 -- 
-2.34.1
+2.25.1
 
