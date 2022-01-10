@@ -2,131 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2237F489B7F
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 15:44:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE4F2489C05
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 16:19:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235694AbiAJOoW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 09:44:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37688 "EHLO
+        id S236088AbiAJPTf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 10:19:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234981AbiAJOoV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 09:44:21 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 686A0C06173F
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 06:44:21 -0800 (PST)
+        with ESMTP id S236085AbiAJPTe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 10:19:34 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED3DC06173F
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 07:19:34 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E61CC60E33
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 14:44:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BBB9C36AE3;
-        Mon, 10 Jan 2022 14:44:20 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 18D5CB81649
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 15:19:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C146C36AE5;
+        Mon, 10 Jan 2022 15:19:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641825860;
-        bh=QTlLtVmA4M6A/doosWcn+xwS48663pzABVMvW6Gyr4M=;
+        s=k20201202; t=1641827971;
+        bh=aZhQbEyF7vRdK8xCqH1U68jQTLsHNHruPWc3aZkJjzI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EgfaRDFnEHM8wW0auRDMXieHj6JQR1i6sQ/AQUPzl2To/Di+UjDQCQx1SaNNZJLUV
-         kEuD+EQvJiqLHZrAFh+cuy9mPf3lK8KzbrAsXrrd0MfrydpsNb/4NH1DnADC3qL/P/
-         JJkzzf+qkZ7mPJtwn4mVOstZ4XokLm50gUy70hibpwLWXY5Q8IWSUX4HPXlKxQ5BMe
-         sDJEMjDPYWOcdDZGFZaJJNcLc3Dy/My5Xti0vJeS/HMzIbuTz9+xzjZ0FoxCZYGKkn
-         iTUFoBl9IFnfuhRUXh6x6zyVc4j1P4x/Z5yVrY5ZAMzdJYzLZbs5BHWTBWjsgde80K
-         /JYuFi4b7mB+A==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1n6vuD-00H9ok-V5; Mon, 10 Jan 2022 14:44:18 +0000
-Date:   Mon, 10 Jan 2022 14:44:17 +0000
-Message-ID: <87mtk3tzum.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        b=I34LhhvfBl6iamTOVTEbL25MvVaLuiEDR4e88n5Hmp5kq7r0m+8oi04IFtuETWYxE
+         nVg1BOL+PPyDFPoPAP7P/28YDQFVUTqxMQkjl7bVQH9HotaztFzm60n88U2lFtZevg
+         XWQMr+zu/2jf02I5iL4vahkkZiCjMqYzWUS6pHtb0uQleII49dhGLsjSsn/r3RIraW
+         CNiAutAqg4L3lliAdNIOgSRefm1dfamFfP1wS5+ZrO+d4VDYzLRGQckFde0gdleXmA
+         tyFZUkENpcNXY8hBqCE2TtRkr7GX5PLb3Sjn1t1iDlg6sYHcv672ST7Y2eOTK398Nc
+         IWaFtdhuDpqpA==
+Date:   Mon, 10 Jan 2022 16:19:27 +0100
+From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>,
+        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 23/23] PCI: aardvark: Make main irq_chip structure a static driver structure
-In-Reply-To: <20220110105324.jud6bzdtmoiuvyas@pali>
+Subject: Re: [PATCH v2 23/23] PCI: aardvark: Make main irq_chip structure a
+ static driver structure
+Message-ID: <20220110161927.64362d52@thinkpad>
+In-Reply-To: <87mtk3tzum.wl-maz@kernel.org>
 References: <20220110015018.26359-1-kabel@kernel.org>
         <20220110015018.26359-24-kabel@kernel.org>
         <bf65af53fe1a4e6b814b124b59ad3aa9@kernel.org>
         <20220110105324.jud6bzdtmoiuvyas@pali>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+        <87mtk3tzum.wl-maz@kernel.org>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: pali@kernel.org, kabel@kernel.org, lorenzo.pieralisi@arm.com, helgaas@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 10 Jan 2022 10:53:24 +0000,
-Pali Roh=C3=A1r <pali@kernel.org> wrote:
->=20
-> On Monday 10 January 2022 09:28:39 Marc Zyngier wrote:
-> > On 2022-01-10 01:50, Marek Beh=C3=BAn wrote:
-> > > Marc Zyngier says [1] that we should use struct irq_chip as a global
-> > > static struct in the driver. Even though the structure currently
-> > > contains a dynamic member (parent_device), Marc says [2] that he plans
-> > > to kill it and make the structure completely static.
-> > >=20
-> > > We have already converted others irq_chip structures in this driver in
-> > > this way, but we omitted this one because the .name member is
-> > > dynamically created from device's name, and the name is displayed in
-> > > sysfs, so changing it would break sysfs ABI.
-> > >=20
-> > > The rationale for changing the name (to "advk-INT") in spite of sysfs
-> > > ABI, and thus allowing to convert to a static structure, is that after
-> > > the other changes we made in this series, the IRQ chip is basically
-> > > something different: it no logner generates ERR and PME interrupts (t=
-hey
-> > > are generated by emulated bridge's rp_irq_chip).
+On Mon, 10 Jan 2022 14:44:17 +0000
+Marc Zyngier <maz@kernel.org> wrote:
+
+> On Mon, 10 Jan 2022 10:53:24 +0000,
+> Pali Roh=C3=A1r <pali@kernel.org> wrote:
 > >=20
-> > There is no 'is spite of the ABI'. If you don't understand why
-> > we don't break the ABI, you have an even bigger problem.
+> > On Monday 10 January 2022 09:28:39 Marc Zyngier wrote: =20
+> > > On 2022-01-10 01:50, Marek Beh=C3=BAn wrote: =20
+> > > > Marc Zyngier says [1] that we should use struct irq_chip as a global
+> > > > static struct in the driver. Even though the structure currently
+> > > > contains a dynamic member (parent_device), Marc says [2] that he pl=
+ans
+> > > > to kill it and make the structure completely static.
+> > > >=20
+> > > > We have already converted others irq_chip structures in this driver=
+ in
+> > > > this way, but we omitted this one because the .name member is
+> > > > dynamically created from device's name, and the name is displayed in
+> > > > sysfs, so changing it would break sysfs ABI.
+> > > >=20
+> > > > The rationale for changing the name (to "advk-INT") in spite of sys=
+fs
+> > > > ABI, and thus allowing to convert to a static structure, is that af=
+ter
+> > > > the other changes we made in this series, the IRQ chip is basically
+> > > > something different: it no logner generates ERR and PME interrupts =
+(they
+> > > > are generated by emulated bridge's rp_irq_chip). =20
+> > >=20
+> > > There is no 'is spite of the ABI'. If you don't understand why
+> > > we don't break the ABI, you have an even bigger problem.
+> > >=20
+> > > So NAK to this patch, now and forever. Any change to the structure to
+> > > make it read-only must allow the preservation of the existing names
+> > > when they are generated by the driver. =20
 > >=20
-> > So NAK to this patch, now and forever. Any change to the structure to
-> > make it read-only must allow the preservation of the existing names
-> > when they are generated by the driver.
+> > Marc, you already presented that you do not like Armada 3720 platform
+> > and that you do not care about it. =20
 >=20
-> Marc, you already presented that you do not like Armada 3720 platform
-> and that you do not care about it.
-
-What I like or not is irrelevant here. What I ask for is that
-userspace ABIs are not broken.
-
-> But please do not slowdown development for this platform.
-
-That's quite an accusation.
-
-> Arguments about ABIs, breaking it and similar are not relevant here as
-> this current kernel implementation is broken. And has to be replaced by
-> a working one. We are doing on it for more than year.
->
-> It really does not make sense to try doing some backward compatibility
-> with something which is broken by design and does not work. It just take
-> lot of time without any value.
+> What I like or not is irrelevant here. What I ask for is that
+> userspace ABIs are not broken.
 >=20
-> We really need to more forward and fix driver as in current state is
-> PCIe on Armada 3720 unusable.
+> > But please do not slowdown development for this platform. =20
+>=20
+> That's quite an accusation.
+>=20
+> > Arguments about ABIs, breaking it and similar are not relevant here as
+> > this current kernel implementation is broken. And has to be replaced by
+> > a working one. We are doing on it for more than year.
+> >
+> > It really does not make sense to try doing some backward compatibility
+> > with something which is broken by design and does not work. It just take
+> > lot of time without any value.
+> >=20
+> > We really need to more forward and fix driver as in current state is
+> > PCIe on Armada 3720 unusable. =20
+>=20
+> This patch doesn't fix anything. It has the potential to break
+> userspace, and I'm not having any of it. You may not care about
+> backward compatibility, but this is thankfully *not* your pet
+> playground.
+>=20
+> You can claim that I am doing a bad job. In which case, feel free to
+> submit a patch removing me from the MAINTAINER file, and we can have
+> that discussion.
+>=20
+> In the meantime, I will continue to oppose these kind of patches that
+> pretend to 'fix' things without adding any value.
+>=20
+> 	M.
 
-This patch doesn't fix anything. It has the potential to break
-userspace, and I'm not having any of it. You may not care about
-backward compatibility, but this is thankfully *not* your pet
-playground.
+Dear Marc,
 
-You can claim that I am doing a bad job. In which case, feel free to
-submit a patch removing me from the MAINTAINER file, and we can have
-that discussion.
+that is why I put this patch as last patch of this series, so that it
+could be potentially dropped.
 
-In the meantime, I will continue to oppose these kind of patches that
-pretend to 'fix' things without adding any value.
+I mostly agree with your points, Pali does not. Pali, let's not sabotage
+ourselves with needless arguments. Marc, Pali means well, but sometimes
+when he has different opinion, he can get quite argumentative. Let's
+ignore this patch for now.
 
-	M.
+Marc, what do you think about the other patches? Did you have time to
+look at them?
 
---=20
-Without deviation from the norm, progress is not possible.
+Thanks.
+
+Marek
