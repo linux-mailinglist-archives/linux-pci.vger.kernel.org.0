@@ -2,143 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE4F2489C05
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 16:19:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF3C6489C53
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 16:36:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236088AbiAJPTf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 10:19:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236085AbiAJPTe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 10:19:34 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED3DC06173F
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 07:19:34 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 18D5CB81649
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 15:19:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C146C36AE5;
-        Mon, 10 Jan 2022 15:19:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641827971;
-        bh=aZhQbEyF7vRdK8xCqH1U68jQTLsHNHruPWc3aZkJjzI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=I34LhhvfBl6iamTOVTEbL25MvVaLuiEDR4e88n5Hmp5kq7r0m+8oi04IFtuETWYxE
-         nVg1BOL+PPyDFPoPAP7P/28YDQFVUTqxMQkjl7bVQH9HotaztFzm60n88U2lFtZevg
-         XWQMr+zu/2jf02I5iL4vahkkZiCjMqYzWUS6pHtb0uQleII49dhGLsjSsn/r3RIraW
-         CNiAutAqg4L3lliAdNIOgSRefm1dfamFfP1wS5+ZrO+d4VDYzLRGQckFde0gdleXmA
-         tyFZUkENpcNXY8hBqCE2TtRkr7GX5PLb3Sjn1t1iDlg6sYHcv672ST7Y2eOTK398Nc
-         IWaFtdhuDpqpA==
-Date:   Mon, 10 Jan 2022 16:19:27 +0100
-From:   Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>,
-        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 23/23] PCI: aardvark: Make main irq_chip structure a
- static driver structure
-Message-ID: <20220110161927.64362d52@thinkpad>
-In-Reply-To: <87mtk3tzum.wl-maz@kernel.org>
-References: <20220110015018.26359-1-kabel@kernel.org>
-        <20220110015018.26359-24-kabel@kernel.org>
-        <bf65af53fe1a4e6b814b124b59ad3aa9@kernel.org>
-        <20220110105324.jud6bzdtmoiuvyas@pali>
-        <87mtk3tzum.wl-maz@kernel.org>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        id S236307AbiAJPgl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 10:36:41 -0500
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:20182 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236243AbiAJPgj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 10:36:39 -0500
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20AE6eTj015372;
+        Mon, 10 Jan 2022 15:35:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2021-07-09;
+ bh=g6Er+gI9i/erk3lqnCuNb3gG2mXN1WNzB/Xgz2fumEk=;
+ b=gtASKtuH+ZVZBEjz/kSNnfXv+hARVXLucL3c/IT5GVaI0NovHjGWmR6sFWB4cIxchDbV
+ c7hkkb1IU87WuxT737TfxoHodtP/Uu/OCadA0zLGmltOYpujhIiP32J5WeStsAFl3sta
+ SZGSLJfnyhawByJNtJ4WdIFcgRS+yfWIMla3NUGrfLlHF8rIZUGtQqtNCqPlvqpYEFub
+ 8hZF+6df7H/5ZYnMBLsdLiwh9LGzjUQfCdhU3eekl2yppGI3SCG3hfQKd1Cemij4pSi4
+ l7JnN33h0s0JN+enUZSH019qjY4Ic5eRryUxwJg8BrVsbwKGY+qvfAMcNeG6SOTuIt3C DA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3dgjtg8r2q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jan 2022 15:35:33 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 20AFVY6e162896;
+        Mon, 10 Jan 2022 15:35:31 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
+        by userp3020.oracle.com with ESMTP id 3df42k4pyy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Jan 2022 15:35:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Fya9TQpRWnW1G2nTVlSOIiZ71YJNwu17d9nWoERTKQI2QY/f8n8aM1BuKknHxrQJzvCBjad8PbUNzKiLGqxVjCZG/Y+io17J6p3lUcXjFQ8nVtKbk6hZHY4t5adPDG+dY6OnHpGmwigPnp8cdnA+0Nx+SHXcoymYGBYiQqC9qK2qoNH1ecw+ZwfdNBqc7MRjgiZN7oim/QN02pbdQtTqZR+5tvvbOMZ9Z6FPLRQGsGIxm3eUUSiBOej1QMHYPneJwsqcA6HGL1YNQIVqC/J2njSzllmTgkhGrhMjugnRMu36zZNYIUqyVA/JblvkUBXtcR07tFWpWfyq3oFlApXN5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g6Er+gI9i/erk3lqnCuNb3gG2mXN1WNzB/Xgz2fumEk=;
+ b=fYeONjFnZW4uulIaG7deD4ElfWGkiozF1i/Plj7VL3kg1xUziaXP8aWVyV7m3LQpZRGnzMGNc8V9A/RoUVCXl/M1fUz3hqSk6SR3IisfZB7PHwkns5FKYYAS78iA5tu1252buLCgond6SKmPtdoUewE5ykNabReQNlhT8aS/NUCWStvp017C/y3B5689VCDVvomIYeE7BduBCVdqWgpOMwgRfaZ6lxOmuFVz/yHOvJ6SNvIoiHErRM5PFECOgaNLRzobsg44TVrvkK27uZOn3qgfX/hh6yBvjNNjx+/bdsK8s8dda4QQ6Zbs0ADe7cIoYheRf8J8YJinyB9XuptAxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g6Er+gI9i/erk3lqnCuNb3gG2mXN1WNzB/Xgz2fumEk=;
+ b=JTc5YFbWgZmEkdKtwkTVB5RFh6n2cFyTarFFjx7WTyHWGBw8XcmiuvSKfbulQtmR6M/C2OE/E/i8G7zSfTsqGrt6AQ7BKWJLvNxQcBBceJKT9keb4xTrAfLoTDAMIYQLWahO/YTdwON2caofuOvZgisrkd1Hnr46MbOfNIP9hmU=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by PH0PR10MB5561.namprd10.prod.outlook.com (2603:10b6:510:f0::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.11; Mon, 10 Jan
+ 2022 15:35:29 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::1053:7ae3:932b:f166]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::1053:7ae3:932b:f166%7]) with mapi id 15.20.4867.011; Mon, 10 Jan 2022
+ 15:35:29 +0000
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     arnd@arndb.de, hch@infradead.org, akpm@linux-foundation.org,
+        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        davem@davemloft.net, airlied@linux.ie, vkoul@kernel.org,
+        hao.wu@intel.com, trix@redhat.com, mdf@kernel.org,
+        yilun.xu@intel.com, awalls@md.metrocast.net, mchehab@kernel.org,
+        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, mporter@kernel.crashing.org,
+        alex.bou9@gmail.com, bhelgaas@google.com,
+        linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-media@vger.kernel.org,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 00/16] Remove usage of the deprecated "pci-dma-compat.h"
+ API
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1ee5ftxic.fsf@ca-mkp.ca.oracle.com>
+References: <cover.1641500561.git.christophe.jaillet@wanadoo.fr>
+Date:   Mon, 10 Jan 2022 10:35:26 -0500
+In-Reply-To: <cover.1641500561.git.christophe.jaillet@wanadoo.fr> (Christophe
+        JAILLET's message of "Thu, 6 Jan 2022 22:45:13 +0100")
+Content-Type: text/plain
+X-ClientProxiedBy: MN2PR05CA0060.namprd05.prod.outlook.com
+ (2603:10b6:208:236::29) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4b718c93-bc6e-45bc-239e-08d9d44ed486
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5561:EE_
+X-Microsoft-Antispam-PRVS: <PH0PR10MB55613110E10AB4F20D97062F8E509@PH0PR10MB5561.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VhcD1Pl5+m/0sIZnkYYfHvpIVdZruh4aF28n1Si/+jqlxqdVptxD0dvO+gL6yWSr1ndv8Df4xG4Dx1eVUSTjd/CsbRTDmU4cJMmL/QNZ1I5JnlsdQ+Y5ZGcfIlBAw3xuwndjEP0cbOd2f13go+HZj4ptSi1e4PCF4O8Eb9D6UdVMurno6+TNM0xtxz2ZlS8VrcdEOkvoFAyujSnFEeMoMrnYP2ifjoled1RIiUwVOiFqXkD0bVd4aS2OZ3akyhBFKN9YfgY8x1EdvQ9mmoxYO2F6aIax1mRLWO+qWqI/KzO8LxmbuBRRDVprShMco1zslwLwETUN8tR1nO8I/z6jP/hYnOszG7nMBS1EAta1H2lXY/ZMlZSrCgtVZsIB02bD3p7oCmSpgceuguNOJHm0FOOzo6aMqF1IuaAUd8V6m40+BZb3RoOwspagOtkp7B2yEkvTsAmvBnPDzg3uuUtgXG+9uXE8XYUG4FguiUP2S4cM/2o04wTtGEXaGKoZG2gGDadAea8RjwSEW6XH0lREmDcqjTe+6o5jpdkAC2oC/S3Efw1jPn26EAB1NjKyXO+2zKIq0+fgmL6tGUzRty34Z6RVY/luZkGE6GXLZsa1/D3+uUu+P2CY5fydT4jqdbn0sopW9TmOAJQhWdvo0N7FuHM5VsItGf6iSE40Q4rzZcrNOVFRXqUcbX+5PPiX58XoO6zRhzf6HmWFG/+PiL3mow==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(6916009)(8936002)(66476007)(6666004)(6506007)(558084003)(6486002)(86362001)(38350700002)(508600001)(7406005)(316002)(7416002)(52116002)(36916002)(66556008)(66946007)(186003)(4326008)(6512007)(26005)(2906002)(5660300002)(38100700002)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?p6v03Xbu2mI5YjD1XS5925lImhtdq+l6J3QWJ9Lr9CfPAG3TGju6iQisptPh?=
+ =?us-ascii?Q?GrN16naZTBl6PdURPY5fue7zsrTe6sdxIP3kxhtN63D+r/8QZgCA54INRMcF?=
+ =?us-ascii?Q?o6hJH/B9kHQILZm3hST0564Hly/Qo6hbT3qsrnuzv5EJOq9WVJeo6tz5v3B4?=
+ =?us-ascii?Q?1zRSGtrMVmD7+Kf83vV4/FqTmNhrw53zp4ZuVgTO/dKBBjVvIPSp5TOOK9VU?=
+ =?us-ascii?Q?/PSb2dJzjA1N9uCBzZPHNKAh8fsGJu8Voj4CWZ1ybW7Sp9mNkmRUZgwjh2c7?=
+ =?us-ascii?Q?zF9bI79IAWBwCEU6TYk4eTKlZEbDQbQfTQzjsNCC/BuxxUo0y93LLWwUUPnR?=
+ =?us-ascii?Q?DLBsEA08Sc5HgrugwqryHFk5CYT5JCrSmVcWItll8OTh+lw1VHxK3JdQcBzb?=
+ =?us-ascii?Q?jluH63JWrXKDNX8/vEBGd7o1Hjn2LisErTyX2OcLPIywWvl/87YChIOYhn2B?=
+ =?us-ascii?Q?urlanpVEa9J3QtaunGAzrVyej/27srfjWElCshQFn6so82DzilmTyRM3vWlA?=
+ =?us-ascii?Q?4oMNsg9ZROZSoAKXQKpBfzJC1MBG0JrSOaSPrkEjhdUcozJYrERP9K8qsH6o?=
+ =?us-ascii?Q?tTmWucU1ZSiQcfH8DyKoiTScoTheN7aoJkeO0COfDeRHk2JDllARO6whD0/K?=
+ =?us-ascii?Q?05jS37TpJRmeu+WFINIfqlOdJoN0RHZs1feHg40SVR1AcP9qeMMAxFK0eU7t?=
+ =?us-ascii?Q?l0P6KKY3tQu4hy8dTRt3ueZ2qQmi0cLo7L4GSyOGPCDouwT67mDB6oE9I+jU?=
+ =?us-ascii?Q?IQZGfUvLSYA+y8nbBz66ZMw6cs1L71dH3AX3tlEuFMg90FDE5nJGfLkQZC4q?=
+ =?us-ascii?Q?xAHS/FsPXAJJ7+zU5INmjKZ5kpks6UkSI8Cpjx2ukXDBBF++2rBRTL4tmGWz?=
+ =?us-ascii?Q?Yctn2TTT0VT+gtvKfFmEgQQ9QfTP9NPXT50j4ZbU2UCCf+YIwmW+Lss0dgR+?=
+ =?us-ascii?Q?B8QwI2P1mTyMMhskJsZQUK1PNHbxFXbp/7zeD2nywXra5lSdgDn+yusWLiVv?=
+ =?us-ascii?Q?P6IyWlHB7Q6V75ZdASdt1aa+BS+nIThdZu+zk0es9u8AWV446UHel0HdUwkR?=
+ =?us-ascii?Q?46ZgJuJoi/+T9AxFYfC5+GkrMfiu6YApUwAR8K3aGH1lrjGrmMZD9iXqvaqN?=
+ =?us-ascii?Q?PfK7ve4PPEc+5MMH65e6Uyhpogrv/RaGwFOP6wkQMqaTnC7VfDqjAaZrIXJH?=
+ =?us-ascii?Q?WN3AEF6aKp77BhqkfbJ4Tx2MzUpQs3pScNKJMNoB47qQ6MQ0lPkYTbAhusSY?=
+ =?us-ascii?Q?qecXUV50tbmrTo2WC/MNdnqnV9iu7zJuHOvwbq8ssPeHTzxhXSSzo4S6/ySm?=
+ =?us-ascii?Q?PgIuXuIjXf1EnQri5Sg1b47SMV7LmVhpx9+NJBkzv2DyJ5KtXCwV4y7IdG5g?=
+ =?us-ascii?Q?Rsf/PNeVYqKILsbuYPSG5Tx7qerDY+jYzLgyBHrvJssMll2nETDEl4PIPzxQ?=
+ =?us-ascii?Q?I0XOW7JNsb+tbbFLTURAgwrtx99tkEbCVrUasNm8ew84Uyi4tVz/P5Q/b3CO?=
+ =?us-ascii?Q?Lm8GjqO8J8eJzG9evqyQvF+oBTnWRcE8o0wgyRtwtBK9lAORRdjrIuHmI3QB?=
+ =?us-ascii?Q?7AUsAAn9ZGNaR7JJ4WlMVmYcwY/UNBfvE4mNOrT0MCP494liWTi+unM5qM1m?=
+ =?us-ascii?Q?wu2yR+3fkeKUFn9rsCxuuiD1DuikFsnWbRUZCT1uWvWdvc7yC98Rxgr2bBam?=
+ =?us-ascii?Q?pqneYw=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b718c93-bc6e-45bc-239e-08d9d44ed486
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2022 15:35:28.8983
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uE/cQ4vyObC3vBuAEKE+iXQMRZqN0F6enY9bxd/m10YlkWXcFmoEKaN5FmWv1oVJLM7bON1/+ZoTguHEWTXWoIBvo4YirMOygaoiToay+wc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5561
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10223 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
+ definitions=main-2201100108
+X-Proofpoint-GUID: Gg471IfcOv-uoBh7RYjn5ZS-0P248EWs
+X-Proofpoint-ORIG-GUID: Gg471IfcOv-uoBh7RYjn5ZS-0P248EWs
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 10 Jan 2022 14:44:17 +0000
-Marc Zyngier <maz@kernel.org> wrote:
 
-> On Mon, 10 Jan 2022 10:53:24 +0000,
-> Pali Roh=C3=A1r <pali@kernel.org> wrote:
-> >=20
-> > On Monday 10 January 2022 09:28:39 Marc Zyngier wrote: =20
-> > > On 2022-01-10 01:50, Marek Beh=C3=BAn wrote: =20
-> > > > Marc Zyngier says [1] that we should use struct irq_chip as a global
-> > > > static struct in the driver. Even though the structure currently
-> > > > contains a dynamic member (parent_device), Marc says [2] that he pl=
-ans
-> > > > to kill it and make the structure completely static.
-> > > >=20
-> > > > We have already converted others irq_chip structures in this driver=
- in
-> > > > this way, but we omitted this one because the .name member is
-> > > > dynamically created from device's name, and the name is displayed in
-> > > > sysfs, so changing it would break sysfs ABI.
-> > > >=20
-> > > > The rationale for changing the name (to "advk-INT") in spite of sys=
-fs
-> > > > ABI, and thus allowing to convert to a static structure, is that af=
-ter
-> > > > the other changes we made in this series, the IRQ chip is basically
-> > > > something different: it no logner generates ERR and PME interrupts =
-(they
-> > > > are generated by emulated bridge's rp_irq_chip). =20
-> > >=20
-> > > There is no 'is spite of the ABI'. If you don't understand why
-> > > we don't break the ABI, you have an even bigger problem.
-> > >=20
-> > > So NAK to this patch, now and forever. Any change to the structure to
-> > > make it read-only must allow the preservation of the existing names
-> > > when they are generated by the driver. =20
-> >=20
-> > Marc, you already presented that you do not like Armada 3720 platform
-> > and that you do not care about it. =20
->=20
-> What I like or not is irrelevant here. What I ask for is that
-> userspace ABIs are not broken.
->=20
-> > But please do not slowdown development for this platform. =20
->=20
-> That's quite an accusation.
->=20
-> > Arguments about ABIs, breaking it and similar are not relevant here as
-> > this current kernel implementation is broken. And has to be replaced by
-> > a working one. We are doing on it for more than year.
-> >
-> > It really does not make sense to try doing some backward compatibility
-> > with something which is broken by design and does not work. It just take
-> > lot of time without any value.
-> >=20
-> > We really need to more forward and fix driver as in current state is
-> > PCIe on Armada 3720 unusable. =20
->=20
-> This patch doesn't fix anything. It has the potential to break
-> userspace, and I'm not having any of it. You may not care about
-> backward compatibility, but this is thankfully *not* your pet
-> playground.
->=20
-> You can claim that I am doing a bad job. In which case, feel free to
-> submit a patch removing me from the MAINTAINER file, and we can have
-> that discussion.
->=20
-> In the meantime, I will continue to oppose these kind of patches that
-> pretend to 'fix' things without adding any value.
->=20
-> 	M.
+Christophe,
 
-Dear Marc,
+> This serie axes all the remaining usages of the deprecated
+> "pci-dma-compat.h" API.
 
-that is why I put this patch as last patch of this series, so that it
-could be potentially dropped.
+Applied patches 10-15 to 5.17/scsi-staging, thanks!
 
-I mostly agree with your points, Pali does not. Pali, let's not sabotage
-ourselves with needless arguments. Marc, Pali means well, but sometimes
-when he has different opinion, he can get quite argumentative. Let's
-ignore this patch for now.
-
-Marc, what do you think about the other patches? Did you have time to
-look at them?
-
-Thanks.
-
-Marek
+-- 
+Martin K. Petersen	Oracle Linux Engineering
