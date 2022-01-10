@@ -2,114 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64816489772
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 12:30:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 219224897B6
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 12:42:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244719AbiAJLad (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 06:30:33 -0500
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:47375 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S244760AbiAJL3t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 10 Jan 2022 06:29:49 -0500
-Received: from [192.168.0.5] (ip5f5aece2.dynamic.kabel-deutschland.de [95.90.236.226])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 879DE61E5FE02;
-        Mon, 10 Jan 2022 12:29:44 +0100 (CET)
-Message-ID: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
-Date:   Mon, 10 Jan 2022 12:29:44 +0100
+        id S244914AbiAJLmv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 06:42:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:56803 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S244926AbiAJLlo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 06:41:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1641814901;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SsWQC8aTb+0uRe3yU+LwCtHB9iia3Osu0BBlRAz4Dj0=;
+        b=futY8jD0bx8u3ZSMnv4xgVIkFqrhmEe+8+MLM0VPZ3PsOL/6dk0pboyomFGeZd1a74uiu0
+        m+FwRJZPjaSuc8phiWgxZo3dFjL4tLc7fKpsb2qqPFc6SubbUA9M7f3crgEtNdlRCHF1ei
+        tNY8L593iJCCbF0goOuMUNWzHjTpnEA=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-113-Cgvc8MmPMqGKtsmeoQZ0qg-1; Mon, 10 Jan 2022 06:41:40 -0500
+X-MC-Unique: Cgvc8MmPMqGKtsmeoQZ0qg-1
+Received: by mail-ed1-f71.google.com with SMTP id eg24-20020a056402289800b003fe7f91df01so873207edb.6
+        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 03:41:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=SsWQC8aTb+0uRe3yU+LwCtHB9iia3Osu0BBlRAz4Dj0=;
+        b=QYou/FpqD8EfHxypT1qoesab4/I2vF3lJVu8L65JDgx3uP7gIOS8Mc4MNGcMe6wSLJ
+         7vQD7X3VIf08M87QwDggHMgWDrQXmJV6LC0IRCkRf6HyN3OWB51QOzvY9UvkUixrzWSR
+         zp1S0b04WhdnYNWLrlLH6RSFtTrAy9P6Ndb+x7Hqa0eVdSd37nmW4sC9qAbEifsmqfDi
+         wIhnTv6/gtswAVOlNkeZ0OJhkTMPx7IDlG7wwEufLh5aXk6DZ8U/GT3biAsc+i7Ovc8V
+         CcZbF6OV5t9Dw7ggd6qIcpi4hofBr/2ME82CePLMIQmK3tHsSWxKUy9UZYj20ILQ5fom
+         cQXw==
+X-Gm-Message-State: AOAM5301YDVc3Bmq3T9/rIyNJEJ0qqiwoawdlznXq2nOg1io9EpvjqdG
+        Vu295YIb31NE/inquhlZa8DChRznQc8JARGmH1npIYaf5NlUyc6InjXLWO5pBYP7E43fG//7vG7
+        MquHY3avUqEWw/3GJcEzv
+X-Received: by 2002:a17:907:a420:: with SMTP id sg32mr1390941ejc.310.1641814899127;
+        Mon, 10 Jan 2022 03:41:39 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwa47UJCAu9cZOZqhb8987Jy+Gr9KRUjqDbs/oRBNFOeATkg186ylFpwptic1AlmBR/yUCuXg==
+X-Received: by 2002:a17:907:a420:: with SMTP id sg32mr1390927ejc.310.1641814898923;
+        Mon, 10 Jan 2022 03:41:38 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id j21sm2321879ejj.133.2022.01.10.03.41.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jan 2022 03:41:38 -0800 (PST)
+Message-ID: <c992ece7-6878-a39e-0386-5a499265c4cb@redhat.com>
+Date:   Mon, 10 Jan 2022 12:41:37 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
+ Thunderbird/91.3.0
+Subject: Re: [PATCH v6] x86/PCI: Ignore E820 reservations for bridge windows
+ on newer systems
 Content-Language: en-US
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: 100 ms boot time increase regression in acpi_init()/acpi_scan_bus()
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        regressions@lists.linux.dev
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, stable@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+References: <20211217141348.379461-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211217141348.379461-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-#regzbot introduced: v5.13..v5.14-rc1
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215419
+Hi All,
+
+On 12/17/21 15:13, Hans de Goede wrote:
+> Some BIOS-es contain a bug where they add addresses which map to system
+> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
+> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+> space").
+> 
+> To work around this bug Linux excludes E820 reserved addresses when
+> allocating addresses from the PCI host bridge window since 2010.
+> 
+> Recently (2019) some systems have shown-up with E820 reservations which
+> cover the entire _CRS returned PCI bridge memory window, causing all
+> attempts to assign memory to PCI BARs which have not been setup by the
+> BIOS to fail. For example here are the relevant dmesg bits from a
+> Lenovo IdeaPad 3 15IIL 81WE:
+> 
+>  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
+>  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
+> 
+> The ACPI specifications appear to allow this new behavior:
+> 
+> The relationship between E820 and ACPI _CRS is not really very clear.
+> ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
+> 
+>   This range of addresses is in use or reserved by the system and is
+>   not to be included in the allocatable memory pool of the operating
+>   system's memory manager.
+> 
+> and it may be used when:
+> 
+>   The address range is in use by a memory-mapped system device.
+> 
+> Furthermore, sec 15.2 says:
+> 
+>   Address ranges defined for baseboard memory-mapped I/O devices, such
+>   as APICs, are returned as reserved.
+> 
+> A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
+> and its apertures are in use and certainly should not be included in
+> the general allocatable pool, so the fact that some BIOS-es reports
+> the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
+> 
+> So it seems that the excluding of E820 reserved addresses is a mistake.
+> 
+> Ideally Linux would fully stop excluding E820 reserved addresses,
+> but then the old systems this was added for will regress.
+> Instead keep the old behavior for old systems, while ignoring
+> the E820 reservations for any systems from now on.
+> 
+> Old systems are defined here as BIOS year < 2018, this was chosen to make
+> sure that E820 reservations will not be used on the currently affected
+> systems, while at the same time also taking into account that the systems
+> for which the E820 checking was originally added may have received BIOS
+> updates for quite a while (esp. CVE related ones), giving them a more
+> recent BIOS year then 2010.
+> 
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
+> BugLink: https://bugs.launchpad.net/bugs/1878279
+> BugLink: https://bugs.launchpad.net/bugs/1931715
+> BugLink: https://bugs.launchpad.net/bugs/1932069
+> BugLink: https://bugs.launchpad.net/bugs/1921649
+> Cc: Benoit Grégoire <benoitg@coeus.ca>
+> Cc: Hui Wang <hui.wang@canonical.com>
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v6:
+> - Remove the possibility to change the behavior from the commandline
+>   because of worries that users may use this to paper over other problems
+
+ping ?
+
+Regards,
+
+Hans
 
 
-Dear Linux folks,
 
 
-On the Intel T4500 laptop Acer TravelMate 5735Z with Debian 
-sid/unstable, there is a 100 ms introduced between Linux 5.10.46 and 
-5.13.9, and is still present in Linux 5.15.5.
-
-     [    0.000000] microcode: microcode updated early to revision 
-0xa0b, date = 2010-09-28
-     [    0.000000] Linux version 5.15.0-2-amd64 
-(debian-kernel@lists.debian.org) (gcc-11 (Debian 11.2.0-13) 11.2.0, GNU 
-ld (GNU Binutils for Debian) 2.37) #1 SMP Debian 5.15.5-2 (2021-12-18)
-     [    0.000000] Command line: 
-BOOT_IMAGE=/boot/vmlinuz-5.15.0-2-amd64 
-root=UUID=e17cec4f-d2b8-4cc3-bd39-39a10ed422f4 ro quiet noisapnp 
-cryptomgr.notests random.trust_cpu=on initcall_debug log_buf_len=4M
-     […]
-     [    0.262243] calling  acpi_init+0x0/0x487 @ 1
-     […]
-     [    0.281655] ACPI: Enabled 15 GPEs in block 00 to 3F
-     [    0.394855] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
-     […]
-     [    0.570908] initcall acpi_init+0x0/0x487 returned 0 after 300781 
-usecs
-
-I attached all the log files to the Kernel.org Bugzilla bug report 
-#215419 [1].
-
-Unfortunately, I am unable to bisect the issue, as it’s not my machine, 
-and I do not have a lot of access to it.
-
-Using ftrace, unfortunately, I didn’t save all of them, I think the path is
-
-     acpi_init() → acpi_scan_init() → acpi_bus_scan(ACPI_ROOT_OBJECT)
-
-But this path hasn’t changed as far as I can see. Anyway, from that 
-path, somehow
-
-     acpi_bus_check_add_1() → acpi_bus_check_add() → … → 
-acpi_bus_check_add() → acpi_add_single_object() → acpi_bus_get_status()
-
-is called, and the `acpi_bus_get_status()` call takes 100 ms on the 
-system – also the cause for bug #208705 [2] –, but that code path wasn’t 
-taken before.
-
-Do you know from the top of your head, what changed? I am going to have 
-short access to the system every two weeks or so, so debugging is 
-unfortunately quite hard.
-
-What is already on my to-do list:
-
-1.  Use dynamic debug `drivers/acpi/scan.c`
-2.  Trace older Linux kernel (5.10.46) to see the differences
-3.  Booting some GNU/Linux system to test 5.11 (Ubuntu 20.10) and 5.12
-4.  Unrelated to the regression, but trace `acpi_bus_get_status()` to 
-understand the 100 ms delay to solve bug #208705 [2]
 
 
-Kind regards,
 
-Paul
+> Changes in v5:
+> - Drop mention of Windows behavior from the commit msg, replace with a
+>   reference to the specs
+> - Improve documentation in Documentation/admin-guide/kernel-parameters.txt
+> - Reword the big comment added, use "PCI host bridge window" in it and drop
+>   all refences to Windows
+> 
+> Changes in v4:
+> - Rewrap the big comment block to fit in 80 columns
+> - Add Rafael's Acked-by
+> - Add Cc: stable@vger.kernel.org
+> 
+> Changes in v3:
+> - Commit msg tweaks (drop dmesg timestamps, typo fix)
+> - Use "defined(CONFIG_...)" instead of "defined CONFIG_..."
+> - Add Mika's Reviewed-by
+> 
+> Changes in v2:
+> - Replace the per model DMI quirk approach with disabling E820 reservations
+>   checking for all systems with a BIOS year >= 2018
+> - Add documentation for the new kernel-parameters to
+>   Documentation/admin-guide/kernel-parameters.txt
+> ---
+> Other patches trying to address the same issue:
+> https://lore.kernel.org/r/20210624095324.34906-1-hui.wang@canonical.com
+> https://lore.kernel.org/r/20200617164734.84845-1-mika.westerberg@linux.intel.com
+> V1 patch:
+> https://lore.kernel.org/r/20211005150956.303707-1-hdegoede@redhat.com
+> ---
+>  arch/x86/kernel/resource.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
+> index 9b9fb7882c20..9ae64f9af956 100644
+> --- a/arch/x86/kernel/resource.c
+> +++ b/arch/x86/kernel/resource.c
+> @@ -1,4 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#include <linux/dmi.h>
+>  #include <linux/ioport.h>
+>  #include <asm/e820/api.h>
+>  
+> @@ -23,11 +24,31 @@ static void resource_clip(struct resource *res, resource_size_t start,
+>  		res->start = end + 1;
+>  }
+>  
+> +/*
+> + * Some BIOS-es contain a bug where they add addresses which map to
+> + * system RAM in the PCI host bridge window returned by the ACPI _CRS
+> + * method, see commit 4dc2287c1805 ("x86: avoid E820 regions when
+> + * allocating address space"). To avoid this Linux by default excludes
+> + * E820 reservations when allocating addresses since 2010.
+> + * In 2019 some systems have shown-up with E820 reservations which cover
+> + * the entire _CRS returned PCI host bridge window, causing all attempts
+> + * to assign memory to PCI BARs to fail if Linux uses E820 reservations.
+> + *
+> + * Ideally Linux would fully stop using E820 reservations, but then
+> + * the old systems this was added for will regress.
+> + * Instead keep the old behavior for old systems, while ignoring the
+> + * E820 reservations for any systems from now on.
+> + */
+>  static void remove_e820_regions(struct resource *avail)
+>  {
+> -	int i;
+> +	int i, year = dmi_get_bios_year();
+>  	struct e820_entry *entry;
+>  
+> +	if (year >= 2018)
+> +		return;
+> +
+> +	pr_info_once("PCI: Removing E820 reservations from host bridge windows\n");
+> +
+>  	for (i = 0; i < e820_table->nr_entries; i++) {
+>  		entry = &e820_table->entries[i];
+>  
+> 
 
-
-PS: Do you know of GNU/Linux live systems that are available for all 
-Linux kernel releases and have an initrd, that just stores/uploads the 
-output of `dmesg`?
-
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=215419
-      "100 ms regression in boottime before `ACPI: PCI Root Bridge [PCI0]"
-[2]: https://bugzilla.kernel.org/show_bug.cgi?id=208705
-      "boot performance: 100 ms delay in PCI initialization - Acer 
-TravelMate 5735Z"
