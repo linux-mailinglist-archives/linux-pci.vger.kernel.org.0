@@ -2,66 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0D6848A9F7
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 09:57:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ABA248AAA8
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 10:38:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236411AbiAKI5P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 03:57:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236410AbiAKI5P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 03:57:15 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA31C06173F;
-        Tue, 11 Jan 2022 00:57:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 3A110CE0CF3;
-        Tue, 11 Jan 2022 08:57:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01CF8C36AE9;
-        Tue, 11 Jan 2022 08:57:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1641891431;
-        bh=NdxodxWZzbwf/ggHaYd5sNJGA5eNob24Z1IUAg07QCw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iqf1MXWMDx5bH13jjIOAjklovdMj8eHdh2yjJ9sI6CIPbsTZ1HDFHYiOxxhGg4lFf
-         r/YSSUY+h33izj2tH2lWc2MpP6jlI4gx2RkJiwtH7SCOwjWlBExjRtQAwJS6lU+cEK
-         orMkCoJgFyb0Iu6/5Lyj5ncCu7ThKgpUGn6nfkWc=
-Date:   Tue, 11 Jan 2022 09:57:08 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
+        id S1349307AbiAKJiJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jan 2022 04:38:09 -0500
+Received: from 1.mo552.mail-out.ovh.net ([178.32.96.117]:38647 "EHLO
+        1.mo552.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1349300AbiAKJiI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 04:38:08 -0500
+Received: from mxplan5.mail.ovh.net (unknown [10.108.4.36])
+        by mo552.mail-out.ovh.net (Postfix) with ESMTPS id D4DDE2252A;
+        Tue, 11 Jan 2022 09:02:10 +0000 (UTC)
+Received: from kaod.org (37.59.142.95) by DAG4EX1.mxp5.local (172.16.2.31)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Tue, 11 Jan
+ 2022 10:02:01 +0100
+Authentication-Results: garm.ovh; auth=pass (GARM-95G001713f3599-f95f-45bc-8458-3cc8394211bc,
+                    5383433EA887FCAE918FFCB03530F9AACAE8953B) smtp.auth=clg@kaod.org
+X-OVh-ClientIp: 82.64.250.170
+Message-ID: <83cac5d2-b5f2-836c-1f4f-bfe054a8bedb@kaod.org>
+Date:   Tue, 11 Jan 2022 10:02:01 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [patch] genirq/msi: Populate sysfs entry only once
+Content-Language: en-US
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Alex Williamson <alex.williamson@redhat.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Jason Gunthorpe <jgg@nvidia.com>,
         Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Ashok Raj <ashok.raj@intel.com>, <linux-pci@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Niklas Schnelle <schnelle@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        <linux-s390@vger.kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         Jon Mason <jdmason@kudzu.us>,
         Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: Re: [patch] genirq/msi: Populate sysfs entry only once
-Message-ID: <Yd1GZMvstSNTc80B@kroah.com>
+        Allen Hubbe <allenbh@gmail.com>, <linux-ntb@googlegroups.com>
 References: <20211206210600.123171746@linutronix.de>
- <20211206210749.224917330@linutronix.de>
- <87leznqx2a.ffs@tglx>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ <20211206210749.224917330@linutronix.de> <87leznqx2a.ffs@tglx>
+From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
 In-Reply-To: <87leznqx2a.ffs@tglx>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [37.59.142.95]
+X-ClientProxiedBy: DAG6EX1.mxp5.local (172.16.2.51) To DAG4EX1.mxp5.local
+ (172.16.2.31)
+X-Ovh-Tracer-GUID: 62e82270-dbcc-463c-8f53-caaee6d6cca0
+X-Ovh-Tracer-Id: 5157184527403223894
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddrudehvddguddvjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfhfhfgjtgfgihesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucggtffrrghtthgvrhhnpeeigedvffekgeeftedutddttdevudeihfegudffkeeitdekkeetkefhffelveelleenucfkpheptddrtddrtddrtddpfeejrdehledrudegvddrleehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdphhgvlhhopehmgihplhgrnhehrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheptghlgheskhgrohgurdhorhhgpdhrtghpthhtoheplhhinhhugidqnhhtsgesghhoohhglhgvghhrohhuphhsrdgtohhm
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 10, 2022 at 07:12:45PM +0100, Thomas Gleixner wrote:
+On 1/10/22 19:12, Thomas Gleixner wrote:
 > The MSI entries for multi-MSI are populated en bloc for the MSI descriptor,
 > but the current code invokes the population inside the per interrupt loop
 > which triggers a warning in the sysfs code and causes the interrupt
@@ -72,8 +74,36 @@ On Mon, Jan 10, 2022 at 07:12:45PM +0100, Thomas Gleixner wrote:
 > Fixes: bf5e758f02fc ("genirq/msi: Simplify sysfs handling")
 > Reported-by: Borislav Petkov <bp@alien8.de>
 > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  kernel/irq/msi.c |   11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+
+Thanks,
+
+C.
+
+> ---
+>   kernel/irq/msi.c |   11 +++++------
+>   1 file changed, 5 insertions(+), 6 deletions(-)
+> 
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -887,12 +887,11 @@ int __msi_domain_alloc_irqs(struct irq_d
+>   			ret = msi_init_virq(domain, virq + i, vflags);
+>   			if (ret)
+>   				return ret;
+> -
+> -			if (info->flags & MSI_FLAG_DEV_SYSFS) {
+> -				ret = msi_sysfs_populate_desc(dev, desc);
+> -				if (ret)
+> -					return ret;
+> -			}
+> +		}
+> +		if (info->flags & MSI_FLAG_DEV_SYSFS) {
+> +			ret = msi_sysfs_populate_desc(dev, desc);
+> +			if (ret)
+> +				return ret;
+>   		}
+>   		allocated++;
+>   	}
+> 
+
