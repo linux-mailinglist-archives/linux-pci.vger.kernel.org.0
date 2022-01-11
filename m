@@ -2,164 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0120E48AF11
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 15:02:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D02448B0AA
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 16:19:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238779AbiAKOCj convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 11 Jan 2022 09:02:39 -0500
-Received: from mail-qt1-f180.google.com ([209.85.160.180]:37725 "EHLO
-        mail-qt1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238129AbiAKOCj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 09:02:39 -0500
-Received: by mail-qt1-f180.google.com with SMTP id c15so18163311qtc.4;
-        Tue, 11 Jan 2022 06:02:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XuRUuLBL0LO4l/7Vzw5hsRxoKoTaJt1gWWvfirCSVGU=;
-        b=W61eZWziCTqZnpxJyizO7pYL+8iEgY99XsuvrURS/mgfP+S/+mfNPgnpn2zrEt3vVi
-         V/UqREa9urncP23/VS6fGQEfXFJ9z6ScEjfcqnle/qk5DrPewfKlMKi7ZgxbJJceDwJt
-         AcQ3A6i3zlDaQoj5q9oQoI6Y5htg+324vSUA6R7YCx49IWDZ2m8uwb9Iax5a0UuMl5p0
-         KW+9sSOHirz6EAgqzUhzHzd2FwYLLrgzlVawgkgDo9PWSPHpb2OtHEwZKUxK0T8Hq1s5
-         F52gxH3nboC/ZPW0qErirs1SsEimSg0jY7cg1wCUHgpc0LAfxhqc7NNw7Z+38KwXHcG7
-         vgSg==
-X-Gm-Message-State: AOAM532VJDEFUEl/CGpIqoqU3XDHQH4wZjdBM1/GaZHpX3vdXiMhToB4
-        g9fMSo+Xf6AncZCuAuKdR3wIte1Pl7izaF3DrSc=
-X-Google-Smtp-Source: ABdhPJzXA7cm/2zBttHyL3oyAnskPD0Lo3P6S49TZ9PZ0l0J7HO3gc8HjpKSmEm4UxxOWKD0TgiTdibTD1Zt+RHCuTk=
-X-Received: by 2002:a05:622a:44e:: with SMTP id o14mr3696357qtx.369.1641909757395;
- Tue, 11 Jan 2022 06:02:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20220110171123.GA60297@bhelgaas> <3f85e298-2e55-2190-21b7-596cfc8388aa@redhat.com>
-In-Reply-To: <3f85e298-2e55-2190-21b7-596cfc8388aa@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 11 Jan 2022 15:02:26 +0100
-Message-ID: <CAJZ5v0gdK1ULNztKE3OARkm46iwz9LUcCYHvOkKsOm3LSx+d8A@mail.gmail.com>
-Subject: Re: [PATCH v6] x86/PCI: Ignore E820 reservations for bridge windows
- on newer systems
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        id S243488AbiAKPTK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jan 2022 10:19:10 -0500
+Received: from elvis.franken.de ([193.175.24.41]:42587 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231986AbiAKPTJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 11 Jan 2022 10:19:09 -0500
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1n7IvR-0004j6-01; Tue, 11 Jan 2022 16:19:05 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 1FA0DC0E68; Tue, 11 Jan 2022 16:18:41 +0100 (CET)
+Date:   Tue, 11 Jan 2022 16:18:41 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-mips@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Benoit_Gr=C3=A9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>,
-        Stable <stable@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Kevin Cernekee <cernekee@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Rob Herring <robh@kernel.org>,
+        Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v1 0/4] PCI: brcmstb: Augment driver for MIPs SOCs
+Message-ID: <20220111151841.GB11006@alpha.franken.de>
+References: <20211209204726.6676-1-jim2101024@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211209204726.6676-1-jim2101024@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 10, 2022 at 10:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 1/10/22 18:11, Bjorn Helgaas wrote:
-> > On Mon, Jan 10, 2022 at 12:41:37PM +0100, Hans de Goede wrote:
-> >> Hi All,
-> >>
-> >> On 12/17/21 15:13, Hans de Goede wrote:
-> >>> Some BIOS-es contain a bug where they add addresses which map to system
-> >>> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
-> >>> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
-> >>> space").
-> >>>
-> >>> To work around this bug Linux excludes E820 reserved addresses when
-> >>> allocating addresses from the PCI host bridge window since 2010.
-> >>>
-> >>> Recently (2019) some systems have shown-up with E820 reservations which
-> >>> cover the entire _CRS returned PCI bridge memory window, causing all
-> >>> attempts to assign memory to PCI BARs which have not been setup by the
-> >>> BIOS to fail. For example here are the relevant dmesg bits from a
-> >>> Lenovo IdeaPad 3 15IIL 81WE:
-> >>>
-> >>>  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
-> >>>  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
-> >>>
-> >>> The ACPI specifications appear to allow this new behavior:
-> >>>
-> >>> The relationship between E820 and ACPI _CRS is not really very clear.
-> >>> ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
-> >>>
-> >>>   This range of addresses is in use or reserved by the system and is
-> >>>   not to be included in the allocatable memory pool of the operating
-> >>>   system's memory manager.
-> >>>
-> >>> and it may be used when:
-> >>>
-> >>>   The address range is in use by a memory-mapped system device.
-> >>>
-> >>> Furthermore, sec 15.2 says:
-> >>>
-> >>>   Address ranges defined for baseboard memory-mapped I/O devices, such
-> >>>   as APICs, are returned as reserved.
-> >>>
-> >>> A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
-> >>> and its apertures are in use and certainly should not be included in
-> >>> the general allocatable pool, so the fact that some BIOS-es reports
-> >>> the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
-> >>>
-> >>> So it seems that the excluding of E820 reserved addresses is a mistake.
-> >>>
-> >>> Ideally Linux would fully stop excluding E820 reserved addresses,
-> >>> but then the old systems this was added for will regress.
-> >>> Instead keep the old behavior for old systems, while ignoring
-> >>> the E820 reservations for any systems from now on.
-> >>>
-> >>> Old systems are defined here as BIOS year < 2018, this was chosen to make
-> >>> sure that E820 reservations will not be used on the currently affected
-> >>> systems, while at the same time also taking into account that the systems
-> >>> for which the E820 checking was originally added may have received BIOS
-> >>> updates for quite a while (esp. CVE related ones), giving them a more
-> >>> recent BIOS year then 2010.
-> >>>
-> >>> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
-> >>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-> >>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-> >>> BugLink: https://bugs.launchpad.net/bugs/1878279
-> >>> BugLink: https://bugs.launchpad.net/bugs/1931715
-> >>> BugLink: https://bugs.launchpad.net/bugs/1932069
-> >>> BugLink: https://bugs.launchpad.net/bugs/1921649
-> >>> Cc: Benoit Grégoire <benoitg@coeus.ca>
-> >>> Cc: Hui Wang <hui.wang@canonical.com>
-> >>> Cc: stable@vger.kernel.org
-> >>> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >>> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> >>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >>> ---
-> >>> Changes in v6:
-> >>> - Remove the possibility to change the behavior from the commandline
-> >>>   because of worries that users may use this to paper over other problems
-> >>
-> >> ping ?
-> >
-> > Thanks, Hans.  Maybe I'm quixotic, but I'm still hoping for an
-> > approach based on firmware behavior instead of firmware date.  If
-> > nobody else tries, I will eventually try myself, but I don't have any
-> > ETA.
->
-> I really do NOT see how doing a better approach later blocks
-> merging the date based fix now ?
->
-> The date based approach can simply be replaced by any better
-> solution later.
+On Thu, Dec 09, 2021 at 03:47:21PM -0500, Jim Quinlan wrote:
+> With this patchset, the Broadcom STB PCIe controller driver 
+> supports Arm, Arm64, and now MIPs.
+> 
+> Jim Quinlan (4):
+>   dt-bindings: PCI: Add compatible string for Brcmstb 74[23]5 MIPs SOCs
+>   MIPS: bmips: Add support PCIe controller device nodes
+>   MIPS: bmips: Remove obsolete DMA mapping support
+>   PCI: brcmstb: Augment driver for MIPs SOCs
+> 
+>  .../bindings/pci/brcm,stb-pcie.yaml           |   2 +
+>  arch/mips/Kconfig                             |   1 -
+>  arch/mips/bmips/dma.c                         | 106 +-----------------
+>  arch/mips/boot/dts/brcm/bcm7425.dtsi          |  30 +++++
+>  arch/mips/boot/dts/brcm/bcm7435.dtsi          |  30 +++++
+>  arch/mips/boot/dts/brcm/bcm97425svmb.dts      |   9 ++
+>  arch/mips/boot/dts/brcm/bcm97435svmb.dts      |   9 ++
+>  drivers/pci/controller/Kconfig                |   2 +-
+>  drivers/pci/controller/pcie-brcmstb.c         |  82 +++++++++++++-
+>  9 files changed, 161 insertions(+), 110 deletions(-)
 
-Agreed.
+series applied to mips-next.
 
-> Can we please merge the date based approach now so peoples broken
-> systems get fixed now, rather then at some unknown later time ?
+Thomas.
 
-OK, I'll queue it up.  Thanks!
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
