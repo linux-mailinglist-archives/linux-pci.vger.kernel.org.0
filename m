@@ -2,119 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5F6948B9B1
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 22:32:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CE4C48B9D7
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 22:46:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245339AbiAKVcM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 16:32:12 -0500
-Received: from mga07.intel.com ([134.134.136.100]:23573 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245377AbiAKVcL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 Jan 2022 16:32:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641936731; x=1673472731;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8KiDPEBXN3DIxu+tbJkTbCrX/h+9tD/s/wCwvZ89tvE=;
-  b=Y3BItdXyG8dh3XwsPSUIT9bc58LsYBTtcotSE3srBiA18T+WfgH7JOJa
-   62+oktM8lhItjFD4+OKnCBB6gAkWJXDUB6ieY/ho6ARlBbVuF/vGoyo+8
-   EK1HFwq1kvCNUN0yxNLG05bly0iViuGShBsWaAnrL3H2RH91jikq680xt
-   ZWOIlUG+79oHYk6XsGiyHwz3TboT9NRJf9jd2p/sVwRgmiWIdkgxacJzG
-   P+gOJahW4PE7js9c0Ru4G42+d3jrKjQXcKGwFrTuyfzl4VstU4mzoHSjs
-   hQD3j4VJd5rcI7bvf8wsxFvp98AiJWUIvhAsg2pZAGemFYhLDNbcGgk9a
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="306940203"
-X-IronPort-AV: E=Sophos;i="5.88,279,1635231600"; 
-   d="scan'208";a="306940203"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 13:32:10 -0800
-X-IronPort-AV: E=Sophos;i="5.88,279,1635231600"; 
-   d="scan'208";a="762659909"
-Received: from zedchen-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.139.117])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 13:32:09 -0800
-Date:   Tue, 11 Jan 2022 13:32:08 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, patches@lists.linux.dev,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH 09/13] cxl/region: Implement XHB verification
-Message-ID: <20220111213208.k6e4kxity2j2zciw@intel.com>
-References: <20220107003756.806582-1-ben.widawsky@intel.com>
- <20220107003756.806582-10-ben.widawsky@intel.com>
- <20220107103052.00006c4b@huawei.com>
- <20220107103827.00006e4c@huawei.com>
+        id S245456AbiAKVqO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jan 2022 16:46:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232974AbiAKVqN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 16:46:13 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22F6C06173F;
+        Tue, 11 Jan 2022 13:46:12 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B6C0CB81D54;
+        Tue, 11 Jan 2022 21:46:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D999C36AE9;
+        Tue, 11 Jan 2022 21:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641937570;
+        bh=XNEfESj08xbpQ9h2hTKb/Pu9WAZg5VvTWzJOGQNAOC4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hrPlCKr2Cgo8R910eadJlHVlOQja6nGt1WhCOdCaXCFbaY87edhU/MmAMX/v1PJsc
+         gLQc0SVeHdbiE+O2eRDoMKPl75FAH+9KQyJDGXovCKyCiyadNi8gEHpPonHamnVox+
+         G04I153V4JR+wMjH4pxqMpmy15qR5o2IrbvHn9FFW8B65WXFhkGXUhvSFYkIGy6yh3
+         hA4WQhIs2poE1DZrZ30e2kEEHb/WlABHuWYKlp5c9+auiqcRV0NWB+f+CloLsF44oi
+         sHcF3MxaFbGuuaZJXqMhu2E3SIyauijaeJkHkWIKSXHFM6YfsjF2RAKLje4z0h4GaE
+         X5ke9q8yP4zfw==
+Date:   Tue, 11 Jan 2022 15:46:08 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 19/19] PCI: Set bridge map_irq and swizzle_irq to default
+ functions
+Message-ID: <20220111214608.GA169999@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220107103827.00006e4c@huawei.com>
+In-Reply-To: <20200722022514.1283916-20-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22-01-07 10:38:27, Jonathan Cameron wrote:
-> On Fri, 7 Jan 2022 10:30:52 +0000
-> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-> 
-> > On Thu,  6 Jan 2022 16:37:52 -0800
-> > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > 
-> > > Cross host bridge verification primarily determines if the requested
-> > > interleave ordering can be achieved by the root decoder, which isn't as
-> > > programmable as other decoders.
-> > > 
-> > > The algorithm implemented here is based on the CXL Type 3 Memory Device
-> > > Software Guide, chapter 2.13.14
-> > > 
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
-> > 
-> > Trivial thing inline.
-> > 
-> > > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> > > index c8e3c48dfbb9..ca559a4b5347 100644
-> > > --- a/drivers/cxl/region.c
-> > > +++ b/drivers/cxl/region.c
-> > > @@ -28,6 +28,17 @@
-> > >   */
-> > >  
-> > >  #define region_ways(region) ((region)->config.eniw)
-> > > +#define region_ig(region) (ilog2((region)->config.ig))
-> > > +
-> > > +#define for_each_cxl_endpoint(ep, region, idx)                                 \
-> > > +	for (idx = 0, ep = (region)->config.targets[idx];                      \
-> > > +	     idx < region_ways(region);                                        \
-> > > +	     idx++, ep = (region)->config.targets[idx])
-> > > +
-> > > +#define for_each_cxl_decoder_target(target, decoder, idx)                      \
-> > > +	for (idx = 0, target = (decoder)->target[idx];                         \  
-> > 
-> > As target is used too often in here, you'll replace it in ->target[idx] as well.
-> > It happens to work today because the parameter always happens to be target
-> > 
-> > > +	     idx < (decoder)->nr_targets;                                      \
-> > > +	     idx++, target++)
-> I should have read the next few lines :)
-> 
-> target++ doesn't get (decoder)->target[idx] which is what we want - it indexes
-> off the end of a particular instance rather than through the array.
-> 
-> I'm guessing this was from my unclear comment yesterday. I should have spent
-> a little more time being explicit there.
-> 
-> Jonathan
-> 
-> > >    
-> 
+[-cc many, +cc iproc, loongson, tegra maintainers]
 
-Gotcha. I combined the idx increment as well, what do you think about this (just
-typed, not tested):
+On Tue, Jul 21, 2020 at 08:25:14PM -0600, Rob Herring wrote:
+> The majority of DT based host drivers use the default .map_irq() and
+> .swizzle_irq() functions, so let's initialize the function pointers to
+> the default and drop setting them in the host drivers.
+> 
+> Drivers like iProc which don't support legacy interrupts need to set
+> .map_irq() back to NULL.
 
-#define for_each_cxl_decoder_target(dport, decoder, idx)                      \
-        for (idx = 0, dport = (decoder)->target[idx];                         \
-             idx < (decoder)->nr_targets;                                     \
-             dport = (decoder)->target[++idx])
+Probably a dumb question...
+
+This patch removed all the ->swizzle_irq users in drivers/pci/, which
+is great -- IIUC swizzling is specified by the PCI-to-PCI Bridge Spec,
+r1.2, sec 9.1, and should not be device-specific.  I assume the few
+remaining arch/ users (arm and alpha) are either bugs or workarounds
+for broken devices.
+
+My question is why we still have a few users of ->map_irq: loongson,
+tegra, iproc.  Shouldn't this mapping be described somehow via DT?
+
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index fc4e38fec928..97433beff6cf 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2709,7 +2709,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+>  
+>  	host->ops = &tegra_pcie_ops;
+>  	host->map_irq = tegra_pcie_map_irq;
+> -	host->swizzle_irq = pci_common_swizzle;
+>  
+>  	err = pci_host_probe(host);
+>  	if (err < 0) {
+
+> diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
+> index 7c10c1cb6f65..a956b0c18bd1 100644
+> --- a/drivers/pci/controller/pcie-iproc-platform.c
+> +++ b/drivers/pci/controller/pcie-iproc-platform.c
+> @@ -99,9 +99,10 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
+>  	switch (pcie->type) {
+>  	case IPROC_PCIE_PAXC:
+>  	case IPROC_PCIE_PAXC_V2:
+> +		pcie->map_irq = 0;
+>  		break;
+>  	default:
+> -		pcie->map_irq = of_irq_parse_and_map_pci;
+> +		break;
+>  	}
+>  
+>  	ret = iproc_pcie_setup(pcie, &bridge->windows);
+
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index e98dafd0fff4..905e93808243 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -1526,7 +1526,6 @@ int iproc_pcie_setup(struct iproc_pcie *pcie, struct list_head *res)
+>  	host->ops = &iproc_pcie_ops;
+>  	host->sysdata = pcie;
+>  	host->map_irq = pcie->map_irq;
+> -	host->swizzle_irq = pci_common_swizzle;
+>  
+>  	ret = pci_host_probe(host);
+>  	if (ret < 0) {
+
+drivers/pci/controller/pci-loongson.c:
+
+  static int loongson_pci_probe(struct platform_device *pdev)
+  {
+    ...
+    bridge->map_irq = loongson_map_irq;
+
