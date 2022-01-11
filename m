@@ -2,174 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2D4848B630
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 19:55:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5F6948B9B1
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 22:32:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350242AbiAKSzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 13:55:43 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:54620 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350250AbiAKSzl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 13:55:41 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6CF356176D;
-        Tue, 11 Jan 2022 18:55:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8210C36AE3;
-        Tue, 11 Jan 2022 18:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641927339;
-        bh=zojY8MTCnk8nwBqZ+pXLnQcYipINl6Y5Z/qNYwqhFRc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=q6rIpxYlfnP/5Kr6nyyWLHpNrmEsfDvrClt4rm7Sxa+1/jl/V84qxepgXn6Z1rAuV
-         D4gwcA5ZtoWGkG6HLcaC+VisaRHHhwJbOIdSmEU6qKbp+oWzrfFQi8OP1ZmfgK8KGT
-         mtMF+0rbkAPCQKXPXwlIXWrhLX2nDzaohYCxuShmtjY1QZGoVnUQdnhDCk4RGeYGCH
-         JqWvFMyFdFXK+NlxHa/2xaj+Fa911Zg0OouSpg7ZOaBvPfXIhBlQBskNawWvNYPpEF
-         I8pNitn+N71ZQzXYH4yFJvtFiD07SMzFThKa0m1x6j1pnwBd5t6JwSHMP9A3hOWbgW
-         quz7Pk34Z32wA==
-Date:   Tue, 11 Jan 2022 12:55:38 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yao Hongbo <yaohongbo@linux.alibaba.com>
-Cc:     bhelgaas@google.com, lukas@wunner.de,
-        zhangliguang@linux.alibaba.com,
-        alikernel-developer@linux.alibaba.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [RFC PATCH v2] PCI: Waiting command completed in
- get_port_device_capability()
-Message-ID: <20220111185538.GA152548@bhelgaas>
+        id S245339AbiAKVcM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jan 2022 16:32:12 -0500
+Received: from mga07.intel.com ([134.134.136.100]:23573 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S245377AbiAKVcL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 11 Jan 2022 16:32:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641936731; x=1673472731;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8KiDPEBXN3DIxu+tbJkTbCrX/h+9tD/s/wCwvZ89tvE=;
+  b=Y3BItdXyG8dh3XwsPSUIT9bc58LsYBTtcotSE3srBiA18T+WfgH7JOJa
+   62+oktM8lhItjFD4+OKnCBB6gAkWJXDUB6ieY/ho6ARlBbVuF/vGoyo+8
+   EK1HFwq1kvCNUN0yxNLG05bly0iViuGShBsWaAnrL3H2RH91jikq680xt
+   ZWOIlUG+79oHYk6XsGiyHwz3TboT9NRJf9jd2p/sVwRgmiWIdkgxacJzG
+   P+gOJahW4PE7js9c0Ru4G42+d3jrKjQXcKGwFrTuyfzl4VstU4mzoHSjs
+   hQD3j4VJd5rcI7bvf8wsxFvp98AiJWUIvhAsg2pZAGemFYhLDNbcGgk9a
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="306940203"
+X-IronPort-AV: E=Sophos;i="5.88,279,1635231600"; 
+   d="scan'208";a="306940203"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 13:32:10 -0800
+X-IronPort-AV: E=Sophos;i="5.88,279,1635231600"; 
+   d="scan'208";a="762659909"
+Received: from zedchen-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.139.117])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 13:32:09 -0800
+Date:   Tue, 11 Jan 2022 13:32:08 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, patches@lists.linux.dev,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 09/13] cxl/region: Implement XHB verification
+Message-ID: <20220111213208.k6e4kxity2j2zciw@intel.com>
+References: <20220107003756.806582-1-ben.widawsky@intel.com>
+ <20220107003756.806582-10-ben.widawsky@intel.com>
+ <20220107103052.00006c4b@huawei.com>
+ <20220107103827.00006e4c@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1641525769-113099-1-git-send-email-yaohongbo@linux.alibaba.com>
+In-Reply-To: <20220107103827.00006e4c@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Lukas, Rafael (in case you have any recollection of 2bd50dd800b5)]
-
-On Fri, Jan 07, 2022 at 11:22:49AM +0800, Yao Hongbo wrote:
-> According to the PCIe specification Revision 5.0, section
-> 7.5.3.11 (slot Status Register), if Command Complete notification
-> is supported,  a write to the slot control register needs to set
-> the command completed bit, which can indicate the controller is
-> ready to receive the next command.
+On 22-01-07 10:38:27, Jonathan Cameron wrote:
+> On Fri, 7 Jan 2022 10:30:52 +0000
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 > 
-> However, before probing the pcie hotplug service, there needs to set
-> HPIE bit in the slot ctrl register to disable hotplug interrupts,
-> and there is no wait currently.
+> > On Thu,  6 Jan 2022 16:37:52 -0800
+> > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > 
+> > > Cross host bridge verification primarily determines if the requested
+> > > interleave ordering can be achieved by the root decoder, which isn't as
+> > > programmable as other decoders.
+> > > 
+> > > The algorithm implemented here is based on the CXL Type 3 Memory Device
+> > > Software Guide, chapter 2.13.14
+> > > 
+> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
+> > 
+> > Trivial thing inline.
+> > 
+> > > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+> > > index c8e3c48dfbb9..ca559a4b5347 100644
+> > > --- a/drivers/cxl/region.c
+> > > +++ b/drivers/cxl/region.c
+> > > @@ -28,6 +28,17 @@
+> > >   */
+> > >  
+> > >  #define region_ways(region) ((region)->config.eniw)
+> > > +#define region_ig(region) (ilog2((region)->config.ig))
+> > > +
+> > > +#define for_each_cxl_endpoint(ep, region, idx)                                 \
+> > > +	for (idx = 0, ep = (region)->config.targets[idx];                      \
+> > > +	     idx < region_ways(region);                                        \
+> > > +	     idx++, ep = (region)->config.targets[idx])
+> > > +
+> > > +#define for_each_cxl_decoder_target(target, decoder, idx)                      \
+> > > +	for (idx = 0, target = (decoder)->target[idx];                         \  
+> > 
+> > As target is used too often in here, you'll replace it in ->target[idx] as well.
+> > It happens to work today because the parameter always happens to be target
+> > 
+> > > +	     idx < (decoder)->nr_targets;                                      \
+> > > +	     idx++, target++)
+> I should have read the next few lines :)
 > 
-> The interval between the two functions get_port_device_capability() and
-> pcie_disable_notification() is not long, which may cause the latter to
-> be interfered by the former.
+> target++ doesn't get (decoder)->target[idx] which is what we want - it indexes
+> off the end of a particular instance rather than through the array.
 > 
-> The command complete event received by pcie_disable_notification() may
-> belong to the operation of get_port_device_capability().
-
-Yes, looks like a potential problem.
-
-> Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
-> Signed-off-by: Yao Hongbo <yaohongbo@linux.alibaba.com>
-> ---
->  drivers/pci/pcie/portdrv_core.c | 40 ++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 38 insertions(+), 2 deletions(-)
+> I'm guessing this was from my unclear comment yesterday. I should have spent
+> a little more time being explicit there.
 > 
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index bda6308..ec2088b6e 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -15,6 +15,7 @@
->  #include <linux/string.h>
->  #include <linux/slab.h>
->  #include <linux/aer.h>
-> +#include <linux/delay.h>
->  
->  #include "../pci.h"
->  #include "portdrv.h"
-> @@ -190,6 +191,42 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
->  	return 0;
->  }
->  
-> +static void pcie_port_disable_hp_interrupt(struct pci_dev *dev)
-> +{
-> +	u16 slot_status;
-> +	u32 slot_cap;
-> +	int timeout = 1000;
-> +
-> +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> +			PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> +
-> +	/*
-> +	 * If the command completed notification is not supported,
-> +	 * we don't need to wait after writing to the slot ctrl register.
-> +	 */
-> +	pcie_capability_read_dword(dev, PCI_EXP_SLTCAP, &slot_cap);
-> +	if (slot_cap & PCI_EXP_SLTCAP_NCCS)
-> +		return;
-> +
-> +	do {
-> +		pcie_capability_read_word(dev, PCI_EXP_SLTSTA, &slot_status);
-> +		if (slot_status == (u16) ~0) {
-> +			pci_info(dev, "%s: no response from device\n",  __func__);
-> +			return;
-> +		}
-> +
-> +		if (slot_status & PCI_EXP_SLTSTA_CC) {
-> +			pcie_capability_write_word(dev, PCI_EXP_SLTSTA, PCI_EXP_SLTSTA_CC);
-> +			return;
-> +		}
-> +
-> +		msleep(10);
-> +		timeout -= 10;
-> +	} while (timeout >= 0);
-> +
-> +	pci_info(dev, "Timeout on hotplug disable interrupt!\n");
-> +}
-> +
->  /**
->   * get_port_device_capability - discover capabilities of a PCI Express port
->   * @dev: PCI Express port to examine
-> @@ -213,8 +250,7 @@ static int get_port_device_capability(struct pci_dev *dev)
->  		 * Disable hot-plug interrupts in case they have been enabled
->  		 * by the BIOS and the hot-plug service driver is not loaded.
->  		 */
-> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> +		pcie_port_disable_hp_interrupt(dev);
+> Jonathan
+> 
+> > >    
+> 
 
-This originally came from 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port
-services during port initialization"), where we disable hotplug
-interrupts in case the hotplug driver is not available.
+Gotcha. I combined the idx increment as well, what do you think about this (just
+typed, not tested):
 
-In general, I think the OS should not be responsible for disabling
-interrupts for feature X.  The OS may predate feature X and may not
-know anything about X at all.  The power-on default for interrupts
-related to X should be "disabled" (as it is for HPIE and CCIE), and if
-firmware enables them, it should disable them or arrange to handle
-them itself before handing off to the OS.
-
-I don't know whether 2bd50dd800b5 was prompted by spurious hotplug
-interrupts or not.  If it was, I think we were seeing a firmware
-defect or possibly a pciehp initialization issue.
-
-At the time of 2bd50dd800b5, we always cleared HPIE and CCIE here.
-
-But now, on ACPI systems, we only clear HPIE and CCIE here if we *do*
-have the hotplug driver (because host->native_pcie_hotplug only
-remains set if we have been granted control via _OSC, and we only
-request control when CONFIG_HOTPLUG_PCI_PCIE is enabled).  On these
-systems, we should be able to remove this disable code because pciehp
-will do whatever it needs.
-
-For non-ACPI systems, bridge->native_pcie_hotplug will always be set,
-so we will clear HPIE and CCIE here and then (if
-CONFIG_HOTPLUG_PCI_PCIE is enabled) initialize pciehp soon after,
-which may be a problem as you describe.
-
-What kind of system are you seeing the problem on?  It seems like it
-should be safe to drop the HPIE and CCIE disable here for ACPI
-systems.  And *likely* we could do the same for non-ACPI systems,
-though I have no experience there.
-
-Bjorn
+#define for_each_cxl_decoder_target(dport, decoder, idx)                      \
+        for (idx = 0, dport = (decoder)->target[idx];                         \
+             idx < (decoder)->nr_targets;                                     \
+             dport = (decoder)->target[++idx])
