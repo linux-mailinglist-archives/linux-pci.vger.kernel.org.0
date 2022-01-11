@@ -2,108 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D8DC48AB84
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 11:35:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0120E48AF11
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 15:02:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237818AbiAKKfx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 05:35:53 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:47234 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349296AbiAKKfw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 05:35:52 -0500
-Received: from [77.244.183.192] (port=64540 helo=[192.168.178.41])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1n7EVK-000DqX-8N; Tue, 11 Jan 2022 11:35:50 +0100
-Subject: Re: [PATCH 1/2] PCI: dra7xx: Fix link removal on probe error
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     Rob Herring <robh@kernel.org>
-Cc:     PCI <linux-pci@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sekhar Nori <nsekhar@ti.com>
-References: <20211214221450.589884-1-luca@lucaceresoli.net>
- <CAL_Jsq+GQTcx1EGKHug2ZcDZufrKM-4k6PB0vQeTCTG42MHzvA@mail.gmail.com>
- <59a23c89-0810-eb28-acd9-7051ac34d438@lucaceresoli.net>
-Message-ID: <4579940c-27dc-733e-4022-ebea4671c839@lucaceresoli.net>
-Date:   Tue, 11 Jan 2022 11:35:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S238779AbiAKOCj convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 11 Jan 2022 09:02:39 -0500
+Received: from mail-qt1-f180.google.com ([209.85.160.180]:37725 "EHLO
+        mail-qt1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238129AbiAKOCj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 09:02:39 -0500
+Received: by mail-qt1-f180.google.com with SMTP id c15so18163311qtc.4;
+        Tue, 11 Jan 2022 06:02:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XuRUuLBL0LO4l/7Vzw5hsRxoKoTaJt1gWWvfirCSVGU=;
+        b=W61eZWziCTqZnpxJyizO7pYL+8iEgY99XsuvrURS/mgfP+S/+mfNPgnpn2zrEt3vVi
+         V/UqREa9urncP23/VS6fGQEfXFJ9z6ScEjfcqnle/qk5DrPewfKlMKi7ZgxbJJceDwJt
+         AcQ3A6i3zlDaQoj5q9oQoI6Y5htg+324vSUA6R7YCx49IWDZ2m8uwb9Iax5a0UuMl5p0
+         KW+9sSOHirz6EAgqzUhzHzd2FwYLLrgzlVawgkgDo9PWSPHpb2OtHEwZKUxK0T8Hq1s5
+         F52gxH3nboC/ZPW0qErirs1SsEimSg0jY7cg1wCUHgpc0LAfxhqc7NNw7Z+38KwXHcG7
+         vgSg==
+X-Gm-Message-State: AOAM532VJDEFUEl/CGpIqoqU3XDHQH4wZjdBM1/GaZHpX3vdXiMhToB4
+        g9fMSo+Xf6AncZCuAuKdR3wIte1Pl7izaF3DrSc=
+X-Google-Smtp-Source: ABdhPJzXA7cm/2zBttHyL3oyAnskPD0Lo3P6S49TZ9PZ0l0J7HO3gc8HjpKSmEm4UxxOWKD0TgiTdibTD1Zt+RHCuTk=
+X-Received: by 2002:a05:622a:44e:: with SMTP id o14mr3696357qtx.369.1641909757395;
+ Tue, 11 Jan 2022 06:02:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <59a23c89-0810-eb28-acd9-7051ac34d438@lucaceresoli.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20220110171123.GA60297@bhelgaas> <3f85e298-2e55-2190-21b7-596cfc8388aa@redhat.com>
+In-Reply-To: <3f85e298-2e55-2190-21b7-596cfc8388aa@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 11 Jan 2022 15:02:26 +0100
+Message-ID: <CAJZ5v0gdK1ULNztKE3OARkm46iwz9LUcCYHvOkKsOm3LSx+d8A@mail.gmail.com>
+Subject: Re: [PATCH v6] x86/PCI: Ignore E820 reservations for bridge windows
+ on newer systems
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Benoit_Gr=C3=A9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>,
+        Stable <stable@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+On Mon, Jan 10, 2022 at 10:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 1/10/22 18:11, Bjorn Helgaas wrote:
+> > On Mon, Jan 10, 2022 at 12:41:37PM +0100, Hans de Goede wrote:
+> >> Hi All,
+> >>
+> >> On 12/17/21 15:13, Hans de Goede wrote:
+> >>> Some BIOS-es contain a bug where they add addresses which map to system
+> >>> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
+> >>> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+> >>> space").
+> >>>
+> >>> To work around this bug Linux excludes E820 reserved addresses when
+> >>> allocating addresses from the PCI host bridge window since 2010.
+> >>>
+> >>> Recently (2019) some systems have shown-up with E820 reservations which
+> >>> cover the entire _CRS returned PCI bridge memory window, causing all
+> >>> attempts to assign memory to PCI BARs which have not been setup by the
+> >>> BIOS to fail. For example here are the relevant dmesg bits from a
+> >>> Lenovo IdeaPad 3 15IIL 81WE:
+> >>>
+> >>>  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
+> >>>  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
+> >>>
+> >>> The ACPI specifications appear to allow this new behavior:
+> >>>
+> >>> The relationship between E820 and ACPI _CRS is not really very clear.
+> >>> ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
+> >>>
+> >>>   This range of addresses is in use or reserved by the system and is
+> >>>   not to be included in the allocatable memory pool of the operating
+> >>>   system's memory manager.
+> >>>
+> >>> and it may be used when:
+> >>>
+> >>>   The address range is in use by a memory-mapped system device.
+> >>>
+> >>> Furthermore, sec 15.2 says:
+> >>>
+> >>>   Address ranges defined for baseboard memory-mapped I/O devices, such
+> >>>   as APICs, are returned as reserved.
+> >>>
+> >>> A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
+> >>> and its apertures are in use and certainly should not be included in
+> >>> the general allocatable pool, so the fact that some BIOS-es reports
+> >>> the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
+> >>>
+> >>> So it seems that the excluding of E820 reserved addresses is a mistake.
+> >>>
+> >>> Ideally Linux would fully stop excluding E820 reserved addresses,
+> >>> but then the old systems this was added for will regress.
+> >>> Instead keep the old behavior for old systems, while ignoring
+> >>> the E820 reservations for any systems from now on.
+> >>>
+> >>> Old systems are defined here as BIOS year < 2018, this was chosen to make
+> >>> sure that E820 reservations will not be used on the currently affected
+> >>> systems, while at the same time also taking into account that the systems
+> >>> for which the E820 checking was originally added may have received BIOS
+> >>> updates for quite a while (esp. CVE related ones), giving them a more
+> >>> recent BIOS year then 2010.
+> >>>
+> >>> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
+> >>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+> >>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
+> >>> BugLink: https://bugs.launchpad.net/bugs/1878279
+> >>> BugLink: https://bugs.launchpad.net/bugs/1931715
+> >>> BugLink: https://bugs.launchpad.net/bugs/1932069
+> >>> BugLink: https://bugs.launchpad.net/bugs/1921649
+> >>> Cc: Benoit Grégoire <benoitg@coeus.ca>
+> >>> Cc: Hui Wang <hui.wang@canonical.com>
+> >>> Cc: stable@vger.kernel.org
+> >>> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >>> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> >>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >>> ---
+> >>> Changes in v6:
+> >>> - Remove the possibility to change the behavior from the commandline
+> >>>   because of worries that users may use this to paper over other problems
+> >>
+> >> ping ?
+> >
+> > Thanks, Hans.  Maybe I'm quixotic, but I'm still hoping for an
+> > approach based on firmware behavior instead of firmware date.  If
+> > nobody else tries, I will eventually try myself, but I don't have any
+> > ETA.
+>
+> I really do NOT see how doing a better approach later blocks
+> merging the date based fix now ?
+>
+> The date based approach can simply be replaced by any better
+> solution later.
 
-On 16/12/21 10:08, Luca Ceresoli wrote:
-> Hi Rob,
-> 
-> thanks for the quick feedback!
-> 
-> On 14/12/21 23:42, Rob Herring wrote:
->> On Tue, Dec 14, 2021 at 4:15 PM Luca Ceresoli <luca@lucaceresoli.net> wrote:
->>>
->>> If a devm_phy_get() calls fails with phy_count==N (N > 0), then N links
->>> have already been added by device_link_add() and won't be deleted by
->>> device_link_del() because the code calls 'return' and not 'goto err_link'.
->>>
->>> Fix in a very simple way by doing all the devm_phy_get() calls before all
->>> the device_link_add() calls.
->>>
->>> Fixes: 7a4db656a635 ("PCI: dra7xx: Create functional dependency between PCIe and PHY")
->>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->>> ---
->>>  drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
->>> index f7f1490e7beb..2ccc53869e13 100644
->>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
->>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
->>> @@ -757,7 +757,9 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
->>>                 phy[i] = devm_phy_get(dev, name);
->>>                 if (IS_ERR(phy[i]))
->>>                         return PTR_ERR(phy[i]);
->>> +       }
->>>
->>> +       for (i = 0; i < phy_count; i++) {
->>>                 link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
->>
->> I think this should happen automatically now with fw_devlink being
->> enabled by default. Can you try?
-> 
-> Do you mean removal should be done automatically? I think they are not
-> due to the DL_FLAG_STATELESS flag.
+Agreed.
 
-I would love to have feedback because, as said, I think my patch is
-correct, but if I'm wrong (which might well be) I have to drop patch 1
-and rewrite patch 2 in a slightly more complex form.
+> Can we please merge the date based approach now so peoples broken
+> systems get fixed now, rather then at some unknown later time ?
 
-About your request to try: I only have hardware with phy_count==1, and
-anyway I cannot access it at the moment. :(
-
-Regards.
--- 
-Luca
+OK, I'll queue it up.  Thanks!
