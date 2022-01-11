@@ -2,189 +2,290 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE98748BA80
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 23:09:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86A6E48BAED
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 23:47:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345484AbiAKWJC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 17:09:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345466AbiAKWJA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 17:09:00 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B30C06173F;
-        Tue, 11 Jan 2022 14:09:00 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id k15so1813030edk.13;
-        Tue, 11 Jan 2022 14:09:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=AkrcGrVzJVeMi9QZ0GgFqv58rNqhQAkifpl96t3BMvs=;
-        b=pV+XY/w89E+g8m7FO1TZnIYkp/3uwM/PZXmKtlXP+fl4YSAZTOi0G8mP1VngeboXui
-         0oOgvwPrIU1m4FwnlRixybLpslH5fiqoXLXLFpW5dvyyvUELctHZTdn8mWn6ZnA8fays
-         4ATIg6oHiQlPNnt9wB+MYds97o+VGVcxd7scPIxFKjCZg6/yw3O763RfNjDG4tKBKAJ3
-         SAkPFUAfFBDCVsT5btspwfHjp9anVVNtQWIdyFSH/Wc6QOuTfsHtQpvC3ZUwnmcfADub
-         sT55l/DfFoT7l7Cn4y3WdKWa2SwOhYfaQ24lYuSEhYC1DjauYXdU8/M1/wVdNuYkyp+3
-         PiMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=AkrcGrVzJVeMi9QZ0GgFqv58rNqhQAkifpl96t3BMvs=;
-        b=2bz4ihqryfIDBrGWujvvuxhxJjd7pJWEkTTq4R62pYN8jsDkHJyE1RsW/xgH+vAKyu
-         rO+2CGtDpu+aDjrvd2njF5fEwJYmS4I5Vhkg562W0dCFaOXJf3hkLlrxxU1AZqkixF7k
-         C8XJn5XuDP8o7a32pI1s7TEIK+ai6/5golwW6jL1kR0uSGzB1LVuyZxUt8GKPQ5xCQXm
-         J/E4u5qAh5o1UelBFYH24xzJkPbCWNgHrAbUwJ40Bj/L2kV/in2HRHYm4UJUJ5hBcf/o
-         NWLFsU5UaR0n227etX7zPx4pb5l6mnoL8G7QyBdOwbC0gc6Pr0TD9XEO1O5tuzG3qrNz
-         l0Pw==
-X-Gm-Message-State: AOAM533mDVvIfnsc/cSc7pZMqf/oKGA4JqyuwsxN5mt8WCSDe8g9gsek
-        eklr7QgyG/u4te4wTqYCrnpEhpi+UxUL3EZqnbU=
-X-Google-Smtp-Source: ABdhPJw96nWtta56U5jXF0Jj5CzV+hWqwrSBw/zMsuEp4TY7D1Ufd4JRyPY3EwFhZ0w62p2FoCE/wf0xZJInqicSap4=
-X-Received: by 2002:a05:6402:3496:: with SMTP id v22mr6356889edc.347.1641938938837;
- Tue, 11 Jan 2022 14:08:58 -0800 (PST)
+        id S231574AbiAKWrt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jan 2022 17:47:49 -0500
+Received: from mga09.intel.com ([134.134.136.24]:33716 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230248AbiAKWrs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 11 Jan 2022 17:47:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641941268; x=1673477268;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LsfPa2o7Q+vpSqVmm7FQAFi1coP/UQNAj7eSPlGJbSM=;
+  b=jo6l8DIMJgfzGcBpqZYpZIw+a5d1bMfwHU+X/AzxP5c0OW9232948itD
+   ANwtYS05hW6pVl13dHAYm3A3pfiRNxl9b0e65CYCCA1FRtln3kB/z61Vc
+   sIZ5Kb+/O/lCHW13rzCXAroTTH9JeTe7r4FHjAlDdQMM+cSn86xVgDuLL
+   kR98VDwj7N1QWdpxCUTetkUc7Xokr8nZEUxBXDS/paCGpGW/jFf0CRM7K
+   v00omkV/QY2OaqjuoO20y3VXL7aBLr8w8f7s/1/u1Y9QwQW38fOmCa2Rn
+   NAA17C+IP/ZUJQ5RYZalhncfb1EB3yvH0aDHNxqajYXy0iggbaEMTWFIi
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="243399529"
+X-IronPort-AV: E=Sophos;i="5.88,281,1635231600"; 
+   d="scan'208";a="243399529"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 14:47:47 -0800
+X-IronPort-AV: E=Sophos;i="5.88,281,1635231600"; 
+   d="scan'208";a="762682053"
+Received: from zedchen-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.139.117])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 14:47:46 -0800
+Date:   Tue, 11 Jan 2022 14:47:45 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, patches@lists.linux.dev,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 09/13] cxl/region: Implement XHB verification
+Message-ID: <20220111224745.uji3y3zbycdpj2cm@intel.com>
+References: <20220107003756.806582-1-ben.widawsky@intel.com>
+ <20220107003756.806582-10-ben.widawsky@intel.com>
+ <20220107100714.00004461@Huawei.com>
+ <20220107115524.0000344a@huawei.com>
 MIME-Version: 1.0
-References: <20211222012105.3438916-1-rajatja@google.com> <20220111163916.GA148556@bhelgaas>
-In-Reply-To: <20220111163916.GA148556@bhelgaas>
-Reply-To: rajatxjain@gmail.com
-From:   Rajat Jain <rajatxjain@gmail.com>
-Date:   Tue, 11 Jan 2022 14:08:47 -0800
-Message-ID: <CAA93t1pkyQdZfWAQardP6bzw7Exsvd6nKqR2UPY4WPKKHVytaQ@mail.gmail.com>
-Subject: Re: [PATCH] pci: Make DWORD accesses while saving / restoring LTR state
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220107115524.0000344a@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Bjorn,
+On 22-01-07 11:55:24, Jonathan Cameron wrote:
+> On Fri, 7 Jan 2022 10:07:14 +0000
+> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> 
+> > On Thu,  6 Jan 2022 16:37:52 -0800
+> > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > 
+> > > Cross host bridge verification primarily determines if the requested
+> > > interleave ordering can be achieved by the root decoder, which isn't as
+> > > programmable as other decoders.
+> > > 
+> > > The algorithm implemented here is based on the CXL Type 3 Memory Device
+> > > Software Guide, chapter 2.13.14
+> > > 
+> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
+> > 
+> > Hi Ben,
+> > 
+> > A few things I'm carrying 'fixes' for in here.
+> > 
+> > Jonathan
+> > 
+> > > ---
+> > >  .clang-format        |  2 +
+> > >  drivers/cxl/region.c | 89 +++++++++++++++++++++++++++++++++++++++++++-
+> > >  drivers/cxl/trace.h  |  3 ++
+> > >  3 files changed, 93 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/.clang-format b/.clang-format
+> > > index 15d4eaabc6b5..55f628f21722 100644
+> > > --- a/.clang-format
+> > > +++ b/.clang-format
+> > > @@ -169,6 +169,8 @@ ForEachMacros:
+> > >    - 'for_each_cpu_and'
+> > >    - 'for_each_cpu_not'
+> > >    - 'for_each_cpu_wrap'
+> > > +  - 'for_each_cxl_decoder_target'
+> > > +  - 'for_each_cxl_endpoint'
+> > >    - 'for_each_dapm_widgets'
+> > >    - 'for_each_dev_addr'
+> > >    - 'for_each_dev_scope'
+> > > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+> > > index c8e3c48dfbb9..ca559a4b5347 100644
+> > > --- a/drivers/cxl/region.c
+> > > +++ b/drivers/cxl/region.c
+> > > @@ -28,6 +28,17 @@
+> > >   */
+> > >  
+> > >  #define region_ways(region) ((region)->config.eniw)
+> > > +#define region_ig(region) (ilog2((region)->config.ig))
+> > > +
+> > > +#define for_each_cxl_endpoint(ep, region, idx)                                 \
+> > > +	for (idx = 0, ep = (region)->config.targets[idx];                      \
+> > > +	     idx < region_ways(region);                                        \
+> > > +	     idx++, ep = (region)->config.targets[idx])
+> > > +
+> > > +#define for_each_cxl_decoder_target(target, decoder, idx)                      \
+> > > +	for (idx = 0, target = (decoder)->target[idx];                         \
+> > > +	     idx < (decoder)->nr_targets;                                      \
+> > > +	     idx++, target++)
+> > >  
+> > >  static struct cxl_decoder *rootd_from_region(struct cxl_region *r)
+> > >  {
+> > > @@ -175,6 +186,30 @@ static bool qtg_match(const struct cxl_decoder *rootd,
+> > >  	return true;
+> > >  }
+> > >  
+> > > +static int get_unique_hostbridges(const struct cxl_region *region,
+> > > +				  struct cxl_port **hbs)
+> > > +{
+> > > +	struct cxl_memdev *ep;
+> > > +	int i, hb_count = 0;
+> > > +
+> > > +	for_each_cxl_endpoint(ep, region, i) {
+> > > +		struct cxl_port *hb = get_hostbridge(ep);
+> > > +		bool found = false;
+> > > +		int j;
+> > > +
+> > > +		BUG_ON(!hb);
+> > > +
+> > > +		for (j = 0; j < hb_count; j++) {
+> > > +			if (hbs[j] == hb)
+> > > +				found = true;
+> > > +		}
+> > > +		if (!found)
+> > > +			hbs[hb_count++] = hb;
+> > > +	}
+> > > +
+> > > +	return hb_count;
+> > > +}
+> > > +
+> > >  /**
+> > >   * region_xhb_config_valid() - determine cross host bridge validity
+> > >   * @rootd: The root decoder to check against
+> > > @@ -188,7 +223,59 @@ static bool qtg_match(const struct cxl_decoder *rootd,
+> > >  static bool region_xhb_config_valid(const struct cxl_region *region,
+> > >  				    const struct cxl_decoder *rootd)
+> > >  {
+> > > -	/* TODO: */
+> > > +	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
+> > > +	int rootd_ig, i;
+> > > +	struct cxl_dport *target;
+> > > +
+> > > +	/* Are all devices in this region on the same CXL host bridge */
+> > > +	if (get_unique_hostbridges(region, hbs) == 1)
+> > > +		return true;
+> > > +
+> > > +	rootd_ig = rootd->interleave_granularity;
+> > > +
+> > > +	/* CFMWS.HBIG >= Device.Label.IG */
+> > > +	if (rootd_ig < region_ig(region)) {
+> > > +		trace_xhb_valid(region,
+> > > +				"granularity does not support the region interleave granularity\n");
+> > > +		return false;
+> > > +	}
+> > > +
+> > > +	/* ((2^(CFMWS.HBIG - Device.RLabel.IG) * (2^CFMWS.ENIW)) > Device.RLabel.NLabel) */
+> > > +	if (1 << (rootd_ig - region_ig(region)) * (1 << rootd->interleave_ways) >  
+> > 
+> > This maths isn't what the comment says it is.
+> > ((1 << (rootd_ig - region_ig(region))) * rootd->interleaveways)
+> > so brackets needed to avoid 2^( all the rest) and rootd->interleave_ways seems to the
+> > actual number of ways not the log2 of it.
+> > 
+> > That feeds through below.
 
-On Tue, Jan 11, 2022 at 8:39 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Dec 21, 2021 at 05:21:05PM -0800, Rajat Jain wrote:
-> > Some devices have an errata such that they only support DWORD accesses
-> > to some registers.
-> >
-> > For e.g. this Bayhub O2 device ([VID:DID] = [0x1217:0x8621]) only
-> > supports DWORD accesses to LTR latency registers and L1 PM substates
-> > control registers:
-> > https://github.com/rajatxjain/public_shared/blob/main/OZ711LV2_appnote.pdf
-> >
-> > Since L1 PM substate control registers are DWORD sized, and hence their
-> > access in the kernel is already DWORD sized, so we don't need to do
-> > anything for them.
-> >
-> > However, the LTR registers being WORD sized, are in need of a solution.
-> > This patch converts the WORD sized accesses to these registers, into
-> > DWORD sized accesses, while saving and restoring them.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
->
-> Applied to pci/enumeration for v5.17, thanks, Rajat!
+You're correct on both counts. Nice catch.
 
-Thank you.
+> > 
+> > 
+> > > +	    region_ways(region)) {
+> > > +		trace_xhb_valid(region,
+> > > +				"granularity to device granularity ratio requires a larger number of devices than currently configured");
+> > > +		return false;
+> > > +	}
+> > > +
+> > > +	/* Check that endpoints are hooked up in the correct order */
+> > > +	for_each_cxl_decoder_target(target, rootd, i) {
+> > > +		struct cxl_memdev *endpoint = region->config.targets[i];
+> > > +
+> > > +		if (get_hostbridge(endpoint) != target->port) {  
+> > 
+> > I think this should be
+> > get_hostbridge(endpoint)->uport != target->dport
+> > 
+> > As it stands you are comparing the host bridge with the root object.
+> 
+> On closer inspection this code doesn't do what it is meant to do at all
+> if there are multiple EP below a given root bridge.
+> 
+> You'd expect multiple endpoints to match to each target->port.
+> Something along the lines of this should work:
+> 
+>         {
+>                 struct cxl_memdev **epgroupstart = region->config.targets;
+>                 struct cxl_memdev **endpoint;
+> 
+>                 for_each_cxl_decoder_target(target, rootd, i) {
+>                         /* Find start of next endpoint group */
+>                         endpoint = epgroupstart;
+>                         if (*endpoint == NULL) {
+>                                 printk("No endpoints under decoder target\n");
+>                                 return false;
+>                         }
+>                         while (*epgroupstart &&
+>                                 get_hostbridge(*endpoint) == get_hostbridge(*epgroupstart))
+>                                 epgroupstart++;
+>                 }
+>                 if (*epgroupstart) {
+>                         printk("still some entries left. boom\n");
+>                         return false;
+>                 }
+>         }
+> 
+> Only lightly tested with correct inputs...
+> 
+> Next up is figuring out why the EP HDM decoder won't commit. :)
+> 
+> Jonathan
+> 
 
->
-> The app note suggests that this erratum only affects the registers at
-> 0x234, 0x248, and 0x24c, i.e., the LTR snoop registers and the L1 SS
-> control registers.
->
-> Can you confirm that is true?  Byte and word accesses to other parts
-> of config space work correctly?
->
-> I *assume* the other parts work correctly, because if byte and word
-> accesses were broken, all sorts of things would not work, like
-> PCI_COMMAND, PCI_STATUS, searching the capability list, etc.
+You're correct that what I have isn't correct. However, I think this was just
+bogus leftover from an aborted attempt to try to implement this. See below...
 
+> 
+> > 
+> > > +			trace_xhb_valid(region, "device ordering bad\n");
+> > > +			return false;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * CFMWS.InterleaveTargetList[n] must contain all devices, x where:
+> > > +	 *	(Device[x],RegionLabel.Position >> (CFMWS.HBIG -
+> > > +	 *	Device[x].RegionLabel.InterleaveGranularity)) &
+> > > +	 *	((2^CFMWS.ENIW) - 1) = n
+> > > +	 *
+> > > +	 * Linux notes: All devices are known to have the same interleave
+> > > +	 * granularity at this point.
+> > > +	 */
+> > > +	for_each_cxl_decoder_target(target, rootd, i) {
+> > > +		if (((i >> (rootd_ig - region_ig(region)))) &
+> > > +		    (((1 << rootd->interleave_ways) - 1) != target->port_id)) {
+> > > +			trace_xhb_valid(region,
+> > > +					"One or more devices are not connected to the correct hostbridge.");
+> > > +			return false;
+> > > +		}
+> > > +	}
+> > > +
 
-Yes, that is correct. The Bayhub SD controller works fine otherwise,
-so only these registers needed the quirk.
+I think this does the correct XHB calculation. So I think I can just remove the
+top hunk and we're good. Do you agree?
 
-Thanks & Best Regards,
-
-Rajat
-
-
->
-> Bjorn
->
-> > ---
-> >  drivers/pci/pci.c       | 24 ++++++++++++++++--------
-> >  drivers/pci/pcie/aspm.c |  1 +
-> >  2 files changed, 17 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 3d2fb394986a..efa8cd16827f 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -1556,7 +1556,7 @@ static void pci_save_ltr_state(struct pci_dev *dev)
-> >  {
-> >       int ltr;
-> >       struct pci_cap_saved_state *save_state;
-> > -     u16 *cap;
-> > +     u32 *cap;
-> >
-> >       if (!pci_is_pcie(dev))
-> >               return;
-> > @@ -1571,25 +1571,33 @@ static void pci_save_ltr_state(struct pci_dev *dev)
-> >               return;
-> >       }
-> >
-> > -     cap = (u16 *)&save_state->cap.data[0];
-> > -     pci_read_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap++);
-> > -     pci_read_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, cap++);
-> > +     /*
-> > +      * We deliberately do a dword access to save both PCI_LTR_MAX_SNOOP_LAT
-> > +      * and PCI_LTR_MAX_NOSNOOP_LAT together since some devices only support
-> > +      * dword accesses to these registers.
-> > +      */
-> > +     cap = &save_state->cap.data[0];
-> > +     pci_read_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap);
-> >  }
-> >
-> >  static void pci_restore_ltr_state(struct pci_dev *dev)
-> >  {
-> >       struct pci_cap_saved_state *save_state;
-> >       int ltr;
-> > -     u16 *cap;
-> > +     u32 *cap;
-> >
-> >       save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-> >       ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
-> >       if (!save_state || !ltr)
-> >               return;
-> >
-> > -     cap = (u16 *)&save_state->cap.data[0];
-> > -     pci_write_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap++);
-> > -     pci_write_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, *cap++);
-> > +     /*
-> > +      * We deliberately do a dword access to restore both
-> > +      * PCI_LTR_MAX_SNOOP_LAT and PCI_LTR_MAX_NOSNOOP_LAT together since
-> > +      * some devices only support dword accesses to these registers.
-> > +      */
-> > +     cap = &save_state->cap.data[0];
-> > +     pci_write_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap);
-> >  }
-> >
-> >  /**
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index 52c74682601a..083f47a7b69b 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -496,6 +496,7 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
-> >       encode_l12_threshold(l1_2_threshold, &scale, &value);
-> >       ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
-> >
-> > +     /* Always make DWORD sized accesses to these registers */
-> >       pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1, &pctl1);
-> >       pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL2, &pctl2);
-> >       pci_read_config_dword(child, child->l1ss + PCI_L1SS_CTL1, &cctl1);
-> > --
-> > 2.34.1.307.g9b7440fafd-goog
-> >
+> > >  	return true;
+> > >  }
+> > >  
+> > > diff --git a/drivers/cxl/trace.h b/drivers/cxl/trace.h
+> > > index a53f00ba5d0e..4de47d1111ac 100644
+> > > --- a/drivers/cxl/trace.h
+> > > +++ b/drivers/cxl/trace.h
+> > > @@ -38,6 +38,9 @@ DEFINE_EVENT(cxl_region_template, sanitize_failed,
+> > >  DEFINE_EVENT(cxl_region_template, allocation_failed,
+> > >  	     TP_PROTO(const struct cxl_region *region, char *status),
+> > >  	     TP_ARGS(region, status));
+> > > +DEFINE_EVENT(cxl_region_template, xhb_valid,
+> > > +	     TP_PROTO(const struct cxl_region *region, char *status),
+> > > +	     TP_ARGS(region, status));
+> > >  
+> > >  #endif /* if !defined (__CXL_TRACE_H__) || defined(TRACE_HEADER_MULTI_READ) */
+> > >    
+> > 
+> 
