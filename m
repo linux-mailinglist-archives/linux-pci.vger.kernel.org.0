@@ -2,67 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20A1948B46E
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 18:50:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB9D748B48E
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 18:52:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344602AbiAKRup (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 12:50:45 -0500
-Received: from mail-oi1-f177.google.com ([209.85.167.177]:34587 "EHLO
-        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344022AbiAKRup (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 12:50:45 -0500
-Received: by mail-oi1-f177.google.com with SMTP id r131so140842oig.1;
-        Tue, 11 Jan 2022 09:50:44 -0800 (PST)
+        id S1344839AbiAKRwc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jan 2022 12:52:32 -0500
+Received: from mail-oo1-f52.google.com ([209.85.161.52]:43932 "EHLO
+        mail-oo1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345100AbiAKRvs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 12:51:48 -0500
+Received: by mail-oo1-f52.google.com with SMTP id z20-20020a4a3054000000b002dbfaf0b568so4636593ooz.10;
+        Tue, 11 Jan 2022 09:51:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=xpEEP6pn59TAkOy+KIoH6uTjJ6S6pmp9UVrqmovuxDE=;
-        b=YJ25l3EgN2rD2Czconkq/TijjLo6pp6BeiRUYYhb9ETvv1a3ANRk4ntTSEeWjmqb2m
-         Owj1AQTF+JAdLAk9lbTgVtUI+/fqTX6R97APAbPzB+/ZIEq42CLMWGFrfjZhEbMPTJPQ
-         JCNgYfJ9iXsmK4h44xyDaNrfBlsvST3UZhLM5ZYxOlW5VU7bWstiqGlBRCRvBQLm3U5e
-         18jsCnkix1fvljRN0bsKQRJFObpRREvwn2Zg1RYNBoxwEgvpxga+KnsNibA1pqjxpWhD
-         1tjPcP6esQFDp02/bByoVksSrXXAChTUvt5Kekr7IDJ2Moz19pYMd7gowe8zgbFu7ir6
-         C9Jw==
-X-Gm-Message-State: AOAM531hATMwIQlzPHhG8eCOphQAoG+QeQWD0gYy1Mh++v4hsNlTZ0a0
-        rQTfO6BG/PDR+CawVkNEQqT9nA0KpQ==
-X-Google-Smtp-Source: ABdhPJwwX2jBplY7ZSp7V0C8lWNfBrPtgM86TV0fUt2mbnasJt+D7XWKI7BTjDNSI5byvJHPplpI/Q==
-X-Received: by 2002:a05:6808:4d2:: with SMTP id a18mr2576006oie.99.1641923444555;
-        Tue, 11 Jan 2022 09:50:44 -0800 (PST)
+        bh=UifqrbSv4P6oUwIS9VVpUp4MVpz/i09ZMQyiV9QJa6A=;
+        b=gO2slWkHUbjIJ7at6MJLKVJYBjA4lDb5+SJdJ34eK5M4FNOLqdYSUlDD7sS5umpTEi
+         Pn5cr/c8XFmzJGcKB5BmXzy55CYxIJo3d2yi8EF8GyDcjiX3BF8TD1YgMNjYEM+bLzlu
+         T5ZMfezjQvfdgX0ZZeC9+rNtRuWK1LsHattZf3nvJQCOi6Qz61mpF2H/5Lwo4HrXL8gF
+         uRMajAoGN/+CYbdZ/nNAUMickJr7jJNlJaPoi36fhl6+2yzn/LlxZ44RzRnf/DWgAHrH
+         WqJIFKDgHVeTFfwSvagBGvPs9hQrE8jE2uzw85m0U9eEZ2uSEEmh2JBuIczOAGdjVzMV
+         lY4A==
+X-Gm-Message-State: AOAM530IWrvsdlbqSJeRQsJT8xSA2syEd0MrEAIBMC6VTxXNXW6ku0tp
+        byF7EatPjXTbctzAWoQOCA==
+X-Google-Smtp-Source: ABdhPJznNaT1VvHIngLtpJFtz0iASueDANoXRX2e5SW6ZAucUfj28fstai6hZocWcmtpqr5MeaK/UA==
+X-Received: by 2002:a4a:3bd4:: with SMTP id s203mr3882712oos.18.1641923507894;
+        Tue, 11 Jan 2022 09:51:47 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id a26sm48342oos.39.2022.01.11.09.50.43
+        by smtp.gmail.com with ESMTPSA id x13sm2018165oof.19.2022.01.11.09.51.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jan 2022 09:50:43 -0800 (PST)
-Received: (nullmailer pid 3226952 invoked by uid 1000);
-        Tue, 11 Jan 2022 17:50:42 -0000
-Date:   Tue, 11 Jan 2022 11:50:42 -0600
+        Tue, 11 Jan 2022 09:51:47 -0800 (PST)
+Received: (nullmailer pid 3228864 invoked by uid 1000);
+        Tue, 11 Jan 2022 17:51:46 -0000
+Date:   Tue, 11 Jan 2022 11:51:46 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+Cc:     linux-gpio@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>,
+        - <patches@opensource.cirrus.com>, linux-kernel@vger.kernel.org,
+        Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        John Crispin <john@phrozen.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: snps,dw-pcie-ep: Drop conflicting
- 'max-functions' schema
-Message-ID: <Yd3Dcltq5IG6CeWa@robh.at.kernel.org>
-References: <20220107030358.2378221-1-robh@kernel.org>
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-riscv@lists.infradead.org,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        linux-pci@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Suman Anna <s-anna@ti.com>, netdev@vger.kernel.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] dt-bindings: Drop required 'interrupt-parent'
+Message-ID: <Yd3DsoMYTylcOWDo@robh.at.kernel.org>
+References: <20220107031905.2406176-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220107030358.2378221-1-robh@kernel.org>
+In-Reply-To: <20220107031905.2406176-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 06 Jan 2022 21:03:57 -0600, Rob Herring wrote:
-> 'max-functions' is already defined in pci-ep.yaml schema as a uint8 and all
-> users of it expect an uint8. Drop the conflicting schema.
+On Thu, 06 Jan 2022 21:19:04 -0600, Rob Herring wrote:
+> 'interrupt-parent' is never required as it can be in a parent node or a
+> parent node itself can be an interrupt provider. Where exactly it lives is
+> outside the scope of a binding schema.
 > 
 > Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml | 4 ----
->  1 file changed, 4 deletions(-)
+>  .../devicetree/bindings/gpio/toshiba,gpio-visconti.yaml  | 1 -
+>  .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml     | 9 ---------
+>  Documentation/devicetree/bindings/mfd/cirrus,madera.yaml | 1 -
+>  .../devicetree/bindings/net/lantiq,etop-xway.yaml        | 1 -
+>  .../devicetree/bindings/net/lantiq,xrx200-net.yaml       | 1 -
+>  .../devicetree/bindings/pci/sifive,fu740-pcie.yaml       | 1 -
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml       | 1 -
+>  7 files changed, 15 deletions(-)
 > 
 
 Applied, thanks!
