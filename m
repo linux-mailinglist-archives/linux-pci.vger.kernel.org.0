@@ -2,137 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E20C48B566
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 19:10:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2D4848B630
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 19:55:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238346AbiAKSJJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 13:09:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:50314 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232636AbiAKSJI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 11 Jan 2022 13:09:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F797D6E;
-        Tue, 11 Jan 2022 10:09:08 -0800 (PST)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 324F83F766;
-        Tue, 11 Jan 2022 10:09:07 -0800 (PST)
-Date:   Tue, 11 Jan 2022 18:09:01 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>, bhelgaas@google.com
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [bug report] PCI: brcmstb: Add control of subdevice voltage
- regulators
-Message-ID: <20220111180901.GA29495@lpieralisi>
-References: <20220111073312.GA12633@kili>
- <CANCKTBsV1yn-tntVHNeaEOSkpAmz9fxu9bjzgMYvFv96=+437Q@mail.gmail.com>
- <fb32020a-c6a1-acc0-b5f8-ebdd84c2c31f@gmail.com>
+        id S1350242AbiAKSzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jan 2022 13:55:43 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:54620 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350250AbiAKSzl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 13:55:41 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6CF356176D;
+        Tue, 11 Jan 2022 18:55:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8210C36AE3;
+        Tue, 11 Jan 2022 18:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641927339;
+        bh=zojY8MTCnk8nwBqZ+pXLnQcYipINl6Y5Z/qNYwqhFRc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=q6rIpxYlfnP/5Kr6nyyWLHpNrmEsfDvrClt4rm7Sxa+1/jl/V84qxepgXn6Z1rAuV
+         D4gwcA5ZtoWGkG6HLcaC+VisaRHHhwJbOIdSmEU6qKbp+oWzrfFQi8OP1ZmfgK8KGT
+         mtMF+0rbkAPCQKXPXwlIXWrhLX2nDzaohYCxuShmtjY1QZGoVnUQdnhDCk4RGeYGCH
+         JqWvFMyFdFXK+NlxHa/2xaj+Fa911Zg0OouSpg7ZOaBvPfXIhBlQBskNawWvNYPpEF
+         I8pNitn+N71ZQzXYH4yFJvtFiD07SMzFThKa0m1x6j1pnwBd5t6JwSHMP9A3hOWbgW
+         quz7Pk34Z32wA==
+Date:   Tue, 11 Jan 2022 12:55:38 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yao Hongbo <yaohongbo@linux.alibaba.com>
+Cc:     bhelgaas@google.com, lukas@wunner.de,
+        zhangliguang@linux.alibaba.com,
+        alikernel-developer@linux.alibaba.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RFC PATCH v2] PCI: Waiting command completed in
+ get_port_device_capability()
+Message-ID: <20220111185538.GA152548@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fb32020a-c6a1-acc0-b5f8-ebdd84c2c31f@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1641525769-113099-1-git-send-email-yaohongbo@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+Bjorn, linux-pci]
+[+cc Lukas, Rafael (in case you have any recollection of 2bd50dd800b5)]
 
-On Tue, Jan 11, 2022 at 08:37:59AM -0800, Florian Fainelli wrote:
-> +Lorenzo,
+On Fri, Jan 07, 2022 at 11:22:49AM +0800, Yao Hongbo wrote:
+> According to the PCIe specification Revision 5.0, section
+> 7.5.3.11 (slot Status Register), if Command Complete notification
+> is supported,  a write to the slot control register needs to set
+> the command completed bit, which can indicate the controller is
+> ready to receive the next command.
 > 
-> On 1/11/2022 8:02 AM, Jim Quinlan wrote:
-> > On Tue, Jan 11, 2022 at 2:33 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > > 
-> > > Hello Jim Quinlan,
-> > > 
-> > > This is a semi-automatic email about new static checker warnings.
-> > > 
-> > > The patch 31d8fedc2827: "PCI: brcmstb: Add control of subdevice
-> > > voltage regulators" from Jan 6, 2022, leads to the following Smatch
-> > > complaint:
-> > > 
-> > >      drivers/pci/controller/pcie-brcmstb.c:1404 brcm_pcie_resume()
-> > >      error: we previously assumed 'pcie->sr' could be null (see line 1350)
-> > > 
-> > > drivers/pci/controller/pcie-brcmstb.c
-> > >    1349
-> > >    1350          if (pcie->sr) {
-> > >                      ^^^^^^^^
-> > > Check for NULL
-> > > 
-> > >    1351                  if (pcie->ep_wakeup_capable) {
-> > >    1352                          /*
-> > >    1353                           * We are resuming from a suspend.  In the suspend we
-> > >    1354                           * did not disable the power supplies, so there is
-> > >    1355                           * no need to enable them (and falsely increase their
-> > >    1356                           * usage count).
-> > >    1357                           */
-> > >    1358                          pcie->ep_wakeup_capable = false;
-> > >    1359                  } else {
-> > >    1360                          ret = regulator_bulk_enable(pcie->sr->num_supplies,
-> > >    1361                                                      pcie->sr->supplies);
-> > >    1362                          if (ret) {
-> > >    1363                                  dev_err(dev, "Could not turn on regulators\n");
-> > >    1364                                  goto err_disable_clk;
-> > >    1365                          }
-> > >    1366                  }
-> > >    1367          }
-> > >    1368
-> > >    1369          ret = reset_control_reset(pcie->rescal);
-> > >    1370          if (ret)
-> > >    1371                  goto err_regulator;
-> > >    1372
-> > >    1373          ret = brcm_phy_start(pcie);
-> > >    1374          if (ret)
-> > >    1375                  goto err_reset;
-> > >    1376
-> > >    1377          /* Take bridge out of reset so we can access the SERDES reg */
-> > >    1378          pcie->bridge_sw_init_set(pcie, 0);
-> > >    1379
-> > >    1380          /* SERDES_IDDQ = 0 */
-> > >    1381          tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-> > >    1382          u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
-> > >    1383          writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-> > >    1384
-> > >    1385          /* wait for serdes to be stable */
-> > >    1386          udelay(100);
-> > >    1387
-> > >    1388          ret = brcm_pcie_setup(pcie);
-> > >    1389          if (ret)
-> > >    1390                  goto err_reset;
-> > >    1391
-> > >    1392          ret = brcm_pcie_linkup(pcie);
-> > >    1393          if (ret)
-> > >    1394                  goto err_reset;
-> > >    1395
-> > >    1396          if (pcie->msi)
-> > >    1397                  brcm_msi_set_regs(pcie->msi);
-> > >    1398
-> > >    1399          return 0;
-> > >    1400
-> > >    1401  err_reset:
-> > >    1402          reset_control_rearm(pcie->rescal);
-> > >    1403  err_regulator:
-> > >    1404          regulator_bulk_disable(pcie->sr->num_supplies, pcie->- sr->supplies);
-> > >                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > > Unchecked dereferences.  I think we do need to add a check?
-> > Absolutely, "if (pcie->sr)".  What do I need to do - send a fixup or a
-> > new full pullreq?  I'm not quite sure if this was accepted yet....
+> However, before probing the pcie hotplug service, there needs to set
+> HPIE bit in the slot ctrl register to disable hotplug interrupts,
+> and there is no wait currently.
 > 
-> Your patch series has been queued up in Lorenzo's tree here:
+> The interval between the two functions get_port_device_capability() and
+> pcie_disable_notification() is not long, which may cause the latter to
+> be interfered by the former.
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/log/?h=pci/brcmstb
-> 
-> so I suppose you could submit an incremental patch to fix the error
-> reported by Dan and Lorenzo can either squash it or just leave it as a
-> fix on top?
+> The command complete event received by pcie_disable_notification() may
+> belong to the operation of get_port_device_capability().
 
-Please send a fix to Bjorn and CC linux-pci as soon as possible, he may
-be able to squash that in before sending a PR.
+Yes, looks like a potential problem.
 
-Thanks,
-Lorenzo
+> Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+> Signed-off-by: Yao Hongbo <yaohongbo@linux.alibaba.com>
+> ---
+>  drivers/pci/pcie/portdrv_core.c | 40 ++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 38 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index bda6308..ec2088b6e 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/string.h>
+>  #include <linux/slab.h>
+>  #include <linux/aer.h>
+> +#include <linux/delay.h>
+>  
+>  #include "../pci.h"
+>  #include "portdrv.h"
+> @@ -190,6 +191,42 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>  	return 0;
+>  }
+>  
+> +static void pcie_port_disable_hp_interrupt(struct pci_dev *dev)
+> +{
+> +	u16 slot_status;
+> +	u32 slot_cap;
+> +	int timeout = 1000;
+> +
+> +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> +			PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +
+> +	/*
+> +	 * If the command completed notification is not supported,
+> +	 * we don't need to wait after writing to the slot ctrl register.
+> +	 */
+> +	pcie_capability_read_dword(dev, PCI_EXP_SLTCAP, &slot_cap);
+> +	if (slot_cap & PCI_EXP_SLTCAP_NCCS)
+> +		return;
+> +
+> +	do {
+> +		pcie_capability_read_word(dev, PCI_EXP_SLTSTA, &slot_status);
+> +		if (slot_status == (u16) ~0) {
+> +			pci_info(dev, "%s: no response from device\n",  __func__);
+> +			return;
+> +		}
+> +
+> +		if (slot_status & PCI_EXP_SLTSTA_CC) {
+> +			pcie_capability_write_word(dev, PCI_EXP_SLTSTA, PCI_EXP_SLTSTA_CC);
+> +			return;
+> +		}
+> +
+> +		msleep(10);
+> +		timeout -= 10;
+> +	} while (timeout >= 0);
+> +
+> +	pci_info(dev, "Timeout on hotplug disable interrupt!\n");
+> +}
+> +
+>  /**
+>   * get_port_device_capability - discover capabilities of a PCI Express port
+>   * @dev: PCI Express port to examine
+> @@ -213,8 +250,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  		 * Disable hot-plug interrupts in case they have been enabled
+>  		 * by the BIOS and the hot-plug service driver is not loaded.
+>  		 */
+> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +		pcie_port_disable_hp_interrupt(dev);
+
+This originally came from 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port
+services during port initialization"), where we disable hotplug
+interrupts in case the hotplug driver is not available.
+
+In general, I think the OS should not be responsible for disabling
+interrupts for feature X.  The OS may predate feature X and may not
+know anything about X at all.  The power-on default for interrupts
+related to X should be "disabled" (as it is for HPIE and CCIE), and if
+firmware enables them, it should disable them or arrange to handle
+them itself before handing off to the OS.
+
+I don't know whether 2bd50dd800b5 was prompted by spurious hotplug
+interrupts or not.  If it was, I think we were seeing a firmware
+defect or possibly a pciehp initialization issue.
+
+At the time of 2bd50dd800b5, we always cleared HPIE and CCIE here.
+
+But now, on ACPI systems, we only clear HPIE and CCIE here if we *do*
+have the hotplug driver (because host->native_pcie_hotplug only
+remains set if we have been granted control via _OSC, and we only
+request control when CONFIG_HOTPLUG_PCI_PCIE is enabled).  On these
+systems, we should be able to remove this disable code because pciehp
+will do whatever it needs.
+
+For non-ACPI systems, bridge->native_pcie_hotplug will always be set,
+so we will clear HPIE and CCIE here and then (if
+CONFIG_HOTPLUG_PCI_PCIE is enabled) initialize pciehp soon after,
+which may be a problem as you describe.
+
+What kind of system are you seeing the problem on?  It seems like it
+should be safe to drop the HPIE and CCIE disable here for ACPI
+systems.  And *likely* we could do the same for non-ACPI systems,
+though I have no experience there.
+
+Bjorn
