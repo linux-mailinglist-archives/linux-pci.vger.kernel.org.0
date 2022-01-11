@@ -2,107 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 357B148BA42
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 22:56:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE98748BA80
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 23:09:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229533AbiAKV4B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 16:56:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49224 "EHLO
+        id S1345484AbiAKWJC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jan 2022 17:09:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232579AbiAKVz6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 16:55:58 -0500
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174BFC06173F;
-        Tue, 11 Jan 2022 13:55:58 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 7FF7F100D5855;
-        Tue, 11 Jan 2022 22:55:55 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 612A8350DA7; Tue, 11 Jan 2022 22:55:55 +0100 (CET)
-Date:   Tue, 11 Jan 2022 22:55:55 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Yao Hongbo <yaohongbo@linux.alibaba.com>, bhelgaas@google.com,
-        zhangliguang@linux.alibaba.com,
-        alikernel-developer@linux.alibaba.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [RFC PATCH v2] PCI: Waiting command completed in
- get_port_device_capability()
-Message-ID: <20220111215555.GA19605@wunner.de>
-References: <1641525769-113099-1-git-send-email-yaohongbo@linux.alibaba.com>
- <20220111185538.GA152548@bhelgaas>
+        with ESMTP id S1345466AbiAKWJA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 17:09:00 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B30C06173F;
+        Tue, 11 Jan 2022 14:09:00 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id k15so1813030edk.13;
+        Tue, 11 Jan 2022 14:09:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=AkrcGrVzJVeMi9QZ0GgFqv58rNqhQAkifpl96t3BMvs=;
+        b=pV+XY/w89E+g8m7FO1TZnIYkp/3uwM/PZXmKtlXP+fl4YSAZTOi0G8mP1VngeboXui
+         0oOgvwPrIU1m4FwnlRixybLpslH5fiqoXLXLFpW5dvyyvUELctHZTdn8mWn6ZnA8fays
+         4ATIg6oHiQlPNnt9wB+MYds97o+VGVcxd7scPIxFKjCZg6/yw3O763RfNjDG4tKBKAJ3
+         SAkPFUAfFBDCVsT5btspwfHjp9anVVNtQWIdyFSH/Wc6QOuTfsHtQpvC3ZUwnmcfADub
+         sT55l/DfFoT7l7Cn4y3WdKWa2SwOhYfaQ24lYuSEhYC1DjauYXdU8/M1/wVdNuYkyp+3
+         PiMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=AkrcGrVzJVeMi9QZ0GgFqv58rNqhQAkifpl96t3BMvs=;
+        b=2bz4ihqryfIDBrGWujvvuxhxJjd7pJWEkTTq4R62pYN8jsDkHJyE1RsW/xgH+vAKyu
+         rO+2CGtDpu+aDjrvd2njF5fEwJYmS4I5Vhkg562W0dCFaOXJf3hkLlrxxU1AZqkixF7k
+         C8XJn5XuDP8o7a32pI1s7TEIK+ai6/5golwW6jL1kR0uSGzB1LVuyZxUt8GKPQ5xCQXm
+         J/E4u5qAh5o1UelBFYH24xzJkPbCWNgHrAbUwJ40Bj/L2kV/in2HRHYm4UJUJ5hBcf/o
+         NWLFsU5UaR0n227etX7zPx4pb5l6mnoL8G7QyBdOwbC0gc6Pr0TD9XEO1O5tuzG3qrNz
+         l0Pw==
+X-Gm-Message-State: AOAM533mDVvIfnsc/cSc7pZMqf/oKGA4JqyuwsxN5mt8WCSDe8g9gsek
+        eklr7QgyG/u4te4wTqYCrnpEhpi+UxUL3EZqnbU=
+X-Google-Smtp-Source: ABdhPJw96nWtta56U5jXF0Jj5CzV+hWqwrSBw/zMsuEp4TY7D1Ufd4JRyPY3EwFhZ0w62p2FoCE/wf0xZJInqicSap4=
+X-Received: by 2002:a05:6402:3496:: with SMTP id v22mr6356889edc.347.1641938938837;
+ Tue, 11 Jan 2022 14:08:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220111185538.GA152548@bhelgaas>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20211222012105.3438916-1-rajatja@google.com> <20220111163916.GA148556@bhelgaas>
+In-Reply-To: <20220111163916.GA148556@bhelgaas>
+Reply-To: rajatxjain@gmail.com
+From:   Rajat Jain <rajatxjain@gmail.com>
+Date:   Tue, 11 Jan 2022 14:08:47 -0800
+Message-ID: <CAA93t1pkyQdZfWAQardP6bzw7Exsvd6nKqR2UPY4WPKKHVytaQ@mail.gmail.com>
+Subject: Re: [PATCH] pci: Make DWORD accesses while saving / restoring LTR state
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 11, 2022 at 12:55:38PM -0600, Bjorn Helgaas wrote:
-> On Fri, Jan 07, 2022 at 11:22:49AM +0800, Yao Hongbo wrote:
-> > According to the PCIe specification Revision 5.0, section
-> > 7.5.3.11 (slot Status Register), if Command Complete notification
+Hello Bjorn,
 
-Hm, I only have the PCIe r4.0 Base Spec available and the section
-number is 7.8.11 there.  Is 7.5.3.11 really correct for the r5.0 spec?
+On Tue, Jan 11, 2022 at 8:39 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Dec 21, 2021 at 05:21:05PM -0800, Rajat Jain wrote:
+> > Some devices have an errata such that they only support DWORD accesses
+> > to some registers.
+> >
+> > For e.g. this Bayhub O2 device ([VID:DID] = [0x1217:0x8621]) only
+> > supports DWORD accesses to LTR latency registers and L1 PM substates
+> > control registers:
+> > https://github.com/rajatxjain/public_shared/blob/main/OZ711LV2_appnote.pdf
+> >
+> > Since L1 PM substate control registers are DWORD sized, and hence their
+> > access in the kernel is already DWORD sized, so we don't need to do
+> > anything for them.
+> >
+> > However, the LTR registers being WORD sized, are in need of a solution.
+> > This patch converts the WORD sized accesses to these registers, into
+> > DWORD sized accesses, while saving and restoring them.
+> >
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+>
+> Applied to pci/enumeration for v5.17, thanks, Rajat!
+
+Thank you.
+
+>
+> The app note suggests that this erratum only affects the registers at
+> 0x234, 0x248, and 0x24c, i.e., the LTR snoop registers and the L1 SS
+> control registers.
+>
+> Can you confirm that is true?  Byte and word accesses to other parts
+> of config space work correctly?
+>
+> I *assume* the other parts work correctly, because if byte and word
+> accesses were broken, all sorts of things would not work, like
+> PCI_COMMAND, PCI_STATUS, searching the capability list, etc.
 
 
-> > However, before probing the pcie hotplug service, there needs to set
-> > HPIE bit in the slot ctrl register to disable hotplug interrupts,
-> > and there is no wait currently.
+Yes, that is correct. The Bayhub SD controller works fine otherwise,
+so only these registers needed the quirk.
 
-There is a similar issue on resume.  The PCI core writes to the
-Slot Control register in...
+Thanks & Best Regards,
 
-  pci_pm_resume_noirq()
-    pci_pm_default_resume_early()
-      pci_restore_state()
-        pci_restore_pcie_state()
-
-...and to ensure that the proper Command Completed dance is performed,
-we do this in pciehp_resume_noirq() and pciehp_runtime_resume():
-
-	/* pci_restore_state() just wrote to the Slot Control register */
-	ctrl->cmd_started = jiffies;
-	ctrl->cmd_busy = true;
-
-That was introduced by 469e764c4a3c.
-
-I'd prefer that we do the same in pciehp_probe() (or pcie_init())
-if we come to the conlusion that we want to continue disabling HPIE
-and CCIE in get_port_device_capability().  It's a much simpler and
-smaller solution than the one proposed in the present patch.
+Rajat
 
 
-> But now, on ACPI systems, we only clear HPIE and CCIE here if we *do*
-> have the hotplug driver (because host->native_pcie_hotplug only
-> remains set if we have been granted control via _OSC, and we only
-> request control when CONFIG_HOTPLUG_PCI_PCIE is enabled).  On these
-> systems, we should be able to remove this disable code because pciehp
-> will do whatever it needs.
-
-I guess an argument could be made that even though CONFIG_HOTPLUG_PCI_PCIE
-is enabled, pciehp may fail to probe, e.g. because the call to kzalloc()
-in pcie_init() returns NULL due to insufficient memory.  Then the interrupt
-would remain enabled if the BIOS neglected to disable it.  That could be
-accounted for by rearranging pciehp such that the interrupt is disabled
-first thing on probe.  Of course that approach doesn't solve the problem
-if CONFIG_HOTPLUG_PCI_PCIE is disabled and we'd still have to disable
-the interrupt in get_port_device_capability() in that case.
-
-I think it generally makes sense to assume the worst and compensate for
-broken BIOSes.
-
-Hotplug and PME share the same MSI or MSI-X vector per section 6.7.3.4
-of the PCIe Base Spec, so enabled but unhandled hotplug interrupts will
-cause the PME interrupt handler to run.  That's probably not fatal,
-but still undesirable.
-
-Thanks,
-
-Lukas
+>
+> Bjorn
+>
+> > ---
+> >  drivers/pci/pci.c       | 24 ++++++++++++++++--------
+> >  drivers/pci/pcie/aspm.c |  1 +
+> >  2 files changed, 17 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 3d2fb394986a..efa8cd16827f 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -1556,7 +1556,7 @@ static void pci_save_ltr_state(struct pci_dev *dev)
+> >  {
+> >       int ltr;
+> >       struct pci_cap_saved_state *save_state;
+> > -     u16 *cap;
+> > +     u32 *cap;
+> >
+> >       if (!pci_is_pcie(dev))
+> >               return;
+> > @@ -1571,25 +1571,33 @@ static void pci_save_ltr_state(struct pci_dev *dev)
+> >               return;
+> >       }
+> >
+> > -     cap = (u16 *)&save_state->cap.data[0];
+> > -     pci_read_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap++);
+> > -     pci_read_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, cap++);
+> > +     /*
+> > +      * We deliberately do a dword access to save both PCI_LTR_MAX_SNOOP_LAT
+> > +      * and PCI_LTR_MAX_NOSNOOP_LAT together since some devices only support
+> > +      * dword accesses to these registers.
+> > +      */
+> > +     cap = &save_state->cap.data[0];
+> > +     pci_read_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap);
+> >  }
+> >
+> >  static void pci_restore_ltr_state(struct pci_dev *dev)
+> >  {
+> >       struct pci_cap_saved_state *save_state;
+> >       int ltr;
+> > -     u16 *cap;
+> > +     u32 *cap;
+> >
+> >       save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
+> >       ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
+> >       if (!save_state || !ltr)
+> >               return;
+> >
+> > -     cap = (u16 *)&save_state->cap.data[0];
+> > -     pci_write_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap++);
+> > -     pci_write_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, *cap++);
+> > +     /*
+> > +      * We deliberately do a dword access to restore both
+> > +      * PCI_LTR_MAX_SNOOP_LAT and PCI_LTR_MAX_NOSNOOP_LAT together since
+> > +      * some devices only support dword accesses to these registers.
+> > +      */
+> > +     cap = &save_state->cap.data[0];
+> > +     pci_write_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap);
+> >  }
+> >
+> >  /**
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 52c74682601a..083f47a7b69b 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -496,6 +496,7 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+> >       encode_l12_threshold(l1_2_threshold, &scale, &value);
+> >       ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
+> >
+> > +     /* Always make DWORD sized accesses to these registers */
+> >       pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1, &pctl1);
+> >       pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL2, &pctl2);
+> >       pci_read_config_dword(child, child->l1ss + PCI_L1SS_CTL1, &cctl1);
+> > --
+> > 2.34.1.307.g9b7440fafd-goog
+> >
