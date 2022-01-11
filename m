@@ -2,185 +2,401 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4615848A1E3
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Jan 2022 22:25:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 632E748A427
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Jan 2022 01:05:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344548AbiAJVZv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Jan 2022 16:25:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:55087 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1344438AbiAJVZi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Jan 2022 16:25:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641849937;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XZwslwgP+oh5aspfJM1SMOOPqxe5XZQW+9MccJZxeWQ=;
-        b=RcOQMv5iamm4OJMJCyL1Wc2TxSUquYc+38zi+xJXvFwJI1/AO3uOLomIiemH1lri73QjT4
-        wBZPk16hmhaGcaKakZkwBgQ63w9rMd6M6uL2DfEhTAcfzB3ibUvgQMI01w0H0thDn4nOMu
-        txcWLm+lfTmN+TwpyurcNRsCjKyA+js=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-193-X9RB3AmrMIWnRyOtFqSa1w-1; Mon, 10 Jan 2022 16:25:36 -0500
-X-MC-Unique: X9RB3AmrMIWnRyOtFqSa1w-1
-Received: by mail-ed1-f70.google.com with SMTP id eg24-20020a056402289800b003fe7f91df01so2331019edb.6
-        for <linux-pci@vger.kernel.org>; Mon, 10 Jan 2022 13:25:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=XZwslwgP+oh5aspfJM1SMOOPqxe5XZQW+9MccJZxeWQ=;
-        b=KYcHKiqIMPVXCO9TpNk7U8P7lelkUhjDhSjQiiwyLohGy1JNruSkTQ2wXDiM1jf8sf
-         dwU/uoyb5vrwxRdnlao+c1yRl2a2auQJ7JFBSP7eqMXoA5GXqmmnBK4wnjzrtg3PZ3tm
-         xtl16rvzrPAA21PhFr8tSz2DIpV8RoNQRsrRoP/hIaDxmLkWiiH/BEWqsD58HIVtEQCm
-         PpVCe23jfqp9ngKNnQtEPqAI6Es2SK1Dq/hiCx2s4dpjLpZTtv+bJyiEeiOWjotcm1U6
-         O0UuS2YpDgKwTfShMaJHnK7CGk4Eir9HlfkGuOVTZkLC+/XULhyL+yqAY3xM77luaPcK
-         O7tw==
-X-Gm-Message-State: AOAM531P0qUYJcxsr155/im1BxoAmkKNr2azVTT3CfYM2McxkoZj/QWo
-        K/IZtx0Gwm4wOGrB2ptHtrcKeQ0neu72vPm7bjW1KPckc9hV/OLT4dYRbQLvP0wadYHfA8U2csP
-        MAgJztSnPNuGTs+d+Zn/3
-X-Received: by 2002:a17:906:2a48:: with SMTP id k8mr1283887eje.758.1641849934911;
-        Mon, 10 Jan 2022 13:25:34 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzBhmbGGnZjgkUeKScpwDdJY+XydMkS+ToXpC2fefpuPgiCRCJvCwxI9hGbgy9OMa8FNndoyg==
-X-Received: by 2002:a17:906:2a48:: with SMTP id k8mr1283870eje.758.1641849934650;
-        Mon, 10 Jan 2022 13:25:34 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id la10sm2830302ejc.22.2022.01.10.13.25.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jan 2022 13:25:34 -0800 (PST)
-Message-ID: <3f85e298-2e55-2190-21b7-596cfc8388aa@redhat.com>
-Date:   Mon, 10 Jan 2022 22:25:33 +0100
+        id S1345812AbiAKAFK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Jan 2022 19:05:10 -0500
+Received: from mga02.intel.com ([134.134.136.20]:32928 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242685AbiAKAFK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 10 Jan 2022 19:05:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641859510; x=1673395510;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=H2fbRA/uYSTvN7YXLcWkKt3nlptWhdsD3O8Q/GOy/9g=;
+  b=m4UHyLpqVTUAr4FXQkX7vQwlJ+0PMJ5LRxePwTkfoqs4uLj+t9k5EYHs
+   zr+KFeqZiu+jNcSmsDDg/zQ4DbKutoIIW3Ng++Ltxr1EzFOBEIhyF9D31
+   4fKZc7yP0h40FR6Ji+d1gVxcN8rU+9ejyoTRioK1yDAUfAHmNp69G92SA
+   Ll4SyCh8/5I6wveK2NNMwERVjKZy2Y38o+PEpyfemJe2tLruwo5I3Y8p/
+   hNuORfrZc5dMB3EOyDP+M9c715oBgvOmfKYd16BJWqU76Lb5kbZTO/b0n
+   UX9vKePYGrqMA5kHm3pwyPmBOYJfH2q8VSdkMoUoxKz7x9Bp4tsGmy3tU
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10223"; a="230706305"
+X-IronPort-AV: E=Sophos;i="5.88,278,1635231600"; 
+   d="scan'208";a="230706305"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2022 16:05:10 -0800
+X-IronPort-AV: E=Sophos;i="5.88,278,1635231600"; 
+   d="scan'208";a="472261068"
+Received: from meghanma-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.135.79])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2022 16:05:09 -0800
+Date:   Mon, 10 Jan 2022 16:05:08 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, patches@lists.linux.dev,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 13/13] cxl: Program decoders for regions
+Message-ID: <20220111000508.xg3de4la5zgf5o5j@intel.com>
+References: <20220107003756.806582-1-ben.widawsky@intel.com>
+ <20220107003756.806582-14-ben.widawsky@intel.com>
+ <20220107161812.00007956@huawei.com>
+ <20220107163341.mb7pchctbfcaev7r@intel.com>
+ <20220107172222.000068ac@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v6] x86/PCI: Ignore E820 reservations for bridge windows
- on newer systems
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>, stable@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-References: <20220110171123.GA60297@bhelgaas>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220110171123.GA60297@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220107172222.000068ac@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 1/10/22 18:11, Bjorn Helgaas wrote:
-> On Mon, Jan 10, 2022 at 12:41:37PM +0100, Hans de Goede wrote:
->> Hi All,
->>
->> On 12/17/21 15:13, Hans de Goede wrote:
->>> Some BIOS-es contain a bug where they add addresses which map to system
->>> RAM in the PCI host bridge window returned by the ACPI _CRS method, see
->>> commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
->>> space").
->>>
->>> To work around this bug Linux excludes E820 reserved addresses when
->>> allocating addresses from the PCI host bridge window since 2010.
->>>
->>> Recently (2019) some systems have shown-up with E820 reservations which
->>> cover the entire _CRS returned PCI bridge memory window, causing all
->>> attempts to assign memory to PCI BARs which have not been setup by the
->>> BIOS to fail. For example here are the relevant dmesg bits from a
->>> Lenovo IdeaPad 3 15IIL 81WE:
->>>
->>>  [mem 0x000000004bc50000-0x00000000cfffffff] reserved
->>>  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
->>>
->>> The ACPI specifications appear to allow this new behavior:
->>>
->>> The relationship between E820 and ACPI _CRS is not really very clear.
->>> ACPI v6.3, sec 15, table 15-374, says AddressRangeReserved means:
->>>
->>>   This range of addresses is in use or reserved by the system and is
->>>   not to be included in the allocatable memory pool of the operating
->>>   system's memory manager.
->>>
->>> and it may be used when:
->>>
->>>   The address range is in use by a memory-mapped system device.
->>>
->>> Furthermore, sec 15.2 says:
->>>
->>>   Address ranges defined for baseboard memory-mapped I/O devices, such
->>>   as APICs, are returned as reserved.
->>>
->>> A PCI host bridge qualifies as a baseboard memory-mapped I/O device,
->>> and its apertures are in use and certainly should not be included in
->>> the general allocatable pool, so the fact that some BIOS-es reports
->>> the PCI aperture as "reserved" in E820 doesn't seem like a BIOS bug.
->>>
->>> So it seems that the excluding of E820 reserved addresses is a mistake.
->>>
->>> Ideally Linux would fully stop excluding E820 reserved addresses,
->>> but then the old systems this was added for will regress.
->>> Instead keep the old behavior for old systems, while ignoring
->>> the E820 reservations for any systems from now on.
->>>
->>> Old systems are defined here as BIOS year < 2018, this was chosen to make
->>> sure that E820 reservations will not be used on the currently affected
->>> systems, while at the same time also taking into account that the systems
->>> for which the E820 checking was originally added may have received BIOS
->>> updates for quite a while (esp. CVE related ones), giving them a more
->>> recent BIOS year then 2010.
->>>
->>> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
->>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
->>> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
->>> BugLink: https://bugs.launchpad.net/bugs/1878279
->>> BugLink: https://bugs.launchpad.net/bugs/1931715
->>> BugLink: https://bugs.launchpad.net/bugs/1932069
->>> BugLink: https://bugs.launchpad.net/bugs/1921649
->>> Cc: Benoit Grégoire <benoitg@coeus.ca>
->>> Cc: Hui Wang <hui.wang@canonical.com>
->>> Cc: stable@vger.kernel.org
->>> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->>> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>> Changes in v6:
->>> - Remove the possibility to change the behavior from the commandline
->>>   because of worries that users may use this to paper over other problems
->>
->> ping ?
+On 22-01-07 17:22:22, Jonathan Cameron wrote:
+> On Fri, 7 Jan 2022 08:33:41 -0800
+> Ben Widawsky <ben.widawsky@intel.com> wrote:
 > 
-> Thanks, Hans.  Maybe I'm quixotic, but I'm still hoping for an
-> approach based on firmware behavior instead of firmware date.  If
-> nobody else tries, I will eventually try myself, but I don't have any
-> ETA.
+> > On 22-01-07 16:18:12, Jonathan Cameron wrote:
+> > > On Thu,  6 Jan 2022 16:37:56 -0800
+> > > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > >   
+> > > > Do the HDM decoder programming for all endpoints and host bridges in a
+> > > > region. Switches are currently unimplemented.
+> > > > 
+> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > > ---
+> > > >  drivers/cxl/core/hdm.c | 198 +++++++++++++++++++++++++++++++++++++++++
+> > > >  drivers/cxl/cxl.h      |   3 +
+> > > >  drivers/cxl/region.c   |  39 +++++++-
+> > > >  3 files changed, 237 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > > > index 44e48cea8cd4..c7293cbd8547 100644
+> > > > --- a/drivers/cxl/core/hdm.c
+> > > > +++ b/drivers/cxl/core/hdm.c
+> > > > @@ -242,3 +242,201 @@ int devm_cxl_enumerate_switch_decoders(struct cxl_port *port)
+> > > >  	return 0;
+> > > >  }
+> > > >  EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_switch_decoders, CXL);
+> > > > +
+> > > > +#define COMMIT_TIMEOUT_MS 10
+> > > > +static int wait_for_commit(struct cxl_decoder *cxld)
+> > > > +{
+> > > > +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> > > > +	const unsigned long start = jiffies;
+> > > > +	struct cxl_port_state *cxlps;
+> > > > +	void __iomem *hdm_decoder;
+> > > > +	unsigned long end = start;
+> > > > +	u32 ctrl;
+> > > > +
+> > > > +	cxlps = dev_get_drvdata(&port->dev);
+> > > > +	hdm_decoder = cxlps->regs.hdm_decoder;
+> > > > +
+> > > > +	do {
+> > > > +		end = jiffies;
+> > > > +		ctrl = readl(hdm_decoder +
+> > > > +			     CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> > > > +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
+> > > > +			break;
+> > > > +
+> > > > +		if (time_after(end, start + COMMIT_TIMEOUT_MS)) {
+> > > > +			dev_err(&cxld->dev, "HDM decoder commit timeout %x\n", ctrl);
+> > > > +			return -ETIMEDOUT;
+> > > > +		}
+> > > > +		if ((ctrl & CXL_HDM_DECODER0_CTRL_COMMIT_ERROR) != 0) {
+> > > > +			dev_err(&cxld->dev, "HDM decoder commit error %x\n", ctrl);
+> > > > +			return -ENXIO;
+> > > > +		}
+> > > > +	} while (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl));  
+> > > 
+> > > Hi Ben,
+> > > 
+> > > Thanks for posting this btw - it's very helpful indeed for hammering out bugs
+> > > in the qemu code and to identify what isn't there yet.
+> > > 
+> > > Took me a while to work out how this seemed to succeed on QEMU with no
+> > > implementation of the commit for the host bridges (just adding that now ;)
+> > > Reason is this condition is inverse of what I think you intend.
+> > > 
+> > > Given you have an exit condition above this could probably just be a while (1)
+> > > loop.
+> > > 
+> > > Jonathan  
+> > 
+> > Quick response without looking at code. I thought I did implement this in QEMU,
+> > but you're correct that the logic is inverted. If you have a QEMU branch for me
+> > to use when I fix this, please let me know.
+> 
+> The branch I got from your gitlab has it specifically for the type3 device, but
+> not more generally.
+> 
+> Qemu wise will see if I can hammer something into a shape to share but might take
+> a little while to hammer out remaining bugs.  I've made a few fiddly changes to
+> try and simplify the setup + avoid fixed PA address ranges anywhere.
+> 
+> Jonathan
+> 
 
-I really do NOT see how doing a better approach later blocks
-merging the date based fix now ?
+Just pushed a bugfix to my v4 branch for this (I've also updated the kernel
+patch).
 
-The date based approach can simply be replaced by any better
-solution later.
-
-Can we please merge the date based approach now so peoples broken
-systems get fixed now, rather then at some unknown later time ?
-
-Regards,
-
-Hans
-
+> > 
+> > >   
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +/**
+> > > > + * cxl_commit_decoder() - Program a configured cxl_decoder
+> > > > + * @cxld: The preconfigured cxl decoder.
+> > > > + *
+> > > > + * A cxl decoder that is to be committed should have been earmarked as enabled.
+> > > > + * This mechanism acts as a soft reservation on the decoder.
+> > > > + *
+> > > > + * Returns 0 if commit was successful, negative error code otherwise.
+> > > > + */
+> > > > +int cxl_commit_decoder(struct cxl_decoder *cxld)
+> > > > +{
+> > > > +	u32 ctrl, tl_lo, tl_hi, base_lo, base_hi, size_lo, size_hi;
+> > > > +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> > > > +	struct cxl_port_state *cxlps;
+> > > > +	void __iomem *hdm_decoder;
+> > > > +	int rc;
+> > > > +
+> > > > +	/*
+> > > > +	 * Decoder flags are entirely software controlled and therefore this
+> > > > +	 * case is purely a driver bug.
+> > > > +	 */
+> > > > +	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_ENABLE) != 0,
+> > > > +			  "Invalid %s enable state\n", dev_name(&cxld->dev)))
+> > > > +		return -ENXIO;
+> > > > +
+> > > > +	cxlps = dev_get_drvdata(&port->dev);
+> > > > +	hdm_decoder = cxlps->regs.hdm_decoder;
+> > > > +	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> > > > +
+> > > > +	/*
+> > > > +	 * A decoder that's currently active cannot be changed without the
+> > > > +	 * system being quiesced. While the driver should prevent against this,
+> > > > +	 * for a variety of reasons the hardware might not be in sync with the
+> > > > +	 * hardware and so, do not splat on error.
+> > > > +	 */
+> > > > +	size_hi = readl(hdm_decoder +
+> > > > +			CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
+> > > > +	size_lo =
+> > > > +		readl(hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
+> > > > +	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl) &&
+> > > > +	    (size_lo + size_hi)) {
+> > > > +		dev_err(&port->dev, "Tried to change an active decoder (%s)\n",
+> > > > +			dev_name(&cxld->dev));
+> > > > +		return -EBUSY;
+> > > > +	}
+> > > > +
+> > > > +	u32p_replace_bits(&ctrl, 8 - ilog2(cxld->interleave_granularity),
+> > > > +			  CXL_HDM_DECODER0_CTRL_IG_MASK);
+> > > > +	u32p_replace_bits(&ctrl, ilog2(cxld->interleave_ways),
+> > > > +			  CXL_HDM_DECODER0_CTRL_IW_MASK);
+> > > > +	u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_COMMIT);
+> > > > +
+> > > > +	/* TODO: set based on type */
+> > > > +	u32p_replace_bits(&ctrl, 1, CXL_HDM_DECODER0_CTRL_TYPE);
+> > > > +
+> > > > +	base_lo = FIELD_PREP(GENMASK(31, 28),
+> > > > +			     (u32)(cxld->decoder_range.start & 0xffffffff));
+> > > > +	base_hi = FIELD_PREP(~0, (u32)(cxld->decoder_range.start >> 32));
+> > > > +
+> > > > +	size_lo = (u32)(range_len(&cxld->decoder_range)) & GENMASK(31, 28);
+> > > > +	size_hi = (u32)((range_len(&cxld->decoder_range) >> 32));
+> > > > +
+> > > > +	if (cxld->nr_targets > 0) {
+> > > > +		tl_lo |= FIELD_PREP(GENMASK(7, 0), cxld->target[0]->port_id);
+> > > > +		if (cxld->interleave_ways > 1)
+> > > > +			tl_lo |= FIELD_PREP(GENMASK(15, 8),
+> > > > +					    cxld->target[1]->port_id);
+> > > > +		if (cxld->interleave_ways > 2)
+> > > > +			tl_lo |= FIELD_PREP(GENMASK(23, 16),
+> > > > +					    cxld->target[2]->port_id);
+> > > > +		if (cxld->interleave_ways > 3)
+> > > > +			tl_lo |= FIELD_PREP(GENMASK(31, 24),
+> > > > +					    cxld->target[3]->port_id);
+> > > > +		if (cxld->interleave_ways > 4)
+> > > > +			tl_hi |= FIELD_PREP(GENMASK(7, 0),
+> > > > +					    cxld->target[4]->port_id);
+> > > > +		if (cxld->interleave_ways > 5)
+> > > > +			tl_hi |= FIELD_PREP(GENMASK(15, 8),
+> > > > +					    cxld->target[5]->port_id);
+> > > > +		if (cxld->interleave_ways > 6)
+> > > > +			tl_hi |= FIELD_PREP(GENMASK(23, 16),
+> > > > +					    cxld->target[6]->port_id);
+> > > > +		if (cxld->interleave_ways > 7)
+> > > > +			tl_hi |= FIELD_PREP(GENMASK(31, 24),
+> > > > +					    cxld->target[7]->port_id);
+> > > > +
+> > > > +		writel(tl_hi, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
+> > > > +		writel(tl_lo, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
+> > > > +	}
+> > > > +
+> > > > +	writel(size_hi,
+> > > > +	       hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
+> > > > +	writel(size_lo,
+> > > > +	       hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
+> > > > +	writel(base_hi,
+> > > > +	       hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
+> > > > +	writel(base_lo,
+> > > > +	       hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
+> > > > +	writel(ctrl, hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> > > > +
+> > > > +	rc = wait_for_commit(cxld);
+> > > > +	if (rc)
+> > > > +		return rc;
+> > > > +
+> > > > +	cxld->flags |= CXL_DECODER_F_ENABLE;
+> > > > +
+> > > > +#define DPORT_TL_STR "%d %d %d %d %d %d %d %d"
+> > > > +#define DPORT(i)                                                               \
+> > > > +	(cxld->nr_targets && cxld->interleave_ways > (i)) ?                    \
+> > > > +		      cxld->target[(i)]->port_id :                                   \
+> > > > +		      -1
+> > > > +#define DPORT_TL                                                               \
+> > > > +	DPORT(0), DPORT(1), DPORT(2), DPORT(3), DPORT(4), DPORT(5), DPORT(6),  \
+> > > > +		DPORT(7)
+> > > > +
+> > > > +	dev_dbg(&port->dev,
+> > > > +		"%s\n\tBase %pa\n\tSize %llu\n\tIG %u\n\tIW %u\n\tTargetList: " DPORT_TL_STR,
+> > > > +		dev_name(&cxld->dev), &cxld->decoder_range.start,
+> > > > +		range_len(&cxld->decoder_range), cxld->interleave_granularity,
+> > > > +		cxld->interleave_ways, DPORT_TL);
+> > > > +#undef DPORT_TL
+> > > > +#undef DPORT
+> > > > +#undef DPORT_TL_STR
+> > > > +	return 0;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(cxl_commit_decoder);
+> > > > +
+> > > > +/**
+> > > > + * cxl_disable_decoder() - Disables a decoder
+> > > > + * @cxld: The active cxl decoder.
+> > > > + *
+> > > > + * CXL decoders (as of 2.0 spec) have no way to deactivate them other than to
+> > > > + * set the size of the HDM to 0. This function will clear all registers, and if
+> > > > + * the decoder is active, commit the 0'd out registers.
+> > > > + */
+> > > > +void cxl_disable_decoder(struct cxl_decoder *cxld)
+> > > > +{
+> > > > +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> > > > +	struct cxl_port_state *cxlps;
+> > > > +	void __iomem *hdm_decoder;
+> > > > +	u32 ctrl;
+> > > > +
+> > > > +	cxlps = dev_get_drvdata(&port->dev);
+> > > > +	hdm_decoder = cxlps->regs.hdm_decoder;
+> > > > +	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> > > > +
+> > > > +	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_ENABLE) == 0,
+> > > > +			  "Invalid decoder enable state\n"))
+> > > > +		return;
+> > > > +
+> > > > +	/* There's no way to "uncommit" a committed decoder, only 0 size it */
+> > > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_HIGH(cxld->id));
+> > > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_TL_LOW(cxld->id));
+> > > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
+> > > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
+> > > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(cxld->id));
+> > > > +	writel(0, hdm_decoder + CXL_HDM_DECODER0_BASE_LOW_OFFSET(cxld->id));
+> > > > +
+> > > > +	/* If the device isn't actually active, just zero out all the fields */
+> > > > +	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
+> > > > +		writel(CXL_HDM_DECODER0_CTRL_COMMIT,
+> > > > +		       hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(cxl_disable_decoder);
+> > > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > > > index 79bca9a8246c..587b75f7fa53 100644
+> > > > --- a/drivers/cxl/cxl.h
+> > > > +++ b/drivers/cxl/cxl.h
+> > > > @@ -54,6 +54,7 @@
+> > > >  #define   CXL_HDM_DECODER0_CTRL_IW_MASK GENMASK(7, 4)
+> > > >  #define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
+> > > >  #define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
+> > > > +#define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
+> > > >  #define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
+> > > >  #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
+> > > >  #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
+> > > > @@ -364,6 +365,8 @@ int devm_cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
+> > > >  struct cxl_dport *cxl_find_dport_by_dev(struct cxl_port *port,
+> > > >  					const struct device *dev);
+> > > >  struct cxl_port *ep_find_cxl_port(struct cxl_memdev *cxlmd, unsigned int depth);
+> > > > +int cxl_commit_decoder(struct cxl_decoder *cxld);
+> > > > +void cxl_disable_decoder(struct cxl_decoder *cxld);
+> > > >  
+> > > >  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+> > > >  bool is_cxl_decoder(struct device *dev);
+> > > > diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+> > > > index 3120b65b0bc5..fd82d37ba573 100644
+> > > > --- a/drivers/cxl/region.c
+> > > > +++ b/drivers/cxl/region.c
+> > > > @@ -580,10 +580,30 @@ static void cleanup_staged_decoders(struct cxl_region *region)
+> > > >  	}
+> > > >  }
+> > > >  
+> > > > -static int bind_region(const struct cxl_region *region)
+> > > > +static int bind_region(struct cxl_region *region)
+> > > >  {
+> > > > -	/* TODO: */
+> > > > -	return 0;
+> > > > +	struct cxl_decoder *cxld, *d;
+> > > > +	int rc;
+> > > > +
+> > > > +	list_for_each_entry_safe(cxld, d, &region->staged_list, region_link) {
+> > > > +		rc = cxl_commit_decoder(cxld);
+> > > > +		if (!rc)
+> > > > +			list_move_tail(&cxld->region_link, &region->commit_list);
+> > > > +		else
+> > > > +			break;
+> > > > +	}
+> > > > +
+> > > > +	list_for_each_entry_safe(cxld, d, &region->commit_list, region_link) {
+> > > > +		if (rc)
+> > > > +			cxl_disable_decoder(cxld);
+> > > > +		list_del(&cxld->region_link);
+> > > > +	}
+> > > > +
+> > > > +	if (rc)
+> > > > +		cleanup_staged_decoders((struct cxl_region *)region);
+> > > > +
+> > > > +	BUG_ON(!list_empty(&region->staged_list));
+> > > > +	return rc;
+> > > >  }
+> > > >  
+> > > >  static int cxl_region_probe(struct device *dev)
+> > > > @@ -650,9 +670,22 @@ static int cxl_region_probe(struct device *dev)
+> > > >  	return ret;
+> > > >  }
+> > > >  
+> > > > +static void cxl_region_remove(struct device *dev)
+> > > > +{
+> > > > +	struct cxl_region *region = to_cxl_region(dev);
+> > > > +	struct cxl_decoder *cxld, *d;
+> > > > +
+> > > > +	list_for_each_entry_safe(cxld, d, &region->commit_list, region_link) {
+> > > > +		cxl_disable_decoder(cxld);
+> > > > +		list_del(&cxld->region_link);
+> > > > +		cxl_put_decoder(cxld);
+> > > > +	}
+> > > > +}
+> > > > +
+> > > >  static struct cxl_driver cxl_region_driver = {
+> > > >  	.name = "cxl_region",
+> > > >  	.probe = cxl_region_probe,
+> > > > +	.remove = cxl_region_remove,
+> > > >  	.id = CXL_DEVICE_REGION,
+> > > >  };
+> > > >  module_cxl_driver(cxl_region_driver);  
+> > >   
+> 
