@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DC3448BE60
+	by mail.lfdr.de (Postfix) with ESMTP id 5F31A48BE61
 	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 06:37:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236258AbiALFhZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 00:37:25 -0500
-Received: from mga03.intel.com ([134.134.136.65]:53896 "EHLO mga03.intel.com"
+        id S1350904AbiALFhY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 00:37:24 -0500
+Received: from mga02.intel.com ([134.134.136.20]:62472 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233661AbiALFhY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S232195AbiALFhY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 12 Jan 2022 00:37:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1641965844; x=1673501844;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=TtiUOL0NOvPVNtAz/SEHEVk6ukU2aHH8pbGvPBdYhGI=;
-  b=HWj5SDmSVxoakhGZwFeIO6igCLnB7dHxh95Pnxo3t7kf3UlG9m/avohL
-   BjrT6TsGFofqP4BOJk2fqhPVctZUYlbAwWQNh/zTn4NX1IvmZiC/VKIJo
-   fmRQxcVSx9ONhAW3K+xrTyY6REngpo1ER+k9T/kBbggoYmUSW2rPEwqAP
-   WNy0LdJTvJn9Pd6GXoLnUhM7PiIAmSWhdoBN6CmCICtqvXdBomHZxOUuN
-   +oBPCj5r1LrE3EhYTdIKdkqN96fSGaO/kiFcAfnk5DM4vfoDsI6jG8xlY
-   IpVU3GhbxLiDuBaVZtOvq2SW3PcJIuwpDcpGk4/fdgfhkDKBvRsG1kjlX
+  bh=Ifv08V5nb+n/IjyWDBm9oYQXWwf6/Q3sV0+SrMG26TY=;
+  b=oC7N2zJ3UxIYjCDAClHwxjL+YBsw8HYFO0X511LI8m6ip0XsdFUVAZHo
+   0SOd80Riz89Os888latCn9tE2Zwjhf8hQI7WnJhBj/ZbVRUekWDSCSbEw
+   jrEkEptcd01YC+HeDu+j+xXF3z52shRo45LvdcijpcTRyHM2VzXO3Qp5t
+   hYrtYDd1Wx7OXhnMr8AnLNwbQLmB9Dm1gmRHQhNh+hX3U8ZxB9+b1Z0h4
+   VL4lB6K1wvvdM10uGso6BFeSiUJ/ot65Iq4xahAvfWqzjCF0dG5Hm7qE7
+   N9jkS+Lly9XjrEQl/adnHcjRSY9nbm/5gTzbxAdFuNwpDoSAcM0qz80Hq
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="243619367"
+X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="231004990"
 X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
-   d="scan'208";a="243619367"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 21:37:23 -0800
+   d="scan'208";a="231004990"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 21:37:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
-   d="scan'208";a="515359236"
+   d="scan'208";a="691262862"
 Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 11 Jan 2022 21:37:22 -0800
+  by orsmga005.jf.intel.com with ESMTP; 11 Jan 2022 21:37:22 -0800
 Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1n7WK2-0005Xf-09; Wed, 12 Jan 2022 05:37:22 +0000
-Date:   Wed, 12 Jan 2022 13:36:34 +0800
+        id 1n7WK2-0005Xk-3M; Wed, 12 Jan 2022 05:37:22 +0000
+Date:   Wed, 12 Jan 2022 13:36:45 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/hotplug] BUILD SUCCESS
- 42a46c70045915bcbdced3e694dc5825d124fb5c
-Message-ID: <61de68e2.HEaMg+7jv6f/6SPR%lkp@intel.com>
+Subject: [helgaas-pci:pci/misc] BUILD SUCCESS
+ 560dbc4654fa013fadcbcd9647904051d6fadc11
+Message-ID: <61de68ed.LyBMmUyJrfzRxXb8%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,8 +52,8 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
-branch HEAD: 42a46c70045915bcbdced3e694dc5825d124fb5c  PCI: pciehp: Use down_read/write_nested(reset_lock) to fix lockdep errors
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
+branch HEAD: 560dbc4654fa013fadcbcd9647904051d6fadc11  misc: pci_endpoint_test: Terminate statement with semicolon
 
 elapsed time: 730m
 
