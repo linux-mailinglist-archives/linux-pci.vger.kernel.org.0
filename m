@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2202948CF50
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 00:48:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C28F548CF4F
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 00:48:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235701AbiALXsl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 18:48:41 -0500
-Received: from mga04.intel.com ([192.55.52.120]:13997 "EHLO mga04.intel.com"
+        id S235688AbiALXsk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 18:48:40 -0500
+Received: from mga04.intel.com ([192.55.52.120]:13995 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235691AbiALXsU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jan 2022 18:48:20 -0500
+        id S235701AbiALXsY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jan 2022 18:48:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642031300; x=1673567300;
+  t=1642031304; x=1673567304;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=NGhTlz6K842nSSifnB2cI703CM5Bl7Bq3y/bzctyC5Y=;
-  b=nl+Iy8M0DyP3lbv1crmwqe6ph7rgsXQHtXUPea2Z0iDfYCgCHSRFuBKg
-   n6+zD+8Rfaq0hBa9vCGW84hDh0Vbo2k2htFWsamcUPL9ZA+HfClen9jmV
-   3t8fzFAT8Z0pxQxp3qMseWnf3U243fpmPS96sBZMcjyJyf/kLGTsquToI
-   PbvwRH8Neg/KpxCdKcbJWqgXKP9gRLLW4/yS/N0HXY/svtMTwGbr6WWgK
-   dHjkPyaIYmPrn7jiR8vAYOhyY2djhUvLLPU21tRJ5lP5Ynd07ANiO7E48
-   Lz+2sBrqHZJ6ZJow80cEWELfx6vwLo53p7VXz6aiNylGUGNByp2lBaMVR
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="242695368"
+  bh=Sz0q31fHqc0I1mJSaBX93aEzTlZDmtfU2Ln63uj8NIM=;
+  b=nOpySXQP07JynE/d7zXAFuNMEvs/K+jF9ke93R5ypG2M75IOZiJpYUge
+   znPe3SeskmYsbpvl2hipmjbxECzrNJVrAudXElEATMIs5JCGhOYA7FzGG
+   G9wTts4gYmIy9PQtUwWumzDQWi/3V6bOJ3HQMSFRJ6PbgFXHKXceAMeYz
+   rGtUhsWsATB4fpUq6cc3BvXKqUznI9vRc1v6sNUvh31DbLy8B8R6ZMOU3
+   b8IhmnEd1jgXhvueQcJnQki2IqPhAq9rYqukZl6S2kk0Fpf7Mzc4lu7vA
+   4TxO8VwAnICY8hpFAvGG+z1HQHUfhsi5JxqbbMRCXkCCNVtkGXtitiW28
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="242695371"
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="242695368"
+   d="scan'208";a="242695371"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:48:13 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:48:14 -0800
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="670324219"
+   d="scan'208";a="670324222"
 Received: from jmaclean-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.136.131])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:48:12 -0800
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:48:13 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
         linux-pci@vger.kernel.org
@@ -43,9 +43,9 @@ Cc:     patches@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH v2 14/15] cxl/pmem: Convert nvdimm bridge API to use memdev
-Date:   Wed, 12 Jan 2022 15:47:48 -0800
-Message-Id: <20220112234749.1965960-15-ben.widawsky@intel.com>
+Subject: [PATCH v2 15/15] cxl/region: Create an nd_region
+Date:   Wed, 12 Jan 2022 15:47:49 -0800
+Message-Id: <20220112234749.1965960-16-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220112234749.1965960-1-ben.widawsky@intel.com>
 References: <20220112234749.1965960-1-ben.widawsky@intel.com>
@@ -55,59 +55,135 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The cxl_pmem driver specific cxl_nvdimm structure isn't a suitable
-parameter for an exported API that can be used by other drivers.
-Instead, use a memdev structure, which should be woven into any caller
-using this API.
+LIBNVDIMM supports the creation of regions for both persistent and
+volatile memory ranges. The cxl_region driver is capable of handling the
+CXL side of region creation but will reuse LIBVDIMM for interfacing with
+the rest of the kernel.
+
+TODO: CXL regions can go away. As a result the nd_region must also be
+torn down.
+
+TODO2: Handle mappings. LIBNVDIMM is capable of being informed about
+which parts of devices contribute to a region and validating whether or
+not the region is configured properly. To do this properly requires
+tracking allocations per device.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/core/pmem.c | 3 +--
- drivers/cxl/cxl.h       | 2 +-
- drivers/cxl/pmem.c      | 2 +-
- 3 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/cxl/core/pmem.c | 16 +++++++++++++
+ drivers/cxl/cxl.h       |  1 +
+ drivers/cxl/region.c    | 52 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 69 insertions(+)
 
 diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-index f21e5ce9619a..bfcf51fbda5d 100644
+index bfcf51fbda5d..762a08c6f073 100644
 --- a/drivers/cxl/core/pmem.c
 +++ b/drivers/cxl/core/pmem.c
-@@ -62,9 +62,8 @@ static int match_nvdimm_bridge(struct device *dev, void *data)
- 	return is_cxl_nvdimm_bridge(dev);
+@@ -213,6 +213,22 @@ struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev)
  }
+ EXPORT_SYMBOL_NS_GPL(to_cxl_nvdimm, CXL);
  
--struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
-+struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_memdev *cxlmd)
++static int match_cxl_nvdimm(struct device *dev, void *data)
++{
++	return is_cxl_nvdimm(dev);
++}
++
++struct cxl_nvdimm *cxl_find_nvdimm(struct cxl_memdev *cxlmd)
++{
++	struct device *dev;
++
++	dev = device_find_child(&cxlmd->dev, NULL, match_cxl_nvdimm);
++	if (!dev)
++		return NULL;
++	return to_cxl_nvdimm(dev);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_find_nvdimm, CXL);
++
+ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_memdev *cxlmd)
  {
--	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
- 	struct cxl_port *port;
- 	struct device *dev;
- 
+ 	struct cxl_nvdimm *cxl_nvd;
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 1130165dfc8d..6f9cabb77c08 100644
+index 6f9cabb77c08..a7b90356914d 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -433,7 +433,7 @@ struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
- bool is_cxl_nvdimm(struct device *dev);
+@@ -434,6 +434,7 @@ bool is_cxl_nvdimm(struct device *dev);
  bool is_cxl_nvdimm_bridge(struct device *dev);
  int devm_cxl_add_nvdimm(struct device *host, struct cxl_memdev *cxlmd);
--struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
-+struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_memdev *cxlmd);
+ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_memdev *cxlmd);
++struct cxl_nvdimm *cxl_find_nvdimm(struct cxl_memdev *cxlmd);
  
  /*
   * Unit test builds overrides this to __weak, find the 'strong' version
-diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-index b65a272a2d6d..420ace433a01 100644
---- a/drivers/cxl/pmem.c
-+++ b/drivers/cxl/pmem.c
-@@ -39,7 +39,7 @@ static int cxl_nvdimm_probe(struct device *dev)
- 	struct nvdimm *nvdimm;
- 	int rc;
+diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+index d00305655f5a..d4a7e8d47c11 100644
+--- a/drivers/cxl/region.c
++++ b/drivers/cxl/region.c
+@@ -623,6 +623,52 @@ static int bind_region(struct cxl_region *region)
+ 	return rc;
+ }
  
--	cxl_nvb = cxl_find_nvdimm_bridge(cxl_nvd);
-+	cxl_nvb = cxl_find_nvdimm_bridge(cxl_nvd->cxlmd);
- 	if (!cxl_nvb)
- 		return -ENXIO;
++static int connect_to_libnvdimm(struct cxl_region *region)
++{
++	struct nd_region_desc ndr_desc;
++	struct cxl_nvdimm_bridge *nvb;
++	struct nd_region *ndr;
++	int rc = 0;
++
++	nvb = cxl_find_nvdimm_bridge(region->config.targets[0]);
++	device_lock(&nvb->dev);
++	if (!nvb->nvdimm_bus) {
++		rc = -ENXIO;
++		goto out;
++	}
++
++	memset(&ndr_desc, 0, sizeof(ndr_desc));
++
++	ndr_desc.res = region->res;
++
++	ndr_desc.numa_node = memory_add_physaddr_to_nid(region->res->start);
++	ndr_desc.target_node = phys_to_target_node(region->res->start);
++	if (ndr_desc.numa_node == NUMA_NO_NODE) {
++		ndr_desc.numa_node =
++			memory_add_physaddr_to_nid(region->res->start);
++		dev_info(&region->dev,
++			 "changing numa node from %d to %d for CXL region %pR",
++			 NUMA_NO_NODE, ndr_desc.numa_node, region->res);
++	}
++	if (ndr_desc.target_node == NUMA_NO_NODE) {
++		ndr_desc.target_node = ndr_desc.numa_node;
++		dev_info(&region->dev,
++			 "changing target node from %d to %d for CXL region %pR",
++			 NUMA_NO_NODE, ndr_desc.target_node, region->res);
++	}
++
++	ndr = nvdimm_pmem_region_create(nvb->nvdimm_bus, &ndr_desc);
++	if (IS_ERR(ndr))
++		rc = PTR_ERR(ndr);
++	else
++		dev_set_drvdata(&region->dev, ndr);
++
++out:
++	device_unlock(&nvb->dev);
++	put_device(&nvb->dev);
++	return rc;
++}
++
+ static void region_unregister(void *dev)
+ {
+ 	struct cxl_region *region = to_cxl_region(dev);
+@@ -704,6 +750,12 @@ static int cxl_region_probe(struct device *dev)
+ 		return ret;
+ 	}
  
++	ret = connect_to_libnvdimm(region);
++	if (ret) {
++		region_unregister(dev);
++		return ret;
++	}
++
+ 
+ 	region->active = true;
+ 	dev_info(dev, "Bound");
 -- 
 2.34.1
 
