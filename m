@@ -2,145 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C26BD48C66E
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 15:50:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E66748C67D
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 15:52:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354268AbiALOtJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 09:49:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354256AbiALOtI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 09:49:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0E8C06173F;
-        Wed, 12 Jan 2022 06:49:08 -0800 (PST)
+        id S1354304AbiALOvE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 09:51:04 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:50192 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354287AbiALOu5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 09:50:57 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BA745B81ED0;
-        Wed, 12 Jan 2022 14:49:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21199C36AEA;
-        Wed, 12 Jan 2022 14:49:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 63133B81F44;
+        Wed, 12 Jan 2022 14:50:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2145C36AE5;
+        Wed, 12 Jan 2022 14:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641998945;
-        bh=tUAj1+vcYAmzKzaI31fyw8aqfm34XHOHX4eyc4NGFyA=;
+        s=k20201202; t=1641999055;
+        bh=ZYIhQu0CJmEYqQPsxX+F20R/7TLgNCmuzU7RtO1+uBU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=morh+rIOrKybqitKRfUIUIFi2rcTWKUy8xiWifzxi1P7YtMsmq77Ua/B4yJpe4CwL
-         LL44Sai9LAt7ttDvYV0f0GoSXrXxFrChD9miO10WSgmkPTMsU1t7ashiL/xn4VeSyS
-         0H0O1fj+5ywoqBQVpnimlmNk7ZxT48qteMlH/XwJkMUvguC9ZWHgCc8mkxmahfHtTk
-         GK2jeXBr8Nlg0j1NA2sWrxBliUqs5Omm8hwikUQPENuoaqln/0Wjd+lGKZZP5VFq3T
-         WHspIKXqTAWyLqyPHMRt1t7K7U+tPTpAZjKjl3QLTqaGlllX4g+3DG5IOwih+np8R+
-         r8l2RQX+64gng==
-Date:   Wed, 12 Jan 2022 08:49:03 -0600
+        b=TXQxe4XlT38nugbWRKDdxBY1KByqJNOv/XOXpZvLebOZ9mcEi/Uvcpz3dY0ztwTJa
+         31sW3/JElg+npzFZ1JCgqG1CywPvdfrxwbIIeebzyAcX96Dm5aY2ox8kce6thXtQty
+         lXJweipz0XlaCSlNN3NyKg2BCTVRBxDi+1uUqVJOcvg3to99k4HHQtL1CtXTYmb2FT
+         1c/ELnOzN0FXUxAo5Btp4avLKJa/gvHEQU55udjSCtYrDChsyhtz82vpA5qr1+pyvf
+         nDWPzMqKsE+vdyJwT+NYjm9enW3FGmAGiw/43NgBhbbMq8mB1E8JMzTf8Nqk/qx7sP
+         iUoY9ndVvBQWQ==
+Date:   Wed, 12 Jan 2022 08:50:53 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukasz Maniak <lukasz.maniak@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?Q?=C5=81ukasz?= Gieryk <lukasz.gieryk@linux.intel.com>
-Subject: Re: [PATCH] PCI: Reset IOV state on FLR to PF
-Message-ID: <20220112144903.GA253960@bhelgaas>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Re: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
+Message-ID: <20220112145053.GA254177@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211222191958.955681-1-lukasz.maniak@linux.intel.com>
+In-Reply-To: <9526698be0ced0f7a7ed00bd76538d16@walle.cc>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 22, 2021 at 08:19:57PM +0100, Lukasz Maniak wrote:
-> As per PCI Express specification, FLR to a PF resets the PF state as
-> well as the SR-IOV extended capability including VF Enable which means
-> that VFs no longer exist.
-
-Can you add a specific reference to the spec, please?
-
-> Currently, the IOV state is not updated during FLR, resulting in
-> non-compliant PCI driver behavior.
-
-And include a little detail about what problem is observed?  How would
-a user know this problem is occurring?
-
-> This patch introduces a simple function, called on the FLR path, that
-> removes the virtual function devices from the PCI bus and their
-> corresponding sysfs links with a final clear of the num_vfs value in IOV
-> state.
+On Thu, Dec 23, 2021 at 07:12:02PM +0100, Michael Walle wrote:
+> Am 2021-12-23 17:37, schrieb Bjorn Helgaas:
 > 
-> Signed-off-by: Lukasz Maniak <lukasz.maniak@linux.intel.com>
-> ---
->  drivers/pci/iov.c | 21 +++++++++++++++++++++
->  drivers/pci/pci.c |  2 ++
->  drivers/pci/pci.h |  4 ++++
->  3 files changed, 27 insertions(+)
+> > I intended to change the quirk from FINAL to EARLY, but obviously
+> > forgot.  Here's the updated version:
+> > 
+> > commit bb5639b73a2d ("PCI: Work around Intel I210 ROM BAR overlap
+> > defect")
+> > Author: Bjorn Helgaas <bhelgaas@google.com>
+> > Date:   Tue Dec 21 10:45:07 2021 -0600
+> > 
+> >     PCI: Work around Intel I210 ROM BAR overlap defect
+> > 
+> >     Per PCIe r5, sec 7.5.1.2.4, a device must not claim accesses to its
+> >     Expansion ROM unless both the Memory Space Enable and the Expansion
+> > ROM
+> >     Enable bit are set.  But apparently some Intel I210 NICs don't work
+> >     correctly if the ROM BAR overlaps another BAR, even if the Expansion
+> > ROM is
+> >     disabled.
+> > 
+> >     Michael reported that on a Kontron SMARC-sAL28 ARM64 system with
+> > U-Boot
+> >     v2021.01-rc3, the ROM BAR overlaps BAR 3, and networking doesn't
+> > work at
+> >     all:
+> > 
+> >       BAR 0: 0x40000000 (32-bit, non-prefetchable) [size=1M]
+> >       BAR 3: 0x40200000 (32-bit, non-prefetchable) [size=16K]
+> >       ROM:   0x40200000 (disabled) [size=1M]
+> > 
+> >       NETDEV WATCHDOG: enP2p1s0 (igb): transmit queue 0 timed out
+> >       Hardware name: Kontron SMARC-sAL28 (Single PHY) on SMARC Eval
+> > 2.0 carrier (DT)
+> >       igb 0002:01:00.0 enP2p1s0: Reset adapter
+> > 
+> >     Previously, pci_std_update_resource() wrote the assigned ROM address
+> > to the
+> >     BAR only when the ROM was enabled.  This meant that the I210 ROM BAR
+> > could
+> >     be left with an address assigned by firmware, which might overlap
+> > with
+> >     other BARs.
+> > 
+> >     Quirk these I210 devices so pci_std_update_resource() always writes
+> > the
+> >     assigned address to the ROM BAR, whether or not the ROM is enabled.
+> > 
+> >     Link:
+> > https://lore.kernel.org/r/20201230185317.30915-1-michael@walle.cc
+> >     Link: https://bugzilla.kernel.org/show_bug.cgi?id=211105
+> >     Reported-by: Michael Walle <michael@walle.cc>
+> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 0267977c9f17..69ee321027b4 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -1013,6 +1013,27 @@ int pci_iov_bus_range(struct pci_bus *bus)
->  	return max ? max - bus->number : 0;
->  }
->  
-> +/**
-> + * pci_reset_iov_state - reset the state of the IOV capability
-> + * @dev: the PCI device
-> + */
-> +void pci_reset_iov_state(struct pci_dev *dev)
-> +{
-> +	struct pci_sriov *iov = dev->sriov;
-> +
-> +	if (!dev->is_physfn)
-> +		return;
-> +	if (!iov->num_VFs)
-> +		return;
-> +
-> +	sriov_del_vfs(dev);
-> +
-> +	if (iov->link != dev->devfn)
-> +		sysfs_remove_link(&dev->dev.kobj, "dep_link");
-> +
-> +	iov->num_VFs = 0;
-> +}
-> +
->  /**
->   * pci_enable_sriov - enable the SR-IOV capability
->   * @dev: the PCI device
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 3d2fb394986a..535f19d37e8d 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4694,6 +4694,8 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
->   */
->  int pcie_flr(struct pci_dev *dev)
->  {
-> +	pci_reset_iov_state(dev);
-> +
->  	if (!pci_wait_for_pending_transaction(dev))
->  		pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 3d60cabde1a1..7bb144fbec76 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -480,6 +480,7 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno);
->  resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
->  void pci_restore_iov_state(struct pci_dev *dev);
->  int pci_iov_bus_range(struct pci_bus *bus);
-> +void pci_reset_iov_state(struct pci_dev *dev);
->  extern const struct attribute_group sriov_pf_dev_attr_group;
->  extern const struct attribute_group sriov_vf_dev_attr_group;
->  #else
-> @@ -501,6 +502,9 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
->  {
->  	return 0;
->  }
-> +static inline void pci_reset_iov_state(struct pci_dev *dev)
-> +{
-> +}
->  
->  #endif /* CONFIG_PCI_IOV */
->  
-> 
-> base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
-> -- 
-> 2.25.1
-> 
+> Tested-by: Michael Walle <michael@walle.cc>
+
+Applied to pci/resource for v5.17, thanks!
