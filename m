@@ -2,153 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9007548C64B
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 15:43:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C26BD48C66E
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 15:50:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354194AbiALOnS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 09:43:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50510 "EHLO
+        id S1354268AbiALOtJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 09:49:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354224AbiALOnJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 09:43:09 -0500
-Received: from mail-vk1-xa2b.google.com (mail-vk1-xa2b.google.com [IPv6:2607:f8b0:4864:20::a2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECF3C06173F;
-        Wed, 12 Jan 2022 06:43:09 -0800 (PST)
-Received: by mail-vk1-xa2b.google.com with SMTP id g5so1856527vkg.0;
-        Wed, 12 Jan 2022 06:43:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YuLML67FvMTXCFOyBy0QsGo20H8VwFueQSoBZ6wWnSQ=;
-        b=TWj8wv6JAtkU5obWQkGAQ+Xf5SmvAkdPJCv/mni2+ELsbXLTqo7KXO8vKVA0HKItYE
-         1/DgbX77M1BMcAWZAV+/nxU+/NELLORfZW1QeSu8tjt4LN/DRbCFKlFbekwBttY6qg1M
-         J4CKVorPvT905ZDZN3ntTPTkKqhNxVe5IUmWKD0VZ4R9NoB/n0jsdj2qSFKVp9+63IRQ
-         kDXlZT9lI53tPvqFzy2jQ9UJkJWe2d9xbLC6LTy8Pu4/9NWcJHhg7GHIArQyza4vdgm9
-         pQ39+vAl7kM+2T09Oh9RKMjSM5jLUc3x+q1vK+LFO2gt268Y3U3kPzLzTXZs3Eoi5NIY
-         hteg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YuLML67FvMTXCFOyBy0QsGo20H8VwFueQSoBZ6wWnSQ=;
-        b=q9vaFR6tqcZsSQkpTo7grp9whDwyjctyerFV3aySyKuj0O/GaNIjNeQiPH4wH8XfZq
-         dihG8heYQ7rtb0lb+xTcpwuF9uUkdbeZ6ubGBBSNgxawaVdPbOsnR2TBB18KaTmC5wih
-         97p2xCVQKRGzYpYMtoZskPY5Yc5JFXZ76+PD5RH9GCXQMFN21VXLK2fU6FU+OG8SyhSz
-         shVSu49lXVceb9rJ4WKtOmQc///bEVRfko0VHNkM8RQGvuuomvcVox4dVHMMpYzN4n4m
-         IBeudOgrRc3Sr1LRma+VmeW8e0qW0KZRXw1sTLf3x5FO+cWvic8LIvpb1JkrZ27/JMGE
-         Vyrw==
-X-Gm-Message-State: AOAM532ccHmQXH20kW/WN2cN2MiJ7biYgpuUX+o4pYhyVx6vvsY9TIGa
-        L5mIW8kmjJK1qlUBHQkgm0PxQpMbuXmszgBTEqxY7yPpiG4=
-X-Google-Smtp-Source: ABdhPJwqp7aTaC7M4DpP5Pl8nm2+KXgioYyrJgSrDqRuM4bQ87FjhRqqZvIdJGaEEOP6ggAh2+HZZCLhWxdyYFBn68M=
-X-Received: by 2002:a1f:fcc9:: with SMTP id a192mr2733193vki.1.1641998587825;
- Wed, 12 Jan 2022 06:43:07 -0800 (PST)
+        with ESMTP id S1354256AbiALOtI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 09:49:08 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0E8C06173F;
+        Wed, 12 Jan 2022 06:49:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BA745B81ED0;
+        Wed, 12 Jan 2022 14:49:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21199C36AEA;
+        Wed, 12 Jan 2022 14:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641998945;
+        bh=tUAj1+vcYAmzKzaI31fyw8aqfm34XHOHX4eyc4NGFyA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=morh+rIOrKybqitKRfUIUIFi2rcTWKUy8xiWifzxi1P7YtMsmq77Ua/B4yJpe4CwL
+         LL44Sai9LAt7ttDvYV0f0GoSXrXxFrChD9miO10WSgmkPTMsU1t7ashiL/xn4VeSyS
+         0H0O1fj+5ywoqBQVpnimlmNk7ZxT48qteMlH/XwJkMUvguC9ZWHgCc8mkxmahfHtTk
+         GK2jeXBr8Nlg0j1NA2sWrxBliUqs5Omm8hwikUQPENuoaqln/0Wjd+lGKZZP5VFq3T
+         WHspIKXqTAWyLqyPHMRt1t7K7U+tPTpAZjKjl3QLTqaGlllX4g+3DG5IOwih+np8R+
+         r8l2RQX+64gng==
+Date:   Wed, 12 Jan 2022 08:49:03 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukasz Maniak <lukasz.maniak@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?utf-8?Q?=C5=81ukasz?= Gieryk <lukasz.gieryk@linux.intel.com>
+Subject: Re: [PATCH] PCI: Reset IOV state on FLR to PF
+Message-ID: <20220112144903.GA253960@bhelgaas>
 MIME-Version: 1.0
-References: <20211207104924.21327-1-sergio.paracuellos@gmail.com>
-In-Reply-To: <20211207104924.21327-1-sergio.paracuellos@gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Wed, 12 Jan 2022 15:42:56 +0100
-Message-ID: <CAMhs-H886ZPZED-qmMtZcWFabRLNL14Y7SSz_Ko7d45zXL+v2w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] PCI: mt7621: Remove specific MIPS code from driver
-To:     linux-pci <linux-pci@vger.kernel.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211222191958.955681-1-lukasz.maniak@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn, Lorenzo,
+On Wed, Dec 22, 2021 at 08:19:57PM +0100, Lukasz Maniak wrote:
+> As per PCI Express specification, FLR to a PF resets the PF state as
+> well as the SR-IOV extended capability including VF Enable which means
+> that VFs no longer exist.
 
-On Tue, Dec 7, 2021 at 11:49 AM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
->
-> Hi all,
->
-> MIPS specific code can be removed from driver and put into ralink mt7621
-> instead which is a more accurate place to do this. To make this possible
-> we need to have access to 'bridge->windows' in 'pcibios_root_bridge_prepa=
-re()'
-> which has been implemented for ralink mt7621 platform (there is no real
-> need to implement this for any other platforms since those ones haven't g=
-ot
-> I/O coherency units). This also allow us to properly enable this driver t=
-o
-> completely be enabled for COMPILE_TEST. This patchset appoarch:
-> - Move windows list splice in 'pci_register_host_bridge()' after function
->   'pcibios_root_bridge_prepare()' is called.
-> - Implement 'pcibios_root_bridge_prepare()' for ralink mt7621.
-> - Avoid custom MIPs code in pcie-mt7621 driver.
-> - Add missing 'MODULE_LICENSE()' to pcie-mt7621 driver to avoid compile t=
-est
->   module compilation to complain (already sent patch from Yanteng Si that
->   I have rewrite commit message and long description a bit.
-> - Remove MIPS conditional code from Kconfig and mark driver as 'tristate'=
-.
->
-> This patchset is a real fix for some errors reported by Kernel Test Robot=
- about
-> implicit mips functions used in driver code and fix errors in driver when
-> is compiled as a module [1] (mips:allmodconfig).
->
-> Changes in v3:
->  - Rebase the series on the top of the temporal fix sent for v5.16[3] for
->    the module compilation problem.
->  - Address review comments from Guenter in PATCH 2 (thanks Guenter!):
->     - Address TODO in comment about the hardware does not allow zeros
->       after 1s for the mask and WARN_ON if that's happend.
->     - Be sure mask is real valid upper 16 bits.
+Can you add a specific reference to the spec, please?
 
-What are your plans for this series? Can we merge this?
+> Currently, the IOV state is not updated during FLR, resulting in
+> non-compliant PCI driver behavior.
 
-Best regards,
-    Sergio Paracuellos
+And include a little detail about what problem is observed?  How would
+a user know this problem is occurring?
 
->
-> Changes in v2:
->  - Collect Acked-by from Arnd Bergmann for PATCH 1.
->  - Collect Reviewed-by from Krzysztof Wilczy=C5=84ski for PATCH 4.
->  - Adjust some patches commit subject and message as pointed out by Bjorn=
- in review of v1 of the series[2].
->
-> This patchset is the good way of properly compile driver as a module remo=
-ving
-> all MIPS specific code into arch ralink mt7621 place. To avoid mips:allmo=
-dconfig reported
-> problems for v5.16 the following patch has been sent[3]. This series are =
-rebased onto this patch to provide
-> a real fix for this problem.
->
-> [0]: https://lore.kernel.org/linux-mips/CAMhs-H8ShoaYiFOOzJaGC68nZz=3DV36=
-5RXN_Kjuj=3DfPFENGJiiw@mail.gmail.com/T/#t
-> [1]: https://lkml.org/lkml/2021/11/14/436
-> [2]: https://lore.kernel.org/r/20211115070809.15529-1-sergio.paracuellos@=
-gmail.com
-> [3]: https://lore.kernel.org/linux-pci/20211203192454.32624-1-sergio.para=
-cuellos@gmail.com/T/#u
->
-> Thanks in advance for your time.
->
-> Best regards,
->    Sergio Paracuellos
->
-> Sergio Paracuellos (5):
->   PCI: Let pcibios_root_bridge_prepare() access to 'bridge->windows'
->   MIPS: ralink: implement 'pcibios_root_bridge_prepare()'
->   PCI: mt7621: Avoid custom MIPS code in driver code
->   PCI: mt7621: Add missing 'MODULE_LICENSE()' definition
->   PCI: mt7621: Allow COMPILE_TEST for all arches
->
->  arch/mips/ralink/mt7621.c            | 31 ++++++++++++++++++++++
->  drivers/pci/controller/Kconfig       |  4 +--
->  drivers/pci/controller/pcie-mt7621.c | 39 ++--------------------------
->  drivers/pci/probe.c                  |  4 +--
->  4 files changed, 37 insertions(+), 41 deletions(-)
->
-> --
-> 2.33.0
->
+> This patch introduces a simple function, called on the FLR path, that
+> removes the virtual function devices from the PCI bus and their
+> corresponding sysfs links with a final clear of the num_vfs value in IOV
+> state.
+> 
+> Signed-off-by: Lukasz Maniak <lukasz.maniak@linux.intel.com>
+> ---
+>  drivers/pci/iov.c | 21 +++++++++++++++++++++
+>  drivers/pci/pci.c |  2 ++
+>  drivers/pci/pci.h |  4 ++++
+>  3 files changed, 27 insertions(+)
+> 
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 0267977c9f17..69ee321027b4 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -1013,6 +1013,27 @@ int pci_iov_bus_range(struct pci_bus *bus)
+>  	return max ? max - bus->number : 0;
+>  }
+>  
+> +/**
+> + * pci_reset_iov_state - reset the state of the IOV capability
+> + * @dev: the PCI device
+> + */
+> +void pci_reset_iov_state(struct pci_dev *dev)
+> +{
+> +	struct pci_sriov *iov = dev->sriov;
+> +
+> +	if (!dev->is_physfn)
+> +		return;
+> +	if (!iov->num_VFs)
+> +		return;
+> +
+> +	sriov_del_vfs(dev);
+> +
+> +	if (iov->link != dev->devfn)
+> +		sysfs_remove_link(&dev->dev.kobj, "dep_link");
+> +
+> +	iov->num_VFs = 0;
+> +}
+> +
+>  /**
+>   * pci_enable_sriov - enable the SR-IOV capability
+>   * @dev: the PCI device
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 3d2fb394986a..535f19d37e8d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4694,6 +4694,8 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
+>   */
+>  int pcie_flr(struct pci_dev *dev)
+>  {
+> +	pci_reset_iov_state(dev);
+> +
+>  	if (!pci_wait_for_pending_transaction(dev))
+>  		pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 3d60cabde1a1..7bb144fbec76 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -480,6 +480,7 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno);
+>  resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
+>  void pci_restore_iov_state(struct pci_dev *dev);
+>  int pci_iov_bus_range(struct pci_bus *bus);
+> +void pci_reset_iov_state(struct pci_dev *dev);
+>  extern const struct attribute_group sriov_pf_dev_attr_group;
+>  extern const struct attribute_group sriov_vf_dev_attr_group;
+>  #else
+> @@ -501,6 +502,9 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
+>  {
+>  	return 0;
+>  }
+> +static inline void pci_reset_iov_state(struct pci_dev *dev)
+> +{
+> +}
+>  
+>  #endif /* CONFIG_PCI_IOV */
+>  
+> 
+> base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
+> -- 
+> 2.25.1
+> 
