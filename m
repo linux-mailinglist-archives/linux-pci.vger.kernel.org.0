@@ -2,100 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38C5148C6CC
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 16:09:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1DB648C6F6
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 16:18:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354444AbiALPJv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 10:09:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354436AbiALPJs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 10:09:48 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FCFC06173F;
-        Wed, 12 Jan 2022 07:09:48 -0800 (PST)
+        id S243221AbiALPSq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 10:18:46 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:35262 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243049AbiALPSg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 10:18:36 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C48A0B81F6B;
-        Wed, 12 Jan 2022 15:09:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 907B5C36AF4;
-        Wed, 12 Jan 2022 15:09:45 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1CB5AB81F18;
+        Wed, 12 Jan 2022 15:18:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97134C36AE5;
+        Wed, 12 Jan 2022 15:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642000185;
-        bh=h3fkWHCAV5x/zKoNsPAzmv82eux9e2j7e/NxPgQfh1M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JG62vFRG3wB6eOg09wBugRwH2nfjhWQ0G+KxTZhrXnBwv89TtUPwgRM80yqULqeDL
-         73WtIoWuLnrBmHvX4ydu7j+b5Gsr7VDGd8F075SH+MB/R8fWspV/0sQ/l0f2MQEsMG
-         24e2z+3ESDRF9sYJfcHt1as9VdMGxxpHRXWl10LuWCBQj/Nu9DSIoqDWQKVmbRQjMD
-         m0MgfsPsDFn1g1EEitum3nxhz9BGJiLCQyjMaF6CazpVBrSqQbIu/c6inTQUQYHZgW
-         MFLJ59oa8csaRknpHTTXiY/FJTzj+EvwA3C7Hf1YGspgZxPUOAs5EMPDRGR+K/6Yop
-         6VlXxIKCy5ooA==
-Received: by mail-ed1-f51.google.com with SMTP id k15so11074425edk.13;
-        Wed, 12 Jan 2022 07:09:45 -0800 (PST)
-X-Gm-Message-State: AOAM531H4S09Rbq6IiwmgMdHr479zKayBVWc6FaiMjBbYTq7ZBZEqxI0
-        KBK0pSQIB4LyXiaCZedBFhyufWO1gmEpStRIVA==
-X-Google-Smtp-Source: ABdhPJxhV+LT9DDlm1+3GiwpmO7VFy5DgD7sf7a99AA056uQov7A+ISg5Ea1HKqaqM6NQJvF4mZDcCg7lCeayFF+yAk=
-X-Received: by 2002:a05:6402:4315:: with SMTP id m21mr79460edc.67.1642000183813;
- Wed, 12 Jan 2022 07:09:43 -0800 (PST)
+        s=k20201202; t=1642000713;
+        bh=+VK97S4+9dHrE0d87LQ66cQJF7naygHp+eL8HzXayK4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gPMjNRm4LK8IlEez+6lAMbvWR2RdRd8rJv5J1r8ErW7YV+7wUAwSFewRUS/oCH9o3
+         ZRm+zvfy8gS3uwzjsAngRL+5ek9gqt2xXju8vjP/GEZsHcu1u40k1YaX3+i98v0OBu
+         wYRDDKnx3oi/EL5BjHqtBqUnFAzGdmdUqhcd/PcvJ/QhQrdKxVnP8mS4oiGk0MyBbp
+         E4UvszXCZwQ/jAZ1xfTJTt+axi/BEAjieZqoHv5Tu2z707QySjRF2ecrwA0kPUkHt6
+         HgcDXhNAJgIo7xLgO+0vC+1cuP6IYgFw49bqpWYo7dtFiD30R2iPM7ZwQUuBBP3+9c
+         0r4HHLtMsbrYA==
+Received: by pali.im (Postfix)
+        id DF2E3768; Wed, 12 Jan 2022 16:18:30 +0100 (CET)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 00/11] PCI: mvebu: subsystem ids, AER and INTx
+Date:   Wed, 12 Jan 2022 16:18:03 +0100
+Message-Id: <20220112151814.24361-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220105150239.9628-1-pali@kernel.org>
+References: <20220105150239.9628-1-pali@kernel.org>
 MIME-Version: 1.0
-References: <20200722022514.1283916-20-robh@kernel.org> <20220111214608.GA169999@bhelgaas>
-In-Reply-To: <20220111214608.GA169999@bhelgaas>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 12 Jan 2022 09:09:31 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKoK6Vewwn4X0L+TKAz-UdK4n7CQ+OKpiEwGe2HqR5L8g@mail.gmail.com>
-Message-ID: <CAL_JsqKoK6Vewwn4X0L+TKAz-UdK4n7CQ+OKpiEwGe2HqR5L8g@mail.gmail.com>
-Subject: Re: [PATCH 19/19] PCI: Set bridge map_irq and swizzle_irq to default functions
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 11, 2022 at 3:46 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [-cc many, +cc iproc, loongson, tegra maintainers]
->
-> On Tue, Jul 21, 2020 at 08:25:14PM -0600, Rob Herring wrote:
-> > The majority of DT based host drivers use the default .map_irq() and
-> > .swizzle_irq() functions, so let's initialize the function pointers to
-> > the default and drop setting them in the host drivers.
-> >
-> > Drivers like iProc which don't support legacy interrupts need to set
-> > .map_irq() back to NULL.
->
-> Probably a dumb question...
->
-> This patch removed all the ->swizzle_irq users in drivers/pci/, which
-> is great -- IIUC swizzling is specified by the PCI-to-PCI Bridge Spec,
-> r1.2, sec 9.1, and should not be device-specific.  I assume the few
-> remaining arch/ users (arm and alpha) are either bugs or workarounds
-> for broken devices.
->
-> My question is why we still have a few users of ->map_irq: loongson,
-> tegra, iproc.  Shouldn't this mapping be described somehow via DT?
+This patch series extends pci-bridge-emul.c driver to emulate PCI Subsystem
+Vendor ID capability and PCIe extended capabilities. And then implement
+in pci-mvebu.c driver support for PCI Subsystem Vendor IDs, PCIe AER
+registers, support for legacy INTx interrupts, configuration for X1/X4
+mode and usage of new PCI child_ops API.
 
-Tegra could perhaps be written another way. The mapping is standard,
-but it's disabling an idle state when PCI interrupts are used. It just
-needs some way to know if legacy interrupts are being used.
+This patch series depends on other pci-mvebu and pci-bridge-emul patches from:
+https://lore.kernel.org/linux-pci/20220104153529.31647-1-pali@kernel.org/
 
-iproc looks pretty special with its bcma bus.
+Changes in v2:
+* use static structures for INTx interrupts
+* remove INTx domain after unregistering INTx handler
 
-Adding something to DT doesn't really help because we'd still have to
-support the old way.
+Pali Rohár (9):
+  PCI: pci-bridge-emul: Add support for PCI Bridge Subsystem Vendor ID
+    capability
+  dt-bindings: PCI: mvebu: Add num-lanes property
+  PCI: mvebu: Correctly configure x1/x4 mode
+  PCI: mvebu: Add support for PCI Bridge Subsystem Vendor ID on emulated
+    bridge
+  PCI: mvebu: Add support for Advanced Error Reporting registers on
+    emulated bridge
+  PCI: mvebu: Use child_ops API
+  dt-bindings: PCI: mvebu: Update information about intx interrupts
+  PCI: mvebu: Implement support for legacy INTx interrupts
+  ARM: dts: armada-385.dtsi: Add definitions for PCIe legacy INTx
+    interrupts
 
-Rob
+Russell King (2):
+  PCI: pci-bridge-emul: Re-arrange register tests
+  PCI: pci-bridge-emul: Add support for PCIe extended capabilities
+
+ .../devicetree/bindings/pci/mvebu-pci.txt     |  16 +
+ arch/arm/boot/dts/armada-385.dtsi             |  52 ++-
+ drivers/pci/controller/pci-mvebu.c            | 355 +++++++++++++++---
+ drivers/pci/pci-bridge-emul.c                 | 167 +++++---
+ drivers/pci/pci-bridge-emul.h                 |  17 +
+ 5 files changed, 497 insertions(+), 110 deletions(-)
+
+-- 
+2.20.1
+
