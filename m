@@ -2,92 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ED1E48C431
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 13:49:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 587F948C446
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 13:58:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240521AbiALMtA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 07:49:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240376AbiALMs7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 07:48:59 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C3AC06173F
-        for <linux-pci@vger.kernel.org>; Wed, 12 Jan 2022 04:48:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 565AB611C3
-        for <linux-pci@vger.kernel.org>; Wed, 12 Jan 2022 12:48:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72848C36AE5;
-        Wed, 12 Jan 2022 12:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641991738;
-        bh=/9T0s6xbzi2HQddz3QMQs46AFIeuDOt3z8ZPe2K0stM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=e5IwVLW7WtyyYwp7ja8nhynr4c2wEScMBnK/JWzCKOrAtNWOtlWyAh/GouviwyPJ6
-         qQybVxth1M2ak+JrAdETi3gXbDykIJniIIa7fZ1kaTvmSAxflnt+nRp4gWcEquBU6C
-         vm7cv2dLvqAugY1yAWjlwQD1sHFux+K6E9N5Wm2QIqHKClILWbxo2koTlPAr32Jr66
-         O6RDLjV8PaDhUGCK4BsjA1BllLzzhqQ3oM3L8avrYyDLHZMBTyLyw8SLmJHBSUENH0
-         n0dczlOis6sJ/z+HXteHIjxz/V+4wvTkTu8LJT2JSYafK8g8ItojdCnEDuqH6mWkZH
-         aiyBWS+6yEJpw==
-Date:   Wed, 12 Jan 2022 06:48:56 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        Theodore Ts'o <tytso@mit.edu>
-Subject: Re: [PATCH resend v2] PCI: pciehp: Use
- down_read/write_nested(reset_lock) to fix lockdep errors
-Message-ID: <20220112124856.GA246967@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60b38764-835c-83dd-8fb9-b7d6a22e70b6@redhat.com>
+        id S240661AbiALM6I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 07:58:08 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:42809 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240649AbiALM6H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 07:58:07 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 04DC45804F4;
+        Wed, 12 Jan 2022 07:58:07 -0500 (EST)
+Received: from imap44 ([10.202.2.94])
+  by compute4.internal (MEProxy); Wed, 12 Jan 2022 07:58:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type:content-transfer-encoding; s=fm1; bh=+0OhM
+        YrRQ9jLMWXZW2QfIppEObFYwHFLD0nH1qOBcOg=; b=tJSSVXQqInVYxygG3AuiK
+        RVrRdS/RSsOcfUg/lAYvld/rzNyFpuYTbpG1/NlhnLxxf0+18PAuI7WULIdW+2V9
+        6ET8iQIcdtWRHyoWLI4n5W5X5JlUDY9Gt5DGniyFftiiOlwZYZ9sC3Qw4mXAjgW7
+        kTf5Rq8hZnX+1Vbz7qYTXy+irbwPojreCbthG/RZyn9o3+SaPIMJ7/eiHkUMSefj
+        f/g4gYb4LSKkdUtB788MxfezKteguiTGTBFOWEbB/H7HG4wzl9G66sou93Xl5rZC
+        1yME/kTeHJJ6QX0/llug5XFTBmUmmr0HUuZ89+/163evgEusIZgzX2+hSWHI1XrQ
+        g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=+0OhMYrRQ9jLMWXZW2QfIppEObFYwHFLD0nH1qOBc
+        Og=; b=W8AnzRS4W6cAnLeRkQURPoHp1hmAbZljojEtySbLWzv/QP+cVc9p1VrLB
+        Ptb95z9oiolFGcagJP5Yydd9p1+pRJreeCFd1gETYIT+Glv8Leo45uX3wPTOGqrk
+        JBfrDxiPnCbIF2FlP/RXyRZ4ia0YOqoupO+K47MC0Zn1mFcMxRpIFoK3Hl+o+YI+
+        HBvmt+WlD2IFVVr1ZLs/PXOx7wR8AdoGtVV/QAEBclVYizLWwrJJ9zSnD9Ougonr
+        dldGRnlifk3TEw0fOj7x5zN02jb84yt+pwy+1KD8x1FBLGEP6XRDiY638hTZXvaf
+        AcXazUmzYxtt/W6QvctJ6OBVYje/A==
+X-ME-Sender: <xms:XtDeYQANFXZjh4Iy74aHVwqMjQQOJbOyjDTJ3XYNR0KuK6JtA8iKgA>
+    <xme:XtDeYSilmnRc943u5TLFdIlIDieo4DkOxewqUL9ZRN-a7K44v26BOybYjV_HQvcCF
+    5Mx2a0DdV1Die0oSXo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrtddugddvtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtgfesthhqredtreerjeenucfhrhhomhepfdflihgr
+    gihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqe
+    enucggtffrrghtthgvrhhnpeefteegkeevfeethffgudehgedvueduvdeifedvvdelhfef
+    heekteefueektdefjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:XtDeYTmaen5eNJxFkbrcbkEMhLaUbiiV55tnth5EFuGa-ahzsAQ3Bg>
+    <xmx:XtDeYWxMMuCdaXgY_UpZLsMYJR6eKcRqTELl9W-bEht3xQe1V9X4LA>
+    <xmx:XtDeYVRW5_2Hv1oFQortdWrgBIksbx6ORsFEH7TRrkEOfW4CC4OgvQ>
+    <xmx:X9DeYVaaFYeVy3ZPWBLP-3jhTpWsedUu7hd3HfP59VNWLW-2rJ6Zow>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 5A413FA0AA7; Wed, 12 Jan 2022 07:58:06 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-4569-g891f756243-fm-20220111.001-g891f7562
+Mime-Version: 1.0
+Message-Id: <013cc25a-d460-49eb-8cc0-8f59a0c5a45e@www.fastmail.com>
+In-Reply-To: <20220111214608.GA169999@bhelgaas>
+References: <20220111214608.GA169999@bhelgaas>
+Date:   Wed, 12 Jan 2022 12:57:44 +0000
+From:   "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>,
+        "Rob Herring" <robh@kernel.org>
+Cc:     "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "Tiezhu Yang" <yangtiezhu@loongson.cn>,
+        "Huacai Chen" <chenhuacai@kernel.org>,
+        "Ray Jui" <rjui@broadcom.com>,
+        "Scott Branden" <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 19/19] PCI: Set bridge map_irq and swizzle_irq to default functions
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 01:39:07PM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 1/12/22 09:28, Lukas Wunner wrote:
-> > On Tue, Jan 11, 2022 at 11:14:47AM -0600, Bjorn Helgaas wrote:
-> >> On Fri, Dec 17, 2021 at 03:17:09PM +0100, Hans de Goede wrote:
-> >>> Use down_read_nested() and down_write_nested() when taking the
-> >>> ctrl->reset_lock rw-sem, passing the number of PCIe hotplug controllers in
-> >>> the path to the PCI root bus as lock subclass parameter. This fixes the
-> >>> following false-positive lockdep report when unplugging a Lenovo X1C8 from
-> >>> a Lenovo 2nd gen TB3 dock:
-> > [...]
-> >> Applied to pci/hotplug for v5.17, thanks, Hans!
-> > 
-> > I've realized only now that Hans reported this issue already in August 2020
-> > and opened a bugzilla for it:
-> > 
-> > https://bugzilla.kernel.org/show_bug.cgi?id=208855
-> 
-> Ah I completely forgot about having filed that bug, good catch.
-> 
-> > The status can now be set to RESOLVED FIXED.  I don't have permission
-> > to do that but perhaps either of you, Bjorn or Hans, has?
-> 
-> I have added a comment and closed the bug now. Note that you can email
-> the kernel.org admins with your bugzilla login + a friendly requests
-> to give you some more bugzilla rights. I did that a while ago when
-> I hit similar issues doing triage of bugzilla.kernel.org bugs.
-> 
-> > Also, the commit could optionally be amended with a Link: tag to that
-> > bugzilla entry.
-> 
-> There isn't really any new info in the bugzilla though, so I guess
-> the commit is fine as is. With that said if Bjorn wants to add it
-> that is fine too of course.
 
-Thanks, I added it.  It does have a link to Ted's original email,
-which includes a complete dmesg log.
 
-Of course, that makes the commit referenced by
-https://bugzilla.kernel.org/show_bug.cgi?id=208855#c2 obsolete, but
-that happens anyway because I often rebase to add things like this.
+=E5=9C=A82022=E5=B9=B41=E6=9C=8811=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8B=E5=
+=8D=889:46=EF=BC=8CBjorn Helgaas=E5=86=99=E9=81=93=EF=BC=9A
+> [-cc many, +cc iproc, loongson, tegra maintainers]
+>
+> On Tue, Jul 21, 2020 at 08:25:14PM -0600, Rob Herring wrote:
+>> The majority of DT based host drivers use the default .map_irq() and
+>> .swizzle_irq() functions, so let's initialize the function pointers to
+>> the default and drop setting them in the host drivers.
+>>=20
+>> Drivers like iProc which don't support legacy interrupts need to set
+>> .map_irq() back to NULL.
+>
+> Probably a dumb question...
+>
+> This patch removed all the ->swizzle_irq users in drivers/pci/, which
+> is great -- IIUC swizzling is specified by the PCI-to-PCI Bridge Spec,
+> r1.2, sec 9.1, and should not be device-specific.  I assume the few
+> remaining arch/ users (arm and alpha) are either bugs or workarounds
+> for broken devices.
+>
+> My question is why we still have a few users of ->map_irq: loongson,
+> tegra, iproc.  Shouldn't this mapping be described somehow via DT?
+>
 
-Bjorn
+Hi all,
+
+For Loongson we are describing IRQ map in DT for newer platforms.
+But for legacy platforms (AMD RS780E North Bridge) with i8259 irqchip,
+we need to read PCI IRQ registers to get mapping information.
+
+It is not known until boot time, so we have to use map_irq callback.
+
+Thanks.
+- Jiaxun
+
+[...]
+
+--=20
+- Jiaxun
