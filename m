@@ -2,187 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 222D048CCE2
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 21:10:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9679948CCE4
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 21:10:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357222AbiALUKK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 15:10:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42558 "EHLO
+        id S1357012AbiALUKe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 15:10:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357669AbiALUJs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 15:09:48 -0500
-Received: from mail-ua1-x92c.google.com (mail-ua1-x92c.google.com [IPv6:2607:f8b0:4864:20::92c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9688EC06173F;
-        Wed, 12 Jan 2022 12:09:48 -0800 (PST)
-Received: by mail-ua1-x92c.google.com with SMTP id p37so7030571uae.8;
-        Wed, 12 Jan 2022 12:09:48 -0800 (PST)
+        with ESMTP id S1357224AbiALUKc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 15:10:32 -0500
+Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E21C06173F;
+        Wed, 12 Jan 2022 12:10:32 -0800 (PST)
+Received: by mail-ua1-x934.google.com with SMTP id i5so7006855uaq.10;
+        Wed, 12 Jan 2022 12:10:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/4zazzFqIYCG/88G2zNvkkpvFQtMz6NxYikeCTrDZI8=;
-        b=n2jcE2JB0r4p/pRX7koB0HcEiZxuEm+139VeLMGmRhc0z2YEjLKbagbzFaz+aLJoIv
-         MqHtwbNDhmy+lWBbx7fCpujC9k8ENfxgB+tf3FOHa8yFvdzO8T3infL44dEBy3HULBNM
-         VafqG82USxgDxiS7giR7OuVwBtkGu7i54/mDXoi4HahJ1IErV/l5puRYFdNF8i0zR/HW
-         mSUwGxvRGSa4Qwec8CebhvNm0xdDMjRoUiQawNbWT55n7Bg9o7aXGwH/FT9zwMWQQfnn
-         IzJtHBOTptqwdKyHTzsglPiNDuQI11Cl8ZnolUzm4VS0N5lsKZslquDRbTW2kI/D8xQP
-         ghtA==
+         :cc;
+        bh=+xNMNzoJN9YEqe7h1YnZR3MXu+BdsLUcSma3TBj/qlY=;
+        b=Fc332POiwbXnXeouq/OsiseB/jSFhy8NuD3ewinUwSgJc2Okx9WuCU5kw573bQJMb/
+         Wwp3TiKkulw4sS5a+0PK5CyozC15eo6WnXWDAjVStUD87OHorpeOVJZYu/4d0qctRO2Q
+         cTdcC7R8UusoY1OMP3d0pE36glbukZgEDa9S4Hw6vGfnX5xMD24cC/vz+J1fWTua8/dx
+         dmBuiZAh2tLic0LuIlZwH2ebZzfsZcDvmWZ27SrjTyWQe5yWOT6tM1uZFaXe/MkTFkFg
+         FHAEfZU0yXUSMqkRxGCsbXMYNDI8hfhfuYsUFOjHx0ZiVs8GaVHe8S9bU7gJuDk+J3J2
+         u1cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/4zazzFqIYCG/88G2zNvkkpvFQtMz6NxYikeCTrDZI8=;
-        b=MFalsCd5/uVhd4fIz+7ARGbhSLaEJlZyWZPu2Sq5/QuknrrCgxv3avJ3tR1AZB+EtT
-         gDebTzSYfyqm1iFscA/NbXrlhe3kDdzJ22+sqbrbIdD6zyKI/vyvJUqncBS69nV2OdSj
-         lJrpBifwbkEp/zWFHh+MoRkaQXOifiCxcIIk190br1wMH6OuuElz55OEXeyXAoVORQAi
-         wTNIbfRXhRadu1m0bEEMW0UxT6ztvksXmETLrZ9fLQ47v7VXLlTsyWTVAoNUq5oayWyF
-         J2CJ8sFSVh6vTZDfauYa4+HAC3RM08kjDGYopqKF4WezAS3fm1l6C0+ZTf58iW7C9Kzr
-         OPmg==
-X-Gm-Message-State: AOAM531Gic1paEnAN7Qs/GhdzT5Mn/PQ9mE/Cxkk2iYpF9OjwJ67Sn9N
-        3Unc/eGJKEZiFQEASm0oLthAzhGQN2iWHIYx/S8=
-X-Google-Smtp-Source: ABdhPJxJo/rld++GT9M5d6zn4cBK6v8mhODfJW+SsfVSE/Z0P8+PlYSevigr4p+wsfOnnf8CplHidPAUdUc1sqBKvJE=
-X-Received: by 2002:ab0:3c9e:: with SMTP id a30mr969512uax.131.1642018187671;
- Wed, 12 Jan 2022 12:09:47 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=+xNMNzoJN9YEqe7h1YnZR3MXu+BdsLUcSma3TBj/qlY=;
+        b=QNk5yaC57bz1jml9bkfL+TqCOmlfH8FcaCis+ry014MZn6+Z6lV/u2vvOJr/dl/u4V
+         CIqt+qHtLwJEUMcFcbu4H20Ztov3HoL4g+3tLgc327jSwTd75p9z26G+XnLLHZfN8eFG
+         8aiT+Q63kYZzEhIRsF14J6fskd2rdu/a1qTUF63U+GN9R8RpXIJTRLnM6Cm1+bMudR3l
+         VA46gA52qk/a11rzvWe87bzDUHGq/wkvuIE+Ym6yzT7dXpM2jtUFMzxBr7/7XTeJVmR3
+         ldXBu4vXcH4SgBl1yP0C4K8xlHLbskPPp/+iCWvfWKdkdZVq2BnlotQ8h0rAoVx8XEPG
+         jhjA==
+X-Gm-Message-State: AOAM533cTdYgRjMR4j2e/sBpGMJ6lUlE8sUhCWaEC25QBhMqvobHb7et
+        OvdzMLsgqNq164VM4a/sasFOYk+e8SjkbX9wUhnPPXgoqK0=
+X-Google-Smtp-Source: ABdhPJy5RKhxrrj/E+Fu3TMCFp6rkiROs/fdwrPPO31p9X01uWbr3szh2g2yqu2kAt/PBWC+yT7CJe/NlMHCJJ6ZStg=
+X-Received: by 2002:a05:6102:dc9:: with SMTP id e9mr893623vst.17.1642018231219;
+ Wed, 12 Jan 2022 12:10:31 -0800 (PST)
 MIME-Version: 1.0
 References: <20211207104924.21327-1-sergio.paracuellos@gmail.com>
- <CAMhs-H886ZPZED-qmMtZcWFabRLNL14Y7SSz_Ko7d45zXL+v2w@mail.gmail.com> <20220112180627.GB1319@lpieralisi>
-In-Reply-To: <20220112180627.GB1319@lpieralisi>
+ <20211207104924.21327-3-sergio.paracuellos@gmail.com> <20220112182015.GA403047@roeck-us.net>
+In-Reply-To: <20220112182015.GA403047@roeck-us.net>
 From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Wed, 12 Jan 2022 21:09:36 +0100
-Message-ID: <CAMhs-H_KXmAuJzJhNWoHX7yy0p2hNeexe5rbBc4EPinTwGmzSA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] PCI: mt7621: Remove specific MIPS code from driver
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Date:   Wed, 12 Jan 2022 21:10:19 +0100
+Message-ID: <CAMhs-H851_Dh4R2TXWh80n1BwXQ7PdY+mQ652iWkJs2erCgK-A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] MIPS: ralink: implement 'pcibios_root_bridge_prepare()'
+To:     Guenter Roeck <linux@roeck-us.net>
 Cc:     linux-pci <linux-pci@vger.kernel.org>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
         linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 7:06 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
+On Wed, Jan 12, 2022 at 7:20 PM Guenter Roeck <linux@roeck-us.net> wrote:
 >
-> On Wed, Jan 12, 2022 at 03:42:56PM +0100, Sergio Paracuellos wrote:
-> > Hi Bjorn, Lorenzo,
+> On Tue, Dec 07, 2021 at 11:49:21AM +0100, Sergio Paracuellos wrote:
+> > PCI core code call 'pcibios_root_bridge_prepare()' function inside function
+> > 'pci_register_host_bridge()'. This point is very good way to properly enter
+> > into this MIPS ralink specific code to properly setup I/O coherency units
+> > with PCI memory addresses.
 > >
-> > On Tue, Dec 7, 2021 at 11:49 AM Sergio Paracuellos
-> > <sergio.paracuellos@gmail.com> wrote:
-> > >
-> > > Hi all,
-> > >
-> > > MIPS specific code can be removed from driver and put into ralink mt7=
-621
-> > > instead which is a more accurate place to do this. To make this possi=
-ble
-> > > we need to have access to 'bridge->windows' in 'pcibios_root_bridge_p=
-repare()'
-> > > which has been implemented for ralink mt7621 platform (there is no re=
-al
-> > > need to implement this for any other platforms since those ones haven=
-'t got
-> > > I/O coherency units). This also allow us to properly enable this driv=
-er to
-> > > completely be enabled for COMPILE_TEST. This patchset appoarch:
-> > > - Move windows list splice in 'pci_register_host_bridge()' after func=
-tion
-> > >   'pcibios_root_bridge_prepare()' is called.
-> > > - Implement 'pcibios_root_bridge_prepare()' for ralink mt7621.
-> > > - Avoid custom MIPs code in pcie-mt7621 driver.
-> > > - Add missing 'MODULE_LICENSE()' to pcie-mt7621 driver to avoid compi=
-le test
-> > >   module compilation to complain (already sent patch from Yanteng Si =
-that
-> > >   I have rewrite commit message and long description a bit.
-> > > - Remove MIPS conditional code from Kconfig and mark driver as 'trist=
-ate'.
-> > >
-> > > This patchset is a real fix for some errors reported by Kernel Test R=
-obot about
-> > > implicit mips functions used in driver code and fix errors in driver =
-when
-> > > is compiled as a module [1] (mips:allmodconfig).
-> > >
-> > > Changes in v3:
-> > >  - Rebase the series on the top of the temporal fix sent for v5.16[3]=
- for
-> > >    the module compilation problem.
-> > >  - Address review comments from Guenter in PATCH 2 (thanks Guenter!):
-> > >     - Address TODO in comment about the hardware does not allow zeros
-> > >       after 1s for the mask and WARN_ON if that's happend.
-> > >     - Be sure mask is real valid upper 16 bits.
-> >
-> > What are your plans for this series? Can we merge this?
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 >
-> I was waiting for an ACK on patch (2) since it affects MIPS code.
-
-I was expecting Thomas to get ACK for this patch or get it through the
-MIPS tree.
-
+> FWIW:
 >
-> It would also be great if Bjorn reviewed it to make sure he agrees
-> with the approach.
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Agreed.
-
->
-> I think it is too late for this cycle, apologies, there is a significant
-> review backlog.
->
-> Lorenzo
+Thanks!
 
 Best regards,
     Sergio Paracuellos
 
 >
-> > Best regards,
-> >     Sergio Paracuellos
+> > ---
+> >  arch/mips/ralink/mt7621.c | 31 +++++++++++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
 > >
-> > >
-> > > Changes in v2:
-> > >  - Collect Acked-by from Arnd Bergmann for PATCH 1.
-> > >  - Collect Reviewed-by from Krzysztof Wilczy=C5=84ski for PATCH 4.
-> > >  - Adjust some patches commit subject and message as pointed out by B=
-jorn in review of v1 of the series[2].
-> > >
-> > > This patchset is the good way of properly compile driver as a module =
-removing
-> > > all MIPS specific code into arch ralink mt7621 place. To avoid mips:a=
-llmodconfig reported
-> > > problems for v5.16 the following patch has been sent[3]. This series =
-are rebased onto this patch to provide
-> > > a real fix for this problem.
-> > >
-> > > [0]: https://lore.kernel.org/linux-mips/CAMhs-H8ShoaYiFOOzJaGC68nZz=
-=3DV365RXN_Kjuj=3DfPFENGJiiw@mail.gmail.com/T/#t
-> > > [1]: https://lkml.org/lkml/2021/11/14/436
-> > > [2]: https://lore.kernel.org/r/20211115070809.15529-1-sergio.paracuel=
-los@gmail.com
-> > > [3]: https://lore.kernel.org/linux-pci/20211203192454.32624-1-sergio.=
-paracuellos@gmail.com/T/#u
-> > >
-> > > Thanks in advance for your time.
-> > >
-> > > Best regards,
-> > >    Sergio Paracuellos
-> > >
-> > > Sergio Paracuellos (5):
-> > >   PCI: Let pcibios_root_bridge_prepare() access to 'bridge->windows'
-> > >   MIPS: ralink: implement 'pcibios_root_bridge_prepare()'
-> > >   PCI: mt7621: Avoid custom MIPS code in driver code
-> > >   PCI: mt7621: Add missing 'MODULE_LICENSE()' definition
-> > >   PCI: mt7621: Allow COMPILE_TEST for all arches
-> > >
-> > >  arch/mips/ralink/mt7621.c            | 31 ++++++++++++++++++++++
-> > >  drivers/pci/controller/Kconfig       |  4 +--
-> > >  drivers/pci/controller/pcie-mt7621.c | 39 ++------------------------=
---
-> > >  drivers/pci/probe.c                  |  4 +--
-> > >  4 files changed, 37 insertions(+), 41 deletions(-)
-> > >
-> > > --
-> > > 2.33.0
-> > >
+> > diff --git a/arch/mips/ralink/mt7621.c b/arch/mips/ralink/mt7621.c
+> > index bd71f5b14238..d6efffd4dd20 100644
+> > --- a/arch/mips/ralink/mt7621.c
+> > +++ b/arch/mips/ralink/mt7621.c
+> > @@ -10,6 +10,8 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/sys_soc.h>
+> >  #include <linux/memblock.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/bug.h>
+> >
+> >  #include <asm/bootinfo.h>
+> >  #include <asm/mipsregs.h>
+> > @@ -22,6 +24,35 @@
+> >
+> >  static void *detect_magic __initdata = detect_memory_region;
+> >
+> > +int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
+> > +{
+> > +     struct resource_entry *entry;
+> > +     resource_size_t mask;
+> > +
+> > +     entry = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
+> > +     if (!entry) {
+> > +             pr_err("Cannot get memory resource\n");
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     if (mips_cps_numiocu(0)) {
+> > +             /*
+> > +              * Hardware doesn't accept mask values with 1s after
+> > +              * 0s (e.g. 0xffef), so warn if that's happen
+> > +              */
+> > +             mask = ~(entry->res->end - entry->res->start) & CM_GCR_REGn_MASK_ADDRMASK;
+> > +             WARN_ON(mask && BIT(ffz(~mask)) - 1 != ~mask);
+> > +
+> > +             write_gcr_reg1_base(entry->res->start);
+> > +             write_gcr_reg1_mask(mask | CM_GCR_REGn_MASK_CMTGT_IOCU0);
+> > +             pr_info("PCI coherence region base: 0x%08llx, mask/settings: 0x%08llx\n",
+> > +                     (unsigned long long)read_gcr_reg1_base(),
+> > +                     (unsigned long long)read_gcr_reg1_mask());
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  phys_addr_t mips_cpc_default_phys_base(void)
+> >  {
+> >       panic("Cannot detect cpc address");
+> > --
+> > 2.33.0
+> >
