@@ -2,80 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 900FD48BC79
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 02:31:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A3BF48BC8F
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 02:44:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347764AbiALBbL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 20:31:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41762 "EHLO
+        id S1347876AbiALBoB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jan 2022 20:44:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235678AbiALBbL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 20:31:11 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD00C06173F
-        for <linux-pci@vger.kernel.org>; Tue, 11 Jan 2022 17:31:11 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id c3so1711992pls.5
-        for <linux-pci@vger.kernel.org>; Tue, 11 Jan 2022 17:31:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=zWgTqK+//r+FI94NQVNRv5s0joBk1kqpwFFvipQzTiE=;
-        b=HKYc916JvWL1ESbC8UePMItOyR/nt3IGjEjUqt8gGgnNVFS+fjSgULjSI4985epJdL
-         yHocqZKVQSafOSZQV5Z40ZW4tR3zatPreqAnP+1st2UgOVI3XUtI8ACChb7tL432eqi0
-         hRH4tfD86XLpzmNO3PM0nOFBFT2bioAjDQW8qn5QuuLb6qVFD1CFJfqDlIiQqmoNie1P
-         Aruw72PyWt3RqOQEPI9NUeI0VdmSvSlTXCDiBVtclCqNEoKMXFud61Z2j7+mg+RjBLrQ
-         RNYbOINuyzjv08axYMgbizZNjc6Y6pZqAaOZzZfYwe76pAx8bJ5NEnBOXLl8UHOANe4n
-         MtiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zWgTqK+//r+FI94NQVNRv5s0joBk1kqpwFFvipQzTiE=;
-        b=4lDhXqsMnTsv0RngDFqerKZVn2Iy4BTJiCFT38BNe0dqDcowNucYOGkHYpuvHrVG+k
-         Q6Y+wGTeZJ+lHRsgzqZT2WqqfM1RT1qVxslOHxlFue3gFOeHyt0Pu9959uWb9K5bl+yp
-         ySVy0kPghlYEOirGjp9FTOJPJqbtvr8a3L/IDxlZ83HvDaMm+IQ+Vfrjl/cot00Ip2Ar
-         XAAOUAJd4enVS//7mpuPlVAHFpZ1KorMNtdbUSJuYiNJticxI2p+1lqVFuhCYPCgevM/
-         +9ThlQSJ54v8B/BhJUCxmkKe1F/oMRim8JtGbzZB0cXW4ugZrDM1drs41C1udxan4m8i
-         lnUA==
-X-Gm-Message-State: AOAM531dZCWuzAY5yTdc6JFzdCitHpQoQ3LFkpyVijcQ2B/+q6F9jyb0
-        ecUTY27JRHiy9XTJVskL/P67bWuCGVI=
-X-Google-Smtp-Source: ABdhPJymuYCBByuAJhdRLWur3yxxRVleKYjSAooK82ZyuUcHGiuPO1l5AUsFB/E1dPcp6P5g5FNYSA==
-X-Received: by 2002:a63:a84b:: with SMTP id i11mr6277644pgp.486.1641951070586;
-        Tue, 11 Jan 2022 17:31:10 -0800 (PST)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
-        by smtp.gmail.com with ESMTPSA id k8sm12556258pfu.72.2022.01.11.17.31.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jan 2022 17:31:10 -0800 (PST)
-From:   Jim Quinlan <jim2101024@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        jim2101024@gmail.com, james.quinlan@broadcom.com
-Cc:     linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH] fixup! PCI: brcmstb: Add control of subdevice voltage regulators
-Date:   Tue, 11 Jan 2022 20:31:00 -0500
-Message-Id: <20220112013100.48029-1-jim2101024@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S236309AbiALBoA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 20:44:00 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDE51C06173F;
+        Tue, 11 Jan 2022 17:44:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B0A361682;
+        Wed, 12 Jan 2022 01:44:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B0A3C36AE3;
+        Wed, 12 Jan 2022 01:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641951839;
+        bh=ssV4IOZe/mj0Wlv5asZC4ExDpfjoHEImje+e8erdkTA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lL8DtX0XUF8W3JOYxAct5pcraAVNmUX4WBgSVTaxTIB7Jg4PYIEovyDMe3bx6wBhP
+         pyFAA7642KgBAzYI9n5nate65pbU9ysw5Nm9PDi8OIeu6Kx59rLF5l40erXnRXUBpR
+         Y5yskVlNqBeMTP7etDovG3IzrlfMEB0G+R6JpoIwp2fj+VHTxQqaEzaMIaR3Sb8Sch
+         4ruXS4i4ZTJhaXZO160ib9S5nwiGs1naEi+x6qDxCbCjiIUOkARTkB/uqPgvtups7W
+         3PeR5gWS7EgP7RPxj6o/5VmN31g4znRe4OfSiHjyV4wQmm3mhP4uLcFeM/wbL8PrMJ
+         Gk0o0rZnKgiWw==
+Received: by pali.im (Postfix)
+        id 97B49B98; Wed, 12 Jan 2022 02:43:56 +0100 (CET)
+Date:   Wed, 12 Jan 2022 02:43:56 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 08/11] PCI: mvebu: Use child_ops API
+Message-ID: <20220112014356.h2pm7nc3vzsvjexq@pali>
+References: <20220105150239.9628-1-pali@kernel.org>
+ <20220105150239.9628-9-pali@kernel.org>
+ <CAL_Jsq+1hoAUVOzyOGZ1vVMsChhHJJpzk5HNU4Gi=Luy_8LArA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_Jsq+1hoAUVOzyOGZ1vVMsChhHJJpzk5HNU4Gi=Luy_8LArA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
----
- drivers/pci/controller/pcie-brcmstb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Wednesday 05 January 2022 09:41:51 Rob Herring wrote:
+> On Wed, Jan 5, 2022 at 9:03 AM Pali Rohár <pali@kernel.org> wrote:
+> >
+> > Split struct pci_ops between ops and child_ops. Member ops is used for
+> > accessing PCIe Root Ports via pci-bridge-emul.c driver and child_ops for
+> > accessing real PCIe cards.
+> >
+> > There is no need to mix these two struct pci_ops into one as PCI core code
+> > already provides separate callbacks via bridge->ops and bridge->child_ops.
+> 
+> I had similar patches including mvebu that I never got around to
+> sending out. I pushed the branch out now at least[1].
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 8a3321314b74..4134f01acd87 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -1392,7 +1392,8 @@ static int brcm_pcie_resume(struct device *dev)
- err_reset:
- 	reset_control_rearm(pcie->rescal);
- err_regulator:
--	regulator_bulk_disable(pcie->sr->num_supplies, pcie->sr->supplies);
-+	if (pcie->sr)
-+		regulator_bulk_disable(pcie->sr->num_supplies, pcie->sr->supplies);
- err_disable_clk:
- 	clk_disable_unprepare(pcie->clk);
- 	return ret;
--- 
-2.17.1
-
+Are you going to finish your patch series and send it? Because if yes,
+I can drop this my patch in v3 and let all ->child_ops conversion for
+you.
