@@ -2,82 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9E4D48BD45
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 03:28:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89AD948BE62
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 06:37:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348651AbiALC22 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 21:28:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348529AbiALC22 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 21:28:28 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD4D3C06173F
-        for <linux-pci@vger.kernel.org>; Tue, 11 Jan 2022 18:28:27 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id u13so3028450lff.12
-        for <linux-pci@vger.kernel.org>; Tue, 11 Jan 2022 18:28:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=XVVa5bqL/dcAtURXq87wPg3cYkV+G48POPS93zwghbw=;
-        b=d7YWrTuPk0mW4KLgkxNPn8nFzYkThZ7UYPQkiCKX/eYZBAxNaAEEy4sLYUg3/KW/pf
-         jZ6ju7WkcAgPxaKOc4tA0XwLile9IXJhgRgS0IArbOlt/RyO+ApGdwiKksE3WUJKVTq9
-         KMswdRIKg1M6f0h8UYNd4+FWGsEVPLgEN9SchJ1MwuAsPqi1QHMP73A6Cs5EmUG9P0wv
-         lnts/+PilqCOrgfUQ1sWVI0U18Oz0SMBQkuG43xLEQ3rX95mn1V9Pgi8n62qX/IBtpbo
-         NYVRrp2sckFOSIau69QvFfSStUUPRBf/478AqAF90ErAzhsQTqD3qzScmiOe6Y2AkRTn
-         dKoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=XVVa5bqL/dcAtURXq87wPg3cYkV+G48POPS93zwghbw=;
-        b=iJ8pzXtoSl0C9GXtG1c5ZT07z+/5gPLh7HEfSb+ptHH1+A0hU0h/unvAMl0fS4XyO8
-         EgrFzWCOVPM7VbPQ/n+tYflLnVXxQXQg27mzGfzeRpcGrFsnsKrFB9kM3OI3+4DXkIn4
-         ce44qgyxk4RgQ8wuw19LD8KjDiZjBiD1Zg5DxSMW/CjPoqrwHvz+B7pnjqemxIhiQl0H
-         se2z15Ygr5Vkrw7W/6A/kjBlT90Aap0EtwVpfk9M+AyVZ+2nCnbc3NxPm/KChk9ifOaV
-         1tC+5ke9F0CB+GtKJ+zySaXdOs83WTIDrRGzeS+lL4K/GwcbDpNBWptcU4fXdwSx5+dw
-         ScZA==
-X-Gm-Message-State: AOAM533rwLT8dPIyooWLiadsL6kgac5R7cGk7IPy7d0/ZGDob5jA4qUD
-        C1Oyx8gBA1+DFUi2Ge1BXMu5D/ytsqgXkzBr24Y=
-X-Google-Smtp-Source: ABdhPJz7HEZmxYSmy8l1Z9HxSlbwgBxOD+awKrexYNm4TAyXHwEMF8fettXj5X5aHuszUrvZuVn2/vhwbIE/BAIo/Qo=
-X-Received: by 2002:ac2:58da:: with SMTP id u26mr5413154lfo.91.1641954506309;
- Tue, 11 Jan 2022 18:28:26 -0800 (PST)
+        id S233661AbiALFhZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 00:37:25 -0500
+Received: from mga01.intel.com ([192.55.52.88]:17946 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1350902AbiALFhY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jan 2022 00:37:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641965844; x=1673501844;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7xCN3gMh66dGvGJeW19jQ2TJSlEFCTbJhlElIgdfrOc=;
+  b=ITlEdN6Vyw/4LDA/hjw+wUnxqFrGDLPPYUZfCA83GdEe4X8qTF1BcW5i
+   EkUr/gC8mgP7HA4pahop1l2X+jUMx65ZEFUBVPKmkVuLjq9zfpaJO2Pf9
+   cQFhaTUzDx/N2ZaTX5njVQFPFESklsrg6wYnsCAZW4Ztd8d62fQSomvCG
+   QK0A8K2lrDm2aepdXcyuyxfkwAsR7TTPDvD5VOjHBGBFFsTuLKL60WuIA
+   5HVZX2mUS8FC5PrStbF9PaNsuycesyRqQ8fAz7ZaXHz3rAwX7ASR5EgSb
+   ceKJS18jYH4qHJ2PfsZEmatAashgyBlawiVZ0F3H2oWeOak9hWB8u0x6/
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="268006647"
+X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
+   d="scan'208";a="268006647"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2022 21:37:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
+   d="scan'208";a="558605377"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 11 Jan 2022 21:37:22 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1n7WK2-0005Xm-3r; Wed, 12 Jan 2022 05:37:22 +0000
+Date:   Wed, 12 Jan 2022 13:36:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/resource] BUILD SUCCESS
+ 500b55b05d0a21c4adddf4c3b29ee6f32b502046
+Message-ID: <61de68d3.hLOEp+/MglKnB30r%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Received: by 2002:a05:6520:3806:b0:18f:6b3b:f015 with HTTP; Tue, 11 Jan 2022
- 18:28:25 -0800 (PST)
-Reply-To: fulhammartins8@gmail.com
-From:   Fulham Martins <bfranck976@gmail.com>
-Date:   Tue, 11 Jan 2022 18:28:25 -0800
-Message-ID: <CAOXQwByqYVpJnJuiMrVfUPtnQK8AudgbD61gzHXVEnAWQwmWRg@mail.gmail.com>
-Subject: INVESTMENT
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Prospective Partner,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/resource
+branch HEAD: 500b55b05d0a21c4adddf4c3b29ee6f32b502046  PCI: Work around Intel I210 ROM BAR overlap defect
 
-My Name is Mr. Fulham Martins. I am from the United Kingdom.
-It is my resolve to contact you for an investment plan in your country. It is
-no more a secret that investments are thriving fast in your country.
-Therefore, I want to invest in your country and want you to be my
-business partner.
-I am ready to invest in any sector such as Manufacturing, Agriculture,
-Real Estate, Hoteling,etc. or any other business that has good return
-on investment/profitable.
+elapsed time: 728m
 
-If you choose to be of assistance,I am ready to send the CONSIGNMENT
-FUND BOX to your country regarding the investment
-collaboration/partnership or do a direct bank transfer to your account
-based on whatever modalities the investment will entail.
-I am presently based in the United Kingdom and would like to know
-whether you are ready to partner with me on this. Kindly indicate your
-interest to enable us proceed.
-Thank you in anticipation as I look forward to reading your reply on
-fulhammartins8@gmail.com.
+configs tested: 140
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Best regards.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+arc                                 defconfig
+s390                             allmodconfig
+sh                          sdk7780_defconfig
+m68k                        mvme16x_defconfig
+arm                        cerfcube_defconfig
+arm                            pleb_defconfig
+sh                          r7785rp_defconfig
+arc                    vdk_hs38_smp_defconfig
+h8300                               defconfig
+s390                          debug_defconfig
+arc                              allyesconfig
+arm                       multi_v4t_defconfig
+arm                           viper_defconfig
+nios2                         3c120_defconfig
+powerpc                      bamboo_defconfig
+arm                      footbridge_defconfig
+ia64                         bigsur_defconfig
+arm                        multi_v7_defconfig
+sh                          rsk7203_defconfig
+sparc                            alldefconfig
+m68k                       m5275evb_defconfig
+sh                        edosk7705_defconfig
+powerpc                     rainier_defconfig
+sh                            shmin_defconfig
+sh                            hp6xx_defconfig
+h8300                       h8s-sim_defconfig
+sh                           se7751_defconfig
+arm                         assabet_defconfig
+microblaze                          defconfig
+sh                           se7722_defconfig
+sh                 kfr2r09-romimage_defconfig
+sh                          landisk_defconfig
+sh                           se7712_defconfig
+powerpc                  storcenter_defconfig
+xtensa                generic_kc705_defconfig
+powerpc                     tqm8548_defconfig
+ia64                             allyesconfig
+s390                                defconfig
+sh                     magicpanelr2_defconfig
+powerpc                     pq2fads_defconfig
+parisc                              defconfig
+mips                           xway_defconfig
+m68k                         amcore_defconfig
+arm                            mps2_defconfig
+mips                      maltasmvp_defconfig
+powerpc                    adder875_defconfig
+sh                             shx3_defconfig
+m68k                        stmark2_defconfig
+arm                        trizeps4_defconfig
+powerpc                 mpc8272_ads_defconfig
+powerpc                 mpc836x_mds_defconfig
+m68k                            q40_defconfig
+sh                        edosk7760_defconfig
+mips                        jmr3927_defconfig
+xtensa                           alldefconfig
+arm                  randconfig-c002-20220111
+ia64                             allmodconfig
+ia64                                defconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a003
+i386                          randconfig-a001
+i386                          randconfig-a005
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+riscv                randconfig-r042-20220111
+arc                  randconfig-r043-20220111
+s390                 randconfig-r044-20220111
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
 
-Mr.Fulham Martins.
+clang tested configs:
+arm                  randconfig-c002-20220111
+x86_64                        randconfig-c007
+riscv                randconfig-c006-20220111
+powerpc              randconfig-c003-20220111
+i386                          randconfig-c001
+mips                 randconfig-c004-20220111
+s390                 randconfig-c005-20220111
+arm                      tct_hammer_defconfig
+mips                        workpad_defconfig
+mips                          ath79_defconfig
+arm                    vt8500_v6_v7_defconfig
+mips                           ip27_defconfig
+powerpc                          allmodconfig
+powerpc                     kmeter1_defconfig
+powerpc                 mpc8272_ads_defconfig
+powerpc                 mpc836x_mds_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
