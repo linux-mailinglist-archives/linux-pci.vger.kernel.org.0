@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D503948CF3B
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 00:48:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A87B48CF3C
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 00:48:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235639AbiALXsE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 18:48:04 -0500
-Received: from mga04.intel.com ([192.55.52.120]:13985 "EHLO mga04.intel.com"
+        id S235643AbiALXsF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 18:48:05 -0500
+Received: from mga04.intel.com ([192.55.52.120]:13986 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235642AbiALXsC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jan 2022 18:48:02 -0500
+        id S235590AbiALXsE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jan 2022 18:48:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642031282; x=1673567282;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=D6dnueQCdz88+vZC8U8lA4/WtL0w6JeRzu7qunSkRtg=;
-  b=XPp8oEVsamBNB45Ulh5gof6nKzUF4MDbIE4fM3fcjbuKNVg1P5XBpjMf
-   pd34FkplAqrwQOQFAXWcuQiv+lNF0j+H5YQE7OBmX1zsM7FkkfriC2Tkk
-   jChMEKRjYP3ZgM+5uPPaWfZgFVTdRbpKwOKIeN/bpoT3ZfaWmGB1CGpJd
-   lwcJUS/r9eUTEBnHiOnvj9rshCOsHGxkbe2+7xsbPaL4PLWUBY/3Qdw53
-   Gb71nQHCjVY95BtjTLOSQVCl+yZ4K8bjHW1XnhIOp8uBOwBDAfdMXMiWp
-   McZkRppHD4evfGxhYjl29UMgMRkTkihDjmWCZ++1ZbdtXcbgEPTHJZ0Fj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="242695323"
+  t=1642031284; x=1673567284;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=lydRZibB7lXUc9cAyuJ2WBnEQS8JedlHiEcNOeW5sRk=;
+  b=WngAqWZaEvHcuWf7wj/yn/rSHPBKnVmgQ4KmEML00L9+c982SsEN3v5c
+   qApRUEuEas2naUBV34nQ9L8Xe1yIFWhUhxjz6U3yq2NOQIr32HTpPZHnj
+   HxcDy69aJ11dZHyqJbXwapcsTvAgUk4n7+foOAQ9xK8uJn1jmLTJX5D1e
+   mwxNFZCeDQM4iVRJmvOaWfNZlBNaI2CNs7Ai8m4OxLTHoXS58nKM1ML5k
+   czWkbaOViwuNVX4XqvQ97U02ojILne6UHwOMsdWkC9hJEOzicjW8seqWy
+   jBtBzpxhyPpuZ0Lw+5xzORqYUfkCUflujAujT5ngafDDoX0Q6Pz2yRB6b
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="242695324"
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="242695323"
+   d="scan'208";a="242695324"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:48:02 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:48:03 -0800
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="670324165"
+   d="scan'208";a="670324169"
 Received: from jmaclean-mobl1.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.136.131])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:48:01 -0800
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 15:48:02 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
         linux-pci@vger.kernel.org
@@ -43,146 +43,92 @@ Cc:     patches@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         Vishal Verma <vishal.l.verma@intel.com>
-Subject: [PATCH v2 00/15] CXL Region driver
-Date:   Wed, 12 Jan 2022 15:47:34 -0800
-Message-Id: <20220112234749.1965960-1-ben.widawsky@intel.com>
+Subject: [PATCH v2 01/15] cxl/core: Rename find_cxl_port
+Date:   Wed, 12 Jan 2022 15:47:35 -0800
+Message-Id: <20220112234749.1965960-2-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220112234749.1965960-1-ben.widawsky@intel.com>
+References: <20220112234749.1965960-1-ben.widawsky@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Major changes since v1:
-- bug fixes in certain calculations for region programming
-- bug fix in for_each_cxl_decoder_target
-- clarify ENIW and IG from ways and granularity
-- wait_for_commit bug fix
-- use devm management for region removal
-- remove trace points
-- add basic libnvdimm connection
+Needed for other things.
 
-Original commit message follows with minor updates for correctness.
-
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
+ drivers/cxl/core/port.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-This patch series introduces the CXL region driver as well as associated APIs in
-CXL core. The region driver enables the creation of "regions" which is a concept
-defined by the CXL 2.0 specification [1]. Region verification and programming
-state are owned by the cxl_region driver (implemented in the cxl_region module).
-It relies on cxl_mem to determine if devices are CXL routed, and cxl_port to
-actually handle the programming of the HDM decoders. Much of the region driver
-is an implementation of algorithms described in the CXL Type 3 Memory Device
-Software Guide [2].
-
-The region driver will be responsible for configuring regions found on
-persistent capacities in the Label Storage Area (LSA), it will also enumerate
-regions configured by BIOS, usually volatile capacities, and will allow for
-dynamic region creation (which can then be stored in the LSA). It is the primary
-consumer of the CXL Port [3] and CXL Mem drivers introduced previously [4]. Dan
-has reworked those drivers which is a requirement for this branch. A cached copy
-is included in the gitlab for this project [5]. Those patches will be posted
-shortly.
-
-The patches for the region driver could be squashed. They're broken out to aid
-review and because that's the order they were implemented in. My preference is
-to keep those as they are.
-
-Some things are still missing and will be worked on while these are reviewed (in
-priority order):
-1. Volatile regions/LSA regions (Have a plan)
-2. Switch ports (Have a plan)
-3. Decoder programming restrictions (No plan). The one know restriction I've
-   missed is to disallow programming HDM decoders that aren't in incremental
-   system physical address ranges.
-4. CXL region teardown -> nd_region teardown
-5. Stress testing
-
-Here is an example of output when programming a x2 interleave region
-
-# ./cxlctl create-region -n -a -s $((256<<20)) /sys/bus/cxl/devices/decoder0.0
-[   57.564475][  T654] cxl_core:cxl_add_region:478: cxl region0.0:0: Added region0.0:0 to decoder0.0
-[   57.608949][  T655] cxl_region:allocate_address_space:170: cxl_region region0.0:0: resource [mem 0x4c00000000-0x4c1fffffff]
-[   57.610056][  T655] cxl_core:cxl_commit_decoder:394: cxl_port port1: decoder1.0
-[   57.610056][  T655]  Base 0x0000004c00000000
-[   57.610056][  T655]  Size 512M
-[   57.610056][  T655]  IG 0 (256b)
-[   57.610056][  T655]  ENIW 1 (x2)
-[   57.610056][  T655]  TargetList: 0 1 -1 -1 -1 -1 -1 -1
-[   57.613584][  T655] cxl_core:cxl_commit_decoder:394: cxl_port endpoint2: decoder2.0
-[   57.613584][  T655]  Base 0x0000004c00000000
-[   57.613584][  T655]  Size 512M
-[   57.613584][  T655]  IG 0 (256b)
-[   57.613584][  T655]  ENIW 1 (x2)
-[   57.613584][  T655]  TargetList: -1 -1 -1 -1 -1 -1 -1 -1
-[   57.617051][  T655] cxl_core:cxl_commit_decoder:394: cxl_port endpoint3: decoder3.0
-[   57.617051][  T655]  Base 0x0000004c00000000
-[   57.617051][  T655]  Size 512M
-[   57.617051][  T655]  IG 0 (256b)
-[   57.617051][  T655]  ENIW 1 (x2)
-[   57.617051][  T655]  TargetList: -1 -1 -1 -1 -1 -1 -1 -1
-[   57.619433][  T655] cxl_region region0.0:0: Bound
-[   57.621435][  T655] cxl_core:cxl_bus_probe:1384: cxl_region region0.0:0: probe: 0
-
-If you're wondering how I tested this, I've baked it into my cxlctl app [6] and
-lib [7]. Eventually this will get absorbed by ndctl/cxl-cli/libcxl.
-
-
-Branch can be found at gitlab [8].
-
----
-
-[1]: https://www.computeexpresslink.org/download-the-specification
-[2]: https://cdrdv2.intel.com/v1/dl/getContent/643805?wapkw=CXL%20memory%20device%20sw%20guide
-[3]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-9-ben.widawsky@intel.com/
-[4]: https://lore.kernel.org/linux-cxl/20211022183709.1199701-17-ben.widawsky@intel.com/
-[5]: https://gitlab.com/bwidawsk/linux/-/commit/126793e22427f7975a8f2fca373764be78012e88
-[6]: https://gitlab.com/bwidawsk-cxl/cxlctl
-[7]: https://gitlab.com/bwidawsk-cxl/cxl_rs
-[8]: https://gitlab.com/bwidawsk/linux/-/tree/cxl_region-v2
-
-Ben Widawsky (15):
-  cxl/core: Rename find_cxl_port
-  cxl/core: Track port depth
-  cxl/region: Add region creation ABI
-  cxl/region: Introduce concept of region configuration
-  cxl/mem: Cache port created by the mem dev
-  cxl/region: Introduce a cxl_region driver
-  cxl/acpi: Handle address space allocation
-  cxl/region: Address space allocation
-  cxl/region: Implement XHB verification
-  cxl/region: HB port config verification
-  cxl/region: Add infrastructure for decoder programming
-  cxl/region: Collect host bridge decoders
-  cxl: Program decoders for regions
-  cxl/pmem: Convert nvdimm bridge API to use memdev
-  cxl/region: Create an nd_region
-
- .clang-format                                 |   3 +
- Documentation/ABI/testing/sysfs-bus-cxl       |  63 ++
- .../driver-api/cxl/memory-devices.rst         |  14 +
- drivers/cxl/Makefile                          |   2 +
- drivers/cxl/acpi.c                            |  30 +
- drivers/cxl/core/Makefile                     |   1 +
- drivers/cxl/core/core.h                       |   4 +
- drivers/cxl/core/hdm.c                        | 199 +++++
- drivers/cxl/core/pmem.c                       |  19 +-
- drivers/cxl/core/port.c                       | 132 ++-
- drivers/cxl/core/region.c                     | 525 ++++++++++++
- drivers/cxl/cxl.h                             |  48 +-
- drivers/cxl/cxlmem.h                          |   9 +
- drivers/cxl/mem.c                             |  16 +-
- drivers/cxl/pmem.c                            |   2 +-
- drivers/cxl/port.c                            |  42 +-
- drivers/cxl/region.c                          | 769 ++++++++++++++++++
- drivers/cxl/region.h                          |  47 ++
- tools/testing/cxl/Kbuild                      |   1 +
- 19 files changed, 1903 insertions(+), 23 deletions(-)
- create mode 100644 drivers/cxl/core/region.c
- create mode 100644 drivers/cxl/region.c
- create mode 100644 drivers/cxl/region.h
-
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 29b0722dc6eb..5a1ffadd5d0d 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -666,7 +666,7 @@ static int match_port_by_dport(struct device *dev, const void *data)
+ 	return cxl_find_dport_by_dev(port, data) != NULL;
+ }
+ 
+-static struct cxl_port *find_cxl_port(struct device *dport_dev)
++static struct cxl_port *dport_find_cxl_port(struct device *dport_dev)
+ {
+ 	struct device *port_dev;
+ 
+@@ -699,7 +699,7 @@ struct cxl_port *find_cxl_root(struct cxl_memdev *cxlmd)
+ 		if (!dport_dev)
+ 			break;
+ 
+-		port = find_cxl_port(dport_dev);
++		port = dport_find_cxl_port(dport_dev);
+ 		if (!port)
+ 			continue;
+ 
+@@ -728,7 +728,7 @@ static void cxl_remove_ep(void *data)
+ 		if (!dport_dev)
+ 			break;
+ 
+-		port = find_cxl_port(dport_dev);
++		port = dport_find_cxl_port(dport_dev);
+ 		if (!port || is_cxl_root(port))
+ 			continue;
+ 
+@@ -787,7 +787,7 @@ static int add_port_register_ep(struct cxl_memdev *cxlmd,
+ 	resource_size_t component_reg_phys;
+ 	int rc;
+ 
+-	parent_port = find_cxl_port(grandparent(dport_dev));
++	parent_port = dport_find_cxl_port(grandparent(dport_dev));
+ 	if (!parent_port) {
+ 		/*
+ 		 * The root CXL port is added by the CXL platform driver, fail
+@@ -811,7 +811,7 @@ static int add_port_register_ep(struct cxl_memdev *cxlmd,
+ 		goto out;
+ 	}
+ 
+-	port = find_cxl_port(dport_dev);
++	port = dport_find_cxl_port(dport_dev);
+ 	if (!port) {
+ 		component_reg_phys = find_component_registers(uport_dev);
+ 		port = devm_cxl_add_port(&parent_port->dev, uport_dev,
+@@ -876,7 +876,7 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+ 			break;
+ 		}
+ 
+-		port = find_cxl_port(dport_dev);
++		port = dport_find_cxl_port(dport_dev);
+ 		if (port) {
+ 			dev_dbg(&cxlmd->dev,
+ 				"found already registered port %s:%s\n",
+@@ -922,7 +922,7 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_ports, CXL);
+ 
+ struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd)
+ {
+-	return find_cxl_port(grandparent(&cxlmd->dev));
++	return dport_find_cxl_port(grandparent(&cxlmd->dev));
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_mem_find_port, CXL);
+ 
 -- 
 2.34.1
 
