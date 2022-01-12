@@ -2,105 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E66748C67D
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 15:52:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4C3348C68A
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 15:54:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354304AbiALOvE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 09:51:04 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:50192 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354287AbiALOu5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 09:50:57 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 63133B81F44;
-        Wed, 12 Jan 2022 14:50:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2145C36AE5;
-        Wed, 12 Jan 2022 14:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641999055;
-        bh=ZYIhQu0CJmEYqQPsxX+F20R/7TLgNCmuzU7RtO1+uBU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=TXQxe4XlT38nugbWRKDdxBY1KByqJNOv/XOXpZvLebOZ9mcEi/Uvcpz3dY0ztwTJa
-         31sW3/JElg+npzFZ1JCgqG1CywPvdfrxwbIIeebzyAcX96Dm5aY2ox8kce6thXtQty
-         lXJweipz0XlaCSlNN3NyKg2BCTVRBxDi+1uUqVJOcvg3to99k4HHQtL1CtXTYmb2FT
-         1c/ELnOzN0FXUxAo5Btp4avLKJa/gvHEQU55udjSCtYrDChsyhtz82vpA5qr1+pyvf
-         nDWPzMqKsE+vdyJwT+NYjm9enW3FGmAGiw/43NgBhbbMq8mB1E8JMzTf8Nqk/qx7sP
-         iUoY9ndVvBQWQ==
-Date:   Wed, 12 Jan 2022 08:50:53 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
-Message-ID: <20220112145053.GA254177@bhelgaas>
+        id S243201AbiALOxd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 09:53:33 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4406 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354337AbiALOxd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 09:53:33 -0500
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JYr8d5XgGz6883P;
+        Wed, 12 Jan 2022 22:50:41 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Wed, 12 Jan 2022 15:53:30 +0100
+Received: from localhost (10.122.247.231) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 12 Jan
+ 2022 14:53:29 +0000
+Date:   Wed, 12 Jan 2022 14:53:28 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
+        <linux-pci@vger.kernel.org>, <patches@lists.linux.dev>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>
+Subject: Re: [PATCH 13/13] cxl: Program decoders for regions
+Message-ID: <20220112145328.00000194@huawei.com>
+In-Reply-To: <20220107003756.806582-14-ben.widawsky@intel.com>
+References: <20220107003756.806582-1-ben.widawsky@intel.com>
+        <20220107003756.806582-14-ben.widawsky@intel.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9526698be0ced0f7a7ed00bd76538d16@walle.cc>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 23, 2021 at 07:12:02PM +0100, Michael Walle wrote:
-> Am 2021-12-23 17:37, schrieb Bjorn Helgaas:
-> 
-> > I intended to change the quirk from FINAL to EARLY, but obviously
-> > forgot.  Here's the updated version:
-> > 
-> > commit bb5639b73a2d ("PCI: Work around Intel I210 ROM BAR overlap
-> > defect")
-> > Author: Bjorn Helgaas <bhelgaas@google.com>
-> > Date:   Tue Dec 21 10:45:07 2021 -0600
-> > 
-> >     PCI: Work around Intel I210 ROM BAR overlap defect
-> > 
-> >     Per PCIe r5, sec 7.5.1.2.4, a device must not claim accesses to its
-> >     Expansion ROM unless both the Memory Space Enable and the Expansion
-> > ROM
-> >     Enable bit are set.  But apparently some Intel I210 NICs don't work
-> >     correctly if the ROM BAR overlaps another BAR, even if the Expansion
-> > ROM is
-> >     disabled.
-> > 
-> >     Michael reported that on a Kontron SMARC-sAL28 ARM64 system with
-> > U-Boot
-> >     v2021.01-rc3, the ROM BAR overlaps BAR 3, and networking doesn't
-> > work at
-> >     all:
-> > 
-> >       BAR 0: 0x40000000 (32-bit, non-prefetchable) [size=1M]
-> >       BAR 3: 0x40200000 (32-bit, non-prefetchable) [size=16K]
-> >       ROM:   0x40200000 (disabled) [size=1M]
-> > 
-> >       NETDEV WATCHDOG: enP2p1s0 (igb): transmit queue 0 timed out
-> >       Hardware name: Kontron SMARC-sAL28 (Single PHY) on SMARC Eval
-> > 2.0 carrier (DT)
-> >       igb 0002:01:00.0 enP2p1s0: Reset adapter
-> > 
-> >     Previously, pci_std_update_resource() wrote the assigned ROM address
-> > to the
-> >     BAR only when the ROM was enabled.  This meant that the I210 ROM BAR
-> > could
-> >     be left with an address assigned by firmware, which might overlap
-> > with
-> >     other BARs.
-> > 
-> >     Quirk these I210 devices so pci_std_update_resource() always writes
-> > the
-> >     assigned address to the ROM BAR, whether or not the ROM is enabled.
-> > 
-> >     Link:
-> > https://lore.kernel.org/r/20201230185317.30915-1-michael@walle.cc
-> >     Link: https://bugzilla.kernel.org/show_bug.cgi?id=211105
-> >     Reported-by: Michael Walle <michael@walle.cc>
-> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Tested-by: Michael Walle <michael@walle.cc>
+On Thu,  6 Jan 2022 16:37:56 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-Applied to pci/resource for v5.17, thanks!
+> Do the HDM decoder programming for all endpoints and host bridges in a
+> region. Switches are currently unimplemented.
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+Hi Ben,
+
+Minor bug in the maths below that I'd missed eyeballing the registers
+because it happened to give nearly the write value for my normal test config
+by complete coincidence...
+
+You may well have already caught this one - I've not checked your latest
+tree.
+
+> +/**
+> + * cxl_commit_decoder() - Program a configured cxl_decoder
+> + * @cxld: The preconfigured cxl decoder.
+> + *
+> + * A cxl decoder that is to be committed should have been earmarked as enabled.
+> + * This mechanism acts as a soft reservation on the decoder.
+> + *
+> + * Returns 0 if commit was successful, negative error code otherwise.
+> + */
+> +int cxl_commit_decoder(struct cxl_decoder *cxld)
+> +{
+> +	u32 ctrl, tl_lo, tl_hi, base_lo, base_hi, size_lo, size_hi;
+> +	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> +	struct cxl_port_state *cxlps;
+> +	void __iomem *hdm_decoder;
+> +	int rc;
+> +
+> +	/*
+> +	 * Decoder flags are entirely software controlled and therefore this
+> +	 * case is purely a driver bug.
+> +	 */
+> +	if (dev_WARN_ONCE(&port->dev, (cxld->flags & CXL_DECODER_F_ENABLE) != 0,
+> +			  "Invalid %s enable state\n", dev_name(&cxld->dev)))
+> +		return -ENXIO;
+> +
+> +	cxlps = dev_get_drvdata(&port->dev);
+> +	hdm_decoder = cxlps->regs.hdm_decoder;
+> +	ctrl = readl(hdm_decoder + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> +
+> +	/*
+> +	 * A decoder that's currently active cannot be changed without the
+> +	 * system being quiesced. While the driver should prevent against this,
+> +	 * for a variety of reasons the hardware might not be in sync with the
+> +	 * hardware and so, do not splat on error.
+> +	 */
+> +	size_hi = readl(hdm_decoder +
+> +			CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(cxld->id));
+> +	size_lo =
+> +		readl(hdm_decoder + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(cxld->id));
+> +	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl) &&
+> +	    (size_lo + size_hi)) {
+> +		dev_err(&port->dev, "Tried to change an active decoder (%s)\n",
+> +			dev_name(&cxld->dev));
+> +		return -EBUSY;
+> +	}
+> +
+> +	u32p_replace_bits(&ctrl, 8 - ilog2(cxld->interleave_granularity),
+
+This maths is wrong.   interleave_granularity is stored here as log2() anyway
+and should be cxld->interleave_granularity - 8;
+
+
+
+> +			  CXL_HDM_DECODER0_CTRL_IG_MASK);
+> +	u32p_replace_bits(&ctrl, ilog2(cxld->interleave_ways),
+> +			  CXL_HDM_DECODER0_CTRL_IW_MASK);
