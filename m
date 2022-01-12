@@ -2,73 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 878B948BC78
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 02:30:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 900FD48BC79
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Jan 2022 02:31:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347750AbiALBaj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Jan 2022 20:30:39 -0500
-Received: from mail-oi1-f170.google.com ([209.85.167.170]:46035 "EHLO
-        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235678AbiALBaj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 20:30:39 -0500
-Received: by mail-oi1-f170.google.com with SMTP id t9so1438496oie.12;
-        Tue, 11 Jan 2022 17:30:38 -0800 (PST)
+        id S1347764AbiALBbL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Jan 2022 20:31:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235678AbiALBbL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Jan 2022 20:31:11 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD00C06173F
+        for <linux-pci@vger.kernel.org>; Tue, 11 Jan 2022 17:31:11 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id c3so1711992pls.5
+        for <linux-pci@vger.kernel.org>; Tue, 11 Jan 2022 17:31:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=zWgTqK+//r+FI94NQVNRv5s0joBk1kqpwFFvipQzTiE=;
+        b=HKYc916JvWL1ESbC8UePMItOyR/nt3IGjEjUqt8gGgnNVFS+fjSgULjSI4985epJdL
+         yHocqZKVQSafOSZQV5Z40ZW4tR3zatPreqAnP+1st2UgOVI3XUtI8ACChb7tL432eqi0
+         hRH4tfD86XLpzmNO3PM0nOFBFT2bioAjDQW8qn5QuuLb6qVFD1CFJfqDlIiQqmoNie1P
+         Aruw72PyWt3RqOQEPI9NUeI0VdmSvSlTXCDiBVtclCqNEoKMXFud61Z2j7+mg+RjBLrQ
+         RNYbOINuyzjv08axYMgbizZNjc6Y6pZqAaOZzZfYwe76pAx8bJ5NEnBOXLl8UHOANe4n
+         MtiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=CQIGGTzoJ4KByPkRaK7D+T+l6re9t+YkmjrIouxd4KA=;
-        b=BuEXApT+H0Iv+17+AfTm7fZ+Z6rLlD22d0R1PNappXkzdaHih7nA+f2mdYufCcDXrc
-         zIY6aVH1T3CkGMjPY7ef2i/evIn7XEPkDxUmeIx0Hv05fIpo74b/Ppxiyw4u4xT72bt5
-         G0nPOw3ImIl16p4V92vqGe6V7E6ijR18hII3toPzkescDhIgz29n84sMez9k9GK0FR8D
-         hMCxOvpNInWzEhi8+wlPVe+HwDVd3IM5dJdly/gkUIeZDeEiLTO2okwP2jEjz5I74WdW
-         GapMpBA6aPggYMoHFO2QJzHwWBrnYleWb0v3V5EBYbpRDP9Q5w2Vrhx/QcZiGfzXXenJ
-         /Vqg==
-X-Gm-Message-State: AOAM533TiR3LQ4rdQmSM3/1to+9+RVC2vlKpj6ciVxYZ40BDvFlUsYE8
-        rDry1DPPmBJJf+IJiikFbOGR3PjRjQ==
-X-Google-Smtp-Source: ABdhPJyRrY0awBxfCnhsmy8iXNqluRU+JGL3oUqttbabEPdPsvs8r11Gtb/cgXQ/XK0pX5ThN9578w==
-X-Received: by 2002:a05:6808:1b2b:: with SMTP id bx43mr3699375oib.38.1641951038511;
-        Tue, 11 Jan 2022 17:30:38 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id w19sm394262oiw.29.2022.01.11.17.30.37
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zWgTqK+//r+FI94NQVNRv5s0joBk1kqpwFFvipQzTiE=;
+        b=4lDhXqsMnTsv0RngDFqerKZVn2Iy4BTJiCFT38BNe0dqDcowNucYOGkHYpuvHrVG+k
+         Q6Y+wGTeZJ+lHRsgzqZT2WqqfM1RT1qVxslOHxlFue3gFOeHyt0Pu9959uWb9K5bl+yp
+         ySVy0kPghlYEOirGjp9FTOJPJqbtvr8a3L/IDxlZ83HvDaMm+IQ+Vfrjl/cot00Ip2Ar
+         XAAOUAJd4enVS//7mpuPlVAHFpZ1KorMNtdbUSJuYiNJticxI2p+1lqVFuhCYPCgevM/
+         +9ThlQSJ54v8B/BhJUCxmkKe1F/oMRim8JtGbzZB0cXW4ugZrDM1drs41C1udxan4m8i
+         lnUA==
+X-Gm-Message-State: AOAM531dZCWuzAY5yTdc6JFzdCitHpQoQ3LFkpyVijcQ2B/+q6F9jyb0
+        ecUTY27JRHiy9XTJVskL/P67bWuCGVI=
+X-Google-Smtp-Source: ABdhPJymuYCBByuAJhdRLWur3yxxRVleKYjSAooK82ZyuUcHGiuPO1l5AUsFB/E1dPcp6P5g5FNYSA==
+X-Received: by 2002:a63:a84b:: with SMTP id i11mr6277644pgp.486.1641951070586;
+        Tue, 11 Jan 2022 17:31:10 -0800 (PST)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.11.250])
+        by smtp.gmail.com with ESMTPSA id k8sm12556258pfu.72.2022.01.11.17.31.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jan 2022 17:30:37 -0800 (PST)
-Received: (nullmailer pid 3869648 invoked by uid 1000);
-        Wed, 12 Jan 2022 01:30:36 -0000
-Date:   Tue, 11 Jan 2022 19:30:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 09/11] dt-bindings: PCI: mvebu: Update information about
- intx interrupts
-Message-ID: <Yd4vPDAu82Ec6fEc@robh.at.kernel.org>
-References: <20220105150239.9628-1-pali@kernel.org>
- <20220105150239.9628-10-pali@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220105150239.9628-10-pali@kernel.org>
+        Tue, 11 Jan 2022 17:31:10 -0800 (PST)
+From:   Jim Quinlan <jim2101024@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        jim2101024@gmail.com, james.quinlan@broadcom.com
+Cc:     linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH] fixup! PCI: brcmstb: Add control of subdevice voltage regulators
+Date:   Tue, 11 Jan 2022 20:31:00 -0500
+Message-Id: <20220112013100.48029-1-jim2101024@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 05 Jan 2022 16:02:37 +0100, Pali Rohár wrote:
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->  Documentation/devicetree/bindings/pci/mvebu-pci.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
+---
+ drivers/pci/controller/pcie-brcmstb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 8a3321314b74..4134f01acd87 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -1392,7 +1392,8 @@ static int brcm_pcie_resume(struct device *dev)
+ err_reset:
+ 	reset_control_rearm(pcie->rescal);
+ err_regulator:
+-	regulator_bulk_disable(pcie->sr->num_supplies, pcie->sr->supplies);
++	if (pcie->sr)
++		regulator_bulk_disable(pcie->sr->num_supplies, pcie->sr->supplies);
+ err_disable_clk:
+ 	clk_disable_unprepare(pcie->clk);
+ 	return ret;
+-- 
+2.17.1
+
