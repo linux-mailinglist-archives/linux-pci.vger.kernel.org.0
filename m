@@ -2,108 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97ED348D4C0
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 10:49:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 517A048D4F4
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 10:50:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232404AbiAMJIh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jan 2022 04:08:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbiAMJIh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jan 2022 04:08:37 -0500
-Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:1::465:107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72245C06173F
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jan 2022 01:08:36 -0800 (PST)
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:105:465:1:3:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4JZJWQ2X69zQkFr;
-        Thu, 13 Jan 2022 10:08:34 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Message-ID: <6dfb6225-aca3-dcbb-9e62-4d8b1933995f@denx.de>
-Date:   Thu, 13 Jan 2022 10:08:31 +0100
+        id S229881AbiAMJZQ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 13 Jan 2022 04:25:16 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4410 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229748AbiAMJZP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jan 2022 04:25:15 -0500
+Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JZJqL0WmWz67Ybb;
+        Thu, 13 Jan 2022 17:22:22 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Thu, 13 Jan 2022 10:25:12 +0100
+Received: from localhost (10.47.73.102) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Thu, 13 Jan
+ 2022 09:25:11 +0000
+Date:   Thu, 13 Jan 2022 09:25:12 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Zayd Qumsieh <zaydq@rivosinc.com>
+CC:     <alison.schofield@intel.com>, <ben.widawsky@intel.com>,
+        <cbrowy@avery-design.com>, <dan.j.williams@intel.com>,
+        <f.fangjian@huawei.com>, <helgaas@kernel.org>,
+        <ira.weiny@intel.com>, <linux-acpi@vger.kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linuxarm@huawei.com>, <lorenzo.pieralisi@arm.com>,
+        <vishal.l.verma@intel.com>, Dylan Reid <dylan@rivosinc.com>
+Subject: Re: [RFC PATCH 2/2] cxl/mem: Add CDAT table reading from DOE
+Message-ID: <20220113092512.000011d6@Huawei.com>
+In-Reply-To: <CAAJ9+9ct3+N0LyH+9N03ZQYUZnF23LFAyWFcnNK4bD7SvaohrQ@mail.gmail.com>
+References: <CAAJ9+9fq1=EcOaSoo3oD_5QjYNAv6PPDjKS+gC9o7XDp2p1XpQ@mail.gmail.com>
+        <CAAJ9+9ct3+N0LyH+9N03ZQYUZnF23LFAyWFcnNK4bD7SvaohrQ@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Subject: Re: [RESEND PATCH v2 2/4] PCI: Add pci_check_platform_service_irqs
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-References: <20220112164226.GA263789@bhelgaas>
-From:   Stefan Roese <sr@denx.de>
-In-Reply-To: <20220112164226.GA263789@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.47.73.102]
+X-ClientProxiedBy: lhreml717-chm.china.huawei.com (10.201.108.68) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/12/22 17:42, Bjorn Helgaas wrote:
-> On Wed, Jan 12, 2022 at 10:42:49AM +0100, Stefan Roese wrote:
->> From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
->>
->> Adding method pci_check_platform_service_irqs to check if platform
->> has registered method to proivde dedicated IRQ lines for PCIe services
->> like AER.
->>
->> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
->> Signed-off-by: Stefan Roese <sr@denx.de>
->> Tested-by: Stefan Roese <sr@denx.de>
->> Cc: Bjorn Helgaas <helgaas@kernel.org>
->> Cc: Pali Rohár <pali@kernel.org>
->> Cc: Michal Simek <michal.simek@xilinx.com>
->> ---
->>   include/linux/pci.h | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
->>
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 291eadade811..d6812d596ecc 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -2420,6 +2420,24 @@ static inline bool pci_ari_enabled(struct pci_bus *bus)
->>   	return bus->self && bus->self->ari_enabled;
->>   }
->>   
->> +/**
->> + * pci_check_platform_service_irqs - check platform service irq's
->> + * @pdev: PCI Express device to check
->> + * @irqs: Array of irqs to populate
->> + * @mask: Bitmask of capabilities
->> + */
->> +static inline void pci_check_platform_service_irqs(struct pci_dev *dev,
->> +						   int *irqs, int mask)
->> +{
->> +	struct pci_host_bridge *bridge;
->> +
->> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
->> +		bridge = pci_find_host_bridge(dev->bus);
->> +		if (bridge && bridge->setup_platform_service_irq)
->> +			bridge->setup_platform_service_irq(bridge, irqs, mask);
->> +	}
->> +}
+On Wed, 12 Jan 2022 14:16:18 -0800
+Zayd Qumsieh <zaydq@rivosinc.com> wrote:
+
+> Hello all,
 > 
-> I don't think this needs to be in include/linux/pci.h; I think it
-> should be in drivers/pci/pcie/portdrv_core.c where it is called.
+> Due to issues with vger.kernel.org marking HTML emails as spam, I'll
+> be resending the email in plain text:
+> 
+> 
+> 
+> Hello all, First off, thanks for your work on implementing PCI Data
+> Object Exchange in QEMU and Linux.
+> 
+> 1. Are these patches still being worked on? If not, I’ll try to get
+> them rebased and finished.
+> 
+> 2. Are there any notes not mentioned in the emails you feel are
+> important to know about?
+> 
+> 3. I'm particularly interested in the testing framework - the emails
+> mention that a lot of testing has been done through QEMU but how can I
+> carry out these tests on my own? What tools did you use?
+> 
+> Thanks,
+> 
+> Zayd
 
-Agreed.
+https://lore.kernel.org/all/20211105235056.3711389-1-ira.weiny@intel.com/
+Is the latest version of this.  For basic testing Ben's qemu branch should
+work for you. 
+https://gitlab.com/bwidawsk/qemu/-/commits/cxl-2.0v4/
 
-> The name and signature should be parallel to pcie_init_service_irqs()
-> since it is basically doing the same thing for platform-specific
-> interrupts.
+Note there are some big questions over the approach used for integrating
+this with the PCI subsystem (auxiliary bus vs library) which I'm not sure
+we've reached a conclusion on yet.
 
-I've changed it now to pcie_init_platform_service_irqs(). Just let me
-know if you had some other naming in mind.
+One minor thing on the wish list is lspci support to at least identify the
+presence of a DOE.  I have patches for that and will send out fairly soon
+once I've cleared a backlog of other stuff.
 
-> These patches are split up a little bit *too* much.  Each one should
-> add some piece of functionality.  Currently they add declarations that
-> are not used, functions that are not called, etc.  That makes it hard
-> to read one patch and get any idea of what it's for.
-
-Agreed. Let me see, how this is best done. Most likely 2 patches, one
-adding the new infrastructure to the PCIe subsystem and one adding the
-"user" to the Xilinx PCIe controller driver.
+My main focus right now is on resolving some of the opens around the
+QEMU support for CXL emul in general, but I haven't touched the DOE stuff
+beyond rebasing.  *fingers crossed* I should have an updated qemu tree
+out sometime in next week or so.
 
 Thanks,
-Stefan
+
+Jonathan
