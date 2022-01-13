@@ -2,97 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2FB148D4B2
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 10:49:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7B1048D4B4
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 10:49:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231298AbiAMJEA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jan 2022 04:04:00 -0500
-Received: from mout.perfora.net ([74.208.4.196]:52121 "EHLO mout.perfora.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231161AbiAMJD7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 13 Jan 2022 04:03:59 -0500
-Received: from localhost.localdomain ([81.221.144.115]) by mrelay.perfora.net
- (mreueus003 [74.208.5.2]) with ESMTPSA (Nemesis) id 0M1m9M-1mEAdZ2zBy-00th5p;
- Thu, 13 Jan 2022 10:03:36 +0100
-From:   Marcel Ziswiler <marcel@ziswiler.com>
-To:     linux-phy@lists.infradead.org
-Cc:     linux-next@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Tim Harvey <tharvey@gateworks.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH v2] phy: freescale: pcie: cosmetic clean-up
-Date:   Thu, 13 Jan 2022 10:03:21 +0100
-Message-Id: <20220113090321.119880-1-marcel@ziswiler.com>
-X-Mailer: git-send-email 2.33.1
+        id S230020AbiAMJFL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jan 2022 04:05:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233264AbiAMJEo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jan 2022 04:04:44 -0500
+Received: from mout-u-204.mailbox.org (mout-u-204.mailbox.org [IPv6:2001:67c:2050:1::465:204])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECF8C06173F
+        for <linux-pci@vger.kernel.org>; Thu, 13 Jan 2022 01:04:44 -0800 (PST)
+Received: from smtp1.mailbox.org (unknown [91.198.250.123])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 4JZJQy5HM0zQk4J;
+        Thu, 13 Jan 2022 10:04:42 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Message-ID: <23d61a81-dac8-f801-d1f1-17d67a774285@denx.de>
+Date:   Thu, 13 Jan 2022 10:04:37 +0100
 MIME-Version: 1.0
+Subject: Re: [RESEND PATCH v2 3/4] PCI/portdrv: Check platform supported
+ service IRQ's
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+References: <20220112163646.GA263326@bhelgaas>
+From:   Stefan Roese <sr@denx.de>
+In-Reply-To: <20220112163646.GA263326@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:LMVuApgc6X7l67/Kle4sn+3reMtIFV4BD4OCrBDC7RhTnbXCqpN
- oMXeq9r8qLlVW/gPAVRU6Mysznuj9kG0EoDH3Rp0xtEm+gnC7zrvAqU4uGHwp+zWsGg1REC
- 6z8DfT98EQ7kpLzxabfruD8xyQ5UAuVlxPoM1kOgsArUKFtIDVxlwcvYq2+STFnhvC9gilt
- VusWDZxKRPcFMHm9EzuXw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nGo3enaFOMI=:1EQd4AM0tHvPCz8hk00wKi
- m+xBm6ZubgPv5cObWHd+SFTqJutPuqpz/2/FwpP6s21DqJpAU2T2EEbAXUbYUQbjzg8me/z7z
- qqPJMR/4Nvu+gVBlzDggoLlvLKgtELx7UZJgx0rr9IVW2yh2/cfWenyRXQDPfTQSlIFuyNpI/
- yRXzr7o47oYuaVNIQS/t7hDrZZoMALMRizJu4N0x+l2YK6tCZnFPx1jUnI3TVPTB3H5d2dXFI
- yMjUwPXq85uB2u5rn0s+ZYQyLSRG3pu7wKGmcdr1ipfmhiK96Sfy+MJfUC/cn6Y2VU3iilCem
- vlcckL+/hHJKRxoeiWibrQR+njJXFDjaexD1EBb0Aw+qRqPQxBylspfePJi/GDbMyAPno8qhg
- uybCZlxz7BjwpKxjb2TpbqU4LCbJ/07mRvxq27MmtTWQmGgurgDtT3R6B0ttRHGhKP6eGB9Wg
- NXZ8/a5lxZDmdnUuQ8ZMFYz9S4apaE0fY4L8bVjbExtc8dAxPSlwIuHpbeJq85GR0nLW0b19k
- UUAR4Md/xfrO/0fbAjU6Pwx68yIaAiTsiR8sNLm0JiyfsFT7mDzuaSydXdyyllncxNR+vZMf0
- v21n9e3bIeuy29fA5u9SRE4e/ve9JTPfHVPZb7beJUsq46QYG1t6qV4Y+ffJ2upJKamSis84Q
- FBLkYWGTAMwhz1xB5eM7HKOtxspFTV5Syd0LUVaCRDpZtBR9UfEhvmrKjBu6zn5NDgTg=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On 1/12/22 17:36, Bjorn Helgaas wrote:
+> On Wed, Jan 12, 2022 at 11:34:02AM +0100, Pali Rohár wrote:
+>> On Wednesday 12 January 2022 10:42:50 Stefan Roese wrote:
+>>> From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+>>>
+>>> Platforms may have dedicated IRQ lines for PCIe services like
+>>> AER/PME etc., check for such IRQ lines.
+>>> Check if platform has any dedicated IRQ lines for PCIe
+>>> services.
+> 
+> Use the terminology from the spec again ("platform-specific System
+> Errors").
 
-Sort includes alphabethically and add a new line before the dt-bindings
-one as usually done.
+Ok.
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+>>> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+>>> Signed-off-by: Stefan Roese <sr@denx.de>
+>>> Tested-by: Stefan Roese <sr@denx.de>
+>>> Cc: Bjorn Helgaas <helgaas@kernel.org>
+>>> Cc: Pali Rohár <pali@kernel.org>
+>>> Cc: Michal Simek <michal.simek@xilinx.com>
+>>> ---
+>>>   drivers/pci/pcie/portdrv_core.c | 8 ++++++++
+>>>   1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+>>> index bda630889f95..70dd45671ed8 100644
+>>> --- a/drivers/pci/pcie/portdrv_core.c
+>>> +++ b/drivers/pci/pcie/portdrv_core.c
+>>> @@ -358,6 +358,14 @@ int pcie_port_device_register(struct pci_dev *dev)
+>>>   		}
+>>>   	}
+>>>   
+>>> +	/*
+>>> +	 * Some platforms have dedicated interrupt line from root complex to
+>>> +	 * interrupt controller for PCIe services like AER/PME etc., check
+>>> +	 * if platform registered with any such IRQ.
+>>> +	 */
+>>> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
+>>> +		pci_check_platform_service_irqs(dev, irqs, capabilities);
+>>> +
+>>
+>> In my opinion calling this hook at this stage is too late. Few lines
+>> above is following code:
+>>
+>> 	if (irq_services) {
+>> 		/*
+>> 		 * Initialize service IRQs. Don't use service devices that
+>> 		 * require interrupts if there is no way to generate them.
+>> 		 * However, some drivers may have a polling mode (e.g.
+>> 		 * pciehp_poll_mode) that can be used in the absence of IRQs.
+>> 		 * Allow them to determine if that is to be used.
+>> 		 */
+>> 		status = pcie_init_service_irqs(dev, irqs, irq_services);
+>> 		if (status) {
+>> 			irq_services &= PCIE_PORT_SERVICE_HP;
+>> 			if (!irq_services)
+>> 				goto error_disable;
+>> 		}
+>> 	}
+>>
+>> Function pcie_init_service_irqs() fails if "dev" does not have any
+>> suitable interrupt. Which happens for devices / root ports without
+>> support for standard interrupts (INTx / MSI).
+>>
+>> I think that this new hook should have preference over
+>> pcie_init_service_irqs() and after this new hook should be
+>> pcie_init_service_irqs() called only for irq_services which new hook has
+>> not filled. And if at least new hook or pcie_init_service_irqs() passes
+>> then "error_disable" path should not be called.
+> 
+> I tend to agree.  I expect that a host bridge will only use this new
+> mechanism if the standard INTx/MSI interrupts don't work.
+> 
+> I guess it's possible a device could use platform-specific errors for
+> some services and standard INTx/MSI for others, but unless we have an
+> example of that, I'm not sure it's worth trying to support that.
+> 
+> For now, I think it will be simpler to skip pcie_init_service_irqs()
+> completely if the platform-specific hook is successful.
 
----
+Understood. I'll make the necessary changes in v3.
 
-Changes in v2:
-- Was 'phy: freescale: pcie: fix building for x86_64 as a module' but as
-  Vinod already pushed a fix for that build issue this now only
-  addresses the minor cosmetic clean-up as requested by him.
-
- drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-index 04b1aafb29f4..f1eb03ba25d6 100644
---- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-+++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-@@ -5,9 +5,9 @@
- 
- #include <linux/bitfield.h>
- #include <linux/clk.h>
-+#include <linux/delay.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
--#include <linux/delay.h>
- #include <linux/mfd/syscon.h>
- #include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
- #include <linux/module.h>
-@@ -15,6 +15,7 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
-+
- #include <dt-bindings/phy/phy-imx8-pcie.h>
- 
- #define IMX8MM_PCIE_PHY_CMN_REG061	0x184
--- 
-2.33.1
-
+Thanks,
+Stefan
