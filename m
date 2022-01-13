@@ -2,111 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E67B148D01F
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 02:28:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59E8F48D089
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 03:50:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231302AbiAMB2k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 20:28:40 -0500
-Received: from mga14.intel.com ([192.55.52.115]:57880 "EHLO mga14.intel.com"
+        id S231804AbiAMCub (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 21:50:31 -0500
+Received: from mga06.intel.com ([134.134.136.31]:21669 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231290AbiAMB2j (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jan 2022 20:28:39 -0500
+        id S229768AbiAMCub (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jan 2022 21:50:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642037319; x=1673573319;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1GQhvpc9h2q+oWT0Bwc9I8ajOa4+I4trncxc6miRVHI=;
-  b=LEWGEU418sRdd1tHEfAAc37NyvfxK9/j0EwFKiUnsuGOw6P6EiAyDEgz
-   Vc7mJKQ7JodDOYwVYPBAdeFOXrVZGVu3B4sTPFWmfj6uFu/I/ERES3isZ
-   pBrr+WGYyjNrbwz+AgMVgeo9QUfi44tWlvo4ir4/K1jhZjZyGWvbfhjSY
-   C/QdRheSuYb7oXy8cist1EMGXR2DVZMtEGAVKawHQ7y1Fyo5Cu3fRyE1m
-   nnBO44N2o/2sIF3L4jZxFDS+lyNjPqAo9LKGJZSIX+VEIFwI2vFhRCpTL
-   w6LzJrV17GGYhENM5FHfeOl2lyAF5/5SY4XD0BT5c04q+GNNfEkVDqurN
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="244106300"
+  t=1642042231; x=1673578231;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Qs3zSbYlel7tNSfxRS8p4PHbPMXMTznPsw5i8oWUQEo=;
+  b=W57S5IAe0F9Dk/qVraeUwgJkelUGjEww4dKRpvTyvVqK5Kw2GFQaeWmD
+   l2TPJCqw/G8ZTMW5hOqWmhBaYFAPQO3BUuVms8YzuwV86J/XZyNgfHCf2
+   pN/RdLS4arNgD7KURX/mtNtQkshcdqN9vq8QWi1F2E4MLeA+A/x1U3IPt
+   0k7Kvsi2RX9WvOCHo3mUD4jT4183Y1H4AU4gcDb1eUQD2fESYccUswY24
+   uB/cTLoc2IBHQPyXkcXASfindTr/PhQINYADWZ/hHkmhcpK/OMTGAYhO3
+   sxqdoAi9ZdMF1bKYLIQIEVqWx7ZuDti4GmUE8sLXpXP2LdRgXAtqhMOb3
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="304649770"
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="244106300"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 17:28:29 -0800
+   d="scan'208";a="304649770"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 18:50:30 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="765397423"
-Received: from jsinnott-mobl.amr.corp.intel.com (HELO ldmartin-desk2) ([10.212.139.158])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 17:28:29 -0800
-Date:   Wed, 12 Jan 2022 17:28:29 -0800
-From:   Lucas De Marchi <lucas.demarchi@intel.com>
+   d="scan'208";a="473067964"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 12 Jan 2022 18:50:29 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1n7qC4-0006kn-VR; Thu, 13 Jan 2022 02:50:28 +0000
+Date:   Thu, 13 Jan 2022 10:50:14 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-pci@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [Intel-gfx] [PATCH v4] x86/quirks: Replace QFLAG_APPLY_ONCE with
- static locals
-Message-ID: <20220113012829.pquif5ujboyohzld@ldmartin-desk2>
-References: <20220113002128.7wcji4n5rlpchlyt@ldmartin-desk2>
- <20220113010645.GA301048@bhelgaas>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/host/hv] BUILD SUCCESS
+ d9932b46915664c88709d59927fa67e797adec56
+Message-ID: <61df9366.xRo6oc4qmcsM+4My%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20220113010645.GA301048@bhelgaas>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 07:06:45PM -0600, Bjorn Helgaas wrote:
->On Wed, Jan 12, 2022 at 04:21:28PM -0800, Lucas De Marchi wrote:
->> On Wed, Jan 12, 2022 at 06:08:05PM -0600, Bjorn Helgaas wrote:
->> > On Wed, Jan 12, 2022 at 03:30:43PM -0800, Lucas De Marchi wrote:
->> > > The flags are only used to mark a quirk to be called once and nothing
->> > > else. Also, that logic may not be appropriate if the quirk wants to
->> > > do additional filtering and set quirk as applied by itself.
->> > >
->> > > So replace the uses of QFLAG_APPLY_ONCE with static local variables in
->> > > the few quirks that use this logic and remove all the flags logic.
->> > >
->> > > Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
->> > > Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
->> >
->> > Only occurred to me now, but another, less intrusive approach would be
->> > to just remove QFLAG_APPLY_ONCE from intel_graphics_quirks() and do
->> > its bookkeeping internally, e.g.,
->>
->> that is actually what I suggested after your comment in v2: this would
->> be the first patch with "minimal fix". But then to keep it consistent
->> with the other calls to follow up with additional patches on top
->> converting them as well.  Maybe what I wrote wasn't clear in the
->> direction? Copying it here:
->>
->> 	1) add the static local only to intel graphics quirk  and remove the
->> 	flag from this item
->> 	2 and 3) add the static local to other functions and remove the flag
->> 	from those items
->> 	4) remove the flag from the table, the defines and its usage.
->> 	5) fix the coding style (to be clear, it's already wrong, not
->> 	something wrong introduced here... maybe could be squashed in (4)?)
->
->Oh, sorry, I guess I just skimmed over that without really
->comprehending it.
->
->Although the patch below is basically just 1 from above and doesn't
->require any changes to the other functions or the flags themselves
->(2-4 above).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/hv
+branch HEAD: d9932b46915664c88709d59927fa67e797adec56  PCI: hv: Add arm64 Hyper-V vPCI support
 
-Yes, but I would do the rest of the conversion anyway. It would be odd
-to be inconsistent with just a few functions. So in the end I think we
-would achieve the same goal.
+elapsed time: 720m
 
-I would really prefer this approach, having the bug fix first, if I was
-concerned about having to backport this to linux-stable beyond 5.10.y
-(we have a trivial conflict on 5.10).
+configs tested: 134
+configs skipped: 3
 
-However given this situation is new (Intel GPU + Intel Discrete GPU)
-rare (it also needs a PCI topology in a certain way to reproduce it),
-I'm not too concerned. Not even sure if it's worth submitting to
-linux-stable.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I'll wait others to chime in on one way vs the other.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+m68k                       m5249evb_defconfig
+h8300                               defconfig
+mips                      loongson3_defconfig
+microblaze                          defconfig
+mips                        vocore2_defconfig
+xtensa                  nommu_kc705_defconfig
+m68k                             alldefconfig
+sh                          sdk7780_defconfig
+ia64                        generic_defconfig
+ia64                         bigsur_defconfig
+sh                     magicpanelr2_defconfig
+mips                  maltasmvp_eva_defconfig
+arm                             pxa_defconfig
+m68k                          atari_defconfig
+powerpc                    klondike_defconfig
+arm                           stm32_defconfig
+powerpc                      bamboo_defconfig
+csky                             alldefconfig
+powerpc                 mpc834x_itx_defconfig
+m68k                       bvme6000_defconfig
+sh                        apsh4ad0a_defconfig
+sh                              ul2_defconfig
+sh                          polaris_defconfig
+arm                       aspeed_g5_defconfig
+mips                      maltasmvp_defconfig
+mips                           ci20_defconfig
+sh                          rsk7269_defconfig
+um                           x86_64_defconfig
+sh                               j2_defconfig
+powerpc64                        alldefconfig
+mips                     decstation_defconfig
+powerpc                       holly_defconfig
+csky                                defconfig
+powerpc                        warp_defconfig
+arc                          axs101_defconfig
+sh                           sh2007_defconfig
+powerpc                 mpc837x_rdb_defconfig
+powerpc                      pasemi_defconfig
+sh                          r7785rp_defconfig
+arm                            hisi_defconfig
+sh                           se7705_defconfig
+arm                  randconfig-c002-20220112
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-thanks
-Lucas De Marchi
+clang tested configs:
+arm                  randconfig-c002-20220112
+x86_64                        randconfig-c007
+riscv                randconfig-c006-20220112
+powerpc              randconfig-c003-20220112
+i386                          randconfig-c001
+mips                 randconfig-c004-20220112
+powerpc                     akebono_defconfig
+mips                   sb1250_swarm_defconfig
+arm                         shannon_defconfig
+powerpc                 xes_mpc85xx_defconfig
+arm                          collie_defconfig
+powerpc                  mpc866_ads_defconfig
+mips                      pic32mzda_defconfig
+mips                           mtx1_defconfig
+mips                        bcm63xx_defconfig
+powerpc                      pmac32_defconfig
+arm                        spear3xx_defconfig
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220112
+riscv                randconfig-r042-20220112
+hexagon              randconfig-r041-20220112
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
