@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59E8F48D089
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 03:50:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F3C648D09B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 04:04:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231804AbiAMCub (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 21:50:31 -0500
-Received: from mga06.intel.com ([134.134.136.31]:21669 "EHLO mga06.intel.com"
+        id S231856AbiAMDEc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 22:04:32 -0500
+Received: from mga14.intel.com ([192.55.52.115]:64628 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229768AbiAMCub (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jan 2022 21:50:31 -0500
+        id S231833AbiAMDEc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 12 Jan 2022 22:04:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642042231; x=1673578231;
+  t=1642043072; x=1673579072;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=Qs3zSbYlel7tNSfxRS8p4PHbPMXMTznPsw5i8oWUQEo=;
-  b=W57S5IAe0F9Dk/qVraeUwgJkelUGjEww4dKRpvTyvVqK5Kw2GFQaeWmD
-   l2TPJCqw/G8ZTMW5hOqWmhBaYFAPQO3BUuVms8YzuwV86J/XZyNgfHCf2
-   pN/RdLS4arNgD7KURX/mtNtQkshcdqN9vq8QWi1F2E4MLeA+A/x1U3IPt
-   0k7Kvsi2RX9WvOCHo3mUD4jT4183Y1H4AU4gcDb1eUQD2fESYccUswY24
-   uB/cTLoc2IBHQPyXkcXASfindTr/PhQINYADWZ/hHkmhcpK/OMTGAYhO3
-   sxqdoAi9ZdMF1bKYLIQIEVqWx7ZuDti4GmUE8sLXpXP2LdRgXAtqhMOb3
+  bh=PHyeXUlXAzbJik1j1BfbKp1pPMJI3E6VA1o41vDpK4A=;
+  b=eh9c8DbWgtyIEumKBPuZRu6846gF/HHO3FJGJ8aHuY1Wb3nFpmtK1gjY
+   Es7F1SvjM2u9P7qYBGW2DJasxgpKTb+BJFtlLlyf8vV2emznQPqYkF53B
+   P3xGp9BYyZ9sDpjILijuoL5AVgv2dF9ljpL2tlSukKMILAokLa/piwEs8
+   1uQBeayNp8JVRCvhHzvfjbnwnFWCuRphVK4icBy/y1yogDIX1zfHzFpfv
+   jLnKvudhP6EBoJyzkJwFKhm2DWAEsf4rsihaGDq/AcihIMx+m4P50DYHu
+   7+WIIZEcsO87Bi4MNO2A6EarIxnoJFhzx0AVQ2mf7zLYr/ym+nd1YFfAG
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="304649770"
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="244119741"
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="304649770"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 18:50:30 -0800
+   d="scan'208";a="244119741"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 19:04:32 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="473067964"
+   d="scan'208";a="475150631"
 Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 12 Jan 2022 18:50:29 -0800
+  by orsmga006.jf.intel.com with ESMTP; 12 Jan 2022 19:04:30 -0800
 Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1n7qC4-0006kn-VR; Thu, 13 Jan 2022 02:50:28 +0000
-Date:   Thu, 13 Jan 2022 10:50:14 +0800
+        id 1n7qPd-0006ll-Fu; Thu, 13 Jan 2022 03:04:29 +0000
+Date:   Thu, 13 Jan 2022 11:04:00 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/host/hv] BUILD SUCCESS
- d9932b46915664c88709d59927fa67e797adec56
-Message-ID: <61df9366.xRo6oc4qmcsM+4My%lkp@intel.com>
+Subject: [helgaas-pci:pci/hotplug] BUILD SUCCESS
+ 085a9f43433f30cbe8a1ade62d9d7827c3217f4d
+Message-ID: <61df96a0.gtdDgiIUDvxHgBfg%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,12 +52,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/hv
-branch HEAD: d9932b46915664c88709d59927fa67e797adec56  PCI: hv: Add arm64 Hyper-V vPCI support
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
+branch HEAD: 085a9f43433f30cbe8a1ade62d9d7827c3217f4d  PCI: pciehp: Use down_read/write_nested(reset_lock) to fix lockdep errors
 
-elapsed time: 720m
+elapsed time: 733m
 
-configs tested: 134
+configs tested: 131
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -116,8 +116,8 @@ ia64                             allmodconfig
 ia64                                defconfig
 ia64                             allyesconfig
 m68k                             allmodconfig
-m68k                             allyesconfig
 m68k                                defconfig
+m68k                             allyesconfig
 nios2                               defconfig
 arc                              allyesconfig
 nds32                             allnoconfig
@@ -148,9 +148,6 @@ powerpc                           allnoconfig
 x86_64                        randconfig-a006
 x86_64                        randconfig-a004
 x86_64                        randconfig-a002
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
 i386                          randconfig-a012
 i386                          randconfig-a014
 i386                          randconfig-a016
