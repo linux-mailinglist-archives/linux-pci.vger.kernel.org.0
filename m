@@ -2,99 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 517A048D4F4
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 10:50:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CDA4548D518
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 10:50:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229881AbiAMJZQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 13 Jan 2022 04:25:16 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4410 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbiAMJZP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jan 2022 04:25:15 -0500
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JZJqL0WmWz67Ybb;
-        Thu, 13 Jan 2022 17:22:22 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 13 Jan 2022 10:25:12 +0100
-Received: from localhost (10.47.73.102) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Thu, 13 Jan
- 2022 09:25:11 +0000
-Date:   Thu, 13 Jan 2022 09:25:12 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Zayd Qumsieh <zaydq@rivosinc.com>
-CC:     <alison.schofield@intel.com>, <ben.widawsky@intel.com>,
-        <cbrowy@avery-design.com>, <dan.j.williams@intel.com>,
-        <f.fangjian@huawei.com>, <helgaas@kernel.org>,
-        <ira.weiny@intel.com>, <linux-acpi@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linuxarm@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <vishal.l.verma@intel.com>, Dylan Reid <dylan@rivosinc.com>
-Subject: Re: [RFC PATCH 2/2] cxl/mem: Add CDAT table reading from DOE
-Message-ID: <20220113092512.000011d6@Huawei.com>
-In-Reply-To: <CAAJ9+9ct3+N0LyH+9N03ZQYUZnF23LFAyWFcnNK4bD7SvaohrQ@mail.gmail.com>
-References: <CAAJ9+9fq1=EcOaSoo3oD_5QjYNAv6PPDjKS+gC9o7XDp2p1XpQ@mail.gmail.com>
-        <CAAJ9+9ct3+N0LyH+9N03ZQYUZnF23LFAyWFcnNK4bD7SvaohrQ@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S233239AbiAMJiw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jan 2022 04:38:52 -0500
+Received: from mga06.intel.com ([134.134.136.31]:46172 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233252AbiAMJiu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jan 2022 04:38:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642066730; x=1673602730;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9ouIefcz1muB75wy0WmnSN1XcPoxLQ3DV+u2AW2BDz8=;
+  b=V3NChWPbk+jqzLfBV6+BnKBicnvQFgrScIW5+LE2OCarZlef08VTIwgj
+   YkZzEuZD2XLmhgwFKO67YEsIGUeLZfZa7WvVU3hyNm6TFeonxGMB+9Vo1
+   3pG8uSX92UuFF9J2plUfIcLqyXz2Pvs0Tw5QTMGyF6TMdoyFYSl/AQeFP
+   54Au+MMdvjSRiZUkV13Q2rhQHCwQAjpiyN2Zbh4YJ6zP66nP9RZ9XVqQX
+   wxCA2f5lmMWiVIstnFkjRwcVCouHBBBvKgxfwiUO6z0cWh4ZLQvGdDcJr
+   ieBMSa9EakYhXFhKAhSJKS/SsaQK9eeHaEfoFdRYGIeVYEKagZURDPlAR
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="304707762"
+X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
+   d="scan'208";a="304707762"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 01:38:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
+   d="scan'208";a="559048302"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 13 Jan 2022 01:38:38 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1n7wZ3-00072x-Aa; Thu, 13 Jan 2022 09:38:37 +0000
+Date:   Thu, 13 Jan 2022 17:38:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/host/brcmstb] BUILD SUCCESS
+ 11ed8b8624b8085f706864b4addcd304b1e4fc38
+Message-ID: <61dff30f.Iup2TWzwpfJAceK7%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.47.73.102]
-X-ClientProxiedBy: lhreml717-chm.china.huawei.com (10.201.108.68) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 12 Jan 2022 14:16:18 -0800
-Zayd Qumsieh <zaydq@rivosinc.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/brcmstb
+branch HEAD: 11ed8b8624b8085f706864b4addcd304b1e4fc38  PCI: brcmstb: Do not turn off WOL regulators on suspend
 
-> Hello all,
-> 
-> Due to issues with vger.kernel.org marking HTML emails as spam, I'll
-> be resending the email in plain text:
-> 
-> 
-> 
-> Hello all, First off, thanks for your work on implementing PCI Data
-> Object Exchange in QEMU and Linux.
-> 
-> 1. Are these patches still being worked on? If not, I’ll try to get
-> them rebased and finished.
-> 
-> 2. Are there any notes not mentioned in the emails you feel are
-> important to know about?
-> 
-> 3. I'm particularly interested in the testing framework - the emails
-> mention that a lot of testing has been done through QEMU but how can I
-> carry out these tests on my own? What tools did you use?
-> 
-> Thanks,
-> 
-> Zayd
+elapsed time: 725m
 
-https://lore.kernel.org/all/20211105235056.3711389-1-ira.weiny@intel.com/
-Is the latest version of this.  For basic testing Ben's qemu branch should
-work for you. 
-https://gitlab.com/bwidawsk/qemu/-/commits/cxl-2.0v4/
+configs tested: 155
+configs skipped: 3
 
-Note there are some big questions over the approach used for integrating
-this with the PCI subsystem (auxiliary bus vs library) which I'm not sure
-we've reached a conclusion on yet.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-One minor thing on the wish list is lspci support to at least identify the
-presence of a DOE.  I have patches for that and will send out fairly soon
-once I've cleared a backlog of other stuff.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+m68k                             alldefconfig
+sh                          sdk7780_defconfig
+ia64                        generic_defconfig
+ia64                         bigsur_defconfig
+sh                     magicpanelr2_defconfig
+sh                          landisk_defconfig
+sh                   sh7724_generic_defconfig
+mips                  maltasmvp_eva_defconfig
+sh                                  defconfig
+mips                       capcella_defconfig
+powerpc                      ppc40x_defconfig
+m68k                             allyesconfig
+powerpc                           allnoconfig
+sh                               alldefconfig
+powerpc                      mgcoge_defconfig
+arm                            lart_defconfig
+powerpc                    klondike_defconfig
+arm                           stm32_defconfig
+powerpc                      bamboo_defconfig
+csky                             alldefconfig
+sparc                       sparc32_defconfig
+sh                          rsk7269_defconfig
+um                           x86_64_defconfig
+sh                               j2_defconfig
+powerpc64                        alldefconfig
+mips                     decstation_defconfig
+powerpc                       holly_defconfig
+csky                                defconfig
+powerpc                        warp_defconfig
+m68k                       m5475evb_defconfig
+mips                             allyesconfig
+arm                            pleb_defconfig
+arm                        trizeps4_defconfig
+sh                           se7705_defconfig
+mips                         mpc30x_defconfig
+xtensa                  audio_kc705_defconfig
+mips                 decstation_r4k_defconfig
+nios2                            alldefconfig
+powerpc                      pasemi_defconfig
+m68k                            q40_defconfig
+arm                           tegra_defconfig
+arm                          badge4_defconfig
+mips                            ar7_defconfig
+mips                        jmr3927_defconfig
+openrisc                 simple_smp_defconfig
+powerpc                  iss476-smp_defconfig
+sh                   sh7770_generic_defconfig
+arm                          exynos_defconfig
+ia64                             allmodconfig
+sh                         apsh4a3a_defconfig
+mips                           xway_defconfig
+powerpc                       ppc64_defconfig
+arm                          simpad_defconfig
+arm                         lpc18xx_defconfig
+m68k                        mvme16x_defconfig
+ia64                          tiger_defconfig
+m68k                       bvme6000_defconfig
+sh                             sh03_defconfig
+arm                        cerfcube_defconfig
+powerpc                 mpc837x_mds_defconfig
+xtensa                  nommu_kc705_defconfig
+sh                          r7785rp_defconfig
+arm                            hisi_defconfig
+powerpc                       maple_defconfig
+i386                             alldefconfig
+arm                           sunxi_defconfig
+sh                           se7721_defconfig
+sh                           se7780_defconfig
+powerpc                   motionpro_defconfig
+arm                           h3600_defconfig
+m68k                         amcore_defconfig
+sh                          rsk7264_defconfig
+sh                          kfr2r09_defconfig
+um                             i386_defconfig
+h8300                               defconfig
+arm                  randconfig-c002-20220113
+arm                  randconfig-c002-20220112
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a002
+i386                          randconfig-a012
+i386                          randconfig-a016
+i386                          randconfig-a014
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+riscv                randconfig-r042-20220113
+arc                  randconfig-r043-20220113
+s390                 randconfig-r044-20220113
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
-My main focus right now is on resolving some of the opens around the
-QEMU support for CXL emul in general, but I haven't touched the DOE stuff
-beyond rebasing.  *fingers crossed* I should have an updated qemu tree
-out sometime in next week or so.
+clang tested configs:
+arm                  randconfig-c002-20220113
+x86_64                        randconfig-c007
+riscv                randconfig-c006-20220113
+powerpc              randconfig-c003-20220113
+i386                          randconfig-c001
+mips                 randconfig-c004-20220113
+mips                        bcm63xx_defconfig
+mips                   sb1250_swarm_defconfig
+powerpc                      pmac32_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220112
+riscv                randconfig-r042-20220112
+hexagon              randconfig-r041-20220112
+hexagon              randconfig-r045-20220113
+hexagon              randconfig-r041-20220113
 
-Thanks,
-
-Jonathan
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
