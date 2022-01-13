@@ -2,76 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7B8248CF7F
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 01:00:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CA3348CF8B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 01:08:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236340AbiAMAAe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 19:00:34 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:37816 "EHLO
+        id S236470AbiAMAIL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Jan 2022 19:08:11 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:39020 "EHLO
         sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231522AbiAMAAd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 19:00:33 -0500
+        with ESMTP id S236356AbiAMAIK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Jan 2022 19:08:10 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 68D7DCE1DD0;
-        Thu, 13 Jan 2022 00:00:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19064C36AE9;
-        Thu, 13 Jan 2022 00:00:28 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 3D90DCE0D86
+        for <linux-pci@vger.kernel.org>; Thu, 13 Jan 2022 00:08:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37A06C36AE5;
+        Thu, 13 Jan 2022 00:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642032029;
-        bh=trGh1l73wrj5RPiPc/D2fF8FI27Khi/DM6q9d+U1vLo=;
+        s=k20201202; t=1642032487;
+        bh=MDgHuDUKkZpA7YOw1v3XLpNUYIpHVwXXwUpwObv/ol8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ecCNkSAnUPWNmK0Wzw+EbLssThumLTtWn53naeIAFCaRaa1Tmsi9Nnb2TUubrDj9X
-         WPRo+f30n0oJ2miMjpS2FXe90FI5CKKkNYhOoXJFe8R+iK3hMD7I6keegZyD/37AzQ
-         XYuBcv5YesYeA7kFt7ARI0fmebQEUhMTNjp1vRmI+Lju4WfC0i8OcWefcBItE7RgBs
-         FbLcuNP7VAZdi0w3fRcK3c0igXDnoS8jC8JxonZApnokgPcJKTm71WEX9pFWqVN4wO
-         cKnuzTVI6HspmzgTLw3lsX6y6E51Y3LNfxqT85EmTzS5yIyQ+7KWLy0s1VihFE/YgJ
-         Usv0YYhVjfM0A==
-Date:   Wed, 12 Jan 2022 18:00:27 -0600
+        b=h3ltMKmCmD3tevTq6L9VPtrq5sYLCo/U0POpi8VL9a2TmkgwbC8Swvq3Xo9ReOt2O
+         HMCmB9EgV/+VYk/je+wteTDfdS/9v8OCuAXTXKOpd9HYDLlZo2HfOWnDPhW/mHL0+p
+         uFJI+i6BMvCgvGGgXmqHspibjHlaG8b+XKNGEEcfMtoJ7Lz1LT/Tti9R8Gic0uQC1F
+         O+8khN3dv34B4NeS9F9azDXOJPNgV2czoN8IzXkW5S3GFMHlsmJh6N3Y8Eks1/UDz7
+         fXm8oUvW0gKWoD20C/bNxcAoV6SjptP7J35A8L45dU7fIe6yinZpvUFiQEjw7qUmFj
+         ald+NR5l2MqRg==
+Date:   Wed, 12 Jan 2022 18:08:05 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH dt + pci 2/2] PCI: Add function for parsing
- `slot-power-limit-milliwatt` DT property
-Message-ID: <20220113000027.GA294943@bhelgaas>
+To:     Lucas De Marchi <lucas.demarchi@intel.com>
+Cc:     x86@kernel.org, linux-pci@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [Intel-gfx] [PATCH v4] x86/quirks: Replace QFLAG_APPLY_ONCE with
+ static locals
+Message-ID: <20220113000805.GA295089@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220112222822.7yirl7k57ju5d2ox@pali>
+In-Reply-To: <20220112233043.1865454-1-lucas.demarchi@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 11:28:22PM +0100, Pali Rohár wrote:
-> On Wednesday 12 January 2022 16:08:15 Bjorn Helgaas wrote:
-> > On Sun, Oct 31, 2021 at 04:07:06PM +0100, Marek Behún wrote:
-> > > From: Pali Rohár <pali@kernel.org>
-> > > 
-> > > Add function of_pci_get_slot_power_limit(), which parses the
-> > > `slot-power-limit-milliwatt` DT property, returning the value in
-> > > milliwatts and in format ready for the PCIe Slot Capabilities Register.
-> > > 
-> > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > Signed-off-by: Marek Behún <kabel@kernel.org>
-> > 
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > Do we have a caller of of_pci_get_slot_power_limit() yet?  I didn't
-> > see one from a quick look
-> > (https://lore.kernel.org/linux-pci/?q=b%3Aof_pci_get_slot_power_limit).
-> > 
-> > Let's merge this when we have a user for it.
+On Wed, Jan 12, 2022 at 03:30:43PM -0800, Lucas De Marchi wrote:
+> The flags are only used to mark a quirk to be called once and nothing
+> else. Also, that logic may not be appropriate if the quirk wants to
+> do additional filtering and set quirk as applied by itself.
 > 
-> I have a patch for both pci-mvebu.c and pci-aardvark.c drivers. But
-> there are lot of patches for these drivers waiting on mailing list for
-> review... Should I sent another patch for pci-mvebu.c which will use
-> this of_pci_get_slot_power_limit() function?
+> So replace the uses of QFLAG_APPLY_ONCE with static local variables in
+> the few quirks that use this logic and remove all the flags logic.
+> 
+> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
 
-If the of_pci_get_slot_power_limit() patches are independent of the
-ones waiting for review, they could be added to *this* series.
+Only occurred to me now, but another, less intrusive approach would be
+to just remove QFLAG_APPLY_ONCE from intel_graphics_quirks() and do
+its bookkeeping internally, e.g.,
 
-Bjorn
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 391a4e2b8604..7b655004e5fd 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -587,10 +587,14 @@ intel_graphics_stolen(int num, int slot, int func,
+ 
+ static void __init intel_graphics_quirks(int num, int slot, int func)
+ {
++	static bool stolen __initdata = false;
+ 	const struct intel_early_ops *early_ops;
+ 	u16 device;
+ 	int i;
+ 
++	if (stolen)
++		return;
++
+ 	device = read_pci_config_16(num, slot, func, PCI_DEVICE_ID);
+ 
+ 	for (i = 0; i < ARRAY_SIZE(intel_early_ids); i++) {
+@@ -602,6 +606,7 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
+ 		early_ops = (typeof(early_ops))driver_data;
+ 
+ 		intel_graphics_stolen(num, slot, func, early_ops);
++		stolen = true;
+ 
+ 		return;
+ 	}
+@@ -703,7 +708,7 @@ static struct chipset early_qrk[] __initdata = {
+ 	{ PCI_VENDOR_ID_INTEL, 0x3406, PCI_CLASS_BRIDGE_HOST,
+ 	  PCI_BASE_CLASS_BRIDGE, 0, intel_remapping_check },
+ 	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, PCI_CLASS_DISPLAY_VGA, PCI_ANY_ID,
+-	  QFLAG_APPLY_ONCE, intel_graphics_quirks },
++	  0, intel_graphics_quirks },
+ 	/*
+ 	 * HPET on the current version of the Baytrail platform has accuracy
+ 	 * problems: it will halt in deep idle state - so we disable it.
