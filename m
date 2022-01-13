@@ -2,228 +2,284 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA4548D518
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 10:50:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0C4248D5D4
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 11:35:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233239AbiAMJiw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jan 2022 04:38:52 -0500
-Received: from mga06.intel.com ([134.134.136.31]:46172 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233252AbiAMJiu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 13 Jan 2022 04:38:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642066730; x=1673602730;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9ouIefcz1muB75wy0WmnSN1XcPoxLQ3DV+u2AW2BDz8=;
-  b=V3NChWPbk+jqzLfBV6+BnKBicnvQFgrScIW5+LE2OCarZlef08VTIwgj
-   YkZzEuZD2XLmhgwFKO67YEsIGUeLZfZa7WvVU3hyNm6TFeonxGMB+9Vo1
-   3pG8uSX92UuFF9J2plUfIcLqyXz2Pvs0Tw5QTMGyF6TMdoyFYSl/AQeFP
-   54Au+MMdvjSRiZUkV13Q2rhQHCwQAjpiyN2Zbh4YJ6zP66nP9RZ9XVqQX
-   wxCA2f5lmMWiVIstnFkjRwcVCouHBBBvKgxfwiUO6z0cWh4ZLQvGdDcJr
-   ieBMSa9EakYhXFhKAhSJKS/SsaQK9eeHaEfoFdRYGIeVYEKagZURDPlAR
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="304707762"
-X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="304707762"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 01:38:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="559048302"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 13 Jan 2022 01:38:38 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1n7wZ3-00072x-Aa; Thu, 13 Jan 2022 09:38:37 +0000
-Date:   Thu, 13 Jan 2022 17:38:23 +0800
-From:   kernel test robot <lkp@intel.com>
+        id S231521AbiAMKf2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jan 2022 05:35:28 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:49082 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230436AbiAMKf1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jan 2022 05:35:27 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C03D61C22;
+        Thu, 13 Jan 2022 10:35:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63F35C36AE3;
+        Thu, 13 Jan 2022 10:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642070126;
+        bh=QDMrVNPg2KIzF3PgrdItUahPo6vyE5QcAuk75W6xmFw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JJcZ2G8it9sh0VZckhQSMHllghDZjkkhutHnNnrAXdEZ6mgm/RkzqaggMhUrl8yRh
+         Vq9UlOkmKYpRwapcY0LcNHogAwXC4uf3p0qDcfdzt6+EacRXq+3iUCP63e925l+/t+
+         gyA0Pw5CMLkfzhZwAIb93n2Q1ONB82tSj12/wzlvCsMhm+nzkIo+MrV+xGzVVv6lmi
+         aTCIZXMGU1tksyprbHTWRCO7WCkseV/PUIpNVf0P+EcD+lSe637DSMrBwbIipzTkm9
+         YKZeBMyycpN0AzLusfsRZdJh17uE6/+z8BBKOUyjbl0O8Bb0NBN410OG50hDzicasM
+         TMj1NLojcGakw==
+Received: by pali.im (Postfix)
+        id 95B8C732; Thu, 13 Jan 2022 11:35:23 +0100 (CET)
+Date:   Thu, 13 Jan 2022 11:35:23 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/host/brcmstb] BUILD SUCCESS
- 11ed8b8624b8085f706864b4addcd304b1e4fc38
-Message-ID: <61dff30f.Iup2TWzwpfJAceK7%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/15] PCI: mvebu: Propagate errors when updating
+ PCI_IO_BASE and PCI_MEM_BASE registers
+Message-ID: <20220113103523.5usmja7bp44f7ju7@pali>
+References: <20220107234658.oav7oofcbwa7o6sz@pali>
+ <20220113001921.GA286275@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220113001921.GA286275@bhelgaas>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/brcmstb
-branch HEAD: 11ed8b8624b8085f706864b4addcd304b1e4fc38  PCI: brcmstb: Do not turn off WOL regulators on suspend
+On Wednesday 12 January 2022 18:19:21 Bjorn Helgaas wrote:
+> On Sat, Jan 08, 2022 at 12:46:58AM +0100, Pali Rohár wrote:
+> > On Friday 07 January 2022 17:16:17 Bjorn Helgaas wrote:
+> > > On Fri, Jan 07, 2022 at 11:28:26PM +0100, Pali Rohár wrote:
+> > > > On Friday 07 January 2022 15:55:04 Bjorn Helgaas wrote:
+> > > > > On Thu, Nov 25, 2021 at 01:45:58PM +0100, Pali Rohár wrote:
+> > > > > > Properly propagate failure from mvebu_pcie_add_windows() function back to
+> > > > > > the caller mvebu_pci_bridge_emul_base_conf_write() and correctly updates
+> > > > > > PCI_IO_BASE, PCI_MEM_BASE and PCI_IO_BASE_UPPER16 registers on error.
+> > > > > > On error set base value higher than limit value which indicates that
+> > > > > > address range is disabled. 
+> > > > > 
+> > > > > Does the spec say that if software programs something invalid,
+> > > > > hardware should proactively set the base and limit registers to
+> > > > > disable the window?
+> > > > 
+> > > > No. But this patch address something totally different. Software can do
+> > > > fully valid operation, e.g. try to set forwarding memory window as large
+> > > > as possible. But because this driver "emulates" pci bridge by calling
+> > > > software/kernel function (mvebu_pcie_add_windows), some operations which
+> > > > in real HW cannot happen, are possible in software.
+> > > > 
+> > > > For example there are limitations in sizes of forwarding memory windows,
+> > > > because it is done by mvebu-mbus driver, which is responsible for
+> > > > configuring mapping and forwarding of PCIe I/O and MEM windows. And due
+> > > > to Marvell HW, there are restrictions which are not in PCIe HW.
+> > > > 
+> > > > Currently if such error happens, obviously kernel is not able to set
+> > > > PCIe windows and it just print warnings to dmesg. Trying to access these
+> > > > windows would result in the worst case in crashes.
+> > > > 
+> > > > With this change when mvebu_pcie_add_windows() function fails then into
+> > > > emulated config space is put information that particular forwarding
+> > > > window is disabled. I think that it is better to indicate it in config
+> > > > space what is the current "reality" of hardware configuration. If window
+> > > > is disabled in real-HW (meaning in mvebu-mbus driver) then show it also
+> > > > in emulated config space of pci bridge.
+> > > > 
+> > > > Do you have better idea what should emulated pci bridge do, if software
+> > > > try to set fully valid configuration of forwarding window, but it is not
+> > > > possible to achieve it (even compliant PCI bridge must be able to do
+> > > > it)?
+> > > 
+> > > On an ACPI system, the host bridge window sizes are constrained by the
+> > > host bridge _CRS method.  I assume there's a similar constraint in DT.
+> > > 
+> > > Is the fact that mvebu_pcie_add_windows() can fail a symptom of a DT
+> > > that describes more available space than mvebu-bus can map?
+> > 
+> > Memory maps for mvebu are more complicated. There is no explicit size in
+> > DT ranges property as it is dynamically allocated by mvebu-mbus:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/armada-385.dtsi?h=v5.15#n47
+> 
+> I wish I knew how to really interpret those "ranges" properties.  (Is
+> there a good description in Documentation/ somewhere?  All I've found
+> so far is https://elinux.org/Device_Tree_Usage, which is good, but
+> doesn't match this example completely.)
+> 
+> I see:
+> 
+>   pciec: pcie {
+>     ranges = <...>;
+>     pcie1: pcie@1,0 {
+>       ranges = <0x82000000 0 0 0x82000000 0x1 0 1 0
+> 	        0x81000000 0 0 0x81000000 0x1 0 1 0>;
+>     };
+>     pcie2: pcie@2,0 {
+>       ranges = <0x82000000 0 0 0x82000000 0x2 0 1 0
+> 	        0x81000000 0 0 0x81000000 0x2 0 1 0>;
+>     };
+>     pcie3: pcie@3,0 {
+>       ranges = <0x82000000 0 0 0x82000000 0x3 0 1 0
+> 	        0x81000000 0 0 0x81000000 0x3 0 1 0>;
+>     };
+>     pcie4: pcie@4,0 {
+>       ranges = <0x82000000 0 0 0x82000000 0x4 0 1 0
+> 	        0x81000000 0 0 0x81000000 0x4 0 1 0>;
+>     };
+>   };
+> 
+> What does this look like in dmesg, i.e., what CPU address ranges are
+> mapped to what PCI bus addresses?
 
-elapsed time: 725m
+These explicit ranges in DT are probably ignored as they are invalid.
+You can see them (0xffffffffffffffff) in dmesg. MEM and I/O resources
+are parsed in pci-mvebu.c driver in mvebu_pcie_parse_request_resources()
+function.
 
-configs tested: 155
-configs skipped: 3
+Here is relevant dmesg output:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+[    0.671607] mvebu-pcie soc:pcie: host bridge /soc/pcie ranges:
+[    0.677474] mvebu-pcie soc:pcie:      MEM 0x00f1080000..0x00f1081fff -> 0x0000080000
+[    0.685245] mvebu-pcie soc:pcie:      MEM 0x00f1040000..0x00f1041fff -> 0x0000040000
+[    0.693017] mvebu-pcie soc:pcie:      MEM 0x00f1044000..0x00f1045fff -> 0x0000044000
+[    0.700788] mvebu-pcie soc:pcie:      MEM 0x00f1048000..0x00f1049fff -> 0x0000048000
+[    0.708562] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0100000000
+[    0.716856] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0100000000
+[    0.725146] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0200000000
+[    0.733438] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0200000000
+[    0.741730] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0300000000
+[    0.750022] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0300000000
+[    0.758314] mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0400000000
+[    0.766606] mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0400000000
+[    0.907763] mvebu-pcie soc:pcie: PCI host bridge to bus 0000:00
+[    0.913698] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.919203] pci_bus 0000:00: root bus resource [mem 0xf1080000-0xf1081fff] (bus address [0x00080000-0x00081fff])
+[    0.929406] pci_bus 0000:00: root bus resource [mem 0xf1040000-0xf1041fff] (bus address [0x00040000-0x00041fff])
+[    0.939608] pci_bus 0000:00: root bus resource [mem 0xf1044000-0xf1045fff] (bus address [0x00044000-0x00045fff])
+[    0.949812] pci_bus 0000:00: root bus resource [mem 0xf1048000-0xf1049fff] (bus address [0x00048000-0x00049fff])
+[    0.960014] pci_bus 0000:00: root bus resource [mem 0xe0000000-0xe7ffffff]
+[    0.966908] pci_bus 0000:00: root bus resource [io  0x1000-0xeffff]
+[    0.973261] pci 0000:00:01.0: [11ab:6820] type 01 class 0x060400
+[    0.979458] pci 0000:00:02.0: [11ab:6820] type 01 class 0x060400
+[    0.985643] pci 0000:00:03.0: [11ab:6820] type 01 class 0x060400
+[    0.992482] PCI: bus0: Fast back to back transfers disabled
+[    0.998075] pci 0000:00:01.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+[    1.006108] pci 0000:00:02.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+[    1.014134] pci 0000:00:03.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+[    1.022242] pci 0000:01:00.0: [1e0f:0001] type 00 class 0x010802
+[    1.028289] pci 0000:01:00.0: reg 0x10: [mem 0xc0000000-0xc0003fff 64bit]
+[    1.035233] pci 0000:01:00.0: PME# supported from D0 D3hot
+[    1.040787] pci 0000:01:00.0: 2.000 Gb/s available PCIe bandwidth, limited by 2.5 GT/s PCIe x1 link at 0000:00:01.0 (capable of 31.504 Gb/s with 8.0 GT/s PCIe x4 link)
+[    1.056630] PCI: bus1: Fast back to back transfers disabled
+[    1.062217] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 01
+[    1.068935] pci 0000:02:00.0: [168c:003c] type 00 class 0x028000
+[    1.074975] pci 0000:02:00.0: reg 0x10: [mem 0xc8000000-0xc81fffff 64bit]
+[    1.081817] pci 0000:02:00.0: reg 0x30: [mem 0xc8200000-0xc820ffff pref]
+[    1.088611] pci 0000:02:00.0: supports D1 D2
+[    1.093765] PCI: bus2: Fast back to back transfers disabled
+[    1.099356] pci_bus 0000:02: busn_res: [bus 02-ff] end is updated to 02
+[    1.106070] pci 0000:03:00.0: [168c:002e] type 00 class 0x028000
+[    1.112110] pci 0000:03:00.0: reg 0x10: [mem 0xd0000000-0xd000ffff 64bit]
+[    1.119031] pci 0000:03:00.0: supports D1
+[    1.123049] pci 0000:03:00.0: PME# supported from D0 D1 D3hot
+[    1.129688] PCI: bus3: Fast back to back transfers disabled
+[    1.135274] pci_bus 0000:03: busn_res: [bus 03-ff] end is updated to 03
+[    1.141926] pci 0000:00:01.0: BAR 8: assigned [mem 0xe0000000-0xe00fffff]
+[    1.148738] pci 0000:00:02.0: BAR 8: assigned [mem 0xe0200000-0xe04fffff]
+[    1.155544] pci 0000:00:03.0: BAR 8: assigned [mem 0xe0100000-0xe01fffff]
+[    1.162357] pci 0000:01:00.0: BAR 0: assigned [mem 0xe0000000-0xe0003fff 64bit]
+[    1.169696] pci 0000:00:01.0: PCI bridge to [bus 01]
+[    1.174674] pci 0000:00:01.0:   bridge window [mem 0xe0000000-0xe00fffff]
+[    1.181490] pci 0000:02:00.0: BAR 0: assigned [mem 0xe0200000-0xe03fffff 64bit]
+[    1.188830] pci 0000:02:00.0: BAR 6: assigned [mem 0xe0400000-0xe040ffff pref]
+[    1.196074] pci 0000:00:02.0: PCI bridge to [bus 02]
+[    1.201050] pci 0000:00:02.0:   bridge window [mem 0xe0200000-0xe04fffff]
+[    1.207867] pci 0000:03:00.0: BAR 0: assigned [mem 0xe0100000-0xe010ffff 64bit]
+[    1.215200] pci 0000:00:03.0: PCI bridge to [bus 03]
+[    1.220179] pci 0000:00:03.0:   bridge window [mem 0xe0100000-0xe01fffff]
+[    1.227028] pcieport 0000:00:01.0: enabling device (0140 -> 0142)
+[    1.233186] pcieport 0000:00:02.0: enabling device (0140 -> 0142)
+[    1.239339] pcieport 0000:00:03.0: enabling device (0140 -> 0142)
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-m68k                             alldefconfig
-sh                          sdk7780_defconfig
-ia64                        generic_defconfig
-ia64                         bigsur_defconfig
-sh                     magicpanelr2_defconfig
-sh                          landisk_defconfig
-sh                   sh7724_generic_defconfig
-mips                  maltasmvp_eva_defconfig
-sh                                  defconfig
-mips                       capcella_defconfig
-powerpc                      ppc40x_defconfig
-m68k                             allyesconfig
-powerpc                           allnoconfig
-sh                               alldefconfig
-powerpc                      mgcoge_defconfig
-arm                            lart_defconfig
-powerpc                    klondike_defconfig
-arm                           stm32_defconfig
-powerpc                      bamboo_defconfig
-csky                             alldefconfig
-sparc                       sparc32_defconfig
-sh                          rsk7269_defconfig
-um                           x86_64_defconfig
-sh                               j2_defconfig
-powerpc64                        alldefconfig
-mips                     decstation_defconfig
-powerpc                       holly_defconfig
-csky                                defconfig
-powerpc                        warp_defconfig
-m68k                       m5475evb_defconfig
-mips                             allyesconfig
-arm                            pleb_defconfig
-arm                        trizeps4_defconfig
-sh                           se7705_defconfig
-mips                         mpc30x_defconfig
-xtensa                  audio_kc705_defconfig
-mips                 decstation_r4k_defconfig
-nios2                            alldefconfig
-powerpc                      pasemi_defconfig
-m68k                            q40_defconfig
-arm                           tegra_defconfig
-arm                          badge4_defconfig
-mips                            ar7_defconfig
-mips                        jmr3927_defconfig
-openrisc                 simple_smp_defconfig
-powerpc                  iss476-smp_defconfig
-sh                   sh7770_generic_defconfig
-arm                          exynos_defconfig
-ia64                             allmodconfig
-sh                         apsh4a3a_defconfig
-mips                           xway_defconfig
-powerpc                       ppc64_defconfig
-arm                          simpad_defconfig
-arm                         lpc18xx_defconfig
-m68k                        mvme16x_defconfig
-ia64                          tiger_defconfig
-m68k                       bvme6000_defconfig
-sh                             sh03_defconfig
-arm                        cerfcube_defconfig
-powerpc                 mpc837x_mds_defconfig
-xtensa                  nommu_kc705_defconfig
-sh                          r7785rp_defconfig
-arm                            hisi_defconfig
-powerpc                       maple_defconfig
-i386                             alldefconfig
-arm                           sunxi_defconfig
-sh                           se7721_defconfig
-sh                           se7780_defconfig
-powerpc                   motionpro_defconfig
-arm                           h3600_defconfig
-m68k                         amcore_defconfig
-sh                          rsk7264_defconfig
-sh                          kfr2r09_defconfig
-um                             i386_defconfig
-h8300                               defconfig
-arm                  randconfig-c002-20220113
-arm                  randconfig-c002-20220112
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64                        randconfig-a002
-i386                          randconfig-a012
-i386                          randconfig-a016
-i386                          randconfig-a014
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-riscv                randconfig-r042-20220113
-arc                  randconfig-r043-20220113
-s390                 randconfig-r044-20220113
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+And some more information from /proc:
 
-clang tested configs:
-arm                  randconfig-c002-20220113
-x86_64                        randconfig-c007
-riscv                randconfig-c006-20220113
-powerpc              randconfig-c003-20220113
-i386                          randconfig-c001
-mips                 randconfig-c004-20220113
-mips                        bcm63xx_defconfig
-mips                   sb1250_swarm_defconfig
-powerpc                      pmac32_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220112
-riscv                randconfig-r042-20220112
-hexagon              randconfig-r041-20220112
-hexagon              randconfig-r045-20220113
-hexagon              randconfig-r041-20220113
+$ cat /proc/ioports
+00001000-000effff : PCI I/O
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+$ cat /proc/iomem
+...
+e0000000-e7ffffff : PCI MEM
+  e0000000-e00fffff : PCI Bus 0000:01
+    e0000000-e0003fff : 0000:01:00.0
+      e0000000-e0003fff : nvme
+  e0100000-e01fffff : PCI Bus 0000:03
+    e0100000-e010ffff : 0000:03:00.0
+      e0100000-e010ffff : ath9k
+  e0200000-e04fffff : PCI Bus 0000:02
+    e0200000-e03fffff : 0000:02:00.0
+      e0200000-e03fffff : ath
+    e0400000-e040ffff : 0000:02:00.0
+...
+
+> Are pcie1, pcie2, etc Root Ports?  Or are they each separate host
+> bridges (they each have "bus-range = <0x00 0xff>")?
+
+From kernel point of view they are root ports. But in reality every of
+these root port is on separate bus segment, but kernel pci-mvebu.c
+driver merges all these segments/domains into one host bridge and put
+all root ports into bus 0.
+
+Here is lspci -tvnn output with topology:
+
+$ lspci -tvnn
+-[0000:00]-+-01.0-[01]----00.0  Device [1e0f:0001]
+           +-02.0-[02]----00.0  Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter [168c:003c]
+           \-03.0-[03]----00.0  Qualcomm Atheros AR9287 Wireless Network Adapter (PCI-Express) [168c:002e]
+
+And without topology:
+
+$ lspci -nn
+00:01.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+00:02.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+00:03.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [11ab:6820] (rev 04)
+01:00.0 Non-Volatile memory controller [0108]: Device [1e0f:0001]
+02:00.0 Network controller [0280]: Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter [168c:003c]
+03:00.0 Network controller [0280]: Qualcomm Atheros AR9287 Wireless Network Adapter (PCI-Express) [168c:002e] (rev 01)
+
+Buses 1, 2 and 3 represents mPCIe cards, all of them are in reality in
+separate bus segments and on different HW host bridges. So they do *not*
+share access to config space, do *not* share INTx interrupts, etc...
+
+> Is space from pciec dynamically assigned to pcie1, pcie2, etc?  If so,
+> I assume there are more restrictions on the size and alignment than on
+> PCI bridge windows, which allow size/alignment down to 1MB?
+
+Yes, exactly. I do not know now all restrictions. At least there are
+fixed number of memory slots and each has to be of size 2^N. They are
+dynamically assigned by kernel mbus driver at time when somebody updates
+BASE/LIMIT registers. And that kernel mbus driver takes care to split
+non-aligned window size to more slots of size 2^N. And resources are
+shared from pool with other HW parts (e.g. DMA), so other drivers loaded
+in kernel can "eat" available slots before pci-mvebu and then there does
+not have to be nothing to allocate for PCI.
+
+But most Armada boards do not have exported all peripherals from SoC,
+unconnected are disabled in DT and therefore exhaustion should not
+happen.
+
+> I'm trying to see how this could be described in ACPI because that's a
+> fairly general model that accommodates most machines.  Possibly
+> describing mvebu in ACPI would involve losing some flexibility.
+> 
+> Bjorn
+
+I do not understand APCI model very well and I'm in impression that it
+is impossible to represent mvebu in ACPI.
