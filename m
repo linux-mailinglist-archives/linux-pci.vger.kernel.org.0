@@ -2,204 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F3C648D09B
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 04:04:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0F7848D21C
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 06:54:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231856AbiAMDEc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Jan 2022 22:04:32 -0500
-Received: from mga14.intel.com ([192.55.52.115]:64628 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231833AbiAMDEc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 12 Jan 2022 22:04:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642043072; x=1673579072;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=PHyeXUlXAzbJik1j1BfbKp1pPMJI3E6VA1o41vDpK4A=;
-  b=eh9c8DbWgtyIEumKBPuZRu6846gF/HHO3FJGJ8aHuY1Wb3nFpmtK1gjY
-   Es7F1SvjM2u9P7qYBGW2DJasxgpKTb+BJFtlLlyf8vV2emznQPqYkF53B
-   P3xGp9BYyZ9sDpjILijuoL5AVgv2dF9ljpL2tlSukKMILAokLa/piwEs8
-   1uQBeayNp8JVRCvhHzvfjbnwnFWCuRphVK4icBy/y1yogDIX1zfHzFpfv
-   jLnKvudhP6EBoJyzkJwFKhm2DWAEsf4rsihaGDq/AcihIMx+m4P50DYHu
-   7+WIIZEcsO87Bi4MNO2A6EarIxnoJFhzx0AVQ2mf7zLYr/ym+nd1YFfAG
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="244119741"
-X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="244119741"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 19:04:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="475150631"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 12 Jan 2022 19:04:30 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1n7qPd-0006ll-Fu; Thu, 13 Jan 2022 03:04:29 +0000
-Date:   Thu, 13 Jan 2022 11:04:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/hotplug] BUILD SUCCESS
- 085a9f43433f30cbe8a1ade62d9d7827c3217f4d
-Message-ID: <61df96a0.gtdDgiIUDvxHgBfg%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S230123AbiAMFwy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jan 2022 00:52:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229770AbiAMFwx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jan 2022 00:52:53 -0500
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 872FFC06173F;
+        Wed, 12 Jan 2022 21:52:53 -0800 (PST)
+Received: by mail-ua1-x936.google.com with SMTP id c36so9043893uae.13;
+        Wed, 12 Jan 2022 21:52:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VacwZVPOJEgERNsEcisnb2BeyEAPowJ9bL7/Aod4750=;
+        b=Qjkseb1t5CmCIjGVttXv7Vekl6sKJB+xrWoSxAQTuKsgsYi4r9Fn+Z0opv4QFRWeJ5
+         JLbXRON3hGCJLBvrrCYnbzzvYa+zSlcg6nEii1noY4AhbgxB53sx9rGfGVNPd1rx4i4e
+         uckNRYjIKWSPuirGMYJO+wHFjbqBEtfQT14CwNLJIUJeARI2tECzIE0+xL/efbzsHzmH
+         GA5uWUwmowSkP5mO5JXLRnAlUVXqRqVt9RDbbbkxeU2Ue2rItiEgXDROdFrTcrPhkKiV
+         oT1z7oua5p2D6JAnY4EWN89QGaH9KId8Qd8/piT82poomcc1BBn9Zj3it8fm2S7ewD8D
+         CwHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VacwZVPOJEgERNsEcisnb2BeyEAPowJ9bL7/Aod4750=;
+        b=QJ+t1GP7i3azlFD3kGsQgxaP1N6QPF+1YfDbR+ocQHxMZBPifW5Fw5G8zkG/T2mPr1
+         rIUTRucLirakorahWkh6TVvHdmVCBLmnT/qU53OpSdHomPiK1ZgnTZBVn1Ii2uvClYmq
+         pGp/UilaQFMfELrSdAwEWmKQm24zZ0oVhAjVJOQhjReOp2cDqIqIutmChTNZmxhwH6nu
+         v7GgfIHxL7J7KS3oa1TBgGYcVZ2lrdKIR2l4ePj0UH2a9XhnbZ/BsTcP75qxhqaeXpaf
+         8TbOcgHjRfE45+PdEiRVwhyt+3Y5+xTr9/JnOZa8dU1SMsrgdqFVidYymIkhFMABjVsk
+         FUhA==
+X-Gm-Message-State: AOAM531vQRiHVbZ2vLDvdfvviKqK3GYwN4ZmZnPIVfQhxkjuIC+QU5Q7
+        2hk9SAqJd+vsHUIatZ5q9YFtXqoRL5b0b2PHe7esO7RayFg=
+X-Google-Smtp-Source: ABdhPJy/PvHFS7oW3cogGKFqF6P6ZQntSgJd9pWl4ZiU8cO8ToHne1XXLLPruuAE8RpryJymiilm/2QMOa+e8Sfcho4=
+X-Received: by 2002:a9f:31cc:: with SMTP id w12mr1633916uad.46.1642053172642;
+ Wed, 12 Jan 2022 21:52:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20211207104924.21327-1-sergio.paracuellos@gmail.com> <20220112215203.GA286653@bhelgaas>
+In-Reply-To: <20220112215203.GA286653@bhelgaas>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Thu, 13 Jan 2022 06:52:41 +0100
+Message-ID: <CAMhs-H-D_58dbYX1jetMMVEf4p+sSP0CV5GEEC7bBLs8Eo7wpQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] PCI: mt7621: Remove specific MIPS code from driver
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
-branch HEAD: 085a9f43433f30cbe8a1ade62d9d7827c3217f4d  PCI: pciehp: Use down_read/write_nested(reset_lock) to fix lockdep errors
+Hi Bjorn,
 
-elapsed time: 733m
+On Wed, Jan 12, 2022 at 10:52 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Dec 07, 2021 at 11:49:19AM +0100, Sergio Paracuellos wrote:
+> > Hi all,
+> >
+> > MIPS specific code can be removed from driver and put into ralink mt762=
+1
+> > instead which is a more accurate place to do this. To make this possibl=
+e
+> > we need to have access to 'bridge->windows' in 'pcibios_root_bridge_pre=
+pare()'
+> > which has been implemented for ralink mt7621 platform (there is no real
+> > need to implement this for any other platforms since those ones haven't=
+ got
+> > I/O coherency units). This also allow us to properly enable this driver=
+ to
+> > completely be enabled for COMPILE_TEST. This patchset appoarch:
+> > - Move windows list splice in 'pci_register_host_bridge()' after functi=
+on
+> >   'pcibios_root_bridge_prepare()' is called.
+> > - Implement 'pcibios_root_bridge_prepare()' for ralink mt7621.
+> > - Avoid custom MIPs code in pcie-mt7621 driver.
+> > - Add missing 'MODULE_LICENSE()' to pcie-mt7621 driver to avoid compile=
+ test
+> >   module compilation to complain (already sent patch from Yanteng Si th=
+at
+> >   I have rewrite commit message and long description a bit.
+> > - Remove MIPS conditional code from Kconfig and mark driver as 'tristat=
+e'.
+> >
+> > This patchset is a real fix for some errors reported by Kernel Test Rob=
+ot about
+> > implicit mips functions used in driver code and fix errors in driver wh=
+en
+> > is compiled as a module [1] (mips:allmodconfig).
+> >
+> > Changes in v3:
+> >  - Rebase the series on the top of the temporal fix sent for v5.16[3] f=
+or
+> >    the module compilation problem.
+> >  - Address review comments from Guenter in PATCH 2 (thanks Guenter!):
+> >     - Address TODO in comment about the hardware does not allow zeros
+> >       after 1s for the mask and WARN_ON if that's happend.
+> >     - Be sure mask is real valid upper 16 bits.
+> >
+> > Changes in v2:
+> >  - Collect Acked-by from Arnd Bergmann for PATCH 1.
+> >  - Collect Reviewed-by from Krzysztof Wilczy=C5=84ski for PATCH 4.
+> >  - Adjust some patches commit subject and message as pointed out by Bjo=
+rn in review of v1 of the series[2].
+> >
+> > This patchset is the good way of properly compile driver as a module re=
+moving
+> > all MIPS specific code into arch ralink mt7621 place. To avoid mips:all=
+modconfig reported
+> > problems for v5.16 the following patch has been sent[3]. This series ar=
+e rebased onto this patch to provide
+> > a real fix for this problem.
+> >
+> > [0]: https://lore.kernel.org/linux-mips/CAMhs-H8ShoaYiFOOzJaGC68nZz=3DV=
+365RXN_Kjuj=3DfPFENGJiiw@mail.gmail.com/T/#t
+> > [1]: https://lkml.org/lkml/2021/11/14/436
+> > [2]: https://lore.kernel.org/r/20211115070809.15529-1-sergio.paracuello=
+s@gmail.com
+> > [3]: https://lore.kernel.org/linux-pci/20211203192454.32624-1-sergio.pa=
+racuellos@gmail.com/T/#u
+> >
+> > Thanks in advance for your time.
+> >
+> > Best regards,
+> >    Sergio Paracuellos
+> >
+> > Sergio Paracuellos (5):
+> >   PCI: Let pcibios_root_bridge_prepare() access to 'bridge->windows'
+> >   MIPS: ralink: implement 'pcibios_root_bridge_prepare()'
+> >   PCI: mt7621: Avoid custom MIPS code in driver code
+> >   PCI: mt7621: Add missing 'MODULE_LICENSE()' definition
+> >   PCI: mt7621: Allow COMPILE_TEST for all arches
+> >
+> >  arch/mips/ralink/mt7621.c            | 31 ++++++++++++++++++++++
+> >  drivers/pci/controller/Kconfig       |  4 +--
+> >  drivers/pci/controller/pcie-mt7621.c | 39 ++--------------------------
+> >  drivers/pci/probe.c                  |  4 +--
+> >  4 files changed, 37 insertions(+), 41 deletions(-)
+>
+> I tentatively put this on my pci/host/mt7621 branch.  The only
+> non-mt7621 change is the pci_register_host_bridge() change, which
+> seems innocuous, so maybe we can still squeeze it in.
+>
+> I squashed these patches together:
+>
+>   MIPS: ralink: implement 'pcibios_root_bridge_prepare()'
+>   PCI: mt7621: Avoid custom MIPS code in driver code
+>
+> because the first adds the coherency setup to the MIPS
+> pcibios_root_bridge_prepare(), and the second removes that same code
+> from pcie-mt7621.c.  I think it makes more sense to do it as a move in
+> a single patch, both for ease of reviewing and for potential
+> bisection.
 
-configs tested: 131
-configs skipped: 3
+Makes sense. Thanks for letting me know.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-m68k                       m5249evb_defconfig
-h8300                               defconfig
-mips                      loongson3_defconfig
-microblaze                          defconfig
-mips                        vocore2_defconfig
-xtensa                  nommu_kc705_defconfig
-m68k                             alldefconfig
-sh                          sdk7780_defconfig
-ia64                        generic_defconfig
-ia64                         bigsur_defconfig
-sh                     magicpanelr2_defconfig
-mips                  maltasmvp_eva_defconfig
-arm                             pxa_defconfig
-m68k                          atari_defconfig
-powerpc                    klondike_defconfig
-arm                           stm32_defconfig
-powerpc                      bamboo_defconfig
-csky                             alldefconfig
-powerpc                 mpc834x_itx_defconfig
-m68k                       bvme6000_defconfig
-sh                        apsh4ad0a_defconfig
-sh                              ul2_defconfig
-sh                          polaris_defconfig
-arm                       aspeed_g5_defconfig
-mips                      maltasmvp_defconfig
-mips                           ci20_defconfig
-sh                          rsk7269_defconfig
-um                           x86_64_defconfig
-sh                               j2_defconfig
-powerpc64                        alldefconfig
-mips                     decstation_defconfig
-powerpc                       holly_defconfig
-csky                                defconfig
-powerpc                        warp_defconfig
-arc                          axs101_defconfig
-sh                           sh2007_defconfig
-powerpc                 mpc837x_rdb_defconfig
-powerpc                      pasemi_defconfig
-sh                          r7785rp_defconfig
-arm                            hisi_defconfig
-sh                           se7705_defconfig
-arm                  randconfig-c002-20220112
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-
-clang tested configs:
-arm                  randconfig-c002-20220112
-x86_64                        randconfig-c007
-riscv                randconfig-c006-20220112
-powerpc              randconfig-c003-20220112
-i386                          randconfig-c001
-mips                 randconfig-c004-20220112
-powerpc                     akebono_defconfig
-mips                   sb1250_swarm_defconfig
-arm                         shannon_defconfig
-powerpc                 xes_mpc85xx_defconfig
-arm                          collie_defconfig
-powerpc                  mpc866_ads_defconfig
-mips                      pic32mzda_defconfig
-mips                           mtx1_defconfig
-mips                        bcm63xx_defconfig
-powerpc                      pmac32_defconfig
-arm                        spear3xx_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220112
-riscv                randconfig-r042-20220112
-hexagon              randconfig-r041-20220112
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Best regards,
+    Sergio Paracuellos
