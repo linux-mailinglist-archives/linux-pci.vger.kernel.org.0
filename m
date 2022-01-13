@@ -2,169 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6BF448DC2C
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 17:47:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6979548DD16
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 18:45:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236888AbiAMQri (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jan 2022 11:47:38 -0500
-Received: from mga14.intel.com ([192.55.52.115]:22127 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234714AbiAMQri (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 13 Jan 2022 11:47:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642092458; x=1673628458;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yC1aTVPT0hdsL/SN5OhB5oxW83SlaYQWk3o87ylsEKk=;
-  b=PdlRsv7zG0J5wRAmX3JtAxFm2DSUQ7W6KeUJauOGKFJsQ2I0yxiJH8xM
-   JCB16e543pBk/ZL09Hc/TE5p6G+r8ppvJ1NZ21B61WALnI/PWbfYI2QOI
-   CG34c0jsDqFKeEEms9FagQyvrKSaOJi8U1xjsdBFEKpBbcNWb2TkrWD2i
-   2xeKMKpJC9S1FbieBoN8SPJS/AoaDixJ2jto7EgbH5FHJE89fa26OHSIt
-   ODgUvVIbksmnCfBcDffwOOhj478E6bbt9dcpDuYr+OohHpQZQsW4FvYez
-   kqcfu1Yn06/fziTYOtkgH+VSkaYmIdzyXGE7qoQz4EU7D7QLj/M6ZS2bv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="244255008"
-X-IronPort-AV: E=Sophos;i="5.88,286,1635231600"; 
-   d="scan'208";a="244255008"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 08:47:37 -0800
-X-IronPort-AV: E=Sophos;i="5.88,286,1635231600"; 
-   d="scan'208";a="691860033"
-Received: from lmaniak-dev.igk.intel.com ([10.55.249.72])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 08:47:36 -0800
-Date:   Thu, 13 Jan 2022 17:45:38 +0100
-From:   Lukasz Maniak <lukasz.maniak@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?Q?=C5=81ukasz?= Gieryk <lukasz.gieryk@linux.intel.com>
-Subject: Re: [PATCH] PCI: Reset IOV state on FLR to PF
-Message-ID: <20220113164538.GA577231@lmaniak-dev.igk.intel.com>
-References: <20211222191958.955681-1-lukasz.maniak@linux.intel.com>
- <20220112144903.GA253960@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220112144903.GA253960@bhelgaas>
+        id S237233AbiAMRpO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jan 2022 12:45:14 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:55727 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229702AbiAMRpN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jan 2022 12:45:13 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 009FC580316;
+        Thu, 13 Jan 2022 12:45:13 -0500 (EST)
+Received: from imap44 ([10.202.2.94])
+  by compute4.internal (MEProxy); Thu, 13 Jan 2022 12:45:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type:content-transfer-encoding; s=fm1; bh=1CIEC
+        p+ZznhrnPza5jhu/RiuRksajhZP6I88iKtpDs8=; b=ckDv9HlADf8bSd7kIPFX4
+        v1DpASlU5OWs9X7OqaHrXPGFI4ugegImfIeT9TyFeeCf4nm5OAK6GacUdAgoY7b6
+        ot8gpXBdAQ+kFJtKjSdPkmQBHumcBNdaWfaih1oTj58WK8aEfSyab54cUWN8XRqb
+        xYK8hYE8tUDs7qrYrFCWDPMP/3cjTGMUk1y+v2HlDCjcbIO8+MIddxSgNRhOAnwL
+        3vNo9cocl9ojFSjWBjDayTuFQbEx6/b4Qz527PGvHgLB6TUU5Qlv0WMb/0pw9fdm
+        TxMA1rVjP67tPxBHZ2l0oZsrXqHNx/FGlC/9VPgqNRTZYNj8boGdhEjn8EdnBhTT
+        A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=1CIECp+ZznhrnPza5jhu/RiuRksajhZP6I88iKtpD
+        s8=; b=JbkQa3BiNsDyIduXJv8N45YVNw2HcCJlKmd66SdKxHBnti0dT+Y7xvhXH
+        CbAhvKB4+La8kB+XpcWjl394mssqkc/NITqvnu4HHOorEv90ts/TR7HystW9Ynb/
+        O5NZIPKcFe33+x1PDusIisW6xI6eWTMjNajUB4brz8rA/lr6IaxfIwe3egDDwmxf
+        y0HnUoJtyhBxvUEX4XsQdD9VsksUJbiTvpm3iYut5OAw9mnybgKwK212G3ck7Ma/
+        9V4QLSMbDGm4oCVQBEv3lOIsxgLd9zEvppTcvIQAx38YCVox6UjgiXAqSgQstpet
+        I6HKOV6dN8ud36K9ri4ppF8auZ9Kg==
+X-ME-Sender: <xms:KGXgYaUJkp385IA7sIN4uh_yX1Qwj9tJsk_FqQstF5jIzeJBwSHx6w>
+    <xme:KGXgYWl16o1aZZW848uxc1hI8w3zco_0fq2QJn7WOfKDKLbZGM4mcRs9XS1hFwkJY
+    GQaZBYs972iHh4KxJ8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrtdefgddutdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgfgsehtqhertderreejnecuhfhrohhmpedflfhi
+    rgiguhhnucgjrghnghdfuceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+    eqnecuggftrfgrthhtvghrnhepfeetgeekveeftefhgfduheegvdeuuddvieefvddvlefh
+    feehkeetfeeukedtfeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:KGXgYearfFR55hwYe2Wb4-7AcEeJLRnOROP3shtJTds_HIA8drbaxw>
+    <xmx:KGXgYRVBcSxSXHrndaXwDNQ67reKHzlSCNntW6O_9poWDgTyJ02mxA>
+    <xmx:KGXgYUlYUR47QXwG7WdQquC6t3iUZMMinCe6fn6UivUDEJAOvkvH5A>
+    <xmx:KGXgYecDrqi3RDyKnFE20IMPq9cYhn393OL23yFc2ofseF6xjtgQgQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 67B55FA0AA7; Thu, 13 Jan 2022 12:45:12 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-4569-g891f756243-fm-20220111.001-g891f7562
+Mime-Version: 1.0
+Message-Id: <a660ca71-b7ed-4348-93ca-c05b0e5b1697@www.fastmail.com>
+In-Reply-To: <20220112211039.GA281591@bhelgaas>
+References: <20220112211039.GA281591@bhelgaas>
+Date:   Thu, 13 Jan 2022 17:44:50 +0000
+From:   "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     "Rob Herring" <robh@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        "Tiezhu Yang" <yangtiezhu@loongson.cn>,
+        "Huacai Chen" <chenhuacai@kernel.org>,
+        "Ray Jui" <rjui@broadcom.com>,
+        "Scott Branden" <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 19/19] PCI: Set bridge map_irq and swizzle_irq to default functions
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 08:49:03AM -0600, Bjorn Helgaas wrote:
-> On Wed, Dec 22, 2021 at 08:19:57PM +0100, Lukasz Maniak wrote:
-> > As per PCI Express specification, FLR to a PF resets the PF state as
-> > well as the SR-IOV extended capability including VF Enable which means
-> > that VFs no longer exist.
-> 
-> Can you add a specific reference to the spec, please?
-> 
-Following the Single Root I/O Virtualization and Sharing Specification:
-2.2.3. FLR That Targets a PF
-PFs must support FLR.
-FLR to a PF resets the PF state as well as the SR-IOV extended
-capability including VF Enable which means that VFs no longer exist.
 
-For PCI Express Base Specification Revision 5.0 and later, this is
-section 9.2.2.3.
 
-> > Currently, the IOV state is not updated during FLR, resulting in
-> > non-compliant PCI driver behavior.
-> 
-> And include a little detail about what problem is observed?  How would
-> a user know this problem is occurring?
-> 
-The problem is that the state of the kernel and HW as to the number of
-VFs gets out of sync after FLR.
+=E5=9C=A82022=E5=B9=B41=E6=9C=8812=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8B=E5=
+=8D=889:10=EF=BC=8CBjorn Helgaas=E5=86=99=E9=81=93=EF=BC=9A
+> On Wed, Jan 12, 2022 at 08:08:45PM +0000, Jiaxun Yang wrote:
+>> =E5=9C=A82022=E5=B9=B41=E6=9C=8812=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8B=
+=E5=8D=883:19=EF=BC=8CBjorn Helgaas=E5=86=99=E9=81=93=EF=BC=9A
+>> > On Wed, Jan 12, 2022 at 12:57:44PM +0000, Jiaxun Yang wrote:
+>> >> =E5=9C=A82022=E5=B9=B41=E6=9C=8811=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=
+=8B=E5=8D=889:46=EF=BC=8CBjorn Helgaas=E5=86=99=E9=81=93=EF=BC=9A
+>> >> > [-cc many, +cc iproc, loongson, tegra maintainers]
+>> [...]
+>> > I see these:
+>> >
+>> >   Documentation/devicetree/bindings/pci/loongson.yaml
+>> >   arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+>> >
+>> > which makes me think there are Loongson systems with DT.  Are there
+>> > some Loongson systems with DT and some legacy ones without?
+>>=20
+>> Actually all present MIPS/Loongson systems are legacy and we just
+>> built-in DTs in kernel and select which one to use at boot time.=20
+>
+> So I guess you know enough about what platform it is to select which
+> DT to use, but you don't know enough to know the I8259 routing?
+>
+> If you *could* select a DT that described the I8259 routing, I guess
+> maybe you could select a matching DT or update a DT in-place?
+>
+>> > The only driver I see is drivers/pci/controller/pci-loongson.c.
+>> > Is that used for all Loongson system?  It unconditionally uses
+>> > ->map_irq =3D loongson_map_irq().
+>>=20
+>> Yes, it's used among all Loongson systems.  For system using LS7A
+>> PCH the IRQ mapping is fixed so we just programmed it in DT. For
+>> RS780E we use this routine to read PCI_INTERRUPT_LINE to select
+>> which I8259 IRQ to use.
+>>=20
+>> > loongson_map_irq() reads PCI_INTERRUPT_LINE; I think that depends
+>> > on firmware having previously programmed it, right?
+>>=20
+>> I'm unclear about what did firmware do but as AMD RS780E is used in
+>> x86 PCs as well it should be the same way.
+>
+> PCI devices don't use the value in PCI_INTERRUPT_LINE, and the spec
+> doesn't define a default value.  It's only for use by software.
+>
+> I'm pretty sure that on ACPI x86, we don't depend on
+> PCI_INTERRUPT_LINE except for things like quirks.
+>
+> I think the ACPI MADT and _PRT are supposed to contain all the INTx
+> routing information we need.  Obviously this isn't an ACPI system.
+> I'm just making the point that it *should* be possible to remove this
+> dependency on firmware if we can identify the specific platform (which
+> determines the I8259 routing).
 
-This results in further listing, after the FLR is performed by the HW,
-of VFs that actually no longer exist and should no longer be reported on
-the PCI bus. lspci return FFs for these VFs.
+Hi,
 
-sriov_numvfs in sysfs returns old invalid value and does not allow
-setting a new value before explicitly setting 0 in the first place.
+Thanks for the information, I had send a enquire to Loongson to ask about
+those details.
 
-> > This patch introduces a simple function, called on the FLR path, that
-> > removes the virtual function devices from the PCI bus and their
-> > corresponding sysfs links with a final clear of the num_vfs value in IOV
-> > state.
-> > 
-> > Signed-off-by: Lukasz Maniak <lukasz.maniak@linux.intel.com>
-> > ---
-> >  drivers/pci/iov.c | 21 +++++++++++++++++++++
-> >  drivers/pci/pci.c |  2 ++
-> >  drivers/pci/pci.h |  4 ++++
-> >  3 files changed, 27 insertions(+)
-> > 
-> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > index 0267977c9f17..69ee321027b4 100644
-> > --- a/drivers/pci/iov.c
-> > +++ b/drivers/pci/iov.c
-> > @@ -1013,6 +1013,27 @@ int pci_iov_bus_range(struct pci_bus *bus)
-> >  	return max ? max - bus->number : 0;
-> >  }
-> >  
-> > +/**
-> > + * pci_reset_iov_state - reset the state of the IOV capability
-> > + * @dev: the PCI device
-> > + */
-> > +void pci_reset_iov_state(struct pci_dev *dev)
-> > +{
-> > +	struct pci_sriov *iov = dev->sriov;
-> > +
-> > +	if (!dev->is_physfn)
-> > +		return;
-> > +	if (!iov->num_VFs)
-> > +		return;
-> > +
-> > +	sriov_del_vfs(dev);
-> > +
-> > +	if (iov->link != dev->devfn)
-> > +		sysfs_remove_link(&dev->dev.kobj, "dep_link");
-> > +
-> > +	iov->num_VFs = 0;
-> > +}
-> > +
-> >  /**
-> >   * pci_enable_sriov - enable the SR-IOV capability
-> >   * @dev: the PCI device
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 3d2fb394986a..535f19d37e8d 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -4694,6 +4694,8 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
-> >   */
-> >  int pcie_flr(struct pci_dev *dev)
-> >  {
-> > +	pci_reset_iov_state(dev);
-> > +
-> >  	if (!pci_wait_for_pending_transaction(dev))
-> >  		pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
-> >  
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index 3d60cabde1a1..7bb144fbec76 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -480,6 +480,7 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno);
-> >  resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
-> >  void pci_restore_iov_state(struct pci_dev *dev);
-> >  int pci_iov_bus_range(struct pci_bus *bus);
-> > +void pci_reset_iov_state(struct pci_dev *dev);
-> >  extern const struct attribute_group sriov_pf_dev_attr_group;
-> >  extern const struct attribute_group sriov_vf_dev_attr_group;
-> >  #else
-> > @@ -501,6 +502,9 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
-> >  {
-> >  	return 0;
-> >  }
-> > +static inline void pci_reset_iov_state(struct pci_dev *dev)
-> > +{
-> > +}
-> >  
-> >  #endif /* CONFIG_PCI_IOV */
-> >  
-> > 
-> > base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
-> > -- 
-> > 2.25.1
-> > 
+Patching DT at boot time should be possible :-)
+
+Thanks.
+
+>
+> Bjorn
+
+--=20
+- Jiaxun
