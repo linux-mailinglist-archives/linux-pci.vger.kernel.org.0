@@ -2,93 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5EDB48D6BC
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 12:36:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 475EC48D6DF
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 12:45:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231355AbiAMLgN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jan 2022 06:36:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52556 "EHLO
+        id S232071AbiAMLph (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jan 2022 06:45:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230124AbiAMLgN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jan 2022 06:36:13 -0500
+        with ESMTP id S232038AbiAMLpg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jan 2022 06:45:36 -0500
 Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:1::465:107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2490CC06173F
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jan 2022 03:36:13 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31BD6C06173F
+        for <linux-pci@vger.kernel.org>; Thu, 13 Jan 2022 03:45:36 -0800 (PST)
 Received: from smtp2.mailbox.org (unknown [91.198.250.124])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4JZMnl2H2MzQlJP;
-        Thu, 13 Jan 2022 12:36:11 +0100 (CET)
+        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4JZN0Z0FrFzQlJV;
+        Thu, 13 Jan 2022 12:45:34 +0100 (CET)
 X-Virus-Scanned: amavisd-new at heinlein-support.de
-From:   Stefan Roese <sr@denx.de>
-To:     linux-pci@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yao Hongbo <yaohongbo@linux.alibaba.com>,
-        Naveen Naidu <naveennaidu479@gmail.com>
-Subject: [PATCH] PCI/portdrv: Don't disable AER reporting in get_port_device_capability()
-Date:   Thu, 13 Jan 2022 12:36:04 +0100
-Message-Id: <20220113113604.1652425-1-sr@denx.de>
+Message-ID: <517324a1-c099-2c7b-73a0-c6cca027c796@denx.de>
+Date:   Thu, 13 Jan 2022 12:45:30 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v3 1/2] PCI/portdrv: Add option to setup IRQs for
+ platform-specific Service Errors
+Content-Language: en-US
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     linux-pci@vger.kernel.org,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+References: <20220113104939.1635398-1-sr@denx.de>
+ <20220113104939.1635398-2-sr@denx.de> <20220113111450.pgacviso7sn627ln@pali>
+From:   Stefan Roese <sr@denx.de>
+In-Reply-To: <20220113111450.pgacviso7sn627ln@pali>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Testing has shown, that AER reporting is currently disabled in the
-DevCtl registers of all non Root Port PCIe devices on systems using
-pcie_ports_native || host->native_aer. Practically disabling AER
-completely in such systems. This is due to the fact that with commit
-2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port
-initialization"), a call to pci_disable_pcie_error_reporting() was
-added *after* the PCIe AER setup was completed for the PCIe device
-tree.
+On 1/13/22 12:14, Pali Rohár wrote:
+> On Thursday 13 January 2022 11:49:38 Stefan Roese wrote:
+>> From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+>>
+>> As per section 6.2.4.1.2, 6.2.6 in PCIe r4.0 (and later versions),
+>> platform-specific System Errors like AER can be delivered via platform-
+>> specific interrupt lines.
+>>
+>> This patch adds the init_platform_service_irqs() hook to struct
+>> pci_host_bridge, making it possible that platforms may implement this
+>> function to hook IRQs for these platform-specific System Errors, like
+>> AER.
+>>
+>> If these platform-specific service IRQs have been successfully
+>> installed via pcie_init_platform_service_irqs(),
+>> pcie_init_service_irqs() is skipped.
+>>
+>> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+>> Signed-off-by: Stefan Roese <sr@denx.de>
+>> Cc: Bjorn Helgaas <helgaas@kernel.org>
+>> Cc: Pali Rohár <pali@kernel.org>
+>> Cc: Michal Simek <michal.simek@xilinx.com>
+>> ---
+>>   drivers/pci/pcie/portdrv_core.c | 43 ++++++++++++++++++++++++++++++++-
+>>   include/linux/pci.h             |  2 ++
+>>   2 files changed, 44 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+>> index bda630889f95..4dab74ff4368 100644
+>> --- a/drivers/pci/pcie/portdrv_core.c
+>> +++ b/drivers/pci/pcie/portdrv_core.c
+>> @@ -190,6 +190,31 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>>   	return 0;
+>>   }
+>>   
+>> +/**
+>> + * pcie_init_platform_service_irqs - initialize platform service irqs for
+>> + * platform-specific System Errors
+>> + * @dev: PCI Express port to handle
+>> + * @irqs: Array of irqs to populate
+>> + * @mask: Bitmask of capabilities
+>> + *
+>> + * Return value: true/false for platforms service irqs installed or not
+>> + */
+>> +static bool pcie_init_platform_service_irqs(struct pci_dev *dev,
+>> +					    int *irqs, int mask)
+>> +{
+>> +	struct pci_host_bridge *bridge;
+>> +
+>> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+> 
+> I think that this check is not needed as it is done before calling
+> pcie_init_platform_service_irqs() function.
 
-This patch now removes this call to pci_disable_pcie_error_reporting()
-from get_port_device_capability(), leaving the already enabled AER
-configuration intact. With this change, I'm able to fully use the
-Kernel AER infrastructure on a ZynqMP system which has a PCIe switch
-connected to the host CPU PCIe Root Port.
+Ah, you are correct. I'll remove this check in v4.
 
-Fixes: 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port initialization")
-Signed-off-by: Stefan Roese <sr@denx.de>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Pali Rohár <pali@kernel.org>
-Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: Yao Hongbo <yaohongbo@linux.alibaba.com>
-Cc: Naveen Naidu <naveennaidu479@gmail.com>
----
- drivers/pci/pcie/portdrv_core.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+>> +		bridge = pci_find_host_bridge(dev->bus);
+>> +		if (bridge && bridge->init_platform_service_irqs) {
+>> +			bridge->init_platform_service_irqs(dev, irqs, mask);
+>> +			return true;
+> 
+> Suggestion: What about "return bridge->init_platform_service_irqs(...);" ?
+> This could allow callback function to fail...
 
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 4dab74ff4368..48f5e67709f7 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -244,15 +244,8 @@ static int get_port_device_capability(struct pci_dev *dev)
- 
- #ifdef CONFIG_PCIEAER
- 	if (dev->aer_cap && pci_aer_available() &&
--	    (pcie_ports_native || host->native_aer)) {
-+	    (pcie_ports_native || host->native_aer))
- 		services |= PCIE_PORT_SERVICE_AER;
--
--		/*
--		 * Disable AER on this port in case it's been enabled by the
--		 * BIOS (the AER service driver will enable it when necessary).
--		 */
--		pci_disable_pcie_error_reporting(dev);
--	}
- #endif
- 
- 	/* Root Ports and Root Complex Event Collectors may generate PMEs */
--- 
-2.34.1
+Even better. I'll make this change as well and will wait a bit with
+sending v4 to collect a few more review comments.
 
+Thanks,
+Stefan
