@@ -2,82 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CB6B48E080
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Jan 2022 23:41:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16CC348E177
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jan 2022 01:28:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238057AbiAMWlz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Jan 2022 17:41:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238045AbiAMWly (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Jan 2022 17:41:54 -0500
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23783C061751
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jan 2022 14:41:53 -0800 (PST)
-Received: by mail-pf1-x441.google.com with SMTP id x83so1148469pfc.0
-        for <linux-pci@vger.kernel.org>; Thu, 13 Jan 2022 14:41:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=YbEI3Q/NEjCtDTVCV1jkA7nYNYBH/Wfa2wk3IkVyJko=;
-        b=OZP/QoKN8ru5XovrHZZEtRGAPOqy8yRZtZX0efEKVWs/Q7f6+2JX3Mloojh5SZ/AxH
-         cPAHMJhJrLRzzoPYh5n9fG2/pMOrYfS/PU2zx88sTYLTj0Dv1cVWivcA/TNU5IJgRtzI
-         yyO22l7H4XiZ577o8zD4nj2E5AestX9VYls3ntwqOHZNPl0OsU/EptDmXh66odxZFNCy
-         EIQC+hO6HyVDK/x5ziZcfqIxZJTlgvB+YGNZLq+4zSXQW5IZ9FoHkF7Eb5K19JwK6tqA
-         L1pbJiPTkM7B36B6kKA792uSFGR69D9KVeYMTQ95Fzk4WvuXfGt3UHBLmZ7aOqdAe8eh
-         8P+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=YbEI3Q/NEjCtDTVCV1jkA7nYNYBH/Wfa2wk3IkVyJko=;
-        b=ZWNkJ3VXjb5k00tBJ3AlZseuStzd2uIBz+DpWmaKCawa2lj9g1+5wz4xYdHhXQiAXf
-         fhg3FGEaif+OkrAIdICNXJ1/ctRxWvuYnA0ANTe00qGi4NKZ2A1hwR5B9ZOymGblo7Qw
-         aZOHtfp7gbPV4YC6o4qor7+gW0SGmlQ7244udTypIel9sTfSK9hQU/adkj5+Hj9yNakG
-         zTxlDUuGE2xWBLa74426NnHDEueI8kNPQe1eysU2RTgW1aqaF+/84JzCxk+Ku9bzUDP+
-         m7De2dkQQTeVk+/qbphH1D4CC9vGB6qgq3Lqui063MthN/dYEmyIZO1R5SqVeHla+azM
-         828w==
-X-Gm-Message-State: AOAM533rAfu8Jyt6jbO1z/9vQ+8SKl54uZIYwWBX1Jn21mLvNys25ctV
-        WAZSSKDnOYPF24qEIKLt54aXrz3H2/fDAkofcTA=
-X-Google-Smtp-Source: ABdhPJwo/BFuE/MyrXvV4Wc2jiueqzTZxw+feN+I2rvhYn2V6MZ0AjtfVc00EmStBrmKGTDtifrnIaK8zXPI0L+vd18=
-X-Received: by 2002:a63:4507:: with SMTP id s7mr5556975pga.252.1642113712456;
- Thu, 13 Jan 2022 14:41:52 -0800 (PST)
+        id S238399AbiANA2N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Jan 2022 19:28:13 -0500
+Received: from mga04.intel.com ([192.55.52.120]:24454 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230165AbiANA2N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 13 Jan 2022 19:28:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642120093; x=1673656093;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RRSc0fCF2gQ58MCLYJ6EBu3GpIJNYU365XBPjiNmmwU=;
+  b=aH2hmOTwwfKK+7xqAT3xwiRYnJPanp28ULfpIXa3JM2OtWPTBLRoceFs
+   EFYyGpJ5d6Mzc7XZ0yZW3h3RtCSdFsXlKFE6OcHnoHFlniUbU8dHct2z2
+   AKNVo+Hoih3KkW+Ub0sQ8kG+LtLGSiHERbH/pWmvojpRYPasSHOIxKuwC
+   5pXglXux9y+c80/thexk8jwphMFvCaEN3+lJMdUPP6vuJdsFm+aCubBmq
+   MjLJ5y9GiPyp4NbL27W9wrML9nmVSmKkJlTPk5+cn6Qh76DtNrD5FWeSf
+   BE7tby8VpvLxrfkx+FGiJg3+b4vFXwZH0pkdcj6Q6bQ9gER0YjkUxhxkj
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10226"; a="242964235"
+X-IronPort-AV: E=Sophos;i="5.88,287,1635231600"; 
+   d="scan'208";a="242964235"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 16:28:12 -0800
+X-IronPort-AV: E=Sophos;i="5.88,287,1635231600"; 
+   d="scan'208";a="491317600"
+Received: from lucas-s2600cw.jf.intel.com ([10.165.21.202])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 16:28:12 -0800
+From:   Lucas De Marchi <lucas.demarchi@intel.com>
+To:     x86@kernel.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>, stable@vger.kernel.org
+Subject: [PATCH v5 1/5] x86/quirks: Fix stolen detection with integrated + discrete GPU
+Date:   Thu, 13 Jan 2022 16:28:39 -0800
+Message-Id: <20220114002843.2083382-1-lucas.demarchi@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:f38c:0:0:0:0 with HTTP; Thu, 13 Jan 2022 14:41:52
- -0800 (PST)
-Reply-To: mchristophdaniel@gmail.com
-From:   Marcus Galois <marcus.galois@gmail.com>
-Date:   Thu, 13 Jan 2022 23:41:52 +0100
-Message-ID: <CANqBaXVSfOGLj7J26QWPsx3dwN0Cxmg71Yc9hV9b7yv0f0E1qQ@mail.gmail.com>
-Subject: Good News Finally.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello friend.
+early_pci_scan_bus() does a depth-first traversal, possibly calling
+the quirk functions for each device based on vendor, device and class
+from early_qrk table. intel_graphics_quirks() however uses PCI_ANY_ID
+and does additional filtering in the quirk.
 
-You might find it so difficult to remember me, though it is indeed a
-very long time, I am much delighted to contact you again after a long
-period of time, I remember you despite circumstances that made things
-not worked out as we projected then. I want to inform you that the
-transaction we're doing together then finally worked out and I decided
-to contact you and to let you know because of your tremendous effort
-to make things work out then.
+If there is an Intel integrated + discrete GPU the quirk may be called
+first for the discrete GPU based on the PCI topology. Then we will fail
+to reserve the system stolen memory for the integrated GPU, because we
+will already have marked the quirk as "applied".
 
-Meanwhile I must inform you that I'm presently in Caribbean Island for
-numerous business negotiation with some partners. with my sincere
-heart i have decided to compensate you with USD$900,000 for your
-dedication then on our transaction, you tried so much that period and
-I appreciated your effort. I wrote a cheque/check on your name, as
-soon as you receive it, you let me know.
+This was reproduced in a setup with Alderlake-P (integrated) + DG2
+(discrete), with the following PCI topology:
 
-Contact my secretary now on his email: mchristophdaniel@gmail.com
-Name: Mr. Christoph Daniel
+	- 00:01.0 Bridge
+	  `- 03:00.0 DG2
+	- 00:02.0 Integrated GPU
 
-You are to forward to him your Name........ Address.......,Phone
-number......for shipment/dispatch of the cheque/Check to you
+So, stop using the QFLAG_APPLY_ONCE flag, replacing it with a static
+local variable. We can set this variable in the right place, inside
+intel_graphics_quirks(), only when the quirk was actually applied, i.e.
+when we find the integrated GPU based on the intel_early_ids table.
 
-Regards,
-Mr. Marcus Galois
+Cc: stable@vger.kernel.org
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+---
+
+v5: apply fix before the refactor
+
+ arch/x86/kernel/early-quirks.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 1ca3a56fdc2d..de9a76eb544e 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -589,10 +589,14 @@ intel_graphics_stolen(int num, int slot, int func,
+ 
+ static void __init intel_graphics_quirks(int num, int slot, int func)
+ {
++	static bool quirk_applied __initdata;
+ 	const struct intel_early_ops *early_ops;
+ 	u16 device;
+ 	int i;
+ 
++	if (quirk_applied)
++		return;
++
+ 	device = read_pci_config_16(num, slot, func, PCI_DEVICE_ID);
+ 
+ 	for (i = 0; i < ARRAY_SIZE(intel_early_ids); i++) {
+@@ -605,6 +609,8 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
+ 
+ 		intel_graphics_stolen(num, slot, func, early_ops);
+ 
++		quirk_applied = true;
++
+ 		return;
+ 	}
+ }
+@@ -705,7 +711,7 @@ static struct chipset early_qrk[] __initdata = {
+ 	{ PCI_VENDOR_ID_INTEL, 0x3406, PCI_CLASS_BRIDGE_HOST,
+ 	  PCI_BASE_CLASS_BRIDGE, 0, intel_remapping_check },
+ 	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, PCI_CLASS_DISPLAY_VGA, PCI_ANY_ID,
+-	  QFLAG_APPLY_ONCE, intel_graphics_quirks },
++	  0, intel_graphics_quirks },
+ 	/*
+ 	 * HPET on the current version of the Baytrail platform has accuracy
+ 	 * problems: it will halt in deep idle state - so we disable it.
+-- 
+2.34.1
+
