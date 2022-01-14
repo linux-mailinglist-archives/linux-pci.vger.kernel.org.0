@@ -2,193 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA51148F08A
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jan 2022 20:42:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B0FC48F0DD
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jan 2022 21:19:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236669AbiANTmY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jan 2022 14:42:24 -0500
-Received: from mga17.intel.com ([192.55.52.151]:5857 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234013AbiANTmY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 14 Jan 2022 14:42:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642189344; x=1673725344;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kPpAaDZAjNDrJlDzT9W8k9malr27sV63Vf5Ga5QYIJk=;
-  b=S2mAcqBNiXSOKaVfJpbXc8Pis+6sMhI3HrNy7+iXX4DVJfVPlLBx0X3o
-   agJwE9D5Py9BTjMoAVwediyA/KSSgJc2kQ6xzPqIK7OVOIA6X5O9W72JG
-   cnwNCUV1b5rOviVJ6qArwhS3RQd43bpKIQDFXiZoEFdb7bMMzPyIsJtgA
-   hhUSwFNn+UHv59ygE7Ag9+5R9eS4gMA93McrRfPMD2tvxK7IWbHT0jK4u
-   sz4yXs4p8yKOeNH1ZCapg73qXMOGiJIcpMGLBmjuyFvUap4Z2u9WICgYh
-   sRp2RuhGGr6QLAQLjZiJ+0QTb+ZiJyLprAvJYkKgOnuqj5E5Pl9FBMetY
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10227"; a="225001606"
-X-IronPort-AV: E=Sophos;i="5.88,289,1635231600"; 
-   d="scan'208";a="225001606"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 11:42:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,289,1635231600"; 
-   d="scan'208";a="624456455"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 14 Jan 2022 11:42:22 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1n8SSr-0008va-OW; Fri, 14 Jan 2022 19:42:21 +0000
-Date:   Sat, 15 Jan 2022 03:41:40 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- 87c71931633bd15e9cfd51d4a4d9cd685e8cdb55
-Message-ID: <61e1d1f4.khlDN4dcDs0WuSj5%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S237104AbiANUTk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jan 2022 15:19:40 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:45518 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232761AbiANUTj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jan 2022 15:19:39 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9654AB82A28
+        for <linux-pci@vger.kernel.org>; Fri, 14 Jan 2022 20:19:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 229ACC36AE5;
+        Fri, 14 Jan 2022 20:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642191577;
+        bh=x+WgLRk4SMV2nI2+xa6bew44FqW62hnnN2DNIkxHMBo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=oFO5pvoEa5tlNJxDMXf0AJA9cvcqYzmjWr5F0z0WCXVAURAMj3FpzfErLdwdMFsj7
+         1gWPQuWlBHJFAs2rPa3zfVVsheyFLrBJrUuo1XAGFoKe+royx32xx9ydXb1/UuU2RG
+         p+p7o6U2Aagq+Z/IlUXt2+/kuupCLZp3BWI6c9E675WVNX0vt0T0iQIi8URAdnAYhG
+         SAlM/C5NZTwsl1+7IHVAthtQZMrtBTqDabCNk9CzDWLarTRauwSKP/WCrlUspN/rtZ
+         WgJEg/Ya8RF7tuCC766C47YPz/tt1hCcuUQ20x948CbWIqPoLpVi7+hypTsWuHnta8
+         5AmsU7q7bFN+g==
+Date:   Fri, 14 Jan 2022 14:19:35 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Stefan Roese <sr@denx.de>
+Cc:     linux-pci@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Yao Hongbo <yaohongbo@linux.alibaba.com>,
+        Naveen Naidu <naveennaidu479@gmail.com>
+Subject: Re: [PATCH] PCI/portdrv: Don't disable AER reporting in
+ get_port_device_capability()
+Message-ID: <20220114201935.GA572866@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220113113604.1652425-1-sr@denx.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 87c71931633bd15e9cfd51d4a4d9cd685e8cdb55  Merge branch 'pci/driver-cleanup'
+On Thu, Jan 13, 2022 at 12:36:04PM +0100, Stefan Roese wrote:
+> Testing has shown, that AER reporting is currently disabled in the
+> DevCtl registers of all non Root Port PCIe devices on systems using
+> pcie_ports_native || host->native_aer. Practically disabling AER
+> completely in such systems. 
 
-elapsed time: 1388m
+I want to be a little pedantic here because the error landscape is
+complicated, and I think it will help if we correspond closely to the
+spec language.
 
-configs tested: 121
-configs skipped: 3
+Device Control controls Error Reporting (whether the device sends
+ERR_* messages), and IIUC this is relevant even without AER (I'm
+looking at PCIe r6.0, sec 6.2.5, which refers to CERE, NERE, FERE
+outside the AER box).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Can you update this with analysis of the code as opposed to what we
+observe in testing?  Hopefully the analysis corresponds to the
+observations :)  Here's my take; probably too much for a commit log,
+but maybe it can be distilled:
 
-gcc tested configs:
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm64                            allyesconfig
-arm64                               defconfig
-i386                          randconfig-c001
-mips                           jazz_defconfig
-h8300                               defconfig
-powerpc                        cell_defconfig
-arm                            hisi_defconfig
-m68k                        mvme16x_defconfig
-powerpc                     tqm8555_defconfig
-powerpc                      pcm030_defconfig
-sparc                               defconfig
-mips                           ip32_defconfig
-arm                           viper_defconfig
-arm                            qcom_defconfig
-arm                            pleb_defconfig
-ia64                        generic_defconfig
-sh                   rts7751r2dplus_defconfig
-sh                   sh7724_generic_defconfig
-mips                         db1xxx_defconfig
-powerpc                     mpc83xx_defconfig
-mips                        vocore2_defconfig
-openrisc                    or1ksim_defconfig
-s390                       zfcpdump_defconfig
-arm                            xcep_defconfig
-powerpc                 mpc837x_mds_defconfig
-ia64                         bigsur_defconfig
-mips                            ar7_defconfig
-sh                                  defconfig
-i386                             alldefconfig
-sh                          sdk7786_defconfig
-arm                           tegra_defconfig
-sh                              ul2_defconfig
-arm                  randconfig-c002-20220113
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                             allnoconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-h8300                            allyesconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-sparc                            allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-powerpc                          allmodconfig
-powerpc                          allyesconfig
-i386                          randconfig-a003
-i386                          randconfig-a001
-i386                          randconfig-a005
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-riscv                randconfig-r042-20220113
-arc                  randconfig-r043-20220113
-s390                 randconfig-r044-20220113
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-riscv                    nommu_virt_defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                           allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
+  pcie_portdrv_probe
+    pcie_port_device_register
+      get_port_device_capability
+        pci_disable_pcie_error_reporting
+          clear CERE NFERE FERE URRE               # <-- disable for RP USP DSP
+      pcie_device_init
+        device_register                            # new AER service device
+          aer_probe
+            aer_enable_rootport                    # RP only
+              set_downstream_devices_error_reporting
+                set_device_error_reporting         # self (RP)
+                  if (RP || USP || DSP)
+                    pci_enable_pcie_error_reporting
+                      set CERE NFERE FERE URRE     # <-- enable for RP
+                pci_walk_bus
+                  set_device_error_reporting
+                    if (RP || USP || DSP)
+                      pci_enable_pcie_error_reporting
+                        set CERE NFERE FERE URRE   # <-- enable for USP DSP
 
-clang tested configs:
-arm                          pxa168_defconfig
-mips                           ip28_defconfig
-powerpc                     tqm8560_defconfig
-mips                          ath79_defconfig
-arm                          ixp4xx_defconfig
-powerpc                 mpc836x_rdk_defconfig
-powerpc                   lite5200b_defconfig
-powerpc                  mpc866_ads_defconfig
-riscv                    nommu_virt_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a011
-hexagon              randconfig-r045-20220113
-hexagon              randconfig-r041-20220113
+In a typical Root Port -> Endpoint hierarchy, the above:
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+  - Disables Error Reporting for the Root Port,
+
+  - Enables Error Reporting for the Root Port,
+
+  - Does NOT enable Error Reporting for the Endpoint because it is not
+    a Root Port or Switch Port.
+
+In a deeper Root Port -> Upstream Switch Port -> Downstream Switch
+Port -> Endpoint hierarchy:
+
+  - Disables Error Reporting for the Root Port,
+
+  - Enables Error Reporting for the Root Port,
+
+  - Enables Error Reporting for both Switch Ports,
+
+  - Does NOT enable Error Reporting for the Endpoint because it is not
+    a Root Port or Switch Port,
+
+  - Disables Error Reporting for the Switch Ports when
+    pcie_portdrv_probe() claims them.  AER does not re-enable it
+    because these are not Root Ports.
+
+I think the bottom line is that the current code leaves reporting
+enabled on Root Ports and disabled everywhere else.  It's enabled
+temporarily on Switch Ports, but disabled again when
+pcie_portdrv_probe() claims them.
+
+The core doesn't do anything with Endpoints, but a few drivers enable
+reporting themselves.  This probably only works when their devices are
+directly connected to a Root Port.
+
+> This is due to the fact that with commit 2bd50dd800b5 ("PCI: PCIe:
+> Disable PCIe port services during port initialization"), a call to
+> pci_disable_pcie_error_reporting() was added *after* the PCIe AER
+> setup was completed for the PCIe device tree.
+
+IIUC, 2bd50dd800b5 is really only an issue for Switch Ports, because
+it makes portdrv disable reporting for them, but AER doesn't re-enable
+it.
+
+> This patch now removes this call to pci_disable_pcie_error_reporting()
+> from get_port_device_capability(), leaving the already enabled AER
+> configuration intact. With this change, I'm able to fully use the
+> Kernel AER infrastructure on a ZynqMP system which has a PCIe switch
+> connected to the host CPU PCIe Root Port.
+
+This patch doesn't affect the Endpoint, and I assume you also need to
+enable reporting there?
+
+> Fixes: 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port initialization")
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Pali Rohár <pali@kernel.org>
+> Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: Yao Hongbo <yaohongbo@linux.alibaba.com>
+> Cc: Naveen Naidu <naveennaidu479@gmail.com>
+> ---
+>  drivers/pci/pcie/portdrv_core.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 4dab74ff4368..48f5e67709f7 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -244,15 +244,8 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  
+>  #ifdef CONFIG_PCIEAER
+>  	if (dev->aer_cap && pci_aer_available() &&
+> -	    (pcie_ports_native || host->native_aer)) {
+> +	    (pcie_ports_native || host->native_aer))
+>  		services |= PCIE_PORT_SERVICE_AER;
+> -
+> -		/*
+> -		 * Disable AER on this port in case it's been enabled by the
+> -		 * BIOS (the AER service driver will enable it when necessary).
+> -		 */
+> -		pci_disable_pcie_error_reporting(dev);
+> -	}
+>  #endif
+>  
+>  	/* Root Ports and Root Complex Event Collectors may generate PMEs */
+> -- 
+> 2.34.1
+> 
