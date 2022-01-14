@@ -2,178 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C1DC48E7BA
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Jan 2022 10:42:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F93B48E966
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Jan 2022 12:46:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235490AbiANJmw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Jan 2022 04:42:52 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:35842 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbiANJmu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jan 2022 04:42:50 -0500
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JZxCh0K0mzccbV;
-        Fri, 14 Jan 2022 17:42:08 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Fri, 14 Jan 2022 17:42:48 +0800
-CC:     <yangyicong@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?=c5=81ukasz_Gieryk?= <lukasz.gieryk@linux.intel.com>
-Subject: Re: [PATCH] PCI: Reset IOV state on FLR to PF
-To:     Lukasz Maniak <lukasz.maniak@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20211222191958.955681-1-lukasz.maniak@linux.intel.com>
- <20220112144903.GA253960@bhelgaas>
- <20220113164538.GA577231@lmaniak-dev.igk.intel.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <cc6ec042-3a74-f5c3-5106-e3ff4689c009@huawei.com>
-Date:   Fri, 14 Jan 2022 17:42:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S240851AbiANLqT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Jan 2022 06:46:19 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:45640 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237600AbiANLqT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Jan 2022 06:46:19 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 82651B825C8
+        for <linux-pci@vger.kernel.org>; Fri, 14 Jan 2022 11:46:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA76EC36AE5;
+        Fri, 14 Jan 2022 11:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642160777;
+        bh=E5KqOMuIo5m9lLLXHofhxNr+MCSQxPJVCIxClOJgnfA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=azZFqGe1DznPeyKjfO8KPukLIolNwk3xqmvWwb8OmFqhX0fPlLySO4Jit6F5f9qaH
+         T607wgHQCLuvoLmsZ7iy1p90IqnRIsOV/fkOnqkecDZMUaLmJMM1eXrSXhadr+QR6/
+         wTmGoN7Xj/xrcfoPQOr5CW+bkmk+lvHQml1k8JZTBEb/+9vnaicJfBqVyabMgo6jMb
+         h1MIK2Toa/+1kQaS0I9Q1uYWq+7T/Q+IQoW5FfAMAZA/U3axL5M3U5Pq5uuTh1rxVd
+         gHCzeEqZepbvNhSetlqXgebzbS9/MAehnq7S5OOsnswxV3/O61MHKrgJp/J1j1MXI7
+         YpnHMfXlcI8sw==
+Received: by pali.im (Postfix)
+        id 173A17D1; Fri, 14 Jan 2022 12:46:14 +0100 (CET)
+Date:   Fri, 14 Jan 2022 12:46:13 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Stefan Roese <sr@denx.de>
+Cc:     linux-pci@vger.kernel.org,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v4 1/2] PCI/portdrv: Add option to setup IRQs for
+ platform-specific Service Errors
+Message-ID: <20220114114613.oymjnjsoqbx2uwjl@pali>
+References: <20220114075834.1938409-1-sr@denx.de>
+ <20220114075834.1938409-2-sr@denx.de>
 MIME-Version: 1.0
-In-Reply-To: <20220113164538.GA577231@lmaniak-dev.igk.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220114075834.1938409-2-sr@denx.de>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/1/14 0:45, Lukasz Maniak wrote:
-> On Wed, Jan 12, 2022 at 08:49:03AM -0600, Bjorn Helgaas wrote:
->> On Wed, Dec 22, 2021 at 08:19:57PM +0100, Lukasz Maniak wrote:
->>> As per PCI Express specification, FLR to a PF resets the PF state as
->>> well as the SR-IOV extended capability including VF Enable which means
->>> that VFs no longer exist.
->>
->> Can you add a specific reference to the spec, please?
->>
-> Following the Single Root I/O Virtualization and Sharing Specification:
-> 2.2.3. FLR That Targets a PF
-> PFs must support FLR.
-> FLR to a PF resets the PF state as well as the SR-IOV extended
-> capability including VF Enable which means that VFs no longer exist.
+On Friday 14 January 2022 08:58:33 Stefan Roese wrote:
+> From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
 > 
-> For PCI Express Base Specification Revision 5.0 and later, this is
-> section 9.2.2.3.
+> As per section 6.2.4.1.2, 6.2.6 in PCIe r4.0 (and later versions),
+> platform-specific System Errors like AER can be delivered via platform-
+> specific interrupt lines.
 > 
->>> Currently, the IOV state is not updated during FLR, resulting in
->>> non-compliant PCI driver behavior.
->>
->> And include a little detail about what problem is observed?  How would
->> a user know this problem is occurring?
->>
-> The problem is that the state of the kernel and HW as to the number of
-> VFs gets out of sync after FLR.
+> This patch adds the init_platform_service_irqs() hook to struct
+> pci_host_bridge, making it possible that platforms may implement this
+> function to hook IRQs for these platform-specific System Errors, like
+> AER.
 > 
-> This results in further listing, after the FLR is performed by the HW,
-> of VFs that actually no longer exist and should no longer be reported on
-> the PCI bus. lspci return FFs for these VFs.
+> If these platform-specific service IRQs have been successfully
+> installed via pcie_init_platform_service_irqs(),
+> pcie_init_service_irqs() is skipped.
 > 
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Cc: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Pali Rohár <pali@kernel.org>
+> Cc: Michal Simek <michal.simek@xilinx.com>
 
-There're some exceptions. Take HiSilicon's hns3 and sec device as an example,
-the VF won't be destroyed after the FLR reset. Currently the transactions
-with the VF will be restored after the FLR. But this patch will break that,
-the VF is fully disabled and the transaction cannot be restored. User needs
-to reconfigure it, which is unnecessary before this patch.
+Reviewed-by: Pali Rohár <pali@kernel.org>
 
-Can we handle this problem in another way? Maybe test the VF's vendor device
-ID after the FLR reset to see whether it has really gone or not?
-
-Thanks,
-Yicong
-
-> sriov_numvfs in sysfs returns old invalid value and does not allow
-> setting a new value before explicitly setting 0 in the first place.
+> ---
+>  drivers/pci/pcie/portdrv_core.c | 39 ++++++++++++++++++++++++++++++++-
+>  include/linux/pci.h             |  2 ++
+>  2 files changed, 40 insertions(+), 1 deletion(-)
 > 
->>> This patch introduces a simple function, called on the FLR path, that
->>> removes the virtual function devices from the PCI bus and their
->>> corresponding sysfs links with a final clear of the num_vfs value in IOV
->>> state.
->>>
->>> Signed-off-by: Lukasz Maniak <lukasz.maniak@linux.intel.com>
->>> ---
->>>  drivers/pci/iov.c | 21 +++++++++++++++++++++
->>>  drivers/pci/pci.c |  2 ++
->>>  drivers/pci/pci.h |  4 ++++
->>>  3 files changed, 27 insertions(+)
->>>
->>> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
->>> index 0267977c9f17..69ee321027b4 100644
->>> --- a/drivers/pci/iov.c
->>> +++ b/drivers/pci/iov.c
->>> @@ -1013,6 +1013,27 @@ int pci_iov_bus_range(struct pci_bus *bus)
->>>  	return max ? max - bus->number : 0;
->>>  }
->>>  
->>> +/**
->>> + * pci_reset_iov_state - reset the state of the IOV capability
->>> + * @dev: the PCI device
->>> + */
->>> +void pci_reset_iov_state(struct pci_dev *dev)
->>> +{
->>> +	struct pci_sriov *iov = dev->sriov;
->>> +
->>> +	if (!dev->is_physfn)
->>> +		return;
->>> +	if (!iov->num_VFs)
->>> +		return;
->>> +
->>> +	sriov_del_vfs(dev);
->>> +
->>> +	if (iov->link != dev->devfn)
->>> +		sysfs_remove_link(&dev->dev.kobj, "dep_link");
->>> +
->>> +	iov->num_VFs = 0;
->>> +}
->>> +
->>>  /**
->>>   * pci_enable_sriov - enable the SR-IOV capability
->>>   * @dev: the PCI device
->>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>> index 3d2fb394986a..535f19d37e8d 100644
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -4694,6 +4694,8 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
->>>   */
->>>  int pcie_flr(struct pci_dev *dev)
->>>  {
->>> +	pci_reset_iov_state(dev);
->>> +
->>>  	if (!pci_wait_for_pending_transaction(dev))
->>>  		pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
->>>  
->>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->>> index 3d60cabde1a1..7bb144fbec76 100644
->>> --- a/drivers/pci/pci.h
->>> +++ b/drivers/pci/pci.h
->>> @@ -480,6 +480,7 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno);
->>>  resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
->>>  void pci_restore_iov_state(struct pci_dev *dev);
->>>  int pci_iov_bus_range(struct pci_bus *bus);
->>> +void pci_reset_iov_state(struct pci_dev *dev);
->>>  extern const struct attribute_group sriov_pf_dev_attr_group;
->>>  extern const struct attribute_group sriov_vf_dev_attr_group;
->>>  #else
->>> @@ -501,6 +502,9 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
->>>  {
->>>  	return 0;
->>>  }
->>> +static inline void pci_reset_iov_state(struct pci_dev *dev)
->>> +{
->>> +}
->>>  
->>>  #endif /* CONFIG_PCI_IOV */
->>>  
->>>
->>> base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
->>> -- 
->>> 2.25.1
->>>
-> .
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index e7dcb1f23210..27b990cedb4c 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -190,6 +190,31 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * pcie_init_platform_service_irqs - initialize platform service irqs for
+> + * platform-specific System Errors
+> + * @dev: PCI Express port to handle
+> + * @irqs: Array of irqs to populate
+> + * @mask: Bitmask of capabilities
+> + *
+> + * Return value: -ENODEV, in case no platform-specific IRQ is available
+> + */
+> +static int pcie_init_platform_service_irqs(struct pci_dev *dev,
+> +					   int *irqs, int mask)
+> +{
+> +	struct pci_host_bridge *bridge;
+> +
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+> +		bridge = pci_find_host_bridge(dev->bus);
+> +		if (bridge && bridge->init_platform_service_irqs) {
+> +			return bridge->init_platform_service_irqs(dev, irqs,
+> +								  mask);
+> +		}
+> +	}
+> +
+> +	return -ENODEV;
+> +}
+> +
+>  /**
+>   * get_port_device_capability - discover capabilities of a PCI Express port
+>   * @dev: PCI Express port to examine
+> @@ -335,7 +360,19 @@ int pcie_port_device_register(struct pci_dev *dev)
+>  		irq_services |= PCIE_PORT_SERVICE_DPC;
+>  	irq_services &= capabilities;
+>  
+> -	if (irq_services) {
+> +	/*
+> +	 * Some platforms have dedicated interrupts from root complex to
+> +	 * interrupt controller for PCIe platform-specific System Errors
+> +	 * like AER/PME etc., check if the platform registered with any such
+> +	 * IRQ.
+> +	 */
+> +	status = pcie_init_platform_service_irqs(dev, irqs, capabilities);
+> +
+> +	/*
+> +	 * Only install service irqs, when the platform-specific hook was
+> +	 * unsuccessful
+> +	 */
+> +	if (irq_services && status) {
+>  		/*
+>  		 * Initialize service IRQs. Don't use service devices that
+>  		 * require interrupts if there is no way to generate them.
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 18a75c8e615c..fb8aad3cb460 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -554,6 +554,8 @@ struct pci_host_bridge {
+>  	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
+>  	int (*map_irq)(const struct pci_dev *, u8, u8);
+>  	void (*release_fn)(struct pci_host_bridge *);
+> +	int (*init_platform_service_irqs)(struct pci_dev *dev, int *irqs,
+> +					  int plat_mask);
+>  	void		*release_data;
+>  	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+>  	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+> -- 
+> 2.34.1
 > 
