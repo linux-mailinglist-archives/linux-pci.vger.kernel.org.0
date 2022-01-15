@@ -2,118 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67D6948F7B3
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Jan 2022 17:02:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0800348F898
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Jan 2022 19:07:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229584AbiAOQCO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 15 Jan 2022 11:02:14 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:58106 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233026AbiAOQCO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 15 Jan 2022 11:02:14 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 028D460DF5;
-        Sat, 15 Jan 2022 16:02:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F5B4C36AE7;
-        Sat, 15 Jan 2022 16:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642262533;
-        bh=dXfz+j87xPDNeSX6HqrqgV0QIp9lXOhuOevSxgxBxAg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fBZUceP1fm1936OzmEoRc6xtqdD5KbaOLzrdEc+FuWEcCjgwnmIq7E5Rf9kN/qhOD
-         8yJWG2lHkrpd6AAyQEMaHrVuUBaZQVsC04OOGISARjc6DNf4NcLCVz59LvwhH1XxXy
-         0moIJHeGq+McQ5xaKrJey/AyOw7Fme5/Aeh/hs1pS32r0E655g9LGIStj7Gcfsr48+
-         56Avbf+02HmjAu1u80ZQKazofB9alNivfvpNOb5XbdMHyaIPqwF/jXOCt6bO0279/8
-         BCmo6chcAZz0OG6WtjiZUYit2B7zeWX4IxUgwaJSjC9VMR5E8F4bpBlH9EnvKMZo94
-         Mk2j4H4tbkxmA==
-Received: by mail-ed1-f48.google.com with SMTP id q25so46084088edb.2;
-        Sat, 15 Jan 2022 08:02:13 -0800 (PST)
-X-Gm-Message-State: AOAM532iF24XQny1hY7MtF5WCxSm1CnvVYUE86Mzh2CW3ma8zqRgdmWp
-        UYoci5uR5GahZiClB0Poi5Qrkegzg/CcOTEX5Q==
-X-Google-Smtp-Source: ABdhPJxfQvzMyV4E/lfsW80blaC+yF6Jz6eXdtfrSUYSUFPPjf5rBowLMBSmFOPgGlwU3ROMI1ZeCovUN+HxGfr8daY=
-X-Received: by 2002:aa7:c587:: with SMTP id g7mr9586993edq.109.1642262531677;
- Sat, 15 Jan 2022 08:02:11 -0800 (PST)
+        id S232005AbiAOSHO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 15 Jan 2022 13:07:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231278AbiAOSHO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 15 Jan 2022 13:07:14 -0500
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C2B0C061574
+        for <linux-pci@vger.kernel.org>; Sat, 15 Jan 2022 10:07:14 -0800 (PST)
+Received: by mail-oi1-x22f.google.com with SMTP id g205so17184985oif.5
+        for <linux-pci@vger.kernel.org>; Sat, 15 Jan 2022 10:07:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=m30KUYe9FxckrHiSx8oY4BjCeYPtXmWafMqCG9hbWa8=;
+        b=EzihtJVZEuCGDJM5xSp0BumOJFzs/7LO2TGSfBOcTK+AXyiZa+uhX9YTelxv5aXg36
+         7eZbPH9flRFGlVOgBUtmv04o5AWzMLqdVi/3ymHemztUL8VN6SQ4QEVcxim+xcjaSnmT
+         tb6W0rzC7l1L8rsvIYOEbSehqxPvsfDaR1v52+Z9nbIl5reuPYXdMPQ9ZZP3M6JtjUSy
+         M356JXoV9gqZ947DJcus9UNYhv0HEcPeThhntQFSRZ2Uc9Xug/U87mIsJWd56Rt2gSFq
+         a/g3+KvgE4DpTkz0HfEUhjlPOLE73EiTmRA23YoeB0n1Pz0rUqNprCZuCcfswf3UWKfM
+         r3DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=m30KUYe9FxckrHiSx8oY4BjCeYPtXmWafMqCG9hbWa8=;
+        b=zn/ZiapLFGHrV96UT2wKjyPvozRy1x+5vCuXap20PyTUbw1KA94qVZ1nnbpD6XsTaX
+         3TDCuA6GLayXVYxfOViWJDqb4jI78etNl7SFJhDvO5ZLPjV49wNxZy36AVZQkb3UCS1C
+         mabSO8AnlvhTjXNk9bDKw/aSL3XCFKQ4VU2PsDm0tZocBvFFm1OUEBYBGkIcxpP1coxj
+         EVxw4BgHwWiMpSruL/quhwOf9jtvtfrPGiX9m/uziki6F002dLGxoFfAahjsJqUv3RUQ
+         Z85T0dQN4TL51hLXF4T1r7iZPIYhrIx50Q8iDMpszcVeKhrJyj+30CBStYU3bUfEvfX/
+         Q3LQ==
+X-Gm-Message-State: AOAM531Ehgu8o86kuG2dQ3dl4IcmMNSV3SZDCOaHoHjwHINw9bl43wra
+        38Xvuz115PJNRG2EZZlQdwBjFZVVrVbJ6Z/+78U=
+X-Google-Smtp-Source: ABdhPJwfxdVWv5kxFUnLEG+8DS/YPvD74RR9dRRbIzbvufjxpaH3vHOqTu54rl7+sEvbp0l8kCdHqu+TdFvVJzPc+xQ=
+X-Received: by 2002:a05:6808:ddd:: with SMTP id g29mr17343948oic.66.1642270033211;
+ Sat, 15 Jan 2022 10:07:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20211214221450.589884-1-luca@lucaceresoli.net>
- <CAL_Jsq+GQTcx1EGKHug2ZcDZufrKM-4k6PB0vQeTCTG42MHzvA@mail.gmail.com>
- <59a23c89-0810-eb28-acd9-7051ac34d438@lucaceresoli.net> <4579940c-27dc-733e-4022-ebea4671c839@lucaceresoli.net>
-In-Reply-To: <4579940c-27dc-733e-4022-ebea4671c839@lucaceresoli.net>
-From:   Rob Herring <robh@kernel.org>
-Date:   Sat, 15 Jan 2022 10:02:00 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ5nr6xJoTv3A6UPMMDXhWKcwSEUA3ux3kK8OMWQxdc6w@mail.gmail.com>
-Message-ID: <CAL_JsqJ5nr6xJoTv3A6UPMMDXhWKcwSEUA3ux3kK8OMWQxdc6w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PCI: dra7xx: Fix link removal on probe error
-To:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     PCI <linux-pci@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sekhar Nori <nsekhar@ti.com>
+Received: by 2002:a05:6838:2703:0:0:0:0 with HTTP; Sat, 15 Jan 2022 10:07:12
+ -0800 (PST)
+Reply-To: imorourafiatou0@gmail.com
+From:   "Mrs. Susan Dansuki" <mralberthoudanii@gmail.com>
+Date:   Sat, 15 Jan 2022 10:07:12 -0800
+Message-ID: <CAOr9ssQRHFou5B2oWrbMvHT8z+bEfdOrSDQ30D2wcWes9rm9xg@mail.gmail.com>
+Subject: Re: COVID-19 RELIEF FUND WORTH $1,500,000.00 USD
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+Saravana
+--=20
+Attention: Beneficiary,
 
-On Tue, Jan 11, 2022 at 4:35 AM Luca Ceresoli <luca@lucaceresoli.net> wrote:
->
-> Hi Rob,
->
-> On 16/12/21 10:08, Luca Ceresoli wrote:
-> > Hi Rob,
-> >
-> > thanks for the quick feedback!
-> >
-> > On 14/12/21 23:42, Rob Herring wrote:
-> >> On Tue, Dec 14, 2021 at 4:15 PM Luca Ceresoli <luca@lucaceresoli.net> wrote:
-> >>>
-> >>> If a devm_phy_get() calls fails with phy_count==N (N > 0), then N links
-> >>> have already been added by device_link_add() and won't be deleted by
-> >>> device_link_del() because the code calls 'return' and not 'goto err_link'.
-> >>>
-> >>> Fix in a very simple way by doing all the devm_phy_get() calls before all
-> >>> the device_link_add() calls.
-> >>>
-> >>> Fixes: 7a4db656a635 ("PCI: dra7xx: Create functional dependency between PCIe and PHY")
-> >>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> >>> ---
-> >>>  drivers/pci/controller/dwc/pci-dra7xx.c | 2 ++
-> >>>  1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> >>> index f7f1490e7beb..2ccc53869e13 100644
-> >>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> >>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> >>> @@ -757,7 +757,9 @@ static int dra7xx_pcie_probe(struct platform_device *pdev)
-> >>>                 phy[i] = devm_phy_get(dev, name);
-> >>>                 if (IS_ERR(phy[i]))
-> >>>                         return PTR_ERR(phy[i]);
-> >>> +       }
-> >>>
-> >>> +       for (i = 0; i < phy_count; i++) {
-> >>>                 link[i] = device_link_add(dev, &phy[i]->dev, DL_FLAG_STATELESS);
-> >>
-> >> I think this should happen automatically now with fw_devlink being
-> >> enabled by default. Can you try?
-> >
-> > Do you mean removal should be done automatically? I think they are not
-> > due to the DL_FLAG_STATELESS flag.
->
-> I would love to have feedback because, as said, I think my patch is
-> correct, but if I'm wrong (which might well be) I have to drop patch 1
-> and rewrite patch 2 in a slightly more complex form.
+In the wake of the global COVID-19 Pandemic, I wish to bring you the
+good news of hope , I am  Mrs. Susan Dansuki, the current Director of
+the Centers for Disease Control and Prevention. Be officially inform
+that the United Nations organization department for disaster
+management in conjunction with IMF, World Bank, is giving out Covid-19
+stimulus package worth $1,500, 000.00 USD, and your e-mail address
+were selected among other's to receive this stimulus package.
 
-I mean that why do you need explicit dependency tracking here when
-dependencies on a PHY should happen automatically now. IOW, what is
-special about this driver and dependency?
+The United Nations COVID-19 Response and Recovery Fund is a UN
+inter-agency fund mechanism established by the UN Secretary-General to
+help support low- and middle-income people(s) to respond to the
+pandemic and its impacts, including an unprecedented socio-economic
+shock. The Fund=E2=80=99s assistance targets those most vulnerable to econo=
+mic
+hardship and social disruption around the world.
 
-Rob
+We are delighted to inform you that due to mixed up of names and
+numbers, your email attached to approved number UN6MM020/COVID-19,
+which consequently fall on our Chapter, therefore, you are advised to
+contact the United Nations Covid-19 Relief Fund Coordinator ( Mr.
+Robert TAIWO ), to claim your $1,500, 000.00 USD.
+
+Name: Mr.  Robert Taiwo
+Email:   mr.roberttaiwo73@qq.com
+Telephone :  +229 965 483 88
+
+Confirm the following information as soon as possible.
+
+1. Full Name :
+2. Address :
+3. Nationality :
+4. Direct Telephone #:
+
+NOTE: that the amount to be paid to you is ( $1,500, 000.00 USD ), we
+are expecting your urgent response to this email to enable us monitor
+the transaction effectively.
+
+Best Regards
+Mrs. Susan Dansuki
+Director of the Centers for Disease Control and Prevention.
