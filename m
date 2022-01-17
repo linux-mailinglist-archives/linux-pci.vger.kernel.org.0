@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC0DD490633
+	by mail.lfdr.de (Postfix) with ESMTP id 1691E490630
 	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 11:46:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236190AbiAQKpz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jan 2022 05:45:55 -0500
+        id S233763AbiAQKpy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jan 2022 05:45:54 -0500
 Received: from unknown-3-146.windriver.com ([147.11.3.146]:10400 "EHLO
         mail1.wrs.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S233756AbiAQKpz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 05:45:55 -0500
+        with ESMTP id S233757AbiAQKpy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 05:45:54 -0500
 X-Greylist: delayed 1571 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jan 2022 05:45:54 EST
 Received: from mail.windriver.com (mail.wrs.com [147.11.1.11])
-        by mail1.wrs.com (8.15.2/8.15.2) with ESMTPS id 20HAI1Rp024995
+        by mail1.wrs.com (8.15.2/8.15.2) with ESMTPS id 20HALxbZ025167
         (version=TLSv1.1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Mon, 17 Jan 2022 02:18:01 -0800
+        Mon, 17 Jan 2022 02:21:59 -0800
 Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.corp.ad.wrs.com [147.11.82.252])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 20HAHtAH008450
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 20HALowg008849
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Jan 2022 02:18:00 -0800 (PST)
+        Mon, 17 Jan 2022 02:21:51 -0800 (PST)
 Received: from pek-lpggp7.wrs.com (128.224.153.21) by
  ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Mon, 17 Jan 2022 02:17:51 -0800
+ 15.1.2242.12; Mon, 17 Jan 2022 02:21:47 -0800
 From:   Xiaolei Wang <xiaolei.wang@windriver.com>
 To:     <hongxing.zhu@nxp.com>, <l.stach@pengutronix.de>,
         <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <kw@linux.com>,
@@ -34,8 +34,8 @@ CC:     <linux-imx@nxp.com>, <linux-pci@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
 Subject: [PATCH] pci: imx: disable reglator when imx6_pcie_probe fails
-Date:   Mon, 17 Jan 2022 18:17:35 +0800
-Message-ID: <20220117101735.3512039-1-xiaolei.wang@windriver.com>
+Date:   Mon, 17 Jan 2022 18:21:37 +0800
+Message-ID: <20220117102137.3513439-1-xiaolei.wang@windriver.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -88,7 +88,7 @@ otherwise the following calltrace will appear
 [ 3.984669] softirqs last disabled at (1197): [<c012ef08>] irq_exit+0x18c/0x20c
 [ 3.992021] ---[ end trace 45a52c023bf8fb33 ]---
 
-Signed-off-by: wrsadmin <wrsadmin@pek-xwang8-d1.corp.ad.wrs.com>
+Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
 ---
  drivers/pci/controller/dwc/pci-imx6.c | 7 ++++++-
  1 file changed, 6 insertions(+), 1 deletion(-)
