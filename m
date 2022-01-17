@@ -2,140 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84D9C49050A
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 10:39:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC0DD490633
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 11:46:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233505AbiAQJjc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jan 2022 04:39:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235888AbiAQJjc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 04:39:32 -0500
-Received: from mout-u-204.mailbox.org (mout-u-204.mailbox.org [IPv6:2001:67c:2050:1::465:204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928FDC061574
-        for <linux-pci@vger.kernel.org>; Mon, 17 Jan 2022 01:39:31 -0800 (PST)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 4Jcn1D0ld6zQjvM;
-        Mon, 17 Jan 2022 10:39:28 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Message-ID: <ae9add63-042f-07b0-ddcd-39dbb34224d2@denx.de>
-Date:   Mon, 17 Jan 2022 10:39:22 +0100
+        id S236190AbiAQKpz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jan 2022 05:45:55 -0500
+Received: from unknown-3-146.windriver.com ([147.11.3.146]:10400 "EHLO
+        mail1.wrs.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S233756AbiAQKpz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 05:45:55 -0500
+X-Greylist: delayed 1571 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jan 2022 05:45:54 EST
+Received: from mail.windriver.com (mail.wrs.com [147.11.1.11])
+        by mail1.wrs.com (8.15.2/8.15.2) with ESMTPS id 20HAI1Rp024995
+        (version=TLSv1.1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Mon, 17 Jan 2022 02:18:01 -0800
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.corp.ad.wrs.com [147.11.82.252])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 20HAHtAH008450
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Jan 2022 02:18:00 -0800 (PST)
+Received: from pek-lpggp7.wrs.com (128.224.153.21) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Mon, 17 Jan 2022 02:17:51 -0800
+From:   Xiaolei Wang <xiaolei.wang@windriver.com>
+To:     <hongxing.zhu@nxp.com>, <l.stach@pengutronix.de>,
+        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
+        <festevam@gmail.com>
+CC:     <linux-imx@nxp.com>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] pci: imx: disable reglator when imx6_pcie_probe fails
+Date:   Mon, 17 Jan 2022 18:17:35 +0800
+Message-ID: <20220117101735.3512039-1-xiaolei.wang@windriver.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 2/2] PCI/AER: Enable AER on Endpoints as well
-Content-Language: en-US
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yao Hongbo <yaohongbo@linux.alibaba.com>,
-        Naveen Naidu <naveennaidu479@gmail.com>
-References: <20220117080348.2757180-1-sr@denx.de>
- <20220117080348.2757180-3-sr@denx.de> <20220117093000.p3a5lqjn4e5kfk3o@pali>
-From:   Stefan Roese <sr@denx.de>
-In-Reply-To: <20220117093000.p3a5lqjn4e5kfk3o@pali>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [128.224.153.21]
+X-ClientProxiedBy: ala-exchng01.corp.ad.wrs.com (147.11.82.252) To
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/17/22 10:30, Pali Rohár wrote:
-> On Monday 17 January 2022 09:03:48 Stefan Roese wrote:
->> Currently, the PCIe AER subsystem does not enable AER in the PCIe
->> Endpoints via the Device Control register. It's only done for the
->> Root Port and all PCIe Ports in between the Root Port and the
->> Endpoint(s). Some device drivers enable AER in their PCIe device by
->> directly calling pci_enable_pcie_error_reporting(). But in most
->> cases, AER is currently disabled in the PCIe Endpoints.
->>
->> This patch enables AER on PCIe Endpoints now as well in
->> set_device_error_reporting(). This will make the ad-hoc calls to
->> pci_enable_pcie_error_reporting() superfluous.
->>
->> Signed-off-by: Stefan Roese <sr@denx.de>
->> Cc: Bjorn Helgaas <helgaas@kernel.org>
->> Cc: Pali Rohár <pali@kernel.org>
->> Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
->> Cc: Michal Simek <michal.simek@xilinx.com>
->> Cc: Yao Hongbo <yaohongbo@linux.alibaba.com>
->> Cc: Naveen Naidu <naveennaidu479@gmail.com>
-> 
-> Reviewed-by: Pali Rohár <pali@kernel.org>
-> 
->> ---
->> v2:
->> - New patch
->>
->>   drivers/pci/pcie/aer.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index 9fa1f97e5b27..385e2033d7b5 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -1216,7 +1216,8 @@ static int set_device_error_reporting(struct pci_dev *dev, void *data)
->>   	if ((type == PCI_EXP_TYPE_ROOT_PORT) ||
->>   	    (type == PCI_EXP_TYPE_RC_EC) ||
->>   	    (type == PCI_EXP_TYPE_UPSTREAM) ||
->> -	    (type == PCI_EXP_TYPE_DOWNSTREAM)) {
->> +	    (type == PCI_EXP_TYPE_DOWNSTREAM) ||
->> +	    (type == PCI_EXP_TYPE_ENDPOINT)) {
-> 
-> Hm... maybe another question to discussion: Why enabling of AER is
-> limited just to above PCIe port types? Why we do not want to enable it
-> for _all_ PCIe devices? Currently in the above list are missing Legacy
-> endpoints (which probably do not support AER and so do not have AER
-> capability in config space), Root Complex Integrated Endpoints (these
-> should provide AER supports too, right?), PCIe to PCI/X Bridges (these
-> may generate its own AER errors) and PCI to PCIe Bridges (these are
-> maybe complicated as subtree behind such bridges are regular PCIe
-> devices and so could fully support AER but on legacy PCI bus there is
-> probably no access to extended config space where is AER). But in all of
-> these cases, are there any issues with enabling AER via function
-> pci_enable_pcie_error_reporting()? For me it looks like that in the
-> worst case dev just does not have AER capability in config space or
-> extended config space is not accessible (which is same as no AER
-> capability).
+From: wrsadmin <wrsadmin@pek-xwang8-d1.corp.ad.wrs.com>
 
-I also had similar thoughts on this and was a bit unsure here. Perhaps
-Bjorn can also comment. But...
+disable reglator when imx6_pcie_probe fails,
+otherwise the following calltrace will appear
 
-... I noticed that AER is still disabled for hot-plugged PCIe devices.
-As this code patch will not get called in this HP case. Right now I'm
-testing with this patch here, which could be used instead of this one
-from this mail:
+[ 3.785075] ------------[ cut here ]------------
+[ 3.788142] Registering SWP/SWPB emulation handler
+[ 3.789853] WARNING: CPU: 0 PID: 7 at drivers/regulator/core.c:2257 _regulator_put.part.0+0x1bc/0x1e0
+[ 3.795680] Loading compiled-in X.509 certificates
+[ 3.803947] Modules linked in:
+[ 3.811922] CPU: 0 PID: 7 Comm: kworker/u8:0 Not tainted 5.16.0-10645-g3c750c7b6143-dirty #9
+[ 3.820393] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[ 3.826945] Workqueue: events_unbound async_run_entry_fn
+[ 3.832304] unwind_backtrace from show_stack+0x10/0x14
+[ 3.837569] show_stack from dump_stack_lvl+0x58/0x70
+[ 3.842663] dump_stack_lvl from __warn+0xd8/0x114
+[ 3.847493] __warn from warn_slowpath_fmt+0x5c/0xc4
+[ 3.852490] warn_slowpath_fmt from _regulator_put.part.0+0x1bc/0x1e0
+[ 3.858968] _regulator_put.part.0 from regulator_put+0x2c/0x3c
+[ 3.864918] regulator_put from release_nodes+0x50/0x178
+[ 3.870270] release_nodes from devres_release_all+0x80/0xd0
+[ 3.875968] devres_release_all from really_probe+0xdc/0x30c
+[ 3.881661] really_probe from __driver_probe_device+0x80/0xe4
+[ 3.887522] __driver_probe_device from driver_probe_device+0x30/0xd4
+[ 3.893991] driver_probe_device from __driver_attach_async_helper+0x20/0x38
+[ 3.901068] __driver_attach_async_helper from async_run_entry_fn+0x20/0xb4
+[ 3.908059] async_run_entry_fn from process_one_work+0x298/0x7d0
+[ 3.914188] process_one_work from worker_thread+0x30/0x510
+[ 3.919792] worker_thread from kthread+0x128/0x14c
+[ 3.924705] kthread from ret_from_fork+0x14/0x38
+[ 3.929443] Exception stack(0xc20cbfb0 to 0xc20cbff8)
+[ 3.934521] bfa0: 00000000 00000000 00000000 00000000
+[ 3.942722] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[ 3.950922] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[ 3.957677] irq event stamp: 1207
+[ 3.961024] hardirqs last enabled at (1215): [<c0198270>] __up_console_sem+0x50/0x60
+[ 3.968974] hardirqs last disabled at (1224): [<c019825c>] __up_console_sem+0x3c/0x60
+[ 3.976911] softirqs last enabled at (1206): [<c010150c>] __do_softirq+0x2ec/0x5a4
+[ 3.984669] softirqs last disabled at (1197): [<c012ef08>] irq_exit+0x18c/0x20c
+[ 3.992021] ---[ end trace 45a52c023bf8fb33 ]---
 
-     PCI/AER: Enable AER on all PCIe devices supporting it
+Signed-off-by: wrsadmin <wrsadmin@pek-xwang8-d1.corp.ad.wrs.com>
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-     With this change, AER is now also enabled for hot-plugged PCIe devices
-     as pci_aer_init() is also called upon hot-plugging of a PCIe device.
-     When "pci=noaer" is selected, AER stays disabled of course.
-
-     Signed-off-by: Stefan Roese <sr@denx.de>
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 385e2033d7b5..94107309ef2d 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -387,6 +387,10 @@ void pci_aer_init(struct pci_dev *dev)
-         pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, 
-sizeof(u32) * n);
-
-         pci_aer_clear_status(dev);
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 6974bd5aa116..f8279a15463b 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1216,7 +1216,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 
+ 	ret = dw_pcie_host_init(&pci->pp);
+ 	if (ret < 0)
+-		return ret;
++		goto err_vpcie;
+ 
+ 	if (pci_msi_enabled()) {
+ 		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+@@ -1226,6 +1226,11 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	return 0;
 +
-+       /* Enable AER if requested */
-+       if (pci_aer_available())
-+               pci_enable_pcie_error_reporting(dev);
-  }
++err_vpcie:
++	regulator_disable(imx6_pcie->vpcie);
++
++	return ret;
+ }
+ 
+ static void imx6_pcie_shutdown(struct platform_device *pdev)
+-- 
+2.25.1
 
-This has the same effect of enabling AER in each PCIe Endpoint and
-also is available for hot-plugged Endpoints. If nobody objects, I'll
-probably use this patch as patch 2/2 in the next patchset version.
-
-Comments welcome as always.
-
-Thanks,
-Stefan
