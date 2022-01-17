@@ -2,194 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B08B490E9C
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 18:11:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFB7C491012
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 19:11:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242897AbiAQRLT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jan 2022 12:11:19 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:56788 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242171AbiAQRIk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 12:08:40 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8058DB810A2;
-        Mon, 17 Jan 2022 17:08:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA137C36AE7;
-        Mon, 17 Jan 2022 17:08:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1642439317;
-        bh=rBbjRiF4eXZJndP1YBHbgfNOxlDXMFQ5XO6xMF1mMog=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k/++5WA9ucrT4a7RsPg6aJ+ibU76KWiykeiWAzJ9WDkk9Gda6bOYXNKumgtWiglhy
-         jttYFiTsjgawUq0nyPuotYv/HG8K89MFOn1RwglhVQFSHGFjA94azuU6vDjJqQxfI1
-         VCZncqRlG8F2sklnobKYGDc7Emzes310JT2Sol58=
-Date:   Mon, 17 Jan 2022 18:08:34 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nishanth Menon <nm@ti.com>,
-        Michael Kelley <mikelley@microsoft.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.16 36/52] PCI/MSI: Decouple MSI[-X] disable
- from pcim_release()
-Message-ID: <YeWikhpdcmenkMub@kroah.com>
-References: <20220117165853.1470420-1-sashal@kernel.org>
- <20220117165853.1470420-36-sashal@kernel.org>
+        id S242180AbiAQSKH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jan 2022 13:10:07 -0500
+Received: from mail-qt1-f171.google.com ([209.85.160.171]:34318 "EHLO
+        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238138AbiAQSKF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 13:10:05 -0500
+Received: by mail-qt1-f171.google.com with SMTP id y10so19989482qtw.1;
+        Mon, 17 Jan 2022 10:10:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=+gX+6EZFnPH0WFg52hMFqitJk0/W3pruPDYiBt6+qX4=;
+        b=bsk6noTyVlrggN4cU9seAOdFV+JjHW38gJj7FtDPjsroZPr8PcdTA4+HO0dHpDqpC6
+         L0HBm1fjZxDXnWKraS8iYxjCK83DpM6OFgQPvww6YaaH73G+sWOQgf5Li+f1ZlbFMtHS
+         boZgkcdk/14JGhJosRBga6Y5OJLUEhiUNnmWbLUkcCE8EntZG004dgliiFf05ynglOE1
+         hs5P/r9GqIp+1XG2fankyIO/VVI1Dc3XX6882838BtdNEbNX97uAbWgtFgaJdW86k0ZI
+         pR3yPpnUIq2uqFHbmc3fjCfZ49E4RBsUDtii9/1W90azbaUEWLQKZ98d9r0qY+56Vul6
+         Uttg==
+X-Gm-Message-State: AOAM530OGXb6ns4emksrLfyYlL8Y7EBcyEsMVCS23pJ3q4sMa2slUyWE
+        L8DrVLjSWxhwIyCl8iivu4zVFAx9xdP9u/D675g=
+X-Google-Smtp-Source: ABdhPJxEHcXaXeIMEtK9tfhgAY7BqRWKoWmTshdQCLDeHFwbBDrr2ytiScou+KuQywMa1NOaEgxzE+xNulyCeVFuQHQ=
+X-Received: by 2002:ac8:578d:: with SMTP id v13mr3961180qta.472.1642443004229;
+ Mon, 17 Jan 2022 10:10:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220117165853.1470420-36-sashal@kernel.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 17 Jan 2022 19:09:53 +0100
+Message-ID: <CAJZ5v0iD_Ar15npwR8Cp2oEKF3DgPVo2KaKqfYax5RmTBkbZmg@mail.gmail.com>
+Subject: [GIT PULL] More ACPI updates for v5.17-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 17, 2022 at 11:58:37AM -0500, Sasha Levin wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> [ Upstream commit 3f35d2cf9fbc656db82579d849cc69c373b1ad0d ]
-> 
-> The MSI core will introduce runtime allocation of MSI related data. This
-> data will be devres managed and has to be set up before enabling
-> PCI/MSI[-X]. This would introduce an ordering issue vs. pcim_release().
-> 
-> The setup order is:
-> 
->    pcim_enable_device()
-> 	devres_alloc(pcim_release...);
-> 	...
-> 	pci_irq_alloc()
-> 	  msi_setup_device_data()
-> 	     devres_alloc(msi_device_data_release, ...)
-> 
-> and once the device is released these release functions are invoked in the
-> opposite order:
-> 
->     msi_device_data_release()
->     ...
->     pcim_release()
->        pci_disable_msi[x]()
-> 
-> which is obviously wrong, because pci_disable_msi[x]() requires the MSI
-> data to be available to tear down the MSI[-X] interrupts.
-> 
-> Remove the MSI[-X] teardown from pcim_release() and add an explicit action
-> to be installed on the attempt of enabling PCI/MSI[-X].
-> 
-> This allows the MSI core data allocation to be ordered correctly in a
-> subsequent step.
-> 
-> Reported-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Tested-by: Michael Kelley <mikelley@microsoft.com>
-> Tested-by: Nishanth Menon <nm@ti.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Link: https://lore.kernel.org/r/87tuf9rdoj.ffs@tglx
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/pci/msi.c   | 33 +++++++++++++++++++++++++++++++++
->  drivers/pci/pci.c   |  5 -----
->  include/linux/pci.h |  3 ++-
->  3 files changed, 35 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index d84cf30bb2790..1093f099846eb 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -461,6 +461,31 @@ void pci_restore_msi_state(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_GPL(pci_restore_msi_state);
->  
-> +static void pcim_msi_release(void *pcidev)
-> +{
-> +	struct pci_dev *dev = pcidev;
-> +
-> +	dev->is_msi_managed = false;
-> +	pci_free_irq_vectors(dev);
-> +}
-> +
-> +/*
-> + * Needs to be separate from pcim_release to prevent an ordering problem
-> + * vs. msi_device_data_release() in the MSI core code.
-> + */
-> +static int pcim_setup_msi_release(struct pci_dev *dev)
-> +{
-> +	int ret;
-> +
-> +	if (!pci_is_managed(dev) || dev->is_msi_managed)
-> +		return 0;
-> +
-> +	ret = devm_add_action(&dev->dev, pcim_msi_release, dev);
-> +	if (!ret)
-> +		dev->is_msi_managed = true;
-> +	return ret;
-> +}
-> +
->  static struct msi_desc *
->  msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
->  {
-> @@ -1029,6 +1054,10 @@ static int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
->  	if (nvec > maxvec)
->  		nvec = maxvec;
->  
-> +	rc = pcim_setup_msi_release(dev);
-> +	if (rc)
-> +		return rc;
-> +
->  	for (;;) {
->  		if (affd) {
->  			nvec = irq_calc_affinity_vectors(minvec, nvec, affd);
-> @@ -1072,6 +1101,10 @@ static int __pci_enable_msix_range(struct pci_dev *dev,
->  	if (WARN_ON_ONCE(dev->msix_enabled))
->  		return -EINVAL;
->  
-> +	rc = pcim_setup_msi_release(dev);
-> +	if (rc)
-> +		return rc;
-> +
->  	for (;;) {
->  		if (affd) {
->  			nvec = irq_calc_affinity_vectors(minvec, nvec, affd);
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 3d2fb394986a4..f3f606c232a8a 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2024,11 +2024,6 @@ static void pcim_release(struct device *gendev, void *res)
->  	struct pci_devres *this = res;
->  	int i;
->  
-> -	if (dev->msi_enabled)
-> -		pci_disable_msi(dev);
-> -	if (dev->msix_enabled)
-> -		pci_disable_msix(dev);
-> -
->  	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++)
->  		if (this->region_mask & (1 << i))
->  			pci_release_region(dev, i);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 18a75c8e615cd..e26000404e3c3 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -425,7 +425,8 @@ struct pci_dev {
->  	unsigned int	ats_enabled:1;		/* Address Translation Svc */
->  	unsigned int	pasid_enabled:1;	/* Process Address Space ID */
->  	unsigned int	pri_enabled:1;		/* Page Request Interface */
-> -	unsigned int	is_managed:1;
-> +	unsigned int	is_managed:1;		/* Managed via devres */
-> +	unsigned int	is_msi_managed:1;	/* MSI release via devres installed */
->  	unsigned int	needs_freset:1;		/* Requires fundamental reset */
->  	unsigned int	state_saved:1;
->  	unsigned int	is_physfn:1;
-> -- 
-> 2.34.1
-> 
+Hi Linus,
 
-I do not think this is needed for the stable trees, as it only showed up
-in the MSI rework that Thomas added for 5.17-rc1.  So please drop this
-from all of the AUTOSEL kernels.
+Please pull from the tag
 
-thanks,
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.17-rc1-2
 
-greg k-h
+with top-most commit e3daa2607b1f4bb1d09a5a8ad89ad9f7327a2e63
+
+ Merge branch 'acpi-pfrut'
+
+on top of commit bca21755b9fc00dbe371994b53389eb5d70b8e72
+
+ Merge tag 'acpi-5.17-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+
+to receive more ACPI updates for 5.17-rc1.
+
+The most significant item here is the Platform Firmware Runtime
+Update and Telemetry (PFRUT) support designed to allow certain
+pieces of the platform firmware to be updated on the fly, among
+other things.
+
+Also important is the e820 handling change on x86 that should work
+around PCI BAR allocation issues on some systems shipping since
+2019.
+
+The rest is just a handful of assorted fixes and cleanups on top
+of the ACPI material merged previously.
+
+Specifics:
+
+ - Add support for the the Platform Firmware Runtime Update and
+   Telemetry (PFRUT) interface based on ACPI to allow certain pieces
+   of the platform firmware to be updated without restarting the
+   system and to provide a mechanism for collecting platform firmware
+   telemetry data (Chen Yu, Dan Carpenter, Yang Yingliang).
+
+ - Ignore E820 reservations covering PCI host bridge windows on
+   sufficiently recent x86 systems to avoid issues with allocating
+   PCI BARs on systems where the E820 reservations cover the entire
+   PCI host bridge memory window returned by the _CRS object in the
+   system's ACPI tables (Hans de Goede).
+
+ - Fix and clean up acpi_scan_init() (Rafael Wysocki).
+
+ - Add more sanity checking to ACPI SPCR tables parsing (Mark
+   Langsdorf).
+
+ - Fix up ACPI APD (AMD Soc) driver initialization (Jiasheng Jiang).
+
+ - Drop unnecessary "static" from the ACPI PCC address space handling
+   driver added recently (kernel test robot).
+
+Thanks!
+
+
+---------------
+
+Chen Yu (4):
+      efi: Introduce EFI_FIRMWARE_MANAGEMENT_CAPSULE_HEADER and
+corresponding structures
+      ACPI: Introduce Platform Firmware Runtime Update device driver
+      ACPI: Introduce Platform Firmware Runtime Telemetry driver
+      ACPI: tools: Introduce utility for firmware updates/telemetry
+
+Dan Carpenter (1):
+      ACPI: pfr_telemetry: Fix info leak in pfrt_log_ioctl()
+
+Hans de Goede (1):
+      x86/PCI: Ignore E820 reservations for bridge windows on newer systems
+
+Jiasheng Jiang (1):
+      ACPI: APD: Check for NULL pointer after calling devm_ioremap()
+
+Mark Langsdorf (1):
+      ACPI: SPCR: check if table->serial_port.access_width is too wide
+
+Rafael J. Wysocki (3):
+      ACPI: scan: Change acpi_scan_init() return value type to void
+      ACPI: scan: Simplify initialization of power and sleep buttons
+      ACPI: scan: Rename label in acpi_scan_init()
+
+Yang Yingliang (1):
+      ACPI: pfr_update: Fix return value check in pfru_write()
+
+kernel test robot (1):
+      ACPI: PCC: pcc_ctx can be static
+
+---------------
+
+ Documentation/userspace-api/ioctl/ioctl-number.rst |   1 +
+ arch/x86/kernel/resource.c                         |  23 +-
+ drivers/acpi/Kconfig                               |  22 +
+ drivers/acpi/Makefile                              |   1 +
+ drivers/acpi/acpi_apd.c                            |   2 +
+ drivers/acpi/acpi_pcc.c                            |   2 +-
+ drivers/acpi/internal.h                            |   2 +-
+ drivers/acpi/pfr_telemetry.c                       | 435 ++++++++++++++++
+ drivers/acpi/pfr_update.c                          | 575 +++++++++++++++++++++
+ drivers/acpi/scan.c                                |  76 +--
+ drivers/acpi/spcr.c                                |   9 +-
+ include/linux/efi.h                                |  46 ++
+ include/uapi/linux/pfrut.h                         | 262 ++++++++++
+ tools/power/acpi/.gitignore                        |   1 +
+ tools/power/acpi/Makefile                          |  16 +-
+ tools/power/acpi/Makefile.rules                    |   2 +-
+ tools/power/acpi/man/pfrut.8                       | 137 +++++
+ tools/power/acpi/tools/pfrut/Makefile              |  23 +
+ tools/power/acpi/tools/pfrut/pfrut.c               | 424 +++++++++++++++
+ 19 files changed, 1997 insertions(+), 62 deletions(-)
