@@ -2,111 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70F01491263
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 00:35:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 698ED491266
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 00:38:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243791AbiAQXfZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jan 2022 18:35:25 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:55558 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235399AbiAQXfY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 18:35:24 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6137361161;
-        Mon, 17 Jan 2022 23:35:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B87EC36AEC;
-        Mon, 17 Jan 2022 23:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642462523;
-        bh=CG+ko5k4iKpnY2/XJKntUVk4Bn9sNOrY8wvLENM2z6I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hqxRKUBZPezjTfKyzhW2wlyfaju0sSB0B26HK1Y4VXiiupvkGa9OpUSlaBy57EcY8
-         Tk5fNzPaeKwlrI1eL0x2uisjINtDgFSKeGTjXQssjLbXd2Q48+tiTW00CPPCZW9PWy
-         l9TRD2sfp0mZ7BXZbNwb9l3CAyoJNShOoJvU5RLz91yj7L4gaJlGPT+YaWsRBvuEmb
-         pPompIqvblYsZgH97BlXvJQQrB8NicJ4KyzVNkgZWIV+vd4xO28o0Ij6BrMHhK7qWw
-         HfzL9M+WPwOZSqbjyTUo7iK8c3B4+iJCSv0Y+a+W1GGgEQkDj4uzTklMWAX1DwjyaL
-         XRYzfRZF7fmQw==
-Date:   Mon, 17 Jan 2022 17:35:22 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] PCI: Forbid RPM on ACPI systems before 5.0 only
-Message-ID: <20220117233522.GA815664@bhelgaas>
+        id S236003AbiAQXiZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jan 2022 18:38:25 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:32971 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235399AbiAQXiY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 18:38:24 -0500
+Received: from mail-oi1-f182.google.com ([209.85.167.182]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MHXSD-1n4sTm14k5-00DWsB; Tue, 18 Jan 2022 00:38:23 +0100
+Received: by mail-oi1-f182.google.com with SMTP id bx18so7486623oib.7;
+        Mon, 17 Jan 2022 15:38:22 -0800 (PST)
+X-Gm-Message-State: AOAM531R/t0O6IZblCK86zf88yPCzEqZj5AEsMh32XCLJXhJa8VmyXGT
+        zDmHAoxMOGb/04gfR6ZI6//0X9udBMkHiCNnBxk=
+X-Google-Smtp-Source: ABdhPJy8xBuir7Y3TP7f897USxYmGz/RhF8Id1TC/8pZe6yR6GMlKE+Wl2YJMCge4jshYVhmgaMJvT0S9YFfvjIRSx4=
+X-Received: by 2002:a05:6808:2206:: with SMTP id bd6mr14673246oib.11.1642462701926;
+ Mon, 17 Jan 2022 15:38:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cadbd4eb-40bb-1fa8-1e00-dc95dab62295@gmail.com>
+References: <20220117220355.92575-1-marek.vasut@gmail.com> <20220117220355.92575-2-marek.vasut@gmail.com>
+In-Reply-To: <20220117220355.92575-2-marek.vasut@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 18 Jan 2022 00:38:05 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1vknLE-vfKZbvZDCLZMZk4ezirPeyHGnpkEW2RW1jvbg@mail.gmail.com>
+Message-ID: <CAK8P3a1vknLE-vfKZbvZDCLZMZk4ezirPeyHGnpkEW2RW1jvbg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] PCI: rcar: Return all Fs from read which triggered
+ an exception
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:9DLUmXjttuHAIXkJxm/MC7xl9CXZzZluVHHTAGj+X+flfLdiiSc
+ bjSKFDc6WWZIhUDZa0KlvqmVqwy5bT7cKr5INmUHd6TCBEpx9rmmaiZ0AALs3k2uROzyQa3
+ aNEDEdmwZs1RWNbSjHazAuei+/yLkfrmL1KI43pRepTffsAbnK2fXplL0U/5Lh0uLtcqn4J
+ 5aHG5zEkhfcW9zI8YFJAA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fWLE8/5HP6s=:7URBqeR9410uRkqfDMxx2T
+ QQD5n145lO/0lZLAhwYIenNmveBpyR8WtI/OfxYkPr7jaAQzlyMh/cDcoAMekzlM+BfWpLWyf
+ quqO++hqLwyYJgsKuhNUKA+D72VRrvgo5Tbg6tZ626VTr5P8Hyz6o5SF8SiUovOtzHhl+RBq5
+ 8j4ZfY66QCs2RKcz+oygIjKXEd3JbHJ1EJFL2Ae4mpz1kBFDROqczLCh9mrEbq1sves2z96o0
+ vXpUIDsAx29GQFWlgbcOYbUMCiDgrGDkyUtcg018MqhT/pgsbjmicEBYwlPpRpfP+NiNM1r1e
+ lB9x8GGFVSqsd1+I9cHjY82hTaEkLQpTlp1IzDtGZSWCKdZ9wo3pk/MP2w1gMQP0yXbwkUju2
+ VGBzzTWDiYTdWhD9QU+1sstRBDU+fwVPCQTw5bc+GGArs1kyhgH9LCi2qkQx50umevgD1cZPL
+ S4eZ3fTves+G+iVA23pnuz/4O7e47uJAxclwv1LXJZyA+LygW7iMB45COUCAodQ358uQXHL9W
+ 4TA79KAJzmC+QuSvCpBc1Qn7PTwvcZcQZ6dBFVOkqlyVecgW8PwMC4dfHCMw/W6HvHo0Rp5Zz
+ 5jRb9YRnsSfWtKH7TPAL1hKZonXjV4jtbcPuIQGWZE+mgxrEFuyuDHFC4TIJ2lOq3TxGb6laN
+ hYrthk6HcHnLnWTyepsWOODJKUsXQrygAlH/SAkoY2srSjrKSxx0bGOJ9Q5MtPfHeVi8=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Kai-Heng, Lukas, Mika, since they were cc'd or commented on [0] below]
+On Mon, Jan 17, 2022 at 11:03 PM <marek.vasut@gmail.com> wrote:
+> It is possible to enforce the fault using 'isb' instruction placed
+> right after the read/write instruction which started the faulting
+> access. Add custom register accessors which perform the read/write
+> followed immediately by 'isb'.
+>
+> This way, the fault always happens on the 'isb' and in case of read,
+> which is located one instruction before the 'isb', it is now possible
+> to fix up the return value of the read in the asynchronous external
+> abort hook and make that read return all Fs.
 
-On Mon, Jan 17, 2022 at 11:51:54AM +0100, Heiner Kallweit wrote:
-> Currently PCI core forbids RPM and requires opt-in from userspace,
-> apart from few drivers calling pm_runtime_allow(). Reason is that some
-> early ACPI PM implementations conflict with RPM, see [0].
-> Note that as of today pm_runtime_forbid() is also called for non-ACPI
-> systems. Maybe it's time to allow RPM per default for non-ACPI systems
-> and recent enough ACPI versions. Let's allow RPM from ACPI 5.0 which
-> was published in 2011.
+Hi Marek,
 
-Let's reword this to use the positive sense, e.g., something like
-"enable runtime power management for non-ACPI and ACPI 5.0 and newer."
+As mentioned on IRC, I think this can be done a lot simpler, using a .text.fixup
+section hack:
+> +void rcar_pci_write_reg_workaround(struct rcar_pcie *pcie, u32 val, unsigned int reg)
+> +{
+> +#ifdef CONFIG_ARM
+> +       asm volatile(
+> +               "       str %0, [%1]\n"
+> +               "       isb\n"
+> +       ::"r"(val), "r"(pcie->base + reg):"memory");
 
-This feels like a potentially significant change that could cause
-breakage.  
 
-  - How would a user recognize that we're doing something different?
-    Maybe we need a note in dmesg?
+I think this would looks something like
 
-  - If a system broke because of this, what would it look like?  How
-    would a user notice a problem, and how would he or she connect the
-    problem to this change?
+   int error = 0;
+   asm volatile(
+        "       str %1, [%2]\n"
+        "1:       isb\n"
+        "2:\n"
+        "         pushsection .text.fixup,\"ax\"\n"
+        "       .align  2\n"                                    \
+        "3:     mov     %0, %3\n"                               \
+        "       b       2b\n"                                   \
+        "       .popsection\n"                                  \
+        "       .pushsection __ex_table,\"a\"\n"                \
+        "       .align  3\n"                                    \
+        "       .long   1b, 3b\n"                               \
+        "       .popsection"                                    \
+       : "+r" (error) :"r"(val), "r"(pcie->base + reg), "i" (-ENXIO):"memory");
 
-  - Is there a kernel parameter that will get the previous behavior of
-    disabling runtime PM as a workaround until a quirk can be added?
-    If so, we should probably mention it here.  If not, should there
-    be?
+This saves you from hand-parsing the instruction sequence, which tends
+to be even more fragile. After this, you just need to check the
+'error' variable,
+which remains at 0 normally but contains -ENXIO if an exception hits.
 
-> [0] https://lkml.org/lkml/2020/11/17/1548
+I'm not entirely sure this works for the particular exception you are getting,
+and it probably requires not registering the rcar_pcie_aarch32_abort_handler
+function, but it seems likely to work.
 
-Please use an https://lore.kernel.org/r/... link instead.
-
-Let's mention bb910a7040e9 ("PCI/PM Runtime: Make runtime PM of PCI
-devices inactive by default") as well to help connect the dots here.
-
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  drivers/pci/pci.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 428afd459..26e3a500c 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3101,7 +3101,12 @@ void pci_pm_init(struct pci_dev *dev)
->  	u16 status;
->  	u16 pmc;
->  
-> -	pm_runtime_forbid(&dev->dev);
-> +#ifdef CONFIG_ACPI
-> +	/* Some early ACPI PM implementations conflict with RPM. */
-> +	if (acpi_gbl_FADT.header.revision > 0 &&
-> +	    acpi_gbl_FADT.header.revision < 5)
-> +		pm_runtime_forbid(&dev->dev);
-> +#endif
->  	pm_runtime_set_active(&dev->dev);
->  	pm_runtime_enable(&dev->dev);
->  	device_enable_async_suspend(&dev->dev);
-> -- 
-> 2.34.1
-> 
+        Arnd
