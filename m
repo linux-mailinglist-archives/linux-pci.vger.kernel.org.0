@@ -2,122 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFD304904B3
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 10:21:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 134DE4904EB
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 10:30:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235579AbiAQJVq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jan 2022 04:21:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233695AbiAQJVq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 04:21:46 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC749C061574
-        for <linux-pci@vger.kernel.org>; Mon, 17 Jan 2022 01:21:45 -0800 (PST)
+        id S235756AbiAQJaJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jan 2022 04:30:09 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:42474 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235753AbiAQJaE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 04:30:04 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 03E64B80E65
-        for <linux-pci@vger.kernel.org>; Mon, 17 Jan 2022 09:21:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500DDC36AE7;
-        Mon, 17 Jan 2022 09:21:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AD834608C0
+        for <linux-pci@vger.kernel.org>; Mon, 17 Jan 2022 09:30:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDC4BC36AE3;
+        Mon, 17 Jan 2022 09:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642411302;
-        bh=0w8WQ5GF2Svqv+sG9cQc6zr4N6/xOftE3VTqEnBLcEQ=;
+        s=k20201202; t=1642411803;
+        bh=2dO/Z2pvb4d/QZ4iCCw/enkh+MU8xdSP5FCVdhoj69c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MMjqxvhOvOz6h9qzt76PAispWKvsmMJHOLKNqdB2OjokFyHGqNCmEuYFOSMRywTJc
-         xNyjGGGL3Be+DfI+JVF+H9UqbM0I8dU5qRoucicjURT9TTgHaHmWmYaQ0r7JtYT+d6
-         /Afli0kKyR8In0x6AS0jLN55JsaybMw8bpM8SX2vjgTSagfKqNeKycX875Rr0+MFgf
-         Llu8LM69NPVsfKF21fpokVo67j3+jvKtjESIhoYP8Ul1z+pt+AmruSlllbKtHZWojD
-         NBqI0ceL3BowuqiYjR93d27OtBQsoH7oUw1eJ7C4K445kIe/jzGcnGadl3UJ8PvNbg
-         yjGioAhUoA/gQ==
+        b=XHtgSkVJZ35/lRJM9OMIj11U3t5hR8pv7L7Q9NaLBBA0jugr6RMkDEnhB5t727bRR
+         zFYfBSXKW0Nu34iQuV2YJju9M3vswdcniGKaZYW19lMcb/1K4hICZbIRGj5Xm3Pxqv
+         GoTu7JUUieYSf6bAVh8wO9rXjwPTLEdF5pp6Hi+XgTAm62kgmGg7MojIPl1Sx+pAJh
+         8M3rqj/XVbTR5aN1LIQ6DZBQUdT4XJMplJi6ye9f0capC5RdOyEsCtaLmsW/SwWAbR
+         jNcHD7fcecXKwX7/rPMVTwF/oiqeGSNqhM5kes4ia7W8KEyyHM2tFAWK1SySO5RN+5
+         dZ1GzrckHl/9A==
 Received: by pali.im (Postfix)
-        id 63FAB871; Mon, 17 Jan 2022 10:21:39 +0100 (CET)
-Date:   Mon, 17 Jan 2022 10:21:39 +0100
+        id 713E3871; Mon, 17 Jan 2022 10:30:00 +0100 (CET)
+Date:   Mon, 17 Jan 2022 10:30:00 +0100
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To:     Stefan Roese <sr@denx.de>
-Cc:     linux-pci@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
         Michal Simek <michal.simek@xilinx.com>,
         Yao Hongbo <yaohongbo@linux.alibaba.com>,
         Naveen Naidu <naveennaidu479@gmail.com>
-Subject: Re: [PATCH v2 1/2] PCI/portdrv: Don't disable AER reporting in
- get_port_device_capability()
-Message-ID: <20220117092139.kjjpnkxisb43euet@pali>
+Subject: Re: [PATCH v2 2/2] PCI/AER: Enable AER on Endpoints as well
+Message-ID: <20220117093000.p3a5lqjn4e5kfk3o@pali>
 References: <20220117080348.2757180-1-sr@denx.de>
- <20220117080348.2757180-2-sr@denx.de>
+ <20220117080348.2757180-3-sr@denx.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220117080348.2757180-2-sr@denx.de>
+In-Reply-To: <20220117080348.2757180-3-sr@denx.de>
 User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 17 January 2022 09:03:47 Stefan Roese wrote:
-> Testing has shown, that AER reporting is currently disabled in the
-> DevCtl registers of all non Root Port PCIe devices on systems using
-> pcie_ports_native || host->native_aer. Practically disabling AER
-> completely in such systems. This is due to the fact that with commit
-> 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port
-> initialization"), a call to pci_disable_pcie_error_reporting() was
-> added *after* the PCIe AER setup was completed for the PCIe device
-> tree.
+On Monday 17 January 2022 09:03:48 Stefan Roese wrote:
+> Currently, the PCIe AER subsystem does not enable AER in the PCIe
+> Endpoints via the Device Control register. It's only done for the
+> Root Port and all PCIe Ports in between the Root Port and the
+> Endpoint(s). Some device drivers enable AER in their PCIe device by
+> directly calling pci_enable_pcie_error_reporting(). But in most
+> cases, AER is currently disabled in the PCIe Endpoints.
 > 
-> Here a longer analysis about the currect status of AER enaling /
-> disabling upon bootup provided by Bjorn:
+> This patch enables AER on PCIe Endpoints now as well in
+> set_device_error_reporting(). This will make the ad-hoc calls to
+> pci_enable_pcie_error_reporting() superfluous.
 > 
->   pcie_portdrv_probe
->     pcie_port_device_register
->       get_port_device_capability
->         pci_disable_pcie_error_reporting
->           clear CERE NFERE FERE URRE               # <-- disable for RP USP DSP
->       pcie_device_init
->         device_register                            # new AER service device
->           aer_probe
->             aer_enable_rootport                    # RP only
->               set_downstream_devices_error_reporting
->                 set_device_error_reporting         # self (RP)
->                   if (RP || USP || DSP)
->                     pci_enable_pcie_error_reporting
->                       set CERE NFERE FERE URRE     # <-- enable for RP
->                 pci_walk_bus
->                   set_device_error_reporting
->                     if (RP || USP || DSP)
->                       pci_enable_pcie_error_reporting
->                         set CERE NFERE FERE URRE   # <-- enable for USP DSP
-> 
-> In a typical Root Port -> Endpoint hierarchy, the above:
->   - Disables Error Reporting for the Root Port,
->   - Enables Error Reporting for the Root Port,
->   - Does NOT enable Error Reporting for the Endpoint because it is not
->     a Root Port or Switch Port.
-> 
-> In a deeper Root Port -> Upstream Switch Port -> Downstream Switch
-> Port -> Endpoint hierarchy:
->   - Disables Error Reporting for the Root Port,
->   - Enables Error Reporting for the Root Port,
->   - Enables Error Reporting for both Switch Ports,
->   - Does NOT enable Error Reporting for the Endpoint because it is not
->     a Root Port or Switch Port,
->   - Disables Error Reporting for the Switch Ports when
->     pcie_portdrv_probe() claims them.  AER does not re-enable it
->     because these are not Root Ports.
-> 
-> This patch now removes this call to pci_disable_pcie_error_reporting()
-> from get_port_device_capability(), leaving the already enabled AER
-> configuration intact. With this change, AER is enabled in the Root Port
-> and the PCIe switch upstream and downstream ports. Only the PCIe
-> Endpoints don't have AER enabled yet. A follow-up patch will take
-> care of this Endpoint enabling.
-> 
-> Fixes: 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port initialization")
 > Signed-off-by: Stefan Roese <sr@denx.de>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
 > Cc: Bjorn Helgaas <helgaas@kernel.org>
 > Cc: Pali Rohár <pali@kernel.org>
 > Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
@@ -129,32 +76,42 @@ Reviewed-by: Pali Rohár <pali@kernel.org>
 
 > ---
 > v2:
-> - Enhance commit message as suggested by Bjorn
+> - New patch
 > 
->  drivers/pci/pcie/portdrv_core.c | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
+>  drivers/pci/pcie/aer.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index f81c7be4d7d8..27b990cedb4c 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -244,15 +244,8 @@ static int get_port_device_capability(struct pci_dev *dev)
->  
->  #ifdef CONFIG_PCIEAER
->  	if (dev->aer_cap && pci_aer_available() &&
-> -	    (pcie_ports_native || host->native_aer)) {
-> +	    (pcie_ports_native || host->native_aer))
->  		services |= PCIE_PORT_SERVICE_AER;
-> -
-> -		/*
-> -		 * Disable AER on this port in case it's been enabled by the
-> -		 * BIOS (the AER service driver will enable it when necessary).
-> -		 */
-> -		pci_disable_pcie_error_reporting(dev);
-> -	}
->  #endif
->  
->  	/* Root Ports and Root Complex Event Collectors may generate PMEs */
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 9fa1f97e5b27..385e2033d7b5 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1216,7 +1216,8 @@ static int set_device_error_reporting(struct pci_dev *dev, void *data)
+>  	if ((type == PCI_EXP_TYPE_ROOT_PORT) ||
+>  	    (type == PCI_EXP_TYPE_RC_EC) ||
+>  	    (type == PCI_EXP_TYPE_UPSTREAM) ||
+> -	    (type == PCI_EXP_TYPE_DOWNSTREAM)) {
+> +	    (type == PCI_EXP_TYPE_DOWNSTREAM) ||
+> +	    (type == PCI_EXP_TYPE_ENDPOINT)) {
+
+Hm... maybe another question to discussion: Why enabling of AER is
+limited just to above PCIe port types? Why we do not want to enable it
+for _all_ PCIe devices? Currently in the above list are missing Legacy
+endpoints (which probably do not support AER and so do not have AER
+capability in config space), Root Complex Integrated Endpoints (these
+should provide AER supports too, right?), PCIe to PCI/X Bridges (these
+may generate its own AER errors) and PCI to PCIe Bridges (these are
+maybe complicated as subtree behind such bridges are regular PCIe
+devices and so could fully support AER but on legacy PCI bus there is
+probably no access to extended config space where is AER). But in all of
+these cases, are there any issues with enabling AER via function
+pci_enable_pcie_error_reporting()? For me it looks like that in the
+worst case dev just does not have AER capability in config space or
+extended config space is not accessible (which is same as no AER
+capability).
+
+>  		if (enable)
+>  			pci_enable_pcie_error_reporting(dev);
+>  		else
 > -- 
 > 2.34.1
 > 
