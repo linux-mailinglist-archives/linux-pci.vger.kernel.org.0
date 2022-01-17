@@ -2,139 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D602C490697
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 12:07:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6396490D2F
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 18:01:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233825AbiAQLGy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jan 2022 06:06:54 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:47795 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238956AbiAQLGj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 06:06:39 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yaohongbo@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0V249G5w_1642417595;
-Received: from 30.225.24.118(mailfrom:yaohongbo@linux.alibaba.com fp:SMTPD_---0V249G5w_1642417595)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 17 Jan 2022 19:06:36 +0800
-Message-ID: <41c0cadc-a623-b013-24f0-410af2a6dc64@linux.alibaba.com>
-Date:   Mon, 17 Jan 2022 19:06:35 +0800
+        id S241700AbiAQRBT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jan 2022 12:01:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237872AbiAQRAe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 12:00:34 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC26EC06175F;
+        Mon, 17 Jan 2022 09:00:28 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5EEA2611C6;
+        Mon, 17 Jan 2022 17:00:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF52BC36AE3;
+        Mon, 17 Jan 2022 17:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642438827;
+        bh=NqR7yKJSns1WI91EqrzghJUPndY75hkCqkC8BO4I9k0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o4wm9NDIDbswv0cW+zBTKvaQSrpTypW8Yi7pycn7Sy18MzafU2Nk4II9nr4p56buZ
+         f1TTiFl5NDGr8jsMnYqz8OLleBYgIN2lEaso3mD+RMrt3SMd5ZyDfnJVdB7k8UQ6si
+         aHrmDxMx9SRbcmBdCyWJYFGonWZBPR7D1Qyrxb6gjPfS8AFXi9k1q/VnRRQJeBCZMx
+         yOlqxWvvouMWLruvdQdGBk9kuRiWH5AlaTeCWNw41jYnIhTKdUHVQiKBIBnzeiFxgV
+         EMdoltz+cHVmkXhYWdPWnZzs3JMdm4UbGQvCcgjPxCiPnh4gwSlZknRY3/JHPZ21O/
+         dT1loM0nVjw9A==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Nishanth Menon <nm@ti.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.16 36/52] PCI/MSI: Decouple MSI[-X] disable from pcim_release()
+Date:   Mon, 17 Jan 2022 11:58:37 -0500
+Message-Id: <20220117165853.1470420-36-sashal@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220117165853.1470420-1-sashal@kernel.org>
+References: <20220117165853.1470420-1-sashal@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.4.1
-Subject: Re: [RFC PATCH] PCI: Add "pci=reassign_all_bus" boot parameter
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, zhangliguang@linux.alibaba.com,
-        alikernel-developer@linux.alibaba.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220112154310.GA259954@bhelgaas>
-From:   Yao Hongbo <yaohongbo@linux.alibaba.com>
-In-Reply-To: <20220112154310.GA259954@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Thomas Gleixner <tglx@linutronix.de>
 
+[ Upstream commit 3f35d2cf9fbc656db82579d849cc69c373b1ad0d ]
 
-在 2022/1/12 下午11:43, Bjorn Helgaas 写道:
-> On Thu, Dec 30, 2021 at 05:30:13PM +0800, Yao Hongbo wrote:
->> PCI bridges may be misconfigured by te system BIOS, and then the OS
->> scan the bridges that need to be reconfigured.
->> However, the PCI bus topology configured by the bios may be wrong:
->>
->> [   19.376273] pci 0000:40:00.0: bridge configuration invalid ([bus
->> 00-00]), reconfiguring
->> [   19.384443] pci_bus 0000:47: busn_res: can not insert [bus 47-46]
->> under [bus 40-46] (conflicts with (null) [bus 40-46])
->>
->> The primary bus number and subordinate bus number written by the bios
->> were wrong, and the OS continues to add bridges on the wrong bus
->> topology.
->>
->> In order to avoid such problems, a kernel cmdline needs to be
->> added to support the os to fully configure the pci bus.
-> 
-> Why can't we make Linux smart enough to fix this by itself, without
-> forcing the user to boot with "pci=reassign_all_bus"?
-> 
+The MSI core will introduce runtime allocation of MSI related data. This
+data will be devres managed and has to be set up before enabling
+PCI/MSI[-X]. This would introduce an ordering issue vs. pcim_release().
 
-   Hi, Bjorn.
+The setup order is:
 
-   You're right, it's better for us to make pci enumeration more smart.
+   pcim_enable_device()
+	devres_alloc(pcim_release...);
+	...
+	pci_irq_alloc()
+	  msi_setup_device_data()
+	     devres_alloc(msi_device_data_release, ...)
 
-   But i think it's better to provide an additional option for users on ACPI systems,
+and once the device is released these release functions are invoked in the
+opposite order:
 
-which can quickly distingguish the issues between the BIOS and the OS.
->> Signed-off-by: Yao Hongbo <yaohongbo@linux.alibaba.com>
->> ---
->>  Documentation/admin-guide/kernel-parameters.txt | 1 +
->>  drivers/acpi/pci_root.c                         | 3 +++
->>  drivers/pci/pci.c                               | 5 +++++
->>  include/linux/pci.h                             | 2 ++
->>  4 files changed, 11 insertions(+)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index 2fba824..c83a2e5 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -4084,6 +4084,7 @@
->>  		nomio		[S390] Do not use MIO instructions.
->>  		norid		[S390] ignore the RID field and force use of
->>  				one PCI domain per PCI function
->> +		reassign_all_bus	The OS fully configure the PCI bus.
->>  
->>  	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
->>  			Management.
->> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->> index ab2f7df..e21ac25 100644
->> --- a/drivers/acpi/pci_root.c
->> +++ b/drivers/acpi/pci_root.c
->> @@ -592,6 +592,9 @@ static int acpi_pci_root_add(struct acpi_device *device,
->>  	is_pcie = strcmp(acpi_device_hid(device), "PNP0A08") == 0;
->>  	negotiate_os_control(root, &no_aspm, is_pcie);
->>  
->> +	if (pci_reassign_all_bus)
->> +		pci_add_flags(PCI_REASSIGN_ALL_BUS);
->> +
->>  	/*
->>  	 * TBD: Need PCI interface for enumeration/configuration of roots.
->>  	 */
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 3d2fb39..5746e88 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -142,6 +142,9 @@ bool pci_reset_supported(struct pci_dev *dev)
->>  /* If set, the PCI config space of each device is printed during boot. */
->>  bool pci_early_dump;
->>  
->> +/* If set, the pci will reassign resources*/
->> +bool pci_reassign_all_bus;
->> +
->>  bool pci_ats_disabled(void)
->>  {
->>  	return pcie_ats_disabled;
->> @@ -6846,6 +6849,8 @@ static int __init pci_setup(char *str)
->>  				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
->>  			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
->>  				disable_acs_redir_param = str + 18;
->> +			} else if (!strncmp(str, "reassign_all_bus", 16)) {
->> +				pci_reassign_all_bus = true;
->>  			} else {
->>  				pr_err("PCI: Unknown option `%s'\n", str);
->>  			}
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 18a75c8e..ad0e3e9 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -2119,6 +2119,8 @@ int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
->>  extern u8 pci_dfl_cache_line_size;
->>  extern u8 pci_cache_line_size;
->>  
->> +extern bool pci_reassign_all_bus;
->> +
->>  /* Architecture-specific versions may override these (weak) */
->>  void pcibios_disable_device(struct pci_dev *dev);
->>  void pcibios_set_master(struct pci_dev *dev);
->> -- 
->> 1.8.3.1
->>
+    msi_device_data_release()
+    ...
+    pcim_release()
+       pci_disable_msi[x]()
+
+which is obviously wrong, because pci_disable_msi[x]() requires the MSI
+data to be available to tear down the MSI[-X] interrupts.
+
+Remove the MSI[-X] teardown from pcim_release() and add an explicit action
+to be installed on the attempt of enabling PCI/MSI[-X].
+
+This allows the MSI core data allocation to be ordered correctly in a
+subsequent step.
+
+Reported-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Michael Kelley <mikelley@microsoft.com>
+Tested-by: Nishanth Menon <nm@ti.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/87tuf9rdoj.ffs@tglx
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/msi.c   | 33 +++++++++++++++++++++++++++++++++
+ drivers/pci/pci.c   |  5 -----
+ include/linux/pci.h |  3 ++-
+ 3 files changed, 35 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index d84cf30bb2790..1093f099846eb 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -461,6 +461,31 @@ void pci_restore_msi_state(struct pci_dev *dev)
+ }
+ EXPORT_SYMBOL_GPL(pci_restore_msi_state);
+ 
++static void pcim_msi_release(void *pcidev)
++{
++	struct pci_dev *dev = pcidev;
++
++	dev->is_msi_managed = false;
++	pci_free_irq_vectors(dev);
++}
++
++/*
++ * Needs to be separate from pcim_release to prevent an ordering problem
++ * vs. msi_device_data_release() in the MSI core code.
++ */
++static int pcim_setup_msi_release(struct pci_dev *dev)
++{
++	int ret;
++
++	if (!pci_is_managed(dev) || dev->is_msi_managed)
++		return 0;
++
++	ret = devm_add_action(&dev->dev, pcim_msi_release, dev);
++	if (!ret)
++		dev->is_msi_managed = true;
++	return ret;
++}
++
+ static struct msi_desc *
+ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
+ {
+@@ -1029,6 +1054,10 @@ static int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+ 	if (nvec > maxvec)
+ 		nvec = maxvec;
+ 
++	rc = pcim_setup_msi_release(dev);
++	if (rc)
++		return rc;
++
+ 	for (;;) {
+ 		if (affd) {
+ 			nvec = irq_calc_affinity_vectors(minvec, nvec, affd);
+@@ -1072,6 +1101,10 @@ static int __pci_enable_msix_range(struct pci_dev *dev,
+ 	if (WARN_ON_ONCE(dev->msix_enabled))
+ 		return -EINVAL;
+ 
++	rc = pcim_setup_msi_release(dev);
++	if (rc)
++		return rc;
++
+ 	for (;;) {
+ 		if (affd) {
+ 			nvec = irq_calc_affinity_vectors(minvec, nvec, affd);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 3d2fb394986a4..f3f606c232a8a 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2024,11 +2024,6 @@ static void pcim_release(struct device *gendev, void *res)
+ 	struct pci_devres *this = res;
+ 	int i;
+ 
+-	if (dev->msi_enabled)
+-		pci_disable_msi(dev);
+-	if (dev->msix_enabled)
+-		pci_disable_msix(dev);
+-
+ 	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++)
+ 		if (this->region_mask & (1 << i))
+ 			pci_release_region(dev, i);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 18a75c8e615cd..e26000404e3c3 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -425,7 +425,8 @@ struct pci_dev {
+ 	unsigned int	ats_enabled:1;		/* Address Translation Svc */
+ 	unsigned int	pasid_enabled:1;	/* Process Address Space ID */
+ 	unsigned int	pri_enabled:1;		/* Page Request Interface */
+-	unsigned int	is_managed:1;
++	unsigned int	is_managed:1;		/* Managed via devres */
++	unsigned int	is_msi_managed:1;	/* MSI release via devres installed */
+ 	unsigned int	needs_freset:1;		/* Requires fundamental reset */
+ 	unsigned int	state_saved:1;
+ 	unsigned int	is_physfn:1;
+-- 
+2.34.1
+
