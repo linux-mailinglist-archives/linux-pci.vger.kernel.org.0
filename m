@@ -2,122 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1691E490630
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 11:46:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6A1E490645
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Jan 2022 11:52:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233763AbiAQKpy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jan 2022 05:45:54 -0500
-Received: from unknown-3-146.windriver.com ([147.11.3.146]:10400 "EHLO
-        mail1.wrs.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S233757AbiAQKpy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 05:45:54 -0500
-X-Greylist: delayed 1571 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jan 2022 05:45:54 EST
-Received: from mail.windriver.com (mail.wrs.com [147.11.1.11])
-        by mail1.wrs.com (8.15.2/8.15.2) with ESMTPS id 20HALxbZ025167
-        (version=TLSv1.1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Mon, 17 Jan 2022 02:21:59 -0800
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.corp.ad.wrs.com [147.11.82.252])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 20HALowg008849
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Jan 2022 02:21:51 -0800 (PST)
-Received: from pek-lpggp7.wrs.com (128.224.153.21) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.12; Mon, 17 Jan 2022 02:21:47 -0800
-From:   Xiaolei Wang <xiaolei.wang@windriver.com>
-To:     <hongxing.zhu@nxp.com>, <l.stach@pengutronix.de>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <festevam@gmail.com>
-CC:     <linux-imx@nxp.com>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] pci: imx: disable reglator when imx6_pcie_probe fails
-Date:   Mon, 17 Jan 2022 18:21:37 +0800
-Message-ID: <20220117102137.3513439-1-xiaolei.wang@windriver.com>
-X-Mailer: git-send-email 2.25.1
+        id S238773AbiAQKwE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jan 2022 05:52:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231277AbiAQKwD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 05:52:03 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94109C061574;
+        Mon, 17 Jan 2022 02:52:03 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id g22so17297405edu.1;
+        Mon, 17 Jan 2022 02:52:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:cc:from
+         :subject:content-transfer-encoding;
+        bh=iHEJ7aPY/vyeKyL4IrOawGrgT3E6eTiteUfS/PavmY4=;
+        b=iNs8s0CIp2CW6jnGcysUC78KZIW+mkhe0ZFvEoskbn8MWlnCvVZUN/x1kuv4qNCwRM
+         4UFcXcdtVje0rjHeSe/zxw4B1tSdUHFu7JHGNfH71IrOmB4SVhk6EFS1o2M7u6Iahrhp
+         RAJjZfPvOA4yAPzIBTH0yjXopMVWU10Nn2ZuuA4nq2QQvow8tznS6up9JHfdIeH52O3P
+         E6KNmieCeAkI3CQVrPwo+GGnSZoG5LXIp4sKbqPoL5zbVwC6qGBfXXeTQ/zO2e/dbqJ5
+         hGmYhADMo0v5F1zv8AoT03I4ZjrV9tQ8SSc54vmmQXichYhqtQBYD8bn3hFR3OcpQIez
+         FIMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:from:subject:content-transfer-encoding;
+        bh=iHEJ7aPY/vyeKyL4IrOawGrgT3E6eTiteUfS/PavmY4=;
+        b=7eaoF91+Q6Ej8jYJS8YaWDVuixPSqCygNRT8TBrQQ7Tz0XR1Kf/UtqHYRXbMiEW00q
+         aH2wIHW3k932Y5NBUfWzriT3WMXxvD/zKC+mi7MoXw46pHss5fwN8KKvyVDlZ9/G9wBJ
+         28cchUgGs0M5bBvA4iCDbdz/AxmgAq0FkXceBOjdrEBSc531rY4tNZNWVJiBVgwSbJgJ
+         H+2V9c4JgU7X/LYLvhw/02Og6jwtU5OCTQZoLkPOTwWl0FIVrr5wAu/gtIBdso3+8PTf
+         IIli40VaDVnOZXAoGityznATSv284jneM74ss2M3K2NtH/iJUMBKEJ4IpFtTpdgxb/u/
+         u2mA==
+X-Gm-Message-State: AOAM5327YO7vPiDxAay90+8WYfV3Mmkq9Rc7XLtK8mTt6pJLZDyemCsI
+        4Uvk6CsHkykJmxDpjTyyJVw=
+X-Google-Smtp-Source: ABdhPJwcz89uAhbQ/PxhSMbS21X8jl1M0muLAE1r3yiBA67LZ9Flhk0/FBGVIdrdxh9dIiq8jUK3dg==
+X-Received: by 2002:a05:6402:d0a:: with SMTP id eb10mr20155973edb.48.1642416722143;
+        Mon, 17 Jan 2022 02:52:02 -0800 (PST)
+Received: from ?IPV6:2003:ea:8f2f:5b00:cd6d:ebf4:94e9:c321? (p200300ea8f2f5b00cd6debf494e9c321.dip0.t-ipconnect.de. [2003:ea:8f2f:5b00:cd6d:ebf4:94e9:c321])
+        by smtp.googlemail.com with ESMTPSA id l25sm2951078edc.20.2022.01.17.02.52.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jan 2022 02:52:01 -0800 (PST)
+Message-ID: <cadbd4eb-40bb-1fa8-1e00-dc95dab62295@gmail.com>
+Date:   Mon, 17 Jan 2022 11:51:54 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [128.224.153.21]
-X-ClientProxiedBy: ala-exchng01.corp.ad.wrs.com (147.11.82.252) To
- ala-exchng01.corp.ad.wrs.com (147.11.82.252)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-US
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH] PCI: Forbid RPM on ACPI systems before 5.0 only
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: wrsadmin <wrsadmin@pek-xwang8-d1.corp.ad.wrs.com>
+Currently PCI core forbids RPM and requires opt-in from userspace,
+apart from few drivers calling pm_runtime_allow(). Reason is that some
+early ACPI PM implementations conflict with RPM, see [0].
+Note that as of today pm_runtime_forbid() is also called for non-ACPI
+systems. Maybe it's time to allow RPM per default for non-ACPI systems
+and recent enough ACPI versions. Let's allow RPM from ACPI 5.0 which
+was published in 2011.
 
-disable reglator when imx6_pcie_probe fails,
-otherwise the following calltrace will appear
+[0] https://lkml.org/lkml/2020/11/17/1548
 
-[ 3.785075] ------------[ cut here ]------------
-[ 3.788142] Registering SWP/SWPB emulation handler
-[ 3.789853] WARNING: CPU: 0 PID: 7 at drivers/regulator/core.c:2257 _regulator_put.part.0+0x1bc/0x1e0
-[ 3.795680] Loading compiled-in X.509 certificates
-[ 3.803947] Modules linked in:
-[ 3.811922] CPU: 0 PID: 7 Comm: kworker/u8:0 Not tainted 5.16.0-10645-g3c750c7b6143-dirty #9
-[ 3.820393] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-[ 3.826945] Workqueue: events_unbound async_run_entry_fn
-[ 3.832304] unwind_backtrace from show_stack+0x10/0x14
-[ 3.837569] show_stack from dump_stack_lvl+0x58/0x70
-[ 3.842663] dump_stack_lvl from __warn+0xd8/0x114
-[ 3.847493] __warn from warn_slowpath_fmt+0x5c/0xc4
-[ 3.852490] warn_slowpath_fmt from _regulator_put.part.0+0x1bc/0x1e0
-[ 3.858968] _regulator_put.part.0 from regulator_put+0x2c/0x3c
-[ 3.864918] regulator_put from release_nodes+0x50/0x178
-[ 3.870270] release_nodes from devres_release_all+0x80/0xd0
-[ 3.875968] devres_release_all from really_probe+0xdc/0x30c
-[ 3.881661] really_probe from __driver_probe_device+0x80/0xe4
-[ 3.887522] __driver_probe_device from driver_probe_device+0x30/0xd4
-[ 3.893991] driver_probe_device from __driver_attach_async_helper+0x20/0x38
-[ 3.901068] __driver_attach_async_helper from async_run_entry_fn+0x20/0xb4
-[ 3.908059] async_run_entry_fn from process_one_work+0x298/0x7d0
-[ 3.914188] process_one_work from worker_thread+0x30/0x510
-[ 3.919792] worker_thread from kthread+0x128/0x14c
-[ 3.924705] kthread from ret_from_fork+0x14/0x38
-[ 3.929443] Exception stack(0xc20cbfb0 to 0xc20cbff8)
-[ 3.934521] bfa0: 00000000 00000000 00000000 00000000
-[ 3.942722] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[ 3.950922] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[ 3.957677] irq event stamp: 1207
-[ 3.961024] hardirqs last enabled at (1215): [<c0198270>] __up_console_sem+0x50/0x60
-[ 3.968974] hardirqs last disabled at (1224): [<c019825c>] __up_console_sem+0x3c/0x60
-[ 3.976911] softirqs last enabled at (1206): [<c010150c>] __do_softirq+0x2ec/0x5a4
-[ 3.984669] softirqs last disabled at (1197): [<c012ef08>] irq_exit+0x18c/0x20c
-[ 3.992021] ---[ end trace 45a52c023bf8fb33 ]---
-
-Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 7 ++++++-
+ drivers/pci/pci.c | 7 ++++++-
  1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 6974bd5aa116..f8279a15463b 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1216,7 +1216,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 428afd459..26e3a500c 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3101,7 +3101,12 @@ void pci_pm_init(struct pci_dev *dev)
+ 	u16 status;
+ 	u16 pmc;
  
- 	ret = dw_pcie_host_init(&pci->pp);
- 	if (ret < 0)
--		return ret;
-+		goto err_vpcie;
- 
- 	if (pci_msi_enabled()) {
- 		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-@@ -1226,6 +1226,11 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 	}
- 
- 	return 0;
-+
-+err_vpcie:
-+	regulator_disable(imx6_pcie->vpcie);
-+
-+	return ret;
- }
- 
- static void imx6_pcie_shutdown(struct platform_device *pdev)
+-	pm_runtime_forbid(&dev->dev);
++#ifdef CONFIG_ACPI
++	/* Some early ACPI PM implementations conflict with RPM. */
++	if (acpi_gbl_FADT.header.revision > 0 &&
++	    acpi_gbl_FADT.header.revision < 5)
++		pm_runtime_forbid(&dev->dev);
++#endif
+ 	pm_runtime_set_active(&dev->dev);
+ 	pm_runtime_enable(&dev->dev);
+ 	device_enable_async_suspend(&dev->dev);
 -- 
-2.25.1
+2.34.1
 
