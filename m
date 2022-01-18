@@ -2,94 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66F3849213C
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 09:31:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FF834921F9
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 10:06:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232865AbiARIbK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jan 2022 03:31:10 -0500
-Received: from mail-vk1-f178.google.com ([209.85.221.178]:33717 "EHLO
-        mail-vk1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232184AbiARIbJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jan 2022 03:31:09 -0500
-Received: by mail-vk1-f178.google.com with SMTP id g5so12013726vkg.0;
-        Tue, 18 Jan 2022 00:31:08 -0800 (PST)
+        id S1345175AbiARJGW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jan 2022 04:06:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345158AbiARJGW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jan 2022 04:06:22 -0500
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37114C061748
+        for <linux-pci@vger.kernel.org>; Tue, 18 Jan 2022 01:06:21 -0800 (PST)
+Received: by mail-yb1-xb2a.google.com with SMTP id z22so53241914ybi.11
+        for <linux-pci@vger.kernel.org>; Tue, 18 Jan 2022 01:06:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=AIHedDQeQ2nfeFyhlIY6iBZ7Eo/kAlP72EhStgPHV1I=;
+        b=k1UGLl6o5Uq6om5hN0pjU2SqjycVyCGV42oQwMqtQTc6fkgbpj/oyn6fvH1hhLxegR
+         e/tPf/G+2yaXGI3do3wgHJ4MBEiuCqdEdBnyCL11eVSeCzta++Y5RURdzrzWTjelmsnR
+         tYb7NXugOOFQvK5UrYmiZe+/YKb+yCGeZYWGcjYdV5yN72laJXIlbtqVapKJ/5GdwrZc
+         jKv0Mf/FS0NNj/5kDQ9kAOsNyVCtbpKLftV2DJtg6CRRyJ8egrShP/swZ3woEYdRd/kv
+         rGI7pqoXVl1W7n46g1lZBHmTX0YsD0zUT5JnPzSKv/9tGz6f/BNBIuij6Gfw3F4qflfa
+         1a8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S3bW86Tr5XN3ZOrA53EILVLd81w2LJ0wB/ZgFi8ZETs=;
-        b=FdYEkfCpiBpdg6O0dFN247vS+2fAai41yNzpZk1IDVtWLcICbsVEGGrNVRJoKOjIF2
-         Gm/Wkmr8gIWSATxE/Qaz5zrsNcNrXp3xnTT+lNCFvxkJGNLzBo+ZxwndnLJCHWhP0OcV
-         Fcql0CSC5z1gC8VxKQ7k0tGenL0Bv07uJVZwxDJFkRCbzrudCJdKD2QigkkjSE8k4yO2
-         G00RLj21Yr/wgkaXdIoCopCfS/Xlnj7cgP8gtLkNyQg/EO7hCSNF9ylTclj2JnpzoB9L
-         kV4U7BT4f8w5TioYnUpb+ym7v4tCwlHy0Ik/3oARofFtI86n10mya0I83RQ799Torcw+
-         y0LQ==
-X-Gm-Message-State: AOAM532Quoea6xXTryTU55GZc7d+GD7IlrDnsCARrhcpKlpVRWGxIC9Y
-        WHWDY72Wpwq1B8o/M+Gj8VKbdjP8oWzVuA==
-X-Google-Smtp-Source: ABdhPJyp8/C0hn+Wm7Ag7Ras/nAuZzhEn39na5nMWGjalEehXGMm+O57ro9YH4HRibxsunW1J3I4lQ==
-X-Received: by 2002:a05:6122:200d:: with SMTP id l13mr9703359vkd.16.1642494668284;
-        Tue, 18 Jan 2022 00:31:08 -0800 (PST)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id s69sm3609309vka.55.2022.01.18.00.31.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jan 2022 00:31:08 -0800 (PST)
-Received: by mail-ua1-f46.google.com with SMTP id m90so35181699uam.2;
-        Tue, 18 Jan 2022 00:31:07 -0800 (PST)
-X-Received: by 2002:ab0:4d5a:: with SMTP id k26mr9174493uag.122.1642494667707;
- Tue, 18 Jan 2022 00:31:07 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=AIHedDQeQ2nfeFyhlIY6iBZ7Eo/kAlP72EhStgPHV1I=;
+        b=Z8wHvxxHn9/ebMIMIbBdLOUvx3aCuo1aBzgtsS22UtCgCvRgPqSoaSqCEQV6Dc4WWr
+         Z537fRJEDn/kCAmKJFWYQW/sCKjgDJ1V2vK4a6NowXbfpaofL93CwzzAk/blZEj2x2d0
+         z9jDBWTNtzzEE2p8NS/Q1Py6b87YWb+YU+8CBiRsL5SFCFpuUkOLRzjmbnFSjjwELxHY
+         fKPUlIN+vM6Ltp4DYCrv7rt3Ta6qWCqY+4LkhkrA8O4nSppF2dqN9JGTFrQSvXOzk/W0
+         Knk969CE28tFuSz7LwLDCb5dYDQIOlq+bpB7hpuNyftSVulaGE+hMXsJgft6lCNxGJQy
+         ekog==
+X-Gm-Message-State: AOAM530rR9vHntXtwJgRTLZKSyJKUmpNVpaE6bWMCgwMZPC8fd6/0ggy
+        dWnzEkU889kt5g0a7iVsy42s/7U7hAbtMIEm1b0=
+X-Google-Smtp-Source: ABdhPJy5JVI3lW5DQjGRcco9V6NcXyngKxIlC4poqepFoSfKU9tR+yKwtpwsk8Y/0BpNOB+S0MHQJLI1GNmgFDkC468=
+X-Received: by 2002:a25:e549:: with SMTP id c70mr10850321ybh.339.1642496780233;
+ Tue, 18 Jan 2022 01:06:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20220117220355.92575-1-marek.vasut@gmail.com>
-In-Reply-To: <20220117220355.92575-1-marek.vasut@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 18 Jan 2022 09:30:56 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUCHWd1w8CwtbO34TXYDoXVi6aQdFQgoeosCX7viVZXoQ@mail.gmail.com>
-Message-ID: <CAMuHMdUCHWd1w8CwtbO34TXYDoXVi6aQdFQgoeosCX7viVZXoQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] PCI: rcar: Finish transition to L1 state in rcar_pcie_config_access()
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Received: by 2002:a05:7108:3655:0:0:0:0 with HTTP; Tue, 18 Jan 2022 01:06:19
+ -0800 (PST)
+Reply-To: asil.ajwad@gmail.com
+From:   Asil Ajwad <graceyaogokamboule@gmail.com>
+Date:   Mon, 17 Jan 2022 21:06:19 -1200
+Message-ID: <CA+Yy_gC682JQi1_QLisGxR7uZiLm8cG+u0MPQzn6Z_L30nLM6Q@mail.gmail.com>
+Subject: Greetings,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Marek,
+-- 
+Greetings,
 
-On Mon, Jan 17, 2022 at 11:04 PM <marek.vasut@gmail.com> wrote:
-> From: Marek Vasut <marek.vasut+renesas@gmail.com>
->
-> In case the controller is transitioning to L1 in rcar_pcie_config_access(),
-> any read/write access to PCIECDR triggers asynchronous external abort. This
-> is because the transition to L1 link state must be manually finished by the
-> driver. The PCIe IP can transition back from L1 state to L0 on its own.
->
-> Avoid triggering the abort in rcar_pcie_config_access() by checking whether
-> the controller is in the transition state, and if so, finish the transition
-> right away. This prevents a lot of unnecessary exceptions, although not all
-> of them.
->
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+I am Mr.Asil Ajwad, I work with United Bank of Africa, can you use
+an ATM Visa Card to withdraw money at, ATM Cash Machine in your
+country, if yes I want to transfer abounded fund the sum of $10.5million
+US-Dollars, to you from my country, this is part of the money that was
+abounded by our late old client a politician who unfortunately lost
+his life and was forced out of power Du to his greedy act, the bank will
 
-Thanks for your patch!
+change the account details to your name, and apply for a Visa Card
+with your details, the Visa Card will be send to you, and you can be
+withdrawing money with it always, whatever any amount you withdraw
+daily, you will send 60% to me and you will take 40%, the Visa Card
+and the bank account will be on your name, I will be waiting for your
+response for more details, thanks to you a lot for giving me your time.
 
-I believe all my comments on v1[1] are still valid.
-
-[1] https://lore.kernel.org/r/CAMuHMdXUteqOinkCNH8L-dC=W82DChQSupAXv_Uhjq5M=T5uxQ@mail.gmail.com/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+regards,
+Mr.Asil Ajwad.
