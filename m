@@ -2,312 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D341492B43
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 17:33:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A140492B5D
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 17:36:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243782AbiARQdL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jan 2022 11:33:11 -0500
-Received: from mga12.intel.com ([192.55.52.136]:25537 "EHLO mga12.intel.com"
+        id S236725AbiARQg6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jan 2022 11:36:58 -0500
+Received: from mga03.intel.com ([134.134.136.65]:61598 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243751AbiARQc7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 18 Jan 2022 11:32:59 -0500
+        id S235745AbiARQg5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 Jan 2022 11:36:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642523578; x=1674059578;
+  t=1642523817; x=1674059817;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=Ou1tYTGYDE/VqSh4Fh3pqeVC6v99AHNfT2N9XJ85LAg=;
-  b=V1N/3dANn5z//6Yizd0pKlqlg4rNMiLz53MmTcwpkgcicQHFSV5Xt991
-   2N5awCMYALbnS96bI2AlpZ/zg6t7ocNwnc3eqd2aBftT1iuOwASFWdDqv
-   TS1Lo7L6ntIlK2LobsQxLvH0utPz0Te0FVzlut685rVRGdWCuVEcz9iys
-   uJIwX65UcjX+xtR8tl0SUDPN1EKeyq/4bhiaJY6tQ4i2cqwrySSCiMKyw
-   8rr9xmscqEy/Tsq4eGkyxVE851jTDxrrEHkJ7Adb21KSf+qthFvneamHW
-   8ZFVWN8XUMMX0x9Ov7UpbVel82pkzSdxNwIgVv8hz6KgEzzihy/4QtyIa
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10230"; a="224833481"
+  bh=+QXDhRLlT4+aaM08yYpmeZ6XvKbAJznm45i6RTbR4HI=;
+  b=c10OuOAF8KPQ9nUqXguVIceXl3d5zoft41zHBSCPh0Vf63tVAMImsqsR
+   Xu3duHOEvxw/3uhdawiJ3VSQEhkQqfBCRFeGv0h2EzajDWMwqOq9q83AE
+   OYhZFXRqy5CNM+lXBR9Oj/rjL7AE36oTCGlIdfTbgHuY3vEBzc+7mDPCb
+   eEhK+mc/AwrcExe3DMoNjqst+zhtPMXzUdUu+Kuo3DE87QX3lSF+x47Yl
+   bf844sFGkSTKibU4m3YuZHCbbob63GUr3VvegeGgYUHkZHZtEKTQfIRxy
+   0BoiXV7wPXDVgqNulPCL2tit1e5whoF1FNjWNK+vX9/IH5oJFGbOXjQ6H
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10230"; a="244815415"
 X-IronPort-AV: E=Sophos;i="5.88,297,1635231600"; 
-   d="scan'208";a="224833481"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 08:32:26 -0800
+   d="scan'208";a="244815415"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 08:36:57 -0800
 X-IronPort-AV: E=Sophos;i="5.88,297,1635231600"; 
-   d="scan'208";a="517826389"
-Received: from lmaniak-dev.igk.intel.com ([10.55.249.72])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 08:32:23 -0800
-Date:   Tue, 18 Jan 2022 17:30:54 +0100
-From:   Lukasz Maniak <lukasz.maniak@linux.intel.com>
-To:     Yicong Yang <yangyicong@huawei.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, yangyicong@hisilicon.com,
+   d="scan'208";a="531866381"
+Received: from ftaylor1-mobl.amr.corp.intel.com (HELO ldmartin-desk2) ([10.212.190.69])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2022 08:36:56 -0800
+Date:   Tue, 18 Jan 2022 08:36:56 -0800
+From:   Lucas De Marchi <lucas.demarchi@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?Q?=C5=81ukasz?= Gieryk <lukasz.gieryk@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH] PCI: Reset IOV state on FLR to PF
-Message-ID: <20220118163054.GA8392@lmaniak-dev.igk.intel.com>
-References: <20220117225542.GA813284@bhelgaas>
- <e4483576-cafb-6ba2-a98f-8b7bdcead80d@huawei.com>
+        intel-gfx@lists.freedesktop.org,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] x86/quirks: Fix stolen detection with integrated
+ + discrete GPU
+Message-ID: <20220118163656.fzzkwubgoe5gz36k@ldmartin-desk2>
+References: <20220114002843.2083382-1-lucas.demarchi@intel.com>
+ <YeaLIs9t0jhovC28@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <e4483576-cafb-6ba2-a98f-8b7bdcead80d@huawei.com>
+In-Reply-To: <YeaLIs9t0jhovC28@zn.tnic>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 18, 2022 at 07:07:23PM +0800, Yicong Yang wrote:
-> On 2022/1/18 6:55, Bjorn Helgaas wrote:
-> > [+cc Alex in case he has comments on how FLR should work on
-> > non-conforming hns3 devices]
-> > 
-> > On Sat, Jan 15, 2022 at 05:22:19PM +0800, Yicong Yang wrote:
-> >> On 2022/1/15 0:37, Bjorn Helgaas wrote:
-> >>> On Fri, Jan 14, 2022 at 05:42:48PM +0800, Yicong Yang wrote:
-> >>>> On 2022/1/14 0:45, Lukasz Maniak wrote:
-> >>>>> On Wed, Jan 12, 2022 at 08:49:03AM -0600, Bjorn Helgaas wrote:
-> >>>>>> On Wed, Dec 22, 2021 at 08:19:57PM +0100, Lukasz Maniak wrote:
-> >>>>>>> As per PCI Express specification, FLR to a PF resets the PF state as
-> >>>>>>> well as the SR-IOV extended capability including VF Enable which means
-> >>>>>>> that VFs no longer exist.
-> >>>>>>
-> >>>>>> Can you add a specific reference to the spec, please?
-> >>>>>>
-> >>>>> Following the Single Root I/O Virtualization and Sharing Specification:
-> >>>>> 2.2.3. FLR That Targets a PF
-> >>>>> PFs must support FLR.
-> >>>>> FLR to a PF resets the PF state as well as the SR-IOV extended
-> >>>>> capability including VF Enable which means that VFs no longer exist.
-> >>>>>
-> >>>>> For PCI Express Base Specification Revision 5.0 and later, this is
-> >>>>> section 9.2.2.3.
-> >>>
-> >>> This is also the section in the new PCIe r6.0.  Let's use that.
-> >>>
-> >>>>>>> Currently, the IOV state is not updated during FLR, resulting in
-> >>>>>>> non-compliant PCI driver behavior.
-> >>>>>>
-> >>>>>> And include a little detail about what problem is observed?  How would
-> >>>>>> a user know this problem is occurring?
-> >>>>>>
-> >>>>> The problem is that the state of the kernel and HW as to the number of
-> >>>>> VFs gets out of sync after FLR.
-> >>>>>
-> >>>>> This results in further listing, after the FLR is performed by the HW,
-> >>>>> of VFs that actually no longer exist and should no longer be reported on
-> >>>>> the PCI bus. lspci return FFs for these VFs.
-> >>>>
-> >>>> There're some exceptions. Take HiSilicon's hns3 and sec device as an
-> >>>> example, the VF won't be destroyed after the FLR reset.
-> >>>
-> >>> If FLR on an hns3 PF does *not* clear VF Enable, and the VFs still
-> >>> exist after FLR, isn't that a violation of sec 9.2.2.3?
-> >>
-> >> yes I think it's a violation to the spec.
-> > 
-> > Thanks for confirming that.
-> > 
-> >>> If hns3 and sec don't conform to the spec, we should have some sort of
-> >>> quirk that serves to document and work around this.
-> >>
-> >> ok I think it'll help. Do you mean something like this based on this patch:
-> >>
-> >> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> >> index 69ee321027b4..0e4976c669b2 100644
-> >> --- a/drivers/pci/iov.c
-> >> +++ b/drivers/pci/iov.c
-> >> @@ -1025,6 +1025,8 @@ void pci_reset_iov_state(struct pci_dev *dev)
-> >>  		return;
-> >>  	if (!iov->num_VFs)
-> >>  		return;
-> >> +	if (dev->flr_no_vf_reset)
-> >> +		return;
-> >>
-> >>  	sriov_del_vfs(dev);
-> >>
-> >> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> >> index 003950c738d2..c8ffcb0ac612 100644
-> >> --- a/drivers/pci/quirks.c
-> >> +++ b/drivers/pci/quirks.c
-> >> @@ -1860,6 +1860,17 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
-> >>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
-> >>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
-> >>
-> >> +/*
-> >> + * Some HiSilicon PCIe devices' VF won't be destroyed after a FLR reset.
-> >> + * Don't reset these devices' IOV state when doing FLR.
-> >> + */
-> >> +static void quirk_huawei_pcie_flr(struct pci_dev *pdev)
-> >> +{
-> >> +	pdev->flr_no_vf_reset = 1;
-> >> +}
-> >> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_flr);
-> >> +/* ...some other devices have this quirk */
-> > 
-> > Yes, I think something along this line will help.
-> > 
-> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> >> index 18a75c8e615c..e62f9fa4d48f 100644
-> >> --- a/include/linux/pci.h
-> >> +++ b/include/linux/pci.h
-> >> @@ -454,6 +454,7 @@ struct pci_dev {
-> >>  	unsigned int	is_probed:1;		/* Device probing in progress */
-> >>  	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
-> >>  	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
-> >> +	unsigned int	flr_no_vf_reset:1;	/* VF won't be destroyed after PF's FLR */
-> >>
-> >>>> Currently the transactions with the VF will be restored after the
-> >>>> FLR. But this patch will break that, the VF is fully disabled and
-> >>>> the transaction cannot be restored. User needs to reconfigure it,
-> >>>> which is unnecessary before this patch.
-> >>>
-> >>> What does it mean for a "transaction to be restored"?  Maybe you mean
-> >>> this patch removes the *VFs* via sriov_del_vfs(), and whoever
-> >>> initiated the FLR would need to re-enable VFs via pci_enable_sriov()
-> >>> or something similar?
-> >>
-> >> Partly. It'll also terminate the VF users.
-> >> Think that I attach the VF of hns to a VM by vfio and ping the network
-> >> in the VM, when doing FLR the 'ping' will pause and after FLR it'll
-> >> resume. Currenlty The driver handle this in the ->reset_{prepare, done}()
-> >> methods. The user of VM may not realize there is a FLR of the PF as the
-> >> VF always exists and the 'ping' is never terminated.
-> >>
-> >> If we remove the VF when doing FLR, then 1) we'll block in the VF->remove()
-> >> until no one is using the device, for example the 'ping' is finished.
-> >> 2) the VF in the VM no longer exists and we have to re-enable VF and hotplug
-> >> it into the VM and restart the ping. That's a big difference.
-> >>
-> >>> If FLR disables VFs, it seems like we should expect to have to
-> >>> re-enable them if we want them.
-> >>
-> >> It involves a remove()/probe() process of the VF driver and the user
-> >> of the VF will be terminated, just like the situation illustrated
-> >> above.
-> > 
-> > I think users of FLR should be able to rely on it working per spec,
-> > i.e., that VFs will be destroyed.  If hardware like hns3 doesn't do
-> > that, the quirk should work around that in software by doing it
-> > explicitly.
-> > 
-> > I don't think the non-standard behavior should be exposed to the
-> > users.  The user should not have to know about this hns3 issue.
-> > 
-> > If FLR on a standard NIC terminates a ping on a VF, FLR on an hns3 NIC
-> > should also terminate a ping on a VF.
-> > 
-> 
-> ok thanks for the discussion, agree on that. According to the spec, after
-> the FLR to the PF the VF does not exist anymore, so the ping will be terminated.
-> Our hns3 and sec team are still evaluating it before coming to a solution of
-> whether using a quirk or comform to the spec.
-> 
-> For this patch it looks reasonable to me, but some questions about the code below.
-> 
-> >>>> Can we handle this problem in another way? Maybe test the VF's
-> >>>> vendor device ID after the FLR reset to see whether it has really
-> >>>> gone or not?
-> >>>>
-> >>>>> sriov_numvfs in sysfs returns old invalid value and does not allow
-> >>>>> setting a new value before explicitly setting 0 in the first place.
-> >>>>>
-> >>>>>>> This patch introduces a simple function, called on the FLR path, that
-> >>>>>>> removes the virtual function devices from the PCI bus and their
-> >>>>>>> corresponding sysfs links with a final clear of the num_vfs value in IOV
-> >>>>>>> state.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Lukasz Maniak <lukasz.maniak@linux.intel.com>
-> >>>>>>> ---
-> >>>>>>>  drivers/pci/iov.c | 21 +++++++++++++++++++++
-> >>>>>>>  drivers/pci/pci.c |  2 ++
-> >>>>>>>  drivers/pci/pci.h |  4 ++++
-> >>>>>>>  3 files changed, 27 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> >>>>>>> index 0267977c9f17..69ee321027b4 100644
-> >>>>>>> --- a/drivers/pci/iov.c
-> >>>>>>> +++ b/drivers/pci/iov.c
-> >>>>>>> @@ -1013,6 +1013,27 @@ int pci_iov_bus_range(struct pci_bus *bus)
-> >>>>>>>  	return max ? max - bus->number : 0;
-> >>>>>>>  }
-> >>>>>>>  
-> >>>>>>> +/**
-> >>>>>>> + * pci_reset_iov_state - reset the state of the IOV capability
-> >>>>>>> + * @dev: the PCI device
-> >>>>>>> + */
-> >>>>>>> +void pci_reset_iov_state(struct pci_dev *dev)
-> >>>>>>> +{
-> >>>>>>> +	struct pci_sriov *iov = dev->sriov;
-> >>>>>>> +
-> >>>>>>> +	if (!dev->is_physfn)
-> >>>>>>> +		return;
-> >>>>>>> +	if (!iov->num_VFs)
-> >>>>>>> +		return;
-> >>>>>>> +
-> >>>>>>> +	sriov_del_vfs(dev);
-> >>>>>>> +
-> >>>>>>> +	if (iov->link != dev->devfn)
-> >>>>>>> +		sysfs_remove_link(&dev->dev.kobj, "dep_link");
-> >>>>>>> +
-> >>>>>>> +	iov->num_VFs = 0;
-> >>>>>>> +}
-> >>>>>>> +
-> 
-> Any reason for not using pci_disable_sriov()?
+On Tue, Jan 18, 2022 at 10:40:50AM +0100, Borislav Petkov wrote:
+>n Thu, Jan 13, 2022 at 04:28:39PM -0800, Lucas De Marchi wrote:
+>> early_pci_scan_bus() does a depth-first traversal, possibly calling
+>> the quirk functions for each device based on vendor, device and class
+>> from early_qrk table. intel_graphics_quirks() however uses PCI_ANY_ID
+>> and does additional filtering in the quirk.
+>>
+>> If there is an Intel integrated + discrete GPU the quirk may be called
+>> first for the discrete GPU based on the PCI topology. Then we will fail
+>> to reserve the system stolen memory for the integrated GPU, because we
+>> will already have marked the quirk as "applied".
+>
+>Who is "we"?
+>
+>Please use passive voice in your commit message: no "we" or "I", etc,
+>and describe your changes in imperative mood.
+>
+>Bottom line is: personal pronouns are ambiguous in text, especially with
+>so many parties/companies/etc developing the kernel so let's avoid them
+>please.
 
-The issue with pci_disable_sriov() is that it calls sriov_disable(),
-which directly uses pci_cfg_access_lock(), leading to deadlock on the
-FLR path.
+I had the impression the subject/title should be imperative, with it
+more relaxed in the body. It seems we have one more difference among
+subsystems and I will adapt on next submissions to x86.
 
-> 
-> With the spec the related registers in the SRIOV cap will be reset so
-> it's ok in general. But for some devices not following the spec like hns3,
-> some fields like VF enable won't be reset and keep enabled after the FLR.
-> In this case after the FLR the VF devices in the system has gone but
-> the state of the PF SRIOV cap leaves uncleared. pci_disable_sriov()
-> will reset the whole SRIOV cap. It'll also call pcibios_sriov_disable()
-> to correct handle the VF disabling on some platforms, IIUC.
-> 
-> Or is it better to use pdev->driver->sriov_configure(pdev,0)?
-> PF drivers must implement ->sriov_configure() for enabling/disabling
-> the VF but we totally skip the PF driver here.
-> 
-> Thanks,
-> Yicong
-> 
-> >>>>>>>  /**
-> >>>>>>>   * pci_enable_sriov - enable the SR-IOV capability
-> >>>>>>>   * @dev: the PCI device
-> >>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> >>>>>>> index 3d2fb394986a..535f19d37e8d 100644
-> >>>>>>> --- a/drivers/pci/pci.c
-> >>>>>>> +++ b/drivers/pci/pci.c
-> >>>>>>> @@ -4694,6 +4694,8 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
-> >>>>>>>   */
-> >>>>>>>  int pcie_flr(struct pci_dev *dev)
-> >>>>>>>  {
-> >>>>>>> +	pci_reset_iov_state(dev);
-> >>>>>>> +
-> >>>>>>>  	if (!pci_wait_for_pending_transaction(dev))
-> >>>>>>>  		pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
-> >>>>>>>  
-> >>>>>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> >>>>>>> index 3d60cabde1a1..7bb144fbec76 100644
-> >>>>>>> --- a/drivers/pci/pci.h
-> >>>>>>> +++ b/drivers/pci/pci.h
-> >>>>>>> @@ -480,6 +480,7 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno);
-> >>>>>>>  resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
-> >>>>>>>  void pci_restore_iov_state(struct pci_dev *dev);
-> >>>>>>>  int pci_iov_bus_range(struct pci_bus *bus);
-> >>>>>>> +void pci_reset_iov_state(struct pci_dev *dev);
-> >>>>>>>  extern const struct attribute_group sriov_pf_dev_attr_group;
-> >>>>>>>  extern const struct attribute_group sriov_vf_dev_attr_group;
-> >>>>>>>  #else
-> >>>>>>> @@ -501,6 +502,9 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
-> >>>>>>>  {
-> >>>>>>>  	return 0;
-> >>>>>>>  }
-> >>>>>>> +static inline void pci_reset_iov_state(struct pci_dev *dev)
-> >>>>>>> +{
-> >>>>>>> +}
-> >>>>>>>  
-> >>>>>>>  #endif /* CONFIG_PCI_IOV */
-> > .
-> > 
+To clarify, "we" here means whoever is reading and following the code
+path. It has the same connotation as the others in
+'git log --grep "we\s"'.  From a quick grep it seems Linus merges a lot
+of pull requests using that language and he himself uses it in commit
+messages. Example: commit 054aa8d439b9 ("fget: check that the fd still
+exists after getting a ref to it"). I was also surprised he also uses it
+in the first person in some commits.
+
+>
+>> This was reproduced in a setup with Alderlake-P (integrated) + DG2
+>> (discrete), with the following PCI topology:
+>>
+>> 	- 00:01.0 Bridge
+>> 	  `- 03:00.0 DG2
+>> 	- 00:02.0 Integrated GPU
+>>
+>> So, stop using the QFLAG_APPLY_ONCE flag, replacing it with a static
+>> local variable. We can set this variable in the right place, inside
+>> intel_graphics_quirks(), only when the quirk was actually applied, i.e.
+>> when we find the integrated GPU based on the intel_early_ids table.
+>>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+>> ---
+>>
+>> v5: apply fix before the refactor
+>>
+>>  arch/x86/kernel/early-quirks.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+>> index 1ca3a56fdc2d..de9a76eb544e 100644
+>> --- a/arch/x86/kernel/early-quirks.c
+>> +++ b/arch/x86/kernel/early-quirks.c
+>> @@ -589,10 +589,14 @@ intel_graphics_stolen(int num, int slot, int func,
+>>
+>>  static void __init intel_graphics_quirks(int num, int slot, int func)
+>>  {
+>> +	static bool quirk_applied __initdata;
+>>  	const struct intel_early_ops *early_ops;
+>>  	u16 device;
+>>  	int i;
+>>
+>> +	if (quirk_applied)
+>> +		return;
+>> +
+>>  	device = read_pci_config_16(num, slot, func, PCI_DEVICE_ID);
+>>
+>>  	for (i = 0; i < ARRAY_SIZE(intel_early_ids); i++) {
+>> @@ -605,6 +609,8 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
+>>
+>>  		intel_graphics_stolen(num, slot, func, early_ops);
+>>
+>> +		quirk_applied = true;
+>> +
+>>  		return;
+>>  	}
+>
+>So I wonder: why can't you simply pass in a static struct chipset *
+>pointer into the early_qrk[i].f function and in there you can set
+>QFLAG_APPLIED or so, so that you can mark that the quirk is applied by
+>using the nice, per-quirk flags someone has already added instead of
+>this ugly static variable?
+
+It seems you prefer v1. See 20211218061313.100571-1-lucas.demarchi@intel.com
+
+Although in the review Bjorn suggested just splitting the commit, it was
+also mentioned that the PCI subsystem has no such logic in its
+equivalent pci_do_fixups(): a quirk/fixup needing that should instead
+use a static local.
+
+After checking the code again I seconded his suggestion and adapted
+on subsequent versions. Besides his comment on PCI subsystem I had these
+motivations:
+
+1) From a total o 11 quirks, only 3 were actually using that logic and 1
+of them was wrong (the one being fixed here with the called vs applied
+logic)
+
+2) The resources these conditions are protecting are global to the
+system: they all end up setting a variable - just having a static local
+protecting the function from being called more than once seemed
+appropriate to avoid that.
+
+3) Even arch/x86 uses that for the PCI fixups
+(arch/x86/kernel/quirks.c). It uses the logic "resource has already
+been set" as opposed to adding static local since, but it seems similar
+approach to me.
+
+
+>
+>Patch 3 especially makes me go, huh?
+
+What is special about patch 3? Maybe the way it was split in v5 vs v4
+made it not so clear: intention was not to change the current behavior
+since it has been like this for 15+ years with no bug that I know of.
+The previous approach would not call acpi_table_parse() twice for
+example.
+
+thanks
+Lucas De Marchi
+
+>
+>-- 
+>Regards/Gruss,
+>    Boris.
+>
+>https://people.kernel.org/tglx/notes-about-netiquette
