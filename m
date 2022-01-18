@@ -2,377 +2,311 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12008493102
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 23:49:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69E1C493116
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 23:59:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344558AbiARWtj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jan 2022 17:49:39 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:39742 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349833AbiARWti (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jan 2022 17:49:38 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 83C2261460;
-        Tue, 18 Jan 2022 22:49:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BE38C340E0;
-        Tue, 18 Jan 2022 22:49:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642546176;
-        bh=Ul8VHUyyB8eFMXh3v1AtQuhwOKVgkbwkrQyU3MHhhXY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oTtWjDKVZwGMXfX8IhDrwWDLF5Wfh5K2dZy2FZumDko6bfhRuJmItEENfZn8bVd+L
-         BPzS04BLiEaH/WEVszS/R2zOgMNvtpsOucvy4H5nGqBlgqKFFh+jjwdgaoXm1sm78t
-         3JtVOxmk2ZmDXbl0BUOIBAqSsm+H22bQRiG8akztjZWOo5pskxG51cpmv3cYmH1STH
-         PDW4wibqtZTDNK7dSZKYv6U8kUwvrxW8VML5vfSFBYpEWOYwo/ofZwpC7mFQV5M2If
-         ON0nTAeHm1AzbKpkcPd78UWPLC15H5QfhtxyThgY3XU19chFVtG3shdYwjoQjKnIbD
-         n7PYWbpnV3HxQ==
-Date:   Tue, 18 Jan 2022 16:49:35 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     rafael@kernel.org, bp@alien8.de, tony.luck@intel.com,
-        james.morse@arm.com, lenb@kernel.org, rjw@rjwysocki.net,
-        bhelgaas@google.com, zhangliguang@linux.alibaba.com,
-        zhuo.song@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5] ACPI: Move sdei_init and ghes_init ahead to handle
- platform errors earlier
-Message-ID: <20220118224935.GA903617@bhelgaas>
+        id S1348372AbiARW7N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jan 2022 17:59:13 -0500
+Received: from mail-eus2azon11020024.outbound.protection.outlook.com ([52.101.56.24]:15341
+        "EHLO na01-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1344248AbiARW7M (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 Jan 2022 17:59:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ny3wOHuEzVFC1Q82ibF0+F+mfSSbne/NHtJhip9g/sBfcNkY/cMd4A79sZeskjcHJ1lfSetE094j+oy1zOdTb/GYyvteN4theJ9kkH1/SWGS6mqX7NT0EsEORf9KO+FsJpI/nYy6cncJL4k2ZIXPsa4zMhXbacFZLr57eXFvrLnUkD5coqr2nmDWwUguP6Ek9AAi985/YPGaIeWK37ZHcwmHIbBDmKg62JksuKRB7aRBXJvIQeXQG08WyEjDzkyEc997pWb5na0RhRTvVv4ZYjRz4zaPzcw7fyQJ3U5c4ovVaoNTEswXVT9pINjShdZIgQ62jzweIU00BOtoosKxOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BnxQTKWpZjtI5BCxm7iRyCiCM96b0QazHjQbvluzpq0=;
+ b=dOPhEaHHQrWs1lklNN91LjOWKvi05evFvMbg6vvegOHfKFATacNeYUwg/lEuTeUZ323JueBVcDasKjN+1+ss1oLRLeKUt5QBAagZW7TcVe6I5Kui3ZYW+gn479f5F5O/WxcjLOMhet+yWhBDkZYxUxDyQL64iQGRVD0SoXJm1Sv/Qf4DDsLIxYgA0Z0C9CBm9VVBm8tBOzw03hPwMRNiQI3gyundRxLNBy2RtJqhAHtScsOluoC4CDUd98z/NqLPIOmOBrwzWzq5gFXmmDx1C/IItgLQ5NzdV0J7Icuo+hitbuKhxjIQTDqpmosYYhbfmFU2Ioq92iZy7R+84xkPdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BnxQTKWpZjtI5BCxm7iRyCiCM96b0QazHjQbvluzpq0=;
+ b=c+KAuT3x4w5mSQprqH906fZl++JxYNGV0RXXDa1hwdG3Zfn3iagfpWTgD7AFEwWWNE6iK4SaJHOtN4qfYj4FLs3lV4akMXyxeKtvUsqesRVLag1SpEjYj+/WXlmhNgACoIIuoqXHtK7UCvnxNeKS/zLU+j078Gr0/sZP1VkXYns=
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
+ by DM6PR21MB1211.namprd21.prod.outlook.com (2603:10b6:5:166::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.3; Tue, 18 Jan
+ 2022 22:59:06 +0000
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::7478:bb68:bc94:3312]) by MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::7478:bb68:bc94:3312%3]) with mapi id 15.20.4909.004; Tue, 18 Jan 2022
+ 22:59:06 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Long Li <longli@microsoft.com>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Purna Pavan Chandra Aekkaladevi <paekkaladevi@microsoft.com>
+Subject: RE: [PATCH] PCI: hv: Fix NUMA node assignment when kernel boots with
+ parameters affecting NUMA topology
+Thread-Topic: [PATCH] PCI: hv: Fix NUMA node assignment when kernel boots with
+ parameters affecting NUMA topology
+Thread-Index: AQHYA1QWURfWxy//0UuSygYpK/bNEqxXrRcQgABXZwCABGe4cIADvrGAgAYErcCAA0OXAIAAA4Kg
+Date:   Tue, 18 Jan 2022 22:59:06 +0000
+Message-ID: <MWHPR21MB1593386F34FD34260FAE89EFD7589@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <1641511228-12415-1-git-send-email-longli@linuxonhyperv.com>
+ <MWHPR21MB15937B050A3E849A76384EA8D74D9@MWHPR21MB1593.namprd21.prod.outlook.com>
+ <BY5PR21MB15067D1C5AA731A340A7AF34CE4D9@BY5PR21MB1506.namprd21.prod.outlook.com>
+ <MWHPR21MB15938D29A4C1AF535E8510ADD7509@MWHPR21MB1593.namprd21.prod.outlook.com>
+ <BY5PR21MB1506B0D34E7C42B9B0337136CE539@BY5PR21MB1506.namprd21.prod.outlook.com>
+ <MWHPR21MB1593B3FF426AFF5B3F7C35E9D7569@MWHPR21MB1593.namprd21.prod.outlook.com>
+ <BY5PR21MB1506829683984FD91061D907CE589@BY5PR21MB1506.namprd21.prod.outlook.com>
+In-Reply-To: <BY5PR21MB1506829683984FD91061D907CE589@BY5PR21MB1506.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8bda7ebd-c08f-425e-b37c-6b8fc48aeffa;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-01-07T15:18:50Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1febcc33-d124-4e51-c89f-08d9dad6215b
+x-ms-traffictypediagnostic: DM6PR21MB1211:EE_
+x-ms-exchange-atpmessageproperties: SA|SL
+x-microsoft-antispam-prvs: <DM6PR21MB121119901E9CCBB2E2E6DB40D7589@DM6PR21MB1211.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IRB3Sn738fwMQalNwWuCSTJQI9nxrZpFYT5MZy0woKKcF1Mlr8+bgZysguwzFGKkVeaKK3APCcdk7cupnukELgqThUO/KWdzSyZLHpT/CCqqYYOpv/jhxY0qx8PEBJUx/Iod09bftgTfVEt4HOX35sM2YtPO65gI6UCGMKcKLZoGIkPC378/ngtpXoSg5ryp2Ubu+duBiEn79n5qIrrT67zF7ZMG9tQlcg4+0AidzCb2zQGHqpy9CFAho4/OqPkvqPUR0etcKDcbk4GZLa6bJUIDpnq1L/JRayt32xrvVkoaK04c+9nM1RHC3mgSkiynE15L/frDK/5v8nOX+ZeX0j7TMJQonIuC+bWTZungDmytR3w1LCMI7j7tON8+Y28lN3t82l5S0h5v2SMgC+Lt+d3X5SGWkgIGT9RpvO0b9MowXVKsf08xjgHE9yPNUWHL/H3bTI4YnD3YkQBkp/caMAtEtDLRDJs+ZHN0TMTfRLX+MvYRbsdanHVZtIURsEzlVtjWhulZJP2QXVCvA1ERpciPJ0BP22okpMHxHali5iJ9+jUQtcwH+xOylvV4oxzCZOA/lTmWT+mKvR+PTYqx7707C12tD7+h0WkQGEtJYXChrVEcvq6lBPjVxgh9Brjxb69+54AngUXcVAwsz3X0FfoFwMmWyBPF4pH+kY/tcCCrAmikbQRmIutb6KJzIHX6462XiVf/2KD5I8YgQAaFNp8qejP1YCiCAINH3ejcefUfpBwOx8u2HqyGFXkayLNm
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(86362001)(76116006)(6636002)(26005)(52536014)(55016003)(8990500004)(5660300002)(33656002)(110136005)(7696005)(6506007)(186003)(2906002)(66946007)(66556008)(66476007)(64756008)(9686003)(122000001)(71200400001)(82960400001)(82950400001)(38100700002)(38070700005)(8936002)(8676002)(66446008)(10290500003)(508600001)(83380400001)(316002)(20210929001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?4BUaXt4ZdpNzxC2vgOPdO+OdbEnVUn05toHhQS5Xi3MG54nCvYfZhR8xWjXZ?=
+ =?us-ascii?Q?Ni/KaLo2impAVhPYRCxOt7h99rIil29JaSqVmJe2uziKTbQoVXRcUTtKgFKD?=
+ =?us-ascii?Q?1MSPqgVSDSfLQTcipjYhAx0i5F+nH7/V9nk1ePsG4Y8H43DX/GmNZXgG5ozV?=
+ =?us-ascii?Q?ZG3MqFtu4jxL8y8Cu8KlgQMVBu6HXCTBiK9D6x6wu5xWOtLjUnO1BgUak5lF?=
+ =?us-ascii?Q?Qz4gnVKgZl7OehdhGUG+cKZPA/rKuGOuJypCz5UXSABhMUBMTYsZB0xO1zf3?=
+ =?us-ascii?Q?vbtxsxgmCBRrUzJjNat4rNYVqVjAhWzJcvL0eiYI9Yp3PpzkasorIvE9QJWY?=
+ =?us-ascii?Q?Ow39s/xIUR8RHK7FbTX9/6rCoDc3ADfobYEq2xV2nWHjUlnbC1zCF8SCjYSJ?=
+ =?us-ascii?Q?T4uBHXqcEMoWeuHYrJylPZqfoskh9twBQxB6LZXeWJ8DxjsKcPfT8fJak1Ns?=
+ =?us-ascii?Q?KlV7lXou6NTxdRZb2n+hJnwFhNXBPfbZu00Fk5BlkzbUdYavD93axi2h8EQd?=
+ =?us-ascii?Q?rZkJhQ8uShbsIZkflJP8M4SrXMw63qkn9p6lf2NcgMn1AIBFWqc8VmraNOXV?=
+ =?us-ascii?Q?tgcPyXwizh1fj3QXNrNuiCQDWI9WRVA5kEuzzXK9VTQ1utKL8YzvIw0wFNqg?=
+ =?us-ascii?Q?34v0d6+FFCJr9Shf/0K9oLlAUghL/Qpjn39q5KAkAodNamqp8cUEFJZrjwUB?=
+ =?us-ascii?Q?XBGvf6rn/TYiKKMQZvy/DufnOouXuFALb1U3ufy4IFdjRfA78C1NazYex3fl?=
+ =?us-ascii?Q?guwW+vwv4jfRTAdGR8uN9gl6p6uzQGvc/QfE7DTVAezi9/aYIJ0CBaDpxYfh?=
+ =?us-ascii?Q?+f69nzcnyzrKCeyMt+u0cAu7qtJIeERGbEl1eclzBnF8EGwPH3ZgAes493ei?=
+ =?us-ascii?Q?eLEEa3MqOSSfqK5kgxb2qqo7NJ0ZdmvtPAFju2087rl+oIZZJfRc+5Ihj0mt?=
+ =?us-ascii?Q?cb7zf87n3V8j6BjIcK+BQcbebltsO/uJyBpijdVoh4DmhZgqOEoiCaaoUo9H?=
+ =?us-ascii?Q?S1Inv59WEW/KcorwCML10PrlTQ2l215CYNt9DjE366N3FfskDAjqNTeLHoA8?=
+ =?us-ascii?Q?ziBQsHSJMvoJ7YtMTliPF0qt69sQGfQfa+sx62lVyE9MsoSsGxql1uTBGhPy?=
+ =?us-ascii?Q?6Qv0Lc0ce/gC9t7SmPc4WvFogjmeUOEBWKGagc6k4QhsU7k2RVa+62T3xVwT?=
+ =?us-ascii?Q?labDfB5OAfAHwvLsSVq7pREo00xduSwuIqrECbMcxNBWQ7eu0xAl3D0jlmnH?=
+ =?us-ascii?Q?pKra1ksJMFnTF7Tgr/DPXOIIZHHhT2Ceyen063BhKNAW537ePDym/NDbo59a?=
+ =?us-ascii?Q?t5zsPOMZBAOmf9CQcubzRqv3YvimePF17VrMCLcSKaaHZR9vKMVKZeI61Y06?=
+ =?us-ascii?Q?XYQsTrfzg1qJPIbwqOktmvM1P7hvHPejCADm1dR3xZ7vl1uxRxkrt5fpd+dx?=
+ =?us-ascii?Q?2JoASFgX0Z48WyGQpacxJeF2XwPORNHTSTrrRYduZUlydd0RE8iuXqzHb2TR?=
+ =?us-ascii?Q?WKMXNxw1z6K6vhvCZ8K+L2CnFkqt7vGeiSQEZ161onopkXdtKyoPOo3naZCN?=
+ =?us-ascii?Q?NF4KnoCI0wsZHxgB6OhGeYEHDdZ93ApmXsi5gLMGrGbaUnM7VISs3WhvdM5/?=
+ =?us-ascii?Q?30NCfLvuCPEEVuBTQc5kyNG28pJGiioW2vHG9MmlNBZfMo/wKUSM39rrsFqe?=
+ =?us-ascii?Q?rIqTzw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220116084310.57465-1-xueshuai@linux.alibaba.com>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1febcc33-d124-4e51-c89f-08d9dad6215b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2022 22:59:06.4845
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AMSzadaVSH1s+7VoZSKcgzQm6gYKO0iCBkF1Ju5PfOuU750M10tB+QNrglNKPpXzyyeMmD02fFlgSjtHSpJOXgoewgoo1LqIfKEpzoplwoc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1211
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jan 16, 2022 at 04:43:10PM +0800, Shuai Xue wrote:
-> On an ACPI system, ACPI is initialised very early from a
-> subsys_initcall(), while SDEI is not ready until a
-> subsys_initcall_sync(). This patch is to reduce the time before GHES
-> initialization.
-> 
-> The SDEI driver provides functions (e.g. apei_sdei_register_ghes(),
-> apei_sdei_unregister_ghes()) to register or unregister event callback
-> for dispatcher in firmware. When the GHES driver probing, it registers
-> the corresponding callback according to the notification type specified
-> by GHES. If the GHES notification type is SDEI, the GHES driver will
-> call apei_sdei_register_ghes() to register event call.
-> 
-> When the firmware emits an event, it migrates the handling of the event
-> into the kernel at the registered entry-point __sdei_asm_handler. And
-> finally, the kernel will call the registered event callback and return
-> status_code to indicate the status of event handling. SDEI_EV_FAILED
-> indicates that the kernel failed to handle the event.
-> 
-> Consequently, when an error occurs during kernel booting, the kernel is
-> unable to handle and report errors until the GHES driver is initialized
-> by device_initcall(), in which the event callback is registered.  For
-> example, when the kernel booting, the console logs many times from
-> firmware before GHES drivers init in our platform:
-> 
-> 	Trip in MM PCIe RAS handle(Intr:910)
->   	Clean PE[1.1.1] ERR_STS:0x4000100 -> 0 INT_STS:F0000000
-> 	Find RP(98:1.0)
-> 	--Walk dev(98:1.0) CE:0 UCE:4000
-> 	...
-> 	ERROR:   sdei_dispatch_event(32a) ret:-1
-> 	--handler(910) end
+From: Long Li <longli@microsoft.com> Sent: Tuesday, January 18, 2022 2:44 P=
+M
+> >
+> > From: Long Li <longli@microsoft.com> Sent: Wednesday, January 12, 2022 =
+4:59
+> > PM
+> > >
+> > > > Subject: RE: [PATCH] PCI: hv: Fix NUMA node assignment when kernel
+> > > > boots with parameters affecting NUMA topology
+> > > >
+> > > > From: Long Li <longli@microsoft.com> Sent: Friday, January 7, 2022
+> > > > 12:32 PM
+> > > > > >
+> > > > > > From: longli@linuxonhyperv.com <longli@linuxonhyperv.com> Sent:
+> > > > > > Thursday, January 6, 2022 3:20 PM
+> > > > > > >
+> > > > > > > When the kernel boots with parameters restricting the number
+> > > > > > > of cpus or NUMA nodes, e.g. maxcpus=3DX or numa=3Doff, the vP=
+CI
+> > > > > > > driver should only set to the NUMA node to a value that is va=
+lid in the
+> > current running kernel.
+> > > > > > >
+> > > > > > > Signed-off-by: Long Li <longli@microsoft.com>
+> > > > > > > ---
+> > > > > > >  drivers/pci/controller/pci-hyperv.c | 17 +++++++++++++++--
+> > > > > > >  1 file changed, 15 insertions(+), 2 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/pci/controller/pci-hyperv.c
+> > > > > > > b/drivers/pci/controller/pci- hyperv.c index
+> > > > > > > fc1a29acadbb..8686343eff4c 100644
+> > > > > > > --- a/drivers/pci/controller/pci-hyperv.c
+> > > > > > > +++ b/drivers/pci/controller/pci-hyperv.c
+> > > > > > > @@ -1835,8 +1835,21 @@ static void
+> > > > > > > hv_pci_assign_numa_node(struct hv_pcibus_device *hbus)
+> > > > > > >  		if (!hv_dev)
+> > > > > > >  			continue;
+> > > > > > >
+> > > > > > > -		if (hv_dev->desc.flags &
+> > HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
+> > > > > > > -			set_dev_node(&dev->dev, hv_dev-
+> > >desc.virtual_numa_node);
+> > > > > > > +		if (hv_dev->desc.flags &
+> > HV_PCI_DEVICE_FLAG_NUMA_AFFINITY) {
+> > > > > > > +			int cpu;
+> > > > > > > +			bool found_node =3D false;
+> > > > > > > +
+> > > > > > > +			for_each_possible_cpu(cpu)
+> > > > > > > +				if (cpu_to_node(cpu) =3D=3D
+> > > > > > > +				    hv_dev->desc.virtual_numa_node) {
+> > > > > > > +					found_node =3D true;
+> > > > > > > +					break;
+> > > > > > > +				}
+> > > > > > > +
+> > > > > > > +			if (found_node)
+> > > > > > > +				set_dev_node(&dev->dev,
+> > > > > > > +					     hv_dev-
+> > >desc.virtual_numa_node);
+> > > > > > > +		}
+> > > > > >
+> > > > > > I'm wondering about this approach vs. just comparing against
+> > nr_node_ids.
+> > > > >
+> > > > > I was trying to fix this by comparing with nr_node_ids. This
+> > > > > worked for numa=3Doff, but it didn't work with maxcpus=3DX.
+> > > > >
+> > > > > maxcpus=3DX is commonly used in kdump kernels. In this config,  t=
+he
+> > > > > memory system is initialized in a way that only the NUMA nodes
+> > > > > within maxcpus are setup and can be used by the drivers.
+> > > >
+> > > > In looking at a 5.16 kernel running in a Hyper-V VM on two NUMA
+> > > > nodes, the number of NUMA nodes configured in the kernel is not
+> > > > affected by maxcpus=3D on the kernel boot line.  This VM has 48 vCP=
+Us
+> > > > and 2 NUMA nodes, and is Generation 2.  Even with maxcpus=3D4 or
+> > > > maxcpus=3D1, these lines are output during
+> > > > boot:
+> > > >
+> > > > [    0.238953] NODE_DATA(0) allocated [mem 0x7edffd5000-0x7edffffff=
+f]
+> > > > [    0.241397] NODE_DATA(1) allocated [mem 0xfcdffd4000-0xfcdfffeff=
+f]
+> > > >
+> > > > and
+> > > >
+> > > > [    0.280039] Initmem setup node 0 [mem 0x0000000000001000-
+> > 0x0000007edfffffff]
+> > > > [    0.282869] Initmem setup node 1 [mem 0x0000007ee0000000-
+> > 0x000000fcdfffffff]
+> > > >
+> > > > It's perfectly legit to have a NUMA node with memory but no CPUs.
+> > > > The memory assigned to the NUMA node is determined by the ACPI SRAT=
+.
+> > > > So I'm wondering what is causing the kdump issue you see.  Or maybe
+> > > > the behavior of older kernels is different.
+> > >
+> > > Sorry, it turns out I had a typo. It's nr_cpus=3D1 (not maxcpus). But
+> > > I'm not sure if that matters as the descriptions on these two in the =
+kernel doc
+> > are the same.
+> > >
+> > > On my system (4 NUMA nodes) with kdump boot line:  (maybe if you try =
+a
+> > > VM with 4 NUMA nodes, you can see the problem)
+> > > [    0.000000] Command line: BOOT_IMAGE=3D/boot/vmlinuz-5.11.0-1025-a=
+zure
+> > > root=3DPARTUUID=3D7145c36d-e182-43b6-a37e-0b6d18fef8fe ro console=3Dt=
+ty1
+> > > console=3DttyS0
+> > > earlyprintk=3DttyS0 reset_devices systemd.unit=3Dkdump-tools-dump.ser=
+vice
+> > > nr_cpus=3D1 irqpoll nousb ata_piix.prefer_ms_hyperv=3D0
+> > > elfcorehdr=3D4038049140K
+> > >
+> > > I see the following:
+> > > [    0.408246] NODE_DATA(0) allocated [mem 0x2cfd6000-0x2cffffff]
+> > > [    0.410454] NODE_DATA(3) allocated [mem 0x3c2bef32000-0x3c2bef5bff=
+f]
+> > > [    0.413031] Zone ranges:
+> > > [    0.414117]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+> > > [    0.416522]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+> > > [    0.418932]   Normal   [mem 0x0000000100000000-0x000003c2bef5cfff]
+> > > [    0.421357]   Device   empty
+> > > [    0.422454] Movable zone start for each node
+> > > [    0.424109] Early memory node ranges
+> > > [    0.425541]   node   0: [mem 0x0000000000001000-0x000000000009ffff=
+]
+> > > [    0.428050]   node   0: [mem 0x000000001d000000-0x000000002cffffff=
+]
+> > > [    0.430547]   node   3: [mem 0x000003c27f000000-0x000003c2bef5cfff=
+]
+> > > [    0.432963] Initmem setup node 0 [mem 0x0000000000001000-
+> > 0x000000002cffffff]
+> > > [    0.435695] Initmem setup node 3 [mem 0x000003c27f000000-
+> > 0x000003c2bef5cfff]
+> > > [    0.438446] On node 0, zone DMA: 1 pages in unavailable ranges
+> > > [    0.439377] On node 0, zone DMA32: 53088 pages in unavailable rang=
+es
+> > > [    0.452784] On node 3, zone Normal: 40960 pages in unavailable ran=
+ges
+> > > [    0.455221] On node 3, zone Normal: 4259 pages in unavailable rang=
+es
+> > >
+> > > It's unclear to me why node 1 and 2 are missing. But I don't think
+> > > it's a Hyper-V problem since it's only affected by setting nr_cpus
+> > > over kernel boot line. Later, a device driver
+> > > (mlx5 in this example) tries to allocate memory on node 1 and fails:
+> > >
+> >
+> > To summarize some offline conversation, we've figured out that the "mis=
+sing"
+> > NUMA nodes are not due to setting maxcpus=3D1 or nr_cpus=3D1.  Setting =
+the cpu
+> > count doesn't affect any of this.
+> >
+> > Instead, Linux is modifying the memory map prior to starting the kdump =
+kernel
+> > so that most of the memory is not touched and is
+> > preserved to be dumped, which is the whole point of kdump.   This
+> > modified memory map has no memory in NUMA nodes 1 and 2, so it is corre=
+ct
+> > to just see nodes 0 and 3 as online.
+> >
+> > I think code fix here is pretty simple:
+> >
+> > 	int node;
+> >
+> > 	node =3D hv_dev->desc.virtual_numa_node;
+> > 	if ((hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
+> > 			&& (node < nr_node_ids))
+> > 		set_dev_node(&dev->dev, numa_map_to_online_node(node));
+> >
+> > Michael
+>=20
+> Okay, this looks good.
+>=20
+> I'm sending a V2 (with a minor change) after testing is done.
+>=20
+> Long
 
-If I understand correctly, the firmware noticed an error, tried to
-report it to the kernel, and is complaining because the kernel isn't
-ready to handle it yet.  And the reason for this patch is to reduce
-these complaints from the firmware.
+Please leave a comment in the code as to why a NUMA node might be
+offline.   In the future, somebody new might not know what can happen.
+I certainly didn't. :-(
 
-That doesn't seem like a very good reason for this patch.  There is
-*always* a window before the kernel is ready to handle events from the
-firmware.
-
-Why is the firmware noticing these errors in the first place?  If
-you're seeing these complaints regularly, my guess is that either you
-have some terrible hardware or (more likely) the firmware isn't
-clearing some expected error condition correctly.  For example, maybe
-the Unsupported Request errors that happen while enumerating PCIe
-devices are being reported.
-
-If you register the callback function, the kernel will now start
-seeing these error reports.  What happens then?  Does the kernel log
-the errors somewhere?  Is that better than the current situation where
-the firmware logs them?
-
-However, I DO think that:
-
-  - Removing acpi_hest_init() from acpi_pci_root_init(), and
-
-  - Converting ghes_init() and sdei_init() from initcalls to explicit
-    calls
-
-are very good reasons to do something like this patch because HEST is
-not PCI-specific, and IMO, explicit calls are better than initcalls
-because initcall ordering is implicit and not well-defined within a
-level.
-
-> This is because the callback function has not been registered yet.  Due
-> to the poor design of firmware, previously reported errors will be
-> overwritten by new ones. Therefore, all errors that occurred before GHES
-> initialization are missed and there is no chance to report and find them
-> again.
-> 
-> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
-> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
-> the estatus memory pool. On the other hand, ghes_init() relies on
-> sdei_init() to detect the SDEI version and the framework for registering
-> and unregistering events. The dependencies are as follows
-> 
-> 	ghes_init() => acpi_hest_init() => acpi_bus_init() => acpi_init()
-> 	ghes_init() => sdei_init()
-> 
-> Based on above, move sdei_init and ghes_init as far ahead as possible,
-> right after acpi_iort_init() in acpi_init(). After this patch, there are
-> still errors missing, but we have to tolerate it until the software
-> reporting capability is built. And this patch merely reduce the time
-> before GHES initialization. The boot dmesg before this patch:
-> 
-> 	[    3.688586] HEST: Table parsing has been initialized.
-> 	...
-> 	[   33.204340] calling  sdei_init+0x0/0x120 @ 1
-> 	[   33.208645] sdei: SDEIv1.0 (0x0) detected in firmware.
-> 	...
-> 	[   36.005390] calling  ghes_init+0x0/0x11c @ 1
-> 	[   36.190021] GHES: APEI firmware first mode is enabled by APEI bit and WHEA _OSC.
-> 
-> After this patch, the boot dmesg like bellow:
-> 
-> 	[    3.688664] HEST: Table parsing has been initialized.
-> 	[    3.688691] sdei: SDEIv1.0 (0x0) detected in firmware.
-> 	[    3.694557] GHES: APEI firmware first mode is enabled by APEI bit and WHEA _OSC.
-> 
-> As we can see, the initialization of GHES is advanced by 33 seconds.
-> (It should be noted that the effect of optimization varies with the
-> platform.)
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> ---
->  drivers/acpi/apei/ghes.c    | 18 ++++++++----------
->  drivers/acpi/bus.c          |  4 ++++
->  drivers/acpi/pci_root.c     |  4 ++--
->  drivers/firmware/arm_sdei.c | 13 ++-----------
->  include/acpi/apei.h         |  2 ++
->  include/linux/arm_sdei.h    |  2 ++
->  6 files changed, 20 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 0c5c9acc6254..64f24a9f213f 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -1457,27 +1457,26 @@ static struct platform_driver ghes_platform_driver = {
->  	.remove		= ghes_remove,
->  };
->  
-> -static int __init ghes_init(void)
-> +void __init ghes_init(void)
->  {
->  	int rc;
->  
->  	if (acpi_disabled)
-> -		return -ENODEV;
-> +		return;
->  
->  	switch (hest_disable) {
->  	case HEST_NOT_FOUND:
-> -		return -ENODEV;
-> +		pr_info(GHES_PFX "HEST is not found!\n");
-
-I don't know whether this "HEST is not found" message is worthwhile or
-not.  I don't think lack of an HEST is an error, and users may be
-alarmed.  But this is an ACPI thing, so up to you and Rafael.
-
-> +		return;
->  	case HEST_DISABLED:
->  		pr_info(GHES_PFX "HEST is not enabled!\n");
-> -		return -EINVAL;
-> +		return;
->  	default:
->  		break;
->  	}
->  
-> -	if (ghes_disable) {
-> +	if (ghes_disable)
->  		pr_info(GHES_PFX "GHES is not enabled!\n");
-> -		return -EINVAL;
-> -	}
->  
->  	ghes_nmi_init_cxt();
-
-Previously, if "ghes_disable", we returned immediately.  After this
-patch, if "ghes_disable", we print "GHES is not enabled!\n", but then
-we go on to call ghes_nmi_init_cxt() and register the
-&ghes_platform_driver.  That looks wrong.  Maybe you meant to keep a
-"return" here?
-
-> @@ -1495,8 +1494,7 @@ static int __init ghes_init(void)
->  	else
->  		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
->  
-> -	return 0;
-> +	return;
->  err:
-> -	return rc;
-> +	ghes_disable = 1;
-
-Why do you set ghes_disable here?  As far as I can tell, we will never
-look at it again.  The places we do look at it are:
-
-  - ghes_init(): earlier in this function, so we've already done that,
-
-  - acpi_hest_init(): we've already called that, too, and
-
-  - acpi_bus_osc_negotiate_platform_control(): called from
-    acpi_bus_init(), which we've already called.
-
->  }
-> -device_initcall(ghes_init);
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index 07f604832fd6..1dcd71df2cd5 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -30,6 +30,7 @@
->  #include <linux/acpi_viot.h>
->  #include <linux/pci.h>
->  #include <acpi/apei.h>
-> +#include <linux/arm_sdei.h>
->  #include <linux/suspend.h>
->  #include <linux/prmt.h>
->  
-> @@ -1331,6 +1332,9 @@ static int __init acpi_init(void)
->  
->  	pci_mmcfg_late_init();
->  	acpi_iort_init();
-> +	acpi_hest_init();
-> +	sdei_init();
-> +	ghes_init();
-
-sdei_init() and ghes_init() stick out here because they're the only
-functions without an "acpi_" prefix.  Maybe a separate patch to rename
-them?
-
->  	acpi_scan_init();
->  	acpi_ec_init();
->  	acpi_debugfs_init();
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index b76db99cced3..14e20af44627 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -23,7 +23,7 @@
->  #include <linux/dmi.h>
->  #include <linux/platform_data/x86/apple.h>
->  #include <acpi/apei.h>	/* for acpi_hest_init() */
-
-This #include looks like it may no longer be necessary.
-
-> -
-> +#include <linux/arm_sdei.h> /* for sdei_init() */
-
-I don't think this #include is necessary.
-
->  #include "internal.h"
->  
->  #define ACPI_PCI_ROOT_CLASS		"pci_bridge"
-> @@ -943,7 +943,7 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->  
->  void __init acpi_pci_root_init(void)
->  {
-> -	acpi_hest_init();
-> +
-
-Drop the blank line here.
-
->  	if (acpi_pci_disabled)
->  		return;
->  
-> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-> index a7e762c352f9..1e1a51510e83 100644
-> --- a/drivers/firmware/arm_sdei.c
-> +++ b/drivers/firmware/arm_sdei.c
-> @@ -1059,14 +1059,14 @@ static bool __init sdei_present_acpi(void)
->  	return true;
->  }
->  
-> -static int __init sdei_init(void)
-> +void __init sdei_init(void)
->  {
->  	struct platform_device *pdev;
->  	int ret;
->  
->  	ret = platform_driver_register(&sdei_driver);
->  	if (ret || !sdei_present_acpi())
-> -		return ret;
-> +		return;
->  
->  	pdev = platform_device_register_simple(sdei_driver.driver.name,
->  					       0, NULL, 0);
-> @@ -1076,17 +1076,8 @@ static int __init sdei_init(void)
->  		pr_info("Failed to register ACPI:SDEI platform device %d\n",
->  			ret);
->  	}
-> -
-> -	return ret;
->  }
->  
-> -/*
-> - * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
-> - * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
-> - * by device_initcall(). We want to be called in the middle.
-> - */
-> -subsys_initcall_sync(sdei_init);
-> -
->  int sdei_event_handler(struct pt_regs *regs,
->  		       struct sdei_registered_event *arg)
->  {
-> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
-> index ece0a8af2bae..7dbd6363fda7 100644
-> --- a/include/acpi/apei.h
-> +++ b/include/acpi/apei.h
-> @@ -27,8 +27,10 @@ extern int hest_disable;
->  extern int erst_disable;
->  #ifdef CONFIG_ACPI_APEI_GHES
->  extern bool ghes_disable;
-> +void __init ghes_init(void);
->  #else
->  #define ghes_disable 1
-> +static inline void ghes_init(void) { return; }
-
-"return" is unnecessary here.
-
->  #endif
->  
->  #ifdef CONFIG_ACPI_APEI
-> diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
-> index 0a241c5c911d..9c987188b692 100644
-> --- a/include/linux/arm_sdei.h
-> +++ b/include/linux/arm_sdei.h
-> @@ -46,9 +46,11 @@ int sdei_unregister_ghes(struct ghes *ghes);
->  /* For use by arch code when CPU hotplug notifiers are not appropriate. */
->  int sdei_mask_local_cpu(void);
->  int sdei_unmask_local_cpu(void);
-> +void __init sdei_init(void);
->  #else
->  static inline int sdei_mask_local_cpu(void) { return 0; }
->  static inline int sdei_unmask_local_cpu(void) { return 0; }
-> +static inline void sdei_init(void) { return ; }
-
-"return" is unnecessary here.
-
->  #endif /* CONFIG_ARM_SDE_INTERFACE */
->  
->  
-> -- 
-> 2.20.1.12.g72788fdb
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Michael
