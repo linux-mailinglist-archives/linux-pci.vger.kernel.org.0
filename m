@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3EC7491E70
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 05:18:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDC9B491E71
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 05:18:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231845AbiARESN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Jan 2022 23:18:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58402 "EHLO
+        id S231881AbiARESP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Jan 2022 23:18:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230169AbiARESN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 23:18:13 -0500
-Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2FC4C061574;
-        Mon, 17 Jan 2022 20:18:12 -0800 (PST)
-Received: by mail-qk1-x72c.google.com with SMTP id 193so20883713qkh.13;
-        Mon, 17 Jan 2022 20:18:12 -0800 (PST)
+        with ESMTP id S230169AbiARESP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Jan 2022 23:18:15 -0500
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8046C061574;
+        Mon, 17 Jan 2022 20:18:14 -0800 (PST)
+Received: by mail-qk1-x735.google.com with SMTP id h2so1092890qkp.10;
+        Mon, 17 Jan 2022 20:18:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RIw4lgCiOYTaWvypeX/l+WozvsAUYZfOGlKqOpcHN5Y=;
-        b=HqcZxT1JAiZn1ZOVcnn6JPxSBmABORcNBANIrzpFBc0k6qXe2ps/EAfsfOYJuEZf+Z
-         RZQQq4d1lKcOXWoWUyZAQ2SWOWbRtm4x5ArHYYJXEJYoletTW22sWc2Gz2Q0Edh5oLgB
-         p9PSTUvSKCgHu4tKiUaSV72zEXVgww5GDT3nlsboo9Yho1qHZrOgkiXTHSULH8MvTO3S
-         Zmu0K9UBFDyqNJ0bvCNOH4K13PhAraWvDbeUdr1iDcRaUzJ7Hqaa/8zjhxzqDORTFMQG
-         Kf/PgTOOiayIqnqcpP2cSsLk2kWBV2Udgvhi9woTAQKwnl79RsdnFwOcC+nFfCGHd0DA
-         hPXw==
+        bh=KHokDnc5z5J/K/wLU1PbiasxitJZZ/hOyhpCkiqT9Eg=;
+        b=mTsoyzWo9NyQbHK1tV+FKRiWQwNGyi0Jt8KKTtfjuuKlsZmkOz2ZRa9RWbgVIUi+51
+         8DVSE7+3jfZWwEo3mgC926tLKP86cGIBcVUKaYi2MAOuvhA4+yGcEstuvdzWZfwAINCG
+         FdRnrkjKWphGSQEO1rtk1TfhMTVrewtq1hnHZ2h7MDNEY++06SjVGtDGuvteEGPK0Ar9
+         MQuEFmlQLfX/5CT174fHAUTvDztT4Kghyeg6b3gtIJoml+1BQ2JFmO3bmQUo9z1yCJe5
+         3web1d9qTDrV7CrM+EKWpvP0crEslcCYaS4lnq5IkYhvEazHmtTRkJU6cNTXLynsNDk+
+         hL9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RIw4lgCiOYTaWvypeX/l+WozvsAUYZfOGlKqOpcHN5Y=;
-        b=mySYSKjUktVrbGo/GqUXrSkWNLtwgRJxiop5VUpSAk7QUfyNvOcKBFMK/2CIsEH06k
-         hx87tBT2TSAEgf4A53o+M3FAwvgzGuAk2t/uRAkwNxT+fKRSTYBt1jucstA+M54Guei+
-         8LBIitRIFgZUq3RRDLz0ghWHBkwD75IIF4Q8qMMzDy52kT0K/uiiCoaYNbqWkb9glTdZ
-         mAZZniBDjB+GxR9eUyHA12XbU0Rwb1ZLlzKBsgxbQL4mM6hJ+yHi2X2Qc/VspVlRqZIB
-         BtnjqM9e97E4MmN11rXXVJJgpXPkLIzaOO/pIhgd6FlW9fpTjXGi5KmcBmr7c/pBNbQd
-         MLHg==
-X-Gm-Message-State: AOAM533d19ghD7YvLxzEC4G2dR0KC0lcInQlcfvYGf4+ve2MzfBsPkUg
-        ByPZnkZZsH2Vrh4C2pyWmzg=
-X-Google-Smtp-Source: ABdhPJyvM3m+zhMaM4wyedO6DCooKNu0oj3SQgMjTHibTQ097/9KEtdAH5rrAm7jScXb+AVW+HqDdw==
-X-Received: by 2002:a05:620a:17a5:: with SMTP id ay37mr8581756qkb.0.1642479492150;
-        Mon, 17 Jan 2022 20:18:12 -0800 (PST)
+        bh=KHokDnc5z5J/K/wLU1PbiasxitJZZ/hOyhpCkiqT9Eg=;
+        b=AFiPSZmh9jWtoqWHDNV1UHKWuvzrrlJUqjUBmN8wm5ZGk/k4NC18wFsesee0s7X2TG
+         ZRAqzjvus5kLX1uF+0trwOJyI7RxbAZ5511mpoFGdKdh64BcdECCo+tAPwcPralMwYYU
+         uRaQjWZaJwtJM3YFKuMHNckmlIz6BGG1ROO4qgSHbDmnN6letDtbJy+VDGgYyKYyLOqH
+         6fHJGKQTd1AsW0TLMAPJsXfpvuciee+E26nOZEVm4iYCTh/MtmcG9aJr1Rs7mUNboKs3
+         r79/G3XcF5x0FkesNR72gmZTbDORHyA5R7Q0Vgw8OZLQooIkqHRjACOTqRw3yWAtK+cx
+         etmw==
+X-Gm-Message-State: AOAM533RLucEdDgCd7SI5VCG4e3fTF96y89VJ7L/Pt/BD3NSOEsI7rhl
+        77AYpHnnhArdUncDE7nUQ9E=
+X-Google-Smtp-Source: ABdhPJzqDmtkyEtOWfp5U8QKcovCZJBHtjaLh3q+VHa9kXWqz1lEDreyNvJz5ZdA9LIa0tvHrVkvMQ==
+X-Received: by 2002:a05:620a:284d:: with SMTP id h13mr16713710qkp.330.1642479493786;
+        Mon, 17 Jan 2022 20:18:13 -0800 (PST)
 Received: from localhost.localdomain ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id d11sm10225479qkn.96.2022.01.17.20.18.11
+        by smtp.gmail.com with ESMTPSA id d11sm10225479qkn.96.2022.01.17.20.18.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jan 2022 20:18:11 -0800 (PST)
+        Mon, 17 Jan 2022 20:18:13 -0800 (PST)
 From:   Stuart Hayes <stuart.w.hayes@gmail.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>
@@ -57,9 +57,9 @@ Cc:     Keith Busch <kbusch@kernel.org>, kw@linux.com,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [RFC PATCH 1/3] Add support for seven more indicators in enclosure driver
-Date:   Mon, 17 Jan 2022 22:17:56 -0600
-Message-Id: <de41441fa835af52ac53a08013534e0cdd448aa9.1642460765.git.stuart.w.hayes@gmail.com>
+Subject: [RFC PATCH 2/3] Add PCIe enclosure management auxiliary driver
+Date:   Mon, 17 Jan 2022 22:17:57 -0600
+Message-Id: <111e1684ab4a77c7ca4abc9f7fd1f37f9534d937.1642460765.git.stuart.w.hayes@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1642460765.git.stuart.w.hayes@gmail.com>
 References: <cover.1642460765.git.stuart.w.hayes@gmail.com>
@@ -69,302 +69,658 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch adds support for seven additional indicators (ok, rebuild,
-prdfail, hotspare, ica, ifa, disabled) to the enclosure driver, which
-currently only supports three (fault, active, locate). It also reduces
-duplicated code for the set and show functions for the sysfs attributes
-for all of the indicators, and allows users of the driver to provide
-common get_led and set_led callbacks to control all indicators (though
-it continues to support the existing callbacks for the three currently
-supported indicators, so it does not require any changes to code that
-already uses the enclosure driver).
-
-This will be used by the pcie_em driver.
+This patch adds a new auxiliary driver to support PCIe enclosure
+management (NPEM and _DSM).  Drivers whose PCIe devices could have
+NPEM and/or _DSM enclosure management support could register an
+auxiliary device, and this driver will attach to that and register an
+enclosure to allow user space control of the associated state
+indicators.
 
 Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 ---
- drivers/misc/enclosure.c  | 189 ++++++++++++++++++++++----------------
- include/linux/enclosure.h |  22 +++++
- 2 files changed, 133 insertions(+), 78 deletions(-)
+ drivers/pci/pcie/Kconfig      |   8 +
+ drivers/pci/pcie/Makefile     |   1 +
+ drivers/pci/pcie/pcie_em.c    | 473 ++++++++++++++++++++++++++++++++++
+ include/linux/pcie_em.h       |  97 +++++++
+ include/uapi/linux/pci_regs.h |  11 +-
+ 5 files changed, 589 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pci/pcie/pcie_em.c
+ create mode 100644 include/linux/pcie_em.h
 
-diff --git a/drivers/misc/enclosure.c b/drivers/misc/enclosure.c
-index 1b010d9267c9..e5a0bb9a719f 100644
---- a/drivers/misc/enclosure.c
-+++ b/drivers/misc/enclosure.c
-@@ -473,30 +473,6 @@ static const char *const enclosure_type[] = {
- 	[ENCLOSURE_COMPONENT_ARRAY_DEVICE] = "array device",
- };
- 
--static ssize_t get_component_fault(struct device *cdev,
--				   struct device_attribute *attr, char *buf)
--{
--	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
--	struct enclosure_component *ecomp = to_enclosure_component(cdev);
--
--	if (edev->cb->get_fault)
--		edev->cb->get_fault(edev, ecomp);
--	return sysfs_emit(buf, "%d\n", ecomp->fault);
--}
--
--static ssize_t set_component_fault(struct device *cdev,
--				   struct device_attribute *attr,
--				   const char *buf, size_t count)
--{
--	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
--	struct enclosure_component *ecomp = to_enclosure_component(cdev);
--	int val = simple_strtoul(buf, NULL, 0);
--
--	if (edev->cb->set_fault)
--		edev->cb->set_fault(edev, ecomp, val);
--	return count;
--}
--
- static ssize_t get_component_status(struct device *cdev,
- 				    struct device_attribute *attr,char *buf)
- {
-@@ -531,54 +507,6 @@ static ssize_t set_component_status(struct device *cdev,
- 		return -EINVAL;
- }
- 
--static ssize_t get_component_active(struct device *cdev,
--				    struct device_attribute *attr, char *buf)
--{
--	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
--	struct enclosure_component *ecomp = to_enclosure_component(cdev);
--
--	if (edev->cb->get_active)
--		edev->cb->get_active(edev, ecomp);
--	return sysfs_emit(buf, "%d\n", ecomp->active);
--}
--
--static ssize_t set_component_active(struct device *cdev,
--				    struct device_attribute *attr,
--				    const char *buf, size_t count)
--{
--	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
--	struct enclosure_component *ecomp = to_enclosure_component(cdev);
--	int val = simple_strtoul(buf, NULL, 0);
--
--	if (edev->cb->set_active)
--		edev->cb->set_active(edev, ecomp, val);
--	return count;
--}
--
--static ssize_t get_component_locate(struct device *cdev,
--				    struct device_attribute *attr, char *buf)
--{
--	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
--	struct enclosure_component *ecomp = to_enclosure_component(cdev);
--
--	if (edev->cb->get_locate)
--		edev->cb->get_locate(edev, ecomp);
--	return sysfs_emit(buf, "%d\n", ecomp->locate);
--}
--
--static ssize_t set_component_locate(struct device *cdev,
--				    struct device_attribute *attr,
--				    const char *buf, size_t count)
--{
--	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
--	struct enclosure_component *ecomp = to_enclosure_component(cdev);
--	int val = simple_strtoul(buf, NULL, 0);
--
--	if (edev->cb->set_locate)
--		edev->cb->set_locate(edev, ecomp, val);
--	return count;
--}
--
- static ssize_t get_component_power_status(struct device *cdev,
- 					  struct device_attribute *attr,
- 					  char *buf)
-@@ -641,29 +569,134 @@ static ssize_t get_component_slot(struct device *cdev,
- 	return sysfs_emit(buf, "%d\n", slot);
- }
- 
--static DEVICE_ATTR(fault, S_IRUGO | S_IWUSR, get_component_fault,
--		    set_component_fault);
+diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+index 45a2ef702b45..deaaf00c0d38 100644
+--- a/drivers/pci/pcie/Kconfig
++++ b/drivers/pci/pcie/Kconfig
+@@ -142,3 +142,11 @@ config PCIE_EDR
+ 	  the PCI Firmware Specification r3.2.  Enable this if you want to
+ 	  support hybrid DPC model which uses both firmware and OS to
+ 	  implement DPC.
++
++config PCIE_EM
++	tristate "PCIe Enclosure Management support"
++	depends on ENCLOSURE_SERVICES
++	help
++	  Auxiliary driver for PCI Express enclosure management (support
++	  for Native PCIe Enclosure Management (NPEM) and the related _DSM
++	  interface for status LED management).
+diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
+index 5783a2f79e6a..3b2b160b6f13 100644
+--- a/drivers/pci/pcie/Makefile
++++ b/drivers/pci/pcie/Makefile
+@@ -13,3 +13,4 @@ obj-$(CONFIG_PCIE_PME)		+= pme.o
+ obj-$(CONFIG_PCIE_DPC)		+= dpc.o
+ obj-$(CONFIG_PCIE_PTM)		+= ptm.o
+ obj-$(CONFIG_PCIE_EDR)		+= edr.o
++obj-$(CONFIG_PCIE_EM)		+= pcie_em.o
+diff --git a/drivers/pci/pcie/pcie_em.c b/drivers/pci/pcie/pcie_em.c
+new file mode 100644
+index 000000000000..fe6ec3aaa561
+--- /dev/null
++++ b/drivers/pci/pcie/pcie_em.c
+@@ -0,0 +1,473 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * callbacks for attrs using enum enclosure_component_setting (LEDs)
++ * Auxiliary driver providing support for PCIe Native PCIe Enclosure
++ * Management, supporting both the PCIe NPEM extended capability and the
++ * _DSM interface (as defined in the PCI Firmware Specification Rev
++ * 3.3, chapter 4.7, "_DSM Definitions for PCIe SSD Status LED".
++ *
++ * Copyright (c) 2021 Dell Inc.
++ *
++ * TODO: Actually add NPEM extended capability support
++ *       Add pcieport & cxl support
 + */
-+static ssize_t led_show(struct device *cdev,
-+			enum enclosure_component_led led,
-+			char *buf)
-+{
-+	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
-+	struct enclosure_component *ecomp = to_enclosure_component(cdev);
 +
-+	if (edev->cb->get_led)
-+		edev->cb->get_led(edev, ecomp, led);
-+	else
-+		/*
-+		 * support old callbacks for fault/active/locate
-+		 */
-+		switch (led) {
-+		case ENCLOSURE_LED_FAULT:
-+			if (edev->cb->get_fault) {
-+				edev->cb->get_fault(edev, ecomp);
-+				ecomp->led[led] = ecomp->fault;
-+			}
-+			break;
-+		case ENCLOSURE_LED_ACTIVE:
-+			if (edev->cb->get_active) {
-+				edev->cb->get_active(edev, ecomp);
-+				ecomp->led[led] = ecomp->active;
-+			}
-+			break;
-+		case ENCLOSURE_LED_LOCATE:
-+			if (edev->cb->get_locate) {
-+				edev->cb->get_locate(edev, ecomp);
-+				ecomp->led[led] = ecomp->locate;
-+			}
-+			break;
-+		default:
-+		}
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+	return sysfs_emit(buf, "%d\n", ecomp->led[led]);
-+}
++#include <linux/acpi.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/pci.h>
++#include <linux/enclosure.h>
++#include <linux/auxiliary_bus.h>
++#include <linux/delay.h>
++#include "../pci.h"
++#include <linux/pcie_em.h>
 +
-+static ssize_t led_set(struct device *cdev,
-+		       enum enclosure_component_led led,
-+		       const char *buf, size_t count)
-+{
-+	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
-+	struct enclosure_component *ecomp = to_enclosure_component(cdev);
-+	int err, val;
++#define DRIVER_NAME	"pcie-em"
++#define DRIVER_VERSION	"v1.0"
 +
-+	err = kstrtoint(buf, 0, &val);
-+	if (err)
-+		return err;
++#define NPEM_EXT_CAP_H
++/*
++ * NPEM & _DSM use the same state bit definitions
++ */
++#define	NPEM_STATE_OK		BIT(2)
++#define	NPEM_STATE_LOCATE	BIT(3)
++#define	NPEM_STATE_FAILED	BIT(4)
++#define	NPEM_STATE_REBUILD	BIT(5)
++#define	NPEM_STATE_PFA		BIT(6)  /* predicted failure analysis */
++#define	NPEM_STATE_HOTSPARE	BIT(7)
++#define	NPEM_STATE_ICA		BIT(8)  /* in a critical array */
++#define	NPEM_STATE_IFA		BIT(9)  /* in a failed array */
++#define	NPEM_STATE_INVALID	BIT(10)
++#define	NPEM_STATE_DISABLED	BIT(11)
++#define NPEM_ALL_STATES		GENMASK(11, 2)
 +
-+	if (edev->cb->set_led)
-+		edev->cb->set_led(edev, ecomp, led, val);
-+	else
-+		/*
-+		 * support old callbacks for fault/active/locate
-+		 */
-+		switch (led) {
-+		case ENCLOSURE_LED_FAULT:
-+			if (edev->cb->set_fault)
-+				edev->cb->set_fault(edev, ecomp, val);
-+			break;
-+		case ENCLOSURE_LED_ACTIVE:
-+			if (edev->cb->set_active)
-+				edev->cb->set_active(edev, ecomp, val);
-+			break;
-+		case ENCLOSURE_LED_LOCATE:
-+			if (edev->cb->set_locate)
-+				edev->cb->set_locate(edev, ecomp, val);
-+			break;
-+		default:
-+		}
-+
-+	return count;
-+}
-+
-+#define LED_ATTR_RW(led_attr, led)					\
-+static ssize_t led_attr##_show(struct device *cdev,			\
-+			       struct device_attribute *attr,		\
-+			       char *buf)				\
-+{									\
-+	return led_show(cdev, led, buf);				\
-+}									\
-+static ssize_t led_attr##_store(struct device *cdev,			\
-+				struct device_attribute *attr,		\
-+				const char *buf, size_t count)		\
-+{									\
-+	return led_set(cdev, led, buf, count);				\
-+}									\
-+static DEVICE_ATTR_RW(led_attr)
-+
- static DEVICE_ATTR(status, S_IRUGO | S_IWUSR, get_component_status,
- 		   set_component_status);
--static DEVICE_ATTR(active, S_IRUGO | S_IWUSR, get_component_active,
--		   set_component_active);
--static DEVICE_ATTR(locate, S_IRUGO | S_IWUSR, get_component_locate,
--		   set_component_locate);
- static DEVICE_ATTR(power_status, S_IRUGO | S_IWUSR, get_component_power_status,
- 		   set_component_power_status);
- static DEVICE_ATTR(type, S_IRUGO, get_component_type, NULL);
- static DEVICE_ATTR(slot, S_IRUGO, get_component_slot, NULL);
-+LED_ATTR_RW(fault, ENCLOSURE_LED_FAULT);
-+LED_ATTR_RW(active, ENCLOSURE_LED_ACTIVE);
-+LED_ATTR_RW(locate, ENCLOSURE_LED_LOCATE);
-+LED_ATTR_RW(ok, ENCLOSURE_LED_OK);
-+LED_ATTR_RW(rebuild, ENCLOSURE_LED_REBUILD);
-+LED_ATTR_RW(prdfail, ENCLOSURE_LED_PRDFAIL);
-+LED_ATTR_RW(hotspare, ENCLOSURE_LED_HOTSPARE);
-+LED_ATTR_RW(ica, ENCLOSURE_LED_ICA);
-+LED_ATTR_RW(ifa, ENCLOSURE_LED_IFA);
-+LED_ATTR_RW(disabled, ENCLOSURE_LED_DISABLED);
- 
- static struct attribute *enclosure_component_attrs[] = {
- 	&dev_attr_fault.attr,
- 	&dev_attr_status.attr,
- 	&dev_attr_active.attr,
- 	&dev_attr_locate.attr,
-+	&dev_attr_ok.attr,
-+	&dev_attr_rebuild.attr,
-+	&dev_attr_prdfail.attr,
-+	&dev_attr_hotspare.attr,
-+	&dev_attr_ica.attr,
-+	&dev_attr_ifa.attr,
-+	&dev_attr_disabled.attr,
- 	&dev_attr_power_status.attr,
- 	&dev_attr_type.attr,
- 	&dev_attr_slot.attr,
- 	NULL
- };
-+
- ATTRIBUTE_GROUPS(enclosure_component);
- 
- static int __init enclosure_init(void)
-diff --git a/include/linux/enclosure.h b/include/linux/enclosure.h
-index 1c630e2c2756..98dd0f05efb7 100644
---- a/include/linux/enclosure.h
-+++ b/include/linux/enclosure.h
-@@ -49,6 +49,20 @@ enum enclosure_component_setting {
- 	ENCLOSURE_SETTING_BLINK_B_OFF_ON = 7,
- };
- 
-+enum enclosure_component_led {
-+	ENCLOSURE_LED_FAULT,
-+	ENCLOSURE_LED_ACTIVE,
-+	ENCLOSURE_LED_LOCATE,
-+	ENCLOSURE_LED_OK,
-+	ENCLOSURE_LED_REBUILD,
-+	ENCLOSURE_LED_PRDFAIL,
-+	ENCLOSURE_LED_HOTSPARE,
-+	ENCLOSURE_LED_ICA,
-+	ENCLOSURE_LED_IFA,
-+	ENCLOSURE_LED_DISABLED,
-+	ENCLOSURE_LED_MAX,
++static const u32 to_npem_state[ENCLOSURE_LED_MAX] = {
++	[ENCLOSURE_LED_FAULT]		= NPEM_STATE_FAILED,
++	[ENCLOSURE_LED_LOCATE]		= NPEM_STATE_LOCATE,
++	[ENCLOSURE_LED_OK]		= NPEM_STATE_OK,
++	[ENCLOSURE_LED_REBUILD]		= NPEM_STATE_REBUILD,
++	[ENCLOSURE_LED_PRDFAIL]		= NPEM_STATE_PFA,
++	[ENCLOSURE_LED_HOTSPARE]	= NPEM_STATE_HOTSPARE,
++	[ENCLOSURE_LED_ICA]		= NPEM_STATE_ICA,
++	[ENCLOSURE_LED_IFA]		= NPEM_STATE_IFA,
++	[ENCLOSURE_LED_DISABLED]	= NPEM_STATE_DISABLED,
 +};
 +
- struct enclosure_device;
- struct enclosure_component;
- struct enclosure_component_callbacks {
-@@ -72,6 +86,13 @@ struct enclosure_component_callbacks {
- 	int (*set_locate)(struct enclosure_device *,
- 			  struct enclosure_component *,
- 			  enum enclosure_component_setting);
-+	void (*get_led)(struct enclosure_device *edev,
-+			struct enclosure_component *ecomp,
-+			enum enclosure_component_led);
-+	int (*set_led)(struct enclosure_device *edev,
-+		       struct enclosure_component *ecomp,
-+		       enum enclosure_component_led,
-+		       enum enclosure_component_setting);
- 	void (*get_power_status)(struct enclosure_device *,
- 				 struct enclosure_component *);
- 	int (*set_power_status)(struct enclosure_device *,
-@@ -90,6 +111,7 @@ struct enclosure_component {
- 	int fault;
- 	int active;
- 	int locate;
-+	int led[ENCLOSURE_LED_MAX];
- 	int slot;
- 	enum enclosure_status status;
- 	int power_status;
++/*
++ * pcie_em_dev->pdev could be the drive itself or the downstream port
++ * leading to it
++ */
++struct pcie_em_dev {
++	struct pci_dev *pdev;			/* dev with controls */
++	struct pcie_em_led_state_ops *ops;	/* _DSM or NPEM ops */
++	struct enclosure_device *edev;
++	u32 states;				/* last written states */
++	u32 supported_states;
++	u16 npem_pos;				/* position of NPEM ext cap */
++	struct work_struct npem_work;		/* NPEM control write work func */
++	unsigned long last_ctrl_write;		/* time of last NPEM ctrl write */
++};
++
++struct pcie_em_led_state_ops {
++	void (*init)(struct pcie_em_dev *emdev);
++	int (*get_supported_states)(struct pcie_em_dev *emdev);
++	int (*get_current_states)(struct pcie_em_dev *emdev, u32 *states);
++	int (*set_current_states)(struct pcie_em_dev *emdev);
++};
++
++static struct mutex pcie_em_lock;
++static int pcie_em_exiting;
++
++#ifdef CONFIG_ACPI
++/*
++ * _DSM LED control
++ */
++static const guid_t pcie_pcie_em_dsm_guid = PCIE_SSD_LEDS_DSM_GUID;
++
++struct pcie_em_dsm_output {
++	u16 status;
++	u8 function_specific_err;
++	u8 vendor_specific_err;
++	u32 state;
++};
++
++static void dsm_status_err_print(struct pci_dev *pdev,
++				 struct pcie_em_dsm_output *output)
++{
++	switch (output->status) {
++	case 0:
++		break;
++	case 1:
++		pci_dbg(pdev, "_DSM not supported\n");
++		break;
++	case 2:
++		pci_dbg(pdev, "_DSM invalid input parameters\n");
++		break;
++	case 3:
++		pci_dbg(pdev, "_DSM communication error\n");
++		break;
++	case 4:
++		pci_dbg(pdev, "_DSM function-specific error 0x%x\n",
++			output->function_specific_err);
++		break;
++	case 5:
++		pci_dbg(pdev, "_DSM vendor-specific error 0x%x\n",
++			output->vendor_specific_err);
++		break;
++	default:
++		pci_dbg(pdev, "_DSM returned unknown status 0x%x\n",
++			output->status);
++	}
++}
++
++static int dsm_set(struct pci_dev *pdev, u32 value)
++{
++	acpi_handle handle;
++	union acpi_object *out_obj, arg3[2];
++	struct pcie_em_dsm_output *dsm_output;
++
++	handle = ACPI_HANDLE(&pdev->dev);
++	if (!handle)
++		return -ENODEV;
++
++	arg3[0].type = ACPI_TYPE_PACKAGE;
++	arg3[0].package.count = 1;
++	arg3[0].package.elements = &arg3[1];
++
++	arg3[1].type = ACPI_TYPE_BUFFER;
++	arg3[1].buffer.length = 4;
++	arg3[1].buffer.pointer = (u8 *)&value;
++
++	out_obj = acpi_evaluate_dsm_typed(handle, &pcie_pcie_em_dsm_guid,
++				1, SET_STATE_DSM, &arg3[0], ACPI_TYPE_BUFFER);
++	if (!out_obj)
++		return -EIO;
++
++	if (out_obj->buffer.length < 8) {
++		ACPI_FREE(out_obj);
++		return -EIO;
++	}
++
++	dsm_output = (struct pcie_em_dsm_output *)out_obj->buffer.pointer;
++
++	if (dsm_output->status != 0) {
++		dsm_status_err_print(pdev, dsm_output);
++		ACPI_FREE(out_obj);
++		return -EIO;
++	}
++	ACPI_FREE(out_obj);
++	return 0;
++}
++
++static int dsm_get(struct pci_dev *pdev, u64 dsm_func, u32 *output)
++{
++	acpi_handle handle;
++	union acpi_object *out_obj;
++	struct pcie_em_dsm_output *dsm_output;
++
++	handle = ACPI_HANDLE(&pdev->dev);
++	if (!handle)
++		return -ENODEV;
++
++	out_obj = acpi_evaluate_dsm_typed(handle, &pcie_pcie_em_dsm_guid, 0x1,
++					  dsm_func, NULL, ACPI_TYPE_BUFFER);
++	if (!out_obj)
++		return -EIO;
++
++	if (out_obj->buffer.length < 8) {
++		ACPI_FREE(out_obj);
++		return -EIO;
++	}
++
++	dsm_output = (struct pcie_em_dsm_output *)out_obj->buffer.pointer;
++	if (dsm_output->status != 0) {
++		dsm_status_err_print(pdev, dsm_output);
++		ACPI_FREE(out_obj);
++		return -EIO;
++	}
++
++	*output = dsm_output->state;
++	ACPI_FREE(out_obj);
++	return 0;
++}
++
++static int get_supported_states_dsm(struct pcie_em_dev *emdev)
++{
++	return dsm_get(emdev->pdev, GET_SUPPORTED_STATES_DSM, &emdev->supported_states);
++}
++
++static int get_current_states_dsm(struct pcie_em_dev *emdev, u32 *states)
++{
++	return dsm_get(emdev->pdev, GET_STATE_DSM, states);
++}
++
++static int set_current_states_dsm(struct pcie_em_dev *emdev)
++{
++	return dsm_set(emdev->pdev, emdev->states);
++}
++
++static struct pcie_em_led_state_ops dsm_pcie_em_led_state_ops = {
++	.get_supported_states	= get_supported_states_dsm,
++	.get_current_states	= get_current_states_dsm,
++	.set_current_states	= set_current_states_dsm,
++};
++
++/*
++ * end of _DSM code
++ */
++
++#endif /* CONFIG_ACPI */
++
++/*
++ * NPEM LED control
++ */
++
++static inline int npem_write_ctrl(struct pcie_em_dev *emdev, u32 reg)
++{
++	struct pci_dev *pdev = emdev->pdev;
++
++	emdev->last_ctrl_write = jiffies;
++	return pci_write_config_dword(pdev, emdev->npem_pos + PCI_NPEM_CTRL, reg);
++}
++
++static int get_supported_states_npem(struct pcie_em_dev *emdev)
++{
++	struct pci_dev *pdev = emdev->pdev;
++	u32 reg;
++	int ret;
++
++	ret = pci_read_config_dword(pdev, emdev->npem_pos + PCI_NPEM_CAP, &reg);
++	if (!ret)
++		emdev->supported_states = reg & NPEM_ALL_STATES;
++	return ret;
++}
++
++static int get_current_states_npem(struct pcie_em_dev *emdev, u32 *states)
++{
++	struct pci_dev *pdev = emdev->pdev;
++	u32 reg;
++	int ret;
++
++	ret = pci_read_config_dword(pdev, emdev->npem_pos + PCI_NPEM_CTRL, &reg);
++	if (!ret)
++		*states = reg & NPEM_ALL_STATES;
++	return ret;
++}
++
++static void npem_set_states_work(struct work_struct *w)
++{
++	struct pcie_em_dev *emdev = container_of(w, struct pcie_em_dev, npem_work);
++	struct pci_dev *pdev = emdev->pdev;
++	u32 status;
++
++	/*
++	 * per spec, wait up to 1 second for command completed status bit to be high
++	 */
++	while (true) {
++		if (pci_read_config_dword(pdev, emdev->npem_pos + PCI_NPEM_STATUS,
++					  &status))
++			return;
++		if ((status & PCI_NPEM_STATUS_CC) ||
++		    time_after(jiffies, emdev->last_ctrl_write + HZ)) {
++			break;
++		}
++		msleep(20);
++	}
++	npem_write_ctrl(emdev, emdev->states | PCI_NPEM_CTRL_EN);
++}
++
++static int set_current_states_npem(struct pcie_em_dev *emdev)
++{
++	schedule_work(&emdev->npem_work);
++	return 0;
++}
++
++static void npem_init(struct pcie_em_dev *emdev)
++{
++	struct pci_dev *pdev = emdev->pdev;
++
++	emdev->npem_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_NPEM);
++	npem_write_ctrl(emdev, PCI_NPEM_CTRL_EN);
++	INIT_WORK(&emdev->npem_work, npem_set_states_work);
++}
++
++static struct pcie_em_led_state_ops npem_pcie_em_led_state_ops = {
++	.init			= npem_init,
++	.get_supported_states	= get_supported_states_npem,
++	.get_current_states	= get_current_states_npem,
++	.set_current_states	= set_current_states_npem,
++};
++
++/*
++ * end of NPEM code
++ */
++
++static void pcie_em_get_led(struct enclosure_device *edev,
++			     struct enclosure_component *ecomp,
++			     enum enclosure_component_led led)
++{
++	struct pcie_em_dev *emdev = ecomp->scratch;
++	u32 states = 0;
++
++	emdev->ops->get_current_states(emdev, &states);
++	ecomp->led[led] = !!(states & to_npem_state[led]) ?
++		ENCLOSURE_SETTING_ENABLED : ENCLOSURE_SETTING_DISABLED;
++}
++
++static int pcie_em_set_led(struct enclosure_device *edev,
++			 struct enclosure_component *ecomp,
++			 enum enclosure_component_led led,
++			 enum enclosure_component_setting val)
++{
++	struct pcie_em_dev *emdev = ecomp->scratch;
++	u32 npem_state = to_npem_state[led], states;
++	int rc;
++
++	if (val != ENCLOSURE_SETTING_ENABLED
++	    && val != ENCLOSURE_SETTING_DISABLED)
++		return -EINVAL;
++
++	states = emdev->states & ~npem_state;
++	states |= val == ENCLOSURE_SETTING_ENABLED ? npem_state : 0;
++
++	if ((states & emdev->supported_states) != states)
++		return -EINVAL;
++
++	emdev->states = states;
++	rc = emdev->ops->set_current_states(emdev);
++	/*
++	 * save last written state so it doesn't have to be re-read via NPEM/
++	 * _DSM on the next write
++	 */
++	return rc;
++}
++
++static struct enclosure_component_callbacks pcie_em_cb = {
++	.get_led	= pcie_em_get_led,
++	.set_led	= pcie_em_set_led,
++};
++
++static void pcie_em_remove(struct auxiliary_device *adev)
++{
++	struct pcie_em_dev *emdev = dev_get_drvdata(&adev->dev);
++
++	emdev->edev->scratch = NULL;
++	enclosure_unregister(emdev->edev);
++	dev_set_drvdata(&adev->dev, NULL);
++	kfree(emdev);
++}
++
++static int add_pcie_em_dev(struct auxiliary_device *adev,
++				struct pcie_em_led_state_ops *ops)
++{
++	struct pcie_em_dev *emdev;
++	struct pci_dev *pdev = to_pci_dev(adev->dev.parent);
++	struct enclosure_device *edev;
++	struct enclosure_component *ecomp;
++	int rc = 0;
++
++	mutex_lock(&pcie_em_lock);
++	if (pcie_em_exiting)
++		goto out_unlock;
++
++	emdev = kzalloc(sizeof(*emdev), GFP_KERNEL);
++	if (!emdev) {
++		rc = -ENOMEM;
++		goto out_unlock;
++	}
++	emdev->pdev = pdev;
++	emdev->ops = ops;
++	emdev->states = 0;
++	if (emdev->ops->init)
++		emdev->ops->init(emdev);
++
++	if (emdev->ops->get_supported_states(emdev) != 0)
++		goto out_free;
++
++	edev = enclosure_register(&pdev->dev, dev_name(&adev->dev), 1, &pcie_em_cb);
++	if (!edev)
++		goto out_free;
++
++	ecomp = enclosure_component_alloc(edev, 0, ENCLOSURE_COMPONENT_DEVICE, dev_name(&pdev->dev));
++	if (IS_ERR(ecomp))
++		goto out_unreg;
++
++	ecomp->type = ENCLOSURE_COMPONENT_ARRAY_DEVICE;
++	rc = enclosure_component_register(ecomp);
++	if (rc < 0)
++		goto out_unreg;
++
++	ecomp->scratch = emdev;
++	emdev->edev = edev;
++	dev_set_drvdata(&adev->dev, emdev);
++	goto out_unlock;
++
++out_unreg:
++	enclosure_unregister(edev);
++out_free:
++	kfree(emdev);
++out_unlock:
++	mutex_unlock(&pcie_em_lock);
++	return rc;
++}
++
++static int pcie_em_probe(struct auxiliary_device *adev,
++			  const struct auxiliary_device_id *id)
++{
++	struct pci_dev *pdev = to_pci_dev(adev->dev.parent);
++
++	/*
++	 * The PCI Firmware Spec Rev 3.3 says that the _DSM should be used
++	 * in preference to NPEM if available.
++	 */
++#ifdef CONFIG_ACPI
++	if (pci_has_pcie_em_dsm(pdev))
++		return add_pcie_em_dev(adev, &dsm_pcie_em_led_state_ops);
++#endif
++	if (pci_has_npem(pdev))
++		return add_pcie_em_dev(adev, &npem_pcie_em_led_state_ops);
++
++	/*
++	 * should not get here
++	 */
++	return -ENODEV;
++}
++
++static const struct auxiliary_device_id pcie_em_id_table[] = {
++	{ .name = "nvme.pcie_em", },
++//	{ .name = "cxl.pcie_em", },
++//	{ .name = "pcieport.pcie_em", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(auxiliary, pcie_em_id_table);
++
++static struct auxiliary_driver pcie_em_driver = {
++	.name = "pcie_em",
++	.probe = pcie_em_probe,
++	.remove = pcie_em_remove,
++	.id_table = pcie_em_id_table,
++};
++
++static int __init pcie_em_init(void)
++{
++	mutex_init(&pcie_em_lock);
++	auxiliary_driver_register(&pcie_em_driver);
++	return 0;
++}
++
++static void __exit pcie_em_exit(void)
++{
++	mutex_lock(&pcie_em_lock);
++	pcie_em_exiting = 1;
++	mutex_unlock(&pcie_em_lock);
++	auxiliary_driver_unregister(&pcie_em_driver);
++}
++
++module_init(pcie_em_init);
++module_exit(pcie_em_exit);
++
++MODULE_AUTHOR("Stuart Hayes <stuart.w.hayes@gmail.com>");
++MODULE_DESCRIPTION("Support for PCIe SSD Status LEDs");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/pcie_em.h b/include/linux/pcie_em.h
+new file mode 100644
+index 000000000000..26b6d68cccd3
+--- /dev/null
++++ b/include/linux/pcie_em.h
+@@ -0,0 +1,97 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef DRIVERS_PCI_PCIE_EM_H
++#define DRIVERS_PCI_PCIE_EM_H
++
++#include <linux/pci.h>
++#include <linux/acpi.h>
++
++#define PCIE_SSD_LEDS_DSM_GUID						\
++	GUID_INIT(0x5d524d9d, 0xfff9, 0x4d4b,				\
++		  0x8c, 0xb7, 0x74, 0x7e, 0xd5, 0x1e, 0x19, 0x4d)
++
++#define GET_SUPPORTED_STATES_DSM	0x01
++#define GET_STATE_DSM			0x02
++#define SET_STATE_DSM			0x03
++
++static inline bool pci_has_pcie_em_dsm(struct pci_dev *pdev)
++{
++#ifdef CONFIG_ACPI
++	acpi_handle handle;
++	const guid_t pcie_ssd_leds_dsm_guid = PCIE_SSD_LEDS_DSM_GUID;
++
++	handle = ACPI_HANDLE(&pdev->dev);
++	if (handle)
++		if (acpi_check_dsm(handle, &pcie_ssd_leds_dsm_guid, 0x1,
++				   1 << GET_SUPPORTED_STATES_DSM ||
++				   1 << GET_STATE_DSM ||
++				   1 << SET_STATE_DSM))
++			return true;
++#endif
++	return false;
++}
++
++static inline bool pci_has_npem(struct pci_dev *pdev)
++{
++	int pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_NPEM);
++	u32 cap;
++
++	if (pos)
++		if (!pci_read_config_dword(pdev, pos + PCI_NPEM_CAP, &cap))
++			return cap & PCI_NPEM_CAP_NPEM_CAP;
++	return false;
++}
++
++static inline bool pci_has_enclosure_management(struct pci_dev *pdev)
++{
++	return pci_has_pcie_em_dsm(pdev) || pci_has_npem(pdev);
++}
++
++static inline void release_pcie_em_aux_device(struct device *dev)
++{
++	kfree(to_auxiliary_dev(dev));
++}
++
++static inline struct auxiliary_device *register_pcie_em_auxdev(struct device *dev, int id)
++{
++	struct auxiliary_device *adev;
++	int ret;
++
++	if (!pci_has_enclosure_management(to_pci_dev(dev)))
++		return NULL;
++
++	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
++	if (!adev)
++		goto em_reg_out_err;
++
++	adev->name = "pcie_em";
++	adev->dev.parent = dev;
++	adev->dev.release = release_pcie_em_aux_device;
++	adev->id = id;
++
++	ret = auxiliary_device_init(adev);
++	if (ret < 0)
++		goto em_reg_out_free;
++
++	ret = auxiliary_device_add(adev);
++	if (ret) {
++		auxiliary_device_uninit(adev);
++		goto em_reg_out_free;
++	}
++
++	return adev;
++em_reg_out_free:
++	kfree(adev);
++em_reg_out_err:
++	dev_warn(dev, "failed to register pcie_em device\n");
++	return NULL;
++}
++
++static inline void unregister_pcie_em_auxdev(struct auxiliary_device *auxdev)
++{
++	if (auxdev) {
++		auxiliary_device_delete(auxdev);
++		auxiliary_device_uninit(auxdev);
++	}
++}
++
++#endif /* DRIVERS_PCI_PCIE_EM_H */
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index ff6ccbc6efe9..375540065c29 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -736,7 +736,8 @@
+ #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
+ #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+ #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+-#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
++#define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
++#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_NPEM
+ 
+ #define PCI_EXT_CAP_DSN_SIZEOF	12
+ #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+@@ -1098,4 +1099,12 @@
+ #define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_MASK		0x000000F0
+ #define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_SHIFT	4
+ 
++/* NPEM */
++#define PCI_NPEM_CAP		0x04
++#define  PCI_NPEM_CAP_NPEM_CAP		0x00000001  /* dev is NPEM capable */
++#define PCI_NPEM_CTRL		0x08
++#define  PCI_NPEM_CTRL_EN		0x00000001  /* Enable NPEM */
++#define PCI_NPEM_STATUS		0x0c
++#define  PCI_NPEM_STATUS_CC		0x00000001  /* NPEM command completed */
++
+ #endif /* LINUX_PCI_REGS_H */
 -- 
 2.31.1
 
