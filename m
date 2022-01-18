@@ -2,65 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AE1A4922B4
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 10:27:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3B0D4922F6
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 10:40:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343508AbiARJ0j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jan 2022 04:26:39 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:31100 "EHLO
-        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245369AbiARJ0i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jan 2022 04:26:38 -0500
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4JdNbd0LtLz1FCk7;
-        Tue, 18 Jan 2022 17:22:53 +0800 (CST)
-Received: from SZX1000464847.huawei.com (10.21.59.169) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Tue, 18 Jan 2022 17:26:36 +0800
-From:   Dongdong Liu <liudongdong3@huawei.com>
-To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
-Subject: [PATCH] PCI: Support BAR sizes up to 8TB
-Date:   Tue, 18 Jan 2022 17:21:17 +0800
-Message-ID: <20220118092117.10089-1-liudongdong3@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        id S229768AbiARJkx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jan 2022 04:40:53 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:58936 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229604AbiARJkx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 18 Jan 2022 04:40:53 -0500
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B641A1EC018C;
+        Tue, 18 Jan 2022 10:40:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1642498847;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=1krZRAcW2/qQOgGBfGLOIoGvqo818a87chwmI8ChMGc=;
+        b=R3Ufj3Pf/CNEgauoGpET//WwMKJG+l61x23bQgi9j9qbI/UOOuP+c//D/a/Y1cg/zM1qNI
+        DnrbsJI+HcRo/41FnqORyxRyzSKvdDt2Hkno7oHAJFUFUaFRXtq5xfUPWrizsxq6LSH/5V
+        8cKjJ3CaWuTO+CfsbKRH/JVUGmMWEAs=
+Date:   Tue, 18 Jan 2022 10:40:50 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Lucas De Marchi <lucas.demarchi@intel.com>
+Cc:     x86@kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] x86/quirks: Fix stolen detection with integrated
+ + discrete GPU
+Message-ID: <YeaLIs9t0jhovC28@zn.tnic>
+References: <20220114002843.2083382-1-lucas.demarchi@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.21.59.169]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220114002843.2083382-1-lucas.demarchi@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Current kernel reports disabling BAR if device with a 4TB BAR as it
-only supports BAR size to 128GB.
+n Thu, Jan 13, 2022 at 04:28:39PM -0800, Lucas De Marchi wrote:
+> early_pci_scan_bus() does a depth-first traversal, possibly calling
+> the quirk functions for each device based on vendor, device and class
+> from early_qrk table. intel_graphics_quirks() however uses PCI_ANY_ID
+> and does additional filtering in the quirk.
+> 
+> If there is an Intel integrated + discrete GPU the quirk may be called
+> first for the discrete GPU based on the PCI topology. Then we will fail
+> to reserve the system stolen memory for the integrated GPU, because we
+> will already have marked the quirk as "applied".
 
-pci 0000:01:00.0: disabling BAR 4:
-[mem 0x00000000-0x3ffffffffff 64bit pref] (bad alignment 0x40000000000)
+Who is "we"?
 
-Increase the maximum BAR size from 128GB to 8TB for future expansion.
+Please use passive voice in your commit message: no "we" or "I", etc,
+and describe your changes in imperative mood.
 
-Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
----
- drivers/pci/setup-bus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Bottom line is: personal pronouns are ambiguous in text, especially with
+so many parties/companies/etc developing the kernel so let's avoid them
+please.
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 547396ec50b5..a7893bf2f580 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -994,7 +994,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- {
- 	struct pci_dev *dev;
- 	resource_size_t min_align, align, size, size0, size1;
--	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
-+	resource_size_t aligns[24]; /* Alignments from 1MB to 8TB */
- 	int order, max_order;
- 	struct resource *b_res = find_bus_resource_of_type(bus,
- 					mask | IORESOURCE_PREFETCH, type);
+> This was reproduced in a setup with Alderlake-P (integrated) + DG2
+> (discrete), with the following PCI topology:
+> 
+> 	- 00:01.0 Bridge
+> 	  `- 03:00.0 DG2
+> 	- 00:02.0 Integrated GPU
+> 
+> So, stop using the QFLAG_APPLY_ONCE flag, replacing it with a static
+> local variable. We can set this variable in the right place, inside
+> intel_graphics_quirks(), only when the quirk was actually applied, i.e.
+> when we find the integrated GPU based on the intel_early_ids table.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> ---
+> 
+> v5: apply fix before the refactor
+> 
+>  arch/x86/kernel/early-quirks.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+> index 1ca3a56fdc2d..de9a76eb544e 100644
+> --- a/arch/x86/kernel/early-quirks.c
+> +++ b/arch/x86/kernel/early-quirks.c
+> @@ -589,10 +589,14 @@ intel_graphics_stolen(int num, int slot, int func,
+>  
+>  static void __init intel_graphics_quirks(int num, int slot, int func)
+>  {
+> +	static bool quirk_applied __initdata;
+>  	const struct intel_early_ops *early_ops;
+>  	u16 device;
+>  	int i;
+>  
+> +	if (quirk_applied)
+> +		return;
+> +
+>  	device = read_pci_config_16(num, slot, func, PCI_DEVICE_ID);
+>  
+>  	for (i = 0; i < ARRAY_SIZE(intel_early_ids); i++) {
+> @@ -605,6 +609,8 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
+>  
+>  		intel_graphics_stolen(num, slot, func, early_ops);
+>  
+> +		quirk_applied = true;
+> +
+>  		return;
+>  	}
+
+So I wonder: why can't you simply pass in a static struct chipset *
+pointer into the early_qrk[i].f function and in there you can set
+QFLAG_APPLIED or so, so that you can mark that the quirk is applied by
+using the nice, per-quirk flags someone has already added instead of
+this ugly static variable?
+
+Patch 3 especially makes me go, huh?
+
 -- 
-2.33.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
