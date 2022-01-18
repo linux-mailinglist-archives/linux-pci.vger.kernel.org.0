@@ -2,74 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F29A2491F50
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 07:16:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8C6649206F
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 08:42:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237071AbiARGQp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jan 2022 01:16:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbiARGQp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jan 2022 01:16:45 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23A72C061574;
-        Mon, 17 Jan 2022 22:16:45 -0800 (PST)
+        id S245600AbiARHlw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jan 2022 02:41:52 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:44602 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245617AbiARHlv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jan 2022 02:41:51 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B11CD611ED;
-        Tue, 18 Jan 2022 06:16:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2160FC00446;
-        Tue, 18 Jan 2022 06:16:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1642486604;
-        bh=0Rn0IkkQ4B47dDn5jDXXBcK5X/wRnR0ECfiVjnMdYkk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LY2Rizf6BcW3RcZcctLr7wR+zJVgMvo5wOhFSGhnzG7gufhb5dNJS1z5SqMLrHXuF
-         I56uMcYTIWwPFlRDOQWjSQgtJSvynNF+DIQf+EfbMb0h+5bE/K5EMyc0bHht87izAa
-         DODroLx25pgnfAsVfeLXYBR8HeWTVKrUpFktoY+A=
-Date:   Tue, 18 Jan 2022 07:16:40 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <kbusch@kernel.org>, kw@linux.com,
-        mariusz.tkaczyk@linux.intel.com, helgaas@kernel.org,
-        lukas@wunner.de, pavel@ucw.cz, linux-cxl@vger.kernel.org,
-        martin.petersen@oracle.com, James.Bottomley@hansenpartnership.com,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 1/3] Add support for seven more indicators in
- enclosure driver
-Message-ID: <YeZbSGPqHaSnNurq@kroah.com>
-References: <cover.1642460765.git.stuart.w.hayes@gmail.com>
- <de41441fa835af52ac53a08013534e0cdd448aa9.1642460765.git.stuart.w.hayes@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de41441fa835af52ac53a08013534e0cdd448aa9.1642460765.git.stuart.w.hayes@gmail.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 95AEB61387;
+        Tue, 18 Jan 2022 07:41:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0D96BC00446;
+        Tue, 18 Jan 2022 07:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642491711;
+        bh=iNIkWQPmpKD4eh7g0YAYJGDoyZOdku7nuquEp8Xokjs=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=uPBTXW0GKAOkxKk5xfn5yBh7cxQOC33btATNa40G6GPhQ3DfIFoQnUnM+CMcupjLS
+         q01/IukspSb6c5oepbHTE3zggS0VYm5kglhZX4NoRIsVkyL1i4VkA3imRTqMzS+yqu
+         BO1Etv2dd4kakHU18G7oXLB5H4ohrs42YEcxEnrG2AQLuNz8NrSkqx6CUGJzLSywmC
+         +x5n3LK8Ktl86hxrY1zy2fDIyiUsrfab5ura/LHixu2L+9rVDcMtsFglore4pWs58X
+         DV6fOZDKNbnChxTrGnKMOlJouQFfEGIr2h7ZX/1vO6w+9t0LbCKyE2A9+T9kDyYEfN
+         OYHfa4oLazdNg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ED7E8F60797;
+        Tue, 18 Jan 2022 07:41:50 +0000 (UTC)
+Subject: Re: [GIT PULL] More ACPI updates for v5.17-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAJZ5v0iD_Ar15npwR8Cp2oEKF3DgPVo2KaKqfYax5RmTBkbZmg@mail.gmail.com>
+References: <CAJZ5v0iD_Ar15npwR8Cp2oEKF3DgPVo2KaKqfYax5RmTBkbZmg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJZ5v0iD_Ar15npwR8Cp2oEKF3DgPVo2KaKqfYax5RmTBkbZmg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-5.17-rc1-2
+X-PR-Tracked-Commit-Id: e3daa2607b1f4bb1d09a5a8ad89ad9f7327a2e63
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 6a8d7fbf1c65034b85e7676b42449a56e4206bd3
+Message-Id: <164249171096.10229.6241357949791582942.pr-tracker-bot@kernel.org>
+Date:   Tue, 18 Jan 2022 07:41:50 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 17, 2022 at 10:17:56PM -0600, Stuart Hayes wrote:
-> This patch adds support for seven additional indicators (ok, rebuild,
-> prdfail, hotspare, ica, ifa, disabled) to the enclosure driver, which
-> currently only supports three (fault, active, locate). It also reduces
-> duplicated code for the set and show functions for the sysfs attributes
-> for all of the indicators, and allows users of the driver to provide
-> common get_led and set_led callbacks to control all indicators (though
-> it continues to support the existing callbacks for the three currently
-> supported indicators, so it does not require any changes to code that
-> already uses the enclosure driver).
-> 
-> This will be used by the pcie_em driver.
-> 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> ---
->  drivers/misc/enclosure.c  | 189 ++++++++++++++++++++++----------------
->  include/linux/enclosure.h |  22 +++++
->  2 files changed, 133 insertions(+), 78 deletions(-)
+The pull request you sent on Mon, 17 Jan 2022 19:09:53 +0100:
 
-You did not document your new sysfs files in Documentation/ABI/ anywhere
-:(
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-5.17-rc1-2
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/6a8d7fbf1c65034b85e7676b42449a56e4206bd3
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
