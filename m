@@ -2,38 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 956BE492CDA
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 18:58:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAD6C492D80
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Jan 2022 19:37:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237415AbiARR64 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jan 2022 12:58:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49366 "EHLO
+        id S1348032AbiARShe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jan 2022 13:37:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237348AbiARR6z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jan 2022 12:58:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE4C8C061574;
-        Tue, 18 Jan 2022 09:58:55 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S1348010AbiARShd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jan 2022 13:37:33 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A615BC061574;
+        Tue, 18 Jan 2022 10:37:33 -0800 (PST)
+Received: from zn.tnic (dslb-088-067-202-008.088.067.pools.vodafone-ip.de [88.67.202.8])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 55089614CD;
-        Tue, 18 Jan 2022 17:58:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68705C340E0;
-        Tue, 18 Jan 2022 17:58:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642528734;
-        bh=OSwJ8gD/i/i24wgqvV5ruU3GRdYhopdMAIxlkXZZKkY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ESlABa2sQ6fXuugWUBXk73zPTubb9nhmKCUL37WG2BsxB0lVniTrzplnxU7jW4k0Y
-         vR1swa0yn/3J36LCZJINXqMJvs18eKvG884L5k8e6fMkeUUKqIEEtY2ALQy54OEdst
-         c/akZeRsUG9wgxRzcwXuwj4LwHC8tqemC/MOAmzhht3f4/jgkL1dZDEZhJgxlPM8fC
-         adrBtUtDW5lpLwTKb/74wgertcPW/ahmaiaWqgCJDsKW96Rqlfkh0tQxTPkFCyfdKl
-         WyRDvrMJ8Jzkj2I0c76j3nm/7AfMMXO9cRF0rs5AC3IDhwZEmGLsLXCEV4a7YiX3IB
-         uP4AceA1i+Kag==
-Date:   Tue, 18 Jan 2022 11:58:53 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A88DA1EC056A;
+        Tue, 18 Jan 2022 19:37:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1642531047;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Tjdm+fJYHbI/r1mMtECH4HyAiyFRzU2NRFN0CGW0YZA=;
+        b=VGyEgjtOeBCx3IEFbCxmJFZbIrZGwGsbKHj4HUXlJtbkLWUCrNC/AkV/UwTrfdH0DByvT5
+        xOHGalQl3mCdDuClObLKW0kw9QmmiSQOZgWA1kBb1BO4gjL9Ba7MuJpCvsLO/kk+tSXLmb
+        8Xnz7xjhim7Hjvn9QxfiscleqGwOZ/A=
+Date:   Tue, 18 Jan 2022 19:37:29 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Lucas De Marchi <lucas.demarchi@intel.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         linux-pci@vger.kernel.org, intel-gfx@lists.freedesktop.org,
@@ -43,56 +40,54 @@ Cc:     Lucas De Marchi <lucas.demarchi@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [Intel-gfx] [PATCH v5 1/5] x86/quirks: Fix stolen detection with
  integrated + discrete GPU
-Message-ID: <20220118175853.GA881852@bhelgaas>
+Message-ID: <YecI6S9Cx5esqL+H@zn.tnic>
+References: <Yeb4WKOFNDNbx6tH@zn.tnic>
+ <20220118175853.GA881852@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Yeb4WKOFNDNbx6tH@zn.tnic>
+In-Reply-To: <20220118175853.GA881852@bhelgaas>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 18, 2022 at 06:26:48PM +0100, Borislav Petkov wrote:
-> On Tue, Jan 18, 2022 at 08:36:56AM -0800, Lucas De Marchi wrote:
-> > I had the impression the subject/title should be imperative, with it
-> > more relaxed in the body. It seems we have one more difference among
-> > subsystems and I will adapt on next submissions to x86.
+On Tue, Jan 18, 2022 at 11:58:53AM -0600, Bjorn Helgaas wrote:
+> Thanks for writing this down!  I do the same for PCI.  I suspect this
+> is a pretty conservative style that would be acceptable tree-wide even
+> if not required everywhere.
+
+Yeah, although that is an uphill battle. People do love their personal
+pronouns in commit messages even if it reads weird. And don't get
+me wrong - I used to do it too but tglx started with this passive
+formulation and now I see how it is a lot less intrusive and keeps the
+focus on the issue at hand.
+
+> I don't really care much one way or the other.  I think the simplest
+> approach is to remove QFLAG_APPLY_ONCE from intel_graphics_quirks()
+> and do nothing else, as I suggested here:
 > 
-> We have written it down properly, in case it explains it better:
+>   https://lore.kernel.org/r/20220113000805.GA295089@bhelgaas
 > 
-> "The tip tree maintainers set value on following these rules, especially
-> on the request to write changelogs in imperative mood and not
-> impersonating code or the execution of it. This is not just a whim of
-> the maintainers. Changelogs written in abstract words are more precise
-> and tend to be less confusing than those written in the form of novels."
+> Unfortunately that didn't occur to me until I'd already suggested more
+> complicated things that no longer seem worthwhile to me.
 > 
-> from Documentation/process/maintainer-tip.rst
+> The static variable might be ugly, but it does seem to be what
+> intel_graphics_quirks() wants -- a "do this at most once per system
+> but we don't know exactly which device" situation.
 
-Thanks for writing this down!  I do the same for PCI.  I suspect this
-is a pretty conservative style that would be acceptable tree-wide even
-if not required everywhere.
+I see.
 
-> > Although in the review Bjorn suggested just splitting the commit, it was
-> > also mentioned that the PCI subsystem has no such logic in its
-> > equivalent pci_do_fixups(): a quirk/fixup needing that should instead
-> > use a static local.
-> 
-> Why?
+Yeah, keeping it solely inside intel_graphics_quirks() and maybe with a
+comment ontop, why it is done, is simple. I guess if more quirks need
+this once-thing people might have to consider a more sensible scheme - I
+was just objecting to sprinkling those static vars everywhere.
 
-I don't really care much one way or the other.  I think the simplest
-approach is to remove QFLAG_APPLY_ONCE from intel_graphics_quirks()
-and do nothing else, as I suggested here:
+But your call. :)
 
-  https://lore.kernel.org/r/20220113000805.GA295089@bhelgaas
+Thx.
 
-Unfortunately that didn't occur to me until I'd already suggested more
-complicated things that no longer seem worthwhile to me.
+-- 
+Regards/Gruss,
+    Boris.
 
-The static variable might be ugly, but it does seem to be what
-intel_graphics_quirks() wants -- a "do this at most once per system
-but we don't know exactly which device" situation.
-
-> There's perfectly nice ->flags there for exactly stuff like that. static
-> vars are ugly and should be avoided if possible.
-
-Bjorn
+https://people.kernel.org/tglx/notes-about-netiquette
