@@ -2,78 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ADBD493183
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jan 2022 01:00:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 781BA49331A
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jan 2022 03:45:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350204AbiASAAR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Jan 2022 19:00:17 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38722 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238129AbiASAAR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jan 2022 19:00:17 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1642550414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GJoRNYCC0qaPQvmOXkM+nCsiL5/VV0xKtAJ9Mq0RcS0=;
-        b=a9MMj8QkoBwPjJ9s10Nj5dcTSEk5744AcGkY+mIqMyhSCNoNM/Icm0kXybWpkbKJFQighH
-        1X9AZdGGKDLG3+SXqsfjv3JU9dRsBhgMjiZAZM0AF1fjiNoc/kyGj1WDfc13cCOD1x5fM6
-        DWSEKg44FhgPmXAqIs3WIgSBCgxKc4pq7CN7jLxDnudGUV+EF6aJnCe5DaLVzCN42mwLal
-        ceQwErmCYN5iHW/wBdHkoTdvHTRAkVF0oCvKcxs9zruKkcZH+DR26Tu171bTrPE0yo9FHi
-        4rwrLMfSKfXYBCD5gQy/e3+J5TmjTVIfxiIu8I3nLvdQFvwghW7JJWPQwhCnjQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1642550414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GJoRNYCC0qaPQvmOXkM+nCsiL5/VV0xKtAJ9Mq0RcS0=;
-        b=m3IN+KU7X9XD5oXfHjNVtst6/jOc72hQesIDxbDqdrCWfpXMC6egl9W2w2q0aW8wkvWOLE
-        kL3K2AGDiz3SUfAA==
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: Re: [patch] genirq/msi: Populate sysfs entry only once
-In-Reply-To: <1d5711be-c26d-d57b-10db-1b45d279515d@socionext.com>
-References: <20211206210600.123171746@linutronix.de>
- <20211206210749.224917330@linutronix.de> <87leznqx2a.ffs@tglx>
- <1d5711be-c26d-d57b-10db-1b45d279515d@socionext.com>
-Date:   Wed, 19 Jan 2022 00:59:58 +0100
-Message-ID: <87a6fsa935.ffs@tglx>
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S1351052AbiASCpo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Jan 2022 21:45:44 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:57306 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344162AbiASCpm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Jan 2022 21:45:42 -0500
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 0974220B9270; Tue, 18 Jan 2022 18:45:42 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0974220B9270
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1642560342;
+        bh=wjkIeI5Gu3gvLdHM1LQSKa2r2Zn13qiiFCxWtUIlO6g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Zx4DOsdq+SgaWZp1+46YZiMi5Xk67C+0pfjN0RYoxl5g1wu7rEnxvRqH0NuwXFWwp
+         igW/bDWZAGKodrUHBUMvV+7Fg56H7AWiDBbm9tTzQoRJmIvHV6TXx0WrlSPFHEuY5b
+         nqOw76QUGMogzolUXmzaNZunj5hVBfL+EZMsT3zc=
+From:   longli@linuxonhyperv.com
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, paekkaladevi@microsoft.com
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch v2] PCI: hv: Fix NUMA node assignment when kernel boots with custom NUMA topology
+Date:   Tue, 18 Jan 2022 18:45:29 -0800
+Message-Id: <1642560329-5012-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kunihiko,
+From: Long Li <longli@microsoft.com>
 
-On Wed, Jan 12 2022 at 09:05, Kunihiko Hayashi wrote:
-> Is this fix the same as below?
-> https://marc.info/?l=linux-kernel&m=164061119923119&w=2
+When kernel boots with a NUMA topology with some NUMA nodes offline, the PCI
+driver should only set an online NUMA node on the device. This can happen
+during KDUMP where some NUMA nodes are not made online by the KDUMP kernel.
 
-pretty much the same, but I missed that patch. I was off for 2+ weeks
-and on return Boris poked me about this issue and I fixed it. Then I
-went ahead and marked all vacation mail read as I always do :)
+This patch also fixes the case where kernel is booting with "numa=off".
 
-So sorry for not noticing that patch.
+Signed-off-by: Long Li <longli@microsoft.com>
 
-Thanks,
+Change from v1:
+Use numa_map_to_online_node() to assign a node to device (suggested by
+Michael Kelly <mikelley@microsoft.com>)
 
-        Thomas
+---
+ drivers/pci/controller/pci-hyperv.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 6c9efeefae1b..c7519add6f13 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2130,7 +2130,15 @@ static void hv_pci_assign_numa_node(struct hv_pcibus_device *hbus)
+ 			continue;
+ 
+ 		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
+-			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
++			/*
++			 * The kernel may boot with some NUMA nodes offline
++			 * (e.g. in a KDUMP kernel) or with NUMA disabled via
++			 * "numa=off". In those cases, adjust the host provided
++			 * NUMA node to a valid NUMA node used by the kernel.
++			 */
++			set_dev_node(&dev->dev,
++				     numa_map_to_online_node(
++					     hv_dev->desc.virtual_numa_node));
+ 
+ 		put_pcichild(hv_dev);
+ 	}
+-- 
+2.25.1
+
