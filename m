@@ -2,64 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86AE1493FD6
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jan 2022 19:25:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB2A2494105
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jan 2022 20:38:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350078AbiASSZy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jan 2022 13:25:54 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:42980 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348214AbiASSZy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jan 2022 13:25:54 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C405B6163C
-        for <linux-pci@vger.kernel.org>; Wed, 19 Jan 2022 18:25:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB86C004E1;
-        Wed, 19 Jan 2022 18:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642616753;
-        bh=2Abeu0xENiZgu2PevdewY0cERSGeZ3/QOe6jEgGdfTg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qODfu6POLbHKknw9oy9zh8G3Dan98RC+qgdDiTfypD3DEelzQ7M8P6oC7JStvPw3W
-         hoieAIb0KZ4ScTZtjXZsaRPONLrLHwhR/VKaX70H7Bt+JEvnjc5X0eJP6/nFXEWGyT
-         +CQH5aS+JQkfKzwxQCQl09SKWHubKbW/9SaSFgATa1OEN6pl0LL71cd+OJUEAobG3o
-         VIJy2cH/ZFZWSz4EHfI9zAeUoryNNYq6wh+8qiF+0dq7rFIr2JqVZCHFRJe4NN+3Gd
-         52SSyuk2XAelQMY5v8E6fixT5B28RYRFsAoq/r0WE/y18OcPI9eUUKaSuvU2kcvRhw
-         b3U7obnKa35EQ==
-Date:   Wed, 19 Jan 2022 10:25:50 -0800
-From:   Keith Busch <kbusch@kernel.org>
-To:     Stefan Roese <sr@denx.de>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yao Hongbo <yaohongbo@linux.alibaba.com>,
-        Naveen Naidu <naveennaidu479@gmail.com>
-Subject: Re: [PATCH v3 2/2] PCI/AER: Enable AER on all PCIe devices
- supporting it
-Message-ID: <20220119182550.GB13301@dhcp-10-100-145-180.wdc.com>
-References: <20220119092200.35823-1-sr@denx.de>
- <20220119092200.35823-3-sr@denx.de>
+        id S242226AbiASTiU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jan 2022 14:38:20 -0500
+Received: from mail-qt1-f169.google.com ([209.85.160.169]:46762 "EHLO
+        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232741AbiASTiU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jan 2022 14:38:20 -0500
+Received: by mail-qt1-f169.google.com with SMTP id v7so3074622qtw.13;
+        Wed, 19 Jan 2022 11:38:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kubu8IvDNwwME1j4zVCQMiONGCZPxPM8rnY5h07fCRo=;
+        b=54aHOnyGU2YTScI5iPeiZGhLjGbxM7uiNmcCOWFvMHUZy1WhF7AIw9s1sxc5HmLEVD
+         yhxAIjnZsmCYbeHW7wA/Dg8+MoFuny7l96vcrzJ/FTZZ7lxUQ9MZwLGz5uZRqCPzldtO
+         sfpzX666SzP72pUBZ+9w2szAKbXCivgYzYQkwaGNSmEeatgSCKa5TtZPLd7b3KTJydwh
+         ylGve/gw2BLU0oFqUnz1lx7iY//Wqq+W2dI7oPxUUICNZONENjS/8uhi8mM+T4TK84CT
+         4l/QBYILW/OWqINMcL41Pzx7Ipp2DT9Jq/Kujyr3y5Hv8tLDOvPsjh0UIJ6fdh9vmFUQ
+         3USA==
+X-Gm-Message-State: AOAM5323r8Y64kDMYtZeSYiA6Fh+vKROuOn4j7pGVyDeVljjglg9bcdV
+        CtiyvUyK5yXui6VduRf2+W8Jn14NGF8Or+H46ZQ5XNMOV2w=
+X-Google-Smtp-Source: ABdhPJww649KQAvU5MHy9ei2oMvkYYYf3yQmYqCCV4BNCnFgjZZF+6JFo7HalQlVXdTB1xMaPlTG7mymsomqoM+lOI8=
+X-Received: by 2002:a05:622a:293:: with SMTP id z19mr377959qtw.302.1642621099179;
+ Wed, 19 Jan 2022 11:38:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220119092200.35823-3-sr@denx.de>
+References: <cadbd4eb-40bb-1fa8-1e00-dc95dab62295@gmail.com>
+ <CAJZ5v0gH3xK3g01S0CLe235QTF6=A0EB+Zwuv50=WaJaRsCT+w@mail.gmail.com>
+ <28e851d8-50cf-ee58-b340-1138a37990f6@gmail.com> <CAJZ5v0jKBSxHXf_N8BgtiOYnoxz9UUCZP8UwAHcFt_-6z4TozQ@mail.gmail.com>
+ <46bbb2e4-4d51-990b-1ca4-f7fdfda9489d@gmail.com>
+In-Reply-To: <46bbb2e4-4d51-990b-1ca4-f7fdfda9489d@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 19 Jan 2022 20:38:08 +0100
+Message-ID: <CAJZ5v0jc5kBzz3Rmf3e2QOsC9jwfk-vGQ4kkXWBjYJgHBXAynQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Forbid RPM on ACPI systems before 5.0 only
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 19, 2022 at 10:22:00AM +0100, Stefan Roese wrote:
-> @@ -387,6 +387,10 @@ void pci_aer_init(struct pci_dev *dev)
->  	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, sizeof(u32) * n);
->  
->  	pci_aer_clear_status(dev);
-> +
-> +	/* Enable AER if requested */
-> +	if (pci_aer_available())
-> +		pci_enable_pcie_error_reporting(dev);
->  }
+On Tue, Jan 18, 2022 at 6:42 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+>
+> On 18.01.2022 18:11, Rafael J. Wysocki wrote:
+> > On Tue, Jan 18, 2022 at 5:57 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> >>
+> >> On 18.01.2022 17:28, Rafael J. Wysocki wrote:
+> >>> On Mon, Jan 17, 2022 at 11:52 AM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> >>>>
+> >>>> Currently PCI core forbids RPM and requires opt-in from userspace,
+> >>>> apart from few drivers calling pm_runtime_allow(). Reason is that some
+> >>>> early ACPI PM implementations conflict with RPM, see [0].
+> >>>> Note that as of today pm_runtime_forbid() is also called for non-ACPI
+> >>>> systems. Maybe it's time to allow RPM per default for non-ACPI systems
+> >>>> and recent enough ACPI versions. Let's allow RPM from ACPI 5.0 which
+> >>>> was published in 2011.
+> >>>>
+> >>>> [0] https://lkml.org/lkml/2020/11/17/1548
+> >>>>
+> >>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> >>>> ---
+> >>>>  drivers/pci/pci.c | 7 ++++++-
+> >>>>  1 file changed, 6 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> >>>> index 428afd459..26e3a500c 100644
+> >>>> --- a/drivers/pci/pci.c
+> >>>> +++ b/drivers/pci/pci.c
+> >>>> @@ -3101,7 +3101,12 @@ void pci_pm_init(struct pci_dev *dev)
+> >>>>         u16 status;
+> >>>>         u16 pmc;
+> >>>>
+> >>>> -       pm_runtime_forbid(&dev->dev);
+> >>>> +#ifdef CONFIG_ACPI
+> >>>> +       /* Some early ACPI PM implementations conflict with RPM. */
+> >>>> +       if (acpi_gbl_FADT.header.revision > 0 &&
+> >>>> +           acpi_gbl_FADT.header.revision < 5)
+> >>>> +               pm_runtime_forbid(&dev->dev);
+> >>>> +#endif
+> >>>
+> >>> Well, there are two things here.
+> >>>
+> >>> First, there were systems in which ACPI PM was not ready for changing
+> >>> power states in the S0 system state (ie. run-time) and it was assuming
+> >>> that power states would only be changed during transitions to sleep
+> >>> states (S1 - S4) and to S5.  This can be covered by the ACPI revicion
+> >>> check, but I'm not sure if ACPI 5.0 is the right one.  Why ACPI 5 and
+> >>> not ACPI 6, for instance?
+> >>>
+> >> Just based on the assumption that ACPI 5.0 should be recent enough.
+> >> We can also go with ACPI 6.
+> >
+> > I know that we can, the question is whether or not we should.
+> >
+> > IOW, there needs to be at least some technical grounds on which to
+> > assume that a given ACPI release is safe enough.
+> >
+> When ACPI 5 was published the workaround to disable RPM in general
+> was in place already. I'd assume that the majority of users does not
+> opt in for RPM, therefore it may be hard to find out whether any
+> system with ACPI 5 or ACPI 6 suffers from the same problem as the
+> affected old systems.
 
-Hasn't it always been the device specific driver's responsibility to
-call this function?
+Which kind of demonstrates the problem with the proposed approach
+which is based on speculation.
+
+> >>> Second, there were PCI devices without ACPI PM where the PCI standard
+> >>> PM didn't work correctly.  This is not related to ACPI at all and I'm
+> >>> not sure why the ACPI revision check would be sufficient to cover
+> >>> these cases.
+> >>>
+> >> Didn't know that there were such cases. Can you provide any examples or
+> >> links to reports about such misbehaving devices?
+> >
+> > Admittedly, I don't have a list of them, so I would need to look them
+> > up and not just in the mailing lists.
+> >
+> >>>>         pm_runtime_set_active(&dev->dev);
+> >>>>         pm_runtime_enable(&dev->dev);
+> >>>>         device_enable_async_suspend(&dev->dev);
+> >>>> --
+> >
+> > Also note that this change will allow PM-runtime to be used on PCI
+> > devices without drivers by default and that may not be entirely safe
+> > either.  It didn't work really well in the past IIRC, so I'm wondering
+> > what's the reason to believe that it will work just fine this time.
+>
+> >From "Documentation/power/pci.rst":
+> If a PCI driver implements the runtime PM callbacks and intends to use the
+> runtime PM framework provided by the PM core and the PCI subsystem, it needs
+> to decrement the device's runtime PM usage counter in its probe callback
+> function.  If it doesn't do that, the counter will always be different from
+> zero for the device and it will never be runtime-suspended.
+
+I'm not sure how this is related to what I said above.
+
+> Having said that I don't see how there can be a RPM-related problem w/o
+> the driver calling one of the RPM put functions. Maybe some of the problems
+> in the past were caused by PCI core bugs that have long been fixed.
+>
+> To reduce the risk we could enable RPM for a certain subset of PCI devices
+> only in a first step, e.g. for PCIe devices.
+
+I'm still not sure if runtime-suspending them when they have no
+drivers is a good idea.
+
+It might be better to somehow do the pm_runtime_allow() automatically
+in local_pci_probe() if the usage counter is 1 and power.runtime_auto
+is false after running the driver's ->probe() callback.
