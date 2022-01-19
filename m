@@ -2,185 +2,371 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D018A493740
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jan 2022 10:29:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99526493850
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jan 2022 11:22:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352925AbiASJ2b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jan 2022 04:28:31 -0500
-Received: from mx0a-00622301.pphosted.com ([205.220.163.205]:10278 "EHLO
-        mx0a-00622301.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1352766AbiASJ2a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jan 2022 04:28:30 -0500
-Received: from pps.filterd (m0241924.ppops.net [127.0.0.1])
-        by mx0a-00622301.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20J9MAUA031130;
-        Wed, 19 Jan 2022 01:28:09 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ambarella.com; h=from : to : cc :
- subject : date : message-id : content-transfer-encoding : mime-version :
- content-type; s=com20210415pp;
- bh=rCbFwC20omt0AmuDE6InlHT79uM30qO1GI5hQCe0l5o=;
- b=j4OeCs/9t3/s6hzDrXzCZc4w3zlDKAJu0CmAIqxt/FXg5Y12tQe+TZDW/PCCnZ0mjiG2
- kk4H96I5udCoaunGX0QW8Tamzt82UAJvJr1I4n9fn6w7qFLQijCOuD1sy+3gqBjMHbif
- 39hcYNzFvX5bw5/x8eMHJJv9XNoMAdBrtyvy/nk+iQP/P1UoebWo0O26dEBS1XBGxWba
- b94FQzXIxHxmQa9fVVDxO5RgzGf8Vx5Yprftj2Hffe716fLge9cCB8ogzF+Hf3yXOsnV
- gf78bYYYlCHRCKKowSSELRx8l5YndLloW44b+Rdvj+ZSymXqnQZiLzrtOCMTUGWPmNHg PA== 
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2046.outbound.protection.outlook.com [104.47.66.46])
-        by mx0a-00622301.pphosted.com (PPS) with ESMTPS id 3dna2r0s49-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Jan 2022 01:28:09 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GWHkGWmb4Hqh5J9YGzwLyIQsyUGdtM0xIxYpGYGCLiUgr3Zr8fcV5mNW6ECom4otH0nkq0EYfMjSYiZYIFFqya+Sc7qFPagtXzib0f+PCMGe7HpPKGztf4mhMl2aH8JXISm0SaknpSJBOLA7nTVVV42EB145eWp/QtQp42ao8v+/idalN7v9w4pSiMMIDmnrEKT54kXpYqVnDnnMThSLrIcCDH01D5ngBUJxCkFhQN5oPiDNxKQ5WqprHIXmDklRnXkd6Vt3hsv4A9dEK3PkKW9jchSDHqnmFfelFYGYBMToGIiyTS1Hg4HtmxRuJgsnBuuI7PaVuN01XyVVuL1Gng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=62TQrvx9MNwRgOkABvYehmr8zcMSjqzdukfvuxi839E=;
- b=RD73/MgMLbLFcRpKatxnbmBHTfPrMiuIGJ7vKcPVv/z7+2gt1daPot6IY9BpsXUS0sNRYzBA2n7zNOdwNiGh04qm9MgXCyaYcr7VvKPFhemZMYMdHuNvN9tyrtIBAfFn24SeryWOX4/cLLk++NDgsDpBslYRmw3p2wCl16PpW8Ypk6HwRtrmH7HRCC5GMwUGRuMbqrSAOOnXtTEwI7Wr5GnT5nV6xpdG1pKXRW8Z+Q9psqOL2gkJAyLSLPL9fOQsAVrJIIinisX/q4aokNIijWdHHZoMN/cvcst9L+S2NvwuQQlp+TNj5Jze//agT7FMgPKazKOO6hLBr0olC2hFhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ambarella.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=62TQrvx9MNwRgOkABvYehmr8zcMSjqzdukfvuxi839E=;
- b=aioq8vCAe+HTEhpkveZajpdxYXF5j3/Ul/FUwUGxZHB3LlsVctfW1uL3utJFsyI5UoSHIZP584nENAELxnPCUDDiAtLEMrI5etWaxpoSJEGTmlxqCJOHiQLn88lpoRXUtigSDg3OEWO84L9SA4DPOnfhYG6QUE+F5oE7NF1AdJwVGGWLWy1cOLrazv+sLVakXhfpaWazjBCQRWbnwTBq5LWMXmF2+YeB/GmdHE/mihmVG7elQ29TgoJ42Ya0I8/DdA+FTFwF3oAYHT8jqFHSXCT3AdcRgC99R75e680RqabaUFl4KRavg3KnP2GqpnzSklvLTBt66zoZiWsffY7Adg==
-Received: from PH7PR19MB5562.namprd19.prod.outlook.com (2603:10b6:510:132::22)
- by PH0PR19MB5621.namprd19.prod.outlook.com (2603:10b6:510:143::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7; Wed, 19 Jan
- 2022 09:27:45 +0000
-Received: from PH7PR19MB5562.namprd19.prod.outlook.com
- ([fe80::8c3a:e80f:9fe7:959]) by PH7PR19MB5562.namprd19.prod.outlook.com
- ([fe80::8c3a:e80f:9fe7:959%6]) with mapi id 15.20.4888.013; Wed, 19 Jan 2022
- 09:27:45 +0000
-From:   Li Chen <lchen@ambarella.com>
-To:     Tom Joseph <tjoseph@cadence.com>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Why does cdns_pcie_ep_set_bar use sz > SZ_2G for is_64bits in
- pcie-cadence-ep.c?
-Thread-Topic: Why does cdns_pcie_ep_set_bar use sz > SZ_2G for is_64bits in
- pcie-cadence-ep.c?
-Thread-Index: AdgNFhFdLIAJoUumRauHA5pdsoTIFw==
-Date:   Wed, 19 Jan 2022 09:27:44 +0000
-Message-ID: <PH7PR19MB55626CD5D22EABDEC879EF41A0599@PH7PR19MB5562.namprd19.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3a0a1d17-c91e-425b-8e80-08d9db2df34b
-x-ms-traffictypediagnostic: PH0PR19MB5621:EE_
-x-microsoft-antispam-prvs: <PH0PR19MB56219D5B242F971CB98C2A5FA0599@PH0PR19MB5621.namprd19.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IODRRQSbCrbpxAG2brNyLU3uF0J3uQzQlGvCRB6LGwirtHB+IK4fnDFWc+7cdtFrAqSnifsR1oKjrhp5JZ1L9/97+3L+Rz1CbjEtAs2AzCouzgkAueFw/wLfvu3n57+eNKZ7yDLOETMtamnbbMnERec5TreoPSLin2dq4BirHRWiXGgosTRrcDJufqPX7h90pKGok1k4PYIMIFWv+YvodQQ+jHqXCig2/9paAPmF9jx0KFCSDwCjbprCBdzVrZFb3QuKMkoOsZb9r5FaMULoP7wcX2HEoAhbmOy68RWFQ5jDl8CwwHKf2VSaZo7zrFkxRIFBkh431wZp7wYWeiMJkATedz8c74u8jc/naOsEIG6G/amPfutqWipQnyOyD65l6uQGwyM3M1AKN+GLKBXm+m8zVg1mLQRA4bWWIq1NPb1DKGwMvUcHEe8ZkhAKR71ZLrYpK4A3KYZJzwFuGlcUP9upZUjZ2D2wkIz3a4HVuXdrTls+p2AtI8Ue8p+uJOVeDwrbUKwSgdAsfVX2DfiT+Mh/7MMqocaSqOHDZHkMxRcnZWgupzMdBu2Wqg0PkXN65DvW4IaggsXGFnkv0YVdnUh+Bxtws3BN8sLsFTgBbSjwzWodts1Oo/G0svTzf0Wo0NdPl/emhIyZA5l/lGkhgg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR19MB5562.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(66446008)(83380400001)(33656002)(88996005)(8936002)(6916009)(316002)(9686003)(66556008)(66476007)(66946007)(86362001)(64756008)(5660300002)(26005)(8676002)(186003)(52536014)(6506007)(2906002)(38100700002)(122000001)(508600001)(54906003)(4326008)(55016003)(71200400001)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?8v0WbHvAkwtLqkj0pCicea9PK19od2D278FZCswmgi6PTjVVpq/C+KWjw3?=
- =?iso-8859-2?Q?5b9m3KMWkr4cydIYL6SzwOaAdPOQbLWfwEGsBUdpHVFWWupiJLAv5jkJYg?=
- =?iso-8859-2?Q?TFVxZdOet5iqX9c1xM1+hZSY+/56wK3yGkdwnTsh8drD5xdF5LuJ8yB2AA?=
- =?iso-8859-2?Q?x8YYfmrW386NYGQWLKO9WsGu+VJpKSDKvXmlFlBEeqbHy1LhuChDUMtm4R?=
- =?iso-8859-2?Q?6zHQF9318p5wH4oc8DQju2PPQEVWrA84Zz4ZJSnEaLuYJbVc+3hQEqRnBu?=
- =?iso-8859-2?Q?ZvRFyR7oDWo8w7eJCjK7j6YnuhVrkBvSloF9teyTIqGkX868GUisqfGWM4?=
- =?iso-8859-2?Q?1hjJqUp9r4ot0izgiTSRUBwFfOucCjSK/qo01WUqO1kys1Eh1oOa6kAhgA?=
- =?iso-8859-2?Q?oFgL0wIS/EhBn0/ISLIUZwIqVEVvXGoVSrmL5Hk44XW73hqo1Iegsd8spA?=
- =?iso-8859-2?Q?24v6oUU9SmWzio/+PrPz+G+5vo+zKRdoEs8fjLB5TvFC6ZwfaG982j4it2?=
- =?iso-8859-2?Q?N3vFQRFVjuivstVbxQn+pAC/gw6ZRhAaL7+Fmw9IWj3/DqKZ9sqR3uTLaP?=
- =?iso-8859-2?Q?ywnsomXO8VxdIWfx0D3ssJIWrSmymkAFOrNDum5PPTctBiKjfEb/oiRMrl?=
- =?iso-8859-2?Q?bAuyVkKXRg+hzqN5qMR7MFrNB3oZIoGWJPSx5K6NMSR5by3oQSQQC7Myjq?=
- =?iso-8859-2?Q?AqfGdXbO2kweGJD87JufsOjY1VJ3WjkbQwJyNp+ye5agquwtjENby1m2/p?=
- =?iso-8859-2?Q?zuGk43JrrNPHI3ZchCByx3scShSHxwUTo/ubUbnuUu/595G6B3niSitsnp?=
- =?iso-8859-2?Q?7vFcSkkrXZxVzF3UdPudm+OUFSKCzahXM/r6ZEj/f796REyH3kHw55Qvuc?=
- =?iso-8859-2?Q?Vq2qN6CJ0gS3jhYeYNBjvxHIGzgO2J4R3D+B7hwat+LAP5fpenQxCLOtTw?=
- =?iso-8859-2?Q?2MXvhNHRsVG++23vGIW4aeUKHglNEenRgLpokN8GhA3nXojG/ROB6Qa3TQ?=
- =?iso-8859-2?Q?nUrP/s1C6JWzDwr1lFITizW+QWs9RpBVTTYMhxgPztpoHftpFq+RdHSR27?=
- =?iso-8859-2?Q?kQTadFexZBpLXPXV5nJyNTN5Xc3DwpFGIekywcFzDd4Pane+G5AbXOtKcb?=
- =?iso-8859-2?Q?68rQu4GTfCOkVQ6KrHvhbL2gBm7PRoJabN/q2PKZCJ1Id1ESqfsGd8oDjO?=
- =?iso-8859-2?Q?S6MCYYnOILTpxaTbT34qI7LbO/5kIh4F8Jh1oBMTlCQL1wtKsiOIR63l19?=
- =?iso-8859-2?Q?B5o1zbeSYd/m7IE5G2ngGpFTsEzNr1HgfLANmDE6c3UIb62uGMcKeSe5uC?=
- =?iso-8859-2?Q?A+UXKxHhbVwh3KDZZ8fZJ+sVCiOwr6BCtVTa5aO4rzMAFrZaKWQZ6I8Jy4?=
- =?iso-8859-2?Q?Mnsniqv8rxnukGCXKXeBa2K8EnOTRwNl491nAjtp8pMeVgYyT69zkWY5at?=
- =?iso-8859-2?Q?f7AnKm8NAGP6OLLisjTCd+CqiTe/k2a1+lTCJ6t/D73KsW5bF3l5QSQuc1?=
- =?iso-8859-2?Q?76m9cd4yWzV02uWrP1NlP1GJrYVlue8fY7/0nTheVx5fwAwM7ZgxMh5TBt?=
- =?iso-8859-2?Q?OSs8ACOyPSJ9doojdy8dOteFz47TURt3ifO3aCsEwvyCxqgA/G3zWSK30q?=
- =?iso-8859-2?Q?BQ2/EHGA0ENJGrwHQy8IRiKbsPhdPb/ffnRbZrJ2d6wRYYudwLUax1B5LV?=
- =?iso-8859-2?Q?cRnqc/4mtweexg4MsiM=3D?=
-Content-Transfer-Encoding: quoted-printable
+        id S1350321AbiASKWL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jan 2022 05:22:11 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:31106 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350300AbiASKWK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jan 2022 05:22:10 -0500
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Jf1nB1hgDz1FCrq;
+        Wed, 19 Jan 2022 18:18:22 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Wed, 19 Jan 2022 18:22:07 +0800
+CC:     <yangyicong@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?=c5=81ukasz_Gieryk?= <lukasz.gieryk@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] PCI: Reset IOV state on FLR to PF
+From:   Yicong Yang <yangyicong@huawei.com>
+To:     Lukasz Maniak <lukasz.maniak@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <20220117225542.GA813284@bhelgaas>
+ <e4483576-cafb-6ba2-a98f-8b7bdcead80d@huawei.com>
+ <20220118163054.GA8392@lmaniak-dev.igk.intel.com>
+ <b1ad6220-cdc0-1058-6885-9c5b48441837@huawei.com>
+Message-ID: <f0831ca3-3c41-9c11-9e7a-267753f9f1fa@huawei.com>
+Date:   Wed, 19 Jan 2022 18:22:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: ambarella.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR19MB5562.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a0a1d17-c91e-425b-8e80-08d9db2df34b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jan 2022 09:27:44.8806
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3ccd3c8d-5f7c-4eb4-ae6f-32d8c106402c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: a9MWjkdtWZQH+53V8dx9CFHqvO9GsYnX2HLA5L1R0V+g0ztxNNaUBg0rnRJJdW/7dfSIpAL2z6GrLc9w9jSLIw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR19MB5621
-X-Proofpoint-ORIG-GUID: hSN8hWWH4Cx8FSnA2Bl1DyQAEcMx1vFY
-X-Proofpoint-GUID: hSN8hWWH4Cx8FSnA2Bl1DyQAEcMx1vFY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-01-19_06,2022-01-18_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- impostorscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- mlxlogscore=456 clxscore=1011 mlxscore=0 suspectscore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2201190051
-Content-Type: text/plain; charset="iso-8859-2"
+In-Reply-To: <b1ad6220-cdc0-1058-6885-9c5b48441837@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Tom
+Hi Lukasz, Bjorn,
 
-From these function:
-static int cdns_pcie_ep_set_bar(struct pci_epc *epc, u8 fn, u8 vfn,
-				struct pci_epf_bar *epf_bar)
-{
-	......
-	if ((flags & PCI_BASE_ADDRESS_SPACE) =3D=3D PCI_BASE_ADDRESS_SPACE_IO) {
-		ctrl =3D CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS;
-	} else {
-		bool is_prefetch =3D !!(flags & PCI_BASE_ADDRESS_MEM_PREFETCH);
-		bool is_64bits =3D sz > SZ_2G;
-		if (is_64bits && (bar & 1))
-			return -EINVAL;
-		if (is_64bits && !(flags & PCI_BASE_ADDRESS_MEM_TYPE_64))
-			epf_bar->flags |=3D PCI_BASE_ADDRESS_MEM_TYPE_64;
+FYI, I tested with Mellanox CX-5, the VF also exists after FLR. Here's the operation:
 
-		if (is_64bits && is_prefetch)
-			ctrl =3D CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS;
-		else if (is_prefetch)
-			ctrl =3D CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS;
-		else if (is_64bits)
-			ctrl =3D CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS;
-		else
-			ctrl =3D CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_32BITS;
-	}
+[root@localhost ~]# lspci  -s 01:
+01:00.0 Ethernet controller: Mellanox Technologies MT28800 Family [ConnectX-5 Ex]
+01:00.1 Ethernet controller: Mellanox Technologies MT28800 Family [ConnectX-5 Ex]
+[root@localhost ~]# lspci -vvv -s 01:00.0 | egrep "IOV|VF"
+        Capabilities: [180 v1] Single Root I/O Virtualization (SR-IOV)
+                IOVCap: Migration- 10BitTagReq- Interrupt Message Number: 000
+                IOVCtl: Enable- Migration- Interrupt- MSE- ARIHierarchy+ 10BitTagReq-
+                IOVSta: Migration-
+                Initial VFs: 16, Total VFs: 16, Number of VFs: 0, Function Dependency Link: 00
+                VF offset: 2, stride: 1, Device ID: 101a
+                VF Migration: offset: 00000000, BIR: 0
+[root@localhost 0000:01:00.0]# echo 1 > sriov_numvfs
+[root@localhost ~]# lspci -vvv -s 01:00.0 | egrep "IOV|VF"
+        Capabilities: [180 v1] Single Root I/O Virtualization (SR-IOV)
+                IOVCap: Migration- 10BitTagReq- Interrupt Message Number: 000
+                IOVCtl: Enable+ Migration- Interrupt- MSE+ ARIHierarchy+ 10BitTagReq-
+                IOVSta: Migration-
+                Initial VFs: 16, Total VFs: 16, Number of VFs: 1, Function Dependency Link: 00
+                VF offset: 2, stride: 1, Device ID: 101a
+                VF Migration: offset: 00000000, BIR: 0
+[root@localhost 0000:01:00.0]# echo 1 > reset
+[root@localhost ~]# lspci -vvv -s 01:00.0 | egrep "IOV|VF"
+        Capabilities: [180 v1] Single Root I/O Virtualization (SR-IOV)
+                IOVCap: Migration- 10BitTagReq- Interrupt Message Number: 000
+                IOVCtl: Enable+ Migration- Interrupt- MSE+ ARIHierarchy+ 10BitTagReq-
+                IOVSta: Migration-
+                Initial VFs: 16, Total VFs: 16, Number of VFs: 1, Function Dependency Link: 00
+                VF offset: 2, stride: 1, Device ID: 101a
+                VF Migration: offset: 00000000, BIR: 0
+[root@localhost ~]# lspci -xxx -s 01:00.0
+01:00.0 Ethernet controller: Mellanox Technologies MT28800 Family [ConnectX-5 Ex]
+00: b3 15 19 10 46 05 10 00 00 00 00 02 08 00 80 00
+10: 0c 00 00 00 00 08 00 00 00 00 00 00 00 00 00 00
+20: 00 00 00 00 00 00 00 00 00 00 00 00 b3 15 08 00
+30: 00 00 70 e6 60 00 00 00 00 00 00 00 ff 01 00 00
+40: 01 00 c3 81 08 00 00 00 03 9c cc 80 00 78 00 00
+50: 00 00 00 00 00 00 00 00 00 00 00 00 00 20 00 01
+60: 10 48 02 00 e2 8f e0 11 5f 29 00 00 04 71 41 00
+70: 08 00 04 11 00 00 00 00 00 00 00 00 00 00 00 00
+80: 00 00 00 00 17 00 01 00 40 00 00 00 1e 00 80 01
+90: 04 00 1e 00 00 00 00 00 00 00 00 00 11 c0 3f 80
+a0: 00 20 00 00 00 30 00 00 00 00 00 00 00 00 00 00
+b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+c0: 09 40 18 00 0a 00 00 20 f0 1a 00 00 00 00 00 00
+d0: 20 00 00 80 00 00 00 00 00 00 00 00 00 00 00 00
+e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[root@localhost 0000:01:00.0]# cat reset_method
+flr bus
 
-	......
-}
-
-
-I don't understand why should sz > SZ_2G be taken into account for 64_bits.=
- From my personal practice, there is no problem to use CDNS_PCIE_LM_BAR_CFG=
-_CTRL_MEM_64BITS or CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS when sz <=
- SZ_2G.
-
-
-Regards,
-Li
-
-**********************************************************************
-This email and attachments contain Ambarella Proprietary and/or Confidentia=
-l Information and is intended solely for the use of the individual(s) to wh=
-om it is addressed. Any unauthorized review, use, disclosure, distribute, c=
-opy, or print is prohibited. If you are not an intended recipient, please c=
-ontact the sender by reply email and destroy all copies of the original mes=
-sage. Thank you.
+On 2022/1/19 10:47, Yicong Yang wrote:
+> On 2022/1/19 0:30, Lukasz Maniak wrote:
+>> On Tue, Jan 18, 2022 at 07:07:23PM +0800, Yicong Yang wrote:
+>>> On 2022/1/18 6:55, Bjorn Helgaas wrote:
+>>>> [+cc Alex in case he has comments on how FLR should work on
+>>>> non-conforming hns3 devices]
+>>>>
+>>>> On Sat, Jan 15, 2022 at 05:22:19PM +0800, Yicong Yang wrote:
+>>>>> On 2022/1/15 0:37, Bjorn Helgaas wrote:
+>>>>>> On Fri, Jan 14, 2022 at 05:42:48PM +0800, Yicong Yang wrote:
+>>>>>>> On 2022/1/14 0:45, Lukasz Maniak wrote:
+>>>>>>>> On Wed, Jan 12, 2022 at 08:49:03AM -0600, Bjorn Helgaas wrote:
+>>>>>>>>> On Wed, Dec 22, 2021 at 08:19:57PM +0100, Lukasz Maniak wrote:
+>>>>>>>>>> As per PCI Express specification, FLR to a PF resets the PF state as
+>>>>>>>>>> well as the SR-IOV extended capability including VF Enable which means
+>>>>>>>>>> that VFs no longer exist.
+>>>>>>>>>
+>>>>>>>>> Can you add a specific reference to the spec, please?
+>>>>>>>>>
+>>>>>>>> Following the Single Root I/O Virtualization and Sharing Specification:
+>>>>>>>> 2.2.3. FLR That Targets a PF
+>>>>>>>> PFs must support FLR.
+>>>>>>>> FLR to a PF resets the PF state as well as the SR-IOV extended
+>>>>>>>> capability including VF Enable which means that VFs no longer exist.
+>>>>>>>>
+>>>>>>>> For PCI Express Base Specification Revision 5.0 and later, this is
+>>>>>>>> section 9.2.2.3.
+>>>>>>
+>>>>>> This is also the section in the new PCIe r6.0.  Let's use that.
+>>>>>>
+>>>>>>>>>> Currently, the IOV state is not updated during FLR, resulting in
+>>>>>>>>>> non-compliant PCI driver behavior.
+>>>>>>>>>
+>>>>>>>>> And include a little detail about what problem is observed?  How would
+>>>>>>>>> a user know this problem is occurring?
+>>>>>>>>>
+>>>>>>>> The problem is that the state of the kernel and HW as to the number of
+>>>>>>>> VFs gets out of sync after FLR.
+>>>>>>>>
+>>>>>>>> This results in further listing, after the FLR is performed by the HW,
+>>>>>>>> of VFs that actually no longer exist and should no longer be reported on
+>>>>>>>> the PCI bus. lspci return FFs for these VFs.
+>>>>>>>
+>>>>>>> There're some exceptions. Take HiSilicon's hns3 and sec device as an
+>>>>>>> example, the VF won't be destroyed after the FLR reset.
+>>>>>>
+>>>>>> If FLR on an hns3 PF does *not* clear VF Enable, and the VFs still
+>>>>>> exist after FLR, isn't that a violation of sec 9.2.2.3?
+>>>>>
+>>>>> yes I think it's a violation to the spec.
+>>>>
+>>>> Thanks for confirming that.
+>>>>
+>>>>>> If hns3 and sec don't conform to the spec, we should have some sort of
+>>>>>> quirk that serves to document and work around this.
+>>>>>
+>>>>> ok I think it'll help. Do you mean something like this based on this patch:
+>>>>>
+>>>>> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+>>>>> index 69ee321027b4..0e4976c669b2 100644
+>>>>> --- a/drivers/pci/iov.c
+>>>>> +++ b/drivers/pci/iov.c
+>>>>> @@ -1025,6 +1025,8 @@ void pci_reset_iov_state(struct pci_dev *dev)
+>>>>>  		return;
+>>>>>  	if (!iov->num_VFs)
+>>>>>  		return;
+>>>>> +	if (dev->flr_no_vf_reset)
+>>>>> +		return;
+>>>>>
+>>>>>  	sriov_del_vfs(dev);
+>>>>>
+>>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>>>>> index 003950c738d2..c8ffcb0ac612 100644
+>>>>> --- a/drivers/pci/quirks.c
+>>>>> +++ b/drivers/pci/quirks.c
+>>>>> @@ -1860,6 +1860,17 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
+>>>>>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
+>>>>>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
+>>>>>
+>>>>> +/*
+>>>>> + * Some HiSilicon PCIe devices' VF won't be destroyed after a FLR reset.
+>>>>> + * Don't reset these devices' IOV state when doing FLR.
+>>>>> + */
+>>>>> +static void quirk_huawei_pcie_flr(struct pci_dev *pdev)
+>>>>> +{
+>>>>> +	pdev->flr_no_vf_reset = 1;
+>>>>> +}
+>>>>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_flr);
+>>>>> +/* ...some other devices have this quirk */
+>>>>
+>>>> Yes, I think something along this line will help.
+>>>>
+>>>>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>>>>> index 18a75c8e615c..e62f9fa4d48f 100644
+>>>>> --- a/include/linux/pci.h
+>>>>> +++ b/include/linux/pci.h
+>>>>> @@ -454,6 +454,7 @@ struct pci_dev {
+>>>>>  	unsigned int	is_probed:1;		/* Device probing in progress */
+>>>>>  	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
+>>>>>  	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
+>>>>> +	unsigned int	flr_no_vf_reset:1;	/* VF won't be destroyed after PF's FLR */
+>>>>>
+>>>>>>> Currently the transactions with the VF will be restored after the
+>>>>>>> FLR. But this patch will break that, the VF is fully disabled and
+>>>>>>> the transaction cannot be restored. User needs to reconfigure it,
+>>>>>>> which is unnecessary before this patch.
+>>>>>>
+>>>>>> What does it mean for a "transaction to be restored"?  Maybe you mean
+>>>>>> this patch removes the *VFs* via sriov_del_vfs(), and whoever
+>>>>>> initiated the FLR would need to re-enable VFs via pci_enable_sriov()
+>>>>>> or something similar?
+>>>>>
+>>>>> Partly. It'll also terminate the VF users.
+>>>>> Think that I attach the VF of hns to a VM by vfio and ping the network
+>>>>> in the VM, when doing FLR the 'ping' will pause and after FLR it'll
+>>>>> resume. Currenlty The driver handle this in the ->reset_{prepare, done}()
+>>>>> methods. The user of VM may not realize there is a FLR of the PF as the
+>>>>> VF always exists and the 'ping' is never terminated.
+>>>>>
+>>>>> If we remove the VF when doing FLR, then 1) we'll block in the VF->remove()
+>>>>> until no one is using the device, for example the 'ping' is finished.
+>>>>> 2) the VF in the VM no longer exists and we have to re-enable VF and hotplug
+>>>>> it into the VM and restart the ping. That's a big difference.
+>>>>>
+>>>>>> If FLR disables VFs, it seems like we should expect to have to
+>>>>>> re-enable them if we want them.
+>>>>>
+>>>>> It involves a remove()/probe() process of the VF driver and the user
+>>>>> of the VF will be terminated, just like the situation illustrated
+>>>>> above.
+>>>>
+>>>> I think users of FLR should be able to rely on it working per spec,
+>>>> i.e., that VFs will be destroyed.  If hardware like hns3 doesn't do
+>>>> that, the quirk should work around that in software by doing it
+>>>> explicitly.
+>>>>
+>>>> I don't think the non-standard behavior should be exposed to the
+>>>> users.  The user should not have to know about this hns3 issue.
+>>>>
+>>>> If FLR on a standard NIC terminates a ping on a VF, FLR on an hns3 NIC
+>>>> should also terminate a ping on a VF.
+>>>>
+>>>
+>>> ok thanks for the discussion, agree on that. According to the spec, after
+>>> the FLR to the PF the VF does not exist anymore, so the ping will be terminated.
+>>> Our hns3 and sec team are still evaluating it before coming to a solution of
+>>> whether using a quirk or comform to the spec.
+>>>
+>>> For this patch it looks reasonable to me, but some questions about the code below.
+>>>
+>>>>>>> Can we handle this problem in another way? Maybe test the VF's
+>>>>>>> vendor device ID after the FLR reset to see whether it has really
+>>>>>>> gone or not?
+>>>>>>>
+>>>>>>>> sriov_numvfs in sysfs returns old invalid value and does not allow
+>>>>>>>> setting a new value before explicitly setting 0 in the first place.
+>>>>>>>>
+>>>>>>>>>> This patch introduces a simple function, called on the FLR path, that
+>>>>>>>>>> removes the virtual function devices from the PCI bus and their
+>>>>>>>>>> corresponding sysfs links with a final clear of the num_vfs value in IOV
+>>>>>>>>>> state.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Lukasz Maniak <lukasz.maniak@linux.intel.com>
+>>>>>>>>>> ---
+>>>>>>>>>>  drivers/pci/iov.c | 21 +++++++++++++++++++++
+>>>>>>>>>>  drivers/pci/pci.c |  2 ++
+>>>>>>>>>>  drivers/pci/pci.h |  4 ++++
+>>>>>>>>>>  3 files changed, 27 insertions(+)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+>>>>>>>>>> index 0267977c9f17..69ee321027b4 100644
+>>>>>>>>>> --- a/drivers/pci/iov.c
+>>>>>>>>>> +++ b/drivers/pci/iov.c
+>>>>>>>>>> @@ -1013,6 +1013,27 @@ int pci_iov_bus_range(struct pci_bus *bus)
+>>>>>>>>>>  	return max ? max - bus->number : 0;
+>>>>>>>>>>  }
+>>>>>>>>>>  
+>>>>>>>>>> +/**
+>>>>>>>>>> + * pci_reset_iov_state - reset the state of the IOV capability
+>>>>>>>>>> + * @dev: the PCI device
+>>>>>>>>>> + */
+>>>>>>>>>> +void pci_reset_iov_state(struct pci_dev *dev)
+>>>>>>>>>> +{
+>>>>>>>>>> +	struct pci_sriov *iov = dev->sriov;
+>>>>>>>>>> +
+>>>>>>>>>> +	if (!dev->is_physfn)
+>>>>>>>>>> +		return;
+>>>>>>>>>> +	if (!iov->num_VFs)
+>>>>>>>>>> +		return;
+>>>>>>>>>> +
+>>>>>>>>>> +	sriov_del_vfs(dev);
+>>>>>>>>>> +
+>>>>>>>>>> +	if (iov->link != dev->devfn)
+>>>>>>>>>> +		sysfs_remove_link(&dev->dev.kobj, "dep_link");
+>>>>>>>>>> +
+>>>>>>>>>> +	iov->num_VFs = 0;
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>
+>>> Any reason for not using pci_disable_sriov()?
+>>
+>> The issue with pci_disable_sriov() is that it calls sriov_disable(),
+>> which directly uses pci_cfg_access_lock(), leading to deadlock on the
+>> FLR path.
+>>
+> 
+> That'll be a problem. Well my main concern is whether the VFs will be reset
+> correctly through pci_reset_iov_state() as it lacks the participant of
+> PF driver and bios (seems may needed only on powerpc, not sure), which is
+> necessary in the enable/disable routine through $pci_dev/sriov_numvfs.
+> 
+>>>
+>>> With the spec the related registers in the SRIOV cap will be reset so
+>>> it's ok in general. But for some devices not following the spec like hns3,
+>>> some fields like VF enable won't be reset and keep enabled after the FLR.
+>>> In this case after the FLR the VF devices in the system has gone but
+>>> the state of the PF SRIOV cap leaves uncleared. pci_disable_sriov()
+>>> will reset the whole SRIOV cap. It'll also call pcibios_sriov_disable()
+>>> to correct handle the VF disabling on some platforms, IIUC.
+>>>
+>>> Or is it better to use pdev->driver->sriov_configure(pdev,0)?
+>>> PF drivers must implement ->sriov_configure() for enabling/disabling
+>>> the VF but we totally skip the PF driver here.
+>>>
+>>> Thanks,
+>>> Yicong
+>>>
+>>>>>>>>>>  /**
+>>>>>>>>>>   * pci_enable_sriov - enable the SR-IOV capability
+>>>>>>>>>>   * @dev: the PCI device
+>>>>>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>>>>>>>>> index 3d2fb394986a..535f19d37e8d 100644
+>>>>>>>>>> --- a/drivers/pci/pci.c
+>>>>>>>>>> +++ b/drivers/pci/pci.c
+>>>>>>>>>> @@ -4694,6 +4694,8 @@ EXPORT_SYMBOL(pci_wait_for_pending_transaction);
+>>>>>>>>>>   */
+>>>>>>>>>>  int pcie_flr(struct pci_dev *dev)
+>>>>>>>>>>  {
+>>>>>>>>>> +	pci_reset_iov_state(dev);
+>>>>>>>>>> +
+>>>>>>>>>>  	if (!pci_wait_for_pending_transaction(dev))
+>>>>>>>>>>  		pci_err(dev, "timed out waiting for pending transaction; performing function level reset anyway\n");
+>>>>>>>>>>  
+>>>>>>>>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>>>>>>>>>> index 3d60cabde1a1..7bb144fbec76 100644
+>>>>>>>>>> --- a/drivers/pci/pci.h
+>>>>>>>>>> +++ b/drivers/pci/pci.h
+>>>>>>>>>> @@ -480,6 +480,7 @@ void pci_iov_update_resource(struct pci_dev *dev, int resno);
+>>>>>>>>>>  resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
+>>>>>>>>>>  void pci_restore_iov_state(struct pci_dev *dev);
+>>>>>>>>>>  int pci_iov_bus_range(struct pci_bus *bus);
+>>>>>>>>>> +void pci_reset_iov_state(struct pci_dev *dev);
+>>>>>>>>>>  extern const struct attribute_group sriov_pf_dev_attr_group;
+>>>>>>>>>>  extern const struct attribute_group sriov_vf_dev_attr_group;
+>>>>>>>>>>  #else
+>>>>>>>>>> @@ -501,6 +502,9 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
+>>>>>>>>>>  {
+>>>>>>>>>>  	return 0;
+>>>>>>>>>>  }
+>>>>>>>>>> +static inline void pci_reset_iov_state(struct pci_dev *dev)
+>>>>>>>>>> +{
+>>>>>>>>>> +}
+>>>>>>>>>>  
+>>>>>>>>>>  #endif /* CONFIG_PCI_IOV */
+>>>> .
+>>>>
+>> .
+>>
+> .
+> 
