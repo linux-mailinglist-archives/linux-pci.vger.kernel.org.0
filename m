@@ -2,80 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D97C49367B
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Jan 2022 09:45:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B556493720
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Jan 2022 10:22:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352263AbiASIpF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Jan 2022 03:45:05 -0500
-Received: from mx.socionext.com ([202.248.49.38]:9340 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1350075AbiASIpF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 19 Jan 2022 03:45:05 -0500
-Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 19 Jan 2022 17:45:04 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id F085B2059054;
-        Wed, 19 Jan 2022 17:45:03 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 19 Jan 2022 17:45:03 +0900
-Received: from [10.212.181.226] (unknown [10.212.181.226])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id 11233B62A1;
-        Wed, 19 Jan 2022 17:45:02 +0900 (JST)
-Subject: Re: [patch] genirq/msi: Populate sysfs entry only once
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-References: <20211206210600.123171746@linutronix.de>
- <20211206210749.224917330@linutronix.de> <87leznqx2a.ffs@tglx>
- <1d5711be-c26d-d57b-10db-1b45d279515d@socionext.com> <87a6fsa935.ffs@tglx>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <7d6445e9-011f-60ec-0fd0-3c354d507d57@socionext.com>
-Date:   Wed, 19 Jan 2022 17:45:01 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S1352755AbiASJWJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Jan 2022 04:22:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1353011AbiASJWH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Jan 2022 04:22:07 -0500
+Received: from mout-u-204.mailbox.org (mout-u-204.mailbox.org [IPv6:2001:67c:2050:1::465:204])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 950C3C06161C
+        for <linux-pci@vger.kernel.org>; Wed, 19 Jan 2022 01:22:07 -0800 (PST)
+Received: from smtp102.mailbox.org (unknown [91.198.250.119])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 4Jf0XF0wTDzQkH3;
+        Wed, 19 Jan 2022 10:22:05 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+From:   Stefan Roese <sr@denx.de>
+To:     linux-pci@vger.kernel.org
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Yao Hongbo <yaohongbo@linux.alibaba.com>,
+        Naveen Naidu <naveennaidu479@gmail.com>
+Subject: [PATCH v3 0/2] Fully enable AER
+Date:   Wed, 19 Jan 2022 10:21:58 +0100
+Message-Id: <20220119092200.35823-1-sr@denx.de>
 MIME-Version: 1.0
-In-Reply-To: <87a6fsa935.ffs@tglx>
-Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
+While working on AER support on a ZynqMP based system, which has some
+PCIe Device connected via a PCIe switch, problems with AER enabling in
+the Device Control registers of all PCIe devices but the Root Port. In
+fact, only the Root Port has AER enabled right now. This patch set now
+fixes this problem by first fixing the AER enabing in the
+interconnected PCIe switches between the Root Port and the PCIe
+devices and in a 2nd patch, also enabling AER in the PCIe Endpoints.
 
-On 2022/01/19 8:59, Thomas Gleixner wrote:
-> Kunihiko,
-> 
-> On Wed, Jan 12 2022 at 09:05, Kunihiko Hayashi wrote:
->> Is this fix the same as below?
->> https://marc.info/?l=linux-kernel&m=164061119923119&w=2
-> 
-> pretty much the same, but I missed that patch. I was off for 2+ weeks
-> and on return Boris poked me about this issue and I fixed it. Then I
-> went ahead and marked all vacation mail read as I always do :)
-> 
-> So sorry for not noticing that patch.
+Please note that these changes are quite invasive, as with these
+patches applied, AER now will be enabled in the Device Control
+registers of all available PCIe Endpoints, which currently is not the
+case.
 
-No problem. If this issue wansn't resolved, the PCIe controller wouldn't
-work properly, so I'm relieved to solve the issue and get your response.
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Pali Rohár <pali@kernel.org>
+Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: Yao Hongbo <yaohongbo@linux.alibaba.com>
+Cc: Naveen Naidu <naveennaidu479@gmail.com>
 
-Thank you,
+Stefan Roese (2):
+  PCI/portdrv: Don't disable AER reporting in
+    get_port_device_capability()
+  PCI/AER: Enable AER on all PCIe devices supporting it
 
----
-Best Regards
-Kunihiko Hayashi
+ drivers/pci/pcie/aer.c          | 4 ++++
+ drivers/pci/pcie/portdrv_core.c | 9 +--------
+ 2 files changed, 5 insertions(+), 8 deletions(-)
+
+-- 
+2.34.1
+
