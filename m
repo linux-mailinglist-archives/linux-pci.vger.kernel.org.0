@@ -2,245 +2,306 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FDAB49534D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 18:33:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 059D949538C
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 18:50:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231545AbiATRbp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jan 2022 12:31:45 -0500
-Received: from mail-mw2nam10on2053.outbound.protection.outlook.com ([40.107.94.53]:22209
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230261AbiATRbo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 20 Jan 2022 12:31:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GjK+PhSDzspXHeScD2FmKEth25HQ8pK65A2E1HNfow6L+daTJ1zUadzoyepNHck0yI56oS2FnCLN/DfBUGLtcLrB20NImbuddApVoB+yQPDefdzZ96vTkh61ny8XyhMrupWIRabtmycnCU+SV1hlMMoPJtOhwQZqU+ATgpanUAQl1zNXfEBVzVnr77H5iEohshOWzcn+N4qPDpdulRPTNwRt1IIjVwqXM7FW5V3V97O8+btBBu/Q0dJ0K1Zfzn8jihZ4kh6R7aqjwIjXCkD2DAXyo1/PwA11kmGVjFy8OJsDMTFAsuOwZyhSwfEznG6ffTRXRSrZfW2CDEqbqBvfrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B5sH2FkwCUG5iXmbg1pljXrLG+yWw44ihbzezz5CujQ=;
- b=Gmdy1aNKRKEh5p2AuUmvPRRbVK4xnOUeRtOS4NBKDV0ozBMX457K+1txgFcIPOctszEqP44J19QplNDBbTWWO+8/paXcq6gySd1h2XWKIbOHtTGNe3yPp+10V74iPwA2ZiVHP5GNQFaUA/dVYRFyir207mJMNcI3tCi/YgbGYDH5IppuJPsgHgXlXZ0aQu3CPrH2QQwUki6ofn/EN9vah94RH0cpmCGPE0AHvP3RjX4r+XttdOKGslcaMOjxw5ow6o8ViPc4Ij1QdrgRRQQjyukGj2JNpsEZMXtzw5sriRbaiLH5BKNsyfvT9ORJYtiXI2VGyOYup+QSBckg2OjUuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B5sH2FkwCUG5iXmbg1pljXrLG+yWw44ihbzezz5CujQ=;
- b=AG2dKDrl39fQLz8Ubz7BFlelF1t5Ojyd0HT/PrNMhB+2hX1i3Rpw0bfhusz1cEla7OPS3WIvAN7Ik/kCfLBIhRtZeiTipOuVwDQ0b4AjeoyueYLJohV+X5GApwN0RGAjasU+5NW7lxj828hUtRjsoIa5BWO3Y1LG81HXiO+y6yU=
-Received: from BY3PR05MB8497.namprd05.prod.outlook.com (2603:10b6:a03:3c8::23)
- by PH0PR05MB8654.namprd05.prod.outlook.com (2603:10b6:510:ba::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.6; Thu, 20 Jan
- 2022 17:31:40 +0000
-Received: from BY3PR05MB8497.namprd05.prod.outlook.com
- ([fe80::a1ad:f4ce:d76:96c1]) by BY3PR05MB8497.namprd05.prod.outlook.com
- ([fe80::a1ad:f4ce:d76:96c1%5]) with mapi id 15.20.4909.008; Thu, 20 Jan 2022
- 17:31:40 +0000
-From:   Vikash Bansal <bvikas@vmware.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srivatsa Bhat <srivatsab@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Srinidhi Rao <srinidhir@vmware.com>,
-        Anish Swaminathan <anishs@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        Ajay Kaher <akaher@vmware.com>
-Subject: Re: [PATCH] PCI: Speed up device init by parsing capabilities all at
- once
-Thread-Topic: [PATCH] PCI: Speed up device init by parsing capabilities all at
- once
-Thread-Index: AQHYDI9PHjjBXmLhA0GwF8F8yaRAo6xrdBqAgAEWJIA=
-Date:   Thu, 20 Jan 2022 17:31:40 +0000
-Message-ID: <195F50E8-2E4D-416B-A24A-4602321FABB7@vmware.com>
-References: <1642526161-22499-1-git-send-email-bvikas@vmware.com>
- <YekAgfkDgV6z6hYV@kroah.com>
-In-Reply-To: <YekAgfkDgV6z6hYV@kroah.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/16.56.21121100
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vmware.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c7abba19-0fee-45d1-5a7a-08d9dc3ab84e
-x-ms-traffictypediagnostic: PH0PR05MB8654:EE_
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <PH0PR05MB86541131070B55A84822DBE5AB5A9@PH0PR05MB8654.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: K0/jTbl/0rzJAIlqQi7WamUwp5s3pu0HGl2PzCZgw1x5Z6pd8yspBzUL/oyvFEwVZGRHneHLghdjBg750pbr+hw0jW1hsMkVwxHQ9PYA7C/MUhydun6gEYjup/7F5CZ0zXFEssiGvZZh3tBV1JPR7KGQvtjbvTN8dL77lhVzR+h8Ww3cnANu3+3MI3M31lprab7/y6ioXY4lQtECBXpnMOMp8kF/X5pA6WN94Xy1imi1bSbM4ZCGL2TWiriU5u00aAI4IqNCYnmca5DS9fiu6J63032tRWT0GnBpQPnX1s5fgLCIY8lFJUv+RqzKSjvqhNKNLqiW1T5CtZp8xE4kDVoeoFOEUEQKFocL40+8hddbGTv31QN4MmyGT0BN2rUguwXvDtZy3tsTMkc3yzzhaB1TLARu/m3sRmh4S+ernUuh3FqbUIYsgnBt2Wcj9dDt9w8qkqeSAwB1zXBaqne/NIZBWtiqVvvnj6fJN6/53lSjenoj/ycgnHrP32cLYDLQiELgE5FIgaXE2cxO7BpavfFDvuWfpyLVLYSjv90RZqFV6OTTRU8bDhHF6jAtzPN6rX0cSRzQjzpxippqStr7iCEd8X4vH/h2ybPPXH0PkeJImKE5jqZfQtoE3iGTZcLeg9dWW9fEc8jh7B9k7oSOzc91lC99AixZKbZeGLKuQec6lowan4sI5+DAvoyqMrkieIkq4CqEkaFrDpwJSNo0KIg4tDLoQZRm2V/7l4cuisyrG+r9RezT4mC7R+YoYmlwyS7ijbR+3tQvHSuonDEsBZVGlbLhOabyUDDv7+NY7Og=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR05MB8497.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(53546011)(508600001)(2616005)(26005)(6506007)(71200400001)(6512007)(186003)(83380400001)(38100700002)(107886003)(86362001)(122000001)(8936002)(8676002)(6916009)(54906003)(76116006)(91956017)(316002)(66476007)(66556008)(66446008)(66946007)(64756008)(38070700005)(4326008)(5660300002)(2906002)(36756003)(33656002)(6486002)(45980500001)(20210929001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UUF6WFFPVm9tNHB2SzBkSWpIbFM5L244UThpYk0rcFlMNmdod3g0V2ZwZFZ0?=
- =?utf-8?B?czdwTVJOUkg0ZnVNa1lkM0h6b0EzaCtVcDZDTW43dWJyTU1vcnNHbkxheWk5?=
- =?utf-8?B?cERxNStyMTVKT0syTE55blE3OUJSSDdDWFhOMjd2TDU2ZFZMMTFLWWdScm1M?=
- =?utf-8?B?NGpBQVhKWExLZ3M5UWlKcE92WVBRc1pCeHJETW9aeUcweis5SWsyRmJ4K0Uy?=
- =?utf-8?B?SUszQ1lOWHNRUVF2d0t0WFNVR2NGUThHa3Irek1TcEFYQy9RT0U4dUkzSVU3?=
- =?utf-8?B?ZHNPWW9aRWFRZ2twTGh4MEFoclZoU3ZvQWlTNmJrWFVoR3dvdWNFcEVCQXgr?=
- =?utf-8?B?TTdYbDZMczVLaWw2dXZkRkpUUUZzWkNTMzlwZERiTzd4bUlhT0dEbzVPM1R0?=
- =?utf-8?B?WU5IeEdobVF6K1hwSGRtUmZobUNrZGRYV3FQVGNCdHNDei9tWTdzY1dGZW80?=
- =?utf-8?B?R2RLZG81V3lJTUczR3NDTXJ6dFFYS0ZHWmhjRnNrdTdDU2RoaC9zYSs2MTJq?=
- =?utf-8?B?SUR5VTdpb2JKYkEybVAxT1A3VDAxSnJkMGcwNGJOenBRMllRWTNBZkoya2tO?=
- =?utf-8?B?L3dIMWdod1ZNaFFRYXAzWVBsa09GbUVUbkpGRkU0T3VVWlNMNXdnRnNQN3Jk?=
- =?utf-8?B?VHlWbEJwR1U3LzVEN3QrdERLY3NuOEpmZGVyY1I4RFpMcnhvcXVIUWZsUkp0?=
- =?utf-8?B?L2s5alR2b0hFWkgwNUFSNU81SVFoVHR5cHdmZENnemlmVWRkZEJxVGR3WGlS?=
- =?utf-8?B?UHhBUFNzWUt0OFVmR2tpOVNJTFY0akRqZjhqV3hNZHVMbHQwcUtKZlE4TVda?=
- =?utf-8?B?QXR0R2phVmpmY2JvZWNMaFRydDRLQlhoUS9YaXM0cGl3bW84RVFjckJCaGZI?=
- =?utf-8?B?d2Q0RkJpcWtiK1FtRG44T2RsK3RCQmgzVGU5ZnhmWmswNXVKd0ZqMi8vamhH?=
- =?utf-8?B?N3VYWWJTUDhVUFJ1dU1jUTN1anZpQ29sS2dtRFcrOVVPbHU3OHdOd2g1YjVG?=
- =?utf-8?B?L2dwNWVQRUl4VVgyTHJ3K3UwS1lpeU1oZUUyeGJvQ1ByNVF6M0Q1UERJTnJE?=
- =?utf-8?B?MjVTWlZ2Z2tTejRac1NNamFDQVo5M3d1cHVNWmdVeWNHSC9xZGV1ZWNKSXZY?=
- =?utf-8?B?VnRHUFNDL09sNDlYMFZ1ZFZ1dEVGUGh5VGpzQmN3V2RGWklyeW9Ta0ZZNmVm?=
- =?utf-8?B?bHd6Y0lUM2o5ZlEvbGcyb2hxcUkvMitQU3NoeU82elIxUDhpUk9qUXR3YU5s?=
- =?utf-8?B?eTJzVk5TbEt6ZzJvUW5taG5wVld4Y1I4Q1BLRG1jTVJZWjlacEpKNnhYak44?=
- =?utf-8?B?UFM2UFB3SXc3czhWZUdpSGhhYlUyNU4vaXFENUNZWVkwemFyTzVZVVFEbkVU?=
- =?utf-8?B?RVVrSFVFNWMvMVdmRGpMT0RvYXBheTVpTEVQQWo0TVBRcTBXMzBSRVA3RklM?=
- =?utf-8?B?emJ0cFpzcHZyMk5kb0duYnd3MHRwQnBNdURQcEU0cmJXOXFycXA4M0JCK3lR?=
- =?utf-8?B?M0s2U0J5YVF2QURMME1iUHFnU3JWbGpkMWtya1haT0RIdzFqNXdFYmgyVzZr?=
- =?utf-8?B?L28xai9sY2pPbytsMEI1OUQvdzM4ZWZtcWZJQ1YyZGJIbEtRSitLZDFhcENt?=
- =?utf-8?B?WFpyUWdmQjFsU3BrM2RjczN1QXZiZ2xjUE96ak5YVWEyR2RJT09EYkttSlNB?=
- =?utf-8?B?ODRLOXRJL255QzZxSDRzYlp3THJ2eUgxOVAvMVdJZmsyV2dIcUxuQ2pLYzJ5?=
- =?utf-8?B?dWVpcFk5aU02SWNXR2xReU9CNUlKakpmcThabWRiU29UVlhERCs0cEt6R1hB?=
- =?utf-8?B?aC9EL1NsUHFhRDZkQnRnSDJDdDg0dFlvQVRZK0ExZmNhMGhFUmY5K2VnS0t1?=
- =?utf-8?B?TmNIMjZ0ZWVUdTMxMTl5bndiTkxJSFkyNnVKVWdjbDVkMmdsYmFiQ0gvOVZF?=
- =?utf-8?B?aGwwbG1UcjNuTitacE1ZcFd2MndVMDJmc0NBL3F1b2U2TURDN2NGR1dXUWJq?=
- =?utf-8?B?V0MrMmlyVDNTMUNyUWl0bzQ5U1JnOG9wT3FVWWo3OHhjaDJXSmVFWFVoT083?=
- =?utf-8?B?eXBweGJQcFB0Y1FQQ0NyKzdwSnJUeElvM2Q2b0JZNW5QanB0WHpvcUFRbWEw?=
- =?utf-8?B?dHRwQXE5eUN4VlRUbExlNlBSRVJTODZjMVNGM3FRKzFyWUQzdzdiMU4yTko3?=
- =?utf-8?Q?YmeKXSiXpp8ZJxjkFtf/6Pc=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5E2BC936D2BDE24AB71129052E5F00E9@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S232935AbiATRuw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jan 2022 12:50:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232919AbiATRuv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 12:50:51 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A63C061574;
+        Thu, 20 Jan 2022 09:50:51 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4AF67B81E07;
+        Thu, 20 Jan 2022 17:50:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA54AC340E3;
+        Thu, 20 Jan 2022 17:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642701049;
+        bh=uBykbVzlL0QHjj61BeaN5GB/Yt4BmjF6DthwNMIs+5k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=gKKJPjxJLU1n3xGX872rev9h3ycUznKmbpB7SsTyPdmBErLp+UFjJ8WHAWdJASd1N
+         kjB1d+ad2nH3zL+vimfZkcCowv/0c68QW00SBU4MfaSkwIoQENBjsXvzQ5xWJO44uU
+         ozDDUnUfJECaqCl/GLbwKVGNvOKfr0r9H3mv59/SOjOT6ZrEqDVtQ+XBHSwU+79Ppt
+         L+NuS7/dedzSAQEekO/rARzN5HZbZUnqpvIK/oStULbAOaTaNQ6H2rGaqUALdDMHT0
+         bJLB7sq13ro30hT/OamEA67dnDDZlEMiq95QBfbwEyqYLmO/kQ5G9AA4w1dA4W/WiC
+         RO0HEWDgMJ0Mw==
+Date:   Thu, 20 Jan 2022 11:50:47 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/15] PCI: mvebu: Propagate errors when updating
+ PCI_IO_BASE and PCI_MEM_BASE registers
+Message-ID: <20220120175047.GA1050722@bhelgaas>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY3PR05MB8497.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7abba19-0fee-45d1-5a7a-08d9dc3ab84e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2022 17:31:40.5805
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mnxkWaT77lp4AaQSF1kuHUKdxT8r1DTP3UW0ksLfQUnKlhl4hnrzdzZsOogQQkgAEWJ7k13N48EzKAaNuWLmag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR05MB8654
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220113103523.5usmja7bp44f7ju7@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-ICAgIE9uIDIwLzAxLzIyLCAxMTo1NiBBTSwgIkdyZWcgS0giIDxncmVna2hAbGludXhmb3VuZGF0
-aW9uLm9yZz4gd3JvdGU6DQogICAgSGkgR3JlZywNCiAgICBUaGFua3MgZm9yIHRoZSBjb21tZW50
-cw0KDQogICAgPk9uIFR1ZSwgSmFuIDE4LCAyMDIyIGF0IDA5OjE2OjAxQU0gLTA4MDAsIFZpa2Fz
-aCBCYW5zYWwgd3JvdGU6DQogICAgPj4gSW4gdGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24sIHRo
-ZSBQQ0kgY2FwYWJpbGl0eSBsaXN0IGlzIHBhcnNlZCBmcm9tDQogICAgPj4gdGhlIGJlZ2lubmlu
-ZyB0byBmaW5kIGVhY2ggY2FwYWJpbGl0eSwgd2hpY2ggcmVzdWx0cyBpbiBhIGxhcmdlIG51bWJl
-cg0KICAgID4+IG9mIHJlZHVuZGFudCBQQ0kgcmVhZHMuDQogICAgPj4gDQogICAgPj4gSW5zdGVh
-ZCwgd2UgY2FuIHBhcnNlIHRoZSBjb21wbGV0ZSBsaXN0IGp1c3Qgb25jZSwgc3RvcmUgaXQgaW4g
-dGhlDQogICAgPj4gcGNpX2RldiBzdHJ1Y3R1cmUsIGFuZCBnZXQgdGhlIG9mZnNldCBvZiBlYWNo
-IGNhcGFiaWxpdHkgZGlyZWN0bHkgZnJvbQ0KICAgID4+IHRoZSBwY2lfZGV2IHN0cnVjdHVyZS4N
-CiAgICA+PiANCiAgICA+PiBUaGlzIGltcGxlbWVudGF0aW9uIGltcHJvdmVzIHBjaSBkZXZpY2Vz
-IGluaXRpYWxpemF0aW9uIHRpbWUgIGJ5IH4yLTMlIGluDQogICAgPj4gY2FzZSBvZiBiYXJlIG1l
-dGFsIGFuZCA3LTglIGluIGNhc2Ugb2YgVk0gcnVubmluZyBvbiBFU1hpLg0KICAgID4NCiAgICA+
-V2hhdCBpcyB0aGF0IGluIHRlcm1zIG9mICJ3YWxsIGNsb2NrIiB0aW1lPyAgJSBpcyBoYXJkIHRv
-IGtub3cgaGVyZSwgYW5kDQogICAgPm9mIGNvdXJzZSBpdCB3aWxsIGRlcGVuZCBvbiB0aGUgUENJ
-IGJ1cyBzcGVlZCwgcmlnaHQ/DQogICAgPg0KDQogICAgSW4gdGVybXMgb2YgIndhbGwgY2xvY2si
-IHRpbWU6DQogICAgRm9yIGJhcmUtbWV0YWwgaXQgcmVkdWNlZCBmcm9tIDI3MG1zIHRvIDI2MW1z
-DQogICAgQW5kIGZvciBWTSBpdCByZWR1Y2VkIGZyb20gMjAxbXMgdG8gMTg0bXMuDQogICAgDQog
-ICAgPj4gSXQgYWxzbyBhZGRzIGEgbWVtb3J5IG92ZXJoZWFkIG9mIDIwYnl0ZXMgKHZhbHVlIG9m
-IFBDSV9DQVBfSURfTUFYKSBwZXINCiAgICA+PiBQQ0kgZGV2aWNlLg0KICAgID4+IA0KICAgID4+
-IFNpZ25lZC1vZmYtYnk6IFZpa2FzaCBCYW5zYWwgPGJ2aWthc0B2bXdhcmUuY29tPg0KICAgID4+
-IC0tLQ0KICAgID4+ICBkcml2ZXJzL3BjaS9wY2kuYyAgIHwgNDMgKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrLS0tLS0tLQ0KICAgID4+ICBkcml2ZXJzL3BjaS9wcm9iZS5jIHwg
-IDUgKysrKysNCiAgICA+PiAgaW5jbHVkZS9saW51eC9wY2kuaCB8ICAyICsrDQogICAgPj4gIDMg
-ZmlsZXMgY2hhbmdlZCwgNDMgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkNCiAgICA+PiAN
-CiAgICA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpLmMgYi9kcml2ZXJzL3BjaS9wY2ku
-Yw0KICAgID4+IGluZGV4IDNkMmZiMzk0OTg2YS4uOGUwMjRkYjMwMjYyIDEwMDY0NA0KICAgID4+
-IC0tLSBhL2RyaXZlcnMvcGNpL3BjaS5jDQogICAgPj4gKysrIGIvZHJpdmVycy9wY2kvcGNpLmMN
-CiAgICA+PiBAQCAtNDY4LDYgKzQ2OCw0MSBAQCBzdGF0aWMgdTggX19wY2lfYnVzX2ZpbmRfY2Fw
-X3N0YXJ0KHN0cnVjdCBwY2lfYnVzICpidXMsDQogICAgPj4gIAlyZXR1cm4gMDsNCiAgICA+PiAg
-fQ0KICAgID4+ICANCiAgICA+PiArDQogICAgPj4gKy8qKg0KICAgID4+ICsgKiBwY2lfZmluZF9h
-bGxfY2FwYWJpbGl0aWVzIC0gUmVhZCBhbGwgY2FwYWJpbGl0aWVzDQogICAgPj4gKyAqIEBkZXY6
-IHRoZSBQQ0kgZGV2aWNlDQogICAgPj4gKyAqDQogICAgPj4gKyAqIFJlYWQgYWxsIGNhcGFiaWxp
-dGllcyBhbmQgc3RvcmUgb2Zmc2V0cyBpbiBjYXBfb2ZmDQogICAgPj4gKyAqIGFycmF5IGluIHBj
-aV9kZXYgc3RydWN0dXJlLg0KICAgID4+ICsgKi8NCiAgICA+PiArdm9pZCBwY2lfZmluZF9hbGxf
-Y2FwYWJpbGl0aWVzKHN0cnVjdCBwY2lfZGV2ICpkZXYpDQogICAgPj4gK3sNCiAgICA+PiArCWlu
-dCB0dGwgPSBQQ0lfRklORF9DQVBfVFRMOw0KICAgID4+ICsJdTE2IGVudDsNCiAgICA+PiArCXU4
-IHBvczsNCiAgICA+PiArCXU4IGlkOw0KICAgID4+ICsNCiAgICA+PiArCXBvcyA9IF9fcGNpX2J1
-c19maW5kX2NhcF9zdGFydChkZXYtPmJ1cywgZGV2LT5kZXZmbiwgZGV2LT5oZHJfdHlwZSk7DQog
-ICAgPj4gKwlpZiAoIXBvcykNCiAgICA+PiArCQlyZXR1cm47DQogICAgPj4gKwlwY2lfYnVzX3Jl
-YWRfY29uZmlnX2J5dGUoZGV2LT5idXMsIGRldi0+ZGV2Zm4sIHBvcywgJnBvcyk7DQogICAgPj4g
-Kwl3aGlsZSAodHRsLS0pIHsNCiAgICA+PiArCQlpZiAocG9zIDwgMHg0MCkNCiAgICA+DQogICAg
-PldoYXQgaXMgdGhpcyBtYWdpYyB2YWx1ZSBvZiAweDQwPw0KICAgID4NCg0KICAgIDB4NDAgaXMg
-dGhlIHN0YXJ0IGFkZHJlc3Mgb2YgY2FwYWJpbGl0eSBsaXN0LiBUaGlzIGNvZGUgaXMgY29waWVk
-IGZyb20gZnVuY3Rpb24gX19wY2lfZmluZF9uZXh0X2NhcF90dGwNCg0KICAgID4+ICsJCQlicmVh
-azsNCiAgICA+PiArCQlwb3MgJj0gfjM7DQogICAgPg0KICAgID5XaHkgfjM/DQogICAgPg0KICAg
-IENhcGFiaWxpdHkgc3RhcnQgYWRkcmVzcyBpcyA0IGJ5dGUgYWxpZ25lZC4gVGhpcyBjb2RlIGlz
-IGFsc28gY29waWVkIGZyb20gX19wY2lfZmluZF9uZXh0X2NhcF90dGwuDQogDQogICAgPj4gKwkJ
-cGNpX2J1c19yZWFkX2NvbmZpZ193b3JkKGRldi0+YnVzLCBkZXYtPmRldmZuLCBwb3MsICZlbnQp
-Ow0KICAgID4+ICsJCWlkID0gZW50ICYgMHhmZjsNCiAgICA+DQogICAgPkRvIHlvdSByZWFsbHkg
-bmVlZCB0aGUgJiBpZiB5b3UgYXJlIHRydW5jYXRpbmcgaXQ/DQogICAgPg0KDQogICAgWWVzLCB0
-aGlzIGlzIG5vdCByZWFsbHkgcmVxdWlyZWQuIEJ1dCBhZ2FpbiwgdGhpcyBjb2RlIGlzIGNvcGll
-ZCBmcm9tIF9fcGNpX2ZpbmRfbmV4dF9jYXBfdHRsLg0KDQogICAgPj4gKwkJaWYgKGlkID09IDB4
-ZmYpDQogICAgPj4gKwkJCWJyZWFrOw0KICAgID4+ICsNCiAgICA+PiArCQkvKiBSZWFkIGZpcnN0
-IGluc3RhbmNlIG9mIGNhcGFiaWxpdHkgKi8NCiAgICA+PiArCQlpZiAoIShkZXYtPmNhcF9vZmZb
-aWRdKSkNCiAgICA+PiArCQkJZGV2LT5jYXBfb2ZmW2lkXSA9IHBvczsNCiAgICA+DQogICAgPlNo
-b3VsZG4ndCB5b3UgaGF2ZSBjaGVja2VkIHRoaXMgYmVmb3JlIHlvdSByZWFkIHRoZSB2YWx1ZT8N
-CiAgICA+DQoNCiAgICBZZXMsIHdpbGwgbW92ZSB0aGlzIGNvZGUNCg0KICAgID4+ICsJCXBvcyA9
-IChlbnQgPj4gOCk7DQogICAgPg0KICAgID5XaGF0IGFib3V0IHdhbGtpbmcgdGhlIGxpc3QgdXNp
-bmcgX19wY2lfZmluZF9uZXh0X2NhcCgpIGxpa2UgYmVmb3JlPw0KICAgID5XaHkgaXMgdGhpcyBz
-b21laG93IHRoZSBzYW1lIGFzIHRoZSBvbGQgZnVuY3Rpb24/DQogICAgPg0KDQogICAgX19wY2lf
-ZmluZF9uZXh0X2NhcCgpIGlzIHVzZWQgdG8gZmluZCBhIGdpdmVuIGNhcGFiaWxpdHksDQogICAg
-SXQgY2FuJ3QgYmUgdXNlZCB0byB3YWxrIHRocm91Z2ggdGhlIGxpc3QgaW4gdGhpcyBjYXNlLg0K
-DQogICAgPj4gKwl9DQogICAgPj4gK30NCiAgICA+PiArDQogICAgPj4gIC8qKg0KICAgID4+ICAg
-KiBwY2lfZmluZF9jYXBhYmlsaXR5IC0gcXVlcnkgZm9yIGRldmljZXMnIGNhcGFiaWxpdGllcw0K
-ICAgID4+ICAgKiBAZGV2OiBQQ0kgZGV2aWNlIHRvIHF1ZXJ5DQogICAgPj4gQEAgLTQ4OSwxMyAr
-NTI0LDcgQEAgc3RhdGljIHU4IF9fcGNpX2J1c19maW5kX2NhcF9zdGFydChzdHJ1Y3QgcGNpX2J1
-cyAqYnVzLA0KICAgID4+ICAgKi8NCiAgICA+PiAgdTggcGNpX2ZpbmRfY2FwYWJpbGl0eShzdHJ1
-Y3QgcGNpX2RldiAqZGV2LCBpbnQgY2FwKQ0KICAgID4+ICB7DQogICAgPj4gLQl1OCBwb3M7DQog
-ICAgPj4gLQ0KICAgID4gLQlwb3MgPSBfX3BjaV9idXNfZmluZF9jYXBfc3RhcnQoZGV2LT5idXMs
-IGRldi0+ZGV2Zm4sIGRldi0+aGRyX3R5cGUpOw0KICAgID4+IC0JaWYgKHBvcykNCiAgICA+PiAt
-CQlwb3MgPSBfX3BjaV9maW5kX25leHRfY2FwKGRldi0+YnVzLCBkZXYtPmRldmZuLCBwb3MsIGNh
-cCk7DQogICAgPj4gLQ0KICAgID4+IC0JcmV0dXJuIHBvczsNCiAgICA+PiArCXJldHVybiBkZXYt
-PmNhcF9vZmZbY2FwXTsNCiAgICA+PiAgfQ0KICAgID4+ICBFWFBPUlRfU1lNQk9MKHBjaV9maW5k
-X2NhcGFiaWxpdHkpOw0KICAgID4+ICANCiAgICA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kv
-cHJvYmUuYyBiL2RyaXZlcnMvcGNpL3Byb2JlLmMNCiAgICA+PiBpbmRleCAwODdkMzY1OGY3NWMu
-LmJhY2FiMTJjZWRiYiAxMDA2NDQNCiAgICA+PiAtLS0gYS9kcml2ZXJzL3BjaS9wcm9iZS5jDQog
-ICAgPj4gKysrIGIvZHJpdmVycy9wY2kvcHJvYmUuYw0KICAgID4+IEBAIC0xODM5LDYgKzE4Mzks
-MTEgQEAgaW50IHBjaV9zZXR1cF9kZXZpY2Uoc3RydWN0IHBjaV9kZXYgKmRldikNCiAgICA+PiAg
-CWRldi0+aGRyX3R5cGUgPSBoZHJfdHlwZSAmIDB4N2Y7DQogICAgPj4gIAlkZXYtPm11bHRpZnVu
-Y3Rpb24gPSAhIShoZHJfdHlwZSAmIDB4ODApOw0KICAgID4+ICAJZGV2LT5lcnJvcl9zdGF0ZSA9
-IHBjaV9jaGFubmVsX2lvX25vcm1hbDsNCiAgICA+PiArCS8qDQogICAgPj4gKwkgKiBSZWFkIGFs
-bCBjYXBhYmlsaXRpZXMgYW5kIHN0b3JlIG9mZnNldHMgaW4gY2FwX29mZg0KICAgID4+ICsJICog
-YXJyYXkgaW4gcGNpX2RldiBzdHJ1Y3R1cmUuDQogICAgPj4gKwkgKi8NCiAgICA+DQogICAgPkNv
-bW1lbnQgaXMgbm90IG5lZWRlZCBpZiB0aGUgZnVuY3Rpb24gbmFtZSBpcyBkZXNjcmlwdGl2ZS4N
-CiAgICA+DQoNCiAgICBvaw0KDQogICAgPj4gKwlwY2lfZmluZF9hbGxfY2FwYWJpbGl0aWVzKGRl
-dik7DQogICAgPg0KICAgID5BbmQgaXQgaXMsIHNvIG5vIG5lZWQgZm9yIHRoZSBjb21tZW50Lg0K
-ICAgID4NCiAgICA+PiAgCXNldF9wY2llX3BvcnRfdHlwZShkZXYpOw0KICAgID4+ICANCiAgICA+
-PiAgCXBjaV9zZXRfb2Zfbm9kZShkZXYpOw0KICAgID4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xp
-bnV4L3BjaS5oIGIvaW5jbHVkZS9saW51eC9wY2kuaA0KICAgID4+IGluZGV4IDE4YTc1YzhlNjE1
-Yy4uZDIyMWM3M2U2N2Y4IDEwMDY0NA0KICAgID4+IC0tLSBhL2luY2x1ZGUvbGludXgvcGNpLmgN
-CiAgICA+PiArKysgYi9pbmNsdWRlL2xpbnV4L3BjaS5oDQogICAgPj4gQEAgLTMyNiw2ICszMjYs
-NyBAQCBzdHJ1Y3QgcGNpX2RldiB7DQogICAgPj4gIAl1bnNpZ25lZCBpbnQJY2xhc3M7CQkvKiAz
-IGJ5dGVzOiAoYmFzZSxzdWIscHJvZy1pZikgKi8NCiAgICA+PiAgCXU4CQlyZXZpc2lvbjsJLyog
-UENJIHJldmlzaW9uLCBsb3cgYnl0ZSBvZiBjbGFzcyB3b3JkICovDQogICAgPj4gIAl1OAkJaGRy
-X3R5cGU7CS8qIFBDSSBoZWFkZXIgdHlwZSAoYG11bHRpJyBmbGFnIG1hc2tlZCBvdXQpICovDQog
-ICAgPj4gKwl1OCAgICAgICAgICAgICAgY2FwX29mZltQQ0lfQ0FQX0lEX01BWF07IC8qIE9mZnNl
-dHMgb2YgYWxsIHBjaSBjYXBhYmlsaXRpZXMgKi8NCiAgICA+DQogICAgPkRpZCB5b3UgcnVuICdw
-YWhvbGUnIHRvIGVuc3VyZSB5b3UgYXJlIG5vdCBhZGRpbmcgZXh0cmEgcGFkZGluZyBieXRlcw0K
-ICAgID5oZXJlPw0KICAgID4NCiAgICA+PiAgI2lmZGVmIENPTkZJR19QQ0lFQUVSDQogICAgPj4g
-IAl1MTYJCWFlcl9jYXA7CS8qIEFFUiBjYXBhYmlsaXR5IG9mZnNldCAqLw0KICAgID4+ICAJc3Ry
-dWN0IGFlcl9zdGF0cyAqYWVyX3N0YXRzOwkvKiBBRVIgc3RhdHMgZm9yIHRoaXMgZGV2aWNlICov
-DQogICAgPj4gQEAgLTExMjgsNiArMTEyOSw3IEBAIHZvaWQgcGNpX3NvcnRfYnJlYWR0aGZpcnN0
-KHZvaWQpOw0KICAgID4+ICANCiAgICA+PiAgdTggcGNpX2J1c19maW5kX2NhcGFiaWxpdHkoc3Ry
-dWN0IHBjaV9idXMgKmJ1cywgdW5zaWduZWQgaW50IGRldmZuLCBpbnQgY2FwKTsNCiAgICA+PiAg
-dTggcGNpX2ZpbmRfY2FwYWJpbGl0eShzdHJ1Y3QgcGNpX2RldiAqZGV2LCBpbnQgY2FwKTsNCiAg
-ICA+PiArdm9pZCBwY2lfZmluZF9hbGxfY2FwYWJpbGl0aWVzKHN0cnVjdCBwY2lfZGV2ICpkZXYp
-Ow0KICAgID4NCiAgICA+V2h5IGlzIHRoaXMgbm93IGEgZ2xvYmFsIGZ1bmN0aW9uIGFuZCBub3Qg
-b25lIGp1c3QgbG9jYWwgdG8gdGhlIHBjaQ0KICAgID5jb3JlPyAgV2hvIGVsc2Ugd291bGQgZXZl
-ciBuZWVkIHRvIGNhbGwgaXQ/DQogIA0KICAgIFdpbGwgbWFrZSBwY2lfZmluZF9hbGxfY2FwYWJp
-bGl0aWUgbG9jYWwgYW5kIG1vdmUgaXQgdG8gcHJvYmUuYw0KDQogICAgPg0KICAgID50aGFua3Ms
-DQogICAgPg0KICAgID5ncmVnIGstaA0KDQogICAgDQoNCg==
+On Thu, Jan 13, 2022 at 11:35:23AM +0100, Pali Rohár wrote:
+> On Wednesday 12 January 2022 18:19:21 Bjorn Helgaas wrote:
+> > On Sat, Jan 08, 2022 at 12:46:58AM +0100, Pali Rohár wrote:
+> > > On Friday 07 January 2022 17:16:17 Bjorn Helgaas wrote:
+> > > > On Fri, Jan 07, 2022 at 11:28:26PM +0100, Pali Rohár wrote:
+> > > > > On Friday 07 January 2022 15:55:04 Bjorn Helgaas wrote:
+> > > > > > On Thu, Nov 25, 2021 at 01:45:58PM +0100, Pali Rohár wrote:
+> > > > > > > Properly propagate failure from mvebu_pcie_add_windows()
+> > > > > > > function back to the caller
+> > > > > > > mvebu_pci_bridge_emul_base_conf_write() and correctly
+> > > > > > > updates PCI_IO_BASE, PCI_MEM_BASE and
+> > > > > > > PCI_IO_BASE_UPPER16 registers on error.  On error set
+> > > > > > > base value higher than limit value which indicates that
+> > > > > > > address range is disabled. 
+> > > > > > 
+> > > > > > Does the spec say that if software programs something
+> > > > > > invalid, hardware should proactively set the base and
+> > > > > > limit registers to disable the window?
+> > > > > 
+> > > > > No. But this patch address something totally different.
+> > > > > Software can do fully valid operation, e.g. try to set
+> > > > > forwarding memory window as large as possible. But because
+> > > > > this driver "emulates" pci bridge by calling software/kernel
+> > > > > function (mvebu_pcie_add_windows), some operations which in
+> > > > > real HW cannot happen, are possible in software.
+> > > > > 
+> > > > > For example there are limitations in sizes of forwarding
+> > > > > memory windows, because it is done by mvebu-mbus driver,
+> > > > > which is responsible for configuring mapping and forwarding
+> > > > > of PCIe I/O and MEM windows. And due to Marvell HW, there
+> > > > > are restrictions which are not in PCIe HW.
+> > > > > 
+> > > > > Currently if such error happens, obviously kernel is not
+> > > > > able to set PCIe windows and it just print warnings to
+> > > > > dmesg. Trying to access these windows would result in the
+> > > > > worst case in crashes.
+> > > > > 
+> > > > > With this change when mvebu_pcie_add_windows() function
+> > > > > fails then into emulated config space is put information
+> > > > > that particular forwarding window is disabled. I think that
+> > > > > it is better to indicate it in config space what is the
+> > > > > current "reality" of hardware configuration. If window is
+> > > > > disabled in real-HW (meaning in mvebu-mbus driver) then show
+> > > > > it also in emulated config space of pci bridge.
+> > > > > 
+> > > > > Do you have better idea what should emulated pci bridge do,
+> > > > > if software try to set fully valid configuration of
+> > > > > forwarding window, but it is not possible to achieve it
+> > > > > (even compliant PCI bridge must be able to do it)?
+> > > > 
+> > > > On an ACPI system, the host bridge window sizes are
+> > > > constrained by the host bridge _CRS method.  I assume there's
+> > > > a similar constraint in DT.
+> > > > 
+> > > > Is the fact that mvebu_pcie_add_windows() can fail a symptom
+> > > > of a DT that describes more available space than mvebu-bus can
+> > > > map?
+> > > 
+> > > Memory maps for mvebu are more complicated. There is no explicit
+> > > size in DT ranges property as it is dynamically allocated by
+> > > mvebu-mbus:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/armada-385.dtsi?h=v5.15#n47
+> > 
+> > I wish I knew how to really interpret those "ranges" properties.
+> > (Is there a good description in Documentation/ somewhere?  All
+> > I've found so far is https://elinux.org/Device_Tree_Usage, which
+> > is good, but doesn't match this example completely.)
+> > 
+> > I see:
+> > 
+> >   pciec: pcie {
+> >     ranges = <...>;
+> >     pcie1: pcie@1,0 {
+> >       ranges = <0x82000000 0 0 0x82000000 0x1 0 1 0
+> > 	        0x81000000 0 0 0x81000000 0x1 0 1 0>;
+> >     };
+> >     pcie2: pcie@2,0 {
+> >       ranges = <0x82000000 0 0 0x82000000 0x2 0 1 0
+> > 	        0x81000000 0 0 0x81000000 0x2 0 1 0>;
+> >     };
+> >     pcie3: pcie@3,0 {
+> >       ranges = <0x82000000 0 0 0x82000000 0x3 0 1 0
+> > 	        0x81000000 0 0 0x81000000 0x3 0 1 0>;
+> >     };
+> >     pcie4: pcie@4,0 {
+> >       ranges = <0x82000000 0 0 0x82000000 0x4 0 1 0
+> > 	        0x81000000 0 0 0x81000000 0x4 0 1 0>;
+> >     };
+> >   };
+> > 
+> > What does this look like in dmesg, i.e., what CPU address ranges are
+> > mapped to what PCI bus addresses?
+> 
+> These explicit ranges in DT are probably ignored as they are invalid.
+> You can see them (0xffffffffffffffff) in dmesg. 
+
+Are you saying that this DT ranges and the dmesg line are connected?
+
+  ranges = <0x82000000 0 0 0x82000000 0x1 0 1 0
+            0x81000000 0 0 0x81000000 0x1 0 1 0>;
+
+  mvebu-pcie soc:pcie: MEM 0xffffffffffffffff..0x00fffffffe -> 0x0100000000
+
+1) It would be nice if there were a hint somewhere in Documentation/
+that would allow mere mortals to see the connection there.
+
+2) Why do we have these DT entries if they are invalid and useless?
+
+> MEM and I/O resources are parsed in pci-mvebu.c driver in
+> mvebu_pcie_parse_request_resources() function.
+
+So mvebu-mbus.c fills in the static mbus_state from the DT
+"pcie-mem-aperture", which seems unconnected to the DT descriptions of
+the PCI controllers:
+
+  static struct mvebu_mbus_state mbus_state;
+
+  mvebu_mbus_dt_init
+    mvebu_mbus_get_pcie_resources(&mbus_state.pcie_mem_aperture)
+      of_property_read_u32_array("pcie-mem-aperture")
+
+  mvebu_pcie_probe
+    mvebu_pcie_parse_request_resources
+      mvebu_mbus_get_pcie_mem_aperture(&pcie->mem)
+	*res = mbus_state.pcie_mem_aperture
+      pci_add_resource(&bridge->windows, &pcie->mem)
+
+> Here is relevant dmesg output:
+> 
+> mvebu-pcie soc:pcie: host bridge /soc/pcie ranges:
+> mvebu-pcie soc:pcie:      MEM 0x00f1080000..0x00f1081fff -> 0x0000080000
+> mvebu-pcie soc:pcie:      MEM 0x00f1040000..0x00f1041fff -> 0x0000040000
+> mvebu-pcie soc:pcie:      MEM 0x00f1044000..0x00f1045fff -> 0x0000044000
+> mvebu-pcie soc:pcie:      MEM 0x00f1048000..0x00f1049fff -> 0x0000048000
+> mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0100000000
+> mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0100000000
+> mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0200000000
+> mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0200000000
+> mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0300000000
+> mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0300000000
+> mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0400000000
+> mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0400000000
+> mvebu-pcie soc:pcie: PCI host bridge to bus 0000:00
+> pci_bus 0000:00: root bus resource [bus 00-ff]
+> pci_bus 0000:00: root bus resource [mem 0xf1080000-0xf1081fff] (bus address [0x00080000-0x00081fff])
+> pci_bus 0000:00: root bus resource [mem 0xf1040000-0xf1041fff] (bus address [0x00040000-0x00041fff])
+> pci_bus 0000:00: root bus resource [mem 0xf1044000-0xf1045fff] (bus address [0x00044000-0x00045fff])
+> pci_bus 0000:00: root bus resource [mem 0xf1048000-0xf1049fff] (bus address [0x00048000-0x00049fff])
+> pci_bus 0000:00: root bus resource [mem 0xe0000000-0xe7ffffff]
+
+I see 0xf1080000-0xf1081fff, 0xf1040000-0xf1041fff, etc mentioned in
+the DT info above, but I don't see where [mem 0xe0000000-0xe7ffffff]
+came from.
+
+Regardless, this means PCI thinks [mem 0xe0000000-0xe7ffffff] is
+available on bus 00 and can be assigned to devices on bus 00 according
+to the normal PCI rules (BARs aligned on size, PCI bridge windows
+aligned on 1MB and multiple of 1MB in size).  IIUC, mvebu imposes
+additional alignment constraints on the bridge windows.
+
+These are the bridge window assignments from your dmesg:
+
+> pci 0000:00:01.0: BAR 8: assigned [mem 0xe0000000-0xe00fffff]
+> pci 0000:00:02.0: BAR 8: assigned [mem 0xe0200000-0xe04fffff]
+> pci 0000:00:03.0: BAR 8: assigned [mem 0xe0100000-0xe01fffff]
+
+> pci 0000:00:01.0: PCI bridge to [bus 01]
+> pci 0000:00:01.0:   bridge window [mem 0xe0000000-0xe00fffff]
+> pci 0000:00:02.0: PCI bridge to [bus 02]
+> pci 0000:00:02.0:   bridge window [mem 0xe0200000-0xe04fffff]
+> pci 0000:00:03.0: PCI bridge to [bus 03]
+> pci 0000:00:03.0:   bridge window [mem 0xe0100000-0xe01fffff]
+
+The PCI core knows nothing about the mvebu constraints.  Are we just
+lucky here that when PCI assigned these bridge windows, they happen to
+be supported on mvebu?  What happens if PCI decides it needs 29MB on
+bus 01?
+
+> > Are pcie1, pcie2, etc Root Ports?  Or are they each separate host
+> > bridges (they each have "bus-range = <0x00 0xff>")?
+> 
+> From kernel point of view they are root ports. But in reality every of
+> these root port is on separate bus segment, but kernel pci-mvebu.c
+> driver merges all these segments/domains into one host bridge and put
+> all root ports into bus 0.
+> 
+> Here is lspci -tvnn output with topology:
+> 
+> $ lspci -tvnn
+> -[0000:00]-+-01.0-[01]----00.0  Device [1e0f:0001]
+>            +-02.0-[02]----00.0  Qualcomm Atheros QCA986x/988x 802.11ac Wireless Network Adapter [168c:003c]
+>            \-03.0-[03]----00.0  Qualcomm Atheros AR9287 Wireless Network Adapter (PCI-Express) [168c:002e]
+
+> Buses 1, 2 and 3 represents mPCIe cards, all of them are in reality
+> in separate bus segments and on different HW host bridges. So they
+> do *not* share access to config space, do *not* share INTx
+> interrupts, etc...
+> 
+> > Is space from pciec dynamically assigned to pcie1, pcie2, etc?  If
+> > so, I assume there are more restrictions on the size and alignment
+> > than on PCI bridge windows, which allow size/alignment down to
+> > 1MB?
+> 
+> Yes, exactly. I do not know now all restrictions. At least there are
+> fixed number of memory slots and each has to be of size 2^N. They
+> are dynamically assigned by kernel mbus driver at time when somebody
+> updates BASE/LIMIT registers. And that kernel mbus driver takes care
+> to split non-aligned window size to more slots of size 2^N. And
+> resources are shared from pool with other HW parts (e.g. DMA), so
+> other drivers loaded in kernel can "eat" available slots before
+> pci-mvebu and then there does not have to be nothing to allocate for
+> PCI.
+
+So IIUC,
+
+  pcie1 == 00:01.0 Root Port
+  pcie2 == 00:02.0 Root Port
+  pcie3 == 00:03.0 Root Port
+
+From a software point of view, they're all under a single host bridge,
+and Linux assumes everything under a host bridge plays by the PCI
+rules.
+
+In this case, the root ports *don't* play by the rules since they have
+additional alignment restrictions, so I think these really should be
+described as separate host bridges in DT with the address space
+carved up statically among them.
+
+It's common on x86 to have multiple host bridges that all appear to
+software to be in domain 0000.  The bus number ranges under each are
+static, e.g., one bridge has [bus 00-7f] and another has [bus 80-ff].
+
+> But most Armada boards do not have exported all peripherals from SoC,
+> unconnected are disabled in DT and therefore exhaustion should not
+> happen.
+> 
+> > I'm trying to see how this could be described in ACPI because that's a
+> > fairly general model that accommodates most machines.  Possibly
+> > describing mvebu in ACPI would involve losing some flexibility.
+> 
+> I do not understand APCI model very well and I'm in impression that it
+> is impossible to represent mvebu in ACPI.
+
+It could be described as a separate host bridge for every root port.
+ACPI uses _CRS (current resource settings) to describe the apertures
+to PCI and any address translation.  Currently the _CRS description is
+static, but ACPI does allow those resource assignments to be modified
+via _PRS (possible resource settings) and _SRS (set resource
+settings).
+
+Bjorn
