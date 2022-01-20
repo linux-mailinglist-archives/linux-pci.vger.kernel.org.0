@@ -2,110 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3E86495391
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 18:54:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5F1949544B
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 19:40:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232400AbiATRy0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jan 2022 12:54:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230477AbiATRyZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 12:54:25 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F281AC061574
-        for <linux-pci@vger.kernel.org>; Thu, 20 Jan 2022 09:54:24 -0800 (PST)
+        id S1347048AbiATSkX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jan 2022 13:40:23 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:59674 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346978AbiATSkV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 13:40:21 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 4478BCE213B
-        for <linux-pci@vger.kernel.org>; Thu, 20 Jan 2022 17:54:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E76FCC340E0;
-        Thu, 20 Jan 2022 17:54:20 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 96E12B81E05;
+        Thu, 20 Jan 2022 18:40:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66A8BC340E3;
+        Thu, 20 Jan 2022 18:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642701261;
-        bh=hf05+WnLlVx/ittw/XUQFQXaAdJ0s8m7SrMEaTE38fM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bK1xADaZJOLh0DoDwQ6R7FyquHV5MeCBl4a63iHf7vMbIosLUG5h22qmXCCq0BdmM
-         KfVho+k5vpm3jSaGb5jpuIgcRfhTF7KPrs/BxIKmfv0e+7U1UbZsaqz0rGECWpoE3c
-         yP7zHhLT/nV9cdOfpY0HeYrIUXSz9+kMNNWd7HJ/1z4HjCLSe4vgMe5rle88AbaNBy
-         620+tKf1W1Rt3sHAuUiJ7GLBK6FOLy2J5dRCtCGQNRaqQVtLTAiKsYyMSN3ReQWJbX
-         hy0NvDUTjUuwdnFMP+3hM5mPckPo+XzFV5WtzH7Q7qi5gEuVM0Kh7jawn3mWvsmV2H
-         QyGGqlgBzrHbQ==
-Date:   Thu, 20 Jan 2022 11:54:19 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Stefan Roese <sr@denx.de>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yao Hongbo <yaohongbo@linux.alibaba.com>,
-        Naveen Naidu <naveennaidu479@gmail.com>
-Subject: Re: [PATCH v3 2/2] PCI/AER: Enable AER on all PCIe devices
- supporting it
-Message-ID: <20220120175419.GA1053838@bhelgaas>
+        s=k20201202; t=1642704019;
+        bh=3hOpLWRBY9cHHOmcyAbJ95mmCdfVcMmLJ9hEzU1QGr8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Iuy7vdiqq62okwRM3xtqhd+rqybWWzYYuqm4jNuNN1yACWWwImg2QwJktgGZQ+hwI
+         rqGxUNRfnuJxvyjOZnLYFS5l0Fr3dLP5iZn3IpaJtIUo69/+1pv3VWZFnGg0pjEfrg
+         9LgaNUJI2U1TjPvyGzxTBTHtM3lS1zx2LUYCxERFujaY64yKNzsG9lAWc1zRcxrlUU
+         mdGuc1nWYdvr82eKCJ3z+mlxR6mK6pg8nIlHkgw8l9WGwQ2cjBRmPaBaRclLRma47Q
+         OmHpwRHIg2i1lJU8x03xQ/XL+RC4PQm9BN9KvtbGsZh1UpW6LYOUcNeKStd9reIuQm
+         /CtmjBYaS9a9A==
+Received: by mail-ed1-f48.google.com with SMTP id r10so1536670edt.1;
+        Thu, 20 Jan 2022 10:40:19 -0800 (PST)
+X-Gm-Message-State: AOAM531R2/BX1aLqVuyni34DMqGqkqE8J4uj0dZHhSsPhbmHThuStioi
+        tO8UlarswnPU3XrF66wB9VSFA0yeVhDMqzV8qw==
+X-Google-Smtp-Source: ABdhPJzz7/BlVmNumwwPk+wbTtOxgNZu8/gsMqY7Y0iMYVCeOZu2LKuPqdM97ZlmghXoyGaEGscqg+6agoLtb/FCKgw=
+X-Received: by 2002:aa7:da81:: with SMTP id q1mr420456eds.280.1642704017630;
+ Thu, 20 Jan 2022 10:40:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3dcb1639-3234-8c3c-28b4-3be0f66dc29e@denx.de>
+References: <20220105150239.9628-1-pali@kernel.org> <20220112151814.24361-1-pali@kernel.org>
+ <20220112151814.24361-9-pali@kernel.org> <YemSgTfl7NiTfcKc@robh.at.kernel.org>
+ <20220120165522.v2xitzokcom4phmw@pali>
+In-Reply-To: <20220120165522.v2xitzokcom4phmw@pali>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 20 Jan 2022 12:40:06 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJS=V3qVCzmN0r9yOQNXZcsFgvneySqPy_CXYKsyzUK0g@mail.gmail.com>
+Message-ID: <CAL_JsqJS=V3qVCzmN0r9yOQNXZcsFgvneySqPy_CXYKsyzUK0g@mail.gmail.com>
+Subject: Re: [PATCH v2 08/11] PCI: mvebu: Use child_ops API
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 20, 2022 at 05:59:22PM +0100, Stefan Roese wrote:
-> On 1/20/22 16:46, Bjorn Helgaas wrote:
-> > On Thu, Jan 20, 2022 at 08:31:31AM +0100, Stefan Roese wrote:
-> > > On 1/19/22 11:37, Pali Rohár wrote:
-> > 
-> > > > And when you opened this issue with hotplugging, another thing for
-> > > > followup changes in future is calling pcie_set_ecrc_checking() function
-> > > > to align ECRC state of newly hotplugged device with "pci=ecrc=..."
-> > > > cmdline option. As currently it is done only at that function
-> > > > set_device_error_reporting().
-> > > 
-> > > Agreed, this is another area to look into. Not sure if it's okay to
-> > > address this, once this patch-set has been accepted (if it will be).
-> > 
-> > ECRC might be something that could be peeled off first to reduce the
-> > complexity of AER itself.
-> > 
-> > The ECRC capability and enable bits are in the AER Capability, so I
-> > think it should be moved to pci_aer_init() so it happens for every
-> > device as we enumerate it.
-> 
-> Just that there is no misunderstanding: You are thinking about something
-> like this:
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 9fa1f97e5b27..5585fefc4d0e 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -387,6 +387,9 @@ void pci_aer_init(struct pci_dev *dev)
->         pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, sizeof(u32) *
-> n);
-> 
->         pci_aer_clear_status(dev);
-> +
-> +       /* Enable ECRC checking if enabled and configured */
-> +       pcie_set_ecrc_checking(dev);
->  }
-> 
->  void pci_aer_exit(struct pci_dev *dev)
-> @@ -1223,9 +1226,6 @@ static int set_device_error_reporting(struct pci_dev
-> *dev, void *data)
->                         pci_disable_pcie_error_reporting(dev);
->         }
-> 
-> -       if (enable)
-> -               pcie_set_ecrc_checking(dev);
-> -
->         return 0;
->  }
-> 
-> Perhaps as patch 1/3 in this patch series? Or as some completely
-> separate patch?
+On Thu, Jan 20, 2022 at 10:55 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
+>
+> On Thursday 20 January 2022 10:49:05 Rob Herring wrote:
+> > On Wed, Jan 12, 2022 at 04:18:11PM +0100, Pali Roh=C3=A1r wrote:
+> > > Split struct pci_ops between ops and child_ops. Member ops is used fo=
+r
+> > > accessing PCIe Root Ports via pci-bridge-emul.c driver and child_ops =
+for
+> > > accessing real PCIe cards.
+> > >
+> > > There is no need to mix these two struct pci_ops into one as PCI core=
+ code
+> > > already provides separate callbacks via bridge->ops and bridge->child=
+_ops.
+> > >
+> > > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> > > ---
+> > >  drivers/pci/controller/pci-mvebu.c | 82 ++++++++++++++++------------=
+--
+> > >  1 file changed, 44 insertions(+), 38 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/control=
+ler/pci-mvebu.c
+> > > index 9ea2f6a7c2b0..1e90ab888075 100644
+> > > --- a/drivers/pci/controller/pci-mvebu.c
+> > > +++ b/drivers/pci/controller/pci-mvebu.c
+> > > @@ -294,11 +294,29 @@ static void mvebu_pcie_setup_hw(struct mvebu_pc=
+ie_port *port)
+> > >     mvebu_writel(port, mask, PCIE_MASK_OFF);
+> > >  }
+> > >
+> > > -static int mvebu_pcie_hw_rd_conf(struct mvebu_pcie_port *port,
+> > > -                            struct pci_bus *bus,
+> > > -                            u32 devfn, int where, int size, u32 *val=
+)
+> > > +static struct mvebu_pcie_port *mvebu_pcie_find_port(struct mvebu_pci=
+e *pcie,
+> > > +                                               struct pci_bus *bus,
+> > > +                                               int devfn);
+> > > +
+> > > +static int mvebu_pcie_child_rd_conf(struct pci_bus *bus, u32 devfn, =
+int where,
+> > > +                               int size, u32 *val)
+> > >  {
+> > > -   void __iomem *conf_data =3D port->base + PCIE_CONF_DATA_OFF;
+> > > +   struct mvebu_pcie *pcie =3D bus->sysdata;
+> > > +   struct mvebu_pcie_port *port;
+> > > +   void __iomem *conf_data;
+> > > +
+> > > +   port =3D mvebu_pcie_find_port(pcie, bus, devfn);
+> > > +   if (!port) {
+> > > +           *val =3D 0xffffffff;
+> > > +           return PCIBIOS_DEVICE_NOT_FOUND;
+> > > +   }
+> > > +
+> > > +   if (!mvebu_pcie_link_up(port)) {
+> > > +           *val =3D 0xffffffff;
+> > > +           return PCIBIOS_DEVICE_NOT_FOUND;
+> > > +   }
+> > > +
+> > > +   conf_data =3D port->base + PCIE_CONF_DATA_OFF;
+> > >
+> > >     mvebu_writel(port, PCIE_CONF_ADDR(bus->number, devfn, where),
+> > >                  PCIE_CONF_ADDR_OFF);
+> > > @@ -321,11 +339,21 @@ static int mvebu_pcie_hw_rd_conf(struct mvebu_p=
+cie_port *port,
+> > >     return PCIBIOS_SUCCESSFUL;
+> > >  }
+> > >
+> > > -static int mvebu_pcie_hw_wr_conf(struct mvebu_pcie_port *port,
+> > > -                            struct pci_bus *bus,
+> > > -                            u32 devfn, int where, int size, u32 val)
+> > > +static int mvebu_pcie_child_wr_conf(struct pci_bus *bus, u32 devfn,
+> > > +                               int where, int size, u32 val)
+> > >  {
+> > > -   void __iomem *conf_data =3D port->base + PCIE_CONF_DATA_OFF;
+> > > +   struct mvebu_pcie *pcie =3D bus->sysdata;
+> > > +   struct mvebu_pcie_port *port;
+> > > +   void __iomem *conf_data;
+> > > +
+> >
+> > > +   port =3D mvebu_pcie_find_port(pcie, bus, devfn);
+> > > +   if (!port)
+> > > +           return PCIBIOS_DEVICE_NOT_FOUND;
+> > > +
+> > > +   if (!mvebu_pcie_link_up(port))
+> > > +           return PCIBIOS_DEVICE_NOT_FOUND;
+> > > +
+> > > +   conf_data =3D port->base + PCIE_CONF_DATA_OFF;
+> >
+> > Again, the same setup code in read and write is a sign to use
+> > .map_bus(). You can copy it from my version I pointed you to.
+> >
+> > Rob
+>
+> I'm planning to do other cleanup in followup patches. But there are too
+> many mvebu and aardvark patches on the list waiting, and I do not want
+> to send another batch.
 
-Yes.  Probably as 1/3, since subsequent patches may depend on this
-one, or at least may not apply cleanly without this one.
+It can all be part of this patch.
 
-Bjorn
+Rob
