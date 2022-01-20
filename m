@@ -2,280 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0306495242
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 17:23:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E576495247
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 17:24:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235587AbiATQWq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jan 2022 11:22:46 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:32950 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376957AbiATQWp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 11:22:45 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 66946B81DB4;
-        Thu, 20 Jan 2022 16:22:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA1AFC340E0;
-        Thu, 20 Jan 2022 16:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642695763;
-        bh=nAL+9EUzWg/VrpxcuKiEa2MCqLsPygZexwnmRgYCpj4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=i00f7Xhs2vtYGBvTf0qEya6e2YHNqDbb4NGL5j72h9W5HNKLdKZ7eAB4OlWbqlyeS
-         SoTF197WIJJlyHSfZ8VFdC/DkqP98TfpDZNlzTWruh/5mbjaOVIhu8U8n7lvtQdPuT
-         FUGoxdXDKEmXnsYORRTTDjxV8djZwrDbrmS5il+T0UEaJ2THUUxm83JMlln/rXHL7W
-         FheRqJxYuEu5rfUR3I/5f/+0UWRqk/c/HrCDaUta4meLzGeFWkJONezRNH9T9Q27U3
-         pybMMOLnVjxe2TRD+WYdovOjmi4pzy+C4hw1BoAXcNt9bNMqUtScKadqCO5qO7ITl3
-         qk41k/gvxbjiA==
-Date:   Thu, 20 Jan 2022 10:22:41 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     rafael@kernel.org, bp@alien8.de, tony.luck@intel.com,
-        james.morse@arm.com, lenb@kernel.org, rjw@rjwysocki.net,
-        bhelgaas@google.com, zhangliguang@linux.alibaba.com,
-        zhuo.song@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6] ACPI: explicit init HEST, SDEI and GHES in apci_init
-Message-ID: <20220120162241.GA1047212@bhelgaas>
+        id S1376957AbiATQYj convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 20 Jan 2022 11:24:39 -0500
+Received: from mail-qt1-f173.google.com ([209.85.160.173]:38688 "EHLO
+        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1376968AbiATQYg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 11:24:36 -0500
+Received: by mail-qt1-f173.google.com with SMTP id j16so2633949qtr.5;
+        Thu, 20 Jan 2022 08:24:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=K4LYhqSWqSNuiVXiClJzV7bn+HnGpoOT567DraNrN9c=;
+        b=jmf8w+gGCtZwIGjfWXWxkLO4N+cY1knFKloNzcN9tbk8pTgiU85M8kMW9jVPrRyLnO
+         x0ko5QLqNSPoXedXolbTzhdmkfUM/b+2Bw89LcDKg3VGCnKCuyWX80nQWntIwncAiOWE
+         BJDapPY5ghjAQDOk4pBEvWykapzIVu70x0DlgYfGQwqnLeg5jh/Q+wXvLZi4T2aPPWI/
+         ndk/D5vvmNY3q3s1/m5PJ/tmJgidgAcDTfHvYdKjd4HjguaaBlQYyFgsGubvrVsGCdXG
+         VxGrVp+RcIkpAIfiVSvjMrReAGn2IjXkvIxJl53FtD25/eZBq+Jco8D+7dx6m5dGvoCB
+         DUKg==
+X-Gm-Message-State: AOAM53281bAkz6NNtwqtun28edgSoBDck23hrraeWiPdMWyRWEjBGP+5
+        Su4A36AlD0J0uTM0u69xSRU4mHF88LrkKlUhL+o=
+X-Google-Smtp-Source: ABdhPJwGcK5RjXPVqFEqsR1iHUpWItJCutLCW24ebFjYzfQGKAYGBWGmBy2x8T9ANApcM7Kj7NYYGbeMVFgKGkY0zww=
+X-Received: by 2002:ac8:578d:: with SMTP id v13mr14866971qta.472.1642695875395;
+ Thu, 20 Jan 2022 08:24:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220120050522.23689-1-xueshuai@linux.alibaba.com>
+References: <e57cc874-dacd-912d-4282-3cb6b1b77323@linux.alibaba.com> <20220119204259.GA962224@bhelgaas>
+In-Reply-To: <20220119204259.GA962224@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 20 Jan 2022 17:24:24 +0100
+Message-ID: <CAJZ5v0j34en1bCZamSGA9XgC-VZRgLgiA89o060_FAWWf21Byw@mail.gmail.com>
+Subject: Re: [PATCH v5] ACPI: Move sdei_init and ghes_init ahead to handle
+ platform errors earlier
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Shuai Xue <xueshuai@linux.alibaba.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        luanshi <zhangliguang@linux.alibaba.com>,
+        zhuo.song@linux.alibaba.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 20, 2022 at 01:05:22PM +0800, Shuai Xue wrote:
-> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
-> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
-> the estatus memory pool. On the other hand, ghes_init() relies on
-> sdei_init() to detect the SDEI version and (un)register events. The
-> dependencies are as follows:
-> 
->     ghes_init() => acpi_hest_init() => acpi_bus_init() => acpi_init()
->     ghes_init() => sdei_init()
-> 
-> HEST is not PCI-specific and initcall ordering is implicit and not
-> well-defined within a level.
-> 
-> Based on above, remove acpi_hest_init() from acpi_pci_root_init() and
-> convert ghes_init() and sdei_init() from initcalls to explicit calls in the
-> following order:
-> 
->     acpi_hest_init()
->     sdei_init()
->     ghes_init()
-> 
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+On Wed, Jan 19, 2022 at 9:43 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, Jan 19, 2022 at 02:40:11PM +0800, Shuai Xue wrote:
+> > [+to Rafael, question about HEST/GHES/SDEI init]
+> >
+> > Hi, Bjorn,
+> >
+> > Thank you for your comments and quick reply.
+> >
+> > 在 2022/1/19 AM6:49, Bjorn Helgaas 写道:
+> > > On Sun, Jan 16, 2022 at 04:43:10PM +0800, Shuai Xue wrote:
+> > >> On an ACPI system, ACPI is initialised very early from a
+> > >> subsys_initcall(), while SDEI is not ready until a
+> > >> subsys_initcall_sync(). This patch is to reduce the time before GHES
+> > >> initialization.
+> > >>
+> > >> The SDEI driver provides functions (e.g. apei_sdei_register_ghes(),
+> > >> apei_sdei_unregister_ghes()) to register or unregister event callback
+> > >> for dispatcher in firmware. When the GHES driver probing, it registers
+> > >> the corresponding callback according to the notification type specified
+> > >> by GHES. If the GHES notification type is SDEI, the GHES driver will
+> > >> call apei_sdei_register_ghes() to register event call.
+> > >>
+> > >> When the firmware emits an event, it migrates the handling of the event
+> > >> into the kernel at the registered entry-point __sdei_asm_handler. And
+> > >> finally, the kernel will call the registered event callback and return
+> > >> status_code to indicate the status of event handling. SDEI_EV_FAILED
+> > >> indicates that the kernel failed to handle the event.
+> > >>
+> > >> Consequently, when an error occurs during kernel booting, the kernel is
+> > >> unable to handle and report errors until the GHES driver is initialized
+> > >> by device_initcall(), in which the event callback is registered.  For
+> > >> example, when the kernel booting, the console logs many times from
+> > >> firmware before GHES drivers init in our platform:
+> > >>
+> > >>    Trip in MM PCIe RAS handle(Intr:910)
+> > >>    Clean PE[1.1.1] ERR_STS:0x4000100 -> 0 INT_STS:F0000000
+> > >>    Find RP(98:1.0)
+> > >>    --Walk dev(98:1.0) CE:0 UCE:4000
+> > >>    ...
+> > >>    ERROR:   sdei_dispatch_event(32a) ret:-1
+> > >>    --handler(910) end
+> > >
+> > > If I understand correctly, the firmware noticed an error, tried to
+> > > report it to the kernel, and is complaining because the kernel isn't
+> > > ready to handle it yet.  And the reason for this patch is to reduce
+> > > these complaints from the firmware.
+> >
+> > My thoughts exactly :)
+> >
+> > > That doesn't seem like a very good reason for this patch.  There is
+> > > *always* a window before the kernel is ready to handle events from the
+> > > firmware.
+> >
+> > Yes, there is always a window. But if we could do better in kernel that
+> > reduces the window by 90% (from 33 seconds to 3 second), why not?
+> >
+> > > Why is the firmware noticing these errors in the first place?  If
+> > > you're seeing these complaints regularly, my guess is that either you
+> > > have some terrible hardware or (more likely) the firmware isn't
+> > > clearing some expected error condition correctly.  For example, maybe
+> > > the Unsupported Request errors that happen while enumerating PCIe
+> > > devices are being reported.
+> > >
+> > > If you register the callback function, the kernel will now start
+> > > seeing these error reports.  What happens then?  Does the kernel log
+> > > the errors somewhere?  Is that better than the current situation where
+> > > the firmware logs them?
+> >
+> > Yep, it is a hardware issue. The firmware only logs in console
+> > (ttyAMA0) and we can not see it in kernel side. After the kernel
+> > starts seeing these error reports, we could see EDAC/ghes and
+> > efi/cper detailed logs in dmesg. We did not notice the problem until
+> > we check the console log, which inspired us to reduce the window
+> > when kernel startup, so that we can see the message clearly and
+> > properly. I think the intuition is to check the log of dmesg, not
+> > the console.
+>
+> > > However, I DO think that:
+> > >
+> > >   - Removing acpi_hest_init() from acpi_pci_root_init(), and
+> > >
+> > >   - Converting ghes_init() and sdei_init() from initcalls to explicit
+> > >     calls
+> > >
+> > > are very good reasons to do something like this patch because HEST is
+> > > not PCI-specific, and IMO, explicit calls are better than initcalls
+> > > because initcall ordering is implicit and not well-defined within a
+> > > level.
+> >
+> > Haha, if the above reasons still don't convince you, I would like to
+> > accept yours :) Should we do it in one patch or separate it into two
+> > patches?
+>
+> IMO, this can be done in one patch, but this would probably go via
+> Rafael.
 
-I didn't suggest the approach; I just reviewed the patch and the
-commit log and proposed moving it out of acpi_pci_root_init().  That
-doesn't need to be acknowledged.
-
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Minor extra "return" below.
-
-> ---
->  drivers/acpi/apei/ghes.c    | 17 +++++++----------
->  drivers/acpi/bus.c          |  4 ++++
->  drivers/acpi/pci_root.c     |  3 ---
->  drivers/firmware/arm_sdei.c | 13 ++-----------
->  include/acpi/apei.h         |  4 +++-
->  include/linux/arm_sdei.h    |  2 ++
->  6 files changed, 18 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 0c5c9acc6254..bed4f10cfcb8 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -1457,33 +1457,33 @@ static struct platform_driver ghes_platform_driver = {
->  	.remove		= ghes_remove,
->  };
->  
-> -static int __init ghes_init(void)
-> +void __init ghes_init(void)
->  {
->  	int rc;
->  
->  	if (acpi_disabled)
-> -		return -ENODEV;
-> +		return;
->  
->  	switch (hest_disable) {
->  	case HEST_NOT_FOUND:
-> -		return -ENODEV;
-> +		return;
->  	case HEST_DISABLED:
->  		pr_info(GHES_PFX "HEST is not enabled!\n");
-> -		return -EINVAL;
-> +		return;
->  	default:
->  		break;
->  	}
->  
->  	if (ghes_disable) {
->  		pr_info(GHES_PFX "GHES is not enabled!\n");
-> -		return -EINVAL;
-> +		return;
->  	}
->  
->  	ghes_nmi_init_cxt();
->  
->  	rc = platform_driver_register(&ghes_platform_driver);
->  	if (rc)
-> -		goto err;
-> +		return;
->  
->  	rc = apei_osc_setup();
->  	if (rc == 0 && osc_sb_apei_support_acked)
-> @@ -1495,8 +1495,5 @@ static int __init ghes_init(void)
->  	else
->  		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
->  
-> -	return 0;
-> -err:
-> -	return rc;
-> +	return;
-
-Unnecessary "return".
-
->  }
-> -device_initcall(ghes_init);
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index 07f604832fd6..1dcd71df2cd5 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -30,6 +30,7 @@
->  #include <linux/acpi_viot.h>
->  #include <linux/pci.h>
->  #include <acpi/apei.h>
-> +#include <linux/arm_sdei.h>
-
-This "arm" looks a little out of place in this supposedly arch-generic
-code.  Not really a new thing with this patch, since this #include
-already appears in drivers/acpi/apei/ghes.c.  Maybe it's unavoidable.
-
->  #include <linux/suspend.h>
->  #include <linux/prmt.h>
->  
-> @@ -1331,6 +1332,9 @@ static int __init acpi_init(void)
->  
->  	pci_mmcfg_late_init();
->  	acpi_iort_init();
-> +	acpi_hest_init();
-> +	sdei_init();
-> +	ghes_init();
->  	acpi_scan_init();
->  	acpi_ec_init();
->  	acpi_debugfs_init();
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index b76db99cced3..6f9e75d14808 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -22,8 +22,6 @@
->  #include <linux/slab.h>
->  #include <linux/dmi.h>
->  #include <linux/platform_data/x86/apple.h>
-> -#include <acpi/apei.h>	/* for acpi_hest_init() */
-> -
->  #include "internal.h"
->  
->  #define ACPI_PCI_ROOT_CLASS		"pci_bridge"
-> @@ -943,7 +941,6 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->  
->  void __init acpi_pci_root_init(void)
->  {
-> -	acpi_hest_init();
->  	if (acpi_pci_disabled)
->  		return;
->  
-> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-> index a7e762c352f9..1e1a51510e83 100644
-> --- a/drivers/firmware/arm_sdei.c
-> +++ b/drivers/firmware/arm_sdei.c
-> @@ -1059,14 +1059,14 @@ static bool __init sdei_present_acpi(void)
->  	return true;
->  }
->  
-> -static int __init sdei_init(void)
-> +void __init sdei_init(void)
->  {
->  	struct platform_device *pdev;
->  	int ret;
->  
->  	ret = platform_driver_register(&sdei_driver);
->  	if (ret || !sdei_present_acpi())
-> -		return ret;
-> +		return;
->  
->  	pdev = platform_device_register_simple(sdei_driver.driver.name,
->  					       0, NULL, 0);
-> @@ -1076,17 +1076,8 @@ static int __init sdei_init(void)
->  		pr_info("Failed to register ACPI:SDEI platform device %d\n",
->  			ret);
->  	}
-> -
-> -	return ret;
->  }
->  
-> -/*
-> - * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
-> - * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
-> - * by device_initcall(). We want to be called in the middle.
-> - */
-> -subsys_initcall_sync(sdei_init);
-> -
->  int sdei_event_handler(struct pt_regs *regs,
->  		       struct sdei_registered_event *arg)
->  {
-> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
-> index ece0a8af2bae..4e60dd73c3bb 100644
-> --- a/include/acpi/apei.h
-> +++ b/include/acpi/apei.h
-> @@ -27,14 +27,16 @@ extern int hest_disable;
->  extern int erst_disable;
->  #ifdef CONFIG_ACPI_APEI_GHES
->  extern bool ghes_disable;
-> +void __init ghes_init(void);
->  #else
->  #define ghes_disable 1
-> +static inline void ghes_init(void) { }
->  #endif
->  
->  #ifdef CONFIG_ACPI_APEI
->  void __init acpi_hest_init(void);
->  #else
-> -static inline void acpi_hest_init(void) { return; }
-> +static inline void acpi_hest_init(void) { }
->  #endif
->  
->  int erst_write(const struct cper_record_header *record);
-> diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
-> index 0a241c5c911d..14dc461b0e82 100644
-> --- a/include/linux/arm_sdei.h
-> +++ b/include/linux/arm_sdei.h
-> @@ -46,9 +46,11 @@ int sdei_unregister_ghes(struct ghes *ghes);
->  /* For use by arch code when CPU hotplug notifiers are not appropriate. */
->  int sdei_mask_local_cpu(void);
->  int sdei_unmask_local_cpu(void);
-> +void __init sdei_init(void);
->  #else
->  static inline int sdei_mask_local_cpu(void) { return 0; }
->  static inline int sdei_unmask_local_cpu(void) { return 0; }
-> +static inline void sdei_init(void) { }
->  #endif /* CONFIG_ARM_SDE_INTERFACE */
->  
->  
-> -- 
-> 2.20.1.12.g72788fdb
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Yes, that would make sense IMO.
