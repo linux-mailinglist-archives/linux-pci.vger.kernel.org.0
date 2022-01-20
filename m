@@ -2,125 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D80A1495599
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 21:45:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D08394955A0
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 21:48:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347295AbiATUpJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jan 2022 15:45:09 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:43826 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347236AbiATUpJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 15:45:09 -0500
+        id S1347336AbiATUsV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jan 2022 15:48:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347106AbiATUsU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 15:48:20 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A842C061574;
+        Thu, 20 Jan 2022 12:48:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 424CD61865
-        for <linux-pci@vger.kernel.org>; Thu, 20 Jan 2022 20:45:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51711C340E0;
-        Thu, 20 Jan 2022 20:45:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 06E8B61867;
+        Thu, 20 Jan 2022 20:48:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36B62C340E0;
+        Thu, 20 Jan 2022 20:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642711508;
-        bh=a88irtrpHyTXFEJChpvrjofK80Arq6Dau38IGAmiUwg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=absrxxQEGYn50Lfr2hIV1Nn9ld+W7lnPMOtbK+UfI8jJBTNPgCdXjsOdrFsKr57K/
-         Sp43xd1ZAo0FqaJVKxIC5NS0sOWL5C7SBEvv3+GknaxZJdeeuz2GAnJ5hHx31efsHL
-         21jRWY2YqpL0NWdz+hkD9yg+C3i9cQGiUuyOCtRLph2TqafuukhGjfWZPqL4u9HIaj
-         LxZA6cI7H3nOmn7K0YUP0SiymBquGYMenldoIwhfWm5SVFSDRnmHwEzGMw/Wg1j67z
-         CG9xth/5dc44GnHZuaR0QMBiJMbtUYjFMxzNzGgYSw/V84KRvdRYLd0wuCS2fy20rg
-         3BSVryZj1OX5w==
-Received: by pali.im (Postfix)
-        id 8F980791; Thu, 20 Jan 2022 21:45:05 +0100 (CET)
-Date:   Thu, 20 Jan 2022 21:45:05 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH pciutils 3/4] libpci: Add support for filling bridge
- resources
-Message-ID: <20220120204505.pwsgfutwh563y3ug@pali>
-References: <20211231222748.xriixk5etfya2xbn@pali>
- <20220120203352.GA1061051@bhelgaas>
+        s=k20201202; t=1642711699;
+        bh=w4VcuI/3zhWQl6ui5BVYNLaRbVfgrW/jIa3EPwGsGew=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RrYZEAwegilX/Cs6ioExmUZfcShhX2NrNRBY2sL8NAIPYklsEJrNwUI3Sqfft5uTn
+         ca6if3JFve3hUDsKzwoYjyhyaU1sWSHYm3mP3H64vnZm8mswOlhHr4G9hbCH0DqpEY
+         MvTeH5O8LUgBfkZeBbjNN3cWptyeHIFjd98sXYYsAt5cFMxhty2/j+CeZX6yMBpFlO
+         E98WRCgY8ED+ljmB8pQKV2KluyeuQDln5slrdvyjuHktErnOWHa2A2dMyq9wJ5HDcH
+         1DWIhpHczLVCQeM9l2bPaxewpFkO+Krzhnvk9g4gB3IB0ZH42sGAbFp8vDl44MPgC6
+         9aQtoGOgc9M4Q==
+Date:   Thu, 20 Jan 2022 14:48:17 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        intel-gfx@lists.freedesktop.org
+Subject: [GIT PULL] PCI fixes for v5.17
+Message-ID: <20220120204817.GA1065181@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220120203352.GA1061051@bhelgaas>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 20 January 2022 14:33:52 Bjorn Helgaas wrote:
-> On Fri, Dec 31, 2021 at 11:27:48PM +0100, Pali Rohár wrote:
-> > On Sunday 26 December 2021 23:20:27 Pali Rohár wrote:
-> > > On Sunday 26 December 2021 23:13:11 Martin Mareš wrote:
-> > > > Hi!
-> > > > 
-> > > > > +      else if (i < 7+6+4)
-> > > > > +        {
-> > > > > +          /*
-> > > > > +           * If kernel was compiled without CONFIG_PCI_IOV option then after
-> > > > > +           * the ROM line for configured bridge device (that which had set
-> > > > > +           * subordinary bus number to non-zero value) are four additional lines
-> > > > > +           * which describe resources behind bridge. For PCI-to-PCI bridges they
-> > > > > +           * are: IO, MEM, PREFMEM and empty. For CardBus bridges they are: IO0,
-> > > > > +           * IO1, MEM0 and MEM1. For unconfigured bridges and other devices
-> > > > > +           * there is no additional line after the ROM line. If kernel was
-> > > > > +           * compiled with CONFIG_PCI_IOV option then after the ROM line and
-> > > > > +           * before the first bridge resource line are six additional lines
-> > > > > +           * which describe IOV resources. Read all remaining lines in resource
-> > > > > +           * file and based on the number of remaining lines (0, 4, 6, 10) parse
-> > > > > +           * resources behind bridge.
-> > > > > +           */
-> > > > > +          lines[i-7].flags = flags;
-> > > > > +          lines[i-7].base_addr = start;
-> > > > > +          lines[i-7].size = size;
-> > > > > +        }
-> > > > > +    }
-> > > > > +  if (i == 7+4 || i == 7+6+4)
-> > > > 
-> > > > This looks crazy: is there any other way how to tell what the
-> > > > bridge entries mean?  Checking the number of entries looks very
-> > > > brittle.
-> > > 
-> > > I do not know any other way. Just for reference, here is a link to
-> > > the function resource_show() and DEVICE_COUNT_RESOURCE enum:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pci-sysfs.c?h=v5.15#n136
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/pci.h?h=v5.15#n94
-> > 
-> > I have also checked flags and there is no indication if resource is
-> > assigned on bridge as BAR or is forwarded behind the bridge.
-> > 
-> > Bjorn, Krzysztof: any idea if something better than checking number
-> > of entries in "resource" node can be used to determinate type of
-> > entry at specified line in "resource" node?
-> 
-> That *is* crazy.  I'm sorry that resource_show() works that way, and
-> that it gives no clue to identify BAR vs ROM vs IOV BAR vs CB window
-> vs regular bridge window.
-> 
-> It's conceivable that we could add "io_window" and "mem_window" files
-> or something similar.
+The following changes since commit fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf:
 
-Meanwhile I found out that in linux/ioport.h file is IORESOURCE_WINDOW
-constant with comment /* forwarded by bridge */
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/ioport.h?h=v5.15#n56
+  Linux 5.16-rc1 (2021-11-14 13:56:52 -0800)
 
-But apparently it is not set for resources behind PCI bridges and
-therefore it is not available in column of "resources" sysfs file.
+are available in the Git repository at:
 
-So maybe instead of adding new sysfs files, it would be better way to
-implement this flag and export it in flags column of "resources" file
-for every row which belongs to resources behind bridges?
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.17-fixes-1
 
-But in any case changes in kernel does not help lspci/libpci which is
-running on existing (unmodified) kernel.
+for you to fetch changes up to 9c494ca4d3a535f9ca11ad6af1813983c1c6cbdd:
 
-> Does this patch fix a problem?  I'm not clear on what the benefit is.
-> 
-> Bjorn
+  x86/gpu: Reserve stolen memory for first integrated Intel GPU (2022-01-18 14:19:06 -0600)
 
-My patch for libpci fixes it, but via counting number of rows in
-"resources" sysfs file... which is crazy. But I do not see any other
-option how to do it via currently available kernel APIs.
+----------------------------------------------------------------
+PCI fixes:
+
+  - Reserve "stolen memory" for integrated Intel GPU, even if it's not
+    the first GPU to be enumerated (Lucas De Marchi)
+
+----------------------------------------------------------------
+Lucas De Marchi (1):
+      x86/gpu: Reserve stolen memory for first integrated Intel GPU
+
+ arch/x86/kernel/early-quirks.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
