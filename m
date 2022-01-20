@@ -2,97 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9997B49526B
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 17:31:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F2BD49529A
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 17:49:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346286AbiATQb4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jan 2022 11:31:56 -0500
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:35625 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346858AbiATQby (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 11:31:54 -0500
-Received: by mail-oi1-f171.google.com with SMTP id s127so9665475oig.2;
-        Thu, 20 Jan 2022 08:31:54 -0800 (PST)
+        id S1377110AbiATQtK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jan 2022 11:49:10 -0500
+Received: from mail-oi1-f175.google.com ([209.85.167.175]:45028 "EHLO
+        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1377115AbiATQtH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 11:49:07 -0500
+Received: by mail-oi1-f175.google.com with SMTP id s9so9663092oib.11;
+        Thu, 20 Jan 2022 08:49:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=oIS21M3kDACk8JCT5uuyNKZCe6YGCb1Ik2cXn3T5AB0=;
-        b=TH5G2TplCGappsYRRkehXFphvULbK2Jkksqbl0djI8I7s/f7tWiVOPDxR1R6TVIgIh
-         9Wx4pzzMsw3slayECc1l/ab45OYw8WIX4qOaE1nM3qHLGSMR7X3WkzB4w2X1aaXgSk/0
-         7b4ySIKa9mPUk/8X5yvXfTfchHIIlWf0kVo53+oQ4txrl33jFHjbLBIBX2y/IhxJYaq2
-         YTsVDGGb9/WzjpTI7Imr93my6a0EQStuu02bppYr6QW0EpA2vWFhUi4noAUTLsAIII0M
-         y/rGascBhz+/RMg0moCLontIwaApyIY4ThkhY2plr29BlUQPRZemlvlmSsFwhjZPIiAN
-         sUGw==
-X-Gm-Message-State: AOAM5331WgnymGmaG+0ZdXk6fl11jlR7YG6vW0XeRj/Tbl8PWs84U8ko
-        6LkkBhWpPdzY1CPgaRGeJQ==
-X-Google-Smtp-Source: ABdhPJyAmQH8lK/5INP9kdsaboVqe2rh5v2NQ1dA3JLRep7fGroWXk18fJqb9O1GEwXs999OdcKCYQ==
-X-Received: by 2002:aca:2409:: with SMTP id n9mr8475446oic.120.1642696313584;
-        Thu, 20 Jan 2022 08:31:53 -0800 (PST)
+        bh=atLkBu3N/RFCjhoQCUPCGUzf/CIlAjhcm9ghJHrFyPo=;
+        b=vdj5H5oD+ne7oZ0BEDBwdzYI/W1h1pb1MMlykWJbuRICt4odO0XEBSBDa/262BvKHR
+         BEJLXoAPVleHUTBv7Wfn1l/Z83qv3x059UXv+ofR1j1ZjsJIMHvhJkVsbEUINulbI0Li
+         CZ69+75TjO025haxQRQfDpKuNQxdMHQL3DIXW/tcLgNx1yxMqoci6HVayRT1rEHtFoxM
+         vAr0M42R6Ev66Y+R9rtsXARYf4ZdU2+FMfQ7fQG4jMtsuqGsAzK5GHT+rkgd2c5uN6dX
+         l7ngLP8Hh0I92JUTZWB3xJ15pBkrpB9uKWscLTue3qJoaziSt3I7yQmzb495E4p26Ngi
+         J/6Q==
+X-Gm-Message-State: AOAM531fA/1jRF6Gw1Ev6rBKDKY1aUY1TFxV0y//hU6KzBD3I3iDk7lI
+        AWVD+MRtY7MGYseEOTjVqw==
+X-Google-Smtp-Source: ABdhPJw6rfhYcEudPb8hkyG0JB3JIC9ChkgIAC4YvkyUefFiL3rdFzoA/qLdUPkxtT08jmgKVIoVkA==
+X-Received: by 2002:a05:6808:11c5:: with SMTP id p5mr8329266oiv.51.1642697346626;
+        Thu, 20 Jan 2022 08:49:06 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id f8sm1343757oop.46.2022.01.20.08.31.52
+        by smtp.gmail.com with ESMTPSA id ay14sm2096888oib.5.2022.01.20.08.49.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jan 2022 08:31:53 -0800 (PST)
-Received: (nullmailer pid 1556364 invoked by uid 1000);
-        Thu, 20 Jan 2022 16:31:52 -0000
-Date:   Thu, 20 Jan 2022 10:31:52 -0600
+        Thu, 20 Jan 2022 08:49:06 -0800 (PST)
+Received: (nullmailer pid 1580253 invoked by uid 1000);
+        Thu, 20 Jan 2022 16:49:05 -0000
+Date:   Thu, 20 Jan 2022 10:49:05 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/11] PCI: Small improvements for pci-bridge-emul and
- mvebu
-Message-ID: <YemOeJ2qIJV9dzO6@robh.at.kernel.org>
-References: <20211221141455.30011-1-pali@kernel.org>
- <20220104153529.31647-1-pali@kernel.org>
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 08/11] PCI: mvebu: Use child_ops API
+Message-ID: <YemSgTfl7NiTfcKc@robh.at.kernel.org>
+References: <20220105150239.9628-1-pali@kernel.org>
+ <20220112151814.24361-1-pali@kernel.org>
+ <20220112151814.24361-9-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220104153529.31647-1-pali@kernel.org>
+In-Reply-To: <20220112151814.24361-9-pali@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 04, 2022 at 04:35:18PM +0100, Pali Rohár wrote:
-> This patch series contains small improvements for pci-bridge-emul and
-> mvebu drivers. This patch series is based on top of the patches:
-> https://lore.kernel.org/linux-pci/20211125124605.25915-1-pali@kernel.org/
-> (which are now in pci/mvebu branch)
+On Wed, Jan 12, 2022 at 04:18:11PM +0100, Pali Rohár wrote:
+> Split struct pci_ops between ops and child_ops. Member ops is used for
+> accessing PCIe Root Ports via pci-bridge-emul.c driver and child_ops for
+> accessing real PCIe cards.
 > 
-> In V2 was added comment into code explaining PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD
-> and PCI_BRIDGE_EMUL_NO_IO_FORWARD flags.
+> There is no need to mix these two struct pci_ops into one as PCI core code
+> already provides separate callbacks via bridge->ops and bridge->child_ops.
 > 
-> Pali Rohár (11):
->   MAINTAINERS: Add Pali Rohár as pci-mvebu.c maintainer
->   PCI: pci-bridge-emul: Make struct pci_bridge_emul_ops as const
->   PCI: pci-bridge-emul: Rename PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR to
->     PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD
->   PCI: pci-bridge-emul: Add support for new flag
->     PCI_BRIDGE_EMUL_NO_IO_FORWARD
->   PCI: mvebu: Add help string for CONFIG_PCI_MVEBU option
->   PCI: mvebu: Remove duplicate nports assignment
->   PCI: mvebu: Set PCI_BRIDGE_EMUL_NO_IO_FORWARD when IO is unsupported
->   PCI: mvebu: Properly initialize vendor, device and revision of
->     emulated bridge
->   PCI: mvebu: Update comment for PCI_EXP_LNKCAP register on emulated
->     bridge
->   PCI: mvebu: Update comment for PCI_EXP_LNKCTL register on emulated
->     bridge
->   PCI: mvebu: Fix reporting Data Link Layer Link Active on emulated
->     bridge
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-mvebu.c | 82 ++++++++++++++++--------------
+>  1 file changed, 44 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index 9ea2f6a7c2b0..1e90ab888075 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -294,11 +294,29 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+>  	mvebu_writel(port, mask, PCIE_MASK_OFF);
+>  }
+>  
+> -static int mvebu_pcie_hw_rd_conf(struct mvebu_pcie_port *port,
+> -				 struct pci_bus *bus,
+> -				 u32 devfn, int where, int size, u32 *val)
+> +static struct mvebu_pcie_port *mvebu_pcie_find_port(struct mvebu_pcie *pcie,
+> +						    struct pci_bus *bus,
+> +						    int devfn);
+> +
+> +static int mvebu_pcie_child_rd_conf(struct pci_bus *bus, u32 devfn, int where,
+> +				    int size, u32 *val)
+>  {
+> -	void __iomem *conf_data = port->base + PCIE_CONF_DATA_OFF;
+> +	struct mvebu_pcie *pcie = bus->sysdata;
+> +	struct mvebu_pcie_port *port;
+> +	void __iomem *conf_data;
+> +
+> +	port = mvebu_pcie_find_port(pcie, bus, devfn);
+> +	if (!port) {
+> +		*val = 0xffffffff;
+> +		return PCIBIOS_DEVICE_NOT_FOUND;
+> +	}
+> +
+> +	if (!mvebu_pcie_link_up(port)) {
+> +		*val = 0xffffffff;
+> +		return PCIBIOS_DEVICE_NOT_FOUND;
+> +	}
+> +
+> +	conf_data = port->base + PCIE_CONF_DATA_OFF;
+>  
+>  	mvebu_writel(port, PCIE_CONF_ADDR(bus->number, devfn, where),
+>  		     PCIE_CONF_ADDR_OFF);
+> @@ -321,11 +339,21 @@ static int mvebu_pcie_hw_rd_conf(struct mvebu_pcie_port *port,
+>  	return PCIBIOS_SUCCESSFUL;
+>  }
+>  
+> -static int mvebu_pcie_hw_wr_conf(struct mvebu_pcie_port *port,
+> -				 struct pci_bus *bus,
+> -				 u32 devfn, int where, int size, u32 val)
+> +static int mvebu_pcie_child_wr_conf(struct pci_bus *bus, u32 devfn,
+> +				    int where, int size, u32 val)
+>  {
+> -	void __iomem *conf_data = port->base + PCIE_CONF_DATA_OFF;
+> +	struct mvebu_pcie *pcie = bus->sysdata;
+> +	struct mvebu_pcie_port *port;
+> +	void __iomem *conf_data;
+> +
 
-For the series,
+> +	port = mvebu_pcie_find_port(pcie, bus, devfn);
+> +	if (!port)
+> +		return PCIBIOS_DEVICE_NOT_FOUND;
+> +
+> +	if (!mvebu_pcie_link_up(port))
+> +		return PCIBIOS_DEVICE_NOT_FOUND;
+> +
+> +	conf_data = port->base + PCIE_CONF_DATA_OFF;
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-In the future, please do not thread new versions with the old version 
-of the series.
+Again, the same setup code in read and write is a sign to use 
+.map_bus(). You can copy it from my version I pointed you to.
 
 Rob
