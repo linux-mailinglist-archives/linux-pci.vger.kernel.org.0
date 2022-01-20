@@ -2,135 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1B7E495109
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 16:08:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39BB34951B8
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 16:46:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376410AbiATPIS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jan 2022 10:08:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41172 "EHLO
+        id S1376519AbiATPqS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jan 2022 10:46:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232516AbiATPIS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 10:08:18 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8F41C061574;
-        Thu, 20 Jan 2022 07:08:17 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id o7-20020a05600c510700b00347e10f66d1so7246297wms.0;
-        Thu, 20 Jan 2022 07:08:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=ddPVCxZ4dU5YjdeoeIUkKx7PGG9W/fGI0TtRqbFtTuw=;
-        b=H6c4pby5QH1o8S7IPDYhT0iMNADpq3fH9CJ1YFaBUTbth7CK+XT0K1kj/KxEW3svMz
-         qgPSkkw0v5ifu7wiTZ5ueesuwmt13mkAyXAHkbUvi5ZKfVSsMWLuc2Swh1ZByGg8Cwgs
-         JCgHJ/p6N0it6jnvmy+yz+X9GiRJHqUyok4tcJwB1VTHCQ0wnhTroDypB1uqiwBLNjKo
-         vLCmGDNpepIE/C0qTpl46MLnWh0+aWCljk+Umg70LvdYmUUHwHO/XvXINwEWnlXSlDnF
-         NHmU9EwfPYCHUxAD5LD6QBcp0IM8253CUgv7gWuYyanHdMTY0yzw9xKdC9DHUQqu2N+H
-         VsfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=ddPVCxZ4dU5YjdeoeIUkKx7PGG9W/fGI0TtRqbFtTuw=;
-        b=iVpLMaGJZaR7e5Oi3gDcwRTdIJLBBXWr3252t7Ynviausn5dSiOBJJPxECZLNpe4HW
-         MUwS+kaoZQgT06U+L76t76UVlYIJQutAoIsfZCxSo2eR2MCpMzBdGAwSEJBYA9dmBu8e
-         q3WVf6/Mebcgdgzfw2PvjrosS9PNh4AkT4ymdAL58WPMBE2mXZxXyz83hkVPmmhGsRPK
-         qEshXwkRqRTfuY+lPU0PtFIZMpR/2XBeQNPCLZH5KNBlr027rH6Vn784GvTboiy1O/5M
-         Qbvq91gJdPx0xC29XDHPcMIY6+Rv0ol5Egh5/25RqP5ahxqLWBoowz/gEl6EdfUXLz+l
-         dIew==
-X-Gm-Message-State: AOAM532WFhyd018Ao/IaaXdooLbBgwXXjHxhmqxq2FOVvRm1jgpuqRkY
-        vkNij/adjWODgxEAZ1Cm3Xae95Z20EpSarktVjG8Uc0CYho=
-X-Google-Smtp-Source: ABdhPJycTIloH80MYHJgoCdcMS3sJYfpzZW6RfgpOkcOdf2Mub026i47AWJ9yyadXN1Q0Bwely+PGyslLzS6SnFiRN8=
-X-Received: by 2002:a7b:c310:: with SMTP id k16mr9289871wmj.169.1642691296273;
- Thu, 20 Jan 2022 07:08:16 -0800 (PST)
+        with ESMTP id S1346016AbiATPqS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 10:46:18 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 582A9C061574
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jan 2022 07:46:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E9CC2611E1
+        for <linux-pci@vger.kernel.org>; Thu, 20 Jan 2022 15:46:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B2AC340E0;
+        Thu, 20 Jan 2022 15:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642693577;
+        bh=dTMk8Gw51lEiU78KiW/nHaKoQP1IdjBC2pdtclyIjgA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fK0VBNMl76AragmwqWSYecv5x2zvVlAmYBuFnCFBwkqFrCzZi2JYg+zQfFi7tma+L
+         /+L6olHB4d7xJqsBZaH9ihrnvOJwgOO7vmWbdSDz6LEINo06boMrHI/Nt7S6MycoNh
+         MZRoHCar9tcNGtQDmeOKHWga8MVmkNf6+Z+p4SoE5nYrJSXKg8jotmM9v/sYwkyb60
+         PTztmt3iH+0bfpHxtrcjS9KTtPmBNCiFiFEWdEqPL0O9Ugc8GOxyCVcHFdOvxOnq3q
+         LvLd3Vq+/1R5Een9IZfSz90nQ0T2ZMEmT7tkxdmrIR2fwT1dFOrgAjGWr2lOSKHhGj
+         Eb67SYeOoM5VQ==
+Date:   Thu, 20 Jan 2022 09:46:15 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Stefan Roese <sr@denx.de>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Yao Hongbo <yaohongbo@linux.alibaba.com>,
+        Naveen Naidu <naveennaidu479@gmail.com>
+Subject: Re: [PATCH v3 2/2] PCI/AER: Enable AER on all PCIe devices
+ supporting it
+Message-ID: <20220120154615.GA1044459@bhelgaas>
 MIME-Version: 1.0
-References: <20220120000409.2706549-1-rajatja@google.com> <CAE_wzQ_XxONXx5bgDNLAWM_UbV0r8hP9fW6s5sgRYRVSHQWjLw@mail.gmail.com>
-In-Reply-To: <CAE_wzQ_XxONXx5bgDNLAWM_UbV0r8hP9fW6s5sgRYRVSHQWjLw@mail.gmail.com>
-Reply-To: rajatxjain@gmail.com
-From:   Rajat Jain <rajatxjain@gmail.com>
-Date:   Thu, 20 Jan 2022 07:08:06 -0800
-Message-ID: <CAA93t1pOi9mz9he41E+S+sb7F=0ptaWG4hmi+Nuac=7FXEBi7Q@mail.gmail.com>
-Subject: Re: [PATCH] PCI: ACPI: Allow internal devices to be marked as untrusted
-To:     Dmitry Torokhov <dtor@google.com>
-Cc:     Rajat Jain <rajatja@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jesse Barnes <jsbarnes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <487c2f8f-a02d-1ddb-ff17-339cbac7e1a7@denx.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Dmitry, Bjorn,
+On Thu, Jan 20, 2022 at 08:31:31AM +0100, Stefan Roese wrote:
+> On 1/19/22 11:37, Pali Rohár wrote:
 
-Thanks for your review and comments.
+> > And when you opened this issue with hotplugging, another thing for
+> > followup changes in future is calling pcie_set_ecrc_checking() function
+> > to align ECRC state of newly hotplugged device with "pci=ecrc=..."
+> > cmdline option. As currently it is done only at that function
+> > set_device_error_reporting().
+> 
+> Agreed, this is another area to look into. Not sure if it's okay to
+> address this, once this patch-set has been accepted (if it will be).
 
-On Wed, Jan 19, 2022 at 6:25 PM Dmitry Torokhov <dtor@google.com> wrote:
->
-> Hi Rajat,
->
-> On Wed, Jan 19, 2022 at 4:04 PM Rajat Jain <rajatja@google.com> wrote:
-> >
-> > Today the pci_dev->untrusted is set for any devices sitting downstream
-> > an external facing port (determined via "ExternalFacingPort" property).
-> > This however, disallows any internal devices to be marked as untrusted.
-> >
-> > There are use-cases though, where a platform would like to treat an
-> > internal device as untrusted (perhaps because it runs untrusted
-> > firmware, or offers an attack surface by handling untrusted network
-> > data etc).
-> >
-> > This patch introduces a new "UntrustedDevice" property that can be used
-> > by the firmware to mark any device as untrusted.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> >  drivers/pci/pci-acpi.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index a42dbf448860..3d9e5fa49451 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -1350,12 +1350,25 @@ static void pci_acpi_set_external_facing(struct pci_dev *dev)
-> >                 dev->external_facing = 1;
-> >  }
-> >
-> > +static void pci_acpi_set_untrusted(struct pci_dev *dev)
-> > +{
-> > +       u8 val;
-> > +
-> > +       if (device_property_read_u8(&dev->dev, "UntrustedDevice", &val))
-> > +               return;
-> > +
-> > +       /* These PCI devices are not trustworthy */
-> > +       if (val)
-> > +               dev->untrusted = 1;
->
-> Should this all be replaced with:
->
-> dev->untrusted = device_property_read_bool(&dev->dev, "UntrustedDevice");
->
-> ?
+ECRC might be something that could be peeled off first to reduce the
+complexity of AER itself.
 
-Ack, yes, I will do this.
+The ECRC capability and enable bits are in the AER Capability, so I
+think it should be moved to pci_aer_init() so it happens for every
+device as we enumerate it.
 
->
-> Also, is this ACPI-specific? Why won't we need this for DT systems (or
-> do we already have this)?.
+As far as I can tell, there is no requirement that every device in the
+path support ECRC, so it can be enabled independently for each device.
+I think devices that don't support ECRC checking must handle TLPs with
+ECRC without error.
 
-Good point. Ack, Yes, I don't mind doing this for DT systems also. I
-wanted to get some feedback and acceptance within the PCI subsystem on
-the general idea of this property though. Bjorn?
+Per Table 6-5, ECRC check failures result in a device logging the
+prefix/header of the TLP and sending ERR_NONFATAL or ERR_COR.  I think
+this is useful regardless of whether AER interrupts are enabled
+because error information is logged where the ECRC failure was
+detected.
 
-Thanks & Best Regards,
-
-Rajat
-
->
-> Thanks,
-> Dmitry
+Bjorn
