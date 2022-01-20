@@ -2,120 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30B094952C7
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 17:59:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49CED4952E4
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Jan 2022 18:09:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377209AbiATQ7g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jan 2022 11:59:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377186AbiATQ7b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 11:59:31 -0500
-Received: from mout-u-204.mailbox.org (mout-u-204.mailbox.org [IPv6:2001:67c:2050:1::465:204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33705C061574
-        for <linux-pci@vger.kernel.org>; Thu, 20 Jan 2022 08:59:31 -0800 (PST)
-Received: from smtp202.mailbox.org (unknown [91.198.250.118])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 4JfpdX0Ddfz9skr;
-        Thu, 20 Jan 2022 17:59:28 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Message-ID: <3dcb1639-3234-8c3c-28b4-3be0f66dc29e@denx.de>
-Date:   Thu, 20 Jan 2022 17:59:22 +0100
+        id S1377215AbiATRJT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Jan 2022 12:09:19 -0500
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:45585 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1377203AbiATRJT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 12:09:19 -0500
+Received: by mail-ot1-f41.google.com with SMTP id v8-20020a9d6048000000b005960952c694so8359538otj.12;
+        Thu, 20 Jan 2022 09:09:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Euwjo6CgoOD4aO0544Go5k7bgAvjOJGkS5qDpA3RUSc=;
+        b=cdQYEKMNjQnDmCDxj5d7aXmc/U5J0ZVeNi9apCWGD+skO354oajSamNhwuUIjDxSNz
+         jVuRLmKWWVMetR37g9Achs4liAAldBFA+ubIx8dpSMaxgfEZAGjNkZAsrtc7aDNeO2Iu
+         wAaKG9KdCe1kMObVzaYKXF11wYQP7DemLC+TjqBfXTjRo+DTAjU7IyYlSkZwx6rTKutP
+         AZdqjODeXEedAdXVhrtT2J6uMCiXnSVD6VsLeTX7aTMfrhCSzSVZsRlfFiTum8NXncv6
+         rpmJH1Na1zDYbymJGRoZrwJ6seC7M722wKIiFKgW/bzcDaDR3568nAwZtS8zLVwUHrTJ
+         Yrig==
+X-Gm-Message-State: AOAM530Ssbgt48ZC3SjufASO8eqmKpJLw/7dLq0Mwf9IGIR9/KyxJM+h
+        rM51WoeNDYZgfSou/hz/WT3QDPDmKQ==
+X-Google-Smtp-Source: ABdhPJz4bpxpNcmiI8YWg3qvT0F0SvrpJ4m2JLdSJmUlrVteXsDv4EbixpwWMFD7H2CVINSHcnvp2A==
+X-Received: by 2002:a9d:22c3:: with SMTP id y61mr431937ota.248.1642698558566;
+        Thu, 20 Jan 2022 09:09:18 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id c20sm1747132ots.50.2022.01.20.09.09.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jan 2022 09:09:17 -0800 (PST)
+Received: (nullmailer pid 1607218 invoked by uid 1000);
+        Thu, 20 Jan 2022 17:09:17 -0000
+Date:   Thu, 20 Jan 2022 11:09:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 05/11] PCI: mvebu: Correctly configure x1/x4 mode
+Message-ID: <YemXPQx4F1eRtLxO@robh.at.kernel.org>
+References: <20220105150239.9628-1-pali@kernel.org>
+ <20220112151814.24361-1-pali@kernel.org>
+ <20220112151814.24361-6-pali@kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/2] PCI/AER: Enable AER on all PCIe devices supporting
- it
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yao Hongbo <yaohongbo@linux.alibaba.com>,
-        Naveen Naidu <naveennaidu479@gmail.com>
-References: <20220120154615.GA1044459@bhelgaas>
-From:   Stefan Roese <sr@denx.de>
-In-Reply-To: <20220120154615.GA1044459@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220112151814.24361-6-pali@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/20/22 16:46, Bjorn Helgaas wrote:
-> On Thu, Jan 20, 2022 at 08:31:31AM +0100, Stefan Roese wrote:
->> On 1/19/22 11:37, Pali Roh√°r wrote:
+On Wed, Jan 12, 2022 at 04:18:08PM +0100, Pali Roh·r wrote:
+> If x1/x4 mode is not set correctly then link with endpoint card is not
+> established.
 > 
->>> And when you opened this issue with hotplugging, another thing for
->>> followup changes in future is calling pcie_set_ecrc_checking() function
->>> to align ECRC state of newly hotplugged device with "pci=ecrc=..."
->>> cmdline option. As currently it is done only at that function
->>> set_device_error_reporting().
->>
->> Agreed, this is another area to look into. Not sure if it's okay to
->> address this, once this patch-set has been accepted (if it will be).
+> Use DTS property 'num-lanes' to deteriminate x1/x4 mode.
 > 
-> ECRC might be something that could be peeled off first to reduce the
-> complexity of AER itself.
+> Signed-off-by: Pali Roh·r <pali@kernel.org>
+> ---
+>  drivers/pci/controller/pci-mvebu.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
 > 
-> The ECRC capability and enable bits are in the AER Capability, so I
-> think it should be moved to pci_aer_init() so it happens for every
-> device as we enumerate it.
+> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> index a075ba26cff1..0f2ec0a17874 100644
+> --- a/drivers/pci/controller/pci-mvebu.c
+> +++ b/drivers/pci/controller/pci-mvebu.c
+> @@ -93,6 +93,7 @@ struct mvebu_pcie_port {
+>  	void __iomem *base;
+>  	u32 port;
+>  	u32 lane;
+> +	bool is_x4;
 
-Just that there is no misunderstanding: You are thinking about something
-like this:
+I would just store the number of lanes.
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 9fa1f97e5b27..5585fefc4d0e 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -387,6 +387,9 @@ void pci_aer_init(struct pci_dev *dev)
-         pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, 
-sizeof(u32) * n);
+>  	int devfn;
+>  	unsigned int mem_target;
+>  	unsigned int mem_attr;
+> @@ -233,13 +234,25 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+>  
+>  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+>  {
+> -	u32 ctrl, cmd, dev_rev, mask;
+> +	u32 ctrl, lnkcap, cmd, dev_rev, mask;
+>  
+>  	/* Setup PCIe controller to Root Complex mode. */
+>  	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
+>  	ctrl |= PCIE_CTRL_RC_MODE;
+>  	mvebu_writel(port, ctrl, PCIE_CTRL_OFF);
+>  
+> +	/*
+> +	 * Set Maximum Link Width to X1 or X4 in Root Port's PCIe Link
+> +	 * Capability register. This register is defined by PCIe specification
+> +	 * as read-only but this mvebu controller has it as read-write and must
+> +	 * be set to number of SerDes PCIe lanes (1 or 4). If this register is
+> +	 * not set correctly then link with endpoint card is not established.
+> +	 */
+> +	lnkcap = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP);
+> +	lnkcap &= ~PCI_EXP_LNKCAP_MLW;
+> +	lnkcap |= (port->is_x4 ? 4 : 1) << 4;
 
-         pci_aer_clear_status(dev);
-+
-+       /* Enable ECRC checking if enabled and configured */
-+       pcie_set_ecrc_checking(dev);
-  }
+then this is just: lanes << 4
 
-  void pci_aer_exit(struct pci_dev *dev)
-@@ -1223,9 +1226,6 @@ static int set_device_error_reporting(struct 
-pci_dev *dev, void *data)
-                         pci_disable_pcie_error_reporting(dev);
-         }
+> +	mvebu_writel(port, lnkcap, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP);
+> +
+>  	/* Disable Root Bridge I/O space, memory space and bus mastering. */
+>  	cmd = mvebu_readl(port, PCIE_CMD_OFF);
+>  	cmd &= ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER);
+> @@ -986,6 +999,7 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
+>  	struct device *dev = &pcie->pdev->dev;
+>  	enum of_gpio_flags flags;
+>  	int reset_gpio, ret;
+> +	u32 num_lanes;
+>  
+>  	port->pcie = pcie;
+>  
+> @@ -998,6 +1012,9 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
+>  	if (of_property_read_u32(child, "marvell,pcie-lane", &port->lane))
+>  		port->lane = 0;
+>  
+> +	if (!of_property_read_u32(child, "num-lanes", &num_lanes) && num_lanes == 4)
+> +		port->is_x4 = true;
 
--       if (enable)
--               pcie_set_ecrc_checking(dev);
--
-         return 0;
-  }
+And this can be:
 
-Perhaps as patch 1/3 in this patch series? Or as some completely
-separate patch?
+num_lanes = 1;
+of_property_read_u32(child, "num-lanes", &num_lanes);
 
-Thanks,
-Stefan
+If you want to validate the DT is only 1 or 4, make the DT schema do 
+that.
 
-> As far as I can tell, there is no requirement that every device in the
-> path support ECRC, so it can be enabled independently for each device.
-> I think devices that don't support ECRC checking must handle TLPs with
-> ECRC without error.
+
+> +
+>  	port->name = devm_kasprintf(dev, GFP_KERNEL, "pcie%d.%d", port->port,
+>  				    port->lane);
+>  	if (!port->name) {
+> -- 
+> 2.20.1
 > 
-> Per Table 6-5, ECRC check failures result in a device logging the
-> prefix/header of the TLP and sending ERR_NONFATAL or ERR_COR.  I think
-> this is useful regardless of whether AER interrupts are enabled
-> because error information is logged where the ECRC failure was
-> detected.
 > 
-> Bjorn
-> 
-
-Viele Gr√º√üe,
-Stefan Roese
-
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de
