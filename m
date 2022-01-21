@@ -2,73 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 338494962A3
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jan 2022 17:11:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8489F496358
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jan 2022 17:57:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381749AbiAUQLx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jan 2022 11:11:53 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:37522 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239055AbiAUQLw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jan 2022 11:11:52 -0500
+        id S1381542AbiAUQ5h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jan 2022 11:57:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1380427AbiAUQ5L (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jan 2022 11:57:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 634F8C06173B;
+        Fri, 21 Jan 2022 08:57:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A2C4CB82067
-        for <linux-pci@vger.kernel.org>; Fri, 21 Jan 2022 16:11:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36B8EC340E1;
-        Fri, 21 Jan 2022 16:11:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0169B61A5F;
+        Fri, 21 Jan 2022 16:57:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A9D0C340E1;
+        Fri, 21 Jan 2022 16:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642781510;
-        bh=z1MmIUsTd5gyftevRQ1Uoz07jmjBQNtEqTUB8WShNw8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lYvyhBnTEOffOfMPu2pyXy3cZhnxQTgtA//Cz3K4bF25hluCERE06hRvlSQPYcJhG
-         Wh7PlDcU1YtE+mm6ZAaSYFVLzBPWztG+Zc6oCIHMmtXAiDVDseHhm7IacUGrnxj6Qf
-         7va3iPg+A47VRWGu90qRbccG82PI+Qqr7kdku5AOH16PvSreIbZJ2PGAFn9upqkdBA
-         HBKTRKhIDuCVaWA0HVLZh3afycqFQLTIM+EzhNmesEVRwq27yRKFI4T1BOyqXXnqml
-         RKFIVtOkDpr2/+Lb3Sapk5BxXs5uPbPv5wRX986oq6QLmiHo9702dsBrQp7fKRHTXs
-         ilXqop+/qubPg==
-Received: by pali.im (Postfix)
-        id B3B17857; Fri, 21 Jan 2022 17:11:47 +0100 (CET)
-Date:   Fri, 21 Jan 2022 17:11:47 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH pciutils 3/5] libpci: generic: Implement SUBSYS also for
- PCI_HEADER_TYPE_BRIDGE
-Message-ID: <20220121161147.n6byckl4rnezfgy6@pali>
-References: <20220121135718.27172-1-pali@kernel.org>
- <20220121135718.27172-4-pali@kernel.org>
- <mj+md-20220121.144016.17855.nikam@ucw.cz>
+        s=k20201202; t=1642784229;
+        bh=VAH/EB9un3em4rOt5evA5NBqtb1X5kVyOQuIem/HfhI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ObJENak7V3h9A2S++J8N8+hw/43AqvzdDjNkj7XZRkXxp4MYigrM6Xo6DYE5vwt6m
+         mx+9CJKOwEMoj5/lC1sFyMvnAzwvNmwpjctkTTvL23WpWWIMsXcayaCyqVypvtr9Wi
+         AWMqx38L1s9yBSJNMAYY2awOpbDHZp5CFrkgF7guSO/U+F2L1YHM/QfkRraf2JvmiD
+         jPPu1eGOAiPU5LR46o8mCrrsUC3i7kxl3ic9e+sPTq8e+SGNK7WCT/nPTUbc8so8PD
+         n0if+30ZJGlfEOymuqqgiDrUGNJhdxLV/PIaJuDHtEnsVCkokb5SxyhKQHbvT5pzz+
+         zH0J1q2Mbwm6Q==
+Date:   Fri, 21 Jan 2022 10:57:07 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files (can't boot)
+Message-ID: <20220121165707.GA1129091@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <mj+md-20220121.144016.17855.nikam@ucw.cz>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <m3bl05zhjt.fsf@t19.piap.pl>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 21 January 2022 15:40:49 Martin Mareš wrote:
-> Hello!
+On Fri, Jan 21, 2022 at 08:14:46AM +0100, Krzysztof Hałasa wrote:
+> Hi Bjorn, Krzysztof,
 > 
-> > +        case PCI_HEADER_TYPE_BRIDGE:
-> > +          if (pci_read_word(d, PCI_STATUS) & PCI_STATUS_CAP_LIST)
-> > +            {
-> > +              byte been_there[256];
-> > +              int where, id;
-> > +
-> > +              memset(been_there, 0, 256);
-> > +              where = pci_read_byte(d, PCI_CAPABILITY_LIST) & ~3;
-> > +              while (where && !been_there[where]++)
+> Bjorn Helgaas <helgaas@kernel.org> writes:
 > 
-> Please don't. There should be a single implementation of capability list
-> walking in libpci, not everybody doing his own.
+> > On Fri, Jul 30, 2021 at 10:18:44AM +0200, Krzysztof Hałasa wrote:
+> >> I'm encountering a problem booting an i.MX6-based device (Gateworks
+> >> Ventana SBC). This is apparently a known issue:
+> >> https://lkml.org/lkml/2020/7/16/388
+> 
+> > Hi Krzysztof, is this still an issue?
+> 
+> Well... I'm still using i.MX6 with 5.14 and Krzysiek Wilczyński's "PCI:
+> Race condition in pci_create_sysfs_dev_files (can't boot)" patch (which
+> fixes the problem). It seems parts of this patch are now in mainline,
+> but most of it is still missing. So I guess the problem isn't fixed.
+> 
+> Perhaps because the DEC Alpha part of the patch is not yet ready?
+> Krzysztof?
+> 
+> > e1d3f3268b0e ("PCI/sysfs: Convert "config" to static attribute") and
+> > similar patches appeared in v5.13,
+> 
+> Right, but they hadn't fixed the problem. 5.13 was released in June, and
+> I have started using the patch in August (apparently with pre-5.14
+> first, then with final 5.14).
 
-Current libpci code which walks capability list is in functions
-pci_scan_caps() and pci_find_cap(). But pci_find_cap() calls
-pci_fill_info() (only with PCI_FILL_CAPS flag). So I'm not sure if it is
-a good idea to call pci_find_cap() from pci_generic_fill_info().
+Thanks.  e1d3f3268b0e and related patches converted individual files
+("config", "rom", "vpd", etc) to static attributes, but since the
+problem you're seeing is with a directory, it's likely different.
+
+I opened this bugzilla report to try to keep this from getting lost:
+https://bugzilla.kernel.org/show_bug.cgi?id=215515
+
+Bjorn
