@@ -2,41 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2E9249602C
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jan 2022 14:58:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CF5E496031
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jan 2022 14:58:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350745AbiAUN6P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jan 2022 08:58:15 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:48318 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350794AbiAUN6P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jan 2022 08:58:15 -0500
+        id S1380779AbiAUN6S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jan 2022 08:58:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1380770AbiAUN6S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jan 2022 08:58:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDFDBC061574
+        for <linux-pci@vger.kernel.org>; Fri, 21 Jan 2022 05:58:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8D30D6175E
-        for <linux-pci@vger.kernel.org>; Fri, 21 Jan 2022 13:58:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD476C340E4;
-        Fri, 21 Jan 2022 13:58:13 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9A6DDB81FC5
+        for <linux-pci@vger.kernel.org>; Fri, 21 Jan 2022 13:58:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31278C340E3;
+        Fri, 21 Jan 2022 13:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642773494;
-        bh=tZD9Kt2oqV3x+ucieG7rcKrQel3qU6fgABWWF2uxhjk=;
+        s=k20201202; t=1642773495;
+        bh=BzA91MyN+EGBFQfWvrsnhbePTPNuL0lesT/LXWw9F1A=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=U+L0GxkwuwxF5tE0jXIbkU3q782FODZ46dpAZtjQ0rw0UGChJhPlJzilwaygZvUpK
-         sIn9yw6w6HQasjc/FI4rS6IiGcfSy4YXdQMijPgPLtzeFWHAQu5M/FYK1hMWCSBTxW
-         RD2tM5MZYhDhMLHvo1nv0YZClxHNzyXITKSaeTJGMjrjJxkRVb25K0I2Pi09t9xYWR
-         an+nHrn0tcrktuhTs8zJWYkwKkClp8Ty8+0ykTv1i/xZfbiytPonof93DAbyyqC39N
-         jqimYLvk1MXunO44lkNt6+9Az5luPUCLblWhnwwUTM0JRHR0kRUJWgMCXfhI59S24A
-         VFw1CV6I+XFQQ==
+        b=B3qCtUORrhv95udgbKRY8xvy9ffMEEmcYQ7PAK6VwpjuASc6EeBRUc045+wBCJBs8
+         PmXqiW76caI5JYkH78//ihmyfiZVdrMh1itZKBnD3QLz8t+lFvfhnoRkv+pYkhhIBR
+         7cxKyJTiZmEYSV61pGRPBi0Z485wgIPSDfCqpqnRovClui/A2ZUzqAixK4cLaVQUsO
+         zuibFlr1bd6vM9ugdbHfqz2gbfXgtd5xugaB89PV9b9PlCHwaYxRzixVUDpRqqITLt
+         e0HQ9M3Mm3Tre/83bOvo5DiztipnLmkSz4m++mnybY9T4m01AKrXcLzHcvg9YlG17v
+         ViQAUYRlddb9g==
 Received: by pali.im (Postfix)
-        id A203FB8A; Fri, 21 Jan 2022 14:58:11 +0100 (CET)
+        id C9CADC83; Fri, 21 Jan 2022 14:58:12 +0100 (CET)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Martin Mares <mj@ucw.cz>, Bjorn Helgaas <helgaas@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Matthew Wilcox <willy@infradead.org>, linux-pci@vger.kernel.org
-Subject: [PATCH pciutils 1/5] libpci: Add new options for pci_fill_info: PROGIF, REVID and SUBSYS
-Date:   Fri, 21 Jan 2022 14:57:14 +0100
-Message-Id: <20220121135718.27172-2-pali@kernel.org>
+Subject: [PATCH pciutils 2/5] libpci: generic: Implement PROGIF, REVID and SUBSYS support
+Date:   Fri, 21 Jan 2022 14:57:15 +0100
+Message-Id: <20220121135718.27172-3-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20220121135718.27172-1-pali@kernel.org>
 References: <20220121135718.27172-1-pali@kernel.org>
@@ -46,41 +49,61 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This change extends libpci library and allows providers to fill these
-informations (Programming interface, Revision id and Subsystem ids) via
-native system APIs, which sometimes may differs from what is stored in PCI
-config space.
-
-Programming interface is part of 24-bit Device Class number but apparently
-libpci exports only high 16-bit of this number via device_class member.
+PCI_FILL_SUBSYS is implemented only for PCI_HEADER_TYPE_NORMAL and
+PCI_HEADER_TYPE_CARDBUS like in lspci.
 ---
- lib/pci.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ lib/generic.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/lib/pci.h b/lib/pci.h
-index b9fd9bfb9b5b..8c3c11b9ebeb 100644
---- a/lib/pci.h
-+++ b/lib/pci.h
-@@ -145,6 +145,9 @@ struct pci_dev {
-   pciaddr_t bridge_base_addr[4];	/* Bridge base addresses (without flags) */
-   pciaddr_t bridge_size[4];		/* Bridge sizes */
-   pciaddr_t bridge_flags[4];		/* PCI_IORESOURCE_* flags for bridge addresses */
-+  u8 prog_if;				/* Programming interface for device_class */
-+  u8 rev_id;				/* Revision id */
-+  u16 subsys_vendor_id, subsys_id;	/* Subsystem vendor id and subsystem id */
+diff --git a/lib/generic.c b/lib/generic.c
+index ef9e2a34b4f4..f4b6918cb55b 100644
+--- a/lib/generic.c
++++ b/lib/generic.c
+@@ -80,7 +80,7 @@ pci_generic_fill_info(struct pci_dev *d, unsigned int flags)
+   struct pci_access *a = d->access;
+   unsigned int done = 0;
  
-   /* Fields used internally */
-   struct pci_access *access;
-@@ -210,6 +213,9 @@ char *pci_get_string_property(struct pci_dev *d, u32 prop) PCI_ABI;
- #define PCI_FILL_IOMMU_GROUP	0x4000
- #define PCI_FILL_BRIDGE_BASES	0x8000
- #define PCI_FILL_RESCAN		0x00010000
-+#define PCI_FILL_PROGIF		0x00020000
-+#define PCI_FILL_REVID		0x00040000
-+#define PCI_FILL_SUBSYS		0x00080000
+-  if ((flags & (PCI_FILL_BASES | PCI_FILL_ROM_BASE)) && d->hdrtype < 0)
++  if ((flags & (PCI_FILL_SUBSYS | PCI_FILL_BASES | PCI_FILL_ROM_BASE)) && d->hdrtype < 0)
+     d->hdrtype = pci_read_byte(d, PCI_HEADER_TYPE) & 0x7f;
  
- void pci_setup_cache(struct pci_dev *, u8 *cache, int len) PCI_ABI;
+   if (flags & PCI_FILL_IDENT)
+@@ -96,6 +96,35 @@ pci_generic_fill_info(struct pci_dev *d, unsigned int flags)
+       done |= PCI_FILL_CLASS;
+     }
  
++  if (flags & PCI_FILL_PROGIF)
++    {
++      d->prog_if = pci_read_byte(d, PCI_CLASS_PROG);
++      done |= PCI_FILL_PROGIF;
++    }
++
++  if (flags & PCI_FILL_REVID)
++    {
++      d->rev_id = pci_read_byte(d, PCI_REVISION_ID);
++      done |= PCI_FILL_REVID;
++    }
++
++  if (flags & PCI_FILL_SUBSYS)
++    {
++      switch (d->hdrtype)
++        {
++        case PCI_HEADER_TYPE_NORMAL:
++          d->subsys_vendor_id = pci_read_word(d, PCI_SUBSYSTEM_VENDOR_ID);
++          d->subsys_id = pci_read_word(d, PCI_SUBSYSTEM_ID);
++          done |= PCI_FILL_SUBSYS;
++          break;
++        case PCI_HEADER_TYPE_CARDBUS:
++          d->subsys_vendor_id = pci_read_word(d, PCI_CB_SUBSYSTEM_VENDOR_ID);
++          d->subsys_id = pci_read_word(d, PCI_CB_SUBSYSTEM_ID);
++          done |= PCI_FILL_SUBSYS;
++          break;
++        }
++    }
++
+   if (flags & PCI_FILL_IRQ)
+     {
+       d->irq = pci_read_byte(d, PCI_INTERRUPT_LINE);
 -- 
 2.20.1
 
