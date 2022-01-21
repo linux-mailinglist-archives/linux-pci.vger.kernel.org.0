@@ -2,135 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F0AD495FB3
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jan 2022 14:21:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C3F749602F
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jan 2022 14:58:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380607AbiAUNU6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Jan 2022 08:20:58 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:43936 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233333AbiAUNU4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jan 2022 08:20:56 -0500
-Received: from albireo.burrow.ucw.cz (albireo.ucw.cz [91.219.245.20])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits)
-         client-signature RSA-PSS (1024 bits))
-        (Client CN "albireo.ucw.cz", Issuer "ucw.cz" (verified OK))
-        by jabberwock.ucw.cz (Postfix) with ESMTPS id 58DE61C0BAB
-        for <linux-pci@vger.kernel.org>; Fri, 21 Jan 2022 14:20:55 +0100 (CET)
-Received: by albireo.burrow.ucw.cz (Postfix, from userid 1000)
-        id DDBAB1A1639; Fri, 21 Jan 2022 14:20:54 +0100 (CET)
-Date:   Fri, 21 Jan 2022 14:20:54 +0100
-From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] lspci: Don't report PCIe link downgrades for downstream
- ports
-Message-ID: <mj+md-20220121.131934.39347.albireo@ucw.cz>
-References: <20210318170244.151240-1-helgaas@kernel.org>
- <20210318173325.GR3420@casper.infradead.org>
+        id S1350794AbiAUN6R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jan 2022 08:58:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350819AbiAUN6Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Jan 2022 08:58:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40CE8C061574
+        for <linux-pci@vger.kernel.org>; Fri, 21 Jan 2022 05:58:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0B709B81F88
+        for <linux-pci@vger.kernel.org>; Fri, 21 Jan 2022 13:58:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78FD0C340E1;
+        Fri, 21 Jan 2022 13:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642773493;
+        bh=JVf6h0NMxUJs4pkAAdBauLe7+1uoLIM13xiPaULE9O4=;
+        h=From:To:Subject:Date:From;
+        b=egmlLUVDl1ca6YzBuZn1oCfvutaKqzIOO7TOtehhziWXjgHlWmizmpR/PHEB5yO4W
+         0NNGs40iQttMGUFf5KHyTWaOwDaQ0IdkvVO80GjuqcUBCwwthhfl1f7isaqXPCeWvj
+         HqzlYUWBbISBIB++E2Q2F9nv23qABX3FfsKv/B3AZ/fXnAHZWTeBkBo/2m1kGk/YhN
+         xlAnIW5h7Sfh388UZVBH3rSLLZ6OAjUCOsnK+ulgZ6JgejIVXWk4yIe2nzAhXbwSuz
+         +1bD49ku1G+l8JN7/jJQfanzzJMpSbCdFBNYFkbv0fiJFbzFCiuolPdo5r2/tTFm5c
+         cr0JmqM90W6og==
+Received: by pali.im (Postfix)
+        id 8B9A0857; Fri, 21 Jan 2022 14:58:10 +0100 (CET)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Martin Mares <mj@ucw.cz>, Bjorn Helgaas <helgaas@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-pci@vger.kernel.org
+Subject: [PATCH pciutils 0/5] Support for PROGIF, REVID and SUBSYS
+Date:   Fri, 21 Jan 2022 14:57:13 +0100
+Message-Id: <20220121135718.27172-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210318173325.GR3420@casper.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Rspamd-Queue-Id: 58DE61C0BAB
-X-Spam-Status: No, score=-1.49
-X-Spamd-Bar: -
-Authentication-Results: jabberwock.ucw.cz;
-        dkim=none;
-        dmarc=none;
-        spf=none (jabberwock.ucw.cz: domain of mj@ucw.cz has no SPF policy when checking 91.219.245.20) smtp.mailfrom=mj@ucw.cz
-X-Spamd-Result: default: False [-1.49 / 15.00];
-         ARC_NA(0.00)[];
-         BAYES_HAM(-3.00)[100.00%];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         HFILTER_HELO_IP_A(1.00)[albireo.burrow.ucw.cz];
-         DMARC_NA(0.00)[ucw.cz];
-         SENDER_REP_HAM(-0.69)[asn: 51744(-0.18), country: CZ(-0.01), ip: 91.219.245.20(-0.51)];
-         RCPT_COUNT_FIVE(0.00)[6];
-         AUTH_NA(1.00)[];
-         TO_MATCH_ENVRCPT_SOME(0.00)[];
-         HFILTER_HELO_NORES_A_OR_MX(0.30)[albireo.burrow.ucw.cz];
-         NEURAL_HAM(-0.00)[-1.000];
-         R_SPF_NA(0.00)[no SPF record];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         R_DKIM_NA(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:51744, ipnet:91.219.244.0/22, country:CZ];
-         TAGGED_FROM(0.00)[f-210122,linux-pci=vger.kernel.org];
-         MID_RHS_MATCH_FROM(0.00)[]
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+libpci currently provides only access to bits [23:8] of class id via
+dev->device_class member. Remaining bits [7:0] of class id can be only
+accessed via reading config space.
 
-This fell through the cracks in my mailbox, but I finally assembled
-pieces and here is what I applied.
+lspci in some places reads class id from dev->device_class and on some
+places from config space because it does not have access to all class bits.
 
-				Martin
+For some broken devices kernel reports different class id via sysfs as
+what is stored in device config space. Value reported by sysfs should be
+the correct one.
 
+lspci has -b option (Bus-centric view) to choose if information from
+kernel or from config space should be showed. But this option is not
+respected on all places because of missing bits.
 
-commit 9f7681202fcfaefd02e202eb64c01eb9e962729d
-Author: Martin Mares <mj@ucw.cz>
-Date:   Fri Jan 21 14:16:37 2022 +0100
+Same applies for vendor+device ids, subsystem ids and revision id.
 
-    lspci: Improvements to PCIe link speed downgrade reporting
-    
-    Do not report PCIe link downgrades for downstream ports.
-    
-    Changed wording so that "overdriven" is reported instead of
-    "strange" for speeds greater than the maximum supported one.
-    
-    Also report nothing instead of "ok".
-    
-    Inspired by patches by Bjorn Helgaas and Matthew Wilcox.
+Export all these information from sysfs via libpci API use it in lspci.
+With this change lspci should now respect -b option for all these
+information.
 
-diff --git a/ls-caps.c b/ls-caps.c
-index 91acb59..79b61cd 100644
---- a/ls-caps.c
-+++ b/ls-caps.c
-@@ -771,13 +771,16 @@ static char *link_speed(int speed)
-     }
- }
- 
--static char *link_compare(int sta, int cap)
-+static char *link_compare(int type, int sta, int cap)
- {
--  if (sta < cap)
--    return "downgraded";
-   if (sta > cap)
--    return "strange";
--  return "ok";
-+    return " (overdriven)";
-+  if (sta == cap)
-+    return "";
-+  if ((type == PCI_EXP_TYPE_ROOT_PORT) || (type == PCI_EXP_TYPE_DOWNSTREAM) ||
-+      (type == PCI_EXP_TYPE_PCIE_BRIDGE))
-+    return "";
-+  return " (downgraded)";
- }
- 
- static char *aspm_support(int code)
-@@ -850,11 +853,11 @@ static void cap_express_link(struct device *d, int where, int type)
-   w = get_conf_word(d, where + PCI_EXP_LNKSTA);
-   sta_speed = w & PCI_EXP_LNKSTA_SPEED;
-   sta_width = (w & PCI_EXP_LNKSTA_WIDTH) >> 4;
--  printf("\t\tLnkSta:\tSpeed %s (%s), Width x%d (%s)\n",
-+  printf("\t\tLnkSta:\tSpeed %s%s, Width x%d%s\n",
- 	link_speed(sta_speed),
--	link_compare(sta_speed, cap_speed),
-+	link_compare(type, sta_speed, cap_speed),
- 	sta_width,
--	link_compare(sta_width, cap_width));
-+	link_compare(type, sta_width, cap_width));
-   printf("\t\t\tTrErr%c Train%c SlotClk%c DLActive%c BWMgmt%c ABWMgmt%c\n",
- 	FLAG(w, PCI_EXP_LNKSTA_TR_ERR),
- 	FLAG(w, PCI_EXP_LNKSTA_TRAIN),
+With this change are in libpci and lspci also available subsystem ids
+for PCI-to-PCI bridges.
+
+This patch series is based on top of another patch series:
+https://lore.kernel.org/linux-pci/20211220155448.1233-3-pali@kernel.org/
+
+Pali Rohár (5):
+  libpci: Add new options for pci_fill_info: PROGIF, REVID and SUBSYS
+  libpci: generic: Implement PROGIF, REVID and SUBSYS support
+  libpci: generic: Implement SUBSYS also for PCI_HEADER_TYPE_BRIDGE
+  libpci: sysfs: Implement PROGIF, REVID and SUBSYS support
+  lspci: Retrieve prog if, subsystem ids and revision id via libpci
+
+ lib/generic.c | 55 +++++++++++++++++++++++++++++++++++++++-
+ lib/pci.h     |  6 +++++
+ lib/sysfs.c   | 39 +++++++++++++++++++++++++---
+ ls-kernel.c   |  8 +++---
+ lspci.c       | 70 ++++++++++++++++++---------------------------------
+ lspci.h       |  2 --
+ 6 files changed, 123 insertions(+), 57 deletions(-)
+
+-- 
+2.20.1
+
