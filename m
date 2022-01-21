@@ -2,124 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 015FD4958D2
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Jan 2022 05:13:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8700495A9E
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Jan 2022 08:24:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233994AbiAUENF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Jan 2022 23:13:05 -0500
-Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25595 "EHLO
-        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233558AbiAUENE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Jan 2022 23:13:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1642738378; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=Xe7I4/F5q1pXlFL1rhmzWFPv/ozwn99MqZpMCvCsah6sieW+5MvoEAzvaNiDl6k7sCsC0Hz9iNt9n0kb3ExrHC5OgsaGlEFyQlHPjwYoTgdp/wN7wq6pZW6FbA8+RoSmL8ef5q0I6wXCL8gSEqWOKoNFEm32sdzExSu2s7Emc/A=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1642738378; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=6OqN5KFL3TzRtCH3fbY7QtTlkqaTO04W2B0TqAkZ6Pg=; 
-        b=UpfwIdV1rWzn8q6goAcWWQrfnpZ6RL/cXHzdHHzsI2Q5J45NbLfLc8TaJgPlm8Qrgs/1WwBCCsa4kHj3SoHIV3OO27XyhkgngSywIKM8FiYlXDOneCecSxB/r5JfhPHFuSHJ+wQ5Q9MCz/50EEFEiZ5Ug5We6twBe0Lv1bQWz3w=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zohomail.com;
-        spf=pass  smtp.mailfrom=lchen.firstlove@zohomail.com;
-        dmarc=pass header.from=<lchen.firstlove@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1642738378;
-        s=zm2020; d=zohomail.com; i=lchen.firstlove@zohomail.com;
-        h=Date:From:To:Cc:Message-ID:In-Reply-To:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=6OqN5KFL3TzRtCH3fbY7QtTlkqaTO04W2B0TqAkZ6Pg=;
-        b=P8UbR6VdnFgqss5emjwEaYWQGOBbwXW6CLObUR1h6X+az1sHTEnKanLrzhEcmgfS
-        Q0qlBcOC0VoaUId1wc39hmBLpIt1uuUDQM8fWf9IHtfAjA9AKJvSag7RJ2n85dyLZUt
-        NtBOJrTwrmpXtNGnh9awwZcWC648cO9yxDe9tEnk=
-Received: from mail.zoho.com by mx.zohomail.com
-        with SMTP id 1642738376718895.9144931596065; Thu, 20 Jan 2022 20:12:56 -0800 (PST)
-Received: from  [203.218.243.128] by mail.zoho.com
-        with HTTP;Thu, 20 Jan 2022 20:12:56 -0800 (PST)
-Date:   Fri, 21 Jan 2022 12:12:56 +0800
-From:   Li Chen <lchen.firstlove@zohomail.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     "Kishon Vijay Abraham I" <kishon@ti.com>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "linux-pci" <linux-pci@vger.kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <17e7ad65ff5.d9de88b4962.1109678039880040918@zohomail.com>
-In-Reply-To: 
-Subject: [PATCH v4] PCI: endpoint: Add prefetch BAR support
+        id S1343489AbiAUHYz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Jan 2022 02:24:55 -0500
+Received: from ni.piap.pl ([195.187.100.5]:57256 "EHLO ni.piap.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S245477AbiAUHYz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 21 Jan 2022 02:24:55 -0500
+X-Greylist: delayed 603 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Jan 2022 02:24:55 EST
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+        by ni.piap.pl (Postfix) with ESMTPSA id 6440DC3F3EDF;
+        Fri, 21 Jan 2022 08:14:46 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 6440DC3F3EDF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
+        t=1642749288; bh=gGNbanSwWXMu21C4JkM/lsSy+zDuwl4CRiCXbsqVfmw=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Q/ilh0KrCSi27knvkHT5j4nsmPCKPV3JhfpDhjXZWEUlYFvyQUkVDj4lLxsdFHdMJ
+         RjOJE8LrY/+XcKk+VSYuaDZdp/cWySbVc21ULLmQkm1ihOAwo3mLVhsc8d2t94FftL
+         ZSzj1L7Gsbs36QBHfkX5nJaR5DF+vozJro4dsUjg=
+From:   =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files (can't boot)
+References: <20220120230050.GA1077958@bhelgaas>
+Sender: khalasa@piap.pl
+Date:   Fri, 21 Jan 2022 08:14:46 +0100
+In-Reply-To: <20220120230050.GA1077958@bhelgaas> (Bjorn Helgaas's message of
+        "Thu, 20 Jan 2022 17:00:50 -0600")
+Message-ID: <m3bl05zhjt.fsf@t19.piap.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-KLMS-Rule-ID: 3
+X-KLMS-Message-Action: skipped
+X-KLMS-AntiSpam-Status: not scanned, whitelist
+X-KLMS-AntiPhishing: not scanned, whitelist
+X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, not scanned, whitelist
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Li Chen <lchen@ambarella.com>
+Hi Bjorn, Krzysztof,
 
-Before this commit, epf cannot set BAR to be prefetchable.
-Prefetchable BAR can also help epf device to use bridge's
-prefetch memory window.
+Bjorn Helgaas <helgaas@kernel.org> writes:
 
-Signed-off-by: Li Chen <lchen@ambarella.com>
----
-Changes in v2:
-Remove Gerrit Change-id
-Changes in v3:
-capitalize "BAR" in the subject and commit log as suggested by Bjorn.
-Changes in v4:
-This patch context doesn't change but resend with my Zoho mail account in that previous
-company mail will contain un-removeable proprietary messages. 
-Add "From:" to the first line of the message body.
+> On Fri, Jul 30, 2021 at 10:18:44AM +0200, Krzysztof Ha=C5=82asa wrote:
+>> I'm encountering a problem booting an i.MX6-based device (Gateworks
+>> Ventana SBC). This is apparently a known issue:
+>> https://lkml.org/lkml/2020/7/16/388
 
- drivers/pci/endpoint/functions/pci-epf-test.c | 4 ++++
- include/linux/pci-epc.h                       | 2 ++
- 2 files changed, 6 insertions(+)
+> Hi Krzysztof, is this still an issue?
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 90d84d3bc868..96489cfdf58d 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -817,15 +817,19 @@ static void pci_epf_configure_bar(struct pci_epf *epf,
- {
- 	struct pci_epf_bar *epf_bar;
- 	bool bar_fixed_64bit;
-+	bool bar_prefetch;
- 	int i;
- 
- 	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		epf_bar = &epf->bar[i];
- 		bar_fixed_64bit = !!(epc_features->bar_fixed_64bit & (1 << i));
-+		bar_prefetch = !!(epc_features->bar_prefetch & (1 << i));
- 		if (bar_fixed_64bit)
- 			epf_bar->flags |= PCI_BASE_ADDRESS_MEM_TYPE_64;
- 		if (epc_features->bar_fixed_size[i])
- 			bar_size[i] = epc_features->bar_fixed_size[i];
-+		if (bar_prefetch)
-+			epf_bar->flags |= PCI_BASE_ADDRESS_MEM_PREFETCH;
- 	}
- }
- 
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index a48778e1a4ee..825632d581d0 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -161,6 +161,7 @@ struct pci_epc {
-  * @msix_capable: indicate if the endpoint function has MSI-X capability
-  * @reserved_bar: bitmap to indicate reserved BAR unavailable to function driver
-  * @bar_fixed_64bit: bitmap to indicate fixed 64bit BARs
-+ * @bar_prefetch: bitmap to indicate prefetchable BARs
-  * @bar_fixed_size: Array specifying the size supported by each BAR
-  * @align: alignment size required for BAR buffer allocation
-  */
-@@ -171,6 +172,7 @@ struct pci_epc_features {
- 	unsigned int	msix_capable : 1;
- 	u8	reserved_bar;
- 	u8	bar_fixed_64bit;
-+	u8	bar_prefetch;
- 	u64	bar_fixed_size[PCI_STD_NUM_BARS];
- 	size_t	align;
- };
--- 
-2.34.1
+Well... I'm still using i.MX6 with 5.14 and Krzysiek Wilczy=C5=84ski's "PCI:
+Race condition in pci_create_sysfs_dev_files (can't boot)" patch (which
+fixes the problem). It seems parts of this patch are now in mainline,
+but most of it is still missing. So I guess the problem isn't fixed.
 
+Perhaps because the DEC Alpha part of the patch is not yet ready?
+Krzysztof?
 
+> e1d3f3268b0e ("PCI/sysfs: Convert "config" to static attribute") and
+> similar patches appeared in v5.13,
+
+Right, but they hadn't fixed the problem. 5.13 was released in June, and
+I have started using the patch in August (apparently with pre-5.14
+first, then with final 5.14).
+--=20
+Krzysztof "Chris" Ha=C5=82asa
+
+Sie=C4=87 Badawcza =C5=81ukasiewicz
+Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
+Al. Jerozolimskie 202, 02-486 Warszawa
