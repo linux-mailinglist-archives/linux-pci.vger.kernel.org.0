@@ -2,109 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D6449716F
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Jan 2022 13:10:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F2F94971E8
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Jan 2022 15:12:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236278AbiAWMKW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Jan 2022 07:10:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231757AbiAWMKW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Jan 2022 07:10:22 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99C54C06173B;
-        Sun, 23 Jan 2022 04:10:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E6A27B80CD0;
-        Sun, 23 Jan 2022 12:10:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D39DFC340E2;
-        Sun, 23 Jan 2022 12:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642939817;
-        bh=gjuqgtA8NkkbAj8od2tDkDBDycbTBrLq37rQBNtwky0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LSDgppls5Brq/3BhSrshWh6sc4JihhqlIvgwdmamukk4Wvp12ZCJeCdf9+17AZRQv
-         TI9dVHIDgD19fdecUk1e4ZHg1I58jP+f949C8FHxuXsT8E1yZtCDUlBX0N/2tdec5S
-         XoHhjk7nQGS/E47QyG9cKVk7IQS4XlI8JBibuTcUAUU6ndy+EsG9Mia+a9CNGsXMUE
-         jSc5nNOAD/gsgL9fPtT4qrXJvvJd9rdXlYVpQMU+/kndzX6LlIZibovS9tLSUUIW6e
-         Uqe44nCb0rXZSijrEbYMKnw2HnW/GTx23NRsYc7P1q+lOb5tJ956iJV/YxN2wG49MH
-         VjYtuJD0IqOvg==
-Date:   Sun, 23 Jan 2022 20:02:42 +0800
-From:   Jisheng Zhang <jszhang@kernel.org>
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: Fix integrated MSI Receiver mask reg setting
- during resume
-Message-ID: <Ye1D4lYAIpDe7qAN@xhacker>
-References: <20211226074019.2556-1-jszhang@kernel.org>
+        id S236695AbiAWOMi convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Sun, 23 Jan 2022 09:12:38 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:46099 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236678AbiAWOMh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Jan 2022 09:12:37 -0500
+Received: from mail-ot1-f48.google.com ([209.85.210.48]) by
+ mrelayeu.kundenserver.de (mreue109 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MXH3Y-1mmoX40TGg-00YmMA; Sun, 23 Jan 2022 15:12:36 +0100
+Received: by mail-ot1-f48.google.com with SMTP id b12-20020a9d754c000000b0059eb935359eso2308358otl.8;
+        Sun, 23 Jan 2022 06:12:35 -0800 (PST)
+X-Gm-Message-State: AOAM533g0oZsbp7Z/anzF7agG3MU4kp3uVYOvgqFhY/w/l7jmhe9cPqD
+        SdvCg48ZaJ6U9zTUMvSL1JAMwqpokyzwGt5uVUQ=
+X-Google-Smtp-Source: ABdhPJwsxPN5euMvtpK7DNRSulHCrUsUHaRKuofZ2zjhjCoIyYh865xy9dYYLJyS7znZPg5TPtlrfDZCnXkEbwxcBdA=
+X-Received: by 2002:a9d:7757:: with SMTP id t23mr885681otl.368.1642947154756;
+ Sun, 23 Jan 2022 06:12:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20211226074019.2556-1-jszhang@kernel.org>
+References: <20220122221554.196311-1-marek.vasut@gmail.com> <20220122221554.196311-2-marek.vasut@gmail.com>
+In-Reply-To: <20220122221554.196311-2-marek.vasut@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sun, 23 Jan 2022 15:12:18 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1vw3n_QbT-aqSzWFavKMmYtBqQptvMxeZmDF+-bO0dGA@mail.gmail.com>
+Message-ID: <CAK8P3a1vw3n_QbT-aqSzWFavKMmYtBqQptvMxeZmDF+-bO0dGA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] PCI: rcar: Return all Fs from read which triggered
+ an exception
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:JJAkLKIx9MEQb7WOcNk+/a4wEjdqWd3f5Jcre5K8F3JsdS6Vc0A
+ APyKRswQrnmV00pcwLcQaCJ14GXvms8YIyfqoLwT2mLMO4of4D4yGlvHi4V/As1n5HWTC3Y
+ /f9Xe8owyCt7B4CLToF92pJJtllQ6rKhizhCYh7s8kNQfZwY+E5Fu3mu5YzTO+pZPjh3sOT
+ rEAch7Fs2+yuY3hx6jsLQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6CMKSNvHvyg=:Rsaa9CH2shYVghPqlHbSMd
+ FNsoHRHj8kUNLkpBmBwWIqFYjYrljs1CJTkBxfWWzTyVf7ebndkXcJ5vlptbK8ZuYW4mIGOXJ
+ wDcAoARCXAWIerZaR4/2Uz1zrRkPLY8x+RSlbXX//sdU+TC402Nw0lCeXDyyU8KhTlkGQm3/O
+ Gx54g9FQH/+tcbU9HiML+8KDWAFRudvNYPchoGFQ5eDj6YpQ7oz9lQr8+RprbdlhvK1qx8qss
+ sm12PDjJJT79NLvTM2oCZxTzawu4L8GCeazHK2BnK3+HcsJhioeiHvBe6mo+tBCVXEWR0kea0
+ pszyYRtIAnBjmEvBNN6VwDSQWajUXkCVXrLqNttwO4Gt+zZqibPL5Z9z3+nqxDtDyflNR5MT0
+ Dv/97A3954G/ly6vg6x/RhPlq9fpPaprbDzokvuCFI0FCA8Bt+Kbf4ve/8Cz5LJzVJEkCqkdl
+ FXJ0stMghY7Kxnwa2+Ks9j/ujimi1sdh47kl4MIS1yJDEHu6/Q4hvsxl4wcNv1mQ/OOkuH2WM
+ YxbGNaV86Fxw8w7RHRI67DgNDmaQ+v8foxay6C9aD4rVaQzyy2X4clwvdZ0ac4V5+rc5WIxJk
+ 1HUQwp3Aewq93Eamo5lyI+fX3+Zd5usB9l11F4yjLb7aJu/UyFDwVopnq8bd2mxq09D8zdg3H
+ D+RLSvlYQFUmiJfRd756JNO8lOnzL20R67Pv66oxSIrsIneF9O619wCr5KWiS/7onsHI=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Dec 26, 2021 at 03:40:19PM +0800, Jisheng Zhang wrote:
-> If the host which makes use of the IP's integrated MSI Receiver losts
-> power during suspend, we call dw_pcie_setup_rc() to reinit the RC. But
-> dw_pcie_setup_rc() always set the pp->irq_mask[ctrl] as ~0, so the mask
-> register is always set as 0xffffffff incorrectly, thus the MSI can't
-> work after resume.
-> 
-> Fix this issue by moving pp->irq_mask[ctrl] initialization to
-> dw_pcie_host_init(), so we can correctly set the mask reg during both
-> boot and resume.
-> 
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+On Sat, Jan 22, 2022 at 11:15 PM <marek.vasut@gmail.com> wrote:
+>
+> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+>
+> In case the controller is transitioning to L1 in rcar_pcie_config_access(),
+> any read/write access to PCIECDR triggers asynchronous external abort. This
+> is because the transition to L1 link state must be manually finished by the
+> driver. The PCIe IP can transition back from L1 state to L0 on its own.
+>
+> The current asynchronous external abort hook implementation restarts
+> the instruction which finally triggered the fault, which can be a
+> different instruction than the read/write instruction which started
+> the faulting access. Usually the instruction which finally triggers
+> the fault is one which has some data dependency on the result of the
+> read/write. In case of read, the read value after fixup is undefined,
+> while a read value of faulting read should be all Fs.
+>
+> It is possible to enforce the fault using 'isb' instruction placed
+> right after the read/write instruction which started the faulting
+> access. Add custom register accessors which perform the read/write
+> followed immediately by 'isb'.
+>
+> This way, the fault always happens on the 'isb' and in case of read,
+> which is located one instruction before the 'isb', it is now possible
+> to fix up the return value of the read in the asynchronous external
+> abort hook and make that read return all Fs.
+>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Krzysztof Wilczyński <kw@linux.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: linux-renesas-soc@vger.kernel.org
 
-Hi all,
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-This patch can still be applied to the latest linus tree. Do you want
-me to rebase and send out a new version?
+provided once concern gets resolved:
 
-Without this patch, dwc host MSI interrupt(if use the IP's integrated
-MSI receiver) can't work after resume. Could it be picked up as a fix
-for v5.17?
+> +#ifdef CONFIG_ARM
+> +#define __rcar_pci_rw_reg_workaround(instr)                            \
+> +               "1:     " instr " %1, [%2]\n"                           \
+> +               "2:     isb\n"                                          \
+> +               "3:     .pushsection .text.fixup,\"ax\"\n"              \
+> +               "       .align  2\n"                                    \
+> +               "4:     mov     %0, #" __stringify(PCIBIOS_SET_FAILED) "\n" \
+> +               "       b       3b\n"                                   \
+> +               "       .popsection\n"                                  \
+> +               "       .pushsection __ex_table,\"a\"\n"                \
+> +               "       .align  3\n"                                    \
+> +               "       .long   1b, 4b\n"                               \
+> +               "       .long   1b, 4b\n"                               \
+> +               "       .popsection\n"
+> +#endif
 
-Thanks
+You list the fixup for the ldr/str instruction here twice, (.long 1b,4b), but
+no fixup for the isb instruction (.long 2b, 4b). Your description says that
+the fault happens on the isb, not the ldr, so I don't understand what is
+going on here.
 
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index f4755f3a03be..2fa86f32d964 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -362,6 +362,12 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  			if (ret < 0)
->  				return ret;
->  		} else if (pp->has_msi_ctrl) {
-> +			u32 ctrl, num_ctrls;
-> +
-> +			num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-> +			for (ctrl = 0; ctrl < num_ctrls; ctrl++)
-> +				pp->irq_mask[ctrl] = ~0;
-> +
->  			if (!pp->msi_irq) {
->  				pp->msi_irq = platform_get_irq_byname_optional(pdev, "msi");
->  				if (pp->msi_irq < 0) {
-> @@ -541,7 +547,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->  
->  		/* Initialize IRQ Status array */
->  		for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
-> -			pp->irq_mask[ctrl] = ~0;
->  			dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK +
->  					    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
->  					    pp->irq_mask[ctrl]);
-> -- 
-> 2.34.1
-> 
+       Arnd
