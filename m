@@ -2,79 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5E64496FB0
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Jan 2022 04:34:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44B0E4970F5
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Jan 2022 11:39:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235279AbiAWDd7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 Jan 2022 22:33:59 -0500
-Received: from mailgw01.mediatek.com ([60.244.123.138]:47768 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S232076AbiAWDd6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Jan 2022 22:33:58 -0500
-X-UUID: d47e39515d5541e8a978c68408054fcc-20220123
-X-UUID: d47e39515d5541e8a978c68408054fcc-20220123
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <qizhong.cheng@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 669783469; Sun, 23 Jan 2022 11:33:54 +0800
-Received: from mtkexhb01.mediatek.inc (172.21.101.102) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sun, 23 Jan 2022 11:33:52 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by mtkexhb01.mediatek.inc
- (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 23 Jan
- 2022 11:33:46 +0800
-Received: from localhost.localdomain (10.17.3.154) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sun, 23 Jan 2022 11:33:46 +0800
-From:   qizhong cheng <qizhong.cheng@mediatek.com>
-To:     Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <qizhong.cheng@mediatek.com>, <chuanjia.liu@mediatek.com>
-Subject: [PATCH] PCI: mediatek: Change MSI interrupt processing sequence
-Date:   Sun, 23 Jan 2022 11:33:06 +0800
-Message-ID: <20220123033306.29799-1-qizhong.cheng@mediatek.com>
-X-Mailer: git-send-email 2.25.1
+        id S232613AbiAWKjO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Jan 2022 05:39:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229594AbiAWKjO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 23 Jan 2022 05:39:14 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13E31C06173B;
+        Sun, 23 Jan 2022 02:39:14 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B247FB80AD2;
+        Sun, 23 Jan 2022 10:39:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7709C340E2;
+        Sun, 23 Jan 2022 10:39:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642934351;
+        bh=giP7T5U/6HYH5M/XC35TE5YxsEHR+HxDlnOPEOIqim0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=urUGGLmO5uELWysOnb3o6Y75gKJ7ULy6pYepr3om0HCvm9e+Z27gk1vtOXbElRb7U
+         9QCTTVKBnANxbuc1K5aW9KaLZ/nPqPudD3juLhn5Ro3JAiUzpXrP6sOinW+OYAVoxH
+         wfNW3/QfpvL/Qq3Iguchh6mwjS30AhnzNHyDizHKgjWYl24ZPQPg9Mv65F1u9ZHslJ
+         ys0ZTRra2eOD99rKgmWcmAXAxi7KEWsCAc2hE+dAajq1qQMoXdJKDqDruqiLrexI4D
+         s8Cj86V91rdF+qG+KBNrJLjvTsnQN87pOhHUZRMyAKEz/Xg8CKRiVRqVwT5QwOvjFy
+         DbrzYW4/Jn9Nw==
+Date:   Sun, 23 Jan 2022 12:39:07 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     longli@linuxonhyperv.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, paekkaladevi@microsoft.com,
+        Long Li <longli@microsoft.com>
+Subject: Re: [Patch v3] PCI: hv: Fix NUMA node assignment when kernel boots
+ with custom NUMA topology
+Message-ID: <Ye0wSwQhsnk2nB8z@unreal>
+References: <1642622346-22861-1-git-send-email-longli@linuxonhyperv.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1642622346-22861-1-git-send-email-longli@linuxonhyperv.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As an edge-triggered interrupts, its interrupt status should be cleared
-before dispatch to the handler of device.
+On Wed, Jan 19, 2022 at 11:59:06AM -0800, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
+> 
+> When kernel boots with a NUMA topology with some NUMA nodes offline, the PCI
+> driver should only set an online NUMA node on the device. This can happen
+> during KDUMP where some NUMA nodes are not made online by the KDUMP kernel.
+> 
+> This patch also fixes the case where kernel is booting with "numa=off".
+> 
+> Fixes: 999dd956d838 ("PCI: hv: Add support for protocol 1.3 and support PCI_BUS_RELATIONS2")
+> 
 
-Signed-off-by: qizhong cheng <qizhong.cheng@mediatek.com>
----
- drivers/pci/controller/pcie-mediatek.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+No blank line here, please
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 2f3f974977a3..705ea33758b1 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -624,12 +624,12 @@ static void mtk_pcie_intr_handler(struct irq_desc *desc)
- 		if (status & MSI_STATUS){
- 			unsigned long imsi_status;
- 
-+			/* Clear MSI interrupt status */
-+			writel(MSI_STATUS, port->base + PCIE_INT_STATUS);
- 			while ((imsi_status = readl(port->base + PCIE_IMSI_STATUS))) {
- 				for_each_set_bit(bit, &imsi_status, MTK_MSI_IRQS_NUM)
- 					generic_handle_domain_irq(port->inner_domain, bit);
- 			}
--			/* Clear MSI interrupt status */
--			writel(MSI_STATUS, port->base + PCIE_INT_STATUS);
- 		}
- 	}
- 
--- 
-2.25.1
+> Signed-off-by: Long Li <longli@microsoft.com>
 
+Everything below needs to be under "---" marker.
+
+Thanks
+
+> 
+> Change log:
+> v2: use numa_map_to_online_node() to assign a node to device (suggested by
+> Michael Kelly <mikelley@microsoft.com>)
+> 
+> v3: add "Fixes" and check for num_possible_nodes()
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 6c9efeefae1b..b5276e81bb44 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2129,8 +2129,17 @@ static void hv_pci_assign_numa_node(struct hv_pcibus_device *hbus)
+>  		if (!hv_dev)
+>  			continue;
+>  
+> -		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
+> -			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
+> +		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY &&
+> +		    hv_dev->desc.virtual_numa_node < num_possible_nodes())
+> +			/*
+> +			 * The kernel may boot with some NUMA nodes offline
+> +			 * (e.g. in a KDUMP kernel) or with NUMA disabled via
+> +			 * "numa=off". In those cases, adjust the host provided
+> +			 * NUMA node to a valid NUMA node used by the kernel.
+> +			 */
+> +			set_dev_node(&dev->dev,
+> +				     numa_map_to_online_node(
+> +					     hv_dev->desc.virtual_numa_node));
+>  
+>  		put_pcichild(hv_dev);
+>  	}
+> -- 
+> 2.25.1
+> 
