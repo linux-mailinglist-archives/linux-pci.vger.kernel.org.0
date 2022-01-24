@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A174D49809A
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 14:12:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5241C49809C
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 14:12:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242916AbiAXNMo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jan 2022 08:12:44 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:31123 "EHLO
+        id S242999AbiAXNMp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jan 2022 08:12:45 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:31124 "EHLO
         szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242960AbiAXNMj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 08:12:39 -0500
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Jj9KT4yz2z1FCtg;
-        Mon, 24 Jan 2022 21:08:45 +0800 (CST)
+        with ESMTP id S242965AbiAXNMk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 08:12:40 -0500
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Jj9KV0DSyz1FCv5;
+        Mon, 24 Jan 2022 21:08:46 +0800 (CST)
 Received: from localhost.localdomain (10.67.164.66) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -36,9 +36,9 @@ To:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
 CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
         <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
         <yangyicong@hisilicon.com>, <song.bao.hua@hisilicon.com>
-Subject: [PATCH v3 7/8] MAINTAINERS: Add maintainer for HiSilicon PTT driver
-Date:   Mon, 24 Jan 2022 21:11:17 +0800
-Message-ID: <20220124131118.17887-8-yangyicong@hisilicon.com>
+Subject: [PATCH v3 8/8] iommu/arm-smmu-v3: Make default domain type of HiSilicon PTT device to identity
+Date:   Mon, 24 Jan 2022 21:11:18 +0800
+Message-ID: <20220124131118.17887-9-yangyicong@hisilicon.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20220124131118.17887-1-yangyicong@hisilicon.com>
 References: <20220124131118.17887-1-yangyicong@hisilicon.com>
@@ -53,31 +53,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add maintainer for driver and documentation of HiSilicon PTT device.
+The DMA of HiSilicon PTT device can only work with identical
+mapping. So add a quirk for the device to force the domain
+passthrough.
 
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea3e6c914384..237c618a74d5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8689,6 +8689,13 @@ F:	Documentation/admin-guide/perf/hisi-pcie-pmu.rst
- F:	Documentation/admin-guide/perf/hisi-pmu.rst
- F:	drivers/perf/hisilicon
+diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+index 6dc6d8b6b368..6f67a2b1dd27 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
++++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+@@ -2838,6 +2838,21 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
+ 	}
+ }
  
-+HISILICON PTT DRIVER
-+M:	Yicong Yang <yangyicong@hisilicon.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/trace/hisi-ptt.rst
-+F:	drivers/hwtracing/ptt/
++#define IS_HISI_PTT_DEVICE(pdev)	((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
++					 (pdev)->device == 0xa12e)
 +
- HISILICON QM AND ZIP Controller DRIVER
- M:	Zhou Wang <wangzhou1@hisilicon.com>
- L:	linux-crypto@vger.kernel.org
++static int arm_smmu_def_domain_type(struct device *dev)
++{
++	if (dev_is_pci(dev)) {
++		struct pci_dev *pdev = to_pci_dev(dev);
++
++		if (IS_HISI_PTT_DEVICE(pdev))
++			return IOMMU_DOMAIN_IDENTITY;
++	}
++
++	return 0;
++}
++
+ static struct iommu_ops arm_smmu_ops = {
+ 	.capable		= arm_smmu_capable,
+ 	.domain_alloc		= arm_smmu_domain_alloc,
+@@ -2863,6 +2878,7 @@ static struct iommu_ops arm_smmu_ops = {
+ 	.sva_unbind		= arm_smmu_sva_unbind,
+ 	.sva_get_pasid		= arm_smmu_sva_get_pasid,
+ 	.page_response		= arm_smmu_page_response,
++	.def_domain_type	= arm_smmu_def_domain_type,
+ 	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
+ 	.owner			= THIS_MODULE,
+ };
 -- 
 2.24.0
 
