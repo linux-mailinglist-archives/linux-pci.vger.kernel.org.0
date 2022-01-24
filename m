@@ -2,99 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F022497DF5
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 12:30:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A52A497EB5
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 13:12:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237541AbiAXLaM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jan 2022 06:30:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50958 "EHLO
+        id S237863AbiAXMM3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jan 2022 07:12:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237517AbiAXLaK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 06:30:10 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00128C06173D;
-        Mon, 24 Jan 2022 03:30:09 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id o1-20020a1c4d01000000b0034d95625e1fso19454024wmh.4;
-        Mon, 24 Jan 2022 03:30:09 -0800 (PST)
+        with ESMTP id S229584AbiAXMM2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 07:12:28 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47265C06173B
+        for <linux-pci@vger.kernel.org>; Mon, 24 Jan 2022 04:12:28 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id jx6so20848122ejb.0
+        for <linux-pci@vger.kernel.org>; Mon, 24 Jan 2022 04:12:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rFXh+U6gV0rVqtSI/fZKKaMEH8mcFoZZQHL/CbCcpBo=;
-        b=KNdG6zMcSoQbEg7btkjR6HFyycn3hKVkO4BEMKu/Hj9UYIrPTNmzUfwjRi4yUSZPZE
-         OB21fvLtDoS3r3oKoQ+rD9hwpsCyBqeNejsuYXidz7XHQetWohUhhJcWNy6ds28eBAc9
-         4bf39waGmNwKy6eBgivy0qbDf9TwULE4RIlFxf4dx2YoN2NVOV4GmN95e6rfD6b07xvm
-         Y30Qnxo750wUzIh7n3TI4HM29stcFoJ8HxhvmEjKp68Aat+JAxKqhhnZ4LbTv9U304YD
-         5wUqiyhtkj/vkrfhwyYe/JkulV7QGQKcXO36KY7gWCM81FzRb7ng98eMV/LML64z9Ux+
-         fpAw==
+        d=monstr-eu.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=EF33JaMG+hm3D3rC4FKnXqraG6SkDY8uCv7rbWwdgXo=;
+        b=h9kOSUGdVE4gKL9s/LJMs1IPT3IbpeWYBrpfv+AuECTvZC/d9Mgmj+8/qzAF3eXbfK
+         m2PtizTIvCHLxd6Gr7Fy05dMKmmlLLy4fEUmMzmo48gVyiHxEhPLV4MLyO9oPA3wQplh
+         Vu1eRpEh9FNcwp+b/0xm/G3Q5QeqPlP25zblpv7pn1fhf7z/jOebqtlWaC7aW9HA3fhF
+         VjHo7lvhY7/oUqkPSCrDzarLxSsOAQnP9tESF52Jr02HUzNrium0qVdHZa1C0dYGAGE8
+         mDJhzJkStQMJW3cmp/Q9xzv797988P0T7BpUMuqWmKMM8P4QGKIRCVs93TY4AR01o66n
+         x2fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rFXh+U6gV0rVqtSI/fZKKaMEH8mcFoZZQHL/CbCcpBo=;
-        b=18clPgBdjAukG3wx+geJF/uCN5nW1rbKe1IJHLcaWrx/i7s+h7zIzOmTd8Coe8TED7
-         ko01b7hbseAdwlL94f9HHMDxjO2JMLW3itXz/zZQk1cSRS0PreUXslerRg1GbPQ7S00e
-         8Bsl/tlZm7kcR7yFb+SVSlWYL6vF3cauJ8TUPNif/+rmc7FKzMMtWpLvMLUjg0sxj9Hy
-         4H/2Xz7e/BHDO/Td5wOHfoV9WF6YGQH/b8bWdGGGRF1fwT1B6RcdHr9l9UpA9NCn6RRb
-         kfqXRI1EGSyEm6aHA85ltux3XSd16Y0rcU+L7VeUYj33oRJ928TDIHHsy4/pXyNQVpck
-         qeZQ==
-X-Gm-Message-State: AOAM533a9Vwtv7HyNtG7Sygz33tRY/3WIljYdV73pQbmjGyZ+Ekxewny
-        XxxytoIBQNAT7c2zs/MnIJgbgqA1qF7irw==
-X-Google-Smtp-Source: ABdhPJz4Ghnx0dAKrBXjPFAxC1JWCHgIsTFyxuiiHD4dALOuhlNNZWjRlN3BKMYdMSVrXR8b2Mis0g==
-X-Received: by 2002:a1c:c917:: with SMTP id f23mr1463435wmb.10.1643023808401;
-        Mon, 24 Jan 2022 03:30:08 -0800 (PST)
-Received: from localhost.localdomain (198.red-81-44-130.dynamicip.rima-tde.net. [81.44.130.198])
-        by smtp.gmail.com with ESMTPSA id y15sm3328927wrd.51.2022.01.24.03.30.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jan 2022 03:30:07 -0800 (PST)
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: [PATCH 2/2] PCI: mt7621: remove unused function pcie_rmw()
-Date:   Mon, 24 Jan 2022 12:30:03 +0100
-Message-Id: <20220124113003.406224-3-sergio.paracuellos@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220124113003.406224-1-sergio.paracuellos@gmail.com>
-References: <20220124113003.406224-1-sergio.paracuellos@gmail.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=EF33JaMG+hm3D3rC4FKnXqraG6SkDY8uCv7rbWwdgXo=;
+        b=0vupCX1PWvPdREZmHvGasXfyo9KANcE5nYdQf5l9+Z/Nk0I8WAMu1WBj0ahxrq0Igf
+         hGXcmnuFUDnMSccAqJipTT35+yFkNJoDSIiJ8qk5HiYLx/SjxIiwYq4DsbUxmkl8hrEH
+         285VN7GZgvTx1aIvJIyqil+/AqsrAH/sWq2cN37yEc2uyXGwjbGn2MMaloJjWDAcipjF
+         3nwmfm/K/kzasi8dODPtvxckUAhrOq0lZv2xFnmfZcMqAYTOcH01+ovRYRwPcLPZ+S7X
+         c2Wz3kxaroiPL/1HeltDzcxbEABWbjWnAuIF1auOWN0MP2fhU+jNQrjy8JFkpWYeSleI
+         ebjw==
+X-Gm-Message-State: AOAM532JhM5ZdyND1bXP+x7i7QxhDtkG7Sqcfur9R4zBhHIxqokLODZ/
+        Qocu6JOGeXtMbyI7rKsFUNYCSllZzbJel+qv
+X-Google-Smtp-Source: ABdhPJyQSddN36xdAtpIRActuatI3ilXCh3FopeB7M5+U2SlQv66S7Fj/8y3ScreZHIH5mQGHDw6Ng==
+X-Received: by 2002:a17:906:c099:: with SMTP id f25mr12755359ejz.458.1643026346842;
+        Mon, 24 Jan 2022 04:12:26 -0800 (PST)
+Received: from ?IPV6:2a02:768:2307:40d6::f9e? ([2a02:768:2307:40d6::f9e])
+        by smtp.gmail.com with ESMTPSA id gu2sm4768438ejb.221.2022.01.24.04.12.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jan 2022 04:12:26 -0800 (PST)
+Message-ID: <9e98c6c9-36a8-046a-b195-78942fdcafff@monstr.eu>
+Date:   Mon, 24 Jan 2022 13:12:25 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v1] microblaze/PCI: Remove pci_phys_mem_access_prot() dead
+ code
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20220121205150.1151607-1-helgaas@kernel.org>
+From:   Michal Simek <monstr@monstr.eu>
+In-Reply-To: <20220121205150.1151607-1-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Function pcie_rmw() is not being used at all and be deleted. Hence get rid
-of it. This fix the following complain warning:
 
-drivers/pci/controller/pcie-mt7621.c:112:20: warning: unused function 'pcie_rmw' [-Wunused-function]
 
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 2bdd5238e756 ("PCI: mt7621: Add MediaTek MT7621 PCIe host controller driver")
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
----
- drivers/pci/controller/pcie-mt7621.c | 9 ---------
- 1 file changed, 9 deletions(-)
+On 1/21/22 21:51, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> pci_phys_mem_access_prot() is defined but never used.  Remove it.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>   arch/microblaze/include/asm/pci.h |  4 ---
+>   arch/microblaze/pci/pci-common.c  | 49 -------------------------------
+>   2 files changed, 53 deletions(-)
+> 
+> diff --git a/arch/microblaze/include/asm/pci.h b/arch/microblaze/include/asm/pci.h
+> index 7c4dc5d85f53..d90528064604 100644
+> --- a/arch/microblaze/include/asm/pci.h
+> +++ b/arch/microblaze/include/asm/pci.h
+> @@ -61,10 +61,6 @@ extern int pci_mmap_legacy_page_range(struct pci_bus *bus,
+>   extern void pcibios_resource_survey(void);
+>   
+>   struct file;
+> -extern pgprot_t	pci_phys_mem_access_prot(struct file *file,
+> -					 unsigned long pfn,
+> -					 unsigned long size,
+> -					 pgprot_t prot);
+>   
+>   /* This part of code was originally in xilinx-pci.h */
+>   #ifdef CONFIG_PCI_XILINX
+> diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
+> index 622a4867f9e9..33bab7eec731 100644
+> --- a/arch/microblaze/pci/pci-common.c
+> +++ b/arch/microblaze/pci/pci-common.c
+> @@ -165,55 +165,6 @@ int pci_iobar_pfn(struct pci_dev *pdev, int bar, struct vm_area_struct *vma)
+>   	return 0;
+>   }
+>   
+> -/*
+> - * This one is used by /dev/mem and fbdev who have no clue about the
+> - * PCI device, it tries to find the PCI device first and calls the
+> - * above routine
+> - */
+> -pgprot_t pci_phys_mem_access_prot(struct file *file,
+> -				  unsigned long pfn,
+> -				  unsigned long size,
+> -				  pgprot_t prot)
+> -{
+> -	struct pci_dev *pdev = NULL;
+> -	struct resource *found = NULL;
+> -	resource_size_t offset = ((resource_size_t)pfn) << PAGE_SHIFT;
+> -	int i;
+> -
+> -	if (page_is_ram(pfn))
+> -		return prot;
+> -
+> -	prot = pgprot_noncached(prot);
+> -	for_each_pci_dev(pdev) {
+> -		for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
+> -			struct resource *rp = &pdev->resource[i];
+> -			int flags = rp->flags;
+> -
+> -			/* Active and same type? */
+> -			if ((flags & IORESOURCE_MEM) == 0)
+> -				continue;
+> -			/* In the range of this resource? */
+> -			if (offset < (rp->start & PAGE_MASK) ||
+> -			    offset > rp->end)
+> -				continue;
+> -			found = rp;
+> -			break;
+> -		}
+> -		if (found)
+> -			break;
+> -	}
+> -	if (found) {
+> -		if (found->flags & IORESOURCE_PREFETCH)
+> -			prot = pgprot_noncached_wc(prot);
+> -		pci_dev_put(pdev);
+> -	}
+> -
+> -	pr_debug("PCI: Non-PCI map for %llx, prot: %lx\n",
+> -		 (unsigned long long)offset, pgprot_val(prot));
+> -
+> -	return prot;
+> -}
+> -
+>   /* This provides legacy IO read access on a bus */
+>   int pci_legacy_read(struct pci_bus *bus, loff_t port, u32 *val, size_t size)
+>   {
 
-diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
-index f2e567282d3e..33eb37a2225c 100644
---- a/drivers/pci/controller/pcie-mt7621.c
-+++ b/drivers/pci/controller/pcie-mt7621.c
-@@ -109,15 +109,6 @@ static inline void pcie_write(struct mt7621_pcie *pcie, u32 val, u32 reg)
- 	writel_relaxed(val, pcie->base + reg);
- }
- 
--static inline void pcie_rmw(struct mt7621_pcie *pcie, u32 reg, u32 clr, u32 set)
--{
--	u32 val = readl_relaxed(pcie->base + reg);
--
--	val &= ~clr;
--	val |= set;
--	writel_relaxed(val, pcie->base + reg);
--}
--
- static inline u32 pcie_port_read(struct mt7621_pcie_port *port, u32 reg)
- {
- 	return readl_relaxed(port->base + reg);
+Applied.
+M
+
 -- 
-2.25.1
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+
 
