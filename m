@@ -2,169 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A52A497EB5
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 13:12:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62ED0497F30
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 13:21:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237863AbiAXMM3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jan 2022 07:12:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbiAXMM2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 07:12:28 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47265C06173B
-        for <linux-pci@vger.kernel.org>; Mon, 24 Jan 2022 04:12:28 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id jx6so20848122ejb.0
-        for <linux-pci@vger.kernel.org>; Mon, 24 Jan 2022 04:12:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=EF33JaMG+hm3D3rC4FKnXqraG6SkDY8uCv7rbWwdgXo=;
-        b=h9kOSUGdVE4gKL9s/LJMs1IPT3IbpeWYBrpfv+AuECTvZC/d9Mgmj+8/qzAF3eXbfK
-         m2PtizTIvCHLxd6Gr7Fy05dMKmmlLLy4fEUmMzmo48gVyiHxEhPLV4MLyO9oPA3wQplh
-         Vu1eRpEh9FNcwp+b/0xm/G3Q5QeqPlP25zblpv7pn1fhf7z/jOebqtlWaC7aW9HA3fhF
-         VjHo7lvhY7/oUqkPSCrDzarLxSsOAQnP9tESF52Jr02HUzNrium0qVdHZa1C0dYGAGE8
-         mDJhzJkStQMJW3cmp/Q9xzv797988P0T7BpUMuqWmKMM8P4QGKIRCVs93TY4AR01o66n
-         x2fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=EF33JaMG+hm3D3rC4FKnXqraG6SkDY8uCv7rbWwdgXo=;
-        b=0vupCX1PWvPdREZmHvGasXfyo9KANcE5nYdQf5l9+Z/Nk0I8WAMu1WBj0ahxrq0Igf
-         hGXcmnuFUDnMSccAqJipTT35+yFkNJoDSIiJ8qk5HiYLx/SjxIiwYq4DsbUxmkl8hrEH
-         285VN7GZgvTx1aIvJIyqil+/AqsrAH/sWq2cN37yEc2uyXGwjbGn2MMaloJjWDAcipjF
-         3nwmfm/K/kzasi8dODPtvxckUAhrOq0lZv2xFnmfZcMqAYTOcH01+ovRYRwPcLPZ+S7X
-         c2Wz3kxaroiPL/1HeltDzcxbEABWbjWnAuIF1auOWN0MP2fhU+jNQrjy8JFkpWYeSleI
-         ebjw==
-X-Gm-Message-State: AOAM532JhM5ZdyND1bXP+x7i7QxhDtkG7Sqcfur9R4zBhHIxqokLODZ/
-        Qocu6JOGeXtMbyI7rKsFUNYCSllZzbJel+qv
-X-Google-Smtp-Source: ABdhPJyQSddN36xdAtpIRActuatI3ilXCh3FopeB7M5+U2SlQv66S7Fj/8y3ScreZHIH5mQGHDw6Ng==
-X-Received: by 2002:a17:906:c099:: with SMTP id f25mr12755359ejz.458.1643026346842;
-        Mon, 24 Jan 2022 04:12:26 -0800 (PST)
-Received: from ?IPV6:2a02:768:2307:40d6::f9e? ([2a02:768:2307:40d6::f9e])
-        by smtp.gmail.com with ESMTPSA id gu2sm4768438ejb.221.2022.01.24.04.12.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jan 2022 04:12:26 -0800 (PST)
-Message-ID: <9e98c6c9-36a8-046a-b195-78942fdcafff@monstr.eu>
-Date:   Mon, 24 Jan 2022 13:12:25 +0100
+        id S238240AbiAXMVW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jan 2022 07:21:22 -0500
+Received: from mail-dm6nam12on2079.outbound.protection.outlook.com ([40.107.243.79]:2401
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231180AbiAXMVV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 Jan 2022 07:21:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oJGLKdViOec0G6bLV6bFet7CKP5NILl1sdj3wOdjHVDy+B88ZvSEoMYTPUn4z3xlPHmPVwvPlHNpsWOZkw72kWz/0HJNd5hy2R4UQDILjbSg0zb2/p2M2f0OkyWNdy0ubQSVszMXohW+MhkIzwPl7U2BohAduZMf1F62qqhoJDJsjGHUYWi19gNW7Q5tIudWIzUy5qogkMHO8VxgTn3qvxgljnLdcdfn0wGQz5HDxub/RSq3Hyewn+UQY6KoW8yNq1kHQw+mnZNUSX5UNbbF2sML3asreS/GQQMQtfJfDdgyFn6pGUFUlyOJlnW9UcJzxTBYIS0/7+pt6tHgS3EBsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TeXOPqj7ZkbddF/deGJ0C/kG3ctWNz+320Z7MSvWFok=;
+ b=DRM4v4sw4YunJttJgBN892XtRgt8C0YueKJVHjlAQp2O+Lqz5vxRJKHsk0clvYg8KiwJMuGXF4fBMs24hHuE6ONfDG35Zc3vWHS9zAcYwlpkX+YlKgvn7WpZzmddOrU09vdA7Gmj+oZQFspkALW4VE9sZVXQVUpFt/hLtN4kDCH5+mxFMW7ehSAmSdswhKY5HMz5dBsZ3tQ/bjJlgVW7jkGwbodghJlsr2eerWtdWNV0n2VUIMeix5gu8DlcrK2EjN13AvdngDqTI6YzATh9M53yh9mGraBibZEHbiv521NS/bZk5q+RE+xntZg5vL8llZVb6Qp3GS8hhbS09VO3Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 12.22.5.235) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TeXOPqj7ZkbddF/deGJ0C/kG3ctWNz+320Z7MSvWFok=;
+ b=qdJ+goK2AHeCtLzceiu+dJnqLSM2HPhsBJZENW8RzLyHJ9D1Uybv+H8TZLKFA3WVDrDUHYhNe5a6hqDA14L7nEfc3t6Le+IG/0IQk0konh5SsayqZMeYRprdR3qfDsRhjrqP8dBYyvqQVH99X63/HJmUoQgN2K1ps0B6zHIcPkRU6po4JaJrQgpE1otsQeIjcCakGL1GDLJvhaXW5VcgqvqWy5QxdiIg6ymcgCuFwm9BxFXONloOZGWgucJlRsNdIZMyncoQcvzaSVder4pqqGkO4rRjHFFrupq9vOE47uU4Bhx7IBS6uZv3RuwoT/8ytKkC7n6boyoviW9ehLleCA==
+Received: from MW4PR04CA0142.namprd04.prod.outlook.com (2603:10b6:303:84::27)
+ by BN8PR12MB3300.namprd12.prod.outlook.com (2603:10b6:408:6a::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7; Mon, 24 Jan
+ 2022 12:21:19 +0000
+Received: from CO1NAM11FT023.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:84:cafe::ea) by MW4PR04CA0142.outlook.office365.com
+ (2603:10b6:303:84::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7 via Frontend
+ Transport; Mon, 24 Jan 2022 12:21:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.235)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 12.22.5.235 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.235; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (12.22.5.235) by
+ CO1NAM11FT023.mail.protection.outlook.com (10.13.175.35) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4909.7 via Frontend Transport; Mon, 24 Jan 2022 12:21:19 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.18; Mon, 24 Jan 2022 12:21:19 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.9;
+ Mon, 24 Jan 2022 04:21:18 -0800
+Received: from nvidia-Inspiron-15-7510.nvidia.com (10.127.8.13) by
+ mail.nvidia.com (10.126.190.182) with Microsoft SMTP Server id 15.2.986.9 via
+ Frontend Transport; Mon, 24 Jan 2022 04:21:16 -0800
+From:   Abhishek Sahu <abhsahu@nvidia.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Abhishek Sahu <abhsahu@nvidia.com>
+Subject: [PATCH] PCI: Fix the ACPI power state during runtime resume
+Date:   Mon, 24 Jan 2022 17:51:07 +0530
+Message-ID: <20220124122107.12148-1-abhsahu@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v1] microblaze/PCI: Remove pci_phys_mem_access_prot() dead
- code
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20220121205150.1151607-1-helgaas@kernel.org>
-From:   Michal Simek <monstr@monstr.eu>
-In-Reply-To: <20220121205150.1151607-1-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c62bdb8e-a2d6-479e-f628-08d9df3406e7
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3300:EE_
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3300EF7B8E3B30415AF7CA5DCC5E9@BN8PR12MB3300.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oTFrS66Rqlcp+lRcFld+r8W4C9wAdCW6q54wb62NJtNwYHuZinbKVZGeCs+RzUhyNxbDLiv0Rz2KO5Ock1HCi00rRE94pcWNN6Usb7f4dVuQYnJJNVD96FK09Go4wq/VLCheqhg+szojcjIgho3g139KODlkTRnq2VmxZl8UNr1c3Hzq9ONLm2PlVwn6YWi9Ey/h7v7ez8fOXEjYeEyjpwIb9de11vGPdjKHnn+zdr9Wxig+EZXICFhjlV33Ck5XpV5Ki7ET+4V4MHlNEs3gW4bUa7hmED+0IwtW7WdN6QFhXR32l3dj8UOylrMdJE6NTh7i4Ys0JnndhuqgM9OdghDRuqeulkk9a/1KNlcSwLp+uxbb0GOaKfkynoQjHSZZLkJdApqjDGLRNjlxuEBj6HszOqTPGdCW7t7MoTLEuJrwdughdGQhl8glGUWGReDyvDtmvj1oxJlTUMU/EqDpmZN1jSKGk2DLM4yUHJ3x+DWfafdOZIyv0DP9CytMIoMPYkbZuSVo0kH+jMH3djKNZdqKLTstCk0oMPNtS8+apzekDkG/JB6yjt9BaOyk0n2N7I5knKf4C3KrxEOzaIqTmHq9bBS1rnxTvgTIf2eds8vCTqCpYyyudv2F4647BJ9jQPbA4ikLYCu1xNPj4RQaaeA125iuYtZ4mKOjPMxw2/h32kFihr+bX0w+W8g8aQa9F73eGQA6Il/NDI3YTVf44GtM5n5D8mKyQ4/BXZEYSps9+GVobDuUC/KcaJFPKLJRsZlRDXVZ2dKIwHaHOcq89pwd1Pe53gMXXt/zybykQzM=
+X-Forefront-Antispam-Report: CIP:12.22.5.235;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(4636009)(36840700001)(40470700004)(46966006)(7696005)(426003)(26005)(4326008)(70206006)(86362001)(1076003)(107886003)(82310400004)(6666004)(8936002)(54906003)(70586007)(508600001)(336012)(47076005)(40460700003)(186003)(356005)(8676002)(2616005)(36860700001)(83380400001)(5660300002)(36756003)(81166007)(2906002)(316002)(110136005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2022 12:21:19.5700
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c62bdb8e-a2d6-479e-f628-08d9df3406e7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.235];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT023.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3300
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Consider the following sequence during PCI device runtime
+suspend/resume:
 
+1. PCI device goes into runtime suspended state. The PCI state
+   will be changed to PCI_D0 and then pci_platform_power_transition()
+   will be called which changes the ACPI state to ACPI_STATE_D3_HOT.
 
-On 1/21/22 21:51, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> pci_phys_mem_access_prot() is defined but never used.  Remove it.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->   arch/microblaze/include/asm/pci.h |  4 ---
->   arch/microblaze/pci/pci-common.c  | 49 -------------------------------
->   2 files changed, 53 deletions(-)
-> 
-> diff --git a/arch/microblaze/include/asm/pci.h b/arch/microblaze/include/asm/pci.h
-> index 7c4dc5d85f53..d90528064604 100644
-> --- a/arch/microblaze/include/asm/pci.h
-> +++ b/arch/microblaze/include/asm/pci.h
-> @@ -61,10 +61,6 @@ extern int pci_mmap_legacy_page_range(struct pci_bus *bus,
->   extern void pcibios_resource_survey(void);
->   
->   struct file;
-> -extern pgprot_t	pci_phys_mem_access_prot(struct file *file,
-> -					 unsigned long pfn,
-> -					 unsigned long size,
-> -					 pgprot_t prot);
->   
->   /* This part of code was originally in xilinx-pci.h */
->   #ifdef CONFIG_PCI_XILINX
-> diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-> index 622a4867f9e9..33bab7eec731 100644
-> --- a/arch/microblaze/pci/pci-common.c
-> +++ b/arch/microblaze/pci/pci-common.c
-> @@ -165,55 +165,6 @@ int pci_iobar_pfn(struct pci_dev *pdev, int bar, struct vm_area_struct *vma)
->   	return 0;
->   }
->   
-> -/*
-> - * This one is used by /dev/mem and fbdev who have no clue about the
-> - * PCI device, it tries to find the PCI device first and calls the
-> - * above routine
-> - */
-> -pgprot_t pci_phys_mem_access_prot(struct file *file,
-> -				  unsigned long pfn,
-> -				  unsigned long size,
-> -				  pgprot_t prot)
-> -{
-> -	struct pci_dev *pdev = NULL;
-> -	struct resource *found = NULL;
-> -	resource_size_t offset = ((resource_size_t)pfn) << PAGE_SHIFT;
-> -	int i;
-> -
-> -	if (page_is_ram(pfn))
-> -		return prot;
-> -
-> -	prot = pgprot_noncached(prot);
-> -	for_each_pci_dev(pdev) {
-> -		for (i = 0; i <= PCI_ROM_RESOURCE; i++) {
-> -			struct resource *rp = &pdev->resource[i];
-> -			int flags = rp->flags;
-> -
-> -			/* Active and same type? */
-> -			if ((flags & IORESOURCE_MEM) == 0)
-> -				continue;
-> -			/* In the range of this resource? */
-> -			if (offset < (rp->start & PAGE_MASK) ||
-> -			    offset > rp->end)
-> -				continue;
-> -			found = rp;
-> -			break;
-> -		}
-> -		if (found)
-> -			break;
-> -	}
-> -	if (found) {
-> -		if (found->flags & IORESOURCE_PREFETCH)
-> -			prot = pgprot_noncached_wc(prot);
-> -		pci_dev_put(pdev);
-> -	}
-> -
-> -	pr_debug("PCI: Non-PCI map for %llx, prot: %lx\n",
-> -		 (unsigned long long)offset, pgprot_val(prot));
-> -
-> -	return prot;
-> -}
-> -
->   /* This provides legacy IO read access on a bus */
->   int pci_legacy_read(struct pci_bus *bus, loff_t port, u32 *val, size_t size)
->   {
+2. Parent bridge goes into runtime suspended state. If parent
+   bridge supports D3cold, then it will change the power state of all its
+   children to D3cold state and the power will be removed.
 
-Applied.
-M
+3. During wake-up time, the bridge will be runtime resumed first
+   and pci_power_up() will be called for the bridge. Now, the power
+   supply will be resumed.
 
+4. pci_resume_bus() will be called which will internally invoke
+   pci_restore_standard_config(). pci_update_current_state()
+   will read PCI_PM_CTRL register and the current_state will be
+   updated to D0.
+
+In the above process, at step 4, the ACPI device state will still be
+ACPI_STATE_D3_HOT since pci_platform_power_transition() is not being
+invoked. We need call the pci_platform_power_transition() with state
+D0 to change the ACPI state to ACPI_STATE_D0.
+
+This patch calls pci_power_up() if current power state is D0 inside
+pci_restore_standard_config(). This pci_power_up() will change the
+ACPI state to ACPI_STATE_D0.
+
+Following are the steps to confirm:
+
+Enable the debug prints in acpi_pci_set_power_state()
+
+0000:01:00.0 is PCI device and 0000:00:01.0 is parent bridge device
+
+Before:
+
+0000:01:00.0: power state changed by ACPI to D3hot
+0000:00:01.0: power state changed by ACPI to D3cold
+0000:00:01.0: power state changed by ACPI to D0
+
+After:
+
+0000:01:00.0: power state changed by ACPI to D3hot
+0000:00:01.0: power state changed by ACPI to D3cold
+0000:00:01.0: power state changed by ACPI to D0
+0000:01:00.0: power state changed by ACPI to D0
+
+So with this patch, the PCI device ACPI state is also being
+changed to D0.
+
+Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
+---
+ drivers/pci/pci-driver.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 588588cfda48..64e0cca12f16 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -521,14 +521,22 @@ static void pci_device_shutdown(struct device *dev)
+  */
+ static int pci_restore_standard_config(struct pci_dev *pci_dev)
+ {
++	int error = 0;
+ 	pci_update_current_state(pci_dev, PCI_UNKNOWN);
+ 
+ 	if (pci_dev->current_state != PCI_D0) {
+-		int error = pci_set_power_state(pci_dev, PCI_D0);
+-		if (error)
+-			return error;
++		error = pci_set_power_state(pci_dev, PCI_D0);
++	} else {
++		/*
++		 * The platform power state can still be non-D0, so this is
++		 * required to change the platform power state to D0.
++		 */
++		error = pci_power_up(pci_dev);
+ 	}
+ 
++	if (error)
++		return error;
++
+ 	pci_restore_state(pci_dev);
+ 	pci_pme_restore(pci_dev);
+ 	return 0;
 -- 
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
-
+2.17.1
 
