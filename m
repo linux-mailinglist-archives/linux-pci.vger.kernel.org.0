@@ -2,45 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DEEF497671
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 01:28:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7626497673
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 01:28:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240568AbiAXA2o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Jan 2022 19:28:44 -0500
-Received: from mga04.intel.com ([192.55.52.120]:41947 "EHLO mga04.intel.com"
+        id S240569AbiAXA2u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Jan 2022 19:28:50 -0500
+Received: from mga12.intel.com ([192.55.52.136]:40856 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235008AbiAXA2o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 23 Jan 2022 19:28:44 -0500
+        id S240570AbiAXA2u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:28:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642984124; x=1674520124;
+  t=1642984130; x=1674520130;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5qUmJVhdpHru+9iai5Jb7cr86cHMGIXY/Xi0hUqO6y0=;
-  b=OxKQeWhllqkojBhyYcsgIA+sij6HpSi16kYrm5iyyoTOrD3NBrdRo/Xd
-   /Uca4d6cKK479x2kwafGpHMig3AvtMmaatag7LlZQh5ZAORjLWxyLPUlC
-   XA/ONX6yTJlT2OUC3ywz8Vhz2u/PG5Gu5Ymn9udSzf0OqaK5OdyBxUoQc
-   SrQGra9kMK2wyXoaZf7jHqFwrASW4bri5ZHui6NJyCqj0GaYt2wtkdoh+
-   Ts8wl00BwllEV51CY6gD0EB/48lQ3IWoVp+kvqwMwWs/KDMRjEk1CMW85
-   Qugk7CsQOf+KSLu8NC4L+6/WOft3Mhuma0nVtjvO2MYN5Wd411Mu4h74s
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="244766445"
+  bh=qbLNMAnty4gJkoAKex52oh503HoWQvUo2O0EEWaISls=;
+  b=ItRCKuPMeMk3LIvrqyZNUhV6I9ImTb72VR1EYnim9MRv3yCprIP7qE3V
+   yV8Apau2z2zpvQYpw7om5b/YwI640/rMqjo0biy/FYrqIsx9nqNQZp8i5
+   YGIiHYhQx2RC7xO6SCDGZXGIcnO/CqjZz1iH+zcgq3hzF5WvdZL6K/ZO7
+   eaDk8xzG4vyHhKsxt37Hp7Do75aorOhiXq8a8MZrdCWePwr0oPEPTS70t
+   lyIfoKY3YipfNpYuRJxqSclMm6LhPBfN+cmKHLlfQv5L4GyPuQ49dyCyW
+   mRlp7JwHyZayj4p1Q+itoKVf1mXsIo3fRGMjrcu+h/yIrOgKJr/oCQWnI
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="225915097"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="244766445"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:28:44 -0800
+   d="scan'208";a="225915097"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:28:49 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="476536353"
+   d="scan'208";a="580171932"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:28:44 -0800
-Subject: [PATCH v3 01/40] cxl: Rename CXL_MEM to CXL_PCI
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:28:49 -0800
+Subject: [PATCH v3 02/40] cxl/pci: Implement Interface Ready Timeout
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Sun, 23 Jan 2022 16:28:44 -0800
-Message-ID: <164298412409.3018233.12407355692407890752.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sun, 23 Jan 2022 16:28:49 -0800
+Message-ID: <164298412919.3018233.12491722885382120190.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -53,73 +53,87 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Ben Widawsky <ben.widawsky@intel.com>
 
-The cxl_mem module was renamed cxl_pci in commit 21e9f76733a8 ("cxl:
-Rename mem to pci"). In preparation for adding an ancillary driver for
-cxl_memdev devices (registered on the cxl bus by cxl_pci), go ahead and
-rename CONFIG_CXL_MEM to CONFIG_CXL_PCI. Free up the CXL_MEM name for
-that new driver to manage CXL.mem endpoint operations.
+The original driver implementation used the doorbell timeout for the
+Mailbox Interface Ready bit to piggy back off of, since the latter does
+not have a defined timeout. This functionality, introduced in commit
+8adaf747c9f0 ("cxl/mem: Find device capabilities"), needs improvement as
+the recent "Add Mailbox Ready Time" ECN timeout indicates that the
+mailbox ready time can be significantly longer that 2 seconds.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+While the specification limits the maximum timeout to 256s, the cxl_pci
+driver gives up on the mailbox after 60s. This value corresponds with
+important timeout values already present in the kernel. A module
+parameter is provided as an emergency override and represents the
+default Linux policy for all devices.
+
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+[djbw: add modparam, drop check_device_status()]
+Co-developed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/Kconfig  |   23 ++++++++++++-----------
- drivers/cxl/Makefile |    2 +-
- 2 files changed, 13 insertions(+), 12 deletions(-)
+ drivers/cxl/pci.c |   35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 67c91378f2dd..ef05e96f8f97 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -13,25 +13,26 @@ menuconfig CXL_BUS
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 8dc91fd3396a..ed8de9eac970 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -1,7 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+ #include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/moduleparam.h>
+ #include <linux/module.h>
++#include <linux/delay.h>
+ #include <linux/sizes.h>
+ #include <linux/mutex.h>
+ #include <linux/list.h>
+@@ -35,6 +37,20 @@
+ /* CXL 2.0 - 8.2.8.4 */
+ #define CXL_MAILBOX_TIMEOUT_MS (2 * HZ)
  
- if CXL_BUS
++/*
++ * CXL 2.0 ECN "Add Mailbox Ready Time" defines a capability field to
++ * dictate how long to wait for the mailbox to become ready. The new
++ * field allows the device to tell software the amount of time to wait
++ * before mailbox ready. This field per the spec theoretically allows
++ * for up to 255 seconds. 255 seconds is unreasonably long, its longer
++ * than the maximum SATA port link recovery wait. Default to 60 seconds
++ * until someone builds a CXL device that needs more time in practice.
++ */
++static unsigned short mbox_ready_timeout = 60;
++module_param(mbox_ready_timeout, ushort, 0600);
++MODULE_PARM_DESC(mbox_ready_timeout,
++		 "seconds to wait for mailbox ready status");
++
+ static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+ {
+ 	const unsigned long start = jiffies;
+@@ -281,6 +297,25 @@ static int cxl_pci_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *c
+ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+ {
+ 	const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
++	unsigned long timeout;
++	u64 md_status;
++
++	timeout = jiffies + mbox_ready_timeout * HZ;
++	do {
++		md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
++		if (md_status & CXLMDEV_MBOX_IF_READY)
++			break;
++		if (msleep_interruptible(100))
++			break;
++	} while (!time_after(jiffies, timeout));
++
++	if (!(md_status & CXLMDEV_MBOX_IF_READY)) {
++		dev_err(cxlds->dev,
++			"timeout awaiting mailbox ready, device state:%s%s\n",
++			md_status & CXLMDEV_DEV_FATAL ? " fatal" : "",
++			md_status & CXLMDEV_FW_HALT ? " firmware-halt" : "");
++		return -EIO;
++	}
  
--config CXL_MEM
--	tristate "CXL.mem: Memory Devices"
-+config CXL_PCI
-+	tristate "PCI manageability"
- 	default CXL_BUS
- 	help
--	  The CXL.mem protocol allows a device to act as a provider of
--	  "System RAM" and/or "Persistent Memory" that is fully coherent
--	  as if the memory was attached to the typical CPU memory
--	  controller.
-+	  The CXL specification defines a "CXL memory device" sub-class in the
-+	  PCI "memory controller" base class of devices. Device's identified by
-+	  this class code provide support for volatile and / or persistent
-+	  memory to be mapped into the system address map (Host-managed Device
-+	  Memory (HDM)).
- 
--	  Say 'y/m' to enable a driver that will attach to CXL.mem devices for
--	  configuration and management primarily via the mailbox interface. See
--	  Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification for more
--	  details.
-+	  Say 'y/m' to enable a driver that will attach to CXL memory expander
-+	  devices enumerated by the memory device class code for configuration
-+	  and management primarily via the mailbox interface. See Chapter 2.3
-+	  Type 3 CXL Device in the CXL 2.0 specification for more details.
- 
- 	  If unsure say 'm'.
- 
- config CXL_MEM_RAW_COMMANDS
- 	bool "RAW Command Interface for Memory Devices"
--	depends on CXL_MEM
-+	depends on CXL_PCI
- 	help
- 	  Enable CXL RAW command interface.
- 
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index d1aaabc940f3..cf07ae6cea17 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_CXL_BUS) += core/
--obj-$(CONFIG_CXL_MEM) += cxl_pci.o
-+obj-$(CONFIG_CXL_PCI) += cxl_pci.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
- obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
- 
+ 	cxlds->mbox_send = cxl_pci_mbox_send;
+ 	cxlds->payload_size =
 
