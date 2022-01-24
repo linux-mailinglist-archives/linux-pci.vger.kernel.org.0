@@ -2,45 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05BC14976A6
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 01:31:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3BC74976A8
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 01:31:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240620AbiAXAbJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Jan 2022 19:31:09 -0500
-Received: from mga01.intel.com ([192.55.52.88]:43203 "EHLO mga01.intel.com"
+        id S240611AbiAXAbQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Jan 2022 19:31:16 -0500
+Received: from mga14.intel.com ([192.55.52.115]:51724 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240611AbiAXAbJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 23 Jan 2022 19:31:09 -0500
+        id S240617AbiAXAbP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:31:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642984268; x=1674520268;
+  t=1642984274; x=1674520274;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Se7gc5KYlkNd5Lqi+t6Nx2TFdTKjs49hkFjpHjzSTIQ=;
-  b=HLZW6xECa1P4kb5oyGQU40KXPJfCjOuNpsMZN2rDhq6Qh3ukUjjsB09i
-   6RM1yzko7xXNaOdOmUzNOUXXOeYXRq2X0d25NY/GAUTOHfBNQUbPBuD6b
-   ivsIqerx59w57AkBtX2KUIm2qmxbbziHN00Uf7IJICmT8EdB/yvSYguzr
-   tx0ZN7W6gf6mSivccVtpkzmewYzM6yQksJ+IC/ibc8K2a/qMIUWny6oMK
-   oO+lwviaYWbFVqSlR1EakVbGIpOi6FNenza6hMcJD3pvBMZmPRGomUVzI
-   Jgw6zppcXrqkvC57XchjPx078IPrJqi8RJIvds+vYMSbNLc9c6nUMLKJu
+  bh=5+FJpLB8Qt6mE4dbQ2E52eJSpXbZ7qQHR/gOMZALWOc=;
+  b=j5rYPC2wlPZ8hrVXOci11N+hogGOW+EcmAatgV3IwnWvFb3lk3bKoYLm
+   ela3cqZE/3tdHpQqboZJAn/QJ9Xwgmp7snejU7U2vWurIOiDZzz2Mc/yz
+   8X55Yd3mPZFCZTZTe/ReTV/rR1g5+wyBLtIpqS4TNECrkJ8/wXx7cOF6D
+   a8BVhp31AL/A9Wk99DYEGWqhPw9wrjgfi1MG6tGeHnI/OKTUVRgjo0st/
+   9AWAII92H4TYf8tR3IVsHT7s/4OgQt/d6W30CnlairJiN9H0m8t1EeAYG
+   fMrbDGWrNhqhoAyGPN2SMM1b5BHFHMif+xUPCQ/eJWA6A1D8Klabz8JCv
    w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="270368482"
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="246151739"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="270368482"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:31:08 -0800
+   d="scan'208";a="246151739"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:31:14 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="766230433"
+   d="scan'208";a="531916698"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:31:08 -0800
-Subject: [PATCH v3 28/40] cxl/pci: Retrieve CXL DVSEC memory info
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:31:14 -0800
+Subject: [PATCH v3 29/40] cxl/pci: Implement wait for media active
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     kernel test robot <lkp@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Sun, 23 Jan 2022 16:31:08 -0800
-Message-ID: <164298426829.3018233.15215948891228582221.stgit@dwillia2-desk3.amr.corp.intel.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
+        nvdimm@lists.linux.dev
+Date:   Sun, 23 Jan 2022 16:31:13 -0800
+Message-ID: <164298427373.3018233.9309741847039301834.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -53,259 +52,153 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Ben Widawsky <ben.widawsky@intel.com>
 
-Before CXL 2.0 HDM Decoder Capability mechanisms can be utilized in a
-device the driver must determine that the device is ready for CXL.mem
-operation and that platform firmware, or some other agent, has
-established an active decode via the legacy CXL 1.1 decoder mechanism.
+CXL 2.0 8.1.3.8.2 states:
 
-This legacy mechanism is defined in the CXL DVSEC as a set of range
-registers and status bits that take time to settle after a reset.
+  Memory_Active: When set, indicates that the CXL Range 1 memory is
+  fully initialized and available for software use. Must be set within
+  Range 1. Memory_Active_Timeout of deassertion of reset to CXL device
+  if CXL.mem HwInit Mode=1
 
-Validate the CXL memory decode setup via the DVSEC and cache it for
-later consideration by the cxl_mem driver (to be added). Failure to
-validate is not fatal to the cxl_pci driver since that is only providing
-CXL command support over PCI.mmio, and might be needed to rectify CXL
-DVSEC validation problems.
+Unfortunately, Memory_Active can take quite a long time depending on
+media size (up to 256s per 2.0 spec). Provide a callback for the
+eventual establishment of CXL.mem operations via the 'cxl_mem' driver
+the 'struct cxl_memdev'. The implementation waits for 60s by default for
+now and can be overridden by the mbox_ready_time module parameter.
 
-Any potential ranges that the device is already claiming via DVSEC need
-to be reconciled with the dynamic provisioning ranges provided by
-platform firmware (like ACPI CEDT.CFMWS). Leave that reconciliation to
-the cxl_mem driver.
-
-Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-[djbw: clarify changelog]
-[djbw: shorten defines]
-[djbw: change precise spin wait to generous msleep]
+[djbw: switch to sleeping wait]
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/cxlmem.h |   18 +++++++-
- drivers/cxl/cxlpci.h |   15 ++++++
- drivers/cxl/pci.c    |  116 ++++++++++++++++++++++++++++++++++++++++++++++++--
- 3 files changed, 142 insertions(+), 7 deletions(-)
+ drivers/cxl/cxlmem.h         |    2 ++
+ drivers/cxl/pci.c            |   49 +++++++++++++++++++++++++++++++++++++++++-
+ tools/testing/cxl/test/mem.c |    8 +++++++
+ 3 files changed, 58 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index cedc6d3c0448..00f55f4066b9 100644
+index 00f55f4066b9..e70838e5dc17 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -89,6 +89,18 @@ struct cxl_mbox_cmd {
-  */
- #define CXL_CAPACITY_MULTIPLIER SZ_256M
- 
-+/**
-+ * struct cxl_endpoint_dvsec_info - Cached DVSEC info
-+ * @mem_enabled: cached value of mem_enabled in the DVSEC, PCIE_DEVICE
-+ * @ranges: Number of active HDM ranges this device uses.
-+ * @dvsec_range: cached attributes of the ranges in the DVSEC, PCIE_DEVICE
-+ */
-+struct cxl_endpoint_dvsec_info {
-+	bool mem_enabled;
-+	int ranges;
-+	struct range dvsec_range[2];
-+};
-+
- /**
-  * struct cxl_dev_state - The driver device state
-  *
-@@ -98,7 +110,7 @@ struct cxl_mbox_cmd {
-  *
-  * @dev: The device associated with this CXL state
-  * @regs: Parsed register blocks
-- * @device_dvsec: Offset to the PCIe device DVSEC
-+ * @cxl_dvsec: Offset to the PCIe device DVSEC
-  * @payload_size: Size of space for payload
-  *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-  * @lsa_size: Size of Label Storage Area
-@@ -118,6 +130,7 @@ struct cxl_mbox_cmd {
-  * @next_volatile_bytes: volatile capacity change pending device reset
-  * @next_persistent_bytes: persistent capacity change pending device reset
+@@ -132,6 +132,7 @@ struct cxl_endpoint_dvsec_info {
   * @component_reg_phys: register base of component registers
-+ * @info: Cached DVSEC information about the device.
+  * @info: Cached DVSEC information about the device.
   * @mbox_send: @dev specific transport for transmitting mailbox commands
++ * @wait_media_ready: @dev specific method to await media ready
   *
   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-@@ -127,7 +140,7 @@ struct cxl_dev_state {
- 	struct device *dev;
- 
- 	struct cxl_regs regs;
--	int device_dvsec;
-+	int cxl_dvsec;
- 
- 	size_t payload_size;
- 	size_t lsa_size;
-@@ -149,6 +162,7 @@ struct cxl_dev_state {
- 	u64 next_persistent_bytes;
- 
- 	resource_size_t component_reg_phys;
-+	struct cxl_endpoint_dvsec_info info;
+  * details on capacity parameters.
+@@ -165,6 +166,7 @@ struct cxl_dev_state {
+ 	struct cxl_endpoint_dvsec_info info;
  
  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
++	int (*wait_media_ready)(struct cxl_dev_state *cxlds);
  };
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 766de340c4ce..2c29d26af7f8 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -16,7 +16,20 @@
- #define PCI_DVSEC_VENDOR_ID_CXL		0x1E98
  
- /* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
--#define CXL_DVSEC_PCIE_DEVICE					0
-+#define CXL_DVSEC			0
-+#define   CXL_DVSEC_CAP_OFFSET		0xA
-+#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
-+#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
-+#define   CXL_DVSEC_CTRL_OFFSET		0xC
-+#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
-+#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + (i * 0x10))
-+#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + (i * 0x10))
-+#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
-+#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
-+#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
-+#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + (i * 0x10))
-+#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + (i * 0x10))
-+#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
- 
- /* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
- #define CXL_DVSEC_FUNCTION_MAP					2
+ enum cxl_opcode {
 diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 76de39b90351..5c43886dc2af 100644
+index 5c43886dc2af..513cb0e2a70a 100644
 --- a/drivers/cxl/pci.c
 +++ b/drivers/cxl/pci.c
-@@ -386,6 +386,110 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
- 	return rc;
+@@ -49,7 +49,7 @@
+ static unsigned short mbox_ready_timeout = 60;
+ module_param(mbox_ready_timeout, ushort, 0600);
+ MODULE_PARM_DESC(mbox_ready_timeout,
+-		 "seconds to wait for mailbox ready status");
++		 "seconds to wait for mailbox ready / memory active status");
+ 
+ static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+ {
+@@ -417,6 +417,51 @@ static int wait_for_valid(struct cxl_dev_state *cxlds)
+ 	return -ETIMEDOUT;
  }
  
-+static int wait_for_valid(struct cxl_dev_state *cxlds)
++/*
++ * Wait up to @mbox_ready_timeout for the device to report memory
++ * active.
++ */
++static int wait_for_media_ready(struct cxl_dev_state *cxlds)
 +{
-+	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-+	int d = cxlds->cxl_dvsec, rc;
-+	u32 val;
-+
-+	/*
-+	 * Memory_Info_Valid: When set, indicates that the CXL Range 1 Size high
-+	 * and Size Low registers are valid. Must be set within 1 second of
-+	 * deassertion of reset to CXL device. Likely it is already set by the
-+	 * time this runs, but otherwise give a 1.5 second timeout in case of
-+	 * clock skew.
-+	 */
-+	rc = pci_read_config_dword(pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &val);
-+	if (rc)
-+		return rc;
-+
-+	if (val & CXL_DVSEC_MEM_INFO_VALID)
-+		return 0;
-+
-+	msleep(1500);
-+
-+	rc = pci_read_config_dword(pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &val);
-+	if (rc)
-+		return rc;
-+
-+	if (val & CXL_DVSEC_MEM_INFO_VALID)
-+		return 0;
-+	return -ETIMEDOUT;
-+}
-+
-+static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
-+{
-+	struct cxl_endpoint_dvsec_info *info = &cxlds->info;
 +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
 +	int d = cxlds->cxl_dvsec;
-+	int hdm_count, rc, i;
-+	u16 cap, ctrl;
-+
-+	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CAP_OFFSET, &cap);
-+	if (rc)
-+		return rc;
-+	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl);
-+	if (rc)
-+		return rc;
-+
-+	if (!(cap & CXL_DVSEC_MEM_CAPABLE))
-+		return -ENXIO;
-+
-+	/*
-+	 * It is not allowed by spec for MEM.capable to be set and have 0 HDM
-+	 * decoders. As this driver is for a spec defined class code which must
-+	 * be CXL.mem capable, there is no point in continuing.
-+	 */
-+	hdm_count = FIELD_GET(CXL_DVSEC_HDM_COUNT_MASK, cap);
-+	if (!hdm_count || hdm_count > 2)
-+		return -EINVAL;
++	bool active = false;
++	u64 md_status;
++	int rc, i;
 +
 +	rc = wait_for_valid(cxlds);
 +	if (rc)
 +		return rc;
 +
-+	info->mem_enabled = FIELD_GET(CXL_DVSEC_MEM_ENABLE, ctrl);
-+
-+	for (i = 0; i < hdm_count; i++) {
-+		u64 base, size;
++	for (i = mbox_ready_timeout; i; i--) {
 +		u32 temp;
++		int rc;
 +
 +		rc = pci_read_config_dword(
-+			pdev, d + CXL_DVSEC_RANGE_SIZE_HIGH(i), &temp);
++			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &temp);
 +		if (rc)
++			return rc;
++
++		active = FIELD_GET(CXL_DVSEC_MEM_ACTIVE, temp);
++		if (active)
 +			break;
-+		size = (u64)temp << 32;
-+
-+		rc = pci_read_config_dword(
-+			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(i), &temp);
-+		if (rc)
-+			break;
-+		size |= temp & CXL_DVSEC_MEM_SIZE_LOW_MASK;
-+
-+		rc = pci_read_config_dword(
-+			pdev, d + CXL_DVSEC_RANGE_BASE_HIGH(i), &temp);
-+		if (rc)
-+			break;
-+		base = (u64)temp << 32;
-+
-+		rc = pci_read_config_dword(
-+			pdev, d + CXL_DVSEC_RANGE_BASE_LOW(i), &temp);
-+		if (rc)
-+			break;
-+		base |= temp & CXL_DVSEC_MEM_BASE_LOW_MASK;
-+
-+		info->dvsec_range[i] = (struct range) {
-+			.start = base,
-+			.end = base + size - 1
-+		};
-+
-+		if (size)
-+			info->ranges++;
++		msleep(1000);
 +	}
 +
-+	return rc;
++	if (!active) {
++		dev_err(&pdev->dev,
++			"timeout awaiting memory active after %d seconds\n",
++			mbox_ready_timeout);
++		return -ETIMEDOUT;
++	}
++
++	md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
++	if (!CXLMDEV_READY(md_status))
++		return -EIO;
++
++	return 0;
 +}
 +
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
  {
- 	struct cxl_register_map map;
-@@ -408,10 +512,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (IS_ERR(cxlds))
- 		return PTR_ERR(cxlds);
- 
--	cxlds->device_dvsec = pci_find_dvsec_capability(pdev,
--							PCI_DVSEC_VENDOR_ID_CXL,
--							CXL_DVSEC_PCIE_DEVICE);
--	if (!cxlds->device_dvsec) {
-+	cxlds->cxl_dvsec = pci_find_dvsec_capability(
-+		pdev, PCI_DVSEC_VENDOR_ID_CXL, CXL_DVSEC);
-+	if (!cxlds->cxl_dvsec) {
- 		dev_err(&pdev->dev,
- 			"Device DVSEC not present. Expect limited functionality.\n");
+ 	struct cxl_endpoint_dvsec_info *info = &cxlds->info;
+@@ -520,6 +565,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  		return -ENXIO;
-@@ -452,6 +555,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	}
+ 
++	cxlds->wait_media_ready = wait_for_media_ready;
++
+ 	rc = cxl_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
  	if (rc)
  		return rc;
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 8c2086c4caef..3af3f94de0c3 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -4,6 +4,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
++#include <linux/delay.h>
+ #include <linux/sizes.h>
+ #include <linux/bits.h>
+ #include <cxlmem.h>
+@@ -236,6 +237,12 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
+ 	return rc;
+ }
  
-+	rc = cxl_dvsec_ranges(cxlds);
-+	if (rc)
-+		dev_err(&pdev->dev,
-+			"Failed to get DVSEC range information (%d)\n", rc);
++static int cxl_mock_wait_media_ready(struct cxl_dev_state *cxlds)
++{
++	msleep(100);
++	return 0;
++}
 +
- 	cxlmd = devm_cxl_add_memdev(cxlds);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
+ static void label_area_release(void *lsa)
+ {
+ 	vfree(lsa);
+@@ -262,6 +269,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ 		return PTR_ERR(cxlds);
+ 
+ 	cxlds->mbox_send = cxl_mock_mbox_send;
++	cxlds->wait_media_ready = cxl_mock_wait_media_ready;
+ 	cxlds->payload_size = SZ_4K;
+ 
+ 	rc = cxl_enumerate_cmds(cxlds);
 
