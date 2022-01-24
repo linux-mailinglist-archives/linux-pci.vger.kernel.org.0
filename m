@@ -2,124 +2,198 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D8DC497C1F
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 10:38:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79C90497D3D
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 11:35:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233738AbiAXJiA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jan 2022 04:38:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53412 "EHLO
+        id S231820AbiAXKfN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jan 2022 05:35:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232146AbiAXJh7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 04:37:59 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C85FC06173B;
-        Mon, 24 Jan 2022 01:37:59 -0800 (PST)
+        with ESMTP id S229780AbiAXKfM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 05:35:12 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC22C06173B;
+        Mon, 24 Jan 2022 02:35:12 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DCFFCB80E91;
-        Mon, 24 Jan 2022 09:37:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3272DC340E1;
-        Mon, 24 Jan 2022 09:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643017076;
-        bh=trMMsK0upawtiqHzBj/YBpmQi2sZ2sDGXQLM3jRktag=;
+        by sin.source.kernel.org (Postfix) with ESMTPS id BA652CE1084;
+        Mon, 24 Jan 2022 10:35:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 975B8C340E1;
+        Mon, 24 Jan 2022 10:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1643020509;
+        bh=4DW+brPdZos02wxjXVsOUcvneTuVQw0JJNkmVqyY/VY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E5KyOkT94TOrFGTJe/+B9Rsugxiuxl/i2FbuYXMiKAf6rAEYbIIbF2YmX7mG2nE3+
-         EkJ3QV+7RrMXXWGSirzg3CrupA6SIKbFdyVB8wsi3+KNpA8nKdzQc/puksFPfAfVqF
-         FsIS0kI5QYFXfhYVnijh+/FR3eY6QU1ASEutLQJrTbnvuUf03JKknD9bYf6odfNIPz
-         codCfAPX6Gwxm/dxARJPT1oL8KQs22+f6cOPrSWuEZvkGIBLSu03i2lA8/A/ndo/c2
-         AnSkfcR3jIOi0JCpQ9lNE7Qly/3Ojg9zlib65x53Cqcg7O/FfM/NS5FMhqbSrND548
-         +GY1U6Vyhs+Bw==
-Received: by pali.im (Postfix)
-        id F2E68A79; Mon, 24 Jan 2022 10:37:52 +0100 (CET)
-Date:   Mon, 24 Jan 2022 10:37:52 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] PCI: rcar: Return all Fs from read which
- triggered an exception
-Message-ID: <20220124093752.l2kpenot6wj76753@pali>
-References: <20220122221554.196311-1-marek.vasut@gmail.com>
- <20220122221554.196311-2-marek.vasut@gmail.com>
- <20220123153147.sv6eoayxqvqbaa66@pali>
- <7ced7370-1853-b52d-7e04-062d1bf3334c@gmail.com>
- <20220123164936.cmzvkkkuw5chz3ek@pali>
- <9d89314c-8757-8965-0f5d-14fd95669320@gmail.com>
+        b=lRev4780I1jkQoy4By4NlAYN0dfeX1CgpypbsoanFqV2ZffzOPxiGk1pj7SQQjal5
+         L4xvzrRP1vIP/BRCYr03DPVj+d+8qjG7gcoc2HpM7rA1s/F/kDhlLIYPt37uQgFiTs
+         rcH64RTKpESXdHxvAqql85mTf0rpxnzIcY0uNVRs=
+Date:   Mon, 24 Jan 2022 11:35:06 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vikash Bansal <bvikas@vmware.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, srivatsab@vmware.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com, srinidhir@vmware.com,
+        anishs@vmware.com, vsirnapalli@vmware.com, akaher@vmware.com
+Subject: Re: [PATCH v2] PCI: Speed up device init by parsing capabilities all
+ at once
+Message-ID: <Ye6A2uB/zX5GaliR@kroah.com>
+References: <1642881286-31024-1-git-send-email-bvikas@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9d89314c-8757-8965-0f5d-14fd95669320@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1642881286-31024-1-git-send-email-bvikas@vmware.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Monday 24 January 2022 06:46:47 Marek Vasut wrote:
-> On 1/23/22 17:49, Pali Rohár wrote:
+On Sat, Jan 22, 2022 at 11:54:46AM -0800, Vikash Bansal wrote:
+> In the current implementation, the PCI capability list is parsed from
+> the beginning to find each capability, which results in a large number
+> of redundant PCI reads.
 > 
-> Hi,
+> Instead, we can parse the complete list just once, store it in the
+> pci_dev structure, and get the offset of each capability directly from
+> the pci_dev structure.
 > 
-> [...]
+> This implementation improves pci devices initialization time  by ~2-3%
+> (from 270ms to 261ms) in case of bare metal and 7-8% (From 201ms to 184ms)
+> in case of VM running on ESXi.
 > 
-> > > > I must admit that this patch from its initial version evolved into giant hack...
-> > > > https://lore.kernel.org/linux-pci/20210514200549.431275-1-marek.vasut@gmail.com/
-> > > > 
-> > > > During review of the previous patch I have asked some important
-> > > > questions but I have not got any answer to them. So I'm reminding it:
-> > > > https://lore.kernel.org/linux-pci/20210805183024.ftdwknkttfwwogks@pali/
-> > > > 
-> > > > So could please answer what happens when PCIe controller is in some
-> > > > non-L* state and either MMIO happen or config read happens or config
-> > > > write happens?
-> > > 
-> > > What kind of non-L state ?
-> > 
-> > E.g. Hot Reset, Detect, Polling, Configuration or Recovery.
-> > 
-> > > Do you have some specific test which fails ?
-> > 
-> > Yes, by putting PCIe controller into one of those states. I have already
-> > wrote you in some previous email to trigger hot reset as this is the
-> > easiest test and can be done also by userspace (setpci).
-> > 
-> > Link goes to Recovery state automatically when doing link retraining
-> > (e.g. by setting RT bit in PCIe Root Port config space) and from
-> > Recovery to Configuration or directly back to L0. So testing this path
-> > needs precise timing and repeating it more times to trigger.
-> > 
-> > So the easiest test is really via PCIe Hot Reset by setting Secondary
-> > Bus Reset bit in Bridge Control register of PCIe Root Port. After this
-> > is link in Hot Reset and does not go back to L0 until you clear that
-> > bit. So in this state you can do all these operations which cause
-> > aborts, like calling that kernel function which is reading from config
-> > space which belongs to device on the other end of the PCIe link or doing
-> > MMIO read / write operation of mapped memory which again belongs to
-> > other end of PCIe link.
-> > 
-> > Or instead of Hot Reset, you can set link disable bit in config space of
-> > PCIe Root Port. Then link also would not be in L0 state (until you clear
-> > that bit), so again you have lot of time to do same tests.
+> It also adds a memory overhead of 20bytes (value of PCI_CAP_ID_MAX) per
+> PCI device.
 > 
-> Can you give me the exact setpci invocation ? If so, then I can test this
-> for you on the hardware.
+> Run pahole for pci_dev structure. This patch is not adding any padding
+> bytes.
+> 
+> Signed-off-by: Vikash Bansal <bvikas@vmware.com>
+> ---
+>  drivers/pci/pci.c   | 43 ++++++++++++++++++++++++++++++++++++-------
+>  drivers/pci/probe.c |  1 +
+>  include/linux/pci.h |  2 ++
+>  3 files changed, 39 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9ecce435fb3f..b361788bcc27 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -468,6 +468,41 @@ static u8 __pci_bus_find_cap_start(struct pci_bus *bus,
+>  	return 0;
+>  }
+>  
+> +
+> +/**
+> + * pci_find_all_capabilities - Read all capabilities
+> + * @dev: the PCI device
+> + *
+> + * Read all capabilities and store offsets in cap_off
+> + * array in pci_dev structure.
+> + */
+> +void pci_find_all_capabilities(struct pci_dev *dev)
+> +{
+> +	int ttl = PCI_FIND_CAP_TTL;
+> +	u16 ent;
+> +	u8 pos;
+> +	u8 id;
+> +
+> +	pos = __pci_bus_find_cap_start(dev->bus, dev->devfn, dev->hdr_type);
+> +	if (!pos)
+> +		return;
+> +	pci_bus_read_config_byte(dev->bus, dev->devfn, pos, &pos);
+> +	while (ttl--) {
+> +		if (pos < 0x40)
+> +			break;
+> +		pos &= ~3;
+> +		pci_bus_read_config_word(dev->bus, dev->devfn, pos, &ent);
+> +		id = ent & 0xff;
+> +		if (id == 0xff)
+> +			break;
+> +
+> +		/* Read first instance of capability */
+> +		if (!(dev->cap_off[id]))
+> +			dev->cap_off[id] = pos;
+> +		pos = (ent >> 8);
+> +	}
+> +}
+> +
+>  /**
+>   * pci_find_capability - query for devices' capabilities
+>   * @dev: PCI device to query
+> @@ -489,13 +524,7 @@ static u8 __pci_bus_find_cap_start(struct pci_bus *bus,
+>   */
+>  u8 pci_find_capability(struct pci_dev *dev, int cap)
+>  {
+> -	u8 pos;
+> -
+> -	pos = __pci_bus_find_cap_start(dev->bus, dev->devfn, dev->hdr_type);
+> -	if (pos)
+> -		pos = __pci_find_next_cap(dev->bus, dev->devfn, pos, cap);
+> -
+> -	return pos;
+> +	return dev->cap_off[cap];
+>  }
+>  EXPORT_SYMBOL(pci_find_capability);
+>  
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 17a969942d37..b2fa5b2c42f6 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1831,6 +1831,7 @@ int pci_setup_device(struct pci_dev *dev)
+>  	dev->hdr_type = hdr_type & 0x7f;
+>  	dev->multifunction = !!(hdr_type & 0x80);
+>  	dev->error_state = pci_channel_io_normal;
+> +	pci_find_all_capabilities(dev);
+>  	set_pcie_port_type(dev);
+>  
+>  	pci_set_of_node(dev);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 8253a5413d7c..abcf7fdc4c98 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -335,6 +335,7 @@ struct pci_dev {
+>  	unsigned int	class;		/* 3 bytes: (base,sub,prog-if) */
+>  	u8		revision;	/* PCI revision, low byte of class word */
+>  	u8		hdr_type;	/* PCI header type (`multi' flag masked out) */
+> +	u8              cap_off[PCI_CAP_ID_MAX]; /* Offsets of all pci capabilities */
+>  #ifdef CONFIG_PCIEAER
+>  	u16		aer_cap;	/* AER capability offset */
+>  	struct aer_stats *aer_stats;	/* AER stats for this device */
+> @@ -1140,6 +1141,7 @@ void pci_sort_breadthfirst(void);
+>  
+>  u8 pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn, int cap);
+>  u8 pci_find_capability(struct pci_dev *dev, int cap);
+> +void pci_find_all_capabilities(struct pci_dev *dev);
+>  u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
+>  u8 pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
+>  u8 pci_find_next_ht_capability(struct pci_dev *dev, u8 pos, int ht_cap);
+> -- 
+> 2.30.0
+> 
 
-Call "setpci -s $bdf_root_port BRIDGE_CONTROL" with address of the PCIe
-Root Port device (parent of selected device). This will print value of
-bridge control register. Logical OR it with value 0x20 (Secondary Bus
-Reset Bit) and call "setpci -s $bdf_root_port BRIDGE_CONTROL=$new_value".
-After this call is link in the Hot Reset state and you can do any test.
-To bring link back, call setpci again with cleared 0x20 bit mask.
+Hi,
 
-Similar test you can done also with setting Link Disable bit (bit 4) in
-PCIe Link Control register. Offset to this register is not static and
-you can figure it out from lspci -s $bdf_root_port -vv output.
-Retrain Link is bit 5 in the same register.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/SubmittingPatches for what needs to be done
+  here to properly describe this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
