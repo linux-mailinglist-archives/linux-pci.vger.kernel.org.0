@@ -2,183 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62ED0497F30
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 13:21:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7DDC497F44
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 13:21:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238240AbiAXMVW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jan 2022 07:21:22 -0500
-Received: from mail-dm6nam12on2079.outbound.protection.outlook.com ([40.107.243.79]:2401
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231180AbiAXMVV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 24 Jan 2022 07:21:21 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oJGLKdViOec0G6bLV6bFet7CKP5NILl1sdj3wOdjHVDy+B88ZvSEoMYTPUn4z3xlPHmPVwvPlHNpsWOZkw72kWz/0HJNd5hy2R4UQDILjbSg0zb2/p2M2f0OkyWNdy0ubQSVszMXohW+MhkIzwPl7U2BohAduZMf1F62qqhoJDJsjGHUYWi19gNW7Q5tIudWIzUy5qogkMHO8VxgTn3qvxgljnLdcdfn0wGQz5HDxub/RSq3Hyewn+UQY6KoW8yNq1kHQw+mnZNUSX5UNbbF2sML3asreS/GQQMQtfJfDdgyFn6pGUFUlyOJlnW9UcJzxTBYIS0/7+pt6tHgS3EBsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TeXOPqj7ZkbddF/deGJ0C/kG3ctWNz+320Z7MSvWFok=;
- b=DRM4v4sw4YunJttJgBN892XtRgt8C0YueKJVHjlAQp2O+Lqz5vxRJKHsk0clvYg8KiwJMuGXF4fBMs24hHuE6ONfDG35Zc3vWHS9zAcYwlpkX+YlKgvn7WpZzmddOrU09vdA7Gmj+oZQFspkALW4VE9sZVXQVUpFt/hLtN4kDCH5+mxFMW7ehSAmSdswhKY5HMz5dBsZ3tQ/bjJlgVW7jkGwbodghJlsr2eerWtdWNV0n2VUIMeix5gu8DlcrK2EjN13AvdngDqTI6YzATh9M53yh9mGraBibZEHbiv521NS/bZk5q+RE+xntZg5vL8llZVb6Qp3GS8hhbS09VO3Tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 12.22.5.235) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TeXOPqj7ZkbddF/deGJ0C/kG3ctWNz+320Z7MSvWFok=;
- b=qdJ+goK2AHeCtLzceiu+dJnqLSM2HPhsBJZENW8RzLyHJ9D1Uybv+H8TZLKFA3WVDrDUHYhNe5a6hqDA14L7nEfc3t6Le+IG/0IQk0konh5SsayqZMeYRprdR3qfDsRhjrqP8dBYyvqQVH99X63/HJmUoQgN2K1ps0B6zHIcPkRU6po4JaJrQgpE1otsQeIjcCakGL1GDLJvhaXW5VcgqvqWy5QxdiIg6ymcgCuFwm9BxFXONloOZGWgucJlRsNdIZMyncoQcvzaSVder4pqqGkO4rRjHFFrupq9vOE47uU4Bhx7IBS6uZv3RuwoT/8ytKkC7n6boyoviW9ehLleCA==
-Received: from MW4PR04CA0142.namprd04.prod.outlook.com (2603:10b6:303:84::27)
- by BN8PR12MB3300.namprd12.prod.outlook.com (2603:10b6:408:6a::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7; Mon, 24 Jan
- 2022 12:21:19 +0000
-Received: from CO1NAM11FT023.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:84:cafe::ea) by MW4PR04CA0142.outlook.office365.com
- (2603:10b6:303:84::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7 via Frontend
- Transport; Mon, 24 Jan 2022 12:21:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.235)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 12.22.5.235 as permitted sender) receiver=protection.outlook.com;
- client-ip=12.22.5.235; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (12.22.5.235) by
- CO1NAM11FT023.mail.protection.outlook.com (10.13.175.35) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4909.7 via Frontend Transport; Mon, 24 Jan 2022 12:21:19 +0000
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.18; Mon, 24 Jan 2022 12:21:19 +0000
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.9;
- Mon, 24 Jan 2022 04:21:18 -0800
-Received: from nvidia-Inspiron-15-7510.nvidia.com (10.127.8.13) by
- mail.nvidia.com (10.126.190.182) with Microsoft SMTP Server id 15.2.986.9 via
- Frontend Transport; Mon, 24 Jan 2022 04:21:16 -0800
-From:   Abhishek Sahu <abhsahu@nvidia.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Abhishek Sahu <abhsahu@nvidia.com>
-Subject: [PATCH] PCI: Fix the ACPI power state during runtime resume
-Date:   Mon, 24 Jan 2022 17:51:07 +0530
-Message-ID: <20220124122107.12148-1-abhsahu@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        id S239500AbiAXMVu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jan 2022 07:21:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239407AbiAXMVp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 07:21:45 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5325C06173B;
+        Mon, 24 Jan 2022 04:21:44 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id a13so13231251wrh.9;
+        Mon, 24 Jan 2022 04:21:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yNk3iptcaf318dqFvmgFI2Cy5wTzaw5Fh5cUP/iskfI=;
+        b=MzO9AUc2ANAyPODg7OE6uf3n3mk8jAUUPoucXqJIgb8W5HF3uINCqAKFWGOfc/howo
+         dZvdbFPLMKwN5ZmLKaUYyYrxw7pG87h0sCgUqaFFXaA8Gy+0d91NBChxVDZaUs3ri1ug
+         2u84lJUDxeV6AyifKzjZadF3iLiDH1yhfzOmCrhV+f9i0CUkfirDpurTgpOBcYhXGEIh
+         Tq7xrRFoNhnW0tdF4Fk/QG4kwzedYtal6sXiweCv7vL5x0//SCXHFVfGZuL6B8WodgHe
+         kDuXT8vHwvWDzBiGAko57Noxy2Iw70ZQEZhbs+GYrgsoJXDTGQwBX+8Rc4J31DQ8xDex
+         yHwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yNk3iptcaf318dqFvmgFI2Cy5wTzaw5Fh5cUP/iskfI=;
+        b=QwjR+VnNIwW2Kx5aPe5T+6ELdX4iw4uST4tztY/jP4YI08HXf4K5MUyWkp1AjaXh4c
+         B2gILsRPAZeeHS/tMRYXWlEs988TvEgRv56odtJFcPN89hrwf8p3caN4iPhRYVJ0dQcC
+         XK6/L+cZRQ24ngRxFzKuUqPoahN9cObIl2djDrvX5+OJH4+Kj72bKez7Sv7dtid/A1kd
+         YScDL3Jk/hcL0mjwBTCGN8FRg1A4zMrs9lry2kc/gNIQgGx6B7q29nPGJS+Yeyh3of3S
+         6cosPfSG6CkkMw2o5VzedVachxswbR1AYKeDFiQ+7OT0R8P+bk5f6Xit1BCHUsIfdUXo
+         NWIg==
+X-Gm-Message-State: AOAM533bJSOq1qdtPG/89CUJ6VcgW0ZwtHtzuuHgFdHWLXlVvCiw5+v2
+        Z/0xu2NEHDNNlr6ck6p630cwFyO9pRU=
+X-Google-Smtp-Source: ABdhPJxpFZOXc2gQIkGEiuUZRHxO0E1YI7AvQ9fqIfJ4409KMCRS1KZ2BLTx5rAooWuz0vvYxMIg2A==
+X-Received: by 2002:adf:f90c:: with SMTP id b12mr14161536wrr.379.1643026903103;
+        Mon, 24 Jan 2022 04:21:43 -0800 (PST)
+Received: from localhost.localdomain.at (62-178-82-229.cable.dynamic.surfer.at. [62.178.82.229])
+        by smtp.gmail.com with ESMTPSA id w8sm13984499wre.83.2022.01.24.04.21.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jan 2022 04:21:42 -0800 (PST)
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] Revert "PCI: j721e: Drop redundant struct device *"
+Date:   Mon, 24 Jan 2022 13:21:22 +0100
+Message-Id: <20220124122132.435743-1-christian.gmeiner@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c62bdb8e-a2d6-479e-f628-08d9df3406e7
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3300:EE_
-X-Microsoft-Antispam-PRVS: <BN8PR12MB3300EF7B8E3B30415AF7CA5DCC5E9@BN8PR12MB3300.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oTFrS66Rqlcp+lRcFld+r8W4C9wAdCW6q54wb62NJtNwYHuZinbKVZGeCs+RzUhyNxbDLiv0Rz2KO5Ock1HCi00rRE94pcWNN6Usb7f4dVuQYnJJNVD96FK09Go4wq/VLCheqhg+szojcjIgho3g139KODlkTRnq2VmxZl8UNr1c3Hzq9ONLm2PlVwn6YWi9Ey/h7v7ez8fOXEjYeEyjpwIb9de11vGPdjKHnn+zdr9Wxig+EZXICFhjlV33Ck5XpV5Ki7ET+4V4MHlNEs3gW4bUa7hmED+0IwtW7WdN6QFhXR32l3dj8UOylrMdJE6NTh7i4Ys0JnndhuqgM9OdghDRuqeulkk9a/1KNlcSwLp+uxbb0GOaKfkynoQjHSZZLkJdApqjDGLRNjlxuEBj6HszOqTPGdCW7t7MoTLEuJrwdughdGQhl8glGUWGReDyvDtmvj1oxJlTUMU/EqDpmZN1jSKGk2DLM4yUHJ3x+DWfafdOZIyv0DP9CytMIoMPYkbZuSVo0kH+jMH3djKNZdqKLTstCk0oMPNtS8+apzekDkG/JB6yjt9BaOyk0n2N7I5knKf4C3KrxEOzaIqTmHq9bBS1rnxTvgTIf2eds8vCTqCpYyyudv2F4647BJ9jQPbA4ikLYCu1xNPj4RQaaeA125iuYtZ4mKOjPMxw2/h32kFihr+bX0w+W8g8aQa9F73eGQA6Il/NDI3YTVf44GtM5n5D8mKyQ4/BXZEYSps9+GVobDuUC/KcaJFPKLJRsZlRDXVZ2dKIwHaHOcq89pwd1Pe53gMXXt/zybykQzM=
-X-Forefront-Antispam-Report: CIP:12.22.5.235;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(4636009)(36840700001)(40470700004)(46966006)(7696005)(426003)(26005)(4326008)(70206006)(86362001)(1076003)(107886003)(82310400004)(6666004)(8936002)(54906003)(70586007)(508600001)(336012)(47076005)(40460700003)(186003)(356005)(8676002)(2616005)(36860700001)(83380400001)(5660300002)(36756003)(81166007)(2906002)(316002)(110136005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2022 12:21:19.5700
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c62bdb8e-a2d6-479e-f628-08d9df3406e7
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.235];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT023.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3300
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Consider the following sequence during PCI device runtime
-suspend/resume:
+This reverts commit 19e863828acf6d8ac8475ba1fd93c0fe17fdc4ef.
 
-1. PCI device goes into runtime suspended state. The PCI state
-   will be changed to PCI_D0 and then pci_platform_power_transition()
-   will be called which changes the ACPI state to ACPI_STATE_D3_HOT.
+Fixes the following oops:
+ Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
+ Internal error: Oops: 96000004 [#1] PREEMPT SMP
+ Modules linked in:
+ CPU: 1 PID: 7 Comm: kworker/u4:0 Not tainted 5.17.0-rc1-00086-ge38b27816fea-dirty #71
+ Hardware name: CPE0108 (DT)
+ Workqueue: events_unbound deferred_probe_work_func
+ pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+ pc : j721e_pcie_probe+0x184/0x600
+ lr : j721e_pcie_probe+0x170/0x600
+ sp : ffff80000957bae0
+ x29: ffff80000957bae0 x28: ffff800009357000 x27: ffff00000000c078
+ x26: ffff00003fe047a8 x25: 0000000000000000 x24: ffff0000000f5280
+ x23: ffff800008c98f78 x22: ffff800008f90ff0 x21: ffff000000231410
+ x20: ffff000002ef2780 x19: 0000000000000021 x18: 0000000000000001
+ x17: 0000000000000000 x16: 0000000000058c00 x15: ffffffffffffffff
+ x14: ffffffffffffffff x13: 0000000000000010 x12: 0101010101010101
+ x11: 0000000000000040 x10: ffff8000093e06c8 x9 : ffff8000093e06c0
+ x8 : ffff000000400270 x7 : 0000000000000000 x6 : ffff000000231590
+ x5 : ffff80000957b9e0 x4 : 0000000000000000 x3 : ffff0000002314f4
+ x2 : 0000000000000000 x1 : ffff0000000f5280 x0 : 0000000000000000
+ Call trace:
+  j721e_pcie_probe+0x184/0x600
+  platform_probe+0x68/0xe0
+  really_probe+0x144/0x320
+  __driver_probe_device+0xc4/0xe0
+  driver_probe_device+0x7c/0x110
+  __device_attach_driver+0x90/0xe0
+  bus_for_each_drv+0x78/0xd0
+  __device_attach+0xf0/0x150
+  device_initial_probe+0x14/0x20
+  bus_probe_device+0x9c/0xb0
+  deferred_probe_work_func+0x88/0xc0
+  process_one_work+0x1bc/0x340
+  worker_thread+0x1f8/0x420
+  kthread+0x110/0x120
+  ret_from_fork+0x10/0x20
+ Code: f9400280 a90573fb d0005396 913fc2d6 (f9400800)
 
-2. Parent bridge goes into runtime suspended state. If parent
-   bridge supports D3cold, then it will change the power state of all its
-   children to D3cold state and the power will be removed.
-
-3. During wake-up time, the bridge will be runtime resumed first
-   and pci_power_up() will be called for the bridge. Now, the power
-   supply will be resumed.
-
-4. pci_resume_bus() will be called which will internally invoke
-   pci_restore_standard_config(). pci_update_current_state()
-   will read PCI_PM_CTRL register and the current_state will be
-   updated to D0.
-
-In the above process, at step 4, the ACPI device state will still be
-ACPI_STATE_D3_HOT since pci_platform_power_transition() is not being
-invoked. We need call the pci_platform_power_transition() with state
-D0 to change the ACPI state to ACPI_STATE_D0.
-
-This patch calls pci_power_up() if current power state is D0 inside
-pci_restore_standard_config(). This pci_power_up() will change the
-ACPI state to ACPI_STATE_D0.
-
-Following are the steps to confirm:
-
-Enable the debug prints in acpi_pci_set_power_state()
-
-0000:01:00.0 is PCI device and 0000:00:01.0 is parent bridge device
-
-Before:
-
-0000:01:00.0: power state changed by ACPI to D3hot
-0000:00:01.0: power state changed by ACPI to D3cold
-0000:00:01.0: power state changed by ACPI to D0
-
-After:
-
-0000:01:00.0: power state changed by ACPI to D3hot
-0000:00:01.0: power state changed by ACPI to D3cold
-0000:00:01.0: power state changed by ACPI to D0
-0000:01:00.0: power state changed by ACPI to D0
-
-So with this patch, the PCI device ACPI state is also being
-changed to D0.
-
-Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
+Fixes: 19e863828acf ("PCI: j721e: Drop redundant struct device *")
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
 ---
- drivers/pci/pci-driver.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/pci/controller/cadence/pci-j721e.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 588588cfda48..64e0cca12f16 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -521,14 +521,22 @@ static void pci_device_shutdown(struct device *dev)
-  */
- static int pci_restore_standard_config(struct pci_dev *pci_dev)
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index 489586a4cdc7..cd43d1898482 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -51,10 +51,11 @@ enum link_status {
+ #define MAX_LANES			2
+ 
+ struct j721e_pcie {
+-	struct cdns_pcie	*cdns_pcie;
++	struct device		*dev;
+ 	struct clk		*refclk;
+ 	u32			mode;
+ 	u32			num_lanes;
++	struct cdns_pcie	*cdns_pcie;
+ 	void __iomem		*user_cfg_base;
+ 	void __iomem		*intd_cfg_base;
+ 	u32			linkdown_irq_regfield;
+@@ -98,7 +99,7 @@ static inline void j721e_pcie_intd_writel(struct j721e_pcie *pcie, u32 offset,
+ static irqreturn_t j721e_pcie_link_irq_handler(int irq, void *priv)
  {
-+	int error = 0;
- 	pci_update_current_state(pci_dev, PCI_UNKNOWN);
+ 	struct j721e_pcie *pcie = priv;
+-	struct device *dev = pcie->cdns_pcie->dev;
++	struct device *dev = pcie->dev;
+ 	u32 reg;
  
- 	if (pci_dev->current_state != PCI_D0) {
--		int error = pci_set_power_state(pci_dev, PCI_D0);
--		if (error)
--			return error;
-+		error = pci_set_power_state(pci_dev, PCI_D0);
-+	} else {
-+		/*
-+		 * The platform power state can still be non-D0, so this is
-+		 * required to change the platform power state to D0.
-+		 */
-+		error = pci_power_up(pci_dev);
- 	}
+ 	reg = j721e_pcie_intd_readl(pcie, STATUS_REG_SYS_2);
+@@ -164,7 +165,7 @@ static const struct cdns_pcie_ops j721e_pcie_ops = {
+ static int j721e_pcie_set_mode(struct j721e_pcie *pcie, struct regmap *syscon,
+ 			       unsigned int offset)
+ {
+-	struct device *dev = pcie->cdns_pcie->dev;
++	struct device *dev = pcie->dev;
+ 	u32 mask = J721E_MODE_RC;
+ 	u32 mode = pcie->mode;
+ 	u32 val = 0;
+@@ -183,7 +184,7 @@ static int j721e_pcie_set_mode(struct j721e_pcie *pcie, struct regmap *syscon,
+ static int j721e_pcie_set_link_speed(struct j721e_pcie *pcie,
+ 				     struct regmap *syscon, unsigned int offset)
+ {
+-	struct device *dev = pcie->cdns_pcie->dev;
++	struct device *dev = pcie->dev;
+ 	struct device_node *np = dev->of_node;
+ 	int link_speed;
+ 	u32 val = 0;
+@@ -204,7 +205,7 @@ static int j721e_pcie_set_link_speed(struct j721e_pcie *pcie,
+ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
+ 				     struct regmap *syscon, unsigned int offset)
+ {
+-	struct device *dev = pcie->cdns_pcie->dev;
++	struct device *dev = pcie->dev;
+ 	u32 lanes = pcie->num_lanes;
+ 	u32 val = 0;
+ 	int ret;
+@@ -219,7 +220,7 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
  
-+	if (error)
-+		return error;
-+
- 	pci_restore_state(pci_dev);
- 	pci_pme_restore(pci_dev);
- 	return 0;
+ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+ {
+-	struct device *dev = pcie->cdns_pcie->dev;
++	struct device *dev = pcie->dev;
+ 	struct device_node *node = dev->of_node;
+ 	struct of_phandle_args args;
+ 	unsigned int offset = 0;
+@@ -376,6 +377,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 	if (!pcie)
+ 		return -ENOMEM;
+ 
++	pcie->dev = dev;
+ 	pcie->mode = mode;
+ 	pcie->linkdown_irq_regfield = data->linkdown_irq_regfield;
+ 
 -- 
-2.17.1
+2.34.1
 
