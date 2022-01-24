@@ -2,150 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B07CA4978AC
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 06:46:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDB2B4978EB
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 07:27:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241300AbiAXFqv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jan 2022 00:46:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241243AbiAXFqu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 00:46:50 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70342C06173B;
-        Sun, 23 Jan 2022 21:46:50 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id ka4so18239290ejc.11;
-        Sun, 23 Jan 2022 21:46:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=HkSnuS44LOPC+JgKYRieiRulO3DJyDOtuSthHUwp9II=;
-        b=P48wyIytu8V6vbAkSzwSLeJ3w66HMxF8/+xyLajrMsMelRRkt7dIEoFrgEbWOraeGd
-         izlZi5qtNvpmouGKA0cRUllGSZ7XN+Wgmdhe/xxSAe5l9rYuIGqstkKVoXmF8myv1sQX
-         yrWyCkU1j3AbnrndpJfD/al37mm9KOtmy/NesFjc0KkCTn8CZygoeM0frNROb0i+YtoW
-         aU4D/8TIZW7MVBsiSYo0qo2ASrb5q9Y0y2S0h8kASO9Z4DdjFVX7zWbCYqrd1+gdWHGA
-         CznYfdMMkIQZvlqol3YCgHlWXlvl0TwD6r3K6SMlB40aLz2xtMfB+QL2gowjnqpqbNYV
-         6SaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=HkSnuS44LOPC+JgKYRieiRulO3DJyDOtuSthHUwp9II=;
-        b=eX4TLN5D+/4m7KdMrkff+yQR7GzqxM6sllgE2znMDr67tOVdmJ4AX1wMuC7Dlz/IRG
-         uA3htxFlQfV95PN9ugHJhfgR/gIngcqWQSj3ROHu7DvLmqYB4bhZB+2QlMjIJJH9r64Y
-         PhFmBqKQ3ZoF7TfG6mmpX9kpaSPvXOBqwezD784etDqd5eHGLO8HXmFRUh35cPvVaX86
-         hda15rObf/8JptMlZPDmRalMoFzRO/LzEmH3qkxnIb8HJVu5KqrJ8WVxKagJIeuVP10B
-         3b37vYIp+6Dk2iBuPpAI+qrJFw5sC2765K8eUqNxtd+jZQEaogNSYf0ewiKwt0QJBsMc
-         Adlw==
-X-Gm-Message-State: AOAM5321bU7iKoyyV8y1VgpZWlAKD2uVZiBmBECxrdEkjN9km02RD+O3
-        ZOrxJKQcMFYn23lqb8p7xts=
-X-Google-Smtp-Source: ABdhPJzauLFpRG9IXo056rR3+62+2H10wFaDgOVv2qwDodGm311TrIRCS4ymtpMibZzgw54YpkRpiA==
-X-Received: by 2002:a17:906:1e01:: with SMTP id g1mr11894889ejj.298.1643003208934;
-        Sun, 23 Jan 2022 21:46:48 -0800 (PST)
-Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id u6sm4446233ejn.181.2022.01.23.21.46.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Jan 2022 21:46:48 -0800 (PST)
-Message-ID: <9d89314c-8757-8965-0f5d-14fd95669320@gmail.com>
-Date:   Mon, 24 Jan 2022 06:46:47 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 2/2] PCI: rcar: Return all Fs from read which triggered
- an exception
-Content-Language: en-US
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        id S241613AbiAXG1R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jan 2022 01:27:17 -0500
+Received: from mga12.intel.com ([192.55.52.136]:43034 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241551AbiAXG1R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 24 Jan 2022 01:27:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643005637; x=1674541637;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Gn34ABxcSee+wgnEIT0hQPLTIw0wZvixz3QrsRcRHEs=;
+  b=B4oEodK3Ck8lRt03nWPzBiCPgUYOG4fI0RCDf7j+JhLpiQfu6REiERj5
+   sHJs284gFoZawaEYudKvW/iSadpSlXThxVyApGZDswU/J4AwvK7yQ/J2O
+   jIBtWHeFrzvp0b0YZGBusN4ILfD4Y6FiSKRCyFboLvcpCTh3l/gft3/Ux
+   6fWt5esZfHHvctnDdLeJYahSX1OpjEPzjLnS/6N4vi1FqHVvk8WL7jSoc
+   d6d1Pqsft52IqloICaGU3Gt3lOZCPwsZs3vm2Z61Qt1Xg6w/HY7+Gw7mq
+   Hr60HMuUIXI3O3Z651o8jD883sfGvUQ8JfmCML5Oi5HYGZcX4VOa1gSdJ
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="225953974"
+X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
+   d="scan'208";a="225953974"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 22:27:17 -0800
+X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
+   d="scan'208";a="534089171"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 22:27:12 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 24 Jan 2022 08:27:09 +0200
+Date:   Mon, 24 Jan 2022 08:27:09 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rajat Jain <rajatja@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-References: <20220122221554.196311-1-marek.vasut@gmail.com>
- <20220122221554.196311-2-marek.vasut@gmail.com>
- <20220123153147.sv6eoayxqvqbaa66@pali>
- <7ced7370-1853-b52d-7e04-062d1bf3334c@gmail.com>
- <20220123164936.cmzvkkkuw5chz3ek@pali>
-From:   Marek Vasut <marek.vasut@gmail.com>
-In-Reply-To: <20220123164936.cmzvkkkuw5chz3ek@pali>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rajatxjain@gmail.com,
+        dtor@google.com, jsbarnes@google.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Pavel Machek <pavel@denx.de>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH] PCI: ACPI: Allow internal devices to be marked as
+ untrusted
+Message-ID: <Ye5GvQbFKo+CFtRb@lahna>
+References: <20220120000409.2706549-1-rajatja@google.com>
+ <20220121214117.GA1154852@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220121214117.GA1154852@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/23/22 17:49, Pali Rohár wrote:
-
 Hi,
 
-[...]
+On Fri, Jan 21, 2022 at 03:41:17PM -0600, Bjorn Helgaas wrote:
+> [+cc Greg, Jean-Philippe, Mika, Pavel, Oliver, Joerg since they
+> commented on previous "external-facing" discussion]
+> 
+> On Wed, Jan 19, 2022 at 04:04:09PM -0800, Rajat Jain wrote:
+> > Today the pci_dev->untrusted is set for any devices sitting downstream
+> > an external facing port (determined via "ExternalFacingPort" property).
+> > This however, disallows any internal devices to be marked as untrusted.
+> 
+> This isn't stated quite accurately.  "dev->untrusted" is currently set
+> only by set_pcie_untrusted(), when "dev" has an upstream bridge that
+> is either external-facing or untrusted.
+> 
+> But that doesn't disallow or prevent internal devices from being
+> marked as untrusted; it just doesn't implement that.
+> 
+> > There are use-cases though, where a platform would like to treat an
+> > internal device as untrusted (perhaps because it runs untrusted
+> > firmware, or offers an attack surface by handling untrusted network
+> > data etc).
+> > 
+> > This patch introduces a new "UntrustedDevice" property that can be used
+> > by the firmware to mark any device as untrusted.
 
->>> I must admit that this patch from its initial version evolved into giant hack...
->>> https://lore.kernel.org/linux-pci/20210514200549.431275-1-marek.vasut@gmail.com/
->>>
->>> During review of the previous patch I have asked some important
->>> questions but I have not got any answer to them. So I'm reminding it:
->>> https://lore.kernel.org/linux-pci/20210805183024.ftdwknkttfwwogks@pali/
->>>
->>> So could please answer what happens when PCIe controller is in some
->>> non-L* state and either MMIO happen or config read happens or config
->>> write happens?
->>
->> What kind of non-L state ?
-> 
-> E.g. Hot Reset, Detect, Polling, Configuration or Recovery.
-> 
->> Do you have some specific test which fails ?
-> 
-> Yes, by putting PCIe controller into one of those states. I have already
-> wrote you in some previous email to trigger hot reset as this is the
-> easiest test and can be done also by userspace (setpci).
-> 
-> Link goes to Recovery state automatically when doing link retraining
-> (e.g. by setting RT bit in PCIe Root Port config space) and from
-> Recovery to Configuration or directly back to L0. So testing this path
-> needs precise timing and repeating it more times to trigger.
-> 
-> So the easiest test is really via PCIe Hot Reset by setting Secondary
-> Bus Reset bit in Bridge Control register of PCIe Root Port. After this
-> is link in Hot Reset and does not go back to L0 until you clear that
-> bit. So in this state you can do all these operations which cause
-> aborts, like calling that kernel function which is reading from config
-> space which belongs to device on the other end of the PCIe link or doing
-> MMIO read / write operation of mapped memory which again belongs to
-> other end of PCIe link.
-> 
-> Or instead of Hot Reset, you can set link disable bit in config space of
-> PCIe Root Port. Then link also would not be in L0 state (until you clear
-> that bit), so again you have lot of time to do same tests.
-
-Can you give me the exact setpci invocation ? If so, then I can test 
-this for you on the hardware.
-
->> This patch addresses the case where the link transition to L1 state has to
->> be completed manually. If the CPU accesses the config space before that
->> happened, you get an imprecise data abort.
-> 
-> Yes, I see. But it does not have to complete and the question how is
-> handled this case... And that is why is needed to know what happens in
-> such cases.
-> 
-> And IIRC you cannot go from L1 state directly to L0, but only via
-> Recovery state. And from Recovery you may end up in Detect state.
-> (e.g. after hot unplug or if some buggy card with kernel quirk is used)
-> 
->>> It is really important to know this fact.
->>>
->>> I'm in impression that this patch still is not enough as similar issues
->>> are also in other PCIe controllers which I know...
->>
->> Do you have a suggestion for a patch which would be enough on this hardware
->> ?
-> 
-> I do not have enough information.
-
-I see
+I think this new property should be documented somewhere too (also
+explain when to use it instead of ExternalFacingPort). If not in the
+next ACPI spec or some supplemental doc then perhaps in the DT bindings
+under Documentation/devicetree/bindings.
