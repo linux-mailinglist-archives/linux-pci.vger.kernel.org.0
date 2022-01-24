@@ -2,44 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3BC74976A8
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 01:31:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57DBD4976AA
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 01:31:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240611AbiAXAbQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 23 Jan 2022 19:31:16 -0500
-Received: from mga14.intel.com ([192.55.52.115]:51724 "EHLO mga14.intel.com"
+        id S240617AbiAXAbT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 23 Jan 2022 19:31:19 -0500
+Received: from mga03.intel.com ([134.134.136.65]:62345 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240617AbiAXAbP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 23 Jan 2022 19:31:15 -0500
+        id S235522AbiAXAbT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 23 Jan 2022 19:31:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642984274; x=1674520274;
+  t=1642984279; x=1674520279;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5+FJpLB8Qt6mE4dbQ2E52eJSpXbZ7qQHR/gOMZALWOc=;
-  b=j5rYPC2wlPZ8hrVXOci11N+hogGOW+EcmAatgV3IwnWvFb3lk3bKoYLm
-   ela3cqZE/3tdHpQqboZJAn/QJ9Xwgmp7snejU7U2vWurIOiDZzz2Mc/yz
-   8X55Yd3mPZFCZTZTe/ReTV/rR1g5+wyBLtIpqS4TNECrkJ8/wXx7cOF6D
-   a8BVhp31AL/A9Wk99DYEGWqhPw9wrjgfi1MG6tGeHnI/OKTUVRgjo0st/
-   9AWAII92H4TYf8tR3IVsHT7s/4OgQt/d6W30CnlairJiN9H0m8t1EeAYG
-   fMrbDGWrNhqhoAyGPN2SMM1b5BHFHMif+xUPCQ/eJWA6A1D8Klabz8JCv
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="246151739"
+  bh=c0l8SZblXwv0B6ZZUTJUC6Gddvs4JIEh2lg9YgBwkvE=;
+  b=ll+BFWJ+CpvRmH+g0DdzgAAGbGqahDBz7P+832NG0LbMTNX1RN9RQFoY
+   2YmaQJUmAmlI1gXPgA8JKNBjAVAwurw37OfAF+7WNsx77REg6FXmXpQs0
+   kS9amhYJ6Ec90KVL0t4oWaU43drn0KcVItWbWLYJbNP5lfGJjcbM68FC1
+   mTcp9Y3lMdYMvra8s7fO4P7SSkUQyvvlstHTWW5Zx3y13SV3wux958prq
+   Qj2FuB5fEAmEAFeeDgl/ax1IIp8OR+xqVI4xEahK9+IKjjHhS4irbyLqM
+   F0f3yTlfXHcwQOAuA5Cee8EMGMwPbSwdXsToav+kL23SDq5dMdOPlTo2C
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="245879416"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="246151739"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:31:14 -0800
+   d="scan'208";a="245879416"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:31:19 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="531916698"
+   d="scan'208";a="695240319"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:31:14 -0800
-Subject: [PATCH v3 29/40] cxl/pci: Implement wait for media active
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2022 16:31:19 -0800
+Subject: [PATCH v3 30/40] cxl/pci: Emit device serial number
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
-        nvdimm@lists.linux.dev
-Date:   Sun, 23 Jan 2022 16:31:13 -0800
-Message-ID: <164298427373.3018233.9309741847039301834.stgit@dwillia2-desk3.amr.corp.intel.com>
+Cc:     linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
+Date:   Sun, 23 Jan 2022 16:31:19 -0800
+Message-ID: <164298427918.3018233.8524862534398549106.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,155 +49,104 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ben Widawsky <ben.widawsky@intel.com>
+Per the CXL specification (8.1.12.2 Memory Device PCIe Capabilities and
+Extended Capabilities) the Device Serial Number capability is mandatory.
+Emit it for user tooling to identify devices.
 
-CXL 2.0 8.1.3.8.2 states:
-
-  Memory_Active: When set, indicates that the CXL Range 1 memory is
-  fully initialized and available for software use. Must be set within
-  Range 1. Memory_Active_Timeout of deassertion of reset to CXL device
-  if CXL.mem HwInit Mode=1
-
-Unfortunately, Memory_Active can take quite a long time depending on
-media size (up to 256s per 2.0 spec). Provide a callback for the
-eventual establishment of CXL.mem operations via the 'cxl_mem' driver
-the 'struct cxl_memdev'. The implementation waits for 60s by default for
-now and can be overridden by the mbox_ready_time module parameter.
-
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-[djbw: switch to sleeping wait]
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/cxlmem.h         |    2 ++
- drivers/cxl/pci.c            |   49 +++++++++++++++++++++++++++++++++++++++++-
- tools/testing/cxl/test/mem.c |    8 +++++++
- 3 files changed, 58 insertions(+), 1 deletion(-)
+ Documentation/ABI/testing/sysfs-bus-cxl |    9 +++++++++
+ drivers/cxl/core/memdev.c               |   11 +++++++++++
+ drivers/cxl/cxlmem.h                    |    2 ++
+ drivers/cxl/pci.c                       |    1 +
+ tools/testing/cxl/test/mem.c            |    1 +
+ 5 files changed, 24 insertions(+)
 
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 6d8cbf3355b5..87c0e5e65322 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -25,6 +25,15 @@ Description:
+ 		identically named field in the Identify Memory Device Output
+ 		Payload in the CXL-2.0 specification.
+ 
++What:		/sys/bus/cxl/devices/memX/serial
++Date:		January, 2022
++KernelVersion:	v5.18
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) 64-bit serial number per the PCIe Device Serial Number
++		capability. Mandatory for CXL devices, see CXL 2.0 8.1.12.2
++		Memory Device PCIe Capabilities and Extended Capabilities.
++
+ What:		/sys/bus/cxl/devices/*/devtype
+ Date:		June, 2021
+ KernelVersion:	v5.14
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 61029cb7ac62..1e574b052583 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -89,7 +89,18 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
+ static struct device_attribute dev_attr_pmem_size =
+ 	__ATTR(size, 0444, pmem_size_show, NULL);
+ 
++static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
++			   char *buf)
++{
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++
++	return sysfs_emit(buf, "%#llx\n", cxlds->serial);
++}
++static DEVICE_ATTR_RO(serial);
++
+ static struct attribute *cxl_memdev_attributes[] = {
++	&dev_attr_serial.attr,
+ 	&dev_attr_firmware_version.attr,
+ 	&dev_attr_payload_max.attr,
+ 	&dev_attr_label_storage_size.attr,
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 00f55f4066b9..e70838e5dc17 100644
+index e70838e5dc17..0ba0cf8dcdbc 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -132,6 +132,7 @@ struct cxl_endpoint_dvsec_info {
+@@ -131,6 +131,7 @@ struct cxl_endpoint_dvsec_info {
+  * @next_persistent_bytes: persistent capacity change pending device reset
   * @component_reg_phys: register base of component registers
   * @info: Cached DVSEC information about the device.
++ * @serial: PCIe Device Serial Number
   * @mbox_send: @dev specific transport for transmitting mailbox commands
-+ * @wait_media_ready: @dev specific method to await media ready
+  * @wait_media_ready: @dev specific method to await media ready
   *
-  * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-  * details on capacity parameters.
-@@ -165,6 +166,7 @@ struct cxl_dev_state {
+@@ -164,6 +165,7 @@ struct cxl_dev_state {
+ 
+ 	resource_size_t component_reg_phys;
  	struct cxl_endpoint_dvsec_info info;
++	u64 serial;
  
  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-+	int (*wait_media_ready)(struct cxl_dev_state *cxlds);
- };
- 
- enum cxl_opcode {
+ 	int (*wait_media_ready)(struct cxl_dev_state *cxlds);
 diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 5c43886dc2af..513cb0e2a70a 100644
+index 513cb0e2a70a..9252e1f4b18c 100644
 --- a/drivers/cxl/pci.c
 +++ b/drivers/cxl/pci.c
-@@ -49,7 +49,7 @@
- static unsigned short mbox_ready_timeout = 60;
- module_param(mbox_ready_timeout, ushort, 0600);
- MODULE_PARM_DESC(mbox_ready_timeout,
--		 "seconds to wait for mailbox ready status");
-+		 "seconds to wait for mailbox ready / memory active status");
- 
- static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
- {
-@@ -417,6 +417,51 @@ static int wait_for_valid(struct cxl_dev_state *cxlds)
- 	return -ETIMEDOUT;
- }
- 
-+/*
-+ * Wait up to @mbox_ready_timeout for the device to report memory
-+ * active.
-+ */
-+static int wait_for_media_ready(struct cxl_dev_state *cxlds)
-+{
-+	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-+	int d = cxlds->cxl_dvsec;
-+	bool active = false;
-+	u64 md_status;
-+	int rc, i;
-+
-+	rc = wait_for_valid(cxlds);
-+	if (rc)
-+		return rc;
-+
-+	for (i = mbox_ready_timeout; i; i--) {
-+		u32 temp;
-+		int rc;
-+
-+		rc = pci_read_config_dword(
-+			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &temp);
-+		if (rc)
-+			return rc;
-+
-+		active = FIELD_GET(CXL_DVSEC_MEM_ACTIVE, temp);
-+		if (active)
-+			break;
-+		msleep(1000);
-+	}
-+
-+	if (!active) {
-+		dev_err(&pdev->dev,
-+			"timeout awaiting memory active after %d seconds\n",
-+			mbox_ready_timeout);
-+		return -ETIMEDOUT;
-+	}
-+
-+	md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
-+	if (!CXLMDEV_READY(md_status))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
- static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
- {
- 	struct cxl_endpoint_dvsec_info *info = &cxlds->info;
-@@ -520,6 +565,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		return -ENXIO;
- 	}
- 
-+	cxlds->wait_media_ready = wait_for_media_ready;
-+
- 	rc = cxl_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
- 	if (rc)
- 		return rc;
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 8c2086c4caef..3af3f94de0c3 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -4,6 +4,7 @@
- #include <linux/platform_device.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-+#include <linux/delay.h>
- #include <linux/sizes.h>
- #include <linux/bits.h>
- #include <cxlmem.h>
-@@ -236,6 +237,12 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	return rc;
- }
- 
-+static int cxl_mock_wait_media_ready(struct cxl_dev_state *cxlds)
-+{
-+	msleep(100);
-+	return 0;
-+}
-+
- static void label_area_release(void *lsa)
- {
- 	vfree(lsa);
-@@ -262,6 +269,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+@@ -557,6 +557,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (IS_ERR(cxlds))
  		return PTR_ERR(cxlds);
  
- 	cxlds->mbox_send = cxl_mock_mbox_send;
-+	cxlds->wait_media_ready = cxl_mock_wait_media_ready;
- 	cxlds->payload_size = SZ_4K;
++	cxlds->serial = pci_get_dsn(pdev);
+ 	cxlds->cxl_dvsec = pci_find_dvsec_capability(
+ 		pdev, PCI_DVSEC_VENDOR_ID_CXL, CXL_DVSEC);
+ 	if (!cxlds->cxl_dvsec) {
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 3af3f94de0c3..36ef337c775c 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -268,6 +268,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+ 	if (IS_ERR(cxlds))
+ 		return PTR_ERR(cxlds);
  
- 	rc = cxl_enumerate_cmds(cxlds);
++	cxlds->serial = pdev->id;
+ 	cxlds->mbox_send = cxl_mock_mbox_send;
+ 	cxlds->wait_media_ready = cxl_mock_wait_media_ready;
+ 	cxlds->payload_size = SZ_4K;
 
