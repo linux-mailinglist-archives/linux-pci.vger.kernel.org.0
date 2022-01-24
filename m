@@ -2,532 +2,352 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3682499272
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 21:21:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38B0E499595
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Jan 2022 22:13:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355320AbiAXUUm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Jan 2022 15:20:42 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:53466 "EHLO
+        id S1442082AbiAXUxH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Jan 2022 15:53:07 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:44564 "EHLO
         ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380243AbiAXUQA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 15:16:00 -0500
+        with ESMTP id S1389744AbiAXUm7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Jan 2022 15:42:59 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4ED00B810BD;
-        Mon, 24 Jan 2022 20:15:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0B0BC340EA;
-        Mon, 24 Jan 2022 20:15:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E7D3FB81057;
+        Mon, 24 Jan 2022 20:42:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E05EC340E5;
+        Mon, 24 Jan 2022 20:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643055357;
-        bh=VB0BEilfxnSHO26Ufm414IcFxD0dqrOchqBAnjnkdRY=;
+        s=k20201202; t=1643056974;
+        bh=YD9I436bcedS/S5vYTroiV1PaDUObF9Dgw1cGkc7VMc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=o0Iul+vrbAUv6lq9+6IhRC/xXawkexSG+wBTW5ZFcLdyRPiQ6U/YAr1ur6go0TIfD
-         9msc7lgsjotYiZ2+vbrHfCD645r3+RDJrm5HrMKe6WO7YjXyNZJ1rOhrtOREgIu/qQ
-         tQHAAYUTh8sCtjtMc/bLQwg37ZKgiTfRKR1BmSwhxIXLYHif99+zsmXSt2NAxV3G4W
-         toVAd10CSb9Ov9/XD6OaBUQ8JzfDvbi4HLmnxkA5bXifHgBFxXomesvvvQRdQvyixZ
-         bzYzjXm6r42vCaLDlDuLCsAt5d5Xb6av3wbyITH+iSbw+UG1rn2rPNPHjhpn8Itu/z
-         usJ4MEI9MEXpQ==
-Date:   Mon, 24 Jan 2022 14:15:54 -0600
+        b=gZdS0PuuV+EEQp5hqWXv5oQJ8kQBR170U4s9b5zji8flMLHE1wYWuARBl4WsKATBF
+         wQPM48UQ6QJOXwEN0LWxQiYLh9T383INucSyan78S47gNNrS/UI8OTyZU2Cd+PRqS+
+         TG5ohnsE3+CJ7nEStidkFm8FUYnqfzwedSvAdhuZh8Aa+j16D0r1rhzvRlavJ/dEz7
+         2iPhKh3skwAwhxdm7ItMy2n2GKuqpcIDXwwjuj92aMkR7AdVjcPmHV33bTsfvCqIQH
+         vzm+cc/9wzZPHZH2f9MzfEo2syR3Vz4UL7vkvl7Jkwe4cF/7PpiKRd+wr2dKOy91ZR
+         oFj1bxKzYJ3lQ==
+Date:   Mon, 24 Jan 2022 14:42:52 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alain Volmat <avolmat@me.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Subject: Re: [PATCH RESEND v2 2/5] pci: dwc: pcie-st: Add PCIe driver for STi
- platforms
-Message-ID: <20220124201554.GA1545465@bhelgaas>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        Baruch Siach <baruch.siach@siklu.com>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] PCI: qcom: add support for IPQ60xx PCIe controller
+Message-ID: <20220124204252.GA1552314@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220103074731.3651-3-avolmat@me.com>
+In-Reply-To: <f69d32f08a890463a331567e5742f2d33fa8b2bb.1643041464.git.baruch@tkos.co.il>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 03, 2022 at 08:47:28AM +0100, Alain Volmat wrote:
-> Addition of the PCIe driver (supporting RC) for controllers
-> found on some STi platforms such as STiH407, STiH410 or
-> STiH418.
-> The controller is based on the designware PCIe controller.
+Capitalize subject line to match history, i.e.,
 
-Please follow the subject and commit log conventions in
-drivers/pci/controller.  Update capitalization, use imperative mood,
-blank lines between paragraphs, etc.  Wrap to fill 75 columns in the
-commit log.
+  $ git log --oneline drivers/pci/controller/dwc/pcie-qcom.c
+  3f13d611aa6b PCI: qcom: Use __be16 type to store return value from cpu_to_be16()
+  4e0e90539bb0 PCI: qcom: Fix an error handling path in 'qcom_pcie_probe()'
+  45a3ec891370 PCI: qcom: Add sc8180x compatible
+  aa9c0df98c29 PCI: qcom: Switch pcie_1_pipe_clk_src after PHY init in SC7280
+  b89ff410253d PCI: qcom: Replace ops with struct pcie_cfg in pcie match data
+  2cfef1971aea PCI: qcom: Use PHY_REFCLK_USE_PAD only for ipq8064
+  7081556f81f7 PCI: qcom: Add support for ddrss_sf_tbu clock
+  4c9398822106 PCI: qcom: Add support for configuring BDF to SID mapping for SM8250
+  e1dd639e374a PCI: qcom: Add SM8250 SoC support
 
-Follow OEM usage ("DesignWare"), also below in Kconfig help text and
-comments.
+A good one would be:
 
-In commit logs, comments, etc, use "PCIe" consistently, not "PCI
-express" or "pcie".  Similarly, use "PHY" instead of "phy"; "GPIO"
-instead of "gpio".
+  PCI: qcom: Add IPQ60xx support
 
-> Signed-off-by: Alain Volmat <avolmat@me.com>
+We already know this is a PCIe controller, and it's nice to have the
+important words like "IPQ60xx" early in the message so they don't get
+truncated or wrapped.
+
+On Mon, Jan 24, 2022 at 06:27:31PM +0200, Baruch Siach wrote:
+> From: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> 
+> IPQ60xx series of SoCs have one port of PCIe gen 3. Add support for that
+> platform.
+> 
+> The code is based on downstream[1] Codeaurora kernel v5.4 (branch
+> win.linuxopenwrt.2.0).
+> 
+> Split out the DBI registers access part from .init into .post_init. DBI
+> registers are only accessible after phy_power_on().
+> 
+> [1] https://source.codeaurora.org/quic/qsdk/oss/kernel/linux-ipq-5.4/
+> 
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
 > ---
-> v2: update of the pcie-st driver to add possibility to build as module
->     and remove the __init of the probe
+> v5:
 > 
->  drivers/pci/controller/dwc/Kconfig    |  11 +
->  drivers/pci/controller/dwc/Makefile   |   1 +
->  drivers/pci/controller/dwc/pcie-sti.c | 386 ++++++++++++++++++++++++++
->  3 files changed, 398 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-sti.c
+>   * Remove comments from qcom_pcie_init_2_9_0() (Bjorn Andersson)
 > 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 62ce3abf0f19..232b8ffd54af 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -384,4 +384,15 @@ config PCIE_FU740
->  	  Say Y here if you want PCIe controller support for the SiFive
->  	  FU740.
+> v4:
+> 
+>   * Rebase on v5.16-rc1
+> 
+> v3:
+>   * Drop speed setup; rely on generic code (Rob Herring)
+> 
+>   * Drop unused CLK_RATE macros (Bjorn Helgaas)
+> 
+>   * Minor formatting fixes (Bjorn Helgaas)
+> 
+>   * Add reference to downstream Codeaurora kernel tree (Bjorn Helgaas)
+> 
+> v2:
+>   * Drop ATU configuration; rely on common code instead
+> 
+>   * Use more common register macros
+> 
+>   * Use bulk clk and reset APIs
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.h |   1 +
+>  drivers/pci/controller/dwc/pcie-qcom.c       | 137 +++++++++++++++++++
+>  2 files changed, 138 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index ea87809ee298..279c3778a13b 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -76,6 +76,7 @@
 >  
-> +config PCIE_STI
-> +	tristate "STMicroelectronics PCIe Controller for STi SoCs"
-> +	depends on ARCH_STI || COMPILE_TEST
-> +	depends on OF && PCI_MSI_IRQ_DOMAIN
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Enable PCIe controller support on STMicroelectronics STi SoCs.
-> +	  This controller is based on Designware hardware and therefore
-> +	  the driver re-uses the Designware core functions to implement
-> +	  the driver.
+>  #define GEN3_RELATED_OFF			0x890
+>  #define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
+> +#define GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS	BIT(13)
+>  #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
+>  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
+>  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index c19cd506ed3f..5d47e572da44 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -52,6 +52,10 @@
+>  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+>  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+>  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+> +#define AHB_CLK_EN				BIT(0)
+> +#define MSTR_AXI_CLK_EN				BIT(1)
+> +#define BYPASS					BIT(4)
 > +
->  endmenu
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index 8ba7b67f5e50..c98fa18714ce 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -21,6 +21,7 @@ obj-$(CONFIG_PCIE_KEEMBAY) += pcie-keembay.o
->  obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
->  obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
->  obj-$(CONFIG_PCI_MESON) += pci-meson.o
-> +obj-$(CONFIG_PCIE_STI) += pcie-sti.o
->  obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
->  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
-> diff --git a/drivers/pci/controller/dwc/pcie-sti.c b/drivers/pci/controller/dwc/pcie-sti.c
-> new file mode 100644
-> index 000000000000..61da00a079ac
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-sti.c
-> @@ -0,0 +1,386 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2021 STMicroelectronics
-> + *
-> + * STMicroelectronics PCI express Driver for STi SoCs.
-> + * ST PCIe IPs are built around a Synopsys IP Core.
-> + *
-> + * Authors: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-> + *          Alain Volmat <avolmat@me.com>
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +
-> +#include "pcie-designware.h"
-> +
-> +/* RC_ADDRESS_TRANSLATION Registers */
-> +#define TRANSLATION_CONTROL		0x900
-> +/* Controls if area is inclusive or exclusive */
-> +#define RC_PASS_ADDR_RANGE		BIT(1)
-> +
-> +/* Base of area reserved for config accesses. Fixed size of 64K. */
-> +#define CFG_BASE_ADDRESS		0x92c
-> +#define CFG_REGION_SIZE			65536
-> +#define CFG_SPACE1_OFFSET		0x1000
-> +
-> +/* First 4K of config space has this BDF (bus,device,function) */
-> +#define FUNC0_BDF_NUM			0x930
-> +
-> +/* Mem regions */
-> +#define IN0_MEM_ADDR_START		0x964
-> +#define IN0_MEM_ADDR_LIMIT		0x968
-> +#define IN1_MEM_ADDR_START		0x974
-> +#define IN1_MEM_ADDR_LIMIT		0x978
-> +
-> +/* syscfg1 bits */
-> +#define PCIE_APP_LTSSM_ENABLE		BIT(2)
-> +/* syscfg0 bits */
-> +#define PCIE_TYPE_ROOT_COMPLEX		BIT(0)
-> +
-> +/* st,syscfg offsets */
-> +#define SYSCFG0_REG	1
-> +#define SYSCFG1_REG	2
-> +
-> +#define to_st_pcie(x)	dev_get_drvdata((x)->dev)
-> +
-> +/**
-> + * struct st_pcie - private data of the controller
-> + * @dw: designware pcie
-> + * @syscfg0: PCIe conf register setting root complex, regmap offset
-> + * @syscfg1: PCIe conf register for PCIE_APP_LTSSM_ENABLE, regmap offset
-> + * @phy: associated pcie phy
-> + * @lmi: memory made available to the controller
-> + * @regmap: Syscfg registers bank in which PCIe port is configured
-> + * @pwr: power control
-> + * @rst: reset control
-> + * @reset_gpio: optional reset gpio
-> + * @config_window_start: start address of 64K config space area
-> + */
-> +struct st_pcie {
-> +	struct dw_pcie *dw;
-> +	int syscfg0;
-> +	int syscfg1;
-> +	struct phy *phy;
-> +	struct resource	*lmi;
-> +	struct regmap *regmap;
-> +	struct reset_control *pwr;
+>  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT	0x178
+>  #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2	0x1A8
+>  #define PCIE20_PARF_LTSSM			0x1B0
+> @@ -171,6 +175,11 @@ struct qcom_pcie_resources_2_7_0 {
+>  	struct clk *ref_clk_src;
+>  };
+>  
+> +struct qcom_pcie_resources_2_9_0 {
+> +	struct clk_bulk_data clks[5];
 > +	struct reset_control *rst;
-> +	struct gpio_desc *reset_gpio;
-> +	phys_addr_t config_window_start;
 > +};
 > +
-> +/*
-> + * The PCI express core IP expects the following arrangement on it's address
-
-s/PCI express/PCIe/
-s/it's/its/
-
-> + * bus (slv_haddr) when driving config cycles.
-> + * bus_number		[31:24]
-> + * dev_number		[23:19]
-> + * func_number		[18:16]
-> + * unused		[15:12]
-> + * ext_reg_number	[11:8]
-> + * reg_number		[7:2]
-> + *
-> + * Bits [15:12] are unused.
-> + *
-> + * In the glue logic there is a 64K region of address space that can be
-> + * written/read to generate config cycles. The base address of this is
-> + * controlled by CFG_BASE_ADDRESS. There are 8 16 bit registers called
-> + * FUNC0_BDF_NUM to FUNC8_BDF_NUM. These split the bottom half of the 64K
-> + * window into 8 regions at 4K boundaries. These control the bus, device and
-> + * function number you are trying to talk to.
-> + *
-> + * The decision on whether to generate a type 0 or type 1 access is controlled
-> + * by bits 15:12 of the address you write to.  If they are zero, then a type 0
-> + * is generated, if anything else it will be a type 1. Thus the bottom 4K
-> + * region controlled by FUNC0_BDF_NUM can only generate type 0, all the others
-> + * can only generate type 1.
-> + *
-> + * We only use FUNC0_BDF_NUM and FUNC1_BDF_NUM. Which one you use is selected
-> + * by bit 12 of the address you write to. The selected register is then used
-> + * for the top 16 bits of the slv_haddr to form the bus/dev/func, bit 15:12 are
-> + * wired to zero, and bits 11:2 form the address of the register you want to
-> + * read in config space.
-> + *
-> + * We always write FUNC0_BDF_NUM as a 32 bit write. So if we want type 1
-> + * accesses we have to shift by 16 so in effect we are writing to FUNC1_BDF_NUM
-> + */
-> +static inline u32 bdf_num(int bus, int devfn, int is_root_bus)
+>  union qcom_pcie_resources {
+>  	struct qcom_pcie_resources_1_0_0 v1_0_0;
+>  	struct qcom_pcie_resources_2_1_0 v2_1_0;
+> @@ -178,6 +187,7 @@ union qcom_pcie_resources {
+>  	struct qcom_pcie_resources_2_3_3 v2_3_3;
+>  	struct qcom_pcie_resources_2_4_0 v2_4_0;
+>  	struct qcom_pcie_resources_2_7_0 v2_7_0;
+> +	struct qcom_pcie_resources_2_9_0 v2_9_0;
+>  };
+>  
+>  struct qcom_pcie;
+> @@ -1297,6 +1307,119 @@ static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
+>  	clk_disable_unprepare(res->pipe_clk);
+>  }
+>  
+> +static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
 > +{
-> +	return ((bus << 8) | devfn) << (is_root_bus ? 0 : 16);
-> +}
-> +
-> +static void __iomem *st_pcie_other_map_bus(struct pci_bus *bus, unsigned int devfn, int where)
-
-Wrap to fit in 80 columns (see other drivers for examples).  Wrap rest
-of file similarly.
-
-> +{
-> +	struct pcie_port *pp = bus->sysdata;
-> +	struct dw_pcie *dw = to_dw_pcie_from_pp(pp);
-> +	u32 bdf;
-> +
-> +	bdf = bdf_num(bus->number, devfn, pci_is_root_bus(bus));
-> +
-> +	/* Set the config packet devfn */
-> +	dw_pcie_writel_dbi(dw, FUNC0_BDF_NUM, bdf);
-> +	dw_pcie_readl_dbi(dw, FUNC0_BDF_NUM);
-> +
-> +	return pp->va_cfg0_base + where + (pci_is_root_bus(bus->parent) ? 0 : CFG_SPACE1_OFFSET);
-> +}
-> +
-> +static struct pci_ops st_child_pcie_ops = {
-> +	.map_bus = st_pcie_other_map_bus,
-> +	.read = pci_generic_config_read,
-> +	.write = pci_generic_config_write,
-> +};
-> +
-> +static void st_pcie_hw_setup(struct dw_pcie *dw)
-> +{
-> +	struct st_pcie *pcie = to_st_pcie(dw);
-> +
-> +	/* Set up the config window to the top of the PCI address space */
-> +	dw_pcie_writel_dbi(dw, CFG_BASE_ADDRESS, pcie->config_window_start);
-> +
-> +	/*
-> +	 * Open up memory to the PCI controller. We could do slightly
-> +	 * better than this and exclude the kernel text segment and bss etc.
-> +	 * They are base/limit registers so can be of arbitrary alignment
-> +	 * presumably
-> +	 */
-> +	dw_pcie_writel_dbi(dw, IN0_MEM_ADDR_START, pcie->lmi->start);
-> +	dw_pcie_writel_dbi(dw, IN0_MEM_ADDR_LIMIT, pcie->lmi->end);
-> +
-> +	/* Disable the 2nd region */
-> +	dw_pcie_writel_dbi(dw, IN1_MEM_ADDR_START, ~0);
-> +	dw_pcie_writel_dbi(dw, IN1_MEM_ADDR_LIMIT, 0);
-> +
-> +	dw_pcie_writel_dbi(dw, TRANSLATION_CONTROL, RC_PASS_ADDR_RANGE);
-> +}
-> +
-> +static int st_pcie_init(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *dw = to_dw_pcie_from_pp(pp);
-> +	struct st_pcie *pcie = to_st_pcie(dw);
+> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct device *dev = pci->dev;
 > +	int ret;
 > +
-> +	/* Set device type : Root Complex */
-> +	ret = regmap_write(pcie->regmap, pcie->syscfg0, PCIE_TYPE_ROOT_COMPLEX);
-> +	if (ret < 0) {
-> +		dev_err(dw->dev, "unable to set device type\n");
-> +		return ret;
-> +	}
+> +	res->clks[0].id = "iface";
+> +	res->clks[1].id = "axi_m";
+> +	res->clks[2].id = "axi_s";
+> +	res->clks[3].id = "axi_bridge";
+> +	res->clks[4].id = "rchng";
 > +
-> +	ret = reset_control_deassert(pcie->pwr);
+> +	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	res->rst = devm_reset_control_array_get_exclusive(dev);
+> +	if (IS_ERR(res->rst))
+> +		return PTR_ERR(res->rst);
+> +
+> +	return 0;
+> +}
+> +
+> +static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
+> +{
+> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+> +
+> +	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
+> +}
+> +
+> +static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
+> +{
+> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+> +	struct device *dev = pcie->pci->dev;
+> +	int ret;
+> +
+> +	ret = reset_control_assert(res->rst);
 > +	if (ret) {
-> +		dev_err(dw->dev, "unable to bring out of powerdown\n");
+> +		dev_err(dev, "reset assert failed (%d)\n", ret);
 > +		return ret;
 > +	}
 > +
-> +	ret = reset_control_deassert(pcie->rst);
+> +	usleep_range(2000, 2500);
+
+Where do these sleep durations come from?  If they're specified
+somewhere by PCIe, can you include a citation, e.g., a section number
+in the spec.
+
+> +	ret = reset_control_deassert(res->rst);
 > +	if (ret) {
-> +		dev_err(dw->dev, "unable to bring out of softreset\n");
+> +		dev_err(dev, "reset deassert failed (%d)\n", ret);
 > +		return ret;
 > +	}
 > +
-> +	/* let the controller initialize in the proper mode (RC) after reset */
-
-Capitalize comments consistently.  Not sure what this comment is
-telling us anyway.  RC mode is determined above.  I assume this delay
-an STi-specific thing?  A reference to how this was derived might be a
-useful thing, e.g., a section number in the STi spec.
-
-> +	usleep_range(1000, 2000);
+> +	usleep_range(2000, 2500);
+> +
+> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+> +	if (ret)
+> +		goto err_reset;
+> +
+> +	return 0;
+> +
+> +err_reset:
+> +	reset_control_assert(res->rst);
 > +
 > +	return ret;
 > +}
 > +
-> +static int st_pcie_control_ltssm(struct dw_pcie *dw, bool enable)
+> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
 > +{
-> +	struct st_pcie *pcie = to_st_pcie(dw);
+> +	struct dw_pcie *pci = pcie->pci;
+> +	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +	u32 val;
+> +	int i;
 > +
-> +	return regmap_update_bits(pcie->regmap, pcie->syscfg1, PCIE_APP_LTSSM_ENABLE,
-> +				  FIELD_PREP(PCIE_APP_LTSSM_ENABLE, enable));
-> +}
+> +	writel(SLV_ADDR_SPACE_SZ,
+> +		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
 > +
-> +static int st_pcie_host_init(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *dw = to_dw_pcie_from_pp(pp);
-> +	struct st_pcie *pcie = to_st_pcie(dw);
-> +	int err;
+> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +	val &= ~BIT(0);
+> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
 > +
-> +	pcie->config_window_start = pp->cfg0_base;
+> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
 > +
-> +	/*
-> +	 * "Override" default ops provided by designware driver as STI
-> +	 * PCIe uses its own translation unit rather than iATU
-> +	 */
+> +	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
+> +	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
+> +		pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> +	writel(GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS
+> +		| GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL,
+> +		pci->dbi_base + GEN3_RELATED_OFF);
+> +
+> +	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
+> +		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
+> +		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
+> +		pcie->parf + PCIE20_PARF_SYS_CTRL);
+> +
+> +	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
+> +
+> +	dw_pcie_dbi_ro_wr_en(pci);
+> +	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
 
-No need for the scare quotes around "override".  You are in fact
-overriding the ops.
+Is "PCIE_CAP_LINK1_VAL" misnamed?  If it's being written to
+PCI_EXP_SLTCAP, seems like it should be named something about a
+*slot*, not a *link*.
 
-> +	pp->bridge->child_ops = &st_child_pcie_ops;
-> +
-> +	/*
-> +	 * We have to initialise the PCIe cell on some hardware before we can
-> +	 * talk to the phy
-> +	 */
-> +	err = st_pcie_init(pp);
-> +	if (err)
-> +		return err;
-> +
-> +	err = st_pcie_control_ltssm(dw, false);
-> +	if (err) {
-> +		dev_err(dw->dev, "disable ltssm failed, %d\n", err);
+Or is this an error and it should this be written to PCI_EXP_LNKCAP
+instead?
 
-s/ltssm/LTSSM/
+Could PCIE_CAP_LINK1_VAL be defined in terms of PCI_EXP_SLTCAP_* or
+PCI_EXP_LNKCAP_*?
 
-> +		return err;
-> +	}
+> +	/* Configure PCIe link capabilities for ASPM */
+> +	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
+> +	val &= ~PCI_EXP_LNKCAP_ASPMS;
+> +	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
+
+Thanks for using the standard PCI_EXP_LNKCAP and similar #defines.
+Does this mean you don't advertise any ASPM support on this platform?
+If so, that's fine, but the comment could be more specific.
+"Configure" doesn't give any hint about *how* they are configured.
+
+> +	writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
+> +			PCI_EXP_DEVCTL2);
 > +
-> +	/* Init the associated miphy */
-> +	err = phy_init(pcie->phy);
-> +	if (err < 0) {
-> +		dev_err(dw->dev, "Cannot init PHY: %d\n", err);
-> +		return err;
-> +	}
+> +	for (i = 0; i < 256; i++)
+> +		writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N
+> +				+ (4 * i));
 > +
 > +	return 0;
 > +}
 > +
-> +static int st_pcie_start_link(struct dw_pcie *dw)
-> +{
-> +	struct st_pcie *pcie = to_st_pcie(dw);
-> +	int err;
-> +
-> +	/* Do all the register poking */
-
-Pointless comment.
-
-> +	st_pcie_hw_setup(dw);
-> +
-> +	if (pcie->reset_gpio) {
-> +		/* Assert the PERST# signal */
-> +		gpiod_set_value(pcie->reset_gpio, 1);
-> +
-> +		/* PERST# signal must stay asserted for at least 100us (Tperst-clk) */
-
-Thanks for this reference to a specific delay from the spec!
-
-> +		usleep_range(100, 200);
-> +		/* Release PERST# signal */
-> +		gpiod_set_value(pcie->reset_gpio, 0);
-> +	}
-> +
-> +	/* Re-enable the link, link training must begin shortly after reset */
-> +	err = st_pcie_control_ltssm(dw, true);
-> +	if (err) {
-> +		dev_err(dw->dev, "enable ltssm failed, %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	err = dw_pcie_wait_for_link(dw);
-> +	if (err) {
-> +		dev_err(dw->dev, "wait for link failed, %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	/*
-> +	 * PCIe specification states that you should not issue any config
-> +	 * requests until 100ms after asserting reset, so we enforce that here
-> +	 */
-> +	if  (pcie->reset_gpio)
-> +		msleep(100);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct dw_pcie_host_ops st_pcie_host_ops = {
-> +	.host_init = st_pcie_host_init,
+>  static int qcom_pcie_link_up(struct dw_pcie *pci)
+>  {
+>  	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> @@ -1487,6 +1610,15 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
+>  	.config_sid = qcom_pcie_config_sid_sm8250,
+>  };
+>  
+> +/* Qcom IP rev.: 2.9.0  Synopsys IP rev.: 5.00a */
+> +static const struct qcom_pcie_ops ops_2_9_0 = {
+> +	.get_resources = qcom_pcie_get_resources_2_9_0,
+> +	.init = qcom_pcie_init_2_9_0,
+> +	.post_init = qcom_pcie_post_init_2_9_0,
+> +	.deinit = qcom_pcie_deinit_2_9_0,
+> +	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
 > +};
 > +
-> +static const struct dw_pcie_ops dw_pcie_ops = {
-> +	.start_link = st_pcie_start_link,
+>  static const struct qcom_pcie_cfg apq8084_cfg = {
+>  	.ops = &ops_1_0_0,
+>  };
+> @@ -1520,6 +1652,10 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
+>  	.pipe_clk_need_muxing = true,
+>  };
+>  
+> +static const struct qcom_pcie_cfg ipq6018_cfg = {
+> +	.ops = &ops_2_9_0,
 > +};
 > +
-> +static int st_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct st_pcie *pcie;
-> +	struct dw_pcie *dw;
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct pcie_port *pp;
-> +	int ret;
-> +
-> +	pcie = devm_kzalloc(&pdev->dev, sizeof(*pcie), GFP_KERNEL);
-> +	if (!pcie)
-> +		return -ENOMEM;
-> +
-> +	dw = devm_kzalloc(&pdev->dev, sizeof(*dw), GFP_KERNEL);
-> +	if (!dw)
-> +		return -ENOMEM;
-> +	pcie->dw = dw;
-> +	dw->dev = &pdev->dev;
-> +	dw->ops = &dw_pcie_ops;
-> +
-> +	pp = &dw->pp;
-> +	pp->ops = &st_pcie_host_ops;
-> +
-> +	/* mem regions */
-> +	pcie->lmi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem-window");
-> +	if (!pcie->lmi)
-> +		return -ENXIO;
-> +
-> +	/* regmap registers for PCIe IP configuration */
-> +	pcie->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
-> +	if (IS_ERR(pcie->regmap))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pcie->regmap),
-> +				     "No syscfg phandle specified\n");
-
-Make your error messages all capitalized or all uncapitalized.  I
-think uncapitalized is more typical in drivers/pci/
-
-> +	ret = of_property_read_u32_index(np, "st,syscfg", SYSCFG0_REG, &pcie->syscfg0);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "can't get syscfg0 offset (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32_index(np, "st,syscfg", SYSCFG1_REG, &pcie->syscfg1);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "can't get syscfg1 offset (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* powerdown / resets */
-> +	pcie->pwr = devm_reset_control_get_optional(&pdev->dev, "powerdown");
-> +	if (IS_ERR(pcie->pwr))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pcie->pwr),
-> +				     "Error getting powerdown reset control\n");
-> +
-> +	pcie->rst = devm_reset_control_get(&pdev->dev, "softreset");
-> +	if (IS_ERR(pcie->rst))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pcie->rst),
-> +				     "Error getting softreset control\n");
-> +
-> +	/* phy */
-> +	pcie->phy = devm_phy_get(&pdev->dev, "pcie");
-> +	if (IS_ERR(pcie->phy))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pcie->phy), "no PHY configured\n");
-> +
-> +	/* Claim the GPIO for PRST# if available, keep it de-asserted */
-> +	pcie->reset_gpio = devm_gpiod_get_optional(&pdev->dev, "reset", GPIOD_OUT_LOW);
-> +	if (IS_ERR(pcie->reset_gpio))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pcie->reset_gpio),
-> +				     "Cannot request reset-gpios\n");
-> +
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	ret = dw_pcie_host_init(pp);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "failed to initialize host\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id st_pcie_of_match[] = {
-> +	{ .compatible = "st,stih407-pcie", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, st_pcie_of_match);
-> +
-> +static struct platform_driver st_pcie_driver __refdata = {
-> +	.probe  = st_pcie_probe,
-> +	.driver = {
-> +		.name = "st-pcie",
-> +		.of_match_table = st_pcie_of_match,
-> +	},
-> +};
-> +module_platform_driver(st_pcie_driver);
-> +
-> +MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@foss.st.com>");
-> +MODULE_AUTHOR("Alain Volmat <avolmat@me.com>");
-> +MODULE_DESCRIPTION("STi PCIe Controller driver");
-> +MODULE_LICENSE("GPL v2");
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.link_up = qcom_pcie_link_up,
+>  	.start_link = qcom_pcie_start_link,
+> @@ -1629,6 +1765,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
+>  	{ .compatible = "qcom,pcie-sc8180x", .data = &sm8250_cfg },
+>  	{ .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
+> +	{ .compatible = "qcom,pcie-ipq6018", .data = &ipq6018_cfg },
+>  	{ }
+>  };
+>  
 > -- 
-> 2.25.1
+> 2.34.1
 > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
