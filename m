@@ -2,108 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F18CF49B6FF
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jan 2022 15:56:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C0DD49B7B7
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jan 2022 16:36:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238072AbiAYOzr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jan 2022 09:55:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385259AbiAYOxn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jan 2022 09:53:43 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B47BFC06175E
-        for <linux-pci@vger.kernel.org>; Tue, 25 Jan 2022 06:53:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        id S1357899AbiAYPfR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jan 2022 10:35:17 -0500
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:45975 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1356706AbiAYPdT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jan 2022 10:33:19 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5E54961652
-        for <linux-pci@vger.kernel.org>; Tue, 25 Jan 2022 14:53:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99CC2C340E0;
-        Tue, 25 Jan 2022 14:53:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643122421;
-        bh=MG6PPK4J4Z0W/4hEFH1gf9zUWf6kWhi+Ti4lsbcUgYg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JJV665taiWugFCikAtarnLCoyaNueGtPFX9KS3iefcctdjXZnNlELlLxgwtsPFBoJ
-         nyP8IC8XbJbWQiyU1jun6ZUg+gOXCRNCNHjy6e9H+u8+s0dSpIGCUn1oxnks1tW3U7
-         xu9UyXJTOM82Ta9BSwJ7drm8pdO3GQw5/9qHvqYYdkDHphmVsgAcXeVuvnW/Zbc0lf
-         +zy0fWoe6JDgdOvr7E5yyKY8KWzGasbUoZndpS7dKCbrhWdO4Ht6J2Htsndx2oO/RA
-         /fIGmYlF8BFXNfmy/mgU1y4mTcS7XtuNqRt50XELIaXczFtkhg7cYJFSrer8TmUZf5
-         ifkJTIm+Kd5VQ==
-Received: by pali.im (Postfix)
-        id 5F18A12F7; Tue, 25 Jan 2022 15:53:39 +0100 (CET)
-Date:   Tue, 25 Jan 2022 15:53:39 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Stefan Roese <sr@denx.de>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yao Hongbo <yaohongbo@linux.alibaba.com>,
-        Naveen Naidu <naveennaidu479@gmail.com>
-Subject: Re: [PATCH v4 3/3] PCI/AER: Enable AER on all PCIe devices
- supporting it
-Message-ID: <20220125145339.2p7e4pz5lqd7k7go@pali>
-References: <20220125071820.2247260-1-sr@denx.de>
- <20220125071820.2247260-4-sr@denx.de>
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 2001C280472B8;
+        Tue, 25 Jan 2022 16:33:14 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 127582B19AE; Tue, 25 Jan 2022 16:33:14 +0100 (CET)
+Date:   Tue, 25 Jan 2022 16:33:14 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Blazej Kucman <blazej.kucman@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Naveen Naidu <naveennaidu479@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>
+Subject: Re: [Bug 215525] New: HotPlug does not work on upstream kernel
+ 5.17.0-rc1
+Message-ID: <20220125153314.GA31653@wunner.de>
+References: <bug-215525-41252@https.bugzilla.kernel.org/>
+ <20220124214635.GA1553164@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220125071820.2247260-4-sr@denx.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20220124214635.GA1553164@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 25 January 2022 08:18:20 Stefan Roese wrote:
-> With this change, AER is now enabled on all PCIe devices, also when the
-> PCIe device is hot-plugged.
+On Mon, Jan 24, 2022 at 03:46:35PM -0600, Bjorn Helgaas wrote:
+> On Mon, Jan 24, 2022 at 11:46:14AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=215525
+> > 
+> > While testing on latest upstream kernel we noticed that with the
+> > merge commit d0a231f01e5b hotplug and hotunplug of nvme drives
+> > stopped working.
+[...]
+> Only three commits touch pciehp:
 > 
-> Please note that this change is quite invasive, as with this patch
-> applied, AER now will be enabled in the Device Control registers of all
-> available PCIe Endpoints, which currently is not the case.
-> 
-> When "pci=noaer" is selected, AER stays disabled of course.
-> 
-> Signed-off-by: Stefan Roese <sr@denx.de>
-> Cc: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: Pali Rohár <pali@kernel.org>
-> Cc: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Cc: Yao Hongbo <yaohongbo@linux.alibaba.com>
-> Cc: Naveen Naidu <naveennaidu479@gmail.com>
+>   085a9f43433f ("PCI: pciehp: Use down_read/write_nested(reset_lock) to fix lockdep errors")
+>   23584c1ed3e1 ("PCI: pciehp: Fix infinite loop in IRQ handler upon power fault")
+>   a3b0f10db148 ("PCI: pciehp: Use PCI_POSSIBLE_ERROR() to check config reads")
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
+Those commits pertain to *native* hotplug, however the machine in question
+does not grant hotplug control to OSPM, so pciehp isn't even probed for
+any ports on that machine:
 
-> ---
-> v4:
-> - No change
-> 
-> v3:
-> - New patch, replacing the "old" 2/2 patch
->   Now enabling of AER for each PCIe device is done in pci_aer_init(),
->   which also makes sure that AER is enabled in each PCIe device even when
->   it's hot-plugged.
-> 
->  drivers/pci/pcie/aer.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 5585fefc4d0e..10b2f7db8adb 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -388,6 +388,10 @@ void pci_aer_init(struct pci_dev *dev)
->  
->  	pci_aer_clear_status(dev);
->  
-> +	/* Enable AER if requested */
-> +	if (pci_aer_available())
-> +		pci_enable_pcie_error_reporting(dev);
-> +
->  	/* Enable ECRC checking if enabled and configured */
->  	pcie_set_ecrc_checking(dev);
->  }
-> -- 
-> 2.35.0
-> 
+  acpi PNP0A08:09: _OSC: OS supports [ASPM ClockPM Segments MSI HPX-Type3]
+  acpi PNP0A08:09: _OSC: not requesting OS control; OS requires [ExtendedConfig ASPM ClockPM MSI]
+
+Are these ports supposed to be handled by native hotplug or acpiphp?
+Perhaps CONFIG_HOTPLUG_PCI_PCIE was erroneously not enabled?
+
+It's unfortunate that the bugzilla only contains the dmesg dump of
+broken hotplug, but not of working hotplug.  That would make it easier
+to determine what's going wrong.
+
+Thanks,
+
+Lukas
