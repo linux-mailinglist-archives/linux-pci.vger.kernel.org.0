@@ -2,104 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93BC949AC78
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jan 2022 07:38:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D70249AD0A
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jan 2022 08:08:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353694AbiAYGip (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jan 2022 01:38:45 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54396 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353715AbiAYGg2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jan 2022 01:36:28 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 20P6aK79060164;
-        Tue, 25 Jan 2022 00:36:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1643092580;
-        bh=0ahs03idH8cYYf0yCflB2h0MYTuJLcMpZXgSS7OYavk=;
-        h=Subject:CC:References:From:To:Date:In-Reply-To;
-        b=wdTr5U2xMvJv4ekstl2CmYehRTvcVI/GvCl5+1enm780PVT2g3vqNrrO2/DmNSy38
-         QiXWGWyyVpKcM8mmZR3B/ePGD8RS3CS3URJJycAokW/3CmW6LzzmjZcNI1Vt9T3E5A
-         i6EP1gdaJCQfeBVJfowckqdhSPmB2KE8XtvfbMZc=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 20P6aJUw011293
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Jan 2022 00:36:20 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Tue, 25
- Jan 2022 00:36:19 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Tue, 25 Jan 2022 00:36:19 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 20P6aGqH071812;
-        Tue, 25 Jan 2022 00:36:17 -0600
-Subject: Re: [PATCH v2] dt-bindings: PCI: ti,j721e: Add device id for J721S2
-CC:     Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20211130035608.13492-1-a-govindraju@ti.com>
-From:   Aswath Govindraju <a-govindraju@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Message-ID: <ab490690-eac2-c714-1359-b4058e2f98ff@ti.com>
-Date:   Tue, 25 Jan 2022 12:06:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S1354647AbiAYHGL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jan 2022 02:06:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1392123AbiAYHDP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jan 2022 02:03:15 -0500
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3058C02B749
+        for <linux-pci@vger.kernel.org>; Mon, 24 Jan 2022 21:41:52 -0800 (PST)
+Received: by mail-yb1-xb34.google.com with SMTP id g14so58278831ybs.8
+        for <linux-pci@vger.kernel.org>; Mon, 24 Jan 2022 21:41:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=omchJdYJcVvbnbx3iWDsqNfzfvgFxRY5UV8d5JFHFd0Qxp4Fs99oOTWbnsLJvmkGLO
+         KJ9h0aIZipzZCxLYUC1EbKJQXjsTnrYD4skWPu5L6KEa7WwksJ/DgfAKn2I//FvNz16e
+         yvRSMjBJIkfJOiN7QosmIFzfX6t0OymUxXq/kzoldmt5Tk4SMXy3poAlzZfnj4tLqkCO
+         r1uVZjBjIcfKcTHUm4yIRwmNGijXGA0OAhFYRol/6hiAAZJ37V1K6a3bLM+XpGdFXGos
+         hPiIHyT9XSW8aiVFGjIdHRgRcnWLHkX21ZW87GvspRwlXlL9xuI6dXFZXWxBZnRTJWgA
+         Bk5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=B8CYiV3icXyaFx1G1PNmo4TxPavGz6SmRhVEh5OpzkWRiC1rZuhZBxYqJRxfwBBeOR
+         +s55FBypq4w9KHzDsTr7bceOqqJ4U4Xji9M0XG2rHToknmFO6vvgfJVvqcVSbLGx4uo8
+         m7yT/AeYvydOjs2Efe+LwEQJKBvf6hEUuuFQi4cw174inqO/Wpv45JkqclCSI5fnzogU
+         zpo5MwLWTczSwzjuyL23YEGW7GFQIrLon8fjhVqpVsV1O0Duh2C7ICm/MtgdWVwjNLFF
+         I0kZl886+5ue6SjWdylT+5ryYg2EX3iFhReIYmD2e/E/2yQ0US4r7TBxk25XHxajzegd
+         GwGQ==
+X-Gm-Message-State: AOAM533PbC81CWhCLLcSShIjAqnXiyJHKftiNBtMLMKONZm8ncsNR7zd
+        Fa3e4VCK42O5ZdEd+NBLrqdiPGRBnnbGZJgw6fjeYSiAmlU=
+X-Google-Smtp-Source: ABdhPJwywiwyTtOCXfovmJIEM7Vqt+PFDzMW3tzxRj90P3fJDPhIlV2jOd/vI9WPw47eCab8Z7S4n4qldrLRD5Ly+Sc=
+X-Received: by 2002:a25:d783:: with SMTP id o125mr27594671ybg.710.1643089301256;
+ Mon, 24 Jan 2022 21:41:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20211130035608.13492-1-a-govindraju@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Received: by 2002:a05:7000:ad9d:0:0:0:0 with HTTP; Mon, 24 Jan 2022 21:41:40
+ -0800 (PST)
+Reply-To: danielseyba@yahoo.com
+From:   Seyba Daniel <mrssuzaramaling19@gmail.com>
+Date:   Tue, 25 Jan 2022 06:41:40 +0100
+Message-ID: <CAKN-9XgQjuMspSnu-F01fv+Bgr6eZEygpsR3pZ-5cF=m78av-Q@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Hello,
 
-On 30/11/21 9:26 am, Aswath Govindraju wrote:
-> Document the device id of J721S2 SoC.
-> 
-> Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
-> ---
-> 
+I am so sorry contacting you in this means especially when we have never
+met before. I urgently seek your service to represent me in investing in
+your region / country and you will be rewarded for your service without
+affecting your present job with very little time invested in it.
 
-May I know if this patch can be picked up?
+My interest is in buying real estate, private schools or companies with
+potentials for rapid growth in long terms.
 
-Thanks,
-Aswath
+So please confirm interest by responding back.
 
-> changes since v1:
-> - changed (oneOf, items) into enum
-> 
->  .../devicetree/bindings/pci/ti,j721e-pci-host.yaml   | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-> index cc900202df29..41df8f1c2d4c 100644
-> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-> @@ -64,13 +64,11 @@ properties:
->      const: 0x104c
->  
->    device-id:
-> -    oneOf:
-> -      - items:
-> -          - const: 0xb00d
-> -      - items:
-> -          - const: 0xb00f
-> -      - items:
-> -          - const: 0xb010
-> +    enum:
-> +      - 0xb00d
-> +      - 0xb00f
-> +      - 0xb010
-> +      - 0xb013
->  
->    msi-map: true
->  
-> 
+My dearest regards
 
+Seyba Daniel
