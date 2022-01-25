@@ -2,184 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F16B49BBA2
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Jan 2022 19:56:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8683049BC13
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Jan 2022 20:28:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233830AbiAYS42 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jan 2022 13:56:28 -0500
-Received: from mga11.intel.com ([192.55.52.93]:28303 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233782AbiAYS4T (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 25 Jan 2022 13:56:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643136979; x=1674672979;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ZCUrpJmkA1RP99UUe0/NF9HezTpFuh09zVkkBmfC5vg=;
-  b=kzl7Wb1MFLLJ793ru/mAMoAxkDGoavl9x56Tk7ZWhn/E5pns5eHm1X+2
-   j/DCsdthgXnbhNTT/MdifYmTRMguSxexv0T56ncuE8qETUnp/e9ofy/it
-   38EUby1VbO0K8W2vz1t3ZNsjCSkjC839cTaH2+zAU1mshG0pwv/CZF8Fr
-   aoJEN+TGU5i3cZsmUGEMsTERipXIA7tjHXVQcY/SrNEq5uV8S6iA+Sz6k
-   oIGFqc4OnvWcvj1NAhFafOqUent9psEp8J8cvtuJF6v3xYQX3fV869YhT
-   8uLEPfxbnoE/xkZikvFQBI2tiv8apt1IzhmV+m/dBOucoZfPKCELFRyqN
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="243983910"
-X-IronPort-AV: E=Sophos;i="5.88,315,1635231600"; 
-   d="scan'208";a="243983910"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 10:56:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,315,1635231600"; 
-   d="scan'208";a="674098995"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.147])
-  by fmsmga001.fm.intel.com with SMTP; 25 Jan 2022 10:56:15 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 25 Jan 2022 20:56:14 +0200
-Date:   Tue, 25 Jan 2022 20:56:14 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>, linux-pci@vger.kernel.org
-Subject: Re: [REGRESSION] 527139d738d7 ("PCI/sysfs: Convert "rom" to static
- attribute")
-Message-ID: <YfBHzo4kNGgd2jTd@intel.com>
-References: <YbzMyDm+5PCer8Fj@intel.com>
- <20220122002445.GA1162144@bhelgaas>
+        id S229997AbiAYT2g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jan 2022 14:28:36 -0500
+Received: from mail-pl1-f175.google.com ([209.85.214.175]:35700 "EHLO
+        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229950AbiAYT2c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jan 2022 14:28:32 -0500
+Received: by mail-pl1-f175.google.com with SMTP id d18so7633582plg.2;
+        Tue, 25 Jan 2022 11:28:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Rkz5i91jrZJto37j3RGSd05f/eRfvo2BCm796nin8Vs=;
+        b=XRSGOlm1VFqT3avvfzptjdr/V8D9yTVMulgMxGpZ7G7ejzNVUmBrSCSSzGdQIbyBGA
+         wLOATfMRkgFf7AKjLokOWmvQ71CTQzSyBSMu32dH9GIJwiRDS5KY51i2SYfY0XPneHL/
+         ryCWbdsIcvWIxwUcQruluk6MN1ULgD5779AyhvV50OPqRmw+gqJ494us1srnl3Ds/4Tw
+         FA+szLQkz+NTKT5gBSs8lhlo3if8ALpz98+fE8QN7vc+AWMtHB22xJKpNFyz/WEPjT5a
+         EUJbOhxxGarJRbtGkRONvQB963Qct9mbEQnP1NF+wi7cC9Cppqh/vlLxWz03d0sdhqgn
+         bGnA==
+X-Gm-Message-State: AOAM533sXRFtcUNigiJ0DQlIB32sZGa/bv9zSZa0r8EZkSOwfSQbHV9n
+        CPnYdKZ9giKc43jEewCH4OA=
+X-Google-Smtp-Source: ABdhPJyeNd/r+jQn3mMtMf9He8DTH104dq3dEwAvQtFQxWx1zXikeSDUCeamDKcdFDb0ku5F8bxZDQ==
+X-Received: by 2002:a17:902:6bc9:b0:149:fdf1:f031 with SMTP id m9-20020a1709026bc900b00149fdf1f031mr19734916plt.58.1643138906187;
+        Tue, 25 Jan 2022 11:28:26 -0800 (PST)
+Received: from localhost ([2601:647:5b00:ece0:aab:34ff:52ca:a7a5])
+        by smtp.gmail.com with ESMTPSA id qe15sm1162214pjb.47.2022.01.25.11.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jan 2022 11:28:25 -0800 (PST)
+Date:   Tue, 25 Jan 2022 11:28:24 -0800
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     arnd@arndb.de, hch@infradead.org, akpm@linux-foundation.org,
+        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        davem@davemloft.net, airlied@linux.ie, vkoul@kernel.org,
+        hao.wu@intel.com, trix@redhat.com, mdf@kernel.org,
+        yilun.xu@intel.com, awalls@md.metrocast.net, mchehab@kernel.org,
+        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, mporter@kernel.crashing.org,
+        alex.bou9@gmail.com, bhelgaas@google.com,
+        linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-media@vger.kernel.org,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 00/16] Remove usage of the deprecated "pci-dma-compat.h"
+ API
+Message-ID: <YfBPWB9m5TWcZuFY@epycbox.lan>
+References: <cover.1641500561.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220122002445.GA1162144@bhelgaas>
-X-Patchwork-Hint: comment
+In-Reply-To: <cover.1641500561.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 21, 2022 at 06:24:45PM -0600, Bjorn Helgaas wrote:
-> On Fri, Dec 17, 2021 at 07:45:44PM +0200, Ville Syrjälä wrote:
-> > On Fri, Dec 17, 2021 at 11:29:28AM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Dec 17, 2021 at 12:44:51PM +0200, Ville Syrjälä wrote:
-> > > > The pci sysfs "rom" file has disappeared for VGA devices.
-> > > > Looks to be a regression from commit 527139d738d7 ("PCI/sysfs:
-> > > > Convert "rom" to static attribute").
-> > > > 
-> > > > Some kind of ordering issue between the sysfs file creation 
-> > > > vs. pci_fixup_video() perhaps?
-> > > 
-> > > Can you attach your complete "lspci -vv" output?  Also, which is the
-> > > default device?  I think there's a "boot_vga" sysfs file that shows
-> > > this.  "find /sys -name boot_vga | xargs grep ."
-> > 
-> > All I have is Intel iGPUs so it's always 00:02.0. 
-> > 
-> > $ cat /sys/bus/pci/devices/0000\:00\:02.0/boot_vga 
-> > 1
-> > $ cat /sys/bus/pci/devices/0000\:00\:02.0/rom
-> > cat: '/sys/bus/pci/devices/0000:00:02.0/rom': No such file or directory
-> > 
-> > I've attached the full lspci from my IVB laptop, but the problem
-> > happens on every machine (with an iGPU at least).
-> > 
-> > I presume with a discrete GPU it might not happen since they
-> > actually have a real ROM.
-> > 
-> > > I think the relevant path is something like this:
-> > > 
-> > >   acpi_pci_root_add
-> > >     pci_acpi_scan_root
-> > >       ...
-> > >         pci_scan_single_device
-> > >           pci_device_add
-> > >             device_add
-> > >               ...
-> > >                 sysfs_create_groups
-> > >                   ...
-> > >                     if (grp->is_visible())
-> > >                       pci_dev_rom_attr_is_visible  # after 527139d738d7
-> > >                         if (pci_resource_len(pdev, PCI_ROM_RESOURCE))
-> > >                           ...
-> > >     pci_bus_add_devices
-> > >       pci_bus_add_device
-> > >         pci_fixup_device(pci_fixup_final)
-> > >           pci_fixup_video
-> > >             if (vga_default_device() ...)
-> > >               # update PCI_ROM_RESOURCE
-> > >         pci_create_sysfs_dev_files
-> > >           if (pci_resource_len(pdev, PCI_ROM_RESOURCE))
-> > >             sysfs_create_bin_file("rom")           # before 527139d738d7
-> > > 
-> > > Prior to 527139d738d7, we ran pci_fixup_video() in
-> > > pci_bus_add_devices().  The vga_default_device() there might depend on
-> > > the fact that we've discovered all the PCI devices.  
-> > > 
-> > > After 527139d738d7, we create the "rom" file in pci_device_add(),
-> > > which happens as we discover each device, so maybe we don't yet know
-> > > which device is the default VGA device.
+On Thu, Jan 06, 2022 at 10:45:13PM +0100, Christophe JAILLET wrote:
+> This serie axes all the remaining usages of the deprecated "pci-dma-compat.h"
+> API.
 > 
-> Thanks, Ville!
+> All these patches have already been posted.
 > 
-> I think this is happening because the iGPU has no ROM BAR,
-> so pci_resource_len(PCI_ROM_RESOURCE) is 0 when we run
-> pci_dev_rom_attr_is_visible().  Prior to 527139d738d7, we also
-> used pci_resource_len(PCI_ROM_RESOURCE), but pci_fixup_video() had
-> been run, and it filled in the ROM resource with the shadow ROM
-> start and size.
+> They have been generated with a coccinelle script.
+> The tricky parts are patches that use dma_alloc_coherent() because the correct
+> GFP flag has to be used in place of the previous embedded GFP_ATOMIC.
 > 
-> Can you collect the dmesg output with "pci=earlydump"?  I think
-> that will show zeros at PCI_ROM_ADDRESS for your 00:02.0 device.
-
-Yeah no real ROM on these:
- pci 0000:00:02.0: config space:
- 00000000: 86 80 26 01 07 00 90 00 09 00 00 03 00 00 00 00
- 00000010: 04 00 00 f0 00 00 00 00 0c 00 00 e0 00 00 00 00
- 00000020: 01 50 00 00 00 00 00 00 00 00 00 00 aa 17 da 21
- 00000030: 00 00 00 00 90 00 00 00 00 00 00 00 0b 01 00 00
- 00000040: 09 00 0c 01 9e 61 00 e2 90 00 08 14 00 00 00 00
- 00000050: 11 02 00 00 11 00 00 00 00 00 00 00 01 00 a0 db
- 00000060: 00 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00
- 00000070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- 00000080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- 00000090: 05 d0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- 000000a0: 00 00 00 00 13 00 06 03 00 00 00 00 00 00 00 00
- 000000b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- 000000c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- 000000d0: 01 a4 22 00 00 00 00 00 00 00 00 00 00 00 00 00
- 000000e0: 00 00 00 00 00 00 00 00 00 80 00 00 00 00 00 00
- 000000f0: 00 00 00 00 00 00 00 00 00 00 06 00 18 60 ef da
- pci 0000:00:02.0: [8086:0126] type 00 class 0x030000
- pci 0000:00:02.0: reg 0x10: [mem 0xf0000000-0xf03fffff 64bit]
- pci 0000:00:02.0: reg 0x18: [mem 0xe0000000-0xefffffff 64bit pref]
- pci 0000:00:02.0: reg 0x20: [io  0x5000-0x503f]
-
+> Patches 1-3 are already Reviewed. References to the corresponding mail is
+> given below the ---
 > 
-> And can you try the test patch below?  I reproduced the problem in
-> qemu by instrumenting to clear the VGA ROM BAR, and moving the
-> pci_fixup_video() quirk earlier makes it run before
-> pci_dev_rom_attr_is_visible(), which fixes the problem for me.
+> Patch 1-2,4-10 are just generated from the coccinelle script. Only too long
+> lines have been hand modified. dma_alloc_coherent() modification are NOT part
+> of these patches.
 > 
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index 2edd86649468..615a76d70019 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -353,8 +353,8 @@ static void pci_fixup_video(struct pci_dev *pdev)
->  		}
->  	}
->  }
-> -DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_ANY_ID, PCI_ANY_ID,
-> -				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_video);
-> +DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID,
-> +			       PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_video);
->  
->  
->  static const struct dmi_system_id msi_k8t_dmi_table[] = {
+> Patch 3 also includes some 'dma_set_mask_and_coherent()' instead of
+> 'pci_set_dma_mask()/pci_set_consistent_dma_mask()'.
+> I've left this additional modification because it was reviewed with it.
+> 
+> Patch 10-15 are the tricky parts. Explanation of which GFP flag is the right one
+> is given in each patch. It has been divided in several patches to ease review.
+> 
+> Patch 15 is the only one I'm slighly unsure with. The old code was using a
+> GFP_USER flag in the function. I'm not familiar with it.
+> I *guess*  that GFP_KERNEL is fine, but maybe it should also be GFP_USER or left
+> as GFP_ATOMIC so that nothing is changed.
+> 
+> Patch 16 is the last step that remove "pci-dma-compat.h" and its only usage.
+> 
+> 
+> All patches, exept 1-2,6 that are architecture specific, have been compile tested.
+> 
+> 
+> After all that, a few rst files, 1 or 2 strings in error messages and some
+> error branching labels should still need some attention. 
+> This is some minor issues.
+> 
+> 
+> Only the cover letter is sent to every one. Each patch is sent to the
+> corresponding maintainer(s) + Andrew Morton, Christoph Hellwig and Arnd Bergmann.
+> 
+> 
+> Best regards.
+> 
+> 
+> Christophe JAILLET (16):
+>   alpha: Remove usage of the deprecated "pci-dma-compat.h" API
+>   floppy: Remove usage of the deprecated "pci-dma-compat.h" API
+>   fpga: dfl: pci: Remove usage of the deprecated "pci-dma-compat.h" API
+>   media: Remove usage of the deprecated "pci-dma-compat.h" API
+>   agp/intel: Remove usage of the deprecated "pci-dma-compat.h" API
+>   sparc: Remove usage of the deprecated "pci-dma-compat.h" API
+>   dmaengine: pch_dma: Remove usage of the deprecated "pci-dma-compat.h"
+>     API
+>   rapidio/tsi721: Remove usage of the deprecated "pci-dma-compat.h" API
+>   media: v4l2-pci-skeleton: Remove usage of the deprecated
+>     "pci-dma-compat.h" API
+>   scsi: message: fusion: Remove usage of the deprecated
+>     "pci-dma-compat.h" API
+>   scsi: mptbase: Use dma_alloc_coherent() in 'mpt_alloc_fw_memory()'
+>   scsi: mptbase: Use dma_alloc_coherent()
+>   scsi: mptsas: Use dma_alloc_coherent() in
+>     mptsas_exp_repmanufacture_info()
+>   scsi: mptsas: Use dma_alloc_coherent()
+>   scsi: mptctl: Use dma_alloc_coherent()
+>   PCI: Remove usage of the deprecated "pci-dma-compat.h" API
+> 
+>  arch/alpha/include/asm/floppy.h     |   7 +-
+>  arch/alpha/kernel/pci_iommu.c       |  12 +--
+>  arch/powerpc/include/asm/floppy.h   |   8 +-
+>  arch/sparc/kernel/ioport.c          |   2 +-
+>  drivers/char/agp/intel-gtt.c        |  26 ++---
+>  drivers/dma/pch_dma.c               |   2 +-
+>  drivers/fpga/dfl-pci.c              |  14 +--
+>  drivers/media/pci/cx18/cx18-queue.h |   6 +-
+>  drivers/media/pci/ivtv/ivtv-queue.h |  25 +++--
+>  drivers/media/pci/ivtv/ivtv-udma.h  |   8 +-
+>  drivers/message/fusion/mptbase.c    | 149 ++++++++++++++++------------
+>  drivers/message/fusion/mptctl.c     |  82 +++++++++------
+>  drivers/message/fusion/mptlan.c     |  90 +++++++++--------
+>  drivers/message/fusion/mptsas.c     |  94 +++++++++---------
+>  drivers/rapidio/devices/tsi721.c    |   8 +-
+>  include/linux/pci-dma-compat.h      | 129 ------------------------
+>  include/linux/pci.h                 |   3 -
+>  samples/v4l/v4l2-pci-skeleton.c     |   2 +-
+>  18 files changed, 289 insertions(+), 378 deletions(-)
+>  delete mode 100644 include/linux/pci-dma-compat.h
+> 
+> -- 
+> 2.32.0
+> 
+Applied [03/16] to linux-fpga for-next.
 
-pci=earlydump now reports:
- pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
-and poking it via sysfs works fine.
-
-Tested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-
--- 
-Ville Syrjälä
-Intel
+Thanks,
+Moritz
