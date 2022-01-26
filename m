@@ -2,389 +2,749 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5473949D2C8
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 20:51:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CBB249D34E
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 21:16:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244572AbiAZTvv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jan 2022 14:51:51 -0500
-Received: from relmlor2.renesas.com ([210.160.252.172]:62469 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S244559AbiAZTvO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jan 2022 14:51:14 -0500
-X-IronPort-AV: E=Sophos;i="5.88,319,1635174000"; 
-   d="scan'208";a="108403312"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 27 Jan 2022 04:51:13 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 06C9E400C441;
-        Thu, 27 Jan 2022 04:51:10 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [RFC PATCH 5/5] PCI: rcar-ep: Add support for DMAC
-Date:   Wed, 26 Jan 2022 19:50:43 +0000
-Message-Id: <20220126195043.28376-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220126195043.28376-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20220126195043.28376-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S229944AbiAZUQx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jan 2022 15:16:53 -0500
+Received: from mga02.intel.com ([134.134.136.20]:32465 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230248AbiAZUQx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jan 2022 15:16:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643228213; x=1674764213;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ju36awwO4fJ+MlnDAWUCS616FRE8UCVNNgfXIehk6fk=;
+  b=G/rUF3evnVZ6nLRJvlQkknjNQAOI4hUzzUgB9iogBSX197i8ZzFEgOfo
+   T85gu8zv8yiqLk3M6y6bMr+eeotk+ZnBmOegSQKYyPfKkkh/1yiSN4fG7
+   Ge3bA63BhxqSc3v87wVPXISWskTxVDXWKFDwbBtMpJ8b5DLX2bj9UYcVU
+   2bsX/yBHpN0MjVGvnO0QpPcNoCs/vImutloV/N8pXWXqIdMT1eEx3pYQg
+   TLQ/LXVaoo70HahZIxYbHudVZwZqyYMKuFqXe7viFlY7MKU5K3tMZGY5P
+   O/YP5Yra5Mbwx2eHssbGZKSPPgm3cks1DamjXIdw9/3tbQS15iOGtbFOv
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="234017482"
+X-IronPort-AV: E=Sophos;i="5.88,319,1635231600"; 
+   d="scan'208";a="234017482"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 12:16:52 -0800
+X-IronPort-AV: E=Sophos;i="5.88,319,1635231600"; 
+   d="scan'208";a="535321876"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 12:16:52 -0800
+Subject: [PATCH v4 24/40] cxl/port: Add a driver for 'struct cxl_port'
+ objects
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     kernel test robot <lkp@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
+Date:   Wed, 26 Jan 2022 12:16:52 -0800
+Message-ID: <164322817812.3708001.17146719098062400994.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164298424635.3018233.9356036382052246767.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164298424635.3018233.9356036382052246767.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-R-Car PCIe controller has an internal DMAC to support data transfer
-between Internal Bus -> PCI Express and vice versa.
+From: Ben Widawsky <ben.widawsky@intel.com>
 
-This patch fills in the required flags and ops for the PCIe EP to
-support DMAC transfer.
+The need for a CXL port driver and a dedicated cxl_bus_type is driven by
+a need to simultaneously support 2 independent physical memory decode
+domains (cache coherent CXL.mem and uncached PCI.mmio) that also
+intersect at a single PCIe device node. A CXL Port is a device that
+advertises a  CXL Component Register block with an "HDM Decoder
+Capability Structure".
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>From Documentation/driver-api/cxl/memory-devices.rst:
+
+    Similar to how a RAID driver takes disk objects and assembles them into
+    a new logical device, the CXL subsystem is tasked to take PCIe and ACPI
+    objects and assemble them into a CXL.mem decode topology. The need for
+    runtime configuration of the CXL.mem topology is also similar to RAID in
+    that different environments with the same hardware configuration may
+    decide to assemble the topology in contrasting ways. One may choose
+    performance (RAID0) striping memory across multiple Host Bridges and
+    endpoints while another may opt for fault tolerance and disable any
+    striping in the CXL.mem topology.
+
+The port driver identifies whether an endpoint Memory Expander is
+connected to a CXL topology. If an active (bound to the 'cxl_port'
+driver) CXL Port is not found at every PCIe Switch Upstream port and an
+active "root" CXL Port then the device is just a plain PCIe endpoint
+only capable of participating in PCI.mmio and DMA cycles, not CXL.mem
+coherent interleave sets.
+
+The 'cxl_port' driver lets the CXL subsystem leverage driver-core
+infrastructure for setup and teardown of register resources and
+communicating device activation status to userspace. The cxl_bus_type
+can rendezvous the async arrival of platform level CXL resources (via
+the 'cxl_acpi' driver) with the asynchronous enumeration of Memory
+Expander endpoints, while also implementing a hierarchical locking model
+independent of the associated 'struct pci_dev' locking model. The
+locking for dport and decoder enumeration is now handled in the core
+rather than callers.
+
+For now the port driver only enumerates and registers CXL resources
+(downstream port metadata and decoder resources) later it will be used
+to take action on its decoders in response to CXL.mem region
+provisioning requests.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+[djbw: add theory of operation document, move enumeration infra to core]
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/pci/controller/pcie-rcar-ep.c | 227 ++++++++++++++++++++++++++
- drivers/pci/controller/pcie-rcar.h    |  23 +++
- 2 files changed, 250 insertions(+)
+Changes since v3:
+- Fixup a dev_err() to use @dev rather than @port->dev (Ben)
 
-diff --git a/drivers/pci/controller/pcie-rcar-ep.c b/drivers/pci/controller/pcie-rcar-ep.c
-index f9682df1da61..c49b25069328 100644
---- a/drivers/pci/controller/pcie-rcar-ep.c
-+++ b/drivers/pci/controller/pcie-rcar-ep.c
-@@ -18,6 +18,21 @@
+ Documentation/driver-api/cxl/memory-devices.rst |  302 +++++++++++++++++++++++
+ drivers/cxl/Kconfig                             |    5 
+ drivers/cxl/Makefile                            |    2 
+ drivers/cxl/acpi.c                              |   26 --
+ drivers/cxl/core/pci.c                          |    2 
+ drivers/cxl/core/port.c                         |   34 ++-
+ drivers/cxl/cxl.h                               |    4 
+ drivers/cxl/cxlpci.h                            |    1 
+ drivers/cxl/port.c                              |   63 +++++
+ tools/testing/cxl/Kbuild                        |    6 
+ tools/testing/cxl/test/cxl.c                    |    2 
+ 11 files changed, 416 insertions(+), 31 deletions(-)
+ create mode 100644 drivers/cxl/port.c
+
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
+index c8f7a16cd0e3..3498d38d7cbd 100644
+--- a/Documentation/driver-api/cxl/memory-devices.rst
++++ b/Documentation/driver-api/cxl/memory-devices.rst
+@@ -14,6 +14,303 @@ that optionally define a device's contribution to an interleaved address
+ range across multiple devices underneath a host-bridge or interleaved
+ across host-bridges.
  
- #define RCAR_EPC_MAX_FUNCTIONS		1
++CXL Bus: Theory of Operation
++============================
++Similar to how a RAID driver takes disk objects and assembles them into a new
++logical device, the CXL subsystem is tasked to take PCIe and ACPI objects and
++assemble them into a CXL.mem decode topology. The need for runtime configuration
++of the CXL.mem topology is also similar to RAID in that different environments
++with the same hardware configuration may decide to assemble the topology in
++contrasting ways. One may choose performance (RAID0) striping memory across
++multiple Host Bridges and endpoints while another may opt for fault tolerance
++and disable any striping in the CXL.mem topology.
++
++Platform firmware enumerates a menu of interleave options at the "CXL root port"
++(Linux term for the top of the CXL decode topology). From there, PCIe topology
++dictates which endpoints can participate in which Host Bridge decode regimes.
++Each PCIe Switch in the path between the root and an endpoint introduces a point
++at which the interleave can be split. For example platform firmware may say at a
++given range only decodes to 1 one Host Bridge, but that Host Bridge may in turn
++interleave cycles across multiple Root Ports. An intervening Switch between a
++port and an endpoint may interleave cycles across multiple Downstream Switch
++Ports, etc.
++
++Here is a sample listing of a CXL topology defined by 'cxl_test'. The 'cxl_test'
++module generates an emulated CXL topology of 2 Host Bridges each with 2 Root
++Ports. Each of those Root Ports are connected to 2-way switches with endpoints
++connected to those downstream ports for a total of 8 endpoints::
++
++    # cxl list -BEMPu -b cxl_test
++    {
++      "bus":"root3",
++      "provider":"cxl_test",
++      "ports:root3":[
++        {
++          "port":"port5",
++          "host":"cxl_host_bridge.1",
++          "ports:port5":[
++            {
++              "port":"port8",
++              "host":"cxl_switch_uport.1",
++              "endpoints:port8":[
++                {
++                  "endpoint":"endpoint9",
++                  "host":"mem2",
++                  "memdev":{
++                    "memdev":"mem2",
++                    "pmem_size":"256.00 MiB (268.44 MB)",
++                    "ram_size":"256.00 MiB (268.44 MB)",
++                    "serial":"0x1",
++                    "numa_node":1,
++                    "host":"cxl_mem.1"
++                  }
++                },
++                {
++                  "endpoint":"endpoint15",
++                  "host":"mem6",
++                  "memdev":{
++                    "memdev":"mem6",
++                    "pmem_size":"256.00 MiB (268.44 MB)",
++                    "ram_size":"256.00 MiB (268.44 MB)",
++                    "serial":"0x5",
++                    "numa_node":1,
++                    "host":"cxl_mem.5"
++                  }
++                }
++              ]
++            },
++            {
++              "port":"port12",
++              "host":"cxl_switch_uport.3",
++              "endpoints:port12":[
++                {
++                  "endpoint":"endpoint17",
++                  "host":"mem8",
++                  "memdev":{
++                    "memdev":"mem8",
++                    "pmem_size":"256.00 MiB (268.44 MB)",
++                    "ram_size":"256.00 MiB (268.44 MB)",
++                    "serial":"0x7",
++                    "numa_node":1,
++                    "host":"cxl_mem.7"
++                  }
++                },
++                {
++                  "endpoint":"endpoint13",
++                  "host":"mem4",
++                  "memdev":{
++                    "memdev":"mem4",
++                    "pmem_size":"256.00 MiB (268.44 MB)",
++                    "ram_size":"256.00 MiB (268.44 MB)",
++                    "serial":"0x3",
++                    "numa_node":1,
++                    "host":"cxl_mem.3"
++                  }
++                }
++              ]
++            }
++          ]
++        },
++        {
++          "port":"port4",
++          "host":"cxl_host_bridge.0",
++          "ports:port4":[
++            {
++              "port":"port6",
++              "host":"cxl_switch_uport.0",
++              "endpoints:port6":[
++                {
++                  "endpoint":"endpoint7",
++                  "host":"mem1",
++                  "memdev":{
++                    "memdev":"mem1",
++                    "pmem_size":"256.00 MiB (268.44 MB)",
++                    "ram_size":"256.00 MiB (268.44 MB)",
++                    "serial":"0",
++                    "numa_node":0,
++                    "host":"cxl_mem.0"
++                  }
++                },
++                {
++                  "endpoint":"endpoint14",
++                  "host":"mem5",
++                  "memdev":{
++                    "memdev":"mem5",
++                    "pmem_size":"256.00 MiB (268.44 MB)",
++                    "ram_size":"256.00 MiB (268.44 MB)",
++                    "serial":"0x4",
++                    "numa_node":0,
++                    "host":"cxl_mem.4"
++                  }
++                }
++              ]
++            },
++            {
++              "port":"port10",
++              "host":"cxl_switch_uport.2",
++              "endpoints:port10":[
++                {
++                  "endpoint":"endpoint16",
++                  "host":"mem7",
++                  "memdev":{
++                    "memdev":"mem7",
++                    "pmem_size":"256.00 MiB (268.44 MB)",
++                    "ram_size":"256.00 MiB (268.44 MB)",
++                    "serial":"0x6",
++                    "numa_node":0,
++                    "host":"cxl_mem.6"
++                  }
++                },
++                {
++                  "endpoint":"endpoint11",
++                  "host":"mem3",
++                  "memdev":{
++                    "memdev":"mem3",
++                    "pmem_size":"256.00 MiB (268.44 MB)",
++                    "ram_size":"256.00 MiB (268.44 MB)",
++                    "serial":"0x2",
++                    "numa_node":0,
++                    "host":"cxl_mem.2"
++                  }
++                }
++              ]
++            }
++          ]
++        }
++      ]
++    }
++
++In that listing each "root", "port", and "endpoint" object correspond a kernel
++'struct cxl_port' object. A 'cxl_port' is a device that can decode CXL.mem to
++its descendants. So "root" claims non-PCIe enumerable platform decode ranges and
++decodes them to "ports", "ports" decode to "endpoints", and "endpoints"
++represent the decode from SPA (System Physical Address) to DPA (Device Physical
++Address).
++
++Continuing the RAID analogy, disks have both topology metadata and on device
++metadata that determine RAID set assembly. CXL Port topology and CXL Port link
++status is metadata for CXL.mem set assembly. The CXL Port topology is enumerated
++by the arrival of a CXL.mem device. I.e. unless and until the PCIe core attaches
++the cxl_pci driver to a CXL Memory Expander there is no role for CXL Port
++objects. Conversely for hot-unplug / removal scenarios, there is no need for
++the Linux PCI core to tear down switch-level CXL resources because the endpoint
++->remove() event cleans up the port data that was established to support that
++Memory Expander.
++
++The port metadata and potential decode schemes that a give memory device may
++participate can be determined via a command like::
++
++    # cxl list -BDMu -d root -m mem3
++    {
++      "bus":"root3",
++      "provider":"cxl_test",
++      "decoders:root3":[
++        {
++          "decoder":"decoder3.1",
++          "resource":"0x8030000000",
++          "size":"512.00 MiB (536.87 MB)",
++          "volatile_capable":true,
++          "nr_targets":2
++        },
++        {
++          "decoder":"decoder3.3",
++          "resource":"0x8060000000",
++          "size":"512.00 MiB (536.87 MB)",
++          "pmem_capable":true,
++          "nr_targets":2
++        },
++        {
++          "decoder":"decoder3.0",
++          "resource":"0x8020000000",
++          "size":"256.00 MiB (268.44 MB)",
++          "volatile_capable":true,
++          "nr_targets":1
++        },
++        {
++          "decoder":"decoder3.2",
++          "resource":"0x8050000000",
++          "size":"256.00 MiB (268.44 MB)",
++          "pmem_capable":true,
++          "nr_targets":1
++        }
++      ],
++      "memdevs:root3":[
++        {
++          "memdev":"mem3",
++          "pmem_size":"256.00 MiB (268.44 MB)",
++          "ram_size":"256.00 MiB (268.44 MB)",
++          "serial":"0x2",
++          "numa_node":0,
++          "host":"cxl_mem.2"
++        }
++      ]
++    }
++
++...which queries the CXL topology to ask "given CXL Memory Expander with a kernel
++device name of 'mem3' which platform level decode ranges may this device
++participate". A given expander can participate in multiple CXL.mem interleave
++sets simultaneously depending on how many decoder resource it has. In this
++example mem3 can participate in one or more of a PMEM interleave that spans to
++Host Bridges, a PMEM interleave that targets a single Host Bridge, a Volatile
++memory interleave that spans 2 Host Bridges, and a Volatile memory interleave
++that only targets a single Host Bridge.
++
++Conversely the memory devices that can participate in a given platform level
++decode scheme can be determined via a command like the following::
++
++    # cxl list -MDu -d 3.2
++    [
++      {
++        "memdevs":[
++          {
++            "memdev":"mem1",
++            "pmem_size":"256.00 MiB (268.44 MB)",
++            "ram_size":"256.00 MiB (268.44 MB)",
++            "serial":"0",
++            "numa_node":0,
++            "host":"cxl_mem.0"
++          },
++          {
++            "memdev":"mem5",
++            "pmem_size":"256.00 MiB (268.44 MB)",
++            "ram_size":"256.00 MiB (268.44 MB)",
++            "serial":"0x4",
++            "numa_node":0,
++            "host":"cxl_mem.4"
++          },
++          {
++            "memdev":"mem7",
++            "pmem_size":"256.00 MiB (268.44 MB)",
++            "ram_size":"256.00 MiB (268.44 MB)",
++            "serial":"0x6",
++            "numa_node":0,
++            "host":"cxl_mem.6"
++          },
++          {
++            "memdev":"mem3",
++            "pmem_size":"256.00 MiB (268.44 MB)",
++            "ram_size":"256.00 MiB (268.44 MB)",
++            "serial":"0x2",
++            "numa_node":0,
++            "host":"cxl_mem.2"
++          }
++        ]
++      },
++      {
++        "root decoders":[
++          {
++            "decoder":"decoder3.2",
++            "resource":"0x8050000000",
++            "size":"256.00 MiB (268.44 MB)",
++            "pmem_capable":true,
++            "nr_targets":1
++          }
++        ]
++      }
++    ]
++
++...where the naming scheme for decoders is "decoder<port_id>.<instance_id>".
++
+ Driver Infrastructure
+ =====================
  
-+#define RCAR_PCIE_MAX_DMAC_BYTE_COUNT		0x7FFFFFFU
-+#define RCAR_PCIE_DMAC_BYTE_COUNT_MULTIPLE	8
-+#define RCAR_PCIE_DMAC_TIMEOUT			(msecs_to_jiffies(3 * 1000))
-+#define RCAR_PCIE_DMAC_DEFAULT_CHANNEL		0
-+
-+enum rcar_pcie_ep_dmac_xfr_status {
-+	RCAR_PCIE_DMA_XFR_SUCCESS,
-+	RCAR_PCIE_DMA_XFR_ERROR,
-+};
-+
-+struct rcar_pcie_ep_dmac_info {
-+	enum rcar_pcie_ep_dmac_xfr_status status;
-+	size_t bytes;
-+};
-+
- /* Structure representing the PCIe interface */
- struct rcar_pcie_endpoint {
- 	struct rcar_pcie	pcie;
-@@ -28,8 +43,114 @@ struct rcar_pcie_endpoint {
- 	unsigned long		*ib_window_map;
- 	u32			num_ib_windows;
- 	u32			num_ob_windows;
-+	struct completion	irq_raised;
-+	struct mutex		dma_operation;
-+	spinlock_t		lock;
-+	struct rcar_pcie_ep_dmac_info xfr;
- };
+@@ -28,6 +325,11 @@ CXL Memory Device
+ .. kernel-doc:: drivers/cxl/pci.c
+    :internal:
  
-+static inline bool rcar_pcie_ep_is_dmac_active(struct rcar_pcie_endpoint *ep)
-+{
-+	if (rcar_pci_read_reg(&ep->pcie, PCIEDMAOR) & PCIEDMAOR_DMAACT)
-+		return true;
++CXL Port
++--------
++.. kernel-doc:: drivers/cxl/port.c
++   :doc: cxl port
 +
-+	return false;
-+}
+ CXL Core
+ --------
+ .. kernel-doc:: drivers/cxl/cxl.h
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index ef05e96f8f97..4f4f7587f6ca 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -77,4 +77,9 @@ config CXL_PMEM
+ 	  provisioning the persistent memory capacity of CXL memory expanders.
+ 
+ 	  If unsure say 'm'.
 +
-+static void
-+rcar_pcie_ep_setup_dmac_request(struct rcar_pcie_endpoint *ep,
-+				dma_addr_t dma_dst, dma_addr_t dma_src,
-+				size_t len, enum pci_epf_xfr_direction dir, u8 ch)
-+{
-+	struct rcar_pcie *pcie = &ep->pcie;
-+	u32 val;
++config CXL_PORT
++	default CXL_BUS
++	tristate
 +
-+	ep->xfr.status = RCAR_PCIE_DMA_XFR_ERROR;
-+	ep->xfr.bytes = RCAR_PCIE_MAX_DMAC_BYTE_COUNT;
-+
-+	/* swap values if xfr is from pcie to internal */
-+	if (dir == PCIE_TO_INTERNAL)
-+		swap(dma_dst, dma_src);
-+
-+	/* Configure the PCI Express lower */
-+	rcar_pci_write_reg(pcie, lower_32_bits(dma_dst), PCIEDMPALR(ch));
-+
-+	/* Configure the PCI Express upper */
-+	rcar_pci_write_reg(pcie, upper_32_bits(dma_dst), PCIEDMPAUR(ch));
-+
-+	/* Configure the internal bus address */
-+	rcar_pci_write_reg(pcie, lower_32_bits(dma_src), PCIEDMIAR(ch));
-+
-+	/* Configure the byte count values */
-+	rcar_pci_write_reg(pcie, len, PCIEDMBCNTR(ch));
-+
-+	/* Enable interrupts */
-+	val = rcar_pci_read_reg(pcie, PCIEDMCHSR(ch));
-+
-+	/* set enable flags */
-+	val |= PCIEDMCHSR_IE;
-+	val |= PCIEDMCHSR_IBEE;
-+	val |= PCIEDMCHSR_PEEE;
-+	val |= PCIEDMCHSR_CHTCE;
-+
-+	/* Clear error flags */
-+	val &= ~PCIEDMCHSR_TE;
-+	val &= ~PCIEDMCHSR_PEE;
-+	val &= ~PCIEDMCHSR_IBE;
-+	val &= ~PCIEDMCHSR_CHTC;
-+
-+	rcar_pci_write_reg(pcie, val, PCIEDMCHSR(ch));
-+
-+	wmb(); /* flush the settings */
-+}
-+
-+static void rcar_pcie_ep_execute_dmac_request(struct rcar_pcie_endpoint *ep,
-+					      enum pci_epf_xfr_direction dir, u8 ch)
-+{
-+	struct rcar_pcie *pcie = &ep->pcie;
-+	u32 val;
-+
-+	/* Enable DMA */
-+	val = rcar_pci_read_reg(pcie, PCIEDMAOR);
-+	val |= PCIEDMAOR_DMAE;
-+	rcar_pci_write_reg(pcie, val, PCIEDMAOR);
-+
-+	/* Configure the DMA direction */
-+	val = rcar_pci_read_reg(pcie, PCIEDMCHCR(ch));
-+	if (dir == INTERNAL_TO_PCIE)
-+		val |= PCIEDMCHCR_DIR;
-+	else
-+		val &= ~PCIEDMCHCR_DIR;
-+
-+	val |= PCIEDMCHCR_CHE;
-+	rcar_pci_write_reg(pcie, val, PCIEDMCHCR(ch));
-+
-+	wmb(); /* flush the settings */
-+}
-+
-+static enum rcar_pcie_ep_dmac_xfr_status
-+rcar_pcie_ep_get_dmac_status(struct rcar_pcie_endpoint *ep,
-+			     size_t *count, u8 ch)
-+{
-+	*count = ep->xfr.bytes;
-+	return ep->xfr.status;
-+}
-+
-+static void rcar_pcie_ep_stop_dmac_request(struct rcar_pcie_endpoint *ep, u8 ch)
-+{
-+	struct rcar_pcie *pcie = &ep->pcie;
-+	u32 val;
-+
-+	val = rcar_pci_read_reg(pcie, PCIEDMCHCR(ch));
-+	val &= ~PCIEDMCHCR_CHE;
-+	rcar_pci_write_reg(pcie, val, PCIEDMCHCR(ch));
-+
-+	/* Disable interrupt */
-+	val = rcar_pci_read_reg(pcie, PCIEDMAOR);
-+	val &= ~PCIEDMAOR_DMAE;
-+	rcar_pci_write_reg(pcie, val, PCIEDMAOR);
-+}
-+
- static void rcar_pcie_ep_hw_init(struct rcar_pcie *pcie)
- {
- 	u32 val;
-@@ -419,6 +540,44 @@ static int rcar_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn, u8 vfn,
- 	}
+ endif
+diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+index cf07ae6cea17..56fcac2323cb 100644
+--- a/drivers/cxl/Makefile
++++ b/drivers/cxl/Makefile
+@@ -3,7 +3,9 @@ obj-$(CONFIG_CXL_BUS) += core/
+ obj-$(CONFIG_CXL_PCI) += cxl_pci.o
+ obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+ obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
++obj-$(CONFIG_CXL_PORT) += cxl_port.o
+ 
+ cxl_pci-y := pci.o
+ cxl_acpi-y := acpi.o
+ cxl_pmem-y := pmem.o
++cxl_port-y := port.o
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 8c2ced91518b..82591642ea90 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -169,7 +169,6 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+ 	struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+ 	struct acpi_pci_root *pci_root;
+ 	struct cxl_dport *dport;
+-	struct cxl_hdm *cxlhdm;
+ 	struct cxl_port *port;
+ 	int rc;
+ 
+@@ -197,28 +196,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+ 		return PTR_ERR(port);
+ 	dev_dbg(host, "%s: add: %s\n", dev_name(match), dev_name(&port->dev));
+ 
+-	rc = devm_cxl_port_enumerate_dports(host, port);
+-	if (rc < 0)
+-		return rc;
+-	cxl_device_lock(&port->dev);
+-	if (rc == 1) {
+-		rc = devm_cxl_add_passthrough_decoder(host, port);
+-		goto out;
+-	}
+-
+-	cxlhdm = devm_cxl_setup_hdm(host, port);
+-	if (IS_ERR(cxlhdm)) {
+-		rc = PTR_ERR(cxlhdm);
+-		goto out;
+-	}
+-
+-	rc = devm_cxl_enumerate_decoders(host, cxlhdm);
+-	if (rc)
+-		dev_err(&port->dev, "Couldn't enumerate decoders (%d)\n", rc);
+-
+-out:
+-	cxl_device_unlock(&port->dev);
+-	return rc;
++	return 0;
  }
  
-+static int rcar_pcie_ep_data_transfer(struct pci_epc *epc, struct pci_epf *epf,
-+				      dma_addr_t dma_dst, dma_addr_t dma_src,
-+				      size_t len, enum pci_epf_xfr_direction dir)
-+{
-+	struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
-+	u8 ch = RCAR_PCIE_DMAC_DEFAULT_CHANNEL;
-+	enum rcar_pcie_ep_dmac_xfr_status stat;
-+	int ret = -EINVAL;
-+	long wait_status;
-+	size_t count;
-+
-+	if (len > RCAR_PCIE_MAX_DMAC_BYTE_COUNT ||
-+	    (len % RCAR_PCIE_DMAC_BYTE_COUNT_MULTIPLE) != 0)
-+		return -EINVAL;
-+
-+	if (mutex_is_locked(&ep->dma_operation) || rcar_pcie_ep_is_dmac_active(ep))
-+		return -EBUSY;
-+
-+	mutex_lock(&ep->dma_operation);
-+
-+	rcar_pcie_ep_setup_dmac_request(ep, dma_dst, dma_src, len, dir, ch);
-+
-+	rcar_pcie_ep_execute_dmac_request(ep, dir, ch);
-+
-+	wait_status = wait_for_completion_interruptible_timeout(&ep->irq_raised,
-+								RCAR_PCIE_DMAC_TIMEOUT);
-+	if (wait_status <= 0) {
-+		rcar_pcie_ep_stop_dmac_request(ep, ch);
-+	} else {
-+		stat = rcar_pcie_ep_get_dmac_status(ep, &count, ch);
-+		if (stat == RCAR_PCIE_DMA_XFR_SUCCESS && !count)
-+			ret = 0;
+ struct cxl_chbs_context {
+@@ -278,9 +256,7 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+ 		return 0;
+ 	}
+ 
+-	cxl_device_lock(&root_port->dev);
+ 	dport = devm_cxl_add_dport(host, root_port, match, uid, ctx.chbcr);
+-	cxl_device_unlock(&root_port->dev);
+ 	if (IS_ERR(dport)) {
+ 		dev_err(host, "failed to add downstream port: %s\n",
+ 			dev_name(match));
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 48c9a004ae8e..a04220ebc03f 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -50,10 +50,8 @@ static int match_add_dports(struct pci_dev *pdev, void *data)
+ 		dev_dbg(&port->dev, "failed to find component registers\n");
+ 
+ 	port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+-	cxl_device_lock(&port->dev);
+ 	dport = devm_cxl_add_dport(host, port, &pdev->dev, port_num,
+ 				   cxl_regmap_to_base(pdev, &map));
+-	cxl_device_unlock(&port->dev);
+ 	if (IS_ERR(dport)) {
+ 		ctx->error = PTR_ERR(dport);
+ 		return PTR_ERR(dport);
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 2b09d04d3568..682e7cdbcc9c 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -40,6 +40,11 @@ static int cxl_device_id(struct device *dev)
+ 		return CXL_DEVICE_NVDIMM_BRIDGE;
+ 	if (dev->type == &cxl_nvdimm_type)
+ 		return CXL_DEVICE_NVDIMM;
++	if (is_cxl_port(dev)) {
++		if (is_cxl_root(to_cxl_port(dev)))
++			return CXL_DEVICE_ROOT;
++		return CXL_DEVICE_PORT;
 +	}
-+
-+	mutex_unlock(&ep->dma_operation);
-+	return ret;
-+}
-+
- static int rcar_pcie_ep_start(struct pci_epc *epc)
- {
- 	struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
-@@ -429,6 +588,55 @@ static int rcar_pcie_ep_start(struct pci_epc *epc)
  	return 0;
  }
  
-+static irqreturn_t rcar_pcie_ep_dmac_irq_handler(int irq, void *arg)
+@@ -300,6 +305,9 @@ static void unregister_port(void *_port)
+ {
+ 	struct cxl_port *port = _port;
+ 
++	if (!is_cxl_root(port))
++		device_lock_assert(port->dev.parent);
++
+ 	device_unregister(&port->dev);
+ }
+ 
+@@ -527,14 +535,33 @@ static int add_dport(struct cxl_port *port, struct cxl_dport *new)
+ 	return dup ? -EEXIST : 0;
+ }
+ 
++/*
++ * Since root-level CXL dports cannot be enumerated by PCI they are not
++ * enumerated by the common port driver that acquires the port lock over
++ * dport add/remove. Instead, root dports are manually added by a
++ * platform driver and cond_port_lock() is used to take the missing port
++ * lock in that case.
++ */
++static void cond_port_lock(struct cxl_port *port)
 +{
-+	u8 ch = RCAR_PCIE_DMAC_DEFAULT_CHANNEL;
-+	struct rcar_pcie_endpoint *ep = arg;
-+	struct rcar_pcie *pcie = &ep->pcie;
-+	unsigned long flags;
-+	u32 chsr_val;
-+	u32 chcr_val;
-+	u32 bytes;
-+
-+	spin_lock_irqsave(&ep->lock, flags);
-+
-+	chsr_val = rcar_pci_read_reg(pcie, PCIEDMCHSR(ch));
-+
-+	chcr_val = rcar_pci_read_reg(pcie, PCIEDMCHCR(ch));
-+
-+	if (mutex_is_locked(&ep->dma_operation)) {
-+		if ((chsr_val &  PCIEDMCHSR_PEE) ||
-+		    (chsr_val & PCIEDMCHSR_IBE) ||
-+		    (chsr_val & PCIEDMCHSR_CHTC))
-+			ep->xfr.status = RCAR_PCIE_DMA_XFR_ERROR;
-+		else if (chsr_val & PCIEDMCHSR_TE)
-+			ep->xfr.status = RCAR_PCIE_DMA_XFR_SUCCESS;
-+
-+		/* get byte count */
-+		bytes = rcar_pci_read_reg(pcie, PCIEDMBCNTR(ch));
-+		ep->xfr.bytes = bytes;
-+
-+		if ((chsr_val & PCIEDMCHSR_PEE) || (chsr_val & PCIEDMCHSR_IBE) ||
-+		    (chsr_val & PCIEDMCHSR_TE) || (chsr_val & PCIEDMCHSR_CHTC)) {
-+			complete(&ep->irq_raised);
-+		}
-+	} else {
-+		spin_unlock_irqrestore(&ep->lock, flags);
-+		return IRQ_NONE;
-+	}
-+
-+	if (chcr_val & PCIEDMCHCR_CHE)
-+		chcr_val &= ~PCIEDMCHCR_CHE;
-+	rcar_pci_write_reg(pcie, chcr_val, PCIEDMCHCR(ch));
-+
-+	/* Clear DMA interrupt source */
-+	rcar_pci_write_reg(pcie, chsr_val, PCIEDMCHSR(ch));
-+
-+	spin_unlock_irqrestore(&ep->lock, flags);
-+
-+	return IRQ_HANDLED;
++	if (is_cxl_root(port))
++		cxl_device_lock(&port->dev);
 +}
 +
- static void rcar_pcie_ep_stop(struct pci_epc *epc)
++static void cond_port_unlock(struct cxl_port *port)
++{
++	if (is_cxl_root(port))
++		cxl_device_unlock(&port->dev);
++}
++
+ static void cxl_dport_remove(void *data)
  {
- 	struct rcar_pcie_endpoint *ep = epc_get_drvdata(epc);
-@@ -446,6 +654,8 @@ static const struct pci_epc_features rcar_pcie_epc_features = {
- 	.bar_fixed_size[0] = 128,
- 	.bar_fixed_size[2] = 256,
- 	.bar_fixed_size[4] = 256,
-+	.internal_dmac = true,
-+	.internal_dmac_mask = DMA_BIT_MASK(32),
- };
+ 	struct cxl_dport *dport = data;
+ 	struct cxl_port *port = dport->port;
  
- static const struct pci_epc_features*
-@@ -466,6 +676,7 @@ static const struct pci_epc_ops rcar_pcie_epc_ops = {
- 	.start		= rcar_pcie_ep_start,
- 	.stop		= rcar_pcie_ep_stop,
- 	.get_features	= rcar_pcie_ep_get_features,
-+	.dmac_transfer	= rcar_pcie_ep_data_transfer,
- };
+-	cxl_device_lock(&port->dev);
++	cond_port_lock(port);
+ 	list_del_init(&dport->list);
+-	cxl_device_unlock(&port->dev);
++	cond_port_unlock(port);
+ 	put_device(dport->dport);
+ }
  
- static const struct of_device_id rcar_pcie_ep_of_match[] = {
-@@ -480,6 +691,7 @@ static int rcar_pcie_ep_probe(struct platform_device *pdev)
- 	struct rcar_pcie_endpoint *ep;
- 	struct rcar_pcie *pcie;
- 	struct pci_epc *epc;
-+	int dmac_irq;
- 	int err;
+@@ -588,7 +615,9 @@ struct cxl_dport *devm_cxl_add_dport(struct device *host, struct cxl_port *port,
+ 	dport->component_reg_phys = component_reg_phys;
+ 	dport->port = port;
  
- 	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
-@@ -502,6 +714,14 @@ static int rcar_pcie_ep_probe(struct platform_device *pdev)
- 		goto err_pm_put;
- 	}
++	cond_port_lock(port);
+ 	rc = add_dport(port, dport);
++	cond_port_unlock(port);
+ 	if (rc)
+ 		return ERR_PTR(rc);
  
-+	dmac_irq = platform_get_irq(pdev, 1);
-+	if (dmac_irq < 0)
-+		goto err_pm_put;
+@@ -887,6 +916,7 @@ static int cxl_bus_probe(struct device *dev)
+ 	rc = to_cxl_drv(dev->driver)->probe(dev);
+ 	cxl_nested_unlock(dev);
+ 
++	dev_dbg(dev, "probe: %d\n", rc);
+ 	return rc;
+ }
+ 
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index ca3777061181..cee71c6e2fed 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -163,6 +163,8 @@ int cxl_map_device_regs(struct pci_dev *pdev,
+ enum cxl_regloc_type;
+ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 		      struct cxl_register_map *map);
++void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
++				   resource_size_t length);
+ 
+ #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+ #define CXL_TARGET_STRLEN 20
+@@ -348,6 +350,8 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
+ 
+ #define CXL_DEVICE_NVDIMM_BRIDGE	1
+ #define CXL_DEVICE_NVDIMM		2
++#define CXL_DEVICE_PORT			3
++#define CXL_DEVICE_ROOT			4
+ 
+ #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
+ #define CXL_MODALIAS_FMT "cxl:t%d"
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 103636fda198..47640f19e899 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -2,6 +2,7 @@
+ /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+ #ifndef __CXL_PCI_H__
+ #define __CXL_PCI_H__
++#include <linux/pci.h>
+ #include "cxl.h"
+ 
+ #define CXL_MEMORY_PROGIF	0x10
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+new file mode 100644
+index 000000000000..daa4c3c33aed
+--- /dev/null
++++ b/drivers/cxl/port.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/slab.h>
 +
-+	init_completion(&ep->irq_raised);
-+	mutex_init(&ep->dma_operation);
-+	spin_lock_init(&ep->lock);
++#include "cxlmem.h"
++#include "cxlpci.h"
 +
- 	ep->num_ib_windows = MAX_NR_INBOUND_MAPS;
- 	ep->ib_window_map =
- 			devm_kcalloc(dev, BITS_TO_LONGS(ep->num_ib_windows),
-@@ -533,6 +753,13 @@ static int rcar_pcie_ep_probe(struct platform_device *pdev)
- 
- 	rcar_pcie_ep_hw_init(pcie);
- 
-+	err = devm_request_irq(dev, dmac_irq, rcar_pcie_ep_dmac_irq_handler,
-+			       0, "pcie-rcar-ep-dmac", pcie);
-+	if (err) {
-+		dev_err(dev, "failed to request dmac irq\n");
-+		goto err_pm_put;
++/**
++ * DOC: cxl port
++ *
++ * The port driver enumerates dport via PCI and scans for HDM
++ * (Host-managed-Device-Memory) decoder resources via the
++ * @component_reg_phys value passed in by the agent that registered the
++ * port. All descendant ports of a CXL root port (described by platform
++ * firmware) are managed in this drivers context. Each driver instance
++ * is responsible for tearing down the driver context of immediate
++ * descendant ports. The locking for this is validated by
++ * CONFIG_PROVE_CXL_LOCKING.
++ *
++ * The primary service this driver provides is presenting APIs to other
++ * drivers to utilize the decoders, and indicating to userspace (via bind
++ * status) the connectivity of the CXL.mem protocol throughout the
++ * PCIe topology.
++ */
++
++static int cxl_port_probe(struct device *dev)
++{
++	struct cxl_port *port = to_cxl_port(dev);
++	struct cxl_hdm *cxlhdm;
++	int rc;
++
++	rc = devm_cxl_port_enumerate_dports(dev, port);
++	if (rc < 0)
++		return rc;
++
++	if (rc == 1)
++		return devm_cxl_add_passthrough_decoder(dev, port);
++
++	cxlhdm = devm_cxl_setup_hdm(dev, port);
++	if (IS_ERR(cxlhdm))
++		return PTR_ERR(cxlhdm);
++
++	rc = devm_cxl_enumerate_decoders(dev, cxlhdm);
++	if (rc) {
++		dev_err(dev, "Couldn't enumerate decoders (%d)\n", rc);
++		return rc;
 +	}
 +
- 	err = pci_epc_multi_mem_init(epc, ep->ob_window, ep->num_ob_windows);
- 	if (err < 0) {
- 		dev_err(dev, "failed to initialize the epc memory space\n");
-diff --git a/drivers/pci/controller/pcie-rcar.h b/drivers/pci/controller/pcie-rcar.h
-index 9bb125db85c6..874f8a384e6d 100644
---- a/drivers/pci/controller/pcie-rcar.h
-+++ b/drivers/pci/controller/pcie-rcar.h
-@@ -54,6 +54,29 @@
- #define  PAR_ENABLE		BIT(31)
- #define  IO_SPACE		BIT(8)
- 
-+/* PCIe DMAC control reg & mask */
-+#define PCIEDMAOR		0x04000
-+#define  PCIEDMAOR_DMAE		BIT(31)
-+#define  PCIEDMAOR_DMAACT	BIT(16)
-+#define PCIEDMPALR(x)		(0x04100 + ((x) * 0x40))
-+#define PCIEDMPAUR(x)		(0x04104 + ((x) * 0x40))
-+#define PCIEDMIAR(x)		(0x04108 + ((x) * 0x40))
-+#define PCIEDMBCNTR(x)		(0x04110 + ((x) * 0x40))
-+#define PCIEDMCCAR(x)		(0x04120 + ((x) * 0x40))
-+#define PCIEDMCHCR(x)		(0x04128 + ((x) * 0x40))
-+#define  PCIEDMCHCR_CHE		BIT(31)
-+#define  PCIEDMCHCR_DIR		BIT(30)
-+#define PCIEDMCHSR(x)		(0x0412c + ((x) * 0x40))
-+#define  PCIEDMCHSR_CHTCE	BIT(28)
-+#define  PCIEDMCHSR_PEEE	BIT(27)
-+#define  PCIEDMCHSR_IBEE	BIT(25)
-+#define  PCIEDMCHSR_CHTC	BIT(12)
-+#define  PCIEDMCHSR_PEE		BIT(11)
-+#define  PCIEDMCHSR_IBE		BIT(9)
-+#define  PCIEDMCHSR_IE		BIT(3)
-+#define  PCIEDMCHSR_TE		BIT(0)
-+#define PCIEDMCHC2R(x)		(0x04130 + ((x) * 0x40))
++	return 0;
++}
 +
- /* Configuration */
- #define PCICONF(x)		(0x010000 + ((x) * 0x4))
- #define  INTDIS			BIT(10)
--- 
-2.25.1
++static struct cxl_driver cxl_port_driver = {
++	.name = "cxl_port",
++	.probe = cxl_port_probe,
++	.id = CXL_DEVICE_PORT,
++};
++
++module_cxl_driver(cxl_port_driver);
++MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS(CXL);
++MODULE_ALIAS_CXL(CXL_DEVICE_PORT);
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index 3045d7cba0db..3e2a529875ea 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -26,6 +26,12 @@ obj-m += cxl_pmem.o
+ cxl_pmem-y := $(CXL_SRC)/pmem.o
+ cxl_pmem-y += config_check.o
+ 
++obj-m += cxl_port.o
++
++cxl_port-y := $(CXL_SRC)/port.o
++cxl_port-y += config_check.o
++
++
+ obj-m += cxl_core.o
+ 
+ cxl_core-y := $(CXL_CORE_SRC)/port.o
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 81c09380c537..ce6ace286fc7 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -437,10 +437,8 @@ static int mock_cxl_port_enumerate_dports(struct device *host,
+ 		if (pdev->dev.parent != port->uport)
+ 			continue;
+ 
+-		cxl_device_lock(&port->dev);
+ 		dport = devm_cxl_add_dport(host, port, &pdev->dev, pdev->id,
+ 					   CXL_RESOURCE_NONE);
+-		cxl_device_unlock(&port->dev);
+ 
+ 		if (IS_ERR(dport)) {
+ 			dev_err(dev, "failed to add dport: %s (%ld)\n",
 
