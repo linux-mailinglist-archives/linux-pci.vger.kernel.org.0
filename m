@@ -2,107 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16B9849C850
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 12:10:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E7C849C958
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 13:12:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233256AbiAZLKK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jan 2022 06:10:10 -0500
-Received: from mga01.intel.com ([192.55.52.88]:20697 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233213AbiAZLKJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Jan 2022 06:10:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643195409; x=1674731409;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AZ52GxZm2Eq1pzG9AHFhzbjqb/WlLIS9HlqJiBwFpBE=;
-  b=P/xu5lStg8ZjB0PZDjIQmkKbyfUFT/EEOGpbQYsJTIVHg8WpC8Gekq5O
-   QkP/cDUYf94PcHlMLet3vjUgRHIFKV/NLrWrPLs3AEzkbFukDlmmVlRIJ
-   X4WkB1tdU7IYocfNprBeQ9xxv7UtJQJGfIH0FpVGVnEjaCDBwOOR6coHM
-   VJSWlfm7M3natB+zV2HFTI+WX+GCI+SoW1ej/SGGTXZ97R98Ux38iT/VB
-   CEd2x2NgMltvUm4nLNv88fyt7ZJi/wGGZRD+JelPK3h3Cl3pFyL4ae3oI
-   kykrc+u+fefJRiquAcAza5MAiqbO2CPq/aoYGUTHNV16AjFHejDMWKwpH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="270980033"
-X-IronPort-AV: E=Sophos;i="5.88,317,1635231600"; 
-   d="scan'208";a="270980033"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 03:10:09 -0800
-X-IronPort-AV: E=Sophos;i="5.88,317,1635231600"; 
-   d="scan'208";a="624802639"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 03:10:06 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 26 Jan 2022 13:10:03 +0200
-Date:   Wed, 26 Jan 2022 13:10:03 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, koba.ko@canonical.com,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI/DPC: Disable DPC when link is in L2/L3 ready, L2
- and L3 state
-Message-ID: <YfEsC94BvFwd5MLy@lahna>
-References: <20220126071853.1940111-1-kai.heng.feng@canonical.com>
- <20220126071853.1940111-2-kai.heng.feng@canonical.com>
+        id S233964AbiAZMMz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jan 2022 07:12:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233952AbiAZMMz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jan 2022 07:12:55 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3269AC06161C
+        for <linux-pci@vger.kernel.org>; Wed, 26 Jan 2022 04:12:55 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EE18DB81CBB
+        for <linux-pci@vger.kernel.org>; Wed, 26 Jan 2022 12:12:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5946AC340E3;
+        Wed, 26 Jan 2022 12:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643199172;
+        bh=YX5baDbE1GWQCRxqExBo0eSccknGG7xkF0mfrtJFsx4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=oPnLc5bvP/gg0s11qeRiLbts8HJzbwx5TP+GmnBG8Ovk7oMKuX5pk039ylc07UA6o
+         9xuRkSq7gpzmq7QNfvivYQgCNRdCqUmo3O2iJLquQX4OHQM0DASJ6GpF0q1BFGTVWD
+         OjFsgZnxQ/5RyBapmtez/nUlh/bpABh8kugGS+wmLaFd3c52aiNeniIjdVLAGhLrkb
+         PWekGTxBdKlv+6tm/2TNrhFYxxcim9cA28cXm00KkLqMnZP9TdWsCh2AlZxx4Z6emH
+         fe0PAWwliiS8YDOnyHp1xapGOiRCli2j7LVMvgNs/3Lfx8DmT7ZIWcO7OlHnM/3ob9
+         cyj90GybD88Zg==
+Date:   Wed, 26 Jan 2022 06:12:50 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     joey.corleone@mail.ru, Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: [Bug 215533] [BISECTED][REGRESSION] UI becomes unresponsive
+ every couple of seconds
+Message-ID: <20220126121250.GA1694509@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220126071853.1940111-2-kai.heng.feng@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <bug-215533-41252-1JFKZyUc5S@https.bugzilla.kernel.org/>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+[+cc Jan, author of 0e8ae5a6ff59, linux-pci]
 
-On Wed, Jan 26, 2022 at 03:18:52PM +0800, Kai-Heng Feng wrote:
-> Since TLP and DLLP transmission is disabled for a Link in L2/L3 Ready,
-> L2 and L3, and DPC depends on AER, so also disable DPC here.
-
-Here too I think it is good to mention that the DPC "service" never
-implemented the PM hooks in the first place
-
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-
-One minor comment below, but other than that looks good,
-
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
-> ---
->  drivers/pci/pcie/dpc.c | 61 +++++++++++++++++++++++++++++++-----------
->  1 file changed, 45 insertions(+), 16 deletions(-)
+On Wed, Jan 26, 2022 at 08:18:12AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=215533
 > 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 3e9afee02e8d1..9585c10b7c577 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -343,13 +343,34 @@ void pci_dpc_init(struct pci_dev *pdev)
->  	}
->  }
->  
-> +static void dpc_enable(struct pcie_device *dev)
-> +{
-> +	struct pci_dev *pdev = dev->port;
-> +	u16 ctl;
-> +
-> +	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-> +
-
-Drop the empty line here.
-
-> +	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
-> +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-> +}
-> +
-> +static void dpc_disable(struct pcie_device *dev)
-> +{
-> +	struct pci_dev *pdev = dev->port;
-> +	u16 ctl;
-> +
-> +	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
-> +	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-> +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
-> +}
+> --- Comment #1 from joey.corleone@mail.ru ---
+> I accidentally sent the report prematurely. So here come my findings:
+> 
+> Since 5.16
+> (1) my system becomes unresponsive every couple of seconds (micro lags), which
+> makes it more or less unusable.
+> (2) wrong(?) CPU frequencies are reported. 
+> 
+> - 5.15 works fine.
+> - Starting from some commit in 5.17, it seems (1) is fixed (unsure), but
+> definitely not (2).
+> 
+> I have bisected the kernel between 5.15 and 5.16, and found that the offending
+> commit is 0e8ae5a6ff5952253cd7cc0260df838ab4c21009 ("PCI/portdrv: Do not setup
+> up IRQs if there are no users"). Bisection log attached.
+> 
+> Reverting this commit on linux-git[1] fixes both (1) and (2).
+> 
+> Important notes:
+> - This regression was reported on a DELL XPS 9550 laptop by two users [2], so
+> it might be related strictly to that model. 
+> - According to user mallocman, the issue can also be fixed by reverting the
+> BIOS version of the laptop to v1.12.
+> - The issue ONLY occurs when AC is plugged in (and stays there even when I
+> unplug it).
+> - When booting on battery power, there is no issue at all.
+> 
+> You can easily observe the regression via: 
+> 
+> watch cat /sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_cur_fre
+> 
+> As soon as I plug in AC, all frequencies go up to values around 3248338 and
+> stay there even if I unplug AC. This does not happen at all when booted on
+> battery power. 
+> 
+> Also note: 
+> - the laptop's fans are not really affected by the high frequencies.
+> - setting the governor to "powersave" has no effect on the frequencies (as
+> compared to when on battery power).
+> - lowering the maximum frequency manually works, but does not fix (1).
+> 
+> [1] https://aur.archlinux.org/pkgbase/linux-git/ (pulled commits up to
+> 0280e3c58f92b2fe0e8fbbdf8d386449168de4a8).
+> [2] https://bbs.archlinux.org/viewtopic.php?id=273330
+> 
+> -- 
+> You may reply to this email to add a comment.
+> 
+> You are receiving this mail because:
+> You are watching the assignee of the bug.
