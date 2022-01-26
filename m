@@ -2,182 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3CCE49C459
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 08:31:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D32AA49C839
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 12:03:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbiAZHb7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jan 2022 02:31:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbiAZHb6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jan 2022 02:31:58 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E788C06161C
-        for <linux-pci@vger.kernel.org>; Tue, 25 Jan 2022 23:31:58 -0800 (PST)
-Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1nCcmX-0005nl-FZ; Wed, 26 Jan 2022 08:31:53 +0100
-Message-ID: <f6220c47-0593-abc8-6faa-28e8b719fa77@leemhuis.info>
-Date:   Wed, 26 Jan 2022 08:31:52 +0100
+        id S233189AbiAZLDI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jan 2022 06:03:08 -0500
+Received: from mga09.intel.com ([134.134.136.24]:23299 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233170AbiAZLDI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jan 2022 06:03:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643194988; x=1674730988;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8Q3gBcQGz/pjxvxeA6YutlHYOEjH1VZ/sW0EYV1FVls=;
+  b=XeGkmbtDKP3G1PdfHmBXm2537aF6sXuxHc2Yujz2OLT6ZahlcVyqmq5Q
+   wV1UVlxvK+PcFh3gi7R8wdXWlSa4CyYmCfI5kZk2arW3PSyZ7UxI4hb+X
+   rkqxb9ynK6xVN8AnllMJoBnkrX9Zw2D067EAcViCr7RxRQ5AmQVcX7U25
+   JuKxbO2ky8gRJ020Ye/RBFGZYl3Ts5ipVfzXR1MMr4duQwHp8vadHKunz
+   9bWbohBudL5tzOFNgexNygIz73yTXjAf/9/al6cuZ3vQdjN5X91EH3T4g
+   HXLCn0eBeUYhW1pxbcUNyu+Dcg1YCJsv52Agzn1wRxSGiYBwSCn1iP4A1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="246305773"
+X-IronPort-AV: E=Sophos;i="5.88,317,1635231600"; 
+   d="scan'208";a="246305773"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 03:03:07 -0800
+X-IronPort-AV: E=Sophos;i="5.88,317,1635231600"; 
+   d="scan'208";a="563378278"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 03:03:03 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 26 Jan 2022 13:03:00 +0200
+Date:   Wed, 26 Jan 2022 13:03:00 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, koba.ko@canonical.com,
+        Russell Currey <ruscur@russell.cc>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI/AER: Disable AER when link is in L2/L3 ready, L2
+ and L3 state
+Message-ID: <YfEqZMUS9jyiErmF@lahna>
+References: <20220126071853.1940111-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [Bug 215525] New: HotPlug does not work on upstream kernel
- 5.17.0-rc1
-Content-Language: en-BS
-To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc:     Blazej Kucman <blazej.kucman@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Naveen Naidu <naveennaidu479@gmail.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220124214635.GA1553164@bhelgaas>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20220124214635.GA1553164@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643182318;bc282c32;
-X-HE-SMSGID: 1nCcmX-0005nl-FZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220126071853.1940111-1-kai.heng.feng@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-[TLDR: I'm adding this regression to regzbot, the Linux kernel
-regression tracking bot; most text you find below is compiled from a few
-templates paragraphs some of you might have seen already.]
-
-Hi, this is your Linux kernel regression tracker speaking.
-
-Adding the regression mailing list to the list of recipients, as it
-should be in the loop for all regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
-On 24.01.22 22:46, Bjorn Helgaas wrote:
-> [+cc linux-pci, Hans, Lukas, Naveen, Keith, Nirmal, Jonathan]
+On Wed, Jan 26, 2022 at 03:18:51PM +0800, Kai-Heng Feng wrote:
+> Commit 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in
+> hint") enables ACS, and some platforms lose its NVMe after resume from
+> S3:
+> [   50.947816] pcieport 0000:00:1b.0: DPC: containment event, status:0x1f01 source:0x0000
+> [   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
+> [   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
+> [   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error status/mask=00200000/00010000
+> [   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
+> [   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
+> [   50.947843] nvme nvme0: frozen state error detected, reset controller
 > 
-> On Mon, Jan 24, 2022 at 11:46:14AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
->> https://bugzilla.kernel.org/show_bug.cgi?id=215525
->>
->>             Bug ID: 215525
->>            Summary: HotPlug does not work on upstream kernel 5.17.0-rc1
->>            Product: Drivers
->>            Version: 2.5
->>     Kernel Version: 5.17.0-rc1 upstream
->>           Hardware: x86-64
->>                 OS: Linux
->>               Tree: Mainline
->>             Status: NEW
->>           Severity: normal
->>           Priority: P1
->>          Component: PCI
->>           Assignee: drivers_pci@kernel-bugs.osdl.org
->>           Reporter: blazej.kucman@intel.com
->>         Regression: No
->>
->> Created attachment 300308
->>   --> https://bugzilla.kernel.org/attachment.cgi?id=300308&action=edit
->> dmesg
->>
->> While testing on latest upstream
->> kernel(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/) we
->> noticed that with the merge commit
->> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d0a231f01e5b25bacd23e6edc7c979a18a517b2b)
->> hotplug and hotunplug of nvme drives stopped working.
->>
->> Rescan PCI does not help.
->> echo "1" > /sys/bus/pci/rescan
->>
->> Issue does not reproduce on a kernel built on an antecedent
->> commit(88db8458086b1dcf20b56682504bdb34d2bca0e2).
->>
->>
->> During hot-remove device does not disappear, however when we try to do I/O on
->> the disk then there is an I/O error, and the device disappears.
->>
->> Before I/O no logs regarding the disk appeared in the dmesg, only after I/O the
->> entries appeared like below:
->> [  177.943703] nvme nvme5: controller is down; will reset: CSTS=0xffffffff,
->> PCI_STATUS=0xffff
->> [  177.971661] nvme 10000:0b:00.0: can't change power state from D3cold to D0
->> (config space inaccessible)
->> [  177.981121] pcieport 10000:00:02.0: can't derive routing for PCI INT A
->> [  177.987749] nvme 10000:0b:00.0: PCI INT A: no GSI
->> [  177.992633] nvme nvme5: Removing after probe failure status: -19
->> [  178.004633] nvme5n1: detected capacity change from 83984375 to 0
->> [  178.004677] I/O error, dev nvme5n1, sector 0 op 0x0:(READ) flags 0x0
->> phys_seg 1 prio class 0
->>
->>
->> OS: RHEL 8.4 GA
->> Platform: Intel Purley
->>
->> The logs are collected on a non-recent upstream kernel, but a issue also occurs
->> on the newest upstream kernel(dd81e1c7d5fb126e5fbc5c9e334d7b3ec29a16a0)
+> It happens right after ACS gets enabled during resume.
+
+Is this really because of the above commit of due the fact that AER
+"service" never implemented the PM hooks in the first place ;-)
 > 
-> Apparently worked immediately before merging the PCI changes for
-> v5.17 and failed immediately after:
+> There's another case, when Thunderbolt reaches D3cold:
+> [   30.100211] pcieport 0000:00:1d.0: AER: Uncorrected (Non-Fatal) error received: 0000:00:1d.0
+> [   30.100251] pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+> [   30.100256] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
+> [   30.100262] pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
+> [   30.100267] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
+> [   30.100372] thunderbolt 0000:0a:00.0: AER: can't recover (no error_detected callback)
+> [   30.100401] xhci_hcd 0000:3e:00.0: AER: can't recover (no error_detected callback)
+> [   30.100427] pcieport 0000:00:1d.0: AER: device recovery failed
 > 
->   good: 88db8458086b ("Merge tag 'exfat-for-5.17-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat")
->   bad:  d0a231f01e5b ("Merge tag 'pci-v5.17-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci")
-> 
-> Only three commits touch pciehp:
-> 
->   085a9f43433f ("PCI: pciehp: Use down_read/write_nested(reset_lock) to fix lockdep errors")
->   23584c1ed3e1 ("PCI: pciehp: Fix infinite loop in IRQ handler upon power fault")
->   a3b0f10db148 ("PCI: pciehp: Use PCI_POSSIBLE_ERROR() to check config reads")
-> 
-> None seems obviously related to me.  Blazej, could you try setting
-> CONFIG_DYNAMIC_DEBUG=y and booting with 'dyndbg="file pciehp* +p"' to
-> enable more debug messages?
+> Since PCIe spec "5.2 Link State Power Management" states that TLP and DLLP
+> transmission is disabled for a Link in L2/L3 Ready (D3hot), L2 (D3cold with aux
+> power) and L3 (D3cold), so disable AER to avoid the noises from turning power
+> rails on/off.
 
-To be sure this issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
+I think more accurate here is to say when the topology behind the root
+port enters low power states. Reason here is that you can't really tell
+from the OS standpoint whether the link went into L1 or L2/3 before the
+ACPI power resource is turned off.
 
-#regzbot ^introduced: d0a231f01e5b25bacd23e
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215525
-#regzbot from: blazej.kucman@intel.com
-#regzbot title: pci: HotPlug does not work on upstream kernel 5.17.0-rc1
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=209149
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
+> Fixes: 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in hint")
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+Thanks for fixing this!
 
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply, that's in everyone's interest.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
-
----
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and/or the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-tell #regzbot about it in the report, as that will ensure the regression
-gets on the radar of regzbot and the regression tracker. That's in your
-interest, as they will make sure the report won't fall through the
-cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include a 'Link:' tag to the report in the commit message, as explained
-in Documentation/process/submitting-patches.rst
-That aspect was recently was made more explicit in commit 1f57bd42b77c:
-https://git.kernel.org/linus/1f57bd42b77c
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
