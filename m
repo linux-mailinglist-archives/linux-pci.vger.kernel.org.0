@@ -2,164 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8900A49C14E
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 03:27:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3057449C179
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 03:54:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236371AbiAZC1D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Jan 2022 21:27:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236373AbiAZC1C (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Jan 2022 21:27:02 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C342FC06161C;
-        Tue, 25 Jan 2022 18:27:01 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8B6CBB81B99;
-        Wed, 26 Jan 2022 02:27:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E9AC340E0;
-        Wed, 26 Jan 2022 02:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643164019;
-        bh=0EB6cP7OR7AmWV0MNJu9iQEAQNNivvS5YyjvxnTpexE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k8iR6TQxOFtjWVXILWWOYJkWJq9QPkdGUr9b/pvZEE6jPKltvYUMh6gJl3DLKxulg
-         hBo3jWAffJrb2QQCiv6FyAS1UuwQqVwwvyHZbSZUCheOlr0bdrqB+in/1nCWnrF336
-         /WsoK5hPvanUSFFC52rGKmB7HnJKnUoZsh4p56MdxlX0s5Sa4S5k5fvNY4jJd5PAt0
-         AI5fz9L3cqbxH9fT/V/XwuYScbrAEYKsavA3+ttbXFEmaJ28c7u9nU3wRcJVuOLiPe
-         LZT5ciovcTpmPoor1KnthJftPqiP1wVAjyAoMX63+xhlx/P4zhch0+GO4pS99Gv49x
-         BJQoxzinEC72w==
-Date:   Wed, 26 Jan 2022 10:26:52 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, bhelgaas@google.com,
-        lorenzo.pieralisi@arm.com, marcel.ziswiler@toradex.com,
-        tharvey@gateworks.com, kishon@ti.com, vkoul@kernel.org,
-        robh@kernel.org, galak@kernel.crashing.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: Re: [PATCH v7 7/8] arm64: dts: imx8mm-evk: Add the pcie support on
- imx8mm evk board
-Message-ID: <20220126022651.GD4686@dragon>
-References: <1638432158-4119-1-git-send-email-hongxing.zhu@nxp.com>
- <1638432158-4119-8-git-send-email-hongxing.zhu@nxp.com>
+        id S236663AbiAZCyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Jan 2022 21:54:40 -0500
+Received: from mga04.intel.com ([192.55.52.120]:65436 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236514AbiAZCyi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 25 Jan 2022 21:54:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643165678; x=1674701678;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=wj9FuH5h8qEM3wIELD4IvCj7rEfospIx8qsXu9H/tI8=;
+  b=E5cHoR4dmQnO8izHAZYTi4ZFnJwZgRY8UtPGDgXX6dtczl5pcvNJTAN7
+   pmSuTs55vG0sGbF37NbFzbKqJOuyh006IEe+JveoVB3vVhBWlirtDL/pA
+   aPx/lkat5ay8XKpMmRcmmRNdMHwPEXZutFCw6nX4DHKq7GQp4HJuVMuxj
+   2oid6ZpNvqideVC9kenHybWCeBNizSpCBFFVE23VssVdq866NJ5ER/bf4
+   FSsGSgRnCV9hlmXzhCHSgOTgia/3yykL4nW0uTXKgYHBzu4WahjOYxrJP
+   DD7gY8WqtFhukFfT2nIUYuDy4f3wSExuUZaFPVbM0BZF8de2DzqbbBqDH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="245302694"
+X-IronPort-AV: E=Sophos;i="5.88,316,1635231600"; 
+   d="scan'208";a="245302694"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 18:54:37 -0800
+X-IronPort-AV: E=Sophos;i="5.88,316,1635231600"; 
+   d="scan'208";a="617838093"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 18:54:37 -0800
+Subject: [PATCH v4 16/40] cxl/core/port: Use dedicated lock for decoder
+ target list
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org
+Date:   Tue, 25 Jan 2022 18:54:36 -0800
+Message-ID: <164316562430.3437160.122223070771602475.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164298420439.3018233.5113217660229718675.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164298420439.3018233.5113217660229718675.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1638432158-4119-8-git-send-email-hongxing.zhu@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 02, 2021 at 04:02:37PM +0800, Richard Zhu wrote:
-> Add the PCIe support on iMX8MM EVK boards.
-> And set the default reference clock mode.
-> 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Reviewed-by: Tim Harvey <tharvey@gateworks.com>
-> Tested-by: Tim Harvey <tharvey@gateworks.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-> index e033d0257b5a..87a30daf0b3c 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-> @@ -5,6 +5,7 @@
->  
->  /dts-v1/;
->  
-> +#include <dt-bindings/phy/phy-imx8-pcie.h>
->  #include <dt-bindings/usb/pd.h>
->  #include "imx8mm.dtsi"
->  
-> @@ -30,6 +31,23 @@ status {
->  		};
->  	};
->  
-> +	pcie0_refclk: pcie0-refclk {
-> +		compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <100000000>;
+Lockdep reports:
 
-Incorrect indent.  Fixed them up and applied.
+ ======================================================
+ WARNING: possible circular locking dependency detected
+ 5.16.0-rc1+ #142 Tainted: G           OE
+ ------------------------------------------------------
+ cxl/1220 is trying to acquire lock:
+ ffff979b85475460 (kn->active#144){++++}-{0:0}, at: __kernfs_remove+0x1ab/0x1e0
 
-Shawn
+ but task is already holding lock:
+ ffff979b87ab38e8 (&dev->lockdep_mutex#2/4){+.+.}-{3:3}, at: cxl_remove_ep+0x50c/0x5c0 [cxl_core]
 
-> +	};
-> +
-> +	reg_pcie0: regulator-pcie {
-> +		compatible = "regulator-fixed";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_pcie0_reg>;
-> +		regulator-name = "MPCIE_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
->  	reg_usdhc2_vmmc: regulator-usdhc2 {
->  		compatible = "regulator-fixed";
->  		pinctrl-names = "default";
-> @@ -289,6 +307,30 @@ pca6416: gpio@20 {
->  	};
->  };
->  
-> +&pcie_phy {
-> +	fsl,refclk-pad-mode = <IMX8_PCIE_REFCLK_PAD_INPUT>;
-> +	fsl,tx-deemph-gen1 = <0x2d>;
-> +	fsl,tx-deemph-gen2 = <0xf>;
-> +	clocks = <&pcie0_refclk>;
-> +	status = "okay";
-> +};
-> +
-> +&pcie0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pcie0>;
-> +	reset-gpio = <&gpio4 21 GPIO_ACTIVE_LOW>;
-> +	clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>, <&clk IMX8MM_CLK_PCIE1_AUX>,
-> +		 <&pcie0_refclk>;
-> +	clock-names = "pcie", "pcie_aux", "pcie_bus";
-> +	assigned-clocks = <&clk IMX8MM_CLK_PCIE1_AUX>,
-> +			  <&clk IMX8MM_CLK_PCIE1_CTRL>;
-> +	assigned-clock-rates = <10000000>, <250000000>;
-> +	assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_50M>,
-> +				 <&clk IMX8MM_SYS_PLL2_250M>;
-> +	vpcie-supply = <&reg_pcie0>;
-> +	status = "okay";
-> +};
-> +
->  &sai3 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_sai3>;
-> @@ -406,6 +448,19 @@ MX8MM_IOMUXC_I2C3_SDA_I2C3_SDA			0x400001c3
->  		>;
->  	};
->  
-> +	pinctrl_pcie0: pcie0grp {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_I2C4_SCL_PCIE1_CLKREQ_B    0x61
-> +			MX8MM_IOMUXC_SAI2_RXFS_GPIO4_IO21       0x41
-> +		>;
-> +	};
-> +
-> +	pinctrl_pcie0_reg: pcie0reggrp {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_GPIO1_IO05_GPIO1_IO5       0x41
-> +		>;
-> +	};
-> +
->  	pinctrl_pmic: pmicirqgrp {
->  		fsl,pins = <
->  			MX8MM_IOMUXC_GPIO1_IO03_GPIO1_IO3		0x141
-> -- 
-> 2.25.1
-> 
+...where cxl_remove_ep() is a helper that wants to delete ports while
+holding a lock on the host device for that port. That sets up a lockdep
+violation whereby target_list_show() can not rely holding the decoder's
+device lock while walking the target_list. Switch to a dedicated seqlock
+for this purpose.
+
+Reported-by: Ben Widawsky <ben.widawsky@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes in v4:
+- Fix missing unlock in error exit case (Ben)
+
+ drivers/cxl/core/port.c |   30 ++++++++++++++++++++++++------
+ drivers/cxl/cxl.h       |    2 ++
+ 2 files changed, 26 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index f58b2d502ac8..5188d47180f1 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -104,14 +104,11 @@ static ssize_t target_type_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(target_type);
+ 
+-static ssize_t target_list_show(struct device *dev,
+-			       struct device_attribute *attr, char *buf)
++static ssize_t emit_target_list(struct cxl_decoder *cxld, char *buf)
+ {
+-	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+ 	ssize_t offset = 0;
+ 	int i, rc = 0;
+ 
+-	cxl_device_lock(dev);
+ 	for (i = 0; i < cxld->interleave_ways; i++) {
+ 		struct cxl_dport *dport = cxld->target[i];
+ 		struct cxl_dport *next = NULL;
+@@ -127,10 +124,28 @@ static ssize_t target_list_show(struct device *dev,
+ 			break;
+ 		offset += rc;
+ 	}
+-	cxl_device_unlock(dev);
+ 
+ 	if (rc < 0)
+ 		return rc;
++	return offset;
++}
++
++static ssize_t target_list_show(struct device *dev,
++				struct device_attribute *attr, char *buf)
++{
++	struct cxl_decoder *cxld = to_cxl_decoder(dev);
++	ssize_t offset;
++	unsigned int seq;
++	int rc;
++
++	do {
++		seq = read_seqbegin(&cxld->target_lock);
++		rc = emit_target_list(cxld, buf);
++	} while (read_seqretry(&cxld->target_lock, seq));
++
++	if (rc < 0)
++		return rc;
++	offset = rc;
+ 
+ 	rc = sysfs_emit_at(buf, offset, "\n");
+ 	if (rc < 0)
+@@ -494,15 +509,17 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+ 		goto out_unlock;
+ 	}
+ 
++	write_seqlock(&cxld->target_lock);
+ 	for (i = 0; i < cxld->nr_targets; i++) {
+ 		struct cxl_dport *dport = find_dport(port, target_map[i]);
+ 
+ 		if (!dport) {
+ 			rc = -ENXIO;
+-			goto out_unlock;
++			break;
+ 		}
+ 		cxld->target[i] = dport;
+ 	}
++	write_sequnlock(&cxld->target_lock);
+ 
+ out_unlock:
+ 	cxl_device_unlock(&port->dev);
+@@ -543,6 +560,7 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+ 
+ 	cxld->id = rc;
+ 	cxld->nr_targets = nr_targets;
++	seqlock_init(&cxld->target_lock);
+ 	dev = &cxld->dev;
+ 	device_initialize(dev);
+ 	device_set_pm_not_required(dev);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 569cbe7f23d6..47c256ad105f 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -185,6 +185,7 @@ enum cxl_decoder_type {
+  * @interleave_granularity: data stride per dport
+  * @target_type: accelerator vs expander (type2 vs type3) selector
+  * @flags: memory type capabilities and locking
++ * @target_lock: coordinate coherent reads of the target list
+  * @nr_targets: number of elements in @target
+  * @target: active ordered target list in current decoder configuration
+  */
+@@ -199,6 +200,7 @@ struct cxl_decoder {
+ 	int interleave_granularity;
+ 	enum cxl_decoder_type target_type;
+ 	unsigned long flags;
++	seqlock_t target_lock;
+ 	int nr_targets;
+ 	struct cxl_dport *target[];
+ };
+
