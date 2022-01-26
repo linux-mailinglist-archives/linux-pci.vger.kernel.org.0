@@ -2,233 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87ECD49C988
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 13:22:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 493E349CEC2
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 16:40:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241214AbiAZMW4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jan 2022 07:22:56 -0500
-Received: from mga04.intel.com ([192.55.52.120]:5419 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241287AbiAZMWz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Jan 2022 07:22:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643199775; x=1674735775;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vzw5BowU4VGev8ZyHV97rcYvgfUTcpziNuV9o+sLKQM=;
-  b=HB07rv8JsCBaVWPXFBCw4wRxesqcJaAXxhnhXD1RBnyi2xOW+noULhLU
-   Us8zYYxzgdghyecphkIvjdgBRK7a51xB/j2L0vnJBsT/2LbE8JYLZ/Ppj
-   js8MBnpTixf2BBwl6BgPSKs4WMj3mE2TwmYuhxENg5qLEzHcy0gEcPy8v
-   Ht4aFFJ6ve2DYCFh8/7/eKJwmm8huyyONv0b2dfmyEqb9GO4NDiQfLOFb
-   C56DwC3xkHHlUYCcXV1q4ooboIlC/Li7LziuY8DJ1Pzn4+HrpGyoAq+mR
-   k6iymLE3X19IvM8OjXQp+RO/+MRVmgbiXAAE9wVwocTUIh9cIifsSMhel
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="245371420"
-X-IronPort-AV: E=Sophos;i="5.88,318,1635231600"; 
-   d="scan'208";a="245371420"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2022 04:22:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,318,1635231600"; 
-   d="scan'208";a="477466521"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 26 Jan 2022 04:22:53 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nChK8-000LB7-P5; Wed, 26 Jan 2022 12:22:52 +0000
-Date:   Wed, 26 Jan 2022 20:22:45 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:for-linus] BUILD SUCCESS
- c035366d9c9fe48d947ee6c43465ab43d42e20f2
-Message-ID: <61f13d15.3ulHB20FZiQQGkBX%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S242916AbiAZPkT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jan 2022 10:40:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243019AbiAZPkQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 26 Jan 2022 10:40:16 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1A2C06161C;
+        Wed, 26 Jan 2022 07:40:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9ECB46194F;
+        Wed, 26 Jan 2022 15:40:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1864C340E3;
+        Wed, 26 Jan 2022 15:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643211615;
+        bh=07/MIz8fKzhFCCwBfpvqCou3XnqmFxByCSYEulgW10Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XptR4jlYs3Qr0ObepVT4rVv9NF1gMCB3lwPa04JnyftMfCmJCVczvxA2AJphqNrfx
+         gll2dSP1hFbsupvnvp5ToX7/OpFyvlQ/QZyttGXDbTUVVUVS7opmZTtx1wS4MOodXj
+         HCIzGoAWCcJvqmmdvxH0wjIZOgNBQWhjg4p91E+iuf4V0NEhSq0nHxQsxw53/xkp6i
+         og5yltCoFP0kzR6FBDv0bnRyXJzwHjTBwh+u2OUCPEJ2DhpEr02JD1EaJ63i7JqMiv
+         R9O4+5dXGKYHcCHAh+Z97x8rNTw0AYAVTVtr3i/xgqtayUC6Dhh0A1pQzHdXmUFyEe
+         L01xklJmtuHwg==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-ia64@vger.kernel.org, x86@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Subject: [PATCH v1] PCI/sysfs: Find shadow ROM before static attribute initialization
+Date:   Wed, 26 Jan 2022 09:40:01 -0600
+Message-Id: <20220126154001.16895-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: c035366d9c9fe48d947ee6c43465ab43d42e20f2  PCI: mt7621: Remove unused function pcie_rmw()
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-elapsed time: 725m
+Ville reported that the sysfs "rom" file for VGA devices disappeared after
+527139d738d7 ("PCI/sysfs: Convert "rom" to static attribute").
 
-configs tested: 159
-configs skipped: 3
+Prior to 527139d738d7, FINAL fixups, including pci_fixup_video() where we
+find shadow ROMs, were run before pci_create_sysfs_dev_files() created the
+sysfs "rom" file.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+After 527139d738d7, "rom" is a static attribute and is created before FINAL
+fixups are run, so we didn't create "rom" files for shadow ROMs:
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-i386                 randconfig-c001-20220124
-m68k                             allmodconfig
-powerpc                          allmodconfig
-m68k                             allyesconfig
-powerpc                          allyesconfig
-s390                             allmodconfig
-s390                             allyesconfig
-powerpc              randconfig-c003-20220124
-arm                            hisi_defconfig
-sh                            hp6xx_defconfig
-sh                           se7206_defconfig
-powerpc                     redwood_defconfig
-arm                        spear6xx_defconfig
-powerpc                mpc7448_hpc2_defconfig
-powerpc                    sam440ep_defconfig
-h8300                       h8s-sim_defconfig
-sh                         ap325rxa_defconfig
-powerpc                         ps3_defconfig
-nios2                            alldefconfig
-sh                 kfr2r09-romimage_defconfig
-sh                          urquell_defconfig
-mips                         cobalt_defconfig
-mips                            ar7_defconfig
-mips                        vocore2_defconfig
-arm                      jornada720_defconfig
-mips                         db1xxx_defconfig
-xtensa                  audio_kc705_defconfig
-sh                           se7780_defconfig
-mips                         rt305x_defconfig
-arm                        mini2440_defconfig
-ia64                             alldefconfig
-arc                        nsimosci_defconfig
-sh                           se7724_defconfig
-arm                       aspeed_g5_defconfig
-mips                           xway_defconfig
-arc                          axs101_defconfig
-arm                          gemini_defconfig
-arm                     eseries_pxa_defconfig
-arc                        nsim_700_defconfig
-sh                         apsh4a3a_defconfig
-um                               alldefconfig
-sh                           se7721_defconfig
-powerpc                     tqm8541_defconfig
-openrisc                            defconfig
-i386                                defconfig
-arm                            zeus_defconfig
-nios2                         10m50_defconfig
-powerpc                 mpc834x_mds_defconfig
-sh                          sdk7780_defconfig
-arc                            hsdk_defconfig
-mips                  decstation_64_defconfig
-xtensa                           alldefconfig
-arc                                 defconfig
-powerpc                       ppc64_defconfig
-mips                            gpr_defconfig
-mips                      fuloong2e_defconfig
-sh                          landisk_defconfig
-arm                           stm32_defconfig
-arm                  randconfig-c002-20220124
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a002-20220124
-x86_64               randconfig-a003-20220124
-x86_64               randconfig-a001-20220124
-x86_64               randconfig-a004-20220124
-x86_64               randconfig-a005-20220124
-x86_64               randconfig-a006-20220124
-i386                 randconfig-a002-20220124
-i386                 randconfig-a005-20220124
-i386                 randconfig-a003-20220124
-i386                 randconfig-a004-20220124
-i386                 randconfig-a001-20220124
-i386                 randconfig-a006-20220124
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+  acpi_pci_root_add
+    ...
+      pci_scan_single_device
+        pci_device_add
+          pci_fixup_video                    # <-- new HEADER fixup
+          device_add
+            ...
+              if (grp->is_visible())
+                pci_dev_rom_attr_is_visible  # after 527139d738d7
+    pci_bus_add_devices
+      pci_bus_add_device
+        pci_fixup_device(pci_fixup_final)
+          pci_fixup_video                    # <-- previous FINAL fixup
+        pci_create_sysfs_dev_files
+          if (pci_resource_len(pdev, PCI_ROM_RESOURCE))
+            sysfs_create_bin_file("rom")     # before 527139d738d7
 
-clang tested configs:
-arm                  randconfig-c002-20220124
-riscv                randconfig-c006-20220124
-i386                 randconfig-c001-20220124
-powerpc              randconfig-c003-20220124
-mips                 randconfig-c004-20220124
-x86_64               randconfig-c007-20220124
-powerpc                      katmai_defconfig
-powerpc                   lite5200b_defconfig
-arm                           omap1_defconfig
-powerpc                    socrates_defconfig
-arm                         orion5x_defconfig
-powerpc                        fsp2_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64               randconfig-a011-20220124
-x86_64               randconfig-a013-20220124
-x86_64               randconfig-a015-20220124
-x86_64               randconfig-a016-20220124
-x86_64               randconfig-a014-20220124
-x86_64               randconfig-a012-20220124
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                 randconfig-a011-20220124
-i386                 randconfig-a016-20220124
-i386                 randconfig-a013-20220124
-i386                 randconfig-a014-20220124
-i386                 randconfig-a015-20220124
-i386                 randconfig-a012-20220124
-riscv                randconfig-r042-20220124
-hexagon              randconfig-r045-20220124
-hexagon              randconfig-r041-20220124
-hexagon              randconfig-r045-20220125
-hexagon              randconfig-r041-20220125
-riscv                randconfig-r042-20220126
-hexagon              randconfig-r045-20220126
-hexagon              randconfig-r041-20220126
+Change pci_fixup_video() to be a HEADER fixup so it runs before sysfs
+static attributes are initialized.
 
+Rename the Loongson pci_fixup_radeon() to pci_fixup_video() and make its
+dmesg logging identical to the others since it is doing the same job.
+
+Fixes: 527139d738d7 ("PCI/sysfs: Convert "rom" to static attribute")
+Link: https://lore.kernel.org/r/YbxqIyrkv3GhZVxx@intel.com
+Reported-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Tested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Krzysztof Wilczyński <kw@linux.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ arch/ia64/pci/fixup.c              | 4 ++--
+ arch/mips/loongson64/vbios_quirk.c | 9 ++++-----
+ arch/x86/pci/fixup.c               | 4 ++--
+ 3 files changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/arch/ia64/pci/fixup.c b/arch/ia64/pci/fixup.c
+index acb55a41260d..2bcdd7d3a1ad 100644
+--- a/arch/ia64/pci/fixup.c
++++ b/arch/ia64/pci/fixup.c
+@@ -76,5 +76,5 @@ static void pci_fixup_video(struct pci_dev *pdev)
+ 		}
+ 	}
+ }
+-DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_ANY_ID, PCI_ANY_ID,
+-				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_video);
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID,
++			       PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_video);
+diff --git a/arch/mips/loongson64/vbios_quirk.c b/arch/mips/loongson64/vbios_quirk.c
+index 9a29e94d3db1..3115d4de982c 100644
+--- a/arch/mips/loongson64/vbios_quirk.c
++++ b/arch/mips/loongson64/vbios_quirk.c
+@@ -3,7 +3,7 @@
+ #include <linux/pci.h>
+ #include <loongson.h>
+ 
+-static void pci_fixup_radeon(struct pci_dev *pdev)
++static void pci_fixup_video(struct pci_dev *pdev)
+ {
+ 	struct resource *res = &pdev->resource[PCI_ROM_RESOURCE];
+ 
+@@ -22,8 +22,7 @@ static void pci_fixup_radeon(struct pci_dev *pdev)
+ 	res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
+ 		     IORESOURCE_PCI_FIXED;
+ 
+-	dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
+-		 PCI_ROM_RESOURCE, res);
++	dev_info(&pdev->dev, "Video device with shadowed ROM at %pR\n", res);
+ }
+-DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, 0x9615,
+-				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_ATI, 0x9615,
++			       PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_video);
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index 2edd86649468..615a76d70019 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -353,8 +353,8 @@ static void pci_fixup_video(struct pci_dev *pdev)
+ 		}
+ 	}
+ }
+-DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_ANY_ID, PCI_ANY_ID,
+-				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_video);
++DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID,
++			       PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_video);
+ 
+ 
+ static const struct dmi_system_id msi_k8t_dmi_table[] = {
+-- 
+2.25.1
+
