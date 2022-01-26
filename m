@@ -2,44 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FCB749C304
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 06:24:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85C9949C306
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Jan 2022 06:24:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229691AbiAZFYG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 26 Jan 2022 00:24:06 -0500
-Received: from mga11.intel.com ([192.55.52.93]:26029 "EHLO mga11.intel.com"
+        id S232621AbiAZFYK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 26 Jan 2022 00:24:10 -0500
+Received: from mga18.intel.com ([134.134.136.126]:20239 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232517AbiAZFYG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 26 Jan 2022 00:24:06 -0500
+        id S232517AbiAZFYK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 26 Jan 2022 00:24:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643174646; x=1674710646;
+  t=1643174650; x=1674710650;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jikdn5aUxL1fQVhM2z1NpcZFt/8C4df5jyvo0XW+XDA=;
-  b=Bf3Y1+FmdHwgisrDOEs55fkbkBvauK7KfXec0KBZFl/EwY6SUNiSQvqb
-   UG9O0HwqL2LhrRAC4AZioqdiE5HuGF6RLop7+Qk+5I63hJR6AueTj/br6
-   B4NljwH/dfPKa5LFgDSbXNOp97NIn23nh42b99iO64tpQ4DDuRNrNDJ+R
-   6rz5E9uJYkXRDubXKZYjCI1JnlSf5De4FhEMrV2e+J7aNey3Z0yKFOPUX
-   zmbdkhyA4FZCdWzAJJJ5ZJmt6Gb8xdv7PLbo5wdpIMk1W5D+xSXdSVA3M
-   Mw2U7Isj9hk2p5WAf8Omg4k4lKBIANfwLRNGsFPo3Tu/+R+hcVFrYh8Rd
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="244082433"
+  bh=AjJ3jl+UE6FaD8JAG1gG3qC0eTOrRDsTZmi1qCGYjwE=;
+  b=KHO99Lb2os9EEW+fAQufiYUPRTjBV0ekNynrm1mQ9uG80Dl7yDxPEuB2
+   TdXV1KS9JBaGiFV3L2oA+ig8E5Gb5RSxXkzUmrCraasMrCmHI7tBs9aTG
+   3oeUs52zsZwL/eyD4HI95kq+pvP5JjzFVb5+8CgM8YpsWc35EHvhKhN+t
+   /iBTAMtujxxHChZNHzQx7PfjI/g6VDKChvYkfJC8RD8by+yMGCt++rrAX
+   UnoOJkhdNS0IMfJNdNps4P7bxbIcR5EJK5+OTPhhgknhp/luLoTEt/PQR
+   1QC+x10ShAHPdQ4fO0R9UxuV1fGel9pHZ/GfbGKQGIdFsoJSWtW0Ab5v0
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10238"; a="230057652"
 X-IronPort-AV: E=Sophos;i="5.88,316,1635231600"; 
-   d="scan'208";a="244082433"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 21:24:04 -0800
+   d="scan'208";a="230057652"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 21:24:09 -0800
 X-IronPort-AV: E=Sophos;i="5.88,316,1635231600"; 
-   d="scan'208";a="563305708"
+   d="scan'208";a="624728233"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 21:24:04 -0800
-Subject: [PATCH 1/2] cxl/core/port: Fix / relax decoder target enumeration
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 21:24:09 -0800
+Subject: [PATCH 2/2] cxl/core/port: Handle invalid decoders
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     linux-pci@vger.kernel.org, nvdimm@lists.linux.dev,
         ben.widawsky@intel.com
-Date:   Tue, 25 Jan 2022 21:24:04 -0800
-Message-ID: <164317464406.3438644.6609329492458460242.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Tue, 25 Jan 2022 21:24:09 -0800
+Message-ID: <164317464918.3438644.12371149695618136198.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164317463887.3438644.4087819721493502301.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164317463887.3438644.4087819721493502301.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -50,44 +50,115 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If the decoder is not presently active the target_list may not be
-accurate. Perform a best effort mapping and assume that it will be fixed
-up when the decoder is enabled.
+In case init_hdm_decoder() finds invalid settings, skip to the next
+valid decoder. Only fail port enumeration if zero valid decoders are
+found. This protects the driver init against broken hardware and / or
+future interleave capabilities.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/acpi.c      |    2 +-
- drivers/cxl/core/port.c |    5 ++++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/cxl/core/hdm.c |   36 ++++++++++++++++++++++++++++++------
+ 1 file changed, 30 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index df6691d0a6d0..f64d98bfcb3b 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -15,7 +15,7 @@
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index c966ab0d51fe..4955ba16c9c8 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -150,8 +150,8 @@ static int to_interleave_ways(u32 ctrl)
+ 	}
+ }
  
- static unsigned long cfmws_to_decoder_flags(int restrictions)
+-static void init_hdm_decoder(struct cxl_decoder *cxld, int *target_map,
+-			     void __iomem *hdm, int which)
++static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
++			    int *target_map, void __iomem *hdm, int which)
  {
--	unsigned long flags = 0;
-+	unsigned long flags = CXL_DECODER_F_ENABLE;
+ 	u64 size, base;
+ 	u32 ctrl;
+@@ -167,6 +167,11 @@ static void init_hdm_decoder(struct cxl_decoder *cxld, int *target_map,
  
- 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_TYPE2)
- 		flags |= CXL_DECODER_F_TYPE2;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 224a4853a33e..e75e0d4fb894 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1263,8 +1263,11 @@ int cxl_decoder_add_locked(struct cxl_decoder *cxld, int *target_map)
- 	port = to_cxl_port(cxld->dev.parent);
- 	if (!is_endpoint_decoder(dev)) {
- 		rc = decoder_populate_targets(cxld, port, target_map);
--		if (rc)
-+		if (rc && (cxld->flags & CXL_DECODER_F_ENABLE)) {
-+			dev_err(&port->dev,
-+				"Failed to populate active decoder targets\n");
- 			return rc;
+ 	if (!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED))
+ 		size = 0;
++	if (base == U64_MAX || size == U64_MAX) {
++		dev_warn(&port->dev, "decoder%d.%d: Invalid resource range\n",
++			 port->id, cxld->id);
++		return -ENXIO;
++	}
+ 
+ 	cxld->decoder_range = (struct range) {
+ 		.start = base,
+@@ -180,6 +185,12 @@ static void init_hdm_decoder(struct cxl_decoder *cxld, int *target_map,
+ 			cxld->flags |= CXL_DECODER_F_LOCK;
+ 	}
+ 	cxld->interleave_ways = to_interleave_ways(ctrl);
++	if (!cxld->interleave_ways) {
++		dev_warn(&port->dev,
++			 "decoder%d.%d: Invalid interleave ways (ctrl: %#x)\n",
++			 port->id, cxld->id, ctrl);
++		return -ENXIO;
++	}
+ 	cxld->interleave_granularity = to_interleave_granularity(ctrl);
+ 
+ 	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl))
+@@ -188,12 +199,14 @@ static void init_hdm_decoder(struct cxl_decoder *cxld, int *target_map,
+ 		cxld->target_type = CXL_DECODER_ACCELERATOR;
+ 
+ 	if (is_cxl_endpoint(to_cxl_port(cxld->dev.parent)))
+-		return;
++		return 0;
+ 
+ 	target_list.value =
+ 		ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+ 	for (i = 0; i < cxld->interleave_ways; i++)
+ 		target_map[i] = target_list.target_id[i];
++
++	return 0;
+ }
+ 
+ /**
+@@ -204,7 +217,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+ {
+ 	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
+ 	struct cxl_port *port = cxlhdm->port;
+-	int i, committed;
++	int i, committed, failed;
+ 	u32 ctrl;
+ 
+ 	/*
+@@ -224,7 +237,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+ 	if (committed != cxlhdm->decoder_count)
+ 		msleep(20);
+ 
+-	for (i = 0; i < cxlhdm->decoder_count; i++) {
++	for (i = 0, failed = 0; i < cxlhdm->decoder_count; i++) {
+ 		int target_map[CXL_DECODER_MAX_INTERLEAVE] = { 0 };
+ 		int rc, target_count = cxlhdm->target_count;
+ 		struct cxl_decoder *cxld;
+@@ -239,7 +252,13 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+ 			return PTR_ERR(cxld);
+ 		}
+ 
+-		init_hdm_decoder(cxld, target_map, cxlhdm->regs.hdm_decoder, i);
++		rc = init_hdm_decoder(port, cxld, target_map,
++				      cxlhdm->regs.hdm_decoder, i);
++		if (rc) {
++			put_device(&cxld->dev);
++			failed++;
++			continue;
 +		}
+ 		rc = add_hdm_decoder(port, cxld, target_map);
+ 		if (rc) {
+ 			dev_warn(&port->dev,
+@@ -248,6 +267,11 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
+ 		}
  	}
  
- 	rc = dev_set_name(dev, "decoder%d.%d", port->id, cxld->id);
++	if (failed == cxlhdm->decoder_count) {
++		dev_err(&port->dev, "No valid decoders found\n");
++		return -ENXIO;
++	}
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_decoders, CXL);
 
