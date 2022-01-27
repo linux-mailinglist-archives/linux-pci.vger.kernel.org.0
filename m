@@ -2,154 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94FB049EE0C
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 23:26:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98FA149EE15
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 23:29:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239804AbiA0W0p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jan 2022 17:26:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbiA0W0p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 17:26:45 -0500
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 156DCC061714
-        for <linux-pci@vger.kernel.org>; Thu, 27 Jan 2022 14:26:45 -0800 (PST)
-Received: by mail-qk1-x734.google.com with SMTP id w8so3965611qkw.8
-        for <linux-pci@vger.kernel.org>; Thu, 27 Jan 2022 14:26:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mFJYwHho4FfiR59k7zwtTLakJoJ7lquDQcT100wA/fo=;
-        b=rpfrv8BDIFTyw0uXk3zhjbYHebBePgDawS9sfK5yt/3wAcmbth4KY/h1zZYsTsLmfN
-         fgtl4SHqwhNnU1VpfET/gxU+KeCIQuY2bY5tL049r02z/HXrI9EVe8pEkqCaOH7+l5iP
-         MYM+4Ja/dB8RlQxMxP38UuFeP/X7Crbu69hVCO8cZExf21rOYU9+cdei7iXGuvusrtum
-         629IrQY7wICIsgR94zbqAfNcOYwhKLk2SiOWNK6dOdtXsFIyz1nRbN322w3uSxtkSFsd
-         AZHE+HjNKiIvU3wrfthwQ3i2Vtr4Rt93scHtFCDroNqbQvLrAzI9XLMuhIo2xo0ZGpo6
-         DTpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mFJYwHho4FfiR59k7zwtTLakJoJ7lquDQcT100wA/fo=;
-        b=jMnak/zxT+1HZv5ezHuqN0Fzf8gmVcvmV9Ok2U5boR6WyySl4oFRLPtm10ya3sciqu
-         cWxVFSXsPeWe9hzosbVu18ONWoBGRzGIidEz2/oh2P1mqXZOk99gpCkPvK9+qVkCGH9O
-         tykYgoedfdrMIf3WhYUjdRqxfl3u0itcExEjwTR7ok7a9QzJYKmnjfI5Pzm2axagv/2v
-         RPu6OqgGKfiF/iVK8c8Y8qow/owDqi68kPLA/4+1/uhc/HnlLntJvgomXrnYpd7C60NK
-         z5bft6PeRCOQj8kjjx/SgUXHEDIAOPhJPzz7wtYGeKFWPfQfLlfahU8o693hrKIc/bZh
-         25eA==
-X-Gm-Message-State: AOAM533bop3QptXuFru1KsXT42Z4q1YM5Q4e1PJlN/8CX7bs0iLwM8hC
-        gXFPn0lqyGsjpdiMPuoIzCOcp/A4rKN39z2ww0DPzg==
-X-Google-Smtp-Source: ABdhPJw5njHZn9FdtZ7mxK8u3dwjXowY9Gof5xx3mkPvo9kuP+l1BjCpbeMiOIXIS+bJzJ/qZ3NllMmkXJSqHlH+YyA=
-X-Received: by 2002:a05:620a:103c:: with SMTP id a28mr4056658qkk.413.1643322403889;
- Thu, 27 Jan 2022 14:26:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20220120000409.2706549-1-rajatja@google.com> <20220121214117.GA1154852@bhelgaas>
- <Ye5GvQbFKo+CFtRb@lahna> <Ye/X7E2dKb+zem34@lahna> <Ye/btvA1rLB2rp02@kroah.com>
- <Ye/zTHR5aCG58z87@lahna> <CAJZ5v0gitdeEAxcgSoB1=VHA9FnRdCtmUqA_cN_f1a2yFRDghQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gitdeEAxcgSoB1=VHA9FnRdCtmUqA_cN_f1a2yFRDghQ@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 27 Jan 2022 14:26:07 -0800
-Message-ID: <CACK8Z6H2DLTJgxgS3pcvfOh=5S8cxEMKvwEPfB9zoVf1g2H_UQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: ACPI: Allow internal devices to be marked as untrusted
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Len Brown <lenb@kernel.org>,
+        id S242107AbiA0W3y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jan 2022 17:29:54 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:43052 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240302AbiA0W3y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 17:29:54 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E8D0661BE7;
+        Thu, 27 Jan 2022 22:29:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0079DC340E4;
+        Thu, 27 Jan 2022 22:29:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643322593;
+        bh=2A1Qz0GfrPyGcogA96dHYkOffh2OD1gRCsT/yYZhCRw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WQDfuj+H1ddbhDrcKs5pElGAYXWaeV06tQuylU55u+ZXetQSTaH8GNhDgqSeyv9dG
+         2BfJwtJeTHLIylQkV5XAMMUYputYwpNQufwX+3p1Ip34ztsx9gcIH+qv6MVEo4w7Up
+         WCWDW+fUulV6sP0rZVk5O8FB+qLVkSh6B85GivODMTnfDyK4rQ55BPIt3xxBriQpUI
+         Nwxp6yBDM41a40bb6L2hd5btFdA/Nh5uu5bvtmhBNhFBvFOhDaJZEgO6OYuLzm4Q6g
+         rsT0PjdG9xShjFKzUFEUEWzDJyUZfYGI4BTEqoWF67vVKRpFu0L7JDT502XCFPn+SQ
+         6jrLkM0+THcXg==
+Date:   Thu, 27 Jan 2022 16:29:51 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Christian Gmeiner <christian.gmeiner@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Pavel Machek <pavel@denx.de>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] Revert "PCI: j721e: Drop redundant struct device *"
+Message-ID: <20220127222951.GA144828@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220124122132.435743-1-christian.gmeiner@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Rafael, Bjorn, Mika, Dmitry, Greg,
+On Mon, Jan 24, 2022 at 01:21:22PM +0100, Christian Gmeiner wrote:
+> This reverts commit 19e863828acf6d8ac8475ba1fd93c0fe17fdc4ef.
+> 
+> Fixes the following oops:
+>  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
 
-Thanks a lot for your comments.
+Hi Christian,
 
-On Tue, Jan 25, 2022 at 6:45 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Jan 25, 2022 at 1:55 PM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > On Tue, Jan 25, 2022 at 12:15:02PM +0100, Greg Kroah-Hartman wrote:
-> > > On Tue, Jan 25, 2022 at 12:58:52PM +0200, Mika Westerberg wrote:
-> > > > On Mon, Jan 24, 2022 at 08:27:17AM +0200, Mika Westerberg wrote:
-> > > > > > > This patch introduces a new "UntrustedDevice" property that can be used
-> > > > > > > by the firmware to mark any device as untrusted.
-> > > > >
-> > > > > I think this new property should be documented somewhere too (also
-> > > > > explain when to use it instead of ExternalFacingPort). If not in the
-> > > > > next ACPI spec or some supplemental doc then perhaps in the DT bindings
-> > > > > under Documentation/devicetree/bindings.
-> > > >
-> > > > Actually Microsoft has similar already:
-> > > >
-> > > > https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-internal-pcie-ports-accessible-to-users-and-requiring-dma-protection
-> > > >
-> > > > I think we should use that too here.
+Would you mind trying this patch?
 
-But because this property also applies to a root port (only), it only
-helps if the device is downstream a PCIe root port. In our case, we
-have an internal (wifi) device 00:14.3 (sits on the internal PCI bus
-0), so cannot use this.
+commit 9d36a93af8fe ("PCI: j721e: Initialize pcie->cdns_pcie before using it")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Thu Jan 27 15:49:49 2022 -0600
 
-> > >
-> > > But we do not have "dma protection" for Linux, so how will that value
-> > > make sense?
-> >
-> > Yes I think we do - IOMMU. That's the same thing what we do now for
-> > "External Facing Ports". This one just is for internal ones.
-> >
-> > > And shouldn't this be an ACPI standard?
-> >
-> > Probably should or some supplemental doc but not sure how easy these
-> > "properties" can be added there to be honest.
+    PCI: j721e: Initialize pcie->cdns_pcie before using it
+    
+    Christian reported a NULL pointer dereference in j721e_pcie_probe() caused
+    by 19e863828acf ("PCI: j721e: Drop redundant struct device *"), which
+    removed struct j721e_pcie.dev since there's another copy in struct
+    cdns_pcie.dev reachable via j721e_pcie->cdns_pcie->dev.
+    
+    The problem is that j721e_pcie->cdns_pcie was dereferenced before being
+    initialized:
+    
+      j721e_pcie_probe
+        pcie = devm_kzalloc()             # struct j721e_pcie
+        j721e_pcie_ctrl_init(pcie)
+          dev = pcie->cdns_pcie->dev      <-- dereference cdns_pcie
+        switch (mode) {
+        case PCI_MODE_RC:
+          cdns_pcie = ...                 # alloc as part of pci_host_bridge
+          pcie->cdns_pcie = cdns_pcie     <-- initialize pcie->cdns_pcie
+    
+    Initialize pcie->cdns_pcie before it is used.
+    
+    Fixes: 19e863828acf ("PCI: j721e: Drop redundant struct device *")
+    Reported-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+    Link: https://lore.kernel.org/r/20220124122132.435743-1-christian.gmeiner@gmail.com
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-AIUI, the principal comment I have received here is that this property
-needs to be documented somewhere. I agree.
-
-Rafael, do you know if this new property can be added to the ACPI
-spec, and if so, how to do so? I'm happy to initiate a process if
-someone can point me to, I just hope that publishing a new property to
-the ACPI does not have to block this patch.
-
-The other option I was thinking of was to use the same property name
-(say "untrusted-device") for both ACPI and device tree platforms, and
-document it in Documentation/devicetree/bindings/pci/pci.txt along
-with others. Since there are other properties there that seem to be
-used similarly (Mika highlighted some below), perhaps that is an
-acceptable solution?
-
-I had one last question on the property name itself. I was trying to
-understand why a property might have 2 names i.e. "external-facing"
-for DT and "ExternalFacingPort" in ACPI? Are there any naming
-convention requirements that require ACPI and DT property names to be
-different? Is "untrusted-device" an acceptable ACPI property name?
-
-Thanks & Best Regards,
-
-Rajat
-
-> >
-> > Some of these that we use in Linux too are from that same page:
-> >
-> > https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
-> >
-> > Namely these: HotPlugSupportInD3, ExternalFacingPort, usb4-host-interface,
-> > usb4-port-number and StorageD3Enable.
->
-> Right.
->
-> We are kind of on the receiving end here, because at the time we learn
-> about these things the decisions to use them have been made already.
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index 489586a4cdc7..5d950c1d9fd0 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -372,10 +372,48 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 
+ 	mode = (u32)data->mode;
+ 
++	switch (mode) {
++	case PCI_MODE_RC:
++		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_HOST))
++			return -ENODEV;
++
++		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
++		if (!bridge)
++			return -ENOMEM;
++
++		if (!data->byte_access_allowed)
++			bridge->ops = &cdns_ti_pcie_host_ops;
++		rc = pci_host_bridge_priv(bridge);
++		rc->quirk_retrain_flag = data->quirk_retrain_flag;
++		rc->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
++
++		cdns_pcie = &rc->pcie;
++		break;
++	case PCI_MODE_EP:
++		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_EP))
++			return -ENODEV;
++
++		ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
++		if (!ep)
++			return -ENOMEM;
++
++		ep->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
++
++		cdns_pcie = &ep->pcie;
++		break;
++	default:
++		dev_err(dev, "INVALID device type %d\n", mode);
++		return 0;
++	}
++
++	cdns_pcie->dev = dev;
++	cdns_pcie->ops = &j721e_pcie_ops;
++
+ 	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+ 	if (!pcie)
+ 		return -ENOMEM;
+ 
++	pcie->cdns_pcie = cdns_pcie;
+ 	pcie->mode = mode;
+ 	pcie->linkdown_irq_regfield = data->linkdown_irq_regfield;
+ 
+@@ -426,28 +464,6 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 
+ 	switch (mode) {
+ 	case PCI_MODE_RC:
+-		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_HOST)) {
+-			ret = -ENODEV;
+-			goto err_get_sync;
+-		}
+-
+-		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
+-		if (!bridge) {
+-			ret = -ENOMEM;
+-			goto err_get_sync;
+-		}
+-
+-		if (!data->byte_access_allowed)
+-			bridge->ops = &cdns_ti_pcie_host_ops;
+-		rc = pci_host_bridge_priv(bridge);
+-		rc->quirk_retrain_flag = data->quirk_retrain_flag;
+-		rc->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
+-
+-		cdns_pcie = &rc->pcie;
+-		cdns_pcie->dev = dev;
+-		cdns_pcie->ops = &j721e_pcie_ops;
+-		pcie->cdns_pcie = cdns_pcie;
+-
+ 		gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+ 		if (IS_ERR(gpiod)) {
+ 			ret = PTR_ERR(gpiod);
+@@ -497,23 +513,6 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 
+ 		break;
+ 	case PCI_MODE_EP:
+-		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_EP)) {
+-			ret = -ENODEV;
+-			goto err_get_sync;
+-		}
+-
+-		ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+-		if (!ep) {
+-			ret = -ENOMEM;
+-			goto err_get_sync;
+-		}
+-		ep->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
+-
+-		cdns_pcie = &ep->pcie;
+-		cdns_pcie->dev = dev;
+-		cdns_pcie->ops = &j721e_pcie_ops;
+-		pcie->cdns_pcie = cdns_pcie;
+-
+ 		ret = cdns_pcie_init_phy(dev, cdns_pcie);
+ 		if (ret) {
+ 			dev_err(dev, "Failed to init phy\n");
+@@ -525,8 +524,6 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 			goto err_pcie_setup;
+ 
+ 		break;
+-	default:
+-		dev_err(dev, "INVALID device type %d\n", mode);
+ 	}
+ 
+ 	return 0;
