@@ -2,83 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8D1D49EA54
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 19:25:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 024E449EC62
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 21:20:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236220AbiA0SZi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jan 2022 13:25:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49318 "EHLO
+        id S232714AbiA0UUG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jan 2022 15:20:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236144AbiA0SZi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 13:25:38 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F7BC061714;
-        Thu, 27 Jan 2022 10:25:38 -0800 (PST)
+        with ESMTP id S231500AbiA0UUG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 15:20:06 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FA5C061714;
+        Thu, 27 Jan 2022 12:20:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D39D661CE5;
-        Thu, 27 Jan 2022 18:25:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4684DC340E8;
-        Thu, 27 Jan 2022 18:25:37 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id C618ACE23A2;
+        Thu, 27 Jan 2022 20:20:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A35C340E4;
+        Thu, 27 Jan 2022 20:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643307937;
-        bh=YT9O/J6APcutEaa2IHsPQh9rsIOe8yDex/CtLoUWWTQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=klIU8qgEVLOl3a6jRI5FM6PL7X6BU02KUVW/txCFAN9cElm3ElINcKkUXkZGccPJU
-         ZbdmaAjN/picjxZXUk3OH+nsCH3Kz2F/C96g5SxtRDLZJ/YiLRm6hzu+grhIIWUHRu
-         CuQfLNfSpfs+/MNQQm+7TCSwojVe/VEs6BvxNx8wMD77jS5bo9mGS335RVBdUmk+LG
-         T59slaqO2Qg7yxQeCx2nrFeZFInZO6VXUfUL/KYWcG8+n5AtfZC8R0Szl8wRSPnFH7
-         zd3ei4fhU+hVVzUijKhWu/HrXhT0m3ER7ke9iZVBZl86MToPxnuIsHeW5Vw7/ulhY3
-         o2W8VKvJhncpg==
-Received: by mail-qt1-f169.google.com with SMTP id y8so3212956qtn.8;
-        Thu, 27 Jan 2022 10:25:37 -0800 (PST)
-X-Gm-Message-State: AOAM532nUQES4KOnfAJrmBopu+MC8A5yzhxepD+lvk9Pj3jb6HACE2fr
-        cVHgC2Crd1OChv4A2/IvqbuDVDNeF4zVSxzJKQ==
-X-Google-Smtp-Source: ABdhPJzEs26uOUlYxkTLdr9JC10p5n/HWaaR4jaj2RGVfimzOa47NGAkfa4zr1/nKHtA7sG9QxdunJEQTH2PnkqSnu8=
-X-Received: by 2002:ac8:7f4d:: with SMTP id g13mr3858178qtk.272.1643307936365;
- Thu, 27 Jan 2022 10:25:36 -0800 (PST)
+        s=k20201202; t=1643314802;
+        bh=jDCjWf6ypNkZuEAsY8LECbP+oIMiPmm168NFCgdTwdU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=swjQYcxVFKi+qB+DFCRTI3l90xXZImd1+2M38FGFoDftL6dEzYwvhKMYtRsvIVvYG
+         qmfbb3TA2FICfTtXet/28HRamaXKwqZAtFYF0cUmqgND5G2R5Qh+H8GRX9jvLB3P/8
+         Tz8W2zQjCOHIwpmtZKkTPtGx40jAiqGBRfjr7bQNuq82V0sAYI7akEtqI9hYDAInB0
+         vk2C+K+ZUdzLnCbE5WwVgTXkXvQKaVJMVsJydnQOTrsVjto36RwGbrvGhMhX8nK86h
+         8zDFyR754IPm+VyF9bODM7QKOAbWNV7irJFfLQy/B9yg28je950rdM6bJtSd2+megp
+         6mvbCXV2uB4cA==
+Date:   Thu, 27 Jan 2022 14:20:00 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     daire.mcnamara@microchip.com
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh@kernel.org,
+        linux-pci@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com,
+        cyril.jean@microchip.com, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v21 3/4] PCI: microchip: Add host driver for Microchip
+ PCIe controller
+Message-ID: <20220127202000.GA126335@bhelgaas>
 MIME-Version: 1.0
-References: <ab490690-eac2-c714-1359-b4058e2f98ff@ti.com> <20220127152333.GA101708@bhelgaas>
-In-Reply-To: <20220127152333.GA101708@bhelgaas>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 27 Jan 2022 12:25:24 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+9aDzexJUaTPCY=SChqC1Ek1xL0qj-CorGjvXk=Sn20w@mail.gmail.com>
-Message-ID: <CAL_Jsq+9aDzexJUaTPCY=SChqC1Ek1xL0qj-CorGjvXk=Sn20w@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: PCI: ti,j721e: Add device id for J721S2
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Aswath Govindraju <a-govindraju@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Nishanth Menon <nm@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210125162934.5335-4-daire.mcnamara@microchip.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 9:24 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Lorenzo, initial post
-> https://lore.kernel.org/r/20211130035608.13492-1-a-govindraju@ti.com]
->
-> On Tue, Jan 25, 2022 at 12:06:16PM +0530, Aswath Govindraju wrote:
-> > On 30/11/21 9:26 am, Aswath Govindraju wrote:
-> > > Document the device id of J721S2 SoC.
-> > >
-> > > Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
-> > > ---
-> > >
-> >
-> > May I know if this patch can be picked up?
->
-> "git log Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml"
-> says most changes to this file have been applied by Lorenzo, so I cc'd
-> him.
+[+cc Marc]
 
-I can take it if there's not other pending changes to this file for 5.18?
+On Mon, Jan 25, 2021 at 04:29:33PM +0000, daire.mcnamara@microchip.com wrote:
+> From: Daire McNamara <daire.mcnamara@microchip.com>
+> 
+> Add support for the Microchip PolarFire PCIe controller when
+> configured in host (Root Complex) mode.
 
-Rob
+> +static void mc_handle_msi(struct irq_desc *desc)
+> +{
+> +	struct mc_port *port = irq_desc_get_handler_data(desc);
+> +	struct device *dev = port->dev;
+> +	struct mc_msi *msi = &port->msi;
+> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	unsigned long status;
+> +	u32 bit;
+> +	u32 virq;
+> +
+> +	status = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
+> +	if (status & PM_MSI_INT_MSI_MASK) {
+> +		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
+> +		for_each_set_bit(bit, &status, msi->num_vectors) {
+> +			virq = irq_find_mapping(msi->dev_domain, bit);
+> +			if (virq)
+> +				generic_handle_irq(virq);
+> +			else
+> +				dev_err_ratelimited(dev, "bad MSI IRQ %d\n", bit);
+> +		}
+> +	}
+> +}
+> +
+> +static void mc_msi_bottom_irq_ack(struct irq_data *data)
+> +{
+> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
+> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+> +	u32 bitpos = data->hwirq;
+> +	unsigned long status;
+> +
+> +	writel_relaxed(BIT(bitpos), bridge_base_addr + ISTATUS_MSI);
+> +	status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
+> +	if (!status)
+> +		writel_relaxed(BIT(PM_MSI_INT_MSI_SHIFT), bridge_base_addr + ISTATUS_LOCAL);
+
+This looks like it might be racy.  What happens if we read 0 from
+ISTATUS_MSI, but a new MSI is latched before we write ISTATUS_LOCAL?
+
+Will mc_handle_msi() be called?  If so, will PM_MSI_INT_MSI_MASK be
+set in the value it reads from ISTATUS_LOCAL?
+
+Current code at:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-microchip-host.c?id=v5.17-rc1#n406
