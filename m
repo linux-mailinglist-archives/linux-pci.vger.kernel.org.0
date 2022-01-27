@@ -2,98 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BE3A49E592
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 16:16:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D88F49E5EE
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 16:23:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242713AbiA0PQe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jan 2022 10:16:34 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:37272 "EHLO
+        id S235043AbiA0PXg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jan 2022 10:23:36 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:41210 "EHLO
         dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231149AbiA0PQd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 10:16:33 -0500
+        with ESMTP id S231421AbiA0PXf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 10:23:35 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F15960C44;
-        Thu, 27 Jan 2022 15:16:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A4C8C340E4;
-        Thu, 27 Jan 2022 15:16:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D19061356;
+        Thu, 27 Jan 2022 15:23:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A227CC340E4;
+        Thu, 27 Jan 2022 15:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643296592;
-        bh=6zdI64JO16o4OH7ihIB0tyhcoVY66C9Jpg96cHbKPds=;
+        s=k20201202; t=1643297014;
+        bh=y6d+jRTmcap665QuVDISL57EylZTRwEwZaCF30UdSSg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hACrKDFLEvnRX2070s40MHT2rdBP6mAneFCTf5+sefDmyVuNOGFCIC+g+qN1028um
-         /Ibeid44iPpekMbYboRKsakO/x6MVfzNQPdB8yJ8JzSZHsykf5XfI+XmzMPOip4Ju0
-         INLL1ozY5XoDNN765dpagbrWTf0+RrXW5U/q+eEfv1zHAyHfbAD2zItMPuvBXue1T9
-         q7ELjwNJJMEOe7G0mZ3FhoPBZbjGulwhA+2755cC+5ztRRFM22NZkifhGHTmP84frZ
-         IDdxkI2cDy2xYx4dpEivf0rNZ975DUGdHd/fbKBcjeU8R//VHo6dQjRLWNeGX0XY9N
-         9Slo4T7bqdY5g==
-Date:   Thu, 27 Jan 2022 09:16:30 -0600
+        b=Ucqh7UOBNrx25G3/jcxOJOWbfy4xE7btiU2t25yjvEGn6gyMZasO4eLP4OEyvBqvr
+         AZ8+L+XpkLaCDaz9/n9uEcu5BhTQyn68bfBP5/ZwB0FkLyFcPw/WUdueF2PWXffeUb
+         6jJv1ayCvkxsH33r0zJcf5fv5vtWiNx2BU1cePZ8Snu13h+fbf7/x//MXs6CPtfgg2
+         g6bXYnpOKtnDIRfzewKCglNZayydQmA4n4hHxZJITe27GvA9USSsVdRgsHlmnG6G26
+         uT+gKC+vcB0JkTtfhU6h8JrQPdySdmf4RV2QE6XC3vbE1cesvooZAxeul1h3irctND
+         +7PiQISrpQ8ZQ==
+Date:   Thu, 27 Jan 2022 09:23:33 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Bryan O'Donoghue <pure.logic@nexus-software.ie>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] PCI: qcom: add support for IPQ60xx PCIe controller
-Message-ID: <20220127151630.GA100574@bhelgaas>
+To:     Aswath Govindraju <a-govindraju@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Nishanth Menon <nm@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2] dt-bindings: PCI: ti,j721e: Add device id for J721S2
+Message-ID: <20220127152333.GA101708@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8735lc9r9d.fsf@tarshish>
+In-Reply-To: <ab490690-eac2-c714-1359-b4058e2f98ff@ti.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 09:41:45AM +0200, Baruch Siach wrote:
-> On Mon, Jan 24 2022, Bjorn Helgaas wrote:
-> > On Mon, Jan 24, 2022 at 06:27:31PM +0200, Baruch Siach wrote:
+[+cc Lorenzo, initial post
+https://lore.kernel.org/r/20211130035608.13492-1-a-govindraju@ti.com]
 
-> >> +static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
-> >> +{
-> >> +	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-> >> +	struct device *dev = pcie->pci->dev;
-> >> +	int ret;
-> >> +
-> >> +	ret = reset_control_assert(res->rst);
-> >> +	if (ret) {
-> >> +		dev_err(dev, "reset assert failed (%d)\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	usleep_range(2000, 2500);
-> >
-> > Where do these sleep durations come from?  If they're specified
-> > somewhere by PCIe, can you include a citation, e.g., a section number
-> > in the spec.
+On Tue, Jan 25, 2022 at 12:06:16PM +0530, Aswath Govindraju wrote:
+> On 30/11/21 9:26 am, Aswath Govindraju wrote:
+> > Document the device id of J721S2 SoC.
+> > 
+> > Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
+> > ---
+> > 
 > 
-> As I mentioned before, I have no access to hardware documentation. I'm
-> only porting working code from downstream kernel.
+> May I know if this patch can be picked up?
+
+"git log Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml"
+says most changes to this file have been applied by Lorenzo, so I cc'd
+him.
+
+> > changes since v1:
+> > - changed (oneOf, items) into enum
+> > 
+> >  .../devicetree/bindings/pci/ti,j721e-pci-host.yaml   | 12 +++++-------
+> >  1 file changed, 5 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> > index cc900202df29..41df8f1c2d4c 100644
+> > --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> > @@ -64,13 +64,11 @@ properties:
+> >      const: 0x104c
+> >  
+> >    device-id:
+> > -    oneOf:
+> > -      - items:
+> > -          - const: 0xb00d
+> > -      - items:
+> > -          - const: 0xb00f
+> > -      - items:
+> > -          - const: 0xb010
+> > +    enum:
+> > +      - 0xb00d
+> > +      - 0xb00f
+> > +      - 0xb010
+> > +      - 0xb013
+> >    msi-map: true
+> >  
+> > 
 > 
-> In a comment on v4 Bjorn Andersson mentioned "datasheet stating the
-> minimum timing of the operations to be performed to get the PCIe
-> controller into a known (clean) state".
-
-Sorry if I'm repeating questions.  We can help avoid that by adding a
-brief comment here like "black magic copied from working code at X" or
-whatever you *do* know.  Repeated questions are wasted effort for both
-the author and reviewers.
-
-Sleeps with unsourced durations are always suspect because nobody
-wants to wait longer than necessary, and if all we have is a bare
-number and nobody knows how it was derived, we can't be confident
-about changing it.
-
->   https://lore.kernel.org/all/Ydd5Wh0KeADBQ%2Fh1@ripper/
-> 
-> I have no further details.
