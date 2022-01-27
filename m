@@ -2,145 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6716849ED52
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 22:21:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94FB049EE0C
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 23:26:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234874AbiA0VVD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jan 2022 16:21:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33354 "EHLO
+        id S239804AbiA0W0p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jan 2022 17:26:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231293AbiA0VVD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 16:21:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD7BAC061714;
-        Thu, 27 Jan 2022 13:21:02 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6889761AEC;
-        Thu, 27 Jan 2022 21:21:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76F2AC340E4;
-        Thu, 27 Jan 2022 21:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643318461;
-        bh=vEhS+uNe9MbUR6FumfDLesP9xJaTiiHWcuhhBI9N7ng=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IQmm35PUiDv2We4J7ZGC4FxPaSSCGo58PxoDdwdSL0UveVkGmu+yWA/vovPZkqzfZ
-         7JsY/0uKSSAhZxpoi8HO5CAVE2lQkfp49fgLqfDLELm1iOm+AzWBjDolNRFBwNPH1i
-         UQzMNPyE+q5yEzzHh4eFC94y4Dt6Gf1xCdCQlq9BhzLxcIMMRChsOXBoCmRl5ov3zp
-         S0yhkIMouP8saTG2EerbZ+O0XPx4PA5iIjncsOvIJKDW1ZoeYZSgrucqGCZvyJbRy4
-         SDqUAhQaJ9w/SFmZIXbpRl9q6N6Ir++gvJmKBw9O5ygLhJIx0y87ow95C34w8F7Jao
-         i0RRrNzKjWHDA==
-Date:   Thu, 27 Jan 2022 15:21:00 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "qizhong.cheng" <qizhong.cheng@mediatek.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, chuanjia.liu@mediatek.com,
-        Srikanth Thokala <srikanth.thokala@intel.com>,
-        Pratyush Anand <pratyush.anand@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Subject: Re: [PATCH] PCI: mediatek: Change MSI interrupt processing sequence
-Message-ID: <20220127212100.GA102267@bhelgaas>
+        with ESMTP id S229796AbiA0W0p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 17:26:45 -0500
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 156DCC061714
+        for <linux-pci@vger.kernel.org>; Thu, 27 Jan 2022 14:26:45 -0800 (PST)
+Received: by mail-qk1-x734.google.com with SMTP id w8so3965611qkw.8
+        for <linux-pci@vger.kernel.org>; Thu, 27 Jan 2022 14:26:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mFJYwHho4FfiR59k7zwtTLakJoJ7lquDQcT100wA/fo=;
+        b=rpfrv8BDIFTyw0uXk3zhjbYHebBePgDawS9sfK5yt/3wAcmbth4KY/h1zZYsTsLmfN
+         fgtl4SHqwhNnU1VpfET/gxU+KeCIQuY2bY5tL049r02z/HXrI9EVe8pEkqCaOH7+l5iP
+         MYM+4Ja/dB8RlQxMxP38UuFeP/X7Crbu69hVCO8cZExf21rOYU9+cdei7iXGuvusrtum
+         629IrQY7wICIsgR94zbqAfNcOYwhKLk2SiOWNK6dOdtXsFIyz1nRbN322w3uSxtkSFsd
+         AZHE+HjNKiIvU3wrfthwQ3i2Vtr4Rt93scHtFCDroNqbQvLrAzI9XLMuhIo2xo0ZGpo6
+         DTpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mFJYwHho4FfiR59k7zwtTLakJoJ7lquDQcT100wA/fo=;
+        b=jMnak/zxT+1HZv5ezHuqN0Fzf8gmVcvmV9Ok2U5boR6WyySl4oFRLPtm10ya3sciqu
+         cWxVFSXsPeWe9hzosbVu18ONWoBGRzGIidEz2/oh2P1mqXZOk99gpCkPvK9+qVkCGH9O
+         tykYgoedfdrMIf3WhYUjdRqxfl3u0itcExEjwTR7ok7a9QzJYKmnjfI5Pzm2axagv/2v
+         RPu6OqgGKfiF/iVK8c8Y8qow/owDqi68kPLA/4+1/uhc/HnlLntJvgomXrnYpd7C60NK
+         z5bft6PeRCOQj8kjjx/SgUXHEDIAOPhJPzz7wtYGeKFWPfQfLlfahU8o693hrKIc/bZh
+         25eA==
+X-Gm-Message-State: AOAM533bop3QptXuFru1KsXT42Z4q1YM5Q4e1PJlN/8CX7bs0iLwM8hC
+        gXFPn0lqyGsjpdiMPuoIzCOcp/A4rKN39z2ww0DPzg==
+X-Google-Smtp-Source: ABdhPJw5njHZn9FdtZ7mxK8u3dwjXowY9Gof5xx3mkPvo9kuP+l1BjCpbeMiOIXIS+bJzJ/qZ3NllMmkXJSqHlH+YyA=
+X-Received: by 2002:a05:620a:103c:: with SMTP id a28mr4056658qkk.413.1643322403889;
+ Thu, 27 Jan 2022 14:26:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d78b45e461b204d375830217d0d27ffdd97cedd3.camel@mediatek.com>
+References: <20220120000409.2706549-1-rajatja@google.com> <20220121214117.GA1154852@bhelgaas>
+ <Ye5GvQbFKo+CFtRb@lahna> <Ye/X7E2dKb+zem34@lahna> <Ye/btvA1rLB2rp02@kroah.com>
+ <Ye/zTHR5aCG58z87@lahna> <CAJZ5v0gitdeEAxcgSoB1=VHA9FnRdCtmUqA_cN_f1a2yFRDghQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gitdeEAxcgSoB1=VHA9FnRdCtmUqA_cN_f1a2yFRDghQ@mail.gmail.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Thu, 27 Jan 2022 14:26:07 -0800
+Message-ID: <CACK8Z6H2DLTJgxgS3pcvfOh=5S8cxEMKvwEPfB9zoVf1g2H_UQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: ACPI: Allow internal devices to be marked as untrusted
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Pavel Machek <pavel@denx.de>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Srikanth, Pratyush, Thomas, Pali, Ryder, Jianjun]
+Hello Rafael, Bjorn, Mika, Dmitry, Greg,
 
-On Wed, Jan 26, 2022 at 11:37:58AM +0800, qizhong.cheng wrote:
-> On Tue, 2022-01-25 at 17:21 +0000, Marc Zyngier wrote:
-> > On 2022-01-25 16:57, Bjorn Helgaas wrote:
-> > > On Sun, Jan 23, 2022 at 11:33:06AM +0800, qizhong cheng wrote:
-> > > > As an edge-triggered interrupts, its interrupt status should
-> > > > be cleared before dispatch to the handler of device.
-> > > 
-> > > I'm not an IRQ expert, but the reasoning that "we should clear
-> > > the MSI interrupt status before dispatching the handler because
-> > > MSI is an edge-triggered interrupt" doesn't seem completely
-> > > convincing because your code will now look like this:
-> > > 
-> > >   /* Clear the INTx */
-> > >   writel(1 << bit, port->base + PCIE_INT_STATUS);
-> > >   generic_handle_domain_irq(port->irq_domain, bit - INTX_SHIFT);
-> > >   ...
-> > > 
-> > >   /* Clear MSI interrupt status */
-> > >   writel(MSI_STATUS, port->base + PCIE_INT_STATUS);
-> > >   generic_handle_domain_irq(port->inner_domain, bit);
-> > > 
-> > > You clear interrupt status before dispatching the handler for
-> > > *both* level-triggered INTx interrupts and edge-triggered MSI
-> > > interrupts.
-> > > 
-> > > So it doesn't seem that simply being edge-triggered is the
-> > > critical factor here.
-> > 
-> > This is the usual problem with these half-baked implementations.
-> > The signalling to the primary interrupt controller is level, as
-> > they take a multitude of input and (crucially) latch the MSI
-> > edges. Effectively, this is an edge-to-level converter, with all
-> > the problems that this creates.
-> > 
-> > By clearing the status *after* the handling, you lose edges that
-> > have been received and coalesced after the read of the status
-> > register. By clearing it *before*, you are acknowledging the
-> > interrupts early, and allowing them to be coalesced independently
-> > of the ones that have been received earlier.
-> > 
-> > This is however mostly an educated guess. Someone with access to
-> > the TRM should verify this.
-> 
-> Yes, as Maz said, we save the edge-interrupt status so that it
-> becomes a level-interrupt. This is similar to an edge-to-level
-> converter, so we need to clear it *before*. We found this problem
-> through a lot of experiments and tested this patch.
+Thanks a lot for your comments.
 
-I thought there might be other host controllers with similar design,
-so I looked at all the other drivers and tried to figure out whether
-any others had similar problems.
+On Tue, Jan 25, 2022 at 6:45 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Tue, Jan 25, 2022 at 1:55 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > On Tue, Jan 25, 2022 at 12:15:02PM +0100, Greg Kroah-Hartman wrote:
+> > > On Tue, Jan 25, 2022 at 12:58:52PM +0200, Mika Westerberg wrote:
+> > > > On Mon, Jan 24, 2022 at 08:27:17AM +0200, Mika Westerberg wrote:
+> > > > > > > This patch introduces a new "UntrustedDevice" property that can be used
+> > > > > > > by the firmware to mark any device as untrusted.
+> > > > >
+> > > > > I think this new property should be documented somewhere too (also
+> > > > > explain when to use it instead of ExternalFacingPort). If not in the
+> > > > > next ACPI spec or some supplemental doc then perhaps in the DT bindings
+> > > > > under Documentation/devicetree/bindings.
+> > > >
+> > > > Actually Microsoft has similar already:
+> > > >
+> > > > https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-internal-pcie-ports-accessible-to-users-and-requiring-dma-protection
+> > > >
+> > > > I think we should use that too here.
 
-The ones below look suspicious to me because they all clear some sort
-of status register *after* handling an MSI.  Can you guys take a look
-and make sure they are working correctly?
+But because this property also applies to a root port (only), it only
+helps if the device is downstream a PCIe root port. In our case, we
+have an internal (wifi) device 00:14.3 (sits on the internal PCI bus
+0), so cannot use this.
 
-  keembay_pcie_msi_irq_handler
-    status = readl(pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS)
-    if (status & MSI_CTRL_INT)
-      dw_handle_msi_irq
-	generic_handle_domain_irq
-      writel(status, pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS)
+> > >
+> > > But we do not have "dma protection" for Linux, so how will that value
+> > > make sense?
+> >
+> > Yes I think we do - IOMMU. That's the same thing what we do now for
+> > "External Facing Ports". This one just is for internal ones.
+> >
+> > > And shouldn't this be an ACPI standard?
+> >
+> > Probably should or some supplemental doc but not sure how easy these
+> > "properties" can be added there to be honest.
 
-  spear13xx_pcie_irq_handler
-    status = readl(&app_reg->int_sts)
-    if (status & MSI_CTRL_INT)
-      dw_handle_msi_irq
-	generic_handle_domain_irq
-    writel(status, &app_reg->int_clr)
+AIUI, the principal comment I have received here is that this property
+needs to be documented somewhere. I agree.
 
-  advk_pcie_handle_int
-    isr0_status = advk_readl(pcie, PCIE_ISR0_REG)
-    if (isr0_status & PCIE_ISR0_MSI_INT_PENDING)
-      advk_pcie_handle_msi
-        advk_readl(pcie, PCIE_MSI_STATUS_REG)
-	advk_writel(pcie, BIT(msi_idx), PCIE_MSI_STATUS_REG)
-	generic_handle_irq
-	advk_writel(pcie, PCIE_ISR0_MSI_INT_PENDING, PCIE_ISR0_REG)
+Rafael, do you know if this new property can be added to the ACPI
+spec, and if so, how to do so? I'm happy to initiate a process if
+someone can point me to, I just hope that publishing a new property to
+the ACPI does not have to block this patch.
 
-  mtk_pcie_irq_handler
-    status = readl_relaxed(pcie->base + PCIE_INT_STATUS_REG)
-    for_each_set_bit_from(irq_bit, &status, ...)
-      mtk_pcie_msi_handler
-        generic_handle_domain_irq
-      writel_relaxed(BIT(irq_bit), pcie->base + PCIE_INT_STATUS_REG)
+The other option I was thinking of was to use the same property name
+(say "untrusted-device") for both ACPI and device tree platforms, and
+document it in Documentation/devicetree/bindings/pci/pci.txt along
+with others. Since there are other properties there that seem to be
+used similarly (Mika highlighted some below), perhaps that is an
+acceptable solution?
 
-Bjorn
+I had one last question on the property name itself. I was trying to
+understand why a property might have 2 names i.e. "external-facing"
+for DT and "ExternalFacingPort" in ACPI? Are there any naming
+convention requirements that require ACPI and DT property names to be
+different? Is "untrusted-device" an acceptable ACPI property name?
+
+Thanks & Best Regards,
+
+Rajat
+
+> >
+> > Some of these that we use in Linux too are from that same page:
+> >
+> > https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports
+> >
+> > Namely these: HotPlugSupportInD3, ExternalFacingPort, usb4-host-interface,
+> > usb4-port-number and StorageD3Enable.
+>
+> Right.
+>
+> We are kind of on the receiving end here, because at the time we learn
+> about these things the decisions to use them have been made already.
