@@ -2,101 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 024E449EC62
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 21:20:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAB0A49ECD2
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 21:47:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232714AbiA0UUG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jan 2022 15:20:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231500AbiA0UUG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 15:20:06 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FA5C061714;
-        Thu, 27 Jan 2022 12:20:05 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C618ACE23A2;
-        Thu, 27 Jan 2022 20:20:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A35C340E4;
-        Thu, 27 Jan 2022 20:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643314802;
-        bh=jDCjWf6ypNkZuEAsY8LECbP+oIMiPmm168NFCgdTwdU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=swjQYcxVFKi+qB+DFCRTI3l90xXZImd1+2M38FGFoDftL6dEzYwvhKMYtRsvIVvYG
-         qmfbb3TA2FICfTtXet/28HRamaXKwqZAtFYF0cUmqgND5G2R5Qh+H8GRX9jvLB3P/8
-         Tz8W2zQjCOHIwpmtZKkTPtGx40jAiqGBRfjr7bQNuq82V0sAYI7akEtqI9hYDAInB0
-         vk2C+K+ZUdzLnCbE5WwVgTXkXvQKaVJMVsJydnQOTrsVjto36RwGbrvGhMhX8nK86h
-         8zDFyR754IPm+VyF9bODM7QKOAbWNV7irJFfLQy/B9yg28je950rdM6bJtSd2+megp
-         6mvbCXV2uB4cA==
-Date:   Thu, 27 Jan 2022 14:20:00 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     daire.mcnamara@microchip.com
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh@kernel.org,
-        linux-pci@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com,
-        cyril.jean@microchip.com, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v21 3/4] PCI: microchip: Add host driver for Microchip
- PCIe controller
-Message-ID: <20220127202000.GA126335@bhelgaas>
+        id S236736AbiA0UrR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jan 2022 15:47:17 -0500
+Received: from out1.migadu.com ([91.121.223.63]:16820 "EHLO out1.migadu.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235860AbiA0UrQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Jan 2022 15:47:16 -0500
+Message-ID: <154fcaf2-18cd-9ea9-eee2-bc8b8ee3468d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1643316435;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aAb/EfwgYZCTrUmAlHlukJV3yahEfNUaFOpCLo5BrBU=;
+        b=u06LBlnL162q43KpbpkUBpWhM+yjvdmHQMQgUpacsgXmfL/QnZJakleMmjBIKCWTw/M/em
+        64lQjhC/vkpevJ3UD6hnuNeqpE/iblb0DfVDo8tlM6ZAiPtew9APS3UTfYb3kBCtBnDT3o
+        JXPQNWHt7bNzxkPBB4+FnXVP/s+7YnM=
+Date:   Thu, 27 Jan 2022 13:47:08 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210125162934.5335-4-daire.mcnamara@microchip.com>
+Subject: Re: [Bug 215525] New: HotPlug does not work on upstream kernel
+ 5.17.0-rc1
+Content-Language: en-US
+To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Blazej Kucman <blazej.kucman@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Naveen Naidu <naveennaidu479@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>
+References: <bug-215525-41252@https.bugzilla.kernel.org/>
+ <20220124214635.GA1553164@bhelgaas> <20220127154615.00003df8@linux.intel.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Jonathan Derrick <jonathan.derrick@linux.dev>
+In-Reply-To: <20220127154615.00003df8@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
+X-Migadu-Auth-User: linux.dev
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Marc]
 
-On Mon, Jan 25, 2021 at 04:29:33PM +0000, daire.mcnamara@microchip.com wrote:
-> From: Daire McNamara <daire.mcnamara@microchip.com>
+
+On 1/27/2022 7:46 AM, Mariusz Tkaczyk wrote:
+> On Mon, 24 Jan 2022 15:46:35 -0600
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
 > 
-> Add support for the Microchip PolarFire PCIe controller when
-> configured in host (Root Complex) mode.
+>> [+cc linux-pci, Hans, Lukas, Naveen, Keith, Nirmal, Jonathan]
+>>
+>> On Mon, Jan 24, 2022 at 11:46:14AM +0000,
+>> bugzilla-daemon@bugzilla.kernel.org wrote:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=215525
+>>>
+>>>              Bug ID: 215525
+>>>             Summary: HotPlug does not work on upstream kernel
+>>> 5.17.0-rc1 Product: Drivers
+>>>             Version: 2.5
+>>>      Kernel Version: 5.17.0-rc1 upstream
+>>>            Hardware: x86-64
+>>>                  OS: Linux
+>>>                Tree: Mainline
+>>>              Status: NEW
+>>>            Severity: normal
+>>>            Priority: P1
+>>>           Component: PCI
+>>>            Assignee: drivers_pci@kernel-bugs.osdl.org
+>>>            Reporter: blazej.kucman@intel.com
+>>>          Regression: No
+>>>
+>>> Created attachment 300308
+>>>    -->
+>>> https://bugzilla.kernel.org/attachment.cgi?id=300308&action=edit
+>>> dmesg
+>>>
+>>> While testing on latest upstream
+>>> kernel(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/)
+>>> we noticed that with the merge commit
+>>> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d0a231f01e5b25bacd23e6edc7c979a18a517b2b)
+>>> hotplug and hotunplug of nvme drives stopped working.
+>>>
+>>> Rescan PCI does not help.
+>>> echo "1" > /sys/bus/pci/rescan
+>>>
+>>> Issue does not reproduce on a kernel built on an antecedent
+>>> commit(88db8458086b1dcf20b56682504bdb34d2bca0e2).
+>>>
+>>>
+>>> During hot-remove device does not disappear, however when we try to
+>>> do I/O on the disk then there is an I/O error, and the device
+>>> disappears.
+>>>
+>>> Before I/O no logs regarding the disk appeared in the dmesg, only
+>>> after I/O the entries appeared like below:
+>>> [  177.943703] nvme nvme5: controller is down; will reset:
+>>> CSTS=0xffffffff, PCI_STATUS=0xffff
+>>> [  177.971661] nvme 10000:0b:00.0: can't change power state from
+>>> D3cold to D0 (config space inaccessible)
+>>> [  177.981121] pcieport 10000:00:02.0: can't derive routing for PCI
+>>> INT A [  177.987749] nvme 10000:0b:00.0: PCI INT A: no GSI
+>>> [  177.992633] nvme nvme5: Removing after probe failure status: -19
+>>> [  178.004633] nvme5n1: detected capacity change from 83984375 to 0
+>>> [  178.004677] I/O error, dev nvme5n1, sector 0 op 0x0:(READ) flags
+>>> 0x0 phys_seg 1 prio class 0
+>>>
+>>>
+>>> OS: RHEL 8.4 GA
+>>> Platform: Intel Purley
+>>>
+>>> The logs are collected on a non-recent upstream kernel, but a issue
+>>> also occurs on the newest upstream
+>>> kernel(dd81e1c7d5fb126e5fbc5c9e334d7b3ec29a16a0)
+>>
+>> Apparently worked immediately before merging the PCI changes for
+>> v5.17 and failed immediately after:
+>>
+>>    good: 88db8458086b ("Merge tag 'exfat-for-5.17-rc1' of
+>> git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat") bad:
+>>   d0a231f01e5b ("Merge tag 'pci-v5.17-changes' of
+>> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci")
+>>
+>> Only three commits touch pciehp:
+>>
+>>    085a9f43433f ("PCI: pciehp: Use down_read/write_nested(reset_lock)
+>> to fix lockdep errors") 23584c1ed3e1 ("PCI: pciehp: Fix infinite loop
+>> in IRQ handler upon power fault") a3b0f10db148 ("PCI: pciehp: Use
+>> PCI_POSSIBLE_ERROR() to check config reads")
+>>
+>> None seems obviously related to me.  Blazej, could you try setting
+>> CONFIG_DYNAMIC_DEBUG=y and booting with 'dyndbg="file pciehp* +p"' to
+>> enable more debug messages?
+>>
+> 
+> Hi Bjorn,
+> 
+> Thanks for your suggestions. Blazej did some tests and results were
+> inconclusive. He tested it on two same platforms. On the first one it
+> didn't work, even if he reverted all suggested patches. On the second
+> one hotplugs always worked.
+> 
+> He noticed that on first platform where issue has been found initally,
+> there was boot parameter "pci=nommconf". After adding this parameter
+> on the second platform, hotplugs stopped working too.
+> 
+> Tested on tag pci-v5.17-changes. He have CONFIG_HOTPLUG_PCI_PCIE
+> and CONFIG_DYNAMIC_DEBUG enabled in config. He also attached two dmesg
+> logs to bugzilla with boot parameter 'dyndbg="file pciehp* +p" as
+> requested. One with "pci=nommconf" and one without.
+> 
+> Issue seems to related to "pci=nommconf" and it is probably caused
+> by change outside pciehp.
 
-> +static void mc_handle_msi(struct irq_desc *desc)
-> +{
-> +	struct mc_port *port = irq_desc_get_handler_data(desc);
-> +	struct device *dev = port->dev;
-> +	struct mc_msi *msi = &port->msi;
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	unsigned long status;
-> +	u32 bit;
-> +	u32 virq;
-> +
-> +	status = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
-> +	if (status & PM_MSI_INT_MSI_MASK) {
-> +		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
-> +		for_each_set_bit(bit, &status, msi->num_vectors) {
-> +			virq = irq_find_mapping(msi->dev_domain, bit);
-> +			if (virq)
-> +				generic_handle_irq(virq);
-> +			else
-> +				dev_err_ratelimited(dev, "bad MSI IRQ %d\n", bit);
-> +		}
-> +	}
-> +}
-> +
-> +static void mc_msi_bottom_irq_ack(struct irq_data *data)
-> +{
-> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	u32 bitpos = data->hwirq;
-> +	unsigned long status;
-> +
-> +	writel_relaxed(BIT(bitpos), bridge_base_addr + ISTATUS_MSI);
-> +	status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
-> +	if (!status)
-> +		writel_relaxed(BIT(PM_MSI_INT_MSI_SHIFT), bridge_base_addr + ISTATUS_LOCAL);
+Could it be related to this?
 
-This looks like it might be racy.  What happens if we read 0 from
-ISTATUS_MSI, but a new MSI is latched before we write ISTATUS_LOCAL?
+int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int 
+devfn, int reg, int len, u32 *val)
+{
+	if (domain == 0 && reg < 256 && raw_pci_ops)
+		return raw_pci_ops->read(domain, bus, devfn, reg, len, val);
+	if (raw_pci_ext_ops)
+		return raw_pci_ext_ops->read(domain, bus, devfn, reg, len, val);
+	return -EINVAL;
+}
 
-Will mc_handle_msi() be called?  If so, will PM_MSI_INT_MSI_MASK be
-set in the value it reads from ISTATUS_LOCAL?
+It looks like raw_pci_ext_ops won't be set with nommconf, and VMD 
+subdevice domain will be > 0.
 
-Current code at:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-microchip-host.c?id=v5.17-rc1#n406
+
+> 
+> He is currently working on email client setup to answer himself.
+> 
+> Thanks,
+> Mariusz
+> 
+> 
