@@ -2,70 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59ACA49E1EF
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 13:05:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24DE549E4F5
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Jan 2022 15:46:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236318AbiA0MFn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jan 2022 07:05:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236302AbiA0MFm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 07:05:42 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01166C061714
-        for <linux-pci@vger.kernel.org>; Thu, 27 Jan 2022 04:05:42 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id x11so4931526lfa.2
-        for <linux-pci@vger.kernel.org>; Thu, 27 Jan 2022 04:05:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=YOUcemHxUh03jeZl3Fc3dcJaR/JbAfubjjjBMUyE1Qc=;
-        b=WJSFWCGF3U93PVV4x8HuZswOSV0qMPmOln/Pq5RzcZpHcMj05hQ/tu5bOusnKTcDNX
-         teA/q+avPqxzuk3n7IPwJhHIwPQm4FjNROtMRWGuzIwRl+2CC7MpGHygO8gr00rqCwOv
-         /roT0TMz8v6dJ2C+KPNXnLHxGgcz3aR1RYUu4rNuOdWQXbrQWErcdjV+zDNberiYxnbN
-         52Rdekjj+c3h5j/BikfIuOWESMfB0BAV0V6alUcP7gvp+LlUv0oid8LU2zySWH00SiiW
-         5+eMMkQ+i8B16y1PWjEgvlXSWtZkgXbJ/TWffqwTicsU9LTBnNVAZko0QQ8WBWyyKxlx
-         OX4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=YOUcemHxUh03jeZl3Fc3dcJaR/JbAfubjjjBMUyE1Qc=;
-        b=H7NjLUi1IR9a50atYrXQFFT8c7EPe5KqEzBtPTqIc21y1MpRNvlUcDpaXwIoBBEzGH
-         Xh091MhApCSpHoebxRC3EWxxUm/u942SJc8enkuqNUAGzlp7cFMVUazdWiI1TmTHfmRl
-         IRaw3fNwvBWe3OgIoNarObFX/f1N4khJkxTYJEmj1t2vR0UTihNnqlijF+Oul5RftUQc
-         pM8NkWzCge4hkuMDf9F3usOTubNskJLJY7c4I6sf33JDuQIy8p/kbjdmbLezwv+W5uBE
-         9W+1lyNwSHNq07LiUxmVZqt7HHQ2UQ+73qz+fR32gRIKoIaq08CZ4e030Ofsz5bIm0Oh
-         e9Pw==
-X-Gm-Message-State: AOAM532CNRpZJZucGOZr11mOiSiZwQj563prKyaz6Mfl3pzcOylzgjEu
-        NT5LAxDR48RxCkBjrIgsLSUMEgBpIXzybDLZSXA=
-X-Google-Smtp-Source: ABdhPJzvWb506eVCmjQv5GwIG4h9Gzzx8LUT1H2fWJP9yJg1hMUhcbeOSSRPYIH47SLjLWydVqWEc9JMgvi+3jQqmQQ=
-X-Received: by 2002:a05:6512:3b1e:: with SMTP id f30mr2623906lfv.411.1643285140378;
- Thu, 27 Jan 2022 04:05:40 -0800 (PST)
+        id S242545AbiA0OqZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jan 2022 09:46:25 -0500
+Received: from mga17.intel.com ([192.55.52.151]:38463 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242643AbiA0OqX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 27 Jan 2022 09:46:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643294783; x=1674830783;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=l/jq9vACHWJwLDheExQJOYCVhe0TuS3hd6gaFyO4Eio=;
+  b=P+HsTRDrSwTt9m8YWFjmGZyoXqQRI5Jlb5Ek7JeIZbBS96Gh5u/cKGkQ
+   PtHW6pptVRIPgXUNyv26V0rAGxI6/PVVBinADr3P4apfj+78yJQus7bSH
+   vvmXxIrGdq685NkyAp4ckiP79pXzjJuAqdEUHafl4mZ4WJw4nGjgLEREo
+   MSNGpINsFPQHcz/x/bhXUKvD+aICsZA7GJfa3c0MPfUXIJEbZ1qpkeVEb
+   nLQnvPp1DpqtqDRh+1p9jEjieP+zJgmG6j+86S2/9NFexvEFwAk4Kre7a
+   TwFn2bzOI0uCg3SsHMRTh2PXETN+72cWWYGfo7o5ItQbHr3glf/9a+6mD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10239"; a="227546419"
+X-IronPort-AV: E=Sophos;i="5.88,320,1635231600"; 
+   d="scan'208";a="227546419"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 06:46:23 -0800
+X-IronPort-AV: E=Sophos;i="5.88,320,1635231600"; 
+   d="scan'208";a="535683854"
+Received: from mtkaczyk-mobl1.ger.corp.intel.com (HELO localhost) ([10.213.28.172])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2022 06:46:20 -0800
+Date:   Thu, 27 Jan 2022 15:46:15 +0100
+From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Blazej Kucman <blazej.kucman@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Naveen Naidu <naveennaidu479@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>
+Subject: Re: [Bug 215525] New: HotPlug does not work on upstream kernel
+ 5.17.0-rc1
+Message-ID: <20220127154615.00003df8@linux.intel.com>
+In-Reply-To: <20220124214635.GA1553164@bhelgaas>
+References: <bug-215525-41252@https.bugzilla.kernel.org/>
+        <20220124214635.GA1553164@bhelgaas>
 MIME-Version: 1.0
-Received: by 2002:a2e:a783:0:0:0:0:0 with HTTP; Thu, 27 Jan 2022 04:05:39
- -0800 (PST)
-Reply-To: greogebrown@gmail.com
-From:   george brown <barristerlevi@gmail.com>
-Date:   Thu, 27 Jan 2022 13:05:39 +0100
-Message-ID: <CAEJ6ChcvSb0X5zgQ5-bHP1Z5Un2k2Esaw9dG=KTjhZsRkcgqbg@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello
+On Mon, 24 Jan 2022 15:46:35 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-My name is George Brown I am a lawyer by profession. I wish to offer you
-the next of kin to my client. You will inherit the sum of ($8.5 Million)
-dollars my client left in the bank before his death.
+> [+cc linux-pci, Hans, Lukas, Naveen, Keith, Nirmal, Jonathan]
+> 
+> On Mon, Jan 24, 2022 at 11:46:14AM +0000,
+> bugzilla-daemon@bugzilla.kernel.org wrote:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=215525
+> > 
+> >             Bug ID: 215525
+> >            Summary: HotPlug does not work on upstream kernel
+> > 5.17.0-rc1 Product: Drivers
+> >            Version: 2.5
+> >     Kernel Version: 5.17.0-rc1 upstream
+> >           Hardware: x86-64
+> >                 OS: Linux
+> >               Tree: Mainline
+> >             Status: NEW
+> >           Severity: normal
+> >           Priority: P1
+> >          Component: PCI
+> >           Assignee: drivers_pci@kernel-bugs.osdl.org
+> >           Reporter: blazej.kucman@intel.com
+> >         Regression: No
+> > 
+> > Created attachment 300308  
+> >   -->
+> > https://bugzilla.kernel.org/attachment.cgi?id=300308&action=edit
+> > dmesg
+> > 
+> > While testing on latest upstream
+> > kernel(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/)
+> > we noticed that with the merge commit
+> > (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d0a231f01e5b25bacd23e6edc7c979a18a517b2b)
+> > hotplug and hotunplug of nvme drives stopped working.
+> > 
+> > Rescan PCI does not help.
+> > echo "1" > /sys/bus/pci/rescan
+> > 
+> > Issue does not reproduce on a kernel built on an antecedent
+> > commit(88db8458086b1dcf20b56682504bdb34d2bca0e2).
+> > 
+> > 
+> > During hot-remove device does not disappear, however when we try to
+> > do I/O on the disk then there is an I/O error, and the device
+> > disappears.
+> > 
+> > Before I/O no logs regarding the disk appeared in the dmesg, only
+> > after I/O the entries appeared like below:
+> > [  177.943703] nvme nvme5: controller is down; will reset:
+> > CSTS=0xffffffff, PCI_STATUS=0xffff
+> > [  177.971661] nvme 10000:0b:00.0: can't change power state from
+> > D3cold to D0 (config space inaccessible)
+> > [  177.981121] pcieport 10000:00:02.0: can't derive routing for PCI
+> > INT A [  177.987749] nvme 10000:0b:00.0: PCI INT A: no GSI
+> > [  177.992633] nvme nvme5: Removing after probe failure status: -19
+> > [  178.004633] nvme5n1: detected capacity change from 83984375 to 0
+> > [  178.004677] I/O error, dev nvme5n1, sector 0 op 0x0:(READ) flags
+> > 0x0 phys_seg 1 prio class 0
+> > 
+> > 
+> > OS: RHEL 8.4 GA
+> > Platform: Intel Purley
+> > 
+> > The logs are collected on a non-recent upstream kernel, but a issue
+> > also occurs on the newest upstream
+> > kernel(dd81e1c7d5fb126e5fbc5c9e334d7b3ec29a16a0)  
+> 
+> Apparently worked immediately before merging the PCI changes for
+> v5.17 and failed immediately after:
+> 
+>   good: 88db8458086b ("Merge tag 'exfat-for-5.17-rc1' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat") bad:
+>  d0a231f01e5b ("Merge tag 'pci-v5.17-changes' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci")
+> 
+> Only three commits touch pciehp:
+> 
+>   085a9f43433f ("PCI: pciehp: Use down_read/write_nested(reset_lock)
+> to fix lockdep errors") 23584c1ed3e1 ("PCI: pciehp: Fix infinite loop
+> in IRQ handler upon power fault") a3b0f10db148 ("PCI: pciehp: Use
+> PCI_POSSIBLE_ERROR() to check config reads")
+> 
+> None seems obviously related to me.  Blazej, could you try setting
+> CONFIG_DYNAMIC_DEBUG=y and booting with 'dyndbg="file pciehp* +p"' to
+> enable more debug messages?
+> 
 
-My client is a citizen of your country who died in auto crash with his wife
-and only son. I will be entitled with 50% of the total fund while 50% will
-be for you.
-Please contact my private email here for more details:greogebrown@gmail.com
+Hi Bjorn,
 
-Many thanks in advance,
-Mr.George Brown,
+Thanks for your suggestions. Blazej did some tests and results were
+inconclusive. He tested it on two same platforms. On the first one it
+didn't work, even if he reverted all suggested patches. On the second
+one hotplugs always worked.
+
+He noticed that on first platform where issue has been found initally,
+there was boot parameter "pci=nommconf". After adding this parameter
+on the second platform, hotplugs stopped working too.
+
+Tested on tag pci-v5.17-changes. He have CONFIG_HOTPLUG_PCI_PCIE
+and CONFIG_DYNAMIC_DEBUG enabled in config. He also attached two dmesg
+logs to bugzilla with boot parameter 'dyndbg="file pciehp* +p" as
+requested. One with "pci=nommconf" and one without.
+
+Issue seems to related to "pci=nommconf" and it is probably caused
+by change outside pciehp.
+
+He is currently working on email client setup to answer himself.
+
+Thanks,
+Mariusz
+
+
