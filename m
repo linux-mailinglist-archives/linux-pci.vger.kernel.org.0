@@ -2,111 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D3AA49FFAC
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jan 2022 18:37:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 100C749FFE1
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jan 2022 19:00:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240142AbiA1RhT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jan 2022 12:37:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240074AbiA1RhT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jan 2022 12:37:19 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31AFDC061714;
-        Fri, 28 Jan 2022 09:37:19 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id m14so12009381wrg.12;
-        Fri, 28 Jan 2022 09:37:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=NlfUGJI0+1YpxGmrw2B+G4W+F0clMFCP86GadVW6dv8=;
-        b=jYX8+UgHM64f/dvAf0KYmoqsFA89aRKPDUfqqbWgzqJR8Iz50n2h8tV5xRweAg8YHI
-         gtNiZrTjyxZKuKjGL3o7fUt8Um+8N2XqVRqMUDXerDnJS5QewKV3FnALDwQG9/yDspaZ
-         N5Qv2dEGOw7tSQ9vc0sJNY7tOm/PjeNtM4ULiwaohlfcbWYMj//rtqRz4Zh0K5oUj2t/
-         BtTXM4W1Fa7+136kYfWfuzwRCsMjliKAbHdkgSs0XjkrwskDc0aAp6lz/DmMO7yvAuZw
-         hcVvxm5owYK+Z3CoLkkDuuIwNkD9JwM1lYSP+QcKtDWEIz+DopgOMHrYFDcLhkB/Q4K0
-         rSTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:subject:message-id
-         :mime-version:content-disposition;
-        bh=NlfUGJI0+1YpxGmrw2B+G4W+F0clMFCP86GadVW6dv8=;
-        b=29bcEEea9ufTkZrMha9fnZh1qFjZOdterzhgIq5O5o+IXaDBrelAYbCZdf6DLKDVJO
-         4BUKnsa0/aBBzuvirIGe0iR/gHrFJgf1ncpHnco9gCpQlVSVv8Y02uiUoUkTF7CHBcgW
-         xtomvtLQyBt4haZE3HvaHPKV8IA0O8CFxmG4ONy3D4aO67gt2ZqT1FOfoIN0JzEDCP7m
-         LcFI+luxAiewVpZ7oNC/85PjY4wZvngpNPDXlzazlX9nFTta4TEQ3GyJLEGoG8FDhZ/+
-         H2AqP9oUdxnwIOYDrGXDCsVFkU/8lFApheq9MLfuPysiEYLxQZZEyFXoyxDNORdD9lQU
-         +Q8g==
-X-Gm-Message-State: AOAM530rPjy5Di8KmUA64+qgyuVE5F7Zm/a89uPF6bl90yJgFyKT/Ghy
-        XpfqIzcgp7OoVlolhDg7XGA=
-X-Google-Smtp-Source: ABdhPJwxnkhWr4Yygc6peQZz8IsYK91MheT49I1bxkJzUOtFIO3IFho9/Lpx871N99G8AB5qUaiYzw==
-X-Received: by 2002:a5d:604a:: with SMTP id j10mr7776469wrt.547.1643391437278;
-        Fri, 28 Jan 2022 09:37:17 -0800 (PST)
-Received: from jupiter.dyndns.org (cpc69401-oxfd27-2-0-cust150.4-3.cable.virginm.net. [82.14.184.151])
-        by smtp.gmail.com with ESMTPSA id n18sm4941466wrm.47.2022.01.28.09.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jan 2022 09:37:16 -0800 (PST)
-Sender: Brent Spillner <spillner@gmail.com>
-Date:   Fri, 28 Jan 2022 17:37:15 +0000
-From:   Brent Spillner <spillner@acm.org>
-To:     bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arch:x86:pci:irq.c: Improve log message when IRQ cannot be
- identified
-Message-ID: <YfQpy5yGGqY8T0wW@jupiter.dyndns.org>
+        id S240770AbiA1SAc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jan 2022 13:00:32 -0500
+Received: from mga18.intel.com ([134.134.136.126]:55165 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1343650AbiA1SA2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 28 Jan 2022 13:00:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643392828; x=1674928828;
+  h=message-id:date:mime-version:to:references:from:subject:
+   in-reply-to:content-transfer-encoding;
+  bh=/kAMO9UCCWELpL95wHGY0j+eTJs2CMOTU7egNKfSooU=;
+  b=aDdwCAiNnLmCzHbPQpR5OwJUjIbkqWOHIz+xyvNZOiUde5qGQX4bgLbK
+   DgDVz/zZhK4AuESECaDBSscVaL1tWJ+ydTYgQOwNxemAFYIIGNg3A2spt
+   UZaMQeDxbCOW75zUC6tRa81oM/zOEQDhFpQ05pX4s7YhoAdxy0gFSV8hZ
+   3+6r6VanEGFzxeulwyHE2jhVgsyDE0GiQUg00OzaCFNkxzLlPFt3bPlTl
+   UMzF3jmqafvj0D+d/OLvve9Y+ZFKaTEorx78fd8/fBboOMQi2IXd7jqWV
+   mk1kvTLyiy37qKVqwyybFMuDRJT2qVlYQRkCqvvljGst13TzVlFyqBNYw
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="230744973"
+X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
+   d="scan'208";a="230744973"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 10:00:26 -0800
+X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
+   d="scan'208";a="697167028"
+Received: from zhenkuny-mobl2.amr.corp.intel.com (HELO [10.209.84.59]) ([10.209.84.59])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 10:00:26 -0800
+Message-ID: <a7ef2455-ede5-2238-639b-b3a66842a04b@intel.com>
+Date:   Fri, 28 Jan 2022 10:00:23 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.2
+Content-Language: en-US
+To:     Brent Spillner <spillner@acm.org>, bhelgaas@google.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <YfQpy5yGGqY8T0wW@jupiter.dyndns.org>
+From:   Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH] arch:x86:pci:irq.c: Improve log message when IRQ cannot
+ be identified
+In-Reply-To: <YfQpy5yGGqY8T0wW@jupiter.dyndns.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The existing code always suggests trying the pci=biosirq kernel
-parameter, but this option is only recognized when CONFIG_PCI_BIOS is
-set, which in turn depends on CONFIG_X86_32, so it is never appropriate
-on x86_64.
+Please fix up that subject.  We don't tend to use ":" to separate
+things.  Second, the prefix isn't a filename.  It's really a subsystem.
+ Take a look at:
 
-The new version tries to form a more useful message when pci=biosirq is
-not available, including by suggesting different acpi= options if
-appropriate (probably the most common cause of failed IRQ discovery).
+	git log arch/x86/pci/irq.c
 
-See arch/x86/pci/common.c:535 for the interpretation of pci=biosirq, and
-arch/x86/Kconfig:2633 for the dependencies of CONFIG_PCI_BIOS.
+for some other examples.
 
-Signed-off-by: Brent Spillner <spillner@acm.org>
----
- arch/x86/pci/irq.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On 1/28/22 09:37, Brent Spillner wrote:
+> The existing code always suggests trying the pci=biosirq kernel
+> parameter, but this option is only recognized when CONFIG_PCI_BIOS is
+> set, which in turn depends on CONFIG_X86_32, so it is never appropriate
+> on x86_64.
+> 
+> The new version tries to form a more useful message when pci=biosirq is
+> not available, including by suggesting different acpi= options if
+> appropriate (probably the most common cause of failed IRQ discovery).
+> 
+> See arch/x86/pci/common.c:535 for the interpretation of pci=biosirq, and
+> arch/x86/Kconfig:2633 for the dependencies of CONFIG_PCI_BIOS.
 
-diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-index 97b63e35e152..bc4aaaa74832 100644
---- a/arch/x86/pci/irq.c
-+++ b/arch/x86/pci/irq.c
-@@ -1522,7 +1522,21 @@ static int pirq_enable_irq(struct pci_dev *dev)
- 		} else if (pci_probe & PCI_BIOS_IRQ_SCAN)
- 			msg = "";
- 		else
-+#ifdef CONFIG_PCI_BIOS
- 			msg = "; please try using pci=biosirq";
-+#else
-+			/* pci=biosirq is not a valid option */
-+#ifdef CONFIG_ACPI
-+			if (acpi_noirq)
-+				msg = "; consider removing acpi=noirq";
-+			else
-+#endif
-+				msg = "; recommend verifying UEFI/BIOS IRQ options"
-+#ifndef CONFIG_ACPI
-+					" or enabling ACPI"
-+#endif
-+					;
-+#endif
- 
- 		/*
- 		 * With IDE legacy devices the IRQ lookup failure is not
--- 
-2.34.1
+Shockingly enough, that parameter is in the documentation:
 
+	Documentation/admin-guide/kernel-parameters.txt
+
+and double-shockingly, it's even called out as X86-32-only:
+
+	biosirq		[X86-32] Use PCI BIOS calls to get the interrupt
+
+Given that, do we really need to refer to the line numbers of the
+implementation which will probably be stale by the time this is merged
+anyway?
+
+>  arch/x86/pci/irq.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
+> index 97b63e35e152..bc4aaaa74832 100644
+> --- a/arch/x86/pci/irq.c
+> +++ b/arch/x86/pci/irq.c
+> @@ -1522,7 +1522,21 @@ static int pirq_enable_irq(struct pci_dev *dev)
+>  		} else if (pci_probe & PCI_BIOS_IRQ_SCAN)
+>  			msg = "";
+>  		else
+> +#ifdef CONFIG_PCI_BIOS
+>  			msg = "; please try using pci=biosirq";
+> +#else
+> +			/* pci=biosirq is not a valid option */
+> +#ifdef CONFIG_ACPI
+> +			if (acpi_noirq)
+> +				msg = "; consider removing acpi=noirq";
+> +			else
+> +#endif
+> +				msg = "; recommend verifying UEFI/BIOS IRQ options"
+> +#ifndef CONFIG_ACPI
+> +					" or enabling ACPI"
+> +#endif
+> +					;
+> +#endif
+
+Any chance you could make that, um, a bit more readable?  It's OK to add
+brackets to the else{} for readability even if they're not *strictly*
+necessary.
+
+It might also be nice to use
+
+	if (IS_ENABLED(CONFIG_FOO))
+		...
+
+rather than the #ifdefs.
+
+I'd also be perfectly OK having two different strings rather than
+relying on string concatenation and the #ifdefs.
+
+Is the "or enabling ACPI" message really necessary?
