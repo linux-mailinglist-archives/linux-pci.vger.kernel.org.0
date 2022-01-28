@@ -2,32 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA58349EF6E
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jan 2022 01:26:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9A3F49EF46
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jan 2022 01:26:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344766AbiA1A0o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jan 2022 19:26:44 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:47182 "EHLO
+        id S1344568AbiA1A0b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jan 2022 19:26:31 -0500
+Received: from ale.deltatee.com ([204.191.154.188]:46998 "EHLO
         ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344612AbiA1A0e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 19:26:34 -0500
+        with ESMTP id S1344485AbiA1A00 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 19:26:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=06xrVvtoAjmIinAQk61eUYk8K5xu+g+hinoJXPXmfIY=; b=OfzXlltJMxq3gS2+grdKIdu4qj
-        pNrW4b+9M5LpdqTxnk1XYOcDzd5sgEQAjsyP2AMJ90RwWXPlUE0qwyvBvkFe/uwG24thUIFowHlWz
-        AgwDoi5KSSjGXB+pFolbCqFgldtLxrIfDDXdZh+GY0lTgBK/AH6nSD5Euur1kyMGDNNQkjW6YPZ+y
-        qtvw6xepTrb2L4huQSSyb/3moKvDDRsD4oGQalhPJZgXyviy1FReSq3qj6fVDQqRBB1JYGOGZoM+n
-        wLZrhunhed8GYxvvt+5L1BFHkUlwcfmZKpM1FBe9/DodXasZIyyXlHjkT8id4sGEdzYjg14sWtmnj
-        +OgqnvBQ==;
+        bh=UO35KE8YVx2v+yNTFMhmKCQE8ptUbM1lG6ODy8MFD4U=; b=sBbcFg82SAk1otTpMskAScMiG7
+        RyAKAQkLTz1xmy8xTlaHSy36dHLKBWxmZ36QoMwA4kkP1Jl1psr1WnOOxIkWmE9XtLADFmwdP9Al8
+        ICSCs2cktw8nLKLELqHswQ/9zbp0P2ctwkft2z7KTrR3Sn8uIMRmhiPnKpbppo9L3h5AIBakUCRp6
+        ACGKOFIT2MqbGv8JvJsn9xNK3WT0DFPSr3AFe/PofI/wklbT7AxT8jWUom0daiNDBGZ6rcIONs0MR
+        Hx6YbD9XhVp29jfmuXGV9Ri0UA0Ly2AAO8I6iJbJsPYwK+DBu9x+77HhVcbEqqwc0x0ilK1AB7U1m
+        XP4zUiFw==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nDF5s-005OcZ-JQ; Thu, 27 Jan 2022 17:26:25 -0700
+        id 1nDF5r-005OcV-Sd; Thu, 27 Jan 2022 17:26:25 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nDF5p-0001dD-7X; Thu, 27 Jan 2022 17:26:21 -0700
+        id 1nDF5p-0001dH-Dg; Thu, 27 Jan 2022 17:26:21 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -53,8 +53,8 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
         Ralph Campbell <rcampbell@nvidia.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 27 Jan 2022 17:26:08 -0700
-Message-Id: <20220128002614.6136-19-logang@deltatee.com>
+Date:   Thu, 27 Jan 2022 17:26:09 -0700
+Message-Id: <20220128002614.6136-20-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220128002614.6136-1-logang@deltatee.com>
 References: <20220128002614.6136-1-logang@deltatee.com>
@@ -67,7 +67,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on ale.deltatee.com
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
         MYRULES_NO_TEXT autolearn=no autolearn_force=no version=3.4.6
-Subject: [PATCH v5 18/24] block: add check when merging zone device pages
+Subject: [PATCH v5 19/24] lib/scatterlist: add check when merging zone device pages
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
@@ -81,69 +81,86 @@ without scanning the entire segment. This helper returns true either if
 both pages are not zone device pages or both pages are zone device
 pages with the same pgmap.
 
-Add a helper to determine if zone device pages are mergeable and use
-this helper in page_is_mergeable().
+Factor out the check for page mergability into a pages_are_mergable()
+helper and add a check with zone_device_pages_are_mergeable().
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- block/bio.c        |  2 ++
- include/linux/mm.h | 23 +++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+ lib/scatterlist.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index 4312a8085396..055fcf159461 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -806,6 +806,8 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
- 		return false;
- 	if (xen_domain() && !xen_biovec_phys_mergeable(bv, page))
- 		return false;
-+	if (!zone_device_pages_have_same_pgmap(bv->bv_page, page))
-+		return false;
+diff --git a/lib/scatterlist.c b/lib/scatterlist.c
+index d5e82e4a57ad..af53a0984f76 100644
+--- a/lib/scatterlist.c
++++ b/lib/scatterlist.c
+@@ -410,6 +410,15 @@ static struct scatterlist *get_next_sg(struct sg_append_table *table,
+ 	return new_sg;
+ }
  
- 	*same_page = ((vec_end_addr & PAGE_MASK) == page_addr);
- 	if (*same_page)
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 24f44230dcbf..4a8e8cddd910 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1080,6 +1080,24 @@ static inline bool is_zone_device_page(const struct page *page)
- {
- 	return page_zonenum(page) == ZONE_DEVICE;
- }
-+
-+/*
-+ * Consecutive zone device pages should not be merged into the same sgl
-+ * or bvec segment with other types of pages or if they belong to different
-+ * pgmaps. Otherwise getting the pgmap of a given segment is not possible
-+ * without scanning the entire segment. This helper returns true either if
-+ * both pages are not zone device pages or both pages are zone device pages
-+ * with the same pgmap.
-+ */
-+static inline bool zone_device_pages_have_same_pgmap(const struct page *a,
-+						     const struct page *b)
++static bool pages_are_mergeable(struct page *a, struct page *b)
 +{
-+	if (is_zone_device_page(a) != is_zone_device_page(b))
++	if (page_to_pfn(a) != page_to_pfn(b) + 1)
 +		return false;
-+	if (!is_zone_device_page(a))
-+		return true;
-+	return a->pgmap == b->pgmap;
-+}
- extern void memmap_init_zone_device(struct zone *, unsigned long,
- 				    unsigned long, struct dev_pagemap *);
- #else
-@@ -1087,6 +1105,11 @@ static inline bool is_zone_device_page(const struct page *page)
- {
- 	return false;
- }
-+static inline bool zone_device_pages_have_same_pgmap(const struct page *a,
-+						     const struct page *b)
-+{
++	if (!zone_device_pages_have_same_pgmap(a, b))
++		return false;
 +	return true;
 +}
- #endif
++
+ /**
+  * sg_alloc_append_table_from_pages - Allocate and initialize an append sg
+  *                                    table from an array of pages
+@@ -447,6 +456,7 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
+ 	unsigned int chunks, cur_page, seg_len, i, prv_len = 0;
+ 	unsigned int added_nents = 0;
+ 	struct scatterlist *s = sgt_append->prv;
++	struct page *last_pg;
  
- static inline bool is_zone_movable_page(const struct page *page)
+ 	/*
+ 	 * The algorithm below requires max_segment to be aligned to PAGE_SIZE
+@@ -460,21 +470,17 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
+ 		return -EOPNOTSUPP;
+ 
+ 	if (sgt_append->prv) {
+-		unsigned long paddr =
+-			(page_to_pfn(sg_page(sgt_append->prv)) * PAGE_SIZE +
+-			 sgt_append->prv->offset + sgt_append->prv->length) /
+-			PAGE_SIZE;
+-
+ 		if (WARN_ON(offset))
+ 			return -EINVAL;
+ 
+ 		/* Merge contiguous pages into the last SG */
+ 		prv_len = sgt_append->prv->length;
+-		while (n_pages && page_to_pfn(pages[0]) == paddr) {
++		last_pg = sg_page(sgt_append->prv);
++		while (n_pages && pages_are_mergeable(last_pg, pages[0])) {
+ 			if (sgt_append->prv->length + PAGE_SIZE > max_segment)
+ 				break;
+ 			sgt_append->prv->length += PAGE_SIZE;
+-			paddr++;
++			last_pg = pages[0];
+ 			pages++;
+ 			n_pages--;
+ 		}
+@@ -488,7 +494,7 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
+ 	for (i = 1; i < n_pages; i++) {
+ 		seg_len += PAGE_SIZE;
+ 		if (seg_len >= max_segment ||
+-		    page_to_pfn(pages[i]) != page_to_pfn(pages[i - 1]) + 1) {
++		    !pages_are_mergeable(pages[i], pages[i - 1])) {
+ 			chunks++;
+ 			seg_len = 0;
+ 		}
+@@ -504,8 +510,7 @@ int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
+ 		for (j = cur_page + 1; j < n_pages; j++) {
+ 			seg_len += PAGE_SIZE;
+ 			if (seg_len >= max_segment ||
+-			    page_to_pfn(pages[j]) !=
+-			    page_to_pfn(pages[j - 1]) + 1)
++			    !pages_are_mergeable(pages[j], pages[j - 1]))
+ 				break;
+ 		}
+ 
 -- 
 2.30.2
 
