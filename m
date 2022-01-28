@@ -2,32 +2,32 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 267D849EF7D
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jan 2022 01:27:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B774049EF7A
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jan 2022 01:26:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344717AbiA1A0x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Jan 2022 19:26:53 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:47152 "EHLO
+        id S1344818AbiA1A0w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Jan 2022 19:26:52 -0500
+Received: from ale.deltatee.com ([204.191.154.188]:47188 "EHLO
         ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344601AbiA1A0e (ORCPT
+        with ESMTP id S1344610AbiA1A0e (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Jan 2022 19:26:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=deltatee.com; s=20200525; h=Subject:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Cc:To:From:content-disposition;
-        bh=uQsXlm3k3BsGKUE9AcXsDkkM/IeKE+SiwnMMrQUs4ow=; b=hrw+tXZiDf1t/jPl6BGYffAfg1
-        TSx6zkydAWPh2OjlZjMW/EoVppTVL005Je5Cu2rpgeTkXKCISo7BFPQ4pu1J6XnWW5qlfmqXDsKuS
-        KeoGYTx/Q1Asl7/aWcq2oinFsubmteSVEHCswc59bbr835y6HjmmhKg7EKhFacOMfebxAnjhG/HKu
-        9K10iU35orwOCvMgfRbBfQm3RjZkJ7DrKHpEECxR8bjB3oYykPqhhWXweUVShn1Mm8XlLfOr3wZTF
-        py/3HQCUszOAEpqeDW4TmGoUIaQFiEA5ueu+ovczMAWThSaldWB7f8w5eqaTpHfQcii5CF7oOlLYb
-        tAyP/nGQ==;
+        bh=YF+tFaHkg5cUqirL/bZSIqfFWw9UNFd41dtgFgGRixo=; b=GNd2ovXaYfT4BSta3Z5NMwqhh8
+        csryim3gluAjras3z5p36hM6G0N09HwPD2rF3dR2DRlJgtCrsK0kKUXEymF0HvgEdo2WCUQ4mHOkV
+        KLQ6ROa/3DtauBHOBEIK9Llvudy6cQbheCk42dRYSeedq1yKQuUcYgynftDp8Zf5Jo8IRRngxqnSH
+        bQ+/UMtoo0T9GDimp7PbaBoli3sJdx8RHQKlnQOThAMXQX4srV6EL+eZGlikyp/Kcw0csVinKlvjf
+        GK0c6mMDsIw5YdrdhuYvUwaS7ExirDnRDA1ig9/X2wNRbGVJozznHYOICl09Zd6gdvcDbJBWAEqJV
+        MT0c1AJw==;
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nDF5t-005OcY-1M; Thu, 27 Jan 2022 17:26:25 -0700
+        id 1nDF5s-005OcX-LP; Thu, 27 Jan 2022 17:26:25 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.94.2)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1nDF5o-0001d5-PB; Thu, 27 Jan 2022 17:26:20 -0700
+        id 1nDF5p-0001d9-1W; Thu, 27 Jan 2022 17:26:21 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -53,8 +53,8 @@ Cc:     Stephen Bates <sbates@raithlin.com>,
         Chaitanya Kulkarni <ckulkarnilinux@gmail.com>,
         Ralph Campbell <rcampbell@nvidia.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 27 Jan 2022 17:26:06 -0700
-Message-Id: <20220128002614.6136-17-logang@deltatee.com>
+Date:   Thu, 27 Jan 2022 17:26:07 -0700
+Message-Id: <20220128002614.6136-18-logang@deltatee.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220128002614.6136-1-logang@deltatee.com>
 References: <20220128002614.6136-1-logang@deltatee.com>
@@ -65,104 +65,126 @@ X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on ale.deltatee.com
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        MYRULES_NO_TEXT autolearn=no autolearn_force=no version=3.4.6
-Subject: [PATCH v5 16/24] mm: introduce FOLL_PCI_P2PDMA to gate getting PCI P2PDMA pages
+X-Spam-Status: No, score=-6.5 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        MYRULES_FREE,MYRULES_NO_TEXT autolearn=no autolearn_force=no
+        version=3.4.6
+Subject: [PATCH v5 17/24] iov_iter: introduce iov_iter_get_pages_[alloc_]flags()
 X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Callers that expect PCI P2PDMA pages can now set FOLL_PCI_P2PDMA to
-allow obtaining P2PDMA pages. If a caller does not set this flag
-and tries to map P2PDMA pages it will fail.
+Add iov_iter_get_pages_flags() and iov_iter_get_pages_alloc_flags()
+which take a flags argument that is passed to get_user_pages_fast().
 
-This is implemented by checking failing if PCI p2pdma pages are
-found when FOLL_PCI_P2PDMA is set. This is only done if pte_devmap()
-is set.
-
-FOLL_PCI_P2PDMA cannot be set if FOLL_LONGTERM is set.
+This is so that FOLL_PCI_P2PDMA can be passed when appropriate.
 
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- include/linux/mm.h |  1 +
- mm/gup.c           | 22 +++++++++++++++++++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
+ include/linux/uio.h |  6 ++++++
+ lib/iov_iter.c      | 25 +++++++++++++++++++------
+ 2 files changed, 25 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 1ab20ed73678..24f44230dcbf 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2888,6 +2888,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
- #define FOLL_SPLIT_PMD	0x20000	/* split huge pmd before returning */
- #define FOLL_PIN	0x40000	/* pages must be released via unpin_user_page */
- #define FOLL_FAST_ONLY	0x80000	/* gup_fast: prevent fall-back to slow gup */
-+#define FOLL_PCI_P2PDMA	0x100000 /* allow returning PCI P2PDMA pages */
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index 1198a2bfc9bf..22cf1db3a6c5 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -232,8 +232,14 @@ void iov_iter_pipe(struct iov_iter *i, unsigned int direction, struct pipe_inode
+ void iov_iter_discard(struct iov_iter *i, unsigned int direction, size_t count);
+ void iov_iter_xarray(struct iov_iter *i, unsigned int direction, struct xarray *xarray,
+ 		     loff_t start, size_t count);
++ssize_t iov_iter_get_pages_flags(struct iov_iter *i, struct page **pages,
++		size_t maxsize, unsigned maxpages, size_t *start,
++		unsigned int gup_flags);
+ ssize_t iov_iter_get_pages(struct iov_iter *i, struct page **pages,
+ 			size_t maxsize, unsigned maxpages, size_t *start);
++ssize_t iov_iter_get_pages_alloc_flags(struct iov_iter *i,
++		struct page ***pages, size_t maxsize, size_t *start,
++		unsigned int gup_flags);
+ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i, struct page ***pages,
+ 			size_t maxsize, size_t *start);
+ int iov_iter_npages(const struct iov_iter *i, int maxpages);
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index b0e0acdf96c1..9eeea74f85a7 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -1513,9 +1513,9 @@ static struct page *first_bvec_segment(const struct iov_iter *i,
+ 	return page;
+ }
  
- /*
-  * FOLL_PIN and FOLL_LONGTERM may be used in various combinations with each
-diff --git a/mm/gup.c b/mm/gup.c
-index f0af462ac1e2..66e8cbd168b6 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -527,6 +527,12 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
- 			page = pte_page(pte);
- 		else
- 			goto no_page;
+-ssize_t iov_iter_get_pages(struct iov_iter *i,
++ssize_t iov_iter_get_pages_flags(struct iov_iter *i,
+ 		   struct page **pages, size_t maxsize, unsigned maxpages,
+-		   size_t *start)
++		   size_t *start, unsigned int gup_flags)
+ {
+ 	size_t len;
+ 	int n, res;
+@@ -1526,7 +1526,6 @@ ssize_t iov_iter_get_pages(struct iov_iter *i,
+ 		return 0;
+ 
+ 	if (likely(iter_is_iovec(i))) {
+-		unsigned int gup_flags = 0;
+ 		unsigned long addr;
+ 
+ 		if (iov_iter_rw(i) != WRITE)
+@@ -1556,6 +1555,13 @@ ssize_t iov_iter_get_pages(struct iov_iter *i,
+ 		return iter_xarray_get_pages(i, pages, maxsize, maxpages, start);
+ 	return -EFAULT;
+ }
++EXPORT_SYMBOL_GPL(iov_iter_get_pages_flags);
 +
-+		if (unlikely(!(flags & FOLL_PCI_P2PDMA) &&
-+			     is_pci_p2pdma_page(page))) {
-+			page = ERR_PTR(-EREMOTEIO);
-+			goto out;
-+		}
- 	} else if (unlikely(!page)) {
- 		if (flags & FOLL_DUMP) {
- 			/* Avoid special (like zero) pages in core dumps */
-@@ -985,6 +991,9 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
- 	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
- 		return -EOPNOTSUPP;
++ssize_t iov_iter_get_pages(struct iov_iter *i, struct page **pages,
++			   size_t maxsize, unsigned maxpages, size_t *start)
++{
++	return iov_iter_get_pages_flags(i, pages, maxsize, maxpages, start, 0);
++}
+ EXPORT_SYMBOL(iov_iter_get_pages);
  
-+	if ((gup_flags & FOLL_LONGTERM) && (gup_flags & FOLL_PCI_P2PDMA))
-+		return -EOPNOTSUPP;
+ static struct page **get_pages_array(size_t n)
+@@ -1638,9 +1644,9 @@ static ssize_t iter_xarray_get_pages_alloc(struct iov_iter *i,
+ 	return actual;
+ }
+ 
+-ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
++ssize_t iov_iter_get_pages_alloc_flags(struct iov_iter *i,
+ 		   struct page ***pages, size_t maxsize,
+-		   size_t *start)
++		   size_t *start, unsigned int gup_flags)
+ {
+ 	struct page **p;
+ 	size_t len;
+@@ -1652,7 +1658,6 @@ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+ 		return 0;
+ 
+ 	if (likely(iter_is_iovec(i))) {
+-		unsigned int gup_flags = 0;
+ 		unsigned long addr;
+ 
+ 		if (iov_iter_rw(i) != WRITE)
+@@ -1665,6 +1670,7 @@ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+ 		p = get_pages_array(n);
+ 		if (!p)
+ 			return -ENOMEM;
 +
- 	if (vma_is_secretmem(vma))
- 		return -EFAULT;
- 
-@@ -2304,6 +2313,10 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
- 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
- 		page = pte_page(pte);
- 
-+		if (unlikely(pte_devmap(pte) && !(flags & FOLL_PCI_P2PDMA) &&
-+			     is_pci_p2pdma_page(page)))
-+			goto pte_unmap;
+ 		res = get_user_pages_fast(addr, n, gup_flags, p);
+ 		if (unlikely(res <= 0)) {
+ 			kvfree(p);
+@@ -1692,6 +1698,13 @@ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+ 		return iter_xarray_get_pages_alloc(i, pages, maxsize, start);
+ 	return -EFAULT;
+ }
++EXPORT_SYMBOL_GPL(iov_iter_get_pages_alloc_flags);
 +
- 		head = try_grab_compound_head(page, 1, flags);
- 		if (!head)
- 			goto pte_unmap;
-@@ -2381,6 +2394,12 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
- 			undo_dev_pagemap(nr, nr_start, flags, pages);
- 			break;
- 		}
-+
-+		if (!(flags & FOLL_PCI_P2PDMA) && is_pci_p2pdma_page(page)) {
-+			undo_dev_pagemap(nr, nr_start, flags, pages);
-+			break;
-+		}
-+
- 		SetPageReferenced(page);
- 		pages[*nr] = page;
- 		if (unlikely(!try_grab_page(page, flags))) {
-@@ -2849,7 +2868,8 @@ static int internal_get_user_pages_fast(unsigned long start,
++ssize_t iov_iter_get_pages_alloc(struct iov_iter *i, struct page ***pages,
++				 size_t maxsize, size_t *start)
++{
++	return iov_iter_get_pages_alloc_flags(i, pages, maxsize, start, 0);
++}
+ EXPORT_SYMBOL(iov_iter_get_pages_alloc);
  
- 	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM |
- 				       FOLL_FORCE | FOLL_PIN | FOLL_GET |
--				       FOLL_FAST_ONLY | FOLL_NOFAULT)))
-+				       FOLL_FAST_ONLY | FOLL_NOFAULT |
-+				       FOLL_PCI_P2PDMA)))
- 		return -EINVAL;
- 
- 	if (gup_flags & FOLL_PIN)
+ size_t csum_and_copy_from_iter(void *addr, size_t bytes, __wsum *csum,
 -- 
 2.30.2
 
