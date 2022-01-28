@@ -2,127 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ACDF49F51A
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jan 2022 09:29:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 894DB49F5BF
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jan 2022 09:57:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347290AbiA1I3j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jan 2022 03:29:39 -0500
-Received: from mga02.intel.com ([134.134.136.20]:11396 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234154AbiA1I3i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Jan 2022 03:29:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643358578; x=1674894578;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=P8mWBGCWwqokVCoOnFNTrTuq7YTbhJhHV/wj2yIzdG8=;
-  b=PcNZIhQ2OpHbAILWyu2t18t1I0feuS7fma16rns00lxbmJP5Og13wYuM
-   T3ysN6i+doezUmbYwe2TGOGk7WWiL7Go5ea4aWCCjdk63OSDUz58cBlOm
-   x9qWrbG468Yhk3LeJv11ynfJid5IylzN17A88kSSxu+71y5dn2SBBe0Nd
-   EUkx25kg7z8tmz0IQgTKCkCojxDjSVzj9ILh3qdiaPUDT0rJ9R1273PUP
-   zWYhvg7wBmv0gpS/+Ykk4rOpWQjaLmfeQsKeXqq8MS8hBWTOP8ZmzwpZK
-   dWabv5JSfH2OM0GUqGCuEf9aqlyx6u0/19vlxhgcrnG0SHwqd0gUF82fE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="234454695"
-X-IronPort-AV: E=Sophos;i="5.88,323,1635231600"; 
-   d="scan'208";a="234454695"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 00:29:38 -0800
-X-IronPort-AV: E=Sophos;i="5.88,323,1635231600"; 
-   d="scan'208";a="697019867"
-Received: from mtkaczyk-mobl1.ger.corp.intel.com (HELO localhost) ([10.213.14.254])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 00:29:36 -0800
-Date:   Fri, 28 Jan 2022 09:29:31 +0100
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+        id S230149AbiA1I5W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jan 2022 03:57:22 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:41558 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229847AbiA1I5U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jan 2022 03:57:20 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 440B961DB4;
+        Fri, 28 Jan 2022 08:57:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A508EC340E0;
+        Fri, 28 Jan 2022 08:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643360239;
+        bh=eA0GRKE5jNFxledJDISs9E2n145awy0LOLWI3Kj0OCw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hfnsg/b/fnzfO7W3HdljYTzrlb2uSKZmWuNmXxQxBjBzTF4/87QiwUfhBOrUqcQ9o
+         VqEpBVJ/09By38KslCaSZifpWNtzGRrqT45RbhqLwii/m0Ve4CMGsEk1YGj62kQ88y
+         Te0x0ARTckdiSvT1Be6JX4lYnidxJvX3ceXUi/Csn+xeebovSgHtaiqQF0+pzCyf+5
+         zT4AgmPr6dH0hYgSdc8kPg6pYsU7P877Gkc1fdKVjATVVBfFesDB/1L9PQ480J5MrB
+         xfL5EjeMNo1drRYV1uYTG0Iqr8bmMqj7aljAsGvNS/gNE0I9zjBy0Us89b2NHJGt69
+         9Y5CvGzyJFhgg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nDN4H-003lDg-8T; Fri, 28 Jan 2022 08:57:17 +0000
+Date:   Fri, 28 Jan 2022 08:57:16 +0000
+Message-ID: <87r18s5jbn.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Blazej Kucman <blazej.kucman@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Naveen Naidu <naveennaidu479@gmail.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>
-Subject: Re: [Bug 215525] New: HotPlug does not work on upstream kernel
- 5.17.0-rc1
-Message-ID: <20220128092931.00004a24@linux.intel.com>
-In-Reply-To: <20220128025212.GA152555@bhelgaas>
-References: <20220127154615.00003df8@linux.intel.com>
-        <20220128025212.GA152555@bhelgaas>
-MIME-Version: 1.0
+Cc:     "qizhong.cheng" <qizhong.cheng@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRz?= =?UTF-8?B?a2k=?= 
+        <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        chuanjia.liu@mediatek.com,
+        Srikanth Thokala <srikanth.thokala@intel.com>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
+Subject: Re: [PATCH] PCI: mediatek: Change MSI interrupt processing sequence
+In-Reply-To: <20220127212100.GA102267@bhelgaas>
+References: <d78b45e461b204d375830217d0d27ffdd97cedd3.camel@mediatek.com>
+        <20220127212100.GA102267@bhelgaas>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, qizhong.cheng@mediatek.com, ryder.lee@mediatek.com, jianjun.wang@mediatek.com, lorenzo.pieralisi@arm.com, kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, chuanjia.liu@mediatek.com, srikanth.thokala@intel.com, pratyush.anand@gmail.com, thomas.petazzoni@bootlin.com, pali@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 27 Jan 2022 20:52:12 -0600
+On Thu, 27 Jan 2022 21:21:00 +0000,
 Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> On Thu, Jan 27, 2022 at 03:46:15PM +0100, Mariusz Tkaczyk wrote:
-> > ...
-> > Thanks for your suggestions. Blazej did some tests and results were
-> > inconclusive. He tested it on two same platforms. On the first one
-> > it didn't work, even if he reverted all suggested patches. On the
-> > second one hotplugs always worked.
+> 
+> [+cc Srikanth, Pratyush, Thomas, Pali, Ryder, Jianjun]
+> 
+> On Wed, Jan 26, 2022 at 11:37:58AM +0800, qizhong.cheng wrote:
+> > On Tue, 2022-01-25 at 17:21 +0000, Marc Zyngier wrote:
+> > > On 2022-01-25 16:57, Bjorn Helgaas wrote:
+> > > > On Sun, Jan 23, 2022 at 11:33:06AM +0800, qizhong cheng wrote:
+> > > > > As an edge-triggered interrupts, its interrupt status should
+> > > > > be cleared before dispatch to the handler of device.
+> > > > 
+> > > > I'm not an IRQ expert, but the reasoning that "we should clear
+> > > > the MSI interrupt status before dispatching the handler because
+> > > > MSI is an edge-triggered interrupt" doesn't seem completely
+> > > > convincing because your code will now look like this:
+> > > > 
+> > > >   /* Clear the INTx */
+> > > >   writel(1 << bit, port->base + PCIE_INT_STATUS);
+> > > >   generic_handle_domain_irq(port->irq_domain, bit - INTX_SHIFT);
+> > > >   ...
+> > > > 
+> > > >   /* Clear MSI interrupt status */
+> > > >   writel(MSI_STATUS, port->base + PCIE_INT_STATUS);
+> > > >   generic_handle_domain_irq(port->inner_domain, bit);
+> > > > 
+> > > > You clear interrupt status before dispatching the handler for
+> > > > *both* level-triggered INTx interrupts and edge-triggered MSI
+> > > > interrupts.
+> > > > 
+> > > > So it doesn't seem that simply being edge-triggered is the
+> > > > critical factor here.
+> > > 
+> > > This is the usual problem with these half-baked implementations.
+> > > The signalling to the primary interrupt controller is level, as
+> > > they take a multitude of input and (crucially) latch the MSI
+> > > edges. Effectively, this is an edge-to-level converter, with all
+> > > the problems that this creates.
+> > > 
+> > > By clearing the status *after* the handling, you lose edges that
+> > > have been received and coalesced after the read of the status
+> > > register. By clearing it *before*, you are acknowledging the
+> > > interrupts early, and allowing them to be coalesced independently
+> > > of the ones that have been received earlier.
+> > > 
+> > > This is however mostly an educated guess. Someone with access to
+> > > the TRM should verify this.
 > > 
-> > He noticed that on first platform where issue has been found
-> > initally, there was boot parameter "pci=nommconf". After adding
-> > this parameter on the second platform, hotplugs stopped working too.
-> > 
-> > Tested on tag pci-v5.17-changes. He have CONFIG_HOTPLUG_PCI_PCIE
-> > and CONFIG_DYNAMIC_DEBUG enabled in config. He also attached two
-> > dmesg logs to bugzilla with boot parameter 'dyndbg="file pciehp*
-> > +p" as requested. One with "pci=nommconf" and one without.
-> > 
-> > Issue seems to related to "pci=nommconf" and it is probably caused
-> > by change outside pciehp.  
+> > Yes, as Maz said, we save the edge-interrupt status so that it
+> > becomes a level-interrupt. This is similar to an edge-to-level
+> > converter, so we need to clear it *before*. We found this problem
+> > through a lot of experiments and tested this patch.
 > 
-> Maybe I'm missing something.  If I understand correctly, the problem
-> has nothing to do with the kernel version (correct me if I'm wrong!)
+> I thought there might be other host controllers with similar design,
+> so I looked at all the other drivers and tried to figure out whether
+> any others had similar problems.
 > 
-Hi Bjorn,
-
-The problem occurred after the merge commit. It is some kind of
-regression.
-
-> PCIe native hotplug doesn't work when booted with "pci=nommconf".
-> When using "pci=nommconf", obviously we can't access the extended PCI
-> config space (offset 0x100-0xfff), so none of the extended
-> capabilities are available.
+> The ones below look suspicious to me because they all clear some sort
+> of status register *after* handling an MSI.  Can you guys take a look
+> and make sure they are working correctly?
 > 
-> In that case, we don't even ask the platform for control of PCIe
-> hotplug via _OSC.  From the dmesg diff from normal (working) to
-> "pci=nommconf" (not working):
+>   keembay_pcie_msi_irq_handler
+>     status = readl(pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS)
+>     if (status & MSI_CTRL_INT)
+>       dw_handle_msi_irq
+> 	generic_handle_domain_irq
+>       writel(status, pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS)
 > 
->   -Command line: BOOT_IMAGE=/boot/vmlinuz-smp ...
->   +Command line: BOOT_IMAGE=/boot/vmlinuz-smp pci=nommconf ...
->   ...
->   -acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM
-> Segments MSI HPX-Type3] -acpi PNP0A08:00: _OSC: platform does not
-> support [AER LTR] -acpi PNP0A08:00: _OSC: OS now controls
-> [PCIeHotplug PME PCIeCapability] +acpi PNP0A08:00: _OSC: OS supports
-> [ASPM ClockPM Segments MSI HPX-Type3] +acpi PNP0A08:00: _OSC: not
-> requesting OS control; OS requires [ExtendedConfig ASPM ClockPM MSI]
-> +acpi PNP0A08:00: MMCONFIG is disabled, can't access extended PCI
-> configuration space under this bridge.
+>   spear13xx_pcie_irq_handler
+>     status = readl(&app_reg->int_sts)
+>     if (status & MSI_CTRL_INT)
+>       dw_handle_msi_irq
+> 	generic_handle_domain_irq
+>     writel(status, &app_reg->int_clr)
+
+I think these two are fine.
+
+The top level interrupt is only a level signal that the is something
+to process. The only thing that is unclear is what the effect of
+writing to that status register if MSIs are pending at that point. A
+sane implementation would just ignore the write.
+
+The actual processing is done in dw_handle_msi_irq(), reading the
+PCIE_MSI_INTR0_STATUS register. This same register is then used to Ack
+the interrupt, one bit at a time, as interrupts are handled (see
+dw_pci_bottom_ack). Ack taking place before the handling, it makes it
+safe for edge delivery.
+
 > 
+>   advk_pcie_handle_int
+>     isr0_status = advk_readl(pcie, PCIE_ISR0_REG)
+>     if (isr0_status & PCIE_ISR0_MSI_INT_PENDING)
+>       advk_pcie_handle_msi
+>         advk_readl(pcie, PCIE_MSI_STATUS_REG)
+> 	advk_writel(pcie, BIT(msi_idx), PCIE_MSI_STATUS_REG)
+> 	generic_handle_irq
+> 	advk_writel(pcie, PCIE_ISR0_MSI_INT_PENDING, PCIE_ISR0_REG)
 
-So, it shouldn't work from years but it has been broken recently, that
-is the only objection I have. Could you tell why it was working?
-According to your words- it shouldn't. We are using VMD driver, is that
-matter?
+Same thing, I guess. It is just that the Ack has been open-coded.
 
-I already saw Jonathan's finding, we can check this. But if nommconf
-stays against hotplug, is it valuable? Maybe we should accept the
-regression as desired.
+>
+>   mtk_pcie_irq_handler
+>     status = readl_relaxed(pcie->base + PCIE_INT_STATUS_REG)
+>     for_each_set_bit_from(irq_bit, &status, ...)
+>       mtk_pcie_msi_handler
+>         generic_handle_domain_irq
+>       writel_relaxed(BIT(irq_bit), pcie->base + PCIE_INT_STATUS_REG)
 
-> Why are you using "pci=nommconf"?  As far as I know, there's no reason
-> to use that except to work around some kind of defect.
+Similar thing. The PCIE_MSI_SET_STATUS register is read first, and
+then written back in the ack callback.
 
-It was added long time ago when it was useful, and sometimes is
-returning. We need to get rid of it definitely.
+	M.
 
-Thanks,
-Mariusz
-
+-- 
+Without deviation from the norm, progress is not possible.
