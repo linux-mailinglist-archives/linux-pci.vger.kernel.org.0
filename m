@@ -2,89 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E34C24A0159
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Jan 2022 21:03:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFD214A024C
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Jan 2022 21:49:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344383AbiA1UDU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 28 Jan 2022 15:03:20 -0500
-Received: from mga05.intel.com ([192.55.52.43]:28403 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234277AbiA1UDS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 28 Jan 2022 15:03:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643400198; x=1674936198;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3CBqo9wC6SYWLiBJXSytiwe5Oe58CLW3FLA0qDovUXU=;
-  b=jkJceV0cge9mXLXtGwQxnjg/l9Kc2WYVUpTX/ceY/uwa/JWvQa9F0xKV
-   QROttXf37r9CDCGtlzdRKbjRJSou4tCExiJmTshB7Hflfpx5fOcPbCSrE
-   +S9GooJ5SggxLv4aV5qwjDfaEkoxXmfB8+AVI97uuZa/xisA7sUjZKazn
-   lKTSxbh/vMwdM7Ow1OMKUKMg4naDfpun7IEyjqXBn7H2pPkTh8mEEGpIr
-   hj15kUvBZMlZpc8Uh/JuLJjHI/5YCwIMJ29HsCue5lW6dst7GOOn4SBHu
-   tNLkGgBrU9uKCchHlQ3PKGRLidgtFs+2muQ70sh/BYEzpADCYy03aD9jU
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10241"; a="333541639"
-X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="333541639"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 12:02:21 -0800
-X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="675188885"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 12:02:15 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nDXQj-00FYpG-UB;
-        Fri, 28 Jan 2022 22:01:09 +0200
-Date:   Fri, 28 Jan 2022 22:01:09 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v3 7/8] mfd: lpc_ich: Add support for pinctrl in non-ACPI
- system
-Message-ID: <YfRLhWwcf9CfKwSN@smile.fi.intel.com>
-References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
- <20211221181526.53798-8-andriy.shevchenko@linux.intel.com>
+        id S235562AbiA1UtP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 28 Jan 2022 15:49:15 -0500
+Received: from mail-ej1-f50.google.com ([209.85.218.50]:40688 "EHLO
+        mail-ej1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238025AbiA1UtO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 28 Jan 2022 15:49:14 -0500
+Received: by mail-ej1-f50.google.com with SMTP id p15so19878776ejc.7;
+        Fri, 28 Jan 2022 12:49:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jq5dwGgkiq/tjKMtkNEpgpX6pW2tDIubIfAQctI09OQ=;
+        b=R8QrTPQ1TnxjfVBxm/vPbSs+zZoij6ff/S5aKTxlp2+ttjb1Q0WhRqnUjx2ZJ3Biei
+         UNfKTz3xzLPiQBTHWFK+9MgXkQnFBTEHa/MJwGRcvhyD1sIgWKfQP58v0VPU/Jt0brDv
+         RDZ+p8wigIcTVvF+lp8GckSZBkL5TNCBWlEgitH4IgrssdqOOxGv/LSeOHrqX6VlZCji
+         7p40IOYzL/RVtIftNnJ18ieDX7mUYDGt2M7EsYAtgzcKYvDc6ncet4P/omXQfNCwOb/1
+         hrSRId/zJ0PckyUyi8iR72kNXSB7rHnY8/+DWgQBd7oiPkixruHoafy3n07v9JHlX62T
+         xsTQ==
+X-Gm-Message-State: AOAM531KCam80TpzOUu3GawXJjFWqyCT9OrYcAFaMGPTDKmLJ0fWESwb
+        A9CTKcA60IvXKE4+q/jI+F8zgR0vTXdjgoQO6/o=
+X-Google-Smtp-Source: ABdhPJy/HStjEBmsl8P/QuvAKGCD5KVvaoBga4gudMrXZBSCYYO7DY4qoIKGdMjUOarIsRls2oxcIn9/TIrpW/CHaSQ=
+X-Received: by 2002:a17:906:910:: with SMTP id i16mr7916287ejd.677.1643402953464;
+ Fri, 28 Jan 2022 12:49:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211221181526.53798-8-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <YfQpy5yGGqY8T0wW@jupiter.dyndns.org> <a7ef2455-ede5-2238-639b-b3a66842a04b@intel.com>
+In-Reply-To: <a7ef2455-ede5-2238-639b-b3a66842a04b@intel.com>
+From:   Brent Spillner <spillner@acm.org>
+Date:   Fri, 28 Jan 2022 20:48:47 +0000
+Message-ID: <CAGwJgaNa2u8vmxsnaSdpSH+ZO0e2GCYObSwC+j03843gXQ_vwg@mail.gmail.com>
+Subject: Re: [PATCH] arch:x86:pci:irq.c: Improve log message when IRQ cannot
+ be identified
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 08:15:25PM +0200, Andy Shevchenko wrote:
-> From: Tan Jui Nee <jui.nee.tan@intel.com>
-> 
-> Add support for non-ACPI systems, such as system that uses
-> Advanced Boot Loader (ABL) whereby a platform device has to be created
-> in order to bind with pin control and GPIO.
-> 
-> At the moment, Intel Apollo Lake In-Vehicle Infotainment (IVI) system
-> requires a driver to hide and unhide P2SB to lookup P2SB BAR and pass
-> the PCI BAR address to GPIO.
+On Fri, Jan 28, 2022 at 6:00 PM Dave Hansen <dave.hansen@intel.com> wrote:
+> Shockingly enough, that parameter is in the documentation:
+> and double-shockingly, it's even called out as X86-32-only:
 
-Lee, are you fine with this change? I hope I fixed all your comments.
+Right, seeing that is what convinced me that not customizing the log
+message for x86_64 could be considered a (admittedly very minor) bug,
+and perhaps worth fixing.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Given that, do we really need to refer to the line numbers of the
+> implementation which will probably be stale by the time this is merged
+> anyway?
 
+Understood, will change the commit message to just refer to the
+command line documentation.
 
+> Any chance you could make that, um, a bit more readable?  It's OK to add
+> brackets to the else{} for readability even if they're not *strictly*
+> necessary.
+>
+> It might also be nice to use
+>
+>         if (IS_ENABLED(CONFIG_FOO))
+>                 ...
+>
+> rather than the #ifdefs.
+
+I don't mind doing either of those if that's the maintainer consensus,
+but would note that neither would be consistent with the surrounding
+code. Prior to the patch, the .c files in arch/x86/pci contain a total
+of 33 #ifdefs and just one IS_ENABLED(), and systematically avoid
+superfluous braces around single-statement if/else/for bodies.
+Granted, the code has other style problems and triggers a number of
+checkpatch.pl warnings (although not in the region affected by this
+patch), but I was trying to be as light a touch as possible.
+
+> I'd also be perfectly OK having two different strings rather than
+> relying on string concatenation and the #ifdefs.
+>
+> Is the "or enabling ACPI" message really necessary?
+
+Not strictly necessary--- it seems fair to assume that anyone
+disabling ACPI does so intentionally and with good reason--- but I
+thought it might stimulate the right thought process for someone who
+doesn't understand why their hardware isn't being properly detected,
+as ACPI triggers some very different code paths through this driver.
+
+It seems like the multiline string literal is your main pain point--- would
+
++#ifdef CONFIG_ACPI
++                       if (acpi_noirq)
++                               msg = "; consider removing acpi=noirq";
++                       else
++                               msg = "; recommend verifying UEFI/BIOS
+IRQ options";
++#else
++                       msg = "; recommend verifying UEFI/BIOS IRQ
+options or enabling ACPI";
++#endif
+
+be OK without going to IS_ENABLED()?  (Personally, I think the #ifdef
+style is more readable.)
