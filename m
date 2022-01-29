@@ -2,69 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B36A04A30F9
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Jan 2022 18:07:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C8974A325D
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Jan 2022 23:34:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352902AbiA2RHt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 Jan 2022 12:07:49 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:53828 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245664AbiA2RHs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Jan 2022 12:07:48 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5CE40B8279C;
-        Sat, 29 Jan 2022 17:07:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1F0DBC340E5;
-        Sat, 29 Jan 2022 17:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643476066;
-        bh=mK4GOxjWQhgRBxEZl+E4VWsLx6wsCN7ihIaJ91iTUj0=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=GdlQvadpZItLZKHQeaAo/69i91fqU+knvzzcHU5wGgL/6llcQFwxq/dytA1HPv+CV
-         SeYTy6P32XFZNZfZR+7thit3bAlRjN112WnuViIITpzcSHQhUWalHvF0gmhsQX3bv3
-         c9HrqElGb5savYCAZV6obr+OlA3U64wn22RXhOrjj5axZtLh7evJrUrIWz/R6mopbv
-         eMazdV16ZaEzBggb1d+8UcjdrRSluSBFQ0OfSWBEfgXTgksHGMsTaxOAZBBtsOzVpC
-         vyZYq0+RncErBvhaArEykqLRJW7eDwmhbsiLIiCzUt+SGQfAbVxUy6ShLfu5UeyvNC
-         wyX5X1Gg0/NxA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0E9D0E5D07E;
-        Sat, 29 Jan 2022 17:07:46 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v5.17
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220129161547.GA352890@bhelgaas>
-References: <20220129161547.GA352890@bhelgaas>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220129161547.GA352890@bhelgaas>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.17-fixes-2
-X-PR-Tracked-Commit-Id: 66d28b21fe6b3da8d1e9f0a7ba38bc61b6c547e1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f8c7e4ede46fe63ff10000669652648aab09d112
-Message-Id: <164347606605.4234.11517840311801526698.pr-tracker-bot@kernel.org>
-Date:   Sat, 29 Jan 2022 17:07:46 +0000
+        id S1353123AbiA2WeG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Jan 2022 17:34:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243417AbiA2WeG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Jan 2022 17:34:06 -0500
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 282C3C061714
+        for <linux-pci@vger.kernel.org>; Sat, 29 Jan 2022 14:34:06 -0800 (PST)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 4E85792009C; Sat, 29 Jan 2022 23:34:03 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 4823E92009B;
+        Sat, 29 Jan 2022 22:34:03 +0000 (GMT)
+Date:   Sat, 29 Jan 2022 22:34:03 +0000 (GMT)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+cc:     Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 19/19] PCI: Set bridge map_irq and swizzle_irq to default
+ functions
+In-Reply-To: <20220111214608.GA169999@bhelgaas>
+Message-ID: <alpine.DEB.2.21.2201220459090.58572@angie.orcam.me.uk>
+References: <20220111214608.GA169999@bhelgaas>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Sat, 29 Jan 2022 10:15:47 -0600:
+On Tue, 11 Jan 2022, Bjorn Helgaas wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.17-fixes-2
+> This patch removed all the ->swizzle_irq users in drivers/pci/, which
+> is great -- IIUC swizzling is specified by the PCI-to-PCI Bridge Spec,
+> r1.2, sec 9.1, and should not be device-specific.  I assume the few
+> remaining arch/ users (arm and alpha) are either bugs or workarounds
+> for broken devices.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f8c7e4ede46fe63ff10000669652648aab09d112
+ I skimmed over the Alpha stuff and it seems to mostly care about setting 
+the slot value returned differently and defers to `pci_common_swizzle' for 
+actual pin determination.  This could be moderately easy to sort out.
 
-Thank you!
+ One exception is `takara_swizzle' which looks incomplete to me; as this 
+is a PICMG device[1] someone would have to fill in the missing details as 
+AFAICT the PICMG connector is supposed to provide all the INT# A-D lines 
+and then routing is done on the backplane using binding defined by PICMG.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+ According to DEC documentation there's an alternative interrupt routing 
+mode available too, using a external interrupt controller FPGA placed on 
+the backplane[2], where no swizzling is done and instead each of the four 
+INT# lines across all the PCI slots, up to 16, provided by a backplane is 
+individually routed to 64 inputs of the interrupt controller.
+
+ There is a paper by DEC available online[3] that could help filling in 
+the missing details for either mode, especially someone who has access to 
+such a system and could verify it in reality.
+
+References:
+
+[1] "DIGITAL 21164 PICMG SBC, User Information for the EBM21 and EBM23",
+    V1.0, Digital Equipment Corporation, June 1997, Part Number: 
+    EK-A0937-UG. A01
+
+[2] "DIGITAL Modular Computing Components, OEM Information for DMCC 
+    Backplanes", Version 4.1, Compaq Computer Corporation, January 1999, 
+    Order Number: EK-A0929-TM. C01
+
+[3] Ross L. Armstrong, "PCI Interrupt Controller for Industry Standard 
+    PCI-ISA Bus Architecture using PCI-to-PCI Bridge Technology", Digital 
+    Equipment Corporation (Scotland) Ltd., 1996
+
+ FWIW,
+
+  Maciej
