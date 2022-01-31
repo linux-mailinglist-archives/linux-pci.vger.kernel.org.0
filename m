@@ -2,141 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AA2E4A5391
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 00:51:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1FF64A539D
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 00:58:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbiAaXvq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 18:51:46 -0500
-Received: from mga05.intel.com ([192.55.52.43]:22290 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229798AbiAaXvp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 Jan 2022 18:51:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643673105; x=1675209105;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+/coqwKlOdxaXYlX5oEp45IALwH8yjaQ+IYj+p4ZQB8=;
-  b=OYT8kaS158Mo8Be8Tjzm6xi9guQipIsQpUpPLwc0FG0vKRoRK2YdRoJJ
-   st9kttMxH9ccr11fFjCmUyJculsO0ICfZ53Lo02a1KMrZLnQslZV/FKNL
-   MvHOWuRdxkG+XT/+0pOa4UN5JcgKgzAhzrj0kVHiBKiaVUTpmLjNkmETV
-   NwPC+EInP1S8h4DIC8VvEwcCdB1tXwlzKc0QSPfntlvLllVMd1WfF5pOC
-   m5Gsjl6GipJDWDlOaZy0oENSO9vDqRxFg28zoyaz4J3wcwUliSbKPA1dF
-   3wuT7A7okEHYtcSn8gVoPRc443vG/awDYa7rFrbfQnkcvpC3vgsqLBq4A
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="333935273"
-X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
-   d="scan'208";a="333935273"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 15:51:45 -0800
-X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
-   d="scan'208";a="537554609"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 15:51:45 -0800
-Subject: [PATCH v4 02/40] cxl/pci: Implement Interface Ready Timeout
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Mon, 31 Jan 2022 15:51:45 -0800
-Message-ID: <164367306565.208548.1932299464604450843.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164298412919.3018233.12491722885382120190.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164298412919.3018233.12491722885382120190.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S229865AbiAaX6m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 18:58:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229820AbiAaX6l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 18:58:41 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69903C061714
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 15:58:41 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id f8so13722377pgf.8
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 15:58:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yNJ1Af637EUsfEdH6a2ccu9Mo4j5OqbaUb3RufUGSWY=;
+        b=60RjLIW2YUmyS930+but4FzcDG3xNa0qtVpNLi5JD7AlMJKow7DsB9zzn+/pIjcTQO
+         CrcXwv1h/gqYxTPy6rLDax0nPqnptjD2/8VEEaJxdeNGDD21ci6lbFIp7yWy3bPs3sq8
+         lpgN7Evb8dFXnZeqg3qX4ij/v9Nr4I6hE1Q5aP/j6y+iL4qallwPO3DPYWr0lSu5TqFN
+         ZY4ZLbByhxdCtD7ehzbNuEQNG7kTNBW/rgJwBmIG13CfMjvb4goeeA1dUsrqxYLQy03D
+         dkP56ruJfgfrug5zPiycMEBRSiscxVtHk7ZusK9LjM6HGlWgs+CxaKPLLcEtGhIIB+YG
+         xOaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yNJ1Af637EUsfEdH6a2ccu9Mo4j5OqbaUb3RufUGSWY=;
+        b=nhoOMNFu97I53/X1bq6oT9jNjB2he+4ghfSH4o9OF+tILBX0KAP2Az2emNozL93VL2
+         CrSwk9jWtMM98nhaFRTjB3y0zivA8MzxJjwtroFg71cIUUjttFpWVvIv3VBLuYPHc/LJ
+         ZPdiIHLkOx9S7C3/fN5Qx8Mh1nPcu3utiUDvWdzyG8cKdsHKI6FmLD2H1yiys3/yyiwt
+         ii+Ln86DqTgRaZ+DnUPzG3+SydpDcWZ6g6a3cGgaRVG4RbH5RhV3ps5qEjojOKjNxKcy
+         iqioyePM/xXCotEe5qFE3wyytaQsUYMnCLRlGRxU9CKn/44ZSjTLiCeXXzf82k00W0GJ
+         GJ3Q==
+X-Gm-Message-State: AOAM533eRJOeUAS6h8DT2Yuvrf//LrpgT62K0XH0HtsCIbbLGdvIBvuz
+        2LfRyHcXY1Gq0hrInUUOee5SnmRjOF7+JHpQz/Vwg+zbDa8=
+X-Google-Smtp-Source: ABdhPJzPF/aTsyybswbESWaWt/tZ7xtIpkCJfezDwJdqphzVn7EcqVMENnKkS/ge15TRYOrA8MtUuKuGfy+m9O8smzo=
+X-Received: by 2002:a63:85c6:: with SMTP id u189mr18410261pgd.437.1643673520966;
+ Mon, 31 Jan 2022 15:58:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <164298420439.3018233.5113217660229718675.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164316562430.3437160.122223070771602475.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220131233422.xo6sugw4bvoyh6ia@intel.com> <CAPcyv4hD9jPaTJZE47hx1mg66T44KWCyiaCZGrqG1i-mNAfKqA@mail.gmail.com>
+ <20220131234259.twqkexaq7emp5ml4@intel.com>
+In-Reply-To: <20220131234259.twqkexaq7emp5ml4@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 31 Jan 2022 15:58:33 -0800
+Message-ID: <CAPcyv4hS7-gS+M63WFp+u7jSGzHSVDcZ2oW3iMFdwKMSjFcLuA@mail.gmail.com>
+Subject: Re: [PATCH v4 16/40] cxl/core/port: Use dedicated lock for decoder
+ target list
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ben Widawsky <ben.widawsky@intel.com>
+On Mon, Jan 31, 2022 at 3:43 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 22-01-31 15:38:44, Dan Williams wrote:
+> > On Mon, Jan 31, 2022 at 3:34 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > >
+> > > On 22-01-25 18:54:36, Dan Williams wrote:
+> > > > Lockdep reports:
+> > > >
+> > > >  ======================================================
+> > > >  WARNING: possible circular locking dependency detected
+> > > >  5.16.0-rc1+ #142 Tainted: G           OE
+> > > >  ------------------------------------------------------
+> > > >  cxl/1220 is trying to acquire lock:
+> > > >  ffff979b85475460 (kn->active#144){++++}-{0:0}, at: __kernfs_remove+0x1ab/0x1e0
+> > > >
+> > > >  but task is already holding lock:
+> > > >  ffff979b87ab38e8 (&dev->lockdep_mutex#2/4){+.+.}-{3:3}, at: cxl_remove_ep+0x50c/0x5c0 [cxl_core]
+> > > >
+> > > > ...where cxl_remove_ep() is a helper that wants to delete ports while
+> > > > holding a lock on the host device for that port. That sets up a lockdep
+> > > > violation whereby target_list_show() can not rely holding the decoder's
+> > > > device lock while walking the target_list. Switch to a dedicated seqlock
+> > > > for this purpose.
+> > > >
+> > > > Reported-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > > ---
+> > > > Changes in v4:
+> > > > - Fix missing unlock in error exit case (Ben)
+> > >
+> > > Could you help me understand why we need a lock at all for the target list? I
+> > > thought the target list remains static throughout the lifetime of the decoder at
+> > > which point, the only issue would be reading the sysfs entries while the decoder
+> > > is being destroyed. Is that possible?
+> >
+> > This is emitting the target list per the current configuration. If
+> > another thread or the kernel is configuring the decoder and while the
+> > target list is being read it should get a coherent snapshot, not the
+> > intermediate settings.
+>
+> How can you see the decoder in sysfs before it is finished being configured?
 
-The original driver implementation used the doorbell timeout for the
-Mailbox Interface Ready bit to piggy back off of, since the latter does
-not have a defined timeout. This functionality, introduced in commit
-8adaf747c9f0 ("cxl/mem: Find device capabilities"), needs improvement as
-the recent "Add Mailbox Ready Time" ECN timeout indicates that the
-mailbox ready time can be significantly longer that 2 seconds.
-
-While the specification limits the maximum timeout to 256s, the cxl_pci
-driver gives up on the mailbox after 60s. This value corresponds with
-important timeout values already present in the kernel. A module
-parameter is provided as an emergency override and represents the
-default Linux policy for all devices.
-
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-[djbw: add modparam, drop check_device_status()]
-Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v3:
-- Let non-admins send timeout bug reports (Ben)
-
- drivers/cxl/pci.c |   35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
-
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 8dc91fd3396a..cc0cdd7e9de3 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1,7 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
- #include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/moduleparam.h>
- #include <linux/module.h>
-+#include <linux/delay.h>
- #include <linux/sizes.h>
- #include <linux/mutex.h>
- #include <linux/list.h>
-@@ -35,6 +37,20 @@
- /* CXL 2.0 - 8.2.8.4 */
- #define CXL_MAILBOX_TIMEOUT_MS (2 * HZ)
- 
-+/*
-+ * CXL 2.0 ECN "Add Mailbox Ready Time" defines a capability field to
-+ * dictate how long to wait for the mailbox to become ready. The new
-+ * field allows the device to tell software the amount of time to wait
-+ * before mailbox ready. This field per the spec theoretically allows
-+ * for up to 255 seconds. 255 seconds is unreasonably long, its longer
-+ * than the maximum SATA port link recovery wait. Default to 60 seconds
-+ * until someone builds a CXL device that needs more time in practice.
-+ */
-+static unsigned short mbox_ready_timeout = 60;
-+module_param(mbox_ready_timeout, ushort, 0644);
-+MODULE_PARM_DESC(mbox_ready_timeout,
-+		 "seconds to wait for mailbox ready status");
-+
- static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
- {
- 	const unsigned long start = jiffies;
-@@ -281,6 +297,25 @@ static int cxl_pci_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *c
- static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
- {
- 	const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
-+	unsigned long timeout;
-+	u64 md_status;
-+
-+	timeout = jiffies + mbox_ready_timeout * HZ;
-+	do {
-+		md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
-+		if (md_status & CXLMDEV_MBOX_IF_READY)
-+			break;
-+		if (msleep_interruptible(100))
-+			break;
-+	} while (!time_after(jiffies, timeout));
-+
-+	if (!(md_status & CXLMDEV_MBOX_IF_READY)) {
-+		dev_err(cxlds->dev,
-+			"timeout awaiting mailbox ready, device state:%s%s\n",
-+			md_status & CXLMDEV_DEV_FATAL ? " fatal" : "",
-+			md_status & CXLMDEV_FW_HALT ? " firmware-halt" : "");
-+		return -EIO;
-+	}
- 
- 	cxlds->mbox_send = cxl_pci_mbox_send;
- 	cxlds->payload_size =
-
+After cxl_decoder_add() the attribute is visible to userspace. At the
+beginning of time a disabled decoder will have zeroes in all "Target
+Port Identifier" fields. When region creation changes the target list
+to valid values it needs to synchronize against userspace that may be
+actively walking the target list as it is being updated.
