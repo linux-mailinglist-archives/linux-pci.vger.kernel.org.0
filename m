@@ -2,117 +2,279 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74AE64A4A70
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 16:21:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3BEC4A4AED
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 16:49:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379362AbiAaPVr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 10:21:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241253AbiAaPVr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 10:21:47 -0500
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C326EC061714;
-        Mon, 31 Jan 2022 07:21:46 -0800 (PST)
-Received: by mail-oi1-x236.google.com with SMTP id e81so27254954oia.6;
-        Mon, 31 Jan 2022 07:21:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:content-language:to
-         :cc:references:from:subject:in-reply-to:content-transfer-encoding;
-        bh=oVZWckNIPsWHeKbXJ2sFvACBl5okPcSAEIsKC6XhxDU=;
-        b=NXQ2vh5WqJcNrwvi+uhxOeXRwL3TuQvr8zI74nXKNlbA4THVcrFQe20l84a2F3rCSl
-         fb+2O3VmewcReatZ19klOskQ2upf6qljRrD6n2B9Y4PhroYWW+XOfsdsfB3MZuirxQ9t
-         X+vPYa1ikH13JYbnSKqVdMeH1jmxa4D6k59/FHZubOFHJbDfNxiaB8VfMIjtaMgLtJV+
-         3A2GEeuqlrodVHjFD7y9lvjUf+N31nBGTmFabP1WX1nvXw95IBSd2qgNRGX0BxRvAmns
-         3J8DZp0qcC/r7rrsLbS0TgQNcR7BR3VDw0NU5D6j9PO9dXHpEDeoVqLmRligf9NcdWA6
-         MSIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:subject:in-reply-to
-         :content-transfer-encoding;
-        bh=oVZWckNIPsWHeKbXJ2sFvACBl5okPcSAEIsKC6XhxDU=;
-        b=KywFr/OqYMsf3qiaElSRqlSWv6PhIuJkZBMaeZcZmCrMnwj09ZfcYxqGtcZ+jVolwZ
-         KlB7ay/40xZ+j8S3irzoABlLB3gcmKr4gNvKvocXi2Wod3WPESxpYfZHJ8de7p88QCxr
-         DrqidW7OpNKBtFJhjdth2pyPrGFKzwWo0mqOeP5hanlcFKmHpoWEjJ/ZSpDt4hLEEhfP
-         R6a/d9heCj46D9wqtCpIj8AGC8RpskMOJp91B2Unpt5xFqa6B0xTpIxhdronb+AOoDEu
-         5ht0V9CuMBAg+mOWDvkV9Wy0viP80Al/upgtdU5avyipYryyvjlt+i7C2JQirSaoCNgZ
-         t9kg==
-X-Gm-Message-State: AOAM530Cl83PjeZaRDrEZUBsw/MaSrRs2zOSzgRdmn2ZDhWPsHTdcd49
-        SRu7+VoFIDWdA/ppoXmtVwM=
-X-Google-Smtp-Source: ABdhPJwZ2DsfGoZh9WlCulrelJMyxXaQWZM7t1bPVVjVsAMl6JMrpJ5ac6K1xcqWaqkMGtPCEBWrHw==
-X-Received: by 2002:a05:6808:211f:: with SMTP id r31mr12780920oiw.194.1643642506160;
-        Mon, 31 Jan 2022 07:21:46 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d65sm9789045otb.17.2022.01.31.07.21.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Jan 2022 07:21:44 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <c78df469-1a9f-5778-24d1-8f08a6bf5bcc@roeck-us.net>
-Date:   Mon, 31 Jan 2022 07:21:40 -0800
+        id S1379878AbiAaPtB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 10:49:01 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4568 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1379829AbiAaPs7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 10:48:59 -0500
+Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JnXSn6S1Sz67xX7;
+        Mon, 31 Jan 2022 23:45:13 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Mon, 31 Jan 2022 16:48:56 +0100
+Received: from localhost (10.47.73.212) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Mon, 31 Jan
+ 2022 15:48:55 +0000
+Date:   Mon, 31 Jan 2022 15:48:48 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH v3 15/40] cxl: Prove CXL locking
+Message-ID: <20220131154848.00006615@Huawei.com>
+In-Reply-To: <164298419875.3018233.7880727408723281411.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <164298419875.3018233.7880727408723281411.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Will Deacon <will@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Jason Gunthorpe <jgg@nvidia.com>, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, Kevin Tian <kevin.tian@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cedric Le Goater <clg@kaod.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vinod Koul <vkoul@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <87mtjc2lhe.ffs@tglx>
-From:   Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [patch V3 28/35] PCI/MSI: Simplify pci_irq_get_affinity()
-In-Reply-To: <87mtjc2lhe.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.73.212]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/31/22 03:27, Thomas Gleixner wrote:
-> On Sun, Jan 30 2022 at 09:12, Guenter Roeck wrote:
->> On Fri, Dec 10, 2021 at 11:19:26PM +0100, Thomas Gleixner wrote:
->> This patch results in the following runtime warning when booting x86
->> (32 bit) nosmp images from NVME in qemu.
->>
->> [   14.825482] nvme nvme0: 1/0/0 default/read/poll queues
->> ILLOPC: ca7c6d10: 0f 0b
->> [   14.826188] ------------[ cut here ]------------
->> [   14.826307] WARNING: CPU: 0 PID: 7 at drivers/pci/msi/msi.c:1114 pci_irq_get_affinity+0x80/0x90
+On Sun, 23 Jan 2022 16:29:58 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> When CONFIG_PROVE_LOCKING is enabled the 'struct device' definition gets
+> an additional mutex that is not clobbered by
+> lockdep_set_novalidate_class() like the typical device_lock(). This
+> allows for local annotation of subsystem locks with mutex_lock_nested()
+> per the subsystem's object/lock hierarchy. For CXL, this primarily needs
+> the ability to lock ports by depth and child objects of ports by their
+> parent parent-port lock.
 > 
-> This complains about msi_desc->affinity being NULL.
-> 
->> git bisect bad f48235900182d64537c6e8f8dc0932b57a1a0638
->> # first bad commit: [f48235900182d64537c6e8f8dc0932b57a1a0638] PCI/MSI: Simplify pci_irq_get_affinity()
-> 
-> Hrm. Can you please provide dmesg and /proc/interrupts from a
-> kernel before that commit?
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Hi Dan,
+
+This infrastructure is nice.
+
+A few comments inline - mostly requests for a few comments to make
+life easier when reading this in future.  Also, I'd slightly prefer
+this as 2 patches so the trivial nvdimm / Kconfig.debug stuff is separate
+from the patch actually introducing support for this in CXL.
+
+Anyhow, all trivial stuff so as far as I'm concerned.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/cxl/acpi.c       |   10 +++---
+>  drivers/cxl/core/pmem.c  |    4 +-
+>  drivers/cxl/core/port.c  |   43 ++++++++++++++++++++-------
+>  drivers/cxl/cxl.h        |   74 ++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/pmem.c       |   12 ++++---
+>  drivers/nvdimm/nd-core.h |    2 +
+>  lib/Kconfig.debug        |   23 ++++++++++++++
+>  7 files changed, 143 insertions(+), 25 deletions(-)
 > 
 
-Sure. Please see http://server.roeck-us.net/qemu/x86/.
-The logs are generated with with v5.16.4.
 
-Guenter
+> @@ -712,15 +725,23 @@ static int cxl_bus_match(struct device *dev, struct device_driver *drv)
+>  
+>  static int cxl_bus_probe(struct device *dev)
+>  {
+> -	return to_cxl_drv(dev->driver)->probe(dev);
+> +	int rc;
+> +
+> +	cxl_nested_lock(dev);
+
+I guess it is 'fairly' obvious why this call is here (I assume because the device
+lock is already held), but maybe worth a comment?
+
+> +	rc = to_cxl_drv(dev->driver)->probe(dev);
+> +	cxl_nested_unlock(dev);
+> +
+> +	return rc;
+>  }
+>  
+>  static void cxl_bus_remove(struct device *dev)
+>  {
+>  	struct cxl_driver *cxl_drv = to_cxl_drv(dev->driver);
+>  
+> +	cxl_nested_lock(dev);
+>  	if (cxl_drv->remove)
+>  		cxl_drv->remove(dev);
+> +	cxl_nested_unlock(dev);
+>  }
+>  
+>  struct bus_type cxl_bus_type = {
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index c1dc53492773..569cbe7f23d6 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -285,6 +285,7 @@ static inline bool is_cxl_root(struct cxl_port *port)
+>  	return port->uport == port->dev.parent;
+>  }
+>  
+> +bool is_cxl_port(struct device *dev);
+>  struct cxl_port *to_cxl_port(struct device *dev);
+>  struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
+>  				   resource_size_t component_reg_phys,
+> @@ -295,6 +296,7 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
+>  
+>  struct cxl_decoder *to_cxl_decoder(struct device *dev);
+>  bool is_root_decoder(struct device *dev);
+> +bool is_cxl_decoder(struct device *dev);
+>  struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+>  					   unsigned int nr_targets);
+>  struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
+> @@ -347,4 +349,76 @@ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
+>  #ifndef __mock
+>  #define __mock static
+>  #endif
+> +
+> +#ifdef CONFIG_PROVE_CXL_LOCKING
+> +enum cxl_lock_class {
+> +	CXL_ANON_LOCK,
+> +	CXL_NVDIMM_LOCK,
+> +	CXL_NVDIMM_BRIDGE_LOCK,
+> +	CXL_PORT_LOCK,
+
+As you are going to increment off the end of this perhaps a comment
+here so that no one thinks "I'll just add another entry after CXL_PORT_LOCK"
+
+> +};
+> +
+> +static inline void cxl_nested_lock(struct device *dev)
+> +{
+> +	if (is_cxl_port(dev)) {
+> +		struct cxl_port *port = to_cxl_port(dev);
+> +
+> +		mutex_lock_nested(&dev->lockdep_mutex,
+> +				  CXL_PORT_LOCK + port->depth);
+> +	} else if (is_cxl_decoder(dev)) {
+> +		struct cxl_port *port = to_cxl_port(dev->parent);
+> +
+> +		mutex_lock_nested(&dev->lockdep_mutex,
+> +				  CXL_PORT_LOCK + port->depth + 1);
+
+Perhaps a comment on why port->dev + 1 is a safe choice?
+Not immediately obvious to me and I'm too lazy to figure it out :)
+
+> +	} else if (is_cxl_nvdimm_bridge(dev))
+> +		mutex_lock_nested(&dev->lockdep_mutex, CXL_NVDIMM_BRIDGE_LOCK);
+> +	else if (is_cxl_nvdimm(dev))
+> +		mutex_lock_nested(&dev->lockdep_mutex, CXL_NVDIMM_LOCK);
+> +	else
+> +		mutex_lock_nested(&dev->lockdep_mutex, CXL_ANON_LOCK);
+> +}
+> +
+> +static inline void cxl_nested_unlock(struct device *dev)
+> +{
+> +	mutex_unlock(&dev->lockdep_mutex);
+> +}
+> +
+> +static inline void cxl_device_lock(struct device *dev)
+> +{
+> +	/*
+> +	 * For double lock errors the lockup will happen before lockdep
+> +	 * warns at cxl_nested_lock(), so assert explicitly.
+> +	 */
+> +	lockdep_assert_not_held(&dev->lockdep_mutex);
+> +
+> +	device_lock(dev);
+> +	cxl_nested_lock(dev);
+> +}
+> +
+> +static inline void cxl_device_unlock(struct device *dev)
+> +{
+> +	cxl_nested_unlock(dev);
+> +	device_unlock(dev);
+> +}
+> +#else
+> +static inline void cxl_nested_lock(struct device *dev)
+> +{
+> +}
+> +
+> +static inline void cxl_nested_unlock(struct device *dev)
+> +{
+> +}
+> +
+> +static inline void cxl_device_lock(struct device *dev)
+> +{
+> +	device_lock(dev);
+> +}
+> +
+> +static inline void cxl_device_unlock(struct device *dev)
+> +{
+> +	device_unlock(dev);
+> +}
+> +#endif
+> +
+> +
+
+One blank line only.
+
+>  #endif /* __CXL_H__ */
+...
+> diff --git a/drivers/nvdimm/nd-core.h b/drivers/nvdimm/nd-core.h
+> index a11850dd475d..2650a852eeaf 100644
+> --- a/drivers/nvdimm/nd-core.h
+> +++ b/drivers/nvdimm/nd-core.h
+> @@ -185,7 +185,7 @@ static inline void devm_nsio_disable(struct device *dev,
+>  }
+>  #endif
+>  
+> -#ifdef CONFIG_PROVE_LOCKING
+> +#ifdef CONFIG_PROVE_NVDIMM_LOCKING
+>  extern struct class *nd_class;
+>  
+>  enum {
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 9ef7ce18b4f5..ea9291723d06 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1509,6 +1509,29 @@ config CSD_LOCK_WAIT_DEBUG
+>  	  include the IPI handler function currently executing (if any)
+>  	  and relevant stack traces.
+>  
+> +choice
+> +	prompt "Lock debugging: prove subsystem device_lock() correctness"
+> +	depends on PROVE_LOCKING
+> +	help
+> +	  For subsystems that have instrumented their usage of the device_lock()
+> +	  with nested annotations, enable lock dependency checking. The locking
+> +	  hierarchy 'subclass' identifiers are not compatible across
+> +	  sub-systems, so only one can be enabled at a time.
+> +
+> +config PROVE_NVDIMM_LOCKING
+> +	bool "NVDIMM"
+> +	depends on LIBNVDIMM
+> +	help
+> +	  Enable lockdep to validate nd_device_lock() usage.
+
+I would slightly have preferred a first patch that pulled out the NVDIMM parts
+and a second that introduced it for CXL.
+
+> +
+> +config PROVE_CXL_LOCKING
+> +	bool "CXL"
+> +	depends on CXL_BUS
+> +	help
+> +	  Enable lockdep to validate cxl_device_lock() usage.
+> +
+> +endchoice
+> +
+>  endmenu # lock debugging
+>  
+>  config TRACE_IRQFLAGS
+> 
+
