@@ -2,145 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2144F4A3E41
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 08:36:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E36714A3E5C
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 08:52:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348035AbiAaHgw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 02:36:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347972AbiAaHgv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 02:36:51 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6233C061714;
-        Sun, 30 Jan 2022 23:36:50 -0800 (PST)
-Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1nERF0-0003mt-Ng; Mon, 31 Jan 2022 08:36:47 +0100
-Message-ID: <95bf594b-250c-5a6d-aa3b-d428dbf9c203@leemhuis.info>
-Date:   Mon, 31 Jan 2022 08:36:46 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-BS
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        regressions@lists.linux.dev
-References: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: 100 ms boot time increase regression in
- acpi_init()/acpi_scan_bus()
-In-Reply-To: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8
+        id S237965AbiAaHwo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 02:52:44 -0500
+Received: from mail-gv0che01on2116.outbound.protection.outlook.com ([40.107.23.116]:24929
+        "EHLO CHE01-GV0-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S237927AbiAaHwo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 31 Jan 2022 02:52:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U8Mqip1x1N3ubbpUmFa3nmZ/KVElT/2lbgYcwnPrpqvsrOchMjZX4D0F5Pi5N4iEtZ3h+vmDq99/4KJ5BsiS18BneakewsExR1lgF0IrmCN6lT9utmykDYizCotwJ6yI4OMGJUajZTYT0fQvaRH2aiI4JLWVvwGl3EJ+XkRC/0TDVMiORfhIPFldxFaVl7ce8A5Cfcajyofupf4ElgO45nDwzmCvOVPEQAgTQqW/msim7NZLqmUsBxHOYzuYReDO1FPv+SrYTeWlGNAbiVSOPwQ1zG8AQ0eWU+VrVnvEziMD7iE5GPJ2qdjMVCi0buCeBmkeF2jJoBcBxWQlAAdZDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fDwr7HV6KU5Vv6PWjmcMfB64UaBmg7KXWt6gaVkEIL0=;
+ b=CxMvUYGIPLkK3O1O7OMDN33A/GGDgh3p9nJGaKPZ+5cMG8KALwZiHe2SezbGsFNkya0ts6O+enoexeAyTeUn/JPaFSp7QfCR7hATvYShEvbzwROErgnVRfK0W2LyNwIFtEU2VVU7nJMpgO2wxloV8DNyBCfK9lrWhDkx1nCWoY+RdsHr32qm18xm91WqggAsBr8l5QqGdqD6wfWzX0rVsx40YoOV0ysMm/U10u3x6PLcv8niHHz0WHlgeNvXJXgRcWjr5OuHhAwTWcypJFK45onSz6jZWY9e9AQOhi6OCLhN+2nZXlqcB1+jU9wMZNh4e1Zm0tRUF/+aLoy1rNE8yA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fDwr7HV6KU5Vv6PWjmcMfB64UaBmg7KXWt6gaVkEIL0=;
+ b=cuhCzas4uCdt3Ei4/SpBbqVgwhlrtvQvg6GZ/t1U9U01GdoqK9lEwDiU8S/wBp4HYlmMdbxKgFqqmGXwCjPOYRNFrjdVkwtWHuWXGcQ4bMGlkBICcVl4ljIz/OGjs1CFEQZEVNRsbHgVeE7X/W9TNoi8V10bwfqRYh2I5mXzijA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=toradex.com;
+Received: from ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:3d::11)
+ by GV0P278MB0436.CHEP278.PROD.OUTLOOK.COM (2603:10a6:710:2e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.17; Mon, 31 Jan
+ 2022 07:52:42 +0000
+Received: from ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::fc21:519b:ba18:7676]) by ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::fc21:519b:ba18:7676%3]) with mapi id 15.20.4930.021; Mon, 31 Jan 2022
+ 07:52:42 +0000
+From:   Francesco Dolcini <francesco.dolcini@toradex.com>
+To:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Jason Liu <jason.hui.liu@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: [PATCH v1] PCI: imx6: Handle the abort from user-space
+Date:   Mon, 31 Jan 2022 08:52:35 +0100
+Message-Id: <20220131075235.787432-1-francesco.dolcini@toradex.com>
+X-Mailer: git-send-email 2.25.1
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643614610;7995cc82;
-X-HE-SMSGID: 1nERF0-0003mt-Ng
+Content-Type: text/plain
+X-ClientProxiedBy: GVAP278CA0005.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:710:20::15) To ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:3d::11)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 45b91400-514d-4bf5-52c5-08d9e48ea8da
+X-MS-TrafficTypeDiagnostic: GV0P278MB0436:EE_
+X-Microsoft-Antispam-PRVS: <GV0P278MB04361AB9036E6BD7ED43A8D7E2259@GV0P278MB0436.CHEP278.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: k+eV9lj3ihEB3F38S4Hq41vLchyReyvEZchn69vUXHWwgGB397jzBrg1HRYlVEWDa8lIVW4XiWnI6w/4dvkiFfRvWqF+NiYyE66xcnVTFjIEcbsZvPkiPiTXIOPNFAFKauEL/CX3eImwlJHiqgnns1b8PNyk6ZMrfXP22CaIEEuysP2ePlfcohTnTUGyK0q8wgzOND0ePG1xRsw7JMiORUZEa5E67r4xyLeIvEleCdEIJFj+umRLavPzZrtwaJfMSvYiBVC+ml77w1u1808GobczAw9dRawXT2x60ZODuUGiHuqbdw+AiJT72V745yW0moZNXAKQF3JvPVapERovrVbSmvBO6fEZeFrdKuEj39TfiwoxgBhlQw8G4J5qBEg66Dj8SU1nmW5YipIyxhqmInz/adwhYR+KgKZ7qvmfLbCj2p+lXJe0ad/p/me9B7RbayDM/BWjqHt216eTSOtKFZNlDl7CxjXw4Ur5y5a9sprBeuNNgPHDAbMA9RJKWNrlu+9E5pFKHNRhkSuQNz0kSth+deF7TJdcA082OFO1U5Q/Av3fSOMKtjKDchYQ6j7GyaetvfejOVb5jJ4F9zu5WWCuzZRZHM+3QHcr+SpV6u1HpC5rIqGZ9aMJBJ5p0Yc0PeQW9dw7SkpOIGL0ioPEXsZPCjgd10VABei4jkGiDhIBcZz7yVsa5F1paAKi279Zr+gDZBU1WRMSBkhbkLgRNAEebYMNA6C3KzUYaXGrf+5LtYNU5UeCnqcwisznNwPwSd6peDNqZmXpLwhrQfdBU/Mip9xHTtKMUO4IXBSHynQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(346002)(376002)(39840400004)(396003)(136003)(366004)(110136005)(966005)(83380400001)(6486002)(38350700002)(8936002)(36756003)(52116002)(508600001)(66556008)(66476007)(316002)(4326008)(54906003)(66946007)(8676002)(6512007)(921005)(38100700002)(86362001)(44832011)(107886003)(6666004)(26005)(186003)(1076003)(6506007)(7416002)(2616005)(2906002)(5660300002)(20210929001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?q5xudGt88kvPOnDKUjAU4Uv7ImGpJfI47K0HqsFa3mMf8C7V4YrW9SNFGIDh?=
+ =?us-ascii?Q?kCgkr9/oWFZDfLmrIj9Qp6DMqjFiGQcRJiQWBl1uWFn6SmdTFuRFGVgp5pfi?=
+ =?us-ascii?Q?IbcVJveZ1GzPw49vK8aXStDSkQlokRFImLWcFCEwhM+zPgfU6g5vJoHIxyUE?=
+ =?us-ascii?Q?I8b6Gtn1Hw0gpQi2+F5tDMVJBcHRE8prX/pG8hgbq1sc5AK/omzaQtR6IYx8?=
+ =?us-ascii?Q?blrWIFJHGMdR/ZrRH5zbwp+28cSdHolMRX/h8HeqEijBLYws/l+wv1G1mkHC?=
+ =?us-ascii?Q?CbB1ySUSOkKieV3r1I97bwYfZ8ZY1y1WQkpSbU5eHb5PIu0wT5Rwz+TMevnz?=
+ =?us-ascii?Q?I45FLd1ZYeKj3E5WOkOglOOyG2pP7Xi+2NXpvs352gSLAh7ew13qksVJYnRs?=
+ =?us-ascii?Q?tRA2k7KeT5EXl7bgBBfCWPdcu+LoFygmo8oO2onqpL1bnr5HCp6N6J4/M0DP?=
+ =?us-ascii?Q?mT18Kj5ms+yWm3tsSt2RLbJc607btsdmiZui/e7Smc1tn7/VHwdsfuPAF+aN?=
+ =?us-ascii?Q?CoN6xSmj6yfaF9hTkUNWAy2QOzWSCfNGlTk+TA8Wfm/A7QzWCNburCA1GoI+?=
+ =?us-ascii?Q?Y6azQcmAIS+xNqBVLkr1KexNvWNeb2ZMp5HQ7wAGvgqqTqsD5475BiBxs7/C?=
+ =?us-ascii?Q?D/Ecue/nfUm4ol0+GOrx17+BRit2wjWCN9JFqfTWMOOEIJWHSboH9rQ6nbTb?=
+ =?us-ascii?Q?yn/vkoYSXM5leva0ndQOzYpRfOK1QFOxN6Muog6CmJjzw89K6PWTyGxqr6DS?=
+ =?us-ascii?Q?7IunzEXfYL5YamoLHhcvEcq4aBc/mSY9jtQ+tuOWKYoZERZbZcJmCO6t+EyU?=
+ =?us-ascii?Q?2GkwrU1JAiHDigT53R6xLWG1Wbw2a2jD0gDUgJxfMTY1ggV8oYe0+CwOptQj?=
+ =?us-ascii?Q?dNgj2lLvBx0f9PCjpbUzCZzzTHS9Gbg+m/7ZshBjm9x/f+hoACIwEDDYPXZw?=
+ =?us-ascii?Q?FlPV72WESyHHii2zzxk0YD3VnYDpAtKNnwhJOoCuUZCgYHhiol1jN++TGLdC?=
+ =?us-ascii?Q?XWQ4BE2ZnxDTMedQj14+HgUNCZkwRRPklVeVbS6RWKV6tbqC7iBBObg8/8Aq?=
+ =?us-ascii?Q?+3ZGYnsw7CLPHbgKh5TXI4rbF/cBDOZIx1gPT4H25pB+iFE/UHXbeXWchsP/?=
+ =?us-ascii?Q?KrnfGyvR8Vc9iwqkxZWjrVkEKSEGIqLoaGEjwnajcthiRmoZQK35cR/6RXvJ?=
+ =?us-ascii?Q?4nOYwrSxrO6Es77/fa8OMJz66QSyBDnBE0qa4x4KwuJTXZ3iAfGp0KkUJDab?=
+ =?us-ascii?Q?em+rAPB85zuU/g57KiEFl7hWDRzywCkKUz1D0y04XiIj9tYulbEwDEyjiqDl?=
+ =?us-ascii?Q?XAJPTXgsbo70ZfJm7QevincTYB8yH5Pb/XNMH/bsQlSGIgICqAMYk6kl3b+f?=
+ =?us-ascii?Q?mEc/MgIg+uq7EydZiU0ioo6pStULzxKqlmMqcyOvRvlakre5y5ti5lGj2ic6?=
+ =?us-ascii?Q?a7fLVoyHvdorZUDtrvSWTpDjOoBWW0Zq99w3ag15XwaU09guQ5EHSCiBh6aK?=
+ =?us-ascii?Q?cnn3uiVBMo7VfZhrv+yxYw4X4/VyTn2ITaN2fpnQrZ2khdqga1asTFVSj38h?=
+ =?us-ascii?Q?QmlQBO7n8UFpgFOMZ5GDL2yO+VE2WayDa/Dsg0V/uka64Uq5HIt7lbKL/Y7R?=
+ =?us-ascii?Q?3Geze4wenBcDELO2erGy19OzfwlRCOhw3aKveD6enAFthz8Khh2Blaknb6rd?=
+ =?us-ascii?Q?TxFqGA=3D=3D?=
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45b91400-514d-4bf5-52c5-08d9e48ea8da
+X-MS-Exchange-CrossTenant-AuthSource: ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2022 07:52:41.9786
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z0kjJUElJKCLduNDKJ/L4nWlxOJjv8p9D6r+pDlTHOALjukD2ixXkTXnG9HIuMVWSJIgGWqCx3qJzDYbD6OEMkoMnD51HwQBqqYt0LZgV9c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV0P278MB0436
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, this is your Linux kernel regression tracker speaking.
+From: Jason Liu <jason.hui.liu@nxp.com>
 
-On 10.01.22 12:29, Paul Menzel wrote:
-> #regzbot introduced: v5.13..v5.14-rc1
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215419
+The driver install one hook to handle the external abort, but issue
+is that if the abort introduced from user space code, the following
+code unsigned long instr = *(unsigned long *)pc; which will created
+another data-abort(page domain fault) if CONFIG_CPU_SW_DOMAIN_PAN.
 
-Thx for getting regzbot involved!
+The patch does not intent to use copy_from_user and then do the hack
+due to the security consideration. In fact, we can just return and
+report the external abort to user-space.
 
-Nothing happened since you reported the issue three weeks ago; sure,
-it's not a pressing issue, but I wonder what the status is.
+Link: https://lore.kernel.org/all/20220128082920.591115-1-francesco.dolcini@toradex.com
+Signed-off-by: Jason Liu <jason.hui.liu@nxp.com>
+Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
+Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Acked-by: Lucas Stach <l.stach@pengutronix.de>
+---
+rfc -> v1:
+ * added Acked-by Lucas Stach
+ * include correct header for user_mode()
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-@pm people: isn't this at least worth a reply?
-@paul: did you perform any additional checks?
-
-Or did anything happen somewhere else and I just missed it?
-
-#regzbot poke
-
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
-
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply, that's in everyone's interest.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
-
-> On the Intel T4500 laptop Acer TravelMate 5735Z with Debian
-> sid/unstable, there is a 100 ms introduced between Linux 5.10.46 and
-> 5.13.9, and is still present in Linux 5.15.5.
-> 
->     [    0.000000] microcode: microcode updated early to revision 0xa0b,
-> date = 2010-09-28
->     [    0.000000] Linux version 5.15.0-2-amd64
-> (debian-kernel@lists.debian.org) (gcc-11 (Debian 11.2.0-13) 11.2.0, GNU
-> ld (GNU Binutils for Debian) 2.37) #1 SMP Debian 5.15.5-2 (2021-12-18)
->     [    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-2-amd64
-> root=UUID=e17cec4f-d2b8-4cc3-bd39-39a10ed422f4 ro quiet noisapnp
-> cryptomgr.notests random.trust_cpu=on initcall_debug log_buf_len=4M
->     […]
->     [    0.262243] calling  acpi_init+0x0/0x487 @ 1
->     […]
->     [    0.281655] ACPI: Enabled 15 GPEs in block 00 to 3F
->     [    0.394855] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
->     […]
->     [    0.570908] initcall acpi_init+0x0/0x487 returned 0 after 300781
-> usecs
-> 
-> I attached all the log files to the Kernel.org Bugzilla bug report
-> #215419 [1].
-> 
-> Unfortunately, I am unable to bisect the issue, as it’s not my machine,
-> and I do not have a lot of access to it.
-> 
-> Using ftrace, unfortunately, I didn’t save all of them, I think the path is
-> 
->     acpi_init() → acpi_scan_init() → acpi_bus_scan(ACPI_ROOT_OBJECT)
-> 
-> But this path hasn’t changed as far as I can see. Anyway, from that
-> path, somehow
-> 
->     acpi_bus_check_add_1() → acpi_bus_check_add() → … →
-> acpi_bus_check_add() → acpi_add_single_object() → acpi_bus_get_status()
-> 
-> is called, and the `acpi_bus_get_status()` call takes 100 ms on the
-> system – also the cause for bug #208705 [2] –, but that code path wasn’t
-> taken before.
-> 
-> Do you know from the top of your head, what changed? I am going to have
-> short access to the system every two weeks or so, so debugging is
-> unfortunately quite hard.
-> 
-> What is already on my to-do list:
-> 
-> 1.  Use dynamic debug `drivers/acpi/scan.c`
-> 2.  Trace older Linux kernel (5.10.46) to see the differences
-> 3.  Booting some GNU/Linux system to test 5.11 (Ubuntu 20.10) and 5.12
-> 4.  Unrelated to the regression, but trace `acpi_bus_get_status()` to
-> understand the 100 ms delay to solve bug #208705 [2]
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> PS: Do you know of GNU/Linux live systems that are available for all
-> Linux kernel releases and have an initrd, that just stores/uploads the
-> output of `dmesg`?
-> 
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=215419
->      "100 ms regression in boottime before `ACPI: PCI Root Bridge [PCI0]"
-> [2]: https://bugzilla.kernel.org/show_bug.cgi?id=208705
->      "boot performance: 100 ms delay in PCI initialization - Acer
-> TravelMate 5735Z"
-> 
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 6974bd5aa116..c47a05332a94 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -22,6 +22,7 @@
+ #include <linux/of_address.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
++#include <linux/ptrace.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/resource.h>
+@@ -297,8 +298,15 @@ static int imx6q_pcie_abort_handler(unsigned long addr,
+ 		unsigned int fsr, struct pt_regs *regs)
+ {
+ 	unsigned long pc = instruction_pointer(regs);
+-	unsigned long instr = *(unsigned long *)pc;
+-	int reg = (instr >> 12) & 15;
++	unsigned long instr;
++	int reg;
++
++	/* if the abort from user-space, just return and report it */
++	if (user_mode(regs))
++		return 1;
++
++	instr = *(unsigned long *)pc;
++	reg = (instr >> 12) & 15;
+ 
+ 	/*
+ 	 * If the instruction being executed was a read,
+-- 
+2.25.1
 
