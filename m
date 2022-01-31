@@ -2,250 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E129E4A517C
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 22:33:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2143A4A51B1
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 22:40:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358151AbiAaVdP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 16:33:15 -0500
-Received: from mga05.intel.com ([192.55.52.43]:11442 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241365AbiAaVdO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 Jan 2022 16:33:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643664794; x=1675200794;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AKxtkV2nWEtyxc0yUPzos0ai3+HqJxpnpoG1PScXq/Q=;
-  b=R56uBeRtmvMWtOGzir+xBUxFozeYcoj1lNqGFHCZTnThzfxXGPMHGCPh
-   qTsv6nfp3F/seBPzEbUi6ZF6neb6WT1zxzHhbqb6KL8EAEmZz4ORkeYxt
-   1ua9mlFR+IMiRXFr0Uo/Mu57rW5ITSEHC85lQvAx6uX71menViXDZ80+j
-   ElHmk2/ox9A9O13KTV7m4xdsl5YHTjGOFXbrougIRZoCSvMCAEZRHD1+C
-   QiVBTMgGz3h2gry6AKEuAU/iszrUUvF9fCjcBoiQoOpS4z18/l7kE2/3o
-   1YHFyBu7lmU4OVI2OjqT1oWBRzbMUbHdhsnhvcsfJkNsRGmS9Dkd6b/sG
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="333911182"
-X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="333911182"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 13:33:14 -0800
-X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="479361253"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 13:33:13 -0800
-Subject: [PATCH v4 11/40] cxl/core/port: Clarify decoder creation
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
-        nvdimm@lists.linux.dev
-Date:   Mon, 31 Jan 2022 13:33:13 -0800
-Message-ID: <164366463014.111117.9714595404002687111.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164298417755.3018233.850001481653928773.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164298417755.3018233.850001481653928773.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S1381214AbiAaVkt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 16:40:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1381227AbiAaVir (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 16:38:47 -0500
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA295C06176D
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 13:38:20 -0800 (PST)
+Received: by mail-oi1-x241.google.com with SMTP id u13so13196503oie.5
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 13:38:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=RcCyF58LaRxi/j1nHAT0ApLeXmQ9s66f3iMVqhPacvY=;
+        b=dEuqzCa7Zlz6s4mRGbRbRWXXanD59qsT+xmKk7tBbCVL8shmNgt9pnuL3r3GZQALql
+         Y63DqHUGCnZO0yzAtzp7ZNS2CuC8pMKUMaMtNqE3s9gB45FDt9/C7CdeYDqwmv7HZJbj
+         h6fZit5aG7dGp8FvXKTscfcGshyIKAGZl/Y4NFvWe+GDkg5MDDBzPsbgzyvzZ7B1mfX4
+         ltlQ0tRJrdsWlCdvxMPpvS+PhwNDM1Zp7MYHnfnHzWMTP4bbhrhxbQSB0Xw9LPR0gSp/
+         L2Vas/DZH4ZiZyplfhihUfOHaOD2GjtH1tg3ZI6lVgxDcwRnl8d4U3qCI5tj+07J/ZXk
+         SzvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=RcCyF58LaRxi/j1nHAT0ApLeXmQ9s66f3iMVqhPacvY=;
+        b=N/+8d8NliHnSwdkooi0ZYT/qhB0F5Nfg4XQsQghY17ufJLs1aq2Ds49UHgW7FfHGjJ
+         YFKdgHsFnXFkiuwCjjSXxmFGhD7uEISTtrWRSIOVuyuAeWICLSl6AV1ILQfw6hKPuDsi
+         +XcT7v/bD0VeEvn5we1mipljV/9lvq2exyniReJwQ795RtnPBwFn6SZxJlkVsrcB0XUs
+         KVaNLhbDr5j+5wqJp9lz5fGscpzBu+kVIvFxpZtNPiRxBdlu/2WLPmiwWimY8PvTSeUD
+         k3CXb6dWsKSwiqZBXdkZR2L7yV2DPGnBOa/2fCF15ZlFNc93dsB35i8bNc6jcy6Y09PJ
+         hP0w==
+X-Gm-Message-State: AOAM531CsylJ6Q5vgPoSuWw+nXRpLxk37o49BCUNYTh0U6JeWocvCPOo
+        ZDE7d6mEdr5ERYQFqz/P0tT2EEovI+BVcsEGfV6Cfa/FtdXVcw==
+X-Google-Smtp-Source: ABdhPJzjG4nHBnpm1YeRsvfpKVsM6nmNJIeFJaztEJrNHMe+iyJctx1iGavTAT23A2IhS4j6LtYbunRiUquAn1xj08o=
+X-Received: by 2002:a54:4490:: with SMTP id v16mr14818764oiv.157.1643665089421;
+ Mon, 31 Jan 2022 13:38:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a4a:c30d:0:0:0:0:0 with HTTP; Mon, 31 Jan 2022 13:38:09
+ -0800 (PST)
+Reply-To: westerunion909@gmail.com
+From:   "Antonia Lloyd." <anthonylloydatmxxx04@gmail.com>
+Date:   Mon, 31 Jan 2022 13:38:09 -0800
+Message-ID: <CAExPwBBpihjV-rv_-+hYqb1WD3wpSWx81B_Q3ES15U3TXSPsyw@mail.gmail.com>
+Subject: Dear Email ID Owner.(USD$4000 IMF COMPENSATION FUND TO PICK UP TODAY).
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Ben Widawsky <ben.widawsky@intel.com>
+Dear Email ID Owner.
 
-Add wrappers for the creation of decoder objects at the root level and
-switch level, and keep the core helper private to cxl/core/port.c. Root
-decoders are static descriptors conveyed from platform firmware (e.g.
-ACPI CFMWS). Switch decoders are CXL standard decoders enumerated via
-the HDM decoder capability structure. The base address for the HDM
-decoder capability structure may be conveyed either by PCIe or platform
-firmware (ACPI CEDT.CHBS).
+The IMF is compensating all the email address that was funds as one of
+the ward win Victims and your email address and your name is among the
+listed one of approved to pay the sum of $3.6 million U.S Dollars. We
+have concluded to effect your own payment through Western Union Money
+Transfer for easy pick-up of those funds in good condition,$4000 twice
+daily,till the $3.6 million is completely transferred to you.We now
+need your information where we will be sending the funds,such
+as;Receiver name(Your full Name)address and phone number.Contact
+Western Union agent with this Email: ( westerunion995@gmail.com  ) for
+your payment fund.
 
-Additionally, the kdoc descriptions for these helpers and their
-dependencies is updated.
+Ms.Maria Zatto
+E-mail:westerunion995@gmail.com
+Telephone: +229 682 97 169
 
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-[djbw: fixup changelog, clarify kdoc]
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v3:
-- Clarify 'switch' in cxl_switch_decoder_alloc() kdoc (Jonathan)
-- Clarify 'root' in cxl_root_decoder_alloc() kdoc (Jonathan)
-- Add comment explaing how is_cxl_root() works (Jonathan)
-- Fixup changelog to mention doc additions (Jonathan)
+Contact Ms.Maria,immediately you get this mail through western union
+email address above to enable her speed-up.your payment and release
+the $4000 dollars MTCN today for you to pick up the payment OK.
 
- drivers/cxl/acpi.c      |    4 +-
- drivers/cxl/core/port.c |   83 ++++++++++++++++++++++++++++++++++++++++++-----
- drivers/cxl/cxl.h       |   16 ++++++++-
- 3 files changed, 92 insertions(+), 11 deletions(-)
+You are expected to provide us with the details as prescribed below to
+enable safe and easy release of your funds today.
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index da70f1836db6..0b267eabb15e 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -102,7 +102,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 	for (i = 0; i < CFMWS_INTERLEAVE_WAYS(cfmws); i++)
- 		target_map[i] = cfmws->interleave_targets[i];
- 
--	cxld = cxl_decoder_alloc(root_port, CFMWS_INTERLEAVE_WAYS(cfmws));
-+	cxld = cxl_root_decoder_alloc(root_port, CFMWS_INTERLEAVE_WAYS(cfmws));
- 	if (IS_ERR(cxld))
- 		return 0;
- 
-@@ -260,7 +260,7 @@ static int add_host_bridge_uport(struct device *match, void *arg)
- 	 * dport. Disable the range until the first CXL region is enumerated /
- 	 * activated.
- 	 */
--	cxld = cxl_decoder_alloc(port, 1);
-+	cxld = cxl_switch_decoder_alloc(port, 1);
- 	if (IS_ERR(cxld))
- 		return PTR_ERR(cxld);
- 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 63c76cb2a2ec..88ffec71464a 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -495,13 +495,26 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
- 	return rc;
- }
- 
--struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
-+/**
-+ * cxl_decoder_alloc - Allocate a new CXL decoder
-+ * @port: owning port of this decoder
-+ * @nr_targets: downstream targets accessible by this decoder. All upstream
-+ *		ports and root ports must have at least 1 target.
-+ *
-+ * A port should contain one or more decoders. Each of those decoders enable
-+ * some address space for CXL.mem utilization. A decoder is expected to be
-+ * configured by the caller before registering.
-+ *
-+ * Return: A new cxl decoder to be registered by cxl_decoder_add()
-+ */
-+static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-+					     unsigned int nr_targets)
- {
- 	struct cxl_decoder *cxld;
- 	struct device *dev;
- 	int rc = 0;
- 
--	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets < 1)
-+	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE || nr_targets == 0)
- 		return ERR_PTR(-EINVAL);
- 
- 	cxld = kzalloc(struct_size(cxld, target, nr_targets), GFP_KERNEL);
-@@ -519,20 +532,74 @@ struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets)
- 	device_set_pm_not_required(dev);
- 	dev->parent = &port->dev;
- 	dev->bus = &cxl_bus_type;
--
--	/* root ports do not have a cxl_port_type parent */
--	if (port->dev.parent->type == &cxl_port_type)
--		dev->type = &cxl_decoder_switch_type;
-+	if (is_cxl_root(port))
-+		cxld->dev.type = &cxl_decoder_root_type;
- 	else
--		dev->type = &cxl_decoder_root_type;
-+		cxld->dev.type = &cxl_decoder_switch_type;
- 
- 	return cxld;
- err:
- 	kfree(cxld);
- 	return ERR_PTR(rc);
- }
--EXPORT_SYMBOL_NS_GPL(cxl_decoder_alloc, CXL);
- 
-+/**
-+ * cxl_root_decoder_alloc - Allocate a root level decoder
-+ * @port: owning CXL root of this decoder
-+ * @nr_targets: static number of downstream targets
-+ *
-+ * Return: A new cxl decoder to be registered by cxl_decoder_add(). A
-+ * 'CXL root' decoder is one that decodes from a top-level / static platform
-+ * firmware description of CXL resources into a CXL standard decode
-+ * topology.
-+ */
-+struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
-+					   unsigned int nr_targets)
-+{
-+	if (!is_cxl_root(port))
-+		return ERR_PTR(-EINVAL);
-+
-+	return cxl_decoder_alloc(port, nr_targets);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_root_decoder_alloc, CXL);
-+
-+/**
-+ * cxl_switch_decoder_alloc - Allocate a switch level decoder
-+ * @port: owning CXL switch port of this decoder
-+ * @nr_targets: max number of dynamically addressable downstream targets
-+ *
-+ * Return: A new cxl decoder to be registered by cxl_decoder_add(). A
-+ * 'switch' decoder is any decoder that can be enumerated by PCIe
-+ * topology and the HDM Decoder Capability. This includes the decoders
-+ * that sit between Switch Upstream Ports / Switch Downstream Ports and
-+ * Host Bridges / Root Ports.
-+ */
-+struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
-+					     unsigned int nr_targets)
-+{
-+	if (is_cxl_root(port))
-+		return ERR_PTR(-EINVAL);
-+
-+	return cxl_decoder_alloc(port, nr_targets);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, CXL);
-+
-+/**
-+ * cxl_decoder_add - Add a decoder with targets
-+ * @cxld: The cxl decoder allocated by cxl_decoder_alloc()
-+ * @target_map: A list of downstream ports that this decoder can direct memory
-+ *              traffic to. These numbers should correspond with the port number
-+ *              in the PCIe Link Capabilities structure.
-+ *
-+ * Certain types of decoders may not have any targets. The main example of this
-+ * is an endpoint device. A more awkward example is a hostbridge whose root
-+ * ports get hot added (technically possible, though unlikely).
-+ *
-+ * Context: Process context. Takes and releases the cxld's device lock.
-+ *
-+ * Return: Negative error code if the decoder wasn't properly configured; else
-+ *	   returns 0.
-+ */
- int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map)
- {
- 	struct cxl_port *port;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index bfd95acea66c..621a70e023c1 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -278,6 +278,17 @@ struct cxl_dport {
- 	struct list_head list;
- };
- 
-+/*
-+ * The platform firmware device hosting the root is also the top of the
-+ * CXL port topology. All other CXL ports have another CXL port as their
-+ * parent and their ->uport / host device is out-of-line of the port
-+ * ancestry.
-+ */
-+static inline bool is_cxl_root(struct cxl_port *port)
-+{
-+	return port->uport == port->dev.parent;
-+}
-+
- struct cxl_port *to_cxl_port(struct device *dev);
- struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
- 				   resource_size_t component_reg_phys,
-@@ -288,7 +299,10 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
- 
- struct cxl_decoder *to_cxl_decoder(struct device *dev);
- bool is_root_decoder(struct device *dev);
--struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port, int nr_targets);
-+struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
-+					   unsigned int nr_targets);
-+struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
-+					     unsigned int nr_targets);
- int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
- int cxl_decoder_autoremove(struct device *host, struct cxl_decoder *cxld);
- 
+(1)Your Full name:
+(2)Your Phone number:
+(3)Your Country:
+(4)Your Age:
 
+Thank you,
+Dr.Antonia Lloyd.
+Contact Dir.Western Union Money Transfer,
+Cotonou-Benin Republic.
