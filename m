@@ -2,119 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4414F4A51FF
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 23:05:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEF644A5230
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 23:16:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230174AbiAaWFW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 17:05:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57690 "EHLO
+        id S232335AbiAaWQu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 17:16:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbiAaWFW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 17:05:22 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FEC6C061714;
-        Mon, 31 Jan 2022 14:05:21 -0800 (PST)
+        with ESMTP id S231611AbiAaWQt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 17:16:49 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B952EC061714;
+        Mon, 31 Jan 2022 14:16:49 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3BE896159A;
-        Mon, 31 Jan 2022 22:05:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B66AC340E8;
-        Mon, 31 Jan 2022 22:05:20 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 13140B82CB6;
+        Mon, 31 Jan 2022 22:16:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5486BC340E8;
+        Mon, 31 Jan 2022 22:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643666720;
-        bh=rtMYLz36aZm/StOCmHf/+PfRe3vImM7acI85NsbHfzs=;
+        s=k20201202; t=1643667406;
+        bh=l2z+lAUe/+F6BZPZI6f7qXZoGRCMMHhZIn0CHGQl3Nk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IpyvB65SXg8lxmpn7BQGkjJrzU6/cJMc0aRy3XbWM0/5Ga+DyaFPOgn/OnERV6Mcd
-         NSBmi5R5nH/1S+u8602wv2tlRia6VHoRtKxMJSQA0rs88jJL4rM0VamxsshryGIjRK
-         IkX7s6X5SJIE52YVw9B7ylwEPMRX7B9Sa2X3TTzCA1YyWRaNw8qlQAvun/5nsMfD+f
-         L6EvSbUhtjKMDQZsl/SBuE8rKCfQtDKLFq/WCoRM78Qm40GKzyJJPj9Dj5GbVtyI0u
-         UdBh00Qisljv+MQB77fnqWdB6QNsnTI+UCSr+MBkfn71N3E3GULOY+6Zaro7YRmSMU
-         3KrLUhdl8zVNg==
-Date:   Mon, 31 Jan 2022 16:05:18 -0600
+        b=qj1RwbOA2eih9YWp46SPpm1Br65lLRzdJp20ake/jCWpIvH/YaXcdseDLHaGL1EV7
+         Q4RqxWvUglPguB2c0iD+Pu6siiVTc6sFUpdvdkSuAIcyQFEItUxRWex80yd0pp4/0u
+         JkqrOxLUXVzGIPVaatF8vd59IV/4g+qYx1fyVvp6qBJB4aGwGpAvN+vbninrddAZBu
+         wNSd72vZ2da8h+xKIDtXPNpWDN/oFVARuG3kX6UTx6Mg1y49nmuxb5ngKkjSqzMYIW
+         FeKKqQK5jJw8veLLqLavjL4o/s99OmyKfUMxOG0F7zuQXT/OXLiX2xSfAXIYJEpRRj
+         jLebys6Qd+8JQ==
+Date:   Mon, 31 Jan 2022 16:16:44 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: cadence: respond to received PTM Requests
-Message-ID: <20220131220518.GA515079@bhelgaas>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        regressions@lists.linux.dev
+Subject: Re: 100 ms boot time increase regression in
+ acpi_init()/acpi_scan_bus()
+Message-ID: <20220131221644.GA516851@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220131120841.118833-1-christian.gmeiner@gmail.com>
+In-Reply-To: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Update subject line to match previous conventions ("git log --oneline
-drivers/pci/controller/cadence/pcie-cadence-host.c" to see).
+On Mon, Jan 10, 2022 at 12:29:44PM +0100, Paul Menzel wrote:
+> PS: Do you know of GNU/Linux live systems that are available for all Linux
+> kernel releases and have an initrd, that just stores/uploads the output of
+> `dmesg`?
 
-On Mon, Jan 31, 2022 at 01:08:27PM +0100, Christian Gmeiner wrote:
-> This enables the Controller [RP] to automatically respond
-> with Response/ResponseD messages.
+That would be pretty slick.
 
-Update to imperative mood, e.g., "Enable Controller to ...":
-
-  https://chris.beams.io/posts/git-commit/
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-tip.rst?id=v5.16#n134
-
-> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 10 ++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h      |  4 ++++
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index fb96d37a135c..940c7dd701d6 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -123,6 +123,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
->  	return ret;
->  }
->  
-> +static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
-> +{
-> +	u32 val;
-> +
-> +	val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
-> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
-
-I assume this is some device-specific enable bit that is effectively
-ANDed with PCI_PTM_CTRL_ENABLE in the Precision Time Measurement
-Capability?
-
-> +}
-> +
->  static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
->  {
->  	struct cdns_pcie *pcie = &rc->pcie;
-> @@ -501,6 +509,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	if (rc->quirk_detect_quiet_flag)
->  		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
->  
-> +	cdns_pcie_host_enable_ptm_response(pcie);
-> +
->  	ret = cdns_pcie_start_link(pcie);
->  	if (ret) {
->  		dev_err(dev, "Failed to start link\n");
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index c8a27b6290ce..9510ea513b8a 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -116,6 +116,10 @@
->  #define LM_RC_BAR_CFG_APERTURE(bar, aperture)		\
->  					(((aperture) - 2) << ((bar) * 8))
->  
-> +/* PTM Control Register */
-> +#define CDNS_PCIE_LM_PTM_CTRL 	(CDNS_PCIE_LM_BASE + 0x0DA8)
-> +#define CDNS_PCIE_LM_TPM_CTRL_PTMRSEN 	BIT(17)
-> +
->  /*
->   * Endpoint Function Registers (PCI configuration space for endpoint functions)
->   */
-> -- 
-> 2.34.1
-> 
+There is a collection of dmesg logs at https://github.com/linuxhw/Dmesg,
+mentioned earlier:
+https://lore.kernel.org/r/82035130-d810-9f0b-259e-61280de1d81f@redhat.com 
