@@ -2,111 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF8464A3DC1
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 07:42:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2144F4A3E41
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 08:36:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235513AbiAaGmG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 01:42:06 -0500
-Received: from mga03.intel.com ([134.134.136.65]:58817 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232348AbiAaGmF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 Jan 2022 01:42:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643611325; x=1675147325;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NzR5WVLsAbh7rkG2YhVbwAZdDUygwE0mUXpLIgrwZ/Q=;
-  b=d44Qgx/hidnwWkSjbQetiunam+bvaDAz6ZPJMZMMpI711tzHrImyfquC
-   l3D2N5kc6+KqA1c+BajmFiNmdHidjZIbfK2z7vV+w4nmNe1zeZT17UU9d
-   4bnFAeB2qMHzvtjkLF8yD82DJUnY6hyQhL93IEAl+HbzfsxGKw+jju1cm
-   mKzOKGQKzfUKLuDoV462AeVMJQi5GJG/QokMTM1Vy4mu2dpsvm7IOzK4S
-   J8hhypjVJUzm8H8th/vgD8EJt+AjgRq+O+V5KeZ5jxNcMd/cYww68D+4v
-   yBW22v316oHUKHHnQBsShnYoucMOaUL77ae9UeSYBVjSKdjgJ5zrSRwx2
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10243"; a="247362622"
-X-IronPort-AV: E=Sophos;i="5.88,330,1635231600"; 
-   d="scan'208";a="247362622"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2022 22:42:05 -0800
-X-IronPort-AV: E=Sophos;i="5.88,330,1635231600"; 
-   d="scan'208";a="626278379"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2022 22:42:00 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 31 Jan 2022 08:41:36 +0200
-Date:   Mon, 31 Jan 2022 08:41:36 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Pavel Machek <pavel@denx.de>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH] PCI: ACPI: Allow internal devices to be marked as
- untrusted
-Message-ID: <YfeEoF35RPDVMdzD@lahna>
-References: <20220121214117.GA1154852@bhelgaas>
- <Ye5GvQbFKo+CFtRb@lahna>
- <Ye/X7E2dKb+zem34@lahna>
- <Ye/btvA1rLB2rp02@kroah.com>
- <Ye/zTHR5aCG58z87@lahna>
- <CAJZ5v0gitdeEAxcgSoB1=VHA9FnRdCtmUqA_cN_f1a2yFRDghQ@mail.gmail.com>
- <CACK8Z6H2DLTJgxgS3pcvfOh=5S8cxEMKvwEPfB9zoVf1g2H_UQ@mail.gmail.com>
- <YfOf2X7Snm7cvDRV@lahna>
- <CACK8Z6FMgc5UQY-ZGB9sKYR5Wt6L6huTnEKZaFyVRAmDmQt9XQ@mail.gmail.com>
- <CAJZ5v0iuM_qjhPxvhzgvtKM-4pBB2skf9G=R=Qo6NzKnZ2LN=w@mail.gmail.com>
+        id S1348035AbiAaHgw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 02:36:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347972AbiAaHgv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 02:36:51 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6233C061714;
+        Sun, 30 Jan 2022 23:36:50 -0800 (PST)
+Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1nERF0-0003mt-Ng; Mon, 31 Jan 2022 08:36:47 +0100
+Message-ID: <95bf594b-250c-5a6d-aa3b-d428dbf9c203@leemhuis.info>
+Date:   Mon, 31 Jan 2022 08:36:46 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0iuM_qjhPxvhzgvtKM-4pBB2skf9G=R=Qo6NzKnZ2LN=w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-BS
+To:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        regressions@lists.linux.dev
+References: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: 100 ms boot time increase regression in
+ acpi_init()/acpi_scan_bus()
+In-Reply-To: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643614610;7995cc82;
+X-HE-SMSGID: 1nERF0-0003mt-Ng
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi, this is your Linux kernel regression tracker speaking.
 
-On Sun, Jan 30, 2022 at 03:30:39PM +0100, Rafael J. Wysocki wrote:
-> > I'm open to doing so if the others also feel the same way. IMHO
-> > though, the semantics of ACPI "DmaProperty" differ from the semantics
-> > of the property I'm proposing here.
-> >
-> > The current (documented) semantics (of "DmaProperty"): *This device
-> > (root port) is trusted*, but any devices downstream are not to be
-> > trusted.
-> >
-> > What I need and am proposing (new "UntrustedDevice"): *This device as
-> > well as any downstream devices* are untrusted.
-> >
-> > Note that there may be firmware implementing "DmaProperty" already out
-> > there (for windows), and if we decide to use it for my purposes, then
-> > there shall be a discrepancy in how Linux uses that property vs
-> > Windows. Is that acceptable?
-> 
-> It may be confusing, so I'd rather not do that.
-> 
-> The platform firmware will use it with the Windows use case in mind
-> and if it has side effects in Linux, problems are likely to appear in
-> the field.
-> 
-> So the question is rather not about it being acceptable, but about
-> whether or not this is generally going to work.
+On 10.01.22 12:29, Paul Menzel wrote:
+> #regzbot introduced: v5.13..v5.14-rc1
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215419
 
-I was kind of implying that we could perhaps contact Microsoft and ask
-them if the wording could be changed to cover all the devices, not just
-PCIe root ports. I think this is something they will also need for
-things like internal WI-FI controllers.
+Thx for getting regzbot involved!
 
-If that's not possible then no objections adding "UntrustedDevice". We
-just need to deal with the "DmaProperty" anyway and both end up setting
-pdev->untrusted in the similar manner.
+Nothing happened since you reported the issue three weeks ago; sure,
+it's not a pressing issue, but I wonder what the status is.
+
+@pm people: isn't this at least worth a reply?
+@paul: did you perform any additional checks?
+
+Or did anything happen somewhere else and I just missed it?
+
+#regzbot poke
+
+Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+
+P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+on my table. I can only look briefly into most of them. Unfortunately
+therefore I sometimes will get things wrong or miss something important.
+I hope that's not the case here; if you think it is, don't hesitate to
+tell me about it in a public reply, that's in everyone's interest.
+
+BTW, I have no personal interest in this issue, which is tracked using
+regzbot, my Linux kernel regression tracking bot
+(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+this mail to get things rolling again and hence don't need to be CC on
+all further activities wrt to this regression.
+
+> On the Intel T4500 laptop Acer TravelMate 5735Z with Debian
+> sid/unstable, there is a 100 ms introduced between Linux 5.10.46 and
+> 5.13.9, and is still present in Linux 5.15.5.
+> 
+>     [    0.000000] microcode: microcode updated early to revision 0xa0b,
+> date = 2010-09-28
+>     [    0.000000] Linux version 5.15.0-2-amd64
+> (debian-kernel@lists.debian.org) (gcc-11 (Debian 11.2.0-13) 11.2.0, GNU
+> ld (GNU Binutils for Debian) 2.37) #1 SMP Debian 5.15.5-2 (2021-12-18)
+>     [    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-2-amd64
+> root=UUID=e17cec4f-d2b8-4cc3-bd39-39a10ed422f4 ro quiet noisapnp
+> cryptomgr.notests random.trust_cpu=on initcall_debug log_buf_len=4M
+>     […]
+>     [    0.262243] calling  acpi_init+0x0/0x487 @ 1
+>     […]
+>     [    0.281655] ACPI: Enabled 15 GPEs in block 00 to 3F
+>     [    0.394855] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+>     […]
+>     [    0.570908] initcall acpi_init+0x0/0x487 returned 0 after 300781
+> usecs
+> 
+> I attached all the log files to the Kernel.org Bugzilla bug report
+> #215419 [1].
+> 
+> Unfortunately, I am unable to bisect the issue, as it’s not my machine,
+> and I do not have a lot of access to it.
+> 
+> Using ftrace, unfortunately, I didn’t save all of them, I think the path is
+> 
+>     acpi_init() → acpi_scan_init() → acpi_bus_scan(ACPI_ROOT_OBJECT)
+> 
+> But this path hasn’t changed as far as I can see. Anyway, from that
+> path, somehow
+> 
+>     acpi_bus_check_add_1() → acpi_bus_check_add() → … →
+> acpi_bus_check_add() → acpi_add_single_object() → acpi_bus_get_status()
+> 
+> is called, and the `acpi_bus_get_status()` call takes 100 ms on the
+> system – also the cause for bug #208705 [2] –, but that code path wasn’t
+> taken before.
+> 
+> Do you know from the top of your head, what changed? I am going to have
+> short access to the system every two weeks or so, so debugging is
+> unfortunately quite hard.
+> 
+> What is already on my to-do list:
+> 
+> 1.  Use dynamic debug `drivers/acpi/scan.c`
+> 2.  Trace older Linux kernel (5.10.46) to see the differences
+> 3.  Booting some GNU/Linux system to test 5.11 (Ubuntu 20.10) and 5.12
+> 4.  Unrelated to the regression, but trace `acpi_bus_get_status()` to
+> understand the 100 ms delay to solve bug #208705 [2]
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
+> 
+> PS: Do you know of GNU/Linux live systems that are available for all
+> Linux kernel releases and have an initrd, that just stores/uploads the
+> output of `dmesg`?
+> 
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=215419
+>      "100 ms regression in boottime before `ACPI: PCI Root Bridge [PCI0]"
+> [2]: https://bugzilla.kernel.org/show_bug.cgi?id=208705
+>      "boot performance: 100 ms delay in PCI initialization - Acer
+> TravelMate 5735Z"
+> 
+
