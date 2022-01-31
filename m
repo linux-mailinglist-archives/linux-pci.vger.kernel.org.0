@@ -2,92 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F1CE4A45BC
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 12:49:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B5184A4671
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 12:58:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351550AbiAaLqh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 06:46:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379780AbiAaLoO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 06:44:14 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80AC5C034003;
-        Mon, 31 Jan 2022 03:27:59 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1643628478;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to; bh=4vunJSw+29nMhKwarhIq3XOACVtrs68uDOcnGTjBogA=;
-        b=08+adjG5kvqly9R27r6UQqPVlHuuR0wvg7AraR+yb44p1SYXk6tzK2abtw7IGSi2A3wXfI
-        6U1PBy/jkvuCM3fKrPHG2APL7p9nnSGR9rg89/6St5G9+Iod6wSzgG4//1TPbjInXUs8YN
-        AwxB3zkSRCSMca4ho01kA/XiGI4WDXwyqGA/Q1QoCwvYXEwS/NWbubISSEMuoN2RNNZk6X
-        k+mIQEs2lRbseraKMG1ylwlb9XmMSJiXrB/5Msv2UG1+iYWWGnwuZaVGTtIizxYMk1wpBk
-        7RxcI8ct1tXsnuKIrqrBOd4gsj7C5lweoLU2Rx7EKaWcOJBL6ltT48oEiUJlEw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1643628478;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to; bh=4vunJSw+29nMhKwarhIq3XOACVtrs68uDOcnGTjBogA=;
-        b=F4vMMMS/RR2647UpQl2u4kgknqNjM8y1uiJemITMdVUuEzICexEkSEXuPmcOo4kKXCPGTF
-        66aXb64gMDoB5SDg==
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Will Deacon <will@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Jason Gunthorpe <jgg@nvidia.com>, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, Kevin Tian <kevin.tian@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cedric Le Goater <clg@kaod.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vinod Koul <vkoul@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V3 28/35] PCI/MSI: Simplify pci_irq_get_affinity()
-In-Reply-To: <20220130171210.GA3545402@roeck-us.net>
-Date:   Mon, 31 Jan 2022 12:27:57 +0100
-Message-ID: <87mtjc2lhe.ffs@tglx>
+        id S1350536AbiAaL6X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 06:58:23 -0500
+Received: from ni.piap.pl ([195.187.100.5]:39372 "EHLO ni.piap.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1359597AbiAaL4Z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 31 Jan 2022 06:56:25 -0500
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+        by ni.piap.pl (Postfix) with ESMTPSA id 75D85C3F3EF4;
+        Mon, 31 Jan 2022 12:56:18 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 75D85C3F3EF4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
+        t=1643630179; bh=/+mLaOy/51TWJQwY1+C7KvOgFe0ubYBePwOJGJ3IXvM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=K+tGCoIgRmsF/33DcDBfv/wNu/hz4XBXLkxRSRFqEW6E63nPRc0p6iDVzVdTshPh1
+         BCnvamxWBw//dw2/YT4ba8wjG8vTi+/7VcWQvj5cDJxSM+TJaCjdGU2woAy3i3DH0D
+         dO9wt1A+6X704q43Qdcts9vm6LXH99S5Q8oyRXhY=
+From:   =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files (can't boot)
+References: <20220121165707.GA1129091@bhelgaas>
+Sender: khalasa@piap.pl
+Date:   Mon, 31 Jan 2022 12:56:18 +0100
+In-Reply-To: <20220121165707.GA1129091@bhelgaas> (Bjorn Helgaas's message of
+        "Fri, 21 Jan 2022 10:57:07 -0600")
+Message-ID: <m38ruwxgnx.fsf@t19.piap.pl>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-KLMS-Rule-ID: 3
+X-KLMS-Message-Action: skipped
+X-KLMS-AntiSpam-Status: not scanned, whitelist
+X-KLMS-AntiPhishing: not scanned, whitelist
+X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, not scanned, whitelist
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jan 30 2022 at 09:12, Guenter Roeck wrote:
-> On Fri, Dec 10, 2021 at 11:19:26PM +0100, Thomas Gleixner wrote:
-> This patch results in the following runtime warning when booting x86
-> (32 bit) nosmp images from NVME in qemu.
+Bjorn Helgaas <helgaas@kernel.org> writes:
+
+> Thanks.  e1d3f3268b0e and related patches converted individual files
+> ("config", "rom", "vpd", etc) to static attributes, but since the
+> problem you're seeing is with a directory, it's likely different.
 >
-> [   14.825482] nvme nvme0: 1/0/0 default/read/poll queues
-> ILLOPC: ca7c6d10: 0f 0b
-> [   14.826188] ------------[ cut here ]------------
-> [   14.826307] WARNING: CPU: 0 PID: 7 at drivers/pci/msi/msi.c:1114 pci_irq_get_affinity+0x80/0x90
+> I opened this bugzilla report to try to keep this from getting lost:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D215515
 
-This complains about msi_desc->affinity being NULL.
+Ok, thanks.
+--=20
+Krzysztof "Chris" Ha=C5=82asa
 
-> git bisect bad f48235900182d64537c6e8f8dc0932b57a1a0638
-> # first bad commit: [f48235900182d64537c6e8f8dc0932b57a1a0638] PCI/MSI: Simplify pci_irq_get_affinity()
-
-Hrm. Can you please provide dmesg and /proc/interrupts from a
-kernel before that commit?
-
-Thanks,
-
-        tglx
-
+Sie=C4=87 Badawcza =C5=81ukasiewicz
+Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
+Al. Jerozolimskie 202, 02-486 Warszawa
