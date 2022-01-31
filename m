@@ -2,134 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E13A4A4FC7
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 20:57:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A84674A513B
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 22:16:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377744AbiAaT55 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 14:57:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377915AbiAaT5m (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 14:57:42 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0619C061744
-        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 11:57:37 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id g15-20020a17090a67cf00b001b7d5b6bedaso173171pjm.4
-        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 11:57:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PxxRAP314jDSGXiVlWBZyKjdy+DN2lrBrDJCppTsFgM=;
-        b=WdF4V2p0Y7jszFxrF6/IZtcSS1/fMQSWE4SLUKzohrF0Eiu8PUD2Gsuu4DKOdKctwv
-         F0/I2WtBj5j9qyMK2Ud8QJsMKcphaDnL0YcMacaTfmwam7F7WP6s4F4iKO4JhUoUZnST
-         S79gZWRdEqg8m1tWf2vNWoVAs+hh/pwEyqR1Z/V9uOC3VEFDLN3iMWqYfkZuplgL7zk3
-         O9GbK/PPyVuwrOlhHet3TuEpTGfeXnbq6FkykZEnhhZqnTa0ZVswJkKr5qHH2b40DweJ
-         4STK4nP4GCUVJCE+qWSZeMZLlBBvq3YQCz754/ou+jXXgWohdKZfKlw2uKZRKbmH9mG+
-         I9kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PxxRAP314jDSGXiVlWBZyKjdy+DN2lrBrDJCppTsFgM=;
-        b=sXvtBtwSr/pSLRXhqRRJXXcfdaMILfgE3C8CSEgkO6Vj330UsrUtxowdpWcwoAvyEc
-         P0SxbMwJUhgG2OrszhkcqRdS2DB+jdY4qPbQPmU00xbiUgQFghr8WtcfB/G2FnAryRoF
-         ttXa/BCVzkjUX3XKA7Touh8b7NBcw5Gx+SO/BNfMRq0MgF0mYfU2N4fvpe2sfeUj5rtY
-         2PtEDFVZeMoLCWK6+DoHLL+HNCqv5kUlY6kJJIiq8H9qhXnE6amSSEjPhAt2C74XRQbq
-         ZKpKiB/XB58UC7lICtG4HIzrjb7xgQEvJGYeiP9QojXsl9MH2nA2RdRIhK8zQfE7OABz
-         NFgQ==
-X-Gm-Message-State: AOAM533pukii6dGpu+xZ/a86Jr8o3DZxJjnY6k/XSg3nSGb+q8gMEg10
-        cQtcAPebsq72h0WPZ2i+gLNfZ01ZJfht9wWUBU7q0w==
-X-Google-Smtp-Source: ABdhPJzqcph7YwhpfF/brZKrrekNHBCzD++nDzmgUTJk0t+y46UMthqiVH1mTjGuZq7aCS+IDc+KBgp+FYh2FgQjMcI=
-X-Received: by 2002:a17:90a:348f:: with SMTP id p15mr5931910pjb.173.1643659057200;
- Mon, 31 Jan 2022 11:57:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20220121214117.GA1154852@bhelgaas> <Ye5GvQbFKo+CFtRb@lahna>
- <Ye/X7E2dKb+zem34@lahna> <Ye/btvA1rLB2rp02@kroah.com> <Ye/zTHR5aCG58z87@lahna>
- <CAJZ5v0gitdeEAxcgSoB1=VHA9FnRdCtmUqA_cN_f1a2yFRDghQ@mail.gmail.com>
- <CACK8Z6H2DLTJgxgS3pcvfOh=5S8cxEMKvwEPfB9zoVf1g2H_UQ@mail.gmail.com>
- <YfOf2X7Snm7cvDRV@lahna> <CACK8Z6FMgc5UQY-ZGB9sKYR5Wt6L6huTnEKZaFyVRAmDmQt9XQ@mail.gmail.com>
- <CAJZ5v0iuM_qjhPxvhzgvtKM-4pBB2skf9G=R=Qo6NzKnZ2LN=w@mail.gmail.com> <YfeEoF35RPDVMdzD@lahna>
-In-Reply-To: <YfeEoF35RPDVMdzD@lahna>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Mon, 31 Jan 2022 11:57:00 -0800
-Message-ID: <CACK8Z6EBbdPHhMtD+vMWs54GRw-ChCeNNfeKM4Hk5JcAqex6hg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: ACPI: Allow internal devices to be marked as untrusted
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S1358920AbiAaVQo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 16:16:44 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34332 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232007AbiAaVQn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 16:16:43 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1643663802;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tU8NK9NTEirj5O/+bd9d0PukMKUVqECyFzPD3aLKDXk=;
+        b=KmPtM4XylI1QpBV825qhL/YVm9F73QsW9H0dQ5UPcPGil3mXgUuoX3HprH/+a3ZG/ShNJr
+        BjlGsc1ndAOmgHyQvIvZUOUD6HLDHOBCi/Ji6X9uEEf7jDK1BzH1apOdzDHBzBMfjkAtXZ
+        8BD8lWMmiKDXbdlCTK3THWqdS9xoq1KFr2G35OtVX67EMI6vGc6c9cosnIZIpe5sYh+au2
+        PL1LZWmdvONdEfE18CsyjWjHM6gOUgcS0xyBIooTsaH48TF002qdkFf00iF1dJ2JVj/0SI
+        eh6W7ozcJJE4CPYA3I/LgUWnchhhUB5lvUTPvZV1OWQ8MM0o/wu35qDKV5db6w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1643663802;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tU8NK9NTEirj5O/+bd9d0PukMKUVqECyFzPD3aLKDXk=;
+        b=+0otG72AhE6uKJBBtoOAEgmDIjBRXfGv02FMllL7V8PEVFVne4ebGZPaDcAGYon+0st4ER
+        /th5pds4YqGCrMCA==
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Will Deacon <will@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Len Brown <lenb@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Jason Gunthorpe <jgg@nvidia.com>, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, Kevin Tian <kevin.tian@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cedric Le Goater <clg@kaod.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Pavel Machek <pavel@denx.de>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+        Megha Dey <megha.dey@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V3 28/35] PCI/MSI: Simplify pci_irq_get_affinity()
+In-Reply-To: <c78df469-1a9f-5778-24d1-8f08a6bf5bcc@roeck-us.net>
+References: <87mtjc2lhe.ffs@tglx>
+ <c78df469-1a9f-5778-24d1-8f08a6bf5bcc@roeck-us.net>
+Date:   Mon, 31 Jan 2022 22:16:41 +0100
+Message-ID: <87ee4n38sm.ffs@tglx>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Mika, Rafael,
+Guenter,
 
-On Sun, Jan 30, 2022 at 10:42 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> Hi,
->
-> On Sun, Jan 30, 2022 at 03:30:39PM +0100, Rafael J. Wysocki wrote:
-> > > I'm open to doing so if the others also feel the same way. IMHO
-> > > though, the semantics of ACPI "DmaProperty" differ from the semantics
-> > > of the property I'm proposing here.
-> > >
-> > > The current (documented) semantics (of "DmaProperty"): *This device
-> > > (root port) is trusted*, but any devices downstream are not to be
-> > > trusted.
-> > >
-> > > What I need and am proposing (new "UntrustedDevice"): *This device as
-> > > well as any downstream devices* are untrusted.
-> > >
-> > > Note that there may be firmware implementing "DmaProperty" already out
-> > > there (for windows), and if we decide to use it for my purposes, then
-> > > there shall be a discrepancy in how Linux uses that property vs
-> > > Windows. Is that acceptable?
-> >
-> > It may be confusing, so I'd rather not do that.
-> >
-> > The platform firmware will use it with the Windows use case in mind
-> > and if it has side effects in Linux, problems are likely to appear in
-> > the field.
-> >
-> > So the question is rather not about it being acceptable, but about
-> > whether or not this is generally going to work.
->
-> I was kind of implying that we could perhaps contact Microsoft and ask
-> them if the wording could be changed to cover all the devices, not just
-> PCIe root ports. I think this is something they will also need for
-> things like internal WI-FI controllers.
+On Mon, Jan 31 2022 at 07:21, Guenter Roeck wrote:
+> Sure. Please see http://server.roeck-us.net/qemu/x86/.
+> The logs are generated with with v5.16.4.
 
-We (Chromeos) do not have a contact at Microsoft, not sure if Intel
-does. If someone can point me to a contact I will be happy to initiate
-a conversation. However, given that they have already published it,
-and changing the semantics might mean they will also have to change
-windows implementation. Not sure if we have enough leverage with
-Microsoft here, so I wouldn't have any high hopes though. Like Rafael
-said, we're on the receiving end here.
+thanks for providing the data. It definitely helped me to leave the
+state of not seeing the wood for the trees. Fix below.
 
-Rafael, one last question: is "untrusted-device" an acceptable ACPI
-property name, or does it have to be Camel case?
+Thanks,
 
-Thanks & Best Regards,
+        tglx
+---
+Subject: PCI/MSI: Remove bogus warning in pci_irq_get_affinity()
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Mon, 31 Jan 2022 22:02:46 +0100
 
-Rajat
+The recent overhaul of pci_irq_get_affinity() introduced a regression when
+pci_irq_get_affinity() is called for an MSI-X interrupt which was not
+allocated with affinity descriptor information.
 
->
-> If that's not possible then no objections adding "UntrustedDevice". We
-> just need to deal with the "DmaProperty" anyway and both end up setting
-> pdev->untrusted in the similar manner.
+The original code just returned a NULL pointer in that case, but the rework
+added a WARN_ON() under the assumption that the corresponding WARN_ON() in
+the MSI case can be applied to MSI-X as well.
+
+In fact the MSI warning in the original code does not make sense either
+because it's legitimate to invoke pci_irq_get_affinity() for a MSI
+interrupt which was not allocated with affinity descriptor information.
+
+Remove it and just return NULL as the original code did.
+
+Fixes: f48235900182 ("PCI/MSI: Simplify pci_irq_get_affinity()")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ drivers/pci/msi/msi.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -1111,7 +1111,8 @@ const struct cpumask *pci_irq_get_affini
+ 	if (!desc)
+ 		return cpu_possible_mask;
+ 
+-	if (WARN_ON_ONCE(!desc->affinity))
++	/* MSI[X] interrupts can be allocated without affinity descriptor */
++	if (!desc->affinity)
+ 		return NULL;
+ 
+ 	/*
