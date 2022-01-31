@@ -2,98 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4E6D4A5160
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 22:22:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EA574A5164
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 22:22:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351109AbiAaVWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 16:22:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344273AbiAaVWQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 16:22:16 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D5BAC061714;
-        Mon, 31 Jan 2022 13:22:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 895C661551;
-        Mon, 31 Jan 2022 21:22:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A0FC340E8;
-        Mon, 31 Jan 2022 21:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643664134;
-        bh=OQPPff+VNVexuaIwDaQ8HqPGB/uPTD1j/rHAOfVFiMI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AqZHizyBRhG45rzMuoD+Vra5tgjAeeehuwfA1tAof3XNzN3+W73/AReushgs8nHJv
-         rdN3NoLN+/A2aoHNVFDI6247LmTPJKEKJRqiAjWOWORKVYhV0f4jiTbMmIuW0yEGIj
-         0EaLG3/olUiI360YFxQsJ5S8jEcTojbtyLczP1JHSsuHbjLe4VI6Wzx/MsWfMiEkN0
-         jAg1ZUCHUjDPr54OZoi2/Wtx1XRJqLjJXgGYLhGFhqtFzzStAFk1j5U9NvLVZrIE2F
-         ehJyQXKpqRu/+4efAI80IS8kNoxOXdG4LKgQdK0fZYScmo4W03CFTWnmntK7j4KveY
-         8/N73vQ1uMtLA==
-Date:   Mon, 31 Jan 2022 15:22:13 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Brent Spillner <spillner@acm.org>, bhelgaas@google.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arch:x86:pci:irq.c: Improve log message when IRQ cannot
- be identified
-Message-ID: <20220131212213.GA510910@bhelgaas>
+        id S1357892AbiAaVWo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 16:22:44 -0500
+Received: from mail-eopbgr20085.outbound.protection.outlook.com ([40.107.2.85]:33250
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1358273AbiAaVWi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 31 Jan 2022 16:22:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RS4iDIGooxqRET5ENaVm4LUfVAYeFpRzN6V5nFw+Tgh04ZNs4KpufGmEIwKBMgWA6sAH/gT7csBvFG87T4DevtSLP5584JPt9RmcLN5jf7ynSLbUFJZX2wYUyFoAKrFCreokIe7u8fem8eH+DcgyH488TcwUMA88pft9hiyUbAI+4c7DY37FXQPuIuES7n1Y+8CNZSXtXfnvty9SJrRxFuOm2VYQwmVmk+LJlCXhkWQJRF8hTqfxI7e5eZDtSym2OPFdtyBPgj6Ssg2kPoAKNbBWBg1qj2yiRUB+KDi9AG0a6VuEPniKvDIWNT6ickHmxmYX6XPrf2uEA91ByoDqog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FVUF9Wf8FBzYAidlJKC7+C0Fgu2kWS6pORoU1HnKKsc=;
+ b=NZ0frZGNJvMZUvtVT3wNyxtqzlp6G2n5DO2GWkR8SJwtmD28gAvQDhZFpW90UDDhOHogfhLd8Al00tJ5JOvpJAXFNE64oUCo8GHUnhTu4FZSp1im7xV5XCkaKhh/Zsee1cAFRyQnScxqd+Stg8JcAC97W6/YD1bkWeORtIgyEYollLHQKsMMqdFNDxooKYoWlfbeheXkuUNcbwkuu+R9FwpblRtZ21cG3DPIbmdhyxEC7G44cCqEw3tgPHLYck862VrXNKf2mpykXseFCravt0jVHHwzRFqmWjXu/f4dSvwDUR3PGZx5cBYG9g9P/eRoxl+hr8NSYa9W1ZrAfGiXUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 194.138.21.70) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=siemens.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=siemens.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FVUF9Wf8FBzYAidlJKC7+C0Fgu2kWS6pORoU1HnKKsc=;
+ b=sbPnnlcQ3N4v2+zK0sWLYeKmqAxh5EarhxbhdUYAm6KeqKd+wM6UzUUIydfSh/nTW/7O/QdqlRu+TH/5uiboS1SHjdAWrnVKurlI2/EvnKw38GZi0HrJpNMC+5qNPtLlINuNN2/S8eENBj48+nm13oke+HFEiJ3LZTauMsJVluEHzVfadWb6lPJXBSD1n7+m6k8cVrnwTH9eJgzc7Zqa3lURSRtsqyP1leV0sY6fb9NV1jB/zOwVkyFLWrT6STSNtoM/JCbN7tlA+cxEIzJsMPQde0yPK1ZH883FDAXp2D10KSmg8S6tGvld+B24TnUv/A+UbUbMQsEJo1zzx7gNKw==
+Received: from OL1P279CA0061.NORP279.PROD.OUTLOOK.COM (2603:10a6:e10:15::12)
+ by VI1PR1001MB1117.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:6a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.20; Mon, 31 Jan
+ 2022 21:22:31 +0000
+Received: from HE1EUR01FT005.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:e10:15:cafe::ec) by OL1P279CA0061.outlook.office365.com
+ (2603:10a6:e10:15::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.15 via Frontend
+ Transport; Mon, 31 Jan 2022 21:22:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 194.138.21.70)
+ smtp.mailfrom=siemens.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=siemens.com;
+Received-SPF: Pass (protection.outlook.com: domain of siemens.com designates
+ 194.138.21.70 as permitted sender) receiver=protection.outlook.com;
+ client-ip=194.138.21.70; helo=hybrid.siemens.com;
+Received: from hybrid.siemens.com (194.138.21.70) by
+ HE1EUR01FT005.mail.protection.outlook.com (10.152.1.229) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4930.15 via Frontend Transport; Mon, 31 Jan 2022 21:22:31 +0000
+Received: from DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) by
+ DEMCHDC9SJA.ad011.siemens.net (194.138.21.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.18; Mon, 31 Jan 2022 22:22:30 +0100
+Received: from [139.22.137.89] (139.22.137.89) by
+ DEMCHDC8A0A.ad011.siemens.net (139.25.226.106) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Mon, 31 Jan 2022 22:22:29 +0100
+Message-ID: <5f6bc890-3a49-3056-ccee-210de546688e@siemens.com>
+Date:   Mon, 31 Jan 2022 22:22:28 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8f820849-6940-4271-e678-1ae037cdfb64@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v2] PCI/portdrv: Do not setup up IRQs if there are no
+ users
+Content-Language: en-US
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+To:     <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <8f9a13ac-8ab1-15ac-06cb-c131b488a36f@siemens.com>
+In-Reply-To: <8f9a13ac-8ab1-15ac-06cb-c131b488a36f@siemens.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [139.22.137.89]
+X-ClientProxiedBy: DEMCHDC8A1A.ad011.siemens.net (139.25.226.107) To
+ DEMCHDC8A0A.ad011.siemens.net (139.25.226.106)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a1be38aa-4651-4d28-2690-08d9e4ffca45
+X-MS-TrafficTypeDiagnostic: VI1PR1001MB1117:EE_
+X-Microsoft-Antispam-PRVS: <VI1PR1001MB1117EC9326D9C1986ADCE61195259@VI1PR1001MB1117.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tyfXxxONu0DDtWtIQtVf5Rz6GXkvHm3uCG+YQWNE48BnJg1zHU6QYNk51DNZm4f1EfmFUF0Ez2jisnr7EX2u68YA2jeRU50r5xGGlYQOsc38iYqWTRrNPs0RhYhk5DmVEJkPFFyGEZwL/gww62PgLZXt8WRP6AZgD8kI1xVOW++c7SkGkeYGEi4brvvQ/+yh3uDFUr3jPoAqy/4bf4Nar2ky1SX0hnw8itAfiiRcaZbnJjELF1Da2WWnp0xs2cz3bh0SZN6HeVJ1gHlKobUeWnd1yVCooWthaIKpV/7t2H6yewmvqU39Mx7PY+1DA7DAnX59hkKVl+rYEQ7VXwGbwZhPG2qsS0ZDZqQLx1Gccyk5+8XKWj5e2VozHIRLk3M+BXSAWuPX62hQkxy+E6yKozBOEyJArF+OmL3MN82RM9bi16/aBhgwYtgdLGAR1UZW80NWbmU8AhmEeKnxJ+NnxY4waTxpN/SG1/PtpEEgR4TLiG4fJVtIStvVqHT+r+9TtpEouDaIW6iiHFBPSHKP6PJqCNuoWDzI7HK++JNE2CMeIXeVRDohv4G/QxPWKZ7ypNMLem1WMbrefYBR/Ph56cJ+avjLXRlxc7aeidp015coNjCbmECktdg6RLJfRlIBXs+4eWi+fgByVAWk5IbZJf+27/rHIEVMNyD6PfRIqRPv2eEaCEmnShf/Ln/EOmuPX9qur7jQ2hFy9/RymCN5GOCTHIspsnxwIwdRkWulVtBvyQe3rXscWjUz8l0W9zDyiaZQ/2bBvE68HpHgUim33krggLAKlz1pbFqt3H1j8ROtb5LPC9K/1F237x+BeLHFVbBwbt72v4GU4297GYPAk7sZ4YFpvY9pvzXNldXpF1zF/K6n1+cxz13gIxnWKH8/kEPyub4kthOdhtoO1AXgYg==
+X-Forefront-Antispam-Report: CIP:194.138.21.70;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:hybrid.siemens.com;PTR:hybrid.siemens.com;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(40470700004)(7596003)(86362001)(31696002)(356005)(7636003)(316002)(110136005)(6706004)(16576012)(82960400001)(47076005)(83380400001)(82310400004)(53546011)(336012)(956004)(2616005)(26005)(186003)(16526019)(966005)(508600001)(40460700003)(2906002)(36860700001)(70206006)(70586007)(5660300002)(4326008)(31686004)(44832011)(8936002)(36756003)(8676002)(26730200005)(3940600001)(19860200003)(43740500002)(20210929001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2022 21:22:31.0177
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1be38aa-4651-4d28-2690-08d9e4ffca45
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38ae3bcd-9579-4fd4-adda-b42e1495d55a;Ip=[194.138.21.70];Helo=[hybrid.siemens.com]
+X-MS-Exchange-CrossTenant-AuthSource: HE1EUR01FT005.eop-EUR01.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR1001MB1117
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 01:36:53PM -0800, Dave Hansen wrote:
-> On 1/28/22 12:48, Brent Spillner wrote:
-> > It seems like the multiline string literal is your main pain point--- would
-> > 
-> > +#ifdef CONFIG_ACPI
-> > +                       if (acpi_noirq)
-> > +                               msg = "; consider removing acpi=noirq";
-> > +                       else
-> > +                               msg = "; recommend verifying UEFI/BIOS
-> > IRQ options";
-> > +#else
-> > +                       msg = "; recommend verifying UEFI/BIOS IRQ
-> > options or enabling ACPI";
-> > +#endif
-> > 
-> > be OK without going to IS_ENABLED()?  (Personally, I think the #ifdef
-> > style is more readable.)
+On 30.08.21 10:08, Jan Kiszka wrote:
+> From: Jan Kiszka <jan.kiszka@siemens.com>
 > 
-> I think that's _better_ than what was in the patch.  But, even with it,
-> I still think the #ifdef mess borders on unreadable.
+> Avoid registering service IRQs if there is no service that offers them
+> or no driver to register a handler against them. This saves IRQ vectors
+> when they are limited (e.g. on x86) and also avoids that spurious events
+> could hit a missing handler. Such spurious events need to be generated
+> by the Jailhouse hypervisor for active MSI vectors when enabling or
+> disabling itself.
 > 
-> But, if Bjorn likes it, then go for it. :)
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> ---
+> 
+> Changes in v2:
+>   - move initialization of irqs to address test bot finding
+> 
+>   drivers/pci/pcie/portdrv_core.c | 47 +++++++++++++++++++++------------
+>   1 file changed, 30 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index e1fed6649c41..0e2556269429 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -166,9 +166,6 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>   {
+>   	int ret, i;
+>   
+> -	for (i = 0; i < PCIE_PORT_DEVICE_MAXSERVICES; i++)
+> -		irqs[i] = -1;
+> -
+>   	/*
+>   	 * If we support PME but can't use MSI/MSI-X for it, we have to
+>   	 * fall back to INTx or other interrupts, e.g., a system shared
+> @@ -312,8 +309,10 @@ static int pcie_device_init(struct pci_dev *pdev, int service, int irq)
+>    */
+>   int pcie_port_device_register(struct pci_dev *dev)
+>   {
+> -	int status, capabilities, i, nr_service;
+> -	int irqs[PCIE_PORT_DEVICE_MAXSERVICES];
+> +	int status, capabilities, irq_services, i, nr_service;
+> +	int irqs[PCIE_PORT_DEVICE_MAXSERVICES] = {
+> +		[0 ... PCIE_PORT_DEVICE_MAXSERVICES-1] = -1
+> +	};
+>   
+>   	/* Enable PCI Express port device */
+>   	status = pci_enable_device(dev);
+> @@ -326,18 +325,32 @@ int pcie_port_device_register(struct pci_dev *dev)
+>   		return 0;
+>   
+>   	pci_set_master(dev);
+> -	/*
+> -	 * Initialize service irqs. Don't use service devices that
+> -	 * require interrupts if there is no way to generate them.
+> -	 * However, some drivers may have a polling mode (e.g. pciehp_poll_mode)
+> -	 * that can be used in the absence of irqs.  Allow them to determine
+> -	 * if that is to be used.
+> -	 */
+> -	status = pcie_init_service_irqs(dev, irqs, capabilities);
+> -	if (status) {
+> -		capabilities &= PCIE_PORT_SERVICE_HP;
+> -		if (!capabilities)
+> -			goto error_disable;
+> +
+> +	irq_services = 0;
+> +	if (IS_ENABLED(CONFIG_PCIE_PME))
+> +		irq_services |= PCIE_PORT_SERVICE_PME;
+> +	if (IS_ENABLED(CONFIG_PCIEAER))
+> +		irq_services |= PCIE_PORT_SERVICE_AER;
+> +	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+> +		irq_services |= PCIE_PORT_SERVICE_HP;
+> +	if (IS_ENABLED(CONFIG_PCIE_DPC))
+> +		irq_services |= PCIE_PORT_SERVICE_DPC;
+> +	irq_services &= capabilities;
+> +
+> +	if (irq_services) {
+> +		/*
+> +		 * Initialize service irqs. Don't use service devices that
+> +		 * require interrupts if there is no way to generate them.
+> +		 * However, some drivers may have a polling mode (e.g.
+> +		 * pciehp_poll_mode) that can be used in the absence of irqs.
+> +		 * Allow them to determine if that is to be used.
+> +		 */
+> +		status = pcie_init_service_irqs(dev, irqs, irq_services);
+> +		if (status) {
+> +			irq_services &= PCIE_PORT_SERVICE_HP;
+> +			if (!irq_services)
+> +				goto error_disable;
+> +		}
+>   	}
+>   
+>   	/* Allocate child services if any */
 
-I was hoping to avoid commenting at all ;)
+It turns out that this patch causes troubles on some machines, see [1].
+That could be "resolved" by doing
 
-I'm a little bit averse to suggesting *any* command-line options
-because users shouldn't have to use options like these.  It would be
-better if we got a bug report and could fix the bug or add a quirk to
-work around a firmware issue automatically.
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index bda630889f95..68b0013c3662 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -331,7 +331,7 @@ int pcie_port_device_register(struct pci_dev *dev)
+  
+  	pci_set_master(dev);
+  
+-	irq_services = 0;
++	irq_services = PCIE_PORT_SERVICE_BWNOTIF;
+  	if (IS_ENABLED(CONFIG_PCIE_PME))
+  		irq_services |= PCIE_PORT_SERVICE_PME;
+  	if (IS_ENABLED(CONFIG_PCIEAER))
 
-If a user finds a command-line option that "works," the problem is
-solved as far as they are concerned, but it doesn't help the next
-person who trips over it.
+thus considering bandwidth notification as an IRQ-providing service as
+well. But as far as I can see, there is no driver for this port service,
+thus no one should ever request or even handle that interrupt.
 
-I think pci_acpi_init() should warn when "acpi=noirq" was used because
-the only reason to use it should be to work around a firmware defect,
-and ideally, we could make a quirk to do that.  Maybe the doc should
-suggest a bug report.
+I'm not yet seeing the key difference that could explain this effect.
+What else happens via pcie_device_init() when called for
+PCIE_PORT_SERVICE_BWNOTIF, although there will never be a driver?
 
-What does "verifying UEFI/BIOS IRQ options" mean?  I could go look at
-the BIOS setup menu, but I would have no idea what to look for, so the
-only thing I could do would be to try randomly changing IRQ-related
-things.  If that happens to hit on a working configuration, I might
-be happy, but it wouldn't help the next person at all.  I'd rather see
-a bug report.  Then we could at least try to make a quirk so no
-command line option would be needed.
+Jan
 
-Bjorn
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=215533
+
+-- 
+Siemens AG, Technology
+Competence Center Embedded Linux
