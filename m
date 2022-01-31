@@ -2,158 +2,270 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3D7B4A5247
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 23:23:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 207814A5259
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 23:28:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232909AbiAaWXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 17:23:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbiAaWXp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 17:23:45 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982CBC061714;
-        Mon, 31 Jan 2022 14:23:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F613615C6;
-        Mon, 31 Jan 2022 22:23:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B9D5C340E8;
-        Mon, 31 Jan 2022 22:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643667824;
-        bh=0Y3rqgHlAMjH8w1RLY+36FufBDg9B2bU0SqT42dDkig=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VJGnBnmU3SXGd+G8IsHvhCOl83XvQO75dgqmOmMAvwsNtgc7jUQIDgXypI4KMnd6O
-         Bm8HkYi16UX7+jZJu+BTLKhPD1I2BXJ5tvRSymVdDkzsYffNO+Rg9LNRsuS1YbM1bG
-         kgivmCN/59omZJUGTrFfb3YHyg4PpE4QXH8Pq91DaF7XgqbU69sv5u/CIvPX+orVIJ
-         EPuv0ZngdPeFm7gHFKwl4Xt3DkT+0m1g8rsYaSqJ7dsn0zdxNvPNEPIWrw33fJFm/s
-         fnAxKaPT4d+di9wmjOfNwKLI61t3b+6q76AIr+03hGGZv7IIiMazLbJy1RRaXb1xrW
-         RJpMQ65e/JnFA==
-Date:   Mon, 31 Jan 2022 16:23:42 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v8 00/10] vgaarb: Rework default VGA device selection
-Message-ID: <20220131222342.GA517488@bhelgaas>
+        id S233328AbiAaW2L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 17:28:11 -0500
+Received: from mga09.intel.com ([134.134.136.24]:33652 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230136AbiAaW2L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 31 Jan 2022 17:28:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643668091; x=1675204091;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9WLB85i0owrYX8M10oRGSSx6TtdTOtxPK//pnDqDdY0=;
+  b=LHATsvKZni0aITeMldpTXpwWRtacq3mvOejLCyiXyrNBIVQgYlxj6w6e
+   fOB5RnPIg+6X8eJ3+XIw/7Dmmo2RwrCfQ6TSnohgxc9VOcb5KEceFnGVg
+   P7nu+EWftjab7cA4Oq1sQ+S12WKSW8OKWbJXDcoV3+h7kIIWTTKISLD4a
+   ixAZ915N6WAppvMq+sufsjKJGPK+EATYityYbPdFymXXQHrrrruX62eDD
+   +ZdSlBsSkcJfG/QrNYCEac8O7smhYwzEDo6LEz51PnXgjU6X9Du9hxuhI
+   JOb+G99ru7Rk1KPdBJHmMyhAhQXtio4IEhawU/RCOyZ/yy4beU8+ySN/6
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="247333552"
+X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
+   d="scan'208";a="247333552"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 14:28:10 -0800
+X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
+   d="scan'208";a="534328236"
+Received: from sssheth-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.130.247])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 14:28:10 -0800
+Date:   Mon, 31 Jan 2022 14:28:08 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
+Subject: Re: [PATCH v3 03/40] cxl/pci: Defer mailbox status checks to command
+ timeouts
+Message-ID: <20220131222808.kipxr7ezpyhw2y5p@intel.com>
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164298413480.3018233.9643395389297971819.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220106000658.243509-1-helgaas@kernel.org>
+In-Reply-To: <164298413480.3018233.9643395389297971819.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+to Maarten, Maxime, Thomas; beginning of thread:
-https://lore.kernel.org/r/20220106000658.243509-1-helgaas@kernel.org]
+On 22-01-23 16:28:54, Dan Williams wrote:
+> Device status can change without warning at any point in time. This
+> effectively means that no amount of status checking before a command is
+> submitted can guarantee that the device is not in an error condition
+> when the command is later submitted. The clearest signal that a device
+> is not able to process commands is if it fails to process commands.
+> 
+> With the above understanding in hand, update cxl_pci_setup_mailbox() to
+> validate the readiness of the mailbox once at the beginning of time, and
+> then use timeouts and busy sequencing errors as the only occasions to
+> report status.
+> 
+> Just as before, unless and until the driver gains a reset recovery path,
+> doorbell clearing failures by the device are fatal to mailbox
+> operations.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/cxl/pci.c |  134 +++++++++++++----------------------------------------
+>  1 file changed, 33 insertions(+), 101 deletions(-)
+> 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index ed8de9eac970..91de2e4aff6f 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -73,14 +73,16 @@ static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+>  	return 0;
+>  }
+>  
+> -static void cxl_pci_mbox_timeout(struct cxl_dev_state *cxlds,
+> -				 struct cxl_mbox_cmd *mbox_cmd)
+> -{
+> -	struct device *dev = cxlds->dev;
+> +#define cxl_err(dev, status, msg)                                        \
+> +	dev_err_ratelimited(dev, msg ", device state %s%s\n",                  \
+> +			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
+> +			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
+>  
+> -	dev_dbg(dev, "Mailbox command (opcode: %#x size: %zub) timed out\n",
+> -		mbox_cmd->opcode, mbox_cmd->size_in);
+> -}
+> +#define cxl_cmd_err(dev, cmd, status, msg)                               \
+> +	dev_err_ratelimited(dev, msg " (opcode: %#x), device state %s%s\n",    \
+> +			    (cmd)->opcode,                                     \
+> +			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
+> +			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
+>  
+>  /**
+>   * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
+> @@ -134,7 +136,11 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>  
+>  	/* #1 */
+>  	if (cxl_doorbell_busy(cxlds)) {
+> -		dev_err_ratelimited(dev, "Mailbox re-busy after acquiring\n");
+> +		u64 md_status =
+> +			readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> +
+> +		cxl_cmd_err(cxlds->dev, mbox_cmd, md_status,
+> +			    "mailbox queue busy");
+>  		return -EBUSY;
+>  	}
+>  
+> @@ -160,7 +166,9 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>  	/* #5 */
+>  	rc = cxl_pci_mbox_wait_for_doorbell(cxlds);
+>  	if (rc == -ETIMEDOUT) {
+> -		cxl_pci_mbox_timeout(cxlds, mbox_cmd);
+> +		u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> +
+> +		cxl_cmd_err(cxlds->dev, mbox_cmd, md_status, "mailbox timeout");
+>  		return rc;
+>  	}
+>  
+> @@ -198,98 +206,13 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>  	return 0;
+>  }
+>  
+> -/**
+> - * cxl_pci_mbox_get() - Acquire exclusive access to the mailbox.
+> - * @cxlds: The device state to gain access to.
+> - *
+> - * Context: Any context. Takes the mbox_mutex.
+> - * Return: 0 if exclusive access was acquired.
+> - */
+> -static int cxl_pci_mbox_get(struct cxl_dev_state *cxlds)
+> -{
+> -	struct device *dev = cxlds->dev;
+> -	u64 md_status;
+> -	int rc;
+> -
+> -	mutex_lock_io(&cxlds->mbox_mutex);
+> -
+> -	/*
+> -	 * XXX: There is some amount of ambiguity in the 2.0 version of the spec
+> -	 * around the mailbox interface ready (8.2.8.5.1.1).  The purpose of the
+> -	 * bit is to allow firmware running on the device to notify the driver
+> -	 * that it's ready to receive commands. It is unclear if the bit needs
+> -	 * to be read for each transaction mailbox, ie. the firmware can switch
+> -	 * it on and off as needed. Second, there is no defined timeout for
+> -	 * mailbox ready, like there is for the doorbell interface.
+> -	 *
+> -	 * Assumptions:
+> -	 * 1. The firmware might toggle the Mailbox Interface Ready bit, check
+> -	 *    it for every command.
+> -	 *
+> -	 * 2. If the doorbell is clear, the firmware should have first set the
+> -	 *    Mailbox Interface Ready bit. Therefore, waiting for the doorbell
+> -	 *    to be ready is sufficient.
+> -	 */
+> -	rc = cxl_pci_mbox_wait_for_doorbell(cxlds);
+> -	if (rc) {
+> -		dev_warn(dev, "Mailbox interface not ready\n");
+> -		goto out;
+> -	}
+> -
+> -	md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> -	if (!(md_status & CXLMDEV_MBOX_IF_READY && CXLMDEV_READY(md_status))) {
+> -		dev_err(dev, "mbox: reported doorbell ready, but not mbox ready\n");
+> -		rc = -EBUSY;
+> -		goto out;
+> -	}
+> -
+> -	/*
+> -	 * Hardware shouldn't allow a ready status but also have failure bits
+> -	 * set. Spit out an error, this should be a bug report
+> -	 */
+> -	rc = -EFAULT;
+> -	if (md_status & CXLMDEV_DEV_FATAL) {
+> -		dev_err(dev, "mbox: reported ready, but fatal\n");
+> -		goto out;
+> -	}
+> -	if (md_status & CXLMDEV_FW_HALT) {
+> -		dev_err(dev, "mbox: reported ready, but halted\n");
+> -		goto out;
+> -	}
+> -	if (CXLMDEV_RESET_NEEDED(md_status)) {
+> -		dev_err(dev, "mbox: reported ready, but reset needed\n");
+> -		goto out;
+> -	}
+> -
+> -	/* with lock held */
+> -	return 0;
+> -
+> -out:
+> -	mutex_unlock(&cxlds->mbox_mutex);
+> -	return rc;
+> -}
+> -
+> -/**
+> - * cxl_pci_mbox_put() - Release exclusive access to the mailbox.
+> - * @cxlds: The device state to communicate with.
+> - *
+> - * Context: Any context. Expects mbox_mutex to be held.
+> - */
+> -static void cxl_pci_mbox_put(struct cxl_dev_state *cxlds)
+> -{
+> -	mutex_unlock(&cxlds->mbox_mutex);
+> -}
+> -
+>  static int cxl_pci_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+>  {
+>  	int rc;
+>  
+> -	rc = cxl_pci_mbox_get(cxlds);
+> -	if (rc)
+> -		return rc;
+> -
+> +	mutex_lock_io(&cxlds->mbox_mutex);
+>  	rc = __cxl_pci_mbox_send_cmd(cxlds, cmd);
+> -	cxl_pci_mbox_put(cxlds);
+> +	mutex_unlock(&cxlds->mbox_mutex);
+>  
+>  	return rc;
+>  }
+> @@ -310,11 +233,20 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+>  	} while (!time_after(jiffies, timeout));
+>  
+>  	if (!(md_status & CXLMDEV_MBOX_IF_READY)) {
+> -		dev_err(cxlds->dev,
+> -			"timeout awaiting mailbox ready, device state:%s%s\n",
+> -			md_status & CXLMDEV_DEV_FATAL ? " fatal" : "",
+> -			md_status & CXLMDEV_FW_HALT ? " firmware-halt" : "");
+> -		return -EIO;
+> +		cxl_err(cxlds->dev, md_status,
+> +			"timeout awaiting mailbox ready");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	/*
+> +	 * A command may be in flight from a previous driver instance,
+> +	 * think kexec, do one doorbell wait so that
+> +	 * __cxl_pci_mbox_send_cmd() can assume that it is the only
+> +	 * source for future doorbell busy events.
+> +	 */
 
-On Wed, Jan 05, 2022 at 06:06:48PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Current default VGA device selection fails in some cases because part of it
-> is done in the vga_arb_device_init() subsys_initcall, and some arches
-> enumerate PCI devices in pcibios_init(), which runs *after* that.
+Does this mean for background commands? Does kexec run if the current kernel is
+holding a mutex?
 
-Where are we at with this series?  Is there anything I can do to move
-it forward?
+> +	if (cxl_pci_mbox_wait_for_doorbell(cxlds) != 0) {
+> +		cxl_err(cxlds->dev, md_status, "timeout awaiting mailbox idle");
+> +		return -ETIMEDOUT;
 
-Bjorn
+It might be useful to post the return code in the mailbox status register should
+this event happen.
 
-> For example:
-> 
->   - On BMC system, the AST2500 bridge [1a03:1150] does not implement
->     PCI_BRIDGE_CTL_VGA.  This is perfectly legal but means the legacy VGA
->     resources won't reach downstream devices unless they're included in the
->     usual bridge windows.
-> 
->   - vga_arb_select_default_device() will set a device below such a bridge
->     as the default VGA device as long as it has PCI_COMMAND_IO and
->     PCI_COMMAND_MEMORY enabled.
-> 
->   - vga_arbiter_add_pci_device() is called for every VGA device, either at
->     boot-time or at hot-add time, and it will also set the device as the
->     default VGA device, but ONLY if all bridges leading to it implement
->     PCI_BRIDGE_CTL_VGA.
-> 
->   - This difference between vga_arb_select_default_device() and
->     vga_arbiter_add_pci_device() means that a device below an AST2500 or
->     similar bridge can only be set as the default if it is enumerated
->     before vga_arb_device_init().
-> 
->   - On ACPI-based systems, PCI devices are enumerated by acpi_init(), which
->     runs before vga_arb_device_init().
-> 
->   - On non-ACPI systems, like on MIPS system, they are enumerated by
->     pcibios_init(), which typically runs *after* vga_arb_device_init().
-> 
-> This series consolidates all the default VGA device selection in
-> vga_arbiter_add_pci_device(), which is always called after enumerating a
-> PCI device.
-> 
-> Almost all the work here is Huacai's.  I restructured it a little bit and
-> added a few trivial patches on top.
-> 
-> I'd like to move vgaarb.c to drivers/pci eventually, but there's another
-> initcall ordering snag that needs to be resolved first, so this leaves 
-> it where it is.
-> 
-> Bjorn
-> 
-> Version history:
-> V0 original implementation as final quirk to set default device.
-> https://lore.kernel.org/r/20210514080025.1828197-6-chenhuacai@loongson.cn
-> 
-> V1 rework vgaarb to do all default device selection in
-> vga_arbiter_add_pci_device().
-> https://lore.kernel.org/r/20210705100503.1120643-1-chenhuacai@loongson.cn
-> 
-> V2 move arbiter to PCI subsystem, fix nits.
-> https://lore.kernel.org/r/20210722212920.347118-1-helgaas@kernel.org
-> 
-> V3 rewrite the commit log of the last patch (which is also summarized
-> by Bjorn).
-> https://lore.kernel.org/r/20210820100832.663931-1-chenhuacai@loongson.cn
-> 
-> V4 split the last patch to two steps.
-> https://lore.kernel.org/r/20210827083129.2781420-1-chenhuacai@loongson.cn
-> 
-> V5 split Patch-9 again and sort the patches.
-> https://lore.kernel.org/r/20210911093056.1555274-1-chenhuacai@loongson.cn
-> 
-> V6 split Patch-5 again and sort the patches again.
-> https://lore.kernel.org/r/20210916082941.3421838-1-chenhuacai@loongson.cn
-> 
-> V7 stop moving vgaarb to drivers/pci because of ordering issues with
-> misc_init().
-> https://lore.kernel.org/r/20211015061512.2941859-1-chenhuacai@loongson.cn
-> https://lore.kernel.org/r/CAAhV-H7FhAjM-Ha42Z1dLrE4PvC9frfyeU27KHWcyWKkMftEsA@mail.gmail.com
-> 
-> 
-> Bjorn Helgaas (8):
->   vgaarb: Factor out vga_select_framebuffer_device()
->   vgaarb: Factor out default VGA device selection
->   vgaarb: Move framebuffer detection to ADD_DEVICE path
->   vgaarb: Move non-legacy VGA detection to ADD_DEVICE path
->   vgaarb: Move disabled VGA device detection to ADD_DEVICE path
->   vgaarb: Remove empty vga_arb_device_card_gone()
->   vgaarb: Use unsigned format string to print lock counts
->   vgaarb: Replace full MIT license text with SPDX identifier
-> 
-> Huacai Chen (2):
->   vgaarb: Move vga_arb_integrated_gpu() earlier in file
->   vgaarb: Log bridge control messages when adding devices
-> 
->  drivers/gpu/vga/vgaarb.c | 311 +++++++++++++++++++--------------------
->  1 file changed, 154 insertions(+), 157 deletions(-)
-> 
-> -- 
-> 2.25.1
+It would be ideal if we reset the device at this point, however, it could be
+actively decoding and we wouldn't know until cxl_mem driver comes up, which it
+can't because this would have failed. I'm not sure how to deal with that
+dependency, but it seems non-optimal to me. Perhaps it does make sense to
+continue with binding the binding the driver and just removing mailbox
+functionality?
+
+>  	}
+>  
+>  	cxlds->mbox_send = cxl_pci_mbox_send;
 > 
