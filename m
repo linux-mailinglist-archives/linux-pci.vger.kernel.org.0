@@ -2,180 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D15D54A534E
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 00:35:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08CDA4A535C
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 00:38:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbiAaXf3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 18:35:29 -0500
-Received: from mga04.intel.com ([192.55.52.120]:62728 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229584AbiAaXf2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 Jan 2022 18:35:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643672128; x=1675208128;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eEJU5QLLSBr1mXOJ8eM9Ty+9C3BosFULoxCbvemD8DM=;
-  b=En1Q+08RlWQe1iddikfN48GzbZeEGS2BOAU3Mdumta1m4m2F7M+8Qnny
-   +0NcSj675RAmw6oSz17TCjx3LmOnU3wL5OGtZUqMNt7YUvE9I36QNbmjR
-   A+Fd4wgYOlLKhKDZyKbOQBq6b+BDDqZFJjq5l9EDtpRJkSdN1hH0naVpc
-   03X2KSyZ48N2/5BahhR5sYBUXy1fDHXdjr9e0hUVs7uiCsh1kcPLTmJpw
-   ZIv9KACEF0IbvsdvB91M7+BX2tCRN7+R0sNYaRXO2YeLmI2FQDNjTqjso
-   T6rOGtWo4uXkUsYFhsPb5XT7bEgriYteGuu9FYhUeNQTIDXAYk9FeOy5y
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="246409004"
-X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
-   d="scan'208";a="246409004"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 15:35:19 -0800
-X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
-   d="scan'208";a="479394016"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 15:35:18 -0800
-Subject: [PATCH v5 16/40] cxl/core/port: Use dedicated lock for decoder
- target list
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
-        nvdimm@lists.linux.dev
-Date:   Mon, 31 Jan 2022 15:35:18 -0800
-Message-ID: <164367209095.208169.1171673319121271280.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164316562430.3437160.122223070771602475.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164316562430.3437160.122223070771602475.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S229620AbiAaXiz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 18:38:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229582AbiAaXiw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 18:38:52 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B58C061714
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 15:38:52 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id c9so13880980plg.11
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 15:38:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6vOCLYMOxUbUApT9HbI5FSaW7HrkYDiGCAlYIBP1qU8=;
+        b=y5Gc5mz9i67hNtmNqXv8utVOziwwRl+j5ZyQ5cW/fPpfTUfAUWiDK1v8K35o7f1Vsk
+         T91L4zpwTpHpPQOtWr2aeQ2Lsy5aZZaFDuq82GiBOyNEDWH6vPJn4vQRkjQ4eBB3n33J
+         tLPzWhrrbaR7acnXPJrRVi7Cxj0TELu/Qj0nsI8jguFQRvpg8M0OFyAAKLlGSGExEWh1
+         Q3SJLGDy0SzmOzGU8U9AeemuFYzoe0lcqL5VEb+WZNmtPBefnXbT/gB781pU4lBUSdoo
+         cnELrFsISGbUygEtKEWZu5WDKZSIlzDZfZIojiLpEQtDe5kF5C8uEuxsbr/j6z2QWxGe
+         iEYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6vOCLYMOxUbUApT9HbI5FSaW7HrkYDiGCAlYIBP1qU8=;
+        b=5aDI8OfzAumSHwo23ryOGHKyuRPRkQMy2PS83G89ojukEJtS2DfWXpRlqbZW7hKG9J
+         VtfjoTeQOKVRFqAtqiS232vlYDa3n4vxd2KQCRvwt5P3IivQG32gAppIGeFxcHyZGCCm
+         iwH2JwE3N17mCTNh74SjhIn9B/YrpXYy9nrLKuBbejwCK1AFht2D7FlvpSsav9KD44Bj
+         SV5ptE+K0wcg+wKKl7wKe6YfU2iTEEuTflp6oq3Bk7vk7qj8Zj0pDse2hJKc1/3MAYhS
+         0509kIE7NQWvbbQdXfDYSUCxXAZP+2X3uXUm3/Vnl8OEFgP7wkOHt1GGOcm/HigNxfu+
+         UGqQ==
+X-Gm-Message-State: AOAM530Tt8uXXadhjcZDGqwo1OwhwaJnVZo5x5PdHT97mkthzqWH1MNe
+        bFsv+ElatdI5eSiKUrtDVRfKeGNzYl8L/8M7inzf1UHb5nk=
+X-Google-Smtp-Source: ABdhPJwguyNOPmFwDrco2lLS7Rj3fKLBxsK1kYtPGwPykoCdnEFPqdFwq9bgloA8zzisbdGyCWOoppLClYsF+LP7oC8=
+X-Received: by 2002:a17:902:b20a:: with SMTP id t10mr22895008plr.132.1643672331921;
+ Mon, 31 Jan 2022 15:38:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <164298420439.3018233.5113217660229718675.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164316562430.3437160.122223070771602475.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220131233422.xo6sugw4bvoyh6ia@intel.com>
+In-Reply-To: <20220131233422.xo6sugw4bvoyh6ia@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 31 Jan 2022 15:38:44 -0800
+Message-ID: <CAPcyv4hD9jPaTJZE47hx1mg66T44KWCyiaCZGrqG1i-mNAfKqA@mail.gmail.com>
+Subject: Re: [PATCH v4 16/40] cxl/core/port: Use dedicated lock for decoder
+ target list
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Lockdep reports:
+On Mon, Jan 31, 2022 at 3:34 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 22-01-25 18:54:36, Dan Williams wrote:
+> > Lockdep reports:
+> >
+> >  ======================================================
+> >  WARNING: possible circular locking dependency detected
+> >  5.16.0-rc1+ #142 Tainted: G           OE
+> >  ------------------------------------------------------
+> >  cxl/1220 is trying to acquire lock:
+> >  ffff979b85475460 (kn->active#144){++++}-{0:0}, at: __kernfs_remove+0x1ab/0x1e0
+> >
+> >  but task is already holding lock:
+> >  ffff979b87ab38e8 (&dev->lockdep_mutex#2/4){+.+.}-{3:3}, at: cxl_remove_ep+0x50c/0x5c0 [cxl_core]
+> >
+> > ...where cxl_remove_ep() is a helper that wants to delete ports while
+> > holding a lock on the host device for that port. That sets up a lockdep
+> > violation whereby target_list_show() can not rely holding the decoder's
+> > device lock while walking the target_list. Switch to a dedicated seqlock
+> > for this purpose.
+> >
+> > Reported-by: Ben Widawsky <ben.widawsky@intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> > Changes in v4:
+> > - Fix missing unlock in error exit case (Ben)
+>
+> Could you help me understand why we need a lock at all for the target list? I
+> thought the target list remains static throughout the lifetime of the decoder at
+> which point, the only issue would be reading the sysfs entries while the decoder
+> is being destroyed. Is that possible?
 
- ======================================================
- WARNING: possible circular locking dependency detected
- 5.16.0-rc1+ #142 Tainted: G           OE
- ------------------------------------------------------
- cxl/1220 is trying to acquire lock:
- ffff979b85475460 (kn->active#144){++++}-{0:0}, at: __kernfs_remove+0x1ab/0x1e0
-
- but task is already holding lock:
- ffff979b87ab38e8 (&dev->lockdep_mutex#2/4){+.+.}-{3:3}, at: cxl_remove_ep+0x50c/0x5c0 [cxl_core]
-
-...where cxl_remove_ep() is a helper that wants to delete ports while
-holding a lock on the host device for that port. That sets up a lockdep
-violation whereby target_list_show() can not rely holding the decoder's
-device lock while walking the target_list. Switch to a dedicated seqlock
-for this purpose.
-
-Reported-by: Ben Widawsky <ben.widawsky@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v4:
-- Cleanup error exit condition (Jonathan)
-
- drivers/cxl/core/port.c |   30 +++++++++++++++++++++++-------
- drivers/cxl/cxl.h       |    2 ++
- 2 files changed, 25 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 9285cdb734b2..fc5d86222bc3 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -104,14 +104,11 @@ static ssize_t target_type_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(target_type);
- 
--static ssize_t target_list_show(struct device *dev,
--			       struct device_attribute *attr, char *buf)
-+static ssize_t emit_target_list(struct cxl_decoder *cxld, char *buf)
- {
--	struct cxl_decoder *cxld = to_cxl_decoder(dev);
- 	ssize_t offset = 0;
- 	int i, rc = 0;
- 
--	cxl_device_lock(dev);
- 	for (i = 0; i < cxld->interleave_ways; i++) {
- 		struct cxl_dport *dport = cxld->target[i];
- 		struct cxl_dport *next = NULL;
-@@ -124,13 +121,29 @@ static ssize_t target_list_show(struct device *dev,
- 		rc = sysfs_emit_at(buf, offset, "%d%s", dport->port_id,
- 				   next ? "," : "");
- 		if (rc < 0)
--			break;
-+			return rc;
- 		offset += rc;
- 	}
--	cxl_device_unlock(dev);
-+
-+	return offset;
-+}
-+
-+static ssize_t target_list_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+	ssize_t offset;
-+	unsigned int seq;
-+	int rc;
-+
-+	do {
-+		seq = read_seqbegin(&cxld->target_lock);
-+		rc = emit_target_list(cxld, buf);
-+	} while (read_seqretry(&cxld->target_lock, seq));
- 
- 	if (rc < 0)
- 		return rc;
-+	offset = rc;
- 
- 	rc = sysfs_emit_at(buf, offset, "\n");
- 	if (rc < 0)
-@@ -494,15 +507,17 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
- 		goto out_unlock;
- 	}
- 
-+	write_seqlock(&cxld->target_lock);
- 	for (i = 0; i < cxld->nr_targets; i++) {
- 		struct cxl_dport *dport = find_dport(port, target_map[i]);
- 
- 		if (!dport) {
- 			rc = -ENXIO;
--			goto out_unlock;
-+			break;
- 		}
- 		cxld->target[i] = dport;
- 	}
-+	write_sequnlock(&cxld->target_lock);
- 
- out_unlock:
- 	cxl_device_unlock(&port->dev);
-@@ -543,6 +558,7 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
- 
- 	cxld->id = rc;
- 	cxld->nr_targets = nr_targets;
-+	seqlock_init(&cxld->target_lock);
- 	dev = &cxld->dev;
- 	device_initialize(dev);
- 	device_set_pm_not_required(dev);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 6a38d2e1f3dd..e79162999088 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -185,6 +185,7 @@ enum cxl_decoder_type {
-  * @interleave_granularity: data stride per dport
-  * @target_type: accelerator vs expander (type2 vs type3) selector
-  * @flags: memory type capabilities and locking
-+ * @target_lock: coordinate coherent reads of the target list
-  * @nr_targets: number of elements in @target
-  * @target: active ordered target list in current decoder configuration
-  */
-@@ -199,6 +200,7 @@ struct cxl_decoder {
- 	int interleave_granularity;
- 	enum cxl_decoder_type target_type;
- 	unsigned long flags;
-+	seqlock_t target_lock;
- 	int nr_targets;
- 	struct cxl_dport *target[];
- };
-
+This is emitting the target list per the current configuration. If
+another thread or the kernel is configuring the decoder and while the
+target list is being read it should get a coherent snapshot, not the
+intermediate settings.
