@@ -2,166 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D6B84A51ED
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 22:56:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4414F4A51FF
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 23:05:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbiAaV4R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 16:56:17 -0500
-Received: from mga06.intel.com ([134.134.136.31]:15637 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229477AbiAaV4N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 Jan 2022 16:56:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643666173; x=1675202173;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=K7qga3eZ1iQPzkhpO0/Tpd0vzWpBCsIwWSgi0Hbgg/w=;
-  b=WdzkGkv/qndtXrBIxhSLWQhp3ar/q93liY+FrVX2SagkvBR+nrvquGoi
-   7qezXOkpXpQUWX2emG4z7ez+DY0lRVdxtogsV8tXs2+6namDdjkYRBvAy
-   KqYFpHz8MGWUgsyOkNwJUNAAtQZh2SSFB48Qad/s59F74Bb7bkCjDh+hY
-   5DOZPUeAKfZGI32oSF3AzHHQZJdt3Ph3Xu+YwPUlztNI8H65pxs9DqsHN
-   Bgg3jXXJR8Viu67WD2GB2YIA964TIHAhZ+Mry9QGwgKtr6GBNzlCZDIKV
-   uu1heFoBY8iKczIITEIfqyaTetjACrbMWyERcEBLamuTGRsYO9fdgqWpg
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="308289927"
-X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="308289927"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 13:56:11 -0800
-X-IronPort-AV: E=Sophos;i="5.88,331,1635231600"; 
-   d="scan'208";a="537510990"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 13:56:11 -0800
-Subject: [PATCH v4 30/40] cxl/pci: Emit device serial number
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Mon, 31 Jan 2022 13:56:11 -0800
-Message-ID: <164366608838.196598.16856227191534267098.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164298427918.3018233.8524862534398549106.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164298427918.3018233.8524862534398549106.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S230174AbiAaWFW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 17:05:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229690AbiAaWFW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 17:05:22 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FEC6C061714;
+        Mon, 31 Jan 2022 14:05:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3BE896159A;
+        Mon, 31 Jan 2022 22:05:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B66AC340E8;
+        Mon, 31 Jan 2022 22:05:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643666720;
+        bh=rtMYLz36aZm/StOCmHf/+PfRe3vImM7acI85NsbHfzs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IpyvB65SXg8lxmpn7BQGkjJrzU6/cJMc0aRy3XbWM0/5Ga+DyaFPOgn/OnERV6Mcd
+         NSBmi5R5nH/1S+u8602wv2tlRia6VHoRtKxMJSQA0rs88jJL4rM0VamxsshryGIjRK
+         IkX7s6X5SJIE52YVw9B7ylwEPMRX7B9Sa2X3TTzCA1YyWRaNw8qlQAvun/5nsMfD+f
+         L6EvSbUhtjKMDQZsl/SBuE8rKCfQtDKLFq/WCoRM78Qm40GKzyJJPj9Dj5GbVtyI0u
+         UdBh00Qisljv+MQB77fnqWdB6QNsnTI+UCSr+MBkfn71N3E3GULOY+6Zaro7YRmSMU
+         3KrLUhdl8zVNg==
+Date:   Mon, 31 Jan 2022 16:05:18 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Christian Gmeiner <christian.gmeiner@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: cadence: respond to received PTM Requests
+Message-ID: <20220131220518.GA515079@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220131120841.118833-1-christian.gmeiner@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Per the CXL specification (8.1.12.2 Memory Device PCIe Capabilities and
-Extended Capabilities) the Device Serial Number capability is mandatory.
-Emit it for user tooling to identify devices.
+Update subject line to match previous conventions ("git log --oneline
+drivers/pci/controller/cadence/pcie-cadence-host.c" to see).
 
-It is reasonable to ask whether the attribute should be added to the
-list of PCI sysfs device attributes. The PCI layer can optionally emit
-it too, but the CXL subsystem is aiming to preserve its independence and
-the possibility of CXL topologies with non-PCI devices in it. To date
-that has only proven useful for the 'cxl_test' model, but as can be seen
-with seen with ACPI0016 devices, sometimes all that is needed is a
-platform firmware table to point to CXL Component Registers in MMIO
-space to define a "CXL" device.
+On Mon, Jan 31, 2022 at 01:08:27PM +0100, Christian Gmeiner wrote:
+> This enables the Controller [RP] to automatically respond
+> with Response/ResponseD messages.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes since v3:
-- Fixup changelog to clarify why CXL is emitting this attribute
-  regardless of whether PCI later emits it. (Jonathan)
+Update to imperative mood, e.g., "Enable Controller to ...":
 
- Documentation/ABI/testing/sysfs-bus-cxl |    9 +++++++++
- drivers/cxl/core/memdev.c               |   11 +++++++++++
- drivers/cxl/cxlmem.h                    |    2 ++
- drivers/cxl/pci.c                       |    1 +
- tools/testing/cxl/test/mem.c            |    1 +
- 5 files changed, 24 insertions(+)
+  https://chris.beams.io/posts/git-commit/
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-tip.rst?id=v5.16#n134
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 6d8cbf3355b5..87c0e5e65322 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -25,6 +25,15 @@ Description:
- 		identically named field in the Identify Memory Device Output
- 		Payload in the CXL-2.0 specification.
- 
-+What:		/sys/bus/cxl/devices/memX/serial
-+Date:		January, 2022
-+KernelVersion:	v5.18
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) 64-bit serial number per the PCIe Device Serial Number
-+		capability. Mandatory for CXL devices, see CXL 2.0 8.1.12.2
-+		Memory Device PCIe Capabilities and Extended Capabilities.
-+
- What:		/sys/bus/cxl/devices/*/devtype
- Date:		June, 2021
- KernelVersion:	v5.14
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 61029cb7ac62..1e574b052583 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -89,7 +89,18 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
- static struct device_attribute dev_attr_pmem_size =
- 	__ATTR(size, 0444, pmem_size_show, NULL);
- 
-+static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
-+			   char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+
-+	return sysfs_emit(buf, "%#llx\n", cxlds->serial);
-+}
-+static DEVICE_ATTR_RO(serial);
-+
- static struct attribute *cxl_memdev_attributes[] = {
-+	&dev_attr_serial.attr,
- 	&dev_attr_firmware_version.attr,
- 	&dev_attr_payload_max.attr,
- 	&dev_attr_label_storage_size.attr,
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index e70838e5dc17..0ba0cf8dcdbc 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -131,6 +131,7 @@ struct cxl_endpoint_dvsec_info {
-  * @next_persistent_bytes: persistent capacity change pending device reset
-  * @component_reg_phys: register base of component registers
-  * @info: Cached DVSEC information about the device.
-+ * @serial: PCIe Device Serial Number
-  * @mbox_send: @dev specific transport for transmitting mailbox commands
-  * @wait_media_ready: @dev specific method to await media ready
-  *
-@@ -164,6 +165,7 @@ struct cxl_dev_state {
- 
- 	resource_size_t component_reg_phys;
- 	struct cxl_endpoint_dvsec_info info;
-+	u64 serial;
- 
- 	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
- 	int (*wait_media_ready)(struct cxl_dev_state *cxlds);
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 513cb0e2a70a..9252e1f4b18c 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -557,6 +557,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (IS_ERR(cxlds))
- 		return PTR_ERR(cxlds);
- 
-+	cxlds->serial = pci_get_dsn(pdev);
- 	cxlds->cxl_dvsec = pci_find_dvsec_capability(
- 		pdev, PCI_DVSEC_VENDOR_ID_CXL, CXL_DVSEC);
- 	if (!cxlds->cxl_dvsec) {
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 3af3f94de0c3..36ef337c775c 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -268,6 +268,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	if (IS_ERR(cxlds))
- 		return PTR_ERR(cxlds);
- 
-+	cxlds->serial = pdev->id;
- 	cxlds->mbox_send = cxl_mock_mbox_send;
- 	cxlds->wait_media_ready = cxl_mock_wait_media_ready;
- 	cxlds->payload_size = SZ_4K;
+> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 10 ++++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h      |  4 ++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index fb96d37a135c..940c7dd701d6 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -123,6 +123,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+>  	return ret;
+>  }
+>  
+> +static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
 
+I assume this is some device-specific enable bit that is effectively
+ANDed with PCI_PTM_CTRL_ENABLE in the Precision Time Measurement
+Capability?
+
+> +}
+> +
+>  static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -501,6 +509,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	if (rc->quirk_detect_quiet_flag)
+>  		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+>  
+> +	cdns_pcie_host_enable_ptm_response(pcie);
+> +
+>  	ret = cdns_pcie_start_link(pcie);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to start link\n");
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index c8a27b6290ce..9510ea513b8a 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -116,6 +116,10 @@
+>  #define LM_RC_BAR_CFG_APERTURE(bar, aperture)		\
+>  					(((aperture) - 2) << ((bar) * 8))
+>  
+> +/* PTM Control Register */
+> +#define CDNS_PCIE_LM_PTM_CTRL 	(CDNS_PCIE_LM_BASE + 0x0DA8)
+> +#define CDNS_PCIE_LM_TPM_CTRL_PTMRSEN 	BIT(17)
+> +
+>  /*
+>   * Endpoint Function Registers (PCI configuration space for endpoint functions)
+>   */
+> -- 
+> 2.34.1
+> 
