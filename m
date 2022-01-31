@@ -2,38 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B36E4A4DDF
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 19:15:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 212AB4A4DEB
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 19:19:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343720AbiAaSPx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 13:15:53 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4582 "EHLO
+        id S1345846AbiAaSTd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 13:19:33 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4583 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344000AbiAaSPx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 13:15:53 -0500
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JnbjH5QC6z67MSd;
-        Tue,  1 Feb 2022 02:11:15 +0800 (CST)
+        with ESMTP id S1343549AbiAaSTc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 13:19:32 -0500
+Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JnbtD0dZ8z67yjQ;
+        Tue,  1 Feb 2022 02:19:00 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 31 Jan 2022 19:15:51 +0100
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Mon, 31 Jan 2022 19:19:30 +0100
 Received: from localhost (10.47.73.212) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Mon, 31 Jan
- 2022 18:15:50 +0000
-Date:   Mon, 31 Jan 2022 18:15:44 +0000
+ 2022 18:19:30 +0000
+Date:   Mon, 31 Jan 2022 18:19:24 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        kernel test robot <lkp@intel.com>,
         <linux-pci@vger.kernel.org>, <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v3 26/40] cxl/pci: Store component register base in
- cxlds
-Message-ID: <20220131181544.0000268a@Huawei.com>
-In-Reply-To: <164298425711.3018233.16653457511648347954.stgit@dwillia2-desk3.amr.corp.intel.com>
+Subject: Re: [PATCH v3 27/40] cxl/pci: Cache device DVSEC offset
+Message-ID: <20220131181924.00006c57@Huawei.com>
+In-Reply-To: <164298426273.3018233.9302136088649279124.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <164298425711.3018233.16653457511648347954.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <164298426273.3018233.9302136088649279124.stgit@dwillia2-desk3.amr.corp.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -47,75 +45,73 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 23 Jan 2022 16:30:57 -0800
+On Sun, 23 Jan 2022 16:31:02 -0800
 Dan Williams <dan.j.williams@intel.com> wrote:
 
 > From: Ben Widawsky <ben.widawsky@intel.com>
 > 
-> In preparation for defining a cxl_port object to represent the decoder
-> resources of a memory expander capture the compont register base
-
-component
-
-> address.
-> 
-> The port driver uses the component register base to enumerate the HDM
-> Decoder Capability structure. Unlike other cxl_port objects the endpoint
-> port decodes from upstream SPA to downstream DPA rather than upstream
-> port to downstream port.
+> The PCIe device DVSEC, defined in the CXL 2.0 spec, 8.1.3 is required to
+> be implemented by CXL 2.0 endpoint devices. Since the information
+> contained within this DVSEC will be critically important, it makes sense
+> to find the value early, and error out if it cannot be found.
 > 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> [djbw: clarify changelog]
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Guess the logic makes sense about checking this early though my cynical
+mind says, that if someone is putting in devices that claim to be
+CXL ones and this isn't there it is there own problem if they
+kernel wastes effort bringing the driver up only to find later
+it can't finish doing so...
+
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+note that I got confused by this one when checking what it was for
+as you rename it in the next patch... I'll complain about that there ;)
+
+
 > ---
->  drivers/cxl/cxlmem.h |    3 +++
->  drivers/cxl/pci.c    |   11 +++++++++++
->  2 files changed, 14 insertions(+)
+>  drivers/cxl/cxlmem.h |    2 ++
+>  drivers/cxl/pci.c    |    9 +++++++++
+>  2 files changed, 11 insertions(+)
 > 
 > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index fca2d1b5f6ff..90d67fff5bed 100644
+> index 90d67fff5bed..cedc6d3c0448 100644
 > --- a/drivers/cxl/cxlmem.h
 > +++ b/drivers/cxl/cxlmem.h
-> @@ -116,6 +116,7 @@ struct cxl_mbox_cmd {
->   * @active_persistent_bytes: sum of hard + soft persistent
->   * @next_volatile_bytes: volatile capacity change pending device reset
->   * @next_persistent_bytes: persistent capacity change pending device reset
-> + * @component_reg_phys: register base of component registers
->   * @mbox_send: @dev specific transport for transmitting mailbox commands
+> @@ -98,6 +98,7 @@ struct cxl_mbox_cmd {
 >   *
->   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> @@ -145,6 +146,8 @@ struct cxl_dev_state {
->  	u64 next_volatile_bytes;
->  	u64 next_persistent_bytes;
+>   * @dev: The device associated with this CXL state
+>   * @regs: Parsed register blocks
+> + * @device_dvsec: Offset to the PCIe device DVSEC
+>   * @payload_size: Size of space for payload
+>   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
+>   * @lsa_size: Size of Label Storage Area
+> @@ -126,6 +127,7 @@ struct cxl_dev_state {
+>  	struct device *dev;
 >  
-> +	resource_size_t component_reg_phys;
-> +
->  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
->  };
+>  	struct cxl_regs regs;
+> +	int device_dvsec;
 >  
+>  	size_t payload_size;
+>  	size_t lsa_size;
 > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index c29d50660c21..e54dbdf9ac15 100644
+> index e54dbdf9ac15..76de39b90351 100644
 > --- a/drivers/cxl/pci.c
 > +++ b/drivers/cxl/pci.c
-> @@ -416,6 +416,17 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
+> @@ -408,6 +408,15 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (IS_ERR(cxlds))
+>  		return PTR_ERR(cxlds);
 >  
-> +	/*
-> +	 * If the component registers can't be found, the cxl_pci driver may
-> +	 * still be useful for management functions so don't return an error.
-> +	 */
-> +	cxlds->component_reg_phys = CXL_RESOURCE_NONE;
-> +	rc = cxl_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-> +	if (rc)
-> +		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
+> +	cxlds->device_dvsec = pci_find_dvsec_capability(pdev,
+> +							PCI_DVSEC_VENDOR_ID_CXL,
+> +							CXL_DVSEC_PCIE_DEVICE);
+> +	if (!cxlds->device_dvsec) {
+> +		dev_err(&pdev->dev,
+> +			"Device DVSEC not present. Expect limited functionality.\n");
+> +		return -ENXIO;
+> +	}
 > +
-> +	cxlds->component_reg_phys = cxl_regmap_to_base(pdev, &map);
-> +
->  	rc = cxl_pci_setup_mailbox(cxlds);
+>  	rc = cxl_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
 >  	if (rc)
 >  		return rc;
 > 
