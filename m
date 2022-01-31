@@ -2,36 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3BEC4A4AED
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 16:49:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C50E4A4B27
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 16:59:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379878AbiAaPtB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 10:49:01 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4568 "EHLO
+        id S232006AbiAaP7n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 10:59:43 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4570 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379829AbiAaPs7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 10:48:59 -0500
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JnXSn6S1Sz67xX7;
-        Mon, 31 Jan 2022 23:45:13 +0800 (CST)
+        with ESMTP id S241222AbiAaP7n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 10:59:43 -0500
+Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JnXmt3VfKz67Dqh;
+        Mon, 31 Jan 2022 23:59:10 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 31 Jan 2022 16:48:56 +0100
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Mon, 31 Jan 2022 16:59:41 +0100
 Received: from localhost (10.47.73.212) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Mon, 31 Jan
- 2022 15:48:55 +0000
-Date:   Mon, 31 Jan 2022 15:48:48 +0000
+ 2022 15:59:40 +0000
+Date:   Mon, 31 Jan 2022 15:59:34 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v3 15/40] cxl: Prove CXL locking
-Message-ID: <20220131154848.00006615@Huawei.com>
-In-Reply-To: <164298419875.3018233.7880727408723281411.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <164298419875.3018233.7880727408723281411.stgit@dwillia2-desk3.amr.corp.intel.com>
+CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 16/40] cxl/core/port: Use dedicated lock for decoder
+ target list
+Message-ID: <20220131155934.000064ac@Huawei.com>
+In-Reply-To: <164316562430.3437160.122223070771602475.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164298420439.3018233.5113217660229718675.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <164316562430.3437160.122223070771602475.stgit@dwillia2-desk3.amr.corp.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -45,236 +46,144 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 23 Jan 2022 16:29:58 -0800
+On Tue, 25 Jan 2022 18:54:36 -0800
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> When CONFIG_PROVE_LOCKING is enabled the 'struct device' definition gets
-> an additional mutex that is not clobbered by
-> lockdep_set_novalidate_class() like the typical device_lock(). This
-> allows for local annotation of subsystem locks with mutex_lock_nested()
-> per the subsystem's object/lock hierarchy. For CXL, this primarily needs
-> the ability to lock ports by depth and child objects of ports by their
-> parent parent-port lock.
+> Lockdep reports:
 > 
+>  ======================================================
+>  WARNING: possible circular locking dependency detected
+>  5.16.0-rc1+ #142 Tainted: G           OE
+>  ------------------------------------------------------
+>  cxl/1220 is trying to acquire lock:
+>  ffff979b85475460 (kn->active#144){++++}-{0:0}, at: __kernfs_remove+0x1ab/0x1e0
+> 
+>  but task is already holding lock:
+>  ffff979b87ab38e8 (&dev->lockdep_mutex#2/4){+.+.}-{3:3}, at: cxl_remove_ep+0x50c/0x5c0 [cxl_core]
+> 
+> ...where cxl_remove_ep() is a helper that wants to delete ports while
+> holding a lock on the host device for that port. That sets up a lockdep
+> violation whereby target_list_show() can not rely holding the decoder's
+> device lock while walking the target_list. Switch to a dedicated seqlock
+> for this purpose.
+> 
+> Reported-by: Ben Widawsky <ben.widawsky@intel.com>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Hi Dan,
-
-This infrastructure is nice.
-
-A few comments inline - mostly requests for a few comments to make
-life easier when reading this in future.  Also, I'd slightly prefer
-this as 2 patches so the trivial nvdimm / Kconfig.debug stuff is separate
-from the patch actually introducing support for this in CXL.
-
-Anyhow, all trivial stuff so as far as I'm concerned.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Suggested additional tidy up inline.
 
 Thanks,
 
 Jonathan
 
 > ---
->  drivers/cxl/acpi.c       |   10 +++---
->  drivers/cxl/core/pmem.c  |    4 +-
->  drivers/cxl/core/port.c  |   43 ++++++++++++++++++++-------
->  drivers/cxl/cxl.h        |   74 ++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/pmem.c       |   12 ++++---
->  drivers/nvdimm/nd-core.h |    2 +
->  lib/Kconfig.debug        |   23 ++++++++++++++
->  7 files changed, 143 insertions(+), 25 deletions(-)
+> Changes in v4:
+> - Fix missing unlock in error exit case (Ben)
 > 
-
-
-> @@ -712,15 +725,23 @@ static int cxl_bus_match(struct device *dev, struct device_driver *drv)
+>  drivers/cxl/core/port.c |   30 ++++++++++++++++++++++++------
+>  drivers/cxl/cxl.h       |    2 ++
+>  2 files changed, 26 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index f58b2d502ac8..5188d47180f1 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -104,14 +104,11 @@ static ssize_t target_type_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(target_type);
 >  
->  static int cxl_bus_probe(struct device *dev)
+> -static ssize_t target_list_show(struct device *dev,
+> -			       struct device_attribute *attr, char *buf)
+> +static ssize_t emit_target_list(struct cxl_decoder *cxld, char *buf)
 >  {
-> -	return to_cxl_drv(dev->driver)->probe(dev);
+> -	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+>  	ssize_t offset = 0;
+>  	int i, rc = 0;
+>  
+> -	cxl_device_lock(dev);
+>  	for (i = 0; i < cxld->interleave_ways; i++) {
+>  		struct cxl_dport *dport = cxld->target[i];
+>  		struct cxl_dport *next = NULL;
+> @@ -127,10 +124,28 @@ static ssize_t target_list_show(struct device *dev,
+>  			break;
+>  		offset += rc;
+>  	}
+> -	cxl_device_unlock(dev);
+>  
+>  	if (rc < 0)
+>  		return rc;
+
+Now you don't have a lock to unlock above, the only path that can
+hit this if (rc < 0) is an if (rc < 0) in the for loop.
+Perhaps just return directly there.
+
+> +	return offset;
+> +}
+> +
+> +static ssize_t target_list_show(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_decoder *cxld = to_cxl_decoder(dev);
+> +	ssize_t offset;
+> +	unsigned int seq;
 > +	int rc;
 > +
-> +	cxl_nested_lock(dev);
-
-I guess it is 'fairly' obvious why this call is here (I assume because the device
-lock is already held), but maybe worth a comment?
-
-> +	rc = to_cxl_drv(dev->driver)->probe(dev);
-> +	cxl_nested_unlock(dev);
+> +	do {
+> +		seq = read_seqbegin(&cxld->target_lock);
+> +		rc = emit_target_list(cxld, buf);
+> +	} while (read_seqretry(&cxld->target_lock, seq));
 > +
-> +	return rc;
->  }
+> +	if (rc < 0)
+> +		return rc;
+> +	offset = rc;
 >  
->  static void cxl_bus_remove(struct device *dev)
->  {
->  	struct cxl_driver *cxl_drv = to_cxl_drv(dev->driver);
+>  	rc = sysfs_emit_at(buf, offset, "\n");
+>  	if (rc < 0)
+> @@ -494,15 +509,17 @@ static int decoder_populate_targets(struct cxl_decoder *cxld,
+>  		goto out_unlock;
+>  	}
 >  
-> +	cxl_nested_lock(dev);
->  	if (cxl_drv->remove)
->  		cxl_drv->remove(dev);
-> +	cxl_nested_unlock(dev);
->  }
+> +	write_seqlock(&cxld->target_lock);
+>  	for (i = 0; i < cxld->nr_targets; i++) {
+>  		struct cxl_dport *dport = find_dport(port, target_map[i]);
 >  
->  struct bus_type cxl_bus_type = {
+>  		if (!dport) {
+>  			rc = -ENXIO;
+> -			goto out_unlock;
+> +			break;
+>  		}
+>  		cxld->target[i] = dport;
+>  	}
+> +	write_sequnlock(&cxld->target_lock);
+>  
+>  out_unlock:
+>  	cxl_device_unlock(&port->dev);
+> @@ -543,6 +560,7 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
+>  
+>  	cxld->id = rc;
+>  	cxld->nr_targets = nr_targets;
+> +	seqlock_init(&cxld->target_lock);
+>  	dev = &cxld->dev;
+>  	device_initialize(dev);
+>  	device_set_pm_not_required(dev);
 > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index c1dc53492773..569cbe7f23d6 100644
+> index 569cbe7f23d6..47c256ad105f 100644
 > --- a/drivers/cxl/cxl.h
 > +++ b/drivers/cxl/cxl.h
-> @@ -285,6 +285,7 @@ static inline bool is_cxl_root(struct cxl_port *port)
->  	return port->uport == port->dev.parent;
->  }
->  
-> +bool is_cxl_port(struct device *dev);
->  struct cxl_port *to_cxl_port(struct device *dev);
->  struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
->  				   resource_size_t component_reg_phys,
-> @@ -295,6 +296,7 @@ int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
->  
->  struct cxl_decoder *to_cxl_decoder(struct device *dev);
->  bool is_root_decoder(struct device *dev);
-> +bool is_cxl_decoder(struct device *dev);
->  struct cxl_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
->  					   unsigned int nr_targets);
->  struct cxl_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
-> @@ -347,4 +349,76 @@ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd);
->  #ifndef __mock
->  #define __mock static
->  #endif
-> +
-> +#ifdef CONFIG_PROVE_CXL_LOCKING
-> +enum cxl_lock_class {
-> +	CXL_ANON_LOCK,
-> +	CXL_NVDIMM_LOCK,
-> +	CXL_NVDIMM_BRIDGE_LOCK,
-> +	CXL_PORT_LOCK,
-
-As you are going to increment off the end of this perhaps a comment
-here so that no one thinks "I'll just add another entry after CXL_PORT_LOCK"
-
-> +};
-> +
-> +static inline void cxl_nested_lock(struct device *dev)
-> +{
-> +	if (is_cxl_port(dev)) {
-> +		struct cxl_port *port = to_cxl_port(dev);
-> +
-> +		mutex_lock_nested(&dev->lockdep_mutex,
-> +				  CXL_PORT_LOCK + port->depth);
-> +	} else if (is_cxl_decoder(dev)) {
-> +		struct cxl_port *port = to_cxl_port(dev->parent);
-> +
-> +		mutex_lock_nested(&dev->lockdep_mutex,
-> +				  CXL_PORT_LOCK + port->depth + 1);
-
-Perhaps a comment on why port->dev + 1 is a safe choice?
-Not immediately obvious to me and I'm too lazy to figure it out :)
-
-> +	} else if (is_cxl_nvdimm_bridge(dev))
-> +		mutex_lock_nested(&dev->lockdep_mutex, CXL_NVDIMM_BRIDGE_LOCK);
-> +	else if (is_cxl_nvdimm(dev))
-> +		mutex_lock_nested(&dev->lockdep_mutex, CXL_NVDIMM_LOCK);
-> +	else
-> +		mutex_lock_nested(&dev->lockdep_mutex, CXL_ANON_LOCK);
-> +}
-> +
-> +static inline void cxl_nested_unlock(struct device *dev)
-> +{
-> +	mutex_unlock(&dev->lockdep_mutex);
-> +}
-> +
-> +static inline void cxl_device_lock(struct device *dev)
-> +{
-> +	/*
-> +	 * For double lock errors the lockup will happen before lockdep
-> +	 * warns at cxl_nested_lock(), so assert explicitly.
-> +	 */
-> +	lockdep_assert_not_held(&dev->lockdep_mutex);
-> +
-> +	device_lock(dev);
-> +	cxl_nested_lock(dev);
-> +}
-> +
-> +static inline void cxl_device_unlock(struct device *dev)
-> +{
-> +	cxl_nested_unlock(dev);
-> +	device_unlock(dev);
-> +}
-> +#else
-> +static inline void cxl_nested_lock(struct device *dev)
-> +{
-> +}
-> +
-> +static inline void cxl_nested_unlock(struct device *dev)
-> +{
-> +}
-> +
-> +static inline void cxl_device_lock(struct device *dev)
-> +{
-> +	device_lock(dev);
-> +}
-> +
-> +static inline void cxl_device_unlock(struct device *dev)
-> +{
-> +	device_unlock(dev);
-> +}
-> +#endif
-> +
-> +
-
-One blank line only.
-
->  #endif /* __CXL_H__ */
-...
-> diff --git a/drivers/nvdimm/nd-core.h b/drivers/nvdimm/nd-core.h
-> index a11850dd475d..2650a852eeaf 100644
-> --- a/drivers/nvdimm/nd-core.h
-> +++ b/drivers/nvdimm/nd-core.h
-> @@ -185,7 +185,7 @@ static inline void devm_nsio_disable(struct device *dev,
->  }
->  #endif
->  
-> -#ifdef CONFIG_PROVE_LOCKING
-> +#ifdef CONFIG_PROVE_NVDIMM_LOCKING
->  extern struct class *nd_class;
->  
->  enum {
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 9ef7ce18b4f5..ea9291723d06 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1509,6 +1509,29 @@ config CSD_LOCK_WAIT_DEBUG
->  	  include the IPI handler function currently executing (if any)
->  	  and relevant stack traces.
->  
-> +choice
-> +	prompt "Lock debugging: prove subsystem device_lock() correctness"
-> +	depends on PROVE_LOCKING
-> +	help
-> +	  For subsystems that have instrumented their usage of the device_lock()
-> +	  with nested annotations, enable lock dependency checking. The locking
-> +	  hierarchy 'subclass' identifiers are not compatible across
-> +	  sub-systems, so only one can be enabled at a time.
-> +
-> +config PROVE_NVDIMM_LOCKING
-> +	bool "NVDIMM"
-> +	depends on LIBNVDIMM
-> +	help
-> +	  Enable lockdep to validate nd_device_lock() usage.
-
-I would slightly have preferred a first patch that pulled out the NVDIMM parts
-and a second that introduced it for CXL.
-
-> +
-> +config PROVE_CXL_LOCKING
-> +	bool "CXL"
-> +	depends on CXL_BUS
-> +	help
-> +	  Enable lockdep to validate cxl_device_lock() usage.
-> +
-> +endchoice
-> +
->  endmenu # lock debugging
->  
->  config TRACE_IRQFLAGS
+> @@ -185,6 +185,7 @@ enum cxl_decoder_type {
+>   * @interleave_granularity: data stride per dport
+>   * @target_type: accelerator vs expander (type2 vs type3) selector
+>   * @flags: memory type capabilities and locking
+> + * @target_lock: coordinate coherent reads of the target list
+>   * @nr_targets: number of elements in @target
+>   * @target: active ordered target list in current decoder configuration
+>   */
+> @@ -199,6 +200,7 @@ struct cxl_decoder {
+>  	int interleave_granularity;
+>  	enum cxl_decoder_type target_type;
+>  	unsigned long flags;
+> +	seqlock_t target_lock;
+>  	int nr_targets;
+>  	struct cxl_dport *target[];
+>  };
 > 
 
