@@ -2,103 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C8674A49BC
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 15:57:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74AE64A4A70
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Jan 2022 16:21:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348768AbiAaO5h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 09:57:37 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4566 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232149AbiAaO5h (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 09:57:37 -0500
-Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JnWJX4Ktrz67yKf;
-        Mon, 31 Jan 2022 22:53:00 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 31 Jan 2022 15:57:35 +0100
-Received: from localhost (10.47.73.212) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Mon, 31 Jan
- 2022 14:57:34 +0000
-Date:   Mon, 31 Jan 2022 14:57:29 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        <linux-pci@vger.kernel.org>, <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v3 14/40] cxl/core: Track port depth
-Message-ID: <20220131145729.0000056f@Huawei.com>
-In-Reply-To: <164298419321.3018233.4469731547378993606.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <164298419321.3018233.4469731547378993606.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S1379362AbiAaPVr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 10:21:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241253AbiAaPVr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 10:21:47 -0500
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C326EC061714;
+        Mon, 31 Jan 2022 07:21:46 -0800 (PST)
+Received: by mail-oi1-x236.google.com with SMTP id e81so27254954oia.6;
+        Mon, 31 Jan 2022 07:21:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:message-id:date:mime-version:user-agent:content-language:to
+         :cc:references:from:subject:in-reply-to:content-transfer-encoding;
+        bh=oVZWckNIPsWHeKbXJ2sFvACBl5okPcSAEIsKC6XhxDU=;
+        b=NXQ2vh5WqJcNrwvi+uhxOeXRwL3TuQvr8zI74nXKNlbA4THVcrFQe20l84a2F3rCSl
+         fb+2O3VmewcReatZ19klOskQ2upf6qljRrD6n2B9Y4PhroYWW+XOfsdsfB3MZuirxQ9t
+         X+vPYa1ikH13JYbnSKqVdMeH1jmxa4D6k59/FHZubOFHJbDfNxiaB8VfMIjtaMgLtJV+
+         3A2GEeuqlrodVHjFD7y9lvjUf+N31nBGTmFabP1WX1nvXw95IBSd2qgNRGX0BxRvAmns
+         3J8DZp0qcC/r7rrsLbS0TgQNcR7BR3VDw0NU5D6j9PO9dXHpEDeoVqLmRligf9NcdWA6
+         MSIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
+         :content-language:to:cc:references:from:subject:in-reply-to
+         :content-transfer-encoding;
+        bh=oVZWckNIPsWHeKbXJ2sFvACBl5okPcSAEIsKC6XhxDU=;
+        b=KywFr/OqYMsf3qiaElSRqlSWv6PhIuJkZBMaeZcZmCrMnwj09ZfcYxqGtcZ+jVolwZ
+         KlB7ay/40xZ+j8S3irzoABlLB3gcmKr4gNvKvocXi2Wod3WPESxpYfZHJ8de7p88QCxr
+         DrqidW7OpNKBtFJhjdth2pyPrGFKzwWo0mqOeP5hanlcFKmHpoWEjJ/ZSpDt4hLEEhfP
+         R6a/d9heCj46D9wqtCpIj8AGC8RpskMOJp91B2Unpt5xFqa6B0xTpIxhdronb+AOoDEu
+         5ht0V9CuMBAg+mOWDvkV9Wy0viP80Al/upgtdU5avyipYryyvjlt+i7C2JQirSaoCNgZ
+         t9kg==
+X-Gm-Message-State: AOAM530Cl83PjeZaRDrEZUBsw/MaSrRs2zOSzgRdmn2ZDhWPsHTdcd49
+        SRu7+VoFIDWdA/ppoXmtVwM=
+X-Google-Smtp-Source: ABdhPJwZ2DsfGoZh9WlCulrelJMyxXaQWZM7t1bPVVjVsAMl6JMrpJ5ac6K1xcqWaqkMGtPCEBWrHw==
+X-Received: by 2002:a05:6808:211f:: with SMTP id r31mr12780920oiw.194.1643642506160;
+        Mon, 31 Jan 2022 07:21:46 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d65sm9789045otb.17.2022.01.31.07.21.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Jan 2022 07:21:44 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <c78df469-1a9f-5778-24d1-8f08a6bf5bcc@roeck-us.net>
+Date:   Mon, 31 Jan 2022 07:21:40 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-US
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Will Deacon <will@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Jason Gunthorpe <jgg@nvidia.com>, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, Kevin Tian <kevin.tian@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cedric Le Goater <clg@kaod.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <87mtjc2lhe.ffs@tglx>
+From:   Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [patch V3 28/35] PCI/MSI: Simplify pci_irq_get_affinity()
+In-Reply-To: <87mtjc2lhe.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.73.212]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 23 Jan 2022 16:29:53 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> From: Ben Widawsky <ben.widawsky@intel.com>
+On 1/31/22 03:27, Thomas Gleixner wrote:
+> On Sun, Jan 30 2022 at 09:12, Guenter Roeck wrote:
+>> On Fri, Dec 10, 2021 at 11:19:26PM +0100, Thomas Gleixner wrote:
+>> This patch results in the following runtime warning when booting x86
+>> (32 bit) nosmp images from NVME in qemu.
+>>
+>> [   14.825482] nvme nvme0: 1/0/0 default/read/poll queues
+>> ILLOPC: ca7c6d10: 0f 0b
+>> [   14.826188] ------------[ cut here ]------------
+>> [   14.826307] WARNING: CPU: 0 PID: 7 at drivers/pci/msi/msi.c:1114 pci_irq_get_affinity+0x80/0x90
 > 
-> In preparation for proving CXL subsystem usage of the device_lock()
-> order track the depth of ports with the expectation that  shallower port
-
-It's nitpick Monday: double space before shallower.
-
-> locks can be held over deeper port locks.
+> This complains about msi_desc->affinity being NULL.
 > 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/cxl/core/port.c |    2 ++
->  drivers/cxl/cxl.h       |    2 ++
->  2 files changed, 4 insertions(+)
+>> git bisect bad f48235900182d64537c6e8f8dc0932b57a1a0638
+>> # first bad commit: [f48235900182d64537c6e8f8dc0932b57a1a0638] PCI/MSI: Simplify pci_irq_get_affinity()
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 826b300ba950..4ec5febf73fb 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -362,6 +362,8 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
->  	if (IS_ERR(port))
->  		return port;
->  
-> +	if (parent_port)
-> +		port->depth = parent_port->depth + 1;
->  	dev = &port->dev;
->  	if (parent_port)
->  		rc = dev_set_name(dev, "port%d", port->id);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index e60878ab4569..c1dc53492773 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -252,6 +252,7 @@ struct cxl_walk_context {
->   * @dports: cxl_dport instances referenced by decoders
->   * @decoder_ida: allocator for decoder ids
->   * @component_reg_phys: component register capability base address (optional)
-> + * @depth: How deep this port is relative to the root. depth 0 is the root.
->   */
->  struct cxl_port {
->  	struct device dev;
-> @@ -260,6 +261,7 @@ struct cxl_port {
->  	struct list_head dports;
->  	struct ida decoder_ida;
->  	resource_size_t component_reg_phys;
-> +	unsigned int depth;
->  };
->  
->  /**
+> Hrm. Can you please provide dmesg and /proc/interrupts from a
+> kernel before that commit?
 > 
 
+Sure. Please see http://server.roeck-us.net/qemu/x86/.
+The logs are generated with with v5.16.4.
+
+Guenter
