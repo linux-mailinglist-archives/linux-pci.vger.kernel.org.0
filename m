@@ -2,148 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 569E84A602E
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 16:31:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F74C4A606C
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 16:46:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240424AbiBAPb5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 10:31:57 -0500
-Received: from mga02.intel.com ([134.134.136.20]:60430 "EHLO mga02.intel.com"
+        id S240532AbiBAPqj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 10:46:39 -0500
+Received: from mga04.intel.com ([192.55.52.120]:26867 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233563AbiBAPb4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Feb 2022 10:31:56 -0500
+        id S240521AbiBAPqj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Feb 2022 10:46:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643729516; x=1675265516;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2YQX+1pMX3xBqiCCvoSHrWYs7DOA65rdAvLn4EkaPAA=;
-  b=QF4y6VswXT2TeM0ewmXMjvvE05/q84d8bhXIQyxj2YNzGpv36zGN9gUU
-   yROwl6hd1/LJCIuMcMQ2v92nn14r4FDQ3lDERq0MSlx1f686XEnb327Ke
-   6EMtQnITWP/rbFj0t0949JYUxrTZ+bWg69omDnJtxJhQOD/tygbPtB+g5
-   gi0AgToZ5zFyr+2McZO8zCxre9/dWRUpal4+UdXPzIMY0efOUCEv1Iqja
-   tC7eOzjlByVENWmifq1MLwnP2ZFyVCum8wT4ZMAGCD5JFwgJQ4p7ch7Dk
-   cISEW2zLEpFGnhd1Kn+6PDjbaGtm8lk84/9ObR2WnRkxYz8UDkb2DpwAq
+  t=1643730399; x=1675266399;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=d9eKHUfVREYlEXOMy6/dbAqRNvB0R5n8Xjyt6b1+6HE=;
+  b=d/Jx2ga3CIukNweVndQXc/EMFAs7jYvJantwB9CJlSKeXH/GB8GOCm0B
+   V5VsimeUIvRH+03XBD4i1yACVNTfVyeOqG8J6gTNLzR1n2gzkUvOzBsg0
+   xspWxa0tAwlexd9AiKvck026IZ9J4RB4eTq+7PLjbPDAdqdKRaJiZKUpM
+   3vvcvi971xvnL4HNDWeI4VEDWiar+ravQlKux4Xbk5jQuP+7akcMH/fXi
+   6U8qwVh4pGuhdrsuF75P3HQeIonbhMRde2AO2749jKP3hOA/EGqXxo6nr
+   tSDN76Z4o1ChYcaQJXC7crOnf59tZx3okshUL/McUB+vXWf2B8qwH2Q0P
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="235108638"
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="246550085"
 X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="235108638"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:31:56 -0800
+   d="scan'208";a="246550085"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:46:38 -0800
 X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="676113907"
-Received: from rashmigh-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.8])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:31:55 -0800
-Date:   Tue, 1 Feb 2022 07:31:54 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        nvdimm@lists.linux.dev
-Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
-Message-ID: <20220201153154.jpyxayuulbhdran4@intel.com>
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
+   d="scan'208";a="537853590"
+Received: from tveit-mobl1.ger.corp.intel.com (HELO [10.252.37.11]) ([10.252.37.11])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:46:36 -0800
+Message-ID: <b0a06a30-f479-df9f-980c-b789f0f26ce9@linux.intel.com>
+Date:   Tue, 1 Feb 2022 16:46:33 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.5.1
+Subject: Re: [PATCH v8 00/10] vgaarb: Rework default VGA device selection
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@loongson.cn>
+References: <20220131222342.GA517488@bhelgaas>
+From:   Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+In-Reply-To: <20220131222342.GA517488@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22-01-23 16:31:24, Dan Williams wrote:
-> While CXL memory targets will have their own memory target node,
-> individual memory devices may be affinitized like other PCI devices.
-> Emit that attribute for memdevs.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Hey,
+ 
+Op 31-01-2022 om 23:23 schreef Bjorn Helgaas:
+> [+to Maarten, Maxime, Thomas; beginning of thread:
+> https://lore.kernel.org/r/20220106000658.243509-1-helgaas@kernel.org]
+>
+> On Wed, Jan 05, 2022 at 06:06:48PM -0600, Bjorn Helgaas wrote:
+>> From: Bjorn Helgaas <bhelgaas@google.com>
+>>
+>> Current default VGA device selection fails in some cases because part of it
+>> is done in the vga_arb_device_init() subsys_initcall, and some arches
+>> enumerate PCI devices in pcibios_init(), which runs *after* that.
+> Where are we at with this series?  Is there anything I can do to move
+> it forward?
+>
+> Bjorn
 
-This brings up an interesting question. Are all devices in a region affinitized
-to the same NUMA node? I think they must be - at which point, should this
-attribute be a part of a region, rather than a device?
+Hi Bjorn,
 
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl |    9 +++++++++
->  drivers/cxl/core/memdev.c               |   17 +++++++++++++++++
->  tools/testing/cxl/test/cxl.c            |    1 +
->  3 files changed, 27 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 87c0e5e65322..0b51cfec0c66 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -34,6 +34,15 @@ Description:
->  		capability. Mandatory for CXL devices, see CXL 2.0 8.1.12.2
->  		Memory Device PCIe Capabilities and Extended Capabilities.
->  
-> +What:		/sys/bus/cxl/devices/memX/numa_node
-> +Date:		January, 2022
-> +KernelVersion:	v5.18
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) If NUMA is enabled and the platform has affinitized the
-> +		host PCI device for this memory device, emit the CPU node
-> +		affinity for this device.
-> +
 
-I think you'd want to say something about the device actively decoding. Perhaps
-I'm mistaken though, can you affinitize without setting up HDM decoders for the
-device?
+I'm afraid that I don't understand the vga arbiter or the vga code well enough to review.
 
->  What:		/sys/bus/cxl/devices/*/devtype
->  Date:		June, 2021
->  KernelVersion:	v5.14
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 1e574b052583..b2773664e407 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -99,11 +99,19 @@ static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(serial);
->  
-> +static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
-> +			      char *buf)
-> +{
-> +	return sprintf(buf, "%d\n", dev_to_node(dev));
-> +}
-> +static DEVICE_ATTR_RO(numa_node);
-> +
->  static struct attribute *cxl_memdev_attributes[] = {
->  	&dev_attr_serial.attr,
->  	&dev_attr_firmware_version.attr,
->  	&dev_attr_payload_max.attr,
->  	&dev_attr_label_storage_size.attr,
-> +	&dev_attr_numa_node.attr,
->  	NULL,
->  };
->  
-> @@ -117,8 +125,17 @@ static struct attribute *cxl_memdev_ram_attributes[] = {
->  	NULL,
->  };
->  
-> +static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
-> +				  int n)
-> +{
-> +	if (!IS_ENABLED(CONFIG_NUMA) && a == &dev_attr_numa_node.attr)
-> +		return 0;
-> +	return a->mode;
-> +}
-> +
->  static struct attribute_group cxl_memdev_attribute_group = {
->  	.attrs = cxl_memdev_attributes,
-> +	.is_visible = cxl_memdev_visible,
->  };
->  
->  static struct attribute_group cxl_memdev_ram_attribute_group = {
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 40ed567952e6..cd2f20f2707f 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -583,6 +583,7 @@ static __init int cxl_test_init(void)
->  		if (!pdev)
->  			goto err_mem;
->  		pdev->dev.parent = &port->dev;
-> +		set_dev_node(&pdev->dev, i % 2);
->  
->  		rc = platform_device_add(pdev);
->  		if (rc) {
-> 
+Could you perhaps find someone who could review?
+
+I see Chen wrote some patches and tested, so perhaps they could?
+
+~Maarten
+
+>> For example:
+>>
+>>   - On BMC system, the AST2500 bridge [1a03:1150] does not implement
+>>     PCI_BRIDGE_CTL_VGA.  This is perfectly legal but means the legacy VGA
+>>     resources won't reach downstream devices unless they're included in the
+>>     usual bridge windows.
+>>
+>>   - vga_arb_select_default_device() will set a device below such a bridge
+>>     as the default VGA device as long as it has PCI_COMMAND_IO and
+>>     PCI_COMMAND_MEMORY enabled.
+>>
+>>   - vga_arbiter_add_pci_device() is called for every VGA device, either at
+>>     boot-time or at hot-add time, and it will also set the device as the
+>>     default VGA device, but ONLY if all bridges leading to it implement
+>>     PCI_BRIDGE_CTL_VGA.
+>>
+>>   - This difference between vga_arb_select_default_device() and
+>>     vga_arbiter_add_pci_device() means that a device below an AST2500 or
+>>     similar bridge can only be set as the default if it is enumerated
+>>     before vga_arb_device_init().
+>>
+>>   - On ACPI-based systems, PCI devices are enumerated by acpi_init(), which
+>>     runs before vga_arb_device_init().
+>>
+>>   - On non-ACPI systems, like on MIPS system, they are enumerated by
+>>     pcibios_init(), which typically runs *after* vga_arb_device_init().
+>>
+>> This series consolidates all the default VGA device selection in
+>> vga_arbiter_add_pci_device(), which is always called after enumerating a
+>> PCI device.
+>>
+>> Almost all the work here is Huacai's.  I restructured it a little bit and
+>> added a few trivial patches on top.
+>>
+>> I'd like to move vgaarb.c to drivers/pci eventually, but there's another
+>> initcall ordering snag that needs to be resolved first, so this leaves 
+>> it where it is.
+>>
+>> Bjorn
+>>
+>> Version history:
+>> V0 original implementation as final quirk to set default device.
+>> https://lore.kernel.org/r/20210514080025.1828197-6-chenhuacai@loongson.cn
+>>
+>> V1 rework vgaarb to do all default device selection in
+>> vga_arbiter_add_pci_device().
+>> https://lore.kernel.org/r/20210705100503.1120643-1-chenhuacai@loongson.cn
+>>
+>> V2 move arbiter to PCI subsystem, fix nits.
+>> https://lore.kernel.org/r/20210722212920.347118-1-helgaas@kernel.org
+>>
+>> V3 rewrite the commit log of the last patch (which is also summarized
+>> by Bjorn).
+>> https://lore.kernel.org/r/20210820100832.663931-1-chenhuacai@loongson.cn
+>>
+>> V4 split the last patch to two steps.
+>> https://lore.kernel.org/r/20210827083129.2781420-1-chenhuacai@loongson.cn
+>>
+>> V5 split Patch-9 again and sort the patches.
+>> https://lore.kernel.org/r/20210911093056.1555274-1-chenhuacai@loongson.cn
+>>
+>> V6 split Patch-5 again and sort the patches again.
+>> https://lore.kernel.org/r/20210916082941.3421838-1-chenhuacai@loongson.cn
+>>
+>> V7 stop moving vgaarb to drivers/pci because of ordering issues with
+>> misc_init().
+>> https://lore.kernel.org/r/20211015061512.2941859-1-chenhuacai@loongson.cn
+>> https://lore.kernel.org/r/CAAhV-H7FhAjM-Ha42Z1dLrE4PvC9frfyeU27KHWcyWKkMftEsA@mail.gmail.com
+>>
+>>
+>> Bjorn Helgaas (8):
+>>   vgaarb: Factor out vga_select_framebuffer_device()
+>>   vgaarb: Factor out default VGA device selection
+>>   vgaarb: Move framebuffer detection to ADD_DEVICE path
+>>   vgaarb: Move non-legacy VGA detection to ADD_DEVICE path
+>>   vgaarb: Move disabled VGA device detection to ADD_DEVICE path
+>>   vgaarb: Remove empty vga_arb_device_card_gone()
+>>   vgaarb: Use unsigned format string to print lock counts
+>>   vgaarb: Replace full MIT license text with SPDX identifier
+>>
+>> Huacai Chen (2):
+>>   vgaarb: Move vga_arb_integrated_gpu() earlier in file
+>>   vgaarb: Log bridge control messages when adding devices
+>>
+>>  drivers/gpu/vga/vgaarb.c | 311 +++++++++++++++++++--------------------
+>>  1 file changed, 154 insertions(+), 157 deletions(-)
+>>
+>> -- 
+>> 2.25.1
+>>
+
