@@ -2,136 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A3194A5FEC
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 16:24:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 569E84A602E
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 16:31:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239853AbiBAPYM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 10:24:12 -0500
-Received: from mga01.intel.com ([192.55.52.88]:22994 "EHLO mga01.intel.com"
+        id S240424AbiBAPb5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 10:31:57 -0500
+Received: from mga02.intel.com ([134.134.136.20]:60430 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231308AbiBAPYM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Feb 2022 10:24:12 -0500
+        id S233563AbiBAPb4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Feb 2022 10:31:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643729052; x=1675265052;
+  t=1643729516; x=1675265516;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=PiisifOP6Owd2ujPZ/s8BSQ7ZkKzSF51SGkqgdrJosA=;
-  b=Kt0ckzDSW2iZ++Ze/wAyT0Jsv68Ls+Iz4nH0VCI+HA1lpxW9R92B6R3Y
-   R3BsYw7RSBDcD6S29Wf9Z4zVh09yuNxm6G6veC4WPYOpQ+GyKM49T8sAU
-   I6IM5iiwEdeFXDar9w0uWooAq4ZxD8tvpgGb4fQ/vLFvr8sUIOl97GUmp
-   Jn5e6ckjJaJHIxqC4F40cmYLgzmOCLWmTOREz9CY8xgSjm9HCKtt2Q4O5
-   KM+7Vi46AHa+t/Hdc0B83ANfV6CjqjJdKHGm8ylUxvJwiEdMwtvlA2ULz
-   5XR9S9BlIxhu8vR4LCKWZ09Z7EpjNfc0YKlCQCL01Qo3B52zJglzit/nx
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="272191024"
+  bh=2YQX+1pMX3xBqiCCvoSHrWYs7DOA65rdAvLn4EkaPAA=;
+  b=QF4y6VswXT2TeM0ewmXMjvvE05/q84d8bhXIQyxj2YNzGpv36zGN9gUU
+   yROwl6hd1/LJCIuMcMQ2v92nn14r4FDQ3lDERq0MSlx1f686XEnb327Ke
+   6EMtQnITWP/rbFj0t0949JYUxrTZ+bWg69omDnJtxJhQOD/tygbPtB+g5
+   gi0AgToZ5zFyr+2McZO8zCxre9/dWRUpal4+UdXPzIMY0efOUCEv1Iqja
+   tC7eOzjlByVENWmifq1MLwnP2ZFyVCum8wT4ZMAGCD5JFwgJQ4p7ch7Dk
+   cISEW2zLEpFGnhd1Kn+6PDjbaGtm8lk84/9ObR2WnRkxYz8UDkb2DpwAq
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="235108638"
 X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="272191024"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:24:12 -0800
+   d="scan'208";a="235108638"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:31:56 -0800
 X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="479721965"
+   d="scan'208";a="676113907"
 Received: from rashmigh-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.8])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:24:11 -0800
-Date:   Tue, 1 Feb 2022 07:24:10 -0800
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:31:55 -0800
+Date:   Tue, 1 Feb 2022 07:31:54 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH v3 27/40] cxl/pci: Cache device DVSEC offset
-Message-ID: <20220201152410.36jvdmmpcqi3lhdw@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        nvdimm@lists.linux.dev
+Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
+Message-ID: <20220201153154.jpyxayuulbhdran4@intel.com>
 References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164298426273.3018233.9302136088649279124.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220131181924.00006c57@Huawei.com>
+ <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220131181924.00006c57@Huawei.com>
+In-Reply-To: <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22-01-31 18:19:24, Jonathan Cameron wrote:
-> On Sun, 23 Jan 2022 16:31:02 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
+On 22-01-23 16:31:24, Dan Williams wrote:
+> While CXL memory targets will have their own memory target node,
+> individual memory devices may be affinitized like other PCI devices.
+> Emit that attribute for memdevs.
 > 
-> > From: Ben Widawsky <ben.widawsky@intel.com>
-> > 
-> > The PCIe device DVSEC, defined in the CXL 2.0 spec, 8.1.3 is required to
-> > be implemented by CXL 2.0 endpoint devices. Since the information
-> > contained within this DVSEC will be critically important, it makes sense
-> > to find the value early, and error out if it cannot be found.
-> > 
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Guess the logic makes sense about checking this early though my cynical
-> mind says, that if someone is putting in devices that claim to be
-> CXL ones and this isn't there it is there own problem if they
-> kernel wastes effort bringing the driver up only to find later
-> it can't finish doing so...
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-I don't remember if Dan and I discussed actually failing to bind this early if
-the DVSEC isn't there. I think the concern is less about wasted effort and more
-about the inability to determine if the device is actively decoding something
-and then having the kernel driver tear that out when it takes over the decoder
-resources. This was specifically targeted toward the DVSEC range registers
-(obviously things would fail later if we couldn't find the MMIO).
+This brings up an interesting question. Are all devices in a region affinitized
+to the same NUMA node? I think they must be - at which point, should this
+attribute be a part of a region, rather than a device?
 
-I agree with your cynical mind though that it might not be our job to prevent
-devices which aren't spec compliant. I'd say if we start seeing bug reports
-around this we can revisit.
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl |    9 +++++++++
+>  drivers/cxl/core/memdev.c               |   17 +++++++++++++++++
+>  tools/testing/cxl/test/cxl.c            |    1 +
+>  3 files changed, 27 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 87c0e5e65322..0b51cfec0c66 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -34,6 +34,15 @@ Description:
+>  		capability. Mandatory for CXL devices, see CXL 2.0 8.1.12.2
+>  		Memory Device PCIe Capabilities and Extended Capabilities.
+>  
+> +What:		/sys/bus/cxl/devices/memX/numa_node
+> +Date:		January, 2022
+> +KernelVersion:	v5.18
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) If NUMA is enabled and the platform has affinitized the
+> +		host PCI device for this memory device, emit the CPU node
+> +		affinity for this device.
+> +
 
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> note that I got confused by this one when checking what it was for
-> as you rename it in the next patch... I'll complain about that there ;)
-> 
-> 
-> > ---
-> >  drivers/cxl/cxlmem.h |    2 ++
-> >  drivers/cxl/pci.c    |    9 +++++++++
-> >  2 files changed, 11 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 90d67fff5bed..cedc6d3c0448 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -98,6 +98,7 @@ struct cxl_mbox_cmd {
-> >   *
-> >   * @dev: The device associated with this CXL state
-> >   * @regs: Parsed register blocks
-> > + * @device_dvsec: Offset to the PCIe device DVSEC
-> >   * @payload_size: Size of space for payload
-> >   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-> >   * @lsa_size: Size of Label Storage Area
-> > @@ -126,6 +127,7 @@ struct cxl_dev_state {
-> >  	struct device *dev;
-> >  
-> >  	struct cxl_regs regs;
-> > +	int device_dvsec;
-> >  
-> >  	size_t payload_size;
-> >  	size_t lsa_size;
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index e54dbdf9ac15..76de39b90351 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -408,6 +408,15 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  	if (IS_ERR(cxlds))
-> >  		return PTR_ERR(cxlds);
-> >  
-> > +	cxlds->device_dvsec = pci_find_dvsec_capability(pdev,
-> > +							PCI_DVSEC_VENDOR_ID_CXL,
-> > +							CXL_DVSEC_PCIE_DEVICE);
-> > +	if (!cxlds->device_dvsec) {
-> > +		dev_err(&pdev->dev,
-> > +			"Device DVSEC not present. Expect limited functionality.\n");
-> > +		return -ENXIO;
-> > +	}
-> > +
-> >  	rc = cxl_setup_regs(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
-> >  	if (rc)
-> >  		return rc;
-> > 
+I think you'd want to say something about the device actively decoding. Perhaps
+I'm mistaken though, can you affinitize without setting up HDM decoders for the
+device?
+
+>  What:		/sys/bus/cxl/devices/*/devtype
+>  Date:		June, 2021
+>  KernelVersion:	v5.14
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 1e574b052583..b2773664e407 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -99,11 +99,19 @@ static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
+>  }
+>  static DEVICE_ATTR_RO(serial);
+>  
+> +static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
+> +			      char *buf)
+> +{
+> +	return sprintf(buf, "%d\n", dev_to_node(dev));
+> +}
+> +static DEVICE_ATTR_RO(numa_node);
+> +
+>  static struct attribute *cxl_memdev_attributes[] = {
+>  	&dev_attr_serial.attr,
+>  	&dev_attr_firmware_version.attr,
+>  	&dev_attr_payload_max.attr,
+>  	&dev_attr_label_storage_size.attr,
+> +	&dev_attr_numa_node.attr,
+>  	NULL,
+>  };
+>  
+> @@ -117,8 +125,17 @@ static struct attribute *cxl_memdev_ram_attributes[] = {
+>  	NULL,
+>  };
+>  
+> +static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
+> +				  int n)
+> +{
+> +	if (!IS_ENABLED(CONFIG_NUMA) && a == &dev_attr_numa_node.attr)
+> +		return 0;
+> +	return a->mode;
+> +}
+> +
+>  static struct attribute_group cxl_memdev_attribute_group = {
+>  	.attrs = cxl_memdev_attributes,
+> +	.is_visible = cxl_memdev_visible,
+>  };
+>  
+>  static struct attribute_group cxl_memdev_ram_attribute_group = {
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 40ed567952e6..cd2f20f2707f 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -583,6 +583,7 @@ static __init int cxl_test_init(void)
+>  		if (!pdev)
+>  			goto err_mem;
+>  		pdev->dev.parent = &port->dev;
+> +		set_dev_node(&pdev->dev, i % 2);
+>  
+>  		rc = platform_device_add(pdev);
+>  		if (rc) {
 > 
