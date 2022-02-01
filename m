@@ -2,250 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 609914A641B
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 19:39:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B8134A6434
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 19:49:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238012AbiBASjS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 13:39:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231139AbiBASjS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 13:39:18 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 790BCC061714;
-        Tue,  1 Feb 2022 10:39:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 83991B82F43;
-        Tue,  1 Feb 2022 18:39:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C70EC340EB;
-        Tue,  1 Feb 2022 18:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643740754;
-        bh=8z51N/DJx2T9IZBKLAJUpdHtDXlaBB892mPnUtwsAQg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=k5lepYiVq+QONvRWemSETVG+HaTcv8zcqOu7zP5adFD7H6vA2aVadGowfyQeEhfx0
-         SRjRJbHNYNe+8o489Y06zASvNxRFqPhIgIdQWoYchx5mWSR91M95IczqCFnJAoaEYI
-         G8xsTItS9KoI/7Y2n6aqkyg5QUJpBStOuScBWWkv7xkw4XxUFG+BIVroweBA4yKd+A
-         A7ISV1AX8h3W+ngjwuhGB6F1bhRz1CxiYxb6Pm607tmxyNN6CYfhavPRtbnw6QkY94
-         4/VVaiLIQPN97CSiWmnj9CAVnJ2oP6tDjnehkmaDJXWUGPY5bMKd1uArLiFz7poCU6
-         x12BqMM36mbyg==
-Date:   Tue, 1 Feb 2022 12:39:12 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Prasad Malisetty <quic_pmaliset@quicinc.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-        manivannan.sadhasivam@linaro.org, swboyd@chromium.org
-Subject: Re: [PATCH v2] PCI: qcom: Add system PM support
-Message-ID: <20220201183912.GA583363@bhelgaas>
+        id S241931AbiBAStt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 13:49:49 -0500
+Received: from mga18.intel.com ([134.134.136.126]:59728 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229915AbiBAStt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Feb 2022 13:49:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643741389; x=1675277389;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bg9FWKZPg6qD5wWLGmPj2TvHp//wEHqsVc4+P4TfgkI=;
+  b=ZsUE2H98aeaYYpvcOpQUg0ZP7gTt204UaeLI9Uy35Oj9kwHkOtIvew0y
+   5/31H8Uv035Q3724yOobFaiMfxU6LYFSAvQw3dSWsz085QefLSGjtjkT/
+   Tta+ARRMVhxO6MUg2tnEXdNDqYNV9dMIx0nmmPu2lLZz6l2SXrLSCBqka
+   74qFIHWo5OhM7ROTNsOZzK+OlQcRfROhaEu2gK/e7ewojmveAeTzJjhk+
+   stjWgBmU+QPek93bGCpCudZVsXt4dpRQQv7hELulcw3+MlAbVG8mS3+8R
+   sySYpnRmpIdxZ2UxDgibS5BiVMklcawl8kUngkwnCM9u7uj8H8D4biRQQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="231332389"
+X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
+   d="scan'208";a="231332389"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 10:49:49 -0800
+X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
+   d="scan'208";a="482491047"
+Received: from rashmigh-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.8])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 10:49:48 -0800
+Date:   Tue, 1 Feb 2022 10:49:47 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V6 06/10] cxl/pci: Find the DOE mailbox which supports
+ CDAT
+Message-ID: <20220201184947.5yx4l74nruyoapvr@intel.com>
+References: <20220201071952.900068-1-ira.weiny@intel.com>
+ <20220201071952.900068-7-ira.weiny@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1643738876-18572-1-git-send-email-quic_pmaliset@quicinc.com>
+In-Reply-To: <20220201071952.900068-7-ira.weiny@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 11:37:56PM +0530, Prasad Malisetty wrote:
-> Add suspend_noirq and resume_noirq callbacks to handle
-> System suspend and resume in dwc pcie controller driver.
-
-s/System/system/
-s/pcie/PCIe/ as you did below.
-
-> When system suspends, send PME turnoff message to enter
-> link into L2 state. Along with powerdown the PHY, disable
-> pipe clock, switch gcc_pcie_1_pipe_clk_src to XO if mux is
-> supported and disable the pcie clocks, regulators.
+On 22-01-31 23:19:48, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> When system resumes, PCIe link will be re-established and
-> setup rc settings.
+> Memory devices need the CDAT data from the device.  This data is read
+> from a DOE mailbox which supports the CDAT protocol.
 > 
-> Signed-off-by: Prasad Malisetty <quic_pmaliset@quicinc.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-
-The kernel test robot reported the lack of system power management?
-I'm impressed ;)  I doubt this "Reported-by" is useful.  If it *is*,
-please include a link to the report.
-
+> Search the DOE auxiliary devices for the one which supports the CDAT
+> protocol.  Cache that device to be used for future queries.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > ---
-> Changes since v1:
-> 	- Removed unnecessary logs and modified log level suggested by Manivannan.
-> 	- Removed platform specific callbacks as PM support is generic.
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 97 ++++++++++++++++++++++++++++++++++
->  1 file changed, 97 insertions(+)
+>  drivers/cxl/cxl.h    |  3 +++
+>  drivers/cxl/cxlmem.h |  2 ++
+>  drivers/cxl/pci.c    | 43 ++++++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 47 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index c19cd506..d1dd6c7 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -73,6 +73,8 @@
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 962629c5775f..7169101db553 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -90,6 +90,9 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+>  #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
+>  #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
 >  
->  #define PCIE20_PARF_Q2A_FLUSH			0x1AC
+> +#define CXL_DOE_PROTOCOL_COMPLIANCE 0
+> +#define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
+> +
+>  /*
+>   * Using struct_group() allows for per register-block-type helper routines,
+>   * without requiring block-type agnostic code to include the prefix.
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 5d33ce24fe09..0fefe43951e3 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -117,6 +117,7 @@ struct cxl_endpoint_dvsec_info {
+>   * Currently only memory devices are represented.
+>   *
+>   * @dev: The device associated with this CXL state
+> + * @cdat_doe: Auxiliary DOE device capabile of reading CDAT
+>   * @regs: Parsed register blocks
+>   * @cxl_dvsec: Offset to the PCIe device DVSEC
+>   * @payload_size: Size of space for payload
+> @@ -149,6 +150,7 @@ struct cxl_endpoint_dvsec_info {
+>  struct cxl_dev_state {
+>  	struct device *dev;
 >  
-> +#define PCIE20_PARF_PM_STTS                     0x24
-
-Indent with tabs (not spaces) as the surrounding code does.
-
->  #define PCIE20_MISC_CONTROL_1_REG		0x8BC
->  #define DBI_RO_WR_EN				1
+> +	struct pci_doe_dev *cdat_doe;
+>  	struct cxl_regs regs;
+>  	int cxl_dvsec;
 >  
-> @@ -1616,6 +1618,100 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	return ret;
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index d4ae79b62a14..dcc55c4efd85 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -536,12 +536,53 @@ static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
+>  	return rc;
 >  }
 >  
-> +static int qcom_pcie_send_pme_turnoff_msg(struct qcom_pcie *pcie)
+> +static int cxl_match_cdat_doe_device(struct device *dev, const void *data)
 > +{
-> +	int ret = 0;
-
-Drop unnecessary init.
-
-> +	u32 val = 0, poll_val = 0;
-
-Drop unnecessary "val" init.
-
-> +	u64 l23_rdy_poll_timeout = 100000;
-
-Add "microseconds" comment.
-
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
+> +	const struct cxl_dev_state *cxlds = data;
+> +	struct auxiliary_device *adev;
+> +	struct pci_doe_dev *doe_dev;
 > +
-> +	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +	val |= BIT(4);
-> +	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
+> +	/* First determine if this auxiliary device belongs to the cxlds */
+> +	if (cxlds->dev != dev->parent)
+> +		return 0;
+
+I don't understand auxiliary bus but I'm wondering why it's checking the parent
+of the device?
+
 > +
-> +	ret = readl_poll_timeout((pcie->parf + PCIE20_PARF_PM_STTS), poll_val,
-> +			(poll_val & BIT(5)), 10000, l23_rdy_poll_timeout);
-> +	if (!ret)
-> +		dev_info(dev, "PM_Enter_L23 is received\n");
-> +	else
-> +		dev_err(dev, "PM_Enter_L23 is NOT received.PARF_PM_STTS 0x%x\n",
-> +			readl_relaxed(pcie->parf + PCIE20_PARF_PM_STTS));
+> +	adev = to_auxiliary_dev(dev);
+> +	doe_dev = container_of(adev, struct pci_doe_dev, adev);
 > +
-> +	return ret;
+> +	/* If it is one of ours check for the CDAT protocol */
+> +	if (pci_doe_supports_prot(doe_dev, PCI_DVSEC_VENDOR_ID_CXL,
+> +				  CXL_DOE_PROTOCOL_TABLE_ACCESS))
+> +		return 1;
+> +
+> +	return 0;
 > +}
 > +
-> +static void qcom_pcie_host_disable(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+>  static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
+>  {
+>  	struct device *dev = cxlds->dev;
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+> +	struct auxiliary_device *adev;
+> +	int rc;
+>  
+> -	return pci_doe_create_doe_devices(pdev);
+> +	rc = pci_doe_create_doe_devices(pdev);
+> +	if (rc)
+> +		return rc;
+> +
+> +	adev = auxiliary_find_device(NULL, cxlds, &cxl_match_cdat_doe_device);
+> +
+> +	if (adev) {
+> +		struct pci_doe_dev *doe_dev = container_of(adev,
+> +							   struct pci_doe_dev,
+> +							   adev);
+> +
+> +		/*
+> +		 * No reference need be taken.  The DOE device lifetime is
+> +		 * longer that the CXL device state lifetime
+> +		 */
 
-qcom_pcie_host_disable() is called from qcom_pcie_pm_suspend_noirq(),
-which is used for all qcom devices.  But it looks like not all qcom
-devices have 2_7_0 resources.  Is this supposed to be used only on
-certain revisions?
+You're holding a reference to the adev here. Did you mean to drop it?
 
-> +
-> +	/* Assert the reset of endpoint */
-
-Superfluous comment, since the function name says the same thing.
-
-> +	qcom_ep_reset_assert(pcie);
-> +
-> +	/* Put PHY into POWER DOWN state */
-> +	phy_power_off(pcie->phy);
-> +
-> +	writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
-> +	pcie->ops->post_deinit(pcie);
-> +
-> +	/* Disable PCIe clocks and regulators */
-> +	pcie->ops->deinit(pcie);
-> +}
-> +
-> +static int __maybe_unused qcom_pcie_pm_suspend_noirq(struct device *dev)
-> +{
-> +	int ret = 0;
-> +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
-> +	struct dw_pcie *pci = pcie->pci;
-> +
-> +	if (!dw_pcie_link_up(pci)) {
-> +		dev_dbg(dev, "Power has been turned off already\n");
-> +		return ret;
-
-"return 0" here and drop the init above.
-
+> +		cxlds->cdat_doe = doe_dev;
 > +	}
 > +
-> +	/* Send PME turnoff msg */
-
-Superfluous comment.
-
-> +	ret = qcom_pcie_send_pme_turnoff_msg(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Power down the PHY, disable clock and regulators */
-> +	qcom_pcie_host_disable(pcie);
-> +
-> +	return ret;
-
-"return 0" here.
-
-> +}
-> +
-> +/* Resume the PCIe link */
-> +static int __maybe_unused qcom_pcie_pm_resume_noirq(struct device *dev)
-> +{
-> +	int ret = 0;
-
-Drop unnecessary init.
-
-> +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct pcie_port *pp = &pci->pp;
-> +
-> +	/* Initialize PCIe host */
-
-Superfluous comment.
-
-> +	ret = qcom_pcie_host_init(pp);
-> +	if (ret) {
-> +		dev_err(dev, "cannot initialize host\n");
-> +		return ret;
-> +	}
-> +
-> +	dw_pcie_setup_rc(pp);
-> +
-> +	/* Start the PCIe link */
-
-Superfluous comment.
-
-> +	qcom_pcie_start_link(pci);
-> +
-> +	ret = dw_pcie_wait_for_link(pci);
-> +	if (ret)
-> +		dev_err(dev, "Link never came up, Resume failed\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct dev_pm_ops qcom_pcie_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(qcom_pcie_pm_suspend_noirq, qcom_pcie_pm_resume_noirq)
-
-qcom_pcie_pm_suspend_noirq() and qcom_pcie_pm_resume_noirq() look
-nothing like their counterparts in dra7xx, exynos, imx6, intel-gw.
-Any chance you could make them more similar?
-
-> +};
-> +
->  static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
->  	{ .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
-> @@ -1648,6 +1744,7 @@ static struct platform_driver qcom_pcie_driver = {
->  	.probe = qcom_pcie_probe,
->  	.driver = {
->  		.name = "qcom-pcie",
-> +		.pm = &qcom_pcie_pm_ops,
->  		.suppress_bind_attrs = true,
->  		.of_match_table = qcom_pcie_match,
->  	},
+> +	return 0;
+>  }
+>  
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 > -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-> of Code Aurora Forum, hosted by The Linux Foundation
+> 2.31.1
 > 
