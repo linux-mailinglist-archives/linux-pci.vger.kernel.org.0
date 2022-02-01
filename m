@@ -2,155 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50E014A53E5
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 01:11:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AF474A53FE
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 01:22:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230232AbiBAALy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 19:11:54 -0500
-Received: from mail-dm6nam11on2073.outbound.protection.outlook.com ([40.107.223.73]:12128
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230215AbiBAALx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 Jan 2022 19:11:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aMJ7V1TUvURvp+HcAA/F/gVNnwSk9bYCdzEt9Ypi9tnfuIF/XeQymSM0XJaphhLZRRlhnbnkAKzS/ktLKC35yg1aYAZRY7115sfJk/JH4V2x3r9haN2xjSDXBEPfW4mW+w37h0MfFCkeapwbWqVRhu/n+vdyVyGlhI2IH1VCKWaW4el+N19vdq1EhOIhIYj62Qrrf3LLed7qbcDvwtKX+l1cNF/SCZ7EVxFeHWwxX1eZyQo8gXk7WXvtvlah6bFZhl8I+hKtKbeSsYq3QtCHT+BZ/AjVk4Xx7elbkZz+zjyOMxilzzCyDWuiZ15lXTWvOIGXKdALrjDpjIIE01QMTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=boEGum0Z2VUpoJCSSK/oMyegBaLNtai7Wn265WWI+mE=;
- b=TlTj8jQ1MW5NVo3ADliKW/MOe2sgGZvwOgUthrWZaXX/yh1yXFRmRXtlgnK1EFoO6NyIzKIOhxtk8BAjmhfAGIv6HdfkQjFd/hG84C9Oe9rlF1Y8c8nVX0o3q6RzogJOquxJnCahkA2ikKf25eoV6VJ+VKi/Xsac07X8dFKeCxMGXhMSso6p7vG0Ll6dXbLdulzzM7cna8/4jFZIrz/hAMhrvesMpZZDuRiINqGWA5tzkvpDBtBJJpjNd7tsNiz5lHUHgA+cE65fm6rX4+0g2fbUfuBi9Xlb8qQuNcjKncA/N11kxtuuXUXR0i6wgfSs3OsqA6YmfQ0zOTfThyBvRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=boEGum0Z2VUpoJCSSK/oMyegBaLNtai7Wn265WWI+mE=;
- b=Etv7IvJl5cUZCVl2Z/r8M+VPw/1OfC5hbY6ENICmO0aSCsFe8wAIcI5f9boMYDhpmJB/CdKIp62ByX5WFIQAJz2HcrejNqBTKJy3ptLsBpm9yN6/frH0HzLzOan4o+5MZJF1QFh11GWGNEc5NZZln//mODrSfs/va0MkdrGx09JbdG1t0ErGvVuXi2gSGXb5gmU5POJA9vAr9divUos0Plbk2PwD9i+I8lrZycYRPc3y6HNpsbDHcmlAMeZPGusSFYq3x49wwLix7nHgL87mZVlQde8RWaC88H+ttsvP+D6kk16trbCaLGE2jm4yQxFzZJhuc1epZ9zKZNr6JCkvgQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by MW3PR12MB4361.namprd12.prod.outlook.com (2603:10b6:303:5a::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.17; Tue, 1 Feb
- 2022 00:11:51 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3%4]) with mapi id 15.20.4930.022; Tue, 1 Feb 2022
- 00:11:50 +0000
-Date:   Mon, 31 Jan 2022 20:11:48 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
-Subject: Re: [PATCH V6 mlx5-next 07/15] vfio: Have the core code decode the
- VFIO_DEVICE_FEATURE ioctl
-Message-ID: <20220201001148.GY1786498@nvidia.com>
-References: <20220130160826.32449-1-yishaih@nvidia.com>
- <20220130160826.32449-8-yishaih@nvidia.com>
- <20220131164143.6c145fdb.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220131164143.6c145fdb.alex.williamson@redhat.com>
-X-ClientProxiedBy: BLAPR03CA0097.namprd03.prod.outlook.com
- (2603:10b6:208:32a::12) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        id S230358AbiBAAWo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 19:22:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230351AbiBAAWo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 19:22:44 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDC6C06173B
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 16:22:44 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id oa14-20020a17090b1bce00b001b61aed4a03so753596pjb.5
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 16:22:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jIHgdGIiKIa4L0IScjJCyDTcpqzj6Bi1VzL3ASe6azQ=;
+        b=jgY4HyBd008qBo63rSgSWDTpijDW7gC3KFgr3h6OVdeFQ+xy+xoxY+ch/hqNKZPMnu
+         CZUjup8oiCi2Tbc1MwrveJc0+HDEUlvRHxAO432hwwLwvJTQWsQUawBoX8nsfRHYIEaM
+         HFUqnKWpQbBwW/3cdqf2PPR484VTXSjZJFj5AXYYJ212wStAii0GteXUTh9FBAW3YWhZ
+         pIaN2KnGYevRiIC/zx3DWc+90dueGxWjKPtm1MOgExWADMT60tpJ3CN142+iqjIHZVVS
+         GQQeZRXX/8Wy3fUl9JAkq4xK5CKyXIFL2vBHDS79xa+RowHpgdWWjXg9GUGmJKnfqh94
+         zlfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jIHgdGIiKIa4L0IScjJCyDTcpqzj6Bi1VzL3ASe6azQ=;
+        b=onHswQzH1GQYWqpe2PV+cPsxTJ9FHeH/HYl83J0+TaNqundl0HESo9Dc0+vZy0vC42
+         /rgR7aJLMWEubRabkp1tST3WOCCqImmC5BLovXi6ey2IKrt2t1drEDDiMXfXs5Jh+Z50
+         diaIpJ/TnjRyhp9clB1eoZYNIVYzhqhea9+d1zRiM5YODO9y3qA+JdFjHMPEnofVySPw
+         3NyOVMSHFvRH+Otgau7J4IBalEFWKTYyR01GkDAbii+ssNfERChJ9nwcxzyjWLUt/9bV
+         j1dznedWaso0Bleo9cqMoyJTl+1Ye9vkw+3nhGp11eXZdIMVDCSjVxUUxnYpMhC9EIMT
+         rfHg==
+X-Gm-Message-State: AOAM533knH3F4ePTBGvab7s1zPe7m4Zep6Z2NAKtMESrIahoZZD2aKk+
+        qen/BnQ9gtTH6apQcJYseEutz0rQ5Oy6QoWiwY1LGQ==
+X-Google-Smtp-Source: ABdhPJwS7MQwNC4f8cq+f3Xr82/cV0/JabcKe4hKPclU2jlfgVz9aw8W6AoyRoZLOttBYD+a/Mtkg+ak5/IS0D4L1vQ=
+X-Received: by 2002:a17:90a:640e:: with SMTP id g14mr37044050pjj.8.1643674963543;
+ Mon, 31 Jan 2022 16:22:43 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: eac45d81-2e52-4b30-b683-08d9e517715d
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4361:EE_
-X-Microsoft-Antispam-PRVS: <MW3PR12MB4361C38AFE8726825D1F2F98C2269@MW3PR12MB4361.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +Qw070uzFGM1dUuRfC66PDXHafyKq4lDzvgdMYqWrgv/dFeleyzezcDUQoknraHpbpE0338C+q9EpYekTX646RMiNyyfVpryeKfC3D7NhTnApjVX5vF7ESrQ3twZ1MbYlddQurj98ZF0Ev3eI11s7otjFItXG7x0f2f04J/zNFN2uVzwG4msC7ZgSp0lmtClo4TGf9bKHdS9uJVY2TAE58NP3cTwWro0qkcFZpJVehdKuV+jVoO/Qjad1SKtOmB+WSA3yqG99i5gxSucdGw+8j1EJD6CQHwGO+8hCuDaIat954QgEiRYyrBVxV6fv87fakL4Hg+K+Kr05PumuD5IT1pEmtVGhocxmu7KyQBbLGTnacFod7ihnibPgUAtFl7iyv10azTVilfA6m0e2WSocIHS0BwnaQhZDSQa9JKvgTYja6EyUGHAIh9Jg9GmHmxwgZTZGXiNQc0H8cauCj7CR8Hr4i97eHW/vyB0z9ZySCPIrp1X3z/Dd3DNZq75D3QLmYiVP4ClrR6+EilKme+7ujO9j9x3aahHQACkoPPfOjuWn+JSBBSxze1o7CGXv0pZ6KZqQcA33kKDFv/7tlRbs0/z2rfvV8ZC1S7fZ7N7uoe3FOFSUSk/IqwuR7LoUNuDtgiNbU4MzeAByFHtohbxeQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(4326008)(8676002)(6486002)(86362001)(508600001)(8936002)(66556008)(66476007)(66946007)(38100700002)(6916009)(316002)(5660300002)(6512007)(36756003)(2616005)(107886003)(26005)(33656002)(186003)(1076003)(2906002)(6506007)(83380400001)(20210929001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Cz0ROUK4kAetnnhD1nzBPYG28mBSiO6ldwKh7Svr16tciEH0HcvtINuhzI9R?=
- =?us-ascii?Q?RfVk76fAM1enx+IADc/3SvJ29OjClhEeKin7aEM3Bz6E+yH3z5g9Pxi0E7AT?=
- =?us-ascii?Q?Do3UnfLyqduJW2euCSgE2y+NWQSIJRCDaMsNKq6QUjLetnKc1dc456dLsTGh?=
- =?us-ascii?Q?4hO/K4EroOQSON4tOHL7EthIuAqNWRhawrJITGBBosozL+oXPatME7BQnSZT?=
- =?us-ascii?Q?TbCM+nwN6VJqnPDKVrqMbVcphRUnqIswx6Wz7MF+kjFbyxLO7x6AW07EYqzr?=
- =?us-ascii?Q?NuRZ7ebNZ8YW3LIvp8tqaOonBumqCFdDscBFBOVShbxhzpLnc2WnkgZvaYOg?=
- =?us-ascii?Q?sVM8uYsp6VNUZgMe+/kHFqOheW1uo1oGM5kPpNvNuT+b8iBljPQTasqWKHab?=
- =?us-ascii?Q?6C4nAUVE4rsmzVoUfBFYqQumUca7nyB/o3anwjSsd7DzDSkPSzCoApRYM2gs?=
- =?us-ascii?Q?BSEYMVHl/5KveNwTcZuwJYJcQksVralDkKWhIxiP2k1JAXmGTjgZyneUT1pQ?=
- =?us-ascii?Q?T1VvGm6E2bhGEbrypr+CsYTZ5MyzJ0lGH16ULcFOGnAVMjQna6ucm9t1Lfs3?=
- =?us-ascii?Q?IKVsG1a3pJ7Ylag9BjQwaxsNvMGY7Pe6w4rSqIjLJuLYogc6YuM7CadahaK+?=
- =?us-ascii?Q?DqX8XAC8mbsJVAkHeiNIlV/z8+pXE5bV8Hz4xmSNqQ8dFitTfKHGZ63aC7uv?=
- =?us-ascii?Q?dmhLz/H0aGyF0gXcEv4kWSXl2rAZOgpnNJcD46qFwv+TB9e94fBjuV+San8z?=
- =?us-ascii?Q?XZAAiSnPT+RBqsnQrQAzL1MPqQCvpu7inLEZz00rRK0J/cq40gKAibr8djXy?=
- =?us-ascii?Q?ccClaWnNvBq/fnqZEip2sPg7enaSYLXvVRMLzCL7w5s+C8s7kEkCnFlz3JbO?=
- =?us-ascii?Q?BXNhmpEVy3dx2iyxGpWs7toJqla96QOnTfZgLl/OWXFDsg+PXBq5TnTgrhzN?=
- =?us-ascii?Q?d/HoyPB1w4wlbpmkUmLna9OYAgXC7GjutLQMmYTj7r01p0dDpqai62U+Sqif?=
- =?us-ascii?Q?kDYzh8GrDpRN81sLyN9gBOgc8UDeUyz414kjvQXNov1IYYvZPUidl5thj/U/?=
- =?us-ascii?Q?fwxDaz5EBfCTDU5i72L2ImxBS8J/63+4Lj/npgsQsAWLyatFPEIJ8CpDNE7n?=
- =?us-ascii?Q?2wrRLa1tiWsNyd2wC3XqRoHbQuNDDIU+WFtbW7srShm2nWOw7tbIDbLC+26O?=
- =?us-ascii?Q?iuKVQOq19YCbxedXRE2y/i+EKf6Gwjka8v+aZ2LVpJLSAVRpcHVFXYpoyXCP?=
- =?us-ascii?Q?26nuiAY6gJ0VSdJHVP+7dxz1Jq+mFcTNKncThluTrcUCkq2/MX3gA64fvXuz?=
- =?us-ascii?Q?6VuDX5OZbG0ffmUu6MsHQbY8oiMDvpPaOi2I6IBg2todfM/mN1vzGWUrzeh2?=
- =?us-ascii?Q?SmycppBGDAUeL/RgM4iKjy+Du8OtNA7nRcc+fp11H+g2JNnca3V2yOr7uqBh?=
- =?us-ascii?Q?OLF0R3qK17OyXcQXWNHJo6TpR6W9DGxTt79L0HOVvjmyyxaeSAb6TpvRgQ2N?=
- =?us-ascii?Q?pMgkePxxNlO2l2tnz7i+lH7FPFRUs5hUgJYzbrLp/tnN4zq0HqVKf7Edhw8z?=
- =?us-ascii?Q?lppGDV1ekud3zML8E7A=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eac45d81-2e52-4b30-b683-08d9e517715d
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2022 00:11:49.9861
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IPKswFiDD5/yaThQ+kOADBcFPWjB/AZWGIHOAFMIcsaL4pBO/IowTHgvJQzPBkdC
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4361
+References: <164322333437.3694981.17087130505938650994.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164324151672.3935633.11277011056733051668.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220131161856.00005cd0@Huawei.com>
+In-Reply-To: <20220131161856.00005cd0@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 31 Jan 2022 16:22:35 -0800
+Message-ID: <CAPcyv4j2e-QxZp9-a7aL5JkC2WmLy9DAO9vgeYV7N1GdfayQQg@mail.gmail.com>
+Subject: Re: [PATCH v5 18/40] cxl/pmem: Introduce a find_cxl_root() helper
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 04:41:43PM -0700, Alex Williamson wrote:
-> > +int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
-> > +				void __user *arg, size_t argsz)
-> > +{
-> > +	struct vfio_pci_core_device *vdev =
-> > +		container_of(device, struct vfio_pci_core_device, vdev);
-> > +	uuid_t uuid;
-> > +	int ret;
-> 
-> Nit, should uuid at least be scoped within the token code?  Or token
-> code pushed to a separate function?
-
-Sure, it wasn't done before, but it would be nicer,.
-
-> > +static inline int vfio_check_feature(u32 flags, size_t argsz, u32 supported_ops,
-> > +				    size_t minsz)
-> > +{
-> > +	if ((flags & (VFIO_DEVICE_FEATURE_GET | VFIO_DEVICE_FEATURE_SET)) &
-> > +	    ~supported_ops)
-> > +		return -EINVAL;
-> 
-> These look like cases where it would be useful for userspace debugging
-> to differentiate errnos.
-
-I tried to keep it unchanged from what it was today.
-
-> -EOPNOTSUPP?
-
-This would be my preference, but it would also be the first use in
-vfio
-
-> > +	if (flags & VFIO_DEVICE_FEATURE_PROBE)
-> > +		return 0;
-> > +	/* Without PROBE one of GET or SET must be requested */
-> > +	if (!(flags & (VFIO_DEVICE_FEATURE_GET | VFIO_DEVICE_FEATURE_SET)))
-> > +		return -EINVAL;
-> > +	if (argsz < minsz)
-> > +		return -EINVAL;
+On Mon, Jan 31, 2022 at 8:20 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
 >
-> -ENOSPC?
+> On Wed, 26 Jan 2022 15:59:07 -0800
+> Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> > In preparation for switch port enumeration while also preserving the
+> > potential for multi-domain / multi-root CXL topologies. Introduce a
+> > 'struct device' generic mechanism for retrieving a root CXL port, if on=
+e
+> > is registered. Note that the only know multi-domain CXL configurations
+> > are running the cxl_test unit test on a system that also publishes an
+> > ACPI0017 device.
+> >
+> > With this in hand the nvdimm-bridge lookup can be with
+> > device_find_child() instead of bus_find_device() + custom mocked lookup
+> > infrastructure in cxl_test.
+> >
+> > The mechanism looks for a 2nd level port since the root level topology
+> > is platform-firmware specific and the 2nd level down follows standard
+> > PCIe topology expectations. The cxl_acpi 2nd level is associated with a
+> > PCIe Root Port.
+> >
+> > Reported-by: Ben Widawsky <ben.widawsky@intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> A question inline.
+>
+> Thanks,
+>
+> Jonathan
+>
+> > ---
+> > Changes since v4:
+> > - reset @iter each loop otherwise only the first dport can be scanned.
+> >
+> >  drivers/cxl/core/pmem.c       |   14 ++++++++---
+> >  drivers/cxl/core/port.c       |   50 +++++++++++++++++++++++++++++++++=
+++++++++
+> >  drivers/cxl/cxl.h             |    1 +
+> >  tools/testing/cxl/Kbuild      |    2 --
+> >  tools/testing/cxl/mock_pmem.c |   24 --------------------
+> >  5 files changed, 61 insertions(+), 30 deletions(-)
+> >  delete mode 100644 tools/testing/cxl/mock_pmem.c
+> >
+> > diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+> > index 40b3f5030496..8de240c4d96b 100644
+> > --- a/drivers/cxl/core/pmem.c
+> > +++ b/drivers/cxl/core/pmem.c
+> > @@ -57,24 +57,30 @@ bool is_cxl_nvdimm_bridge(struct device *dev)
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(is_cxl_nvdimm_bridge, CXL);
+> >
+> > -__mock int match_nvdimm_bridge(struct device *dev, const void *data)
+> > +static int match_nvdimm_bridge(struct device *dev, void *data)
+> >  {
+> >       return is_cxl_nvdimm_bridge(dev);
+> >  }
+> >
+> >  struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cx=
+l_nvd)
+> >  {
+> > +     struct cxl_port *port =3D find_cxl_root(&cxl_nvd->dev);
+> >       struct device *dev;
+> >
+> > -     dev =3D bus_find_device(&cxl_bus_type, NULL, cxl_nvd, match_nvdim=
+m_bridge);
+> > +     if (!port)
+> > +             return NULL;
+> > +
+> > +     dev =3D device_find_child(&port->dev, NULL, match_nvdimm_bridge);
+> > +     put_device(&port->dev);
+> > +
+> >       if (!dev)
+> >               return NULL;
+> > +
+> >       return to_cxl_nvdimm_bridge(dev);
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_find_nvdimm_bridge, CXL);
+> >
+> > -static struct cxl_nvdimm_bridge *
+> > -cxl_nvdimm_bridge_alloc(struct cxl_port *port)
+> > +static struct cxl_nvdimm_bridge *cxl_nvdimm_bridge_alloc(struct cxl_po=
+rt *port)
+> >  {
+> >       struct cxl_nvdimm_bridge *cxl_nvb;
+> >       struct device *dev;
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index 4c921c49f967..6447f12ef71d 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -457,6 +457,56 @@ int devm_cxl_register_pci_bus(struct device *host,=
+ struct device *uport,
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(devm_cxl_register_pci_bus, CXL);
+> >
+> > +/* Find a 2nd level CXL port that has a dport that is an ancestor of @=
+match */
+> > +static int match_cxl_root_child(struct device *dev, const void *match)
+> > +{
+> > +     const struct device *iter =3D NULL;
+> > +     struct cxl_port *port, *parent;
+> > +     struct cxl_dport *dport;
+> > +
+> > +     if (!is_cxl_port(dev))
+> > +             return 0;
+> > +
+> > +     port =3D to_cxl_port(dev);
+> > +     if (is_cxl_root(port))
+> > +             return 0;
+> > +
+> > +     parent =3D to_cxl_port(port->dev.parent);
+> > +     if (!is_cxl_root(parent))
+> > +             return 0;
+> > +
+> > +     cxl_device_lock(&port->dev);
+> > +     list_for_each_entry(dport, &port->dports, list) {
+> > +             iter =3D match;
+>
+> This confuses me.  In the call below to bus_find_device()
+> data =3D=3D NULL, which ends up as match here.
 
-Do you want to do all of these minsz then? There are lots..
+I think you misread, @start is NULL @data becomes @match as the
+starting point for the search.
 
-Jason
+>
+> So how does that ever find a match?
+>
+> > +             while (iter) {
+> > +                     if (iter =3D=3D dport->dport)
+> > +                             goto out;
+> > +                     iter =3D iter->parent;
+> > +             }
+> > +     }
+> > +out:
+> > +     cxl_device_unlock(&port->dev);
+> > +
+> > +     return !!iter;
+>
+> return iter; should be sufficient as docs just say non zero for a match
+> in bus_find_device() match functions.
+
+drivers/cxl/core/port.c:488:16: error: returning =E2=80=98const struct devi=
+ce
+*=E2=80=99 from a function with return type =E2=80=98int=E2=80=99 makes int=
+eger from pointer
+without a cast [-Werror=3Dint-conversion]
+
+>
+> > +}
+> > +
+> > +struct cxl_port *find_cxl_root(struct device *dev)
+> > +{
+> > +     struct device *port_dev;
+> > +     struct cxl_port *root;
+> > +
+> > +     port_dev =3D
+> > +             bus_find_device(&cxl_bus_type, NULL, dev, match_cxl_root_=
+child);
+>
+> Line breaking is rather ugly to my eye.  Perhaps break
+> parameter list up instead?
+
+This is what clang-format picked, but yes it's a tag ugly. I'll go
+ahead and s/match_cxl_root_child/match_root_child/ since there are no
+public symbol namespace issues with this static helper.
