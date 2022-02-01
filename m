@@ -2,68 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C883B4A5AD3
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 12:03:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A7004A5B0F
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 12:23:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237053AbiBALDt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 06:03:49 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4595 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236837AbiBALDt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 06:03:49 -0500
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jp25G6BzCz67XhV;
-        Tue,  1 Feb 2022 19:00:02 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Tue, 1 Feb 2022 12:03:47 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 1 Feb
- 2022 11:03:47 +0000
-Date:   Tue, 1 Feb 2022 11:03:45 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v4 21/40] cxl/core: Generalize dport enumeration in the
- core
-Message-ID: <20220201110345.0000689e@Huawei.com>
-In-Reply-To: <164368114191.354031.5270501846455462665.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164298423047.3018233.6769866347542494809.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <164368114191.354031.5270501846455462665.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S237218AbiBALXN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 06:23:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57527 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237207AbiBALXN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 06:23:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643714592;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wls2HlLMZ5xS0VLgYNarmM3xEfIz1yMYSVtpjmaBDnA=;
+        b=Fz5bmqajG50A+SHyTs5R8Ui8Ob58YOIm5TutbZCJyluY8ErtXwwI1yhigyZH9IBEt+K6Y8
+        o0CpMJCQ4ZlSKVBwZPJjq/3RembVSqGkP/DNUeZ9rWaYh9/Osl0RXM76qqZ7W+4OiPWq1n
+        YnGPOaBRmtaaFN0NaIcWM1GAR+q6deE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-468-NB2v9r2dMte-i36Jh3lmVw-1; Tue, 01 Feb 2022 06:23:09 -0500
+X-MC-Unique: NB2v9r2dMte-i36Jh3lmVw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9BB8E1019988;
+        Tue,  1 Feb 2022 11:23:07 +0000 (UTC)
+Received: from localhost (unknown [10.39.194.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 145CE73160;
+        Tue,  1 Feb 2022 11:23:06 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
+        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com
+Cc:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, yishaih@nvidia.com,
+        maorg@nvidia.com
+Subject: Re: [PATCH V6 mlx5-next 10/15] vfio: Remove migration protocol v1
+In-Reply-To: <20220130160826.32449-11-yishaih@nvidia.com>
+Organization: Red Hat GmbH
+References: <20220130160826.32449-1-yishaih@nvidia.com>
+ <20220130160826.32449-11-yishaih@nvidia.com>
+User-Agent: Notmuch/0.34 (https://notmuchmail.org)
+Date:   Tue, 01 Feb 2022 12:23:05 +0100
+Message-ID: <874k5izv8m.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 31 Jan 2022 18:10:04 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Sun, Jan 30 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
 
-> The core houses infrastructure for decoder resources. A CXL port's
-> dports are more closely related to decoder infrastructure than topology
-> enumeration. Implement generic PCI based dport enumeration in the core,
-> i.e. arrange for existing root port enumeration from cxl_acpi to share
-> code with switch port enumeration which just amounts to a small
-> difference in a pci_walk_bus() invocation once the appropriate 'struct
-> pci_bus' has been retrieved.
-> 
-> Set the convention that decoder objects are registered after all dports
-> are enumerated. This enables userspace to know when the CXL core is
-> finished establishing 'dportX' links underneath the 'portX' object.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> From: Jason Gunthorpe <jgg@nvidia.com>
+>
+> v1 was never implemented and is replaced by v2.
+>
+> The old uAPI definitions are removed from the header file. As per Linus's
+> past remarks we do not have a hard requirement to retain compilation
+> compatibility in uapi headers and qemu is already following Linus's
+> preferred model of copying the kernel headers.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+If we are all in agreement that we will replace v1 with v2 (and I think
+we are), we probably should remove the x-enable-migration stuff in QEMU
+sooner rather than later, to avoid leaving a trap for the next
+unsuspecting person trying to update the headers.
 
+>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> ---
+>  include/uapi/linux/vfio.h | 228 --------------------------------------
+>  1 file changed, 228 deletions(-)
+>
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 9efc35535b29..70c77da5812d 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -323,7 +323,6 @@ struct vfio_region_info_cap_type {
+>  #define VFIO_REGION_TYPE_PCI_VENDOR_MASK	(0xffff)
+>  #define VFIO_REGION_TYPE_GFX                    (1)
+>  #define VFIO_REGION_TYPE_CCW			(2)
+> -#define VFIO_REGION_TYPE_MIGRATION              (3)
 
+Do we want to keep region type 3 reserved? Probably not really needed,
+but would put us on the safe side.
 
