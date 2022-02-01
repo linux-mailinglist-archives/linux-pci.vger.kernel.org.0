@@ -2,88 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B46EF4A5EC8
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 16:01:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 134BE4A5FB4
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 16:11:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239617AbiBAPBp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 10:01:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235655AbiBAPBo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 10:01:44 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B7DFC061714;
-        Tue,  1 Feb 2022 07:01:44 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A009261639;
-        Tue,  1 Feb 2022 15:01:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE575C340EB;
-        Tue,  1 Feb 2022 15:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643727703;
-        bh=1lsscK2CvDTuGlMIjQLdrV/h85gyYq2WsV5RiWocm3A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DE/PwBR+nmYdXGRwtS5Dn94pMjb86NHd/0AGava6LNh1WUp/z+jof6jz8BhjiSQ+L
-         200TmAjfeS+0a4lmRdxOLpLj8uurqKq2l5/PW2CN3FuaN0TXg0Ed2kyU40nTQLwGI5
-         L9YY/OCpUeZPNCrCIE6URh9y8MC1X0dtJc0Fg+Vp4QcO65+prPr2KLkRI1J4XTXqrM
-         VnaPj0u8TzwRrLg21gYCWGSuH80PBZ41S4ICyQXNK7MV3fVrGpoaw9g3hliI2OYfFj
-         ybURLIJlNPH8qS+xdG2/bgMA4b8+cldDiEMy9nL0VUYpbHg3VCKPWUYNAYc/R3XPVw
-         oZILFTrgpS03A==
-Date:   Tue, 1 Feb 2022 09:01:41 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     marek.vasut@gmail.com
-Cc:     linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] PCI: rcar: Use PCI_SET_ERROR_RESPONSE after read
- which triggered an exception
-Message-ID: <20220201150141.GA565205@bhelgaas>
+        id S240124AbiBAPLE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 10:11:04 -0500
+Received: from mga01.intel.com ([192.55.52.88]:21113 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240120AbiBAPLE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Feb 2022 10:11:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643728264; x=1675264264;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NdLePjmH/RJmxdRZVM8XpVi1qx4upTKlYfI9sEoHNeA=;
+  b=SK74whqe2tA/dNqxocRczY4lNdNLofKpCpqgpvogvx1hYpidHhX0hy0V
+   w7Sy9bTzwEqmO4rtfniBS1wg2X4acLPntIvAvL3gfG0QO9idzU3KqFaVM
+   Up8wSo5qIxjMWHZaSHem6qCcfVKG4b32/SR+VnnELTqWJawE0Ds50R9xv
+   CTH9O0vSBiAD09PJLlTr5CxoT5n20yBbG3vZggc7i9hHvxSc/E2/uCSGO
+   X5RvDQ5nfFZeQnsf6C2MXevnNs9NBqPAQNlplIm0exGaXIXOWMADCWoox
+   s8RsPXjhdLkT+8YVnqZewTXIVZCgHEPjEWa2d0R4Zn4v14jbzE5GcFHXX
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="272187999"
+X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
+   d="scan'208";a="272187999"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:11:04 -0800
+X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
+   d="scan'208";a="537842390"
+Received: from rashmigh-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.8])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:11:03 -0800
+Date:   Tue, 1 Feb 2022 07:11:02 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        nvdimm@lists.linux.dev
+Subject: Re: [PATCH v3 23/40] cxl/core: Emit modalias for CXL devices
+Message-ID: <20220201151102.czrykjrqdb6vddzk@intel.com>
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164298424120.3018233.15611905873808708542.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220129043837.172126-2-marek.vasut@gmail.com>
+In-Reply-To: <164298424120.3018233.15611905873808708542.stgit@dwillia2-desk3.amr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jan 29, 2022 at 05:38:37AM +0100, marek.vasut@gmail.com wrote:
-> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+On 22-01-23 16:30:41, Dan Williams wrote:
+> In order to enable libkmod lookups for CXL device objects to their
+> corresponding module, add 'modalias' to the base attribute of CXL
+> devices.
 > 
-> In case the controller is transitioning to L1 in rcar_pcie_config_access(),
-> any read/write access to PCIECDR triggers asynchronous external abort. This
-> is because the transition to L1 link state must be manually finished by the
-> driver. The PCIe IP can transition back from L1 state to L0 on its own.
-> 
-> The current asynchronous external abort hook implementation restarts
-> the instruction which finally triggered the fault, which can be a
-> different instruction than the read/write instruction which started
-> the faulting access. Usually the instruction which finally triggers
-> the fault is one which has some data dependency on the result of the
-> read/write. In case of read, the read value after fixup is undefined,
-> while a read value of faulting read should be all Fs.
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
 
-Since the kernel test robot found something to fix, maybe you could
-replace "all Fs" with PCI_ERROR_RESPONSE at the same time.
-
-> It is possible to enforce the fault using 'isb' instruction placed
-> right after the read/write instruction which started the faulting
-> access. Add custom register accessors which perform the read/write
-> followed immediately by 'isb'.
-> 
-> This way, the fault always happens on the 'isb' and in case of read,
-> which is located one instruction before the 'isb', it is now possible
-> to fix up the return value of the read in the asynchronous external
-> abort hook and make that read return all Fs.
-
-And here.
-
-Bjorn
+[snip]
