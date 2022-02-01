@@ -2,151 +2,441 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B93804A5BF8
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 13:13:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 012464A5BFB
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 13:13:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237636AbiBAMNa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 07:13:30 -0500
-Received: from mail-bn7nam10on2063.outbound.protection.outlook.com ([40.107.92.63]:21857
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233554AbiBAMN2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Feb 2022 07:13:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JPwU6ulLjcS0+07r9JXJM54HYYDJTyQE8uZWwOWMcvgpPIMB+IaTLPxGVWcTB562Hj0D2qj5r8bFUCp/UWrO4ShOsLBV6d3nd3A4cfLQ/U17lX69KZdAG4pi81aSAKQ6Lhv0COc2D92bvRiVIcdvOuWF1kNYsulwggVWrBnsRePOvkZycw5JJgUR1Hq28rsI3hfuE/Y60EQZGkHSWi38GygBSvmEAmpr+3ePS6oG+j/kiLXlP64EYX8d1uEWBXp6CO4bJYRzDzbeReZzHDadTg6QnJiuYsLuOCE6WFnU0iMTHSDHKch1/gIOzLHq6/lM/uIEUG3Pdcf1aCN8OWC40g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6fSVPDZBrGTKTVyebii3gD+2rnyFAFn/mx34xFk7BuI=;
- b=SowCBq4Kf78SxjT0LNiC0vZ2QdnZ+NcCluJ0Zt18o4Q2HLISVquAYGW1bmiTbIkc+N4yM21AllEixjgw2kZJcchMhWupeEulkvgVkKSBleuxJJlIWlmlNFofdWPiU1IUA4zh8r4GRlY5TJQG+zhhHHD793oz4m7kdh35OWZ5VJd9d93oPdAMEvmpf9wcTPG3PoRnm+c7wfbzs63Mk/eMbD+bXCqWkqAJRaah0BzRMEC00OkCctPZCt5O8XiE6cbLCxGP1FQMetarGKhMXq9eKni43022/qyGzBMh8pREcJXpdn2b2SHUoeGQzkiklry918aGaD1BRQ5mAQGp20R3HQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6fSVPDZBrGTKTVyebii3gD+2rnyFAFn/mx34xFk7BuI=;
- b=pgThTAdGxuVIHbFxV4+LrYDrC7oFADIOpNz/5hYcf/PotTVISOBWwcbd/kJ2r/YEmOSpTItHHIIM+zzvvI1/8jo4wXfWpQpUMo3TZPuu5ge0SceKIAejoZrBcOvYyNUopXoxGAS4oW7pOKzUENae7iIX/lNE1e4pZFpP+dR0vne5mbFf1KmR0Gsdny8G4acMl/WVHbhxjr9I8OCijAk7qZAxswb++KoGJCX4JftcYMt4YYXpgA8NkFTVfIiJa5Z5ugv1Wgn7OSlIhN7ShJ2Gk2DpdKc+rqxVq1FWaX8CrfgeLAxmJ3u9O6Nohe5JGKvurL6XnJM7b02XFwqpck8RVQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by DM6PR12MB4418.namprd12.prod.outlook.com (2603:10b6:5:28e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.15; Tue, 1 Feb
- 2022 12:13:26 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3%4]) with mapi id 15.20.4930.022; Tue, 1 Feb 2022
- 12:13:26 +0000
-Date:   Tue, 1 Feb 2022 08:13:25 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
-        bhelgaas@google.com, saeedm@nvidia.com, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
-        leonro@nvidia.com, kwankhede@nvidia.com, mgurtovoy@nvidia.com,
-        maorg@nvidia.com
-Subject: Re: [PATCH V6 mlx5-next 10/15] vfio: Remove migration protocol v1
-Message-ID: <20220201121325.GB1786498@nvidia.com>
-References: <20220130160826.32449-1-yishaih@nvidia.com>
- <20220130160826.32449-11-yishaih@nvidia.com>
- <874k5izv8m.fsf@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874k5izv8m.fsf@redhat.com>
-X-ClientProxiedBy: BL0PR05CA0019.namprd05.prod.outlook.com
- (2603:10b6:208:91::29) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        id S233554AbiBAMNd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 07:13:33 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4596 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231532AbiBAMNd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 07:13:33 -0500
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jp3jQ4dcMz67mkr;
+        Tue,  1 Feb 2022 20:12:58 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Tue, 1 Feb 2022 13:13:30 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 1 Feb
+ 2022 12:13:29 +0000
+Date:   Tue, 1 Feb 2022 12:13:28 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH v3 32/40] cxl/core/port: Add switch port enumeration
+Message-ID: <20220201121328.00006f3e@Huawei.com>
+In-Reply-To: <164298428940.3018233.18042207990919432824.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164298428940.3018233.18042207990919432824.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6c604a4c-c61d-4349-b14e-08d9e57c3ff6
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4418:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4418F7D7D8EDDAA03D3BDA9AC2269@DM6PR12MB4418.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zMjVhlJ01uyp3fv7Aswc8KZZPjo0aTI1qISSifYvGagDd3qUDTjnUyDzh3My8Xee43Q/mxVzxvZY+DTC/+cuMF2j1F/ZIHCIWojNLwTpX1aBoEC4Ys5OezMG3MYe4F0Xz4CzejpLdSVNc8JMB3UtygjaMWaPLVunI+5O+74uHgX/JpLx01pBaWHG8whGf8zYaDDDioj2hnIxTyYR8FuQlLAudJdWYNHyAcO+lJzGXLGAIOlj8zbPuzoqE8/QPOh31/UERXWrl7Tdi/+lxT0zN7nskXCbqWJq1fikgDFXEFmlUZR2ZvlHLsBsu9IXTU94DM1D+hs/BBlv7xfOHM159L7BYOMZ4G2Zwjt4C52WkKT9Lq83+4/oUBm0TRCwQDZb2YueaGq3UokjV7LxWIcdjE2hEebry7Ex9DiO5cYEwp+bPvsfmzO+t2w7GQBVvZp40qnw6AVWkCXZ7uYkkyjziUbrMXu2pKalKtKR282wFvtd7N3BdtQelzNA9T2TdKxcM3YTjWKaSJ/H+9MK9yxgaLme91gxTDtzZ61GDDODcdWO+clIuJ6Aws0iqbkhWzgsu3sgQpK9JUPgq3IJLHg1T6YOH4WGoHBsF5+/6Zfq1d4+QzDrjhk/imN2+fWpFz/wSA9tCQUepL7Zkk+fbShhZw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(36756003)(2906002)(6486002)(4326008)(66556008)(66476007)(66946007)(8936002)(8676002)(508600001)(316002)(83380400001)(107886003)(86362001)(6512007)(5660300002)(6916009)(33656002)(6506007)(38100700002)(26005)(2616005)(1076003)(186003)(20210929001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zGe988zK+ZCE2boW0IRs7MEFLpPAuiq2xdEDR2YD0PP8RZEmvgbognbZ9lJ4?=
- =?us-ascii?Q?ff+LGPyc96nms3P7N9BYEP7OeLvpxXgL0P4430GY4CPDZW1Zz+avGMwJJ+mS?=
- =?us-ascii?Q?WIKiT7xv7oL7QPBy/beDF+/VOgmVD1VIQw4wEbctrRpurmR7RuT1A39Ns08x?=
- =?us-ascii?Q?g5ucLzCVTIaQTblvR0gVhPWFjL0yvQPgUrhAe3CfAT+SJbqrCeBp7BWo7C1J?=
- =?us-ascii?Q?pSC2fOkMuAnGyjDUjLY/Luak3ist/7Px8d00GyQRdcKsCNTnV1tVqppplNfl?=
- =?us-ascii?Q?bDfJt13Xf6l6D4CF6B/kN8wUXyVHtr13pS9c+P4RCQgoyYqtoay9j0d5bJwz?=
- =?us-ascii?Q?0U3s0V8VOU7u9ol/jQI++CUkkEE036h+IgiP9pSBPY+7AkOpIvOoiEgmonPw?=
- =?us-ascii?Q?/Yh5UdnBuQvP7cF0UjckpuHErJLy14FYegrXSm4B7Oc/G+J7R9nc3EsZxRt9?=
- =?us-ascii?Q?LmiMTBBxF3HvAue08ttOYvr+zP9AOvLAPoAbuZT6S3ZN6xJaNpl9yp1Gqr6d?=
- =?us-ascii?Q?LmY19pKnvqb6rTWiLXKG3cqUESdSEiTbJwuvqf56Y7wu2eaJQsu1Rjzpg7Qd?=
- =?us-ascii?Q?+4QIDq8cxgv8U2TPeu0TGVmCOXVXIiynC2xZLZD3wXLvyM+6b79IltZY3sBO?=
- =?us-ascii?Q?5iTD8/GXkjLeOpl47TxUPdd6lB+FXxjGdviWG9gF8YUCFu43e7nh3NGGDaa/?=
- =?us-ascii?Q?EfTe+MwXHkZm9MVXZ92vu7Qlf53LwQRZ3RMVrnZ5yUpy39iXUbYdgejuvhIQ?=
- =?us-ascii?Q?OtDUScwsASVurX6J5T14iUmEU8cCCQrg607WdK+3QJsxQChia6H1slHHtOZg?=
- =?us-ascii?Q?PbgcH6siUiVoAF6xaAAIQ5cdIIIccj70Pw4pKFWgHfm3QenP56fZGznCsTrn?=
- =?us-ascii?Q?ZFueNSjB9w1KgAtlP8RS+YmwipLYvML0gaKYM7hJ9XDfJuStfquTT4IijXD8?=
- =?us-ascii?Q?sfdBVe5vp9iWXWFjbig9OOEDMcOpv9J1vPgZKHDagFW9KYrGa0w9SezCGV2J?=
- =?us-ascii?Q?6z+1Age4CheD/bpCJWyGeTpzkaeNjJLCKZzIo0/CLMIjcpmL6yVv3Uv8FkBl?=
- =?us-ascii?Q?R3Y9+mNbmgEqphsL0r8snb4GvRia/TGeJuKmUj+UEhVcY8mro9KHfxBuVccT?=
- =?us-ascii?Q?sv+hQPWPTUQyNhjPG/Zo6cLlEYIn1hi2Y1MwtOecOTZ9WlQ2pN4yeQ+m3+Nt?=
- =?us-ascii?Q?UUR4pe48G1DpsizVG9qKzU41ZcLd/7Fp7CyZyRcl5Mas6PW4+qElKMtEoGxW?=
- =?us-ascii?Q?L30kU4xMwt1JUWrT1ECLYEztI/ho5T2cyEeIRdogm71t+NayruQAixjA/QKI?=
- =?us-ascii?Q?EL570nkcHYQObw9Cm8E4GMrz9qoMjh0+pNkuJU9oaSCEHMqIfviQyEAHVtDY?=
- =?us-ascii?Q?kuZyMMfES+2APmryxglYZIPL2cB8CCAXYQFVdv7ojV+DMsRyQUTz/3w1sZ3W?=
- =?us-ascii?Q?OvLwpr5ygk33TJ3ASjwqm+7vYG1xAumkd9KKMJTch5VXqi0exofxusXX8XGx?=
- =?us-ascii?Q?vNO0gZ9Yc8Qi4PJQxRlO9GRWSxrYPx4xpE2kLWo98tefx/vMysL2p9Dn0bp3?=
- =?us-ascii?Q?lIZPhfWeNzEES+xCGmI=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c604a4c-c61d-4349-b14e-08d9e57c3ff6
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2022 12:13:26.2566
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: i0hfvltLbL7/ICAMw9Ffq+6rmM8yucSoaxb2SnmCmXavhSPoNbaBOiYFwsj3RXvW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4418
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 12:23:05PM +0100, Cornelia Huck wrote:
-> On Sun, Jan 30 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
+On Sun, 23 Jan 2022 16:31:29 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
+
+> So far the platorm level CXL resources have been enumerated by the
+> cxl_acpi driver, and cxl_pci has gathered all the pre-requisite
+> information it needs to fire up a cxl_mem driver. However, the first
+> thing the cxl_mem driver will be tasked to do is validate that all the
+> PCIe Switches in its ancestry also have CXL capabilities and an CXL.mem
+> link established.
 > 
-> > From: Jason Gunthorpe <jgg@nvidia.com>
-> >
-> > v1 was never implemented and is replaced by v2.
-> >
-> > The old uAPI definitions are removed from the header file. As per Linus's
-> > past remarks we do not have a hard requirement to retain compilation
-> > compatibility in uapi headers and qemu is already following Linus's
-> > preferred model of copying the kernel headers.
+> Provide a common mechanism for a CXL.mem endpoint driver to enumerate
+> all the ancestor CXL ports in the topology and validate CXL.mem
+> connectivity.
 > 
-> If we are all in agreement that we will replace v1 with v2 (and I think
-> we are), we probably should remove the x-enable-migration stuff in QEMU
-> sooner rather than later, to avoid leaving a trap for the next
-> unsuspecting person trying to update the headers.
-
-Once we have agreement on the kernel patch we plan to send a QEMU
-patch making it support the v2 interface and the migration
-non-experimental. We are also working to fixing the error paths, at
-least least within the limitations of the current qemu design.
-
-The v1 support should remain in old releases as it is being used in
-the field "experimentally".
-
-> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > index 9efc35535b29..70c77da5812d 100644
-> > +++ b/include/uapi/linux/vfio.h
-> > @@ -323,7 +323,6 @@ struct vfio_region_info_cap_type {
-> >  #define VFIO_REGION_TYPE_PCI_VENDOR_MASK	(0xffff)
-> >  #define VFIO_REGION_TYPE_GFX                    (1)
-> >  #define VFIO_REGION_TYPE_CCW			(2)
-> > -#define VFIO_REGION_TYPE_MIGRATION              (3)
+> Multiple endpoints may end up racing to establish a shared port in the
+> topology. This race is resolved via taking the device-lock on a parent
+> CXL Port before establishing a new child. The winner of the race
+> establishes the port, the loser simply registers its interest in the
+> port via 'struct cxl_ep' place-holder reference.
 > 
-> Do we want to keep region type 3 reserved? Probably not really needed,
-> but would put us on the safe side.
+> At endpoint teardown the same parent port lock is taken as 'struct
+> cxl_ep' references are deleted. Last endpoint to drop its reference
+> unregisters the port.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Yes, thanks, this was too zealous to drop it
+I've not done Qemu switch emulation yet, but should probably get on with
+it to test his (not a big job, but lots of other stuff to do as ever!)
+As such I haven't tested this beyond the not breaking cases without a
+switch yet.
 
-Jason 
+Comments inline. Mostly trivial but I think the error handling paths in
+add_port_register_ep() need another look.
+
+Jonathan
+
+
+> ---
+>  drivers/cxl/acpi.c      |   17 --
+>  drivers/cxl/core/port.c |  379 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h       |   20 ++
+>  3 files changed, 400 insertions(+), 16 deletions(-)
+> 
+
+
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 26c3eb9180cd..cd95d9f8c624 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -7,6 +7,7 @@
+
+...
+
+
+> +/**
+> + * cxl_add_ep - register an endpoint's interest in a port
+> + * @port: a port in the endpoint's topology ancestry
+> + * @ep_dev: device representing the endpoint
+> + *
+> + * Intermediate CXL ports are scanned based on the arrival of endpoints.
+> + * When those endpoints depart the port can be destroyed once all
+> + * endpoints that care about that port have been removed.
+> + */
+> +static int cxl_add_ep(struct cxl_port *port, struct device *ep_dev)
+> +{
+> +	struct cxl_ep *ep;
+> +	int rc;
+> +
+> +	ep = kzalloc(sizeof(*ep), GFP_KERNEL);
+> +	if (!ep)
+> +		return -ENOMEM;
+> +
+> +	INIT_LIST_HEAD(&ep->list);
+> +	ep->ep = get_device(ep_dev);
+> +
+> +	rc = add_ep(port, ep);
+> +	if (rc)
+> +		cxl_ep_release(ep);
+> +	return rc;
+> +}
+> +
+
+
+...
+
+> +
+> +static struct device *grandparent(struct device *dev)
+> +{
+> +	if (dev && dev->parent)
+> +		return dev->parent->parent;
+> +	return NULL;
+> +}
+> +
+> +static void delete_switch_port(struct cxl_memdev *cxlmd, struct cxl_port *port,
+> +			       struct list_head *dports)
+> +{
+> +	struct cxl_dport *dport, *_d;
+> +
+
+This hand manipulation of devm managed stuff could benefit from an explanatory
+comment or two.
+
+> +	dev_dbg(&cxlmd->dev, "delete %s\n", dev_name(&port->dev));
+> +	list_for_each_entry_safe(dport, _d, dports, list) {
+> +		devm_release_action(&port->dev, cxl_dport_unlink, dport);
+> +		devm_release_action(&port->dev, cxl_dport_remove, dport);
+> +		devm_kfree(&port->dev, dport);
+> +	}
+> +	devm_release_action(port->dev.parent, cxl_unlink_uport, port);
+> +	devm_release_action(port->dev.parent, unregister_port, port);
+> +}
+> +
+> +static void cxl_remove_ep(void *data)
+
+Maybe naming needs a rethink.  Instinctively I'd expect this to do the opposite
+of add_ep whereas it does a whole lot more. Mind you I can't think of
+a better name...
+
+> +{
+> +	struct cxl_memdev *cxlmd = data;
+> +	struct device *iter;
+> +
+> +	for (iter = &cxlmd->dev; iter; iter = grandparent(iter)) {
+> +		struct device *dport_dev = grandparent(iter);
+> +		struct cxl_port *port, *parent_port;
+> +		LIST_HEAD(reap_dports);
+> +		struct cxl_ep *ep;
+> +
+> +		if (!dport_dev)
+> +			break;
+> +
+> +		port = find_cxl_port(dport_dev);
+> +		if (!port || is_cxl_root(port)) {
+> +			put_device(&port->dev);
+> +			continue;
+> +		}
+> +
+> +		parent_port = to_cxl_port(port->dev.parent);
+> +		cxl_device_lock(&parent_port->dev);
+> +		if (!parent_port->dev.driver) {
+
+Might be good to have a comment here on 'why' this condition might be hit.
+In similar path in setup there happens to be a dev_dbg() that does
+the job of a comment.
+
+> +			cxl_device_unlock(&parent_port->dev);
+> +			put_device(&port->dev);
+> +			continue;
+> +		}
+> +
+> +		cxl_device_lock(&port->dev);
+> +		ep = find_ep(port, &cxlmd->dev);
+> +		dev_dbg(&cxlmd->dev, "disconnect %s from %s\n",
+> +			ep ? dev_name(ep->ep) : "", dev_name(&port->dev));
+> +		cxl_ep_release(ep);
+> +		if (ep && !port->dead && list_empty(&port->endpoints) &&
+> +		    !is_cxl_root(parent_port)) {
+> +			/*
+> +			 * This was the last ep attached to a dynamically
+> +			 * enumerated port. Block new cxl_add_ep() and garbage
+> +			 * collect the port.
+> +			 */
+> +			port->dead = true;
+> +			list_splice_init(&port->dports, &reap_dports);
+> +		}
+> +		cxl_device_unlock(&port->dev);
+> +
+> +		if (!list_empty(&reap_dports))
+> +			delete_switch_port(cxlmd, port, &reap_dports);
+> +		put_device(&port->dev);
+> +		cxl_device_unlock(&parent_port->dev);
+> +	}
+> +}
+> +
+> +static resource_size_t find_component_registers(struct device *dev)
+> +{
+> +	struct cxl_register_map map;
+> +	struct pci_dev *pdev;
+> +
+> +	/*
+> +	 * Theoretically, CXL component registers can be hosted on a
+> +	 * non-PCI device, in practice, only cxl_test hits this case.
+> +	 */
+> +	if (!dev_is_pci(dev))
+> +		return CXL_RESOURCE_NONE;
+> +
+> +	pdev = to_pci_dev(dev);
+> +
+> +	cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
+> +	return cxl_regmap_to_base(pdev, &map);
+> +}
+> +
+> +static int add_port_register_ep(struct cxl_memdev *cxlmd,
+> +				struct device *uport_dev,
+> +				struct device *dport_dev)
+> +{
+> +	struct cxl_port *port, *parent_port;
+> +	resource_size_t component_reg_phys;
+> +	int rc;
+> +
+> +	parent_port = find_cxl_port(grandparent(dport_dev));
+> +	if (!parent_port) {
+> +		/*
+> +		 * The root CXL port is added by the CXL platform driver, fail
+> +		 * for now to be re-probed after platform driver attaches.
+> +		 */
+> +		if (!grandparent(dport_dev)) {
+
+Possibly worth a local variable for grandparent(dport_dev)?
+Could you pull this out before trying to call find_cxl_port(NULL)?
+Obviously that's safe, but this seems more complex than it needs to be.
+
+	struct device *gp = grandparent(dport_dev);
+
+	if (!gp) {
+		/*
+		 * The root CXL port is added by the CXL platform driver, fail
+		 * for now to be re-probed after platform driver attaches.
+		 */
+		dev_dbg(&cxlmd->dev, "%s is a root dport\n",
+			dev_name(dport_dev));
+			return -ENXIO;
+	}
+	parent_port = find_cxl_port(gp);
+	if (!parent_port) {
+		/* iterate to create this parent port */
+		return -EAGAIN;
+	}
+
+
+> +			dev_dbg(&cxlmd->dev, "%s is a root dport\n",
+> +				dev_name(dport_dev));
+> +			return -ENXIO;
+> +		}
+> +		/* ...otherwise, iterate to create this parent_port */
+> +		return -EAGAIN;
+> +	}
+> +
+> +	cxl_device_lock(&parent_port->dev);
+> +	if (!parent_port->dev.driver) {
+> +		dev_warn(&cxlmd->dev,
+> +			 "port %s:%s disabled, failed to enumerate CXL.mem\n",
+> +			 dev_name(&parent_port->dev), dev_name(uport_dev));
+> +		rc = -ENXIO;
+> +		goto out;
+
+In this path, port isn't initialized (see below)
+
+> +	}
+> +
+> +	port = find_cxl_port_at(parent_port, dport_dev);
+> +	if (!port) {
+> +		component_reg_phys = find_component_registers(uport_dev);
+> +		port = devm_cxl_add_port(&parent_port->dev, uport_dev,
+> +					 component_reg_phys, parent_port);
+> +		if (!IS_ERR(port))
+> +			get_device(&port->dev);
+> +	}
+> +out:
+> +	cxl_device_unlock(&parent_port->dev);
+> +
+> +	if (IS_ERR(port))
+
+Port isn't initialized in all paths above...
+I think you want to skip on to the put_device(&parent_port->dev) if
+rc is set..
+
+> +		rc = PTR_ERR(port);
+> +	else {
+
+We could enter this path with rc set and continue as if it wasn't.
+
+> +		dev_dbg(&cxlmd->dev, "add to new port %s:%s\n",
+> +			dev_name(&port->dev), dev_name(port->uport));
+> +		rc = cxl_add_ep(port, &cxlmd->dev);
+> +		if (rc == -EEXIST) {
+> +			/*
+> +			 * "can't" happen, but this error code means
+> +			 * something to the caller, so translate it.
+> +			 */
+> +			rc = -ENXIO;
+> +		}
+> +		put_device(&port->dev);
+> +	}
+> +
+> +	put_device(&parent_port->dev);
+> +	return rc;
+> +}
+> +
+> +int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+> +{
+> +	struct device *dev = &cxlmd->dev;
+> +	struct device *iter;
+> +	int rc;
+> +
+> +	rc = devm_add_action_or_reset(&cxlmd->dev, cxl_remove_ep, cxlmd);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/*
+> +	 * Scan for and add all cxl_ports in this device's ancestry.
+> +	 * Repeat until no more ports are added. Abort if a port add
+> +	 * attempt fails.
+> +	 */
+> +retry:
+> +	for (iter = dev; iter; iter = grandparent(iter)) {
+> +		struct device *dport_dev = grandparent(iter);
+> +		struct device *uport_dev;
+> +		struct cxl_port *port;
+> +
+> +		if (!dport_dev)
+> +			break;
+> +		uport_dev = dport_dev->parent;
+> +		dev_dbg(dev, "scan: iter: %s dport_dev: %s parent: %s\n",
+> +			dev_name(iter), dev_name(dport_dev),
+> +			uport_dev ? dev_name(uport_dev) : "'none'");
+
+Given the uport_dev is something we don't expect to happen and it'll be warned
+on anyway, maybe move this dev_dbg() after the check and possibly augment that
+dev_warn with iter so all the information is there as well.
+
+Will end up with a simpler dev_dbg()
+
+
+> +		if (!uport_dev) {
+> +			dev_warn(dev, "unexpected topology, no parent for %s\n",
+> +				 dev_name(dport_dev));
+> +			rc = -ENXIO;
+> +			break;
+
+This rc isn't returned below.
+return -ENOXIO; here is probably better option anyway.
+
+> +		}
+> +
+> +		port = find_cxl_port(dport_dev);
+> +		if (port) {
+> +			dev_dbg(&cxlmd->dev,
+> +				"found already registered port %s:%s\n",
+> +				dev_name(&port->dev), dev_name(port->uport));
+> +			rc = cxl_add_ep(port, &cxlmd->dev);
+> +
+> +			/*
+> +			 * If the endpoint already exists in the port's list,
+> +			 * that's ok, it was added on a previous pass.
+> +			 * Otherwise, retry in add_port_register_ep() after
+> +			 * taking the parent_port lock as the current port may
+> +			 * be being reaped.
+> +			 */
+> +			if (rc && rc != -EEXIST) {
+> +				put_device(&port->dev);
+> +				return rc;
+> +			}
+> +
+> +			if (is_cxl_port(port->dev.parent) &&
+> +			    !is_cxl_root(to_cxl_port(port->dev.parent))) {
+
+I'd like a comment on what this is matching.  What types of port will
+result in us following this path?
+
+> +				put_device(&port->dev);
+> +				continue;
+> +			}
+> +
+> +			put_device(&port->dev);
+> +			break;
+> +		}
+> +
+> +		rc = add_port_register_ep(cxlmd, uport_dev, dport_dev);
+> +		/* port missing, try to add parent */
+> +		if (rc == -EAGAIN)
+> +			continue;
+> +		/* failed to add ep or port */
+> +		if (rc)
+> +			return rc;
+> +		/* port added, new descendants possible, start over */
+> +		goto retry;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_ports, CXL);
+> +
+> +struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd)
+> +{
+> +	return find_cxl_port(grandparent(&cxlmd->dev));
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_mem_find_port, CXL);
+> +
+
+>  static int decoder_populate_targets(struct cxl_decoder *cxld,
+>  				    struct cxl_port *port, int *target_map)
+>  {
+
+
