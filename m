@@ -2,387 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37D814A6838
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 23:52:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D7004A6852
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 00:01:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242103AbiBAWwy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 17:52:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242079AbiBAWwx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 17:52:53 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF566C061714
-        for <linux-pci@vger.kernel.org>; Tue,  1 Feb 2022 14:52:53 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id s6so11097647plg.12
-        for <linux-pci@vger.kernel.org>; Tue, 01 Feb 2022 14:52:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8kU0XOUT2FjB6HiuChhnBEa47slyR6hjDe4I0/jSHDY=;
-        b=ggi2Lw1H6x+MITtgL4Glf59B7IFSw0Pethefh56tsv5qIqUoIVf3OacMDMvL0McC3V
-         8Axbe0jU3mdpdFbZ4W1KFnTYKol2n7YwJ6eFvtX9FCN336Ct4ROh7QFrjcngAMVq9nLz
-         TecDkzf5805gqBjOQ2l54zc/acquOtjhi1C6aroNjw5SUD120OlUSvWpIvntvJ5a/x5b
-         saajTw0GZUVy/Xag/nuImfPdcwOwW39bNNO5QqTb5un2CtrUVvsOrD3ZzYOd5lFD2WdP
-         u931kPj+D23IIDts3yI1Si7Rd48805aMINO/NsG8ptHNfS0qdfUU6rCRM0nIzLVJliyG
-         ffHw==
+        id S242525AbiBAXBL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 18:01:11 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42107 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S242497AbiBAXBL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 18:01:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643756470;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZZQsFy9xaSL/C+8tHxnl069hXf8XB97MOyjVaLm6KWA=;
+        b=gPL4po6fTkOJxZ3jS15cGUu9Hk4q4r600itP89dn9uTHPjB3reWGyPK9Nv3NSjGTak+ciJ
+        bCocr7JzzMNLljAZnH/TsI2y7nXpgRyw8O0Jj/SqFxjk7UoVPDh+63/z03cEbLg2E+8Sr0
+        ZPwrUK+Y8pA2PRi98IohowQrzW8UNIw=
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
+ [209.85.167.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-228-AwJ6rlirOBKOgDbeM-1FTw-1; Tue, 01 Feb 2022 18:01:09 -0500
+X-MC-Unique: AwJ6rlirOBKOgDbeM-1FTw-1
+Received: by mail-oi1-f198.google.com with SMTP id ay31-20020a056808301f00b002d06e828c00so2789769oib.2
+        for <linux-pci@vger.kernel.org>; Tue, 01 Feb 2022 15:01:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8kU0XOUT2FjB6HiuChhnBEa47slyR6hjDe4I0/jSHDY=;
-        b=TrAb4rLKqZprI4tMOmCHB2/CEKrQUsmc06N/IAyFnpkMpb6MYXnlyYovgoUsKJdV3J
-         CR5ympsD2NZMh+KUAdWu2WrBAT1XHkU3JBG764vhmaqzBjMLNPN+TsIKTzMXjvRCS7is
-         GhXUk8XIJkwzmk04s6/zz820gkiyHm55k3A4RszNmQQRO73eCUTgS6U8cj7V2xFD7mVN
-         9bdxGZxsT5PfStLBWkagu9u7GW4bMeF6bOX7OcTl5Z3U/5XzSgmETzIzPa9bzTgdaRap
-         JVn9XMDE7yNFeMQcMOZQJb55RPNHs/c5wTMEVPcTcbC1R9HHRdmNkxIrWqkgzG6IX7PD
-         PGFA==
-X-Gm-Message-State: AOAM531sUtTfCvL2KdMJOmTACB7ijJAN9/xHfoicaCxDuaKgKCRH8uQF
-        VNm9WRiw8c5YWMn7EPZED4Oh4RarRu0DKzGHxwR1/A==
-X-Google-Smtp-Source: ABdhPJwmBBffwtEJZZ8LKUM52kL53y9UOV9zdX4OrW/si3K/XbRxWKg9FPNI57CpI6to45HBhUgcM8cG/Px9h+B9kec=
-X-Received: by 2002:a17:902:b20a:: with SMTP id t10mr27652487plr.132.1643755973230;
- Tue, 01 Feb 2022 14:52:53 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZZQsFy9xaSL/C+8tHxnl069hXf8XB97MOyjVaLm6KWA=;
+        b=prANdQ2n/cL7tgpgZazzIzM4lbwG6Hw3dZCb/uB34zLIEqGAOJT3Sz6WR2L+RnoG4m
+         6viUt3Vt7WZNhAqIEUfw7XfSt8X5kkBaG8ATYxpu02BWz5BN/KZe2xBdtan449I5/B3V
+         6WeK7XepubYgWrL2TAWxFPAweHdGi6QMKjg+b1T6RTbr4fps7uEdKSkLMKwu6xvVCHBt
+         KF0OPwLSGtP2D//8nUC9z89iDMCBcPFpK/UneYIg4Uj0r+Q8z7IsaMe93g9GKpjRQsTA
+         Idu8n2ekCZhVfp1T7NQ108nYuzk5PgDVD6Fr6dLb+Rt2GYcn4wOTW7E3IaE3ZiK+PCxp
+         Bu/Q==
+X-Gm-Message-State: AOAM531zSEEXcAhEazCap+CfWIqsphwJdCJoIeBLperCukXnlW6DrNGl
+        Unl2tRFccTOorpNsLXLsFWEGlnvYX8sbEfnofXmUY9fxXwU+GoBO/etosU7+zAzkvbrWDcHrne0
+        0DEnxZWREPul0SqOdhZxJ
+X-Received: by 2002:a05:6808:20a7:: with SMTP id s39mr2718321oiw.306.1643756468634;
+        Tue, 01 Feb 2022 15:01:08 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxcB506OEAhqOJI745n4wG5GysVpVVMM9JD8hrzIrz8J+sFhUk3i/Fjf/mS8Hij0DFXWZZ5bQ==
+X-Received: by 2002:a05:6808:20a7:: with SMTP id s39mr2718298oiw.306.1643756468405;
+        Tue, 01 Feb 2022 15:01:08 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id bf15sm1581295oib.32.2022.02.01.15.01.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Feb 2022 15:01:08 -0800 (PST)
+Date:   Tue, 1 Feb 2022 16:01:06 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
+Subject: Re: [PATCH V6 mlx5-next 10/15] vfio: Remove migration protocol v1
+Message-ID: <20220201160106.0760bfea.alex.williamson@redhat.com>
+In-Reply-To: <87sft2yd50.fsf@redhat.com>
+References: <20220130160826.32449-1-yishaih@nvidia.com>
+        <20220130160826.32449-11-yishaih@nvidia.com>
+        <874k5izv8m.fsf@redhat.com>
+        <20220201121325.GB1786498@nvidia.com>
+        <87sft2yd50.fsf@redhat.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164298426829.3018233.15215948891228582221.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220131182522.000049fb@Huawei.com>
-In-Reply-To: <20220131182522.000049fb@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 1 Feb 2022 14:52:46 -0800
-Message-ID: <CAPcyv4hXtosNpT9uctf1h_n4yfNzDXiQcYty+Wb+Ymz4ft=R5w@mail.gmail.com>
-Subject: Re: [PATCH v3 28/40] cxl/pci: Retrieve CXL DVSEC memory info
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 10:25 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Sun, 23 Jan 2022 16:31:08 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > From: Ben Widawsky <ben.widawsky@intel.com>
-> >
-> > Before CXL 2.0 HDM Decoder Capability mechanisms can be utilized in a
-> > device the driver must determine that the device is ready for CXL.mem
-> > operation and that platform firmware, or some other agent, has
-> > established an active decode via the legacy CXL 1.1 decoder mechanism.
-> >
-> > This legacy mechanism is defined in the CXL DVSEC as a set of range
-> > registers and status bits that take time to settle after a reset.
-> >
-> > Validate the CXL memory decode setup via the DVSEC and cache it for
-> > later consideration by the cxl_mem driver (to be added). Failure to
-> > validate is not fatal to the cxl_pci driver since that is only providing
-> > CXL command support over PCI.mmio, and might be needed to rectify CXL
-> > DVSEC validation problems.
-> >
-> > Any potential ranges that the device is already claiming via DVSEC need
-> > to be reconciled with the dynamic provisioning ranges provided by
-> > platform firmware (like ACPI CEDT.CFMWS). Leave that reconciliation to
-> > the cxl_mem driver.
-> >
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > [djbw: clarify changelog]
-> > [djbw: shorten defines]
-> > [djbw: change precise spin wait to generous msleep]
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->
-> The name change from previous patch wants cleaning up and a few
-> more trivial suggestions inline.
->
-> Thanks,
->
-> Jonathan
->
-> > ---
-> >  drivers/cxl/cxlmem.h |   18 +++++++-
-> >  drivers/cxl/cxlpci.h |   15 ++++++
-> >  drivers/cxl/pci.c    |  116 ++++++++++++++++++++++++++++++++++++++++++++++++--
-> >  3 files changed, 142 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index cedc6d3c0448..00f55f4066b9 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -89,6 +89,18 @@ struct cxl_mbox_cmd {
-> >   */
-> >  #define CXL_CAPACITY_MULTIPLIER SZ_256M
-> >
-> > +/**
-> > + * struct cxl_endpoint_dvsec_info - Cached DVSEC info
-> > + * @mem_enabled: cached value of mem_enabled in the DVSEC, PCIE_DEVICE
-> > + * @ranges: Number of active HDM ranges this device uses.
-> > + * @dvsec_range: cached attributes of the ranges in the DVSEC, PCIE_DEVICE
-> > + */
-> > +struct cxl_endpoint_dvsec_info {
-> > +     bool mem_enabled;
-> > +     int ranges;
-> > +     struct range dvsec_range[2];
-> > +};
-> > +
-> >  /**
-> >   * struct cxl_dev_state - The driver device state
-> >   *
-> > @@ -98,7 +110,7 @@ struct cxl_mbox_cmd {
-> >   *
-> >   * @dev: The device associated with this CXL state
-> >   * @regs: Parsed register blocks
-> > - * @device_dvsec: Offset to the PCIe device DVSEC
-> > + * @cxl_dvsec: Offset to the PCIe device DVSEC
->
-> So soon?  Call it this in the previous patch!
+On Tue, 01 Feb 2022 13:39:23 +0100
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-Whoops, yes, rebase mistake.
+> On Tue, Feb 01 2022, Jason Gunthorpe <jgg@nvidia.com> wrote:
+> 
+> > On Tue, Feb 01, 2022 at 12:23:05PM +0100, Cornelia Huck wrote:  
+> >> On Sun, Jan 30 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
+> >>   
+> >> > From: Jason Gunthorpe <jgg@nvidia.com>
+> >> >
+> >> > v1 was never implemented and is replaced by v2.
+> >> >
+> >> > The old uAPI definitions are removed from the header file. As per Linus's
+> >> > past remarks we do not have a hard requirement to retain compilation
+> >> > compatibility in uapi headers and qemu is already following Linus's
+> >> > preferred model of copying the kernel headers.  
+> >> 
+> >> If we are all in agreement that we will replace v1 with v2 (and I think
+> >> we are), we probably should remove the x-enable-migration stuff in QEMU
+> >> sooner rather than later, to avoid leaving a trap for the next
+> >> unsuspecting person trying to update the headers.  
+> >
+> > Once we have agreement on the kernel patch we plan to send a QEMU
+> > patch making it support the v2 interface and the migration
+> > non-experimental. We are also working to fixing the error paths, at
+> > least least within the limitations of the current qemu design.  
+> 
+> I'd argue that just ripping out the old interface first would be easier,
+> as it does not require us to synchronize with a headers sync (and does
+> not require to synchronize a headers sync with ripping it out...)
+> 
+> > The v1 support should remain in old releases as it is being used in
+> > the field "experimentally".  
+> 
+> Of course; it would be hard to rip it out retroactively :)
+> 
+> But it should really be gone in QEMU 7.0.
+> 
+> Considering adding the v2 uapi, we might get unlucky: The Linux 5.18
+> merge window will likely be in mid-late March (and we cannot run a
+> headers sync before the patches hit Linus' tree), while QEMU 7.0 will
+> likely enter freeze in mid-late March as well. So there's a non-zero
+> chance that the new uapi will need to be deferred to 7.1.
 
 
->
-> >   * @payload_size: Size of space for payload
-> >   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-> >   * @lsa_size: Size of Label Storage Area
-> > @@ -118,6 +130,7 @@ struct cxl_mbox_cmd {
-> >   * @next_volatile_bytes: volatile capacity change pending device reset
-> >   * @next_persistent_bytes: persistent capacity change pending device reset
-> >   * @component_reg_phys: register base of component registers
-> > + * @info: Cached DVSEC information about the device.
-> >   * @mbox_send: @dev specific transport for transmitting mailbox commands
-> >   *
-> >   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> > @@ -127,7 +140,7 @@ struct cxl_dev_state {
-> >       struct device *dev;
-> >
-> >       struct cxl_regs regs;
-> > -     int device_dvsec;
-> > +     int cxl_dvsec;
-> >
-> >       size_t payload_size;
-> >       size_t lsa_size;
-> > @@ -149,6 +162,7 @@ struct cxl_dev_state {
-> >       u64 next_persistent_bytes;
-> >
-> >       resource_size_t component_reg_phys;
-> > +     struct cxl_endpoint_dvsec_info info;
-> >
-> >       int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-> >  };
-> > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> > index 766de340c4ce..2c29d26af7f8 100644
-> > --- a/drivers/cxl/cxlpci.h
-> > +++ b/drivers/cxl/cxlpci.h
-> > @@ -16,7 +16,20 @@
-> >  #define PCI_DVSEC_VENDOR_ID_CXL              0x1E98
-> >
-> >  /* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
-> > -#define CXL_DVSEC_PCIE_DEVICE                                        0
-> > +#define CXL_DVSEC                    0
-> > +#define   CXL_DVSEC_CAP_OFFSET               0xA
-> > +#define     CXL_DVSEC_MEM_CAPABLE    BIT(2)
-> > +#define     CXL_DVSEC_HDM_COUNT_MASK GENMASK(5, 4)
-> > +#define   CXL_DVSEC_CTRL_OFFSET              0xC
-> > +#define     CXL_DVSEC_MEM_ENABLE     BIT(2)
-> > +#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)       (0x18 + (i * 0x10))
-> > +#define   CXL_DVSEC_RANGE_SIZE_LOW(i)        (0x1C + (i * 0x10))
-> > +#define     CXL_DVSEC_MEM_INFO_VALID BIT(0)
-> > +#define     CXL_DVSEC_MEM_ACTIVE     BIT(1)
-> > +#define     CXL_DVSEC_MEM_SIZE_LOW_MASK      GENMASK(31, 28)
-> > +#define   CXL_DVSEC_RANGE_BASE_HIGH(i)       (0x20 + (i * 0x10))
-> > +#define   CXL_DVSEC_RANGE_BASE_LOW(i)        (0x24 + (i * 0x10))
-> > +#define     CXL_DVSEC_MEM_BASE_LOW_MASK      GENMASK(31, 28)
-> >
-> >  /* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
-> >  #define CXL_DVSEC_FUNCTION_MAP                                       2
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 76de39b90351..5c43886dc2af 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -386,6 +386,110 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
-> >       return rc;
-> >  }
-> >
-> > +static int wait_for_valid(struct cxl_dev_state *cxlds)
-> > +{
-> > +     struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> > +     int d = cxlds->cxl_dvsec, rc;
-> > +     u32 val;
-> > +
-> > +     /*
-> > +      * Memory_Info_Valid: When set, indicates that the CXL Range 1 Size high
-> > +      * and Size Low registers are valid. Must be set within 1 second of
-> > +      * deassertion of reset to CXL device. Likely it is already set by the
-> > +      * time this runs, but otherwise give a 1.5 second timeout in case of
-> > +      * clock skew.
-> > +      */
-> > +     rc = pci_read_config_dword(pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &val);
-> > +     if (rc)
-> > +             return rc;
-> > +
-> > +     if (val & CXL_DVSEC_MEM_INFO_VALID)
-> > +             return 0;
-> > +
-> > +     msleep(1500);
-> > +
-> > +     rc = pci_read_config_dword(pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &val);
-> > +     if (rc)
-> > +             return rc;
-> > +
-> > +     if (val & CXL_DVSEC_MEM_INFO_VALID)
-> > +             return 0;
->
-> Prefer a blank line here.
+Agreed that v1 migration TYPE/SUBTYPE should live in infamy as
+reserved, but I'm not sure why we need to make the rest of it a big
+complicated problem.  On one hand, leaving stubs for the necessary
+structure and macros until QEMU gets updated doesn't seem so terrible.
+Nor actually does letting the next QEMU header update cause build
+breakages, which would probably frustrate the person submitting that
+update, but it's not like QEMU hasn't done selective header updates in
+the past.  The former is probably the more friendly approach if we
+don't outrage someone in the kernel community in the meantime.  Thanks,
 
-Sure.
+Alex
 
->
-> > +     return -ETIMEDOUT;
-> > +}
-> > +
-> > +static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
-> > +{
-> > +     struct cxl_endpoint_dvsec_info *info = &cxlds->info;
-> > +     struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> > +     int d = cxlds->cxl_dvsec;
-> > +     int hdm_count, rc, i;
-> > +     u16 cap, ctrl;
-> > +
-> > +     rc = pci_read_config_word(pdev, d + CXL_DVSEC_CAP_OFFSET, &cap);
-> > +     if (rc)
-> > +             return rc;
->
-> trivial but I'd like a blank line here as I find that slightly easier
-> to parse after to many code reviews...
-
-Done.
-
->
-> > +     rc = pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl);
-> > +     if (rc)
-> > +             return rc;
-> > +
-> > +     if (!(cap & CXL_DVSEC_MEM_CAPABLE))
-> > +             return -ENXIO;
-> > +
-> > +     /*
-> > +      * It is not allowed by spec for MEM.capable to be set and have 0 HDM
-> > +      * decoders. As this driver is for a spec defined class code which must
-> > +      * be CXL.mem capable, there is no point in continuing.
->
-> Comment should probably also talk about why > 2 not allowed.
-
-Changed to:
-
-        /*
-         * It is not allowed by spec for MEM.capable to be set and have 0 legacy
-         * HDM decoders (values > 2 are also undefined as of CXL 2.0). As this
-         * driver is for a spec defined class code which must be CXL.mem
-         * capable, there is no point in continuing to enable CXL.mem.
-         */
-
->
-> > +      */
-> > +     hdm_count = FIELD_GET(CXL_DVSEC_HDM_COUNT_MASK, cap);
-> > +     if (!hdm_count || hdm_count > 2)
-> > +             return -EINVAL;
-> > +
-> > +     rc = wait_for_valid(cxlds);
-> > +     if (rc)
-> > +             return rc;
-> > +
-> > +     info->mem_enabled = FIELD_GET(CXL_DVSEC_MEM_ENABLE, ctrl);
-> > +
-> > +     for (i = 0; i < hdm_count; i++) {
-> > +             u64 base, size;
-> > +             u32 temp;
-> > +
-> > +             rc = pci_read_config_dword(
-> > +                     pdev, d + CXL_DVSEC_RANGE_SIZE_HIGH(i), &temp);
-> > +             if (rc)
-> > +                     break;
->
-> return rc; would be cleaner for these than break.
-> Saves the minor review effort of going to look for what is done in the
-> exit path (nothing :)
-
-Done.
-
-I had considered just dropping the error checking altogether since the
-PCI core is not this paranoid, but might as well keep it at this
-point.
-
->
-> > +             size = (u64)temp << 32;
-> > +
-> > +             rc = pci_read_config_dword(
-> > +                     pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(i), &temp);
-> > +             if (rc)
-> > +                     break;
-> > +             size |= temp & CXL_DVSEC_MEM_SIZE_LOW_MASK;
-> > +
-> > +             rc = pci_read_config_dword(
-> > +                     pdev, d + CXL_DVSEC_RANGE_BASE_HIGH(i), &temp);
-> > +             if (rc)
-> > +                     break;
-> > +             base = (u64)temp << 32;
-> > +
-> > +             rc = pci_read_config_dword(
-> > +                     pdev, d + CXL_DVSEC_RANGE_BASE_LOW(i), &temp);
-> > +             if (rc)
-> > +                     break;
-> > +             base |= temp & CXL_DVSEC_MEM_BASE_LOW_MASK;
-> > +
-> > +             info->dvsec_range[i] = (struct range) {
-> > +                     .start = base,
-> > +                     .end = base + size - 1
-> > +             };
-> > +
-> > +             if (size)
-> > +                     info->ranges++;
-> > +     }
-> > +
-> > +     return rc;
-> > +}
-> > +
-> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  {
-> >       struct cxl_register_map map;
-> > @@ -408,10 +512,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >       if (IS_ERR(cxlds))
-> >               return PTR_ERR(cxlds);
-> >
-> > -     cxlds->device_dvsec = pci_find_dvsec_capability(pdev,
-> > -                                                     PCI_DVSEC_VENDOR_ID_CXL,
-> > -                                                     CXL_DVSEC_PCIE_DEVICE);
-> > -     if (!cxlds->device_dvsec) {
-> > +     cxlds->cxl_dvsec = pci_find_dvsec_capability(
-> > +             pdev, PCI_DVSEC_VENDOR_ID_CXL, CXL_DVSEC);
-> > +     if (!cxlds->cxl_dvsec) {
->
-> I'm guessing a rebase went astray given this only came in one patch earlier.
-
-Yes, sorry about that.
-
->
-> >               dev_err(&pdev->dev,
-> >                       "Device DVSEC not present. Expect limited functionality.\n");
-> >               return -ENXIO;
-> > @@ -452,6 +555,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >       if (rc)
-> >               return rc;
-> >
-> > +     rc = cxl_dvsec_ranges(cxlds);
-> > +     if (rc)
-> > +             dev_err(&pdev->dev,
-> > +                     "Failed to get DVSEC range information (%d)\n", rc);
-> > +
-> >       cxlmd = devm_cxl_add_memdev(cxlds);
-> >       if (IS_ERR(cxlmd))
-> >               return PTR_ERR(cxlmd);
-> >
->
