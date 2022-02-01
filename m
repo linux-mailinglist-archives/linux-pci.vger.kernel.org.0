@@ -2,692 +2,294 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D67BA4A6862
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 00:11:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCD764A68C2
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 00:48:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242753AbiBAXLW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 18:11:22 -0500
-Received: from mga04.intel.com ([192.55.52.120]:3388 "EHLO mga04.intel.com"
+        id S230281AbiBAXs5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 18:48:57 -0500
+Received: from mga14.intel.com ([192.55.52.115]:15188 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229626AbiBAXLU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Feb 2022 18:11:20 -0500
+        id S230127AbiBAXs5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Feb 2022 18:48:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643757080; x=1675293080;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=xB74PCTiG3B6GgKTfF9NXZ8EDHyHVjhCGN4iA6byXqk=;
-  b=kkHrszP/GQ3wl22NzORbauBVY7/g3jXpPxjPfWkd4FEKjIx83D5a1eKd
-   yoTU44I4jzvYTVY1+FYFxbIrfteURA7FIRoZj7E1Ze+Mbfcd6JRdKY7cQ
-   vT9drBZA9EJwFkDqOomAjkbk91mJRhK7zZ8XS/UXIBKH+XmHyRukYoodM
-   slIGKLDYD8yxinMrX16+9BpCzd1kxchiLhE28FRp1Sf9IsTqdVDRlix7r
-   gWhK094ZJdPHewHulfueBEO3TKpu0A6a5RJMpoOVUPF4PPOXXfW+JhoTr
-   UUyykLskFpHNzV/7URFyt6gms3GR+XzMUnZZ0BjgukikzONGva9RACGjm
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="246646736"
+  t=1643759337; x=1675295337;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=52q2zTYRWzOA+xqqfcsssRP6HVYMj56pzgBjtNndfYc=;
+  b=Zf91Nub3lWGlBq7CwiByt48POGz8M/xJAwRNYa+OsTPRjyQtWD713pNa
+   nQz0uigRSCifb89QQwVXtHxOrk3D+dPhfQmRf4NJHt+gDJkGAxLdm8Wvh
+   T84nrhJYYOON3grRzbyK8iqgAvAiidkgpNrCI4BQFhTBq+Nn06Ybylt3y
+   XudwzzCuqAGOnLqxN3xN48cfbmwhWbgogPa2Xpf7KDKbfTTE7TpEWBXgX
+   OJoZrlDi9EfBpUAO9r1Ro7i7r0MdbAHF1Dg8LqZy3k1D9dUeUPt9UvtJs
+   sE/69KfU0GDRbt//hQR+5V1+JK2MURYmMRMH2vmLb1CtUvIgo7bBDSYRn
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="248040929"
 X-IronPort-AV: E=Sophos;i="5.88,335,1635231600"; 
-   d="scan'208";a="246646736"
+   d="scan'208";a="248040929"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 15:11:19 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 15:48:56 -0800
 X-IronPort-AV: E=Sophos;i="5.88,335,1635231600"; 
-   d="scan'208";a="538026836"
-Received: from aphan2-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.131.48])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 15:11:18 -0800
-Date:   Tue, 1 Feb 2022 15:11:17 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
-        kernel test robot <lkp@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 02/14] cxl/region: Introduce concept of region
- configuration
-Message-ID: <20220201231117.lksqoukbvss6e3ec@intel.com>
-References: <20220128002707.391076-1-ben.widawsky@intel.com>
- <20220128002707.391076-3-ben.widawsky@intel.com>
- <CAPcyv4hHJcPLRJM-7z+wKhjBhp9HH2qXuEeC0VfDnD6yU9H-Wg@mail.gmail.com>
+   d="scan'208";a="538035571"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 15:48:56 -0800
+Subject: [PATCH v4 28/40] cxl/pci: Retrieve CXL DVSEC memory info
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     kernel test robot <lkp@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-pci@vger.kernel.org, nvdimm@lists.linux.dev
+Date:   Tue, 01 Feb 2022 15:48:56 -0800
+Message-ID: <164375911821.559935.7375160041663453400.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164298426829.3018233.15215948891228582221.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164298426829.3018233.15215948891228582221.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPcyv4hHJcPLRJM-7z+wKhjBhp9HH2qXuEeC0VfDnD6yU9H-Wg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22-01-28 16:25:34, Dan Williams wrote:
-> On Thu, Jan 27, 2022 at 4:27 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > The region creation APIs create a vacant region. Configuring the region
-> > works in the same way as similar subsystems such as devdax. Sysfs attrs
-> > will be provided to allow userspace to configure the region.  Finally
-> > once all configuration is complete, userspace may activate the region.
-> >
-> > Introduced here are the most basic attributes needed to configure a
-> > region. Details of these attribute are described in the ABI
-> 
-> s/attribute/attributes/
-> 
-> > Documentation. Sanity checking of configuration parameters are done at
-> > region binding time. This consolidates all such logic in one place,
-> > rather than being strewn across multiple places.
-> 
-> I think that's too late for some of the validation. The complex
-> validation that the region driver does throughout the topology is
-> different from the basic input validation that can  be done at the
-> sysfs write time. For example ,this patch allows negative
-> interleave_granularity values to specified, just return -EINVAL. I
-> agree that sysfs should not validate everything, I disagree with
-> pushing all validation to cxl_region_probe().
-> 
+From: Ben Widawsky <ben.widawsky@intel.com>
 
-Two points:c
-1. How do we distinguish "basic input validation". It'd be good if we could
-   define "basic input validation". For instance, when I first wrote these
-   patches, x3 would have been EINVAL, but today it's allowed. Can you help
-   enumerate what you consider basic.
+Before CXL 2.0 HDM Decoder Capability mechanisms can be utilized in a
+device the driver must determine that the device is ready for CXL.mem
+operation and that platform firmware, or some other agent, has
+established an active decode via the legacy CXL 1.1 decoder mechanism.
 
-2. I like the idea that all validation takes place in one place. Obviously you
-   do not. So, see #1 and I will rework.
+This legacy mechanism is defined in the CXL DVSEC as a set of range
+registers and status bits that take time to settle after a reset.
 
-> >
-> > A example is provided below:
-> >
-> > /sys/bus/cxl/devices/region0.0:0
-> > ├── interleave_granularity
-> > ├── interleave_ways
-> > ├── offset
-> > ├── size
-> > ├── subsystem -> ../../../../../../bus/cxl
-> > ├── target0
-> > ├── uevent
-> > └── uuid
-> 
-> As mentioned off-list, it looks like devtype and modalias are missing.
-> 
+Validate the CXL memory decode setup via the DVSEC and cache it for
+later consideration by the cxl_mem driver (to be added). Failure to
+validate is not fatal to the cxl_pci driver since that is only providing
+CXL command support over PCI.mmio, and might be needed to rectify CXL
+DVSEC validation problems.
 
-Thanks.
+Any potential ranges that the device is already claiming via DVSEC need
+to be reconciled with the dynamic provisioning ranges provided by
+platform firmware (like ACPI CEDT.CFMWS). Leave that reconciliation to
+the cxl_mem driver.
 
-> >
-> > Reported-by: kernel test robot <lkp@intel.com> (v2)
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-cxl |  40 ++++
-> >  drivers/cxl/core/region.c               | 300 ++++++++++++++++++++++++
-> >  2 files changed, 340 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> > index dcc728458936..50ba5018014d 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > @@ -187,3 +187,43 @@ Description:
-> >                 region driver before being deleted. The attributes expects a
-> >                 region in the form "regionX.Y:Z". The region's name, allocated
-> >                 by reading create_region, will also be released.
-> > +
-> > +What:          /sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/offset
-> 
-> This is just another 'resource' attribute for the physical base
-> address of the region, right? 'offset' sounds like something that
-> would be relative instead of absolute.
-> 
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+[djbw: clarify changelog]
+[djbw: shorten defines]
+[djbw: change precise spin wait to generous msleep]
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+Changes since v3:
+- Move cxl_dvsec rename to previous patch (Jonathan)
+- Change dev_err() on cxl_dvsec_range() failure to dev_warn()
+- Fixup cxl_dvsec_range() to check for missing ->cxl_dvsec == 0
+- Clarify legacy HDM decoder count expectations (Jonathan)
+- Cleanup error exit s/break/return rc;/ (Jonathan)
+- Cleanup whitespace (Jonathan)
 
-It is offset. I can change it to physical base if you'd like but I thought that
-information wasn't critically important for userspace to have. Does userspace
-care about the physical base?
+ drivers/cxl/cxlmem.h |   14 ++++++
+ drivers/cxl/cxlpci.h |   13 +++++
+ drivers/cxl/pci.c    |  119 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 146 insertions(+)
 
-> > +Date:          August, 2021
-> 
-> Same date update comment here.
-> 
-> > +KernelVersion: v5.18
-> > +Contact:       linux-cxl@vger.kernel.org
-> > +Description:
-> > +               (RO) A region resides within an address space that is claimed by
-> > +               a decoder.
-> 
-> "A region is a contiguous partition of a CXL Root decoder address space."
-> 
-> >                  Region space allocation is handled by the driver, but
-> 
-> "Region capacity is allocated by writing to the size attribute, the
-> resulting physical address base determined by the driver is reflected
-> here."
-> 
-> > +               the offset may be read by userspace tooling in order to
-> > +               determine fragmentation, and available size for new regions.
-> 
-> I would also expect, before / along with these new region attributes,
-> there would be 'available' and 'max_extent_available' at the decoder
-> level to indicate how much free space the decoder has and how big the
-> next region creation can be. User tooling can walk  the decoder and
-> the regions together to determine fragmentation if necessary, but for
-> the most part the tool likely only cares about "how big can the next
-> region be?" and "how full is this decoder?".
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 5cf5329e13a9..00f55f4066b9 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -89,6 +89,18 @@ struct cxl_mbox_cmd {
+  */
+ #define CXL_CAPACITY_MULTIPLIER SZ_256M
+ 
++/**
++ * struct cxl_endpoint_dvsec_info - Cached DVSEC info
++ * @mem_enabled: cached value of mem_enabled in the DVSEC, PCIE_DEVICE
++ * @ranges: Number of active HDM ranges this device uses.
++ * @dvsec_range: cached attributes of the ranges in the DVSEC, PCIE_DEVICE
++ */
++struct cxl_endpoint_dvsec_info {
++	bool mem_enabled;
++	int ranges;
++	struct range dvsec_range[2];
++};
++
+ /**
+  * struct cxl_dev_state - The driver device state
+  *
+@@ -118,6 +130,7 @@ struct cxl_mbox_cmd {
+  * @next_volatile_bytes: volatile capacity change pending device reset
+  * @next_persistent_bytes: persistent capacity change pending device reset
+  * @component_reg_phys: register base of component registers
++ * @info: Cached DVSEC information about the device.
+  * @mbox_send: @dev specific transport for transmitting mailbox commands
+  *
+  * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
+@@ -149,6 +162,7 @@ struct cxl_dev_state {
+ 	u64 next_persistent_bytes;
+ 
+ 	resource_size_t component_reg_phys;
++	struct cxl_endpoint_dvsec_info info;
+ 
+ 	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+ };
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 766de340c4ce..329e7ea3f36a 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -17,6 +17,19 @@
+ 
+ /* CXL 2.0 8.1.3: PCIe DVSEC for CXL Device */
+ #define CXL_DVSEC_PCIE_DEVICE					0
++#define   CXL_DVSEC_CAP_OFFSET		0xA
++#define     CXL_DVSEC_MEM_CAPABLE	BIT(2)
++#define     CXL_DVSEC_HDM_COUNT_MASK	GENMASK(5, 4)
++#define   CXL_DVSEC_CTRL_OFFSET		0xC
++#define     CXL_DVSEC_MEM_ENABLE	BIT(2)
++#define   CXL_DVSEC_RANGE_SIZE_HIGH(i)	(0x18 + (i * 0x10))
++#define   CXL_DVSEC_RANGE_SIZE_LOW(i)	(0x1C + (i * 0x10))
++#define     CXL_DVSEC_MEM_INFO_VALID	BIT(0)
++#define     CXL_DVSEC_MEM_ACTIVE	BIT(1)
++#define     CXL_DVSEC_MEM_SIZE_LOW_MASK	GENMASK(31, 28)
++#define   CXL_DVSEC_RANGE_BASE_HIGH(i)	(0x20 + (i * 0x10))
++#define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + (i * 0x10))
++#define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
+ 
+ /* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
+ #define CXL_DVSEC_FUNCTION_MAP					2
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index c94002166084..6b3270246545 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -386,6 +386,120 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 	return rc;
+ }
+ 
++static int wait_for_valid(struct cxl_dev_state *cxlds)
++{
++	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
++	int d = cxlds->cxl_dvsec, rc;
++	u32 val;
++
++	/*
++	 * Memory_Info_Valid: When set, indicates that the CXL Range 1 Size high
++	 * and Size Low registers are valid. Must be set within 1 second of
++	 * deassertion of reset to CXL device. Likely it is already set by the
++	 * time this runs, but otherwise give a 1.5 second timeout in case of
++	 * clock skew.
++	 */
++	rc = pci_read_config_dword(pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &val);
++	if (rc)
++		return rc;
++
++	if (val & CXL_DVSEC_MEM_INFO_VALID)
++		return 0;
++
++	msleep(1500);
++
++	rc = pci_read_config_dword(pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &val);
++	if (rc)
++		return rc;
++
++	if (val & CXL_DVSEC_MEM_INFO_VALID)
++		return 0;
++
++	return -ETIMEDOUT;
++}
++
++static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
++{
++	struct cxl_endpoint_dvsec_info *info = &cxlds->info;
++	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
++	int d = cxlds->cxl_dvsec;
++	int hdm_count, rc, i;
++	u16 cap, ctrl;
++
++	if (!d)
++		return -ENXIO;
++
++	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CAP_OFFSET, &cap);
++	if (rc)
++		return rc;
++
++	rc = pci_read_config_word(pdev, d + CXL_DVSEC_CTRL_OFFSET, &ctrl);
++	if (rc)
++		return rc;
++
++	if (!(cap & CXL_DVSEC_MEM_CAPABLE))
++		return -ENXIO;
++
++	/*
++	 * It is not allowed by spec for MEM.capable to be set and have 0 legacy
++	 * HDM decoders (values > 2 are also undefined as of CXL 2.0). As this
++	 * driver is for a spec defined class code which must be CXL.mem
++	 * capable, there is no point in continuing to enable CXL.mem.
++	 */
++	hdm_count = FIELD_GET(CXL_DVSEC_HDM_COUNT_MASK, cap);
++	if (!hdm_count || hdm_count > 2)
++		return -EINVAL;
++
++	rc = wait_for_valid(cxlds);
++	if (rc)
++		return rc;
++
++	info->mem_enabled = FIELD_GET(CXL_DVSEC_MEM_ENABLE, ctrl);
++
++	for (i = 0; i < hdm_count; i++) {
++		u64 base, size;
++		u32 temp;
++
++		rc = pci_read_config_dword(
++			pdev, d + CXL_DVSEC_RANGE_SIZE_HIGH(i), &temp);
++		if (rc)
++			return rc;
++
++		size = (u64)temp << 32;
++
++		rc = pci_read_config_dword(
++			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(i), &temp);
++		if (rc)
++			return rc;
++
++		size |= temp & CXL_DVSEC_MEM_SIZE_LOW_MASK;
++
++		rc = pci_read_config_dword(
++			pdev, d + CXL_DVSEC_RANGE_BASE_HIGH(i), &temp);
++		if (rc)
++			return rc;
++
++		base = (u64)temp << 32;
++
++		rc = pci_read_config_dword(
++			pdev, d + CXL_DVSEC_RANGE_BASE_LOW(i), &temp);
++		if (rc)
++			return rc;
++
++		base |= temp & CXL_DVSEC_MEM_BASE_LOW_MASK;
++
++		info->dvsec_range[i] = (struct range) {
++			.start = base,
++			.end = base + size - 1
++		};
++
++		if (size)
++			info->ranges++;
++	}
++
++	return 0;
++}
++
+ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+ 	struct cxl_register_map map;
+@@ -449,6 +563,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
++	rc = cxl_dvsec_ranges(cxlds);
++	if (rc)
++		dev_warn(&pdev->dev,
++			 "Failed to get DVSEC range information (%d)\n", rc);
++
+ 	cxlmd = devm_cxl_add_memdev(cxlds);
+ 	if (IS_ERR(cxlmd))
+ 		return PTR_ERR(cxlmd);
 
-Sounds good.
-
-> 
-> 
-> > +
-> > +What:
-> > +/sys/bus/cxl/devices/decoderX.Y/regionX.Y:Z/{interleave,size,uuid,target[0-15]}
-> > +Date:          August, 2021
-> > +KernelVersion: v5.18
-> > +Contact:       linux-cxl@vger.kernel.org
-> > +Description:
-> > +               (RW) Configuring regions requires a minimal set of parameters in
-> > +               order for the subsequent bind operation to succeed. The
-> > +               following parameters are defined:
-> 
-> Let's split up the descriptions into individual sections. That can
-> also document the order that attributes must be written. For example,
-> doesn't size need to be set before targets are added so that targets
-> can be validated whether they have sufficient capacity?
-> 
-
-Okay. Order doesn't matter if you do validation all in one place as it is, but
-sounds like we're changing that. So I can split it when we figure out what
-validation is actually occurring at the sysfs attr boundary.
-
-> > +
-> > +               ==      ========================================================
-> > +               interleave_granularity Mandatory. Number of consecutive bytes
-> > +                       each device in the interleave set will claim. The
-> > +                       possible interleave granularity values are determined by
-> > +                       the CXL spec and the participating devices.
-> > +               interleave_ways Mandatory. Number of devices participating in the
-> > +                       region. Each device will provide 1/interleave of storage
-> > +                       for the region.
-> > +               size    Manadatory. Phsyical address space the region will
-> > +                       consume.
-> 
-> s/Phsyical/Physical/
-> 
-> > +               target  Mandatory. Memory devices are the backing storage for a
-> > +                       region. There will be N targets based on the number of
-> > +                       interleave ways that the top level decoder is configured
-> > +                       for.
-> 
-> That doesn't sound right, IW at the root != IW at the endpoint level
-> and the region needs to record all the endpoint level targets.
-
-
-Yes This is wrong. I thought I had fixed it, but I guess not.
-
-> 
-> > Each target must be set with a memdev device ie.
-> > +                       'mem1'. This attribute only becomes available after
-> > +                       setting the 'interleave' attribute.
-> > +               uuid    Optional. A unique identifier for the region. If none is
-> > +                       selected, the kernel will create one.
-> 
-> Let's drop the Mandatory / Optional distinction, or I am otherwise not
-> understanding what this is trying to document. For example 'uuid' is
-> "mandatory" for PMEM regions and "omitted" for volatile regions not
-> optional.
-> 
-
-Well the kernel fills it in if userspace leaves it out. I'm guessing you're
-going to ask me to change that, so I will remove Mandatory/Optional.
-
-> > +               ==      ========================================================
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 1a448543db0d..3b48e0469fc7 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -3,9 +3,12 @@
-> >  #include <linux/io-64-nonatomic-lo-hi.h>
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> > +#include <linux/sizes.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/uuid.h>
-> >  #include <linux/idr.h>
-> >  #include <region.h>
-> > +#include <cxlmem.h>
-> >  #include <cxl.h>
-> >  #include "core.h"
-> >
-> > @@ -18,11 +21,305 @@
-> >   * (programming the hardware) is handled by a separate region driver.
-> >   */
-> >
-> > +struct cxl_region *to_cxl_region(struct device *dev);
-> > +static const struct attribute_group region_interleave_group;
-> > +
-> > +static bool is_region_active(struct cxl_region *cxlr)
-> > +{
-> > +       /* TODO: Regions can't be activated yet. */
-> > +       return false;
-> 
-> This function seems redundant with just checking "cxlr->dev.driver !=
-> NULL"? The benefit of that is there is no need to carry a TODO in the
-> series.
-> 
-
-Yeah. I think checking driver bind status is sufficient to replace this.
-
-> > +}
-> > +
-> > +static void remove_target(struct cxl_region *cxlr, int target)
-> > +{
-> > +       struct cxl_memdev *cxlmd;
-> > +
-> > +       cxlmd = cxlr->config.targets[target];
-> > +       if (cxlmd)
-> > +               put_device(&cxlmd->dev);
-> 
-> A memdev can be a member of multiple regions at once, shouldn't this
-> be an endpoint decoder or similar, not the entire memdev?
-
-Is this referring to the later question about whether targets are decoders or
-memdevs? The thought was each region would hold a reference to all memdevs in
-the interleave set.
-
-> 
-> Also, if memdevs autoremove themselves from regions at memdev
-> ->remove() time then I don't think the region needs to hold references
-> on memdevs.
-> 
-
-I'll defer to you on that. I'll remove holding the reference, but I definitely
-haven't solved the interaction when a memdev goes away. I had been thinking the
-inverse originally, a memdev can't go away until the region is gone. According
-to the spec, these devices can't be hot removed, only managed remove, so if
-things blew up, not our problem. However, if we have decent infrastructure to
-support better than that, we should.
-
-> > +       cxlr->config.targets[target] = NULL;
-> > +}
-> > +
-> > +static ssize_t interleave_ways_show(struct device *dev,
-> > +                                   struct device_attribute *attr, char *buf)
-> > +{
-> > +       struct cxl_region *cxlr = to_cxl_region(dev);
-> > +
-> > +       return sysfs_emit(buf, "%d\n", cxlr->config.interleave_ways);
-> > +}
-> > +
-> > +static ssize_t interleave_ways_store(struct device *dev,
-> > +                                    struct device_attribute *attr,
-> > +                                    const char *buf, size_t len)
-> > +{
-> > +       struct cxl_region *cxlr = to_cxl_region(dev);
-> > +       int ret, prev_iw;
-> > +       int val;
-> 
-> I would expect:
-> 
-> if (dev->driver)
->    return -EBUSY;
-> 
-> ...to shutdown configuration writes once the region is active. Might
-> also need a region-wide seqlock like target_list_show. So that region
-> probe drains  all active sysfs writers before assuming the
-> configuration is stable.
-> 
-
-Okay.
-
-> > +
-> > +       prev_iw = cxlr->config.interleave_ways;
-> > +       ret = kstrtoint(buf, 0, &val);
-> > +       if (ret)
-> > +               return ret;
-> > +       if (ret < 0 || ret > CXL_DECODER_MAX_INTERLEAVE)
-> > +               return -EINVAL;
-> > +
-> > +       cxlr->config.interleave_ways = val;
-> > +
-> > +       ret = sysfs_update_group(&dev->kobj, &region_interleave_group);
-> > +       if (ret < 0)
-> > +               goto err;
-> > +
-> > +       sysfs_notify(&dev->kobj, NULL, "target_interleave");
-> 
-> Why?
-> 
-
-I copied it from another driver. I didn't check if it was actually needed or
-not.
-
-> > +
-> > +       while (prev_iw > cxlr->config.interleave_ways)
-> > +               remove_target(cxlr, --prev_iw);
-> 
-> To make the kernel side simpler this attribute could just require that
-> setting interleave ways is a one way street, if you want to change it
-> you need to delete the region and start over.
-> 
-
-I'm fine with that.
-
-> > +
-> > +       return len;
-> > +
-> > +err:
-> > +       cxlr->config.interleave_ways = prev_iw;
-> > +       return ret;
-> > +}
-> > +static DEVICE_ATTR_RW(interleave_ways);
-> > +
-> > +static ssize_t interleave_granularity_show(struct device *dev,
-> > +                                          struct device_attribute *attr,
-> > +                                          char *buf)
-> > +{
-> > +       struct cxl_region *cxlr = to_cxl_region(dev);
-> > +
-> > +       return sysfs_emit(buf, "%d\n", cxlr->config.interleave_granularity);
-> > +}
-> > +
-> > +static ssize_t interleave_granularity_store(struct device *dev,
-> > +                                           struct device_attribute *attr,
-> > +                                           const char *buf, size_t len)
-> > +{
-> > +       struct cxl_region *cxlr = to_cxl_region(dev);
-> > +       int val, ret;
-> > +
-> > +       ret = kstrtoint(buf, 0, &val);
-> > +       if (ret)
-> > +               return ret;
-> > +       cxlr->config.interleave_granularity = val;
-> 
-> This wants minimum input validation and synchronization against an
-> active region.
-> 
-> > +
-> > +       return len;
-> > +}
-> > +static DEVICE_ATTR_RW(interleave_granularity);
-> > +
-> > +static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
-> > +                          char *buf)
-> > +{
-> > +       struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
-> > +       struct cxl_region *cxlr = to_cxl_region(dev);
-> > +       resource_size_t offset;
-> > +
-> > +       if (!cxlr->res)
-> > +               return sysfs_emit(buf, "\n");
-> 
-> Should be an error I would think. I.e. require size to be set before
-> s/offset/resource/ can be read.
-> 
-> > +
-> > +       offset = cxld->platform_res.start - cxlr->res->start;
-> 
-> Why make usersapce do the offset math?
-> 
-> > +
-> > +       return sysfs_emit(buf, "%pa\n", &offset);
-> > +}
-> > +static DEVICE_ATTR_RO(offset);
-> 
-> This can be DEVICE_ATTR_ADMIN_RO() to hide physical address layout
-> information from non-root.
-> 
-> > +
-> > +static ssize_t size_show(struct device *dev, struct device_attribute *attr,
-> > +                        char *buf)
-> > +{
-> > +       struct cxl_region *cxlr = to_cxl_region(dev);
-> > +
-> > +       return sysfs_emit(buf, "%llu\n", cxlr->config.size);
-> 
-> Perhaps no need to store size separately if this becomes:
-> 
-> sysfs_emit(buf, "%llu\n", (unsigned long long) resource_size(cxlr->res));
-> 
-> 
-> ...?
-> 
-> > +}
-> > +
-> > +static ssize_t size_store(struct device *dev, struct device_attribute *attr,
-> > +                         const char *buf, size_t len)
-> > +{
-> > +       struct cxl_region *cxlr = to_cxl_region(dev);
-> > +       unsigned long long val;
-> > +       ssize_t rc;
-> > +
-> > +       rc = kstrtoull(buf, 0, &val);
-> > +       if (rc)
-> > +               return rc;
-> > +
-> > +       device_lock(&cxlr->dev);
-> > +       if (is_region_active(cxlr))
-> > +               rc = -EBUSY;
-> > +       else
-> > +               cxlr->config.size = val;
-> > +       device_unlock(&cxlr->dev);
-> 
-> I think lockdep will complain about device_lock() usage in an
-> attribute. Try changing this to cxl_device_lock() with
-> CONFIG_PROVE_CXL_LOCKING=y.
-> 
-> > +
-> > +       return rc ? rc : len;
-> > +}
-> > +static DEVICE_ATTR_RW(size);
-> > +
-> > +static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
-> > +                        char *buf)
-> > +{
-> > +       struct cxl_region *cxlr = to_cxl_region(dev);
-> > +
-> > +       return sysfs_emit(buf, "%pUb\n", &cxlr->config.uuid);
-> > +}
-> > +
-> > +static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
-> > +                         const char *buf, size_t len)
-> > +{
-> > +       struct cxl_region *cxlr = to_cxl_region(dev);
-> > +       ssize_t rc;
-> > +
-> > +       if (len != UUID_STRING_LEN + 1)
-> > +               return -EINVAL;
-> > +
-> > +       device_lock(&cxlr->dev);
-> > +       if (is_region_active(cxlr))
-> > +               rc = -EBUSY;
-> > +       else
-> > +               rc = uuid_parse(buf, &cxlr->config.uuid);
-> > +       device_unlock(&cxlr->dev);
-> > +
-> > +       return rc ? rc : len;
-> > +}
-> > +static DEVICE_ATTR_RW(uuid);
-> > +
-> > +static struct attribute *region_attrs[] = {
-> > +       &dev_attr_interleave_ways.attr,
-> > +       &dev_attr_interleave_granularity.attr,
-> > +       &dev_attr_offset.attr,
-> > +       &dev_attr_size.attr,
-> > +       &dev_attr_uuid.attr,
-> > +       NULL,
-> > +};
-> > +
-> > +static const struct attribute_group region_group = {
-> > +       .attrs = region_attrs,
-> > +};
-> > +
-> > +static size_t show_targetN(struct cxl_region *cxlr, char *buf, int n)
-> > +{
-> > +       int ret;
-> > +
-> > +       device_lock(&cxlr->dev);
-> > +       if (!cxlr->config.targets[n])
-> > +               ret = sysfs_emit(buf, "\n");
-> > +       else
-> > +               ret = sysfs_emit(buf, "%s\n",
-> > +                                dev_name(&cxlr->config.targets[n]->dev));
-> > +       device_unlock(&cxlr->dev);
-> 
-> The component contribution of a memdev to a region is a DPA-span, not
-> the whole memdev. I would expect something like dax_mapping_attributes
-> or REGION_MAPPING() from drivers/nvdimm/region_devs.c. A tuple of
-> information about the component contribution of a memdev to a region.
-> 
-
-I had been thinking the kernel would manage the DPS spans of a memdev (and
-create the mappings). I can make this look like dax_mapping_attributes.
-
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static size_t set_targetN(struct cxl_region *cxlr, const char *buf, int n,
-> > +                         size_t len)
-> > +{
-> > +       struct device *memdev_dev;
-> > +       struct cxl_memdev *cxlmd;
-> > +
-> > +       device_lock(&cxlr->dev);
-> > +
-> > +       if (len == 1 || cxlr->config.targets[n])
-> > +               remove_target(cxlr, n);
-> > +
-> > +       /* Remove target special case */
-> > +       if (len == 1) {
-> > +               device_unlock(&cxlr->dev);
-> > +               return len;
-> > +       }
-> > +
-> > +       memdev_dev = bus_find_device_by_name(&cxl_bus_type, NULL, buf);
-> 
-> I think this wants to be an endpoint decoder, not a memdev. Because
-> it's the decoder that joins a memdev to a region, or at least a
-> decoder should be picked when the memdev is assigned so that the DPA
-> mapping can be registered. If all the decoders are allocated then fail
-> here.
-> 
-
-My preference is obviously how it is, using memdevs and having the decoders
-allocated at bind time. I don't have an objective argument why one is better
-than the other so I will change it. I will make the interface take a set of
-decoders.
-
-> > +       if (!memdev_dev) {
-> > +               device_unlock(&cxlr->dev);
-> > +               return -ENOENT;
-> > +       }
-> > +
-> > +       /* reference to memdev held until target is unset or region goes away */
-> > +
-> > +       cxlmd = to_cxl_memdev(memdev_dev);
-> > +       cxlr->config.targets[n] = cxlmd;
-> > +
-> > +       device_unlock(&cxlr->dev);
-> > +
-> > +       return len;
-> > +}
-> > +
-> > +#define TARGET_ATTR_RW(n)                                                      \
-> > +       static ssize_t target##n##_show(                                       \
-> > +               struct device *dev, struct device_attribute *attr, char *buf)  \
-> > +       {                                                                      \
-> > +               return show_targetN(to_cxl_region(dev), buf, (n));             \
-> > +       }                                                                      \
-> > +       static ssize_t target##n##_store(struct device *dev,                   \
-> > +                                        struct device_attribute *attr,        \
-> > +                                        const char *buf, size_t len)          \
-> > +       {                                                                      \
-> > +               return set_targetN(to_cxl_region(dev), buf, (n), len);         \
-> > +       }                                                                      \
-> > +       static DEVICE_ATTR_RW(target##n)
-> > +
-> > +TARGET_ATTR_RW(0);
-> > +TARGET_ATTR_RW(1);
-> > +TARGET_ATTR_RW(2);
-> > +TARGET_ATTR_RW(3);
-> > +TARGET_ATTR_RW(4);
-> > +TARGET_ATTR_RW(5);
-> > +TARGET_ATTR_RW(6);
-> > +TARGET_ATTR_RW(7);
-> > +TARGET_ATTR_RW(8);
-> > +TARGET_ATTR_RW(9);
-> > +TARGET_ATTR_RW(10);
-> > +TARGET_ATTR_RW(11);
-> > +TARGET_ATTR_RW(12);
-> > +TARGET_ATTR_RW(13);
-> > +TARGET_ATTR_RW(14);
-> > +TARGET_ATTR_RW(15);
-> > +
-> > +static struct attribute *interleave_attrs[] = {
-> > +       &dev_attr_target0.attr,
-> > +       &dev_attr_target1.attr,
-> > +       &dev_attr_target2.attr,
-> > +       &dev_attr_target3.attr,
-> > +       &dev_attr_target4.attr,
-> > +       &dev_attr_target5.attr,
-> > +       &dev_attr_target6.attr,
-> > +       &dev_attr_target7.attr,
-> > +       &dev_attr_target8.attr,
-> > +       &dev_attr_target9.attr,
-> > +       &dev_attr_target10.attr,
-> > +       &dev_attr_target11.attr,
-> > +       &dev_attr_target12.attr,
-> > +       &dev_attr_target13.attr,
-> > +       &dev_attr_target14.attr,
-> > +       &dev_attr_target15.attr,
-> > +       NULL,
-> > +};
-> > +
-> > +static umode_t visible_targets(struct kobject *kobj, struct attribute *a, int n)
-> > +{
-> > +       struct device *dev = container_of(kobj, struct device, kobj);
-> > +       struct cxl_region *cxlr = to_cxl_region(dev);
-> > +
-> > +       if (n < cxlr->config.interleave_ways)
-> > +               return a->mode;
-> > +       return 0;
-> > +}
-> > +
-> > +static const struct attribute_group region_interleave_group = {
-> > +       .attrs = interleave_attrs,
-> > +       .is_visible = visible_targets,
-> > +};
-> > +
-> > +static const struct attribute_group *region_groups[] = {
-> > +       &region_group,
-> > +       &region_interleave_group,
-> > +       NULL,
-> > +};
-> > +
-> >  static void cxl_region_release(struct device *dev);
-> >
-> >  static const struct device_type cxl_region_type = {
-> >         .name = "cxl_region",
-> >         .release = cxl_region_release,
-> > +       .groups = region_groups
-> >  };
-> >
-> >  static ssize_t create_region_show(struct device *dev,
-> > @@ -108,8 +405,11 @@ static void cxl_region_release(struct device *dev)
-> >  {
-> >         struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
-> >         struct cxl_region *cxlr = to_cxl_region(dev);
-> > +       int i;
-> >
-> >         ida_free(&cxld->region_ida, cxlr->id);
-> > +       for (i = 0; i < cxlr->config.interleave_ways; i++)
-> > +               remove_target(cxlr, i);
-> 
-> Like the last patch this feels too late. I expect whatever unregisters
-> the region should have already handled removing the targets.
-> 
-
-I think I already explained why it works this way. I will change it.
-
-> >         kfree(cxlr);
-> >  }
-> >
-> > --
-> > 2.35.0
-> >
