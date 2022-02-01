@@ -2,104 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E904A4A5D4D
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 14:16:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A0DB4A5D68
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 14:26:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238474AbiBANQ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 08:16:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238446AbiBANQZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 08:16:25 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7548AC061714;
-        Tue,  1 Feb 2022 05:16:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S238609AbiBAN0k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 08:26:40 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:49173 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238435AbiBAN0j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 08:26:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643721998;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=t4DZwBWjH4KMtaPN0r4y8wXSGSfdg/Ee8aiJ79lHN9s=;
+        b=Tfcjj/pq57jwBJsDSqDR/Xrbps4R1VAg+EP58k2Dpd9760Lv0Ekj8MOULAt1Hw7MQZ1KSM
+        GqWnngv6HZJDVn06N8PF7Z3h8BKqFUg2W96U3m7uz/Ioq5puzGnTNiu9SksQ80JhT8S/8D
+        clpzWGfrcqXG/4uqGbi8wzJL0LYRSD8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-605-Ps4YUhxlNiGFYKnj5GBr2g-1; Tue, 01 Feb 2022 08:26:33 -0500
+X-MC-Unique: Ps4YUhxlNiGFYKnj5GBr2g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D18BCB82DE3;
-        Tue,  1 Feb 2022 13:16:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8765EC340EF;
-        Tue,  1 Feb 2022 13:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643721382;
-        bh=UaVOPrZ2MW3v73wj5jL6yYbvsFi5Uh7hAAKwFmb6cms=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jM2G7l58pX7fzAJNYKR7OGgVw//fL9Zw0pcho/QheJNUDQZKLPBPeiDHMHL1UCzEj
-         3YZH1jX1pET95yU3MAS7ok7zbMnO3HExSbrve9Y0n4pVGOtWkruReWjplCEKxv8wuv
-         TTjO4XQM34oUWwhxoqre5JJgaD6xksH/Xgbiahjd/Q4QuUSxbtwnrzcvmnV+yXobp5
-         RQw+M7LQNuNiAPL6v0oweou/Jbvugev4Zf2IlkhvR/HTp71xHzNml2h1zsyLdXDMEw
-         3NMp+kqoB/XvV7i8DtNxM6/Z4EyBx7LpZZxq+I528lm7QWPACvVzYADqh1TGSJL/Oo
-         BZcPWe8Ix2kYw==
-Received: by mail-ej1-f54.google.com with SMTP id m4so54225821ejb.9;
-        Tue, 01 Feb 2022 05:16:22 -0800 (PST)
-X-Gm-Message-State: AOAM532rntE3gbN/1qP6WKWAjS1BUrSioOVwwYXxuTknXrrmoG+u0UGs
-        JCGr4nSZp4CS1tG7w9GC3IZl3PpZ2+GqnF4ZjA==
-X-Google-Smtp-Source: ABdhPJzy9MuzObhcYyskRJVEt40Siz6xKdIKSxIxEJ2Z/KqP2iA7ZjtDgOplHMyrhQzUbUReOMoTRaPXB1JGPeH0oBY=
-X-Received: by 2002:a17:907:7f1a:: with SMTP id qf26mr15019342ejc.20.1643721380863;
- Tue, 01 Feb 2022 05:16:20 -0800 (PST)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E1D81091DA3;
+        Tue,  1 Feb 2022 13:26:31 +0000 (UTC)
+Received: from localhost (unknown [10.39.194.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 38EF978DDD;
+        Tue,  1 Feb 2022 13:26:31 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
+        bhelgaas@google.com, saeedm@nvidia.com, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
+        leonro@nvidia.com, kwankhede@nvidia.com, mgurtovoy@nvidia.com,
+        maorg@nvidia.com
+Subject: Re: [PATCH V6 mlx5-next 10/15] vfio: Remove migration protocol v1
+In-Reply-To: <20220201125444.GE1786498@nvidia.com>
+Organization: Red Hat GmbH
+References: <20220130160826.32449-1-yishaih@nvidia.com>
+ <20220130160826.32449-11-yishaih@nvidia.com> <874k5izv8m.fsf@redhat.com>
+ <20220201121325.GB1786498@nvidia.com> <87sft2yd50.fsf@redhat.com>
+ <20220201125444.GE1786498@nvidia.com>
+User-Agent: Notmuch/0.34 (https://notmuchmail.org)
+Date:   Tue, 01 Feb 2022 14:26:29 +0100
+Message-ID: <87mtjayayi.fsf@redhat.com>
 MIME-Version: 1.0
-References: <20220106103645.2790803-1-festevam@gmail.com>
-In-Reply-To: <20220106103645.2790803-1-festevam@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 1 Feb 2022 07:16:09 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+_qASKWhoLHgnaypVjuDwHwAovke48PQFXUenO2JoEDw@mail.gmail.com>
-Message-ID: <CAL_Jsq+_qASKWhoLHgnaypVjuDwHwAovke48PQFXUenO2JoEDw@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: imx6: Allow to probe when dw_pcie_wait_for_link() fails
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        PCI <linux-pci@vger.kernel.org>, stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 6, 2022 at 4:36 AM Fabio Estevam <festevam@gmail.com> wrote:
->
-> The intention of commit 886a9c134755 ("PCI: dwc: Move link handling into
-> common code") was to standardize the behavior of link down as explained
-> in its commit log:
->
-> "The behavior for a link down was inconsistent as some drivers would fail
-> probe in that case while others succeed. Let's standardize this to
-> succeed as there are usecases where devices (and the link) appear later
-> even without hotplug. For example, a reconfigured FPGA device."
->
-> The pci-imx6 still fails to probe when the link is not present, which
-> causes the following warning:
->
-> imx6q-pcie 8ffc000.pcie: Phy link never came up
-> imx6q-pcie: probe of 8ffc000.pcie failed with error -110
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 30 at drivers/regulator/core.c:2257 _regulator_put.part.0+0x1b8/0x1dc
-> Modules linked in:
-> CPU: 0 PID: 30 Comm: kworker/u2:2 Not tainted 5.15.0-next-20211103 #1
-> Hardware name: Freescale i.MX6 SoloX (Device Tree)
-> Workqueue: events_unbound async_run_entry_fn
-> [<c0111730>] (unwind_backtrace) from [<c010bb74>] (show_stack+0x10/0x14)
-> [<c010bb74>] (show_stack) from [<c0f90290>] (dump_stack_lvl+0x58/0x70)
-> [<c0f90290>] (dump_stack_lvl) from [<c012631c>] (__warn+0xd4/0x154)
-> [<c012631c>] (__warn) from [<c0f87b00>] (warn_slowpath_fmt+0x74/0xa8)
-> [<c0f87b00>] (warn_slowpath_fmt) from [<c076b4bc>] (_regulator_put.part.0+0x1b8/0x1dc)
-> [<c076b4bc>] (_regulator_put.part.0) from [<c076b574>] (regulator_put+0x2c/0x3c)
-> [<c076b574>] (regulator_put) from [<c08c3740>] (release_nodes+0x50/0x178)
->
-> Fix this problem by ignoring the dw_pcie_wait_for_link() error like
-> it is done on the other dwc drivers.
->
-> Tested on imx6sx-sdb and imx6q-sabresd boards.
->
-> Cc: <stable@vger.kernel.org>
-> Fixes: 886a9c134755 ("PCI: dwc: Move link handling into common code")
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> ---
-> Changes since v1:
-> - Remove the printk timestamp from the kernel warning log (Richard).
->
->  drivers/pci/controller/dwc/pci-imx6.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
+On Tue, Feb 01 2022, Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> On Tue, Feb 01, 2022 at 01:39:23PM +0100, Cornelia Huck wrote:
+>> On Tue, Feb 01 2022, Jason Gunthorpe <jgg@nvidia.com> wrote:
+>> 
+>> > On Tue, Feb 01, 2022 at 12:23:05PM +0100, Cornelia Huck wrote:
+>> >> On Sun, Jan 30 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
+>> >> 
+>> >> > From: Jason Gunthorpe <jgg@nvidia.com>
+>> >> >
+>> >> > v1 was never implemented and is replaced by v2.
+>> >> >
+>> >> > The old uAPI definitions are removed from the header file. As per Linus's
+>> >> > past remarks we do not have a hard requirement to retain compilation
+>> >> > compatibility in uapi headers and qemu is already following Linus's
+>> >> > preferred model of copying the kernel headers.
+>> >> 
+>> >> If we are all in agreement that we will replace v1 with v2 (and I think
+>> >> we are), we probably should remove the x-enable-migration stuff in QEMU
+>> >> sooner rather than later, to avoid leaving a trap for the next
+>> >> unsuspecting person trying to update the headers.
+>> >
+>> > Once we have agreement on the kernel patch we plan to send a QEMU
+>> > patch making it support the v2 interface and the migration
+>> > non-experimental. We are also working to fixing the error paths, at
+>> > least least within the limitations of the current qemu design.
+>> 
+>> I'd argue that just ripping out the old interface first would be easier,
+>> as it does not require us to synchronize with a headers sync (and does
+>> not require to synchronize a headers sync with ripping it out...)
+>
+> We haven't worked out the best way to organize the qemu patch series,
+> currently it is just one patch that updates everything together, but
+> that is perhaps a bit too big...
+>
+> I have thought that a 3 patch series deleting the existing v1 code and
+> then readding it is a potential option, but we don't change
+> everything, just almost everything..
+
+Even in that case, removing the old code and adding the new one is
+probably much easier to review. (Also, you obviously need to have the
+header update in between those two stages.)
+
+>
+>> > The v1 support should remain in old releases as it is being used in
+>> > the field "experimentally".
+>> 
+>> Of course; it would be hard to rip it out retroactively :)
+>> 
+>> But it should really be gone in QEMU 7.0.
+>
+> Seems like you are arguing from both sides, we can't put the v2 in to
+> 7.0 because Linus has not accepted it but we have to rip the v1 out
+> even though Linus hasn't accepted that?
+>
+> We can certainly defer the kernels removal patch for a release if it
+> makes qemu's life easier?
+
+No, I'm only talking about the QEMU implementation (i.e. the code that
+uses the v1 definitions and exposes x-enable-migration). Any change in
+the headers needs to be done via a sync with upstream Linux.
+
+>
+>> Considering adding the v2 uapi, we might get unlucky: The Linux 5.18
+>> merge window will likely be in mid-late March (and we cannot run a
+>> headers sync before the patches hit Linus' tree), while QEMU 7.0 will
+>> likely enter freeze in mid-late March as well. So there's a non-zero
+>> chance that the new uapi will need to be deferred to 7.1.
+>
+> Usually in rdma land we start advancing the user side once the kernel
+> patches hit the kernel maintainer tree, not Linus's. I run a
+> non-rebasing tree so that gives a permanent git hash. It works well
+> enough and avoids these kinds of artificial delays.
+
+QEMU policy is "it must be in Linus' tree [*]", because we run a full
+header sync. We have been bitten by premature updates in the
+past. Updates of only parts of the headers are only acceptable during
+development of a patch series, and must be marked as "will be replaced
+with a proper header sync".
+
+[*] Preferrably a (full or -rc) release, but the very minimum is a git
+hash from his tree.
+
