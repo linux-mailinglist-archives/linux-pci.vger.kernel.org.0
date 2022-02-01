@@ -2,21 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB7DE4A5A7F
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 11:49:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8CFC4A5A81
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 11:50:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236761AbiBAKtx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 05:49:53 -0500
-Received: from angie.orcam.me.uk ([78.133.224.34]:44272 "EHLO
-        angie.orcam.me.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229845AbiBAKtx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 05:49:53 -0500
+        id S234882AbiBAKuF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 05:50:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229845AbiBAKuD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 05:50:03 -0500
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C0E6BC061714;
+        Tue,  1 Feb 2022 02:50:03 -0800 (PST)
 Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 8F06692009C; Tue,  1 Feb 2022 11:49:51 +0100 (CET)
+        id CEA0692009D; Tue,  1 Feb 2022 11:50:00 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 87F0292009B;
-        Tue,  1 Feb 2022 10:49:51 +0000 (GMT)
-Date:   Tue, 1 Feb 2022 10:49:51 +0000 (GMT)
+        by angie.orcam.me.uk (Postfix) with ESMTP id C852E92009B;
+        Tue,  1 Feb 2022 10:50:00 +0000 (GMT)
+Date:   Tue, 1 Feb 2022 10:50:00 +0000 (GMT)
 From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -24,10 +27,11 @@ cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PING][PATCH v2 0/4] x86/PCI: Odd generic PIRQ router improvements
-In-Reply-To: <20220106232528.GA334563@bhelgaas>
-Message-ID: <alpine.DEB.2.21.2202010108590.58572@angie.orcam.me.uk>
-References: <20220106232528.GA334563@bhelgaas>
+Subject: [PING][PATCH v3] x86/PCI: Add support for the Intel 82378ZB/82379AB
+ (SIO/SIO.A) PIRQ router
+In-Reply-To: <20220106232456.GA334344@bhelgaas>
+Message-ID: <alpine.DEB.2.21.2202010128560.58572@angie.orcam.me.uk>
+References: <20220106232456.GA334344@bhelgaas>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -37,21 +41,18 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On Thu, 6 Jan 2022, Bjorn Helgaas wrote:
 
-> On Sun, Jan 02, 2022 at 11:24:19PM +0000, Maciej W. Rozycki wrote:
+> >  Reposting as it seems to have been missed and now needs to be regenerated 
+> > to resolve a merge conflict with a later change that did make it.
 > > 
-> >  Resending as this has gone into void.  Also there is a context dependency 
-> > with a change developed later possibly causing a merge conflict, so to 
-> > make it easier to queue the incoming patches I have folded the follow-up 
-> > change into this series, expanding it to 4 patches from the original 3 and 
-> > mechanically regenerating according to upstream changes.  I have updated 
-> > the cover letter accordingly.
+> >  Please apply.
 > 
-> I'm assuming the x86/IRQ folks will handle this, too.
+> No objection from me, but I know zero about this code, so I'll let the
+> x86/IRQ guys deal with this.
 
  Ping for:
+<https://lore.kernel.org/lkml/alpine.DEB.2.21.2201022030220.56863@angie.orcam.me.uk/>.
 
-<https://lore.kernel.org/lkml/alpine.DEB.2.21.2201020142430.56863@angie.orcam.me.uk/>.
-
- Series re-verified against 5.17-rc2.  Thank you for your input, Bjorn!
+ Patch re-verified against 5.17-rc2.  Thank you for your input, Bjorn!
 
   Maciej
+
