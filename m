@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B69BB4A649B
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 20:08:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A20B4A64AF
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 20:11:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242288AbiBATGt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 14:06:49 -0500
-Received: from mailbackend.panix.com ([166.84.1.89]:14692 "EHLO
+        id S232783AbiBATLQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 14:11:16 -0500
+Received: from mailbackend.panix.com ([166.84.1.89]:16255 "EHLO
         mailbackend.panix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232024AbiBATGr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 14:06:47 -0500
+        with ESMTP id S230158AbiBATLP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 14:11:15 -0500
 Received: from xps-7390.lan (unknown [184.169.45.4])
-        by mailbackend.panix.com (Postfix) with ESMTPSA id 4JpDt155nJz3nq9;
-        Tue,  1 Feb 2022 14:06:00 -0500 (EST)
+        by mailbackend.panix.com (Postfix) with ESMTPSA id 4JpDzK1Lmvz3pB1;
+        Tue,  1 Feb 2022 14:10:36 -0500 (EST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-        t=1643742405; bh=GjOy9V+xf4+4M8XW1PUCDW3kKPjbRRywYTORb4Ky4cY=;
+        t=1643742675; bh=OckH8k0KTEh/ywObWM7L4DFG5auw6DG2pWt+KQwEdf4=;
         h=Date:From:Reply-To:To:cc:Subject:In-Reply-To:References;
-        b=B2SQU009jcLgoDfKECjRaQu7qFe9z33bpWOI1pR4jJM58ODNZU2Sim+GlbMvt9QUF
-         LTaDLRLGpdKOamUbrryQjEdy2rE1UEqLNgDinBCppbCJTzDa3hH8V4SJkCZuaYXEBp
-         X+K1TNYwKLNl1o/barzH5Cqewhk4ruRenPYiGwD0=
-Date:   Tue, 1 Feb 2022 11:05:54 -0800 (PST)
+        b=pnrMRgmQ48ePjnNQ+0K6R1WRlx+aZR1EIP2IHNDg/gin/h8yF8l+CNICnB/WVy6yS
+         gcqPg9xSBUK2cjqRzurt2/5fTDdJI/9Qb2mvrGQLXrmbbAF6NYbg7U3X3x42qTbYv9
+         miOoEjMT1FiYIu2NY+ohTc7IKW/+Fk68osxAqbS4=
+Date:   Tue, 1 Feb 2022 11:10:31 -0800 (PST)
 From:   "Kenneth R. Crudup" <kenny@panix.com>
 Reply-To: "Kenneth R. Crudup" <kenny@panix.com>
 To:     Vidya Sagar <vidyas@nvidia.com>
@@ -36,10 +36,10 @@ cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com,
 Subject: Re: [PATCH V1] PCI/ASPM: Save/restore L1SS Capability for
  suspend/resume
 In-Reply-To: <8aa96f79-402-4897-424f-64a2c6893de8@panix.com>
-Message-ID: <b2ab48c8-3ecc-23f9-bfd-f8adfbf6f18@panix.com>
+Message-ID: <a1c7f860-3610-b854-f232-161b9f0d449@panix.com>
 References: <20220201123536.12962-1-vidyas@nvidia.com> <8aa96f79-402-4897-424f-64a2c6893de8@panix.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1158255537-1643742403=:3569"
+Content-Type: multipart/mixed; boundary="8323329-382464210-1643742671=:3569"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -47,11 +47,12 @@ X-Mailing-List: linux-pci@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-1158255537-1643742403=:3569
+--8323329-382464210-1643742671=:3569
 Content-Type: text/plain; charset=US-ASCII
 
 
 The attachments made the messages too big; resending one at a time.
+(This one is the "lspci" after the 2nd hibernation attempt (which worked)).
 
 On Tue, 1 Feb 2022, Kenneth R. Crudup wrote:
 
@@ -84,11 +85,11 @@ On Tue, 1 Feb 2022, Kenneth R. Crudup wrote:
 
 -- 
 Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange County CA
---8323329-1158255537-1643742403=:3569
-Content-Type: text/plain; charset=US-ASCII; name=lspci-l1ss-patch-after-hibernate
+--8323329-382464210-1643742671=:3569
+Content-Type: text/plain; charset=US-ASCII; name=lspci-l1ss-patch-after-hibernate-2
 Content-Transfer-Encoding: BASE64
 Content-Description: 
-Content-Disposition: attachment; filename=lspci-l1ss-patch-after-hibernate
+Content-Disposition: attachment; filename=lspci-l1ss-patch-after-hibernate-2
 
 MDA6MDAuMCBIb3N0IGJyaWRnZSBbMDYwMF06IEludGVsIENvcnBvcmF0aW9u
 IERldmljZSBbODA4Njo4YTEyXSAocmV2IDAzKQ0KCVN1YnN5c3RlbTogRGVs
@@ -1038,4 +1039,108 @@ b21tb25Nb2RlPTB1cyBMVFIxLjJfVGhyZXNob2xkPTgxOTIwbnMNCgkJTDFT
 dWJDdGwyOiBUX1B3ck9uPTYwdXMNCglLZXJuZWwgZHJpdmVyIGluIHVzZTog
 cnRzeF9wY2kNCg0K
 
---8323329-1158255537-1643742403=:3569--
+--8323329-382464210-1643742671=:3569
+Content-Type: text/plain; charset=US-ASCII; name=diff-of-lspci-before-after-2
+Content-Transfer-Encoding: BASE64
+Content-Description: 
+Content-Disposition: attachment; filename=diff-of-lspci-before-after-2
+
+LS0tIGxzcGNpLWwxc3MtcGF0Y2gtYmVmb3JlLWhpYmVybmF0ZQkyMDIyLTAy
+LTAxIDEwOjQyOjQxLjI0ODYwNTA0MSAtMDgwMA0KKysrIGxzcGNpLWwxc3Mt
+cGF0Y2gtYWZ0ZXItaGliZXJuYXRlLTIJMjAyMi0wMi0wMSAxMDo1OTo1MS41
+NTIwMDM5MjMgLTA4MDANCkBAIC01NjQsNyArNTY0LDcgQEANCiAJQ29udHJv
+bDogSS9PLSBNZW0rIEJ1c01hc3RlcisgU3BlY0N5Y2xlLSBNZW1XSU5WLSBW
+R0FTbm9vcC0gUGFyRXJyLSBTdGVwcGluZy0gU0VSUi0gRmFzdEIyQi0gRGlz
+SU5UeCsNCiAJU3RhdHVzOiBDYXArIDY2TUh6LSBVREYtIEZhc3RCMkItIFBh
+ckVyci0gREVWU0VMPWZhc3QgPlRBYm9ydC0gPFRBYm9ydC0gPE1BYm9ydC0g
+PlNFUlItIDxQRVJSLSBJTlR4LQ0KIAlMYXRlbmN5OiA2NA0KLQlJbnRlcnJ1
+cHQ6IHBpbiBBIHJvdXRlZCB0byBJUlEgMTk5DQorCUludGVycnVwdDogcGlu
+IEEgcm91dGVkIHRvIElSUSAxODgNCiAJSU9NTVUgZ3JvdXA6IDEzDQogCVJl
+Z2lvbiAwOiBNZW1vcnkgYXQgNjAzZWJiMDAwMCAoNjQtYml0LCBub24tcHJl
+ZmV0Y2hhYmxlKSBbc2l6ZT0xNktdDQogCVJlZ2lvbiA0OiBNZW1vcnkgYXQg
+NjAzZWEwMDAwMCAoNjQtYml0LCBub24tcHJlZmV0Y2hhYmxlKSBbc2l6ZT0x
+TV0NCkBAIC01NzMsNyArNTczLDcgQEANCiAJCVN0YXR1czogRDAgTm9Tb2Z0
+UnN0KyBQTUUtRW5hYmxlLSBEU2VsPTAgRFNjYWxlPTAgUE1FLQ0KIAlDYXBh
+YmlsaXRpZXM6IFs4MF0gVmVuZG9yIFNwZWNpZmljIEluZm9ybWF0aW9uOiBM
+ZW49MTQgPD8+DQogCUNhcGFiaWxpdGllczogWzYwXSBNU0k6IEVuYWJsZSsg
+Q291bnQ9MS8xIE1hc2thYmxlLSA2NGJpdCsNCi0JCUFkZHJlc3M6IDAwMDAw
+MDAwZmVlMDA5ZDggIERhdGE6IDAwMDANCisJCUFkZHJlc3M6IDAwMDAwMDAw
+ZmVlMDA4OTggIERhdGE6IDAwMDANCiAJS2VybmVsIGRyaXZlciBpbiB1c2U6
+IHNuZF9oZGFfaW50ZWwNCiAJS2VybmVsIG1vZHVsZXM6IHNuZF9oZGFfaW50
+ZWwNCiANCkBAIC02ODMsNyArNjgzLDcgQEANCiAJUmVnaW9uIDE6IE1lbW9y
+eSBhdCA4YTIwMDAwMCAoMzItYml0LCBub24tcHJlZmV0Y2hhYmxlKSBbc2l6
+ZT00S10NCiAJQ2FwYWJpbGl0aWVzOiBbODBdIFBvd2VyIE1hbmFnZW1lbnQg
+dmVyc2lvbiAzDQogCQlGbGFnczogUE1FQ2xrLSBEU0ktIEQxKyBEMisgQXV4
+Q3VycmVudD0zNzVtQSBQTUUoRDAtLEQxKyxEMissRDNob3QrLEQzY29sZCsp
+DQotCQlTdGF0dXM6IEQwIE5vU29mdFJzdC0gUE1FLUVuYWJsZS0gRFNlbD0w
+IERTY2FsZT0wIFBNRS0NCisJCVN0YXR1czogRDMgTm9Tb2Z0UnN0LSBQTUUt
+RW5hYmxlKyBEU2VsPTAgRFNjYWxlPTAgUE1FLQ0KIAlDYXBhYmlsaXRpZXM6
+IFs5MF0gTVNJOiBFbmFibGUrIENvdW50PTEvMSBNYXNrYWJsZS0gNjRiaXQr
+DQogCQlBZGRyZXNzOiAwMDAwMDAwMGZlZTAwNmQ4ICBEYXRhOiAwMDAwDQog
+CUNhcGFiaWxpdGllczogW2IwXSBFeHByZXNzICh2MikgRW5kcG9pbnQsIE1T
+SSAwMA0KQEAgLTY5Niw3ICs2OTYsNyBAQA0KIAkJTG5rQ2FwOglQb3J0ICMw
+LCBTcGVlZCA1R1QvcywgV2lkdGggeDEsIEFTUE0gTDBzIEwxLCBFeGl0IExh
+dGVuY3kgTDBzIHVubGltaXRlZCwgTDEgPDY0dXMNCiAJCQlDbG9ja1BNKyBT
+dXJwcmlzZS0gTExBY3RSZXAtIEJ3Tm90LSBBU1BNT3B0Q29tcCsNCiAJCUxu
+a0N0bDoJQVNQTSBEaXNhYmxlZDsgUkNCIDY0IGJ5dGVzLCBEaXNhYmxlZC0g
+Q29tbUNsaysNCi0JCQlFeHRTeW5jaC0gQ2xvY2tQTS0gQXV0V2lkRGlzLSBC
+V0ludC0gQXV0QldJbnQtDQorCQkJRXh0U3luY2gtIENsb2NrUE0rIEF1dFdp
+ZERpcy0gQldJbnQtIEF1dEJXSW50LQ0KIAkJTG5rU3RhOglTcGVlZCA1R1Qv
+cyAob2spLCBXaWR0aCB4MSAob2spDQogCQkJVHJFcnItIFRyYWluLSBTbG90
+Q2xrKyBETEFjdGl2ZS0gQldNZ210LSBBQldNZ210LQ0KIAkJRGV2Q2FwMjog
+Q29tcGxldGlvbiBUaW1lb3V0OiBOb3QgU3VwcG9ydGVkLCBUaW1lb3V0RGlz
+KyBOUk9QclByUC0gTFRSKw0K
+
+--8323329-382464210-1643742671=:3569
+Content-Type: text/plain; charset=US-ASCII; name=diff-of-lspci-before-after
+Content-Transfer-Encoding: BASE64
+Content-Description: 
+Content-Disposition: attachment; filename=diff-of-lspci-before-after
+
+LS0tIGxzcGNpLWwxc3MtcGF0Y2gtYWZ0ZXItaGliZXJuYXRlCTIwMjItMDIt
+MDEgMTA6NDQ6MjAuMjk5OTk5ODg4IC0wODAwDQorKysgbHNwY2ktbDFzcy1w
+YXRjaC1iZWZvcmUtaGliZXJuYXRlCTIwMjItMDItMDEgMTA6NDI6NDEuMjQ4
+NjA1MDQxIC0wODAwDQpAQCAtNTY0LDcgKzU2NCw3IEBADQogCUNvbnRyb2w6
+IEkvTy0gTWVtKyBCdXNNYXN0ZXIrIFNwZWNDeWNsZS0gTWVtV0lOVi0gVkdB
+U25vb3AtIFBhckVyci0gU3RlcHBpbmctIFNFUlItIEZhc3RCMkItIERpc0lO
+VHgrDQogCVN0YXR1czogQ2FwKyA2Nk1Iei0gVURGLSBGYXN0QjJCLSBQYXJF
+cnItIERFVlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5T
+RVJSLSA8UEVSUi0gSU5UeC0NCiAJTGF0ZW5jeTogNjQNCi0JSW50ZXJydXB0
+OiBwaW4gQSByb3V0ZWQgdG8gSVJRIDE4OA0KKwlJbnRlcnJ1cHQ6IHBpbiBB
+IHJvdXRlZCB0byBJUlEgMTk5DQogCUlPTU1VIGdyb3VwOiAxMw0KIAlSZWdp
+b24gMDogTWVtb3J5IGF0IDYwM2ViYjAwMDAgKDY0LWJpdCwgbm9uLXByZWZl
+dGNoYWJsZSkgW3NpemU9MTZLXQ0KIAlSZWdpb24gNDogTWVtb3J5IGF0IDYw
+M2VhMDAwMDAgKDY0LWJpdCwgbm9uLXByZWZldGNoYWJsZSkgW3NpemU9MU1d
+DQpAQCAtNTczLDcgKzU3Myw3IEBADQogCQlTdGF0dXM6IEQwIE5vU29mdFJz
+dCsgUE1FLUVuYWJsZS0gRFNlbD0wIERTY2FsZT0wIFBNRS0NCiAJQ2FwYWJp
+bGl0aWVzOiBbODBdIFZlbmRvciBTcGVjaWZpYyBJbmZvcm1hdGlvbjogTGVu
+PTE0IDw/Pg0KIAlDYXBhYmlsaXRpZXM6IFs2MF0gTVNJOiBFbmFibGUrIENv
+dW50PTEvMSBNYXNrYWJsZS0gNjRiaXQrDQotCQlBZGRyZXNzOiAwMDAwMDAw
+MGZlZTAwODk4ICBEYXRhOiAwMDAwDQorCQlBZGRyZXNzOiAwMDAwMDAwMGZl
+ZTAwOWQ4ICBEYXRhOiAwMDAwDQogCUtlcm5lbCBkcml2ZXIgaW4gdXNlOiBz
+bmRfaGRhX2ludGVsDQogCUtlcm5lbCBtb2R1bGVzOiBzbmRfaGRhX2ludGVs
+DQogDQpAQCAtNjgzLDcgKzY4Myw3IEBADQogCVJlZ2lvbiAxOiBNZW1vcnkg
+YXQgOGEyMDAwMDAgKDMyLWJpdCwgbm9uLXByZWZldGNoYWJsZSkgW3NpemU9
+NEtdDQogCUNhcGFiaWxpdGllczogWzgwXSBQb3dlciBNYW5hZ2VtZW50IHZl
+cnNpb24gMw0KIAkJRmxhZ3M6IFBNRUNsay0gRFNJLSBEMSsgRDIrIEF1eEN1
+cnJlbnQ9Mzc1bUEgUE1FKEQwLSxEMSssRDIrLEQzaG90KyxEM2NvbGQrKQ0K
+LQkJU3RhdHVzOiBEMyBOb1NvZnRSc3QtIFBNRS1FbmFibGUrIERTZWw9MCBE
+U2NhbGU9MCBQTUUtDQorCQlTdGF0dXM6IEQwIE5vU29mdFJzdC0gUE1FLUVu
+YWJsZS0gRFNlbD0wIERTY2FsZT0wIFBNRS0NCiAJQ2FwYWJpbGl0aWVzOiBb
+OTBdIE1TSTogRW5hYmxlKyBDb3VudD0xLzEgTWFza2FibGUtIDY0Yml0Kw0K
+IAkJQWRkcmVzczogMDAwMDAwMDBmZWUwMDZkOCAgRGF0YTogMDAwMA0KIAlD
+YXBhYmlsaXRpZXM6IFtiMF0gRXhwcmVzcyAodjIpIEVuZHBvaW50LCBNU0kg
+MDANCkBAIC02OTYsNyArNjk2LDcgQEANCiAJCUxua0NhcDoJUG9ydCAjMCwg
+U3BlZWQgNUdUL3MsIFdpZHRoIHgxLCBBU1BNIEwwcyBMMSwgRXhpdCBMYXRl
+bmN5IEwwcyB1bmxpbWl0ZWQsIEwxIDw2NHVzDQogCQkJQ2xvY2tQTSsgU3Vy
+cHJpc2UtIExMQWN0UmVwLSBCd05vdC0gQVNQTU9wdENvbXArDQogCQlMbmtD
+dGw6CUFTUE0gRGlzYWJsZWQ7IFJDQiA2NCBieXRlcywgRGlzYWJsZWQtIENv
+bW1DbGsrDQotCQkJRXh0U3luY2gtIENsb2NrUE0rIEF1dFdpZERpcy0gQldJ
+bnQtIEF1dEJXSW50LQ0KKwkJCUV4dFN5bmNoLSBDbG9ja1BNLSBBdXRXaWRE
+aXMtIEJXSW50LSBBdXRCV0ludC0NCiAJCUxua1N0YToJU3BlZWQgNUdUL3Mg
+KG9rKSwgV2lkdGggeDEgKG9rKQ0KIAkJCVRyRXJyLSBUcmFpbi0gU2xvdENs
+aysgRExBY3RpdmUtIEJXTWdtdC0gQUJXTWdtdC0NCiAJCURldkNhcDI6IENv
+bXBsZXRpb24gVGltZW91dDogTm90IFN1cHBvcnRlZCwgVGltZW91dERpcysg
+TlJPUHJQclAtIExUUisNCg==
+
+--8323329-382464210-1643742671=:3569--
