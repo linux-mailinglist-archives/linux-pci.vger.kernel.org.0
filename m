@@ -2,179 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F74C4A606C
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 16:46:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60C084A6073
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 16:48:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240532AbiBAPqj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 10:46:39 -0500
-Received: from mga04.intel.com ([192.55.52.120]:26867 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240521AbiBAPqj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Feb 2022 10:46:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643730399; x=1675266399;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=d9eKHUfVREYlEXOMy6/dbAqRNvB0R5n8Xjyt6b1+6HE=;
-  b=d/Jx2ga3CIukNweVndQXc/EMFAs7jYvJantwB9CJlSKeXH/GB8GOCm0B
-   V5VsimeUIvRH+03XBD4i1yACVNTfVyeOqG8J6gTNLzR1n2gzkUvOzBsg0
-   xspWxa0tAwlexd9AiKvck026IZ9J4RB4eTq+7PLjbPDAdqdKRaJiZKUpM
-   3vvcvi971xvnL4HNDWeI4VEDWiar+ravQlKux4Xbk5jQuP+7akcMH/fXi
-   6U8qwVh4pGuhdrsuF75P3HQeIonbhMRde2AO2749jKP3hOA/EGqXxo6nr
-   tSDN76Z4o1ChYcaQJXC7crOnf59tZx3okshUL/McUB+vXWf2B8qwH2Q0P
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="246550085"
-X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="246550085"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:46:38 -0800
-X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="537853590"
-Received: from tveit-mobl1.ger.corp.intel.com (HELO [10.252.37.11]) ([10.252.37.11])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:46:36 -0800
-Message-ID: <b0a06a30-f479-df9f-980c-b789f0f26ce9@linux.intel.com>
-Date:   Tue, 1 Feb 2022 16:46:33 +0100
+        id S240521AbiBAPsD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 10:48:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:35118 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229683AbiBAPsC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 10:48:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643730482;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9Knci/X96aFPzSMVFU3zf+SkqZCYI3io+dJ2JPBOMDk=;
+        b=TZtMiL7RYJxzfdfUFIrtps4nDp/rLHz7kAKFm1WkT0lrlbW6A/2K9N5SmANF97Gr4Icqck
+        5yq3Q5ru+EJH4H40egEvNMMPqpb3A1yCaQHUufZtFncOip9hIx6kpJatAcyraKPq5ZmhXO
+        mTAfQUEYG99CajERTOZqDtOuoMvOslM=
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
+ [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-301-F_f94oQNPRmxeGoT7bqxlg-1; Tue, 01 Feb 2022 10:48:01 -0500
+X-MC-Unique: F_f94oQNPRmxeGoT7bqxlg-1
+Received: by mail-oo1-f70.google.com with SMTP id g2-20020a4a9242000000b002da7c459222so6817244ooh.13
+        for <linux-pci@vger.kernel.org>; Tue, 01 Feb 2022 07:48:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9Knci/X96aFPzSMVFU3zf+SkqZCYI3io+dJ2JPBOMDk=;
+        b=NrigCjS53uzCJ7Zv1aaZqiQzyaHsvLKZ0INHmjI+rG8RsObyEti1WIAviIV4ZMkCVX
+         vSCh5gn5Pzb6xKei/nXgcsVcehYSOKFQr0xw7a7XrICEGLB6r4Hl2gubevYboN0BWaw0
+         Pw9+O2q3PTdyWU9gUtOypELs2eHFpwHoMNjTuT7n3haI5sFQyyZUaQMHwChUIzWA3QjM
+         cDKt6Lbb8MzU5q+w5q4iVZDFvGL1ZKnakC5oHLRjxbW1Ul59gtOl6Tv3PtLUIx5mnAkg
+         ohforrbQ3aJILUyome8F2lmifB88FLFzCic1LhQM1QW5duyjpNgEUs3fdgqJOqHBKcNS
+         iu9g==
+X-Gm-Message-State: AOAM531bn30rkWtETIdzPWAsYfo5gfOPJTX7ugjrenP0dZCOOD4LaolM
+        esjLfXg/tW3SYT4YzabG9obc2e6l6OGallAQvzx8R/krBecOCJOKM3DgYLU/vHpbloyjVgm8QcK
+        ES0F2Ci5PUMJhwZ+uYRa1
+X-Received: by 2002:a05:6808:23ca:: with SMTP id bq10mr1790901oib.231.1643730480394;
+        Tue, 01 Feb 2022 07:48:00 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy/ry/WmF0nAwd5BGAo0XXYdPkIIcEkBtT4hvQOF28RNhJmYh7Hg0chPAeCnJSrW0mLpwwJnA==
+X-Received: by 2002:a05:6808:23ca:: with SMTP id bq10mr1790885oib.231.1643730480206;
+        Tue, 01 Feb 2022 07:48:00 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id s13sm56278ooh.43.2022.02.01.07.47.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Feb 2022 07:47:59 -0800 (PST)
+Date:   Tue, 1 Feb 2022 08:47:58 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
+Subject: Re: [PATCH V6 mlx5-next 07/15] vfio: Have the core code decode the
+ VFIO_DEVICE_FEATURE ioctl
+Message-ID: <20220201084758.17e66f41.alex.williamson@redhat.com>
+In-Reply-To: <20220201001148.GY1786498@nvidia.com>
+References: <20220130160826.32449-1-yishaih@nvidia.com>
+        <20220130160826.32449-8-yishaih@nvidia.com>
+        <20220131164143.6c145fdb.alex.williamson@redhat.com>
+        <20220201001148.GY1786498@nvidia.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.5.1
-Subject: Re: [PATCH v8 00/10] vgaarb: Rework default VGA device selection
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-References: <20220131222342.GA517488@bhelgaas>
-From:   Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-In-Reply-To: <20220131222342.GA517488@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hey,
- 
-Op 31-01-2022 om 23:23 schreef Bjorn Helgaas:
-> [+to Maarten, Maxime, Thomas; beginning of thread:
-> https://lore.kernel.org/r/20220106000658.243509-1-helgaas@kernel.org]
->
-> On Wed, Jan 05, 2022 at 06:06:48PM -0600, Bjorn Helgaas wrote:
->> From: Bjorn Helgaas <bhelgaas@google.com>
->>
->> Current default VGA device selection fails in some cases because part of it
->> is done in the vga_arb_device_init() subsys_initcall, and some arches
->> enumerate PCI devices in pcibios_init(), which runs *after* that.
-> Where are we at with this series?  Is there anything I can do to move
-> it forward?
->
-> Bjorn
+On Mon, 31 Jan 2022 20:11:48 -0400
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-Hi Bjorn,
+> On Mon, Jan 31, 2022 at 04:41:43PM -0700, Alex Williamson wrote:
+> > > +int vfio_pci_core_ioctl_feature(struct vfio_device *device, u32 flags,
+> > > +				void __user *arg, size_t argsz)
+> > > +{
+> > > +	struct vfio_pci_core_device *vdev =
+> > > +		container_of(device, struct vfio_pci_core_device, vdev);
+> > > +	uuid_t uuid;
+> > > +	int ret;  
+> > 
+> > Nit, should uuid at least be scoped within the token code?  Or token
+> > code pushed to a separate function?  
+> 
+> Sure, it wasn't done before, but it would be nicer,.
+> 
+> > > +static inline int vfio_check_feature(u32 flags, size_t argsz, u32 supported_ops,
+> > > +				    size_t minsz)
+> > > +{
+> > > +	if ((flags & (VFIO_DEVICE_FEATURE_GET | VFIO_DEVICE_FEATURE_SET)) &
+> > > +	    ~supported_ops)
+> > > +		return -EINVAL;  
+> > 
+> > These look like cases where it would be useful for userspace debugging
+> > to differentiate errnos.  
+> 
+> I tried to keep it unchanged from what it was today.
+> 
+> > -EOPNOTSUPP?  
+> 
+> This would be my preference, but it would also be the first use in
+> vfio
+> 
+> > > +	if (flags & VFIO_DEVICE_FEATURE_PROBE)
+> > > +		return 0;
+> > > +	/* Without PROBE one of GET or SET must be requested */
+> > > +	if (!(flags & (VFIO_DEVICE_FEATURE_GET | VFIO_DEVICE_FEATURE_SET)))
+> > > +		return -EINVAL;
+> > > +	if (argsz < minsz)
+> > > +		return -EINVAL;  
+> >
+> > -ENOSPC?  
+> 
+> Do you want to do all of these minsz then? There are lots..
 
+Hmm, maybe this one is more correct as EINVAL.  In the existing use
+cases the structure associated with the feature is a fixed size, so
+it's not a matter that we down have space for a return like
+HOT_RESET_INFO, it's simply invalid arguments by the caller.  I guess
+keep this one as EINVAL, but EOPNOTSUPP seems useful for the previous.
+Thanks,
 
-I'm afraid that I don't understand the vga arbiter or the vga code well enough to review.
-
-Could you perhaps find someone who could review?
-
-I see Chen wrote some patches and tested, so perhaps they could?
-
-~Maarten
-
->> For example:
->>
->>   - On BMC system, the AST2500 bridge [1a03:1150] does not implement
->>     PCI_BRIDGE_CTL_VGA.  This is perfectly legal but means the legacy VGA
->>     resources won't reach downstream devices unless they're included in the
->>     usual bridge windows.
->>
->>   - vga_arb_select_default_device() will set a device below such a bridge
->>     as the default VGA device as long as it has PCI_COMMAND_IO and
->>     PCI_COMMAND_MEMORY enabled.
->>
->>   - vga_arbiter_add_pci_device() is called for every VGA device, either at
->>     boot-time or at hot-add time, and it will also set the device as the
->>     default VGA device, but ONLY if all bridges leading to it implement
->>     PCI_BRIDGE_CTL_VGA.
->>
->>   - This difference between vga_arb_select_default_device() and
->>     vga_arbiter_add_pci_device() means that a device below an AST2500 or
->>     similar bridge can only be set as the default if it is enumerated
->>     before vga_arb_device_init().
->>
->>   - On ACPI-based systems, PCI devices are enumerated by acpi_init(), which
->>     runs before vga_arb_device_init().
->>
->>   - On non-ACPI systems, like on MIPS system, they are enumerated by
->>     pcibios_init(), which typically runs *after* vga_arb_device_init().
->>
->> This series consolidates all the default VGA device selection in
->> vga_arbiter_add_pci_device(), which is always called after enumerating a
->> PCI device.
->>
->> Almost all the work here is Huacai's.  I restructured it a little bit and
->> added a few trivial patches on top.
->>
->> I'd like to move vgaarb.c to drivers/pci eventually, but there's another
->> initcall ordering snag that needs to be resolved first, so this leaves 
->> it where it is.
->>
->> Bjorn
->>
->> Version history:
->> V0 original implementation as final quirk to set default device.
->> https://lore.kernel.org/r/20210514080025.1828197-6-chenhuacai@loongson.cn
->>
->> V1 rework vgaarb to do all default device selection in
->> vga_arbiter_add_pci_device().
->> https://lore.kernel.org/r/20210705100503.1120643-1-chenhuacai@loongson.cn
->>
->> V2 move arbiter to PCI subsystem, fix nits.
->> https://lore.kernel.org/r/20210722212920.347118-1-helgaas@kernel.org
->>
->> V3 rewrite the commit log of the last patch (which is also summarized
->> by Bjorn).
->> https://lore.kernel.org/r/20210820100832.663931-1-chenhuacai@loongson.cn
->>
->> V4 split the last patch to two steps.
->> https://lore.kernel.org/r/20210827083129.2781420-1-chenhuacai@loongson.cn
->>
->> V5 split Patch-9 again and sort the patches.
->> https://lore.kernel.org/r/20210911093056.1555274-1-chenhuacai@loongson.cn
->>
->> V6 split Patch-5 again and sort the patches again.
->> https://lore.kernel.org/r/20210916082941.3421838-1-chenhuacai@loongson.cn
->>
->> V7 stop moving vgaarb to drivers/pci because of ordering issues with
->> misc_init().
->> https://lore.kernel.org/r/20211015061512.2941859-1-chenhuacai@loongson.cn
->> https://lore.kernel.org/r/CAAhV-H7FhAjM-Ha42Z1dLrE4PvC9frfyeU27KHWcyWKkMftEsA@mail.gmail.com
->>
->>
->> Bjorn Helgaas (8):
->>   vgaarb: Factor out vga_select_framebuffer_device()
->>   vgaarb: Factor out default VGA device selection
->>   vgaarb: Move framebuffer detection to ADD_DEVICE path
->>   vgaarb: Move non-legacy VGA detection to ADD_DEVICE path
->>   vgaarb: Move disabled VGA device detection to ADD_DEVICE path
->>   vgaarb: Remove empty vga_arb_device_card_gone()
->>   vgaarb: Use unsigned format string to print lock counts
->>   vgaarb: Replace full MIT license text with SPDX identifier
->>
->> Huacai Chen (2):
->>   vgaarb: Move vga_arb_integrated_gpu() earlier in file
->>   vgaarb: Log bridge control messages when adding devices
->>
->>  drivers/gpu/vga/vgaarb.c | 311 +++++++++++++++++++--------------------
->>  1 file changed, 154 insertions(+), 157 deletions(-)
->>
->> -- 
->> 2.25.1
->>
+Alex
 
