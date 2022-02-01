@@ -2,197 +2,255 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3BEF4A63C0
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 19:26:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3C534A63DA
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 19:31:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232619AbiBAS0S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 13:26:18 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4609 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230476AbiBAS0R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 13:26:17 -0500
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JpCvp1J0Vz67mB8;
-        Wed,  2 Feb 2022 02:22:30 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 1 Feb 2022 19:26:15 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 1 Feb
- 2022 18:26:14 +0000
-Date:   Tue, 1 Feb 2022 18:26:13 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <patches@lists.linux.dev>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Bjorn Helgaas" <helgaas@kernel.org>, <nvdimm@lists.linux.dev>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 11/14] cxl/region: Add support for single switch
- level
-Message-ID: <20220201182613.00005fdf@Huawei.com>
-In-Reply-To: <20220128002707.391076-12-ben.widawsky@intel.com>
-References: <20220128002707.391076-1-ben.widawsky@intel.com>
-        <20220128002707.391076-12-ben.widawsky@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S237784AbiBASbt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 13:31:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:29486 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231515AbiBASbt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 13:31:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643740309;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lWcCCfSrxGYDduQ3iXNmhKq8eIpL0JoSBTfvltj/8CM=;
+        b=OqCzk/0TGdfDIZ+a8jrsuHMvxBf0o7K69F34fO6s+U21FnXVF2fQcN959GPEQfbERpOZ9b
+        bKlfF6NeH/wtnoHMbxlHQRlDq3UFP2QqYNa+DkjEsqRkL5RvGQO0EPRUTpo9LFnkIv0ckz
+        uKzzDcHft6uFOu4NuJ1m2Fma9sSddvw=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-151-tYcIXkM6NIWyy7ciW5wmUA-1; Tue, 01 Feb 2022 13:31:47 -0500
+X-MC-Unique: tYcIXkM6NIWyy7ciW5wmUA-1
+Received: by mail-ot1-f71.google.com with SMTP id k3-20020a9d4b83000000b005a1871e98cbso9924613otf.10
+        for <linux-pci@vger.kernel.org>; Tue, 01 Feb 2022 10:31:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lWcCCfSrxGYDduQ3iXNmhKq8eIpL0JoSBTfvltj/8CM=;
+        b=a2F5+2ocR2pcxYiGU7l3XFf9Bm5QlcJkfmpmga/zRciqfAQ/E7bsnORlsAuIlUoNKM
+         rKlcWlpoR8BVgIDt1A/PCKNr+LdMdv3jOQZbY+NRgKpcpcON9Hz08FBLkQuBgUX+bFm2
+         9XxYfzaY1mvHGd2tjlwkMco5bxkEuxZjgEw5YNxw/Rfye5FF5Iwv+lahGTns1sC3GwQ6
+         EANxICIJ+tvo2ZAahSn7bdBZoOlPuTEiBHr6dYBn9TcH40ykml/h0Wt3Nioh9WfTrw8d
+         oNBsRYImCKrq/sN1qyKEoT9rA3gmSZbBfmeuuLDKHx9Ko/I5eKdpJLSfCEccwuQQukho
+         3wzg==
+X-Gm-Message-State: AOAM530jBT+xBRyvACK3ira/SRzSFNyFNruQPJbtZD9HZxC1y3uMIqJj
+        dEvyrT4i4xf0vSA1UZkIZ8gvDFcjAS7Atkof6iD3cgCGmElU4uAP44RnIZ1p2gvf9NlJjIqlXZk
+        rWKFVWT40PBV6V2Z2sF7J
+X-Received: by 2002:a05:6808:bd6:: with SMTP id o22mr2056174oik.309.1643740306991;
+        Tue, 01 Feb 2022 10:31:46 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJw8CVMKC1GZyh/e69wmJFpSseU2Qrzj5ioYE5cAr/3TsLa65dQuvn6qvN1/aRP6C70RiE9NBg==
+X-Received: by 2002:a05:6808:bd6:: with SMTP id o22mr2056155oik.309.1643740306743;
+        Tue, 01 Feb 2022 10:31:46 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id r186sm10151672oie.23.2022.02.01.10.31.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Feb 2022 10:31:46 -0800 (PST)
+Date:   Tue, 1 Feb 2022 11:31:44 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>
+Cc:     <bhelgaas@google.com>, <jgg@nvidia.com>, <saeedm@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
+        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>, <maorg@nvidia.com>
+Subject: Re: [PATCH V6 mlx5-next 09/15] vfio: Extend the device migration
+ protocol with RUNNING_P2P
+Message-ID: <20220201113144.0c8dfaa5.alex.williamson@redhat.com>
+In-Reply-To: <20220130160826.32449-10-yishaih@nvidia.com>
+References: <20220130160826.32449-1-yishaih@nvidia.com>
+        <20220130160826.32449-10-yishaih@nvidia.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 27 Jan 2022 16:27:04 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Sun, 30 Jan 2022 18:08:20 +0200
+Yishai Hadas <yishaih@nvidia.com> wrote:
 
-> CXL switches have HDM decoders just like host bridges and endpoints.
-> Their programming works in a similar fashion.
+> From: Jason Gunthorpe <jgg@nvidia.com>
 > 
-> The spec does not prohibit multiple levels of switches, however, those
-> are not implemented at this time.
+> The RUNNING_P2P state is designed to support multiple devices in the same
+> VM that are doing P2P transactions between themselves. When in RUNNING_P2P
+> the device must be able to accept incoming P2P transactions but should not
+> generate outgoing transactions.
 > 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-One trivial comment inline, but it's end of day here so I've not taken as
-deeper look at this as I probably will at some later date.
+> As an optional extension to the mandatory states it is defined as
+> inbetween STOP and RUNNING:
+>    STOP -> RUNNING_P2P -> RUNNING -> RUNNING_P2P -> STOP
+> 
+> For drivers that are unable to support RUNNING_P2P the core code silently
+> merges RUNNING_P2P and RUNNING together. Drivers that support this will be
+> required to implement 4 FSM arcs beyond the basic FSM. 2 of the basic FSM
+> arcs become combination transitions.
+> 
+> Compared to the v1 clarification, NDMA is redefined into FSM states and is
+> described in terms of the desired P2P quiescent behavior, noting that
+> halting all DMA is an acceptable implementation.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> ---
+>  drivers/vfio/vfio.c       | 70 ++++++++++++++++++++++++++++++---------
+>  include/linux/vfio.h      |  2 ++
+>  include/uapi/linux/vfio.h | 34 +++++++++++++++++--
+>  3 files changed, 88 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> index b12be212d048..a722a1a8a48a 100644
+> --- a/drivers/vfio/vfio.c
+> +++ b/drivers/vfio/vfio.c
+> @@ -1573,39 +1573,55 @@ u32 vfio_mig_get_next_state(struct vfio_device *device,
+>  			    enum vfio_device_mig_state cur_fsm,
+>  			    enum vfio_device_mig_state new_fsm)
+>  {
+> -	enum { VFIO_DEVICE_NUM_STATES = VFIO_DEVICE_STATE_RESUMING + 1 };
+> +	enum { VFIO_DEVICE_NUM_STATES = VFIO_DEVICE_STATE_RUNNING_P2P + 1 };
+>  	/*
+> -	 * The coding in this table requires the driver to implement 6
+> +	 * The coding in this table requires the driver to implement
+>  	 * FSM arcs:
+>  	 *         RESUMING -> STOP
+> -	 *         RUNNING -> STOP
+>  	 *         STOP -> RESUMING
+> -	 *         STOP -> RUNNING
+>  	 *         STOP -> STOP_COPY
+>  	 *         STOP_COPY -> STOP
+>  	 *
+> -	 * The coding will step through multiple states for these combination
+> -	 * transitions:
+> -	 *         RESUMING -> STOP -> RUNNING
+> +	 * If P2P is supported then the driver must also implement these FSM
+> +	 * arcs:
+> +	 *         RUNNING -> RUNNING_P2P
+> +	 *         RUNNING_P2P -> RUNNING
+> +	 *         RUNNING_P2P -> STOP
+> +	 *         STOP -> RUNNING_P2P
+> +	 * Without P2P the driver must implement:
+> +	 *         RUNNING -> STOP
+> +	 *         STOP -> RUNNING
+> +	 *
+> +	 * If all optional features are supported then the coding will step
+> +	 * through multiple states for these combination transitions:
+> +	 *         RESUMING -> STOP -> RUNNING_P2P
+> +	 *         RESUMING -> STOP -> RUNNING_P2P -> RUNNING
+>  	 *         RESUMING -> STOP -> STOP_COPY
+> -	 *         RUNNING -> STOP -> RESUMING
+> -	 *         RUNNING -> STOP -> STOP_COPY
+> +	 *         RUNNING -> RUNNING_P2P -> STOP
+> +	 *         RUNNING -> RUNNING_P2P -> STOP -> RESUMING
+> +	 *         RUNNING -> RUNNING_P2P -> STOP -> STOP_COPY
+> +	 *         RUNNING_P2P -> STOP -> RESUMING
+> +	 *         RUNNING_P2P -> STOP -> STOP_COPY
+> +	 *         STOP -> RUNNING_P2P -> RUNNING
+>  	 *         STOP_COPY -> STOP -> RESUMING
+> -	 *         STOP_COPY -> STOP -> RUNNING
+> +	 *         STOP_COPY -> STOP -> RUNNING_P2P
+> +	 *         STOP_COPY -> STOP -> RUNNING_P2P -> RUNNING
+>  	 */
+>  	static const u8 vfio_from_fsm_table[VFIO_DEVICE_NUM_STATES][VFIO_DEVICE_NUM_STATES] = {
+>  		[VFIO_DEVICE_STATE_STOP] = {
+>  			[VFIO_DEVICE_STATE_STOP] = VFIO_DEVICE_STATE_STOP,
+> -			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_RUNNING,
+> +			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_RUNNING_P2P,
+>  			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_STOP_COPY,
+>  			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_RESUMING,
+> +			[VFIO_DEVICE_STATE_RUNNING_P2P] = VFIO_DEVICE_STATE_RUNNING_P2P,
+>  			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+>  		},
+>  		[VFIO_DEVICE_STATE_RUNNING] = {
+> -			[VFIO_DEVICE_STATE_STOP] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_STOP] = VFIO_DEVICE_STATE_RUNNING_P2P,
+>  			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_RUNNING,
+> -			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_STOP,
+> -			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_RUNNING_P2P,
+> +			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_RUNNING_P2P,
+> +			[VFIO_DEVICE_STATE_RUNNING_P2P] = VFIO_DEVICE_STATE_RUNNING_P2P,
+>  			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+>  		},
+>  		[VFIO_DEVICE_STATE_STOP_COPY] = {
+> @@ -1613,6 +1629,7 @@ u32 vfio_mig_get_next_state(struct vfio_device *device,
+>  			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_STOP,
+>  			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_STOP_COPY,
+>  			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_RUNNING_P2P] = VFIO_DEVICE_STATE_STOP,
+>  			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+>  		},
+>  		[VFIO_DEVICE_STATE_RESUMING] = {
+> @@ -1620,6 +1637,15 @@ u32 vfio_mig_get_next_state(struct vfio_device *device,
+>  			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_STOP,
+>  			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_STOP,
+>  			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_RESUMING,
+> +			[VFIO_DEVICE_STATE_RUNNING_P2P] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+> +		},
+> +		[VFIO_DEVICE_STATE_RUNNING_P2P] = {
+> +			[VFIO_DEVICE_STATE_STOP] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_RUNNING,
+> +			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_RUNNING_P2P] = VFIO_DEVICE_STATE_RUNNING_P2P,
+>  			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+>  		},
+>  		[VFIO_DEVICE_STATE_ERROR] = {
+> @@ -1627,14 +1653,26 @@ u32 vfio_mig_get_next_state(struct vfio_device *device,
+>  			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_ERROR,
+>  			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_ERROR,
+>  			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_ERROR,
+> +			[VFIO_DEVICE_STATE_RUNNING_P2P] = VFIO_DEVICE_STATE_ERROR,
+>  			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+>  		},
+>  	};
+> +	bool have_p2p = device->migration_flags & VFIO_MIGRATION_P2P;
+> +
+>  	if (cur_fsm >= ARRAY_SIZE(vfio_from_fsm_table) ||
+>  	    new_fsm >= ARRAY_SIZE(vfio_from_fsm_table))
+>  		return VFIO_DEVICE_STATE_ERROR;
+>  
+> -	return vfio_from_fsm_table[cur_fsm][new_fsm];
+> +	if (!have_p2p && (new_fsm == VFIO_DEVICE_STATE_RUNNING_P2P ||
+> +			  cur_fsm == VFIO_DEVICE_STATE_RUNNING_P2P))
+> +		return VFIO_DEVICE_STATE_ERROR;
+
+new_fsm is provided by the user, we pass set_state.device_state
+directly to .migration_set_state.  We should do bounds checking and
+compatibility testing on the end state in the core so that we can
+return an appropriate -EINVAL and -ENOSUPP respectively, otherwise
+we're giving userspace a path to put the device into ERROR state, which
+we claim is not allowed.
+
+Testing cur_fsm is more an internal consistency check, maybe those
+should be WARN_ON.
+
+> +
+> +	cur_fsm = vfio_from_fsm_table[cur_fsm][new_fsm];
+> +	if (!have_p2p) {
+> +		while (cur_fsm == VFIO_DEVICE_STATE_RUNNING_P2P)
+> +			cur_fsm = vfio_from_fsm_table[cur_fsm][new_fsm];
+> +	}
+
+Perhaps this could be generalized with something like:
+
+	static const unsigned int state_flags_table[VFIO_DEVICE_NUM_STATES] = {
+		[VFIO_DEVICE_STATE_STOP] = VFIO_MIGRATION_STOP_COPY,
+		[VFIO_DEVICE_STATE_RUNNING] = VFIO_MIGRATION_STOP_COPY,
+		[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_MIGRATION_STOP_COPY,
+		[VFIO_DEVICE_STATE_RESUMING] = VFIO_MIGRATION_STOP_COPY,
+		[VFIO_DEVICE_STATE_RUNNING_P2P] = VFIO_MIGRATION_P2P,
+		[VFIO_DEVICE_STATE_ERROR] = ~0U,
+	};
+
+	while (!(state_flags_table[cur_fsm] & device->migration_flags))
+		cur_fsm = vfio_from_fsm_table[cur_fsm][new_fsm];
 
 Thanks,
-
-Jonathan
-
-> ---
->  drivers/cxl/cxl.h    |  5 ++++
->  drivers/cxl/region.c | 61 ++++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 64 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 8ace6cca0776..d70d8c85d05f 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -96,6 +96,11 @@ static inline u8 cxl_to_ig(u16 g)
->  	return ilog2(g) - 8;
->  }
->  
-> +static inline int cxl_to_ways(u8 ways)
-> +{
-> +	return 1 << ways;
-
-This special case of cxl_to_interleave_ways probably needs some
-documentation or a name that makes it clear why it is special.
-
-> +}
-> +
->  static inline bool cxl_is_interleave_ways_valid(int iw)
->  {
->  	switch (iw) {
-> diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> index b8982be13bfe..f748060733dd 100644
-> --- a/drivers/cxl/region.c
-> +++ b/drivers/cxl/region.c
-> @@ -359,6 +359,23 @@ static bool has_switch(const struct cxl_region *cxlr)
->  	return false;
->  }
->  
-> +static bool has_multi_switch(const struct cxl_region *cxlr)
-> +{
-> +	struct cxl_memdev *ep;
-> +	int i;
-> +
-> +	for_each_cxl_endpoint(ep, cxlr, i)
-> +		if (ep->port->depth > 3)
-> +			return true;
-> +
-> +	return false;
-> +}
-> +
-> +static struct cxl_port *get_switch(struct cxl_memdev *ep)
-> +{
-> +	return to_cxl_port(ep->port->dev.parent);
-> +}
-> +
->  static struct cxl_decoder *get_decoder(struct cxl_region *cxlr,
->  				       struct cxl_port *p)
->  {
-> @@ -409,6 +426,8 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->  				      const struct cxl_decoder *rootd,
->  				      bool state_update)
->  {
-> +	const int region_ig = cxl_to_ig(cxlr->config.interleave_granularity);
-> +	const int region_eniw = cxl_to_eniw(cxlr->config.interleave_ways);
->  	const int num_root_ports = get_num_root_ports(cxlr);
->  	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
->  	struct cxl_decoder *cxld, *c;
-> @@ -416,8 +435,12 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->  
->  	hb_count = get_unique_hostbridges(cxlr, hbs);
->  
-> -	/* TODO: Switch support */
-> -	if (has_switch(cxlr))
-> +	/* TODO: support multiple levels of switches */
-> +	if (has_multi_switch(cxlr))
-> +		return false;
-> +
-> +	/* TODO: x3 interleave for switches is hard. */
-> +	if (has_switch(cxlr) && !is_power_of_2(region_ways(cxlr)))
->  		return false;
->  
->  	/*
-> @@ -470,8 +493,14 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->  		list_for_each_entry(rp, &hb->dports, list) {
->  			struct cxl_memdev *ep;
->  			int port_grouping = -1;
-> +			int target_ndx;
->  
->  			for_each_cxl_endpoint_hb(ep, cxlr, hb, idx) {
-> +				struct cxl_decoder *switch_cxld;
-> +				struct cxl_dport *target;
-> +				struct cxl_port *switch_port;
-> +				bool found = false;
-> +
->  				if (get_rp(ep) != rp)
->  					continue;
->  
-> @@ -499,6 +528,34 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->  
->  				cxld->interleave_ways++;
->  				cxld->target[port_grouping] = get_rp(ep);
-> +
-> +				/*
-> +				 * At least one switch is connected here if the endpoint
-> +				 * has a depth > 2
-> +				 */
-> +				if (ep->port->depth == 2)
-> +					continue;
-> +
-> +				/* Check the staged list to see if this
-> +				 * port has already been added
-> +				 */
-> +				switch_port = get_switch(ep);
-> +				list_for_each_entry(switch_cxld, &cxlr->staged_list, region_link) {
-> +					if (to_cxl_port(switch_cxld->dev.parent) == switch_port)
-> +						found = true;
-> +				}
-> +
-> +				if (found) {
-> +					target = cxl_find_dport_by_dev(switch_port, ep->dev.parent->parent);
-> +					switch_cxld->target[target_ndx++] = target;
-> +					continue;
-> +				}
-> +
-> +				target_ndx = 0;
-> +
-> +				switch_cxld = get_decoder(cxlr, switch_port);
-> +				switch_cxld->interleave_ways++;
-> +				switch_cxld->interleave_granularity = cxl_to_ways(region_ig + region_eniw);
->  			}
->  		}
->  	}
+Alex
 
