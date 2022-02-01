@@ -2,126 +2,318 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8091E4A61BF
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 17:59:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA4304A61D7
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 18:04:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232037AbiBAQ6y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 11:58:54 -0500
-Received: from mail-co1nam11on2064.outbound.protection.outlook.com ([40.107.220.64]:21408
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229847AbiBAQ6x (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Feb 2022 11:58:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F0dWhh5K/hTXuLbdDkpIjTdaoZjfupZVWqc9zHkLffeC6V5TR4huuJyGP54QVDmsZu48V7Xh3cYplf2oBRrFlCl9DJi+ljBeilG/s7YdLJK6ThqjUigivbM+J2K+nx2caRBVFzqSDXRM+PhLDqDSdKDYtc6qj4w8Y7x3xiEBQm8ij1nbQfH+hB/plqFSQzCxDaFjlmgNaI5pUKQHKlyxODF7AXD9G0gNLSE/rP4GZl7eBivSaP1LC98wvljuv5iczo/9Hnppje4AsNjwZM/CtODsNcOvExC1rZH+3YFverad5xLiABE2WIHsSYt31TxhrEOt0O4gTEn+1+coML8atQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d1Jc9WOCPz2c+d7N7BqRNTNpvgb+FRKwXmuwtiK4vgE=;
- b=d9eJgo/JPYNaEyHblAmF760nD2BcQPhscq1BUYqJ3fmePBJJQdvRJAddRkHiIg7lIDxLIoApPuxzVr6Qe0GU1Vq2ubKnEXPcP+pI2ZIg50jK1iQ9DMhCPYVifDREGhzdCdrrVnfWl85JF+8VHlZZojs1V2N4MZE0Yn1+/Mqe6J23/+3Sc/ROAeN4XiK7nw3eBlwMsAgj/CJQl26S/t/Nc36RugRFM+mE2LK4z0ggCTU0+Tkv3AHkTgkSP8C4vgI52CJ+SOV8wZVxZDohcm8nfJhl5bbXZz3jiHFj0yHXxvKDOZ+ZLUlJJgF35GbBoQyCCw78ar+TcMXDZ7pzIJuMjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 12.22.5.236) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com; dmarc=pass
- (p=reject sp=reject pct=100) action=none header.from=nvidia.com; dkim=none
- (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d1Jc9WOCPz2c+d7N7BqRNTNpvgb+FRKwXmuwtiK4vgE=;
- b=qXR1McJmn3iRlMdReE1YB3VUjJZPEow5E9BW/zpLN7j8beFBN7drx6GLcYrhAXqgOHta75HW32o25vG3c+rgNhFJAfRH5e2ZiNWZd1+zNZav3dVy+reYN5hk6GYmBVedDWVDLGmipvHhzWuHuxzFobaOd8i7i9tAt02FtqmiHbg6/j4sXSzAlOb7W4pw4shswWWxz4FBkxsEIlpR2K04/JguauLcGy3bYepIV9ZphF3OLmggc+myF7QzjeGeFphp+DKmzgQD1RnSyrN5ez2h4odpfWVKgOcJL4CiZZpItPkPzErqcdPxSZGjuXr+SY8/LROXLFfYiLbWO/6cs5t1UQ==
-Received: from MW4PR03CA0276.namprd03.prod.outlook.com (2603:10b6:303:b5::11)
- by DM5PR12MB1371.namprd12.prod.outlook.com (2603:10b6:3:78::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.20; Tue, 1 Feb
- 2022 16:58:51 +0000
-Received: from CO1NAM11FT049.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:b5:cafe::6) by MW4PR03CA0276.outlook.office365.com
- (2603:10b6:303:b5::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.18 via Frontend
- Transport; Tue, 1 Feb 2022 16:58:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.236)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 12.22.5.236 as permitted sender) receiver=protection.outlook.com;
- client-ip=12.22.5.236; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (12.22.5.236) by
- CO1NAM11FT049.mail.protection.outlook.com (10.13.175.50) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4930.15 via Frontend Transport; Tue, 1 Feb 2022 16:58:51 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL109.nvidia.com
- (10.27.9.19) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Tue, 1 Feb
- 2022 16:58:50 +0000
-Received: from [10.25.79.72] (10.126.231.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.9; Tue, 1 Feb 2022
- 08:58:47 -0800
-Message-ID: <0bd9fdc1-99d4-1c59-7343-3708b331b2b5@nvidia.com>
-Date:   Tue, 1 Feb 2022 22:28:44 +0530
+        id S241377AbiBAREP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 12:04:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54407 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S241353AbiBAREO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 12:04:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643735054;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HaP8KxAvLh1LNosubcUnzm5ADA1WUWrY6mLgom77lbw=;
+        b=DIkrgDShfgO+NkC30zUtvvoOuhfRsKYxYcKF6do0fIMWltpTbhcYlhqA0uyJKFLjta0HBt
+        bJsDyXx0fbp/3DRsWZib7fszJ77uWXhsDLzRLY+uCIDNwCGJKDPJoQCwleT5IC6zZfb0Xd
+        wajZcy48ZLEkZtb2hlgAgHa8/JIEMJw=
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
+ [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-486-2Cr9AtxjM8qonTGYCutfJw-1; Tue, 01 Feb 2022 12:04:13 -0500
+X-MC-Unique: 2Cr9AtxjM8qonTGYCutfJw-1
+Received: by mail-oo1-f70.google.com with SMTP id t12-20020a4ab58c000000b002dcbee240efso6936264ooo.10
+        for <linux-pci@vger.kernel.org>; Tue, 01 Feb 2022 09:04:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HaP8KxAvLh1LNosubcUnzm5ADA1WUWrY6mLgom77lbw=;
+        b=xwgx/VMZmtnE6JksJ1Hpj1Uft0G2p++H2CvhZQrfLUCj9Rtf24RO6+qDxYnzZrg9a4
+         DbddXnw2if+jM3iq5EK9YOR8NiFpO7SJkH+Kgk8YcMqk9nTxZ71l0DoGz6GJTZIL6ub5
+         IwrTH3/EfX/z6wCPm97E+yL1Y2dgD8a5StHop8Fgm/6VQHHZeeuUvCMXlAUusYYbTWHd
+         CLLrXMYz3tCNwlg/wH66cI1RIEyFD1WERk9IzhA7Ykjc6GS+dMJ+r16BtMgo5svy5eBV
+         eOI5em45lgWxoqAPmohJjz5XGRbTBlx6JyiuTzDEzBT3AyS0LG06gz4/UJsM87Y2QO4n
+         Olnw==
+X-Gm-Message-State: AOAM53351dOQTSxmCRq7CM5XQmAUrc3w7GQJRA0zUE3ZNyZu/BAquM3p
+        m91ArmG5She2xY23cAfbFRavKqfu+zEAcHFXDWZz015diJJ0mcJreZlMzaddonBtQDH3ZmA8EaV
+        YN100DFut7kZfm8CKRkDR
+X-Received: by 2002:a05:6808:1590:: with SMTP id t16mr1823485oiw.232.1643735051760;
+        Tue, 01 Feb 2022 09:04:11 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwMjDQDxU4HmO3Y8DyO6BaAYkGGKEcpgCS6V05gNDO7FGcol+auJ8qLU06UxCLWL/4533WeAA==
+X-Received: by 2002:a05:6808:1590:: with SMTP id t16mr1823463oiw.232.1643735051432;
+        Tue, 01 Feb 2022 09:04:11 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id d21sm5504515otq.68.2022.02.01.09.04.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Feb 2022 09:04:11 -0800 (PST)
+Date:   Tue, 1 Feb 2022 10:04:08 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
+Subject: Re: [PATCH V6 mlx5-next 08/15] vfio: Define device migration
+ protocol v2
+Message-ID: <20220201100408.4a68df09.alex.williamson@redhat.com>
+In-Reply-To: <20220201003124.GZ1786498@nvidia.com>
+References: <20220130160826.32449-1-yishaih@nvidia.com>
+        <20220130160826.32449-9-yishaih@nvidia.com>
+        <20220131164318.3da9eae5.alex.williamson@redhat.com>
+        <20220201003124.GZ1786498@nvidia.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: Query related to shutting down NVMe during system suspend
-Content-Language: en-US
-To:     Keith Busch <kbusch@kernel.org>
-CC:     <rafael.j.wysocki@intel.com>, <hch@lst.de>, <bhelgaas@google.com>,
-        <mmaddireddy@nvidia.com>, <kthota@nvidia.com>,
-        <sagar.tv@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <65b836cd-8d5d-b9c2-eb8f-2ee3ef46112b@nvidia.com>
- <20220201163054.GA2838889@dhcp-10-100-145-180.wdc.com>
-From:   Vidya Sagar <vidyas@nvidia.com>
-In-Reply-To: <20220201163054.GA2838889@dhcp-10-100-145-180.wdc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.231.35]
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 65e157f5-a374-4b9d-41f0-08d9e5a41fab
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1371:EE_
-X-Microsoft-Antispam-PRVS: <DM5PR12MB13713861F61D9B67CA24CB55B8269@DM5PR12MB1371.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OwtsEU78TzuXiI0Lhsmq1CyVpd+Xa2kWBIpZIPjlbUTnherpl4S/mIPtFwavw28mydO3kJDZydYeP2F/fmXsX55+q3cEWZgXiGmPZ9sVsgicq3H8EaIgKMR1MZ2bLZ5sTHq6XJbqOReZPrihf9Qou8GcDWJhaGx1HzQrF9p7UUPnV2hHtVI7etsHA045BF8LTJk7+7Jj8TzkTehjFvkkQGRdKKzCrYWduTUI8+dbUCUIiu+f3aFgFk5eHA458BwRyAAe0UhHMajHR5BGXI+LsEXKEy2Dr4ha0m+cmgi+AlK842JVWvVRHluj02wajssp2g4YWy3SaKIc5OLas8rORZwY2BShp1kHIF6EwuBTW9qkvLOmL8M2azRfbKKvHpLw2/UsPAjBypBy7dVCjroD8zFQMayXbqUpIFUUeQcVc1GfGPZyqhFELrr5erRKKZzwE2j4CBx4/GFfhpBx5AapsnWWLyk71EGIkdmk3dSPwGsEKK2U+1+KK0hQFon0NR556uQEfl5ui43X/Sc+24W7rgNTN5nl9hueVYiMTp/rdBTG+OHkpcDVVY2Xpew6JQk5EROQjOMMLaPXrctdbDSDMH/uG+TmcQGQ4MT7xDVW+XBox2jciRqlG/PYPeM/4qeA6Zi4dv7Q/e2pTbnnh7BcNoRuy7hk+5pFIUTbuC58OaNeewLaPhcYRzOFX/jtzK6IqquWA8bBmM8DoQg2V3/K1EpoHtoZuXyJtjmVETBQcA9ZCb/aOKuuV7ycVV/l3+LRy4HpVMjWWsHLsvD4wtvLQyJjiwWoUVcr2VNOUUjnfXgSjuA6WOEoPqW4xz/W6y2qIqHuZL4LqRJXXAcOyCX8Gw==
-X-Forefront-Antispam-Report: CIP:12.22.5.236;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(47076005)(31686004)(83380400001)(53546011)(36860700001)(966005)(508600001)(6666004)(186003)(36756003)(336012)(16526019)(26005)(426003)(2616005)(40460700003)(8676002)(2906002)(4326008)(70206006)(31696002)(15650500001)(82310400004)(86362001)(8936002)(356005)(6916009)(70586007)(81166007)(316002)(16576012)(5660300002)(54906003)(43740500002)(36900700001)(20210929001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2022 16:58:51.7256
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65e157f5-a374-4b9d-41f0-08d9e5a41fab
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.236];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT049.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1371
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks for the super quick reply and I couldn't agree more.
+On Mon, 31 Jan 2022 20:31:24 -0400
+Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-On 2/1/2022 10:00 PM, Keith Busch wrote:
-> External email: Use caution opening links or attachments
+> On Mon, Jan 31, 2022 at 04:43:18PM -0700, Alex Williamson wrote:
+> > On Sun, 30 Jan 2022 18:08:19 +0200
+> > Yishai Hadas <yishaih@nvidia.com> wrote:  
+> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > > index ef33ea002b0b..d9162702973a 100644
+> > > +++ b/include/uapi/linux/vfio.h
+> > > @@ -605,10 +605,10 @@ struct vfio_region_gfx_edid {
+> > >  
+> > >  struct vfio_device_migration_info {
+> > >  	__u32 device_state;         /* VFIO device state */
+> > > -#define VFIO_DEVICE_STATE_STOP      (0)
+> > > -#define VFIO_DEVICE_STATE_RUNNING   (1 << 0)
+> > > -#define VFIO_DEVICE_STATE_SAVING    (1 << 1)
+> > > -#define VFIO_DEVICE_STATE_RESUMING  (1 << 2)
+> > > +#define VFIO_DEVICE_STATE_V1_STOP      (0)
+> > > +#define VFIO_DEVICE_STATE_V1_RUNNING   (1 << 0)
+> > > +#define VFIO_DEVICE_STATE_V1_SAVING    (1 << 1)
+> > > +#define VFIO_DEVICE_STATE_V1_RESUMING  (1 << 2)  
+> > 
+> > I assume the below is kept until we rip out all the references, but I'm
+> > not sure why we're bothering to define V1 that's not used anywhere
+> > versus just deleting the above to avoid collision with the new enum.  
 > 
+> I felt adding the deletion made this patch too big so I shoved it into
+> its own patch after the v2 stuff is described. The rename here is only
+> because we end up with a naming conflict with the enum below.
+
+Right, but we could just as easily delete the above 4 lines here to
+avoid the conflict rather than renaming them to V1.
+
+> > > + * If this function fails and returns -1 then the device_state is updated with
+> > > + * the current state the device is in. This may be the original operating state
+> > > + * or some other state along the combination transition path. The user can then
+> > > + * decide if it should execute a VFIO_DEVICE_RESET, attempt to return to the
+> > > + * original state, or attempt to return to some other state such as RUNNING or
+> > > + * STOP. If errno is set to EOPNOTSUPP, EFAULT or ENOTTY then the device_state
+> > > + * output is not reliable.  
+> > 
+> > I haven't made it through the full series yet, but it's not clear to me
+> > why these specific errnos are being masked above.  
 > 
-> On Tue, Feb 01, 2022 at 09:52:28PM +0530, Vidya Sagar wrote:
->> Hi Rafael & Christoph,
->> My query is regarding the comment and the code that follows after it at
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/nvme/host/pci.c?h=v5.17-rc2#n3243
->> What I understood from it is that, there is an underlying assumption
->> that the power to the devices is not removed during the suspend call.
->> In the case of device-tree based platforms like Tegra194, power is
->> indeed removed to the devices during suspend-resume process. Hence, the
->> NVMe devices need to be taken through the shutdown path irrespective of
->> whether the ASPM states are enabled or not.
->> I would like to hear from you the best method to follow to achieve this.
+> Basically, we can't return the device_state unless we properly process
+> the ioctl. Eg old kernels that do not support this will return ENOTTY
+> and will not update it. If userspace messed up the pointer EFAULT will
+> be return and it will not be updated, finally EOPNOTSUPP is a generic
+> escape for any future reason the kernel might not want to update it.
 > 
-> Since platform makers can't converge on how to let a driver know what
-> it's supposed to do, I suggest we default to the simple shutdown suspend
-> all the time. We can add a module parameter to let a user request nvme
-> power management if they really want it. No matter what we do here,
-> someone is going to complain, but at least simple shutdown is safe...
+> In practice, I found no use for using the device_state in the error
+> path in qemu, but it seemed useful for debugging.
+
+
+Ok, let me parrot back to see if I understand.  -ENOTTY will be
+returned if the ioctl doesn't exist, in which case device_state is
+untouched and cannot be trusted.  At the same time, we expect the user
+to use the feature ioctl to make sure the ioctl exists, so it would
+seem that we've reclaimed that errno if we believe the user should
+follow the protocol.
+
+-EOPNOTSUPP is returned both if the driver doesn't support migration
+(which should be invalid based on the protocol).  ie. this:
+
++       if (!device->ops->migration_set_state)
++               return -EOPNOTSUPP;
+
+Should return -ENOTTY, just as the feature does.  But it's also for
+future unsupported ops, but couldn't we also specify that the driver
+must fill final_state with the current device state for any such case.
+We also have this:
+
++       if (set_state.argsz < minsz || set_state.flags)
++               return -EOPNOTSUPP;
+
+Which I think should be -EINVAL.
+
+That leaves -EFAULT, for example:
+
++       if (copy_from_user(&set_state, arg, minsz))
++               return -EFAULT;
+
+Should we be able to know the current device state in core code such
+that we can fill in device state here?
+
+I think those changes would go a ways towards fully specified behavior
+instead of these wishy washy unreliable return values.  Then we could
+also get rid of this paranoia protection of those errnos:
+
++       if (IS_ERR(filp)) {
++               if (WARN_ON(PTR_ERR(filp) == -EOPNOTSUPP ||
++                           PTR_ERR(filp) == -ENOTTY ||
++                           PTR_ERR(filp) == -EFAULT))
++                       filp = ERR_PTR(-EINVAL);
++               goto out_copy;
++       }
+
+Also, the original text of this uapi paragraph reads:
+
+ "If this function fails and returns -1 then..."
+
+Could we clarify that to s/function/ioctl/?  It caused me a moment of
+confusion for the returned -errnos.
+
+> > > + * If the new_state starts a new data transfer session then the FD associated
+> > > + * with that session is returned in data_fd. The user is responsible to close
+> > > + * this FD when it is finished. The user must consider the migration data
+> > > + * segments carried over the FD to be opaque and non-fungible. During RESUMING,
+> > > + * the data segments must be written in the same order they came out of the
+> > > + * saving side FD.  
+> > 
+> > The lifecycle of this FD is a little sketchy.  The user is responsible
+> > to close the FD, are they required to?  
 > 
+> No. Detecting this in the kernel would be notable added complexity to
+> the drivers.
+> 
+> Let's clarify it:
+> 
+>  "close this FD when it no longer has data to
+>  read/write. data_fds are not re-used, every data transfer session gets
+>  a new FD."
+> 
+> ?
+
+
+Better
+
+
+> > ie. should the migration driver fail transitions if there's an
+> > outstanding FD?  
+> 
+> No, the driver should orphan that FD and use a fresh new one the next
+> cycle. mlx5 will sanitize the FD, free all the memory, and render it
+> inoperable which I'd view as best practice.
+
+Agreed, can we add a second sentence to the above clarification to
+outline those driver responsibilities?
+
+
+> > Should the core code mangle the f_ops or force and EOF or in some
+> > other way disconnect the FD to avoid driver bugs/exploits with users
+> > poking stale FDs?    
+> 
+> We looked at swapping f_ops of a running fd for the iommufd project
+> and decided it was not allowed/desired. It needs locking.
+> 
+> Here the driver should piggy back the force EOF using its own existing
+> locking protecting concurrent read/write, like mlx5 did. It is
+> straightforward.
+
+Right, sounded ugly but I thought I'd toss it out.  If we define it as
+the driver's responsibility, I think I'm ok.
+
+> > Should we be bumping a reference on the device FD such that we can't
+> > have outstanding migration FDs with the device closed (and
+> > re-assigned to a new user)?  
+> 
+> The driver must ensure any activity triggered by the migration FD
+> against the vfio_device is halted before close_device() returns, just
+> like basically everything else connected to open/close_device(). mlx5
+> does this by using the same EOF sanitizing the FSM logic uses.
+> 
+> Once sanitized the f_ops should not be touching the vfio_device, or
+> even have a pointer to it, so there is no reason to connect the two
+> FDs together. I'd say it is a red flag if a driver proposes to do
+> this, likely it means it has a problem with the open/close_device()
+> lifetime model.
+
+Maybe we just need a paragraph somewhere to describe the driver
+responsibilities and expectations in managing the migration FD,
+including disconnecting it after end of stream and access relative to
+the open state of the vfio_device.  Seems an expanded descriptions
+somewhere near the declaration in vfio_device_ops would be appropriate.
+
+> > > + * Setting device_state to VFIO_DEVICE_STATE_ERROR will always fail with EINVAL,
+> > > + * and take no action. However the device_state will be updated with the current
+> > > + * value.
+> > > + *
+> > > + * Return: 0 on success, -1 and errno set on failure.
+> > > + */
+> > > +struct vfio_device_mig_set_state {
+> > > +	__u32 argsz;
+> > > +	__u32 device_state;
+> > > +	__s32 data_fd;
+> > > +	__u32 flags;
+> > > +};  
+> > 
+> > argsz and flags layout is inconsistent with all other vfio ioctls.  
+> 
+> OK
+> 
+> >   
+> > > +
+> > > +#define VFIO_DEVICE_MIG_SET_STATE _IO(VFIO_TYPE, VFIO_BASE + 21)  
+> > 
+> > Did you consider whether this could also be implemented as a
+> > VFIO_DEVICE_FEATURE?  Seems the feature struct would just be
+> > device_state and data_fd.  Perhaps there's a use case for GET as well.
+> > Thanks,  
+> 
+> Only briefly..
+> 
+> I'm not sure what the overall VFIO vision is here.. Are we abandoning
+> traditional ioctls in favour of a multiplexer? Calling the multiplexer
+> ioctl "feature" is a bit odd..
+
+Is it really?  VF Token support is a feature that a device might have
+and we can use the same interface to probe that it exists as well as
+set the UUID token.  We're using it to manipulate the state of a device
+feature.
+
+If we're only looking for a means to expose that a device has support
+for something, our options are a flag bit on the vfio_device_info or a
+capability on that ioctl.  It's arguable that the latter might be a
+better option for VFIO_DEVICE_FEATURE_MIGRATION since its purpose is
+only to return a flags field, ie. we're not interacting with a feature,
+we're exposing a capability with fixed properties.
+
+However as we move to MIG_SET_SET, well now we are interacting with a
+feature of the device and there's really nothing unique about the
+calling convention that would demand that we define a stand alone ioctl.
+
+> It complicates the user code a bit, it is more complicated to invoke the
+> VFIO_DEVICE_FEATURE (check the qemu patch to see the difference).
+
+Is it really any more than some wrapper code?  Are there objections to
+this sort of multiplexer?  As I was working on the VF Token support, it
+felt like a fairly small device feature and I didn't want to set a
+precedent of cluttering our ioctl space with every niche little
+feature.  The s390 folks have some proposals on list for using features
+and I'm tempted to suggest it to Abhishek as well for their
+implementation of D3cold support.
+ 
+> Either way I don't have a strong opinion, please have a think and let
+> us know which you'd like to follow.
+
+I'm leaning towards a capability for migration support flags and a
+feature for setting the state, but let me know if this looks like a bad
+idea for some reason.  Thanks,
+
+Alex
+
