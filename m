@@ -2,118 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 210684A679B
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 23:15:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99B764A67A3
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 23:18:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234933AbiBAWPa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 17:15:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231201AbiBAWP3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 17:15:29 -0500
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC4DC06173B
-        for <linux-pci@vger.kernel.org>; Tue,  1 Feb 2022 14:15:29 -0800 (PST)
-Received: by mail-pg1-x531.google.com with SMTP id e16so16660651pgn.4
-        for <linux-pci@vger.kernel.org>; Tue, 01 Feb 2022 14:15:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8lcMIoP/jHkOrDBdh7YfG3YTgWtU2wGo4Ba0w3LhmBk=;
-        b=afbFAARJkoHS4pWZ0vUBRJPgIfnOqYZwucjuZLq6xeZPyo0burwAueHbReZoyKlMXg
-         BG2s5RJxrnwruBFcRQRCvhFDrcVjjdgz0+KWc0qz//R8pt3v2gu/0TpUPe5QTVQHApkx
-         H/Qz9HGRSD4lGZ+0deuZGdfwi/2mKtsM1I3LQVaqiSEyo1pwtrqYjkvJqf9zhobEcc7g
-         CGBSXm7X+GWRz70YSzwTz0jwFtFqQ9hnVw15VcjLG1m7S6/wCHXtpGoEdUvQLiaI6LHB
-         rclUXG5uqiW07B0xDC6Y2qvc8L8U+uzD4EFa+Jr2P7drnEgYbOUsIN7R5fDYpW7IV2Ze
-         QNgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8lcMIoP/jHkOrDBdh7YfG3YTgWtU2wGo4Ba0w3LhmBk=;
-        b=dBShstK9pDaXbHgTrmQp329V+dX1nc9Fl5i2Az+EUhsaLMjCna3p+3eCy01hqRREkG
-         4swm/rVVFgo8S77D/CaeI9rF7OWpKPI4sKUSPI+d8qz9ldI1oHLidm0iDObsECvUqzqK
-         oH/oq7Z634VFVt4T9AcsU5qRWtVFzxm/zjprhTKODptmVlLebh80RVYYZcGeJ0t6fFHk
-         zKviOOG/ZoFJdipVw64u6fuGqrKKIkxWriaNE9RCwxow5TkoJnH/JDsBH5yipQpsy90r
-         fr1Y4S3YHW0kNbFTVggEGmjZNiHNXOLISK0QsjTuyKZ7cvofltUOxFoXfYrTFAyDF63P
-         N+kg==
-X-Gm-Message-State: AOAM5313LeNf0JABstu2GhI7kuXqtLGhozeJ+/M6qvK9GRhPi1S9KhNa
-        Z4SZnFP11FH97pTxDbdgUmZ+lAqn6IKlLi5xueX5JSCkCgLXOA==
-X-Google-Smtp-Source: ABdhPJwfvJzchvNflrDe9GlJOyttxlmX1KkpKMR7XP6+YRQzFCoV3LZM5GUDP9/jhHXiSOAIEdQOCObqAll0xjZasmM=
-X-Received: by 2002:a63:550f:: with SMTP id j15mr22064347pgb.40.1643753729140;
- Tue, 01 Feb 2022 14:15:29 -0800 (PST)
-MIME-Version: 1.0
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164298426273.3018233.9302136088649279124.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220131181924.00006c57@Huawei.com> <20220201152410.36jvdmmpcqi3lhdw@intel.com>
- <CAPcyv4iyRKfviJNtHP=wsqRtppDb+BrmhNeum+ZcyBAJ5VSPtA@mail.gmail.com> <20220201221114.25ivh5ubptd7kauk@intel.com>
-In-Reply-To: <20220201221114.25ivh5ubptd7kauk@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 1 Feb 2022 14:15:22 -0800
-Message-ID: <CAPcyv4hYSm+q1RYnrdNvr_dXsU-OZ-v94RRvNGtr5-wtHc97=w@mail.gmail.com>
-Subject: Re: [PATCH v3 27/40] cxl/pci: Cache device DVSEC offset
+        id S238039AbiBAWSn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 17:18:43 -0500
+Received: from mga14.intel.com ([192.55.52.115]:9058 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229971AbiBAWSm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Feb 2022 17:18:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643753922; x=1675289922;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N1pYMtoifGkvk1GZdHfarNxiC8SwrZB1coh6JHcccJ8=;
+  b=egsyWGMhSvIaqxjejdNiZJeyRzqTxDFviczJg0eBexq5VLhRV6A3A732
+   /fNuTP50QycvT8mMQoBxX7Qze4sV2TUcQFIfpy6y0NmE0j0yMp8WKUAO8
+   Og18DC4x/aLkSmzlSYjVkWvInt6ioZCYgVX3nfhg93YOEUrXjPX/u1Aeq
+   PPJv2o4P41IqYAaxBec34nYyoSWpP3TPbQBoLzVenqSTtgSRu+gt1fcOC
+   xduHVs78IKQbN/+itU/ibpui3EbFOxDMA0we3zHdZ9Fp/sERX5MHvfamO
+   3xAXgwRM6qrYwMCgPJtWA0z/8YRjOoxQKA/COx9oMpup8284jgporrtW8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="248028749"
+X-IronPort-AV: E=Sophos;i="5.88,335,1635231600"; 
+   d="scan'208";a="248028749"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 14:18:42 -0800
+X-IronPort-AV: E=Sophos;i="5.88,335,1635231600"; 
+   d="scan'208";a="482557745"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 14:18:41 -0800
+Date:   Tue, 1 Feb 2022 14:18:41 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
 To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V6 06/10] cxl/pci: Find the DOE mailbox which supports
+ CDAT
+Message-ID: <20220201221841.GO785175@iweiny-DESK2.sc.intel.com>
+Mail-Followup-To: Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20220201071952.900068-1-ira.weiny@intel.com>
+ <20220201071952.900068-7-ira.weiny@intel.com>
+ <20220201184947.5yx4l74nruyoapvr@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220201184947.5yx4l74nruyoapvr@intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 1, 2022 at 2:11 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 22-02-01 13:41:50, Dan Williams wrote:
-> > On Tue, Feb 1, 2022 at 7:24 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > On 22-01-31 18:19:24, Jonathan Cameron wrote:
-> > > > On Sun, 23 Jan 2022 16:31:02 -0800
-> > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >
-> > > > > From: Ben Widawsky <ben.widawsky@intel.com>
-> > > > >
-> > > > > The PCIe device DVSEC, defined in the CXL 2.0 spec, 8.1.3 is required to
-> > > > > be implemented by CXL 2.0 endpoint devices. Since the information
-> > > > > contained within this DVSEC will be critically important, it makes sense
-> > > > > to find the value early, and error out if it cannot be found.
-> > > > >
-> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > > Guess the logic makes sense about checking this early though my cynical
-> > > > mind says, that if someone is putting in devices that claim to be
-> > > > CXL ones and this isn't there it is there own problem if they
-> > > > kernel wastes effort bringing the driver up only to find later
-> > > > it can't finish doing so...
-> > >
-> > > I don't remember if Dan and I discussed actually failing to bind this early if
-> > > the DVSEC isn't there.
-> >
-> > On second look, the error message does not make sense because there is
-> > "no functionality" not "limited functionality" as a result of this
-> > failure because the cxl_pci driver just gives up. This failure should
-> > be limited to cxl_mem, not cxl_pci as there might still be value in
-> > accessing the mailbox on this device.
-> >
-> > > I think the concern is less about wasted effort and more
-> > > about the inability to determine if the device is actively decoding something
-> > > and then having the kernel driver tear that out when it takes over the decoder
-> > > resources. This was specifically targeted toward the DVSEC range registers
-> > > (obviously things would fail later if we couldn't find the MMIO).
-> >
-> > If there is no CXL DVSEC then cxl_mem should fail, that's it.
-> >
->
-> If there is no CXL DVSEC we have no way to find the device's MMIO. You need the
-> register locator dvsec. Not sure how you intend to do anything with the device
-> at that point, but if you see something I don't, then by all means, change it.
+On Tue, Feb 01, 2022 at 10:49:47AM -0800, Widawsky, Ben wrote:
+> On 22-01-31 23:19:48, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Memory devices need the CDAT data from the device.  This data is read
+> > from a DOE mailbox which supports the CDAT protocol.
+> > 
+> > Search the DOE auxiliary devices for the one which supports the CDAT
+> > protocol.  Cache that device to be used for future queries.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-I see:
+[snip]
 
-pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL, CXL_DVSEC_PCIE_DEVICE);
+> >  
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index d4ae79b62a14..dcc55c4efd85 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -536,12 +536,53 @@ static int cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
+> >  	return rc;
+> >  }
+> >  
+> > +static int cxl_match_cdat_doe_device(struct device *dev, const void *data)
+> > +{
+> > +	const struct cxl_dev_state *cxlds = data;
+> > +	struct auxiliary_device *adev;
+> > +	struct pci_doe_dev *doe_dev;
+> > +
+> > +	/* First determine if this auxiliary device belongs to the cxlds */
+> > +	if (cxlds->dev != dev->parent)
+> > +		return 0;
+> 
+> I don't understand auxiliary bus but I'm wondering why it's checking the parent
+> of the device?
 
-...and:
+auxiliary_find_device() iterates all the auxiliary devices in the system.  This
+check was a way for the match function to know if the auxiliary device belongs
+to the cxlds we are interested in...
 
-pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL, CXL_DVSEC_REG_LOCATOR);
+But now that I think about it we could have other auxiliary devices attached
+which are not DOE...  :-/  So this check is not complete.
 
-...aren't they independent?
+FWIW I'm not thrilled with the way auxiliary_find_device() is defined.  And now
+that I look at it I think the only user of it currently is wrong.  They too
+have a check like this but it is after another check...  :-/
+
+I was hoping to avoid having a list of DOE devices in the cxlds and simply let
+the auxiliary bus infrastructure do that somehow.  IIRC Jonathan was thinking
+along the same lines.  I think he actually suggested auxiliary_find_device()...
+
+It would be nice if I could have an aux_find_child() or something which
+iterated the auxiliary devices attached to a particular parent device.  I've
+just not figured out exactly how to implement that better than what I did here.
+
+> 
+> > +
+> > +	adev = to_auxiliary_dev(dev);
+> > +	doe_dev = container_of(adev, struct pci_doe_dev, adev);
+> > +
+> > +	/* If it is one of ours check for the CDAT protocol */
+> > +	if (pci_doe_supports_prot(doe_dev, PCI_DVSEC_VENDOR_ID_CXL,
+> > +				  CXL_DOE_PROTOCOL_TABLE_ACCESS))
+> > +		return 1;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int cxl_setup_doe_devices(struct cxl_dev_state *cxlds)
+> >  {
+> >  	struct device *dev = cxlds->dev;
+> >  	struct pci_dev *pdev = to_pci_dev(dev);
+> > +	struct auxiliary_device *adev;
+> > +	int rc;
+> >  
+> > -	return pci_doe_create_doe_devices(pdev);
+> > +	rc = pci_doe_create_doe_devices(pdev);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	adev = auxiliary_find_device(NULL, cxlds, &cxl_match_cdat_doe_device);
+> > +
+> > +	if (adev) {
+> > +		struct pci_doe_dev *doe_dev = container_of(adev,
+> > +							   struct pci_doe_dev,
+> > +							   adev);
+> > +
+> > +		/*
+> > +		 * No reference need be taken.  The DOE device lifetime is
+> > +		 * longer that the CXL device state lifetime
+> > +		 */
+> 
+> You're holding a reference to the adev here. Did you mean to drop it?
+
+Does find device get a reference? ...  Ah shoot I did not see that.
+
+Yea the reference should be dropped somewhere.
+
+Thanks,
+Ira
+
+> 
+> > +		cxlds->cdat_doe = doe_dev;
+> > +	}
+> > +
+> > +	return 0;
+> >  }
+> >  
+> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > -- 
+> > 2.31.1
+> > 
