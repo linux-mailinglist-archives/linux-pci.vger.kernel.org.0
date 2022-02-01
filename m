@@ -2,42 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D1A64A5AA0
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 11:52:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 027CA4A5ABF
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 11:58:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236933AbiBAKw5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 05:52:57 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4591 "EHLO
+        id S236843AbiBAK6g convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 1 Feb 2022 05:58:36 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4592 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236923AbiBAKw5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 05:52:57 -0500
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jp1qj6zX4z67QKq;
-        Tue,  1 Feb 2022 18:48:17 +0800 (CST)
+        with ESMTP id S236807AbiBAK6f (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 05:58:35 -0500
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jp1zF1qTpz67stb;
+        Tue,  1 Feb 2022 18:54:49 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 1 Feb 2022 11:52:55 +0100
+ 15.1.2308.21; Tue, 1 Feb 2022 11:58:34 +0100
 Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 1 Feb
- 2022 10:52:54 +0000
-Date:   Tue, 1 Feb 2022 10:52:53 +0000
+ 2022 10:58:33 +0000
+Date:   Tue, 1 Feb 2022 10:58:32 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
-        <linux-pci@vger.kernel.org>, <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v5 16/40] cxl/core/port: Use dedicated lock for decoder
- target list
-Message-ID: <20220201105253.00002f23@Huawei.com>
-In-Reply-To: <164367209095.208169.1171673319121271280.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164316562430.3437160.122223070771602475.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <164367209095.208169.1171673319121271280.stgit@dwillia2-desk3.amr.corp.intel.com>
+        "Linux PCI" <linux-pci@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH v5 18/40] cxl/pmem: Introduce a find_cxl_root() helper
+Message-ID: <20220201105832.000058d6@Huawei.com>
+In-Reply-To: <CAPcyv4j2e-QxZp9-a7aL5JkC2WmLy9DAO9vgeYV7N1GdfayQQg@mail.gmail.com>
+References: <164322333437.3694981.17087130505938650994.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <164324151672.3935633.11277011056733051668.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <20220131161856.00005cd0@Huawei.com>
+        <CAPcyv4j2e-QxZp9-a7aL5JkC2WmLy9DAO9vgeYV7N1GdfayQQg@mail.gmail.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [10.202.226.41]
 X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
  lhreml710-chm.china.huawei.com (10.201.108.61)
@@ -46,29 +48,151 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 31 Jan 2022 15:35:18 -0800
+On Mon, 31 Jan 2022 16:22:35 -0800
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Lockdep reports:
+> On Mon, Jan 31, 2022 at 8:20 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > On Wed, 26 Jan 2022 15:59:07 -0800
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >  
+> > > In preparation for switch port enumeration while also preserving the
+> > > potential for multi-domain / multi-root CXL topologies. Introduce a
+> > > 'struct device' generic mechanism for retrieving a root CXL port, if one
+> > > is registered. Note that the only know multi-domain CXL configurations
+> > > are running the cxl_test unit test on a system that also publishes an
+> > > ACPI0017 device.
+> > >
+> > > With this in hand the nvdimm-bridge lookup can be with
+> > > device_find_child() instead of bus_find_device() + custom mocked lookup
+> > > infrastructure in cxl_test.
+> > >
+> > > The mechanism looks for a 2nd level port since the root level topology
+> > > is platform-firmware specific and the 2nd level down follows standard
+> > > PCIe topology expectations. The cxl_acpi 2nd level is associated with a
+> > > PCIe Root Port.
+> > >
+> > > Reported-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
+> > A question inline.
+> >
+> > Thanks,
+> >
+> > Jonathan
+> >  
+> > > ---
+> > > Changes since v4:
+> > > - reset @iter each loop otherwise only the first dport can be scanned.
+> > >
+> > >  drivers/cxl/core/pmem.c       |   14 ++++++++---
+> > >  drivers/cxl/core/port.c       |   50 +++++++++++++++++++++++++++++++++++++++++
+> > >  drivers/cxl/cxl.h             |    1 +
+> > >  tools/testing/cxl/Kbuild      |    2 --
+> > >  tools/testing/cxl/mock_pmem.c |   24 --------------------
+> > >  5 files changed, 61 insertions(+), 30 deletions(-)
+> > >  delete mode 100644 tools/testing/cxl/mock_pmem.c
+> > >
+> > > diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+> > > index 40b3f5030496..8de240c4d96b 100644
+> > > --- a/drivers/cxl/core/pmem.c
+> > > +++ b/drivers/cxl/core/pmem.c
+> > > @@ -57,24 +57,30 @@ bool is_cxl_nvdimm_bridge(struct device *dev)
+> > >  }
+> > >  EXPORT_SYMBOL_NS_GPL(is_cxl_nvdimm_bridge, CXL);
+> > >
+> > > -__mock int match_nvdimm_bridge(struct device *dev, const void *data)
+> > > +static int match_nvdimm_bridge(struct device *dev, void *data)
+> > >  {
+> > >       return is_cxl_nvdimm_bridge(dev);
+> > >  }
+> > >
+> > >  struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
+> > >  {
+> > > +     struct cxl_port *port = find_cxl_root(&cxl_nvd->dev);
+> > >       struct device *dev;
+> > >
+> > > -     dev = bus_find_device(&cxl_bus_type, NULL, cxl_nvd, match_nvdimm_bridge);
+> > > +     if (!port)
+> > > +             return NULL;
+> > > +
+> > > +     dev = device_find_child(&port->dev, NULL, match_nvdimm_bridge);
+> > > +     put_device(&port->dev);
+> > > +
+> > >       if (!dev)
+> > >               return NULL;
+> > > +
+> > >       return to_cxl_nvdimm_bridge(dev);
+> > >  }
+> > >  EXPORT_SYMBOL_NS_GPL(cxl_find_nvdimm_bridge, CXL);
+> > >
+> > > -static struct cxl_nvdimm_bridge *
+> > > -cxl_nvdimm_bridge_alloc(struct cxl_port *port)
+> > > +static struct cxl_nvdimm_bridge *cxl_nvdimm_bridge_alloc(struct cxl_port *port)
+> > >  {
+> > >       struct cxl_nvdimm_bridge *cxl_nvb;
+> > >       struct device *dev;
+> > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > > index 4c921c49f967..6447f12ef71d 100644
+> > > --- a/drivers/cxl/core/port.c
+> > > +++ b/drivers/cxl/core/port.c
+> > > @@ -457,6 +457,56 @@ int devm_cxl_register_pci_bus(struct device *host, struct device *uport,
+> > >  }
+> > >  EXPORT_SYMBOL_NS_GPL(devm_cxl_register_pci_bus, CXL);
+> > >
+> > > +/* Find a 2nd level CXL port that has a dport that is an ancestor of @match */
+> > > +static int match_cxl_root_child(struct device *dev, const void *match)
+> > > +{
+> > > +     const struct device *iter = NULL;
+> > > +     struct cxl_port *port, *parent;
+> > > +     struct cxl_dport *dport;
+> > > +
+> > > +     if (!is_cxl_port(dev))
+> > > +             return 0;
+> > > +
+> > > +     port = to_cxl_port(dev);
+> > > +     if (is_cxl_root(port))
+> > > +             return 0;
+> > > +
+> > > +     parent = to_cxl_port(port->dev.parent);
+> > > +     if (!is_cxl_root(parent))
+> > > +             return 0;
+> > > +
+> > > +     cxl_device_lock(&port->dev);
+> > > +     list_for_each_entry(dport, &port->dports, list) {
+> > > +             iter = match;  
+> >
+> > This confuses me.  In the call below to bus_find_device()
+> > data == NULL, which ends up as match here.  
 > 
->  ======================================================
->  WARNING: possible circular locking dependency detected
->  5.16.0-rc1+ #142 Tainted: G           OE
->  ------------------------------------------------------
->  cxl/1220 is trying to acquire lock:
->  ffff979b85475460 (kn->active#144){++++}-{0:0}, at: __kernfs_remove+0x1ab/0x1e0
-> 
->  but task is already holding lock:
->  ffff979b87ab38e8 (&dev->lockdep_mutex#2/4){+.+.}-{3:3}, at: cxl_remove_ep+0x50c/0x5c0 [cxl_core]
-> 
-> ...where cxl_remove_ep() is a helper that wants to delete ports while
-> holding a lock on the host device for that port. That sets up a lockdep
-> violation whereby target_list_show() can not rely holding the decoder's
-> device lock while walking the target_list. Switch to a dedicated seqlock
-> for this purpose.
-> 
-> Reported-by: Ben Widawsky <ben.widawsky@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> I think you misread, @start is NULL @data becomes @match as the
+> starting point for the search.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+oops. I read the wrong parameter order as you identified.
+
+
+> 
+> >
+> > So how does that ever find a match?
+> >  
+> > > +             while (iter) {
+> > > +                     if (iter == dport->dport)
+> > > +                             goto out;
+> > > +                     iter = iter->parent;
+> > > +             }
+> > > +     }
+> > > +out:
+> > > +     cxl_device_unlock(&port->dev);
+> > > +
+> > > +     return !!iter;  
+> >
+> > return iter; should be sufficient as docs just say non zero for a match
+> > in bus_find_device() match functions.  
+> 
+> drivers/cxl/core/port.c:488:16: error: returning ‘const struct device
+> *’ from a function with return type ‘int’ makes integer from pointer
+> without a cast [-Werror=int-conversion]
+Ah. Good point.
+
+Jonathan
 
