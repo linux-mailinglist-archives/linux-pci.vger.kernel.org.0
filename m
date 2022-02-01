@@ -2,168 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F3584A5CAF
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 14:00:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E904A4A5D4D
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 14:16:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238293AbiBAM76 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 07:59:58 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4601 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233789AbiBAM76 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 07:59:58 -0500
-Received: from fraeml735-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jp4fH0CtNz67xDg;
-        Tue,  1 Feb 2022 20:55:19 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml735-chm.china.huawei.com (10.206.15.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 1 Feb 2022 13:59:56 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 1 Feb
- 2022 12:59:56 +0000
-Date:   Tue, 1 Feb 2022 12:59:54 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>, <ben.widawsky@intel.com>
-Subject: Re: [PATCH 2/2] cxl/core/port: Handle invalid decoders
-Message-ID: <20220201125954.000038c4@Huawei.com>
-In-Reply-To: <164317464918.3438644.12371149695618136198.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164317463887.3438644.4087819721493502301.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <164317464918.3438644.12371149695618136198.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S238474AbiBANQ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 08:16:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238446AbiBANQZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 08:16:25 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7548AC061714;
+        Tue,  1 Feb 2022 05:16:25 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D18BCB82DE3;
+        Tue,  1 Feb 2022 13:16:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8765EC340EF;
+        Tue,  1 Feb 2022 13:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643721382;
+        bh=UaVOPrZ2MW3v73wj5jL6yYbvsFi5Uh7hAAKwFmb6cms=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jM2G7l58pX7fzAJNYKR7OGgVw//fL9Zw0pcho/QheJNUDQZKLPBPeiDHMHL1UCzEj
+         3YZH1jX1pET95yU3MAS7ok7zbMnO3HExSbrve9Y0n4pVGOtWkruReWjplCEKxv8wuv
+         TTjO4XQM34oUWwhxoqre5JJgaD6xksH/Xgbiahjd/Q4QuUSxbtwnrzcvmnV+yXobp5
+         RQw+M7LQNuNiAPL6v0oweou/Jbvugev4Zf2IlkhvR/HTp71xHzNml2h1zsyLdXDMEw
+         3NMp+kqoB/XvV7i8DtNxM6/Z4EyBx7LpZZxq+I528lm7QWPACvVzYADqh1TGSJL/Oo
+         BZcPWe8Ix2kYw==
+Received: by mail-ej1-f54.google.com with SMTP id m4so54225821ejb.9;
+        Tue, 01 Feb 2022 05:16:22 -0800 (PST)
+X-Gm-Message-State: AOAM532rntE3gbN/1qP6WKWAjS1BUrSioOVwwYXxuTknXrrmoG+u0UGs
+        JCGr4nSZp4CS1tG7w9GC3IZl3PpZ2+GqnF4ZjA==
+X-Google-Smtp-Source: ABdhPJzy9MuzObhcYyskRJVEt40Siz6xKdIKSxIxEJ2Z/KqP2iA7ZjtDgOplHMyrhQzUbUReOMoTRaPXB1JGPeH0oBY=
+X-Received: by 2002:a17:907:7f1a:: with SMTP id qf26mr15019342ejc.20.1643721380863;
+ Tue, 01 Feb 2022 05:16:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20220106103645.2790803-1-festevam@gmail.com>
+In-Reply-To: <20220106103645.2790803-1-festevam@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 1 Feb 2022 07:16:09 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+_qASKWhoLHgnaypVjuDwHwAovke48PQFXUenO2JoEDw@mail.gmail.com>
+Message-ID: <CAL_Jsq+_qASKWhoLHgnaypVjuDwHwAovke48PQFXUenO2JoEDw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: imx6: Allow to probe when dw_pcie_wait_for_link() fails
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        PCI <linux-pci@vger.kernel.org>, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 25 Jan 2022 21:24:09 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> In case init_hdm_decoder() finds invalid settings, skip to the next
-> valid decoder. Only fail port enumeration if zero valid decoders are
-> found. This protects the driver init against broken hardware and / or
-> future interleave capabilities.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-One comment inline, but I'm fine with this as it is.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+On Thu, Jan 6, 2022 at 4:36 AM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> The intention of commit 886a9c134755 ("PCI: dwc: Move link handling into
+> common code") was to standardize the behavior of link down as explained
+> in its commit log:
+>
+> "The behavior for a link down was inconsistent as some drivers would fail
+> probe in that case while others succeed. Let's standardize this to
+> succeed as there are usecases where devices (and the link) appear later
+> even without hotplug. For example, a reconfigured FPGA device."
+>
+> The pci-imx6 still fails to probe when the link is not present, which
+> causes the following warning:
+>
+> imx6q-pcie 8ffc000.pcie: Phy link never came up
+> imx6q-pcie: probe of 8ffc000.pcie failed with error -110
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 30 at drivers/regulator/core.c:2257 _regulator_put.part.0+0x1b8/0x1dc
+> Modules linked in:
+> CPU: 0 PID: 30 Comm: kworker/u2:2 Not tainted 5.15.0-next-20211103 #1
+> Hardware name: Freescale i.MX6 SoloX (Device Tree)
+> Workqueue: events_unbound async_run_entry_fn
+> [<c0111730>] (unwind_backtrace) from [<c010bb74>] (show_stack+0x10/0x14)
+> [<c010bb74>] (show_stack) from [<c0f90290>] (dump_stack_lvl+0x58/0x70)
+> [<c0f90290>] (dump_stack_lvl) from [<c012631c>] (__warn+0xd4/0x154)
+> [<c012631c>] (__warn) from [<c0f87b00>] (warn_slowpath_fmt+0x74/0xa8)
+> [<c0f87b00>] (warn_slowpath_fmt) from [<c076b4bc>] (_regulator_put.part.0+0x1b8/0x1dc)
+> [<c076b4bc>] (_regulator_put.part.0) from [<c076b574>] (regulator_put+0x2c/0x3c)
+> [<c076b574>] (regulator_put) from [<c08c3740>] (release_nodes+0x50/0x178)
+>
+> Fix this problem by ignoring the dw_pcie_wait_for_link() error like
+> it is done on the other dwc drivers.
+>
+> Tested on imx6sx-sdb and imx6q-sabresd boards.
+>
+> Cc: <stable@vger.kernel.org>
+> Fixes: 886a9c134755 ("PCI: dwc: Move link handling into common code")
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
 > ---
->  drivers/cxl/core/hdm.c |   36 ++++++++++++++++++++++++++++++------
->  1 file changed, 30 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index c966ab0d51fe..4955ba16c9c8 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -150,8 +150,8 @@ static int to_interleave_ways(u32 ctrl)
->  	}
->  }
->  
-> -static void init_hdm_decoder(struct cxl_decoder *cxld, int *target_map,
-> -			     void __iomem *hdm, int which)
-> +static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
-> +			    int *target_map, void __iomem *hdm, int which)
->  {
->  	u64 size, base;
->  	u32 ctrl;
-> @@ -167,6 +167,11 @@ static void init_hdm_decoder(struct cxl_decoder *cxld, int *target_map,
->  
->  	if (!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED))
->  		size = 0;
-> +	if (base == U64_MAX || size == U64_MAX) {
-> +		dev_warn(&port->dev, "decoder%d.%d: Invalid resource range\n",
-> +			 port->id, cxld->id);
-> +		return -ENXIO;
-> +	}
->  
->  	cxld->decoder_range = (struct range) {
->  		.start = base,
-> @@ -180,6 +185,12 @@ static void init_hdm_decoder(struct cxl_decoder *cxld, int *target_map,
->  			cxld->flags |= CXL_DECODER_F_LOCK;
->  	}
->  	cxld->interleave_ways = to_interleave_ways(ctrl);
-> +	if (!cxld->interleave_ways) {
-> +		dev_warn(&port->dev,
-> +			 "decoder%d.%d: Invalid interleave ways (ctrl: %#x)\n",
-> +			 port->id, cxld->id, ctrl);
-> +		return -ENXIO;
-> +	}
->  	cxld->interleave_granularity = to_interleave_granularity(ctrl);
->  
->  	if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl))
-> @@ -188,12 +199,14 @@ static void init_hdm_decoder(struct cxl_decoder *cxld, int *target_map,
->  		cxld->target_type = CXL_DECODER_ACCELERATOR;
->  
->  	if (is_cxl_endpoint(to_cxl_port(cxld->dev.parent)))
-> -		return;
-> +		return 0;
->  
->  	target_list.value =
->  		ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
->  	for (i = 0; i < cxld->interleave_ways; i++)
->  		target_map[i] = target_list.target_id[i];
-> +
-> +	return 0;
->  }
->  
->  /**
-> @@ -204,7 +217,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
->  {
->  	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
->  	struct cxl_port *port = cxlhdm->port;
-> -	int i, committed;
-> +	int i, committed, failed;
->  	u32 ctrl;
->  
->  	/*
-> @@ -224,7 +237,7 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
->  	if (committed != cxlhdm->decoder_count)
->  		msleep(20);
->  
-> -	for (i = 0; i < cxlhdm->decoder_count; i++) {
-> +	for (i = 0, failed = 0; i < cxlhdm->decoder_count; i++) {
->  		int target_map[CXL_DECODER_MAX_INTERLEAVE] = { 0 };
->  		int rc, target_count = cxlhdm->target_count;
->  		struct cxl_decoder *cxld;
-> @@ -239,7 +252,13 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
->  			return PTR_ERR(cxld);
->  		}
->  
-> -		init_hdm_decoder(cxld, target_map, cxlhdm->regs.hdm_decoder, i);
-> +		rc = init_hdm_decoder(port, cxld, target_map,
-> +				      cxlhdm->regs.hdm_decoder, i);
-> +		if (rc) {
-> +			put_device(&cxld->dev);
-> +			failed++;
-Not sure I'd have done it this way around, as opposed to
-inited++ or similar, but up to you.
-> +			continue;
-> +		}
->  		rc = add_hdm_decoder(port, cxld, target_map);
->  		if (rc) {
->  			dev_warn(&port->dev,
-> @@ -248,6 +267,11 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm)
->  		}
->  	}
->  
-> +	if (failed == cxlhdm->decoder_count) {
-> +		dev_err(&port->dev, "No valid decoders found\n");
-> +		return -ENXIO;
-> +	}
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_decoders, CXL);
-> 
+> Changes since v1:
+> - Remove the printk timestamp from the kernel warning log (Richard).
+>
+>  drivers/pci/controller/dwc/pci-imx6.c | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
 
+Reviewed-by: Rob Herring <robh@kernel.org>
