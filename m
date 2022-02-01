@@ -2,290 +2,348 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3147C4A559C
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 04:27:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D79574A55F9
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 05:58:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232972AbiBAD1R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 22:27:17 -0500
-Received: from mga18.intel.com ([134.134.136.126]:16888 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232970AbiBAD1Q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 Jan 2022 22:27:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643686036; x=1675222036;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=uvfPs006VLHlDm78FLdP2UhYjxVDqA3qOwYrLqfzp+M=;
-  b=UlZX9GtfvrEBs2zbeGQwyUlXMEnAz9GOM2tTtfObecoFxhtqsapw6rqS
-   Nq/664lZ/ZZQQwfl+FaZZZ/bZq6AvykSt73N95hQGYTlJfg9n0xNqjHBX
-   UBwQDxpB0r95+DQfrVM1INrSbHGEtDYwCEZWiMHy9XQO7+q9QjesKbafS
-   Z+7I976FhqOzhmG5/AsqrySSHOX/YMtJQGwDTfLn8uPDOkyYCWQyziw3w
-   dBCwVfxNK9TiEb3ssIF0iYWPJc7cU/XrlS4XgfhVyXkjgoSwcWdtwLKsO
-   RLu3nhkN4J1KV/kAhgGnhiR9unGzX7A1NUkjsGdChL6iN63Myxp2XAU9E
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="231183777"
-X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
-   d="scan'208";a="231183777"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 19:27:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
-   d="scan'208";a="698260533"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 31 Jan 2022 19:27:14 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nEjp4-000SiV-81; Tue, 01 Feb 2022 03:27:14 +0000
-Date:   Tue, 1 Feb 2022 11:26:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        linux-pci@vger.kernel.org
-Subject: [helgaas-pci:for-linus 1/1]
- drivers/pci/controller/cadence/pci-j721e.c:510:30: warning: variable 'rc' is
- uninitialized when used here
-Message-ID: <202202011117.2J6tELXm-lkp@intel.com>
+        id S232744AbiBAE65 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 23:58:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231250AbiBAE64 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 23:58:56 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA035C061714
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 20:58:56 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id g15-20020a17090a67cf00b001b7d5b6bedaso1269273pjm.4
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 20:58:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UW73ADbyQLu7YdYQIibXelAkLmUMMebCP4sdSICcX1s=;
+        b=W5cZBVlDlTzyUznoAbCZuAxmNhytQ0VrSYt+y6aV80CF8oLBDDgdTWlHMYalldOymM
+         xWLWxw3m+N2QPIlcznS+C3QMDqvYGO9fhNUmXs8xIpPb5a4wOpEH13S5y5/yB7IPu8Vj
+         VJTBFztuzky0tzoHMUMAgBZnJJXDKls+VQlBsOrSzyUHtp0QsGLloZxr1i2U/XZsv6ps
+         0QQh1UIBm2ih8aj3jopb+SDPkgdJdOtaOcD+RAA3mJuccYJxyLMJnO8NEjWvpX+lnyzR
+         SuLV2DoYW3qzJ6XqAV6oAAvIbpBjB1WoHmnvGebYU5cGhY1ex1mZZ8JXiJfdQEYCsjUZ
+         7gSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UW73ADbyQLu7YdYQIibXelAkLmUMMebCP4sdSICcX1s=;
+        b=A2U+A09lOC7CvXbo7HryMpJ54SczIP+fdvYaS+GFQNzHqXILWk+g4sPdIqXcHhWA1h
+         e2p1ukWjjkTGUd/R5UHiPRmmd/zBgVIBidR3kDqTaHSLA4ov/OwCFhRGNzhen2brqadg
+         /91gYkIh3LyFu74unsi+5MtM6TfQNL27XKus43UAX+1Mm3Xx3xns7JHXHAz4/CIEjony
+         J4K22efsiEVXdJgybMWqIfqIk0dWS+XsNvBJ51t2NyGRLdX3nBvLSDUwT0wWIGNJsjc4
+         JOZe7rjsR39nrbhXV6z/j6ZRtMBmImn6ubWRikQ889hoxE0VFf6Zw/Plfr33Ed1OXqzd
+         qjDQ==
+X-Gm-Message-State: AOAM532xn4GalRylZkcQgAQuuQHY/7JeDTyYJ+HlP8y0abh/geRIp5ds
+        Dfm8IK26abSuOvKJ5+qaTbE6zh7qm5TTVUYzSQAqSw==
+X-Google-Smtp-Source: ABdhPJyXOeR3KzFnohpu/h7369f2N3sAwM5T+C3fTeNJLfoM+jyNK53+wVDUevl69CbdlcEIkhsxbI3PQyruYug5KEM=
+X-Received: by 2002:a17:902:d705:: with SMTP id w5mr23413046ply.34.1643691536088;
+ Mon, 31 Jan 2022 20:58:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164298423561.3018233.8938479363856921038.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220201002435.oodbf3xuhb7xknus@intel.com>
+In-Reply-To: <20220201002435.oodbf3xuhb7xknus@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 31 Jan 2022 20:58:48 -0800
+Message-ID: <CAPcyv4heQk4LyTOQmU_orK97xgwY4s1fDBsQZv_bqCHwLah4zQ@mail.gmail.com>
+Subject: Re: [PATCH v3 22/40] cxl/core/hdm: Add CXL standard decoder
+ enumeration to the core
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-head:   a00908f9feb6a654adbc2b08241a61e491cfddd4
-commit: a00908f9feb6a654adbc2b08241a61e491cfddd4 [1/1] PCI: j721e: Initialize pcie->cdns_pcie before using it
-config: x86_64-randconfig-a011-20220131 (https://download.01.org/0day-ci/archive/20220201/202202011117.2J6tELXm-lkp@intel.com/config)
-compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 2cdbaca3943a4d6259119f185656328bd3805b68)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?id=a00908f9feb6a654adbc2b08241a61e491cfddd4
-        git remote add helgaas-pci https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
-        git fetch --no-tags helgaas-pci for-linus
-        git checkout a00908f9feb6a654adbc2b08241a61e491cfddd4
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/pci/controller/cadence/
+On Mon, Jan 31, 2022 at 4:24 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 22-01-23 16:30:35, Dan Williams wrote:
+> > Unlike the decoder enumeration for "root decoders" described by platform
+> > firmware, standard coders can be enumerated from the component registers
+>                      ^ decoders
+>
+> > space once the base address has been identified (via PCI, ACPI, or
+> > another mechanism).
+> >
+> > Add common infrastructure for HDM (Host-managed-Device-Memory) Decoder
+> > enumeration and share it between host-bridge, upstream switch port, and
+> > cxl_test defined decoders.
+> >
+> > The locking model for switch level decoders is to hold the port lock
+> > over the enumeration. This facilitates moving the dport and decoder
+> > enumeration to a 'port' driver. For now, the only enumerator of decoder
+> > resources is the cxl_acpi root driver.
+> >
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>
+> I authored some parts of this patch, not sure how much percentage-wise. If it
+> was intentional to drop me, that's fine - just checking.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+It was a patch that was not original to the first series, but yeah I
+copied some bits out of that series. I'll add you as Co-developed-by
+on the resend.
 
-All warnings (new ones prefixed by >>):
+>
+> Some comments below.
+>
+> Reviewed-by: Ben Widawsky <ben.widawsky@intel.com>
+>
+> > ---
+> >  drivers/cxl/acpi.c            |   43 ++-----
+> >  drivers/cxl/core/Makefile     |    1
+> >  drivers/cxl/core/core.h       |    2
+> >  drivers/cxl/core/hdm.c        |  247 +++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/core/port.c       |   65 ++++++++---
+> >  drivers/cxl/core/regs.c       |    5 -
+> >  drivers/cxl/cxl.h             |   33 ++++-
+> >  drivers/cxl/cxlmem.h          |    8 +
+> >  tools/testing/cxl/Kbuild      |    4 +
+> >  tools/testing/cxl/test/cxl.c  |   29 +++++
+> >  tools/testing/cxl/test/mock.c |   50 ++++++++
+> >  tools/testing/cxl/test/mock.h |    3
+> >  12 files changed, 436 insertions(+), 54 deletions(-)
+> >  create mode 100644 drivers/cxl/core/hdm.c
+> >
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index 259441245687..8c2ced91518b 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -168,10 +168,10 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> >       struct device *host = root_port->dev.parent;
+> >       struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+> >       struct acpi_pci_root *pci_root;
+> > -     int single_port_map[1], rc;
+> > -     struct cxl_decoder *cxld;
+> >       struct cxl_dport *dport;
+> > +     struct cxl_hdm *cxlhdm;
+> >       struct cxl_port *port;
+> > +     int rc;
+> >
+> >       if (!bridge)
+> >               return 0;
+> > @@ -200,37 +200,24 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> >       rc = devm_cxl_port_enumerate_dports(host, port);
+> >       if (rc < 0)
+> >               return rc;
+> > -     if (rc > 1)
+> > -             return 0;
+> > -
+> > -     /* TODO: Scan CHBCR for HDM Decoder resources */
+> > -
+> > -     /*
+> > -      * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability
+> > -      * Structure) single ported host-bridges need not publish a decoder
+> > -      * capability when a passthrough decode can be assumed, i.e. all
+> > -      * transactions that the uport sees are claimed and passed to the single
+> > -      * dport. Disable the range until the first CXL region is enumerated /
+> > -      * activated.
+> > -      */
+> > -     cxld = cxl_switch_decoder_alloc(port, 1);
+> > -     if (IS_ERR(cxld))
+> > -             return PTR_ERR(cxl);
+> > -
+> >       cxl_device_lock(&port->dev);
+> > -     dport = list_first_entry(&port->dports, typeof(*dport), list);
+> > -     cxl_device_unlock(&port->dev);
+> > +     if (rc == 1) {
+> > +             rc = devm_cxl_add_passthrough_decoder(host, port);
+> > +             goto out;
+> > +     }
+> >
+> > -     single_port_map[0] = dport->port_id;
+> > +     cxlhdm = devm_cxl_setup_hdm(host, port);
+> > +     if (IS_ERR(cxlhdm)) {
+> > +             rc = PTR_ERR(cxlhdm);
+> > +             goto out;
+> > +     }
+> >
+> > -     rc = cxl_decoder_add(cxld, single_port_map);
+> > +     rc = devm_cxl_enumerate_decoders(host, cxlhdm);
+> >       if (rc)
+> > -             put_device(&cxld->dev);
+> > -     else
+> > -             rc = cxl_decoder_autoremove(host, cxld);
+> > +             dev_err(&port->dev, "Couldn't enumerate decoders (%d)\n", rc);
+> >
+> > -     if (rc == 0)
+> > -             dev_dbg(host, "add: %s\n", dev_name(&cxld->dev));
+> > +out:
+> > +     cxl_device_unlock(&port->dev);
+> >       return rc;
+> >  }
+> >
+> > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> > index 91057f0ec763..6d37cd78b151 100644
+> > --- a/drivers/cxl/core/Makefile
+> > +++ b/drivers/cxl/core/Makefile
+> > @@ -8,3 +8,4 @@ cxl_core-y += regs.o
+> >  cxl_core-y += memdev.o
+> >  cxl_core-y += mbox.o
+> >  cxl_core-y += pci.o
+> > +cxl_core-y += hdm.o
+> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> > index e0c9aacc4e9c..1a50c0fc399c 100644
+> > --- a/drivers/cxl/core/core.h
+> > +++ b/drivers/cxl/core/core.h
+> > @@ -14,6 +14,8 @@ struct cxl_mem_query_commands;
+> >  int cxl_query_cmd(struct cxl_memdev *cxlmd,
+> >                 struct cxl_mem_query_commands __user *q);
+> >  int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s);
+> > +void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+> > +                                resource_size_t length);
+> >
+> >  int cxl_memdev_init(void);
+> >  void cxl_memdev_exit(void);
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > new file mode 100644
+> > index 000000000000..802048dc2046
+> > --- /dev/null
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -0,0 +1,247 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> > +#include <linux/io-64-nonatomic-hi-lo.h>
+> > +#include <linux/device.h>
+> > +#include <linux/delay.h>
+> > +
+> > +#include "cxlmem.h"
+> > +#include "core.h"
+> > +
+> > +/**
+> > + * DOC: cxl core hdm
+> > + *
+> > + * Compute Express Link Host Managed Device Memory, starting with the
+> > + * CXL 2.0 specification, is managed by an array of HDM Decoder register
+> > + * instances per CXL port and per CXL endpoint. Define common helpers
+> > + * for enumerating these registers and capabilities.
+> > + */
+> > +
+> > +static int add_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+> > +                        int *target_map)
+> > +{
+> > +     int rc;
+> > +
+> > +     rc = cxl_decoder_add_locked(cxld, target_map);
+> > +     if (rc) {
+> > +             put_device(&cxld->dev);
+> > +             dev_err(&port->dev, "Failed to add decoder\n");
+> > +             return rc;
+> > +     }
+> > +
+> > +     rc = cxl_decoder_autoremove(&port->dev, cxld);
+> > +     if (rc)
+> > +             return rc;
+> > +
+> > +     dev_dbg(&cxld->dev, "Added to port %s\n", dev_name(&port->dev));
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +/*
+> > + * Per the CXL specification (8.2.5.12 CXL HDM Decoder Capability Structure)
+> > + * single ported host-bridges need not publish a decoder capability when a
+> > + * passthrough decode can be assumed, i.e. all transactions that the uport sees
+> > + * are claimed and passed to the single dport. Disable the range until the first
+> > + * CXL region is enumerated / activated.
+> > + */
+> > +int devm_cxl_add_passthrough_decoder(struct device *host, struct cxl_port *port)
+> > +{
+> > +     struct cxl_decoder *cxld;
+> > +     struct cxl_dport *dport;
+> > +     int single_port_map[1];
+> > +
+> > +     cxld = cxl_switch_decoder_alloc(port, 1);
+> > +     if (IS_ERR(cxld))
+> > +             return PTR_ERR(cxld);
+> > +
+> > +     device_lock_assert(&port->dev);
+> > +
+> > +     dport = list_first_entry(&port->dports, typeof(*dport), list);
+> > +     single_port_map[0] = dport->port_id;
+> > +
+> > +     return add_hdm_decoder(port, cxld, single_port_map);
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(devm_cxl_add_passthrough_decoder, CXL);
+>
+> Hmm, this makes me realize I need to modify the region driver to not care about
+> finding decoder resources for a passthrough decoder.
 
->> drivers/pci/controller/cadence/pci-j721e.c:510:30: warning: variable 'rc' is uninitialized when used here [-Wuninitialized]
-                   ret = cdns_pcie_host_setup(rc);
-                                              ^~
-   drivers/pci/controller/cadence/pci-j721e.c:359:25: note: initialize the variable 'rc' to silence this warning
-           struct cdns_pcie_rc *rc;
-                                  ^
-                                   = NULL
-   1 warning generated.
+Why would a passthrough decoder not have passthrough resources?
 
+> > +
+> > +static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+> > +{
+> > +     u32 hdm_cap;
+> > +
+> > +     hdm_cap = readl(cxlhdm->regs.hdm_decoder + CXL_HDM_DECODER_CAP_OFFSET);
+> > +     cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
+> > +     cxlhdm->target_count =
+> > +             FIELD_GET(CXL_HDM_DECODER_TARGET_COUNT_MASK, hdm_cap);
+> > +     if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_11_8, hdm_cap))
+> > +             cxlhdm->interleave_mask |= GENMASK(11, 8);
+> > +     if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_14_12, hdm_cap))
+> > +             cxlhdm->interleave_mask |= GENMASK(14, 12);
+> > +}
+> > +
+> > +static void __iomem *map_hdm_decoder_regs(struct cxl_port *port,
+> > +                                       void __iomem *crb)
+> > +{
+> > +     struct cxl_register_map map;
+> > +     struct cxl_component_reg_map *comp_map = &map.component_map;
+> > +
+> > +     cxl_probe_component_regs(&port->dev, crb, comp_map);
+> > +     if (!comp_map->hdm_decoder.valid) {
+> > +             dev_err(&port->dev, "HDM decoder registers invalid\n");
+> > +             return IOMEM_ERR_PTR(-ENXIO);
+> > +     }
+> > +
+> > +     return crb + comp_map->hdm_decoder.offset;
+> > +}
+> > +
+> > +/**
+> > + * devm_cxl_setup_hdm - map HDM decoder component registers
+> > + * @port: cxl_port to map
+> > + */
+>
+> This got messed up on the fixup. You need @host and @port at this point. It'd be
+> pretty cool if we could skip straight to not @host arg.
 
-vim +/rc +510 drivers/pci/controller/cadence/pci-j721e.c
+I'll fixup the inter-patch dpc breakage again, I think I may have
+edited a local copy of this file as part of the rebase, and botched
+the resend.
 
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  350  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  351  static int j721e_pcie_probe(struct platform_device *pdev)
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  352  {
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  353  	struct device *dev = &pdev->dev;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  354  	struct device_node *node = dev->of_node;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  355  	struct pci_host_bridge *bridge;
-72de208f2bda3c Bjorn Helgaas          2021-12-22  356  	const struct j721e_pcie_data *data;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  357  	struct cdns_pcie *cdns_pcie;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  358  	struct j721e_pcie *pcie;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  359  	struct cdns_pcie_rc *rc;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  360  	struct cdns_pcie_ep *ep;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  361  	struct gpio_desc *gpiod;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  362  	void __iomem *base;
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  363  	struct clk *clk;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  364  	u32 num_lanes;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  365  	u32 mode;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  366  	int ret;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  367  	int irq;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  368  
-72de208f2bda3c Bjorn Helgaas          2021-12-22  369  	data = of_device_get_match_data(dev);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  370  	if (!data)
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  371  		return -EINVAL;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  372  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  373  	mode = (u32)data->mode;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  374  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  375  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  376  	if (!pcie)
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  377  		return -ENOMEM;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  378  
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  379  	switch (mode) {
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  380  	case PCI_MODE_RC:
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  381  		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_HOST))
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  382  			return -ENODEV;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  383  
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  384  		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  385  		if (!bridge)
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  386  			return -ENOMEM;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  387  
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  388  		if (!data->byte_access_allowed)
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  389  			bridge->ops = &cdns_ti_pcie_host_ops;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  390  		rc = pci_host_bridge_priv(bridge);
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  391  		rc->quirk_retrain_flag = data->quirk_retrain_flag;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  392  		rc->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  393  
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  394  		cdns_pcie = &rc->pcie;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  395  		cdns_pcie->dev = dev;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  396  		cdns_pcie->ops = &j721e_pcie_ops;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  397  		pcie->cdns_pcie = cdns_pcie;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  398  		break;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  399  	case PCI_MODE_EP:
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  400  		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_EP))
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  401  			return -ENODEV;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  402  
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  403  		ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  404  		if (!ep)
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  405  			return -ENOMEM;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  406  
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  407  		ep->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  408  
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  409  		cdns_pcie = &ep->pcie;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  410  		cdns_pcie->dev = dev;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  411  		cdns_pcie->ops = &j721e_pcie_ops;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  412  		pcie->cdns_pcie = cdns_pcie;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  413  		break;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  414  	default:
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  415  		dev_err(dev, "INVALID device type %d\n", mode);
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  416  		return 0;
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  417  	}
-a00908f9feb6a6 Bjorn Helgaas          2022-01-27  418  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  419  	pcie->mode = mode;
-f1de58802f0fff Kishon Vijay Abraham I 2021-08-11  420  	pcie->linkdown_irq_regfield = data->linkdown_irq_regfield;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  421  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  422  	base = devm_platform_ioremap_resource_byname(pdev, "intd_cfg");
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  423  	if (IS_ERR(base))
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  424  		return PTR_ERR(base);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  425  	pcie->intd_cfg_base = base;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  426  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  427  	base = devm_platform_ioremap_resource_byname(pdev, "user_cfg");
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  428  	if (IS_ERR(base))
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  429  		return PTR_ERR(base);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  430  	pcie->user_cfg_base = base;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  431  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  432  	ret = of_property_read_u32(node, "num-lanes", &num_lanes);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  433  	if (ret || num_lanes > MAX_LANES)
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  434  		num_lanes = 1;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  435  	pcie->num_lanes = num_lanes;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  436  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  437  	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48)))
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  438  		return -EINVAL;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  439  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  440  	irq = platform_get_irq_byname(pdev, "link_state");
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  441  	if (irq < 0)
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  442  		return irq;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  443  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  444  	dev_set_drvdata(dev, pcie);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  445  	pm_runtime_enable(dev);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  446  	ret = pm_runtime_get_sync(dev);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  447  	if (ret < 0) {
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  448  		dev_err(dev, "pm_runtime_get_sync failed\n");
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  449  		goto err_get_sync;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  450  	}
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  451  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  452  	ret = j721e_pcie_ctrl_init(pcie);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  453  	if (ret < 0) {
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  454  		dev_err(dev, "pm_runtime_get_sync failed\n");
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  455  		goto err_get_sync;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  456  	}
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  457  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  458  	ret = devm_request_irq(dev, irq, j721e_pcie_link_irq_handler, 0,
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  459  			       "j721e-pcie-link-down-irq", pcie);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  460  	if (ret < 0) {
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  461  		dev_err(dev, "failed to request link state IRQ %d\n", irq);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  462  		goto err_get_sync;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  463  	}
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  464  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  465  	j721e_pcie_config_link_irq(pcie);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  466  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  467  	switch (mode) {
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  468  	case PCI_MODE_RC:
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  469  		gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  470  		if (IS_ERR(gpiod)) {
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  471  			ret = PTR_ERR(gpiod);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  472  			if (ret != -EPROBE_DEFER)
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  473  				dev_err(dev, "Failed to get reset GPIO\n");
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  474  			goto err_get_sync;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  475  		}
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  476  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  477  		ret = cdns_pcie_init_phy(dev, cdns_pcie);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  478  		if (ret) {
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  479  			dev_err(dev, "Failed to init phy\n");
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  480  			goto err_get_sync;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  481  		}
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  482  
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  483  		clk = devm_clk_get_optional(dev, "pcie_refclk");
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  484  		if (IS_ERR(clk)) {
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  485  			ret = PTR_ERR(clk);
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  486  			dev_err(dev, "failed to get pcie_refclk\n");
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  487  			goto err_pcie_setup;
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  488  		}
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  489  
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  490  		ret = clk_prepare_enable(clk);
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  491  		if (ret) {
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  492  			dev_err(dev, "failed to enable pcie_refclk\n");
-496bb18483cc04 Christophe JAILLET     2021-06-27  493  			goto err_pcie_setup;
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  494  		}
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  495  		pcie->refclk = clk;
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  496  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  497  		/*
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  498  		 * "Power Sequencing and Reset Signal Timings" table in
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  499  		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  500  		 * indicates PERST# should be deasserted after minimum of 100us
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  501  		 * once REFCLK is stable. The REFCLK to the connector in RC
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  502  		 * mode is selected while enabling the PHY. So deassert PERST#
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  503  		 * after 100 us.
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  504  		 */
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  505  		if (gpiod) {
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  506  			usleep_range(100, 200);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  507  			gpiod_set_value_cansleep(gpiod, 1);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  508  		}
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  509  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22 @510  		ret = cdns_pcie_host_setup(rc);
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  511  		if (ret < 0) {
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  512  			clk_disable_unprepare(pcie->refclk);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  513  			goto err_pcie_setup;
-49e0efdce79125 Kishon Vijay Abraham I 2021-03-08  514  		}
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  515  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  516  		break;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  517  	case PCI_MODE_EP:
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  518  		ret = cdns_pcie_init_phy(dev, cdns_pcie);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  519  		if (ret) {
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  520  			dev_err(dev, "Failed to init phy\n");
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  521  			goto err_get_sync;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  522  		}
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  523  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  524  		ret = cdns_pcie_ep_setup(ep);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  525  		if (ret < 0)
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  526  			goto err_pcie_setup;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  527  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  528  		break;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  529  	}
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  530  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  531  	return 0;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  532  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  533  err_pcie_setup:
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  534  	cdns_pcie_disable_phy(cdns_pcie);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  535  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  536  err_get_sync:
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  537  	pm_runtime_put(dev);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  538  	pm_runtime_disable(dev);
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  539  
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  540  	return ret;
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  541  }
-f3e25911a430ed Kishon Vijay Abraham I 2020-07-22  542  
+I otherwise could not see a way to skip the temporary state without
+shipping devm abuse in the middle of series (leaking object
+allocations until release)
 
-:::::: The code at line 510 was first introduced by commit
-:::::: f3e25911a430ed16ec209929183df762fe9c785b PCI: j721e: Add TI J721E PCIe driver
+>
+> > +struct cxl_hdm *devm_cxl_setup_hdm(struct device *host, struct cxl_port *port)
+> > +{
+> > +     void __iomem *crb, __iomem *hdm;
+> > +     struct device *dev = &port->dev;
+> > +     struct cxl_hdm *cxlhdm;
+> > +
+> > +     cxlhdm = devm_kzalloc(host, sizeof(*cxlhdm), GFP_KERNEL);
+> > +     if (!cxlhdm)
+> > +             return ERR_PTR(-ENOMEM);
+> > +
+> > +     cxlhdm->port = port;
+> > +     crb = devm_cxl_iomap_block(host, port->component_reg_phys,
+> > +                                CXL_COMPONENT_REG_BLOCK_SIZE);
+> > +     if (!crb) {
+> > +             dev_err(dev, "No component registers mapped\n");
+> > +             return ERR_PTR(-ENXIO);
+> > +     }
+>
+> Does this work if the port is operating in passthrough decoder mode? Is the idea
+> to just not call this thing if so?
 
-:::::: TO: Kishon Vijay Abraham I <kishon@ti.com>
-:::::: CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Per the spec there are always component registers in a CXL port, there
+just may not be an HDM Decoder Capability structure in that set of
+component registers. See 8.2.5.12.
