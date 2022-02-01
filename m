@@ -2,195 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DA204A633B
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 19:08:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF1374A6354
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 19:15:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236930AbiBASIT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 13:08:19 -0500
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:30991 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232304AbiBASIS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 13:08:18 -0500
+        id S241894AbiBASPJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 13:15:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234816AbiBASNI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 13:13:08 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE3DC061757
+        for <linux-pci@vger.kernel.org>; Tue,  1 Feb 2022 10:12:44 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id i187-20020a1c3bc4000000b0034d2ed1be2aso2662362wma.1
+        for <linux-pci@vger.kernel.org>; Tue, 01 Feb 2022 10:12:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1643738899; x=1675274899;
-  h=from:to:cc:subject:date:message-id;
-  bh=XibvicD4b/B19Mt1CSI3bLsU+ULqNBdRlOGv5+YBSrA=;
-  b=BzrXriCsfKfT3QNy2O8Rt8pTp9CjCuNKInXEKya4L3IVMSgWHLHaoP9J
-   YKfHbWuiysxC7UKuL6tr+95jcgd541i2zF6LSpQ968vif3yLtfYKUh/3L
-   sSuFA15ihI5mD2lURJNk+j1StB8MAFKlvFZ7hkj1+DylLDT7r/Wwx5ory
-   0=;
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 01 Feb 2022 10:08:19 -0800
-X-QCInternal: smtphost
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Feb 2022 10:08:17 -0800
-X-QCInternal: smtphost
-Received: from pmaliset-linux.qualcomm.com ([10.206.64.233])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 01 Feb 2022 23:37:59 +0530
-Received: by pmaliset-linux.qualcomm.com (Postfix, from userid 3848298)
-        id 7DAC32121A; Tue,  1 Feb 2022 23:37:58 +0530 (IST)
-From:   Prasad Malisetty <quic_pmaliset@quicinc.com>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-        manivannan.sadhasivam@linaro.org, swboyd@chromium.org,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>
-Subject: [PATCH v2] PCI: qcom: Add system PM support
-Date:   Tue,  1 Feb 2022 23:37:56 +0530
-Message-Id: <1643738876-18572-1-git-send-email-quic_pmaliset@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=dY71NLd2odIGCqoV5Xs6eXVkEoQhnfK5Y92j96KZ6U4=;
+        b=WNZlggPqi+mcyn6CtHhFvi90Qy9rbenquOQ8+cMfPWnJCY6ppZPEBZjCGNOimAnNjp
+         RAMXNXAWOoGwq5pz8Gzhi9fwRiObOKoEEm9OhJTaukJim9rjChe9D1Rq8QusJ7dcbeFc
+         pS3jLIIQV08Uc7zDf5YhWR4AcXsQshQqTo53n4jFIH6maUEtr0Hf9cirLCmbGL7mMBNt
+         QSUAHexfNt7ydRZgZImN14l/h7lnJNzJUPpOeZjF9GYPyVHGnKJwSLiAj/kYHhnlrius
+         HSKoEuiJKxLgcrm/3nuUTzcIvu7E9rlUC/oFggE0r6ucDQV7/q294oPmPdu/0i+r/Qq2
+         lk0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=dY71NLd2odIGCqoV5Xs6eXVkEoQhnfK5Y92j96KZ6U4=;
+        b=LQUJkzSf0MOe21wie1NUQ5B3jo+b3oOHUKUv5xU/9CG9y/BURgMkdKUUObHu7dJowO
+         s/kZiSz3PnefQVYo9UrtCnAYbP/XFVdbrwNKIM+q+2w65VFLn1kmj5qqgdu+54OmRDB2
+         X0MzXcUiz16Oz4pBLgCY0DsJJ69SKpR+IzWATeCTeIDalwFzoKIvzZDDYQnfIPRsW37H
+         6doDh0/tA0mDmGsV4swTX2QQ8yo4vVXJyX5ozFl4cgX/Uh5jiT+t3uFpE0MClSofPZfP
+         DzJg8MY+f7nx3UvAswftwcZwOvYNOWylQVMcGTm6QKR/eMGO+dCTSz8A84QOJWXYX8AP
+         4e6A==
+X-Gm-Message-State: AOAM533kjr9bN+FkdHF4ne8PLhJC/7EAwKLEr2O7b1XLDHy1qWFU8l/o
+        YNnMlUo0qrX+WlnXJmTi++PnX3BkUvyy+46mOQA=
+X-Google-Smtp-Source: ABdhPJyOjuBfQpYrK7GejPA936VIMD75H+qFkYQKzA270Gq/3NXrS4C7dVrOucVlpZDJIL5NgvNLJvtkHdYeIxdrXfU=
+X-Received: by 2002:a05:600c:a4c:: with SMTP id c12mr2842205wmq.48.1643739162610;
+ Tue, 01 Feb 2022 10:12:42 -0800 (PST)
+MIME-Version: 1.0
+Sender: 1joypeters@gmail.com
+Received: by 2002:a5d:610f:0:0:0:0:0 with HTTP; Tue, 1 Feb 2022 10:12:42 -0800 (PST)
+From:   Aisha Al-Qaddafi <aishagaddafi1894@gmail.com>
+Date:   Tue, 1 Feb 2022 18:12:42 +0000
+X-Google-Sender-Auth: QMdJbinimWG0RG9dtsdvyTNIhxw
+Message-ID: <CA+F+MbZeY2Ff=hzwG9fiaaWJOBcKhM_LzS_C1SsSW=YQHR=n5w@mail.gmail.com>
+Subject: Investment offer,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add suspend_noirq and resume_noirq callbacks to handle
-System suspend and resume in dwc pcie controller driver.
+Hello Dear Friend,
 
-When system suspends, send PME turnoff message to enter
-link into L2 state. Along with powerdown the PHY, disable
-pipe clock, switch gcc_pcie_1_pipe_clk_src to XO if mux is
-supported and disable the pcie clocks, regulators.
+With due respect to your person and much sincerity of purpose I wish
+to write to you today for our mutual benefit in this investment
+transaction..
+I'm Mrs. Aisha Al-Gaddafi, presently residing herein Oman the
+Southeastern coast of the Arabian Peninsula in Western Asia, I'm a
+single Mother and a widow with three Children. I am the only
+biological Daughter of the late Libyan President (Late Colonel Muammar
+Gaddafi). I have an investment funds worth Twenty Seven Million Five
+Hundred Thousand United State Dollars ($27.500.000.00 ) and i need an
+investment Manager/Partner and because of my Asylum Status I will
+authorize you the ownership of the investment funds, However, I am
+interested in you for investment project assistance in your country,
+may be from there,. we can build a business relationship in the
+nearest future..
 
-When system resumes, PCIe link will be re-established and
-setup rc settings.
+I am willing to negotiate an investment/business profit sharing ratio
+with you based on the future investment earning profits. If you are
+willing to handle this project kindly reply urgently to enable me to
+provide you more information about the investment funds.
 
-Signed-off-by: Prasad Malisetty <quic_pmaliset@quicinc.com>
-Reported-by: kernel test robot <lkp@intel.com>
-
----
-Changes since v1:
-	- Removed unnecessary logs and modified log level suggested by Manivannan.
-	- Removed platform specific callbacks as PM support is generic.
----
- drivers/pci/controller/dwc/pcie-qcom.c | 97 ++++++++++++++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index c19cd506..d1dd6c7 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -73,6 +73,8 @@
- 
- #define PCIE20_PARF_Q2A_FLUSH			0x1AC
- 
-+#define PCIE20_PARF_PM_STTS                     0x24
-+
- #define PCIE20_MISC_CONTROL_1_REG		0x8BC
- #define DBI_RO_WR_EN				1
- 
-@@ -1616,6 +1618,100 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int qcom_pcie_send_pme_turnoff_msg(struct qcom_pcie *pcie)
-+{
-+	int ret = 0;
-+	u32 val = 0, poll_val = 0;
-+	u64 l23_rdy_poll_timeout = 100000;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+
-+	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-+	val |= BIT(4);
-+	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-+
-+	ret = readl_poll_timeout((pcie->parf + PCIE20_PARF_PM_STTS), poll_val,
-+			(poll_val & BIT(5)), 10000, l23_rdy_poll_timeout);
-+	if (!ret)
-+		dev_info(dev, "PM_Enter_L23 is received\n");
-+	else
-+		dev_err(dev, "PM_Enter_L23 is NOT received.PARF_PM_STTS 0x%x\n",
-+			readl_relaxed(pcie->parf + PCIE20_PARF_PM_STTS));
-+
-+	return ret;
-+}
-+
-+static void qcom_pcie_host_disable(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-+
-+	/* Assert the reset of endpoint */
-+	qcom_ep_reset_assert(pcie);
-+
-+	/* Put PHY into POWER DOWN state */
-+	phy_power_off(pcie->phy);
-+
-+	writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
-+
-+	pcie->ops->post_deinit(pcie);
-+
-+	/* Disable PCIe clocks and regulators */
-+	pcie->ops->deinit(pcie);
-+}
-+
-+static int __maybe_unused qcom_pcie_pm_suspend_noirq(struct device *dev)
-+{
-+	int ret = 0;
-+	struct qcom_pcie *pcie = dev_get_drvdata(dev);
-+	struct dw_pcie *pci = pcie->pci;
-+
-+	if (!dw_pcie_link_up(pci)) {
-+		dev_dbg(dev, "Power has been turned off already\n");
-+		return ret;
-+	}
-+
-+	/* Send PME turnoff msg */
-+	ret = qcom_pcie_send_pme_turnoff_msg(pcie);
-+	if (ret)
-+		return ret;
-+
-+	/* Power down the PHY, disable clock and regulators */
-+	qcom_pcie_host_disable(pcie);
-+
-+	return ret;
-+}
-+
-+/* Resume the PCIe link */
-+static int __maybe_unused qcom_pcie_pm_resume_noirq(struct device *dev)
-+{
-+	int ret = 0;
-+	struct qcom_pcie *pcie = dev_get_drvdata(dev);
-+	struct dw_pcie *pci = pcie->pci;
-+	struct pcie_port *pp = &pci->pp;
-+
-+	/* Initialize PCIe host */
-+	ret = qcom_pcie_host_init(pp);
-+	if (ret) {
-+		dev_err(dev, "cannot initialize host\n");
-+		return ret;
-+	}
-+
-+	dw_pcie_setup_rc(pp);
-+
-+	/* Start the PCIe link */
-+	qcom_pcie_start_link(pci);
-+
-+	ret = dw_pcie_wait_for_link(pci);
-+	if (ret)
-+		dev_err(dev, "Link never came up, Resume failed\n");
-+
-+	return ret;
-+}
-+
-+static const struct dev_pm_ops qcom_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(qcom_pcie_pm_suspend_noirq, qcom_pcie_pm_resume_noirq)
-+};
-+
- static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
- 	{ .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
-@@ -1648,6 +1744,7 @@ static struct platform_driver qcom_pcie_driver = {
- 	.probe = qcom_pcie_probe,
- 	.driver = {
- 		.name = "qcom-pcie",
-+		.pm = &qcom_pcie_pm_ops,
- 		.suppress_bind_attrs = true,
- 		.of_match_table = qcom_pcie_match,
- 	},
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Your urgent reply will be appreciated if only you are interested in
+this investment project.
+Best Regards
+Mrs. Aisha Al-Gaddafi.
