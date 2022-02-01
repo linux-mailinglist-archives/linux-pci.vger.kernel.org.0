@@ -2,151 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67D204A5435
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 01:40:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A1E24A543A
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 01:44:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230376AbiBAAkc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 19:40:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36714 "EHLO
+        id S231211AbiBAAoH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 19:44:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbiBAAkb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 19:40:31 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20BE2C061714;
-        Mon, 31 Jan 2022 16:40:31 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id f17so28724185wrx.1;
-        Mon, 31 Jan 2022 16:40:31 -0800 (PST)
+        with ESMTP id S230449AbiBAAoG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 19:44:06 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B48FC06173B
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 16:44:06 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id h12so15546858pjq.3
+        for <linux-pci@vger.kernel.org>; Mon, 31 Jan 2022 16:44:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=7b37+sb97Re3oAWrsxv3q1g8yG0f6pamguZVF07b8vM=;
-        b=gvKPj5ggc5CJwxMCJl72etucJT8QAoxnd62+g9Zan2I+7VBRYDIVs1Sa5CDdxBZoJw
-         HWIfz3n1t3ZsWBEdV5d6/QGflCgRcqckFAI1f1H6dKI77cOwKrZmvmfNvJWXIPdnQ2vO
-         BBGjVPfLdH+IO4/ZBxAV/e2Yad0SeGvAVc9Q/1XfKJAyTxCUJBFqJkbQphI8xAPe0ISv
-         BxaVy4V0+GCvD+0ZHtkWMB0uLOu6Vhcs5TDf07vnweE99b5AlEhvogO5St1dyHaAby6S
-         gTWmj0KUc4oUQhV72OAnAOrCmh84PS4k4DKxbQqzsXbB/mBlwNgFv93enOM+j6780Lde
-         yWrw==
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ogo17UqARJL4p9/LnCmhjKJqbXuqhpyXuwxM70OGXlE=;
+        b=c/376VNugm56bLwLAeXVu2BkqPu6SjdkyjMHwccQMq8pothhH4fO8WLySebdQcMD4H
+         loG6kUDzEYGhQa82gRKpqVhOUHGnewKq/WNZn4MLGesAnoMvnvbQhu1Ccmfzorl7/cV7
+         OEZ8a+Gyd+zal9oBz2vk+PJQ1ZFd02wAtzvnV1tAbXuSUFE0uiKuvI42UmDmm80R1WgK
+         qZraj11WiDcWOoImxxnH99Y/W4JqELiqXkCQspluqqhexUHlEUIM4J7frzjmYmFoBaye
+         9hOQk1hvkjH22urQF4Xy+PUpnHRRP/n5r+l7X+ZI4MhAcXNBPDWUZF2VpwBzSt0a41ob
+         E1tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:subject:message-id
-         :mime-version:content-disposition;
-        bh=7b37+sb97Re3oAWrsxv3q1g8yG0f6pamguZVF07b8vM=;
-        b=ZefCCKD/4CbdmPlq62OO3uKq/uECY/4x1Sk3FGBoSKCfrmPVLwSIzVa4Brmy3LsJoA
-         33SBGug2occZuy0zdVMznMe28a8LaniAvuTlBxkqphvQN7MRdmpabGJsxoNuNLcCyWBx
-         JsGgQFjekwNtTAOlk6ZdunNF/ozewCpK1RegsUuB/WzpJZcgjZA/ExwNxgi0OhTQ1YLW
-         Px7yaC5rtSItc+jN1Fsr52aqyzPLp+PDVtkCKTxJfKrnt2FYZi+rS6QucDD/L3O/ghQN
-         fluBxY3t5s/a37vYDd2J+7DpMZLyypxRdkwSsuXuKC0TZUB/P/GzT9I5BJ+wsq594ChS
-         Kx3Q==
-X-Gm-Message-State: AOAM531LmEU+dVdSxqLqqHkTlCBooPGGi9KMbeyQBUFplaY4YYELfXFa
-        AJfePLHMyNJvAoh+hp5CMhg=
-X-Google-Smtp-Source: ABdhPJzIYdNZ5LhKCEQJ5TRnxRwbUHbNuVeBbSi1uN4zCq7ZfmulED/bq5T7i6rhPPVbUX2vKOsh0Q==
-X-Received: by 2002:a5d:5343:: with SMTP id t3mr19684978wrv.293.1643676029669;
-        Mon, 31 Jan 2022 16:40:29 -0800 (PST)
-Received: from jupiter.dyndns.org (cpc69401-oxfd27-2-0-cust150.4-3.cable.virginm.net. [82.14.184.151])
-        by smtp.gmail.com with ESMTPSA id o8sm599148wmc.46.2022.01.31.16.40.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jan 2022 16:40:29 -0800 (PST)
-Sender: Brent Spillner <spillner@gmail.com>
-Date:   Tue, 1 Feb 2022 00:40:29 +0000
-From:   Brent Spillner <spillner@acm.org>
-To:     bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] x86/PCI: Improve log message when IRQ cannot be identified
-Message-ID: <YfiBfdAf9uHYTf4T@jupiter.dyndns.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ogo17UqARJL4p9/LnCmhjKJqbXuqhpyXuwxM70OGXlE=;
+        b=7LbFgcaoTjnJCHlsP546ndlOYcOg/jtSgzYo8G8E2urccbnN6jyIjat29sWUA8Gi3F
+         CA5X5L4uOZZEIwwnd+JLB5q1xmR5Du7/oTb+8lYzi47l4nWgl4fUvs16QO8Jlycwj/TA
+         WIaGVQksd6jZJIyKtOgcKl5ncm0OgrtWDWeL02gCzv64P8+Lsm2aYovof/dTwfIeXWCu
+         09bzKIQPT8Ec7djZ/c9K7HwN6xcZHk68zEb6nAPyUV5p27yL2ZFL1P9IygRguCx19Crf
+         xJL46fWssuPtlk3urzbuSKwn9X12pkzJRJbRnBI7GEY8b8kKj8ydfG2OffueT0bTk0PK
+         Xd6A==
+X-Gm-Message-State: AOAM5332kNIy77ysY2vZJPkC2bsxnCrhtaI3ir+dQnBGHTHNuh8NpkE8
+        RHmNa8oDDXAxptxXC8KIYEAJiolqEEGEcapOFJfCUQ==
+X-Google-Smtp-Source: ABdhPJwvfdKe0O3cEdLQmli0XryY4gO5HzlQNdngTCrUOV66YWmpQb/QY9/oJXGJogWtu0TkcS3vUNlsGbmDbUQ6wDg=
+X-Received: by 2002:a17:902:d705:: with SMTP id w5mr22672490ply.34.1643676245916;
+ Mon, 31 Jan 2022 16:44:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164298422000.3018233.4106867312927858722.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20220131234740.bzg63pqyf2wl3din@intel.com>
+In-Reply-To: <20220131234740.bzg63pqyf2wl3din@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 31 Jan 2022 16:43:58 -0800
+Message-ID: <CAPcyv4gAJO+eqep1Ba1TtHUccfCw2yEjaHSV8iDhHJ9H8oADUQ@mail.gmail.com>
+Subject: Re: [PATCH v3 19/40] cxl/port: Up-level cxl_add_dport() locking
+ requirements to the caller
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The existing code always suggests trying the pci=biosirq kernel parameter, but
-this option is only recognized when CONFIG_PCI_BIOS is set, which in turn
-depends on CONFIG_X86_32, so it is never appropriate on x86_64.
-kernel-parameters.txt confirms that pci=biosirq is intended to be supported
-only on X86-32.
+On Mon, Jan 31, 2022 at 3:47 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 22-01-23 16:30:20, Dan Williams wrote:
+> > In preparation for moving dport enumeration into the core, require the
+> > port device lock to be acquired by the caller.
+> >
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  drivers/cxl/acpi.c            |    2 ++
+> >  drivers/cxl/core/port.c       |    3 +--
+> >  tools/testing/cxl/mock_acpi.c |    4 ++++
+> >  3 files changed, 7 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index ab2b76532272..e596dc375267 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -342,7 +342,9 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+> >               return 0;
+> >       }
+> >
+> > +     device_lock(&root_port->dev);
+> >       rc = cxl_add_dport(root_port, match, uid, ctx.chbcr);
+> > +     device_unlock(&root_port->dev);
+> >       if (rc) {
+> >               dev_err(host, "failed to add downstream port: %s\n",
+> >                       dev_name(match));
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index ec9587e52423..c51a10154e29 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -516,7 +516,7 @@ static int add_dport(struct cxl_port *port, struct cxl_dport *new)
+> >  {
+> >       struct cxl_dport *dup;
+> >
+> > -     cxl_device_lock(&port->dev);
+> > +     device_lock_assert(&port->dev);
+> >       dup = find_dport(port, new->port_id);
+> >       if (dup)
+> >               dev_err(&port->dev,
+> > @@ -525,7 +525,6 @@ static int add_dport(struct cxl_port *port, struct cxl_dport *new)
+> >                       dev_name(dup->dport));
+> >       else
+> >               list_add_tail(&new->list, &port->dports);
+> > -     cxl_device_unlock(&port->dev);
+> >
+> >       return dup ? -EEXIST : 0;
+> >  }
+> > diff --git a/tools/testing/cxl/mock_acpi.c b/tools/testing/cxl/mock_acpi.c
+> > index 4c8a493ace56..667c032ccccf 100644
+> > --- a/tools/testing/cxl/mock_acpi.c
+> > +++ b/tools/testing/cxl/mock_acpi.c
+> > @@ -57,7 +57,9 @@ static int match_add_root_port(struct pci_dev *pdev, void *data)
+> >
+> >       /* TODO walk DVSEC to find component register base */
+> >       port_num = FIELD_GET(PCI_EXP_LNKCAP_PN, lnkcap);
+> > +     device_lock(&port->dev);
+> >       rc = cxl_add_dport(port, &pdev->dev, port_num, CXL_RESOURCE_NONE);
+> > +     device_unlock(&port->dev);
+> >       if (rc) {
+> >               dev_err(dev, "failed to add dport: %s (%d)\n",
+> >                       dev_name(&pdev->dev), rc);
+> > @@ -78,7 +80,9 @@ static int mock_add_root_port(struct platform_device *pdev, void *data)
+> >       struct device *dev = ctx->dev;
+> >       int rc;
+> >
+> > +     device_lock(&port->dev);
+> >       rc = cxl_add_dport(port, &pdev->dev, pdev->id, CXL_RESOURCE_NONE);
+> > +     device_unlock(&port->dev);
+> >       if (rc) {
+> >               dev_err(dev, "failed to add dport: %s (%d)\n",
+> >                       dev_name(&pdev->dev), rc);
+> >
+>
+> Since I really don't understand, perhaps an explanation as to why you aren't
+> using cxl_device_lock would help? (Is it just to get around not having a
+> cxl_device_lock_assert())?
 
-The new version tries to be more helpful by recommending changes to ACPI
-settings if appropriate, and only mentioning pci=biosirq (and the manual
-pirq= option) for kernels that support it. Additionally, it encourages
-the user to file bug reports so faulty firmware can be identified and
-potentially handled via known quirks in a future kernel release.
-
-ACPI is relevant to these warnings because it will significantly change
-the path taken through the PCI discovery (and later interrupt routing)
-code. Booting with acpi=noirq should be highly unusual and likely
-indicates an attempt to work around faulty motherboard firmware, so I
-added a new log message in pci_acpi_init() for this case, with yet
-another recommendation to file a bug report.
-
-Signed-off-by: Brent Spillner <spillner@acm.org>
----
-Changes in v2:
- - Tried to make the code more legible by reducing use of #ifdef (only
-   used where required to guard reference to acpi_noirq)
- - The tradeoff is there's now an idiosyncratic use of do {...} while (0),
-   but that lets me early-out from the acpi_noirq case without more #ifdefs
-   or duplicated if statements.
- - Included a warning for acpi_noirq in pci_acpi_init() per maintainer suggestion
- - Encourage user to file bug reports in all warning messages
-
- arch/x86/pci/acpi.c |  4 +++-
- arch/x86/pci/irq.c  | 22 +++++++++++++++++++---
- 2 files changed, 22 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-index 052f1d78a562..12f894d345a9 100644
---- a/arch/x86/pci/acpi.c
-+++ b/arch/x86/pci/acpi.c
-@@ -401,8 +401,10 @@ int __init pci_acpi_init(void)
- {
- 	struct pci_dev *dev = NULL;
- 
--	if (acpi_noirq)
-+	if (acpi_noirq) {
-+		printk(KERN_WARNING "PCI: ACPI IRQ routing disabled; please submit a bug report if this was required to work around firmware defects\n");
- 		return -ENODEV;
-+	}
- 
- 	printk(KERN_INFO "PCI: Using ACPI for IRQ routing\n");
- 	acpi_irq_penalty_init();
-diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-index 97b63e35e152..393b036e773b 100644
---- a/arch/x86/pci/irq.c
-+++ b/arch/x86/pci/irq.c
-@@ -1519,10 +1519,26 @@ static int pirq_enable_irq(struct pci_dev *dev)
- 			} else
- 				msg = "; probably buggy MP table";
- #endif
--		} else if (pci_probe & PCI_BIOS_IRQ_SCAN)
-+		} else if (pci_probe & PCI_BIOS_IRQ_SCAN) {
- 			msg = "";
--		else
--			msg = "; please try using pci=biosirq";
-+		} else {
-+			do {	/* just one iteration; allows break to minimize code duplication */
-+#ifdef CONFIG_ACPI
-+				if (acpi_noirq) {
-+				    msg = "; consider removing acpi=noirq, and file a bug report if that does not help";
-+					break;		/* out of remainder of one-iteration do {} loop */
-+				}
-+#endif
-+				if (IS_ENABLED(CONFIG_PCI_BIOS))
-+					/* pci=biosirq and pirq= are valid only on x86_32, and should never be necessary */
-+					msg = "; try using pci=biosirq or manual pirq=, and file a bug report for this device";
-+				else if (!IS_ENABLED(CONFIG_ACPI))
-+					/* ACPI will change code path through PCI subsystem, and is worth trying */
-+					msg = "; try enabling ACPI if feasible, and file a bug report for this device";
-+				else
-+					msg = "; please file a bug report for failure to discover device IRQ via ACPI";
-+			} while (0);
-+		}
- 
- 		/*
- 		 * With IDE legacy devices the IRQ lookup failure is not
--- 
-2.35.1
-
+Whoops, this gets fixed up later on in , but I rebased this patch and
+didn't notice that I inadvertently dropped the lockdep stuff. Will
+rebase this hiccup out of the history.
