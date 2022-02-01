@@ -2,141 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A0DB4A5D68
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 14:26:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A087A4A5DA3
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 14:47:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238609AbiBAN0k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 08:26:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:49173 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238435AbiBAN0j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 08:26:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643721998;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=t4DZwBWjH4KMtaPN0r4y8wXSGSfdg/Ee8aiJ79lHN9s=;
-        b=Tfcjj/pq57jwBJsDSqDR/Xrbps4R1VAg+EP58k2Dpd9760Lv0Ekj8MOULAt1Hw7MQZ1KSM
-        GqWnngv6HZJDVn06N8PF7Z3h8BKqFUg2W96U3m7uz/Ioq5puzGnTNiu9SksQ80JhT8S/8D
-        clpzWGfrcqXG/4uqGbi8wzJL0LYRSD8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-605-Ps4YUhxlNiGFYKnj5GBr2g-1; Tue, 01 Feb 2022 08:26:33 -0500
-X-MC-Unique: Ps4YUhxlNiGFYKnj5GBr2g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E1D81091DA3;
-        Tue,  1 Feb 2022 13:26:31 +0000 (UTC)
-Received: from localhost (unknown [10.39.194.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 38EF978DDD;
-        Tue,  1 Feb 2022 13:26:31 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
-        bhelgaas@google.com, saeedm@nvidia.com, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
-        leonro@nvidia.com, kwankhede@nvidia.com, mgurtovoy@nvidia.com,
-        maorg@nvidia.com
-Subject: Re: [PATCH V6 mlx5-next 10/15] vfio: Remove migration protocol v1
-In-Reply-To: <20220201125444.GE1786498@nvidia.com>
-Organization: Red Hat GmbH
-References: <20220130160826.32449-1-yishaih@nvidia.com>
- <20220130160826.32449-11-yishaih@nvidia.com> <874k5izv8m.fsf@redhat.com>
- <20220201121325.GB1786498@nvidia.com> <87sft2yd50.fsf@redhat.com>
- <20220201125444.GE1786498@nvidia.com>
-User-Agent: Notmuch/0.34 (https://notmuchmail.org)
-Date:   Tue, 01 Feb 2022 14:26:29 +0100
-Message-ID: <87mtjayayi.fsf@redhat.com>
+        id S238864AbiBANrH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 08:47:07 -0500
+Received: from mga18.intel.com ([134.134.136.126]:28613 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230213AbiBANrH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Feb 2022 08:47:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643723227; x=1675259227;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=alu1H9qvEw3HFlKI7urAlQj1NT+EXGA6doXsiFrrJ64=;
+  b=W7XqfEtfblm+hOy2EBzjBFBFCP7AUqc2j15u53AlcfFaMXJ/m05EFnvK
+   0wWnlNvGlTGVuOpFBsh6CPmdtsM/sdCaiJYRcyPTZ8dJSbmnJ2KlxZloP
+   Ldpr7fh25Acy5rqhDUI5E35ueM06Ja/bzioj8hG51Vputmgzn75Lv9MQ7
+   pl2XeU9WFmRTZiUpCtcNYiNkePvYCE7Ua/douv8io+0jIEBcylbTIURrZ
+   GNSqFVG3DRxCNQEo6sgo2a8cvzrSZ1h4H2QWxGag0Y4ee1b0fLEq2zoQc
+   yB3BEbKL1xPYsXZ2HIu3s0whXIqA8qRbUSheFc1fi4iNGAiVdiqyN+r/C
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="231262473"
+X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
+   d="scan'208";a="231262473"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 05:46:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
+   d="scan'208";a="619793915"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 01 Feb 2022 05:46:44 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nEtUZ-000TKG-SL; Tue, 01 Feb 2022 13:46:43 +0000
+Date:   Tue, 1 Feb 2022 21:46:36 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     marek.vasut@gmail.com, linux-pci@vger.kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa-dev@sang-engineering.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] PCI: rcar: Use PCI_SET_ERROR_RESPONSE after read
+ which triggered an exception
+Message-ID: <202202012118.qgdNW3Ra-lkp@intel.com>
+References: <20220129043837.172126-2-marek.vasut@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220129043837.172126-2-marek.vasut@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 01 2022, Jason Gunthorpe <jgg@nvidia.com> wrote:
+Hi,
 
-> On Tue, Feb 01, 2022 at 01:39:23PM +0100, Cornelia Huck wrote:
->> On Tue, Feb 01 2022, Jason Gunthorpe <jgg@nvidia.com> wrote:
->> 
->> > On Tue, Feb 01, 2022 at 12:23:05PM +0100, Cornelia Huck wrote:
->> >> On Sun, Jan 30 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
->> >> 
->> >> > From: Jason Gunthorpe <jgg@nvidia.com>
->> >> >
->> >> > v1 was never implemented and is replaced by v2.
->> >> >
->> >> > The old uAPI definitions are removed from the header file. As per Linus's
->> >> > past remarks we do not have a hard requirement to retain compilation
->> >> > compatibility in uapi headers and qemu is already following Linus's
->> >> > preferred model of copying the kernel headers.
->> >> 
->> >> If we are all in agreement that we will replace v1 with v2 (and I think
->> >> we are), we probably should remove the x-enable-migration stuff in QEMU
->> >> sooner rather than later, to avoid leaving a trap for the next
->> >> unsuspecting person trying to update the headers.
->> >
->> > Once we have agreement on the kernel patch we plan to send a QEMU
->> > patch making it support the v2 interface and the migration
->> > non-experimental. We are also working to fixing the error paths, at
->> > least least within the limitations of the current qemu design.
->> 
->> I'd argue that just ripping out the old interface first would be easier,
->> as it does not require us to synchronize with a headers sync (and does
->> not require to synchronize a headers sync with ripping it out...)
->
-> We haven't worked out the best way to organize the qemu patch series,
-> currently it is just one patch that updates everything together, but
-> that is perhaps a bit too big...
->
-> I have thought that a 3 patch series deleting the existing v1 code and
-> then readding it is a potential option, but we don't change
-> everything, just almost everything..
+I love your patch! Yet something to improve:
 
-Even in that case, removing the old code and adding the new one is
-probably much easier to review. (Also, you obviously need to have the
-header update in between those two stages.)
+[auto build test ERROR on helgaas-pci/next]
+[also build test ERROR on v5.17-rc2 next-20220131]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
->
->> > The v1 support should remain in old releases as it is being used in
->> > the field "experimentally".
->> 
->> Of course; it would be hard to rip it out retroactively :)
->> 
->> But it should really be gone in QEMU 7.0.
->
-> Seems like you are arguing from both sides, we can't put the v2 in to
-> 7.0 because Linus has not accepted it but we have to rip the v1 out
-> even though Linus hasn't accepted that?
->
-> We can certainly defer the kernels removal patch for a release if it
-> makes qemu's life easier?
+url:    https://github.com/0day-ci/linux/commits/marek-vasut-gmail-com/PCI-rcar-Finish-transition-to-L1-state-in-rcar_pcie_config_access/20220129-124033
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+config: arm-randconfig-c002-20220201 (https://download.01.org/0day-ci/archive/20220201/202202012118.qgdNW3Ra-lkp@intel.com/config)
+compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 6b1e844b69f15bb7dffaf9365cd2b355d2eb7579)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://github.com/0day-ci/linux/commit/88177fcc2d6d4acbea59c90839882f70b7b774a1
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review marek-vasut-gmail-com/PCI-rcar-Finish-transition-to-L1-state-in-rcar_pcie_config_access/20220129-124033
+        git checkout 88177fcc2d6d4acbea59c90839882f70b7b774a1
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/pci/controller/
 
-No, I'm only talking about the QEMU implementation (i.e. the code that
-uses the v1 definitions and exposes x-enable-migration). Any change in
-the headers needs to be done via a sync with upstream Linux.
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
->
->> Considering adding the v2 uapi, we might get unlucky: The Linux 5.18
->> merge window will likely be in mid-late March (and we cannot run a
->> headers sync before the patches hit Linus' tree), while QEMU 7.0 will
->> likely enter freeze in mid-late March as well. So there's a non-zero
->> chance that the new uapi will need to be deferred to 7.1.
->
-> Usually in rdma land we start advancing the user side once the kernel
-> patches hit the kernel maintainer tree, not Linus's. I run a
-> non-rebasing tree so that gives a permanent git hash. It works well
-> enough and avoids these kinds of artificial delays.
+All errors (new ones prefixed by >>):
 
-QEMU policy is "it must be in Linus' tree [*]", because we run a full
-header sync. We have been bitten by premature updates in the
-past. Updates of only parts of the headers are only acceptable during
-development of a patch series, and must be marked as "will be replaced
-with a proper header sync".
+   drivers/pci/controller/pcie-rcar-host.c:133:5: warning: no previous prototype for function 'rcar_pci_write_reg_workaround' [-Wmissing-prototypes]
+   int rcar_pci_write_reg_workaround(struct rcar_pcie *pcie, u32 val, unsigned int reg)
+       ^
+   drivers/pci/controller/pcie-rcar-host.c:133:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int rcar_pci_write_reg_workaround(struct rcar_pcie *pcie, u32 val, unsigned int reg)
+   ^
+   static 
+   drivers/pci/controller/pcie-rcar-host.c:146:5: warning: no previous prototype for function 'rcar_pci_read_reg_workaround' [-Wmissing-prototypes]
+   int rcar_pci_read_reg_workaround(struct rcar_pcie *pcie, u32 *val, unsigned int reg)
+       ^
+   drivers/pci/controller/pcie-rcar-host.c:146:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int rcar_pci_read_reg_workaround(struct rcar_pcie *pcie, u32 *val, unsigned int reg)
+   ^
+   static 
+>> drivers/pci/controller/pcie-rcar-host.c:138:3: error: instruction requires: data-barriers
+                   __rcar_pci_rw_reg_workaround("str")
+                   ^
+   drivers/pci/controller/pcie-rcar-host.c:120:4: note: expanded from macro '__rcar_pci_rw_reg_workaround'
+                   "2:     isb\n"                                          \
+                    ^
+   <inline asm>:2:4: note: instantiated into assembly here
+   2:      isb
+           ^
+   drivers/pci/controller/pcie-rcar-host.c:151:3: error: instruction requires: data-barriers
+                   __rcar_pci_rw_reg_workaround("ldr")
+                   ^
+   drivers/pci/controller/pcie-rcar-host.c:120:4: note: expanded from macro '__rcar_pci_rw_reg_workaround'
+                   "2:     isb\n"                                          \
+                    ^
+   <inline asm>:2:4: note: instantiated into assembly here
+   2:      isb
+           ^
+>> drivers/pci/controller/pcie-rcar-host.c:138:3: error: instruction requires: data-barriers
+                   __rcar_pci_rw_reg_workaround("str")
+                   ^
+   drivers/pci/controller/pcie-rcar-host.c:120:4: note: expanded from macro '__rcar_pci_rw_reg_workaround'
+                   "2:     isb\n"                                          \
+                    ^
+   <inline asm>:2:4: note: instantiated into assembly here
+   2:      isb
+           ^
+   drivers/pci/controller/pcie-rcar-host.c:151:3: error: instruction requires: data-barriers
+                   __rcar_pci_rw_reg_workaround("ldr")
+                   ^
+   drivers/pci/controller/pcie-rcar-host.c:120:4: note: expanded from macro '__rcar_pci_rw_reg_workaround'
+                   "2:     isb\n"                                          \
+                    ^
+   <inline asm>:2:4: note: instantiated into assembly here
+   2:      isb
+           ^
+   2 warnings and 4 errors generated.
 
-[*] Preferrably a (full or -rc) release, but the very minimum is a git
-hash from his tree.
 
+vim +138 drivers/pci/controller/pcie-rcar-host.c
+
+   132	
+   133	int rcar_pci_write_reg_workaround(struct rcar_pcie *pcie, u32 val, unsigned int reg)
+   134	{
+   135		int error = PCIBIOS_SUCCESSFUL;
+   136	#ifdef CONFIG_ARM
+   137		asm volatile(
+ > 138			__rcar_pci_rw_reg_workaround("str")
+   139		: "+r"(error):"r"(val), "r"(pcie->base + reg) : "memory");
+   140	#else
+   141		rcar_pci_write_reg(pcie, val, reg);
+   142	#endif
+   143		return error;
+   144	}
+   145	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
