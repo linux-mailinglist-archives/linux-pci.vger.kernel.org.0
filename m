@@ -2,235 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 563A44A5418
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 01:34:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67D204A5435
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Feb 2022 01:40:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbiBAAel (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 31 Jan 2022 19:34:41 -0500
-Received: from mga02.intel.com ([134.134.136.20]:10714 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230433AbiBAAek (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 31 Jan 2022 19:34:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643675681; x=1675211681;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fjf5FB26voT1T0ARPJIzRUTIpVRARtKXAGh8m512xik=;
-  b=EvmhFnAmbKLMBckZ5N11xjTSKb4qcjcxber0idTqilier37o8THcHPc7
-   udF0gUR+7rMqMA3Gzy2XIe5t3MuvEx6iaOBjDKKYKk9sxpGjge3Eo6cZA
-   4xuBMQX/yRy2soiVMpYQg6m0/n5lLG6c86O7uCnIbKT2Aral/YINUASCp
-   ALovAzKGSosYYP+G7ADvn7gde3UhkOX/UhSWjkajX+TDFHnPLmO1EBYGH
-   fQIY/bw5sdbrmUIJz0QrlSx9LmIalhiNGay9oPzzyOTUBC3cbKTi+ZD3S
-   V5fw046kaKU//WO+n8THaWoKuZj+yqOJ0JJXM5S7ycQFm+t6crOkKqzs7
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="234983264"
-X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
-   d="scan'208";a="234983264"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 16:34:40 -0800
-X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
-   d="scan'208";a="522864865"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 16:34:40 -0800
-Subject: [PATCH v6 18/40] cxl/pmem: Introduce a find_cxl_root() helper
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-pci@vger.kernel.org,
-        nvdimm@lists.linux.dev
-Date:   Mon, 31 Jan 2022 16:34:40 -0800
-Message-ID: <164367562182.225521.9488555616768096049.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164324151672.3935633.11277011056733051668.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164324151672.3935633.11277011056733051668.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        id S230376AbiBAAkc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 31 Jan 2022 19:40:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229520AbiBAAkb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 31 Jan 2022 19:40:31 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20BE2C061714;
+        Mon, 31 Jan 2022 16:40:31 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id f17so28724185wrx.1;
+        Mon, 31 Jan 2022 16:40:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=7b37+sb97Re3oAWrsxv3q1g8yG0f6pamguZVF07b8vM=;
+        b=gvKPj5ggc5CJwxMCJl72etucJT8QAoxnd62+g9Zan2I+7VBRYDIVs1Sa5CDdxBZoJw
+         HWIfz3n1t3ZsWBEdV5d6/QGflCgRcqckFAI1f1H6dKI77cOwKrZmvmfNvJWXIPdnQ2vO
+         BBGjVPfLdH+IO4/ZBxAV/e2Yad0SeGvAVc9Q/1XfKJAyTxCUJBFqJkbQphI8xAPe0ISv
+         BxaVy4V0+GCvD+0ZHtkWMB0uLOu6Vhcs5TDf07vnweE99b5AlEhvogO5St1dyHaAby6S
+         gTWmj0KUc4oUQhV72OAnAOrCmh84PS4k4DKxbQqzsXbB/mBlwNgFv93enOM+j6780Lde
+         yWrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:subject:message-id
+         :mime-version:content-disposition;
+        bh=7b37+sb97Re3oAWrsxv3q1g8yG0f6pamguZVF07b8vM=;
+        b=ZefCCKD/4CbdmPlq62OO3uKq/uECY/4x1Sk3FGBoSKCfrmPVLwSIzVa4Brmy3LsJoA
+         33SBGug2occZuy0zdVMznMe28a8LaniAvuTlBxkqphvQN7MRdmpabGJsxoNuNLcCyWBx
+         JsGgQFjekwNtTAOlk6ZdunNF/ozewCpK1RegsUuB/WzpJZcgjZA/ExwNxgi0OhTQ1YLW
+         Px7yaC5rtSItc+jN1Fsr52aqyzPLp+PDVtkCKTxJfKrnt2FYZi+rS6QucDD/L3O/ghQN
+         fluBxY3t5s/a37vYDd2J+7DpMZLyypxRdkwSsuXuKC0TZUB/P/GzT9I5BJ+wsq594ChS
+         Kx3Q==
+X-Gm-Message-State: AOAM531LmEU+dVdSxqLqqHkTlCBooPGGi9KMbeyQBUFplaY4YYELfXFa
+        AJfePLHMyNJvAoh+hp5CMhg=
+X-Google-Smtp-Source: ABdhPJzIYdNZ5LhKCEQJ5TRnxRwbUHbNuVeBbSi1uN4zCq7ZfmulED/bq5T7i6rhPPVbUX2vKOsh0Q==
+X-Received: by 2002:a5d:5343:: with SMTP id t3mr19684978wrv.293.1643676029669;
+        Mon, 31 Jan 2022 16:40:29 -0800 (PST)
+Received: from jupiter.dyndns.org (cpc69401-oxfd27-2-0-cust150.4-3.cable.virginm.net. [82.14.184.151])
+        by smtp.gmail.com with ESMTPSA id o8sm599148wmc.46.2022.01.31.16.40.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Jan 2022 16:40:29 -0800 (PST)
+Sender: Brent Spillner <spillner@gmail.com>
+Date:   Tue, 1 Feb 2022 00:40:29 +0000
+From:   Brent Spillner <spillner@acm.org>
+To:     bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] x86/PCI: Improve log message when IRQ cannot be identified
+Message-ID: <YfiBfdAf9uHYTf4T@jupiter.dyndns.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In preparation for switch port enumeration while also preserving the
-potential for multi-domain / multi-root CXL topologies. Introduce a
-'struct device' generic mechanism for retrieving a root CXL port, if one
-is registered. Note that the only known multi-domain CXL configurations
-are running the cxl_test unit test on a system that also publishes an
-ACPI0017 device.
+The existing code always suggests trying the pci=biosirq kernel parameter, but
+this option is only recognized when CONFIG_PCI_BIOS is set, which in turn
+depends on CONFIG_X86_32, so it is never appropriate on x86_64.
+kernel-parameters.txt confirms that pci=biosirq is intended to be supported
+only on X86-32.
 
-With this in hand the nvdimm-bridge lookup can be with
-device_find_child() instead of bus_find_device() + custom mocked lookup
-infrastructure in cxl_test.
+The new version tries to be more helpful by recommending changes to ACPI
+settings if appropriate, and only mentioning pci=biosirq (and the manual
+pirq= option) for kernels that support it. Additionally, it encourages
+the user to file bug reports so faulty firmware can be identified and
+potentially handled via known quirks in a future kernel release.
 
-The mechanism looks for a 2nd level port since the root level topology
-is platform-firmware specific and the 2nd level down follows standard
-PCIe topology expectations. The cxl_acpi 2nd level is associated with a
-PCIe Root Port.
+ACPI is relevant to these warnings because it will significantly change
+the path taken through the PCI discovery (and later interrupt routing)
+code. Booting with acpi=noirq should be highly unusual and likely
+indicates an attempt to work around faulty motherboard firmware, so I
+added a new log message in pci_acpi_init() for this case, with yet
+another recommendation to file a bug report.
 
-Reported-by: Ben Widawsky <ben.widawsky@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Brent Spillner <spillner@acm.org>
 ---
-Changes since v5:
-- Shorten 'match_cxl_root_child' name to improve line wrapping
-  (Jonathan)
+Changes in v2:
+ - Tried to make the code more legible by reducing use of #ifdef (only
+   used where required to guard reference to acpi_noirq)
+ - The tradeoff is there's now an idiosyncratic use of do {...} while (0),
+   but that lets me early-out from the acpi_noirq case without more #ifdefs
+   or duplicated if statements.
+ - Included a warning for acpi_noirq in pci_acpi_init() per maintainer suggestion
+ - Encourage user to file bug reports in all warning messages
 
- drivers/cxl/core/pmem.c       |   14 ++++++++----
- drivers/cxl/core/port.c       |   49 +++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h             |    1 +
- tools/testing/cxl/Kbuild      |    2 --
- tools/testing/cxl/mock_pmem.c |   24 --------------------
- 5 files changed, 60 insertions(+), 30 deletions(-)
- delete mode 100644 tools/testing/cxl/mock_pmem.c
+ arch/x86/pci/acpi.c |  4 +++-
+ arch/x86/pci/irq.c  | 22 +++++++++++++++++++---
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-index 40b3f5030496..8de240c4d96b 100644
---- a/drivers/cxl/core/pmem.c
-+++ b/drivers/cxl/core/pmem.c
-@@ -57,24 +57,30 @@ bool is_cxl_nvdimm_bridge(struct device *dev)
- }
- EXPORT_SYMBOL_NS_GPL(is_cxl_nvdimm_bridge, CXL);
- 
--__mock int match_nvdimm_bridge(struct device *dev, const void *data)
-+static int match_nvdimm_bridge(struct device *dev, void *data)
+diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
+index 052f1d78a562..12f894d345a9 100644
+--- a/arch/x86/pci/acpi.c
++++ b/arch/x86/pci/acpi.c
+@@ -401,8 +401,10 @@ int __init pci_acpi_init(void)
  {
- 	return is_cxl_nvdimm_bridge(dev);
- }
+ 	struct pci_dev *dev = NULL;
  
- struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_nvdimm *cxl_nvd)
- {
-+	struct cxl_port *port = find_cxl_root(&cxl_nvd->dev);
- 	struct device *dev;
- 
--	dev = bus_find_device(&cxl_bus_type, NULL, cxl_nvd, match_nvdimm_bridge);
-+	if (!port)
-+		return NULL;
-+
-+	dev = device_find_child(&port->dev, NULL, match_nvdimm_bridge);
-+	put_device(&port->dev);
-+
- 	if (!dev)
- 		return NULL;
-+
- 	return to_cxl_nvdimm_bridge(dev);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_find_nvdimm_bridge, CXL);
- 
--static struct cxl_nvdimm_bridge *
--cxl_nvdimm_bridge_alloc(struct cxl_port *port)
-+static struct cxl_nvdimm_bridge *cxl_nvdimm_bridge_alloc(struct cxl_port *port)
- {
- 	struct cxl_nvdimm_bridge *cxl_nvb;
- 	struct device *dev;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 2a4230d685d5..af7a515e4572 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -455,6 +455,55 @@ int devm_cxl_register_pci_bus(struct device *host, struct device *uport,
- }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_register_pci_bus, CXL);
- 
-+/* Find a 2nd level CXL port that has a dport that is an ancestor of @match */
-+static int match_root_child(struct device *dev, const void *match)
-+{
-+	const struct device *iter = NULL;
-+	struct cxl_port *port, *parent;
-+	struct cxl_dport *dport;
-+
-+	if (!is_cxl_port(dev))
-+		return 0;
-+
-+	port = to_cxl_port(dev);
-+	if (is_cxl_root(port))
-+		return 0;
-+
-+	parent = to_cxl_port(port->dev.parent);
-+	if (!is_cxl_root(parent))
-+		return 0;
-+
-+	cxl_device_lock(&port->dev);
-+	list_for_each_entry(dport, &port->dports, list) {
-+		iter = match;
-+		while (iter) {
-+			if (iter == dport->dport)
-+				goto out;
-+			iter = iter->parent;
-+		}
+-	if (acpi_noirq)
++	if (acpi_noirq) {
++		printk(KERN_WARNING "PCI: ACPI IRQ routing disabled; please submit a bug report if this was required to work around firmware defects\n");
+ 		return -ENODEV;
 +	}
-+out:
-+	cxl_device_unlock(&port->dev);
-+
-+	return !!iter;
-+}
-+
-+struct cxl_port *find_cxl_root(struct device *dev)
-+{
-+	struct device *port_dev;
-+	struct cxl_port *root;
-+
-+	port_dev = bus_find_device(&cxl_bus_type, NULL, dev, match_root_child);
-+	if (!port_dev)
-+		return NULL;
-+
-+	root = to_cxl_port(port_dev->parent);
-+	get_device(&root->dev);
-+	put_device(port_dev);
-+	return root;
-+}
-+EXPORT_SYMBOL_NS_GPL(find_cxl_root, CXL);
-+
- static struct cxl_dport *find_dport(struct cxl_port *port, int id)
- {
- 	struct cxl_dport *dport;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 4d4cc8292137..61b0db526fa2 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -304,6 +304,7 @@ struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
  
- int cxl_add_dport(struct cxl_port *port, struct device *dport, int port_id,
- 		  resource_size_t component_reg_phys);
-+struct cxl_port *find_cxl_root(struct device *dev);
+ 	printk(KERN_INFO "PCI: Using ACPI for IRQ routing\n");
+ 	acpi_irq_penalty_init();
+diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
+index 97b63e35e152..393b036e773b 100644
+--- a/arch/x86/pci/irq.c
++++ b/arch/x86/pci/irq.c
+@@ -1519,10 +1519,26 @@ static int pirq_enable_irq(struct pci_dev *dev)
+ 			} else
+ 				msg = "; probably buggy MP table";
+ #endif
+-		} else if (pci_probe & PCI_BIOS_IRQ_SCAN)
++		} else if (pci_probe & PCI_BIOS_IRQ_SCAN) {
+ 			msg = "";
+-		else
+-			msg = "; please try using pci=biosirq";
++		} else {
++			do {	/* just one iteration; allows break to minimize code duplication */
++#ifdef CONFIG_ACPI
++				if (acpi_noirq) {
++				    msg = "; consider removing acpi=noirq, and file a bug report if that does not help";
++					break;		/* out of remainder of one-iteration do {} loop */
++				}
++#endif
++				if (IS_ENABLED(CONFIG_PCI_BIOS))
++					/* pci=biosirq and pirq= are valid only on x86_32, and should never be necessary */
++					msg = "; try using pci=biosirq or manual pirq=, and file a bug report for this device";
++				else if (!IS_ENABLED(CONFIG_ACPI))
++					/* ACPI will change code path through PCI subsystem, and is worth trying */
++					msg = "; try enabling ACPI if feasible, and file a bug report for this device";
++				else
++					msg = "; please file a bug report for failure to discover device IRQ via ACPI";
++			} while (0);
++		}
  
- struct cxl_decoder *to_cxl_decoder(struct device *dev);
- bool is_root_decoder(struct device *dev);
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 3299fb0977b2..ddaee8a2c418 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -32,6 +32,4 @@ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
- cxl_core-y += $(CXL_CORE_SRC)/mbox.o
- cxl_core-y += config_check.o
- 
--cxl_core-y += mock_pmem.o
--
- obj-m += test/
-diff --git a/tools/testing/cxl/mock_pmem.c b/tools/testing/cxl/mock_pmem.c
-deleted file mode 100644
-index f7315e6f52c0..000000000000
---- a/tools/testing/cxl/mock_pmem.c
-+++ /dev/null
-@@ -1,24 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/* Copyright(c) 2021 Intel Corporation. All rights reserved. */
--#include <cxl.h>
--#include "test/mock.h"
--#include <core/core.h>
--
--int match_nvdimm_bridge(struct device *dev, const void *data)
--{
--	int index, rc = 0;
--	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
--	const struct cxl_nvdimm *cxl_nvd = data;
--
--	if (ops) {
--		if (dev->type == &cxl_nvdimm_bridge_type &&
--		    (ops->is_mock_dev(dev->parent->parent) ==
--		     ops->is_mock_dev(cxl_nvd->dev.parent->parent)))
--			rc = 1;
--	} else
--		rc = dev->type == &cxl_nvdimm_bridge_type;
--
--	put_cxl_mock_ops(index);
--
--	return rc;
--}
+ 		/*
+ 		 * With IDE legacy devices the IRQ lookup failure is not
+-- 
+2.35.1
 
