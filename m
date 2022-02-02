@@ -2,235 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A84754A76A3
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 18:18:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 403124A7704
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 18:44:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238217AbiBBRSn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Feb 2022 12:18:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbiBBRSm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 12:18:42 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD164C061714;
-        Wed,  2 Feb 2022 09:18:42 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id b13so202093edn.0;
-        Wed, 02 Feb 2022 09:18:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=8ZoifPL9k2IkYJ2rOwXV9s+gL+QWVkXsi/bflJbVNGE=;
-        b=SQRDQg86WqLE7eMqHazeyMcVAiXex5mZXzs/r1HLIj+V5WKW49DeSBlgkVs6JKKpBq
-         YWHd0pZiIubPBB8LhyraD8Iju3h18yepteIggBM3HsIUgs/rFke0/jC2aiBtcpOP9EfK
-         Ty2D/U5BHjRt+K9ICGaMklSzVIYYzZGPNd26GSgZT5TXqipbAAi100inTJaI8rIvKEht
-         SOpBb96sXsjWSswsQgR/oVylqKBRuM9jXZgbHAO+qkoYhpuLqXh8glji0yOA+bOT10Fs
-         1zGs+1VJCY2d38czyQQXuairAm0IejAVj9Q/THCiaQZRnaizxopnKvXHzaMRf3LvzD6t
-         oLUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=8ZoifPL9k2IkYJ2rOwXV9s+gL+QWVkXsi/bflJbVNGE=;
-        b=eG3FnQXfsmObAi9Rdh35zmVhV3/+AqaEW0SqNpcsWoh1v3eD9/mNBVqYSRdZhIQMSG
-         QK1a8lmRT5f1RmMUvSUkdrwv19bToKsxCzmwDOua4XNH99kkMF8WIwW1PqNk+dV+WOhT
-         TEdM15VoPp7I9p/hG+z36uPaOuQF8bvmXgAme0XTX/8aBvns+fWIQYduIq65wbdSTtvj
-         vxrHIL9xVUAwRp1KnXcqGdgM80y2rDRgYgQ1S0yd4I6ZlWKIm60zVKgfuGxsW9EnM758
-         G57oSwlEDEMewgK+ZVJ8o8fJfcEvoRR8U12ugerDe8LCljmP14FEqyCR9Vg1w8NmkGXg
-         oJHg==
-X-Gm-Message-State: AOAM531NzaARe0Td5Ag10Wx3WMy+etSTpR5Rp/QhThyjtlzdLJwI3An+
-        qR08o0kcldaBU4Ih+tSSQbQ=
-X-Google-Smtp-Source: ABdhPJwNJqi7u47Ybr76o3uAhYwS9CHNqP4rTCCatremGTisy5+f8yeqzd9Y7ebqP1eCAX7xQNWW0A==
-X-Received: by 2002:a05:6402:26c9:: with SMTP id x9mr31137370edd.151.1643822321123;
-        Wed, 02 Feb 2022 09:18:41 -0800 (PST)
-Received: from ubuntu-laptop (p4fd5939b.dip0.t-ipconnect.de. [79.213.147.155])
-        by smtp.googlemail.com with ESMTPSA id x12sm19847774edv.57.2022.02.02.09.18.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Feb 2022 09:18:40 -0800 (PST)
-Message-ID: <2d41d08a9501597fd9c9d2aaa024cfe1f201cf65.camel@gmail.com>
-Subject: Re: [PATCH] PCI: kirin: Fix kirin960-pcie probe failure issue
-From:   Bean Huo <huobean@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, ffclaire1224@gmail.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        beanhuo@micron.com
-Date:   Wed, 02 Feb 2022 18:18:40 +0100
-In-Reply-To: <20220202162659.GA12603@bhelgaas>
-References: <20220202162659.GA12603@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        id S234635AbiBBRm7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Feb 2022 12:42:59 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:60468 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231680AbiBBRm7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 12:42:59 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EEC17B831CE;
+        Wed,  2 Feb 2022 17:42:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61D35C004E1;
+        Wed,  2 Feb 2022 17:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643823776;
+        bh=CvG8ii+9YGkPWVWDFhYOlfrAwbJIQDmwvlL7Cx3lywg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bPExBU/v4gXvP4NE7IFiqWBZJg9dt9hHChNbHnf92/KY+4qe1TdMyJNwC00O7JrXU
+         3X//Sy26N3xCsYRmSozlMeOx4RLP7CeLVGujFCJ38OTitlniOJGo4G4caNoB1+mo1c
+         eroTbPl1Q4exl5dIl4kerIDKXCgPo1uWLrv0wW/N9+eR7a16znlLOp+f0ENxo905LC
+         8pFFBYgsDR/ztBYZ+x8H1PJqo/HCqZ8ye+LTYSBxQvGt8Nw98TdYPVt8f1ULeKcTvq
+         TJABHCYxfAQOVEWmICHsK8ZZbM8MM97yN9aYY/tGwSY1L0PcibuATaEfrhO/ZyaeTw
+         OWp9CKaKK7t+A==
+Date:   Wed, 2 Feb 2022 11:42:55 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     pierre.gondois@arm.com
+Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [Bug 215560] New: _PRS/_SRS methods should be optional
+Message-ID: <20220202174255.GA22220@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bug-215560-41252@https.bugzilla.kernel.org/>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2022-02-02 at 10:26 -0600, Bjorn Helgaas wrote:
-> [+cc Fan]
-> 
-> If you're fixing a previous commit, please cc the author of that
-> commit.
-> 
-> I'd prefer the patch below because it avoids the casts of .data and
-> the of_device_get_match_data() result, it doesn't silently default to
-> PCIE_KIRIN_INTERNAL_PHY if a device without a .data is added, and
-> it's 
-> the most common design pattern in drivers/pci/.
-> 
-> What do you think?
+Hi Pierre,
 
-Hi Bjorn,
+Thanks a lot for the report!
 
-The below change looks good to me. thanks.
+On Wed, Feb 02, 2022 at 10:20:44AM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=215560
+> 
+>             Bug ID: 215560
+>            Summary: _PRS/_SRS methods should be optional
+>            Product: Drivers
+>            Version: 2.5
+>     Kernel Version: v5.17-rc2
+>           Hardware: All
+>                 OS: Linux
+>               Tree: Mainline
+>             Status: NEW
+>           Severity: enhancement
+>           Priority: P1
+>          Component: PCI
+>           Assignee: drivers_pci@kernel-bugs.osdl.org
+>           Reporter: pierre.gondois@arm.com
+>         Regression: No
+> 
+> The PCI legacy interrupts can be described with link devices, cf ACPI 6.4,
+> s6.2.13 "_PRT (PCI Routing Table)".
+> Link devices can have optional _SRS/_PRS methods to set the interrupt.
 
-Bean
-> 
-> On Tue, Feb 01, 2022 at 10:59:41PM +0100, Bean Huo wrote:
-> > From: Bean Huo <beanhuo@micron.com>
-> > 
-> > of_device_get_match_data() will return 'enum pcie_kirin_phy_type'
-> > type
-> > value, and most likely the return value will be
-> > PCIE_KIRIN_INTERNAL_PHY == 0.
-> > This will cause the PCI probe to fail. And
-> > of_device_get_match_data() does not
-> > require error checking on its return on devicetree based platform.
-> > 
-> > So,this patch is to remove unnecessary error checking to fix
-> > kirin960-pcie
-> > probe failure issue.
-> > 
-> > Fixes: a622435fbe1a ("PCI: kirin: Prefer
-> > of_device_get_match_data()")
-> > Signed-off-by: Bean Huo <beanhuo@micron.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-kirin.c | 7 +------
-> >  1 file changed, 1 insertion(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-kirin.c
-> > b/drivers/pci/controller/dwc/pcie-kirin.c
-> > index fa6886d66488..e102aa6efb7f 100644
-> > --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> > +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> > @@ -781,12 +781,7 @@ static int kirin_pcie_probe(struct
-> > platform_device *pdev)
-> >  		return -EINVAL;
-> >  	}
-> >  
-> > -	phy_type = (long)of_device_get_match_data(dev);
-> > -	if (!phy_type) {
-> > -		dev_err(dev, "OF data missing\n");
-> > -		return -EINVAL;
-> > -	}
-> > -
-> > +	phy_type = (enum
-> > pcie_kirin_phy_type)of_device_get_match_data(dev);
-> >  
-> >  	kirin_pcie = devm_kzalloc(dev, sizeof(struct kirin_pcie),
-> > GFP_KERNEL);
-> >  	if (!kirin_pcie)
-> 
-> commit 3e21687be135 ("PCI: kirin: Add dev struct for
-> of_device_get_match_data()")
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Wed Feb 2 09:52:41 2022 -0600
-> 
->     PCI: kirin: Add dev struct for of_device_get_match_data()
->     
->     a622435fbe1a ("PCI: kirin: Prefer of_device_get_match_data()")
-> broke
->     kirin_pcie_probe() because it assumed match data of 0 was a
-> failure when in
->     fact, it meant the match data was "(void
-> *)PCIE_KIRIN_INTERNAL_PHY".
->     
->     Therefore, probing of "hisilicon,kirin960-pcie" devices failed
-> with -EINVAL
->     and an "OF data missing" message.
->     
->     Add a struct kirin_pcie_data to encode the PHY type.  Then the
-> result of
->     of_device_get_match_data() should always be a non-NULL pointer to
-> a struct
->     kirin_pcie_data that contains the PHY type.
->     
->     Fixes: a622435fbe1a ("PCI: kirin: Prefer
-> of_device_get_match_data()")
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c
-> b/drivers/pci/controller/dwc/pcie-kirin.c
-> index fa6886d66488..0dc4e3395b37 100644
-> --- a/drivers/pci/controller/dwc/pcie-kirin.c
-> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-> @@ -756,21 +756,27 @@ static int __exit kirin_pcie_remove(struct
-> platform_device *pdev)
->  	return 0;
->  }
->  
-> +struct kirin_pcie_data {
-> +	enum pcie_kirin_phy_type	phy_type;
-> +};
-> +
-> +static const struct kirin_pcie_data kirin_960_data = {
-> +	.phy_type = PCIE_KIRIN_INTERNAL_PHY;
-> +};
-> +
-> +static const struct kirin_pcie_data kirin_970_data = {
-> +	.phy_type = PCIE_KIRIN_EXTERNAL_PHY;
-> +};
-> +
->  static const struct of_device_id kirin_pcie_match[] = {
-> -	{
-> -		.compatible = "hisilicon,kirin960-pcie",
-> -		.data = (void *)PCIE_KIRIN_INTERNAL_PHY
-> -	},
-> -	{
-> -		.compatible = "hisilicon,kirin970-pcie",
-> -		.data = (void *)PCIE_KIRIN_EXTERNAL_PHY
-> -	},
-> +	{ .compatible = "hisilicon,kirin960-pcie", .data =
-> &kirin_960_data },
-> +	{ .compatible = "hisilicon,kirin970-pcie", .data =
-> &kirin_970_data },
->  	{},
->  };
->  
->  static int kirin_pcie_probe(struct platform_device *pdev)
->  {
-> -	enum pcie_kirin_phy_type phy_type;
-> +	struct kirin_pcie_data *data;
->  	struct device *dev = &pdev->dev;
->  	struct kirin_pcie *kirin_pcie;
->  	struct dw_pcie *pci;
-> @@ -781,13 +787,12 @@ static int kirin_pcie_probe(struct
-> platform_device *pdev)
->  		return -EINVAL;
->  	}
->  
-> -	phy_type = (long)of_device_get_match_data(dev);
-> -	if (!phy_type) {
-> +	data = of_device_get_match_data(dev);
-> +	if (!data) {
->  		dev_err(dev, "OF data missing\n");
->  		return -EINVAL;
->  	}
->  
-> -
->  	kirin_pcie = devm_kzalloc(dev, sizeof(struct kirin_pcie),
-> GFP_KERNEL);
->  	if (!kirin_pcie)
->  		return -ENOMEM;
-> @@ -800,7 +805,7 @@ static int kirin_pcie_probe(struct
-> platform_device *pdev)
->  	pci->ops = &kirin_dw_pcie_ops;
->  	pci->pp.ops = &kirin_pcie_host_ops;
->  	kirin_pcie->pci = pci;
-> -	kirin_pcie->type = phy_type;
-> +	kirin_pcie->type = data->phy_type;
->  
->  	ret = kirin_pcie_get_resource(kirin_pcie, pdev);
->  	if (ret)
+Is this a direct quote?  I don't see text similar to this in ACPI
+v6.4.
 
+I do see this in sec 6.2.13:
+
+  There are two ways that _PRT can be used. Typically, the interrupt
+  input that a given PCI interrupt is on is configurable.  For
+  example, a given PCI interrupt might be configured for either IRQ 10
+  or 11 on an 8259 interrupt controller. In this model, each interrupt
+  is represented in the ACPI namespace as a PCI Interrupt Link Device.
+
+  These objects have _PRS, _CRS, _SRS, and _DIS control methods to
+  allocate the interrupt. Then, OSPM handles the interrupts not as
+  interrupt inputs on the interrupt controller, but as PCI interrupt
+  pins. The driver looks up the device’s pins in the _PRT to determine
+  which device objects allocate the interrupts. To move the PCI
+  interrupt to a different interrupt input on the interrupt
+  controller, OSPM uses _PRS, _CRS, _SRS, and _DIS control methods for
+  the PCI Interrupt Link Device.
+
+  In the second model, the PCI interrupts are hardwired to specific
+  interrupt inputs on the interrupt controller and are not
+  configurable. In this case, the Source field in _PRT does not
+  reference a device, but instead contains the value zero, and the
+  Source Index field contains the global system interrupt to which the
+  PCI interrupt is hardwired.
+
+For the first model (configurable inputs), it says "These objects have
+_PRS, _CRS, _SRS, and _DIS," which could be read as requiring those
+objects.
+
+For the second model (hardwired inputs), the interrupts are not
+configurable, and I don't think there would be any reason to have an
+interrupt link device at all.
+
+> In PCI Firmware Specification Revision 3.3, s4.3.2.1. "Resource Setting":
+> """
+> A non-configurable device only specifies _CRS. However, if they are
+> configurable, devices include
+> _PRS to indicate the possible resource setting and _SRS to allow OSPM to
+> specify a new resource
+> allocation for the device.
+> """
+
+My copy of the PCI Firmware spec r3.3 (dated Jan 20, 2021), sec
+4.3.2.1 says:
+
+  Host bridges resources programming is communicated to the operating
+  system using ACPI methods _CRS, _SRS, and _PRS. _CRS indicates the
+  current resource setting for the host bridge. This includes I/O
+  space, memory space, and bus range assigned to the bridge by
+  platform firmware.
+
+  A non-configurable device only specifies _CRS. However, if they are
+  configurable, devices include _PRS to indicate the possible resource
+  setting and _SRS to allow OSPM to specify a new resource allocation
+  for the device.
+
+So this is specifically talking about methods of a PCI host bridge
+(PNP0A03 or PNP0A08), not about methods of an interrupt link device
+(PNP0C0F).
+
+> However, _PRS/_SRS methods are checked in drivers/acpi/pci_link.c, and the
+> driver aborts if they are absent.
+> E.g.: When _PRS is missing:
+> ACPI: \_SB_.PCI0.LNKA: _CRS 36 not found in _PRS
+> ACPI: \_SB_.PCI0.LNKA: No IRQ available. Try pci=noacpi or acpi=off
+
+I assume this bug report is because something isn't working.  Can you
+update the bugzilla with a note about what specifically isn't working
+and also attach a complete dmesg log and acpidump?
+
+Bjorn
