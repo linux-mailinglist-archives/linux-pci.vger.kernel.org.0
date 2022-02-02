@@ -2,121 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C023E4A7995
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 21:36:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 989B84A7A8A
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 22:35:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232023AbiBBUgy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Feb 2022 15:36:54 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:54148 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbiBBUgy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 15:36:54 -0500
+        id S1347645AbiBBVf4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Feb 2022 16:35:56 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:40650 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233297AbiBBVfy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 16:35:54 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D8669619C8;
-        Wed,  2 Feb 2022 20:36:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E97C004E1;
-        Wed,  2 Feb 2022 20:36:52 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A1FE0B8311B;
+        Wed,  2 Feb 2022 21:35:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2975AC004E1;
+        Wed,  2 Feb 2022 21:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643834213;
-        bh=0BGKMKxHDz655bbS6eHoCnQ6dfdh9lnMmg+71V26wGU=;
+        s=k20201202; t=1643837752;
+        bh=7kN0xNUmp6IHM12aVfs0hbWaqrbS1EUbii1ez3Z24rs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Veg9CsOJvhMMidPlW81xKh8JxyfIpA7e6kTEu5935U5A0lMsmeAlgKgm03A1wYHBy
-         JPfEOe4uQyj53hkvTdHBT53GHnRYnC32qd5r6Guke+shXoEnTh5+jHKLXOw2r7Y9bL
-         g+gbCka+Ss5v4qxxlB36Ln7XsGqC6F0kJZnkuaJOi9nWFKHpKMCBEIIqZR/fqy9Nhg
-         hYU2CzpARjiIcVFBEeSp2dGSWQc7bVH2UI6+6P58ZyZ3iO3oOQRC+EKdDausMT1K68
-         Jn+luIZrgJhs6xiiulBHeJYx4TtQXNx7cQIU69HfQ7VmB3yVWcDhM+kbPtvMhLOsHf
-         nhCzwsBKwo9Pg==
-Date:   Wed, 2 Feb 2022 14:36:51 -0600
+        b=lsiVPiXb0D2xVnrJyDkYfplL4ZJ8EW6Ay2wVGBs4H9V/1p/ohfIBig4JHd2Lo5pF7
+         +tSoeF8mGTmzU5EyxTVv7NmglsDQSxjbv9YfvmOodW7LFqrRcU0Gf1d9cQgKJI+6Go
+         CMBORGpZPGKvtfLO60scEJCNOOLL36d5Je8BzCfJzsmLBFTaATnurgIwSIJXAysh/1
+         J2katS3g8zodXIqf3KlUjSQBXWgmKTWN8tS753H7p5Tv8HLg6A2l5syIeKXhnIFBp0
+         PVe/GLmGoJ6qF5Z0Rs3UDI7e7GEcZC5k6md3RJ3pRGHt36qIIraH0+F0MjmT/gvpSK
+         KFS9AThjS3hOQ==
+Date:   Wed, 2 Feb 2022 15:35:50 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v3 3/8] platform/x86/intel: Add Primary to Sideband
- (P2SB) bridge support
-Message-ID: <20220202203651.GA40446@bhelgaas>
+To:     Vikash Bansal <bvikas@vmware.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Srinidhi Rao <srinidhir@vmware.com>,
+        Anish Swaminathan <anishs@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        Ajay Kaher <akaher@vmware.com>
+Subject: Re: [PATCH v2] PCI: Speed up device init by parsing capabilities all
+ at once
+Message-ID: <20220202213550.GA44337@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YfmBZvQ28y/Mh60J@smile.fi.intel.com>
+In-Reply-To: <2A631B59-B3BD-4B3C-9DDD-795B7843333B@vmware.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 08:52:22PM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 01, 2022 at 12:14:01PM -0600, Bjorn Helgaas wrote:
-> > On Fri, Jan 28, 2022 at 08:30:20PM +0200, Andy Shevchenko wrote:
-> > > On Fri, Jan 07, 2022 at 11:11:08AM -0600, Bjorn Helgaas wrote:
-> > > > On Fri, Jan 07, 2022 at 04:56:42PM +0200, Andy Shevchenko wrote:
-> > > 
-> > > ...
-> > > 
-> > > > My point is that the unhide is architecturally messed up.  The OS
-> > > > runs on the platform as described by ACPI.  Devices that cannot be
-> > > > enumerated are described in the ACPI namespace.
-> > > 
-> > > This device may or may not be _partially_ or _fully_ (due to being
-> > > multifunctional) described in ACPI. I agree, that ideally the
-> > > devices in question it has behind should be represented properly by
-> > > firmware.  However, the firmwares in the wild for selected products
-> > > / devices don't do that. We need to solve (work around) it in the
-> > > software.
-> > > 
-> > > This is already done for a few devices. This series consolidates
-> > > that and enables it for very known GPIO IPs.
-> > 
-> > Consolidating the code to unhide the device and size the BAR is fine.
-> > 
-> > I would prefer the PCI core to be involved as little as possible
-> > because we're violating some key assumptions and we could trip over
-> > those later.  We're assuming the existence of P2SB based on the fact
-> > that we found some *other* device, we're assuming firmware isn't using
-> > P2SB (may be true now, but impossible to verify), we're assuming the
-> > P2SB BAR contains a valid address that's not used elsewhere but also
-> > won't be assigned to anything.
-> > 
-> > > PCI core just provides a code that is very similar to what we need
-> > > here. Are you specifically suggesting that we have to copy'n'paste
-> > > that rather long function and maintain in parallel with PCI?
-> > 
-> > I think we're talking about __pci_read_base(), which is currently an
-> > internal PCI interface.  This series adds pci_bus_info/warn/etc(),
+On Fri, Jan 28, 2022 at 04:51:43AM +0000, Vikash Bansal wrote:
+> In the current implementation, the PCI capability list is parsed from
+> the beginning to find each capability, which results in a large number
+> of redundant PCI reads.
 > 
-> The patch that adds those macros is good on its own, if you think so...
-> I tried to submit it separately, but it was no response, so I don't know.
+> Instead, we can parse the complete list just once, store it in the
+> pci_dev structure, and get the offset of each capability directly from
+> the pci_dev structure.
+> 
+> This implementation improves pci devices initialization time  by ~2-3%
+> (from 270ms to 261ms) in case of bare metal and 7-8% (From 201ms to 184ms)
+> in case of VM running on ESXi.
+> 
+> It also adds a memory overhead of 20bytes (value of PCI_CAP_ID_MAX) per
+> PCI device.
+> 
+> Ran pahole for pci_dev structure. This patch is not adding any padding
+> bytes.
 
-I'd rather not add pci_bus_info(), etc.  There are only a couple
-places that could use it, and if we cared enough, I think those places
-could avoid it by doing pci_alloc_dev() first.
+I like the idea of this.
 
-What if you used pci_alloc_dev() and then called the current
-__pci_read_base() on the pci_dev *?
+I guess the corresponding thing could be done for extended
+capabilities as well, but they're not as common, there are more of
+them, and maybe the benefit wouldn't be worth it.
 
-The caller would still have the ugly #include path, but I guess you're
-OK with that.
+More comments below.
 
-Since the P2SB BAR is not included in the host bridge _CRS, the
-pcibios_bus_to_resource() done by __pci_read_base() won't work
-correctly, so this only "works" on host bridges with no address
-translation.  But that's also the case with your current series.
-This is an example of one of the PCI core assumptions being violated,
-so things can break.
+> Signed-off-by: Vikash Bansal <bvikas@vmware.com>
+> ---
+> 
+> Changes in v2:
+>   - Ran pahole tool.
+>   - Modified comments to add "clock time".
+>   - Removed comments before call to pci_find_all_capabilities.
+> 
+> drivers/pci/pci.c   | 43 ++++++++++++++++++++++++++++++++++++-------
+> drivers/pci/probe.c |  1 +
+> include/linux/pci.h |  2 ++
+> 3 files changed, 39 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9ecce435fb3f..b361788bcc27 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -468,6 +468,41 @@ static u8 __pci_bus_find_cap_start(struct pci_bus *bus,
+> 	return 0;
+> }
+> 
+> +
+> +/**
+> + * pci_find_all_capabilities - Read all capabilities
+> + * @dev: the PCI device
+> + *
+> + * Read all capabilities and store offsets in cap_off
+> + * array in pci_dev structure.
+> + */
+> +void pci_find_all_capabilities(struct pci_dev *dev)
+> +{
+> +	int ttl = PCI_FIND_CAP_TTL;
+> +	u16 ent;
+> +	u8 pos;
+> +	u8 id;
+> +
+> +	pos = __pci_bus_find_cap_start(dev->bus, dev->devfn, dev->hdr_type);
+> +	if (!pos)
+> +		return;
+> +	pci_bus_read_config_byte(dev->bus, dev->devfn, pos, &pos);
+> +	while (ttl--) {
+> +		if (pos < 0x40)
+> +			break;
+> +		pos &= ~3;
+> +		pci_bus_read_config_word(dev->bus, dev->devfn, pos, &ent);
+> +		id = ent & 0xff;
+> +		if (id == 0xff)
+> +			break;
+> +
+> +		/* Read first instance of capability */
+> +		if (!(dev->cap_off[id]))
+> +			dev->cap_off[id] = pos;
+> +		pos = (ent >> 8);
+> +	}
+> +}
 
-Bjorn
+With the current capability infrastructure, one has to specify the
+capability of interest up front, so there's no way to iterate directly
+through all the capabilities.  Hence this code that looks a lot like
+__pci_find_next_cap_ttl(), which knows the capability to look for and
+ignores any others.
+
+> +
+> /**
+>   * pci_find_capability - query for devices' capabilities
+>   * @dev: PCI device to query
+> @@ -489,13 +524,7 @@ static u8 __pci_bus_find_cap_start(struct pci_bus *bus,
+>   */
+> u8 pci_find_capability(struct pci_dev *dev, int cap)
+> {
+> -	u8 pos;
+> -
+> -	pos = __pci_bus_find_cap_start(dev->bus, dev->devfn, dev->hdr_type);
+> -	if (pos)
+> -		pos = __pci_find_next_cap(dev->bus, dev->devfn, pos, cap);
+> -
+> -	return pos;
+> +	return dev->cap_off[cap];
+
+This may index past the end of the cap_off[] table.  We have no
+control over the callers, so no way to prevent them from reading
+arbitrary memory here.
+
+Here's an alternate proposal:
+
+  - Leave pci_find_capability() completely alone.
+
+  - Don't add the cap_off[] table.  This only works for Capabilities
+    (not Extended Capabilities), depends on PCI_CAP_ID_MAX (which is
+    not fixed and could change in the future), and duplicates existing
+    data like dev->pcie_cap, dev->msi_cap, dev->msix_cap, etc.
+
+  - Add pci_find_all_capabilities() (I'd probably call it
+    "pci_scan_capabilities()"), but extend it to iterate through both
+    kinds of capabilities (probably a helper function for each kind)
+    and fill in dev->pcie_cap, dev->msi_cap, dev->aer_cap, etc as it
+    finds them.
+
+  - Follow up with patches that remove calls to pci_find_capability()
+    and pci_find_ext_capability() for the capabilities we've already
+    located.
+
+> }
+> EXPORT_SYMBOL(pci_find_capability);
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 17a969942d37..b2fa5b2c42f6 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1831,6 +1831,7 @@ int pci_setup_device(struct pci_dev *dev)
+> 	dev->hdr_type = hdr_type & 0x7f;
+> 	dev->multifunction = !!(hdr_type & 0x80);
+> 	dev->error_state = pci_channel_io_normal;
+> +	pci_find_all_capabilities(dev);
+> 	set_pcie_port_type(dev);
+> 
+> 	pci_set_of_node(dev);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 8253a5413d7c..abcf7fdc4c98 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -335,6 +335,7 @@ struct pci_dev {
+> 	unsigned int	class;		/* 3 bytes: (base,sub,prog-if) */
+> 	u8		revision;	/* PCI revision, low byte of class word */
+> 	u8		hdr_type;	/* PCI header type (`multi' flag masked out) */
+> +	u8              cap_off[PCI_CAP_ID_MAX]; /* Offsets of all pci capabilities */
+> #ifdef CONFIG_PCIEAER
+> 	u16		aer_cap;	/* AER capability offset */
+> 	struct aer_stats *aer_stats;	/* AER stats for this device */
+> @@ -1140,6 +1141,7 @@ void pci_sort_breadthfirst(void);
+> 
+> u8 pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn, int cap);
+> u8 pci_find_capability(struct pci_dev *dev, int cap);
+> +void pci_find_all_capabilities(struct pci_dev *dev);
+
+Shouldn't be exposed outside drivers/pci/; could move to
+drivers/pci/pci.h.
+
+> u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
+> u8 pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
+> u8 pci_find_next_ht_capability(struct pci_dev *dev, u8 pos, int ht_cap);
+> --
+> 2.30.0
+> 
