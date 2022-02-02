@@ -2,153 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F18AE4A69D4
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 03:06:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F0944A6AAE
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 05:00:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231861AbiBBCGf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Feb 2022 21:06:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229928AbiBBCGf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Feb 2022 21:06:35 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F0CC061714
-        for <linux-pci@vger.kernel.org>; Tue,  1 Feb 2022 18:06:35 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id o64so18900827pjo.2
-        for <linux-pci@vger.kernel.org>; Tue, 01 Feb 2022 18:06:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H8NaK6sogIQ9vr23uq3ONCRZOGt+JDgbjU55p0WZp4U=;
-        b=bfP6aLccvV4nBE91AzyhEB+9wzkc3lnTdeQz2pDYN+pboTQ/PNybvwrn+LpcyKBBxv
-         KeWaA+rToyLUpVDwgxI7FDgZtJGZOoMSTMPsXpPVcPiqQyWtb2hOp8ZCp27GHqDI6sb1
-         0GOVrybLfDhc8lgnSrII4ufgbX/XH6ixzM7lF3uFWj44zEQ6yJZwv6q+szt45nm91d7m
-         X8DZr01oeCBpXuNWL4yP263MF73rs3FBn5OxE7LQ/rCISl86epCO1jHqvAJ9uqZNIU6H
-         PXs1dzc2aqAO/WtzZGqCliKcS+jd6L2aiYOnXmSA0C6GFVrXo8k8BeNRgHnxGVTJFO+c
-         B1cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H8NaK6sogIQ9vr23uq3ONCRZOGt+JDgbjU55p0WZp4U=;
-        b=mnZmB2yNhHcz8ZJRd9+gzSGmU5KwygQieXGu1pT4DdptBRTVSx8OFfZt2XR56/Qcm6
-         QqyY/dO1XxW4wth+PrquVtvIzWWChP63wncPH1G4sSivLPpuGMpFRagN77dcXbdNgLx5
-         J5oegSOi1hRHORWnZKPHLAuQuLpL1JOGJaaTqmJjj1eWWVKozvO4rWipWfPKP5QoW0iG
-         eCZG7ZuCcgnAlUr/ahOZ+g7X/qQuvGVqm4AcmFXlOyrytDxfErMqhh1kVaNYmOqWNMao
-         CA8fDNtbLVNXI+9wLkVIlOaOKJZ1aqh761V5B0TAcMrCewRNb93cLE9vHeHpqz/yjvF7
-         upJQ==
-X-Gm-Message-State: AOAM532zKG8wdDgOy+aVievGOlFhEIypLa8mS8NHKkjL5BQ8SdXVnAe7
-        cJIO0Fe2Z1BAZg+Cl+Wy4aIcjL+5jUfmMFRYv+FvLQ==
-X-Google-Smtp-Source: ABdhPJx0554lrOHB07UdrxMgw1RFi/OP2MSvhvTbPt2YwPByF5SP+JUPDvszH7looKd1nhnBvBbvijrznsTw/Kwt9XI=
-X-Received: by 2002:a17:902:ced2:: with SMTP id d18mr28827516plg.21.1643767594601;
- Tue, 01 Feb 2022 18:06:34 -0800 (PST)
+        id S231765AbiBBEAm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Feb 2022 23:00:42 -0500
+Received: from mga07.intel.com ([134.134.136.100]:54391 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232069AbiBBEAk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 1 Feb 2022 23:00:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643774440; x=1675310440;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3PIFhmj818P6guWNz7QSEbMuO/LC/pFWN1ArnS1Hkds=;
+  b=QiBPYYjppATivE6SlMM+WRgEIMw7VqD9A3FFvZskxD80Yr1WH2h0LPiE
+   JhKI6w0cGKPTRJa69DTTkATunQnFT584q6442t32kzVKpvSey2ajFL7z3
+   cBAOOJDqtiu+AHaQa9qzX5rmoNjrA5P3EAwIT9tzewfU0LQUETCy7vDIn
+   Wvr92rX+UdJd+BDThW76de+qUkLo/eVhzKAKkrnEL15beiWcXsxDBqrdn
+   4B3TYwvP3NbLXGh0WNyaRMDsLOPEkizwvrJeoCSS4TfKrRDlppS3CShxu
+   g2BnFBCFSHr4NprzHi5YtM0pdv1pVUzkx4XAItLIxCEWyI9AdBoa1ibfD
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="311154997"
+X-IronPort-AV: E=Sophos;i="5.88,335,1635231600"; 
+   d="scan'208";a="311154997"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 20:00:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,335,1635231600"; 
+   d="scan'208";a="769162059"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 01 Feb 2022 20:00:37 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nF6ou-000U76-Dm; Wed, 02 Feb 2022 04:00:36 +0000
+Date:   Wed, 2 Feb 2022 12:00:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bean Huo <huobean@gmail.com>, songxiaowei@hisilicon.com,
+        wangbinghui@hisilicon.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        ffclaire1224@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org, beanhuo@micron.com
+Subject: Re: [PATCH] PCI: kirin: Fix kirin960-pcie probe failure issue
+Message-ID: <202202021149.TJc443Qq-lkp@intel.com>
+References: <20220201215941.1203155-1-huobean@gmail.com>
 MIME-Version: 1.0
-References: <20220121214117.GA1154852@bhelgaas> <Ye5GvQbFKo+CFtRb@lahna>
- <Ye/X7E2dKb+zem34@lahna> <Ye/btvA1rLB2rp02@kroah.com> <Ye/zTHR5aCG58z87@lahna>
- <CAJZ5v0gitdeEAxcgSoB1=VHA9FnRdCtmUqA_cN_f1a2yFRDghQ@mail.gmail.com>
- <CACK8Z6H2DLTJgxgS3pcvfOh=5S8cxEMKvwEPfB9zoVf1g2H_UQ@mail.gmail.com>
- <YfOf2X7Snm7cvDRV@lahna> <CACK8Z6FMgc5UQY-ZGB9sKYR5Wt6L6huTnEKZaFyVRAmDmQt9XQ@mail.gmail.com>
- <CAJZ5v0iuM_qjhPxvhzgvtKM-4pBB2skf9G=R=Qo6NzKnZ2LN=w@mail.gmail.com>
- <YfeEoF35RPDVMdzD@lahna> <CACK8Z6EBbdPHhMtD+vMWs54GRw-ChCeNNfeKM4Hk5JcAqex6hg@mail.gmail.com>
-In-Reply-To: <CACK8Z6EBbdPHhMtD+vMWs54GRw-ChCeNNfeKM4Hk5JcAqex6hg@mail.gmail.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Tue, 1 Feb 2022 18:05:58 -0800
-Message-ID: <CACK8Z6ET81wSUu_kyMHx88OUPvicMoxMejYp_0vwRGP75urFrQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: ACPI: Allow internal devices to be marked as untrusted
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Pavel Machek <pavel@denx.de>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220201215941.1203155-1-huobean@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 11:57 AM Rajat Jain <rajatja@google.com> wrote:
->
-> Hello Mika, Rafael,
->
-> On Sun, Jan 30, 2022 at 10:42 PM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > Hi,
-> >
-> > On Sun, Jan 30, 2022 at 03:30:39PM +0100, Rafael J. Wysocki wrote:
-> > > > I'm open to doing so if the others also feel the same way. IMHO
-> > > > though, the semantics of ACPI "DmaProperty" differ from the semantics
-> > > > of the property I'm proposing here.
-> > > >
-> > > > The current (documented) semantics (of "DmaProperty"): *This device
-> > > > (root port) is trusted*, but any devices downstream are not to be
-> > > > trusted.
-> > > >
-> > > > What I need and am proposing (new "UntrustedDevice"): *This device as
-> > > > well as any downstream devices* are untrusted.
-> > > >
-> > > > Note that there may be firmware implementing "DmaProperty" already out
-> > > > there (for windows), and if we decide to use it for my purposes, then
-> > > > there shall be a discrepancy in how Linux uses that property vs
-> > > > Windows. Is that acceptable?
-> > >
-> > > It may be confusing, so I'd rather not do that.
-> > >
-> > > The platform firmware will use it with the Windows use case in mind
-> > > and if it has side effects in Linux, problems are likely to appear in
-> > > the field.
-> > >
-> > > So the question is rather not about it being acceptable, but about
-> > > whether or not this is generally going to work.
-> >
-> > I was kind of implying that we could perhaps contact Microsoft and ask
-> > them if the wording could be changed to cover all the devices, not just
-> > PCIe root ports. I think this is something they will also need for
-> > things like internal WI-FI controllers.
->
-> We (Chromeos) do not have a contact at Microsoft, not sure if Intel
-> does. If someone can point me to a contact I will be happy to initiate
-> a conversation. However, given that they have already published it,
-> and changing the semantics might mean they will also have to change
-> windows implementation. Not sure if we have enough leverage with
-> Microsoft here, so I wouldn't have any high hopes though.
+Hi Bean,
 
-To keep everyone updated, Mika has helped me initiate a conversation
-with Microsoft on this (Thanks a lot Mika!). We're still waiting to
-hear their feedback. Until then, I've posted a v2 for review at:
-https://patchwork.kernel.org/project/linux-pci/patch/20220202020103.2149130-1-rajatja@google.com/
+Thank you for the patch! Perhaps something to improve:
 
-If we can reach an agreement with Microsoft, I can change the property
-name in the patch (to "DmaProperty"), but would appreciate review of
-any other aspects of v2 in the meantime.
+[auto build test WARNING on helgaas-pci/next]
+[also build test WARNING on v5.17-rc2 next-20220201]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-Thanks & Best Regards,
+url:    https://github.com/0day-ci/linux/commits/Bean-Huo/PCI-kirin-Fix-kirin960-pcie-probe-failure-issue/20220202-060120
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+config: riscv-randconfig-r001-20220130 (https://download.01.org/0day-ci/archive/20220202/202202021149.TJc443Qq-lkp@intel.com/config)
+compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 6b1e844b69f15bb7dffaf9365cd2b355d2eb7579)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install riscv cross compiling tool for clang build
+        # apt-get install binutils-riscv64-linux-gnu
+        # https://github.com/0day-ci/linux/commit/91a6cc1deb484e0590261edbf304784499ca1784
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Bean-Huo/PCI-kirin-Fix-kirin960-pcie-probe-failure-issue/20220202-060120
+        git checkout 91a6cc1deb484e0590261edbf304784499ca1784
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv SHELL=/bin/bash drivers/pci/controller/dwc/
 
-Rajat
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pci/controller/dwc/pcie-kirin.c:784:13: warning: cast to smaller integer type 'enum pcie_kirin_phy_type' from 'const void *' [-Wvoid-pointer-to-enum-cast]
+           phy_type = (enum pcie_kirin_phy_type)of_device_get_match_data(dev);
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning generated.
 
 
-> Like Rafael
-> said, we're on the receiving end here.
->
-> Rafael, one last question: is "untrusted-device" an acceptable ACPI
-> property name, or does it have to be Camel case?
->
-> Thanks & Best Regards,
->
-> Rajat
->
-> >
-> > If that's not possible then no objections adding "UntrustedDevice". We
-> > just need to deal with the "DmaProperty" anyway and both end up setting
-> > pdev->untrusted in the similar manner.
+vim +784 drivers/pci/controller/dwc/pcie-kirin.c
+
+   770	
+   771	static int kirin_pcie_probe(struct platform_device *pdev)
+   772	{
+   773		enum pcie_kirin_phy_type phy_type;
+   774		struct device *dev = &pdev->dev;
+   775		struct kirin_pcie *kirin_pcie;
+   776		struct dw_pcie *pci;
+   777		int ret;
+   778	
+   779		if (!dev->of_node) {
+   780			dev_err(dev, "NULL node\n");
+   781			return -EINVAL;
+   782		}
+   783	
+ > 784		phy_type = (enum pcie_kirin_phy_type)of_device_get_match_data(dev);
+   785	
+   786		kirin_pcie = devm_kzalloc(dev, sizeof(struct kirin_pcie), GFP_KERNEL);
+   787		if (!kirin_pcie)
+   788			return -ENOMEM;
+   789	
+   790		pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+   791		if (!pci)
+   792			return -ENOMEM;
+   793	
+   794		pci->dev = dev;
+   795		pci->ops = &kirin_dw_pcie_ops;
+   796		pci->pp.ops = &kirin_pcie_host_ops;
+   797		kirin_pcie->pci = pci;
+   798		kirin_pcie->type = phy_type;
+   799	
+   800		ret = kirin_pcie_get_resource(kirin_pcie, pdev);
+   801		if (ret)
+   802			return ret;
+   803	
+   804		platform_set_drvdata(pdev, kirin_pcie);
+   805	
+   806		ret = kirin_pcie_power_on(pdev, kirin_pcie);
+   807		if (ret)
+   808			return ret;
+   809	
+   810		return dw_pcie_host_init(&pci->pp);
+   811	}
+   812	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
