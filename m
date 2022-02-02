@@ -2,165 +2,411 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A29DC4A7BF2
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 00:55:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E9E54A7C03
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 00:57:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348169AbiBBXyt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Feb 2022 18:54:49 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:47209 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239165AbiBBXys (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 18:54:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643846088;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HBpJIq8plKHosD2jX5H6b08b/gKUpV2Uh7c6zubcVJs=;
-        b=USLTLTgbF5y8YWliZYW/uDPvCtRmGeRF5JRcn8LP1ko9G25iYqCnUQ/BVfqfWXnPuqkHjP
-        iWixQdi8+eOM2R7PMBs29FdBbte3B+/yQGLiB9DE0qLZiSMu/ejIpXmK6pggC2svhxLxup
-        vSKRMh4kmk7/xxbBuVc6a7z1pnE47uc=
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
- [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-661-tpTEjhzANWWN6c5yu4_7SQ-1; Wed, 02 Feb 2022 18:54:47 -0500
-X-MC-Unique: tpTEjhzANWWN6c5yu4_7SQ-1
-Received: by mail-oi1-f197.google.com with SMTP id o130-20020aca5a88000000b002c8dd0d6fa3so447871oib.18
-        for <linux-pci@vger.kernel.org>; Wed, 02 Feb 2022 15:54:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HBpJIq8plKHosD2jX5H6b08b/gKUpV2Uh7c6zubcVJs=;
-        b=rgjtPAvt935dVeWWm95lv98ln/QBhNzbtrRCepiqOk1jOErc/ewW9MzVeAJYOtKP2k
-         Vrr6v3tVbwSY9S9D0+o4eEEXsXY/PVz10DwwDhVkkcTmk54izff4yc9EA/NhgDN2+vRf
-         kPxtfattVrpqbtH7cUfMgC89wipDxLqjnQiPXgirdXex3D5U+5GuCoPE+BEPp/9h4xjv
-         25Xlg6qcnEG5Yq1UE36VXbC6enOv3tdzVUkUY8SPLWl0kuyjS0FmUDS1o1IA/dWPw0OD
-         qqRsKKl7n0/CxGIy4KvW9Xv0m2qWmqZG6xwSTdSqsRCc//tAZ6p5t1JgQsBHeu4eJghV
-         shQg==
-X-Gm-Message-State: AOAM530M6m2/1hlIuHXdVJ/nmDrUAxtWPkebG15bm7aEPVPSIAwjkVlF
-        7DMd/byJA5J9zuQW6RaPIghIo1vPvKSEe+y2HTS4b7VpkmQrevbbEJl6Ais34uGpZGEcdv35Gp8
-        EUW4de3oBQj9EhZwYxXF1
-X-Received: by 2002:a4a:a2c9:: with SMTP id r9mr16204887ool.37.1643846086283;
-        Wed, 02 Feb 2022 15:54:46 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz4Mlr5MG7RXURcZnvvmwmixiDykwHQ0hC5c9AkY2EJIsO+5bsG3ZTU5VvuEJ7u6eFrPSRSwA==
-X-Received: by 2002:a4a:a2c9:: with SMTP id r9mr16204871ool.37.1643846086069;
-        Wed, 02 Feb 2022 15:54:46 -0800 (PST)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id o1sm8270528oik.0.2022.02.02.15.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Feb 2022 15:54:45 -0800 (PST)
-Date:   Wed, 2 Feb 2022 16:54:44 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
-Subject: Re: [PATCH V6 mlx5-next 09/15] vfio: Extend the device migration
- protocol with RUNNING_P2P
-Message-ID: <20220202165444.44816642.alex.williamson@redhat.com>
-In-Reply-To: <20220201195003.GN1786498@nvidia.com>
-References: <20220130160826.32449-1-yishaih@nvidia.com>
-        <20220130160826.32449-10-yishaih@nvidia.com>
-        <20220201113144.0c8dfaa5.alex.williamson@redhat.com>
-        <20220201185321.GM1786498@nvidia.com>
-        <20220201121322.2f3ceaf2.alex.williamson@redhat.com>
-        <20220201195003.GN1786498@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S1348184AbiBBX4C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Feb 2022 18:56:02 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:32800 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230287AbiBBX4C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 18:56:02 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2B9C3B81038;
+        Wed,  2 Feb 2022 23:56:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A5CEC004E1;
+        Wed,  2 Feb 2022 23:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643846160;
+        bh=VYKWNJ13o28HJ6kkZTai5gFkSoXL6VWNwk791MCkgXg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=JXBznAehLdmH39bfydGEumyDD6TIrVTQCUrsuyTzqAWWyQ6BygNXtk7dJhUZxBQYF
+         BTBXo623GCuc+DXbETm0fro4lf36v6LCvF14E7y68be1a8U01SqK7moAL0DruiGdZy
+         x0ihBIXn0bkKcvpP6/ARRguyAwN83zxE4zHWQr8h62YkYUcWhPq5LNElIkyiiKjLBs
+         s5Rc9KgzAvopa0TwR3upz0i+6OZdUexwg4mp/ozjfuUFbfs3vmpFG8Ynm6pBFxUxyt
+         llToOS/cqlGpvxxoDLDMqu44ydKKeoN+Bj+2T/8rz0d/k43GW2p/uf8IXkQCU7uYMi
+         SVqXNhjkMcEFw==
+Date:   Wed, 2 Feb 2022 17:55:58 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Keith Busch <kbusch@kernel.org>, kw@linux.com,
+        mariusz.tkaczyk@linux.intel.com, lukas@wunner.de, pavel@ucw.cz,
+        linux-cxl@vger.kernel.org, martin.petersen@oracle.com,
+        James.Bottomley@hansenpartnership.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH v2 1/3] Add support for seven more indicators in
+ enclosure driver
+Message-ID: <20220202235558.GA54005@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d71f2483ed6cb6ea74a267301982c14e6bfa79a7.1643822289.git.stuart.w.hayes@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 1 Feb 2022 15:50:03 -0400
-Jason Gunthorpe <jgg@nvidia.com> wrote:
+Follow subject line convention (also applies to other patches):
 
-> On Tue, Feb 01, 2022 at 12:13:22PM -0700, Alex Williamson wrote:
-> > On Tue, 1 Feb 2022 14:53:21 -0400
-> > Jason Gunthorpe <jgg@nvidia.com> wrote:
-> >   
-> > > On Tue, Feb 01, 2022 at 11:31:44AM -0700, Alex Williamson wrote:  
-> > > > > +	bool have_p2p = device->migration_flags & VFIO_MIGRATION_P2P;
-> > > > > +
-> > > > >  	if (cur_fsm >= ARRAY_SIZE(vfio_from_fsm_table) ||
-> > > > >  	    new_fsm >= ARRAY_SIZE(vfio_from_fsm_table))
-> > > > >  		return VFIO_DEVICE_STATE_ERROR;
-> > > > >  
-> > > > > -	return vfio_from_fsm_table[cur_fsm][new_fsm];
-> > > > > +	if (!have_p2p && (new_fsm == VFIO_DEVICE_STATE_RUNNING_P2P ||
-> > > > > +			  cur_fsm == VFIO_DEVICE_STATE_RUNNING_P2P))
-> > > > > +		return VFIO_DEVICE_STATE_ERROR;    
-> > > > 
-> > > > new_fsm is provided by the user, we pass set_state.device_state
-> > > > directly to .migration_set_state.  We should do bounds checking and
-> > > > compatibility testing on the end state in the core so that we can    
-> > > 
-> > > This is the core :)  
-> > 
-> > But this is the wrong place, we need to do it earlier rather than when
-> > we're already iterating next states.  I only mention core to avoid that
-> > I'm suggesting a per driver responsibility.  
+  $ git log --oneline drivers/misc/enclosure.c
+  714f1af14bb0 misc: enclosure: replace snprintf in show functions with sysfs_emit
+  6a57251c70a4 misc: enclosure: Update enclosure_remove_device() documentation to match reality
+  82f5b473d91a misc: enclosure: Fix some kerneldoc anomalies
+  529244bd1afc scsi: enclosure: Fix stale device oops with hot replug
+  e3575c1201f0 misc: enclosure: Use struct_size() in kzalloc()
+  750b54deb569 misc: enclosure: Remove unnecessary error check
+
+I don't think "seven" is really relevant for the subject or even the
+commit log since you list them all anyway.
+
+On Wed, Feb 02, 2022 at 11:59:11AM -0600, Stuart Hayes wrote:
+> This patch adds support for seven additional indicators (ok, rebuild,
+> prdfail, hotspare, ica, ifa, disabled) to the enclosure driver, which
+> currently only supports three (fault, active, locate). It also reduces
+> duplicated code for the set and show functions for the sysfs attributes
+> for all of the indicators, and allows users of the driver to provide
+> common get_led and set_led callbacks to control all indicators (though
+> it continues to support the existing callbacks for the three currently
+> supported indicators, so it does not require any changes to code that
+> already uses the enclosure driver).
+
+This restructures things (replacing get_component_fault(),
+set_component_fault(), etc with attributes) and adds things (the new
+indicators and also maybe the .get_led() and .set_led() hooks).  It
+would be nice to split all those into separate patches.
+
+Also consider using imperative mood:
+  https://chris.beams.io/posts/git-commit/
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-tip.rst?id=v5.16#n134
+
+A few more minor comments below.
+
+> @@ -0,0 +1,14 @@
+> +What:		/sys/class/enclosure/<enclosure>/<component>/rebuild
+> +What:		/sys/class/enclosure/<enclosure>/<component>/disabled
+> +What:		/sys/class/enclosure/<enclosure>/<component>/hotspare
+> +What:		/sys/class/enclosure/<enclosure>/<component>/ica
+> +What:		/sys/class/enclosure/<enclosure>/<component>/ifa
+> +What:		/sys/class/enclosure/<enclosure>/<component>/ok
+> +What:		/sys/class/enclosure/<enclosure>/<component>/prdfail
+> +Date:		February 2022
+> +Contact:	Stuart Hayes <stuart.w.hayes@gmail.com>
+> +Description:
+> +		(RW) Get or set the indicator (1 is on, 0 is off) that
+> +		corresponds to the attribute name, for a component in an
+> +		enclosure. The "ica" and "ifa" states are "in critical
+> +		array" and "in failed array".
+
+What's "prdfail"?
+
+> diff --git a/drivers/misc/enclosure.c b/drivers/misc/enclosure.c
+> index 1b010d9267c9..485d6a3c655b 100644
+> --- a/drivers/misc/enclosure.c
+> +++ b/drivers/misc/enclosure.c
+> @@ -473,30 +473,6 @@ static const char *const enclosure_type[] = {
+>  	[ENCLOSURE_COMPONENT_ARRAY_DEVICE] = "array device",
+>  };
+>  
+> -static ssize_t get_component_fault(struct device *cdev,
+> -				   struct device_attribute *attr, char *buf)
+> -{
+> -	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
+> -	struct enclosure_component *ecomp = to_enclosure_component(cdev);
+> -
+> -	if (edev->cb->get_fault)
+> -		edev->cb->get_fault(edev, ecomp);
+> -	return sysfs_emit(buf, "%d\n", ecomp->fault);
+> -}
+> -
+> -static ssize_t set_component_fault(struct device *cdev,
+> -				   struct device_attribute *attr,
+> -				   const char *buf, size_t count)
+> -{
+> -	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
+> -	struct enclosure_component *ecomp = to_enclosure_component(cdev);
+> -	int val = simple_strtoul(buf, NULL, 0);
+> -
+> -	if (edev->cb->set_fault)
+> -		edev->cb->set_fault(edev, ecomp, val);
+> -	return count;
+> -}
+> -
+>  static ssize_t get_component_status(struct device *cdev,
+>  				    struct device_attribute *attr,char *buf)
+>  {
+> @@ -531,54 +507,6 @@ static ssize_t set_component_status(struct device *cdev,
+>  		return -EINVAL;
+>  }
+>  
+> -static ssize_t get_component_active(struct device *cdev,
+> -				    struct device_attribute *attr, char *buf)
+> -{
+> -	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
+> -	struct enclosure_component *ecomp = to_enclosure_component(cdev);
+> -
+> -	if (edev->cb->get_active)
+> -		edev->cb->get_active(edev, ecomp);
+> -	return sysfs_emit(buf, "%d\n", ecomp->active);
+> -}
+> -
+> -static ssize_t set_component_active(struct device *cdev,
+> -				    struct device_attribute *attr,
+> -				    const char *buf, size_t count)
+> -{
+> -	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
+> -	struct enclosure_component *ecomp = to_enclosure_component(cdev);
+> -	int val = simple_strtoul(buf, NULL, 0);
+> -
+> -	if (edev->cb->set_active)
+> -		edev->cb->set_active(edev, ecomp, val);
+> -	return count;
+> -}
+> -
+> -static ssize_t get_component_locate(struct device *cdev,
+> -				    struct device_attribute *attr, char *buf)
+> -{
+> -	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
+> -	struct enclosure_component *ecomp = to_enclosure_component(cdev);
+> -
+> -	if (edev->cb->get_locate)
+> -		edev->cb->get_locate(edev, ecomp);
+> -	return sysfs_emit(buf, "%d\n", ecomp->locate);
+> -}
+> -
+> -static ssize_t set_component_locate(struct device *cdev,
+> -				    struct device_attribute *attr,
+> -				    const char *buf, size_t count)
+> -{
+> -	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
+> -	struct enclosure_component *ecomp = to_enclosure_component(cdev);
+> -	int val = simple_strtoul(buf, NULL, 0);
+> -
+> -	if (edev->cb->set_locate)
+> -		edev->cb->set_locate(edev, ecomp, val);
+> -	return count;
+> -}
+> -
+>  static ssize_t get_component_power_status(struct device *cdev,
+>  					  struct device_attribute *attr,
+>  					  char *buf)
+> @@ -641,29 +569,136 @@ static ssize_t get_component_slot(struct device *cdev,
+>  	return sysfs_emit(buf, "%d\n", slot);
+>  }
+>  
+> -static DEVICE_ATTR(fault, S_IRUGO | S_IWUSR, get_component_fault,
+> -		    set_component_fault);
+> +/*
+> + * callbacks for attrs using enum enclosure_component_setting (LEDs)
+> + */
+> +static ssize_t led_show(struct device *cdev,
+> +			enum enclosure_component_led led,
+> +			char *buf)
+> +{
+> +	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
+> +	struct enclosure_component *ecomp = to_enclosure_component(cdev);
+> +
+> +	if (edev->cb->get_led)
+> +		edev->cb->get_led(edev, ecomp, led);
+> +	else
+
+The switch is technically one statement, but it's so long that I think
+it really needs braces around it.
+
+> +		/*
+> +		 * support old callbacks for fault/active/locate
+> +		 */
+> +		switch (led) {
+> +		case ENCLOSURE_LED_FAULT:
+> +			if (edev->cb->get_fault) {
+> +				edev->cb->get_fault(edev, ecomp);
+> +				ecomp->led[led] = ecomp->fault;
+> +			}
+> +			break;
+> +		case ENCLOSURE_LED_ACTIVE:
+> +			if (edev->cb->get_active) {
+> +				edev->cb->get_active(edev, ecomp);
+> +				ecomp->led[led] = ecomp->active;
+> +			}
+> +			break;
+> +		case ENCLOSURE_LED_LOCATE:
+> +			if (edev->cb->get_locate) {
+> +				edev->cb->get_locate(edev, ecomp);
+> +				ecomp->led[led] = ecomp->locate;
+> +			}
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +
+> +	return sysfs_emit(buf, "%d\n", ecomp->led[led]);
+> +}
+> +
+> +static ssize_t led_set(struct device *cdev,
+> +		       enum enclosure_component_led led,
+> +		       const char *buf, size_t count)
+> +{
+> +	struct enclosure_device *edev = to_enclosure_device(cdev->parent);
+> +	struct enclosure_component *ecomp = to_enclosure_component(cdev);
+> +	int err, val;
+> +
+> +	err = kstrtoint(buf, 0, &val);
+> +	if (err)
+> +		return err;
+> +
+> +	if (edev->cb->set_led)
+> +		edev->cb->set_led(edev, ecomp, led, val);
+> +	else
+
+Same here.  Or you could just return early for the cb->set_led case
+and unindent the below.
+
+> +		/*
+> +		 * support old callbacks for fault/active/locate
+> +		 */
+> +		switch (led) {
+> +		case ENCLOSURE_LED_FAULT:
+> +			if (edev->cb->set_fault)
+> +				edev->cb->set_fault(edev, ecomp, val);
+> +			break;
+> +		case ENCLOSURE_LED_ACTIVE:
+> +			if (edev->cb->set_active)
+> +				edev->cb->set_active(edev, ecomp, val);
+> +			break;
+> +		case ENCLOSURE_LED_LOCATE:
+> +			if (edev->cb->set_locate)
+> +				edev->cb->set_locate(edev, ecomp, val);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+
+I guess you rely on the callbacks to set ecomp->led[led] (or
+ecomp->fault, etc)?
+
+Maybe do the "ecomp->led[led] = ecomp->fault" bits here instead of in
+led_show() so that crashdumps will show the same info regardless of
+whether led_show() has been run?  ...
+
+Oh, never mind, I see that you only ever update led[led] in the
+.get_led() callbacks.  In that case, why do you even *store* the
+result in led[led]?  Couldn't you just return it from .get_led()?
+
+> +	return count;
+> +}
+> +
+> +#define LED_ATTR_RW(led_attr, led)					\
+> +static ssize_t led_attr##_show(struct device *cdev,			\
+> +			       struct device_attribute *attr,		\
+> +			       char *buf)				\
+> +{									\
+> +	return led_show(cdev, led, buf);				\
+> +}									\
+> +static ssize_t led_attr##_store(struct device *cdev,			\
+> +				struct device_attribute *attr,		\
+> +				const char *buf, size_t count)		\
+> +{									\
+> +	return led_set(cdev, led, buf, count);				\
+> +}									\
+> +static DEVICE_ATTR_RW(led_attr)
+> +
+>  static DEVICE_ATTR(status, S_IRUGO | S_IWUSR, get_component_status,
+>  		   set_component_status);
+> -static DEVICE_ATTR(active, S_IRUGO | S_IWUSR, get_component_active,
+> -		   set_component_active);
+> -static DEVICE_ATTR(locate, S_IRUGO | S_IWUSR, get_component_locate,
+> -		   set_component_locate);
+>  static DEVICE_ATTR(power_status, S_IRUGO | S_IWUSR, get_component_power_status,
+>  		   set_component_power_status);
+>  static DEVICE_ATTR(type, S_IRUGO, get_component_type, NULL);
+>  static DEVICE_ATTR(slot, S_IRUGO, get_component_slot, NULL);
+> +LED_ATTR_RW(fault, ENCLOSURE_LED_FAULT);
+> +LED_ATTR_RW(active, ENCLOSURE_LED_ACTIVE);
+> +LED_ATTR_RW(locate, ENCLOSURE_LED_LOCATE);
+> +LED_ATTR_RW(ok, ENCLOSURE_LED_OK);
+> +LED_ATTR_RW(rebuild, ENCLOSURE_LED_REBUILD);
+> +LED_ATTR_RW(prdfail, ENCLOSURE_LED_PRDFAIL);
+> +LED_ATTR_RW(hotspare, ENCLOSURE_LED_HOTSPARE);
+> +LED_ATTR_RW(ica, ENCLOSURE_LED_ICA);
+> +LED_ATTR_RW(ifa, ENCLOSURE_LED_IFA);
+> +LED_ATTR_RW(disabled, ENCLOSURE_LED_DISABLED);
+>  
+>  static struct attribute *enclosure_component_attrs[] = {
+>  	&dev_attr_fault.attr,
+>  	&dev_attr_status.attr,
+>  	&dev_attr_active.attr,
+>  	&dev_attr_locate.attr,
+> +	&dev_attr_ok.attr,
+> +	&dev_attr_rebuild.attr,
+> +	&dev_attr_prdfail.attr,
+> +	&dev_attr_hotspare.attr,
+> +	&dev_attr_ica.attr,
+> +	&dev_attr_ifa.attr,
+> +	&dev_attr_disabled.attr,
+>  	&dev_attr_power_status.attr,
+>  	&dev_attr_type.attr,
+>  	&dev_attr_slot.attr,
+>  	NULL
+>  };
+> +
+
+Spurious diff?  I see both with and without this blank line, but seems
+more common without.
+
+>  ATTRIBUTE_GROUPS(enclosure_component);
+
+>  
+>  static int __init enclosure_init(void)
+> diff --git a/include/linux/enclosure.h b/include/linux/enclosure.h
+> index 1c630e2c2756..98dd0f05efb7 100644
+> --- a/include/linux/enclosure.h
+> +++ b/include/linux/enclosure.h
+> @@ -49,6 +49,20 @@ enum enclosure_component_setting {
+>  	ENCLOSURE_SETTING_BLINK_B_OFF_ON = 7,
+>  };
+>  
+> +enum enclosure_component_led {
+> +	ENCLOSURE_LED_FAULT,
+> +	ENCLOSURE_LED_ACTIVE,
+> +	ENCLOSURE_LED_LOCATE,
+> +	ENCLOSURE_LED_OK,
+> +	ENCLOSURE_LED_REBUILD,
+> +	ENCLOSURE_LED_PRDFAIL,
+> +	ENCLOSURE_LED_HOTSPARE,
+> +	ENCLOSURE_LED_ICA,
+> +	ENCLOSURE_LED_IFA,
+> +	ENCLOSURE_LED_DISABLED,
+> +	ENCLOSURE_LED_MAX,
+> +};
+> +
+>  struct enclosure_device;
+>  struct enclosure_component;
+>  struct enclosure_component_callbacks {
+> @@ -72,6 +86,13 @@ struct enclosure_component_callbacks {
+>  	int (*set_locate)(struct enclosure_device *,
+>  			  struct enclosure_component *,
+>  			  enum enclosure_component_setting);
+> +	void (*get_led)(struct enclosure_device *edev,
+> +			struct enclosure_component *ecomp,
+> +			enum enclosure_component_led);
+> +	int (*set_led)(struct enclosure_device *edev,
+> +		       struct enclosure_component *ecomp,
+> +		       enum enclosure_component_led,
+> +		       enum enclosure_component_setting);
+>  	void (*get_power_status)(struct enclosure_device *,
+>  				 struct enclosure_component *);
+>  	int (*set_power_status)(struct enclosure_device *,
+> @@ -90,6 +111,7 @@ struct enclosure_component {
+>  	int fault;
+>  	int active;
+>  	int locate;
+> +	int led[ENCLOSURE_LED_MAX];
+>  	int slot;
+>  	enum enclosure_status status;
+>  	int power_status;
+> -- 
+> 2.31.1
 > 
-> Only the first vfio_mig_get_next_state() can return ERROR, once it
-> succeeds the subsequent ones must also succeed.
-
-Yes, I see that.
-
-> This is the earliest can be. It is done directly after taking the lock
-> that allows us to read the current state to call this function to
-> determine if the requested transition is acceptable.
-
-I think the argument here is that there's no value to validating or
-bounds checking the end state, which could be done in the core ioctl
-before calling the driver if the first iteration will already fail for
-both the end state and the full path validation.
-
-> > > Userspace can never put the device into error. As the function comment
-> > > says VFIO_DEVICE_STATE_ERROR is returned to indicate the arc is not
-> > > permitted. The driver is required to reflect that back as an errno
-> > > like mlx5 shows:
-> > > 
-> > > +		next_state = vfio_mig_get_next_state(vdev, mvdev->mig_state,
-> > > +						     new_state);
-> > > +		if (next_state == VFIO_DEVICE_STATE_ERROR) {
-> > > +			res = ERR_PTR(-EINVAL);
-> > > +			break;
-> > > +		}
-> > > 
-> > > We never get the driver into error, userspaces gets an EINVAL and no
-> > > change to the device state.  
-> > 
-> > Hmm, subtle.  I'd argue that if we do a bounds and support check of the
-> > end state in vfio_ioctl_mig_set_state() before calling
-> > .migration_set_state() then we could remove ERROR from
-> > vfio_from_fsm_table[] altogether and simply begin
-> > vfio_mig_get_next_state() with:  
-> 
-> Then we can't reject blocked arcs like STOP_COPY -> PRE_COPY.
-
-Right, I hadn't made it through to 15/, which helps to clarify how the
-cur_fsm + new_fsm validate the full arc.
- 
-> It is setup this way to allow the core code to assert all policy, not
-> just a simple validation of the next_fsm.
-> 
-> > Then we only get to ERROR by the driver placing us in ERROR and things
-> > feel a bit more sane to me.  
-> 
-> This is already true.
-> 
-> Perhaps it is confusing using ERROR to indicate that
-> vfio_mig_get_next_state() failed. Would you be happier with a -errno
-> return?
-
-Yes, it's confusing to me that next_state() returns states that don't
-become the device_state.  Stuffing the next step back into cur_fsm and
-using an errno for a bounds/validity/blocked-arc test would be a better
-API.  Thanks,
-
-Alex
-
