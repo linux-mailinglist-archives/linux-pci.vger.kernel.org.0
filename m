@@ -2,146 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 553DB4A7798
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 19:14:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A44784A77E5
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 19:26:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243619AbiBBSNX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Feb 2022 13:13:23 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:42326 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238368AbiBBSNV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 13:13:21 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C5B156189A;
-        Wed,  2 Feb 2022 18:13:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEE88C004E1;
-        Wed,  2 Feb 2022 18:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643825600;
-        bh=W7XCI06/Ylc9GMz/SPCh+EaDCTdMMnEF4ru0ssHogmc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=p6gbM9RaaXjLYLTMPY3DdcD/bfNZZIb75BBjPYCWjrHK53ulGt8CVyO8CH5SFGTEH
-         ir34jm8h1mMyZcsLlgOA2QAZ5Jt9Pit8pGPRTFBvzQQ76ilr7z4piokRLR/ndg+7aS
-         ghwA2qIKTM7eCkHwhkIKau+DYxWktipAg2WohVy1BBQXvzXcwXJbl2SLEnzwg3UYc/
-         s0OEsRBOXsHF1RBU1pA78jqUezUWQ2c8OPBNEnjttUncMLpjQYikS+/kwbCWNK/8g6
-         vk1iFxiBpmRrWa/PL5yeqRJ2DW6vcDGEhI9/wM56MROHxp88Tfo0/TUgdR+r5KBoqP
-         uEgpYdyRGTYLQ==
-Date:   Wed, 2 Feb 2022 12:13:18 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Brent Spillner <spillner@acm.org>
-Cc:     bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86/PCI: Improve log message when IRQ cannot be
- identified
-Message-ID: <20220202181318.GA26584@bhelgaas>
+        id S237775AbiBBS0H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Feb 2022 13:26:07 -0500
+Received: from mga03.intel.com ([134.134.136.65]:27379 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237063AbiBBS0G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Feb 2022 13:26:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643826366; x=1675362366;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5lFTo574KUlzFBIVhKVEFCo/gFEvbqxFvFV8HxS9aUU=;
+  b=jWQ9HJKSoOk6uNWbFZ41Mkdm5AUyYMfJMe+WLc2yZxq0aJVTZ+7OFw96
+   MZoSEfJf5kWJa5Fdj0MeQXxMqcdCbQJUy+yJamgNHdHdZx7wAEEtrQf3z
+   0/5o/4SedT9St/jAqh+AdPcvHLUCxrv+X8vxou6+wiAlJI4vkWtEe3IS/
+   Seh43J7AQtJrIkvh0qCg1nxKbWPAaVygOEoH9eW9NqrieH01oXr9eVuFE
+   clGXBJ9VV5esnuMBLrSlleLhLFEvb08CgnILczjbvTIR3lTvZyPFOZ1l/
+   vXB1sZh2PnFbD25M9BDSPuK/DSQX685+c0Qejn2leUgK4uXMrquB24e4l
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="247944744"
+X-IronPort-AV: E=Sophos;i="5.88,337,1635231600"; 
+   d="scan'208";a="247944744"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 10:26:06 -0800
+X-IronPort-AV: E=Sophos;i="5.88,337,1635231600"; 
+   d="scan'208";a="497845490"
+Received: from svenur-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.133.34])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 10:26:06 -0800
+Date:   Wed, 2 Feb 2022 10:26:04 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 01/14] cxl/region: Add region creation ABI
+Message-ID: <20220202182604.oangkxomx3npmobl@intel.com>
+References: <20220128002707.391076-1-ben.widawsky@intel.com>
+ <20220128002707.391076-2-ben.widawsky@intel.com>
+ <CAPcyv4h53gj9vETFcj_RebW+Zt=q+1yOmMo9CpyzHdABanpPRg@mail.gmail.com>
+ <CAPcyv4hj=1=+8UvqzSZqJ12ef1F15Hpzud7YjJpz7dZa0=9=QQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YfiBfdAf9uHYTf4T@jupiter.dyndns.org>
+In-Reply-To: <CAPcyv4hj=1=+8UvqzSZqJ12ef1F15Hpzud7YjJpz7dZa0=9=QQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 12:40:29AM +0000, Brent Spillner wrote:
-> The existing code always suggests trying the pci=biosirq kernel parameter, but
-> this option is only recognized when CONFIG_PCI_BIOS is set, which in turn
-> depends on CONFIG_X86_32, so it is never appropriate on x86_64.
-> kernel-parameters.txt confirms that pci=biosirq is intended to be supported
-> only on X86-32.
-> 
-> The new version tries to be more helpful by recommending changes to ACPI
-> settings if appropriate, and only mentioning pci=biosirq (and the manual
-> pirq= option) for kernels that support it. Additionally, it encourages
-> the user to file bug reports so faulty firmware can be identified and
-> potentially handled via known quirks in a future kernel release.
-> 
-> ACPI is relevant to these warnings because it will significantly change
-> the path taken through the PCI discovery (and later interrupt routing)
-> code. Booting with acpi=noirq should be highly unusual and likely
-> indicates an attempt to work around faulty motherboard firmware, so I
-> added a new log message in pci_acpi_init() for this case, with yet
-> another recommendation to file a bug report.
-> 
-> Signed-off-by: Brent Spillner <spillner@acm.org>
+On 22-01-28 10:59:26, Dan Williams wrote:
+> On Fri, Jan 28, 2022 at 10:14 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> [..]
+> > Here is that put_device() I was expecting, that kfree() earlier was a
+> > double-free it seems.
+> >
+> > Also, I would have expected a devm action to remove this. Something like:
+> >
+> > struct cxl_port *port = to_cxl_port(cxld->dev.parent);
+> >
+> > cxl_device_lock(&port->dev);
+> > if (port->dev.driver)
+> >     devm_cxl_add_region(port->uport, cxld, id);
 
-IIUC pirq_enable_irq() is only used for non-ACPI, non-DT, non-Xen,
-non-Intel MID systems, so this is a real legacy path.
+I assume you mean devm_cxl_delete_region(), yes?
 
-I don't think it's really worth cluttering an error case in a path
-that should be rarely used in the first place.
+> > else
+> >     rc = -ENXIO;
+> > cxl_device_unlock(&port->dev);
+> >
+> > ...then no matter what you know the region will be unregistered when
+> > the root port goes away.
+> 
+> ...actually, the lock and ->dev.driver check here are not needed
+> because this attribute is only registered while the cxl_acpi driver is
+> bound. So, it is safe to assume this is protected as decoder remove
+> synchronizes against active sysfs users.
 
-Are you seeing a problem where you're getting the wrong error message
-today?  Can we just fix that problem instead so no kernel parameter is
-needed in the first place?
-
-> ---
-> Changes in v2:
->  - Tried to make the code more legible by reducing use of #ifdef (only
->    used where required to guard reference to acpi_noirq)
->  - The tradeoff is there's now an idiosyncratic use of do {...} while (0),
->    but that lets me early-out from the acpi_noirq case without more #ifdefs
->    or duplicated if statements.
->  - Included a warning for acpi_noirq in pci_acpi_init() per maintainer suggestion
->  - Encourage user to file bug reports in all warning messages
-> 
->  arch/x86/pci/acpi.c |  4 +++-
->  arch/x86/pci/irq.c  | 22 +++++++++++++++++++---
->  2 files changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-> index 052f1d78a562..12f894d345a9 100644
-> --- a/arch/x86/pci/acpi.c
-> +++ b/arch/x86/pci/acpi.c
-> @@ -401,8 +401,10 @@ int __init pci_acpi_init(void)
->  {
->  	struct pci_dev *dev = NULL;
->  
-> -	if (acpi_noirq)
-> +	if (acpi_noirq) {
-> +		printk(KERN_WARNING "PCI: ACPI IRQ routing disabled; please submit a bug report if this was required to work around firmware defects\n");
->  		return -ENODEV;
-> +	}
->  
->  	printk(KERN_INFO "PCI: Using ACPI for IRQ routing\n");
->  	acpi_irq_penalty_init();
-> diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-> index 97b63e35e152..393b036e773b 100644
-> --- a/arch/x86/pci/irq.c
-> +++ b/arch/x86/pci/irq.c
-> @@ -1519,10 +1519,26 @@ static int pirq_enable_irq(struct pci_dev *dev)
->  			} else
->  				msg = "; probably buggy MP table";
->  #endif
-> -		} else if (pci_probe & PCI_BIOS_IRQ_SCAN)
-> +		} else if (pci_probe & PCI_BIOS_IRQ_SCAN) {
->  			msg = "";
-> -		else
-> -			msg = "; please try using pci=biosirq";
-> +		} else {
-> +			do {	/* just one iteration; allows break to minimize code duplication */
-> +#ifdef CONFIG_ACPI
-> +				if (acpi_noirq) {
-> +				    msg = "; consider removing acpi=noirq, and file a bug report if that does not help";
-> +					break;		/* out of remainder of one-iteration do {} loop */
-> +				}
-> +#endif
-> +				if (IS_ENABLED(CONFIG_PCI_BIOS))
-> +					/* pci=biosirq and pirq= are valid only on x86_32, and should never be necessary */
-> +					msg = "; try using pci=biosirq or manual pirq=, and file a bug report for this device";
-> +				else if (!IS_ENABLED(CONFIG_ACPI))
-> +					/* ACPI will change code path through PCI subsystem, and is worth trying */
-> +					msg = "; try enabling ACPI if feasible, and file a bug report for this device";
-> +				else
-> +					msg = "; please file a bug report for failure to discover device IRQ via ACPI";
-> +			} while (0);
-> +		}
->  
->  		/*
->  		 * With IDE legacy devices the IRQ lookup failure is not
-> -- 
-> 2.35.1
-> 
+I'm somewhat confused when you say devm action to remove this. The current auto
+region deletion happens when the ->release() is called. Are you suggesting when
+the root decoder is removed I delete the regions at that point?
