@@ -2,144 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 403124A7704
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 18:44:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15C794A7724
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 18:55:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234635AbiBBRm7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Feb 2022 12:42:59 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:60468 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231680AbiBBRm7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 12:42:59 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EEC17B831CE;
-        Wed,  2 Feb 2022 17:42:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61D35C004E1;
-        Wed,  2 Feb 2022 17:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643823776;
-        bh=CvG8ii+9YGkPWVWDFhYOlfrAwbJIQDmwvlL7Cx3lywg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bPExBU/v4gXvP4NE7IFiqWBZJg9dt9hHChNbHnf92/KY+4qe1TdMyJNwC00O7JrXU
-         3X//Sy26N3xCsYRmSozlMeOx4RLP7CeLVGujFCJ38OTitlniOJGo4G4caNoB1+mo1c
-         eroTbPl1Q4exl5dIl4kerIDKXCgPo1uWLrv0wW/N9+eR7a16znlLOp+f0ENxo905LC
-         8pFFBYgsDR/ztBYZ+x8H1PJqo/HCqZ8ye+LTYSBxQvGt8Nw98TdYPVt8f1ULeKcTvq
-         TJABHCYxfAQOVEWmICHsK8ZZbM8MM97yN9aYY/tGwSY1L0PcibuATaEfrhO/ZyaeTw
-         OWp9CKaKK7t+A==
-Date:   Wed, 2 Feb 2022 11:42:55 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     pierre.gondois@arm.com
-Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [Bug 215560] New: _PRS/_SRS methods should be optional
-Message-ID: <20220202174255.GA22220@bhelgaas>
+        id S236690AbiBBRzI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Feb 2022 12:55:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236254AbiBBRzH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 12:55:07 -0500
+Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EB9C061714;
+        Wed,  2 Feb 2022 09:55:07 -0800 (PST)
+Received: by mail-ot1-x32d.google.com with SMTP id q14-20020a05683022ce00b005a6162a1620so222990otc.0;
+        Wed, 02 Feb 2022 09:55:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=ZS+k85G5qylVBfk3NCCSnd5a87KERoi5Cnaumfe0BkI=;
+        b=f+LHESUPOX2rqn4gSzIxZmkexATu9B0sRe3y9Io+ncuxKnDIW7GV/Fc8ZtblvOukaE
+         uMiJ5c07J9kHeBwMlha08KCr11hQP2240dBo52Cjewr7GBJpyFJlr6k3PZqwDzENF4Qs
+         grLW11oh2TwxyzMorXJ+5qUPTOUtMab/D/BG8Dbm94QRMZYVOLE5rO/Qb0Yg6CngxXyX
+         5Kv/ABXh95WsVI/fGgKD1MONF/7QuM+bSWk10FIbBNzKSX9m+XQ0GVmpCbhfQjjTLQOo
+         /grVsjKFVEzVOFvKrWnjYQPevROOo5UfqMRcTN9eQ5D5gYwvQqcIrmMD0G97x9I53brV
+         BMSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ZS+k85G5qylVBfk3NCCSnd5a87KERoi5Cnaumfe0BkI=;
+        b=eCJ9NU112x2/hiYVpQRSmwppg/6AoeEP5pucOY9vL3OBj4UCMSQJ/+xLwVsTF/Kgro
+         UKRlz7w+Rb/LPI1KuN1XislzDAc8QoE2zbBd+CF5ekOc900swzI7HfbKxHMYgpYocJqp
+         0W5BIEkVJSvBwCuNKm7JmoU8P8RbkZNhaWQYeONHax7xVsr1Hp338XGhq2vEeohVCXFY
+         lC1fWLKtvnYmIId0tT74yDpMwPlzyzRfvqP3By49RjLdWjJJJVTP8HZ4AKzyp+w+RZJu
+         J5gkw5SK5bNpjomTQNgJQcfjU+VIZ2B4VsQyJ3HjCzYG52K468CrWgKy/B5UmxRx1/TJ
+         oi2w==
+X-Gm-Message-State: AOAM533uEOk054sNJkRcz8Z5PavSSFywEpcVldMffVSpjxNKfYbSy/DT
+        bDeMBiZ3ahYF7Z1B3Tkftww=
+X-Google-Smtp-Source: ABdhPJyzlv68GqTOOlCLUqk4ZnqV5AEHsig9CTW8cmKhdlDHkx/MBJLvFlyQjrsbAAKC/c8xQonpgw==
+X-Received: by 2002:a9d:112:: with SMTP id 18mr17603653otu.379.1643824507123;
+        Wed, 02 Feb 2022 09:55:07 -0800 (PST)
+Received: from ?IPV6:2603:8081:2802:9dfb:3cb0:d8d2:94fa:3630? (2603-8081-2802-9dfb-3cb0-d8d2-94fa-3630.res6.spectrum.com. [2603:8081:2802:9dfb:3cb0:d8d2:94fa:3630])
+        by smtp.gmail.com with ESMTPSA id bl6sm6288403oib.38.2022.02.02.09.55.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Feb 2022 09:55:06 -0800 (PST)
+Message-ID: <6a565605-ff32-6079-9430-bceb428c3889@gmail.com>
+Date:   Wed, 2 Feb 2022 11:54:57 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [RFC PATCH 2/3] Add PCIe enclosure management auxiliary driver
+Content-Language: en-US
+To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Keith Busch <kbusch@kernel.org>, kw@linux.com,
+        helgaas@kernel.org, lukas@wunner.de, pavel@ucw.cz,
+        linux-cxl@vger.kernel.org, martin.petersen@oracle.com,
+        James.Bottomley@hansenpartnership.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <cover.1642460765.git.stuart.w.hayes@gmail.com>
+ <111e1684ab4a77c7ca4abc9f7fd1f37f9534d937.1642460765.git.stuart.w.hayes@gmail.com>
+ <20220131125915.0000294f@linux.intel.com>
+From:   stuart hayes <stuart.w.hayes@gmail.com>
+In-Reply-To: <20220131125915.0000294f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <bug-215560-41252@https.bugzilla.kernel.org/>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Pierre,
 
-Thanks a lot for the report!
 
-On Wed, Feb 02, 2022 at 10:20:44AM +0000, bugzilla-daemon@kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=215560
+On 1/31/2022 5:59 AM, Mariusz Tkaczyk wrote:
+> Hi Stuart,
+> On Mon, 17 Jan 2022 22:17:57 -0600
+> Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
 > 
->             Bug ID: 215560
->            Summary: _PRS/_SRS methods should be optional
->            Product: Drivers
->            Version: 2.5
->     Kernel Version: v5.17-rc2
->           Hardware: All
->                 OS: Linux
->               Tree: Mainline
->             Status: NEW
->           Severity: enhancement
->           Priority: P1
->          Component: PCI
->           Assignee: drivers_pci@kernel-bugs.osdl.org
->           Reporter: pierre.gondois@arm.com
->         Regression: No
+>> +	switch (output->status) {
+>> +	case 0:
+>> +		break;
+>> +	case 1:
+>> +		pci_dbg(pdev, "_DSM not supported\n");
+>> +		break;
+>> +	case 2:
+>> +		pci_dbg(pdev, "_DSM invalid input parameters\n");
+>> +		break;
+>> +	case 3:
+>> +		pci_dbg(pdev, "_DSM communication error\n");
+>> +		break;
+>> +	case 4:
+>> +		pci_dbg(pdev, "_DSM function-specific error 0x%x\n",
+>> +			output->function_specific_err);
+>> +		break;
+>> +	case 5:
+>> +		pci_dbg(pdev, "_DSM vendor-specific error 0x%x\n",
+>> +			output->vendor_specific_err);
+>> +		break;
+>> +	default:
+>> +		pci_dbg(pdev, "_DSM returned unknown status 0x%x\n",
+>> +			output->status);
+>> +	}
+>> +}
 > 
-> The PCI legacy interrupts can be described with link devices, cf ACPI 6.4,
-> s6.2.13 "_PRT (PCI Routing Table)".
-> Link devices can have optional _SRS/_PRS methods to set the interrupt.
+> I tired to compile it and I failed:
+> drivers/misc/enclosure.c: In function ‘led_show’:
+> drivers/misc/enclosure.c:607:3: error: label at end of compound
+> statement default:
+>     ^~~~~~~
+> drivers/misc/enclosure.c: In function ‘led_set’:
+> drivers/misc/enclosure.c:644:3: error: label at end of compound
+> statement default:
+>     ^~~~~~~
+> make[2]: *** [scripts/Makefile.build:288: drivers/misc/enclosure.o]
+> Error 1 make[1]: *** [scripts/Makefile.build:550: drivers/misc] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+> 
+> My gcc version:
+> gcc (SUSE Linux) 7.5.0
+> 
+> Could you please, resolve the issue?
+> 
+> Thanks,
+> Mariusz
+> 
 
-Is this a direct quote?  I don't see text similar to this in ACPI
-v6.4.
-
-I do see this in sec 6.2.13:
-
-  There are two ways that _PRT can be used. Typically, the interrupt
-  input that a given PCI interrupt is on is configurable.  For
-  example, a given PCI interrupt might be configured for either IRQ 10
-  or 11 on an 8259 interrupt controller. In this model, each interrupt
-  is represented in the ACPI namespace as a PCI Interrupt Link Device.
-
-  These objects have _PRS, _CRS, _SRS, and _DIS control methods to
-  allocate the interrupt. Then, OSPM handles the interrupts not as
-  interrupt inputs on the interrupt controller, but as PCI interrupt
-  pins. The driver looks up the device’s pins in the _PRT to determine
-  which device objects allocate the interrupts. To move the PCI
-  interrupt to a different interrupt input on the interrupt
-  controller, OSPM uses _PRS, _CRS, _SRS, and _DIS control methods for
-  the PCI Interrupt Link Device.
-
-  In the second model, the PCI interrupts are hardwired to specific
-  interrupt inputs on the interrupt controller and are not
-  configurable. In this case, the Source field in _PRT does not
-  reference a device, but instead contains the value zero, and the
-  Source Index field contains the global system interrupt to which the
-  PCI interrupt is hardwired.
-
-For the first model (configurable inputs), it says "These objects have
-_PRS, _CRS, _SRS, and _DIS," which could be read as requiring those
-objects.
-
-For the second model (hardwired inputs), the interrupts are not
-configurable, and I don't think there would be any reason to have an
-interrupt link device at all.
-
-> In PCI Firmware Specification Revision 3.3, s4.3.2.1. "Resource Setting":
-> """
-> A non-configurable device only specifies _CRS. However, if they are
-> configurable, devices include
-> _PRS to indicate the possible resource setting and _SRS to allow OSPM to
-> specify a new resource
-> allocation for the device.
-> """
-
-My copy of the PCI Firmware spec r3.3 (dated Jan 20, 2021), sec
-4.3.2.1 says:
-
-  Host bridges resources programming is communicated to the operating
-  system using ACPI methods _CRS, _SRS, and _PRS. _CRS indicates the
-  current resource setting for the host bridge. This includes I/O
-  space, memory space, and bus range assigned to the bridge by
-  platform firmware.
-
-  A non-configurable device only specifies _CRS. However, if they are
-  configurable, devices include _PRS to indicate the possible resource
-  setting and _SRS to allow OSPM to specify a new resource allocation
-  for the device.
-
-So this is specifically talking about methods of a PCI host bridge
-(PNP0A03 or PNP0A08), not about methods of an interrupt link device
-(PNP0C0F).
-
-> However, _PRS/_SRS methods are checked in drivers/acpi/pci_link.c, and the
-> driver aborts if they are absent.
-> E.g.: When _PRS is missing:
-> ACPI: \_SB_.PCI0.LNKA: _CRS 36 not found in _PRS
-> ACPI: \_SB_.PCI0.LNKA: No IRQ available. Try pci=noacpi or acpi=off
-
-I assume this bug report is because something isn't working.  Can you
-update the bugzilla with a note about what specifically isn't working
-and also attach a complete dmesg log and acpidump?
-
-Bjorn
+No problem.  I'll send a v2 now.
+Thanks,
+Stuart
