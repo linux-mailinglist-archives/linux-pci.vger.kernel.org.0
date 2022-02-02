@@ -2,58 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFB214A6F67
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 12:02:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D38D44A6DD2
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Feb 2022 10:31:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343630AbiBBLCR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Feb 2022 06:02:17 -0500
-Received: from mail.profitfirm24.com.pl ([212.237.10.110]:59418 "EHLO
-        mail.profitfirm24.com.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343647AbiBBLCP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 06:02:15 -0500
-Received: by mail.profitfirm24.com.pl (Postfix, from userid 1001)
-        id 56B8EAA71E; Tue,  1 Feb 2022 09:17:29 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=profitfirm24.com.pl;
-        s=mail; t=1643707573;
-        bh=M1ZVeu3q6Upppe+FUx/3rgI7MKJXh389NZDbgCK1SX4=;
-        h=Date:From:To:Subject:From;
-        b=GS+GvXofHVUlnbKTNdVpcL0XuF1tmMO2kwiV1+IC4bs9OC/qNOo+/ldDETOH0aeqK
-         qWhLDSfaF9i9iyAolJx+sUEqjGg8mVhexgZD1INftpsa4Af7Odp/w4KfCnetIoGXA0
-         ZszXjnvb9jzCbS13BB8ThcPmFz6GzA9gNjpbV4N2rls4VWoQMM89526AtOgdfbphX+
-         GsU3jlUP0XOh2Za94H1REkWeDHiWGSYVgQf5pEIw/CpYauwhdq8oPiYEVpZdVMu01l
-         So1M7TFaZA71sYZZg1mzDZUlPNcFKrTNyjCNYm45GbuSmRYTRL8cTbEFC6qc20kKrL
-         Ve9H+tIzD8Aqw==
-Received: by profitfirm24.com.pl for <linux-pci@vger.kernel.org>; Tue,  1 Feb 2022 09:17:20 GMT
-Message-ID: <20220201074652-0.1.b.2yn7.0.wgjohudjb1@profitfirm24.com.pl>
-Date:   Tue,  1 Feb 2022 09:17:20 GMT
-From:   =?UTF-8?Q? "Arkadiusz_Soko=C5=82owski" ?= 
-        <arkadiusz.sokolowski@profitfirm24.com.pl>
-To:     <linux-pci@vger.kernel.org>
-Subject: Koszty instalacji fotowoltaicznej
-X-Mailer: mail.profitfirm24.com.pl
+        id S232306AbiBBJbx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Feb 2022 04:31:53 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4610 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230054AbiBBJbx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Feb 2022 04:31:53 -0500
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jpc4Q13RFz67kws;
+        Wed,  2 Feb 2022 17:31:18 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Wed, 2 Feb 2022 10:31:51 +0100
+Received: from localhost (10.47.70.124) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Wed, 2 Feb
+ 2022 09:31:50 +0000
+Date:   Wed, 2 Feb 2022 09:31:49 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, Ben Widawsky <ben.widawsky@intel.com>,
+        <linux-pci@vger.kernel.org>, <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH v5 22/40] cxl/core/hdm: Add CXL standard decoder
+ enumeration to the core
+Message-ID: <20220202093149.00006594@Huawei.com>
+In-Reply-To: <164374688404.395335.9239248252443123526.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164316647461.3437452.7695738236907745246.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <164374688404.395335.9239248252443123526.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.70.124]
+X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dzie=C5=84 dobry,
+On Tue, 01 Feb 2022 12:24:30 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-stworzyli=C5=9Bmy specjaln=C4=85 ofert=C4=99 dla firm, na kompleksow=C4=85=
- obs=C5=82ug=C4=99 inwestycji w fotowoltaik=C4=99. =20
+> Unlike the decoder enumeration for "root decoders" described by platform
+> firmware, standard decoders can be enumerated from the component
+> registers space once the base address has been identified (via PCI,
+> ACPI, or another mechanism).
+> 
+> Add common infrastructure for HDM (Host-managed-Device-Memory) Decoder
+> enumeration and share it between host-bridge, upstream switch port, and
+> cxl_test defined decoders.
+> 
+> The locking model for switch level decoders is to hold the port lock
+> over the enumeration. This facilitates moving the dport and decoder
+> enumeration to a 'port' driver. For now, the only enumerator of decoder
+> resources is the cxl_acpi root driver.
+> 
+> Co-developed-by: Ben Widawsky <ben.widawsky@intel.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+> Changes since v4:
+> - Fix kdoc for @host arg, for real this time (Jonathan and Ben)
+> - Drop unused cxl_register_map from map_hdm_decoder_regs (Jonathan)
+> - s/coders/decoders/ in changelog (Ben)
+> - Add Ben's co-developed-by
+> 
+LGTM
 
-Specjalizujemy si=C4=99 w zakresie doboru, monta=C5=BCu i serwisie instal=
-acji fotowoltaicznych, dysponujemy najnowocze=C5=9Bniejszymi rozwi=C4=85z=
-ania, kt=C3=B3re zapewni=C4=85 Pa=C5=84stwu oczekiwane rezultaty.
-
-Mo=C5=BCemy przygotowa=C4=87 dla Pa=C5=84stwa wst=C4=99pn=C4=85 kalkulacj=
-=C4=99 i przeanalizowa=C4=87 efekty mo=C5=BCliwe do osi=C4=85gni=C4=99cia=
-=2E
-
-Czy s=C4=85 Pa=C5=84stwo otwarci na wst=C4=99pn=C4=85 rozmow=C4=99 w tym =
-temacie?
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 
-Pozdrawiam
-Arkadiusz Soko=C5=82owski
