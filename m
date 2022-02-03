@@ -2,128 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 601AC4A8B29
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 19:05:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F5464A8C32
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 20:07:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233598AbiBCSFk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Feb 2022 13:05:40 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4669 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353197AbiBCSFj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Feb 2022 13:05:39 -0500
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JqRLx4Bnzz67lMW;
-        Fri,  4 Feb 2022 02:01:45 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Thu, 3 Feb 2022 19:05:36 +0100
-Received: from localhost (10.47.78.15) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 3 Feb
- 2022 18:05:36 +0000
-Date:   Thu, 3 Feb 2022 18:05:32 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
-        "Linux NVDIMM" <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
-Message-ID: <20220203180532.00007083@Huawei.com>
-In-Reply-To: <CAPcyv4gJozea7aDg+KyKdwEbSO5PV-rUUGC5u-6NNTHA755etA@mail.gmail.com>
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <20220131184126.00002a47@Huawei.com>
-        <CAPcyv4iYpj7MH4kKMP57ouHb85GffEmhXPupq5i1mwJwzFXr0w@mail.gmail.com>
-        <20220202094437.00003c03@Huawei.com>
-        <CAPcyv4hwdMetDJ-+yL9-2rY92g2C4wWPqpRiQULaX_M6ZQPMtA@mail.gmail.com>
-        <20220203094123.000049e6@Huawei.com>
-        <CAPcyv4gJozea7aDg+KyKdwEbSO5PV-rUUGC5u-6NNTHA755etA@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S1353659AbiBCTHe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Feb 2022 14:07:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234813AbiBCTHe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Feb 2022 14:07:34 -0500
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4B4C061714;
+        Thu,  3 Feb 2022 11:07:33 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 1F698100D9407;
+        Thu,  3 Feb 2022 20:07:32 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id F0C032D934; Thu,  3 Feb 2022 20:07:31 +0100 (CET)
+Date:   Thu, 3 Feb 2022 20:07:31 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Liguang Zhang <zhangliguang@linux.alibaba.com>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Amey Narkhede <ameynarkhede03@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: pciehp: clear cmd_busy bit when Command Completed
+ in polling mode
+Message-ID: <20220203190731.GA24120@wunner.de>
+References: <20211111054258.7309-1-zhangliguang@linux.alibaba.com>
+ <20211126173309.GA12255@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.78.15]
-X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211126173309.GA12255@wunner.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 3 Feb 2022 08:59:44 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+Hi Bjorn,
 
-> On Thu, Feb 3, 2022 at 1:41 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Wed, 2 Feb 2022 07:44:37 -0800
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >  
-> > > On Wed, Feb 2, 2022 at 1:45 AM Jonathan Cameron
-> > > <Jonathan.Cameron@huawei.com> wrote:  
-> > > >
-> > > > On Tue, 1 Feb 2022 15:57:10 -0800
-> > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >  
-> > > > > On Mon, Jan 31, 2022 at 10:41 AM Jonathan Cameron
-> > > > > <Jonathan.Cameron@huawei.com> wrote:  
-> > > > > >
-> > > > > > On Sun, 23 Jan 2022 16:31:24 -0800
-> > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > > >  
-> > > > > > > While CXL memory targets will have their own memory target node,
-> > > > > > > individual memory devices may be affinitized like other PCI devices.
-> > > > > > > Emit that attribute for memdevs.
-> > > > > > >
-> > > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
-> > > > > >
-> > > > > > Hmm. Is this just duplicating what we can get from
-> > > > > > the PCI device?  It feels a bit like overkill to have it here
-> > > > > > as well.  
-> > > > >
-> > > > > Not all cxl_memdevs are associated with PCI devices.  
-> > > >
-> > > > Platform devices have numa nodes too...  
-> > >
-> > > So what's the harm in having a numa_node attribute local to the memdev?
-> > >  
-> >
-> > I'm not really against, it just wanted to raise the question of
-> > whether we want these to go further than the granularity at which
-> > numa nodes can be assigned.  
+the below patch is marked "Changes Requested" in patchwork:
+
+https://patchwork.kernel.org/project/linux-pci/patch/20211111054258.7309-1-zhangliguang@linux.alibaba.com/
+
+I think that might be erroneous because the patch is correct,
+I've provided a Reviewed-by and no change requests are recorded
+in patchwork or the mailing list archive.
+
+If you've got a few minutes to spare, could you double-check the
+state in patchwork and provide Liguang Zhang with the changes you'd
+want (if any)?
+
+Thanks!
+
+Lukas
+
+On Fri, Nov 26, 2021 at 06:33:09PM +0100, Lukas Wunner wrote:
+> On Thu, Nov 11, 2021 at 01:42:58PM +0800, Liguang Zhang wrote:
+> > This patch fixes this problem that on driver probe from system startup,
+> > pciehp checks the Presence Detect State bit in the Slot Status register
+> > to bring up an occupied slot or bring down an unoccupied slot. If empty
+> > slot's power status is on, turn power off. The Hot-Plug interrupt isn't
+> > requested yet, so avoid triggering a notification by calling
+> > pcie_disable_notification().
+> > 
+> > Both the CCIE and HPIE bits are masked in pcie_disable_notification(),
+> > when we issue a hotplug command, pcie_wait_cmd() will polling the
+> > Command Completed bit instead of waiting for an interrupt. But cmd_busy
+> > bit was not cleared when Command Completed which results in timeouts
+> > like this in pciehp_power_off_slot() and pcie_init_notification():
+> > 
+> >   pcieport 0000:00:03.0: pciehp: Timeout on hotplug command 0x01c0
+> > (issued 2264 msec ago)
+> >   pcieport 0000:00:03.0: pciehp: Timeout on hotplug command 0x05c0
+> > (issued 2288 msec ago)
+> > 
+> > Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
 > 
-> What is the "granularity at which numa nodes can be assigned"? It
-> sounds like you are referencing a standard / document, so maybe I
-> missed something. Certainly Proximity Domains != Linux NUMA nodes so
-> it's not ACPI.
-
-Sure, it's the fusion of a number of possible sources, one of which
-is ACPI. If there is a reason why it differs to the parent device
-(which can be ACPI, or can just be from a bunch of other places which
-I'm sure will keep growing) then it definitely makes sense to expose
-it at that level. 
-
+> Fixes: a5dd4b4b0570 ("PCI: pciehp: Wait for hotplug command completion where necessary")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215143
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> Cc: stable@vger.kernel.org # v4.2+
 > 
-> >  Right now that at platform_device or
-> > PCI EP (from ACPI anyway).  Sure the value might come from higher
-> > up a hierarchy but at least in theory it can be assigned to
-> > individual devices.
-> >
-> > This is pushing that description beyond that point so is worth discussing.  
+> Thanks a lot, that's a really good catch.
 > 
-> To me, any device that presents a driver interface can declare its CPU
-> affinity with a numa_node leaf attribute. Once you start walking the
-> device tree to infer the node from parent information you also need to
-> be worried about whether the Linux device topology follows the NUMA
-> topology. The leaf attribute removes that ambiguity.
-I'll go with 'maybe'...
-
-Either way I'm fine with this change, just wanted to bring attention to
-the duplication as it wasn't totally clear to me it was a good idea.
-
-FWIW
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-
+> It's a somewhat intricate bug, so I'll try to explain in my own words:
+> 
+> If notification is disabled (HPIE or CCIE not set in the Slot Status
+> register), we rely on pcie_poll_cmd() to poll for Command Completed.
+> But once it's signaled, we neglect to clear ctrl->cmd_busy.
+> (Normally it is cleared by the hardirq handler pciehp_isr() if
+> notification is enabled.)
+> 
+> The result is that starting with the second Slot Control write,
+> pciehp will gratuitously wait for a command to finish which has
+> already finished and it will incorrectly report a timeout.
+> 
+> The bug was originally introduced in 2015 by commit a5dd4b4b0570
+> ("PCI: pciehp: Wait for hotplug command completion where necessary"),
+> but didn't manifest itself because the first Slot Control Write already
+> enabled notification and from that point on the hardirq handler would
+> clear ctrl->cmd_busy.  However I think the bug may have manifested
+> itself with pciehp_poll_mode=1.
+> 
+> It wasn't until commit 4e6a13356f1c ("PCI: pciehp: Deduplicate presence
+> check on probe & resume") that multiple consecutive Slot Control writes
+> were performed on ->probe with notification disabled, so that's the
+> commit which first exposed the bug with pciehp_poll_mode=0.
+> 
+> Thanks,
+> 
+> Lukas
+> 
+> > ---
+> >  drivers/pci/hotplug/pciehp_hpc.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+> > index 83a0fa119cae..8698aefc6041 100644
+> > --- a/drivers/pci/hotplug/pciehp_hpc.c
+> > +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> > @@ -98,6 +98,8 @@ static int pcie_poll_cmd(struct controller *ctrl, int timeout)
+> >  		if (slot_status & PCI_EXP_SLTSTA_CC) {
+> >  			pcie_capability_write_word(pdev, PCI_EXP_SLTSTA,
+> >  						   PCI_EXP_SLTSTA_CC);
+> > +			ctrl->cmd_busy = 0;
+> > +			smp_mb();
+> >  			return 1;
+> >  		}
+> >  		msleep(10);
+> > -- 
+> > 2.19.1.6.gb485710b
