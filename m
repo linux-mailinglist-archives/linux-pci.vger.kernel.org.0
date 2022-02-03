@@ -2,271 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 540A64A82A7
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 11:47:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C89E64A82C4
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 11:56:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230516AbiBCKrb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Feb 2022 05:47:31 -0500
-Received: from mga04.intel.com ([192.55.52.120]:30392 "EHLO mga04.intel.com"
+        id S1348290AbiBCK4K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Feb 2022 05:56:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:38744 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236951AbiBCKra (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Feb 2022 05:47:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643885250; x=1675421250;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AaKp4nK4y2AhNC3RZfFFLx76DaIFsvrpQkyX6uVpUq0=;
-  b=CViuyvF62cLKve5354SVVDEQLxSU54Ul6KwVW2JLarOVE8f1gyH6V4S2
-   2yxLxZ8zR+y/1UhYSFZwieJMSxheb0xK7Yr0vD+5apEsdS9yw4mlOXrH3
-   ZT4C9QpcoIlYZF5XBtVssuFD0YNNs/JMxEHaY5U4WtnToerj5GoGZQftS
-   7/FONaxyx3UUUT73Onj4Emw7UoKzioXm2VN+Vz2ZrVBJWpRx3XkwjjZ5S
-   wkHGnHTWVTAQw6rhvY9v+Jr7GuEiVQHXLo9WDRWPbNq8z/l8+rvG86OFZ
-   GvJaf77xHluRSMRq2l2OdHYFE7wpG2bD18wXzrVUgXYdWQ1k6HrFJJpKn
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10246"; a="246953026"
-X-IronPort-AV: E=Sophos;i="5.88,339,1635231600"; 
-   d="scan'208";a="246953026"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2022 02:47:18 -0800
-X-IronPort-AV: E=Sophos;i="5.88,339,1635231600"; 
-   d="scan'208";a="538696790"
-Received: from bkucman-mobl.ger.corp.intel.com (HELO localhost) ([10.249.138.26])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2022 02:47:14 -0800
-Date:   Thu, 3 Feb 2022 11:47:09 +0100
-From:   Blazej Kucman <blazej.kucman@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-        linux-pci@vger.kernel.org, Blazej Kucman <blazej.kucman@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Naveen Naidu <naveennaidu479@gmail.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>
-Subject: Re: [Bug 215525] New: HotPlug does not work on upstream kernel
- 5.17.0-rc1
-Message-ID: <20220203114709.00000fd1@linux.intel.com>
-In-Reply-To: <0ce2529b-f27c-08b9-fd0c-0a0e3a5cd354@leemhuis.info>
-References: <20220202164308.GA17822@bhelgaas>
-        <0ce2529b-f27c-08b9-fd0c-0a0e3a5cd354@leemhuis.info>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        id S243664AbiBCK4J (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Feb 2022 05:56:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B6BC11D4;
+        Thu,  3 Feb 2022 02:56:09 -0800 (PST)
+Received: from e123427-lin.arm.com (unknown [10.57.39.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB6DD3F774;
+        Thu,  3 Feb 2022 02:56:06 -0800 (PST)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 00/11] PCI: Small improvements for pci-bridge-emul and mvebu
+Date:   Thu,  3 Feb 2022 10:56:00 +0000
+Message-Id: <164388574160.14310.5659554004338344602.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20220104153529.31647-1-pali@kernel.org>
+References: <20211221141455.30011-1-pali@kernel.org> <20220104153529.31647-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 3 Feb 2022 10:13:15 +0100
-Thorsten Leemhuis <regressions@leemhuis.info> wrote:
-
-> Hi, this is your Linux kernel regression tracker speaking.
+On Tue, 4 Jan 2022 16:35:18 +0100, Pali Rohár wrote:
+> This patch series contains small improvements for pci-bridge-emul and
+> mvebu drivers. This patch series is based on top of the patches:
+> https://lore.kernel.org/linux-pci/20211125124605.25915-1-pali@kernel.org/
+> (which are now in pci/mvebu branch)
 > 
-> On 02.02.22 17:43, Bjorn Helgaas wrote:
-> > On Wed, Feb 02, 2022 at 04:48:01PM +0100, Blazej Kucman wrote:  
-> >> On Fri, 28 Jan 2022 08:03:28 -0600
-> >> Bjorn Helgaas <helgaas@kernel.org> wrote:  
-> >>> On Fri, Jan 28, 2022 at 09:49:34PM +0800, Kai-Heng Feng wrote:  
-> >>>> On Fri, Jan 28, 2022 at 9:08 PM Bjorn Helgaas
-> >>>> <helgaas@kernel.org> wrote:    
-> >>>>> On Fri, Jan 28, 2022 at 09:29:31AM +0100, Mariusz Tkaczyk
-> >>>>> wrote:    
-> >>>>>> On Thu, 27 Jan 2022 20:52:12 -0600
-> >>>>>> Bjorn Helgaas <helgaas@kernel.org> wrote:    
-> >>>>>>> On Thu, Jan 27, 2022 at 03:46:15PM +0100, Mariusz Tkaczyk
-> >>>>>>> wrote:    
-> >>>>>>>> ...
-> >>>>>>>> Thanks for your suggestions. Blazej did some tests and
-> >>>>>>>> results were inconclusive. He tested it on two same
-> >>>>>>>> platforms. On the first one it didn't work, even if he
-> >>>>>>>> reverted all suggested patches. On the second one hotplugs
-> >>>>>>>> always worked.
-> >>>>>>>>
-> >>>>>>>> He noticed that on first platform where issue has been found
-> >>>>>>>> initally, there was boot parameter "pci=nommconf". After
-> >>>>>>>> adding this parameter on the second platform, hotplugs
-> >>>>>>>> stopped working too.
-> >>>>>>>>
-> >>>>>>>> Tested on tag pci-v5.17-changes. He have
-> >>>>>>>> CONFIG_HOTPLUG_PCI_PCIE and CONFIG_DYNAMIC_DEBUG enabled in
-> >>>>>>>> config. He also attached two dmesg logs to bugzilla with
-> >>>>>>>> boot parameter 'dyndbg="file pciehp* +p" as requested. One
-> >>>>>>>> with "pci=nommconf" and one without.
-> >>>>>>>>
-> >>>>>>>> Issue seems to related to "pci=nommconf" and it is probably
-> >>>>>>>> caused by change outside pciehp.    
-> >>>>>>>
-> >>>>>>> Maybe I'm missing something.  If I understand correctly, the
-> >>>>>>> problem has nothing to do with the kernel version (correct me
-> >>>>>>> if I'm wrong!)    
-> >>>>>>
-> >>>>>> The problem occurred after the merge commit. It is some kind of
-> >>>>>> regression.    
-> >>>>>
-> >>>>> The bug report doesn't yet contain the evidence showing this.
-> >>>>> It only contains dmesg logs with "pci=nommconf" where pciehp
-> >>>>> doesn't work (which is the expected behavior) and a log without
-> >>>>> "pci=nommconf" where pciehp does work (which is again the
-> >>>>> expected behavior).   
-> >>>>>>> PCIe native hotplug doesn't work when booted with
-> >>>>>>> "pci=nommconf". When using "pci=nommconf", obviously we can't
-> >>>>>>> access the extended PCI config space (offset 0x100-0xfff), so
-> >>>>>>> none of the extended capabilities are available.
-> >>>>>>>
-> >>>>>>> In that case, we don't even ask the platform for control of
-> >>>>>>> PCIe hotplug via _OSC.  From the dmesg diff from normal
-> >>>>>>> (working) to "pci=nommconf" (not working):
-> >>>>>>>
-> >>>>>>>   -Command line: BOOT_IMAGE=/boot/vmlinuz-smp ...
-> >>>>>>>   +Command line: BOOT_IMAGE=/boot/vmlinuz-smp pci=nommconf ...
-> >>>>>>>   ...
-> >>>>>>>   -acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM
-> >>>>>>> ClockPM Segments MSI HPX-Type3] -acpi PNP0A08:00: _OSC:
-> >>>>>>> platform does not support [AER LTR] -acpi PNP0A08:00: _OSC:
-> >>>>>>> OS now controls [PCIeHotplug PME PCIeCapability] +acpi
-> >>>>>>> PNP0A08:00: _OSC: OS supports [ASPM ClockPM Segments MSI
-> >>>>>>> HPX-Type3] +acpi PNP0A08:00: _OSC: not requesting OS control;
-> >>>>>>> OS requires [ExtendedConfig ASPM ClockPM MSI] +acpi
-> >>>>>>> PNP0A08:00: MMCONFIG is disabled, can't access extended PCI
-> >>>>>>> configuration space under this bridge.    
-> >>>>>>
-> >>>>>> So, it shouldn't work from years but it has been broken
-> >>>>>> recently, that is the only objection I have. Could you tell why
-> >>>>>> it was working? According to your words- it shouldn't. We are
-> >>>>>> using VMD driver, is that matter?    
-> >>>>>
-> >>>>> 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe features")
-> >>>>> looks like a it could be related.  Try reverting that commit
-> >>>>> and see whether it makes a difference.    
-> >>>>
-> >>>> The affected NVMe is indeed behind VMD domain, so I think the
-> >>>> commit can make a difference.
-> >>>>
-> >>>> Does VMD behave differently on laptops and servers?
-> >>>> Anyway, I agree that the issue really lies in "pci=nommconf".    
-> >>>
-> >>> Oh, I have a guess:
-> >>>
-> >>>   - With "pci=nommconf", prior to v5.17-rc1, pciehp did not work
-> >>> in general, but *did* work for NVMe behind a VMD.  As of
-> >>> v5.17-rc1, pciehp no longer works for NVMe behind VMD.
-> >>>
-> >>>   - Without "pci=nommconf", pciehp works as expected for all
-> >>> devices including NVMe behind VMD, both before and after
-> >>> v5.17-rc1.
-> >>>
-> >>> Is that what you're observing?
-> >>>
-> >>> If so, I doubt there's anything to fix other than getting rid of
-> >>> "pci=nommconf".  
-> >>
-> >> I haven't tested with VMD disabled earlier. I verified it and my
-> >> observations are as follows:
-> >>
-> >> OS: RHEL 8.4
-> >> NO - hotplug not working
-> >> YES - hotplug working
-> >>
-> >> pci=nommconf added:
-> >> +--------------+-------------------+---------------------+--------------+
-> >> |              | pci-v5.17-changes | revert-04b12ef163d1 | inbox
-> >> kernel
-> >> +--------------+-------------------+---------------------+--------------+
-> >> | VMD enabled  | NO                | YES                 | YES
-> >> +--------------+-------------------+---------------------+--------------+
-> >> | VMD disabled | NO                | NO                  | NO
-> >> +--------------+-------------------+---------------------+--------------+
-> >>
-> >> without pci=nommconf:
-> >> +--------------+-------------------+---------------------+--------------+
-> >> |              | pci-v5.17-changes | revert-04b12ef163d1 | inbox
-> >> kernel
-> >> +--------------+-------------------+---------------------+--------------+
-> >> | VMD enabled  | YES               | YES                 | YES
-> >> +--------------+-------------------+---------------------+--------------+
-> >> | VMD disabled | YES               | YES                 | YES
-> >> +--------------+-------------------+---------------------+--------------+
-> >>
-> >> So, results confirmed your assumptions, but I also confirmed that
-> >> revert of 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe
-> >> features") makes it to work as in inbox kernel.
-> >>
-> >> We will drop the legacy parameter in our tests. According to my
-> >> results there is a regression in VMD caused by: 04b12ef163d1
-> >> commit, even if it is not working for nvme anyway. Should it be
-> >> fixed?  
-> > 
-> > I don't know what the "inbox kernel" is.  I guess that's unmodified
-> > RHEL 8.4?
-
-Yes
-
-
-> > 
-> > And revert-04b12ef163d1 means the pci-v5.17-changes tag plus a
-> > revert of 04b12ef163d1?
-
-Yes
-
-> > 
-> > I think your "hotplug working" or "hotplug not working" notes refer
-> > specifically to devices behind VMD, right?  They do not refer to
-> > devices outside the VMD hierarchy?
-
-Row in tables with "VMD disabled", means that the VMD is off in UEFI,
-and VMD is not exposed to OS, so NVME device is not in VMD hierarchy
-then.
-
-"hotplug working" or "hotplug not working" refers only to the
-hotplug behaviour.
-
-> > 
-> > So IIUC, the regression is that hotplug of devices behind VMD used
-> > to work with "pci=nommconf", but it does not work after
-> > 04b12ef163d1. IMO that does not need to be fixed because it was
-> > arguably a bug that it *did* work before.  
+> In V2 was added comment into code explaining PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD
+> and PCI_BRIDGE_EMUL_NO_IO_FORWARD flags.
 > 
-> FWIW, that afaics does matter. To quote Linus:
-> 
-> ```
-> Users are literally the _only_ thing that matters.
-> 
-> No amount of "you shouldn't have used this" or "that behavior was
-> undefined, it's your own fault your app broke" or "that used to work
-> simply because of a kernel bug" is at all relevant.
-> ```
-> 
-> That quote is from:
-> https://lore.kernel.org/all/CAHk-=wiVi7mSrsMP=fLXQrXK_UimybW=ziLOwSzFTtoXUacWVQ@mail.gmail.com/
-> 
-> So from my point of view as a regression tracker I currently think
-> this still needs to be fixed.
-> 
-> > That said, I'm not 100% confident about 04b12ef163d1 because _OSC
-> > is a way to negotiate ownership of things that could be owned
-> > either by platform firmware or by the OS, and the commit log
-> > doesn't make it clear that's the situation here.  It's more of a
-> > "the problem doesn't happen when we do this" sort of commit log.
-> > 
-> > If there's anything more to do here, it would be helpful to attach
-> > complete dmesg logs from the scenarios of interest to the bugzilla.
-> > That will help remove ambiguity about what's being tested and what
-> > the results are.  
-> 
-> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
-> 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them.
-> Unfortunately therefore I sometimes will get things wrong or miss
-> something important. I hope that's not the case here; if you think it
-> is, don't hesitate to tell me about it in a public reply, that's in
-> everyone's interest.
-> 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
+> [...]
 
+Applied to pci/mvebu, thanks!
+
+[01/11] MAINTAINERS: Add Pali Rohár as pci-mvebu.c maintainer
+        https://git.kernel.org/lpieralisi/pci/c/e621e106a1
+[02/11] PCI: pci-bridge-emul: Make struct pci_bridge_emul_ops as const
+        https://git.kernel.org/lpieralisi/pci/c/64a70f521e
+[03/11] PCI: pci-bridge-emul: Rename PCI_BRIDGE_EMUL_NO_PREFETCHABLE_BAR to PCI_BRIDGE_EMUL_NO_PREFMEM_FORWARD
+        https://git.kernel.org/lpieralisi/pci/c/d3f332b568
+[04/11] PCI: pci-bridge-emul: Add support for new flag PCI_BRIDGE_EMUL_NO_IO_FORWARD
+        https://git.kernel.org/lpieralisi/pci/c/05241c1365
+[05/11] PCI: mvebu: Add help string for CONFIG_PCI_MVEBU option
+        https://git.kernel.org/lpieralisi/pci/c/7f09a4b195
+[06/11] PCI: mvebu: Remove duplicate nports assignment
+        https://git.kernel.org/lpieralisi/pci/c/7a02acdb5d
+[07/11] PCI: mvebu: Set PCI_BRIDGE_EMUL_NO_IO_FORWARD when IO is unsupported
+        https://git.kernel.org/lpieralisi/pci/c/5c88ed7985
+[08/11] PCI: mvebu: Properly initialize vendor, device and revision of emulated bridge
+        https://git.kernel.org/lpieralisi/pci/c/16038ebb0f
+[09/11] PCI: mvebu: Update comment for PCI_EXP_LNKCAP register on emulated bridge
+        https://git.kernel.org/lpieralisi/pci/c/d76a6ed096
+[10/11] PCI: mvebu: Update comment for PCI_EXP_LNKCTL register on emulated bridge
+        https://git.kernel.org/lpieralisi/pci/c/c94ea32c0d
+[11/11] PCI: mvebu: Fix reporting Data Link Layer Link Active on emulated bridge
+        https://git.kernel.org/lpieralisi/pci/c/c3bd7dc553
+
+Thanks,
+Lorenzo
