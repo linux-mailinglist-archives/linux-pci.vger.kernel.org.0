@@ -2,113 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D3BC4A8AA9
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 18:50:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 601AC4A8B29
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 19:05:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353069AbiBCRuZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Feb 2022 12:50:25 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:55568 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232884AbiBCRuZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Feb 2022 12:50:25 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A759F617A1;
-        Thu,  3 Feb 2022 17:50:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D89C340E8;
-        Thu,  3 Feb 2022 17:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643910624;
-        bh=izoWiGyh8XnBsfb1ecNvm9atycnzhhjoNIrDnYGzsSo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NEpCL124PAd8kMvKewlQOMwBnNT/KzBx4XxEzyNr0MFyqqE7eHBI23LyHGAZIll/D
-         3suqK6ZinE5qpFVW+LOIPRBk9xhd20djeZD62TSbPKV4ZmSMikFkC9K2QZN3Tf9Xtk
-         DYOEC/rHtZNoe/Ql6TIEbB5lfNdP0qfBpF2LRo3LTsnFTfjxuTQJeA021h9kthyIBD
-         fM+15PgLb3juU9OsQGc1gh6YoA+NmI6qJuzHPIHEMkc8YlFAuMtk30fP5nOpTC00Qu
-         YI56RFy4MEDhfBbBkzKex6JOWjJnVWgmCWHfhAVEbE0TMvJc6UEM7ZKgOsxqW/IHvd
-         j3r+G+i00ps8w==
-Date:   Thu, 3 Feb 2022 11:50:22 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pierre Gondois <pierre.gondois@arm.com>
-Cc:     linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Alex Hung <alex.hung@canonical.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [Bug 215560] New: _PRS/_SRS methods should be optional
-Message-ID: <20220203175022.GA106219@bhelgaas>
+        id S233598AbiBCSFk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Feb 2022 13:05:40 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4669 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1353197AbiBCSFj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Feb 2022 13:05:39 -0500
+Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JqRLx4Bnzz67lMW;
+        Fri,  4 Feb 2022 02:01:45 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Thu, 3 Feb 2022 19:05:36 +0100
+Received: from localhost (10.47.78.15) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 3 Feb
+ 2022 18:05:36 +0000
+Date:   Thu, 3 Feb 2022 18:05:32 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>,
+        "Linux NVDIMM" <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
+Message-ID: <20220203180532.00007083@Huawei.com>
+In-Reply-To: <CAPcyv4gJozea7aDg+KyKdwEbSO5PV-rUUGC5u-6NNTHA755etA@mail.gmail.com>
+References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <20220131184126.00002a47@Huawei.com>
+        <CAPcyv4iYpj7MH4kKMP57ouHb85GffEmhXPupq5i1mwJwzFXr0w@mail.gmail.com>
+        <20220202094437.00003c03@Huawei.com>
+        <CAPcyv4hwdMetDJ-+yL9-2rY92g2C4wWPqpRiQULaX_M6ZQPMtA@mail.gmail.com>
+        <20220203094123.000049e6@Huawei.com>
+        <CAPcyv4gJozea7aDg+KyKdwEbSO5PV-rUUGC5u-6NNTHA755etA@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2ae06ba-de8f-2cae-60fa-fe9a215d779b@arm.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.78.15]
+X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 03, 2022 at 06:12:10PM +0100, Pierre Gondois wrote:
-> On 2/3/22 5:32 PM, Bjorn Helgaas wrote:
-> > On Thu, Feb 03, 2022 at 10:10:19AM +0100, Pierre Gondois wrote:
-> > > On 2/2/22 6:42 PM, Bjorn Helgaas wrote:
-> > > > On Wed, Feb 02, 2022 at 10:20:44AM +0000, bugzilla-daemon@kernel.org wrote:
-> > > > > https://bugzilla.kernel.org/show_bug.cgi?id=215560
-> > > > > 
-> > > > > The PCI legacy interrupts can be described with link devices, cf ACPI 6.4,
-> > > > > s6.2.13 "_PRT (PCI Routing Table)".
-> > > > > Link devices can have optional _SRS/_PRS methods to set the interrupt.
-> > > > > ...
-> > 
-> > > > > However, _PRS/_SRS methods are checked in drivers/acpi/pci_link.c, and the
-> > > > > driver aborts if they are absent.
-> > > > > E.g.: When _PRS is missing:
-> > > > > ACPI: \_SB_.PCI0.LNKA: _CRS 36 not found in _PRS
-> > > > > ACPI: \_SB_.PCI0.LNKA: No IRQ available. Try pci=noacpi or acpi=off
-> > > > 
-> > > > I assume this bug report is because something isn't working.  Can
-> > > > you update the bugzilla with a note about what specifically isn't
-> > > > working and also attach a complete dmesg log and acpidump?
-> > > 
-> > > The question arose while writing link devices code, so there is no
-> > > platform with missing _PRS/_SRS methods that I know.
-> > > 
-> > > The question was more about spec compliance and the necessity to
-> > > have these methods when legacy interrupts are not configurable.  The
-> > > message above (_CRS XXX not found in _PRS) can be generated for a
-> > > Juno for instance, and the ACPI tables are at:
-> > > https://github.com/tianocore/edk2-platforms/blob/master/Platform/ARM/JunoPkg/AcpiTables/AcpiSsdtRootPci.asl
-> > > The ACPI table need to be modified (remove _PRS and set _CRS
-> > > correctly).
-> > > 
-> > > If the conclusion is that _PRS/_SRS are mandatory, even for
-> > > hard-wired interrupts, then the bugzilla can be closed.
-> > 
-> > OK, so if I understand correctly, you're using Interrupt Link devices
-> > not because it's possible to connect a PCI interrupt to one of several
-> > inputs on the interrupt controller, but because the PCI default of
-> > "level triggered, active low" is not compatible with GICv2.
-> > 
-> > The Interrupt Link device gives you a chance to specify "level
-> > triggered, active *high*".  If you used a Source of 0 (where there
-> > is no Interrupt Link), there would be no way to specify that.
-> > 
-> > Since this use of Interrupt Links only conveys triggering information
-> > and nothing is configurable, I think the OS should get that info from
-> > _CRS, and _PRS and _SRS should not be required.
-> > 
-> > Alex made a change [1] along that line a while ago, but maybe there's
-> > more we should do.
-> > 
-> > Bjorn
-> > 
-> > [1] https://git.kernel.org/linus/92d1b381f677
-> 
-> Yes, this is exactly the situation.
-> 
-> The interrupt advertised in _CRS is checked to be in _PRS at:
-> https://github.com/torvalds/linux/blob/26291c54e111ff6ba87a164d85d4a4e134b7315c/drivers/acpi/pci_link.c#L549
-> and the _SRS method is also evaluated.
-> 
-> I can submit a patch if necessary,
+On Thu, 3 Feb 2022 08:59:44 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-That would be awesome.  Thanks for pushing on this!
+> On Thu, Feb 3, 2022 at 1:41 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > On Wed, 2 Feb 2022 07:44:37 -0800
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >  
+> > > On Wed, Feb 2, 2022 at 1:45 AM Jonathan Cameron
+> > > <Jonathan.Cameron@huawei.com> wrote:  
+> > > >
+> > > > On Tue, 1 Feb 2022 15:57:10 -0800
+> > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > >  
+> > > > > On Mon, Jan 31, 2022 at 10:41 AM Jonathan Cameron
+> > > > > <Jonathan.Cameron@huawei.com> wrote:  
+> > > > > >
+> > > > > > On Sun, 23 Jan 2022 16:31:24 -0800
+> > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > > >  
+> > > > > > > While CXL memory targets will have their own memory target node,
+> > > > > > > individual memory devices may be affinitized like other PCI devices.
+> > > > > > > Emit that attribute for memdevs.
+> > > > > > >
+> > > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
+> > > > > >
+> > > > > > Hmm. Is this just duplicating what we can get from
+> > > > > > the PCI device?  It feels a bit like overkill to have it here
+> > > > > > as well.  
+> > > > >
+> > > > > Not all cxl_memdevs are associated with PCI devices.  
+> > > >
+> > > > Platform devices have numa nodes too...  
+> > >
+> > > So what's the harm in having a numa_node attribute local to the memdev?
+> > >  
+> >
+> > I'm not really against, it just wanted to raise the question of
+> > whether we want these to go further than the granularity at which
+> > numa nodes can be assigned.  
+> 
+> What is the "granularity at which numa nodes can be assigned"? It
+> sounds like you are referencing a standard / document, so maybe I
+> missed something. Certainly Proximity Domains != Linux NUMA nodes so
+> it's not ACPI.
 
-Bjorn
+Sure, it's the fusion of a number of possible sources, one of which
+is ACPI. If there is a reason why it differs to the parent device
+(which can be ACPI, or can just be from a bunch of other places which
+I'm sure will keep growing) then it definitely makes sense to expose
+it at that level. 
+
+> 
+> >  Right now that at platform_device or
+> > PCI EP (from ACPI anyway).  Sure the value might come from higher
+> > up a hierarchy but at least in theory it can be assigned to
+> > individual devices.
+> >
+> > This is pushing that description beyond that point so is worth discussing.  
+> 
+> To me, any device that presents a driver interface can declare its CPU
+> affinity with a numa_node leaf attribute. Once you start walking the
+> device tree to infer the node from parent information you also need to
+> be worried about whether the Linux device topology follows the NUMA
+> topology. The leaf attribute removes that ambiguity.
+I'll go with 'maybe'...
+
+Either way I'm fine with this change, just wanted to bring attention to
+the duplication as it wasn't totally clear to me it was a good idea.
+
+FWIW
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
