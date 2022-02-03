@@ -2,119 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 009AD4A892D
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 18:00:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CC024A8964
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 18:10:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352468AbiBCQ77 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Feb 2022 11:59:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbiBCQ75 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Feb 2022 11:59:57 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA37EC06173B
-        for <linux-pci@vger.kernel.org>; Thu,  3 Feb 2022 08:59:57 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id t9so440671plg.13
-        for <linux-pci@vger.kernel.org>; Thu, 03 Feb 2022 08:59:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aLNM0uedgDZUPnFFdk/G6RDrE5HpLbY+y+ugdlzYiAo=;
-        b=ZiypM0N61B5ExfM/3S9FFu/uqwvUIZIzMjlKTXTsQRCs8cpjqHp8xd8FBa+lGNg37w
-         7oO62QBfGznSGqqbhoZK5cvNlIeb4mRHs134VQEYHaB48K+D2iPTXUzLPI/209Epb4fq
-         5MH0udNWP4yiDCrfdEGCCtPcDC5L08RJjvBMHG0HyOeYEg9X7epz443Q9WO9flsco55x
-         pUUQyvICdlCZ6hCdAyUg1dDHldgpFudAORJ5Mj+lQwZuVqUNyYAQh7DnmOzo5jVGhswS
-         T8798GvGVuC7whHxc1dBZIDfWVT8hU+fNfG6kXDtf+jMYTBMRTHQUOnN9Nvra/RO2rP6
-         StjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aLNM0uedgDZUPnFFdk/G6RDrE5HpLbY+y+ugdlzYiAo=;
-        b=kM9tllf2mEXT87U69LY5OkLG4yEblqOmdaGsdY/9UlEss0wFEoBH0lC/Ir+pHmpwpr
-         ki+59inZPmtpHZFRPfMqUjjUKjXr9I7+/TfUl4x6Y0EYQ70dUTEaGvaaSxBxuIrneQkd
-         gm5GTDD84ZuNMnpDPsCFI7cqzAs4xuFOSGIycOPRx1eyERIC5ENfgGIva0Yejwk8p+k4
-         /Spsx826y55yMCHO9d+bw+zPnEpqC+XYvhK/48sU5c5zuLNsAOercVAPptfe/zCFlKYY
-         zuVimWhwHESHbSJAB2EBNo/D676eS8r9STFEQv5ZUGTYRXerNz1OLHWYi7vkdnDWocvY
-         xA0w==
-X-Gm-Message-State: AOAM530VjACRGH46jr5YbjBfPVt1wvhwPVbcShPFdRJZaD6bNHfnqDtO
-        PGLycTN4hNI6GoGASK1ipQaze8z7TciH31nZfy6kKw==
-X-Google-Smtp-Source: ABdhPJzgrxyMBHMvf3i8ye1B/HNShEgJawC1NkUzkgzjFViOioPA5FIlRbLo5ApzFhBycSmhBddHuzg74RaTaEbyb48=
-X-Received: by 2002:a17:90a:640e:: with SMTP id g14mr14865235pjj.8.1643907597103;
- Thu, 03 Feb 2022 08:59:57 -0800 (PST)
+        id S1352662AbiBCRKB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Feb 2022 12:10:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:58168 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1352539AbiBCRJs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Feb 2022 12:09:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01A6C147A;
+        Thu,  3 Feb 2022 09:09:48 -0800 (PST)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00B973F40C;
+        Thu,  3 Feb 2022 09:09:46 -0800 (PST)
+Date:   Thu, 3 Feb 2022 17:09:41 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: imx6: Allow to probe when
+ dw_pcie_wait_for_link() fails
+Message-ID: <20220203170941.GA26554@lpieralisi>
+References: <20220106103645.2790803-1-festevam@gmail.com>
+ <AS8PR04MB8676540C48042F8E71D45E098C4D9@AS8PR04MB8676.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220131184126.00002a47@Huawei.com> <CAPcyv4iYpj7MH4kKMP57ouHb85GffEmhXPupq5i1mwJwzFXr0w@mail.gmail.com>
- <20220202094437.00003c03@Huawei.com> <CAPcyv4hwdMetDJ-+yL9-2rY92g2C4wWPqpRiQULaX_M6ZQPMtA@mail.gmail.com>
- <20220203094123.000049e6@Huawei.com>
-In-Reply-To: <20220203094123.000049e6@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 3 Feb 2022 08:59:44 -0800
-Message-ID: <CAPcyv4gJozea7aDg+KyKdwEbSO5PV-rUUGC5u-6NNTHA755etA@mail.gmail.com>
-Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS8PR04MB8676540C48042F8E71D45E098C4D9@AS8PR04MB8676.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 3, 2022 at 1:41 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Wed, 2 Feb 2022 07:44:37 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > On Wed, Feb 2, 2022 at 1:45 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > On Tue, 1 Feb 2022 15:57:10 -0800
-> > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > > On Mon, Jan 31, 2022 at 10:41 AM Jonathan Cameron
-> > > > <Jonathan.Cameron@huawei.com> wrote:
-> > > > >
-> > > > > On Sun, 23 Jan 2022 16:31:24 -0800
-> > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > >
-> > > > > > While CXL memory targets will have their own memory target node,
-> > > > > > individual memory devices may be affinitized like other PCI devices.
-> > > > > > Emit that attribute for memdevs.
-> > > > > >
-> > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > > >
-> > > > > Hmm. Is this just duplicating what we can get from
-> > > > > the PCI device?  It feels a bit like overkill to have it here
-> > > > > as well.
-> > > >
-> > > > Not all cxl_memdevs are associated with PCI devices.
-> > >
-> > > Platform devices have numa nodes too...
-> >
-> > So what's the harm in having a numa_node attribute local to the memdev?
-> >
->
-> I'm not really against, it just wanted to raise the question of
-> whether we want these to go further than the granularity at which
-> numa nodes can be assigned.
+On Fri, Jan 07, 2022 at 03:12:45AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Fabio Estevam <festevam@gmail.com>
+> > Sent: Thursday, January 6, 2022 6:37 PM
+> > To: bhelgaas@google.com
+> > Cc: lorenzo.pieralisi@arm.com; robh@kernel.org;
+> > l.stach@pengutronix.de; Hongxing Zhu <hongxing.zhu@nxp.com>;
+> > linux-pci@vger.kernel.org; Fabio Estevam <festevam@gmail.com>;
+> > stable@vger.kernel.org
+> > Subject: [PATCH v2] PCI: imx6: Allow to probe when
+> > dw_pcie_wait_for_link() fails
+> > 
+> > The intention of commit 886a9c134755 ("PCI: dwc: Move link handling
+> > into common code") was to standardize the behavior of link down as
+> > explained in its commit log:
+> > 
+> > "The behavior for a link down was inconsistent as some drivers would fail
+> > probe in that case while others succeed. Let's standardize this to succeed
+> > as there are usecases where devices (and the link) appear later even
+> > without hotplug. For example, a reconfigured FPGA device."
+> > 
+> > The pci-imx6 still fails to probe when the link is not present, which causes
+> > the following warning:
+> > 
+> > imx6q-pcie 8ffc000.pcie: Phy link never came up
+> > imx6q-pcie: probe of 8ffc000.pcie failed with error -110 ------------[ cut
+> > here ]------------
+> > WARNING: CPU: 0 PID: 30 at drivers/regulator/core.c:2257
+> > _regulator_put.part.0+0x1b8/0x1dc Modules linked in:
+> > CPU: 0 PID: 30 Comm: kworker/u2:2 Not tainted 5.15.0-next-20211103
+> > #1 Hardware name: Freescale i.MX6 SoloX (Device Tree)
+> > Workqueue: events_unbound async_run_entry_fn [<c0111730>]
+> > (unwind_backtrace) from [<c010bb74>] (show_stack+0x10/0x14)
+> > [<c010bb74>] (show_stack) from [<c0f90290>]
+> > (dump_stack_lvl+0x58/0x70) [<c0f90290>] (dump_stack_lvl) from
+> > [<c012631c>] (__warn+0xd4/0x154) [<c012631c>] (__warn) from
+> > [<c0f87b00>] (warn_slowpath_fmt+0x74/0xa8) [<c0f87b00>]
+> > (warn_slowpath_fmt) from [<c076b4bc>]
+> > (_regulator_put.part.0+0x1b8/0x1dc)
+> > [<c076b4bc>] (_regulator_put.part.0) from [<c076b574>]
+> > (regulator_put+0x2c/0x3c) [<c076b574>] (regulator_put) from
+> > [<c08c3740>] (release_nodes+0x50/0x178)
+> > 
+> > Fix this problem by ignoring the dw_pcie_wait_for_link() error like it is
+> > done on the other dwc drivers.
+> > 
+> > Tested on imx6sx-sdb and imx6q-sabresd boards.
+> > 
+> > Cc: <stable@vger.kernel.org>
+> > Fixes: 886a9c134755 ("PCI: dwc: Move link handling into common code")
+> > Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> [Richard Zhu] Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
 
-What is the "granularity at which numa nodes can be assigned"? It
-sounds like you are referencing a standard / document, so maybe I
-missed something. Certainly Proximity Domains != Linux NUMA nodes so
-it's not ACPI.
+Please, there is no need to add [Richard Zhu] to let us understand
+it is you, this breaks tools that pick up tags automatically so
+refrain from using it, thanks.
 
->  Right now that at platform_device or
-> PCI EP (from ACPI anyway).  Sure the value might come from higher
-> up a hierarchy but at least in theory it can be assigned to
-> individual devices.
->
-> This is pushing that description beyond that point so is worth discussing.
+Lorenzo
 
-To me, any device that presents a driver interface can declare its CPU
-affinity with a numa_node leaf attribute. Once you start walking the
-device tree to infer the node from parent information you also need to
-be worried about whether the Linux device topology follows the NUMA
-topology. The leaf attribute removes that ambiguity.
+> > Changes since v1:
+> > - Remove the printk timestamp from the kernel warning log (Richard).
+> > 
+> >  drivers/pci/controller/dwc/pci-imx6.c | 10 ++--------
+> >  1 file changed, 2 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
+> > b/drivers/pci/controller/dwc/pci-imx6.c
+> > index 2ac081510632..5e8a03061b31 100644
+> > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > @@ -807,9 +807,7 @@ static int imx6_pcie_start_link(struct dw_pcie
+> > *pci)
+> >  	/* Start LTSSM. */
+> >  	imx6_pcie_ltssm_enable(dev);
+> > 
+> > -	ret = dw_pcie_wait_for_link(pci);
+> > -	if (ret)
+> > -		goto err_reset_phy;
+> > +	dw_pcie_wait_for_link(pci);
+> > 
+> >  	if (pci->link_gen == 2) {
+> >  		/* Allow Gen2 mode after the link is up. */ @@ -845,11 +843,7
+> > @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
+> >  		}
+> > 
+> >  		/* Make sure link training is finished as well! */
+> > -		ret = dw_pcie_wait_for_link(pci);
+> > -		if (ret) {
+> > -			dev_err(dev, "Failed to bring link up!\n");
+> > -			goto err_reset_phy;
+> > -		}
+> > +		dw_pcie_wait_for_link(pci);
+> >  	} else {
+> >  		dev_info(dev, "Link: Gen2 disabled\n");
+> >  	}
+> > --
+> > 2.25.1
+> 
