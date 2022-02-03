@@ -2,106 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 096394A8D34
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 21:28:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EFC54A8EFC
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 21:42:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245080AbiBCU2L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Feb 2022 15:28:11 -0500
-Received: from mga02.intel.com ([134.134.136.20]:26035 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234566AbiBCU2K (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Feb 2022 15:28:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643920090; x=1675456090;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tB1HUyQO+nYJafkdVgFOWJU/qrAWAD/qIqDemUlXcmw=;
-  b=Ig+Fydl95U4qgkPd5rGKioFwlq97gvZ4JcmbGpzhtvw2GV2emKikCQR7
-   //zY9uJvAniyuYd3CcOfuBIZyrSwxMkBHnYdHUxWTP/4oBESXD916Qb4E
-   57PuRATvrFN2R/VE6e9hlHuCr8ykUjPZU9AQyak/ol1PNNJbyY98WNquo
-   8odWnwLkswQVhn9DnbgIXdY2C0jIw84gFhwlXAeYX6aOn9yfE9y12W48S
-   JCo3F36ViBxZlG5oXvYAgOUa8RNuXJALL50lsUrN6qawg7GKC7z2ugIEw
-   oYroElvuox5qSNQ3+od49kfTpDawkBEKGNPcNRZIdyn1+Iiz2q/vCQMCI
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10247"; a="235646203"
-X-IronPort-AV: E=Sophos;i="5.88,340,1635231600"; 
-   d="scan'208";a="235646203"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2022 12:28:10 -0800
-X-IronPort-AV: E=Sophos;i="5.88,340,1635231600"; 
-   d="scan'208";a="524069910"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2022 12:28:10 -0800
-Date:   Thu, 3 Feb 2022 12:28:10 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH V6 01/10] PCI: Add vendor ID for the PCI SIG
-Message-ID: <20220203202810.GX785175@iweiny-DESK2.sc.intel.com>
-Mail-Followup-To: Bjorn Helgaas <helgaas@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>, linux-kernel@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20220201071952.900068-2-ira.weiny@intel.com>
- <20220203171112.GA103601@bhelgaas>
+        id S230518AbiBCUmC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Feb 2022 15:42:02 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:40182 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354976AbiBCUii (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Feb 2022 15:38:38 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6B4EBB83556;
+        Thu,  3 Feb 2022 20:38:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A26C340E8;
+        Thu,  3 Feb 2022 20:38:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643920716;
+        bh=KqcRBHHZvoZzX9kbACzClvmZ6/tlvG8DciwPkL4BxwI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KM4Xmum1FCnpD4sw+PrpUF+HZMlMh6m/nUxGUmj9x0BzQ48I4YhbWcKSGU99z03fR
+         f41gwPWIbjCScpGJsluIHmNjI6PyOQJWSFejosCCiFbcw0cNhG4tqwtuqXXHenx1pJ
+         v7+SmoqKOQNxY1LTeue3GnhG8ZJxRwiTv6zbjS1kEr2gyRPOks9MKSN8SGpTdiw+R7
+         KSVllhlGGG1voFY02n26yg0tdsfToVFfMgffUlyCABOMIa0TXbKbCXZPYK6Co8gCni
+         YFM7ulAMkTJXZXWYcTmX8kGlmfg99DmXaP+nC3jS5nFgNf+kYYFOyQxEXlmLPQNvxO
+         0n5U3otQcouIw==
+Date:   Thu, 3 Feb 2022 14:38:33 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Liguang Zhang <zhangliguang@linux.alibaba.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Amey Narkhede <ameynarkhede03@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: pciehp: clear cmd_busy bit when Command Completed
+ in polling mode
+Message-ID: <20220203203833.GA113163@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220203171112.GA103601@bhelgaas>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20220203190731.GA24120@wunner.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 03, 2022 at 11:11:12AM -0600, Bjorn Helgaas wrote:
-> On Mon, Jan 31, 2022 at 11:19:43PM -0800, ira.weiny@intel.com wrote:
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > This ID is used in DOE headers to identify protocols that are defined
-> > within the PCI Express Base Specification.
-> > 
-> > Specified in Table 7-x2 of the Data Object Exchange ECN (approved 12 March
-> > 2020) available from https://members.pcisig.com/wg/PCI-SIG/document/14143
+On Thu, Feb 03, 2022 at 08:07:31PM +0100, Lukas Wunner wrote:
+> Hi Bjorn,
 > 
-> Please update this citation to PCIe r6.0, sec 6.30.1.1, table 6-32.
-
-Done.
-
-Thanks,
-Ira
-
+> the below patch is marked "Changes Requested" in patchwork:
 > 
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> >  include/linux/pci_ids.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > index 011f2f1ea5bb..849f514cd7db 100644
-> > --- a/include/linux/pci_ids.h
-> > +++ b/include/linux/pci_ids.h
-> > @@ -149,6 +149,7 @@
-> >  #define PCI_CLASS_OTHERS		0xff
-> >  
-> >  /* Vendors and devices.  Sort key: vendor first, device next. */
-> > +#define PCI_VENDOR_ID_PCI_SIG		0x0001
-> >  
-> >  #define PCI_VENDOR_ID_LOONGSON		0x0014
-> >  
-> > -- 
-> > 2.31.1
-> > 
+> https://patchwork.kernel.org/project/linux-pci/patch/20211111054258.7309-1-zhangliguang@linux.alibaba.com/
+> 
+> I think that might be erroneous because the patch is correct,
+> I've provided a Reviewed-by and no change requests are recorded
+> in patchwork or the mailing list archive.
+> 
+> If you've got a few minutes to spare, could you double-check the
+> state in patchwork and provide Liguang Zhang with the changes you'd
+> want (if any)?
+
+Thanks for reminding me about this.  I don't remember why I marked it
+"changes requested" but I often do that if there's been significant
+discussion.  In this case you also provided additional information
+(Fixes tag, bugzilla link, commit log elaboration) that should be
+included.  Given that, I would typically wait for the author to repost
+it and incorporate the additional information.
+
+But I applied it to pci/hotplug with the commit log below.
+
+commit 92912b175178 ("PCI: pciehp: Clear cmd_busy bit in polling mode")
+Author: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Date:   Thu Nov 11 13:42:58 2021 +0800
+
+    PCI: pciehp: Clear cmd_busy bit in polling mode
+    
+    Writes to a Downstream Port's Slot Control register are PCIe hotplug
+    "commands."  If the Port supports Command Completed events, software must
+    wait for a command to complete before writing to Slot Control again.
+    
+    pcie_do_write_cmd() sets ctrl->cmd_busy when it writes to Slot Control.  If
+    software notification is enabled, i.e., PCI_EXP_SLTCTL_HPIE and
+    PCI_EXP_SLTCTL_CCIE are set, ctrl->cmd_busy is cleared by pciehp_isr().
+    
+    But when software notification is disabled, as it is when pcie_init()
+    powers off an empty slot, pcie_wait_cmd() uses pcie_poll_cmd() to poll for
+    command completion, and it neglects to clear ctrl->cmd_busy, which leads to
+    spurious timeouts:
+    
+      pcieport 0000:00:03.0: pciehp: Timeout on hotplug command 0x01c0 (issued 2264 msec ago)
+      pcieport 0000:00:03.0: pciehp: Timeout on hotplug command 0x05c0 (issued 2288 msec ago)
+    
+    Clear ctrl->cmd_busy in pcie_poll_cmd() when it detects a Command Completed
+    event (PCI_EXP_SLTSTA_CC).
+    
+    [bhelgaas: commit log]
+    Fixes: a5dd4b4b0570 ("PCI: pciehp: Wait for hotplug command completion where necessary")
+    Link: https://lore.kernel.org/r/20211111054258.7309-1-zhangliguang@linux.alibaba.com
+    Link: https://bugzilla.kernel.org/show_bug.cgi?id=215143
+    Link: https://lore.kernel.org/r/20211126173309.GA12255@wunner.de
+    Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Reviewed-by: Lukas Wunner <lukas@wunner.de>
+    Cc: stable@vger.kernel.org	# v4.19+
