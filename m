@@ -2,199 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 81D7E4A90C5
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 23:44:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23B504A9129
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Feb 2022 00:27:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240451AbiBCWol (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Feb 2022 17:44:41 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:56016 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230333AbiBCWok (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Feb 2022 17:44:40 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2CDC361824;
-        Thu,  3 Feb 2022 22:44:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F636C340E8;
-        Thu,  3 Feb 2022 22:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643928279;
-        bh=iDaAk9mxmUgwTsnlREt5ubizOYlIlAemHZh26ZSwxIA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FwH+EsJuPl//li/m3SPToDU+A57WiASVXY7l5utxJH7bagtbR1TG25BTGf2HdJqu3
-         BohbcrihzbuJLnnRhP+hPCla/SQp7/roMdzixvw4+z2xWrIzUFvwyoB0wY7uUa0rSR
-         jDkcqvevd4nYrzmHIQ142rzAp1YAwchM2zMA7huN4uP0UI4WnxZpSYIo1zSM8ri4mL
-         PXfsVbhYHuzvhSBJ4LPVr/8VRODjGdD+YZBGfq6NHbsW+UDamNOS1qE44578U8I+sU
-         RavHbJpCUKJ8mfwIMA6Z4BsakBq853d8FCsh4ZqBb64j0ucHxZPz4InA9HFgXU+5wm
-         8VdkRjNDkleow==
-Date:   Thu, 3 Feb 2022 16:44:37 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     ira.weiny@intel.com
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH V6 04/10] PCI/DOE: Introduce pci_doe_create_doe_devices
-Message-ID: <20220203224437.GA120552@bhelgaas>
+        id S1355993AbiBCX1R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Feb 2022 18:27:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240907AbiBCX1R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Feb 2022 18:27:17 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164E1C06173B
+        for <linux-pci@vger.kernel.org>; Thu,  3 Feb 2022 15:27:17 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id y5-20020a17090aca8500b001b8127e3d3aso4483492pjt.3
+        for <linux-pci@vger.kernel.org>; Thu, 03 Feb 2022 15:27:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BsyblFTmw+r35ga77s3th7VRl5YZ95yIbDncHVc3CwA=;
+        b=e+FUaAtomXP56EwVWn4BuwpGpvYl4YQM7pG4oxgQNn45tNFG5riFGIvo3/r9SuLfwF
+         n1wFpJH8gKTkiTbktN6vdtjWmK9EXwQjEA8+zGlN8Int9bd71XHmRbdfzNM6452KKvyK
+         aMIg6aRhWNcobFrh72guWDPhLg0lHz9UnG74ZPwTy5155OhElQ5Iu17EdBBt6lc1yIeq
+         dgWBKblxpwRSm6v1iQNTLz9uUVUKUHRvqvZrJ6FHOHb9iIr2dJV7hN8No5e1Xon6XBKr
+         quz2oQFkDH56iNPWIj8x68fHzIPZqaEAV6a9M5pK9GBnCCgiVCLsyUCyIgsfg3ODF3dg
+         Jmew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BsyblFTmw+r35ga77s3th7VRl5YZ95yIbDncHVc3CwA=;
+        b=oOmdCN2+bOjzRgGPEb1UHFAALqpudjaCCfk+VEsjwjNpHrI2n5Gai71BRcjxJui5Fn
+         878SFekyU7u3KQEn8il3o4vYgRnPggfLCMFmDkhFi1znwAerXtjJf/SmFV1phIVeRmNx
+         RQF4IFsbfnou8wLE7eBajcBEWH/GQQNnc6rvcysBqQ1xNIz9AKd1fRcFQhWt2EUCxoI3
+         aaxl+jKKa6/ZdcPQf0+vuE3OandKkHXanrCQhcv+mxKjBVunGr1c3tZbLol6Z+XR7Xhp
+         N7A/ZWhSZeMMY2TXnuJeyR3WeZD3kfUBbWOLsMJkajqnf2kyXy432yCRhn+9URHmMd9z
+         Elkw==
+X-Gm-Message-State: AOAM531RRGTpZexbRmhhjcdcC1tTEeiHBiWkphjEjVjXRHuQbWjmGxtk
+        vCwkkk08RaExA2s3DS8gf5lYkr1vAiBR2sDFVpnpTA==
+X-Google-Smtp-Source: ABdhPJzEUtyjmmacvDfTXnelwWli6Ri0H9Z6WDKS4HmGdq7uyuvN9ne5eixusBC3CvFjQUXEhYGsd1zm9YB/Q+V0jSY=
+X-Received: by 2002:a17:902:bcca:: with SMTP id o10mr385365pls.147.1643930836509;
+ Thu, 03 Feb 2022 15:27:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220201071952.900068-5-ira.weiny@intel.com>
+References: <20220128002707.391076-1-ben.widawsky@intel.com>
+ <20220128002707.391076-3-ben.widawsky@intel.com> <CAPcyv4hHJcPLRJM-7z+wKhjBhp9HH2qXuEeC0VfDnD6yU9H-Wg@mail.gmail.com>
+ <20220201231117.lksqoukbvss6e3ec@intel.com> <CAPcyv4iGQWXX8rzCH7BJUSyvDXbdiuHw4kLiuqGmVVBGTh2a1Q@mail.gmail.com>
+ <20220203222300.gf4st36yoqjxq5q6@intel.com>
+In-Reply-To: <20220203222300.gf4st36yoqjxq5q6@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 3 Feb 2022 15:27:02 -0800
+Message-ID: <CAPcyv4icq8_9E+ziU5KKYrAepUtNP32Qf6wYGYpcUU2K1P4mAA@mail.gmail.com>
+Subject: Re: [PATCH v3 02/14] cxl/region: Introduce concept of region configuration
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
+        kernel test robot <lkp@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 11:19:46PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> CXL and/or PCI devices can define DOE mailboxes.  
+On Thu, Feb 3, 2022 at 2:23 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 22-02-03 09:48:49, Dan Williams wrote:
+> > On Tue, Feb 1, 2022 at 3:11 PM Ben Widawsky <ben.widawsky@intel.com> wr=
+ote:
+> > >
+> > > On 22-01-28 16:25:34, Dan Williams wrote:
+> > > > On Thu, Jan 27, 2022 at 4:27 PM Ben Widawsky <ben.widawsky@intel.co=
+m> wrote:
+> > > > >
+> > > > > The region creation APIs create a vacant region. Configuring the =
+region
+> > > > > works in the same way as similar subsystems such as devdax. Sysfs=
+ attrs
+> > > > > will be provided to allow userspace to configure the region.  Fin=
+ally
+> > > > > once all configuration is complete, userspace may activate the re=
+gion.
+> > > > >
+> > > > > Introduced here are the most basic attributes needed to configure=
+ a
+> > > > > region. Details of these attribute are described in the ABI
+> > > >
+> > > > s/attribute/attributes/
+> > > >
+> > > > > Documentation. Sanity checking of configuration parameters are do=
+ne at
+> > > > > region binding time. This consolidates all such logic in one plac=
+e,
+> > > > > rather than being strewn across multiple places.
+> > > >
+> > > > I think that's too late for some of the validation. The complex
+> > > > validation that the region driver does throughout the topology is
+> > > > different from the basic input validation that can  be done at the
+> > > > sysfs write time. For example ,this patch allows negative
+> > > > interleave_granularity values to specified, just return -EINVAL. I
+> > > > agree that sysfs should not validate everything, I disagree with
+> > > > pushing all validation to cxl_region_probe().
+> > > >
+> > >
+> > > Two points:c
+> > > 1. How do we distinguish "basic input validation". It'd be good if we=
+ could
+> > >    define "basic input validation". For instance, when I first wrote =
+these
+> > >    patches, x3 would have been EINVAL, but today it's allowed. Can yo=
+u help
+> > >    enumerate what you consider basic.
+> >
+> > I internalized this kernel design principle from Dave Miller many
+> > years ago paraphrasing "push decision making out to leaf code as much
+> > as possible", and centralizing all validation in cxl_region_probe()
+> > violates. The software that makes the mistake does not know it made a
+> > mistake until much later and "probe failed" is less descriptive than
+> > "EINVAL writing interleave_ways" . I wish I could find the thread
+> > because it also talked about his iteration process.
+>
+> It would definitely be interesting to understand why pushing decision mak=
+ing
+> into the leaf code is a violation. Was it primary around the descriptiven=
+ess of
+> the error?
 
-In concrete terms, "DOE mailbox" refers to a DOE Capability, right?
-PCIe devices are allowed to implement several instances of the DOE
-Capability, of course.  I'm kind of partial to concreteness because it
-makes it easier to map between the code and the spec.
+You mean the other way round, why is it a violation to move decision
+making into the core? It was a comment about the inflexibility of the
+core logic vs leaf logic, in the case of CXL it's about the
+observability of errors at the right granularity which the core can
+not do because the core is disconnected from the transaction that
+injected the error.
 
-> Normally the kernel will want to maintain control of all of these
-> mailboxes.  However, under a limited number of use cases users may
-> want to allow user space access to some of these mailboxes while the
-> kernel retains control of the rest.
+> > Basic input validation to me is things like:
+> >
+> > - Don't allow writes while the region is active
+> > - Check that values are in bound. So yes, the interleave-ways value of
+> > 3 would fail until the kernel supports it, and granularity values >
+> > 16K would also fail.
+> > - Check that memdevs are actually downstream targets of the given decod=
+er
+> > - Check that the region uuid is unique
+>
+> These are obviously easy and informative at attr store time (in fact, act=
+ive was
+> meant to be checked already for many cases). So if we agree to codify thi=
+s at
+> probe via WARN, and add it to kdoc, I've no problem with it.
 
-Is there something in this patch related to user-space vs kernel
-control of things?  To me this patch looks like "for every DOE
-Capability on a device, create an auxiliary device and try to attach
-an auxiliary device driver to it."
+Why is WARN needed? Either the sysfs validation does it job correctly
+or it doesn't. Also if sysfs didn't WARN when the bad input is
+specified why would the core do anything higher than dev_err()?
+Basically I think the bar for WARN is obvious kernel programming error
+where only a kernel-developer will see it vs EINVAL at runtime
+scenarios. I have seen Greg raise the bar for WARN in his reviews
+given how many deployments turn on 'panic_on_warn'.
 
-If part of creating the auxiliary devices is adding things in sysfs, I
-think it would be useful to mention that here.
+> > - Check that decoder has capacity
+> > - Check that the memdev has capacity
+> > - Check that the decoder to map the DPA is actually available given
+> > decoders must be programmed in increasing DPA order
+> >
+> > Essentially any validation short of walking the topology to program
+> > upstream decoders since those errors are only resolved by racing
+> > region probes that try to grab upstream decoder resources.
+> >
+>
+> I intentionally avoided doing a lot of these until probe because it seeme=
+d like
+> not a great policy to deny regions from being populated if another region
+> utilizing those resources hasn't been bound yes. For a simple example, if=
+ x1
+> region A is created and utilizes all of memdev =C9=91's capacity you bloc=
+k out any
+> other region setup using memdev =C9=91, even if region A wasn't bound. Th=
+ere's a
+> similar problem with specifying decoders as part of configuration.
+>
+> I'll infer from your comment that you are fine with this tradeoff, or you=
+ have
+> some other way to manage this in mind.
 
-> An example of this is for CXL Compliance Testing (see CXL 2.0
-> 14.16.4 Compliance Mode DOE) which offers a mechanism to set
-> different test modes for a device.
+It comes back to observability if threadA allocates all the DPA then
+yes all other threads should see -ENOSPC. No different than if 3 fdisk
+threads all tried to create a partition, the first one to the kernel
+wins. If threadA does not end up activating that regionA's capacity
+that's userspace's fault, and the admin needs to make sure that
+configuration does not race itself. The kernel allocating DPA
+immediately lets those races be found early such that threadB finds
+all the DPA gone and stops trying to create the region.
 
-Not sure exactly what this contributes here.  I guess you're saying
-you might want user-space access to this, but I don't see anything in
-this patch related to that.
+> I really see any validation which requires removal of resources from the =
+system
+> to be more fit for bind time. I suppose if the proposal is to move the re=
+gion
+> attributes to be DEVICE_ATTR_ADMIN, that pushes the problem onto the syst=
+em
+> administrator. It just seemed like most of the interface could be non-roo=
+t.
 
-> Rather than re-invent the wheel the architecture creates auxiliary
-> devices for each DOE mailbox which can then be driven by a generic
-> DOE mailbox driver.  If access to an individual mailbox is required
-> by user space the driver for that mailbox can be unloaded and access
-> handed to user space.
+None of the sysfs entries for CXL are writable by non-root.
 
-IIUC a device can have several DOE Capabilities, and each Capability
-can support several protocols.  So I would think the granularity might
-be "protocol" rather than "mailbox" (DOE Capability).
+DEVICE_ATTR_RW() is 0644
+DEVICE_ATTR_ADMIN_RW() is 0600
 
-But either way this text seems like it would go with a different patch
-since this patch has nothing to specify a particular protocol or even
-a particular mailbox/DOE Capability.
+Yes, pushing the problem onto the sysadmin is the only option. Only
+CAP_SYS_ADMIN can be trusted to muck with the physical address layout
+of the system. Even then CONFIG_LOCKDOWN_KERNEL wants to limit what
+CAP_SYS_ADMIN can to do the memory configuration, so I don't see any
+room for non-root to be considered in this ABI.
 
-> Create the helper pci_doe_create_doe_devices() which iterates each DOE
-> mailbox found in the device and creates a DOE auxiliary device on the
-> auxiliary bus.  While doing so ensure that the auxiliary DOE driver
-> loads to drive that device.
+>
+> > >
+> > > 2. I like the idea that all validation takes place in one place. Obvi=
+ously you
+> > >    do not. So, see #1 and I will rework.
+> >
+> > The validation helpers need to be written once, where they are called
+> > does not much matter, does it?
+> >
+>
+> Somewhat addressed above too...
+>
+> I think that depends on whether the full list is established as mentioned=
+. If in
+> the region driver we can put several assertions that a variety of things =
+don't
+> need [re]validation, then it doesn't matter. Without this, when trying to=
+ debug
+> or add code you need to figure out which place is doing the validation an=
+d which
+> place should do it.
 
-Here's a case where "iterating over DOE mailboxes found in the device"
-is slightly abstract.  The code obviously iterates over DOE
-*Capabilities* (PCI_EXT_CAP_ID_DOE), and that's something I can easily
-find in the spec.
+All I can say it has not been a problem in practice for NVDIMM debug
+scenarios which does validation at probe for pre-existing namespaces
+and validation at sysfs write for namespace creation.
 
-Knowing that this is a PCIe Capability is useful because it puts it in
-the context of other capabilities ("optional things that live in
-config space") and the mechanisms for synchronization and user-space
-access.
+> At the very least I think the plan should be established in a kdoc.
 
-> +/**
-> + * pci_doe_create_doe_devices - Create auxiliary DOE devices for all DOE
-> + *                              mailboxes found
-> + * @pci_dev: The PCI device to scan for DOE mailboxes
-> + *
-> + * There is no coresponding destroy of these devices.  This function associates
-> + * the DOE auxiliary devices created with the pci_dev passed in.  That
-> + * association is device managed (devm_*) such that the DOE auxiliary device
-> + * lifetime is always greater than or equal to the lifetime of the pci_dev.
-
-This seems backwards.  What does it mean if the DOE aux dev lifetime
-is *greater* than that of the pci_dev?  Surely you can't access a PCI
-DOE Capability if the pci_dev is gone?
-
-> + * RETURNS: 0 on success -ERRNO on failure.
-> + */
-> +int pci_doe_create_doe_devices(struct pci_dev *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	int irqs, rc;
-> +	u16 pos = 0;
-> +
-> +	/*
-> +	 * An implementation may support an unknown number of interrupts.
-> +	 * Assume that number is not that large and request them all.
-
-This doesn't really inspire confidence :)  Playing devil's advocate,
-since pdev is an arbitrary device, I would assume the number *is*
-large.
-
-> +	irqs = pci_msix_vec_count(pdev);
-> +	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSIX);
-
-pci_msix_vec_count() is apparently sort of discouraged; see
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/PCI/msi-howto.rst?id=v5.16#n179
-
-A DOE Capability may be implemented by any device, e.g., a NIC or
-storage HBA, etc.  I'm a little queasy about IRQ alloc happening both
-here and in the driver for the device's primary functionality.  Can
-you reassure me that this is actually OK and safe?
-
-Sorry if I've asked this before.  If I have, perhaps a comment would
-be useful.
-
-> +	if (rc != irqs) {
-> +		/* No interrupt available - carry on */
-> +		pci_dbg(pdev, "No interrupts available for DOE\n");
-> +	} else {
-> +		/*
-> +		 * Enabling bus mastering is require for MSI/MSIx.  It could be
-
-s/require/required/
-s/MSIx/MSI-X/ to match spec usage.
-
-But I think you only support MSI-X, since you passed "PCI_IRQ_MSIX", not
-"PCI_IRQ_MSI | PCI_IRQ_MSIX" above?
-
-> +		 * done later within the DOE initialization, but as it
-> +		 * potentially has other impacts keep it here when setting up
-> +		 * the IRQ's.
-
-s/IRQ's/IRQs/
-
-"Potentially has other impacts" is too vague, and this doesn't explain
-why bus mastering should be enabled here rather than later.  The
-device should not issue an MSI-X until DOE Interrupt Enable is set, so
-near there seems like a logical place.
-
-> +		 */
-> +		pci_set_master(pdev);
-> +		rc = devm_add_action_or_reset(dev,
-> +					      pci_doe_free_irq_vectors,
-> +					      pdev);
-> +		if (rc)
-> +			return rc;
-> +	}
-
-> +++ b/include/linux/pci-doe.h
-> @@ -13,6 +13,8 @@
->  #ifndef LINUX_PCI_DOE_H
->  #define LINUX_PCI_DOE_H
->  
-> +#define DOE_DEV_NAME "doe"
-
-This is only used once, above.  Why not just use the string there
-directly and skip the #define?  If it's needed elsewhere eventually,
-we can add a #define then.
-
-Bjorn
+Sure, a "CXL Region: Theory of Operation" would be a good document to
+lead into the patch series as a follow-on to "CXL Bus: Theory of
+Operation".
