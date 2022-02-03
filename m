@@ -2,85 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E6A94A8391
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 13:07:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC33D4A83C3
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Feb 2022 13:23:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231365AbiBCMH0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Feb 2022 07:07:26 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4667 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230500AbiBCMHZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Feb 2022 07:07:25 -0500
-Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JqHTN5srwz67bcp;
-        Thu,  3 Feb 2022 20:06:48 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Thu, 3 Feb 2022 13:07:23 +0100
-Received: from localhost (10.47.78.15) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 3 Feb
- 2022 12:07:22 +0000
-Date:   Thu, 3 Feb 2022 12:07:18 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
-        "Ben Widawsky" <ben.widawsky@intel.com>,
-        <linux-pci@vger.kernel.org>, <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v5 33/40] cxl/mem: Add the cxl_mem driver
-Message-ID: <20220203120718.00004fce@Huawei.com>
-In-Reply-To: <164386009471.764789.4921759340860835924.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <164316691403.3437657.5374419213236572727.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <164386009471.764789.4921759340860835924.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        id S1350376AbiBCMWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Feb 2022 07:22:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:43618 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229379AbiBCMWQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Feb 2022 07:22:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B206211D4;
+        Thu,  3 Feb 2022 04:22:15 -0800 (PST)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6F9A3F774;
+        Thu,  3 Feb 2022 04:22:13 -0800 (PST)
+Date:   Thu, 3 Feb 2022 12:22:11 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>
+Cc:     rafael@kernel.org, viresh.kumar@linaro.org, jonathanh@nvidia.com,
+        krzysztof.kozlowski@canonical.com, robh@kernel.org, kw@linux.com,
+        p.zabel@pengutronix.de, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amitk@kernel.org,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 5/5] PCI: tegra194: Handle errors in BPMP response
+Message-ID: <20220203122211.GB24443@lpieralisi>
+References: <20210915085517.1669675-1-mperttunen@nvidia.com>
+ <20210915085517.1669675-5-mperttunen@nvidia.com>
+ <YV86l4OhqKN0AkMN@orome.fritz.box>
+ <20211013125956.GA11036@lpieralisi>
+ <20211129121918.GA24438@lpieralisi>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.78.15]
-X-ClientProxiedBy: lhreml731-chm.china.huawei.com (10.201.108.82) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211129121918.GA24438@lpieralisi>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 02 Feb 2022 19:56:14 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Mon, Nov 29, 2021 at 12:19:18PM +0000, Lorenzo Pieralisi wrote:
+> On Wed, Oct 13, 2021 at 01:59:56PM +0100, Lorenzo Pieralisi wrote:
+> > On Thu, Oct 07, 2021 at 08:21:11PM +0200, Thierry Reding wrote:
+> > > On Wed, Sep 15, 2021 at 11:55:17AM +0300, Mikko Perttunen wrote:
+> > > > The return value from tegra_bpmp_transfer indicates the success or
+> > > > failure of the IPC transaction with BPMP. If the transaction
+> > > > succeeded, we also need to check the actual command's result code.
+> > > > Add code to do this.
+> > > > 
+> > > > Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> > > > ---
+> > > >  drivers/pci/controller/dwc/pcie-tegra194.c | 9 ++++++++-
+> > > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > > 
+> > > Acked-by: Thierry Reding <treding@nvidia.com>
+> > 
+> > Hi Thierry,
+> > 
+> > can I pull this patch into the PCI tree ? Or if you want the series
+> > to go via another tree:
+> > 
+> > Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> 
+> Hi,
+> 
+> I would like to ask please how you want this series to be handled.
 
-> From: Ben Widawsky <ben.widawsky@intel.com>
-> 
-> At this point the subsystem can enumerate all CXL ports (CXL.mem decode
-> resources in upstream switch ports and host bridges) in a system. The
-> last mile is connecting those ports to endpoints.
-> 
-> The cxl_mem driver connects an endpoint device to the platform CXL.mem
-> protoctol decode-topology. At ->probe() time it walks its
-> device-topology-ancestry and adds a CXL Port object at every Upstream
-> Port hop until it gets to CXL root. The CXL root object is only present
-> after a platform firmware driver registers platform CXL resources. For
-> ACPI based platform this is managed by the ACPI0017 device and the
-> cxl_acpi driver.
-> 
-> The ports are registered such that disabling a given port automatically
-> unregisters all descendant ports, and the chain can only be registered
-> after the root is established.
-> 
-> Given ACPI device scanning may run asynchronously compared to PCI device
-> scanning the root driver is tasked with rescanning the bus after the
-> root successfully probes.
-> 
-> Conversely if any ports in a chain between the root and an endpoint
-> becomes disconnected it subsequently triggers the endpoint to
-> unregister. Given lock dependencies the endpoint unregistration happens
-> in a workqueue asynchronously. If userspace cares about synchronizing
-> delayed work after port events the /sys/bus/cxl/flush attribute is
-> available for that purpose.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> [djbw: clarify changelog, rework hotplug support]
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Should I apply this patch stand-alone ?
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I will mark all other patches in this series as Not Applicable in
+the PCI queue.
+
+Thanks,
+Lorenzo
