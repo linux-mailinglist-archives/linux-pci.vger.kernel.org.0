@@ -2,147 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 307524A9315
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Feb 2022 05:26:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61A7E4A93B3
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Feb 2022 06:37:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356955AbiBDE0M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Feb 2022 23:26:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356895AbiBDE0L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Feb 2022 23:26:11 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C2C4C06173B
-        for <linux-pci@vger.kernel.org>; Thu,  3 Feb 2022 20:26:11 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id p12-20020a17090a2d8c00b001b833dec394so5106614pjd.0
-        for <linux-pci@vger.kernel.org>; Thu, 03 Feb 2022 20:26:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qNO8XI0s2IJe0dOG++UNZPM+4qBVHP9LahgM133K508=;
-        b=F33tz2gW5xc+H/zo8drJNNoYOl5wWG4oYZOYKPKkqoLlCV1LTAXK4I8i1rhkUFhPg3
-         xNdeuMQ2fsuPezb1NVm8BKn1Q77zsjqYWno0IO+aiwcEEsJ6P5JSKpxw9kx1LnYLlIu7
-         mPeJEDe92aWYyHKc4YTNwg3u95JrARl3C06DMHUVckI7XOFgaozT7feSDOK4ueMvdzwt
-         Q8mbO8ci6SzLV5c5wRfUFRBVfmnc+gMI9oeSV8kH8yaZI1z+ZKYA7gOvU9GN0UfTKcMU
-         b9Uzzu2Bp4292NQnk7W03v9cxnHcebhdYINglNfaeeQkftzTGvGIcwnvkz9zOW/lbrGO
-         TCgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qNO8XI0s2IJe0dOG++UNZPM+4qBVHP9LahgM133K508=;
-        b=dKBmhJo1qkjA+tiso/sN6Wlyky36ixgF+GjmHu5QK3lggNbM2bMrNNv3GpAuMVEPJr
-         WEmL5MUv2bXce9f9+L4o6PUXsrSktjZfDJSecTjkinh/+PkyvalUanqO8TPRdSnUtt6p
-         +wrwPyotzoSbHr4bXoYgL2B0nk4Vq3FOnT17hDA6WYlyycvLiszgBRrecpjCcFsUjj63
-         3F6+KFk8vJ/ew0x0zqQgdsCniGG44HWitQshSN80aXiDetpu/DbFrg6iZmCG7xVrmHSC
-         px6umliM/CgPTbaXy89vsL0DvSt+PdL3pFNHIgFFWyKZD2r4HureqWn+T8eUwNiE1Oae
-         WQKg==
-X-Gm-Message-State: AOAM532/kJdyCJMyq0i+rsiHw4oF/Mn/8Frbc+sfN/L06nvkcxGv10Mc
-        UUS9JU5VvWFPDpEmzaWwHZmf9FflEjKJT/ToTyxNUw==
-X-Google-Smtp-Source: ABdhPJwqyG+G+9GgrIrs1fMv3a+GqhlWXZ0SovqqjLooA08PQJQWr7FqJSewXVV+gWYIby0fPFo2Z9M/9sb26O8QRtw=
-X-Received: by 2002:a17:902:bcca:: with SMTP id o10mr1350771pls.147.1643948770583;
- Thu, 03 Feb 2022 20:26:10 -0800 (PST)
+        id S238339AbiBDFhh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Feb 2022 00:37:37 -0500
+Received: from mail-mw2nam12on2042.outbound.protection.outlook.com ([40.107.244.42]:65025
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S236404AbiBDFhg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Feb 2022 00:37:36 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BILbfTc75B49atY89iIhWRAji6bWlAGGbG7+S3MUF+erA1M5Nxql73j8ZNE1/YEMisJC4h+ohoma30TBva1xq/5MJhOMKown3elv0qJ6Vax/S2zAVJryKgdAmhHumR60wFOXmwpCs/rkrONNgdkBDbbXIAg5YbAKtdz/D944TQptn0rh6opbmPwuHjJ7ogMAy8hfpy3JcrTPeIMvw6IlRDVEaSxBq+ZWJwbYGj1HUMEn2piJ9Jbi/iLpWNE5R+/oHbmdK+yLbwlf8grZB5CBSWv8JFtTpSOs0OQbbkLNbQJelebnVnL25cX29Rnte/NmlOQSb2W3necBz/bMpiWdAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vbtGn4EFi3CXps3faYz4/9xa/rdHEe8r+lT9OFqYHic=;
+ b=KkT2Apt15VWdz7cfHBvcTiHdz5xtdOWb/QCFZswqlbUr7LYjnomyui69Gb2GjwTp2RsABvI+LhyHXi+zVF9BZnrjgwyYx4dnBM9Q84Ia05QVy9AcxuB200vReWAPdVKaaLT89xedjrUB0A77Le9A2gphvYivg72648Op0BC0PL10+XtXYswsoP7ZrQUSgfjYkBoWUrEruC5lFb14knjLFk5e5RSr5eAz4kv0oMuT9/9qmfWnseifQSUCyGmCO3cGEGLh53FQ+++BHDq2FjELxK7i+Pxir9cjutHCuJR1sNgVtcn+QueTCBSyNI/cbExMU4gde96MnivpS0uFCu/G2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 12.22.5.234) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com; dmarc=pass
+ (p=reject sp=reject pct=100) action=none header.from=nvidia.com; dkim=none
+ (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vbtGn4EFi3CXps3faYz4/9xa/rdHEe8r+lT9OFqYHic=;
+ b=MaHo4RgZs/bWyBx+SfToIUe1EZcyTOAzsNLkjKOC58CqIf1erW/qT6ohByH3Id16AKYko9jlqAFBAVp1yrnEV/ANk5tSqM8fLklG5pqB7NQo2GNW3FiwHKBJuorDi8GRb5TDi3eCONky5hK5aUg3PNnusDG37SPzKBnZ7ddnY2DxgnqF+rlDqD4T4fvnJvKc91zeUzyDmZt+D9FsARvaY1jO48Ah5EBuZILJfVPhR5CHQQhO6ZCqlv8qUd2yqpO5oiosoO+HIK+MN/9aUMB+uBJkbKXT6uMMz8SLoRLA/O3X5EJIy3wm3rP7WjBaA1aUTTvCMozzJaMCfX3k7FBddw==
+Received: from MN2PR12MB3550.namprd12.prod.outlook.com (2603:10b6:208:108::22)
+ by CH0PR12MB5385.namprd12.prod.outlook.com (2603:10b6:610:d4::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12; Fri, 4 Feb
+ 2022 05:37:34 +0000
+Received: from BN9PR03CA0147.namprd03.prod.outlook.com (2603:10b6:408:fe::32)
+ by MN2PR12MB3550.namprd12.prod.outlook.com (2603:10b6:208:108::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12; Fri, 4 Feb
+ 2022 05:37:33 +0000
+Received: from BN8NAM11FT019.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:fe:cafe::34) by BN9PR03CA0147.outlook.office365.com
+ (2603:10b6:408:fe::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12 via Frontend
+ Transport; Fri, 4 Feb 2022 05:37:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.234)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 12.22.5.234 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.234; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (12.22.5.234) by
+ BN8NAM11FT019.mail.protection.outlook.com (10.13.176.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4951.12 via Frontend Transport; Fri, 4 Feb 2022 05:37:33 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL101.nvidia.com
+ (10.27.9.10) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Fri, 4 Feb
+ 2022 05:37:32 +0000
+Received: from [10.25.75.81] (10.126.230.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.9; Thu, 3 Feb 2022
+ 21:37:25 -0800
+Message-ID: <1035cfee-e546-df14-da5c-7510137ef397@nvidia.com>
+Date:   Fri, 4 Feb 2022 11:07:22 +0530
 MIME-Version: 1.0
-References: <164298411792.3018233.7493009997525360044.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164298428430.3018233.16409089892707993289.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220131184126.00002a47@Huawei.com> <CAPcyv4iYpj7MH4kKMP57ouHb85GffEmhXPupq5i1mwJwzFXr0w@mail.gmail.com>
- <20220202094437.00003c03@Huawei.com> <CAPcyv4hwdMetDJ-+yL9-2rY92g2C4wWPqpRiQULaX_M6ZQPMtA@mail.gmail.com>
- <20220203094123.000049e6@Huawei.com> <CAPcyv4gJozea7aDg+KyKdwEbSO5PV-rUUGC5u-6NNTHA755etA@mail.gmail.com>
- <20220203180532.00007083@Huawei.com>
-In-Reply-To: <20220203180532.00007083@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 3 Feb 2022 20:25:58 -0800
-Message-ID: <CAPcyv4hDLVye0UGPchHP__n+_hdNL1ZFqPawcz47hoOePBuggA@mail.gmail.com>
-Subject: Re: [PATCH v3 31/40] cxl/memdev: Add numa_node attribute
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH V1] PCI/ASPM: Save/restore L1SS Capability for
+ suspend/resume
+Content-Language: en-US
+To:     "Kenneth R. Crudup" <kenny@panix.com>
+CC:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <hkallweit1@gmail.com>, <wangxiongfeng2@huawei.com>,
+        <mika.westerberg@linux.intel.com>, <kai.heng.feng@canonical.com>,
+        <chris.packham@alliedtelesis.co.nz>, <yangyicong@hisilicon.com>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>, <abhsahu@nvidia.com>,
+        <sagupta@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20220201123536.12962-1-vidyas@nvidia.com>
+ <8aa96f79-402-4897-424f-64a2c6893de8@panix.com>
+ <2ab59f0d-3ae7-ca5e-6bfc-12bed18813b2@nvidia.com>
+ <38a02915-906f-c53-7e13-6c8710315e7@panix.com>
+ <708b746c-1715-9d64-5a59-55c9ad81bd0a@nvidia.com>
+ <f449b4a-a13-d32d-b7c3-da226aebd30@panix.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+In-Reply-To: <f449b4a-a13-d32d-b7c3-da226aebd30@panix.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.230.35]
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0aa34b75-7be1-4611-9853-08d9e7a0716c
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3550:EE_|CH0PR12MB5385:EE_
+X-Microsoft-Antispam-PRVS: <MN2PR12MB355071AD96C0970B3B2632C3B8299@MN2PR12MB3550.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ilhQlhl1K70+93GAGVEAio88K1jzcfS5Y//PCdDGYJLB/DxErvMe299EFU77sECxaqbLDYlDUuCB2132stXTIZJHJpIS/4PQpCcduYZguia+/euCducbK/vJt+y7eQIrJ/Lk75lDZ0otzH3RyaTCX/9qmnJDSYVX1kc6AQWeOMXiaZBhcLtEKAPHKt5wyjPFZFFuNhFPq0C4W/tss8YyNUs9+P+Y3mX9kEkiLTG1k4UDS1gCraSynPvv6jBIYrMWB8DyNpOKweBJ0wrhI71ddLD9EMbmS2jd4+TdXe60SchI9ZCAOyytg1HyUW8isNvqUIc/QMaM/G42hVeYpO8OgodGLGKS4Lhb/ldWC4Y4P7AIlXpzTdmzqedM/uFi1HBFhnEiWfFJwcVLZ6Fd9VZ016bK6iAZYiBJd1Eo392DnjJUaDolprbkY3aakD1lF6qHOWnsuIpAk/d/4CriGOoQGqAj4Hjg7UcIhyvO1k2v1RigfRfu/3VpTYZWrOUW4lEJmDWtqgJt5TqY6uHLyRG+KFp/7rU3tgy5K1ScrLZq1gO76iKVAGHy+Sx8DDNZ6rZIRq8g8gF5MccKd2jQGqSr7/KodEFpwfe7qEGh17Lu0gE+J3rprRoDLg3ijW0y81WeMPur3io9kimfzqcGHilGrUciSmE+28P2a+6aFR/MxhR/7VgHa6GdAxGA2i5bgfpImrss+iLZ3W5a83ubsJnUx8fCJWPA57eZs4+c8AmOnlLQQbx9N4K7gRfT0jVw0ZhPafdGVk4qwi6YvDOyGQbLxw==
+X-Forefront-Antispam-Report: CIP:12.22.5.234;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230001)(4636009)(46966006)(40470700004)(36840700001)(7416002)(70206006)(70586007)(4326008)(4744005)(8676002)(316002)(40460700003)(6916009)(54906003)(15650500001)(5660300002)(36860700001)(2906002)(8936002)(31686004)(16576012)(83380400001)(86362001)(36756003)(31696002)(356005)(81166007)(426003)(47076005)(2616005)(53546011)(6666004)(16526019)(186003)(82310400004)(336012)(508600001)(26005)(32563001)(43740500002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2022 05:37:33.1486
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0aa34b75-7be1-4611-9853-08d9e7a0716c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.234];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT019.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5385
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 3, 2022 at 10:15 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 3 Feb 2022 08:59:44 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > On Thu, Feb 3, 2022 at 1:41 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > On Wed, 2 Feb 2022 07:44:37 -0800
-> > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > > On Wed, Feb 2, 2022 at 1:45 AM Jonathan Cameron
-> > > > <Jonathan.Cameron@huawei.com> wrote:
-> > > > >
-> > > > > On Tue, 1 Feb 2022 15:57:10 -0800
-> > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > >
-> > > > > > On Mon, Jan 31, 2022 at 10:41 AM Jonathan Cameron
-> > > > > > <Jonathan.Cameron@huawei.com> wrote:
-> > > > > > >
-> > > > > > > On Sun, 23 Jan 2022 16:31:24 -0800
-> > > > > > > Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > > > >
-> > > > > > > > While CXL memory targets will have their own memory target node,
-> > > > > > > > individual memory devices may be affinitized like other PCI devices.
-> > > > > > > > Emit that attribute for memdevs.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > > > > >
-> > > > > > > Hmm. Is this just duplicating what we can get from
-> > > > > > > the PCI device?  It feels a bit like overkill to have it here
-> > > > > > > as well.
-> > > > > >
-> > > > > > Not all cxl_memdevs are associated with PCI devices.
-> > > > >
-> > > > > Platform devices have numa nodes too...
-> > > >
-> > > > So what's the harm in having a numa_node attribute local to the memdev?
-> > > >
-> > >
-> > > I'm not really against, it just wanted to raise the question of
-> > > whether we want these to go further than the granularity at which
-> > > numa nodes can be assigned.
-> >
-> > What is the "granularity at which numa nodes can be assigned"? It
-> > sounds like you are referencing a standard / document, so maybe I
-> > missed something. Certainly Proximity Domains != Linux NUMA nodes so
-> > it's not ACPI.
->
-> Sure, it's the fusion of a number of possible sources, one of which
-> is ACPI. If there is a reason why it differs to the parent device
-> (which can be ACPI, or can just be from a bunch of other places which
-> I'm sure will keep growing) then it definitely makes sense to expose
-> it at that level.
->
-> >
-> > >  Right now that at platform_device or
-> > > PCI EP (from ACPI anyway).  Sure the value might come from higher
-> > > up a hierarchy but at least in theory it can be assigned to
-> > > individual devices.
-> > >
-> > > This is pushing that description beyond that point so is worth discussing.
-> >
-> > To me, any device that presents a driver interface can declare its CPU
-> > affinity with a numa_node leaf attribute. Once you start walking the
-> > device tree to infer the node from parent information you also need to
-> > be worried about whether the Linux device topology follows the NUMA
-> > topology. The leaf attribute removes that ambiguity.
-> I'll go with 'maybe'...
->
-> Either way I'm fine with this change, just wanted to bring attention to
-> the duplication as it wasn't totally clear to me it was a good idea.
 
-If the bar to upstream something was when it was totally clear it was
-a good idea... I'd have a lot less patches to send.
 
->
-> FWIW
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On 2/4/2022 6:48 AM, Kenneth R. Crudup wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Wed, 2 Feb 2022, Vidya Sagar wrote:
+> 
+>> but could you please confirm that you are using the same system as before?
+> 
+> Yeah, the same Dell XPS 7390 2-in-1 as last year.
+> 
+> I've merged this change into Linus' master and it's been
+> suspending/resuming/hibernating with no issues so far. Is there anything else
+> you'd like me to test?
+Nothing more at this point. Thanks for your time though.
 
-Appreciate the discussion.
+> 
+>          -Kenny
+> 
+> --
+> Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange County CA
+> 
