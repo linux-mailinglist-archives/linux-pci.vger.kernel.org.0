@@ -1,171 +1,155 @@
 Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19AB24A9F46
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Feb 2022 19:37:31 +0100 (CET)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.lfdr.de (Postfix) with ESMTP id E8E724A9FCD
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Feb 2022 20:12:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377643AbiBDShD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Feb 2022 13:37:03 -0500
-Received: from mail-bn7nam10on2087.outbound.protection.outlook.com ([40.107.92.87]:7815
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1377578AbiBDSg5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Feb 2022 13:36:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QuThBcNSMHXgxX5o/x4DInRajdu4+JRdRJf/ClDlsqJYGjPQo5fDLZNO5BXdlL9bg6EUhZ3RM8aASpUi1WjioUgNZ7qgZjr2VrgLCFfcYKrMsPXOOX9iYRA4Nvz3WWZDhwTMMjRq67pCVaYHfgtVkXlW0eMVN4ENPeSlx0LBWALIJ2R409AF4cABJiYTOb/ckDxEGrIDc+NT/pquVtCF9mS6MKC9UhJS/Wa6eq1SqsmiaeW/IKR4NrK1tgsr7ZtPA7Bn4mh5N1GQQtJBIni2pcOEa6BK1ZuFpcyGY/7yTf5WsD/Ze34mlKFaBL0sdrz5dh9wAGe/+LESjYZ0gnFUAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C0OHNYXkviAC7mH2HlkqzXP+1ZyGQdRGgVv+us+IPq8=;
- b=g/mMEycKH2G9l2gzuDaOaRGlkUpoWf8fc2DOUwrmdhfQn1MSl8B6a3AJ2i6BQfEGJ4TMFbvsEQCGTUO/hDaKeqHYMkPk3HifXQaZjuzdFq9f0V7TX9DEEQTsS7pAScCdB5T/h766LlwUWnbxT379yTdRlkOElICLlQuGwESAwy9AEBIEbsPmfDvUAAqZhaVN7GaZxhDkEoqPNBMuf16K641R3zh2ayj4C0+MzhBTZF/s+GLlPyZVYnL7iwQJ6Ilb9fJxqKJrqLlL23ZRoEtfOy8WxsYqXH/fAMKaVIGUkADJ8rRYq4amw6jrfS6Gr/rGgl6p4egin19ULR8X+8mkCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C0OHNYXkviAC7mH2HlkqzXP+1ZyGQdRGgVv+us+IPq8=;
- b=gIdb92YLqbH9s6Gs21Oim3lbcJt8FmsDpjFyfQYWWqhYKDJIBWzbTACtd463tt3/syYeEACpsVfs6kcUVcuo/N8iEBcDslCSv7U5BxBkNbauySAvGJbYQaAzfh4C+CGYaQP/yWQcfsJEMOvIYTwTJWzvF7bv9EsLe2S8w7EgFEI=
-Received: from BL1PR12MB5144.namprd12.prod.outlook.com (2603:10b6:208:316::6)
- by MN2PR12MB3742.namprd12.prod.outlook.com (2603:10b6:208:16a::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12; Fri, 4 Feb
- 2022 18:36:56 +0000
-Received: from BL1PR12MB5144.namprd12.prod.outlook.com
- ([fe80::99d4:4d4f:653f:61be]) by BL1PR12MB5144.namprd12.prod.outlook.com
- ([fe80::99d4:4d4f:653f:61be%5]) with mapi id 15.20.4951.014; Fri, 4 Feb 2022
- 18:36:56 +0000
-From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>
-CC:     Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>
-Subject: RE: [PATCH 0/2] Mark USB4 controllers as is_thunderbolt
-Thread-Topic: [PATCH 0/2] Mark USB4 controllers as is_thunderbolt
-Thread-Index: AQHYGfUZ8uN1dYeam0W687TAa8QHVqyDuD8w
-Date:   Fri, 4 Feb 2022 18:36:55 +0000
-Message-ID: <BL1PR12MB51448980EDF4ED5CAF1BE64BF7299@BL1PR12MB5144.namprd12.prod.outlook.com>
-References: <20220204182820.130339-1-mario.limonciello@amd.com>
-In-Reply-To: <20220204182820.130339-1-mario.limonciello@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2022-02-04T18:36:22Z;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=003d7b25-ccdc-493e-8529-c27875d0bf9d;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2022-02-04T18:36:52Z
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: a6238ea4-2aa3-4d9a-a97c-63a08eb2fde6
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2b2c0500-6c2b-4db6-abc8-08d9e80d5228
-x-ms-traffictypediagnostic: MN2PR12MB3742:EE_
-x-microsoft-antispam-prvs: <MN2PR12MB37422955883343250A0B1D2CF7299@MN2PR12MB3742.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KW4DLvP7ohNkOPVkkHeXDeEg9bYETlFcHqDlj/Uy/zdPaUSSGjC0sC3g4AQ12+7svnX2LNLaAo2ogEuxSrVSSP6lTPl+gWlMCJW3y4QVKmHiNfPOQ1dMTliJ4MkWr9oF+6IsQYqo1f+L9tW18k6DsXO8nRyp07ibkrv1HZOThIUxznYlXqDeCs0Xn2GGxiOiUnVAxlXNnXRSbRfCJm10AyKQkRfHTxZqwdboogFNsI9P1FQjSr+9QpYOZrQeoVuf/Qws7L69p86VNlKX4dmcKeM60aY8XJgnejCTD6wyl77v35MGglnA+PWt4O6PmLMavKXDh1gzkv6IqOJZYa57lsi9Jy+f5kAg5OFc5PWf7AV/hWFzKBNpWJT0swvivR790k0uSw4biVrVt1a6gYl1mr3UF20PNDoqzdhXXSeO5lmwluATkIUSqMREyS8v+yI9yJqqz3F9KETkX0jLRwucfVWCvCKt8tgkHQdWXC1Uunv9mAf4qGcQLiXuM+rXySPq47Vr77MY8nB5eVDroCkXrSBXPWt5/+PkhBXKtHEWOoyFkMZCLNBhXoCRaE/6x+ciMUj+SC41iqLs0CuAgwSoKRPnu2rAce1t73TWXEvJwGLCEQf/LSQFWEGpOG10ZS5l3ff0FHzJA7y8+UEohtCOjH2w+U0IcAExoDjZvP0JG6LxvL9FninST6RuNMRH1KAbuWSB9JR/GYOMJKl/v8YcEw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5144.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38070700005)(110136005)(26005)(186003)(122000001)(38100700002)(54906003)(8936002)(64756008)(66446008)(8676002)(4326008)(66556008)(66476007)(6506007)(7696005)(86362001)(316002)(53546011)(52536014)(76116006)(66946007)(2906002)(33656002)(71200400001)(5660300002)(83380400001)(55016003)(508600001)(9686003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?7Mo4g0NqDm2GIuIdbRzcN2Qbjl93CGEA5b2/BuRIgEmTAsq1RsYf2e1CirWD?=
- =?us-ascii?Q?8CgHejubRUwM3lNB5Xbsr0JMqDm7OVbVB24sBorOfpK0M8oSP2eRqr+Xo4+w?=
- =?us-ascii?Q?/TgyT3Nb6Wgk2/FqPjkRJXD30L0/XDkbymZb159RghFWlFJlq3eu6x4pTc3F?=
- =?us-ascii?Q?NMuHyjr7hjmSlYrDQEenO1rO8VpAl5Yl7HBkZkRuO2Qhb+359J3/QWN+pBM9?=
- =?us-ascii?Q?sCJEDTM0useU2CKWQ2cavr6+P5GwZSBR33F1KqlaijAKP/m3RvY287zk9jMn?=
- =?us-ascii?Q?QCzntIttjKEyP1X0kSk9Sm0DL2Od+jjmn6exu+yPjNvBgSKUp4JQJrvlUqJd?=
- =?us-ascii?Q?+kNAv/K97cX7383NvpqW7hI7WboylLiaeArhRKHokir+ope+HqByRQDtA92s?=
- =?us-ascii?Q?7N/Xdrxvyu7RT6QJAp1NCF0LG6/bbSl4DMs9r+CLoIBVqh9v/8D/oa4iWu+S?=
- =?us-ascii?Q?67xQRML4isYjusICt0dm0XO8fmBwiJ0xd33SZL9WKoClc0ouvuVFyMvMd1Cx?=
- =?us-ascii?Q?rXC7kFrLUPgtvBCbp2uv+todZvwnSYMsZGeaVV2LDtlfdC+Jzl3aU1p88X9U?=
- =?us-ascii?Q?WzL7+6K7KNAU31AOKzVPIqW6c4dbnXPSxljVTFiZ7/ezTzrD/U0wVoNMK6wp?=
- =?us-ascii?Q?jg9+1LF7M4fEJTtGo9t4X+hoUK4jW9ZTRBcd7To/gB8PWXlI+p2hGRthSlzJ?=
- =?us-ascii?Q?GBIjBByOojRQpag0GP1UR8UlUqvnouP8vXwC+gyJdMTVS6zoHi5bFSE8VQRD?=
- =?us-ascii?Q?0gK4DYRNLDm5QdbhoC0nkJWz5MYp/Sy4hBPIm8Tp3ZGrJHUfKBoWBH7jMQW9?=
- =?us-ascii?Q?WJKuSnTTQ2dnAeo605TiSnyXeID59yi06WFExcMNJi6DwqXC21PsvMLpo76j?=
- =?us-ascii?Q?tG28dlMk+hkanVNNGig2ligiFilVGiMusEhEjS+AqOeoH+f0F+8faUCL3y5y?=
- =?us-ascii?Q?qRxZgLg/SOXSr5AFVQeD/aaFJvvG+Nc7xuJl/8va6RduSivP8idHQ2vYUoLW?=
- =?us-ascii?Q?gXOwux/FGC8zk3l/qm2Hnr4hcmZhVwNDHCXgqvLLIYSH2jhcv2mtjqH3exv/?=
- =?us-ascii?Q?wbAC5yIk8Xc5f2QthYPp6l53c9xbuMp3fdzK93Wg5xRWl0AAyU5h0dnuaMpC?=
- =?us-ascii?Q?ffcvHHp/oNWldfeAXcTwj+JoaShzNOT8O0o+GKMbx23SGG3GEGd6XKdoSZBS?=
- =?us-ascii?Q?FkEwXjn4BQ3sCGkcjYXLLuMEgZkH/Fk0rRhMGzrsRCCPbRa4ANwaNJIk8ntY?=
- =?us-ascii?Q?o1NR0RlrvHq3w8MODH4jnRB2iYichHWrR9+OGvI84vF7kVMePWEDMLpwBvQc?=
- =?us-ascii?Q?18YrQWqNxnf2Vs3qX+X9nseY769pdb63n6aj9gBPI8N9T6h1/nWj5D6vV9Kl?=
- =?us-ascii?Q?/oonNdJRCXsROlBnYtQ6jIzSQO/F0aGOmCTUA2dPgoqcpOxtSE4+XOrZvcnJ?=
- =?us-ascii?Q?fOSYpnseB9/2T0vDLTHN6yIAS9M21CUvpIiK0bu/pN6Ku08ozoTwLkY2mtgk?=
- =?us-ascii?Q?5EBtfzXQSgvNftmeoXMM12/mC/LfxCwpi5mgb5O4UVSaOBiX3QNek/oqEiLq?=
- =?us-ascii?Q?P/DcEhfKqKmeYou7t9bXuaHbHzGURkOiKylteMyoKVl4hRjH8EYJB8dO3hRo?=
- =?us-ascii?Q?aCaaF3A0bhHhbPN4dgDBbcY=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S231264AbiBDTM4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Feb 2022 14:12:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231728AbiBDTM4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Feb 2022 14:12:56 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C451C061714;
+        Fri,  4 Feb 2022 11:12:56 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id l24-20020a17090aec1800b001b55738f633so8296361pjy.1;
+        Fri, 04 Feb 2022 11:12:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o+2vQhaK54H9Hdp01q4kx6TzLMZbpfp4A4zBHmmTnPc=;
+        b=kC+yjJYVoYE0SMFrNpOfqbJLywLEVTVjVFXJH5t/nVKAI4qoNmGB2tNJhLvh0K6ZMo
+         fZM5nF2Sif+TYJOWv81vRU/v5r5Zdov66tmOZFfmWHJcFw6EKU6UGC9CvV1rJiM/Ph0T
+         xxD++0G7RFrHIAcOJrQLb+8i13VDY+jK4NyruwM5ev0Q8d5/oUcS2hKsMgg3LlCxilIi
+         OBC7yFC/tXYAEzOYohoifQ5tOVYA+r6Yc9onVPqb/VJJAisIty14jtME3e7WvwqAS2g8
+         RbpZl5Mg5xEoOHbnsXF7KddBAvz1eBSy8OYY7+UX0eVtRgLmcuR1XEWh2BX4tB7t7L4z
+         gX2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o+2vQhaK54H9Hdp01q4kx6TzLMZbpfp4A4zBHmmTnPc=;
+        b=ObqXIoy5FfdaHMGASSLaLL/MzqN6CvfMjrFaYzPrX8eNSuyJ5oTaSK+j+G1te04y3Q
+         t1jVPL0BBo06TujPbRKjoH3T+u4ORD+0/eGs5zUMAM+nrgnYmb796U8qrgjmPMmnFG8e
+         5/3uItJWRk+hwvkTVOoBtXmTu5lAcJcc4Zad32kR6aNWhyYm2ePknhwDQgY9HZtc19bf
+         iDVXGnQVlRNEYbzYWdeypg+K1ptJHtTCU8g3SE2cl5YzcGt2rZkTjQkcKEWcrmJ+FIVF
+         5gSQL2H15SwAVuALXUHCk1vbwWDA3BDZqmzmJZjjMJNCye5pQ0t1yBAAc5mgdA3pG1Zk
+         Goyw==
+X-Gm-Message-State: AOAM5315tU1v5yVwFJsANPrGvHdx3mApKWcOJI26AS+C6P6etlGZHD79
+        LCSei8zZftG11El3MllqkLqZ2OLX91htwllgGpM=
+X-Google-Smtp-Source: ABdhPJyPI8usXYMumMnrEQ3nLDq5zjec+fco1omgVZwxBeH6nOTi/fUN2f8Dc8+wqicpUpw+xbOinGtCvbA54nwhPh0=
+X-Received: by 2002:a17:90a:df0e:: with SMTP id gp14mr436884pjb.57.1644001975488;
+ Fri, 04 Feb 2022 11:12:55 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5144.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b2c0500-6c2b-4db6-abc8-08d9e80d5228
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Feb 2022 18:36:55.8845
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BDlyzG3W06mvlOkTQ6+mY5Bap1K4eqSJbPquZ+0mbEYM8eDdUDqbqiiN3QmWnETaICWnf1+KD6/EjDEE6us2bg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3742
+References: <20220204183316.328937-1-ben.dooks@codethink.co.uk>
+In-Reply-To: <20220204183316.328937-1-ben.dooks@codethink.co.uk>
+From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
+Date:   Fri, 4 Feb 2022 21:12:19 +0200
+Message-ID: <CAEn-LTo96qGWyq7Zp9=VUaJh_kAW2JA7hRKwVzrSyz=xwDT=rg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: fu740: RFC: force gen1 and get devices probing
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>, macro@orcam.me.uk
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[Public]
+On Fri, Feb 4, 2022 at 8:35 PM Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+>
+> The dw pcie core does not probe devices unless this fix
+> from u-boot is applied. The link must be changed to gen1
+> and then the system will see all the other pcie devices
+> behind the unmatched board's bridge.
+>
+> This is a quick PoC to try and get our test farm working
+> when a system does not have the pcie initialised by a
+> u-boot script.
+>
+> I will look at a proper patch when I am back in the office
 
-> -----Original Message-----
-> From: Limonciello, Mario <Mario.Limonciello@amd.com>
-> Sent: Friday, February 4, 2022 1:28 PM
-> To: Bjorn Helgaas <bhelgaas@google.com>; Andreas Noever
-> <andreas.noever@gmail.com>; Mika Westerberg
-> <mika.westerberg@linux.intel.com>; open list:PCI SUBSYSTEM <linux-
-> pci@vger.kernel.org>; open list:THUNDERBOLT DRIVER <linux-
-> usb@vger.kernel.org>
-> Cc: Michael Jamet <michael.jamet@intel.com>; Yehezkel Bernat
-> <YehezkelShB@gmail.com>; Deucher, Alexander
-> <Alexander.Deucher@amd.com>; Limonciello, Mario
-> <Mario.Limonciello@amd.com>
-> Subject: [PATCH 0/2] Mark USB4 controllers as is_thunderbolt
->=20
-> Various drivers in the kernel use `pci_is_thunderbolt_attached` to design=
-ate
-> behaving differently from a device that is internally in the machine. Thi=
-s
-> function relies upon the `is_thunderbolt` designation which checks for a
-> specific capability only set on Intel controllers.
->=20
-> Non-Intel USB4 designs should also match this designation so that they ca=
-n
-> be treated the same regardless of the host they're connected to.
->=20
-> Mario Limonciello (2):
->   thunderbolt: move definition of PCI_CLASS_SERIAL_USB_USB4
->   pci: mark USB4 devices as "is_thunderbolt"
+Hi,
 
-Series is:
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Have you looked into the patches posted for Linux and U-Boot from
+Maciej W. Rozycki?
 
->=20
->  drivers/pci/probe.c       | 4 ++--
->  drivers/thunderbolt/nhi.h | 2 --
->  include/linux/pci_ids.h   | 1 +
->  3 files changed, 3 insertions(+), 4 deletions(-)
->=20
+On the Linux side (not reviewed yet):
+[PATCH v3] pci: Work around ASMedia ASM2824 PCIe link training failures
+https://www.spinics.net/lists/linux-pci/msg120112.html
+
+The U-Boot fix was merged a few days ago.
+
+david
+
+> ---
+>  drivers/pci/controller/dwc/pcie-fu740.c | 37 +++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
+> index 960e58ead5f2..44f792764e45 100644
+> --- a/drivers/pci/controller/dwc/pcie-fu740.c
+> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
+> @@ -181,11 +181,48 @@ static void fu740_pcie_init_phy(struct fu740_pcie *afp)
+>         fu740_phyregwrite(1, PCIEX8MGMT_PHY_LANE3_BASE, PCIEX8MGMT_PHY_INIT_VAL, afp);
+>  }
+>
+> +/* u-boot forces system to gen1 otherwise nothing probes... */
+> +static void pcie_sifive_force_gen1(struct dw_pcie *dw, struct fu740_pcie *afp )
+> +{
+> +       unsigned val;
+> +
+> +#if 0
+> +       /* u-boot code */
+> +        /* ctrl_ro_wr_enable */
+> +        val = readl(sv->dw.dbi_base + PCIE_MISC_CONTROL_1);
+> +        val |= DBI_RO_WR_EN;
+> +        writel(val, sv->dw.dbi_base + PCIE_MISC_CONTROL_1);
+> +
+> +        /* configure link cap */
+> +        linkcap = readl(sv->dw.dbi_base + PF0_PCIE_CAP_LINK_CAP);
+> +        linkcap |= PCIE_LINK_CAP_MAX_SPEED_MASK;
+> +        writel(linkcap, sv->dw.dbi_base + PF0_PCIE_CAP_LINK_CAP);
+> +
+> +        /* ctrl_ro_wr_disable */
+> +        val &= ~DBI_RO_WR_EN;
+> +        writel(val, sv->dw.dbi_base + PCIE_MISC_CONTROL_1);
+> +#endif
+> +
+> +       val = readl_relaxed(dw->dbi_base +  PCIE_MISC_CONTROL_1_OFF);
+> +       val |= PCIE_DBI_RO_WR_EN;
+> +       writel_relaxed(val, dw->dbi_base +  PCIE_MISC_CONTROL_1_OFF);
+> +
+> +       val = readl(dw->dbi_base + 0x70 + 0x0c);
+> +       val |= 0xf;
+> +       writel(val, dw->dbi_base + 0x70 + 0x0c);
+> +
+> +       val = readl_relaxed(dw->dbi_base +  PCIE_MISC_CONTROL_1_OFF);
+> +       val &= ~PCIE_DBI_RO_WR_EN;
+> +       writel_relaxed(val, dw->dbi_base +  PCIE_MISC_CONTROL_1_OFF);
+> +}
+> +
+>  static int fu740_pcie_start_link(struct dw_pcie *pci)
+>  {
+>         struct device *dev = pci->dev;
+>         struct fu740_pcie *afp = dev_get_drvdata(dev);
+>
+> +       pcie_sifive_force_gen1(pci, afp);
+> +
+>         /* Enable LTSSM */
+>         writel_relaxed(0x1, afp->mgmt_base + PCIEX8MGMT_APP_LTSSM_ENABLE);
+>         return 0;
 > --
 > 2.34.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
