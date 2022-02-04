@@ -2,133 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 404294A98FD
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Feb 2022 13:12:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F9684A99AE
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Feb 2022 14:07:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241446AbiBDMM2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Feb 2022 07:12:28 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:54887 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241756AbiBDMM0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Feb 2022 07:12:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643976745;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yZ4sk8q50ZTV8rKcA8E+/BfbQj64WFy5L6RAZRHT8z8=;
-        b=OGsBWagfwTx0/wEJOqUzk3gPAOF/2T8wVKNj7HHaG6JQ0w6558IghnfFShtGaSEJzghxND
-        CFbM0xchVd35EzZN6Zu/96tSRsCsBGVHI1hlyN2bsxDDU9Uzb07ZO4scaxKNKkfGIpFSRV
-        6ecH5Pqz9WVf+zUuOHzRbCMgy6Pyaeo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-665-7oW6mt6LOG-DK6m5qaL82g-1; Fri, 04 Feb 2022 07:12:22 -0500
-X-MC-Unique: 7oW6mt6LOG-DK6m5qaL82g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C169584DA41;
-        Fri,  4 Feb 2022 12:12:20 +0000 (UTC)
-Received: from localhost (unknown [10.39.194.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 63B254F854;
-        Fri,  4 Feb 2022 12:12:11 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com
-Subject: Re: [PATCH V6 mlx5-next 08/15] vfio: Define device migration
- protocol v2
-In-Reply-To: <20220202163656.4c0cc386.alex.williamson@redhat.com>
-Organization: Red Hat GmbH
-References: <20220130160826.32449-1-yishaih@nvidia.com>
- <20220130160826.32449-9-yishaih@nvidia.com>
- <20220131164318.3da9eae5.alex.williamson@redhat.com>
- <20220201003124.GZ1786498@nvidia.com>
- <20220201100408.4a68df09.alex.williamson@redhat.com>
- <20220201183620.GL1786498@nvidia.com>
- <20220201144916.14f75ca5.alex.williamson@redhat.com>
- <20220202002459.GP1786498@nvidia.com>
- <20220202163656.4c0cc386.alex.williamson@redhat.com>
-User-Agent: Notmuch/0.34 (https://notmuchmail.org)
-Date:   Fri, 04 Feb 2022 13:12:09 +0100
-Message-ID: <87o83mx23q.fsf@redhat.com>
+        id S1348794AbiBDNGM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Feb 2022 08:06:12 -0500
+Received: from mail-dm6nam10on2042.outbound.protection.outlook.com ([40.107.93.42]:6753
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1348009AbiBDNGL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Feb 2022 08:06:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PQQ+5p4Txp67tE2OnQCwe0sXTrnztrvzKVQlikg1fAD7DGjelw26KXufl0rAHWrxLibb7WJIrYO+bL/faey1CwaJ6GxqfUfqQtfronVcQFrJx6JOVqG0hEH5JmdDaQ3I1xLmSSsjrh9KInbfH+5kgg+oueZI+9p7SoUTPuHYfkzyC9wdvHVKajES+xP000nGk/ViZwXcs8JPBaudAps4Jur6lNXF66/FcsvNcHXZx6BD0vNCIgAVmkir/ri/wlDa3ZjHULHkgdoGZkYVeQwtjVjYBjjJ7pGFyDlBN07ET5aJzutQm8w49Z4Ppwhilb2P0yDpEwVHDPHiBrwo51iDUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Svqj+OXpJNEBSKlWzrxDj/rz1V7xMHE3HSuZeNhhZmY=;
+ b=Be/uCAb3skbf2BNZLkXj1RnrEWo0C5Yk4XRqII1NmXJFzDW+cJ9/fo2WfvQtk7hUSMT+Omxhd+bXDdSVpj7+JhYU1UcU3dfp4kNLZKxsdPFuYJnqO4l/KnCSTmauIqbvhvqWRp35Tb+7HUDh5wxb71Ms5SbQ9m2EM0cEf9Seeljb1VTvjYrOzya/lfYbRJjG/c/CGIOFXnudRgQT1BluyEJXtQHV/pnFYtV1lRoeRngDClGWs//ZMSv3eCc4rVq4XLcZA1QgXPUIm4hca7jKQDKpEkUo1sMduzfTcrVNHxzJl9QWWTudi9xgmuN6vU9n/IDAHdFDz1TbBqe3g4VEsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Svqj+OXpJNEBSKlWzrxDj/rz1V7xMHE3HSuZeNhhZmY=;
+ b=cRXGtm5xpoiznJCTlRzVdhtxhIi+MTxngoi8laGeSUnWVIvitT3RYKnR7L0wy5EIZ5RZZqBK/2GzR4jeCOmFwnYvTIzV7j6+qYDNlpu5+ManP62usdk7Y0ZIZvCP6RmqJ4nYRi0Y4jMqb69/9ULAL3TRmhPRoAP3SgcCLuCyIBo=
+Received: from BN6PR14CA0033.namprd14.prod.outlook.com (2603:10b6:404:13f::19)
+ by BYAPR02MB5718.namprd02.prod.outlook.com (2603:10b6:a03:11c::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.11; Fri, 4 Feb
+ 2022 13:06:08 +0000
+Received: from BN1NAM02FT043.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:404:13f:cafe::84) by BN6PR14CA0033.outlook.office365.com
+ (2603:10b6:404:13f::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12 via Frontend
+ Transport; Fri, 4 Feb 2022 13:06:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ BN1NAM02FT043.mail.protection.outlook.com (10.13.2.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4951.12 via Frontend Transport; Fri, 4 Feb 2022 13:06:07 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Fri, 4 Feb 2022 05:05:54 -0800
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Fri, 4 Feb 2022 05:05:54 -0800
+Envelope-to: linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ lorenzo.pieralisi@arm.com,
+ bhelgaas@google.com
+Received: from [10.140.9.2] (port=44286 helo=xhdbharatku40.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1nFyEG-000Bmk-Mm; Fri, 04 Feb 2022 05:02:21 -0800
+From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <michals@xilinx.com>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH 0/2] Add support for Xilinx Versal CPM5 Root Port
+Date:   Fri, 4 Feb 2022 18:32:14 +0530
+Message-ID: <20220204130216.2206-1-bharat.kumar.gogada@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6426eab6-8e16-4310-cb1a-08d9e7df1b68
+X-MS-TrafficTypeDiagnostic: BYAPR02MB5718:EE_
+X-Microsoft-Antispam-PRVS: <BYAPR02MB571800A3E7B07AFA3405C772A5299@BYAPR02MB5718.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fhof6dphPfTDyZPS7Oe6QwB40SOCsKeYZS8W0tZS1mgoVBxduEADRucCy9wcZM22si8HFySMpsBIQwfR1IzvfPiYVM1epLCwdahG+5oUklyuTiocIFRukc6F0pskh3h3QGUHXZ5A5cM9P1v4l/CW3z5hfi4KYRATyR9e08iJcK+M4ei+cHqFMiWcUr8U4NpHmEuzldKJyQAHbAL9C0/fc3Dlr4MsDOxjhkGZqCN+20qQhA5eTA7I5qCtsqmGQ9lzMUjciCYOYbrE4gIK/7SXs/sN/WU/ZXYkdseI9ZnzJ+Nkg8TkxvebjHR2zKQNE52oK+1ZhN82wv+tJ+A/Qz8h8fVyuRUSD/EqVtuiHxn0lFs4XWEFgkvxUtzIuXqLl2yuz/O59XtvKVyUAoHQDjlZtB3tqUcuqZhFmecBhS8EGFdQP5PzeCzZYpPf4iIoszgB0W4pnSkyo7vpcPg2MzQlQG+9cET14KymLsvE+YySiWBSZlNiLxGtiSZRACkQ6OieJnruYEKVQrhGcX6zPgdjWkBE1+QZG6SfeX5J8doDre4x2VVPcNOT8qYdazY0iGkWyYY5v3reE2COB2mxkuevQSkF51fca7o7I/avqVK1QKhs1MX5e8xlbpGrz/bqjXV+8QFZRtz4IqGT4BiLlHQNmEaZzoXT69/Lsyi7n/xdF8jBaM+0xTq5GKCFni5wIdPY
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(47076005)(9786002)(508600001)(4326008)(8936002)(2906002)(83380400001)(107886003)(7636003)(8676002)(82310400004)(336012)(1076003)(426003)(2616005)(186003)(26005)(356005)(7696005)(6666004)(36756003)(5660300002)(103116003)(70586007)(110136005)(36860700001)(54906003)(70206006)(316002)(4744005)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2022 13:06:07.1805
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6426eab6-8e16-4310-cb1a-08d9e7df1b68
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN1NAM02FT043.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5718
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 02 2022, Alex Williamson <alex.williamson@redhat.com> wrote:
+Xilinx Versal Premium series has CPM5 block which supports Root port
+functioning at Gen5 speed.
+Xilinx Versal CPM5 has few changes with existing CPM block.
+- CPM5 has dedicated register space for control and status registers.
+- CPM5 legacy interrupt handling needs additonal register bit
+  to enable and handle legacy interrupts.
 
-> On Tue, 1 Feb 2022 20:24:59 -0400
-> Jason Gunthorpe <jgg@nvidia.com> wrote:
->
->> On Tue, Feb 01, 2022 at 02:49:16PM -0700, Alex Williamson wrote:
->> > On Tue, 1 Feb 2022 14:36:20 -0400
->> > Jason Gunthorpe <jgg@nvidia.com> wrote:
+Bharat Kumar Gogada (2):
+  PCI: xilinx-cpm: Update YAML schemas for Versal CPM5 Root Port
+  PCI: xilinx-cpm: Add support for Versal CPM5 Root Port driver
 
->> > > I don't want to touch capabilities, but we can try to use feature for
->> > > set state. Please confirm this is what you want.  
->> > 
->> > It's a team sport, but to me it seems like it fits well both in my
->> > mental model of interacting with a device feature, without
->> > significantly altering the uAPI you're defining anyway.  
->> 
->> Well, my advice is that ioctls are fine, and a bit easier all around.
->> eg strace and syzkaller are a bit easier if everything neatly maps
->> into one struct per ioctl - their generator tools are optimized for
->> this common case.
->> 
->> Simple multiplexors are next-best-fine, but there should be a clear
->> idea when to use the multiplexer, or not.
->> 
->> Things like the cap chains enter a whole world of adventure for
->> strace/syzkaller :)
->
-> vfio's argsz/flags is not only a standard framework, but it's one that
-> promotes extensions.  We were able to add capability chains with
-> backwards compatibility because of this design.  IMO, that's avoided
-> ioctl sprawl; we've been able to maintain a fairly small set of core
-> ioctls rather than add add a new ioctl every time we want to describe
-> some new property of a device or region or IOMMU.  I think that
-> improves the usability of the uAPI.  I certainly wouldn't want to
-> program to a uAPI with a million ioctls.  A counter argument is that
-> we're making the interface more complex, but at the same time we're
-> adding shared infrastructure for dealing with that complexity.
->
-> Of course we do continue to add new ioctls as necessary, including this
-> FEATURE ioctl, and I recognize that with such a generic multiplexer we
-> run the risk of over using it, ie. everything looks like a nail.  You
-> initially did not see the fit for setting device state as interacting
-> with a device feature, but it doesn't seem like you had a strong
-> objection to my explanation of it in that context.
->
-> So I think if the FEATURE ioctl has an ongoing place in our uAPI (using
-> it to expose migration flags would seem to be a point in that
-> direction) and it doesn't require too many contortions to think of the
-> operation we're trying to perform on the device as interacting with a
-> device FEATURE, and there are no functional or performance implications
-> of it, I would think we should use it.  To do otherwise would suggest
-> that we should consider the FEATURE ioctl a failed experiment and not
-> continue to expand its use.
->
-> I'd be interested to hear more input on this from the community.
+ .../bindings/pci/xilinx-versal-cpm.yaml       | 47 ++++++++++++++++---
+ drivers/pci/controller/pcie-xilinx-cpm.c      | 33 ++++++++++++-
+ 2 files changed, 72 insertions(+), 8 deletions(-)
 
-My personal take would be: a new ioctl is more suitable for things that
-may be implemented by different backends, but in a non-generic way, and
-for mandatory functionality; the FEATURE ioctl is more suitable for
-things that either are very specific to a certain backend (i.e. don't
-reserve an ioctl for something that will only ever be used on one
-platform), or for things that have a lot of commonality for the backends
-that implement them (i.e. you are using a familiar scheme to interact
-with them.)
-
-From staring at the code and the discussion here for a bit (I have not
-yet made my way through all of this except in a superficial way), I'd
-lean more towards using FEATURE here.
+-- 
+2.17.1
 
