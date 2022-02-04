@@ -2,103 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9A644AA226
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Feb 2022 22:19:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A38F04AA250
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Feb 2022 22:30:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242215AbiBDVSx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Feb 2022 16:18:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242249AbiBDVRl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Feb 2022 16:17:41 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3929C061794
-        for <linux-pci@vger.kernel.org>; Fri,  4 Feb 2022 13:17:00 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id g15-20020a17090a67cf00b001b7d5b6bedaso7231255pjm.4
-        for <linux-pci@vger.kernel.org>; Fri, 04 Feb 2022 13:17:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kDEtWBF+FkzY2NKHxDg+IP2BBNRMiosO3bx2fXdN2Zs=;
-        b=r42ec818szqLkxWoZYqBAhS9cGcDXcv2mRyuvEfw3F7D16kltjOkJRitiddd3N3+Hj
-         JeVRC4RpR1rK8a9E2eMyTEVdh1UQfw8q0ERznMg96qWADTVMDBDsXgRXRrEugON6ECZK
-         oKt6+q4iTGJOgzo4xKt1URjxHjbctHnOfnYaXSyL+C5Ts8eRJ6vhStKrEd+gFkRVX6e8
-         8zi2NFXX3iz3yR/XwjUeNPXx/642wvWCVAgTpgbBqczj8wdK8Sk+fr43NrNV8m40fgVd
-         bGoMDfJC4pFqB4bGrUUZlJaS//ElOsdCn7W6CJs2GlfrNedawjQaPvM+pP9dLzfabw1m
-         G3Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kDEtWBF+FkzY2NKHxDg+IP2BBNRMiosO3bx2fXdN2Zs=;
-        b=1sJwcMv8Hh+PeNHx+VFOEnskdVM3YetG7qNAwNYewXb0kzLv99oBmKaevV6BV7ENY6
-         BsRoOtivV4Zq6BDFNcdKaqXr36kZuo2AHdCuc8OhCxKKjji2Plqtf1g50eULhxs0qEva
-         jmZ1gMRP3+x0oEYSI6qt4Y6MiTDR3cf1ISzKlkkqf6TAMfZ1zlhjAuvEpINQPapFdkX3
-         LLyjeLxidFFGvYxuuHLHbSKYyplQ6igqlO1GQK4nwgL7TVkC6UtjlUQPKNWhszIXWexG
-         e79HWir/OnVLQhkX+l6SiIasMju3bvx8p2fprdL6vjB+s1sd7r4az+xbiICkSI+Pk/cK
-         3hAA==
-X-Gm-Message-State: AOAM533zxS77bmcBS74HWIPJjZbcvYR+ngCl5vdFpQr+JOMqRstGiLH6
-        khRX9V5xEE59e+zy+scFQ70q/zpWTilJsKXwshBW0A==
-X-Google-Smtp-Source: ABdhPJyYTHXd2SrC9SGFxE2ktHk2dl3UoJFNcRrSZVbTvz8JWMKwrHE3BqN2e3RkLP538tVK3yIoU7ZN4ib1cUV+/Cw=
-X-Received: by 2002:a17:902:d705:: with SMTP id w5mr5259433ply.34.1644009420472;
- Fri, 04 Feb 2022 13:17:00 -0800 (PST)
+        id S241964AbiBDVak (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Feb 2022 16:30:40 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:59880 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241986AbiBDVaj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Feb 2022 16:30:39 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 28C57CE2467;
+        Fri,  4 Feb 2022 21:30:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2593BC004E1;
+        Fri,  4 Feb 2022 21:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644010236;
+        bh=9xc8l7vw16ox1ipnsmrdgBCKBAmGW5YNhi+ZVgOdK9g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SoyddsbLtA14tC00Brhd7Tto1My8RSahkuR5VLEuf5+4MFMbRBmKE0hj6MQSw4Gzk
+         vKWuG+3k0NH8jCWHoUJ98WUG2fPyPKhTxSQUIqZ6clPcx2j0oA4/hHtIqwpXIVI9au
+         eEt8hEB0IQHBHIAwjBs66s78/0Vp8mrMu+2GXqCCo++oksrYqio7fhRMUAj+NHJ6mo
+         lTJmbC8xWO8+eDL+5FhHZaLN5ZXEloz0rb/rbO3mqfEuYKx6Jn38dvs1ptdP7hIs5l
+         SFE1UH2BOqkIX9MZ5ofIkvjOXcDQ9UTq8lIZROmyx3wPWX7jOYd6pVN67Pw9gfQ8D8
+         SGban8Aqy1WCQ==
+Date:   Fri, 4 Feb 2022 15:30:34 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bean Huo <huobean@gmail.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>
+Subject: [GIT PULL] PCI fixes for v5.17
+Message-ID: <20220204213034.GA217708@bhelgaas>
 MIME-Version: 1.0
-References: <20220201071952.900068-1-ira.weiny@intel.com> <20220201071952.900068-3-ira.weiny@intel.com>
-In-Reply-To: <20220201071952.900068-3-ira.weiny@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 4 Feb 2022 13:16:49 -0800
-Message-ID: <CAPcyv4hokCBMZCbqZ38-Aj+yMk3H+OmX7Ykn=5-4_jqiCV5Zug@mail.gmail.com>
-Subject: Re: [PATCH V6 02/10] PCI: Replace magic constant for PCI Sig Vendor ID
-To:     "Weiny, Ira" <ira.weiny@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 11:20 PM <ira.weiny@intel.com> wrote:
->
-> From: Ira Weiny <ira.weiny@intel.com>
->
-> Based on Bjorn's suggestion[1], now that the PCI Sig Vendor ID is
-> defined the define should be used in pci_bus_crs_vendor_id() rather than
-> the hard coded magic value.
->
-> Replace the magic value in pci_bus_crs_vendor_id() with
-> PCI_VENDOR_ID_PCI_SIG.
->
-> [1] https://lore.kernel.org/linux-cxl/20211117215044.GA1777828@bhelgaas/
->
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  drivers/pci/probe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 087d3658f75c..d92dbb136fc9 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2318,7 +2318,7 @@ EXPORT_SYMBOL(pci_alloc_dev);
->
->  static bool pci_bus_crs_vendor_id(u32 l)
->  {
-> -       return (l & 0xffff) == 0x0001;
-> +       return (l & 0xffff) == PCI_VENDOR_ID_PCI_SIG;
->  }
+The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
 
-Looks good to me:
+  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.17-fixes-3
+
+for you to fetch changes up to 7dd3876205df92e07d824fe2264b38e0b8a9eec1:
+
+  PCI: kirin: Add dev struct for of_device_get_match_data() (2022-02-04 15:14:26 -0600)
+
+N.B. These have been in linux-next for a couple days as 71c96af28da5
+("PCI: kirin: Add dev struct for of_device_get_match_data()"), but I
+amended that commit to add the reporter's info to the commit log.
+
+----------------------------------------------------------------
+PCI fixes:
+
+  - Restructure j721e_pcie_probe() so we don't dereference a NULL pointer
+    (Bjorn Helgaas)
+
+  - Add a kirin_pcie_data struct to identify different Kirin variants to
+    fix probe failure for controllers with an internal PHY (Bjorn Helgaas)
+
+----------------------------------------------------------------
+Bjorn Helgaas (2):
+      PCI: j721e: Initialize pcie->cdns_pcie before using it
+      PCI: kirin: Add dev struct for of_device_get_match_data()
+
+ drivers/pci/controller/cadence/pci-j721e.c | 85 +++++++++++++++---------------
+ drivers/pci/controller/dwc/pcie-kirin.c    | 31 ++++++-----
+ 2 files changed, 60 insertions(+), 56 deletions(-)
