@@ -2,154 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2B504AA45F
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Feb 2022 00:32:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27B754AA7BE
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Feb 2022 09:52:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238967AbiBDXcY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Feb 2022 18:32:24 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:36458 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234948AbiBDXcY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Feb 2022 18:32:24 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 20D2DB83972;
-        Fri,  4 Feb 2022 23:32:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46B27C340ED;
-        Fri,  4 Feb 2022 23:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644017542;
-        bh=GR4dOo1Lfdor0ypIQE86E4qvS3wJM1AIXoiFnVPF5CE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kd2LxVPMtefRU+J6mZuTfmxv1ztG9Zjqq3Jdt/WMKDQn1pyoksiDaauoevWiQ9oaY
-         Z0kt3n+FQsWwURS6zDAhAl1HL2j7HfE5I1GRdmzjxW2VmfpRiojzRgc6xWEnxv9oj3
-         +H0sBZRXIBN+S8csXLa4k7k5V7dzX2SzycdVL1IYJPzAVSk22ecB2D4OBkeXpyMQQV
-         Yb1qHozcXAPysFIfA1JsVcgx5rTvvSkNQNBQWdNNqbnnPf5BWDCMotW5Mgj2Ktmd/J
-         G6qzzYNFFVFkKyyQz8nNFHQs/BdwfnFPScTBCm/4GsvGb6HK+9KK7jGpDc3rxW2KjQ
-         9zgM1bkfwn4kA==
-Date:   Fri, 4 Feb 2022 17:32:19 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Abhishek Sahu <abhsahu@nvidia.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] PCI: Fix the ACPI power state during runtime resume
-Message-ID: <20220204233219.GA228585@bhelgaas>
+        id S235721AbiBEIwX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Feb 2022 03:52:23 -0500
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:36304 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232461AbiBEIwX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Feb 2022 03:52:23 -0500
+Received: from [78.40.148.178] (helo=webmail.codethink.co.uk)
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1nGGnp-0005LZ-Ak; Sat, 05 Feb 2022 08:52:17 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220124122107.12148-1-abhsahu@nvidia.com>
+Date:   Sat, 05 Feb 2022 08:52:17 +0000
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     paul.walmsley@sifive.com, greentime.hu@sifive.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] PCI: fu740: fix finding gpios
+In-Reply-To: <20220204225308.GA225749@bhelgaas>
+References: <20220204225308.GA225749@bhelgaas>
+Message-ID: <90fdcc8b0b4e1b6cd9913923fcfb6415@codethink.co.uk>
+X-Sender: ben.dooks@codethink.co.uk
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rafael, hoping for your review :)
 
-Wonder if we should add something like this to MAINTAINERS so you get
-cc'd on power-related things:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea3e6c914384..3d9a211cad5d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15422,6 +15422,7 @@ F:	include/linux/pm.h
- F:	include/linux/pm_*
- F:	include/linux/powercap.h
- F:	kernel/configs/nopm.config
-+K:	pci_[a-z_]*power[a-z_]*\(
- 
- DYNAMIC THERMAL POWER MANAGEMENT (DTPM)
- M:	Daniel Lezcano <daniel.lezcano@kernel.org>
-]
+On 2022-02-04 22:53, Bjorn Helgaas wrote:
+> Follow subject line convention (s/fix/Fix/, s/gpios/GPIOs/).
+> 
+> On Fri, Feb 04, 2022 at 05:38:21PM +0000, Ben Dooks wrote:
+>> The calls to devm_gpiod_get_optional() have the -gpios on
+>> the name. This means the pcie driver is not finding the
+>> necessary reset or power gpios to allow the pcie devices
+>> on the SiFive Unmatched boards.
+>> 
+>> Note, this was workng around 5.16 and may not have been
+>> broken? There is still an issue if uboot has not probed
+>> the pcie bus then there are no pcie devices shown when
+>> Linux is started.
+> 
+> Wrap to fill 75 columns
+> s/gpios/GPIOs/
+> s/pcie/PCIe/
+> s/workng/working/
+> s/to allow the pcie devices/to allow the PCIe devices <to something>?/
 
-On Mon, Jan 24, 2022 at 05:51:07PM +0530, Abhishek Sahu wrote:
-> Consider the following sequence during PCI device runtime
-> suspend/resume:
+Thank you, will reword this and re-post.
+
+The note will be removed anyway as explained below.
+
+> I can't tell what this is saying.  It used to work and something broke
+> it?  If so, we should have a "Fixes:" tag to identify the commit that
+> broke it.
 > 
-> 1. PCI device goes into runtime suspended state. The PCI state
->    will be changed to PCI_D0 and then pci_platform_power_transition()
->    will be called which changes the ACPI state to ACPI_STATE_D3_HOT.
+> Or it used to work and "may *not* have been broken"?  I'm confused.
 > 
-> 2. Parent bridge goes into runtime suspended state. If parent
->    bridge supports D3cold, then it will change the power state of all its
->    children to D3cold state and the power will be removed.
-> 
-> 3. During wake-up time, the bridge will be runtime resumed first
->    and pci_power_up() will be called for the bridge. Now, the power
->    supply will be resumed.
-> 
-> 4. pci_resume_bus() will be called which will internally invoke
->    pci_restore_standard_config(). pci_update_current_state()
->    will read PCI_PM_CTRL register and the current_state will be
->    updated to D0.
-> 
-> In the above process, at step 4, the ACPI device state will still be
-> ACPI_STATE_D3_HOT since pci_platform_power_transition() is not being
-> invoked. We need call the pci_platform_power_transition() with state
-> D0 to change the ACPI state to ACPI_STATE_D0.
-> 
-> This patch calls pci_power_up() if current power state is D0 inside
-> pci_restore_standard_config(). This pci_power_up() will change the
-> ACPI state to ACPI_STATE_D0.
-> 
-> Following are the steps to confirm:
-> 
-> Enable the debug prints in acpi_pci_set_power_state()
-> 
-> 0000:01:00.0 is PCI device and 0000:00:01.0 is parent bridge device
-> 
-> Before:
-> 
-> 0000:01:00.0: power state changed by ACPI to D3hot
-> 0000:00:01.0: power state changed by ACPI to D3cold
-> 0000:00:01.0: power state changed by ACPI to D0
-> 
-> After:
-> 
-> 0000:01:00.0: power state changed by ACPI to D3hot
-> 0000:00:01.0: power state changed by ACPI to D3cold
-> 0000:00:01.0: power state changed by ACPI to D0
-> 0000:01:00.0: power state changed by ACPI to D0
-> 
-> So with this patch, the PCI device ACPI state is also being
-> changed to D0.
-> 
-> Signed-off-by: Abhishek Sahu <abhsahu@nvidia.com>
-> ---
->  drivers/pci/pci-driver.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 588588cfda48..64e0cca12f16 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -521,14 +521,22 @@ static void pci_device_shutdown(struct device *dev)
->   */
->  static int pci_restore_standard_config(struct pci_dev *pci_dev)
->  {
-> +	int error = 0;
->  	pci_update_current_state(pci_dev, PCI_UNKNOWN);
->  
->  	if (pci_dev->current_state != PCI_D0) {
-> -		int error = pci_set_power_state(pci_dev, PCI_D0);
-> -		if (error)
-> -			return error;
-> +		error = pci_set_power_state(pci_dev, PCI_D0);
-> +	} else {
-> +		/*
-> +		 * The platform power state can still be non-D0, so this is
-> +		 * required to change the platform power state to D0.
-> +		 */
-> +		error = pci_power_up(pci_dev);
->  	}
->  
-> +	if (error)
-> +		return error;
-> +
->  	pci_restore_state(pci_dev);
->  	pci_pme_restore(pci_dev);
->  	return 0;
-> -- 
-> 2.17.1
-> 
+> Unclear how uboot is involved.
+
+I wasn't until we finally tracked down and posted the issue about the
+gen1 speed setting for bridge probing. All we knew is that the board
+would work if you initialised the PCIe in u-boot, and otherwise would
+not probe any peripherals. We have posted a patch for that and are
+going to try and sort out what needs doing there.
+
+The issue for the probe is here:
+https://marc.info/?l=linux-pci&m=164399947722914&w=3
+
+I also think this may never have worked given the issue above, there
+are no clear commits that would break this and the driver has had
+very little modification since being added. It may have been luck
+that most people are booting from a PCIe device and have uboot start
+the PCIe for them.
+
+It is possible there may have been changes in the GPIO or GPIO-OF
+handling, but again it may have been masked by uboot initialisaton.
+Our boot logs suggest somewhere around 5.16 something changed that
+stopped probes working. I will try and bisect down next week to see
+if the kernel is at fault or some part of the test framework,
+uboot changes or other issues.
+
+>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>> ---
+>>  drivers/pci/controller/dwc/pcie-fu740.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c 
+>> b/drivers/pci/controller/dwc/pcie-fu740.c
+>> index 00cde9a248b5..842b7202b96e 100644
+>> --- a/drivers/pci/controller/dwc/pcie-fu740.c
+>> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
+>> @@ -259,11 +259,11 @@ static int fu740_pcie_probe(struct 
+>> platform_device *pdev)
+>>  		return PTR_ERR(afp->mgmt_base);
+>> 
+>>  	/* Fetch GPIOs */
+>> -	afp->reset = devm_gpiod_get_optional(dev, "reset-gpios", 
+>> GPIOD_OUT_LOW);
+>> +	afp->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+>>  	if (IS_ERR(afp->reset))
+>>  		return dev_err_probe(dev, PTR_ERR(afp->reset), "unable to get 
+>> reset-gpios\n");
+>> 
+>> -	afp->pwren = devm_gpiod_get_optional(dev, "pwren-gpios", 
+>> GPIOD_OUT_LOW);
+>> +	afp->pwren = devm_gpiod_get_optional(dev, "pwren", GPIOD_OUT_LOW);
+>>  	if (IS_ERR(afp->pwren))
+>>  		return dev_err_probe(dev, PTR_ERR(afp->pwren), "unable to get 
+>> pwren-gpios\n");
+>> 
+>> --
+>> 2.34.1
+>> 
