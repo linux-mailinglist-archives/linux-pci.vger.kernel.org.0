@@ -2,260 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEEE04AA92A
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Feb 2022 14:33:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A3DD4AA9E4
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Feb 2022 17:05:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380002AbiBENdd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Feb 2022 08:33:33 -0500
-Received: from mga02.intel.com ([134.134.136.20]:9694 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1378932AbiBENdd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 5 Feb 2022 08:33:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644068013; x=1675604013;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mwDLNfzHRmZqwUmNm9wQaiDiHcBKq0OZo7DtnekeM8k=;
-  b=HfD1/H6K4iN12v7RktNJRyslAuXEHSTEa3Visjp2k/j9Mg2FI3vjW3r2
-   1weXyDwctsSl/zCqCenlZcwx2MjIxaKiOuq7WyfqM3/KCdUW+NkkZN8xr
-   Ewi8La6kf6LlndWbzsuCuO3tewLfRt8mBXtA1rNXvz7Iu7mldHrefzs6Q
-   2xtXrpnbQj3cojwTcwj13l24CIkeZqakwIxDqurYFmaTJwwWIxnmeTj44
-   scOmQ3sYgwtmKdTCaiTrhczBrNeeS6AzOFZanWS9ofdxAenyoSfrJdWJw
-   KwdIESLNZhnL/TvClCv0RRckXQ1Jex8TUHR0ZThvy1V4eCV7TP73x0BOk
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10248"; a="235911342"
-X-IronPort-AV: E=Sophos;i="5.88,345,1635231600"; 
-   d="scan'208";a="235911342"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2022 05:33:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,345,1635231600"; 
-   d="scan'208";a="481112870"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 05 Feb 2022 05:33:31 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nGLBz-000Z4P-4g; Sat, 05 Feb 2022 13:33:31 +0000
-Date:   Sat, 05 Feb 2022 21:32:42 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/acpi] BUILD SUCCESS
- 9a607a54a16314ca4f9ec1843e7c01131d851f33
-Message-ID: <61fe7c7a.Sx5Aw19OWIdFaErq%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S238157AbiBEQFS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Feb 2022 11:05:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235925AbiBEQFS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Feb 2022 11:05:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCBABC061348;
+        Sat,  5 Feb 2022 08:05:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 915CFB80838;
+        Sat,  5 Feb 2022 16:05:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59DD4C340F0;
+        Sat,  5 Feb 2022 16:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644077114;
+        bh=iGl+LyscJtuYcWTnVG1S7euCrsahtiihJfZ5fXoL1oY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=X8JG6/nhNcYBVz4/LJvbKrIf9ECKksD7ZPe9T0KLjN00eoxdzDXuvV2g8JObMwM4I
+         SuCGv5ZhUw9sOU+AEEsrb2XsQa+vAkMziBmFjJjP0lSzFd4Q6GM/kaCjROVvGspsi7
+         3puFJhl2RPVG1IbT+Xqx+czYGYI6+nRICXb8lWM2/OipmgBJ/Coh+Y9wKrm/NiLlX/
+         KjFu8LDsqipVQ+NuE8G2uVmzI1C3CWZXqJHLg4aQECoqtFSa+GBW1QSawTe3WFa4nZ
+         xLuxXnBJodnVEIGiQdVAhS66UU+gWPH42wopjR0PUSpZgrAL4Mzp45jX+v8dsW8ac7
+         fNKUn3xkrm/pw==
+Received: by mail-ej1-f52.google.com with SMTP id h7so28847606ejf.1;
+        Sat, 05 Feb 2022 08:05:14 -0800 (PST)
+X-Gm-Message-State: AOAM533BmffB8VwulVYvmGcopmH8FfdehOJh+LosYs0QmdJu3DaFOfWb
+        Wkc+PNKqW2mVOtgXPoM0wWq0hO4yuXrdbkc/Gg==
+X-Google-Smtp-Source: ABdhPJytLF9Q2nt2dRl8Opyzi56TDl6eMrr5GoPOpmBw0oArIh2ZSq9F81OSLu+ma2Vdkgt5+UD3teTYmfNPZUliJI8=
+X-Received: by 2002:a17:906:4781:: with SMTP id cw1mr3582423ejc.264.1644077112652;
+ Sat, 05 Feb 2022 08:05:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20211129173637.303201-1-robh@kernel.org> <Yf2wTLjmcRj+AbDv@xps13.dannf>
+In-Reply-To: <Yf2wTLjmcRj+AbDv@xps13.dannf>
+From:   Rob Herring <robh@kernel.org>
+Date:   Sat, 5 Feb 2022 10:05:01 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+4b4Yy8rJGJv9j9j_TCm6mTAkW5fzcDuuW-jOoiZ2GLg@mail.gmail.com>
+Message-ID: <CAL_Jsq+4b4Yy8rJGJv9j9j_TCm6mTAkW5fzcDuuW-jOoiZ2GLg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: xgene: Fix IB window setup
+To:     dann frazier <dann.frazier@canonical.com>
+Cc:     Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
+        stable <stable@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/acpi
-branch HEAD: 9a607a54a16314ca4f9ec1843e7c01131d851f33  PCI/ACPI: Replace acpi_bus_get_device() with acpi_fetch_acpi_dev()
+On Fri, Feb 4, 2022 at 5:01 PM dann frazier <dann.frazier@canonical.com> wr=
+ote:
+>
+> On Mon, Nov 29, 2021 at 11:36:37AM -0600, Rob Herring wrote:
+> > Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
+> > broke PCI support on XGene. The cause is the IB resources are now sorte=
+d
+> > in address order instead of being in DT dma-ranges order. The result is
+> > which inbound registers are used for each region are swapped. I don't
+> > know the details about this h/w, but it appears that IB region 0
+> > registers can't handle a size greater than 4GB. In any case, limiting
+> > the size for region 0 is enough to get back to the original assignment
+> > of dma-ranges to regions.
+>
+> hey Rob!
+>
+> I've been seeing a panic on HP Moonshoot m400 cartridges (X-Gene1) -
+> only during network installs - that I also bisected down to commit
+> 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup"). I was
+> hoping that this patch that fixed the issue on St=C3=A9phane's X-Gene2
+> system would also fix my issue, but no luck. In fact, it seems to just
+> makes it fail differently. Reverting both patches is required to get a
+> v5.17-rc kernel to boot.
+>
+> I've collected the following logs - let me know if anything else would
+> be useful.
+>
+> 1) v5.17-rc2+ (unmodified):
+>    http://dannf.org/bugs/m400-no-reverts.log
+>    Note that the mlx4 driver fails initialization.
+>
+> 2) v5.17-rc2+, w/o the commit that fixed St=C3=A9phane's system:
+>    http://dannf.org/bugs/m400-xgene2-fix-reverted.log
+>    Note the mlx4 MSI-X timeout, and later panic.
+>
+> 3) v5.17-rc2+, w/ both commits reverted (works)
+>    http://dannf.org/bugs/m400-both-reverted.log
 
-elapsed time: 723m
+The ranges and dma-ranges addresses don't appear to match up with any
+upstream dts files. Can you send me the DT?
 
-configs tested: 187
-configs skipped: 3
+Otherwise, we're going to need some debugging added to
+xgene_pcie_setup_ib_reg() to see if the register setup changed. I can
+come up with something next week.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20220131
-sh                             shx3_defconfig
-sh                     sh7710voipgw_defconfig
-mips                      fuloong2e_defconfig
-arm                         vf610m4_defconfig
-powerpc64                        alldefconfig
-sh                        sh7757lcr_defconfig
-arc                    vdk_hs38_smp_defconfig
-powerpc                        warp_defconfig
-mips                         tb0226_defconfig
-sh                          r7780mp_defconfig
-sh                ecovec24-romimage_defconfig
-xtensa                    smp_lx200_defconfig
-arm                            hisi_defconfig
-arm                           tegra_defconfig
-mips                 decstation_r4k_defconfig
-ia64                        generic_defconfig
-mips                    maltaup_xpa_defconfig
-openrisc                  or1klitex_defconfig
-sparc64                             defconfig
-arc                           tb10x_defconfig
-sh                         ap325rxa_defconfig
-mips                  maltasmvp_eva_defconfig
-mips                         db1xxx_defconfig
-arm                       aspeed_g5_defconfig
-sh                           se7206_defconfig
-sh                             sh03_defconfig
-powerpc                      cm5200_defconfig
-arm                      footbridge_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                      chrp32_defconfig
-arm                         lpc18xx_defconfig
-powerpc                      ep88xc_defconfig
-arm                        mini2440_defconfig
-sh                           se7619_defconfig
-powerpc                 mpc834x_itx_defconfig
-arm                          gemini_defconfig
-m68k                        mvme147_defconfig
-arm                           corgi_defconfig
-xtensa                    xip_kc705_defconfig
-arc                     nsimosci_hs_defconfig
-mips                           gcw0_defconfig
-powerpc                    klondike_defconfig
-mips                      loongson3_defconfig
-xtensa                  cadence_csp_defconfig
-m68k                          multi_defconfig
-arm                        keystone_defconfig
-arm                            zeus_defconfig
-powerpc                     redwood_defconfig
-sh                              ul2_defconfig
-mips                            gpr_defconfig
-arm                        shmobile_defconfig
-m68k                        m5407c3_defconfig
-sh                          polaris_defconfig
-sh                           se7780_defconfig
-powerpc                 mpc837x_rdb_defconfig
-arm                           h3600_defconfig
-csky                             alldefconfig
-mips                        bcm47xx_defconfig
-h8300                               defconfig
-mips                         mpc30x_defconfig
-arm                         axm55xx_defconfig
-powerpc                     rainier_defconfig
-arc                        nsimosci_defconfig
-arm                  randconfig-c002-20220130
-arm                  randconfig-c002-20220131
-arm                  randconfig-c002-20220205
-arm                  randconfig-c002-20220202
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                             allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a003-20220131
-x86_64               randconfig-a001-20220131
-x86_64               randconfig-a006-20220131
-x86_64               randconfig-a002-20220131
-x86_64               randconfig-a004-20220131
-x86_64               randconfig-a005-20220131
-i386                 randconfig-a006-20220131
-i386                 randconfig-a003-20220131
-i386                 randconfig-a001-20220131
-i386                 randconfig-a004-20220131
-i386                          randconfig-a003
-i386                          randconfig-a001
-i386                          randconfig-a005
-i386                 randconfig-a005-20220131
-i386                 randconfig-a002-20220131
-i386                          randconfig-a012
-i386                          randconfig-a016
-x86_64                        randconfig-a002
-riscv                randconfig-r042-20220130
-arc                  randconfig-r043-20220130
-s390                 randconfig-r044-20220130
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-x86_64                           allyesconfig
-
-clang tested configs:
-riscv                randconfig-c006-20220130
-x86_64                        randconfig-c007
-arm                  randconfig-c002-20220130
-powerpc              randconfig-c003-20220130
-mips                 randconfig-c004-20220130
-i386                          randconfig-c001
-riscv                randconfig-c006-20220205
-powerpc              randconfig-c003-20220205
-mips                 randconfig-c004-20220205
-arm                  randconfig-c002-20220205
-riscv                randconfig-c006-20220201
-powerpc              randconfig-c003-20220201
-mips                 randconfig-c004-20220201
-arm                  randconfig-c002-20220201
-powerpc                 mpc832x_rdb_defconfig
-powerpc                        icon_defconfig
-mips                        bcm63xx_defconfig
-powerpc                  mpc866_ads_defconfig
-mips                          rm200_defconfig
-powerpc                      acadia_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64               randconfig-a013-20220131
-x86_64               randconfig-a015-20220131
-x86_64               randconfig-a014-20220131
-x86_64               randconfig-a016-20220131
-x86_64               randconfig-a011-20220131
-x86_64               randconfig-a012-20220131
-i386                 randconfig-a013-20220131
-i386                 randconfig-a014-20220131
-i386                 randconfig-a012-20220131
-i386                 randconfig-a015-20220131
-i386                 randconfig-a016-20220131
-i386                 randconfig-a011-20220131
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-riscv                randconfig-r042-20220131
-hexagon              randconfig-r045-20220130
-hexagon              randconfig-r045-20220131
-hexagon              randconfig-r041-20220130
-hexagon              randconfig-r041-20220131
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Rob
