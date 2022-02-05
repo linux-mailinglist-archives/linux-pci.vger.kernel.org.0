@@ -2,136 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DADC4AA7F0
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Feb 2022 10:39:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 634F74AA834
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Feb 2022 11:54:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356871AbiBEJjf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Feb 2022 04:39:35 -0500
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:40639 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232747AbiBEJjf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Feb 2022 04:39:35 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        id S233832AbiBEKxz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Feb 2022 05:53:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237662AbiBEKxy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Feb 2022 05:53:54 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75527C061346
+        for <linux-pci@vger.kernel.org>; Sat,  5 Feb 2022 02:53:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 8C84B100D9411;
-        Sat,  5 Feb 2022 10:39:33 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 6D41B2E5C36; Sat,  5 Feb 2022 10:39:33 +0100 (CET)
-Date:   Sat, 5 Feb 2022 10:39:33 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Alexander.Deucher@amd.com
-Subject: Re: [PATCH 2/2] pci: mark USB4 devices as "is_thunderbolt"
-Message-ID: <20220205093933.GA29773@wunner.de>
-References: <20220204182820.130339-3-mario.limonciello@amd.com>
- <20220204222956.GA220908@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220204222956.GA220908@bhelgaas>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 096ACB80689
+        for <linux-pci@vger.kernel.org>; Sat,  5 Feb 2022 10:53:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA9EAC340E8;
+        Sat,  5 Feb 2022 10:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644058430;
+        bh=PhlmbpJV6s/aLdgSou91yb+NkA4DduZk9byZMm4L80U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=asQ1FSXKNNWx8tYGIuwbkI66d6AiDMVjb/Kdwg6p9vvz9S4SY0HNuiJKFOcF8xi4B
+         10Iq1Eddu13MJyq20C65yZVAXqEbRYEFtreegLeSB/ZPaU2SbUp3FX5MGYuAM+XQXd
+         zLhu0/zFkSW5ehpWJyDxlsaEl0+t5jnvUPpRty6BK5Filycqi7re4wAx62FL6V995D
+         lJaPO/DPkbYURLKtgqBi+ihnmdY2eCpOv+cnuR4BGaT+5j2E5Nl9HScLJDTk9MiNZw
+         PEjQg77GvBIkWSFpdx+ySdCAOJwcyw2UOtb3rrjzzKdeZw3L40yCohRrY924ObmIUz
+         QGYrOfN6FFX/g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=billy-the-mountain.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nGIhQ-005dQ0-Bw; Sat, 05 Feb 2022 10:53:48 +0000
+Date:   Sat, 05 Feb 2022 10:53:48 +0000
+Message-ID: <87czk137pf.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>, pali@kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 02/23] PCI: aardvark: Fix reading MSI interrupt number
+In-Reply-To: <20220204172400.GA4867@lpieralisi>
+References: <20220110015018.26359-1-kabel@kernel.org>
+        <20220110015018.26359-3-kabel@kernel.org>
+        <20220204172400.GA4867@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lorenzo.pieralisi@arm.com, kabel@kernel.org, helgaas@kernel.org, pali@kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 04, 2022 at 04:29:56PM -0600, Bjorn Helgaas wrote:
-> I've never liked "is_thunderbolt" because it tells us nothing about
-> what functionality is of interest, so it's an unmaintainable mess.
-> 
-> Right now:
-> 
->   - We assume Root Ports and Switch Ports marked "is_thunderbolt"
->     support D3 (pci_bridge_d3_possible()).
+Hi Lorenzo,
 
-We don't allow D3 on hotplug bridges because:
+On Fri, 04 Feb 2022 17:24:00 +0000,
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+>=20
+> On Mon, Jan 10, 2022 at 02:49:57AM +0100, Marek Beh=C3=BAn wrote:
+> > From: Pali Roh=C3=A1r <pali@kernel.org>
+> >=20
+> > In advk_pcie_handle_msi() the authors expect that when bit i in the W1C
+> > register PCIE_MSI_STATUS_REG is cleared, the PCIE_MSI_PAYLOAD_REG is
+> > updated to contain the MSI number corresponding to index i.
+> >=20
+> > Experiments show that this is not so, and instead PCIE_MSI_PAYLOAD_REG
+> > always contains the number of the last received MSI, overall.
+> >=20
+> > Do not read PCIE_MSI_PAYLOAD_REG register for determining MSI interrupt
+> > number. Since Aardvark already forbids more than 32 interrupts and uses
+> > own allocated hwirq numbers, the msi_idx already corresponds to the
+> > received MSI number.
+> >=20
+> > Fixes: 8c39d710363c ("PCI: aardvark: Add Aardvark PCI host controller d=
+river")
+> > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> > Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 9 ++-------
+> >  1 file changed, 2 insertions(+), 7 deletions(-)
+> >=20
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/contro=
+ller/pci-aardvark.c
+> > index 62baddd2ca95..fd95ad64c887 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -1393,7 +1393,6 @@ static void advk_pcie_remove_irq_domain(struct ad=
+vk_pcie *pcie)
+> >  static void advk_pcie_handle_msi(struct advk_pcie *pcie)
+> >  {
+> >  	u32 msi_val, msi_mask, msi_status, msi_idx;
+> > -	u16 msi_data;
+> > =20
+> >  	msi_mask =3D advk_readl(pcie, PCIE_MSI_MASK_REG);
+> >  	msi_val =3D advk_readl(pcie, PCIE_MSI_STATUS_REG);
+> > @@ -1403,13 +1402,9 @@ static void advk_pcie_handle_msi(struct advk_pci=
+e *pcie)
+> >  		if (!(BIT(msi_idx) & msi_status))
+> >  			continue;
+> > =20
+> > -		/*
+> > -		 * msi_idx contains bits [4:0] of the msi_data and msi_data
+> > -		 * contains 16bit MSI interrupt number
+> > -		 */
+> >  		advk_writel(pcie, BIT(msi_idx), PCIE_MSI_STATUS_REG);
+> > -		msi_data =3D advk_readl(pcie, PCIE_MSI_PAYLOAD_REG) & PCIE_MSI_DATA_=
+MASK;
+>=20
+> Ok, it took me a while to understand how aardvark handles MSIs.
+>=20
+> IIUC, msi_data contains the payload of the latest MSI write received.
+>
+> First off, I believe that using a Linux IRQ number for MSI data
+> (payload)(I guess you rely on its truncated bits [4:0] to trigger the
+> related MSI IRQs, which I believe is questionable - if not broken) is
+> not a good idea.
+>=20
+> Is my understanding correct ?
+>
+> This patch and the following one are fixing this. Given that this is IRQ
+> domain code if Marc can cast a look into it that would help me, to make
+> sure I have not missed anything.
 
-		/*
-		 * Hotplug ports handled natively by the OS were not validated
-		 * by vendors for runtime D3 at least until 2018 because there
-		 * was no OS support.
-		 */
-		if (bridge->is_hotplug_bridge)
-			return false;
+I had a look at this series a long while ago, and nothing seem out of
+sorts on the MSI front. If anything, this is better than what is
+currently there.
 
-And we don't allow D3 on older non-hotplug bridges because:
+As for the rest of the series:
 
-		/*
-		 * It should be safe to put PCIe ports from 2015 or newer
-		 * to D3.
-		 */
-		if (dmi_get_bios_year() >= 2015)
-			return true;
+Patch 18 is odd: the use of the handle_simple_irq() flow is likely
+papering over something (I'd expect RP interrupts to be edge
+triggered), and it is impossible to mask them. But hey, after being
+singled out by the author as the big bad bully who prevents people
+from fixing things, I can't say I care.
 
-However we must allow D3 on *Thunderbolt* bridges to take advantage
-of power savings.  So the following check is an exception of the
-above-stated rules:
-
-		/* Even the oldest 2010 Thunderbolt controller supports D3. */
-		if (bridge->is_thunderbolt)
-			return true;
-
-This is most likely necessary for AMD Thunderbolt as well, but
-could be achieved by adding another check to pci_bridge_d3_possible()
-which returns true for the USB4 class.
-
-
->   - Downstream Ports marked "is_thunderbolt" don't support native
->     hotplug Command Completed events, even if they claim they do
->     (pcie_init()).
-
-That's a quirk needed for older Thunderbolt controllers.  It could be
-replaced by a check for the device IDs listed in 493fb50e958c.
-
-It most likely does not affect AMD Thunderbolt.
-
-
->   - Apparently, if *any* device in the system is marked
->     "is_thunderbolt", a GPU external DP port is not fully switchable
->     because ? (gmux_probe()).
-
-This could be replaced by a DMI check for the affected MacBook Pro
-models.  Those happen not to possess a Thunderbolt controller,
-so checking for Thunderbolt presence seemed simpler and more clever
-at the time...
-
-I can produce a list of affected models if you want.
-
-This does not affect AMD Thunderbolt.
-
-
->   - Whether an AMD GPU is attached via Thunderbolt tells us something
->     about what sort of power control and runtime power management we
->     can do (amdgpu_driver_load_kms(), radeon_driver_load_kms()).
-
-External eGPUs are not supposed to be managed by vga_switcheroo
-(which is only responsible for switching between a chipset-integrated iGPU
-and an on-board discrete dGPU), that's what these checks are for.
-
-This does affect AMD Thunderbolt.
-
-
->   - We don't register Thunderbolt eGPU devices with VGA switcheroo
->     because ? (nouveau_vga_init(), radeon_device_init()).
-
-Same as above.
-
-
->   - If an AMD GPU is attached via Thunderbolt, we program different
->     ASPM time values because ? (nbio_v2_3_enable_aspm()).
-
-That wasn't introduced by me, so not sure what the rationale is.
-
-Let me know if I can help clarify things further so that we can
-find a solution that you feel more comfortable with.
+I only objected to patch 23, which is a total no-go.
 
 Thanks,
 
-Lukas
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
