@@ -2,128 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B53C4AACA4
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Feb 2022 22:13:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 104624AAEB0
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Feb 2022 10:52:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381404AbiBEVNM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Feb 2022 16:13:12 -0500
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:49900
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1381403AbiBEVNM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Feb 2022 16:13:12 -0500
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id E0E613FE41
-        for <linux-pci@vger.kernel.org>; Sat,  5 Feb 2022 21:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1644095590;
-        bh=nz2Z4bFotqetThuLUskNVZCWGhwv1YrdlfnjDQe5gQs=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=K0puRBppIpE4rnEKVNnKGfOPwH0dhCZq5XLEdIgCOBGZByOikF33flBu2vbchkgEJ
-         74GKJBsu7xZoKu7/wzGJ7dxbzIsjbturV6JFTk8SlCLw3jZbSNmHwGEJp/SiMxTxH1
-         E/tl2PinE41s5nJH+FFUhmoL8/K0fTenK8d8irWz7Kc9pa26KlN3EciJwQlxWzm818
-         yoUFnz/zOyBUFv33vWOtK/vTMKaClWwyHRUFL+blv47CDPU1YgEsUOoloQcJ0xQVQ2
-         TbmmnU7W5BAPyiSysO4LM3DW38fqbe8E62+hzmuejUMp3IJyMBsLLQ/IiOpvVU644O
-         K9pfcTyAi2YxA==
-Received: by mail-wm1-f70.google.com with SMTP id j18-20020a05600c1c1200b0034aeea95dacso9278421wms.8
-        for <linux-pci@vger.kernel.org>; Sat, 05 Feb 2022 13:13:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nz2Z4bFotqetThuLUskNVZCWGhwv1YrdlfnjDQe5gQs=;
-        b=m+wHpIBtdL205xRwS0Pl8+3WTLM78OFk/Y2ntndTjbvXLCBN0BRXOguTfz+U175146
-         0jc0Wg875IZH7Oavo0ocS3wIYldVgUotrRaW8GKOQpDA6mY9lQhfQyiKtNn+qdUEFDJm
-         xC+O7I0agb3yrleHvCSqN9l+6lAHvFZBW0ysIt8dTUmEXAeVW3iZjNRJzZYqHcGb4Rft
-         XjQ6N30Vwdhtk0xHfN7p5w1Vep6UJRZMphJhjAHuwqfpZUA8RTmw7f4zGtvfF3DBDCRy
-         AmvjACv8infGHs/kcEgaoZOG07/jvI0DVYv34HZEDOoUnsW0GV8iHTLFhofCjL1JVFu3
-         DM4w==
-X-Gm-Message-State: AOAM533jmS7mUgUlpt0xvQ3L0bswrZsY18Y+5YPHBRy0BhZxc304pT5v
-        XWxqDdgTnXVeallKHEjXnUwmbvv6cVQXeTKLYIr6qn73LHbaUbr0r9P/cMWNP21jcjK9GGnwbsM
-        853Jd0KnMyeH0ZULd5n/iABvzklsdGaj8ssWgW35BCA/v2okmwPy7FA==
-X-Received: by 2002:a05:6000:1707:: with SMTP id n7mr4286327wrc.234.1644095590471;
-        Sat, 05 Feb 2022 13:13:10 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx0O5lMWQqmnSzmHWQqbnIIH10oDMuf24v+GRzu1vHjjMNiBTdjAaypokB3rE4ZxL9Iq0Fr05Wxc5BZQWT7mig=
-X-Received: by 2002:a05:6000:1707:: with SMTP id n7mr4286310wrc.234.1644095590242;
- Sat, 05 Feb 2022 13:13:10 -0800 (PST)
+        id S232761AbiBFJwM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 6 Feb 2022 04:52:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232685AbiBFJwL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Feb 2022 04:52:11 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED19C06173B;
+        Sun,  6 Feb 2022 01:52:09 -0800 (PST)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1nGeDE-0005xC-Nn; Sun, 06 Feb 2022 10:52:04 +0100
+Message-ID: <74cf71d9-8c9f-6b3d-8019-2d7f4e9d0d2d@leemhuis.info>
+Date:   Sun, 6 Feb 2022 10:52:04 +0100
 MIME-Version: 1.0
-References: <20211129173637.303201-1-robh@kernel.org> <Yf2wTLjmcRj+AbDv@xps13.dannf>
- <CAL_Jsq+4b4Yy8rJGJv9j9j_TCm6mTAkW5fzcDuuW-jOoiZ2GLg@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+4b4Yy8rJGJv9j9j_TCm6mTAkW5fzcDuuW-jOoiZ2GLg@mail.gmail.com>
-From:   dann frazier <dann.frazier@canonical.com>
-Date:   Sat, 5 Feb 2022 14:12:57 -0700
-Message-ID: <CALdTtnuK+D7gNbEDgHbrc29pFFCR3XYAHqrK3=X_hQxUx-Seow@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
 Subject: Re: [PATCH] PCI: xgene: Fix IB window setup
-To:     Rob Herring <robh@kernel.org>
+Content-Language: en-BS
+To:     dann frazier <dann.frazier@canonical.com>,
+        Rob Herring <robh@kernel.org>
 Cc:     Toan Le <toan@os.amperecomputing.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
-        stable <stable@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>,
+        stable@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20211129173637.303201-1-robh@kernel.org>
+ <Yf2wTLjmcRj+AbDv@xps13.dannf>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <Yf2wTLjmcRj+AbDv@xps13.dannf>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644141129;e2bf8b3e;
+X-HE-SMSGID: 1nGeDE-0005xC-Nn
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Feb 5, 2022 at 9:05 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Feb 4, 2022 at 5:01 PM dann frazier <dann.frazier@canonical.com> =
-wrote:
-> >
-> > On Mon, Nov 29, 2021 at 11:36:37AM -0600, Rob Herring wrote:
-> > > Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
-> > > broke PCI support on XGene. The cause is the IB resources are now sor=
-ted
-> > > in address order instead of being in DT dma-ranges order. The result =
-is
-> > > which inbound registers are used for each region are swapped. I don't
-> > > know the details about this h/w, but it appears that IB region 0
-> > > registers can't handle a size greater than 4GB. In any case, limiting
-> > > the size for region 0 is enough to get back to the original assignmen=
-t
-> > > of dma-ranges to regions.
-> >
-> > hey Rob!
-> >
-> > I've been seeing a panic on HP Moonshoot m400 cartridges (X-Gene1) -
-> > only during network installs - that I also bisected down to commit
-> > 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup"). I was
-> > hoping that this patch that fixed the issue on St=C3=A9phane's X-Gene2
-> > system would also fix my issue, but no luck. In fact, it seems to just
-> > makes it fail differently. Reverting both patches is required to get a
-> > v5.17-rc kernel to boot.
-> >
-> > I've collected the following logs - let me know if anything else would
-> > be useful.
-> >
-> > 1) v5.17-rc2+ (unmodified):
-> >    http://dannf.org/bugs/m400-no-reverts.log
-> >    Note that the mlx4 driver fails initialization.
-> >
-> > 2) v5.17-rc2+, w/o the commit that fixed St=C3=A9phane's system:
-> >    http://dannf.org/bugs/m400-xgene2-fix-reverted.log
-> >    Note the mlx4 MSI-X timeout, and later panic.
-> >
-> > 3) v5.17-rc2+, w/ both commits reverted (works)
-> >    http://dannf.org/bugs/m400-both-reverted.log
->
-> The ranges and dma-ranges addresses don't appear to match up with any
-> upstream dts files. Can you send me the DT?
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; nearly all text you find below is
+compiled from a few templates paragraphs you likely have encountered
+already already from mails similar to this one.]
 
-Sure: http://dannf.org/bugs/fdt
+Hi, this is your Linux kernel regression tracker speaking.
 
- -dann
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-> Otherwise, we're going to need some debugging added to
-> xgene_pcie_setup_ib_reg() to see if the register setup changed. I can
-> come up with something next week.
->
-> Rob
+On 05.02.22 00:01, dann frazier wrote:
+> On Mon, Nov 29, 2021 at 11:36:37AM -0600, Rob Herring wrote:
+>> Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
+>> broke PCI support on XGene. The cause is the IB resources are now sorted
+>> in address order instead of being in DT dma-ranges order. The result is
+>> which inbound registers are used for each region are swapped. I don't
+>> know the details about this h/w, but it appears that IB region 0
+>> registers can't handle a size greater than 4GB. In any case, limiting
+>> the size for region 0 is enough to get back to the original assignment
+>> of dma-ranges to regions.
+> 
+> hey Rob!
+> 
+> I've been seeing a panic on HP Moonshoot m400 cartridges (X-Gene1) -
+> only during network installs - that I also bisected down to commit
+> 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup"). I was
+> hoping that this patch that fixed the issue on Stéphane's X-Gene2
+> system would also fix my issue, but no luck. In fact, it seems to just
+> makes it fail differently. Reverting both patches is required to get a
+> v5.17-rc kernel to boot.
+> 
+> I've collected the following logs - let me know if anything else would
+> be useful.
+> 
+> 1) v5.17-rc2+ (unmodified):
+>    http://dannf.org/bugs/m400-no-reverts.log
+>    Note that the mlx4 driver fails initialization.
+> 
+> 2) v5.17-rc2+, w/o the commit that fixed Stéphane's system:
+>    http://dannf.org/bugs/m400-xgene2-fix-reverted.log
+>    Note the mlx4 MSI-X timeout, and later panic.
+> 
+> 3) v5.17-rc2+, w/ both commits reverted (works)
+>    http://dannf.org/bugs/m400-both-reverted.log
+
+Thanks for the report.
+
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced c7a75d07827a1f33d
+#regzbot title Follow-up error for the commit fixing "PCIe regression on
+APM Merlin (aarch64 dev platform) preventing NVME initialization"
+#regzbot ignore-activity
+
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using the
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst', as this allows the bot to assign
+any fixes posted or commited with the report to always show the current
+status of things and automatically close the issue when the fix hits the
+right tree.
+
+I'm sending this to everyone that got the initial report, to make them
+aware of the tracking. I also hope that messages like this motivate
+people to directly get at least the regression mailing list and ideally
+even regzbot involved when dealing with regressions, as messages like
+this wouldn't be needed then.
+
+Don't worry, I'll send further messages wrt to this regression just to
+the lists (with a tag in the subject so people can filter them away), if
+they are relevant just for regzbot. With a bit of luck no such messages
+will be needed anyway.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
