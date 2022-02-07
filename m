@@ -2,48 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2D724ACA3E
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Feb 2022 21:20:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4746E4ACC3A
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Feb 2022 23:45:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240453AbiBGUSM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Feb 2022 15:18:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44984 "EHLO
+        id S244502AbiBGWpu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Feb 2022 17:45:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241807AbiBGUNs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Feb 2022 15:13:48 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF969C0401DA;
-        Mon,  7 Feb 2022 12:13:47 -0800 (PST)
+        with ESMTP id S241061AbiBGWps (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Feb 2022 17:45:48 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C7FC061355;
+        Mon,  7 Feb 2022 14:45:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AF9B1B81673;
-        Mon,  7 Feb 2022 20:13:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E746C340EE;
-        Mon,  7 Feb 2022 20:13:45 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 23A69CE12FB;
+        Mon,  7 Feb 2022 22:45:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF302C340F0;
+        Mon,  7 Feb 2022 22:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644264825;
-        bh=plTnq9pejgjpmDCGWtGP8pfnD0zRw1CkgzOlZIUXW+Y=;
+        s=k20201202; t=1644273942;
+        bh=qkq40yCflGjOJ7y7JTzQbQGfwF6s4zzKqH433+KJ92U=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cCGH/YrbuY0GdCIi582p6XmXwWgBSOhqBYn2V9Oy3z29nvC/AEkgYR8oJ+IBaQo89
-         NH6MrrUR6Gd4iGcQaK2NtW6N4k10sovKyCWY27PiZ9jM7VPSXKZsUpWdJhUR3nRYFq
-         y738P/ANGIvN8Gdwk7JHHDFo+FEECNI4rgGobNbl8ApAZukXQEPwN1n3NE2t4+ab3O
-         bnqVVg3KflfjdcJZSb8dVNuzA0OkG8YHeq9G29zHWUGqyeZrSstPwYcGjStdoZ7Lsz
-         EwhbN5U1fziwzU9kHbfuENQiQAOjYzkCIOEueSJfD1Qdf/p1HRn/iovjSwu6YhjeNk
-         R7M0VZW4kyV6g==
-Date:   Mon, 7 Feb 2022 14:13:43 -0600
+        b=EP7em8vg/cCJr5iKdH/kyYQXa1Da0wtpS6sxh0EW2W5/Zi2G2gDehBQoES1B722EY
+         863M9KTi5IyMdpjVrzSXZRfe+FAaV2BsqwWJh44tv2mpUBkMDfc3WDAwv+uAuo2bZY
+         lDQpt4AmDKX/N8k9ia9Kd6nRFHSe24+/6zW8TGYKc5HPwcdcIr93Xmo69B7ianvdf8
+         P/4emvsuvRHisUm02S69R5PBKLSPGnhjn4c8L330+yQrM7/w0Wk5brMWCnpKUb3Bwp
+         51tk43LFbP2hTF3+cigGAcaZMZXF6Gi+yTQVDOe89Bej8fFpaxnRGtxND0vPbKgg/Z
+         z7n9llszolzqw==
+Date:   Mon, 7 Feb 2022 16:45:40 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Abhishek Sahu <abhsahu@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] PCI: Fix the ACPI power state during runtime resume
-Message-ID: <20220207201343.GA413636@bhelgaas>
+To:     linux-pci@vger.kernel.org
+Cc:     joey.corleone@mail.ru, Jan Kiszka <jan.kiszka@siemens.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Bug 215533] [BISECTED][REGRESSION] UI becomes unresponsive
+ every couple of seconds
+Message-ID: <20220207224540.GA425996@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2249802.ElGaqSPkdT@kreacher>
+In-Reply-To: <20220126121250.GA1694509@bhelgaas>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -54,37 +53,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 07, 2022 at 07:58:13PM +0100, Rafael J. Wysocki wrote:
-> On Saturday, February 5, 2022 12:32:19 AM CET Bjorn Helgaas wrote:
-> > Wonder if we should add something like this to MAINTAINERS so you get
-> > cc'd on power-related things:
+[+cc linux-kernel for visibility]
+
+On Wed, Jan 26, 2022 at 06:12:50AM -0600, Bjorn Helgaas wrote:
+> On Wed, Jan 26, 2022 at 08:18:12AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=215533
 > > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index ea3e6c914384..3d9a211cad5d 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -15422,6 +15422,7 @@ F:	include/linux/pm.h
-> >  F:	include/linux/pm_*
-> >  F:	include/linux/powercap.h
-> >  F:	kernel/configs/nopm.config
-> > +K:	pci_[a-z_]*power[a-z_]*\(
-> 
-> It seems so, but generally PM patches should be CCed to linux-pm anyway.
+> > --- Comment #1 from joey.corleone@mail.ru ---
+> > I accidentally sent the report prematurely. So here come my findings:
+> > 
+> > Since 5.16
+> > (1) my system becomes unresponsive every couple of seconds (micro lags), which
+> > makes it more or less unusable.
+> > (2) wrong(?) CPU frequencies are reported. 
+> > 
+> > - 5.15 works fine.
+> > - Starting from some commit in 5.17, it seems (1) is fixed (unsure), but
+> > definitely not (2).
+> > 
+> > I have bisected the kernel between 5.15 and 5.16, and found that the offending
+> > commit is 0e8ae5a6ff5952253cd7cc0260df838ab4c21009 ("PCI/portdrv: Do not setup
+> > up IRQs if there are no users"). Bisection log attached.
+> > 
+> > Reverting this commit on linux-git[1] fixes both (1) and (2).
+> > 
+> > Important notes:
+> > - This regression was reported on a DELL XPS 9550 laptop by two users [2], so
+> > it might be related strictly to that model. 
+> > - According to user mallocman, the issue can also be fixed by reverting the
+> > BIOS version of the laptop to v1.12.
+> > - The issue ONLY occurs when AC is plugged in (and stays there even when I
+> > unplug it).
+> > - When booting on battery power, there is no issue at all.
+> > 
+> > You can easily observe the regression via: 
+> > 
+> > watch cat /sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_cur_fre
+> > 
+> > As soon as I plug in AC, all frequencies go up to values around 3248338 and
+> > stay there even if I unplug AC. This does not happen at all when booted on
+> > battery power. 
+> > 
+> > Also note: 
+> > - the laptop's fans are not really affected by the high frequencies.
+> > - setting the governor to "powersave" has no effect on the frequencies (as
+> > compared to when on battery power).
+> > - lowering the maximum frequency manually works, but does not fix (1).
+> > 
+> > [1] https://aur.archlinux.org/pkgbase/linux-git/ (pulled commits up to
+> > 0280e3c58f92b2fe0e8fbbdf8d386449168de4a8).
+> > [2] https://bbs.archlinux.org/viewtopic.php?id=273330
 
-Definitely.  It's just that running get_maintainer.pl on this patch
-currently shows:
+I hope we can find a better solution, but since the responsiveness
+issue is a significant regression, I queued up a revert of
+0e8ae5a6ff59 ("PCI/portdrv: Do not setup up IRQs if there are no
+users") in case we don't find one.
 
-  Bjorn Helgaas <bhelgaas@google.com> (supporter:PCI SUBSYSTEM)
-  linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM)
-  linux-kernel@vger.kernel.org (open list)
-
-so it's not as helpful as it could be.  The MAINTAINERS patch above
-would change it to this:
-
-  Bjorn Helgaas <bhelgaas@google.com> (supporter:PCI SUBSYSTEM)
-  "Rafael J. Wysocki" <rafael@kernel.org> (supporter:POWER MANAGEMENT CORE)
-  linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM)
-  linux-kernel@vger.kernel.org (open list)
-  linux-pm@vger.kernel.org (open list:POWER MANAGEMENT CORE)
+If/when we get to the bottom of this, I'll replace the revert with the
+solution.  0e8ae5a6ff59 appeared in v5.16, so we'll have to make sure
+we fix that as well.
 
 Bjorn
