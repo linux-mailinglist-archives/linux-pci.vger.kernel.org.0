@@ -2,37 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCCAB4AC2F7
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Feb 2022 16:23:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 108A44AC310
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Feb 2022 16:24:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236124AbiBGPXY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Feb 2022 10:23:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36556 "EHLO
+        id S1345408AbiBGPXt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Feb 2022 10:23:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442929AbiBGPKN (ORCPT
+        with ESMTP id S1442933AbiBGPKN (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Feb 2022 10:10:13 -0500
 Received: from mx.tkos.co.il (guitar.tcltek.co.il [84.110.109.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5DEFC0401C4;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5BE7C0401C2;
         Mon,  7 Feb 2022 07:08:44 -0800 (PST)
 Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 109E2440F5F;
+        by mx.tkos.co.il (Postfix) with ESMTPS id A502B440F66;
         Mon,  7 Feb 2022 16:51:33 +0200 (IST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-        s=default; t=1644245493;
-        bh=7aNgLkH2AUxOLsKPef7Ni1LA2rtSGekKuigyuyViuyM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=phl7B+KswJvMTbObMss9Cr38/Rv2yuwI3qlHHebcV/DS1pszFdGbMI7/7nxGZymiC
-         jQx18rL8gZefPL7KiLw+JV/BK4ySQRPqgJVxIxx3BIdl4w4KKs+LdJCNrSJjsmXrvD
-         cW5vKdeVJTKEpbn26VKLRCeKs3OHFAUGbWezCSKFj1NNlcJ1Lnn6lX2nyBxqzfA50A
-         yi52Em5Z3nVshHockJep7Ta7lNt5QF1kw1Oh3Ynlf+2DQi5jbAkKQiqqwTw5C75X8b
-         cbDQxxr5IKuRVMJjHoC0Cgvkd3v0mjLiCCRRB23cf+kzTwFqhq1Wn3LWvunWBQji6H
-         d+NgVT6RIlvRA==
+        s=default; t=1644245494;
+        bh=KLPNQ4abl6ySCDQvYAo8MjsLaFhwDEQEKjXfmAojE54=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=V69dBlpiNiL99ucIMVVNmy0+vyv1hGHdralahf+rs2dkb3M8O84nPIx21Ax0MmjZ1
+         XIB9iMU7tVujx8pER2lD8GxCr0rTW7T34cMtqUL0AMNBMWlXfTnq7rk6TeEUwjE/1w
+         S8jbns3Mvm254na3pC6dH0V9QBXgw1YCqsW9IkzzTcTNw2lZxyGMfWye7PNUwg9rqd
+         WYYw47oupGQItPTD5ZKDkIY0MZ7wlSeXypcmQ3m3QPqEZqYbNeNgPFnM23tcC6uKKo
+         4+p1U9MuRoxxuCX9T1b59IkCOynN44fPC7R9fC8ehcn2CTvZW+fIQdiXCTRqdrw6sa
+         GXBLD8pEHB4Og==
 From:   Baruch Siach <baruch@tkos.co.il>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Baruch Siach <baruch@tkos.co.il>,
+Cc:     Baruch Siach <baruch.siach@siklu.com>,
+        Rob Herring <robh@kernel.org>,
         Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
         Kathiravan T <kathirav@codeaurora.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -45,10 +46,12 @@ Cc:     Baruch Siach <baruch@tkos.co.il>,
         Bryan O'Donoghue <pure.logic@nexus-software.ie>,
         linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v6 0/3] PCI: IPQ6018 platform support
-Date:   Mon,  7 Feb 2022 16:51:23 +0200
-Message-Id: <cover.1644234441.git.baruch@tkos.co.il>
+Subject: [PATCH v6 1/3] PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
+Date:   Mon,  7 Feb 2022 16:51:24 +0200
+Message-Id: <2525ebececdd7597c03c1b460924628735b43c59.1644234441.git.baruch@tkos.co.il>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1644234441.git.baruch@tkos.co.il>
+References: <cover.1644234441.git.baruch@tkos.co.il>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -60,72 +63,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series adds support for the single PCIe lane on IPQ6018 SoCs. The code is 
-ported from downstream Codeaurora v5.4 kernel. The main difference from 
-downstream code is the split of PCIe registers configuration from .init to 
-.post_init, since it requires phy_power_on().
+From: Baruch Siach <baruch.siach@siklu.com>
 
-Tested on IPQ6010 based hardware.
+These are common dwc macros that will be used for other platforms.
 
-Changes in v6:
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
+---
+ drivers/pci/controller/dwc/pcie-designware.h | 6 ++++++
+ drivers/pci/controller/dwc/pcie-tegra194.c   | 6 ------
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-  * Drop DT patch applied to the qcom tree
-
-  * Normalize driver changes subject line
-
-  * Add a preparatory patch to rename PCIE_CAP_LINK1_VAL to PCIE_CAP_SLOT_VAL,
-    and define it using PCI_EXP_SLTCAP_* macros
-
-  * Drop a vague comment about ASPM configuration
-
-  * Add a comment about the source of delay periods
-
-Changes in v5:
-
-  * Remove comments from qcom_pcie_init_2_9_0() (Bjorn Andersson)
-
-Changes in v4:
-
-  * Drop applied DT bits
-
-  * Add max-link-speed that was missing from the applied v2 patch
-
-  * Rebase the driver on v5.16-rc3
-
-Changes in v3:
-
-  * Drop applied patches
-
-  * Rely on generic code for speed setup
-
-  * Drop unused macros
-
-  * Formatting fixes
-
-Changes in v2:
-
-  * Add patch moving GEN3_RELATED macros to a common header
-
-  * Drop ATU configuration from pcie-qcom
-
-  * Remove local definition of common registers
-
-  * Use bulk clk and reset APIs
-
-  * Remove msi-parent from device-tree
-
-Baruch Siach (2):
-  PCI: dwc: tegra: move GEN3_RELATED DBI register to common header
-  PCI: qcom: Define slot capabilities using PCI_EXP_SLTCAP_*
-
-Selvam Sathappan Periakaruppan (1):
-  PCI: qcom: Add IPQ60xx support
-
- drivers/pci/controller/dwc/pcie-designware.h |   7 +
- drivers/pci/controller/dwc/pcie-qcom.c       | 155 ++++++++++++++++++-
- drivers/pci/controller/dwc/pcie-tegra194.c   |   6 -
- 3 files changed, 160 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 7d6e9b7576be..ea87809ee298 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -74,6 +74,12 @@
+ #define PCIE_MSI_INTR0_MASK		0x82C
+ #define PCIE_MSI_INTR0_STATUS		0x830
+ 
++#define GEN3_RELATED_OFF			0x890
++#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
++#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
++#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
++#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
++
+ #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
+ #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index b1b5f836a806..74bf66d9afeb 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -193,12 +193,6 @@
+ #define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK	GENMASK(23, 8)
+ #define GEN3_EQ_CONTROL_OFF_FB_MODE_MASK	GENMASK(3, 0)
+ 
+-#define GEN3_RELATED_OFF			0x890
+-#define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
+-#define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
+-#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
+-#define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
+-
+ #define PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT	0x8D0
+ #define AMBA_ERROR_RESPONSE_CRS_SHIFT		3
+ #define AMBA_ERROR_RESPONSE_CRS_MASK		GENMASK(1, 0)
 -- 
 2.34.1
 
