@@ -2,325 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E4034AC302
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Feb 2022 16:24:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2413F4AC2FF
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Feb 2022 16:24:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237336AbiBGPXr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Feb 2022 10:23:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36558 "EHLO
+        id S1345371AbiBGPXs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Feb 2022 10:23:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442930AbiBGPKN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Feb 2022 10:10:13 -0500
-Received: from mx.tkos.co.il (guitar.tcltek.co.il [84.110.109.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B11C0401C1;
-        Mon,  7 Feb 2022 07:08:44 -0800 (PST)
-Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id D7317440F7B;
-        Mon,  7 Feb 2022 16:51:34 +0200 (IST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-        s=default; t=1644245495;
-        bh=SD/ZLlPUKKUxnVPYw6K+HWOEvaIsL2si6/6u25AtQzU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EP/aGgPHZrulAHQmz3UvZLB/SN2+sNqLMgUHcx1XBwmk4yOFFLPVN96JNin8SnX7C
-         ZjRep3OrPisUZuOtWkqcwRqVLZy1vuhbDRU16nShwIlczcsnBnqS8h3fIuyrRMRprR
-         33l6+eCA2bS5HP1VFCi/Uq5ydsAbZKsqBf2fviNs1e7gQePE0Dryije+LT+abXoOh4
-         Dm2M+mrZPPvfj1Zr5ghbPa69nAsd/eMzd9FNzsjsVyVpSgzH5anacDZMl1YXc4FyUm
-         luiarTmolKWSQUPskS6HombvOf6J3ERsFuM+ZrBoI4qilTnjJgLOB79jSDqRZGvCQv
-         lc+xVmtfOjBHg==
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
-        Baruch Siach <baruch.siach@siklu.com>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Bryan O'Donoghue <pure.logic@nexus-software.ie>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v6 3/3] PCI: qcom: Add IPQ60xx support
-Date:   Mon,  7 Feb 2022 16:51:26 +0200
-Message-Id: <cf844612a67775adbecc7e7ddbbe55a102f27e13.1644234441.git.baruch@tkos.co.il>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1644234441.git.baruch@tkos.co.il>
-References: <cover.1644234441.git.baruch@tkos.co.il>
+        with ESMTP id S1358359AbiBGPA1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Feb 2022 10:00:27 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2087.outbound.protection.outlook.com [40.107.243.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DE7C0401C1;
+        Mon,  7 Feb 2022 07:00:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qf7hdowsQAPSwZt3Wi8FbyH01Xs/UgZz5UJ/3nzmfDsC99EdY0De5U6MAKrxQ77Pa4tCOiSSyDotGOx82rg7FKD9gW5qLVW0f7M/HemS5AiRxoKzluEEQGOZMhbxvhaee6F1cMi4Jb91QRGpISwaZLQYYCzQeWw8SabNWm54LhWESMKfUFg3aU9IVXh3pEuxJJmIueF+ycA5ut0Kp7Br9kmQXD0l4h60TWnRegvoFS2z3GWvVrmF+S4i09FfRDdLiyIilOD6T/PRmo2wMkq8xNXufqXH++09qhQ8hAKgo/XCgWosm+CRxCn4sPx+7C+kcNwJhruCcR3EQH9miitsNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qdSN06sFX9HHs9TCyy4AmyO8E61WVVPvHzEnmPL0aBc=;
+ b=UpKU+ahwF9QSoWpHY+0oUhyX81peepD1DuFrWL3DfFxLdnhYEPVoV7Q0joqVXjR9OLwgfQLFW+Cx4xR6/FWxKNSd+1vmIhhb4z2Dhr3HoZnBP3gfAhdEBsrGFzmkVVE+jnx5tReyLVoFAy0CxuGAKvxBraBMW4h14oIJEdqgvuyRtLxELPHAWr86PSO4tsTY6e12kgnHOcTKdn5Gn7Wj5KrldkqBxoWnAA0os+WuGhPZ+UhXnY0g5AlWuDM3tJSAs/cVgjWPqFV5Y8ot9TBEd527/Y528YfFCxBT3RX5KZB8uRv0ACds1z7KN1z1w7htgyXXTGVMVGde1LgrJqdfHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qdSN06sFX9HHs9TCyy4AmyO8E61WVVPvHzEnmPL0aBc=;
+ b=NyLKvaFxv4JdGaWWzzzOmoGZb5ycoJl9aND7nedAFKGwgdIWNTQESb2EaJ3yVHtzGmNaI5P6NhyJxyjfQj6oWVJKaApIhAfcfWtMrS4Ozd9M50fAg/9iQ065DsfpJZrZPzRD48tXLBAx8dL2vWecafeyjN5buT3KQoGsvQdsPRI=
+Received: from BL1PR12MB5144.namprd12.prod.outlook.com (2603:10b6:208:316::6)
+ by MN2PR12MB3693.namprd12.prod.outlook.com (2603:10b6:208:159::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.14; Mon, 7 Feb
+ 2022 15:00:19 +0000
+Received: from BL1PR12MB5144.namprd12.prod.outlook.com
+ ([fe80::99d4:4d4f:653f:61be]) by BL1PR12MB5144.namprd12.prod.outlook.com
+ ([fe80::99d4:4d4f:653f:61be%5]) with mapi id 15.20.4951.019; Mon, 7 Feb 2022
+ 15:00:19 +0000
+From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Limonciello, Mario" <Mario.Limonciello@amd.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>
+Subject: RE: [PATCH 0/2] Mark USB4 controllers as is_thunderbolt
+Thread-Topic: [PATCH 0/2] Mark USB4 controllers as is_thunderbolt
+Thread-Index: AQHYGfUZ8uN1dYeam0W687TAa8QHVqyHp7CAgACJyAA=
+Date:   Mon, 7 Feb 2022 15:00:19 +0000
+Message-ID: <BL1PR12MB5144B3A3F70AE921721E1397F72C9@BL1PR12MB5144.namprd12.prod.outlook.com>
+References: <20220204182820.130339-1-mario.limonciello@amd.com>
+ <YgC/NQFN7yOffKv3@lahna>
+In-Reply-To: <YgC/NQFN7yOffKv3@lahna>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2022-02-07T14:55:14Z;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=1eb29f6c-51cd-4e09-9f72-ed2a2a06ba6b;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2022-02-07T15:00:13Z
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: b9875dcc-c872-4a96-ae21-a726964e0718
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9d85c462-5d95-47ba-1a4d-08d9ea4a8ece
+x-ms-traffictypediagnostic: MN2PR12MB3693:EE_
+x-microsoft-antispam-prvs: <MN2PR12MB36937E9F1FE64ED810832F3BF72C9@MN2PR12MB3693.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8xsGF/NU0J6yMq259I4YL7BKfqkSfzJ/nDpxdEgg4M3oqnGYUTOS/mCOnY6b46GXoQ2fdcza+j0ydN1DTG2OceIQVB2U5xwtx4h4XYuas0FP4jbw5Gz3nXAfrATkXAt/OFAonE/OrYHtiwmV+NtVNpZHLHLOYpu1c8kD+/CiL6dxZxtQ7iviXyiQugO9VbpwWEuZzRAJd4t/ZyTkEtS5cT4Hf3QwRkeKfZFENofs+u5LZG2ZePMVZaxe3zdyiHKQEWNOYVaaqJ+O/lHF+3vym4ygw4GOuTS4DLeXyqVEQP6SLsmmcEphhI2qRrZQxK0gtz/xNUvllEQulC0CCTPDClJWX0AcJ3TMUzu+5pqaNqQ3w9IBYsE89MrF52MVZTP0AGdzQ+Xa14AsDn0URTxfyv9RvnoIdzB0gU9JvLU5A+RGnITr+v7rNsTiL/z/6HDNQJhzoJwmwXr/vEl88OODXf72tuVn9GSwt4CgUIT8TTbJBRaOeXKDVh5jp1sIKSKjlCijVpIQwL5FPNsERggGH7XAA1PhEF4ury/QibrF2MFbcI2fx91hplCHVNAJbkFZacmVVYr3vx6eaMCyDDqtNW+gxOfl/OH0A5JmdEpwgG4IXRSvLBvjHmLG/oCnae2NG8kzTYlpZBUUl1ifsXQbuSXm2cVHbUmfuUXtlSvl4q78hAq0CA4L5RltnQb16zoM3YOLfKI/F1rD7djPDOZaWg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5144.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(122000001)(6636002)(316002)(110136005)(38100700002)(33656002)(64756008)(8936002)(54906003)(66446008)(66476007)(66556008)(8676002)(2906002)(76116006)(55016003)(66946007)(86362001)(5660300002)(508600001)(4326008)(38070700005)(52536014)(71200400001)(53546011)(9686003)(6506007)(83380400001)(7696005)(26005)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?IuHTVnXcqq63WDo2EV/zi/h1NExbR04+pM3GRxinz6zcc7dfrQOF0hM6eGYd?=
+ =?us-ascii?Q?U50gaCDghCzC0d5TA1SQHgqvWv2BcitCcrcQ1PqIXKmJhJMp4RVnHigDSKV1?=
+ =?us-ascii?Q?1AOCS8eJ1IrzLIhzgV0P6LfupvTnS6rxnZEvmVVB+YtJZQW/Ft6/GsJMvi5l?=
+ =?us-ascii?Q?4/AF5TQZI6VKx3c3Enx0FJztPmKOSVkzMqSHbYL/H1bCSLIkCO5C0SGv87Xe?=
+ =?us-ascii?Q?JVW+Y/VjPlVN2ElNaVVDEyLg8lkgLX3w0Lohy0BbCiEDLzQ1M0XQzTP81oo2?=
+ =?us-ascii?Q?q8CwHQwxHQuqMWO2pMm1uhTmWAYfHAHJfBvmYJNBvlhmIErFTlSqfTN0Rjc5?=
+ =?us-ascii?Q?M3Oi9O1yk/ivKM/16UppeA8rWC+1UtzwKYs1Y8gIc3flOIYr+sksUaqsRlji?=
+ =?us-ascii?Q?NVNxQ+G+SMwbKsTvvvWGp5LpI44lMjRMF6iwZ+qUztwdK0xvIW2MlcPDIn3V?=
+ =?us-ascii?Q?Tj8AjcfmP1YzVBwXUthsTX59tfwDsCqi8LNfnEoOwIRbPTzB+a5Mn5GDV+oI?=
+ =?us-ascii?Q?USTt2uAGXtN7HvShrlaY91YchkjvZKi55UgsVs0wxrfdazpRwvexd/KxKnqU?=
+ =?us-ascii?Q?zyhJmJV37y+drJvu6+6xcmPLbqW37PgI2rVk6vI7rghyzU4h5CuVLCoIbzpa?=
+ =?us-ascii?Q?lUEPAJIL0zmGKkHoJdPcpTrCs7UXTmn727vRmRmOzwRbkogWVoxUCKKFGxsr?=
+ =?us-ascii?Q?D5Et9KWBJ/bagbG+WZRmr1RQq+XdvCD2/URt6mMr3ZXk8aDwl+KiQJBgIkk2?=
+ =?us-ascii?Q?u/3IIwaw/aIe+2TfwE/3Fz4nlgf8Slkl2+05ecBBZmdRkoL3J2CtzXL7Ruwc?=
+ =?us-ascii?Q?qQgQahECJNjoA6vwuj4575ANnZNfCWqsxIEsJcFAlmJqRpeIxVuNeTEfWIwn?=
+ =?us-ascii?Q?u1P4wywXoxyVknt8e+HTM02tONAdDS9Blha+XgeL4JKN4KiPSl8nEsjAy0NY?=
+ =?us-ascii?Q?OoZMnN4SVBNodSga5D6u86XWEzRmRC2PAjYR1RYDRn7D3nXTkNJw9jBcyN5i?=
+ =?us-ascii?Q?PQDE1eXR3Kjv6Xav3Q+DcoCjc55AlJzUBrYRo6B4mEN/MVq49CKHDEtPLs5F?=
+ =?us-ascii?Q?9TUH/xaxsDDrKpWY1jWF6n/xlu9nIyvL0Pld0t+xJ5UPsE43c7CY/d554QAH?=
+ =?us-ascii?Q?/wo2dLbgwG2NS+4ZEP/Z5rg8vLwc/qwH7xkubvrXx/t0q0Kfm8s8zafrPnjD?=
+ =?us-ascii?Q?ZKLtyUl3F43FC4Wyhh4m/8Iqq5qnHlx2LiP/6I5zxxHJMiqoD9jD96mnk0wl?=
+ =?us-ascii?Q?M6Oxu7ePu/BcqMlyJhWEC1uqmjNepDM+oDIW0xQAYmgP/vMpdIsYbLAlj/LH?=
+ =?us-ascii?Q?DAh+iTB9ceJZV0ahrcmlVfSMVuGwEQ0fucGoQsiirc1jQ8fvvRO/YtB8ThWT?=
+ =?us-ascii?Q?3JlhVHhm9Fc2fGYqbYrdNpWY7A+C1OMc8aWjyu97AdgUmGc463qP1qaCf85b?=
+ =?us-ascii?Q?ye692gVVrHt31MGfcbbcjNDtPzQ/90Pf4YW3OwC1xxJkwuPWBu1weWSIoyGM?=
+ =?us-ascii?Q?iuy7CcmOioOatKSV7XFH/QZ60pCs+tssFxp0y+7Osl8lmRNYxmyZpYGzJAuM?=
+ =?us-ascii?Q?uULrH/IxRFHegg4yuf8MGtjYCkoSs4VxcIWH5/7OM9Nzfqg1+vSklEBb2PU6?=
+ =?us-ascii?Q?jJf+zZwBJEU1tbnc1En0nAg=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5144.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d85c462-5d95-47ba-1a4d-08d9ea4a8ece
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2022 15:00:19.3362
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: goayZ4TWP0n8eWkoN5c+lyXRikvqWN5BmuodqcOPN3JOdH/GL63rqouWiORIOHuMyP8Dj0fgcESFloWCaRd2rA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3693
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        T_SPF_HELO_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+[Public]
 
-IPQ60xx series of SoCs have one port of PCIe gen 3. Add support for that
-platform.
+> -----Original Message-----
+> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Sent: Monday, February 7, 2022 1:42 AM
+> To: Limonciello, Mario <Mario.Limonciello@amd.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>; Andreas Noever
+> <andreas.noever@gmail.com>; open list:PCI SUBSYSTEM <linux-
+> pci@vger.kernel.org>; open list:THUNDERBOLT DRIVER <linux-
+> usb@vger.kernel.org>; Michael Jamet <michael.jamet@intel.com>; Yehezkel
+> Bernat <YehezkelShB@gmail.com>; Deucher, Alexander
+> <Alexander.Deucher@amd.com>
+> Subject: Re: [PATCH 0/2] Mark USB4 controllers as is_thunderbolt
+>=20
+> Hi Mario,
+>=20
+> On Fri, Feb 04, 2022 at 12:28:18PM -0600, Mario Limonciello wrote:
+> > Various drivers in the kernel use `pci_is_thunderbolt_attached` to
+> > designate behaving differently from a device that is internally in the
+> > machine. This function relies upon the `is_thunderbolt` designation
+> > which checks for a specific capability only set on Intel controllers.
+> >
+> > Non-Intel USB4 designs should also match this designation so that they
+> > can be treated the same regardless of the host they're connected to.
+>=20
+> Not objecting this if really needed but since USB4 is supposed to be
+> transparent to the native (tunneled) protocol, I would rather try to figu=
+re out
+> if there is really need to change driver behaviour whether it is connecte=
+d
+> over USB4 or plugged natively on the PCIe slot.
+>=20
+> Can you elaborate a bit what kind of functionality needs this? Perhaps we=
+ can
+> figure a better alternative?
 
-The code is based on downstream[1] Codeaurora kernel v5.4 (branch
-win.linuxopenwrt.2.0).
+In the AMD GPU driver we use it to determine which dGPU is built into a pla=
+tform vs. externally connected since the internal one uses ACPI for certain=
+ things and the external one does not.  There are probably other ways to de=
+termine this, but it's not in place at the moment.
 
-Split out the DBI registers access part from .init into .post_init. DBI
-registers are only accessible after phy_power_on().
-
-[1] https://source.codeaurora.org/quic/qsdk/oss/kernel/linux-ipq-5.4/
-
-Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
----
-v6:
-
-Address Bjorn Helgaas comments:
-
-  * Rename PCIE_CAP_LINK1_VAL to PCIE_CAP_SLOT_VAL
-
-  * Drop a vague comment about ASPM configuration
-
-  * Add a comment about the source of delay periods
-
-v5:
-
-  * Remove comments from qcom_pcie_init_2_9_0() (Bjorn Andersson)
-
-v4:
-
-  * Rebase on v5.16-rc1
-
-v3:
-  * Drop speed setup; rely on generic code (Rob Herring)
-
-  * Drop unused CLK_RATE macros (Bjorn Helgaas)
-
-  * Minor formatting fixes (Bjorn Helgaas)
-
-  * Add reference to downstream Codeaurora kernel tree (Bjorn Helgaas)
-
-v2:
-  * Drop ATU configuration; rely on common code instead
-
-  * Use more common register macros
-
-  * Use bulk clk and reset APIs
----
- drivers/pci/controller/dwc/pcie-designware.h |   1 +
- drivers/pci/controller/dwc/pcie-qcom.c       | 140 +++++++++++++++++++
- 2 files changed, 141 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index ea87809ee298..279c3778a13b 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -76,6 +76,7 @@
- 
- #define GEN3_RELATED_OFF			0x890
- #define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
-+#define GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS	BIT(13)
- #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
- #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
- #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 01e58b057d2a..8dba74069180 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -52,6 +52,10 @@
- #define PCIE20_PARF_DBI_BASE_ADDR		0x168
- #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
- #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
-+#define AHB_CLK_EN				BIT(0)
-+#define MSTR_AXI_CLK_EN				BIT(1)
-+#define BYPASS					BIT(4)
-+
- #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT	0x178
- #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2	0x1A8
- #define PCIE20_PARF_LTSSM			0x1B0
-@@ -182,6 +186,11 @@ struct qcom_pcie_resources_2_7_0 {
- 	struct clk *ref_clk_src;
- };
- 
-+struct qcom_pcie_resources_2_9_0 {
-+	struct clk_bulk_data clks[5];
-+	struct reset_control *rst;
-+};
-+
- union qcom_pcie_resources {
- 	struct qcom_pcie_resources_1_0_0 v1_0_0;
- 	struct qcom_pcie_resources_2_1_0 v2_1_0;
-@@ -189,6 +198,7 @@ union qcom_pcie_resources {
- 	struct qcom_pcie_resources_2_3_3 v2_3_3;
- 	struct qcom_pcie_resources_2_4_0 v2_4_0;
- 	struct qcom_pcie_resources_2_7_0 v2_7_0;
-+	struct qcom_pcie_resources_2_9_0 v2_9_0;
- };
- 
- struct qcom_pcie;
-@@ -1308,6 +1318,122 @@ static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
- 	clk_disable_unprepare(res->pipe_clk);
- }
- 
-+static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int ret;
-+
-+	res->clks[0].id = "iface";
-+	res->clks[1].id = "axi_m";
-+	res->clks[2].id = "axi_s";
-+	res->clks[3].id = "axi_bridge";
-+	res->clks[4].id = "rchng";
-+
-+	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-+	if (ret < 0)
-+		return ret;
-+
-+	res->rst = devm_reset_control_array_get_exclusive(dev);
-+	if (IS_ERR(res->rst))
-+		return PTR_ERR(res->rst);
-+
-+	return 0;
-+}
-+
-+static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-+
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
-+}
-+
-+static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-+	struct device *dev = pcie->pci->dev;
-+	int ret;
-+
-+	ret = reset_control_assert(res->rst);
-+	if (ret) {
-+		dev_err(dev, "reset assert failed (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * Delay periods before and after reset deassert are working values
-+	 * from downstream Codeaurora kernel
-+	 */
-+	usleep_range(2000, 2500);
-+
-+	ret = reset_control_deassert(res->rst);
-+	if (ret) {
-+		dev_err(dev, "reset deassert failed (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	usleep_range(2000, 2500);
-+
-+	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-+	if (ret)
-+		goto err_reset;
-+
-+	return 0;
-+
-+err_reset:
-+	reset_control_assert(res->rst);
-+
-+	return ret;
-+}
-+
-+static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	u32 val;
-+	int i;
-+
-+	writel(SLV_ADDR_SPACE_SZ,
-+		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-+	val &= ~BIT(0);
-+	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-+
-+	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-+
-+	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
-+	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
-+		pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-+	writel(GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS
-+		| GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL,
-+		pci->dbi_base + GEN3_RELATED_OFF);
-+
-+	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
-+		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-+		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
-+		pcie->parf + PCIE20_PARF_SYS_CTRL);
-+
-+	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
-+
-+	dw_pcie_dbi_ro_wr_en(pci);
-+	writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
-+
-+	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
-+	val &= ~PCI_EXP_LNKCAP_ASPMS;
-+	writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
-+
-+	writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
-+			PCI_EXP_DEVCTL2);
-+
-+	for (i = 0; i < 256; i++)
-+		writel(0x0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N
-+				+ (4 * i));
-+
-+	return 0;
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-@@ -1498,6 +1624,15 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
- 	.config_sid = qcom_pcie_config_sid_sm8250,
- };
- 
-+/* Qcom IP rev.: 2.9.0  Synopsys IP rev.: 5.00a */
-+static const struct qcom_pcie_ops ops_2_9_0 = {
-+	.get_resources = qcom_pcie_get_resources_2_9_0,
-+	.init = qcom_pcie_init_2_9_0,
-+	.post_init = qcom_pcie_post_init_2_9_0,
-+	.deinit = qcom_pcie_deinit_2_9_0,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+};
-+
- static const struct qcom_pcie_cfg apq8084_cfg = {
- 	.ops = &ops_1_0_0,
- };
-@@ -1531,6 +1666,10 @@ static const struct qcom_pcie_cfg sc7280_cfg = {
- 	.pipe_clk_need_muxing = true,
- };
- 
-+static const struct qcom_pcie_cfg ipq6018_cfg = {
-+	.ops = &ops_2_9_0,
-+};
-+
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = qcom_pcie_link_up,
- 	.start_link = qcom_pcie_start_link,
-@@ -1640,6 +1779,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
- 	{ .compatible = "qcom,pcie-sc8180x", .data = &sm8250_cfg },
- 	{ .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
-+	{ .compatible = "qcom,pcie-ipq6018", .data = &ipq6018_cfg },
- 	{ }
- };
- 
--- 
-2.34.1
-
+Alex
