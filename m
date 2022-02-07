@@ -2,114 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 163EB4AB015
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Feb 2022 15:59:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28EDA4AB47F
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Feb 2022 07:16:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233295AbiBFO7O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 6 Feb 2022 09:59:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43998 "EHLO
+        id S243967AbiBGGPo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Feb 2022 01:15:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231978AbiBFO7O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Feb 2022 09:59:14 -0500
-X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 06 Feb 2022 06:59:13 PST
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 96293C06173B
-        for <linux-pci@vger.kernel.org>; Sun,  6 Feb 2022 06:59:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644159552;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=uX4lWbiYHZ8NWu80q7dFh0qDvrig4tAryOtejA4ht4k=;
-        b=g4Y9L8tJu7JPIiqjt+gelFXayMiIQw+UE4IFgIsY4LG7Ap9ehuSflOt4Pa5VvrFbbMCKky
-        YR/wk8dZk6rWtMhOGaElA1Ebk/SP/T05vsND4vvNftR9F714Y7/eGCRb8DjE1DvKUb1M3t
-        jVhqnIj6sFieJ1rbW1cDsQQ7KHId+zw=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-119-hEoXsMYIMom8YcXVMHOquw-1; Sun, 06 Feb 2022 09:58:08 -0500
-X-MC-Unique: hEoXsMYIMom8YcXVMHOquw-1
-Received: by mail-qt1-f197.google.com with SMTP id a6-20020ac844a6000000b002cf3968d32aso9112875qto.1
-        for <linux-pci@vger.kernel.org>; Sun, 06 Feb 2022 06:58:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uX4lWbiYHZ8NWu80q7dFh0qDvrig4tAryOtejA4ht4k=;
-        b=OsdEfVPsQ6y3GMjeGo5WJ161W8+zwVtKGNovUn1xwWXHCKrs95pAOb0P3Dy4QY2I//
-         tc4o4mlsKEs3eycuPvm3+CPmgXDt1uk7QIwp2bn8ctRD9IF2zGbv3M5v3C8u8H5J5zjt
-         6BBmExxKMhpMFIzs4KEvjJcm2buwCT3RqnjDpbY9DowqZJBc5pVBh43NYsU/WW/CnPDL
-         jYgMNHbRBJJOgJ3Az74dX0O/0dp+y4ys9E/RIEQRAc4L2QSEFmpx+LIjkC1VDpMWvKJh
-         F1tfOXBqSQUJnXF7Rwie4aNODda5Qgm6fqGdJMeY0bhC/h/22jIN+W1gIiGGU3amvciY
-         gAWw==
-X-Gm-Message-State: AOAM532dbFRKHOTrVazJrIPujaS9KaglwLcWX1rCyQj8Uvhmh1QXheT6
-        ERPt+isvKWdmKiALMYs9VwKJWvs8NOOxEpOsI+e+hk0I6i0bxmg2Ira/ygVG9j5ErHE5xY6cwFJ
-        jBsnogdH/bbWodHNluEWX
-X-Received: by 2002:a05:620a:210d:: with SMTP id l13mr4202090qkl.276.1644159488354;
-        Sun, 06 Feb 2022 06:58:08 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyzMMFTsVYuA3WsMa5aAtZSa2Zi+YOirEF8uFgzKhOcPAqZ1RB6Xj6uxrY4Qwi7RDDYG5p59A==
-X-Received: by 2002:a05:620a:210d:: with SMTP id l13mr4202080qkl.276.1644159488194;
-        Sun, 06 Feb 2022 06:58:08 -0800 (PST)
-Received: from localhost.localdomain.com (024-205-208-113.res.spectrum.com. [24.205.208.113])
-        by smtp.gmail.com with ESMTPSA id l202sm4030030qke.66.2022.02.06.06.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Feb 2022 06:58:07 -0800 (PST)
-From:   trix@redhat.com
-To:     rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Tom Rix <trix@redhat.com>
-Subject: [PATCH] ACPI: cleanup double word in comment
-Date:   Sun,  6 Feb 2022 06:58:03 -0800
-Message-Id: <20220206145803.2011247-1-trix@redhat.com>
-X-Mailer: git-send-email 2.26.3
+        with ESMTP id S234999AbiBGENF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Feb 2022 23:13:05 -0500
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2071.outbound.protection.outlook.com [40.107.96.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A8BDC061A73;
+        Sun,  6 Feb 2022 20:13:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EgwbHjUWImcF4xdTHv+K5ZrCkP4zZFPWxYYIK79wTRQXTCpHigIHW249bioDQ8csI58lyjSt0Y7QZ2AxnLnjQAPSRtAjhVl4krp2tZb/dqQrjOGsFn8REB7tX2Al/1haHAjWfiDuKxF2pxFS+1RPvGmO9AeeX7bhd6UtwrKHOFTdQAaozIwMWxc+Fcx/IQxmVdYLOdXzWWE7qAgoKE2oksVzwBo/6BK0RN2k2zUeEAUQ5GosJoJJyry3901hqffNbIybnqgjpQXE3tmrkgsyRUgRi+H7lMLCvZlrt0qhayMOWdE3ch5NVNQJBEb9EAFCNgJeBEqvZkSh87Lhu3I5+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Svqj+OXpJNEBSKlWzrxDj/rz1V7xMHE3HSuZeNhhZmY=;
+ b=eN4TUsc4/oJLMSfMHmsL5VjZkZWWMm1PFo37XfojEgheByNI4gwI1srgS5hINJQ38HNwz3qn8xkEjVJliX538u2vOigKWyqrWwCo0Pf7OWiry7eHz8ixjMH/9fMpDgbZll7ASufPj03cchHgteBI0IcdnP+woLKz9wQH2Q/I2LdODF39viNo99SxMRgnvOfaDn2TARMiy5SLu1DEl432R1MFfhJnlHRzEhRcZmHjqrLUr6/974kSS+87QpnUq00qq0SD+mtmWkAlZloI3Po1ayMl7JxUD6yWnz3C9nJpZm/+6P2luA/pW0gIkAltrhX5MGXegIePUxb1avzkJ+Mm3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Svqj+OXpJNEBSKlWzrxDj/rz1V7xMHE3HSuZeNhhZmY=;
+ b=IYAFsrfl96iM1lA6wWE2yeolYmUhF8gg1rFKdwcCIGaIE9auPdB2TwaCznYFcR2/3bcbQ6Fh4LZ1TYGlBeMvs5qKQD7XRIa2qeJbxlhfcWkcHfSxYwvPX9RyItlPsYiIanVrYi56nuIjemQwjmC+seN4opW6xFmGfQupvC4D5Hg=
+Received: from DM5PR15CA0037.namprd15.prod.outlook.com (2603:10b6:4:4b::23) by
+ DM8PR02MB8038.namprd02.prod.outlook.com (2603:10b6:8:17::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4951.16; Mon, 7 Feb 2022 04:12:59 +0000
+Received: from DM3NAM02FT009.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:4:4b:cafe::9f) by DM5PR15CA0037.outlook.office365.com
+ (2603:10b6:4:4b::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.18 via Frontend
+ Transport; Mon, 7 Feb 2022 04:12:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ DM3NAM02FT009.mail.protection.outlook.com (10.13.5.5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4951.12 via Frontend Transport; Mon, 7 Feb 2022 04:12:59 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Sun, 6 Feb 2022 20:12:56 -0800
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Sun, 6 Feb 2022 20:12:56 -0800
+Envelope-to: linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ lorenzo.pieralisi@arm.com,
+ bhelgaas@google.com
+Received: from [10.140.9.2] (port=45184 helo=xhdbharatku40.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1nGvOa-0005Nx-8o; Sun, 06 Feb 2022 20:12:56 -0800
+From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <michals@xilinx.com>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH 0/2] Add support for Xilinx Versal CPM5 Root Port
+Date:   Mon, 7 Feb 2022 09:42:47 +0530
+Message-ID: <20220207041250.1658-1-bharat.kumar.gogada@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8c7c8e85-57fd-4f99-5e7c-08d9e9f0204f
+X-MS-TrafficTypeDiagnostic: DM8PR02MB8038:EE_
+X-Microsoft-Antispam-PRVS: <DM8PR02MB8038B294E4E5960C0236E7FDA52C9@DM8PR02MB8038.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: a21zLgB11vje+a0GfVoaFfXx5yc6OslZpwjVv1vioJOGAFT6o+SlMuXnHJDoOWNlKJTviAinrH+xt5OGhfly4RDt3ajqtRm4OGgzOD5BO2AYDTXgh5T4C2pOL3Xc0YfIw+tJjc26KKoSN/HtF0JbYSfqY7f+Wwwt1BvOktxIgoQRKxDx84hNDiT1l1fQ1RrMf7+DbTq7GUYfyNegwU5tyY3y93dQ3LJUqOiSVUqRh4h/HskmIRz1UngjmMnL8gzuSW7T4PXjfJWluyDW7qa+k3O/5p2UR7ENX4ob6gvsFcDid7HdXp/T+a19cW8NrZyNhOR/Wo30tIKuraD0WOf4sNpAErTcJJqudzAc/6fMyl0RQ61OU3CvD+mq48ohRubo/HkNK3fxEad4qrhUJRife6zW0GIOepUTl6GzYYf0h3SY1gWvmaj76ZA+JBQsFzJKu3GofHouBKNRpzmEutdMBqKBb7ZlfV7H5dIy7a0n1+8Ue2B8pyCYrVEcVk6pv4CsZ2ebs15C+VjouLKnxTkX6CfvCDMoEZQJA6YXmT45L9r1UIew7E9jK7dtHDX9DB1kCUSTfiY6+Ae5dU0SCenHUOzwWmACj6NWSZYZcISuqnqWycwS1G75wQJiIjK3PDqPCcnhD+m/YS3YJfZ6y/bCd93dJjrQkgYMaUquCcKMrMLt0UuBI/HUNsnm/WV72hMZfrblQJDmee7Y6nUf+PUWRc5uVW7jbIs+Ko6csmhQqWY=
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(5660300002)(356005)(36860700001)(4744005)(110136005)(7696005)(6666004)(82310400004)(54906003)(316002)(2906002)(186003)(336012)(426003)(70586007)(70206006)(7636003)(83380400001)(4326008)(8936002)(2616005)(9786002)(107886003)(1076003)(26005)(103116003)(8676002)(508600001)(47076005)(36756003)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2022 04:12:59.2193
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c7c8e85-57fd-4f99-5e7c-08d9e9f0204f
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT009.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR02MB8038
+X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIM_SIGNED,DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+Xilinx Versal Premium series has CPM5 block which supports Root port
+functioning at Gen5 speed.
+Xilinx Versal CPM5 has few changes with existing CPM block.
+- CPM5 has dedicated register space for control and status registers.
+- CPM5 legacy interrupt handling needs additonal register bit
+  to enable and handle legacy interrupts.
 
-Remove the second 'on' and 'those'.
+Bharat Kumar Gogada (2):
+  PCI: xilinx-cpm: Update YAML schemas for Versal CPM5 Root Port
+  PCI: xilinx-cpm: Add support for Versal CPM5 Root Port driver
 
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- drivers/acpi/Kconfig    | 2 +-
- drivers/acpi/pci_link.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ .../bindings/pci/xilinx-versal-cpm.yaml       | 47 ++++++++++++++++---
+ drivers/pci/controller/pcie-xilinx-cpm.c      | 33 ++++++++++++-
+ 2 files changed, 72 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index ba45541b1f1f8..9b93d8f328d4a 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -301,7 +301,7 @@ config ACPI_IPMI
- 	help
- 	  This driver enables the ACPI to access the BMC controller. And it
- 	  uses the IPMI request/response message to communicate with BMC
--	  controller, which can be found on on the server.
-+	  controller, which can be found on the server.
- 
- 	  To compile this driver as a module, choose M here:
- 	  the module will be called as acpi_ipmi.
-diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-index d54fb8e54671d..58647051c948a 100644
---- a/drivers/acpi/pci_link.c
-+++ b/drivers/acpi/pci_link.c
-@@ -185,7 +185,7 @@ static acpi_status acpi_pci_link_check_current(struct acpi_resource *resource,
- 			if (!p || !p->interrupt_count) {
- 				/*
- 				 * IRQ descriptors may have no IRQ# bits set,
--				 * particularly those those w/ _STA disabled
-+				 * particularly those w/ _STA disabled
- 				 */
- 				pr_debug("Blank _CRS IRQ resource\n");
- 				return AE_OK;
 -- 
-2.26.3
+2.17.1
 
