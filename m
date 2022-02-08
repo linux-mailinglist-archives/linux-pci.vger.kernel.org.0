@@ -2,153 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06B6B4AD71E
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 12:32:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B9884AD7CA
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 12:49:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376282AbiBHLbt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Feb 2022 06:31:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40382 "EHLO
+        id S1356476AbiBHLsU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Feb 2022 06:48:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244901AbiBHLVM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 06:21:12 -0500
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 967B9C03FEC0;
-        Tue,  8 Feb 2022 03:21:10 -0800 (PST)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4JtL7X0Ry6z1FD30;
-        Tue,  8 Feb 2022 19:16:56 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 8 Feb 2022 19:21:05 +0800
-CC:     "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        "liuqi (BA)" <liuqi115@huawei.com>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v3 8/8] iommu/arm-smmu-v3: Make default domain type of
- HiSilicon PTT device to identity
-To:     John Garry <john.garry@huawei.com>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
-        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-        "mike.leach@linaro.org" <mike.leach@linaro.org>,
-        "leo.yan@linaro.org" <leo.yan@linaro.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-References: <20220124131118.17887-1-yangyicong@hisilicon.com>
- <20220124131118.17887-9-yangyicong@hisilicon.com>
- <4f6f6e0f-4398-3018-cc35-6aa7ea1305fe@huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <ae45a637-2c67-4126-3007-6829320d5659@huawei.com>
-Date:   Tue, 8 Feb 2022 19:21:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S1356765AbiBHLsG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 06:48:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE1B6C02B65B;
+        Tue,  8 Feb 2022 03:36:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 10810B81852;
+        Tue,  8 Feb 2022 11:35:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 177FAC004E1;
+        Tue,  8 Feb 2022 11:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1644320146;
+        bh=oqAwa4TvaCnMLZq3Jlv14O8K41LAi+3ZANEnne9fz0M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=siGXsPr/vwToRWq39wEjRkdcljn1K5to7skGnrPV2dBflTsJ4s04w+5MYNHH2MLgU
+         exW8whDq9BB9MMZ9ZIuzeY4a4eV6YdYNMOUqiMg/11sTiO20Zd6MjjU3BQbvTdVQFl
+         OjZmXIupAGk46BOjC51jeLuv05KctkrjlzLJdQTE=
+Date:   Tue, 8 Feb 2022 12:35:43 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 02/14] driver core: Add dma_cleanup callback in
+ bus_type
+Message-ID: <YgJVj/EmzjtR2SKk@kroah.com>
+References: <20220104015644.2294354-1-baolu.lu@linux.intel.com>
+ <20220104015644.2294354-3-baolu.lu@linux.intel.com>
+ <YdQcpHrV7NwUv+qc@infradead.org>
+ <20220104123911.GE2328285@nvidia.com>
+ <YdRFyXWay/bdSSem@kroah.com>
+ <608192e0-136a-57fc-cb2c-3ebb42874788@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <4f6f6e0f-4398-3018-cc35-6aa7ea1305fe@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <608192e0-136a-57fc-cb2c-3ebb42874788@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/2/8 16:05, John Garry wrote:
-> On 24/01/2022 13:11, Yicong Yang wrote:
->> The DMA of HiSilicon PTT device can only work with identical
->> mapping. So add a quirk for the device to force the domain
->> passthrough.
+On Tue, Feb 08, 2022 at 01:55:29PM +0800, Lu Baolu wrote:
+> Hi Greg,
 > 
-> This patch should be earlier in the series, before the PTT driver, and the comment on hisi_ptt_check_iommu_mapping() should mention what is going on here.
+> On 1/4/22 9:04 PM, Greg Kroah-Hartman wrote:
+> > On Tue, Jan 04, 2022 at 08:39:11AM -0400, Jason Gunthorpe wrote:
+> > > On Tue, Jan 04, 2022 at 02:08:36AM -0800, Christoph Hellwig wrote:
+> > > > All these bus callouts still looks horrible and just create tons of
+> > > > boilerplate code.
+> > > 
+> > > Yes, Lu - Greg asked questions then didn't respond to their answers
+> > > meaning he accepts them, you should stick with the v4 version.
+> > 
+> > Trying to catch up on emails from the break, that was way down my list
+> > of things to get back to as it's messy and non-obvious.  I'll revisit it
+> > again after 5.17-rc1 is out, this is too late for that merge window
+> > anyway.
 > 
-
-ok I'll reorder the serives and modify the comments of hisi_ptt_check_iommu_mapping() like:
-
-/*
- * The DMA of PTT trace can only use direct mapping, due to some
- * hardware restriction. Check whether there is an iommu or the
- * policy of the iommu domain is passthrough, otherwise the trace
- * cannot work.
- *
- * The PTT device is supposed to behind the arm smmu v3, which
- * should have passthrough the device by a quirk. Otherwise user
- * should manually set the iommu domain type to identity through
- * sysfs.
- */
-
->>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->> ---
->>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
->>
->> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
->> index 6dc6d8b6b368..6f67a2b1dd27 100644
->> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
->> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
->> @@ -2838,6 +2838,21 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
->>       }
->>   }
->>   +#define IS_HISI_PTT_DEVICE(pdev)    ((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
->> +                     (pdev)->device == 0xa12e)
+> In this series we want to add calls into the iommu subsystem during
+> device driver binding/unbinding, so that the device DMA ownership
+> conflict (kernel driver vs. user-space) could be detected and avoided
+> before calling into device driver's .probe().
 > 
-> I assume that not all revisions will require this check, right?
+> In this v5 series, we implemented this in the affected buses (amba/
+> platform/fsl-mc/pci) which are known to support assigning devices to
+> user space through the vfio framework currently. And more buses are
+> possible to be affected in the future if they also want to support
+> device assignment. Christoph commented that this will create boilerplate
+> code in various bus drivers.
 > 
-
-For current revisions it's necessary.
-
->> +
->> +static int arm_smmu_def_domain_type(struct device *dev)
->> +{
->> +    if (dev_is_pci(dev)) {
->> +        struct pci_dev *pdev = to_pci_dev(dev);
->> +
->> +        if (IS_HISI_PTT_DEVICE(pdev))
->> +            return IOMMU_DOMAIN_IDENTITY;
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->>   static struct iommu_ops arm_smmu_ops = {
->>       .capable        = arm_smmu_capable,
->>       .domain_alloc        = arm_smmu_domain_alloc,
->> @@ -2863,6 +2878,7 @@ static struct iommu_ops arm_smmu_ops = {
->>       .sva_unbind        = arm_smmu_sva_unbind,
->>       .sva_get_pasid        = arm_smmu_sva_get_pasid,
->>       .page_response        = arm_smmu_page_response,
->> +    .def_domain_type    = arm_smmu_def_domain_type,
->>       .pgsize_bitmap        = -1UL, /* Restricted during device attach */
->>       .owner            = THIS_MODULE,
->>   };
+> Back to v4 of this series (please refer to below link [1]), we added
+> this call in the driver core if buses have provided the dma_configure()
+> callback (please refer to below link [2]).
 > 
-> .
+> Which would you prefer, or any other suggestions? We need your guide to
+> move this series ahead. Please help to suggest.
+> 
+> [1] https://lore.kernel.org/linux-iommu/20211217063708.1740334-1-baolu.lu@linux.intel.com/
+> [2] https://lore.kernel.org/linux-iommu/20211217063708.1740334-3-baolu.lu@linux.intel.com/
+
+Let me look over the series again this afternooon.
+
+thanks,
+
+greg k-h
