@@ -2,64 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E8DB4ACEB6
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 03:14:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6C274AD00B
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 05:02:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238239AbiBHCOL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Feb 2022 21:14:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52894 "EHLO
+        id S1346650AbiBHECs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Feb 2022 23:02:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230123AbiBHCOK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Feb 2022 21:14:10 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7925C061355;
-        Mon,  7 Feb 2022 18:14:09 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 50854B80E8C;
-        Tue,  8 Feb 2022 02:14:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E7DC340ED;
-        Tue,  8 Feb 2022 02:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644286447;
-        bh=Fph4PJDbouMfoaJHcmJukTeg2f451EsGTJKeTIiJZTQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AKqCDZ0ciICkeWLsMS+jxD8yuxNERgXloYkmk70hFc5yTOC+PevPiv64CYSV8qUEt
-         03jcCn4L3b4+oEBOv81T9Q4lwzs1A2L+PK59kxWITXFncUbV3qrTcmDvZPRm79wesT
-         3xJRTK3IzIKA4G8zAd64fdg1a1aSLC9zUWPfJ+4+lydZult1W2+SQlYTbJPSVJxku/
-         4Vk8BWTD1vas64xk1lM7rfpqzJvFeU4kdPo6lHi1qpffOaDyvEadbn4cV/vBV9OPXG
-         m9rXXZwraGKbwuaJLngPJmX9nHA6ch4bgmzXxgvrDoX3uF+X4xVvt5/TQJctzRHplH
-         aAB5RWRiT7mZA==
-Received: by mail-vs1-f54.google.com with SMTP id v6so1821685vsp.11;
-        Mon, 07 Feb 2022 18:14:06 -0800 (PST)
-X-Gm-Message-State: AOAM530RHev1vkmYiPlX7rZGzxjlwFmh9NDtgoxtEyf0ievpu6KMNS09
-        TH98fHIzst6iXfkOl5/bD/HD/q8lQRh6aRkwP6o=
-X-Google-Smtp-Source: ABdhPJxBTS0pV366Usd6d6kkxREmCecGZHF4ioCnF9MTIf24VW5LPFIZRFdfHNpyS5oeM33yCJWt7os6PB7tAr29L1w=
-X-Received: by 2002:a67:fd55:: with SMTP id g21mr720208vsr.53.1644286446000;
- Mon, 07 Feb 2022 18:14:06 -0800 (PST)
-MIME-Version: 1.0
-References: <b0a06a30-f479-df9f-980c-b789f0f26ce9@linux.intel.com> <20220207175909.GA406079@bhelgaas>
-In-Reply-To: <20220207175909.GA406079@bhelgaas>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Tue, 8 Feb 2022 10:14:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4t96wJZs50qjJVnFSHXv7n9YeaXPaV32AGvO2SASWmYw@mail.gmail.com>
-Message-ID: <CAAhV-H4t96wJZs50qjJVnFSHXv7n9YeaXPaV32AGvO2SASWmYw@mail.gmail.com>
-Subject: Re: [PATCH v8 00/10] vgaarb: Rework default VGA device selection
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        David Airlie <airlied@linux.ie>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        with ESMTP id S239830AbiBHECq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Feb 2022 23:02:46 -0500
+X-Greylist: delayed 345 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 07 Feb 2022 20:02:45 PST
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E95C0401DC;
+        Mon,  7 Feb 2022 20:02:45 -0800 (PST)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 10DFF1A0C48;
+        Tue,  8 Feb 2022 04:56:56 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CCB9E1A0956;
+        Tue,  8 Feb 2022 04:56:55 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 43634183AC96;
+        Tue,  8 Feb 2022 11:56:54 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     l.stach@pengutronix.de, bhelgaas@google.com, broonie@kernel.org,
+        lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, festevam@gmail.com
+Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH v6 0/8] PCI: imx6: refine codes and add compliance tests mode support 
+Date:   Tue,  8 Feb 2022 11:25:27 +0800
+Message-Id: <1644290735-3797-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -68,41 +44,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
+This series patches refine pci-imx6 driver and do the following changes.
+- Encapsulate the clock enable into one standalone function
+- Add the error propagation from host_init
+- Balance the usage of the regulator and clocks when link never came up
+- Add the compliance tests mode support
 
-On Tue, Feb 8, 2022 at 1:59 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Feb 01, 2022 at 04:46:33PM +0100, Maarten Lankhorst wrote:
-> > Op 31-01-2022 om 23:23 schreef Bjorn Helgaas:
-> > > [+to Maarten, Maxime, Thomas; beginning of thread:
-> > > https://lore.kernel.org/r/20220106000658.243509-1-helgaas@kernel.org]
-> > >
-> > > On Wed, Jan 05, 2022 at 06:06:48PM -0600, Bjorn Helgaas wrote:
-> > >> From: Bjorn Helgaas <bhelgaas@google.com>
-> > >>
-> > >> Current default VGA device selection fails in some cases because part of it
-> > >> is done in the vga_arb_device_init() subsys_initcall, and some arches
-> > >> enumerate PCI devices in pcibios_init(), which runs *after* that.
-> > > Where are we at with this series?  Is there anything I can do to move
-> > > it forward?
-> >
-> > I'm afraid that I don't understand the vga arbiter or the vga code
-> > well enough to review.
-> >
-> > Could you perhaps find someone who could review?
-> >
-> > I see Chen wrote some patches and tested, so perhaps they could?
->
-> Huacai, any chance you could review this?  I'm worried that this
-> series isn't going to go anywhere unless we can find somebody to
-> review it.
-I have reviewed and tested the whole series, it looks good to me
-(except the naming which has already changed). But I thought I cannot
-add a "Reviewed-by" because I was originally a co-developer. But if
-necessary,
+Main changes from v5 to v6:
+- Refer to the following discussion with Fabio, fix the dump by his patch.
+  https://patchwork.kernel.org/project/linux-pci/patch/1641368602-20401-6-git-send-email-hongxing.zhu@nxp.com/
+  Refine and rebase this patch-set after Fabio' dump fix patch is merged.
+- Add one new #4 patch to disable i.MX6QDL REF clock too when disable clocks
+- Split the regulator refine codes into one standalone patch #5 in this version.
 
-Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+Main changes from v4 to v5:
+- Since i.MX8MM PCIe support had been merged. Based on Lorenzo's git repos,
+  resend the patch-set after rebase.
 
-Huacai
->
-> Bjorn
+Main changes from v3 to v4:
+- Regarding Mark's comments, delete the regulator_is_enabled() check.
+- Squash #3 and #6 of v3 patch into #5 patch of v4 set.
+
+Main changes from v2 to v3:
+- Add "Reviewed-by: Lucas Stach <l.stach@pengutronix.de>" tag into
+  first two patches.
+- Add a Fixes tag into #3 patch.
+- Split the #4 of v2 to two patches, one is clock disable codes move,
+  the other one is the acutal clock unbalance fix.
+- Add a new host_exit() callback into dw_pcie_host_ops, then it could be
+  invoked to handle the unbalance issue in the error handling after
+  host_init() function when link is down.
+- Add a new host_exit() callback for i.MX PCIe driver to handle this case
+  in the error handling after host_init.
+
+Main changes from v1 to v2:
+Regarding Lucas' comments.
+  - Move the placement of the new imx6_pcie_clk_enable() to avoid the
+    forward declarition.
+  - Seperate the second patch of v1 patch-set to three patches.
+  - Use the module_param to replace the kernel command line.
+Regarding Bjorn's comments:
+  - Use the cover-letter for a multi-patch series.
+  - Correct the subject line, and refine the commit logs. For example,
+    remove the timestamp of the logs.
+
+drivers/pci/controller/dwc/pci-imx6.c             | 213 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------------------------------
+drivers/pci/controller/dwc/pcie-designware-host.c |   5 ++-
+drivers/pci/controller/dwc/pcie-designware.h      |   1 +
+3 files changed, 142 insertions(+), 77 deletions(-)
+
+[PATCH v6 1/8] PCI: imx6: Encapsulate the clock enable into one
+[PATCH v6 2/8] PCI: imx6: Add the error propagation from host_init
+[PATCH v6 3/8] PCI: imx6: Move imx6_pcie_clk_disable() earlier
+[PATCH v6 4/8] PCI: imx6: Disable imx6qdl pcie ref clk
+[PATCH v6 5/8] PCI: imx6: Refine the regulator usage
+[PATCH v6 6/8] PCI: dwc: Add dw_pcie_host_ops.host_exit() callback
+[PATCH v6 7/8] PCI: imx6: Disable enabled clocks and regulators after
+[PATCH v6 8/8] PCI: imx6: Add the compliance tests mode support
