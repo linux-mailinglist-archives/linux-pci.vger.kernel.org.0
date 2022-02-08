@@ -2,65 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42D354AD04B
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 05:20:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B163F4AD14B
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 06:56:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241854AbiBHEU3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Feb 2022 23:20:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47252 "EHLO
+        id S240505AbiBHF4r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Feb 2022 00:56:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233749AbiBHEU2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Feb 2022 23:20:28 -0500
-Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FF1C0401DC;
-        Mon,  7 Feb 2022 20:20:26 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1644294016; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=A/gZ4I2W1aFDF/7HB6EFQWWvauCeg2zwErlsABsQdO7YXK3o6iwT75rOn9X6Jm3sz5eMhqmxEBxlBhref12Eb/REUm34PTohaSUjrhVUKQb6qJ3knwZhWihN/ryZGsjUko2fUBz6IgSMjMwSJ1Tf7yp6BXbopmZF9jbcobGHtEs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1644294016; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=Fd1dN+H9VpLs2Rn96C0ylDOWq0q9ugp5pJzIMQqGhXc=; 
-        b=UCxIu+4iZdjV7OXZLMc/pMjWN7GvUcVk9cqQoM/ncGf+fHY6DBxO8mGvtRwPF4SUrhKUI/JRCJLirNKnajGufAneWwbnbkYnMQz2Hx9btOiG/WF2fdkMRxotVEkeXYV1/L6UDIiIqlPLQdvfMz3NeqtaLbkpbcbmkS9+4S5iiIU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zohomail.com;
-        spf=pass  smtp.mailfrom=lchen.firstlove@zohomail.com;
-        dmarc=pass header.from=<lchen.firstlove@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1644294016;
-        s=zm2020; d=zohomail.com; i=lchen.firstlove@zohomail.com;
-        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=Fd1dN+H9VpLs2Rn96C0ylDOWq0q9ugp5pJzIMQqGhXc=;
-        b=Z0bAkZa11QHSnDBoKchxvwAKwUtv30GQ7YYOZyf9jOOXhEqcXifJk9OfpEZD2mdH
-        cLYmhP0qsH98apYNmyHFh3j3IpCAyJDHBon/KHo5/SdQuY46YjNv5G5MlsSOvaw6luE
-        ADiPnpnTGMYA24Cn18X508G+QwRa90rb5aoEKu9w=
-Received: from mail.zoho.com by mx.zohomail.com
-        with SMTP id 1644294015113890.2803542207891; Mon, 7 Feb 2022 20:20:15 -0800 (PST)
-Received: from  [45.80.185.188] by mail.zoho.com
-        with HTTP;Mon, 7 Feb 2022 20:20:15 -0800 (PST)
-Date:   Mon, 07 Feb 2022 23:20:15 -0500
-From:   Li Chen <lchen.firstlove@zohomail.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Kishon Vijay Abraham I" <kishon@ti.com>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?=22Krzysztof_Wilczy=C5=84ski=22?= <kw@linux.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "linux-pci" <linux-pci@vger.kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <17ed78f886f.d22c200668349.8594449941761827257@zohomail.com>
-In-Reply-To: <20220207175613.GA404082@bhelgaas>
-References: <20220207175613.GA404082@bhelgaas>
-Subject: Re: [PATCH V6] misc: pci_endpoint_test: simplify endpoint test read
- and write operations
+        with ESMTP id S233686AbiBHF4r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 00:56:47 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D74EC0401DC;
+        Mon,  7 Feb 2022 21:56:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644299806; x=1675835806;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/E3+XDZn+fI4PCSgbxMj37rovQtgfKS2C5AACs5xPYs=;
+  b=LcXFhytTuK1lXzVQrayUaKmUJ1JT7GIKTrP3IrPSSzSWIU0cD5Lg//fM
+   CGGzApENWyGG5nCrQ0ujueLyFxlX/S1S3JlS2wU0TAo6gjG8NnnjdTEf+
+   woAuO1dKLxIuDzTgRyi/Y7788cev91GUg3kFmJORtG4EeKuLgZ1eCbUn8
+   All7THtn60lNLN1wJ+EMkSTM/2fT8O40EZpEr37DqoDNNI7H976y6YnX0
+   IK1XDeTtx/9lTZVi3pYnQr4ezWN1DQt7Kng3er8VeT4C0QlYL7/5n+Pb3
+   N92FAiJ9eu3crH7HACbWkYSF1efoU40gz9BGhMvKbvPz3PCky6CATWU1w
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10251"; a="246468556"
+X-IronPort-AV: E=Sophos;i="5.88,351,1635231600"; 
+   d="scan'208";a="246468556"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2022 21:56:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,351,1635231600"; 
+   d="scan'208";a="678001282"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Feb 2022 21:56:39 -0800
+Message-ID: <608192e0-136a-57fc-cb2c-3ebb42874788@linux.intel.com>
+Date:   Tue, 8 Feb 2022 13:55:29 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Cc:     baolu.lu@linux.intel.com, Christoph Hellwig <hch@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 02/14] driver core: Add dma_cleanup callback in
+ bus_type
+Content-Language: en-US
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@nvidia.com>
+References: <20220104015644.2294354-1-baolu.lu@linux.intel.com>
+ <20220104015644.2294354-3-baolu.lu@linux.intel.com>
+ <YdQcpHrV7NwUv+qc@infradead.org> <20220104123911.GE2328285@nvidia.com>
+ <YdRFyXWay/bdSSem@kroah.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+In-Reply-To: <YdRFyXWay/bdSSem@kroah.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,70 +89,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
- ---- On Mon, 07 Feb 2022 12:56:13 -0500 Bjorn Helgaas <helgaas@kernel.org> wrote ----
- > On Mon, Feb 07, 2022 at 04:09:05AM -0500, Li Chen wrote:
- > > From: Li Chen <lchen@ambarella.com>
- > > 
- > > Introduce pci_endpoint_epf_transfer_data to simplify
- > > read and write operations.
- > > 
- > > Also tabify this file.
- > 
- > Thanks for the patch.
- > 
- > This doesn't apply cleanly on v5.17-rc1.  Please make it apply cleanly
- > there or at least mention where it *does* apply.
+Hi Greg,
 
-Ok, will send v7 which will be based on v5.17-rc3.
+On 1/4/22 9:04 PM, Greg Kroah-Hartman wrote:
+> On Tue, Jan 04, 2022 at 08:39:11AM -0400, Jason Gunthorpe wrote:
+>> On Tue, Jan 04, 2022 at 02:08:36AM -0800, Christoph Hellwig wrote:
+>>> All these bus callouts still looks horrible and just create tons of
+>>> boilerplate code.
+>>
+>> Yes, Lu - Greg asked questions then didn't respond to their answers
+>> meaning he accepts them, you should stick with the v4 version.
+> 
+> Trying to catch up on emails from the break, that was way down my list
+> of things to get back to as it's messy and non-obvious.  I'll revisit it
+> again after 5.17-rc1 is out, this is too late for that merge window
+> anyway.
 
- > 
- > Please separate the whitespace tabification changes and the
- > pci_endpoint_epf_transfer_data() changes into two separate patches.
- > When they're mixed together, it's harder to review the patch.
- > 
- > > #define to_endpoint_test(priv) container_of((priv), struct pci_endpoint_test, \
- > > -                     miscdev)
- > > +                        miscdev)
- > 
- > Always indent with tabs when possible:
- > 
- >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=v5.16#n18
- > 
- > Hmm, coding-style.rst is unfortunately not very explicit about that.
- > 
- > But it's obvious from the existing code in this file that things
- > should not be indented four spaces, as you did in
- > pci_endpoint_test_transfer_data().
+In this series we want to add calls into the iommu subsystem during
+device driver binding/unbinding, so that the device DMA ownership
+conflict (kernel driver vs. user-space) could be detected and avoided
+before calling into device driver's .probe().
 
-So, can I say space is not allowed in indentation? If so, I should not use emacs's tabify, because it will not convert 4 space to 8-width tab. I'm also not sure is scripts/Lindent or clang-format is a good
-choice here, they do too much changes.
+In this v5 series, we implemented this in the affected buses (amba/
+platform/fsl-mc/pci) which are known to support assigning devices to
+user space through the vfio framework currently. And more buses are
+possible to be affected in the future if they also want to support
+device assignment. Christoph commented that this will create boilerplate
+code in various bus drivers.
 
- > 
- > Your patch should match the style of the existing code.
- > 
- > > +static bool pci_endpoint_test_transfer_data(struct pci_endpoint_test *test,
- > > +                unsigned long arg, const int operation)
- > > +{
- > > +    struct pci_endpoint_test_xfer_param param;
- > > +    bool ret = false;
- > > +    u32 flags = 0;
- > 
- > 
- > > +    // if we ask rc to write to ep, then ep should do read operation, and vice versa.
- > 
- > Please use /* */ comments to match the prevailing kernel comment
- > style:
- > 
- >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=v5.16#n598
- > 
- > And spell out or at least capitalize "RC" and "EP" since they're not
- > real words.
- > 
+Back to v4 of this series (please refer to below link [1]), we added
+this call in the driver core if buses have provided the dma_configure()
+callback (please refer to below link [2]).
 
-Thanks, will do it in v7.
+Which would you prefer, or any other suggestions? We need your guide to
+move this series ahead. Please help to suggest.
 
- > Bjorn
- > 
+[1] 
+https://lore.kernel.org/linux-iommu/20211217063708.1740334-1-baolu.lu@linux.intel.com/
+[2] 
+https://lore.kernel.org/linux-iommu/20211217063708.1740334-3-baolu.lu@linux.intel.com/
 
-Regards,
-Li
+Best regards,
+baolu
