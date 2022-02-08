@@ -2,176 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83BCF4AD1EC
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 08:09:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D95A4AD258
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 08:38:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233309AbiBHHJB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Feb 2022 02:09:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49864 "EHLO
+        id S1348423AbiBHHh6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Feb 2022 02:37:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230332AbiBHHJB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 02:09:01 -0500
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8E9C0401F1;
-        Mon,  7 Feb 2022 23:08:58 -0800 (PST)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4JtDXX4dRZz1FD31;
-        Tue,  8 Feb 2022 15:04:44 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 8 Feb 2022 15:08:55 +0800
-CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <daniel.thompson@linaro.org>, <joro@8bytes.org>,
-        <john.garry@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
-        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linuxarm@huawei.com>, <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v3 4/8] hisi_ptt: Add tune function support for HiSilicon
- PCIe Tune and Trace device
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Yicong Yang <yangyicong@hisilicon.com>
-References: <20220124131118.17887-1-yangyicong@hisilicon.com>
- <20220124131118.17887-5-yangyicong@hisilicon.com>
- <20220207114911.0000127e@Huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <15ebb616-bc5a-f589-a435-c8322202661a@huawei.com>
-Date:   Tue, 8 Feb 2022 15:08:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S1346472AbiBHHh6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 02:37:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96248C0401F4;
+        Mon,  7 Feb 2022 23:37:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 25AC0615DC;
+        Tue,  8 Feb 2022 07:37:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D15AEC340ED;
+        Tue,  8 Feb 2022 07:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1644305876;
+        bh=jCqEF148ccWzh0I4aTqkCNTCIq5H5g9nqJjNydsQbQ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uN9p3WazGl53qw4M9VNwJO8ZRkgkySxIicVKaGBLXUeXK86MhKCG6J/ThjV6oubzY
+         R4yk5KKIXmf3ad7kE4UB6L9T+k1HPwQDEOt/xTbWZ4ME/B7p4rq1owyeB7cTAPVn+n
+         8kC3lY7qWJKFK5d991L6XEoK9/nrECqWnAxbyLYU=
+Date:   Tue, 8 Feb 2022 08:37:52 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Neal Liu <neal_liu@aspeedtech.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Tao Ren <rentao.bupt@gmail.com>, BMC-SW@aspeedtech.com
+Subject: Re: [PATCH] usb: ehci: add pci device support for Aspeed platforms
+Message-ID: <YgId0AhvRAmIcEA0@kroah.com>
+References: <20220208062927.3527137-1-neal_liu@aspeedtech.com>
 MIME-Version: 1.0
-In-Reply-To: <20220207114911.0000127e@Huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220208062927.3527137-1-neal_liu@aspeedtech.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/2/7 19:49, Jonathan Cameron wrote:
-> On Mon, 24 Jan 2022 21:11:14 +0800
-> Yicong Yang <yangyicong@hisilicon.com> wrote:
+On Tue, Feb 08, 2022 at 02:29:27PM +0800, Neal Liu wrote:
+> Enable Aspeed quirks in commit 7f2d73788d90 ("usb: ehci:
+> handshake CMD_RUN instead of STS_HALT") to support Aspeed
+> ehci-pci device.
 > 
->> Add tune function for the HiSilicon Tune and Trace device. The interface
->> of tune is exposed through sysfs attributes of PTT PMU device.
->>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> Signed-off-by: Neal Liu <neal_liu@aspeedtech.com>
+> ---
+>  drivers/usb/host/ehci-pci.c | 6 ++++++
+>  include/linux/pci_ids.h     | 3 +++
+>  2 files changed, 9 insertions(+)
 > 
-> A few trivial things inline, but looks good in general to me.
-> With those tidied up
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
+> diff --git a/drivers/usb/host/ehci-pci.c b/drivers/usb/host/ehci-pci.c
+> index e87cf3a00fa4..a91b25d216ae 100644
+> --- a/drivers/usb/host/ehci-pci.c
+> +++ b/drivers/usb/host/ehci-pci.c
+> @@ -222,6 +222,12 @@ static int ehci_pci_setup(struct usb_hcd *hcd)
+>  			ehci->has_synopsys_hc_bug = 1;
+>  		}
+>  		break;
+> +	case PCI_VENDOR_ID_ASPEED:
+> +		if (pdev->device == PCI_DEVICE_ID_ASPEED_EHCI) {
+> +			ehci_info(ehci, "applying Aspeed HC workaround\n");
+> +			ehci->is_aspeed = 1;
+> +		}
+> +		break;
+>  	}
+>  
+>  	/* optional debug port, normally in the first BAR */
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index aad54c666407..410b395fe56c 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -3096,4 +3096,7 @@
+>  
+>  #define PCI_VENDOR_ID_NCUBE		0x10ff
+>  
+> +#define PCI_VENDOR_ID_ASPEED		0x1a03
+> +#define PCI_DEVICE_ID_ASPEED_EHCI	0x2603
 
-Thanks for the comments.
+Please read the top of this file, this does not need to be added here.
 
-> 
->> ---
->>  drivers/hwtracing/ptt/hisi_ptt.c | 154 +++++++++++++++++++++++++++++++
->>  drivers/hwtracing/ptt/hisi_ptt.h |  19 ++++
->>  2 files changed, 173 insertions(+)
->>
->> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
->> index 2994354e690b..b11e702eb506 100644
->> --- a/drivers/hwtracing/ptt/hisi_ptt.c
->> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
->> @@ -21,6 +21,159 @@
->>  
->>  #include "hisi_ptt.h"
->>  
->> +static int hisi_ptt_wait_tuning_finish(struct hisi_ptt *hisi_ptt)
->> +{
->> +	u32 val;
->> +
->> +	return readl_poll_timeout(hisi_ptt->iobase + HISI_PTT_TUNING_INT_STAT,
->> +				  val, !(val & HISI_PTT_TUNING_INT_STAT_MASK),
->> +				  HISI_PTT_WAIT_POLL_INTERVAL_US,
->> +				  HISI_PTT_WAIT_TIMEOUT_US);
->> +}
->> +
->> +static int hisi_ptt_tune_data_get(struct hisi_ptt *hisi_ptt,
->> +				  u32 event, u16 *data)
->> +{
->> +	u32 reg;
->> +
->> +	reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
->> +	reg &= ~(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB);
->> +	reg |= FIELD_PREP(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB,
->> +			  event);
->> +	writel(reg, hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
->> +
->> +	/* Write all 1 to indicates it's the read process */
->> +	writel(~0UL, hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
-> 
-> Just to check, this is includes the bits above the DATA_VAL_MASK?
-> Fine if so, just seems odd to define a field but then write 
-> parts of the register that aren't part of that field.
-> 
+thanks,
 
-yes. The valid data field is [0,15]. But
-all 1 is used here to indicate that it's a
-read process rather than a write process.
-
->> +
->> +	if (hisi_ptt_wait_tuning_finish(hisi_ptt))
->> +		return -ETIMEDOUT;
->> +
->> +	reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
->> +	reg &= HISI_PTT_TUNING_DATA_VAL_MASK;
->> +	*data = (u16)reg;
-> 
-> As below, prefer a FIELD_GET() for this.
-> 
-
-sure. will use field ops here and below.
-
-Thanks.
-
->> +
->> +	return 0;
->> +}
->> +
->> +static int hisi_ptt_tune_data_set(struct hisi_ptt *hisi_ptt,
->> +				  u32 event, u16 data)
->> +{
->> +	u32 reg;
->> +
->> +	reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
->> +	reg &= ~(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB);
->> +	reg |= FIELD_PREP(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB,
->> +			  event);
->> +	writel(reg, hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
->> +
->> +	reg = data;
-> Given you defined HISI_PTT_TUNING_DATA_VAL_MASK why not use it here
-> 
-> writel(FIELD_PREP(..), ...)? 
-> 
->> +	writel(reg, hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
->> +
->> +	if (hisi_ptt_wait_tuning_finish(hisi_ptt))
->> +		return -ETIMEDOUT;
->> +
->> +	return 0;
->> +}
->> +
-> 
-> 
-> .
-> 
+greg k-h
