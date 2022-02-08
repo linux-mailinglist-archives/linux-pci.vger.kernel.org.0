@@ -2,152 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EE2C4AD019
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 05:06:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42D354AD04B
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 05:20:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346716AbiBHEGJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Feb 2022 23:06:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40434 "EHLO
+        id S241854AbiBHEU3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Feb 2022 23:20:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346642AbiBHEGE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Feb 2022 23:06:04 -0500
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA4D9C0401EA;
-        Mon,  7 Feb 2022 20:06:03 -0800 (PST)
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F07692006C5;
-        Tue,  8 Feb 2022 04:57:04 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8B64E2006C9;
-        Tue,  8 Feb 2022 04:57:04 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id F36D5183AC96;
-        Tue,  8 Feb 2022 11:57:02 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     l.stach@pengutronix.de, bhelgaas@google.com, broonie@kernel.org,
-        lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, festevam@gmail.com
-Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH v6 8/8] PCI: imx6: Add the compliance tests mode support
-Date:   Tue,  8 Feb 2022 11:25:35 +0800
-Message-Id: <1644290735-3797-9-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1644290735-3797-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1644290735-3797-1-git-send-email-hongxing.zhu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233749AbiBHEU2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Feb 2022 23:20:28 -0500
+Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FF1C0401DC;
+        Mon,  7 Feb 2022 20:20:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1644294016; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=A/gZ4I2W1aFDF/7HB6EFQWWvauCeg2zwErlsABsQdO7YXK3o6iwT75rOn9X6Jm3sz5eMhqmxEBxlBhref12Eb/REUm34PTohaSUjrhVUKQb6qJ3knwZhWihN/ryZGsjUko2fUBz6IgSMjMwSJ1Tf7yp6BXbopmZF9jbcobGHtEs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1644294016; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=Fd1dN+H9VpLs2Rn96C0ylDOWq0q9ugp5pJzIMQqGhXc=; 
+        b=UCxIu+4iZdjV7OXZLMc/pMjWN7GvUcVk9cqQoM/ncGf+fHY6DBxO8mGvtRwPF4SUrhKUI/JRCJLirNKnajGufAneWwbnbkYnMQz2Hx9btOiG/WF2fdkMRxotVEkeXYV1/L6UDIiIqlPLQdvfMz3NeqtaLbkpbcbmkS9+4S5iiIU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=zohomail.com;
+        spf=pass  smtp.mailfrom=lchen.firstlove@zohomail.com;
+        dmarc=pass header.from=<lchen.firstlove@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1644294016;
+        s=zm2020; d=zohomail.com; i=lchen.firstlove@zohomail.com;
+        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=Fd1dN+H9VpLs2Rn96C0ylDOWq0q9ugp5pJzIMQqGhXc=;
+        b=Z0bAkZa11QHSnDBoKchxvwAKwUtv30GQ7YYOZyf9jOOXhEqcXifJk9OfpEZD2mdH
+        cLYmhP0qsH98apYNmyHFh3j3IpCAyJDHBon/KHo5/SdQuY46YjNv5G5MlsSOvaw6luE
+        ADiPnpnTGMYA24Cn18X508G+QwRa90rb5aoEKu9w=
+Received: from mail.zoho.com by mx.zohomail.com
+        with SMTP id 1644294015113890.2803542207891; Mon, 7 Feb 2022 20:20:15 -0800 (PST)
+Received: from  [45.80.185.188] by mail.zoho.com
+        with HTTP;Mon, 7 Feb 2022 20:20:15 -0800 (PST)
+Date:   Mon, 07 Feb 2022 23:20:15 -0500
+From:   Li Chen <lchen.firstlove@zohomail.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Kishon Vijay Abraham I" <kishon@ti.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?=22Krzysztof_Wilczy=C5=84ski=22?= <kw@linux.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "linux-pci" <linux-pci@vger.kernel.org>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>
+Message-ID: <17ed78f886f.d22c200668349.8594449941761827257@zohomail.com>
+In-Reply-To: <20220207175613.GA404082@bhelgaas>
+References: <20220207175613.GA404082@bhelgaas>
+Subject: Re: [PATCH V6] misc: pci_endpoint_test: simplify endpoint test read
+ and write operations
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Refer to the system board signal Quality of PCIe archiecture PHY test
-specification. Signal quality tests(for example: jitters,  differential
-eye opening and so on ) can be executed with devices in the
-polling.compliance state.
+ ---- On Mon, 07 Feb 2022 12:56:13 -0500 Bjorn Helgaas <helgaas@kernel.org> wrote ----
+ > On Mon, Feb 07, 2022 at 04:09:05AM -0500, Li Chen wrote:
+ > > From: Li Chen <lchen@ambarella.com>
+ > > 
+ > > Introduce pci_endpoint_epf_transfer_data to simplify
+ > > read and write operations.
+ > > 
+ > > Also tabify this file.
+ > 
+ > Thanks for the patch.
+ > 
+ > This doesn't apply cleanly on v5.17-rc1.  Please make it apply cleanly
+ > there or at least mention where it *does* apply.
 
-To let the device support polling.compliance stat, the clocks and powers
-shouldn't be turned off when the probe of device driver is failed.
+Ok, will send v7 which will be based on v5.17-rc3.
 
-Based on CLB(Compliance Load Board) Test Fixture and so on test
-equipments, the PHY link would be down during the compliance tests.
-Refer to this scenario, add the i.MX PCIe compliance tests mode enable
-support, and keep the clocks and powers on, and finish the driver probe
-without error return.
+ > 
+ > Please separate the whitespace tabification changes and the
+ > pci_endpoint_epf_transfer_data() changes into two separate patches.
+ > When they're mixed together, it's harder to review the patch.
+ > 
+ > > #define to_endpoint_test(priv) container_of((priv), struct pci_endpoint_test, \
+ > > -                     miscdev)
+ > > +                        miscdev)
+ > 
+ > Always indent with tabs when possible:
+ > 
+ >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=v5.16#n18
+ > 
+ > Hmm, coding-style.rst is unfortunately not very explicit about that.
+ > 
+ > But it's obvious from the existing code in this file that things
+ > should not be indented four spaces, as you did in
+ > pci_endpoint_test_transfer_data().
 
-Use the "pci_imx6.compliance=1" in kernel command line to enable the
-compliance tests mode.
+So, can I say space is not allowed in indentation? If so, I should not use emacs's tabify, because it will not convert 4 space to 8-width tab. I'm also not sure is scripts/Lindent or clang-format is a good
+choice here, they do too much changes.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 47 ++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 16 deletions(-)
+ > 
+ > Your patch should match the style of the existing code.
+ > 
+ > > +static bool pci_endpoint_test_transfer_data(struct pci_endpoint_test *test,
+ > > +                unsigned long arg, const int operation)
+ > > +{
+ > > +    struct pci_endpoint_test_xfer_param param;
+ > > +    bool ret = false;
+ > > +    u32 flags = 0;
+ > 
+ > 
+ > > +    // if we ask rc to write to ep, then ep should do read operation, and vice versa.
+ > 
+ > Please use /* */ comments to match the prevailing kernel comment
+ > style:
+ > 
+ >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=v5.16#n598
+ > 
+ > And spell out or at least capitalize "RC" and "EP" since they're not
+ > real words.
+ > 
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 7a7d9204c6bc..62262483470a 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -146,6 +146,10 @@ struct imx6_pcie {
- #define PHY_RX_OVRD_IN_LO_RX_DATA_EN		BIT(5)
- #define PHY_RX_OVRD_IN_LO_RX_PLL_EN		BIT(3)
- 
-+static bool imx6_pcie_cmp_mode;
-+module_param_named(compliance, imx6_pcie_cmp_mode, bool, 0644);
-+MODULE_PARM_DESC(compliance, "i.MX PCIe compliance test mode (1=compliance test mode enabled)");
-+
- static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, bool exp_val)
- {
- 	struct dw_pcie *pci = imx6_pcie->pci;
-@@ -840,10 +844,12 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
- 	 * started in Gen2 mode, there is a possibility the devices on the
- 	 * bus will not be detected at all.  This happens with PCIe switches.
- 	 */
--	tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
--	tmp &= ~PCI_EXP_LNKCAP_SLS;
--	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
--	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-+	if (!imx6_pcie_cmp_mode) {
-+		tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
-+		tmp &= ~PCI_EXP_LNKCAP_SLS;
-+		tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-+		dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, tmp);
-+	}
- 
- 	/* Start LTSSM. */
- 	imx6_pcie_ltssm_enable(dev);
-@@ -930,18 +936,20 @@ static void imx6_pcie_host_exit(struct pcie_port *pp)
- 	struct device *dev = pci->dev;
- 	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
- 
--	imx6_pcie_reset_phy(imx6_pcie);
--	imx6_pcie_clk_disable(imx6_pcie);
--	switch (imx6_pcie->drvdata->variant) {
--	case IMX8MM:
--		if (phy_power_off(imx6_pcie->phy))
--			dev_err(dev, "unable to power off phy\n");
--		break;
--	default:
--		break;
-+	if (!imx6_pcie_cmp_mode) {
-+		imx6_pcie_reset_phy(imx6_pcie);
-+		imx6_pcie_clk_disable(imx6_pcie);
-+		switch (imx6_pcie->drvdata->variant) {
-+		case IMX8MM:
-+			if (phy_power_off(imx6_pcie->phy))
-+				dev_err(dev, "unable to power off phy\n");
-+			break;
-+		default:
-+			break;
-+		}
-+		if (imx6_pcie->vpcie)
-+			regulator_disable(imx6_pcie->vpcie);
- 	}
--	if (imx6_pcie->vpcie)
--		regulator_disable(imx6_pcie->vpcie);
- }
- 
- static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
-@@ -1256,8 +1264,15 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	ret = dw_pcie_host_init(&pci->pp);
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (imx6_pcie_cmp_mode) {
-+			dev_info(dev, "Driver loaded with compliance test mode enabled.\n");
-+			ret = 0;
-+		} else {
-+			dev_err(dev, "Unable to add pcie port.\n");
-+		}
- 		return ret;
-+	}
- 
- 	if (pci_msi_enabled()) {
- 		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
--- 
-2.25.1
+Thanks, will do it in v7.
 
+ > Bjorn
+ > 
+
+Regards,
+Li
