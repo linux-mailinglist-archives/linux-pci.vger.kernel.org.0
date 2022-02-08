@@ -2,58 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 178A84AD8D1
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 14:16:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F2DB4ADB34
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Feb 2022 15:35:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346148AbiBHNP6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Feb 2022 08:15:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58138 "EHLO
+        id S1377720AbiBHOfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Feb 2022 09:35:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357886AbiBHMib (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 07:38:31 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C8A6C03FEC0
-        for <linux-pci@vger.kernel.org>; Tue,  8 Feb 2022 04:38:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644323909; x=1675859909;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WwqEDcB3DwKdF2XX3QHC0tlmLuzMZG8Y4ixggGw7gTU=;
-  b=J7WMOFnqU5ja4hGJtUr3/utZRD/5/Yy+9SgMO3PjlE7W+gz5PCKgoH+m
-   0hG7MXfRDHH5RAYRQkTDWfOy6zshyCc8sDF7fZmeU4yqTAKF3Pt/mHxlw
-   +0/otoyWxRftWyoneqmYP8Ci+5oYOS16QUBLb9XpUqlV49NfJu4rL1/6S
-   0ISh5CAhtZQJl3jhG9eqV6s/Gtuf61Vrf7mhgmbafCcW88l2lzfwkcRvJ
-   Ej6V5x8Itp2W/uBvKJf6AItxOKBDz80KnJtGNVhWg2oGAb1nD0xHnXa2B
-   DW43b4wyuJ9B1m+ECt+eV3/f+CDKK1435FNkJBsDjwmM05L8nKc7TR63F
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10251"; a="229587812"
-X-IronPort-AV: E=Sophos;i="5.88,352,1635231600"; 
-   d="scan'208";a="229587812"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2022 04:38:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,352,1635231600"; 
-   d="scan'208";a="484797252"
-Received: from lkp-server01.sh.intel.com (HELO d95dc2dabeb1) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 08 Feb 2022 04:38:27 -0800
-Received: from kbuild by d95dc2dabeb1 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nHPlK-0000BL-F3; Tue, 08 Feb 2022 12:38:26 +0000
-Date:   Tue, 08 Feb 2022 20:38:07 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:for-linus] BUILD SUCCESS
- b139e263240928e877038c4d60527e96ed176d6b
-Message-ID: <6202642f.pnCZWaU4RF+GjoWw%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S1377698AbiBHOfD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 09:35:03 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C052C03FECE;
+        Tue,  8 Feb 2022 06:35:02 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4D044B81AF8;
+        Tue,  8 Feb 2022 14:35:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC78C340F4;
+        Tue,  8 Feb 2022 14:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644330900;
+        bh=MrCNTTZmKlzAuz3fwnSg3bS0Qka94fcpFrFcZ3Mq0ow=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Z1sh7V+nSOP9Xw+WaHe/Pd5mAeLjC6KNy6v3Vk6r02zerPzzwiu+lmz6HXtb450zq
+         K8VGu3fZbe1EJsV1QmrKvOCbZYraliQLRbosS7/NKPOeAjPrwuz8K/XQehnC80K3nY
+         QEm4YhVEAVqypa0UgkSvFlzX19mCfCB5ec5MS5WlK4h/8WaVSDPsj/Bdd8VFhc42Uk
+         eOS7orjVYe6aQxFoPxpHj0HQ+1gXvbcZyiA35O73rADWOLGV90KrehQkp9Qh8nYokp
+         d8I9gt+g31RQoXsmvIaJ/ZTT1SJ023b/viLHLt24iIjHDblyr28Al3DSQWatqwzIOV
+         Ek9EhUOVRYxaQ==
+Received: by mail-ed1-f41.google.com with SMTP id u18so37534102edt.6;
+        Tue, 08 Feb 2022 06:35:00 -0800 (PST)
+X-Gm-Message-State: AOAM531Qx2f7G1Xv8EXVgBjdFttRy3KhbtGe7Pq7xmktu6WyphbmIidy
+        MgbYhBL2fNFfh2mgIXjNWtc2n105hM/9jGbp+g==
+X-Google-Smtp-Source: ABdhPJy79mBKqHZM3sFn6qThXw/30s+hgz04lOPjxO5dJceaXnncLpPviPXlfIbr9FBR1E+ZpwotuJSjNklQfR51GjU=
+X-Received: by 2002:a50:8a89:: with SMTP id j9mr4760118edj.111.1644330896918;
+ Tue, 08 Feb 2022 06:34:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <20211129173637.303201-1-robh@kernel.org> <Yf2wTLjmcRj+AbDv@xps13.dannf>
+ <CAL_Jsq+4b4Yy8rJGJv9j9j_TCm6mTAkW5fzcDuuW-jOoiZ2GLg@mail.gmail.com>
+ <CALdTtnuK+D7gNbEDgHbrc29pFFCR3XYAHqrK3=X_hQxUx-Seow@mail.gmail.com>
+ <CAL_JsqJUmjG-SiuR9T7f=5nGcSjTLhuF_382EQDf74kcqdAq_w@mail.gmail.com> <YgHFFIRT6E0j9TlX@xps13.dannf>
+In-Reply-To: <YgHFFIRT6E0j9TlX@xps13.dannf>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 8 Feb 2022 08:34:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJLTkDm_ZbFWSKwKvVAh0KpxiS9y6LEwmhQ-kejTcLq7A@mail.gmail.com>
+Message-ID: <CAL_JsqJLTkDm_ZbFWSKwKvVAh0KpxiS9y6LEwmhQ-kejTcLq7A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: xgene: Fix IB window setup
+To:     dann frazier <dann.frazier@canonical.com>
+Cc:     Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
+        stable <stable@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,198 +71,209 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: b139e263240928e877038c4d60527e96ed176d6b  Revert "PCI/portdrv: Do not setup up IRQs if there are no users"
+On Mon, Feb 7, 2022 at 7:19 PM dann frazier <dann.frazier@canonical.com> wr=
+ote:
+>
+> On Mon, Feb 07, 2022 at 10:09:31AM -0600, Rob Herring wrote:
+> > On Sat, Feb 5, 2022 at 3:13 PM dann frazier <dann.frazier@canonical.com=
+> wrote:
+> > >
+> > > On Sat, Feb 5, 2022 at 9:05 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Fri, Feb 4, 2022 at 5:01 PM dann frazier <dann.frazier@canonical=
+.com> wrote:
+> > > > >
+> > > > > On Mon, Nov 29, 2021 at 11:36:37AM -0600, Rob Herring wrote:
+> > > > > > Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for set=
+up")
+> > > > > > broke PCI support on XGene. The cause is the IB resources are n=
+ow sorted
+> > > > > > in address order instead of being in DT dma-ranges order. The r=
+esult is
+> > > > > > which inbound registers are used for each region are swapped. I=
+ don't
+> > > > > > know the details about this h/w, but it appears that IB region =
+0
+> > > > > > registers can't handle a size greater than 4GB. In any case, li=
+miting
+> > > > > > the size for region 0 is enough to get back to the original ass=
+ignment
+> > > > > > of dma-ranges to regions.
+> > > > >
+> > > > > hey Rob!
+> > > > >
+> > > > > I've been seeing a panic on HP Moonshoot m400 cartridges (X-Gene1=
+) -
+> > > > > only during network installs - that I also bisected down to commi=
+t
+> > > > > 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup"). I w=
+as
+> > > > > hoping that this patch that fixed the issue on St=C3=A9phane's X-=
+Gene2
+> > > > > system would also fix my issue, but no luck. In fact, it seems to=
+ just
+> > > > > makes it fail differently. Reverting both patches is required to =
+get a
+> > > > > v5.17-rc kernel to boot.
+> > > > >
+> > > > > I've collected the following logs - let me know if anything else =
+would
+> > > > > be useful.
+> > > > >
+> > > > > 1) v5.17-rc2+ (unmodified):
+> > > > >    http://dannf.org/bugs/m400-no-reverts.log
+> > > > >    Note that the mlx4 driver fails initialization.
+> > > > >
+> > > > > 2) v5.17-rc2+, w/o the commit that fixed St=C3=A9phane's system:
+> > > > >    http://dannf.org/bugs/m400-xgene2-fix-reverted.log
+> > > > >    Note the mlx4 MSI-X timeout, and later panic.
+> > > > >
+> > > > > 3) v5.17-rc2+, w/ both commits reverted (works)
+> > > > >    http://dannf.org/bugs/m400-both-reverted.log
+> > > >
+> > > > The ranges and dma-ranges addresses don't appear to match up with a=
+ny
+> > > > upstream dts files. Can you send me the DT?
+> > >
+> > > Sure: http://dannf.org/bugs/fdt
+> >
+> > The first fix certainly is a problem. It's going to need something
+> > besides size to key off of (originally it was dependent on order of
+> > dma-ranges entries).
+> >
+> > The 2nd issue is the 'dma-ranges' has a second entry that is now ignore=
+d:
+> >
+> > dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00>, <0x00
+> > 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >
+> > Based on the flags (3rd addr cell: 0x0), we have an inbound config
+> > space which the kernel now ignores because inbound config space
+> > accesses make no sense. But clearly some setup is needed. Upstream, in
+> > contrast, sets up a memory range that includes this region, so the
+> > setup does happen:
+> >
+> > <0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>
+> >
+> > Minimally, I suspect it will work if you change dma-ranges 2nd entry to=
+:
+> >
+> > <0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>
+>
+> Thanks for looking into this Rob. I tried to test that theory, but it
+> didn't seem to work. This is what I tried:
+>
+> --- m400.dts    2022-02-07 20:16:44.840475323 +0000
+> +++ m400.dts.dmaonly    2022-02-08 00:17:54.097132000 +0000
+> @@ -446,7 +446,7 @@
+>                         reg =3D <0x00 0x1f2b0000 0x00 0x10000 0xe0 0xd000=
+0000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x80=
+0000>;
+>                         reg-names =3D "csr\0cfg\0msi_gen\0msi_term";
+>                         ranges =3D <0x1000000 0x00 0x00 0xe0 0x10000000 0=
+x00 0x10000 0x2000000 0x00 0x30000000 0xe1 0x30000000 0x00 0x80000000>;
+> -                       dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x=
+40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> +                       dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x=
+40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>                         ib-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x4=
+0 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>                         ib-ranges-ep =3D <0x2000000 0x00 0x00 0x00 0x00 0=
+x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x7=
+9000000 0x00 0x79000000 0x00 0x100000>;
+>                         interrupts =3D <0x00 0x10 0x04>;
+> @@ -471,7 +471,7 @@
+>                         reg =3D <0x00 0x1f2c0000 0x00 0x10000 0xd0 0xd000=
+0000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x80=
+0000>;
+>                         reg-names =3D "csr\0cfg\0msi_gen\0msi_term";
+>                         ranges =3D <0x1000000 0x00 0x00 0xd0 0x10000000 0=
+x00 0x10000 0x2000000 0x00 0x30000000 0xd1 0x30000000 0x00 0x80000000>;
+> -                       dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x=
+40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> +                       dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x=
+40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>                         ib-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x4=
+0 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>                         ib-ranges-ep =3D <0x2000000 0x00 0x00 0x00 0x00 0=
+x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x7=
+9000000 0x00 0x79000000 0x00 0x100000>;
+>                         interrupts =3D <0x00 0x10 0x04>;
+> @@ -496,7 +496,7 @@
+>                         reg =3D <0x00 0x1f2d0000 0x00 0x10000 0x90 0xd000=
+0000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x80=
+0000>;
+>                         reg-names =3D "csr\0cfg\0msi_gen\0msi_term";
+>                         ranges =3D <0x1000000 0x00 0x00 0x90 0x10000000 0=
+x00 0x10000 0x2000000 0x00 0x30000000 0x91 0x30000000 0x00 0x80000000>;
+> -                       dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x=
+40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> +                       dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x=
+40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>                         ib-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x4=
+0 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>                         ib-ranges-ep =3D <0x2000000 0x00 0x00 0x00 0x00 0=
+x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x7=
+9000000 0x00 0x79000000 0x00 0x100000>;
+>                         interrupts =3D <0x00 0x10 0x04>;
+> @@ -522,7 +522,7 @@
+>                         reg =3D <0x00 0x1f500000 0x00 0x10000 0xa0 0xd000=
+0000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x80=
+0000>;
+>                         reg-names =3D "csr\0cfg\0msi_gen\0msi_term";
+>                         ranges =3D <0x2000000 0x00 0x30000000 0xa1 0x3000=
+0000 0x00 0x80000000>;
+> -                       dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x=
+40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> +                       dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x=
+40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>                         ib-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x4=
+0 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>                         ib-ranges-ep =3D <0x2000000 0x00 0x00 0x00 0x00 0=
+x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x7=
+9000000 0x00 0x79000000 0x00 0x100000>;
+>                         interrupts =3D <0x00 0x10 0x04>;
+> @@ -547,7 +547,7 @@
+>                         reg =3D <0x00 0x1f510000 0x00 0x10000 0xc0 0xd000=
+0000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x80=
+0000>;
+>                         reg-names =3D "csr\0cfg\0msi_gen\0msi_term";
+>                         ranges =3D <0x1000000 0x00 0x00 0xc0 0x10000000 0=
+x00 0x10000 0x2000000 0x00 0x30000000 0xc1 0x30000000 0x00 0x80000000>;
+> -                       dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x=
+40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> +                       dma-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x=
+40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>                         ib-ranges =3D <0x42000000 0x40 0x00 0x40 0x00 0x4=
+0 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>                         ib-ranges-ep =3D <0x2000000 0x00 0x00 0x00 0x00 0=
+x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x7=
+9000000 0x00 0x79000000 0x00 0x100000>;
+>                         interrupts =3D <0x00 0x10 0x04>;
+>
+> And that failed to boot with a 5.17-rc3. Since dma-ranges was
+> previously identical to ib-ranges, I also tried making the same change
+> to ib-ranges, but with no success.
 
-elapsed time: 721m
+Failed to boot at all or just PCIe still didn't work causing boot to
+eventually fail? 'ib-ranges' is unknown to the kernel, so the firmware
+is using it somehow?
 
-configs tested: 175
-configs skipped: 4
+You also need to revert the first fix for PCIe to work.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-i386                 randconfig-c001-20220207
-powerpc                    sam440ep_defconfig
-m68k                       m5249evb_defconfig
-mips                         mpc30x_defconfig
-mips                         cobalt_defconfig
-powerpc                     pq2fads_defconfig
-arc                     haps_hs_smp_defconfig
-riscv             nommu_k210_sdcard_defconfig
-mips                      loongson3_defconfig
-sh                           se7619_defconfig
-nios2                            alldefconfig
-arm                           stm32_defconfig
-sh                     magicpanelr2_defconfig
-powerpc                     tqm8541_defconfig
-arm                         axm55xx_defconfig
-powerpc                 mpc85xx_cds_defconfig
-powerpc                  storcenter_defconfig
-mips                         tb0226_defconfig
-ia64                         bigsur_defconfig
-arm                        multi_v7_defconfig
-xtensa                    xip_kc705_defconfig
-nds32                            alldefconfig
-sparc64                             defconfig
-arm                        cerfcube_defconfig
-sh                            migor_defconfig
-sh                         apsh4a3a_defconfig
-arm64                            alldefconfig
-sh                          r7785rp_defconfig
-arm                      footbridge_defconfig
-sh                            shmin_defconfig
-powerpc                    adder875_defconfig
-m68k                         amcore_defconfig
-mips                          rb532_defconfig
-powerpc                 linkstation_defconfig
-csky                             alldefconfig
-arm                         assabet_defconfig
-mips                     decstation_defconfig
-sh                ecovec24-romimage_defconfig
-m68k                       m5475evb_defconfig
-m68k                        m5407c3_defconfig
-sh                           se7343_defconfig
-powerpc                        cell_defconfig
-powerpc                      ppc6xx_defconfig
-i386                                defconfig
-arm                             ezx_defconfig
-mips                      maltasmvp_defconfig
-arm                        realview_defconfig
-arm                            xcep_defconfig
-ia64                            zx1_defconfig
-arm                       omap2plus_defconfig
-powerpc                     rainier_defconfig
-powerpc                  iss476-smp_defconfig
-h8300                       h8s-sim_defconfig
-powerpc                      ep88xc_defconfig
-riscv                            allyesconfig
-arm                     eseries_pxa_defconfig
-powerpc                 mpc8540_ads_defconfig
-sh                           se7724_defconfig
-arm                  randconfig-c002-20220207
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-x86_64               randconfig-a013-20220207
-x86_64               randconfig-a016-20220207
-x86_64               randconfig-a015-20220207
-x86_64               randconfig-a012-20220207
-x86_64               randconfig-a014-20220207
-x86_64               randconfig-a011-20220207
-i386                 randconfig-a012-20220207
-i386                 randconfig-a013-20220207
-i386                 randconfig-a015-20220207
-i386                 randconfig-a014-20220207
-i386                 randconfig-a011-20220207
-i386                 randconfig-a016-20220207
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-
-clang tested configs:
-riscv                randconfig-c006-20220208
-x86_64                        randconfig-c007
-powerpc              randconfig-c003-20220208
-i386                          randconfig-c001
-mips                 randconfig-c004-20220208
-arm                  randconfig-c002-20220208
-mips                          rm200_defconfig
-mips                        maltaup_defconfig
-powerpc                     mpc512x_defconfig
-arm                        spear3xx_defconfig
-arm                   milbeaut_m10v_defconfig
-mips                           ip27_defconfig
-arm                  colibri_pxa270_defconfig
-arm                       aspeed_g4_defconfig
-arm                          imote2_defconfig
-powerpc                      ppc44x_defconfig
-powerpc                 mpc836x_mds_defconfig
-mips                           mtx1_defconfig
-arm                            dove_defconfig
-arm                    vt8500_v6_v7_defconfig
-riscv                          rv32_defconfig
-x86_64               randconfig-a006-20220207
-x86_64               randconfig-a004-20220207
-x86_64               randconfig-a005-20220207
-x86_64               randconfig-a003-20220207
-x86_64               randconfig-a002-20220207
-x86_64               randconfig-a001-20220207
-i386                 randconfig-a005-20220207
-i386                 randconfig-a004-20220207
-i386                 randconfig-a003-20220207
-i386                 randconfig-a006-20220207
-i386                 randconfig-a001-20220207
-i386                 randconfig-a002-20220207
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220207
-hexagon              randconfig-r041-20220207
-hexagon              randconfig-r045-20220208
-hexagon              randconfig-r041-20220208
-riscv                randconfig-r042-20220208
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> > While we shouldn't break existing DTs, the moonshot DT doesn't use
+> > what's documented upstream. There are multiple differences compared to
+> > what's documented. Is upstream supposed to support upstream DTs,
+> > downstream DTs, and ACPI for XGene which is an abandoned platform with
+> > only a handful of users?
+>
+> That's a fair question, though it's one of a policy, and I feel I'd be
+> overstepping by weighing in. I suppose one option I have is to try
+> and create and upstream a dts for these systems and modify our
+> boot.scr to always load that over the one provided by firmware. While
+> we do have some of these systems in production, they are being retired
+> and replaced with newer kit over time, and it's possible we'll never
+> need to upgrade them to a modern kernel.
+>
+>   -dann
