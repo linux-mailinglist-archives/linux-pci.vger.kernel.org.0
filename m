@@ -2,60 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 268BA4AF63A
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 17:12:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 56C724AF63F
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 17:14:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232149AbiBIQMX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Feb 2022 11:12:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46456 "EHLO
+        id S236675AbiBIQOA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Feb 2022 11:14:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233603AbiBIQMV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Feb 2022 11:12:21 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F37C0613C9;
-        Wed,  9 Feb 2022 08:12:24 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S233603AbiBIQN5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Feb 2022 11:13:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4D7ECC061355
+        for <linux-pci@vger.kernel.org>; Wed,  9 Feb 2022 08:14:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644423239;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=pY1hMIvILcvQ4iy4cx4rzx5NtHdAQGETHaPrSiHWNSI=;
+        b=KAWEGKJa1PX2+CfetDOHJ0eg12GGWj5DoM/65gF0r8rV4Ro5kuUU1YAVwxSUaAkPXmV3Zx
+        2rQuaEyoiaYnSIsjkFwUKVQcggFLD8mV05UUhnGldsb7RRAuhD13G2/gztvXTnlbzAX4km
+        nTGQHCWgwQ4X9zpZa59cq6lLfNOtXHM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-438-xBvaTn-WO8CV8zoxMFJB7A-1; Wed, 09 Feb 2022 11:13:56 -0500
+X-MC-Unique: xBvaTn-WO8CV8zoxMFJB7A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E7EF6178D;
-        Wed,  9 Feb 2022 16:12:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E587BC340E7;
-        Wed,  9 Feb 2022 16:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644423143;
-        bh=m3/DCmKw6+XqkFayBElGVHbTdWMUgdbgYLhOgJ1SVRQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Eq2V2AOH7HmO+ekuO/1S0ugmsKp5DANBwvob+DQ7ABf5OR+IK2Lmg8R6kgtU/S/op
-         nqKzsF5XOT9XbWjFIQRj1Et9aUDff6jaIIjlCEDU0T9/L1QoLpcYFiaNaG35+YlG9l
-         EwKaz1rik05jWapb4XRrIA3YSFRFgK+8v7dZunborSwf+/ZqiDHcwCRskBBDEU810I
-         CmX2AIZtkVSru1zAasEY2X3fLmWiwUAbzfKZU+EeA7WL20cJc1nT8hEItyAAt/4yj3
-         OySfTc9HcdfKXU6ZpSQL5Cb2/ydDm9n3+xHyEYHTQ7yv1m40dooIvG2S/xCwPIfdLs
-         TCmfVXZ/UcUqw==
-Date:   Wed, 9 Feb 2022 10:12:20 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F10961926DA9;
+        Wed,  9 Feb 2022 16:13:53 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.212])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5535A7B03A;
+        Wed,  9 Feb 2022 16:13:50 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] PCI: hv: Avoid the retarget interrupt hypercall in
- irq_unmask() on ARM64
-Message-ID: <20220209161220.GA559499@bhelgaas>
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Benoit=20Gr=C3=A9goire?= <benoitg@coeus.ca>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Hui Wang <hui.wang@canonical.com>
+Subject: [PATCH] x86/PCI: revert "Ignore E820 reservations for bridge windows on newer systems"
+Date:   Wed,  9 Feb 2022 17:13:42 +0100
+Message-Id: <20220209161342.91721-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220209023722.2866009-1-boqun.feng@gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,69 +67,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 09, 2022 at 10:37:20AM +0800, Boqun Feng wrote:
-> On ARM64 Hyper-V guests, SPIs are used for the interrupts of virtual PCI
-> devices, and SPIs can be managed directly via GICD registers. Therefore
-> the retarget interrupt hypercall is not needed on ARM64.
-> 
-> The retarget interrupt hypercall related code is now put in a helper
-> function and only called on x86.
-> 
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 20ea2ee330b8..80aa33ef5bf0 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1457,7 +1457,7 @@ static void hv_irq_mask(struct irq_data *data)
->  }
->  
->  /**
-> - * hv_irq_unmask() - "Unmask" the IRQ by setting its current
-> + * __hv_irq_unmask() - "Unmask" the IRQ by setting its current
->   * affinity.
->   * @data:	Describes the IRQ
->   *
-> @@ -1466,7 +1466,7 @@ static void hv_irq_mask(struct irq_data *data)
->   * is built out of this PCI bus's instance GUID and the function
->   * number of the device.
->   */
-> -static void hv_irq_unmask(struct irq_data *data)
-> +static void __hv_irq_unmask(struct irq_data *data)
->  {
->  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
->  	struct hv_retarget_device_interrupt *params;
-> @@ -1569,6 +1569,13 @@ static void hv_irq_unmask(struct irq_data *data)
->  	if (!hv_result_success(res) && hbus->state != hv_pcibus_removing)
->  		dev_err(&hbus->hdev->device,
->  			"%s() failed: %#llx", __func__, res);
-> +}
-> +
-> +static void hv_irq_unmask(struct irq_data *data)
-> +{
-> +	/* Only use a hypercall on x86 */
+Commit 7f7b4236f204 ("x86/PCI: Ignore E820 reservations for bridge windows
+on newer systems") fixes the touchpad not working on laptops like
+the Lenovo IdeaPad 3 15IIL05 and the Lenovo IdeaPad 5 14IIL05, as well as
+fixing thunderbolt hotplug issues on the Lenovo Yoga C940.
 
-This comment isn't useful because it only repeats what we can already
-see from the "IS_ENABLED(CONFIG_X86)" below and it doesn't say
-anything about *why*.
+Unfortunately it turns out that this is causing issues with suspend/resume
+on Lenovo ThinkPad X1 Carbon Gen 2 laptops. So, per the no regressions
+policy, rever this. Note I'm looking into another fix for the issues this
+fixed.
 
-Didn't we just go though an exercise of adding interfaces for
-arch-specific things, i.e., 831c1ae725f7 ("PCI: hv: Make the code arch
-neutral by adding arch specific interfaces")?  Maybe this should be
-another such interface?
+Fixes: 7f7b4236f204 ("x86/PCI: Ignore E820 reservations for bridge windows on newer systems")
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=2029207
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ arch/x86/kernel/resource.c | 23 +----------------------
+ 1 file changed, 1 insertion(+), 22 deletions(-)
 
-If you add Hyper-V support for a third arch, this #ifdef will likely
-be silently incorrect.  If you add an interface, there's at least a
-clue that this needs to be evaluated.
+diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
+index 9ae64f9af956..9b9fb7882c20 100644
+--- a/arch/x86/kernel/resource.c
++++ b/arch/x86/kernel/resource.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <linux/dmi.h>
+ #include <linux/ioport.h>
+ #include <asm/e820/api.h>
+ 
+@@ -24,31 +23,11 @@ static void resource_clip(struct resource *res, resource_size_t start,
+ 		res->start = end + 1;
+ }
+ 
+-/*
+- * Some BIOS-es contain a bug where they add addresses which map to
+- * system RAM in the PCI host bridge window returned by the ACPI _CRS
+- * method, see commit 4dc2287c1805 ("x86: avoid E820 regions when
+- * allocating address space"). To avoid this Linux by default excludes
+- * E820 reservations when allocating addresses since 2010.
+- * In 2019 some systems have shown-up with E820 reservations which cover
+- * the entire _CRS returned PCI host bridge window, causing all attempts
+- * to assign memory to PCI BARs to fail if Linux uses E820 reservations.
+- *
+- * Ideally Linux would fully stop using E820 reservations, but then
+- * the old systems this was added for will regress.
+- * Instead keep the old behavior for old systems, while ignoring the
+- * E820 reservations for any systems from now on.
+- */
+ static void remove_e820_regions(struct resource *avail)
+ {
+-	int i, year = dmi_get_bios_year();
++	int i;
+ 	struct e820_entry *entry;
+ 
+-	if (year >= 2018)
+-		return;
+-
+-	pr_info_once("PCI: Removing E820 reservations from host bridge windows\n");
+-
+ 	for (i = 0; i < e820_table->nr_entries; i++) {
+ 		entry = &e820_table->entries[i];
+ 
+-- 
+2.33.1
 
-> +	if (IS_ENABLED(CONFIG_X86))
-> +		__hv_irq_unmask(data);
->  
->  	if (data->parent_data->chip->irq_unmask)
->  		irq_chip_unmask_parent(data);
-> -- 
-> 2.35.1
-> 
