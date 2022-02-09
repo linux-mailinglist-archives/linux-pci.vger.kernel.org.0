@@ -2,57 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A9AB4AE58A
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 00:40:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 208694AE5BB
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 01:08:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237612AbiBHXk3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Feb 2022 18:40:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
+        id S239081AbiBIAID (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Feb 2022 19:08:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237592AbiBHXk2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 18:40:28 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1668C061577;
-        Tue,  8 Feb 2022 15:40:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8822CB81DAE;
-        Tue,  8 Feb 2022 23:40:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D523C004E1;
-        Tue,  8 Feb 2022 23:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644363625;
-        bh=tTPrvW+Dj9qlw2hawH8KNeZdwB7ywT5DEp3AnZQYYas=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=r2ZYtAp5LY9NOVd2QTojCHSKJyHaCFJAHN134jhrTbUWahI6A68xI7guspXyv7w7o
-         cG+Wuo8HmRRMLqSQBbusqueYWr04h/MQzEZaB06LO1ZCD1z95WO80iALgKTH8aTR+b
-         DjIAOIhK1jLscZ9Zp4mnzYqmNxeoEZY9IZ6EsHWmVlXmLje1nszSjyjkpN2V0Xslif
-         1XUTnWixsC9RKRCJOQac0eF5uUOzkDl3hA2N7b8Sd0WopLstcpJ20VC6Lwk+zQDcLa
-         HxkLjNE7GYKLjAE6RxiJbUC7+w3QoxCJ9jeou6OS4VYoA0spDnbkGB8rh+VDsD+z1/
-         Cfy1fhref5yWw==
-Date:   Tue, 8 Feb 2022 17:40:23 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Koen Vandeputte <koen.vandeputte@citymesh.com>,
-        Dexuan Cui <dexuan.linux@gmail.com>
-Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files (can't boot)
-Message-ID: <20220208234023.GA505306@bhelgaas>
+        with ESMTP id S239065AbiBIAIC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 19:08:02 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DCFABC06157B
+        for <linux-pci@vger.kernel.org>; Tue,  8 Feb 2022 16:08:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644365279;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LJZOrVqWNc55dmdiqtBNTiSqfsk4Aunpye1fa+FT0PU=;
+        b=HydJ+zf+hLb/AF0SW3oagGkKiK9fnsUcsg45u/n2pq/vrGxVuC7TkmGaIE7ImTsMgRJhlh
+        cwvSH8Js2qQZnj+gCq0dTrTsM/rWowLyI3gLmLVoDnDVczVyyhAGow/fAKElE9aEPS2dPN
+        MTYVJEV5mlqt3sw8DNRaXUG3VWwc3Es=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-127-SeAUtb20OYe6T1U-Fh2F7w-1; Tue, 08 Feb 2022 19:07:58 -0500
+X-MC-Unique: SeAUtb20OYe6T1U-Fh2F7w-1
+Received: by mail-il1-f200.google.com with SMTP id o8-20020a056e0214c800b002bc2f9cffffso316739ilk.8
+        for <linux-pci@vger.kernel.org>; Tue, 08 Feb 2022 16:07:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=LJZOrVqWNc55dmdiqtBNTiSqfsk4Aunpye1fa+FT0PU=;
+        b=jCEGEC9SnHNguQoc321xtjSjjHO/i9r8HgXD02nMF1xzpyoyek8TWW1YeHuXj/Lf1g
+         2hC1S7UeBmOVqD10fYtyRk5nEXlRWgznC92VEEpBrk9SGVZMDASXypJgOwNhyL4ciB/h
+         E5SkjczDMX0P7HwtydTPMT/EYeWrRBcbA/a20RiNVPBbl/E3Xj+fOX1/Efk+Yl/8nJoA
+         kUhrRacfA8lrkKKETDTIQc7h+JS9HQyDMaeGd9CuRVLMDuJEvAm+8O6DYvgaHVxLorhU
+         huvFjiqSpXMbmbk6wkCMUbKz/2EgT9K1JH+CgzzbC6wHMNnBjSAN3aoBsVSOONsDhZyX
+         s2RA==
+X-Gm-Message-State: AOAM531y8AMZkxWsvf7WYQpMzdK6H5NXhj5Ai3eDj7i3wA6DfpA+YOJU
+        6QEh+kQukucGPZAt4zVLJP5zzzUNlSa+TwbQ2I5vFBkCu5a1IFLN6IqCX/RGe9s/ujAUTFjFOEj
+        2CtnAUTcI1T+KOZI/78Ad
+X-Received: by 2002:a6b:7908:: with SMTP id i8mr3135442iop.168.1644365277466;
+        Tue, 08 Feb 2022 16:07:57 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJytZgQsZPabR4ZtYO1vCzOvaocCOOY2JKPCOUSk9Hbs3xp+0K8JlwDa3ItjNdIxw+0fqmmReg==
+X-Received: by 2002:a6b:7908:: with SMTP id i8mr3135426iop.168.1644365277159;
+        Tue, 08 Feb 2022 16:07:57 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id i15sm9040232iog.14.2022.02.08.16.07.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Feb 2022 16:07:56 -0800 (PST)
+Date:   Tue, 8 Feb 2022 17:07:54 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>
+Cc:     <bhelgaas@google.com>, <jgg@nvidia.com>, <saeedm@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
+        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>, <maorg@nvidia.com>,
+        <ashok.raj@intel.com>, <kevin.tian@intel.com>,
+        <shameerali.kolothum.thodi@huawei.com>
+Subject: Re: [PATCH V7 mlx5-next 08/15] vfio: Define device migration
+ protocol v2
+Message-ID: <20220208170754.01d05a1d.alex.williamson@redhat.com>
+In-Reply-To: <20220207172216.206415-9-yishaih@nvidia.com>
+References: <20220207172216.206415-1-yishaih@nvidia.com>
+        <20220207172216.206415-9-yishaih@nvidia.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <m38ruwxgnx.fsf@t19.piap.pl>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,67 +83,256 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Koen, Dexuan from this old thread:
-https://lore.kernel.org/all/20200716110423.xtfyb3n6tn5ixedh@pali/]
+On Mon, 7 Feb 2022 19:22:09 +0200
+Yishai Hadas <yishaih@nvidia.com> wrote:
+> +static int
+> +vfio_ioctl_device_feature_mig_device_state(struct vfio_device *device,
+> +					   u32 flags, void __user *arg,
+> +					   size_t argsz)
+> +{
+> +	size_t minsz =
+> +		offsetofend(struct vfio_device_feature_mig_state, data_fd);
+> +	struct vfio_device_feature_mig_state mig;
 
-On Mon, Jan 31, 2022 at 12:56:18PM +0100, Krzysztof Hałasa wrote:
-> Bjorn Helgaas <helgaas@kernel.org> writes:
-> 
-> > Thanks.  e1d3f3268b0e and related patches converted individual files
-> > ("config", "rom", "vpd", etc) to static attributes, but since the
-> > problem you're seeing is with a directory, it's likely different.
-> >
-> > I opened this bugzilla report to try to keep this from getting lost:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=215515
-> 
-> Ok, thanks.
+Perhaps set default data_fd here?  ie.
 
-Koen collected some interesting logs at
-https://lore.kernel.org/all/cd4812f0-1de3-0582-936c-ba30906595af@citymesh.com/
-They're from v5.10, which was before all of Krzysztof W's nice work
-converting to static attributes, but Koen's log shows the error
-happening in the pci_sysfs_init() initcall, which is *after*
-imx6_pcie_probe():
+  struct vfio_device_feature_mig_state mig = { .data_fd = -1 };
 
-  imx6_pcie_probe                # probably device initcall (level 6)
-    ...
-      pci_create_sysfs_dev_files
+> +	struct file *filp = NULL;
+> +	int ret;
+> +
+> +	if (!device->ops->migration_set_state ||
+> +	    !device->ops->migration_get_state)
+> +		return -ENOTTY;
+> +
+> +	ret = vfio_check_feature(flags, argsz,
+> +				 VFIO_DEVICE_FEATURE_SET |
+> +				 VFIO_DEVICE_FEATURE_GET,
+> +				 sizeof(mig));
+> +	if (ret != 1)
+> +		return ret;
+> +
+> +	if (copy_from_user(&mig, arg, minsz))
+> +		return -EFAULT;
+> +
+> +	if (flags & VFIO_DEVICE_FEATURE_GET) {
+> +		enum vfio_device_mig_state curr_state;
+> +
+> +		ret = device->ops->migration_get_state(device, &curr_state);
+> +		if (ret)
+> +			return ret;
+> +		mig.device_state = curr_state;
+> +		goto out_copy;
+> +	}
+> +
+> +	/* Handle the VFIO_DEVICE_FEATURE_SET */
+> +	filp = device->ops->migration_set_state(device, mig.device_state);
+> +	if (IS_ERR(filp) || !filp)
+> +		goto out_copy;
+> +
+> +	return vfio_ioct_mig_return_fd(filp, arg, &mig);
+> +out_copy:
+> +	mig.data_fd = -1;
+> +	if (copy_to_user(arg, &mig, sizeof(mig)))
+> +		return -EFAULT;
+> +	if (IS_ERR(filp))
+> +		return PTR_ERR(filp);
+> +	return 0;
+> +}
+...
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index ca69516f869d..3f4a1a7c2277 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -56,6 +56,13 @@ struct vfio_device {
+>   *         match, -errno for abort (ex. match with insufficient or incorrect
+>   *         additional args)
+>   * @device_feature: Fill in the VFIO_DEVICE_FEATURE ioctl
+> + * @migration_set_state: Optional callback to change the migration state for
+> + *         devices that support migration. The returned FD is used for data
+> + *         transfer according to the FSM definition. The driver is responsible
+> + *         to ensure that FD is isolated whenever the migration FSM leaves a
+> + *         data transfer state or before close_device() returns.
+> + @migration_get_state: Optional callback to get the migration state for
 
-  pci_sysfs_init                 # late initcall (level 7)
-    pci_create_sysfs_dev_files
-      "sysfs: cannot create duplicate filename"
+Fix formatting, " * @mig..."
 
-Krzysztof, you're running v5.14, which includes Krzysztof W's work,
-but that shouldn't affect the imx6_pcie_probe()/pci_sysfs_init()
-ordering.  Your log shows the error in imx6_pcie_probe().
+> + *         devices that support migration.
+>   */
+>  struct vfio_device_ops {
+>  	char	*name;
+...
+> +/*
+> + * Indicates the device can support the migration API. See enum
+> + * vfio_device_mig_state for details. If present flags must be non-zero and
+> + * VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE is supported.
+> + *
+> + * VFIO_MIGRATION_STOP_COPY means that RUNNING, STOP, STOP_COPY and
+> + * RESUMING are supported.
+> + */
+> +struct vfio_device_feature_migration {
+> +	__aligned_u64 flags;
+> +#define VFIO_MIGRATION_STOP_COPY	(1 << 0)
+> +};
+> +#define VFIO_DEVICE_FEATURE_MIGRATION 1
+> +
+> +/*
+> + * Upon VFIO_DEVICE_FEATURE_SET,
+> + * Execute a migration state change on the VFIO device.
+> + * The new state is supplied in device_state.
+> + *
+> + * The kernel migration driver must fully transition the device to the new state
+> + * value before the write(2) operation returns to the user.
 
-Would you mind adding the patch below and attaching a complete dmesg
-log to the bugzilla?
+Stale comment, there's no write(2) anymore.
 
-Bjorn
+> + *
+> + * The kernel migration driver must not generate asynchronous device state
+> + * transitions outside of manipulation by the user or the VFIO_DEVICE_RESET
+> + * ioctl as described above.
+> + *
+> + * If this function fails then current device_state may be the original
+> + * operating state or some other state along the combination transition path.
+> + * The user can then decide if it should execute a VFIO_DEVICE_RESET, attempt
+> + * to return to the original state, or attempt to return to some other state
+> + * such as RUNNING or STOP.
+> + *
+> + * If the new_state starts a new data transfer session then the FD associated
+> + * with that session is returned in data_fd. The user is responsible to close
+> + * this FD when it is finished. The user must consider the migration data
+> + * segments carried over the FD to be opaque and non-fungible. During RESUMING,
+> + * the data segments must be written in the same order they came out of the
+> + * saving side FD.
+> + *
+> + * Upon VFIO_DEVICE_FEATURE_GET,
+> + * Get the current migration state of the VFIO device, data_fd will be -1.
+> + */
+> +struct vfio_device_feature_mig_state {
+> +	__u32 device_state; /* From enum vfio_device_mig_state */
+> +	__s32 data_fd;
+> +};
+> +#define VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE 2
+> +
+> +/*
+> + * The device migration Finite State Machine is described by the enum
+> + * vfio_device_mig_state. Some of the FSM arcs will create a migration data
+> + * transfer session by returning a FD, in this case the migration data will
+> + * flow over the FD using read() and write() as discussed below.
+> + *
+> + * There are 5 states to support VFIO_MIGRATION_STOP_COPY:
+> + *  RUNNING - The device is running normally
+> + *  STOP - The device does not change the internal or external state
+> + *  STOP_COPY - The device internal state can be read out
+> + *  RESUMING - The device is stopped and is loading a new internal state
+> + *  ERROR - The device has failed and must be reset
+> + *
+> + * The FSM takes actions on the arcs between FSM states. The driver implements
+> + * the following behavior for the FSM arcs:
+> + *
+> + * RUNNING -> STOP
+> + * STOP_COPY -> STOP
+> + *   While in STOP the device must stop the operation of the device. The
+> + *   device must not generate interrupts, DMA, or advance its internal
+> + *   state. When stopped the device and kernel migration driver must accept
+> + *   and respond to interaction to support external subsystems in the STOP
+> + *   state, for example PCI MSI-X and PCI config pace. Failure by the user to
+> + *   restrict device access while in STOP must not result in error conditions
+> + *   outside the user context (ex. host system faults).
+> + *
+> + *   The STOP_COPY arc will terminate a data transfer session.
+> + *
+> + * RESUMING -> STOP
+> + *   Leaving RESUMING terminates a data transfer session and indicates the
+> + *   device should complete processing of the data delivered by write(). The
+> + *   kernel migration driver should complete the incorporation of data written
+> + *   to the data transfer FD into the device internal state and perform
+> + *   final validity and consistency checking of the new device state. If the
+> + *   user provided data is found to be incomplete, inconsistent, or otherwise
+> + *   invalid, the migration driver must fail the SET_STATE ioctl and
+> + *   optionally go to the ERROR state as described below.
+> + *
+> + *   While in STOP the device has the same behavior as other STOP states
+> + *   described above.
+> + *
+> + *   To abort a RESUMING session the device must be reset.
+> + *
+> + * STOP -> RUNNING
+> + *   While in RUNNING the device is fully operational, the device may generate
+> + *   interrupts, DMA, respond to MMIO, all vfio device regions are functional,
+> + *   and the device may advance its internal state.
+> + *
+> + * STOP -> STOP_COPY
+> + *   This arc begin the process of saving the device state and will return a
+> + *   new data_fd.
+> + *
+> + *   While in the STOP_COPY state the device has the same behavior as STOP
+> + *   with the addition that the data transfers session continues to stream the
+> + *   migration state. End of stream on the FD indicates the entire device
+> + *   state has been transferred.
+> + *
+> + *   The user should take steps to restrict access to vfio device regions while
+> + *   the device is in STOP_COPY or risk corruption of the device migration data
+> + *   stream.
+> + *
+> + * STOP -> RESUMING
+> + *   Entering the RESUMING state starts a process of restoring the device
+> + *   state and will return a new data_fd. The data stream fed into the data_fd
+> + *   should be taken from the data transfer output of the saving group states
+> + *   from a compatible device. The migration driver may alter/reset the
+> + *   internal device state for this arc if required to prepare the device to
+> + *   receive the migration data.
+> + *
+> + * any -> ERROR
+> + *   ERROR cannot be specified as a device state, however any transition request
+> + *   can be failed with an errno return and may then move the device_state into
+> + *   ERROR. In this case the device was unable to execute the requested arc and
+> + *   was also unable to restore the device to any valid device_state.
+> + *   To recover from ERROR VFIO_DEVICE_RESET must be used to return the
+> + *   device_state back to RUNNING.
+> + *
+> + * The remaining possible transitions are interpreted as combinations of the
+> + * above FSM arcs. As there are multiple paths through the FSM arcs the path
+> + * should be selected based on the following rules:
+> + *   - Select the shortest path.
+> + * Refer to vfio_mig_get_next_state() for the result of the algorithm.
+> + *
+> + * The automatic transit through the FSM arcs that make up the combination
+> + * transition is invisible to the user. When working with combination arcs the
+> + * user may see any step along the path in the device_state if SET_STATE
+> + * fails. When handling these types of errors users should anticipate future
+> + * revisions of this protocol using new states and those states becoming
+> + * visible in this case.
+> + */
+> +enum vfio_device_mig_state {
+> +	VFIO_DEVICE_STATE_ERROR = 0,
+> +	VFIO_DEVICE_STATE_STOP = 1,
+> +	VFIO_DEVICE_STATE_RUNNING = 2,
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 7bbf2673c7f2..6a2b62fe7704 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1200,6 +1200,9 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
- 	res_attr->attr.mode = 0600;
- 	res_attr->size = pci_resource_len(pdev, num);
- 	res_attr->private = (void *)(unsigned long)num;
-+	pci_info(pdev, "pci_create_attr:");
-+	print_hex_dump(KERN_INFO, "", DUMP_PREFIX_OFFSET, 16, 1,
-+			res_attr, 64, true);
- 	retval = sysfs_create_bin_file(&pdev->dev.kobj, res_attr);
- 	if (retval)
- 		kfree(res_attr);
-@@ -1380,6 +1383,9 @@ static const struct attribute_group pci_dev_reset_attr_group = {
- 
- int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
- {
-+	pci_info(pdev, "pci_create_sysfs_dev_files\n");
-+	dump_stack();
-+
- 	if (!sysfs_initialized)
- 		return -EACCES;
- 
+I'm a little surprised we're not using RUNNING = 0 given all the
+objection in the v1 protocol that the default state was non-zero.
+
+> +	VFIO_DEVICE_STATE_STOP_COPY = 3,
+> +	VFIO_DEVICE_STATE_RESUMING = 4,
+> +};
+> +
+>  /* -------- API for Type1 VFIO IOMMU -------- */
+>  
+>  /**
+
+Otherwise, I'm still not sure how userspace handles the fact that it
+can't know how much data will be read from the device and how important
+that is.  There's no replacement of that feature from the v1 protocol
+here.
+
+As you noted, it's not only the size of the migration data, but also
+the rate the device can generate it.  However, I also expect that it's
+generally the external rate that's the limiting factor.  I've not
+previously seen any evidence that the device rate is taken into account.
+
+I also think we're still waiting for confirmation from owners of
+devices with extremely large device states (vGPUs) whether they consider
+the stream FD sufficient versus their ability to directly mmap regions
+of the device in the previous protocol.  Thanks,
+
+Alex
 
