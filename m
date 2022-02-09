@@ -2,60 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D92274AFBF0
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 19:52:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CCFB4AFC11
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 19:54:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240961AbiBISv6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Feb 2022 13:51:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43744 "EHLO
+        id S241266AbiBISyH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Feb 2022 13:54:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241207AbiBISuy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Feb 2022 13:50:54 -0500
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF277C0401F3;
-        Wed,  9 Feb 2022 10:46:17 -0800 (PST)
-Received: by mail-yb1-f177.google.com with SMTP id o19so8547647ybc.12;
-        Wed, 09 Feb 2022 10:46:17 -0800 (PST)
+        with ESMTP id S241171AbiBISxK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Feb 2022 13:53:10 -0500
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA08C102FF2;
+        Wed,  9 Feb 2022 10:49:17 -0800 (PST)
+Received: by mail-yb1-f171.google.com with SMTP id 192so8598252ybd.10;
+        Wed, 09 Feb 2022 10:49:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FOZOUKLJKTfcXhSl2Frn48yaywqWILrf0FOGMO8s1HA=;
-        b=tH6yIwGZrWuCUeSYtAFsvNZ4qfXpPlrbYzeKJegOFOLkz7y9I3chVLFYES/qy9UMjQ
-         N3rJRDbOr22jqEL9+QogsXudu4JlsYxcP9gtC4dw1KFXHktdOI9SDpfsMS/RWyUASlKd
-         psBKg9K5hnSt3qwuSHrR3YFw7re694antpouKGXRqwOixbsb03pXoMvc6kplv38MzUFv
-         LVcQQCOZXvlrr4vl8hdGdKeZr2r9rBbSEDdNZt8X4wBaEo+S6e85KVZYhakCGRZkaSCV
-         Gr453zS7cDigHDMg3EvvPBJMZHBWK9dN82TtPe0pP9g0KQxq8GGafSalpICOI7yUj5of
-         jADA==
-X-Gm-Message-State: AOAM530fBs11exwMSn3jLWDW3rbspw3S15KY4OsjKteJ1B64lnNYXAQV
-        7IHTB0dL3wwK5TunEfXO2oNNqiXR4mfiv+4vcKk=
-X-Google-Smtp-Source: ABdhPJwJGGD0nJAvFhNDkFGeYRyEdQdP75MnqP3EaVTzMLv3wT5lodwnLAvfEtrY884JKET27CdtDI1tBOtpbtwnJQ8=
-X-Received: by 2002:a81:8b4e:: with SMTP id e14mr3633769ywk.301.1644432377048;
- Wed, 09 Feb 2022 10:46:17 -0800 (PST)
+        bh=PeOBJrYtsjvPzGhlpO3z8teLSXpq96u2HwrZLSm0an8=;
+        b=5XDWh2dOhoL6Ol0/kOfYT7mgRqpXKg/IKPaDBPMy+kd2tJIc0fNTkuKhtDqI8dzdtt
+         1qSi5feQ9kbfSCuiIOOjBOFSgoeIo+idyq94OGJbCKKsJQ4IEUcR2nuulYIDm/W4+LyH
+         zHK//Ke7D7+GeQljH1CfRuiHtlDhHMIme/3fLEUE4O4XTR5wxRMRDF9dOKnDGwPVN5hV
+         SVop8iK2qdAZzBo/K6iCfQnWMFmuwgzA8XuU14vDFcXfTjk3wwfj1Pt//5HblHc4RzyA
+         UgPbAS2OEVm4etsx99SjozUHbMuTxXOGB6nJWp/llsKWNMWy0eZhY3MKcLbm/crFjzGr
+         6YQQ==
+X-Gm-Message-State: AOAM531xekNT6m0AjXbBwqA+/H66HIefQ1bhnBMSMgr/tW1cEScObg9Z
+        CBmNZJbM77XRwN24e0M2zctFky6g0i5NLDLaaPM=
+X-Google-Smtp-Source: ABdhPJwT5FFqJKpGThs/6Gz9A6AC9UjzXMebOSEosJc0cqXyWoHchf77I20XaY5BX8aA9+P+ZYYkRMCnsz8ehXMYR88=
+X-Received: by 2002:a81:e109:: with SMTP id w9mr3587221ywh.515.1644432556190;
+ Wed, 09 Feb 2022 10:49:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20220209161342.91721-1-hdegoede@redhat.com>
-In-Reply-To: <20220209161342.91721-1-hdegoede@redhat.com>
+References: <YgNVJKy0s8MGBRoa@kroah.com> <20220209183945.GA571585@bhelgaas>
+In-Reply-To: <20220209183945.GA571585@bhelgaas>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 9 Feb 2022 19:46:06 +0100
-Message-ID: <CAJZ5v0ihi_jig=HejWo+rivn2Re7=U5VGPOL8gfmmW0UzBp6NA@mail.gmail.com>
-Subject: Re: [PATCH] x86/PCI: revert "Ignore E820 reservations for bridge
- windows on newer systems"
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?Q?Benoit_Gr=C3=A9goire?= <benoitg@coeus.ca>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+Date:   Wed, 9 Feb 2022 19:49:05 +0100
+Message-ID: <CAJZ5v0hYFRe-HseDnqh4AFpBzzmAjx9nfJo2yC5o=jzbWUqqOw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] PCI: Allow internal devices to be marked as untrusted
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hui Wang <hui.wang@canonical.com>
+        Rajat Jain <rajatxjain@gmail.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Pavel Machek <pavel@denx.de>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
@@ -67,71 +70,123 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 9, 2022 at 5:14 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Wed, Feb 9, 2022 at 7:39 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> Commit 7f7b4236f204 ("x86/PCI: Ignore E820 reservations for bridge windows
-> on newer systems") fixes the touchpad not working on laptops like
-> the Lenovo IdeaPad 3 15IIL05 and the Lenovo IdeaPad 5 14IIL05, as well as
-> fixing thunderbolt hotplug issues on the Lenovo Yoga C940.
+> On Wed, Feb 09, 2022 at 06:46:12AM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Feb 08, 2022 at 04:23:27PM -0800, Rajat Jain wrote:
+> > > On Tue, Feb 1, 2022 at 6:01 PM Rajat Jain <rajatja@google.com> wrote:
+> > > >
+> > > > Today the pci_dev->untrusted is set for any devices sitting downstream
+> > > > an external facing port (determined via "ExternalFacingPort" or the
+> > > > "external-facing" properties).
+> > > >
+> > > > However, currently there is no way for internal devices to be marked as
+> > > > untrusted.
+> > > >
+> > > > There are use-cases though, where a platform would like to treat an
+> > > > internal device as untrusted (perhaps because it runs untrusted firmware
+> > > > or offers an attack surface by handling untrusted network data etc).
+> > > >
+> > > > Introduce a new "UntrustedDevice" property that can be used by the
+> > > > firmware to mark any device as untrusted.
+> > >
+> > > Just to unite the threads (from
+> > > https://www.spinics.net/lists/linux-pci/msg120221.html). I did reach
+> > > out to Microsoft but they haven't acknowledged my email. I also pinged
+> > > them again yesterday, but I suspect I may not be able to break the
+> > > ice. So this patch may be ready to go in my opinion.
+> > >
+> > > I don't see any outstanding comments on this patch, but please let me
+> > > know if you have any comments.
+> > >
+> > > > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > > > ---
+> > > > v2: * Also use the same property for device tree based systems.
+> > > >     * Add documentation (next patch)
+> > > >
+> > > >  drivers/pci/of.c       | 2 ++
+> > > >  drivers/pci/pci-acpi.c | 1 +
+> > > >  drivers/pci/pci.c      | 9 +++++++++
+> > > >  drivers/pci/pci.h      | 2 ++
+> > > >  4 files changed, 14 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > > > index cb2e8351c2cc..e8b804664b69 100644
+> > > > --- a/drivers/pci/of.c
+> > > > +++ b/drivers/pci/of.c
+> > > > @@ -24,6 +24,8 @@ void pci_set_of_node(struct pci_dev *dev)
+> > > >                                                     dev->devfn);
+> > > >         if (dev->dev.of_node)
+> > > >                 dev->dev.fwnode = &dev->dev.of_node->fwnode;
+> > > > +
+> > > > +       pci_set_untrusted(dev);
+> > > >  }
+> > > >
+> > > >  void pci_release_of_node(struct pci_dev *dev)
+> > > > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> > > > index a42dbf448860..2bffbd5c6114 100644
+> > > > --- a/drivers/pci/pci-acpi.c
+> > > > +++ b/drivers/pci/pci-acpi.c
+> > > > @@ -1356,6 +1356,7 @@ void pci_acpi_setup(struct device *dev, struct acpi_device *adev)
+> > > >
+> > > >         pci_acpi_optimize_delay(pci_dev, adev->handle);
+> > > >         pci_acpi_set_external_facing(pci_dev);
+> > > > +       pci_set_untrusted(pci_dev);
+> > > >         pci_acpi_add_edr_notifier(pci_dev);
+> > > >
+> > > >         pci_acpi_add_pm_notifier(adev, pci_dev);
+> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > index 9ecce435fb3f..41e887c27004 100644
+> > > > --- a/drivers/pci/pci.c
+> > > > +++ b/drivers/pci/pci.c
+> > > > @@ -6869,3 +6869,12 @@ static int __init pci_realloc_setup_params(void)
+> > > >         return 0;
+> > > >  }
+> > > >  pure_initcall(pci_realloc_setup_params);
+> > > > +
+> > > > +void pci_set_untrusted(struct pci_dev *pdev)
+> > > > +{
+> > > > +       u8 val;
+> > > > +
+> > > > +       if (!device_property_read_u8(&pdev->dev, "UntrustedDevice", &val)
 >
-> Unfortunately it turns out that this is causing issues with suspend/resume
-> on Lenovo ThinkPad X1 Carbon Gen 2 laptops. So, per the no regressions
-> policy, rever this. Note I'm looking into another fix for the issues this
-> fixed.
+> If we do this, can we combine it with set_pcie_untrusted(), where we
+> already set pdev->untrusted?  Maybe that needs to be renamed; I don't
+> see anything PCIe-specific there, and it looks like it works for
+> conventional PCI as well.
 >
-> Fixes: 7f7b4236f204 ("x86/PCI: Ignore E820 reservations for bridge windows on newer systems")
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=2029207
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > Please no, "Untrusted" does not really convey much, if anything here.
+> > You are taking an odd in-kernel-value and making it a user api.
+> >
+> > Where is this "trust" defined?  Who defines it?  What policy does the
+> > kernel impose on it?
+>
+> I'm a bit hesitant about this, too.  It really doesn't have anything
+> in particular to do with the PCI core.  It's not part of the PCI
+> specs, and it could apply to any kind of device, not just PCI (ACPI,
+> platform, USB, etc).
+>
+> We have:
+>
+>   dev->removable                # struct device
+>   pdev->is_thunderbolt
+>   pdev->untrusted
+>   pdev->external_facing
+>
+> and it feels a little hard to keep everything straight.  Most of them
+> are "discovered" based on some DT or ACPI firmware property.  None of
+> them really has anything specifically to do with *PCI*, and I don't
+> think the PCI core depends on any of them.  I think
+> pdev->is_thunderbolt is the only one we discover based on a PCI
+> feature (the Thunderbolt Capability), and the things we *use* it for
+> are actually not things specified by that capability [1].
+>
+> Could drivers just look for these properties directly instead of
+> relying on the PCI core to get in the middle?  Most callers of
+> device_property_read_*() are in drivers.  I do see that doing it in
+> the PCI core might help enforce standard usage in DT/ACPI, but we
+> could probably do that in other ways, too.
 
-Applied as 5.17-rc material and pushed out for -next, thanks!
+FWIW, I agree that looking at these things in drivers would be better.
 
-> ---
->  arch/x86/kernel/resource.c | 23 +----------------------
->  1 file changed, 1 insertion(+), 22 deletions(-)
->
-> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-> index 9ae64f9af956..9b9fb7882c20 100644
-> --- a/arch/x86/kernel/resource.c
-> +++ b/arch/x86/kernel/resource.c
-> @@ -1,5 +1,4 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -#include <linux/dmi.h>
->  #include <linux/ioport.h>
->  #include <asm/e820/api.h>
->
-> @@ -24,31 +23,11 @@ static void resource_clip(struct resource *res, resource_size_t start,
->                 res->start = end + 1;
->  }
->
-> -/*
-> - * Some BIOS-es contain a bug where they add addresses which map to
-> - * system RAM in the PCI host bridge window returned by the ACPI _CRS
-> - * method, see commit 4dc2287c1805 ("x86: avoid E820 regions when
-> - * allocating address space"). To avoid this Linux by default excludes
-> - * E820 reservations when allocating addresses since 2010.
-> - * In 2019 some systems have shown-up with E820 reservations which cover
-> - * the entire _CRS returned PCI host bridge window, causing all attempts
-> - * to assign memory to PCI BARs to fail if Linux uses E820 reservations.
-> - *
-> - * Ideally Linux would fully stop using E820 reservations, but then
-> - * the old systems this was added for will regress.
-> - * Instead keep the old behavior for old systems, while ignoring the
-> - * E820 reservations for any systems from now on.
-> - */
->  static void remove_e820_regions(struct resource *avail)
->  {
-> -       int i, year = dmi_get_bios_year();
-> +       int i;
->         struct e820_entry *entry;
->
-> -       if (year >= 2018)
-> -               return;
-> -
-> -       pr_info_once("PCI: Removing E820 reservations from host bridge windows\n");
-> -
->         for (i = 0; i < e820_table->nr_entries; i++) {
->                 entry = &e820_table->entries[i];
->
-> --
-> 2.33.1
->
+> [1] https://lore.kernel.org/r/20220204222956.GA220908@bhelgaas
