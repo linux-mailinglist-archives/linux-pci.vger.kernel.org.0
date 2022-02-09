@@ -2,86 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 557E74AFEDF
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 22:03:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D168E4AFF1C
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 22:17:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232761AbiBIVCX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Feb 2022 16:02:23 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:52064 "EHLO
+        id S233152AbiBIVRr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Feb 2022 16:17:47 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:44664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232725AbiBIVCU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Feb 2022 16:02:20 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F10C033255
-        for <linux-pci@vger.kernel.org>; Wed,  9 Feb 2022 13:02:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1135B61B5A
-        for <linux-pci@vger.kernel.org>; Wed,  9 Feb 2022 21:02:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 032A9C340E7;
-        Wed,  9 Feb 2022 21:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644440541;
-        bh=WdDdo+IgIdXDJ+cpewwXAcOeRcwMbSOOi5pe/mRxdBs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=scYDivvA1aQL7rKV8xUdPrSQSzS5iWZqMDTiTuHk9bIYO5P87BOWHTvbmYMpYBad5
-         IbyKJVWVMbnQdSDQ/t5JeyR0dgFihvMmXUztNicDejQV3qDDlQbGoLgFTDnLj8vdrW
-         RqX0+xWO24boza9+z+wvUq6tg2RPNmAK7JS2JlVo4QFGiqzZSgZkN0OplsO527W3w8
-         BWBODTT0L+oHUJeb8DAc7c7q1yaFO9MW9yQdC3GaT+VMSezepfnF/1GIJqh04zujU3
-         7U4iOeT5SB0iMMxy4xZQxW+JxIy8j639dSZrnoUm3G1x5FMlKC8+z1tVm8FW0TAoiD
-         yspxXEOVfYWzg==
-Date:   Wed, 9 Feb 2022 15:02:18 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Blazej Kucman <blazej.kucman@linux.intel.com>
-Cc:     Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-        linux-pci@vger.kernel.org, Blazej Kucman <blazej.kucman@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Naveen Naidu <naveennaidu479@gmail.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>
-Subject: Re: [Bug 215525] New: HotPlug does not work on upstream kernel
- 5.17.0-rc1
-Message-ID: <20220209210218.GA587489@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220209144102.0000143e@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233140AbiBIVRr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Feb 2022 16:17:47 -0500
+Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
+        by lindbergh.monkeyblade.net (Postfix) with UTF8SMTPS id B4452C014F32
+        for <linux-pci@vger.kernel.org>; Wed,  9 Feb 2022 13:17:49 -0800 (PST)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1644441469; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=l9IB4Qa+LqQHeEdS9Xvem4BknbivZ/qkp2XXwLsm5wQ=;
+ b=sg8sl8dB8ru4OuY428fsvNKoEkwCxjROqMq+LJ2/8bJGeWinf8uHU+KGI/d+ntpft4V/kQM3
+ IGbPpeKKCgKWD2SKDHLeBATomznOrt6RNe+uV3FEsFLvxUw2oxm/SDT5J53Xt5LG/YykqBcF
+ 5JFDEpyuFqCoNHLt/ezDRTjOX1s=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 62042f7c19d16b66a9d67c6f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 09 Feb 2022 21:17:48
+ GMT
+Sender: nitirawa=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DD1FBC4360C; Wed,  9 Feb 2022 21:17:47 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: nitirawa)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3F84CC4338F;
+        Wed,  9 Feb 2022 21:17:47 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 10 Feb 2022 02:47:47 +0530
+From:   nitirawa@codeaurora.org
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, rafael.j.wysocki@intel.com,
+        keith.busch@intel.com, hch@lst.de, bhelgaas@google.com,
+        mmaddireddy@nvidia.com, kthota@nvidia.com, sagar.tv@gmail.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Query related to shutting down NVMe during system suspend
+In-Reply-To: <20220209202639.GB1616420@dhcp-10-100-145-180.wdc.com>
+References: <65b836cd-8d5d-b9c2-eb8f-2ee3ef46112b@nvidia.com>
+ <20220209202639.GB1616420@dhcp-10-100-145-180.wdc.com>
+Message-ID: <bc80ec7d1ca2c56feded1a6848c285ef@codeaurora.org>
+X-Sender: nitirawa@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 09, 2022 at 02:41:02PM +0100, Blazej Kucman wrote:
-> On Thu, 3 Feb 2022 09:58:04 -0600
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> > Why were you testing with "pci=nommconf"?  Do you think anybody uses
-> > that with VMD and NVMe?
+On 2022-02-10 01:56, Keith Busch wrote:
+> On Tue, Feb 01, 2022 at 09:52:28PM +0530, Vidya Sagar wrote:
+>> Hi Rafael & Christoph,
+>> My query is regarding the comment and the code that follows after it 
+>> at
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/nvme/host/pci.c?h=v5.17-rc2#n3243
+>> What I understood from it is that, there is an underlying assumption
+>> that the power to the devices is not removed during the suspend call.
+>> In the case of device-tree based platforms like Tegra194, power is
+>> indeed removed to the devices during suspend-resume process. Hence, 
+>> the
+>> NVMe devices need to be taken through the shutdown path irrespective 
+>> of
+>> whether the ASPM states are enabled or not.
+>> I would like to hear from you the best method to follow to achieve 
+>> this.
 > 
-> It was added long time ago when it was useful.
+> Christoph prefers to append quirks for platforms that need full device
+> shutdown on s2idle instead of changing the driver default.
+> 
+> We use dmi matching for our current platform quirk list. I do not know
+> what the equivalent is for device-tree based platforms. Do you know?
 
-I'm curious about why it was useful.  It suggests a possible MMCONFIG
-issue in firmware or in Linux.  If it was a Linux issue, ideally we
-would fix that.  If it's a firmware issue, ideally we would work
-around it or automatically turn on "pci=nommconf" so the user wouldn't
-have to figure that out.
+Hi Keith,
 
-> Bugzilla report can be closed if you don't consider it as regression.
+IMO, the NVME driver is not associated with any device tree, Instead PCI 
+driver is associated with device tree.
+So unlike ACPI based platform where we have platform specific DMI 
+matching, we don't have equivalent check for DT based platform.
 
-OK, I closed it with the details.  I'm not entirely convinced that
-04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC on PCIe features") was the
-right thing, but I'll pursue that elsewhere.
-
-Thanks for your patience in working through this, and sorry for the
-hassle it caused you.
-
-Bjorn
+Do we see any concern if we introduce a module param with default not 
+set to quick suspend.
+For platform that need full shutdown durring resume , they can set it to 
+quick suspend.
