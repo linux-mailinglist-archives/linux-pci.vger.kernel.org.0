@@ -2,116 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35A264AE6AF
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 03:40:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE8724AE6D1
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 03:41:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241739AbiBICkM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Feb 2022 21:40:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42264 "EHLO
+        id S243214AbiBICkU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Feb 2022 21:40:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241649AbiBICiO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 21:38:14 -0500
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2160C061355;
-        Tue,  8 Feb 2022 18:38:13 -0800 (PST)
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 680191A0FF0;
-        Wed,  9 Feb 2022 03:38:12 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2FDD51A0FEB;
-        Wed,  9 Feb 2022 03:38:12 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id C9A77183AC99;
-        Wed,  9 Feb 2022 10:38:10 +0800 (+08)
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     bhelgaas@google.com, shawnguo@kernel.org, l.stach@pengutronix.de
-Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-imx@nxp.com
-Subject: [PATCH v2] arm64: dts: imx8mq-evk: Add second PCIe port support
-Date:   Wed,  9 Feb 2022 10:06:48 +0800
-Message-Id: <1644372408-5485-1-git-send-email-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233796AbiBIChl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 21:37:41 -0500
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92866C061355;
+        Tue,  8 Feb 2022 18:37:40 -0800 (PST)
+Received: by mail-il1-x131.google.com with SMTP id z18so606374iln.2;
+        Tue, 08 Feb 2022 18:37:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J2A+sjZnS5cRMoX3xrf2NiPs/KWZ3vKvmI0duGN4ktY=;
+        b=S8cMgrKplxI50Aumzypa+57fs1D2jx+SSXm19HgRZ1KkM/J7s5Bit0ZDnxpGQkfnCm
+         kYhc1+m+fPk5w64tsFAJlyRtiOh+6rK6xJjVIkzj2Fg3quIEHYo9nhCHyX6ny7wTlXoA
+         rw6++R8VC+iZXy9c8xTS+BfttUupCo5Tm/0n1/FnsFsMSV48dLxUuse6+unLrf/woFzM
+         I/j7wszoIl0+JhmQzkGjEW9NmiZ1Mj1TzCU16xa1HQfLXkXEmLA4RjnUrMWp8b9oYjLI
+         Tto1xS1Yy9Qyeqa/+vPUi/kIsh+PE7GvUcFecVTc55q/JR3muPZrIp1UH4qZmeV9WGtn
+         yE/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J2A+sjZnS5cRMoX3xrf2NiPs/KWZ3vKvmI0duGN4ktY=;
+        b=b2r5TZ6pVRShWYdIc0d3NMNm3EH6kTD2FjGrT5CG6sDHfE8I47AnCIVicLC2zw+Ech
+         tW98Eq9DBNye0fKzt+aX+YB3Cye4gS2qlMpg3aTJEjCcpyLxUMFbCSbnVTG6VvBC1J5t
+         w8OtPs93o/GUZKNVIa+3/nRvZybyH+SJGZH5Itg77WKZEm/vHBi9To8/I7n6xOkVUZht
+         vA6dMFb760e+KJ8TxmBL99QkbgWEfWRV4IhSAKhfaQx/ca8EekJCKzExsXBdp0YmH+6G
+         GVUbM9r+Rxt4zNXWvvqw6RpP+fkr1i1ag6wRzf3hD22JwRPOldX+On8TigBAauqC/vvt
+         dG2w==
+X-Gm-Message-State: AOAM533R+BBHY5N88LUy69AGxXwGQcgQx2/EksWPpRc2fM/He8MzEXi3
+        sFQ5wq8x9k2Ou5JuEe0IdGQ=
+X-Google-Smtp-Source: ABdhPJzO/bwJZAuNb/YObVBnUoezD2/wuk46qw3zm3oPQ0zePvcUEqZbtucXf7YxO+GRY3zW3EEJ8Q==
+X-Received: by 2002:a05:6e02:1aa2:: with SMTP id l2mr65090ilv.111.1644374258027;
+        Tue, 08 Feb 2022 18:37:38 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id p5sm8957352iof.50.2022.02.08.18.37.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Feb 2022 18:37:37 -0800 (PST)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 1FF9227C0054;
+        Tue,  8 Feb 2022 21:37:35 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Tue, 08 Feb 2022 21:37:36 -0500
+X-ME-Sender: <xms:7ygDYjr7dx3TR8Q-fRFbaegqjzVPWZMZYv2TxueDedGvDmEB85KdNg>
+    <xme:7ygDYtovOoWQe4OCsCAFASQR92NIDYQg-14X3R6QIWN8AMnEXspcO8N2PITUvKA4B
+    -Wa_n7t-oGWnUiTfw>
+X-ME-Received: <xmr:7ygDYgOUHCE7QkWmVsKloXRIP6mF-OlH5D6NKGf2yQjj76ZuwOyFf-gB>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrheekgdegiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgv
+    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeeijefhledvtdegudfhffeugeetveeluefgkeevhfeuudeuudfgveevhfetvdeuvden
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
+    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
+    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
+    hnrghmvg
+X-ME-Proxy: <xmx:7ygDYm4jzRc-M5hmb86t7Mbohn9y40_vJq62PExmC7lsAak20b8GkQ>
+    <xmx:7ygDYi6u2LkEKybkab_lWDVOdr1FwqgUmFS-VggvsKwDY_cHGhNmyQ>
+    <xmx:7ygDYugZDsVYd2Y2Qy9EzVc0T99jB1AbgXPICSajc8Ksz0ZHsxl6Qg>
+    <xmx:7ygDYiz5HXC2wyrtVIbrimxH8rIlMSDm28FHsgwvLqgK9gg7YVQAhE4ZOqc>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 8 Feb 2022 21:37:34 -0500 (EST)
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] PCI: hv: Avoid the retarget interrupt hypercall in irq_unmask() on ARM64
+Date:   Wed,  9 Feb 2022 10:37:20 +0800
+Message-Id: <20220209023722.2866009-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Enable the second PCIe port support on i.MX8MQ EVK board.
+On ARM64 Hyper-V guests, SPIs are used for the interrupts of virtual PCI
+devices, and SPIs can be managed directly via GICD registers. Therefore
+the retarget interrupt hypercall is not needed on ARM64.
 
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+The retarget interrupt hypercall related code is now put in a helper
+function and only called on x86.
+
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 38 ++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/pci/controller/pci-hyperv.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index a1b7582f3ecf..06f6e44da4d4 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -27,6 +27,17 @@ pcie0_refclk: pcie0-refclk {
- 		clock-frequency = <100000000>;
- 	};
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 20ea2ee330b8..80aa33ef5bf0 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1457,7 +1457,7 @@ static void hv_irq_mask(struct irq_data *data)
+ }
  
-+	reg_pcie1: regulator-pcie {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pcie1_reg>;
-+		regulator-name = "MPCIE_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio5 10 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
+ /**
+- * hv_irq_unmask() - "Unmask" the IRQ by setting its current
++ * __hv_irq_unmask() - "Unmask" the IRQ by setting its current
+  * affinity.
+  * @data:	Describes the IRQ
+  *
+@@ -1466,7 +1466,7 @@ static void hv_irq_mask(struct irq_data *data)
+  * is built out of this PCI bus's instance GUID and the function
+  * number of the device.
+  */
+-static void hv_irq_unmask(struct irq_data *data)
++static void __hv_irq_unmask(struct irq_data *data)
+ {
+ 	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
+ 	struct hv_retarget_device_interrupt *params;
+@@ -1569,6 +1569,13 @@ static void hv_irq_unmask(struct irq_data *data)
+ 	if (!hv_result_success(res) && hbus->state != hv_pcibus_removing)
+ 		dev_err(&hbus->hdev->device,
+ 			"%s() failed: %#llx", __func__, res);
++}
 +
- 	reg_usdhc2_vmmc: regulator-vsd-3v3 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_reg_usdhc2>;
-@@ -327,6 +338,20 @@ &pcie0 {
- 	status = "okay";
- };
++static void hv_irq_unmask(struct irq_data *data)
++{
++	/* Only use a hypercall on x86 */
++	if (IS_ENABLED(CONFIG_X86))
++		__hv_irq_unmask(data);
  
-+&pcie1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie1>;
-+	reset-gpio = <&gpio5 12 GPIO_ACTIVE_LOW>;
-+	clocks = <&clk IMX8MQ_CLK_PCIE2_ROOT>,
-+		 <&clk IMX8MQ_CLK_PCIE2_AUX>,
-+		 <&clk IMX8MQ_CLK_PCIE2_PHY>,
-+		 <&pcie0_refclk>;
-+	clock-names = "pcie", "pcie_aux", "pcie_phy", "pcie_bus";
-+	vpcie-supply = <&reg_pcie1>;
-+	vph-supply = <&vgen5_reg>;
-+	status = "okay";
-+};
-+
- &pgc_gpu {
- 	power-supply = <&sw1a_reg>;
- };
-@@ -482,6 +507,19 @@ MX8MQ_IOMUXC_UART4_RXD_GPIO5_IO28		0x16
- 		>;
- 	};
- 
-+	pinctrl_pcie1: pcie1grp {
-+		fsl,pins = <
-+			MX8MQ_IOMUXC_I2C4_SDA_PCIE2_CLKREQ_B		0x76
-+			MX8MQ_IOMUXC_ECSPI2_MISO_GPIO5_IO12		0x16
-+		>;
-+	};
-+
-+	pinctrl_pcie1_reg: pcie1reggrp {
-+		fsl,pins = <
-+			MX8MQ_IOMUXC_ECSPI2_SCLK_GPIO5_IO10		0x16
-+		>;
-+	};
-+
- 	pinctrl_qspi: qspigrp {
- 		fsl,pins = <
- 			MX8MQ_IOMUXC_NAND_ALE_QSPI_A_SCLK	0x82
+ 	if (data->parent_data->chip->irq_unmask)
+ 		irq_chip_unmask_parent(data);
 -- 
-2.25.1
+2.35.1
 
