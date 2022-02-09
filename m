@@ -2,113 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3E604AED3F
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 09:53:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14F674AED97
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 10:07:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241737AbiBIIxN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Feb 2022 03:53:13 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:44320 "EHLO
+        id S229645AbiBIJGD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Feb 2022 04:06:03 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:34158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240205AbiBIIxI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Feb 2022 03:53:08 -0500
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 637D6C001F74;
-        Wed,  9 Feb 2022 00:53:04 -0800 (PST)
-Received: by mail-yb1-xb2b.google.com with SMTP id v186so4015881ybg.1;
-        Wed, 09 Feb 2022 00:53:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MDqRZpl2ZNEFfuQ7yfffHKzYxQqjEhCxkRDN1Sj78Ps=;
-        b=cbvyMiumfUXld/I/wxT1ueBd+qe8ToUeMv+ZNjiz7lR7v45FcEsPwEffVyuIq0tT82
-         PO6gTRk+UUrwcDPOCiOQhELlf1CnTZCFML/ogntfu//Gj1rn1Hw8xbZBBZhawqz4lRe0
-         fPEysu5H9/OMFsXJKwv532eD3Uorplm+HlN6ZkMInTqFv4N/oWjXR00xkrQlz755VqnQ
-         +9RwPvWz/ZE4p6iRjyGaHBGHNrvOHPePG4LjAMBboBIkdfYOujRcAJJvZzAwZCPQQk8h
-         sOCD0qAzLgG9OL4GxQFtmEsV0D53zPkAt9zuig+6maCHTtG1S5YcQDydcvzuigrdT8A4
-         uI5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MDqRZpl2ZNEFfuQ7yfffHKzYxQqjEhCxkRDN1Sj78Ps=;
-        b=762+I3SVgnRA1ziX0Qehppenf6aypn6bAuM+b2ivqHrsW/b1tX9yQ3jhsYk8HuIxQ0
-         iIwtyCruJ5yM0kavIPqUxW4J8zqEfc43ZpkCLFh+JAWcVg3Endidy030Qb4m17cUiUze
-         5MlmUdnf3+v9mh8n9tsQnDB5P3nZXNNLy0Tb0wdVbYeRz9hekzMS1KZ6Sa0O/GUf1xeJ
-         X4pd2v4YbF/qC7kYxW6JPxvBFK36knfUqf3FCajXJYNDKRUovuOSe5NG4rdulm94dTKZ
-         vyUT1XvY/U0Oi94ehMszEmiHgqZLg+uC/0omtihR7u07uNO+dWbOWNi0Ime9q9be+vHI
-         SFgQ==
-X-Gm-Message-State: AOAM533A5ACSn616GZtEDHSGmP3OtFV3tpRNEhChXsD6asyT6NSh3rzC
-        eaEdTNhnvBxe8XjjbsneiQgDo2FOIMXsAKTd1G0=
-X-Google-Smtp-Source: ABdhPJwTGByfa1hFDqkwYNeN4BOxA4JwlpvSmwyJQEuJ0ZwibgZOGsyGmRE+oHqgcMNxRgJbh40DHCBik+tp6+3Rk9s=
-X-Received: by 2002:a81:fd3:: with SMTP id 202mr1099770ywp.78.1644396779698;
- Wed, 09 Feb 2022 00:52:59 -0800 (PST)
-MIME-Version: 1.0
-References: <20220126195043.28376-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <PH7PR19MB5562AC3C5E7BBB7730086CC1A02E9@PH7PR19MB5562.namprd19.prod.outlook.com>
-In-Reply-To: <PH7PR19MB5562AC3C5E7BBB7730086CC1A02E9@PH7PR19MB5562.namprd19.prod.outlook.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 9 Feb 2022 08:52:33 +0000
-Message-ID: <CA+V-a8tEwOR-r=+KDe2DhpTMwhXPTgbZYgOWepST3mnhBL_Hag@mail.gmail.com>
-Subject: Re: [EXT] [RFC PATCH 0/5] PCIe EPF support for internal DMAC handling
- and driver update for R-Car PCIe EP to support DMAC
-To:     Li Chen <lchen@ambarella.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+        with ESMTP id S230241AbiBIJGB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Feb 2022 04:06:01 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB34E071F63
+        for <linux-pci@vger.kernel.org>; Wed,  9 Feb 2022 01:05:54 -0800 (PST)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1nHiuc-000491-7t; Wed, 09 Feb 2022 10:05:18 +0100
+Message-ID: <936cc917828bfa3c089a33f0af219fecdc2a778a.camel@pengutronix.de>
+Subject: Re: [RFC 1/2] ARM: dts: imx6qp-sabresd: Enable pcie support
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Richard Zhu <hongxing.zhu@nxp.com>, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, shawnguo@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Date:   Wed, 09 Feb 2022 10:05:16 +0100
+In-Reply-To: <1644390156-5940-1-git-send-email-hongxing.zhu@nxp.com>
+References: <1644390156-5940-1-git-send-email-hongxing.zhu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Chen-san,
+Hi Richard,
 
-On Wed, Feb 9, 2022 at 4:48 AM Li Chen <lchen@ambarella.com> wrote:
->
-> Hi Prabhakar,
->
-> > [0] https://urldefense.com/v3/__https://www.spinics.net/lists/linux-
-> > pci/msg92385.html__;!!PeEy7nZLVv0!yP0WqYs165riCjWRhZprjgMVVLfQLtkkPfv_
-> > R7XCoqkqgMsOyor90EZp0YAdxu0$
->
-> Can your streaming DMA test case(-d) pass if you use EP's internal DMAC i=
-nstead of external DMAC?
->
-Sorry I don't quite get you here.
+Am Mittwoch, dem 09.02.2022 um 15:02 +0800 schrieb Richard Zhu:
+> In the i.MX6QP sabresd board(sch-28857) design, one external oscillator
+> is used as the PCIe reference clock source by the endpoint device.
+> 
+> If RC uses this oscillator as reference clock too, PLL6(ENET PLL) would
+> has to be in bypass mode, and ENET clocks would be messed up.
+> 
+> To keep things simple, let RC use the internal PLL as reference clock
+> and always enable the external oscillator for endpoint device on
+> i.MX6QP sabresd board.
+> 
+The commit message doesn't really match what's being done in the patch.
+Maybe you meant to say that even though the HW design is different you
+are enabling the PCIe controller in the same way as on the 6Q sabresd?
 
-This patch series adds support for EP to transfer using internal DMAC
-as no external DMAC is supported, so when "-d" option is passed and if
-EP has registered it has internal dmac it will use the same and run
-the pcitest.
+Also, is this configuration stable for you? We've had some issues with
+this kind of split clocking setup in a customer design, where it was
+enabled by accident, due to PLL6 no being bypassed. In this design it
+caused the link to randomly drop under load and causing aborts on the
+CPU side, due to completion timeouts. I think it at least warrants a
+comment somewhere that this isn't a recommended setup.
 
-Cheers,
-Prabhakar
+Regards,
+Lucas
 
-> Regards,
-> Li
->
-> **********************************************************************
-> This email and attachments contain Ambarella Proprietary and/or Confident=
-ial Information and is intended solely for the use of the individual(s) to =
-whom it is addressed. Any unauthorized review, use, disclosure, distribute,=
- copy, or print is prohibited. If you are not an intended recipient, please=
- contact the sender by reply email and destroy all copies of the original m=
-essage. Thank you.
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx6qp-sabresd.dts | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qp-sabresd.dts b/arch/arm/boot/dts/imx6qp-sabresd.dts
+> index 480e73183f6b..083cf90bcab5 100644
+> --- a/arch/arm/boot/dts/imx6qp-sabresd.dts
+> +++ b/arch/arm/boot/dts/imx6qp-sabresd.dts
+> @@ -50,8 +50,14 @@ MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17059
+>  	};
+>  };
+>  
+> +&vgen3_reg {
+> +	regulator-min-microvolt = <1800000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-always-on;
+> +};
+> +
+>  &pcie {
+> -	status = "disabled";
+> +	status = "okay";
+>  };
+>  
+>  &sata {
+
+
