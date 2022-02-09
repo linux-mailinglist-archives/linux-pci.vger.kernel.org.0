@@ -2,154 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE8724AE6D1
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 03:41:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DBDE4AE6DC
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Feb 2022 03:41:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243214AbiBICkU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Feb 2022 21:40:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42126 "EHLO
+        id S241721AbiBICkS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Feb 2022 21:40:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233796AbiBIChl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 21:37:41 -0500
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92866C061355;
-        Tue,  8 Feb 2022 18:37:40 -0800 (PST)
-Received: by mail-il1-x131.google.com with SMTP id z18so606374iln.2;
-        Tue, 08 Feb 2022 18:37:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J2A+sjZnS5cRMoX3xrf2NiPs/KWZ3vKvmI0duGN4ktY=;
-        b=S8cMgrKplxI50Aumzypa+57fs1D2jx+SSXm19HgRZ1KkM/J7s5Bit0ZDnxpGQkfnCm
-         kYhc1+m+fPk5w64tsFAJlyRtiOh+6rK6xJjVIkzj2Fg3quIEHYo9nhCHyX6ny7wTlXoA
-         rw6++R8VC+iZXy9c8xTS+BfttUupCo5Tm/0n1/FnsFsMSV48dLxUuse6+unLrf/woFzM
-         I/j7wszoIl0+JhmQzkGjEW9NmiZ1Mj1TzCU16xa1HQfLXkXEmLA4RjnUrMWp8b9oYjLI
-         Tto1xS1Yy9Qyeqa/+vPUi/kIsh+PE7GvUcFecVTc55q/JR3muPZrIp1UH4qZmeV9WGtn
-         yE/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J2A+sjZnS5cRMoX3xrf2NiPs/KWZ3vKvmI0duGN4ktY=;
-        b=b2r5TZ6pVRShWYdIc0d3NMNm3EH6kTD2FjGrT5CG6sDHfE8I47AnCIVicLC2zw+Ech
-         tW98Eq9DBNye0fKzt+aX+YB3Cye4gS2qlMpg3aTJEjCcpyLxUMFbCSbnVTG6VvBC1J5t
-         w8OtPs93o/GUZKNVIa+3/nRvZybyH+SJGZH5Itg77WKZEm/vHBi9To8/I7n6xOkVUZht
-         vA6dMFb760e+KJ8TxmBL99QkbgWEfWRV4IhSAKhfaQx/ca8EekJCKzExsXBdp0YmH+6G
-         GVUbM9r+Rxt4zNXWvvqw6RpP+fkr1i1ag6wRzf3hD22JwRPOldX+On8TigBAauqC/vvt
-         dG2w==
-X-Gm-Message-State: AOAM533R+BBHY5N88LUy69AGxXwGQcgQx2/EksWPpRc2fM/He8MzEXi3
-        sFQ5wq8x9k2Ou5JuEe0IdGQ=
-X-Google-Smtp-Source: ABdhPJzO/bwJZAuNb/YObVBnUoezD2/wuk46qw3zm3oPQ0zePvcUEqZbtucXf7YxO+GRY3zW3EEJ8Q==
-X-Received: by 2002:a05:6e02:1aa2:: with SMTP id l2mr65090ilv.111.1644374258027;
-        Tue, 08 Feb 2022 18:37:38 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id p5sm8957352iof.50.2022.02.08.18.37.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Feb 2022 18:37:37 -0800 (PST)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 1FF9227C0054;
-        Tue,  8 Feb 2022 21:37:35 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 08 Feb 2022 21:37:36 -0500
-X-ME-Sender: <xms:7ygDYjr7dx3TR8Q-fRFbaegqjzVPWZMZYv2TxueDedGvDmEB85KdNg>
-    <xme:7ygDYtovOoWQe4OCsCAFASQR92NIDYQg-14X3R6QIWN8AMnEXspcO8N2PITUvKA4B
-    -Wa_n7t-oGWnUiTfw>
-X-ME-Received: <xmr:7ygDYgOUHCE7QkWmVsKloXRIP6mF-OlH5D6NKGf2yQjj76ZuwOyFf-gB>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrheekgdegiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeeijefhledvtdegudfhffeugeetveeluefgkeevhfeuudeuudfgveevhfetvdeuvden
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
-    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
-    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
-    hnrghmvg
-X-ME-Proxy: <xmx:7ygDYm4jzRc-M5hmb86t7Mbohn9y40_vJq62PExmC7lsAak20b8GkQ>
-    <xmx:7ygDYi6u2LkEKybkab_lWDVOdr1FwqgUmFS-VggvsKwDY_cHGhNmyQ>
-    <xmx:7ygDYugZDsVYd2Y2Qy9EzVc0T99jB1AbgXPICSajc8Ksz0ZHsxl6Qg>
-    <xmx:7ygDYiz5HXC2wyrtVIbrimxH8rIlMSDm28FHsgwvLqgK9gg7YVQAhE4ZOqc>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 8 Feb 2022 21:37:34 -0500 (EST)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wei Liu <wei.liu@kernel.org>
-Cc:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] PCI: hv: Avoid the retarget interrupt hypercall in irq_unmask() on ARM64
-Date:   Wed,  9 Feb 2022 10:37:20 +0800
-Message-Id: <20220209023722.2866009-1-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S238188AbiBICjW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Feb 2022 21:39:22 -0500
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam07on2067.outbound.protection.outlook.com [40.107.95.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78CC4C0612C1;
+        Tue,  8 Feb 2022 18:39:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hJR8RqZdhNgP6g2S9JNXy6Os9YHxuY4j/4Kv6fdwTkv1o6SnmFjfUILMob+UFzbY477RGoeEMb5H/n+jB/lXLOObndIErlYxSnEWeTwnZOWRce0x99x12Y8uKT6Uktjyu5OAM46xFvjABsQpM70rRF9HsW6fICxGzhI4nkXYoxiOtqzQX81oMnDDWOP2Xw6Jsvx9wwlmpEHihnL4H9MGTPa0IlJf5f8yqhHDxWRz3fwKJVOdxQ/1ZCVvmhZ2C1PYrdgr/QR90PfrKI0ewFFRWQWqYL+SfkgylqId47Tadhv1269bpUPBwTJfymmjbCOiue18CeLczcJS7Ngpbgn0iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fIUsMe8Yv7SUafm8LCbXILwkah7adCVu7OEnrx1R0y0=;
+ b=NGWHs2R+qqTx3ag6DioqB3x/G8rKsaIOr9o6MNji/6qR7qm1wRuue9gCkPTvmFFdBJNbmO7ZZJYuSTouuY70W+kBcZGQi9AOWjHViTYNir42S0eChdF4ljXtXK1rW84aS9GNCj4rMmZNXIcrd6jgbdCp97Qs4eOLc/CUqy5cu81OLu24ZksI7dr41DEIVHTbr1CR17fXUp64+Ker2wiy5y50MT07qB48OtJF1xvwrVQASTzq4hjFZwHG6eLszGRH1oqVsgRwb6ocvadcsmp+IF5Vi7YjjVrDuEIPwdcOYjHoj0n8KWk5aPgwWM/HaGJFigLXVNIk0ZYIvhfdsVN/hQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fIUsMe8Yv7SUafm8LCbXILwkah7adCVu7OEnrx1R0y0=;
+ b=Rs4uXoyBGZjwAy7BpXfu9iwAaKpJbH/aqnytDgOIQOH2YENz/Qq90BYvLVZ1T5mFLr9L28Wkex6YMi6odT5f+0Aah/X6q4hT37cOf66ms8PNcrNbqeL4o/ziU1nHxh7CyNgidih3FAdMikaire+QogWYNA3QVDRntrIxAuuuTekphKaasqJeVARwwLY1JO8t/2aCpyyfnflM7AIZiR2QylrsBmnSAnyY5qbePXifhVRM9aqClQryQzTbNX8x1sO0EGycseLi3SsluxshG5W89HbIkqGoka/dt1U/MF29Fvn95ttUE9SM7kDStoBLVVQvlWYaluUi9IIeRWiFDMjM6g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by CY4PR12MB1704.namprd12.prod.outlook.com (2603:10b6:903:11d::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12; Wed, 9 Feb
+ 2022 02:39:19 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::e8f4:9793:da37:1bd3]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::e8f4:9793:da37:1bd3%4]) with mapi id 15.20.4975.011; Wed, 9 Feb 2022
+ 02:39:19 +0000
+Date:   Tue, 8 Feb 2022 22:39:18 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        ashok.raj@intel.com, kevin.tian@intel.com,
+        shameerali.kolothum.thodi@huawei.com
+Subject: Re: [PATCH V7 mlx5-next 14/15] vfio/mlx5: Use its own PCI reset_done
+ error handler
+Message-ID: <20220209023918.GO4160@nvidia.com>
+References: <20220207172216.206415-1-yishaih@nvidia.com>
+ <20220207172216.206415-15-yishaih@nvidia.com>
+ <20220208170801.39dab353.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220208170801.39dab353.alex.williamson@redhat.com>
+X-ClientProxiedBy: BL1P222CA0030.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c7::35) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7e2ba54b-527c-4f8e-5c16-08d9eb755f47
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1704:EE_
+X-Microsoft-Antispam-PRVS: <CY4PR12MB1704C9D9EA94AE7A7CF64163C22E9@CY4PR12MB1704.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: I1iZnmXAOkfjFTPUNLAzLBxBnr6H5Xr6Fal8H8rgo3eVmjId5CXGFFo/wjj7bIOWKJMSOCxA94/aVA++s88Xujz/5iAuaUrPO0zykkT7AD5Ue7GtXjdyRecB6Z0otiIzuICmDnCszX3VGPWqtTQJ5eJ560WZ8x7EacXgA04fYxY0Q596JvPm0Ksy56YYVIFH25tUTqZCB9uWsXRNbNoCabAdlSFCjEL2C+3ffmekK/Wd8rjc1ogfyrYAnG1+WZrFAKgaB7v5W+CpAw+pqnAmbvK7vQ/z5A25Jg0buQdmvAHdvXXUOZfqD+4fiJnUxqedVF/l+kOl9NH0OHpeVz+Vhv2czW7LbnhPZoeV0DlWLsuSYg2J5oZCSqnXXGAz9Cm4Vl92TwdPis5yKwV312QhN7IICpnd60tJF1wktMeM2KFGlZx76i1FxCcXLRgbuWxR3j45wYaP1UQcbvNlwk1yDI40ANVG8bv0B61qLk5shEJmW3RA33lTxjlBWyztHFji50X6b7rOmaQ0hqmR19RTCBRTKtQGqXcx/75xdhaEpAWxicwZuSVkv6c7jKJEkE/Lq+xW2k/xp4XxzL+Oj2S2EQrXY1KW+4B9t2s1tKWbHwFKOOB7jGVCXHTfB1cquU+iSqylP39WweZVoEU/8kBMcQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6916009)(33656002)(8676002)(8936002)(508600001)(6486002)(26005)(66946007)(186003)(6512007)(316002)(1076003)(2616005)(6506007)(4326008)(66476007)(36756003)(2906002)(86362001)(4744005)(5660300002)(83380400001)(66556008)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1zEVp6/1xp+kOG5sxRoFctjCB82kgs1ISSuNKY1euwEWXSGMUhOAmkFcTeEt?=
+ =?us-ascii?Q?CM8y7Yl77XpJvwOlJTI0irS+5UqsmSE51KjUir6/1xRwbhWeOKfio2u7OaIS?=
+ =?us-ascii?Q?mg6+ysUQcx44iEx/i52C1vuOAHRHVLcrwwYrlU2Nq1Ue2nPHCZwNC5qPqpmh?=
+ =?us-ascii?Q?sRsvaxP1tPpqNqNXU3a3TqcMNu1Qfq5jj/XKp0cnLiYZEpQJT9/PVpjAvXjx?=
+ =?us-ascii?Q?k1x+7ldOnVhzqk7oqZ0zQZx1oCTNgX8RkKUpVhqOOBv8bj4a+hkDhiGXYJg0?=
+ =?us-ascii?Q?bP5uGBq/1x6rgloTb8jR3Vn91TuY5S2nF1OEEWHo9y78vgpAK9AE8tgZLE5g?=
+ =?us-ascii?Q?UCxSx5lRtAc78Z/J/U8r7qWk5LahYBrAv8ht29jiHLVtRyV6WaC+ixOOtzL6?=
+ =?us-ascii?Q?/qDOn83Q+lMufO/xFUpXoPubLHTqpjRuCgw8RXqxSPq3NneL2vNWzrnF/R04?=
+ =?us-ascii?Q?+shxPbjg8QYGnaGsYCr6i1lnZ7/C9sJWjGWCMVRmwkbWJ8w7aeSJxCGNLojg?=
+ =?us-ascii?Q?vqxp2pYeJqomug/Twoyj6KS1sCCNuob2pUD1erm3eIVUv9+dM0yGMOj4LDr+?=
+ =?us-ascii?Q?3yWB357gHt13yutu+X4e8WSY8L5+0i0FYKw33gaGAq+JBOS/GAltOXJAIY9d?=
+ =?us-ascii?Q?IWtZvV5kSWM4422IPFTO3Qoks2vnh5Fz2nKM/6lc9xojTZ+tW56AQvQw/IXq?=
+ =?us-ascii?Q?aAEWxoJL0wd9QLOYp+CF+SScXPn+oGL75HW/kg0MicsxrzbTImBPro7rlBoL?=
+ =?us-ascii?Q?TMsYuGuMSkueGYpbRMfjHRK6zo/XyPsGwXMSHiOT91/Hzxs7+EPQiZmxSM2n?=
+ =?us-ascii?Q?4jp4gGbumChEZahpMZiAh28ge6NOTuODTnRCZSaRRhP+wab9vowq+UF1Y+gc?=
+ =?us-ascii?Q?UdaWcq4jaUG5uRhIcaMctcbZOeea1dyiHOJ+oS6r14WnvaE/4fMRI7Mx5oNj?=
+ =?us-ascii?Q?Hb4fOSxedzMlyWNb0w1IhcKlmlR0lIqQv2SnL2hd96x9QJ3qgimsFSJtwx1/?=
+ =?us-ascii?Q?FkQmyk0rK0PulLhCw5U1esBzz6Zrdd1qs9JYUnsRheH0NkL8RO2jHEVbj85f?=
+ =?us-ascii?Q?PDdil1fSaok5QkcfwjLQEsIoxJKVGk/tTsVuPZlNSk9c0ZhWYe/2ETNT2eYB?=
+ =?us-ascii?Q?KYcFrjNK2kv+X/ZLh6IFqoS5xdVzLnHITMBo0gxX8YQSDznlYc7T3hXijRnL?=
+ =?us-ascii?Q?8bel/NEigICJL9WyRPJ3y3eqE4siUsODWINnoq6TMnX57o+kfn0DDuZsDU+2?=
+ =?us-ascii?Q?Xd8Xt+bwn7yfoUAmrT6kMyiv1UWJV8ompcEDycLkonXgf1PK4bql8Q9nW/Z/?=
+ =?us-ascii?Q?BPU5NVpV40MyYIqcSWTassWOPYXldTmeqZRuqFQEiUlRp7P3aYd/Etv+3ANI?=
+ =?us-ascii?Q?KFQY+1zcSGuyTl5BKBeniFV3MAUECREpgOttyYJLPFxrtoFhsN+/UTy68qet?=
+ =?us-ascii?Q?KOgI9w3/aidEaLJkHSB6OTuTVmoy8qUkXqADRVxkaDupJkjAX2JZsrtoH2ME?=
+ =?us-ascii?Q?Csw3TRivkV6gZo1cfYrAgkX97m0ucdld9zs44k5exLCD/CusXjhvizfL6sRt?=
+ =?us-ascii?Q?UvyVOETmZZc6LWhxMGY=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e2ba54b-527c-4f8e-5c16-08d9eb755f47
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2022 02:39:19.3567
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FCKz4HW4A52f1Ne/3X4en/TkdcK0uoly1WhGJrBYpMuCqqb6mERTxNb3XajQmr7O
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1704
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On ARM64 Hyper-V guests, SPIs are used for the interrupts of virtual PCI
-devices, and SPIs can be managed directly via GICD registers. Therefore
-the retarget interrupt hypercall is not needed on ARM64.
+On Tue, Feb 08, 2022 at 05:08:01PM -0700, Alex Williamson wrote:
+> > @@ -477,10 +499,34 @@ static int mlx5vf_pci_get_device_state(struct vfio_device *vdev,
+> >  
+> >  	mutex_lock(&mvdev->state_mutex);
+> >  	*curr_state = mvdev->mig_state;
+> > -	mutex_unlock(&mvdev->state_mutex);
+> > +	mlx5vf_state_mutex_unlock(mvdev);
+> >  	return 0;
+> 
+> I still can't see why it wouldn't be a both fairly trivial to implement
+> and a usability improvement if the unlock wrapper returned -EAGAIN on a
+> deferred reset so we could avoid returning a stale state to the user
+> and a dead fd in the former case.  Thanks,
 
-The retarget interrupt hypercall related code is now put in a helper
-function and only called on x86.
+It simply is not useful - again, we always resolve this race that
+should never happen as though the two events happened consecutively,
+which is what would normally happen if we could use a simple mutex. We
+do not need to add any more complexity to deal with this already
+troublesome thing..
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 20ea2ee330b8..80aa33ef5bf0 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1457,7 +1457,7 @@ static void hv_irq_mask(struct irq_data *data)
- }
- 
- /**
-- * hv_irq_unmask() - "Unmask" the IRQ by setting its current
-+ * __hv_irq_unmask() - "Unmask" the IRQ by setting its current
-  * affinity.
-  * @data:	Describes the IRQ
-  *
-@@ -1466,7 +1466,7 @@ static void hv_irq_mask(struct irq_data *data)
-  * is built out of this PCI bus's instance GUID and the function
-  * number of the device.
-  */
--static void hv_irq_unmask(struct irq_data *data)
-+static void __hv_irq_unmask(struct irq_data *data)
- {
- 	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
- 	struct hv_retarget_device_interrupt *params;
-@@ -1569,6 +1569,13 @@ static void hv_irq_unmask(struct irq_data *data)
- 	if (!hv_result_success(res) && hbus->state != hv_pcibus_removing)
- 		dev_err(&hbus->hdev->device,
- 			"%s() failed: %#llx", __func__, res);
-+}
-+
-+static void hv_irq_unmask(struct irq_data *data)
-+{
-+	/* Only use a hypercall on x86 */
-+	if (IS_ENABLED(CONFIG_X86))
-+		__hv_irq_unmask(data);
- 
- 	if (data->parent_data->chip->irq_unmask)
- 		irq_chip_unmask_parent(data);
--- 
-2.35.1
-
+Jason
