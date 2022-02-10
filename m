@@ -2,269 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B790E4B09B3
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 10:40:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89CC74B0B63
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 11:50:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238845AbiBJJkF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Feb 2022 04:40:05 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58742 "EHLO
+        id S240152AbiBJKua (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Feb 2022 05:50:30 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238786AbiBJJkF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 04:40:05 -0500
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA2ED10B4;
-        Thu, 10 Feb 2022 01:40:04 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0V43zTg4_1644485997;
-Received: from 30.240.123.68(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0V43zTg4_1644485997)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 10 Feb 2022 17:39:59 +0800
-Message-ID: <362d7c9c-4c5e-94f5-8168-39c007465771@linux.alibaba.com>
-Date:   Thu, 10 Feb 2022 17:39:56 +0800
+        with ESMTP id S240208AbiBJKu3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 05:50:29 -0500
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FEFC1006
+        for <linux-pci@vger.kernel.org>; Thu, 10 Feb 2022 02:50:31 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id u16so3822509pfg.3
+        for <linux-pci@vger.kernel.org>; Thu, 10 Feb 2022 02:50:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pfPmHTNS3kNf2REIYVPxP0rI8dFehD3FUEuoa/nfhmQ=;
+        b=LV+Wgp8y3d5XDi3wv3BsyrxVE/eJEg914rTG32ssP43QX2iCrRuh4WUb+6RwJP8n9A
+         XKmpvwvmhZnw8XJ21kf3VZH2jlpzWbQqfvtmkYF/0MR3b+qZZv+o6iF3q6JAoarRHqGZ
+         o9azkiYLnrXoaq1SASw1qMZ5pFQRTKiWtXzvUBbZBy31W8MslfIfFpoM9K+y9eSGBw+X
+         0R4NYYYnq/OSOh15JpFvO9i4lnYSx3CpHXeZgdERKYb2eprNuqRDbD4TYmvvFNbDRDDu
+         8gTdmCz3Tg9ewAdRsYcolPHOYiS2PvpRu3SooESMNWcbJGvogpPyZoSZV4/hKLei8tn1
+         N3oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pfPmHTNS3kNf2REIYVPxP0rI8dFehD3FUEuoa/nfhmQ=;
+        b=w6or0d9RXyCD3m78hL+ITQHHOrEczF9vaJApM9+6CjcZXszMLzfXpBEHA3XnYqCaOX
+         uptQDYzbI1leuJcqElOA+GptEh8GhP1+z8X7ouW5opLh4slI1cuS9kOtyXycXF0JsZRn
+         W8wbEzrjNRcmdQlb3bqqPYLqRJmmyUKaF4sRElyRqqZuT0FEvdQ4UEAU3okYgI4n44lJ
+         8203fr0rm+Se4Kxr3zyapc40TiU+8cJyr95xcGOncbqscyn3zNrRT6SqqHcAShTsDSF2
+         adT/s1NHtQEPknE9n4o9QVecP3PZCKlh2hHqXPusUBECc8ienV+OXt/3OdMhFknLuCVa
+         wZ2A==
+X-Gm-Message-State: AOAM531cc7nWPSUEV9WLCiDiVk0ye6zEOh7oKxGdSUUMGFbjssqtKneH
+        oM8koaUmQquq7lGyNt3PWXHQ
+X-Google-Smtp-Source: ABdhPJwX5eFiJ34Kps0Uoal21jJAK99NMgslIAbYgaiigOPC9RkZIznR1OV86VyQA1xPKb9GDAqA6w==
+X-Received: by 2002:a63:dd0f:: with SMTP id t15mr5652799pgg.12.1644490230574;
+        Thu, 10 Feb 2022 02:50:30 -0800 (PST)
+Received: from thinkpad ([27.111.75.88])
+        by smtp.gmail.com with ESMTPSA id t9sm1794782pjg.44.2022.02.10.02.50.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Feb 2022 02:50:30 -0800 (PST)
+Date:   Thu, 10 Feb 2022 16:20:23 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [RFC PATCH 0/5] PCIe EPF support for internal DMAC handling and
+ driver update for R-Car PCIe EP to support DMAC
+Message-ID: <20220210105023.GB69529@thinkpad>
+References: <20220126195043.28376-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220210084052.GA69529@thinkpad>
+ <CA+V-a8tivrjPoae69pqH1D+B=_Bd7ZzKjCA0PcfBz7Rpf022mA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.5.1
-Subject: Re: [PATCH v7 1/2] ACPI: APEI: explicit init HEST and GHES in
- apci_init
-Content-Language: en-US
-To:     helgaas@kernel.org, rafael@kernel.org
-Cc:     bp@alien8.de, tony.luck@intel.com, james.morse@arm.com,
-        lenb@kernel.org, rjw@rjwysocki.net, bhelgaas@google.com,
-        zhangliguang@linux.alibaba.com, zhuo.song@linux.alibaba.com,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-References: <20211126070422.73234-1-xueshuai@linux.alibaba.com>
- <20220122052618.1074-1-xueshuai@linux.alibaba.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20220122052618.1074-1-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8tivrjPoae69pqH1D+B=_Bd7ZzKjCA0PcfBz7Rpf022mA@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-在 2022/1/22 PM1:26, Shuai Xue 写道:
-> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
-> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
-> the estatus memory pool. On the other hand, ghes_init() relies on
-> sdei_init() to detect the SDEI version and (un)register events. The
-> dependencies are as follows:
+On Thu, Feb 10, 2022 at 09:24:19AM +0000, Lad, Prabhakar wrote:
+> Hi,
 > 
->     ghes_init() => acpi_hest_init() => acpi_bus_init() => acpi_init()
->     ghes_init() => sdei_init()
+> On Thu, Feb 10, 2022 at 8:40 AM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > Hi,
+> >
+> > On Wed, Jan 26, 2022 at 07:50:38PM +0000, Lad Prabhakar wrote:
+> > > Hi All,
+> > >
+> > > The current PCIe EPF framework supports DMA data transfers using external
+> > > DMA only, this patch series aims to add support for platforms supporting
+> > > internal DMAC on PCIe for data transfers.
+> > >
+> > > R-Car PCIe supports internal DMAC to transfer data between Internal Bus to
+> > > PCI Express and vice versa. Last patch fills up the required flags and ops
+> > > to support internal DMAC.
+> > >
+> > > Patches 1-3 are for PCIe EPF core to support internal DMAC handling, patch
+> > > 4/5 is to fix test cases based on the conversation [1].
+> > >
+> >
+> > This looks similar to the Synopsys eDMA IP [1] that goes with the Synopsys PCIe
+> > endpoint IP. Why can't you represent it as a dmaengine driver and use the
+> > existing DMA support?
+> >
+> Let me have a look. Could you please share a link to the Synopsys PCIe
+> endpoint HW manual (the driver doesn't have a binding doc).
 > 
-> HEST is not PCI-specific and initcall ordering is implicit and not
-> well-defined within a level.
-> 
-> Based on above, remove acpi_hest_init() from acpi_pci_root_init() and
-> convert ghes_init() and sdei_init() from initcalls to explicit calls in the
-> following order:
-> 
->     acpi_hest_init()
->     ghes_init()
->         sdei_init()
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> ---
->  drivers/acpi/apei/ghes.c    | 19 ++++++++-----------
->  drivers/acpi/bus.c          |  2 ++
->  drivers/acpi/pci_root.c     |  3 ---
->  drivers/firmware/Kconfig    |  1 +
->  drivers/firmware/arm_sdei.c | 13 ++-----------
->  include/acpi/apei.h         |  4 +++-
->  include/linux/arm_sdei.h    |  2 ++
->  7 files changed, 18 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 0c5c9acc6254..aadc0a972f18 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -1457,33 +1457,35 @@ static struct platform_driver ghes_platform_driver = {
->  	.remove		= ghes_remove,
->  };
->  
-> -static int __init ghes_init(void)
-> +void __init ghes_init(void)
->  {
->  	int rc;
->  
-> +	sdei_init();
-> +
->  	if (acpi_disabled)
-> -		return -ENODEV;
-> +		return;
->  
->  	switch (hest_disable) {
->  	case HEST_NOT_FOUND:
-> -		return -ENODEV;
-> +		return;
->  	case HEST_DISABLED:
->  		pr_info(GHES_PFX "HEST is not enabled!\n");
-> -		return -EINVAL;
-> +		return;
->  	default:
->  		break;
->  	}
->  
->  	if (ghes_disable) {
->  		pr_info(GHES_PFX "GHES is not enabled!\n");
-> -		return -EINVAL;
-> +		return;
->  	}
->  
->  	ghes_nmi_init_cxt();
->  
->  	rc = platform_driver_register(&ghes_platform_driver);
->  	if (rc)
-> -		goto err;
-> +		return;
->  
->  	rc = apei_osc_setup();
->  	if (rc == 0 && osc_sb_apei_support_acked)
-> @@ -1494,9 +1496,4 @@ static int __init ghes_init(void)
->  		pr_info(GHES_PFX "APEI firmware first mode is enabled by APEI bit.\n");
->  	else
->  		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
-> -
-> -	return 0;
-> -err:
-> -	return rc;
->  }
-> -device_initcall(ghes_init);
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index 07f604832fd6..3f403db20f69 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -1331,6 +1331,8 @@ static int __init acpi_init(void)
->  
->  	pci_mmcfg_late_init();
->  	acpi_iort_init();
-> +	acpi_hest_init();
-> +	ghes_init();
->  	acpi_scan_init();
->  	acpi_ec_init();
->  	acpi_debugfs_init();
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index b76db99cced3..6f9e75d14808 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -22,8 +22,6 @@
->  #include <linux/slab.h>
->  #include <linux/dmi.h>
->  #include <linux/platform_data/x86/apple.h>
-> -#include <acpi/apei.h>	/* for acpi_hest_init() */
-> -
->  #include "internal.h"
->  
->  #define ACPI_PCI_ROOT_CLASS		"pci_bridge"
-> @@ -943,7 +941,6 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->  
->  void __init acpi_pci_root_init(void)
->  {
-> -	acpi_hest_init();
->  	if (acpi_pci_disabled)
->  		return;
->  
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index 75cb91055c17..ad114d9cdf8e 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -40,6 +40,7 @@ config ARM_SCPI_POWER_DOMAIN
->  config ARM_SDE_INTERFACE
->  	bool "ARM Software Delegated Exception Interface (SDEI)"
->  	depends on ARM64
-> +	select ACPI_APEI_GHES
->  	help
->  	  The Software Delegated Exception Interface (SDEI) is an ARM
->  	  standard for registering callbacks from the platform firmware
-> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-> index a7e762c352f9..1e1a51510e83 100644
-> --- a/drivers/firmware/arm_sdei.c
-> +++ b/drivers/firmware/arm_sdei.c
-> @@ -1059,14 +1059,14 @@ static bool __init sdei_present_acpi(void)
->  	return true;
->  }
->  
-> -static int __init sdei_init(void)
-> +void __init sdei_init(void)
->  {
->  	struct platform_device *pdev;
->  	int ret;
->  
->  	ret = platform_driver_register(&sdei_driver);
->  	if (ret || !sdei_present_acpi())
-> -		return ret;
-> +		return;
->  
->  	pdev = platform_device_register_simple(sdei_driver.driver.name,
->  					       0, NULL, 0);
-> @@ -1076,17 +1076,8 @@ static int __init sdei_init(void)
->  		pr_info("Failed to register ACPI:SDEI platform device %d\n",
->  			ret);
->  	}
-> -
-> -	return ret;
->  }
->  
-> -/*
-> - * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
-> - * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
-> - * by device_initcall(). We want to be called in the middle.
-> - */
-> -subsys_initcall_sync(sdei_init);
-> -
->  int sdei_event_handler(struct pt_regs *regs,
->  		       struct sdei_registered_event *arg)
->  {
-> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
-> index ece0a8af2bae..4e60dd73c3bb 100644
-> --- a/include/acpi/apei.h
-> +++ b/include/acpi/apei.h
-> @@ -27,14 +27,16 @@ extern int hest_disable;
->  extern int erst_disable;
->  #ifdef CONFIG_ACPI_APEI_GHES
->  extern bool ghes_disable;
-> +void __init ghes_init(void);
->  #else
->  #define ghes_disable 1
-> +static inline void ghes_init(void) { }
->  #endif
->  
->  #ifdef CONFIG_ACPI_APEI
->  void __init acpi_hest_init(void);
->  #else
-> -static inline void acpi_hest_init(void) { return; }
-> +static inline void acpi_hest_init(void) { }
->  #endif
->  
->  int erst_write(const struct cper_record_header *record);
-> diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
-> index 0a241c5c911d..14dc461b0e82 100644
-> --- a/include/linux/arm_sdei.h
-> +++ b/include/linux/arm_sdei.h
-> @@ -46,9 +46,11 @@ int sdei_unregister_ghes(struct ghes *ghes);
->  /* For use by arch code when CPU hotplug notifiers are not appropriate. */
->  int sdei_mask_local_cpu(void);
->  int sdei_unmask_local_cpu(void);
-> +void __init sdei_init(void);
->  #else
->  static inline int sdei_mask_local_cpu(void) { return 0; }
->  static inline int sdei_unmask_local_cpu(void) { return 0; }
-> +static inline void sdei_init(void) { }
->  #endif /* CONFIG_ARM_SDE_INTERFACE */
->  
->  
 
-Hi folks,
+I don't think the PCIe reference manual is available publicly. And you are right
+that the driver is not tied to devicetree. The reason is, it gets probed using
+the PCI ID of the EP and all the resources are defined statically in the driver
+itself.
 
-I am wondering if you have any comments on this series of patches?
+Thanks,
+Mani
 
-Thank you.
-
-Best Regards,
-Shuai
+> Cheers,
+> Prabhakar
+> 
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/dma/dw-edma
+> >
+> > > Patches are based on top of [1] next branch.
+> > >
+> > > [0] https://www.spinics.net/lists/linux-pci/msg92385.html
+> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
+> > >
+> > > Cheers,
+> > > Prabhakar
+> > >
+> > > Lad Prabhakar (5):
+> > >   PCI: endpoint: Add ops and flag to support internal DMAC
+> > >   PCI: endpoint: Add support to data transfer using internal dmac
+> > >   misc: pci_endpoint_test: Add driver data for Renesas RZ/G2{EHMN}
+> > >   misc: pci_endpoint_test: Add support to pass flags for buffer
+> > >     allocation
+> > >   PCI: rcar-ep: Add support for DMAC
+> > >
+> > >  drivers/misc/pci_endpoint_test.c              |  56 ++++-
+> > >  drivers/pci/controller/pcie-rcar-ep.c         | 227 ++++++++++++++++++
+> > >  drivers/pci/controller/pcie-rcar.h            |  23 ++
+> > >  drivers/pci/endpoint/functions/pci-epf-test.c | 184 ++++++++++----
+> > >  drivers/pci/endpoint/pci-epf-core.c           |  32 +++
+> > >  include/linux/pci-epc.h                       |   8 +
+> > >  include/linux/pci-epf.h                       |   7 +
+> > >  7 files changed, 483 insertions(+), 54 deletions(-)
+> > >
+> > > --
+> > > 2.25.1
+> > >
