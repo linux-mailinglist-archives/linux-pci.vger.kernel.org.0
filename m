@@ -2,86 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FFB24B0CCC
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 12:53:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66C0C4B0D9F
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 13:38:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241174AbiBJLws (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Feb 2022 06:52:48 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47566 "EHLO
+        id S241565AbiBJMhB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Feb 2022 07:37:01 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237520AbiBJLwr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 06:52:47 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FD6BFED;
-        Thu, 10 Feb 2022 03:52:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644493969; x=1676029969;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=B1OGRtVIjoiNg+W45MWSmaIT1YHoKiv18s/urFP4N4Q=;
-  b=lY1r0NfZzUHYS+z+T1xLTuXXXGXCKYAxPEtJJ03+dpkg+++7G+hks6Fg
-   fECddcBN+GmOy05oF213beQ/UQshAC8VrQv64DPUe12WCvV/fWmITsXDC
-   uUEL04p2t0E1bOHQf/sUpk5zcJYRf4RWymUCIfjhzJkyB6sDzB7k4r8WE
-   X399ELD/0zMykzh6C2vdckM+dSG0bki5dPzsvQcH2ZdbZJ7V6Gw2/TaPw
-   Z4F9psr4JRlCdWdIeHf9ohPOTgySFP0AhzXOWJgxJ/uo1osruD/tUq7/l
-   vGRroecTS/jhNzQKGPqzGhxMWhUCXV0KLcUH3+V8REw8jXnAonEAeTNwk
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10253"; a="335889656"
-X-IronPort-AV: E=Sophos;i="5.88,358,1635231600"; 
-   d="scan'208";a="335889656"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 03:52:10 -0800
-X-IronPort-AV: E=Sophos;i="5.88,358,1635231600"; 
-   d="scan'208";a="541575532"
-Received: from mtkaczyk-mobl1.ger.corp.intel.com (HELO localhost) ([10.213.17.33])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 03:52:06 -0800
-Date:   Thu, 10 Feb 2022 12:52:01 +0100
-From:   Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <kbusch@kernel.org>, kw@linux.com,
-        helgaas@kernel.org, lukas@wunner.de, pavel@ucw.cz,
-        linux-cxl@vger.kernel.org, martin.petersen@oracle.com,
-        James.Bottomley@hansenpartnership.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH v2 0/3] Add PCIe enclosure management support
-Message-ID: <20220210125201.00003976@linux.intel.com>
-In-Reply-To: <cover.1643822289.git.stuart.w.hayes@gmail.com>
-References: <cover.1643822289.git.stuart.w.hayes@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S237067AbiBJMhA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 07:37:00 -0500
+Received: from so254-9.mailgun.net (so254-9.mailgun.net [198.61.254.9])
+        by lindbergh.monkeyblade.net (Postfix) with UTF8SMTPS id D828025EE
+        for <linux-pci@vger.kernel.org>; Thu, 10 Feb 2022 04:37:01 -0800 (PST)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1644496621; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=VUibi0hgCckN5je/t/ZeyQ477IBxddkvL5uVTzlBSck=;
+ b=mnV0PjBsM3ZOUtNy7kZrjOam1FueC6tOjaW5nU5QqPJyzCb1w4jjEktycCDvsbl2EHwwYr9U
+ yPj4CZSA29rk6PBV5RG6KCxEtDOdFO9PrAL9C9PxIb778ECk3q4f2difFeOPwQShhPkabGma
+ yjN4wW+XeouP21zWzGTBnbT3wvE=
+X-Mailgun-Sending-Ip: 198.61.254.9
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 620506ec19d16b66a95b50fc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 10 Feb 2022 12:37:00
+ GMT
+Sender: nitirawa=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 74726C4360D; Thu, 10 Feb 2022 12:37:00 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: nitirawa)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EDC77C4338F;
+        Thu, 10 Feb 2022 12:36:59 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 10 Feb 2022 18:06:59 +0530
+From:   nitirawa@codeaurora.org
+To:     Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, Keith Busch <kbusch@kernel.org>,
+        robh+dt@kernel.org, rafael.j.wysocki@intel.com, hch@lst.de,
+        bhelgaas@google.com, mmaddireddy@nvidia.com, kthota@nvidia.com,
+        sagar.tv@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Query related to shutting down NVMe during system suspend
+In-Reply-To: <20220210054019.GA929@wunner.de>
+References: <65b836cd-8d5d-b9c2-eb8f-2ee3ef46112b@nvidia.com>
+ <20220209202639.GB1616420@dhcp-10-100-145-180.wdc.com>
+ <0801d0ee-1c39-4413-7865-6c1c61e4706e@nvidia.com>
+ <20220210054019.GA929@wunner.de>
+Message-ID: <65a50f83e87d4cf8b1ac1b740b4fa35b@codeaurora.org>
+X-Sender: nitirawa@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed,  2 Feb 2022 11:59:10 -0600
-Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
-
-> (3) Modifies the nvme driver to create an auxiliary device to which
-> the pcie_em driver can attach.
+On 2022-02-10 11:10, Lukas Wunner wrote:
+> On Thu, Feb 10, 2022 at 09:41:04AM +0530, Vidya Sagar wrote:
+>> On 2/10/2022 1:56 AM, Keith Busch wrote:
+>> > Christoph prefers to append quirks for platforms that need full device
+>> > shutdown on s2idle instead of changing the driver default.
+>> >
+>> > We use dmi matching for our current platform quirk list. I do not know
+>> > what the equivalent is for device-tree based platforms. Do you know?
+>> 
+>> I'm afraid I don't.
 > 
-> These patches do not modify the cxl or pcieport drivers to add
-> support, though the driver was designed to make it easy to do so.
+> of_machine_is_compatible()
 
-Hi Stuart,
-
-I would like to help you with NPEM testing. Currently I have setup with
-NPEM enabled in Downstream port. It will require to add support for
-pcieport. Could you add it in next version?
-
-I'm also searching for a drive with NPEM to do full validation (when
-both Downstream and the SSD are reporting capability). If you can point
-me the model, it will be helpful.
-
-Thanks,
-Mariusz
+Thanks Lukas and keith . Yes it worked using of_machine_is_compatible as 
+it checks root node of device tree for a given compatible value.
+@keith - I have posted the change using above API to enable nvme quick 
+suspend quirks for sc7280 platform. Please can you review it.
