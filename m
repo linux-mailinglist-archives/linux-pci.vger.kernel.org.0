@@ -2,211 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F5824B0BC9
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 12:05:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 115F34B0BD1
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 12:07:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240525AbiBJLEw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Feb 2022 06:04:52 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40102 "EHLO
+        id S240421AbiBJLGN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Feb 2022 06:06:13 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240499AbiBJLEu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 06:04:50 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6D91017
-        for <linux-pci@vger.kernel.org>; Thu, 10 Feb 2022 03:04:52 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id t14-20020a17090a3e4e00b001b8f6032d96so5189630pjm.2
-        for <linux-pci@vger.kernel.org>; Thu, 10 Feb 2022 03:04:52 -0800 (PST)
+        with ESMTP id S240412AbiBJLGL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 06:06:11 -0500
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E443D1015;
+        Thu, 10 Feb 2022 03:06:12 -0800 (PST)
+Received: by mail-yb1-xb36.google.com with SMTP id g14so14233410ybs.8;
+        Thu, 10 Feb 2022 03:06:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xcIDnjucqFHIEtuPRiIEpKJm0pddeuEQPSaD1O2v22M=;
-        b=ihVbyoUymsepvGgJYqBznYehBeetS7pn0LICLU5Pr8mSStejBRoZKpR9KS6bN50o7q
-         3XIsIwNrfVe9xH4ZOZonSVmd9sXmxv2sSkXQYksmteB01XkwRpLNi0YAZQ3NSvGhDazG
-         i712L6DXIPmfbOqGrM7yZdzS3mgMDH9zATdJ2KYpJtX8DSCb0WjiP/BZJhJGlrYohmQp
-         CU8tVxIgpHLgYtCK5hi7Pu41fMSI1niRxCVlD41sC046joWTzgn5L3yiVtTdTftdergt
-         wkoJ9ewCIL0xDTD8cXgzjsVawFflWLvhIRT1AliSdwqryc+sZBiFbyWACS8pnSQ5uLGA
-         glYw==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rSXTr8EbSggRAILOsifB7L+WTvBTHnKRcWh9Uy6RMsI=;
+        b=IapKPtHaA4c/p6NPNWO59i3DRLOAboIm8zEmA/PrlzfF2Fgw5Hui86uyhdri3qtsoB
+         DJUzoEIh0Sm6qFsLIBmStpCzB+51LrAMP9ade4ahB0BEHXPrlN+8NR5VaFVik88L39Cp
+         //fSQqX4eqkbG0pCTM8bahvaUx4uALuAERxrk+fkLNWv2VQ8HDmPeF0oDESfJJe4r74J
+         EcukBdwpUgFoVMcU3RJl1SBAO2w6PRWYKOVd0ZPTpklLhNDOEooMDwj4MIXFjHLYOtKf
+         e65tLXyzzz4YapTsFCD7YkRdhKScm8mFIhY6qVlJxBn5nnP7Cf2PrqfpsvjyQghX7Zd0
+         Gj9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xcIDnjucqFHIEtuPRiIEpKJm0pddeuEQPSaD1O2v22M=;
-        b=F+ollZ+4Dxw6JErNIiAg6y+XHV/H6jKmuiM7tTLcJyfjudyT6EodEXph3sclHbCQdj
-         pv6s55J9TX3FWuOshctIfma26Uqhn/T9ryhYGP6TYQXQZpowN9gt3/0GdBVdroyf9p3M
-         hv1EcJq594oO63DJ8s3r1je4kYFySlnD1QRoadYSWvofPa9SiAG3DKEodjdar7xalqU5
-         UKpAkeNMZKwL13IGdNkIfaK0SxO/7bL2wzmvrZY+/K5UIlfniYLOnxLYf+AhIIGXLD/3
-         CMcTFwZqrK2QWZ8Qn6V8W+2x+HBz5trYd7C5IFuDcx1bf2QICFNfvOA5P46vYjFed1bR
-         fPpg==
-X-Gm-Message-State: AOAM530vBIta3UPofPrAY+CNpWiCYldgYEGGkRoQ1N5YGhFKIeG+kKMO
-        X1M6BAcUZVOapUCguQWpx4V6
-X-Google-Smtp-Source: ABdhPJwJhEmm7+OcWCeh1ubNuw99YIEtnig+7YCj2REhxeHzMIT+RE9fylR/O6SVNKk7nrpJgMdJIg==
-X-Received: by 2002:a17:90a:e7ca:: with SMTP id kb10mr2229659pjb.38.1644491091970;
-        Thu, 10 Feb 2022 03:04:51 -0800 (PST)
-Received: from thinkpad ([27.111.75.88])
-        by smtp.gmail.com with ESMTPSA id 3sm1814409pjk.29.2022.02.10.03.04.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 03:04:51 -0800 (PST)
-Date:   Thu, 10 Feb 2022 16:34:46 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Om Prakash Singh <omp@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: designware-ep: Fix the access to DBI/iATU
- registers before enabling controller
-Message-ID: <20220210110446.GD69529@thinkpad>
-References: <1630473361-27198-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1630473361-27198-3-git-send-email-hayashi.kunihiko@socionext.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rSXTr8EbSggRAILOsifB7L+WTvBTHnKRcWh9Uy6RMsI=;
+        b=YK1aJe26uywhafTjt23VtDXV/J7nLBAt5RqPBLpqqR08oPhw9bzPIBoRnPtTzP0aA7
+         mxuh1B8bya8/LCNUvqnANmuXJ8/KVYOZz+lzwujMs2X1e7sIQeWMUU0QXXu/CaXaJeKV
+         0Z+Jl7Ti64FKulwGIKQ8yMwET7Nw+MhcSVBdPBLpJraFgSGm8jYbivwGMLvS0mU/RBTQ
+         yo7YGD5vN3de7Kuz1DaPCX//37/J7Kbhi1JjwllvPRHb4hpScp8udoG1VJ4e/I2kIZW0
+         i34Wy/snKZuTZSghT2eUTWKNdtKvgMWCpS3kqM4jEQ6Pa2skYLrV6zF87kowoQSUB3tX
+         vaLQ==
+X-Gm-Message-State: AOAM532sVM/uchz6YhD2QPvFR9HbZusrn9thOfJkGjOicPI3Km5d2x5S
+        vcfJskn9WmngQbSNZ1mZymtMGWJUP0zgS3v9t+E=
+X-Google-Smtp-Source: ABdhPJzhQRBibnT4EIVhPnNYy4wRcBBzDm5AgJALelT2TvVSoiTG1+8VPhHvNfma4t62mqYkVJ3N29QUkIbi6+K+nQ4=
+X-Received: by 2002:a81:c607:: with SMTP id l7mr6604698ywi.265.1644491172099;
+ Thu, 10 Feb 2022 03:06:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1630473361-27198-3-git-send-email-hayashi.kunihiko@socionext.com>
+References: <20220126195043.28376-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220210084052.GA69529@thinkpad> <CA+V-a8tivrjPoae69pqH1D+B=_Bd7ZzKjCA0PcfBz7Rpf022mA@mail.gmail.com>
+ <20220210105023.GB69529@thinkpad>
+In-Reply-To: <20220210105023.GB69529@thinkpad>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 10 Feb 2022 11:05:45 +0000
+Message-ID: <CA+V-a8tfUgvzPyMe_FHuz=8mmC6dPHP7E=e+nCzOey04vCcAkg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/5] PCIe EPF support for internal DMAC handling and
+ driver update for R-Car PCIe EP to support DMAC
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Sep 01, 2021 at 02:16:01PM +0900, Kunihiko Hayashi wrote:
-> The driver using core_init_notifier, e.g. pcie-tegra194.c, runs according
-> to the following sequence:
-> 
->     probe()
->         dw_pcie_ep_init()
-> 
->     bind()
->         dw_pcie_ep_start()
->             enable_irq()
-> 
->     (interrupt occurred)
->     handler()
->         [enable controller]
->         dw_pcie_ep_init_complete()
->         dw_pcie_ep_init_notify()
-> 
-> After receiving an interrupt from RC, the handler enables the controller
-> and the controller registers can be accessed.
-> So accessing the registers should do in dw_pcie_ep_init_complete().
-> 
-> Currently dw_pcie_ep_init() has functions dw_iatu_detect() and
-> dw_pcie_ep_find_capability() that include accesses to DWC registers.
-> As a result, accessing the registers before enabling the controller,
-> the access will fail.
-> 
-> The function dw_pcie_ep_init() shouldn't have any access to DWC registers
-> if the controller is enabled after calling bind(). This moves access codes
-> to DBI/iATU registers and depending variables from dw_pcie_ep_init() to
-> dw_pcie_ep_init_complete().
-> 
-> Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Cc: Vidya Sagar <vidyas@nvidia.com>
-> Fixes: 6bfc9c3a2c70 ("PCI: designware-ep: Move the function of getting MSI capability forward")
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> Acked-by: Om Prakash Singh <omp@nvidia.com>
-> Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 81 +++++++++++++------------
->  1 file changed, 41 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 998b698..00ce83c 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+On Thu, Feb 10, 2022 at 10:50 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Thu, Feb 10, 2022 at 09:24:19AM +0000, Lad, Prabhakar wrote:
+> > Hi,
+> >
+> > On Thu, Feb 10, 2022 at 8:40 AM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Wed, Jan 26, 2022 at 07:50:38PM +0000, Lad Prabhakar wrote:
+> > > > Hi All,
+> > > >
+> > > > The current PCIe EPF framework supports DMA data transfers using external
+> > > > DMA only, this patch series aims to add support for platforms supporting
+> > > > internal DMAC on PCIe for data transfers.
+> > > >
+> > > > R-Car PCIe supports internal DMAC to transfer data between Internal Bus to
+> > > > PCI Express and vice versa. Last patch fills up the required flags and ops
+> > > > to support internal DMAC.
+> > > >
+> > > > Patches 1-3 are for PCIe EPF core to support internal DMAC handling, patch
+> > > > 4/5 is to fix test cases based on the conversation [1].
+> > > >
+> > >
+> > > This looks similar to the Synopsys eDMA IP [1] that goes with the Synopsys PCIe
+> > > endpoint IP. Why can't you represent it as a dmaengine driver and use the
+> > > existing DMA support?
+> > >
+> > Let me have a look. Could you please share a link to the Synopsys PCIe
+> > endpoint HW manual (the driver doesn't have a binding doc).
+> >
+>
+> I don't think the PCIe reference manual is available publicly. And you are right
+> that the driver is not tied to devicetree. The reason is, it gets probed using
+> the PCI ID of the EP and all the resources are defined statically in the driver
+> itself.
+>
+In R-Car PCIe the internal dmac is part of the PCIe block itself [0]
+and not a separate block. I don't see any drivers implementing the
+internal dmac drivers as a DMA engine driver. For example the Renesas
+SDHI driver has internal dmac too, this is handled in the SDHI driver
+itself [1] and not implemented as DMA engine driver. Let me know if my
+understanding is wrong here.
 
-[...]
+[0] https://elixir.bootlin.com/linux/v5.17-rc3/source/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml#L76
+[1] https://elixir.bootlin.com/linux/v5.17-rc3/source/drivers/mmc/host/renesas_sdhi_internal_dmac.c
 
->  int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  {
->  	int ret;
-> -	void *addr;
-> -	u8 func_no;
->  	struct resource *res;
->  	struct pci_epc *epc;
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> @@ -683,7 +721,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	struct platform_device *pdev = to_platform_device(dev);
->  	struct device_node *np = dev->of_node;
->  	const struct pci_epc_features *epc_features;
-> -	struct dw_pcie_ep_func *ep_func;
->  
->  	INIT_LIST_HEAD(&ep->func_list);
->  
-> @@ -705,8 +742,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  		}
->  	}
->  
-> -	dw_pcie_iatu_detect(pci);
-> -
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
->  	if (!res)
->  		return -EINVAL;
-> @@ -714,26 +749,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	ep->phys_base = res->start;
->  	ep->addr_size = resource_size(res);
->  
-> -	ep->ib_window_map = devm_kcalloc(dev,
-> -					 BITS_TO_LONGS(pci->num_ib_windows),
-> -					 sizeof(long),
-> -					 GFP_KERNEL);
-> -	if (!ep->ib_window_map)
-> -		return -ENOMEM;
-> -
-> -	ep->ob_window_map = devm_kcalloc(dev,
-> -					 BITS_TO_LONGS(pci->num_ob_windows),
-> -					 sizeof(long),
-> -					 GFP_KERNEL);
-> -	if (!ep->ob_window_map)
-> -		return -ENOMEM;
-> -
-> -	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
-> -			    GFP_KERNEL);
-> -	if (!addr)
-> -		return -ENOMEM;
-> -	ep->outbound_addr = addr;
-> -
->  	if (pci->link_gen < 1)
->  		pci->link_gen = of_pci_get_max_link_speed(np);
->  
-> @@ -750,20 +765,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	if (ret < 0)
->  		epc->max_functions = 1;
->  
-> -	for (func_no = 0; func_no < epc->max_functions; func_no++) {
-> -		ep_func = devm_kzalloc(dev, sizeof(*ep_func), GFP_KERNEL);
-> -		if (!ep_func)
-> -			return -ENOMEM;
-> -
-> -		ep_func->func_no = func_no;
-> -		ep_func->msi_cap = dw_pcie_ep_find_capability(ep, func_no,
-> -							      PCI_CAP_ID_MSI);
-> -		ep_func->msix_cap = dw_pcie_ep_find_capability(ep, func_no,
-> -							       PCI_CAP_ID_MSIX);
-> -
-> -		list_add_tail(&ep_func->list, &ep->func_list);
-> -	}
-> -
->  	if (ep->ops->ep_init)
->  		ep->ops->ep_init(ep);
+Cheers,
+Prabhakar
 
-You also need to move ep_init() as it can have DBI access too.
-
-Thanks,
-Mani
-
->  
-> -- 
-> 2.7.4
-> 
+> Thanks,
+> Mani
+>
+> > Cheers,
+> > Prabhakar
+> >
+> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/dma/dw-edma
+> > >
+> > > > Patches are based on top of [1] next branch.
+> > > >
+> > > > [0] https://www.spinics.net/lists/linux-pci/msg92385.html
+> > > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
+> > > >
+> > > > Cheers,
+> > > > Prabhakar
+> > > >
+> > > > Lad Prabhakar (5):
+> > > >   PCI: endpoint: Add ops and flag to support internal DMAC
+> > > >   PCI: endpoint: Add support to data transfer using internal dmac
+> > > >   misc: pci_endpoint_test: Add driver data for Renesas RZ/G2{EHMN}
+> > > >   misc: pci_endpoint_test: Add support to pass flags for buffer
+> > > >     allocation
+> > > >   PCI: rcar-ep: Add support for DMAC
+> > > >
+> > > >  drivers/misc/pci_endpoint_test.c              |  56 ++++-
+> > > >  drivers/pci/controller/pcie-rcar-ep.c         | 227 ++++++++++++++++++
+> > > >  drivers/pci/controller/pcie-rcar.h            |  23 ++
+> > > >  drivers/pci/endpoint/functions/pci-epf-test.c | 184 ++++++++++----
+> > > >  drivers/pci/endpoint/pci-epf-core.c           |  32 +++
+> > > >  include/linux/pci-epc.h                       |   8 +
+> > > >  include/linux/pci-epf.h                       |   7 +
+> > > >  7 files changed, 483 insertions(+), 54 deletions(-)
+> > > >
+> > > > --
+> > > > 2.25.1
+> > > >
