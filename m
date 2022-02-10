@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B6204B07C5
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 09:10:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14C7F4B07C8
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 09:10:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237023AbiBJIKF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S236937AbiBJIKF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 10 Feb 2022 03:10:05 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48796 "EHLO
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237009AbiBJIKD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 03:10:03 -0500
+        with ESMTP id S237016AbiBJIKE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 03:10:04 -0500
 Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 87006B80;
-        Thu, 10 Feb 2022 00:10:04 -0800 (PST)
-Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 10 Feb 2022 17:10:03 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id CFBBA2083C4C;
-        Thu, 10 Feb 2022 17:10:03 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 10 Feb 2022 17:10:03 +0900
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AA27D1A6;
+        Thu, 10 Feb 2022 00:10:05 -0800 (PST)
+Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 10 Feb 2022 17:10:05 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 5FAC3205D901;
+        Thu, 10 Feb 2022 17:10:05 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 10 Feb 2022 17:10:05 +0900
 Received: from plum.e01.socionext.com (unknown [10.212.243.119])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id 1C0A0C1E23;
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id E9B9EC1E22;
         Thu, 10 Feb 2022 17:10:03 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -32,9 +32,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v3 2/3] PCI: uniphier-ep: Add SoC data structure
-Date:   Thu, 10 Feb 2022 17:09:55 +0900
-Message-Id: <1644480596-20037-3-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v3 3/3] PCI: uniphier-ep: Add NX1 support
+Date:   Thu, 10 Feb 2022 17:09:56 +0900
+Message-Id: <1644480596-20037-4-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1644480596-20037-1-git-send-email-hayashi.kunihiko@socionext.com>
 References: <1644480596-20037-1-git-send-email-hayashi.kunihiko@socionext.com>
@@ -47,145 +47,141 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Define SoC data structure that includes pci_epc_features, SoC-dependent
-callback functions and flags to distinguish the behavior of each SoC.
-The callback functions define init() to initialize the controller and
-wait() to wait until initialization is completed.
-
-Rename uniphier_pcie_init_ep() to uniphier_pcie_pro5_init_ep() for
-initializing PCIe controller implemented in Pro5 SoC. And Pro5 SoC
-doesn't have wait() function.
+Add basic support for UniPhier NX1 SoC as non-legacy SoC. This includes
+a compatible string, SoC-dependent data containing init() and wait()
+functions for the controller.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
- drivers/pci/controller/dwc/pcie-uniphier-ep.c | 61 ++++++++++++++++++---------
- 1 file changed, 42 insertions(+), 19 deletions(-)
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c | 81 +++++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-index 69810c6b0d58..6c035fc45aaa 100644
+index 6c035fc45aaa..4d0a587c0ba5 100644
 --- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
 +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-@@ -60,7 +60,14 @@ struct uniphier_pcie_ep_priv {
- 	struct clk *clk, *clk_gio;
- 	struct reset_control *rst, *rst_gio;
- 	struct phy *phy;
--	const struct pci_epc_features *features;
-+	const struct uniphier_pcie_ep_soc_data *data;
-+};
+@@ -10,6 +10,7 @@
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/init.h>
++#include <linux/iopoll.h>
+ #include <linux/of_device.h>
+ #include <linux/pci.h>
+ #include <linux/phy/phy.h>
+@@ -31,6 +32,17 @@
+ #define PCL_RSTCTRL2			0x0024
+ #define PCL_RSTCTRL_PHY_RESET		BIT(0)
+ 
++#define PCL_PINCTRL0			0x002c
++#define PCL_PERST_PLDN_REGEN		BIT(12)
++#define PCL_PERST_NOE_REGEN		BIT(11)
++#define PCL_PERST_OUT_REGEN		BIT(8)
++#define PCL_PERST_PLDN_REGVAL		BIT(4)
++#define PCL_PERST_NOE_REGVAL		BIT(3)
++#define PCL_PERST_OUT_REGVAL		BIT(0)
 +
-+struct uniphier_pcie_ep_soc_data {
-+	bool has_gio;
-+	void (*init)(struct uniphier_pcie_ep_priv *priv);
-+	int (*wait)(struct uniphier_pcie_ep_priv *priv);
-+	const struct pci_epc_features features;
++#define PCL_PIPEMON			0x0044
++#define PCL_PCLK_ALIVE			BIT(15)
++
+ #define PCL_MODE			0x8000
+ #define PCL_MODE_REGEN			BIT(8)
+ #define PCL_MODE_REGVAL			BIT(0)
+@@ -51,6 +63,9 @@
+ #define PCL_APP_INTX			0x8074
+ #define PCL_APP_INTX_SYS_INT		BIT(0)
+ 
++#define PCL_APP_PM0			0x8078
++#define PCL_SYS_AUX_PWR_DET		BIT(8)
++
+ /* assertion time of INTx in usec */
+ #define PCL_INTX_WIDTH_USEC		30
+ 
+@@ -123,6 +138,55 @@ static void uniphier_pcie_pro5_init_ep(struct uniphier_pcie_ep_priv *priv)
+ 	msleep(100);
+ }
+ 
++static void uniphier_pcie_nx1_init_ep(struct uniphier_pcie_ep_priv *priv)
++{
++	u32 val;
++
++	/* set EP mode */
++	val = readl(priv->base + PCL_MODE);
++	val |= PCL_MODE_REGEN | PCL_MODE_REGVAL;
++	writel(val, priv->base + PCL_MODE);
++
++	/* use auxiliary power detection */
++	val = readl(priv->base + PCL_APP_PM0);
++	val |= PCL_SYS_AUX_PWR_DET;
++	writel(val, priv->base + PCL_APP_PM0);
++
++	/* assert PERST# */
++	val = readl(priv->base + PCL_PINCTRL0);
++	val &= ~(PCL_PERST_NOE_REGVAL | PCL_PERST_OUT_REGVAL
++		 | PCL_PERST_PLDN_REGVAL);
++	val |= PCL_PERST_NOE_REGEN | PCL_PERST_OUT_REGEN
++		| PCL_PERST_PLDN_REGEN;
++	writel(val, priv->base + PCL_PINCTRL0);
++
++	uniphier_pcie_ltssm_enable(priv, false);
++
++	usleep_range(100000, 200000);
++
++	/* deassert PERST# */
++	val = readl(priv->base + PCL_PINCTRL0);
++	val |= PCL_PERST_OUT_REGVAL | PCL_PERST_OUT_REGEN;
++	writel(val, priv->base + PCL_PINCTRL0);
++}
++
++static int uniphier_pcie_nx1_wait_ep(struct uniphier_pcie_ep_priv *priv)
++{
++	u32 status;
++	int ret;
++
++	/* wait PIPE clock */
++	ret = readl_poll_timeout(priv->base + PCL_PIPEMON, status,
++				 status & PCL_PCLK_ALIVE, 100000, 1000000);
++	if (ret) {
++		dev_err(priv->pci.dev,
++			"Failed to initialize controller in EP mode\n");
++		return ret;
++	}
++
++	return 0;
++}
++
+ static int uniphier_pcie_start_link(struct dw_pcie *pci)
+ {
+ 	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+@@ -353,11 +417,28 @@ static const struct uniphier_pcie_ep_soc_data uniphier_pro5_data = {
+ 	},
  };
  
- #define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
-@@ -91,7 +98,7 @@ static void uniphier_pcie_phy_reset(struct uniphier_pcie_ep_priv *priv,
- 	writel(val, priv->base + PCL_RSTCTRL2);
- }
- 
--static void uniphier_pcie_init_ep(struct uniphier_pcie_ep_priv *priv)
-+static void uniphier_pcie_pro5_init_ep(struct uniphier_pcie_ep_priv *priv)
- {
- 	u32 val;
- 
-@@ -209,7 +216,7 @@ uniphier_pcie_get_features(struct dw_pcie_ep *ep)
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
- 
--	return priv->features;
-+	return &priv->data->features;
- }
- 
- static const struct dw_pcie_ep_ops uniphier_pcie_ep_ops = {
-@@ -238,7 +245,8 @@ static int uniphier_pcie_ep_enable(struct uniphier_pcie_ep_priv *priv)
- 	if (ret)
- 		goto out_rst_assert;
- 
--	uniphier_pcie_init_ep(priv);
-+	if (priv->data->init)
-+		priv->data->init(priv);
- 
- 	uniphier_pcie_phy_reset(priv, true);
- 
-@@ -248,8 +256,16 @@ static int uniphier_pcie_ep_enable(struct uniphier_pcie_ep_priv *priv)
- 
- 	uniphier_pcie_phy_reset(priv, false);
- 
-+	if (priv->data->wait) {
-+		ret = priv->data->wait(priv);
-+		if (ret)
-+			goto out_phy_exit;
-+	}
-+
- 	return 0;
- 
-+out_phy_exit:
-+	phy_exit(priv->phy);
- out_rst_gio_assert:
- 	reset_control_assert(priv->rst_gio);
- out_rst_assert:
-@@ -277,8 +293,8 @@ static int uniphier_pcie_ep_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
--	priv->features = of_device_get_match_data(dev);
--	if (WARN_ON(!priv->features))
-+	priv->data = of_device_get_match_data(dev);
-+	if (WARN_ON(!priv->data))
- 		return -EINVAL;
- 
- 	priv->pci.dev = dev;
-@@ -288,13 +304,15 @@ static int uniphier_pcie_ep_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->base))
- 		return PTR_ERR(priv->base);
- 
--	priv->clk_gio = devm_clk_get(dev, "gio");
--	if (IS_ERR(priv->clk_gio))
--		return PTR_ERR(priv->clk_gio);
-+	if (priv->data->has_gio) {
-+		priv->clk_gio = devm_clk_get(dev, "gio");
-+		if (IS_ERR(priv->clk_gio))
-+			return PTR_ERR(priv->clk_gio);
- 
--	priv->rst_gio = devm_reset_control_get_shared(dev, "gio");
--	if (IS_ERR(priv->rst_gio))
--		return PTR_ERR(priv->rst_gio);
-+		priv->rst_gio = devm_reset_control_get_shared(dev, "gio");
-+		if (IS_ERR(priv->rst_gio))
-+			return PTR_ERR(priv->rst_gio);
-+	}
- 
- 	priv->clk = devm_clk_get(dev, "link");
- 	if (IS_ERR(priv->clk))
-@@ -321,13 +339,18 @@ static int uniphier_pcie_ep_probe(struct platform_device *pdev)
- 	return dw_pcie_ep_init(&priv->pci.ep);
- }
- 
--static const struct pci_epc_features uniphier_pro5_data = {
--	.linkup_notifier = false,
--	.msi_capable = true,
--	.msix_capable = false,
--	.align = 1 << 16,
--	.bar_fixed_64bit = BIT(BAR_0) | BIT(BAR_2) | BIT(BAR_4),
--	.reserved_bar =  BIT(BAR_4),
-+static const struct uniphier_pcie_ep_soc_data uniphier_pro5_data = {
-+	.has_gio = true,
-+	.init = uniphier_pcie_pro5_init_ep,
-+	.wait = NULL,
++static const struct uniphier_pcie_ep_soc_data uniphier_nx1_data = {
++	.has_gio = false,
++	.init = uniphier_pcie_nx1_init_ep,
++	.wait = uniphier_pcie_nx1_wait_ep,
 +	.features = {
 +		.linkup_notifier = false,
 +		.msi_capable = true,
 +		.msix_capable = false,
-+		.align = 1 << 16,
++		.align = 1 << 12,
 +		.bar_fixed_64bit = BIT(BAR_0) | BIT(BAR_2) | BIT(BAR_4),
-+		.reserved_bar =  BIT(BAR_4),
 +	},
++};
++
+ static const struct of_device_id uniphier_pcie_ep_match[] = {
+ 	{
+ 		.compatible = "socionext,uniphier-pro5-pcie-ep",
+ 		.data = &uniphier_pro5_data,
+ 	},
++	{
++		.compatible = "socionext,uniphier-nx1-pcie-ep",
++		.data = &uniphier_nx1_data,
++	},
+ 	{ /* sentinel */ },
  };
  
- static const struct of_device_id uniphier_pcie_ep_match[] = {
 -- 
 2.7.4
 
