@@ -2,75 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B7834B17DA
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 22:51:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B9AD4B17E7
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 23:06:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344532AbiBJVvb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Feb 2022 16:51:31 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38530 "EHLO
+        id S236817AbiBJWEj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Feb 2022 17:04:39 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238886AbiBJVvb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 16:51:31 -0500
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7314FE6B;
-        Thu, 10 Feb 2022 13:51:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644529891; x=1676065891;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RtABhcfz++1lD4BxroCHUgbb9du3AHo0vVF0UojqTVo=;
-  b=lj/MKt9Bz7XjoX8SUE9donZ1vbJu+AigWl00ZudBIfOYQnCmbOx+JrzD
-   DeY3dankoEV6vNzkXZEJX24R0MuMmPchzMH579PoiFWEUAGEx8scmYBEG
-   tXgnukX1+i1NoyztWTWQnm9w7NrRatsYFhrUDiNGGac6RYY/TiCMHga75
-   UzWzoSzLWe2ab89FxiINW4Xl6tv0IUB4utbMUmqovoNcV+csDW5ePVPK9
-   MGo+8fBPhlkVFia5pxPTtTZLefdCREZPJO4ZMMsSXBlMDOG61E6E4cw5t
-   69zeldo/RWm2JKS9bp7Te4Cw2KodWqf8tyO0Yf2WPnq4KMn1Z7JSReVLN
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10254"; a="310337049"
-X-IronPort-AV: E=Sophos;i="5.88,359,1635231600"; 
-   d="scan'208";a="310337049"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 13:51:31 -0800
-X-IronPort-AV: E=Sophos;i="5.88,359,1635231600"; 
-   d="scan'208";a="485954165"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 13:51:29 -0800
-Date:   Thu, 10 Feb 2022 13:51:29 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V6 03/10] PCI/DOE: Add Data Object Exchange Aux Driver
-Message-ID: <20220210215128.GA998480@iweiny-DESK2.sc.intel.com>
-Mail-Followup-To: Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
-References: <20220201071952.900068-1-ira.weiny@intel.com>
- <20220201071952.900068-4-ira.weiny@intel.com>
- <CAPcyv4hYAgyf-WcArGvbWHAJgc5+p=OO_6ah_dXJhNM5cXcVTw@mail.gmail.com>
- <20220209101320.00000473@Huawei.com>
- <CAPcyv4g2nNHKPuYVOEH3TbJtCiB1rkRNCVbfDWHnWkotvTAcJg@mail.gmail.com>
- <20220209165756.00002841@huawei.com>
- <CAPcyv4j9mEOn_sJSwX+rY_6wFjuU_JB7e075_n_Q5sfgiGsqew@mail.gmail.com>
+        with ESMTP id S237490AbiBJWEj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 17:04:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C19DBEB0;
+        Thu, 10 Feb 2022 14:04:39 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D04F61A17;
+        Thu, 10 Feb 2022 22:04:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80551C004E1;
+        Thu, 10 Feb 2022 22:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644530678;
+        bh=kRm2jCsDTKb9py2NC2geAT15rVA2TpDLxQHtdakLzu8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rVo6USiTQEAXQl7mTkmS/ijN20fRAXkw8rt7UHitqCSyaIMaWELzeQdJOsdt06dQ/
+         YP/b9YLFk8EMEdE3nHlTxgZ0rVNsMMHM/R57p9x+gCmoQ6nY23H5Sn7zE55m/ZC+0Q
+         Xft2RRZwQZDs5l5y8ubifdg2NJDXh/+sOJTxieC9C3W17xapuod8Kv3qlRte/P8oLM
+         5HLVAmiZlrfQBVxOPfjryKZLyfbFLA3XDN7BE98ATRybYG/izWoSPipev0TNXOYK6s
+         tk/XPkfdHIAIRNyQ97kdWaHydn5loqUmMZVTFHwvMZKn/jwRIt/XCPsnZV2WvfZED3
+         XR7tisH0XnLaw==
+Date:   Thu, 10 Feb 2022 16:04:36 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc:     "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [RFC 2/2] PCI: imx6: Enable imx6qp pcie power management support
+Message-ID: <20220210220436.GA656671@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4j9mEOn_sJSwX+rY_6wFjuU_JB7e075_n_Q5sfgiGsqew@mail.gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR04MB867616CDC587BB93772AC8588C2F9@AS8PR04MB8676.eurprd04.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,29 +61,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 09, 2022 at 11:57:38AM -0800, Dan Williams wrote:
-> On Wed, Feb 9, 2022 at 8:58 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> [..]
-> > > It just seems an unnecessary hunk of code for the core to carry when
-> > > it's trivial for a client of the core to do:
-> > >
-> > > task->private = &completion;
-> > > task->end_task = complete_completion;
-> > > submit_task()
-> > > wait_for_completion(&completion);
-> >
-> > OK, we can move this to the callers though function obviously will
-> > also need renaming - I guess to pci_doe_exchange() and now need to take a
-> > task rather than the exchange.
-> >
-> > I personally slightly prefer the layered approach, but don't care that
-> > strongly.
-> 
-> Like I said, you and Ira are holding the pen, so if you decide to keep
-> the layering, just document the ontology somewhere and I'll let it go.
+On Thu, Feb 10, 2022 at 03:23:19AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: 2022年2月9日 23:37
+> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > Cc: l.stach@pengutronix.de; bhelgaas@google.com;
+> > lorenzo.pieralisi@arm.com; shawnguo@kernel.org; linux-pci@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
+> > Subject: Re: [RFC 2/2] PCI: imx6: Enable imx6qp pcie power management
+> > support
+> > 
+> > On Wed, Feb 09, 2022 at 03:02:36PM +0800, Richard Zhu wrote:
+> > > i.MX6QP PCIe supports the RESET logic, thus it can support the L2 exit
+> > > by the reset mechanism.
+> > > Enable the i.MX6QP PCIe suspend/resume operations support.
 
-I'm busy with the PKS series ATM but I should get back to reviewing all these
-comments soon.
+> > What does "L2 exit by reset mechanism" mean?  Is this an
+> > i.MX6-specific thing?  If not, can you point me to the relevant
+> > part of the PCIe spec?
+>
+> No, it's not i.MX6 specific thing. i.MX6Q/DL doesn't have the
+> self-reset mechanism.  Thus, it can't reset itself to an initialized
+> stat when link exit from the L2 or L3 stats.  i.MX6QP PCIe has the
+> self-reset mechanism, and it can reset itself when link exit from L2
+> or L3 stats.  The commit description might not accurate.  How about
+> change them to "i.MX6QP PCIe supports the RESET logic, thus it can
+> reset itself to the initialized stat when exit from L2 or L3 stats."
 
-Ira
+s/stat/state/
+
+Ugh, I have all sorts of questions now, but I don't think I want to
+know much more about this ;)
+
+Seems like this device requires software assist when bringing the link
+out of L2 or L3.  Is that allowed per PCIe spec, or is this an
+erratum?
+
+Does this mean the driver needs to be involved when we take a device
+out of D3 (where the link was in L2 or L3)?
+
+Bjorn
