@@ -2,80 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 247E34B17A4
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 22:39:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B7834B17DA
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Feb 2022 22:51:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344638AbiBJVhh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Feb 2022 16:37:37 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50234 "EHLO
+        id S1344532AbiBJVvb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Feb 2022 16:51:31 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240037AbiBJVhh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 16:37:37 -0500
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 927F726DA
-        for <linux-pci@vger.kernel.org>; Thu, 10 Feb 2022 13:37:36 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 1471910075775;
-        Thu, 10 Feb 2022 22:37:33 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id E6AE44A84F; Thu, 10 Feb 2022 22:37:32 +0100 (CET)
-Date:   Thu, 10 Feb 2022 22:37:32 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "anatoli.antonovitch@amd.com" <anatoli.antonovitch@amd.com>,
-        "Kumar1, Rahul" <Rahul.Kumar1@amd.com>,
-        "Alexander.Deucher@amd.com" <Alexander.Deucher@amd.com>
-Subject: Re: Question about deadlock between AER and pceihp interrupts during
- resume from S3 with unplugged device
-Message-ID: <20220210213732.GA25592@wunner.de>
-References: <0fc31d9a-f414-a412-3765-5519cbb9b7ff@amd.com>
- <20220210062308.GB929@wunner.de>
- <6da46e96-8d71-3159-d4e1-0c744fb357ba@amd.com>
+        with ESMTP id S238886AbiBJVvb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 16:51:31 -0500
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7314FE6B;
+        Thu, 10 Feb 2022 13:51:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644529891; x=1676065891;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RtABhcfz++1lD4BxroCHUgbb9du3AHo0vVF0UojqTVo=;
+  b=lj/MKt9Bz7XjoX8SUE9donZ1vbJu+AigWl00ZudBIfOYQnCmbOx+JrzD
+   DeY3dankoEV6vNzkXZEJX24R0MuMmPchzMH579PoiFWEUAGEx8scmYBEG
+   tXgnukX1+i1NoyztWTWQnm9w7NrRatsYFhrUDiNGGac6RYY/TiCMHga75
+   UzWzoSzLWe2ab89FxiINW4Xl6tv0IUB4utbMUmqovoNcV+csDW5ePVPK9
+   MGo+8fBPhlkVFia5pxPTtTZLefdCREZPJO4ZMMsSXBlMDOG61E6E4cw5t
+   69zeldo/RWm2JKS9bp7Te4Cw2KodWqf8tyO0Yf2WPnq4KMn1Z7JSReVLN
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10254"; a="310337049"
+X-IronPort-AV: E=Sophos;i="5.88,359,1635231600"; 
+   d="scan'208";a="310337049"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 13:51:31 -0800
+X-IronPort-AV: E=Sophos;i="5.88,359,1635231600"; 
+   d="scan'208";a="485954165"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2022 13:51:29 -0800
+Date:   Thu, 10 Feb 2022 13:51:29 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH V6 03/10] PCI/DOE: Add Data Object Exchange Aux Driver
+Message-ID: <20220210215128.GA998480@iweiny-DESK2.sc.intel.com>
+Mail-Followup-To: Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
+References: <20220201071952.900068-1-ira.weiny@intel.com>
+ <20220201071952.900068-4-ira.weiny@intel.com>
+ <CAPcyv4hYAgyf-WcArGvbWHAJgc5+p=OO_6ah_dXJhNM5cXcVTw@mail.gmail.com>
+ <20220209101320.00000473@Huawei.com>
+ <CAPcyv4g2nNHKPuYVOEH3TbJtCiB1rkRNCVbfDWHnWkotvTAcJg@mail.gmail.com>
+ <20220209165756.00002841@huawei.com>
+ <CAPcyv4j9mEOn_sJSwX+rY_6wFjuU_JB7e075_n_Q5sfgiGsqew@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6da46e96-8d71-3159-d4e1-0c744fb357ba@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAPcyv4j9mEOn_sJSwX+rY_6wFjuU_JB7e075_n_Q5sfgiGsqew@mail.gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 10, 2022 at 03:47:10PM -0500, Andrey Grodzovsky wrote:
-> So the patches indeed helped resolving the deadlock but when we try
-> again to hotplug back there is a link status failure
+On Wed, Feb 09, 2022 at 11:57:38AM -0800, Dan Williams wrote:
+> On Wed, Feb 9, 2022 at 8:58 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> [..]
+> > > It just seems an unnecessary hunk of code for the core to carry when
+> > > it's trivial for a client of the core to do:
+> > >
+> > > task->private = &completion;
+> > > task->end_task = complete_completion;
+> > > submit_task()
+> > > wait_for_completion(&completion);
+> >
+> > OK, we can move this to the callers though function obviously will
+> > also need renaming - I guess to pci_doe_exchange() and now need to take a
+> > task rather than the exchange.
+> >
+> > I personally slightly prefer the layered approach, but don't care that
+> > strongly.
 > 
-> pcieport 0000:00:01.1: pciehp: Slot(0): Card present
-> pcieport 0000:00:01.1: Data Link Layer Link Active not set in 1000 msec
-> pcieport 0000:00:01.1: pciehp: Failed to check link status
-> 
-> and more detailed  bellow,
-> we are trying to debug but again, you might have a quick insight
+> Like I said, you and Ira are holding the pen, so if you decide to keep
+> the layering, just document the ontology somewhere and I'll let it go.
 
-Well, the link doesn't come up.  Is the Link Disable bit in the
-Link Control Register set for some reason?  Perhaps some ACPI method
-fiddled with it?
+I'm busy with the PKS series ATM but I should get back to reviewing all these
+comments soon.
 
-Compare the output of lspci -vv before and after the system sleep
-transition, do you see anything suspicious?
-
-If you reset the slot via sysfs, does the link come back up?
-
-You may want to open a bug over at bugzilla.kernel.org and attach
-the full dmesg output which didn't reach the list, as well as lspci
-output.
-
-Did you apply only my deadlock fix or also Kai-Heng Feng's AER disablement
-patch?
-
-Thanks,
-
-Lukas
+Ira
