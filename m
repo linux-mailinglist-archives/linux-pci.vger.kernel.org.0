@@ -2,57 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45AE14B2E2B
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 21:06:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 068374B2E9C
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 21:40:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353171AbiBKUF1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Feb 2022 15:05:27 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49874 "EHLO
+        id S234977AbiBKUkL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Feb 2022 15:40:11 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353167AbiBKUFZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Feb 2022 15:05:25 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C49CE5;
-        Fri, 11 Feb 2022 12:05:24 -0800 (PST)
+        with ESMTP id S230481AbiBKUkL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Feb 2022 15:40:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8891DCF2;
+        Fri, 11 Feb 2022 12:40:08 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EA191B82C99;
-        Fri, 11 Feb 2022 20:05:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9D9DCC340E9;
-        Fri, 11 Feb 2022 20:05:21 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 28B9C62023;
+        Fri, 11 Feb 2022 20:40:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DE96C340E9;
+        Fri, 11 Feb 2022 20:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644609921;
-        bh=bKbqNxmW+7k+RCMvj4vtfijICXlc4s2mWU4IT47p5F8=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=BHZ3PUEeRAK4hXHk5CMe5sRV31Xf7FJxVLqwCjtOp5/rB2Ws9UeLTUVE7otm5MwAq
-         KPM0DCLw20iJjxWZhjXpT/EnPn9SOR+VerO9994TNi3EwmPf1WYl4tO+OecyHBnzCE
-         0XqzfbSdT3wtVOnKfvnm7asJVkFMXFs8TizFwmHS0rzJxwpe3io6+wE1gwx/ND6tnR
-         agCjNEKDrPWYNJ08PcmMv9prWEVdKonw2ZPUA6IJWNMjzObOytx+54gqBKci1t2J9g
-         bjE7kfKoscI43U1Epk4ukpYHBGyHKOwmEx295k6zDC3vLre9sEa/mji384HtthjyHf
-         68S9KK4r3jZ5Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8A9ECE5D09D;
-        Fri, 11 Feb 2022 20:05:21 +0000 (UTC)
-Subject: Re: [GIT PULL] ACPI fixes for v5.17-rc4
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0i=QT9GjEgWcqT-+CUKL=aScS3S6NZLUDznN-fNBahVYw@mail.gmail.com>
-References: <CAJZ5v0i=QT9GjEgWcqT-+CUKL=aScS3S6NZLUDznN-fNBahVYw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0i=QT9GjEgWcqT-+CUKL=aScS3S6NZLUDznN-fNBahVYw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-5.17-rc4
-X-PR-Tracked-Commit-Id: 27a98fe60b033dfce95361abe368750994b8a78e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 883fd0aba1ae52b800081b9aa9ba9edfc88f36b0
-Message-Id: <164460992156.1412.11559056276253228923.pr-tracker-bot@kernel.org>
-Date:   Fri, 11 Feb 2022 20:05:21 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
+        s=k20201202; t=1644612007;
+        bh=9aqXxRdl3vqUo5edo6YqbhV9C3gHFRDD/8/RSNbjZtA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Z0wCmlUU+nVsUlIwGKvapnNMfsjmR+GPJU95OXDbzd22dsP+3VF9n6NWPf69XPStx
+         UkdNpaQ82k37DQrY/JCfmq+ZN2vPDDN/Ce+hytk/qn+zy2Gp8WHuk0Izn9J5y32jqr
+         zAaUGwJD+Lh6+yJAFc8CaMCaXE1iADSx0Cb7mOg+TYC4TdhwNEr25kiQuK+Dr+a0a5
+         I6snrRGnywOJ2ZWgmUuC3sE9S4FxY9a+8ZX8oKUgkqczlLOQX0aOVVFhqjUl/0ixXd
+         gfaxSTpmEdZ40ea3qWJ+HNM0eFEUIpyWI3ez5hv98v4C30BmyQWi4wHXGVXFfl34kw
+         h+G8Kq2C41V+Q==
+Date:   Fri, 11 Feb 2022 14:40:05 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Joey Corleone <joey.corleone@mail.ru>,
+        Sergiu Deitsch <sergiu.deitsch@gmail.com>,
+        David Spencer <dspencer577@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>
+Subject: [GIT PULL] PCI fixes for v5.17
+Message-ID: <20220211204005.GA732009@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -63,15 +55,31 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Fri, 11 Feb 2022 17:57:41 +0100:
+The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-5.17-rc4
+  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/883fd0aba1ae52b800081b9aa9ba9edfc88f36b0
+are available in the Git repository at:
 
-Thank you!
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.17-fixes-4
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+for you to fetch changes up to 075b7d363c675ef7fa03918881caeca3458e2a96:
+
+  Revert "PCI/portdrv: Do not setup up IRQs if there are no users" (2022-02-11 14:16:11 -0600)
+
+N.B. This has been in linux-next for a couple days as b139e2632409
+("Revert "PCI/portdrv: Do not setup up IRQs if there are no users""),
+but I amended that commit to add more info to the commit log.
+
+----------------------------------------------------------------
+PCI fixes:
+
+  - Revert a commit that reduced the number of IRQs used but resulted in
+    interrupt storms (Bjorn Helgaas)
+
+----------------------------------------------------------------
+Bjorn Helgaas (1):
+      Revert "PCI/portdrv: Do not setup up IRQs if there are no users"
+
+ drivers/pci/pcie/portdrv_core.c | 47 +++++++++++++++--------------------------
+ 1 file changed, 17 insertions(+), 30 deletions(-)
