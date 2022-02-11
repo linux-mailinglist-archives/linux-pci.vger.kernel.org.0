@@ -2,174 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75A134B2140
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 10:14:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4BD44B21A4
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 10:22:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348338AbiBKJOR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Feb 2022 04:14:17 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56604 "EHLO
+        id S1345047AbiBKJW1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Feb 2022 04:22:27 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235817AbiBKJOQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Feb 2022 04:14:16 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34651029
-        for <linux-pci@vger.kernel.org>; Fri, 11 Feb 2022 01:14:15 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id t4-20020a17090a510400b001b8c4a6cd5dso8223436pjh.5
-        for <linux-pci@vger.kernel.org>; Fri, 11 Feb 2022 01:14:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AnYtNhdLAufx/Wabg2w3ZU5XlCq9QWc6T4pL9mdKHRk=;
-        b=PNPe2khfRgmo+HiRLlAoG8nVNb0scB964DKEKSYoD7jVClmPhbuGxl65L227FrqsEV
-         4iVXQk8yjkMgI4Zhwnus0nHOI5kzk+FjeqIZLwu8gcgvdb5Ux6L6guI4TmJf1iJ2CCYb
-         NJPvElMNC+IdNHNEp8OCZhHSaZaJzH245SUwRA0tIVkUbZmm9jrIIdqcnhSioTl6xg74
-         kXPojEOuzOH6ySvsn4F29C2yeDxpHL02dfhn80v0ic8b7gnNaSLrqooTu0WH3UqgNRNs
-         /jpQ651JLr3m4/kZa5eZRasvXTwPv6nOg7gd2feWYA67K7391vlqj86x/yjM0XjqTeoe
-         8fjQ==
+        with ESMTP id S1346394AbiBKJW0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Feb 2022 04:22:26 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 358511036
+        for <linux-pci@vger.kernel.org>; Fri, 11 Feb 2022 01:22:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644571343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JATPSfuuIzbUvjucn3mqiTWieLFcGsiKYRvySMK0CuY=;
+        b=MJpWt3UCHCojLJ61Oy4FxeI3nWm2lR3SDqgRdLOZuLP2DU9xFQI6WuMHrwvhQ2fhJ3OGKx
+        f80iuS1QZtfj7+w5ilVOmkPpP9rInhpVe4lD/vStp1kb+XVqk0GGFOK+OLWhTinSSnJdhc
+        HmJUy8TUSrR/YWk+dUb5GwCAG67Xw+U=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-492-5ae5mav_MQilGuw236TL8Q-1; Fri, 11 Feb 2022 04:22:22 -0500
+X-MC-Unique: 5ae5mav_MQilGuw236TL8Q-1
+Received: by mail-ed1-f71.google.com with SMTP id g5-20020a056402090500b0040f28e1da47so5017603edz.8
+        for <linux-pci@vger.kernel.org>; Fri, 11 Feb 2022 01:22:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AnYtNhdLAufx/Wabg2w3ZU5XlCq9QWc6T4pL9mdKHRk=;
-        b=CB0/GghiEcZWtoWYHh3lOinpiqw+JvvPxH9HSpcUq7WHZCz1LiY7q7BjddJuTq8SPg
-         w7tA1zRI2BskDiIQJguVwT5AXZdAjt/gJ9jTDacKUzOj/JeNRRrL1IV4rMz+3GmADVKT
-         3xLThIdOZ7w13ksUEyHFsnaiRIQ4xqh1Evk+20961tr4HY5VdH7bH81A6OmOpok5QwsO
-         peVCiEQx62HhRKNjJrzRTR8cRDlX5wSQJndeJCRw3ERS5wBE/y8ZfgPtjebjUFjuK1uS
-         hJpoMw2ZIr87JQZC88JsiWHjZoY/hOhnIJDiPuHehWOdfT7T247RggIVChUcY2le5xO0
-         wDEw==
-X-Gm-Message-State: AOAM5316McTca6MF2cDEs0B/fnOe19+wD90IAZnRDkDAXKLRO+acGuc6
-        ba6gNcRnb0Emqw8DoAi7WeBv
-X-Google-Smtp-Source: ABdhPJwHRpEeOjwi5F77yVboQHbjWdwulWc/2KiRTMLMCZ9HfBIOxiShsb9dQk3Gt66vTmxNGYNhAA==
-X-Received: by 2002:a17:90b:3b8f:: with SMTP id pc15mr1606035pjb.165.1644570855042;
-        Fri, 11 Feb 2022 01:14:15 -0800 (PST)
-Received: from thinkpad ([27.111.75.38])
-        by smtp.gmail.com with ESMTPSA id h4sm26078995pfv.166.2022.02.11.01.14.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Feb 2022 01:14:14 -0800 (PST)
-Date:   Fri, 11 Feb 2022 14:44:09 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Prasad Malisetty <quic_pmaliset@quicinc.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-        swboyd@chromium.org
-Subject: Re: [PATCH v2] PCI: qcom: Add system PM support
-Message-ID: <20220211091409.GB3223@thinkpad>
-References: <1643738876-18572-1-git-send-email-quic_pmaliset@quicinc.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=JATPSfuuIzbUvjucn3mqiTWieLFcGsiKYRvySMK0CuY=;
+        b=1tgQQTXdqoxObcwyR89FTrz7SlpWiiLZl2ZPPT4iISnCRkWm4nfwMaNJ9xS8OiGlVS
+         ZjkZgkLQ16DcnWUlW50UAmDq6VZIrcf3SNV7dOGJ/4GcDs3rLrvcXOHQzfdnrLfLFiUZ
+         rjuRX2D5PU4H2U1c1oxLZrgdEn0zYCEirrnO3AK7eBE6i5O6/my684H5zrJOIyRlrBQD
+         NWATlU8v/pZfmSvlh65nVXQCJdbmAlfWf2fgivfnj0HRsUm6sUvn3MrMJjdZ/9SFAE9d
+         vBSsS/DdSoG8Thgq6zAT02VH34i9/BmBlWtVBDhogXUPM88FOQAUQVvfL5je5gQ9MZJd
+         Yt0A==
+X-Gm-Message-State: AOAM533c1cg7iSpoTrGuisSQbgZzIQXrE32IOGzX0JgNKw73LpmSgC4q
+        x3Z62FY0kdsxaOZxnvJwr4GM/7u/96z2ywrsfY7i6zPcCDfWcnRyN/bPcmJkg9T8KJWZ23AD3mf
+        c8QXXHWPQD4AaXAwbuTu/
+X-Received: by 2002:a17:906:9741:: with SMTP id o1mr634464ejy.452.1644571341119;
+        Fri, 11 Feb 2022 01:22:21 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzJzLEHrlpWTVVnLCXx+X1wR5IUJlkBcCT7V/xFq7SwXUygMIWI6NCaHgu9RUznaxy1V50DlQ==
+X-Received: by 2002:a17:906:9741:: with SMTP id o1mr634448ejy.452.1644571340909;
+        Fri, 11 Feb 2022 01:22:20 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id y22sm3647503ejm.225.2022.02.11.01.22.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Feb 2022 01:22:20 -0800 (PST)
+Message-ID: <aa1f140d-0f1b-852c-da8b-75e437537ef2@redhat.com>
+Date:   Fri, 11 Feb 2022 10:22:19 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1643738876-18572-1-git-send-email-quic_pmaliset@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH v2 8/9] platform/x86: amd-gmux: drop the use of
+ `pci_is_thunderbolt_attached`
+Content-Language: en-US
+To:     Yehezkel Bernat <yehezkelshb@gmail.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Lukas Wunner <lukas@wunner.de>, Alexander.Deucher@amd.com
+References: <20220210224329.2793-1-mario.limonciello@amd.com>
+ <20220210224329.2793-9-mario.limonciello@amd.com>
+ <CA+CmpXtah8AeVehExk0+eagyP=DQOPEy18DW3t2rQ0ZjyMk-Rw@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CA+CmpXtah8AeVehExk0+eagyP=DQOPEy18DW3t2rQ0ZjyMk-Rw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On top of Bjorn's review:
+Hi,
 
-On Tue, Feb 01, 2022 at 11:37:56PM +0530, Prasad Malisetty wrote:
-> Add suspend_noirq and resume_noirq callbacks to handle
-> System suspend and resume in dwc pcie controller driver.
+On 2/11/22 10:00, Yehezkel Bernat wrote:
+> On Fri, Feb 11, 2022 at 12:43 AM Mario Limonciello
+> <mario.limonciello@amd.com> wrote:
+>>
+>> Currently `pci_is_thunderbolt_attached` is used to indicate a device
+>> is connected externally.
+>>
+>> The PCI core now marks such devices as removable and downstream drivers
+>> can use this instead.
+>>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>  drivers/platform/x86/apple-gmux.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+>> index 04232fbc7d56..ffac15b9befd 100644
+>> --- a/drivers/platform/x86/apple-gmux.c
+>> +++ b/drivers/platform/x86/apple-gmux.c
+>> @@ -596,7 +596,7 @@ static int gmux_resume(struct device *dev)
+>>
+>>  static int is_thunderbolt(struct device *dev, void *data)
+>>  {
+>> -       return pci_is_thunderbolt_attached(to_pci_dev(dev));
+>> +       return dev_is_removable(dev);
+>>  }
+>>
 > 
-> When system suspends, send PME turnoff message to enter
-> link into L2 state. Along with powerdown the PHY, disable
-> pipe clock, switch gcc_pcie_1_pipe_clk_src to XO if mux is
-> supported and disable the pcie clocks, regulators.
-> 
-> When system resumes, PCIe link will be re-established and
-> setup rc settings.
-> 
-> Signed-off-by: Prasad Malisetty <quic_pmaliset@quicinc.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> ---
-> Changes since v1:
-> 	- Removed unnecessary logs and modified log level suggested by Manivannan.
-> 	- Removed platform specific callbacks as PM support is generic.
+> Maybe it's only me, but isn't it a bit strange to keep this function named
+> `is_thunderbolt` while it's actually about being removable?
 
-This is not still generic... Please see below.
+The comment above the only caller says:
 
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 97 ++++++++++++++++++++++++++++++++++
->  1 file changed, 97 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index c19cd506..d1dd6c7 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -73,6 +73,8 @@
->  
->  #define PCIE20_PARF_Q2A_FLUSH			0x1AC
->  
-> +#define PCIE20_PARF_PM_STTS                     0x24
-> +
->  #define PCIE20_MISC_CONTROL_1_REG		0x8BC
->  #define DBI_RO_WR_EN				1
->  
-> @@ -1616,6 +1618,100 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static int qcom_pcie_send_pme_turnoff_msg(struct qcom_pcie *pcie)
-> +{
-> +	int ret = 0;
-> +	u32 val = 0, poll_val = 0;
-> +	u64 l23_rdy_poll_timeout = 100000;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +
-> +	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +	val |= BIT(4);
+        /*
+         * If Thunderbolt is present, the external DP port is not fully
+         * switchable. Force its AUX channel to the discrete GPU.
+         */
+        gmux_data->external_switchable =
+                !bus_for_each_dev(&pci_bus_type, NULL, NULL, is_thunderbolt);
 
-Define BIT(4)
+So IHMO keeping the name as is is fine.
 
-> +	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +
-> +	ret = readl_poll_timeout((pcie->parf + PCIE20_PARF_PM_STTS), poll_val,
-> +			(poll_val & BIT(5)), 10000, l23_rdy_poll_timeout);
+Regards,
 
-Define BIT(5)
+Hans
 
-> +	if (!ret)
-> +		dev_info(dev, "PM_Enter_L23 is received\n");
-
-Maybe print, "Device entered L23_Ready state"? Also this should be dev_dbg().
-
-> +	else
-> +		dev_err(dev, "PM_Enter_L23 is NOT received.PARF_PM_STTS 0x%x\n",
-
-Maybe print, "Device failed to enter L23_Ready state"?
-
-> +			readl_relaxed(pcie->parf + PCIE20_PARF_PM_STTS));
-> +
-> +	return ret;
-> +}
-> +
-> +static void qcom_pcie_host_disable(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-> +
-
-As Bjorn said this would only work for platforms supporting v2.7.0 ops. Please
-make it generic.
-
-> +	/* Assert the reset of endpoint */
-> +	qcom_ep_reset_assert(pcie);
-> +
-> +	/* Put PHY into POWER DOWN state */
-> +	phy_power_off(pcie->phy);
-> +
-> +	writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
-
-Define "1".
-
-Thanks,
-Mani
