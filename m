@@ -2,184 +2,256 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 848FC4B1BE3
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 03:06:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6E344B1C14
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 03:16:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347129AbiBKCF2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Feb 2022 21:05:28 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59576 "EHLO
+        id S1347223AbiBKCQ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Feb 2022 21:16:29 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:36948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344360AbiBKCF1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 21:05:27 -0500
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2041.outbound.protection.outlook.com [40.107.20.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBEE35F9B;
-        Thu, 10 Feb 2022 18:05:26 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DD7SVzwmFB9oQVRbhFmivZgRIz2XVpnLM/OQ0tXGeueXu/xS5VQt6vDacgDAY64lD613VQ3du3r0TQsLgqyS7KfhNHhw4NQq9pKH1WoEnOU1+8DZmjoPFr/OKJRQ1Dbr0BQP9M1nPZn4SrzZeiyvhs6H460zmiGAIoGyIKOXbfCbLMk3GgYAG07KVPQ8wtxUwyIOTknO4tYGYkX3df7O6Wl1MLtYaHp8YqDnqE34JUsEG23hdNniPzVvvbeEEPQwPWfIgt3J4CI9qxAvoB1ZMb354n3w/UkjphPjRvR8f7oHgvNufyqJ/PJtjFW30AnVDahTcuqBv89qJ/2GD9Zmow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w4cgMUZqaFg+S3IaBHmnxh5Nnbpprz0i7BolEiHt97g=;
- b=bshaHAZQAbzjFWW9Z5ji41HW9qgxcvdt8hZn8fMm8v1Du8jShzp6BC5Y6yMucG+f2XOVGnctoh+TbBgfbKZCyYT8A8cPPetJYBr+3ZtJPzY6KjjOxoEGECN0yHadUfDkYo0ZI4FNKL8zS/3BPilvnNwPrhYHdJiuHU5OW/EVphfzKPG9P4hfRORPloY3ozzfDkKWJmRZX5ttWLkNlo5ExLVIobMlihEAlHzFGvNxyUsF0bgNrlw+nVOt34uGisG7rYbynrCLHoVRpnl/9Pn6xGGwnRM9qgxkyHoqlaZvpksL3lqf2Vv0mt9cqhV6S9Ml4DgzPduEz7DVxB4PXz7k6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w4cgMUZqaFg+S3IaBHmnxh5Nnbpprz0i7BolEiHt97g=;
- b=J9qrbpl5a+RKtI1odk5XiPHlZxMz6SnJ5S4kAammA3hppzX6fsWK83aY7L+2nuKVKHz8WZJf3roCWARgSZyTQPRwJ1OtNuwN4EJiLhIJoEpnYnxbAjJysTNuTfrhSaqZIy+GrjW5wWuB7mGR5KUYXam4RBfjwNCITT43012ikG0=
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by AS1PR04MB9479.eurprd04.prod.outlook.com (2603:10a6:20b:4d7::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.11; Fri, 11 Feb
- 2022 02:05:24 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::3d1c:b479:1c58:199]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::3d1c:b479:1c58:199%4]) with mapi id 15.20.4975.011; Fri, 11 Feb 2022
- 02:05:24 +0000
-From:   Hongxing Zhu <hongxing.zhu@nxp.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [RFC 2/2] PCI: imx6: Enable imx6qp pcie power management support
-Thread-Topic: [RFC 2/2] PCI: imx6: Enable imx6qp pcie power management support
-Thread-Index: AQHYHYduLICm7+FWyEagAyZved6iF6yLWpYAgACtzBCAAVDwAIAAOJIQ
-Date:   Fri, 11 Feb 2022 02:05:24 +0000
-Message-ID: <AS8PR04MB8676C19FBD01547BDF80CFC68C309@AS8PR04MB8676.eurprd04.prod.outlook.com>
-References: <AS8PR04MB867616CDC587BB93772AC8588C2F9@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <20220210220436.GA656671@bhelgaas>
-In-Reply-To: <20220210220436.GA656671@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d8681f63-b4af-442c-7d65-08d9ed02f753
-x-ms-traffictypediagnostic: AS1PR04MB9479:EE_
-x-microsoft-antispam-prvs: <AS1PR04MB947976BA092034815793D61E8C309@AS1PR04MB9479.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kviIolP2cqQbtmpGFYbkxqEjEBDJWqziZuOtIM03G+D9ZW1EbCXIUjulj07wyqLuu9JHTau1FbCe4ArUjg0/IJaKNa//jUw7UMnRfk0V5yp7aBxmt0a1PAnF3DjzvX2OZ+3FaRprQSEd+uUvJTU4p1Le8OqqEB12PDRvmv7s/z9UNuKdILv7IUJ/l8ax+kYa5cg/xe6rId0IcQuIuIE9PIBQUqZ2js45pPpu+OfoNoJ1bxGrDPEhBPNAKbl9LJGQkxB5vz6n9sFt/WjIbDfRfNnwTeeLdie9+GxJURGH0eqm1nc2q4jSvsx+SYt2J6njPBlb1g92D8ggkFz9noAJnQGCTS5zYxagRq4I/ZwQD2HOdlXEjbeGeqCcSBySwfLaFiEN80c5T7l0uxWEge0gjXigmI2Nd4Sh4YGrur+UTLJW4fVjGjjJU8wUJ5zzpM1ceoxbxZxTQPytkqIRM1C7Vlq227iWCZfteRAbqPe7w4ITxQCyMwE+/hoRy5Smyu/MDgC9vUKilGmvmyh77LlFn+gTOQmt5gz2SVqj2Da3dVnNJFqAuqpu/eCuzZo5avLi4j4Qm3cJNrDzSYqO9ZNeYcaOFtGFtTpZrgywao4C1wtKebt8+pDXXQpIosv5QSq9bBRMAZLoZogYOZRnCH+b/Vog3M5vn+hRaqABKGvr03JX+G5EohSL7CDH7Vt7M3rpU3NoCccZzHGHUS0lnOWiidCKswFsLE1peES4u0DAbtk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(83380400001)(508600001)(26005)(186003)(4326008)(66476007)(64756008)(66946007)(44832011)(8676002)(66556008)(76116006)(8936002)(5660300002)(66446008)(52536014)(33656002)(7696005)(53546011)(316002)(6506007)(6916009)(86362001)(54906003)(38100700002)(71200400001)(55016003)(9686003)(38070700005)(2906002)(122000001)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZElkY3JiaVkzVEs5bHY5c3BmUStla1pUNVhKL0FkVWMvYzA5S2s0NDdFVUgz?=
- =?utf-8?B?d1I2SHpWUjh2emxDUWxKYWMzdkZZVVNzQjJPUTZHZEYxMENHeFRRTktiQ2VN?=
- =?utf-8?B?NG16dnlOdDdtZGdYWklHVnozT25vZVF4bVJOVit1Vkt3Y3h1dVptZ2tiVG1u?=
- =?utf-8?B?ckxhYmlEcVFmaTVmMEs1UnVRcWkrekNqT1M0czU5T1dCSWJGRSt3THFPb1Iz?=
- =?utf-8?B?NUY3SXdpdXpRNE5wOWRUR2t6d2ZJS1VXcXR3U29YM3pmZ0tOSzFCTWppLzFl?=
- =?utf-8?B?TEcwbzRMVmZZcTlQdW02N0VPV0I4TG5udjFxdWVOUEpMZllRZzBLNnc5Z2tO?=
- =?utf-8?B?dmpDeXdCKzBHQ25BcnFScFBubU9OMGZySTNiK1hYNVJHWU9wbnErRmlEK0xu?=
- =?utf-8?B?aEVMVDhJV1ZZZlZLcU9YUjhsNWg4dU1UVDhXeVZmQy9YRG5CM3Uxemh5U3Av?=
- =?utf-8?B?Y3ZRWUFsWFdBaWRGb0hKZTdwVVRMVlgrZkJlUzJMRlloZUR0VlNsK3lSNnRK?=
- =?utf-8?B?ZWNRMkltRHN1N2VHWTdQc0FrTUkrK1VFZjVXRE5YRXNGZis5dnNad0x3UVdL?=
- =?utf-8?B?SzdkSUdwaUVFTTFSdXZnSmQrK1ZXM1JsMk4wVkJaMUJnQzhaMHR3UUFLSnU5?=
- =?utf-8?B?M2JjVXFGN1VBQkxqSUpidXpwNkplQ3dRWkxCOCszZkZIaDlPdzQ3RGZDNkVo?=
- =?utf-8?B?aDlRcW9YeFZRQkF3T0c5UG1jcHI0TVpkUGNnYmFrWi9LcnhBMHpUM2pCZzJS?=
- =?utf-8?B?OEZrMXZlNFNhU1U2ZHBRY0FRaGNBRXAwYlExcnYwY3Nud0pKc0tUekpXTm9H?=
- =?utf-8?B?cTRvME52anJ2VVg0NFVVay9lMWVwSk5FeWc4Nll1OWZHZTZXMHFmRkhzWEZv?=
- =?utf-8?B?SUxpQmZNR2JaMjNDSTYvby9yaE1CNFNudnhEaUphZmtwczhyUkI5R29mRk52?=
- =?utf-8?B?bFRCdEpaWXE1cVhDeDIyWHAyd3haTUduU1NabHhoZUpVclpoVEhvY3lUbEpk?=
- =?utf-8?B?QVBkaVM2NEpCNkRPblJFYWtEZHRBd0Nobm5xSVlCY3hXTEJmUFpjSFBGYjNp?=
- =?utf-8?B?aFR1TFcxSmNRd0t2UHh6R2Nya2pLbldFT3hsYmM4UmFVV3NHckpnMDJRNFd5?=
- =?utf-8?B?dGdBRnB5dmUyNnZ6T3FWck44UlVlTlR3WjVxbnJxS2NSVGtqMnFDRUhsM0th?=
- =?utf-8?B?Qm5udUIxZHNhTUsyZ3ZUMzJrNjI3c1hVdGRqMDAxVGZtOHBQZVl2QjJkeXNv?=
- =?utf-8?B?czFtWEdWSllXWDZvUXFkQTVVT1g1aWdkNExieUhBWmoycmJwa3BQWG9wMzNs?=
- =?utf-8?B?aEdlREhsZTJwMzZFMzgrNCtScEl0MFBWUUgvYUE5dllEOGVRTTJGMGUrT0l0?=
- =?utf-8?B?YzNNcjg0RXI5YktWWEN4VHNiYnRWY3N4aTd3bTZWZjFMclJJeVdDSTcrNDA4?=
- =?utf-8?B?eTA1Zk52NWxsU29KVDFqY1Uwb0NkT2xiMDYrMEY1QUkzMFlPS2MvSUU4NDhZ?=
- =?utf-8?B?QjlrRVhEUjlrUUFOOWMwUkhqeTNxUW91aEJ5QTVZbDFLbTRqY29BQkkwQzlV?=
- =?utf-8?B?OEdDTFZCeXNoOWErVDE0NUhyTlhEMTRIUG80RWZSUklYa1ZuaW45dVVxMEdl?=
- =?utf-8?B?UHNCR2d6VzBsbWZhR21yWGJjRE9yT3A0b1ZlQVUyMmVIVG1TNi9jdFBSWWcy?=
- =?utf-8?B?eDVZL2dwZmZ5ZjcyckU5emZlSE9kT2I5UTJ1b1NPdVZqS1U1ZCtnY2ZWRGMv?=
- =?utf-8?B?VlhEUDBRU3RaM1JJWlRDS2JVTnMxTWE4amFieFBIaEFuWElPNXNDcEZjWlE3?=
- =?utf-8?B?SURVdUVJaTNrbXJHS3BhM1lHWkY5cUxEM1pHUTJYTFp6NXRCM25uUFA4bStF?=
- =?utf-8?B?Q01IZWhCK2FQZXEyUEdTU0hTZ2o5RHBJdDVGdjZLUzdpazdrMGpnNDN3OVlJ?=
- =?utf-8?B?bWN4SE81d0g1c0xpaFVIWTNuaWcveXdHQ0w1NDZPQnlEVWw4akVYbUdubTF0?=
- =?utf-8?B?b1NXZEVob1gvV3VGRlNMTS9tVTcvMGtCdy8zYmN4c0M0dHk1U0FrbU5Gcmpo?=
- =?utf-8?B?c2p2SDNwM1B3aUN1Wk1rQUx6UW5Oenc4MFZyb3lLNmQ0Y3VxaVVzSk1jVlFE?=
- =?utf-8?B?MDI1Vmc2R29vVmtYL09VVmpQUStkVHRMMlh4QUFJcVdDcXRnM29DOU50WHNJ?=
- =?utf-8?B?Ymc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S1347176AbiBKCQ2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Feb 2022 21:16:28 -0500
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7025FB7
+        for <linux-pci@vger.kernel.org>; Thu, 10 Feb 2022 18:16:27 -0800 (PST)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 47E35402AE
+        for <linux-pci@vger.kernel.org>; Fri, 11 Feb 2022 02:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1644545786;
+        bh=wr917FetGRB+Dwa6hoOdwfA0a1yOjjIVMUk1tc6Vh2Q=;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+         Content-Type:In-Reply-To;
+        b=F+ZotKceKixZ+v5cOnDdxdsHZZaw2fwxBche2Al7Kz6h0e3dx0l3F41c/5V7ItQFf
+         wkPrcX4eLqnCVSVqS+TZG+PdzfdQRfQnf5fjAbD5n+5GdecNrsLUbxbSuMbS0vdWk6
+         Z0I5rkf6NM3vlCJTAM43jLOWKKP4DetL0Poi5nls4QqSmnrFbQlvEsLb6xDtspSu6z
+         0Kycwl3UjeovzaHoVhVtZVZzdW9l34o4OwwB44wS2Zmop/5wWDkj+E+3PIcHZDMMud
+         q3rRS+6MghJsZhxgrBz6owyabx4zVqwuPkDrb/JWmBPs0jWUTaakU9xeGG4V6JBpx+
+         WwqD2ZBnkpW9A==
+Received: by mail-io1-f70.google.com with SMTP id n20-20020a6bed14000000b0060faa0aefd3so5334234iog.20
+        for <linux-pci@vger.kernel.org>; Thu, 10 Feb 2022 18:16:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wr917FetGRB+Dwa6hoOdwfA0a1yOjjIVMUk1tc6Vh2Q=;
+        b=c7YuOwZmVysXbKXpRYMFzPEiwbVPg/wWUT9vUSoz+5cRAYbZC71mV3xtGrZpSTmfMB
+         9X15c+RIATISrsdK9vcxU4K30Nx8vq+haN7fVCu7HjAgB6NDzFCrtw9FGTn468+/IWJC
+         POONT//95BGwBvrWhaexBemLEHiwis+Hk+03iXNppbXp2Ty6yAVQjTW3QN09fGy9HdRQ
+         3P1H4QiZ7SICdd59rZuz6XwdUhFiS309AheOOnJU2mlpbfqmkSXKRb5qORtjW8ZxkBUF
+         YGKs4KKu8GQVlUOwQDYylSM2G2LW7EdzgeAKWRocalxw5e2PgWuDVHb5fPcme8gQT+fd
+         UjXQ==
+X-Gm-Message-State: AOAM533dNckR8kZjn+atIy85r7qKZW7HUsq2DdJKLH5HSVNyy3bN/UPw
+        T8UD6LD3ie3R6LBvz3F4Va9Xo8pJ7hwkS4ceiUHuYm8NlhKPdy+MNi8bNUpdcF0afeZWDhGaq8+
+        fSr9jgwEfPnkbZCZRm4gZCCGAUPHjXfGb2rHByA==
+X-Received: by 2002:a02:c8c8:: with SMTP id q8mr5221362jao.243.1644545783560;
+        Thu, 10 Feb 2022 18:16:23 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyMHhPZZCj8/aMYnFzDF+/epemaAS8yzBkanyfCuHI/zd+71O1cwnboJ+jJrLUY3cVTfwXTzA==
+X-Received: by 2002:a02:c8c8:: with SMTP id q8mr5221351jao.243.1644545783301;
+        Thu, 10 Feb 2022 18:16:23 -0800 (PST)
+Received: from xps13.dannf (c-71-196-238-11.hsd1.co.comcast.net. [71.196.238.11])
+        by smtp.gmail.com with ESMTPSA id d2sm4867105iog.42.2022.02.10.18.16.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Feb 2022 18:16:22 -0800 (PST)
+Date:   Thu, 10 Feb 2022 19:16:19 -0700
+From:   dann frazier <dann.frazier@canonical.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        stable <stable@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: xgene: Fix IB window setup
+Message-ID: <YgXG838iMrS1l8SC@xps13.dannf>
+References: <20211129173637.303201-1-robh@kernel.org>
+ <Yf2wTLjmcRj+AbDv@xps13.dannf>
+ <CAL_Jsq+4b4Yy8rJGJv9j9j_TCm6mTAkW5fzcDuuW-jOoiZ2GLg@mail.gmail.com>
+ <CALdTtnuK+D7gNbEDgHbrc29pFFCR3XYAHqrK3=X_hQxUx-Seow@mail.gmail.com>
+ <CAL_JsqJUmjG-SiuR9T7f=5nGcSjTLhuF_382EQDf74kcqdAq_w@mail.gmail.com>
+ <YgHFFIRT6E0j9TlX@xps13.dannf>
+ <CAL_JsqJLTkDm_ZbFWSKwKvVAh0KpxiS9y6LEwmhQ-kejTcLq7A@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8681f63-b4af-442c-7d65-08d9ed02f753
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2022 02:05:24.3859
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MHUBZ31t4FffvI+hXra7fzHhnYWY2CYUKUnvIkOpAUy2BmSrssun/fR9UKnUf2Msvw2CDrvIm11X/ySXEa/oyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9479
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqJLTkDm_ZbFWSKwKvVAh0KpxiS9y6LEwmhQ-kejTcLq7A@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIDxoZWxn
-YWFzQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjLlubQy5pyIMTHml6UgNjowNQ0KPiBUbzogSG9u
-Z3hpbmcgWmh1IDxob25neGluZy56aHVAbnhwLmNvbT4NCj4gQ2M6IGwuc3RhY2hAcGVuZ3V0cm9u
-aXguZGU7IGJoZWxnYWFzQGdvb2dsZS5jb207DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207
-IHNoYXduZ3VvQGtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBu
-eHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1JGQyAyLzJdIFBDSTogaW14NjogRW5hYmxlIGlteDZx
-cCBwY2llIHBvd2VyIG1hbmFnZW1lbnQNCj4gc3VwcG9ydA0KPiANCj4gT24gVGh1LCBGZWIgMTAs
-IDIwMjIgYXQgMDM6MjM6MTlBTSArMDAwMCwgSG9uZ3hpbmcgWmh1IHdyb3RlOg0KPiA+ID4gLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IEJqb3JuIEhlbGdhYXMgPGhlbGdh
-YXNAa2VybmVsLm9yZz4NCj4gPiA+IFNlbnQ6IDIwMjLlubQy5pyIOeaXpSAyMzozNw0KPiA+ID4g
-VG86IEhvbmd4aW5nIFpodSA8aG9uZ3hpbmcuemh1QG54cC5jb20+DQo+ID4gPiBDYzogbC5zdGFj
-aEBwZW5ndXRyb25peC5kZTsgYmhlbGdhYXNAZ29vZ2xlLmNvbTsNCj4gPiA+IGxvcmVuem8ucGll
-cmFsaXNpQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+ID4gPiBsaW51eC1wY2lAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4g
-PiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGRs
-LWxpbnV4LWlteA0KPiA+ID4gPGxpbnV4LWlteEBueHAuY29tPg0KPiA+ID4gU3ViamVjdDogUmU6
-IFtSRkMgMi8yXSBQQ0k6IGlteDY6IEVuYWJsZSBpbXg2cXAgcGNpZSBwb3dlcg0KPiA+ID4gbWFu
-YWdlbWVudCBzdXBwb3J0DQo+ID4gPg0KPiA+ID4gT24gV2VkLCBGZWIgMDksIDIwMjIgYXQgMDM6
-MDI6MzZQTSArMDgwMCwgUmljaGFyZCBaaHUgd3JvdGU6DQo+ID4gPiA+IGkuTVg2UVAgUENJZSBz
-dXBwb3J0cyB0aGUgUkVTRVQgbG9naWMsIHRodXMgaXQgY2FuIHN1cHBvcnQgdGhlIEwyDQo+ID4g
-PiA+IGV4aXQgYnkgdGhlIHJlc2V0IG1lY2hhbmlzbS4NCj4gPiA+ID4gRW5hYmxlIHRoZSBpLk1Y
-NlFQIFBDSWUgc3VzcGVuZC9yZXN1bWUgb3BlcmF0aW9ucyBzdXBwb3J0Lg0KPiANCj4gPiA+IFdo
-YXQgZG9lcyAiTDIgZXhpdCBieSByZXNldCBtZWNoYW5pc20iIG1lYW4/ICBJcyB0aGlzIGFuDQo+
-ID4gPiBpLk1YNi1zcGVjaWZpYyB0aGluZz8gIElmIG5vdCwgY2FuIHlvdSBwb2ludCBtZSB0byB0
-aGUgcmVsZXZhbnQgcGFydA0KPiA+ID4gb2YgdGhlIFBDSWUgc3BlYz8NCj4gPg0KPiA+IE5vLCBp
-dCdzIG5vdCBpLk1YNiBzcGVjaWZpYyB0aGluZy4gaS5NWDZRL0RMIGRvZXNuJ3QgaGF2ZSB0aGUN
-Cj4gPiBzZWxmLXJlc2V0IG1lY2hhbmlzbS4gIFRodXMsIGl0IGNhbid0IHJlc2V0IGl0c2VsZiB0
-byBhbiBpbml0aWFsaXplZA0KPiA+IHN0YXQgd2hlbiBsaW5rIGV4aXQgZnJvbSB0aGUgTDIgb3Ig
-TDMgc3RhdHMuICBpLk1YNlFQIFBDSWUgaGFzIHRoZQ0KPiA+IHNlbGYtcmVzZXQgbWVjaGFuaXNt
-LCBhbmQgaXQgY2FuIHJlc2V0IGl0c2VsZiB3aGVuIGxpbmsgZXhpdCBmcm9tIEwyDQo+ID4gb3Ig
-TDMgc3RhdHMuICBUaGUgY29tbWl0IGRlc2NyaXB0aW9uIG1pZ2h0IG5vdCBhY2N1cmF0ZS4gIEhv
-dyBhYm91dA0KPiA+IGNoYW5nZSB0aGVtIHRvICJpLk1YNlFQIFBDSWUgc3VwcG9ydHMgdGhlIFJF
-U0VUIGxvZ2ljLCB0aHVzIGl0IGNhbg0KPiA+IHJlc2V0IGl0c2VsZiB0byB0aGUgaW5pdGlhbGl6
-ZWQgc3RhdCB3aGVuIGV4aXQgZnJvbSBMMiBvciBMMyBzdGF0cy4iDQo+IA0KPiBzL3N0YXQvc3Rh
-dGUvDQpUaGFua3MgZm9yIHlvdXIgcXVpY2tseSByZXBseS4NCkdvdCB0aGF0LCB3b3VsZCBiZSBj
-aGFuZ2VkIGxhdGVyLg0KPiANCj4gVWdoLCBJIGhhdmUgYWxsIHNvcnRzIG9mIHF1ZXN0aW9ucyBu
-b3csIGJ1dCBJIGRvbid0IHRoaW5rIEkgd2FudCB0byBrbm93IG11Y2gNCj4gbW9yZSBhYm91dCB0
-aGlzIDspDQo+IA0KPiBTZWVtcyBsaWtlIHRoaXMgZGV2aWNlIHJlcXVpcmVzIHNvZnR3YXJlIGFz
-c2lzdCB3aGVuIGJyaW5naW5nIHRoZSBsaW5rIG91dCBvZiBMMg0KPiBvciBMMy4gIElzIHRoYXQg
-YWxsb3dlZCBwZXIgUENJZSBzcGVjLCBvciBpcyB0aGlzIGFuIGVycmF0dW0/DQo+IA0KPiBEb2Vz
-IHRoaXMgbWVhbiB0aGUgZHJpdmVyIG5lZWRzIHRvIGJlIGludm9sdmVkIHdoZW4gd2UgdGFrZSBh
-IGRldmljZSBvdXQgb2YNCj4gRDMgKHdoZXJlIHRoZSBsaW5rIHdhcyBpbiBMMiBvciBMMyk/DQoN
-ClllcywgdGhlIFNXIHNob3VsZCBiZSBpbnZvbHZlZCB3aGVuIGJyaW5naW5nIHRoZSBsaW5rIG91
-dCBvZiBMMiBvciBMMy4NCkkgbG9va2VkIHRocm91Z2ggdGhlIFNQRUMsIGRpZG4ndCBmaW5kIHRo
-YXQgdGhleSBhcmUgZm9yYmlkZGVuIGJ5IFNQRUMuDQpJdCBtaWdodCBiZSBhIGRlc2lnbiBsaW1p
-dGF0aW9uLCBJIHRoaW5rLg0KDQpCZXN0IFJlZ2FyZHMNClJpY2hhcmQgWmh1DQoNCj4gDQo+IEJq
-b3JuDQo=
+On Tue, Feb 08, 2022 at 08:34:45AM -0600, Rob Herring wrote:
+> On Mon, Feb 7, 2022 at 7:19 PM dann frazier <dann.frazier@canonical.com> wrote:
+> >
+> > On Mon, Feb 07, 2022 at 10:09:31AM -0600, Rob Herring wrote:
+> > > On Sat, Feb 5, 2022 at 3:13 PM dann frazier <dann.frazier@canonical.com> wrote:
+> > > >
+> > > > On Sat, Feb 5, 2022 at 9:05 AM Rob Herring <robh@kernel.org> wrote:
+> > > > >
+> > > > > On Fri, Feb 4, 2022 at 5:01 PM dann frazier <dann.frazier@canonical.com> wrote:
+> > > > > >
+> > > > > > On Mon, Nov 29, 2021 at 11:36:37AM -0600, Rob Herring wrote:
+> > > > > > > Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
+> > > > > > > broke PCI support on XGene. The cause is the IB resources are now sorted
+> > > > > > > in address order instead of being in DT dma-ranges order. The result is
+> > > > > > > which inbound registers are used for each region are swapped. I don't
+> > > > > > > know the details about this h/w, but it appears that IB region 0
+> > > > > > > registers can't handle a size greater than 4GB. In any case, limiting
+> > > > > > > the size for region 0 is enough to get back to the original assignment
+> > > > > > > of dma-ranges to regions.
+> > > > > >
+> > > > > > hey Rob!
+> > > > > >
+> > > > > > I've been seeing a panic on HP Moonshoot m400 cartridges (X-Gene1) -
+> > > > > > only during network installs - that I also bisected down to commit
+> > > > > > 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup"). I was
+> > > > > > hoping that this patch that fixed the issue on Stéphane's X-Gene2
+> > > > > > system would also fix my issue, but no luck. In fact, it seems to just
+> > > > > > makes it fail differently. Reverting both patches is required to get a
+> > > > > > v5.17-rc kernel to boot.
+> > > > > >
+> > > > > > I've collected the following logs - let me know if anything else would
+> > > > > > be useful.
+> > > > > >
+> > > > > > 1) v5.17-rc2+ (unmodified):
+> > > > > >    http://dannf.org/bugs/m400-no-reverts.log
+> > > > > >    Note that the mlx4 driver fails initialization.
+> > > > > >
+> > > > > > 2) v5.17-rc2+, w/o the commit that fixed Stéphane's system:
+> > > > > >    http://dannf.org/bugs/m400-xgene2-fix-reverted.log
+> > > > > >    Note the mlx4 MSI-X timeout, and later panic.
+> > > > > >
+> > > > > > 3) v5.17-rc2+, w/ both commits reverted (works)
+> > > > > >    http://dannf.org/bugs/m400-both-reverted.log
+> > > > >
+> > > > > The ranges and dma-ranges addresses don't appear to match up with any
+> > > > > upstream dts files. Can you send me the DT?
+> > > >
+> > > > Sure: http://dannf.org/bugs/fdt
+> > >
+> > > The first fix certainly is a problem. It's going to need something
+> > > besides size to key off of (originally it was dependent on order of
+> > > dma-ranges entries).
+> > >
+> > > The 2nd issue is the 'dma-ranges' has a second entry that is now ignored:
+> > >
+> > > dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00>, <0x00
+> > > 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> > >
+> > > Based on the flags (3rd addr cell: 0x0), we have an inbound config
+> > > space which the kernel now ignores because inbound config space
+> > > accesses make no sense. But clearly some setup is needed. Upstream, in
+> > > contrast, sets up a memory range that includes this region, so the
+> > > setup does happen:
+> > >
+> > > <0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>
+> > >
+> > > Minimally, I suspect it will work if you change dma-ranges 2nd entry to:
+> > >
+> > > <0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>
+> >
+> > Thanks for looking into this Rob. I tried to test that theory, but it
+> > didn't seem to work. This is what I tried:
+> >
+> > --- m400.dts    2022-02-07 20:16:44.840475323 +0000
+> > +++ m400.dts.dmaonly    2022-02-08 00:17:54.097132000 +0000
+> > @@ -446,7 +446,7 @@
+> >                         reg = <0x00 0x1f2b0000 0x00 0x10000 0xe0 0xd0000000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x800000>;
+> >                         reg-names = "csr\0cfg\0msi_gen\0msi_term";
+> >                         ranges = <0x1000000 0x00 0x00 0xe0 0x10000000 0x00 0x10000 0x2000000 0x00 0x30000000 0xe1 0x30000000 0x00 0x80000000>;
+> > -                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> > +                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >                         ib-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >                         ib-ranges-ep = <0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x79000000 0x00 0x79000000 0x00 0x100000>;
+> >                         interrupts = <0x00 0x10 0x04>;
+> > @@ -471,7 +471,7 @@
+> >                         reg = <0x00 0x1f2c0000 0x00 0x10000 0xd0 0xd0000000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x800000>;
+> >                         reg-names = "csr\0cfg\0msi_gen\0msi_term";
+> >                         ranges = <0x1000000 0x00 0x00 0xd0 0x10000000 0x00 0x10000 0x2000000 0x00 0x30000000 0xd1 0x30000000 0x00 0x80000000>;
+> > -                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> > +                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >                         ib-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >                         ib-ranges-ep = <0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x79000000 0x00 0x79000000 0x00 0x100000>;
+> >                         interrupts = <0x00 0x10 0x04>;
+> > @@ -496,7 +496,7 @@
+> >                         reg = <0x00 0x1f2d0000 0x00 0x10000 0x90 0xd0000000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x800000>;
+> >                         reg-names = "csr\0cfg\0msi_gen\0msi_term";
+> >                         ranges = <0x1000000 0x00 0x00 0x90 0x10000000 0x00 0x10000 0x2000000 0x00 0x30000000 0x91 0x30000000 0x00 0x80000000>;
+> > -                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> > +                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >                         ib-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >                         ib-ranges-ep = <0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x79000000 0x00 0x79000000 0x00 0x100000>;
+> >                         interrupts = <0x00 0x10 0x04>;
+> > @@ -522,7 +522,7 @@
+> >                         reg = <0x00 0x1f500000 0x00 0x10000 0xa0 0xd0000000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x800000>;
+> >                         reg-names = "csr\0cfg\0msi_gen\0msi_term";
+> >                         ranges = <0x2000000 0x00 0x30000000 0xa1 0x30000000 0x00 0x80000000>;
+> > -                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> > +                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >                         ib-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >                         ib-ranges-ep = <0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x79000000 0x00 0x79000000 0x00 0x100000>;
+> >                         interrupts = <0x00 0x10 0x04>;
+> > @@ -547,7 +547,7 @@
+> >                         reg = <0x00 0x1f510000 0x00 0x10000 0xc0 0xd0000000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x800000>;
+> >                         reg-names = "csr\0cfg\0msi_gen\0msi_term";
+> >                         ranges = <0x1000000 0x00 0x00 0xc0 0x10000000 0x00 0x10000 0x2000000 0x00 0x30000000 0xc1 0x30000000 0x00 0x80000000>;
+> > -                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> > +                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >                         ib-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+> >                         ib-ranges-ep = <0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x79000000 0x00 0x79000000 0x00 0x100000>;
+> >                         interrupts = <0x00 0x10 0x04>;
+> >
+> > And that failed to boot with a 5.17-rc3. Since dma-ranges was
+> > previously identical to ib-ranges, I also tried making the same change
+> > to ib-ranges, but with no success.
+> 
+> Failed to boot at all or just PCIe still didn't work causing boot to
+> eventually fail?
+
+Sorry, I mean PCIe still didn't work, here's the log:
+ http://dannf.org/bugs/m400-tweaked_dtb.log
+(unmodified kernel source w/ above dtb change)
+
+> 'ib-ranges' is unknown to the kernel, so the firmware
+> is using it somehow?
+> 
+> You also need to revert the first fix for PCIe to work.
+
+Oh, OK. I misunderstood. I tried reverting commit 6dce5aa59e0b "PCI:
+xgene: Use inbound resources for setup" along with a dtb with the
+dma-ranges change in the diff above, but PCIe still didn't
+work. Here's the log:
+
+http://dannf.org/bugs/m400-6dce5aa5_reverted+tweaked_dtb.log
+
+  -dann
+  
+> 
+> > > While we shouldn't break existing DTs, the moonshot DT doesn't use
+> > > what's documented upstream. There are multiple differences compared to
+> > > what's documented. Is upstream supposed to support upstream DTs,
+> > > downstream DTs, and ACPI for XGene which is an abandoned platform with
+> > > only a handful of users?
+> >
+> > That's a fair question, though it's one of a policy, and I feel I'd be
+> > overstepping by weighing in. I suppose one option I have is to try
+> > and create and upstream a dts for these systems and modify our
+> > boot.scr to always load that over the one provided by firmware. While
+> > we do have some of these systems in production, they are being retired
+> > and replaced with newer kit over time, and it's possible we'll never
+> > need to upgrade them to a modern kernel.
+> >
+> >   -dann
