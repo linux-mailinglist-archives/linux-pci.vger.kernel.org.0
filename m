@@ -2,161 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 495EE4B2CB7
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 19:21:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2918D4B2DBD
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 20:36:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242106AbiBKSVq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Feb 2022 13:21:46 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60804 "EHLO
+        id S1352814AbiBKTfM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Feb 2022 14:35:12 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241157AbiBKSVq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Feb 2022 13:21:46 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 71E7113A;
-        Fri, 11 Feb 2022 10:21:44 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B6911042;
-        Fri, 11 Feb 2022 10:21:44 -0800 (PST)
-Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B72F33F70D;
-        Fri, 11 Feb 2022 10:21:42 -0800 (PST)
-Date:   Fri, 11 Feb 2022 18:21:37 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     robh+dt@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 10/11] PCI: mvebu: Implement support for legacy INTx
- interrupts
-Message-ID: <20220211182137.GA2492@lpieralisi>
-References: <20220105150239.9628-1-pali@kernel.org>
- <20220112151814.24361-1-pali@kernel.org>
- <20220112151814.24361-11-pali@kernel.org>
- <20220211171917.GA740@lpieralisi>
- <20220211175202.gku5pkwn5wmjo5al@pali>
+        with ESMTP id S1351824AbiBKTfK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Feb 2022 14:35:10 -0500
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2086.outbound.protection.outlook.com [40.107.237.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD4CCCF6;
+        Fri, 11 Feb 2022 11:35:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X5ZhyrkJF2yW4FvReDvtD0B+wQiyf+ZyCcUJtVSrMxjlD6AJfEvI3xBOYrKVMBN76Sbq+Vm2twx2DjJd579yAi163OX2SSh/+oK5wHHRfqETnS3dVzXx+XNm7UGmj+JJIbLmLddlCWHz9wwXjD8TMQl9OSBNorDWt29bpXe4Sb/o/Sf7/8285X4NMr1+upm+umRUYk21pzwMkm3dAk28wrejTML58PatLci9yZKr3qmaQT5pSnlOQzHey4qSqKBfgTjcPoUu3GDtQXLjYdlGZWbVXg8coaKAbzlqmUZgc0g5F/SOfowxOST/+KYeBePoM7awptFXKw+ibJZ27fS/VQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uJ6IrB2ORQe2nxPYRz7qyMCdQUrvEwbuu9iMuxKosSE=;
+ b=NfNsft/U9ImOQq1Qp867No9IuJGAseaTkVcEs8g9UQhTUnNV87iQGn/KdDHlUhm40dbBz7T3lT4ak4C07IsUESChlvUX18oyCNCvTykSjtS4TuzU9551mGnJWNoA61BGnGwD4VM5AHb8v2hT1EqNztQLs5JweSDsni2AkdaO4lOwfXc991VQpu/5ttBiuS+a7vBKdzH0A993XcFd8Ap4o/5Cdxmx14EAzeqYyLdo97hsV2Iqkv07jPJlpae8hxav6Ort6vL6Rl+/rnzZBZsJy4L8th/3y9rNK9c4Zqphbf+jrnGT8U20tnqeZTsla/dmYwqNfT4/sqAM6BTO5DOX0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uJ6IrB2ORQe2nxPYRz7qyMCdQUrvEwbuu9iMuxKosSE=;
+ b=u7/W9REHEtdLl+zgRD4RutFcT73qIgQP8om+GSB2Z3ciwtkBgE8tyew6GGlNFU9gwEXkwUs+mV+WuzY0meTWSA5ORpZm+fWZzMraTWjn3/PZ3F1xlflZjVqMVUitGo2Kv8x3VbUK8TCvirqyYsC2aQly2cZMBHYNK2mroXGLT80=
+Received: from DS7PR03CA0237.namprd03.prod.outlook.com (2603:10b6:5:3ba::32)
+ by BN9PR12MB5148.namprd12.prod.outlook.com (2603:10b6:408:119::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12; Fri, 11 Feb
+ 2022 19:35:06 +0000
+Received: from DM6NAM11FT027.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3ba:cafe::e8) by DS7PR03CA0237.outlook.office365.com
+ (2603:10b6:5:3ba::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.11 via Frontend
+ Transport; Fri, 11 Feb 2022 19:35:06 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT027.mail.protection.outlook.com (10.13.172.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4975.11 via Frontend Transport; Fri, 11 Feb 2022 19:35:06 +0000
+Received: from localhost.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Fri, 11 Feb
+ 2022 13:35:05 -0600
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>
+CC:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "Lukas Wunner" <lukas@wunner.de>, <Alexander.Deucher@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v3 00/12] Overhaul `is_thunderbolt`
+Date:   Fri, 11 Feb 2022 13:32:38 -0600
+Message-ID: <20220211193250.1904843-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220211175202.gku5pkwn5wmjo5al@pali>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 975a67b0-121d-4efc-6eb1-08d9ed959b6e
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5148:EE_
+X-Microsoft-Antispam-PRVS: <BN9PR12MB5148677497D5619531AB1A3BE2309@BN9PR12MB5148.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Sz9UVeGsqg67N4LX4cS/N4lj9FXNxVQhKDd+8XAw+8dnU/V3h6KaVwwRwdFLQ3zUgzKFU8ip+/HamXn+j3laTfsiCJRkZ6kVLcqc/gRGLUbOsodRqkXvmResqP+l9ABukS8fvxCSEwZGYbHbzJTbiWEV7n6CyLlP654wvImGJxsJtoYiDmCwGjVqqVXUzaQXsNTBvqBm/l8MDuoRXQCH49ycOglDKTiDUqM66gg5h0OAS5fk+heoFMfU469ISr3R7qGkavmtNxF1omL1dWbDvraXDtRxRF45eS6GHPYJmOzvB7lBXqKt78Z14ad5uNOIfYUetkDBpfrhdSw19Kn+wFrzo9MbWyU8mQQwDE1PM8KVR7WBD83UF7t8EPbbc8Qmy186lQTADFAScJboGltZwbdbu8s/662oQ/m3xUoc3OQ1D3Grtsr6G/qXZmK+izPwnLy1qKqtPkibYp21s0b2M6BXz7luW7NuegBUuDYdRoBT4huQIN+LVWH6rWDDjnA5zxY6zlqIGho+7lvupFedSuAZvpU8/TrgY8oW8UptLR3yY4iFWp84WkXQcPZnIt6Ld8rDzu94CIUCfbd25SPwy4KBUKdxK+FkCznSm/5R1EXS7snrjhWwOAqI/hdZUsqcXsx+up9e/FWGS27vZcmOW9t34upJfMScw5WUegHef5AZxhkhlVDktRL5VJ8hujxoG3Q3mCmW5vgLeBYlIdFL77ayijhFSwV1SEVmSiYT/Wk=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(16526019)(186003)(2616005)(5660300002)(26005)(356005)(81166007)(36860700001)(2906002)(6666004)(1076003)(7416002)(36756003)(508600001)(47076005)(426003)(336012)(110136005)(70206006)(4326008)(86362001)(44832011)(40460700003)(316002)(70586007)(8676002)(82310400004)(8936002)(54906003)(83380400001)(81973001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2022 19:35:06.2157
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 975a67b0-121d-4efc-6eb1-08d9ed959b6e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT027.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5148
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 11, 2022 at 06:52:02PM +0100, Pali Rohár wrote:
+Various drivers in the kernel use `is_thunderbolt` or
+`pci_is_thunderbolt_attached` to designate behaving differently
+from a device that is internally in the machine. This relies upon checks
+for a specific capability only set on Intel controllers.
 
-[...]
+Non-Intel USB4 designs should also match this designation so that they
+can be treated the same regardless of the host they're connected to.
 
-> > > @@ -1121,6 +1247,21 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
-> > >  		port->io_attr = -1;
-> > >  	}
-> > >  
-> > > +	/*
-> > > +	 * Old DT bindings do not contain "intx" interrupt
-> > > +	 * so do not fail probing driver when interrupt does not exist.
-> > > +	 */
-> > > +	port->intx_irq = of_irq_get_byname(child, "intx");
-> > > +	if (port->intx_irq == -EPROBE_DEFER) {
-> > > +		ret = port->intx_irq;
-> > > +		goto err;
-> > > +	}
-> > > +	if (port->intx_irq <= 0) {
-> > > +		dev_warn(dev, "%s: legacy INTx interrupts cannot be masked individually, "
-> > > +			      "%pOF does not contain intx interrupt\n",
-> > > +			 port->name, child);
-> > 
-> > Here you end up with a new warning on existing firmware. Is it
-> > legitimate ? I would remove the dev_warn().
-> 
-> I added this warning in v2 because Marc wanted it.
-> 
-> Should I (again) remove it in v3?
+As part of adding the generic USB4 controller code, it was realized that
+`is_thunderbolt` and `pcie_is_thunderbolt_attached` have been overloaded.
 
-No, I asked a question and gave an opinion, I appreciate Marc's concern
-so leave it (ie not everyone running a new kernel with new warnings on
-existing firmware would be happy - maybe it is a good way of forcing a
-firmware upgrade, you will tell me).
+Instead migrate to using removable attribute from device core.
 
-Lorenzo
+Changes from v2->v3:
+- Add various tags for patches that haven't changed from v2->v3
+- Add new patches for Mika's suggestions:
+  * Moving Apple Thunderbolt D3 declaration into quirks
+  * Detect PCIe root port used for PCIe tunneling on integrated controllers
+    using `usb4-host-interface`
+  * Detect PCIe root port used for PCIe tunneling on discrete controllers
+    using the USB4 DVSEC specification
 
-> > Rob certainly has more insightful advice on this.
-> > 
-> > Thanks,
-> > Lorenzo
-> > 
-> > > +	}
-> > > +
-> > >  	reset_gpio = of_get_named_gpio_flags(child, "reset-gpios", 0, &flags);
-> > >  	if (reset_gpio == -EPROBE_DEFER) {
-> > >  		ret = reset_gpio;
-> > > @@ -1317,6 +1458,7 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
-> > >  
-> > >  	for (i = 0; i < pcie->nports; i++) {
-> > >  		struct mvebu_pcie_port *port = &pcie->ports[i];
-> > > +		int irq = port->intx_irq;
-> > >  
-> > >  		child = port->dn;
-> > >  		if (!child)
-> > > @@ -1344,6 +1486,22 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
-> > >  			continue;
-> > >  		}
-> > >  
-> > > +		if (irq > 0) {
-> > > +			ret = mvebu_pcie_init_irq_domain(port);
-> > > +			if (ret) {
-> > > +				dev_err(dev, "%s: cannot init irq domain\n",
-> > > +					port->name);
-> > > +				pci_bridge_emul_cleanup(&port->bridge);
-> > > +				devm_iounmap(dev, port->base);
-> > > +				port->base = NULL;
-> > > +				mvebu_pcie_powerdown(port);
-> > > +				continue;
-> > > +			}
-> > > +			irq_set_chained_handler_and_data(irq,
-> > > +							 mvebu_pcie_irq_handler,
-> > > +							 port);
-> > > +		}
-> > > +
-> > >  		/*
-> > >  		 * PCIe topology exported by mvebu hw is quite complicated. In
-> > >  		 * reality has something like N fully independent host bridges
-> > > @@ -1448,6 +1606,7 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
-> > >  
-> > >  	for (i = 0; i < pcie->nports; i++) {
-> > >  		struct mvebu_pcie_port *port = &pcie->ports[i];
-> > > +		int irq = port->intx_irq;
-> > >  
-> > >  		if (!port->base)
-> > >  			continue;
-> > > @@ -1458,7 +1617,17 @@ static int mvebu_pcie_remove(struct platform_device *pdev)
-> > >  		mvebu_writel(port, cmd, PCIE_CMD_OFF);
-> > >  
-> > >  		/* Mask all interrupt sources. */
-> > > -		mvebu_writel(port, 0, PCIE_MASK_OFF);
-> > > +		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
-> > > +
-> > > +		/* Clear all interrupt causes. */
-> > > +		mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
-> > > +
-> > > +		if (irq > 0)
-> > > +			irq_set_chained_handler_and_data(irq, NULL, NULL);
-> > > +
-> > > +		/* Remove IRQ domains. */
-> > > +		if (port->intx_irq_domain)
-> > > +			irq_domain_remove(port->intx_irq_domain);
-> > >  
-> > >  		/* Free config space for emulated root bridge. */
-> > >  		pci_bridge_emul_cleanup(&port->bridge);
-> > > -- 
-> > > 2.20.1
-> > > 
+Changes from v1->v2:
+ - Add Alex's tag to first patch
+ - Move lack of command completion into a quirk (Lukas)
+ - Drop `is_thunderbolt` attribute and `pci_is_thunderbolt_attached` and
+   use device core removable attribute instead
+ - Adjust all consumers of old attribute to use removable
+
+Note: this spans USB/DRM/platform-x86/PCI trees.
+As a majority of the changes are in PCI, it should probably come through
+that tree if possible.
+
+Mario Limonciello (12):
+  thunderbolt: move definition of PCI_CLASS_SERIAL_USB_USB4
+  PCI: Move `is_thunderbolt` check for lack of command completed to a
+    quirk
+  PCI: Move check for old Apple Thunderbolt controllers into a quirk
+  PCI: Drop the `is_thunderbolt` attribute from PCI core
+  PCI: Detect root port of internal USB4 devices by
+    `usb4-host-interface`
+  PCI: Explicitly mark USB4 NHI devices as removable
+  PCI: Set ports for discrete USB4 controllers appropriately
+  drm/amd: drop the use of `pci_is_thunderbolt_attached`
+  drm/nouveau: drop the use of `pci_is_thunderbolt_attached`
+  drm/radeon: drop the use of `pci_is_thunderbolt_attached`
+  platform/x86: amd-gmux: drop the use of `pci_is_thunderbolt_attached`
+  PCI: drop `pci_is_thunderbolt_attached`
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |  2 +-
+ drivers/gpu/drm/amd/amdgpu/nbio_v2_3.c  |  2 +-
+ drivers/gpu/drm/nouveau/nouveau_vga.c   |  4 +-
+ drivers/gpu/drm/radeon/radeon_device.c  |  4 +-
+ drivers/gpu/drm/radeon/radeon_kms.c     |  2 +-
+ drivers/pci/hotplug/pciehp_hpc.c        |  6 +--
+ drivers/pci/pci-acpi.c                  | 10 ++++
+ drivers/pci/pci.c                       | 12 +++--
+ drivers/pci/pci.h                       |  5 ++
+ drivers/pci/probe.c                     | 55 ++++++++++++++-----
+ drivers/pci/quirks.c                    | 70 +++++++++++++++++++++++++
+ drivers/platform/x86/apple-gmux.c       |  2 +-
+ drivers/thunderbolt/nhi.h               |  2 -
+ include/linux/pci.h                     | 25 +--------
+ include/linux/pci_ids.h                 |  3 ++
+ 15 files changed, 148 insertions(+), 56 deletions(-)
+
+-- 
+2.34.1
+
