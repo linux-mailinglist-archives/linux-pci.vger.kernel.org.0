@@ -2,49 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 068374B2E9C
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 21:40:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 926974B2F07
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 22:05:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234977AbiBKUkL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Feb 2022 15:40:11 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39178 "EHLO
+        id S1349386AbiBKVCz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Feb 2022 16:02:55 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230481AbiBKUkL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Feb 2022 15:40:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8891DCF2;
-        Fri, 11 Feb 2022 12:40:08 -0800 (PST)
+        with ESMTP id S231329AbiBKVCy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Feb 2022 16:02:54 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B432A5;
+        Fri, 11 Feb 2022 13:02:53 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 28B9C62023;
-        Fri, 11 Feb 2022 20:40:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DE96C340E9;
-        Fri, 11 Feb 2022 20:40:07 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D4901B82CA9;
+        Fri, 11 Feb 2022 21:02:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51B97C340E9;
+        Fri, 11 Feb 2022 21:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644612007;
-        bh=9aqXxRdl3vqUo5edo6YqbhV9C3gHFRDD/8/RSNbjZtA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Z0wCmlUU+nVsUlIwGKvapnNMfsjmR+GPJU95OXDbzd22dsP+3VF9n6NWPf69XPStx
-         UkdNpaQ82k37DQrY/JCfmq+ZN2vPDDN/Ce+hytk/qn+zy2Gp8WHuk0Izn9J5y32jqr
-         zAaUGwJD+Lh6+yJAFc8CaMCaXE1iADSx0Cb7mOg+TYC4TdhwNEr25kiQuK+Dr+a0a5
-         I6snrRGnywOJ2ZWgmUuC3sE9S4FxY9a+8ZX8oKUgkqczlLOQX0aOVVFhqjUl/0ixXd
-         gfaxSTpmEdZ40ea3qWJ+HNM0eFEUIpyWI3ez5hv98v4C30BmyQWi4wHXGVXFfl34kw
-         h+G8Kq2C41V+Q==
-Date:   Fri, 11 Feb 2022 14:40:05 -0600
+        s=k20201202; t=1644613370;
+        bh=ApT45q3g7mkRiUKpHndWjTAzQ/rKHh2xKyLJKPCYKpg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=QT6uV2oz9XTg8oBcDwpiSDNkfbOCuBDdwTQPQjrbpacmqAUuE9kRf9tTPNrr9J/Xb
+         UbdNCzO7kwyw5xX2S1c/YuKHeUr+qynZcdm/d37Ayjwwyu3gIzYnjXVncbYYI6sley
+         pzCaRuBA/J46LFhghaKiVktGCvFRv0xeimhv2bqZ2mJkYL9Br+fgk+qmD7iL/aERya
+         phT76xW8wXz/QjFyk5dBOqsp7fVv1LIzefSRor9FHR/Vkhrjy6/hK1u7QLs74eVkuK
+         tXzrpiT61ZTfJpU84aAGy1ahBx3V3Qxu5S38FQRB8ssvliOkfna8OjcnRynWZQAAxz
+         s4H9kso4K2C9Q==
+Date:   Fri, 11 Feb 2022 15:02:48 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Joey Corleone <joey.corleone@mail.ru>,
-        Sergiu Deitsch <sergiu.deitsch@gmail.com>,
-        David Spencer <dspencer577@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [GIT PULL] PCI fixes for v5.17
-Message-ID: <20220211204005.GA732009@bhelgaas>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Andreas Noever <andreas.noever@gmail.com>
+Subject: Re: [PATCH v3 01/12] thunderbolt: move definition of
+ PCI_CLASS_SERIAL_USB_USB4
+Message-ID: <20220211210248.GA734887@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20220211193250.1904843-2-mario.limonciello@amd.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,31 +66,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
+On Fri, Feb 11, 2022 at 01:32:39PM -0600, Mario Limonciello wrote:
+> This PCI class definition of the USB4 device is currently located only in
+> the thunderbolt driver.
+> 
+> It will be needed by a few other drivers for upcoming changes. Move it into
+> the common include file.
+> 
+> Acked-by: Alex Deucher <alexander.deucher@amd.com>
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
+I would change the subject to:
 
-are available in the Git repository at:
+  PCI: Add USB4 class definition
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.17-fixes-4
+because this seems like more of a PCI thing than a Thunderbolt thing,
+but either way:
 
-for you to fetch changes up to 075b7d363c675ef7fa03918881caeca3458e2a96:
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-  Revert "PCI/portdrv: Do not setup up IRQs if there are no users" (2022-02-11 14:16:11 -0600)
-
-N.B. This has been in linux-next for a couple days as b139e2632409
-("Revert "PCI/portdrv: Do not setup up IRQs if there are no users""),
-but I amended that commit to add more info to the commit log.
-
-----------------------------------------------------------------
-PCI fixes:
-
-  - Revert a commit that reduced the number of IRQs used but resulted in
-    interrupt storms (Bjorn Helgaas)
-
-----------------------------------------------------------------
-Bjorn Helgaas (1):
-      Revert "PCI/portdrv: Do not setup up IRQs if there are no users"
-
- drivers/pci/pcie/portdrv_core.c | 47 +++++++++++++++--------------------------
- 1 file changed, 17 insertions(+), 30 deletions(-)
+> ---
+>  drivers/thunderbolt/nhi.h | 2 --
+>  include/linux/pci_ids.h   | 1 +
+>  2 files changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thunderbolt/nhi.h b/drivers/thunderbolt/nhi.h
+> index 69083aab2736..79e980b51f94 100644
+> --- a/drivers/thunderbolt/nhi.h
+> +++ b/drivers/thunderbolt/nhi.h
+> @@ -81,6 +81,4 @@ extern const struct tb_nhi_ops icl_nhi_ops;
+>  #define PCI_DEVICE_ID_INTEL_TGL_H_NHI0			0x9a1f
+>  #define PCI_DEVICE_ID_INTEL_TGL_H_NHI1			0x9a21
+>  
+> -#define PCI_CLASS_SERIAL_USB_USB4			0x0c0340
+> -
+>  #endif
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index aad54c666407..61b161d914f0 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -116,6 +116,7 @@
+>  #define PCI_CLASS_SERIAL_USB_OHCI	0x0c0310
+>  #define PCI_CLASS_SERIAL_USB_EHCI	0x0c0320
+>  #define PCI_CLASS_SERIAL_USB_XHCI	0x0c0330
+> +#define PCI_CLASS_SERIAL_USB_USB4	0x0c0340
+>  #define PCI_CLASS_SERIAL_USB_DEVICE	0x0c03fe
+>  #define PCI_CLASS_SERIAL_FIBER		0x0c04
+>  #define PCI_CLASS_SERIAL_SMBUS		0x0c05
+> -- 
+> 2.34.1
+> 
