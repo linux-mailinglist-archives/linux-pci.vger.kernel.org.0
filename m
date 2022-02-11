@@ -2,50 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7211D4B301C
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 23:08:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC25E4B3028
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Feb 2022 23:11:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353943AbiBKWGc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Feb 2022 17:06:32 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38928 "EHLO
+        id S1353983AbiBKWKr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Feb 2022 17:10:47 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345929AbiBKWGc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Feb 2022 17:06:32 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2074.outbound.protection.outlook.com [40.107.237.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C8A6C72;
-        Fri, 11 Feb 2022 14:06:29 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CmItb8t9IqecKnWN4sSx0Wto8uIu4yyDCjTSvAVadeUzDiuHNZ9tw+yjXEq8K530hsaLbOXXVIr1hZGAOF1aSEGrqA+CjcbN0mnA6JJ/k9THd3YaESS4mAEqMXaQNirZOiJdzUdhJU94RNZ1FcLhZcAVYavPaHsbW4x+jqsFNA2BWVfmxVHbId2mQoDP3caLU6eYIjC1K/bsqGY4cu5cpvsgf8bbmWVrzsLUJnms0FSpHPOuMrlzw+IDwLEMV8o0e0GkW1rLaFKjlqdpunRm64ZxPDIY/i/U8120ynVg9Or+hNCH5X5mYkahatAn5SYqPfQWs3mmSebe5GEHmGtbZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rCm5eEFZ9xsi/2YQJiAUzW//rClESadSCQ5rl0ZeYGM=;
- b=Mc7X2LAZyGzcRly9cUSplHLseEinModjCX7EPfFx1YIe+oVV/wM4p9d7x6fRM1AFonYpuYUwTtgZ8mU6bcW8ZJ3y//u6FF99LF76+SKSLYrj1uqQZjRS89a8/5r3M/gHNKx43oL+SjA30OFfEbUKLU27wFZDLl03fZdegO0RzwYcja3+v3jnKAOGd2IR6NSu5JREfuy2hbT9Nni9LZ6uaDk6ecTtNbBdv/XZ16/T4ct2dMVMkcQ5aiS8wHNvLzGVxlQvR4KqjyJAKoMWNpuD8cO1GQb6Zag/DPrrOi1tFKBl6EfDJoXyHzVNyrLl6iPs2U8cr4Wyh3Z46d+No+ZPQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rCm5eEFZ9xsi/2YQJiAUzW//rClESadSCQ5rl0ZeYGM=;
- b=CusewDAXOv7e7PqlxrVQfCIKPvslBwAH60eBLrmmucL64vWbyniG4is6t2KNabwuWFQ7u6Ta6gUZU7ZuE4/OMbYxdl5k4gs0+8g3jClVsiUAbnCeR2TjH6ACUj9Tx8tPyPKeI3mq0PTphzGL3ffUsJYh5J9p0hHMYAOhrbWuI3c=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
- by CY4PR1201MB0136.namprd12.prod.outlook.com (2603:10b6:910:1a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.16; Fri, 11 Feb
- 2022 22:06:26 +0000
-Received: from BL1PR12MB5157.namprd12.prod.outlook.com
- ([fe80::42f:534d:e82:b59f]) by BL1PR12MB5157.namprd12.prod.outlook.com
- ([fe80::42f:534d:e82:b59f%4]) with mapi id 15.20.4951.019; Fri, 11 Feb 2022
- 22:06:23 +0000
-Message-ID: <9d19c3f0-e5da-c9e5-d192-b5db88353888@amd.com>
-Date:   Fri, 11 Feb 2022 16:06:20 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH v3 03/12] PCI: Move check for old Apple Thunderbolt
- controllers into a quirk
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        with ESMTP id S1353972AbiBKWKq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Feb 2022 17:10:46 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9338DCF9;
+        Fri, 11 Feb 2022 14:10:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2FB42612C3;
+        Fri, 11 Feb 2022 22:10:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C337C340E9;
+        Fri, 11 Feb 2022 22:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644617443;
+        bh=F4zwECnYSIoYTo6u15HaW+7XtQkIsH4vBQQc4HAroWo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uwNq4p9W6mrbvgi+RLhhV7zKAfRJ8EtC+4WUxSuPZMShyV/VJTHn6w++7hiePD12o
+         HsWflg4eWX4NGfjWWAuGPKlFafA8Jitk3rf/5iE6vNygI4m0VOF3ijn+yDoD5HK9jf
+         4h8HFg1bVqxctiAieWR5VHYSsJ15hD8E3qx0RuGtrFcDBKa+v346FXCE9zmzzCjCPU
+         ke196VEecIRc5JmgGNc69Q5ReVSePpF2ByphPelHv6Tz/aHz7nRBQVycdNtvnwoIFJ
+         j63KwN7h8LNME9v7/JfGJxWPxOmRTxzzIATtQ4MvtH7ttsOh2Os2+nnaCGvlEyVI8y
+         oZK0Tu66HNcNw==
+Date:   Fri, 11 Feb 2022 16:10:41 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mario Limonciello <mario.limonciello@amd.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
@@ -60,263 +48,121 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Yehezkel Bernat <YehezkelShB@gmail.com>,
         Alexander.Deucher@amd.com, Lukas Wunner <lukas@wunner.de>,
         Andreas Noever <andreas.noever@gmail.com>
-References: <20220211213508.GA736191@bhelgaas>
-From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <20220211213508.GA736191@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BL1PR13CA0024.namprd13.prod.outlook.com
- (2603:10b6:208:256::29) To BL1PR12MB5157.namprd12.prod.outlook.com
- (2603:10b6:208:308::15)
+Subject: Re: [PATCH v3 07/12] PCI: Set ports for discrete USB4 controllers
+ appropriately
+Message-ID: <20220211221041.GA738039@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4a25fd8c-d4e3-4bce-90c8-08d9edaabddc
-X-MS-TrafficTypeDiagnostic: CY4PR1201MB0136:EE_
-X-Microsoft-Antispam-PRVS: <CY4PR1201MB013632F53E55D2C5F0149CBFE2309@CY4PR1201MB0136.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DXhZC6vBJTW3EzG/TqM5O5Wk6qeHFNt/NhshB8bjttSUO/B9kv1ypKDMCbUKRiaWNPEKUpXzQCxIZVVv693zhTTauwDAjUtlRsR1+YNM5l1w2QE6h1vuxOodXm0Rphy5uCaTJjm5k4CJmZ/VP94MzcK/Szdxg0elEbvo94af6B7qDQ3ohrFWQReMv2fjRpIeZdaoS0eKS0swYaxwrwiE97YH+hcH0qYDAr9/TazJA2QReiVg+I6b+f+85ARtKuYP6wkQHvekBskB8HiG4u3BX/e0i9Lm2hvt5kLzP1BCYcimZmni3mVdn5FZ8JRZphkAyRYtgQfz1wq0h2bf0fXVl5ShJV0IJOwGAaoOdJQUgIOJ5Awb0Flnei2sQi94mZYT/plugpVQPfptOnQ5tYYuRfzlsF8Ct50w74l7rQa1YCpMYDMDBDdgnzfyb45caUXcm3caxr2/lGS2OfCI2GR3fizBYx6YJIqM3eHvwq+1Wk8dt3xkL2ClQlgGhBkcrcf2/axpzUq6BHI7CnBfaUsZaUaHQdr4dED6K8pdqtyc/p+fGRiiS6Jp5r0B8HMY0xV7d1ad1FQRbTNNFTJZRlO4IuJ7vKf3yLmLMNwUIKLCFRbgIsLDdMTp8GtGljGwq/V9qGbRoOuePfe+LJjFcrbMZcoGNGHYudXYoG+sTnOZFwhrrSBUE2qHgEBFJRn8q/cUPnCelcrM47+/tSTeD4Ct7aAcr+p9vPJsDOnBFWDeiMk6R81D0aYB9uiVc/LEreab0SqCJLGiDBcECBoBWTGNtg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(47660400002)(36756003)(66556008)(38100700002)(2906002)(8676002)(31686004)(53546011)(6512007)(6506007)(19627235002)(508600001)(316002)(54906003)(83380400001)(66476007)(186003)(6486002)(26005)(7416002)(5660300002)(2616005)(4326008)(8936002)(6916009)(66946007)(86362001)(31696002)(46800400005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OWQyNmFKYlNhdkZrR0NvN3lCemVvUzduRDVncGFMc3VTVzE1Yk5jQ25WaE92?=
- =?utf-8?B?ZzZaNy84U1dYSlNHaVJFSHgzcjk5blE0VXQvY3orWnEwVkpJY2NQZ2E1WFp0?=
- =?utf-8?B?VkdCdSt6ZmNpcmNKcGJiUXZ6QXVVbmpaMUx4Y1REcjIzQlFSbGRGQklMdzha?=
- =?utf-8?B?K3RVM1JJVGRBWDA2OE5PY2lJcFVMR0Ywa1JmQVZoSlNKZWo0eEdPeWVHbSt4?=
- =?utf-8?B?RmtOdzJRYTQ5bFQvQ1l4WjdaRGxjelA0M1pqb0UzMTVYdkVCUi9ZaDdDQzF5?=
- =?utf-8?B?b00ycFVqaDdqcU1ldjhRdi95eUdBbXhIUG0vYzFZQXlxZHlYTFBiUW13dis1?=
- =?utf-8?B?R3VBTjV1MjRhaHJkb0FQSlIyQktFYnkyTXQ3dVBIQnpjOHltOUZhbUJnMTBD?=
- =?utf-8?B?Z2IvMm1jOG1iKzFhNWIvb2wwWTNzZzZ3YW4yQnhSUEdHb2tDK2EvVEp5eHZk?=
- =?utf-8?B?UExJT3ZUVW5RUjVtOEhvc0lKNzRNSXROeUlzdDRVc2NaZ2RZWXFnME5LMHE4?=
- =?utf-8?B?eG4vN0JjWTdnNTFCaDdnbCtCbkhqckN5MEh2d1JTWkJxV1JTRlR0SlBFOGlt?=
- =?utf-8?B?Yi94Zks3bmp4MmxuQThMUjhwTWhMU00rU2dscG9uekhOeXN0RXdxeFA4OXht?=
- =?utf-8?B?WWh1c2JReDNNcTlTSmRKelRTMkZPOVdkaGdoVlhQeTBRU0pFSFRvYWJGWVVP?=
- =?utf-8?B?LzRQaTRTRTMrOW5zK2hhclVDeXh0TGM2WVMwZE50R3ozYzNXM3NjY0Fjc3VU?=
- =?utf-8?B?eVFUU3RlSHVlc3dCSFkwK1BGeHEwQmoxZEYzalJuTUxZcTdlNS9ZVnp5SkxL?=
- =?utf-8?B?L2lFa3JITU4yZDFMUHlBNGNWNDlpeHVuN2puU0dHUE1tUHVCUWU4WmQ1SXBr?=
- =?utf-8?B?SWN2aHhTR011U01Fejg0ajdnQ05oU1ZraFpUUlFJb29BU3plZUFSR3hlcEFP?=
- =?utf-8?B?VERSOHprbGdSd200ZDZwUGd6ck05YUxmNk5tdy9IYzNYNTNjVmk4SEFldHpl?=
- =?utf-8?B?RkZRQi92ZDJWL2djaEpMS3N1RFJNaC9RUFh3U1pFNWUxLzkwa0p2UWljSXlQ?=
- =?utf-8?B?ckREamhjbVBnQk1SemxWVW1HQzhQTFZtRzlkaWQzTkV3dTNRZ3Y5M1AyaHU3?=
- =?utf-8?B?NXMxblA1K21zTHR6aisvVGJ2UzduaXY3eWVHTmtqMGtJUGZpcTZEYWRFcDBS?=
- =?utf-8?B?NGJHOHJOc2g3bmZ6WDVRQndyUE1qWmNUakhuSDI2Sk9jZ0h4dFBoV0c5UDBO?=
- =?utf-8?B?YThyV2ZDUlRqbFVsRTdFQmVFMGZRUmUxNjF3b0xneWpGRTE2VG84VElOd0ox?=
- =?utf-8?B?K3BBZ25ncjdVTGJNbzcvUElLT0RleDBaekFibmtaUUJFUUNzdENmaDNTbXRl?=
- =?utf-8?B?VDBDdXNwSVNUUk01NnZUajY2YmgraGZ3WlZHSFZVVEo2M1loOUo3ZTBCcmpU?=
- =?utf-8?B?R0hRb2JRRWhhMHpqTEpYbitpK25teUUvaXhvaVlPa3oydUVTWDQxb1NPNEty?=
- =?utf-8?B?MW1FY1pVOG1Cc08vS0ZEeC8rdmQ3dGthcUx3UTBJSFlTekNMeCt6d0RqbnlQ?=
- =?utf-8?B?N2U2U2luNE5QTW5EVFovWmdVblh3aWNpa1hRWWxicXB3WlZrQnkreStrbUJo?=
- =?utf-8?B?djh4R1lzZFNZY05EMmRwTkFQcHc0M3VEMjhreGF4L1hBRFdrd0YxbTlqa0VJ?=
- =?utf-8?B?SituSEpGMUdRWTJZM0liOUFiOWxhUWRUQWNjdCszZVdiTUhRRlpaUUd5eFdn?=
- =?utf-8?B?cEUreGNLMFI0YjRxSnJLTFl4TUNleWsxdE5iZkZjTGx3dDUxUzlxU1FDd3BW?=
- =?utf-8?B?Skk5TWR1MlRNbUhoa2xEREJCN1BpWERxZ2lqWXdveDJYME9uM2lvamJhM3k2?=
- =?utf-8?B?eWcwQVRUTjdCMkhYOWdFWWNzQ0VtK2dDTURHWUhCMEpwMUFpMWdEVTA1ajYx?=
- =?utf-8?B?ZGdRVitOcmhYeTZwV0RpMjRIUEhEeVFRM3hqUlJzbEQybWo4RktPcWtkUllZ?=
- =?utf-8?B?ckFHVlB5SS96YWhnNEhhci9tQVhNWGJFazN2QWR2a2p5NE5OYjFCbGJ2ZFc1?=
- =?utf-8?B?bDJQeVVzTkhiOWpRSlF6R0d3WkVFV3QxM1pOVjdZdTl1ZXhwVGhEMHFmUkxj?=
- =?utf-8?B?VGgzejYyMTkrMUoxc1lFdFovdWZXd001QmhxK0pjOFR3c1d1d1AybEc0cXRT?=
- =?utf-8?Q?3A0f3fSwZHN3igJnsOTWYf4=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a25fd8c-d4e3-4bce-90c8-08d9edaabddc
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2022 22:06:23.6301
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GWHY40afzUpbdiZb8Nwiaw/vCv1+qg/blVc1L7+/PTbUmjbheWuX89AFAJo7loII/g+Kolg0ug4si5KsEdu0fA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0136
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220211193250.1904843-8-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/11/2022 15:35, Bjorn Helgaas wrote:
-> On Fri, Feb 11, 2022 at 01:32:41PM -0600, Mario Limonciello wrote:
->> `pci_bridge_d3_possible` currently checks explicitly for a Thunderbolt
->> controller to indicate that D3 is possible.  As this is used solely
->> for older Apple systems, move it into a quirk that enumerates across
->> all Intel TBT controllers.
->>
->> Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/pci/pci.c    | 12 +++++-----
->>   drivers/pci/quirks.c | 53 ++++++++++++++++++++++++++++++++++++++++++++
->>   2 files changed, 60 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 9ecce435fb3f..5002e214c9a6 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -1064,7 +1064,13 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
->>   	if (pci_use_mid_pm())
->>   		return false;
->>   
->> -	return acpi_pci_bridge_d3(dev);
->> +	if (acpi_pci_bridge_d3(dev))
->> +		return true;
->> +
->> +	if (device_property_read_bool(&dev->dev, "HotPlugSupportInD3"))
->> +		return true;
+Make the subject specific, not just "appropriately."  I think you're
+marking something *removable*, so include that.
+
+On Fri, Feb 11, 2022 at 01:32:45PM -0600, Mario Limonciello wrote:
+> Discrete USB4 controllers won't have ACPI nodes specifying which
+> PCIe or XHCI port they are linked with.
 > 
-> Why do we need this?  acpi_pci_bridge_d3() already looks for
-> "HotPlugSupportInD3".
+> In order to set the removable attribute appropriately, use the
+> USB4 DVSEC extended capabability set on these root ports to determine
+> if they are located on a discrete USB4 controller.
 
-The Apple machines don't have ACPI companion devices that specify this 
-property.
+s/capabability/capability/
 
-I guess this probes a different question; can 
-`device_property_read_bool` be used in `acpi_pci_bridge_d3` instead of:
-
-	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
-				   ACPI_TYPE_INTEGER, &obj) < 0)
-		return false;
-
-	return obj->integer.value == 1;
-
-If so, then yeah this can probably be simplified.
-
+> Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Link: https://usb.org/sites/default/files/USB4%20Specification%2020211116.zip
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/probe.c     | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/pci_ids.h |  2 ++
+>  2 files changed, 35 insertions(+)
 > 
->> +	return false;
->>   }
->>   
->>   /**
->> @@ -2954,10 +2960,6 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
->>   		if (pci_bridge_d3_force)
->>   			return true;
->>   
->> -		/* Even the oldest 2010 Thunderbolt controller supports D3. */
->> -		if (bridge->is_thunderbolt)
->> -			return true;
->> -
->>   		/* Platform might know better if the bridge supports D3 */
->>   		if (platform_pci_bridge_d3(bridge))
->>   			return true;
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 6d3c88edde00..aaf098ca7d54 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -3756,6 +3756,59 @@ DECLARE_PCI_FIXUP_SUSPEND_LATE(PCI_VENDOR_ID_INTEL,
->>   			       quirk_apple_poweroff_thunderbolt);
->>   #endif
->>   
->> +/* Apple machines as old as 2010 can do D3 with Thunderbolt controllers, but don't specify
->> + * it in the ACPI tables
-> 
-> Wrap to fit in 80 columns like the rest of the file.  Also use the:
-> 
->    /*
->     * comment ...
->     */
-> 
-> style if it's more than one line.
-> 
-> I don't think "as old as 2010" is helpful here -- I assume 2010 is
-> there because there *were* no Thunderbolt controllers before 2010, but
-> the code doesn't check any dates, so we basically assume all Apple
-> machines of any age with the listed controllers can do this.
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 67ca33188cba..1ed3e24db11e 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -25,6 +25,8 @@
+>  #define CARDBUS_LATENCY_TIMER	176	/* secondary latency timer */
+>  #define CARDBUS_RESERVE_BUSNR	3
+>  
+> +#define PCI_DVSEC_ID_USB4	0x23
+> +
+>  static struct resource busn_resource = {
+>  	.name	= "PCI busn",
+>  	.start	= 0,
+> @@ -1590,6 +1592,36 @@ static void set_pcie_untrusted(struct pci_dev *dev)
+>  		dev->untrusted = true;
+>  }
+>  
+> +static bool pci_is_discrete_usb4(struct pci_dev *dev)
+> +{
+> +	int dvsec_val = 0, pos;
+> +	u32 hdr;
+> +
+> +	/* USB4 spec says vendors can use either */
+> +	pos = pci_find_dvsec_capability(dev,
+> +					PCI_VENDOR_ID_INTEL,
+> +					PCI_DVSEC_ID_USB4);
+> +	if (pos) {
+> +		dvsec_val = 0x06;
+> +	} else {
+> +		pos = pci_find_dvsec_capability(dev,
+> +						PCI_VENDOR_ID_USB_IF,
+> +						PCI_DVSEC_ID_USB4);
+> +		if (pos)
+> +			dvsec_val = 0x01;
+> +	}
+> +	if (!dvsec_val)
+> +		return false;
+> +
+> +	pci_read_config_dword(dev, pos + PCI_DVSEC_HEADER2, &hdr);
+> +	if ((hdr & GENMASK(15, 0)) != dvsec_val)
+> +		return false;
+> +	/* this port is used for either NHI/PCIe tunnel/USB tunnel */
 
-The old comment was saying that, which is where I got it from.  Yeah, 
-I'll update it.
+Capitalize comment like others in this file.
 
-> 
->> + */
->> +static void quirk_apple_d3_thunderbolt(struct pci_dev *dev)
->> +{
->> +	struct property_entry properties[] = {
->> +		PROPERTY_ENTRY_BOOL("HotPlugSupportInD3"),
->> +		{},
->> +	};
->> +
->> +	if (!x86_apple_machine)
->> +		return;
-> 
-> The current code doesn't check x86_apple_machine, so this needs some
-> justification.  How do I know this works the same as before?
+Spec reference would be helpful, too.  I don't know how to verify
+any of these values.  The Link: above is great, but name, revision,
+section number would be even better.
 
-Mika and Lucas were saying the only reason for this codepath was Apple 
-machines in the first place, which is where this idea came from.
+> +	if (hdr & GENMASK(18, 16))
+> +		return true;
+> +	return false;
+> +}
+> +
+>  static void pci_set_removable(struct pci_dev *dev)
+>  {
+>  	struct pci_dev *parent = pci_upstream_bridge(dev);
+> @@ -1612,6 +1644,7 @@ static void pci_set_removable(struct pci_dev *dev)
+>  	if (vsec ||
+>  	    dev->class == PCI_CLASS_SERIAL_USB_USB4 ||
+>  	    pci_acpi_is_usb4(dev) ||
+> +	    pci_is_discrete_usb4(dev) ||
+>  	    (parent &&
+>  	    (parent->external_facing || dev_is_removable(&parent->dev))))
+>  		dev_set_removable(&dev->dev, DEVICE_REMOVABLE);
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 61b161d914f0..271326e058b9 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -3097,4 +3097,6 @@
+>  
+>  #define PCI_VENDOR_ID_NCUBE		0x10ff
+>  
+> +#define PCI_VENDOR_ID_USB_IF		0x1EC0
 
-Something specifically relevant is that the Apple machines use a SW 
-connection manager, whereas everyone else up until USB4 devices use a 
-firmware based connection manager with varying behaviors on generation 
-(ICM).
+This file is supposed to be sorted by Vendor ID.  PCI_VENDOR_ID_XEN,
+PCI_VENDOR_ID_OCZ, and PCI_VENDOR_ID_NCUBE screwed up, but you can put
+USB_IF in the correct spot.
 
-> 
->> +
->> +	if (device_create_managed_software_node(&dev->dev, properties, NULL))
->> +		pci_warn(dev, "could not add HotPlugSupportInD3 property");
->> +}
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_LIGHT_RIDGE,
->> +			quirk_apple_d3_thunderbolt);
-> 
-> The current code assumes *all* Thunderbolt controllers support D3, so
-> it would assume a controller released next year would support D3, but
-> this code would assume the opposite.  Are we supposed to add
-> everything to this list, or do newer machines supply
-> HotPlugSupportInD3, or ...?
-
-This quirk is intended specifically for Apple, which has stopped making 
-Intel machines with Intel TBT controllers.
-
-So I don't believe the list should be growing any more, if anything it 
-might need to shrink if I got too many models that weren't actually in 
-Apple products.  Lucas probably needs to confirm that.
-
-> 
-> How did you derive this list?  (Question for the commit log and/or
-> comments here.)
-
-I went to pci_ids.h and got all the Thunderbolt controllers listed there.
-
-> 
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_EAGLE_RIDGE,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_LIGHT_PEAK,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_2C,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_PORT_RIDGE,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_REDWOOD_RIDGE_2C_NHI,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_REDWOOD_RIDGE_2C_BRIDGE,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_REDWOOD_RIDGE_4C_NHI,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_REDWOOD_RIDGE_4C_BRIDGE,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_NHI,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_BRIDGE,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_NHI,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_BRIDGE,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_2C_NHI,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_2C_BRIDGE,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_NHI,
->> +			quirk_apple_d3_thunderbolt);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_BRIDGE,
->> +			quirk_apple_d3_thunderbolt);
->> +
->>   /*
->>    * Following are device-specific reset methods which can be used to
->>    * reset a single function if other methods (e.g. FLR, PM D0->D3) are
->> -- 
->> 2.34.1
->>
-
+It's not 100%, but most entries use lower-case hex.
