@@ -2,94 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F3994B55F2
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 17:20:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DBDE4B55F8
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 17:21:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356273AbiBNQTf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Feb 2022 11:19:35 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60520 "EHLO
+        id S241001AbiBNQVB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Feb 2022 11:21:01 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356271AbiBNQTc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 11:19:32 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A59D5FF0B;
-        Mon, 14 Feb 2022 08:19:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 31AD0614B9;
-        Mon, 14 Feb 2022 16:19:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49D2AC340E9;
-        Mon, 14 Feb 2022 16:19:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644855560;
-        bh=th0fXVELAWxtqvQc+7VEAegBNHdOQZZG+5CClQGCCpE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bqYjuZS4Gx1PswtxTOd7iMkJKhY53kJsJKAhg3zt1mqrw54HrKBm/UFSojXyU55BV
-         n2IHZqNGpVtPu4xxLMSmjecC6c/FoNBVl0rscVcnButFTqBj1y7oAym5TswVj7Q3Xx
-         gwWrRRwixzJT7nQGlwsPzsRBV+0K3nIoS8O/TnqFBJZXpBQVwNTH1sBpgCoSYcatfc
-         BM8JS5r3eSrB8RUvjFdB1WTU5NbI21uXLL3o5HTfdGiUYx518rPXZ7/na8IRFePVjg
-         udEqaGXyBn6Rt1a4oXE3+CQaJy9y2g6zyhWeJNOe4FIEII8iy2ShWPIbwKUTdV1qFD
-         /KC7vj4kNNmgg==
-Date:   Mon, 14 Feb 2022 10:19:18 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v8 00/10] vgaarb: Rework default VGA device selection
-Message-ID: <20220214161918.GA11115@bhelgaas>
+        with ESMTP id S1356308AbiBNQUt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 11:20:49 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98AED42EE7;
+        Mon, 14 Feb 2022 08:20:41 -0800 (PST)
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Jy8Zq6z3gz67Xv4;
+        Tue, 15 Feb 2022 00:20:19 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Mon, 14 Feb 2022 17:20:39 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Mon, 14 Feb
+ 2022 16:20:38 +0000
+Date:   Mon, 14 Feb 2022 16:20:37 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <patches@lists.linux.dev>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>, <nvdimm@lists.linux.dev>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 08/14] cxl/region: HB port config verification
+Message-ID: <20220214162037.0000104b@Huawei.com>
+In-Reply-To: <20220128002707.391076-9-ben.widawsky@intel.com>
+References: <20220128002707.391076-1-ben.widawsky@intel.com>
+        <20220128002707.391076-9-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b0a06a30-f479-df9f-980c-b789f0f26ce9@linux.intel.com>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml718-chm.china.huawei.com (10.201.108.69) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 04:46:33PM +0100, Maarten Lankhorst wrote:
-> Hey,
->  
-> Op 31-01-2022 om 23:23 schreef Bjorn Helgaas:
-> > [+to Maarten, Maxime, Thomas; beginning of thread:
-> > https://lore.kernel.org/r/20220106000658.243509-1-helgaas@kernel.org]
-> >
-> > On Wed, Jan 05, 2022 at 06:06:48PM -0600, Bjorn Helgaas wrote:
-> >> From: Bjorn Helgaas <bhelgaas@google.com>
-> >>
-> >> Current default VGA device selection fails in some cases because
-> >> part of it is done in the vga_arb_device_init() subsys_initcall,
-> >> and some arches enumerate PCI devices in pcibios_init(), which
-> >> runs *after* that.
-> >
-> > Where are we at with this series?  Is there anything I can do to
-> > move it forward?
+On Thu, 27 Jan 2022 16:27:01 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
+
+> Host bridge root port verification determines if the device ordering in
+> an interleave set can be programmed through the host bridges and
+> switches.
 > 
-> I'm afraid that I don't understand the vga arbiter or the vga code
-> well enough to review.
+> The algorithm implemented here is based on the CXL Type 3 Memory Device
+> Software Guide, chapter 2.13.15. The current version of the guide does
+> not yet support x3 interleave configurations, and so that's not
+> supported here either.
 > 
-> Could you perhaps find someone who could review?
-> 
-> I see Chen wrote some patches and tested, so perhaps they could?
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
-Hi Maarten,
 
-Huacai Chen did provide his Reviewed-by (although as he noted, the
-content initially came from him anyway and my contribution was mainly
-rearranging things into separate patches for each specific case).
+> +static struct cxl_dport *get_rp(struct cxl_memdev *ep)
+> +{
+> +	struct cxl_port *port, *parent_port = port = ep->port;
+> +	struct cxl_dport *dport;
+> +
+> +	while (!is_cxl_root(port)) {
+> +		parent_port = to_cxl_port(port->dev.parent);
+> +		if (parent_port->depth == 1)
+> +			list_for_each_entry(dport, &parent_port->dports, list)
+> +				if (dport->dport == port->uport->parent->parent)
+> +					return dport;
+> +		port = parent_port;
+> +	}
+> +
+> +	BUG();
 
-Anything else we can to do help here?
+I know you mentioned you were reworking this patch set anyway, but
+I thought I'd give some quick debugging related feedback.
 
-Bjorn
+When running against a single switch in qemu (patches out once
+things are actually working), I hit this BUG()
+printing dev_name for the port->uport->parent->parent gives
+pci0000:0c but the matches are sort against
+0000:0c:00.0 etc
+
+So looks like one too many levels of parent in this case at least.
+
+The other bug I haven't chased down yet is that if we happen
+to have downstream ports of the switch with duplicate ids
+(far too easy to do in QEMU as port_num is an optional
+parameter for switch DS ports) it's detected and the probe fails
+- but then it tries again and we get an infinite loop of new
+ports being created and failing to probe...
+I'll get back this one once I have it working with
+a valid switch config.
+
+Jonathan
+
+> +	return NULL;
+> +}
