@@ -2,103 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6950D4B4D36
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 12:11:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DEB34B4D38
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 12:11:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349097AbiBNKqs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Feb 2022 05:46:48 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38800 "EHLO
+        id S1349170AbiBNKtP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Feb 2022 05:49:15 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349022AbiBNKpc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 05:45:32 -0500
-Received: from office.oderland.com (office.oderland.com [91.201.60.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F07574DC1
-        for <linux-pci@vger.kernel.org>; Mon, 14 Feb 2022 02:07:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=oderland.se
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:Cc:To:Subject:From:
-        MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=DBcZFOZFOzAo0487ORwdyo67faVNaoS7BuODPg0NpSc=; b=G2iBx9UAIY7r4NBbcXyTDLChbw
-        Zgw1vyY89SDtdMDHqsdCOLiyD0ju+cpr2blUyln1I+Lq8jk+Pugfx0BpX9MHsjvZGwlvDOY8EdrcN
-        jGT5YBha3W4hhznMoEJ4ehSglNSQ0Mbplhw5Ws2ylCjociLp6FRMi3kOkO3pHh8eBlAtoVvEMFKlT
-        pNH6WgHV7uuMd1VUyrROPx8wiCaTbNyzotCCp5sYdwznYq0yp4Q6OceiB1Nb56b5Uk+DtayFC/NpD
-        uSpOYKz3sPZBukIkgAMdmvd7rCyiCiXWueogd/tWwZjkfgr3VCdmLV1E7dsuX3F10b7HqVqhgSNZj
-        uBVcE0Wg==;
-Received: from [193.180.18.160] (port=46784 helo=[10.137.0.14])
-        by office.oderland.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <josef@oderland.se>)
-        id 1nJYGq-00FJ2L-Q4; Mon, 14 Feb 2022 11:07:48 +0100
-Message-ID: <d818f9c9-a432-213e-4152-eaff3b7da52e@oderland.se>
-Date:   Mon, 14 Feb 2022 11:07:47 +0100
+        with ESMTP id S1348982AbiBNKtE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 05:49:04 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD49BDA45
+        for <linux-pci@vger.kernel.org>; Mon, 14 Feb 2022 02:11:55 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id l9so8541169plg.0
+        for <linux-pci@vger.kernel.org>; Mon, 14 Feb 2022 02:11:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TZC2zqnsGdYKa6ED3IQ9bDrMCL7iNxaV9fJORDhdXXQ=;
+        b=s68lMju5iEdQddCWAGgZ9FK5zw+gevcdYhSzhov5HJEUNazg4BACE2jOSbbjNAH8n8
+         ov/bykvpBolzaTfjrMelg9os0BIQ6zc4fjqcOJwemaUTLeQlBx+u0ZbCB9dtqEMe0Koi
+         u1iRhdu/LIjK31Rha7+WK2zTd0fLVqmBj5egOxiVqitgVA9Z/f845dcFrYPOXGiO/0DC
+         zaWyAQ3AmN3bGDAlRph7fyH8yqIo6ARx0/fg4ebruIc4f5KmE53x4vUCLFcTwaSY4vKe
+         TP6B0Mm0CNydDy0bLgCLGSk1nUL8eb7D+O1pj+Dk3r2DZNyVN7EzchZ+K26LTnNpwTrR
+         9XVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TZC2zqnsGdYKa6ED3IQ9bDrMCL7iNxaV9fJORDhdXXQ=;
+        b=aOwvaEtC09U3C8e5LMXRlNN4+szo1Qlbpg3lDZJzkzA45lFW/Gf/PDWg+QvZdzwNHH
+         6iVoQrPvIlOzGTTuDYp/a9JVItht4w/jssSMR0Mp5vtd8mGH1DjMJ33nSudG/oURaxrl
+         DYXYr3LGjjl9qo1as8vl0ijU/SDyP/sofzoaKlP1KOfFGFb6Cnc08F1sMwymNW5M1wy5
+         HbqNg1F3NC1WklNi01N86nsq62e0h4WnAy/1tr3BiXenzrM+ebvgtGRM0ovw7GvJcIjk
+         rlvTDusTXOUR5SXvdWf4Z0PFbTkYQZ5ayYBsRspjNICJkafoYQata7TZpOblHqH94GIx
+         9KYg==
+X-Gm-Message-State: AOAM533Ml5Aud5OJ2T26vsgX4JvEY+QW3+6gl1iI63IE5ThXi+tKQXPL
+        4jl8Ba9O07Nfr76+LpPTJb8U
+X-Google-Smtp-Source: ABdhPJwZs3ndm10YO39LbYVx1RxPAULC6DZ65ngqdzYWV2fW1AmJXxHQgwkikX0c8E6JiybbRc52fw==
+X-Received: by 2002:a17:90b:1c0e:: with SMTP id oc14mr8152443pjb.25.1644833515150;
+        Mon, 14 Feb 2022 02:11:55 -0800 (PST)
+Received: from thinkpad ([2409:4072:817:5a6f:3104:62c0:1941:5033])
+        by smtp.gmail.com with ESMTPSA id np15sm4359544pjb.44.2022.02.14.02.11.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Feb 2022 02:11:54 -0800 (PST)
+Date:   Mon, 14 Feb 2022 15:41:45 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [RFC PATCH 4/5] misc: pci_endpoint_test: Add support to pass
+ flags for buffer allocation
+Message-ID: <20220214101145.GL3494@thinkpad>
+References: <20220126195043.28376-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220126195043.28376-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:97.0) Gecko/20100101
- Thunderbird/97.0
-From:   Josef Johansson <josef@oderland.se>
-Subject: [PATCH v2] PCI/MSI: Correct use of can_mask in msi_add_msi_desc()
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     xen-devel <xen-devel@lists.xenproject.org>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - office.oderland.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - oderland.se
-X-Get-Message-Sender-Via: office.oderland.com: authenticated_id: josjoh@oderland.se
-X-Authenticated-Sender: office.oderland.com: josjoh@oderland.se
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220126195043.28376-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Josef Johansson <josef@oderland.se>
+On Wed, Jan 26, 2022 at 07:50:42PM +0000, Lad Prabhakar wrote:
+> By default GFP_KERNEL flag is used for buffer allocation in read, write
+> and copy test and then later mapped using streaming DMA api. But on
+> Renesas RZ/G2{EHMN} platforms using the default flag causes the tests to
+> fail. Allocating the buffers from DMA zone (using the GFP_DMA flag) make
+> the test cases to pass.
+> 
+> To handle such case add flags as part of struct pci_endpoint_test_data
+> so that platforms can pass the required flags based on the requirement.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> Hi All,
+> 
+> This patch is based on the conversation where switching to streaming
+> DMA api causes read/write/copy tests to fail on Renesas RZ/G2 platforms
+> when buffers are allocated using GFP_KERNEL.
+> 
+> [0] https://www.spinics.net/lists/linux-pci/msg92385.html
+> 
+> Cheers,
+> Prabhakar
+> ---
+>  drivers/misc/pci_endpoint_test.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 0a00d45830e9..974546992c5e 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -117,6 +117,7 @@ struct pci_endpoint_test {
+>  	enum pci_barno test_reg_bar;
+>  	size_t alignment;
+>  	size_t dmac_data_alignment;
+> +	gfp_t flags;
 
-PCI/MSI: Correct use of can_mask in msi_add_msi_desc()
-    
-Commit 71020a3c0dff4 ("PCI/MSI: Use msi_add_msi_desc()") modifies
-the logic of checking msi_attrib.can_mask, without any reason.
-    
-This commits restores that logic.
+gfp_flags? Since this is used for allocation.
 
-Fixes: 71020a3c0dff4 ("PCI/MSI: Use msi_add_msi_desc()")
-Signed-off-by: Josef Johansson <josef@oderland.se>
+Thanks,
+Mani
 
----
-v2: Changing subject line to fit earlier commits.
-
-Trying to fix a NULL BUG in the NVMe MSIX implementation I stumbled upon this code,
-which ironically was what my last MSI patch resulted into.
-
-I don't see any reason why this logic was change, and it did not break anything
-correcting the logic.
-
-CC xen-devel since it very much relates to Xen kernel (via pci_msi_ignore_mask).
----
-
-diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-index c19c7ca58186..146e7b9a01cc 100644
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -526,7 +526,7 @@ static int msix_setup_msi_descs(struct pci_dev *dev, void __iomem *base,
- 		desc.pci.msi_attrib.can_mask = !pci_msi_ignore_mask &&
- 					       !desc.pci.msi_attrib.is_virtual;
- 
--		if (!desc.pci.msi_attrib.can_mask) {
-+		if (desc.pci.msi_attrib.can_mask) {
- 			addr = pci_msix_desc_addr(&desc);
- 			desc.pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
- 		}
-
---
-2.31.1
-
+>  	const char *name;
+>  };
+>  
+> @@ -125,6 +126,7 @@ struct pci_endpoint_test_data {
+>  	size_t alignment;
+>  	int irq_type;
+>  	size_t dmac_data_alignment;
+> +	gfp_t flags;
+>  };
+>  
+>  static inline u32 pci_endpoint_test_readl(struct pci_endpoint_test *test,
+> @@ -381,7 +383,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+>  		goto err;
+>  	}
+>  
+> -	orig_src_addr = kzalloc(size + alignment, GFP_KERNEL);
+> +	orig_src_addr = kzalloc(size + alignment, test->flags);
+>  	if (!orig_src_addr) {
+>  		dev_err(dev, "Failed to allocate source buffer\n");
+>  		ret = false;
+> @@ -414,7 +416,7 @@ static bool pci_endpoint_test_copy(struct pci_endpoint_test *test,
+>  
+>  	src_crc32 = crc32_le(~0, src_addr, size);
+>  
+> -	orig_dst_addr = kzalloc(size + alignment, GFP_KERNEL);
+> +	orig_dst_addr = kzalloc(size + alignment, test->flags);
+>  	if (!orig_dst_addr) {
+>  		dev_err(dev, "Failed to allocate destination address\n");
+>  		ret = false;
+> @@ -518,7 +520,7 @@ static bool pci_endpoint_test_write(struct pci_endpoint_test *test,
+>  		goto err;
+>  	}
+>  
+> -	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
+> +	orig_addr = kzalloc(size + alignment, test->flags);
+>  	if (!orig_addr) {
+>  		dev_err(dev, "Failed to allocate address\n");
+>  		ret = false;
+> @@ -619,7 +621,7 @@ static bool pci_endpoint_test_read(struct pci_endpoint_test *test,
+>  		goto err;
+>  	}
+>  
+> -	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
+> +	orig_addr = kzalloc(size + alignment, test->flags);
+>  	if (!orig_addr) {
+>  		dev_err(dev, "Failed to allocate destination address\n");
+>  		ret = false;
+> @@ -788,6 +790,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>  	test->alignment = 0;
+>  	test->pdev = pdev;
+>  	test->irq_type = IRQ_TYPE_UNDEFINED;
+> +	test->flags = GFP_KERNEL;
+>  
+>  	if (no_msi)
+>  		irq_type = IRQ_TYPE_LEGACY;
+> @@ -799,6 +802,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>  		test->alignment = data->alignment;
+>  		irq_type = data->irq_type;
+>  		test->dmac_data_alignment = data->dmac_data_alignment;
+> +		test->flags = data->flags;
+>  	}
+>  
+>  	init_completion(&test->irq_raised);
+> @@ -947,23 +951,27 @@ static const struct pci_endpoint_test_data default_data = {
+>  	.test_reg_bar = BAR_0,
+>  	.alignment = SZ_4K,
+>  	.irq_type = IRQ_TYPE_MSI,
+> +	.flags = GFP_KERNEL,
+>  };
+>  
+>  static const struct pci_endpoint_test_data am654_data = {
+>  	.test_reg_bar = BAR_2,
+>  	.alignment = SZ_64K,
+>  	.irq_type = IRQ_TYPE_MSI,
+> +	.flags = GFP_KERNEL,
+>  };
+>  
+>  static const struct pci_endpoint_test_data j721e_data = {
+>  	.alignment = 256,
+>  	.irq_type = IRQ_TYPE_MSI,
+> +	.flags = GFP_KERNEL,
+>  };
+>  
+>  static const struct pci_endpoint_test_data renesas_rzg2x_data = {
+>  	.test_reg_bar = BAR_0,
+>  	.irq_type = IRQ_TYPE_MSI,
+>  	.dmac_data_alignment = 8,
+> +	.flags = GFP_KERNEL | GFP_DMA,
+>  };
+>  
+>  static const struct pci_device_id pci_endpoint_test_tbl[] = {
+> -- 
+> 2.25.1
+> 
