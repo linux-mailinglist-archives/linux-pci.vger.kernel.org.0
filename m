@@ -2,53 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58E5D4B5516
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 16:46:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6E5A4B5590
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 17:06:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238595AbiBNPqk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Feb 2022 10:46:40 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40982 "EHLO
+        id S1356121AbiBNQGI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Feb 2022 11:06:08 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356013AbiBNPqj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 10:46:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A0D726D;
-        Mon, 14 Feb 2022 07:46:31 -0800 (PST)
+        with ESMTP id S1356123AbiBNQGI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 11:06:08 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FFAE49F97;
+        Mon, 14 Feb 2022 08:06:00 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B148C61313;
-        Mon, 14 Feb 2022 15:46:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD385C340EB;
-        Mon, 14 Feb 2022 15:46:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5B37DB811D8;
+        Mon, 14 Feb 2022 16:05:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B92C340E9;
+        Mon, 14 Feb 2022 16:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644853590;
-        bh=ypkwro1J7DlbYw5w/3uL9p/1TnF6Qdw1cTOGQOtdg1I=;
+        s=k20201202; t=1644854758;
+        bh=n+vq94HfU6rfmXgl/cSDbf4YdmG3NAKMuYXhVK2OHso=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=c0U/vNvgxNlRhTzZnEFFCR9aId6hPQBmgaHLTo+QXeG9M6se3Uo3eBniwaQ5IiqMC
-         TqBW6QLwfKfh9+oZArZB9VUlt39D81a5wwq3y6zev029QTe93ZzrvhGkX7JwrXw5tR
-         1IgBc+cGCNur3T+1wnnfN2wB4ygvoBqDnEZzJnS074vM6NQuYfTsDmSJyJ+8SKm7FN
-         bzVUHj3r7qK3x4Bzp0He4EGuy7mgnIAvs0UD2Z6qxb/+j/X9jDdsL5ztXSSYF8e8GZ
-         5cwlpktvcqcYGIXeW1KR22mhuke38YbW7r+LFhiLgggPbMJ9+vnWMOmJ4zZBp1F5hp
-         AeN0j8m9ygFig==
-Date:   Mon, 14 Feb 2022 09:46:28 -0600
+        b=JKD4aMf6G6NMoMHnydRADTZ/HkASxbT0EbypcNf4tE78AaTO9XPZi1Sjc+OQeBKW3
+         OgmaVhXXlxc7qBNdjvPNYyfThdIW/jqaEqL9zdNOSfChbQpaEi5p6VdSgmrwx55fCn
+         Gr+rpOXXEj0zp23Ho+W7zRiL4rKYMiouqbDoLP+q1/MusNBjbxURdqIRhL/lTyvTJO
+         YCLzytW30se3eOkYbVsvFLWXGMFJHN6m0mlw6tvgbdftqpeKxHqrfr87/Zw/gwAz/4
+         0TZ0D+XxRElfpKUXTCtWSkoiZxIoJlb8jx2oXsJZ6pozBE/djdJ8TDgzSQSWw95JbG
+         03DeTlwo63c2Q==
+Date:   Mon, 14 Feb 2022 10:05:56 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@vger.kernel.org, bhelgaas@google.comv,
+        linux-pci@vger.kernel.org, paul.walmsley@sifive.com,
+        greentime.hu@sifive.com, david.abdurachmanov@gmail.com,
         Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Jan Palus <jpalus@fastmail.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [PATCH] PCI: mvebu: Fix merge conflicts in commit 91a8d79fc797
-Message-ID: <20220214154628.GA8830@bhelgaas>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 1/2] PCI: fu740: fix finding GPIOs
+Message-ID: <20220214160556.GA9253@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220214110228.25825-1-pali@kernel.org>
+In-Reply-To: <20220214082144.1176084-2-ben.dooks@codethink.co.uk>
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -59,67 +55,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 12:02:28PM +0100, Pali Rohár wrote:
-> Commit 91a8d79fc797 ("PCI: mvebu: Fix configuring secondary bus of PCIe
-> Root Port via emulated bridge") was incorrectly applied from mailing list
-> patch [1] to the linux git repository [2] probably due to resolving merge
-> conflicts incorrectly. Fix it now.
-> 
-> [1] - https://lore.kernel.org/r/20211125124605.25915-12-pali@kernel.org
-> [2] - https://git.kernel.org/linus/91a8d79fc797
-> 
-> Fixes: 91a8d79fc797 ("PCI: mvebu: Fix configuring secondary bus of PCIe Root Port via emulated bridge")
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215540
-> Reported-by: Jan Palus <jpalus@fastmail.com>
-> Signed-off-by: Pali Rohár <pali@kernel.org>
+[+cc Rob for possible DT/kernel match issue,
+Lorenzo (native host bridge driver maintainer)]
 
-Applied to for-linus for v5.17 with the following commit log, thanks!
+s/fix finding/Fix finding/ (in subject)
+Or even better, say something specific about the DT properties in
+question, e.g., look for "reset" instead of "reset-gpios".
 
-commit c49ae619905e ("PCI: mvebu: Fix device enumeration regression")
-Author: Pali Rohár <pali@kernel.org>
-Date:   Mon Feb 14 12:02:28 2022 +0100
+On Mon, Feb 14, 2022 at 08:21:43AM +0000, Ben Dooks wrote:
+> The calls to devm_gpiod_get_optional() have the -gpios at the end of
+> the name. This means the pcie driver is not finding the necessary
+> reset or power GPOOs to allow the PCIe devices on the SiFive Unmatched
+> boards.
 
-    PCI: mvebu: Fix device enumeration regression
+s/pcie/PCIe/
+s/GPOOs/GPIOs/
+"to allow the PCIe devices ...?"  Something is missing from this
+sentence.  "To allow the devices <to do what>"?  Or maybe the driver
+needs these GPIOs to power up the PCIe devices?
 
-    Jan reported that on Turris Omnia (Armada 385), no PCIe devices were
-    detected after upgrading from v5.16.1 to v5.16.3 and identified the cause
-    as the backport of 91a8d79fc797 ("PCI: mvebu: Fix configuring secondary bus
-    of PCIe Root Port via emulated bridge"), which appeared in v5.17-rc1.
+I guess the implication is that the code looks for "reset-gpios" and
+"pwren-gpios", but the DT contains "reset" and "pwren"?
 
-    91a8d79fc797 was incorrectly applied from mailing list patch [1] to the
-    linux git repository [2] probably due to resolving merge conflicts
-    incorrectly. Fix it now.
+But both Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+and arch/riscv/boot/dts/sifive/fu740-c000.dtsi actually do contain
+"reset-gpios" and "pwren-gpios".
 
-    [1] https://lore.kernel.org/r/20211125124605.25915-12-pali@kernel.org
-    [2] https://git.kernel.org/linus/91a8d79fc797
+If we *do* want to change the code, please change the error messages
+to match.
 
-    [bhelgaas: commit log]
-    BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215540
-    Fixes: 91a8d79fc797 ("PCI: mvebu: Fix configuring secondary bus of PCIe Root Port via emulated bridge")
-    Link: https://lore.kernel.org/r/20220214110228.25825-1-pali@kernel.org
-    Link: https://lore.kernel.org/r/20220127234917.GA150851@bhelgaas
-    Reported-by: Jan Palus <jpalus@fastmail.com>
-    Signed-off-by: Pali Rohár <pali@kernel.org>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> This has not been a noted bug as the PCIe probe from u-boot has been
+> required to get the PCIe working due to other issues with the system
+> setup. It could have been broken since the driver inclusion, and not
+> been noticed as it is not necessary for the driver to funciton.
 
+s/u-boot/U-Boot/
+s/funciton/function/
+
+Please add a line about what the connection between U-Boot and this
+issue is, e.g., maybe U-Boot powers up the devices, so we wouldn't
+notice the kernel's inability to do so?
+
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 > ---
->  drivers/pci/controller/pci-mvebu.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/pci/controller/dwc/pcie-fu740.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> index 71258ea3d35f..f8e82c5e2d87 100644
-> --- a/drivers/pci/controller/pci-mvebu.c
-> +++ b/drivers/pci/controller/pci-mvebu.c
-> @@ -1329,7 +1329,8 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
->  		 * indirectly via kernel emulated PCI bridge driver.
->  		 */
->  		mvebu_pcie_setup_hw(port);
-> -		mvebu_pcie_set_local_dev_nr(port, 0);
-> +		mvebu_pcie_set_local_dev_nr(port, 1);
-> +		mvebu_pcie_set_local_bus_nr(port, 0);
->  	}
+> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
+> index 00cde9a248b5..842b7202b96e 100644
+> --- a/drivers/pci/controller/dwc/pcie-fu740.c
+> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
+> @@ -259,11 +259,11 @@ static int fu740_pcie_probe(struct platform_device *pdev)
+>  		return PTR_ERR(afp->mgmt_base);
 >  
->  	pcie->nports = i;
+>  	/* Fetch GPIOs */
+> -	afp->reset = devm_gpiod_get_optional(dev, "reset-gpios", GPIOD_OUT_LOW);
+> +	afp->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+>  	if (IS_ERR(afp->reset))
+>  		return dev_err_probe(dev, PTR_ERR(afp->reset), "unable to get reset-gpios\n");
+>  
+> -	afp->pwren = devm_gpiod_get_optional(dev, "pwren-gpios", GPIOD_OUT_LOW);
+> +	afp->pwren = devm_gpiod_get_optional(dev, "pwren", GPIOD_OUT_LOW);
+>  	if (IS_ERR(afp->pwren))
+>  		return dev_err_probe(dev, PTR_ERR(afp->pwren), "unable to get pwren-gpios\n");
+>  
 > -- 
-> 2.20.1
+> 2.34.1
 > 
