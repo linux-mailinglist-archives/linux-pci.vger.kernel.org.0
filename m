@@ -2,49 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6E5A4B5590
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 17:06:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 087374B55D4
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 17:12:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356121AbiBNQGI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Feb 2022 11:06:08 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50814 "EHLO
+        id S233391AbiBNQMV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Feb 2022 11:12:21 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356123AbiBNQGI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 11:06:08 -0500
+        with ESMTP id S230109AbiBNQMU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 11:12:20 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FFAE49F97;
-        Mon, 14 Feb 2022 08:06:00 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3BE5C20;
+        Mon, 14 Feb 2022 08:12:12 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5B37DB811D8;
-        Mon, 14 Feb 2022 16:05:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B92C340E9;
-        Mon, 14 Feb 2022 16:05:57 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E8114B80E6C;
+        Mon, 14 Feb 2022 16:12:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60642C340E9;
+        Mon, 14 Feb 2022 16:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644854758;
-        bh=n+vq94HfU6rfmXgl/cSDbf4YdmG3NAKMuYXhVK2OHso=;
+        s=k20201202; t=1644855129;
+        bh=4dZnpaRwK5MeVsN5xFfeGIeYJIqAH3iT0DDVOoXtb+E=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JKD4aMf6G6NMoMHnydRADTZ/HkASxbT0EbypcNf4tE78AaTO9XPZi1Sjc+OQeBKW3
-         OgmaVhXXlxc7qBNdjvPNYyfThdIW/jqaEqL9zdNOSfChbQpaEi5p6VdSgmrwx55fCn
-         Gr+rpOXXEj0zp23Ho+W7zRiL4rKYMiouqbDoLP+q1/MusNBjbxURdqIRhL/lTyvTJO
-         YCLzytW30se3eOkYbVsvFLWXGMFJHN6m0mlw6tvgbdftqpeKxHqrfr87/Zw/gwAz/4
-         0TZ0D+XxRElfpKUXTCtWSkoiZxIoJlb8jx2oXsJZ6pozBE/djdJ8TDgzSQSWw95JbG
-         03DeTlwo63c2Q==
-Date:   Mon, 14 Feb 2022 10:05:56 -0600
+        b=P/uzoknyecs665CyWr1d4eKDhbkZge2DaygEM9f4eKRnMcKubLFy2YflibYkrJvRu
+         dEzxPxTtrLHzBFcVunZLACIbCbkiEN+SdC5UqE7cMdEegLv+ypePJ271tRJN0w/pKS
+         RkvwZD5qNXN5t2DU/t1Ob8jT83IkIGB5MvDSxO3lhM/QPh1Eywhtlf7FaUvG7rlOVL
+         QY0HYcxWlfAYQOtMqEJIXcsNwi1csQosngGTr9el6mYZDltoDV5LsQVlofjVbDeO6P
+         X/6f8ThShIgU4C9mIl/+Oy3b9XkZH2+JVPGdFXnc+OKKz+51F9/k3v5FqUb1/zE4xd
+         1QYs9APpa3OeA==
+Date:   Mon, 14 Feb 2022 10:12:07 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Ben Dooks <ben.dooks@codethink.co.uk>
 Cc:     linux-kernel@vger.kernel.org, bhelgaas@google.comv,
         linux-pci@vger.kernel.org, paul.walmsley@sifive.com,
-        greentime.hu@sifive.com, david.abdurachmanov@gmail.com,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 1/2] PCI: fu740: fix finding GPIOs
-Message-ID: <20220214160556.GA9253@bhelgaas>
+        greentime.hu@sifive.com, david.abdurachmanov@gmail.com
+Subject: Re: [PATCH 2/2] PCI: fu740: Force gen1 for initial device probe
+Message-ID: <20220214161207.GA10207@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220214082144.1176084-2-ben.dooks@codethink.co.uk>
+In-Reply-To: <20220214082144.1176084-3-ben.dooks@codethink.co.uk>
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,70 +53,78 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rob for possible DT/kernel match issue,
-Lorenzo (native host bridge driver maintainer)]
+On Mon, Feb 14, 2022 at 08:21:44AM +0000, Ben Dooks wrote:
+> The fu740 dw pcie core does not probe devices without this fix from
+> U-boot. The fix claims to set the link-speed to gen1 to get the probe
+> to work. As this is a copy from U-boot, the commentary is assumed to
+> be correct.
 
-s/fix finding/Fix finding/ (in subject)
-Or even better, say something specific about the DT properties in
-question, e.g., look for "reset" instead of "reset-gpios".
-
-On Mon, Feb 14, 2022 at 08:21:43AM +0000, Ben Dooks wrote:
-> The calls to devm_gpiod_get_optional() have the -gpios at the end of
-> the name. This means the pcie driver is not finding the necessary
-> reset or power GPOOs to allow the PCIe devices on the SiFive Unmatched
-> boards.
-
+s/dw/DW/ (to match below)
 s/pcie/PCIe/
-s/GPOOs/GPIOs/
-"to allow the PCIe devices ...?"  Something is missing from this
-sentence.  "To allow the devices <to do what>"?  Or maybe the driver
-needs these GPIOs to power up the PCIe devices?
+s/U-boot/U-Boot/ (twice, and again below)
 
-I guess the implication is that the code looks for "reset-gpios" and
-"pwren-gpios", but the DT contains "reset" and "pwren"?
+Is there a stable URL to the place in U-Boot where this is copied
+from?
 
-But both Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-and arch/riscv/boot/dts/sifive/fu740-c000.dtsi actually do contain
-"reset-gpios" and "pwren-gpios".
-
-If we *do* want to change the code, please change the error messages
-to match.
-
-> This has not been a noted bug as the PCIe probe from u-boot has been
-> required to get the PCIe working due to other issues with the system
-> setup. It could have been broken since the driver inclusion, and not
-> been noticed as it is not necessary for the driver to funciton.
-
-s/u-boot/U-Boot/
-s/funciton/function/
-
-Please add a line about what the connection between U-Boot and this
-issue is, e.g., maybe U-Boot powers up the devices, so we wouldn't
-notice the kernel's inability to do so?
-
+> Without this in, and without U-boot starting the PCIe the Unmatched
+> board does not show any PCIe devices after the DW root port.
+> 
 > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 > ---
->  drivers/pci/controller/dwc/pcie-fu740.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pci/controller/dwc/pcie-fu740.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
-> index 00cde9a248b5..842b7202b96e 100644
+> index 842b7202b96e..19501ec8c487 100644
 > --- a/drivers/pci/controller/dwc/pcie-fu740.c
 > +++ b/drivers/pci/controller/dwc/pcie-fu740.c
-> @@ -259,11 +259,11 @@ static int fu740_pcie_probe(struct platform_device *pdev)
->  		return PTR_ERR(afp->mgmt_base);
+> @@ -177,11 +177,30 @@ static void fu740_pcie_init_phy(struct fu740_pcie *afp)
+>  	fu740_phyregwrite(1, PCIEX8MGMT_PHY_LANE3_BASE, PCIEX8MGMT_PHY_INIT_VAL, afp);
+>  }
 >  
->  	/* Fetch GPIOs */
-> -	afp->reset = devm_gpiod_get_optional(dev, "reset-gpios", GPIOD_OUT_LOW);
-> +	afp->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
->  	if (IS_ERR(afp->reset))
->  		return dev_err_probe(dev, PTR_ERR(afp->reset), "unable to get reset-gpios\n");
+> +/* This is copied from u-boot. Force system to gen1 otherwise nothing probes
+> + * as found on the SiFive Unmatched board.
+> + */
+
+s/u-boot/U-Boot/
+
+Use this comment style to match the rest of the file:
+
+  /*
+   * Comment...
+   */
+
+> +static void fu740_pcie_force_gen1(struct dw_pcie *dw, struct fu740_pcie *afp )
+> +{
+> +	unsigned val;
+> +
+> +	dw_pcie_dbi_ro_wr_en(dw);
+> +
+> +	val = dw_pcie_readl_dbi(dw, 0x70 + PCI_EXP_LNKCAP);
+> +	pr_info("%s: link-cap was %08x\n", __func__, val);
+> +	dw_pcie_writel_dbi(dw, 0x70 + PCI_EXP_LNKCAP, val | 0xf);
+> +
+> +	dw_pcie_dbi_ro_wr_dis(dw);
+> +}
+> +
+>  static int fu740_pcie_start_link(struct dw_pcie *pci)
+>  {
+>  	struct device *dev = pci->dev;
+>  	struct fu740_pcie *afp = dev_get_drvdata(dev);
 >  
-> -	afp->pwren = devm_gpiod_get_optional(dev, "pwren-gpios", GPIOD_OUT_LOW);
-> +	afp->pwren = devm_gpiod_get_optional(dev, "pwren", GPIOD_OUT_LOW);
->  	if (IS_ERR(afp->pwren))
->  		return dev_err_probe(dev, PTR_ERR(afp->pwren), "unable to get pwren-gpios\n");
->  
+> +	/* Force PCIe gen1 otherwise Unmatched board does not probe */
+> +	fu740_pcie_force_gen1(pci, afp);
+
+Is Unmatched the *only* board with this controller, i.e., do we want
+to do this for every single FU740 device?
+
+If this is an FU740 defect that will affect anything that uses it, we
+should say that, and we shouldn't call out "Unmatched" specifically.
+
+> +
+>  	/* Enable LTSSM */
+>  	writel_relaxed(0x1, afp->mgmt_base + PCIEX8MGMT_APP_LTSSM_ENABLE);
+>  	return 0;
 > -- 
 > 2.34.1
 > 
