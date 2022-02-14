@@ -2,154 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31B124B5208
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 14:44:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29AA24B5281
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 14:58:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344398AbiBNNoJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Feb 2022 08:44:09 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57188 "EHLO
+        id S1354751AbiBNN6w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Feb 2022 08:58:52 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354561AbiBNNoH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 08:44:07 -0500
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2043.outbound.protection.outlook.com [40.107.220.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A782242EE5;
-        Mon, 14 Feb 2022 05:43:59 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Azp4wlD2BfD1h34TOreFNjRJdcIJ/Ee7dDb+A784nbjMTc7dVPEkhowgkG3sGDfveILFsVXeAjX/FM4cfJLRK3LEswM22W/QgPpbbO5ua6WrP876UPzhM3mN2WlzGx+uLdovZRZSv6Rptk8aHQNWKHoX5AmBgU+Mqyp6rKfPClzv7J87AWe20lI2Rcxt+F4O2GHT0px/HJKOAZ0Uu1Gr6Mfzg5ypHyvKM5Qyps2/GqkQqldChEHOdS3qlV/1JXs73IoYYD9JZgTJ/Xymx7re+jdYPNiXxhLJi2A2+yzUx8eNXLR/Ps1rpYmAPVmJT10c/DUWDKWU8SP/bHRbaDRZAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O03nopTDZ/+eLEMXCm7PD+KUdCQvg1nId9Pcks46iCY=;
- b=JfHTBds/2lruEiFwMAzeJOkXUe2uhx5fEewKj1bpalKcRw+BGC8J/2S0csAINDwNMU49cyq6RCTnGZuq5NLcfYLUr2iWftB5xg0xkA6iNOMbAw1z6SWkCeiYLVX/1vjR98HLqFSYdshJKiePqH3GcAJduEuWL//8WQBV5zC+mEwrMCWOvD92wohm0LESdHCnynYOUxgRO+3cvLLZSPu6ihAVEITv/mmDASJKZfyy71Bb8Wr2gV8oXfSwkCm9d876hc+KfDWiX7qnY06Arpc/Y/V6pL/jMeC7oQnwpY/Sk+e53EiWjHHl/7Kq0dnbtC4tKpifZ9mhc97cXnaIi8ZmJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O03nopTDZ/+eLEMXCm7PD+KUdCQvg1nId9Pcks46iCY=;
- b=HiHXdSDlDXM6uRVEd13AdVQ3sryNOaWtFEPL8SEdhaLhvzDENKKmauGtUkTjLOQ/LSIv0+ZKycIC+Oavmpqt9lpK6qBWgbNzsDzN+dDOTFy82QdM5vDDO2Vb2paXRqSUDUr36aiacUAx2ylbSxQYf8SxA9ro622kuYNNOJAo3Fnu/LRzRnp34j82QlsIIzHGX3Ks5u0qayaid7PxEEwIkLlK5RzozoETGJSyJnafXV25gWbTU9jvA9yZBeH+hwEBss0TUn55bWgt7tvmiSb2irytsLyP/E6tBMeDdcSUKIu+rChtlGohc/2KRY2P2tLlpdZ1YNMjjwqLaeNGHqY/Ng==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by MWHPR12MB1357.namprd12.prod.outlook.com (2603:10b6:300:b::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.11; Mon, 14 Feb
- 2022 13:43:58 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3%4]) with mapi id 15.20.4975.019; Mon, 14 Feb 2022
- 13:43:58 +0000
-Date:   Mon, 14 Feb 2022 09:43:56 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 07/14] PCI: Add driver dma ownership management
-Message-ID: <20220214134356.GB929467@nvidia.com>
-References: <20220104015644.2294354-1-baolu.lu@linux.intel.com>
- <20220104015644.2294354-8-baolu.lu@linux.intel.com>
- <Ygoo/lCt/G6tWDz9@kroah.com>
- <20220214123842.GT4160@nvidia.com>
- <YgpQOmBA7QJJu+2E@kroah.com>
- <20220214131117.GW4160@nvidia.com>
- <YgpbhlPOZsLFm4It@kroah.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YgpbhlPOZsLFm4It@kroah.com>
-X-ClientProxiedBy: MN2PR01CA0063.prod.exchangelabs.com (2603:10b6:208:23f::32)
- To MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+        with ESMTP id S1354744AbiBNN6v (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 08:58:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8588DE00E
+        for <linux-pci@vger.kernel.org>; Mon, 14 Feb 2022 05:58:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644847121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+Ya79H6TqHuWzpLyZaRYnVCACWlD+bUT2wjyTYIXjjM=;
+        b=JQPh/NQjRmIkaTAev6YvgDRoS+spRWobofloLrUu2e0L35vgpuAn+rI0Ov1rM27FuQSnWH
+        CBTljNkW4+Ww5UtGwfllBHcfYs/Xt60jgGyVXa8U/3SIXy6PqMmv8xexpCmmutAgVxAUu0
+        kJEfYG7IDGX+SD8LaDWs11J5Q4Inelw=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-479-Eed55ereOgSweVX4YWi9pA-1; Mon, 14 Feb 2022 08:58:40 -0500
+X-MC-Unique: Eed55ereOgSweVX4YWi9pA-1
+Received: by mail-ej1-f69.google.com with SMTP id qa30-20020a170907869e00b006cee5e080easo823145ejc.3
+        for <linux-pci@vger.kernel.org>; Mon, 14 Feb 2022 05:58:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=+Ya79H6TqHuWzpLyZaRYnVCACWlD+bUT2wjyTYIXjjM=;
+        b=4x3fHEapgEkzyLH9EtawNZpHnXCmjru5b96Sz45AM88p9cJfM98RBuHHzBxrwXt4cT
+         c+Q+Rq8oWJmyryNgrCnMGjPx/EZc/OHwkFvRXYinPOb9YYqJr/g1OSN8mKJdl2B3GO7M
+         uzknHhhPaq8/JQ3JJHDqPz5w4oD+cPI0cTCKfIpHQSoUwNCUQGPqsMFTDkJjl4abXS8A
+         4nz2af/gE4mZL/YNQgIjt0HGk7crO0Km2eCINtSGKaVKyZbhrIc6y5CGGasgNl1c7JwT
+         6lH2LKJHnfHJa4lsZTinKXqFotf0q4nbH9p/z6Uc46IKmRt/2aaz3/QLvkD23JlEWY/c
+         xCBA==
+X-Gm-Message-State: AOAM531WDtlNz52quqGXv7hO+XbPSRJLZjGnL6zsundS71efXZLQEoW0
+        DlaK3iyJDhEUg7yeSBJN8j8oduF2LY2W2gfUKwpH3PY9AS5gsGCAO/TgqfZc0IhKDoYxymUSBPY
+        C86ihnLqRQ1Vp+Z1ZTM7x
+X-Received: by 2002:a17:907:96aa:: with SMTP id hd42mr2192646ejc.738.1644847119344;
+        Mon, 14 Feb 2022 05:58:39 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxURNMgbfRCKJBXSt75Jz56tbXNymf2Sd9gMKsH7sp+2ALu4ROL/BRxIWGui59ZQC9O1R251Q==
+X-Received: by 2002:a17:907:96aa:: with SMTP id hd42mr2192624ejc.738.1644847119058;
+        Mon, 14 Feb 2022 05:58:39 -0800 (PST)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id m7sm909736ejq.10.2022.02.14.05.58.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Feb 2022 05:58:38 -0800 (PST)
+Message-ID: <70afbdca-12ee-1106-c4b9-136c65aaa812@redhat.com>
+Date:   Mon, 14 Feb 2022 14:58:37 +0100
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 096c36bc-dcf4-4139-b93e-08d9efc00ce7
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1357:EE_
-X-Microsoft-Antispam-PRVS: <MWHPR12MB1357895DA011590F9F0FB133C2339@MWHPR12MB1357.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /a4oBX3J/cr8xIbGoOdZf/T/XAeK0tzzHvW/CNi8LRrWnqzqndvWPeMd9yfgdmeySLiO4OA81zacfXgCbHRpE9xDQOiuLbh7CWMSfJgWVQuc2P8PLiYIXn2g9krK3QMMvnGiUeLs+ksFyVsmgqguCs/645Sz3rHNeketcWm6GvMXgqIz0WcKaHB7RZse3Z3uW00Vl78BcIypOrZXO5vxukW3EKvXfUwF0Vi9US5lzUU0js3bJDZlA2yNaNE4CDKeUNAt8Kmo/ET0A6P6/QsVfnY9hlRCQdpTsucWunN7/1M0gcKEQiubjIHnFUdSl5mK5bhLpuO0PmHYEz8FXDwiKKcXqAyg41rGFksB/wO+AN0u+FlKCb2JRclkDLC3+2TghT1jPSBneAXaa+M1LONH2WQOliMHzqn3du/oVF7dOhAzVhYiFNVWWZ77/2gW5H+f0dwHPuzXxtyaREDXWgffZygX+Qcd2p/EQqz9QU6IS1urwotUBgQ4/alHLbzttZVBGnk5+AvM58O+MJuB93MyU1IkXURtlSXwM2wsV79bVSU3pH3ER53Lc9wOm0xgWekQ59htaaAO0rcU7nfOO0Bg2TVAqShIUUvd0P1FkP8eLHxxMGlnmVKDqwvdRANFQT38LlrT/+xfyUirE0RWqtRaL1DZsqPakXb70nIKIKBnyLgveP+vafJ+fvrOPiUjbVua
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2906002)(6916009)(8936002)(54906003)(8676002)(316002)(36756003)(186003)(4326008)(508600001)(6506007)(1076003)(2616005)(6486002)(26005)(6512007)(4744005)(5660300002)(7416002)(38100700002)(33656002)(66946007)(66556008)(66476007)(86362001)(27376004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DIXKOr7w9ZSMZo3oLl5sLw+lEkBd212dVinRgQZ9cjmy+ezDftrR8mttCXCr?=
- =?us-ascii?Q?3LAUmM/cQiht18sA+4KvsxcrRHCRaWiHcyU1tHc+Vhy2MAkHweGWREXkzXVV?=
- =?us-ascii?Q?LFhp2gnf1d/OMFw/rlPL0qC8Na/JZIszj/2i4rGj+2XQKRc19L7qdr471jlb?=
- =?us-ascii?Q?GhNLMgLP8aI/W2FrP1r/tIVMOwL/Tcs7FkfYyE7NNjklN8PX2ZHJSFz4jfvD?=
- =?us-ascii?Q?ovvLTZvQ9eWh066N6hcyyvQCgn1SHA+DTtlJTtCITDEZ4yMBxUyKUl/CyW2M?=
- =?us-ascii?Q?Q7c9zjyY0NUCdY0T4m+Ezwr7ga97lDPPJrPc39emdOWizckq5dooAEFdspuG?=
- =?us-ascii?Q?D+4yUYNRsq65JwkacmLYgknsjzRJX4yBzEoEfmF3ttQ5nFa/S1ZRWN5nX/ri?=
- =?us-ascii?Q?ckh1vQ98qOg4tequHfekG1ahgszeGpewtmk6HDbydKHdGohrOETGxK9BzBKi?=
- =?us-ascii?Q?thvVRSS+TfumUg5tYnolIaye8GwhxesQFngmbZeCIBSAWOA/c7p34C8PFLXX?=
- =?us-ascii?Q?tsUXX2ZOzytOkaR33NCXxmv0Q4AKx1FPgxpXBpZdU/WNEBJgOFkKGVs0K21h?=
- =?us-ascii?Q?8nVntdgRamMOFkp8X8OC4EGzF+k1WQB5zGNE3+7b6ZPRiCVQxabPoO9Pgfxc?=
- =?us-ascii?Q?+mo6Lny1XVXfnKDmDTMMWltHkqYCoAPc9qh1/TgXamHMHmDyEGr8lrSCztr2?=
- =?us-ascii?Q?y8xWYTOwaf3NEDjDvNIiQ9FYtPYBnYlXpf0BErTvgsXj3jRwgjJdn2aOpqYr?=
- =?us-ascii?Q?y8WzcgxMApsfVLB92iSLEygPd46DbMIgPlzR6rUcpD9W7xfG9oOdHwVCR0RY?=
- =?us-ascii?Q?MyQbZcxSXFSiMMWdjbk/5DAvdVx4BQkxzn2g7T3nSF+UheoABFf2ZIdC6jgq?=
- =?us-ascii?Q?435ktiUIR/buCvYgPJhAcxLgFQU+j0/JA8r3XEv0mERdBYWBsUS5PcyWhKY/?=
- =?us-ascii?Q?y/vv69EjcbBGcs6Z+b+zm5x39qq9qDnXJmRlEBgmLHI0uyHyFYDko7BeaGJs?=
- =?us-ascii?Q?VXobgDbkBbeDyePD0aklNQNcZWew7pn21CXTUcjgGDM8vvvlWiABzq8Jo38M?=
- =?us-ascii?Q?9eEG0X/9i15u+Mc0+ZyPnqxSFJMZ2tj70oCcQA5rfS8pzzBvERSH+Plnh8Kz?=
- =?us-ascii?Q?xCZbt7BkAMESlhPbB2yU5vZOUpvbPXThYbIus2A/bIAkF8qie/CC+5pWrdE0?=
- =?us-ascii?Q?IgOYXhEpnx3AAD/0zFI2rk87yNYD8B2Ed3UC0rw/yPXAI3HM91EexKdklNAB?=
- =?us-ascii?Q?V4KYkyZj5edJxcLqGMoMDZ7Wl2izBE5ENRLoqk3CFHD9c63ZDB527E6F+d2H?=
- =?us-ascii?Q?62ZTjWW58+1Lo22d80JZva6VEaIZM6aHJCxu3lh1XhHsSEsJaMm0Bpytl0E/?=
- =?us-ascii?Q?EhmXsJSgQTpNORbdvVYqP+7UInKYfDQN2SGd1vK9OCx3lLGOYEDojtMH0kYb?=
- =?us-ascii?Q?5UOPAr25PXPdvT4FrMyyFKbZkZ8y0upwVkuewTjNkjVZEXImflqCv1jxihaq?=
- =?us-ascii?Q?C3zO7HsrPPuCvO7SiveWdcPa8kIwfsJe7pH5upWVPzCaIhFjIdYZBluVJpeL?=
- =?us-ascii?Q?Ao3ayKEJ+2VN/UBF2w4=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 096c36bc-dcf4-4139-b93e-08d9efc00ce7
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2022 13:43:58.1095
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VXUKJ1U5oX6CVceQ19H5RHmurYZQlkI6xAsHD0tOlyHpDQ9AN3+/cIDQ8itehc5J
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1357
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [5.17 regression] "x86/PCI: Ignore E820 reservations for bridge
+ windows on newer systems" breaks suspend/resume
+Content-Language: en-US
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        linux-acpi <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>, x86@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>
+References: <a7ad05fe-c2ab-a6d9-b66e-68e8c5688420@redhat.com>
+ <697aaf96-ec60-4e11-b011-0e4151e714d7@redhat.com> <YgKcl9YX4HfjqZxS@lahna>
+ <02994528-aaad-5259-1774-19aeacdd18fc@redhat.com> <YgPlQ6UK3+4/yzLk@lahna>
+ <2f01e99d-e830-d03c-3a9d-30b95726cc2c@redhat.com> <YgSzNAlfgcrm8ykH@lahna>
+ <039f9e8d-6e29-0288-606a-1d298e026c97@redhat.com> <YgpcYHZ1fxnBiUjV@lahna>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <YgpcYHZ1fxnBiUjV@lahna>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 02:39:18PM +0100, Greg Kroah-Hartman wrote:
+Hi,
 
-> > A driver that sets this flag can still decide to enable the dma API on
-> > its own. eg tegra drivers do this.
+On 2/14/22 14:42, Mika Westerberg wrote:
+> Hi Hans,
 > 
-> So you are just forcing the driver to manage this all on their own, so
-> how about, "driver_managed_dma", or even shorter "managed_dma"?
+> On Mon, Feb 14, 2022 at 01:42:29PM +0100, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 2/10/22 07:39, Mika Westerberg wrote:
+>>> Hi Hans,
+>>>
+>>> On Wed, Feb 09, 2022 at 05:08:13PM +0100, Hans de Goede wrote:
+>>>> As mentioned in my email from 10 seconds ago I think a better simpler
+>>>> fix would be to just do:
+>>>>
+>>>> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
+>>>> index 9b9fb7882c20..18656f823764 100644
+>>>> --- a/arch/x86/kernel/resource.c
+>>>> +++ b/arch/x86/kernel/resource.c
+>>>> @@ -28,6 +28,10 @@ static void remove_e820_regions(struct resource *avail)
+>>>>  	int i;
+>>>>  	struct e820_entry *entry;
+>>>>  
+>>>> +	/* Only remove E820 reservations on classic BIOS boot */
+>>>> +	if (efi_enabled(EFI_MEMMAP))
+>>>> +		return;
+>>>> +
+>>>>  	for (i = 0; i < e820_table->nr_entries; i++) {
+>>>>  		entry = &e820_table->entries[i];
+>>>>  
+>>>>
+>>>> I'm curious what you think of that?
+>>>
+>>> I'm not an expert in this e820 stuff but this one looks really simple
+>>> and makes sense to me. So definitely should go with it assuming there
+>>> are no objections from the x86 maintainers.
+>>
+>> Unfortunately with this suspend/resume is still broken on the ThinkPad
+>> X1 carbon gen 2 of the reporter reporting the regression. The reporter
+>> has been kind enough to also test in EFI mode (at my request) and then
+>> the problem is back again with this patch. So just differentiating
+>> between EFI / non EFI mode is not an option.
+> 
+> Thanks for the update! Too bad that it did not solve the regression, though :(
+> 
+>> FYI, here is what I believe is the root-cause of the issue on the ThinkPad X1 carbon gen 2:
+>>
+>> The E820 reservations table has the following in both BIOS and EFI boot modes:
+>>
+>> [    0.000000] BIOS-e820: [mem 0x00000000dceff000-0x00000000dfa0ffff] reserved
+>>
+>> Which has a small overlap with:
+>>
+>> [    0.884684] pci_bus 0000:00: root bus resource [mem 0xdfa00000-0xfebfffff window]
+>>
+>> This leads to the following difference in assignments of PCI resources when honoring E820 reservations
+>>
+>> [    0.966573] pci 0000:00:1c.0: BAR 14: assigned [mem 0xdfb00000-0xdfcfffff]
+>> [    0.966698] pci_bus 0000:02: resource 1 [mem 0xdfb00000-0xdfcfffff]
+>>
+>> vs the following when ignoring E820 reservations:
+>>
+>> [    0.966850] pci 0000:00:1c.0: BAR 14: assigned [mem 0xdfa00000-0xdfbfffff]
+>> [    0.966973] pci_bus 0000:02: resource 1 [mem 0xdfa00000-0xdfbfffff]
+>>
+>> And the overlap of 0xdfa00000-0xdfa0ffff from the e820 reservations seems to be what is causing the suspend/resume issue.
+> 
+> Any idea what is using that range?
 
-Yeah, I like "driver_managed_dma" alot, it captures the entire idea
+No, no clue I'm afraid.
 
-Thanks,
-Jason
+>> ###
+>>
+>> As already somewhat discussed, I'll go and prepare this solution instead:
+>>
+>> 1. Add E820_TYPE_MMIO to enum e820_type and modify the 2 places which check for
+>>    type == reserved to treat this as reserved too, so as to not have any
+>>    functional changes there
+>>
+>> 2. Modify the code building e820 tables from the EFI memmap to use
+>>    E820_TYPE_MMIO for MMIO EFI memmap entries.
+>>
+>> 3. Modify arch/x86/kernel/resource.c: remove_e820_regions() to skip
+>>    e820 table entries with a type of E820_TYPE_MMIO,
+>>    this would actually be a functional change and should fix the
+>>    issues we are trying to fix.
+> 
+> Given the above regression, I can't think of a better way to solve this.
+
+Ack, note I'm still waiting for efi=debug output from the X1 carbon gen 2,
+so I hope that what seems to be the conflicting range is not also marked
+as EFI_MEMORY_MAPPED_IO. Otherwise things will get a bit more complicated (*)
+
+Regards,
+
+Hans
+
+*) On the systems where the EFI_MEMORY_MAPPED_IO memmap entries are causing
+issues they fully overlap the PCI bridge window, so we can use that as an
+extra check if necessary.
+
+
+
+
+> 
+
