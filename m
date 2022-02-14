@@ -2,135 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07E654B5472
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 16:19:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0C304B5468
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 16:18:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355741AbiBNPTB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Feb 2022 10:19:01 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45444 "EHLO
+        id S1355720AbiBNPSs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Feb 2022 10:18:48 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355750AbiBNPTA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 10:19:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 36C555A5BC
-        for <linux-pci@vger.kernel.org>; Mon, 14 Feb 2022 07:18:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644851931;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qtxii3fDgLz/BjfAaX9vX0zo678hl9XTBNM9+pp5Auk=;
-        b=ifqS2dm4XeI0Dt7lCwcHBP0dVJlfg1CuWCwNC0dEaPRp8yd4eC0B+kc/J/a07/J58iNbE2
-        tHlGvom/3MqJGH/17koO49TTAfjN0sf9UMHB/pGol3PX3HXLnbgk1DaEtOb+Xylpt7hnOb
-        1wcw5FIjr/0/9UReGjckU16/tIh4gts=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-499-ywGxEZJ_MfqW6Ba62kVU-A-1; Mon, 14 Feb 2022 10:18:46 -0500
-X-MC-Unique: ywGxEZJ_MfqW6Ba62kVU-A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E9C22F25;
-        Mon, 14 Feb 2022 15:18:44 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.192.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F2AD2B598;
-        Mon, 14 Feb 2022 15:18:24 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        =?UTF-8?q?Benoit=20Gr=C3=A9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC 2/2] x86/PCI: Ignore EFI memmap MMIO entries
-Date:   Mon, 14 Feb 2022 16:17:59 +0100
-Message-Id: <20220214151759.98267-3-hdegoede@redhat.com>
-In-Reply-To: <20220214151759.98267-1-hdegoede@redhat.com>
-References: <20220214151759.98267-1-hdegoede@redhat.com>
+        with ESMTP id S231397AbiBNPSr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 10:18:47 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 77C40593BC;
+        Mon, 14 Feb 2022 07:18:39 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E72F1063;
+        Mon, 14 Feb 2022 07:18:39 -0800 (PST)
+Received: from [10.57.70.89] (unknown [10.57.70.89])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 972823F70D;
+        Mon, 14 Feb 2022 07:18:35 -0800 (PST)
+Message-ID: <08e90a61-8491-acf1-ab0f-f93f97366d24@arm.com>
+Date:   Mon, 14 Feb 2022 15:18:31 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH v1 3/8] iommu: Extend iommu_at[de]tach_device() for
+ multi-device groups
+Content-Language: en-GB
+To:     Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Stuart Yoder <stuyoder@gmail.com>, rafael@kernel.org,
+        David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Will Deacon <will@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        kvm@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        iommu@lists.linux-foundation.org,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20220106022053.2406748-1-baolu.lu@linux.intel.com>
+ <20220106022053.2406748-4-baolu.lu@linux.intel.com>
+ <Ygo/eCRFnraY01WA@8bytes.org> <20220214130313.GV4160@nvidia.com>
+ <Ygppub+Wjq6mQEAX@8bytes.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <Ygppub+Wjq6mQEAX@8bytes.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Linux excludes E820 reserved addresses when allocating addresses from the
-PCI host bridge window. This behavior is needed for at least 2 reasons:
+On 2022-02-14 14:39, Joerg Roedel wrote:
+> On Mon, Feb 14, 2022 at 09:03:13AM -0400, Jason Gunthorpe wrote:
+>> Groups should disappear into an internal implementation detail, not be
+>> so prominent in the API.
+> 
+> Not going to happen, IOMMU groups are ABI and todays device assignment
+> code, including user-space, relies on them.
+> 
+> Groups implement and important aspect of hardware IOMMUs that the API
+> can not abstract away: That there are devices which share the same
+> request-id.
+> 
+> This is not an issue for devices concerned by iommufd, but for legacy
+> device assignment it is. The IOMMU-API needs to handle both in a clean
+> API, even if it means that drivers need to lookup the sub-group of a
+> device first.
+> 
+> And I don't see how a per-device API can handle both in a device-centric
+> way. For sure it is not making it 'device centric but operate on groups
+> under the hood'.
 
-1. Some BIOS-es contain a bug where they add addresses which map to system
-RAM in the PCI host bridge window returned by the ACPI _CRS method, see
-commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
-space").
+Arguably, iommu_attach_device() could be renamed something like 
+iommu_attach_group_for_dev(), since that's effectively the semantic that 
+all the existing API users want anyway (even VFIO at the high level - 
+the group is the means for the user to assign their GPU/NIC/whatever 
+device to their process, not the end in itself). That's just a lot more 
+churn.
 
-2. At least the Lenovo X1 carbon gen 2 BIOS has an overlap between an
-E820 reserved range and the ACPI _CRS providing the PCI bridge windows:
- BIOS-e820: [mem 0x00000000dceff000-0x00000000dfa0ffff] reserved
- pci_bus 0000:00: root bus resource [mem 0xdfa00000-0xfebfffff window]
-If Linux assigns the overlapping 0xdfa00000-0xdfa0ffff range to a PCI BAR
-then the system fails to resume after a suspend.
+It's not that callers should be blind to the entire concept of groups 
+altogether - they remain a significant reason why iommu_attach_device() 
+might fail, for one thing - however what callers really shouldn't need 
+to be bothered with is the exact *implementation* of groups. I do 
+actually quite like the idea of refining the group abstraction into 
+isolation groups as a superset of alias groups, but if anything that's a 
+further argument for not having the guts of the current abstraction 
+exposed in places that don't need to care - otherwise that would be 
+liable to be a microcosm of this series in itself: widespread churn vs. 
+"same name, new meaning" compromises.
 
-Recently (2019) some systems have shown-up with EFI memmap MMIO entries
-covering the entire _CRS returned PCI bridge memory window. These memmap
-entries get converted into e820_table entries, causing all attempts to
-assign memory to PCI BARs which have not been setup by the BIOS to fail.
-For example see these dmesg snippets from a Lenovo IdeaPad 3 15IIL 81WE:
-
- efi: mem63: [MMIO   |RUN|  |  |  |  |  |  |  |  |   |  |  |  |UC] range=
-     [0x0000000065400000-0x00000000cfffffff] (1708MB)
- [mem 0x000000004bc50000-0x00000000cfffffff] reserved
- pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
- pci 0000:00:15.0: BAR 0: no space for [mem size 0x00001000 64bit]
- pci 0000:00:15.0: BAR 0: failed to assign [mem size 0x00001000 64bit]
-
-Since the problem is specifically caused by EFI memmap entries with
-a MMIO type, use the new E820_TYPE_MMIO marking of e820 entries
-translated from MMIO EFI memmap entries to skip these entries when
-excluding e820 reservations in arch_remove_reservations(), fixing the
-problem of not being able to find free space for unassigned BARs.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=2029207
-BugLink: https://bugs.launchpad.net/bugs/1878279
-BugLink: https://bugs.launchpad.net/bugs/1931715
-BugLink: https://bugs.launchpad.net/bugs/1932069
-BugLink: https://bugs.launchpad.net/bugs/1921649
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- arch/x86/kernel/resource.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-index 9b9fb7882c20..bd501f787a10 100644
---- a/arch/x86/kernel/resource.c
-+++ b/arch/x86/kernel/resource.c
-@@ -31,6 +31,10 @@ static void remove_e820_regions(struct resource *avail)
- 	for (i = 0; i < e820_table->nr_entries; i++) {
- 		entry = &e820_table->entries[i];
- 
-+		/* Some fw reserves the entire PCI bridge window as MMIO */
-+		if (entry->type == E820_TYPE_MMIO)
-+			continue;
-+
- 		resource_clip(avail, entry->addr,
- 			      entry->addr + entry->size - 1);
- 	}
--- 
-2.33.1
-
+Robin.
