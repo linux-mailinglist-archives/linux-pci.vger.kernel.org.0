@@ -2,70 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BA0E4B50B3
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 13:53:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FA344B50C8
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 13:56:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231526AbiBNMvW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Feb 2022 07:51:22 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43622 "EHLO
+        id S1353677AbiBNMzQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Feb 2022 07:55:16 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:46206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353545AbiBNMvU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 07:51:20 -0500
+        with ESMTP id S1353724AbiBNMzH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 07:55:07 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B44294BFF9;
-        Mon, 14 Feb 2022 04:51:12 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E6584BFF1
+        for <linux-pci@vger.kernel.org>; Mon, 14 Feb 2022 04:54:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5DB35B80E93;
-        Mon, 14 Feb 2022 12:51:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A28C340E9;
-        Mon, 14 Feb 2022 12:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1644843070;
-        bh=TkH843aPv2SgHccKM/nUUYpuR+MzBdCS4gHh0VUBkhw=;
+        by ams.source.kernel.org (Postfix) with ESMTPS id D330DB80B77
+        for <linux-pci@vger.kernel.org>; Mon, 14 Feb 2022 12:54:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60073C340F0;
+        Mon, 14 Feb 2022 12:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644843296;
+        bh=/lMoYB6uwOzDdoBhSkPJand5DJEhcqe1AnVjy1/uE0E=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BwvDPt7gQJU6g5Spk3nR+RG/8Vl1+tMEIbgU5LyuCNwfAryzMulCZkxVQ6J47xhDa
-         tzvuHwALsFwlgBOC9sRRtMrr35eLPMWekVRT1WGWAo1iEDaMmczITPTX0ojw3AlvpR
-         Kr2e80JxIU7D2vsrTNEKIUEcc9CPtG+T/Tfb/GZQ=
-Date:   Mon, 14 Feb 2022 13:51:06 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 07/14] PCI: Add driver dma ownership management
-Message-ID: <YgpQOmBA7QJJu+2E@kroah.com>
-References: <20220104015644.2294354-1-baolu.lu@linux.intel.com>
- <20220104015644.2294354-8-baolu.lu@linux.intel.com>
- <Ygoo/lCt/G6tWDz9@kroah.com>
- <20220214123842.GT4160@nvidia.com>
+        b=BrRNTJOxjgFu1I53D6myrf8P+NZCtLRpZxm7eJqCCe+vP0xN+3gdeBB8kBKRnh5t9
+         8zbZN2+7e1YcP6YxzfGxzn7Jb58b4N06THj3LJDFG79vz5/BX+R0F9LqEIv5sdi565
+         jnx3p82s9NsA0gcNE9wj8/yy0J2OG/clV5EFJmPuC9h5rRZW8NEUVL8pFySlTA2NMB
+         OiEVVcW8khAT89CN7BXPTgGzrwyPPSfBnGAyPVES7zGvLknNZCiB7WLU5XmnGgrAKS
+         XVIbrIXK3NtVEGl4at3sf/j2yhUVknbpDh6jMFp5UD0B2jbCfzi+yMpqYV053rjU6s
+         IaAER+HE59FOg==
+Received: by pali.im (Postfix)
+        id EE266CAA; Mon, 14 Feb 2022 13:54:53 +0100 (CET)
+Date:   Mon, 14 Feb 2022 13:54:53 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, Jan Palus <jpalus@fastmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+Subject: Re: [Bug 215540] New: mvebu: no pcie devices detected on turris
+ omnia (5.16.3 regression)
+Message-ID: <20220214125453.6gpkgydarfbyicic@pali>
+References: <20220211194330.siiwntko6b3lldw4@pali>
+ <20220211195744.GA728212@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220214123842.GT4160@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220211195744.GA728212@bhelgaas>
+User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -76,49 +62,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 08:38:42AM -0400, Jason Gunthorpe wrote:
-> On Mon, Feb 14, 2022 at 11:03:42AM +0100, Greg Kroah-Hartman wrote:
-> > On Tue, Jan 04, 2022 at 09:56:37AM +0800, Lu Baolu wrote:
-> > > Multiple PCI devices may be placed in the same IOMMU group because
-> > > they cannot be isolated from each other. These devices must either be
-> > > entirely under kernel control or userspace control, never a mixture. This
-> > > checks and sets DMA ownership during driver binding, and release the
-> > > ownership during driver unbinding.
-> > > 
-> > > The device driver may set a new flag (no_kernel_api_dma) to skip calling
-> > > iommu_device_use_dma_api() during the binding process. For instance, the
-> > > userspace framework drivers (vfio etc.) which need to manually claim
-> > > their own dma ownership when assigning the device to userspace.
-> > > 
-> > > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > >  include/linux/pci.h      |  5 +++++
-> > >  drivers/pci/pci-driver.c | 21 +++++++++++++++++++++
-> > >  2 files changed, 26 insertions(+)
-> > > 
-> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > index 18a75c8e615c..d29a990e3f02 100644
-> > > +++ b/include/linux/pci.h
-> > > @@ -882,6 +882,10 @@ struct module;
-> > >   *              created once it is bound to the driver.
-> > >   * @driver:	Driver model structure.
-> > >   * @dynids:	List of dynamically added device IDs.
-> > > + * @no_kernel_api_dma: Device driver doesn't use kernel DMA API for DMA.
-> > > + *		Drivers which don't require DMA or want to manually claim the
-> > > + *		owner type (e.g. userspace driver frameworks) could set this
-> > > + *		flag.
-> > 
-> > Again with the bikeshedding, but this name is a bit odd.  Of course it's
-> > in the kernel, this is all kernel code, so you can drop that.  And
-> > again, "negative" flags are rough.  So maybe just "prevent_dma"?
+On Friday 11 February 2022 13:57:44 Bjorn Helgaas wrote:
+> On Fri, Feb 11, 2022 at 08:43:30PM +0100, Pali Rohár wrote:
+> > On Thursday 03 February 2022 09:47:28 Bjorn Helgaas wrote:
+> > > [+cc Lorenzo, beginning of thread:
+> > > https://lore.kernel.org/r/20220127234917.GA150851@bhelgaas]
+> > > On Thu, Feb 03, 2022 at 01:55:28PM +0100, Pali Rohár wrote:
 > 
-> That is misleading too, it is not that DMA is prevented, but that the
-> kernel's dma_api has not been setup.
+> > > > Bjorn & Greg: How do you want to handle this situation? Should I prepare
+> > > > special patch for stable which fix it? Or something else?
+> > > > 
+> > > > Anyway, do you know how it could happen that patch was incorrectly
+> > > > auto-backported into stable? Differences between original and
+> > > > wrongly-modified patch looks very similar (both "bus" and "dev" keywords
+> > > > have same number of characters) and it was hard for me to see that there
+> > > > are differences. So probably overlooking could happen or maybe git or
+> > > > patch tools could do such small changes when doing backports?
+> > > 
+> > > Your patch on the mailing list [1] contains:
+> > > 
+> > >         mvebu_pcie_setup_hw(port);
+> > >         mvebu_pcie_set_local_dev_nr(port, 1);
+> > >   +     mvebu_pcie_set_local_bus_nr(port, 0);
+> > > 
+> > > 91a8d79fc797 ("PCI: mvebu: Fix configuring secondary bus of PCIe Root
+> > > Port via emulated bridge") [2] appeared in v5.17-rc1 and contains:
+> > > 
+> > >         mvebu_pcie_setup_hw(port);
+> > >   -     mvebu_pcie_set_local_dev_nr(port, 1);
+> > >   +     mvebu_pcie_set_local_dev_nr(port, 0);
+> > > 
+> > > And this is the current state of mainline [3].
+> > > 
+> > > 91a8d79fc797 was backported to v5.16.3 as 7cde9bf07316 [4], which also
+> > > contains:
+> > > 
+> > >         mvebu_pcie_setup_hw(port);
+> > >   -     mvebu_pcie_set_local_dev_nr(port, 1);
+> > >   +     mvebu_pcie_set_local_dev_nr(port, 0);
+> > > 
+> > > So I think the problem was a merge error when we first applied this
+> > > for mainline, and we just need to make a patch for mainline, apply it
+> > > for v5.17, and mark it for stable.
+> > 
+> > Should I prepare and send fixup patch?
+> 
+> Yes, please.  Sorry for the inconvenience!
 
-"has not been" or "will not be"?
+Done!
+https://lore.kernel.org/linux-pci/20220214110228.25825-1-pali@kernel.org/
 
-What you want to prevent is the iommu core claiming the device
-automatically, right?  So how about "prevent_iommu_dma"?
-
-naming is hard,
-
-greg k-h
+> > > [1] https://lore.kernel.org/r/20211125124605.25915-12-pali@kernel.org
+> > > [2] https://git.kernel.org/linus/91a8d79fc797
+> > > [3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pci-mvebu.c?id=v5.17-rc2#n1323
+> > > [4] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.16.y&id=7cde9bf07316
