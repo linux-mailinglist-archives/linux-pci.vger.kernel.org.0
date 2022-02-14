@@ -2,100 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BD774B5003
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 13:26:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97ABF4B5056
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 13:39:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353001AbiBNMZk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Feb 2022 07:25:40 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54404 "EHLO
+        id S232263AbiBNMi4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Feb 2022 07:38:56 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346900AbiBNMZ3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 07:25:29 -0500
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA33496A9
-        for <linux-pci@vger.kernel.org>; Mon, 14 Feb 2022 04:25:21 -0800 (PST)
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 21EBK8EU006574;
-        Mon, 14 Feb 2022 04:25:17 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=pfpt0220;
- bh=72xBvPZCFqK5caJDXrKeyUODS4150vncMxG8X5S3F/c=;
- b=iNQRNErVRDA6RkWbqFPFd/16P1hx/9r5SJAIJ44Ax1QaH4PGXLZjcxIORjf197/zDKWQ
- IbMUYzfZUTiR32wiJEBIcYCcVBJeSJGMBy5IkCZi5KGJA+jUtHRdp4aUcY5qXJ1aLl+m
- Kqjx4uC/mRaoKqCkN236UQtF5QxktBVaIW/cXuEor6zSow9ADjBk1i0rIjYoVVNVMksf
- nXLrfpg4oM/e2ad8saoJFF3CXj7MH0JTd94GRZjQzKpkRDWA1AAD9IOB01sDXH6UpEZ1
- xwgm0CPOlpbgACCUQPm7+sJ66Nv6jzh1GypvFFpIOxuDATRmm59eKjZT2fHCMeHmp0XP JA== 
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-        by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3e7dbc2055-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 14 Feb 2022 04:25:17 -0800
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 14 Feb
- 2022 04:25:16 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
- Transport; Mon, 14 Feb 2022 04:25:16 -0800
-Received: from machine421.marvell.com (unknown [10.29.37.2])
-        by maili.marvell.com (Postfix) with ESMTP id A1C243F709B;
-        Mon, 14 Feb 2022 04:25:14 -0800 (PST)
-From:   Sunil Goutham <sgoutham@marvell.com>
-To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
-CC:     <sunil.goutham@gmail.com>, Sunil Goutham <sgoutham@marvell.com>
-Subject: [PATCH] PCI: Add Marvell Octeon devices to PCI IDs
-Date:   Mon, 14 Feb 2022 17:55:10 +0530
-Message-ID: <1644841510-14512-1-git-send-email-sgoutham@marvell.com>
-X-Mailer: git-send-email 2.7.4
+        with ESMTP id S229718AbiBNMiz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 07:38:55 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 519654A907;
+        Mon, 14 Feb 2022 04:38:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yo4GOymmXieHNDBOiy1ir4bkar2fkvMhsRDPopX6s+P1FNmL5+FdhixNjO1IvlPZSKYC/L+bnvf+l0at5cfno4rUu/HBFMSt6CpWQf49Nrw3Ytnpei5ccICqE0LsEfq3V7WcphGsHSyKjN58bnnKG1tTa9hbQ6sSHJd/6fAHXqdbuMw3tlj050t01J9uRlKEI8nz0VnfufS8/ZmftxzKBuzrEp4c1b3jM3FDxXdxB+9KyHA+7AGtM6JQLqnafC++N+Z8l0wNmoKE7fbiqq5wOkS+oeKgYmKFzYYI32Bt3TcDJ5HwI7nTRqyvNTtNftyYNM7X4IT8oSx3zaRvpSJ08Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6UowyYfDMa5djVyTqLWTcSexa93nMb24ExQfR/9HZj8=;
+ b=nuYaLrVP07gf60whA6jnclkC4MAM7Sr3BRDUBeB7LEAMcAkRJ2QwuR7doZKixkxpo3t5Ai5iV4LBQpqxEfZ+npkY8Ata1I/Gn+e6N6M/WJXJ7kWuhvB09pooMYjeGZf+tNr4i4zEOKmJPHh5/uhW4AAv0ofFUIJeOaqyltCO/iZ61suiB+hqY4QBz1NCTPdDBpu2lX/ysQhm5PrqU/a7zCX2zgJgzW8f2lIxrxUimwkdvEr2lC4sqKVR+6otZ/c+dLfYfF3YVcauVOgIXWVvhcVyjabJDc+3R3AQuPI3L4AaxnCxEQkTNJWgHYuvbalQKoIEGpC6l8TGQhudq9ueiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6UowyYfDMa5djVyTqLWTcSexa93nMb24ExQfR/9HZj8=;
+ b=c239871tVJBblcZe2EMPfXSZBE17t+qQnELEdfNzTn9aOYbtBj+m20fmq+GDOK592RKlZb2NMrrh3X118uqgqMdVZNuG5SmYM3yPacBkOM2W0UaR2Q7C330XtHMZwNLYjMe3vP+qpD4Rlg4VmpCx8BUBGlk9AfNh0/eqdifp6I4WA30HP6s2lLcxkaftFKlPMGpbOjWBjk+xAwy735EV/J+Wth6RRgYOE+v2vbdvsv2TDqx7X8fZZOiVAR7ZI+thTQJj2Eu/9BZD0zhF3PDoOv4rGUifShh/A+UxFss4wVxkwAZ+EVoSX5N/+SmDiH1C8o7EZE3CLKNWMOQK5tQXrw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by BN8PR12MB3281.namprd12.prod.outlook.com (2603:10b6:408:6e::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.17; Mon, 14 Feb
+ 2022 12:38:44 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::e8f4:9793:da37:1bd3]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::e8f4:9793:da37:1bd3%4]) with mapi id 15.20.4975.019; Mon, 14 Feb 2022
+ 12:38:44 +0000
+Date:   Mon, 14 Feb 2022 08:38:42 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 07/14] PCI: Add driver dma ownership management
+Message-ID: <20220214123842.GT4160@nvidia.com>
+References: <20220104015644.2294354-1-baolu.lu@linux.intel.com>
+ <20220104015644.2294354-8-baolu.lu@linux.intel.com>
+ <Ygoo/lCt/G6tWDz9@kroah.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ygoo/lCt/G6tWDz9@kroah.com>
+X-ClientProxiedBy: BL1PR13CA0157.namprd13.prod.outlook.com
+ (2603:10b6:208:2bd::12) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-GUID: uD0qtvavXNqSC95C3JRSeArf9dV5e8eB
-X-Proofpoint-ORIG-GUID: uD0qtvavXNqSC95C3JRSeArf9dV5e8eB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-02-14_04,2022-02-14_03,2021-12-02_01
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 56129559-4e88-49a7-4b32-08d9efb6efce
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3281:EE_
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3281AC13E08B83DF5F1E8F74C2339@BN8PR12MB3281.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ToTogupOe/bL6wQ4YSMGlc5GISR43WD00Ws6GpprMVg43+K677AvmVVLA5zdqUfYQ+V1JmeJJNzGEX5OHwDSqu73F6tulWqEn5VZmQh5NNiW2IREQEu+bmslEhfTC3gZkXosO674ou3UAB4mthpPhkfqU3FmGv5E7FVWm+vTqbjh5e7ASx4cUMK4OlyK7eaab4QqTZhoko6Rl0e31FUF7aIovtDs9e0IXYaNb9SOcUrUjSAamX5N2OrLP7FnIA7cQp52ZdtfN6tw2TDCyvbTt199AwxK+nU1G9PCJYDA5d4xVlesm3Rw288TtRgNK9f4V6htcRMfxKtiilIebGtGBh2GkDCf/vQ83OXBKKldXKLGLu7dPjnmkGODLp1cjqbzezkExe7OfZri3jPvv79QSRY/CjIItY+moY9PyZW6+6S5XtxChimiCJGdtKtqeJgbpGm74UNqVuB8qImLALmzHa+sZFBhTDvPCjQav6wGLzUysX4PJvVhJeSHySqGWjxolrCeHnLB5uFalSFcsaQ2LkriEDoIig0ujm8hMr0QcWIaqPvqLOVmwnnOqgfVKlRGfP2ObRSRK7H/JIZJKj8Clh+hY4xS8qHTnmEe3apWYxexP/rfjXsd5Wq9Z+TgKiA+FxkkG1k/73KZ73S+EnMN2Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66946007)(316002)(38100700002)(36756003)(2616005)(6486002)(66556008)(66476007)(4326008)(6916009)(33656002)(186003)(1076003)(26005)(7416002)(6512007)(2906002)(86362001)(54906003)(508600001)(83380400001)(5660300002)(8936002)(6506007)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?tpo9Ob3LOddrzZFjC6Sh7G7U13aG2tiUlrhnesoXuMnS7m2PyKfbizFQC91S?=
+ =?us-ascii?Q?OlPWqBVt/nxrnY4EvUURqJEqbYyhesXCrHkz5Ab/9Sdvrb/v+Xnzgtf7Dm/q?=
+ =?us-ascii?Q?ONXEBUqUFQDDSEEuhWq+JlrACZxZl/HkQ0amRr14Fl7tIr5/CVieuRWFkD98?=
+ =?us-ascii?Q?bkUv9d3Rn0OnmGu8xJagXsKo+KHs1ztYypPNucC8cXa9Tc9BGXisYedWRU5w?=
+ =?us-ascii?Q?8Ol2LiUzRn0VO7wLxdozkf0cSA6GwC5Ul21Z00ubkOYjFmPOrYbm+wdKEXUC?=
+ =?us-ascii?Q?DivPuO5keeKNWKF0SGdkikdlqxOgHV5L6OkpXbXKGS6TjSkfar5AVRL5HEsd?=
+ =?us-ascii?Q?WtvNCEnD/17Jnf4NlTC2Ee8dJtjx8ev/ux4cgf68btwEAbK0SZWn6RP2pM9f?=
+ =?us-ascii?Q?wH58eaALSlUlHrXopc9lvi1U+vedwFRZ62gQ06wrqg0777916anMsvnj7i2A?=
+ =?us-ascii?Q?JmqFmYVolRg/jZ6/HWm+UCcUDQjhTNHxSSemaxFuXG4BfMp52D7KoTrKsg/0?=
+ =?us-ascii?Q?hj7PdphzlVQcCsGXj6BCNpJg0bBCyYToBcV3X7IcBRD3NmUkokR+aMgEQIE3?=
+ =?us-ascii?Q?ffaE6bCGc18uGT3XZLhLj8+4aFUxUbxuPfJYHNGY5M8Y6KNBd79u0wDHkCsC?=
+ =?us-ascii?Q?pqPqDoQBY5vMevV2MG2ximK/hU764HdR+ignbn0AxBnnfRyZr8oPaRqFTIbC?=
+ =?us-ascii?Q?hUK0DCNHhX0w11Ui+lb6MEMOa3jkzTlpAa7dyCcYToN2O3I3DYSI669OyRKn?=
+ =?us-ascii?Q?FkDt0sleSZCqb3/MzvEXlbDQpp0QcOfDui51Gc0tY+HOXpaC870PA5uJST3k?=
+ =?us-ascii?Q?kR8cA84K/kEu28m8sjF2NqbX0Jx/mOFm5bigZQE85Wl6XnqNYGr2Z/MUYdWB?=
+ =?us-ascii?Q?yjEOeSh4Cogu2o2xFvn7QeyYnoJpOUdD+87aXQsiM0IyE74dmLa00p1N1AdS?=
+ =?us-ascii?Q?jowHMOpITe7OWfb895/tozwLRcUfXhuzqpppgSQP52mAN/VhSAjFICMXPgM9?=
+ =?us-ascii?Q?J1oPrfr5hFnHJJdf3InMbzOCr9bJWZz44BjN1znPLtxcrj0fRJ217Pa/VL+H?=
+ =?us-ascii?Q?MFxm6kh4oXBsEKkmD692OniIAasyNvRFlwoGmfz0W6yAupAN5Sw4lJW3pE5T?=
+ =?us-ascii?Q?e8BQHe0hd1Ej2yROF6v+OO8s+COWt7rtJR3iu/ZC5VzUdKqVtSDPAZBfEyJz?=
+ =?us-ascii?Q?UAX8zhu+X+vhegj4SuizckBEyt6tOIE2ugpQohuC9+Qj6oBxf8yVx/QDlbXa?=
+ =?us-ascii?Q?laxHI2jjIb6OUOMc2SCwnixTpkUVK5EAHoDrOWJkOOUlXBTY34eySo1yDCbt?=
+ =?us-ascii?Q?ly+5GaH19ocZWt45CnLhYwfxSRlpg36s0IzOeh9igo9tOp0VNL/HhI18uwbJ?=
+ =?us-ascii?Q?2AVwqxxLalVUNFUFOsgFGoPJXsCg6CzyzXAR/K9bxcB3Z+CHt14ayHTXil+T?=
+ =?us-ascii?Q?mJk/DtOgmN2oRx70AQ70bMGi6Klzdpx546npGOtwNtfmjnlwIgiut5rjLIOO?=
+ =?us-ascii?Q?L0zS22nmXwV0NxzWCAIWjVdT4Hbv4+pqFqjRB5hMgzq5WyfubBYsC08Y2Ui7?=
+ =?us-ascii?Q?7MuF1zrtm9EMWiHYwGE=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56129559-4e88-49a7-4b32-08d9efb6efce
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2022 12:38:44.0214
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: s7YFnp60sVvc6xrFUvaDXnspeYKWVJrVHx5Ux6YZCcyySQEex0XcWUua+HbBL1dM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3281
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Marvell (Cavium) OcteonTx2 and CN10K devices
-to PCI ID database.
+On Mon, Feb 14, 2022 at 11:03:42AM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Jan 04, 2022 at 09:56:37AM +0800, Lu Baolu wrote:
+> > Multiple PCI devices may be placed in the same IOMMU group because
+> > they cannot be isolated from each other. These devices must either be
+> > entirely under kernel control or userspace control, never a mixture. This
+> > checks and sets DMA ownership during driver binding, and release the
+> > ownership during driver unbinding.
+> > 
+> > The device driver may set a new flag (no_kernel_api_dma) to skip calling
+> > iommu_device_use_dma_api() during the binding process. For instance, the
+> > userspace framework drivers (vfio etc.) which need to manually claim
+> > their own dma ownership when assigning the device to userspace.
+> > 
+> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> >  include/linux/pci.h      |  5 +++++
+> >  drivers/pci/pci-driver.c | 21 +++++++++++++++++++++
+> >  2 files changed, 26 insertions(+)
+> > 
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 18a75c8e615c..d29a990e3f02 100644
+> > +++ b/include/linux/pci.h
+> > @@ -882,6 +882,10 @@ struct module;
+> >   *              created once it is bound to the driver.
+> >   * @driver:	Driver model structure.
+> >   * @dynids:	List of dynamically added device IDs.
+> > + * @no_kernel_api_dma: Device driver doesn't use kernel DMA API for DMA.
+> > + *		Drivers which don't require DMA or want to manually claim the
+> > + *		owner type (e.g. userspace driver frameworks) could set this
+> > + *		flag.
+> 
+> Again with the bikeshedding, but this name is a bit odd.  Of course it's
+> in the kernel, this is all kernel code, so you can drop that.  And
+> again, "negative" flags are rough.  So maybe just "prevent_dma"?
 
-Signed-off-by: Sunil Goutham <sgoutham@marvell.com>
----
- include/linux/pci_ids.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+That is misleading too, it is not that DMA is prevented, but that the
+kernel's dma_api has not been setup.
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index aad54c6..5fd187b 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2357,6 +2357,21 @@
- #define PCI_DEVICE_ID_ALTIMA_AC1003	0x03eb
- 
- #define PCI_VENDOR_ID_CAVIUM		0x177d
-+#define PCI_DEVICE_ID_OCTEONTX2_PTP	0xA00C
-+#define PCI_DEVICE_ID_CN10K_PTP		0xA09E
-+#define PCI_DEVICE_ID_OCTEONTX2_CGX	0xA059
-+#define PCI_DEVICE_ID_CN10K_RPM		0xA060
-+#define PCI_DEVICE_ID_OCTEONTX2_CPTPF	0xA0FD
-+#define PCI_DEVICE_ID_OCTEONTX2_CPTVF	0xA0FE
-+#define PCI_DEVICE_ID_CN10K_CPTPF	0xA0F2
-+#define PCI_DEVICE_ID_CN10K_CPTVF	0xA0F3
-+#define PCI_DEVICE_ID_OCTEONTX2_RVUAF	0xA065
-+#define PCI_DEVICE_ID_OCTEONTX2_RVUPF	0xA063
-+#define PCI_DEVICE_ID_OCTEONTX2_RVUVF	0xA064
-+#define PCI_DEVICE_ID_OCTEONTX2_LBK	0xA061
-+#define PCI_DEVICE_ID_OCTEONTX2_LBKVF	0xA0F8
-+#define PCI_DEVICE_ID_OCTEONTX2_SDPPF	0xA0F6
-+#define PCI_DEVICE_ID_OCTEONTX2_SDPVF	0xA0F7
- 
- #define PCI_VENDOR_ID_TECHWELL		0x1797
- #define PCI_DEVICE_ID_TECHWELL_6800	0x6800
--- 
-2.7.4
+Though I agree the name as-is isn't great, I think the comment is good.
 
+Jason
