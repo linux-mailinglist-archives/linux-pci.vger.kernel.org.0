@@ -2,45 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 792684B42BF
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 08:24:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B6A94B42CC
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 08:29:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241217AbiBNHXh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Feb 2022 02:23:37 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38516 "EHLO
+        id S241277AbiBNH12 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Feb 2022 02:27:28 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236871AbiBNHXg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 02:23:36 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B52A593BC;
-        Sun, 13 Feb 2022 23:23:29 -0800 (PST)
+        with ESMTP id S241272AbiBNH10 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 02:27:26 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6405C0F;
+        Sun, 13 Feb 2022 23:27:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644823409; x=1676359409;
+  t=1644823639; x=1676359639;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=8986kutyorRgf8bSEArW0prD8GIGUUBjn9XYUWWmt7s=;
-  b=cI5FS3OYnwVA8/4ykXuuYVG6eg8BbHJoTuBWkmpoSmHcwN7xayIVpyLA
-   curiE5ShLwcBdnd5KgjiEJFwtA5qEvqlzP0LFXf9o+ZUn20dZrzsV6BSm
-   R4ZGwKs7pRqolm+/OoE4X2nfo63LIIBSjtofW0FXOMp4sYvRMWZSOCHun
-   3Wx9XSe67/gHeRLrBQr/XD157ZwqM8afjRGP0+pG9Ooxbb2a1NGvnF6Nj
-   3LuyH15qr1u5ZVa+fz2wL39LopTyWt1qrwdkuZ6kRzxc8X6gDrZaHjWoR
-   X/W/zyywSdWH7MVZ6j4zxF/DMkkBIVJIvGKtXOHbwiRxseARsVJ0f4fGI
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10257"; a="229995260"
+  bh=3D+QYO7Pwm9FAUWke5CmBKJRJaBzCTD4KK+GctzE02M=;
+  b=mnTEk/O6X6ThBSsJfhMrQKGC3ajGqRmoJHPt0jdXy8ooWySswPasiDhN
+   PP0J685V2B0Mw13MqvqNtyp2NtRsRL/k215m8LqutEJw133GM0h2AG9tI
+   LgTVZ7IMsAaFJPoKrbadHOK/mXr2PrILDymSNFhLotRsQJJujQEqE0r5p
+   VWhj9wg4WlG2ipc6DSualXyVcvf6Lex65x1u2FFWl3AiPHruLNUSkqRfp
+   deh5K+JCiByoSt6VlrpUJGPzdYz2bQ963ozuZdPbcz2RPKpJFhLTizKAa
+   r4xnw8ocA3juN9T/NObJeatBAP3TekpEpsZaFsj7Nkg8P/czihzmAQ9wg
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10257"; a="313312832"
 X-IronPort-AV: E=Sophos;i="5.88,367,1635231600"; 
-   d="scan'208";a="229995260"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2022 23:23:29 -0800
+   d="scan'208";a="313312832"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2022 23:27:19 -0800
 X-IronPort-AV: E=Sophos;i="5.88,367,1635231600"; 
-   d="scan'208";a="587076655"
+   d="scan'208";a="634979853"
 Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2022 23:23:25 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 14 Feb 2022 09:23:22 +0200
-Date:   Mon, 14 Feb 2022 09:23:22 +0200
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2022 23:27:15 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 14 Feb 2022 09:27:13 +0200
+Date:   Mon, 14 Feb 2022 09:27:13 +0200
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
+To:     "Limonciello, Mario" <mario.limonciello@amd.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
         "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
@@ -53,19 +53,20 @@ Cc:     Mario Limonciello <mario.limonciello@amd.com>,
         Michael Jamet <michael.jamet@intel.com>,
         Yehezkel Bernat <YehezkelShB@gmail.com>,
         Alexander.Deucher@amd.com, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v3 03/12] PCI: Move check for old Apple Thunderbolt
- controllers into a quirk
-Message-ID: <YgoDauh7rd18OvrM@lahna>
+Subject: Re: [PATCH v3 04/12] PCI: Drop the `is_thunderbolt` attribute from
+ PCI core
+Message-ID: <YgoEUYLbYUbk5A6Q@lahna>
 References: <20220211193250.1904843-1-mario.limonciello@amd.com>
- <20220211193250.1904843-4-mario.limonciello@amd.com>
- <20220213091920.GA15535@wunner.de>
+ <20220211193250.1904843-5-mario.limonciello@amd.com>
+ <20220213082056.GA23572@wunner.de>
+ <0ef8f2cb-1978-f469-71d3-2cf7469eb8b6@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220213091920.GA15535@wunner.de>
+In-Reply-To: <0ef8f2cb-1978-f469-71d3-2cf7469eb8b6@amd.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -74,59 +75,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lukas,
+Hi Mario,
 
-On Sun, Feb 13, 2022 at 10:19:20AM +0100, Lukas Wunner wrote:
-> On Fri, Feb 11, 2022 at 01:32:41PM -0600, Mario Limonciello wrote:
-> > `pci_bridge_d3_possible` currently checks explicitly for a Thunderbolt
-> > controller to indicate that D3 is possible.  As this is used solely
-> > for older Apple systems, move it into a quirk that enumerates across
-> > all Intel TBT controllers.
+On Sun, Feb 13, 2022 at 11:26:56AM -0600, Limonciello, Mario wrote:
+> On 2/13/2022 02:20, Lukas Wunner wrote:
+> > On Fri, Feb 11, 2022 at 01:32:42PM -0600, Mario Limonciello wrote:
+> > > The `is_thunderbolt` attribute is currently a dumping ground for a
+> > > variety of things.
+> > 
+> > It's not as arbitrary as it may seem.  Quite a bit of thought went into
+> > the current design.
+> > 
+> > 
+> > > Instead use the driver core removable attribute to indicate the
+> > > detail a device is attached to a thunderbolt or USB4 chain.
+> > 
+> > You're missing the point that "is_thunderbolt" is set on the *controller*
+> > (i.e. its upstream and downstream ports).
+> > 
+> > The controller itself is *not* removable if it's the host controller.
+> > 
+> > However a device can be assumed to be removable if it has an ancestor
+> > which has the "is_thunderbolt" flag set.
+> > 
 > 
-> I'm not so sure if it is only needed on Apple systems.
-> 
-> 
-> > @@ -2954,10 +2960,6 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
-> >  		if (pci_bridge_d3_force)
-> >  			return true;
-> >  
-> > -		/* Even the oldest 2010 Thunderbolt controller supports D3. */
-> > -		if (bridge->is_thunderbolt)
-> > -			return true;
-> > -
-> >  		/* Platform might know better if the bridge supports D3 */
-> >  		if (platform_pci_bridge_d3(bridge))
-> >  			return true;
-> 
-> The fact that Thunderbolt PCIe ports support D3 is a property of those
-> devices.  It's not a property of the platform or a quirk of a particular
-> vendor.
+> Ah right... I wonder if really what this series should be about then is
+> setting up the the PCIe endpoints for PCIe tunneling and XHCI tunneling to
+> be marked as "external" instead then.  It would mean that existing code will
+> apply the removable attribute to everything downstream (and presumably at
+> least some of those drivers it will continue to make sense to drop
+> "pcie_is_thunderbolt_attached" and instead check dev_is_removable.
 
-It is in fact platform specific. For instance the non-Apple systems
-without "HotPlugSupportInD3" property have not been wired to support
-entering/exiting D3 runtime so putting these ports into D3 may actually
-lead into problems as we are in non-validated territory.
-
-> Hence in my view the current location of the check (pci_bridge_d3_possible())
-> makes sense wheras the location you're moving it to does not.
-> 
-> 
-> > +/* Apple machines as old as 2010 can do D3 with Thunderbolt controllers, but don't specify
-> > + * it in the ACPI tables
-> > + */
-> 
-> Apple started shipping Thunderbolt in 2011.
-> Intel brought the first chips to market in 2010.
-> 
-> The date is meaningful at the code's current location in
-> pci_bridge_d3_possible() because a few lines further down
-> there's a 2015 BIOS cut-off date.
-> 
-> Microsoft came up with an ACPI property that BIOS vendors may set
-> so that Windows knows it may put a Thunderbolt controller into D3cold.
-> I'm not even sure if that property was ever officially adopted by the
-> ACPI spec or if it's just a Microsoft-defined "standard".
-
-AFAIK It was invented by Intel Windows folks but Microsoft "documented"
-it. We use the same property in ChromeOS (and therefore Linux) too so it
-can be thought of as "de facto" way of declaring such port. 
+Yes, I think this is the right thing to do. Anything connected over
+PCIe/USB 3.x tunnel is pretty much "removable" whereas the host
+controllers may or may not. Typically they are not.
