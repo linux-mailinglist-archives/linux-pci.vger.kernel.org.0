@@ -2,162 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 546AB4B4FAC
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 13:09:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BD774B5003
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Feb 2022 13:26:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352441AbiBNMJz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Feb 2022 07:09:55 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44346 "EHLO
+        id S1353001AbiBNMZk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Feb 2022 07:25:40 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231234AbiBNMJy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 07:09:54 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A36FC488A8;
-        Mon, 14 Feb 2022 04:09:46 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E8861396;
-        Mon, 14 Feb 2022 04:09:46 -0800 (PST)
-Received: from [10.57.70.89] (unknown [10.57.70.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A6763F718;
-        Mon, 14 Feb 2022 04:09:41 -0800 (PST)
-Message-ID: <43f2fc07-19ea-53a4-af86-a9192a950c96@arm.com>
-Date:   Mon, 14 Feb 2022 12:09:36 +0000
+        with ESMTP id S1346900AbiBNMZ3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Feb 2022 07:25:29 -0500
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA33496A9
+        for <linux-pci@vger.kernel.org>; Mon, 14 Feb 2022 04:25:21 -0800 (PST)
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 21EBK8EU006574;
+        Mon, 14 Feb 2022 04:25:17 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=pfpt0220;
+ bh=72xBvPZCFqK5caJDXrKeyUODS4150vncMxG8X5S3F/c=;
+ b=iNQRNErVRDA6RkWbqFPFd/16P1hx/9r5SJAIJ44Ax1QaH4PGXLZjcxIORjf197/zDKWQ
+ IbMUYzfZUTiR32wiJEBIcYCcVBJeSJGMBy5IkCZi5KGJA+jUtHRdp4aUcY5qXJ1aLl+m
+ Kqjx4uC/mRaoKqCkN236UQtF5QxktBVaIW/cXuEor6zSow9ADjBk1i0rIjYoVVNVMksf
+ nXLrfpg4oM/e2ad8saoJFF3CXj7MH0JTd94GRZjQzKpkRDWA1AAD9IOB01sDXH6UpEZ1
+ xwgm0CPOlpbgACCUQPm7+sJ66Nv6jzh1GypvFFpIOxuDATRmm59eKjZT2fHCMeHmp0XP JA== 
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+        by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3e7dbc2055-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 14 Feb 2022 04:25:17 -0800
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 14 Feb
+ 2022 04:25:16 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
+ Transport; Mon, 14 Feb 2022 04:25:16 -0800
+Received: from machine421.marvell.com (unknown [10.29.37.2])
+        by maili.marvell.com (Postfix) with ESMTP id A1C243F709B;
+        Mon, 14 Feb 2022 04:25:14 -0800 (PST)
+From:   Sunil Goutham <sgoutham@marvell.com>
+To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC:     <sunil.goutham@gmail.com>, Sunil Goutham <sgoutham@marvell.com>
+Subject: [PATCH] PCI: Add Marvell Octeon devices to PCI IDs
+Date:   Mon, 14 Feb 2022 17:55:10 +0530
+Message-ID: <1644841510-14512-1-git-send-email-sgoutham@marvell.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH v1 1/8] iommu: Add iommu_group_replace_domain()
-Content-Language: en-GB
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Cc:     kvm@vger.kernel.org, rafael@kernel.org,
-        David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        iommu@lists.linux-foundation.org,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20220106022053.2406748-1-baolu.lu@linux.intel.com>
- <20220106022053.2406748-2-baolu.lu@linux.intel.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20220106022053.2406748-2-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Proofpoint-GUID: uD0qtvavXNqSC95C3JRSeArf9dV5e8eB
+X-Proofpoint-ORIG-GUID: uD0qtvavXNqSC95C3JRSeArf9dV5e8eB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-02-14_04,2022-02-14_03,2021-12-02_01
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022-01-06 02:20, Lu Baolu wrote:
-> Expose an interface to replace the domain of an iommu group for frameworks
-> like vfio which claims the ownership of the whole iommu group.
+Add Marvell (Cavium) OcteonTx2 and CN10K devices
+to PCI ID database.
 
-But if the underlying point is the new expectation that 
-iommu_{attach,detach}_device() operate on the device's whole group where 
-relevant, why should we invent some special mechanism for VFIO to be 
-needlessly inconsistent?
+Signed-off-by: Sunil Goutham <sgoutham@marvell.com>
+---
+ include/linux/pci_ids.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-I said before that it's trivial for VFIO to resolve a suitable device if 
-it needs to; by now I've actually written the patch ;)
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index aad54c6..5fd187b 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2357,6 +2357,21 @@
+ #define PCI_DEVICE_ID_ALTIMA_AC1003	0x03eb
+ 
+ #define PCI_VENDOR_ID_CAVIUM		0x177d
++#define PCI_DEVICE_ID_OCTEONTX2_PTP	0xA00C
++#define PCI_DEVICE_ID_CN10K_PTP		0xA09E
++#define PCI_DEVICE_ID_OCTEONTX2_CGX	0xA059
++#define PCI_DEVICE_ID_CN10K_RPM		0xA060
++#define PCI_DEVICE_ID_OCTEONTX2_CPTPF	0xA0FD
++#define PCI_DEVICE_ID_OCTEONTX2_CPTVF	0xA0FE
++#define PCI_DEVICE_ID_CN10K_CPTPF	0xA0F2
++#define PCI_DEVICE_ID_CN10K_CPTVF	0xA0F3
++#define PCI_DEVICE_ID_OCTEONTX2_RVUAF	0xA065
++#define PCI_DEVICE_ID_OCTEONTX2_RVUPF	0xA063
++#define PCI_DEVICE_ID_OCTEONTX2_RVUVF	0xA064
++#define PCI_DEVICE_ID_OCTEONTX2_LBK	0xA061
++#define PCI_DEVICE_ID_OCTEONTX2_LBKVF	0xA0F8
++#define PCI_DEVICE_ID_OCTEONTX2_SDPPF	0xA0F6
++#define PCI_DEVICE_ID_OCTEONTX2_SDPVF	0xA0F7
+ 
+ #define PCI_VENDOR_ID_TECHWELL		0x1797
+ #define PCI_DEVICE_ID_TECHWELL_6800	0x6800
+-- 
+2.7.4
 
-https://gitlab.arm.com/linux-arm/linux-rm/-/commit/9f37d8c17c9b606abc96e1f1001c0b97c8b93ed5
-
-Robin.
-
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->   include/linux/iommu.h | 10 ++++++++++
->   drivers/iommu/iommu.c | 37 +++++++++++++++++++++++++++++++++++++
->   2 files changed, 47 insertions(+)
-> 
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 408a6d2b3034..66ebce3d1e11 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -677,6 +677,9 @@ void iommu_device_unuse_dma_api(struct device *dev);
->   int iommu_group_set_dma_owner(struct iommu_group *group, void *owner);
->   void iommu_group_release_dma_owner(struct iommu_group *group);
->   bool iommu_group_dma_owner_claimed(struct iommu_group *group);
-> +int iommu_group_replace_domain(struct iommu_group *group,
-> +			       struct iommu_domain *old,
-> +			       struct iommu_domain *new);
->   
->   #else /* CONFIG_IOMMU_API */
->   
-> @@ -1090,6 +1093,13 @@ static inline bool iommu_group_dma_owner_claimed(struct iommu_group *group)
->   {
->   	return false;
->   }
-> +
-> +static inline int
-> +iommu_group_replace_domain(struct iommu_group *group, struct iommu_domain *old,
-> +			   struct iommu_domain *new)
-> +{
-> +	return -ENODEV;
-> +}
->   #endif /* CONFIG_IOMMU_API */
->   
->   /**
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 72a95dea688e..ab8ab95969f5 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -3431,3 +3431,40 @@ bool iommu_group_dma_owner_claimed(struct iommu_group *group)
->   	return user;
->   }
->   EXPORT_SYMBOL_GPL(iommu_group_dma_owner_claimed);
-> +
-> +/**
-> + * iommu_group_replace_domain() - Replace group's domain
-> + * @group: The group.
-> + * @old: The previous attached domain. NULL for none.
-> + * @new: The new domain about to be attached.
-> + *
-> + * This is to support backward compatibility for vfio which manages the dma
-> + * ownership in iommu_group level.
-> + */
-> +int iommu_group_replace_domain(struct iommu_group *group,
-> +			       struct iommu_domain *old,
-> +			       struct iommu_domain *new)
-> +{
-> +	int ret = 0;
-> +
-> +	mutex_lock(&group->mutex);
-> +	if (!group->owner || group->domain != old) {
-> +		ret = -EPERM;
-> +		goto unlock_out;
-> +	}
-> +
-> +	if (old)
-> +		__iommu_detach_group(old, group);
-> +
-> +	if (new) {
-> +		ret = __iommu_attach_group(new, group);
-> +		if (ret && old)
-> +			__iommu_attach_group(old, group);
-> +	}
-> +
-> +unlock_out:
-> +	mutex_unlock(&group->mutex);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_group_replace_domain);
