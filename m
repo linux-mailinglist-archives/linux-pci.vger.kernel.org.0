@@ -2,115 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7FCD4B670E
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 10:11:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3256B4B6821
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 10:48:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235641AbiBOJLP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Feb 2022 04:11:15 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52586 "EHLO
+        id S236054AbiBOJsc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Feb 2022 04:48:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbiBOJLO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 04:11:14 -0500
-Received: from theia.8bytes.org (8bytes.org [81.169.241.247])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0645913DD4;
-        Tue, 15 Feb 2022 01:11:04 -0800 (PST)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id CA08436D; Tue, 15 Feb 2022 10:11:02 +0100 (CET)
-Date:   Tue, 15 Feb 2022 10:11:01 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/8] iommu/amd: Use iommu_attach/detach_device()
-Message-ID: <YgtuJQhY8SNlv9/6@8bytes.org>
-References: <20220106022053.2406748-1-baolu.lu@linux.intel.com>
- <20220106022053.2406748-6-baolu.lu@linux.intel.com>
- <20220106143345.GC2328285@nvidia.com>
- <Ygo8iek2CwtPp2hj@8bytes.org>
- <20220214131544.GX4160@nvidia.com>
- <Ygpb6CxmTdUHiN50@8bytes.org>
- <20220214140236.GC929467@nvidia.com>
- <YgplyyjofwlM+1tc@8bytes.org>
- <20220214150059.GE4160@nvidia.com>
+        with ESMTP id S233134AbiBOJsb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 04:48:31 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851D3E6843;
+        Tue, 15 Feb 2022 01:48:22 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2164F611D9;
+        Tue, 15 Feb 2022 09:48:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 541D9C340EB;
+        Tue, 15 Feb 2022 09:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644918501;
+        bh=mtgWCmIxtYu+pI+a3qsD5U922sCEn6VGKZmy6iT7BwA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Uo45ixEngtxvGmZy42/+/B/CrC5rIf07aZrIKMDT0L1yKgQVjdZSd7NXVaGG4kvND
+         6USzuUsq11u4ey35aztktbCTtQ0xwIHBjp64apvdSLLg7j8UhJ9/PZXIkIqZabwF2x
+         8f87y5sxq9bCl3HayAXqvUCuy3n50Q4Lchh4i1NO7Hf6/RsW1NGCrUnSLuwNc53sk3
+         8eJ2x1exqYWCb9on035XdntfuJvT4eHufzUIhVyXDEndOWAUvFU9O7ZVls1mjZTJY6
+         CZVhEhxPq3VRYY/cXpTEiJ+9YuxUHQLuBTsuyrApUXrVmmBqJhR7z4cuzyfLaolffj
+         sl8qI9ARAtECg==
+Received: by pali.im (Postfix)
+        id A12CAF13; Tue, 15 Feb 2022 10:48:18 +0100 (CET)
+Date:   Tue, 15 Feb 2022 10:48:18 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Jan Palus <jpalus@fastmail.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [PATCH] PCI: mvebu: Fix merge conflicts in commit 91a8d79fc797
+Message-ID: <20220215094818.yl44tioh4spauh4q@pali>
+References: <20220214110228.25825-1-pali@kernel.org>
+ <20220214154628.GA8830@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220214150059.GE4160@nvidia.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220214154628.GA8830@bhelgaas>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 11:00:59AM -0400, Jason Gunthorpe wrote:
-> On Mon, Feb 14, 2022 at 03:23:07PM +0100, Joerg Roedel wrote:
+On Monday 14 February 2022 09:46:28 Bjorn Helgaas wrote:
+> On Mon, Feb 14, 2022 at 12:02:28PM +0100, Pali Rohár wrote:
+> > Commit 91a8d79fc797 ("PCI: mvebu: Fix configuring secondary bus of PCIe
+> > Root Port via emulated bridge") was incorrectly applied from mailing list
+> > patch [1] to the linux git repository [2] probably due to resolving merge
+> > conflicts incorrectly. Fix it now.
+> > 
+> > [1] - https://lore.kernel.org/r/20211125124605.25915-12-pali@kernel.org
+> > [2] - https://git.kernel.org/linus/91a8d79fc797
+> > 
+> > Fixes: 91a8d79fc797 ("PCI: mvebu: Fix configuring secondary bus of PCIe Root Port via emulated bridge")
+> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215540
+> > Reported-by: Jan Palus <jpalus@fastmail.com>
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
 > 
-> > Device drivers calling into iommu_attach_device() is seldom a good
-> > idea.  In this case the sound device has some generic hardware
-> > interface so that an existing sound driver can be re-used. Making this
-> > driver call iommu-specific functions for some devices is something hard
-> > to justify.
+> Applied to for-linus for v5.17 with the following commit log, thanks!
 > 
-> Er, so this is transparent to the generic sound device? I guess
-> something fixed up the dma_api on that device to keep working?
+> commit c49ae619905e ("PCI: mvebu: Fix device enumeration regression")
+> Author: Pali Rohár <pali@kernel.org>
+> Date:   Mon Feb 14 12:02:28 2022 +0100
+> 
+>     PCI: mvebu: Fix device enumeration regression
+> 
+>     Jan reported that on Turris Omnia (Armada 385), no PCIe devices were
+>     detected after upgrading from v5.16.1 to v5.16.3 and identified the cause
+>     as the backport of 91a8d79fc797 ("PCI: mvebu: Fix configuring secondary bus
+>     of PCIe Root Port via emulated bridge"), which appeared in v5.17-rc1.
+> 
+>     91a8d79fc797 was incorrectly applied from mailing list patch [1] to the
+>     linux git repository [2] probably due to resolving merge conflicts
+>     incorrectly. Fix it now.
+> 
+>     [1] https://lore.kernel.org/r/20211125124605.25915-12-pali@kernel.org
+>     [2] https://git.kernel.org/linus/91a8d79fc797
+> 
+>     [bhelgaas: commit log]
+>     BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215540
+>     Fixes: 91a8d79fc797 ("PCI: mvebu: Fix configuring secondary bus of PCIe Root Port via emulated bridge")
+>     Link: https://lore.kernel.org/r/20220214110228.25825-1-pali@kernel.org
+>     Link: https://lore.kernel.org/r/20220127234917.GA150851@bhelgaas
+>     Reported-by: Jan Palus <jpalus@fastmail.com>
+>     Signed-off-by: Pali Rohár <pali@kernel.org>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Right, this is completly transparent to the sound device. The IOMMU code
-will not set dma_ops on the device because it uses a direct mapping and
-so the standard implementation will be used.
+Thanks!
 
-> But, then, the requirement is that nobody is using the dma API when we
-> make this change?
-
-That is the tricky part. DMA-API keeps working after the change is made,
-because the new domain is also direct mapped. The new domain just has
-the ability to assign host page-tables to device PASIDs, so that DMA
-requests with a PASID TLP will be remapped.
-
-It was actually a requirement for this code that when it jumps in, the
-DMA-API mappings stay live. And the reason a direct mapping is used at
-all is that the page-table walker of the IOMMU is a two-dimensional
-walker, which will treat the addresses found in the host page-tables as
-IO-virtual an translates them through the underlying page-table. So to
-use host-pagetables the underlying mapping must be direct mapped.
-
-
-> I don't think it matters how big/small the group is, only that when we
-> change the domain we know everything flowing through the domain is
-> still happy.
-
-Yes, that matters. The group size matters too for DMA-API performance.
-If two devices compete for the same lock in the allocator and/or the
-same cached magazines, things will slow down. That only matters for
-high-throughput devices, but still...
-
-Regards,
-
-	Joerg
-
+> > ---
+> >  drivers/pci/controller/pci-mvebu.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> > index 71258ea3d35f..f8e82c5e2d87 100644
+> > --- a/drivers/pci/controller/pci-mvebu.c
+> > +++ b/drivers/pci/controller/pci-mvebu.c
+> > @@ -1329,7 +1329,8 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+> >  		 * indirectly via kernel emulated PCI bridge driver.
+> >  		 */
+> >  		mvebu_pcie_setup_hw(port);
+> > -		mvebu_pcie_set_local_dev_nr(port, 0);
+> > +		mvebu_pcie_set_local_dev_nr(port, 1);
+> > +		mvebu_pcie_set_local_bus_nr(port, 0);
+> >  	}
+> >  
+> >  	pcie->nports = i;
+> > -- 
+> > 2.20.1
+> > 
