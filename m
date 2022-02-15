@@ -2,226 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BC7F4B7068
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 17:39:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C54974B72DC
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 17:42:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241379AbiBOQKc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Feb 2022 11:10:32 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41482 "EHLO
+        id S241386AbiBOQMi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Feb 2022 11:12:38 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241381AbiBOQKc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 11:10:32 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74C306C940;
-        Tue, 15 Feb 2022 08:10:20 -0800 (PST)
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JymHm6sXzz67wr8;
-        Wed, 16 Feb 2022 00:09:24 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 15 Feb 2022 17:10:16 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Tue, 15 Feb
- 2022 16:10:16 +0000
-Date:   Tue, 15 Feb 2022 16:10:14 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <patches@lists.linux.dev>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Bjorn Helgaas" <helgaas@kernel.org>, <nvdimm@lists.linux.dev>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 11/14] cxl/region: Add support for single switch
- level
-Message-ID: <20220215161014.00001c68@Huawei.com>
-In-Reply-To: <20220128002707.391076-12-ben.widawsky@intel.com>
-References: <20220128002707.391076-1-ben.widawsky@intel.com>
-        <20220128002707.391076-12-ben.widawsky@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S241497AbiBOQMd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 11:12:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 647BE65176
+        for <linux-pci@vger.kernel.org>; Tue, 15 Feb 2022 08:12:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644941537;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6yTu+Qfv1IpPv7AVu5hlJ/Sl4wvDv7oYgI9LSyTBR/g=;
+        b=SbAIyqFuN230IwE/22qCixAFYv0ApC+ojCd7IbMepHOIvHgT/Cq66fH0BbozKigJ/syM82
+        IYuyEpm5iR8mKerpBIWU/kiPULDQpVTC26lleXM3Cimfa8r8+4SHATGb0Gt3xLlyPWecgW
+        COknCKJIhnXdoIabWYeFW+7kySahvvA=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-400-Gzj1pq4xPkCt-EIuEr5MwA-1; Tue, 15 Feb 2022 11:12:16 -0500
+X-MC-Unique: Gzj1pq4xPkCt-EIuEr5MwA-1
+Received: by mail-ed1-f70.google.com with SMTP id cr7-20020a056402222700b0040f59dae606so93384edb.11
+        for <linux-pci@vger.kernel.org>; Tue, 15 Feb 2022 08:12:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=6yTu+Qfv1IpPv7AVu5hlJ/Sl4wvDv7oYgI9LSyTBR/g=;
+        b=LmpI+sxgBw1uz6wlAOaZcPa3tRTBODlMtEMTo2fN8YTyMU4nRQ5AlCTRe7vQtxJRPM
+         waZpqDLPm4Rp6X9ieNSK9YtB2ks9/1vvDGhfVEwt0N6ey/k6B0F438mdCDY8FkPRt22K
+         aSBBWUSHXZP8qY5RqGIGJozbSnLRYeejFeRuSDd7soNaumw4EN1pdCHsty0sD/vGgkwR
+         +KpHZ1WjIIp57Chl700/CMcvf+9B280pKPszmG3jXj+TabVr9wDLAcckdq0OTqip7DBe
+         fi+pGt8/lwTOsfJNGoYPB7yTqsih/l7RjK4kwT/QnE9jKh24bKQA/GZJoIkJKsKrvo1j
+         R3CQ==
+X-Gm-Message-State: AOAM531Trj3IKmyA4Md/ha+eooAUAt0s1+qbAiSbBvr2VSd79VbGS0rm
+        nQrxvTPe2nQ3N37AAKpCsJfndA5zc+LV0g6ihWS/7LNdPM6pIH95cCXItZUJSjx2WKnEZhV+l+/
+        3OPd7zQ9nrrJUoChcHPx6
+X-Received: by 2002:a50:8e4b:: with SMTP id 11mr4650941edx.445.1644941533366;
+        Tue, 15 Feb 2022 08:12:13 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzftckYd5NKJC5MMKL5KSz/KVu2PoAWMB8ocFZSkMTrbX9sgdnbBvEL3rXT/dAeLNasexhiOQ==
+X-Received: by 2002:a50:8e4b:: with SMTP id 11mr4650912edx.445.1644941533147;
+        Tue, 15 Feb 2022 08:12:13 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id m28sm4256482ejn.50.2022.02.15.08.12.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Feb 2022 08:12:12 -0800 (PST)
+Message-ID: <05332ea8-2849-e567-1db3-3bdee97c2193@redhat.com>
+Date:   Tue, 15 Feb 2022 17:12:11 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [RFC 0/2] x86/PCI: Ignore EFI memmap MMIO entries
+Content-Language: en-US
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220214151759.98267-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220214151759.98267-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 27 Jan 2022 16:27:04 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
+Hi All,
 
-> CXL switches have HDM decoders just like host bridges and endpoints.
-> Their programming works in a similar fashion.
+On 2/14/22 16:17, Hans de Goede wrote:
+> Hi All,
 > 
-> The spec does not prohibit multiple levels of switches, however, those
-> are not implemented at this time.
+> Here is a new attempt at fixing the issue where on some laptops
+> there are EFI memmap MMIO entries covering the entire PCI bridge
+> mem window, causing Linux to be unable to find free space to
+> assign to unassigned BARs.
 > 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-Hi Ben,
+> This is marked as RFC atm because I'm waiting for feedback from
+> testers.
 
-I'm still hammering away at trying to bring up qemu switch emulation.
-Even though I know you are reworking this, seems only sensible to point
-out issues when I hit them.  If no longer relevant you can ignore them!
+Unfortunately the troublesome 0xdfa00000-0xdfa0ffff region on
+the Lenovo X1 carbon gen 2 is marked as MMIO by the EFI memmap,
+so the approach from this series won't work.
 
-With these bits and a few other minor tweaks the decoders now look
-to be right - I just need to wire up the QEMU side so that
-I don't get hardware exceptions on actually reading and writing once
-the region is bound :) 
+Interestingly enough this RFC series does seem to help to fix
+the suspend/resume on this x1c2, since for some reason merely
+splitting the original:
 
-Thanks,
+BIOS-e820: [mem 0x00000000dceff000-0x00000000dfa0ffff] reserved
 
-J
-> ---
->  drivers/cxl/cxl.h    |  5 ++++
->  drivers/cxl/region.c | 61 ++++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 64 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 8ace6cca0776..d70d8c85d05f 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -96,6 +96,11 @@ static inline u8 cxl_to_ig(u16 g)
->  	return ilog2(g) - 8;
->  }
->  
-> +static inline int cxl_to_ways(u8 ways)
-> +{
-> +	return 1 << ways;
-> +}
-> +
->  static inline bool cxl_is_interleave_ways_valid(int iw)
->  {
->  	switch (iw) {
-> diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> index b8982be13bfe..f748060733dd 100644
-> --- a/drivers/cxl/region.c
-> +++ b/drivers/cxl/region.c
-> @@ -359,6 +359,23 @@ static bool has_switch(const struct cxl_region *cxlr)
->  	return false;
->  }
->  
-> +static bool has_multi_switch(const struct cxl_region *cxlr)
-> +{
-> +	struct cxl_memdev *ep;
-> +	int i;
-> +
-> +	for_each_cxl_endpoint(ep, cxlr, i)
-> +		if (ep->port->depth > 3)
-> +			return true;
-> +
-> +	return false;
-> +}
-> +
-> +static struct cxl_port *get_switch(struct cxl_memdev *ep)
-> +{
-> +	return to_cxl_port(ep->port->dev.parent);
-> +}
-> +
->  static struct cxl_decoder *get_decoder(struct cxl_region *cxlr,
->  				       struct cxl_port *p)
->  {
-> @@ -409,6 +426,8 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->  				      const struct cxl_decoder *rootd,
->  				      bool state_update)
->  {
-> +	const int region_ig = cxl_to_ig(cxlr->config.interleave_granularity);
-> +	const int region_eniw = cxl_to_eniw(cxlr->config.interleave_ways);
->  	const int num_root_ports = get_num_root_ports(cxlr);
->  	struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
->  	struct cxl_decoder *cxld, *c;
-> @@ -416,8 +435,12 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->  
->  	hb_count = get_unique_hostbridges(cxlr, hbs);
->  
-> -	/* TODO: Switch support */
-> -	if (has_switch(cxlr))
-> +	/* TODO: support multiple levels of switches */
-> +	if (has_multi_switch(cxlr))
-> +		return false;
-> +
-> +	/* TODO: x3 interleave for switches is hard. */
-> +	if (has_switch(cxlr) && !is_power_of_2(region_ways(cxlr)))
->  		return false;
->  
->  	/*
-> @@ -470,8 +493,14 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->  		list_for_each_entry(rp, &hb->dports, list) {
->  			struct cxl_memdev *ep;
->  			int port_grouping = -1;
-> +			int target_ndx;
-As things currently stand, with a switch connected below a single port
-of a host bridge (4 type 3 off the switch) this will program the HB
-decoder to have 4 targets, all routed to the switch USP.
+range into:
 
-There is an argument that this is correct but its not what I'd expect.
-I'd expect to see 1 target only.  It's not a problem for small cases, but
-with enough rp and switches we can run out of targets.
+BIOS-e820: [mem 0x00000000dceff000-0x00000000df9fffff] reserved
+BIOS-e820: [mem 0x00000000dfa00000-0x00000000dfa0ffff] MMIO
 
->  
->  			for_each_cxl_endpoint_hb(ep, cxlr, hb, idx) {
-> +				struct cxl_decoder *switch_cxld;
-> +				struct cxl_dport *target;
-> +				struct cxl_port *switch_port;
-> +				bool found = false;
-> +
->  				if (get_rp(ep) != rp)
->  					continue;
->  
-> @@ -499,6 +528,34 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->  
->  				cxld->interleave_ways++;
->  				cxld->target[port_grouping] = get_rp(ep);
-> +
-> +				/*
-> +				 * At least one switch is connected here if the endpoint
-> +				 * has a depth > 2
-> +				 */
-> +				if (ep->port->depth == 2)
-> +					continue;
-> +
-> +				/* Check the staged list to see if this
-> +				 * port has already been added
-> +				 */
-> +				switch_port = get_switch(ep);
-> +				list_for_each_entry(switch_cxld, &cxlr->staged_list, region_link) {
-> +					if (to_cxl_port(switch_cxld->dev.parent) == switch_port)
-> +						found = true;
+causes the PCI resource allocation code to pick slightly
+different resources avoiding the troublesome overlap, see:
+https://bugzilla.redhat.com/show_bug.cgi?id=2029207
+for logs.
 
-break;
+But I don't think we should rely in this, since from a
+arch_remove_reservations() pov the troublesome overlap area
+which is now marked as MMIO is fair game for PCI bars with
+the change to allow MMIO areas for PCI bars, so things seem
+to mostly work by sheer luck after this RFC series.
 
-> +				}
-> +
-> +				if (found) {
-> +					target = cxl_find_dport_by_dev(switch_port, ep->dev.parent->parent);
-> +					switch_cxld->target[target_ndx++] = target;
-> +					continue;
-> +				}
-> +
-> +				target_ndx = 0;
-> +
-> +				switch_cxld = get_decoder(cxlr, switch_port);
-> +				switch_cxld->interleave_ways++;
-> +				switch_cxld->interleave_granularity = cxl_to_ways(region_ig + region_eniw);
+So now I have yet another plan to fix this (see below) I'll get
+that tested and assuming it works post that as a proper patch.
 
-I'm not following this.  Perhaps comment on why this particular maths?  I was assuming the switch
-interleave granularity would that of the region as the switch is last level of decode.
+Regards,
 
-Need to do the equivalent here of what you do in the if (found) or the first target is missed.
-Also need to be updating interleave_ways only in the found path, not here (as the default is 1)
+Hans
 
->  			}
->  		}
->  	}
+
+
+diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
+index 490411dba438..573e1323f490 100644
+--- a/arch/x86/include/asm/pci_x86.h
++++ b/arch/x86/include/asm/pci_x86.h
+@@ -64,6 +64,8 @@ void pcibios_scan_specific_bus(int busn);
+ 
+ /* pci-irq.c */
+ 
++struct pci_dev;
++
+ struct irq_info {
+ 	u8 bus, devfn;			/* Bus, device and function */
+ 	struct {
+@@ -232,3 +234,9 @@ static inline void mmio_config_writel(void __iomem *pos, u32 val)
+ # define x86_default_pci_init_irq	NULL
+ # define x86_default_pci_fixup_irqs	NULL
+ #endif
++
++#if defined CONFIG_PCI && defined CONFIG_ACPI
++extern bool pci_use_e820;
++#else
++#define pci_use_e820 true
++#endif
+diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
+index 9b9fb7882c20..e8dc9bc327bd 100644
+--- a/arch/x86/kernel/resource.c
++++ b/arch/x86/kernel/resource.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/ioport.h>
+ #include <asm/e820/api.h>
++#include <asm/pci_x86.h>
+ 
+ static void resource_clip(struct resource *res, resource_size_t start,
+ 			  resource_size_t end)
+@@ -28,6 +29,9 @@ static void remove_e820_regions(struct resource *avail)
+ 	int i;
+ 	struct e820_entry *entry;
+ 
++	if (!pci_use_e820)
++		return;
++
+ 	for (i = 0; i < e820_table->nr_entries; i++) {
+ 		entry = &e820_table->entries[i];
+ 
+diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
+index 052f1d78a562..7167934819b3 100644
+--- a/arch/x86/pci/acpi.c
++++ b/arch/x86/pci/acpi.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <linux/efi.h>
+ #include <linux/pci.h>
+ #include <linux/acpi.h>
+ #include <linux/init.h>
+@@ -21,6 +22,7 @@ struct pci_root_info {
+ 
+ static bool pci_use_crs = true;
+ static bool pci_ignore_seg;
++bool pci_use_e820 = true;
+ 
+ static int __init set_use_crs(const struct dmi_system_id *id)
+ {
+@@ -291,6 +293,28 @@ static bool resource_is_pcicfg_ioport(struct resource *res)
+ 		res->start == 0xCF8 && res->end == 0xCFF;
+ }
+ 
++static bool resource_matches_efi_mmio_region(const struct resource *res)
++{
++	unsigned long long start, end;
++	efi_memory_desc_t *md;
++
++	if (!efi_enabled(EFI_MEMMAP))
++		return false;
++
++	for_each_efi_memory_desc(md) {
++		if (md->type != EFI_MEMORY_MAPPED_IO)
++			continue;
++
++		start = md->phys_addr;
++		end = start + (md->num_pages << EFI_PAGE_SHIFT) - 1;
++
++		if (res->start >= start && res->end <= end)
++			return true;
++	}
++
++	return false;
++}
++
+ static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
+ {
+ 	struct acpi_device *device = ci->bridge;
+@@ -300,9 +324,16 @@ static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
+ 
+ 	status = acpi_pci_probe_root_resources(ci);
+ 	if (pci_use_crs) {
+-		resource_list_for_each_entry_safe(entry, tmp, &ci->resources)
++		resource_list_for_each_entry_safe(entry, tmp, &ci->resources) {
+ 			if (resource_is_pcicfg_ioport(entry->res))
+ 				resource_list_destroy_entry(entry);
++			if (resource_matches_efi_mmio_region(entry->res)) {
++				dev_info(&device->dev,
++					"host bridge window %pR is marked by EFI as MMIO\n",
++					entry->res);
++				pci_use_e820 = false;
++			}
++		}
+ 		return status;
+ 	}
+ 
 
