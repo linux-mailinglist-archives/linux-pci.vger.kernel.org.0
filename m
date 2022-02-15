@@ -2,127 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46D6C4B6CE5
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 14:01:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 968924B6CEE
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 14:03:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234469AbiBONBH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Feb 2022 08:01:07 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53478 "EHLO
+        id S238044AbiBONDS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Feb 2022 08:03:18 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234093AbiBONBG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 08:01:06 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E48277F6ED;
-        Tue, 15 Feb 2022 05:00:56 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9B72DB819A9;
-        Tue, 15 Feb 2022 13:00:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D88C340EB;
-        Tue, 15 Feb 2022 13:00:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644930054;
-        bh=rBQWeVT+EjzsgM3r1Lc4uCaVLYnzGjhTjj/msDXK3JQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Krj7P+C91g6qOvjxvKB81mvkRoyrAHTF2oSPNlKRcBJo6UzBrK7m9Qlspp+bE8L60
-         XCQxx4QeOVrwnNgvEJ86FjQZg7CL9v5KzzXIYET+suGKDkot+JLR+jgRJgrDF8PHXb
-         y8zl/wECo6oZ0t040D0GT8hit88BtxAcseq6Nt54m60DPgh6P+Wc7CDmPmCCQirWT6
-         /bhPJTdJme5BWgevr8q2KdY9PycccGncoMNM4ZarxRXa6gIzXof5emg7hWNjzMo6+z
-         8OapdOtjag5MQHSESLH0Mvw9rq7Q9xmSOPi/qCAVtsiX7TXBH/kk03l0SaDjMWwS86
-         AStehWQJl8CIg==
-Date:   Tue, 15 Feb 2022 13:00:44 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Yicong Yang <yangyicong@huawei.com>
-Cc:     Yicong Yang <yangyicong@hisilicon.com>, gregkh@linuxfoundation.org,
-        helgaas@kernel.org, alexander.shishkin@linux.intel.com,
-        lorenzo.pieralisi@arm.com, mark.rutland@arm.com,
-        mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
-        mike.leach@linaro.org, leo.yan@linaro.org,
-        jonathan.cameron@huawei.com, daniel.thompson@linaro.org,
-        joro@8bytes.org, john.garry@huawei.com,
-        shameerali.kolothum.thodi@huawei.com, robin.murphy@arm.com,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        coresight@lists.linaro.org, linux-pci@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, iommu@lists.linux-foundation.org,
-        prime.zeng@huawei.com, liuqi115@huawei.com,
-        zhangshaokun@hisilicon.com, linuxarm@huawei.com,
-        song.bao.hua@hisilicon.com
-Subject: Re: [PATCH v3 8/8] iommu/arm-smmu-v3: Make default domain type of
- HiSilicon PTT device to identity
-Message-ID: <20220215130044.GA7154@willie-the-truck>
-References: <20220124131118.17887-1-yangyicong@hisilicon.com>
- <20220124131118.17887-9-yangyicong@hisilicon.com>
- <e58888c1-5448-77c7-7f6c-f5db999a888f@huawei.com>
+        with ESMTP id S235227AbiBONDR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 08:03:17 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7E8899FB52;
+        Tue, 15 Feb 2022 05:03:07 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C0581480;
+        Tue, 15 Feb 2022 05:03:07 -0800 (PST)
+Received: from [10.57.70.89] (unknown [10.57.70.89])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D094A3F718;
+        Tue, 15 Feb 2022 05:03:02 -0800 (PST)
+Message-ID: <b2fd22a1-b52b-8eb1-91e9-9829830f1400@arm.com>
+Date:   Tue, 15 Feb 2022 13:02:58 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e58888c1-5448-77c7-7f6c-f5db999a888f@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH v1 5/8] iommu/amd: Use iommu_attach/detach_device()
+Content-Language: en-GB
+To:     Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220106022053.2406748-1-baolu.lu@linux.intel.com>
+ <20220106022053.2406748-6-baolu.lu@linux.intel.com>
+ <20220106143345.GC2328285@nvidia.com> <Ygo8iek2CwtPp2hj@8bytes.org>
+ <20220214131544.GX4160@nvidia.com> <Ygpb6CxmTdUHiN50@8bytes.org>
+ <20220214140236.GC929467@nvidia.com> <YgplyyjofwlM+1tc@8bytes.org>
+ <20220214150059.GE4160@nvidia.com> <YgtuJQhY8SNlv9/6@8bytes.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <YgtuJQhY8SNlv9/6@8bytes.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 08:55:20PM +0800, Yicong Yang wrote:
-> On 2022/1/24 21:11, Yicong Yang wrote:
-> > The DMA of HiSilicon PTT device can only work with identical
-> > mapping. So add a quirk for the device to force the domain
-> > passthrough.
-> > 
-> > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> > ---
-> >  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> > index 6dc6d8b6b368..6f67a2b1dd27 100644
-> > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> > @@ -2838,6 +2838,21 @@ static int arm_smmu_dev_disable_feature(struct device *dev,
-> >  	}
-> >  }
-> >  
-> > +#define IS_HISI_PTT_DEVICE(pdev)	((pdev)->vendor == PCI_VENDOR_ID_HUAWEI && \
-> > +					 (pdev)->device == 0xa12e)
-> > +
-> > +static int arm_smmu_def_domain_type(struct device *dev)
-> > +{
-> > +	if (dev_is_pci(dev)) {
-> > +		struct pci_dev *pdev = to_pci_dev(dev);
-> > +
-> > +		if (IS_HISI_PTT_DEVICE(pdev))
-> > +			return IOMMU_DOMAIN_IDENTITY;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static struct iommu_ops arm_smmu_ops = {
-> >  	.capable		= arm_smmu_capable,
-> >  	.domain_alloc		= arm_smmu_domain_alloc,
-> > @@ -2863,6 +2878,7 @@ static struct iommu_ops arm_smmu_ops = {
-> >  	.sva_unbind		= arm_smmu_sva_unbind,
-> >  	.sva_get_pasid		= arm_smmu_sva_get_pasid,
-> >  	.page_response		= arm_smmu_page_response,
-> > +	.def_domain_type	= arm_smmu_def_domain_type,
-> >  	.pgsize_bitmap		= -1UL, /* Restricted during device attach */
-> >  	.owner			= THIS_MODULE,
-> >  };
-> > 
->
-> Is this quirk ok with the SMMU v3 driver? Just want to confirm that I'm on the
-> right way to dealing with the issue of our device.
+On 2022-02-15 09:11, Joerg Roedel wrote:
+> On Mon, Feb 14, 2022 at 11:00:59AM -0400, Jason Gunthorpe wrote:
+>> On Mon, Feb 14, 2022 at 03:23:07PM +0100, Joerg Roedel wrote:
+>>
+>>> Device drivers calling into iommu_attach_device() is seldom a good
+>>> idea.  In this case the sound device has some generic hardware
+>>> interface so that an existing sound driver can be re-used. Making this
+>>> driver call iommu-specific functions for some devices is something hard
+>>> to justify.
+>>
+>> Er, so this is transparent to the generic sound device? I guess
+>> something fixed up the dma_api on that device to keep working?
+> 
+> Right, this is completly transparent to the sound device. The IOMMU code
+> will not set dma_ops on the device because it uses a direct mapping and
+> so the standard implementation will be used.
+> 
+>> But, then, the requirement is that nobody is using the dma API when we
+>> make this change?
+> 
+> That is the tricky part. DMA-API keeps working after the change is made,
+> because the new domain is also direct mapped. The new domain just has
+> the ability to assign host page-tables to device PASIDs, so that DMA
+> requests with a PASID TLP will be remapped.
+> 
+> It was actually a requirement for this code that when it jumps in, the
+> DMA-API mappings stay live. And the reason a direct mapping is used at
+> all is that the page-table walker of the IOMMU is a two-dimensional
+> walker, which will treat the addresses found in the host page-tables as
+> IO-virtual an translates them through the underlying page-table. So to
+> use host-pagetables the underlying mapping must be direct mapped.
 
-I don't think the quirk should be in the SMMUv3 driver. Assumedly, you would
-have the exact same problem if you stuck the PTT device behind a different
-type of IOMMU, and so the quirk should be handled by a higher level of the
-stack.
+Given how things have evolved since that code was originally written, 
+and that we seemingly now have the def_domain_type override kicking in 
+as soon as we first see an IOMMUv2-capable device, do we even need to 
+then subsequently switch to this special unmanaged domain with its 
+pagetable sucked out, or could we just install the PASID table in the 
+default domain itself?
 
-Will
+Robin.
+
+>> I don't think it matters how big/small the group is, only that when we
+>> change the domain we know everything flowing through the domain is
+>> still happy.
+> 
+> Yes, that matters. The group size matters too for DMA-API performance.
+> If two devices compete for the same lock in the allocator and/or the
+> same cached magazines, things will slow down. That only matters for
+> high-throughput devices, but still...
+> 
+> Regards,
+> 
+> 	Joerg
+> 
