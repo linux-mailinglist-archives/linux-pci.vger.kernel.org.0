@@ -2,83 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2FE74B6457
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 08:29:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 517384B6466
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 08:32:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233392AbiBOH3Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Feb 2022 02:29:25 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34458 "EHLO
+        id S234042AbiBOHcN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Feb 2022 02:32:13 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231206AbiBOH3Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 02:29:24 -0500
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11A91FA20D;
-        Mon, 14 Feb 2022 23:29:13 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id E5202100D9410;
-        Tue, 15 Feb 2022 08:29:11 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id C35C5254B5C; Tue, 15 Feb 2022 08:29:11 +0100 (CET)
-Date:   Tue, 15 Feb 2022 08:29:11 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Alexander.Deucher@amd.com, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v4 00/10] Overhaul `is_thunderbolt`
-Message-ID: <20220215072911.GA13892@wunner.de>
-References: <20220215000200.242799-1-mario.limonciello@amd.com>
+        with ESMTP id S233274AbiBOHcM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 02:32:12 -0500
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23F96D0B41;
+        Mon, 14 Feb 2022 23:32:00 -0800 (PST)
+X-UUID: ff01df33f2d842a1815e9cd3e7cd3dcd-20220215
+X-UUID: ff01df33f2d842a1815e9cd3e7cd3dcd-20220215
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <qizhong.cheng@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 56783796; Tue, 15 Feb 2022 15:31:56 +0800
+Received: from mtkexhb02.mediatek.inc (172.21.101.103) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 15 Feb 2022 15:31:55 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 15 Feb
+ 2022 15:31:55 +0800
+Received: from localhost.localdomain (10.17.3.154) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 15 Feb 2022 15:31:54 +0800
+From:   qizhong cheng <qizhong.cheng@mediatek.com>
+To:     Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <stable@vger.kernel.org>,
+        <qizhong.cheng@mediatek.com>, <chuanjia.liu@mediatek.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v3] PCI: mediatek: Clear interrupt status before dispatching handler
+Date:   Tue, 15 Feb 2022 15:31:53 +0800
+Message-ID: <20220215073153.17345-1-qizhong.cheng@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220215000200.242799-1-mario.limonciello@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 06:01:50PM -0600, Mario Limonciello wrote:
->  drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |  2 +-
->  drivers/gpu/drm/amd/amdgpu/nbio_v2_3.c  |  2 +-
->  drivers/gpu/drm/nouveau/nouveau_vga.c   |  4 +-
->  drivers/gpu/drm/radeon/radeon_device.c  |  4 +-
->  drivers/gpu/drm/radeon/radeon_kms.c     |  2 +-
->  drivers/pci/hotplug/pciehp_hpc.c        |  6 +-
->  drivers/pci/pci-acpi.c                  | 15 ++++-
->  drivers/pci/pci.c                       | 17 +++--
->  drivers/pci/probe.c                     | 52 ++++++++++++++-
->  drivers/pci/quirks.c                    | 84 +++++++++++++++++++++++++
->  drivers/platform/x86/apple-gmux.c       |  2 +-
->  drivers/thunderbolt/nhi.h               |  2 -
->  include/linux/pci.h                     | 25 +-------
->  include/linux/pci_ids.h                 |  3 +
->  14 files changed, 173 insertions(+), 47 deletions(-)
+We found a failure when used iperf tool for wifi performance testing,
+there are some MSIs received while clearing the interrupt status,
+these MSIs cannot be serviced.
 
-That's an awful lot of additional LoC for what is primarily
-a refactoring job with the intent to simplify things.
+The interrupt status can be cleared even the MSI status still remaining,
+as an edge-triggered interrupts, its interrupt status should be cleared
+before dispatching to the handler of device.
 
-Honestly this looks like an attempt to fix something that
-isn't broken.  Specifically, the is_thunderbolt bit apparently
-can't be removed without adding new bits to struct pci_dev.
-Not sure if that can be called progress.
+Fixes: 43e6409db64d ("PCI: mediatek: Add MSI support for MT2712 and MT7622")
+Signed-off-by: qizhong cheng <qizhong.cheng@mediatek.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: stable@vger.kernel.org
+---
 
-Thanks,
+v3:
+ - Add Fix tag.
 
-Lukas
+v2:
+ - Update the subject line.
+ - Improve the commit log and code comments.
+
+ drivers/pci/controller/pcie-mediatek.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index 2f3f974977a3..2856d74b2513 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -624,12 +624,17 @@ static void mtk_pcie_intr_handler(struct irq_desc *desc)
+ 		if (status & MSI_STATUS){
+ 			unsigned long imsi_status;
+ 
++			/*
++			 * The interrupt status can be cleared even the MSI
++			 * status still remaining, hence as an edge-triggered
++			 * interrupts, its interrupt status should be cleared
++			 * before dispatching handler.
++			 */
++			writel(MSI_STATUS, port->base + PCIE_INT_STATUS);
+ 			while ((imsi_status = readl(port->base + PCIE_IMSI_STATUS))) {
+ 				for_each_set_bit(bit, &imsi_status, MTK_MSI_IRQS_NUM)
+ 					generic_handle_domain_irq(port->inner_domain, bit);
+ 			}
+-			/* Clear MSI interrupt status */
+-			writel(MSI_STATUS, port->base + PCIE_INT_STATUS);
+ 		}
+ 	}
+ 
+-- 
+2.25.1
+
