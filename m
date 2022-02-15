@@ -2,56 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9E374B75BB
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 21:48:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C5904B77D1
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 21:51:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242210AbiBORJm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Feb 2022 12:09:42 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35482 "EHLO
+        id S240628AbiBORVP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Feb 2022 12:21:15 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242215AbiBORJj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 12:09:39 -0500
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 681B911ACD7;
-        Tue, 15 Feb 2022 09:09:29 -0800 (PST)
-Received: by mail-yb1-f173.google.com with SMTP id j12so35870115ybh.8;
-        Tue, 15 Feb 2022 09:09:29 -0800 (PST)
+        with ESMTP id S240580AbiBORVO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 12:21:14 -0500
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA7341D315;
+        Tue, 15 Feb 2022 09:21:04 -0800 (PST)
+Received: by mail-yb1-f176.google.com with SMTP id o19so57921565ybc.12;
+        Tue, 15 Feb 2022 09:21:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aJg+8ODLSufI3YJAkdNmRKsDBXNNQeuaQZl515K2Cg0=;
-        b=CLwrFui3vXLy0KnztE6pgFcZnRP1t5PU3k5bVcF0cLARq6ogCwQ+7VT8KpFZH7wjyU
-         GcJKrs+21rjaAnBtyJ1wSwpRI3jfaHw41uOLa0gRXHYY9gMObP5HmBIBtWoUz+x2k3X9
-         AZDCXU4XHZ6uv8r4PObxu0gQWXu4b8jmadznigwjKJ82A0QSDjvA02GMZCXcHM8D+o3z
-         5g9wE9Ev2eJoWTOejvatnGCliYo6ryEgagkY3s/RnnO8eRXLAnz/m/1stePJj8AQrK8D
-         XthPjz0LDHu+25ihOiNbu9VX0IIlfRyzbGLVn+eyaqypf0ZQwWpmHGhX5p3dyqH8fKBd
-         hCCw==
-X-Gm-Message-State: AOAM532XQaZAovB8/S0gzefBz8x6YuqvHu58OX5s3QFlLpoefGIzirN2
-        8VEqHqPR+BDq/TPNbQCHYW9fCFuLHJPURCz0uhQ=
-X-Google-Smtp-Source: ABdhPJzMObvzFyK2JDA1fz4991a3kpJmlz6YK+5txcVkUYOdgEEjXW3+czvppRdqGKQmpYG047qtCup1MpOfjrGDyp8=
-X-Received: by 2002:a25:fc0d:: with SMTP id v13mr4593644ybd.272.1644944966645;
- Tue, 15 Feb 2022 09:09:26 -0800 (PST)
+        bh=cC73NoewyQZLFmEe3kZ6ovOMbujHh+xwQW66fTjFghM=;
+        b=Rk3XsczuU9pZdjdbJcQysKu3NnZdQtDjP8U1h4nhocsoX6gNS1A0X5LLcsqCXqvrsV
+         CacL75wEg8hkJfGPEfIJjDu6BCIQnzgOxKHF/FfKXSQoVRQQHk0hea8PBErfe29YyRI5
+         uP/HcBTl75GOatkNYmJDpVliqVzK8udlsGwb3thN+ifGd9+NW7G3S0e2JWeADH5jmrGk
+         s3XVF/JfDNkh4Bkl/PHZfOu4KY91W/2dQu/PFJCCkWxZOktf96tpH/IR2upzHx4KbOlI
+         mMANGot8nJaZdA0K5FaanpZHVaCM9VJrpnNtxS2Y5MpmLt88OksrnUzSX4pIN+B5QQbI
+         RPtA==
+X-Gm-Message-State: AOAM533QCe2v88iWXFK1/YnZi/BTOTqgUJYqPGiS/1xkXcPcPH76VK9e
+        /LMXqVWGWxuMyHuYpWD1/JsX2JKBakOPe3/MqwQ=
+X-Google-Smtp-Source: ABdhPJyumJDmiiJXNP6kejIKT1H8Hap2mV31nxKpsXlBb5GpX3LVPHU7UIjrPu1aHpP9hhGMQnrlGHWXnd1ho6SzHdw=
+X-Received: by 2002:a81:1290:: with SMTP id 138mr2179197yws.19.1644945664017;
+ Tue, 15 Feb 2022 09:21:04 -0800 (PST)
 MIME-Version: 1.0
-References: <CAAd53p6hATV8TOcJ9Qi2rMwVi=y_9+tQu6KhDkAm6Y8=cQ_xoA@mail.gmail.com>
- <20220215150939.GA106706@bhelgaas>
-In-Reply-To: <20220215150939.GA106706@bhelgaas>
+References: <20220214151759.98267-1-hdegoede@redhat.com> <05332ea8-2849-e567-1db3-3bdee97c2193@redhat.com>
+In-Reply-To: <05332ea8-2849-e567-1db3-3bdee97c2193@redhat.com>
 From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 15 Feb 2022 18:09:15 +0100
-Message-ID: <CAJZ5v0i6+EMMGuKckhtTdt7TgC3LbofW7oS7B5=McSNjEh1yKA@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: vmd: Honor ACPI _OSC on PCIe features
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
+Date:   Tue, 15 Feb 2022 18:20:53 +0100
+Message-ID: <CAJZ5v0ieyKDzwPUZwfcznhABmM24fm3U7Pzea7tBoaCs9hKizw@mail.gmail.com>
+Subject: Re: [RFC 0/2] x86/PCI: Ignore EFI memmap MMIO entries
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        =?UTF-8?Q?Benoit_Gr=C3=A9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
@@ -64,88 +65,170 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 15, 2022 at 4:09 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, Feb 15, 2022 at 5:12 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> On Mon, Feb 14, 2022 at 08:23:05AM +0800, Kai-Heng Feng wrote:
-> > On Thu, Feb 10, 2022 at 5:36 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Tue, Dec 07, 2021 at 02:15:04PM +0100, Rafael J. Wysocki wrote:
-> > > > On Tue, Dec 7, 2021 at 12:12 AM Keith Busch <kbusch@kernel.org> wrote:
-> > > > > On Fri, Dec 03, 2021 at 11:15:41AM +0800, Kai-Heng Feng wrote:
-> > > > > > When Samsung PCIe Gen4 NVMe is connected to Intel ADL VMD, the
-> > > > > > combination causes AER message flood and drags the system performance
-> > > > > > down.
-> > > > > >
-> > > > > > The issue doesn't happen when VMD mode is disabled in BIOS, since AER
-> > > > > > isn't enabled by acpi_pci_root_create() . When VMD mode is enabled, AER
-> > > > > > is enabled regardless of _OSC:
-> > > > > > [    0.410076] acpi PNP0A08:00: _OSC: platform does not support [AER]
-> > > > > > ...
-> > > > > > [    1.486704] pcieport 10000:e0:06.0: AER: enabled with IRQ 146
-> > > > > >
-> > > > > > Since VMD is an aperture to regular PCIe root ports, honor ACPI _OSC to
-> > > > > > disable PCIe features accordingly to resolve the issue.
-> > > > >
-> > > > > At least for some versions of this hardare, I recall ACPI is unaware of
-> > > > > any devices in the VMD domain; the platform can not see past the VMD
-> > > > > endpoint, so I throught the driver was supposed to always let the VMD
-> > > > > domain use OS native support regardless of the parent's ACPI _OSC.
-> > > >
-> > > > This is orthogonal to whether or not ACPI is aware of the VMD domain
-> > > > or the devices in it.
-> > > >
-> > > > If the platform firmware does not allow the OS to control specific
-> > > > PCIe features at the physical host bridge level, that extends to the
-> > > > VMD "bus", because it is just a way to expose a hidden part of the
-> > > > PCIe hierarchy.
-> > >
-> > > I don't understand what's going on here.  Do we understand the AER
-> > > message flood?  Are we just papering over it by disabling AER?
-> >
-> > To be more precise, AER is disabled by the platform vendor in BIOS to
-> > paper over the issue.
-> > The only viable solution for us is to follow their settings. We may
-> > never know what really happens underneath.
-> >
-> > Disabling ASPM/AER/PME etc is a normal practice for ODMs unfortunately.
+> Hi All,
 >
-> OK.  So this patch actually has nothing in particular to do with AER.
-> It's about making _OSC apply to *all* devices below a host bridge,
-> even those below a VMD.
+> On 2/14/22 16:17, Hans de Goede wrote:
+> > Hi All,
+> >
+> > Here is a new attempt at fixing the issue where on some laptops
+> > there are EFI memmap MMIO entries covering the entire PCI bridge
+> > mem window, causing Linux to be unable to find free space to
+> > assign to unassigned BARs.
+> >
+> > This is marked as RFC atm because I'm waiting for feedback from
+> > testers.
+>
+> Unfortunately the troublesome 0xdfa00000-0xdfa0ffff region on
+> the Lenovo X1 carbon gen 2 is marked as MMIO by the EFI memmap,
+> so the approach from this series won't work.
+>
+> Interestingly enough this RFC series does seem to help to fix
+> the suspend/resume on this x1c2, since for some reason merely
+> splitting the original:
+>
+> BIOS-e820: [mem 0x00000000dceff000-0x00000000dfa0ffff] reserved
+>
+> range into:
+>
+> BIOS-e820: [mem 0x00000000dceff000-0x00000000df9fffff] reserved
+> BIOS-e820: [mem 0x00000000dfa00000-0x00000000dfa0ffff] MMIO
+>
+> causes the PCI resource allocation code to pick slightly
+> different resources avoiding the troublesome overlap, see:
+> https://bugzilla.redhat.com/show_bug.cgi?id=2029207
+> for logs.
+>
+> But I don't think we should rely in this, since from a
+> arch_remove_reservations() pov the troublesome overlap area
+> which is now marked as MMIO is fair game for PCI bars with
+> the change to allow MMIO areas for PCI bars, so things seem
+> to mostly work by sheer luck after this RFC series.
+>
+> So now I have yet another plan to fix this (see below) I'll get
+> that tested and assuming it works post that as a proper patch.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
+> index 490411dba438..573e1323f490 100644
+> --- a/arch/x86/include/asm/pci_x86.h
+> +++ b/arch/x86/include/asm/pci_x86.h
+> @@ -64,6 +64,8 @@ void pcibios_scan_specific_bus(int busn);
+>
+>  /* pci-irq.c */
+>
+> +struct pci_dev;
+> +
+>  struct irq_info {
+>         u8 bus, devfn;                  /* Bus, device and function */
+>         struct {
+> @@ -232,3 +234,9 @@ static inline void mmio_config_writel(void __iomem *pos, u32 val)
+>  # define x86_default_pci_init_irq      NULL
+>  # define x86_default_pci_fixup_irqs    NULL
+>  #endif
+> +
+> +#if defined CONFIG_PCI && defined CONFIG_ACPI
+> +extern bool pci_use_e820;
+> +#else
+> +#define pci_use_e820 true
+> +#endif
+> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
+> index 9b9fb7882c20..e8dc9bc327bd 100644
+> --- a/arch/x86/kernel/resource.c
+> +++ b/arch/x86/kernel/resource.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/ioport.h>
+>  #include <asm/e820/api.h>
+> +#include <asm/pci_x86.h>
+>
+>  static void resource_clip(struct resource *res, resource_size_t start,
+>                           resource_size_t end)
+> @@ -28,6 +29,9 @@ static void remove_e820_regions(struct resource *avail)
+>         int i;
+>         struct e820_entry *entry;
+>
+> +       if (!pci_use_e820)
+> +               return;
+> +
+>         for (i = 0; i < e820_table->nr_entries; i++) {
+>                 entry = &e820_table->entries[i];
+>
+> diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
+> index 052f1d78a562..7167934819b3 100644
+> --- a/arch/x86/pci/acpi.c
+> +++ b/arch/x86/pci/acpi.c
+> @@ -1,4 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#include <linux/efi.h>
+>  #include <linux/pci.h>
+>  #include <linux/acpi.h>
+>  #include <linux/init.h>
+> @@ -21,6 +22,7 @@ struct pci_root_info {
+>
+>  static bool pci_use_crs = true;
+>  static bool pci_ignore_seg;
+> +bool pci_use_e820 = true;
+>
+>  static int __init set_use_crs(const struct dmi_system_id *id)
+>  {
+> @@ -291,6 +293,28 @@ static bool resource_is_pcicfg_ioport(struct resource *res)
+>                 res->start == 0xCF8 && res->end == 0xCFF;
+>  }
+>
+> +static bool resource_matches_efi_mmio_region(const struct resource *res)
 
-Right.
+I would call this resource_is_efi_mmio() FWIW.
 
-> This is slightly ambiguous because while "_OSC applies to the entire
-> hierarchy originated by a PCI Host Bridge" (PCI Firmware spec r3.3,
-> sec 4.5.1), vmd.c creates a logical view where devices below the VMD
-> are in a separate hierarchy with a separate domain.
+> +{
+> +       unsigned long long start, end;
+> +       efi_memory_desc_t *md;
+> +
+> +       if (!efi_enabled(EFI_MEMMAP))
+> +               return false;
+> +
+> +       for_each_efi_memory_desc(md) {
+> +               if (md->type != EFI_MEMORY_MAPPED_IO)
+> +                       continue;
+> +
+> +               start = md->phys_addr;
+> +               end = start + (md->num_pages << EFI_PAGE_SHIFT) - 1;
+> +
+> +               if (res->start >= start && res->end <= end)
+> +                       return true;
+> +       }
+> +
+> +       return false;
+> +}
+> +
+>  static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
+>  {
+>         struct acpi_device *device = ci->bridge;
+> @@ -300,9 +324,16 @@ static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
+>
+>         status = acpi_pci_probe_root_resources(ci);
+>         if (pci_use_crs) {
+> -               resource_list_for_each_entry_safe(entry, tmp, &ci->resources)
+> +               resource_list_for_each_entry_safe(entry, tmp, &ci->resources) {
+>                         if (resource_is_pcicfg_ioport(entry->res))
+>                                 resource_list_destroy_entry(entry);
+> +                       if (resource_matches_efi_mmio_region(entry->res)) {
 
-But from the HW perspective they still are in the same hierarchy below
-the original host bridge.
+I would add a pci_use_e820 check to this.
 
-> The interpretation that _OSC applies to devices below VMD should work,
-> as long as it is possible for platform firmware to manage services
-> (AER, pciehp, etc) for things below VMD without getting in the way of
-> vmd.c.
+> +                               dev_info(&device->dev,
+> +                                       "host bridge window %pR is marked by EFI as MMIO\n",
+> +                                       entry->res);
+> +                               pci_use_e820 = false;
+> +                       }
+> +               }
+>                 return status;
+>         }
 
-vmd.c actually exposes things hidden by the firmware and the point of
-the patch is to still let the firmware control them if it wants/needs
-to IIUC.
-
-> But I think one implication of this is that we cannot support
-> hot-added VMDs.  For example, firmware that wants to manage AER will
-> use _OSC to retain AER control.  But if the firmware doesn't know how
-> VMDs work, it will not be able to handle AER for devices below the
-> VMD.
-
-Well, the firmware needs to know how stuff works to hide it in the
-first place ...
-
-> > > If an error occurs below a VMD, who notices and reports it?  If we
-> > > disable native AER below VMD because of _OSC, as this patch does, I
-> > > guess we're assuming the platform will handle AER events below VMD.
-> > > Is that really true?  Does the platform know how to find AER log
-> > > registers of devices below VMD?
-> > >
-> > > > The platform firmware does that through ACPI _OSC under the host
-> > > > bridge device (not under the VMD device) which it is very well aware
-> > > > of.
+Overall, it looks reasonable to me.
