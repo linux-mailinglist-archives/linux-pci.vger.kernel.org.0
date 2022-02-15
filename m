@@ -2,49 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03BD54B71DE
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 17:41:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FCC94B7170
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 17:40:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240903AbiBOP4U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Feb 2022 10:56:20 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53332 "EHLO
+        id S231211AbiBOQEe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Feb 2022 11:04:34 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239731AbiBOP4T (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 10:56:19 -0500
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2050.outbound.protection.outlook.com [40.107.92.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 412B99E57A;
-        Tue, 15 Feb 2022 07:56:05 -0800 (PST)
+        with ESMTP id S229747AbiBOQEc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 11:04:32 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2067.outbound.protection.outlook.com [40.107.243.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5DD624A;
+        Tue, 15 Feb 2022 08:04:22 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JTX0kKSs60Pnecxb2/PTG95Y7QbFn/09PMJvPwI8ZTaNTRakLYQpsNZXplaQ/D1bvcKFk6RPPGtsm96B+XLhfs0pmnu+C6ZWWHKt5hTisXsQFa+Du+MKO0+CJKQ+4Dglm6SzriJYUtIdXy1XVqQui157yZG3vtsetkQEqTk41Qa8VvUH7n8avI/asvoRFGGlmwvMf5mSMUNWMsO/H5wt5rFoEG6hV9AUrKwuiAUOI9nthysokOYN1/B4M+osTX0hinQheFt13UN6Dzj2w6qkiKTM5oQbLOpUazrA0ax3R3+HJUkYX1LW/pPQMhLnqYbbcfuh/nXUnwpWVRwwFsI7Xw==
+ b=lp2js/0US3EyxSB418wnv0iUBeniFWQk/xxQti24g0Z4UyJk31AZsspCHP/0K1DhJdxaysyygs6tckzh6YCGO66V4d5Nag1RzMDs4H8oNJRZh/NDOljMaRDpo9qoz2vsiDJhG4P4U3JWhW4Y0EshxW5INaCqgly5W+YsfIzlCAqUcACjBY9lOSCNRta+6LtOQb/X1vVAZ5yYOpJhm4xpWTM7qAkJ+IMCnnfidCzv713EpWl2yJlL56mqHBwV5FCG0pbWMfLDY5N8OF8qsOgM+9T8rHLmfJ9OBapZeddk2ihtRFhAmY8Lcs74F0X6ujqY0qgPSu8RQAf7MaErODvRng==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JULRuBXTDT2NSj8/68Dvu12VImVPZwhhvXTRAjqfIgc=;
- b=CknymNw/o75Pcn6uq56TBp+LdPMj87Tp2PvDHDwlKvnBDLHCs7qkCmjC8iZfOt/0q5wpbsl/c2UQxhGTiGntCcoLw7Oeciz+iTmrK0sHbGcGHzKJH6NwxAMtQyzZCl+priVIoiqs3i/Z+S/9CFxa1Hd3J2ZfYyoo+iAAtx34qpXJSrKLaY8gaFvwDczQ+bkPpHKNDP2HEn+x5zoWIuS3/F9nXSLMY9k1iI1rX5GcnFuICNMGSBKnqMXgQbCmr7Gw7le67pfECwovqEAqB8rkC3gqNBGQvgEau2duGHGtwYD9ReqGYj5lFGemfDbamWCtS/vGi/pp01AcaFQWT2xs7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
+ bh=fsKY1jDFmA38zIvx2fZCClWnGHtCX8wp6pGlV3qbOAo=;
+ b=dl59TXjDT/O+ht8OhcgOJMIx23AqkNftY+p6A9PqXI7HDpWqs9YYkGSbbSSKrzigIeskhXS/Agd3ItPvZbxACLnoYXEXk5FOL3iT1yfBGyGNWeQx+C0C84ABzgwMRgwtQDDoD+EDtZnQTn4lWeRXnudq18mLPTq6ZkvK+6FG/CGG6L4lA9npNwNoytLPvQZcmtzy+Q81cyfaZpqnWT4kqWLxPGP/IqQAnmTwT/0PUh2kn+xwFjOkrpoPDkPYiTffD77QTQ986Qlc77BTGHwRRkdGPqvputTv+p3FP2o1LDk34/2pCV1FU0QWYAKanW6r/ej3J0qjdkMvI0lI3ZhwYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JULRuBXTDT2NSj8/68Dvu12VImVPZwhhvXTRAjqfIgc=;
- b=Kz9fYNqv6kKeqjAavbU3V365mdVjjSRfhQOabZBZkYd+vx40YkCde1yqMvRQiZy3UC2d1QQd6rne0zBJhtM9bkh2diSnpC+khqk0TGu9iapIqQ6XvohtGlrOUzhsLjS0C2nn/ISYLQwcRe93iXxHgY578p4lBKSe8mqaDIHRcZAS0won5qtn4L2EYxv9kFNMdjxxXtiZ86oapFajTL9GR/UCoJa4TLxnpYZl138n1eQECb7A80RXc/6UQ5ZY2BH4l8rI+XBnzmkYl9/lvoNyCVq2elgJMSw8UcHmCJAhD2YFuN3O9JJpvMYRzkT3GueS/lXWB/hkPOZQEMtN+JIAGw==
+ bh=fsKY1jDFmA38zIvx2fZCClWnGHtCX8wp6pGlV3qbOAo=;
+ b=irW73Gkruj10kAfTlYNtxTApASQzZrjc7bVNghxc9FzFTPeKC2Sc8Kkloi3rSvlSZUlo6Rlk/ly9E2iehPNVzzVo1sleYOiDD7L3oWPrMIb0ymQGspMOTZLIKQH+v4XdMltaapVlFinB77lfPnvPzea9We3b2Q5kh6+WeU6Neh7Eep/P4psDOr9AQWz74n4icfkcxAzYCENa+SoH9YzbByEY1tWkZGIK8pEJuO41VdnP+XC/R+mg6Wh7sAOI1yOwdo8KHhQSIdiI6yqQ8fITSgeTwwKUlf+wdNFwvCby+/iRAw7LqISObhIKMpGMyWltIG9Ka1eGfszAuMUTjVGgPA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from CH2PR12MB4181.namprd12.prod.outlook.com (2603:10b6:610:a8::16)
- by BN6PR1201MB2466.namprd12.prod.outlook.com (2603:10b6:404:b0::20) with
+ by BYAPR12MB3445.namprd12.prod.outlook.com (2603:10b6:a03:ac::31) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.14; Tue, 15 Feb
- 2022 15:56:03 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.11; Tue, 15 Feb
+ 2022 16:04:20 +0000
 Received: from CH2PR12MB4181.namprd12.prod.outlook.com
  ([fe80::287d:b5f6:ed76:64ba]) by CH2PR12MB4181.namprd12.prod.outlook.com
  ([fe80::287d:b5f6:ed76:64ba%4]) with mapi id 15.20.4975.019; Tue, 15 Feb 2022
- 15:56:03 +0000
-Date:   Tue, 15 Feb 2022 11:56:02 -0400
+ 16:04:20 +0000
+Date:   Tue, 15 Feb 2022 12:04:19 -0400
 From:   Jason Gunthorpe <jgg@nvidia.com>
 To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
         "saeedm@nvidia.com" <saeedm@nvidia.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
@@ -58,70 +57,72 @@ Cc:     Yishai Hadas <yishaih@nvidia.com>,
         "Raj, Ashok" <ashok.raj@intel.com>,
         "shameerali.kolothum.thodi@huawei.com" 
         <shameerali.kolothum.thodi@huawei.com>
-Subject: Re: [PATCH V7 mlx5-next 09/15] vfio: Extend the device migration
- protocol with RUNNING_P2P
-Message-ID: <20220215155602.GB1046125@nvidia.com>
+Subject: Re: [PATCH V7 mlx5-next 08/15] vfio: Define device migration
+ protocol v2
+Message-ID: <20220215160419.GC1046125@nvidia.com>
 References: <20220207172216.206415-1-yishaih@nvidia.com>
- <20220207172216.206415-10-yishaih@nvidia.com>
- <BN9PR11MB5276D169554630B8345DB7598C349@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20220207172216.206415-9-yishaih@nvidia.com>
+ <20220208170754.01d05a1d.alex.williamson@redhat.com>
+ <20220209023645.GN4160@nvidia.com>
+ <BN9PR11MB5276BD03F292902A803FA0E58C349@BN9PR11MB5276.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BN9PR11MB5276D169554630B8345DB7598C349@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-ClientProxiedBy: BL1PR13CA0261.namprd13.prod.outlook.com
- (2603:10b6:208:2ba::26) To CH2PR12MB4181.namprd12.prod.outlook.com
+In-Reply-To: <BN9PR11MB5276BD03F292902A803FA0E58C349@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-ClientProxiedBy: MN2PR04CA0029.namprd04.prod.outlook.com
+ (2603:10b6:208:d4::42) To CH2PR12MB4181.namprd12.prod.outlook.com
  (2603:10b6:610:a8::16)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e4afdd80-c1db-4a99-e871-08d9f09bab1e
-X-MS-TrafficTypeDiagnostic: BN6PR1201MB2466:EE_
-X-Microsoft-Antispam-PRVS: <BN6PR1201MB246615D212491BF17FA77C1BC2349@BN6PR1201MB2466.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Office365-Filtering-Correlation-Id: 2a3464f4-ad5e-47f9-b161-08d9f09cd377
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3445:EE_
+X-Microsoft-Antispam-PRVS: <BYAPR12MB34450C331DD6E53EE706CAD6C2349@BYAPR12MB3445.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qjTNLQSGtl/oPX98AQGQRBDfmJNrBcd9bUY1Pwj1ba57NgskZqXybOIOywFNlZNr5QAVOoKiOp3oiXGKn+VfG/PbFioOiAU+Im78hteRGClh3W+YzzSVNRiWsR8uIjg+oJOuzkrb0qX6a89CQYKfy8nRPlkpBV7meiua1UgN1UIADn0i3TW21QCmlOjPoAudXO0r8JCzz62lYztmF19Mp4MkibyY4l2ebQnZhoQJPZ38cDATCwCVcjUdN+dapwK2EgL9W7GPH1PGOEjMUGXzObWfSFheIqHIcqp+kZ0Uo3RKb88VDup2rAgbIVFulDYjc4YbvkCQCe7rTKd5a5NxiKgMNwAIFQ0+LuWYn7YKkfGiEGvQ9NqNSSIJVb7pG3/qhvwQxx8WjCsJNlL8rGXkDvwMVp2wHHfPgrKtgUioMheOkCR4cR+Ii5PuyN3yby9aVSvEcSQfq1q+DANdHVU2G7LFjd3o6HHo6ES5NREWHuNzDR1NoWd1kImtpXNFO7pzZxV+HOims/C2ob6t3MhjG0+0akvo7gkXXeU4FTO3/ofWd0dKRKCpcwYibHxGhQ/qf8ZxHYA8879OjUAAH0N+zPXvoeI8cc5GLIBHABFBBcoFHTib1mV0lw5pX6cxFMNLZymlnhHqXRUBc0xhgHfr/A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4181.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(83380400001)(38100700002)(8936002)(6486002)(508600001)(5660300002)(66946007)(8676002)(6916009)(66476007)(66556008)(54906003)(316002)(26005)(186003)(4326008)(2906002)(2616005)(1076003)(6512007)(6506007)(86362001)(33656002)(36756003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: /3YwK5rZXO58g4tNxC8gZ/I9JSpD5aF3iU3Q5X6yp/lBuJcwsw75G83fcDcrTCCsyheDmJ8WcwL4AEE+WjM83p4Jk21WA1QViPBobsBPlJmUPm+6cuGx0yEk5BYjWGonKlxYf1Kcv2yOC+6KYegxvV8n4pUuN1tuQZjGq5D6/z6ocD5Ljqb0qVPO1JNn2Of8njJogorSr7kvvKRku0ITYyG6eMCffGjrOGUgtVCdlqs0cQeC8HrmeOKx2TGmrnn65Naj8YSBRiPJUAbq5Q8sWjdISpGq8VsnhzcPP5dwOkelzvKcaW22zFgrx0XQpR3bR9rKMsCZQd/vmV+EJZcZ9Vrl0dyTydlQePTXPUV6l7c35OJuLytxIRA9EiHYljd1EgnBJGR7IkOzLMgLjQJ9KI4vj1sGBKlUQBd3K6Q0sX2pEs9RlYnNgpJ2xQclgJ/fC1czCvlgdFqsXgduNLJAl4nabsiepU/N1FHOdMjLxYl5OQAaQC5QBdGzrHx4CsAnAv3Orv9tFPZM4aY3Zd60n/xrpgDNs4AMnqJuBiH72g39xShtMPQJv/pMLdc2vZWz/R50+YjwxOptVHKK55xTrkutpgFe4rJBP+ugzh9uTy2ubIHi+RmJsSiEzLXCK3+/vRRTNM7zA6YIowSDns+wVg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4181.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(83380400001)(5660300002)(8676002)(508600001)(54906003)(6486002)(2906002)(6916009)(2616005)(26005)(186003)(1076003)(8936002)(6506007)(4326008)(66556008)(66946007)(6512007)(33656002)(86362001)(316002)(36756003)(38100700002)(66476007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xaRLavEEre+H7JQUZuI23q5YgvVOZ7G8tTdaBENjMi0/wx5I9wlL3C7jmye5?=
- =?us-ascii?Q?mHsb7h51R96FLIL2q+PfJTBeOJvuqIu++DEoR73SvXhApC36jY91mYKz3BNK?=
- =?us-ascii?Q?gnxBBO1ibXbiXMj43n9yA4Mlua2JdghcsIJ46gc1KRUKUfc03ezx6GKabICs?=
- =?us-ascii?Q?+eiI6uLL0Y9pUyFKBKYhXT/IBc4QZ45EwGvbbHdvAEnAveuhBbDVjaVn/51W?=
- =?us-ascii?Q?aJtrW4h6drtApUKcRniTGlKjtJGOi+NwVElGyO351354qk835U6b7jY0ar26?=
- =?us-ascii?Q?t0t0vq6Ac/6kwihCdOy3ajlQ60KjKab0LL/KfcrXlhBUO7Tv556QsPCn4bWT?=
- =?us-ascii?Q?UnaBbPeins1m1eUdnffXusok+8TYt6IP+6h/6/ZQ2Saq6g0UhfGzdp5tFchR?=
- =?us-ascii?Q?RNAl3gZKJqyfpDM3krIZQpbjevdnn+G1pfuStRUABEySjky+XjNmodvdRMC8?=
- =?us-ascii?Q?A1NPDsZX6CPY+dFwTBvtpKUVUMO7k+hoaXNZZ5wXoUiQQiYx83gvw/X9m3JY?=
- =?us-ascii?Q?qNJyG/P6C17nk4ofSt451sbGps+CJxC9Hboh5oB6oTzQqZ92r2st3aXjpFYw?=
- =?us-ascii?Q?+LjFP1rWTaFd8InE3RFWKkp3zYF2AeWip/E+26mHnHKrZeAHjh6RZvVhq/1u?=
- =?us-ascii?Q?PiKYf5TKvS141iesxfSZI48wKGXO8QBb+lYZvqBmKYCdJVAcxll/0X/kCW24?=
- =?us-ascii?Q?df8F+3bIvKOQ7vMrqCOfe1KjbTGCDdnfjK+g4+ZallpAN7xE0nwQy1CCVD+1?=
- =?us-ascii?Q?tZAzzBAXPJHmZZCYgApOc36iEdIZ2xhXe5anMY/vOI5yOYsACHI8vRV5l1OL?=
- =?us-ascii?Q?Fwep/2rcEGjk/Ev6RShEWrqKzW8qLBlP/2yjOfm1KJP+zaPhtRwJSSECI2aj?=
- =?us-ascii?Q?ZBu8IIgv9mIzlTsYSzNqiXK87QDK1i+1In95WLSQjqoBVQvevWu7CsPKCj8v?=
- =?us-ascii?Q?6ROJtzbiFM23Fi6rKjqaDlJQHwOhY6E+aHNHqCrTOdTwAlDGXhlVzWgATJjD?=
- =?us-ascii?Q?iExP/gqOjuZBaKryoCiRjzf3PMtbCZy69Okc0YGtYrY4h6ryYtwaGOK6eIH/?=
- =?us-ascii?Q?dX39wbeJhgq7u2JUtU2jM7PF/1ym+UN2VYnc4N+sLSb4FPmLYxGydQrfMb3e?=
- =?us-ascii?Q?ic/csc23mtNaDyl07Pxq/2Z6x/OK2ZICtia9dkwDfmDXAwcQaFJfupcoRlHZ?=
- =?us-ascii?Q?c1Wb6ewa9BAPT/+w4t7zoDWPPJjdmv7Y9aKSGvemRXU2ttYr9FVAB9PCwuBe?=
- =?us-ascii?Q?2bKcnnHzQQEvzsV6f1pvKqXitA/7TfKMPmzyo63xJPvg6p5tR+7y/e41o7eC?=
- =?us-ascii?Q?GGZDaHR0uU9/SSO8k7/T8aO6Tq98LgZGqhMxC0AeFk42b842NSFSOANzIwWj?=
- =?us-ascii?Q?7jhdxNm6taNTfw1Env/ZD5TVLt0c9tpd/agVqTBSX3d5h+UR1Bh3nr16Q5yC?=
- =?us-ascii?Q?YZnUlL/OM5GTOuM6fwi/x/zUfM0wndsYTitLbPCaXnN+tJu//hG4ze5R5OOo?=
- =?us-ascii?Q?+we5qggfj9VJewHfaCPx04h9WOH1wY6B71aAjU1EBFKs5Fg8SZcZtkS/VV0d?=
- =?us-ascii?Q?Ul4+ub5+4DF2BgQ8lps=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cp/yThN8YdGIc/nMNdeupJV5xQkggvPs0fujdDTNcB+HeBUUYG55+g+9yqZn?=
+ =?us-ascii?Q?ltWov5iPPoKzH+sumOkmGbi4jInp97d/k5J8/Qp300kAijdP+bgoyka5ywDg?=
+ =?us-ascii?Q?SvSOhDw4+PPiz6/LTMNMK9bvDhk7ODgC1zJvWL/qbz9dTBUNBOMPuPq4+EUX?=
+ =?us-ascii?Q?t+56A2Leug/GPq1qJMQmlujLFmJnatToWOUgIXmWPPsoRAHmcNLzAiKJKwu7?=
+ =?us-ascii?Q?APUDq5s4uLLLXHbYw6jyivxGk3ReHMA6aUBX1NIavsedJp0mkFU7t8BCjx1n?=
+ =?us-ascii?Q?wjLtIU4cWriUKWm2rz7OAs3EgmlarOFGUYsa0XGXT5dP5EILgzMApjzvgkCg?=
+ =?us-ascii?Q?cGAKg2mc2fWMQ/USg7YkA9D8Z/fcwPVSGk9DelvuOeL0XwXhzJFtZeAF6QuY?=
+ =?us-ascii?Q?bfLLJsgeWFVOBRObAblAqT9hqJ0vDaHi+xBJVLX+Nvpw02y7g/4TvK7yAUU7?=
+ =?us-ascii?Q?hm6aYjYlVa/EpG7egqBnMG8sujEyqKaB9UsDV1aXRONnRYUhcxd0xRkEaGuc?=
+ =?us-ascii?Q?lqHGLk+jTZTJ+FhfqFq9a6gs0gXGvdYlSznNNbqAper/OJPFvRA59/NDBwWt?=
+ =?us-ascii?Q?5KeJOfovs3UnQr3e8JMiXNkPCRCzZL8OSztwdTgbR2VvN9tF0izazAWUjlZq?=
+ =?us-ascii?Q?zc0JSyof/CS5xBW8X3RHrHjXLvTgzaBh0+VxwrXRyZ/t5WkGe5TJw2uaoBpE?=
+ =?us-ascii?Q?XRgsXwP6Dwwz0UOVNtBrIpM2+sfWTmWx2y3vj8F66DEtGboGYTYf5UUlFwcD?=
+ =?us-ascii?Q?EQEiXfVSW2a9iRHvEpwdKZNUXiB0bhhadXadCVkOFfkJd00tvCvxjqMZn3jZ?=
+ =?us-ascii?Q?KKRlu37fXu2t1oQ+RdUusIUtgobmf4+SEZuhxO9Ppsb+ysVPeBZtRfB2pUey?=
+ =?us-ascii?Q?TuIKNhdYx8/YyLwUTWaJ0E7ivRY7dHrZP15rPnhypsuCxHADlKnClX/Mt+O5?=
+ =?us-ascii?Q?sfQNlDk7VQ5+C8n6MGQB3aal1UZcYhmIVeHb58n356rF5okPUVSTnL1na973?=
+ =?us-ascii?Q?4DY3f1PceQAGo/GayWSUBn2BAVQ1teAQ2KP7M4y5TRe80TlRRukzfiwHr9e3?=
+ =?us-ascii?Q?wYxhQOjl53Ae/rAZMJ5Ba/T6eg5JvsP1+Uc8qB1grpW2maTh7DjrKpbaevAO?=
+ =?us-ascii?Q?O3491Hkzv+sjBBdv/rVB/0LaCmzO5pwzYFRDMjxbgu83vGBEwcGlYgozoauT?=
+ =?us-ascii?Q?gANnHbUzRXsHnD+UOI0tKPxITJV+Rv4/SoOD4QrTQypfDgG4SERVe2aynZ8K?=
+ =?us-ascii?Q?g9NJmY+9o0p4OkYQtCHIMiNpPJbmJrKDbh817lbGKzFc0N8AZ/XE6Qh14/q5?=
+ =?us-ascii?Q?VS1CKtlaqxsr/u5iEL7/EFTeKqELnA8VlTCIZFb7Xt9P9xPHgBW6r919rNAo?=
+ =?us-ascii?Q?1ZrdzEp1b71tJ39V8zF4keJk8LQgJ2uMM49nF1qIw0R1Q9IdaXvuCeL66t5B?=
+ =?us-ascii?Q?JUnTuvRP5vhDqO8chFOn9C07lBMam6s+YZYogDKAjsb/1s/5sz1qN6Elh3o2?=
+ =?us-ascii?Q?DbYzDlk3O4XB6h/LWluChNfBc3w/6SSuizuv9QbGmfS2dO13IbAubxCK2uLL?=
+ =?us-ascii?Q?dNkZrFwDFb+AJXYBgm8=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4afdd80-c1db-4a99-e871-08d9f09bab1e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a3464f4-ad5e-47f9-b161-08d9f09cd377
 X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4181.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2022 15:56:03.2893
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2022 16:04:20.4755
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fxwX/41INSAF0myux8qa7hE41Ka5WNO+vo7sHXaA/A9WCLz4SU18rVKBxw4q7+Bj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB2466
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+X-MS-Exchange-CrossTenant-UserPrincipalName: d37/kEMpRzk3QUBALPzyHU2s/DRIe+cpp9CvgoDW39adspHcSmqRz8477+Dj/usy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3445
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -130,153 +131,52 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 15, 2022 at 10:18:11AM +0000, Tian, Kevin wrote:
-> > From: Yishai Hadas <yishaih@nvidia.com>
-> > Sent: Tuesday, February 8, 2022 1:22 AM
-> > 
+On Tue, Feb 15, 2022 at 10:41:56AM +0000, Tian, Kevin wrote:
 > > From: Jason Gunthorpe <jgg@nvidia.com>
+> > Sent: Wednesday, February 9, 2022 10:37 AM
 > > 
-> > The RUNNING_P2P state is designed to support multiple devices in the same
-> > VM that are doing P2P transactions between themselves. When in
-> > RUNNING_P2P
-> > the device must be able to accept incoming P2P transactions but should not
-> > generate outgoing transactions.
-> 
-> outgoing 'P2P' transactions.
-
-Yes
-
-> > As an optional extension to the mandatory states it is defined as
-> > inbetween STOP and RUNNING:
-> >    STOP -> RUNNING_P2P -> RUNNING -> RUNNING_P2P -> STOP
+> > > >  /* -------- API for Type1 VFIO IOMMU -------- */
+> > > >
+> > > >  /**
+> > >
+> > > Otherwise, I'm still not sure how userspace handles the fact that it
+> > > can't know how much data will be read from the device and how important
+> > > that is.  There's no replacement of that feature from the v1 protocol
+> > > here.
 > > 
-> > For drivers that are unable to support RUNNING_P2P the core code silently
-> > merges RUNNING_P2P and RUNNING together. Drivers that support this will
+> > I'm not sure this was part of the v1 protocol either. Yes it had a
+> > pending_bytes, but I don't think it was actually expected to be 100%
+> > accurate. Computing this value accurately is potentially quite
+> > expensive, I would prefer we not enforce this on an implementation
+> > without a reason, and qemu currently doesn't make use of it.
+> > 
+> > The ioctl from the precopy patch is probably the best approach, I
+> > think it would be fine to allow that for stop copy as well, but also
+> > don't see a usage right now.
+> > 
+> > It is not something that needs decision now, it is very easy to detect
+> > if an ioctl is supported on the data_fd at runtime to add new things
+> > here when needed.
+> > 
 > 
-> It would be clearer if following message could be also reflected here:
-> 
->   + * The optional states cannot be used with SET_STATE if the device does not
->   + * support them. The user can discover if these states are supported by using
->   + * VFIO_DEVICE_FEATURE_MIGRATION. 
-> 
-> Otherwise the original context reads like RUNNING_P2P can be used as
-> end state even if the underlying driver doesn't support it then makes me
-> wonder what is the point of the new capability bit.
+> Another interesting thing (not an immediate concern on this series)
+> is how to handle devices which may have long time (e.g. due to 
+> draining outstanding requests, even w/o vPRI) to enter the STOP 
+> state. that time is not as deterministic as pending bytes thus cannot
+> be reported back to the user before the operation is actually done.
 
-You've read it right. Lets just add a simple "Unless driver support is
-present the new state cannot be used in SET_STATE"
+Well, it is not deterministic at all..
 
-> >  	*next_fsm = vfio_from_fsm_table[cur_fsm][new_fsm];
-> > +	while ((state_flags_table[*next_fsm] & device->migration_flags) !=
-> > +			state_flags_table[*next_fsm])
-> > +		*next_fsm = vfio_from_fsm_table[*next_fsm][new_fsm];
-> > +
-> 
-> A comment highlighting the silent merging of unsupported states would
-> be informative here.
+I suppose you have to do as Alex says and try to estimate how much
+time the stop phase of migration will take and grant only the
+remaining time from the SLA to the guest to finish its PRI flushing,
+otherwise go back to PRE_COPY and try again later if the timer hits.
 
-	/*
-	 * Arcs touching optional and unsupported states are skipped over. The
-	 * driver will instead  see an arc from the original state to the next
-	 * logical state, as per the above comment.
-	 */
+This suggests to me the right interface from the driver is some
+estimate of time to enter STOP_COPY and resulting required transfer
+size.
 
-> Defining RUNNING_P2P in above way implies that RUNNING_P2P inherits 
-> all behaviors in RUNNING except blocking outbound P2P:
-> 	* generate interrupts and DMAs
-> 	* respond to MMIO
-> 	* all vfio regions are functional
-> 	* device may advance its internal state
-> 	* drain and block outstanding P2P requests
-
-Correct.
-
-The device must be able to recieve and process any MMIO P2P
-transaction during this state.
-
-We discussed and left interrupts as allowed behavior.
-
-> I think this is not the intended behavior when NDMA was being discussed
-> in previous threads, as above definition suggests the user could continue
-> to submit new requests after outstanding P2P requests are completed given
-> all vfio regions are functional when the device is in RUNNING_P2P.
-
-It is the desired behavior. The device must internally stop generating
-DMA from new work, it cannot rely on external things not poking it
-with MMIO, because the whole point of the state is that MMIO P2P is
-still allowed to happen.
-
-What gets confusing is that in normal cases I wouldn't expect any P2P
-activity to trigger a new work submission.
-
-Probably, since many devices can't implement this, we will end up with
-devices providing a weaker version where they do RUNNING_P2P but this
-relies on the VM operating the device "sanely" without programming P2P
-work submission. It is similar to your notion that migration requires
-guest co-operation in the vPRI case.
-
-I don't like it, and better devices really should avoid requiring
-guest co-operation, but it seems like where things are going.
-
-> Though just a naming thing, possibly what we really require is a STOPPING_P2P
-> state which indicates the device is moving to the STOP (or STOPPED)
-> state.
-
-No, I've deliberately avoided STOP because this isn't anything like
-STOP. It is RUNNING with one restriction.
-
-> In this state the device is functional but vfio regions are not so the user still
-> needs to restrict device access:
-
-The device is not functional in STOP. STOP means the device does not
-provide working MMIO. Ie mlx5 devices will discard all writes and
-read all 0's when in STOP.
-
-The point of RUNNING_P2P is to allow the device to continue to recieve
-all MMIO while halting generation of MMIO to other devices.
-
-> In virtualization this means Qemu must stop vCPU first before entering
-> STOPPING_P2P for a device.
-
-This is already the case. RUNNING/STOP here does not refer to the
-vCPU, it refers to this device.
-
-> Back to your earlier suggestion on reusing RUNNING_P2P to cover vPRI 
-> usage via a new capability bit [1]:
-> 
->     "A cap like "running_p2p returns an event fd, doesn't finish until the
->     VCPU does stuff, and stops pri as well as p2p" might be all that is
->     required here (and not an actual new state)"
-> 
-> vPRI requires a RUNNING semantics. A new capability bit can change 
-> the behaviors listed above for STOPPING_P2P to below:
-> 	* both P2P and vPRI requests should be drained and blocked;
-> 	* all vfio regions are functional (with a RUNNING behavior) so
-> 	  vCPUs can continue running to help drain vPRI requests;
-> 	* an eventfd is returned for the user to poll-wait the completion
-> 	  of state transition;
-
-vPRI draining is not STOP either. If the device is expected to provide
-working MMIO it is not STOP by definition.
-
-> One additional requirement in driver side is to dynamically mediate the 
-> fast path and queue any new request which may trigger vPRI or P2P
-> before moving out of RUNNING_P2P. If moving to STOP_COPY, then
-> queued requests will also be included as device state to be replayed
-> in the resuming path.
-
-This could make sense. I don't know how you dynamically mediate
-though, or how you will trap ENQCMD..
-
-> Does above sound a reasonable understanding of this FSM mechanism? 
-
-Other than mis-using the STOP label, it is close yes.
-
-> > + * The optional states cannot be used with SET_STATE if the device does not
-> > + * support them. The user can disocver if these states are supported by
-> 
-> 'disocver' -> 'discover'
-
-Yep, thanks
+Still, I just don't see how SLAs can really be feasible with this kind
+of HW that requires guest co-operation..
 
 Jason
