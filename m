@@ -2,72 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A2534B69C1
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 11:52:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94D8D4B6A06
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 11:59:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232051AbiBOKw3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Feb 2022 05:52:29 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:36150 "EHLO
+        id S236534AbiBOK7N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Feb 2022 05:59:13 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230356AbiBOKw2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 05:52:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71791888C9;
-        Tue, 15 Feb 2022 02:52:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D8EB614B7;
-        Tue, 15 Feb 2022 10:52:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F610C340EB;
-        Tue, 15 Feb 2022 10:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644922337;
-        bh=HfhL1YOyThE8eIJjbEXTmdOkgir/e14DI5CCQpAi0RA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oLRpRB9ZIeBxw8CF/njTbtsBR3/u9dR1EWVLSMGbeKUe9AetFRV0o9i5Z4vsAP/ZH
-         R5UdZZlCDrV0bsYiFiMBRC0WC1RWimiXXLCUMbzp9JoBtTYZJC97JmMTCNhPD8grwp
-         xNa55r24v+IIhesR0cJL61B1/CnJoVHutzXKlJRBHun82dT1CqpARrkmK18Z3jodgF
-         vHyG94f9quKhYO75mj14fPt9n6zyuynC1z7bTnEVcT6MKdK1vo86SFjiiZwOhUrmpx
-         UZdHdKvvkBYUjWkRjIPiQZBlvRbZ1PNnv+ij1N+Agqu6KPJr62Q5s8qKZzFVZzpbgT
-         yOYfCHs+UCpwQ==
-Received: by pali.im (Postfix)
-        id 703B0F13; Tue, 15 Feb 2022 11:52:14 +0100 (CET)
-Date:   Tue, 15 Feb 2022 11:52:14 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     =?utf-8?B?THXDrXM=?= Mendes <luis.p.mendes@gmail.com>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 11/11] ARM: dts: armada-385.dtsi: Add definitions for
- PCIe legacy INTx interrupts
-Message-ID: <20220215105214.f5biuptsruoredqi@pali>
-References: <20220105150239.9628-1-pali@kernel.org>
- <20220112151814.24361-1-pali@kernel.org>
- <20220112151814.24361-12-pali@kernel.org>
- <87wnhxjxlq.fsf@BL-laptop>
- <20220214150923.a5ttxoh426cfxn4v@pali>
- <87tud1jwpr.fsf@BL-laptop>
- <CAEzXK1qYKVk7QiSY_DwqkZ7WV6WU06WBtiqZx0JJCc+mOP-7Kg@mail.gmail.com>
- <CAEzXK1rj7pOvJgAMd11TJVqzgWD2GSJ-25_BWL7X9wiZWOhieQ@mail.gmail.com>
+        with ESMTP id S236785AbiBOK7L (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 05:59:11 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 065CDDD973;
+        Tue, 15 Feb 2022 02:59:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644922742; x=1676458742;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=0jQo1ZsnwFWu0vvlQPA7wAfy0LnhmDZsxi8pSQps/Qk=;
+  b=fdR7SF46Y0Q4Ck9i553aX0+yNLPcjnnD/yQQS8VysCFNR+hEondDTJvQ
+   yt7TYjuYDE8q8s172JLmXVEfx10muQBbnbLyuT5vDv18jdZazmkvTtR+r
+   wqbO2ewbFpfiXrEbkPBkSQw1ExNToeYnusqxK+MVTPA65Lvv5/+4iW67I
+   yDbLZU6hhG4WsBzg8xiCKcd1XpraJC5VNLK4TOitDJMpqfBpVnQ7wbeJO
+   shYwVGeB0+FMjjUnuG9XwQ1W3DXkIA6GVNOAiW//ZmKoVYYPeuxdJWhGG
+   6pHETBDqFbbBKdvl+B6ooi5yK7pejLEpAz4mN/U8LmUZSJhyo6ULU+UlN
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10258"; a="230954868"
+X-IronPort-AV: E=Sophos;i="5.88,370,1635231600"; 
+   d="scan'208";a="230954868"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2022 02:59:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,370,1635231600"; 
+   d="scan'208";a="775777834"
+Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
+  by fmsmga005.fm.intel.com with ESMTP; 15 Feb 2022 02:59:00 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Tue, 15 Feb 2022 02:59:00 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20 via Frontend Transport; Tue, 15 Feb 2022 02:59:00 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.20; Tue, 15 Feb 2022 02:59:00 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wc5GDlbO0jT1X6UqgwhaY0P2HZKUfLz5plxXYRtGK4/rnFg8DocFTlny3ICZezagb0OM3cgoy6qgOEfXkZ/6+MryF9LUyFreaRmmFfcV7C7jbVh14Fe6w3ooqVxskNIGdxfZdhBrjqKHjCnk03WRkccQ//PXJFxIaVOuOGos9ACznyrQA7aLkwoyqDxrwGJ2aM7EM9xR/kK8d1mtn6swFmOvCe5767/afdEx6+VmwvfyEr1/7BBiz9SptY8y6sQ90ezXeo61+F1MxmCLSNKK92WAeIF+woqZA54flQSXV13uQ3ANuHWxADbX/V228e8ndR5cYhB1i8oXRoQ1B8CNDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0jQo1ZsnwFWu0vvlQPA7wAfy0LnhmDZsxi8pSQps/Qk=;
+ b=GpnzCKbTw9Z4aZU/dbKPRZFxuoruxrSw9fdjRNpJnshWxVUJUaf113NGz3rpOf3YA65fwqoiMrOivjAo+nMXlkr5ldRtjDK9Br//u1K6Kw4CtZbtef/mThbJDUHVzgfJyq19KpSllZU5uiM3Xd6DoWsF5mB6yTrT3tio0Drqs4xNxCu2KklERSjYUBPILFk6ICI4C/q6UkLHc7HL4YTnKskxDFMa04jTzBA2UiazjAbiFqcD1rV8CdqFaWPSvOPtApiQdsgyG3KCQ8Ih44e5hi7282YFmP424iBoIjPpL4oE448GMsvR5twXenGIy9kxoIzwGQ9jc8u6nOGhkTJQow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by SA0PR11MB4528.namprd11.prod.outlook.com (2603:10b6:806:99::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.18; Tue, 15 Feb
+ 2022 10:58:58 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::f514:7aae:315b:4d8d]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::f514:7aae:315b:4d8d%4]) with mapi id 15.20.4975.019; Tue, 15 Feb 2022
+ 10:58:58 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     Yishai Hadas <yishaih@nvidia.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "saeedm@nvidia.com" <saeedm@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "leonro@nvidia.com" <leonro@nvidia.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
+        "maorg@nvidia.com" <maorg@nvidia.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "shameerali.kolothum.thodi@huawei.com" 
+        <shameerali.kolothum.thodi@huawei.com>
+Subject: RE: [PATCH V7 mlx5-next 08/15] vfio: Define device migration protocol
+ v2
+Thread-Topic: [PATCH V7 mlx5-next 08/15] vfio: Define device migration
+ protocol v2
+Thread-Index: AQHYHEd8WrQ75CuCwEmQ+4nXbJWyQ6yKWZwAgAAploCACfA7AIAAB9xw
+Date:   Tue, 15 Feb 2022 10:58:58 +0000
+Message-ID: <BN9PR11MB5276C361E686DCAFA8A078788C349@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20220207172216.206415-1-yishaih@nvidia.com>
+ <20220207172216.206415-9-yishaih@nvidia.com>
+ <20220208170754.01d05a1d.alex.williamson@redhat.com>
+ <20220209023645.GN4160@nvidia.com> 
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8cae3b3b-330f-4670-455e-08d9f0722ae5
+x-ms-traffictypediagnostic: SA0PR11MB4528:EE_
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-microsoft-antispam-prvs: <SA0PR11MB4528E468E799186D534981808C349@SA0PR11MB4528.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5ZrwlqPa2gHi4ztvPhGMkIQONaj04Pcb4H2bL/nHNCf6dzMskSjcBQ/yiGm2DzPPP0LLUPWdsCTFqL4pkSEDhJsm3Q8LsCGSc2gi0/MHAAywU5KgUr0o8JjwaeNt++bz6tMSn+f8i+hyH0YlvOKIWn8TPB2Lc1cJvOE08/YaHW71BciCGAV5cci9o2c/qshLCZVonKuNt+EAZSecAxcV4I27SmQHyC6MqF/kEJVM5ch7nFu2iziKJR2N6lPhNv8gWcJxndHTS2spa1fIJO2if6ak2JUjxpJYcnPIQNFn1jWSL0sj/H9z+mHlLlS98QFrBkSxTclMtq4c4TqQGvsXnWDeeqYIy0NDQe5whhiBZ6ab2FOmcobho8robfx61KjnmxmbqMsLH1L5zcIP0mpIRPy74tzRPYXlMSXA5K2whSHr6Ox+1nInP0hMTm1K649THxh2aghmnm4CzvB3PttBU/t47LvuVY4yBq4RGgyFm+a4w1hI4fqZ50k+P3Mn5pfTRkiIXD5i69IZz035g4aaRw+i8/vIxJUIXl3Ezfd1GOHgmkgtqZRPx8CMWigoLFCutmL529JOSBzFLpZ1SBRyJqhCzAF8hIqBCwSqUabC0qXNuw3xTvrkb5d1tyN5QEh4dTarTR5EUe1ooHW8kw2QLISI2xxyxd6iAb8fhYyCEYCs63k2g9uV+a/mpxl1HLlkyDPaFDshPbr7SoVSoodcFg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(5660300002)(508600001)(71200400001)(2906002)(6506007)(38070700005)(55016003)(7416002)(7696005)(33656002)(316002)(26005)(66946007)(82960400001)(9686003)(54906003)(4326008)(83380400001)(66556008)(122000001)(110136005)(86362001)(38100700002)(52536014)(8936002)(76116006)(8676002)(66476007)(64756008)(186003)(66446008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OVN1ZnNPSXMydVdmWkN5eXduZHFnTzZIdlBCM3NvWTk3MzBJU1NLeWthdTFu?=
+ =?utf-8?B?RmRLK2xMOVprMXZCQi85RlYrenAxMmJFbE8wVS95eDAvbUZJV0lySTArYWc1?=
+ =?utf-8?B?d2VnbGxxR2tOdVNIRFRlRWwxVElGRHRzaVc3NUowcDRWZU9ETlA1Q2ZBNXRp?=
+ =?utf-8?B?Z3p5ckNIY09Mbno1TzZ2QU1DRUhVRE1lU3NLZ1NvUHlhQzRlZ05IQ2RnbXBu?=
+ =?utf-8?B?a0Y0YXBCcCtucWVEV3orNmlPblI1aytwTjZROTEwSzV4T2dTcUovb3JQK0kw?=
+ =?utf-8?B?Y2RXbnZsZjlMZEFETFBPSUM1ZlZOZnVXSDQ1cnB2ak1PQlNYUC9ESUhpcXUv?=
+ =?utf-8?B?ZkZWZ1ZUSmtRcXlWditMaE52VzlFTndlMndtU25LSXN3QXZlWXZJNW9DMyt4?=
+ =?utf-8?B?WU1GOC9mRFBYMDYyUktCSWl3K2VKSXFnSUtoaE8yaW5iYkxHRU5PZjR1dnV2?=
+ =?utf-8?B?U082T3FyOWVONjRVdzZXbFBQdHhqQ1VoaTB6OVZuL21td1RCektBTWpxa2Fj?=
+ =?utf-8?B?Z2dmRzNDQWl1Uk5LTzdNTUdIdSttV2IrTzBpNGM4TEJiRUN3Y3ZneHVsTzZa?=
+ =?utf-8?B?bWtPU21mTEFMejJTWUdsYWh2alB3RmRYSHlXVEZoQjE4VHRCMnQ2RHJJRStk?=
+ =?utf-8?B?clJ0Z25MN2tXVmVYMzVaYWpPMzhLRDc2VFFJM05BTThMRVhPaUdhSVVHa2xp?=
+ =?utf-8?B?N1FrK0tYckpZT0xsMmRXbHFLazByUkF6b3paaXdnRDRzaDdaV24yUW5QR0x1?=
+ =?utf-8?B?elIzUzZEUmZ5Zm5zS1ZjdXJjR0VrbmZWeDM4QkE2T09lcWIxQ1Q0MzFwcDZO?=
+ =?utf-8?B?VSszcTBKODJNbXkveko2VzNWVEVVcmNwM094czJFcXhHejhSMitaakRZaE9h?=
+ =?utf-8?B?b0hJdE43YTdlYlZWRFBWMitXNmNLODFPRExGclJsY0FLdjlkTWQ4eTRXT2M0?=
+ =?utf-8?B?emZVQjBTMGFFTHIxZGsrNWUyMEp4NlRIejl5NThnWFl2VXhuc3BNckk1eUhI?=
+ =?utf-8?B?ejRlRitTYUtqM1F2NlM0Vk1ZbWNNSHpZWHE3T2o5U1A0YU5jajV2V3k4dkFa?=
+ =?utf-8?B?OEU3L2RnNnhhWkcwdGhKUmFvREx1UWRPOVZVUTEwT0NjU29tK2pIdTBsTGJx?=
+ =?utf-8?B?UFRlN0pkbksrcUVDcjkySmppMGE3RHJ2cFZQVnN1Yjc4MFVYYzR0Y2ZyVUhB?=
+ =?utf-8?B?eG42cHlJVS90TE45bFAzbTVub0RGdFRYZi9FWnJZT0pidHhmYlV2c1FIVS9B?=
+ =?utf-8?B?U2NDMnZXY1U4MHFrV25hQjJXaWdyUUluSHN1V2gvUzBXM3Y5bUY4UTIwdXdL?=
+ =?utf-8?B?RTQvK1VGRmhtd2YxSk9zZmtqTTN4K2RKOXBCY3c1ZDkrZ3lVck5rL3B6YnM1?=
+ =?utf-8?B?dDc2Nkd0U0dOU3ZBUG5TdGUwNnRsUFIrdFdNUHNRVHJINW1Tc1B1UkJyRGZx?=
+ =?utf-8?B?L1dNYm1Ubk1UOGJkU2tBMW5MY3NLdlQ3TDdzbURmMUFnT2RFQ1RiSld5RjV0?=
+ =?utf-8?B?a3VIUXBpZ1VxVDdDdHc3UEJxL0pOTStPV0Y3THRrQUxLeG83VXlSZHlkYkg4?=
+ =?utf-8?B?ekUwUjlZQzZ3V1JwYXVaeWltMkE1aUpLc3BKL21tZ0J0MUVsOGh0Smduemd4?=
+ =?utf-8?B?Zld6elI3ZXpiUmxpSGlPVktqTEplYWNEL0RmZmxMRDZjRVJ1aTYxVTZuVGhD?=
+ =?utf-8?B?RUtyUFFyclpyVEI5VEVHc2paVlNwdWJ3UEI5MUNKUGo0ZlZ0N2tMVHVzS2hl?=
+ =?utf-8?B?YlN6dDJvT1BFc1FsTDVzOGNJL01ScmsydW5LcVJzR0Z0WktLenV1QXduRERw?=
+ =?utf-8?B?TmsrZmFHN3ozdE5WY2o0NmpRejN0RFJWRWdaMWxNTE1Ta2xXdHRWYjZlZGtQ?=
+ =?utf-8?B?Z2Z6aVBXNWFlWHVLS2J5NU5IazI1cStHNnE2SjMzQlV0dDIwaDJGSk5XNXpW?=
+ =?utf-8?B?WkJMUUNEdmZXK2tBUEdvNGtmMTQ2czhMTU9TeDVKTzk5UEV6M1NzMlpITmk5?=
+ =?utf-8?B?RXRlbHUxNGMzQWtDcXdlSTZ3ZTdGaUtrNU04eXo3cDVSYjNOYXB5TndHZmJE?=
+ =?utf-8?B?L1FvaVMwUDdYaTc5bXVKYXh2YmV5dFo2YkF1TTQ3U0srQWFyZ1dNUW1EVU1Y?=
+ =?utf-8?B?NDVkQnI4akpoR3hiN3VzZzZYYmV5dkxUMFZTZUZXVFlPNksrRzBhZDEwN3J4?=
+ =?utf-8?B?bVE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEzXK1rj7pOvJgAMd11TJVqzgWD2GSJ-25_BWL7X9wiZWOhieQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cae3b3b-330f-4670-455e-08d9f0722ae5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Feb 2022 10:58:58.4992
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nkwYK4CRHAZXl2RhjAUzv8z5isnwpbFnVT5hNsx5rj5YAu/iCtS1uiIjfO1cS3TrBsQp9urJMd/NFh8IdHbZSw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4528
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,197 +174,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello! armada-388.dtsi file has #include "armada-385.dtsi" line and
-therefore is already covered by this my patch.
-
-Gregory's question was about A380.
-
-But if you want, you can test this patch series (which already covers
-A388) on your A388 HW. It is still better to do tests on more HW.
-
-On Tuesday 15 February 2022 10:48:17 Luís Mendes wrote:
-> Hello,
-> 
-> Sorry for jumping in the conversation, but I read this thread and I
-> have an Armada A388 HW so I can test it, if desired.
-> 
-> Luís
-> 
-> 
-> On Tue, Feb 15, 2022 at 10:47 AM Luís Mendes <luis.p.mendes@gmail.com> wrote:
-> >
-> > Hello,
-> >
-> > Sorry for jumping in the conversation, but I read this thread and I have an Armada A388 HW so I can test it, if desired.
-> >
-> > Luís
-> >
-> > On Mon, Feb 14, 2022 at 7:57 PM Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
-> >>
-> >> Hello,
-> >>
-> >> > On Monday 14 February 2022 16:07:13 Gregory CLEMENT wrote:
-> >> >> Hello Pali,
-> >> >>
-> >> >> > With this change legacy INTA, INTB, INTC and INTD interrupts are reported
-> >> >> > separately and not mixed into one Linux virq source anymore.
-> >> >> >
-> >> >> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> >> >> > ---
-> >> >> >  arch/arm/boot/dts/armada-385.dtsi | 52 ++++++++++++++++++++++++++-----
-> >> >>
-> >> >> Is there any reason for not doing the same change in armada-380.dtsi ?
-> >> >
-> >> > I do not have A380 HW, so I did this change only for A385 which I have
-> >> > tested.
-> >>
-> >> OK fair enough.
-> >>
-> >> So you can add my
-> >> Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> >>
-> >> Moreover to keep biscetability  this patch should be merged after the
-> >> support in the driver. So the easier is to let merge it through the PCI
-> >> subsystem with the other patches from this series. I do not think there
-> >> will be any other changes in this file so there won't be any merge
-> >> conflicts.
-> >>
-> >> Thanks,
-> >>
-> >> Grégory
-> >>
-> >>
-> >> >
-> >> >> Grégory
-> >> >>
-> >> >> >  1 file changed, 44 insertions(+), 8 deletions(-)
-> >> >> >
-> >> >> > diff --git a/arch/arm/boot/dts/armada-385.dtsi b/arch/arm/boot/dts/armada-385.dtsi
-> >> >> > index f0022d10c715..83392b92dae2 100644
-> >> >> > --- a/arch/arm/boot/dts/armada-385.dtsi
-> >> >> > +++ b/arch/arm/boot/dts/armada-385.dtsi
-> >> >> > @@ -69,16 +69,25 @@
-> >> >> >                            reg = <0x0800 0 0 0 0>;
-> >> >> >                            #address-cells = <3>;
-> >> >> >                            #size-cells = <2>;
-> >> >> > +                          interrupt-names = "intx";
-> >> >> > +                          interrupts-extended = <&gic GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-> >> >> >                            #interrupt-cells = <1>;
-> >> >> >                            ranges = <0x82000000 0 0 0x82000000 0x1 0 1 0
-> >> >> >                                      0x81000000 0 0 0x81000000 0x1 0 1 0>;
-> >> >> >                            bus-range = <0x00 0xff>;
-> >> >> > -                          interrupt-map-mask = <0 0 0 0>;
-> >> >> > -                          interrupt-map = <0 0 0 0 &gic GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-> >> >> > +                          interrupt-map-mask = <0 0 0 7>;
-> >> >> > +                          interrupt-map = <0 0 0 1 &pcie1_intc 0>,
-> >> >> > +                                          <0 0 0 2 &pcie1_intc 1>,
-> >> >> > +                                          <0 0 0 3 &pcie1_intc 2>,
-> >> >> > +                                          <0 0 0 4 &pcie1_intc 3>;
-> >> >> >                            marvell,pcie-port = <0>;
-> >> >> >                            marvell,pcie-lane = <0>;
-> >> >> >                            clocks = <&gateclk 8>;
-> >> >> >                            status = "disabled";
-> >> >> > +                          pcie1_intc: interrupt-controller {
-> >> >> > +                                  interrupt-controller;
-> >> >> > +                                  #interrupt-cells = <1>;
-> >> >> > +                          };
-> >> >> >                    };
-> >> >> >
-> >> >> >                    /* x1 port */
-> >> >> > @@ -88,16 +97,25 @@
-> >> >> >                            reg = <0x1000 0 0 0 0>;
-> >> >> >                            #address-cells = <3>;
-> >> >> >                            #size-cells = <2>;
-> >> >> > +                          interrupt-names = "intx";
-> >> >> > +                          interrupts-extended = <&gic GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> >> >> >                            #interrupt-cells = <1>;
-> >> >> >                            ranges = <0x82000000 0 0 0x82000000 0x2 0 1 0
-> >> >> >                                      0x81000000 0 0 0x81000000 0x2 0 1 0>;
-> >> >> >                            bus-range = <0x00 0xff>;
-> >> >> > -                          interrupt-map-mask = <0 0 0 0>;
-> >> >> > -                          interrupt-map = <0 0 0 0 &gic GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> >> >> > +                          interrupt-map-mask = <0 0 0 7>;
-> >> >> > +                          interrupt-map = <0 0 0 1 &pcie2_intc 0>,
-> >> >> > +                                          <0 0 0 2 &pcie2_intc 1>,
-> >> >> > +                                          <0 0 0 3 &pcie2_intc 2>,
-> >> >> > +                                          <0 0 0 4 &pcie2_intc 3>;
-> >> >> >                            marvell,pcie-port = <1>;
-> >> >> >                            marvell,pcie-lane = <0>;
-> >> >> >                            clocks = <&gateclk 5>;
-> >> >> >                            status = "disabled";
-> >> >> > +                          pcie2_intc: interrupt-controller {
-> >> >> > +                                  interrupt-controller;
-> >> >> > +                                  #interrupt-cells = <1>;
-> >> >> > +                          };
-> >> >> >                    };
-> >> >> >
-> >> >> >                    /* x1 port */
-> >> >> > @@ -107,16 +125,25 @@
-> >> >> >                            reg = <0x1800 0 0 0 0>;
-> >> >> >                            #address-cells = <3>;
-> >> >> >                            #size-cells = <2>;
-> >> >> > +                          interrupt-names = "intx";
-> >> >> > +                          interrupts-extended = <&gic GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-> >> >> >                            #interrupt-cells = <1>;
-> >> >> >                            ranges = <0x82000000 0 0 0x82000000 0x3 0 1 0
-> >> >> >                                      0x81000000 0 0 0x81000000 0x3 0 1 0>;
-> >> >> >                            bus-range = <0x00 0xff>;
-> >> >> > -                          interrupt-map-mask = <0 0 0 0>;
-> >> >> > -                          interrupt-map = <0 0 0 0 &gic GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-> >> >> > +                          interrupt-map-mask = <0 0 0 7>;
-> >> >> > +                          interrupt-map = <0 0 0 1 &pcie3_intc 0>,
-> >> >> > +                                          <0 0 0 2 &pcie3_intc 1>,
-> >> >> > +                                          <0 0 0 3 &pcie3_intc 2>,
-> >> >> > +                                          <0 0 0 4 &pcie3_intc 3>;
-> >> >> >                            marvell,pcie-port = <2>;
-> >> >> >                            marvell,pcie-lane = <0>;
-> >> >> >                            clocks = <&gateclk 6>;
-> >> >> >                            status = "disabled";
-> >> >> > +                          pcie3_intc: interrupt-controller {
-> >> >> > +                                  interrupt-controller;
-> >> >> > +                                  #interrupt-cells = <1>;
-> >> >> > +                          };
-> >> >> >                    };
-> >> >> >
-> >> >> >                    /*
-> >> >> > @@ -129,16 +156,25 @@
-> >> >> >                            reg = <0x2000 0 0 0 0>;
-> >> >> >                            #address-cells = <3>;
-> >> >> >                            #size-cells = <2>;
-> >> >> > +                          interrupt-names = "intx";
-> >> >> > +                          interrupts-extended = <&gic GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-> >> >> >                            #interrupt-cells = <1>;
-> >> >> >                            ranges = <0x82000000 0 0 0x82000000 0x4 0 1 0
-> >> >> >                                      0x81000000 0 0 0x81000000 0x4 0 1 0>;
-> >> >> >                            bus-range = <0x00 0xff>;
-> >> >> > -                          interrupt-map-mask = <0 0 0 0>;
-> >> >> > -                          interrupt-map = <0 0 0 0 &gic GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-> >> >> > +                          interrupt-map-mask = <0 0 0 7>;
-> >> >> > +                          interrupt-map = <0 0 0 1 &pcie4_intc 0>,
-> >> >> > +                                          <0 0 0 2 &pcie4_intc 1>,
-> >> >> > +                                          <0 0 0 3 &pcie4_intc 2>,
-> >> >> > +                                          <0 0 0 4 &pcie4_intc 3>;
-> >> >> >                            marvell,pcie-port = <3>;
-> >> >> >                            marvell,pcie-lane = <0>;
-> >> >> >                            clocks = <&gateclk 7>;
-> >> >> >                            status = "disabled";
-> >> >> > +                          pcie4_intc: interrupt-controller {
-> >> >> > +                                  interrupt-controller;
-> >> >> > +                                  #interrupt-cells = <1>;
-> >> >> > +                          };
-> >> >> >                    };
-> >> >> >            };
-> >> >> >    };
-> >> >> > --
-> >> >> > 2.20.1
-> >> >> >
-> >> >>
-> >> >> --
-> >> >> Gregory Clement, Bootlin
-> >> >> Embedded Linux and Kernel engineering
-> >> >> http://bootlin.com
-> >>
-> >> --
-> >> Gregory Clement, Bootlin
-> >> Embedded Linux and Kernel engineering
-> >> http://bootlin.com
+PiBGcm9tOiBUaWFuLCBLZXZpbg0KPiBTZW50OiBUdWVzZGF5LCBGZWJydWFyeSAxNSwgMjAyMiA2
+OjQyIFBNDQo+IA0KPiA+IEZyb206IEphc29uIEd1bnRob3JwZSA8amdnQG52aWRpYS5jb20+DQo+
+ID4gU2VudDogV2VkbmVzZGF5LCBGZWJydWFyeSA5LCAyMDIyIDEwOjM3IEFNDQo+ID4NCj4gPiA+
+ID4gIC8qIC0tLS0tLS0tIEFQSSBmb3IgVHlwZTEgVkZJTyBJT01NVSAtLS0tLS0tLSAqLw0KPiA+
+ID4gPg0KPiA+ID4gPiAgLyoqDQo+ID4gPg0KPiA+ID4gT3RoZXJ3aXNlLCBJJ20gc3RpbGwgbm90
+IHN1cmUgaG93IHVzZXJzcGFjZSBoYW5kbGVzIHRoZSBmYWN0IHRoYXQgaXQNCj4gPiA+IGNhbid0
+IGtub3cgaG93IG11Y2ggZGF0YSB3aWxsIGJlIHJlYWQgZnJvbSB0aGUgZGV2aWNlIGFuZCBob3cN
+Cj4gaW1wb3J0YW50DQo+ID4gPiB0aGF0IGlzLiAgVGhlcmUncyBubyByZXBsYWNlbWVudCBvZiB0
+aGF0IGZlYXR1cmUgZnJvbSB0aGUgdjEgcHJvdG9jb2wNCj4gPiA+IGhlcmUuDQo+ID4NCj4gPiBJ
+J20gbm90IHN1cmUgdGhpcyB3YXMgcGFydCBvZiB0aGUgdjEgcHJvdG9jb2wgZWl0aGVyLiBZZXMg
+aXQgaGFkIGENCj4gPiBwZW5kaW5nX2J5dGVzLCBidXQgSSBkb24ndCB0aGluayBpdCB3YXMgYWN0
+dWFsbHkgZXhwZWN0ZWQgdG8gYmUgMTAwJQ0KPiA+IGFjY3VyYXRlLiBDb21wdXRpbmcgdGhpcyB2
+YWx1ZSBhY2N1cmF0ZWx5IGlzIHBvdGVudGlhbGx5IHF1aXRlDQo+ID4gZXhwZW5zaXZlLCBJIHdv
+dWxkIHByZWZlciB3ZSBub3QgZW5mb3JjZSB0aGlzIG9uIGFuIGltcGxlbWVudGF0aW9uDQo+ID4g
+d2l0aG91dCBhIHJlYXNvbiwgYW5kIHFlbXUgY3VycmVudGx5IGRvZXNuJ3QgbWFrZSB1c2Ugb2Yg
+aXQuDQo+ID4NCj4gPiBUaGUgaW9jdGwgZnJvbSB0aGUgcHJlY29weSBwYXRjaCBpcyBwcm9iYWJs
+eSB0aGUgYmVzdCBhcHByb2FjaCwgSQ0KPiA+IHRoaW5rIGl0IHdvdWxkIGJlIGZpbmUgdG8gYWxs
+b3cgdGhhdCBmb3Igc3RvcCBjb3B5IGFzIHdlbGwsIGJ1dCBhbHNvDQo+ID4gZG9uJ3Qgc2VlIGEg
+dXNhZ2UgcmlnaHQgbm93Lg0KPiA+DQo+ID4gSXQgaXMgbm90IHNvbWV0aGluZyB0aGF0IG5lZWRz
+IGRlY2lzaW9uIG5vdywgaXQgaXMgdmVyeSBlYXN5IHRvIGRldGVjdA0KPiA+IGlmIGFuIGlvY3Rs
+IGlzIHN1cHBvcnRlZCBvbiB0aGUgZGF0YV9mZCBhdCBydW50aW1lIHRvIGFkZCBuZXcgdGhpbmdz
+DQo+ID4gaGVyZSB3aGVuIG5lZWRlZC4NCj4gPg0KPiANCj4gQW5vdGhlciBpbnRlcmVzdGluZyB0
+aGluZyAobm90IGFuIGltbWVkaWF0ZSBjb25jZXJuIG9uIHRoaXMgc2VyaWVzKQ0KPiBpcyBob3cg
+dG8gaGFuZGxlIGRldmljZXMgd2hpY2ggbWF5IGhhdmUgbG9uZyB0aW1lIChlLmcuIGR1ZSB0bw0K
+PiBkcmFpbmluZyBvdXRzdGFuZGluZyByZXF1ZXN0cywgZXZlbiB3L28gdlBSSSkgdG8gZW50ZXIg
+dGhlIFNUT1ANCj4gc3RhdGUuIHRoYXQgdGltZSBpcyBub3QgYXMgZGV0ZXJtaW5pc3RpYyBhcyBw
+ZW5kaW5nIGJ5dGVzIHRodXMgY2Fubm90DQo+IGJlIHJlcG9ydGVkIGJhY2sgdG8gdGhlIHVzZXIg
+YmVmb3JlIHRoZSBvcGVyYXRpb24gaXMgYWN0dWFsbHkgZG9uZS4NCj4gDQo+IFNpbWlsYXJseSB0
+byB3aGF0IHdlIGRpc2N1c3NlZCBmb3IgdlBSSSBhbiBldmVudGZkIHdpbGwgYmUgYmVuZWZpY2lh
+bA0KPiBzbyB0aGUgdXNlciBjYW4gdGltZW91dC13YWl0IG9uIGl0LCBidXQgaXQgYWxzbyBuZWVk
+cyBhbiBhcmMgdG8gY3JlYXRlDQo+IHRoZSBldmVudGZkIGJldHdlZW4gUlVOTklORy0+U1RPUC4u
+Lg0KPiANCg0KdHlwZSB0b28gZmFzdC4gaXQgZG9lc27igJl0IG5lZWQgYSBuZXcgYXJjLiBKdXN0
+IGEgbmV3IGNhcGFiaWxpdHkgdG8gc2F5DQp0aGF0IFNUT1AgcmV0dXJucyBhbiBldmVudCBmZCBm
+b3IgdGhlIHVzZXIgdG8gd2FpdCBmb3IgY29tcGxldGlvbiwNCndoZW4gc3VwcG9ydGluZyBzdWNo
+IGRldmljZXMgaXMgcmVxdWlyZWQuIPCfmIoNCg0KVGhhbmtzDQpLZXZpbg0K
