@@ -2,210 +2,291 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DECA4B6995
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 11:42:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F0AA4B69AC
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 11:48:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231436AbiBOKmM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Feb 2022 05:42:12 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59382 "EHLO
+        id S235927AbiBOKso (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Feb 2022 05:48:44 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235841AbiBOKmL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 05:42:11 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B4519A9B5;
-        Tue, 15 Feb 2022 02:42:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644921720; x=1676457720;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=IBy6APy3QlFaP1vtBp9ldo3MPlY2Q43YIKA3dU2mE5A=;
-  b=YpMVTylPXYiyW4QmDGadg0MH/V0d8LdiqLvPZDcVvTB4bAW/3nYDEg1v
-   sB4nv5mlgotEeinnKYCXakYwNV6es6YQWrTL5eEDnbt5qGyKVWfrL/a3V
-   zFN572p0wm/b5FYdZt6XtJDivuOWc24DWIdvumRgm0zfrR3JPlTX5tDzj
-   vj4Y3BChAkmHUVWayB/SIn1Z39KVQFW+7VkEgPl6+XwSCXict13lwB5GG
-   5wChvtga09PT7Rm/pOs+qbz+RaRN/ABlyU2q8VbVspXg+kGkGmdTxXHNu
-   8iJU2H3OPppVXfNp3chTIQpRSjbJLEpZoCfDlak+WiuTNX1j4J4mzFPH0
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10258"; a="237728360"
-X-IronPort-AV: E=Sophos;i="5.88,370,1635231600"; 
-   d="scan'208";a="237728360"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2022 02:42:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,370,1635231600"; 
-   d="scan'208";a="570761894"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga001.jf.intel.com with ESMTP; 15 Feb 2022 02:41:59 -0800
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 15 Feb 2022 02:41:59 -0800
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Tue, 15 Feb 2022 02:41:59 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20 via Frontend Transport; Tue, 15 Feb 2022 02:41:59 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.177)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.20; Tue, 15 Feb 2022 02:41:58 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V1SMkV0mZq6hX19xMz4DHIxSFilbItuy78DwArzm3PkkW01u0UZN19eOGFIogwLwiQboZDE5CrRgqkQ42LfQ88KFukeoa/54uw8Z/4nAHaFAVx/ANi8pn3TfimUKiqnJDdKHJiBpR+5nrWXbELltsKjAkX7O6yNnT8Za/PZlakOALLWqlU55wXgbRmZ3WqITxfcZklwWC+yaBsImfKvgGEEXwwqV6QpW4iDl9vLR/F/Qr7awsFd8uVQKcDLelXLAL/2FjLLXEn2VAuZ7Yz0N5RsjHdjx9IPpZd+QN8VKexCaVyXl0dVxkNJp7rWMz2F6hvB5sQ1F9TFHvZyhQzjKIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mjhP+lhXdKXHugnpBR/V+G2Bz5n2ARTmFHFwoCQysu4=;
- b=W0tKJszQ/pPX7f56D5hxgVLTdR4I/1wWzEW1xBbcYG5cPnSW9FnptRMKx7G3ItLkM8396guAlPO1gKwMYI/CztDsMXrvsm/bvNaj44/V2TeY576IgedyBCzmgwjOcvDfxmSp6h2uaCBkQrtDuKDr6q9aBmwsud2uRND+4OjVFqO0lBTGPd2Frmr796QEHunIvfrkJ4ZT13Tc3ttgyxaLlSthSw9yN8rlD/K8GDe1t/4YQ1UCW+t3Eni0wcoxsP8vLG8CIUxvBfVS0IR9c3u2mtIyx+D0SCKi+7D7cG7/wnfLmQ0CuRzvUmoSR9Me+kOgqgAh2beHdnvqTnpbuKidOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by DM6PR11MB3228.namprd11.prod.outlook.com (2603:10b6:5:5a::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.11; Tue, 15 Feb
- 2022 10:41:57 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::f514:7aae:315b:4d8d]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::f514:7aae:315b:4d8d%4]) with mapi id 15.20.4975.019; Tue, 15 Feb 2022
- 10:41:57 +0000
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     Yishai Hadas <yishaih@nvidia.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "saeedm@nvidia.com" <saeedm@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "leonro@nvidia.com" <leonro@nvidia.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "maorg@nvidia.com" <maorg@nvidia.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "shameerali.kolothum.thodi@huawei.com" 
-        <shameerali.kolothum.thodi@huawei.com>
-Subject: RE: [PATCH V7 mlx5-next 08/15] vfio: Define device migration protocol
- v2
-Thread-Topic: [PATCH V7 mlx5-next 08/15] vfio: Define device migration
- protocol v2
-Thread-Index: AQHYHEd8WrQ75CuCwEmQ+4nXbJWyQ6yKWZwAgAAploCACfA7AA==
-Date:   Tue, 15 Feb 2022 10:41:56 +0000
-Message-ID: <BN9PR11MB5276BD03F292902A803FA0E58C349@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20220207172216.206415-1-yishaih@nvidia.com>
- <20220207172216.206415-9-yishaih@nvidia.com>
- <20220208170754.01d05a1d.alex.williamson@redhat.com>
- <20220209023645.GN4160@nvidia.com>
-In-Reply-To: <20220209023645.GN4160@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bb6c0c7e-751d-4570-6be3-08d9f06fca01
-x-ms-traffictypediagnostic: DM6PR11MB3228:EE_
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR11MB322820E53EF54282729D47DB8C349@DM6PR11MB3228.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xrb+rrhHpPGfdk0JvNvpJFdqjVXncl/PUZlKP6ne6MrppcuydzXEanKweZ0hEUHLYHs0jChxnH0rZFfLfGM9KGdLCOrhrXgOHmfoBiAcg8Gi1FIjlbEkLgZt9/XHQ3kUOyKURUQFXZOqnMufrL3mSWtfVTENt6fSS/ioI43ttYR0zj9qd7GTwcxTvpvz83zbch+SoG5tHA6L+vpwx8g9cboDQAO0iz4B+f5i2xUtmosoXnW+BnfRRLnyVRgeaY21hL1GGVRbDDthKF4q9+HBC/YnJgbXULTvoRXEGy1Vua4WbCve+8UcTp1Sr1Y9fL/hU6whhSB7BUwKjmkJ5LBStc+OkyYQKkzg+FX3z4Ax8x0A4Q+caj5VMbE9O94lu2Nx/OxNZFezvljlCk6VWdey3wmDWN42eEx0Ei567GQXlmVJD87EQKD160d1lOiUe60+xCVZbJl0Gn9SBvoBNpmK/OOIqhN3xk1MAKNW8HASbfYvkxLtDK/UmYxVidabZFzJwwXJUTQKmpbg2wpasxR5Vo9Ds2ki6jUOATWBPthE0jU/IsrelZOf1HjFlmCIinDaZLcd5vON7SgH/rYq2k1nij4NWNPAWMBKs05/XxkQJ1pCNkIgKEjDIzm3qmAhfSiWr6SwzNR7GvQQtl1AQ4/LwjX0G21bYlNgOtKXNmQO0yzRW0l5iu2VwppIPT4qPOOF5cmB3IAU93YkHfFlUNLWEg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(2906002)(9686003)(26005)(7416002)(186003)(5660300002)(55016003)(38070700005)(7696005)(508600001)(38100700002)(33656002)(54906003)(110136005)(4326008)(8676002)(82960400001)(64756008)(86362001)(8936002)(6506007)(66446008)(76116006)(66946007)(71200400001)(316002)(83380400001)(52536014)(122000001)(66476007)(66556008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?rNAZiVoNhjzoG3WvhRMcGGqq7cdEPT12cuTcnjzNP93EtPyqrAaFxQO5IgSv?=
- =?us-ascii?Q?e3dasX/30LsKTVlgYE9ByZJ2uEVoir2EGwSdUJumnVZPBf90IzAg9rz93ZmB?=
- =?us-ascii?Q?C+YwIg4vpLAcU9aQfodQTlGFB+fU6kuf05zDidqyLhKNekGQGGmVyzsSgn/l?=
- =?us-ascii?Q?4oq8cHXrHnDVFSbnopMPccO2JVbD9f3Y7q2Go8Kq+x9427rEF6LgVh7ol/GH?=
- =?us-ascii?Q?MUXsjtOWaSK0K/qqn6099ODowGPdHRE/js9SvBpQEHdrkferwKlwlDXpZ3bh?=
- =?us-ascii?Q?wPO6q0cOPfvv5i1uMCljgnGWdINkBHHbQ0QfCSN3gWrGXbuhTU7Tw2k+BJbD?=
- =?us-ascii?Q?Biv2NAi2vId25EyI7UiDYgjuZzfZWpMtvJbYCPUJ4ykqn56l1ZSeu+p/OqCF?=
- =?us-ascii?Q?PVv8zb+iLQteVaaiKlKZBfSAkoOLR0pX2JXzWAtkN2r0qz3N3/QrIdo0wi1r?=
- =?us-ascii?Q?Hr1fPkpEE7T9APsg5yg3DGUDSOAipKPDXlfWvNoWeeNVhnvZKLFLN9b07XMz?=
- =?us-ascii?Q?hPofsjhzkfGmpuHbopYe31/Y9cwPn+b34NhFV5SWG+/LWSrTESZUOJ0aVgeV?=
- =?us-ascii?Q?g4CVU9haFDmo4jK7iE6rI82C2+zSe6c6UCKEyRIdn1FZwOKId0QqZvpxyOr+?=
- =?us-ascii?Q?PRTRa1wSJLTckJ3186dpuBfpLmhkTUyhs8kXjdfFB6R3PfREUexMt3qurR0x?=
- =?us-ascii?Q?rG+IyiP6yCI9CE3sfo7DBqDd8aw4J9pSIh7LN+hcrOgdiz/8ZEx8uizMgis/?=
- =?us-ascii?Q?Cdp+/aSGrOScwa91rIqg+3KfOi2bn431di53ZhgCxiUzFeI8mLib1TpBGynG?=
- =?us-ascii?Q?bE3xJg/hQMRyoGL/DxEcZfnH5/UAqZQAGXp2H4bRiW1lgGp8jMeumUBR5r/5?=
- =?us-ascii?Q?bITBDktWYpqmE0Ddm8cs1gpWGtEbKp2282D7Mg5fA6oKHmD3ZYD5PsOKsT6A?=
- =?us-ascii?Q?IrcWYdUcXeaZdaHO1qeDNg840jI+o2ggN4NPW2YbNitQvn7V6cqpmWGmlY8e?=
- =?us-ascii?Q?NujI6/1xzPFjK59cTUnP7Z60/hqXmE48gr3KnwX1yAxHZ/H4QanHayuWiV2r?=
- =?us-ascii?Q?lKrfSpcUQT5oqlj4UVZzL/LGHulQFq2KLkC8+ml1512OzEtj3OtBGnFAsyyR?=
- =?us-ascii?Q?CSTFUl+BkIuJyyQhctR84JKITtOQMYK5lo/lymt8Gl8wtWGa82CCoTvkGIuw?=
- =?us-ascii?Q?olfIddiwsND3/z+wgiaPcS3tV/txUd9/0djtOgZBEzXUrE9uQtb50jB5g6sn?=
- =?us-ascii?Q?wZaVa3rYCIVa6rGE7n/Xc4bsL8ZcvfImUumILvHT8StsIcf8gVDjmxzTFKoA?=
- =?us-ascii?Q?64oZYMoV3u2ezwFRUREziDNblXV7ZXVtGCl76nw2D+dDZXnH+l1WHWznqGK4?=
- =?us-ascii?Q?tW/pNSHLSJtxbgyH/v85bKadJ/UYDUn4ggrPivcdm+CwhSeW2lEuTCyTbcPe?=
- =?us-ascii?Q?Uv7ERW7sZuHSO3Oy/Qj+B/tswyxsa50jxQm/Tzddvr7cY8882jNVF144Fehc?=
- =?us-ascii?Q?I7vr2AScobeaupeQ0np3LsMBbiJN4Oc6iaA4sQgSUw7HCSttPF4Ntg8oqMwa?=
- =?us-ascii?Q?YX4dSQ5XUB4/pAtwdn7IfgyQ0yfcXJFCCxKaszxY8WLU2IZlZ7bH+MIXQC1F?=
- =?us-ascii?Q?bQ=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S232378AbiBOKsl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 05:48:41 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFBF6BB578;
+        Tue, 15 Feb 2022 02:48:29 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id f17so31418167edd.2;
+        Tue, 15 Feb 2022 02:48:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1M5SOvvR5UxFyyhKJEPFzJaclHyq3gw5Z8ty3dGyG3U=;
+        b=RUZ6ElIuzBkDsHh4cMLyoJAlFhzyYs28MqDrmj7itCu3kYSJ+bRRsJQR7GYTe33zyH
+         HH4ln1cNxX2X2VRqgQHsAtrf5ejHxxfMkYED3ucMCauUuKERW/uUCQdHJs5yiV3AHkfD
+         eRwSay8GYw3hgFrNhRwr+7J5soKzzX1KIumv5jm/yg7BqNbfPe6CC7w90sX9gdGkdV0w
+         zrS2GGQMrqCIM8ewIZbvt40x5rGc7oZBcR9GSq0YKhgggV/JIQCfrLmfzyxkNWXCnmPN
+         1Wa5KBli2ZjCcFm9BvJoGcGUxHUiimUWcyB9B4Afqbl/SzcaERFJBesPG+O3USckjS6K
+         IG0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1M5SOvvR5UxFyyhKJEPFzJaclHyq3gw5Z8ty3dGyG3U=;
+        b=oEgqaFfj93YV094Wmiq654HpVC4Q1ajydGIAOwMzvaMqy7bSPwWddkEAecqxHwU9Y9
+         t70tmK90Ro1RkhuvRS4haPsoiZis1Y8LcMBziR8a053Et/gowgIlEY2Cce5xm9Yb2OCy
+         AHllrZPZwoI40T+XJeiYF9kpzKPD++H6l6qoevHrbAZ9UXiVHr1KKYVetol1Nrp4DYH9
+         j0bAOMZ7en8fZ1iv1PFly0nK/c7ErSnSzitncSnbFnOklVr/7PgYvwC1Kv6/okVxxxwr
+         3XFpDrOkpRznQhtDUZybl9MHHNofPSkmIFQKnKJB8gOco0NQQ3EbJH5bhPjibrmnQ87v
+         rOWg==
+X-Gm-Message-State: AOAM532a5YxSN/rRf+oG0IPa+P8GeCGl7xxd6O3aKPZrs2S1JbvNfIuJ
+        F2NCsYmL0UsT6ya+hLbWAcEL38diK9eDlP/i1qo=
+X-Google-Smtp-Source: ABdhPJzBJK61z/+n98rQlJ7TM8RncgIkE9xYPUqFPHexEGmqCyS7CjMirxLl1b2l6anz1sgrfT6S+OfTTkrHsJCvHw0=
+X-Received: by 2002:a05:6402:191:: with SMTP id r17mr3272762edv.348.1644922108457;
+ Tue, 15 Feb 2022 02:48:28 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb6c0c7e-751d-4570-6be3-08d9f06fca01
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Feb 2022 10:41:56.9200
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6gV4v0duTCjXujj/QeOLGRpQSpMjiYpRcMz+RjWq/SvDpbigO+ZBehQ2NPWBchlrVXvT19NA+Fh4Q5TIWpgqNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3228
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220105150239.9628-1-pali@kernel.org> <20220112151814.24361-1-pali@kernel.org>
+ <20220112151814.24361-12-pali@kernel.org> <87wnhxjxlq.fsf@BL-laptop>
+ <20220214150923.a5ttxoh426cfxn4v@pali> <87tud1jwpr.fsf@BL-laptop> <CAEzXK1qYKVk7QiSY_DwqkZ7WV6WU06WBtiqZx0JJCc+mOP-7Kg@mail.gmail.com>
+In-Reply-To: <CAEzXK1qYKVk7QiSY_DwqkZ7WV6WU06WBtiqZx0JJCc+mOP-7Kg@mail.gmail.com>
+From:   =?UTF-8?B?THXDrXMgTWVuZGVz?= <luis.p.mendes@gmail.com>
+Date:   Tue, 15 Feb 2022 10:48:17 +0000
+Message-ID: <CAEzXK1rj7pOvJgAMd11TJVqzgWD2GSJ-25_BWL7X9wiZWOhieQ@mail.gmail.com>
+Subject: Re: [PATCH v2 11/11] ARM: dts: armada-385.dtsi: Add definitions for
+ PCIe legacy INTx interrupts
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Jason Gunthorpe <jgg@nvidia.com>
-> Sent: Wednesday, February 9, 2022 10:37 AM
->=20
-> > >  /* -------- API for Type1 VFIO IOMMU -------- */
-> > >
-> > >  /**
-> >
-> > Otherwise, I'm still not sure how userspace handles the fact that it
-> > can't know how much data will be read from the device and how important
-> > that is.  There's no replacement of that feature from the v1 protocol
-> > here.
->=20
-> I'm not sure this was part of the v1 protocol either. Yes it had a
-> pending_bytes, but I don't think it was actually expected to be 100%
-> accurate. Computing this value accurately is potentially quite
-> expensive, I would prefer we not enforce this on an implementation
-> without a reason, and qemu currently doesn't make use of it.
->=20
-> The ioctl from the precopy patch is probably the best approach, I
-> think it would be fine to allow that for stop copy as well, but also
-> don't see a usage right now.
->=20
-> It is not something that needs decision now, it is very easy to detect
-> if an ioctl is supported on the data_fd at runtime to add new things
-> here when needed.
->=20
+Hello,
 
-Another interesting thing (not an immediate concern on this series)
-is how to handle devices which may have long time (e.g. due to=20
-draining outstanding requests, even w/o vPRI) to enter the STOP=20
-state. that time is not as deterministic as pending bytes thus cannot
-be reported back to the user before the operation is actually done.
+Sorry for jumping in the conversation, but I read this thread and I
+have an Armada A388 HW so I can test it, if desired.
 
-Similarly to what we discussed for vPRI an eventfd will be beneficial=20
-so the user can timeout-wait on it, but it also needs an arc to create=20
-the eventfd between RUNNING->STOP...
+Lu=C3=ADs
 
-Thanks
-Kevin
+
+On Tue, Feb 15, 2022 at 10:47 AM Lu=C3=ADs Mendes <luis.p.mendes@gmail.com>=
+ wrote:
+>
+> Hello,
+>
+> Sorry for jumping in the conversation, but I read this thread and I have =
+an Armada A388 HW so I can test it, if desired.
+>
+> Lu=C3=ADs
+>
+> On Mon, Feb 14, 2022 at 7:57 PM Gregory CLEMENT <gregory.clement@bootlin.=
+com> wrote:
+>>
+>> Hello,
+>>
+>> > On Monday 14 February 2022 16:07:13 Gregory CLEMENT wrote:
+>> >> Hello Pali,
+>> >>
+>> >> > With this change legacy INTA, INTB, INTC and INTD interrupts are re=
+ported
+>> >> > separately and not mixed into one Linux virq source anymore.
+>> >> >
+>> >> > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+>> >> > ---
+>> >> >  arch/arm/boot/dts/armada-385.dtsi | 52 ++++++++++++++++++++++++++-=
+----
+>> >>
+>> >> Is there any reason for not doing the same change in armada-380.dtsi =
+?
+>> >
+>> > I do not have A380 HW, so I did this change only for A385 which I have
+>> > tested.
+>>
+>> OK fair enough.
+>>
+>> So you can add my
+>> Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+>>
+>> Moreover to keep biscetability  this patch should be merged after the
+>> support in the driver. So the easier is to let merge it through the PCI
+>> subsystem with the other patches from this series. I do not think there
+>> will be any other changes in this file so there won't be any merge
+>> conflicts.
+>>
+>> Thanks,
+>>
+>> Gr=C3=A9gory
+>>
+>>
+>> >
+>> >> Gr=C3=A9gory
+>> >>
+>> >> >  1 file changed, 44 insertions(+), 8 deletions(-)
+>> >> >
+>> >> > diff --git a/arch/arm/boot/dts/armada-385.dtsi b/arch/arm/boot/dts/=
+armada-385.dtsi
+>> >> > index f0022d10c715..83392b92dae2 100644
+>> >> > --- a/arch/arm/boot/dts/armada-385.dtsi
+>> >> > +++ b/arch/arm/boot/dts/armada-385.dtsi
+>> >> > @@ -69,16 +69,25 @@
+>> >> >                            reg =3D <0x0800 0 0 0 0>;
+>> >> >                            #address-cells =3D <3>;
+>> >> >                            #size-cells =3D <2>;
+>> >> > +                          interrupt-names =3D "intx";
+>> >> > +                          interrupts-extended =3D <&gic GIC_SPI 29=
+ IRQ_TYPE_LEVEL_HIGH>;
+>> >> >                            #interrupt-cells =3D <1>;
+>> >> >                            ranges =3D <0x82000000 0 0 0x82000000 0x=
+1 0 1 0
+>> >> >                                      0x81000000 0 0 0x81000000 0x1 =
+0 1 0>;
+>> >> >                            bus-range =3D <0x00 0xff>;
+>> >> > -                          interrupt-map-mask =3D <0 0 0 0>;
+>> >> > -                          interrupt-map =3D <0 0 0 0 &gic GIC_SPI =
+29 IRQ_TYPE_LEVEL_HIGH>;
+>> >> > +                          interrupt-map-mask =3D <0 0 0 7>;
+>> >> > +                          interrupt-map =3D <0 0 0 1 &pcie1_intc 0=
+>,
+>> >> > +                                          <0 0 0 2 &pcie1_intc 1>,
+>> >> > +                                          <0 0 0 3 &pcie1_intc 2>,
+>> >> > +                                          <0 0 0 4 &pcie1_intc 3>;
+>> >> >                            marvell,pcie-port =3D <0>;
+>> >> >                            marvell,pcie-lane =3D <0>;
+>> >> >                            clocks =3D <&gateclk 8>;
+>> >> >                            status =3D "disabled";
+>> >> > +                          pcie1_intc: interrupt-controller {
+>> >> > +                                  interrupt-controller;
+>> >> > +                                  #interrupt-cells =3D <1>;
+>> >> > +                          };
+>> >> >                    };
+>> >> >
+>> >> >                    /* x1 port */
+>> >> > @@ -88,16 +97,25 @@
+>> >> >                            reg =3D <0x1000 0 0 0 0>;
+>> >> >                            #address-cells =3D <3>;
+>> >> >                            #size-cells =3D <2>;
+>> >> > +                          interrupt-names =3D "intx";
+>> >> > +                          interrupts-extended =3D <&gic GIC_SPI 33=
+ IRQ_TYPE_LEVEL_HIGH>;
+>> >> >                            #interrupt-cells =3D <1>;
+>> >> >                            ranges =3D <0x82000000 0 0 0x82000000 0x=
+2 0 1 0
+>> >> >                                      0x81000000 0 0 0x81000000 0x2 =
+0 1 0>;
+>> >> >                            bus-range =3D <0x00 0xff>;
+>> >> > -                          interrupt-map-mask =3D <0 0 0 0>;
+>> >> > -                          interrupt-map =3D <0 0 0 0 &gic GIC_SPI =
+33 IRQ_TYPE_LEVEL_HIGH>;
+>> >> > +                          interrupt-map-mask =3D <0 0 0 7>;
+>> >> > +                          interrupt-map =3D <0 0 0 1 &pcie2_intc 0=
+>,
+>> >> > +                                          <0 0 0 2 &pcie2_intc 1>,
+>> >> > +                                          <0 0 0 3 &pcie2_intc 2>,
+>> >> > +                                          <0 0 0 4 &pcie2_intc 3>;
+>> >> >                            marvell,pcie-port =3D <1>;
+>> >> >                            marvell,pcie-lane =3D <0>;
+>> >> >                            clocks =3D <&gateclk 5>;
+>> >> >                            status =3D "disabled";
+>> >> > +                          pcie2_intc: interrupt-controller {
+>> >> > +                                  interrupt-controller;
+>> >> > +                                  #interrupt-cells =3D <1>;
+>> >> > +                          };
+>> >> >                    };
+>> >> >
+>> >> >                    /* x1 port */
+>> >> > @@ -107,16 +125,25 @@
+>> >> >                            reg =3D <0x1800 0 0 0 0>;
+>> >> >                            #address-cells =3D <3>;
+>> >> >                            #size-cells =3D <2>;
+>> >> > +                          interrupt-names =3D "intx";
+>> >> > +                          interrupts-extended =3D <&gic GIC_SPI 70=
+ IRQ_TYPE_LEVEL_HIGH>;
+>> >> >                            #interrupt-cells =3D <1>;
+>> >> >                            ranges =3D <0x82000000 0 0 0x82000000 0x=
+3 0 1 0
+>> >> >                                      0x81000000 0 0 0x81000000 0x3 =
+0 1 0>;
+>> >> >                            bus-range =3D <0x00 0xff>;
+>> >> > -                          interrupt-map-mask =3D <0 0 0 0>;
+>> >> > -                          interrupt-map =3D <0 0 0 0 &gic GIC_SPI =
+70 IRQ_TYPE_LEVEL_HIGH>;
+>> >> > +                          interrupt-map-mask =3D <0 0 0 7>;
+>> >> > +                          interrupt-map =3D <0 0 0 1 &pcie3_intc 0=
+>,
+>> >> > +                                          <0 0 0 2 &pcie3_intc 1>,
+>> >> > +                                          <0 0 0 3 &pcie3_intc 2>,
+>> >> > +                                          <0 0 0 4 &pcie3_intc 3>;
+>> >> >                            marvell,pcie-port =3D <2>;
+>> >> >                            marvell,pcie-lane =3D <0>;
+>> >> >                            clocks =3D <&gateclk 6>;
+>> >> >                            status =3D "disabled";
+>> >> > +                          pcie3_intc: interrupt-controller {
+>> >> > +                                  interrupt-controller;
+>> >> > +                                  #interrupt-cells =3D <1>;
+>> >> > +                          };
+>> >> >                    };
+>> >> >
+>> >> >                    /*
+>> >> > @@ -129,16 +156,25 @@
+>> >> >                            reg =3D <0x2000 0 0 0 0>;
+>> >> >                            #address-cells =3D <3>;
+>> >> >                            #size-cells =3D <2>;
+>> >> > +                          interrupt-names =3D "intx";
+>> >> > +                          interrupts-extended =3D <&gic GIC_SPI 71=
+ IRQ_TYPE_LEVEL_HIGH>;
+>> >> >                            #interrupt-cells =3D <1>;
+>> >> >                            ranges =3D <0x82000000 0 0 0x82000000 0x=
+4 0 1 0
+>> >> >                                      0x81000000 0 0 0x81000000 0x4 =
+0 1 0>;
+>> >> >                            bus-range =3D <0x00 0xff>;
+>> >> > -                          interrupt-map-mask =3D <0 0 0 0>;
+>> >> > -                          interrupt-map =3D <0 0 0 0 &gic GIC_SPI =
+71 IRQ_TYPE_LEVEL_HIGH>;
+>> >> > +                          interrupt-map-mask =3D <0 0 0 7>;
+>> >> > +                          interrupt-map =3D <0 0 0 1 &pcie4_intc 0=
+>,
+>> >> > +                                          <0 0 0 2 &pcie4_intc 1>,
+>> >> > +                                          <0 0 0 3 &pcie4_intc 2>,
+>> >> > +                                          <0 0 0 4 &pcie4_intc 3>;
+>> >> >                            marvell,pcie-port =3D <3>;
+>> >> >                            marvell,pcie-lane =3D <0>;
+>> >> >                            clocks =3D <&gateclk 7>;
+>> >> >                            status =3D "disabled";
+>> >> > +                          pcie4_intc: interrupt-controller {
+>> >> > +                                  interrupt-controller;
+>> >> > +                                  #interrupt-cells =3D <1>;
+>> >> > +                          };
+>> >> >                    };
+>> >> >            };
+>> >> >    };
+>> >> > --
+>> >> > 2.20.1
+>> >> >
+>> >>
+>> >> --
+>> >> Gregory Clement, Bootlin
+>> >> Embedded Linux and Kernel engineering
+>> >> http://bootlin.com
+>>
+>> --
+>> Gregory Clement, Bootlin
+>> Embedded Linux and Kernel engineering
+>> http://bootlin.com
