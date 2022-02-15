@@ -2,79 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90AEE4B6B1F
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 12:33:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67B124B6BDF
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Feb 2022 13:18:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237213AbiBOLdG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Feb 2022 06:33:06 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54776 "EHLO
+        id S237571AbiBOMS0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Feb 2022 07:18:26 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236495AbiBOLck (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 06:32:40 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D881D308
-        for <linux-pci@vger.kernel.org>; Tue, 15 Feb 2022 03:32:20 -0800 (PST)
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Jyf6n1c6KzbkSF;
-        Tue, 15 Feb 2022 19:31:13 +0800 (CST)
-Received: from [10.67.103.235] (10.67.103.235) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Tue, 15 Feb 2022 19:32:18 +0800
-Subject: Re: [PATCH] PCI: Support BAR sizes up to 8TB
-To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
-References: <20220118092117.10089-1-liudongdong3@huawei.com>
-From:   Dongdong Liu <liudongdong3@huawei.com>
-Message-ID: <d6709b5a-dc40-9c96-608c-413202c7b120@huawei.com>
-Date:   Tue, 15 Feb 2022 19:32:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        with ESMTP id S236906AbiBOMSZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Feb 2022 07:18:25 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA141074E1
+        for <linux-pci@vger.kernel.org>; Tue, 15 Feb 2022 04:18:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EFD4CB818C6
+        for <linux-pci@vger.kernel.org>; Tue, 15 Feb 2022 12:18:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04622C340EB;
+        Tue, 15 Feb 2022 12:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644927493;
+        bh=gRY8rXTw6LdFGVplSzgN5uxJqKQ9cAjk0BvUr8Dxssg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K2pOV6jv43BnBcrjYba3EydOysbhqC51uDPtDwOq+NnTSYjhkH1oDvIazjE4WoKtr
+         hA2mFmtBdn1psYav/CkEMI12QBLfiByq+yXi3FiBNaEaXJs+9lysZJJRLT5c0VtrsP
+         6kxNFj4pEmJEHGa9M8vM9jnwG2E71YZSX2yke59pEBH+FMLkhuyGVNryMBzNwH8KlY
+         onRMqUOPDPVDLPFz3+hRQed33vUkojKYJUakk6N6zaxc9M8uRDJ/pk8Ry3VGfhud4S
+         +FXw5JgaQ6VwlBlFfunDHl4kt+SC6aXsMMcsEeGMhZFQE29889kTgOEp9YBKXDSQ1V
+         rcn8O7d4JNGuw==
+Date:   Tue, 15 Feb 2022 14:18:09 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Sunil Goutham <sgoutham@marvell.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        sunil.goutham@gmail.com
+Subject: Re: [PATCH] PCI: Add Marvell Octeon devices to PCI IDs
+Message-ID: <YguaAbHelW0/l9lm@unreal>
+References: <1644841510-14512-1-git-send-email-sgoutham@marvell.com>
 MIME-Version: 1.0
-In-Reply-To: <20220118092117.10089-1-liudongdong3@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.103.235]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1644841510-14512-1-git-send-email-sgoutham@marvell.com>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi
-
-Gentle ping...
-
-On 2022/1/18 17:21, Dongdong Liu wrote:
-> Current kernel reports disabling BAR if device with a 4TB BAR as it
-> only supports BAR size to 128GB.
->
-> pci 0000:01:00.0: disabling BAR 4:
-> [mem 0x00000000-0x3ffffffffff 64bit pref] (bad alignment 0x40000000000)
->
-> Increase the maximum BAR size from 128GB to 8TB for future expansion.
->
-> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+On Mon, Feb 14, 2022 at 05:55:10PM +0530, Sunil Goutham wrote:
+> Add Marvell (Cavium) OcteonTx2 and CN10K devices
+> to PCI ID database.
+> 
+> Signed-off-by: Sunil Goutham <sgoutham@marvell.com>
 > ---
->  drivers/pci/setup-bus.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 547396ec50b5..a7893bf2f580 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -994,7 +994,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
->  {
->  	struct pci_dev *dev;
->  	resource_size_t min_align, align, size, size0, size1;
-> -	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
-> +	resource_size_t aligns[24]; /* Alignments from 1MB to 8TB */
->  	int order, max_order;
->  	struct resource *b_res = find_bus_resource_of_type(bus,
->  					mask | IORESOURCE_PREFETCH, type);
->
+>  include/linux/pci_ids.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index aad54c6..5fd187b 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2357,6 +2357,21 @@
+>  #define PCI_DEVICE_ID_ALTIMA_AC1003	0x03eb
+>  
+>  #define PCI_VENDOR_ID_CAVIUM		0x177d
+> +#define PCI_DEVICE_ID_OCTEONTX2_PTP	0xA00C
+> +#define PCI_DEVICE_ID_CN10K_PTP		0xA09E
+> +#define PCI_DEVICE_ID_OCTEONTX2_CGX	0xA059
+> +#define PCI_DEVICE_ID_CN10K_RPM		0xA060
+> +#define PCI_DEVICE_ID_OCTEONTX2_CPTPF	0xA0FD
+> +#define PCI_DEVICE_ID_OCTEONTX2_CPTVF	0xA0FE
+> +#define PCI_DEVICE_ID_CN10K_CPTPF	0xA0F2
+> +#define PCI_DEVICE_ID_CN10K_CPTVF	0xA0F3
+> +#define PCI_DEVICE_ID_OCTEONTX2_RVUAF	0xA065
+> +#define PCI_DEVICE_ID_OCTEONTX2_RVUPF	0xA063
+> +#define PCI_DEVICE_ID_OCTEONTX2_RVUVF	0xA064
+> +#define PCI_DEVICE_ID_OCTEONTX2_LBK	0xA061
+> +#define PCI_DEVICE_ID_OCTEONTX2_LBKVF	0xA0F8
+> +#define PCI_DEVICE_ID_OCTEONTX2_SDPPF	0xA0F6
+> +#define PCI_DEVICE_ID_OCTEONTX2_SDPVF	0xA0F7
+
+If I recall correctly, this file is for device IDs that are used in more
+than one subsystem. It is not supposed to be updated for every octeon device.
+
+Thanks
+
+>  
+>  #define PCI_VENDOR_ID_TECHWELL		0x1797
+>  #define PCI_DEVICE_ID_TECHWELL_6800	0x6800
+> -- 
+> 2.7.4
+> 
