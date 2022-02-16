@@ -2,201 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB1364B87D2
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Feb 2022 13:37:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44DAC4B888F
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Feb 2022 14:11:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233318AbiBPMh5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Feb 2022 07:37:57 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59996 "EHLO
+        id S231668AbiBPNMG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Feb 2022 08:12:06 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231156AbiBPMh4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Feb 2022 07:37:56 -0500
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3FFD1A399;
-        Wed, 16 Feb 2022 04:37:43 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id a7so2559752ybj.12;
-        Wed, 16 Feb 2022 04:37:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GR3qfBOskF1geBQk+Kw8y3oufWn3aW+k8M3B4Rxy0Ng=;
-        b=mK8wEeYrHXLWQYhC0NEOEJcyWrjWN4JoNtfLkNCGqVNpVtvKgpfrQnLYCd/SwnUa2o
-         VsTQieCcuhmWU+BPdzFngb2ajFqSDiKv7l5Y9HPB4nnyGFtgXDlHnbNIJ2uCrytt+f0o
-         oCQw3w7xuEMuoFbbtCp7LkbPMSY2x6Of2mH1uGNgi+1rO/Nl24OCo1pPw1OiUam2k0ml
-         RpkiU1EhGa4WrgG5j4tHCZt8QDWCxb1r40LGxnAaCS0aI5InxbuKJ8KfFkQtUwvvBGJA
-         Ow/XsUDJd0i/zDaZymbdMI70XHifJCwt8lMVdCwN4BDXLiMb4t3WS/CPI0o/BKWYUqJr
-         NThQ==
-X-Gm-Message-State: AOAM530+Gs5anwefm5EDr56vAIHRSOL8h2CajtyIEmCIGIveQTwyeFqa
-        0C0CKqF/y/0bFUwioOEYzDpVKoKBCFJ2QO3F2JPFA5+rnNk=
-X-Google-Smtp-Source: ABdhPJxy6INMZmU51GIgS8kVS4N2b/ccgnY+ep70go2UqR5ZSwVbcS8Gyqm0t9gs26RJILh7NZt80sIjFCiOY3j0v04=
-X-Received: by 2002:a05:6902:10c7:b0:61e:1639:df86 with SMTP id
- w7-20020a05690210c700b0061e1639df86mr1967990ybu.78.1645015062762; Wed, 16 Feb
- 2022 04:37:42 -0800 (PST)
+        with ESMTP id S230243AbiBPNMG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Feb 2022 08:12:06 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2065.outbound.protection.outlook.com [40.107.94.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF33E235B;
+        Wed, 16 Feb 2022 05:11:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KfAy3Lgn3ZKEWYFneldocoslzF7YOZjvQkgOTb++Ut9goLdQajbfJAmMizcJflkWD7ELma0MyS30zM53E8v0vMMdtb5nyq+F2NQpfn8Zt2qaZyqdWzV1N9xnoQolgsXajNCtVnQAzkFwRcAhdrwCeMyUbaXnp80UZ9Pwv4wwy4Hpzo7/MgnmVDYUCS2hb4DKnjg8Od9F6jm71ua3Y1nR1wLJfdH2QhT90KIG6zfRzqzkrbf8L78K4cvsb4ji9YBlgEo05+v1VL8Q1dKP/4aiupMIl1MgIBjeHawwtQG5JP3VDTumcStHrKrWJLE3BlbMiEb5lsUHHhXCMdCh1VyLyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Z4YLcBvPvIhZRNGJVjbFR1p4ppgKGGjFgGbPr2RC7Ko=;
+ b=jVA9ErMTIJCju7vywPe8QRlOw++eE9Jm2RFxpvxfwoykx8uVJKV5RYs2kzdtW0O7LcFKplSYWozNcb0BHmoyaWpnAWj56e6WbPx0Om44k0Rh3YKH/vdrPvuIA+Cz1wzi1cjXD8oGJpej9VXvjNCypm+onZpCDS7YzDGYBK+1huZXmRsvRC0VzxxkHil7ws19MM1PIiSUV5nsurC/ZFy1hsO/Y+qUMqEyYXJ7AeLHSYFng6XjQtIx60g5kHQxe+ZOYddpGnZ0ozGNjP9ku6SQ2oaNoLCj45vDBbLReIcWDPg8fRsG8WrYtc6sMmhTquZZXAI1nLao2/SLvE+UnioDzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
+ is 12.22.5.238) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=temperror action=none header.from=nvidia.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Z4YLcBvPvIhZRNGJVjbFR1p4ppgKGGjFgGbPr2RC7Ko=;
+ b=GYm5VH0XTOFEjuCggcP7H+7zG7jvrH6vxstjIcx1h1ZVAeGSYY8HPND1UqRvrBvCvBWS5u6nM+7SRblc1NfavzCW7gILI3vqkrSFlR2K1QGPfTFuZk+rBtp0euvdBxYw0yt32qf0ddLx+MbWeIVBqPdhJNteggSL1uLcu1PEsz0BE6LY+ri7l/2Xo1xSlP5Gt/49lg4hKzV7473rE1+jzb1mdy8tBDsdFaEkfzcBZ4PxSNpIHl/xHWzJMjkF+k9/fk8bY0FA/rPduxBdECsWROfKK0MgbIHi9lYK5AWXiVM8LbAUPdffTTlmtkOLgipSpcoyssuIDYbCgEGNQJ37jQ==
+Received: from MN2PR12MB3597.namprd12.prod.outlook.com (2603:10b6:208:cf::25)
+ by CH2PR12MB4245.namprd12.prod.outlook.com (2603:10b6:610:af::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.14; Wed, 16 Feb
+ 2022 13:11:52 +0000
+Received: from BN9PR03CA0175.namprd03.prod.outlook.com (2603:10b6:408:f4::30)
+ by MN2PR12MB3597.namprd12.prod.outlook.com (2603:10b6:208:cf::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.16; Wed, 16 Feb
+ 2022 13:11:50 +0000
+Received: from BN8NAM11FT020.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:f4:cafe::fe) by BN9PR03CA0175.outlook.office365.com
+ (2603:10b6:408:f4::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.15 via Frontend
+ Transport; Wed, 16 Feb 2022 13:11:50 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is 12.22.5.238)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=temperror action=none header.from=nvidia.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of nvidia.com: DNS Timeout)
+Received: from mail.nvidia.com (12.22.5.238) by
+ BN8NAM11FT020.mail.protection.outlook.com (10.13.176.223) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4975.11 via Frontend Transport; Wed, 16 Feb 2022 13:11:49 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL105.nvidia.com
+ (10.27.9.14) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 16 Feb
+ 2022 13:11:48 +0000
+Received: from [10.25.73.191] (10.126.230.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.9; Wed, 16 Feb 2022
+ 05:11:42 -0800
+Message-ID: <0d8cc8c0-31a1-0290-5aa5-0c7b16db1edb@nvidia.com>
+Date:   Wed, 16 Feb 2022 18:41:39 +0530
 MIME-Version: 1.0
-References: <CAJZ5v0i6+EMMGuKckhtTdt7TgC3LbofW7oS7B5=McSNjEh1yKA@mail.gmail.com>
- <20220216015303.GA137820@bhelgaas>
-In-Reply-To: <20220216015303.GA137820@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 16 Feb 2022 13:37:29 +0100
-Message-ID: <CAJZ5v0irC5WJAKjzR6niY4ai965td_6UqF=KXKhCjxaxBGuNtw@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI: vmd: Honor ACPI _OSC on PCIe features
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH V1] PCI/ASPM: Save/restore L1SS Capability for
+ suspend/resume
+Content-Language: en-US
+To:     "Kenneth R. Crudup" <kenny@panix.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <hkallweit1@gmail.com>, <wangxiongfeng2@huawei.com>,
+        <mika.westerberg@linux.intel.com>, <kai.heng.feng@canonical.com>,
+        <chris.packham@alliedtelesis.co.nz>, <yangyicong@hisilicon.com>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>, <abhsahu@nvidia.com>,
+        <sagupta@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20220207163332.GA397884@bhelgaas>
+ <79a41832-12e2-2ed-f3af-da3bac90d941@panix.com>
+ <3ca14a7-b726-8430-fe61-a3ac183a1088@panix.com>
+ <0ccd43af-0293-521b-86d3-ea2ea1c70e5c@nvidia.com>
+ <75a48fb6-3913-ccaf-3c-6d41bbbda533@panix.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+In-Reply-To: <75a48fb6-3913-ccaf-3c-6d41bbbda533@panix.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.230.35]
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 28daed99-0dde-4d35-8772-08d9f14de429
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3597:EE_|CH2PR12MB4245:EE_
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3597F00BC1A3B5E3635ADA97B8359@MN2PR12MB3597.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sX7jbpc/pslZ/8smySL/l5hBCwxjr841STW5RPlUsshu9nL1bS8pV/6z07Ij2EeUnYSfAQ1mOUQmAFQ2Qi25tx0TlTUsPc+ZBhkW4vsJhYBLFHI+hYGiZWg8M7GxmhTzDbkbFU7L1QdXmfewgSDYJnq/qP4RRFXMXn+VTEJIJoyQ66Uu1zSNsA+Da5b5vyQEFPjcugx8tl0RcwuVF7BIPP7g3iurtqFWogOLyMHadsGXLlocJwNcVyxdnBeHS8eMA8CGO1tCesKU1KXKrO8ATGAFg4e1RxajoAWn45BmB9LBagrEYPivN3JTLtr80/BWUXW0fqB8DNjk3qc25TmVXoh+RDqKpWsajyBHpGr/nzycYFS7cTRrzc41p8Ba4cGa75pxYIlFSKe/gr2JdgAlvajLweb6rlligCgFxuZUPhkCR11mUfUQdC+MAOphIvyOOOdQtOoXZi5T0ZJVqtJ3eq7t0hHYX2I6ysuTEdsx7AiJTmps9fvTeTAnIs38ch6wQmrWUnWAMEHuEj10rUNrvFP0uq9AaSwJqexcXfyMXivVeoOd33hEF2+t5qZ+2InwWOknCpB+QBYDGAv9SLyNTeGIXzVAqLVJHmscqmNFW5076MEOqs8YJ2l1/ZT4/CRyxLTNvBMxK1mW+UYYMltwC+hIw4g3S3MbHf18vA9lALhfnps+0+SEEqfW7TeW3g52Ie1o7InAo5bLBFAVahFlWyR+UgfViVz/dxJoAraqROy6Urui5TG9Czk0GOJMYdyiWAUQyC70v7a/ods68udt6w==
+X-Forefront-Antispam-Report: CIP:12.22.5.238;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(316002)(53546011)(8676002)(6666004)(5660300002)(36860700001)(82310400004)(70206006)(4326008)(70586007)(2906002)(16576012)(86362001)(36756003)(26005)(63350400001)(63370400001)(7416002)(426003)(336012)(186003)(508600001)(31696002)(47076005)(356005)(110136005)(54906003)(83380400001)(16526019)(81166007)(8936002)(2616005)(31686004)(40460700003)(32563001)(36900700001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2022 13:11:49.0776
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28daed99-0dde-4d35-8772-08d9f14de429
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.238];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT020.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4245
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 2:53 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Feb 15, 2022 at 06:09:15PM +0100, Rafael J. Wysocki wrote:
-> > On Tue, Feb 15, 2022 at 4:09 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Mon, Feb 14, 2022 at 08:23:05AM +0800, Kai-Heng Feng wrote:
-> > > > On Thu, Feb 10, 2022 at 5:36 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > On Tue, Dec 07, 2021 at 02:15:04PM +0100, Rafael J. Wysocki wrote:
-> > > > > > On Tue, Dec 7, 2021 at 12:12 AM Keith Busch <kbusch@kernel.org> wrote:
-> > > > > > > On Fri, Dec 03, 2021 at 11:15:41AM +0800, Kai-Heng Feng wrote:
-> > > > > > > > When Samsung PCIe Gen4 NVMe is connected to Intel ADL VMD, the
-> > > > > > > > combination causes AER message flood and drags the system performance
-> > > > > > > > down.
-> > > > > > > >
-> > > > > > > > The issue doesn't happen when VMD mode is disabled in BIOS, since AER
-> > > > > > > > isn't enabled by acpi_pci_root_create() . When VMD mode is enabled, AER
-> > > > > > > > is enabled regardless of _OSC:
-> > > > > > > > [    0.410076] acpi PNP0A08:00: _OSC: platform does not support [AER]
-> > > > > > > > ...
-> > > > > > > > [    1.486704] pcieport 10000:e0:06.0: AER: enabled with IRQ 146
-> > > > > > > >
-> > > > > > > > Since VMD is an aperture to regular PCIe root ports, honor ACPI _OSC to
-> > > > > > > > disable PCIe features accordingly to resolve the issue.
-> > > > > > >
-> > > > > > > At least for some versions of this hardare, I recall ACPI is unaware of
-> > > > > > > any devices in the VMD domain; the platform can not see past the VMD
-> > > > > > > endpoint, so I throught the driver was supposed to always let the VMD
-> > > > > > > domain use OS native support regardless of the parent's ACPI _OSC.
-> > > > > >
-> > > > > > This is orthogonal to whether or not ACPI is aware of the VMD domain
-> > > > > > or the devices in it.
-> > > > > >
-> > > > > > If the platform firmware does not allow the OS to control specific
-> > > > > > PCIe features at the physical host bridge level, that extends to the
-> > > > > > VMD "bus", because it is just a way to expose a hidden part of the
-> > > > > > PCIe hierarchy.
-> > > > >
-> > > > > I don't understand what's going on here.  Do we understand the AER
-> > > > > message flood?  Are we just papering over it by disabling AER?
-> > > >
-> > > > To be more precise, AER is disabled by the platform vendor in BIOS to
-> > > > paper over the issue.
-> > > > The only viable solution for us is to follow their settings. We may
-> > > > never know what really happens underneath.
-> > > >
-> > > > Disabling ASPM/AER/PME etc is a normal practice for ODMs unfortunately.
-> > >
-> > > OK.  So this patch actually has nothing in particular to do with AER.
-> > > It's about making _OSC apply to *all* devices below a host bridge,
-> > > even those below a VMD.
-> >
-> > Right.
-> >
-> > > This is slightly ambiguous because while "_OSC applies to the entire
-> > > hierarchy originated by a PCI Host Bridge" (PCI Firmware spec r3.3,
-> > > sec 4.5.1), vmd.c creates a logical view where devices below the VMD
-> > > are in a separate hierarchy with a separate domain.
-> >
-> > But from the HW perspective they still are in the same hierarchy below
-> > the original host bridge.
->
-> I suppose in some sense it's the same hierarchy because the electrical
-> connection all goes through a root port in the original host bridge,
-> but it's a little muddy because according to [1], a VMD spawns a new
-> hierarchy that can use an entirely new [bus 00-ff] space, and the
-> hierarchy below VMD uses a new config access mechanism independent of
-> ECAM or whatever the original host bridge uses.
 
-IIUC, that's part of the hiding mechanism.  See below.
 
-> > > The interpretation that _OSC applies to devices below VMD should work,
-> > > as long as it is possible for platform firmware to manage services
-> > > (AER, pciehp, etc) for things below VMD without getting in the way of
-> > > vmd.c.
-> >
-> > vmd.c actually exposes things hidden by the firmware and the point of
-> > the patch is to still let the firmware control them if it wants/needs
-> > to IIUC.
->
-> My mental picture is that without vmd.c, Linux would enumerate the VMD
-> RCiEP itself, but none of the devices below the VMD would be visible.
-> With vmd.c, devices below the VMD RCiEP are visible.  Maybe this
-> picture is incorrect or too simple?
+On 2/16/2022 11:30 AM, Kenneth R. Crudup wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Wed, 16 Feb 2022, Vidya Sagar wrote:
+> 
+>> I see that the ASPM-L1 state of Realtek NIC which was in disabled state before
+>> hibernate got enabled after hibernate.
+> 
+> That's actually my SD-Card reader; there's a good chance the BIOS does "something"
+> to it at boot time, as it's possible to boot from SD-Card on my laptop.
+> 
+>> This patch doesn't do anything to LnkCtl register which has control for ASPM L1
+>> state.
+> 
+>> Could you please check why ASPM L1 got enabled post hibernation?
+> 
+> I wouldn't know how to do that; if you're still interested in that let me know
+> what to do to determine that.
+I would like Bjorn to take a call on it.
+At this point, there are contradictions in observations.
+Just to summarize,
+- The root ports in your laptop don't have support for L1SS
+- With the same old code base with which the errors were observed plus 
+my patch on top of it, I see that ASPM-L1 state getting enabled for one 
+of the endpoints (Realtek SD-Card reader) after system comes out of 
+hibernation even though ASPM-L1 was disabled before the system enter 
+into hibernation. No errors are reported now.
+- With the linux-next top of the tree plus my patch, no change in the 
+ASPM states and no errors also reported.
 
-It doesn't reflect what really happens AFAICS.  The devices that
-appear to be located below the VMD RCiEP are not there physically.
+This points to BIOS being buggy (both old and new with new one being 
+less problematic)
 
-> Apparently there's a firmware toggle, but I don't know exactly what it
-> does.  Maybe if the toggle is set to disable VMD, the VMD device looks
-> like a regular Root Port and the devices below are enumerated
-> normally even without any vmd.c?
+Bjorn, what are your comments on it?
 
-If the toggle is set to disable VMD, all of the devices that would be
-hidden by the firmware and only visible through the VMD mechanisms
-show up in their proper locations in the original PCIe hierarchy that
-they belong to physically.
-
-> > > But I think one implication of this is that we cannot support
-> > > hot-added VMDs.  For example, firmware that wants to manage AER will
-> > > use _OSC to retain AER control.  But if the firmware doesn't know how
-> > > VMDs work, it will not be able to handle AER for devices below the
-> > > VMD.
-> >
-> > Well, the firmware needs to know how stuff works to hide it in the
-> > first place ...
->
-> [1] does also say that VMD is a Root Complex *Integrated* Endpoint,
-> which could not be hotplugged.  But I don't see anything in the code
-> that actually enforces or requires that, so I don't know what to make
-> of it.
-
-[1] is correct.
-
-> If it's possible to hot-add a VMD device, firmware wouldn't be
-> involved in configuring it (assuming pciehp hotplug).  I assume the
-> new VMD would look like an Endpoint, and if vmd.c is present, maybe it
-> could construct a new hierarchy below that Endpoint?  In that case, we
-> have to assume firmware doesn't know how to operate VMD, so even if
-> firmware manages AER in general, it wouldn't be able to do it for
-> things below the VMD.
-
-No, this really is only about re-exposing some of the existing PCIe
-hierarchy that was hidden by the firmware from the OS.  Physically, it
-is still the same hierarchy all the time.
-
-> > > > > If an error occurs below a VMD, who notices and reports it?  If we
-> > > > > disable native AER below VMD because of _OSC, as this patch does, I
-> > > > > guess we're assuming the platform will handle AER events below VMD.
-> > > > > Is that really true?  Does the platform know how to find AER log
-> > > > > registers of devices below VMD?
-> > > > >
-> > > > > > The platform firmware does that through ACPI _OSC under the host
-> > > > > > bridge device (not under the VMD device) which it is very well aware
-> > > > > > of.
->
-> [1] https://git.kernel.org/linus/185a383ada2e
+> 
+>          -Kenny
+> 
+> --
+> Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange County CA
+> 
