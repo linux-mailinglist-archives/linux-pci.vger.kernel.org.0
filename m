@@ -2,269 +2,267 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 966874B8CD5
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Feb 2022 16:48:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7AFF4B8E88
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Feb 2022 17:50:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235677AbiBPPsL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Feb 2022 10:48:11 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41346 "EHLO
+        id S236636AbiBPQu6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Feb 2022 11:50:58 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233486AbiBPPsL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Feb 2022 10:48:11 -0500
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7DDA1405C0;
-        Wed, 16 Feb 2022 07:47:58 -0800 (PST)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-2d68d519a33so2370807b3.7;
-        Wed, 16 Feb 2022 07:47:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BnBzRdnwb0oKaksx3lFoqjZZUFxsO7xg/LnU+ygXtBg=;
-        b=hwv8EO/W3iHF+5QJ02EFlwZ6MBjeXTabDaQQBpphkR5wf5FFsjS+j/LbE2lJyOclgA
-         aSbLdvZisGsfMtodF4MYb06jbF/Kfn/we4m8hD5xBN5ftoyBlTQ8GFYp4fzA31n9vUFH
-         reCmULZ+wjeYelF7D0QK9Ae5Y8GJ4EaxTr4yqQ8m7UFty65spYLgk/tZ1/CReoSE0K1q
-         hx4d8TK1JOlO8Q1i7l5bT3n4told67SipyWqKrsqOVf+wG3g80ZzQf8hIBfFhXvvBZtQ
-         DqN2bd6cPzFDqFSZ4kAB7Jg8KakGQgdIzwYZ8jMcKwvlWavNPm9hT07Rurvdh8/lW+lh
-         jX5A==
-X-Gm-Message-State: AOAM531sXYCaf6HHCnl/C7Y5di78r8HnEykZZ9wtnBMMsiCaXZ8twFZ2
-        c0Md51Gtj7J8kFDhfhGnTBmrfM67QV3xRQU7tBU=
-X-Google-Smtp-Source: ABdhPJzcrCD0gNb+oW8XiV0ZUte8Kq0vB0oyiJuuIAnjafnoeE64eVdwjJ/Dy5HXQuhy12m6OfGusYfIdrTcaO7l6LE=
-X-Received: by 2002:a0d:d490:0:b0:2d2:aa58:ef87 with SMTP id
- w138-20020a0dd490000000b002d2aa58ef87mr2875528ywd.326.1645026477774; Wed, 16
- Feb 2022 07:47:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20220216150121.9400-1-hdegoede@redhat.com> <20220216150121.9400-2-hdegoede@redhat.com>
-In-Reply-To: <20220216150121.9400-2-hdegoede@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 16 Feb 2022 16:47:46 +0100
-Message-ID: <CAJZ5v0iE52tTO31xCMYYo+REd4UVNpmPUBaXAdOv8B21iOVYCw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] x86/PCI: Disable exclusion of E820 reserved addresses
- in some cases
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S236730AbiBPQut (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Feb 2022 11:50:49 -0500
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam08on2074.outbound.protection.outlook.com [40.107.101.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AAD829058B;
+        Wed, 16 Feb 2022 08:50:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VMaGQrzjnGAhshBjMe4CIQYC3l6vurbkgGhxGfM3ymykaZOWKPGHkZJVNEEVmtg7QZNwzjRh1CSIdG1oJBIJn3QCQ/PSWcX1cVpbtIhmwKYJxhpsEIU9N8/MNZJFi9muhHXw2hSnjKTqAtWWZeWLa741i1FMNTJP8QdGucRego2WVF5RSbrtMMhG1TbQmjZ6KxPlfX7CRGnvQTG/d9MAwVRHQeXxMnqL/CnHf36f20jy4of4ftUs4SEJQKX9g0voLz/Yc8r661jmGMWV/W/nYGZxsH1kgGHdydAp3m7Y0Achd9/c1Jnau6X8iWH63XsVCtnF7f8FkJ75mCZ4XE7Q/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Yfe16UAe5vQ9WWunUIzYw2J1VgfdvdfcfP7X5/Y2amM=;
+ b=lveRPL4qk8G6IGpNn0Nk8ia/3a1wZ2ciMbUoDx3RvQk5CV8dSATroipt5hiWMzIyCG6/6OXl9XSntumEwsK4WXf9PsW2MseWHrJJCam6SKefeVVQCfJjVkcYPqbpVNrxzaVi7PQNqvPi5cq/tABRbxl2UyTYAt3NNlMPgMKBVhXSZq/nLRDx93XFah2PDHHw6YN94J/Afubx+7VsoOYYhq1mbXG1jWBeNkvTQiDNL4HmdipwDJrSdBOgaFh2pt41TvizG80mWPUJBbBsNolEB8nsAEFoUVuTNlhv87ItN6VCXymf1ORGuzQoVEjDR+VQB8z33/xvsrwckF1z+QmV0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yfe16UAe5vQ9WWunUIzYw2J1VgfdvdfcfP7X5/Y2amM=;
+ b=B4d8if4d7+Mz1StP4qQ6p/UGEzqCC72fZIbJM26EbCHoxibSOtT1M+t6O7mtALLbtGhD09H32K6TImzXAgVfxAKNO/8wFJPQDq2g/ayiOx5o+v9RyV++vszkIJOyVj64FoZshHwJ29F2UM7A9HZZkeLipOPAJ0H6CMBTBakIUmU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
+ by DM5PR12MB1370.namprd12.prod.outlook.com (2603:10b6:3:76::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.17; Wed, 16 Feb
+ 2022 16:50:34 +0000
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::692d:9532:906b:2b08]) by BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::692d:9532:906b:2b08%4]) with mapi id 15.20.4995.014; Wed, 16 Feb 2022
+ 16:50:34 +0000
+Message-ID: <8da992ac-c241-1fe2-41a9-579c845608db@amd.com>
+Date:   Wed, 16 Feb 2022 10:50:31 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH v4 00/10] Overhaul `is_thunderbolt`
+Content-Language: en-US
+To:     Alex Deucher <alexdeucher@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?Q?Benoit_Gr=C3=A9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_BL_SPAMCOP_NET,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+References: <20220215000200.242799-1-mario.limonciello@amd.com>
+ <20220215072911.GA13892@wunner.de>
+ <3078823e-4ab4-27b6-b1c7-c6552fbfdb2e@amd.com> <Yg0LaujhftM0b8N/@lahna>
+ <CADnq5_Ov3T9WH29MjgC2byqgTGkn-ux7iUaK3z5s2v4At_b3Ow@mail.gmail.com>
+From:   "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <CADnq5_Ov3T9WH29MjgC2byqgTGkn-ux7iUaK3z5s2v4At_b3Ow@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL1PR13CA0307.namprd13.prod.outlook.com
+ (2603:10b6:208:2c1::12) To BL1PR12MB5157.namprd12.prod.outlook.com
+ (2603:10b6:208:308::15)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9604802a-897a-4f24-ae6b-08d9f16c7306
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1370:EE_
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1370215E8C0B429C233E3247E2359@DM5PR12MB1370.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ep/nuLHVy144laOZFQHstgItn+9eAKGSL9j3ONGEI4EJtHD8jKXhBi6RGOwv9KwFLNb2LRujiDRwTwpTjhD88hh+FXc9XkKzqwNG2VNXqAHlgVkI6MhRcW5xuhsouCITgUZDSCw4Yi0k307W2QuA22D/dcRVs/CdP9DXHNkzDMTQMH9+weC2MrnTseFQPeBdR+pPyGim/Yv6AYoIrMGNUXPBMFTciX3YpwbAaPBA9Uk6KqSZ0+DOgdVBdcZWiHLizNutVhWTEJ5sACuaMIgnu+GmvVdwSZXRlUoUA4/4hddYbH5rfjKb7xfiiy89I8hpa6rDduksb8nAqXepYVaYqCyehkPYRDrzyuPk2+r5AVmH0zqo7lG7E2U91/RlS4fW5ioXhFkYIDEuxVjT+v2R7EPbJp9pAYVDMlnSrXdsenEQLuaH+6zGxyqWTr3FKc6eqw9aJ2ILmVQ8hWUeQRvUWR3lqykiNVAS96uk9iZbUaXBM6hxJA4OVveE3rrlNcNMFthS5oLB499aTQgAZ+WsSX78mde+QbG4n1KlG3DLuzzzAoZxmc0VmL3p1Cwe92U18No4L+q628xwNcPo8vrg9GVgwd8TObiXluYeojp9hGA0v0eQ11ZHX99aWOzlr+Rct3uct27XuHf68lom3oCwoOKYx2EwLd9S9xocCPXPIO7vY1SMy0PYE3Yw7iypO+qBINYcak22uCjLiHsO6bJAkLaNkBoweKZGa6qRPd0Bpwv9QX5mvD8BTv44rxHuOs6hDOyYMQcfcPtMF2+wBKXVdg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38100700002)(316002)(31686004)(26005)(110136005)(66476007)(8936002)(66946007)(7416002)(2906002)(54906003)(5660300002)(8676002)(4326008)(31696002)(6486002)(86362001)(508600001)(83380400001)(66556008)(2616005)(36756003)(53546011)(6666004)(6506007)(6512007)(45080400002)(186003)(81973001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bktnQzZTbkFTakI3S3NzM1RORWRGL2pRckpTR3BmTDdTTlh2NnFhSFNPamZE?=
+ =?utf-8?B?OWJ0NzR5SHViU0VKUmI5L3l5UVlJaSszV1dhTEJGN2RIc2F0c3BCRG9KK3ZJ?=
+ =?utf-8?B?MVpvYWlGSDdTWFRLZ010bzF6VmN1djZNU1RtSXk3c1czRTJpR2N5NnFMOGV5?=
+ =?utf-8?B?NU9PNWg2Q1lnczlobDlxaE9lckU3Z1UwclJucjJIdVV2N3ZKZkNrZWcxdTNt?=
+ =?utf-8?B?VEpWL29SRXZjcFM1THNIQTBXeVptM1BkT1U0dFNVZ2tRVldOdHlJVzVydDA0?=
+ =?utf-8?B?bVU4cmhidnZQYVRkdDJ5L2pjVWtCeUFzcEtUYnBtSWtydmxpUWxpNGYzdmRI?=
+ =?utf-8?B?a3VrUzUzVnJyMndTOHNYTHF2ZVV1QUZyQk5uWExFZnB6a0RWMXRyeWFUWDdL?=
+ =?utf-8?B?TWhIYlY0SGQ5TzN1R2preHJGRjlQaVNPV1dSRFBHNmtoNVFTQUhJVm1KR0hs?=
+ =?utf-8?B?aEpRUTN0cEVMTnh5aHQ2R0dYWmZWM0xHNlJpaDNEeFU2MzA1MXQ4aWQ0ejVO?=
+ =?utf-8?B?aEp3NjRpY0RSZFJHSzRXTkdDMTZkODRuRGxEUzZDVnVEN0hLaUsvK0x5d0Ux?=
+ =?utf-8?B?akFwQ28yQTdDT3g4NzJtZVh0a01zaWo3WFhXanE0R1l1WW1kNjRrSTlFazdS?=
+ =?utf-8?B?R1FuWjQrK0NudEI2R2xvSHlySGpiM1RmamYwS0UybmZjU0pKWEhzeHVTTGpX?=
+ =?utf-8?B?STEvTGNTb1pYdnJTaFJwazczc2RzWTFxb0dwVjNJWVdNWW5TRFZKemY4OGp6?=
+ =?utf-8?B?OWdQRlNGOXpPRDBFMjRBRzBBbnViSTBrTnc3SU51YXM3a0p5N1R6Ykhia1BX?=
+ =?utf-8?B?V0huaW55K09HWVM2d0pVbUNhRHhZNVVDRjlzbk1LbVpta092TU9BZ3h2d3VR?=
+ =?utf-8?B?ek54NFJuS2lGSjl4b0lXQ295VUVQdmQrYVprMCtDWjVvQlIzcDZGV0J3eFht?=
+ =?utf-8?B?U0VoVGJxbnhxbTU4eXFnbnpxb04rQ25FekRVSnZ1Z3NEWFphQWlsdXFXbE8y?=
+ =?utf-8?B?ZHZWYVo0V3M4NHFNQWxLWFZQKzU3MDFJVTRKY1ZqV0tZMHprUUpDRVJ3WDVP?=
+ =?utf-8?B?ZkIxaDJYSVBzdFg2WlhDRnJWOWNvcHFqbmgyaFQ3LyszN1ZBaHNFOTFoTDRv?=
+ =?utf-8?B?dkFpREo0MXRXUjVWNStSelhWdHdIMnQwRHhIL0pTck5KSzMrM2FPT0xKTVZH?=
+ =?utf-8?B?ZmNzWmZwWmI4WGRqSjlUMjJwWjNIb29jeVVIdjZMc3lzbUJGWTNSSHUrdnFZ?=
+ =?utf-8?B?STY0UXBIMHoxUDFRRExoRmE2Q1hwWFBoS2NQN1NkVTFwZG1WeXc1UUppVVpS?=
+ =?utf-8?B?TEJ0Ukp3RUFCanZZRmNnZ0tidnR6c1k4U2VUWnNKQTNublAxSnJ5TzI1MW1M?=
+ =?utf-8?B?QmF6R3JVRHNOZnprZEtQTURQSnE1bVFEMm8zenlqaHREZXlUUmViYXZhQWF0?=
+ =?utf-8?B?THhUc1RwcjMvYmx6cU5SeFNOUU1Nc1ZUOEtDOTNOYlZUQUtHemlObmFNTjBJ?=
+ =?utf-8?B?VkNkQ3hCbWN1YTFQbWE5QWZJTExpYk5FVzdKTnlpN3BrYXRHTTc0YVUrZUF3?=
+ =?utf-8?B?TDNYcFdWYjlZN01uWURiOVoyMXhXUEswTW4wTVkzZG1LajZRZUtJdUoySE1v?=
+ =?utf-8?B?WURnNWRqb0RMRExWVVdJNXVoVE9idHVIeDNHd0VVRGlpblJ0TUJLaFBGYlps?=
+ =?utf-8?B?azhMYWxZM05LKzAwRWNtZEJObldzZnFVQitVNGJvQW9CZHZBUGVuN1I1cGEr?=
+ =?utf-8?B?cU1YVjNYL1ZwbkFXVnNCL2RtVzBvVVlyWVRpV21TMlpMRGR4RWExbXBGUVhq?=
+ =?utf-8?B?b3RqcEhLdGtQOWpjSE0zdmIyT0JyNEM2aDloTkxCdzdHVnBXSVFEZXNwYUk5?=
+ =?utf-8?B?YWNOaitGaUxZbU1uZ3pnRUhwQlI5cDBXaW1rb1dDT1FVUEVRV1A2SUFOODg3?=
+ =?utf-8?B?MjJQcUIxT0liTWFVVHUxN0VqUkhUaGdCcGRUQVphR1BrWm55a0FrcEp5ZUZ2?=
+ =?utf-8?B?NnNHVFdSVThQL3RrTHJaT2F0Y0ZZUXJrbW44elI2dGdXTEZrVGNLZ0JjTm5Z?=
+ =?utf-8?B?UHNhcnlOZ0N3MDVTMEN4amUvbDJaNDNiSklOSzUrdHUrVmpJNnpKYXBwaUpj?=
+ =?utf-8?B?cnJKblAwREJsTDJrc090ZnZqNHRtdEEzM1RpWWtScG5FMUJJaExxQjVVZXF1?=
+ =?utf-8?Q?3ZVMjme8sfRA4zYZAgzNHv4=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9604802a-897a-4f24-ae6b-08d9f16c7306
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2022 16:50:34.3695
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1OVCjB+4bLK+ZEWHQRGctfMW4dc/1gbGLIf9FOBYmmePVxFHqwpLAa31IB2B8BdC15MkfgHNaac6CWQQ58U2Cw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1370
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 4:02 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Some fw has a bug where the PCI bridge window returned by the ACPI
-> resources partly overlaps with some other address range, causing issues.
-> To workaround this Linux excludes E820 reserved addresses when allocating
-> addresses from the PCI bridge window. 2 known examples of such fw bugs are:
->
-> 1. The returned window contains addresses which map to system RAM,
-> see commit 4dc2287c1805 ("x86: avoid E820 regions when allocating
-> address space").
->
-> 2. The Lenovo X1 carbon gen 2 BIOS has an overlap between an EFI/E820
-> reserved range and the ACPI provided PCI bridge window:
->  efi: mem46: [MMIO] range=[0x00000000dfa00000-0x00000000dfa0ffff] (0MB)
->  BIOS-e820: [mem 0x00000000dceff000-0x00000000dfa0ffff] reserved
->  pci_bus 0000:00: root bus resource [mem 0xdfa00000-0xfebfffff window]
-> If Linux assigns the overlapping 0xdfa00000-0xdfa0ffff range to a PCI BAR
-> then the system fails to resume after a suspend.
->
-> Recently (2019) some systems have shown-up with EFI memmap MMIO entries
-> covering the entire ACPI provided PCI bridge window. These memmap entries
-> get converted into e820_table entries, causing all attempts to assign
-> memory to PCI BARs which have not been setup by the BIOS to fail.
-> For example see these dmesg snippets from a Lenovo IdeaPad 3 15IIL 81WE:
->  efi: mem63: [MMIO] range=[0x0000000065400000-0x00000000cfffffff] (1708MB)
->  BIOS-e820: [mem 0x000000004bc50000-0x00000000cfffffff] reserved
->  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
->  pci 0000:00:15.0: BAR 0: no space for [mem size 0x00001000 64bit]
->  pci 0000:00:15.0: BAR 0: failed to assign [mem size 0x00001000 64bit]
->
-> To fix this, check if the ACPI provided PCI bridge window is fully
-> contained within in EFI memmap MMIO region and in that case disable
-> the "exclude E820 reserved addresses" workaround, fixing the problem
-> of not being able to find free space for unassigned BARs.
->
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=2029207
-> BugLink: https://bugs.launchpad.net/bugs/1878279
-> BugLink: https://bugs.launchpad.net/bugs/1931715
-> BugLink: https://bugs.launchpad.net/bugs/1932069
-> BugLink: https://bugs.launchpad.net/bugs/1921649
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On 2/16/2022 08:44, Alex Deucher wrote:
+> On Wed, Feb 16, 2022 at 9:34 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+>>
+>> Hi all,
+>>
+>> On Tue, Feb 15, 2022 at 01:07:00PM -0600, Limonciello, Mario wrote:
+>>> On 2/15/2022 01:29, Lukas Wunner wrote:
+>>>> On Mon, Feb 14, 2022 at 06:01:50PM -0600, Mario Limonciello wrote:
+>>>>>    drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |  2 +-
+>>>>>    drivers/gpu/drm/amd/amdgpu/nbio_v2_3.c  |  2 +-
+>>>>>    drivers/gpu/drm/nouveau/nouveau_vga.c   |  4 +-
+>>>>>    drivers/gpu/drm/radeon/radeon_device.c  |  4 +-
+>>>>>    drivers/gpu/drm/radeon/radeon_kms.c     |  2 +-
+>>>>>    drivers/pci/hotplug/pciehp_hpc.c        |  6 +-
+>>>>>    drivers/pci/pci-acpi.c                  | 15 ++++-
+>>>>>    drivers/pci/pci.c                       | 17 +++--
+>>>>>    drivers/pci/probe.c                     | 52 ++++++++++++++-
+>>>>>    drivers/pci/quirks.c                    | 84 +++++++++++++++++++++++++
+>>>>>    drivers/platform/x86/apple-gmux.c       |  2 +-
+>>>>>    drivers/thunderbolt/nhi.h               |  2 -
+>>>>>    include/linux/pci.h                     | 25 +-------
+>>>>>    include/linux/pci_ids.h                 |  3 +
+>>>>>    14 files changed, 173 insertions(+), 47 deletions(-)
+>>>>
+>>>> That's an awful lot of additional LoC for what is primarily
+>>>> a refactoring job with the intent to simplify things.
+>>>
+>>> You may recall the first version of this series was just for adding
+>>> USB4 matches to the existing code paths, and that's when it was noted
+>>> that is_thunderbolt is a bit overloaded.
+>>>
+>>>>
+>>>> Honestly this looks like an attempt to fix something that
+>>>> isn't broken.  Specifically, the is_thunderbolt bit apparently
+>>>> can't be removed without adding new bits to struct pci_dev.
+>>>> Not sure if that can be called progress. >
+>>>> Thanks,
+>>>>
+>>>> Lukas
+>>>
+>>> Within this series there are two new material patches; setting up root ports
+>>> for both integrated and discrete USB4 controllers to behave well with all
+>>> the existing drivers that rely upon a hint of how they're connected to
+>>> configure devices differently.
+>>>
+>>> If y'all collectively prefer this direction to not refactor is_thunderbolt
+>>> and push into quirks, a simpler version of this series would be to leave all
+>>> the quirks in place, just drop dev->is_thunderbolt, and set
+>>> dev->external_facing on all 3 cases:
+>>>
+>>> * Intel TBT controller
+>>> * USB4 integrated PCIe tunneling root port/XHCI tunneling root port
+>>> * USB4 disctete PCIe tunneling root port/XHCI tunneling root port
+>>>
+>>> All the other drivers and symbols can stay the same then.
+>>
+>> If I understand correctly the original intention of this patch series is
+>> to be able to differentiate whether the device is "permanently"
+>> connected to the motherboard, or it is connected over some hot-pluggable
+>> bus (PCIe, USB, USB4 for example but I'm sure there are other buses that
+>> fit into this picture too). Specifically this is needed for discrete
+>> GPUs because of power management differences or so (please correct me if
+>> I'm mistaken).
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Correct.  It might be possible to drop the patch for the integrated case 
+(patch 3) because I do think that by Microsoft having the _DSD for 
+"ExternalFacingPort" it's very likely that most implementations will 
+have used it for the appropriate PCIe root ports.  If something shows up 
+in the wild that this isn't the case it could be revisited.  If it's 
+found pre-production presumably the OEM can still fix it and if it's 
+post production and there are problems we can dust it off then.
 
-Thanks a lot for working on this!
+The discrete USB4 controller I would be more concerned that this isn't 
+populated, and that (patch 4) should be more important to let the driver 
+core set it removable.
 
-> ---
->  arch/x86/include/asm/pci_x86.h |  8 +++++
->  arch/x86/kernel/resource.c     |  4 +++
->  arch/x86/pci/acpi.c            | 65 +++++++++++++++++++++++++++++++++-
->  3 files changed, 76 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x86.h
-> index 490411dba438..997379b022ee 100644
-> --- a/arch/x86/include/asm/pci_x86.h
-> +++ b/arch/x86/include/asm/pci_x86.h
-> @@ -64,6 +64,8 @@ void pcibios_scan_specific_bus(int busn);
->
->  /* pci-irq.c */
->
-> +struct pci_dev;
-> +
->  struct irq_info {
->         u8 bus, devfn;                  /* Bus, device and function */
->         struct {
-> @@ -232,3 +234,9 @@ static inline void mmio_config_writel(void __iomem *pos, u32 val)
->  # define x86_default_pci_init_irq      NULL
->  # define x86_default_pci_fixup_irqs    NULL
->  #endif
-> +
-> +#if defined CONFIG_PCI && defined CONFIG_ACPI
-> +extern bool pci_use_e820;
-> +#else
-> +#define pci_use_e820 true
-> +#endif
-> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-> index 9b9fb7882c20..e8dc9bc327bd 100644
-> --- a/arch/x86/kernel/resource.c
-> +++ b/arch/x86/kernel/resource.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/ioport.h>
->  #include <asm/e820/api.h>
-> +#include <asm/pci_x86.h>
->
->  static void resource_clip(struct resource *res, resource_size_t start,
->                           resource_size_t end)
-> @@ -28,6 +29,9 @@ static void remove_e820_regions(struct resource *avail)
->         int i;
->         struct e820_entry *entry;
->
-> +       if (!pci_use_e820)
-> +               return;
-> +
->         for (i = 0; i < e820_table->nr_entries; i++) {
->                 entry = &e820_table->entries[i];
->
-> diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
-> index 052f1d78a562..e4617df661a9 100644
-> --- a/arch/x86/pci/acpi.c
-> +++ b/arch/x86/pci/acpi.c
-> @@ -1,4 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +#include <linux/efi.h>
->  #include <linux/pci.h>
->  #include <linux/acpi.h>
->  #include <linux/init.h>
-> @@ -21,6 +22,7 @@ struct pci_root_info {
->
->  static bool pci_use_crs = true;
->  static bool pci_ignore_seg;
-> +bool pci_use_e820 = true;
->
->  static int __init set_use_crs(const struct dmi_system_id *id)
->  {
-> @@ -291,6 +293,60 @@ static bool resource_is_pcicfg_ioport(struct resource *res)
->                 res->start == 0xCF8 && res->end == 0xCFF;
->  }
->
-> +/*
-> + * Some fw has a bug where the PCI bridge window returned by the ACPI resources
-> + * partly overlaps with some other address range, causing issues. To workaround
-> + * this Linux excludes E820 reserved addresses when allocating addresses from
-> + * the PCI bridge window. 2 known examples of such firmware bugs are:
-> + *
-> + * 1. The returned window contains addresses which map to system RAM, see
-> + * commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address space").
-> + *
-> + * 2. The Lenovo X1 carbon gen 2 BIOS has an overlap between an EFI/E820
-> + * reserved range and the ACPI provided PCI bridge window:
-> + *  efi: mem46: [MMIO] range=[0x00000000dfa00000-0x00000000dfa0ffff] (0MB)
-> + *  BIOS-e820: [mem 0x00000000dceff000-0x00000000dfa0ffff] reserved
-> + *  pci_bus 0000:00: root bus resource [mem 0xdfa00000-0xfebfffff window]
-> + * If Linux assigns the overlapping 0xdfa00000-0xdfa0ffff range to a PCI BAR
-> + * then the system fails to resume after a suspend.
-> + *
-> + * Recently (2019) some systems have shown-up with EFI memmap MMIO entries
-> + * covering the entire ACPI provided PCI bridge window. These memmap entries
-> + * get converted into e820_table entries, causing all attempts to assign
-> + * memory to PCI BARs which have not been setup by the BIOS to fail.
-> + * For example see these dmesg snippets from a Lenovo IdeaPad 3 15IIL 81WE:
-> + *  efi: mem63: [MMIO] range=[0x0000000065400000-0x00000000cfffffff] (1708MB)
-> + *  BIOS-e820: [mem 0x000000004bc50000-0x00000000cfffffff] reserved
-> + *  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
-> + *  pci 0000:00:15.0: BAR 0: no space for [mem size 0x00001000 64bit]
-> + *  pci 0000:00:15.0: BAR 0: failed to assign [mem size 0x00001000 64bit]
-> + *
-> + * To code below checks if the ACPI provided PCI bridge window is fully
-> + * contained within in EFI memmap MMIO region and in that case disables
-> + * the "exclude E820 reserved addresses" workaround to avoid this issue.
-> + */
-> +static bool resource_is_efi_mmio_region(const struct resource *res)
-> +{
-> +       unsigned long long start, end;
-> +       efi_memory_desc_t *md;
-> +
-> +       if (!efi_enabled(EFI_MEMMAP))
-> +               return false;
-> +
-> +       for_each_efi_memory_desc(md) {
-> +               if (md->type != EFI_MEMORY_MAPPED_IO)
-> +                       continue;
-> +
-> +               start = md->phys_addr;
-> +               end = start + (md->num_pages << EFI_PAGE_SHIFT) - 1;
-> +
-> +               if (res->start >= start && res->end <= end)
-> +                       return true;
-> +       }
-> +
-> +       return false;
-> +}
-> +
->  static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
->  {
->         struct acpi_device *device = ci->bridge;
-> @@ -300,9 +356,16 @@ static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
->
->         status = acpi_pci_probe_root_resources(ci);
->         if (pci_use_crs) {
-> -               resource_list_for_each_entry_safe(entry, tmp, &ci->resources)
-> +               resource_list_for_each_entry_safe(entry, tmp, &ci->resources) {
->                         if (resource_is_pcicfg_ioport(entry->res))
->                                 resource_list_destroy_entry(entry);
-> +                       if (resource_is_efi_mmio_region(entry->res)) {
-> +                               dev_info(&device->dev,
-> +                                       "host bridge window %pR is marked by EFI as MMIO\n",
-> +                                       entry->res);
-> +                               pci_use_e820 = false;
-> +                       }
-> +               }
->                 return status;
->         }
->
-> --
-> 2.33.1
->
+>>
+>> If we set the is_thunderbolt debate aside and concentrate on that issue,
+>> I think the way to do this is to check whether the root port the GPU is
+>> connected to has an ACPI power resource (returned from _PR3() method).
+>> IF it is present then most likely the platform has provided all the
+>> necessary wiring to move the GPU into D3cold (and the BIOS knows this).
+>> If it is not present then the device cannot even go into D3cold as there
+>> is not means to power of the device in PCIe spec.
+>>
+>> Perhaps we can simply use pci_pr3_present() here as nouveau is already
+>> doing? Granted it is not too elegant solution either but better than
+>> using is_thunderbolt IMHO. Since this seem to be common for many GPUs,
+>> perhaps we can have a helper in DRM core that handles this.
+> 
+> The tricky part is that there were AMD and NVIDIA specific proprietary
+> _PR3-like ACPI methods (plus whatever Apple did) prior to GPU power
+> control standardizing on _PR3.  Currently those methods are handled in
+> the drivers directly, sort of tangled up with vga_switcheroo.  I think
+> ideally that logic would move to the ACPI core and be handled the same
+> way as _PR3, but I'm not sure how well that would work because of the
+> various bios date checks around _PR3 and the lack of general _PR3
+> support in those older platforms.  So I think we still need some sort
+> of "is this soldered in" check.
+
+Considering that limitation if `dev->external_facing` already exists in 
+PCI core may as well use it for this instead of `is_thunderbolt`.
+
+> 
+> Alex
+> 
+> 
+>>
+>> Then going back to is_thunderbolt debate :) I really don't think the
+>> drivers should care whether they are connected over a tunnel or not.
+>> They should work regardless of the underlying transport of the native
+>> protocol. They should also be prepared for the fact that the hardware
+>> can vanish under them at any point (e.g user unplugs the device). For
+>> this reason I don't really like to see is_thunderbolt to be used more
+>> and prefer to get rid if it completely if possible at all. If there is
+>> still need to differentiate whether the device can be hot-removed or
+>> not, I think "removable" in the driver core is the way to go. That is
+>> not dependent on any single transport.
+
+Hopefully that is what the patch series does right now as of v4. As I
+
+If we really don't want another pci_device attribute we can probably 
+invent another device property for the quirked things in patch 2 instead 
+of "no_cmd_complete".
+
