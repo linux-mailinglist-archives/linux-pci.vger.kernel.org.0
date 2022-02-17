@@ -2,61 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E8EB4BA6C6
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Feb 2022 18:13:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D3144BA6CF
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Feb 2022 18:16:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243599AbiBQRNP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Feb 2022 12:13:15 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56912 "EHLO
+        id S243615AbiBQRPM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Feb 2022 12:15:12 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243597AbiBQRNO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 12:13:14 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FB429C120;
-        Thu, 17 Feb 2022 09:12:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645117979; x=1676653979;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0Kdj7ImYvcwQw8lmmiUOnavoXB2sUQ89Xbe3+l21UyM=;
-  b=gG9hT8Srt0UhquXTvyhLlOGeGWR3MYlmoFPEN4k4djxAxKxE5WIVs59+
-   RlzO/ktsRPlejSA2dQpAsNXQq8PqQHIg291TOUnCiMk1q2eDh+VyxMnT9
-   QQFeI0k61rrhazjUuV6RRv/Ngj/zoS+51J/7wGh1se5TD2Utzei/VUDPa
-   H+K5rp7zG3hPH64+U7yMjruLf3ML1Ubdor7mlaiDqTI+7oUfUwacSTEpU
-   lSNjKdNVKNiJwV0dvILsCZAJpSPcCtobLGMJ9syuXc2H98BnvgBSdEa/Q
-   Y+wD2DvEE4tT0aQTqXAkXPqBmQsnirDBfPAKgqUSE7Ii1fFpE5tgybOlV
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10261"; a="249758220"
-X-IronPort-AV: E=Sophos;i="5.88,376,1635231600"; 
-   d="scan'208";a="249758220"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 09:11:35 -0800
-X-IronPort-AV: E=Sophos;i="5.88,376,1635231600"; 
-   d="scan'208";a="530370337"
-Received: from lmmcwade-mobl2.amr.corp.intel.com (HELO localhost.localdomain) ([10.252.137.203])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 09:11:20 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     patches@lists.linux.dev, Ben Widawsky <ben.widawsky@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, nvdimm@lists.linux.dev,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v4 01/14] cxl/region: Add region creation ABI
-Date:   Thu, 17 Feb 2022 09:10:57 -0800
-Message-Id: <20220217171057.685705-1-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220128002707.391076-2-ben.widawsky@intel.com>
-References: <20220128002707.391076-2-ben.widawsky@intel.com>
+        with ESMTP id S231609AbiBQRPM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 12:15:12 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0854F29C11C;
+        Thu, 17 Feb 2022 09:14:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B474DB822BE;
+        Thu, 17 Feb 2022 17:14:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 329FFC340E8;
+        Thu, 17 Feb 2022 17:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645118094;
+        bh=V8FuLE6Vxn5siPMWjHbj01sVGcq0wCo+yDT7Qdj4S+I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=prPz3oAb28oHgqc4mcWzSNRx5FXQu0mAbL9h5AQ+Xq6nRY8BFpfyBA8Sad5O1Moqo
+         LAcMm18rIZDMGP7TgaPxPRxVWQil48c0fLKusHLKyk3K6h/v7liYYQiLoiUhPy330p
+         /OMfUc9rD0FlTJQlzP1Vdh08IYFH8k7uXANvQro8EkJgdmsxm8X0APAUp/dfPnMwtd
+         Ais7+AVvGPNl+Lsil9g4AuTVf9GFMIpfkbpkUgVA1x7PQGyfAFnasYv+yaHHHnqVVA
+         w9Tta0/nCa9kqA+0henKt3+KyBUdQmydMulacsb3AoUBXhJNLcCaTkpzi9yCSB97UL
+         JHjcB+yD85tLw==
+Date:   Thu, 17 Feb 2022 11:14:52 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, pali@kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 11/23] PCI: aardvark: Fix setting MSI address
+Message-ID: <20220217171452.GA286231@bhelgaas>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20220110015018.26359-12-kabel@kernel.org>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,462 +55,103 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Regions are created as a child of the decoder that encompasses an
-address space with constraints. Regions have a number of attributes that
-must be configured before the region can be activated.
+On Mon, Jan 10, 2022 at 02:50:06AM +0100, Marek Behún wrote:
+> From: Pali Rohár <pali@kernel.org>
+> 
+> MSI address for receiving MSI interrupts needs to be correctly set before
+> enabling processing of MSI interrupts.
+> 
+> Move code for setting PCIE_MSI_ADDR_LOW_REG and PCIE_MSI_ADDR_HIGH_REG
+> from advk_pcie_init_msi_irq_domain() to advk_pcie_setup_hw(), before
+> enabling PCIE_CORE_CTRL2_MSI_ENABLE.
+> 
+> After this we can remove the now unused member msi_msg, which was used
+> only for MSI doorbell address. MSI address can be any address which cannot
+> be used to DMA to. So change it to the address of the main struct advk_pcie.
+> 
+> Fixes: 8c39d710363c ("PCI: aardvark: Add Aardvark PCI host controller driver")
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Acked-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> Cc: stable@vger.kernel.org # f21a8b1b6837 ("PCI: aardvark: Move to MSI handling using generic MSI support")
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 21 +++++++++------------
+>  1 file changed, 9 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 51fedbcb41fb..79102704d82f 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -278,7 +278,6 @@ struct advk_pcie {
+>  	raw_spinlock_t msi_irq_lock;
+>  	DECLARE_BITMAP(msi_used, MSI_IRQ_NUM);
+>  	struct mutex msi_used_lock;
+> -	u16 msi_msg;
+>  	int link_gen;
+>  	struct pci_bridge_emul bridge;
+>  	struct gpio_desc *reset_gpio;
+> @@ -473,6 +472,7 @@ static void advk_pcie_disable_ob_win(struct advk_pcie *pcie, u8 win_num)
+>  
+>  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  {
+> +	phys_addr_t msi_addr;
+>  	u32 reg;
+>  	int i;
+>  
+> @@ -561,6 +561,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  	reg |= LANE_COUNT_1;
+>  	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+>  
+> +	/* Set MSI address */
+> +	msi_addr = virt_to_phys(pcie);
 
-The ABI is not meant to be secure, but is meant to avoid accidental
-races. As a result, a buggy process may create a region by name that was
-allocated by a different process. However, multiple processes which are
-trying not to race with each other shouldn't need special
-synchronization to do so.
+Strictly speaking, msi_addr should be a pci_bus_addr_t, not a
+phys_addr_t, and virt_to_phys() doesn't return a bus address.
 
-// Allocate a new region name
-region=$(cat /sys/bus/cxl/devices/decoder0.0/create_region)
-
-// Create a new region by name
-while
-region=$(cat /sys/bus/cxl/devices/decoder0.0/create_region)
-! echo $region > /sys/bus/cxl/devices/decoder0.0/create_region
-do true; done
-
-// Region now exists in sysfs
-stat -t /sys/bus/cxl/devices/decoder0.0/$region
-
-// Delete the region, and name
-echo $region > /sys/bus/cxl/devices/decoder0.0/delete_region
-
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-
----
-Changes since v3:
-- Change ABI for creation (cache a next) (Dan)
-- For above, Use ratelimited dev_err for new ABI
-- Use devm management for regions (Dan)
-- Move device initialization to alloc (Dan)
-- Move device alloc to add
-- Change functions naming to use foo_bar_alloc instead of foo_alloc_bar
-- Update commit message example for ABI change (Dan)
-- Update ABI documentation (Dan)
-- Update copyright date (Dan)
-- Update region kdoc (Dan)
-- Remove unnecessary WARN in region creation (Dan)
-- Remove is_cxl_region() (for now) (Jonathan)
-- Check driver binding to avoid double free of region (Dan)
----
- Documentation/ABI/testing/sysfs-bus-cxl       |  23 ++
- .../driver-api/cxl/memory-devices.rst         |  11 +
- drivers/cxl/core/Makefile                     |   1 +
- drivers/cxl/core/core.h                       |   3 +
- drivers/cxl/core/port.c                       |  11 +
- drivers/cxl/core/region.c                     | 213 ++++++++++++++++++
- drivers/cxl/cxl.h                             |   5 +
- drivers/cxl/region.h                          |  23 ++
- tools/testing/cxl/Kbuild                      |   1 +
- 9 files changed, 291 insertions(+)
- create mode 100644 drivers/cxl/core/region.c
- create mode 100644 drivers/cxl/region.h
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 7c2b846521f3..e5db45ea70ad 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -163,3 +163,26 @@ Description:
- 		memory (type-3). The 'target_type' attribute indicates the
- 		current setting which may dynamically change based on what
- 		memory regions are activated in this decode hierarchy.
-+
-+What:		/sys/bus/cxl/devices/decoderX.Y/create_region
-+Date:		January, 2022
-+KernelVersion:	v5.18
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		Write a value of the form 'regionX.Y:Z' to instantiate a new
-+		region within the decode range bounded by decoderX.Y. The value
-+		written must match the current value returned from reading this
-+		attribute. This behavior lets the kernel arbitrate racing
-+		attempts to create a region. The thread that fails to write
-+		loops and tries the next value. Regions must be created for root
-+		decoders, and must subsequently configured and bound to a region
-+		driver before they can be used.
-+
-+What:		/sys/bus/cxl/devices/decoderX.Y/delete_region
-+Date:		January, 2022
-+KernelVersion:	v5.18
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		Deletes the named region.  The attribute expects a region in the
-+		form "regionX.Y:Z". The region's name, allocated by reading
-+		create_region, will also be released.
-diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-index db476bb170b6..66ddc58a21b1 100644
---- a/Documentation/driver-api/cxl/memory-devices.rst
-+++ b/Documentation/driver-api/cxl/memory-devices.rst
-@@ -362,6 +362,17 @@ CXL Core
- .. kernel-doc:: drivers/cxl/core/mbox.c
-    :doc: cxl mbox
- 
-+CXL Regions
-+-----------
-+.. kernel-doc:: drivers/cxl/region.h
-+   :identifiers:
-+
-+.. kernel-doc:: drivers/cxl/core/region.c
-+   :doc: cxl core region
-+
-+.. kernel-doc:: drivers/cxl/core/region.c
-+   :identifiers:
-+
- External Interfaces
- ===================
- 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 6d37cd78b151..39ce8f2f2373 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_CXL_BUS) += cxl_core.o
- ccflags-y += -I$(srctree)/drivers/cxl
- cxl_core-y := port.o
- cxl_core-y += pmem.o
-+cxl_core-y += region.o
- cxl_core-y += regs.o
- cxl_core-y += memdev.o
- cxl_core-y += mbox.o
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 1a50c0fc399c..adfd42370b28 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -9,6 +9,9 @@ extern const struct device_type cxl_nvdimm_type;
- 
- extern struct attribute_group cxl_base_attribute_group;
- 
-+extern struct device_attribute dev_attr_create_region;
-+extern struct device_attribute dev_attr_delete_region;
-+
- struct cxl_send_command;
- struct cxl_mem_query_commands;
- int cxl_query_cmd(struct cxl_memdev *cxlmd,
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 1e785a3affaa..860e91cae29b 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -213,6 +213,8 @@ static struct attribute_group cxl_decoder_base_attribute_group = {
- };
- 
- static struct attribute *cxl_decoder_root_attrs[] = {
-+	&dev_attr_create_region.attr,
-+	&dev_attr_delete_region.attr,
- 	&dev_attr_cap_pmem.attr,
- 	&dev_attr_cap_ram.attr,
- 	&dev_attr_cap_type2.attr,
-@@ -270,6 +272,8 @@ static void cxl_decoder_release(struct device *dev)
- 	struct cxl_decoder *cxld = to_cxl_decoder(dev);
- 	struct cxl_port *port = to_cxl_port(dev->parent);
- 
-+	ida_free(&cxld->region_ida, cxld->next_region_id);
-+	ida_destroy(&cxld->region_ida);
- 	ida_free(&port->decoder_ida, cxld->id);
- 	kfree(cxld);
- }
-@@ -1244,6 +1248,13 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
- 	cxld->target_type = CXL_DECODER_EXPANDER;
- 	cxld->platform_res = (struct resource)DEFINE_RES_MEM(0, 0);
- 
-+	mutex_init(&cxld->id_lock);
-+	ida_init(&cxld->region_ida);
-+	rc = ida_alloc(&cxld->region_ida, GFP_KERNEL);
-+	if (rc < 0)
-+		goto err;
-+
-+	cxld->next_region_id = rc;
- 	return cxld;
- err:
- 	kfree(cxld);
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-new file mode 100644
-index 000000000000..5576952e4aa1
---- /dev/null
-+++ b/drivers/cxl/core/region.c
-@@ -0,0 +1,213 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/idr.h>
-+#include <region.h>
-+#include <cxl.h>
-+#include "core.h"
-+
-+/**
-+ * DOC: cxl core region
-+ *
-+ * CXL Regions represent mapped memory capacity in system physical address
-+ * space. Whereas the CXL Root Decoders identify the bounds of potential CXL
-+ * Memory ranges, Regions represent the active mapped capacity by the HDM
-+ * Decoder Capability structures throughout the Host Bridges, Switches, and
-+ * Endpoints in the topology.
-+ */
-+
-+static void cxl_region_release(struct device *dev);
-+
-+static const struct device_type cxl_region_type = {
-+	.name = "cxl_region",
-+	.release = cxl_region_release,
-+};
-+
-+static struct cxl_region *to_cxl_region(struct device *dev)
-+{
-+	if (dev_WARN_ONCE(dev, dev->type != &cxl_region_type,
-+			  "not a cxl_region device\n"))
-+		return NULL;
-+
-+	return container_of(dev, struct cxl_region, dev);
-+}
-+
-+static struct cxl_region *cxl_region_alloc(struct cxl_decoder *cxld)
-+{
-+	struct cxl_region *cxlr;
-+	struct device *dev;
-+
-+	cxlr = kzalloc(sizeof(*cxlr), GFP_KERNEL);
-+	if (!cxlr)
-+		return ERR_PTR(-ENOMEM);
-+
-+	dev = &cxlr->dev;
-+	device_initialize(dev);
-+	dev->parent = &cxld->dev;
-+	device_set_pm_not_required(dev);
-+	dev->bus = &cxl_bus_type;
-+	dev->type = &cxl_region_type;
-+
-+	return cxlr;
-+}
-+
-+static void unregister_region(void *_cxlr)
-+{
-+	struct cxl_region *cxlr = _cxlr;
-+
-+	if (!test_and_set_bit(REGION_DEAD, &cxlr->flags))
-+		device_unregister(&cxlr->dev);
-+}
-+
-+/**
-+ * devm_cxl_add_region - Adds a region to a decoder
-+ * @cxld: Parent decoder.
-+ * @cxlr: Region to be added to the decoder.
-+ *
-+ * This is the second step of region initialization. Regions exist within an
-+ * address space which is mapped by a @cxld. That @cxld must be a root decoder,
-+ * and it enforces constraints upon the region as it is configured.
-+ *
-+ * Return: 0 if the region was added to the @cxld, else returns negative error
-+ * code. The region will be named "regionX.Y.Z" where X is the port, Y is the
-+ * decoder id, and Z is the region number.
-+ */
-+static struct cxl_region *devm_cxl_add_region(struct cxl_decoder *cxld)
-+{
-+	struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-+	struct cxl_region *cxlr;
-+	struct device *dev;
-+	int rc;
-+
-+	cxlr = cxl_region_alloc(cxld);
-+	if (IS_ERR(cxlr))
-+		return cxlr;
-+
-+	dev = &cxlr->dev;
-+
-+	cxlr->id = cxld->next_region_id;
-+	rc = dev_set_name(dev, "region%d.%d:%d", port->id, cxld->id, cxlr->id);
-+	if (rc)
-+		goto err_out;
-+
-+	/* affirm that release will have access to the decoder's region ida  */
-+	get_device(&cxld->dev);
-+
-+	rc = device_add(dev);
-+	if (!rc)
-+		rc = devm_add_action_or_reset(port->uport, unregister_region,
-+					      cxlr);
-+	if (rc)
-+		goto err_out;
-+
-+	return cxlr;
-+
-+err_out:
-+	put_device(dev);
-+	kfree(cxlr);
-+	return ERR_PTR(rc);
-+}
-+
-+static ssize_t create_region_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_port *port = to_cxl_port(dev->parent);
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+
-+	return sysfs_emit(buf, "region%d.%d:%d\n", port->id, cxld->id,
-+			  cxld->next_region_id);
-+}
-+
-+static ssize_t create_region_store(struct device *dev,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t len)
-+{
-+	struct cxl_port *port = to_cxl_port(dev->parent);
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+	struct cxl_region *cxlr;
-+	int d, p, r, rc = 0;
-+
-+	if (sscanf(buf, "region%d.%d:%d", &p, &d, &r) != 3)
-+		return -EINVAL;
-+
-+	if (port->id != p || cxld->id != d)
-+		return -EINVAL;
-+
-+	rc = mutex_lock_interruptible(&cxld->id_lock);
-+	if (rc)
-+		return rc;
-+
-+	if (cxld->next_region_id != r) {
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
-+	rc = ida_alloc(&cxld->region_ida, GFP_KERNEL);
-+	if (rc < 0) {
-+		dev_dbg(dev, "Failed to get next cached id (%d)\n", rc);
-+		goto out;
-+	}
-+
-+	cxlr = devm_cxl_add_region(cxld);
-+	if (IS_ERR(cxlr)) {
-+		rc = PTR_ERR(cxlr);
-+		goto out;
-+	}
-+
-+	cxld->next_region_id = rc;
-+	dev_dbg(dev, "Created %s\n", dev_name(&cxlr->dev));
-+
-+out:
-+	mutex_unlock(&cxld->id_lock);
-+	return rc ? rc : len;
-+}
-+DEVICE_ATTR_RW(create_region);
-+
-+static struct cxl_region *cxl_find_region_by_name(struct cxl_decoder *cxld,
-+						  const char *name)
-+{
-+	struct device *region_dev;
-+
-+	region_dev = device_find_child_by_name(&cxld->dev, name);
-+	if (!region_dev)
-+		return ERR_PTR(-ENOENT);
-+
-+	return to_cxl_region(region_dev);
-+}
-+
-+static ssize_t delete_region_store(struct device *dev,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t len)
-+{
-+	struct cxl_port *port = to_cxl_port(dev->parent);
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev);
-+	struct cxl_region *cxlr;
-+
-+	cxlr = cxl_find_region_by_name(cxld, buf);
-+	if (IS_ERR(cxlr))
-+		return PTR_ERR(cxlr);
-+
-+	/* After this, the region is no longer a child of the decoder. */
-+	devm_release_action(port->uport, unregister_region, cxlr);
-+
-+	/* Release is likely called here, so cxlr is not safe to reference. */
-+	put_device(&cxlr->dev);
-+	cxlr = NULL;
-+
-+	dev_dbg(dev, "Deleted %s\n", buf);
-+	return len;
-+}
-+DEVICE_ATTR_WO(delete_region);
-+
-+static void cxl_region_release(struct device *dev)
-+{
-+	struct cxl_decoder *cxld = to_cxl_decoder(dev->parent);
-+	struct cxl_region *cxlr = to_cxl_region(dev);
-+
-+	dev_dbg(&cxld->dev, "Releasing %s\n", dev_name(dev));
-+	ida_free(&cxld->region_ida, cxlr->id);
-+	kfree(cxlr);
-+	put_device(&cxld->dev);
-+}
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index b4047a310340..d5397f7dfcf4 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -221,6 +221,8 @@ enum cxl_decoder_type {
-  * @target_type: accelerator vs expander (type2 vs type3) selector
-  * @flags: memory type capabilities and locking
-  * @target_lock: coordinate coherent reads of the target list
-+ * @region_ida: allocator for region ids.
-+ * @next_region_id: Cached region id for next region.
-  * @nr_targets: number of elements in @target
-  * @target: active ordered target list in current decoder configuration
-  */
-@@ -236,6 +238,9 @@ struct cxl_decoder {
- 	enum cxl_decoder_type target_type;
- 	unsigned long flags;
- 	seqlock_t target_lock;
-+	struct mutex id_lock;
-+	struct ida region_ida;
-+	int next_region_id;
- 	int nr_targets;
- 	struct cxl_dport *target[];
- };
-diff --git a/drivers/cxl/region.h b/drivers/cxl/region.h
-new file mode 100644
-index 000000000000..0016f83bbdfd
---- /dev/null
-+++ b/drivers/cxl/region.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright(c) 2021 Intel Corporation. */
-+#ifndef __CXL_REGION_H__
-+#define __CXL_REGION_H__
-+
-+#include <linux/uuid.h>
-+
-+#include "cxl.h"
-+
-+/**
-+ * struct cxl_region - CXL region
-+ * @dev: This region's device.
-+ * @id: This region's id. Id is globally unique across all regions.
-+ * @flags: Flags representing the current state of the region.
-+ */
-+struct cxl_region {
-+	struct device dev;
-+	int id;
-+	unsigned long flags;
-+#define REGION_DEAD 0
-+};
-+
-+#endif
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 82e49ab0937d..3fe6d34e6d59 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -46,6 +46,7 @@ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
- cxl_core-y += $(CXL_CORE_SRC)/mbox.o
- cxl_core-y += $(CXL_CORE_SRC)/pci.o
- cxl_core-y += $(CXL_CORE_SRC)/hdm.o
-+cxl_core-y += $(CXL_CORE_SRC)/region.o
- cxl_core-y += config_check.o
- 
- obj-m += test/
-
-base-commit: 3bdf187d313e067de2a81109f9a1dd3da7f3dc2c
--- 
-2.35.1
-
+> +	advk_writel(pcie, lower_32_bits(msi_addr), PCIE_MSI_ADDR_LOW_REG);
+> +	advk_writel(pcie, upper_32_bits(msi_addr), PCIE_MSI_ADDR_HIGH_REG);
+> +
+>  	/* Enable MSI */
+>  	reg = advk_readl(pcie, PCIE_CORE_CTRL2_REG);
+>  	reg |= PCIE_CORE_CTRL2_MSI_ENABLE;
+> @@ -1184,10 +1189,10 @@ static void advk_msi_irq_compose_msi_msg(struct irq_data *data,
+>  					 struct msi_msg *msg)
+>  {
+>  	struct advk_pcie *pcie = irq_data_get_irq_chip_data(data);
+> -	phys_addr_t msi_msg = virt_to_phys(&pcie->msi_msg);
+> +	phys_addr_t msi_addr = virt_to_phys(pcie);
+>  
+> -	msg->address_lo = lower_32_bits(msi_msg);
+> -	msg->address_hi = upper_32_bits(msi_msg);
+> +	msg->address_lo = lower_32_bits(msi_addr);
+> +	msg->address_hi = upper_32_bits(msi_addr);
+>  	msg->data = data->hwirq;
+>  }
+>  
+> @@ -1346,18 +1351,10 @@ static struct msi_domain_info advk_msi_domain_info = {
+>  static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
+>  {
+>  	struct device *dev = &pcie->pdev->dev;
+> -	phys_addr_t msi_msg_phys;
+>  
+>  	raw_spin_lock_init(&pcie->msi_irq_lock);
+>  	mutex_init(&pcie->msi_used_lock);
+>  
+> -	msi_msg_phys = virt_to_phys(&pcie->msi_msg);
+> -
+> -	advk_writel(pcie, lower_32_bits(msi_msg_phys),
+> -		    PCIE_MSI_ADDR_LOW_REG);
+> -	advk_writel(pcie, upper_32_bits(msi_msg_phys),
+> -		    PCIE_MSI_ADDR_HIGH_REG);
+> -
+>  	pcie->msi_inner_domain =
+>  		irq_domain_add_linear(NULL, MSI_IRQ_NUM,
+>  				      &advk_msi_domain_ops, pcie);
+> -- 
+> 2.34.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
