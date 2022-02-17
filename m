@@ -2,153 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19AFA4BAAF7
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Feb 2022 21:27:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD8624BAB2C
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Feb 2022 21:40:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343609AbiBQU13 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Feb 2022 15:27:29 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38522 "EHLO
+        id S242577AbiBQUkR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Feb 2022 15:40:17 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343621AbiBQU1Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 15:27:25 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA26AA2F3
-        for <linux-pci@vger.kernel.org>; Thu, 17 Feb 2022 12:27:10 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id 195so5972242pgc.6
-        for <linux-pci@vger.kernel.org>; Thu, 17 Feb 2022 12:27:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YlSG++D5GfAHgHmjCfrZ6D8LvYD5B7GrBUMzoffTqAU=;
-        b=0nnNSqJcsLP1yRJd17NtCLezgX+a+VIHCjJ20hnNd2JMFcDtSMvlN0CG3hTnitJpkJ
-         mjLos2PgtPfsEcRauZ0aOjlsH/2T4HEItSaK5hQLJ0pYMeiYHQESwlKIRpJ5waVMDe5Z
-         9rpZx971pGiBljR2Lp2Kt6GdtyXIn5Hj4X8n/nT0EIHqr7QSgGVmYJ1YSxlaQu7gSMfn
-         oxp27a52vIcy7rEX0Nz38CXd1wqqwuYYQc72P4G8MdOfeLGoXzx9byXk86sMyHOUuZTt
-         PZ9hvu3g29Z8lox1XB01OnlOAfNbPPIpkUxm5LBE+l0v4WBVKY6/6RAsXKaaxhydwvTM
-         WY2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YlSG++D5GfAHgHmjCfrZ6D8LvYD5B7GrBUMzoffTqAU=;
-        b=xiq4a8/eE2k3LIaxattaroYhn4P0/IEOJSNLZH4Y+iTL/E9bUYjr9gMSGZNo7IOer4
-         1oWzfOHnMaLWpp5vx0AViQ2Php8lyjtoT7BRDBvQG0xb5fJMi1NxucudC2f4k/5WMJW4
-         N384TT7jNrf8rKPNe4Q7Eck09GvPUHFlCVrwzZxzDJbmiDLabc2v1XWSbDGpSaTxuBhJ
-         MhQPkJg6jSHBHyQSEFBbERStkdhBL8+eqjYcP6+YE3CeFvCMR9WYMKuj4kBr/Jtt57Xk
-         wZaNPjZNUITg4tFVjDcEuNBeeI2og2YIPaSX9yLPas5EGCTqTEiumcB3Ndp8yC0KN2hL
-         4M0A==
-X-Gm-Message-State: AOAM531tEv8+iNccUqBGe7AtPH1uDmICHmpfFZYeYPoNKvpBOsELPpIN
-        wfykiAV/oJiKeBfvyfqSOKMW4Rx8bBnPBjanRR/cVA==
-X-Google-Smtp-Source: ABdhPJx+YcfS9D3lwIGA9Or9eXz4j+NNFWaYU15u8B4dembYmHz2ef6AeGrexxMajMjW5O5p6yWNlE7EexQ1nAFHaWQ=
-X-Received: by 2002:a63:f011:0:b0:36c:2da3:32bc with SMTP id
- k17-20020a63f011000000b0036c2da332bcmr3689054pgh.40.1645129629655; Thu, 17
- Feb 2022 12:27:09 -0800 (PST)
+        with ESMTP id S229923AbiBQUkR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 15:40:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4BC6148674;
+        Thu, 17 Feb 2022 12:40:02 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5900461E1C;
+        Thu, 17 Feb 2022 20:40:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D99EC340E8;
+        Thu, 17 Feb 2022 20:40:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645130401;
+        bh=gMwTMyNiKF2SJFRozKPAoW+wbNbKhGmor9hG8jl8CGc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jUl9xkZ4uiN5A1eww37AsO3qJEch+3jqmtFDPhIyhp3mXeZNhabJbFwM5bB2wYqX+
+         5vFrGrFysgZYCNDE3LilbfzgF8DvDbx5IcmsRwEr2UuPWrS7rP0KkhoNDf5Vr78941
+         9tzLH8KMntNkpiGUCeC0uWRpgPZ32o92aa497xciBKx2OGNfma4QhofkO6LXHB/HaF
+         kZZ6/T5g8366MKV3WHHtcbgFA3ixcBSRnwPOd8u8fi/huKJH8jy6KqVLYIFj8Mimpx
+         l+sJB4eAs/5vzXmi6FCPjXIDLEtNhDWaQeRWlecsopZN3Wb0jCkfXtIbeFE7ssqgaP
+         BdZUKUOG2flOA==
+Date:   Thu, 17 Feb 2022 14:40:00 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Alexander.Deucher@amd.com
+Subject: Re: [PATCH v3 05/12] PCI: Detect root port of internal USB4 devices
+ by `usb4-host-interface`
+Message-ID: <20220217204000.GA302508@bhelgaas>
 MIME-Version: 1.0
-References: <20220217171057.685705-1-ben.widawsky@intel.com>
- <20220217171931.740926-1-ben.widawsky@intel.com> <CAPcyv4i83TxCN_-Y3a5CuM2ng9bCAyLm53=wcHWutASd434gkg@mail.gmail.com>
- <20220217185811.qjct4dlnupgah7lh@intel.com>
-In-Reply-To: <20220217185811.qjct4dlnupgah7lh@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 17 Feb 2022 12:26:58 -0800
-Message-ID: <CAPcyv4in9Pby8X8ydCLH8SOhr3pjYM7UCAbTOHzuMkKmax8M=Q@mail.gmail.com>
-Subject: Re: [PATCH v5 01/15] cxl/region: Add region creation ABI
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ygo1eoVe8D0b80QF@lahna>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 17, 2022 at 10:58 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 22-02-17 09:58:04, Dan Williams wrote:
-> > On Thu, Feb 17, 2022 at 9:19 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > Regions are created as a child of the decoder that encompasses an
-> > > address space with constraints. Regions have a number of attributes that
-> > > must be configured before the region can be activated.
-> > >
-> > > The ABI is not meant to be secure, but is meant to avoid accidental
-> > > races. As a result, a buggy process may create a region by name that was
-> > > allocated by a different process. However, multiple processes which are
-> > > trying not to race with each other shouldn't need special
-> > > synchronization to do so.
-> > >
-> > > // Allocate a new region name
-> > > region=$(cat /sys/bus/cxl/devices/decoder0.0/create_region)
-> > >
-> > > // Create a new region by name
-> > > while
-> > > region=$(cat /sys/bus/cxl/devices/decoder0.0/create_region)
-> > > ! echo $region > /sys/bus/cxl/devices/decoder0.0/create_region
-> > > do true; done
-> > >
-> > > // Region now exists in sysfs
-> > > stat -t /sys/bus/cxl/devices/decoder0.0/$region
-> > >
-> > > // Delete the region, and name
-> > > echo $region > /sys/bus/cxl/devices/decoder0.0/delete_region
-> > >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-[..]
-> > > +static void unregister_region(void *_cxlr)
-> > > +{
-> > > +       struct cxl_region *cxlr = _cxlr;
-> > > +
-> > > +       if (!test_and_set_bit(REGION_DEAD, &cxlr->flags))
-> > > +               device_unregister(&cxlr->dev);
-> >
-> > I thought REGION_DEAD was needed to prevent double
-> > devm_release_action(), not double unregister?
-> >
->
-> I believe that's correct, repeating what you said on our internal list:
->
-> On 22-02-14 14:11:41, Dan Williams wrote:
->   True, you do need to solve the race between multiple writers racing to
->   do the unregistration, but that could be done with something like:
->
->   if (!test_and_set_bit(REGION_DEAD, &cxlr->flags))
->       device_unregister(&cxlr->dev);
->
-> So I was just trying to implement what you said. Remainder of the discussion
-> below...
+On Mon, Feb 14, 2022 at 12:56:58PM +0200, Mika Westerberg wrote:
+> On Mon, Feb 14, 2022 at 09:52:02AM +0100, Lukas Wunner wrote:
+> > On Mon, Feb 14, 2022 at 09:34:26AM +0200, Mika Westerberg wrote:
+> > > On Fri, Feb 11, 2022 at 03:45:46PM -0600, Bjorn Helgaas wrote:
+> > > > My expectation is that "USB" (like "PCI" and "PCIe") tells me
+> > > > something about how a device is electrically connected and how
+> > > > software can operate it.  It doesn't really tell me anything about
+> > > > whether those electrical connections are permanent, made through an
+> > > > internal slot, or made through an external connector and cable.
+> > > 
+> > > It is used to identify "tunneled" ports (whether PCIe, USB 3.x or
+> > > DisplayPort). Tunnels are created by software (in Linux it is the
+> > > Thunderbolt driver) and are dynamic in nature. The USB4 links go over
+> > > USB Type-C cable which also is something user can plug/unplug freely.
+> > > 
+> > > I would say it is reasonable expectation that anything behind these
+> > > ports can be assumed as "removable".
+> > 
+> > USB gadgets may be soldered to the mainboard.  Those cannot be
+> > unplugged freely.  It is common practice to solder USB Ethernet
+> > or USB FTDI serial ports and nothing's preventing a vendor to solder
+> > USB4/Thunderbolt gadgets.
+> 
+> Right, that's why I say it is "reasonable expectation" that anything
+> behind these ports can be assumed "removable" :) Of course they don't
+> have to be but if we assume that in the driver where this actually
+> matters we should be on the safe side, no?
 
-That was in the context of moving the unregistration to a workqueue
-and taking the device lock to validate whether the device has already
-been unbound. In this case keeping the devm_release_action() inline in
-the sysfs attribute the flag needs to protect against racing
-devm_release_action(). I am not saying that a workqueue is now needed,
-just clarifying the context of that suggestion.
+Spec citations help maintain things over the long term.  Reasonable
+expectations that are part of today's folklore but are not written
+down and shared leads to things that work today but not tomorrow.
 
-[..]
-> > > +
-> > > +       return cxlr;
-> > > +
-> > > +err_out:
-> > > +       put_device(dev);
-> > > +       kfree(cxlr);
-> >
-> > This is a double-free of cxlr;
-> >
->
-> Because of release()? How does release get called if the region device wasn't
-> added? Or is there something else?
-
-->release() is always called at final put_device() regardless of
-whether the device was registered with device_add() or not. I.e. see
-all the other dev_set_name() error handling in the core that just does
-put_device().
+Bjorn
