@@ -2,62 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E8C64B9D1B
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Feb 2022 11:26:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5F094B9E95
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Feb 2022 12:30:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239225AbiBQKZo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Feb 2022 05:25:44 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34822 "EHLO
+        id S239754AbiBQLaL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Feb 2022 06:30:11 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239280AbiBQKZQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 05:25:16 -0500
-Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7FC127C211;
-        Thu, 17 Feb 2022 02:24:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1645093490; x=1676629490;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BqvXLH+FOW688ZuI3rFKDQQKxHsIk9sojfRvijbhbPY=;
-  b=IWeExx0Gfisac10ZiFYvSS6KU3Xw+sTfAcu51EZ5pCCKIkvR1ZXHR/VN
-   K/OmFk1djk81EJeIdFadQdLY6PP0UP4JOaQP0bWvCDPJLZxHKb/DGltbj
-   AR9Q2jh8ezKhSKHxgQjROCfFCUiMLgziTVz2tg8AxStXcXVpjQweKinkm
-   w=;
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 17 Feb 2022 02:24:46 -0800
-X-QCInternal: smtphost
-Received: from unknown (HELO nasanex01a.na.qualcomm.com) ([10.52.223.231])
-  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 02:24:46 -0800
-Received: from [10.216.32.231] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.15; Thu, 17 Feb
- 2022 02:24:41 -0800
-Message-ID: <6d161f6d-3776-07da-2c09-13e5b10abe29@quicinc.com>
-Date:   Thu, 17 Feb 2022 15:53:13 +0530
+        with ESMTP id S236858AbiBQLaL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 06:30:11 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9A3026A2C9;
+        Thu, 17 Feb 2022 03:29:56 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 27CE7CE2B16;
+        Thu, 17 Feb 2022 11:29:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38D57C340E8;
+        Thu, 17 Feb 2022 11:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645097393;
+        bh=LCxdIQMHBhKjMIvf9HzqIMvga5n7AXcluWeSDoahqKE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kzrPyZ7i1dRGMpyLIb1r7UH9vmeg3PqfjiuNjaj+GnAUSg8n/dj4x0AOc8i7uzwl1
+         XS2JQu9I9FOHTarPr6Qd8DHqKlybl9lbdHAGQEAEUtrzXbawGxvx3sYPRBRqTzpsTo
+         +tQgK7eg9F60veSzrTspKjDMu4ZiL+bbTCvTe/3ZjF1A/X66Yvo5MTPvuV0KQRANrw
+         4C5RfgtGNXa8jDBVTu40lj+5oil+ZD74r8G6imDLngay6LT5ReqFjHMaMm2bpUJv60
+         nL05BL8PTvpdd22rU+udfCUAwPIYliF9H8d4/w4zCZ8VfGx7UezSv6CJf5naNJyrep
+         N6TRNIiaa8D6g==
+Received: by pali.im (Postfix)
+        id DB38B1187; Thu, 17 Feb 2022 12:29:49 +0100 (CET)
+Date:   Thu, 17 Feb 2022 12:29:49 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] PCI: rcar: Return all Fs from read which
+ triggered an exception
+Message-ID: <20220217112949.xt6saomde47prbom@pali>
+References: <20220122221554.196311-1-marek.vasut@gmail.com>
+ <20220122221554.196311-2-marek.vasut@gmail.com>
+ <20220123153147.sv6eoayxqvqbaa66@pali>
+ <7ced7370-1853-b52d-7e04-062d1bf3334c@gmail.com>
+ <20220123164936.cmzvkkkuw5chz3ek@pali>
+ <9d89314c-8757-8965-0f5d-14fd95669320@gmail.com>
+ <20220124093752.l2kpenot6wj76753@pali>
+ <65a09af0-f09d-cf46-3d04-d7c9d2750227@gmail.com>
+ <20220131125341.7jzckjihz3cwrxg3@pali>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH v2] PCI: qcom: Add system PM support
-Content-Language: en-US
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_vbadigan@quicinc.com>, <quic_ramkri@quicinc.com>,
-        <swboyd@chromium.org>
-References: <1643738876-18572-1-git-send-email-quic_pmaliset@quicinc.com>
- <20220211091409.GB3223@thinkpad>
-From:   Prasad Malisetty <quic_pmaliset@quicinc.com>
-In-Reply-To: <20220211091409.GB3223@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220131125341.7jzckjihz3cwrxg3@pali>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -66,115 +72,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Mani,
+On Monday 31 January 2022 13:53:41 Pali Rohár wrote:
+> On Saturday 29 January 2022 05:39:40 Marek Vasut wrote:
+> > On 1/24/22 10:37, Pali Rohár wrote:
+> > > On Monday 24 January 2022 06:46:47 Marek Vasut wrote:
+> > > > On 1/23/22 17:49, Pali Rohár wrote:
+> > > > 
+> > > > Hi,
+> > > > 
+> > > > [...]
+> > > > 
+> > > > > > > I must admit that this patch from its initial version evolved into giant hack...
+> > > > > > > https://lore.kernel.org/linux-pci/20210514200549.431275-1-marek.vasut@gmail.com/
+> > > > > > > 
+> > > > > > > During review of the previous patch I have asked some important
+> > > > > > > questions but I have not got any answer to them. So I'm reminding it:
+> > > > > > > https://lore.kernel.org/linux-pci/20210805183024.ftdwknkttfwwogks@pali/
+> > > > > > > 
+> > > > > > > So could please answer what happens when PCIe controller is in some
+> > > > > > > non-L* state and either MMIO happen or config read happens or config
+> > > > > > > write happens?
+> > > > > > 
+> > > > > > What kind of non-L state ?
+> > > > > 
+> > > > > E.g. Hot Reset, Detect, Polling, Configuration or Recovery.
+> > > > > 
+> > > > > > Do you have some specific test which fails ?
+> > > > > 
+> > > > > Yes, by putting PCIe controller into one of those states. I have already
+> > > > > wrote you in some previous email to trigger hot reset as this is the
+> > > > > easiest test and can be done also by userspace (setpci).
+> > > > > 
+> > > > > Link goes to Recovery state automatically when doing link retraining
+> > > > > (e.g. by setting RT bit in PCIe Root Port config space) and from
+> > > > > Recovery to Configuration or directly back to L0. So testing this path
+> > > > > needs precise timing and repeating it more times to trigger.
+> > > > > 
+> > > > > So the easiest test is really via PCIe Hot Reset by setting Secondary
+> > > > > Bus Reset bit in Bridge Control register of PCIe Root Port. After this
+> > > > > is link in Hot Reset and does not go back to L0 until you clear that
+> > > > > bit. So in this state you can do all these operations which cause
+> > > > > aborts, like calling that kernel function which is reading from config
+> > > > > space which belongs to device on the other end of the PCIe link or doing
+> > > > > MMIO read / write operation of mapped memory which again belongs to
+> > > > > other end of PCIe link.
+> > > > > 
+> > > > > Or instead of Hot Reset, you can set link disable bit in config space of
+> > > > > PCIe Root Port. Then link also would not be in L0 state (until you clear
+> > > > > that bit), so again you have lot of time to do same tests.
+> > > > 
+> > > > Can you give me the exact setpci invocation ? If so, then I can test this
+> > > > for you on the hardware.
+> > > 
+> > > Call "setpci -s $bdf_root_port BRIDGE_CONTROL" with address of the PCIe
+> > > Root Port device (parent of selected device). This will print value of
+> > > bridge control register. Logical OR it with value 0x20 (Secondary Bus
+> > > Reset Bit) and call "setpci -s $bdf_root_port BRIDGE_CONTROL=$new_value".
+> > > After this call is link in the Hot Reset state and you can do any test.
+> > > To bring link back, call setpci again with cleared 0x20 bit mask.
+> > > 
+> > > Similar test you can done also with setting Link Disable bit (bit 4) in
+> > > PCIe Link Control register. Offset to this register is not static and
+> > > you can figure it out from lspci -s $bdf_root_port -vv output.
+> > > Retrain Link is bit 5 in the same register.
+> > 
+> > Flipping either bit makes no difference, suspend/resume behaves the same and
+> > the link always recovers.
+> 
+> Ok, perfect! And what happens without suspend/resume (just in normal
+> conditions)? E.g. during active usage of some PCIe card (wifi, sata, etc..).
 
-Thanks for the review and comments.
-
-I updated my mail client. sending the same responses. I will post the 
-new patch version.
-
-Testing is in progress.
-
-Thanks
-
--Prasad
-
-On 2/11/2022 2:44 PM, Manivannan Sadhasivam wrote:
-> On top of Bjorn's review:
->
-> On Tue, Feb 01, 2022 at 11:37:56PM +0530, Prasad Malisetty wrote:
->> Add suspend_noirq and resume_noirq callbacks to handle
->> System suspend and resume in dwc pcie controller driver.
->>
->> When system suspends, send PME turnoff message to enter
->> link into L2 state. Along with powerdown the PHY, disable
->> pipe clock, switch gcc_pcie_1_pipe_clk_src to XO if mux is
->> supported and disable the pcie clocks, regulators.
->>
->> When system resumes, PCIe link will be re-established and
->> setup rc settings.
->>
->> Signed-off-by: Prasad Malisetty <quic_pmaliset@quicinc.com>
->> Reported-by: kernel test robot <lkp@intel.com>
->>
->> ---
->> Changes since v1:
->> 	- Removed unnecessary logs and modified log level suggested by Manivannan.
->> 	- Removed platform specific callbacks as PM support is generic.
-> This is not still generic... Please see below.
->
->> ---
->>   drivers/pci/controller/dwc/pcie-qcom.c | 97 ++++++++++++++++++++++++++++++++++
->>   1 file changed, 97 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->> index c19cd506..d1dd6c7 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -73,6 +73,8 @@
->>   
->>   #define PCIE20_PARF_Q2A_FLUSH			0x1AC
->>   
->> +#define PCIE20_PARF_PM_STTS                     0x24
->> +
->>   #define PCIE20_MISC_CONTROL_1_REG		0x8BC
->>   #define DBI_RO_WR_EN				1
->>   
->> @@ -1616,6 +1618,100 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->>   	return ret;
->>   }
->>   
->> +static int qcom_pcie_send_pme_turnoff_msg(struct qcom_pcie *pcie)
->> +{
->> +	int ret = 0;
->> +	u32 val = 0, poll_val = 0;
->> +	u64 l23_rdy_poll_timeout = 100000;
->> +	struct dw_pcie *pci = pcie->pci;
->> +	struct device *dev = pci->dev;
->> +
->> +	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
->> +	val |= BIT(4);
-> Define BIT(4)
-Sure, I will update in next patch version.
->
->> +	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
->> +
->> +	ret = readl_poll_timeout((pcie->parf + PCIE20_PARF_PM_STTS), poll_val,
->> +			(poll_val & BIT(5)), 10000, l23_rdy_poll_timeout);
-> Define BIT(5)
-Sure, I will update in next patch version.
->
->> +	if (!ret)
->> +		dev_info(dev, "PM_Enter_L23 is received\n");
-> Maybe print, "Device entered L23_Ready state"? Also this should be dev_dbg().
->
->> +	else
->> +		dev_err(dev, "PM_Enter_L23 is NOT received.PARF_PM_STTS 0x%x\n",
-> Maybe print, "Device failed to enter L23_Ready state"?
-Agree, I will update in next patch version.
->
->> +			readl_relaxed(pcie->parf + PCIE20_PARF_PM_STTS));
->> +
->> +	return ret;
->> +}
->> +
->> +static void qcom_pcie_host_disable(struct qcom_pcie *pcie)
->> +{
->> +	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
->> +
-> As Bjorn said this would only work for platforms supporting v2.7.0 ops. Please
-> make it generic.
-I removed platform specific code but forgot to remove above one. will 
-update in next patch version.
->> +	/* Assert the reset of endpoint */
->> +	qcom_ep_reset_assert(pcie);
->> +
->> +	/* Put PHY into POWER DOWN state */
->> +	phy_power_off(pcie->phy);
->> +
->> +	writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> Define "1".
-Sure, I will update in next patch version.
->
-> Thanks,
-> Mani
+PING? Also what lspci see for the root port and card itself during hot reset?
