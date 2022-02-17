@@ -2,52 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D3144BA6CF
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Feb 2022 18:16:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEF514BA6D2
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Feb 2022 18:16:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243615AbiBQRPM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Feb 2022 12:15:12 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37510 "EHLO
+        id S238721AbiBQRQQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Feb 2022 12:16:16 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231609AbiBQRPM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 12:15:12 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0854F29C11C;
-        Thu, 17 Feb 2022 09:14:57 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B474DB822BE;
-        Thu, 17 Feb 2022 17:14:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 329FFC340E8;
-        Thu, 17 Feb 2022 17:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645118094;
-        bh=V8FuLE6Vxn5siPMWjHbj01sVGcq0wCo+yDT7Qdj4S+I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=prPz3oAb28oHgqc4mcWzSNRx5FXQu0mAbL9h5AQ+Xq6nRY8BFpfyBA8Sad5O1Moqo
-         LAcMm18rIZDMGP7TgaPxPRxVWQil48c0fLKusHLKyk3K6h/v7liYYQiLoiUhPy330p
-         /OMfUc9rD0FlTJQlzP1Vdh08IYFH8k7uXANvQro8EkJgdmsxm8X0APAUp/dfPnMwtd
-         Ais7+AVvGPNl+Lsil9g4AuTVf9GFMIpfkbpkUgVA1x7PQGyfAFnasYv+yaHHHnqVVA
-         w9Tta0/nCa9kqA+0henKt3+KyBUdQmydMulacsb3AoUBXhJNLcCaTkpzi9yCSB97UL
-         JHjcB+yD85tLw==
-Date:   Thu, 17 Feb 2022 11:14:52 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, pali@kernel.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2 11/23] PCI: aardvark: Fix setting MSI address
-Message-ID: <20220217171452.GA286231@bhelgaas>
+        with ESMTP id S236933AbiBQRQP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 12:16:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AD9CC2B04A8
+        for <linux-pci@vger.kernel.org>; Thu, 17 Feb 2022 09:15:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645118158;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vK764Lcwway8Tvw3MqNXFsVBTl99kT8sKodI/qvZ50Q=;
+        b=DjoYVZ6nsXlJy3G3NDkTSzxCOVzb6RW61KqIEpQht5a6gh2WZYsLGqe3AsYsSsV+xZiE7d
+        sI+OqteidJZmr6p6xU6u9omjlgnUYhtcCcVDcYHPAWc9NXCtFHgJ9JFyrEnSowOU2iu9gh
+        e0E2UcXk+AgUJMZuPllQO6X5XhtR9vU=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-347-U8S9ViY1MKiLShF8jHYz1A-1; Thu, 17 Feb 2022 12:15:57 -0500
+X-MC-Unique: U8S9ViY1MKiLShF8jHYz1A-1
+Received: by mail-il1-f200.google.com with SMTP id i17-20020a925411000000b002bf4c9c4142so2337726ilb.6
+        for <linux-pci@vger.kernel.org>; Thu, 17 Feb 2022 09:15:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=vK764Lcwway8Tvw3MqNXFsVBTl99kT8sKodI/qvZ50Q=;
+        b=RoMfwPJs84oyUk++iUkTwy88pB6pNsywuvEnwY7odUSzGEZJCj88afgYeLku/ViOXZ
+         R40abzJWrbFt1PID/1MT10p+BNDDVYxeykfxs3ehMOqDcnYIqUMjv8uu36Y7p5I4pRO/
+         n6bzdShkZvqVNaUr0Y6QdAnjik4lIz8NPlyeebEhlcZa/+8p2gQNLQW5pK147tvJ+gsj
+         uFl2FdS380kLZI5ZLahX+a7TRKNqffBtH/iER20EVQnDFsHcdMmIi6e2LOrBXkMR/k01
+         DjzA2ISydx2XzlESVh9ic9LgPU3LJqECscVxWeJLN1S0TkJeeav/9Lz1RUasc6TtjuhS
+         aPrg==
+X-Gm-Message-State: AOAM530CDg/UiiS2rRbkwouJDcr7SxLHmjLODwzGFSbdDPqzaYOirX2L
+        paNuAha4eiQJdnKLo4/LCliggwApkSijSNux3Ym+tw+X8/tmBjVWXy4aYITJJ8nGv1VRcueD2oW
+        g2gS1zVMe3v9Swi04Jv2T
+X-Received: by 2002:a6b:c84f:0:b0:637:d023:4cc8 with SMTP id y76-20020a6bc84f000000b00637d0234cc8mr2557794iof.215.1645118156885;
+        Thu, 17 Feb 2022 09:15:56 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy6CJylLowRlY5qgrihQ8i0FkpuKzcystck5XFkiKaJ3yLL2prCoiA4Yqva8IVPc1yVFdWf8g==
+X-Received: by 2002:a6b:c84f:0:b0:637:d023:4cc8 with SMTP id y76-20020a6bc84f000000b00637d0234cc8mr2557776iof.215.1645118156640;
+        Thu, 17 Feb 2022 09:15:56 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id y7sm2094197ila.7.2022.02.17.09.15.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Feb 2022 09:15:56 -0800 (PST)
+Date:   Thu, 17 Feb 2022 10:15:54 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>
+Cc:     <bhelgaas@google.com>, <jgg@nvidia.com>, <saeedm@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <kuba@kernel.org>, <leonro@nvidia.com>,
+        <kwankhede@nvidia.com>, <mgurtovoy@nvidia.com>, <maorg@nvidia.com>,
+        <ashok.raj@intel.com>, <kevin.tian@intel.com>,
+        <shameerali.kolothum.thodi@huawei.com>
+Subject: Re: [PATCH V7 mlx5-next 15/15] vfio: Extend the device migration
+ protocol with PRE_COPY
+Message-ID: <20220217101554.26f05eb1.alex.williamson@redhat.com>
+In-Reply-To: <20220207172216.206415-16-yishaih@nvidia.com>
+References: <20220207172216.206415-1-yishaih@nvidia.com>
+        <20220207172216.206415-16-yishaih@nvidia.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220110015018.26359-12-kabel@kernel.org>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,103 +83,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 10, 2022 at 02:50:06AM +0100, Marek Behún wrote:
-> From: Pali Rohár <pali@kernel.org>
-> 
-> MSI address for receiving MSI interrupts needs to be correctly set before
-> enabling processing of MSI interrupts.
-> 
-> Move code for setting PCIE_MSI_ADDR_LOW_REG and PCIE_MSI_ADDR_HIGH_REG
-> from advk_pcie_init_msi_irq_domain() to advk_pcie_setup_hw(), before
-> enabling PCIE_CORE_CTRL2_MSI_ENABLE.
-> 
-> After this we can remove the now unused member msi_msg, which was used
-> only for MSI doorbell address. MSI address can be any address which cannot
-> be used to DMA to. So change it to the address of the main struct advk_pcie.
-> 
-> Fixes: 8c39d710363c ("PCI: aardvark: Add Aardvark PCI host controller driver")
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> Acked-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> Cc: stable@vger.kernel.org # f21a8b1b6837 ("PCI: aardvark: Move to MSI handling using generic MSI support")
-> ---
->  drivers/pci/controller/pci-aardvark.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 51fedbcb41fb..79102704d82f 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -278,7 +278,6 @@ struct advk_pcie {
->  	raw_spinlock_t msi_irq_lock;
->  	DECLARE_BITMAP(msi_used, MSI_IRQ_NUM);
->  	struct mutex msi_used_lock;
-> -	u16 msi_msg;
->  	int link_gen;
->  	struct pci_bridge_emul bridge;
->  	struct gpio_desc *reset_gpio;
-> @@ -473,6 +472,7 @@ static void advk_pcie_disable_ob_win(struct advk_pcie *pcie, u8 win_num)
->  
->  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->  {
-> +	phys_addr_t msi_addr;
->  	u32 reg;
->  	int i;
->  
-> @@ -561,6 +561,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->  	reg |= LANE_COUNT_1;
->  	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
->  
-> +	/* Set MSI address */
-> +	msi_addr = virt_to_phys(pcie);
+On Mon, 7 Feb 2022 19:22:16 +0200
+Yishai Hadas <yishaih@nvidia.com> wrote:
 
-Strictly speaking, msi_addr should be a pci_bus_addr_t, not a
-phys_addr_t, and virt_to_phys() doesn't return a bus address.
+> From: Jason Gunthorpe <jgg@nvidia.com>
+> 
+> The optional PRE_COPY states open the saving data transfer FD before
+> reaching STOP_COPY and allows the device to dirty track internal state
+> changes with the general idea to reduce the volume of data transferred
+> in the STOP_COPY stage.
+> 
+> While in PRE_COPY the device remains RUNNING, but the saving FD is open.
+> 
+> Only if the device also supports RUNNING_P2P can it support PRE_COPY_P2P,
+> which halts P2P transfers while continuing the saving FD.
+> 
+> PRE_COPY, with P2P support, requires the driver to implement 7 new arcs
+> and exists as an optional FSM branch between RUNNING and STOP_COPY:
+>     RUNNING -> PRE_COPY -> PRE_COPY_P2P -> STOP_COPY
+> 
+> A new ioctl VFIO_DEVICE_MIG_PRECOPY is provided to allow userspace to
+> query the progress of the precopy operation in the driver with the idea it
+> will judge to move to STOP_COPY at least once the initial data set is
+> transferred, and possibly after the dirty size has shrunk appropriately.
+> 
+> We think there may also be merit in future extensions to the
+> VFIO_DEVICE_MIG_PRECOPY ioctl to also command the device to throttle the
+> rate it generates internal dirty state.
+> 
+> Compared to the v1 clarification, STOP_COPY -> PRE_COPY is made optional
+> and to be defined in future. While making the whole PRE_COPY feature
+> optional eliminates the concern from mlx5, this is still a complicated arc
+> to implement and seems prudent to leave it closed until a proper use case
+> is developed. We also split the pending_bytes report into the initial and
+> sustaining values, and define the protocol to get an event via poll() for
+> new dirty data during PRE_COPY.
 
-> +	advk_writel(pcie, lower_32_bits(msi_addr), PCIE_MSI_ADDR_LOW_REG);
-> +	advk_writel(pcie, upper_32_bits(msi_addr), PCIE_MSI_ADDR_HIGH_REG);
-> +
->  	/* Enable MSI */
->  	reg = advk_readl(pcie, PCIE_CORE_CTRL2_REG);
->  	reg |= PCIE_CORE_CTRL2_MSI_ENABLE;
-> @@ -1184,10 +1189,10 @@ static void advk_msi_irq_compose_msi_msg(struct irq_data *data,
->  					 struct msi_msg *msg)
->  {
->  	struct advk_pcie *pcie = irq_data_get_irq_chip_data(data);
-> -	phys_addr_t msi_msg = virt_to_phys(&pcie->msi_msg);
-> +	phys_addr_t msi_addr = virt_to_phys(pcie);
->  
-> -	msg->address_lo = lower_32_bits(msi_msg);
-> -	msg->address_hi = upper_32_bits(msi_msg);
-> +	msg->address_lo = lower_32_bits(msi_addr);
-> +	msg->address_hi = upper_32_bits(msi_addr);
->  	msg->data = data->hwirq;
->  }
->  
-> @@ -1346,18 +1351,10 @@ static struct msi_domain_info advk_msi_domain_info = {
->  static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
->  {
->  	struct device *dev = &pcie->pdev->dev;
-> -	phys_addr_t msi_msg_phys;
->  
->  	raw_spin_lock_init(&pcie->msi_irq_lock);
->  	mutex_init(&pcie->msi_used_lock);
->  
-> -	msi_msg_phys = virt_to_phys(&pcie->msi_msg);
-> -
-> -	advk_writel(pcie, lower_32_bits(msi_msg_phys),
-> -		    PCIE_MSI_ADDR_LOW_REG);
-> -	advk_writel(pcie, upper_32_bits(msi_msg_phys),
-> -		    PCIE_MSI_ADDR_HIGH_REG);
-> -
->  	pcie->msi_inner_domain =
->  		irq_domain_add_linear(NULL, MSI_IRQ_NUM,
->  				      &advk_msi_domain_ops, pcie);
-> -- 
-> 2.34.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+I feel obligated to ask, is PRE_COPY support essentially RFC at this
+point since we have no proposed in-kernel users?
+
+It seems like we're winding down comments on the remainder of the
+series and I feel ok with where it's headed and the options we have
+available for future extensions.  Pre-copy seems like an important gap
+to fill and I think this patch shows that a future extension could
+allow it, but with the scrutiny not to add unused code to the kernel,
+I'm not sure there's a valid justification to add it now.  Thanks,
+
+Alex
+
+PS - Why is this a stand-alone ioctl rather than a DEVICE_FEATURE?
+
