@@ -2,118 +2,214 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 811CA4B9B68
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Feb 2022 09:47:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A54874B9C18
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Feb 2022 10:33:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237415AbiBQIsL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Feb 2022 03:48:11 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40660 "EHLO
+        id S237306AbiBQJdb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Feb 2022 04:33:31 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235672AbiBQIsK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 03:48:10 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC40A2A0D7C;
-        Thu, 17 Feb 2022 00:47:53 -0800 (PST)
+        with ESMTP id S238649AbiBQJda (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 04:33:30 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C9B996B9;
+        Thu, 17 Feb 2022 01:33:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645087673; x=1676623673;
+  t=1645090396; x=1676626396;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=PDYw5rQvsj5va8j31Q9ml+BYtwBg3y8USkcS+rlhy/s=;
-  b=GVMw/odFrmF2FLqRqpaG8SfrK5NCs6M0LV4S77Y/z+ptKetohILkjnKT
-   inEZ8ky0YowVgLSyDRFpZaCT9QXZBMPGDNA8MNYTeqLXP/eLpbA9FyGBg
-   3UVA2nA7Fq+s+9DS9JYXPxkZPQhCiZfJpZH3ZzAFjCRsfW2Fj9QpgYYIw
-   HleKzWnZV/v0GLAQOg52Y04+hXpAIXvjFzQsfXvHVo9B8MtkdaigDxUe2
-   Pw+7iNpVnOdMHxIUTPecrOMetUbLMvMXZXc8XkDZ0A9KSbeem8JYr+vyD
-   8QI2uPeZz3+DXx+ymHVwR7ksKWvCUmSZCF/tXjgk/KjP4PI3XWKPpi7v8
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10260"; a="248424765"
+  bh=aK1+Q/gQ7IRjnFowKiBbew/57gZX+Oj3JZ/5IP7bGqU=;
+  b=VsVRdtipIrnRGpjERKeNEHk9QKOq6dpUeoJbt1tz0M4L1lhCZ6KMVH5J
+   hfY2zpWGTvYyAdd0wFVPVK5MzBlmFQWTcltX7JWhJfTWUamv9mfpRUvvk
+   GiOzAAPX4mb3TUbrYFTS2SaKWUl9oZA0iCcwKfWfbuoJJY3iVZjl//YBO
+   OaZCOz4H3TILNfhBY+p56wAKaNw0n2GCzTu9WsaztB4CzDp/EqzEHCtQu
+   kK/VFUSk5dLaXo+ZphwWpqd6zKoGktl7Cgpb7ngAVgYKB0E52ILub5nw4
+   ISHJ/wu0bpUY8es5o1RRP/Xcm8DR+458ZgltGGqMsH14ylNkVovnL2fkV
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10260"; a="231459228"
 X-IronPort-AV: E=Sophos;i="5.88,375,1635231600"; 
-   d="scan'208";a="248424765"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 00:47:53 -0800
+   d="scan'208";a="231459228"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 01:33:15 -0800
 X-IronPort-AV: E=Sophos;i="5.88,375,1635231600"; 
-   d="scan'208";a="634446125"
+   d="scan'208";a="704711274"
 Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 00:47:48 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 17 Feb 2022 10:47:46 +0200
-Date:   Thu, 17 Feb 2022 10:47:46 +0200
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 01:33:11 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 17 Feb 2022 11:33:09 +0200
+Date:   Thu, 17 Feb 2022 11:33:09 +0200
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+To:     "Limonciello, Mario" <mario.limonciello@amd.com>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86/PCI: Disable exclusion of E820 reserved
- addresses in some cases
-Message-ID: <Yg4LsrPRkLfRz7eB@lahna>
-References: <20220216150121.9400-1-hdegoede@redhat.com>
- <20220216150121.9400-2-hdegoede@redhat.com>
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Subject: Re: [PATCH v4 00/10] Overhaul `is_thunderbolt`
+Message-ID: <Yg4WVXw84aLK5Knp@lahna>
+References: <20220215000200.242799-1-mario.limonciello@amd.com>
+ <20220215072911.GA13892@wunner.de>
+ <3078823e-4ab4-27b6-b1c7-c6552fbfdb2e@amd.com>
+ <Yg0LaujhftM0b8N/@lahna>
+ <CADnq5_Ov3T9WH29MjgC2byqgTGkn-ux7iUaK3z5s2v4At_b3Ow@mail.gmail.com>
+ <8da992ac-c241-1fe2-41a9-579c845608db@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220216150121.9400-2-hdegoede@redhat.com>
+In-Reply-To: <8da992ac-c241-1fe2-41a9-579c845608db@amd.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 04:01:21PM +0100, Hans de Goede wrote:
-> Some fw has a bug where the PCI bridge window returned by the ACPI
-> resources partly overlaps with some other address range, causing issues.
-> To workaround this Linux excludes E820 reserved addresses when allocating
-> addresses from the PCI bridge window. 2 known examples of such fw bugs are:
-> 
-> 1. The returned window contains addresses which map to system RAM,
-> see commit 4dc2287c1805 ("x86: avoid E820 regions when allocating
-> address space").
-> 
-> 2. The Lenovo X1 carbon gen 2 BIOS has an overlap between an EFI/E820
-> reserved range and the ACPI provided PCI bridge window:
->  efi: mem46: [MMIO] range=[0x00000000dfa00000-0x00000000dfa0ffff] (0MB)
->  BIOS-e820: [mem 0x00000000dceff000-0x00000000dfa0ffff] reserved
->  pci_bus 0000:00: root bus resource [mem 0xdfa00000-0xfebfffff window]
-> If Linux assigns the overlapping 0xdfa00000-0xdfa0ffff range to a PCI BAR
-> then the system fails to resume after a suspend.
-> 
-> Recently (2019) some systems have shown-up with EFI memmap MMIO entries
-> covering the entire ACPI provided PCI bridge window. These memmap entries
-> get converted into e820_table entries, causing all attempts to assign
-> memory to PCI BARs which have not been setup by the BIOS to fail.
-> For example see these dmesg snippets from a Lenovo IdeaPad 3 15IIL 81WE:
->  efi: mem63: [MMIO] range=[0x0000000065400000-0x00000000cfffffff] (1708MB)
->  BIOS-e820: [mem 0x000000004bc50000-0x00000000cfffffff] reserved
->  pci_bus 0000:00: root bus resource [mem 0x65400000-0xbfffffff window]
->  pci 0000:00:15.0: BAR 0: no space for [mem size 0x00001000 64bit]
->  pci 0000:00:15.0: BAR 0: failed to assign [mem size 0x00001000 64bit]
-> 
-> To fix this, check if the ACPI provided PCI bridge window is fully
-> contained within in EFI memmap MMIO region and in that case disable
-> the "exclude E820 reserved addresses" workaround, fixing the problem
-> of not being able to find free space for unassigned BARs.
-> 
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206459
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1871793
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=2029207
-> BugLink: https://bugs.launchpad.net/bugs/1878279
-> BugLink: https://bugs.launchpad.net/bugs/1931715
-> BugLink: https://bugs.launchpad.net/bugs/1932069
-> BugLink: https://bugs.launchpad.net/bugs/1921649
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Hi Mario,
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Wed, Feb 16, 2022 at 10:50:31AM -0600, Limonciello, Mario wrote:
+> On 2/16/2022 08:44, Alex Deucher wrote:
+> > On Wed, Feb 16, 2022 at 9:34 AM Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > > 
+> > > Hi all,
+> > > 
+> > > On Tue, Feb 15, 2022 at 01:07:00PM -0600, Limonciello, Mario wrote:
+> > > > On 2/15/2022 01:29, Lukas Wunner wrote:
+> > > > > On Mon, Feb 14, 2022 at 06:01:50PM -0600, Mario Limonciello wrote:
+> > > > > >    drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |  2 +-
+> > > > > >    drivers/gpu/drm/amd/amdgpu/nbio_v2_3.c  |  2 +-
+> > > > > >    drivers/gpu/drm/nouveau/nouveau_vga.c   |  4 +-
+> > > > > >    drivers/gpu/drm/radeon/radeon_device.c  |  4 +-
+> > > > > >    drivers/gpu/drm/radeon/radeon_kms.c     |  2 +-
+> > > > > >    drivers/pci/hotplug/pciehp_hpc.c        |  6 +-
+> > > > > >    drivers/pci/pci-acpi.c                  | 15 ++++-
+> > > > > >    drivers/pci/pci.c                       | 17 +++--
+> > > > > >    drivers/pci/probe.c                     | 52 ++++++++++++++-
+> > > > > >    drivers/pci/quirks.c                    | 84 +++++++++++++++++++++++++
+> > > > > >    drivers/platform/x86/apple-gmux.c       |  2 +-
+> > > > > >    drivers/thunderbolt/nhi.h               |  2 -
+> > > > > >    include/linux/pci.h                     | 25 +-------
+> > > > > >    include/linux/pci_ids.h                 |  3 +
+> > > > > >    14 files changed, 173 insertions(+), 47 deletions(-)
+> > > > > 
+> > > > > That's an awful lot of additional LoC for what is primarily
+> > > > > a refactoring job with the intent to simplify things.
+> > > > 
+> > > > You may recall the first version of this series was just for adding
+> > > > USB4 matches to the existing code paths, and that's when it was noted
+> > > > that is_thunderbolt is a bit overloaded.
+> > > > 
+> > > > > 
+> > > > > Honestly this looks like an attempt to fix something that
+> > > > > isn't broken.  Specifically, the is_thunderbolt bit apparently
+> > > > > can't be removed without adding new bits to struct pci_dev.
+> > > > > Not sure if that can be called progress. >
+> > > > > Thanks,
+> > > > > 
+> > > > > Lukas
+> > > > 
+> > > > Within this series there are two new material patches; setting up root ports
+> > > > for both integrated and discrete USB4 controllers to behave well with all
+> > > > the existing drivers that rely upon a hint of how they're connected to
+> > > > configure devices differently.
+> > > > 
+> > > > If y'all collectively prefer this direction to not refactor is_thunderbolt
+> > > > and push into quirks, a simpler version of this series would be to leave all
+> > > > the quirks in place, just drop dev->is_thunderbolt, and set
+> > > > dev->external_facing on all 3 cases:
+> > > > 
+> > > > * Intel TBT controller
+> > > > * USB4 integrated PCIe tunneling root port/XHCI tunneling root port
+> > > > * USB4 disctete PCIe tunneling root port/XHCI tunneling root port
+> > > > 
+> > > > All the other drivers and symbols can stay the same then.
+> > > 
+> > > If I understand correctly the original intention of this patch series is
+> > > to be able to differentiate whether the device is "permanently"
+> > > connected to the motherboard, or it is connected over some hot-pluggable
+> > > bus (PCIe, USB, USB4 for example but I'm sure there are other buses that
+> > > fit into this picture too). Specifically this is needed for discrete
+> > > GPUs because of power management differences or so (please correct me if
+> > > I'm mistaken).
+> 
+> Correct.  It might be possible to drop the patch for the integrated case
+> (patch 3) because I do think that by Microsoft having the _DSD for
+> "ExternalFacingPort" it's very likely that most implementations will have
+> used it for the appropriate PCIe root ports.  If something shows up in the
+> wild that this isn't the case it could be revisited.  If it's found
+> pre-production presumably the OEM can still fix it and if it's post
+> production and there are problems we can dust it off then.
+
+Yeah, that's most likely the case.
+
+> The discrete USB4 controller I would be more concerned that this isn't
+> populated, and that (patch 4) should be more important to let the driver
+> core set it removable.
+
+Agreed.
+
+[I actually only now noticed that the PCI core actually already marks
+ devices connected to external facing ports as "removable" in
+ pci_set_removable().]
+
+> > > If we set the is_thunderbolt debate aside and concentrate on that issue,
+> > > I think the way to do this is to check whether the root port the GPU is
+> > > connected to has an ACPI power resource (returned from _PR3() method).
+> > > IF it is present then most likely the platform has provided all the
+> > > necessary wiring to move the GPU into D3cold (and the BIOS knows this).
+> > > If it is not present then the device cannot even go into D3cold as there
+> > > is not means to power of the device in PCIe spec.
+> > > 
+> > > Perhaps we can simply use pci_pr3_present() here as nouveau is already
+> > > doing? Granted it is not too elegant solution either but better than
+> > > using is_thunderbolt IMHO. Since this seem to be common for many GPUs,
+> > > perhaps we can have a helper in DRM core that handles this.
+> > 
+> > The tricky part is that there were AMD and NVIDIA specific proprietary
+> > _PR3-like ACPI methods (plus whatever Apple did) prior to GPU power
+> > control standardizing on _PR3.  Currently those methods are handled in
+> > the drivers directly, sort of tangled up with vga_switcheroo.  I think
+> > ideally that logic would move to the ACPI core and be handled the same
+> > way as _PR3, but I'm not sure how well that would work because of the
+> > various bios date checks around _PR3 and the lack of general _PR3
+> > support in those older platforms.  So I think we still need some sort
+> > of "is this soldered in" check.
+> 
+> Considering that limitation if `dev->external_facing` already exists in PCI
+> core may as well use it for this instead of `is_thunderbolt`.
+
+Indeed.
+
+> > Alex
+> > 
+> > 
+> > > 
+> > > Then going back to is_thunderbolt debate :) I really don't think the
+> > > drivers should care whether they are connected over a tunnel or not.
+> > > They should work regardless of the underlying transport of the native
+> > > protocol. They should also be prepared for the fact that the hardware
+> > > can vanish under them at any point (e.g user unplugs the device). For
+> > > this reason I don't really like to see is_thunderbolt to be used more
+> > > and prefer to get rid if it completely if possible at all. If there is
+> > > still need to differentiate whether the device can be hot-removed or
+> > > not, I think "removable" in the driver core is the way to go. That is
+> > > not dependent on any single transport.
+> 
+> Hopefully that is what the patch series does right now as of v4. As I
+
+It does yes. I think the detection of internal and discrete tunneled
+ports can be dropped from this series for now to make this leaner. We
+can add those later when needed.
