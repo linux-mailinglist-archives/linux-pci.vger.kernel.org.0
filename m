@@ -2,103 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 876B24BAFEE
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 04:03:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D7484BB03F
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 04:31:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231753AbiBRDDa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Feb 2022 22:03:30 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:38106 "EHLO
+        id S232065AbiBRD0O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Feb 2022 22:26:14 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:39432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231770AbiBRDD3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 22:03:29 -0500
-Received: from sender4-pp-o95.zoho.com (sender4-pp-o95.zoho.com [136.143.188.95])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEF36517E4;
-        Thu, 17 Feb 2022 19:03:12 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1645153384; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=AAghYhEtBuBsRRdPfhEY3ptEqfEg5WwmhPJfSE9wSYj1bvAH2Ne/pZyKmsX96BKWF4tcSQeUWdCkgEqJdcu5cj1xF6iNeibKBSqYPMU2PUvN2LrhiHZXv/7QPFWJUc9nFw04MnLzzC9eWfdw2QUa3vkZQ/7HDb8N+XfL3iJPeQg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1645153384; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=XPO+pb8A7LXLQdzcNexkeaONrrOTy72Y4nFvtXzmfo0=; 
-        b=Q92LCoA059lb6HSvjVCpvJ5ZpeIja6qMXW9G4ekuUZKEG6gTpacbAxHiV4OqtA9yoK/Ac1/UTDGDvmfpz0HpR9XnKTsmE6kkPqCQF+MXz8O2TUi3eU8rZgtVyZUpXS4NB8SgKx0KvwrAaDKW5NaJBtH3Rxe93EX944nf5SCb42o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zohomail.com;
-        spf=pass  smtp.mailfrom=lchen.firstlove@zohomail.com;
-        dmarc=pass header.from=<lchen.firstlove@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1645153384;
-        s=zm2020; d=zohomail.com; i=lchen.firstlove@zohomail.com;
-        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=XPO+pb8A7LXLQdzcNexkeaONrrOTy72Y4nFvtXzmfo0=;
-        b=JWzbJDkJXNCNKsKlCI36Ah2KTLPeRF7bdF/fL2Ui+s2+5CQC9RR9GRfBEUHCcga0
-        qYG97mxszUGj8X+qDMsLZOYOKYxbfwBl7d86yeb9WScVhvAF0et/rEy0kPLsvujl84p
-        scDVXdkH6VaQbFGo8NxwU4onpJyAHaM8ai2rLA0A=
-Received: from mail.zoho.com by mx.zohomail.com
-        with SMTP id 1645153382557407.6073312228908; Thu, 17 Feb 2022 19:03:02 -0800 (PST)
-Received: from  [203.218.243.128] by mail.zoho.com
-        with HTTP;Thu, 17 Feb 2022 19:03:02 -0800 (PST)
-Date:   Fri, 18 Feb 2022 11:03:02 +0800
-From:   Li Chen <lchen.firstlove@zohomail.com>
-To:     "xkernelwang" <xkernel.wang@foxmail.com>
-Cc:     "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <17f0ac8707d.e967ff2c113435.3595297833916391134@zohomail.com>
-In-Reply-To: <tencent_CA4766945C568E210AA2701525957F041007@qq.com>
+        with ESMTP id S232060AbiBRD0O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 22:26:14 -0500
+Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B148D1B4F30;
+        Thu, 17 Feb 2022 19:25:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+        s=s201512; t=1645154754;
+        bh=F/tGiAdsjuQ0q4Nj/0VGkH32X+GI2mQPc8R61JxSmTM=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date;
+        b=yZ0hbSooVqyWKuBRGQaqVlGG8jHd3aDQZGS8U0TbDj+XR7yZ+TRxi33d0ZjIXh0d/
+         KWcZVJW0nZY1yolJsmExW9sr8XPZq4mHHnQe1OF7V2++jbEGlPNw7nHrFYbEHSEGj5
+         mpbivzb8BmeceA07KuPS6kRrm6t0I4OD72i0vAt4=
+X-QQ-FEAT: oHWrrGTW1dDmmdYeXRw4YEXQp3CWT7El
+X-QQ-SSF: 00000000000000F0000000000000
+X-QQ-XMAILINFO: M/OchVwRIgcXcgiSPOYTSo67/UC58rNJiHD1eqUIupMUylOlig6Pg1EwAXQBQE
+         P6TGvEezTR3nSPgIyvHLLTB/NgGsc/ZT/EgTyJPs8lu8nT8hTxfJ1dZznTw//hKsMOVl9IP1C6gzu
+         Iw0ysO40N6oDfdmeWq2rKQGYka2vxDfdeveevc7HGDXO2cxSNRxWBHnJO4W/wGYU7/wjGUMgz8TmG
+         cnb33k/Dib38edsTFRNARG8gJP4zhdXsT8JztQmrOi+OkuyTYhzffj++b6eUJFAxmglFydc4hI0cy
+         UMohn1THfvyuzgdgk02GVsLaXJkcwECz7mlJSFwoVrbs7TijQ8qQEezvty4TEZnDtrhBSlmf3S7Xy
+         3zEWNAvRQYlyeA3UOx7oFprcp5uMmUY1+j9tZWRFNqKI4jSaxki5r7Tae7RA2Dca4wnk0WPgTAQzX
+         gkXDlmfSZXYHsoVAQ7Y+q5mFqcXLnhQE+4keROvATyB5XA/9CfpgeQBrFHe0Rk5TR5PKHOU2Q0fFa
+         gg6rgEo7vNUYw6jCajycXUl59yqxjM+SoqMvAww7L8U0EHbNfwewQUKocaV3+VikweiQJPizH4/pT
+         jQGj0nFaHpcag6xcfxW+srKEuCwNWziUzcEJcWCcbE14wv9slfR8IDpEtft4LCH0+h40H6HgA174M
+         tk+nw2XjSMVgBhYGTL2BommBGkuCFRMtTy3g0QEIAtoMKzZ6T2pSZp3LtPxuEwKE3vGg/BMeQ8JR0
+         rsAPPrSLwXR324wX3m67zrRtOl//efHbKAjTbM6OQckSf8Trw328cSI2PEKk81+6Fah1xj5pKN2xX
+         +peIrzlq7vlD72jLTgIvWlDlrg87liYouU3ohBA11sVaec6z3rWPYqB+3Khgt4pTSA==
+X-HAS-ATTACH: no
+X-QQ-BUSINESS-ORIGIN: 2
+X-Originating-IP: 111.47.122.156
+In-Reply-To: <17f0ac8707d.e967ff2c113435.3595297833916391134@zohomail.com>
 References: <tencent_CA4766945C568E210AA2701525957F041007@qq.com>
-Subject: Re: [EXT] [PATCH] PCI: endpoint: functions/pci-epf-test: fix a
- potential memory leak
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        <17f0ac8707d.e967ff2c113435.3595297833916391134@zohomail.com>
+X-QQ-STYLE: 
+X-QQ-mid: webmail813t1645154753t3342158
+From:   "=?ISO-8859-1?B?WGlhb2tlIFdhbmc=?=" <xkernel.wang@foxmail.com>
+To:     "=?ISO-8859-1?B?TGkgQ2hlbg==?=" <lchen.firstlove@zohomail.com>
+Cc:     "=?ISO-8859-1?B?a2lzaG9u?=" <kishon@ti.com>,
+        "=?ISO-8859-1?B?bG9yZW56by5waWVyYWxpc2k=?=" 
+        <lorenzo.pieralisi@arm.com>,
+        "=?ISO-8859-1?B?a3c=?=" <kw@linux.com>,
+        "=?ISO-8859-1?B?YmhlbGdhYXM=?=" <bhelgaas@google.com>,
+        "=?ISO-8859-1?B?bGludXgtcGNp?=" <linux-pci@vger.kernel.org>,
+        "=?ISO-8859-1?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] [PATCH] PCI: endpoint: functions/pci-epf-test: fix a potential memory leak
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="ISO-8859-1"
+Content-Transfer-Encoding: base64
+Date:   Fri, 18 Feb 2022 11:25:53 +0800
+X-Priority: 3
+Message-ID: <tencent_E7FF1CE4823926578BC38502335C4169EB05@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FROM_EXCESS_BASE64,HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Xiaoke,
-This is duplicate  to https://lore.kernel.org/lkml/17ed816b6f3.d4fb44fb69745.1048447841721382920@zohomail.com/T/
+LS0tLSBPbiBGcmksIDE4IEZlYiAyMDIyIDExOjAzOjAyICswODAwICBMaSBDaGVuIDxsY2hl
+bi5maXJzdGxvdmVAem9ob21haWwuY29tPiB3cm90ZSAtLS0tCj4gVGhpcyBpcyBkdXBsaWNh
+dGUgIHRvIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMTdlZDgxNmI2ZjMuZDRmYjQ0
+ZmI2OTc0NS4xMDQ4NDQ3ODQxNzIxMzgyOTIwQHpvaG9tYWlsLmNvbS9ULwoKT2ghIEkgYW0g
+c29ycnkgdGhhdCBJIG9ubHkgdmlld2VkIHRoZSBjb2RlIGluIHRvcnZhbGRzL2xpbnV4IGdp
+dCAKcmVwb3NpdG9yeSwgYnV0IG5vdCB0aGUgbWFpbCBsaXN0LgpUaGFuayB5b3UgZm9yIHlv
+dXIgcmVtaW5kZXIuCgpSZWdhcmRzLApXYW5n
 
-Regards,
-Li
-
- ---- On Fri, 18 Feb 2022 00:31:24 +0800  <xkernel.wang@foxmail.com> wrote ----
- > From: Xiaoke Wang <xkernel.wang@foxmail.com>
- > 
- > In pci_epf_test_write(), there is an error path does not properly
- > release 'buf' which is allocated by kzalloc(). It is better to release
- > it by changing the target label of goto statement.
- > 
- > Signed-off-by: Xiaoke Wang <xkernel.wang@foxmail.com>
- > ---
- >  drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
- >  1 file changed, 1 insertion(+), 1 deletion(-)
- > 
- > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
- > index 90d84d3..41227dd 100644
- > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
- > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
- > @@ -441,7 +441,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- >          if (!epf_test->dma_supported) {
- >              dev_err(dev, "Cannot transfer data using DMA\n");
- >              ret = -EINVAL;
- > -            goto err_map_addr;
- > +            goto err_dma_map;
- >          }
- >  
- >          src_phys_addr = dma_map_single(dma_dev, buf, reg->size,
- > -- 
- > 
- > ######################################################################
- > This EXTERNAL email has been scanned by Proofpoint Email Protect service.
- > 
