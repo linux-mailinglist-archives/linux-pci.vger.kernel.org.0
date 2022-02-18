@@ -2,130 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63C584BB9E7
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 14:14:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 142214BBA01
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 14:20:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233938AbiBRNOP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Feb 2022 08:14:15 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57066 "EHLO
+        id S234121AbiBRNVC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Feb 2022 08:21:02 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233631AbiBRNOO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Feb 2022 08:14:14 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 495621BE077;
-        Fri, 18 Feb 2022 05:13:57 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id bg10so15001790ejb.4;
-        Fri, 18 Feb 2022 05:13:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2rr4tmi7/d0PvHdO4onYfUR4YvrcRNFtlu5Wyv5itrM=;
-        b=FhW+J6S+lwhp+0e20MHUdBowUwSmmRoeYeeoPK1VwSrUJvNbrC1Zos5gbbgENd1X9o
-         Tcki/9zZB8RCQ9Als6J6AbgSC2C6kNhaV0J/bSJiWQWWnaFyVKCUGZtVHnyz/4+DIrwQ
-         swR7w1YANDn2Va9KxvpMvtAtxQzanTQc2OoY4aZY+8lfonQOqdUSVx+pPigIkmuLEghc
-         Nw2lB5dxBAD1mcIxYmzer+VbKIywXaxaxi4HVHbD3Wp4HpYwWFXrm9zFXKpv214zNdSy
-         lVpVvGCPWUmhRyh8Um8o4AEc0V8ECv8PlM1YvUEEA7pOIa3r4nq2m/paNhFBKrlMgkPQ
-         fwvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2rr4tmi7/d0PvHdO4onYfUR4YvrcRNFtlu5Wyv5itrM=;
-        b=3xxsYhoOhh5MJAFaWohsk3J7ZCS5sj13p1XrwyZJrW+nWe8wXhrLbz1Jtla/kMEL33
-         ODh7xELoVPlZMjOfT1r1RfVC+7qgMu9QEYIbvICrwZQU1k+Exl5rC0cOhhlivC8GgpwA
-         TqC7I5tKcNU1BJMm/64nXH1rZJ9gRbBLz215zXbBToRvH6BvpEuOk88UJgxcYGtpNdBC
-         X9gEnRbXSgFvyStTCGGIFmX92bSRBPUARKUyQVbqxh5TOHYT/x5IOi52RN6BaWAKwWwf
-         bm8oXqkppg51mEIJ75INRZdXmoTbLcOLlzX8svOy8MVPIBegrUxR1YnHWndcbl0zRyoh
-         +f9Q==
-X-Gm-Message-State: AOAM530NEDpuEbsdwhqlqdQUo5MsAmzJaqNPoS/B8jeKfqSZuRNfopcv
-        fEXanQaZG6NwMSGdRvO+3I/WZh9Jyoe84VmAaqk=
-X-Google-Smtp-Source: ABdhPJxl+IQGTmAKoqkdMrngrr13yLSAsVP8hfHBAXMPVfVWdOd5SK0ailB8rMVVElRPkUqg5y2xJl0LMkEaVPIeuzI=
-X-Received: by 2002:a17:906:ae97:b0:6cf:73fe:8515 with SMTP id
- md23-20020a170906ae9700b006cf73fe8515mr6366008ejb.462.1645190035697; Fri, 18
- Feb 2022 05:13:55 -0800 (PST)
-MIME-Version: 1.0
-References: <20220131220518.GA515079@bhelgaas> <bac4cc7e-f81e-82e6-9b60-e5e3199637d7@ti.com>
-In-Reply-To: <bac4cc7e-f81e-82e6-9b60-e5e3199637d7@ti.com>
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-Date:   Fri, 18 Feb 2022 14:13:44 +0100
-Message-ID: <CAH9NwWcChBLEwLrzUEcvh7EXtjaEBe5rZo0gHNnzXnaV9p5QGA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: cadence: respond to received PTM Requests
+        with ESMTP id S233017AbiBRNVC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Feb 2022 08:21:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8FBC2B31A0;
+        Fri, 18 Feb 2022 05:20:42 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6884B61755;
+        Fri, 18 Feb 2022 13:20:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1A3C340EF;
+        Fri, 18 Feb 2022 13:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645190441;
+        bh=Bq8uHmrbwFFflKpEPD9pGPNauay9ErYLdZGVjuU6bf4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=G7Tls6vhg9AjFl1lMZO15h5+1DzK81r+7PHA3rwqnbVxkeQl08Fb6gFSWLUbLKI0s
+         x4lkX5K8mjCTjNHKVAXsIJYBL2rg+BXdBIWEbOApgOiDJCeVPjpCLb/Xp/7Yo180rB
+         6iX60M6USeZPwKM5Q3paIMi85QNbx1i/43Fg+5LK+A6L71PEM8/epmiKxWlFX9a7LI
+         mjPVwqwUIeAdejkVSo8IQhUfiqQF7iGCXFrzS9JOO44f3SxNFnNKIyoSbf6dLSKYou
+         e3zLyYJPt8kUwMpXbCR4c57sJUoE5dSuN1HCj+9e1OyUr+KatQe/+2SPOjwqQjDQ+E
+         UE6Ocotsmlk7A==
+Date:   Fri, 18 Feb 2022 07:20:37 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
+Cc:     Christian Gmeiner <christian.gmeiner@gmail.com>,
+        linux-kernel@vger.kernel.org, Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH] PCI: cadence: respond to received PTM Requests
+Message-ID: <20220218132037.GA345784@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bac4cc7e-f81e-82e6-9b60-e5e3199637d7@ti.com>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
-
-Am Fr., 18. Feb. 2022 um 11:56 Uhr schrieb Kishon Vijay Abraham I
-<kishon@ti.com>:
->
+On Fri, Feb 18, 2022 at 04:26:48PM +0530, Kishon Vijay Abraham I wrote:
 > Hi Bjorn,
->
+> 
 > On 01/02/22 3:35 am, Bjorn Helgaas wrote:
 > > Update subject line to match previous conventions ("git log --oneline
 > > drivers/pci/controller/cadence/pcie-cadence-host.c" to see).
-> >
+> > 
 > > On Mon, Jan 31, 2022 at 01:08:27PM +0100, Christian Gmeiner wrote:
 > >> This enables the Controller [RP] to automatically respond
 > >> with Response/ResponseD messages.
-> >
-> > Update to imperative mood, e.g., "Enable Controller to ...":
-> >
-> >   https://chris.beams.io/posts/git-commit/
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/maintainer-tip.rst?id=v5.16#n134
-> >
-> >> Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> >> ---
-> >>  drivers/pci/controller/cadence/pcie-cadence-host.c | 10 ++++++++++
-> >>  drivers/pci/controller/cadence/pcie-cadence.h      |  4 ++++
-> >>  2 files changed, 14 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> >> index fb96d37a135c..940c7dd701d6 100644
-> >> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> >> @@ -123,6 +123,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
-> >>      return ret;
-> >>  }
-> >>
+> > 
+
 > >> +static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
 > >> +{
-> >> +    u32 val;
+> >> +	u32 val;
 > >> +
-> >> +    val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
-> >> +    cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
-> >
+> >> +	val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
+> >> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
+> > 
 > > I assume this is some device-specific enable bit that is effectively
 > > ANDed with PCI_PTM_CTRL_ENABLE in the Precision Time Measurement
 > > Capability?
->
-> That's correct. This bit enables Controller [RP] to respond to the received PTM
-> Requests.
->
+> 
+> That's correct. This bit enables Controller [RP] to respond to the
+> received PTM Requests.
 
-With that information is it okay for you that I send a V2 of this
-patch with an improved commit message or do
-you see any other problems that I need to take into account?
+Great!  Christian, can you update the commit log to reflect that
+both this bit *and* PCI_PTM_CTRL_ENABLE must be set for the RP to
+respond to received PTM Requests?
 
--- 
-greets
---
-Christian Gmeiner, MSc
+When CDNS_PCIE_LM_TPM_CTRL_PTMRSEN is cleared, do PCI_PTM_CAP_ROOT
+and the PTM Responder Capable bit (for which we don't have a #define)
+read as zero?
 
-https://christian-gmeiner.info/privacypolicy
+I think that would be the correct behavior per PCIe r6.0, sec
+7.9.15.2, and it would avoid the confusion of having the PTM
+Capability register advertise functionality that cannot be enabled via
+the PTM Control register.
+
+> >> +/* PTM Control Register */
+> >> +#define CDNS_PCIE_LM_PTM_CTRL 	(CDNS_PCIE_LM_BASE + 0x0DA8)
+
+Other #defines in this file use lower-case hex.
+
+Bjorn
