@@ -2,448 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA44F4BAD68
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 00:52:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4CA34BADF6
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 01:05:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229605AbiBQXu4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Feb 2022 18:50:56 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:49344 "EHLO
+        id S229557AbiBRADe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Feb 2022 19:03:34 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:35108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229623AbiBQXuy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 18:50:54 -0500
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64523433BE
-        for <linux-pci@vger.kernel.org>; Thu, 17 Feb 2022 15:50:38 -0800 (PST)
-Received: by mail-il1-x130.google.com with SMTP id d7so3459395ilf.8
-        for <linux-pci@vger.kernel.org>; Thu, 17 Feb 2022 15:50:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u4jK6zM/dGsbBGtsbu+DwrbOk29KN2o86uMbiSzfAK0=;
-        b=az7hZKDGRAkoXQBEkYUWpj0gH0gHol0LQpBS5h8fK7OCa8iMwXhiDL6Z23Q34GHwkT
-         P05dl6MAjq6cFUvwju3EGm5VtVtBGuYPtbvB9AGuvIPfnL4UWJZXU+CQ6VgffIgFY3Qo
-         DYKSu07MMz6BNzbRis8o4MTmnL09N1j3s/YJt5MCubbJ6DWeD5RZsP5dBcdOQL3dM3rS
-         a4F4u3wFv/XQr7+zy9JjoUuBa96p/i+ix2LggTC2gPdLJ9zwgj5y0UxDYO2xNlqdT+jw
-         5N/8Jmn2p1LhtH2C7uCcp84Q6GFLve7QfuP7k/CStbxEAMM7qC7WU++SrkV0htgoI6CK
-         z2Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u4jK6zM/dGsbBGtsbu+DwrbOk29KN2o86uMbiSzfAK0=;
-        b=xdLRvKoZc5sWBY1LhRO832VnIo7A97U00EQQG/Zrx3Lls8YLBIZE49aeZjBlDYLQ6i
-         IpGwP/fuI+YsscYrc9Tvcsh9p4zrNHnZxLEuN+ISXAZEyisR5ivnX9zFVRajcwMIfkGr
-         /DXS9gkXWtxBPWEeCqMR4PDKDbFLPDvAzafC/RP8at+HUpybfslC8Mjn+GniRYFDg22d
-         9ncwnvldhXWDHi55bqNGMtjLHa9tEG0bXRbg/peSmLRQ4r2E7N+jzLBxzi9cYq+oGMgM
-         NR7K7K53A8As1F4xy3EAdFWY2X2FDcmOaXmURrdfeKwDXK+yDIXNoUm2NkBornfjRQtt
-         hOAQ==
-X-Gm-Message-State: AOAM530RlYGg1abaz5uMLcl+stmPWd1jvnHsc33AM0Wd3nKAMgmHHmih
-        2nOdLQF1NlfOD5bFva7yyHecTsVGfFqv166BfR8ZA43lYFcnSA==
-X-Google-Smtp-Source: ABdhPJwE+OIl8dV3jNoTmCdOxGcrp8lf33cuW1poct8jXzYwVoRqBZaGpYL+5c/kdmQjFLr7LKt61ymLRq1nG0nNp+I=
-X-Received: by 2002:a63:2354:0:b0:372:c945:bfd1 with SMTP id
- u20-20020a632354000000b00372c945bfd1mr4110168pgm.437.1645140775197; Thu, 17
- Feb 2022 15:32:55 -0800 (PST)
+        with ESMTP id S229893AbiBRADc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 19:03:32 -0500
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2044.outbound.protection.outlook.com [40.107.223.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6248415A38;
+        Thu, 17 Feb 2022 16:03:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MF0OojIi0DHgEdAXVzKq+Gk4yGwdA8fP/9m8oWMQbQ3vum9u647b1oupAwEWiDZCp84H2h04aZvQduTOtYIblz3vOOSqRN4dk8AMo6lyEeLXc9+pizDB+5XIK76O3+Pi4Mezde8kr1ZBlw75YKKD7qredYgF+ctU4IOXkEJ618xYFyIzKID8EM2vT5yqf040mJYZr7C4tiHlNMDajL1s9H40kyTIeoNFpBnWizpV3Pwm4hcgpdHur71ggtZcOZHs3bmPSNlz7DP8/CWiAMDCfHs2qnkajLk9GA/xPI4IxHEkqSBJLOmeBpkFsjY9X5oRYDi+2R8pl54Mc2GHGyPWjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HS8PWxY/fjuT2svUrLbwj/FhdkvC0bIpEav5owJfP9w=;
+ b=akm7clyahuQh0/2RbgQmZpW4HwDKFkfG3p6qT890W+Us0v9efOpLOsXKSbDkzvFjgLXN3kyPRpr6EUF2viSxjKbzE5+oz17omZ7FpIqBUSNpoE5KIAcMLdYAB8G9Md5+AOdvK0x3tMQxiQA2gZ/VV30PcH18ZXS5dASRK5QczLGUB7NztNOzSG67md02OpYUq7dn9ymbrNtHkzi06myE7/VE0kln1EvW7hfTppL/ZTJV5+KqSNL8LkTdn8RXiEoS/mCNBjnNFNRmupQCju1lg0HCnz0WRJ6pnPDTwVJYvb1h0MSE66IiuLIyMWLdB7UREsh5ErXLUkkg1XuRqGGq1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HS8PWxY/fjuT2svUrLbwj/FhdkvC0bIpEav5owJfP9w=;
+ b=hu/ffBdUbh6PWDhajjjOtYrqvK7ZVhNkw8evwiZqqw2sSL+KvpbMXmaJQtc3TPYem4q+g8bAlaUtRVfnZeWGH+4Tv3QCLXfxIzNHLGlzUJIGDB74WEWSNrGpknpfcJ+fbC5QrmxjPwtZMI3C3tjUXyA9E7p/tyJE0dHQQWc9gx//GgrDAAxYptqE0PXTZ+YfZrTXzFpbUm7FS8waOqVK1LULO0BF/TMdWP2CUgzWq5qv8r1RcuQiLD3T/uU35LaF5qyhuAsEFohH1CVCOtMtHA6ftcN7pALpVjdwNM81OnmrRx4QDUz160rYQdXHDZsQrB+idCwvh9Ss5ZjUqffoxg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (52.135.49.15) by
+ BY5PR12MB4273.namprd12.prod.outlook.com (10.255.126.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4995.15; Fri, 18 Feb 2022 00:03:08 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::e8f4:9793:da37:1bd3]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::e8f4:9793:da37:1bd3%5]) with mapi id 15.20.4995.018; Fri, 18 Feb 2022
+ 00:03:08 +0000
+Date:   Thu, 17 Feb 2022 20:03:06 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        ashok.raj@intel.com, kevin.tian@intel.com,
+        shameerali.kolothum.thodi@huawei.com
+Subject: Re: [PATCH V7 mlx5-next 15/15] vfio: Extend the device migration
+ protocol with PRE_COPY
+Message-ID: <20220218000306.GM4160@nvidia.com>
+References: <20220207172216.206415-1-yishaih@nvidia.com>
+ <20220207172216.206415-16-yishaih@nvidia.com>
+ <20220217101554.26f05eb1.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220217101554.26f05eb1.alex.williamson@redhat.com>
+X-ClientProxiedBy: BLAPR03CA0035.namprd03.prod.outlook.com
+ (2603:10b6:208:32d::10) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
 MIME-Version: 1.0
-References: <20220217171057.685705-1-ben.widawsky@intel.com>
- <20220217171931.740926-1-ben.widawsky@intel.com> <CAPcyv4i83TxCN_-Y3a5CuM2ng9bCAyLm53=wcHWutASd434gkg@mail.gmail.com>
- <20220217222208.f5krwchjljrzjieg@intel.com>
-In-Reply-To: <20220217222208.f5krwchjljrzjieg@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 17 Feb 2022 15:32:44 -0800
-Message-ID: <CAPcyv4jURh0DbJpDjEwTn-_9WtkSokJN5R3PG5tuwJSMMu_Xcw@mail.gmail.com>
-Subject: Re: [PATCH v5 01/15] cxl/region: Add region creation ABI
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e393ada6-d783-448a-96f0-08d9f2720b5f
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4273:EE_
+X-Microsoft-Antispam-PRVS: <BY5PR12MB427360BBAD62BFFFBCE885B9C2379@BY5PR12MB4273.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZoX+1wNg3cEKyD1zL1tzyTFzrdgafxLvrnSP5bVscI9v4jNOGjjNPKWcJQVSvEmFOCZ3P2WeQYvmU+By6sEBORxVWd8Hsi2kw90aSFvxJmDwxAnOwi4XkOAsjHY0P2T4IS26FcnZIfdT8/G0sJPnUDVASUCgo/foFaaKYfiqwrrJd5GEpuXhn2kbHxl0zxC62NtBQ0Y2nbI6UoSgAXZfk9U9jtKn5nel07mZq/u8aIr+dgt+6DkWN9zqmQSGdjfuLVQ14vnh3oXThJ9afq7ZvtAGNtN3hxUxQBJsVN6MzejMNobnKxwHGDFLFju0ez3S/W6s/FEwZPM/TiNoowDwp39EJxmrQPYniJL2W7ZS4QjpjsEMpm+RvMw24pq+qLkt4PyDyh2EUonKtQCboRDGxx/AGP//PBbyPJ4HiPWr2KVOuXSsBqZjfzNMmlYPtmTTpMh4jOePnm+A7+vsYVIFzkwpBaaawpBCNdHUGeGqnN+jihnR2lilIr/MYrGTR8IxKcAePeGayxLaJxP6xjbl7SJ9gzsnW1d2uYhWmapCEk89CDp32uzNvpd6PgJfNqSsDzhZs69WexzOEjSUOLTgSAehNV+78GMStrgXacS3aFKQHraRy5Kt/C4V4o0uXyqrH82lcDrAgTp2BPBVmzDE4A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6506007)(6486002)(508600001)(186003)(26005)(2616005)(36756003)(5660300002)(8936002)(6512007)(66946007)(316002)(1076003)(66556008)(2906002)(4326008)(6916009)(66476007)(38100700002)(86362001)(8676002)(33656002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zYXdrCUqeQsxfbfTJUKjpBY5icyTYER858BGI09YMtFNrK0q62G/zhYFRKpK?=
+ =?us-ascii?Q?/85AK6xVw3llwrO5NKBpUBOZbEPyYhFiAwb1fS0YteTlbcRP8/EIUS/DgRby?=
+ =?us-ascii?Q?psutQDrCe7JG1r/CsBVQ5znb+H2UHc/6tGMaYF99WcQQxXx2nyj2gNmxD3tp?=
+ =?us-ascii?Q?sdeukA+XGkjUEj6TQWewfpYj++b6zlKZQ2vR39T+Jg96o5RBPUHvOFXq5Rn2?=
+ =?us-ascii?Q?Dxkpu7lsX4kHzyRWIKZmkb/rSMVNPsGpYCQuikJMJa3SrCy3GL/tRtIEBW2U?=
+ =?us-ascii?Q?rYeNC8T5hJwJq2BEJbN+n0jR67dn/qvUpyQg4CF9C0/M7ynx0k1k7s5smW5g?=
+ =?us-ascii?Q?Lu7V75TvANjLxQ7TGaSe/xcxN6PRvs4bCuH4bqCvdFp/FQxbHxrEU8dqlH02?=
+ =?us-ascii?Q?zklDvm2BG5wfE6VJfp7BIp23C79t0LNWrxwHw0vy2xCDuHTz5MNsLFgeZa4u?=
+ =?us-ascii?Q?yfvH5MgaZXzCUmewsPm2LcJ1flKVicKlDeEIIvImQy1pFHvtLgU2OyXCxCef?=
+ =?us-ascii?Q?tdUwLGWWZ6KbTsRj8OtwDjuBM34s7jt90wo87B/CY/qZD+gW8f3yVkTIxx6L?=
+ =?us-ascii?Q?tMP5KSx+Qcb35HgwQCTgm6+Ovo+6152Dg3iV6nD+00VfY3LlC4fpczX1+v98?=
+ =?us-ascii?Q?W1V+ZE7rcKAvottwFQmV0SgxnuCr9lPpd13aWaiAlqQ4KMpYRR+j/ruWss7J?=
+ =?us-ascii?Q?cfzx+fWCfEXJBqAXmOJPNqvOIq3TyVoB4e13EszakvTvGbMhc7Cej9rgwaGa?=
+ =?us-ascii?Q?LggNdhFCV67wS8umEMJJgCUaslXXGxHktHc4EAFuNWI+V0cORju7WvKbJLcz?=
+ =?us-ascii?Q?PdeOZRe11i1YPPvuHbQcgimNdWC7ILz8ZRjOCTDRlTVL5f1CC20RXmAV4XL1?=
+ =?us-ascii?Q?13BgaL4coJQmnsVaYEbbxb1Ry89A6N6Xpp/d6O3WBDGPeN5s5/ZlK3C4V5nq?=
+ =?us-ascii?Q?1EQ4rzWuVhgWPN8rJRRBls6EZTF0C88IFzP/CIYnFYqu2hTjVGhIPA8LKOFF?=
+ =?us-ascii?Q?P3z5OinkPmzQMEGjOwkJsdU/q0oXjsCl34O3zkwaYrZ7ungtwz1WQGlX2jjZ?=
+ =?us-ascii?Q?mlKIzaEfLGl9VDsKF58FuGmLU1pDcLrK42IrbD8yR3IPIxW3Tnr91YVfICN4?=
+ =?us-ascii?Q?VppcUcot9610dYXeXSLGdY9TvT1d+KU1wu5Ow4KrRhQfo9rrI4fI5uEEiN1o?=
+ =?us-ascii?Q?kPlnnVI2ZXlC4MIJB47PF2GBl6B6Kti3L1xcAnBQxYFAKqzFenDJ8XJnkuPL?=
+ =?us-ascii?Q?CqL4Z9lzl6FJ2ien5C4EK5yJATE1WqjZcfDnf+tfJt4UEd/3NCl+RjFKgSIv?=
+ =?us-ascii?Q?/6FjnUcxXvG7Mdq521V8rNyd1SfB+HqL8sLHROWw2ReGcQZvc+So4pFxPvzu?=
+ =?us-ascii?Q?ThM8OZeulmdEASfeoAsedLr4BNv/IfX5aq62m3VGmQBuXlmyA4HJXov2TnoO?=
+ =?us-ascii?Q?Zy4Duh2BrFuFt6sV0+NMjRth1TVFEcwimRLoJ8Y3mhj8dmGI2JX65eTawhLe?=
+ =?us-ascii?Q?NTKdJHbWFmxIaLhl+pfNxVPxlfwKlYsmF2ZW6AvRAT9ZzYcczA+LRAAHIyKt?=
+ =?us-ascii?Q?rytfoNF6vs49N5kUKPs=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e393ada6-d783-448a-96f0-08d9f2720b5f
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2022 00:03:08.5017
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9QlXYI6ACPVmoF1b3iVyiyBXULfkJlR775HjbK8hPT0VtYwOT7zvbGQ9Pkvv3oxZ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4273
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 17, 2022 at 2:22 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 22-02-17 09:58:04, Dan Williams wrote:
-> > On Thu, Feb 17, 2022 at 9:19 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > Regions are created as a child of the decoder that encompasses an
-> > > address space with constraints. Regions have a number of attributes that
-> > > must be configured before the region can be activated.
-> > >
-> > > The ABI is not meant to be secure, but is meant to avoid accidental
-> > > races. As a result, a buggy process may create a region by name that was
-> > > allocated by a different process. However, multiple processes which are
-> > > trying not to race with each other shouldn't need special
-> > > synchronization to do so.
-> > >
-> > > // Allocate a new region name
-> > > region=$(cat /sys/bus/cxl/devices/decoder0.0/create_region)
-> > >
-> > > // Create a new region by name
-> > > while
-> > > region=$(cat /sys/bus/cxl/devices/decoder0.0/create_region)
-> > > ! echo $region > /sys/bus/cxl/devices/decoder0.0/create_region
-> > > do true; done
-> > >
-> > > // Region now exists in sysfs
-> > > stat -t /sys/bus/cxl/devices/decoder0.0/$region
-> > >
-> > > // Delete the region, and name
-> > > echo $region > /sys/bus/cxl/devices/decoder0.0/delete_region
-> > >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> >
-> > Looking good, a few more fixes and cleanups identified below.
-> >
-> > >
-> > > ---
-> > > Changes since v4:
-> > > - Add the missed base attributes addition
-> > >
-> > > ---
-> > >  Documentation/ABI/testing/sysfs-bus-cxl       |  23 ++
-> > >  .../driver-api/cxl/memory-devices.rst         |  11 +
-> > >  drivers/cxl/core/Makefile                     |   1 +
-> > >  drivers/cxl/core/core.h                       |   3 +
-> > >  drivers/cxl/core/port.c                       |  11 +
-> > >  drivers/cxl/core/region.c                     | 213 ++++++++++++++++++
-> > >  drivers/cxl/cxl.h                             |   5 +
-> > >  drivers/cxl/region.h                          |  23 ++
-> > >  tools/testing/cxl/Kbuild                      |   1 +
-> > >  9 files changed, 291 insertions(+)
-> > >  create mode 100644 drivers/cxl/core/region.c
-> > >  create mode 100644 drivers/cxl/region.h
-> > >
-> > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> > > index 7c2b846521f3..e5db45ea70ad 100644
-> > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > > @@ -163,3 +163,26 @@ Description:
-> > >                 memory (type-3). The 'target_type' attribute indicates the
-> > >                 current setting which may dynamically change based on what
-> > >                 memory regions are activated in this decode hierarchy.
-> > > +
-> > > +What:          /sys/bus/cxl/devices/decoderX.Y/create_region
-> > > +Date:          January, 2022
-> > > +KernelVersion: v5.18
-> > > +Contact:       linux-cxl@vger.kernel.org
-> > > +Description:
-> > > +               Write a value of the form 'regionX.Y:Z' to instantiate a new
-> > > +               region within the decode range bounded by decoderX.Y. The value
-> > > +               written must match the current value returned from reading this
-> > > +               attribute. This behavior lets the kernel arbitrate racing
-> > > +               attempts to create a region. The thread that fails to write
-> > > +               loops and tries the next value. Regions must be created for root
-> > > +               decoders, and must subsequently configured and bound to a region
-> > > +               driver before they can be used.
-> > > +
-> > > +What:          /sys/bus/cxl/devices/decoderX.Y/delete_region
-> > > +Date:          January, 2022
-> > > +KernelVersion: v5.18
-> > > +Contact:       linux-cxl@vger.kernel.org
-> > > +Description:
-> > > +               Deletes the named region.  The attribute expects a region in the
-> > > +               form "regionX.Y:Z". The region's name, allocated by reading
-> > > +               create_region, will also be released.
-> > > diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/memory-devices.rst
-> > > index db476bb170b6..66ddc58a21b1 100644
-> > > --- a/Documentation/driver-api/cxl/memory-devices.rst
-> > > +++ b/Documentation/driver-api/cxl/memory-devices.rst
-> > > @@ -362,6 +362,17 @@ CXL Core
-> > >  .. kernel-doc:: drivers/cxl/core/mbox.c
-> > >     :doc: cxl mbox
-> > >
-> > > +CXL Regions
-> > > +-----------
-> > > +.. kernel-doc:: drivers/cxl/region.h
-> > > +   :identifiers:
-> > > +
-> > > +.. kernel-doc:: drivers/cxl/core/region.c
-> > > +   :doc: cxl core region
-> > > +
-> > > +.. kernel-doc:: drivers/cxl/core/region.c
-> > > +   :identifiers:
-> > > +
-> > >  External Interfaces
-> > >  ===================
-> > >
-> > > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> > > index 6d37cd78b151..39ce8f2f2373 100644
-> > > --- a/drivers/cxl/core/Makefile
-> > > +++ b/drivers/cxl/core/Makefile
-> > > @@ -4,6 +4,7 @@ obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> > >  ccflags-y += -I$(srctree)/drivers/cxl
-> > >  cxl_core-y := port.o
-> > >  cxl_core-y += pmem.o
-> > > +cxl_core-y += region.o
-> > >  cxl_core-y += regs.o
-> > >  cxl_core-y += memdev.o
-> > >  cxl_core-y += mbox.o
-> > > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> > > index 1a50c0fc399c..adfd42370b28 100644
-> > > --- a/drivers/cxl/core/core.h
-> > > +++ b/drivers/cxl/core/core.h
-> > > @@ -9,6 +9,9 @@ extern const struct device_type cxl_nvdimm_type;
-> > >
-> > >  extern struct attribute_group cxl_base_attribute_group;
-> > >
-> > > +extern struct device_attribute dev_attr_create_region;
-> > > +extern struct device_attribute dev_attr_delete_region;
-> > > +
-> > >  struct cxl_send_command;
-> > >  struct cxl_mem_query_commands;
-> > >  int cxl_query_cmd(struct cxl_memdev *cxlmd,
-> > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > > index 1e785a3affaa..860e91cae29b 100644
-> > > --- a/drivers/cxl/core/port.c
-> > > +++ b/drivers/cxl/core/port.c
-> > > @@ -213,6 +213,8 @@ static struct attribute_group cxl_decoder_base_attribute_group = {
-> > >  };
-> > >
-> > >  static struct attribute *cxl_decoder_root_attrs[] = {
-> > > +       &dev_attr_create_region.attr,
-> > > +       &dev_attr_delete_region.attr,
-> > >         &dev_attr_cap_pmem.attr,
-> > >         &dev_attr_cap_ram.attr,
-> > >         &dev_attr_cap_type2.attr,
-> > > @@ -270,6 +272,8 @@ static void cxl_decoder_release(struct device *dev)
-> > >         struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> > >         struct cxl_port *port = to_cxl_port(dev->parent);
-> > >
-> > > +       ida_free(&cxld->region_ida, cxld->next_region_id);
-> > > +       ida_destroy(&cxld->region_ida);
-> > >         ida_free(&port->decoder_ida, cxld->id);
-> > >         kfree(cxld);
-> > >  }
-> > > @@ -1244,6 +1248,13 @@ static struct cxl_decoder *cxl_decoder_alloc(struct cxl_port *port,
-> > >         cxld->target_type = CXL_DECODER_EXPANDER;
-> > >         cxld->platform_res = (struct resource)DEFINE_RES_MEM(0, 0);
-> > >
-> > > +       mutex_init(&cxld->id_lock);
-> > > +       ida_init(&cxld->region_ida);
-> > > +       rc = ida_alloc(&cxld->region_ida, GFP_KERNEL);
-> > > +       if (rc < 0)
-> > > +               goto err;
-> > > +
-> > > +       cxld->next_region_id = rc;
-> > >         return cxld;
-> > >  err:
-> > >         kfree(cxld);
-> > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > > new file mode 100644
-> > > index 000000000000..5576952e4aa1
-> > > --- /dev/null
-> > > +++ b/drivers/cxl/core/region.c
-> > > @@ -0,0 +1,213 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-> > > +#include <linux/device.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/idr.h>
-> > > +#include <region.h>
-> > > +#include <cxl.h>
-> > > +#include "core.h"
-> > > +
-> > > +/**
-> > > + * DOC: cxl core region
-> > > + *
-> > > + * CXL Regions represent mapped memory capacity in system physical address
-> > > + * space. Whereas the CXL Root Decoders identify the bounds of potential CXL
-> > > + * Memory ranges, Regions represent the active mapped capacity by the HDM
-> > > + * Decoder Capability structures throughout the Host Bridges, Switches, and
-> > > + * Endpoints in the topology.
-> > > + */
-> > > +
-> > > +static void cxl_region_release(struct device *dev);
-> >
-> > Why forward declare this versus move cxl_region_type after the definition?
-> >
-> > No other CXL object release functions are forward declared.
-> >
-> > > +
-> > > +static const struct device_type cxl_region_type = {
-> > > +       .name = "cxl_region",
-> > > +       .release = cxl_region_release,
-> > > +};
-> > > +
-> > > +static struct cxl_region *to_cxl_region(struct device *dev)
-> > > +{
-> > > +       if (dev_WARN_ONCE(dev, dev->type != &cxl_region_type,
-> > > +                         "not a cxl_region device\n"))
-> > > +               return NULL;
-> > > +
-> > > +       return container_of(dev, struct cxl_region, dev);
-> > > +}
-> > > +
-> > > +static struct cxl_region *cxl_region_alloc(struct cxl_decoder *cxld)
-> > > +{
-> > > +       struct cxl_region *cxlr;
-> > > +       struct device *dev;
-> > > +
-> > > +       cxlr = kzalloc(sizeof(*cxlr), GFP_KERNEL);
-> > > +       if (!cxlr)
-> > > +               return ERR_PTR(-ENOMEM);
-> > > +
-> > > +       dev = &cxlr->dev;
-> > > +       device_initialize(dev);
-> > > +       dev->parent = &cxld->dev;
-> > > +       device_set_pm_not_required(dev);
-> > > +       dev->bus = &cxl_bus_type;
-> > > +       dev->type = &cxl_region_type;
-> > > +
-> > > +       return cxlr;
-> > > +}
-> > > +
-> > > +static void unregister_region(void *_cxlr)
-> > > +{
-> > > +       struct cxl_region *cxlr = _cxlr;
-> > > +
-> > > +       if (!test_and_set_bit(REGION_DEAD, &cxlr->flags))
-> > > +               device_unregister(&cxlr->dev);
-> >
-> > I thought REGION_DEAD was needed to prevent double
-> > devm_release_action(), not double unregister?
-> >
-> > > +}
-> > > +
-> > > +/**
-> > > + * devm_cxl_add_region - Adds a region to a decoder
-> > > + * @cxld: Parent decoder.
-> > > + * @cxlr: Region to be added to the decoder.
-> > > + *
-> > > + * This is the second step of region initialization. Regions exist within an
-> > > + * address space which is mapped by a @cxld. That @cxld must be a root decoder,
-> > > + * and it enforces constraints upon the region as it is configured.
-> > > + *
-> > > + * Return: 0 if the region was added to the @cxld, else returns negative error
-> > > + * code. The region will be named "regionX.Y.Z" where X is the port, Y is the
-> > > + * decoder id, and Z is the region number.
-> > > + */
-> > > +static struct cxl_region *devm_cxl_add_region(struct cxl_decoder *cxld)
-> > > +{
-> > > +       struct cxl_port *port = to_cxl_port(cxld->dev.parent);
-> > > +       struct cxl_region *cxlr;
-> > > +       struct device *dev;
-> > > +       int rc;
-> > > +
-> > > +       cxlr = cxl_region_alloc(cxld);
-> > > +       if (IS_ERR(cxlr))
-> > > +               return cxlr;
-> > > +
-> > > +       dev = &cxlr->dev;
-> > > +
-> > > +       cxlr->id = cxld->next_region_id;
-> > > +       rc = dev_set_name(dev, "region%d.%d:%d", port->id, cxld->id, cxlr->id);
-> > > +       if (rc)
-> > > +               goto err_out;
-> > > +
-> > > +       /* affirm that release will have access to the decoder's region ida  */
-> > > +       get_device(&cxld->dev);
-> > > +
-> > > +       rc = device_add(dev);
-> > > +       if (!rc)
-> > > +               rc = devm_add_action_or_reset(port->uport, unregister_region,
-> > > +                                             cxlr);
-> > > +       if (rc)
-> > > +               goto err_out;
-> >
-> > All the other usages in device_add() in the subsystem follow the style of:
-> >
-> > rc = device_add(dev);
-> > if (rc)
-> >     goto err;
-> >
-> > ...any reason to be unique here and indent the success case?
-> >
-> >
-> > > +
-> > > +       return cxlr;
-> > > +
-> > > +err_out:
-> > > +       put_device(dev);
-> > > +       kfree(cxlr);
-> >
-> > This is a double-free of cxlr;
-> >
-> > > +       return ERR_PTR(rc);
-> > > +}
-> > > +
-> > > +static ssize_t create_region_show(struct device *dev,
-> > > +                                 struct device_attribute *attr, char *buf)
-> > > +{
-> > > +       struct cxl_port *port = to_cxl_port(dev->parent);
-> > > +       struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> > > +
-> > > +       return sysfs_emit(buf, "region%d.%d:%d\n", port->id, cxld->id,
-> > > +                         cxld->next_region_id);
-> > > +}
-> > > +
-> > > +static ssize_t create_region_store(struct device *dev,
-> > > +                                  struct device_attribute *attr,
-> > > +                                  const char *buf, size_t len)
-> > > +{
-> > > +       struct cxl_port *port = to_cxl_port(dev->parent);
-> > > +       struct cxl_decoder *cxld = to_cxl_decoder(dev);
-> > > +       struct cxl_region *cxlr;
-> > > +       int d, p, r, rc = 0;
-> > > +
-> > > +       if (sscanf(buf, "region%d.%d:%d", &p, &d, &r) != 3)
-> > > +               return -EINVAL;
-> > > +
-> > > +       if (port->id != p || cxld->id != d)
-> > > +               return -EINVAL;
-> > > +
-> > > +       rc = mutex_lock_interruptible(&cxld->id_lock);
-> > > +       if (rc)
-> > > +               return rc;
-> > > +
-> > > +       if (cxld->next_region_id != r) {
-> > > +               rc = -EINVAL;
-> > > +               goto out;
-> > > +       }
-> > > +
-> > > +       rc = ida_alloc(&cxld->region_ida, GFP_KERNEL);
-> > > +       if (rc < 0) {
-> > > +               dev_dbg(dev, "Failed to get next cached id (%d)\n", rc);
-> > > +               goto out;
-> > > +       }
-> > > +
-> > > +       cxlr = devm_cxl_add_region(cxld);
-> > > +       if (IS_ERR(cxlr)) {
-> > > +               rc = PTR_ERR(cxlr);
-> > > +               goto out;
-> > > +       }
-> > > +
-> > > +       cxld->next_region_id = rc;
-> >
-> > This looks like a leak in the case when devm_cxl_add_region() fails,
-> > so just move it above that call.
-> >
->
-> It's not super simple with the current pre-caching. If you move this above
-> devm_cxl_add_region(), then you lose the previously pre-cached region. I think
-> the cleaner solution is to just free the ida on failure. Pretty sure no matter
-> what method you go, you need an ida_free in there somewhere. Do you see another
-> way?
+On Thu, Feb 17, 2022 at 10:15:54AM -0700, Alex Williamson wrote:
 
-As soon as one thread has successfully acquired the next_region_id
-then it is safe to advance and assume that the devm_cxl_add_region()
-owns releasing that id.
+> I feel obligated to ask, is PRE_COPY support essentially RFC at this
+> point since we have no proposed in-kernel users?
 
-In fact, just make that implicit. Move the ida_alloc() and the
-next_region_id advancement internal to cxl_region_alloc() with a
-device_lock_assert() for the id_lock. Then the recovery of the
-allocated id happens naturally like all the other ids in the subsystem
-i.e. at release time.
+Yes, it is included here because the kernel in v1 had PRE_COPY, so it
+seemed essential to show how this could continue to look to evaluate
+v2.
+
+NVIDIA has an out of tree driver that implemented PRE_COPY in the v1
+protocol, and we have some future plan to use it in a in-tree driver.
+
+> It seems like we're winding down comments on the remainder of the
+> series and I feel ok with where it's headed and the options we have
+> available for future extensions.  
+
+Thanks, it was a lot of work for everyone to get here!
+
+Yishai has all the revisions from Kevin included, he will sent it on
+Sunday. Based on this Leon will make a formal PR next week so it can
+go into linux-next through your tree. We have to stay co-ordinated
+with our netdev driver branch..
+
+I will ping the acc team and make it priority to review their next
+vresion. Let's try to include their driver as well.
+
+We'll start to make a more review ready qemu series.
+
+> PS - Why is this a stand-alone ioctl rather than a DEVICE_FEATURE?
+
+You asked for the ioctl to be on the data_fd, so there is no
+DEVICE_FEATURE infrastructure and I think it doesn't make sense to put
+a multiplexor there. We have lots of ioctl numbers and don't want this
+to be complicated for performance.
+
+Thanks,
+Jason
