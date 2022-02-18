@@ -2,326 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 995894BC25B
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 22:54:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 729C34BC270
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 23:05:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240026AbiBRVyP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Feb 2022 16:54:15 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52660 "EHLO
+        id S229553AbiBRWGG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Feb 2022 17:06:06 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235061AbiBRVyO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Feb 2022 16:54:14 -0500
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F7AB53B61;
-        Fri, 18 Feb 2022 13:53:56 -0800 (PST)
-Received: by mail-ej1-x62a.google.com with SMTP id d10so17883061eje.10;
-        Fri, 18 Feb 2022 13:53:56 -0800 (PST)
+        with ESMTP id S234097AbiBRWGF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Feb 2022 17:06:05 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B5781712BE
+        for <linux-pci@vger.kernel.org>; Fri, 18 Feb 2022 14:05:46 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id l9so8232988plg.0
+        for <linux-pci@vger.kernel.org>; Fri, 18 Feb 2022 14:05:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FWjdBe+0iGvT17Rwh8+jH620QfW830WBiVyztTPJiZ4=;
-        b=cuJQ0U/C5XgQav95flETsO4jqW2/uNxp6h5ICO0we+V6X/hIWc76b2/nP3HBNIo622
-         9iEjeXPglvTjn8DRMW/M8Sg34xvRO9lxJJ0gxMe7LitkhgmEQ9Aur1chH4I+mLgMEl7U
-         iZ1ZJbTspcYz03LIe0DT0BdKkOCbytJvurVhXiHTB+/hGeNc4GduB6IosQHTUEr4ZtSl
-         QHXMmckdzT/J6Be9rKfJPucKeU6dvBy/jHgPmkMradZexEk0FzkC1HAYdJEKUIJOFMS3
-         oB83vDNlcJKdjAeWcukBt6BjKNDX9i+IURZghm/ss3F6DFYLAT25XbNnlgqlzIGZDUsT
-         AVjA==
+         :cc;
+        bh=vvUsBk8WOyHWPnfmlJUYHHjEnYQBDUZG873sZWj142g=;
+        b=K4s9vs2YZWhm+MEIFx3oIqxhn2FvZQ6dkjYcFCVQa0VrvblHEWi+u/adBMkp683Wf5
+         mULhbASkbQbVwiOBSavb35xHh+4vNOxePt1U9y6NKDKDKQs8GaNdw4m2qKSF4nCQuouC
+         rhd7+wky5+6uxalrFoJ4YHiUX/5CAQRnpRfv1BVDms0xfRVz4dpQBY+ed+4Q54jdG98g
+         RLZ6x/dtrOtLcwbqk0wJG4ElefoLKPKlbdGpq73HJNfXsdValYIijqBIfJC/14hIGmiv
+         c1zhMRkE4PMR6pPwvZEc2Q/SPJNc0ylpoK5IGFXubPDncT9pKX3+5PDev2DtwQ7xGp0B
+         nt3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FWjdBe+0iGvT17Rwh8+jH620QfW830WBiVyztTPJiZ4=;
-        b=lacZoBw05pYKJQzQhdW8nVrkZlLWrYDQTW73psZIQTO04mHmLOWlj7m0xMSWcB2/GJ
-         yq5bpXKBgoWRWakaOjFKOkgHysjsKijmxnQhDRdxMopw63n/1p2iUlrz9mOd9qsy2XVz
-         ORSIwddtEUVa6aZgpwDkpsixQPn1nZS6iyUwLTEg0lHYTPu37fAO605JWitEJL5j7nkM
-         z4ezUded1TortdlRzzIMObSW5YSbvt6IxzIdypeyK+wDYHdmreihnRUfy6Q2X/QkRcyX
-         PgUviuecawE+U5lm42wTpCWFLz2MBJehx16nDzP1gtW3AaN++NoKevL5PDVUIy/cUZCE
-         TWrw==
-X-Gm-Message-State: AOAM531CE4yvPgxpvRiC2NCWWUVAFnlLzfknUuQ2vYkmjrzOM/MqywWI
-        zKd6R9vi34cpqARB3TOMDoZ+G0vj9dF6AaVRe3s=
-X-Google-Smtp-Source: ABdhPJxTYk1PuoLsKrkmYSnq/p7pVMta5oAECeyrazqKqG1PmTQ0ULGxXm/IXzsyeVcQAaqxnu7qPX3Oa8lysB45NM8=
-X-Received: by 2002:a17:906:5f89:b0:6d0:226c:628d with SMTP id
- a9-20020a1709065f8900b006d0226c628dmr7974725eju.646.1645221234740; Fri, 18
- Feb 2022 13:53:54 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=vvUsBk8WOyHWPnfmlJUYHHjEnYQBDUZG873sZWj142g=;
+        b=eJshPWZEAqx2fYxE8PZTzgX2NJ8849AtiLU6h9Nm9MLDhTp75C7c7u04ndUJUDXRnF
+         pqd3zReMKBoX8TTVUzHN11Z2zRdzP99yJHgJ3KDwLz3yq9Bpshqw8bVc2zz/TAvWIqy0
+         Ads1XSBmHEx7Qb68PvQCN0PfAjQDxL7uTwCP2LG6hc4Lif7oZWP5iD6Wqma5piarRIYE
+         7wPqB/ogy5UBmMudVr9iL69zoUg8JAW3d48yxk32s+lLfH6p1fITIbTNHXxULjqjloLd
+         LPom03Kq/3rLqWijZJ3uBH7SmDIhWk5qKz/3ImL06XJLuGBVAD2+7oecoRVYeVDKNWl5
+         9ykQ==
+X-Gm-Message-State: AOAM533wZiy0JizILWMSLwo40slGN/gxaTqbe9wic1KTfgXmA0iadXec
+        ocsH4BdRTu55rK0my0Oy42lby5d0FGETK6TzwTsefQ==
+X-Google-Smtp-Source: ABdhPJyXDciKyO7mjGd2xYKr0AiM1W/M7sz3B7BSgqp5Vv+OSUq8q6jdOz+Q9YgFsMHh7MHyP4i9xutC6svUK1/BZEk=
+X-Received: by 2002:a17:902:7296:b0:14b:4bc6:e81 with SMTP id
+ d22-20020a170902729600b0014b4bc60e81mr9291198pll.132.1645221945889; Fri, 18
+ Feb 2022 14:05:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20220105150239.9628-1-pali@kernel.org> <20220112151814.24361-1-pali@kernel.org>
- <20220112151814.24361-12-pali@kernel.org> <87wnhxjxlq.fsf@BL-laptop>
- <20220214150923.a5ttxoh426cfxn4v@pali> <87tud1jwpr.fsf@BL-laptop>
- <CAEzXK1qYKVk7QiSY_DwqkZ7WV6WU06WBtiqZx0JJCc+mOP-7Kg@mail.gmail.com>
- <CAEzXK1rj7pOvJgAMd11TJVqzgWD2GSJ-25_BWL7X9wiZWOhieQ@mail.gmail.com> <20220215105214.f5biuptsruoredqi@pali>
-In-Reply-To: <20220215105214.f5biuptsruoredqi@pali>
-From:   =?UTF-8?B?THXDrXMgTWVuZGVz?= <luis.p.mendes@gmail.com>
-Date:   Fri, 18 Feb 2022 21:53:43 +0000
-Message-ID: <CAEzXK1qbv+cuRqoNh9_JQK=ViDtO9a+2S9sRMr-o4dUvRnn4Uw@mail.gmail.com>
-Subject: Re: [PATCH v2 11/11] ARM: dts: armada-385.dtsi: Add definitions for
- PCIe legacy INTx interrupts
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com> <20210804161839.3492053-3-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20210804161839.3492053-3-Jonathan.Cameron@huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 18 Feb 2022 14:05:35 -0800
+Message-ID: <CAPcyv4iiZMd6GmyRG+SMcYF_5JEqj8zrti_gjffTvOE27srbUw@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/4] spdm: Introduce a library for DMTF SPDM
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
+        "open list:KEYS-TRUSTED" <keyrings@vger.kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Linuxarm <linuxarm@huawei.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Jeremy Kerr <jk@codeconstruct.com.au>,
+        David E Box <david.e.box@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Successfully tested on my custom A388 system with two PCI express slots.
+On Wed, Aug 4, 2021 at 9:23 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> The Security Protocol and Data Model (SPDM) defines messages,
+> data objects and sequences for performing message exchanges between
+> devices over various transports and physical media.
+>
+> As the kernel supports several possible transports (mctp, PCI DOE)
+> introduce a library than can in turn be used with all those transports.
+>
+> There are a large number of open questions around how we do this that
+> need to be resolved. These include:
+> *  Key chain management
+>    - Current approach is to use a keychain provide as part of per transport
+>      initialization for the root certificates which are assumed to be
+>      loaded into that keychain, perhaps in an initrd script.
+>    - Each SPDM instance then has its own keychain to manage its
+>      certificates. It may make sense to drop this, but that looks like it
+>      will make a lot of the standard infrastructure harder to use.
+>  *  ECC algorithms needing ASN1 encoded signatures.  I'm struggling to find
+>     any specification that actual 'requires' that choice vs raw data, so my
+>     guess is that this is a question of existing usecases (x509 certs seem
+>     to use this form, but CHALLENGE_AUTH SPDM seems to use raw data).
+>     I'm not sure whether we are better off just encoding the signature in
+>     ASN1 as currently done in this series, or if it is worth a tweaking
+>     things in the crypto layers.
+>  *  Lots of options in actual implementation to look at.
+>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  lib/Kconfig  |    3 +
+>  lib/Makefile |    2 +
+>  lib/spdm.c   | 1196 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1201 insertions(+)
+>
+> diff --git a/lib/Kconfig b/lib/Kconfig
+> index ac3b30697b2b..0aa2fef6a592 100644
+> --- a/lib/Kconfig
+> +++ b/lib/Kconfig
+> @@ -704,3 +704,6 @@ config PLDMFW
+>
+>  config ASN1_ENCODER
+>         tristate
+> +
+> +config SPDM
+> +       tristate
+> diff --git a/lib/Makefile b/lib/Makefile
+> index 2cc359ec1fdd..566166d6936e 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -282,6 +282,8 @@ obj-$(CONFIG_PERCPU_TEST) += percpu_test.o
+>  obj-$(CONFIG_ASN1) += asn1_decoder.o
+>  obj-$(CONFIG_ASN1_ENCODER) += asn1_encoder.o
+>
+> +obj-$(CONFIG_SPDM) += spdm.o
+> +
+>  obj-$(CONFIG_FONT_SUPPORT) += fonts/
+>
+>  hostprogs      := gen_crc32table
+> diff --git a/lib/spdm.c b/lib/spdm.c
+> new file mode 100644
+> index 000000000000..3ce2341647f8
+> --- /dev/null
+> +++ b/lib/spdm.c
+> @@ -0,0 +1,1196 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * DMTF Security Protocol and Data Model
+> + *
+> + * Copyright (C) 2021 Huawei
+> + *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> + */
+> +
+> +#include <linux/asn1_encoder.h>
+> +#include <linux/asn1_ber_bytecode.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/cred.h>
+> +#include <linux/dev_printk.h>
+> +#include <linux/digsig.h>
+> +#include <linux/idr.h>
+> +#include <linux/key.h>
+> +#include <linux/module.h>
+> +#include <linux/random.h>
+> +#include <linux/spdm.h>
+> +
+> +#include <crypto/akcipher.h>
+> +#include <crypto/hash.h>
+> +#include <crypto/public_key.h>
+> +#include <keys/asymmetric-type.h>
+> +#include <keys/user-type.h>
+> +#include <asm/unaligned.h>
+> +
+> +/*
+> + * Todo
+> + * - Secure channel setup.
+> + * - Multiple slot support.
+> + * - Measurement support (over secure channel or within CHALLENGE_AUTH.
+> + * - Support more core algorithms (not CMA does not require them, but may use
+> + *   them if present.
+> + * - Extended algorithm, support.
+> + */
+> +/*
+> + * Discussions points
+> + * 1. Worth adding an SPDM layer around a transport layer?
 
-If you wish you can add a:
-Tested-by: Luis Mendes <luis.p.mendes@gmail.com>
+I came here to say yes to this question. I am seeing interest in SPDM
+outside of a DOE transport.
 
-On Tue, Feb 15, 2022 at 10:52 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
->
-> Hello! armada-388.dtsi file has #include "armada-385.dtsi" line and
-> therefore is already covered by this my patch.
->
-> Gregory's question was about A380.
->
-> But if you want, you can test this patch series (which already covers
-> A388) on your A388 HW. It is still better to do tests on more HW.
->
-> On Tuesday 15 February 2022 10:48:17 Lu=C3=ADs Mendes wrote:
-> > Hello,
-> >
-> > Sorry for jumping in the conversation, but I read this thread and I
-> > have an Armada A388 HW so I can test it, if desired.
-> >
-> > Lu=C3=ADs
-> >
-> >
-> > On Tue, Feb 15, 2022 at 10:47 AM Lu=C3=ADs Mendes <luis.p.mendes@gmail.=
-com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > Sorry for jumping in the conversation, but I read this thread and I h=
-ave an Armada A388 HW so I can test it, if desired.
-> > >
-> > > Lu=C3=ADs
-> > >
-> > > On Mon, Feb 14, 2022 at 7:57 PM Gregory CLEMENT <gregory.clement@boot=
-lin.com> wrote:
-> > >>
-> > >> Hello,
-> > >>
-> > >> > On Monday 14 February 2022 16:07:13 Gregory CLEMENT wrote:
-> > >> >> Hello Pali,
-> > >> >>
-> > >> >> > With this change legacy INTA, INTB, INTC and INTD interrupts ar=
-e reported
-> > >> >> > separately and not mixed into one Linux virq source anymore.
-> > >> >> >
-> > >> >> > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> > >> >> > ---
-> > >> >> >  arch/arm/boot/dts/armada-385.dtsi | 52 +++++++++++++++++++++++=
-+++-----
-> > >> >>
-> > >> >> Is there any reason for not doing the same change in armada-380.d=
-tsi ?
-> > >> >
-> > >> > I do not have A380 HW, so I did this change only for A385 which I =
-have
-> > >> > tested.
-> > >>
-> > >> OK fair enough.
-> > >>
-> > >> So you can add my
-> > >> Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> > >>
-> > >> Moreover to keep biscetability  this patch should be merged after th=
-e
-> > >> support in the driver. So the easier is to let merge it through the =
-PCI
-> > >> subsystem with the other patches from this series. I do not think th=
-ere
-> > >> will be any other changes in this file so there won't be any merge
-> > >> conflicts.
-> > >>
-> > >> Thanks,
-> > >>
-> > >> Gr=C3=A9gory
-> > >>
-> > >>
-> > >> >
-> > >> >> Gr=C3=A9gory
-> > >> >>
-> > >> >> >  1 file changed, 44 insertions(+), 8 deletions(-)
-> > >> >> >
-> > >> >> > diff --git a/arch/arm/boot/dts/armada-385.dtsi b/arch/arm/boot/=
-dts/armada-385.dtsi
-> > >> >> > index f0022d10c715..83392b92dae2 100644
-> > >> >> > --- a/arch/arm/boot/dts/armada-385.dtsi
-> > >> >> > +++ b/arch/arm/boot/dts/armada-385.dtsi
-> > >> >> > @@ -69,16 +69,25 @@
-> > >> >> >                            reg =3D <0x0800 0 0 0 0>;
-> > >> >> >                            #address-cells =3D <3>;
-> > >> >> >                            #size-cells =3D <2>;
-> > >> >> > +                          interrupt-names =3D "intx";
-> > >> >> > +                          interrupts-extended =3D <&gic GIC_SP=
-I 29 IRQ_TYPE_LEVEL_HIGH>;
-> > >> >> >                            #interrupt-cells =3D <1>;
-> > >> >> >                            ranges =3D <0x82000000 0 0 0x8200000=
-0 0x1 0 1 0
-> > >> >> >                                      0x81000000 0 0 0x81000000 =
-0x1 0 1 0>;
-> > >> >> >                            bus-range =3D <0x00 0xff>;
-> > >> >> > -                          interrupt-map-mask =3D <0 0 0 0>;
-> > >> >> > -                          interrupt-map =3D <0 0 0 0 &gic GIC_=
-SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-> > >> >> > +                          interrupt-map-mask =3D <0 0 0 7>;
-> > >> >> > +                          interrupt-map =3D <0 0 0 1 &pcie1_in=
-tc 0>,
-> > >> >> > +                                          <0 0 0 2 &pcie1_intc=
- 1>,
-> > >> >> > +                                          <0 0 0 3 &pcie1_intc=
- 2>,
-> > >> >> > +                                          <0 0 0 4 &pcie1_intc=
- 3>;
-> > >> >> >                            marvell,pcie-port =3D <0>;
-> > >> >> >                            marvell,pcie-lane =3D <0>;
-> > >> >> >                            clocks =3D <&gateclk 8>;
-> > >> >> >                            status =3D "disabled";
-> > >> >> > +                          pcie1_intc: interrupt-controller {
-> > >> >> > +                                  interrupt-controller;
-> > >> >> > +                                  #interrupt-cells =3D <1>;
-> > >> >> > +                          };
-> > >> >> >                    };
-> > >> >> >
-> > >> >> >                    /* x1 port */
-> > >> >> > @@ -88,16 +97,25 @@
-> > >> >> >                            reg =3D <0x1000 0 0 0 0>;
-> > >> >> >                            #address-cells =3D <3>;
-> > >> >> >                            #size-cells =3D <2>;
-> > >> >> > +                          interrupt-names =3D "intx";
-> > >> >> > +                          interrupts-extended =3D <&gic GIC_SP=
-I 33 IRQ_TYPE_LEVEL_HIGH>;
-> > >> >> >                            #interrupt-cells =3D <1>;
-> > >> >> >                            ranges =3D <0x82000000 0 0 0x8200000=
-0 0x2 0 1 0
-> > >> >> >                                      0x81000000 0 0 0x81000000 =
-0x2 0 1 0>;
-> > >> >> >                            bus-range =3D <0x00 0xff>;
-> > >> >> > -                          interrupt-map-mask =3D <0 0 0 0>;
-> > >> >> > -                          interrupt-map =3D <0 0 0 0 &gic GIC_=
-SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> > >> >> > +                          interrupt-map-mask =3D <0 0 0 7>;
-> > >> >> > +                          interrupt-map =3D <0 0 0 1 &pcie2_in=
-tc 0>,
-> > >> >> > +                                          <0 0 0 2 &pcie2_intc=
- 1>,
-> > >> >> > +                                          <0 0 0 3 &pcie2_intc=
- 2>,
-> > >> >> > +                                          <0 0 0 4 &pcie2_intc=
- 3>;
-> > >> >> >                            marvell,pcie-port =3D <1>;
-> > >> >> >                            marvell,pcie-lane =3D <0>;
-> > >> >> >                            clocks =3D <&gateclk 5>;
-> > >> >> >                            status =3D "disabled";
-> > >> >> > +                          pcie2_intc: interrupt-controller {
-> > >> >> > +                                  interrupt-controller;
-> > >> >> > +                                  #interrupt-cells =3D <1>;
-> > >> >> > +                          };
-> > >> >> >                    };
-> > >> >> >
-> > >> >> >                    /* x1 port */
-> > >> >> > @@ -107,16 +125,25 @@
-> > >> >> >                            reg =3D <0x1800 0 0 0 0>;
-> > >> >> >                            #address-cells =3D <3>;
-> > >> >> >                            #size-cells =3D <2>;
-> > >> >> > +                          interrupt-names =3D "intx";
-> > >> >> > +                          interrupts-extended =3D <&gic GIC_SP=
-I 70 IRQ_TYPE_LEVEL_HIGH>;
-> > >> >> >                            #interrupt-cells =3D <1>;
-> > >> >> >                            ranges =3D <0x82000000 0 0 0x8200000=
-0 0x3 0 1 0
-> > >> >> >                                      0x81000000 0 0 0x81000000 =
-0x3 0 1 0>;
-> > >> >> >                            bus-range =3D <0x00 0xff>;
-> > >> >> > -                          interrupt-map-mask =3D <0 0 0 0>;
-> > >> >> > -                          interrupt-map =3D <0 0 0 0 &gic GIC_=
-SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-> > >> >> > +                          interrupt-map-mask =3D <0 0 0 7>;
-> > >> >> > +                          interrupt-map =3D <0 0 0 1 &pcie3_in=
-tc 0>,
-> > >> >> > +                                          <0 0 0 2 &pcie3_intc=
- 1>,
-> > >> >> > +                                          <0 0 0 3 &pcie3_intc=
- 2>,
-> > >> >> > +                                          <0 0 0 4 &pcie3_intc=
- 3>;
-> > >> >> >                            marvell,pcie-port =3D <2>;
-> > >> >> >                            marvell,pcie-lane =3D <0>;
-> > >> >> >                            clocks =3D <&gateclk 6>;
-> > >> >> >                            status =3D "disabled";
-> > >> >> > +                          pcie3_intc: interrupt-controller {
-> > >> >> > +                                  interrupt-controller;
-> > >> >> > +                                  #interrupt-cells =3D <1>;
-> > >> >> > +                          };
-> > >> >> >                    };
-> > >> >> >
-> > >> >> >                    /*
-> > >> >> > @@ -129,16 +156,25 @@
-> > >> >> >                            reg =3D <0x2000 0 0 0 0>;
-> > >> >> >                            #address-cells =3D <3>;
-> > >> >> >                            #size-cells =3D <2>;
-> > >> >> > +                          interrupt-names =3D "intx";
-> > >> >> > +                          interrupts-extended =3D <&gic GIC_SP=
-I 71 IRQ_TYPE_LEVEL_HIGH>;
-> > >> >> >                            #interrupt-cells =3D <1>;
-> > >> >> >                            ranges =3D <0x82000000 0 0 0x8200000=
-0 0x4 0 1 0
-> > >> >> >                                      0x81000000 0 0 0x81000000 =
-0x4 0 1 0>;
-> > >> >> >                            bus-range =3D <0x00 0xff>;
-> > >> >> > -                          interrupt-map-mask =3D <0 0 0 0>;
-> > >> >> > -                          interrupt-map =3D <0 0 0 0 &gic GIC_=
-SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-> > >> >> > +                          interrupt-map-mask =3D <0 0 0 7>;
-> > >> >> > +                          interrupt-map =3D <0 0 0 1 &pcie4_in=
-tc 0>,
-> > >> >> > +                                          <0 0 0 2 &pcie4_intc=
- 1>,
-> > >> >> > +                                          <0 0 0 3 &pcie4_intc=
- 2>,
-> > >> >> > +                                          <0 0 0 4 &pcie4_intc=
- 3>;
-> > >> >> >                            marvell,pcie-port =3D <3>;
-> > >> >> >                            marvell,pcie-lane =3D <0>;
-> > >> >> >                            clocks =3D <&gateclk 7>;
-> > >> >> >                            status =3D "disabled";
-> > >> >> > +                          pcie4_intc: interrupt-controller {
-> > >> >> > +                                  interrupt-controller;
-> > >> >> > +                                  #interrupt-cells =3D <1>;
-> > >> >> > +                          };
-> > >> >> >                    };
-> > >> >> >            };
-> > >> >> >    };
-> > >> >> > --
-> > >> >> > 2.20.1
-> > >> >> >
-> > >> >>
-> > >> >> --
-> > >> >> Gregory Clement, Bootlin
-> > >> >> Embedded Linux and Kernel engineering
-> > >> >> http://bootlin.com
-> > >>
-> > >> --
-> > >> Gregory Clement, Bootlin
-> > >> Embedded Linux and Kernel engineering
-> > >> http://bootlin.com
+Hope to find my way back to testing these bits out soon...
