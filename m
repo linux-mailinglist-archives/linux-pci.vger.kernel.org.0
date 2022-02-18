@@ -2,181 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 729C34BC270
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 23:05:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B09034BC2F6
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Feb 2022 00:44:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbiBRWGG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Feb 2022 17:06:06 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42402 "EHLO
+        id S234987AbiBRXnU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Feb 2022 18:43:20 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234097AbiBRWGF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Feb 2022 17:06:05 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B5781712BE
-        for <linux-pci@vger.kernel.org>; Fri, 18 Feb 2022 14:05:46 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id l9so8232988plg.0
-        for <linux-pci@vger.kernel.org>; Fri, 18 Feb 2022 14:05:46 -0800 (PST)
+        with ESMTP id S239400AbiBRXnT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Feb 2022 18:43:19 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF32422BDC3
+        for <linux-pci@vger.kernel.org>; Fri, 18 Feb 2022 15:43:01 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id p23so9156103pgj.2
+        for <linux-pci@vger.kernel.org>; Fri, 18 Feb 2022 15:43:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vvUsBk8WOyHWPnfmlJUYHHjEnYQBDUZG873sZWj142g=;
-        b=K4s9vs2YZWhm+MEIFx3oIqxhn2FvZQ6dkjYcFCVQa0VrvblHEWi+u/adBMkp683Wf5
-         mULhbASkbQbVwiOBSavb35xHh+4vNOxePt1U9y6NKDKDKQs8GaNdw4m2qKSF4nCQuouC
-         rhd7+wky5+6uxalrFoJ4YHiUX/5CAQRnpRfv1BVDms0xfRVz4dpQBY+ed+4Q54jdG98g
-         RLZ6x/dtrOtLcwbqk0wJG4ElefoLKPKlbdGpq73HJNfXsdValYIijqBIfJC/14hIGmiv
-         c1zhMRkE4PMR6pPwvZEc2Q/SPJNc0ylpoK5IGFXubPDncT9pKX3+5PDev2DtwQ7xGp0B
-         nt3w==
+        bh=whNrfqumba6KC2p9V6Pih5sz382GhTFok83j4GryLwE=;
+        b=CUnXvna/nzoToDBNZHEzzpgX9e9lvq6R5InCaM/8HF+c7M9qkefrBPgyeiu5SgKjwk
+         jEZEUbXNb6amnFGNQzFKtKgy4IJ10aeKpa8wfzSW2C6y+Vd/+2SiGAjXMB3g2sFwqHSo
+         Za+If67L34iRq0VJSFjud16DUVXwrH4EtEpl8mWvfxEbPF3dHM64vQ+DAqaPBwVjZJ8R
+         Keeq+HV319aTYJohVMKRB7mh+p5elAQIdI1oNh2ZqwV8wtajiKftYdDj/AttAHquQqDu
+         N5vpefmxuZHO6pcjQRG5aDIGXR/EqqNOUTLUKQCTC3vCo6VPyV7pW49Omlz2eqRGqdGO
+         iyhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vvUsBk8WOyHWPnfmlJUYHHjEnYQBDUZG873sZWj142g=;
-        b=eJshPWZEAqx2fYxE8PZTzgX2NJ8849AtiLU6h9Nm9MLDhTp75C7c7u04ndUJUDXRnF
-         pqd3zReMKBoX8TTVUzHN11Z2zRdzP99yJHgJ3KDwLz3yq9Bpshqw8bVc2zz/TAvWIqy0
-         Ads1XSBmHEx7Qb68PvQCN0PfAjQDxL7uTwCP2LG6hc4Lif7oZWP5iD6Wqma5piarRIYE
-         7wPqB/ogy5UBmMudVr9iL69zoUg8JAW3d48yxk32s+lLfH6p1fITIbTNHXxULjqjloLd
-         LPom03Kq/3rLqWijZJ3uBH7SmDIhWk5qKz/3ImL06XJLuGBVAD2+7oecoRVYeVDKNWl5
-         9ykQ==
-X-Gm-Message-State: AOAM533wZiy0JizILWMSLwo40slGN/gxaTqbe9wic1KTfgXmA0iadXec
-        ocsH4BdRTu55rK0my0Oy42lby5d0FGETK6TzwTsefQ==
-X-Google-Smtp-Source: ABdhPJyXDciKyO7mjGd2xYKr0AiM1W/M7sz3B7BSgqp5Vv+OSUq8q6jdOz+Q9YgFsMHh7MHyP4i9xutC6svUK1/BZEk=
-X-Received: by 2002:a17:902:7296:b0:14b:4bc6:e81 with SMTP id
- d22-20020a170902729600b0014b4bc60e81mr9291198pll.132.1645221945889; Fri, 18
- Feb 2022 14:05:45 -0800 (PST)
+        bh=whNrfqumba6KC2p9V6Pih5sz382GhTFok83j4GryLwE=;
+        b=wylU+/XnAJrXizZfyVfvsclTD+G0EDFEvv4ps2ytXDhz5bowSt5VAnUlzc3BGc+5e7
+         Q1tcKGsYnZivMVvsh3dpiGwazPxUIhWuoNRzmIWs4IJBBi0GBMKAX0yWlrB5f4fXVpXj
+         89DB1G2ratQxnK4DQqnxqpWcwYhczFtcTZRpd73WZ2FtcIlBEH/AR2amOYpJ8u1JyYdd
+         vUNdR5apUThdZ7MWO5BD43dD8T/gxx3T8KolWLf8QxhneVoIWvFZD/o7FEBWR3UUWQvL
+         t42wp6nRVaQThae+NXwUZOBI6ws/X5KCww8KQNqPcz0m9tEKgsmmfyMMP0pTGGBPzvvf
+         XWsA==
+X-Gm-Message-State: AOAM533YuHSBFyb9VZxeZQM+Y8hk99+7xeEiu+6haELxDdqoLvtv0go4
+        LXv5fF9n+yXs+acPSKeH8VUQ8V4/K2lzxHB5Yan0Lg==
+X-Google-Smtp-Source: ABdhPJzZmMN0+mLLFV6zFhJAgugkrkGZAZ9hJGF12JTGW372UotC0sF+5W85WXQp3DLcCjcKKLEsii9H7AGCDkc/R9o=
+X-Received: by 2002:a62:ab09:0:b0:4e0:d967:318f with SMTP id
+ p9-20020a62ab09000000b004e0d967318fmr10148714pff.86.1645227781372; Fri, 18
+ Feb 2022 15:43:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com> <20210804161839.3492053-3-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20210804161839.3492053-3-Jonathan.Cameron@huawei.com>
+References: <20220128002707.391076-1-ben.widawsky@intel.com> <20220128002707.391076-11-ben.widawsky@intel.com>
+In-Reply-To: <20220128002707.391076-11-ben.widawsky@intel.com>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 18 Feb 2022 14:05:35 -0800
-Message-ID: <CAPcyv4iiZMd6GmyRG+SMcYF_5JEqj8zrti_gjffTvOE27srbUw@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/4] spdm: Introduce a library for DMTF SPDM
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>,
-        "open list:KEYS-TRUSTED" <keyrings@vger.kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>,
-        David E Box <david.e.box@intel.com>
+Date:   Fri, 18 Feb 2022 15:42:50 -0800
+Message-ID: <CAPcyv4hF=DWWszAhrOTiBLFxm5s8gcJ_TcdVz9UNfYEuXNiJTw@mail.gmail.com>
+Subject: Re: [PATCH v3 10/14] cxl/region: Collect host bridge decoders
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Linux PCI <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 4, 2021 at 9:23 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Thu, Jan 27, 2022 at 4:27 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> The Security Protocol and Data Model (SPDM) defines messages,
-> data objects and sequences for performing message exchanges between
-> devices over various transports and physical media.
+> Part of host bridge verification in the CXL Type 3 Memory Device
+> Software Guide calculates the host bridge interleave target list (6th
+> step in the flow chart), ie. verification and state update are done in
+> the same step. Host bridge verification is already in place, so go ahead
+> and store the decoders with their target lists.
 >
-> As the kernel supports several possible transports (mctp, PCI DOE)
-> introduce a library than can in turn be used with all those transports.
+> Switches are implemented in a separate patch.
 >
-> There are a large number of open questions around how we do this that
-> need to be resolved. These include:
-> *  Key chain management
->    - Current approach is to use a keychain provide as part of per transport
->      initialization for the root certificates which are assumed to be
->      loaded into that keychain, perhaps in an initrd script.
->    - Each SPDM instance then has its own keychain to manage its
->      certificates. It may make sense to drop this, but that looks like it
->      will make a lot of the standard infrastructure harder to use.
->  *  ECC algorithms needing ASN1 encoded signatures.  I'm struggling to find
->     any specification that actual 'requires' that choice vs raw data, so my
->     guess is that this is a question of existing usecases (x509 certs seem
->     to use this form, but CHALLENGE_AUTH SPDM seems to use raw data).
->     I'm not sure whether we are better off just encoding the signature in
->     ASN1 as currently done in this series, or if it is worth a tweaking
->     things in the crypto layers.
->  *  Lots of options in actual implementation to look at.
->
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 > ---
->  lib/Kconfig  |    3 +
->  lib/Makefile |    2 +
->  lib/spdm.c   | 1196 ++++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 1201 insertions(+)
+>  drivers/cxl/region.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
 >
-> diff --git a/lib/Kconfig b/lib/Kconfig
-> index ac3b30697b2b..0aa2fef6a592 100644
-> --- a/lib/Kconfig
-> +++ b/lib/Kconfig
-> @@ -704,3 +704,6 @@ config PLDMFW
+> diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
+> index 145d7bb02714..b8982be13bfe 100644
+> --- a/drivers/cxl/region.c
+> +++ b/drivers/cxl/region.c
+> @@ -428,6 +428,7 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
+>                 return simple_config(cxlr, hbs[0]);
 >
->  config ASN1_ENCODER
->         tristate
+>         for (i = 0; i < hb_count; i++) {
+> +               struct cxl_decoder *cxld;
+>                 int idx, position_mask;
+>                 struct cxl_dport *rp;
+>                 struct cxl_port *hb;
+> @@ -486,6 +487,18 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
+>                                                 "One or more devices are not connected to the correct Host Bridge Root Port\n");
+>                                         goto err;
+>                                 }
 > +
-> +config SPDM
-> +       tristate
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 2cc359ec1fdd..566166d6936e 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -282,6 +282,8 @@ obj-$(CONFIG_PERCPU_TEST) += percpu_test.o
->  obj-$(CONFIG_ASN1) += asn1_decoder.o
->  obj-$(CONFIG_ASN1_ENCODER) += asn1_encoder.o
->
-> +obj-$(CONFIG_SPDM) += spdm.o
+> +                               if (!state_update)
+> +                                       continue;
 > +
->  obj-$(CONFIG_FONT_SUPPORT) += fonts/
->
->  hostprogs      := gen_crc32table
-> diff --git a/lib/spdm.c b/lib/spdm.c
-> new file mode 100644
-> index 000000000000..3ce2341647f8
-> --- /dev/null
-> +++ b/lib/spdm.c
-> @@ -0,0 +1,1196 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * DMTF Security Protocol and Data Model
-> + *
-> + * Copyright (C) 2021 Huawei
-> + *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> + */
+> +                               if (dev_WARN_ONCE(&cxld->dev,
+> +                                                 port_grouping >= cxld->nr_targets,
+> +                                                 "Invalid port grouping %d/%d\n",
+> +                                                 port_grouping, cxld->nr_targets))
+> +                                       goto err;
 > +
-> +#include <linux/asn1_encoder.h>
-> +#include <linux/asn1_ber_bytecode.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/cred.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/digsig.h>
-> +#include <linux/idr.h>
-> +#include <linux/key.h>
-> +#include <linux/module.h>
-> +#include <linux/random.h>
-> +#include <linux/spdm.h>
-> +
-> +#include <crypto/akcipher.h>
-> +#include <crypto/hash.h>
-> +#include <crypto/public_key.h>
-> +#include <keys/asymmetric-type.h>
-> +#include <keys/user-type.h>
-> +#include <asm/unaligned.h>
-> +
-> +/*
-> + * Todo
-> + * - Secure channel setup.
-> + * - Multiple slot support.
-> + * - Measurement support (over secure channel or within CHALLENGE_AUTH.
-> + * - Support more core algorithms (not CMA does not require them, but may use
-> + *   them if present.
-> + * - Extended algorithm, support.
-> + */
-> +/*
-> + * Discussions points
-> + * 1. Worth adding an SPDM layer around a transport layer?
+> +                               cxld->interleave_ways++;
+> +                               cxld->target[port_grouping] = get_rp(ep);
 
-I came here to say yes to this question. I am seeing interest in SPDM
-outside of a DOE transport.
+There is not enough context in the changelog to understand what this
+code is doing, but I do want to react to all this caching of objects
+without references. I'd prefer helpers that walk the device that are
+already synced with device_del() events than worry about these caches
+and when to invalidate their references.
 
-Hope to find my way back to testing these bits out soon...
+>                         }
+>                 }
+>         }
+> @@ -538,7 +551,7 @@ static bool rootd_valid(const struct cxl_region *cxlr,
+>
+>  struct rootd_context {
+>         const struct cxl_region *cxlr;
+> -       struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
+> +       const struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
+>         int count;
+>  };
+>
+> @@ -564,7 +577,7 @@ static struct cxl_decoder *find_rootd(const struct cxl_region *cxlr,
+>         struct rootd_context ctx;
+>         struct device *ret;
+>
+> -       ctx.cxlr = cxlr;
+> +       ctx.cxlr = (struct cxl_region *)cxlr;
+
+If const requires casting then don't use const.
+
+>
+>         ret = device_find_child((struct device *)&root->dev, &ctx, rootd_match);
+>         if (ret)
+> --
+> 2.35.0
+>
