@@ -2,148 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B09034BC2F6
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Feb 2022 00:44:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 136964BC2FA
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Feb 2022 00:46:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234987AbiBRXnU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Feb 2022 18:43:20 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58042 "EHLO
+        id S240196AbiBRXp6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Feb 2022 18:45:58 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239400AbiBRXnT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Feb 2022 18:43:19 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF32422BDC3
-        for <linux-pci@vger.kernel.org>; Fri, 18 Feb 2022 15:43:01 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id p23so9156103pgj.2
-        for <linux-pci@vger.kernel.org>; Fri, 18 Feb 2022 15:43:01 -0800 (PST)
+        with ESMTP id S231697AbiBRXp5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Feb 2022 18:45:57 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C3B54BD7
+        for <linux-pci@vger.kernel.org>; Fri, 18 Feb 2022 15:45:40 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id d17so3596829pfl.0
+        for <linux-pci@vger.kernel.org>; Fri, 18 Feb 2022 15:45:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=whNrfqumba6KC2p9V6Pih5sz382GhTFok83j4GryLwE=;
-        b=CUnXvna/nzoToDBNZHEzzpgX9e9lvq6R5InCaM/8HF+c7M9qkefrBPgyeiu5SgKjwk
-         jEZEUbXNb6amnFGNQzFKtKgy4IJ10aeKpa8wfzSW2C6y+Vd/+2SiGAjXMB3g2sFwqHSo
-         Za+If67L34iRq0VJSFjud16DUVXwrH4EtEpl8mWvfxEbPF3dHM64vQ+DAqaPBwVjZJ8R
-         Keeq+HV319aTYJohVMKRB7mh+p5elAQIdI1oNh2ZqwV8wtajiKftYdDj/AttAHquQqDu
-         N5vpefmxuZHO6pcjQRG5aDIGXR/EqqNOUTLUKQCTC3vCo6VPyV7pW49Omlz2eqRGqdGO
-         iyhA==
+        d=fungible.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=R9dcpe70j9Trk9rKuKWmAu1MvnVHF87exvDoWtSGUqM=;
+        b=izfsjtjHsgBrGj/HgT+90+NGOW2SCpYve/CDRyzzE70F6IiYAYgdiBY9Xw1PDE0KWf
+         ArV6JKEbQN0Q3oA4CgY3P/VpkjT9tX0KpoeF3z5Blvi5LIRuoQzzGX7H4goP158WmnGk
+         jjSomPs3lUieIujKxjUxu6WammqpqRRnCt07Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=whNrfqumba6KC2p9V6Pih5sz382GhTFok83j4GryLwE=;
-        b=wylU+/XnAJrXizZfyVfvsclTD+G0EDFEvv4ps2ytXDhz5bowSt5VAnUlzc3BGc+5e7
-         Q1tcKGsYnZivMVvsh3dpiGwazPxUIhWuoNRzmIWs4IJBBi0GBMKAX0yWlrB5f4fXVpXj
-         89DB1G2ratQxnK4DQqnxqpWcwYhczFtcTZRpd73WZ2FtcIlBEH/AR2amOYpJ8u1JyYdd
-         vUNdR5apUThdZ7MWO5BD43dD8T/gxx3T8KolWLf8QxhneVoIWvFZD/o7FEBWR3UUWQvL
-         t42wp6nRVaQThae+NXwUZOBI6ws/X5KCww8KQNqPcz0m9tEKgsmmfyMMP0pTGGBPzvvf
-         XWsA==
-X-Gm-Message-State: AOAM533YuHSBFyb9VZxeZQM+Y8hk99+7xeEiu+6haELxDdqoLvtv0go4
-        LXv5fF9n+yXs+acPSKeH8VUQ8V4/K2lzxHB5Yan0Lg==
-X-Google-Smtp-Source: ABdhPJzZmMN0+mLLFV6zFhJAgugkrkGZAZ9hJGF12JTGW372UotC0sF+5W85WXQp3DLcCjcKKLEsii9H7AGCDkc/R9o=
-X-Received: by 2002:a62:ab09:0:b0:4e0:d967:318f with SMTP id
- p9-20020a62ab09000000b004e0d967318fmr10148714pff.86.1645227781372; Fri, 18
- Feb 2022 15:43:01 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=R9dcpe70j9Trk9rKuKWmAu1MvnVHF87exvDoWtSGUqM=;
+        b=6urN6Qi/0B0YSY1oW8/G6SpvtY5CgUdg5p5zEivgGY4jZGzv1cSqKWHNcGDgEUkWJn
+         jYLazum2F9LWI3xbzb0e5iASmZt8yb8J6QH6Ip/RjUMvytSnbfFYTG85lvWH1Ohw2Hn5
+         gUNM3aqT7tFw5ER6zGv/C9CS+ZNdWQSdnjgFt/16G53ccqyCW/cUplqWVyMKERYmqSmn
+         sYuYmlAieGQRHA0Khfde9RXijkT/9n9IuVKiIvI4LvYrraapJ0xTJufOjFlAdpzg6NuR
+         Wq3VIQRwDrtgO5rijBt7N0++3BPXSKE77pGIZzIF8opqjNLWSFWJGHx8gIepKWqFn058
+         p1Rg==
+X-Gm-Message-State: AOAM532YKjfT+IUbkLVo6sqbW3/NTil4TJN7TtemNdrdQwLVSpu1+4oj
+        MIuDDoxTTndFIas16edISNEg/A==
+X-Google-Smtp-Source: ABdhPJz4KxX9mxNmepaO9xMZbFoCSrG8byaEdenOFOn0ok+SuAUAeN5YAmCL3GDwMicfMNUldsgRgg==
+X-Received: by 2002:a62:1881:0:b0:4e0:1b4c:36f8 with SMTP id 123-20020a621881000000b004e01b4c36f8mr10156028pfy.26.1645227940283;
+        Fri, 18 Feb 2022 15:45:40 -0800 (PST)
+Received: from cab09-qa-09.fungible.local ([12.190.10.11])
+        by smtp.gmail.com with ESMTPSA id g126sm11723406pgc.31.2022.02.18.15.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Feb 2022 15:45:39 -0800 (PST)
+From:   Dimitris Michailidis <d.michailidis@fungible.com>
+X-Google-Original-From: Dimitris Michailidis <dmichail@fungible.com>
+To:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        andrew@lunn.ch, d.michailidis@fungible.com
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH net-next v7 1/8] PCI: Add Fungible Vendor ID to pci_ids.h
+Date:   Fri, 18 Feb 2022 15:45:29 -0800
+Message-Id: <20220218234536.9810-2-dmichail@fungible.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220218234536.9810-1-dmichail@fungible.com>
+References: <20220218234536.9810-1-dmichail@fungible.com>
 MIME-Version: 1.0
-References: <20220128002707.391076-1-ben.widawsky@intel.com> <20220128002707.391076-11-ben.widawsky@intel.com>
-In-Reply-To: <20220128002707.391076-11-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 18 Feb 2022 15:42:50 -0800
-Message-ID: <CAPcyv4hF=DWWszAhrOTiBLFxm5s8gcJ_TcdVz9UNfYEuXNiJTw@mail.gmail.com>
-Subject: Re: [PATCH v3 10/14] cxl/region: Collect host bridge decoders
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, patches@lists.linux.dev,
-        Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 4:27 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> Part of host bridge verification in the CXL Type 3 Memory Device
-> Software Guide calculates the host bridge interleave target list (6th
-> step in the flow chart), ie. verification and state update are done in
-> the same step. Host bridge verification is already in place, so go ahead
-> and store the decoders with their target lists.
->
-> Switches are implemented in a separate patch.
->
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/cxl/region.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/cxl/region.c b/drivers/cxl/region.c
-> index 145d7bb02714..b8982be13bfe 100644
-> --- a/drivers/cxl/region.c
-> +++ b/drivers/cxl/region.c
-> @@ -428,6 +428,7 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->                 return simple_config(cxlr, hbs[0]);
->
->         for (i = 0; i < hb_count; i++) {
-> +               struct cxl_decoder *cxld;
->                 int idx, position_mask;
->                 struct cxl_dport *rp;
->                 struct cxl_port *hb;
-> @@ -486,6 +487,18 @@ static bool region_hb_rp_config_valid(struct cxl_region *cxlr,
->                                                 "One or more devices are not connected to the correct Host Bridge Root Port\n");
->                                         goto err;
->                                 }
-> +
-> +                               if (!state_update)
-> +                                       continue;
-> +
-> +                               if (dev_WARN_ONCE(&cxld->dev,
-> +                                                 port_grouping >= cxld->nr_targets,
-> +                                                 "Invalid port grouping %d/%d\n",
-> +                                                 port_grouping, cxld->nr_targets))
-> +                                       goto err;
-> +
-> +                               cxld->interleave_ways++;
-> +                               cxld->target[port_grouping] = get_rp(ep);
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Dimitris Michailidis <dmichail@fungible.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ include/linux/pci_ids.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-There is not enough context in the changelog to understand what this
-code is doing, but I do want to react to all this caching of objects
-without references. I'd prefer helpers that walk the device that are
-already synced with device_del() events than worry about these caches
-and when to invalidate their references.
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index aad54c666407..c7e6f2043c7d 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2561,6 +2561,8 @@
+ 
+ #define PCI_VENDOR_ID_HYGON		0x1d94
+ 
++#define PCI_VENDOR_ID_FUNGIBLE		0x1dad
++
+ #define PCI_VENDOR_ID_HXT		0x1dbf
+ 
+ #define PCI_VENDOR_ID_TEKRAM		0x1de1
+-- 
+2.25.1
 
->                         }
->                 }
->         }
-> @@ -538,7 +551,7 @@ static bool rootd_valid(const struct cxl_region *cxlr,
->
->  struct rootd_context {
->         const struct cxl_region *cxlr;
-> -       struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
-> +       const struct cxl_port *hbs[CXL_DECODER_MAX_INTERLEAVE];
->         int count;
->  };
->
-> @@ -564,7 +577,7 @@ static struct cxl_decoder *find_rootd(const struct cxl_region *cxlr,
->         struct rootd_context ctx;
->         struct device *ret;
->
-> -       ctx.cxlr = cxlr;
-> +       ctx.cxlr = (struct cxl_region *)cxlr;
-
-If const requires casting then don't use const.
-
->
->         ret = device_find_child((struct device *)&root->dev, &ctx, rootd_match);
->         if (ret)
-> --
-> 2.35.0
->
