@@ -2,72 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D7484BB03F
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 04:31:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1477C4BB0E1
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Feb 2022 05:51:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232065AbiBRD0O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Feb 2022 22:26:14 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:39432 "EHLO
+        id S229643AbiBREvZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Feb 2022 23:51:25 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232060AbiBRD0O (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 22:26:14 -0500
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B148D1B4F30;
-        Thu, 17 Feb 2022 19:25:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-        s=s201512; t=1645154754;
-        bh=F/tGiAdsjuQ0q4Nj/0VGkH32X+GI2mQPc8R61JxSmTM=;
-        h=In-Reply-To:References:From:To:Cc:Subject:Date;
-        b=yZ0hbSooVqyWKuBRGQaqVlGG8jHd3aDQZGS8U0TbDj+XR7yZ+TRxi33d0ZjIXh0d/
-         KWcZVJW0nZY1yolJsmExW9sr8XPZq4mHHnQe1OF7V2++jbEGlPNw7nHrFYbEHSEGj5
-         mpbivzb8BmeceA07KuPS6kRrm6t0I4OD72i0vAt4=
-X-QQ-FEAT: oHWrrGTW1dDmmdYeXRw4YEXQp3CWT7El
-X-QQ-SSF: 00000000000000F0000000000000
-X-QQ-XMAILINFO: M/OchVwRIgcXcgiSPOYTSo67/UC58rNJiHD1eqUIupMUylOlig6Pg1EwAXQBQE
-         P6TGvEezTR3nSPgIyvHLLTB/NgGsc/ZT/EgTyJPs8lu8nT8hTxfJ1dZznTw//hKsMOVl9IP1C6gzu
-         Iw0ysO40N6oDfdmeWq2rKQGYka2vxDfdeveevc7HGDXO2cxSNRxWBHnJO4W/wGYU7/wjGUMgz8TmG
-         cnb33k/Dib38edsTFRNARG8gJP4zhdXsT8JztQmrOi+OkuyTYhzffj++b6eUJFAxmglFydc4hI0cy
-         UMohn1THfvyuzgdgk02GVsLaXJkcwECz7mlJSFwoVrbs7TijQ8qQEezvty4TEZnDtrhBSlmf3S7Xy
-         3zEWNAvRQYlyeA3UOx7oFprcp5uMmUY1+j9tZWRFNqKI4jSaxki5r7Tae7RA2Dca4wnk0WPgTAQzX
-         gkXDlmfSZXYHsoVAQ7Y+q5mFqcXLnhQE+4keROvATyB5XA/9CfpgeQBrFHe0Rk5TR5PKHOU2Q0fFa
-         gg6rgEo7vNUYw6jCajycXUl59yqxjM+SoqMvAww7L8U0EHbNfwewQUKocaV3+VikweiQJPizH4/pT
-         jQGj0nFaHpcag6xcfxW+srKEuCwNWziUzcEJcWCcbE14wv9slfR8IDpEtft4LCH0+h40H6HgA174M
-         tk+nw2XjSMVgBhYGTL2BommBGkuCFRMtTy3g0QEIAtoMKzZ6T2pSZp3LtPxuEwKE3vGg/BMeQ8JR0
-         rsAPPrSLwXR324wX3m67zrRtOl//efHbKAjTbM6OQckSf8Trw328cSI2PEKk81+6Fah1xj5pKN2xX
-         +peIrzlq7vlD72jLTgIvWlDlrg87liYouU3ohBA11sVaec6z3rWPYqB+3Khgt4pTSA==
-X-HAS-ATTACH: no
-X-QQ-BUSINESS-ORIGIN: 2
-X-Originating-IP: 111.47.122.156
-In-Reply-To: <17f0ac8707d.e967ff2c113435.3595297833916391134@zohomail.com>
-References: <tencent_CA4766945C568E210AA2701525957F041007@qq.com>
-        <17f0ac8707d.e967ff2c113435.3595297833916391134@zohomail.com>
-X-QQ-STYLE: 
-X-QQ-mid: webmail813t1645154753t3342158
-From:   "=?ISO-8859-1?B?WGlhb2tlIFdhbmc=?=" <xkernel.wang@foxmail.com>
-To:     "=?ISO-8859-1?B?TGkgQ2hlbg==?=" <lchen.firstlove@zohomail.com>
-Cc:     "=?ISO-8859-1?B?a2lzaG9u?=" <kishon@ti.com>,
-        "=?ISO-8859-1?B?bG9yZW56by5waWVyYWxpc2k=?=" 
-        <lorenzo.pieralisi@arm.com>,
-        "=?ISO-8859-1?B?a3c=?=" <kw@linux.com>,
-        "=?ISO-8859-1?B?YmhlbGdhYXM=?=" <bhelgaas@google.com>,
-        "=?ISO-8859-1?B?bGludXgtcGNp?=" <linux-pci@vger.kernel.org>,
-        "=?ISO-8859-1?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] [PATCH] PCI: endpoint: functions/pci-epf-test: fix a potential memory leak
-Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="ISO-8859-1"
-Content-Transfer-Encoding: base64
-Date:   Fri, 18 Feb 2022 11:25:53 +0800
-X-Priority: 3
-Message-ID: <tencent_E7FF1CE4823926578BC38502335C4169EB05@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        FROM_EXCESS_BASE64,HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        with ESMTP id S229961AbiBREvZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Feb 2022 23:51:25 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC6982BB11;
+        Thu, 17 Feb 2022 20:51:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645159869; x=1676695869;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Q+hI30xsMkjVG9jgQ/JDpiTuyxMaaUgT4cUIZmZlwJo=;
+  b=n6YBzEvB1YFqyH2nvdEn/iIxBXfMPRIyu4HuxO6LrU4MhalEFFFndTTm
+   dkU+9CgmG//hd+8zMUKmRiks2inxvYDB+iJpA6fB66XhVCdym2Rij7ul5
+   qn/+JuG5zxpqQZjVKDGnSYmVgF31DBX66Hb9DOXJFy3B5qgFOTBvxAyKG
+   TMnzvZlfSakPizKENmCL7n9IeRaPH+RytOcr0c2v1YtKicJ/rynTFtKTT
+   BdNKspL78yJHqCHeqeGPJdXrpyzfDdq9g/uPc4WJy3kQ9TKd7P5u2BkEm
+   29nLOQSvXPvxs331MtoJTfAjQa5y/5Z3NmMaDJkRiEQE9nqLpRLzmIe2P
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10261"; a="231033856"
+X-IronPort-AV: E=Sophos;i="5.88,377,1635231600"; 
+   d="scan'208";a="231033856"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2022 20:51:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,377,1635231600"; 
+   d="scan'208";a="682353755"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Feb 2022 20:51:09 -0800
+Received: from debox1-desk4.lan (unknown [10.251.23.8])
+        by linux.intel.com (Postfix) with ESMTP id 12817580AA7;
+        Thu, 17 Feb 2022 20:51:09 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
+        robh@kernel.org, bhelgaas@google.com, david.e.box@linux.intel.com,
+        michael.a.bottini@linux.intel.com, rafael@kernel.org,
+        me@adhityamohan.in
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V5 0/3] PCI: vmd: Enable PCIE ASPM and LTR
+Date:   Thu, 17 Feb 2022 20:50:53 -0800
+Message-Id: <20220218045056.333799-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,11 +63,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-LS0tLSBPbiBGcmksIDE4IEZlYiAyMDIyIDExOjAzOjAyICswODAwICBMaSBDaGVuIDxsY2hl
-bi5maXJzdGxvdmVAem9ob21haWwuY29tPiB3cm90ZSAtLS0tCj4gVGhpcyBpcyBkdXBsaWNh
-dGUgIHRvIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMTdlZDgxNmI2ZjMuZDRmYjQ0
-ZmI2OTc0NS4xMDQ4NDQ3ODQxNzIxMzgyOTIwQHpvaG9tYWlsLmNvbS9ULwoKT2ghIEkgYW0g
-c29ycnkgdGhhdCBJIG9ubHkgdmlld2VkIHRoZSBjb2RlIGluIHRvcnZhbGRzL2xpbnV4IGdp
-dCAKcmVwb3NpdG9yeSwgYnV0IG5vdCB0aGUgbWFpbCBsaXN0LgpUaGFuayB5b3UgZm9yIHlv
-dXIgcmVtaW5kZXIuCgpSZWdhcmRzLApXYW5n
+This series adds support for enabling PCIE ASPM and for setting PCIE LTR
+values on devices on root ports reserved by VMD. Configuration of these
+capabilities is usually done by BIOS. But for VMD ports these capabilities
+will not be configured because those ports are not visible to BIOS. For
+future products, post Alder Lake, the hardware team has agreed to do this
+enabling in BIOS.  But this will not apply to current products, so this
+work around is provided for them. Without this, laptops running in VMD mode
+will not be able to power gate roots ports, resulting in higher power
+consumption.
+
+Since V4 we have more information from the BIOS team as to why BIOS
+needs to program device LTRs. This is something that should be done by
+devices, but there are many that don't provide LTR values causing them
+to block SoC level power management. BIOS sets an initial default LTR to
+account for such devices. This SoC specific value is the maximum latency
+required to allow the SoC to enter the deepest power state.
+
+David E. Box (2):
+  PCI: vmd: Add vmd_device_data
+  PCI: vmd: Configure PCIe ASPM and LTR
+
+Michael Bottini (1):
+  PCI/ASPM: Add ASPM BIOS override function
+
+ drivers/pci/controller/vmd.c | 104 ++++++++++++++++++++++++++---------
+ drivers/pci/pcie/aspm.c      |  54 ++++++++++++++++++
+ include/linux/pci.h          |   7 +++
+ 3 files changed, 139 insertions(+), 26 deletions(-)
+
+-- 
+2.25.1
 
