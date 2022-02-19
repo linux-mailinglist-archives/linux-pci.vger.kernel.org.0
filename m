@@ -2,70 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EC374BC8B2
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Feb 2022 14:36:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 135BC4BC8D6
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Feb 2022 15:30:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234771AbiBSNgl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Feb 2022 08:36:41 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39898 "EHLO
+        id S238809AbiBSOab (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Feb 2022 09:30:31 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231447AbiBSNgk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Feb 2022 08:36:40 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB6D9EB96;
-        Sat, 19 Feb 2022 05:36:21 -0800 (PST)
+        with ESMTP id S238683AbiBSOab (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Feb 2022 09:30:31 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B035C606F8;
+        Sat, 19 Feb 2022 06:30:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C70AFB80122;
-        Sat, 19 Feb 2022 13:36:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A678C004E1;
-        Sat, 19 Feb 2022 13:36:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EBD5B60B12;
+        Sat, 19 Feb 2022 14:30:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2790C004E1;
+        Sat, 19 Feb 2022 14:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645277778;
-        bh=Hw+rU+eWSztrE697erPFap9SOm9xA8A7/BpV7Appw20=;
+        s=k20201202; t=1645281010;
+        bh=1QZrh94O15KQIpRKoAgo4yfgnwnVtT+uyOyqoZ05rc8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f7iLf+S9TwauofZNsHVZju7vU9Ny47oTJBOK8/B7beySUn1fmaI2a6kVS7dFdRIka
-         yGgzhuYGq9y610YAvRzC2u7Ijgmw0xUfyHB6p+H+b+yPEh9xw5o0MBlcETY8i/APHo
-         6qJpBH9o6INA5bg7LjsLNEITVeiheAWSeqqbE6tEIYass1sMGQ7VYqcTqSLPMLXUgE
-         AVu0325bPmfeQIsyFoXn7VD++yKhsjY8q/oO817k5q9qpS0UefoVqjiwW2pfUvrcXx
-         eQBKxko5IttdC13UXC1lhaVqO49pYllB2L+AzBl13rm3H1F4691KYpLsPsH1sVMwa3
-         y+eoQ52DB+s/w==
+        b=Dugsq+id1n5+UDe7D5lP60NMG95d1fKfjDrpX4hL+DZdV7jFpjZ1Qz3MMhiDUtPGZ
+         zbqv62j1120QkeEBDl6Usy8tlI46+ajHe1n8yqgq0849xBb8q4HWiKuVlqR20b0m2n
+         J20JqDQjJsfYvFK/ZPhrFHp0DNhMZK3AXR5a6eTB7OdAckRKMgKDUFtLE9B/fQDRTc
+         RDXdmJiyZKv800cDhyYXo/yXrt8+KTGHJ07DspQzPVqttw2ua2yfnWIyaiH7wR35IA
+         f7EyI0aJaU22m2g3fcVqXCtrv24m+r9s4HgbNwsk4rhU/sO/GVXsRZtdqn93kjbztO
+         dMVBxNpTef9DA==
 Received: by pali.im (Postfix)
-        id B827E2B70; Sat, 19 Feb 2022 14:36:15 +0100 (CET)
-Date:   Sat, 19 Feb 2022 14:36:15 +0100
+        id 05BFC2B70; Sat, 19 Feb 2022 15:30:06 +0100 (CET)
+Date:   Sat, 19 Feb 2022 15:30:06 +0100
 From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     =?utf-8?B?THXDrXM=?= Mendes <luis.p.mendes@gmail.com>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 11/11] ARM: dts: armada-385.dtsi: Add definitions for
- PCIe legacy INTx interrupts
-Message-ID: <20220219133615.es6vu5np26mdg6px@pali>
-References: <20220105150239.9628-1-pali@kernel.org>
- <20220112151814.24361-1-pali@kernel.org>
- <20220112151814.24361-12-pali@kernel.org>
- <87wnhxjxlq.fsf@BL-laptop>
- <20220214150923.a5ttxoh426cfxn4v@pali>
- <87tud1jwpr.fsf@BL-laptop>
- <CAEzXK1qYKVk7QiSY_DwqkZ7WV6WU06WBtiqZx0JJCc+mOP-7Kg@mail.gmail.com>
- <CAEzXK1rj7pOvJgAMd11TJVqzgWD2GSJ-25_BWL7X9wiZWOhieQ@mail.gmail.com>
- <20220215105214.f5biuptsruoredqi@pali>
- <CAEzXK1qbv+cuRqoNh9_JQK=ViDtO9a+2S9sRMr-o4dUvRnn4Uw@mail.gmail.com>
+To:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] ARM: Marvell: Update PCIe fixup
+Message-ID: <20220219143006.bsr6wdagf5ytynxu@pali>
+References: <20211101150405.14618-1-pali@kernel.org>
+ <20211102171259.9590-1-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEzXK1qbv+cuRqoNh9_JQK=ViDtO9a+2S9sRMr-o4dUvRnn4Uw@mail.gmail.com>
+In-Reply-To: <20211102171259.9590-1-pali@kernel.org>
 User-Agent: NeoMutt/20180716
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
@@ -77,207 +61,145 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Perfect, thanks!
+PING, Gente reminder for patch 1/2.
 
-On Friday 18 February 2022 21:53:43 Luís Mendes wrote:
-> Successfully tested on my custom A388 system with two PCI express slots.
+On Tuesday 02 November 2021 18:12:58 Pali Rohár wrote:
+> - The code relies on rc_pci_fixup being called, which only happens
+>   when CONFIG_PCI_QUIRKS is enabled, so add that to Kconfig. Omitting
+>   this causes a booting failure with a non-obvious cause.
+> - Update rc_pci_fixup to set the class properly, copying the
+>   more modern style from other places
+> - Correct the rc_pci_fixup comment
 > 
-> If you wish you can add a:
-> Tested-by: Luis Mendes <luis.p.mendes@gmail.com>
+> This patch just re-applies commit 1dc831bf53fd ("ARM: Kirkwood: Update
+> PCI-E fixup") for all other Marvell ARM platforms which have same buggy
+> PCIe controller and do not use pci-mvebu.c controller driver yet.
 > 
-> On Tue, Feb 15, 2022 at 10:52 AM Pali Rohár <pali@kernel.org> wrote:
-> >
-> > Hello! armada-388.dtsi file has #include "armada-385.dtsi" line and
-> > therefore is already covered by this my patch.
-> >
-> > Gregory's question was about A380.
-> >
-> > But if you want, you can test this patch series (which already covers
-> > A388) on your A388 HW. It is still better to do tests on more HW.
-> >
-> > On Tuesday 15 February 2022 10:48:17 Luís Mendes wrote:
-> > > Hello,
-> > >
-> > > Sorry for jumping in the conversation, but I read this thread and I
-> > > have an Armada A388 HW so I can test it, if desired.
-> > >
-> > > Luís
-> > >
-> > >
-> > > On Tue, Feb 15, 2022 at 10:47 AM Luís Mendes <luis.p.mendes@gmail.com> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > Sorry for jumping in the conversation, but I read this thread and I have an Armada A388 HW so I can test it, if desired.
-> > > >
-> > > > Luís
-> > > >
-> > > > On Mon, Feb 14, 2022 at 7:57 PM Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
-> > > >>
-> > > >> Hello,
-> > > >>
-> > > >> > On Monday 14 February 2022 16:07:13 Gregory CLEMENT wrote:
-> > > >> >> Hello Pali,
-> > > >> >>
-> > > >> >> > With this change legacy INTA, INTB, INTC and INTD interrupts are reported
-> > > >> >> > separately and not mixed into one Linux virq source anymore.
-> > > >> >> >
-> > > >> >> > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > >> >> > ---
-> > > >> >> >  arch/arm/boot/dts/armada-385.dtsi | 52 ++++++++++++++++++++++++++-----
-> > > >> >>
-> > > >> >> Is there any reason for not doing the same change in armada-380.dtsi ?
-> > > >> >
-> > > >> > I do not have A380 HW, so I did this change only for A385 which I have
-> > > >> > tested.
-> > > >>
-> > > >> OK fair enough.
-> > > >>
-> > > >> So you can add my
-> > > >> Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> > > >>
-> > > >> Moreover to keep biscetability  this patch should be merged after the
-> > > >> support in the driver. So the easier is to let merge it through the PCI
-> > > >> subsystem with the other patches from this series. I do not think there
-> > > >> will be any other changes in this file so there won't be any merge
-> > > >> conflicts.
-> > > >>
-> > > >> Thanks,
-> > > >>
-> > > >> Grégory
-> > > >>
-> > > >>
-> > > >> >
-> > > >> >> Grégory
-> > > >> >>
-> > > >> >> >  1 file changed, 44 insertions(+), 8 deletions(-)
-> > > >> >> >
-> > > >> >> > diff --git a/arch/arm/boot/dts/armada-385.dtsi b/arch/arm/boot/dts/armada-385.dtsi
-> > > >> >> > index f0022d10c715..83392b92dae2 100644
-> > > >> >> > --- a/arch/arm/boot/dts/armada-385.dtsi
-> > > >> >> > +++ b/arch/arm/boot/dts/armada-385.dtsi
-> > > >> >> > @@ -69,16 +69,25 @@
-> > > >> >> >                            reg = <0x0800 0 0 0 0>;
-> > > >> >> >                            #address-cells = <3>;
-> > > >> >> >                            #size-cells = <2>;
-> > > >> >> > +                          interrupt-names = "intx";
-> > > >> >> > +                          interrupts-extended = <&gic GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-> > > >> >> >                            #interrupt-cells = <1>;
-> > > >> >> >                            ranges = <0x82000000 0 0 0x82000000 0x1 0 1 0
-> > > >> >> >                                      0x81000000 0 0 0x81000000 0x1 0 1 0>;
-> > > >> >> >                            bus-range = <0x00 0xff>;
-> > > >> >> > -                          interrupt-map-mask = <0 0 0 0>;
-> > > >> >> > -                          interrupt-map = <0 0 0 0 &gic GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-> > > >> >> > +                          interrupt-map-mask = <0 0 0 7>;
-> > > >> >> > +                          interrupt-map = <0 0 0 1 &pcie1_intc 0>,
-> > > >> >> > +                                          <0 0 0 2 &pcie1_intc 1>,
-> > > >> >> > +                                          <0 0 0 3 &pcie1_intc 2>,
-> > > >> >> > +                                          <0 0 0 4 &pcie1_intc 3>;
-> > > >> >> >                            marvell,pcie-port = <0>;
-> > > >> >> >                            marvell,pcie-lane = <0>;
-> > > >> >> >                            clocks = <&gateclk 8>;
-> > > >> >> >                            status = "disabled";
-> > > >> >> > +                          pcie1_intc: interrupt-controller {
-> > > >> >> > +                                  interrupt-controller;
-> > > >> >> > +                                  #interrupt-cells = <1>;
-> > > >> >> > +                          };
-> > > >> >> >                    };
-> > > >> >> >
-> > > >> >> >                    /* x1 port */
-> > > >> >> > @@ -88,16 +97,25 @@
-> > > >> >> >                            reg = <0x1000 0 0 0 0>;
-> > > >> >> >                            #address-cells = <3>;
-> > > >> >> >                            #size-cells = <2>;
-> > > >> >> > +                          interrupt-names = "intx";
-> > > >> >> > +                          interrupts-extended = <&gic GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> > > >> >> >                            #interrupt-cells = <1>;
-> > > >> >> >                            ranges = <0x82000000 0 0 0x82000000 0x2 0 1 0
-> > > >> >> >                                      0x81000000 0 0 0x81000000 0x2 0 1 0>;
-> > > >> >> >                            bus-range = <0x00 0xff>;
-> > > >> >> > -                          interrupt-map-mask = <0 0 0 0>;
-> > > >> >> > -                          interrupt-map = <0 0 0 0 &gic GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> > > >> >> > +                          interrupt-map-mask = <0 0 0 7>;
-> > > >> >> > +                          interrupt-map = <0 0 0 1 &pcie2_intc 0>,
-> > > >> >> > +                                          <0 0 0 2 &pcie2_intc 1>,
-> > > >> >> > +                                          <0 0 0 3 &pcie2_intc 2>,
-> > > >> >> > +                                          <0 0 0 4 &pcie2_intc 3>;
-> > > >> >> >                            marvell,pcie-port = <1>;
-> > > >> >> >                            marvell,pcie-lane = <0>;
-> > > >> >> >                            clocks = <&gateclk 5>;
-> > > >> >> >                            status = "disabled";
-> > > >> >> > +                          pcie2_intc: interrupt-controller {
-> > > >> >> > +                                  interrupt-controller;
-> > > >> >> > +                                  #interrupt-cells = <1>;
-> > > >> >> > +                          };
-> > > >> >> >                    };
-> > > >> >> >
-> > > >> >> >                    /* x1 port */
-> > > >> >> > @@ -107,16 +125,25 @@
-> > > >> >> >                            reg = <0x1800 0 0 0 0>;
-> > > >> >> >                            #address-cells = <3>;
-> > > >> >> >                            #size-cells = <2>;
-> > > >> >> > +                          interrupt-names = "intx";
-> > > >> >> > +                          interrupts-extended = <&gic GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-> > > >> >> >                            #interrupt-cells = <1>;
-> > > >> >> >                            ranges = <0x82000000 0 0 0x82000000 0x3 0 1 0
-> > > >> >> >                                      0x81000000 0 0 0x81000000 0x3 0 1 0>;
-> > > >> >> >                            bus-range = <0x00 0xff>;
-> > > >> >> > -                          interrupt-map-mask = <0 0 0 0>;
-> > > >> >> > -                          interrupt-map = <0 0 0 0 &gic GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-> > > >> >> > +                          interrupt-map-mask = <0 0 0 7>;
-> > > >> >> > +                          interrupt-map = <0 0 0 1 &pcie3_intc 0>,
-> > > >> >> > +                                          <0 0 0 2 &pcie3_intc 1>,
-> > > >> >> > +                                          <0 0 0 3 &pcie3_intc 2>,
-> > > >> >> > +                                          <0 0 0 4 &pcie3_intc 3>;
-> > > >> >> >                            marvell,pcie-port = <2>;
-> > > >> >> >                            marvell,pcie-lane = <0>;
-> > > >> >> >                            clocks = <&gateclk 6>;
-> > > >> >> >                            status = "disabled";
-> > > >> >> > +                          pcie3_intc: interrupt-controller {
-> > > >> >> > +                                  interrupt-controller;
-> > > >> >> > +                                  #interrupt-cells = <1>;
-> > > >> >> > +                          };
-> > > >> >> >                    };
-> > > >> >> >
-> > > >> >> >                    /*
-> > > >> >> > @@ -129,16 +156,25 @@
-> > > >> >> >                            reg = <0x2000 0 0 0 0>;
-> > > >> >> >                            #address-cells = <3>;
-> > > >> >> >                            #size-cells = <2>;
-> > > >> >> > +                          interrupt-names = "intx";
-> > > >> >> > +                          interrupts-extended = <&gic GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-> > > >> >> >                            #interrupt-cells = <1>;
-> > > >> >> >                            ranges = <0x82000000 0 0 0x82000000 0x4 0 1 0
-> > > >> >> >                                      0x81000000 0 0 0x81000000 0x4 0 1 0>;
-> > > >> >> >                            bus-range = <0x00 0xff>;
-> > > >> >> > -                          interrupt-map-mask = <0 0 0 0>;
-> > > >> >> > -                          interrupt-map = <0 0 0 0 &gic GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-> > > >> >> > +                          interrupt-map-mask = <0 0 0 7>;
-> > > >> >> > +                          interrupt-map = <0 0 0 1 &pcie4_intc 0>,
-> > > >> >> > +                                          <0 0 0 2 &pcie4_intc 1>,
-> > > >> >> > +                                          <0 0 0 3 &pcie4_intc 2>,
-> > > >> >> > +                                          <0 0 0 4 &pcie4_intc 3>;
-> > > >> >> >                            marvell,pcie-port = <3>;
-> > > >> >> >                            marvell,pcie-lane = <0>;
-> > > >> >> >                            clocks = <&gateclk 7>;
-> > > >> >> >                            status = "disabled";
-> > > >> >> > +                          pcie4_intc: interrupt-controller {
-> > > >> >> > +                                  interrupt-controller;
-> > > >> >> > +                                  #interrupt-cells = <1>;
-> > > >> >> > +                          };
-> > > >> >> >                    };
-> > > >> >> >            };
-> > > >> >> >    };
-> > > >> >> > --
-> > > >> >> > 2.20.1
-> > > >> >> >
-> > > >> >>
-> > > >> >> --
-> > > >> >> Gregory Clement, Bootlin
-> > > >> >> Embedded Linux and Kernel engineering
-> > > >> >> http://bootlin.com
-> > > >>
-> > > >> --
-> > > >> Gregory Clement, Bootlin
-> > > >> Embedded Linux and Kernel engineering
-> > > >> http://bootlin.com
+> Long-term goal for these Marvell ARM platforms should be conversion to
+> pci-mvebu.c controller driver and removal of these fixups in arch code.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Cc: Jason Gunthorpe <jgg@nvidia.com>
+> Cc: stable@vger.kernel.org
+> 
+> ---
+> Changes in v2:
+> * Move MIPS change into separate patch
+> * Add information that this patch is for platforms which do not use pci-mvebu.c
+> ---
+>  arch/arm/Kconfig              |  1 +
+>  arch/arm/mach-dove/pcie.c     | 11 ++++++++---
+>  arch/arm/mach-mv78xx0/pcie.c  | 11 ++++++++---
+>  arch/arm/mach-orion5x/Kconfig |  1 +
+>  arch/arm/mach-orion5x/pci.c   | 12 +++++++++---
+>  5 files changed, 27 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index fc196421b2ce..9f157e973555 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -400,6 +400,7 @@ config ARCH_DOVE
+>  	select GENERIC_IRQ_MULTI_HANDLER
+>  	select GPIOLIB
+>  	select HAVE_PCI
+> +	select PCI_QUIRKS if PCI
+>  	select MVEBU_MBUS
+>  	select PINCTRL
+>  	select PINCTRL_DOVE
+> diff --git a/arch/arm/mach-dove/pcie.c b/arch/arm/mach-dove/pcie.c
+> index ee91ac6b5ebf..ecf057a0f5ba 100644
+> --- a/arch/arm/mach-dove/pcie.c
+> +++ b/arch/arm/mach-dove/pcie.c
+> @@ -135,14 +135,19 @@ static struct pci_ops pcie_ops = {
+>  	.write = pcie_wr_conf,
+>  };
+>  
+> +/*
+> + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
+> + * is operating as a root complex this needs to be switched to
+> + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
+> + * the device. Decoding setup is handled by the orion code.
+> + */
+>  static void rc_pci_fixup(struct pci_dev *dev)
+>  {
+> -	/*
+> -	 * Prevent enumeration of root complex.
+> -	 */
+>  	if (dev->bus->parent == NULL && dev->devfn == 0) {
+>  		int i;
+>  
+> +		dev->class &= 0xff;
+> +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
+>  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
+>  			dev->resource[i].start = 0;
+>  			dev->resource[i].end   = 0;
+> diff --git a/arch/arm/mach-mv78xx0/pcie.c b/arch/arm/mach-mv78xx0/pcie.c
+> index 636d84b40466..9362b5fc116f 100644
+> --- a/arch/arm/mach-mv78xx0/pcie.c
+> +++ b/arch/arm/mach-mv78xx0/pcie.c
+> @@ -177,14 +177,19 @@ static struct pci_ops pcie_ops = {
+>  	.write = pcie_wr_conf,
+>  };
+>  
+> +/*
+> + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
+> + * is operating as a root complex this needs to be switched to
+> + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
+> + * the device. Decoding setup is handled by the orion code.
+> + */
+>  static void rc_pci_fixup(struct pci_dev *dev)
+>  {
+> -	/*
+> -	 * Prevent enumeration of root complex.
+> -	 */
+>  	if (dev->bus->parent == NULL && dev->devfn == 0) {
+>  		int i;
+>  
+> +		dev->class &= 0xff;
+> +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
+>  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
+>  			dev->resource[i].start = 0;
+>  			dev->resource[i].end   = 0;
+> diff --git a/arch/arm/mach-orion5x/Kconfig b/arch/arm/mach-orion5x/Kconfig
+> index e94a61901ffd..7189a5b1ec46 100644
+> --- a/arch/arm/mach-orion5x/Kconfig
+> +++ b/arch/arm/mach-orion5x/Kconfig
+> @@ -6,6 +6,7 @@ menuconfig ARCH_ORION5X
+>  	select GPIOLIB
+>  	select MVEBU_MBUS
+>  	select FORCE_PCI
+> +	select PCI_QUIRKS
+>  	select PHYLIB if NETDEVICES
+>  	select PLAT_ORION_LEGACY
+>  	help
+> diff --git a/arch/arm/mach-orion5x/pci.c b/arch/arm/mach-orion5x/pci.c
+> index 76951bfbacf5..5145fe89702e 100644
+> --- a/arch/arm/mach-orion5x/pci.c
+> +++ b/arch/arm/mach-orion5x/pci.c
+> @@ -509,14 +509,20 @@ static int __init pci_setup(struct pci_sys_data *sys)
+>  /*****************************************************************************
+>   * General PCIe + PCI
+>   ****************************************************************************/
+> +
+> +/*
+> + * The root complex has a hardwired class of PCI_CLASS_MEMORY_OTHER, when it
+> + * is operating as a root complex this needs to be switched to
+> + * PCI_CLASS_BRIDGE_HOST or Linux will errantly try to process the BAR's on
+> + * the device. Decoding setup is handled by the orion code.
+> + */
+>  static void rc_pci_fixup(struct pci_dev *dev)
+>  {
+> -	/*
+> -	 * Prevent enumeration of root complex.
+> -	 */
+>  	if (dev->bus->parent == NULL && dev->devfn == 0) {
+>  		int i;
+>  
+> +		dev->class &= 0xff;
+> +		dev->class |= PCI_CLASS_BRIDGE_HOST << 8;
+>  		for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
+>  			dev->resource[i].start = 0;
+>  			dev->resource[i].end   = 0;
+> -- 
+> 2.20.1
+> 
