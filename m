@@ -2,139 +2,237 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4ADB4BC8E7
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Feb 2022 15:39:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1C254BCA57
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Feb 2022 19:59:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242412AbiBSOj2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Feb 2022 09:39:28 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59392 "EHLO
+        id S238731AbiBSS71 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Feb 2022 13:59:27 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241959AbiBSOj1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Feb 2022 09:39:27 -0500
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBB0710DA
-        for <linux-pci@vger.kernel.org>; Sat, 19 Feb 2022 06:39:07 -0800 (PST)
-Received: by mail-lj1-x233.google.com with SMTP id r20so8317336ljj.1
-        for <linux-pci@vger.kernel.org>; Sat, 19 Feb 2022 06:39:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=upYG2eyOSbvkGAbtOc7NwWXdWYVoG9nJfB7Jf/oiu0I=;
-        b=ksz5V3T7kPOAFQnqrftvY2nCb3GV9+SA/5S36ghc31UfHgYm3yQdeA+7fYV2KZliOh
-         fP49l82G0IDbPgRmhmo4v1/TjDLoAQPOYwlPbX1bjQqUoNavybIXgqMknZUjANIU8ic/
-         M7YBOZR0UrpDXwMSnpRosrkd4cUS2D5P/h9QVAd7fchsFC8OYEaumSvla3xNDREzJP+V
-         VwqugMcVInKqeOCzKJ/luIkBBITwE94h87OKV+z5ZxEd6QT+M2Mnj2FuwR4q7ejzpdrx
-         zPQFVsT989ynEnFS/uETJSlttQdWxE3++0iBq0Wxgm7l4NEG/5mJqDVaLq7KQV9pBDhO
-         K3yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=upYG2eyOSbvkGAbtOc7NwWXdWYVoG9nJfB7Jf/oiu0I=;
-        b=zuepl/Xmdp6DLn6NnN3NDHRmCzM50tW3gQ2WfVzistck6rTxv4e5Sx+zAlZDyBU5Ks
-         nbcFVmbgHniG3gTBBGaU3nWw6uShpXAs7DIPQIMprBxRLJiA+UGnOwD+1CHX4KZl4N4R
-         KhcvfxfQ3PRUFyVrE5TKIt5+EFvUy6zUJokcr+7j7wLVb7QzVT7y7CPWXIQVrUdukfcy
-         VcIDE2l2w6G9rA6uqWNLtreHGJDM1cyF+TzmBXDMF4PAZmGaspKsmTJdmxs6WKbD5Hlb
-         JP5tdwXvM9AWHfQpzhCd8UEp3TwJHHXjJnU/v4qIQYE9JLrKvXETaEVUhPl6yn4BKgDc
-         7ETw==
-X-Gm-Message-State: AOAM531Zn2VhiVhjYH5Qc1jUtERqKT7zwQD9aldY2328smn+JuVJ2hvP
-        Q3py1UWpUAFiXbWpMsgEc3XtNWT6xGrLIyMao3M=
-X-Google-Smtp-Source: ABdhPJzMIq2iQED/0zmgLUi2oglY35cfML9GdSplkvYzBL/fgAsixU+ulPJuXb3GbIdlnIzxHIsmiei4cV66cyLN3ik=
-X-Received: by 2002:a2e:b16e:0:b0:244:d368:57e with SMTP id
- a14-20020a2eb16e000000b00244d368057emr8861656ljm.251.1645281546244; Sat, 19
- Feb 2022 06:39:06 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a05:6512:104a:0:0:0:0 with HTTP; Sat, 19 Feb 2022 06:39:05
- -0800 (PST)
-Reply-To: msbelinaya892@gmail.com
-From:   msbelinaya <vincentphilip.sec@gmail.com>
-Date:   Sat, 19 Feb 2022 14:39:05 +0000
-Message-ID: <CAEQrJKuOwfSHLZ-Gq9797tMEz=BpWaxaSu3wp6GFyh1xN0E4Ag@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
+        with ESMTP id S229437AbiBSS70 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Feb 2022 13:59:26 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9A5B59A53;
+        Sat, 19 Feb 2022 10:59:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645297146; x=1676833146;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=YjcmreUpCIrBCYdc1cFbN9dGuwQFr7PWHG7P8Kh35AU=;
+  b=mxYwLOvVLbye2UJZxyeA0uzPeDhAvaxPjDXmvFS/d3tS+n5Ma4Oi8Vhq
+   BM601u6AUCVDJCSFvqehXGTujNgXQP+lLoVvf8oGxBAuhoFos5DXQZ0zJ
+   QvWh5Y/bRAA2CIMaWf3kpiLC7WZ2nAKl9DdG4UioFD62u7QeAw8PgvCAC
+   Yt3vWaVnZKxdKT4NWoND+6a1WgngogzRwl/xtYpKWl0tahbdgXwTMFMl8
+   6rGNQBnPUvfSx/OBNWc1eWXRHcl7WOb61lhverkEwLe0eNnxc842zqg4J
+   W9xTVOUocbq9RyKKu+gXdQGTKLEn+OwxjSyaidzFelCela0uZtMLzZZTP
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10263"; a="251501265"
+X-IronPort-AV: E=Sophos;i="5.88,381,1635231600"; 
+   d="scan'208";a="251501265"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2022 10:59:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,381,1635231600"; 
+   d="scan'208";a="531330912"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 19 Feb 2022 10:59:06 -0800
+Received: from kpavlasx-mobl2.amr.corp.intel.com (kpavlasx-mobl2.amr.corp.intel.com [10.209.114.238])
+        by linux.intel.com (Postfix) with ESMTP id D74A3580975;
+        Sat, 19 Feb 2022 10:59:05 -0800 (PST)
+Message-ID: <f5318c1171c5733388c9b455f2058f9aed127b8b.camel@linux.intel.com>
+Subject: Re: [PATCH V5 3/3] PCI: vmd: Configure PCIe ASPM and LTR
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Jonathan Derrick <jonathan.derrick@linux.dev>,
+        nirmal.patel@linux.intel.com, lorenzo.pieralisi@arm.com,
+        hch@infradead.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, michael.a.bottini@linux.intel.com,
+        rafael@kernel.org, me@adhityamohan.in
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 19 Feb 2022 10:59:05 -0800
+In-Reply-To: <1a163e75-f620-dfe7-01b1-5356fe767b2d@linux.dev>
+References: <20220218045056.333799-1-david.e.box@linux.intel.com>
+         <20220218045056.333799-4-david.e.box@linux.intel.com>
+         <1a163e75-f620-dfe7-01b1-5356fe767b2d@linux.dev>
+Organization: David E. Box
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+User-Agent: Evolution 3.36.5-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
-X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-2KPZgtiv2YUg2LXYr9in2YLYqtmKINmI2KPYudiq2YLYryDYo9mG2YMg2LPYqtmC2KjZhNmG2Yog
-2KjZgtmE2Kgg2LfZitioLiDZhNmC2K8g2KrZhSDYrdir2Yog2LnZhNmJINin2YTYp9iq2LXYp9mE
-INio2YMNCtmI2YXYudix2YHYqSDZg9mK2YEg2YrZhdmD2YbZhtinINiv2LnZhSDYqNi52LbZhtin
-INin2YTYqNi52LYg2KjYtNmD2YQg2KPZgdi22YQuINij2YbYpyDYp9mE2LPZitiv2KkgS29kam92
-aSBIZWdib3INCtmF2YYg2KrYsdmD2YrYpyDZiNij2LnZhdmEINmD2YXYr9mK2LEg2YLYs9mFINin
-2YTYudmF2YTZitin2Kog2YHZiiDYqNmG2YMgU3RhbmRhcmRCTlAg2KfZhNmF2K3Yr9mI2K8g2YHZ
-iiDYqtix2YPZitinLg0K2KPYudiq2YLYryDYo9mGINil2LHYp9iv2Kkg2KfZhNmE2Ycg2KPZhiDY
-o9mE2KrZgtmKINio2YMg2KfZhNii2YYuINmE2K/ZiiDZhdit2KfYr9ir2Kkg2KrYrNin2LHZitip
-INmF2YfZhdipINij2LHZitivINij2YYNCtij2LTYp9ix2YPZh9inINmF2LnZgyDZiNij2LnYqtmC
-2K8g2KPZhtmDINiz2KrZh9iq2YUg2KjZh9inINmE2KPZhtmH2Kcg2YXYsdiq2KjYt9ipINio2KfY
-s9mFINi52KfYptmE2KrZgyDZiNiz2KrYs9iq2YHZitivDQrZhdmG2YfYpy4NCg0KINmB2Yog2LnY
-p9mFIDIwMDYg2Iwg2YHYqtitINmF2YjYp9i32YYg2YXZhiDYqNmE2K/ZgyDYrdiz2KfYqNmL2Kcg
-2LrZitixINmF2YLZitmFINmE2YXYr9ipIDM2INi02YfYsdmL2Kcg2YjZgdmC2YvYpw0K2YTZhNiq
-2YLZiNmK2YUg2YTYr9mJINin2YTZhdi12LHZgSDYp9mE2LDZiiDYo9iq2LnYp9mF2YQg2YXYudmH
-INio2YLZitmF2KkgONiMNDAw2IwwMDAuMDAg2KzZhtmK2Ycg2KXYs9iq2LHZhNmK2YbZii4NCtmD
-2KfZhiDYqtin2LHZitiuINin2YbYqtmH2KfYoSDYtdmE2KfYrdmK2Kkg2KfYqtmB2KfZgtmK2Kkg
-2KfZhNil2YrYr9in2Lkg2YfYsNmHINmH2YggMTYg2YrZhtin2YrYsSAyMDA5LiDZhNiz2YjYoQ0K
-2KfZhNit2Lgg2Iwg2KrZiNmB2Yog2YHZiiDYstmE2LLYp9mEINmC2KfYqtmEINmB2YogMTIg2YXY
-p9mK2YggMjAwOCDZgdmKINiz2YrYqti02YjYp9mGINiMINin2YTYtdmK2YYg2Iwg2YXZhdinDQrY
-o9iz2YHYsSDYudmGINmF2YLYqtmEIDY4MDAwINi02K7YtSDYudmE2Ykg2KfZhNij2YLZhCDYo9ir
-2YbYp9ihINix2K3ZhNipINi52YXZhC4NCg0K2YTZhSDYqtiz2YXYuSDYpdiv2KfYsdipINin2YTY
-qNmG2YMg2KfZhNiw2Yog2KPYqti52KfZhdmEINmF2LnZhyDYqNi52K8g2KjZiNmB2KfYqtmHINiM
-INmB2YLYryDYudmE2YXYqiDYqNiw2YTZgyDZhNij2YbZhw0K2YPYp9mGINi12K/ZitmC2Yog2YjZ
-g9mG2Kog2YXYr9mK2LEg2K3Ys9in2KjZhyDYudmG2K/ZhdinINiq2YUg2YHYqtitINin2YTYrdiz
-2KfYqCDZgtio2YQg2KrYsdmC2YrYqtmKLiDZiNmF2Lkg2LDZhNmDINmK2KcNCtiz2YrYr9mKDQog
-2YTZhSDZitiw2YPYsSDYo9mC2LHYqCDYp9mE2KPZgtin2LHYqCAvINin2YTZiNix2KvYqSDYudmG
-2K8g2YHYqtitINin2YTYrdiz2KfYqCDYjCDZiNmE2YUg2YrZg9mGINmF2KrYstmI2KzZi9inINij
-2Ygg2YTZitizDQrZhNiv2YrZhyDYo9i32YHYp9mELiDYt9mE2KjYqiDZhdmG2Yog2KXYr9in2LHY
-qSDYp9mE2KjZhtmDINin2YTYsNmKINij2KrYudin2YXZhCDZhdi52Ycg2KfZhNij2LPYqNmI2Lkg
-2KfZhNmF2KfYttmKINil2LnYt9in2KENCtiq2LnZhNmK2YXYp9iqINio2LTYo9mGINmF2Kcg2YrY
-rNioINmB2LnZhNmHINio2KPZhdmI2KfZhNmHINil2LDYpyDZg9in2YYg2LPZitiq2YUg2KrYrNiv
-2YrYryDYp9mE2LnZgtivLg0KDQrYo9i52YTZhSDYo9mGINmH2LDYpyDYs9mK2K3Yr9irINmI2YTZ
-h9iw2Kcg2KfZhNiz2KjYqCDZg9mG2Kog2KPYqNit2Ksg2LnZhiDZiNiz2YrZhNipINmE2YTYqti5
-2KfZhdmEINmF2Lkg2KfZhNmF2YjZgtmBINmE2KPZhtmHDQrYudmG2K/ZhdinINmK2LnZhNmFINmF
-2K/Zitix2Ygg2KfZhNio2YbZgyDYo9mG2YfZhSDZhdin2KrZiNinINmI2YTZitizINmE2K/ZitmH
-2YUg2YjYsdmK2Ksg2Iwg2YHYpdmG2YfZhSDYs9mK2KPYrtiw2YjZhg0K2KfZhNmF2KfZhCDZhNin
-2LPYqtiu2K/Yp9mF2YfZhSDYp9mE2LTYrti12Yog2Iwg2YTYsNmE2YMg2YTYpyDYo9mB2LnZhCDZ
-hNinINij2LHZitivINij2YYg2YrYrdiv2Ksg2LTZitihINmD2YfYsNinLiDZg9in2YYNCtiw2YTZ
-gyDYudmG2K/ZhdinINix2KPZitiqINin2LPZhSDYudin2KbZhNiq2YMg2Iwg2YPZhtiqINiz2LnZ
-itiv2YvYpyDZiNij2KjYrdirINin2YTYotmGINi52YYg2KrYudin2YjZhtmDINmE2KrZgtiv2YrZ
-hdmDDQrZg9ij2YLYsdioINij2YLYsdio2KfYoSAvINmI2LHZitirINmE2YTYrdiz2KfYqCDYjCDZ
-hti42LHZi9inINmE2KPZhiDZhNiv2YrZgyDZhtmB2LMg2KfYs9mFINi52KfYptmE2KrZhyDZiNiz
-2YrZgtmI2YUNCtin2YTZhdmC2LEg2KfZhNix2KbZitiz2Yog2YTZhNio2YbZgyDYqNiq2K3YsdmK
-2LEg2KfZhNit2LPYp9ioINmE2YMuINmE2Kcg2YrZiNis2K8g2K7Yt9ixLiDYqtiq2YUg2KfZhNmF
-2LnYp9mF2YTYqSDYqNmF2YjYrNioDQrYp9iq2YHYp9mC2YrYqSDZhdi02LHZiNi52Kkg2KrYrdmF
-2YrZgyDZhdmGINin2YTYp9mG2KrZh9in2YMg2KfZhNmC2KfZhtmI2YbZii4NCg0K2YXZhiDYp9mE
-2KPZgdi22YQg2YTZhtinINij2YYg2YbYt9in2YTYqCDYqNin2YTZhdin2YQg2LnZhNmJINij2YYg
-2YbYs9mF2K0g2YTZhdiv2YrYsdmKINin2YTYqNmG2YjZgyDYqNij2K7YsNmH2Kcg2Iwg2YHZh9mF
-DQrYo9ir2LHZitin2KEg2KjYp9mE2YHYudmELiDYo9mG2Kcg2YTYs9iqINi02K7YtdmL2Kcg2KzY
-tNi52YvYpyDZhNiw2Kcg2KPZgtiq2LHYrSDYo9mGINmG2YLYs9mFINin2YTZhdin2YQg2KjYp9mE
-2KrYs9in2YjZiiDYjA0KNTAvNTDZqiDYudmE2Ykg2YPZhNinINin2YTYt9ix2YHZitmGLiDYs9iq
-2LPYp9i52K/ZhtmKINit2LXYqtmKINmB2Yog2KjYr9ihINi52YXZhNmKINin2YTYrtin2LUg2YjY
-p9iz2KrYrtiv2KfZhQ0K2KfZhNi52KfYptiv2KfYqiDZhNmE2KPYudmF2KfZhCDYp9mE2K7Zitix
-2YrYqSDYjCDZiNmH2Ygg2YXYpyDZg9in2YYg2K3ZhNmF2YouDQoNCtmF2YYg2YHYttmE2YMg2KPY
-udi32YbZiiDYo9mB2YPYp9ix2YMg2K3ZiNmEINin2YLYqtix2KfYrdmKINiMINij2YbYpyDYrdmC
-2YvYpyDYqNit2KfYrNipINmE2YXYs9in2LnYr9iq2YPZhSDZgdmKINmH2LDZhw0K2KfZhNi12YHZ
-gtipLiDZhNmC2K8g2KfYrtiq2LHYqtmDINmE2KrYs9in2LnYr9mG2Yog2Iwg2YTZitizINio2LnZ
-hdmE2Yog2Iwg2YrYpyDYudiy2YrYstiq2Yog2Iwg2YjZhNmD2YYg2KjYp9mE2YTZhyDYo9ix2K/Y
-qg0K2KPZhiDYqti52YTZhSDYo9mG2YbZiiDYp9iz2KrYutix2YLYqiDZiNmC2KrZi9inINmE2YTY
-tdmE2KfYqSDYqNi02KPZhiDZh9iw2Ycg2KfZhNix2LPYp9mE2Kkg2YLYqNmEINij2YYg2KPYqti1
-2YQg2KjZgw0K2YTZhdi02KfYsdmD2KrZgyDYjCDYo9i52LfZhtmKINix2KPZitmDINmI2KPYsdis
-2Ygg2KPZhiDYqti52KfZhdmEINmH2LDZhyDYp9mE2YXYudmE2YjZhdin2Kog2KjYp9i52KrYqNin
-2LHZh9inIFRPUA0KU0VDUkVULiDYqNi52K8g2KrZhNmC2Yog2KXYrNin2KjYqtmDINiMINit2LXY
-sdmK2YvYpyDYudio2LEg2LnZhtmI2KfZhiDYqNix2YrYr9mKINin2YTYpdmE2YPYqtix2YjZhtmK
-INin2YTYtNiu2LXZiiDYjA0KbXNiZWxpbmF5YTg5MkBnbWFpbC5jb20NCtmK2YXZhtit2YMg2KrZ
-gdin2LXZitmEINin2YTYtdmB2YLYqS4g2YjZhtiz2K7YqSDZhdmGINi02YfYp9iv2Kkg2KXZitiv
-2KfYuSDYp9mE2LXZhtiv2YjZgiDZiNmI2KvZitmC2Kkg2KrYo9iz2YrYsyDYp9mE2LTYsdmD2KkN
-Ctin2YTYqtmKINij2YbYtNij2Kog2KfZhNi12YbYr9mI2YIuDQrYqNin2LHZgyDYp9mE2YTZhyDZ
-gdmKINin2YbYqti42KfYsSDYsdiv2YPZhSDYp9mE2LnYp9is2YQNCtij2LfZitioINin2YTYqtit
-2YrYp9iqDQrYp9mE2LPZitiv2KkgS29kam92aSBIZWdib3INCm1zYmVsaW5heWE4OTJAZ21haWwu
-Y29tDQo=
+Hi,
+
+On Fri, 2022-02-18 at 14:30 -0700, Jonathan Derrick wrote:
+> 
+> On 2/17/2022 9:50 PM, David E. Box wrote:
+> > Currently, PCIe ports reserved for VMD use are not visible to BIOS
+> > and
+> > therefore not configured to enable PCIE ASPM. Additionally, PCIE
+> > LTR
+> > values may be left unset since BIOS will set a default maximum LTR
+> > value
+> > on endpoints to ensure that misconfigured devices don't block SoC
+> > power
+> > management. Lack of this programming results in high power
+> > consumption
+> > on laptops as reported in bugzilla [1].  For currently affected
+> > products, use pci_enable_default_link_state to set the allowed link
+> > states for devices on the root ports. Also set the LTR value to the
+> > maximum value needed for the SoC. Per the VMD hardware team future
+> > products using VMD will enable BIOS configuration of these
+> > capabilities.
+> Will the refreshes of the affected CPU be supported in BIOS or this
+> workaround?
+
+I'll have to check with the hardware/BIOS team. Still because it is
+BIOS this should check for signs that it hasn't already configured ASPM
+before modifying anything. I'll make this change.
+
+David
+
+> 
+> > This solution is a workaround for current products that mainly
+> > targets
+> > laptops. Support is not provided if a switch is used nor for
+> > hotplug.
+> > 
+> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=213717
+> > 
+> > Signed-off-by: Michael Bottini <michael.a.bottini@linux.intel.com>
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> > V5
+> >   - Provide the LTR value as driver data.
+> >   - Use DWORD for the config space write to avoid PCI WORD access
+> > bug.
+> >   - Set ASPM links firsts, enabling all link states, before setting
+> > a
+> >     default LTR if the capability is present
+> >   - Add kernel message that VMD is setting the device LTR.
+> > V4
+> >   - Refactor vmd_enable_apsm() to exit early, making the lines
+> > shorter
+> >     and more readable. Suggested by Christoph.
+> > V3
+> >   - No changes
+> > V2
+> >   - Use return status to print pci_info message if ASPM cannot be
+> > enabled.
+> >   - Add missing static declaration, caught by lkp@intel.com
+> > 
+> >   drivers/pci/controller/vmd.c | 48
+> > +++++++++++++++++++++++++++++++++++-
+> >   1 file changed, 47 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/vmd.c
+> > b/drivers/pci/controller/vmd.c
+> > index a582c351b461..eac379c80cd7 100644
+> > --- a/drivers/pci/controller/vmd.c
+> > +++ b/drivers/pci/controller/vmd.c
+> > @@ -67,10 +67,19 @@ enum vmd_features {
+> >   	 * interrupt handling.
+> >   	 */
+> >   	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
+> > +
+> > +	/*
+> > +	 * Enable ASPM on the PCIE root ports and set the default LTR
+> > of the
+> > +	 * storage devices on platforms where these values are not
+> > configured by
+> > +	 * BIOS. This is needed for laptops, which require these
+> > settings for
+> > +	 * proper power management of the SoC.
+> > +	 */
+> > +	VMD_FEAT_BIOS_PM_QUIRK		= (1 << 5),
+> >   };
+> >   
+> >   struct vmd_device_data {
+> >   	enum vmd_features features;
+> > +	u16 ltr;
+> >   };
+> >   
+> >   static DEFINE_IDA(vmd_instance_ida);
+> > @@ -714,6 +723,38 @@ static void vmd_copy_host_bridge_flags(struct
+> > pci_host_bridge *root_bridge,
+> >   	vmd_bridge->native_dpc = root_bridge->native_dpc;
+> >   }
+> >   
+> > +/*
+> > + * Enable ASPM and LTR settings on devices that aren't configured
+> > by BIOS.
+> > + */
+> > +static int vmd_pm_enable_quirk(struct pci_dev *pdev, void
+> > *userdata)
+> > +{
+> > +	struct vmd_device_data *info = userdata;
+> > +	u32 ltr_reg;
+> > +	int pos;
+> > +
+> > +	if (!(info->features & VMD_FEAT_BIOS_PM_QUIRK))
+> > +		return 0;
+> > +
+> > +	pci_enable_default_link_state(pdev, PCIE_LINK_STATE_ALL);
+> > +
+> > +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
+> > +	if (!pos)
+> > +		return 0;
+> > +
+> > +	/*
+> > +	 * If the LTR capability is present, set the default values to
+> > the
+> > +	 * maximum required by the platform to allow the deepest power
+> > +	 * management savings. Write this as a single DWORD where the
+> > lower word
+> > +	 * is the max snoop latency and the upper word is the max non-
+> > snoop
+> > +	 * latency.
+> > +	 */
+> > +	pci_info(pdev, "VMD: Setting a default LTR\n");
+> > +	ltr_reg = (info->ltr << 16) | info->ltr;
+> > +	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT,
+> > ltr_reg);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >   static int vmd_enable_domain(struct vmd_dev *vmd, struct
+> > vmd_device_data *info)
+> >   {
+> >   	struct pci_sysdata *sd = &vmd->sysdata;
+> > @@ -867,6 +908,8 @@ static int vmd_enable_domain(struct vmd_dev
+> > *vmd, struct vmd_device_data *info)
+> >   		pci_reset_bus(child->self);
+> >   	pci_assign_unassigned_bus_resources(vmd->bus);
+> >   
+> > +	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, info);
+> > +
+> >   	/*
+> >   	 * VMD root buses are virtual and don't return true on
+> > pci_is_pcie()
+> >   	 * and will fail pcie_bus_configure_settings() early. It can
+> > instead be
+> > @@ -1012,7 +1055,10 @@ static const struct vmd_device_data
+> > vmd_28c0_data = {
+> >   static const struct vmd_device_data vmd_467f_data = {
+> >   	.features = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+> >   		    VMD_FEAT_HAS_BUS_RESTRICTIONS |
+> > -		    VMD_FEAT_OFFSET_FIRST_VECTOR,
+> > +		    VMD_FEAT_OFFSET_FIRST_VECTOR |
+> > +		    VMD_FEAT_BIOS_PM_QUIRK,
+> > +	/* 3145728 ns (LatencyScale of 1048576 ns with a LatencyValue
+> > of 3) */
+> > +	.ltr = 0x1003,
+> >   };
+> >   
+> >   static const struct pci_device_id vmd_ids[] = {
+
