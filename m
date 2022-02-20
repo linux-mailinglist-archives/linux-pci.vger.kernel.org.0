@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CC384BD0FD
+	by mail.lfdr.de (Postfix) with ESMTP id 0134E4BD0FC
 	for <lists+linux-pci@lfdr.de>; Sun, 20 Feb 2022 20:34:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244630AbiBTTeY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 20 Feb 2022 14:34:24 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43252 "EHLO
+        id S244638AbiBTTe0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 20 Feb 2022 14:34:26 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244638AbiBTTeX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Feb 2022 14:34:23 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18244507B
-        for <linux-pci@vger.kernel.org>; Sun, 20 Feb 2022 11:34:01 -0800 (PST)
+        with ESMTP id S244637AbiBTTeZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Feb 2022 14:34:25 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365C44506A
+        for <linux-pci@vger.kernel.org>; Sun, 20 Feb 2022 11:34:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7DF0F60EEA
-        for <linux-pci@vger.kernel.org>; Sun, 20 Feb 2022 19:34:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 044FDC340F0;
-        Sun, 20 Feb 2022 19:33:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C686460EF2
+        for <linux-pci@vger.kernel.org>; Sun, 20 Feb 2022 19:34:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A9DC340EB;
+        Sun, 20 Feb 2022 19:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645385640;
-        bh=x6E3D82tqL8Ev1zPGRI/lFqMDrlznXp6H35OeL2E27Y=;
+        s=k20201202; t=1645385643;
+        bh=Q7udoEyumIV3Id2yJHB78wnTUYP2itFHIQHmBGa4kZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U8UDTcco8ZCyUNIJx27v+4gXNzR74zpi5CpSw1tPEF9t5MojKTsX3fRoRABWpYh14
-         73gRtBxWnU+YMiTCaA0NhoPlAV7hoGRA6FxZdISIoAhA68uhqq6iP/Vpge2/OIcglM
-         WZvMpPmkdX6Ko5e5RgpC+tJ7ipXT2vOBj44UOswTe3NliAvtScdxODG85l+3/Y7FRl
-         U6IWtk+Iqz8W3J3kMww9rgmHuvLpmUtDKkUT31hxQMuWhFXc89cMscp0oYYm4H4P2m
-         KoMzYOg//qMBih/JpL3uavsBtw64tr82TywEf0hRGE8zThbrxfUP8E/qGBRGwt69Zq
-         ah/pz/jk1rq2Q==
+        b=ar+RHAJLl2cEgY7Ug7FkARP9pfAWugx9dRQIepRlneW/SSePDMyCbSQXKc7NejXf5
+         Gkkmp8FLZjfDND9UOP45yyw5lKG0TjJ4QX5NH8Z8CoswwDV5x6WR+N6+EvEi/T1+qJ
+         /vF06O619dqje4eugCsUMLyIMwxNx/y6YtyXsw6QxBKcpFY/Cw6rWxW0CLoslxdnVm
+         Z6cT/lDcoTe9Vk08txt1C7Tn37b944sOEwOsHpWXWk17L5urvOJLMb2l0axO6jUhaP
+         w/FQscc/5tN9khuH+QJoyKsGKRo2Wz7/+w0bSZXmOOGlMJI+a5yBwNPpPJjUeXpLKk
+         7UwAS2+yST5NA==
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <helgaas@kernel.org>
@@ -39,9 +39,9 @@ Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Gregory CLEMENT <gregory.clement@bootlin.com>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Subject: [PATCH 04/18] PCI: Add PCI_EXP_SLTCAP_*_SHIFT macros
-Date:   Sun, 20 Feb 2022 20:33:32 +0100
-Message-Id: <20220220193346.23789-5-kabel@kernel.org>
+Subject: [PATCH 05/18] PCI: aardvark: Fix reporting Slot capabilities on emulated bridge
+Date:   Sun, 20 Feb 2022 20:33:33 +0100
+Message-Id: <20220220193346.23789-6-kabel@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220220193346.23789-1-kabel@kernel.org>
 References: <20220220193346.23789-1-kabel@kernel.org>
@@ -60,33 +60,81 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Pali Rohár <pali@kernel.org>
 
-These macros allows to easily compose and extract Slot Power Limit and
-Physical Slot Number values from Slot Capability Register.
+Slot capabilities are currently not reported because emulated bridge
+does not report the PCI_EXP_FLAGS_SLOT flag.
+
+Set PCI_EXP_FLAGS_SLOT to let the kernel know that PCI_EXP_SLT*
+registers are supported.
+
+Move setting of PCI_EXP_SLTCTL register from "dynamic" pcie_conf_read
+function to static buffer as it is only statically filled the
+PCI_EXP_SLTSTA_PDS flag and dynamic read callback is not needed for this
+register.
+
+Set Presence State Bit to 1 since there is no support for unplugging the
+card and there is currently no platform able to detect presence of
+a card - in such a case the bit needs to be set to 1.
+
+Finally correctly set Physical Slot Number to 1 since there is only one
+port and zero value is reserved for ports within the same silicon as
+Root Port which is not our case for Aardvark HW.
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 Signed-off-by: Marek Behún <kabel@kernel.org>
 ---
- include/uapi/linux/pci_regs.h | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/controller/pci-aardvark.c | 31 +++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index bee1a9ed6e66..d825e17e448c 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -591,10 +591,13 @@
- #define  PCI_EXP_SLTCAP_HPS	0x00000020 /* Hot-Plug Surprise */
- #define  PCI_EXP_SLTCAP_HPC	0x00000040 /* Hot-Plug Capable */
- #define  PCI_EXP_SLTCAP_SPLV	0x00007f80 /* Slot Power Limit Value */
-+#define  PCI_EXP_SLTCAP_SPLV_SHIFT	7  /* Slot Power Limit Value shift */
- #define  PCI_EXP_SLTCAP_SPLS	0x00018000 /* Slot Power Limit Scale */
-+#define  PCI_EXP_SLTCAP_SPLS_SHIFT	15 /* Slot Power Limit Scale shift */
- #define  PCI_EXP_SLTCAP_EIP	0x00020000 /* Electromechanical Interlock Present */
- #define  PCI_EXP_SLTCAP_NCCS	0x00040000 /* No Command Completed Support */
- #define  PCI_EXP_SLTCAP_PSN	0xfff80000 /* Physical Slot Number */
-+#define  PCI_EXP_SLTCAP_PSN_SHIFT	19 /* Physical Slot Number shift */
- #define PCI_EXP_SLTCTL		0x18	/* Slot Control */
- #define  PCI_EXP_SLTCTL_ABPE	0x0001	/* Attention Button Pressed Enable */
- #define  PCI_EXP_SLTCTL_PFDE	0x0002	/* Power Fault Detected Enable */
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 01dd530e1b5f..c80c78505bfa 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -859,14 +859,11 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+ 
+ 
+ 	switch (reg) {
+-	case PCI_EXP_SLTCTL:
+-		*value = PCI_EXP_SLTSTA_PDS << 16;
+-		return PCI_BRIDGE_EMUL_HANDLED;
+-
+ 	/*
+-	 * PCI_EXP_RTCTL and PCI_EXP_RTSTA are also supported, but do not need
+-	 * to be handled here, because their values are stored in emulated
+-	 * config space buffer, and we read them from there when needed.
++	 * PCI_EXP_SLTCAP, PCI_EXP_SLTCTL, PCI_EXP_RTCTL and PCI_EXP_RTSTA are
++	 * also supported, but do not need to be handled here, because their
++	 * values are stored in emulated config space buffer, and we read them
++	 * from there when needed.
+ 	 */
+ 
+ 	case PCI_EXP_LNKCAP: {
+@@ -1055,8 +1052,24 @@ static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
+ 	/* Support interrupt A for MSI feature */
+ 	bridge->conf.intpin = PCI_INTERRUPT_INTA;
+ 
+-	/* Aardvark HW provides PCIe Capability structure in version 2 */
+-	bridge->pcie_conf.cap = cpu_to_le16(2);
++	/*
++	 * Aardvark HW provides PCIe Capability structure in version 2 and
++	 * indicate slot support, which is emulated.
++	 */
++	bridge->pcie_conf.cap = cpu_to_le16(2 | PCI_EXP_FLAGS_SLOT);
++
++	/*
++	 * Set Presence Detect State bit permanently since there is no support
++	 * for unplugging the card nor detecting whether it is plugged. (If a
++	 * platform exists in the future that supports it, via a GPIO for
++	 * example, it should be implemented via this bit.)
++	 *
++	 * Set physical slot number to 1 since there is only one port and zero
++	 * value is reserved for ports within the same silicon as Root Port
++	 * which is not our case.
++	 */
++	bridge->pcie_conf.slotcap = cpu_to_le32(1 << PCI_EXP_SLTCAP_PSN_SHIFT);
++	bridge->pcie_conf.slotsta = cpu_to_le16(PCI_EXP_SLTSTA_PDS);
+ 
+ 	/* Indicates supports for Completion Retry Status */
+ 	bridge->pcie_conf.rootcap = cpu_to_le16(PCI_EXP_RTCAP_CRSVIS);
 -- 
 2.34.1
 
