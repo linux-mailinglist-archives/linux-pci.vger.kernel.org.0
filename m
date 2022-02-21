@@ -2,83 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 662FA4BD4A9
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Feb 2022 05:19:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D98DC4BD4B8
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Feb 2022 05:29:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245432AbiBUED5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 20 Feb 2022 23:03:57 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59218 "EHLO
+        id S1343509AbiBUEUj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 20 Feb 2022 23:20:39 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238697AbiBUEDy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Feb 2022 23:03:54 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F248E31DD6;
-        Sun, 20 Feb 2022 20:03:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645416212; x=1676952212;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=a8s6oPn2OepoA76s//VWNsP4UZFDI+9oeHKC9k5AQGM=;
-  b=M/HWzCybvLl4fVSsSHXzBFMOejqsHoIpnejBmbC63ebvvpFfRWaBfo0y
-   RowkODqI9IL8q4lONkg5x3YmZgh/Cphv2ieXocCEjEEI0gnUg5lRKAoQI
-   uw6tJdmJCwyC5V3xXqedLFwJbnogxO4uoKGafr5liQ0rNSLJzTiSzE8RA
-   dzVKfDNrQ/bA0CAZz859yo2lCdIfqTIbYFCROhNEe46wud9vCSVT2sTkO
-   sVNFz2Pd1V/kO8NuvcHnXRGuQ0y9WJmRC6Lf93PTa7t/R6S9OJvri7kHJ
-   ek4OXwrdIwFfe6VyaXJBdaOHP7PQSj39JvjzqupVKD0156Ht4zuqWqWXB
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10264"; a="251612704"
-X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
-   d="scan'208";a="251612704"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 20:03:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
-   d="scan'208";a="683079024"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Feb 2022 20:03:25 -0800
-Message-ID: <97485ead-2570-2782-8766-9a4d8c4c8535@linux.intel.com>
-Date:   Mon, 21 Feb 2022 12:02:00 +0800
+        with ESMTP id S245716AbiBUEUj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Feb 2022 23:20:39 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF8F9E0BB;
+        Sun, 20 Feb 2022 20:20:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 71FFCB80CF9;
+        Mon, 21 Feb 2022 04:20:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A015C340E9;
+        Mon, 21 Feb 2022 04:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645417214;
+        bh=gfKtL3rCxVo8u8AWUM863Dway5lpvp8Eq5EP9JLAgG8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pWGHpd3E5K8IqQX4jfmrOPLDww/qC2cI7PoFy092zgpoYgAHDh7Ceh3RQz+OLVnbw
+         htkXWZ2puo0KPXXBp7RNWm2UzelAoaf9LKk8ywFT5V8rY223a7eON8c2WeTzUK9T89
+         sgOFGzPsnXWaVB8xsxJXonhckbSLxAnMGV5wPtUTgR0u/o2MLC2eXzISRsiAKt5Kb4
+         VvcZsPh86AzemeK0CQ3aaKe1OvL7NR9XAwly9jbLVUna7wxcEmsCZ3vKyFwhPmMpwC
+         tfA7mZjq1sqqu9tAeJpvQujSIq43vJGAb/0Cc/E3PZNURM/rzVzc/no8z9w40mBw/P
+         tc9QV+DvpVmeQ==
+Date:   Mon, 21 Feb 2022 12:20:08 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     l.stach@pengutronix.de, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com
+Subject: Re: [PATCH v3 1/2] ARM: dts: imx6qp-sabresd: Enable PCIe support
+Message-ID: <20220221042008.GL2249@dragon>
+References: <1644902192-12957-1-git-send-email-hongxing.zhu@nxp.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Cc:     baolu.lu@linux.intel.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
-        rafael@kernel.org, David Airlie <airlied@linux.ie>,
-        linux-pci@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        iommu@lists.linux-foundation.org,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v6 01/11] iommu: Add dma ownership management interfaces
-Content-Language: en-US
-To:     Christoph Hellwig <hch@infradead.org>
-References: <20220218005521.172832-1-baolu.lu@linux.intel.com>
- <20220218005521.172832-2-baolu.lu@linux.intel.com>
- <YhCc6dKyojInJe7u@infradead.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-In-Reply-To: <YhCc6dKyojInJe7u@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1644902192-12957-1-git-send-email-hongxing.zhu@nxp.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,40 +55,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/19/22 3:31 PM, Christoph Hellwig wrote:
-> The overall API and patch looks fine, but:
+On Tue, Feb 15, 2022 at 01:16:31PM +0800, Richard Zhu wrote:
+> In the i.MX6QP sabresd board(sch-28857) design, one external oscillator
+> is powered up by vgen3 and used as the PCIe reference clock source by
+> the endpoint device.
 > 
->> + * iommu_group_dma_owner_claimed() - Query group dma ownership status
->> + * @group: The group.
->> + *
->> + * This provides status query on a given group. It is racey and only for
->> + * non-binding status reporting.
+> If RC uses this oscillator as reference clock too, PLL6(ENET PLL) would
+> has to be in bypass mode, and ENET clocks would be messed up.
 > 
-> s/racey/racy/
-
-Yes.
-
+> To keep things simple, let RC use the internal PLL as reference clock
+> and set vgen3 always on to enable the external oscillator for endpoint
+> device on i.MX6QP sabresd board.
 > 
->> + */
->> +bool iommu_group_dma_owner_claimed(struct iommu_group *group)
->> +{
->> +	unsigned int user;
->> +
->> +	mutex_lock(&group->mutex);
->> +	user = group->owner_cnt;
->> +	mutex_unlock(&group->mutex);
->> +
->> +	return user;
->> +}
->> +EXPORT_SYMBOL_GPL(iommu_group_dma_owner_claimed);
+> NOTE: This reference clock setup is used to pass the GEN2 TX compliance
+> tests, and isn't recommended as a setup in the end-user design.
 > 
-> Still no no need for the lock here.
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  arch/arm/boot/dts/imx6qp-sabresd.dts | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qp-sabresd.dts b/arch/arm/boot/dts/imx6qp-sabresd.dts
+> index 480e73183f6b..083cf90bcab5 100644
+> --- a/arch/arm/boot/dts/imx6qp-sabresd.dts
+> +++ b/arch/arm/boot/dts/imx6qp-sabresd.dts
+> @@ -50,8 +50,14 @@ MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17059
+>  	};
+>  };
+>  
+> +&vgen3_reg {
+> +	regulator-min-microvolt = <1800000>;
+> +	regulator-max-microvolt = <3300000>;
 
-We've discussed this before. I tend to think that is right.
+These can be saved, as they are unchanged?
 
-We don't lose anything with this lock held and it also follows the rule
-that all accesses to the internal group structure must be done with the
-group->mutex held.
+Shawn
 
-Best regards,
-baolu
+> +	regulator-always-on;
+> +};
+> +
+>  &pcie {
+> -	status = "disabled";
+> +	status = "okay";
+>  };
+>  
+>  &sata {
+> -- 
+> 2.25.1
+> 
