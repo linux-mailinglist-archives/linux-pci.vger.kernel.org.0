@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2F0C4BDBC0
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Feb 2022 18:40:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 227D14BDCA9
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Feb 2022 18:42:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356204AbiBULYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Feb 2022 06:24:42 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54176 "EHLO
+        id S1356676AbiBULo7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Feb 2022 06:44:59 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356193AbiBULYF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Feb 2022 06:24:05 -0500
+        with ESMTP id S237647AbiBULo4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Feb 2022 06:44:56 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5348E0AD;
-        Mon, 21 Feb 2022 03:18:17 -0800 (PST)
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K2KWt6JfVz67xdt;
-        Mon, 21 Feb 2022 19:17:14 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DDE3B62;
+        Mon, 21 Feb 2022 03:44:33 -0800 (PST)
+Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K2L6C0brlz67xLh;
+        Mon, 21 Feb 2022 19:43:31 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Mon, 21 Feb 2022 12:18:14 +0100
+ 15.1.2308.21; Mon, 21 Feb 2022 12:44:31 +0100
 Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
  (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Mon, 21 Feb
- 2022 11:18:13 +0000
-Date:   Mon, 21 Feb 2022 11:18:12 +0000
+ 2022 11:44:30 +0000
+Date:   Mon, 21 Feb 2022 11:44:28 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Yicong Yang <yangyicong@hisilicon.com>
 CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
@@ -43,12 +43,11 @@ CC:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
         <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
         <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
         <linuxarm@huawei.com>, <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH v4 2/8] hwtracing: Add trace function support for
- HiSilicon PCIe Tune and Trace device
-Message-ID: <20220221111812.00004c0f@Huawei.com>
-In-Reply-To: <20220221084307.33712-3-yangyicong@hisilicon.com>
+Subject: Re: [PATCH v4 3/8] hisi_ptt: Register PMU device for PTT trace
+Message-ID: <20220221114428.000062cd@Huawei.com>
+In-Reply-To: <20220221084307.33712-4-yangyicong@hisilicon.com>
 References: <20220221084307.33712-1-yangyicong@hisilicon.com>
-        <20220221084307.33712-3-yangyicong@hisilicon.com>
+        <20220221084307.33712-4-yangyicong@hisilicon.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
@@ -67,323 +66,249 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 21 Feb 2022 16:43:01 +0800
+On Mon, 21 Feb 2022 16:43:02 +0800
 Yicong Yang <yangyicong@hisilicon.com> wrote:
 
-> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
-> integrated Endpoint(RCiEP) device, providing the capability
-> to dynamically monitor and tune the PCIe traffic, and trace
-> the TLP headers.
+> Register PMU device of PTT trace, then users can use
+> trace through perf command. The driver makes use of perf
+> AUX trace and support following events to configure the
+> trace:
 > 
-> Add the driver for the device to enable the trace function.
-> This patch adds basic function of trace, including the device's
-> probe and initialization, functions for trace buffer allocation
-> and trace enable/disable, register an interrupt handler to
-> simply response to the DMA events. The user interface of trace
-> will be added in the following patch.
+> - filter: select Root port or Endpoint to trace
+> - type: select the type of traced TLP headers
+> - direction: select the direction of traced TLP headers
+> - format: select the data format of the traced TLP headers
+> 
+> This patch adds the PMU driver part of PTT trace. The perf
+> command support of PTT trace is added in the following
+> patch.
 > 
 > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-Hi Yicong,
-
-A few really minor things inline, particularly one place
-where you can improve the error handling.
-It's always fiddly to handle errors in a pci_walk_bus() but
-in this case it's not too difficult as you just need to store
-the retval somewhere in the private data then retrieve it
-after the pci_walk_bus() call.
+A few minor comments inline.
 
 Thanks,
 
 Jonathan
 
-
-
-> ---
->  drivers/Makefile                 |   1 +
->  drivers/hwtracing/Kconfig        |   2 +
->  drivers/hwtracing/ptt/Kconfig    |  11 +
->  drivers/hwtracing/ptt/Makefile   |   2 +
->  drivers/hwtracing/ptt/hisi_ptt.c | 370 +++++++++++++++++++++++++++++++
->  drivers/hwtracing/ptt/hisi_ptt.h | 149 +++++++++++++
->  6 files changed, 535 insertions(+)
->  create mode 100644 drivers/hwtracing/ptt/Kconfig
->  create mode 100644 drivers/hwtracing/ptt/Makefile
->  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
->  create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
-> 
-> diff --git a/drivers/Makefile b/drivers/Makefile
-> index a110338c860c..ab3411e4eba5 100644
-> --- a/drivers/Makefile
-> +++ b/drivers/Makefile
-> @@ -175,6 +175,7 @@ obj-$(CONFIG_USB4)		+= thunderbolt/
->  obj-$(CONFIG_CORESIGHT)		+= hwtracing/coresight/
->  obj-y				+= hwtracing/intel_th/
->  obj-$(CONFIG_STM)		+= hwtracing/stm/
-> +obj-$(CONFIG_HISI_PTT)		+= hwtracing/ptt/
->  obj-$(CONFIG_ANDROID)		+= android/
->  obj-$(CONFIG_NVMEM)		+= nvmem/
->  obj-$(CONFIG_FPGA)		+= fpga/
-> diff --git a/drivers/hwtracing/Kconfig b/drivers/hwtracing/Kconfig
-> index 13085835a636..911ee977103c 100644
-> --- a/drivers/hwtracing/Kconfig
-> +++ b/drivers/hwtracing/Kconfig
-> @@ -5,4 +5,6 @@ source "drivers/hwtracing/stm/Kconfig"
->  
->  source "drivers/hwtracing/intel_th/Kconfig"
->  
-> +source "drivers/hwtracing/ptt/Kconfig"
-> +
->  endmenu
-> diff --git a/drivers/hwtracing/ptt/Kconfig b/drivers/hwtracing/ptt/Kconfig
-> new file mode 100644
-> index 000000000000..41fa83921a07
-> --- /dev/null
-> +++ b/drivers/hwtracing/ptt/Kconfig
-> @@ -0,0 +1,11 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config HISI_PTT
-> +	tristate "HiSilicon PCIe Tune and Trace Device"
-> +	depends on ARM64 && PCI && HAS_DMA && HAS_IOMEM
-> +	help
-> +	  HiSilicon PCIe Tune and Trace Device exists as a PCIe RCiEP
-> +	  device, and it provides support for PCIe traffic tuning and
-> +	  tracing TLP headers to the memory.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called hisi_ptt.
-> diff --git a/drivers/hwtracing/ptt/Makefile b/drivers/hwtracing/ptt/Makefile
-> new file mode 100644
-> index 000000000000..908c09a98161
-> --- /dev/null
-> +++ b/drivers/hwtracing/ptt/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_HISI_PTT) += hisi_ptt.o
-> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-> new file mode 100644
-> index 000000000000..a5b4f09ccd1e
-> --- /dev/null
-> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
-> @@ -0,0 +1,370 @@
-
-...
-
-> +static void hisi_ptt_free_trace_buf(struct hisi_ptt *hisi_ptt)
+> +static int hisi_ptt_trace_init_filter(struct hisi_ptt *hisi_ptt, u64 config)
 > +{
-> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
-> +	struct device *dev = &hisi_ptt->pdev->dev;
-> +	int i;
-> +
-> +	if (!ctrl->trace_buf)
-> +		return;
-> +
-> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
-> +		if (ctrl->trace_buf[i].addr)
-> +			dma_free_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
-> +					  ctrl->trace_buf[i].addr,
-> +					  ctrl->trace_buf[i].dma);
-> +
-> +	kfree(ctrl->trace_buf);
-> +	ctrl->trace_buf = NULL;
-> +}
-> +
-> +static int hisi_ptt_alloc_trace_buf(struct hisi_ptt *hisi_ptt)
-> +{
-> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
-> +	struct device *dev = &hisi_ptt->pdev->dev;
-> +	int i;
-> +
-> +	hisi_ptt->trace_ctrl.buf_index = 0;
-> +
-> +	/* If the trace buffer has already been allocated, zero it. */
-> +	if (ctrl->trace_buf) {
-> +		for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
-> +			memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
-> +		return 0;
-> +	}
-> +
-> +	ctrl->trace_buf = kcalloc(HISI_PTT_TRACE_BUF_CNT, sizeof(struct hisi_ptt_dma_buffer),
-
-Slight preference for sizeof(*ctrl->trace_buf) as it saves a reviewer from scrolling down
-to check the type is correct.
-
-> +				  GFP_KERNEL);
-> +	if (!ctrl->trace_buf)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
-> +		ctrl->trace_buf[i].addr = dma_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
-> +							     &ctrl->trace_buf[i].dma,
-> +							     GFP_KERNEL);
-> +		if (!ctrl->trace_buf[i].addr) {
-> +			hisi_ptt_free_trace_buf(hisi_ptt);
-> +			return -ENOMEM;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-
-...
-
-> +
-> +static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
-> +{
+> +	unsigned long val, port_mask = hisi_ptt->port_mask;
 > +	struct hisi_ptt_filter_desc *filter;
-> +	struct hisi_ptt *hisi_ptt = data;
-> +	struct list_head *target_list;
+> +	int ret = -EINVAL;
 > +
-> +	target_list = pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT ?
-> +		      &hisi_ptt->port_filters : &hisi_ptt->req_filters;
-> +
-> +	filter = kzalloc(sizeof(*filter), GFP_KERNEL);
-> +	if (!filter)
-
-As below, if this happens we'll be left in an odd intermediate state
-where the error is not communicated up to the probe function but the
-filters are only partly set up.
-
-> +		return -ENOMEM;
-> +
-> +	filter->pdev = pdev;
-> +	list_add_tail(&filter->list, target_list);
-> +
-> +	/* Update the available port mask */
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
-> +		hisi_ptt->port_mask |= hisi_ptt_get_filter_val(pdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static void hisi_ptt_release_filters(struct hisi_ptt *hisi_ptt)
-> +{
-> +	struct hisi_ptt_filter_desc *filter, *tfilter;
-> +
-> +	list_for_each_entry_safe(filter, tfilter, &hisi_ptt->req_filters, list) {
-> +		list_del(&filter->list);
-> +		kfree(filter);
-> +	}
-> +
-> +	list_for_each_entry_safe(filter, tfilter, &hisi_ptt->port_filters, list) {
-> +		list_del(&filter->list);
-> +		kfree(filter);
-> +	}
-> +}
-> +
-> +static void hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
-> +{
-> +	struct pci_dev *pdev = hisi_ptt->pdev;
-> +	struct pci_bus *bus;
-> +	u32 reg;
-> +
-> +	INIT_LIST_HEAD(&hisi_ptt->port_filters);
-> +	INIT_LIST_HEAD(&hisi_ptt->req_filters);
+> +	hisi_ptt->trace_ctrl.is_port = FIELD_GET(HISI_PTT_PMU_FILTER_IS_PORT, config);
+> +	val = FIELD_GET(HISI_PTT_PMU_FILTER_VAL_MASK, config);
 > +
 > +	/*
-> +	 * The device range register provides the information about the
-> +	 * root ports which the RCiEP can control and trace. The RCiEP
-> +	 * and the root ports it support are on the same PCIe core, with
-> +	 * same domain number but maybe different bus number. The device
-> +	 * range register will tell us which root ports we can support,
-> +	 * Bit[31:16] indicates the upper BDF numbers of the root port,
-> +	 * while Bit[15:0] indicates the lower.
+> +	 * Port filters are defined as bit mask. For port filters, check
+> +	 * the bits in the @val are within the range of hisi_ptt->port_mask
+> +	 * and whether it's empty or not, otherwise user has specified
+> +	 * some unsupported root ports.
+> +	 *
+> +	 * For Requester ID filters, walk the available filter list to see
+> +	 * whether we have one matched.
 > +	 */
-> +	reg = readl(hisi_ptt->iobase + HISI_PTT_DEVICE_RANGE);
-> +	hisi_ptt->upper = FIELD_GET(HISI_PTT_DEVICE_RANGE_UPPER, reg);
-> +	hisi_ptt->lower = FIELD_GET(HISI_PTT_DEVICE_RANGE_LOWER, reg);
-> +
-> +	bus = pci_find_bus(pci_domain_nr(pdev->bus), PCI_BUS_NUM(hisi_ptt->upper));
-> +	if (bus)
-> +		pci_walk_bus(bus, hisi_ptt_init_filters, hisi_ptt);
-
-Error handling needed for the hisi_ptt_init_filters call though that will require
-placing a retval somewhere in hisi_ptt so we can know there was an error.
-
-> +
-> +	hisi_ptt->trace_ctrl.default_cpu = cpumask_first(cpumask_of_node(dev_to_node(&pdev->dev)));
-> +}
-> +
-> +/*
-> + * The DMA of PTT trace can only use direct mapping, due to some
-> + * hardware restriction. Check whether there is an IOMMU or the
-> + * policy of the IOMMU domain is passthrough, otherwise the trace
-> + * cannot work.
-> + *
-> + * The PTT device is supposed to behind the ARM SMMUv3, which
-> + * should have passthrough the device by a quirk.
-
-Trivial but perhaps a clearer wording is:
-
-The PTT Device is behind an ARM SMMUv3 which should be set to
-passthrough for this device using a quirk.
-
-
-> + */
-> +static int hisi_ptt_check_iommu_mapping(struct pci_dev *pdev)
-> +{
-> +	struct iommu_domain *iommu_domain;
-> +
-> +	iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
-> +	if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
-> +		return 0;
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static int hisi_ptt_probe(struct pci_dev *pdev,
-> +			  const struct pci_device_id *id)
-> +{
-> +	struct hisi_ptt *hisi_ptt;
-> +	int ret;
-> +
-> +	ret = hisi_ptt_check_iommu_mapping(pdev);
-> +	if (ret) {
-> +		pci_err(pdev, "cannot work with non-direct DMA mapping.\n");
-> +		return ret;
+> +	if (!hisi_ptt->trace_ctrl.is_port) {
+> +		list_for_each_entry(filter, &hisi_ptt->req_filters, list)
+> +			if (val == hisi_ptt_get_filter_val(filter->pdev)) {
+> +				ret = 0;
+> +				break;
+> +			}
+> +	} else if (bitmap_subset(&val, &port_mask, BITS_PER_LONG)) {
+> +		ret = 0;
 > +	}
 > +
-> +	hisi_ptt = devm_kzalloc(&pdev->dev, sizeof(*hisi_ptt), GFP_KERNEL);
-> +	if (!hisi_ptt)
-> +		return -ENOMEM;
-> +
-> +	mutex_init(&hisi_ptt->mutex);
-> +	hisi_ptt->pdev = pdev;
-> +	pci_set_drvdata(pdev, hisi_ptt);
-> +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret) {
-> +		pci_err(pdev, "failed to enable device, ret = %d.\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = pcim_iomap_regions(pdev, BIT(2), DRV_NAME);
-> +	if (ret) {
-> +		pci_err(pdev, "failed to remap io memory, ret = %d.\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	hisi_ptt->iobase = pcim_iomap_table(pdev)[2];
-> +
-> +	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
-> +	if (ret) {
-> +		pci_err(pdev, "failed to set 64 bit dma mask, ret = %d.\n", ret);
-> +		return ret;
-> +	}
-> +	pci_set_master(pdev);
-> +
-> +	ret = hisi_ptt_register_irq(hisi_ptt);
 > +	if (ret)
 > +		return ret;
 > +
-> +	hisi_ptt_init_ctrls(hisi_ptt);
-
-There are some elements of this call that can fail so probably should return an
-error code an have appropriate cleanup in here.
-
-> +
+> +	hisi_ptt->trace_ctrl.filter = val;
 > +	return 0;
+> +}
+> +
+> +static int hisi_ptt_pmu_event_init(struct perf_event *event)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	int ret;
+> +	u32 val;
+> +
+> +	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
+> +		return -ENOENT;
+> +
+> +	mutex_lock(&hisi_ptt->mutex);
+> +
+> +	ret = hisi_ptt_trace_init_filter(hisi_ptt, event->attr.config);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_DIRECTION_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_config_onehot(val, hisi_ptt_trace_available_direction,
+> +						 ARRAY_SIZE(hisi_ptt_trace_available_direction));
+> +	if (ret < 0)
+> +		goto out;
+> +	ctrl->direction = val;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_TYPE_MASK, event->attr.config);
+> +
+
+For consistency, no blank line here.
+
+> +	ret = hisi_ptt_trace_valid_config(val, hisi_ptt_trace_available_type,
+> +					  ARRAY_SIZE(hisi_ptt_trace_available_type));
+> +	if (ret < 0)
+> +		goto out;
+> +	ctrl->type = val;
+> +
+> +	val = FIELD_GET(HISI_PTT_PMU_FORMAT_MASK, event->attr.config);
+> +	ret = hisi_ptt_trace_valid_config_onehot(val, hisi_ptt_trace_availble_format,
+> +						 ARRAY_SIZE(hisi_ptt_trace_availble_format));
+> +	if (ret < 0)
+> +		goto out;
+> +	ctrl->format = val;
+> +
+> +out:
+> +	mutex_unlock(&hisi_ptt->mutex);
+> +	return ret;
 > +}
 
 ...
+
+> +
+> +static void hisi_ptt_pmu_start(struct perf_event *event, int flags)
+> +{
+> +	struct hisi_ptt *hisi_ptt = to_hisi_ptt(event->pmu);
+> +	struct perf_output_handle *handle = &hisi_ptt->trace_ctrl.handle;
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	struct hisi_ptt_pmu_buf *buf;
+> +	int cpu = event->cpu;
+> +	int ret;
+> +
+> +	hwc->state = 0;
+> +	mutex_lock(&hisi_ptt->mutex);
+> +	if (hisi_ptt->trace_ctrl.status == HISI_PTT_TRACE_STATUS_ON) {
+> +		pci_dbg(hisi_ptt->pdev, "trace has already started\n");
+> +		goto stop;
+
+If it is already started setting the state to STOPPED without doing anything
+to change the hardware state doesn't feel right.
+I'm assuming we only get here as a result of a bug, so perhaps its fine
+to do this.
+
+> +	}
+> +
+> +	if (cpu == -1)
+> +		cpu = hisi_ptt->trace_ctrl.default_cpu;
+> +
+> +	/*
+> +	 * Handle the interrupt on the same cpu which starts the trace to avoid
+> +	 * context mismatch. Otherwise we'll trigger the WARN from the perf
+> +	 * core in event_function_local().
+> +	 */
+> +	WARN_ON(irq_set_affinity(pci_irq_vector(hisi_ptt->pdev, HISI_PTT_TRACE_DMA_IRQ),
+> +				 cpumask_of(cpu)));
+> +
+> +	ret = hisi_ptt_alloc_trace_buf(hisi_ptt);
+> +	if (ret) {
+> +		pci_dbg(hisi_ptt->pdev, "alloc trace buf failed, ret = %d\n", ret);
+> +		goto stop;
+> +	}
+> +
+> +	buf = perf_aux_output_begin(handle, event);
+> +	if (!buf) {
+> +		pci_dbg(hisi_ptt->pdev, "aux output begin failed\n");
+> +		goto stop;
+> +	}
+> +
+> +	buf->pos = handle->head % buf->length;
+> +
+> +	ret = hisi_ptt_trace_start(hisi_ptt);
+> +	if (ret) {
+> +		pci_dbg(hisi_ptt->pdev, "trace start failed, ret = %d\n", ret);
+> +		perf_aux_output_end(handle, 0);
+> +		goto stop;
+> +	}
+> +
+> +	mutex_unlock(&hisi_ptt->mutex);
+> +	return;
+> +stop:
+> +	event->hw.state |= PERF_HES_STOPPED;
+> +	mutex_unlock(&hisi_ptt->mutex);
+> +}
+> +
+
+...
+
+> +static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
+> +{
+> +	u16 core_id, sicl_id;
+> +	char *pmu_name;
+> +	int ret;
+> +	u32 reg;
+> +
+> +	hisi_ptt->hisi_ptt_pmu = (struct pmu) {
+> +		.module		= THIS_MODULE,
+> +		.capabilities	= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE,
+> +		.task_ctx_nr	= perf_sw_context,
+> +		.attr_groups	= hisi_ptt_pmu_groups,
+> +		.event_init	= hisi_ptt_pmu_event_init,
+> +		.setup_aux	= hisi_ptt_pmu_setup_aux,
+> +		.free_aux	= hisi_ptt_pmu_free_aux,
+> +		.start		= hisi_ptt_pmu_start,
+> +		.stop		= hisi_ptt_pmu_stop,
+> +		.add		= hisi_ptt_pmu_add,
+> +		.del		= hisi_ptt_pmu_del,
+> +	};
+> +
+> +	reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
+> +	core_id = FIELD_GET(HISI_PTT_CORE_ID, reg);
+> +	sicl_id = FIELD_GET(HISI_PTT_SICL_ID, reg);
+> +
+> +	pmu_name = devm_kasprintf(&hisi_ptt->pdev->dev, GFP_KERNEL, "hisi_ptt%u_%u",
+> +				  sicl_id, core_id);
+> +	if (!pmu_name)
+> +		return -ENOMEM;
+> +
+> +	ret = perf_pmu_register(&hisi_ptt->hisi_ptt_pmu, pmu_name, -1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_add_action_or_reset(&hisi_ptt->pdev->dev,
+> +					hisi_ptt_unregister_pmu,
+> +					&hisi_ptt->hisi_ptt_pmu);
+
+This result in the cleanup of the driver being slightly out of order wrt to
+the setup as we have the filters cleared after this (in remove())
+Ideally the remove() ordering should be the precise reverse of the
+probe() order except where it is necessary to deviate from that and
+in those deviations I'd expect to see a comment saying why.
+
+So either clear up the filters using a devm_add_action_or_reset()
+or do a manual unregister of the pmu in remove. I prefer the
+devm_add_action_or_reset for hisi_ptt_release_filters() option.
+
+There may well not be a race here, but it is always good to avoid
+reviewers having to think about whether there might be one!
+
+Note that other reviewers may have different views on this however
+so perhaps go with what they say as this subsystem isn't my area
+of expertise!
+
+> +}
+> +
+>  /*
+>   * The DMA of PTT trace can only use direct mapping, due to some
+>   * hardware restriction. Check whether there is an IOMMU or the
+> @@ -337,6 +826,12 @@ static int hisi_ptt_probe(struct pci_dev *pdev,
+>  
+>  	hisi_ptt_init_ctrls(hisi_ptt);
+>  
+> +	ret = hisi_ptt_register_pmu(hisi_ptt);
+> +	if (ret) {
+> +		pci_err(pdev, "failed to register pmu device, ret = %d", ret);
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
