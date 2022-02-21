@@ -2,21 +2,21 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21F3E4BE487
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Feb 2022 18:59:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9414F4BE8DF
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Feb 2022 19:06:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344290AbiBUIoq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Feb 2022 03:44:46 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34368 "EHLO
+        id S1344319AbiBUIor (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Feb 2022 03:44:47 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344193AbiBUIon (ORCPT
+        with ESMTP id S1344253AbiBUIon (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Feb 2022 03:44:43 -0500
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AEC513D6D;
-        Mon, 21 Feb 2022 00:44:19 -0800 (PST)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4K2G636Bk2zdZSG;
-        Mon, 21 Feb 2022 16:43:07 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 197AC13D70;
+        Mon, 21 Feb 2022 00:44:20 -0800 (PST)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4K2G2F6Sb0zbbZs;
+        Mon, 21 Feb 2022 16:39:49 +0800 (CST)
 Received: from localhost.localdomain (10.67.164.66) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -39,9 +39,9 @@ To:     <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
 CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
         <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
         <yangyicong@hisilicon.com>, <song.bao.hua@hisilicon.com>
-Subject: [PATCH v4 4/8] hisi_ptt: Add support for dynamically updating the filter list
-Date:   Mon, 21 Feb 2022 16:43:03 +0800
-Message-ID: <20220221084307.33712-5-yangyicong@hisilicon.com>
+Subject: [PATCH v4 5/8] hisi_ptt: Add tune function support for HiSilicon PCIe Tune and Trace device
+Date:   Mon, 21 Feb 2022 16:43:04 +0800
+Message-ID: <20220221084307.33712-6-yangyicong@hisilicon.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20220221084307.33712-1-yangyicong@hisilicon.com>
 References: <20220221084307.33712-1-yangyicong@hisilicon.com>
@@ -62,284 +62,232 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCIe devices supported by the PTT trace can be removed/rescanned
-by hotplug or through sysfs.  Add support for dynamically updating
-the available filter list by registering a PCI bus notifier block.
-Then user can always get latest information about available tracing
-filters and driver can block the invalid filters of which related
-devices no longer exist in the system.
+Add tune function for the HiSilicon Tune and Trace device. The interface
+of tune is exposed through sysfs attributes of PTT PMU device.
 
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- drivers/hwtracing/ptt/hisi_ptt.c | 138 ++++++++++++++++++++++++++++---
- drivers/hwtracing/ptt/hisi_ptt.h |  34 ++++++++
- 2 files changed, 160 insertions(+), 12 deletions(-)
+ drivers/hwtracing/ptt/hisi_ptt.c | 154 +++++++++++++++++++++++++++++++
+ drivers/hwtracing/ptt/hisi_ptt.h |  19 ++++
+ 2 files changed, 173 insertions(+)
 
 diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-index c2b6f8aa9f1e..50193a331faa 100644
+index 50193a331faa..4aafaf6f752f 100644
 --- a/drivers/hwtracing/ptt/hisi_ptt.c
 +++ b/drivers/hwtracing/ptt/hisi_ptt.c
-@@ -269,25 +269,118 @@ static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
- 	return 0;
- }
+@@ -21,6 +21,159 @@
  
--static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
-+static void hisi_ptt_update_filters(struct work_struct *work)
- {
-+	struct delayed_work *delayed_work = to_delayed_work(work);
-+	struct hisi_ptt_filter_update_info info;
- 	struct hisi_ptt_filter_desc *filter;
--	struct hisi_ptt *hisi_ptt = data;
- 	struct list_head *target_list;
-+	struct hisi_ptt *hisi_ptt;
+ #include "hisi_ptt.h"
  
--	target_list = pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT ?
--		      &hisi_ptt->port_filters : &hisi_ptt->req_filters;
-+	hisi_ptt = container_of(delayed_work, struct hisi_ptt, work);
- 
--	filter = kzalloc(sizeof(*filter), GFP_KERNEL);
--	if (!filter)
--		return -ENOMEM;
-+	if (!mutex_trylock(&hisi_ptt->mutex)) {
-+		schedule_delayed_work(&hisi_ptt->work, HISI_PTT_WORK_DELAY_MS);
-+		return;
-+	}
- 
--	filter->pdev = pdev;
--	list_add_tail(&filter->list, target_list);
-+	while (kfifo_get(&hisi_ptt->filter_update_kfifo, &info)) {
-+		bool is_port = pci_pcie_type(info.pdev) == PCI_EXP_TYPE_ROOT_PORT;
-+		u16 val = hisi_ptt_get_filter_val(info.pdev);
++static int hisi_ptt_wait_tuning_finish(struct hisi_ptt *hisi_ptt)
++{
++	u32 val;
 +
-+		target_list = is_port ? &hisi_ptt->port_filters : &hisi_ptt->req_filters;
-+
-+		if (info.is_add) {
-+			filter = kzalloc(sizeof(*filter), GFP_KERNEL);
-+			if (!filter)
-+				continue;
-+
-+			filter->pdev = info.pdev;
-+			list_add_tail(&filter->list, target_list);
-+		} else {
-+			list_for_each_entry(filter, target_list, list)
-+				if (hisi_ptt_get_filter_val(filter->pdev) == val) {
-+					list_del(&filter->list);
-+					kfree(filter);
-+					break;
-+				}
-+		}
- 
--	/* Update the available port mask */
--	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
--		hisi_ptt->port_mask |= hisi_ptt_get_filter_val(pdev);
-+		/* Update the available port mask */
-+		if (!is_port)
-+			continue;
-+
-+		if (info.is_add)
-+			hisi_ptt->port_mask |= val;
-+		else
-+			hisi_ptt->port_mask &= ~val;
-+	}
-+
-+	mutex_unlock(&hisi_ptt->mutex);
++	return readl_poll_timeout(hisi_ptt->iobase + HISI_PTT_TUNING_INT_STAT,
++				  val, !(val & HISI_PTT_TUNING_INT_STAT_MASK),
++				  HISI_PTT_WAIT_POLL_INTERVAL_US,
++				  HISI_PTT_WAIT_TIMEOUT_US);
 +}
 +
-+static void hisi_ptt_update_fifo_in(struct hisi_ptt *hisi_ptt,
-+				    struct hisi_ptt_filter_update_info *info)
++static int hisi_ptt_tune_data_get(struct hisi_ptt *hisi_ptt,
++				  u32 event, u16 *data)
 +{
-+	struct pci_dev *root_port = pcie_find_root_port(info->pdev);
-+	u32 port_devid;
++	u32 reg;
 +
-+	if (!root_port)
-+		return;
++	reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
++	reg &= ~(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB);
++	reg |= FIELD_PREP(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB,
++			  event);
++	writel(reg, hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
 +
-+	port_devid = PCI_DEVID(root_port->bus->number, root_port->devfn);
-+	if (port_devid < hisi_ptt->lower ||
-+	    port_devid > hisi_ptt->upper)
-+		return;
++	/* Write all 1 to indicates it's the read process */
++	writel(~0UL, hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
 +
-+	if (kfifo_in_spinlocked(&hisi_ptt->filter_update_kfifo, info, 1,
-+				&hisi_ptt->filter_update_lock))
-+		schedule_delayed_work(&hisi_ptt->work, 0);
-+	else
-+		pci_warn(hisi_ptt->pdev,
-+			 "filter update fifo overflow for target %s\n",
-+			 pci_name(info->pdev));
-+}
++	if (hisi_ptt_wait_tuning_finish(hisi_ptt))
++		return -ETIMEDOUT;
 +
-+/*
-+ * A PCI bus notifier is used here for dynamically updating the filter
-+ * list.
-+ */
-+static int hisi_ptt_notifier_call(struct notifier_block *nb, unsigned long action,
-+				  void *data)
-+{
-+	struct hisi_ptt *hisi_ptt = container_of(nb, struct hisi_ptt, hisi_ptt_nb);
-+	struct hisi_ptt_filter_update_info info;
-+	struct device *dev = data;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	info.pdev = pdev;
-+
-+	switch (action) {
-+	case BUS_NOTIFY_ADD_DEVICE:
-+		info.is_add = true;
-+		break;
-+	case BUS_NOTIFY_DEL_DEVICE:
-+		info.is_add = false;
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	hisi_ptt_update_fifo_in(hisi_ptt, &info);
++	reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
++	reg &= HISI_PTT_TUNING_DATA_VAL_MASK;
++	*data = FIELD_GET(HISI_PTT_TUNING_DATA_VAL_MASK, reg);
 +
 +	return 0;
 +}
 +
-+static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
++static int hisi_ptt_tune_data_set(struct hisi_ptt *hisi_ptt,
++				  u32 event, u16 data)
 +{
-+	struct hisi_ptt_filter_update_info info = {
-+		.pdev = pdev,
-+		.is_add = true,
-+	};
-+	struct hisi_ptt *hisi_ptt = data;
++	u32 reg;
 +
-+	hisi_ptt_update_fifo_in(hisi_ptt, &info);
- 
- 	return 0;
- }
-@@ -313,6 +406,9 @@ static void hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
- 	struct pci_bus *bus;
- 	u32 reg;
- 
-+	INIT_DELAYED_WORK(&hisi_ptt->work, hisi_ptt_update_filters);
-+	spin_lock_init(&hisi_ptt->filter_update_lock);
-+	INIT_KFIFO(hisi_ptt->filter_update_kfifo);
- 	INIT_LIST_HEAD(&hisi_ptt->port_filters);
- 	INIT_LIST_HEAD(&hisi_ptt->req_filters);
- 
-@@ -329,6 +425,13 @@ static void hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
- 	hisi_ptt->upper = FIELD_GET(HISI_PTT_DEVICE_RANGE_UPPER, reg);
- 	hisi_ptt->lower = FIELD_GET(HISI_PTT_DEVICE_RANGE_LOWER, reg);
- 
-+	/*
-+	 * No need to fail if the bus is NULL here as the device
-+	 * maybe hotplugged after the PTT driver probe, in which
-+	 * case we can detect the event and update the list as
-+	 * we register a bus notifier for dynamically updating
-+	 * the filter list.
-+	 */
- 	bus = pci_find_bus(pci_domain_nr(pdev->bus), PCI_BUS_NUM(hisi_ptt->upper));
- 	if (bus)
- 		pci_walk_bus(bus, hisi_ptt_init_filters, hisi_ptt);
-@@ -832,6 +935,12 @@ static int hisi_ptt_probe(struct pci_dev *pdev,
- 		return ret;
- 	}
- 
-+	/* Register the bus notifier for dynamically updating the filter list */
-+	hisi_ptt->hisi_ptt_nb.notifier_call = hisi_ptt_notifier_call;
-+	ret = bus_register_notifier(&pci_bus_type, &hisi_ptt->hisi_ptt_nb);
-+	if (ret)
-+		pci_warn(pdev, "failed to register filter update notifier, ret = %d", ret);
++	reg = readl(hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
++	reg &= ~(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB);
++	reg |= FIELD_PREP(HISI_PTT_TUNING_CTRL_CODE | HISI_PTT_TUNING_CTRL_SUB,
++			  event);
++	writel(reg, hisi_ptt->iobase + HISI_PTT_TUNING_CTRL);
 +
- 	return 0;
- }
- 
-@@ -839,6 +948,11 @@ void hisi_ptt_remove(struct pci_dev *pdev)
++	writel(FIELD_PREP(HISI_PTT_TUNING_DATA_VAL_MASK, data),
++	       hisi_ptt->iobase + HISI_PTT_TUNING_DATA);
++
++	if (hisi_ptt_wait_tuning_finish(hisi_ptt))
++		return -ETIMEDOUT;
++
++	return 0;
++}
++
++static ssize_t hisi_ptt_tune_attr_show(struct device *dev,
++				       struct device_attribute *attr,
++				       char *buf)
++{
++	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
++	struct dev_ext_attribute *ext_attr;
++	struct hisi_ptt_tune_desc *desc;
++	int ret;
++	u16 val;
++
++	ext_attr = container_of(attr, struct dev_ext_attribute, attr);
++	desc = ext_attr->var;
++
++	if (!mutex_trylock(&hisi_ptt->mutex))
++		return -EBUSY;
++
++	ret = hisi_ptt_tune_data_get(hisi_ptt, desc->event_code, &val);
++
++	mutex_unlock(&hisi_ptt->mutex);
++	return ret ? ret : sysfs_emit(buf, "%u\n", val);
++}
++
++static ssize_t hisi_ptt_tune_attr_store(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t count)
++{
++	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
++	struct dev_ext_attribute *ext_attr;
++	struct hisi_ptt_tune_desc *desc;
++	int ret;
++	u16 val;
++
++	ext_attr = container_of(attr, struct dev_ext_attribute, attr);
++	desc = ext_attr->var;
++
++	if (kstrtou16(buf, 10, &val))
++		return -EINVAL;
++
++	if (!mutex_trylock(&hisi_ptt->mutex))
++		return -EBUSY;
++
++	ret = hisi_ptt_tune_data_set(hisi_ptt, desc->event_code, val);
++
++	mutex_unlock(&hisi_ptt->mutex);
++	return ret ? ret : count;
++}
++
++#define HISI_PTT_TUNE_ATTR(_name, _val, _show, _store)			\
++	static struct hisi_ptt_tune_desc _name##_desc = {		\
++		.name = #_name,						\
++		.event_code = _val,					\
++	};								\
++	static struct dev_ext_attribute hisi_ptt_##_name##_attr = {	\
++		.attr	= __ATTR(_name, 0600, _show, _store),		\
++		.var	= &_name##_desc,				\
++	}
++
++#define HISI_PTT_TUNE_ATTR_COMMON(_name, _val)		\
++	HISI_PTT_TUNE_ATTR(_name, _val,			\
++			   hisi_ptt_tune_attr_show,	\
++			   hisi_ptt_tune_attr_store)
++
++/*
++ * The value of the tuning event are composed of two parts: main event code in bit[0,15] and
++ * subevent code in bit[16,23]. For example, qox_tx_cpl is a subevent of 'Tx path QoS control'
++ * which for tuning the weight of Tx completion TLPs. See hisi_ptt.rst documentation for
++ * more information.
++ */
++#define HISI_PTT_TUNE_QOS_TX_CPL				(0x4 | (3 << 16))
++#define HISI_PTT_TUNE_QOS_TX_NP					(0x4 | (4 << 16))
++#define HISI_PTT_TUNE_QOS_TX_P					(0x4 | (5 << 16))
++#define HISI_PTT_TUNE_TX_PATH_IOB_RX_REQ_ALLOC_BUF_LEVEL	(0x5 | (6 << 16))
++#define HISI_PTT_TUNE_TX_PATH_TX_REQ_ALLOC_BUF_LEVEL		(0x5 | (7 << 16))
++
++HISI_PTT_TUNE_ATTR_COMMON(qos_tx_cpl,
++			  HISI_PTT_TUNE_QOS_TX_CPL);
++HISI_PTT_TUNE_ATTR_COMMON(qos_tx_np,
++			  HISI_PTT_TUNE_QOS_TX_NP);
++HISI_PTT_TUNE_ATTR_COMMON(qos_tx_p,
++			  HISI_PTT_TUNE_QOS_TX_P);
++HISI_PTT_TUNE_ATTR_COMMON(tx_path_iob_rx_req_alloc_buf_level,
++			  HISI_PTT_TUNE_TX_PATH_IOB_RX_REQ_ALLOC_BUF_LEVEL);
++HISI_PTT_TUNE_ATTR_COMMON(tx_path_tx_req_alloc_buf_level,
++			  HISI_PTT_TUNE_TX_PATH_TX_REQ_ALLOC_BUF_LEVEL);
++
++static struct attribute *hisi_ptt_tune_attrs[] = {
++	&hisi_ptt_qos_tx_cpl_attr.attr.attr,
++	&hisi_ptt_qos_tx_np_attr.attr.attr,
++	&hisi_ptt_qos_tx_p_attr.attr.attr,
++	&hisi_ptt_tx_path_iob_rx_req_alloc_buf_level_attr.attr.attr,
++	&hisi_ptt_tx_path_tx_req_alloc_buf_level_attr.attr.attr,
++	NULL,
++};
++
++static struct attribute_group hisi_ptt_tune_group = {
++	.attrs	= hisi_ptt_tune_attrs,
++	.name	= "tune",
++};
++
+ static u16 hisi_ptt_get_filter_val(struct pci_dev *pdev)
  {
- 	struct hisi_ptt *hisi_ptt = pci_get_drvdata(pdev);
- 
-+	bus_unregister_notifier(&pci_bus_type, &hisi_ptt->hisi_ptt_nb);
-+
-+	/* Cancel any work that has been queued */
-+	cancel_delayed_work_sync(&hisi_ptt->work);
-+
- 	if (hisi_ptt->trace_ctrl.status == HISI_PTT_TRACE_STATUS_ON)
- 		hisi_ptt_trace_end(hisi_ptt);
+ 	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
+@@ -521,6 +674,7 @@ static struct attribute_group hisi_ptt_pmu_filter_group = {
+ static const struct attribute_group *hisi_ptt_pmu_groups[] = {
+ 	&hisi_ptt_pmu_format_group,
+ 	&hisi_ptt_pmu_filter_group,
++	&hisi_ptt_tune_group,
+ 	NULL
+ };
  
 diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
-index ea012ae74c6b..b8f2d520443c 100644
+index b8f2d520443c..70b662393af9 100644
 --- a/drivers/hwtracing/ptt/hisi_ptt.h
 +++ b/drivers/hwtracing/ptt/hisi_ptt.h
-@@ -10,11 +10,15 @@
- #define _HISI_PTT_H
- 
- #include <linux/bits.h>
-+#include <linux/kfifo.h>
- #include <linux/list.h>
- #include <linux/mutex.h>
-+#include <linux/notifier.h>
- #include <linux/pci.h>
- #include <linux/perf_event.h>
-+#include <linux/spinlock.h>
- #include <linux/types.h>
-+#include <linux/workqueue.h>
- 
- #define DRV_NAME "hisi_ptt"
- 
-@@ -57,6 +61,12 @@
- /* Wait time for hardware DMA to reset */
- #define HISI_PTT_RESET_TIMEOUT_US	10UL
- #define HISI_PTT_RESET_POLL_INTERVAL_US	1UL
-+/* FIFO size for dynamically updating the PTT trace filter list. */
-+#define HISI_PTT_FILTER_UPDATE_FIFO_SIZE	16
-+/* Delay time for filter updating work */
-+#define HISI_PTT_WORK_DELAY_MS		100UL
-+/* Wait time for DMA hardware to reset */
-+#define HISI_PTT_RESET_WAIT_MS		1000UL
- /* Poll timeout and interval for waiting hardware work to finish */
- #define HISI_PTT_WAIT_TIMEOUT_US	100UL
- #define HISI_PTT_WAIT_POLL_INTERVAL_US	10UL
-@@ -117,6 +127,15 @@ struct hisi_ptt_filter_desc {
- 	struct pci_dev *pdev;
+@@ -25,6 +25,11 @@
+ /*
+  * The definition of the device registers and register fields.
+  */
++#define HISI_PTT_TUNING_CTRL		0x0000
++#define   HISI_PTT_TUNING_CTRL_CODE	GENMASK(15, 0)
++#define   HISI_PTT_TUNING_CTRL_SUB	GENMASK(23, 16)
++#define HISI_PTT_TUNING_DATA		0x0004
++#define   HISI_PTT_TUNING_DATA_VAL_MASK	GENMASK(15, 0)
+ #define HISI_PTT_TRACE_ADDR_SIZE	0x0800
+ #define HISI_PTT_TRACE_ADDR_BASE_LO_0	0x0810
+ #define HISI_PTT_TRACE_ADDR_BASE_HI_0	0x0814
+@@ -40,6 +45,8 @@
+ #define HISI_PTT_TRACE_INT_STAT		0x0890
+ #define   HISI_PTT_TRACE_INT_STAT_MASK	GENMASK(3, 0)
+ #define HISI_PTT_TRACE_INT_MASK		0x0894
++#define HISI_PTT_TUNING_INT_STAT	0x0898
++#define   HISI_PTT_TUNING_INT_STAT_MASK	BIT(0)
+ #define HISI_PTT_TRACE_WR_STS		0x08a0
+ #define   HISI_PTT_TRACE_WR_STS_WRITE	GENMASK(27, 0)
+ #define   HISI_PTT_TRACE_WR_STS_BUFFER	GENMASK(29, 28)
+@@ -78,6 +85,18 @@ enum hisi_ptt_trace_status {
+ 	HISI_PTT_TRACE_STATUS_ON,
  };
  
 +/**
-+ * struct hisi_ptt_filter_update_info - information for PTT filter updating
-+ * @pdev:       the PCI device to update in the filter list
-+ * @is_add:     adding to the filter or not
++ * struct hisi_ptt_tune_desc - describe tune event for PTT tune
++ * @hisi_ptt:   PTT device this tune event belongs to
++ * @name:       name of this event
++ * @event_code: code of the event
 + */
-+struct hisi_ptt_filter_update_info {
-+	struct pci_dev *pdev;
-+	bool is_add;
++struct hisi_ptt_tune_desc {
++	struct hisi_ptt *hisi_ptt;
++	const char *name;
++	u32 event_code;
 +};
- 
- /**
-  * struct hisi_ptt_pmu_buf - descriptor of the AUX buffer of PTT trace
-@@ -144,9 +163,13 @@ struct hisi_ptt_pmu_buf {
-  * @port_filters: the filter list of root ports
-  * @req_filters:  the filter list of requester ID
-  * @port_mask:    port mask of the managed root ports
-+ * @work:         delayed work for filter updating
-+ * @filter_update_lock: spinlock to protect the filter update fifo
-+ * @filter_update_fifo: fifo of the filters waiting to update the filter list
-  */
- struct hisi_ptt {
- 	struct hisi_ptt_trace_ctrl trace_ctrl;
-+	struct notifier_block hisi_ptt_nb;
- 	struct pmu hisi_ptt_pmu;
- 	void __iomem *iobase;
- 	struct pci_dev *pdev;
-@@ -164,6 +187,17 @@ struct hisi_ptt {
- 	struct list_head port_filters;
- 	struct list_head req_filters;
- 	u16 port_mask;
 +
-+	/*
-+	 * We use a delayed work here to avoid indefinitely waiting for
-+	 * the hisi_ptt->mutex which protecting the filter list. The
-+	 * work will be delayed only if the mutex can not be held,
-+	 * otherwise no delay will be applied.
-+	 */
-+	struct delayed_work work;
-+	spinlock_t filter_update_lock;
-+	DECLARE_KFIFO(filter_update_kfifo, struct hisi_ptt_filter_update_info,
-+		      HISI_PTT_FILTER_UPDATE_FIFO_SIZE);
- };
- 
- #define to_hisi_ptt(pmu) container_of(pmu, struct hisi_ptt, hisi_ptt_pmu)
+ /**
+  * struct hisi_ptt_dma_buffer - describe a single trace buffer of PTT trace.
+  *                              The detail of the data format is described
 -- 
 2.24.0
 
