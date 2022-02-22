@@ -2,40 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D46294BF5B4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 11:25:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC51C4BF668
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 11:46:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbiBVKYI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 05:24:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49630 "EHLO
+        id S229526AbiBVKrN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 05:47:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbiBVKYH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 05:24:07 -0500
-Received: from imap3.hz.codethink.co.uk (imap3.hz.codethink.co.uk [176.9.8.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D46F283013;
-        Tue, 22 Feb 2022 02:23:42 -0800 (PST)
-Received: from cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net ([86.15.83.122] helo=[192.168.0.21])
-        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1nMSKW-0005am-Cx; Tue, 22 Feb 2022 10:23:36 +0000
-Message-ID: <48e917d1-c012-29bc-d3be-b9ccb876a074@codethink.co.uk>
-Date:   Tue, 22 Feb 2022 10:23:35 +0000
+        with ESMTP id S231367AbiBVKrL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 05:47:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67594A8EEF;
+        Tue, 22 Feb 2022 02:46:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 04BFB61604;
+        Tue, 22 Feb 2022 10:46:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3726AC340E8;
+        Tue, 22 Feb 2022 10:46:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645526805;
+        bh=6HCy67i32Aa1PmtKy+in+Ktr5yO8lY2us1tc8/Y5o6A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iRa3duzz37M6i6gMqISsG9Y1Zziccn0+sM8yfyE4Q2vuAp+szKAq2G9ySTm7WBqvc
+         gb3JWk6fnfU9s1ZxoNphHRIwad0CJXsJJQ7Bw0HcG2vBH3p5UpRm4vq76xJJa2h6LM
+         dNzL0Rs5GT96MtkDFU0lrIHArnjO9HmMELPRxhakaRspsu+RqGA8Fa7evTYbKQt81a
+         C2XNRzyfzxjQ2weBAGV+aMBKEO2NA5t/cu4Wu6hKi98oOWlAz7YuUBkOnxu70bVHz4
+         DWCXiIF4bQ5cicgT5TlPMFkasa+HRD3Qg6aPzy/AcLBwAg4Xtf0xmozftFEJC3nrbi
+         t2TrrcYAUBvVA==
+Received: by pali.im (Postfix)
+        id 5C4B0FDB; Tue, 22 Feb 2022 11:46:42 +0100 (CET)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 00/12] PCI: mvebu: subsystem ids, AER and INTx
+Date:   Tue, 22 Feb 2022 11:46:13 +0100
+Message-Id: <20220222104625.28461-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [[PATCHv3]] PCI: fu740: Force gen1 for initial device probe
-Content-Language: en-GB
-To:     paul.walmsley@sifive.com, greentime.hu@sifive.com
-Cc:     lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20220221203803.1333012-1-ben.dooks@codethink.co.uk>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <20220221203803.1333012-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -43,25 +60,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/02/2022 20:38, Ben Dooks wrote:
-> The fu740 PCIe core does not probe any devices on the SiFive Unmatched
-> board without this fix from U-Boot (or having U-Boot explicitly start
-> the PCIe via either boot-script or user command).
-> 
-> The fix claims to set the link-speed to gen1 to get the probe
-> to work. As this is a copy from U-Boot, the code is assumed to be
-> correct and does fix the issue on the Unmatched. The code is at:
-> https://source.denx.de/u-boot/u-boot/-/blob/master/drivers/pci/pcie_dw_sifive.c#L271
-> 
-> The code has been this way since the driver was commited in:
-> https://source.denx.de/u-boot/u-boot/-/commit/416395c772018c6bf52aad36aca163115001793f
->
+This patch series extends pci-bridge-emul.c driver to emulate PCI Subsystem
+Vendor ID capability and PCIe extended capabilities. And then implement
+in pci-mvebu.c driver support for PCI Subsystem Vendor IDs, PCIe AER
+registers, support for legacy INTx interrupts, configuration for X1/X4
+mode and usage of new PCI child_ops API.
 
-Apologies everyone, messed up sending v3 so re-sent as v4.
+Changes in v3:
+* add Marek's Reviewed-by for first two patches
+* split comments from "PCI: mvebu: Implement support for legacy INTx
+  interrupts" patch into separate patch
 
+Changes in v2:
+* use static structures for INTx interrupts
+* remove INTx domain after unregistering INTx handler
+
+Pali Rohár (10):
+  PCI: pci-bridge-emul: Add support for PCI Bridge Subsystem Vendor ID
+    capability
+  dt-bindings: PCI: mvebu: Add num-lanes property
+  PCI: mvebu: Correctly configure x1/x4 mode
+  PCI: mvebu: Add support for PCI Bridge Subsystem Vendor ID on emulated
+    bridge
+  PCI: mvebu: Add support for Advanced Error Reporting registers on
+    emulated bridge
+  PCI: mvebu: Use child_ops API
+  dt-bindings: PCI: mvebu: Update information about intx interrupts
+  PCI: mvebu: Fix macro names and comments about legacy interrupts
+  PCI: mvebu: Implement support for legacy INTx interrupts
+  ARM: dts: armada-385.dtsi: Add definitions for PCIe legacy INTx
+    interrupts
+
+Russell King (2):
+  PCI: pci-bridge-emul: Re-arrange register tests
+  PCI: pci-bridge-emul: Add support for PCIe extended capabilities
+
+ .../devicetree/bindings/pci/mvebu-pci.txt     |  16 +
+ arch/arm/boot/dts/armada-385.dtsi             |  52 ++-
+ drivers/pci/controller/pci-mvebu.c            | 355 +++++++++++++++---
+ drivers/pci/pci-bridge-emul.c                 | 167 +++++---
+ drivers/pci/pci-bridge-emul.h                 |  17 +
+ 5 files changed, 497 insertions(+), 110 deletions(-)
 
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+2.20.1
 
-https://www.codethink.co.uk/privacy.html
