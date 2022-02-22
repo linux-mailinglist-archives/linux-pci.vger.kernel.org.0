@@ -2,144 +2,252 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 926E64C0108
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 19:13:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 216C64C03A8
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 22:18:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233081AbiBVSN4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 13:13:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35336 "EHLO
+        id S235737AbiBVVTJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 16:19:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234926AbiBVSNz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 13:13:55 -0500
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2052.outbound.protection.outlook.com [40.107.96.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F13F65830;
-        Tue, 22 Feb 2022 10:13:30 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IEvcB2B1VFAgV/fsXim+Buk5lytDI61a+GiDxI1kfBJcKOwF9NTBfJLhyQ3lHrx9tMggLPOTCkWBpBDVpNfsJu1RvsV3rMB3BhLpHg2RePvux891zjsPoSNxYwHXw0k2ycpidsdlVR1FcBJB8EOiNU0PnRdiQ8xC/VQfcTHmcItf2fB6YT9GP4mLUVUc5EZrXWAZniFiwmnq10sQdz3+Tcvc7OUWaXrE7bI1rsRO5tk5lR9SN+T2+6h8qL0BbLlCI2on3KsPGj5iUHMKzyu1/9fmepJIvazfNgDDPr6/UX4ys+B/S9MZlxPeHpS+FZgx5XJZ0VvzdKiT6g/YOaQwTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Nynq5UHTuh3YMMKrju5ltP5Gqt6pCtq7Uxl6ChTSaSY=;
- b=XONd+R6JQ8o3E2SK9KxWZMN2d/809sc9RSJUoDrm3wJ7MnEUL9YEVHnroTzzMvOg7Nr3frix3BrOyrVRjbhYPRuwo+anPXT7T+bJCZuOgAeUjyesl2RnQU/xubYcUxzezOOOndAsjUeamPZ7XBw5LkUPHIO9vsQV/HoAsOUqXjvAh4tK9qTAIU7zwGAWfK44tTeqiJNtoEiz4IJf11lRwupiYMckUkZsuCXK8drkhCH8J97fw6Pa9OLxPcFPAm0WOvxpAx7SlIwDtSTvzx5epG6hvuomcEeYKzukwe9PDAGqWzUvwxk1X6OV+XqNIdMstwvE3NGVs9gc7dQNZ4HEmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nynq5UHTuh3YMMKrju5ltP5Gqt6pCtq7Uxl6ChTSaSY=;
- b=Krww5w1dKmSJV9o023T9qSYE33Nr0MzuAqqvR+kPqyjchr3UPtr3Q3W0vzRgUiv5f8hn4D7HxEkL53Q5ksGtvBYUnueLs4vEWUqd2Q/SeJUcodg4mBqtiqzryGFfEXp8nCZS86WnlXz9wEw+RCf03pl8dYveV8Q4AuBZ7JwQZBdks6pYsD2m66saC9tjgSW19vAuGr7F3w43xFv7AxLgbwrPioGJqLqx73pAv+Bsh/+8akD+MfjM5mL1MOUhOTuDWcjFiBAX3+SG4JwJp1meFpETcHspOPInycn2CoWQG2PV+j93xS1Ur38S+O1i6Qbi7Sx+fUiZwJ3ugcmRUdHB+g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by MW3PR12MB4523.namprd12.prod.outlook.com (2603:10b6:303:5b::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.21; Tue, 22 Feb
- 2022 18:13:28 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3%4]) with mapi id 15.20.5017.022; Tue, 22 Feb 2022
- 18:13:28 +0000
-Date:   Tue, 22 Feb 2022 14:13:26 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
-        bhelgaas@google.com, saeedm@nvidia.com, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
-        leonro@nvidia.com, kwankhede@nvidia.com, mgurtovoy@nvidia.com,
-        maorg@nvidia.com, ashok.raj@intel.com, kevin.tian@intel.com,
-        shameerali.kolothum.thodi@huawei.com
-Subject: Re: [PATCH V8 mlx5-next 08/15] vfio: Have the core code decode the
- VFIO_DEVICE_FEATURE ioctl
-Message-ID: <20220222181326.GD10061@nvidia.com>
-References: <20220220095716.153757-1-yishaih@nvidia.com>
- <20220220095716.153757-9-yishaih@nvidia.com>
- <87o82y7sp2.fsf@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o82y7sp2.fsf@redhat.com>
-X-ClientProxiedBy: MN2PR18CA0010.namprd18.prod.outlook.com
- (2603:10b6:208:23c::15) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        with ESMTP id S234047AbiBVVTI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 16:19:08 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 342F510BBC9;
+        Tue, 22 Feb 2022 13:18:37 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C670139F;
+        Tue, 22 Feb 2022 13:18:36 -0800 (PST)
+Received: from [10.57.40.147] (unknown [10.57.40.147])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E55F3F70D;
+        Tue, 22 Feb 2022 13:18:32 -0800 (PST)
+Message-ID: <3d4c3bf1-fed6-f640-dc20-36d667de7461@arm.com>
+Date:   Tue, 22 Feb 2022 21:18:23 +0000
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2380f1b6-edc5-4b92-5e3d-08d9f62f063a
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4523:EE_
-X-Microsoft-Antispam-PRVS: <MW3PR12MB45237CBEC71C37CDFAF3B9E4C23B9@MW3PR12MB4523.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aGkjDseFjWxtrNFUOHviL2eT56c6bfhZODRtCSLy9g1ncpdgmOIc8bJ1oOMnVvnH9KQUV2tWd0n7fpiNMYgdTMgACqbG8sYAZMA6PHmsJ0HR2daUGkjDA5JyAroBFkK3UTEHABtEuHG1heCNruxU3EtC2wy1j1/jZO/AJszSq5nA4g2dD3Zm1L09Lpfn2fLet/X+dI2tTg2iL2VL57ia7MN7NeajjeLJQGcMXcLR0HUXxvyi7zpwYet1JVKnEhTUvL/X9Pshr46Pit6GekyLMmSFBsqia/ax/O/JzpV4/YxAxJblm2cQ/jkiKzGvVgzd2e/m97KsgKwnCnBWEF+oBpOSaWrGGn+KcDaSsZa7geUH+/xNhAkMyOV3wgB89nFoXOLpBKtTvSlINnh+IyAmwZKVTeX1n3daFsHSzRhh+ENIPYIod/9n4uAeb0W9E36q/dTCr2fK4ItPkDZZbJALEZlWn5S72eTY/ViRJr4DMqNvR7wAreDDlHV/l/Y21VM2lZs1+tLf3h6WeR3Mw0DfWUKUrz4LAIwlVX46zY/dnh9gKJMSg0uSDfXpjDT+7ZHfImkCXZ2+7uyELqGeea1B89MozJs4g5FVFifNB2c8XiUlq7aFkEcH4vKCmBit8gw5vy9UgNaRiet8x3aY/tIUNA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(4744005)(7416002)(38100700002)(5660300002)(6486002)(2906002)(508600001)(6506007)(8676002)(66476007)(66946007)(66556008)(83380400001)(4326008)(6916009)(8936002)(6512007)(26005)(186003)(316002)(2616005)(1076003)(36756003)(33656002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?MbTdMumxG6xdpzvGirSdd/Yik36yusOtQIV5OfSmWenwr3I4fNHWCRtfFuiu?=
- =?us-ascii?Q?LLG9r5p0Qo8CdsEKJVzshylrg8rp9uXGu2JMKDXtr7jEztHvqvK/ubatPa1H?=
- =?us-ascii?Q?gXb9hGpsMyyg4HCMI8IP1VMNB5GPtxdHdj8n1TFvSf/pvrig3usAPWSKMWPx?=
- =?us-ascii?Q?0SoJU5AMmDNEgtmg8pqPDjF2BKX7VOc/IUCQkCgQeXvEtdA6UX/jvmdWhuk4?=
- =?us-ascii?Q?i5U4ONPzuudMmRFYufadi8XPGLCJGxupD/txBp+qfewfDMO6VPJfbIm74OMh?=
- =?us-ascii?Q?jgTOm9+F5TgItSz6g3pFtglvMt0r46L45FpPS0KY2E9uiK7odtVT6sM66g+J?=
- =?us-ascii?Q?FkND2v/i01Nu9gYbxFAJetKfecuJOEMfVEqM5dypyCKKXe7iATtvSmklkM5K?=
- =?us-ascii?Q?bxKcB2re+8qt3K7ZOvlLk52G0L81MijZY3e66LO9YCSIdcnd0fZQOq+V0Mp5?=
- =?us-ascii?Q?paIPp54BU9DajXZDc6g1ofVMQZGkGDbU/+NSjQmG7JlahjJGz6LWDfyr57eQ?=
- =?us-ascii?Q?K6q+3f3pZZQIQsCjTOdXNyqcSnK6COrFqogsH7tLv7+qUvioPhBo54ZyTC2u?=
- =?us-ascii?Q?otFbc/ygz81EqxHGSxLhGAtTgVJz9+/PswUyyMWjUikchPFeTGsPUmuVSrbg?=
- =?us-ascii?Q?QE3zJ4Ku452mq5c2kXynpzId++U5hTm3q36R5dLE6VmI2YN9MQ74zyrqVgfx?=
- =?us-ascii?Q?xiDjPavrsOjRAkTHS+ynrkqMzsxxcE/s7Ap3eT7ja23qFUWWEUf1wYgEhoyg?=
- =?us-ascii?Q?TJwZcb5BjlZDX6KDG+YXdBKoyCnoohpEEXjLct/+R2qsYom67jIuq+Ivx2LU?=
- =?us-ascii?Q?3L6tfgObcnxC3otjd32JWSrvx+1D2xOYfICJZo/SfVir5KqXvH11PTIP43BE?=
- =?us-ascii?Q?1ET9gTQOdx5SlIbDBlMYaYCB4FdnSmSxfDJ217MZ53IIlxEq5rBRCEoOmQwK?=
- =?us-ascii?Q?kcVgAlSqXv3I/Ci7cy9P/UV1yObqlcR0kMuvA7srMIIFRseR8Y2X606I4ujA?=
- =?us-ascii?Q?a1mAUyBg9rcP7iXb/j41mA+HhdtsYC9a2bXtBRt/kGoioUqsNjOkyobfAnXG?=
- =?us-ascii?Q?XicN/yHVhVEigXvYSO0okzhR2GZM2VP/FtovLv7r5G74PYR5ZhQGhI3WzuB6?=
- =?us-ascii?Q?RoKdZAinSuU8Mi9y6wq2VyUYQ99AFe9c4khRxWQ6X69StEn1GBR3Q6vkv6aG?=
- =?us-ascii?Q?iQu0/nwv62S1orDr6R/xyTWGf3qJJS/vH4VFuduV5NLEAINL6fg/hUJ7X63e?=
- =?us-ascii?Q?vioWH9vQ0Ms+MJW7HjpjcDVfOQEicxPrKWKDTxHJrT7MlzgrtyHKNYSeac+G?=
- =?us-ascii?Q?LiHuG43rCh/BmxOYNYr4Jd0RXSDNyZReuKnYPQ/r4yF6FWXj/VAumqnge6A5?=
- =?us-ascii?Q?Ih3l+fB9rpKXn5HxRnCwdn/Cuy1K9pvb3M4O3LxN1GyjJCVpAqePFnoeo/H2?=
- =?us-ascii?Q?J6Rh8ougN5fJ40IePyLwOY7xtlkSQZZGI6EZhJlvfbpLDkKB7xvb7G2pSsgV?=
- =?us-ascii?Q?ivg2CQpMkVmkWSVHU4JoeZDDtNNh33xHVRwEnZan/b4NM3ATFGNuyiKtoMti?=
- =?us-ascii?Q?NgLKNfSccUCyqzQmr5U=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2380f1b6-edc5-4b92-5e3d-08d9f62f063a
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2022 18:13:28.0050
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mcrCx1TMROTOjOhzyof+EtLKI3H+M0alzErPE5r5Fubk08dMBgy9sZY4PIskszFc
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4523
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v6 02/11] driver core: Add dma_cleanup callback in
+ bus_type
+Content-Language: en-GB
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        rafael@kernel.org, David Airlie <airlied@linux.ie>,
+        linux-pci@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        iommu@lists.linux-foundation.org,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20220218005521.172832-1-baolu.lu@linux.intel.com>
+ <20220218005521.172832-3-baolu.lu@linux.intel.com>
+ <YhCdEmC2lYStmUSL@infradead.org>
+ <1d8004d3-1887-4fc7-08d2-0e2ee6b5fdcb@arm.com>
+ <20220221234837.GA10061@nvidia.com>
+ <1acb8748-8d44-688d-2380-f39ec820776f@arm.com>
+ <20220222151632.GB10061@nvidia.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20220222151632.GB10061@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 22, 2022 at 05:48:57PM +0100, Cornelia Huck wrote:
-
-> One not-that-obvious change this is making is how VFIO_DEVICE_* ioctls
-> are processed. With this patch, VFIO_DEVICE_FEATURE is handled a bit
-> differently to other ioctl commands that are passed directly to the
-> device; here we have the common handling first, then control is passed
-> to the device. When I read in Documentation/driver-api/vfio.rst
+On 2022-02-22 15:16, Jason Gunthorpe wrote:
+> On Tue, Feb 22, 2022 at 10:58:37AM +0000, Robin Murphy wrote:
+>> On 2022-02-21 23:48, Jason Gunthorpe wrote:
+>>> On Mon, Feb 21, 2022 at 08:43:33PM +0000, Robin Murphy wrote:
+>>>> On 2022-02-19 07:32, Christoph Hellwig wrote:
+>>>>> So we are back to the callback madness instead of the nice and simple
+>>>>> flag?  Sigh.
+>>>>
+>>>> TBH, I *think* this part could be a fair bit simpler. It looks like this
+>>>> whole callback mess is effectively just to decrement
+>>>> group->owner_cnt, but
+>>>
+>>> Right, the new callback is because of Greg's push to put all the work
+>>> into the existing bus callback. Having symetrical callbacks is
+>>> cleaner.
+>>
+>> I'll continue to disagree that having tons more code purely for the sake of
+>> it is cleaner. The high-level requirements are fundamentally asymmetrical -
+>> ownership has to be actively claimed by the bus code at a point during probe
+>> where it can block probing if necessary, but it can be released anywhere at
+>> all during remove since that cannot fail. I don't personally see the value
+>> in a bunch of code bloat for no reason other than trying to pretend that an
+>> asymmetrical thing isn't.
 > 
-> "The ioctl interface provides a direct pass through for VFIO_DEVICE_*
-> ioctls."
+> Then we should put this in the share core code like most of us want.
+> 
+> If we are doing this distorted thing then it may as well make some
+> kind of self consistent sense with a configure/unconfigure op pair.
+> 
+>> group->owner?  Walking the list would only have to be done for *releasing*
+>> ownership and I'm pretty sure all the races there are benign - only
+>> probe/remove of the driver (or DMA API token) matching a current non-NULL
+>> owner matter; if two removes race, the first might end up releasing
+>> ownership "early", but the second is waiting to do that anyway so it's OK;
+>> if a remove races with a probe, the remove may end up leaving the owner set,
+>> but the probe is waiting to do that anyway so it's OK.
+> 
+> With a lockless algorithm the race is probably wrongly releasing an
+> ownership that probe just set in the multi-device group case.
+> 
+> Still not sure I see what you are thinking though..
 
-Hum. That whole docs section has fallen out of date, the
-vfio_device_ops it quotes is quite out of date now.
+What part of "How hard is it to hold group->mutex when reading or 
+writing group->owner?" sounded like "complex lockless algorithm", exactly?
 
-It is all my fault, I'll send a seperate patch to sort it all after
-this is merged.
+To spell it out, the scheme I'm proposing looks like this:
 
-Maybe we should be converting more of this to kdoc so we don't have
-such duplication and it will be more maintainable. That is a bigger
-project..
+probe/claim:
+	void *owner = driver_or_DMA_API_token(dev);//oversimplification!
+	if (owner) {
+		mutex_lock(group->mutex);
+		if (!group->owner)
+			group->owner = owner;
+		else if (group->owner != owner);
+			ret = -EBUSY;
+		mutex_unlock(group->mutex);
+	}
 
-Thanks,
-Jason
+remove:
+	bool still_owned = false;
+	mutex_lock(group->mutex);
+	list_for_each_entry(tmp, &group->devices, list) {
+		void *owner = driver_or_DMA_API_token(tmp);
+		if (tmp == dev || !owner || owner != group->owner)
+			continue;
+		still_owned = true;
+		break;
+	}
+	if (!still_owned)
+		group->owner = NULL;
+	mutex_unlock(group->mutex);
+
+Of course now that I've made it more concrete I realise that the remove 
+hook does need to run *after* dev->driver is cleared, so not quite 
+"anywhere at all", but the main point remains: as long as actual changes 
+of ownership are always serialised, even if the list walk in the remove 
+hook sees "future" information WRT other devices' drivers, at worst it 
+should merely short-cut to a corresponding pending reclaim of ownership.
+
+> How did we get from adding a few simple lines to dd.c into building
+> some complex lockless algorithm and hoping we did it right?
+
+Because the current alternative to adding a few simple lines to dd.c is 
+adding loads of lines all over the place to end up calling back into 
+common IOMMU code, to do something I'm 99% certain the common IOMMU code 
+could do for itself in private. That said, having worked through the 
+above, it does start looking like a bit of a big change for this series 
+at this point, so I'm happy to keep it on the back burner for when I 
+have to rip .dma_configure to pieces anyway.
+
+According to lockdep, I think I've solved the VFIO locking issue 
+provided vfio_group_viable() goes away, so I'm certainly keen not to 
+delay that for another cycle!
+
+>>>> It has to be s It should be pretty straightforward for
+>>>> iommu_bus_notifier to clear group->owner automatically upon an
+>>>> unbind of the matching driver when it's no longer bound to any other
+>>>> devices in the group either.
+>>>
+>>> That not_bound/unbind notifier isn't currently triggred during
+>>> necessary failure paths of really_probe().
+>>
+>> Eh? Just look at the context of patch #2, let alone the rest of the
+>> function, and tell me how, if we can't rely on BUS_NOTIFY_DRIVER_NOT_BOUND,
+>> calling .dma_cleanup *from the exact same place* is somehow more reliable?
+> 
+> Yeah, OK
+> 
+>> AFAICS, a notifier handling both BUS_NOTIFY_UNBOUND_DRIVER and
+>> BUS_NOTIFY_DRIVER_NOT_BOUND would be directly equivalent to the callers of
+>> .dma_cleanup here.
+> 
+> Yes, but why hide this in a notifier, it is still spaghetti
+
+Quick quiz!
+
+1: The existing IOMMU group management has spent the last 10 years being 
+driven from:
+
+   A - All over random bits of bus code and the driver core
+   B - A private bus notifier
+
+
+2: The functionality that this series replaces and improves upon was 
+split between VFIO and...
+
+   A - Random bits of bus code and the driver core
+   B - The same private bus notifier
+
+>>>> use-case) then it should be up to VFIO to decide when it's finally
+>>>> finished with the whole group, rather than pretending we can keep
+>>>> track of nested ownership claims from inside the API.
+>>>
+>>> What nesting?
+>>
+>> The current implementation of iommu_group_claim_dma_owner() allows owner_cnt
+>> to increase beyond 1, and correspondingly requires
+>> iommu_group_release_dma_owner() to be called the same number of times. It
+>> doesn't appear that VFIO needs that, and I'm not sure I'd trust any other
+>> potential users to get it right either.
+> 
+> That isn't for "nesting" it is keeping track of multi-device
+> groups. Each count represents a device, not a nest.
+
+I was originally going to say "recursion", but then thought that might 
+carry too much risk of misinterpretation, oh well. Hold your favourite 
+word for "taking a mutual-exclusion token that you already hold" in mind 
+and read my paragraph quoted above again. I'm not talking about 
+automatic DMA API claiming, that clearly happens per-device; I'm talking 
+about explicit callers of iommu_group_claim_dma_owner(). Does VFIO call 
+that multiple times for individual devices? No. Should it? No. Is it 
+reasonable that any other future callers should need to? I don't think 
+so. Would things be easier to reason about if we just disallowed it 
+outright? For sure.
+
+>>>> FWIW I have some ideas for re-converging .dma_configure in future
+>>>> which I think should probably be able to subsume this into a
+>>>> completely generic common path, given a common flag.
+>>>
+>>> This would be great!
+>>
+>> Indeed, so if we're enthusiastic about future cleanup that necessitates a
+>> generic flag, why not make the flag generic to start with?
+> 
+> Maybe when someone has patches to delete the bus ops completely they
+> can convince Greg. The good news is that it isn't much work to flip
+> the flag, Lu has already done it 3 times in the previous versions..
+> 
+> It has already been 8 weeks on this point, lets just move on please.
+
+Sure, if it was rc7 with the merge window looming I'd be saying "this is 
+close enough, let's get it in now and fix the small stuff next cycle". 
+However while there's still potentially time to get things right first 
+time, I for one am going to continue to point them out because I'm not a 
+fan of avoidable churn. I'm sorry I haven't had a chance to look 
+properly at this series between v1 and v6, but that's just how things 
+have been.
+
+Robin.
