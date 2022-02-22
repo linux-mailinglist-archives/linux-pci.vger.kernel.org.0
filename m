@@ -2,211 +2,286 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18F104BEEB0
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 02:14:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F09D04BEEFC
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 02:53:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237201AbiBUXtH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Feb 2022 18:49:07 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52836 "EHLO
+        id S229680AbiBVBnm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Feb 2022 20:43:42 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236881AbiBUXtG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Feb 2022 18:49:06 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2592F13;
-        Mon, 21 Feb 2022 15:48:41 -0800 (PST)
+        with ESMTP id S229575AbiBVBnl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Feb 2022 20:43:41 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C3B2559E;
+        Mon, 21 Feb 2022 17:43:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645494197; x=1677030197;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=VdwhDbz03Xg6BdYb0qYc28/VIRDhINu0O9BdOJTdIzM=;
+  b=JAIhkOQlPQpPCDBa9hJU3Gi34ve60QdLj+8hzDeQ1+MHRYaNVL0gy4ck
+   XU3HnU8x4Zx+achD0UW6/ge0Zuu1RlEZNoxwqxd/RWxJT8eDhQ6O/dC2Q
+   PicDoaKG/xjJ+M/bA7752pnKcQorKjmmnwNdugQGMUV16VcE5kGyOgOr5
+   vVg/FcCVuHCKXsqoMT2IB4KCNYMms0H3Pr7n0kIS6ayaP73efvGRMSavX
+   3HVc/A332n8T7vFew7PCCsb6F5os2CLHFmoZ5uaSENs9Xcun7jV31nKyl
+   vxGUUKME+avezf2b6irY1Ps2+vpNNp1G3e+ydRWn+nVadCtSf+sAsy5AY
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10265"; a="250412226"
+X-IronPort-AV: E=Sophos;i="5.88,386,1635231600"; 
+   d="scan'208";a="250412226"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2022 17:43:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,386,1635231600"; 
+   d="scan'208";a="627521588"
+Received: from fmsmsx605.amr.corp.intel.com ([10.18.126.85])
+  by FMSMGA003.fm.intel.com with ESMTP; 21 Feb 2022 17:43:16 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Mon, 21 Feb 2022 17:43:16 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20 via Frontend Transport; Mon, 21 Feb 2022 17:43:16 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.20; Mon, 21 Feb 2022 17:43:16 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iNZEDgFNnFhPYXzomqmbrgT0tqSH7TMaEphZNpIBa0hLLBW8RcOK/Lvc5a++pw1w52RvO5G8qU29coC5uRf5qFslhahjtqG+8nW4V0VfMq6RV8+7s1ZsQpoKs+8+u/zoqoxfKVFg2oz+dAaz2+9vnlNYE6RjYUE+5lCgWexl6howfNw7Ycga2cRofLesRWjlMOWPmPO1uTtswwp97KUMKOTfAoySrLVmT09OwxWWkULgt5lJBMgL8AfTlNx5lCF3CXqW+5JiV+DWOGQKkRe5c/hMxX0h8OsmAGNLSzn+ohoELg4h+QqOWKOCn4iVu5L01PTmxGC8IXPY8beJUiUpSQ==
+ b=nWn83xiAItr4au9DpPbyY8zT2gmLYuV9CwJKP6LIUyPxVT2AwfvcKMg7+evcLjORC2Z/0QkIZ8JaZWmDM/yZJOy7NWnRTzl9vxC+rTH/MNdIRnrdesp+EPfSN2vaGRwwYh6BCxb38LLjS527TnLgnCnA6f8+4TnF0iBqpNVDoyqvoDJCf/Ii1EqazsxIdgRJ5O1acfm975plQeUlsS89Y7AdoxLQuVl0b+smoyFDI80yEXhL1+dQy75ubE2ghohncFm7jiBLJmr8qk4w6Vmxnp7zGBbfjn+4Xi0sZ8G0wgnzRQqfxxmULQ8OXYtvDeP1WQpIiQHiz6RsVu1zR0Xhww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QcWDChi8lPpHRhyU4hWbSi2+fwKFXVHF64Gc3Ysd+bs=;
- b=N3YXewaMQvAsNiVlQdpaGsyyXjejaqzaNCPUM8A1Hkdaj+c7A7PEwyTnlvcpVCc9xdX/u4lp12kVNo18zGYcUnTD22xJloZpWVsYmmbEBvkn+NYkI2VSZj2j2iOMCtXQS2Ayqu/cwUjcrtcLvBcIQDNjsg1MssvtW3rynXFM7mx+IG0jUEVkppuSHpzaYzFPIExpVRy7RaNNyb/R76OB+HnPu907ZI+8Eo5dlmtqVZHy3ozLEB+kGMQtDrZZjEcd4LChsgXBB7ejCKJB86mneQtvvdWm+NcFaldWeroiGBtAPBUW4ezltKbDVl1T+MWHO7ninnyMhnTekghTjDPFxA==
+ bh=XewDusyx2Emfp65BRAyZiWlL1k7lhPjGVOG4aYpFvEA=;
+ b=ZPboyb8oA2+2jVG40F9x5EYjXzSXgHh3Tpj+hvoqz0BOo/dcbsM+rPuReF/LNi9XUV8ODC91zdXT+li+jWrCCzv/zyP0LGWmmO2c82WrPvGrk6/5v5dAC+dj/xcsT7VR0f8J88yeGnFpRu3ZJEDXtVdCh8+GjOemt9qGOJSegSMx+JB0j7DqBm7bpfTq7BOUwFMw3qfhBhDlNWhj5atM1olKMhHnhU1eg5kfFvcrq6oYQ0EsCE/MaZPmWQL1+dYV7EdbXwteKiSshT69MgxsO/grK4aHd6Sj/V7av7jhTpHXXp4co9WFSz2V+Y8utXXxsIQPeIhbwT1wGYulxcJffg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QcWDChi8lPpHRhyU4hWbSi2+fwKFXVHF64Gc3Ysd+bs=;
- b=pWgowEP/6qB4TkkXkyWMJwNZWo9GZ2s9d6U0OfSJNXEiG7bGgC6RhL5dcu+G8vPdl01xciU7s2qcBhsJXpDK2rIPoMeC1WJyhskPXzj/ZJcRaVbUHoiSqydqUxcIdiPWAESicGULaSneEb8+v+Su48DBPJOw5ChNU9I9Gu9RQuykljwwa8WRtmsMvht5rXZrH7Lnm/jaq9hImB93dKhtims9yxkox2oeG5iSn2K6prgeWoWWQCAQvgngSnOgb/03etkDPpVU3GkvGjQcgvyYEd6c06uKnQuZ23x6QzOC9TpHRuzyXIS9Ql8RlY1/jTAB0ZolFE60ZBJYJ7LJJRanGQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by DM4PR12MB5055.namprd12.prod.outlook.com (2603:10b6:5:38a::5) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by BYAPR11MB2599.namprd11.prod.outlook.com (2603:10b6:a02:c6::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.16; Mon, 21 Feb
- 2022 23:48:39 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3%5]) with mapi id 15.20.4995.027; Mon, 21 Feb 2022
- 23:48:39 +0000
-Date:   Mon, 21 Feb 2022 19:48:37 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
-        rafael@kernel.org, David Airlie <airlied@linux.ie>,
-        linux-pci@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        iommu@lists.linux-foundation.org,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v6 02/11] driver core: Add dma_cleanup callback in
- bus_type
-Message-ID: <20220221234837.GA10061@nvidia.com>
-References: <20220218005521.172832-1-baolu.lu@linux.intel.com>
- <20220218005521.172832-3-baolu.lu@linux.intel.com>
- <YhCdEmC2lYStmUSL@infradead.org>
- <1d8004d3-1887-4fc7-08d2-0e2ee6b5fdcb@arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d8004d3-1887-4fc7-08d2-0e2ee6b5fdcb@arm.com>
-X-ClientProxiedBy: BL0PR05CA0014.namprd05.prod.outlook.com
- (2603:10b6:208:91::24) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.24; Tue, 22 Feb
+ 2022 01:43:13 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::f514:7aae:315b:4d8d]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::f514:7aae:315b:4d8d%3]) with mapi id 15.20.4995.027; Tue, 22 Feb 2022
+ 01:43:13 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+CC:     Yishai Hadas <yishaih@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "saeedm@nvidia.com" <saeedm@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "leonro@nvidia.com" <leonro@nvidia.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
+        "maorg@nvidia.com" <maorg@nvidia.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "shameerali.kolothum.thodi@huawei.com" 
+        <shameerali.kolothum.thodi@huawei.com>
+Subject: RE: [PATCH V7 mlx5-next 15/15] vfio: Extend the device migration
+ protocol with PRE_COPY
+Thread-Topic: [PATCH V7 mlx5-next 15/15] vfio: Extend the device migration
+ protocol with PRE_COPY
+Thread-Index: AQHYHEeP9+yi67MoOESanaHY+teTS6yY7QGggAB71QCABXaE4A==
+Date:   Tue, 22 Feb 2022 01:43:13 +0000
+Message-ID: <BN9PR11MB5276C05DBC8C5E79154891B08C3B9@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20220207172216.206415-1-yishaih@nvidia.com>
+ <20220207172216.206415-16-yishaih@nvidia.com>
+ <BN9PR11MB527683AAB1D4CA76EB16ACF68C379@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20220218140618.GO4160@nvidia.com>
+In-Reply-To: <20220218140618.GO4160@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3420f146-5748-4aed-5787-08d9f5a4b0a9
+x-ms-traffictypediagnostic: BYAPR11MB2599:EE_
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR11MB25993989C4F0B27038A6A0C38C3B9@BYAPR11MB2599.namprd11.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qrNbXijzlCTqgi9aPT0TGiMkIYenpS9FfFRQ1Gsm+wfO83XbkGkiPYUPIQJEwhdAQKilP5ollgKvoEyDQxKHpGhyd4/BBHqbq+0U0/XS/NYzalX1vyk5V5ImcSROmoROXx5F4GJ8pVlXBtjzRnr+Xa0O4cS1dC4da10RFNq0d7HO8yJaoMRI5lUX3F4kqaJ5qptxiLiI7HjVAwRNzls6wNqiZWvcCqG+n5ECE2sWdAMPk6NiE3ho/i392qWSFPiecTofw5vxtHvsoiF/xoQZmO4t1LLtkqoTAl7XGjNgJ8gPcfXQA8cSr3RcsEr6t43XMCBJbUd4x3NZ33ze2mvryrkxxwVYkcNy2fgdWbEYlhoK+tSHEe1QDvA/fyM5tIvg7wHPiU6e93MrTxxA2lE18Iy7zNahQM1Q/CllMKakY6rHV9Yxov7Q9YPRZqumBmqNfe2aTXlwY+nDf/8l319Lb3cTraNCreCFyYGd7fhomaUHsdoZ7Qwh0YAvXCUOsbDLF64eKHbFefNRWw2iVKYqcy5yAdfGxr4VyDx6bjdW/AhLS0Oi9mpHeCCop/iiYhIOF8dUoJnc1kFs+m4OQL69fPhB2Pjs61phOggFyKuHg1TQN3dyBgRBSkumzQyDQl6K30Bm5eQ6iQsx2QRhz/584GpLrdruZtyG/H6crMhBSFGw/iUMDv7VGGp7xYCxIl6gvcYZaysP1QoXyxmc0vtzEg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(2906002)(66476007)(38100700002)(4326008)(66446008)(64756008)(122000001)(66556008)(76116006)(66946007)(26005)(9686003)(8676002)(186003)(7696005)(71200400001)(6506007)(86362001)(316002)(38070700005)(55016003)(8936002)(83380400001)(52536014)(82960400001)(7416002)(5660300002)(33656002)(508600001)(6916009)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Kt+xptfdKPO+D8Dm9pTcdw/hY/pMQyGQ8elcsNRYqStJFIA+PeIZ/jTe9X9Y?=
+ =?us-ascii?Q?8SedcvyQvbV2szNHyV3ceEOUaxsIuTmwyLHMOqDQ4101TnOSx5VU1mlEVdVY?=
+ =?us-ascii?Q?tleN+JT8+zP4I3cwnAsurwefZbHuyW1oGNtM5c5m2vlBYbGC3uGwQM2/lJko?=
+ =?us-ascii?Q?H01HBB6U6A/12VUgZ9wiJlnOXMkAIvquYAGlHt+df4Ju/7wiS+RAxb07qB3L?=
+ =?us-ascii?Q?6//+u79e3uTYlJExqQiP4Kskk6n06IEDyvxlcIqeLCXPb6F/eWPxuaCoLLj6?=
+ =?us-ascii?Q?VwSJmfNtS4jcG+swQ4NDBc33akF2oNIk8thcVVieLGa5CvSn/QJqfrlby/CH?=
+ =?us-ascii?Q?uekzWNnxTlP0aM98NNp5zpqZL1dkWVl1DVa8Y34nkb8oZ8Ian/X1KYhWMDdk?=
+ =?us-ascii?Q?5odMRt9EA4rPRkDBSPIBR8QLVX7/ADN7J/CWzEDe91hfq5aGSlRsA2ZJVpPG?=
+ =?us-ascii?Q?81+JNW68w+JoVBvXjhi5hjYg2y+ABnaDwfugOjE+OwHR2GoeHS045tEsj2oL?=
+ =?us-ascii?Q?MdKjPFAz4s+1SWufiqBAD8etgFM/CGp1vYbHnywwi3waw36bQzowC4fYQIdR?=
+ =?us-ascii?Q?uQRh2ZJxrvw+KJUt+vcrSMFkTsGyK6mVoy/xpDw3g73MXpi6b5KDvdPBeQ2m?=
+ =?us-ascii?Q?LD4wuSg6P+6NfTRKUb6AfbBy8RmKRifR/MNeTqPNqas+3/HhDiGaO5Ab5OgK?=
+ =?us-ascii?Q?kiHxwTqRP/r76U04+YOeOxRKMNMt7zdnjZzUiOla1Ycr1Fzgly7dYXR4RAPg?=
+ =?us-ascii?Q?QN2iQZ3RBizk2J4YJ2MjLbbG1wp0BK/unPc+m+CGisGISjz6won+n3wvh48A?=
+ =?us-ascii?Q?d4BCuBpx1AJKprJpUjFW+cdAt5RmFetrrsrUZH6iSr0YjWV8MAenv2qVT4+R?=
+ =?us-ascii?Q?EudyNWdrtJkXeEOGogEe22vqUEVoK2z4R70TpLNy6ggdL9N55MRV8avBVje5?=
+ =?us-ascii?Q?TJFeUEdSrpVWS9IcFiNCk1vvlZyxeDa2gUl/o40oG5oTQfilXreFICSCih1T?=
+ =?us-ascii?Q?4fsZEOCmQ68+myID3vgEQE5W069e5Jm6jHTjiUS/2JsoilUm0Oa9jRILs0f6?=
+ =?us-ascii?Q?JrsdlgQSlQQqY88XE3w+KcBFMVsL/CV2u0WryDotYQc3xdXXi02QdC23dzsV?=
+ =?us-ascii?Q?GiJ4elvv9xNZVSWGyscB1lRdhOkp+sElSn+Hy0+9JveS5q4+IOeL+C21g7W9?=
+ =?us-ascii?Q?cw7gqpcEFMtzzeNLd9lkdN2q12JE8KJ2Gxnt8FLxt+Us7TOlfPKTITv3W8iQ?=
+ =?us-ascii?Q?l15ewNyUjFGjJ/ApnVKfoK/oB4wps6TkxMdkX+JoH+eh/cLqUuJV621JNfp2?=
+ =?us-ascii?Q?G40EHQAPD3dlVxuBtvt5OHKo6tIJ6I1bVLnjdwwXiE9NsprhQ67hb9mRsbpD?=
+ =?us-ascii?Q?3VJ+ETLlZrXJTuoCLHpPRM83uhBHosyXuDk3f5saPqf6x/KPC2dRJ99Bj8qq?=
+ =?us-ascii?Q?J+5bpKk5014OwSTpamgDCCwib4hxF3Vx8IOc+2hjkZLnzodkPjg8HyVQDoC2?=
+ =?us-ascii?Q?AqzUWLe+ru6qXSJZ+zuzsvbnnrf6LfjIFFFz7IvJZ2QAb4GwPodx5f/ikF4J?=
+ =?us-ascii?Q?KuKZjkl64VNeNTDbXJIMfxlxQXo/15V6ST3DUtnqEooChIeBFPVhQkyRjnSH?=
+ =?us-ascii?Q?yA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b19a361d-6d97-4fd8-496e-08d9f594aeef
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5055:EE_
-X-Microsoft-Antispam-PRVS: <DM4PR12MB5055D031CB232986AD17A984C23A9@DM4PR12MB5055.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iWVceXc7lVdrPdreVogL6V9AQIMzQN8K8oV59skH3YwKFLWOq74a0t+2DGui4k1ZccILKQPeuhSgmXPsVXE29OcgbpZANTNFrWt3TAx/mIc2Tb9evhAk4XaL886ImbbmVW7JYay9B6GDlA1j+Tz3IuGjMeOD3ZeBq9kvyH6GoC3zhGiUBKC1KfGzGoiBwxJJRwcOXDK+dGQXewJcDOPlcGzXkOXf62iIGJ/BbvetT56TXkuCU54HixnGCTWu1sGVYShZzIb+inQDtuhbCAP/OfWk8QCSbbRN1Nw055ycrPlJWf5KnCng0rg8wr4aor9lcMiQGviDeN2HOdtrNGwc7q8qefSwNbpv00sAWVXY0u4uAC8d2CD99Ldb8D+GTeHaUFCiIm3hocImbdjuYZRAtFMb25T+331J6YOR7PEBK77UcyfDxwKEt2K9salWVQD7p5Z9blZVX9KXg8Q0KDDXVOnWdBgdfPw0F7Oemxvl8OC4aEWGCXjEcFDYq1PjKecev+/ZDWXfCINv1vpodgPKeGCFzxx7F7wFMcNc3ZzryYvCPwA7gbjt+2PcG6+ByNwYDEyjm89+bccjk1EUSq872Wl6jqV0B+V6A8wEHUeNxm2+oRgwNBapG0Gt1YdO4mtFVXdTC4z6nvAgH9VJzhH3Eg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(53546011)(186003)(66946007)(66556008)(6512007)(6916009)(2616005)(1076003)(6506007)(26005)(6486002)(54906003)(508600001)(316002)(66476007)(86362001)(8676002)(83380400001)(4326008)(38100700002)(5660300002)(8936002)(33656002)(2906002)(36756003)(7416002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?FqGHUW4HO/XDob+kwqpfJRJi/nZwyxdGegCS65n4AepFjWTXhsiiUI0NmipE?=
- =?us-ascii?Q?/eLjNdV7hdObvSQBUF6bTFNrAtP7iKP1jTcJuqCdpMia4LcWP6/35THRTZGF?=
- =?us-ascii?Q?pkbf/tbKp5LdizDBYD4cit8RztvATa70wjj9wb+h0VnCXWffMTLVuZGVL0XW?=
- =?us-ascii?Q?34/BrchfDODt/6TpawO84wAhNavE+H2//hT0R+0vr7+aYc40bhHATyqZT9r7?=
- =?us-ascii?Q?gCZr5Gr84ScijWtv+jgr5O8BmzAwWPKjlo0IvdJhZewbimvnEOAnQZF08Cut?=
- =?us-ascii?Q?rf9IACP8wAEiuPvR9bwtni1j4Us9EwJIltsDyTFyBAi9Yp8nSye6yaVZVo5X?=
- =?us-ascii?Q?lT/0o7wGSnjJbVcxeeegRA873rmecKPlbstcuNb2x2ozaVx3Q9SZ+HdbHrTP?=
- =?us-ascii?Q?cdd6UVP/tVap3NK0tSjntiv5ravvKxPzNuj7EsUf35n3fh9r5RPA24jWxKaU?=
- =?us-ascii?Q?JV8sty74ZsJXWYAzSOSaMc2nU3QilIZb73JNQFjg4TH6e36JZDWx0/vwPWyZ?=
- =?us-ascii?Q?IHjfIJLbRqMo33NDaEEVT4VbaqqGcRs0Z/xYSxvQDorI/x7YuC945CgvMyNz?=
- =?us-ascii?Q?4Rwq5e/1Vu2JGB9ZdUMthjgIYvrzyGvs3YCyA7zA0h7FSNpFNNFvg4QI0mWg?=
- =?us-ascii?Q?wHOODwS0l8hGEmG/LZ8b+hKMTnvksSnb9LyZGKVt7iLOSY8Uz/MRkrhDXTZE?=
- =?us-ascii?Q?L2e9Ertrr+Zqaq0KU/Ic7GNVBtSQe/pGM1RfYQ5ejxLOrsEyKQE3chv+wAtA?=
- =?us-ascii?Q?JUd+R4elCJ/jIRPNxDnS0v2FPfzCkbI7wHrhO6hIUQ5Xbs3SN3RkEI5vVxE+?=
- =?us-ascii?Q?DY/boNihonh8mA8ottlMVqgoc97d9MUrZpurHABmm6kM2aQIEoyle+GAXlHG?=
- =?us-ascii?Q?OpzNF2+Uti50fy4QJ6xB87yGk/bWYvS11jM50iVC0mf9FDErBi5locw1pOR0?=
- =?us-ascii?Q?vnKBg5ZD9L8lz2KtyTsfi4nak0lCMfzBhIOTRl6pGjJRa4DLziUYuscnzIJa?=
- =?us-ascii?Q?bou0Bq2Iv0vvPjFAY6v8nLfs95TWGcVyd62JMQMsfxPp8fsKl31PiWKtOqxl?=
- =?us-ascii?Q?kL6OwMibrUSoSlM6Qg/uYBxGaO9zhOD/3i3UsXIA8kEkRJXhv8509eakrFYA?=
- =?us-ascii?Q?CWj1mdmuzN6o5NbM8Yr8YF9I5NGMFV7oykxbsyUzu79Kolovs6IReiiOuXL5?=
- =?us-ascii?Q?41nInz9OSApPwogcJzvKKl2S0BdlKsyW2x9dLLzQw3p3BHxgKSy/DJJdsK0m?=
- =?us-ascii?Q?CviA0Z7CLI3oWCxaNz8/B7j2QJUp6KyfV7oMd9gBrtlpvY9uz0OimlAcsAzr?=
- =?us-ascii?Q?Dn3Oh9kfxiS08urdi37xXdRsmqxpZ+A0s1i+OfsTIYxqA3xklJZ47oyYQHBd?=
- =?us-ascii?Q?evf6a/f0cprE7R70tNjUgB62AI5+uGFXOZRr8wSET9+LiyH6yXI96B2jEZxK?=
- =?us-ascii?Q?JwGyZYzoFBTN/8W5I3YE/DJAZSzfyyg06/ueH830/P9XjU0fzKR8GitjGkC4?=
- =?us-ascii?Q?dzgv9Q3XTdPMxvpgd+QJImwrz3fK5dCvaZ9GcNaTL1YojRG3AoT9uNgaU99W?=
- =?us-ascii?Q?CPPbbIMzdiJtqA9zCs4=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b19a361d-6d97-4fd8-496e-08d9f594aeef
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2022 23:48:39.3673
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3420f146-5748-4aed-5787-08d9f5a4b0a9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Feb 2022 01:43:13.5559
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iBlyFfVYnf1LhO6mLOQMM5dZkKEGBh5+w7/dZxFchQ+CA28cKFNmZ3H3TdDN4k1q
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5055
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3uI0f0YCBh1LACVw92z/9WHnwrhR/OEsooX5U5U2v8mJvuuCoa7O2IKkERgHe9KcZ9DL5cAXL5pKbKGsC3hdXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2599
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 21, 2022 at 08:43:33PM +0000, Robin Murphy wrote:
-> On 2022-02-19 07:32, Christoph Hellwig wrote:
-> > So we are back to the callback madness instead of the nice and simple
-> > flag?  Sigh.
-> 
-> TBH, I *think* this part could be a fair bit simpler. It looks like this
-> whole callback mess is effectively just to decrement
-> group->owner_cnt, but
+> From: Jason Gunthorpe <jgg@nvidia.com>
+> Sent: Friday, February 18, 2022 10:06 PM
+>=20
+>=20
+> > > and to be defined in future. While making the whole PRE_COPY feature
+> > > optional eliminates the concern from mlx5, this is still a complicate=
+d arc
+> > > to implement and seems prudent to leave it closed until a proper use
+> case
+> >
+> > Can you shed some light on the complexity here?
+>=20
+> It is with the data_fd, once a driver enters STOP_COPY it should stuff
+> its final state into the data_fd. If this is aborted back to PRE_COPY
+> then the data_fd needs to return to streaming changes. Managing this
+> transition is not trivial - it is something that has to be signaled to
+> the receiver.
+>=20
+> There is also something of a race here where the data_fd can reach
+> end-of-stream and then the user can do STOP_COPY->PRE_COPY and
+> continue stuffing data. This makes the construction of the data stream
+> framing "interesting" as there is no longer a possible in-band end of
+> stream marker. See the other discussion about async operation why this
+> is not ideal.
+>=20
+> Basically, it is behavior current qemu doesn't trigger that requires
+> significant complexity and testing in any driver to support
+> properly. No driver proposed
 
-Right, the new callback is because of Greg's push to put all the work
-into the existing bus callback. Having symetrical callbacks is
-cleaner.
+Make sense.
 
-> since we should only care about ownership at probe, hotplug, and other
-> places well outside critical fast-paths, I'm not sure we really need to keep
-> track of that anyway - it can always be recalculated by walking the
-> group->devices list, 
+>=20
+> > > @@ -959,6 +1007,8 @@ struct vfio_device_feature_mig_state {
+> > >   * above FSM arcs. As there are multiple paths through the FSM arcs =
+the
+> > > path
+> > >   * should be selected based on the following rules:
+> > >   *   - Select the shortest path.
+> > > + *   - The path cannot have saving group states as interior arcs, on=
+ly
+> > > + *     starting/end states.
+> >
+> > what about PRECOPY->PRECOPY_P2P->STOP_COPY? In this case
+> > PRECOPY_P2P is used as interior arc.
+>=20
+> It isn't an interior arc because there are only two arcs :) But yes,
+> it is bit unclear.
+>=20
+> > and if we disallow a non-saving-group state as interior arc when both
+> > start and end states are saving-group states (e.g.
+> > STOP_COPY->STOP->RUNNING_P2P->PRE_COPY_P2P as I asked in
+> > the start) then it might be another rule to be specified...
+>=20
+> This isn't a shortest path.
 
-It has to be locked against concurrent probe, and there isn't
-currently any locking scheme that can support this. The owner_cnt is
-effectively a new lock for this purpose. It is the same issue we
-talked about with that VFIO patch you showed me.
+it is the shortest path when STOP_COPY->PRE_COPY_P2P base arc is
+not supported. I guess your earlier explanation about data_fd
+should be the 3rd rule for why that combination arc is not allowed
+in FSM.
 
-So, using the group->device_list would require adding something else
-somewhere - which I think should happen when someone has
-justification for another use of whatever that something else is.
+>=20
+> > > @@ -972,6 +1022,9 @@ struct vfio_device_feature_mig_state {
+> > >   * support them. The user can disocver if these states are supported=
+ by
+> using
+> > >   * VFIO_DEVICE_FEATURE_MIGRATION. By using combination transitions
+> the
+> > > user can
+> > >   * avoid knowing about these optional states if the kernel driver su=
+pports
+> > > them.
+> > > + *
+> > > + * Arcs touching PRE_COPY and PRE_COPY_P2P are removed if support
+> for
+> > > PRE_COPY
+> > > + * is not present.
+> >
+> > why adding this sentence particularly for PRE_COPY? Isn't it already
+> > explained by last paragraph for optional states?
+>=20
+> Well, I thought it was clarifying about how the optionality is
+> constructed.
 
-Also, Greg's did have an objection to the the first version, with code
-living in dd.c, that was basically probe time performance. I'm not
-sure making this slower would really be welcomed..
+The last paragraph already says:
 
-> and some of the relevant places have to do that anyway.
++ * The optional states cannot be used with SET_STATE if the device does no=
+t
++ * support them. The user can disocver if these states are supported by us=
+ing
++ * VFIO_DEVICE_FEATURE_MIGRATION. By using combination transitions the use=
+r can
++ * avoid knowing about these optional states if the kernel driver supports=
+ them.
 
-???
+>=20
+> > > + * Drivers should attempt to return estimates so that initial_bytes =
++
+> > > + * dirty_bytes matches the amount of data an immediate transition to
+> > > STOP_COPY
+> > > + * will require to be streamed.
+> >
+> > I didn't understand this requirement. In an immediate transition to
+> > STOP_COPY I expect the amount of data covers the entire device
+> > state, i.e. initial_bytes. dirty_bytes are dynamic and iteratively retu=
+rned
+> > then why we need set some expectation on the sum of
+> > initial+round1_dity+round2_dirty+...
+>=20
+> "will require to be streamed" means additional data from this point
+> forward, not including anything already sent.
+>=20
+> It turns into the estimate of how long STOP_COPY will take.
+>=20
 
-> It has to be s It should be pretty straightforward for
-> iommu_bus_notifier to clear group->owner automatically upon an
-> unbind of the matching driver when it's no longer bound to any other
-> devices in the group either.
+I still didn't get the 'match' part. Why should the amount of data which
+has already been sent match the additional data to be sent in STOP_COPY?
 
-That not_bound/unbind notifier isn't currently triggred during
-necessary failure paths of really_probe().
-
-Even if this was patched up, it looks like spaghetti to me..
-
-> use-case) then it should be up to VFIO to decide when it's finally
-> finished with the whole group, rather than pretending we can keep
-> track of nested ownership claims from inside the API.
-
-What nesting?
- 
-> Furthermore, If Greg was willing to compromise just far enough to let us put
-> driver_managed_dma in the 3-byte hole in the generic struct
-> device_driver,
-
-Space was not an issue, the earlier version of this switched an
-existing bool to a bitfield.
-
-> we wouldn't have to have quite so much boilerplate repeated across the
-> various bus implementations (I'm not suggesting to move any actual calls
-> back into the driver core, just the storage of flag itself). 
-
-Not sure that makes sense.. But I don't understand why we need to copy
-and paste this code into every bus's dma_configure *shrug*
-
-> FWIW I have some ideas for re-converging .dma_configure in future
-> which I think should probably be able to subsume this into a
-> completely generic common path, given a common flag.
-
-This would be great!
-
-Jason
+Thanks
+Keivn
