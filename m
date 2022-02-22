@@ -2,71 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2297D4BFE69
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 17:22:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF6754BFE70
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 17:24:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231835AbiBVQXH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 11:23:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48896 "EHLO
+        id S230295AbiBVQYp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 11:24:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230295AbiBVQXH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 11:23:07 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C960F166A79
-        for <linux-pci@vger.kernel.org>; Tue, 22 Feb 2022 08:22:40 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id p15so44404693ejc.7
-        for <linux-pci@vger.kernel.org>; Tue, 22 Feb 2022 08:22:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=q+My118MVhW0Ye9CMLkqYiEKe4aBqZcoI39IWD/unS0=;
-        b=pvMkvfXmaWSL7HS+xyy70n9lAtmMhkhp+Jv4oA1m2QpPzXv/iYiXcfNPEOBK3UHrdu
-         AcFAf9Vu4GROep7TFHJdx0oIKb9yS3mbcQsEfvwTPdXC85jYtebb5Y3eE8g7PblKZtff
-         vhsXPa+P6Laor3KIqmlDIXP4ZnNQnvPlObzz5Bha+8gSbykpJ0/LmaNIoasnEnx6vIxV
-         dNbRfINs+qEt6FR58bm02ESK81QDBF+5CXjTcYhbO6kp/+buXU/Id6CONuiqGTI/czfW
-         OIYIrQANVyDwdZZu4dTZnNEntLm31ytjfg9GKeSaTBT+ZN8ZYK6IntvkT4/27q46dNQ3
-         rnpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=q+My118MVhW0Ye9CMLkqYiEKe4aBqZcoI39IWD/unS0=;
-        b=r+ToBHUmx6c34eg+lTwsWrG5cqwDijK+CPwjnvOpDQPuw+FP0NtUrSwm9tt1Cs2iBA
-         0Y7XghplyRtDjL69ngF4Ftn3nFsdB+Eya42f9E+6Rg1HryY8fL2whU/axYLig+ItvUCp
-         95fjVmBtWLC1PcUA39JzVHQ72pmjbBH89PKeRwVVJdnsQRA0kJA8EUI4U+RdT+yEYL3B
-         223Jy2Eygdtq26LqbApPOreP0yC0DcPB9jMg2KXelP1jk6HoPFK+Gw6N2VCKfsDS2vGX
-         Z9T+lLGwHuT9Kk9JL+bphYhjZpbJnrjTSIMv1yjrFSNiB400rwyHkoVAFlsI/IgqN2TV
-         GluA==
-X-Gm-Message-State: AOAM532Lh8TPzWfanHg6eG0HflOAhrCS50CfLIadUOEQhvSIpGzClbLa
-        425vY2ugo6rzr1k7vkyT3vs=
-X-Google-Smtp-Source: ABdhPJxiZ/YD4QrnfvYntsavdPaFU6LgVRlEu7GPEQWh6CYDpnyjl3dRdGyKtloVvE5gVvg7045uuQ==
-X-Received: by 2002:a17:906:b04:b0:6bd:bf71:ed08 with SMTP id u4-20020a1709060b0400b006bdbf71ed08mr20337601ejg.585.1645546959316;
-        Tue, 22 Feb 2022 08:22:39 -0800 (PST)
-Received: from ?IPV6:2a02:908:1252:fb60:21b6:6d72:8af6:ec7c? ([2a02:908:1252:fb60:21b6:6d72:8af6:ec7c])
-        by smtp.gmail.com with ESMTPSA id m17sm6385797ejq.22.2022.02.22.08.22.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Feb 2022 08:22:38 -0800 (PST)
-Message-ID: <cce740f9-3209-045c-ceb6-0089621362e5@gmail.com>
-Date:   Tue, 22 Feb 2022 17:22:37 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH] PCI: Apply quirk_amd_harvest_no_ats to all navi10 and 14
- asics
-Content-Language: en-US
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        amd-gfx@lists.freedesktop.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org
-References: <20220222160801.841643-1-alexander.deucher@amd.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20220222160801.841643-1-alexander.deucher@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        with ESMTP id S233990AbiBVQYo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 11:24:44 -0500
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-eopbgr30044.outbound.protection.outlook.com [40.107.3.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC9D9166E04
+        for <linux-pci@vger.kernel.org>; Tue, 22 Feb 2022 08:24:18 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PCUvNp0fHnPeqjzMiSsNDFnUceQq5oYCfBFhLoSuZMl92oGBFLFbQLyA8ZGCIRVs+0brqF4Cgh1KtFogE7QK/H8OlnHZB+E+PgpOlQ48++bETaTPH/+aUWSdgm3UkTcBK1vt/JQi+ufnQacdIM6xfgyXZk0OVubPxV3+HoA/GUSCOS/xzqXU5Qc+9EHSHqz9EDEAKh+LJnqwwzXXg6mtqgqrnIoogJN0JIeVvdLf0pY29+7WIKahAoxETyhDvS1FwCkAEFVqiGortZ39LtZg1RF+N6E70uXsqbCKMEjIURrKCEGQVtyIHPRZFZWmhM6/6XJnFNYGvBB5+8QcA5wVJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qs/jkr41pVJhlqjqIo4Dp0IOTVGhXFDkBybRJYaF+dg=;
+ b=Z8b2j7hP2HV5oFSno7ZZFUqFCc0f8aGYzhVYAMOmDKWJ9YHv6qJ+EUJrVfZ/9qF0KXEY2bJrD8IVldWxlqHYo6kZsYReHw2Eegr/ZpE4wlYBteXzGYjdVDqrxtvcFpeBCqXbi31BRJqsmmF9KdXgzt3AYikCSJ1uxCMRQOs/Vfs7L0vMODZdBm58doqAdFQ4852eZ6o+85sEgvxisOo2PwlScg5bcpHKmKzMAAIEu4F69hAVvfzh9KnV2R5K2l706od8pjl1NowcFQ3exsU0hvJzxm8yuzNYcXIpLa00aMYYnXKQPCztBpEfD9Vycp7emjV3wcr6saCC5Tf8BRnrHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qs/jkr41pVJhlqjqIo4Dp0IOTVGhXFDkBybRJYaF+dg=;
+ b=ZsVXiqQ4eyKhv25t6kY+0D0ILrYCsaseQR9MbO/ZBn7Hf8zv3s4L4QwBLOwo0GTL5RReQNzF/J+jIT+AvSjMAaGL/+rRKrF2tMxWtx4jd+6dnBD4bVuXc/JEBKRWfjcq0Y5lRq27y6QWYBcBIZDaHFhj2vTd47FaouZG3iXmXr4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
+ by DBBPR04MB7899.eurprd04.prod.outlook.com (2603:10a6:10:1e1::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.27; Tue, 22 Feb
+ 2022 16:24:15 +0000
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::9ce4:9be4:64f8:9c6]) by PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::9ce4:9be4:64f8:9c6%6]) with mapi id 15.20.4995.027; Tue, 22 Feb 2022
+ 16:24:15 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     helgaas@kernel.org, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        kw@linux.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lznuaa@gmail.com, hongxing.zhu@nxp.com, jdmason@kudzu.us,
+        dave.jiang@intel.com, allenbh@gmail.com
+Cc:     linux-ntb@googlegroups.com, linux-pci@vger.kernel.org
+Subject: [PATCH V2 0/4] NTB function for PCIe RC to EP connection
+Date:   Tue, 22 Feb 2022 10:23:51 -0600
+Message-Id: <20220222162355.32369-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.24.0.rc1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR13CA0190.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c3::15) To PAXPR04MB9186.eurprd04.prod.outlook.com
+ (2603:10a6:102:232::18)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 57f58000-413a-4639-ece4-08d9f61fc4be
+X-MS-TrafficTypeDiagnostic: DBBPR04MB7899:EE_
+X-Microsoft-Antispam-PRVS: <DBBPR04MB7899AFF61F4FB5019426F391883B9@DBBPR04MB7899.eurprd04.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UkBvm86E+OYUUtZUYHBY+oyfYgfyhR0jPdpPnvsYkQPJNcs5243aAv+gcB8EUQ3FZWX+McgUR86SMdg9QZLljvcQmA2ZsHifZrurTi0C76kurUqV2jpjGH9uX7KuNaX1AgBd/sCkBe7YpztGC56yk/oEZC7fI4Qt9e1NLeTS6GNzzHppqorM3KMPj+TPeAIDZMPfN93zFwnCXT6VYECOBNUztoUBk8gNd07dXYFv+kgfnICDAeaKV83g7GbFvHR4EGs0GjdbxiI3W0V4brb9GCqn/0g6kR7qpa2PJxdHplbSHUdWk68Nnz+Gl3D36FppSStRxYllRZMm7giBq3Dlua6GIIDGLQee+OLGSO5acfHkvXvf+Utib8FwF762eKSYDZBnvfgWSfWRQRDCxF+3jyy2XhoXfAhegvgwmVwT1gZulF9JPkxNft9kg5+UvcrZktFYH7LoUWWqfjVftswQFpC7XKF+jRBmG4Jln3In87fPi7Zwp/AfrSraNXU0jDCEujXJH6HSgLtDnRuNHgJSD5F96tFLvykH3RpPf+NI/dWbUElRWr3QYt74H+Ws+xwM8Y2OvnObRDStV5/k/2R6cc+HSgLpaeoWtGLSPk6y3OjOfRfj2iK/x0+rZ8RKOGLEDKDsfRC6GfQYihyvxFMtH1IqEGUFuVekVoxbedVmTshRJMWXBc9UihODh0E3ezbrfAU2YpMTOmBOPYo97w9NOcnfNEedf4k8LE5cE89cQ0w=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66946007)(66556008)(83380400001)(508600001)(4326008)(36756003)(8676002)(66476007)(6486002)(52116002)(6666004)(6506007)(5660300002)(26005)(1076003)(186003)(86362001)(8936002)(316002)(7416002)(2616005)(38350700002)(6512007)(38100700002)(921005)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d0sxMXpOY0QwMUNOZWZVL1JIZExrZUo4aURrbUlJckd5TFloVjF5TnI5a3NB?=
+ =?utf-8?B?bmRUSnphMDErV2JrTkN2VzMrNFZ2STBsZmhITjh1Z21NejZ2Zk9hYmtmSzFN?=
+ =?utf-8?B?akc0RHlVSlFGbVhNSkViS01GaHZVZFBSVEloNzR1MVk0OWliWmxFSitkQXJU?=
+ =?utf-8?B?aE9FUE52SkthUmJHcWNzaEF2emp4Q3l0Qy9MakxuOVhDQTVneEZwZWpFZmE0?=
+ =?utf-8?B?eCt5NndPa2J1RGFXaWp2NTV1N1U4bnZiZ1hTN0lNaEdYRTJNYzNteW1XWmFU?=
+ =?utf-8?B?RldEYVBnRGVVS1RpV0FtNUxkSzV5eDJJbEFaNkpkZlN5cVpPNTVmRGk3TndN?=
+ =?utf-8?B?MXpoS3lzYWdBR0dscWdRM1lmRi8vbDl0aXJGcXY4K2NUYzd1ZzNLd3BtajlR?=
+ =?utf-8?B?amdQY2N1TFd2MzA3aXBBQUdVdXNTcmEwNVp0cG9maXRlUDR5MXhZTi91ZXhz?=
+ =?utf-8?B?YXV3UGRsVktvSFdPWnhsZVJKRjZDTXVnOERWQks3QnUzYUdXR2V1aUIrVUxn?=
+ =?utf-8?B?blNyRmE0eFR6d1d6VnRxazFCYTAyeGJXdTZRaVordGh1bVdxY3VyWVBtbDNt?=
+ =?utf-8?B?SHg0dmZVM29oMmJaUWtKdFE0bnJVNlVYbFJTemVZK1FSM2krM3ZYQ2IrQVZy?=
+ =?utf-8?B?MUkxTHRFNWNDTG9rSXVCbVpIVUJlemRmVndGc1FpKy9WbEtmbVRHb3FId0ZI?=
+ =?utf-8?B?dnpONnZNY1dCNy9jMDRjdzhIbXkwZm4ycWxmeXEwSmZwWmM4Q0dDOVdGbFpY?=
+ =?utf-8?B?MnZYMm9YclUvd2N1L0VmY0NiVG52U0FQVVlXQlF6WWVveWxjRkVGaTZrL2Zp?=
+ =?utf-8?B?ZUtNbVdhSXEzYjN0YWoxcHJYNkNPVlo4T0tJMDdyQ3B1T2g1THEvWDNmUEpi?=
+ =?utf-8?B?Ni8zdHJWYVQ0WjZ2YTVMNGlrNUhLeUpEdzlrYk04WlN1SVNHUG1EWkw4SHZV?=
+ =?utf-8?B?bGliVlZ5S01BdWFyaTBNbjF6NE1QbUdnR3VHZzdyQldSelVKYS9STE5jZkYy?=
+ =?utf-8?B?Rkp2d0Z3TWw3MHBjZmxzVExGTGpTeFRPMGJaMEZkR2VjM3FuaGg5WGhNaEJl?=
+ =?utf-8?B?UzI2NGlmUEJ3NE9CKzdaZ3NkU2FkUUp2TlNKUmkzVksyYUtndVlTbmVDSERO?=
+ =?utf-8?B?T2VLcFdGa0pTNFgrKy83QXhoaXJZMlhWd21DazZNa2duUFpTbHVVdEswSkYz?=
+ =?utf-8?B?OWRMaWg3NXgyMTVneXBnck1qc2pHRENUWCtqQTlqU3BWWUFUMUQxbFdDK012?=
+ =?utf-8?B?VjJWbkcyK3Uvc3F4Yi9UYkJRd0NLV3hzd2xycU1qWGZLQ0V1VzR1R1JWV1Zv?=
+ =?utf-8?B?TVc3TE50VUVacUlwS0FQd3hBNW5IRzhEcjIvZHlhY1hWUzNrc3VGZ3pvdHFE?=
+ =?utf-8?B?RHd2SUhvRWJEOXd6VFoxcEY4dCthaU1wSFA5VTExeEZKTFBxRnJvektpYk5M?=
+ =?utf-8?B?a2s4K004M1dOd3dRZzB4SFk1aXIrdFJUOENqWXk5NWlaWGdsbG1jdHJxM1Q1?=
+ =?utf-8?B?Q2haZ3dPeWZVVFRKOWtJamJWNUNjR29zV3FUK1J6SWJzMEJxVS9XaERXcTJO?=
+ =?utf-8?B?V3NWcUdqak5Ga3piK2hOVHNGRTVrZW8vZy92U1Rkcm5yQVpyMW90WHdIKzA5?=
+ =?utf-8?B?WS9rWUhIaWRlSTh6OU5oSHNlSURxN2MyK3c3TFd1NDkxTUtTbm9HNU4yMjVz?=
+ =?utf-8?B?enZlTWhwdWE4b3Flc0xXMkplcjRFc2RzME9Wdjc5MEdBRXB3RDg3L2FUZXlL?=
+ =?utf-8?B?TDFwT0hHci9oTStSMWlLQjR5YXFQQkFWeUlEbTd6blcvRGQrTmVod2tDNkhw?=
+ =?utf-8?B?OGg5dE9FS3JpdlBybmE5MUZUQ2U5amlYMktYaUJJSDdrdllHcCtCazVJbEhL?=
+ =?utf-8?B?S0c5YjBaWHZ2OFZxelI4L0RIV1EzQnJ5SjJkRUk2V2xVQ1o5MmJJR1RmckVr?=
+ =?utf-8?B?YkdnemV6cHRqeUZ2ZkV5SGJIWkhybnFpZzZUNWlEK3RhbEN5SVFoenhWeXl0?=
+ =?utf-8?B?VGc5WWkvblF6cUtUVHVmV3NBM0w2WWxQOS9kZTZRZ3NsbDN2QUl6SUp3cmhN?=
+ =?utf-8?B?UWhzU01PMzJlNE82bVozbGhaUGF0NDl3SHJSSlYzeGlYU0FSTGJuNC9ad29k?=
+ =?utf-8?B?eEFkaUV6WHJSK3ZLRHFNUFpqZFVvcmp3M2YwSlRFNk1HZmhTQ0UwY1lPTDdm?=
+ =?utf-8?Q?I6OfXAFLu24k4C5acFbBcAM=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57f58000-413a-4639-ece4-08d9f61fc4be
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2022 16:24:15.6776
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kjXjyyESD3oBD9tx/tUC1/kPc4xkYfD2jKW7I67TJm1LJPktEhRLTuqBovRRhTVIPaGRxZSvKkdn26ZpuA1iWQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7899
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,59 +123,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 22.02.22 um 17:08 schrieb Alex Deucher:
-> There are enough vbios escapes without the proper workaround
-> that some users still hit this.  MS never productized ATS on
-> windows so OEM platforms that were windows only didn't always
-> validate ATS.
->
-> The advantages of ATS are not worth it compared to the potential
-> instabilities on harvested boards.  Just disable ATS on all navi10
-> and 14 boards.
->
-> Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1760
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+This implement NTB function for PCIe EP to RC connections.
+The existed ntb epf need two PCI EPs and two PCI Host.
 
-Acked-by: Christian König <christian.koenig@amd.com>
+This just need EP to RC connections.
 
-> ---
->   drivers/pci/quirks.c | 14 +++++++++-----
->   1 file changed, 9 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 003950c738d2..ea2de1616510 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5341,11 +5341,6 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
->    */
->   static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
->   {
-> -	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
-> -	    (pdev->device == 0x7340 && pdev->revision != 0xc5) ||
-> -	    (pdev->device == 0x7341 && pdev->revision != 0x00))
-> -		return;
-> -
->   	if (pdev->device == 0x15d8) {
->   		if (pdev->revision == 0xcf &&
->   		    pdev->subsystem_vendor == 0xea50 &&
-> @@ -5367,10 +5362,19 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_amd_harvest_no_ats);
->   /* AMD Iceland dGPU */
->   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
->   /* AMD Navi10 dGPU */
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7310, quirk_amd_harvest_no_ats);
->   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7318, quirk_amd_harvest_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7319, quirk_amd_harvest_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x731a, quirk_amd_harvest_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x731b, quirk_amd_harvest_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x731e, quirk_amd_harvest_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x731f, quirk_amd_harvest_no_ats);
->   /* AMD Navi14 dGPU */
->   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
->   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341, quirk_amd_harvest_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7347, quirk_amd_harvest_no_ats);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x734f, quirk_amd_harvest_no_ats);
->   /* AMD Raven platform iGPU */
->   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8, quirk_amd_harvest_no_ats);
->   #endif /* CONFIG_PCI_ATS */
+    ┌────────────┐         ┌─────────────────────────────────────┐
+    │            │         │                                     │
+    ├────────────┤         │                      ┌──────────────┤
+    │ NTB        │         │                      │ NTB          │
+    │ NetDev     │         │                      │ NetDev       │
+    ├────────────┤         │                      ├──────────────┤
+    │ NTB        │         │                      │ NTB          │
+    │ Transfer   │         │                      │ Transfer     │
+    ├────────────┤         │                      ├──────────────┤
+    │            │         │                      │              │
+    │  PCI NTB   │         │                      │              │
+    │    EPF     │         │                      │              │
+    │   Driver   │         │                      │ PCI Virtual  │
+    │            │         ├───────────────┐      │ NTB Driver   │
+    │            │         │ PCI EP NTB    │◄────►│              │
+    │            │         │  FN Driver    │      │              │
+    ├────────────┤         ├───────────────┤      ├──────────────┤
+    │            │         │               │      │              │
+    │  PCI BUS   │ ◄─────► │  PCI EP BUS   │      │  Virtual PCI │
+    │            │  PCI    │               │      │     BUS      │
+    └────────────┘         └───────────────┴──────┴──────────────┘
+        PCI RC                        PCI EP
+
+
+
+Frank Li (4):
+  PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address
+  NTB: epf: Allow more flexibility in the memory BAR map method
+  PCI: endpoint: Support NTB transfer between RC and EP
+  Documentation: PCI: Add specification for the PCI vNTB function device
+
+ Documentation/PCI/endpoint/index.rst          |    2 +
+ .../PCI/endpoint/pci-vntb-function.rst        |  126 ++
+ Documentation/PCI/endpoint/pci-vntb-howto.rst |  167 ++
+ drivers/ntb/hw/epf/ntb_hw_epf.c               |   48 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   |   10 +-
+ drivers/pci/endpoint/functions/Kconfig        |   11 +
+ drivers/pci/endpoint/functions/Makefile       |    1 +
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 1424 +++++++++++++++++
+ 8 files changed, 1775 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/pci-vntb-function.rst
+ create mode 100644 Documentation/PCI/endpoint/pci-vntb-howto.rst
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-vntb.c
+
+-- 
+2.24.0.rc1
 
