@@ -2,157 +2,234 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E68314BFD7A
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 16:50:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B89D4BFDD3
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 16:55:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233643AbiBVPvQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 10:51:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40896 "EHLO
+        id S230095AbiBVP4J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 10:56:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230341AbiBVPvP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 10:51:15 -0500
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2075.outbound.protection.outlook.com [40.107.236.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708BE46669;
-        Tue, 22 Feb 2022 07:50:50 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WQxU+xJjMvoJCTPjIKyFMEWe9qsJNMWLjfQE9BF/BbD9yGqM8NV+SBH8fh3UKiG0CVIUp9E7Tq+MEL377oEb2n9WJ1Bt9owLyXB2mtWpqDQqDyGeMbwJheABJik7EWgFd2I6HhKk2A+8INzUmge1lBckWUJu8zz2hvGrVm3QLQ1KCRdElkO/JTx2/xYDbqsBVbJKW5ZbeSNo/NHMzXmRNHtesxNrqAJsYS3mYljPsoEc9x4KxgwonS8NyN+iNjaUxv8p2phZgU05NOIiEbO/qIqoC54o385VJFZ1TcUr5dbEZFfx+83xGxh7Mtcx3CvwqZBXAl2Q40x/ZUH38Yk2Jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dV5IswyX88HlEhFXUQgGyk4u0azJWRWqC0LXCVlPxJA=;
- b=Kmp8qJaoxPzcldhl0tnxamlphbV5ly4GWAAisGPvJE5VLxCrxQNd9B7fUKadv+biJYN6BJY0ngPcEVyPBdEIJNrIAzi8twndhUjqwuCgVT6fU+UnC4nZBsKRfXmtiAx71FAmUpEfH+VK0B6ICSQc7Fz8euEAP2zO40nFg9OxBVPfqMZlb9BakX7KEnlWWSgDThGTMXV4q9ZDNC4MqnbUkwgGVqOYSKtIeUBZfc9otvg6mWMLOdzYQK+wvBW4cs12lt1Rhutefd03hHWJyp6R1P+6MD15LGHVVtfBS//PeDD8mevQMXiHAdzr302qutH2UzSh7ypGfwZ+aWbYwIHJ6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dV5IswyX88HlEhFXUQgGyk4u0azJWRWqC0LXCVlPxJA=;
- b=Mv69koDSLkFAgOGmlgTjsX9s+fqjPENjrJPdFkmxldBHgd8rVJFhfqXgBRwLZCQDTS19FkO5Vsia/LqThmAGJeNkTAKSRrlEhrhfUeSWr6kk33EX0n/0hMJClvQs9K+o1BN6RYTWkvc7X8svq/71/ZhMb8TU+yHy82GXajX+YctPqjKsPz4fMZdb2btwxS0GpRG9571fyPdYpES20OWAfVSosG2uZpC8MrUuzOc7zrR1PW+iHDi0TDItLHqfUxlDvmmTLwkviiUtnFOpZXhti/kM6r0nbVWGUumdrX1uUGbmCYkYaGS/gajjapldQiFQk/pnNgtfJH7m76nwNi9lWg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by SA0PR12MB4446.namprd12.prod.outlook.com (2603:10b6:806:71::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.22; Tue, 22 Feb
- 2022 15:50:48 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::e8f4:9793:da37:1bd3%4]) with mapi id 15.20.5017.022; Tue, 22 Feb 2022
- 15:50:48 +0000
-Date:   Tue, 22 Feb 2022 11:50:46 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "saeedm@nvidia.com" <saeedm@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "leonro@nvidia.com" <leonro@nvidia.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "maorg@nvidia.com" <maorg@nvidia.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "shameerali.kolothum.thodi@huawei.com" 
-        <shameerali.kolothum.thodi@huawei.com>
-Subject: Re: [PATCH V7 mlx5-next 15/15] vfio: Extend the device migration
- protocol with PRE_COPY
-Message-ID: <20220222155046.GC10061@nvidia.com>
-References: <20220207172216.206415-1-yishaih@nvidia.com>
- <20220207172216.206415-16-yishaih@nvidia.com>
- <BN9PR11MB527683AAB1D4CA76EB16ACF68C379@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20220218140618.GO4160@nvidia.com>
- <BN9PR11MB5276C05DBC8C5E79154891B08C3B9@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB5276C05DBC8C5E79154891B08C3B9@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-ClientProxiedBy: MN2PR02CA0032.namprd02.prod.outlook.com
- (2603:10b6:208:fc::45) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        with ESMTP id S229774AbiBVP4J (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 10:56:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E1C85D655;
+        Tue, 22 Feb 2022 07:55:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EF88DB81B21;
+        Tue, 22 Feb 2022 15:55:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D56FC340E8;
+        Tue, 22 Feb 2022 15:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645545340;
+        bh=RJA6ZkYjDIYFFxzsjixQVqgf1ASSN+bxfAwsS7ajMEU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R74R33zk5s5+bk0rSsXoh7tckfi2nKiYAr0yyryh4tOt+q2p/2/LwR9AtEXs48zZh
+         ab2HDBT6q/VJ1HOL8mZmHfO2YCYYMkN3nhP08eEkffB3lnA3L4942dQfeOGn6XXQy8
+         CU9Xbjy7VIbxR1niGZbhdKU5OalMu7BQRVOLVTnBvkUhrZb4S1NKGxSYEaj89Vql6A
+         +znm0XipjFw+romCqmq1EaoFRNw1AdPpjwt44a/MAL9cjLN+zj98HhUnapOcSD/OU9
+         2+LaxmvBxCYBZmJFxtpdHTDcAeMdxuGUM0w4c80ebBv2R21lR0WPSYdYiHIZoVxLhN
+         0y89H4IigQBog==
+Received: by pali.im (Postfix)
+        id E8ACFFDB; Tue, 22 Feb 2022 16:55:37 +0100 (CET)
+Date:   Tue, 22 Feb 2022 16:55:37 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     robh+dt@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 10/11] PCI: mvebu: Implement support for legacy INTx
+ interrupts
+Message-ID: <20220222155537.tohm2huegiqseao5@pali>
+References: <20220112151814.24361-1-pali@kernel.org>
+ <20220112151814.24361-11-pali@kernel.org>
+ <20220211171917.GA740@lpieralisi>
+ <20220211175202.gku5pkwn5wmjo5al@pali>
+ <20220216234039.stxv5ndd6ai23sbb@pali>
+ <20220222102057.GA17238@lpieralisi>
+ <20220222105129.jg5kwmhvhggsv72n@pali>
+ <20220222152409.GA18799@lpieralisi>
+ <20220222154226.mwu7d3silgmwzeqc@pali>
+ <20220222154553.GA19919@lpieralisi>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 179bacb1-fcaf-4219-8fb0-08d9f61b1838
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4446:EE_
-X-Microsoft-Antispam-PRVS: <SA0PR12MB4446D1F18B556AFB358A3B22C23B9@SA0PR12MB4446.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JGtyJW0Wiqs9Dj0OrtA2eNQtzU8pdZKRoztkwxuiAU44jJrIGWZln6i0Yp/sTQB8r+nrGPuSo+RwCcPR4DNsVVmUyNTMlKvo7ij7bI+iiQvapprHdx9nU2lUrbAabRPxAsBlR9dnxBNWe4bL/AvRUEHjTqebTKwSXilFDD/aQ0zBEa5sLypnmzyyS7zIY381NqqixrrbPTo52VgCzR8aOqA+eekUWqxTtF8g7gtfuUJOOkKJnEXf3zeWBWHkhm/lvSX7Emk01YNhJxieVZ+bwOAz6LIeBMekdboGpqZHPSDROGkeuJIt3cduw41bXIBL+oaW2cCgWh9IM2F5kTWKnSPejcV+OgnNSIp8Llpq+f1FSzSwbOvVWVZ0OjO8XvQxHIIuLczyGxPfEwhVXJk4BlmuGB6tvK/XhKb7+vXLZReffP06tn4NwzrgqdSz60sAcPiTH2i4fTVK3alMJxfbjJPqXSlpS2iYK+PwblGuUeG60OMusxSMgi4F/Q++ElRGJerrmAfEAOB2w6aXo3TVU5tg5cxXD0idrkk5QdWWxXPTS8fq5OJjeAwv5fCmvKQA6RFdm8Pm1yDAVydOUg5qXCYA3jO/cPuVzrwqAP6Dx0i3BSUtvFkmkEmeLaFOO+xU0G/pjqDChsV1lNQSO/Hd6Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(54906003)(4326008)(6486002)(508600001)(66946007)(8676002)(66556008)(6916009)(316002)(33656002)(66476007)(6512007)(1076003)(8936002)(5660300002)(2616005)(36756003)(26005)(6506007)(86362001)(186003)(38100700002)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6DeHxg/KwoFY61KH0x2hFyf14lsNKGfCSHOYXI6UCKTqOo4xgxyI+vQkZciy?=
- =?us-ascii?Q?WwQ4haz69LaNlqOFAqiStWx71tUjtqDAHZxt+y7oAsURkh1YkWS4VTJ6MqGv?=
- =?us-ascii?Q?jJOneeSLNMeanuRA8LVM7lOiwXc/+V3prQA+rlJKcr03U8+g+nn2zW3Lh5ZA?=
- =?us-ascii?Q?oO9Uu5CsRUEzZsA3H4qN7pz8RLEu7+diLOshJeACQ2winV+wxrUOBXZjbFKv?=
- =?us-ascii?Q?48B9rsJptoooc30eKPUC4z4Pxe0KhDmjzlBhglnAzPYr9yOLhozXdQhzusH0?=
- =?us-ascii?Q?njvcNL6tYAVvLR6TcNeUP9KrPQr2aY8rVzKl7l80L2JnddbVPFGBHktAJW0U?=
- =?us-ascii?Q?3K+1iT/P/D9HHh2D8aQVHxhrcUwmeSsdJ2/D6arv0ppgKW4nI6sLfj81zMIY?=
- =?us-ascii?Q?CWEwiDw8luz1EDHHtLS/dBA0fxABbkbbpt6T3wU09ykHqaZL1ZkF4LRqfGUc?=
- =?us-ascii?Q?/J82LdAbVrqcFw7gGClaygW5ZjJbCEDzsIqgepy/aeO47Okx9FtnKISXmzcR?=
- =?us-ascii?Q?0WmjFF9PuI4cNut0mn9DzdHVdM1rmAirC4XuNLc0LBusFmEHDYhaviO6Lhyp?=
- =?us-ascii?Q?AeYEvbUbtpR4jPLqdQrPA7RpQZVvoOXgTA76tGW1JjjN8RZjAtnhKKDAMhf1?=
- =?us-ascii?Q?MZpDOzudGnZvNfg3vnx5dkhwyL8r5PeqXRUaRMf7Y3JAWKtsXpF4kPPFUSlK?=
- =?us-ascii?Q?S0rTMmR6/p9B9040yVRU7iT1TP6gNjDredepQkRUbpGsOxQ83QqUeitAfJ41?=
- =?us-ascii?Q?EAkI+MVP5V65pSTbuZ3At/qJcENpCt7cCBrMk+TjGv7OFxTqV/RDYgA8GNu4?=
- =?us-ascii?Q?pefJ7FlUC0gUsh1WlcBZxcF5Ex7YaO2O64H0xDBDF8kIJ302x1dKJNGUZOjm?=
- =?us-ascii?Q?v7Or0+uvSnmBbBSh7m84shADf+hrEshfVAMuq35FsuFw0KUR/hWQcqLpFPZ0?=
- =?us-ascii?Q?yKgEf8HNQ0tK5FWb42sCg/hJd53KTFj7Hle+DGrbJkxvE66ifrOjNYgOm+Zk?=
- =?us-ascii?Q?WZAXa1Esm18+s/mH1AXK5u8xXASJBhuD/ORf6cpB+/go2T9udj193R9iJE9x?=
- =?us-ascii?Q?AiUBDU3/Vv9xdhnrI8bV6SNtUtix6GDKEZ/Palnxm/G5KDWmEXcN34wHRsID?=
- =?us-ascii?Q?ck6u2nID5nJpfczfUYuJhjsgbllh9r82Oe8PphL9rphDCmsauKbuGxwddMKD?=
- =?us-ascii?Q?c5ZqWfFgohbJVKxrsvcRVTChdkzFCgUkfc+wPgIOfjDMSdGoM0V0QhiAJ8lh?=
- =?us-ascii?Q?4jeHwrUXGhI84/chZ1hvWVW2P5GlC7G5B6roH+dVN/+BUgT5OgrK1+dE3gby?=
- =?us-ascii?Q?GReFFm8l+geXtvo7Id8UbTc7gVdfC7TDMTDUzyhIRx8LfW9N+EWUAkDMEIL3?=
- =?us-ascii?Q?FQ89uL6SVNvMGEAsc+HMFgTM2zUaGwbs/jnkqf47WSpcnirjTVl7XqaJSLPY?=
- =?us-ascii?Q?CniIftnhnUisC1ltd67Ubw3u+EzJIDOCuod4j2Fzm2AZSXCEcdhBdlfmu2dg?=
- =?us-ascii?Q?AcWWSnihdAHEzIOgb4tjAYnjrvsvsRsJainCL0GDW2elyvz20gBtg4d9Az6k?=
- =?us-ascii?Q?FFrJjS4JLBRkkCzDS3g=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 179bacb1-fcaf-4219-8fb0-08d9f61b1838
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2022 15:50:48.3513
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Cv6Ebg2rx7pO3JP3tM6pGv2dyl6E0HKXNZETxxgFIDqOFScaQueKQ8+OGfoAif1J
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4446
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220222154553.GA19919@lpieralisi>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 22, 2022 at 01:43:13AM +0000, Tian, Kevin wrote:
-
-> > > > + * Drivers should attempt to return estimates so that initial_bytes +
-> > > > + * dirty_bytes matches the amount of data an immediate transition to
-> > > > STOP_COPY
-> > > > + * will require to be streamed.
-> > >
-> > > I didn't understand this requirement. In an immediate transition to
-> > > STOP_COPY I expect the amount of data covers the entire device
-> > > state, i.e. initial_bytes. dirty_bytes are dynamic and iteratively returned
-> > > then why we need set some expectation on the sum of
-> > > initial+round1_dity+round2_dirty+...
+On Tuesday 22 February 2022 15:45:53 Lorenzo Pieralisi wrote:
+> On Tue, Feb 22, 2022 at 04:42:26PM +0100, Pali Rohár wrote:
+> > On Tuesday 22 February 2022 15:24:09 Lorenzo Pieralisi wrote:
+> > > On Tue, Feb 22, 2022 at 11:51:29AM +0100, Pali Rohár wrote:
+> > > > On Tuesday 22 February 2022 10:21:06 Lorenzo Pieralisi wrote:
+> > > > > On Thu, Feb 17, 2022 at 12:40:39AM +0100, Pali Rohár wrote:
+> > > > > > On Friday 11 February 2022 18:52:02 Pali Rohár wrote:
+> > > > > > > On Friday 11 February 2022 17:19:17 Lorenzo Pieralisi wrote:
+> > > > > > > > On Wed, Jan 12, 2022 at 04:18:13PM +0100, Pali Rohár wrote:
+> > > > > > > > > This adds support for legacy INTx interrupts received from other PCIe
+> > > > > > > > > devices and which are reported by a new INTx irq chip.
+> > > > > > > > > 
+> > > > > > > > > With this change, kernel can distinguish between INTA, INTB, INTC and INTD
+> > > > > > > > > interrupts.
+> > > > > > > > > 
+> > > > > > > > > Note that for this support, device tree files has to be properly adjusted
+> > > > > > > > > to provide "interrupts" or "interrupts-extended" property with intx
+> > > > > > > > > interrupt source, "interrupt-names" property with "intx" string and also
+> > > > > > > > > 'interrupt-controller' subnode must be defined.
+> > > > > > > > > 
+> > > > > > > > > If device tree files do not provide these nodes then driver would work as
+> > > > > > > > > before.
+> > > > > > > > 
+> > > > > > > > Nit: this information is not useful. DT rules are written in DT
+> > > > > > > > bindings, not in kernel commit logs. All I am saying is that firmware
+> > > > > > > > developers should not have to read this log to write firmware.
+> > > > > > > 
+> > > > > > > It was not intended for firmware developers, but for reviewers of this
+> > > > > > > patch to understand, what is happening in code and that with old DT
+> > > > > > > files this patch does not change driver behavior (= work as before).
+> > > > > > > 
+> > > > > > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > > > > > > > ---
+> > > > > > > > >  drivers/pci/controller/pci-mvebu.c | 185 +++++++++++++++++++++++++++--
+> > > > > > > > >  1 file changed, 177 insertions(+), 8 deletions(-)
+> > > > > > > > > 
+> > > > > > > > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> > > > > > > > > index 1e90ab888075..dbb6ecb4cb70 100644
+> > > > > > > > > --- a/drivers/pci/controller/pci-mvebu.c
+> > > > > > > > > +++ b/drivers/pci/controller/pci-mvebu.c
+> > > > > > > > > @@ -54,9 +54,10 @@
+> > > > > > > > >  	 PCIE_CONF_ADDR_EN)
+> > > > > > > > >  #define PCIE_CONF_DATA_OFF	0x18fc
+> > > > > > > > >  #define PCIE_INT_CAUSE_OFF	0x1900
+> > > > > > > > > +#define PCIE_INT_UNMASK_OFF	0x1910
+> > > > > > > > 
+> > > > > > > > Nit: I understand it is tempting but here you are redefining or better
+> > > > > > > > giving a proper label to a register. Separate patch please.
+> > > > > > > 
+> > > > > > > Ok!
+> > > > > > > 
+> > > > > > > > > +#define  PCIE_INT_INTX(i)		BIT(24+i)
+> > > > > > > > >  #define  PCIE_INT_PM_PME		BIT(28)
+> > > > > > > > > -#define PCIE_MASK_OFF		0x1910
+> > > > > > > > 
+> > > > > > > > See above.
+> > > > > > > > 
+> > > > > > > > > -#define  PCIE_MASK_ENABLE_INTS          0x0f000000
+> > > > > > > > > +#define  PCIE_INT_ALL_MASK		GENMASK(31, 0)
+> > > > > > > > >  #define PCIE_CTRL_OFF		0x1a00
+> > > > > > > > >  #define  PCIE_CTRL_X1_MODE		0x0001
+> > > > > > > > >  #define  PCIE_CTRL_RC_MODE		BIT(1)
+> > > > > > > > > @@ -110,6 +111,9 @@ struct mvebu_pcie_port {
+> > > > > > > > >  	struct mvebu_pcie_window iowin;
+> > > > > > > > >  	u32 saved_pcie_stat;
+> > > > > > > > >  	struct resource regs;
+> > > > > > > > > +	struct irq_domain *intx_irq_domain;
+> > > > > > > > > +	raw_spinlock_t irq_lock;
+> > > > > > > > > +	int intx_irq;
+> > > > > > > > >  };
+> > > > > > > > >  
+> > > > > > > > >  static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u32 reg)
+> > > > > > > > > @@ -235,7 +239,7 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+> > > > > > > > >  
+> > > > > > > > >  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+> > > > > > > > >  {
+> > > > > > > > > -	u32 ctrl, lnkcap, cmd, dev_rev, mask;
+> > > > > > > > > +	u32 ctrl, lnkcap, cmd, dev_rev, unmask;
+> > > > > > > > >  
+> > > > > > > > >  	/* Setup PCIe controller to Root Complex mode. */
+> > > > > > > > >  	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
+> > > > > > > > > @@ -288,10 +292,30 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+> > > > > > > > >  	/* Point PCIe unit MBUS decode windows to DRAM space. */
+> > > > > > > > >  	mvebu_pcie_setup_wins(port);
+> > > > > > > > >  
+> > > > > > > > > -	/* Enable interrupt lines A-D. */
+> > > > > > > > > -	mask = mvebu_readl(port, PCIE_MASK_OFF);
+> > > > > > > > > -	mask |= PCIE_MASK_ENABLE_INTS;
+> > > > > > > > > -	mvebu_writel(port, mask, PCIE_MASK_OFF);
+> > > > > > > > > +	/* Mask all interrupt sources. */
+> > > > > > > > > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
+> > > > > > > > > +
+> > > > > > > > > +	/* Clear all interrupt causes. */
+> > > > > > > > > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
+> > > > > > > > > +
+> > > > > > > > > +	if (port->intx_irq <= 0) {
+> > > > > > > > > +		/*
+> > > > > > > > > +		 * When neither "summary" interrupt, nor "intx" interrupt was
+> > > > > > > > > +		 * specified in DT then unmask all legacy INTx interrupts as in
+> > > > > > > > > +		 * this case driver does not provide a way for masking and
+> > > > > > > > > +		 * unmasking of individual legacy INTx interrupts. In this case
+> > > > > > > > > +		 * all interrupts, including legacy INTx are reported via one
+> > > > > > > > > +		 * shared GIC source and therefore kernel cannot distinguish
+> > > > > > > > > +		 * which individual legacy INTx was triggered. These interrupts
+> > > > > > > > > +		 * are shared, so it should not cause any issue. Just
+> > > > > > > > > +		 * performance penalty as every PCIe interrupt handler needs to
+> > > > > > > > > +		 * be called when some interrupt is triggered.
+> > > > > > > > > +		 */
+> > > > > > > > 
+> > > > > > > > This comment applies to current mainline right (ie it describes how
+> > > > > > > > current mainline handles INTx) ? IMO you should split it out in a
+> > > > > > > > separate patch.
+> > > > > > > 
+> > > > > > > This above comment describe what happens in if-branch when intx_irq is
+> > > > > > > not set (as written in comment "when intx interrupt was not specified in
+> > > > > > > DT"). You are right that this is also the behavior in the current
+> > > > > > > mainline.
+> > > > > > > 
+> > > > > > > I'm not sure if this comment can be split out as support for "intx"
+> > > > > > > interrupt is in this patch.
+> > > > > > > 
+> > > > > > > > I understand it is hard but a patch is a logical _change_, this
+> > > > > > > > comment is a change per se, it is a clarification on current
+> > > > > > > > behaviour.
+> > > > > > > 
+> > > > > > > Ok, I could try to split this comment into two patches, but part about
+> > > > > > > if-branch comment needs to stay in "this" patch.
+> > > > > > 
+> > > > > > I have done it locally.
+> > > > > > 
+> > > > > > Let me know when I should resend this patch series and I will include
+> > > > > > into it also these changes.
+> > > > > 
+> > > > > Hi,
+> > > > > 
+> > > > > yes please resend it and I will merge it.
+> > > > 
+> > > > Done!
+> > > > https://lore.kernel.org/linux-pci/20220222104625.28461-1-pali@kernel.org/T/#u
+> > > 
+> > > Can you rebase it please on top of my pci/mvebu branch ?
+> > > 
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
+> > > 
+> > > Forgive me, I forgot to mention that, thanks.
+> > > 
+> > > Lorenzo
 > > 
-> > "will require to be streamed" means additional data from this point
-> > forward, not including anything already sent.
-> > 
-> > It turns into the estimate of how long STOP_COPY will take.
+> > Ok! I rebased V3 on top of c3bd7dc553eea5a3595ca3aa0adee9bf83622a1f
+> > (pci/mvebu branch in your repo), fixed conflicts and pushed to my git
+> > repo https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/
+> > as commit 42402f0cfc362ffb0b7e464f420d6ead342dab2b (lpieralisi-pci-mvebu
+> > branch). It is enough? Or do you want me to resend it via emails?
 > 
-> I still didn't get the 'match' part. Why should the amount of data which
-> has already been sent match the additional data to be sent in STOP_COPY?
+> You need to re-send it to linux-pci ML, I only apply patches posted
+> there, sorry for the churn, thanks.
+> 
+> Lorenzo
 
-None of it is 'already been sent' the return values are always 'still
-to be sent'
-
-Jason
+Done!
+https://lore.kernel.org/linux-pci/20220222155030.988-1-pali@kernel.org/T/#u
