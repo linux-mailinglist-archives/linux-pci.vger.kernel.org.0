@@ -2,215 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26CED4BF1E4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 07:07:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29A9E4BF5A1
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 11:21:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230109AbiBVGEC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 01:04:02 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:55368 "EHLO
+        id S230474AbiBVKVo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 05:21:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230078AbiBVGEB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 01:04:01 -0500
-Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4CED8A30E;
-        Mon, 21 Feb 2022 22:03:35 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0V5BrHyw_1645509810;
-Received: from 30.240.116.247(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0V5BrHyw_1645509810)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 22 Feb 2022 14:03:32 +0800
-Message-ID: <dfa2c9ca-cb5a-a067-65c4-6f6588bed095@linux.alibaba.com>
-Date:   Tue, 22 Feb 2022 14:03:30 +0800
+        with ESMTP id S230479AbiBVKVn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 05:21:43 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 39A9B143465;
+        Tue, 22 Feb 2022 02:21:18 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01460106F;
+        Tue, 22 Feb 2022 02:21:18 -0800 (PST)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63BF43F5A1;
+        Tue, 22 Feb 2022 02:21:16 -0800 (PST)
+Date:   Tue, 22 Feb 2022 10:21:06 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     robh+dt@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 10/11] PCI: mvebu: Implement support for legacy INTx
+ interrupts
+Message-ID: <20220222102057.GA17238@lpieralisi>
+References: <20220105150239.9628-1-pali@kernel.org>
+ <20220112151814.24361-1-pali@kernel.org>
+ <20220112151814.24361-11-pali@kernel.org>
+ <20220211171917.GA740@lpieralisi>
+ <20220211175202.gku5pkwn5wmjo5al@pali>
+ <20220216234039.stxv5ndd6ai23sbb@pali>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH v7 1/2] ACPI: APEI: explicit init HEST and GHES in
- apci_init
-Content-Language: en-US
-To:     Nathan Chancellor <nathan@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     helgaas@kernel.org, bp@alien8.de, tony.luck@intel.com,
-        james.morse@arm.com, lenb@kernel.org, rjw@rjwysocki.net,
-        bhelgaas@google.com, zhangliguang@linux.alibaba.com,
-        zhuo.song@linux.alibaba.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-References: <20211126070422.73234-1-xueshuai@linux.alibaba.com>
- <20220122052618.1074-1-xueshuai@linux.alibaba.com>
- <YhPXX+CSoK++9MP6@dev-arch.archlinux-ax161>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <YhPXX+CSoK++9MP6@dev-arch.archlinux-ax161>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220216234039.stxv5ndd6ai23sbb@pali>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Nathan and Rafael,
+On Thu, Feb 17, 2022 at 12:40:39AM +0100, Pali Rohár wrote:
+> On Friday 11 February 2022 18:52:02 Pali Rohár wrote:
+> > On Friday 11 February 2022 17:19:17 Lorenzo Pieralisi wrote:
+> > > On Wed, Jan 12, 2022 at 04:18:13PM +0100, Pali Rohár wrote:
+> > > > This adds support for legacy INTx interrupts received from other PCIe
+> > > > devices and which are reported by a new INTx irq chip.
+> > > > 
+> > > > With this change, kernel can distinguish between INTA, INTB, INTC and INTD
+> > > > interrupts.
+> > > > 
+> > > > Note that for this support, device tree files has to be properly adjusted
+> > > > to provide "interrupts" or "interrupts-extended" property with intx
+> > > > interrupt source, "interrupt-names" property with "intx" string and also
+> > > > 'interrupt-controller' subnode must be defined.
+> > > > 
+> > > > If device tree files do not provide these nodes then driver would work as
+> > > > before.
+> > > 
+> > > Nit: this information is not useful. DT rules are written in DT
+> > > bindings, not in kernel commit logs. All I am saying is that firmware
+> > > developers should not have to read this log to write firmware.
+> > 
+> > It was not intended for firmware developers, but for reviewers of this
+> > patch to understand, what is happening in code and that with old DT
+> > files this patch does not change driver behavior (= work as before).
+> > 
+> > > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > > ---
+> > > >  drivers/pci/controller/pci-mvebu.c | 185 +++++++++++++++++++++++++++--
+> > > >  1 file changed, 177 insertions(+), 8 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+> > > > index 1e90ab888075..dbb6ecb4cb70 100644
+> > > > --- a/drivers/pci/controller/pci-mvebu.c
+> > > > +++ b/drivers/pci/controller/pci-mvebu.c
+> > > > @@ -54,9 +54,10 @@
+> > > >  	 PCIE_CONF_ADDR_EN)
+> > > >  #define PCIE_CONF_DATA_OFF	0x18fc
+> > > >  #define PCIE_INT_CAUSE_OFF	0x1900
+> > > > +#define PCIE_INT_UNMASK_OFF	0x1910
+> > > 
+> > > Nit: I understand it is tempting but here you are redefining or better
+> > > giving a proper label to a register. Separate patch please.
+> > 
+> > Ok!
+> > 
+> > > > +#define  PCIE_INT_INTX(i)		BIT(24+i)
+> > > >  #define  PCIE_INT_PM_PME		BIT(28)
+> > > > -#define PCIE_MASK_OFF		0x1910
+> > > 
+> > > See above.
+> > > 
+> > > > -#define  PCIE_MASK_ENABLE_INTS          0x0f000000
+> > > > +#define  PCIE_INT_ALL_MASK		GENMASK(31, 0)
+> > > >  #define PCIE_CTRL_OFF		0x1a00
+> > > >  #define  PCIE_CTRL_X1_MODE		0x0001
+> > > >  #define  PCIE_CTRL_RC_MODE		BIT(1)
+> > > > @@ -110,6 +111,9 @@ struct mvebu_pcie_port {
+> > > >  	struct mvebu_pcie_window iowin;
+> > > >  	u32 saved_pcie_stat;
+> > > >  	struct resource regs;
+> > > > +	struct irq_domain *intx_irq_domain;
+> > > > +	raw_spinlock_t irq_lock;
+> > > > +	int intx_irq;
+> > > >  };
+> > > >  
+> > > >  static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u32 reg)
+> > > > @@ -235,7 +239,7 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+> > > >  
+> > > >  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+> > > >  {
+> > > > -	u32 ctrl, lnkcap, cmd, dev_rev, mask;
+> > > > +	u32 ctrl, lnkcap, cmd, dev_rev, unmask;
+> > > >  
+> > > >  	/* Setup PCIe controller to Root Complex mode. */
+> > > >  	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
+> > > > @@ -288,10 +292,30 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
+> > > >  	/* Point PCIe unit MBUS decode windows to DRAM space. */
+> > > >  	mvebu_pcie_setup_wins(port);
+> > > >  
+> > > > -	/* Enable interrupt lines A-D. */
+> > > > -	mask = mvebu_readl(port, PCIE_MASK_OFF);
+> > > > -	mask |= PCIE_MASK_ENABLE_INTS;
+> > > > -	mvebu_writel(port, mask, PCIE_MASK_OFF);
+> > > > +	/* Mask all interrupt sources. */
+> > > > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
+> > > > +
+> > > > +	/* Clear all interrupt causes. */
+> > > > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
+> > > > +
+> > > > +	if (port->intx_irq <= 0) {
+> > > > +		/*
+> > > > +		 * When neither "summary" interrupt, nor "intx" interrupt was
+> > > > +		 * specified in DT then unmask all legacy INTx interrupts as in
+> > > > +		 * this case driver does not provide a way for masking and
+> > > > +		 * unmasking of individual legacy INTx interrupts. In this case
+> > > > +		 * all interrupts, including legacy INTx are reported via one
+> > > > +		 * shared GIC source and therefore kernel cannot distinguish
+> > > > +		 * which individual legacy INTx was triggered. These interrupts
+> > > > +		 * are shared, so it should not cause any issue. Just
+> > > > +		 * performance penalty as every PCIe interrupt handler needs to
+> > > > +		 * be called when some interrupt is triggered.
+> > > > +		 */
+> > > 
+> > > This comment applies to current mainline right (ie it describes how
+> > > current mainline handles INTx) ? IMO you should split it out in a
+> > > separate patch.
+> > 
+> > This above comment describe what happens in if-branch when intx_irq is
+> > not set (as written in comment "when intx interrupt was not specified in
+> > DT"). You are right that this is also the behavior in the current
+> > mainline.
+> > 
+> > I'm not sure if this comment can be split out as support for "intx"
+> > interrupt is in this patch.
+> > 
+> > > I understand it is hard but a patch is a logical _change_, this
+> > > comment is a change per se, it is a clarification on current
+> > > behaviour.
+> > 
+> > Ok, I could try to split this comment into two patches, but part about
+> > if-branch comment needs to stay in "this" patch.
+> 
+> I have done it locally.
+> 
+> Let me know when I should resend this patch series and I will include
+> into it also these changes.
 
-åœ¨ 2022/2/22 AM2:18, Nathan Chancellor å†™é“:
-> Hi Shuai,
-> 
-> On Sat, Jan 22, 2022 at 01:26:17PM +0800, Shuai Xue wrote:
->> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
->> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
->> the estatus memory pool. On the other hand, ghes_init() relies on
->> sdei_init() to detect the SDEI version and (un)register events. The
->> dependencies are as follows:
->>
->>     ghes_init() => acpi_hest_init() => acpi_bus_init() => acpi_init()
->>     ghes_init() => sdei_init()
->>
->> HEST is not PCI-specific and initcall ordering is implicit and not
->> well-defined within a level.
->>
->> Based on above, remove acpi_hest_init() from acpi_pci_root_init() and
->> convert ghes_init() and sdei_init() from initcalls to explicit calls in the
->> following order:
->>
->>     acpi_hest_init()
->>     ghes_init()
->>         sdei_init()
->>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
->>  drivers/acpi/apei/ghes.c    | 19 ++++++++-----------
->>  drivers/acpi/bus.c          |  2 ++
->>  drivers/acpi/pci_root.c     |  3 ---
->>  drivers/firmware/Kconfig    |  1 +
->>  drivers/firmware/arm_sdei.c | 13 ++-----------
->>  include/acpi/apei.h         |  4 +++-
->>  include/linux/arm_sdei.h    |  2 ++
->>  7 files changed, 18 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
->> index 0c5c9acc6254..aadc0a972f18 100644
->> --- a/drivers/acpi/apei/ghes.c
->> +++ b/drivers/acpi/apei/ghes.c
->> @@ -1457,33 +1457,35 @@ static struct platform_driver ghes_platform_driver = {
->>  	.remove		= ghes_remove,
->>  };
->>  
->> -static int __init ghes_init(void)
->> +void __init ghes_init(void)
->>  {
->>  	int rc;
->>  
->> +	sdei_init();
->> +
->>  	if (acpi_disabled)
->> -		return -ENODEV;
->> +		return;
->>  
->>  	switch (hest_disable) {
->>  	case HEST_NOT_FOUND:
->> -		return -ENODEV;
->> +		return;
->>  	case HEST_DISABLED:
->>  		pr_info(GHES_PFX "HEST is not enabled!\n");
->> -		return -EINVAL;
->> +		return;
->>  	default:
->>  		break;
->>  	}
->>  
->>  	if (ghes_disable) {
->>  		pr_info(GHES_PFX "GHES is not enabled!\n");
->> -		return -EINVAL;
->> +		return;
->>  	}
->>  
->>  	ghes_nmi_init_cxt();
->>  
->>  	rc = platform_driver_register(&ghes_platform_driver);
->>  	if (rc)
->> -		goto err;
->> +		return;
->>  
->>  	rc = apei_osc_setup();
->>  	if (rc == 0 && osc_sb_apei_support_acked)
->> @@ -1494,9 +1496,4 @@ static int __init ghes_init(void)
->>  		pr_info(GHES_PFX "APEI firmware first mode is enabled by APEI bit.\n");
->>  	else
->>  		pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
->> -
->> -	return 0;
->> -err:
->> -	return rc;
->>  }
->> -device_initcall(ghes_init);
->> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
->> index 07f604832fd6..3f403db20f69 100644
->> --- a/drivers/acpi/bus.c
->> +++ b/drivers/acpi/bus.c
->> @@ -1331,6 +1331,8 @@ static int __init acpi_init(void)
->>  
->>  	pci_mmcfg_late_init();
->>  	acpi_iort_init();
->> +	acpi_hest_init();
->> +	ghes_init();
->>  	acpi_scan_init();
->>  	acpi_ec_init();
->>  	acpi_debugfs_init();
->> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->> index b76db99cced3..6f9e75d14808 100644
->> --- a/drivers/acpi/pci_root.c
->> +++ b/drivers/acpi/pci_root.c
->> @@ -22,8 +22,6 @@
->>  #include <linux/slab.h>
->>  #include <linux/dmi.h>
->>  #include <linux/platform_data/x86/apple.h>
->> -#include <acpi/apei.h>	/* for acpi_hest_init() */
->> -
->>  #include "internal.h"
->>  
->>  #define ACPI_PCI_ROOT_CLASS		"pci_bridge"
->> @@ -943,7 +941,6 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->>  
->>  void __init acpi_pci_root_init(void)
->>  {
->> -	acpi_hest_init();
->>  	if (acpi_pci_disabled)
->>  		return;
->>  
->> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
->> index 75cb91055c17..ad114d9cdf8e 100644
->> --- a/drivers/firmware/Kconfig
->> +++ b/drivers/firmware/Kconfig
->> @@ -40,6 +40,7 @@ config ARM_SCPI_POWER_DOMAIN
->>  config ARM_SDE_INTERFACE
->>  	bool "ARM Software Delegated Exception Interface (SDEI)"
->>  	depends on ARM64
->> +	select ACPI_APEI_GHES
-> 
-> As the kernel test robot pointed out [1], you cannot do this.
-> CONFIG_ACPI_APEI_GHES is a user selectable symbol that has dependencies,
-> which 'select' completely overrides, resulting in build failures when
-> CONFIG_ACPI_APEI is not enabled.
-> 
-> If CONFIG_ARM_SDE_INTERFACE truly requires CONFIG_ACPI_APEI_GHES, you
-> should have "depends on ACPI_APEI_GHES".
-> 
-> If CONFIG_ARM_SDE_INTERFACE soft depends on CONFIG_ACPI_APEI_GHES for
-> functionality but can work without it, you could use
-> "imply ACPI_APEI_GHES", which will enable CONFIG_ACPI_APEI_GHES if its
-> dependencies are met.
-> 
-> I noticed the same error with Alpine Linux's aarch64 configuration [2]
-> if you wanted a quick configuration to test with.
-> 
-> [1]: https://lore.kernel.org/r/202202151504.jWpZGPaH-lkp@intel.com/
-> [2]: https://git.alpinelinux.org/aports/plain/community/linux-edge/config-edge.aarch64
+Hi,
 
-Thank you for explaining the difference among 'select', 'depends on' and 'imply'.
-I was wrong to use 'select'. sdei_init() is called in ghes_init() now, in other words,
-CONFIG_ARM_SDE_INTERFACE truly requires CONFIG_ACPI_APEI_GHES, so we should use
-'depends on'. I will send a new patch set to fix this problem.
+yes please resend it and I will merge it.
 
-Best Regards,
-Shuai
+Thanks,
+Lorenzo
