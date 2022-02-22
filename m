@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC51C4BF668
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 11:46:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A53854BF669
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 11:46:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbiBVKrN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 05:47:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37786 "EHLO
+        id S231381AbiBVKrO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 05:47:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231367AbiBVKrL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 05:47:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67594A8EEF;
-        Tue, 22 Feb 2022 02:46:46 -0800 (PST)
+        with ESMTP id S231389AbiBVKrN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 05:47:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B4AA9A74;
+        Tue, 22 Feb 2022 02:46:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 04BFB61604;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CF784615B0;
         Tue, 22 Feb 2022 10:46:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3726AC340E8;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9696C340F1;
         Tue, 22 Feb 2022 10:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645526805;
-        bh=6HCy67i32Aa1PmtKy+in+Ktr5yO8lY2us1tc8/Y5o6A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iRa3duzz37M6i6gMqISsG9Y1Zziccn0+sM8yfyE4Q2vuAp+szKAq2G9ySTm7WBqvc
-         gb3JWk6fnfU9s1ZxoNphHRIwad0CJXsJJQ7Bw0HcG2vBH3p5UpRm4vq76xJJa2h6LM
-         dNzL0Rs5GT96MtkDFU0lrIHArnjO9HmMELPRxhakaRspsu+RqGA8Fa7evTYbKQt81a
-         C2XNRzyfzxjQ2weBAGV+aMBKEO2NA5t/cu4Wu6hKi98oOWlAz7YuUBkOnxu70bVHz4
-         DWCXiIF4bQ5cicgT5TlPMFkasa+HRD3Qg6aPzy/AcLBwAg4Xtf0xmozftFEJC3nrbi
-         t2TrrcYAUBvVA==
+        s=k20201202; t=1645526806;
+        bh=2aT82nIT8kO4HHvh0X2ZN9nxoHzk3wWu8N2BXVWGDGg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I5qxbbyGd4qWX6gLgzrQZbtVZfKRWAbbRbyld+zQMF3p/rcQMqfnX9BAD8eEigmqE
+         YofFQmfHOKC1L1fV5FNhXf3m9XgJIkVfmxe8UFkt2twc/+fSuQYlep31tsrtsGDNQd
+         BMA1kbplSUrL9HmhiosIazv31jO6TaUEzNVV8TkV1QB+7PJzcMCwp2sB6+p34y/Izx
+         BhmHdCp21oEFErn4bQcQUe5vkbTpXoCAvB1l0Zc7BGotZn67lT4mtR+ajAPCcvD8PB
+         0NBfYcRzZo2GFhfRCEZ10D0gh0XtPVZJvhDYQBE/2UbDtrIFUsAAf5ubuVxD2gRmG8
+         LDuuL/PaVHGXQ==
 Received: by pali.im (Postfix)
-        id 5C4B0FDB; Tue, 22 Feb 2022 11:46:42 +0100 (CET)
+        id 8707A2B5E; Tue, 22 Feb 2022 11:46:43 +0100 (CET)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -43,10 +43,12 @@ To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Russell King <rmk+kernel@armlinux.org.uk>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 00/12] PCI: mvebu: subsystem ids, AER and INTx
-Date:   Tue, 22 Feb 2022 11:46:13 +0100
-Message-Id: <20220222104625.28461-1-pali@kernel.org>
+Subject: [PATCH v3 01/12] PCI: pci-bridge-emul: Re-arrange register tests
+Date:   Tue, 22 Feb 2022 11:46:14 +0100
+Message-Id: <20220222104625.28461-2-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220222104625.28461-1-pali@kernel.org>
+References: <20220222104625.28461-1-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,48 +62,114 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch series extends pci-bridge-emul.c driver to emulate PCI Subsystem
-Vendor ID capability and PCIe extended capabilities. And then implement
-in pci-mvebu.c driver support for PCI Subsystem Vendor IDs, PCIe AER
-registers, support for legacy INTx interrupts, configuration for X1/X4
-mode and usage of new PCI child_ops API.
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Changes in v3:
-* add Marek's Reviewed-by for first two patches
-* split comments from "PCI: mvebu: Implement support for legacy INTx
-  interrupts" patch into separate patch
+Re-arrange the tests for which sets of registers are being accessed so that
+it is easier to add further regions later. No functional change.
 
-Changes in v2:
-* use static structures for INTx interrupts
-* remove INTx domain after unregistering INTx handler
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[pali: Fix reading old value in pci_bridge_emul_conf_write]
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Marek Behún <kabel@kernel.org>
+---
+ drivers/pci/pci-bridge-emul.c | 61 ++++++++++++++++++-----------------
+ 1 file changed, 31 insertions(+), 30 deletions(-)
 
-Pali Rohár (10):
-  PCI: pci-bridge-emul: Add support for PCI Bridge Subsystem Vendor ID
-    capability
-  dt-bindings: PCI: mvebu: Add num-lanes property
-  PCI: mvebu: Correctly configure x1/x4 mode
-  PCI: mvebu: Add support for PCI Bridge Subsystem Vendor ID on emulated
-    bridge
-  PCI: mvebu: Add support for Advanced Error Reporting registers on
-    emulated bridge
-  PCI: mvebu: Use child_ops API
-  dt-bindings: PCI: mvebu: Update information about intx interrupts
-  PCI: mvebu: Fix macro names and comments about legacy interrupts
-  PCI: mvebu: Implement support for legacy INTx interrupts
-  ARM: dts: armada-385.dtsi: Add definitions for PCIe legacy INTx
-    interrupts
-
-Russell King (2):
-  PCI: pci-bridge-emul: Re-arrange register tests
-  PCI: pci-bridge-emul: Add support for PCIe extended capabilities
-
- .../devicetree/bindings/pci/mvebu-pci.txt     |  16 +
- arch/arm/boot/dts/armada-385.dtsi             |  52 ++-
- drivers/pci/controller/pci-mvebu.c            | 355 +++++++++++++++---
- drivers/pci/pci-bridge-emul.c                 | 167 +++++---
- drivers/pci/pci-bridge-emul.h                 |  17 +
- 5 files changed, 497 insertions(+), 110 deletions(-)
-
+diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
+index 033bbeb99176..56b2cb741498 100644
+--- a/drivers/pci/pci-bridge-emul.c
++++ b/drivers/pci/pci-bridge-emul.c
+@@ -418,25 +418,25 @@ int pci_bridge_emul_conf_read(struct pci_bridge_emul *bridge, int where,
+ 	__le32 *cfgspace;
+ 	const struct pci_bridge_reg_behavior *behavior;
+ 
+-	if (bridge->has_pcie && reg >= PCI_CAP_PCIE_END) {
+-		*value = 0;
+-		return PCIBIOS_SUCCESSFUL;
+-	}
+-
+-	if (!bridge->has_pcie && reg >= PCI_BRIDGE_CONF_END) {
++	if (reg < PCI_BRIDGE_CONF_END) {
++		/* Emulated PCI space */
++		read_op = bridge->ops->read_base;
++		cfgspace = (__le32 *) &bridge->conf;
++		behavior = bridge->pci_regs_behavior;
++	} else if (!bridge->has_pcie) {
++		/* PCIe space is not implemented, and no PCI capabilities */
+ 		*value = 0;
+ 		return PCIBIOS_SUCCESSFUL;
+-	}
+-
+-	if (bridge->has_pcie && reg >= PCI_CAP_PCIE_START) {
++	} else if (reg < PCI_CAP_PCIE_END) {
++		/* Our emulated PCIe capability */
+ 		reg -= PCI_CAP_PCIE_START;
+ 		read_op = bridge->ops->read_pcie;
+ 		cfgspace = (__le32 *) &bridge->pcie_conf;
+ 		behavior = bridge->pcie_cap_regs_behavior;
+ 	} else {
+-		read_op = bridge->ops->read_base;
+-		cfgspace = (__le32 *) &bridge->conf;
+-		behavior = bridge->pci_regs_behavior;
++		/* Beyond our PCIe space */
++		*value = 0;
++		return PCIBIOS_SUCCESSFUL;
+ 	}
+ 
+ 	if (read_op)
+@@ -480,11 +480,27 @@ int pci_bridge_emul_conf_write(struct pci_bridge_emul *bridge, int where,
+ 	__le32 *cfgspace;
+ 	const struct pci_bridge_reg_behavior *behavior;
+ 
+-	if (bridge->has_pcie && reg >= PCI_CAP_PCIE_END)
+-		return PCIBIOS_SUCCESSFUL;
++	ret = pci_bridge_emul_conf_read(bridge, reg, 4, &old);
++	if (ret != PCIBIOS_SUCCESSFUL)
++		return ret;
+ 
+-	if (!bridge->has_pcie && reg >= PCI_BRIDGE_CONF_END)
++	if (reg < PCI_BRIDGE_CONF_END) {
++		/* Emulated PCI space */
++		write_op = bridge->ops->write_base;
++		cfgspace = (__le32 *) &bridge->conf;
++		behavior = bridge->pci_regs_behavior;
++	} else if (!bridge->has_pcie) {
++		/* PCIe space is not implemented, and no PCI capabilities */
+ 		return PCIBIOS_SUCCESSFUL;
++	} else if (reg < PCI_CAP_PCIE_END) {
++		/* Our emulated PCIe capability */
++		reg -= PCI_CAP_PCIE_START;
++		write_op = bridge->ops->write_pcie;
++		cfgspace = (__le32 *) &bridge->pcie_conf;
++		behavior = bridge->pcie_cap_regs_behavior;
++	} else {
++		return PCIBIOS_SUCCESSFUL;
++	}
+ 
+ 	shift = (where & 0x3) * 8;
+ 
+@@ -497,21 +513,6 @@ int pci_bridge_emul_conf_write(struct pci_bridge_emul *bridge, int where,
+ 	else
+ 		return PCIBIOS_BAD_REGISTER_NUMBER;
+ 
+-	ret = pci_bridge_emul_conf_read(bridge, reg, 4, &old);
+-	if (ret != PCIBIOS_SUCCESSFUL)
+-		return ret;
+-
+-	if (bridge->has_pcie && reg >= PCI_CAP_PCIE_START) {
+-		reg -= PCI_CAP_PCIE_START;
+-		write_op = bridge->ops->write_pcie;
+-		cfgspace = (__le32 *) &bridge->pcie_conf;
+-		behavior = bridge->pcie_cap_regs_behavior;
+-	} else {
+-		write_op = bridge->ops->write_base;
+-		cfgspace = (__le32 *) &bridge->conf;
+-		behavior = bridge->pci_regs_behavior;
+-	}
+-
+ 	/* Keep all bits, except the RW bits */
+ 	new = old & (~mask | ~behavior[reg / 4].rw);
+ 
 -- 
 2.20.1
 
