@@ -2,98 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52E9D4BFEA4
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 17:32:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A59C4BFF36
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 17:49:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233859AbiBVQdB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 11:33:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39770 "EHLO
+        id S233421AbiBVQtp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 11:49:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234062AbiBVQcr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 11:32:47 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E94FC6E8E7;
-        Tue, 22 Feb 2022 08:32:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S234309AbiBVQto (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 11:49:44 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5145616A5AB
+        for <linux-pci@vger.kernel.org>; Tue, 22 Feb 2022 08:49:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645548556;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vz9nNDvyvDMTdhA9MOOdkPb7DZP5KSBUZs6KelrdH10=;
+        b=XVpQFOJ0IEHE9zZ0tSap//WmJJ6XYy4p0IfKo1BdxtwLC9PEd9vHVBahoRuRTZJ8KPODmp
+        UAzv0ueaLgzz6hj4ej4mMXSnmbuT2SVvbeu7+RnVYbLgQeErsdrDXfLpPsfreWPiPoGhlm
+        aAGtBuRlAfvHD5JkPV06TTWP5EhRINI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-176-p5Vh5Qc4PXe_azqchgwlnw-1; Tue, 22 Feb 2022 11:49:13 -0500
+X-MC-Unique: p5Vh5Qc4PXe_azqchgwlnw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C4EF260AFD;
-        Tue, 22 Feb 2022 16:32:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13904C340E8;
-        Tue, 22 Feb 2022 16:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645547541;
-        bh=X1NkggDZMaHHEK/ibc1MqFK+Ef81w3jOaBfki258e5Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JhhNpdV7ASN4Ad65L5LNmqytTZGEPdaHaHxNKInh1dr7E308XT5lfFLnNa1vmD2vf
-         p6MClteatvt73MlM72iHdchLE/yUvn4OuDWLaWe/RYWQ6v8JGIRoUyhPW81dBUiJ/M
-         xDdFpTFbL2XsFFx3PhmiMtQ+3DIsrPmVkSks0EQwHNwEgxXwFYe+epUmHntGiw0SSj
-         YYs4hhFskTk94R2alrrs0g5dMKkQY2ZYiMhmwxqjnqD3E/gDo2NfR9kJSMT/WzkRnd
-         tIe+xw+sawsuf9sZBvnpEIHSYTTEDX72ZxF/dqGAH45qSnuCeRbT9pDyfc8tZR7YoA
-         FChsc8vh+WsWQ==
-Received: by pali.im (Postfix)
-        id BEEC5FDB; Tue, 22 Feb 2022 17:32:20 +0100 (CET)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] ARM: dts: turris-omnia: Set PCIe slot-power-limit-milliwatt properties
-Date:   Tue, 22 Feb 2022 17:31:58 +0100
-Message-Id: <20220222163158.1666-7-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220222163158.1666-1-pali@kernel.org>
-References: <20220222163158.1666-1-pali@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 335201091DA0;
+        Tue, 22 Feb 2022 16:49:11 +0000 (UTC)
+Received: from localhost (unknown [10.39.193.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0408F837A9;
+        Tue, 22 Feb 2022 16:48:58 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
+        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com
+Cc:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, yishaih@nvidia.com,
+        maorg@nvidia.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        shameerali.kolothum.thodi@huawei.com
+Subject: Re: [PATCH V8 mlx5-next 08/15] vfio: Have the core code decode the
+ VFIO_DEVICE_FEATURE ioctl
+In-Reply-To: <20220220095716.153757-9-yishaih@nvidia.com>
+Organization: Red Hat GmbH
+References: <20220220095716.153757-1-yishaih@nvidia.com>
+ <20220220095716.153757-9-yishaih@nvidia.com>
+User-Agent: Notmuch/0.34 (https://notmuchmail.org)
+Date:   Tue, 22 Feb 2022 17:48:57 +0100
+Message-ID: <87o82y7sp2.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-All 3 miniPCIe slots in Turris Omnia are designed for 10 W.
+On Sun, Feb 20 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- arch/arm/boot/dts/armada-385-turris-omnia.dts | 3 +++
- 1 file changed, 3 insertions(+)
+> From: Jason Gunthorpe <jgg@nvidia.com>
+>
+> Invoke a new device op 'device_feature' to handle just the data array
+> portion of the command. This lifts the ioctl validation to the core code
+> and makes it simpler for either the core code, or layered drivers, to
+> implement their own feature values.
+>
+> Provide vfio_check_feature() to consolidate checking the flags/etc against
+> what the driver supports.
+>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Tested-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c      |  1 +
+>  drivers/vfio/pci/vfio_pci_core.c | 94 +++++++++++++-------------------
+>  drivers/vfio/vfio.c              | 46 ++++++++++++++--
+>  include/linux/vfio.h             | 32 +++++++++++
+>  include/linux/vfio_pci_core.h    |  2 +
+>  5 files changed, 114 insertions(+), 61 deletions(-)
+>
 
-diff --git a/arch/arm/boot/dts/armada-385-turris-omnia.dts b/arch/arm/boot/dts/armada-385-turris-omnia.dts
-index 5bd6a66d2c2b..f240018148f6 100644
---- a/arch/arm/boot/dts/armada-385-turris-omnia.dts
-+++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
-@@ -71,16 +71,19 @@
- 			pcie@1,0 {
- 				/* Port 0, Lane 0 */
- 				status = "okay";
-+				slot-power-limit-milliwatt = <10000>;
- 			};
- 
- 			pcie@2,0 {
- 				/* Port 1, Lane 0 */
- 				status = "okay";
-+				slot-power-limit-milliwatt = <10000>;
- 			};
- 
- 			pcie@3,0 {
- 				/* Port 2, Lane 0 */
- 				status = "okay";
-+				slot-power-limit-milliwatt = <10000>;
- 			};
- 		};
- 	};
--- 
-2.20.1
+(...)
+
+> +static int vfio_ioctl_device_feature(struct vfio_device *device,
+> +				     struct vfio_device_feature __user *arg)
+> +{
+> +	size_t minsz = offsetofend(struct vfio_device_feature, flags);
+> +	struct vfio_device_feature feature;
+> +
+> +	if (copy_from_user(&feature, arg, minsz))
+> +		return -EFAULT;
+> +
+> +	if (feature.argsz < minsz)
+> +		return -EINVAL;
+> +
+> +	/* Check unknown flags */
+> +	if (feature.flags &
+> +	    ~(VFIO_DEVICE_FEATURE_MASK | VFIO_DEVICE_FEATURE_SET |
+> +	      VFIO_DEVICE_FEATURE_GET | VFIO_DEVICE_FEATURE_PROBE))
+> +		return -EINVAL;
+> +
+> +	/* GET & SET are mutually exclusive except with PROBE */
+> +	if (!(feature.flags & VFIO_DEVICE_FEATURE_PROBE) &&
+> +	    (feature.flags & VFIO_DEVICE_FEATURE_SET) &&
+> +	    (feature.flags & VFIO_DEVICE_FEATURE_GET))
+> +		return -EINVAL;
+> +
+> +	switch (feature.flags & VFIO_DEVICE_FEATURE_MASK) {
+> +	default:
+> +		if (unlikely(!device->ops->device_feature))
+> +			return -EINVAL;
+> +		return device->ops->device_feature(device, feature.flags,
+> +						   arg->data,
+> +						   feature.argsz - minsz);
+> +	}
+> +}
+> +
+>  static long vfio_device_fops_unl_ioctl(struct file *filep,
+>  				       unsigned int cmd, unsigned long arg)
+>  {
+>  	struct vfio_device *device = filep->private_data;
+>  
+> -	if (unlikely(!device->ops->ioctl))
+> -		return -EINVAL;
+> -
+> -	return device->ops->ioctl(device, cmd, arg);
+> +	switch (cmd) {
+> +	case VFIO_DEVICE_FEATURE:
+> +		return vfio_ioctl_device_feature(device, (void __user *)arg);
+> +	default:
+> +		if (unlikely(!device->ops->ioctl))
+> +			return -EINVAL;
+> +		return device->ops->ioctl(device, cmd, arg);
+> +	}
+>  }
+
+One not-that-obvious change this is making is how VFIO_DEVICE_* ioctls
+are processed. With this patch, VFIO_DEVICE_FEATURE is handled a bit
+differently to other ioctl commands that are passed directly to the
+device; here we have the common handling first, then control is passed
+to the device. When I read in Documentation/driver-api/vfio.rst
+
+"The ioctl interface provides a direct pass through for VFIO_DEVICE_*
+ioctls."
+
+I would not really expect that behaviour. No objection to introducing
+it, but I think that needs a note in the doc, as you only see that if
+you actually read the implementation (and not just the header and the
+docs).
 
