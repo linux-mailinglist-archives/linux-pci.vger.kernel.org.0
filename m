@@ -2,209 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A80E84BF6A8
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 11:52:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B560D4BF6D8
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 11:59:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231292AbiBVKwB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 05:52:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56902 "EHLO
+        id S229458AbiBVK72 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 05:59:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230519AbiBVKwA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 05:52:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8EC49ADAB;
-        Tue, 22 Feb 2022 02:51:34 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4246BB8196F;
-        Tue, 22 Feb 2022 10:51:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E4DBC340E8;
-        Tue, 22 Feb 2022 10:51:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645527091;
-        bh=fvuaMqV3d9mDWZIn0oy48dn/LDKGxkmDPSOkXGC4qPw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HaK2U600cZKYfQ3Qq9jdSg4iVLLpfRPAVLs6i+mjLGqCkWoTOjMglUl+N4Pqeunav
-         zxUYtVizbbV4rbMiLFc9Gk46HZ0cDuRSPm23GmA2G91i9T4YR6W9WyQsUV6nS3av15
-         umkEJsGr2PiTFDjp9h6veSbHVzKt7tMayovxD3ADGMnRW5ShbCs6eKbFsp1RFAdFoK
-         YebBN5/S+w8aYuiwsrHJ9k9cmJch0BoCvU3S7NHLBK+gewSE6ESon4KSqycoAr65Ll
-         JbFgbUGTUxZqFxGidD1IMLJ39/LeWc+JAaDXHDZXNkYsTwUJZo3C/FT34Y1NHIJTrD
-         qhuGZDzc6/gpg==
-Received: by pali.im (Postfix)
-        id 4424AFDB; Tue, 22 Feb 2022 11:51:29 +0100 (CET)
-Date:   Tue, 22 Feb 2022 11:51:29 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     robh+dt@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Marc Zyngier <maz@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 10/11] PCI: mvebu: Implement support for legacy INTx
- interrupts
-Message-ID: <20220222105129.jg5kwmhvhggsv72n@pali>
-References: <20220105150239.9628-1-pali@kernel.org>
- <20220112151814.24361-1-pali@kernel.org>
- <20220112151814.24361-11-pali@kernel.org>
- <20220211171917.GA740@lpieralisi>
- <20220211175202.gku5pkwn5wmjo5al@pali>
- <20220216234039.stxv5ndd6ai23sbb@pali>
- <20220222102057.GA17238@lpieralisi>
+        with ESMTP id S229786AbiBVK71 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 05:59:27 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 70E16A66CF;
+        Tue, 22 Feb 2022 02:59:02 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39757139F;
+        Tue, 22 Feb 2022 02:59:02 -0800 (PST)
+Received: from [10.57.40.147] (unknown [10.57.40.147])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6D613F70D;
+        Tue, 22 Feb 2022 02:58:57 -0800 (PST)
+Message-ID: <1acb8748-8d44-688d-2380-f39ec820776f@arm.com>
+Date:   Tue, 22 Feb 2022 10:58:37 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220222102057.GA17238@lpieralisi>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v6 02/11] driver core: Add dma_cleanup callback in
+ bus_type
+Content-Language: en-GB
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        rafael@kernel.org, David Airlie <airlied@linux.ie>,
+        linux-pci@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        iommu@lists.linux-foundation.org,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20220218005521.172832-1-baolu.lu@linux.intel.com>
+ <20220218005521.172832-3-baolu.lu@linux.intel.com>
+ <YhCdEmC2lYStmUSL@infradead.org>
+ <1d8004d3-1887-4fc7-08d2-0e2ee6b5fdcb@arm.com>
+ <20220221234837.GA10061@nvidia.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20220221234837.GA10061@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 22 February 2022 10:21:06 Lorenzo Pieralisi wrote:
-> On Thu, Feb 17, 2022 at 12:40:39AM +0100, Pali Rohár wrote:
-> > On Friday 11 February 2022 18:52:02 Pali Rohár wrote:
-> > > On Friday 11 February 2022 17:19:17 Lorenzo Pieralisi wrote:
-> > > > On Wed, Jan 12, 2022 at 04:18:13PM +0100, Pali Rohár wrote:
-> > > > > This adds support for legacy INTx interrupts received from other PCIe
-> > > > > devices and which are reported by a new INTx irq chip.
-> > > > > 
-> > > > > With this change, kernel can distinguish between INTA, INTB, INTC and INTD
-> > > > > interrupts.
-> > > > > 
-> > > > > Note that for this support, device tree files has to be properly adjusted
-> > > > > to provide "interrupts" or "interrupts-extended" property with intx
-> > > > > interrupt source, "interrupt-names" property with "intx" string and also
-> > > > > 'interrupt-controller' subnode must be defined.
-> > > > > 
-> > > > > If device tree files do not provide these nodes then driver would work as
-> > > > > before.
-> > > > 
-> > > > Nit: this information is not useful. DT rules are written in DT
-> > > > bindings, not in kernel commit logs. All I am saying is that firmware
-> > > > developers should not have to read this log to write firmware.
-> > > 
-> > > It was not intended for firmware developers, but for reviewers of this
-> > > patch to understand, what is happening in code and that with old DT
-> > > files this patch does not change driver behavior (= work as before).
-> > > 
-> > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > > ---
-> > > > >  drivers/pci/controller/pci-mvebu.c | 185 +++++++++++++++++++++++++++--
-> > > > >  1 file changed, 177 insertions(+), 8 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-> > > > > index 1e90ab888075..dbb6ecb4cb70 100644
-> > > > > --- a/drivers/pci/controller/pci-mvebu.c
-> > > > > +++ b/drivers/pci/controller/pci-mvebu.c
-> > > > > @@ -54,9 +54,10 @@
-> > > > >  	 PCIE_CONF_ADDR_EN)
-> > > > >  #define PCIE_CONF_DATA_OFF	0x18fc
-> > > > >  #define PCIE_INT_CAUSE_OFF	0x1900
-> > > > > +#define PCIE_INT_UNMASK_OFF	0x1910
-> > > > 
-> > > > Nit: I understand it is tempting but here you are redefining or better
-> > > > giving a proper label to a register. Separate patch please.
-> > > 
-> > > Ok!
-> > > 
-> > > > > +#define  PCIE_INT_INTX(i)		BIT(24+i)
-> > > > >  #define  PCIE_INT_PM_PME		BIT(28)
-> > > > > -#define PCIE_MASK_OFF		0x1910
-> > > > 
-> > > > See above.
-> > > > 
-> > > > > -#define  PCIE_MASK_ENABLE_INTS          0x0f000000
-> > > > > +#define  PCIE_INT_ALL_MASK		GENMASK(31, 0)
-> > > > >  #define PCIE_CTRL_OFF		0x1a00
-> > > > >  #define  PCIE_CTRL_X1_MODE		0x0001
-> > > > >  #define  PCIE_CTRL_RC_MODE		BIT(1)
-> > > > > @@ -110,6 +111,9 @@ struct mvebu_pcie_port {
-> > > > >  	struct mvebu_pcie_window iowin;
-> > > > >  	u32 saved_pcie_stat;
-> > > > >  	struct resource regs;
-> > > > > +	struct irq_domain *intx_irq_domain;
-> > > > > +	raw_spinlock_t irq_lock;
-> > > > > +	int intx_irq;
-> > > > >  };
-> > > > >  
-> > > > >  static inline void mvebu_writel(struct mvebu_pcie_port *port, u32 val, u32 reg)
-> > > > > @@ -235,7 +239,7 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
-> > > > >  
-> > > > >  static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
-> > > > >  {
-> > > > > -	u32 ctrl, lnkcap, cmd, dev_rev, mask;
-> > > > > +	u32 ctrl, lnkcap, cmd, dev_rev, unmask;
-> > > > >  
-> > > > >  	/* Setup PCIe controller to Root Complex mode. */
-> > > > >  	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
-> > > > > @@ -288,10 +292,30 @@ static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
-> > > > >  	/* Point PCIe unit MBUS decode windows to DRAM space. */
-> > > > >  	mvebu_pcie_setup_wins(port);
-> > > > >  
-> > > > > -	/* Enable interrupt lines A-D. */
-> > > > > -	mask = mvebu_readl(port, PCIE_MASK_OFF);
-> > > > > -	mask |= PCIE_MASK_ENABLE_INTS;
-> > > > > -	mvebu_writel(port, mask, PCIE_MASK_OFF);
-> > > > > +	/* Mask all interrupt sources. */
-> > > > > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_UNMASK_OFF);
-> > > > > +
-> > > > > +	/* Clear all interrupt causes. */
-> > > > > +	mvebu_writel(port, ~PCIE_INT_ALL_MASK, PCIE_INT_CAUSE_OFF);
-> > > > > +
-> > > > > +	if (port->intx_irq <= 0) {
-> > > > > +		/*
-> > > > > +		 * When neither "summary" interrupt, nor "intx" interrupt was
-> > > > > +		 * specified in DT then unmask all legacy INTx interrupts as in
-> > > > > +		 * this case driver does not provide a way for masking and
-> > > > > +		 * unmasking of individual legacy INTx interrupts. In this case
-> > > > > +		 * all interrupts, including legacy INTx are reported via one
-> > > > > +		 * shared GIC source and therefore kernel cannot distinguish
-> > > > > +		 * which individual legacy INTx was triggered. These interrupts
-> > > > > +		 * are shared, so it should not cause any issue. Just
-> > > > > +		 * performance penalty as every PCIe interrupt handler needs to
-> > > > > +		 * be called when some interrupt is triggered.
-> > > > > +		 */
-> > > > 
-> > > > This comment applies to current mainline right (ie it describes how
-> > > > current mainline handles INTx) ? IMO you should split it out in a
-> > > > separate patch.
-> > > 
-> > > This above comment describe what happens in if-branch when intx_irq is
-> > > not set (as written in comment "when intx interrupt was not specified in
-> > > DT"). You are right that this is also the behavior in the current
-> > > mainline.
-> > > 
-> > > I'm not sure if this comment can be split out as support for "intx"
-> > > interrupt is in this patch.
-> > > 
-> > > > I understand it is hard but a patch is a logical _change_, this
-> > > > comment is a change per se, it is a clarification on current
-> > > > behaviour.
-> > > 
-> > > Ok, I could try to split this comment into two patches, but part about
-> > > if-branch comment needs to stay in "this" patch.
-> > 
-> > I have done it locally.
-> > 
-> > Let me know when I should resend this patch series and I will include
-> > into it also these changes.
+On 2022-02-21 23:48, Jason Gunthorpe wrote:
+> On Mon, Feb 21, 2022 at 08:43:33PM +0000, Robin Murphy wrote:
+>> On 2022-02-19 07:32, Christoph Hellwig wrote:
+>>> So we are back to the callback madness instead of the nice and simple
+>>> flag?  Sigh.
+>>
+>> TBH, I *think* this part could be a fair bit simpler. It looks like this
+>> whole callback mess is effectively just to decrement
+>> group->owner_cnt, but
 > 
-> Hi,
-> 
-> yes please resend it and I will merge it.
+> Right, the new callback is because of Greg's push to put all the work
+> into the existing bus callback. Having symetrical callbacks is
+> cleaner.
 
-Done!
-https://lore.kernel.org/linux-pci/20220222104625.28461-1-pali@kernel.org/T/#u
+I'll continue to disagree that having tons more code purely for the sake 
+of it is cleaner. The high-level requirements are fundamentally 
+asymmetrical - ownership has to be actively claimed by the bus code at a 
+point during probe where it can block probing if necessary, but it can 
+be released anywhere at all during remove since that cannot fail. I 
+don't personally see the value in a bunch of code bloat for no reason 
+other than trying to pretend that an asymmetrical thing isn't.
 
+We already have other concepts in the IOMMU API, like the domain ops 
+lifecycle, which are almost self-contained but for needing an external 
+prod to get started, so I'm naturally viewing this one the same way.
+
+>> since we should only care about ownership at probe, hotplug, and other
+>> places well outside critical fast-paths, I'm not sure we really need to keep
+>> track of that anyway - it can always be recalculated by walking the
+>> group->devices list,
 > 
-> Thanks,
-> Lorenzo
+> It has to be locked against concurrent probe, and there isn't
+> currently any locking scheme that can support this. The owner_cnt is
+> effectively a new lock for this purpose. It is the same issue we
+> talked about with that VFIO patch you showed me.
+
+Huh? How hard is it to hold group->mutex when reading or writing 
+group->owner? Walking the list would only have to be done for 
+*releasing* ownership and I'm pretty sure all the races there are benign 
+- only probe/remove of the driver (or DMA API token) matching a current 
+non-NULL owner matter; if two removes race, the first might end up 
+releasing ownership "early", but the second is waiting to do that anyway 
+so it's OK; if a remove races with a probe, the remove may end up 
+leaving the owner set, but the probe is waiting to do that anyway so 
+it's OK.
+
+> So, using the group->device_list would require adding something else
+> somewhere - which I think should happen when someone has
+> justification for another use of whatever that something else is.
+> 
+> Also, Greg's did have an objection to the the first version, with code
+> living in dd.c, that was basically probe time performance. I'm not
+> sure making this slower would really be welcomed..
+
+Again, this does not affect probe at all, only remove, and TBH I'd 
+expect the performance impact to be negligible. On any sensible system, 
+IOMMU groups are not large. Heck, in the typical case I'd guess it's no 
+worse than the time we currently spend on group notifiers. I was just 
+making the point that there should not be a significant performance 
+argument for needing to cache a count value.
+
+>> and some of the relevant places have to do that anyway.
+> 
+> ???
+
+I was looking at iommu_group_remove_device() at the time, but of course 
+we should always have seen an unbind before we get there - that one's on 
+me, sorry for the confusion.
+
+>> It has to be s It should be pretty straightforward for
+>> iommu_bus_notifier to clear group->owner automatically upon an
+>> unbind of the matching driver when it's no longer bound to any other
+>> devices in the group either.
+> 
+> That not_bound/unbind notifier isn't currently triggred during
+> necessary failure paths of really_probe().
+
+Eh? Just look at the context of patch #2, let alone the rest of the 
+function, and tell me how, if we can't rely on 
+BUS_NOTIFY_DRIVER_NOT_BOUND, calling .dma_cleanup *from the exact same 
+place* is somehow more reliable?
+
+AFAICS, a notifier handling both BUS_NOTIFY_UNBOUND_DRIVER and 
+BUS_NOTIFY_DRIVER_NOT_BOUND would be directly equivalent to the callers 
+of .dma_cleanup here.
+
+> Even if this was patched up, it looks like spaghetti to me..
+> 
+>> use-case) then it should be up to VFIO to decide when it's finally
+>> finished with the whole group, rather than pretending we can keep
+>> track of nested ownership claims from inside the API.
+> 
+> What nesting?
+
+The current implementation of iommu_group_claim_dma_owner() allows 
+owner_cnt to increase beyond 1, and correspondingly requires 
+iommu_group_release_dma_owner() to be called the same number of times. 
+It doesn't appear that VFIO needs that, and I'm not sure I'd trust any 
+other potential users to get it right either.
+
+>> Furthermore, If Greg was willing to compromise just far enough to let us put
+>> driver_managed_dma in the 3-byte hole in the generic struct
+>> device_driver,
+> 
+> Space was not an issue, the earlier version of this switched an
+> existing bool to a bitfield.
+> 
+>> we wouldn't have to have quite so much boilerplate repeated across the
+>> various bus implementations (I'm not suggesting to move any actual calls
+>> back into the driver core, just the storage of flag itself).
+> 
+> Not sure that makes sense.. But I don't understand why we need to copy
+> and paste this code into every bus's dma_configure *shrug*
+
+That's what I'm saying - right now every bus *has* to have a specific 
+.dma_configure implementation if only to retrieve a 
+semantically-identical flag from each bus-specific structure; there is 
+zero possible code-sharing. With a generically-defined flag, there is 
+some possibility for code-sharing now (e.g. patch #3 wouldn't be 
+needed), and the potential for more in future.
+
+>> FWIW I have some ideas for re-converging .dma_configure in future
+>> which I think should probably be able to subsume this into a
+>> completely generic common path, given a common flag.
+> 
+> This would be great!
+
+Indeed, so if we're enthusiastic about future cleanup that necessitates 
+a generic flag, why not make the flag generic to start with?
+
+Thanks,
+Robin.
