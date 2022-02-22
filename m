@@ -2,131 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E205D4BFE51
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 17:19:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2297D4BFE69
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 17:22:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233967AbiBVQTY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 11:19:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45814 "EHLO
+        id S231835AbiBVQXH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 11:23:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232772AbiBVQTY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 11:19:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD1C166A50;
-        Tue, 22 Feb 2022 08:18:58 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2489C61665;
-        Tue, 22 Feb 2022 16:18:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F537C340E8;
-        Tue, 22 Feb 2022 16:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645546737;
-        bh=IzYQgPVIrzdZrtx5q+tqnEui3obxWSTUv594dzI//Qk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WKV8OLQMZMHYyR3NO+/mjQki2fzbApuXnlQCu4xDAlF7LZQqC/T/OV/5CpSTohQ7R
-         6fCggzwEt931z8/DaVJ0kX61MEl+fizf1beaiN4UhjJ9Dk6Fe5ItuFifMrT0dnZlij
-         IIxHvYEWb2EIjNLQBz3A9dp0JGIayHgXUvvnu0n6p1MlUJPgBSlZzUmpzmkbxi0QFs
-         1oqycRDr7vH+048HwrIURCyhWw5MG40icPvHcjPNkofomaXXbOelugkKOuhFlLO+qy
-         w8LZclUEQOlTTVAtuCz34V5AmhkM3Xpx13PMA1Ks9lGnGsaw7cDkXzt9XDN3UMrUAt
-         /WWSD1DmhiHBQ==
-Received: by pali.im (Postfix)
-        id CD1F4FDB; Tue, 22 Feb 2022 17:18:54 +0100 (CET)
-Date:   Tue, 22 Feb 2022 17:18:54 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: (subset) [PATCH v4 00/12] PCI: mvebu: subsystem ids, AER and INTx
-Message-ID: <20220222161854.7oot5v6xlw2wzmsc@pali>
-References: <20220222155030.988-1-pali@kernel.org>
- <164554589988.5595.5091384618177225445.b4-ty@arm.com>
- <20220222161143.6ryghgtfmhnmhpmz@pali>
- <20220222161539.GA20114@lpieralisi>
+        with ESMTP id S230295AbiBVQXH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 11:23:07 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C960F166A79
+        for <linux-pci@vger.kernel.org>; Tue, 22 Feb 2022 08:22:40 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id p15so44404693ejc.7
+        for <linux-pci@vger.kernel.org>; Tue, 22 Feb 2022 08:22:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=q+My118MVhW0Ye9CMLkqYiEKe4aBqZcoI39IWD/unS0=;
+        b=pvMkvfXmaWSL7HS+xyy70n9lAtmMhkhp+Jv4oA1m2QpPzXv/iYiXcfNPEOBK3UHrdu
+         AcFAf9Vu4GROep7TFHJdx0oIKb9yS3mbcQsEfvwTPdXC85jYtebb5Y3eE8g7PblKZtff
+         vhsXPa+P6Laor3KIqmlDIXP4ZnNQnvPlObzz5Bha+8gSbykpJ0/LmaNIoasnEnx6vIxV
+         dNbRfINs+qEt6FR58bm02ESK81QDBF+5CXjTcYhbO6kp/+buXU/Id6CONuiqGTI/czfW
+         OIYIrQANVyDwdZZu4dTZnNEntLm31ytjfg9GKeSaTBT+ZN8ZYK6IntvkT4/27q46dNQ3
+         rnpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=q+My118MVhW0Ye9CMLkqYiEKe4aBqZcoI39IWD/unS0=;
+        b=r+ToBHUmx6c34eg+lTwsWrG5cqwDijK+CPwjnvOpDQPuw+FP0NtUrSwm9tt1Cs2iBA
+         0Y7XghplyRtDjL69ngF4Ftn3nFsdB+Eya42f9E+6Rg1HryY8fL2whU/axYLig+ItvUCp
+         95fjVmBtWLC1PcUA39JzVHQ72pmjbBH89PKeRwVVJdnsQRA0kJA8EUI4U+RdT+yEYL3B
+         223Jy2Eygdtq26LqbApPOreP0yC0DcPB9jMg2KXelP1jk6HoPFK+Gw6N2VCKfsDS2vGX
+         Z9T+lLGwHuT9Kk9JL+bphYhjZpbJnrjTSIMv1yjrFSNiB400rwyHkoVAFlsI/IgqN2TV
+         GluA==
+X-Gm-Message-State: AOAM532Lh8TPzWfanHg6eG0HflOAhrCS50CfLIadUOEQhvSIpGzClbLa
+        425vY2ugo6rzr1k7vkyT3vs=
+X-Google-Smtp-Source: ABdhPJxiZ/YD4QrnfvYntsavdPaFU6LgVRlEu7GPEQWh6CYDpnyjl3dRdGyKtloVvE5gVvg7045uuQ==
+X-Received: by 2002:a17:906:b04:b0:6bd:bf71:ed08 with SMTP id u4-20020a1709060b0400b006bdbf71ed08mr20337601ejg.585.1645546959316;
+        Tue, 22 Feb 2022 08:22:39 -0800 (PST)
+Received: from ?IPV6:2a02:908:1252:fb60:21b6:6d72:8af6:ec7c? ([2a02:908:1252:fb60:21b6:6d72:8af6:ec7c])
+        by smtp.gmail.com with ESMTPSA id m17sm6385797ejq.22.2022.02.22.08.22.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Feb 2022 08:22:38 -0800 (PST)
+Message-ID: <cce740f9-3209-045c-ceb6-0089621362e5@gmail.com>
+Date:   Tue, 22 Feb 2022 17:22:37 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH] PCI: Apply quirk_amd_harvest_no_ats to all navi10 and 14
+ asics
+Content-Language: en-US
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx@lists.freedesktop.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org
+References: <20220222160801.841643-1-alexander.deucher@amd.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+In-Reply-To: <20220222160801.841643-1-alexander.deucher@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220222161539.GA20114@lpieralisi>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+ Gregory
+Am 22.02.22 um 17:08 schrieb Alex Deucher:
+> There are enough vbios escapes without the proper workaround
+> that some users still hit this.  MS never productized ATS on
+> windows so OEM platforms that were windows only didn't always
+> validate ATS.
+>
+> The advantages of ATS are not worth it compared to the potential
+> instabilities on harvested boards.  Just disable ATS on all navi10
+> and 14 boards.
+>
+> Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1760
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 
-On Tuesday 22 February 2022 16:15:39 Lorenzo Pieralisi wrote:
-> On Tue, Feb 22, 2022 at 05:11:43PM +0100, Pali Rohár wrote:
-> > On Tuesday 22 February 2022 16:06:20 Lorenzo Pieralisi wrote:
-> > > On Tue, 22 Feb 2022 16:50:18 +0100, Pali Rohár wrote:
-> > > > This patch series extends pci-bridge-emul.c driver to emulate PCI Subsystem
-> > > > Vendor ID capability and PCIe extended capabilities. And then implement
-> > > > in pci-mvebu.c driver support for PCI Subsystem Vendor IDs, PCIe AER
-> > > > registers, support for legacy INTx interrupts, configuration for X1/X4
-> > > > mode and usage of new PCI child_ops API.
-> > > > 
-> > > > Changes in v4:
-> > > > * rebased on c3bd7dc553eea5a3595ca3aa0adee9bf83622a1f
-> > > > 
-> > > > [...]
-> > > 
-> > > I can't apply dts changes, patch 12 should go via the arm-soc tree.
-> > 
-> > Gregory already wrote about this dts change:
-> > https://lore.kernel.org/linux-pci/87tud1jwpr.fsf@BL-laptop/
-> > "So the easier is to let merge it through the PCI subsystem with the
-> > other patches from this series."
-> > 
-> > Are there any issues with applying this dts change via pci tree?
-> 
-> I don't usually take dts changes through the PCI tree since they
-> can conflict with arm-soc, that's the issue - dts changes should
-> be managed by platform maintainers.
+Acked-by: Christian König <christian.koenig@amd.com>
 
-Gregory, could you please take patch 12/12?
-https://lore.kernel.org/linux-pci/20220222155030.988-13-pali@kernel.org/
-You have already Acked-by (see above previous link)
+> ---
+>   drivers/pci/quirks.c | 14 +++++++++-----
+>   1 file changed, 9 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 003950c738d2..ea2de1616510 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5341,11 +5341,6 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
+>    */
+>   static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
+>   {
+> -	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
+> -	    (pdev->device == 0x7340 && pdev->revision != 0xc5) ||
+> -	    (pdev->device == 0x7341 && pdev->revision != 0x00))
+> -		return;
+> -
+>   	if (pdev->device == 0x15d8) {
+>   		if (pdev->revision == 0xcf &&
+>   		    pdev->subsystem_vendor == 0xea50 &&
+> @@ -5367,10 +5362,19 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_amd_harvest_no_ats);
+>   /* AMD Iceland dGPU */
+>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
+>   /* AMD Navi10 dGPU */
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7310, quirk_amd_harvest_no_ats);
+>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_ats);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7318, quirk_amd_harvest_no_ats);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7319, quirk_amd_harvest_no_ats);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x731a, quirk_amd_harvest_no_ats);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x731b, quirk_amd_harvest_no_ats);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x731e, quirk_amd_harvest_no_ats);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x731f, quirk_amd_harvest_no_ats);
+>   /* AMD Navi14 dGPU */
+>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
+>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341, quirk_amd_harvest_no_ats);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7347, quirk_amd_harvest_no_ats);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x734f, quirk_amd_harvest_no_ats);
+>   /* AMD Raven platform iGPU */
+>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8, quirk_amd_harvest_no_ats);
+>   #endif /* CONFIG_PCI_ATS */
 
-> Thanks,
-> Lorenzo
-> 
-> > > Applied the others to pci/mvebu, thanks.
-> > > 
-> > > [01/12] PCI: pci-bridge-emul: Re-arrange register tests
-> > >         https://git.kernel.org/lpieralisi/pci/c/c453bf6f9b
-> > > [02/12] PCI: pci-bridge-emul: Add support for PCIe extended capabilities
-> > >         https://git.kernel.org/lpieralisi/pci/c/c0bd419732
-> > > [03/12] PCI: pci-bridge-emul: Add support for PCI Bridge Subsystem Vendor ID capability
-> > >         https://git.kernel.org/lpieralisi/pci/c/3767a90242
-> > > [04/12] dt-bindings: PCI: mvebu: Add num-lanes property
-> > >         https://git.kernel.org/lpieralisi/pci/c/26b982ca83
-> > > [05/12] PCI: mvebu: Correctly configure x1/x4 mode
-> > >         https://git.kernel.org/lpieralisi/pci/c/2a81dd9fd9
-> > > [06/12] PCI: mvebu: Add support for PCI Bridge Subsystem Vendor ID on emulated bridge
-> > >         https://git.kernel.org/lpieralisi/pci/c/e3e13c9135
-> > > [07/12] PCI: mvebu: Add support for Advanced Error Reporting registers on emulated bridge
-> > >         https://git.kernel.org/lpieralisi/pci/c/2b6ee04c0a
-> > > [08/12] PCI: mvebu: Use child_ops API
-> > >         https://git.kernel.org/lpieralisi/pci/c/c099c2a761
-> > > [09/12] dt-bindings: PCI: mvebu: Update information about intx interrupts
-> > >         https://git.kernel.org/lpieralisi/pci/c/0124989220
-> > > [10/12] PCI: mvebu: Fix macro names and comments about legacy interrupts
-> > >         https://git.kernel.org/lpieralisi/pci/c/d00ea94e62
-> > > [11/12] PCI: mvebu: Implement support for legacy INTx interrupts
-> > >         https://git.kernel.org/lpieralisi/pci/c/ec07526264
-> > > 
-> > > Thanks,
-> > > Lorenzo
