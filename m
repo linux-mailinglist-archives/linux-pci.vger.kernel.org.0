@@ -2,203 +2,344 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B560D4BF6D8
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 11:59:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 211234BF6EB
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 12:06:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbiBVK72 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 05:59:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34080 "EHLO
+        id S230432AbiBVLHD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 06:07:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbiBVK71 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 05:59:27 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 70E16A66CF;
-        Tue, 22 Feb 2022 02:59:02 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39757139F;
-        Tue, 22 Feb 2022 02:59:02 -0800 (PST)
-Received: from [10.57.40.147] (unknown [10.57.40.147])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6D613F70D;
-        Tue, 22 Feb 2022 02:58:57 -0800 (PST)
-Message-ID: <1acb8748-8d44-688d-2380-f39ec820776f@arm.com>
-Date:   Tue, 22 Feb 2022 10:58:37 +0000
+        with ESMTP id S229485AbiBVLHC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 06:07:02 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB99F0A;
+        Tue, 22 Feb 2022 03:06:35 -0800 (PST)
+Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K2xCv3G9cz67KXG;
+        Tue, 22 Feb 2022 19:05:31 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Tue, 22 Feb 2022 12:06:32 +0100
+Received: from [10.47.92.123] (10.47.92.123) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 22 Feb
+ 2022 11:06:31 +0000
+Message-ID: <c7d8cff4-b84e-1b73-1d54-2e221b90dac1@huawei.com>
+Date:   Tue, 22 Feb 2022 11:06:28 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v6 02/11] driver core: Add dma_cleanup callback in
- bus_type
-Content-Language: en-GB
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
-        rafael@kernel.org, David Airlie <airlied@linux.ie>,
-        linux-pci@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        iommu@lists.linux-foundation.org,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20220218005521.172832-1-baolu.lu@linux.intel.com>
- <20220218005521.172832-3-baolu.lu@linux.intel.com>
- <YhCdEmC2lYStmUSL@infradead.org>
- <1d8004d3-1887-4fc7-08d2-0e2ee6b5fdcb@arm.com>
- <20220221234837.GA10061@nvidia.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20220221234837.GA10061@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v4 2/8] hwtracing: Add trace function support for
+ HiSilicon PCIe Tune and Trace device
+To:     Yicong Yang <yangyicong@hisilicon.com>,
+        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
+        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
+        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>
+CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
+        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
+        <song.bao.hua@hisilicon.com>
+References: <20220221084307.33712-1-yangyicong@hisilicon.com>
+ <20220221084307.33712-3-yangyicong@hisilicon.com>
+From:   John Garry <john.garry@huawei.com>
+In-Reply-To: <20220221084307.33712-3-yangyicong@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.47.92.123]
+X-ClientProxiedBy: lhreml730-chm.china.huawei.com (10.201.108.81) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022-02-21 23:48, Jason Gunthorpe wrote:
-> On Mon, Feb 21, 2022 at 08:43:33PM +0000, Robin Murphy wrote:
->> On 2022-02-19 07:32, Christoph Hellwig wrote:
->>> So we are back to the callback madness instead of the nice and simple
->>> flag?  Sigh.
->>
->> TBH, I *think* this part could be a fair bit simpler. It looks like this
->> whole callback mess is effectively just to decrement
->> group->owner_cnt, but
+On 21/02/2022 08:43, Yicong Yang wrote:
+> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
+> integrated Endpoint(RCiEP) device, providing the capability
+> to dynamically monitor and tune the PCIe traffic, and trace
+> the TLP headers.
 > 
-> Right, the new callback is because of Greg's push to put all the work
-> into the existing bus callback. Having symetrical callbacks is
-> cleaner.
-
-I'll continue to disagree that having tons more code purely for the sake 
-of it is cleaner. The high-level requirements are fundamentally 
-asymmetrical - ownership has to be actively claimed by the bus code at a 
-point during probe where it can block probing if necessary, but it can 
-be released anywhere at all during remove since that cannot fail. I 
-don't personally see the value in a bunch of code bloat for no reason 
-other than trying to pretend that an asymmetrical thing isn't.
-
-We already have other concepts in the IOMMU API, like the domain ops 
-lifecycle, which are almost self-contained but for needing an external 
-prod to get started, so I'm naturally viewing this one the same way.
-
->> since we should only care about ownership at probe, hotplug, and other
->> places well outside critical fast-paths, I'm not sure we really need to keep
->> track of that anyway - it can always be recalculated by walking the
->> group->devices list,
+> Add the driver for the device to enable the trace function.
+> This patch adds basic function of trace, including the device's
+> probe and initialization, functions for trace buffer allocation
+> and trace enable/disable, register an interrupt handler to
+> simply response to the DMA events. The user interface of trace
+> will be added in the following patch.
 > 
-> It has to be locked against concurrent probe, and there isn't
-> currently any locking scheme that can support this. The owner_cnt is
-> effectively a new lock for this purpose. It is the same issue we
-> talked about with that VFIO patch you showed me.
 
-Huh? How hard is it to hold group->mutex when reading or writing 
-group->owner? Walking the list would only have to be done for 
-*releasing* ownership and I'm pretty sure all the races there are benign 
-- only probe/remove of the driver (or DMA API token) matching a current 
-non-NULL owner matter; if two removes race, the first might end up 
-releasing ownership "early", but the second is waiting to do that anyway 
-so it's OK; if a remove races with a probe, the remove may end up 
-leaving the owner set, but the probe is waiting to do that anyway so 
-it's OK.
+Fill commit message lines upto 75 characters
 
-> So, using the group->device_list would require adding something else
-> somewhere - which I think should happen when someone has
-> justification for another use of whatever that something else is.
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>   drivers/Makefile                 |   1 +
+>   drivers/hwtracing/Kconfig        |   2 +
+>   drivers/hwtracing/ptt/Kconfig    |  11 +
+>   drivers/hwtracing/ptt/Makefile   |   2 +
+>   drivers/hwtracing/ptt/hisi_ptt.c | 370 +++++++++++++++++++++++++++++++
+>   drivers/hwtracing/ptt/hisi_ptt.h | 149 +++++++++++++
+>   6 files changed, 535 insertions(+)
+>   create mode 100644 drivers/hwtracing/ptt/Kconfig
+>   create mode 100644 drivers/hwtracing/ptt/Makefile
+>   create mode 100644 drivers/hwtracing/ptt/hisi_ptt.c
+>   create mode 100644 drivers/hwtracing/ptt/hisi_ptt.h
 > 
-> Also, Greg's did have an objection to the the first version, with code
-> living in dd.c, that was basically probe time performance. I'm not
-> sure making this slower would really be welcomed..
+> diff --git a/drivers/Makefile b/drivers/Makefile
+> index a110338c860c..ab3411e4eba5 100644
+> --- a/drivers/Makefile
+> +++ b/drivers/Makefile
+> @@ -175,6 +175,7 @@ obj-$(CONFIG_USB4)		+= thunderbolt/
+>   obj-$(CONFIG_CORESIGHT)		+= hwtracing/coresight/
+>   obj-y				+= hwtracing/intel_th/
+>   obj-$(CONFIG_STM)		+= hwtracing/stm/
+> +obj-$(CONFIG_HISI_PTT)		+= hwtracing/ptt/
+>   obj-$(CONFIG_ANDROID)		+= android/
+>   obj-$(CONFIG_NVMEM)		+= nvmem/
+>   obj-$(CONFIG_FPGA)		+= fpga/
+> diff --git a/drivers/hwtracing/Kconfig b/drivers/hwtracing/Kconfig
+> index 13085835a636..911ee977103c 100644
+> --- a/drivers/hwtracing/Kconfig
+> +++ b/drivers/hwtracing/Kconfig
+> @@ -5,4 +5,6 @@ source "drivers/hwtracing/stm/Kconfig"
+>   
+>   source "drivers/hwtracing/intel_th/Kconfig"
+>   
+> +source "drivers/hwtracing/ptt/Kconfig"
+> +
+>   endmenu
+> diff --git a/drivers/hwtracing/ptt/Kconfig b/drivers/hwtracing/ptt/Kconfig
+> new file mode 100644
+> index 000000000000..41fa83921a07
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/Kconfig
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config HISI_PTT
+> +	tristate "HiSilicon PCIe Tune and Trace Device"
+> +	depends on ARM64 && PCI && HAS_DMA && HAS_IOMEM
 
-Again, this does not affect probe at all, only remove, and TBH I'd 
-expect the performance impact to be negligible. On any sensible system, 
-IOMMU groups are not large. Heck, in the typical case I'd guess it's no 
-worse than the time we currently spend on group notifiers. I was just 
-making the point that there should not be a significant performance 
-argument for needing to cache a count value.
+why no compile test support?
 
->> and some of the relevant places have to do that anyway.
-> 
-> ???
+> +	help
+> +	  HiSilicon PCIe Tune and Trace Device exists as a PCIe RCiEP
+> +	  device, and it provides support for PCIe traffic tuning and
+> +	  tracing TLP headers to the memory.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called hisi_ptt.
+> diff --git a/drivers/hwtracing/ptt/Makefile b/drivers/hwtracing/ptt/Makefile
+> new file mode 100644
+> index 000000000000..908c09a98161
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_HISI_PTT) += hisi_ptt.o
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+> new file mode 100644
+> index 000000000000..a5b4f09ccd1e
+> --- /dev/null
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+> @@ -0,0 +1,370 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for HiSilicon PCIe tune and trace device
+> + *
+> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
+> + * Author: Yicong Yang <yangyicong@hisilicon.com>
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-iommu.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/iommu.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/sysfs.h>
+> +
+> +#include "hisi_ptt.h"
+> +
+> +static u16 hisi_ptt_get_filter_val(struct pci_dev *pdev)
+> +{
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
+> +		return BIT(HISI_PCIE_CORE_PORT_ID(PCI_SLOT(pdev->devfn)));
+> +
+> +	return PCI_DEVID(pdev->bus->number, pdev->devfn);
+> +}
+> +
+> +static int hisi_ptt_wait_trace_hw_idle(struct hisi_ptt *hisi_ptt)
+> +{
+> +	u32 val;
+> +
+> +	return readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_STS,
+> +					 val, val & HISI_PTT_TRACE_IDLE,
+> +					 HISI_PTT_WAIT_POLL_INTERVAL_US,
+> +					 HISI_PTT_WAIT_TIMEOUT_US);
+> +}
+> +
+> +static int hisi_ptt_wait_dma_reset_done(struct hisi_ptt *hisi_ptt)
+> +{
+> +	u32 val;
+> +
+> +	return readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS,
+> +					 val, !val, HISI_PTT_RESET_POLL_INTERVAL_US,
+> +					 HISI_PTT_RESET_TIMEOUT_US);
+> +}
+> +
+> +static void hisi_ptt_free_trace_buf(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	struct device *dev = &hisi_ptt->pdev->dev;
+> +	int i;
+> +
+> +	if (!ctrl->trace_buf)
+> +		return;
+> +
+> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
 
-I was looking at iommu_group_remove_device() at the time, but of course 
-we should always have seen an unbind before we get there - that one's on 
-me, sorry for the confusion.
+it's good practice to use {} for if-else or similar in the loop
 
->> It has to be s It should be pretty straightforward for
->> iommu_bus_notifier to clear group->owner automatically upon an
->> unbind of the matching driver when it's no longer bound to any other
->> devices in the group either.
-> 
-> That not_bound/unbind notifier isn't currently triggred during
-> necessary failure paths of really_probe().
+> +		if (ctrl->trace_buf[i].addr)
+> +			dma_free_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+> +					  ctrl->trace_buf[i].addr,
+> +					  ctrl->trace_buf[i].dma);
+> +
+> +	kfree(ctrl->trace_buf);
+> +	ctrl->trace_buf = NULL;
+> +}
+> +
+> +static int hisi_ptt_alloc_trace_buf(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	struct device *dev = &hisi_ptt->pdev->dev;
+> +	int i;
+> +
+> +	hisi_ptt->trace_ctrl.buf_index = 0;
+> +
+> +	/* If the trace buffer has already been allocated, zero it. */
+> +	if (ctrl->trace_buf) {
+> +		for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
+> +			memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
+> +		return 0;
+> +	}
+> +
+> +	ctrl->trace_buf = kcalloc(HISI_PTT_TRACE_BUF_CNT, sizeof(struct hisi_ptt_dma_buffer),
+> +				  GFP_KERNEL);
+> +	if (!ctrl->trace_buf)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
+> +		ctrl->trace_buf[i].addr = dma_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
+> +							     &ctrl->trace_buf[i].dma,
+> +							     GFP_KERNEL);
 
-Eh? Just look at the context of patch #2, let alone the rest of the 
-function, and tell me how, if we can't rely on 
-BUS_NOTIFY_DRIVER_NOT_BOUND, calling .dma_cleanup *from the exact same 
-place* is somehow more reliable?
+dmam_alloc_coherent() would mean that we can drop the manual frees
 
-AFAICS, a notifier handling both BUS_NOTIFY_UNBOUND_DRIVER and 
-BUS_NOTIFY_DRIVER_NOT_BOUND would be directly equivalent to the callers 
-of .dma_cleanup here.
+> +		if (!ctrl->trace_buf[i].addr) {
+> +			hisi_ptt_free_trace_buf(hisi_ptt);
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
+> +{
+> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +	hisi_ptt->trace_ctrl.status = HISI_PTT_TRACE_STATUS_OFF;
+> +}
+> +
+> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
+> +	u32 val;
+> +	int i;
+> +
+> +	/* Check device idle before start trace */
+> +	if (hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
 
-> Even if this was patched up, it looks like spaghetti to me..
-> 
->> use-case) then it should be up to VFIO to decide when it's finally
->> finished with the whole group, rather than pretending we can keep
->> track of nested ownership claims from inside the API.
-> 
-> What nesting?
+hisi_ptt_wait_trace_hw_idle() is a bit of an odd odd, as I would expect 
+it to return true when idle
 
-The current implementation of iommu_group_claim_dma_owner() allows 
-owner_cnt to increase beyond 1, and correspondingly requires 
-iommu_group_release_dma_owner() to be called the same number of times. 
-It doesn't appear that VFIO needs that, and I'm not sure I'd trust any 
-other potential users to get it right either.
+> +		pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy.\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	/* Reset the DMA before start tracing */
+> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +	val |= HISI_PTT_TRACE_CTRL_RST;
+> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +
+> +	hisi_ptt_wait_dma_reset_done(hisi_ptt);
+> +
+> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +	val &= ~HISI_PTT_TRACE_CTRL_RST;
+> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +
+> +	/* Clear the interrupt status */
+> +	writel(HISI_PTT_TRACE_INT_STAT_MASK, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
+> +
+> +	/* Configure the trace DMA buffer */
+> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
+> +		writel(lower_32_bits(ctrl->trace_buf[i].dma),
+> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_LO_0 +
+> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
+> +		writel(upper_32_bits(ctrl->trace_buf[i].dma),
+> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_HI_0 +
+> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
+> +	}
+> +	writel(HISI_PTT_TRACE_BUF_SIZE, hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_SIZE);
+> +
+> +	/* Set the trace control register */
+> +	val = FIELD_PREP(HISI_PTT_TRACE_CTRL_TYPE_SEL, ctrl->type);
+> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_RXTX_SEL, ctrl->direction);
+> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_DATA_FORMAT, ctrl->format);
+> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_TARGET_SEL, hisi_ptt->trace_ctrl.filter);
+> +	if (!hisi_ptt->trace_ctrl.is_port)
+> +		val |= HISI_PTT_TRACE_CTRL_FILTER_MODE;
+> +
+> +	/* Start the Trace */
+> +	val |= HISI_PTT_TRACE_CTRL_EN;
+> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
+> +
+> +	ctrl->status = HISI_PTT_TRACE_STATUS_ON;
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t hisi_ptt_irq(int irq, void *context)
 
->> Furthermore, If Greg was willing to compromise just far enough to let us put
->> driver_managed_dma in the 3-byte hole in the generic struct
->> device_driver,
-> 
-> Space was not an issue, the earlier version of this switched an
-> existing bool to a bitfield.
-> 
->> we wouldn't have to have quite so much boilerplate repeated across the
->> various bus implementations (I'm not suggesting to move any actual calls
->> back into the driver core, just the storage of flag itself).
-> 
-> Not sure that makes sense.. But I don't understand why we need to copy
-> and paste this code into every bus's dma_configure *shrug*
+as I said before (I forget the reply), it's odd to add an empty handler.
 
-That's what I'm saying - right now every bus *has* to have a specific 
-.dma_configure implementation if only to retrieve a 
-semantically-identical flag from each bus-specific structure; there is 
-zero possible code-sharing. With a generically-defined flag, there is 
-some possibility for code-sharing now (e.g. patch #3 wouldn't be 
-needed), and the potential for more in future.
-
->> FWIW I have some ideas for re-converging .dma_configure in future
->> which I think should probably be able to subsume this into a
->> completely generic common path, given a common flag.
-> 
-> This would be great!
-
-Indeed, so if we're enthusiastic about future cleanup that necessitates 
-a generic flag, why not make the flag generic to start with?
-
-Thanks,
-Robin.
+> +{
+> +	struct hisi_ptt *hisi_ptt = context;
+> +	u32 status;
+> +
+> +	status = readl(hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
+> +	if (!(status & HISI_PTT_TRACE_INT_STAT_MASK))
+> +		return IRQ_NONE;
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
