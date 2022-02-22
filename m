@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B805B4BFD8C
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 16:52:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EB224BFD86
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Feb 2022 16:51:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233709AbiBVPwM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 10:52:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42324 "EHLO
+        id S233717AbiBVPwO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 10:52:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233699AbiBVPwJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 10:52:09 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63242A713;
-        Tue, 22 Feb 2022 07:51:41 -0800 (PST)
+        with ESMTP id S233697AbiBVPwK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 10:52:10 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09ECA2AE17;
+        Tue, 22 Feb 2022 07:51:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6E63FB81B24;
+        by ams.source.kernel.org (Postfix) with ESMTPS id B02DEB81B37;
+        Tue, 22 Feb 2022 15:51:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392CBC340EB;
         Tue, 22 Feb 2022 15:51:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A6BC340E8;
-        Tue, 22 Feb 2022 15:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645545099;
-        bh=kF2VSgfLpoH+QrHmU7/2uhkKeI3FJlUcWLvYj0tc3Mk=;
+        s=k20201202; t=1645545100;
+        bh=bs4sKA1maaqaqniK3RdXMmapJ3D0NuaCLXrdJTmaiaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eSPVcTrBpdYXaBl+CLugNXcb5mWZjLr5bORfThXweaI+byGk7YJbeVFiSy2haCpX/
-         SC+Oy/ZbI4bTMugzCywxp5xa+BrL7Kg7cqqH8usKcO0ZopCcwzOJg80+UkxrCruTnm
-         CbZkHcTdv1Gz3VA/u47y2/dTXA/QF8KtqC64hgzvwbvBHTbiV8htuv6m8JGrKYpPf1
-         uFZneHle+OhodgkVm488B0TXyy5z/vr++hjehAj23cxeewTwCRsIoUVIkza49s3nIY
-         11idawyhq0hQMcSzd86ps1w42bwlNHJdOooIjXG58Y0cpaGbF/HlhztGBdNF+9isVP
-         7mT1BZQxU6QyQ==
+        b=slrw8s8pkXgN++rHQZQWx6+CqEAGEu28keg9VijmEnZFPz1fcma0IoQtSNvNU1UZk
+         9EQNEXXRswvbSn4L4geX0zHP4OKcEdi8RUWoUBt/M2VqltCEqF4O3lRBEXzJqyp03h
+         zMrbORmdjV6bULaY2OueKCXBpgUBWZ/hJYpTRJIwTlfseXXFuesQXoyUF58U/jkHMF
+         aXDBbMLLtjxwXD7jAuvDDE27qwz7e3jE/e1H+INoAfeQhiFynN2FEZsBosy18fq8iQ
+         sF1ZZGgbgwNP9gh0lJsCZHEwOjBtL8zs/GMJJodzej39QshkQqRGVqFbLuw/fbQny2
+         pfkGnJhdHYw9w==
 Received: by pali.im (Postfix)
-        id C148CFDB; Tue, 22 Feb 2022 16:51:38 +0100 (CET)
+        id E30E0FDB; Tue, 22 Feb 2022 16:51:39 +0100 (CET)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -43,9 +43,9 @@ To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Russell King <rmk+kernel@armlinux.org.uk>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 05/12] PCI: mvebu: Correctly configure x1/x4 mode
-Date:   Tue, 22 Feb 2022 16:50:23 +0100
-Message-Id: <20220222155030.988-6-pali@kernel.org>
+Subject: [PATCH v4 06/12] PCI: mvebu: Add support for PCI Bridge Subsystem Vendor ID on emulated bridge
+Date:   Tue, 22 Feb 2022 16:50:24 +0100
+Message-Id: <20220222155030.988-7-pali@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20220222155030.988-1-pali@kernel.org>
 References: <20220222155030.988-1-pali@kernel.org>
@@ -62,73 +62,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If x1/x4 mode is not set correctly then link with endpoint card is not
-established.
+Register with Subsystem Device/Vendor ID is at offset 0x2c. Export is via
+emulated bridge.
 
-Use DTS property 'num-lanes' to deteriminate x1/x4 mode.
+After this change Subsystem ID is visible in lspci output at line:
+
+  Capabilities: [40] Subsystem
 
 Signed-off-by: Pali Rohár <pali@kernel.org>
 ---
- drivers/pci/controller/pci-mvebu.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pci-mvebu.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index 357f0f41f68e..d0a75c3b78c3 100644
+index d0a75c3b78c3..566d8382afe6 100644
 --- a/drivers/pci/controller/pci-mvebu.c
 +++ b/drivers/pci/controller/pci-mvebu.c
-@@ -93,6 +93,7 @@ struct mvebu_pcie_port {
- 	void __iomem *base;
- 	u32 port;
- 	u32 lane;
-+	bool is_x4;
- 	int devfn;
- 	unsigned int mem_target;
- 	unsigned int mem_attr;
-@@ -233,13 +234,25 @@ static void mvebu_pcie_setup_wins(struct mvebu_pcie_port *port)
+@@ -32,6 +32,7 @@
+ #define PCIE_DEV_REV_OFF	0x0008
+ #define PCIE_BAR_LO_OFF(n)	(0x0010 + ((n) << 3))
+ #define PCIE_BAR_HI_OFF(n)	(0x0014 + ((n) << 3))
++#define PCIE_SSDEV_ID_OFF	0x002c
+ #define PCIE_CAP_PCIEXP		0x0060
+ #define PCIE_HEADER_LOG_4_OFF	0x0128
+ #define PCIE_BAR_CTRL_OFF(n)	(0x1804 + (((n) - 1) * 4))
+@@ -731,6 +732,7 @@ static int mvebu_pci_bridge_emul_init(struct mvebu_pcie_port *port)
+ 	struct pci_bridge_emul *bridge = &port->bridge;
+ 	u32 dev_id = mvebu_readl(port, PCIE_DEV_ID_OFF);
+ 	u32 dev_rev = mvebu_readl(port, PCIE_DEV_REV_OFF);
++	u32 ssdev_id = mvebu_readl(port, PCIE_SSDEV_ID_OFF);
+ 	u32 pcie_cap = mvebu_readl(port, PCIE_CAP_PCIEXP);
+ 	u8 pcie_cap_ver = ((pcie_cap >> 16) & PCI_EXP_FLAGS_VERS);
  
- static void mvebu_pcie_setup_hw(struct mvebu_pcie_port *port)
- {
--	u32 ctrl, cmd, dev_rev, mask;
-+	u32 ctrl, lnkcap, cmd, dev_rev, mask;
+@@ -752,6 +754,8 @@ static int mvebu_pci_bridge_emul_init(struct mvebu_pcie_port *port)
+ 	 */
+ 	bridge->pcie_conf.cap = cpu_to_le16(pcie_cap_ver);
  
- 	/* Setup PCIe controller to Root Complex mode. */
- 	ctrl = mvebu_readl(port, PCIE_CTRL_OFF);
- 	ctrl |= PCIE_CTRL_RC_MODE;
- 	mvebu_writel(port, ctrl, PCIE_CTRL_OFF);
- 
-+	/*
-+	 * Set Maximum Link Width to X1 or X4 in Root Port's PCIe Link
-+	 * Capability register. This register is defined by PCIe specification
-+	 * as read-only but this mvebu controller has it as read-write and must
-+	 * be set to number of SerDes PCIe lanes (1 or 4). If this register is
-+	 * not set correctly then link with endpoint card is not established.
-+	 */
-+	lnkcap = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP);
-+	lnkcap &= ~PCI_EXP_LNKCAP_MLW;
-+	lnkcap |= (port->is_x4 ? 4 : 1) << 4;
-+	mvebu_writel(port, lnkcap, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP);
-+
- 	/* Disable Root Bridge I/O space, memory space and bus mastering. */
- 	cmd = mvebu_readl(port, PCIE_CMD_OFF);
- 	cmd &= ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER);
-@@ -982,6 +995,7 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
- 	struct device *dev = &pcie->pdev->dev;
- 	enum of_gpio_flags flags;
- 	int reset_gpio, ret;
-+	u32 num_lanes;
- 
- 	port->pcie = pcie;
- 
-@@ -994,6 +1008,9 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
- 	if (of_property_read_u32(child, "marvell,pcie-lane", &port->lane))
- 		port->lane = 0;
- 
-+	if (!of_property_read_u32(child, "num-lanes", &num_lanes) && num_lanes == 4)
-+		port->is_x4 = true;
-+
- 	port->name = devm_kasprintf(dev, GFP_KERNEL, "pcie%d.%d", port->port,
- 				    port->lane);
- 	if (!port->name) {
++	bridge->subsystem_vendor_id = ssdev_id & 0xffff;
++	bridge->subsystem_id = ssdev_id >> 16;
+ 	bridge->has_pcie = true;
+ 	bridge->data = port;
+ 	bridge->ops = &mvebu_pci_bridge_emul_ops;
 -- 
 2.20.1
 
