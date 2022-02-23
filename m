@@ -2,123 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A81284C0B59
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 06:02:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 769AE4C0B90
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 06:15:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231290AbiBWFDO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Feb 2022 00:03:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37812 "EHLO
+        id S234607AbiBWFQU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Feb 2022 00:16:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234668AbiBWFDN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 00:03:13 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A97865810;
-        Tue, 22 Feb 2022 21:02:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645592567; x=1677128567;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FNDR7wni8O9F98zBun4+rCEdedHrEYsctc1r1OAxlDU=;
-  b=h3vZbMfgX1W31zHx390r2Ofsf283Cxp7JS/QgzH+ioCooCMU+JG6fd7K
-   ulTA1W/aKKkbeBE0PGPRo5VMrLqMTAyb3gQGq2bx+/qzuUCL31bhwKpjE
-   8f6n0rNOfo/7uLlFIpT9oVDXXckWY5QUHhcQix55NF2oWGmHdLmKZEcaM
-   93Gpb7gInTxMzVcZ6SypEnkDjUJmqaS+27x3ePaptASf9AyUiLOzNOs8v
-   xQRXnFFD9XUAEa1KqreHScRVwhWfNUUtyXpAtkUySDFZKyxdWtwapEO1E
-   t54UNna+HU2NtXJPYhxTX8wnM6DAbc18F4RWfNAqpTsg9LVNAOFxVIDSW
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10266"; a="315113368"
-X-IronPort-AV: E=Sophos;i="5.88,390,1635231600"; 
-   d="scan'208";a="315113368"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 21:02:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,390,1635231600"; 
-   d="scan'208";a="683771422"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Feb 2022 21:02:40 -0800
-Message-ID: <171bec90-5ea6-b35b-f027-1b5e961f5ddf@linux.intel.com>
-Date:   Wed, 23 Feb 2022 13:01:13 +0800
+        with ESMTP id S233406AbiBWFQT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 00:16:19 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF7715BD2C;
+        Tue, 22 Feb 2022 21:15:52 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id gl14-20020a17090b120e00b001bc2182c3d5so2782796pjb.1;
+        Tue, 22 Feb 2022 21:15:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J9X2+n6KpehChnxp9Tmr1fZodcY/pATSFKo49PZQzwo=;
+        b=k574kVhYSfhs2DWwMEDbrHsvrqIW0+aaLPJq1etRIjE/u48bb+8A8BDFoV4U4lHkQv
+         LqBzrHvwM5MTiopD28tV4xjllOpq7/DItVI8qC0lRhtVgM0GwIecvYwgAqwL5nDBhwKT
+         VxVybKr1hVblKHgMzY4OSw8A6txxLAzqFQDZk8zY1ymwFPXSCXQ/O61+mze30QSiWB41
+         b28/eA7CgYxyhL4TqnSoE029e14EhZBCvUQ/kPewVzaJkt/NIl8SynhloVmzS8iu7g36
+         HB5i2efoCr1XmjCmXhcimX1Dv65dnTJDaAZRHDl99OgPdbx8O3u6Lbe4SzlRiPr1Nonb
+         Z3Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J9X2+n6KpehChnxp9Tmr1fZodcY/pATSFKo49PZQzwo=;
+        b=rddoVwrpWTw0a6Ucogz+x/G8EJlBKXhXP0qdNjgkjYCMfmOoL/VGqSUzfIYGxHWpHC
+         QxTWGBepLmRux7bvmabf+js4/mqMOvMv0MdC/dXnHu0l38NxOC/Q5CDGj36gKA4wULV5
+         0BS0oGuudIWHirudK5Q1LHeNLwkwRcNWo/jvkTziAA5rbzYcptVfq7yd2Vxty4tb+zvf
+         zCZ8yfKUzeWi/bIv1bgonMTiaO7SJ0ncnuUr9OyOi/dntgYk5i/UEH63jk3YEWHlX69D
+         nGGknGQg3DLKObOhavRZQLmBoPS20jCZAoLby2WpOncoTjrEyLjJmQ4SZNlpQnLAh4+f
+         ZX9Q==
+X-Gm-Message-State: AOAM531cMNazyMca/ioi6frUGf9B5/OplmL35gFK52FEwFtiiUA12Bh4
+        f3GmPm9sIMZCJKMneL7fo4eiDS1bWBnf0Eo4
+X-Google-Smtp-Source: ABdhPJxrG3DsbCwd9Vb5y+rszL2ndDj9F/tggumUkZ8XkIFacRXlfciOX0sa2oh1KdKvhkXsDzS/DA==
+X-Received: by 2002:a17:90a:178d:b0:1b9:75ce:34d8 with SMTP id q13-20020a17090a178d00b001b975ce34d8mr7549693pja.228.1645593352238;
+        Tue, 22 Feb 2022 21:15:52 -0800 (PST)
+Received: from yusufkhan-a.lan ([24.17.200.29])
+        by smtp.gmail.com with ESMTPSA id a22sm15191334pfv.73.2022.02.22.21.15.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Feb 2022 21:15:51 -0800 (PST)
+From:   Yusuf Khan <yusisamerican@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, tiwai@suse.com, perex@perex.cz,
+        alex.bou9@gmail.com, mporter@kernel.crashing.org,
+        logang@deltatee.com, kurt.schwemmer@microsemi.com,
+        bhelgaas@google.com, kw@linux.com, robh@kernel.org,
+        lorenzo.pieralisi@arm.com, jonathan.derrick@linux.dev,
+        nirmal.patel@linux.intel.com, Yusuf Khan <yusisamerican@gmail.com>
+Subject: [PATCH] Removed some usages of the deprecated "pci-dma-compat.h" KPI
+Date:   Tue, 22 Feb 2022 21:15:45 -0800
+Message-Id: <20220223051545.572235-1-yusisamerican@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Cc:     baolu.lu@linux.intel.com, Christoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
-        rafael@kernel.org, David Airlie <airlied@linux.ie>,
-        linux-pci@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        iommu@lists.linux-foundation.org,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v6 02/11] driver core: Add dma_cleanup callback in
- bus_type
-Content-Language: en-US
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20220218005521.172832-1-baolu.lu@linux.intel.com>
- <20220218005521.172832-3-baolu.lu@linux.intel.com>
- <YhCdEmC2lYStmUSL@infradead.org>
- <1d8004d3-1887-4fc7-08d2-0e2ee6b5fdcb@arm.com>
- <20220221234837.GA10061@nvidia.com>
- <1acb8748-8d44-688d-2380-f39ec820776f@arm.com>
- <20220222151632.GB10061@nvidia.com>
- <3d4c3bf1-fed6-f640-dc20-36d667de7461@arm.com>
- <20220222235353.GF10061@nvidia.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-In-Reply-To: <20220222235353.GF10061@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/23/22 7:53 AM, Jason Gunthorpe wrote:
->> To spell it out, the scheme I'm proposing looks like this:
-> Well, I already got this, it is what is in driver_or_DMA_API_token()
-> that matters
-> 
-> I think you are suggesting to do something like:
-> 
->     if (!READ_ONCE(dev->driver) ||  ???)
->         return NULL;
->     return group;  // A DMA_API 'token'
-> 
-> Which is locklessly reading dev->driver, and why you are talking about
-> races, I guess.
-> 
+The inspiration for this commit comes from Christophe
+JAILLET in [1], you can find reasons for why this was removed
+linked there. This removes the use of the KPI in some pci
+components and rapidio(whatever that is) devices.
 
-I am afraid that we are not able to implement a race-free
-driver_or_DMA_API_token() helper. The lock problem between the IOMMU
-core and driver core always exists.
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux
+-next.git/patch/?id=ada3caabaf6135150077c3f729bb06e8f3b5b8f6
 
-For example, when we implemented iommu_group_store_type() to change the
-default domain type of a device through sysfs, we could only comprised
-and limited this functionality to singleton groups to avoid the lock
-issue.
+Signed-off-by: Yusuf Khan <yusisamerican@gmail.com>
+---
+ drivers/pci/controller/vmd.c     | 1 +
+ drivers/pci/switch/switchtec.c   | 1 +
+ drivers/rapidio/devices/tsi721.c | 8 ++++----
+ sound/pci/asihpi/hpios.c         | 1 +
+ 4 files changed, 7 insertions(+), 4 deletions(-)
 
-Unfortunately, that compromise cannot simply applied to the problem to
-be solved by this series, because the iommu core cannot abort the driver
-binding when the conflict is detected in the bus notifier.
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index cc166c683638..244dc0f2f71e 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -17,6 +17,7 @@
+ #include <linux/srcu.h>
+ #include <linux/rculist.h>
+ #include <linux/rcupdate.h>
++#include <linux/dma-mapping.h>
+ 
+ #include <asm/irqdomain.h>
+ 
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index c36c1238c604..05a876ec1463 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -15,6 +15,7 @@
+ #include <linux/wait.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/nospec.h>
++#include <linux/dma-mapping.h>
+ 
+ MODULE_DESCRIPTION("Microsemi Switchtec(tm) PCIe Management Driver");
+ MODULE_VERSION("0.1");
+diff --git a/drivers/rapidio/devices/tsi721.c b/drivers/rapidio/devices/tsi721.c
+index 4dd31dd9feea..b3134744fb55 100644
+--- a/drivers/rapidio/devices/tsi721.c
++++ b/drivers/rapidio/devices/tsi721.c
+@@ -2836,17 +2836,17 @@ static int tsi721_probe(struct pci_dev *pdev,
+ 	}
+ 
+ 	/* Configure DMA attributes. */
+-	if (pci_set_dma_mask(pdev, DMA_BIT_MASK(64))) {
+-		err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
++	if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(64))) {
++		err = dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
+ 		if (err) {
+ 			tsi_err(&pdev->dev, "Unable to set DMA mask");
+ 			goto err_unmap_bars;
+ 		}
+ 
+-		if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32)))
++		if (dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32)))
+ 			tsi_info(&pdev->dev, "Unable to set consistent DMA mask");
+ 	} else {
+-		err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64));
++		err = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
+ 		if (err)
+ 			tsi_info(&pdev->dev, "Unable to set consistent DMA mask");
+ 	}
+diff --git a/sound/pci/asihpi/hpios.c b/sound/pci/asihpi/hpios.c
+index 6fe60d13e24b..08757c92aee5 100644
+--- a/sound/pci/asihpi/hpios.c
++++ b/sound/pci/asihpi/hpios.c
+@@ -10,6 +10,7 @@ HPI Operating System function implementation for Linux
+ (C) Copyright AudioScience Inc. 1997-2003
+ ******************************************************************************/
+ #define SOURCEFILE_NAME "hpios.c"
++#include <linux/dma-mapping.h>
+ #include "hpi_internal.h"
+ #include "hpidebug.h"
+ #include <linux/delay.h>
+-- 
+2.25.1
 
-Best regards,
-baolu
