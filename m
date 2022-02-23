@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 626884C0FF3
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 11:14:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0B0E4C0FF5
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 11:14:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239500AbiBWKPL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Feb 2022 05:15:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40862 "EHLO
+        id S238176AbiBWKPM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Feb 2022 05:15:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239506AbiBWKPK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 05:15:10 -0500
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577298B6D5
-        for <linux-pci@vger.kernel.org>; Wed, 23 Feb 2022 02:14:43 -0800 (PST)
-Received: by mail-lj1-x236.google.com with SMTP id t14so23819247ljh.8
-        for <linux-pci@vger.kernel.org>; Wed, 23 Feb 2022 02:14:43 -0800 (PST)
+        with ESMTP id S239506AbiBWKPM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 05:15:12 -0500
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F338B6DC
+        for <linux-pci@vger.kernel.org>; Wed, 23 Feb 2022 02:14:44 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id m14so30100932lfu.4
+        for <linux-pci@vger.kernel.org>; Wed, 23 Feb 2022 02:14:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WA3fhXKz11zSRT18uh5lWgyZMPbayuJGb3v+A3A9reA=;
-        b=HodvyXEopC6Rhn8fGedL0X9MMjBw9Lu5v+EsadaDkonNcIgPQ4X0cJg1BONqWOQ9H+
-         g1X+UNd3jlSGFamkHvcAnZ58jL93oRqCBbb4km24aal8v+sDmi7iwX0r0AGyCYkG9DNG
-         1CGLqW/NVcFVeAqxR+joIaSDoV36EGMW92YDJwwLaLYWTEd/D6WdwIRMWfDX1HnRTJQx
-         93MozVwQJx5wMpfCL49pOWm+YVAXYpq8/QW3INtc+sDmhxt8mLwwkUbOLRZzkYUgtQ3Q
-         YvB53v2pkWg+SuK7QpApus6/U5Ij9KgIlTIdmv6ERAqdWXa5kEMwq7PyQCR/qmpTbjRk
-         LMag==
+        bh=lkxtCcsfAVoExf0UCN2vdORLQFrRJOexPGzdfVQ8PeI=;
+        b=gWNRI2EUSNVeFwUMJU8u6PWtIPKU/p2/bjiLSGrlSdzecEmWPHhCrzeOSBqE0XBPnO
+         a1Kl4I3fmbegVY0ooEd6/5aSKlDZpWSSaaTYOLfmjaOrX/rtba97QkwyYIjdTOwldOgS
+         LmfpZOfrr9odIzRxOvKaMBUWyYV4xkI6Y9AANzzudOWqjZiEIUuE7uDucnrc660yW+37
+         h6C9qJkPKVrqLlbDQQ+GAnJl60zFtyACxhxGJGjKR8b5gHP9MckL2pXIE4HP/PGaZaC9
+         azs5sV4xvhW2f7K640q6SasuoEYpHwfXgTzEhWynF0p88vFDjSOBlVCWKv/PPuoU+RmD
+         OEbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WA3fhXKz11zSRT18uh5lWgyZMPbayuJGb3v+A3A9reA=;
-        b=Yv1Xa3Jq6WBEp4Onp9bGYbG5eLS7eWI1ezPHEQJ9lMPysJMqTSZGRTiW1e97pJFPNe
-         WYCPMcfqYVFgm5lhOHaiA1WZF9SJ/dseOGVF5Dyy048+qXPF+ZZfraVeONsU+LTZ7VO0
-         IQ5UOXGI9ADcVAZK5F/1NAxJS7FqdrtKHohmvCtBUKipnq1g06KTLuI3ljA5xH+53G6S
-         99YZUymLAqVQozsmH0qxHItm8AZl7qK+ofeicufqFnhNshEySzSYOcIbYnCJR73Fb3fz
-         M8tMFu3QmwCbSigRgRvMxpG0wQT80DVkJV4S0sLY92otVt8MEMkRh4J75a/Rp1r4f0WY
-         pxUg==
-X-Gm-Message-State: AOAM530jLeVzl/SujV+3fwyontpYUZULA1WF+WSXjfp4Xzjj657d5/YN
-        4OgB+MItE9OMIfyB7i8XgYcm7A==
-X-Google-Smtp-Source: ABdhPJyBzvC5YXap0MKOU54W5OcmPRyG5+/UsDKt+f6SOeKw8Lszf2+OM/EcQnvlBhIqy4Bb9WLQyQ==
-X-Received: by 2002:a2e:99d0:0:b0:244:c392:2326 with SMTP id l16-20020a2e99d0000000b00244c3922326mr19735654ljj.355.1645611281624;
-        Wed, 23 Feb 2022 02:14:41 -0800 (PST)
+        bh=lkxtCcsfAVoExf0UCN2vdORLQFrRJOexPGzdfVQ8PeI=;
+        b=NLJ62B4Au66P9eAz7iW8C1DssePoDiO7+qNGr8BOaL6c2TJHa6hJyHD1kRI30fGPDF
+         ijdIa5aC5jZYDuF09Zi6fl6G5AmQY0tOXMEfZMVNTCFlxQLtHQgU7qyLQUEZ4sWFAN91
+         LghLxVMIwh8YyTc1xMbs1/pCHLpFJX7RLMP9XwbgWA+P+w00pEnjbLu784/T922MR4AO
+         ymL0lGd+5ifJuwa7uQ3GyGgMqfpqoMEe8bZJI4wbXiteGiXojf9xN5w0dPniEooGGaKz
+         X+ZlRrCPqzBNJQh7WVSaz6hvwbXGb7dcLfu3v9NWZZJ1LDZIR7qJr4NXuvCK6aazJvff
+         AcoQ==
+X-Gm-Message-State: AOAM5308UPRL4Wds/7oWhEQstu3vtG3NqA4b7YMSViEqExwFVl7oZt7l
+        rz2E1a7L85fjqvo754hFgM/x1w==
+X-Google-Smtp-Source: ABdhPJyUdZY1PYHVpDV0E9X6d0/1dum9wvltJuig/BGM/jBtyVGLtopVJ0c4MVlSI4ixtnJtHbgWeQ==
+X-Received: by 2002:a05:6512:4021:b0:443:150e:6984 with SMTP id br33-20020a056512402100b00443150e6984mr19253713lfb.423.1645611283097;
+        Wed, 23 Feb 2022 02:14:43 -0800 (PST)
 Received: from eriador.lumag.spb.ru ([94.25.228.217])
-        by smtp.gmail.com with ESMTPSA id s9sm2060256ljd.79.2022.02.23.02.14.40
+        by smtp.gmail.com with ESMTPSA id s9sm2060256ljd.79.2022.02.23.02.14.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 02:14:41 -0800 (PST)
+        Wed, 23 Feb 2022 02:14:42 -0800 (PST)
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -59,9 +59,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: [PATCH v6 2/4] PCI: qcom: Remove redundancy between qcom_pcie and qcom_pcie_cfg
-Date:   Wed, 23 Feb 2022 13:14:33 +0300
-Message-Id: <20220223101435.447839-3-dmitry.baryshkov@linaro.org>
+Subject: [PATCH v6 3/4] PCI: qcom: Add ddrss_sf_tbu flag
+Date:   Wed, 23 Feb 2022 13:14:34 +0300
+Message-Id: <20220223101435.447839-4-dmitry.baryshkov@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220223101435.447839-1-dmitry.baryshkov@linaro.org>
 References: <20220223101435.447839-1-dmitry.baryshkov@linaro.org>
@@ -69,7 +69,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,134 +77,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In preparation to adding more flags to configuration data, use pointer
-to struct qcom_pcie_cfg directly inside struct qcom_pcie, rather than
-duplicating all its fields. This would save us from the boilerplate code
-that just copies flag values from one struct to another one.
+Qualcomm PCIe driver uses compatible string to check if the ddrss_sf_tbu
+clock should be used. Since sc7280 support has added flags, switch to
+the new mechanism to check if this clock should be used.
 
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 34 ++++++++++++--------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index c19cd506ed3f..b2db2180e1bc 100644
+index b2db2180e1bc..7e97820eb575 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -204,8 +204,7 @@ struct qcom_pcie {
- 	union qcom_pcie_resources res;
- 	struct phy *phy;
- 	struct gpio_desc *reset;
--	const struct qcom_pcie_ops *ops;
--	unsigned int pipe_clk_need_muxing:1;
-+	const struct qcom_pcie_cfg *cfg;
+@@ -195,6 +195,7 @@ struct qcom_pcie_ops {
+ struct qcom_pcie_cfg {
+ 	const struct qcom_pcie_ops *ops;
+ 	unsigned int pipe_clk_need_muxing:1;
++	unsigned int has_ddrss_sf_tbu_clk:1;
  };
  
- #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-@@ -229,8 +228,8 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
- 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+ struct qcom_pcie {
+@@ -1164,7 +1165,7 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+ 	res->clks[3].id = "bus_slave";
+ 	res->clks[4].id = "slave_q2a";
+ 	res->clks[5].id = "tbu";
+-	if (of_device_is_compatible(dev->of_node, "qcom,pcie-sm8250")) {
++	if (pcie->cfg->has_ddrss_sf_tbu_clk) {
+ 		res->clks[6].id = "ddrss_sf_tbu";
+ 		res->num_clks = 7;
+ 	} else {
+@@ -1512,6 +1513,7 @@ static const struct qcom_pcie_cfg sdm845_cfg = {
  
- 	/* Enable Link Training state machine */
--	if (pcie->ops->ltssm_enable)
--		pcie->ops->ltssm_enable(pcie);
-+	if (pcie->cfg->ops->ltssm_enable)
-+		pcie->cfg->ops->ltssm_enable(pcie);
+ static const struct qcom_pcie_cfg sm8250_cfg = {
+ 	.ops = &ops_1_9_0,
++	.has_ddrss_sf_tbu_clk = true,
+ };
  
- 	return 0;
- }
-@@ -1176,7 +1175,7 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	if (ret < 0)
- 		return ret;
- 
--	if (pcie->pipe_clk_need_muxing) {
-+	if (pcie->cfg->pipe_clk_need_muxing) {
- 		res->pipe_clk_src = devm_clk_get(dev, "pipe_mux");
- 		if (IS_ERR(res->pipe_clk_src))
- 			return PTR_ERR(res->pipe_clk_src);
-@@ -1209,7 +1208,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 	}
- 
- 	/* Set TCXO as clock source for pcie_pipe_clk_src */
--	if (pcie->pipe_clk_need_muxing)
-+	if (pcie->cfg->pipe_clk_need_muxing)
- 		clk_set_parent(res->pipe_clk_src, res->ref_clk_src);
- 
- 	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
-@@ -1284,7 +1283,7 @@ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
- 
- 	/* Set pipe clock as clock source for pcie_pipe_clk_src */
--	if (pcie->pipe_clk_need_muxing)
-+	if (pcie->cfg->pipe_clk_need_muxing)
- 		clk_set_parent(res->pipe_clk_src, res->phy_pipe_clk);
- 
- 	return clk_prepare_enable(res->pipe_clk);
-@@ -1384,7 +1383,7 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
- 
- 	qcom_ep_reset_assert(pcie);
- 
--	ret = pcie->ops->init(pcie);
-+	ret = pcie->cfg->ops->init(pcie);
- 	if (ret)
- 		return ret;
- 
-@@ -1392,16 +1391,16 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
- 	if (ret)
- 		goto err_deinit;
- 
--	if (pcie->ops->post_init) {
--		ret = pcie->ops->post_init(pcie);
-+	if (pcie->cfg->ops->post_init) {
-+		ret = pcie->cfg->ops->post_init(pcie);
- 		if (ret)
- 			goto err_disable_phy;
- 	}
- 
- 	qcom_ep_reset_deassert(pcie);
- 
--	if (pcie->ops->config_sid) {
--		ret = pcie->ops->config_sid(pcie);
-+	if (pcie->cfg->ops->config_sid) {
-+		ret = pcie->cfg->ops->config_sid(pcie);
- 		if (ret)
- 			goto err;
- 	}
-@@ -1410,12 +1409,12 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
- 
- err:
- 	qcom_ep_reset_assert(pcie);
--	if (pcie->ops->post_deinit)
--		pcie->ops->post_deinit(pcie);
-+	if (pcie->cfg->ops->post_deinit)
-+		pcie->cfg->ops->post_deinit(pcie);
- err_disable_phy:
- 	phy_power_off(pcie->phy);
- err_deinit:
--	pcie->ops->deinit(pcie);
-+	pcie->cfg->ops->deinit(pcie);
- 
- 	return ret;
- }
-@@ -1559,8 +1558,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 
- 	pcie->pci = pci;
- 
--	pcie->ops = pcie_cfg->ops;
--	pcie->pipe_clk_need_muxing = pcie_cfg->pipe_clk_need_muxing;
-+	pcie->cfg = pcie_cfg;
- 
- 	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_HIGH);
- 	if (IS_ERR(pcie->reset)) {
-@@ -1586,7 +1584,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		goto err_pm_runtime_put;
- 	}
- 
--	ret = pcie->ops->get_resources(pcie);
-+	ret = pcie->cfg->ops->get_resources(pcie);
- 	if (ret)
- 		goto err_pm_runtime_put;
- 
+ static const struct qcom_pcie_cfg sc7280_cfg = {
 -- 
 2.34.1
 
