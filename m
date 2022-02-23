@@ -2,118 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 873DE4C196C
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 18:06:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED2E94C19F8
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 18:40:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232812AbiBWRHB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Feb 2022 12:07:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56886 "EHLO
+        id S243421AbiBWRks (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Feb 2022 12:40:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233103AbiBWRG4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 12:06:56 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3AA685D657
-        for <linux-pci@vger.kernel.org>; Wed, 23 Feb 2022 09:06:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645635981;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=OdhMSjzenM1uAIsnbqo9rXhRZ5TBT2FTULmZ23R9wDg=;
-        b=T09sRrhF1hX+Do5Y4Laf6pIbnRIYjoyIGDhxJHCoxMazqfGazLdfBRUiwfoALKAG8R7rKK
-        Uo/NmO6AnAbJp/oSEYvuFZR0BC11fCoX4nr5J80WhiQM9NdMLM34/nXpDeUJJIMt4OtHDn
-        7Ddyk+OnFoBL+aPu7fRT6HXlJlcka3o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-42---G7p4icMOm0TjUV1mgtbQ-1; Wed, 23 Feb 2022 12:06:17 -0500
-X-MC-Unique: --G7p4icMOm0TjUV1mgtbQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S240809AbiBWRkq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 12:40:46 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9298FA19B;
+        Wed, 23 Feb 2022 09:40:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5E3C1091DA1;
-        Wed, 23 Feb 2022 17:06:15 +0000 (UTC)
-Received: from localhost (unknown [10.39.193.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 43153804F8;
-        Wed, 23 Feb 2022 17:06:15 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
-        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com
-Cc:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, yishaih@nvidia.com,
-        maorg@nvidia.com, ashok.raj@intel.com, kevin.tian@intel.com,
-        shameerali.kolothum.thodi@huawei.com
-Subject: Re: [PATCH V8 mlx5-next 09/15] vfio: Define device migration
- protocol v2
-In-Reply-To: <20220220095716.153757-10-yishaih@nvidia.com>
-Organization: Red Hat GmbH
-References: <20220220095716.153757-1-yishaih@nvidia.com>
- <20220220095716.153757-10-yishaih@nvidia.com>
-User-Agent: Notmuch/0.34 (https://notmuchmail.org)
-Date:   Wed, 23 Feb 2022 18:06:13 +0100
-Message-ID: <87ley17bsq.fsf@redhat.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2965961483;
+        Wed, 23 Feb 2022 17:40:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B72DC340E7;
+        Wed, 23 Feb 2022 17:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645638016;
+        bh=vdNxr48kXvnOvyGZXeXUt9F8EvQ0/KBfD8xz+E+eWzQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Sygr+3AqUbbfFMiGflScjFAz1W52Di4MmF0D0l2kQMvn2JhrwmdY9yJkV79q9+VWp
+         j17Sirc+t3iRW5seOsuj15K0pgP5Yl8omqqV+cdwH2WeztviMmdR5tMFuHQTpyVap1
+         Z4t+jPZwWmb7AnIHcH1D0dKZBj4hFvKHr3Nz7q/OSSK6/D1mc+lyphro88kPSchX8h
+         LdDASysYmj4PV5kn1SjzzI9fJQAdKaEf0jUaM6N4JWzkNeVX+8CFHTGhW3HcL6BO41
+         LMsD2e0HFXYmKWDXtc/pWIDzRNSajCA2yOqLtDZnbG/oz2y03r01+F1JMxHH24ARaY
+         2/XCNahlftZgw==
+Date:   Wed, 23 Feb 2022 11:40:14 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     l.stach@pengutronix.de, bhelgaas@google.com, broonie@kernel.org,
+        lorenzo.pieralisi@arm.com, jingoohan1@gmail.com,
+        festevam@gmail.com, francesco.dolcini@toradex.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: Re: [PATCH v7 8/8] PCI: imx6: Add the compliance tests mode support
+Message-ID: <20220223174014.GA139367@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1644992463-14467-9-git-send-email-hongxing.zhu@nxp.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Feb 20 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
+In subject:
 
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index ca69516f869d..3bbadcdbc9c8 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -56,6 +56,14 @@ struct vfio_device {
->   *         match, -errno for abort (ex. match with insufficient or incorrect
->   *         additional args)
->   * @device_feature: Fill in the VFIO_DEVICE_FEATURE ioctl
-> + * @migration_set_state: Optional callback to change the migration state for
-> + *         devices that support migration. The returned FD is used for data
-> + *         transfer according to the FSM definition. The driver is responsible
-> + *         to ensure that FD reaches end of stream or error whenever the
-> + *         migration FSM leaves a data transfer state or before close_device()
-> + *         returns.
-> + * @migration_get_state: Optional callback to get the migration state for
-> + *         devices that support migration.
+s/Add the/Add/
 
-Nit: I'd add "mandatory for VFIO_DEVICE_FEATURE_MIGRATION migration
-support" to both descriptions to be a bit more explicit.
+On Wed, Feb 16, 2022 at 02:21:03PM +0800, Richard Zhu wrote:
+> Refer to the system board signal Quality of PCIe archiecture PHY test
+> specification. Signal quality tests(for example: jitters,  differential
+> eye opening and so on ) can be executed with devices in the
+> polling.compliance state.
 
-(...)
+s/archiecture/architecture/
+s/tests(for/tests (for/
+s/jitters,  /jitter, /              (remove double space)
+s/so on )/so on)/
 
-> +/*
-> + * Indicates the device can support the migration API through
-> + * VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE. If present flags must be non-zero and
-> + * VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE is supported. The RUNNING and
+Is this a reference to a spec?  If so, I can't tell the name of the
+spec, the revision, or the section number.
 
-I'm having trouble parsing this. I think what it tries to say is that at
-least one of the flags defined below must be set?
+> To let the device support polling.compliance stat, the clocks and powers
+> shouldn't be turned off when the probe of device driver is failed.
 
-> + * ERROR states are always supported if this GET succeeds.
+s/stat/state/
+s/powers/power/
+s/driver is failed/driver fails/
 
-What about the following instead:
+> Based on CLB(Compliance Load Board) Test Fixture and so on test
+> equipments, the PHY link would be down during the compliance tests.
+> Refer to this scenario, add the i.MX PCIe compliance tests mode enable
+> support, and keep the clocks and powers on, and finish the driver probe
+> without error return.
 
-"Indicates device support for the migration API through
-VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE. If present, the RUNNING and ERROR
-states are always supported. Support for additional states is indicated
-via the flags field; at least one of the flags defined below must be
-set."
+s/CLB(Compliance/CLB (Compliance/
 
-> + *
-> + * VFIO_MIGRATION_STOP_COPY means that STOP, STOP_COPY and
-> + * RESUMING are supported.
-> + */
-> +struct vfio_device_feature_migration {
-> +	__aligned_u64 flags;
-> +#define VFIO_MIGRATION_STOP_COPY	(1 << 0)
-> +};
+> Use the "pci_imx6.compliance=1" in kernel command line to enable the
+> compliance tests mode.
 
+Thanks for including this in the commit log!
+
+>  	ret = dw_pcie_host_init(&pci->pp);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		if (imx6_pcie_cmp_mode) {
+> +			dev_info(dev, "Driver loaded with compliance test mode enabled.\n");
+
+To match other messages:
+
+s/Driver loaded/driver loaded/
+s/enabled./enabled/
+
+> +			ret = 0;
+> +		} else {
+> +			dev_err(dev, "Unable to add pcie port.\n");
+
+s/Unable/unable/
+s/pcie/PCIe/
+s/port./port/
+
+> +		}
+>  		return ret;
+> +	}
+>  
+>  	if (pci_msi_enabled()) {
+>  		u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+> -- 
+> 2.25.1
+> 
