@@ -2,53 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF05E4C13CF
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 14:15:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88A7C4C13F3
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 14:20:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236535AbiBWNP6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Feb 2022 08:15:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38256 "EHLO
+        id S240028AbiBWNVG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Feb 2022 08:21:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235010AbiBWNP6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 08:15:58 -0500
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13ABAAA007;
-        Wed, 23 Feb 2022 05:15:31 -0800 (PST)
-Received: by mail-vk1-f175.google.com with SMTP id f12so12161179vkl.2;
-        Wed, 23 Feb 2022 05:15:31 -0800 (PST)
+        with ESMTP id S238160AbiBWNVG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 08:21:06 -0500
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE678AA03D;
+        Wed, 23 Feb 2022 05:20:38 -0800 (PST)
+Received: by mail-ua1-f50.google.com with SMTP id t25so1416119uaa.3;
+        Wed, 23 Feb 2022 05:20:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hq4Rn/gXQ/nJOJg9RV/mivldVE9GnufDZvVCzaxv+0U=;
-        b=zswaUpg7egfkGMUZEX1jm03iUq6l52usepskpDkfFVDJhLMr/ml9GL68faUcluDvts
-         gx761TlFFr8zrvi0e3K8Shg1D9V2IStdfUuaqKuh4ghl6CorEpdGw6B7Cwk85dVqz6kl
-         4PprbuOry9Zx/WCuBKyFnXovMGobMYz29//ktdjR34dsJAJc3qld02ArXbCK54yMEE62
-         k3amHoIgwvxIkTWHnbtHK/ikl+5Ebu1xbJxCYsycGIvAX9aSbdVJ2Zph92EFvgj1bAop
-         +QBKs7afM74ffbF4gxVXbtY5fECGMuGGN62cDJKgFht2kL7Kq08JkPDFGhXxgJvP8YP6
-         IzXw==
-X-Gm-Message-State: AOAM530NoA6O3k4PujXQwVPmI3mzxQzBZt70+d6vH1Pbf8GelLm3hnIr
-        ehqOX5x8/YS9cmD/iOYJWRrjhrUGJo5HLg==
-X-Google-Smtp-Source: ABdhPJy+OYhf+V8JNvNri/+l22YveMgDuLMcPjcL+VY4qnnPpT0RzqZzWkyFpW67ISugWtDkx1CKZA==
-X-Received: by 2002:a05:6122:d9e:b0:331:33da:48e5 with SMTP id bc30-20020a0561220d9e00b0033133da48e5mr12633749vkb.35.1645622130074;
-        Wed, 23 Feb 2022 05:15:30 -0800 (PST)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id b23sm938638uam.3.2022.02.23.05.15.29
+        bh=CuR7Va65+Y5mma3TTzgiQBG/Y2rCid4VzfEWWUYwSws=;
+        b=LFOuRT4fL8554KN8WFw3zfOKljErM25arQDgLFVGHMo3n+ylabsp6sV0tGbwmXYkUb
+         4jbpPkjdi9zPb+fwnrGgmriPdWp5XASmhfTxOzDx1lYNP4p/wqQhy/2g4kXpZZntc9sM
+         CNvITRxz7K/wDpakH1+6svnI+KFVaGfHWo+S5CEnL3RbHqx7T6SZDOVRxZzyUChI351A
+         rkKNbDokzhPKEtkbP4y6j6r13vyUV9OqtEDHb0EM+nXXjg6S/JWd+spB26YeCqhaQE8f
+         Oi5pevEOOTSLGQ10QVr8ENkbf/rCYpzRcgNJH/7jX7bT1Imzh1PImdD8+8vbU/Vmc06a
+         eEFQ==
+X-Gm-Message-State: AOAM530GnYDp3WJhUfQ65RQQCGKnb4bdXaWyompygYKk52RaaqDxrSQ2
+        qrCP4prPssSDXmXRM7/e4GaGkea1omc3ug==
+X-Google-Smtp-Source: ABdhPJzgcIumJbv78mkVZpsj2YyXiHZNN9Vaxyi9otEPSEaxmybylXjyyWlGkbhpb1IqgCD5d5GghQ==
+X-Received: by 2002:ab0:3046:0:b0:33c:7679:3141 with SMTP id x6-20020ab03046000000b0033c76793141mr11447936ual.15.1645622438032;
+        Wed, 23 Feb 2022 05:20:38 -0800 (PST)
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
+        by smtp.gmail.com with ESMTPSA id r6sm877889uar.10.2022.02.23.05.20.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Feb 2022 05:15:29 -0800 (PST)
-Received: by mail-vs1-f42.google.com with SMTP id e5so3059617vsg.12;
-        Wed, 23 Feb 2022 05:15:29 -0800 (PST)
-X-Received: by 2002:a67:e10e:0:b0:31b:956b:70cf with SMTP id
- d14-20020a67e10e000000b0031b956b70cfmr11866044vsl.77.1645622129113; Wed, 23
- Feb 2022 05:15:29 -0800 (PST)
+        Wed, 23 Feb 2022 05:20:37 -0800 (PST)
+Received: by mail-vk1-f173.google.com with SMTP id j12so12255743vkr.0;
+        Wed, 23 Feb 2022 05:20:37 -0800 (PST)
+X-Received: by 2002:a05:6122:ca1:b0:330:b95b:e048 with SMTP id
+ ba33-20020a0561220ca100b00330b95be048mr12743811vkb.39.1645622437036; Wed, 23
+ Feb 2022 05:20:37 -0800 (PST)
 MIME-Version: 1.0
-References: <20220219034604.603656-1-marek.vasut@gmail.com>
-In-Reply-To: <20220219034604.603656-1-marek.vasut@gmail.com>
+References: <20220219034604.603656-1-marek.vasut@gmail.com> <20220219034604.603656-2-marek.vasut@gmail.com>
+In-Reply-To: <20220219034604.603656-2-marek.vasut@gmail.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 23 Feb 2022 14:15:18 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUvtu=Kuf0YK7Vj0t=zBsHVucWNFBA-brmwE_4giNAMig@mail.gmail.com>
-Message-ID: <CAMuHMdUvtu=Kuf0YK7Vj0t=zBsHVucWNFBA-brmwE_4giNAMig@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] PCI: rcar: Finish transition to L1 state in rcar_pcie_config_access()
+Date:   Wed, 23 Feb 2022 14:20:25 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU7gxmuhOPjh_awCE0XbjatfPEKRUH3=qzvEsmwReDjsQ@mail.gmail.com>
+Message-ID: <CAMuHMdU7gxmuhOPjh_awCE0XbjatfPEKRUH3=qzvEsmwReDjsQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] PCI: rcar: Use PCI_SET_ERROR_RESPONSE after read
+ which triggered an exception
 To:     Marek Vasut <marek.vasut@gmail.com>
 Cc:     linux-pci <linux-pci@vger.kernel.org>,
         Marek Vasut <marek.vasut+renesas@gmail.com>,
@@ -79,14 +80,33 @@ On Sat, Feb 19, 2022 at 4:46 AM <marek.vasut@gmail.com> wrote:
 > is because the transition to L1 link state must be manually finished by the
 > driver. The PCIe IP can transition back from L1 state to L0 on its own.
 >
-> Avoid triggering the abort in rcar_pcie_config_access() by checking whether
-> the controller is in the transition state, and if so, finish the transition
-> right away. This prevents a lot of unnecessary exceptions, although not all
-> of them.
+> The current asynchronous external abort hook implementation restarts
+> the instruction which finally triggered the fault, which can be a
+> different instruction than the read/write instruction which started
+> the faulting access. Usually the instruction which finally triggers
+> the fault is one which has some data dependency on the result of the
+> read/write. In case of read, the read value after fixup is undefined,
+> while a read value of faulting read should be PCI_ERROR_RESPONSE.
 >
+> It is possible to enforce the fault using 'isb' instruction placed
+> right after the read/write instruction which started the faulting
+> access. Add custom register accessors which perform the read/write
+> followed immediately by 'isb'.
+>
+> This way, the fault always happens on the 'isb' and in case of read,
+> which is located one instruction before the 'isb', it is now possible
+> to fix up the return value of the read in the asynchronous external
+> abort hook and make that read return PCI_ERROR_RESPONSE.
+>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 > Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+With this series applied, my koelsch (R-Car M2-W) with Intel 9301CT
+Gigabit Ethernet adapter survived 1000 suspend/resume cycles.
+Before, it would lock-up after a handful tries.
+
 Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
