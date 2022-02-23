@@ -2,200 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C82B4C0992
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 03:45:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76B2C4C09A3
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 03:49:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238448AbiBWCof (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Feb 2022 21:44:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47974 "EHLO
+        id S236775AbiBWCth (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Feb 2022 21:49:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238127AbiBWCnT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 21:43:19 -0500
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2062f.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eaa::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A1E47AE6
-        for <linux-pci@vger.kernel.org>; Tue, 22 Feb 2022 18:37:31 -0800 (PST)
+        with ESMTP id S236893AbiBWCt2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Feb 2022 21:49:28 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2052.outbound.protection.outlook.com [40.107.94.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A3256764;
+        Tue, 22 Feb 2022 18:47:38 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RBIU7BFHMuq2b1vXEj4yz6+GHxiMaiZ4nMh8LYVJHFEG62ilZ39cdcwZQTaNK333B3EfjVzo6CYR7RFlfQTSIGap/KBBvraxceH5qmrqU/KVcAXhJaQXTxpowMeAEv7XPkWBRlzmmpIW47FISeB2MOqeT8tHiSGJuaR9BMDYDh4ws+jQJ7YQDJNuN6ctxto1P449lGF/VNn4my1R1XmweTlBM5XHGQ/aH6CBr9/jH5wYA2kAZh0fME7HC0rDh/cX2LcGV936qCBwmMGAxoA/DrWUro0I7bWVk8JcQ57pvQm4rbjxQctDOI4YseRJGW5Re25AhACwzKuuiRiNKtZQog==
+ b=GiIVDDjqO1FvTZvUKwA+MYSp9lsWVRXgcaCq2W21hB7R8iSx19fXl8slNin12BOT4oPSHp3MuZUAkfOIJovIPqnZPTop4LfsEj7DXDf/S33IP5NPxwZel06b8+loN4H/myIoHmfScJj/5pt07TISrddXfh5NBZS/lWY3uTs3k1EZu86ERg2WS0Sikss8WL3Lhm4fj6qgVAl35mjn+u5WMzI9X2aw+LvfbzkE68JsPk9aLgaaqdOx9ywctdAQ/d8LXWaPRqyHTiWF5vTDDONtED7CIsNQvEv9iaIHwhI8YKgDCbKJvQq1fb4OhjOb+hQ0nL8s+Z7G+ym1WK5z8KLL8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JfgR/ezmHhZ62TFBWfXbMnDDTmhU1J7Gl8f8JHuRlZM=;
- b=YHNdsDqEloEuVPvfXwb8VP65spnCCK3R26bgBHcqWhChKJwgt/WnwFuiTwRcTsjdDt6loua2fAYNdBvdNw7F8gn2fSGNzX3ikyQKUcroi+/SXsgAo+dFupkxInzxTLRWuQBDvjXiM3Jh96dtuv4O+YnH1UwyJrQZ9AjPgxIFnRtbYPcbK1cpuWMZ0GaeX3PUcrxJtTTqErGOoi8D7O1tqo4jCxZAGXEx568gRCwXrRlSWSfwOJCN2equYyZwQ5Qinw6L4M8nNGEY6xBX9yKpsknZgQ5RX4GNpaKK16398AGyjTkk+dNCc9j9XFWeclT4DTU6mENtfC+RWKejndEiVw==
+ bh=1lcxFAHn07CfLt2270Ppsty0k29DH84mDUiCfv7V2Dg=;
+ b=NC/TnA5G5F5LzRNgPrVNoZGYqyUp8+LBUFWVK8ywp7SO67eVRgNk3G5bavzTtG4V2YaTiZDSemE5iLMNyNr+Kspret7sqZ25+PL7Nhgl0vDEoZwQNkFjPg3AN84gOsR/rvM8w8tWLkB6cJKe+yfX81k/sM+yT/IlLor38raTuEXgPlRl0UUwAvRGXMGWXxl1tbZcHkEG8hgYXvszmchPxwOz5cyDyZ9DRaONAEEkEa2B14/BdHGS8Z8g8lcquWZ8fgnk2Xo6PSuXaoPGRGjZVL4Wn7bBqU9mr8gK+30mzybBWl9xaxoHN0WSdVZEyC2lpetQOb4bRjk3UQXf5LXKMQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JfgR/ezmHhZ62TFBWfXbMnDDTmhU1J7Gl8f8JHuRlZM=;
- b=daay26Wbnom3+H0horPww6Uc7s5rbyhesvAuBhQm4dp7V4RcgGG/huy6JMTIc1WsU9rJit+YmvC90MIpB9j63h90Hup127tUWRbBi++GKEp2SVGqZ3Cj6iXWNdBbj9p6JjL6x1o1ZJpRjMFkTFSmCB16HFrRx5fbOI3M9lKBnPM=
-Received: from DM5PR12MB2469.namprd12.prod.outlook.com (2603:10b6:4:af::38) by
- MWHPR1201MB0269.namprd12.prod.outlook.com (2603:10b6:301:5b::21) with
+ bh=1lcxFAHn07CfLt2270Ppsty0k29DH84mDUiCfv7V2Dg=;
+ b=a/9Eigx82LGPl6TRQ9pP094S/1X8sTbRt5gB9HfEyiumcJR5GpmN49CLO0FiS9PCtUMvDJpjDr5s5K1HuUTVvnVHRkZQuZBF73JPzwPJcJP8VUyynhiz+tNImRZ2Z1ZKFNEhTEUoeM9VKeeRPCHlPQmXBj/jDSch3zGE98iLU4oAPNFLMx/u6koQuDyIc9fbeXYIydMhwM80lgKyZO6zgpOQiuJHPaAX6urKIZ76TplEbohpPzI9SQc4IEUcsTVM522HzukG92n1e8l/WOFfi7GzM20ZXGgdu5lHRn3I2l9BiwmiIH5xqHyh0LaASQnYEWYuCzDA8SZX3yF3NQ6FrQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by DM6PR12MB4124.namprd12.prod.outlook.com (2603:10b6:5:221::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.17; Wed, 23 Feb
- 2022 02:37:15 +0000
-Received: from DM5PR12MB2469.namprd12.prod.outlook.com
- ([fe80::612d:cd2a:369b:17c6]) by DM5PR12MB2469.namprd12.prod.outlook.com
- ([fe80::612d:cd2a:369b:17c6%6]) with mapi id 15.20.5017.022; Wed, 23 Feb 2022
- 02:37:15 +0000
-From:   "Chen, Guchun" <Guchun.Chen@amd.com>
-To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Subject: RE: [PATCH] PCI: Apply quirk_amd_harvest_no_ats to all navi10 and 14
- asics
-Thread-Topic: [PATCH] PCI: Apply quirk_amd_harvest_no_ats to all navi10 and 14
- asics
-Thread-Index: AQHYKAZxkDMOw9+W/Ee6TIjq/RLshqyga5ew
-Date:   Wed, 23 Feb 2022 02:37:14 +0000
-Message-ID: <DM5PR12MB2469B1512F32DEFB1979F1F9F13C9@DM5PR12MB2469.namprd12.prod.outlook.com>
-References: <20220222160801.841643-1-alexander.deucher@amd.com>
-In-Reply-To: <20220222160801.841643-1-alexander.deucher@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 683b5c1e-0b00-4e79-d940-08d9f6756722
-x-ms-traffictypediagnostic: MWHPR1201MB0269:EE_
-x-microsoft-antispam-prvs: <MWHPR1201MB0269CB49AA07F8719D628694F13C9@MWHPR1201MB0269.namprd12.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZMlBJwryqycPa+f7gn0xpN0C1WxQ8y0E2OhTY+/tlbmni+e4ee95hOegMCQIGnIiOyHTxofQ05gw8al/c0pGVR6GaNUL/wKjpfFlTPmPGZWC7kW4aDQy+qe0atj+GoeJjMMws7+vDDkiaboKkjcbmp7heWxhvKLrcTexkXE+46fZHniGMhmhvNU2IGyjlPMRmzknL0KNdmYA4k9jqnrOlDeWgR1953RYIp7RyySZurHayhkYd5yJ44KX0LUh99AgUYg/WlHhqwnJVVWAvBdc5w2A6v5oGfLLTRCCigUUlmEcGnPPuADwlVRb9I+JjvuWDrWJHZUbOKTAUEgREU5KtJ3+MzO+yas9BQfIHHbLVA5BuAZhAgdN+0WAN4Oe/Fd9CMAE8/Bwkk9mp/4rbTAv7l03YNP1+NWepjEIYWxSTRbx2UqYLR63XihCQGLQI9y8QGu+Eptd7i8B1aKvB79xpXVLi+9BZS5reNF8gK/Afv75Yl5N7Sb9YyrlQopkOaWqFFxmmqboZQZZ2TMFd+CP3aBxc+JBI1n+AgrPNvGVzrDUOdvrsRJkaVXZPXr6LY+8g25gm0rNt3e27VPLL8EiGuvPW9jqjeBKLSR8I0zVkBMJZP3Bs86z1yBLXPCWAiYrdufId/iILIeULzFDSuZgQh9s4t8YqWIUpgE0V90qKdpKjWTceNrZay/IHT1kTiO9H+yigDDsX+xNeWhyQ24RCg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB2469.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(186003)(53546011)(26005)(66946007)(45080400002)(76116006)(9686003)(66556008)(66476007)(6506007)(7696005)(966005)(316002)(110136005)(86362001)(71200400001)(64756008)(66446008)(508600001)(122000001)(8676002)(38070700005)(83380400001)(52536014)(4326008)(38100700002)(55016003)(5660300002)(8936002)(33656002)(2906002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?SpHl8PQ+vFgAOHdmaZqk0fk4yNCHUXUDwsl25XnlZZpWZk0qsgs090tKlmzd?=
- =?us-ascii?Q?kuLJbw/7jnDWsccfWXQdmlkdiZsiDueyaillUHRa86p7T7lW4AXJTORTU1Ny?=
- =?us-ascii?Q?2WCWGKFPJyCoap6CBN1tGB6jua/PJbD50grrTHc4Y45BNETaPzJbFddS9svU?=
- =?us-ascii?Q?Ym/NiTUu/s874HdxyX2w1MkklI9buJg31LB+BwX8x6ZANTp67Rc4l9LB9iKz?=
- =?us-ascii?Q?DVKvc2JyofuK0BISM88ixNnHnFvmvPZEl8trvJlQGLcLjzuvhT6Lr6ZVxjFo?=
- =?us-ascii?Q?3bB9oCg2K+Q4ZjyIiRxlT8w5kJQ0y2OrBiRMtkjQTSnrscysS4LW4F1R9nxu?=
- =?us-ascii?Q?4qNjeRmFG9lOVo/8fS9Kdk5NdJobWWv8IeoxqcDm/H+uoV4AYnOqKgn5nsAj?=
- =?us-ascii?Q?AN7POfvA/lYe4/U+jv1aUMLXIEbCibgGSiMGdNgSxiwNQwatZF3aR92+Ycom?=
- =?us-ascii?Q?7J92ROZSqL+NvSdXARsnh14ICbQzIMq25JZiS23CKt7rTAygSXAdOiAeN6ou?=
- =?us-ascii?Q?rWNi4y4H3NNUm+Cn1c3Y87N13ObjfhxRvuWqrJLbDDV5X3cJ6Zly/Zrc4sik?=
- =?us-ascii?Q?chegBy7BytI9G/+i96wIKTs3p/WHOOffveM10/J33omuaARBccxwkcxkekfM?=
- =?us-ascii?Q?jy+SSbnjDCZucy2Z0PdV66VNx+8Fq4zdDeJgUYQCDZvFUczs7xvcvXYzmhYU?=
- =?us-ascii?Q?iuB7AtPN4JCEzidmeuslazADw4epZQtXgLsamfwlz/FiVB3JiZbQt6Yu9ziK?=
- =?us-ascii?Q?Nw2yOlqs207n/l2zJGr0OzpG4D+MiAYCcjk7VzUoj/RpJ+Bk/clhEVZrhh0q?=
- =?us-ascii?Q?jSYLYmCqcoVMc2mKlA/1Ak/3DT+HhHatinVfEmvuu4s0wWMb0VKZtNud1qb7?=
- =?us-ascii?Q?yTMEKRwgQXSMaktKGS1OLVNGS7qBM8ZcaaIdWcMNhHBl3fAipca4YJ6HENQG?=
- =?us-ascii?Q?M07IfhqIakNmO5DeojpO/WL5+N/ruTRVcX3+8ccGp6C0UUsL3JLx1xtSmgwd?=
- =?us-ascii?Q?Eeb20oxaJ2h5FKxRIDURLQSbHj08sW4vKE6R/T8y5JFVweiIX8fuv1BG9y9g?=
- =?us-ascii?Q?CmhuB3gY06E5z9L3WvD4EHGy/yfHtxgLUTLDdhBQKkHz1tMZzBMa1WI+HFEs?=
- =?us-ascii?Q?Zk7FjOZ6VRFTjcVPRK+oE0ZGDI/vwK7Xfo4D0/fOZbql1JdQKMjRDoPXQ7N1?=
- =?us-ascii?Q?I0ApBwTrjchpbrGoYq7gdF9701LxRPf6MVlLg0L++lFQGE8/689vxI7X1iju?=
- =?us-ascii?Q?ne98tYVEX4h9lyIX6yUxOmBbwrXSKhggSa3oJ9ekvjeW7L5lu+60q88pTVKB?=
- =?us-ascii?Q?xICXjPDjmQQhtwsPtVYCNLj7kZ31RCP1zVw1k7FQkO0YCGUaluR3YvUxWgX8?=
- =?us-ascii?Q?wtDipBf4H6NiBFWaJKHtpv19G8wvyDSxvIGq0bUozK2ejvYgr9KmIUnoCEZ1?=
- =?us-ascii?Q?3b4xIf4qA5NcQvRiX3wv+CfEbshhidF+fytmcOdJ34hpOOJxCM1EkEhe2TS1?=
- =?us-ascii?Q?wimHS1aF4keXM5vtKocmYFAejy/p6SVvqDd8TNBeG6hCA7L9nr9CIO3sGmp/?=
- =?us-ascii?Q?pjgz4K1CLFTyCuI/qI7fxjkaKgH19I29Lwxdhu571cQ3Kr9o1T8U8k6ErVZc?=
- =?us-ascii?Q?Kby5+fuIQIJbqkd/D5YBZws=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.24; Wed, 23 Feb
+ 2022 02:47:37 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::e8f4:9793:da37:1bd3]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::e8f4:9793:da37:1bd3%4]) with mapi id 15.20.5017.022; Wed, 23 Feb 2022
+ 02:47:37 +0000
+Date:   Tue, 22 Feb 2022 22:47:35 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
+        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        cohuck@redhat.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        shameerali.kolothum.thodi@huawei.com
+Subject: Re: [PATCH V8 mlx5-next 09/15] vfio: Define device migration
+ protocol v2
+Message-ID: <20220223024735.GL10061@nvidia.com>
+References: <20220220095716.153757-1-yishaih@nvidia.com>
+ <20220220095716.153757-10-yishaih@nvidia.com>
+ <20220222165300.4a8dd044.alex.williamson@redhat.com>
+ <20220223002136.GG10061@nvidia.com>
+ <20220222180934.72400d6a.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220222180934.72400d6a.alex.williamson@redhat.com>
+X-ClientProxiedBy: BL1PR13CA0104.namprd13.prod.outlook.com
+ (2603:10b6:208:2b9::19) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e425623e-3267-4267-820d-08d9f676d9b9
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4124:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR12MB412493DB66F5D297B7EC677EC23C9@DM6PR12MB4124.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TdGELz4ixQ79KaFgEfYiyks88qsxmWDiBBo0t+iUHcM07kQLDQe+2JSq9IbFE6p06MwkFQ+l+eEG9CG0Wj5sjrcJbgdunXcZdbCSZxLy6xLF+pSC/mzSawtel3xJzWUW/4RPLj0KE3DMq6e9xPY+UQJF7ZdymhJtZxOpJ+5/f8AobghAE7ZF1pKYWkPfRxKKuxlyz8Bko7aHGp3sLFLIHl8I2gM24AwunZFLfWv1Ja4Wq+FVT58U/c/78V3NVXiQBao2DMfIuoIf2FuprBuRhmITEOTZggS31uL48+2J9c91BO9Eo1vIqeP1jLbxMUO+wWmgSGjOAQzfTxAPRfWWPYU++bs78Zt1tvidljwjpofyzfjnJYL6z5rms2L4q4ejs76FPtGhFA4qDCZfI6dVOaNzLYTPGa+ku+rqNzjT2+vZBG8X5eQcG8n7kgvD36ymvg0qXtP+y4qGDcnXyHKSLqBZT7SOTbrWd2BJKMlufW4jqkSUHlRlnFZKgT0fWlba5j0bmpNokpVKvcRbLA1SO67fPunAvo1LMcrZnDrqVEp19hgtx2GsG9CI99Ljjbs3XEP6WklsFnOcjubLQPbj3KX2LIbbC1H7V6VgXafBXibqccbVTOMgzPz+MRVm3Kt3h4UMV1uDwGWdukLGWnBW9A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2906002)(38100700002)(86362001)(6916009)(66946007)(6512007)(6506007)(6486002)(508600001)(33656002)(5660300002)(4326008)(8676002)(4744005)(8936002)(7416002)(26005)(186003)(66556008)(66476007)(2616005)(316002)(36756003)(1076003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ox1HP6dXDJXQiv7WDxz+HwdvZQB1WvA+WREep7NM8qf89Hp+sidLAfW+bXwc?=
+ =?us-ascii?Q?UhfiqyvCH9n58qfU0vMF47zJq/RcTr8juC2sNwRZ0QkyjnXsUMWuFZt0ztah?=
+ =?us-ascii?Q?hz4wh+gbT75gbJpPIpcRtl29UFlxLZF9OrIrytDiOZ3RMga9NXO5n3MNjYUo?=
+ =?us-ascii?Q?78gpqRR18sa4ajB+/LqEO5oazK6vDtK5dPMp9gw7Jn8LK03s0lo7HCtrSqJd?=
+ =?us-ascii?Q?oqlta76AProcWDD3AiMVBk1kHHg7LyB1sDzHobq9n+U3DPz8bW8nd33qldcU?=
+ =?us-ascii?Q?we7fYSQIF0QuOY/rK6TDHVeBC41O9WPosl/nYxC7GFkaRnu4k9r79ljgFjz/?=
+ =?us-ascii?Q?snyflTohPw4I8f5sV918xUCWJSaMoOZIYymmDBkxqyNvjCxctyh727Om5tgG?=
+ =?us-ascii?Q?19xAHTWs75PTkNav+vdFTzjVtwNmqwBp6Zmz3TJTifV/hddgcE7jU8zB/EFZ?=
+ =?us-ascii?Q?BsubSEwOTPjxqHMT95KU3u26boLhaEpm7gNy8/4zzlNQj3FJuWDBqU1gxN0Q?=
+ =?us-ascii?Q?lfBo6OYQWwjNxhRoggaLZZPVss+fpfZYSgLw5ptIVhbffZit/gQSQZX71+ob?=
+ =?us-ascii?Q?/lQ6vevCy2ILOnNWcMiOcf8rOWV5E0mrPcALRH6hhawRYRTjaSNgRC3J3ubE?=
+ =?us-ascii?Q?GUHL+U2hDPG3eE5+zdF7hyoEGyL8Qx6JalivsYbuCw7xZf5B/rlwiJXPK/vm?=
+ =?us-ascii?Q?qKPoTkvwB/6I93PPFadIlV0c+HrTAsHRowZTpvHH6grj7gC/MJBpSLKq/VGa?=
+ =?us-ascii?Q?yXoTxhWXJzd/Z/XOE3hfPNGLPHYIaK5ZeqRh23DddQdLzpiQaaJGnYzMEXkF?=
+ =?us-ascii?Q?Z/5a21rGg/C7RMERl9sz7iCRjnvJi12UMxzw1wlKDNV0fLDM1T2eOkhs4iuX?=
+ =?us-ascii?Q?9zlzXZF4sGUz+LuCJsStv1uf8cOZgz5rmexU7/twkbVhSyWrkeXQRO93OLML?=
+ =?us-ascii?Q?YqEZ4M/hm+KEMitn+c0+EjHr8RoNBbcUqnpBSrRZKAMP+jmGocpdrx/uRRhW?=
+ =?us-ascii?Q?TRU2lKvkNvpIhHpcg4Ill7b3PGOTRx0GFnBvkmxWxUw4YrczYLk12Wv07cHl?=
+ =?us-ascii?Q?EWOeTbQEn4d//+GkAzNKp0wV/y71f0iiUUvoVKCO/f5XgloKZjlLgaPDgvCF?=
+ =?us-ascii?Q?wkyAG9g8VVdSjouVUqSM1XQPJXQpazi1FP0DQ8KG+PDNOp0Z1dpnMmqNtZy2?=
+ =?us-ascii?Q?nvAguJpggLDoqGzbYBuSds2Nbi9gSKqK9LfufQ18yZ2qd3VXhra+p0RD6GY2?=
+ =?us-ascii?Q?6+6ogewhYAQxPEqLHD9fZNbRz23enCRJSNQMDYkaNQrVLbQtlEMtytTQP8bV?=
+ =?us-ascii?Q?eKYjD57TaPyL6uHchqIZ2IDl75hQqYOiC+hQRA9XH6rNss4oHhwPNYa+gZBi?=
+ =?us-ascii?Q?IlL91Dw5QdhV79/60zNkQYsLRaYAf7IDK3LUjpnnpP1VPYqirQ56WTvZ9Kos?=
+ =?us-ascii?Q?C64/5O+4F3APo7fL5x99eyizo6ybqOC7qVXkFqYyDZyBIEd0tXWAyzP1codI?=
+ =?us-ascii?Q?1RIGBeU7BJUAnILIJfHI3VhqxE3bJsw0MIY4q9MckFsyCCRNF4bxkxuCjmoF?=
+ =?us-ascii?Q?JuyN+alEjTk1YovtssE=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e425623e-3267-4267-820d-08d9f676d9b9
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB2469.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 683b5c1e-0b00-4e79-d940-08d9f6756722
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2022 02:37:15.0017
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2022 02:47:37.0585
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: W0JsRbu2Kq6IJFNuMQskmZ0wQcKN6P2dvaieqBKdKeb8dFy5ibWPn8t9BNPczX/5Voh60GX6xCCL9QKbSUFEPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1201MB0269
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7e6mi+kc8gNX3X+2FgbzaZ/u7F37TTKjKEnKDqZFB6RgjGbY0xYYA6yGd9jvCTKD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4124
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Acked-by: Guchun Chen <guchun.chen@amd.com>
+On Tue, Feb 22, 2022 at 06:09:34PM -0700, Alex Williamson wrote:
 
-Regards,
-Guchun
+> So if/when we were to support this, we might use a different SET_STATE
+> feature ioctl that allows the user to specify a deadline and we'd use
+> feature probing or a flag on the migration feature for userspace to
+> discover this?  I'd be ok with that, I just want to make sure we have
+> agreeable options to support it.  Thanks,
 
------Original Message-----
-From: amd-gfx <amd-gfx-bounces@lists.freedesktop.org> On Behalf Of Alex Deu=
-cher
-Sent: Wednesday, February 23, 2022 12:08 AM
-To: amd-gfx@lists.freedesktop.org; bhelgaas@google.com; linux-pci@vger.kern=
-el.org
-Cc: Deucher, Alexander <Alexander.Deucher@amd.com>
-Subject: [PATCH] PCI: Apply quirk_amd_harvest_no_ats to all navi10 and 14 a=
-sics
+I think we'd just make the set_state struct longer and add a cap flag
+for deadline?
 
-There are enough vbios escapes without the proper workaround that some user=
-s still hit this.  MS never productized ATS on windows so OEM platforms tha=
-t were windows only didn't always validate ATS.
-
-The advantages of ATS are not worth it compared to the potential instabilit=
-ies on harvested boards.  Just disable ATS on all navi10 and 14 boards.
-
-Bug: https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgi=
-tlab.freedesktop.org%2Fdrm%2Famd%2F-%2Fissues%2F1760&amp;data=3D04%7C01%7Cg=
-uchun.chen%40amd.com%7C1f54cd26c00041e476d008d9f61d92e8%7C3dd8961fe4884e608=
-e11a82d994e183d%7C0%7C0%7C637811429151667411%7CUnknown%7CTWFpbGZsb3d8eyJWIj=
-oiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sda=
-ta=3D1seVVxNb09HvAGelvuyN3WuHI%2BkCkfU%2F50Zzx4rifT4%3D&amp;reserved=3D0
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
----
- drivers/pci/quirks.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c index 003950c738d2=
-..ea2de1616510 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5341,11 +5341,6 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0=
-x0422, quirk_no_ext_tags);
-  */
- static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)  {
--	if ((pdev->device =3D=3D 0x7312 && pdev->revision !=3D 0x00) ||
--	    (pdev->device =3D=3D 0x7340 && pdev->revision !=3D 0xc5) ||
--	    (pdev->device =3D=3D 0x7341 && pdev->revision !=3D 0x00))
--		return;
--
- 	if (pdev->device =3D=3D 0x15d8) {
- 		if (pdev->revision =3D=3D 0xcf &&
- 		    pdev->subsystem_vendor =3D=3D 0xea50 && @@ -5367,10 +5362,19 @@ DECL=
-ARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_amd_harvest_no_ats);
- /* AMD Iceland dGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_at=
-s);
- /* AMD Navi10 dGPU */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7310,=20
-+quirk_amd_harvest_no_ats);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_at=
-s);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7318,=20
-+quirk_amd_harvest_no_ats); DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI,=20
-+0x7319, quirk_amd_harvest_no_ats);=20
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x731a,=20
-+quirk_amd_harvest_no_ats); DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI,=20
-+0x731b, quirk_amd_harvest_no_ats);=20
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x731e,=20
-+quirk_amd_harvest_no_ats); DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI,=20
-+0x731f, quirk_amd_harvest_no_ats);
- /* AMD Navi14 dGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_at=
-s);  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7341, quirk_amd_harvest_n=
-o_ats);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7347,=20
-+quirk_amd_harvest_no_ats); DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI,=20
-+0x734f, quirk_amd_harvest_no_ats);
- /* AMD Raven platform iGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8, quirk_amd_harvest_no_at=
-s);  #endif /* CONFIG_PCI_ATS */
---
-2.35.1
-
+Jason
