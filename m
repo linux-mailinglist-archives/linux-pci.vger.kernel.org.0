@@ -2,134 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBF934C1DF9
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 22:51:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33A314C1E04
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 22:53:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242046AbiBWVwE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Feb 2022 16:52:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50556 "EHLO
+        id S242662AbiBWVyO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Feb 2022 16:54:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242045AbiBWVwD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 16:52:03 -0500
-Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18AFC24087
-        for <linux-pci@vger.kernel.org>; Wed, 23 Feb 2022 13:51:35 -0800 (PST)
-Received: by mail-qv1-xf34.google.com with SMTP id h13so457407qvk.12
-        for <linux-pci@vger.kernel.org>; Wed, 23 Feb 2022 13:51:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7HUVNZQiEEXaUvy3RrhbANmYcH8oGsdxifIctFemNVw=;
-        b=SnxuRkXzdbe1wR2S1H3+KBQbfIfB8Losrc/r+oTwCiBTWmQ5dw9Fa8YhkcNJh5N1b1
-         67vU/Yjbe2hOZPfPAK2L456wDMBjXmTTw4234gOdFxKY2T/Z1G9vylHw7RxkwOHLDn1O
-         sadSZ7aXEeSTaKMePhtVGGU7YPQdZMzgKmZ5V+FF/BZumo1Y8Bs7rrLGicTSUzRo6xRd
-         cHYnrCT7HTizDx1O7UEZ4B3pE4Umhx9OYitYHiTaZnQ8ThY+gVfzwTC3FPJYBUbnPOIA
-         cvMNhcK2/6GTHLF8w7iBsgJJWc0d1RoLrAYuBb+W4clwWvdIQwWFI27AaFh3X2JnrR1p
-         ZUtw==
+        with ESMTP id S241978AbiBWVyO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 16:54:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DF2285004A
+        for <linux-pci@vger.kernel.org>; Wed, 23 Feb 2022 13:53:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645653224;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QHc4p6P496hz/XkslW9zde1DsEfB8iSDkjx5qIKJc48=;
+        b=L7gzNj9StIEUcC5xQmVVb7HRsLT5sLhhcaIhW9mJYoxtkxTnPxnn9jUZngwhqyxyO1b4/q
+        Dux5YbnbShPYmAYm9nAjhXL4fQLqVlxjG/5oklcogr/gdk19Y9+IqD7vG73pJtTr1HRKEu
+        re0RjXwzql23zYF7RCeTKdJIC3Zx6/g=
+Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
+ [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-356-t8Z_xfumPNemZDStyC1lUA-1; Wed, 23 Feb 2022 16:53:42 -0500
+X-MC-Unique: t8Z_xfumPNemZDStyC1lUA-1
+Received: by mail-oo1-f71.google.com with SMTP id r10-20020a4a700a000000b0031bf70c4866so191107ooc.12
+        for <linux-pci@vger.kernel.org>; Wed, 23 Feb 2022 13:53:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7HUVNZQiEEXaUvy3RrhbANmYcH8oGsdxifIctFemNVw=;
-        b=qZDPUMY8OzhGfhMhEiYqkCOcPylD0KLx58p91WI6sdR4LZlZEFaWlfuy7pnqX9kPRM
-         FAxhs5xuaVVW7NpB5/YRQxWFMNEA5R0jCiBcR2Vx0Oo9XjfzGOpSEuNEJHSrGkViRPxi
-         ypJdjt5qwXf4eOwUcamT9XO7KS5GGzOLuxdrHfzFfSjf6CmThMyO2mQFNajOUeFWNUJs
-         9kTXIy5BVzA+jpxSDNW68QE+oCprK907Pua/La1zbCZtrmm50LwJI4C7ufwpQZ3CnmLc
-         2Scbn6r++4FEzhG4SrmkBaW2sv53xAj3CSNeNtHXR0UVznscaKlPVwqkixnF9TF5gvLu
-         fq+w==
-X-Gm-Message-State: AOAM533am1HqELIVVEYAOK9zieyUZQzreJl+C6gnAlmdFkZkq87Mjbqf
-        9ibmh2QQHxqWX+CvJS1UKqu3k0hB5xkLHCXapd4mzA==
-X-Google-Smtp-Source: ABdhPJzje7a7YdyFqZl6kLPzcoGrxOi4FHB8EGjU8WIbzSRWfDzPfj6CqCqQ5BsMUuXZxTnCbgaG73MeeM39f6u1zVQ=
-X-Received: by 2002:a0c:d807:0:b0:42c:1ff7:7242 with SMTP id
- h7-20020a0cd807000000b0042c1ff77242mr1538738qvj.119.1645653094284; Wed, 23
- Feb 2022 13:51:34 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=QHc4p6P496hz/XkslW9zde1DsEfB8iSDkjx5qIKJc48=;
+        b=qr8RHzGk2/A9Zj5V3Hb+3xtM+lvvbMmbcQIlyddjzdubWXfq+QlP0kecXESrzoy6q6
+         hFmPEu7L/Sp1/LMcfgRWF+8W9mnooPcJ+xoPbh/OXbbcE2Tjp4tIOH65y0G/ZM55xZuV
+         aDEtX7idPoQrHuKVivR7tQHxNwskPHSVzHfaPxPlxSd7LoKLiYpy8h7/Kqe1PAjdL7dJ
+         /BGq2crpVIbvhvXKohlzx7hsdO37Wx9bzK4jyghb9ScnFJv6Az6G8WsmIMbdhK5v/LCD
+         tXRFX2ZG4fmCY+3EFcBLvjeI4WVDoTD9vwHlzZdKsIn+ck11DIzyIRSVlpdQQuRYE1Me
+         bbeg==
+X-Gm-Message-State: AOAM533cU6OvdS63ApmQ6uGX+UmVdCAWaPrbhItBo0/ydvB4Wkkyxxcx
+        I9ZxghF+O/b6EsUO+vn+xlPmn13+Li7r/RocL0h1jAASy3yLdPaxGbtkbk/04k/yTZI39nqYg51
+        COOyvHtPnuqMED+VG9yZe
+X-Received: by 2002:a05:6870:3e0d:b0:d3:fe6d:57c3 with SMTP id lk13-20020a0568703e0d00b000d3fe6d57c3mr780561oab.225.1645653222081;
+        Wed, 23 Feb 2022 13:53:42 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxVZWjYYf1lHUEZ749G1CD7yMY7PoElR7MtLZJgwYZu5lf142+Ut2Mxb4MgP1wHkjXeQTJkxQ==
+X-Received: by 2002:a05:6870:3e0d:b0:d3:fe6d:57c3 with SMTP id lk13-20020a0568703e0d00b000d3fe6d57c3mr780550oab.225.1645653221851;
+        Wed, 23 Feb 2022 13:53:41 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id 128sm369711oor.15.2022.02.23.13.53.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Feb 2022 13:53:41 -0800 (PST)
+Date:   Wed, 23 Feb 2022 14:53:39 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        rafael@kernel.org, David Airlie <airlied@linux.ie>,
+        linux-pci@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        iommu@lists.linux-foundation.org,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v6 10/11] vfio: Remove iommu group notifier
+Message-ID: <20220223145339.57ed632e.alex.williamson@redhat.com>
+In-Reply-To: <20220218005521.172832-11-baolu.lu@linux.intel.com>
+References: <20220218005521.172832-1-baolu.lu@linux.intel.com>
+        <20220218005521.172832-11-baolu.lu@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20220223192946.473172-1-bhupesh.sharma@linaro.org> <20220223192946.473172-5-bhupesh.sharma@linaro.org>
-In-Reply-To: <20220223192946.473172-5-bhupesh.sharma@linaro.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Thu, 24 Feb 2022 00:51:23 +0300
-Message-ID: <CAA8EJppDVo5rN3swiVoE8zAqCTmwQD9RZAxbrP0CPO30kQTBmA@mail.gmail.com>
-Subject: Re: [PATCH 4/6] PCI: qcom: Add SM8150 SoC support
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhupesh.linux@gmail.com, lorenzo.pieralisi@arm.com,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        svarbanov@mm-sol.com, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 23 Feb 2022 at 22:30, Bhupesh Sharma <bhupesh.sharma@linaro.org> wrote:
->
-> The PCIe IP (rev 1.5.0) on SM8150 SoC is similar to the one used on
-> SM8250. Hence the support is added reusing the members of ops_2_7_0.
->
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+On Fri, 18 Feb 2022 08:55:20 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> The iommu core and driver core have been enhanced to avoid unsafe driver
+> binding to a live group after iommu_group_set_dma_owner(PRIVATE_USER)
+> has been called. There's no need to register iommu group notifier. This
+> removes the iommu group notifer which contains BUG_ON() and WARN().
+> 
+> The commit 5f096b14d421b ("vfio: Whitelist PCI bridges") allowed all
+> pcieport drivers to be bound with devices while the group is assigned to
+> user space. This is not always safe. For example, The shpchp_core driver
+> relies on the PCI MMIO access for the controller functionality. With its
+> downstream devices assigned to the userspace, the MMIO might be changed
+> through user initiated P2P accesses without any notification. This might
+> break the kernel driver integrity and lead to some unpredictable
+> consequences. As the result, currently we only allow the portdrv driver.
+> 
+> For any bridge driver, in order to avoiding default kernel DMA ownership
+> claiming, we should consider:
+> 
+>  1) Does the bridge driver use DMA? Calling pci_set_master() or
+>     a dma_map_* API is a sure indicate the driver is doing DMA
+> 
+>  2) If the bridge driver uses MMIO, is it tolerant to hostile
+>     userspace also touching the same MMIO registers via P2P DMA
+>     attacks?
+> 
+> Conservatively if the driver maps an MMIO region at all, we can say that
+> it fails the test.
 
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index c19cd506ed3f..66fbc0234888 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1487,6 +1487,17 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
->         .config_sid = qcom_pcie_config_sid_sm8250,
->  };
->
-> +/* Qcom IP rev.: 1.5.0 */
-> +static const struct qcom_pcie_ops ops_1_5_0 = {
-> +       .get_resources = qcom_pcie_get_resources_2_7_0,
-> +       .init = qcom_pcie_init_2_7_0,
-> +       .deinit = qcom_pcie_deinit_2_7_0,
-> +       .ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-> +       .post_init = qcom_pcie_post_init_2_7_0,
-> +       .post_deinit = qcom_pcie_post_deinit_2_7_0,
-> +       .config_sid = qcom_pcie_config_sid_sm8250,
-> +};
-> +
->  static const struct qcom_pcie_cfg apq8084_cfg = {
->         .ops = &ops_1_0_0,
->  };
-> @@ -1511,6 +1522,10 @@ static const struct qcom_pcie_cfg sdm845_cfg = {
->         .ops = &ops_2_7_0,
->  };
->
-> +static const struct qcom_pcie_cfg sm8150_cfg = {
-> +       .ops = &ops_1_5_0,
-> +};
-> +
->  static const struct qcom_pcie_cfg sm8250_cfg = {
->         .ops = &ops_1_9_0,
->  };
-> @@ -1626,6 +1641,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->         { .compatible = "qcom,pcie-ipq4019", .data = &ipq4019_cfg },
->         { .compatible = "qcom,pcie-qcs404", .data = &ipq4019_cfg },
->         { .compatible = "qcom,pcie-sdm845", .data = &sdm845_cfg },
-> +       { .compatible = "qcom,pcie-sm8150", .data = &sm8150_cfg },
->         { .compatible = "qcom,pcie-sm8250", .data = &sm8250_cfg },
->         { .compatible = "qcom,pcie-sc8180x", .data = &sm8250_cfg },
->         { .compatible = "qcom,pcie-sc7280", .data = &sc7280_cfg },
-> --
-> 2.35.1
->
+IIUC, there's a chance we're going to break user configurations if
+they're assigning devices from a group containing a bridge that uses a
+driver other than pcieport.  The recommendation to such an affected user
+would be that the previously allowed host bridge driver was unsafe for
+this use case and to continue to enable assignment of devices within
+that group, the driver should be unbound from the bridge device or
+replaced with the pci-stub driver.  Is that right?
 
+Unfortunately I also think a bisect of such a breakage wouldn't land
+here, I think it was actually broken in "vfio: Set DMA ownership for
+VFIO" since that's where vfio starts to make use of
+iommu_group_claim_dma_owner() which should fail due to
+pci_dma_configure() calling iommu_device_use_default_domain() for
+any driver not identifying itself as driver_managed_dma.
 
--- 
-With best wishes
-Dmitry
+If that's correct, can we leave a breadcrumb in the correct commit log
+indicating why this potential breakage is intentional and how the
+bridge driver might be reconfigured to continue to allow assignment from
+within the group more safely?  Thanks,
+
+Alex
+
