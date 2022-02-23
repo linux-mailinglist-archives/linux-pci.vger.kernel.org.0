@@ -2,152 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A49234C1A36
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 18:50:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 821874C1A75
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 19:00:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241513AbiBWRus (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Feb 2022 12:50:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43868 "EHLO
+        id S243054AbiBWSA5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Feb 2022 13:00:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237008AbiBWRus (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 12:50:48 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ACC35FF7;
-        Wed, 23 Feb 2022 09:50:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EC1FD61470;
-        Wed, 23 Feb 2022 17:50:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D6BBC340F0;
-        Wed, 23 Feb 2022 17:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645638618;
-        bh=tlGfAuQ/IMqnIqCvJXqfuyQ+e69E/QZS0Z5cZBeqpE8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bh21cG5LASljj+iTvs99EC8JUuAQtfLwUEc0e+65NH1U3Uo4I/ED6ZvGFkYaZzu/K
-         OHqcyfw8UzkHRfZPvXTYy0LPmIe6Tfv8XEHmpvCxrW/tNkZD4K1pG/1Mdixg6iQ5Ks
-         MOrP7WgTgmC04jthUlXOCNtsoPlTnXkTq+dVkRTS/8fUSfTm5BtOEPJHRAaLgV/5cz
-         6mrmtttvKn9ufUbIw1FNAF9+Y1weqJ9hg4898GTrxcnRxoXLBXRx1tp7BCw/6c/w/O
-         7CKucBDo2o4ctGU1E/S2MXlrPzpIyxvpFtcNr82fro0rKZ3aLg5vRIGnOXN5dAM91w
-         jyeOJoiq2FhXw==
-Date:   Wed, 23 Feb 2022 11:50:16 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, bhelgaas@google.com, broonie@kernel.org,
-        lorenzo.pieralisi@arm.com, jingoohan1@gmail.com,
-        festevam@gmail.com, francesco.dolcini@toradex.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: Re: [PATCH v7 7/8] PCI: imx6: Disable enabled clocks and regulators
- after link is down
-Message-ID: <20220223175016.GA140091@bhelgaas>
+        with ESMTP id S243744AbiBWSAp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 13:00:45 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5C4B9424A5;
+        Wed, 23 Feb 2022 10:00:17 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA723D6E;
+        Wed, 23 Feb 2022 10:00:16 -0800 (PST)
+Received: from [10.57.40.147] (unknown [10.57.40.147])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7A5F3F70D;
+        Wed, 23 Feb 2022 10:00:10 -0800 (PST)
+Message-ID: <f830c268-daca-8e8f-a429-0c80496a7273@arm.com>
+Date:   Wed, 23 Feb 2022 18:00:06 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1644992463-14467-8-git-send-email-hongxing.zhu@nxp.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v6 01/11] iommu: Add dma ownership management interfaces
+Content-Language: en-GB
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220218005521.172832-1-baolu.lu@linux.intel.com>
+ <20220218005521.172832-2-baolu.lu@linux.intel.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20220218005521.172832-2-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In subject,
-
-s/Disable enabled clocks/Disable clocks/
-
-On Wed, Feb 16, 2022 at 02:21:02PM +0800, Richard Zhu wrote:
-> Since i.MX PCIe doesn't support the hot-plug, and to save power
-> consumption as much as possible. Return error and disable the enabled
-> clocks and regulators when link is down,.
-
-Maybe:
-
-  Since i.MX PCIe doesn't support hot-plug, reduce power consumption
-  as much as possible by disabling clocks and regulators and returning
-  error when the link is down.
-
-> Add a new host_exit() callback for i.MX PCIe driver to disable the
-> enabled clocks, regulators and so on in the error handling after
-> host_init is finished.
-> 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 30 ++++++++++++++++++++++++---
->  1 file changed, 27 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 242d8ef73c1e..fe671e88ec93 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -848,7 +848,9 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
->  	/* Start LTSSM. */
->  	imx6_pcie_ltssm_enable(dev);
->  
-> -	dw_pcie_wait_for_link(pci);
-> +	ret = dw_pcie_wait_for_link(pci);
-> +	if (ret)
-> +		goto err_reset_phy;
-
-These labels look wrong now, since you no longer reset the PHY at
-err_reset_phy.
-
->  	if (pci->link_gen == 2) {
->  		/* Allow Gen2 mode after the link is up. */
-> @@ -884,7 +886,9 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
->  		}
->  
->  		/* Make sure link training is finished as well! */
-> -		dw_pcie_wait_for_link(pci);
-> +		ret = dw_pcie_wait_for_link(pci);
-> +		if (ret)
-> +			goto err_reset_phy;
->  	} else {
->  		dev_info(dev, "Link: Gen2 disabled\n");
->  	}
-> @@ -897,7 +901,6 @@ static int imx6_pcie_start_link(struct dw_pcie *pci)
->  	dev_dbg(dev, "PHY DEBUG_R0=0x%08x DEBUG_R1=0x%08x\n",
->  		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0),
->  		dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG1));
-> -	imx6_pcie_reset_phy(imx6_pcie);
->  	return ret;
->  }
->  
-> @@ -921,8 +924,29 @@ static int imx6_pcie_host_init(struct pcie_port *pp)
->  	return 0;
->  }
->  
-> +static void imx6_pcie_host_exit(struct pcie_port *pp)
+On 2022-02-18 00:55, Lu Baolu wrote:
+[...]
+> +/**
+> + * iommu_group_claim_dma_owner() - Set DMA ownership of a group
+> + * @group: The group.
+> + * @owner: Caller specified pointer. Used for exclusive ownership.
+> + *
+> + * This is to support backward compatibility for vfio which manages
+> + * the dma ownership in iommu_group level. New invocations on this
+> + * interface should be prohibited.
+> + */
+> +int iommu_group_claim_dma_owner(struct iommu_group *group, void *owner)
 > +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct device *dev = pci->dev;
-> +	struct imx6_pcie *imx6_pcie = to_imx6_pcie(pci);
+> +	int ret = 0;
 > +
-> +	imx6_pcie_reset_phy(imx6_pcie);
-> +	imx6_pcie_clk_disable(imx6_pcie);
-> +	switch (imx6_pcie->drvdata->variant) {
-> +	case IMX8MM:
-> +		if (phy_power_off(imx6_pcie->phy))
-> +			dev_err(dev, "unable to power off phy\n");
-> +		break;
-> +	default:
-> +		break;
+> +	mutex_lock(&group->mutex);
+> +	if (group->owner_cnt) {
+
+To clarify the comment buried in the other thread, I really think we 
+should just unconditionally flag the error here...
+
+> +		if (group->owner != owner) {
+> +			ret = -EPERM;
+> +			goto unlock_out;
+> +		}
+> +	} else {
+> +		if (group->domain && group->domain != group->default_domain) {
+> +			ret = -EBUSY;
+> +			goto unlock_out;
+> +		}
+> +
+> +		group->owner = owner;
+> +		if (group->domain)
+> +			__iommu_detach_group(group->domain, group);
 > +	}
-> +	if (imx6_pcie->vpcie)
-> +		regulator_disable(imx6_pcie->vpcie);
-> +}
 > +
->  static const struct dw_pcie_host_ops imx6_pcie_host_ops = {
->  	.host_init = imx6_pcie_host_init,
-> +	.host_exit = imx6_pcie_host_exit,
->  };
->  
->  static const struct dw_pcie_ops dw_pcie_ops = {
-> -- 
-> 2.25.1
-> 
+> +	group->owner_cnt++;
+> +unlock_out:
+> +	mutex_unlock(&group->mutex);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_group_claim_dma_owner);
+> +
+> +/**
+> + * iommu_group_release_dma_owner() - Release DMA ownership of a group
+> + * @group: The group.
+> + *
+> + * Release the DMA ownership claimed by iommu_group_claim_dma_owner().
+> + */
+> +void iommu_group_release_dma_owner(struct iommu_group *group)
+> +{
+> +	mutex_lock(&group->mutex);
+> +	if (WARN_ON(!group->owner_cnt || !group->owner))
+> +		goto unlock_out;
+> +
+> +	if (--group->owner_cnt > 0)
+> +		goto unlock_out;
+
+...and equivalently just set owner_cnt directly to 0 here. I don't see a 
+realistic use-case for any driver to claim the same group more than 
+once, and allowing it in the API just feels like opening up various 
+potential corners for things to get out of sync.
+
+I think that's the only significant concern I have left with the series 
+as a whole - you can consider my other grumbles non-blocking :)
+
+Thanks,
+Robin.
+
+> +
+> +	/*
+> +	 * The UNMANAGED domain should be detached before all USER
+> +	 * owners have been released.
+> +	 */
+> +	if (!WARN_ON(group->domain) && group->default_domain)
+> +		__iommu_attach_group(group->default_domain, group);
+> +	group->owner = NULL;
+> +
+> +unlock_out:
+> +	mutex_unlock(&group->mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_group_release_dma_owner);
+> +
+> +/**
+> + * iommu_group_dma_owner_claimed() - Query group dma ownership status
+> + * @group: The group.
+> + *
+> + * This provides status query on a given group. It is racey and only for
+> + * non-binding status reporting.
+> + */
+> +bool iommu_group_dma_owner_claimed(struct iommu_group *group)
+> +{
+> +	unsigned int user;
+> +
+> +	mutex_lock(&group->mutex);
+> +	user = group->owner_cnt;
+> +	mutex_unlock(&group->mutex);
+> +
+> +	return user;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_group_dma_owner_claimed);
