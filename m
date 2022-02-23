@@ -2,124 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14D044C1D44
-	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 21:42:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D4EB4C1D58
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Feb 2022 21:51:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241462AbiBWUnH convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 23 Feb 2022 15:43:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41198 "EHLO
+        id S237660AbiBWUwC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Feb 2022 15:52:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234184AbiBWUnG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 15:43:06 -0500
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 264D24D9E1;
-        Wed, 23 Feb 2022 12:42:37 -0800 (PST)
-Received: from mail-wr1-f54.google.com ([209.85.221.54]) by
- mrelayeu.kundenserver.de (mreue010 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1N2Unv-1oNLsZ1g5P-013tgA; Wed, 23 Feb 2022 21:42:36 +0100
-Received: by mail-wr1-f54.google.com with SMTP id p9so41552050wra.12;
-        Wed, 23 Feb 2022 12:42:36 -0800 (PST)
-X-Gm-Message-State: AOAM532mTYFfWZt9TfUixYZ4bjOV6N86XMcqwYJ+8jYJNejvP5OSOxmv
-        UlSrxI4myGyGV/gTE+kYAwKJ/kOZwQVH/a3WCO4=
-X-Google-Smtp-Source: ABdhPJziqSCxjCS1x1u10tLrK12Y5BgM1gvdjleghmB0yDOaxeqY4rE/1foGEILFQdcVBbYw8yS43bNCsScP3V8TzG8=
-X-Received: by 2002:adf:cf0c:0:b0:1e6:22fe:4580 with SMTP id
- o12-20020adfcf0c000000b001e622fe4580mr1011010wrj.12.1645648955871; Wed, 23
- Feb 2022 12:42:35 -0800 (PST)
+        with ESMTP id S237436AbiBWUwB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Feb 2022 15:52:01 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EBB71175;
+        Wed, 23 Feb 2022 12:51:32 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E14F36184A;
+        Wed, 23 Feb 2022 20:51:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06108C340E7;
+        Wed, 23 Feb 2022 20:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645649491;
+        bh=fuBbEnwtDxq+kiQXx8gxSj7IRCfE9GArt5C1WdOxPbI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=k600/LqrVOgUpVAQTlIMr5ar7Gb1FMGwtEL7yplP6HRlmTtueupWshev9F4nYEhUA
+         YLLAMQLykHFJP60Ur1b2gxqkYtsCgRtS6cx9zhxQUfLlpHwgRzvm6ScAqmySiAl0aK
+         uWDHI/ivvvl3hcjJHz57Ly/2Q+uCI0mKtMLdNeWdqbtGNQEQlRV2zX8LCh5P2gJDC1
+         Zfo3EK1E0MV15ni2U5x53DKNoc+dnDyQuYcYIUgNSJmu24f+R8YVDcdMzOSXSDUX31
+         VLXXTI9bp7sXld5FfnvXLS4XTTPl6+3xYH6FvQMEza2diqj4RD9UxhiRO4bQgbxf8U
+         ivug1SmqHD64Q==
+Date:   Wed, 23 Feb 2022 14:51:29 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     paul.walmsley@sifive.com, greentime.hu@sifive.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCHv4 1/2] PCI: fu740: fix finding GPIOs
+Message-ID: <20220223205129.GA148800@bhelgaas>
 MIME-Version: 1.0
-References: <cover.1641500561.git.christophe.jaillet@wanadoo.fr>
- <YhXmQwvjMFPQFPUr@infradead.org> <ddf6010e-417d-8da7-8e11-1b4a55f92fff@wanadoo.fr>
-In-Reply-To: <ddf6010e-417d-8da7-8e11-1b4a55f92fff@wanadoo.fr>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 23 Feb 2022 21:42:19 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0nshfiWnhZydoRkmNBMQnyPueE4pvV1LuWR4XLxBQjUg@mail.gmail.com>
-Message-ID: <CAK8P3a0nshfiWnhZydoRkmNBMQnyPueE4pvV1LuWR4XLxBQjUg@mail.gmail.com>
-Subject: Re: [PATCH 00/16] Remove usage of the deprecated "pci-dma-compat.h" API
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        David Miller <davem@davemloft.net>,
-        David Airlie <airlied@linux.ie>, Vinod Koul <vkoul@kernel.org>,
-        hao.wu@intel.com, Tom Rix <trix@redhat.com>,
-        Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-        awalls@md.metrocast.net,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        sreekanth.reddy@broadcom.com,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alex Bounine <alex.bou9@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        dmaengine@vger.kernel.org, linux-fpga@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:+EHDA8n19nCeF+vM2P8PLPYGb0TUOdwEGHkS6GeBNEVHX4jMluh
- 4zZVkIM4OTnw24x4ExwusPPRHPinutOocshs4HRvCffFKEiaheJeU+Nq600oylx4L0vNuhB
- XsenrL+MP+J7CKq0RD9h10OCqN2SKXzdGvqe2Cy5Y2gbRnG2J97LIgwqZ0D/nhZxJ/bNRpf
- hobvYupx0Urm+q/FHAHZg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IBTzsmJgBfY=:S7FSvTCSOCm/oHqdAggS5Y
- bB8TWTPSiuxBUHKaKkZx+mHdyyBSGegJr6XMmUWkL1iEWFq7cZ6+nJViT4FO+xJ8Cs9yAqPyj
- AuRhBGGnbejqMXkAEdPMJNr2DYZbBHylHmvjRl4ql3B6M40+dsKEep0H3TP9iQ38+Ju48tG+k
- frLX1E8YwskOJ1YlpX0p5jR0BOnp3SXs4QpnSIhrnJ1Rskf9E/attNHn0CtH0EplRaKSSII9c
- fnJkYBUxfSnZdSEkGXPQcBj4tVd8Y1CrPf68Tu8JFxU/NbYGMsjrZEkNtO+DcR8QdONeldMKc
- jRsDBn9WNLVtZzxm2ZbemkIKZUweJYVuqDYiAScCL7C5CxnBzi6ta3DckQBY9yNMTXMoqXtgP
- 2lLxWF0tql18b9jMDRbwSDLsZAchAwTbBoleQwTuh666QXns0eK55eMTrADXcE1Jtq68lj0o7
- tZQpeLPuJxf0CkxyZVHM3aJQS3PjTUivRK1U0kM6M6NVejJolVg3Vocjme8Yfy74KECVowJNb
- rQGB3THCUXOZtv8xM1+gRTHb8LcOVs/kISzkldj5wo93hqPOwzYjzQrdqOK755SMwei1KK5Ak
- SlTcE+/LaUYGsBaSvn0XOu/woz5JIXTUZZ/35l89tnlA8wKXFNxtp0s9qk0oh/FuHc4UY+6hV
- reXuv6YnNc6BnoduZPDGvnCglihJhCvm2V5Dxx8F/XJN+DG1tZHs6IR9KWwu6Pe15hiAnEm9f
- q3lKjAwktwqYLUtJuX5Ax/D+8OsnfhdlYYOX3q88j6Hvj1zFxIGcLcpi4wq8+neMdqGUz0YyQ
- sz0brsmpiFwKXxsKz4g49LhuSFB8c+J4uiz0M7FOftJWvcFZvA=
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220221210347.1335004-1-ben.dooks@codethink.co.uk>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 9:26 PM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
->
-> Le 23/02/2022 à 08:46, Christoph Hellwig a écrit :
-> > Hi Christophe,
-> >
-> > do you know what the state is in current linux-next?
-> >
-> > I think we'll just want to queue up anything left at this point in the
-> > dma-mapping or PCI tree and get it done.
-> >
->
-> Hi,
->
-> Patch 01, 04, 05, 06, 08, 09 have not reached -next yet.
-> They all still apply cleanly.
->
-> 04 has been picked it up for inclusion in the media subsystem for 5.18.
-> The other ones all have 1 or more Reviewed-by:/Acked-by: tags.
->
-> Patch 16 must be resubmitted to add "#include <linux/dma-mapping.h>" in
-> order not to break builds.
->
->
-> All the other patches have landed in -next.
+On Mon, Feb 21, 2022 at 09:03:46PM +0000, Ben Dooks wrote:
+> The calls to devm_gpiod_get_optional() have the -gpios at the end of
+> the name but the GPIO core code is already adding the suffix during
+> the lookup. This means the PCIe driver is not finding the necessary
+> reset or power lines to allow initialisation of the PCIe.
+> 
+> This bug has not been noticed as if U-Boot has setup the GPIO lines
+> for the hardware when it does the PCIe initialisation (either by
+> booting from PCIe or user command to access PCIe) then the PCIe
+> will work in Linux. The U-Boot as supplied by SiFive does not by
+> default initialise any PCIe component.
 
-Ok, these all look trivial. I'd suggest you send the rebase version to
-Andrew Morton then, so he can pick them all up into linux-mm, on top
-of the linux-next contents.
+Lorenzo, if you apply this, would you mind s/fix/Fix/ in the subject?
+Or maybe even update to "Drop redundant '-gpios' from DT GPIO lookup"?
 
-         Arnd
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+>  drivers/pci/controller/dwc/pcie-fu740.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
+> index 00cde9a248b5..842b7202b96e 100644
+> --- a/drivers/pci/controller/dwc/pcie-fu740.c
+> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
+> @@ -259,11 +259,11 @@ static int fu740_pcie_probe(struct platform_device *pdev)
+>  		return PTR_ERR(afp->mgmt_base);
+>  
+>  	/* Fetch GPIOs */
+> -	afp->reset = devm_gpiod_get_optional(dev, "reset-gpios", GPIOD_OUT_LOW);
+> +	afp->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+>  	if (IS_ERR(afp->reset))
+>  		return dev_err_probe(dev, PTR_ERR(afp->reset), "unable to get reset-gpios\n");
+>  
+> -	afp->pwren = devm_gpiod_get_optional(dev, "pwren-gpios", GPIOD_OUT_LOW);
+> +	afp->pwren = devm_gpiod_get_optional(dev, "pwren", GPIOD_OUT_LOW);
+>  	if (IS_ERR(afp->pwren))
+>  		return dev_err_probe(dev, PTR_ERR(afp->pwren), "unable to get pwren-gpios\n");
+>  
+> -- 
+> 2.34.1
+> 
