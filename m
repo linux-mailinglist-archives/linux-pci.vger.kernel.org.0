@@ -2,102 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C3BC4C29C1
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 11:42:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B02EA4C2A55
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 12:09:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233542AbiBXKmk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Feb 2022 05:42:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56302 "EHLO
+        id S233788AbiBXLIC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Feb 2022 06:08:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233514AbiBXKmk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 05:42:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7169F16A587
-        for <linux-pci@vger.kernel.org>; Thu, 24 Feb 2022 02:42:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645699329;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ae5cFQNdc0p3hFbpsaaNC1IeyCU41i7xtv/27lyslL4=;
-        b=S0ZDBZ+TeitTlk7NKdw/EP/iCv8achLn3fuHQCvTNINQlIWSy+0nf/RuA+ZILYJ9coEKbh
-        EoLaJE+vIfbJ0xbOkH2FWml2mK3QclZTanDLrftkE2/hQ1p0nRujNGthdUX6z0uwB3HQ+c
-        TLKT0RI8L7k1pVZH61vioWZi651ieAU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-385-WRuhcsptOwCvRstI-Qbm7Q-1; Thu, 24 Feb 2022 05:42:04 -0500
-X-MC-Unique: WRuhcsptOwCvRstI-Qbm7Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A3C25126;
-        Thu, 24 Feb 2022 10:42:02 +0000 (UTC)
-Received: from localhost (unknown [10.39.195.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F9BF83197;
-        Thu, 24 Feb 2022 10:41:46 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
-        bhelgaas@google.com, saeedm@nvidia.com, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
-        leonro@nvidia.com, kwankhede@nvidia.com, mgurtovoy@nvidia.com,
-        maorg@nvidia.com, ashok.raj@intel.com, kevin.tian@intel.com,
-        shameerali.kolothum.thodi@huawei.com
-Subject: Re: [PATCH V8 mlx5-next 09/15] vfio: Define device migration
- protocol v2
-In-Reply-To: <20220224004622.GD409228@nvidia.com>
-Organization: Red Hat GmbH
-References: <20220220095716.153757-1-yishaih@nvidia.com>
- <20220220095716.153757-10-yishaih@nvidia.com> <87ley17bsq.fsf@redhat.com>
- <20220224004622.GD409228@nvidia.com>
-User-Agent: Notmuch/0.34 (https://notmuchmail.org)
-Date:   Thu, 24 Feb 2022 11:41:44 +0100
-Message-ID: <87ilt47dhz.fsf@redhat.com>
+        with ESMTP id S233051AbiBXLIB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 06:08:01 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A10BCBE;
+        Thu, 24 Feb 2022 03:07:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=s+oFl0vWOonHrwSeNZUFJERIhMF8rGA7uA4JM5TBN7w=; b=kUxeBvzUY8AgM2GJqaBNyJArtC
+        oWGIfnZ7fCzvbuMYVQKU3nmSVqj2tgX3kCOHKuUet29L7jbWdWLcNs+2p7QaHrX8MjRjhs9Duaf2m
+        7y3OFKdiLqusIlJeagvoxhlI4Mrdf7Xc8BidDGH5f6wrLA23HUDWbnLWN/t2kOthuBT9+ukwjLKam
+        LbrIsB2We6OlEkLsGiL5g/YROcfuPnt2z+cwOniJNujNctFCflqAIXMJR1rW14mRjxPhrOQ0nT+/y
+        rJ4shbiDjvQgRYLZ3xnnz/In0K8UU03fDxamtI6ngc+VhUTCTeuqpS5H/NKSzt/COYWkxIspEPmpt
+        2aAPQL2Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nNBxz-000UeP-EV; Thu, 24 Feb 2022 11:07:23 +0000
+Date:   Thu, 24 Feb 2022 03:07:23 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     helgaas@kernel.org, corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        rric@kernel.org, bhelgaas@google.com, wsa@kernel.org,
+        Sanket.Goswami@amd.com, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v7 1/4] PCI: Introduce pcim_alloc_irq_vectors()
+Message-ID: <Yhdm68HzOHhGNK4k@infradead.org>
+References: <20210607153916.1021016-1-zhengdejin5@gmail.com>
+ <20210607153916.1021016-2-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210607153916.1021016-2-zhengdejin5@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 23 2022, Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Mon, Jun 07, 2021 at 11:39:13PM +0800, Dejin Zheng wrote:
+> Introduce pcim_alloc_irq_vectors(), a device-managed version of
+> pci_alloc_irq_vectors(). Introducing this function can simplify
+> the error handling path in many drivers.
 
-> On Wed, Feb 23, 2022 at 06:06:13PM +0100, Cornelia Huck wrote:
->> On Sun, Feb 20 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
-
->> > +/*
->> > + * Indicates the device can support the migration API through
->> > + * VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE. If present flags must be non-zero and
->> > + * VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE is supported. The RUNNING and
->> 
->> I'm having trouble parsing this. I think what it tries to say is that at
->> least one of the flags defined below must be set?
->> 
->> > + * ERROR states are always supported if this GET succeeds.
->> 
->> What about the following instead:
->> 
->> "Indicates device support for the migration API through
->> VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE. If present, the RUNNING and ERROR
->> states are always supported. Support for additional states is indicated
->> via the flags field; at least one of the flags defined below must be
->> set."
->
-> Almost, 'at least VFIO_MIGRATION_STOP_COPY must be set'
-
-It feels a bit odd to split the mandatory states between a base layer
-(RUNNING/ERROR) and the ones governed by VFIO_MIGRATION_STOP_COPY. Do we
-want to keep the possibility of a future implementation that does not
-use the semantics indicated by VFIO_MIGRATION_STOP_COPY? If yes, it
-should be "one of the flags" and the flags that require
-VFIO_MIGRATION_STOP_COPY to be set as well need to note that
-dependency. If not, we should explicitly tag VFIO_MIGRATION_STOP_COPY as
-mandatory (so that the flag's special status is obvious.)
-
+How does it do that when it just is a trivial wrapper erroring out
+for the unmanaged case?
