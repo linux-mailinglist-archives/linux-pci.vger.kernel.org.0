@@ -2,69 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7FBE4C2BCF
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 13:33:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD2264C2BDF
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 13:39:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234390AbiBXMdm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Feb 2022 07:33:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51490 "EHLO
+        id S234437AbiBXMiz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Feb 2022 07:38:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231379AbiBXMdh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 07:33:37 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC026192E27;
-        Thu, 24 Feb 2022 04:33:04 -0800 (PST)
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K4C304K1Pz67dyM;
-        Thu, 24 Feb 2022 20:32:12 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Thu, 24 Feb 2022 13:33:02 +0100
-Received: from [10.47.86.126] (10.47.86.126) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 24 Feb
- 2022 12:33:00 +0000
-Message-ID: <aabd5f0a-1a54-e4da-734c-f940c45d66b4@huawei.com>
-Date:   Thu, 24 Feb 2022 12:32:59 +0000
+        with ESMTP id S234430AbiBXMix (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 07:38:53 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84AD619E723
+        for <linux-pci@vger.kernel.org>; Thu, 24 Feb 2022 04:38:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645706303; x=1677242303;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wX7jCbeDPNGj3GcnCI1zkcyFYFrQxOPkEOdyUg8XeqA=;
+  b=dvL0dJIimifUMWcBv1l0ACCMxbsjsB35FkMtup9H08H9TFV47iEjW9V/
+   AFywZeHPQOXCjyXTcslcIEeM3XGpgWCI2pfR6Md6y4RaXETi2XoBELczT
+   xuwhMJ/SD/RRzBGDpazHrOQPl4TyySp26giaAdsvBH32Zsmcbrg6l+CUD
+   26jM47RjhuXkrZDe+5RPvcH3oHkEi7psv4jr3JCjwsJbpO2ZZFPCyXAzz
+   +vjK+wht975mMVOMnMyj/2DPdhjljPm4olcl32SJpyf8HS3JtII/nMdSE
+   rCKiSnPH0nzx3LfNm3Pl0mD7/Yser+KOYY1M8W5haidxSfY3t+7ZBqNi5
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10267"; a="239619957"
+X-IronPort-AV: E=Sophos;i="5.90,133,1643702400"; 
+   d="scan'208";a="239619957"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2022 04:38:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,133,1643702400"; 
+   d="scan'208";a="777042694"
+Received: from lkp-server01.sh.intel.com (HELO 788b1cd46f0d) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Feb 2022 04:38:21 -0800
+Received: from kbuild by 788b1cd46f0d with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nNDO1-00034r-9g; Thu, 24 Feb 2022 12:38:21 +0000
+Date:   Thu, 24 Feb 2022 20:38:10 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/vga] BUILD SUCCESS
+ fd2692370d56a7f1c1a806dfd1494c6e1fb01f7a
+Message-ID: <62177c32.tB32o/Zyki56+4zJ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH v4 2/8] hwtracing: Add trace function support for
- HiSilicon PCIe Tune and Trace device
-To:     Yicong Yang <yangyicong@huawei.com>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
-        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
-        <song.bao.hua@hisilicon.com>
-References: <20220221084307.33712-1-yangyicong@hisilicon.com>
- <20220221084307.33712-3-yangyicong@hisilicon.com>
- <c7d8cff4-b84e-1b73-1d54-2e221b90dac1@huawei.com>
- <e78f6e5e-a0c3-4976-4f46-e3369635ee3d@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <e78f6e5e-a0c3-4976-4f46-e3369635ee3d@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.86.126]
-X-ClientProxiedBy: lhreml752-chm.china.huawei.com (10.201.108.202) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,47 +62,166 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 24/02/2022 03:53, Yicong Yang wrote:
-> On 2022/2/22 19:06, John Garry wrote:
->> On 21/02/2022 08:43, Yicong Yang wrote:
->>> HiSilicon PCIe tune and trace device(PTT) is a PCIe Root Complex
->>> integrated Endpoint(RCiEP) device, providing the capability
->>> to dynamically monitor and tune the PCIe traffic, and trace
->>> the TLP headers.
->>>
->>> Add the driver for the device to enable the trace function.
->>> This patch adds basic function of trace, including the device's
->>> probe and initialization, functions for trace buffer allocation
->>> and trace enable/disable, register an interrupt handler to
->>> simply response to the DMA events. The user interface of trace
->>> will be added in the following patch.
->>>
->>
->> Fill commit message lines upto 75 characters
-> 
-> Hi John,
-> 
-> Thanks for the comments.
-> 
-> The commit message is within 75 characters. I checked again and checkpatch
-> didn't warning for this.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vga
+branch HEAD: fd2692370d56a7f1c1a806dfd1494c6e1fb01f7a  PCI/VGA: Replace full MIT license text with SPDX identifier
 
-I mean to fill the lines up as much as possible, upto 75 char max, if 
-not already done so. I am not sure if you are doing this already, but it 
-looks like you were not.
+possible Warning in current branch (please contact us if interested):
 
-Checkpatch
-will
-no
-warn
-about
-a
-commit
-message
-like
-this
-:)
+drivers/pci/vgaarb.c:235:17: warning: Value stored to 'dev' during its initialization is never read [clang-analyzer-deadcode.DeadStores]
 
+Warning ids grouped by kconfigs:
 
-Thanks,
-john
+clang_recent_errors
+`-- x86_64-randconfig-c007
+    `-- drivers-pci-vgaarb.c:warning:Value-stored-to-dev-during-its-initialization-is-never-read-clang-analyzer-deadcode.DeadStores
+
+elapsed time: 725m
+
+configs tested: 131
+configs skipped: 4
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+mips                 randconfig-c004-20220223
+i386                          randconfig-c001
+sh                             sh03_defconfig
+sh                          sdk7780_defconfig
+arm                            pleb_defconfig
+powerpc                      bamboo_defconfig
+s390                          debug_defconfig
+mips                             allyesconfig
+arm                           stm32_defconfig
+h8300                    h8300h-sim_defconfig
+sh                             espt_defconfig
+arc                              alldefconfig
+sh                          rsk7201_defconfig
+sh                          rsk7269_defconfig
+mips                           jazz_defconfig
+sh                        sh7763rdp_defconfig
+sh                            migor_defconfig
+powerpc                      makalu_defconfig
+arm                       aspeed_g5_defconfig
+powerpc                     tqm8555_defconfig
+ia64                             allmodconfig
+sh                           se7724_defconfig
+arm                         assabet_defconfig
+arc                        nsimosci_defconfig
+powerpc                     redwood_defconfig
+powerpc                      pasemi_defconfig
+sh                     magicpanelr2_defconfig
+powerpc                      ep88xc_defconfig
+ia64                             alldefconfig
+mips                           xway_defconfig
+arm                           viper_defconfig
+sh                        sh7785lcr_defconfig
+sh                        sh7757lcr_defconfig
+nios2                               defconfig
+csky                                defconfig
+arm                           tegra_defconfig
+arm                  randconfig-c002-20220223
+arm                  randconfig-c002-20220224
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a003
+i386                          randconfig-a001
+i386                          randconfig-a005
+arc                  randconfig-r043-20220223
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+
+clang tested configs:
+powerpc              randconfig-c003-20220224
+powerpc              randconfig-c003-20220223
+x86_64                        randconfig-c007
+arm                  randconfig-c002-20220224
+arm                  randconfig-c002-20220223
+mips                 randconfig-c004-20220224
+mips                 randconfig-c004-20220223
+i386                          randconfig-c001
+riscv                randconfig-c006-20220223
+riscv                randconfig-c006-20220224
+powerpc                      walnut_defconfig
+arm                           omap1_defconfig
+powerpc                        icon_defconfig
+arm                         bcm2835_defconfig
+arm                           spitz_defconfig
+powerpc                      ppc44x_defconfig
+powerpc                      katmai_defconfig
+powerpc                     mpc5200_defconfig
+powerpc                 mpc8313_rdb_defconfig
+arm                        neponset_defconfig
+arm                          moxart_defconfig
+powerpc                      ppc64e_defconfig
+mips                        maltaup_defconfig
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220223
+hexagon              randconfig-r041-20220223
+riscv                randconfig-r042-20220223
+s390                 randconfig-r044-20220223
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
