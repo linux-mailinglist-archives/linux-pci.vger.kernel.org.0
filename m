@@ -2,128 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 685B54C36FD
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 21:46:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD55F4C3700
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 21:47:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233902AbiBXUqj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Feb 2022 15:46:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42818 "EHLO
+        id S234403AbiBXUrv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Feb 2022 15:47:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232307AbiBXUqi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 15:46:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B76F82763CA
-        for <linux-pci@vger.kernel.org>; Thu, 24 Feb 2022 12:46:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645735566;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1xJkiVuDqLpP0r8DT6X5v+8nfBw19AQQbdmtTvgjsys=;
-        b=TkAu5iVeDy0SFrjqBoy7TEJPi0N8d02csvVciRAdCcbCGwxOsevQlTz8Gom+LkN6iSVpZ2
-        s4zGBdY/NgfdTSoucK+4Z2Oj8SiVHpwO/1tXQIm4qClAF+7/PzR4+7Ak/EJk7XbcL4Ab/0
-        lJb0CYZ2HbM6HjjOBgEP0GAmIC6Z4Fc=
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
- [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-656-xgRCa9iCMK-7epQHkFlMPQ-1; Thu, 24 Feb 2022 15:46:05 -0500
-X-MC-Unique: xgRCa9iCMK-7epQHkFlMPQ-1
-Received: by mail-oi1-f197.google.com with SMTP id h25-20020a056808015900b002d6048692beso1892304oie.8
-        for <linux-pci@vger.kernel.org>; Thu, 24 Feb 2022 12:46:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=1xJkiVuDqLpP0r8DT6X5v+8nfBw19AQQbdmtTvgjsys=;
-        b=iqQDQFU3USiAP+Rtz7c5BqzWLhnSLySkCgxRVDJ8UBWY0TpqbflRozHyvWr0HQ0j1y
-         vII7am0AFBnxGMjE1SNyHzr80vPyJ/AAZR/BelHWSyXtx24LgIpwd4z4o8aTaeCc4fH8
-         f/WPaRC8pH7/ozpUg9wnfTf2Bjiew/yNXQz5BLa1wTaHNHmxF37o8PHgw18MIRiT09EZ
-         +fGwbdLD3510Cun+aNUKZl/8PG4ZZqluCM5tqtVLwLBXhp3LyPktpTojedBmS6U3Uq0/
-         ef/uN7s3nrYWX8np6TjocoayAF26v9fulXQVsaLs/Q8L/D6Gw+TtYlqMSLf9kjrBisrY
-         AWjA==
-X-Gm-Message-State: AOAM532g4cyD5AUi4D6Iwc2vKXWThWCMz0qjH2EzwWQi54b1gYkMJwBR
-        6xXM3vva0QyPTVIB18OUK1+qzdyiN6uyXOkMwPzOeqnzEu/Lyuf+XnHHiTwTQpdcbiN2yX7VKgn
-        /oxVzbsOtdJst5U8S9iKQ
-X-Received: by 2002:a05:6870:a8ab:b0:d2:cd36:7859 with SMTP id eb43-20020a056870a8ab00b000d2cd367859mr6833991oab.83.1645735564911;
-        Thu, 24 Feb 2022 12:46:04 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzz4xGGAZJSkc7LhAo0lyQZngfUJtqj1zh+GjitSeyjotMwtIhB98xlzX/VXd3Nwyom9gJpFQ==
-X-Received: by 2002:a05:6870:a8ab:b0:d2:cd36:7859 with SMTP id eb43-20020a056870a8ab00b000d2cd367859mr6833976oab.83.1645735564657;
-        Thu, 24 Feb 2022 12:46:04 -0800 (PST)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id g12-20020a056870340c00b000d17b798ba9sm357988oah.34.2022.02.24.12.46.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 12:46:03 -0800 (PST)
-Date:   Thu, 24 Feb 2022 13:46:02 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        ashok.raj@intel.com, kevin.tian@intel.com,
-        shameerali.kolothum.thodi@huawei.com
-Subject: Re: [PATCH V9 mlx5-next 10/15] vfio: Extend the device migration
- protocol with RUNNING_P2P
-Message-ID: <20220224134602.74c250d0.alex.williamson@redhat.com>
-In-Reply-To: <87czjc6w9k.fsf@redhat.com>
-References: <20220224142024.147653-1-yishaih@nvidia.com>
-        <20220224142024.147653-11-yishaih@nvidia.com>
-        <87fso870k8.fsf@redhat.com>
-        <20220224083042.3f5ad059.alex.williamson@redhat.com>
-        <20220224161330.GA19295@nvidia.com>
-        <20220224093542.3730bb24.alex.williamson@redhat.com>
-        <87czjc6w9k.fsf@redhat.com>
-Organization: Red Hat
+        with ESMTP id S234399AbiBXUrt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 15:47:49 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F7F5F4F5;
+        Thu, 24 Feb 2022 12:47:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4B0BF618B6;
+        Thu, 24 Feb 2022 20:47:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65D9CC340E9;
+        Thu, 24 Feb 2022 20:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645735637;
+        bh=FYQ8VrczMzKCYBS2fqPJjnn5DOPdGVQZpAF+gTsqXtQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pxl+AbTmWvoCndwH8I+otmkcCq3c+l5agXw1C6v/+if43v26CMehYuY02ZfCAd45F
+         4nKW3cPqh8CCHk7YkpP41RaexzvBOQkwKw1N7zt7spvpy3h5+N3U3EkGcpMhB7mTsE
+         cJ62Qg5SFY7OuW8fljKGM5ceuxMOrI2p9Qg2ZtmLYg68jGuguYK4pvBGky2cMmN6Wk
+         j5pZrNROOssdt/01NK21l3enpoMlfLf67eTlyC9KmPtpYAV5tWp3/fCnzytj4TZjsD
+         Sk36mTHaau1hWFiTYbr1X4ncDCmusAhlRERC9V5As7RSP9JPWurhMnNQLubgPfklVY
+         wYN/i3Z3r0ELg==
+Date:   Thu, 24 Feb 2022 14:47:15 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] PCI: Add function for parsing
+ 'slot-power-limit-milliwatt' DT property
+Message-ID: <20220224204715.GA291889@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220222163158.1666-5-pali@kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 24 Feb 2022 17:53:59 +0100
-Cornelia Huck <cohuck@redhat.com> wrote:
-
-> On Thu, Feb 24 2022, Alex Williamson <alex.williamson@redhat.com> wrote:
-> > Chatting with Connie offline, I think the clarification that might help
-> > is something alone the lines that the combination of bits must support
-> > migration, which currently requires the STOP_COPY and RESUMING states.
-> > The VFIO_MIGRATION_P2P flag alone does not provide these states.  The
-> > only flag in the current specification to provide these states is
-> > VFIO_MIGRATION_STOP_COPY.  I don't think we want to preclude that some
-> > future flag might provide variants of STOP_COPY and RESUMING, so it's
-> > not so much that VFIO_MIGRATION_STOP_COPY is mandatory, but it is
-> > currently the only flag which provides the base degree of migration
-> > support.  
+On Tue, Feb 22, 2022 at 05:31:56PM +0100, Pali Rohár wrote:
+> Add function of_pci_get_slot_power_limit(), which parses the
+> 'slot-power-limit-milliwatt' DT property, returning the value in
+> milliwatts and in format ready for the PCIe Slot Capabilities Register.
 > 
-> Indeed.
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Signed-off-by: Marek Behún <kabel@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/of.c  | 64 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h | 15 +++++++++++
+>  2 files changed, 79 insertions(+)
 > 
-> >
-> > How or if that translates to an actual documentation update, I'm not
-> > sure.  As it stands, we're not speculating about future support, we're
-> > only stating these two combinations are valid.  Future combinations may
-> > or may not include VFIO_MIGRATION_STOP_COPY.  As the existing proposed
-> > comment indicates, other combinations are TBD.  Connie?  Thanks,
-> >
-> > Alex  
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index cb2e8351c2cc..2b0c0a3641a8 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -633,3 +633,67 @@ int of_pci_get_max_link_speed(struct device_node *node)
+>  	return max_link_speed;
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
+> +
+> +/**
+> + * of_pci_get_slot_power_limit - Parses the "slot-power-limit-milliwatt"
+> + *				 property.
+> + *
+> + * @node: device tree node with the slot power limit information
+> + * @slot_power_limit_value: pointer where the value should be stored in PCIe
+> + *			    Slot Capabilities Register format
+> + * @slot_power_limit_scale: pointer where the scale should be stored in PCIe
+> + *			    Slot Capabilities Register format
+> + *
+> + * Returns the slot power limit in milliwatts and if @slot_power_limit_value
+> + * and @slot_power_limit_scale pointers are non-NULL, fills in the value and
+> + * scale in format used by PCIe Slot Capabilities Register.
+> + *
+> + * If the property is not found or is invalid, returns 0.
+> + */
+> +u32 of_pci_get_slot_power_limit(struct device_node *node,
+> +				u8 *slot_power_limit_value,
+> +				u8 *slot_power_limit_scale)
+> +{
+> +	u32 slot_power_limit;
+
+Including "mw" or similar reference to the units would give a hint of
+how to relate the code to the spec.
+
+> +	u8 value, scale;
+> +
+> +	if (of_property_read_u32(node, "slot-power-limit-milliwatt",
+> +				 &slot_power_limit))
+> +		slot_power_limit = 0;
+> +
+> +	/* Calculate Slot Power Limit Value and Slot Power Limit Scale */
+
+Add a spec reference to PCIe r6.0, sec 7.5.3.9.  IIUC, this supports
+up to 300W, which was what r5.0 defined, but r6.0 added values up to
+0xfe (600W).
+
+> +	if (slot_power_limit == 0) {
+> +		value = 0x00;
+> +		scale = 0;
+> +	} else if (slot_power_limit <= 255) {
+> +		value = slot_power_limit;
+> +		scale = 3;
+> +	} else if (slot_power_limit <= 255*10) {
+> +		value = slot_power_limit / 10;
+> +		scale = 2;
+> +	} else if (slot_power_limit <= 255*100) {
+> +		value = slot_power_limit / 100;
+> +		scale = 1;
+> +	} else if (slot_power_limit <= 239*1000) {
+> +		value = slot_power_limit / 1000;
+> +		scale = 0;
+> +	} else if (slot_power_limit <= 250*1000) {
+> +		value = 0xF0;
+> +		scale = 0;
+> +	} else if (slot_power_limit <= 275*1000) {
+> +		value = 0xF1;
+> +		scale = 0;
+> +	} else {
+> +		value = 0xF2;
+> +		scale = 0;
+> +	}
+> +
+> +	if (slot_power_limit_value)
+> +		*slot_power_limit_value = value;
+> +
+> +	if (slot_power_limit_scale)
+> +		*slot_power_limit_scale = scale;
+> +
+> +	return slot_power_limit;
+
+If "slot-power-limit-milliwatt" contains a value larger than can be
+represented in "value" and "scale", the return value will not agree
+with value/scale, will it?
+
+Currently you only use the return value for a log message, so no real
+harm yet, other than the fact that we might print "Slot power limit
+1000.0W" when the hardware will only advertise 600W available.
+
+Also, if "slot-power-limit-milliwatt" contains something like
+260000 mW (260 W), we'll return 0xF1/0, so the hardware will
+advertise 275 W available.
+
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 3d60cabde1a1..e10cdec6c56e 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -627,6 +627,9 @@ struct device_node;
+>  int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
+>  int of_get_pci_domain_nr(struct device_node *node);
+>  int of_pci_get_max_link_speed(struct device_node *node);
+> +u32 of_pci_get_slot_power_limit(struct device_node *node,
+> +				u8 *slot_power_limit_value,
+> +				u8 *slot_power_limit_scale);
+>  void pci_set_of_node(struct pci_dev *dev);
+>  void pci_release_of_node(struct pci_dev *dev);
+>  void pci_set_bus_of_node(struct pci_bus *bus);
+> @@ -653,6 +656,18 @@ of_pci_get_max_link_speed(struct device_node *node)
+>  	return -EINVAL;
+>  }
+>  
+> +static inline u32
+> +of_pci_get_slot_power_limit(struct device_node *node,
+> +			    u8 *slot_power_limit_value,
+> +			    u8 *slot_power_limit_scale)
+> +{
+> +	if (slot_power_limit_value)
+> +		*slot_power_limit_value = 0;
+> +	if (slot_power_limit_scale)
+> +		*slot_power_limit_scale = 0;
+> +	return 0;
+> +}
+> +
+>  static inline void pci_set_of_node(struct pci_dev *dev) { }
+>  static inline void pci_release_of_node(struct pci_dev *dev) { }
+>  static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
+> -- 
+> 2.20.1
 > 
-> Hm... "a flag indicating support for a migration state machine such as
-> VFIO_MIGRATION_STOP_COPY is mandatory"?
-
-TBH, I'm not sure this makes a substantive improvement.  We don't know
-what those new flag bits will be used for, including which bit or bits
-will combine to indicate a valid state machine.  Userspace written to
-this spec needs to support STOP_COPY and optionally P2P as we're
-stating.  Nothing really compels us to speculate general rules for
-unknown future bit combinations.  Thanks,
-
-Alex
-
