@@ -2,98 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 225134C2F3D
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 16:17:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF0464C2F7C
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 16:23:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233983AbiBXPR7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Feb 2022 10:17:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39670 "EHLO
+        id S231423AbiBXPXh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Feb 2022 10:23:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235924AbiBXPRx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 10:17:53 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57841CF3A4
-        for <linux-pci@vger.kernel.org>; Thu, 24 Feb 2022 07:17:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S236476AbiBXPXI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 10:23:08 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B2A971B65C4
+        for <linux-pci@vger.kernel.org>; Thu, 24 Feb 2022 07:22:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645716092;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Cs1X/g4/VcYdFDurBVvxcC8xvB0VJR+m/I4hc1Nnw5k=;
+        b=cjuyExD+Oucr28lFXbYYeN3HFQNH0uw+W/0tWtabfwiHoj7omydipTD7FknSBRZmG+DVzr
+        5mrxM/Qy06Q0vlM6N/tQ/110wSw6kEjoytwX0g5OqY/2QLtjVzpNG/j1JWPp8GGU7jB6BH
+        x4X9Wj11ZcPfiDqK2O0369kVxc5YWM4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-608-G9s_fX5xOzSkQbi3ed5iGw-1; Thu, 24 Feb 2022 10:21:28 -0500
+X-MC-Unique: G9s_fX5xOzSkQbi3ed5iGw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E7A4D60EAA
-        for <linux-pci@vger.kernel.org>; Thu, 24 Feb 2022 15:17:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11F8C340EC;
-        Thu, 24 Feb 2022 15:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645715842;
-        bh=w6A0U9Uhn4+JdPjAJvGRWzWyHpMuNYJAcNXTqv1RpnE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=D09ac/tosSnGDopFS9Edb8PNDaMMUpFvuuta+tLxwmCWTOumSHj0wSBXk55jZ6TpM
-         Xor5YC/mTY+rM6lt+nBxCvvjwmeYn7S8TUzSTkrxNEQYwqcngicbKlWvR83WN71UnS
-         8qXr+mbNcn40lVtbPQZoMDa55FFSIjw9m4yy3RrQfLJ+FZh9BIF+veXTtvdcY2QFat
-         Qa1oMD1oggkIrv6TF21FwNV4UsQnm2RhdS+jdY6cbqJHGlf6mtqer8p9FyGUxyLerC
-         r55ohhInEWt71Pq6kntBZ4R0UlKGZ3qp0aoNHJ0rB71EYr6lCCncn9jeK19GsysYjK
-         7wjyQVqCEQ9HA==
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     pali@kernel.org, linux-pci@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH phy v4 5/5] Revert "PCI: aardvark: Fix initialization with old Marvell's Arm Trusted Firmware"
-Date:   Thu, 24 Feb 2022 16:17:18 +0100
-Message-Id: <20220224151718.7679-1-kabel@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34AB11091DA0;
+        Thu, 24 Feb 2022 15:21:26 +0000 (UTC)
+Received: from localhost (unknown [10.39.195.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D44657C049;
+        Thu, 24 Feb 2022 15:21:12 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
+        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com
+Cc:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, yishaih@nvidia.com,
+        maorg@nvidia.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        shameerali.kolothum.thodi@huawei.com
+Subject: Re: [PATCH V9 mlx5-next 10/15] vfio: Extend the device migration
+ protocol with RUNNING_P2P
+In-Reply-To: <20220224142024.147653-11-yishaih@nvidia.com>
+Organization: Red Hat GmbH
+References: <20220224142024.147653-1-yishaih@nvidia.com>
+ <20220224142024.147653-11-yishaih@nvidia.com>
+User-Agent: Notmuch/0.34 (https://notmuchmail.org)
+Date:   Thu, 24 Feb 2022 16:21:11 +0100
+Message-ID: <87fso870k8.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Pali Rohár <pali@kernel.org>
+On Thu, Feb 24 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
 
-This reverts commit b0c6ae0f8948a2be6bf4e8b4bbab9ca1343289b6.
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 22ed358c04c5..26a66f68371d 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -1011,10 +1011,16 @@ struct vfio_device_feature {
+>   *
+>   * VFIO_MIGRATION_STOP_COPY means that STOP, STOP_COPY and
+>   * RESUMING are supported.
+> + *
+> + * VFIO_MIGRATION_STOP_COPY | VFIO_MIGRATION_P2P means that RUNNING_P2P
+> + * is supported in addition to the STOP_COPY states.
+> + *
+> + * Other combinations of flags have behavior to be defined in the future.
+>   */
+>  struct vfio_device_feature_migration {
+>  	__aligned_u64 flags;
+>  #define VFIO_MIGRATION_STOP_COPY	(1 << 0)
+> +#define VFIO_MIGRATION_P2P		(1 << 1)
+>  };
 
-Armada 3720 phy driver (phy-mvebu-a3700-comphy.c) does not return
--EOPNOTSUPP from phy_power_on() callback anymore.
+Coming back to my argument (for the previous series) that this should
+rather be "at least one of the flags below must be set". If we operate
+under the general assumption that each flag indicates that a certain
+functionality (including some states) is supported, and that flags may
+depend on other flags, we might have a future flag that defines a
+different behaviour, but does not depend on STOP_COPY, but rather
+conflicts with it. We should not create the impression that STOP_COPY
+will neccessarily be mandatory for all time.
 
-So remove dead code which handles -EOPNOTSUPP return value.
+So, if we use my suggestion from the last round, what about making the
+new addition
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Marek Behún <kabel@kernel.org>
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
-Dear Lorenzo,
+"VFIO_MIGRATION_P2P means that RUNNING_P2P is supported in addition to
+the STOP_COPY states. It depends on VFIO_MIGRATION_STOP_COPY."
 
-could you please give your Ack for this, so that Vinod can apply it
-with the rest of the comphy series?
-The series can be found at
-  https://lore.kernel.org/linux-phy/20220203214444.1508-1-kabel@kernel.org/
+Maybe we could also use the additional clarification
 
-Marek
----
- drivers/pci/controller/pci-aardvark.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+"at least one of the flags below must be set, and flags may depend on or
+conflict with each other."
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 4f5b44827d21..6bae688852a5 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -1482,9 +1482,7 @@ static int advk_pcie_enable_phy(struct advk_pcie *pcie)
- 	}
- 
- 	ret = phy_power_on(pcie->phy);
--	if (ret == -EOPNOTSUPP) {
--		dev_warn(&pcie->pdev->dev, "PHY unsupported by firmware\n");
--	} else if (ret) {
-+	if (ret) {
- 		phy_exit(pcie->phy);
- 		return ret;
- 	}
--- 
-2.34.1
+That implies that VFIO_MIGRATION_STOP_COPY is mandatory with the current
+set of defined flags. I would not really object to adding "This flag is
+currently mandatory", but I do not like singling it out in the general
+description of how the flags work.
+
+Sorry if that sounds nitpicky, but I think we really need to make it
+clear that we have some nice possible flexibility with how the flags
+work.
 
