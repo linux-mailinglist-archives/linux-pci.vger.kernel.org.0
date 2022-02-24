@@ -2,124 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 606CC4C29BC
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 11:41:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C3BC4C29C1
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 11:42:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233325AbiBXKmP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Feb 2022 05:42:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54294 "EHLO
+        id S233542AbiBXKmk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Feb 2022 05:42:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230119AbiBXKmO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 05:42:14 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 37F4B45AEF;
-        Thu, 24 Feb 2022 02:41:44 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB6B0ED1;
-        Thu, 24 Feb 2022 02:41:43 -0800 (PST)
-Received: from [10.163.48.178] (unknown [10.163.48.178])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BF8A3F70D;
-        Thu, 24 Feb 2022 02:41:36 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH 05/11] swiotlb: pass a gfp_mask argument to
- swiotlb_init_late
-To:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org
-Cc:     x86@kernel.org, Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org
-References: <20220222153514.593231-1-hch@lst.de>
- <20220222153514.593231-6-hch@lst.de>
-Message-ID: <e3eb6441-129e-35fe-b07c-fea86908222c@arm.com>
-Date:   Thu, 24 Feb 2022 16:11:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S233514AbiBXKmk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 05:42:40 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7169F16A587
+        for <linux-pci@vger.kernel.org>; Thu, 24 Feb 2022 02:42:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645699329;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ae5cFQNdc0p3hFbpsaaNC1IeyCU41i7xtv/27lyslL4=;
+        b=S0ZDBZ+TeitTlk7NKdw/EP/iCv8achLn3fuHQCvTNINQlIWSy+0nf/RuA+ZILYJ9coEKbh
+        EoLaJE+vIfbJ0xbOkH2FWml2mK3QclZTanDLrftkE2/hQ1p0nRujNGthdUX6z0uwB3HQ+c
+        TLKT0RI8L7k1pVZH61vioWZi651ieAU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-385-WRuhcsptOwCvRstI-Qbm7Q-1; Thu, 24 Feb 2022 05:42:04 -0500
+X-MC-Unique: WRuhcsptOwCvRstI-Qbm7Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A3C25126;
+        Thu, 24 Feb 2022 10:42:02 +0000 (UTC)
+Received: from localhost (unknown [10.39.195.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F9BF83197;
+        Thu, 24 Feb 2022 10:41:46 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
+        bhelgaas@google.com, saeedm@nvidia.com, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
+        leonro@nvidia.com, kwankhede@nvidia.com, mgurtovoy@nvidia.com,
+        maorg@nvidia.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        shameerali.kolothum.thodi@huawei.com
+Subject: Re: [PATCH V8 mlx5-next 09/15] vfio: Define device migration
+ protocol v2
+In-Reply-To: <20220224004622.GD409228@nvidia.com>
+Organization: Red Hat GmbH
+References: <20220220095716.153757-1-yishaih@nvidia.com>
+ <20220220095716.153757-10-yishaih@nvidia.com> <87ley17bsq.fsf@redhat.com>
+ <20220224004622.GD409228@nvidia.com>
+User-Agent: Notmuch/0.34 (https://notmuchmail.org)
+Date:   Thu, 24 Feb 2022 11:41:44 +0100
+Message-ID: <87ilt47dhz.fsf@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20220222153514.593231-6-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Feb 23 2022, Jason Gunthorpe <jgg@nvidia.com> wrote:
 
+> On Wed, Feb 23, 2022 at 06:06:13PM +0100, Cornelia Huck wrote:
+>> On Sun, Feb 20 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
 
-On 2/22/22 9:05 PM, Christoph Hellwig wrote:
-> Let the caller chose a zone to allocate from.
+>> > +/*
+>> > + * Indicates the device can support the migration API through
+>> > + * VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE. If present flags must be non-zero and
+>> > + * VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE is supported. The RUNNING and
+>> 
+>> I'm having trouble parsing this. I think what it tries to say is that at
+>> least one of the flags defined below must be set?
+>> 
+>> > + * ERROR states are always supported if this GET succeeds.
+>> 
+>> What about the following instead:
+>> 
+>> "Indicates device support for the migration API through
+>> VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE. If present, the RUNNING and ERROR
+>> states are always supported. Support for additional states is indicated
+>> via the flags field; at least one of the flags defined below must be
+>> set."
+>
+> Almost, 'at least VFIO_MIGRATION_STOP_COPY must be set'
 
-This is being used later via xen_swiotlb_gfp() on arm platform.
+It feels a bit odd to split the mandatory states between a base layer
+(RUNNING/ERROR) and the ones governed by VFIO_MIGRATION_STOP_COPY. Do we
+want to keep the possibility of a future implementation that does not
+use the semantics indicated by VFIO_MIGRATION_STOP_COPY? If yes, it
+should be "one of the flags" and the flags that require
+VFIO_MIGRATION_STOP_COPY to be set as well need to note that
+dependency. If not, we should explicitly tag VFIO_MIGRATION_STOP_COPY as
+mandatory (so that the flag's special status is obvious.)
 
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/x86/pci/sta2x11-fixup.c | 2 +-
->  include/linux/swiotlb.h      | 2 +-
->  kernel/dma/swiotlb.c         | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/pci/sta2x11-fixup.c b/arch/x86/pci/sta2x11-fixup.c
-> index e0c039a75b2db..c7e6faf59a861 100644
-> --- a/arch/x86/pci/sta2x11-fixup.c
-> +++ b/arch/x86/pci/sta2x11-fixup.c
-> @@ -57,7 +57,7 @@ static void sta2x11_new_instance(struct pci_dev *pdev)
->  		int size = STA2X11_SWIOTLB_SIZE;
->  		/* First instance: register your own swiotlb area */
->  		dev_info(&pdev->dev, "Using SWIOTLB (size %i)\n", size);
-> -		if (swiotlb_init_late(size))
-> +		if (swiotlb_init_late(size, GFP_DMA))
->  			dev_emerg(&pdev->dev, "init swiotlb failed\n");
->  	}
->  	list_add(&instance->list, &sta2x11_instance_list);
-> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-> index b48b26bfa0edb..1befd6b2ccf5e 100644
-> --- a/include/linux/swiotlb.h
-> +++ b/include/linux/swiotlb.h
-> @@ -40,7 +40,7 @@ extern void swiotlb_init(int verbose);
->  int swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int verbose);
->  unsigned long swiotlb_size_or_default(void);
->  extern int swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs);
-> -int swiotlb_init_late(size_t size);
-> +int swiotlb_init_late(size_t size, gfp_t gfp_mask);
->  extern void __init swiotlb_update_mem_attributes(void);
->  
->  phys_addr_t swiotlb_tbl_map_single(struct device *hwdev, phys_addr_t phys,
-> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> index 5f64b02fbb732..a653fcf1fe6c2 100644
-> --- a/kernel/dma/swiotlb.c
-> +++ b/kernel/dma/swiotlb.c
-> @@ -290,7 +290,7 @@ swiotlb_init(int verbose)
->   * initialize the swiotlb later using the slab allocator if needed.
->   * This should be just like above, but with some error catching.
->   */
-> -int swiotlb_init_late(size_t size)
-> +int swiotlb_init_late(size_t size, gfp_t gfp_mask)
->  {
->  	unsigned long nslabs = ALIGN(size >> IO_TLB_SHIFT, IO_TLB_SEGSIZE);
->  	unsigned long bytes;
-> @@ -309,7 +309,7 @@ int swiotlb_init_late(size_t size)
->  	bytes = nslabs << IO_TLB_SHIFT;
->  
->  	while ((SLABS_PER_PAGE << order) > IO_TLB_MIN_SLABS) {
-> -		vstart = (void *)__get_free_pages(GFP_DMA | __GFP_NOWARN,
-> +		vstart = (void *)__get_free_pages(gfp_mask | __GFP_NOWARN,
->  						  order);
->  		if (vstart)
->  			break;
-> 
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
