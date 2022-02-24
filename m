@@ -2,56 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B0C64C2C4E
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 13:59:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43B844C2DE9
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Feb 2022 15:10:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234680AbiBXM7i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Feb 2022 07:59:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45698 "EHLO
+        id S232752AbiBXOJ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Feb 2022 09:09:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231754AbiBXM7h (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 07:59:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21B3A28F947
-        for <linux-pci@vger.kernel.org>; Thu, 24 Feb 2022 04:59:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CA19FB825AC
-        for <linux-pci@vger.kernel.org>; Thu, 24 Feb 2022 12:59:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BD46C340EC;
-        Thu, 24 Feb 2022 12:59:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645707544;
-        bh=gaq2mWkDV0qIBJqUgGBkFqd/RJEF473+Ag3q8m+wL7U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mprAmf+yqhqgRFyosfFQ+Cgx/IoKMs+XTDlYvO10B7qtCb6+WTGORy7wMuqghILDB
-         wVaSm2oCBzJJmBzw3dO38dM0GxnWmlKsE1xnPwQGDNw91xLEa+Qy9BiT6UPC+ycFqv
-         IAU2m5EbtvkZqgjqj2MymqmcfaBQx7/E8RN+1GuDzHqzs/cJqvcmoVmj3EMFdNf7AE
-         Ghau5FW3PACpv/uWYq8YCMY3iQK2S1ujnqDyBMnKaLdJVrjSvvk8Qkh5MnneyA54ui
-         3ukDSiTPJiDnZQKqoeHCZgJ1/LNSUOmFyA7gB4Oyoiwb41HsjWDasEbHfofG2GgiPl
-         eyIGvrzBFlo6A==
-Received: by pali.im (Postfix)
-        id 4B77CB6E; Thu, 24 Feb 2022 13:59:01 +0100 (CET)
-Date:   Thu, 24 Feb 2022 13:59:01 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 11/23] PCI: aardvark: Fix setting MSI address
-Message-ID: <20220224125901.bmfqrby3lrda36p3@pali>
-References: <20220218154329.762831dd@thinkpad>
- <20220223181312.GA141319@bhelgaas>
+        with ESMTP id S232103AbiBXOJZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 09:09:25 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E2E2229456D;
+        Thu, 24 Feb 2022 06:08:54 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74410ED1;
+        Thu, 24 Feb 2022 06:08:54 -0800 (PST)
+Received: from lpieralisi (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58CC83F66F;
+        Thu, 24 Feb 2022 06:08:53 -0800 (PST)
+Date:   Thu, 24 Feb 2022 14:08:47 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jisheng Zhang <jszhang@kernel.org>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: Fix integrated MSI Receiver mask reg setting
+ during resume
+Message-ID: <20220224140847.GA4839@lpieralisi>
+References: <20211226074019.2556-1-jszhang@kernel.org>
+ <Ye1D4lYAIpDe7qAN@xhacker>
+ <20220223114622.GA27645@lpieralisi>
+ <YhZbcU3yNuuBDXm/@xhacker>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220223181312.GA141319@bhelgaas>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <YhZbcU3yNuuBDXm/@xhacker>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -60,75 +50,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wednesday 23 February 2022 12:13:12 Bjorn Helgaas wrote:
-> On Fri, Feb 18, 2022 at 03:43:29PM +0100, Marek Behún wrote:
-> > On Thu, 17 Feb 2022 11:14:52 -0600
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > 
-> > > > +	phys_addr_t msi_addr;
-> > > >  	u32 reg;
-> > > >  	int i;
-> > > >  
-> > > > @@ -561,6 +561,11 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
-> > > >  	reg |= LANE_COUNT_1;
-> > > >  	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-> > > >  
-> > > > +	/* Set MSI address */
-> > > > +	msi_addr = virt_to_phys(pcie);  
+On Thu, Feb 24, 2022 at 12:06:09AM +0800, Jisheng Zhang wrote:
+> On Wed, Feb 23, 2022 at 11:46:22AM +0000, Lorenzo Pieralisi wrote:
+> > On Sun, Jan 23, 2022 at 08:02:42PM +0800, Jisheng Zhang wrote:
+> > > On Sun, Dec 26, 2021 at 03:40:19PM +0800, Jisheng Zhang wrote:
+> > > > If the host which makes use of the IP's integrated MSI Receiver losts
+> > > > power during suspend, we call dw_pcie_setup_rc() to reinit the RC. But
+> > > > dw_pcie_setup_rc() always set the pp->irq_mask[ctrl] as ~0, so the mask
+> > > > register is always set as 0xffffffff incorrectly, thus the MSI can't
+> > > > work after resume.
+> > > > 
+> > > > Fix this issue by moving pp->irq_mask[ctrl] initialization to
+> > > > dw_pcie_host_init(), so we can correctly set the mask reg during both
+> > > > boot and resume.
+> > > > 
+> > > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 > > > 
-> > > Strictly speaking, msi_addr should be a pci_bus_addr_t, not a
-> > > phys_addr_t, and virt_to_phys() doesn't return a bus address.
+> > > Hi all,
+> > > 
+> > > This patch can still be applied to the latest linus tree. Do you want
+> > > me to rebase and send out a new version?
+> > > 
+> > > Without this patch, dwc host MSI interrupt(if use the IP's integrated
+> > > MSI receiver) can't work after resume. Could it be picked up as a fix
+> > > for v5.17?
 > > 
-> > the problem here is that as far as we know currently there is no
-> > function that converts a virtual address to pci_bus_addr_t like
-> > virt_to_phys() does to convert to phys_addr_t.
-> > 
-> > On Armada 3720 there are PCIe Controller Address Decoder Registers,
-> > which such a translating function would need to consult to do the
-> > translation. But the default settings of these registers is to map PCIe
-> > addresses 1 to 1 to physical addresses, and no driver changes these
-> > registers.
+> > The tricky bit with this patch is that it is not clear what piece of
+> > logic is lost on power down and what not. IIUC MSI interrupt controller
+> > logic is kept so it does not need to be saved/restored (but in
 > 
-> The poorly-named pcibios_resource_to_bus() (I think the name is my
-> fault) is the way to convert a CPU physical address to a PCI bus
-> address.
-
-But here it is needed to do something different. It is needed to do
-inverse mapping of function which converts PCI bus address to CPU
-physical address of CPU memory. So to converting CPU physical address of
-CPU memory to PCI bus address from PCI bus point of view.
-
-I think that this information is stored in dma_ranges member of struct
-pci_host_bridge. But function pcibios_resource_to_bus() looks at the
-->windows member which converts CPU physical address of PCI memory (not
-CPU memory) to PCI bus address, which is something different. So
-pcibios_resource_to_bus() would not work here and it may return
-incorrect values (as PCI memory may be different from CPU point of view
-and PCI bus point of view).
-
-> This is implemented in terms of the host bridge windows and the
-> translation offset in struct resource_entry, which should be set up
-> via the pci_add_resource_offset() called from
-> devm_of_pci_get_host_bridge_resources().
+> You may mean the external MSI interrupt controller case, but here the
+> focus is the integrated MSI Receiver in the IP. Normally, after
+> suspending to ram, the dwc IP would lost power, so the integrated MSI
+> Receiver also lost power.
 > 
-> > Pali says that other drivers also use phys_addr_t, and most hardware
-> > maps 1 to 1 by default.
+> > dw_pcie_setup_rc() we overwrite PCIE_MSI_INTR0_ENABLE even if it
+> > is not needed on resume - actually, it can even be destructive).
+> > 
 > 
-> Yes.  I think they're all technically incorrect.  Most systems do map
-> CPU phys == PCI bus, but I point it out because it's a case where
-> copying that pattern to new drivers will eventually bite us.
+> For the integrated MSI Receiver case, since the entire IP power is lost,
+> so the PCIE_MSI_INTR0_MASK|ENABLE setting is lost, we need to resume the
+> mask to the one before suspending. For PCIE_MSI_INTR0_ENABLE register(s),
+> since it's always 0xffffffff, so current code is fine.
+> 
+> > Maybe we need to write suspend/resume hooks for the dwc core instead
+> > of moving code around to fix these bugs ?
+> > 
+> 
+> Even with suspend/resume hooks, we still need to fix the
+> PCIE_MSI_INTR0_MASK wrong setting with always ~0. After the fix, msi works
+> so we don't need suspend/resume hooks any more.
 
-I agree, it is incorrect but I do not see a way how to do it correctly
-because of missing function (which for pci-aardvark should return
-identity).
+I don't understand. The fix removes code that is writing into
+PCIE_MSI_INTR0_MASK (in dw_pcie_setup_rc()). Where that register
+content is restored on power up to the correct value then ?
 
-> > So we think that until at least an API for such a function exists, we
-> > shuld leave it as it is. I am not against converting the phys_addr_to
-> > to a pci_bus_addr_t, but Pali thinks that for now we should leave even
-> > that as it is, because the virt_to_phys() function returns phys_addr_t.
-> > 
-> > We can add a comment there explaining this, if you want.
-> > 
-> > What do you think?
-> > 
-> > Marek
+I assume those registers when the IP loses power are reset
+to their reset value, so something does not add up.
+
+Lorenzo
