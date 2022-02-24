@@ -2,79 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A45504C39DE
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 00:52:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EB854C39EB
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 00:55:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232916AbiBXXwk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Feb 2022 18:52:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41336 "EHLO
+        id S229469AbiBXXyj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Feb 2022 18:54:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbiBXXwj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 18:52:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1487B458B;
-        Thu, 24 Feb 2022 15:52:08 -0800 (PST)
+        with ESMTP id S234580AbiBXXyi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 18:54:38 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F10311DB8BF;
+        Thu, 24 Feb 2022 15:54:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9541661CBF;
-        Thu, 24 Feb 2022 23:52:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD98FC340E9;
-        Thu, 24 Feb 2022 23:52:07 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7E57EB82A1B;
+        Thu, 24 Feb 2022 23:54:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D1AC340E9;
+        Thu, 24 Feb 2022 23:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645746728;
-        bh=zVAGv3GzIY0CmGHccO6MTpPuZ0cGji1luXzfksNlM2M=;
+        s=k20201202; t=1645746845;
+        bh=8m28xb7jX3rywztpqXC+7Sf7/JfCaAm/fcFHne2Mfy4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kCSNhdmjCNFp4p3nEZo05DvtkYaTYatl89i6A6bnh2GoE1LafejZW2+LdT+xyn9p9
-         vFysfr3uU3CN1goYGDWRGNKLLknLWL4gwXq4LwSu/xs2AfSKORCBht3dm2YESZuJkC
-         QTihOOdWAM03oTBu5HCC9wQYShduFbcLphU9XZZOZ2w+HR8xeoLGBBRX0Da60zkFuO
-         Gw55uOtn72xOyN5dsOgPR66lVXrDqagidhgfw1lK88dhzevhVz/lXIRWDLrY+G2rDT
-         B2vC1ShfZifdcQml58IDHz2aBNdppV0ayqFTRcbx14EaEZyzuuUqWcpsrE30jKvDVw
-         +pVWnNSGt5bFQ==
-Date:   Thu, 24 Feb 2022 17:52:06 -0600
+        b=SFUz6Z502Ca7Kj0zNp0wvhF3BdzD+Zk/9kpXhzEoTRH+cCA0Bm7FQGGltf0D5VG6y
+         uv8yJchzr9kXT+6aTeqxkewFjyLWf0qvefF/i4VFjr2RIRk4fyhroRerr+/+2kzGQp
+         BaXfc73+w2CM3Z4us0WRerwLf+VBBnIxhlwWjxtiF2Z10ky3bsydBkCRJ9uve0l8LP
+         y/N6NA+t2aAHik9sHZkQRkP8HEZBIIMpEO8uyrkFTmcFm6Lq4BoJtBtNTLjs/vl/s2
+         dvj4uq4oU75qqgn7cda90FtLpZ6Paoh9Tf6K9B7VwvMuTKk7GWGfXF1oCK40lXxgp+
+         A6lSA9pQyExVQ==
+Date:   Thu, 24 Feb 2022 17:54:03 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v2 05/11] pci: use helper for safer setting of
- driver_override
-Message-ID: <20220224235206.GA302751@bhelgaas>
+To:     Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc:     "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "francesco.dolcini@toradex.com" <francesco.dolcini@toradex.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v7 8/8] PCI: imx6: Add the compliance tests mode support
+Message-ID: <20220224235403.GA303878@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f7347531-8aa4-c011-d405-dea93e29779f@canonical.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR04MB8676DCB7CB8D94B0CBC97D0B8C3D9@AS8PR04MB8676.eurprd04.prod.outlook.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -85,86 +64,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 08:49:15AM +0100, Krzysztof Kozlowski wrote:
-> On 23/02/2022 22:51, Bjorn Helgaas wrote:
-> > In subject, to match drivers/pci/ convention, do something like:
-> > 
-> >   PCI: Use driver_set_override() instead of open-coding
-> > 
-> > On Wed, Feb 23, 2022 at 08:13:04PM +0100, Krzysztof Kozlowski wrote:
-> >> Use a helper for seting driver_override to reduce amount of duplicated
-> >> code.
-> >> @@ -567,31 +567,15 @@ static ssize_t driver_override_store(struct device *dev,
-> >>  				     const char *buf, size_t count)
-> >>  {
-> >>  	struct pci_dev *pdev = to_pci_dev(dev);
-> >> -	char *driver_override, *old, *cp;
-> >> +	int ret;
-> >>  
-> >>  	/* We need to keep extra room for a newline */
-> >>  	if (count >= (PAGE_SIZE - 1))
-> >>  		return -EINVAL;
-> > 
-> > This check makes no sense in the new function.  Michael alluded to
-> > this as well.
+On Thu, Feb 24, 2022 at 07:50:09AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: 2022年2月24日 1:40
+> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > Cc: l.stach@pengutronix.de; bhelgaas@google.com; broonie@kernel.org;
+> > lorenzo.pieralisi@arm.com; jingoohan1@gmail.com; festevam@gmail.com;
+> > francesco.dolcini@toradex.com; linux-pci@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
+> > Subject: Re: [PATCH v7 8/8] PCI: imx6: Add the compliance tests mode support
+
+> > Is this a reference to a spec?  If so, I can't tell the name of the spec, the
+> > revision, or the section number.
+> Yes, it is a reference to a spec. How about change them to the following?
 > 
-> I am not sure if I got your comment properly. You mean here:
-> 1. Move this check to driver_set_override()?
-> 2. Remove the check entirely?
-
-I was mistaken about the purpose of the comment and the check.  I
-thought it had to do with *this* function, and this function doesn't
-add a newline, and there's no obvious connection with PAGE_SIZE.
-
-But looking closer, I think the "extra room for a newline" is really
-to make sure that *driver_override_show()* can add a newline and have
-it still fit within the PAGE_SIZE sysfs limit.
-
-Most driver_override_*() functions have the same comment, so maybe
-this was obvious to everybody except me :)  I do see that spi.c adds
-"when displaying value" at the end, which helps a lot.
-
-Sorry for the wild goose chase.
-
-> >> -	driver_override = kstrndup(buf, count, GFP_KERNEL);
-> >> -	if (!driver_override)
-> >> -		return -ENOMEM;
-> >> -
-> >> -	cp = strchr(driver_override, '\n');
-> >> -	if (cp)
-> >> -		*cp = '\0';
-> >> -
-> >> -	device_lock(dev);
-> >> -	old = pdev->driver_override;
-> >> -	if (strlen(driver_override)) {
-> >> -		pdev->driver_override = driver_override;
-> >> -	} else {
-> >> -		kfree(driver_override);
-> >> -		pdev->driver_override = NULL;
-> >> -	}
-> >> -	device_unlock(dev);
-> >> -
-> >> -	kfree(old);
-> >> +	ret = driver_set_override(dev, &pdev->driver_override, buf);
-> >> +	if (ret)
-> >> +		return ret;
-> >>  
-> >>  	return count;
-> >>  }
-> >> -- 
-> >> 2.32.0
-> >>
-> >>
-> >> _______________________________________________
-> >> linux-arm-kernel mailing list
-> >> linux-arm-kernel@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> PCI: imx6: Add compliance tests mode support
 > 
+> Refer to the Chapter 3.2 System Board Signal Quality of PCI Express
+> Architecture PHY Test Specification Revision 2.0.
 > 
-> Best regards,
-> Krzysztof
+> Signal quality tests (for example: jitter, differential eye opening and
+> so on) can be executed with devices in the polling.compliance state.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> To let the device support polling.compliance state, the clocks and powers
+> shouldn't be turned off when the probe of device driver fails.
+> 
+> Based on CLB (Compliance Load Board) Test Fixture and so on test
+> equipments, the PHY link would be down during the compliance tests.
+> Refer to this scenario, add the i.MX PCIe compliance tests mode enable
+> support, and keep the clocks and powers on, and finish the driver probe
+> without error return.
+> 
+> Use the "pci_imx6.compliance=1" in kernel command line to enable the
+> compliance tests mode.
+
+Sounds good, thanks.
