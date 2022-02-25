@@ -2,104 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D1814C4541
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 14:04:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B13484C459F
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 14:14:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234167AbiBYNFC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 08:05:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38664 "EHLO
+        id S241016AbiBYNNI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 08:13:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240882AbiBYNE7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 08:04:59 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA721E5A5A;
-        Fri, 25 Feb 2022 05:04:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F8DD61C3F;
-        Fri, 25 Feb 2022 13:04:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1710C340E7;
-        Fri, 25 Feb 2022 13:04:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645794266;
-        bh=gdf8s76fH34Bh2Vwgt/Faw/t+5GPOkcmWqEgY93CwF0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FRmByzmjAFfB81VvBzGdQnHWmjKxktkTlmz6ZRQ61ZMvzec5bEvOJcSOTlGhwT9LS
-         cHRE8zzfE8qWtuZHce1el1sEhpq2QgDOxTzPVc5WnDxl+91mQSVH2JY6yhbfc11OMF
-         OCArkVPrIm+uuPhNVRaPfT2FMdxSCC4DVb6+yEe8fblhDsABBsvPgO5M4HJDlZEVvU
-         hcY16n9Dvo++UKp2UEURFpXtiovPzKPtOJ9mDvMTz/0DG7iBo3mcwo/SLinhVQRpUE
-         eYpgYBCDGXRqZnbMfvsQ99BlrM612b6h85RHYgNGid0a7BcKZohEmtNcJye0Dv2HO+
-         GQm0BOkv91s+A==
-Received: by pali.im (Postfix)
-        id F223F7EF; Fri, 25 Feb 2022 14:04:22 +0100 (CET)
-Date:   Fri, 25 Feb 2022 14:04:22 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 05/12] PCI: mvebu: Correctly configure x1/x4 mode
-Message-ID: <20220225130422.2aordy6mb2nxcxht@pali>
-References: <20220222155030.988-6-pali@kernel.org>
- <20220225000800.GA304526@bhelgaas>
+        with ESMTP id S241007AbiBYNNI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 08:13:08 -0500
+Received: from mail-mut.mcl.gg (mail-mut.mcl.gg [IPv6:2a0f:85c1:beef:2011::25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50155181E55
+        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 05:12:35 -0800 (PST)
+Message-ID: <3db2e80c-76aa-2f93-7be2-d2c34283289d@mcl.gg>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mcl.gg; s=mail;
+        t=1645794750; bh=owDrh3jCAesAqtGwF9HgH+X6SWFko8JbNWCP+uD6IEs=;
+        h=Date:To:Cc:References:From:Subject:In-Reply-To;
+        b=je/XYiqXaH5Z2Bee6ZIklrkt2Qg0VMP1DqN1x+Sh8CA4LsEO4QK3jF6kh0XrVB7uh
+         di9TnhVDuXIaGtuAP0bkJUTGFzV88ZkxOU0s6EYvtlwmkdIpDLpPGwGnpTlv1rerP7
+         vN8IYcq4ccdRFAseIsQCpkGVJsWPu3qCrAQKbWoEjFS/tObIBdqBAnyCzu1BKYYIR7
+         hsBhBBWy2XgrcOLPQLVqBZlPlPmVsfw0k+ZOPJf/CrKI41Nho8ZmgaxkQDL87R/3+e
+         PI5QMkN4/5TURU/z8SnFol5aRHDnj35YnytO6mSiGNXgmR7bnA1a7ky4nZOz5y5jDy
+         0iBYGgthdjPgQ==
+Date:   Fri, 25 Feb 2022 14:12:30 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+References: <d4dd76f4-19e4-c35a-bd46-6e014707402e@mcl.gg>
+ <20220224162532.GA274119@bhelgaas> <20220224172136.ydx4wu7avmfq4ndt@pali>
+From:   Marcel Menzel <mail@mcl.gg>
+Subject: Re: Kernel 5.16.3 and above fails to detect PCIe devices on Turris
+ Omnia (Armada 385 / mvebu)
+In-Reply-To: <20220224172136.ydx4wu7avmfq4ndt@pali>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220225000800.GA304526@bhelgaas>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 24 February 2022 18:08:00 Bjorn Helgaas wrote:
-> On Tue, Feb 22, 2022 at 04:50:23PM +0100, Pali Rohár wrote:
-> > If x1/x4 mode is not set correctly then link with endpoint card is not
-> > established.
-> > 
-> > Use DTS property 'num-lanes' to deteriminate x1/x4 mode.
-> 
-> I know this is already merged, but if tweaking for any other reason,
-> s/deteriminate/determine/
-> 
-> > +	 * Set Maximum Link Width to X1 or X4 in Root Port's PCIe Link
-> > +	 * Capability register. This register is defined by PCIe specification
-> > +	 * as read-only but this mvebu controller has it as read-write and must
-> > +	 * be set to number of SerDes PCIe lanes (1 or 4). If this register is
-> > +	 * not set correctly then link with endpoint card is not established.
-> 
-> True, everything in Link Capability is RO or HwInit, but that's for
-> the architected access via config space.  I think a device-specific
-> mechanism like this is fair game as long as you do it before anybody
-> can read it via config space.
 
-Maybe I was not clear and explicit in above comment, but this register
-sets number of PCIe lanes which HW will use. Armada PCIe controllers
-supports only x1 and x4. Sometimes default HW value is 4 for x1 HW and
-sometimes default value for x4 HW is 1. First case cause that link never
-comes up (HW is trying to setup 4 lanes but in reality there is only
-one, so link training never finish) and second case cause degraded
-performance (x4 link is established only in x1 mode as HW is via this
-register instructed to ignores other 3 lanes).
 
-So basically HW designers misused this Link Capability register for
-configuring PCIe Link of PCIe Root Port.
+Am 24.02.2022 um 18:21 schrieb Pali Rohár:
+> On Thursday 24 February 2022 10:25:32 Bjorn Helgaas wrote:
+>> On Thu, Feb 24, 2022 at 05:00:30PM +0100, Marcel Menzel wrote:
+>>> +linux-pci
+>>>
+>>> Am 24.02.2022 um 14:52 schrieb Marcel Menzel:
+>>>> Am 24.02.2022 um 14:09 schrieb Marcel Menzel:
+>>>>> Hello,
+>>>>>
+>>>>> When upgrading from kernel 5.16.2 to a newer version (tried 5.16.3
+>>>>> and 5.16.10 with unchanged .config), the Kernel fails to detect both
+>>>>> my installed mPCIe WiFi cards in my Turris Omnia (newer version,
+>>>>> silver case, GPIO pins installed again).
+>>>>> I have two Mediatek MT7915 based cards installed. I also tried with
+>>>>> one Atheros at9k and one ath10k based card, yielding the same
+>>>>> result. On a Kernel version newer than 5.16.2, all cards aren't
+>>>>> getting recognized correctly.
+>>>>>
+>>>>> Before 5.16.3 I also had to disable PCIe ASPM via boot aragument,
+>>>>> otherwise the WiFi drivers would complain about weird device
+>>>>> behaviors and failing to initialize them, but re-enabling it does
+>>>>> not yield any different results.
+>> Please try this commit, which is headed to mainline today:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=for-linus&id=c49ae619905eebd3f54598a84e4cd2bd58ba8fe9
+>>
+>> This commit should fix the PCI enumeration problem.
+> It should fix that regression. If not, please let me know.
+Can confirm this patch solving the issue. Many thanks!
 
-> > +	 */
-> > +	lnkcap = mvebu_readl(port, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP);
-> > +	lnkcap &= ~PCI_EXP_LNKCAP_MLW;
-> > +	lnkcap |= (port->is_x4 ? 4 : 1) << 4;
-> > +	mvebu_writel(port, lnkcap, PCIE_CAP_PCIEXP + PCI_EXP_LNKCAP);
+>> If you still have
+>> to disable ASPM, that sounds like a separate problem that we should
+>> also try to debug.
+> This is different and known issue and **not** related to ASPM. I spend
+> some time on it, initially I thought it is bug in Atheros cards, but now
+> I'm in impression that this is issue in Marvell PCIe HW that link
+> retraining (required step of ASPM) triggers either Link Down or Hot
+> Reset which triggers another Atheros issue (this one is already
+> documented in kernel pci quirks code).
+>
+> I will try to implement some workaround for this but requirement is to
+> have all new improvements in pci-mvebu.c + pci-aardvark.c drivers... and
+> review process is slow. So it would not be before all those changes are
+> reviewed and merged.
+Removing "pcie_aspm=off" works for my MT7915E based cards, having had no 
+issues so far. So it doesn't seem to be an issue with the Marvell 
+hardware itself at least.
+
+Regarding Atheros cards: I disabled it back then for my Atheros AR9582 & 
+QCA9880 cards and never re-enabled it when I switched to the MT7915E 
+cards, which I forgot to mention in my first mail, sorry!
+I put those two cards back into the device to test it, and the same 
+problem occurs why I disabled it back then. The router completely 
+freezes while booting with this as the last log lines (gathered via serial):
+
+[   10.400986] ath9k 0000:02:00.0: can't change power state from D3cold 
+to D0 (config space inaccessible)
+[   10.466924] ath10k_pci 0000:03:00.0: can't change power state from 
+D3cold to D0 (config space inaccessible)
+[   10.613847] ath10k_pci 0000:03:00.0: failed to wake up device : -110
+[   10.622944] usb 1-1: New USB device found, idVendor=0cf3, 
+idProduct=3004, bcdDevice= 0.02
+[   10.635092] usb 1-1: New USB device strings: Mfr=0, Product=0, 
+SerialNumber=0
+[   10.659930] ath10k_pci: probe of 0000:03:00.0 failed with error -110
+
+This seems to be another topic however. I'd be glad to test and try to 
+debug fixes and / or gather additional information on my hardware 
+regarding this problem.
