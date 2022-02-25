@@ -2,60 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67AD84C4CC6
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 18:42:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5410F4C4CDF
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 18:51:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243951AbiBYRnC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 12:43:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56044 "EHLO
+        id S229750AbiBYRvy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 12:51:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239434AbiBYRnC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 12:43:02 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E103747041;
-        Fri, 25 Feb 2022 09:42:28 -0800 (PST)
+        with ESMTP id S229594AbiBYRvt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 12:51:49 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B21622313B;
+        Fri, 25 Feb 2022 09:51:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9994AB832D3;
-        Fri, 25 Feb 2022 17:42:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E00C340F0;
-        Fri, 25 Feb 2022 17:42:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D545861DFA;
+        Fri, 25 Feb 2022 17:51:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E26CBC340E7;
+        Fri, 25 Feb 2022 17:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645810946;
-        bh=jfHP8ngKi4vi3hByTlvRBRmGbm9iwkShUz8a4jmfoDA=;
+        s=k20201202; t=1645811473;
+        bh=4OGwXvj6qG40FpaSoNd3Q08HMEjHMoeogTnv4EWa8cg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=n2kvSfc3paE5uL2pMwk1S162tbwbF/72CqdijVqlJrce7vDG9FBy+jqWdaH3istvR
-         2VesiPVL/8aE4R3giOSVzAO3EKj1IW4CBrkRgRVWZUgaPbu2sjnyywLMoyrEhhh/TT
-         zw93DjlZXGL6IS86ZJmESPcGTiOrZ1UKeC/qikGAW6KDolKQLXnQk3VZRi9Nm7YwsN
-         77Y4nmToTJnrlcd410RW94elR9bPMNuiu9cAxoeXUzKhtmgwO0hIEnaa9VldTHz8oU
-         5dO9RyjQ6SfjzB9pw3qppG5X0senYPvCFW87hoxmezrQuSXbHr6+RiZZim0B2saAMx
-         KriJ61n3uN8fw==
-Date:   Fri, 25 Feb 2022 11:42:24 -0600
+        b=ILebw+DPu/ytkCQwojobeXNB8JX0usxgEWR0mD61kJ1R+PoCCL1Tw5MULyNKQzLyX
+         g+agQx4t1UaZhZ6KQ2MFvVIVrH9dAzIDGQjdRxdHeAJ+rRFZszmOQeSq9DBlK8aEVq
+         KEin/IhXQe1qwzCSGjeB4eN/2DATuH801k1+LJo0brl5DIUBXQ5Dj/g4b4MLmJTRhH
+         1Gbf1nE3/YZzIbx83UY01nQbm28MNJK0W+IBYjm6dvtI6K65V4w7cKtJFKufEiJWIu
+         OQNN1V6GIhVbX02eL++cq8SEQoP9D86aH2/9MPqi/8RnGSrEpoqGiSyZ8TzSo65/DU
+         s4pSYD9Ex+hgQ==
+Date:   Fri, 25 Feb 2022 11:51:11 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "open list:X86 PLATFORM DRIVERS" 
-        <platform-driver-x86@vger.kernel.org>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Alexander.Deucher@amd.com, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v5 3/7] PCI: Drop the `is_thunderbolt` attribute from PCI
- core
-Message-ID: <20220225174224.GA366735@bhelgaas>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] PCI: Add PCI_EXP_SLTCAP_*_SHIFT macros
+Message-ID: <20220225175111.GA367168@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220224215116.7138-4-mario.limonciello@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220225182216.2fcf5455@thinkpad>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -66,83 +61,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 03:51:12PM -0600, Mario Limonciello wrote:
-> The `is_thunderbolt` attribute originally had a well defined list of
-> quirks that it existed for, but it has been overloaded with more
-> meaning.
-> 
-> Instead use the driver core removable attribute to indicate the
-> detail a device is attached to a thunderbolt or USB4 chain.
-> 
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/pci/probe.c               | 2 +-
->  drivers/platform/x86/apple-gmux.c | 2 +-
->  include/linux/pci.h               | 5 ++---
->  3 files changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 17a969942d37..1b752d425c47 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1584,7 +1584,7 @@ static void set_pcie_thunderbolt(struct pci_dev *dev)
->  	/* Is the device part of a Thunderbolt controller? */
->  	vsec = pci_find_vsec_capability(dev, PCI_VENDOR_ID_INTEL, PCI_VSEC_ID_INTEL_TBT);
->  	if (vsec)
-> -		dev->is_thunderbolt = 1;
-> +		dev->external_facing = true;
->  }
->  
->  static void set_pcie_untrusted(struct pci_dev *dev)
-> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-> index 57553f9b4d1d..4444da0c39b0 100644
-> --- a/drivers/platform/x86/apple-gmux.c
-> +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -596,7 +596,7 @@ static int gmux_resume(struct device *dev)
->  
->  static int is_thunderbolt(struct device *dev, void *data)
->  {
-> -	return to_pci_dev(dev)->is_thunderbolt;
-> +	return to_pci_dev(dev)->external_facing;
->  }
->  
->  static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 1e5b769e42fc..d9719eb14654 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -442,7 +442,6 @@ struct pci_dev {
->  	unsigned int	is_virtfn:1;
->  	unsigned int	is_hotplug_bridge:1;
->  	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
-> -	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
->  	unsigned int	no_cmd_complete:1;	/* Lies about command completed events */
->  
->  	/*
-> @@ -2447,11 +2446,11 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
->  {
->  	struct pci_dev *parent = pdev;
->  
-> -	if (pdev->is_thunderbolt)
-> +	if (dev_is_removable(&pdev->dev))
->  		return true;
->  
->  	while ((parent = pci_upstream_bridge(parent)))
-> -		if (parent->is_thunderbolt)
-> +		if (dev_is_removable(&parent->dev))
->  			return true;
->  
->  	return false;
+On Fri, Feb 25, 2022 at 06:22:16PM +0100, Marek Behún wrote:
+> On Fri, 25 Feb 2022 09:37:56 -0600
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Since you remove this function entirely later, it seems like you might
-as well push this to the end of the series, so you won't have to
-change it before removing it.
+> > Yes, it's a mix.  For some recent additions, I've resisted adding the
+> > _SHIFT macros on the theory that they clutter the file, they never
+> > change, and the main point of the #defines is readability and so
+> > grep/tags/etc can find things.
+> > 
+> > There are a *few* users of FIELD_PREP() and FIELD_GET():
+> > 
+> >   git grep -E "FIELD_(GET|PREP)\(PCI_EXP"
+> > 
+> > and I'm inclined to go that direction in the future.  What do you
+> > think?
+> 
+> I am also pro that direction.
+> 
+> Would you also like to convert current usages in the .c driver files?
+> 
+> We can't remove the existing macros since they are in UAPI, but we can
+> convert drivers so that they don't use _SHIFT macros.
 
-That would just leave the "PCI_VSEC_ID_INTEL_TBT implies external-facing"
-assumption above.  Not having a Thunderbolt spec, I have no idea how
-you deal with that.
-
-But it is definitely not the case that "dev_is_removable() implies
-device is Thunderbolt", so I don't think this last hunk can work.
+Certainly not a high priority, but it actually looks like there aren't
+*that* many uses in drivers/pci/, so I'd be OK with converting them.
 
 Bjorn
