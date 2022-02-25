@@ -2,237 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2D414C449F
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 13:30:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A166C4C44A0
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 13:31:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240590AbiBYMam (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 07:30:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48028 "EHLO
+        id S240640AbiBYMb2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 07:31:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236770AbiBYMal (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 07:30:41 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6148B1C3D19
-        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 04:30:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645792209; x=1677328209;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=i2m1TRy0RcDtgZROXZhe1QYBeb54AdEblG75tGnILy8=;
-  b=OGAXdFJjNUvI4GkQYsph+KfOrsuRKK2DmVexQghF2Keh16Urg5nTMlJQ
-   N6yqnVtWLMR27qWKDxOfKLI6+WtjOuWnRd5Xkdtv4yvBPDG2VUdtO0WE5
-   SQxXdFHxEzGGIpkQc8UX6I3AAKvrqByueOrsmzl+q4QLgrVkgGU9dZjGI
-   CSdaa02whjH4Xv+WEuI3s580NzAQ2JYXm+UxGIvr8AkB5SkEY6bfF4ona
-   +vIgnQIyeDa1d9cI7LX5fF4iK2mZqIN6KQnGSnfAUkI50Sy54/S/oP7MB
-   qBUOnwpf8/HXssHvTgAoUghgF8kZP8JY5lKOyEmPmi68W3KY/6qkWdHSA
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10268"; a="233111111"
-X-IronPort-AV: E=Sophos;i="5.90,136,1643702400"; 
-   d="scan'208";a="233111111"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2022 04:30:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,136,1643702400"; 
-   d="scan'208";a="628829856"
-Received: from lkp-server01.sh.intel.com (HELO 788b1cd46f0d) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 25 Feb 2022 04:30:07 -0800
-Received: from kbuild by 788b1cd46f0d with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nNZja-0004IV-Tr; Fri, 25 Feb 2022 12:30:06 +0000
-Date:   Fri, 25 Feb 2022 20:29:04 +0800
-From:   kernel test robot <lkp@intel.com>
+        with ESMTP id S234513AbiBYMb1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 07:31:27 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F7A214FBA;
+        Fri, 25 Feb 2022 04:30:55 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 77CFC61B1D;
+        Fri, 25 Feb 2022 12:30:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B157C340E7;
+        Fri, 25 Feb 2022 12:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645792254;
+        bh=NYB7W5hUbS2zZedM+oLWCNkYlxgEa7XFe2VF9aAqvWM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g43ZGUP1Q3iGRy55LTmE+I++1QLpUhHIEL+ZzdT2ql3v22SwDeUFf/lm8JintNN/E
+         8o+OaYJJNdGOugjf92a8nT3Chbs9Mc4C1JZSyFzg7Pfg9fC/fjRQtQK1j1iB+M9ELt
+         RmdewUgoBrZjGBW/XxvLUSGUpSAV+TyoGlF43HCP52B9Fv7RNOujK9qtgHZQdqsJMP
+         P9p1ljcpnrFZ06o0j7iENIkfNd8HYwdtkrQYKRqTB+0E4ZSWFaaqIWfx6LrJ3C2jRL
+         Am2brfc+e5DP0idzWUX5lEV0lWrT052PNQ4yVkiSoFhnuoGxcNIAh5FoYAoiRYpN/J
+         k8rCO7BKm2Enw==
+Received: by pali.im (Postfix)
+        id A5B1C7EF; Fri, 25 Feb 2022 13:30:51 +0100 (CET)
+Date:   Fri, 25 Feb 2022 13:30:51 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/bridge-class-codes] BUILD SUCCESS
- fe665816e0d4ff4945c8ca720278023a4d05a6b3
-Message-ID: <6218cb90.xHuiftgY8w0M09Sa%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] PCI: Add function for parsing
+ 'slot-power-limit-milliwatt' DT property
+Message-ID: <20220225123051.xlsv7fkesdf5upeh@pali>
+References: <20220222163158.1666-5-pali@kernel.org>
+ <20220224204715.GA291889@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220224204715.GA291889@bhelgaas>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/bridge-class-codes
-branch HEAD: fe665816e0d4ff4945c8ca720278023a4d05a6b3  PCI: iproc: Set all 24 bits of PCI class code
+On Thursday 24 February 2022 14:47:15 Bjorn Helgaas wrote:
+> On Tue, Feb 22, 2022 at 05:31:56PM +0100, Pali Rohár wrote:
+> > Add function of_pci_get_slot_power_limit(), which parses the
+> > 'slot-power-limit-milliwatt' DT property, returning the value in
+> > milliwatts and in format ready for the PCIe Slot Capabilities Register.
+> > 
+> > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > Signed-off-by: Marek Behún <kabel@kernel.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  drivers/pci/of.c  | 64 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/pci/pci.h | 15 +++++++++++
+> >  2 files changed, 79 insertions(+)
+> > 
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index cb2e8351c2cc..2b0c0a3641a8 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -633,3 +633,67 @@ int of_pci_get_max_link_speed(struct device_node *node)
+> >  	return max_link_speed;
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_pci_get_max_link_speed);
+> > +
+> > +/**
+> > + * of_pci_get_slot_power_limit - Parses the "slot-power-limit-milliwatt"
+> > + *				 property.
+> > + *
+> > + * @node: device tree node with the slot power limit information
+> > + * @slot_power_limit_value: pointer where the value should be stored in PCIe
+> > + *			    Slot Capabilities Register format
+> > + * @slot_power_limit_scale: pointer where the scale should be stored in PCIe
+> > + *			    Slot Capabilities Register format
+> > + *
+> > + * Returns the slot power limit in milliwatts and if @slot_power_limit_value
+> > + * and @slot_power_limit_scale pointers are non-NULL, fills in the value and
+> > + * scale in format used by PCIe Slot Capabilities Register.
+> > + *
+> > + * If the property is not found or is invalid, returns 0.
+> > + */
+> > +u32 of_pci_get_slot_power_limit(struct device_node *node,
+> > +				u8 *slot_power_limit_value,
+> > +				u8 *slot_power_limit_scale)
+> > +{
+> > +	u32 slot_power_limit;
+> 
+> Including "mw" or similar reference to the units would give a hint of
+> how to relate the code to the spec.
+> 
+> > +	u8 value, scale;
+> > +
+> > +	if (of_property_read_u32(node, "slot-power-limit-milliwatt",
+> > +				 &slot_power_limit))
+> > +		slot_power_limit = 0;
+> > +
+> > +	/* Calculate Slot Power Limit Value and Slot Power Limit Scale */
+> 
+> Add a spec reference to PCIe r6.0, sec 7.5.3.9.  IIUC, this supports
+> up to 300W, which was what r5.0 defined, but r6.0 added values up to
+> 0xfe (600W).
 
-elapsed time: 720m
+I did not know about it and I have not seen/read r6.0.
 
-configs tested: 148
-configs skipped: 3
+It would be nice if somebody with access to r6.0 send a patch to lspci
+utility, so we could write support for 600W based on lspci parser.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> > +	if (slot_power_limit == 0) {
+> > +		value = 0x00;
+> > +		scale = 0;
+> > +	} else if (slot_power_limit <= 255) {
+> > +		value = slot_power_limit;
+> > +		scale = 3;
+> > +	} else if (slot_power_limit <= 255*10) {
+> > +		value = slot_power_limit / 10;
+> > +		scale = 2;
+> > +	} else if (slot_power_limit <= 255*100) {
+> > +		value = slot_power_limit / 100;
+> > +		scale = 1;
+> > +	} else if (slot_power_limit <= 239*1000) {
+> > +		value = slot_power_limit / 1000;
+> > +		scale = 0;
+> > +	} else if (slot_power_limit <= 250*1000) {
+> > +		value = 0xF0;
+> > +		scale = 0;
+> > +	} else if (slot_power_limit <= 275*1000) {
+> > +		value = 0xF1;
+> > +		scale = 0;
+> > +	} else {
+> > +		value = 0xF2;
+> > +		scale = 0;
+> > +	}
+> > +
+> > +	if (slot_power_limit_value)
+> > +		*slot_power_limit_value = value;
+> > +
+> > +	if (slot_power_limit_scale)
+> > +		*slot_power_limit_scale = scale;
+> > +
+> > +	return slot_power_limit;
+> 
+> If "slot-power-limit-milliwatt" contains a value larger than can be
+> represented in "value" and "scale", the return value will not agree
+> with value/scale, will it?
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-powerpc              randconfig-c003-20220225
-mips                 randconfig-c004-20220225
-m68k                        mvme16x_defconfig
-sh                ecovec24-romimage_defconfig
-sh                         microdev_defconfig
-ia64                        generic_defconfig
-h8300                    h8300h-sim_defconfig
-openrisc                            defconfig
-sh                        apsh4ad0a_defconfig
-sh                  sh7785lcr_32bit_defconfig
-h8300                     edosk2674_defconfig
-sh                           se7751_defconfig
-arm                         s3c6400_defconfig
-arm                         assabet_defconfig
-arc                 nsimosci_hs_smp_defconfig
-powerpc                         wii_defconfig
-powerpc64                        alldefconfig
-arc                      axs103_smp_defconfig
-m68k                          atari_defconfig
-x86_64                           alldefconfig
-sh                           se7750_defconfig
-xtensa                generic_kc705_defconfig
-powerpc                 mpc834x_mds_defconfig
-sh                     magicpanelr2_defconfig
-mips                         rt305x_defconfig
-arm                           sama5_defconfig
-arm64                            alldefconfig
-sh                            shmin_defconfig
-sh                   sh7724_generic_defconfig
-arc                           tb10x_defconfig
-sh                           se7780_defconfig
-arc                          axs103_defconfig
-mips                         db1xxx_defconfig
-powerpc                      bamboo_defconfig
-m68k                         amcore_defconfig
-arm                        keystone_defconfig
-openrisc                         alldefconfig
-powerpc                     redwood_defconfig
-powerpc                        warp_defconfig
-xtensa                    xip_kc705_defconfig
-arc                    vdk_hs38_smp_defconfig
-h8300                               defconfig
-microblaze                      mmu_defconfig
-powerpc                      tqm8xx_defconfig
-arm                     eseries_pxa_defconfig
-sh                           se7712_defconfig
-sh                 kfr2r09-romimage_defconfig
-powerpc                      pasemi_defconfig
-m68k                          multi_defconfig
-arm                            zeus_defconfig
-arc                            hsdk_defconfig
-arm                          gemini_defconfig
-powerpc                     stx_gp3_defconfig
-arc                     nsimosci_hs_defconfig
-powerpc                     tqm8555_defconfig
-arm                  randconfig-c002-20220224
-arm                  randconfig-c002-20220223
-arm                  randconfig-c002-20220225
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-s390                 randconfig-r044-20220224
-arc                  randconfig-r043-20220224
-arc                  randconfig-r043-20220223
-riscv                randconfig-r042-20220224
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+In previous version 0xF2 was reserved for values above 275 W. So for me
+it looked like a correct solution.
 
-clang tested configs:
-powerpc              randconfig-c003-20220225
-x86_64                        randconfig-c007
-arm                  randconfig-c002-20220225
-mips                 randconfig-c004-20220225
-i386                          randconfig-c001
-riscv                randconfig-c006-20220225
-powerpc              randconfig-c003-20220224
-arm                  randconfig-c002-20220224
-mips                 randconfig-c004-20220224
-riscv                randconfig-c006-20220224
-arm                           sama7_defconfig
-riscv                    nommu_virt_defconfig
-i386                             allyesconfig
-arm                         orion5x_defconfig
-arm                                 defconfig
-arm                         hackkit_defconfig
-powerpc                    mvme5100_defconfig
-powerpc                     tqm8560_defconfig
-arm                        magician_defconfig
-powerpc                          allyesconfig
-arm                         palmz72_defconfig
-mips                     loongson2k_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220225
-hexagon              randconfig-r041-20220225
-riscv                randconfig-r042-20220225
-hexagon              randconfig-r045-20220224
-hexagon              randconfig-r041-20220224
+> Currently you only use the return value for a log message, so no real
+> harm yet, other than the fact that we might print "Slot power limit
+> 1000.0W" when the hardware will only advertise 600W available.
+> 
+> Also, if "slot-power-limit-milliwatt" contains something like
+> 260000 mW (260 W), we'll return 0xF1/0, so the hardware will
+> advertise 275 W available.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+There is no way how to encode 260 W. It is possible only 250 W or 275 W,
+and nothing between. I chose to round value to upper limit. What do you
+prefer in these cases? Upper or lower limit?
+
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 3d60cabde1a1..e10cdec6c56e 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -627,6 +627,9 @@ struct device_node;
+> >  int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
+> >  int of_get_pci_domain_nr(struct device_node *node);
+> >  int of_pci_get_max_link_speed(struct device_node *node);
+> > +u32 of_pci_get_slot_power_limit(struct device_node *node,
+> > +				u8 *slot_power_limit_value,
+> > +				u8 *slot_power_limit_scale);
+> >  void pci_set_of_node(struct pci_dev *dev);
+> >  void pci_release_of_node(struct pci_dev *dev);
+> >  void pci_set_bus_of_node(struct pci_bus *bus);
+> > @@ -653,6 +656,18 @@ of_pci_get_max_link_speed(struct device_node *node)
+> >  	return -EINVAL;
+> >  }
+> >  
+> > +static inline u32
+> > +of_pci_get_slot_power_limit(struct device_node *node,
+> > +			    u8 *slot_power_limit_value,
+> > +			    u8 *slot_power_limit_scale)
+> > +{
+> > +	if (slot_power_limit_value)
+> > +		*slot_power_limit_value = 0;
+> > +	if (slot_power_limit_scale)
+> > +		*slot_power_limit_scale = 0;
+> > +	return 0;
+> > +}
+> > +
+> >  static inline void pci_set_of_node(struct pci_dev *dev) { }
+> >  static inline void pci_release_of_node(struct pci_dev *dev) { }
+> >  static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
+> > -- 
+> > 2.20.1
+> > 
