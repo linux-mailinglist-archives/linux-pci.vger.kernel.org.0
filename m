@@ -2,155 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21DCC4C4648
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 14:27:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B88644C4771
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 15:29:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238648AbiBYN1i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 08:27:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42888 "EHLO
+        id S231280AbiBYO35 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 09:29:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231407AbiBYN1i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 08:27:38 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C003C7DA82
-        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 05:27:05 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5C04861D41
-        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 13:27:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 763E3C340E7;
-        Fri, 25 Feb 2022 13:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645795624;
-        bh=fgudwGgujN7n8+7ucdsczhITRgfgLcuRkLVC7d/cbfI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AzKfu4FggnUVOwagUMZOXaYaId+0HHTsByz0eugjad+0XfvLLb5gRxpGwUrffyQlM
-         KSbV2mHddtcGTxmaZpQcj42a790hzRYxZ449NH48Z7T+wSXVA678plN3BVA7jpIBbO
-         KdrAs4p/CWAdfBIc3SwIw8gnJI/2zX+RNQWUH39koAVd7wLAOapPosANfJI5tcGiAS
-         Y7OHpVwYZlYVg29r9bg0lTHR8houOTWavYSsLPTMff/1ZAkL0FkBftn+9jkHyfHmzP
-         WMbrqsDULgkto6URG8yC6aQTuQMSNIV+DMPWFtlu1L/s7r96Da6k7IaYslu8V8Nhvh
-         6Ij+nVGcCUW7A==
-Received: by pali.im (Postfix)
-        id D0C757EF; Fri, 25 Feb 2022 14:27:01 +0100 (CET)
-Date:   Fri, 25 Feb 2022 14:27:01 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Marcel Menzel <mail@mcl.gg>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: Kernel 5.16.3 and above fails to detect PCIe devices on Turris
- Omnia (Armada 385 / mvebu)
-Message-ID: <20220225132701.fzqbvynueho2res2@pali>
-References: <d4dd76f4-19e4-c35a-bd46-6e014707402e@mcl.gg>
- <20220224162532.GA274119@bhelgaas>
- <20220224172136.ydx4wu7avmfq4ndt@pali>
- <3db2e80c-76aa-2f93-7be2-d2c34283289d@mcl.gg>
+        with ESMTP id S232662AbiBYO34 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 09:29:56 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2991322A243
+        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 06:29:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645799364; x=1677335364;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=O6hER5E1XhrsunST4ZJLI4jCQ46zinexpzFLPxonyMY=;
+  b=TG7geYYxosU33xfWYA1xG27c0dH3mIhj1pp/QgVzZpL1iXawmXBzPlbm
+   7+YvCMTryEPFWE7zKGZotljKLWdJ9NEelV5UPfUkO+b2Up7qyqT9wWoLu
+   Ujk8pB/wchw0EbitNARuTV6Us2ADelkooLmJoIU4ErXz9oxkN4tiEQIaQ
+   3zgndBWKCsAzWNnOx7JurLccfz7BQ5InS2mtXyglCeoU1Jtr+Y8hV+F4J
+   xqwms4LJXEsgt/I6EDWb31tTZwzVK8kzIWcq7hEbDikoraqCrLVTaD2yT
+   SEznfYY/PdwogGB/igL52tH9AXF7fhL3wANBClQq8SKwa2y+GwKIJNUek
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10268"; a="338940156"
+X-IronPort-AV: E=Sophos;i="5.90,136,1643702400"; 
+   d="scan'208";a="338940156"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2022 06:29:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,136,1643702400"; 
+   d="scan'208";a="684664900"
+Received: from tejas-system-product-name.iind.intel.com ([10.145.162.130])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Feb 2022 06:29:20 -0800
+From:   Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
+To:     intel-gfx@lists.freedesktop.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Surendrakumar Upadhyay, TejaskumarX" 
+        <tejaskumarx.surendrakumar.upadhyay@intel.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH topic/core-for-CI] PCI: vmd: Prevent recursive locking on interrupt allocation
+Date:   Fri, 25 Feb 2022 19:45:50 +0530
+Message-Id: <20220225141550.162490-1-tejaskumarx.surendrakumar.upadhyay@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3db2e80c-76aa-2f93-7be2-d2c34283289d@mcl.gg>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 25 February 2022 14:12:30 Marcel Menzel wrote:
-> Am 24.02.2022 um 18:21 schrieb Pali Rohár:
-> > On Thursday 24 February 2022 10:25:32 Bjorn Helgaas wrote:
-> > > On Thu, Feb 24, 2022 at 05:00:30PM +0100, Marcel Menzel wrote:
-> > > > +linux-pci
-> > > > 
-> > > > Am 24.02.2022 um 14:52 schrieb Marcel Menzel:
-> > > > > Am 24.02.2022 um 14:09 schrieb Marcel Menzel:
-> > > > > > Hello,
-> > > > > > 
-> > > > > > When upgrading from kernel 5.16.2 to a newer version (tried 5.16.3
-> > > > > > and 5.16.10 with unchanged .config), the Kernel fails to detect both
-> > > > > > my installed mPCIe WiFi cards in my Turris Omnia (newer version,
-> > > > > > silver case, GPIO pins installed again).
-> > > > > > I have two Mediatek MT7915 based cards installed. I also tried with
-> > > > > > one Atheros at9k and one ath10k based card, yielding the same
-> > > > > > result. On a Kernel version newer than 5.16.2, all cards aren't
-> > > > > > getting recognized correctly.
-> > > > > > 
-> > > > > > Before 5.16.3 I also had to disable PCIe ASPM via boot aragument,
-> > > > > > otherwise the WiFi drivers would complain about weird device
-> > > > > > behaviors and failing to initialize them, but re-enabling it does
-> > > > > > not yield any different results.
-> > > Please try this commit, which is headed to mainline today:
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=for-linus&id=c49ae619905eebd3f54598a84e4cd2bd58ba8fe9
-> > > 
-> > > This commit should fix the PCI enumeration problem.
-> > It should fix that regression. If not, please let me know.
-> Can confirm this patch solving the issue. Many thanks!
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Perfect!
+Tejas reported the following recursive locking issue:
 
-> > > If you still have
-> > > to disable ASPM, that sounds like a separate problem that we should
-> > > also try to debug.
-> > This is different and known issue and **not** related to ASPM. I spend
-> > some time on it, initially I thought it is bug in Atheros cards, but now
-> > I'm in impression that this is issue in Marvell PCIe HW that link
-> > retraining (required step of ASPM) triggers either Link Down or Hot
-> > Reset which triggers another Atheros issue (this one is already
-> > documented in kernel pci quirks code).
-> > 
-> > I will try to implement some workaround for this but requirement is to
-> > have all new improvements in pci-mvebu.c + pci-aardvark.c drivers... and
-> > review process is slow. So it would not be before all those changes are
-> > reviewed and merged.
-> Removing "pcie_aspm=off" works for my MT7915E based cards, having had no
-> issues so far. So it doesn't seem to be an issue with the Marvell hardware
-> itself at least.
+ swapper/0/1 is trying to acquire lock:
+ ffff8881074fd0a0 (&md->mutex){+.+.}-{3:3}, at: msi_get_virq+0x30/0xc0
 
-That is probably because MT7915E card does not trigger that issue. But
-I think issue is really in Marvell hardware.
+ but task is already holding lock:
+ ffff8881017cd6a0 (&md->mutex){+.+.}-{3:3}, at: __pci_enable_msi_range+0xf2/0x290
 
-> Regarding Atheros cards: I disabled it back then for my Atheros AR9582 &
-> QCA9880 cards and never re-enabled it when I switched to the MT7915E cards,
-> which I forgot to mention in my first mail, sorry!
-> I put those two cards back into the device to test it, and the same problem
-> occurs why I disabled it back then. The router completely freezes while
-> booting with this as the last log lines (gathered via serial):
-> 
-> [   10.400986] ath9k 0000:02:00.0: can't change power state from D3cold to
-> D0 (config space inaccessible)
-> [   10.466924] ath10k_pci 0000:03:00.0: can't change power state from D3cold
-> to D0 (config space inaccessible)
-> [   10.613847] ath10k_pci 0000:03:00.0: failed to wake up device : -110
+ stack backtrace:
+  __mutex_lock+0x9d/0x920
+  msi_get_virq+0x30/0xc0
+  pci_irq_vector+0x26/0x30
+  vmd_msi_init+0xcc/0x210
+  msi_domain_alloc+0xbf/0x150
+  msi_domain_alloc_irqs_descs_locked+0x3e/0xb0
+  __pci_enable_msi_range+0x155/0x290
+  pci_alloc_irq_vectors_affinity+0xba/0x100
+  pcie_port_device_register+0x307/0x550
+  pcie_portdrv_probe+0x3c/0xd0
+  pci_device_probe+0x95/0x110
 
-At this stage there is no link with the card. But kernel does not know
-it as there is missing implementation for DLLSC interrupt in pci-mvebu.c
-driver. We need DLLSC support for debugging this issue.
+This is caused by the VMD MSI code which does a lookup of the Linux
+interrupt number for an VMD managed MSI[X] vector. The lookup function
+tries to acquire the already held mutex.
 
-For another Marvell driver (pci-aardvark.c) there is already pending
-patch for review which adds DLLSC interrupt support:
-https://lore.kernel.org/linux-pci/20220220193346.23789-9-kabel@kernel.org/
+Avoid that by caching the Linux interrupt number at initialization time
+instead of looking it up over and over.
 
-So on Armada 3720 platforms it is possible to start debugging it.
+Fixes: 82ff8e6b78fc ("PCI/MSI: Use msi_get_virq() in pci_get_vector()")
+Reported-by: "Surendrakumar Upadhyay, TejaskumarX" <tejaskumarx.surendrakumar.upadhyay@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: "Surendrakumar Upadhyay, TejaskumarX" <tejaskumarx.surendrakumar.upadhyay@intel.com>
+Cc: linux-pci@vger.kernel.org
+Link: https://lore.kernel.org/r/87a6euub2a.ffs@tglx
+---
+ drivers/pci/controller/vmd.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-I have (experimental) DLLSC support prepared also for pci-mvebu.c but it
-depends on summary interrupt which is in missing in irq-armada-370-xp.c:
-https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-mvebu
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index cc166c683638..eb05cceab964 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -99,11 +99,13 @@ struct vmd_irq {
+  * @srcu:	SRCU struct for local synchronization.
+  * @count:	number of child IRQs assigned to this vector; used to track
+  *		sharing.
++ * @virq:	The underlying VMD Linux interrupt number
+  */
+ struct vmd_irq_list {
+ 	struct list_head	irq_list;
+ 	struct srcu_struct	srcu;
+ 	unsigned int		count;
++	unsigned int		virq;
+ };
+ 
+ struct vmd_dev {
+@@ -253,7 +255,6 @@ static int vmd_msi_init(struct irq_domain *domain, struct msi_domain_info *info,
+ 	struct msi_desc *desc = arg->desc;
+ 	struct vmd_dev *vmd = vmd_from_bus(msi_desc_to_pci_dev(desc)->bus);
+ 	struct vmd_irq *vmdirq = kzalloc(sizeof(*vmdirq), GFP_KERNEL);
+-	unsigned int index, vector;
+ 
+ 	if (!vmdirq)
+ 		return -ENOMEM;
+@@ -261,10 +262,8 @@ static int vmd_msi_init(struct irq_domain *domain, struct msi_domain_info *info,
+ 	INIT_LIST_HEAD(&vmdirq->node);
+ 	vmdirq->irq = vmd_next_irq(vmd, desc);
+ 	vmdirq->virq = virq;
+-	index = index_from_irqs(vmd, vmdirq->irq);
+-	vector = pci_irq_vector(vmd->dev, index);
+ 
+-	irq_domain_set_info(domain, virq, vector, info->chip, vmdirq,
++	irq_domain_set_info(domain, virq, vmdirq->irq->virq, info->chip, vmdirq,
+ 			    handle_untracked_irq, vmd, NULL);
+ 	return 0;
+ }
+@@ -685,7 +684,8 @@ static int vmd_alloc_irqs(struct vmd_dev *vmd)
+ 			return err;
+ 
+ 		INIT_LIST_HEAD(&vmd->irqs[i].irq_list);
+-		err = devm_request_irq(&dev->dev, pci_irq_vector(dev, i),
++		vmd->irqs[i].virq = pci_irq_vector(dev, i);
++		err = devm_request_irq(&dev->dev, vmd->irqs[i].virq,
+ 				       vmd_irq, IRQF_NO_THREAD,
+ 				       vmd->name, &vmd->irqs[i]);
+ 		if (err)
+@@ -969,7 +969,7 @@ static int vmd_suspend(struct device *dev)
+ 	int i;
+ 
+ 	for (i = 0; i < vmd->msix_count; i++)
+-		devm_free_irq(dev, pci_irq_vector(pdev, i), &vmd->irqs[i]);
++		devm_free_irq(dev, vmd->irqs[i].virq, &vmd->irqs[i]);
+ 
+ 	return 0;
+ }
+@@ -981,7 +981,7 @@ static int vmd_resume(struct device *dev)
+ 	int err, i;
+ 
+ 	for (i = 0; i < vmd->msix_count; i++) {
+-		err = devm_request_irq(dev, pci_irq_vector(pdev, i),
++		err = devm_request_irq(dev, vmd->irqs[i].virq,
+ 				       vmd_irq, IRQF_NO_THREAD,
+ 				       vmd->name, &vmd->irqs[i]);
+ 		if (err)
+-- 
+2.34.1
 
-So without that summary interrupt in irq-armada-370-xp.c driver it is
-not possible to get information about it in pci-mvebu.c driver.
-
-> [   10.622944] usb 1-1: New USB device found, idVendor=0cf3, idProduct=3004,
-> bcdDevice= 0.02
-> [   10.635092] usb 1-1: New USB device strings: Mfr=0, Product=0,
-> SerialNumber=0
-> [   10.659930] ath10k_pci: probe of 0000:03:00.0 failed with error -110
-> 
-> This seems to be another topic however. I'd be glad to test and try to debug
-> fixes and / or gather additional information on my hardware regarding this
-> problem.
