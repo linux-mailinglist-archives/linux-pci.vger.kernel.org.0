@@ -2,53 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76D8E4C4D84
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 19:20:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D81F44C4DA3
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 19:23:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231331AbiBYSUj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 13:20:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34654 "EHLO
+        id S233057AbiBYSYK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 13:24:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230169AbiBYSUj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 13:20:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380691F83EA;
-        Fri, 25 Feb 2022 10:20:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D184461E45;
-        Fri, 25 Feb 2022 18:20:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED835C340E7;
-        Fri, 25 Feb 2022 18:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645813206;
-        bh=3pp28Z7LYj0TeOCOwmecu2bPUACxkEVQ3wkBZOO598I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BQc9DcTOi6HSwOn/ET23Hyq6JZAqi0MgedWChGOKvgiN4xFTTvife4hrn12ANPE89
-         7hlrTB1An0XU3F12OarfKxgb4nwmJFB8SyK+qlx4LfknLxKYwsV43slCXVzXCxQELI
-         WGzhkGLQTagV9G74sN3HEy5qGt4h4gUTY3ssgeWGao2iW7fyQwWtKWQobdinQFkjIC
-         c6jo6cMd0oTo5/EeH7yUmTlxh0bdE/Y8IcgcrEFW5LANJMCCYgIwJg4Mo+IcWFJS0G
-         hbKewORzsotOyVzsrwKpeKbmP1yMqcLRVm84o5eU1GcRJADlce/pNHxRJuR6L9jfUO
-         h3H2m8rcQdgSA==
-Date:   Fri, 25 Feb 2022 12:20:04 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yusuf Khan <yusisamerican@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        tiwai@suse.com, perex@perex.cz, alex.bou9@gmail.com,
-        mporter@kernel.crashing.org, logang@deltatee.com,
-        kurt.schwemmer@microsemi.com, Bjorn Helgaas <bhelgaas@google.com>,
-        kw@linux.com, robh@kernel.org, lorenzo.pieralisi@arm.com,
-        jonathan.derrick@linux.dev, nirmal.patel@linux.intel.com
-Subject: Re: [PATCH] Removed some usages of the deprecated "pci-dma-compat.h"
- KPI
-Message-ID: <20220225182004.GA369816@bhelgaas>
+        with ESMTP id S233126AbiBYSYH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 13:24:07 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9F2B1B4024
+        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 10:23:26 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id z16so5395439pfh.3
+        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 10:23:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=lw2tVDAuKEfg8bijjSTLHy0bAbafPvPmOe1XuQajp7A=;
+        b=mI06mSIHHJFfg1p5ZrLzTf8yyoeQ/rZigLingXhIVkNkFxDwrh1z/QmxkS/qL3b5D/
+         RMbxJ6xWTK5mWL5RcL+goD/fNZngB1FneyBJBmpMjEWiBRoDpx1goVON9wAgQJxx/RHC
+         IUemPeGZdgam1Lkno02aKlFhsbFvVZ7BGG4mkcYvA9H+lUfPA/7ZXDqZ1exm0BONLn+t
+         9YI2lXMEnc0EX6vpYe4yqzD/qUTz5QOXC6yvsZXhdoKCckXh9s9GO0IwRSCuaejZU6xx
+         KcFvynS1YgkPBmajOzq3i54ue16kgz0jPmH7PrsPBd22QFKP2MLla0GYnRdf8Xjyh+lL
+         fx9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=lw2tVDAuKEfg8bijjSTLHy0bAbafPvPmOe1XuQajp7A=;
+        b=1VqIh+0e1eTmxKEUUeCHPgxSvzC0J/Sk/tEmaxkxad1JqvTsMIpV7+IQYeoKfxOHw6
+         pPi209ny1AYQo2T3lAB3Ddentsy8AcorRm4V84NofB1JjkLczsuUCMLLBDCoBeTeHeap
+         oIDxSIyyUFMowqfcJ67uEliZL8W5DCz+GZ5SdZUI7BeVa0Oi1fsBgTpwq7EGCalImc+m
+         UdddNxBGBIvqIt7qMWQ7/Ct8g7pUrfMG3bJysn1TnqDdyVFDIHWpHfL2+JTp6DEE3XMg
+         RmnWxgt8lZi3bWNW+cQ5/fY5Ayzq+LFlmCt6CaegNrHyDp4+2EbBRxZo9Fm+vBFOTzEY
+         z5JQ==
+X-Gm-Message-State: AOAM530piZBzHcB0jXVnI1Z5aasjK4S3b7zuiR16HiXjkgpp91X9f25o
+        6ChG7DlFVpztf3xYIQifCmdJ
+X-Google-Smtp-Source: ABdhPJyMVviF/ifryo3SfljNP/FoVPf24sEk4F74H3nfQjxNlUpGcpxqW+61s2P7YKVfMLViHCmLsg==
+X-Received: by 2002:a63:7742:0:b0:374:7607:afa with SMTP id s63-20020a637742000000b0037476070afamr7178017pgc.391.1645813406296;
+        Fri, 25 Feb 2022 10:23:26 -0800 (PST)
+Received: from thinkpad ([220.158.159.72])
+        by smtp.gmail.com with ESMTPSA id f13-20020a056a001acd00b004f0f9a967basm4181042pfv.100.2022.02.25.10.23.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Feb 2022 10:23:26 -0800 (PST)
+Date:   Fri, 25 Feb 2022 23:53:21 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     kishon@ti.com, lorenzo.pieralisi@arm.com
+Cc:     omp@nvidia.com, vidyas@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        dmitry.baryshkov@linaro.org
+Subject: PCI: endpoint: Usage of atomic notifier chain
+Message-ID: <20220225182321.GG274289@thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJoG2+9Tp4ZW4tqTVSgp7wukduEFKHiqOXJO-Yn17OwTvn+a+w@mail.gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,8 +67,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 01:54:54AM -0800, Yusuf Khan wrote:
-> See https://lkml.org/lkml/2022/2/23/11 Before you think of this commit!
+Hi,
 
-Use links to https://lore.kernel.org/r/ whenever you can, instead of
-lkml.org, etc.
+While working with the PCI endpoint subsystem, I stumbled upon the sleeping
+in atomic context bug during CORE_INIT phase. The issue seems to be due to the
+usage of "epc lock" (mutex) in functions such as set_msi, set_msix,
+write_header, etc...
+
+These functions are supposed to be used in the atomic notifier chain by the
+CORE_INIT notifier. While using the lock is necessary in these functions as
+pci_epc_create() would've been called, I see two possible workarounds:
+
+1. Using non-atomic notifier chains such as blocking or raw.
+2. Modifying the EPF drivers to use workqueue in CORE_INIT notifier chain. But
+this has the implication of missing the workqueue execution before hitting other
+PCI events as there might be a delay in scheduling the work item.
+
+I prefer 1st option but I'd like to hear other ideas also.
+
+Thanks,
+Mani
