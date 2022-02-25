@@ -2,58 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EB854C39EB
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 00:55:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 235C84C3A03
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 01:02:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbiBXXyj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Feb 2022 18:54:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50460 "EHLO
+        id S229685AbiBYADA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 24 Feb 2022 19:03:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234580AbiBXXyi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 18:54:38 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F10311DB8BF;
-        Thu, 24 Feb 2022 15:54:07 -0800 (PST)
+        with ESMTP id S229479AbiBYADA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Feb 2022 19:03:00 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 531B718F239;
+        Thu, 24 Feb 2022 16:02:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7E57EB82A1B;
-        Thu, 24 Feb 2022 23:54:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D1AC340E9;
-        Thu, 24 Feb 2022 23:54:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C689361C5A;
+        Fri, 25 Feb 2022 00:02:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC0FC340E9;
+        Fri, 25 Feb 2022 00:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645746845;
-        bh=8m28xb7jX3rywztpqXC+7Sf7/JfCaAm/fcFHne2Mfy4=;
+        s=k20201202; t=1645747348;
+        bh=B5C/irAy5Ksddk0oeAfWCNVXMjjzHhykOfXsUHlDfiU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SFUz6Z502Ca7Kj0zNp0wvhF3BdzD+Zk/9kpXhzEoTRH+cCA0Bm7FQGGltf0D5VG6y
-         uv8yJchzr9kXT+6aTeqxkewFjyLWf0qvefF/i4VFjr2RIRk4fyhroRerr+/+2kzGQp
-         BaXfc73+w2CM3Z4us0WRerwLf+VBBnIxhlwWjxtiF2Z10ky3bsydBkCRJ9uve0l8LP
-         y/N6NA+t2aAHik9sHZkQRkP8HEZBIIMpEO8uyrkFTmcFm6Lq4BoJtBtNTLjs/vl/s2
-         dvj4uq4oU75qqgn7cda90FtLpZ6Paoh9Tf6K9B7VwvMuTKk7GWGfXF1oCK40lXxgp+
-         A6lSA9pQyExVQ==
-Date:   Thu, 24 Feb 2022 17:54:03 -0600
+        b=FnBk0yBT8P4/HNhq/XNKvxXaoDFhHO5SqZmvwFrWWsqUJQw/kezs9NKd44trxe2ol
+         dAD/Lef2N0wukNLou1M1AorFCxCh1Ck+CeuJyDXugG0qE4EMC/GNA98cpRN9PWi2Tu
+         xNphdc525yVvjRdNZVda4zNu4ZpZg7osW6myVg1OjCalqiQI3nvgn3ScInTdNp2iJu
+         ze0uT9v8Ux3rbKeCrE7WiwNDbuA4Hi5HksoggPw3TYjsU0SM4Pr9dpAMoqJ0VYipVM
+         4u/FLsn2RhgLPO8FTk3ZV4fXrwxRMLeoNmv2/V/k969Z8FiCv3TU4U9P/T09VOSZGo
+         k6mQtILoRoVnQ==
+Date:   Thu, 24 Feb 2022 18:02:26 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc:     "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "francesco.dolcini@toradex.com" <francesco.dolcini@toradex.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v7 8/8] PCI: imx6: Add the compliance tests mode support
-Message-ID: <20220224235403.GA303878@bhelgaas>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 04/12] dt-bindings: PCI: mvebu: Add num-lanes property
+Message-ID: <20220225000226.GA304258@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB8676DCB7CB8D94B0CBC97D0B8C3D9@AS8PR04MB8676.eurprd04.prod.outlook.com>
+In-Reply-To: <20220222155030.988-5-pali@kernel.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -64,40 +60,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 07:50:09AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: 2022å¹´2æœˆ24æ—¥ 1:40
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: l.stach@pengutronix.de; bhelgaas@google.com; broonie@kernel.org;
-> > lorenzo.pieralisi@arm.com; jingoohan1@gmail.com; festevam@gmail.com;
-> > francesco.dolcini@toradex.com; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> > kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
-> > Subject: Re: [PATCH v7 8/8] PCI: imx6: Add the compliance tests mode support
+On Tue, Feb 22, 2022 at 04:50:22PM +0100, Pali Rohár wrote:
+> Controller driver needs to correctly configure PCIe link if it contains 1
+> or 4 SerDes PCIe lanes. Therefore add a new 'num-lanes' DT property for
+> mvebu PCIe controller. Property 'num-lanes' seems to be de-facto standard
+> way how number of lanes is specified in other PCIe controllers.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/pci/mvebu-pci.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/mvebu-pci.txt b/Documentation/devicetree/bindings/pci/mvebu-pci.txt
+> index 6173af6885f8..24225852bce0 100644
+> --- a/Documentation/devicetree/bindings/pci/mvebu-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/mvebu-pci.txt
+> @@ -77,6 +77,7 @@ and the following optional properties:
+>  - marvell,pcie-lane: the physical PCIe lane number, for ports having
+>    multiple lanes. If this property is not found, we assume that the
+>    value is 0.
+> +- num-lanes: number of SerDes PCIe lanes for this link (1 or 4)
+>  - reset-gpios: optional GPIO to PERST#
+>  - reset-delay-us: delay in us to wait after reset de-assertion, if not
+>    specified will default to 100ms, as required by the PCIe specification.
+> @@ -141,6 +142,7 @@ pcie-controller {
+>  		interrupt-map = <0 0 0 0 &mpic 58>;
+>  		marvell,pcie-port = <0>;
+>  		marvell,pcie-lane = <0>;
+> +		num-lanes = <1>;
 
-> > Is this a reference to a spec?  If so, I can't tell the name of the spec, the
-> > revision, or the section number.
-> Yes, it is a reference to a spec. How about change them to the following?
-> 
-> PCI: imx6: Add compliance tests mode support
-> 
-> Refer to the Chapter 3.2 System Board Signal Quality of PCI Express
-> Architecture PHY Test Specification Revision 2.0.
-> 
-> Signal quality tests (for example: jitter, differential eye opening and
-> so on) can be executed with devices in the polling.compliance state.
-> 
-> To let the device support polling.compliance state, the clocks and powers
-> shouldn't be turned off when the probe of device driver fails.
-> 
-> Based on CLB (Compliance Load Board) Test Fixture and so on test
-> equipments, the PHY link would be down during the compliance tests.
-> Refer to this scenario, add the i.MX PCIe compliance tests mode enable
-> support, and keep the clocks and powers on, and finish the driver probe
-> without error return.
-> 
-> Use the "pci_imx6.compliance=1" in kernel command line to enable the
-> compliance tests mode.
+Is this patch really necessary?  AFAICS, the related driver change
+only sets "port->is_x4 = true" when "num-lanes = <4>", and in all
+other cases it defaults to a Max Link Width of 1:
 
-Sounds good, thanks.
+  lnkcap |= (port->is_x4 ? 4 : 1) << 4;
+
+I don't see the point of adding a value that we don't validate or do
+anything with.  E.g., I don't see an error message that would catch
+"num-lanes = <3>".
+
+Bjorn
