@@ -2,112 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 067CE4C418C
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 10:36:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 289614C41AC
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 10:43:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239162AbiBYJg5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 04:36:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60814 "EHLO
+        id S237428AbiBYJnk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 04:43:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239155AbiBYJgz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 04:36:55 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 462851F7699
-        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 01:36:24 -0800 (PST)
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 17E613FCAA
-        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 09:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1645781783;
-        bh=mwBGuSv1vzWcEgYl2MgCXz9QnnQmXLrpGmSTa9ywwuI=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=r9eAB7z4Au066qpDSZhT/9tLha4EycFEcDpSDYbGUKhKjIf6GqDyx0qOB4yMtdJ0g
-         84ewarQUNcMrY1MhjENr9hz+gZwZhthQsFtTnD8l2MUdO2beuYmflKwP1Pn8smPDxq
-         ATilhUpWEAjVu80vT+V8eS3udpxyBM4152O0envOSLXto9+dUtvR1CNRWwYztBzb1O
-         wyxvFAljpddatUQCLUt3LTK8FXE0MoodphirVw10CK9HYuGFqRXyvBqmzy9+kbqXYP
-         RKSppOkDReF4VnmoAhKPnhqTr8mJl1Jdn05HngR7ByJe7btYmeRO/EdxDHyG0Hqlaq
-         OY6Od5OYf5hbA==
-Received: by mail-ed1-f72.google.com with SMTP id r11-20020a508d8b000000b00410a4fa4768so2043478edh.9
-        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 01:36:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=mwBGuSv1vzWcEgYl2MgCXz9QnnQmXLrpGmSTa9ywwuI=;
-        b=yBYeNQQ3gnPu/cS6LwbyxXcw0hmDnA3PSDDKTnFYTAnwKiovX2qE6KrDQQs264djnJ
-         /K8Bvb/9OBU+kSbxUKSeq+vYGwkIDJG5wS8WEGd9rIHjCq4pIVKk4eQC4DEzePwV67dC
-         lGP89pduvUIC4sFLFOsdYndrjeQbLwoR8Za7Cj6hht5V9Lz8Dr6XRHKSl3dAvOd6qSuJ
-         ijqf1dyvYCYym3r05/OK3yBMLnnvSV9DmugxRm44WPR6U+82PeCERwhSH1oEC0wclaqm
-         07vPlvQ+rUyZrvZDAa62GSi2Lmlq/PDEVYSj0LzN+ZazXcrPJgjZhOa0nXGdXYvIGhXE
-         G3xg==
-X-Gm-Message-State: AOAM5300RlgKpGeEPoYZowtWMFWQq/A0175UjTXlOHiPCaM5BN0qHvTP
-        QOUxovUvvSq4NSk0Z2+Uv+jMkXuAZPVeDBswj5AZhr+phF8UQIjpwrdgKEVZH/r2cPp73cYrEbx
-        vtTW4OePiGcMybbTDB8psn0bdQGkHQ+gOy8FnsQ==
-X-Received: by 2002:a17:906:4cca:b0:6ce:6a06:bf7 with SMTP id q10-20020a1709064cca00b006ce6a060bf7mr5644751ejt.109.1645781782637;
-        Fri, 25 Feb 2022 01:36:22 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxvGXs5zpBbIxYfXArg3HJWTHPHMBjqJChT5RpHzF7M3/UrStNiNcxogS5o2fNS3FLp8Ip6Ag==
-X-Received: by 2002:a17:906:4cca:b0:6ce:6a06:bf7 with SMTP id q10-20020a1709064cca00b006ce6a060bf7mr5644737ejt.109.1645781782424;
-        Fri, 25 Feb 2022 01:36:22 -0800 (PST)
-Received: from [192.168.0.130] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
-        by smtp.gmail.com with ESMTPSA id bo9-20020a170906d04900b006ce6b8e05c1sm773655ejb.150.2022.02.25.01.36.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Feb 2022 01:36:21 -0800 (PST)
-Message-ID: <0aff95ff-5b79-8ae9-48fd-720a9f27cbce@canonical.com>
-Date:   Fri, 25 Feb 2022 10:36:20 +0100
+        with ESMTP id S233806AbiBYJnj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 04:43:39 -0500
+Received: from CHE01-GV0-obe.outbound.protection.outlook.com (mail-gv0che01on2117.outbound.protection.outlook.com [40.107.23.117])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E991A273D;
+        Fri, 25 Feb 2022 01:43:05 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=clacuUVM16/m8LSmdCnIL7/hLC/KpM6Un6DjttwXOZ+JZBLffXsJyceOKodtTtUZQNONWuYdYDugs190AUvdrjq0pRGVRf8aIV6IVkY8/cQzaYe+JhUBye/aSaMvOitaej72zl/YYrp7SA3x/x8wSZAmZuMbF/rTeeigj1lzOVFWUftRbd3KFTjxqBJN+Mf812fQVv0een/P5G3AQ/jQAr0Gi+j7qZbvJJKAQ92PfIfG9+qI5AqIoiKfswRwVh2dh2t+zTgJOOWQMhO4GyBzA87ZMfNdnie3EKQDdZcOQCKenEbaMOC4anTOH890d3eg+5q0f69naDA3T2QjRKyyjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AWN5P7jBad2RGPEcnpe06943yiFUIbvdL91sFEG0K8I=;
+ b=KtyG7IyAA5V6RROukeVO0aBfuPOxZCrRB21yId7uE1ggByDpBLHe1eXlUAdXF+t+ZC3ahGGAzPxkDb6TGsSRHtF5sJ3Kuhefw+A4Pmz7ycgMgZWdSeZnqWDLihq1zqtvV5EVdyZdtTzy4UwwAHs6l6EfTpGihgCDQYRXU8Q6w0pJWQBvFnMpnW7x/HVXpJAX56kcDKOQJC/y5pLC3mfrMi2fkcy88KAOn62HfpbXQioMji9l3nGU5IgGnHYvG7ZZcnkrpw5R/8VAAwFSVLBC8F6rIC/DXEdHCX5B+ly0GbqywUf+QtEMmsULRQJMDq6cwLW6n9kvDc+njyYW2jTBaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AWN5P7jBad2RGPEcnpe06943yiFUIbvdL91sFEG0K8I=;
+ b=QtDl9UxojcCrCvlk41D79oDxDheaXNs/oYh9TeZ2+YJEgn7m/hmtUkbG4oEYvx8zJoJR7gfHHLtLcK9ZuE6JL5s6PJakTTRw8kfk0Z1izf2P08YyfkM/TyyNBppnxI286wPqKb5AYc2C61GObBDXUlgn+1s4DGTEq7ndAfGy0u4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=toradex.com;
+Received: from ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:3d::11)
+ by ZRAP278MB0208.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:2d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.22; Fri, 25 Feb
+ 2022 09:43:02 +0000
+Received: from ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::6c4e:9890:b0f5:6abb]) by ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM
+ ([fe80::6c4e:9890:b0f5:6abb%5]) with mapi id 15.20.5017.025; Fri, 25 Feb 2022
+ 09:43:02 +0000
+Date:   Fri, 25 Feb 2022 10:43:01 +0100
+From:   Francesco Dolcini <francesco.dolcini@toradex.com>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     l.stach@pengutronix.de, bhelgaas@google.com, broonie@kernel.org,
+        lorenzo.pieralisi@arm.com, jingoohan1@gmail.com,
+        festevam@gmail.com, francesco.dolcini@toradex.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: Re: [PATCH v8 5/8] PCI: imx6: Refine the regulator usage
+Message-ID: <20220225094301.GA2171975@francesco-nb.int.toradex.com>
+References: <1645760667-10510-1-git-send-email-hongxing.zhu@nxp.com>
+ <1645760667-10510-6-git-send-email-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1645760667-10510-6-git-send-email-hongxing.zhu@nxp.com>
+X-ClientProxiedBy: GV0P278CA0085.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:710:2b::18) To ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:3d::11)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v2 05/11] pci: use helper for safer setting of
- driver_override
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-References: <20220224235206.GA302751@bhelgaas>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220224235206.GA302751@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e6e756ed-57ff-41c9-7cab-08d9f8433746
+X-MS-TrafficTypeDiagnostic: ZRAP278MB0208:EE_
+X-Microsoft-Antispam-PRVS: <ZRAP278MB02089EEA4E2A7B4D88A4BCE2E23E9@ZRAP278MB0208.CHEP278.PROD.OUTLOOK.COM>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DIbbYs50AmHnVjeX9LC4Geas8oRkx+GYanVZ4NeyV8Jt2OqpyxaTNh2B59D4TJO5F1ALywuuXzXtZ7SUnSB8EW5QrHcFdYQQ4fbMECg27dsic3nZJGFLqcEsN1JCnk4rnzkGZqxECEnlRw3Kk7w+P+MLCuMbYBlfp3Pu3TADsJDokrPRH0LFza5MRAaPcUqH6W9a4PMWJaimfeyowRa4YIHsKWG12e3pRA97w7123sohb0B3ekXVtaTsBw4LDKcnIyGjm1x150BkFfR3YCoTUh6jVYlSM36nPK/PqbYwl4SgdLardP23RM7k47Fm9oVlQO+gX7AKkWjBpPlg9BVgTxxA70y+JFBjr6UsbjlEkXHKLb5QHW+LQK56e5hOn7cJqDdCIy1fCfXSieuSru6r1FOU0yOg3WM49yjSSDjWUijoBqk0668Hn/p73JVu58B2zkcIg5iEoGZP5Do3tyTVTuYjBgiMc1JwVtjWu5dAhZS9doOX+6f9KyjaxHJWTpr50tk9tJy9itxYO9d9GGkd1gpeRdHeiGdsHNuaHNN2SOEvuZCt71gr0hBZKp4dlbIASYkydZOKHqFgHapMu8bEaKrUEGZFosvRBUB/Y89k69v6JkKqH4j0XOS4NSx19VzVv3gyEShEBTv9DQDXx+p34qnNA+Fc+enycqmoM9U87NOXQZux3g8JWSx4XcLyXFa/k68kxsXAYkVEuAcY2wBPLQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(376002)(346002)(366004)(39850400004)(136003)(396003)(4326008)(66946007)(5660300002)(8936002)(8676002)(7416002)(316002)(66476007)(66556008)(2906002)(33656002)(6916009)(6486002)(508600001)(52116002)(6506007)(6512007)(83380400001)(38100700002)(38350700002)(1076003)(86362001)(26005)(44832011)(186003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?l1lWUHjn2+DZTfcLfe4CQxlml8elAkiEx/W1STjSkgcRPHSbnFQJH5H+WWbq?=
+ =?us-ascii?Q?qe0N5+xymQjJw4hq7F6r7x4r7AD2GUmvvD2WL00kLQ68ukqEZFj7SOM8DwkA?=
+ =?us-ascii?Q?1A97xMyNdWxjnATXmQM/l4EYRFo2qj7zTXY+0nsbPCn6rbeebHECJHx7boh3?=
+ =?us-ascii?Q?bRrDtxa6oVh1mUZRSk+FO8dsZacGH7tcl8IM+3ktN71IMHKmGwS+4qmJMDLM?=
+ =?us-ascii?Q?RcjTiS475yg1FJDrhx5t22EID/NF+xHTJmc0GgBflPO46To5VeJsjrfSE4Lf?=
+ =?us-ascii?Q?K3g3T2qKoTc9r2OpU9vpGHQUw4SHCsObRfl4DMmKsB+uYqHf8ykTpfVlWYDS?=
+ =?us-ascii?Q?buSfBMVbXcVXV2uxD8cdLwsKbwSVMRu+SBJDMCpULqZp3dRwW2rTBTrvlffa?=
+ =?us-ascii?Q?lGI0VYmX6zoiiNU7oVmTjXNZHqQVgqq49DWT/q0TLBQmdkZ3mYFSFvIrgFFt?=
+ =?us-ascii?Q?FKge/0E34x3TEeykwnUInkH1rxMgWQ0QcT3A72hEfysU6DbIuh5A7vpRflSR?=
+ =?us-ascii?Q?9+PQBtUL7TOi1lrB+XwCQhS+fn8vopcojQNMAFPFvf1Ns5HMs+rz3irpWXhl?=
+ =?us-ascii?Q?VbJMKfQKjtbojiq3n614OuMZ1ZLMMxVktkrGLjkg3NBFG6ignM5Tf50Z0+K1?=
+ =?us-ascii?Q?Y5tWpAgw/c/ApwU4xMChFApieL449GYT0qkEeCxPbWWwXaiUdOPjYjMFH7tM?=
+ =?us-ascii?Q?30cpdQNIRXUctEmH4xbRZkpq2yBVUH/Jy2Z6VI77n8XGLS6DWpkhizxgEWTQ?=
+ =?us-ascii?Q?7Mk6aoxMojY9l49TDPmeeT8JD5BDlaupsY7XuDfdUfWZLTB8ub6al29rpiNx?=
+ =?us-ascii?Q?7uC3hC6+O8GfOXb2ABxKDSQOLKV4R4B+ynMXMi32dYpIpinVcljZ5pz3FLXk?=
+ =?us-ascii?Q?6oiSJDCLIfQfJUWLIVRcmq4kzZunSlJJSxnRYmz/EOp0BJQkqxbIQhGaJP6A?=
+ =?us-ascii?Q?I6JMQB+homCHEEr/8htDF66VXdVH1e4uV46UiXnApWmKNKIQbNbtaXKJsCTu?=
+ =?us-ascii?Q?9mC8PtOTfzltKr5nlKSoiZFzh+9/7YKurqEPYofFZWufZwh5Dkfcq9kovvTu?=
+ =?us-ascii?Q?vEkP9cyb9ka5W8pjRjzNLR47rIaInooW0pnDalDxTBijafG/VUFX3XSU/axd?=
+ =?us-ascii?Q?tkvDRs4v+3KpnkB3LVBiAgzkhEoTxVwouxNqZKxGfGLd9IgNKE6VCEORe9v1?=
+ =?us-ascii?Q?Zbh33SvXtM23OB7Tesi4FnLAl0gNyBVvElMyzPRqeKEp0gsZxXqwVicTCEYn?=
+ =?us-ascii?Q?zLlwC86A05BDRcGE2HbMZRci8BRLbTVxLn82P2Yo+agH8spQIE8NaUn8z1kJ?=
+ =?us-ascii?Q?Mhv3EEbWt+XdCXY0iSaOm4V8csPc+RsuV/sUCVAvXHdmg4OCePspdbayXW/j?=
+ =?us-ascii?Q?hkuxcB27FzmaDj99Tc4J39gy8ejOv5LhYKko3J3idxUKAespqBZUn36gtLno?=
+ =?us-ascii?Q?/vTs767m9zLUBY77j/OwnNN1MKE2/NJmhRHwcVvB3ioNYfh0OlmIp4HpIQsJ?=
+ =?us-ascii?Q?KfO9csXPIj9P69/tlF8NJZ8z9V/KsG3gqXYr2sYPLmeigobEXnhcXUhZmHqm?=
+ =?us-ascii?Q?qvQV2NS9bbZLuEmIWs2CheQsihNLZksEoK0YSN7WPJMa8wuMXjhAhZUGyR+n?=
+ =?us-ascii?Q?Exj6GIiRQ0sceZ2acytDQSupzKB7AkvF40E96v5lX8eHNu9/HIt8DyCGlyL+?=
+ =?us-ascii?Q?H3k3Zg=3D=3D?=
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6e756ed-57ff-41c9-7cab-08d9f8433746
+X-MS-Exchange-CrossTenant-AuthSource: ZRAP278MB0642.CHEP278.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2022 09:43:02.4749
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qK6fpirhemoPODsghY4meo+0e5WBBkvIM7XDfIFZXLtMEuncY0Ygy/5o+8uwzWfc1tGc7ehhO5zhpiiwNx6xqc3YrBwqFtQmnQPM8187AdY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZRAP278MB0208
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -115,52 +120,101 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 25/02/2022 00:52, Bjorn Helgaas wrote:
-> On Thu, Feb 24, 2022 at 08:49:15AM +0100, Krzysztof Kozlowski wrote:
->> On 23/02/2022 22:51, Bjorn Helgaas wrote:
->>> In subject, to match drivers/pci/ convention, do something like:
->>>
->>>   PCI: Use driver_set_override() instead of open-coding
->>>
->>> On Wed, Feb 23, 2022 at 08:13:04PM +0100, Krzysztof Kozlowski wrote:
->>>> Use a helper for seting driver_override to reduce amount of duplicated
->>>> code.
->>>> @@ -567,31 +567,15 @@ static ssize_t driver_override_store(struct device *dev,
->>>>  				     const char *buf, size_t count)
->>>>  {
->>>>  	struct pci_dev *pdev = to_pci_dev(dev);
->>>> -	char *driver_override, *old, *cp;
->>>> +	int ret;
->>>>  
->>>>  	/* We need to keep extra room for a newline */
->>>>  	if (count >= (PAGE_SIZE - 1))
->>>>  		return -EINVAL;
->>>
->>> This check makes no sense in the new function.  Michael alluded to
->>> this as well.
->>
->> I am not sure if I got your comment properly. You mean here:
->> 1. Move this check to driver_set_override()?
->> 2. Remove the check entirely?
+On Fri, Feb 25, 2022 at 11:44:24AM +0800, Richard Zhu wrote:
+> The driver should undo any enables it did itself. The regulator disable
+> shouldn't be basing decisions on regulator_is_enabled().
 > 
-> I was mistaken about the purpose of the comment and the check.  I
-> thought it had to do with *this* function, and this function doesn't
-> add a newline, and there's no obvious connection with PAGE_SIZE.
-> 
-> But looking closer, I think the "extra room for a newline" is really
-> to make sure that *driver_override_show()* can add a newline and have
-> it still fit within the PAGE_SIZE sysfs limit.
-> 
-> Most driver_override_*() functions have the same comment, so maybe
-> this was obvious to everybody except me :)  I do see that spi.c adds
-> "when displaying value" at the end, which helps a lot.
-> 
-> Sorry for the wild goose chase.
+> To keep the balance of the regulator usage counter, disable the regulator
+> just behind of imx6_pcie_assert_core_reset() in resume and shutdown.
 
-I think I will move this check anyway to driver_set_override() helper,
-because there is no particular benefit to have duplicated all over. The
-helper will receive "count" argument so can perform all checks.
+While this patch does not look wrong and improving the existing code, I
+do have a couple of concern.
 
+1. It's weird that regulator enable/disable are really non symmetric in
+the code, enable is in imx6_pcie_deassert_core_reset(), while disable is
+not in imx6_pcie_assert_core_reset() but spread around.
 
-Best regards,
-Krzysztof
+2. We are playing around with vpcie during regulator during
+suspend/resume, why? We currently have issue with suspend/resume when a
+PCIe switch is there, with the final effect of PCIe being not usable
+afterward. I fear like this is related to our issue.
+
+What about vpcie enable in probe, and vpcie disable in shutdown and
+that's all? 
+
+Francesco
+
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 19 +++++++------------
+>  1 file changed, 7 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 0f1b8c873a4a..160a0bd02098 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -369,8 +369,6 @@ static int imx6_pcie_attach_pd(struct device *dev)
+>  
+>  static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+>  {
+> -	struct device *dev = imx6_pcie->pci->dev;
+> -
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX7D:
+>  	case IMX8MQ:
+> @@ -400,14 +398,6 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+>  				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
+>  		break;
+>  	}
+> -
+> -	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
+> -		int ret = regulator_disable(imx6_pcie->vpcie);
+> -
+> -		if (ret)
+> -			dev_err(dev, "failed to disable vpcie regulator: %d\n",
+> -				ret);
+> -	}
+>  }
+>  
+>  static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
+> @@ -584,7 +574,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  	struct device *dev = pci->dev;
+>  	int ret, err;
+>  
+> -	if (imx6_pcie->vpcie && !regulator_is_enabled(imx6_pcie->vpcie)) {
+> +	if (imx6_pcie->vpcie) {
+>  		ret = regulator_enable(imx6_pcie->vpcie);
+>  		if (ret) {
+>  			dev_err(dev, "failed to enable vpcie regulator: %d\n",
+> @@ -657,7 +647,7 @@ static int imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  	return 0;
+>  
+>  err_clks:
+> -	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
+> +	if (imx6_pcie->vpcie) {
+>  		ret = regulator_disable(imx6_pcie->vpcie);
+>  		if (ret)
+>  			dev_err(dev, "failed to disable vpcie regulator: %d\n",
+> @@ -1029,6 +1019,9 @@ static int imx6_pcie_resume_noirq(struct device *dev)
+>  		return 0;
+>  
+>  	imx6_pcie_assert_core_reset(imx6_pcie);
+> +	if (imx6_pcie->vpcie)
+> +		regulator_disable(imx6_pcie->vpcie);
+> +
+>  	imx6_pcie_init_phy(imx6_pcie);
+>  	imx6_pcie_deassert_core_reset(imx6_pcie);
+>  	dw_pcie_setup_rc(pp);
+> @@ -1262,6 +1255,8 @@ static void imx6_pcie_shutdown(struct platform_device *pdev)
+>  
+>  	/* bring down link, so bootloader gets clean state in case of reboot */
+>  	imx6_pcie_assert_core_reset(imx6_pcie);
+> +	if (imx6_pcie->vpcie)
+> +		regulator_disable(imx6_pcie->vpcie);
+>  }
+>  
+>  static const struct imx6_pcie_drvdata drvdata[] = {
+> -- 
+> 2.25.1
+> 
