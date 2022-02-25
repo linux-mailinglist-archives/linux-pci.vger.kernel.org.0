@@ -2,54 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C10474C4BB3
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 18:12:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C07B4C4BBC
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 18:14:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243524AbiBYRM5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 12:12:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50098 "EHLO
+        id S243512AbiBYROR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 12:14:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243528AbiBYRM4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 12:12:56 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71CC7200;
-        Fri, 25 Feb 2022 09:12:23 -0800 (PST)
+        with ESMTP id S240804AbiBYROQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 12:14:16 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91AB1A8043;
+        Fri, 25 Feb 2022 09:13:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1747361D68;
-        Fri, 25 Feb 2022 17:12:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA6CC340E7;
-        Fri, 25 Feb 2022 17:12:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4E5EE61D73;
+        Fri, 25 Feb 2022 17:13:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E452C340E7;
+        Fri, 25 Feb 2022 17:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645809142;
-        bh=ejCLtxHIwdP5I6GuifJpd0rm+KBBzgMUin9/wtmWpW0=;
+        s=k20201202; t=1645809222;
+        bh=4sE4Gtevnk8/TCjMANbcRjCHG8DgJ5S+RZAsg3tQewo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=b3b2jd4oWSeQ+rmqWfg4ZV6td3mx12YyQMgep4RmTiOBoVONjeEX5U8YQ9g/n/QKW
-         h2WqBplWsQQZHM9HOEN6F21Dq0zsBW2s+1VnCHqNAtzju73YYEJXI3JBKnnQQhwEMq
-         6tlHnSX4ceYk4KdQ3DB+sMzLfIezI0cAdpk3urPWlsqUCIO+r/cwuOlashDqv0sKu6
-         TF6PRa5L/efAJSYp1w0EI8FUOU7wkf938oqQB3SLlOP7lIaDvYr0IxBE4L8J901l1e
-         Qw7xMQgHJV+WK312VqGP+o6jZssk2ABNDMSrK2yUueQNP/QdSdbNL+y5IIit23K6ZE
-         Wm7SUbjcogrvw==
-Date:   Fri, 25 Feb 2022 11:12:20 -0600
+        b=aKNMEZYO9GYS47EsbtSGoBp7jQ6cq+PB2zbte+AwwqqiqpcVRMxGDM0F0Afex5ZJW
+         4rYESli2esu86LIUX6eb+GIiQqKG0aJoZCwpzqlHuXkixzO/1AezAk2443Z9c992ps
+         XywAbCY1/AWyw1jhDZ3bHZQXnfC+/H1QPWErc949Yi5ixSLpl4/cO2POfTAAfrxKho
+         CAVXpDY7lijl79zw4wxpFlP592n7RcY/q2RQ45t4e4X5U4/DfLgdvmThUjLUu/hMNF
+         a6Vl3pNKPQMeAYVdX3MJ7TCbUyat1DVH9TvH+imzTBTV3gNbtHMVmiV6Fa05o9r3/n
+         oKdbLx9yzFJlA==
+Date:   Fri, 25 Feb 2022 11:13:41 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 04/12] dt-bindings: PCI: mvebu: Add num-lanes property
-Message-ID: <20220225171220.GA364705@bhelgaas>
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v2 05/11] pci: use helper for safer setting of
+ driver_override
+Message-ID: <20220225171341.GA364850@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220225125810.7mbo7firer5yodls@pali>
+In-Reply-To: <0aff95ff-5b79-8ae9-48fd-720a9f27cbce@canonical.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -60,68 +85,53 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 25, 2022 at 01:58:10PM +0100, Pali Rohár wrote:
-> On Thursday 24 February 2022 18:02:26 Bjorn Helgaas wrote:
-> > On Tue, Feb 22, 2022 at 04:50:22PM +0100, Pali Rohár wrote:
-> > > Controller driver needs to correctly configure PCIe link if it contains 1
-> > > or 4 SerDes PCIe lanes. Therefore add a new 'num-lanes' DT property for
-> > > mvebu PCIe controller. Property 'num-lanes' seems to be de-facto standard
-> > > way how number of lanes is specified in other PCIe controllers.
-> > > 
-> > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/pci/mvebu-pci.txt | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pci/mvebu-pci.txt b/Documentation/devicetree/bindings/pci/mvebu-pci.txt
-> > > index 6173af6885f8..24225852bce0 100644
-> > > --- a/Documentation/devicetree/bindings/pci/mvebu-pci.txt
-> > > +++ b/Documentation/devicetree/bindings/pci/mvebu-pci.txt
-> > > @@ -77,6 +77,7 @@ and the following optional properties:
-> > >  - marvell,pcie-lane: the physical PCIe lane number, for ports having
-> > >    multiple lanes. If this property is not found, we assume that the
-> > >    value is 0.
-> > > +- num-lanes: number of SerDes PCIe lanes for this link (1 or 4)
-> > >  - reset-gpios: optional GPIO to PERST#
-> > >  - reset-delay-us: delay in us to wait after reset de-assertion, if not
-> > >    specified will default to 100ms, as required by the PCIe specification.
-> > > @@ -141,6 +142,7 @@ pcie-controller {
-> > >  		interrupt-map = <0 0 0 0 &mpic 58>;
-> > >  		marvell,pcie-port = <0>;
-> > >  		marvell,pcie-lane = <0>;
-> > > +		num-lanes = <1>;
+On Fri, Feb 25, 2022 at 10:36:20AM +0100, Krzysztof Kozlowski wrote:
+> On 25/02/2022 00:52, Bjorn Helgaas wrote:
+> > On Thu, Feb 24, 2022 at 08:49:15AM +0100, Krzysztof Kozlowski wrote:
+> >> On 23/02/2022 22:51, Bjorn Helgaas wrote:
+> >>> In subject, to match drivers/pci/ convention, do something like:
+> >>>
+> >>>   PCI: Use driver_set_override() instead of open-coding
+> >>>
+> >>> On Wed, Feb 23, 2022 at 08:13:04PM +0100, Krzysztof Kozlowski wrote:
+> >>>> Use a helper for seting driver_override to reduce amount of duplicated
+> >>>> code.
+> >>>> @@ -567,31 +567,15 @@ static ssize_t driver_override_store(struct device *dev,
+> >>>>  				     const char *buf, size_t count)
+> >>>>  {
+> >>>>  	struct pci_dev *pdev = to_pci_dev(dev);
+> >>>> -	char *driver_override, *old, *cp;
+> >>>> +	int ret;
+> >>>>  
+> >>>>  	/* We need to keep extra room for a newline */
+> >>>>  	if (count >= (PAGE_SIZE - 1))
+> >>>>  		return -EINVAL;
+> >>>
+> >>> This check makes no sense in the new function.  Michael alluded to
+> >>> this as well.
+> >>
+> >> I am not sure if I got your comment properly. You mean here:
+> >> 1. Move this check to driver_set_override()?
+> >> 2. Remove the check entirely?
 > > 
-> > Is this patch really necessary?
-> 
-> This is just documentation patch. And I think that documentation is
-> always important.
-> 
-> > AFAICS, the related driver change
-> > only sets "port->is_x4 = true" when "num-lanes = <4>", and in all
-> > other cases it defaults to a Max Link Width of 1:
+> > I was mistaken about the purpose of the comment and the check.  I
+> > thought it had to do with *this* function, and this function doesn't
+> > add a newline, and there's no obvious connection with PAGE_SIZE.
 > > 
-> >   lnkcap |= (port->is_x4 ? 4 : 1) << 4;
-> 
-> Yes!
-> 
-> And this registers configures number of lanes in HW.
-> 
-> > I don't see the point of adding a value that we don't validate or do
-> > anything with.  E.g., I don't see an error message that would catch
-> > "num-lanes = <3>".
+> > But looking closer, I think the "extra room for a newline" is really
+> > to make sure that *driver_override_show()* can add a newline and have
+> > it still fit within the PAGE_SIZE sysfs limit.
 > > 
-> > Bjorn
+> > Most driver_override_*() functions have the same comment, so maybe
+> > this was obvious to everybody except me :)  I do see that spi.c adds
+> > "when displaying value" at the end, which helps a lot.
+> > 
+> > Sorry for the wild goose chase.
 > 
-> In past I was told that kernel should not do validation of DT properties
-> and it is job of some DT schema validation. That is why I did not added
-> code into kernel which show error message when value different than 1
-> and 4 is specified in DT.
-> 
-> But issue here is that there is no DT schema for pci-mvebu as above
-> .txt file was not converted to YAML schema yet. This is something which
-> should be improved...
+> I think I will move this check anyway to driver_set_override() helper,
+> because there is no particular benefit to have duplicated all over. The
+> helper will receive "count" argument so can perform all checks.
 
-I'm OK with this patch as-is, especially since Rob acked it.
+Thanks, I think that would be good!
 
 Bjorn
