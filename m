@@ -2,58 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 013204C493C
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 16:38:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 741444C498A
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 16:49:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242169AbiBYPic (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 10:38:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55860 "EHLO
+        id S242329AbiBYPuZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 10:50:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239396AbiBYPib (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 10:38:31 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6898714F2A6;
-        Fri, 25 Feb 2022 07:37:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E6546618C5;
-        Fri, 25 Feb 2022 15:37:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15D1DC340F0;
-        Fri, 25 Feb 2022 15:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645803478;
-        bh=g98zliAtM2Tc6v3mwYJ14NN8JaWLKdHFUA4VftrTn6U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CCnRtCJaxgV9HmJFSyPj+jajT4/2v2E2/2sbiK+wTwgAkK9VYqaVVXruNGv6odZfw
-         V+7GDK6lCMcPITFVfTKgSh/EC9a8wY25tVbdYm9L2THSX/lyca/vuOdwzwCDH2vl8z
-         zRxEkbooPjGmdxd8HCgqhg+/8rHocpnmebG7Ewy3VTl3JzOkzpSCmWK2R+zRg1Du3U
-         23w7MiJzog2ZfZlfjnzyyTLzfKKC3RVVO45SIVo6dnNiiuFXhbPdwVKX2vB1gbcZJE
-         KpRniDbA6WjyWfbq788WReK252QrTmlFNqVY17ug/5j1DHmfi0t3nlOwvJ9XLhheeC
-         klJHvkJTwC3+Q==
-Date:   Fri, 25 Feb 2022 09:37:56 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] PCI: Add PCI_EXP_SLTCAP_*_SHIFT macros
-Message-ID: <20220225153756.GA358517@bhelgaas>
+        with ESMTP id S242321AbiBYPuZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 10:50:25 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 596261BE0CC;
+        Fri, 25 Feb 2022 07:49:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645804193; x=1677340193;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=DNrB1zjz6lR2HM4GwMtv1uDsRQnAZcKdTXb9/LCxKm8=;
+  b=ACQ/i69Ezep0naXNSDW+ybueoCWTRTyZZyhbx5A9Y2aHV196FJKe5gqk
+   bdkStxSg/cRGj0A+IzFGJd66BfUQI8yjG4Hxj2VLR3iUBlKo3OGwVwAs2
+   ZPYsokGsoJPOanNGLHfMmOiSY/SAY058SaXErlI+BmqXFg2zwkIYKwibl
+   qMK9N1KNypoZSRPUqfLpnFG9v3slzrCpPxwh7TXLpZ4ayS9qIvDO0iDsm
+   mQgehwj3kQ6mmWJPkwY3oOSYDvVUhbS3M/07UNkbdzzPACwYSV1K88l3l
+   0eXfodRJfR9yH8FAywa7SxibblzrFkZOWn7Cn/KOI4Fs6BNc7CINHb1SR
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10268"; a="315735474"
+X-IronPort-AV: E=Sophos;i="5.90,136,1643702400"; 
+   d="scan'208";a="315735474"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2022 07:49:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,136,1643702400"; 
+   d="scan'208";a="592518949"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Feb 2022 07:49:52 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 25 Feb 2022 07:49:52 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 25 Feb 2022 07:49:51 -0800
+Received: from orsmsx611.amr.corp.intel.com ([10.22.229.24]) by
+ ORSMSX611.amr.corp.intel.com ([10.22.229.24]) with mapi id 15.01.2308.021;
+ Fri, 25 Feb 2022 07:49:51 -0800
+From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "logang@deltatee.com" <logang@deltatee.com>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+Subject: RE: [PATCH] PCI/P2PDMA: Update device table with 3rd gen Xeon
+ platform information
+Thread-Topic: [PATCH] PCI/P2PDMA: Update device table with 3rd gen Xeon
+ platform information
+Thread-Index: AQHYHdIG4Q22z4JZ0Um0Xan5JCcwz6ykgLnw
+Date:   Fri, 25 Feb 2022 15:49:51 +0000
+Message-ID: <f3fa3b81b9e14025ae28c490ce53006c@intel.com>
+References: <20220209162801.7647-1-michael.j.ruhl@intel.com>
+In-Reply-To: <20220209162801.7647-1-michael.j.ruhl@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.6.401.20
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220225122451.fa2fiyzohwme2d66@pali>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,46 +85,54 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 25, 2022 at 01:24:51PM +0100, Pali Rohár wrote:
-> On Thursday 24 February 2022 14:28:43 Bjorn Helgaas wrote:
-> > On Tue, Feb 22, 2022 at 05:31:54PM +0100, Pali Rohár wrote:
-> > > These macros allows to easily compose and extract Slot Power Limit and
-> > > Physical Slot Number values from Slot Capability Register.
-> > >
-> > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > Signed-off-by: Marek Behún <kabel@kernel.org>
-> > > ---
-> > >  include/uapi/linux/pci_regs.h | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> > > index 108f8523fa04..3fc9a4cac630 100644
-> > > --- a/include/uapi/linux/pci_regs.h
-> > > +++ b/include/uapi/linux/pci_regs.h
-> > > @@ -591,10 +591,13 @@
-> > >  #define  PCI_EXP_SLTCAP_HPS	0x00000020 /* Hot-Plug Surprise */
-> > >  #define  PCI_EXP_SLTCAP_HPC	0x00000040 /* Hot-Plug Capable */
-> > >  #define  PCI_EXP_SLTCAP_SPLV	0x00007f80 /* Slot Power Limit Value */
-> > > +#define  PCI_EXP_SLTCAP_SPLV_SHIFT	7  /* Slot Power Limit Value shift */
-> > 
-> > Is there a way to use FIELD_PREP() and FIELD_GET() instead?  It seems
-> > like that's what the cool kids are doing now.
-> 
-> This is possible too.
-> 
-> I have proposed a patch with _SHIFT macros as this is the way how are
-> other macros in this file defined and used.
+Hi,
 
-Yes, it's a mix.  For some recent additions, I've resisted adding the
-_SHIFT macros on the theory that they clutter the file, they never
-change, and the main point of the #defines is readability and so
-grep/tags/etc can find things.
+I see that this patch is in the Linux PCI development patchwork.
 
-There are a *few* users of FIELD_PREP() and FIELD_GET():
+I am not sure what the timeline for this process is.
 
-  git grep -E "FIELD_(GET|PREP)\(PCI_EXP"
+Will this be accepted or rejected "officially"?
 
-and I'm inclined to go that direction in the future.  What do you
-think?
+Do I need to do anything else to move this patch forward?
 
-Bjorn
+Thanks,
+
+Mike
+
+>-----Original Message-----
+>From: Ruhl, Michael J <michael.j.ruhl@intel.com>
+>Sent: Wednesday, February 9, 2022 11:28 AM
+>To: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
+>bhelgaas@google.com; logang@deltatee.com; Ruhl, Michael J
+><michael.j.ruhl@intel.com>
+>Cc: Williams, Dan J <dan.j.williams@intel.com>
+>Subject: [PATCH] PCI/P2PDMA: Update device table with 3rd gen Xeon
+>platform information
+>
+>In order to do P2P communication the bridge ID of the platform
+>must be in the P2P device table.
+>
+>Update the P2P device table with a device id for the 3rd Gen
+>Intel Xeon Scalable Processors.
+>
+>Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>---
+> drivers/pci/p2pdma.c | 1 +
+> 1 file changed, 1 insertion(+)
+>
+>diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+>index 1015274bd2fe..30b1df3c9d2f 100644
+>--- a/drivers/pci/p2pdma.c
+>+++ b/drivers/pci/p2pdma.c
+>@@ -321,6 +321,7 @@ static const struct pci_p2pdma_whitelist_entry {
+> 	{PCI_VENDOR_ID_INTEL,	0x2032, 0},
+> 	{PCI_VENDOR_ID_INTEL,	0x2033, 0},
+> 	{PCI_VENDOR_ID_INTEL,	0x2020, 0},
+>+	{PCI_VENDOR_ID_INTEL,	0x09a2, 0},
+> 	{}
+> };
+>
+>--
+>2.31.1
+
