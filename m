@@ -2,166 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA7FC4C4E71
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 20:14:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D465F4C4F0B
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 20:43:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234316AbiBYTOn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 14:14:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41948 "EHLO
+        id S234804AbiBYTnv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 14:43:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234255AbiBYTOn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 14:14:43 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81FFF21BC7B;
-        Fri, 25 Feb 2022 11:14:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645816450; x=1677352450;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4F5q6A0jER9Ar6T9F+pJoTaJyetTnnAUTKjDx2UvVrg=;
-  b=SykShM49cxmSltRSi32RcAqlr04uMScUa5YRTNxlBYO0S3QvHHe5712X
-   5dKPDO614gQC4xY3QolahWwB3DPbhYAeQMVzEIPaKGI1KB7RixBNdCcXW
-   oXgWPSZbSV4VI7IYbbdij5u37imuBmMbTqW+AV6Tdpcjhit/2JebCMBeQ
-   9F0yqFk9xmgElTm0aWXfVHfEFms6C8bno/g/3LshsasxWO/LbGElH+d9K
-   HpXLOddnaTvH7jmKevjgI4pG40wTrjcLR9np3h7tH6+t91H4udjWF+RxP
-   FM+eCvThz/oikaGTt1v4DKNtR77EhvihNzCkNSG4KZPpCcnH9X7Fzvkkh
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10268"; a="239967233"
-X-IronPort-AV: E=Sophos;i="5.90,137,1643702400"; 
-   d="scan'208";a="239967233"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2022 11:14:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,137,1643702400"; 
-   d="scan'208";a="492065316"
-Received: from orsmsx605.amr.corp.intel.com ([10.22.229.18])
-  by orsmga003.jf.intel.com with ESMTP; 25 Feb 2022 11:14:07 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 25 Feb 2022 11:14:04 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 25 Feb 2022 11:14:04 -0800
-Received: from orsmsx611.amr.corp.intel.com ([10.22.229.24]) by
- ORSMSX611.amr.corp.intel.com ([10.22.229.24]) with mapi id 15.01.2308.021;
- Fri, 25 Feb 2022 11:14:04 -0800
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "logang@deltatee.com" <logang@deltatee.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-Subject: RE: [PATCH] PCI/P2PDMA: Update device table with 3rd gen Xeon
- platform information
-Thread-Topic: [PATCH] PCI/P2PDMA: Update device table with 3rd gen Xeon
- platform information
-Thread-Index: AQHYHdIG4Q22z4JZ0Um0Xan5JCcwz6ylH28A//+ceRA=
-Date:   Fri, 25 Feb 2022 19:14:03 +0000
-Message-ID: <cde2aa29568a42418ee9cdc2616a2138@intel.com>
-References: <20220209162801.7647-1-michael.j.ruhl@intel.com>
- <20220225170944.GA364325@bhelgaas>
-In-Reply-To: <20220225170944.GA364325@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.6.401.20
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S232313AbiBYTnu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 14:43:50 -0500
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186E014A04B;
+        Fri, 25 Feb 2022 11:43:18 -0800 (PST)
+Received: by mail-oo1-f52.google.com with SMTP id y15-20020a4a650f000000b0031c19e9fe9dso7666500ooc.12;
+        Fri, 25 Feb 2022 11:43:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xgb0dJvwz1iExFb+kUzchm5jv/LkQ2YDc/ox85Jj8rI=;
+        b=oCf0pLycZcGjkctfI8+tFc1vrF9qc573tPZcH42d+poUxgXHxmC634X5DbJ2foYkpF
+         tdMZtPL/HzwgOJXcpec7FIfbp46IHzvb4ZAEa+OlUgIxgfCdOYkJlpLXAhAy1tCXwEz6
+         Yo5RoGDMeegQnCsaRTa2/qnSxY9tMP/ddnkrrBnq5G+ejNNzIyRDYYmzOorHUkn8uaEX
+         SNLnHCZjy5K2yhbMjHQt/HUtYbHLz+ORV2Sx5NpUk963wOxJsdoC5/SpvYpQ0Bdoo5DP
+         E7OdZhWmG4pSmZFXNHZCwHNWEGi93noR4kKU2u+LZR2qBtmoI/ask1+/K/tJbqcicfpo
+         G4Dg==
+X-Gm-Message-State: AOAM532gqjNPRlezVscp3oJTe1/cZWVpt1hWSJX4jLVBSB0xUjbfl2IH
+        jCAU2S2h4XGh+dsvjX2PXw==
+X-Google-Smtp-Source: ABdhPJxPA+B6OYUNh8b4iyR8ggfpuz/89O7eflPUakUIYUD6KSOXUPYVtJk8cy4Ocz/PhbGcT6NawQ==
+X-Received: by 2002:a05:6870:3e0d:b0:d3:fe6d:57c3 with SMTP id lk13-20020a0568703e0d00b000d3fe6d57c3mr2150845oab.225.1645818197476;
+        Fri, 25 Feb 2022 11:43:17 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id bf39-20020a056808192700b002d51f615f1csm1867414oib.34.2022.02.25.11.43.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Feb 2022 11:43:16 -0800 (PST)
+Received: (nullmailer pid 1312537 invoked by uid 1000);
+        Fri, 25 Feb 2022 19:43:15 -0000
+Date:   Fri, 25 Feb 2022 13:43:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        bhupesh.linux@gmail.com, lorenzo.pieralisi@arm.com,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        svarbanov@mm-sol.com, bhelgaas@google.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: pci: qcom: Document PCIe bindings for
+ SM8150 SoC
+Message-ID: <YhkxU9AUK268G4Uz@robh.at.kernel.org>
+References: <20220223192946.473172-1-bhupesh.sharma@linaro.org>
+ <20220223192946.473172-2-bhupesh.sharma@linaro.org>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220223192946.473172-2-bhupesh.sharma@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
->-----Original Message-----
->From: Bjorn Helgaas <helgaas@kernel.org>
->Sent: Friday, February 25, 2022 12:10 PM
->To: Ruhl, Michael J <michael.j.ruhl@intel.com>
->Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
->bhelgaas@google.com; logang@deltatee.com; Williams, Dan J
-><dan.j.williams@intel.com>
->Subject: Re: [PATCH] PCI/P2PDMA: Update device table with 3rd gen Xeon
->platform information
->
->On Wed, Feb 09, 2022 at 11:28:01AM -0500, Michael J. Ruhl wrote:
->> In order to do P2P communication the bridge ID of the platform
->> must be in the P2P device table.
->>
->> Update the P2P device table with a device id for the 3rd Gen
->> Intel Xeon Scalable Processors.
->>
->> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
->
->Updated the commit log to match previous similar patches and applied
->as below to pci/p2pdma for v5.18, thanks!
+On Thu, Feb 24, 2022 at 12:59:41AM +0530, Bhupesh Sharma wrote:
+> Document the PCIe DT bindings for SM8150 SoC. The PCIe IP is similar to
+> the one used on SM8250.
+> 
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-Thank you!
+Acked-by: Rob Herring <robh@kernel.org>
 
->Device ID 0x09a2 doesn't appear at https://pci-ids.ucw.cz/read/PC/8086
->which means "lspci" won't be able to display a human-readable name for
->these devices.  You can easily add a name at that same URL.
+But please convert this to schema. Future changes to the .txt binding 
+may not be accepted.
 
-I will see about getting this updated asap.
-
-Regards,
-
-M
-
->Bjorn
->
->
->  commit feaea1fe8b36 ("PCI/P2PDMA: Add Intel 3rd Gen Intel Xeon Scalable
->Processors to whitelist")
->  Author: Michael J. Ruhl <michael.j.ruhl@intel.com>
->  Date:   Wed Feb 9 11:28:01 2022 -0500
->
->    PCI/P2PDMA: Add Intel 3rd Gen Intel Xeon Scalable Processors to whitel=
-ist
->
->    In order to do P2P communication the bridge ID of the platform must be=
- in
->    the P2P device table.
->
->    Update the P2P device table with a device ID for the 3rd Gen Intel Xeo=
-n
->    Scalable Processors.
->
->    Link: https://lore.kernel.org/r/20220209162801.7647-1-
->michael.j.ruhl@intel.com
->    Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
->    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->    Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->
->> ---
->>  drivers/pci/p2pdma.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
->> index 1015274bd2fe..30b1df3c9d2f 100644
->> --- a/drivers/pci/p2pdma.c
->> +++ b/drivers/pci/p2pdma.c
->> @@ -321,6 +321,7 @@ static const struct pci_p2pdma_whitelist_entry {
->>  	{PCI_VENDOR_ID_INTEL,	0x2032, 0},
->>  	{PCI_VENDOR_ID_INTEL,	0x2033, 0},
->>  	{PCI_VENDOR_ID_INTEL,	0x2020, 0},
->> +	{PCI_VENDOR_ID_INTEL,	0x09a2, 0},
->>  	{}
->>  };
->>
->> --
->> 2.31.1
->>
+Rob
