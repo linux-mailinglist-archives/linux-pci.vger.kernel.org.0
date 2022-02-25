@@ -2,81 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64F514C4F0D
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 20:44:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A02F4C502F
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 21:55:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235208AbiBYTop (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 14:44:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52544 "EHLO
+        id S237014AbiBYUzk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 15:55:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232313AbiBYToi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 14:44:38 -0500
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A08951A3600;
-        Fri, 25 Feb 2022 11:44:05 -0800 (PST)
-Received: by mail-oo1-f46.google.com with SMTP id s203-20020a4a3bd4000000b003191c2dcbe8so7724558oos.9;
-        Fri, 25 Feb 2022 11:44:05 -0800 (PST)
+        with ESMTP id S233762AbiBYUzk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 15:55:40 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628CC1E4819
+        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 12:55:07 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id p184-20020a1c29c1000000b0037f76d8b484so2403392wmp.5
+        for <linux-pci@vger.kernel.org>; Fri, 25 Feb 2022 12:55:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=ixHVzoz696qN1Cmrg9x1bmR8vdWLOLbXCVjc9DtTLhI=;
+        b=pYyf/gcMNcPjka309u1PxjANqEWr6UweGBj6NdzSXajcH7FlPZfUn606XZWXsVG1YW
+         BLcYWwpE/3Zb9Zz6bMQobspEjRcGlO8s18CaIoE2MmfibShwFGSTZ0l4m0myzX5YS8kR
+         zBdK6POneFfRSIFQRQ0Ye2V4rQ76iEI4f87CHBps9I79/zKeDRnHIZKKZjoZDQzsxNbV
+         3iXKdDO5fQJPNLi4di59CS3GiCjD66L3OB+5F6+IQr1xcbaJoXflSajMIgkn+3uCnSN2
+         eQAASXxst7nCu7xnaGma5pWD4YmX+q8SVjTBk29NLaIsPYNzhjRkmn+FAso0Ey6IZvn6
+         P2vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tW4zPiKBcV7dGZmtEMwIis6F1TyhWjq1DmblCZrI9K8=;
-        b=I3pTVYhCUx9PMm9HO5o5oWnZD0jMjnvOTZKNb4az7euweT5POwcDgltqvpXKv1KDQk
-         Ug022ztb5mIb5SQRsARwHQ1WMFtozJ6OtvPKS9rCSm8uwLe9GydJpXGTmMFKg8nxutoI
-         p5TRr+ApthKWgAAsiOhY+MtY6NlAukQdHYnVeMeAdjkwEo04PmRdLGGf5jdZKs7a+kYh
-         +rtAeVkEJVuJPUaZdRkBcTYhsiKI1WK6RUUOOMHVMKk+4GnAY9QNRmQp9/3JKaPTGA0s
-         H9NxEfnuDMPb8ZoSgLo4jN0/P2vbk3dIKSFO1v8t8aoSpUi2j5LVuEQvKjs2PNVOn3uq
-         S3UQ==
-X-Gm-Message-State: AOAM532iLvE82TsLdglAEusTUVZt9u0j57wS1YGd8ovMMrrjkXCoaVEY
-        CzHR8bs5du4BSsmn5mj+dg==
-X-Google-Smtp-Source: ABdhPJyrGxDdbmb/ikGgs7yq1wNO0QvuE+0EGbX09kP8eiqL24MZFxcrlDZeb3RdyrTjLul91B9b1A==
-X-Received: by 2002:a05:6870:128c:b0:ce:c0c9:5ba with SMTP id 12-20020a056870128c00b000cec0c905bamr2174582oal.12.1645818244950;
-        Fri, 25 Feb 2022 11:44:04 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id j23-20020a056830241700b005af4acc68a5sm1532276ots.29.2022.02.25.11.44.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 11:44:04 -0800 (PST)
-Received: (nullmailer pid 1313718 invoked by uid 1000);
-        Fri, 25 Feb 2022 19:44:03 -0000
-Date:   Fri, 25 Feb 2022 13:44:03 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc:     lorenzo.pieralisi@arm.com, bjorn.andersson@linaro.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bhupesh.linux@gmail.com,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, agross@kernel.org, svarbanov@mm-sol.com
-Subject: Re: [PATCH 2/6] dt-bindings: phy: qcom,qmp: Add SM8150 PCIe PHY
- bindings
-Message-ID: <Yhkxg1wjduMX22Mo@robh.at.kernel.org>
-References: <20220223192946.473172-1-bhupesh.sharma@linaro.org>
- <20220223192946.473172-3-bhupesh.sharma@linaro.org>
+        h=x-gm-message-state:message-id:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=ixHVzoz696qN1Cmrg9x1bmR8vdWLOLbXCVjc9DtTLhI=;
+        b=2asjLtAeJoQgTbLfGUUwCkD5ma2VILuhA325/u/EkK18oshQcuLBtRzd1JPIPlgJZp
+         o9KZAeKMkr6Ma4iojDxkllzY/zTbU4IsVGFHd8V0OgJBFKqT1f3Ii73vDrCBjx2IzDKx
+         KM3y90JXtbIv8ZcInEPA5LBn8U+Gd0nMeW5X+3aErbOGJS87XFCeYWJ8QjbTQKFj39+R
+         W5Vvpuumv2R+8dPQwhKOLjkHj3qqiJCIQfNXxZoeUsshNNOjIbkVw3+sYfjwb7vfpAPW
+         N0MlkXIvw86wYGcSNMomAKHRgkjhU2EYu4nC8/UiTP2hEaXDk0PqtpExj+6B8/mfavvR
+         nxug==
+X-Gm-Message-State: AOAM531bYv6T8pmOO1vxJEfuPE9ljYlfYju4zVqKsCtXqayzaejtQAFP
+        rZbL0VfM8qCEKBR+sXyYiac=
+X-Google-Smtp-Source: ABdhPJy63t2NaOXDAEdd3nq/hMqt3mwNb/NY8AQOyF90Ic+XBVo2tQQkLc63Vm/O2Sq9Rl6xLfuuqw==
+X-Received: by 2002:a05:600c:4343:b0:381:3fba:4fcf with SMTP id r3-20020a05600c434300b003813fba4fcfmr2683486wme.122.1645822506002;
+        Fri, 25 Feb 2022 12:55:06 -0800 (PST)
+Received: from [192.168.0.133] ([5.193.8.34])
+        by smtp.gmail.com with ESMTPSA id e6-20020a5d5006000000b001e75916a7c2sm3216523wrt.84.2022.02.25.12.55.02
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Fri, 25 Feb 2022 12:55:05 -0800 (PST)
+Message-ID: <62194229.1c69fb81.85460.b9d7@mx.google.com>
+From:   Mrs Maria Elisabeth Schaeffler <borealex766@gmail.com>
+X-Google-Original-From: Mrs Maria Elisabeth Schaeffler
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220223192946.473172-3-bhupesh.sharma@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Spende
+To:     Recipients <Mrs@vger.kernel.org>
+Date:   Sat, 26 Feb 2022 00:54:57 +0400
+Reply-To: mariaeisaeth001@gmail.com
+X-Spam-Status: No, score=2.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,TO_MALFORMED,T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE
         autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 24 Feb 2022 00:59:42 +0530, Bhupesh Sharma wrote:
-> Add the following two PCIe PHYs found on SM8150, to the QMP binding:
-> 
-> QMP GEN3x1 PHY - 1 lane
-> QMP GEN3x2 PHY - 2 lanes
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> ---
->  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
+Hallo,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Ich bin Frau Maria Elisabeth Schaeffler, eine deutsche Wirtschaftsmagnatin,=
+ Investorin und Philanthropin. Ich bin der Vorsitzende von Wipro Limited. I=
+ch habe 25 Prozent meines pers=F6nlichen Verm=F6gens f=FCr wohlt=E4tige Zwe=
+cke ausgegeben. Und ich habe auch versprochen zu geben
+der Rest von 25% geht dieses Jahr 2021 an Einzelpersonen. Ich habe mich ent=
+schlossen, Ihnen 1.500.000,00 Euro zu spenden. Wenn Sie an meiner Spende in=
+teressiert sind, kontaktieren Sie mich f=FCr weitere Informationen.
+
+Sie k=F6nnen auch =FCber den untenstehenden Link mehr =FCber mich lesen
+
+
+https://en.wikipedia.org/wiki/Maria-Elisabeth_Schaeffler
+
+Sch=F6ne Gr=FC=DFe
+Gesch=E4ftsf=FChrer Wipro Limited
+Maria-Elisabeth_Schaeffler
+Email: mariaeisaeth001@gmail.com
