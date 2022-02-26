@@ -2,59 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A0034C54DF
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Feb 2022 10:23:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1318E4C553D
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Feb 2022 11:47:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230142AbiBZJYS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Feb 2022 04:24:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54924 "EHLO
+        id S231189AbiBZKrt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Feb 2022 05:47:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230117AbiBZJYR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Feb 2022 04:24:17 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E711B2AD5;
-        Sat, 26 Feb 2022 01:23:44 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DA1760FD8;
-        Sat, 26 Feb 2022 09:23:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0388C340E8;
-        Sat, 26 Feb 2022 09:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645867423;
-        bh=Drm593FxdaMjEXv54XpM7u4sTVgfw1fpSFTqP+vF/Sw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R63McLfGxlNO1VVtTzVyhZlBLD/EdO2emxiJNDbz0alK4WVE7OKub43ux5C4Ugmg8
-         1nXjfBjm0q2kAjRCE10MS+A9w2pHM1ZiEcM2NVW+cs5fXFhq7lZ1lhQX4tPyVBVIAd
-         SDEoE+lP3n6p7TDMn7+03zaddaLLSvgMdAR4t8K8Qdk5WTuF9yzmmnJCHrhjqxPhD+
-         l8Y2w4r3wj+T79am2nam0R7RhUyBFx6ZF4E5Jzy8P49wNOdE+x/Pb4tRk0EX75wSfp
-         KoZ25z876TdL7bdDhYfCJMw74mLW3znqCGrzLp564ypky7UjG4tjNszKbBj8TCpgMt
-         S+xpYFFMHKdmw==
-Date:   Sat, 26 Feb 2022 17:15:42 +0800
-From:   Jisheng Zhang <jszhang@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: Fix integrated MSI Receiver mask reg setting
- during resume
-Message-ID: <YhnvvnPNgDNkTHXO@xhacker>
-References: <20211226074019.2556-1-jszhang@kernel.org>
- <Ye1D4lYAIpDe7qAN@xhacker>
- <20220223114622.GA27645@lpieralisi>
- <YhZbcU3yNuuBDXm/@xhacker>
- <20220224140847.GA4839@lpieralisi>
+        with ESMTP id S231186AbiBZKrs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Feb 2022 05:47:48 -0500
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E070129C46F
+        for <linux-pci@vger.kernel.org>; Sat, 26 Feb 2022 02:47:13 -0800 (PST)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 78EC392009C; Sat, 26 Feb 2022 11:47:10 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 6B9CA92009B;
+        Sat, 26 Feb 2022 10:47:10 +0000 (GMT)
+Date:   Sat, 26 Feb 2022 10:47:10 +0000 (GMT)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Avoid handing out address 0 to devices
+Message-ID: <alpine.DEB.2.21.2202260044180.25061@angie.orcam.me.uk>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220224140847.GA4839@lpieralisi>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,HDRS_LCASE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,65 +37,99 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 02:08:47PM +0000, Lorenzo Pieralisi wrote:
-> On Thu, Feb 24, 2022 at 12:06:09AM +0800, Jisheng Zhang wrote:
-> > On Wed, Feb 23, 2022 at 11:46:22AM +0000, Lorenzo Pieralisi wrote:
-> > > On Sun, Jan 23, 2022 at 08:02:42PM +0800, Jisheng Zhang wrote:
-> > > > On Sun, Dec 26, 2021 at 03:40:19PM +0800, Jisheng Zhang wrote:
-> > > > > If the host which makes use of the IP's integrated MSI Receiver losts
-> > > > > power during suspend, we call dw_pcie_setup_rc() to reinit the RC. But
-> > > > > dw_pcie_setup_rc() always set the pp->irq_mask[ctrl] as ~0, so the mask
-> > > > > register is always set as 0xffffffff incorrectly, thus the MSI can't
-> > > > > work after resume.
-> > > > > 
-> > > > > Fix this issue by moving pp->irq_mask[ctrl] initialization to
-> > > > > dw_pcie_host_init(), so we can correctly set the mask reg during both
-> > > > > boot and resume.
-> > > > > 
-> > > > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > > > 
-> > > > Hi all,
-> > > > 
-> > > > This patch can still be applied to the latest linus tree. Do you want
-> > > > me to rebase and send out a new version?
-> > > > 
-> > > > Without this patch, dwc host MSI interrupt(if use the IP's integrated
-> > > > MSI receiver) can't work after resume. Could it be picked up as a fix
-> > > > for v5.17?
-> > > 
-> > > The tricky bit with this patch is that it is not clear what piece of
-> > > logic is lost on power down and what not. IIUC MSI interrupt controller
-> > > logic is kept so it does not need to be saved/restored (but in
-> > 
-> > You may mean the external MSI interrupt controller case, but here the
-> > focus is the integrated MSI Receiver in the IP. Normally, after
-> > suspending to ram, the dwc IP would lost power, so the integrated MSI
-> > Receiver also lost power.
-> > 
-> > > dw_pcie_setup_rc() we overwrite PCIE_MSI_INTR0_ENABLE even if it
-> > > is not needed on resume - actually, it can even be destructive).
-> > > 
-> > 
-> > For the integrated MSI Receiver case, since the entire IP power is lost,
-> > so the PCIE_MSI_INTR0_MASK|ENABLE setting is lost, we need to resume the
-> > mask to the one before suspending. For PCIE_MSI_INTR0_ENABLE register(s),
-> > since it's always 0xffffffff, so current code is fine.
-> > 
-> > > Maybe we need to write suspend/resume hooks for the dwc core instead
-> > > of moving code around to fix these bugs ?
-> > > 
-> > 
-> > Even with suspend/resume hooks, we still need to fix the
-> > PCIE_MSI_INTR0_MASK wrong setting with always ~0. After the fix, msi works
-> > so we don't need suspend/resume hooks any more.
-> 
-> I don't understand. The fix removes code that is writing into
-> PCIE_MSI_INTR0_MASK (in dw_pcie_setup_rc()). Where that register
+We have numerous platforms that permit assigning addresses from 0 to PCI 
+devices, both in the memory and the I/O bus space, and we happily do so 
+if there is no conflict, e.g.:
 
-No, the patch just moves the irq_mask[] array setting from
-dw_pcie_setup_rc() to dw_pcie_host_init(), the code which writes
-irq_mask[] array into PCIE_MSI_INTR0_MASK is still kept there.
+pci 0000:07:00.0: BAR 0: assigned [io  0x0000-0x0007]
+pci 0000:07:00.1: BAR 0: assigned [io  0x0008-0x000f]
+pci 0000:06:01.0: PCI bridge to [bus 07]
+pci 0000:06:01.0:   bridge window [io  0x0000-0x0fff]
 
-> content is restored on power up to the correct value then ?
+(with the SiFive HiFive Unmatched RISC-V board and a dual serial port 
+option card based on the OxSemi OXPCIe952 device wired for the legacy 
+UART mode).
 
-the irq_mask[] array.
+Address 0 is treated specially however in many places, for example in 
+`pci_iomap_range' and `pci_iomap_wc_range' we require that the start 
+address is non-zero, and even if we let such an address through, then 
+individual device drivers could reject a request to handle a device at 
+such an address, such as in `uart_configure_port'.  Consequently given
+devices configured as shown above only one is actually usable:
+
+Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+serial 0000:07:00.0: enabling device (0000 -> 0001)
+serial: probe of 0000:07:00.0 failed with error -12
+serial 0000:07:00.1: enabling device (0000 -> 0001)
+serial 0000:07:00.1: detected caps 00000700 should be 00000500
+0000:07:00.1: ttyS0 at I/O 0x8 (irq = 39, base_baud = 15625000) is a 16C950/954
+
+Especially I/O space ranges are particularly valuable, because bridges 
+only decode bits from 12 up and consequently where 16-bit addressing is 
+in effect, as few as 16 separate ranges can be assigned to individual 
+buses only.
+
+Therefore avoid handing out address 0, however rather than bumping the 
+lowest address available to PCI via PCIBIOS_MIN_IO and PCIBIOS_MIN_MEM, 
+or doing an equivalent arrangement in `__pci_assign_resource', let the 
+whole range assigned to a bus start from that address and instead only 
+avoid it for actual devices.  Do it in `pci_bus_alloc_from_region' then 
+observing that bridge resources will have the IORESOURCE_STARTALIGN flag 
+set rather than IORESOURCE_SIZEALIGN and by making the least significant 
+bit decoded 1 according to the resource type, either memory or I/O.
+
+With this in place the system in question we have:
+
+pci 0000:07:00.0: BAR 0: assigned [io  0x0008-0x000f]
+pci 0000:07:00.1: BAR 0: assigned [io  0x0010-0x0017]
+pci 0000:06:01.0: PCI bridge to [bus 07]
+pci 0000:06:01.0:   bridge window [io  0x0000-0x0fff]
+
+and then devices work correctly:
+
+Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+serial 0000:07:00.0: enabling device (0000 -> 0001)
+serial 0000:07:00.0: detected caps 00000700 should be 00000500
+0000:07:00.0: ttyS0 at I/O 0x8 (irq = 38, base_baud = 15625000) is a 16C950/954
+serial 0000:07:00.1: enabling device (0000 -> 0001)
+serial 0000:07:00.1: detected caps 00000700 should be 00000500
+0000:07:00.1: ttyS1 at I/O 0x10 (irq = 39, base_baud = 15625000) is a 16C950/954
+
+Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+---
+Hi,
+
+ NB I have an OxSemi OXPCIe952 based card that can be wired to either the 
+native or the legacy mode via a jumper block and I am so glad that I have 
+checked whether it works in the legacy mode as well.  I guess there are so 
+few legacy-free platforms still for nobody else to notice this issue yet.
+
+ I think I've chosen the right solution, but I'll be happy to hear any 
+suggestions for an alternative one.  Otherwise please apply.
+
+  Maciej
+---
+ drivers/pci/bus.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+linux-pci-bus-alloc-from-region-min.diff
+Index: linux-macro/drivers/pci/bus.c
+===================================================================
+--- linux-macro.orig/drivers/pci/bus.c
++++ linux-macro/drivers/pci/bus.c
+@@ -194,6 +194,15 @@ static int pci_bus_alloc_from_region(str
+ 		 */
+ 		if (avail.start)
+ 			min_used = avail.start;
++		/*
++		 * For non-bridge resources avoid assigning address 0 as
++		 * we assume that to mean no assignment in many places,
++		 * starting from `pci_iomap_range'.
++		 */
++		if (min_used == 0 && (res->flags & IORESOURCE_SIZEALIGN))
++			min_used = res->flags & IORESOURCE_IO ?
++				   ~PCI_BASE_ADDRESS_IO_MASK + 1 :
++				   ~PCI_BASE_ADDRESS_MEM_MASK + 1;
+ 
+ 		max = avail.end;
+ 
