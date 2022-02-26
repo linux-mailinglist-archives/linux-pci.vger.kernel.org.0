@@ -2,55 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EE924C535C
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Feb 2022 03:26:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 590854C53A7
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Feb 2022 05:17:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229509AbiBZCNL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 21:13:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57010 "EHLO
+        id S229664AbiBZERa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 23:17:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbiBZCNL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 21:13:11 -0500
-Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C29179265;
-        Fri, 25 Feb 2022 18:12:38 -0800 (PST)
-Received: by mail-vk1-xa32.google.com with SMTP id j12so2502209vkr.0;
-        Fri, 25 Feb 2022 18:12:38 -0800 (PST)
+        with ESMTP id S229455AbiBZERa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 23:17:30 -0500
+Received: from mail-vk1-xa2b.google.com (mail-vk1-xa2b.google.com [IPv6:2607:f8b0:4864:20::a2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304252067C1;
+        Fri, 25 Feb 2022 20:16:56 -0800 (PST)
+Received: by mail-vk1-xa2b.google.com with SMTP id j201so2535439vke.11;
+        Fri, 25 Feb 2022 20:16:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lDWpy2NuIsQN7E/0B1NasChFwKSZ7ta4TFaRo3f/J1c=;
-        b=RRvEInhRxEBzutgK0TBld7VqkdgO2eExoA/SoRpxe/FJJ0U3LL31c1DPAVhHdIazw+
-         riRIH3qQo6YW79G0JeW4MO3oAmr///O+zV2uOJzW4dwjqhLSS/a25Y9iibdTseuz7VXX
-         LfK38vfc0uld1ZG+YldAS1ZsQURnnZuLFN0AnE0f950yiaFDjnNAFZqlN4o5Q1jAH32E
-         R69V7NIBYDmTxrtLFYvc3pNY2rZhy1UDw0IyEuml6cgH3JKhfqsovSK0N+GXdBxdyj/m
-         Ja8yq5rw5xqYlJbl2f2GNPx+pBW8T0DjIvsZ2dJXADPS9usSYVcD+Rf1Ql1UggKZ7vUs
-         L/Vg==
+        bh=hlz5lW5Mjko+FKIXQXxAuW16NWPm12e+1Hy+bd7Mx6w=;
+        b=Uz9h9hvX43DtDQmuumxT1Zmmcx6xPCLXQ0hmqAZG5NLgfVyndIWnNP1/SfAPRnbcpw
+         dTuD2S8v+nr2w7o6Ix6PXbohV1T2AWwMgAC6skWx1FBY5GQEYkOOqdJV7X1+wYjYb96n
+         rgv22li1xTHhPWPCIG94PsRbitLlWM9qUHMbFC8+BHNahcBVdqafZZp/8UyawM3lV2as
+         hLym20TFC6z6w31JKSWnlFnuYMSPMqiMpen38UcqcS0FwNj12zNwwjLL7wDx3L1Ix5vF
+         L/xqEvSCs3V5LQ55MA+anIcwETlcs87JAdfoGkCV5dD+97145ZpYNGPcV4ng36oxbQ0u
+         hOMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lDWpy2NuIsQN7E/0B1NasChFwKSZ7ta4TFaRo3f/J1c=;
-        b=BkMtMBl7qpZRP7TMLtXCvrFvs6gnmyUGjSmt4kAqSr4urBRIuofIXzGVgemMd4lhM0
-         kD6Eq4f4xXPodjIbbw2vwLd6CXQfkDrNymZ2YhSMGnA1C0hBfdlHiMJFldSPmjK0BwPb
-         HiaqG43uvq5vEnRhJyM1SIvfrJ9wIrvoPAKOjtSbRGQOphPGUsNn6hP4Y9ioW5843JNN
-         vZcWLiFzNxjsM6MpaEIomp4kjgIGJjkk03GtmjdNFcf3GQYbm5VKp3E+agmbdWn/r3a5
-         NDeIH8sbDOr4iK1lPa3BAfDtnvFXtzJMfcbkMuwDD5bDy3p+GTlT4A7RObtVZm5jxqzm
-         cFdg==
-X-Gm-Message-State: AOAM531Ff3r8Nn33D84I8QXA3+0g4dWOCactgoszFj/V0tOllYwC2BSH
-        84c9sZUpZZleL8cHVrtxnQUJl8jKrByYLyrwtlw=
-X-Google-Smtp-Source: ABdhPJzsUE+TqICcXLNuL+ZS/uvjE53/+EGUyjFKuVTi339MEgMzrXx6N86iaeg/mC2K5UwwLFGYsT3W6YgRtSbD0mM=
-X-Received: by 2002:a05:6122:d0f:b0:330:c206:d46e with SMTP id
- az15-20020a0561220d0f00b00330c206d46emr4846192vkb.41.1645841557409; Fri, 25
- Feb 2022 18:12:37 -0800 (PST)
+        bh=hlz5lW5Mjko+FKIXQXxAuW16NWPm12e+1Hy+bd7Mx6w=;
+        b=P4iq6mE+3fynk0S8QM36vdlPBKXHLaKsxOLB6egJbXxrtrZyjN0HByk4Gis36B3Wuu
+         2hKl8rOeq1lkSLdUDmaZHINRIR5QfYUeT3IP5Wg2GFDiX8E9/DaTqjaUhcsSF6dYnagy
+         O0dDYZdFytwb5phKiCFdBtRYQAIh827UthFxQ/xv6AKr6XUQ5Fd+dGt30G7t+1v70KUA
+         xdtThnmgKZIv7f6fDItzDGCYSLsL0KgWXSmEdVbtYWubkt6eHMwfc5sHXb1svEX94K2s
+         12AP4bpvqwFBIF1SzCNHZJQe1j8HfmUj12/gYs3dAjzSPFz+fKHMFbEqHnRCID82lHOD
+         sEzg==
+X-Gm-Message-State: AOAM532AOwaxjG89/bClZ//PYkGDAbOLX8LZZCq0i97V3Fp52PVw+xTa
+        f6fEJOdUzw3dWN8mRcz6GQRAmQXqcWm36KkV6F0=
+X-Google-Smtp-Source: ABdhPJwYRO82iUobOAIaLCi1t7YVNRWIVT3kqXeye6le29zqLubyWdpBRMZMQPg0JqJxvRtmaAESk1aLCAiVVR1/JEc=
+X-Received: by 2002:a05:6122:1898:b0:32d:5227:d967 with SMTP id
+ bi24-20020a056122189800b0032d5227d967mr4755411vkb.38.1645849015106; Fri, 25
+ Feb 2022 20:16:55 -0800 (PST)
 MIME-Version: 1.0
-References: <CAJoG2+9Tp4ZW4tqTVSgp7wukduEFKHiqOXJO-Yn17OwTvn+a+w@mail.gmail.com>
- <20220225182004.GA369816@bhelgaas>
-In-Reply-To: <20220225182004.GA369816@bhelgaas>
+References: <20220223051545.572235-1-yusisamerican@gmail.com> <20220225181927.GA368545@bhelgaas>
+In-Reply-To: <20220225181927.GA368545@bhelgaas>
 From:   Yusuf Khan <yusisamerican@gmail.com>
-Date:   Fri, 25 Feb 2022 18:12:26 -0800
-Message-ID: <CAJoG2+9p4jC1aSybosd_+pkEzGDv=44D_VshrJzbgpk++Nr8Ng@mail.gmail.com>
+Date:   Fri, 25 Feb 2022 20:16:44 -0800
+Message-ID: <CAJoG2+-XfTNcu+C92B=b6k_Wa54E=fTQhh1DXK0-fuUuWmvwUA@mail.gmail.com>
 Subject: Re: [PATCH] Removed some usages of the deprecated "pci-dma-compat.h" KPI
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -70,12 +69,10 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-sorry....
+pci-dma-compat.h is included by pci.h so files that depend on it don't
+(usually)include it The patch removed function calls to it and replaced them
+with dma-mapping calls since that's what it wraps.
 
-On Fri, Feb 25, 2022 at 10:20 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Feb 23, 2022 at 01:54:54AM -0800, Yusuf Khan wrote:
-> > See https://lkml.org/lkml/2022/2/23/11 Before you think of this commit!
->
-> Use links to https://lore.kernel.org/r/ whenever you can, instead of
-> lkml.org, etc.
+As I failed english in school I don't understand half of what you
+said, that said
+the link to "More tips" was helpful.
