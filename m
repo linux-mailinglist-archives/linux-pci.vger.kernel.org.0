@@ -2,84 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D01224C515B
-	for <lists+linux-pci@lfdr.de>; Fri, 25 Feb 2022 23:15:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EE924C535C
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Feb 2022 03:26:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236899AbiBYWQB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 25 Feb 2022 17:16:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56598 "EHLO
+        id S229509AbiBZCNL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Feb 2022 21:13:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236549AbiBYWQA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 17:16:00 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1448718F21E;
-        Fri, 25 Feb 2022 14:15:28 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 685C2CE27EC;
-        Fri, 25 Feb 2022 22:15:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A876FC340E7;
-        Fri, 25 Feb 2022 22:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645827324;
-        bh=tk3VRDpANFYB8NRJhQeUoW4hJrY3AMcDY0PFavgHSlM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GcEMYWBJDy+GrVvgWXw9G6tgkduT4RiIH8V+ghG8kiqsvZ4gRRBqx9oRhgORLK9JL
-         UwD+8MuHddaL4r6piLp1I5iDQF8pmPhxfeFFkFMnVPgrq3IvLr4y4ViLUyuwvvx/79
-         eJopq66hUBHEs8nno/mlqTNJZ1TlXD/iMbmN2e5MxkW4NmOkU0x5RmtmWrUARpbrv2
-         CZbBV9jFd5gIaIhIGmgdII9kByJyeiYCGkBwfremIbecTfz5TBlngGjl4/k91/ExzL
-         2DY4rluykLyO6tF0BGSdMisRk2jDyc2UhEljCtOJg4AaVCCBYdAeVyeBm/Rvt14M56
-         lJACkQE/x0ASg==
-Date:   Fri, 25 Feb 2022 16:15:23 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v9 00/11] vgaarb: Rework default VGA device selection
-Message-ID: <20220225221523.GA385757@bhelgaas>
+        with ESMTP id S229447AbiBZCNL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Feb 2022 21:13:11 -0500
+Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C29179265;
+        Fri, 25 Feb 2022 18:12:38 -0800 (PST)
+Received: by mail-vk1-xa32.google.com with SMTP id j12so2502209vkr.0;
+        Fri, 25 Feb 2022 18:12:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lDWpy2NuIsQN7E/0B1NasChFwKSZ7ta4TFaRo3f/J1c=;
+        b=RRvEInhRxEBzutgK0TBld7VqkdgO2eExoA/SoRpxe/FJJ0U3LL31c1DPAVhHdIazw+
+         riRIH3qQo6YW79G0JeW4MO3oAmr///O+zV2uOJzW4dwjqhLSS/a25Y9iibdTseuz7VXX
+         LfK38vfc0uld1ZG+YldAS1ZsQURnnZuLFN0AnE0f950yiaFDjnNAFZqlN4o5Q1jAH32E
+         R69V7NIBYDmTxrtLFYvc3pNY2rZhy1UDw0IyEuml6cgH3JKhfqsovSK0N+GXdBxdyj/m
+         Ja8yq5rw5xqYlJbl2f2GNPx+pBW8T0DjIvsZ2dJXADPS9usSYVcD+Rf1Ql1UggKZ7vUs
+         L/Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lDWpy2NuIsQN7E/0B1NasChFwKSZ7ta4TFaRo3f/J1c=;
+        b=BkMtMBl7qpZRP7TMLtXCvrFvs6gnmyUGjSmt4kAqSr4urBRIuofIXzGVgemMd4lhM0
+         kD6Eq4f4xXPodjIbbw2vwLd6CXQfkDrNymZ2YhSMGnA1C0hBfdlHiMJFldSPmjK0BwPb
+         HiaqG43uvq5vEnRhJyM1SIvfrJ9wIrvoPAKOjtSbRGQOphPGUsNn6hP4Y9ioW5843JNN
+         vZcWLiFzNxjsM6MpaEIomp4kjgIGJjkk03GtmjdNFcf3GQYbm5VKp3E+agmbdWn/r3a5
+         NDeIH8sbDOr4iK1lPa3BAfDtnvFXtzJMfcbkMuwDD5bDy3p+GTlT4A7RObtVZm5jxqzm
+         cFdg==
+X-Gm-Message-State: AOAM531Ff3r8Nn33D84I8QXA3+0g4dWOCactgoszFj/V0tOllYwC2BSH
+        84c9sZUpZZleL8cHVrtxnQUJl8jKrByYLyrwtlw=
+X-Google-Smtp-Source: ABdhPJzsUE+TqICcXLNuL+ZS/uvjE53/+EGUyjFKuVTi339MEgMzrXx6N86iaeg/mC2K5UwwLFGYsT3W6YgRtSbD0mM=
+X-Received: by 2002:a05:6122:d0f:b0:330:c206:d46e with SMTP id
+ az15-20020a0561220d0f00b00330c206d46emr4846192vkb.41.1645841557409; Fri, 25
+ Feb 2022 18:12:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220224224753.297579-1-helgaas@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CAJoG2+9Tp4ZW4tqTVSgp7wukduEFKHiqOXJO-Yn17OwTvn+a+w@mail.gmail.com>
+ <20220225182004.GA369816@bhelgaas>
+In-Reply-To: <20220225182004.GA369816@bhelgaas>
+From:   Yusuf Khan <yusisamerican@gmail.com>
+Date:   Fri, 25 Feb 2022 18:12:26 -0800
+Message-ID: <CAJoG2+9p4jC1aSybosd_+pkEzGDv=44D_VshrJzbgpk++Nr8Ng@mail.gmail.com>
+Subject: Re: [PATCH] Removed some usages of the deprecated "pci-dma-compat.h" KPI
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        tiwai@suse.com, perex@perex.cz, alex.bou9@gmail.com,
+        mporter@kernel.crashing.org, logang@deltatee.com,
+        kurt.schwemmer@microsemi.com, Bjorn Helgaas <bhelgaas@google.com>,
+        kw@linux.com, robh@kernel.org, lorenzo.pieralisi@arm.com,
+        jonathan.derrick@linux.dev, nirmal.patel@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 04:47:42PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Current default VGA device selection fails in some cases because part of it
-> is done in the vga_arb_device_init() subsys_initcall, and some arches
-> enumerate PCI devices in pcibios_init(), which runs *after* that.
-> 
-> The big change from the v8 posting is that this moves vgaarb.c from
-> drivers/gpu/vga to drivers/pci because it really has nothing to do with
-> GPUs or DRM.
+sorry....
 
-I provisionally applied this to pci/vga and put it into -next just
-to get a little runtime on it.
-
-But I'd prefer not to unilaterally yank this out of drivers/gpu
-without a consensus from the GPU folks that this is the right thing to
-do.
-
-Any thoughts?  If it seems OK to you, I think patch 1/11 (the move
-itself) is all you would need to look at, although of course I would
-still be grateful for any review and feedback on the rest.
-
-After it's in drivers/pci, all the blame for any issues would come my
-way.
-
-Bjorn
+On Fri, Feb 25, 2022 at 10:20 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, Feb 23, 2022 at 01:54:54AM -0800, Yusuf Khan wrote:
+> > See https://lkml.org/lkml/2022/2/23/11 Before you think of this commit!
+>
+> Use links to https://lore.kernel.org/r/ whenever you can, instead of
+> lkml.org, etc.
