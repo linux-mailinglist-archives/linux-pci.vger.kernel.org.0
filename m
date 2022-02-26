@@ -2,134 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1318E4C553D
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Feb 2022 11:47:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 102AA4C5544
+	for <lists+linux-pci@lfdr.de>; Sat, 26 Feb 2022 11:51:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231189AbiBZKrt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Feb 2022 05:47:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38228 "EHLO
+        id S229896AbiBZKvb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 26 Feb 2022 05:51:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231186AbiBZKrs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Feb 2022 05:47:48 -0500
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E070129C46F
-        for <linux-pci@vger.kernel.org>; Sat, 26 Feb 2022 02:47:13 -0800 (PST)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id 78EC392009C; Sat, 26 Feb 2022 11:47:10 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id 6B9CA92009B;
-        Sat, 26 Feb 2022 10:47:10 +0000 (GMT)
-Date:   Sat, 26 Feb 2022 10:47:10 +0000 (GMT)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+        with ESMTP id S230361AbiBZKva (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Feb 2022 05:51:30 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 623F08D6A8
+        for <linux-pci@vger.kernel.org>; Sat, 26 Feb 2022 02:50:56 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E9073B80E9E
+        for <linux-pci@vger.kernel.org>; Sat, 26 Feb 2022 10:50:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 883ACC340F0;
+        Sat, 26 Feb 2022 10:50:51 +0000 (UTC)
+From:   Huacai Chen <chenhuacai@loongson.cn>
 To:     Bjorn Helgaas <bhelgaas@google.com>
-cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Avoid handing out address 0 to devices
-Message-ID: <alpine.DEB.2.21.2202260044180.25061@angie.orcam.me.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+Cc:     linux-pci@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH V12 0/6] PCI: Loongson pci improvements and quirks 
+Date:   Sat, 26 Feb 2022 18:47:25 +0800
+Message-Id: <20220226104731.76776-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,HDRS_LCASE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We have numerous platforms that permit assigning addresses from 0 to PCI 
-devices, both in the memory and the I/O bus space, and we happily do so 
-if there is no conflict, e.g.:
+This patchset improves Loongson PCI controller driver and resolves some
+problems: LS2K/LS7A's PCI config space supports 1/2/4-bytes access, so
+the first patch use pci_generic_config_read()/pci_generic_config_write()
+for them; the second patch add ACPI init support which will be used by
+LoongArch; the third patch improves the mrrs quirk for LS7A chipset; The
+fourth patch add a new quirk for LS7A chipset to avoid poweroff/reboot
+failure, and the fifth patch add a new quirk for LS7A chipset to fix the
+multifunction devices' irq pin mappings.
 
-pci 0000:07:00.0: BAR 0: assigned [io  0x0000-0x0007]
-pci 0000:07:00.1: BAR 0: assigned [io  0x0008-0x000f]
-pci 0000:06:01.0: PCI bridge to [bus 07]
-pci 0000:06:01.0:   bridge window [io  0x0000-0x0fff]
+V1 -> V2:
+1, Rework the 4th patch;
+2, Improve commit messages;
+3, Remove the last patch since there is better solutions.
 
-(with the SiFive HiFive Unmatched RISC-V board and a dual serial port 
-option card based on the OxSemi OXPCIe952 device wired for the legacy 
-UART mode).
+V2 -> V3:
+1, Add more affected device ids for the 4th patch;
+2, Improve commit messages to describe root causes.
 
-Address 0 is treated specially however in many places, for example in 
-`pci_iomap_range' and `pci_iomap_wc_range' we require that the start 
-address is non-zero, and even if we let such an address through, then 
-individual device drivers could reject a request to handle a device at 
-such an address, such as in `uart_configure_port'.  Consequently given
-devices configured as shown above only one is actually usable:
+V3 -> V4:
+1, Rework the MRRS quirk patch;
+2, Improve commit messages to describe root causes, again.
 
-Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
-serial 0000:07:00.0: enabling device (0000 -> 0001)
-serial: probe of 0000:07:00.0 failed with error -12
-serial 0000:07:00.1: enabling device (0000 -> 0001)
-serial 0000:07:00.1: detected caps 00000700 should be 00000500
-0000:07:00.1: ttyS0 at I/O 0x8 (irq = 39, base_baud = 15625000) is a 16C950/954
+V4 -> V5:
+1, Improve the MRRS quirk patch;
+2, Change the order of 2nd and 3rd patch;
+3, Improve commit messages to describe root causes, again.
 
-Especially I/O space ranges are particularly valuable, because bridges 
-only decode bits from 12 up and consequently where 16-bit addressing is 
-in effect, as few as 16 separate ranges can be assigned to individual 
-buses only.
+V5 -> V6:
+1, Rework the 1st patch;
+2, Adjust the order of the series.
 
-Therefore avoid handing out address 0, however rather than bumping the 
-lowest address available to PCI via PCIBIOS_MIN_IO and PCIBIOS_MIN_MEM, 
-or doing an equivalent arrangement in `__pci_assign_resource', let the 
-whole range assigned to a bus start from that address and instead only 
-avoid it for actual devices.  Do it in `pci_bus_alloc_from_region' then 
-observing that bridge resources will have the IORESOURCE_STARTALIGN flag 
-set rather than IORESOURCE_SIZEALIGN and by making the least significant 
-bit decoded 1 according to the resource type, either memory or I/O.
+V6 -> V7:
+1, Use correct pci config access operations;
+2, Add ACPI init support for LoongArch;
+3, Don't move to quirks.c since the driver has ACPI support;
+4, Some other minor improvements.
 
-With this in place the system in question we have:
+V7 -> V8:
+1, Use CFG1 method for LS2K/LS7A pci config.
 
-pci 0000:07:00.0: BAR 0: assigned [io  0x0008-0x000f]
-pci 0000:07:00.1: BAR 0: assigned [io  0x0010-0x0017]
-pci 0000:06:01.0: PCI bridge to [bus 07]
-pci 0000:06:01.0:   bridge window [io  0x0000-0x0fff]
+V8 -> V9:
+1, Use pci_controller_data for the first patch. 
 
-and then devices work correctly:
+V9 -> V10:
+1, Add a patch to avoid LS2K/LS7A access unexisting devices.
 
-Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
-serial 0000:07:00.0: enabling device (0000 -> 0001)
-serial 0000:07:00.0: detected caps 00000700 should be 00000500
-0000:07:00.0: ttyS0 at I/O 0x8 (irq = 38, base_baud = 15625000) is a 16C950/954
-serial 0000:07:00.1: enabling device (0000 -> 0001)
-serial 0000:07:00.1: detected caps 00000700 should be 00000500
-0000:07:00.1: ttyS1 at I/O 0x10 (irq = 39, base_baud = 15625000) is a 16C950/954
+V10 -> V11:
+1, Rebased on 5.16-rc4.
 
-Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
+V11 -> V12:
+1, Rebased on 5.17-rc5.
+
+Huacai Chen, Tiezhu Yang and Jianmin Lv(6):
+ PCI: loongson: Use generic 8/16/32-bit config ops on LS2K/LS7A.
+ PCI: loongson: Add ACPI init support.
+ PCI: loongson: Don't access unexisting devices.
+ PCI: loongson: Improve the MRRS quirk for LS7A.
+ PCI: Add quirk for LS7A to avoid reboot failure.
+ PCI: Add quirk for multifunction devices of LS7A.
+
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn> 
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
-Hi,
+ drivers/acpi/pci_mcfg.c               |  13 +++
+ drivers/pci/controller/Kconfig        |   2 +-
+ drivers/pci/controller/pci-loongson.c | 184 ++++++++++++++++++++++++++--------
+ drivers/pci/pci.c                     |   6 ++
+ drivers/pci/pcie/portdrv_core.c       |   6 +-
+ include/linux/pci-ecam.h              |   1 +
+ include/linux/pci.h                   |   2 +
+ 7 files changed, 169 insertions(+), 45 deletions(-)
+--
+2.27.0
 
- NB I have an OxSemi OXPCIe952 based card that can be wired to either the 
-native or the legacy mode via a jumper block and I am so glad that I have 
-checked whether it works in the legacy mode as well.  I guess there are so 
-few legacy-free platforms still for nobody else to notice this issue yet.
-
- I think I've chosen the right solution, but I'll be happy to hear any 
-suggestions for an alternative one.  Otherwise please apply.
-
-  Maciej
----
- drivers/pci/bus.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
-
-linux-pci-bus-alloc-from-region-min.diff
-Index: linux-macro/drivers/pci/bus.c
-===================================================================
---- linux-macro.orig/drivers/pci/bus.c
-+++ linux-macro/drivers/pci/bus.c
-@@ -194,6 +194,15 @@ static int pci_bus_alloc_from_region(str
- 		 */
- 		if (avail.start)
- 			min_used = avail.start;
-+		/*
-+		 * For non-bridge resources avoid assigning address 0 as
-+		 * we assume that to mean no assignment in many places,
-+		 * starting from `pci_iomap_range'.
-+		 */
-+		if (min_used == 0 && (res->flags & IORESOURCE_SIZEALIGN))
-+			min_used = res->flags & IORESOURCE_IO ?
-+				   ~PCI_BASE_ADDRESS_IO_MASK + 1 :
-+				   ~PCI_BASE_ADDRESS_MEM_MASK + 1;
- 
- 		max = avail.end;
- 
