@@ -2,229 +2,277 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DC124C726E
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 18:21:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 257654C73C4
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 18:38:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233397AbiB1RWB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Feb 2022 12:22:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58858 "EHLO
+        id S238302AbiB1Rie (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Feb 2022 12:38:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233202AbiB1RWB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 12:22:01 -0500
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2124.outbound.protection.outlook.com [40.107.212.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD377F6CD;
-        Mon, 28 Feb 2022 09:21:21 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WGROcgBaEOXb7LR3FSSNEbts4Yq/gvHTx+QKUuXbAAY5UqWvNzfG7p7f8KZ/E4oIY2Rg3W/6thQHYo5rve1gDrELKt8iS2YFLRoH9fR/9AjQ2lsrgmn9iDX80UAjlSXOSPjssDUT8bTtfta610/KrIXF2KrxowYbVA72b+NZKjemn6I3Q8qTA8pRTtF8REV/JBSss17jNVGtO1VcQKJc/r0HVJUDodOMK67YsY8jVlw4hKBUGKXamkEqnLxEDesq1hYllQrmCfk3QY6HyBfqf6cbFPKkF3CKIzRlGdswgVbTtwwpkjOaxMQW3IwFnOYSnAGrVG3h0f1J30AqcmDstw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RpdUqKZ7g1q/KewkZ6ChsRglmfEx00uxvbcobvCdGfU=;
- b=LJMs1KTZ7v/9xPQzWqwE99HpshKHrcrSRvv/ORlRAYjEQ4QMFbz9SSuQz569NU3uSyxbw7qgL8vThmNVrmL+iOoOZ5Q05OOgLdlnVnuyY6rt8CO3+nJ7pO6RhgJs5YRQ6hsBnmgzIr9q4dr/DnKFZ7cId8sNR8mK1kPz+NjJsYmsHCLHbZjW/S2w4xeNV0MBOZwP1OY9w/Pm5csoksYWBXZLx9aLCD2H2wSEQ/aNiJomsEF0PFRWEmgnxrcWHd9g/6DyV5ZH6ZfvKyrunrSO9n+PYyWpqMNlu9SlmdfaxECG9OT8XX/tiZEog93mBNempxlHZOzdJ/YJEFwMvv/XAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RpdUqKZ7g1q/KewkZ6ChsRglmfEx00uxvbcobvCdGfU=;
- b=g9nhUzwY7Vv8E+CpoSKp6JTM3px3JlWNs6F2X8reB07guIM/x41SwxKlqSwheS10FFvB/Fkeq7/rfh8dcoeOfoUnWfG+L0jxfKfrdqdCGm4VlN8iNabrsfcnlk6IAdWKRQX46VsBv09YurvywJ/Jr7kAhgjG5GLHzKCGlZRnNLY=
-Received: from MN0PR21MB3098.namprd21.prod.outlook.com (2603:10b6:208:376::14)
- by MW4PR21MB1969.namprd21.prod.outlook.com (2603:10b6:303:7c::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.0; Mon, 28 Feb
- 2022 17:21:09 +0000
-Received: from MN0PR21MB3098.namprd21.prod.outlook.com
- ([fe80::69f8:51be:b573:e70c]) by MN0PR21MB3098.namprd21.prod.outlook.com
- ([fe80::69f8:51be:b573:e70c%5]) with mapi id 15.20.5038.006; Mon, 28 Feb 2022
- 17:21:08 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "tboot-devel@lists.sourceforge.net" 
-        <tboot-devel@lists.sourceforge.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: RE: [PATCH 08/11] swiotlb: make the swiotlb_init interface more
- useful
-Thread-Topic: [PATCH 08/11] swiotlb: make the swiotlb_init interface more
- useful
-Thread-Index: AQHYK+bNn5GdGBwbMEGdpROKeAVKTayoQv4AgACScQCAAGA5YA==
-Date:   Mon, 28 Feb 2022 17:21:08 +0000
-Message-ID: <MN0PR21MB3098608AE81E444CC3C25B3ED7019@MN0PR21MB3098.namprd21.prod.outlook.com>
-References: <20220227143055.335596-1-hch@lst.de>
- <20220227143055.335596-9-hch@lst.de>
- <MN0PR21MB309816A344171B46735CA29CD7019@MN0PR21MB3098.namprd21.prod.outlook.com>
- <20220228113042.GA10570@lst.de>
-In-Reply-To: <20220228113042.GA10570@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=09ca4065-c6d1-484e-9620-c278d7ad8315;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-02-28T17:15:06Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cddbc668-5c1a-4f83-a223-08d9fadeb5d5
-x-ms-traffictypediagnostic: MW4PR21MB1969:EE_
-x-ms-exchange-atpmessageproperties: SA|SL
-x-microsoft-antispam-prvs: <MW4PR21MB196937E190D2B2302E542BC1D7019@MW4PR21MB1969.namprd21.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cWMWzCjniKzqFntSWVtxFr6flL5hbkfMuMWEOfWBvp+rRvG3wx0D3BFme7Yx0KkfWddAX+K0TAjZSoBLG/dbCYqG3J4kOuPfduhdVzscxUWeqlC9sCMkCqC0xiejdz/6IT7f6bapZMAliRvF/vblVA6B2YlRczt5t0sEpaYdr5dazTyWOvIE0KVPw6YW5F/PgZj0YMXKWHad3ywMAD+hHR365wls4O+zcl6VWG7NacfeMBxfTB8Nr+2PhySwoukGk4rzlf6C0OODAj+PoceUmzz6B7ak2FDpI7Hs5qR06yzJdm5EDKWHL9m1v4FwEXi2xJ/kA+nFuVK2YrDBsI0KqQMtV8rp674JXYCFZU3QkL+HedGlbfTYi6d23jn2awU57YHtSy2fQoFZ82WoWOwjEKbhX+lbrpEX9ApOdwVw3S9RUm8hmMDB7RemARCNdIBOnPMRt0n+s1AlgosPl75ZvR59aChrKGJeUPiNSc+5cIffAEKtK70UsCmch8KzNHauzAEuGBCVhe0ad4OAnA/wrjzHa1QNqWU9BBO4zAHWz8/RUx4OtzPqv/q5jZnEDIkvcnrTA1e7sVhEtlDrhAaLXEi9iT5mOAdUaZ+CVshr3g3WBcOUxb8jf1BuTEQoYZCCQEhQLQl2I2x/lcQA04gwYJi3joTUh36T1bkrZdCas1OWQuHFQaDuBk6Tz/A4k+zU15fg6Dh8oVWnyCzEwn1IPkzGbyQPt6KEI4s9I4Vmx0F5qReR6C3txeazzxnncn3L
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR21MB3098.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6916009)(10290500003)(55016003)(33656002)(2906002)(508600001)(54906003)(316002)(82950400001)(86362001)(82960400001)(38070700005)(122000001)(38100700002)(52536014)(76116006)(66946007)(66476007)(66556008)(4326008)(8676002)(66446008)(7696005)(71200400001)(6506007)(64756008)(7416002)(186003)(26005)(5660300002)(9686003)(8936002)(83380400001)(8990500004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?29qyXTMF81O5S1nx5r+Osp6BQ3ZTLcxu2nBcQagislDsBPG7/Ek1jr6Fh3OJ?=
- =?us-ascii?Q?opz233MPZ2LLUS/xrAR5i+eVc/zjCgiVy/ZZuf3InciYY0kMjj7+5VaO5h5F?=
- =?us-ascii?Q?oRKXGdgstHJssPfSfK2WsKYRNeeviAEFXbmxNfv8bknITEhFH5B4d6jwze4c?=
- =?us-ascii?Q?RWXCGfZNF2gKSkuPcpodmLO0n7bQLJyVr8jAXN+XgCdkV91EVzAAYIUz0Uq2?=
- =?us-ascii?Q?yditzag1mxkeDvx+u3/cN7VJT5I5A5f3wl1WsBcvf6OqUpeRsXsL6w5wps06?=
- =?us-ascii?Q?OeyG5v7grFT6+P+mzpPMYT8SNHnzVUa38NYQWN0X4cFU8K6DyNlWpfpn6zUs?=
- =?us-ascii?Q?MXl9+qxlaYoLCV/Gu/olCdfTvRPkm7Eodi56SkhrywkJLBm2oajaleIuYWgZ?=
- =?us-ascii?Q?8WKC+RGUtlMJg5ivA9cB9olJOCkKlh0E+ruPUFdqZO7Wie3Blz9B5aS4egQk?=
- =?us-ascii?Q?ScpyHViNGJli/C8ys0QP2FW8viCgMAzumWEv4zYc2T7kAwrHxo/a/4w8BCUI?=
- =?us-ascii?Q?S9oSQ8iyUaIrjgFXvC/u/FYkaC+gUt2VBaD38jQfKSKwzADe4iDFJUul2VKU?=
- =?us-ascii?Q?XPLpG/26A6X9zUSa3f2pelG03Q52x2t1kHF6BdmAa6JwPo+bCpqzos58Cdnt?=
- =?us-ascii?Q?126Bg+eFBH6hjPcb3bLc8a4jpbrDeMqMk24DcSPLXYQAe2FrIsduyuGRILDq?=
- =?us-ascii?Q?csTj3oIiSQBfTDJnZll226+FPShkzEpQO1d9rZoxX6n5EpKXblNnTktM+xNN?=
- =?us-ascii?Q?17jXiNYZvs95XMpBYvwqVO6k2OnWdtynypvighqRkDlYRiVWEtcBFdmh1B+8?=
- =?us-ascii?Q?DateI3ggNJxMadDyoNzi/IPwpllwUb7Z381uWK5pgamFLgNUq/0jkKwO0/Wx?=
- =?us-ascii?Q?4mvc5QLQIYLHk7w5Z0Ol56+UsMsGe2eYhrmQ26YoCie5TsFOgvuZYIR/HGqH?=
- =?us-ascii?Q?uDNRa+N9vvPIFo9AZJ7Kp172LlVuDohqcCLzE4HokxuVqpG+6qsemCNBOc/S?=
- =?us-ascii?Q?I5HfA3HwA4LUdCpal4akyxUQz4U//cM6fGRRxFdD66OqmWagCtftMRQV6mkP?=
- =?us-ascii?Q?CMbTal9ZvFOLnTE4bdkS1Y3QgAu7h/tEOq/8pWCANPRmkC/nqavd5Yd6J/MA?=
- =?us-ascii?Q?R5R1P67ITW3DpSXyMGg3AA1wzK5psIK3gkl32DnEjiXmj1WkSEHvNYX6ht5K?=
- =?us-ascii?Q?GPB75YGdMVG7gmxMyCTereGHRheCMA4L0Tsuzz0FkN5brsFZXMNcqQB+h0Jd?=
- =?us-ascii?Q?EFzYZm7uPyaqVuh5aH5HtujJZvEMFrXRhSlYRHvK33rdvCM8j2gqMtVcEbB7?=
- =?us-ascii?Q?W1XkihGMneb+CyMh/KOmYFkqY0Srp/mX97+xBeFPHuMTveuzO7Sg540IMVwp?=
- =?us-ascii?Q?hO/qc1LYfKsSvK1g829RchZje/CiVbp7/4/gEZIYVsOwba0W7dYzYwLPhANY?=
- =?us-ascii?Q?UGF1iEfHAQVHD03WfHcq/MLTHnpj0HHw1yEp6mPS7avfnTkrVuX5dg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S238790AbiB1RiW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 12:38:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 459B3793BB
+        for <linux-pci@vger.kernel.org>; Mon, 28 Feb 2022 09:33:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646069624;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EqPUjuDBqn5Lu6pDeJoTefOb/5PdohRN9v0ddUjXPvo=;
+        b=f3IwtuLYBs6Rs5PAjtfpa9eS6ip0Pbc98Tp7CXrqXJ9DZAvrIg2O8u5J1M9okEWA2PgA2w
+        CSgf4tE2RR47qI1EacQJad8IBSt7bYEtL/UiI+JwlQ9XZl4qTqs/Ep74uNzE6pbFLI1b3Y
+        e4vAmJ9rfvgxqfj3Zk+sGvueAbFVn24=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-461-KqNjfM86PHudm6drz2He9g-1; Mon, 28 Feb 2022 12:33:43 -0500
+X-MC-Unique: KqNjfM86PHudm6drz2He9g-1
+Received: by mail-oi1-f200.google.com with SMTP id c3-20020aca3503000000b002d48224d7e8so5884087oia.4
+        for <linux-pci@vger.kernel.org>; Mon, 28 Feb 2022 09:33:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EqPUjuDBqn5Lu6pDeJoTefOb/5PdohRN9v0ddUjXPvo=;
+        b=Hs9PxyFJB1HyZAiDvdBh4z77Vlm0we8VeKGkpPYn9ADIQAIclwim/ODapa0W25M5ZK
+         5NmF3AOZvuUstfB1BPdcjZwvy8rRcT2o0TnQlyAbLbKAtmEkRFTtpB3MpxHGH4vMqsOU
+         435d9oZEC3o/pwp+JMyHsZ2j4NITxI8X+eEIXws543LTUgazcNySIqEA7DRm9hNhFIiW
+         YyzH0tdUgIx4TSnGHoouoLnQ8stHstb7aa0DKmYMwDwueT/I+tVe2KCKiq8/dJ0W/+PW
+         Qfqpb54ce77RRIYyYF1YIyMoSQqgdNZyjrxuUgT14DS1MAwMXHzKd47C9AmTA342iXef
+         bzeA==
+X-Gm-Message-State: AOAM531+5fYVLFz4G/dAwftaCkccSbI6aI3LqdYS3iQHvNXKWHsQ2/hV
+        wp9k0jrCzE5ujdylt/qFlNhdX156rhv8P+wiqi9AtphdOO0t/79j1WrM3KQ7TtsQLnx887CSQVO
+        rcLnsZhVzNzQyBOfme240
+X-Received: by 2002:a9d:6445:0:b0:59a:ebae:155b with SMTP id m5-20020a9d6445000000b0059aebae155bmr9778555otl.270.1646069621989;
+        Mon, 28 Feb 2022 09:33:41 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyQPFJaAb0KvlwoTLjIGtuvXmo4QXpyccFci0Rpu++2G9KCLx2NXKpWsI0Q6uTyb2Aa6RRzxQ==
+X-Received: by 2002:a9d:6445:0:b0:59a:ebae:155b with SMTP id m5-20020a9d6445000000b0059aebae155bmr9778519otl.270.1646069621348;
+        Mon, 28 Feb 2022 09:33:41 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id l26-20020a05683004ba00b005af665739e0sm5256946otd.30.2022.02.28.09.33.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Feb 2022 09:33:40 -0800 (PST)
+Date:   Mon, 28 Feb 2022 10:33:38 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Cc:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, <jgg@nvidia.com>,
+        <cohuck@redhat.com>, <mgurtovoy@nvidia.com>, <yishaih@nvidia.com>,
+        <linuxarm@huawei.com>, <liulongfang@huawei.com>,
+        <prime.zeng@hisilicon.com>, <jonathan.cameron@huawei.com>,
+        <wangzhou1@hisilicon.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 03/10] hisi_acc_qm: Move PCI device IDs to common
+ header
+Message-ID: <20220228103338.76da0b3b.alex.williamson@redhat.com>
+In-Reply-To: <20220228090121.1903-4-shameerali.kolothum.thodi@huawei.com>
+References: <20220228090121.1903-1-shameerali.kolothum.thodi@huawei.com>
+        <20220228090121.1903-4-shameerali.kolothum.thodi@huawei.com>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR21MB3098.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cddbc668-5c1a-4f83-a223-08d9fadeb5d5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2022 17:21:08.7946
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vzOn32YAvsUYVAMMexjkwRxJ/GCrUPaTSyZyITipNC05D/kQ57R5+nXhVEq9s2CnE36lzOIxTlRer+N0f7Wm6ohAO+aiDJeeTp61TqSz2jo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1969
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de> Sent: Monday, February 28, 2022 3:31 A=
-M
->=20
-> On Mon, Feb 28, 2022 at 02:53:39AM +0000, Michael Kelley (LINUX) wrote:
-> > From: Christoph Hellwig <hch@lst.de> Sent: Sunday, February 27, 2022 6:=
-31 AM
-> > >
-> > > Pass a bool to pass if swiotlb needs to be enabled based on the
-> > > addressing needs and replace the verbose argument with a set of
-> > > flags, including one to force enable bounce buffering.
-> > >
-> > > Note that this patch removes the possibility to force xen-swiotlb
-> > > use using swiotlb=3Dforce on the command line on x86 (arm and arm64
-> > > never supported that), but this interface will be restored shortly.
-> > >
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  arch/arm/mm/init.c                     |  6 +----
-> > >  arch/arm64/mm/init.c                   |  6 +----
-> > >  arch/ia64/mm/init.c                    |  4 +--
-> > >  arch/mips/cavium-octeon/dma-octeon.c   |  2 +-
-> > >  arch/mips/loongson64/dma.c             |  2 +-
-> > >  arch/mips/sibyte/common/dma.c          |  2 +-
-> > >  arch/powerpc/include/asm/swiotlb.h     |  1 +
-> > >  arch/powerpc/mm/mem.c                  |  3 ++-
-> > >  arch/powerpc/platforms/pseries/setup.c |  3 ---
-> > >  arch/riscv/mm/init.c                   |  8 +-----
-> > >  arch/s390/mm/init.c                    |  3 +--
-> > >  arch/x86/kernel/cpu/mshyperv.c         |  8 ------
-> > >  arch/x86/kernel/pci-dma.c              | 15 ++++++-----
-> > >  arch/x86/mm/mem_encrypt_amd.c          |  3 ---
-> > >  drivers/xen/swiotlb-xen.c              |  4 +--
-> > >  include/linux/swiotlb.h                | 15 ++++++-----
-> > >  include/trace/events/swiotlb.h         | 29 ++++++++-------------
-> > >  kernel/dma/swiotlb.c                   | 35 ++++++++++++++----------=
---
-> > >  18 files changed, 56 insertions(+), 93 deletions(-)
-> >
-> > [snip]
-> >
-> > >
-> > > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/msh=
-yperv.c
-> > > index 5a99f993e6392..568274917f1cd 100644
-> > > --- a/arch/x86/kernel/cpu/mshyperv.c
-> > > +++ b/arch/x86/kernel/cpu/mshyperv.c
-> > > @@ -336,14 +336,6 @@ static void __init ms_hyperv_init_platform(void)
-> > >  			swiotlb_unencrypted_base =3D
-> ms_hyperv.shared_gpa_boundary;
-> > >  #endif
-> > >  		}
-> > > -
-> > > -#ifdef CONFIG_SWIOTLB
-> > > -		/*
-> > > -		 * Enable swiotlb force mode in Isolation VM to
-> > > -		 * use swiotlb bounce buffer for dma transaction.
-> > > -		 */
-> > > -		swiotlb_force =3D SWIOTLB_FORCE;
-> > > -#endif
-> >
-> > With this code removed, it's not clear to me what forces the use of the
-> > swiotlb in a Hyper-V isolated VM.  The code in pci_swiotlb_detect_4g() =
-doesn't
-> > catch this case because cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT)
-> > returns "false" in a Hyper-V guest.  In the Hyper-V guest, it's only
-> > cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) that returns "true".  I'm
-> > looking more closely at the meaning of the CC_ATTR_* values, and it may
-> > be that Hyper-V should also return "true" for CC_ATTR_MEM_ENCRYPT,
-> > but I don't think CC_ATTR_HOST_MEM_ENCRYPT should return "true".
->=20
-> Ok, I assumed that CC_ATTR_HOST_MEM_ENCRYPT returned true in this case.
-> I guess we just need to check for CC_ATTR_GUEST_MEM_ENCRYPT as well
-> there?
+[Cc+ Bjorn, linux-pci]
 
-I'm unsure.
+On Mon, 28 Feb 2022 09:01:14 +0000
+Shameer Kolothum <shameerali.kolothum.thodi@huawei.com> wrote:
 
-The comments for CC_ATTR_HOST_MEM_ENCRYPT indicates that it is for
-SME.   The comments for both CC_ATTR_MEM_ENCRYPT and
-CC_ATTR_GUEST_MEM_ENCRYPT mention SEV and SEV-ES (and presumably
-SEV-SNP).   But I haven't looked at the details of the core SNP patches fro=
-m
-the AMD folks.   I'd say that they need to weigh in on the right approach
-here that will work for both SME and the various SEV flavors, and then
-hopefully the Hyper-V case will fit in.
+> Move the PCI Device IDs of HiSilicon ACC devices to
+> a common header and use a uniform naming convention.
+> 
+> This will be useful when we introduce the vfio PCI
+> HiSilicon ACC live migration driver in subsequent patches.
+> 
+> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> ---
+>  drivers/crypto/hisilicon/hpre/hpre_main.c | 12 +++++-------
+>  drivers/crypto/hisilicon/sec2/sec_main.c  | 14 ++++++--------
+>  drivers/crypto/hisilicon/zip/zip_main.c   | 11 ++++-------
+>  include/linux/pci_ids.h                   |  6 ++++++
+>  4 files changed, 21 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
+> index ebfab3e14499..ba4043447e53 100644
+> --- a/drivers/crypto/hisilicon/hpre/hpre_main.c
+> +++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
+> @@ -68,8 +68,6 @@
+>  #define HPRE_REG_RD_INTVRL_US		10
+>  #define HPRE_REG_RD_TMOUT_US		1000
+>  #define HPRE_DBGFS_VAL_MAX_LEN		20
+> -#define HPRE_PCI_DEVICE_ID		0xa258
+> -#define HPRE_PCI_VF_DEVICE_ID		0xa259
+>  #define HPRE_QM_USR_CFG_MASK		GENMASK(31, 1)
+>  #define HPRE_QM_AXI_CFG_MASK		GENMASK(15, 0)
+>  #define HPRE_QM_VFG_AX_MASK		GENMASK(7, 0)
+> @@ -111,8 +109,8 @@
+>  static const char hpre_name[] = "hisi_hpre";
+>  static struct dentry *hpre_debugfs_root;
+>  static const struct pci_device_id hpre_dev_ids[] = {
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, HPRE_PCI_DEVICE_ID) },
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, HPRE_PCI_VF_DEVICE_ID) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_HPRE_PF) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_HPRE_VF) },
+>  	{ 0, }
+>  };
+>  
+> @@ -242,7 +240,7 @@ MODULE_PARM_DESC(uacce_mode, UACCE_MODE_DESC);
+>  
+>  static int pf_q_num_set(const char *val, const struct kernel_param *kp)
+>  {
+> -	return q_num_set(val, kp, HPRE_PCI_DEVICE_ID);
+> +	return q_num_set(val, kp, PCI_DEVICE_ID_HUAWEI_HPRE_PF);
+>  }
+>  
+>  static const struct kernel_param_ops hpre_pf_q_num_ops = {
+> @@ -921,7 +919,7 @@ static int hpre_debugfs_init(struct hisi_qm *qm)
+>  	qm->debug.sqe_mask_len = HPRE_SQE_MASK_LEN;
+>  	hisi_qm_debug_init(qm);
+>  
+> -	if (qm->pdev->device == HPRE_PCI_DEVICE_ID) {
+> +	if (qm->pdev->device == PCI_DEVICE_ID_HUAWEI_HPRE_PF) {
+>  		ret = hpre_ctrl_debug_init(qm);
+>  		if (ret)
+>  			goto failed_to_create;
+> @@ -958,7 +956,7 @@ static int hpre_qm_init(struct hisi_qm *qm, struct pci_dev *pdev)
+>  	qm->sqe_size = HPRE_SQE_SIZE;
+>  	qm->dev_name = hpre_name;
+>  
+> -	qm->fun_type = (pdev->device == HPRE_PCI_DEVICE_ID) ?
+> +	qm->fun_type = (pdev->device == PCI_DEVICE_ID_HUAWEI_HPRE_PF) ?
+>  			QM_HW_PF : QM_HW_VF;
+>  	if (qm->fun_type == QM_HW_PF) {
+>  		qm->qp_base = HPRE_PF_DEF_Q_BASE;
+> diff --git a/drivers/crypto/hisilicon/sec2/sec_main.c b/drivers/crypto/hisilicon/sec2/sec_main.c
+> index 26d3ab1d308b..ab806fb481ac 100644
+> --- a/drivers/crypto/hisilicon/sec2/sec_main.c
+> +++ b/drivers/crypto/hisilicon/sec2/sec_main.c
+> @@ -20,8 +20,6 @@
+>  
+>  #define SEC_VF_NUM			63
+>  #define SEC_QUEUE_NUM_V1		4096
+> -#define SEC_PF_PCI_DEVICE_ID		0xa255
+> -#define SEC_VF_PCI_DEVICE_ID		0xa256
+>  
+>  #define SEC_BD_ERR_CHK_EN0		0xEFFFFFFF
+>  #define SEC_BD_ERR_CHK_EN1		0x7ffff7fd
+> @@ -225,7 +223,7 @@ static const struct debugfs_reg32 sec_dfx_regs[] = {
+>  
+>  static int sec_pf_q_num_set(const char *val, const struct kernel_param *kp)
+>  {
+> -	return q_num_set(val, kp, SEC_PF_PCI_DEVICE_ID);
+> +	return q_num_set(val, kp, PCI_DEVICE_ID_HUAWEI_SEC_PF);
+>  }
+>  
+>  static const struct kernel_param_ops sec_pf_q_num_ops = {
+> @@ -313,8 +311,8 @@ module_param_cb(uacce_mode, &sec_uacce_mode_ops, &uacce_mode, 0444);
+>  MODULE_PARM_DESC(uacce_mode, UACCE_MODE_DESC);
+>  
+>  static const struct pci_device_id sec_dev_ids[] = {
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, SEC_PF_PCI_DEVICE_ID) },
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, SEC_VF_PCI_DEVICE_ID) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_SEC_PF) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_SEC_VF) },
+>  	{ 0, }
+>  };
+>  MODULE_DEVICE_TABLE(pci, sec_dev_ids);
+> @@ -717,7 +715,7 @@ static int sec_core_debug_init(struct hisi_qm *qm)
+>  	regset->base = qm->io_base;
+>  	regset->dev = dev;
+>  
+> -	if (qm->pdev->device == SEC_PF_PCI_DEVICE_ID)
+> +	if (qm->pdev->device == PCI_DEVICE_ID_HUAWEI_SEC_PF)
+>  		debugfs_create_file("regs", 0444, tmp_d, regset, &sec_regs_fops);
+>  
+>  	for (i = 0; i < ARRAY_SIZE(sec_dfx_labels); i++) {
+> @@ -735,7 +733,7 @@ static int sec_debug_init(struct hisi_qm *qm)
+>  	struct sec_dev *sec = container_of(qm, struct sec_dev, qm);
+>  	int i;
+>  
+> -	if (qm->pdev->device == SEC_PF_PCI_DEVICE_ID) {
+> +	if (qm->pdev->device == PCI_DEVICE_ID_HUAWEI_SEC_PF) {
+>  		for (i = SEC_CLEAR_ENABLE; i < SEC_DEBUG_FILE_NUM; i++) {
+>  			spin_lock_init(&sec->debug.files[i].lock);
+>  			sec->debug.files[i].index = i;
+> @@ -877,7 +875,7 @@ static int sec_qm_init(struct hisi_qm *qm, struct pci_dev *pdev)
+>  	qm->sqe_size = SEC_SQE_SIZE;
+>  	qm->dev_name = sec_name;
+>  
+> -	qm->fun_type = (pdev->device == SEC_PF_PCI_DEVICE_ID) ?
+> +	qm->fun_type = (pdev->device == PCI_DEVICE_ID_HUAWEI_SEC_PF) ?
+>  			QM_HW_PF : QM_HW_VF;
+>  	if (qm->fun_type == QM_HW_PF) {
+>  		qm->qp_base = SEC_PF_DEF_Q_BASE;
+> diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+> index 678f8b58ec42..f4a517728385 100644
+> --- a/drivers/crypto/hisilicon/zip/zip_main.c
+> +++ b/drivers/crypto/hisilicon/zip/zip_main.c
+> @@ -15,9 +15,6 @@
+>  #include <linux/uacce.h>
+>  #include "zip.h"
+>  
+> -#define PCI_DEVICE_ID_ZIP_PF		0xa250
+> -#define PCI_DEVICE_ID_ZIP_VF		0xa251
+> -
+>  #define HZIP_QUEUE_NUM_V1		4096
+>  
+>  #define HZIP_CLOCK_GATE_CTRL		0x301004
+> @@ -246,7 +243,7 @@ MODULE_PARM_DESC(uacce_mode, UACCE_MODE_DESC);
+>  
+>  static int pf_q_num_set(const char *val, const struct kernel_param *kp)
+>  {
+> -	return q_num_set(val, kp, PCI_DEVICE_ID_ZIP_PF);
+> +	return q_num_set(val, kp, PCI_DEVICE_ID_HUAWEI_ZIP_PF);
+>  }
+>  
+>  static const struct kernel_param_ops pf_q_num_ops = {
+> @@ -268,8 +265,8 @@ module_param_cb(vfs_num, &vfs_num_ops, &vfs_num, 0444);
+>  MODULE_PARM_DESC(vfs_num, "Number of VFs to enable(1-63), 0(default)");
+>  
+>  static const struct pci_device_id hisi_zip_dev_ids[] = {
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_ZIP_PF) },
+> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_ZIP_VF) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_ZIP_PF) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_ZIP_VF) },
+>  	{ 0, }
+>  };
+>  MODULE_DEVICE_TABLE(pci, hisi_zip_dev_ids);
+> @@ -838,7 +835,7 @@ static int hisi_zip_qm_init(struct hisi_qm *qm, struct pci_dev *pdev)
+>  	qm->sqe_size = HZIP_SQE_SIZE;
+>  	qm->dev_name = hisi_zip_name;
+>  
+> -	qm->fun_type = (pdev->device == PCI_DEVICE_ID_ZIP_PF) ?
+> +	qm->fun_type = (pdev->device == PCI_DEVICE_ID_HUAWEI_ZIP_PF) ?
+>  			QM_HW_PF : QM_HW_VF;
+>  	if (qm->fun_type == QM_HW_PF) {
+>  		qm->qp_base = HZIP_PF_DEF_Q_BASE;
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index aad54c666407..6b98e0d91f0a 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2529,6 +2529,12 @@
+>  #define PCI_DEVICE_ID_KORENIX_JETCARDF3	0x17ff
+>  
+>  #define PCI_VENDOR_ID_HUAWEI		0x19e5
+> +#define PCI_DEVICE_ID_HUAWEI_ZIP_PF	0xa250
+> +#define PCI_DEVICE_ID_HUAWEI_ZIP_VF	0xa251
+> +#define PCI_DEVICE_ID_HUAWEI_SEC_PF	0xa255
+> +#define PCI_DEVICE_ID_HUAWEI_SEC_VF	0xa256
+> +#define PCI_DEVICE_ID_HUAWEI_HPRE_PF	0xa258
+> +#define PCI_DEVICE_ID_HUAWEI_HPRE_VF	0xa259
+>  
+>  #define PCI_VENDOR_ID_NETRONOME		0x19ee
+>  #define PCI_DEVICE_ID_NETRONOME_NFP4000	0x4000
 
-Michael
