@@ -2,59 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 226304C7CE8
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 23:06:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CC934C7CED
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 23:06:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229889AbiB1WHT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Feb 2022 17:07:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59052 "EHLO
+        id S231307AbiB1WHX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Feb 2022 17:07:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231310AbiB1WHO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 17:07:14 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E7C25C4E39
-        for <linux-pci@vger.kernel.org>; Mon, 28 Feb 2022 14:06:34 -0800 (PST)
+        with ESMTP id S231329AbiB1WHS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 17:07:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EFE1CC4E0C
+        for <linux-pci@vger.kernel.org>; Mon, 28 Feb 2022 14:06:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646085994;
+        s=mimecast20190719; t=1646085998;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1LW+d0gtxqXAjakKIGWcmifEtiCoe2QekVg+4keAltg=;
-        b=ZQcDhle+kSZWyEdihfyKJCikmiCc1QREqsbFhf3Zh7JYqjNREv58TZ+ymnwvTuyzVHNYkP
-        jagKGEnBXbOyiH9uOKxftWyZr6gCclWsa2NeEbh2zoPuOjO2/5N4HbhmhuyjsCKoYmPsXx
-        TIB3oJwVZ+u2/ReGsFud8TSawgUN0g8=
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
- [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=d94j7lxxX5y02+A6WG5OxYm+EuL2bPwYE+feweTMi6I=;
+        b=J0ohMJ9U4ZN2kRr3Weze39lKaA2qodgnMc2U8kKg2jj2hagwo7Z89eTVrnJTmbp9kN8iQp
+        h6WAvdENA2NstwlRqY7ftZc5uM+XFeiHJEt+qmcrDz8x3bA8qd0uSU9A6L6rBA9ZutRL1g
+        jHofp/lyat83++zOLirrqDWEJrhor9o=
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
+ [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-44-W7_9Jwk2Or2vFx3lruVGUg-1; Mon, 28 Feb 2022 17:06:32 -0500
-X-MC-Unique: W7_9Jwk2Or2vFx3lruVGUg-1
-Received: by mail-ot1-f69.google.com with SMTP id c11-20020a056830348b00b005af30a0cee8so9963797otu.4
-        for <linux-pci@vger.kernel.org>; Mon, 28 Feb 2022 14:06:32 -0800 (PST)
+ us-mta-607-GqBc5b2POfSxUFbczmrbGw-1; Mon, 28 Feb 2022 17:06:36 -0500
+X-MC-Unique: GqBc5b2POfSxUFbczmrbGw-1
+Received: by mail-ot1-f70.google.com with SMTP id q2-20020a9d5782000000b005ad0c39a8b5so9959180oth.2
+        for <linux-pci@vger.kernel.org>; Mon, 28 Feb 2022 14:06:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1LW+d0gtxqXAjakKIGWcmifEtiCoe2QekVg+4keAltg=;
-        b=KnHTxk/+vzkWBnAmR2GySY5AQ1MITnuSg+Yh3VjFtwnna4fM1WDGD7YnahRMT0WX/f
-         UjLHdgtdOjR5oVjy4kxsu6DubMy7p+SE3tfCN+9uiLKOGMlnEzUX5einZ8Dte7RMWac9
-         M/1RmcJZ6UjYFLqWL2dyADkFPIYmCGV4MOsyViZ03I4eb2C3h+QWW3WOP698un2zyar/
-         zKR/N4KDGQHY95m/Bl2fOiSoNRJggcITGfiGSMgMI6AGktJnKpLTu6WCiqBUDU2pgtWL
-         xjIp5qgIUnPqcVvsVVD9/fFbT0g64y2vii5s2CQpwAmqYK5HAcWh80kNcfNq2E2HvnC5
-         p9pQ==
-X-Gm-Message-State: AOAM531h2QSGYAZbswr/RiGOPAWGChcWs/hHrCi79Bhy6OsT5jWGBieo
-        QAK9+kHjTPg5Had1riV5yzRo1yMMpStoQfidRfVIKr4zC6Xdi0RYMJxqsAtNZ4+6TyT/nGUnrOh
-        +jVwB7fotitOdELrckUVG
-X-Received: by 2002:a05:6830:314d:b0:5af:fecc:538e with SMTP id c13-20020a056830314d00b005affecc538emr5635069ots.348.1646085991360;
-        Mon, 28 Feb 2022 14:06:31 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzFW1+83X6LvIg8c4ECGOmnmvfHMjqxq9s+M0gGRNVNvZ2qLWJBsQ0hgIVPGZj3LChgbRzMPQ==
-X-Received: by 2002:a05:6830:314d:b0:5af:fecc:538e with SMTP id c13-20020a056830314d00b005affecc538emr5635030ots.348.1646085990790;
-        Mon, 28 Feb 2022 14:06:30 -0800 (PST)
+        bh=d94j7lxxX5y02+A6WG5OxYm+EuL2bPwYE+feweTMi6I=;
+        b=Yd7hxYZrD5HZUbKCOJ0aKap9vmNnfY0RbIoaWuaBXQtF4C5F7KaHzYaXOGibF7FV0e
+         0iFHgqbGePjctJg35YLonoTwXZkJWa6Zlvc3qVgJMV5tmJo2oQ9giGHXjvSE3QyDpH48
+         pCjLlFrYB/nKZZlW+vdhAxddK5YB4J8xiFjNW49TWJzH17nI+IV1kXzkq3tC1tS3zg8/
+         LQ1foX+X9Q0mhLxhaeZufG9016kCslZPKDF+lU6IxJa+36DTJMdL2Uq+eZsBz+DX9RYJ
+         NE4gBeIwvkfafm1c/N5FCFrhMJVDggDdgSET+2QjeNXkkylhdXtjbVgtjuXYCm7/DzyF
+         zdXQ==
+X-Gm-Message-State: AOAM531VbmAVJ2zgA0UfoR3RdiPNMgVpBeOkUc0uN1RUYNxIs7vH0MEP
+        sV1etl+8hSJlqWAHNbMOSVoCZQJEl/LgFGJ64V6qXyQXSe5SezaE1OZHv3ltSXdvSpjR5SLtAzw
+        tU4lbSMpPVFUPzDA8jj1y
+X-Received: by 2002:a05:6808:1586:b0:2d5:1211:5785 with SMTP id t6-20020a056808158600b002d512115785mr10690613oiw.0.1646085995965;
+        Mon, 28 Feb 2022 14:06:35 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwLGQUBEm26I4XhzS9O0hC1lMHUwWYT/sXCYb5vTAfKM0mj7adVygonLblatFgJDlUF3+gebg==
+X-Received: by 2002:a05:6808:1586:b0:2d5:1211:5785 with SMTP id t6-20020a056808158600b002d512115785mr10690580oiw.0.1646085995791;
+        Mon, 28 Feb 2022 14:06:35 -0800 (PST)
 Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id bd14-20020a056808220e00b002d53f900b9csm7017463oib.30.2022.02.28.14.06.29
+        by smtp.gmail.com with ESMTPSA id m21-20020a056820051500b0031d0841b87esm5371712ooj.34.2022.02.28.14.06.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Feb 2022 14:06:30 -0800 (PST)
-Date:   Mon, 28 Feb 2022 15:06:28 -0700
+        Mon, 28 Feb 2022 14:06:35 -0800 (PST)
+Date:   Mon, 28 Feb 2022 15:06:33 -0700
 From:   Alex Williamson <alex.williamson@redhat.com>
 To:     Lu Baolu <baolu.lu@linux.intel.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -82,11 +82,11 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dmitry Osipenko <digetx@gmail.com>,
         iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 09/11] vfio: Delete the unbound_list
-Message-ID: <20220228150628.2c0077f4.alex.williamson@redhat.com>
-In-Reply-To: <20220228005056.599595-10-baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v7 10/11] vfio: Remove iommu group notifier
+Message-ID: <20220228150633.3438200c.alex.williamson@redhat.com>
+In-Reply-To: <20220228005056.599595-11-baolu.lu@linux.intel.com>
 References: <20220228005056.599595-1-baolu.lu@linux.intel.com>
-        <20220228005056.599595-10-baolu.lu@linux.intel.com>
+        <20220228005056.599595-11-baolu.lu@linux.intel.com>
 X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -102,36 +102,19 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 28 Feb 2022 08:50:54 +0800
+On Mon, 28 Feb 2022 08:50:55 +0800
 Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-> From: Jason Gunthorpe <jgg@nvidia.com>
+> The iommu core and driver core have been enhanced to avoid unsafe driver
+> binding to a live group after iommu_group_set_dma_owner(PRIVATE_USER)
+> has been called. There's no need to register iommu group notifier. This
+> removes the iommu group notifer which contains BUG_ON() and WARN().
 > 
-> commit 60720a0fc646 ("vfio: Add device tracking during unbind") added the
-> unbound list to plug a problem with KVM where KVM_DEV_VFIO_GROUP_DEL
-> relied on vfio_group_get_external_user() succeeding to return the
-> vfio_group from a group file descriptor. The unbound list allowed
-> vfio_group_get_external_user() to continue to succeed in edge cases.
-> 
-> However commit 5d6dee80a1e9 ("vfio: New external user group/file match")
-> deleted the call to vfio_group_get_external_user() during
-> KVM_DEV_VFIO_GROUP_DEL. Instead vfio_external_group_match_file() is used
-> to directly match the file descriptor to the group pointer.
-> 
-> This in turn avoids the call down to vfio_dev_viable() during
-> KVM_DEV_VFIO_GROUP_DEL and also avoids the trouble the first commit was
-> trying to fix.
-> 
-> There are no other users of vfio_dev_viable() that care about the time
-> after vfio_unregister_group_dev() returns, so simply delete the
-> unbound_list entirely.
-> 
-> Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 > ---
->  drivers/vfio/vfio.c | 74 ++-------------------------------------------
->  1 file changed, 2 insertions(+), 72 deletions(-)
+>  drivers/vfio/vfio.c | 147 --------------------------------------------
+>  1 file changed, 147 deletions(-)
 
 Acked-by: Alex Williamson <alex.williamson@redhat.com>
 
