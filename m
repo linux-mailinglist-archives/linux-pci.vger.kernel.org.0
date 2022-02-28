@@ -2,50 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 377A44C6CC6
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 13:39:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 839514C6D70
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 14:08:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236191AbiB1MkW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Feb 2022 07:40:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47560 "EHLO
+        id S234481AbiB1NIn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Feb 2022 08:08:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236076AbiB1MkV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 07:40:21 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02074F453;
-        Mon, 28 Feb 2022 04:39:42 -0800 (PST)
+        with ESMTP id S234393AbiB1NIn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 08:08:43 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A994BCC2;
+        Mon, 28 Feb 2022 05:08:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4AC6DB81115;
-        Mon, 28 Feb 2022 12:39:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7029DC340F4;
-        Mon, 28 Feb 2022 12:39:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 440AD612D7;
+        Mon, 28 Feb 2022 13:08:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4116C340EE;
+        Mon, 28 Feb 2022 13:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646051980;
-        bh=CUgW3tNZSaj+TM/ZyUObZoHTBcStn4Kp7amTw5B6gOI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FTjDPs5PdmnQzS1SvaklSMTUYV/PbgBx9CD1cnXm0q+Jn0bDBCIgtoBf3MoiUo1+F
-         IwdqIfWcBcBc0f8Jj+cMdmDmMVm30HhLMazMqFrpVeq1O8Yc/zopwk11PJJoK/DG8b
-         ixyCbrEm8ERN1Zb78bakD95qp5yfU0NyV0wroot+r/+XaE9jZzI5nOa7y/Rud1M13R
-         bS60nAM+JdkWh5y2Lw/GyQGFvU4ViFy3otKRfjZq1N9AsEvbrj45D8Jr8HoJwZ/V5/
-         kBHbsfRIYypm15tHz4p67FC5dNeL9YDp7Xt9r6eYzwbMG3K5PSO7vaGC48xxGWepoR
-         Qa9hQFiTDjmNQ==
-From:   Leon Romanovsky <leon@kernel.org>
-To:     alex.williamson@redhat.com, bhelgaas@google.com, jgg@nvidia.com,
-        saeedm@nvidia.com
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        cohuck@redhat.com, ashok.raj@intel.com, kevin.tian@intel.com,
-        shameerali.kolothum.thodi@huawei.com
-Subject: [GIT PULL] Add mlx5 live migration driver and v2 migration protocol
-Date:   Mon, 28 Feb 2022 14:39:34 +0200
-Message-Id: <20220228123934.812807-1-leon@kernel.org>
-X-Mailer: git-send-email 2.35.1
+        s=k20201202; t=1646053683;
+        bh=xwpZD4gZhTKAz2WFv6X6JMrNMSyputHa5miIKZ7mnV4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FDHaYinVMNM6kACb7E2Qy0TXd85azTDlvzFKosdq2q5aXpNxj4+0bCHnUOyq7qvCX
+         SdYowwLghSSD7m9p89L9IHLNURvZvuumE6Vu3Y7iNzNocmQHWUzg83s0qB+weG5HB0
+         +kvmS/aLHNI/6Nqh49ZcJOvFivLCHBHTVfK80/WeRhDxjAD3RPcXkp71y1CkrubPcT
+         TYf9kmUe4enaJ9QLuu5EOG9nUHW7bKk6BlwMqnVjYo83gCrxYJUvbhawoVypGiHk6k
+         f1g5of4zmfYtpdOQJOHVTh9uxD0U5bue4hdKW1TR99VKgbXAKo0qKyQa7hTJW5HG6p
+         WxhALj7z+X8eQ==
+Date:   Mon, 28 Feb 2022 13:07:52 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v3 07/11] spi: Use helper for safer setting of
+ driver_override
+Message-ID: <YhzJKKCxnx9DvliT@sirena.org.uk>
+References: <20220227135214.145599-1-krzysztof.kozlowski@canonical.com>
+ <20220227135329.145862-1-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IskqWBy0ijhzVzPO"
+Content-Disposition: inline
+In-Reply-To: <20220227135329.145862-1-krzysztof.kozlowski@canonical.com>
+X-Cookie: Killing turkeys causes winter.
 X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,130 +88,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
 
-Hi Alex,
+--IskqWBy0ijhzVzPO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This pull request contains the v9 version of recently submitted mlx5 live migration
-driver from Yishai and Jason.
+On Sun, Feb 27, 2022 at 02:53:25PM +0100, Krzysztof Kozlowski wrote:
+> Use a helper for seting driver_override to reduce amount of duplicated
+> code.
 
-In addition to changes in VFIO, this series extended the ethernet part of mlx5 driver.
-Such changes have all chances to create merge conflicts between VFIO, netdev and RDMA
-subsystems, which are eliminated with this PR.
+Reviwed-by: Mark Brown <broonie@kernel.org>
 
-Thanks
+--IskqWBy0ijhzVzPO
+Content-Type: application/pgp-signature; name="signature.asc"
 
-------------------------------------------------------------------------------------
+-----BEGIN PGP SIGNATURE-----
 
-The following changes since commit cfb92440ee71adcc2105b0890bb01ac3cddb8507:
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmIcyScACgkQJNaLcl1U
+h9Ao0gf+JDpig6VFnyylTAGyA+EFJ7fmHFbvWhVF0t9hjFi5sLRAs8Z3+hLLKVej
+zLVg+PMT7lEK9f1Cya6K7+gCq6ukWeVmmFBvuEA5Mn++s0vTXTuvx7VPQ8I7paXG
+iePQNfdjxSxtdDUM+zinbF3mL8p4PcKUzqKlYEGeYvhxM2KxJx8a01GSsgKU1rNC
+8ynKO/iKprh+dyGZOBcXM/m3OJDmQ0YEQi9uVQFGaznJ/yE4YjoBnCc7gj7uF2gB
+3VAYxVi8Uj4ZMLOq0HPkR6QYxtneVT0Gly46I5Mg5BJZHdJ4yGkOOhaqZ0E4gwXI
+YsZPSj+FAaJ1fM7xBMDL23NN8cHicw==
+=Gb02
+-----END PGP SIGNATURE-----
 
-  Linux 5.17-rc5 (2022-02-20 13:07:20 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git tags/mlx5-vfio-v9
-
-for you to fetch changes up to d18f3ba69448b8f68caf8592a9abb39e75c76e8d:
-
-  vfio/mlx5: Use its own PCI reset_done error handler (2022-02-27 11:44:00 +0200)
-
-----------------------------------------------------------------
-Add mlx5 live migration driver and v2 migration protocol
-
-This series adds mlx5 live migration driver for VFs that are migration
-capable and includes the v2 migration protocol definition and mlx5
-implementation.
-
-The mlx5 driver uses the vfio_pci_core split to create a specific VFIO
-PCI driver that matches the mlx5 virtual functions. The driver provides
-the same experience as normal vfio-pci with the addition of migration
-support.
-
-In HW the migration is controlled by the PF function, using its
-mlx5_core driver, and the VFIO PCI VF driver co-ordinates with the PF to
-execute the migration actions.
-
-The bulk of the v2 migration protocol is semantically the same v1,
-however it has been recast into a FSM for the device_state and the
-actual syscall interface uses normal ioctl(), read() and write() instead
-of building a syscall interface using the region.
-
-Several bits of infrastructure work are included here:
- - pci_iov_vf_id() to help drivers like mlx5 figure out the VF index from
-   a BDF
- - pci_iov_get_pf_drvdata() to clarify the tricky locking protocol when a
-   VF reaches into its PF's driver
- - mlx5_core uses the normal SRIOV lifecycle and disables SRIOV before
-   driver remove, to be compatible with pci_iov_get_pf_drvdata()
- - Lifting VFIO_DEVICE_FEATURE into core VFIO code
-
-This series comes after alot of discussion. Some major points:
-- v1 ABI compatible migration defined using the same FSM approach:
-   https://lore.kernel.org/all/0-v1-a4f7cab64938+3f-vfio_mig_states_jgg@nvidia.com/
-- Attempts to clarify how the v1 API works:
-   Alex's:
-     https://lore.kernel.org/kvm/163909282574.728533.7460416142511440919.stgit@omen/
-   Jason's:
-     https://lore.kernel.org/all/0-v3-184b374ad0a8+24c-vfio_mig_doc_jgg@nvidia.com/
-- Etherpad exploring the scope and questions of general VFIO migration:
-     https://lore.kernel.org/kvm/87mtm2loml.fsf@redhat.com/
-
-NOTE: As this series touched mlx5_core parts we need to send this in a
-pull request format to VFIO to avoid conflicts.
-
-Matching qemu changes can be previewed here:
- https://github.com/jgunthorpe/qemu/commits/vfio_migration_v2
-
-Link: https://lore.kernel.org/all/20220224142024.147653-1-yishaih@nvidia.com
-Signed-of-by: Leon Romanovsky <leonro@nvidia.com>
-
-----------------------------------------------------------------
-Jason Gunthorpe (6):
-      PCI/IOV: Add pci_iov_vf_id() to get VF index
-      PCI/IOV: Add pci_iov_get_pf_drvdata() to allow VF reaching the drvdata of a PF
-      vfio: Have the core code decode the VFIO_DEVICE_FEATURE ioctl
-      vfio: Define device migration protocol v2
-      vfio: Extend the device migration protocol with RUNNING_P2P
-      vfio: Remove migration protocol v1 documentation
-
-Leon Romanovsky (1):
-      net/mlx5: Reuse exported virtfn index function call
-
-Yishai Hadas (8):
-      net/mlx5: Disable SRIOV before PF removal
-      net/mlx5: Expose APIs to get/put the mlx5 core device
-      net/mlx5: Introduce migration bits and structures
-      net/mlx5: Add migration commands definitions
-      vfio/mlx5: Expose migration commands over mlx5 device
-      vfio/mlx5: Implement vfio_pci driver for mlx5 devices
-      vfio/pci: Expose vfio_pci_core_aer_err_detected()
-      vfio/mlx5: Use its own PCI reset_done error handler
-
- MAINTAINERS                                        |   6 +
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c      |  10 +
- drivers/net/ethernet/mellanox/mlx5/core/main.c     |  45 ++
- .../net/ethernet/mellanox/mlx5/core/mlx5_core.h    |   1 +
- drivers/net/ethernet/mellanox/mlx5/core/sriov.c    |  17 +-
- drivers/pci/iov.c                                  |  43 ++
- drivers/vfio/pci/Kconfig                           |   3 +
- drivers/vfio/pci/Makefile                          |   2 +
- drivers/vfio/pci/mlx5/Kconfig                      |  10 +
- drivers/vfio/pci/mlx5/Makefile                     |   4 +
- drivers/vfio/pci/mlx5/cmd.c                        | 259 ++++++++
- drivers/vfio/pci/mlx5/cmd.h                        |  36 ++
- drivers/vfio/pci/mlx5/main.c                       | 676 +++++++++++++++++++++
- drivers/vfio/pci/vfio_pci.c                        |   1 +
- drivers/vfio/pci/vfio_pci_core.c                   | 101 ++-
- drivers/vfio/vfio.c                                | 295 ++++++++-
- include/linux/mlx5/driver.h                        |   3 +
- include/linux/mlx5/mlx5_ifc.h                      | 147 ++++-
- include/linux/pci.h                                |  15 +-
- include/linux/vfio.h                               |  53 ++
- include/linux/vfio_pci_core.h                      |   4 +
- include/uapi/linux/vfio.h                          | 406 ++++++-------
- 22 files changed, 1846 insertions(+), 291 deletions(-)
- create mode 100644 drivers/vfio/pci/mlx5/Kconfig
- create mode 100644 drivers/vfio/pci/mlx5/Makefile
- create mode 100644 drivers/vfio/pci/mlx5/cmd.c
- create mode 100644 drivers/vfio/pci/mlx5/cmd.h
- create mode 100644 drivers/vfio/pci/mlx5/main.c
+--IskqWBy0ijhzVzPO--
