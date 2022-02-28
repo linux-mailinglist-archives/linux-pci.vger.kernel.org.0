@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 274D74C62A0
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 06:32:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 560E24C62B3
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 06:52:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233052AbiB1Fcx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Feb 2022 00:32:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57226 "EHLO
+        id S232548AbiB1Fxb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Feb 2022 00:53:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230376AbiB1Fcv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 00:32:51 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2485F3FDA0
-        for <linux-pci@vger.kernel.org>; Sun, 27 Feb 2022 21:32:13 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id e13so9763838plh.3
-        for <linux-pci@vger.kernel.org>; Sun, 27 Feb 2022 21:32:13 -0800 (PST)
+        with ESMTP id S232276AbiB1Fxa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 00:53:30 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ABBDDE8E
+        for <linux-pci@vger.kernel.org>; Sun, 27 Feb 2022 21:52:51 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id ay5so6962793plb.1
+        for <linux-pci@vger.kernel.org>; Sun, 27 Feb 2022 21:52:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zt5yG2/AIuh58baIFrL7CF1jcLSWp/+HZOTSJf5d7NQ=;
-        b=b7NwzpIVwlYqDvvKLnONGL8kears9DE7ord8WnaiDDwPdS3Ggvxu6FggIxv8MJA1M/
-         J+1bWhLizd9gVhjHpT/H1uOahYxeCb0TKp/E6dwE5y1aQqQ6ASLbDoA2Fs4eW3R3uAy1
-         ger0jrB/hhDQeQ0LyyIwS77yDrPgc70m1AtIvdH6gVciMpzaZuaB0U5GKK48RA61+CoB
-         km1SFaGOWVb1RI0ysu2jfsOYaxCQwm97f3ZusOjhaTOX7CjmOs+4bU5bAs4YBl6J+AWd
-         zuWnp+KhjWOcK9Oe8T22zJ3yVCBVaXIe1+U7JotaoNBs2Wkz0vZ0FHcf+8Y/AX4pW1hT
-         K81g==
+        bh=4FGVyqcRhA3FOHpBtjYMfLTMY/AEpBQwbSy9bJblggI=;
+        b=Lzsq0flf1Peawv9YIxTb4si+LwH45dAarQEgouedmzJ5DPr3OKlAEOE/zXiVZuhimo
+         16l74awZObG6YUNX69s4ZQD9j3u+dpxRV+FIF2ajwaJ5W2Sch8HA3gYbT7ylq5aYhzpz
+         +UiI40kZeg8vB4pCNaZED2s6C9a2U02SHSQdR5nYatjQ3FdCu0zjPjHc0V6E8odQfCiC
+         uXagAPqDU8SRUjvYVZHQJUytBGetSz7RXaDRCP3Lh7nwbQcmdZd10hekiOIxVEUYLxGz
+         WYJNwRvLyGDJhitCprkIcon1rdC/CKy3qjNdWu9TFXuI/5MkReR8bMM+lQRgGw80LjQU
+         w0Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=zt5yG2/AIuh58baIFrL7CF1jcLSWp/+HZOTSJf5d7NQ=;
-        b=0K/MWa6txRcTMN4QWpylty2Q3wb5bTiaBmX21v+MemQtGa1HsabZpxewoc9ey6HI/6
-         4oGZ21/7vFFs8sxnOB7bCpKcdBPQDoGEJSu5Vks1TUC1sUVkKJBgENot6fL9wMirjxR8
-         r4h1SeV9TMjWXFlek1HHUZ4u4j3q+QfbtGZK2Zxk8+xaKoB79Br7Kl/3C8chu6Ykw6bB
-         8C1eeKXSZaYKQwHjyrH0Fe3461qfi1miL75Dkpp9k99n4ly+zZ/0zxzNl7+VQzsX3xzM
-         /cg3mRIqnY6o5wuuDP9fsKVSV4dZhJKRU+6R9brJZkSymPacBAMfa4Uq7ZbHfbcKjJwS
-         hIIg==
-X-Gm-Message-State: AOAM531Cxqc5R8btS/3EG6qGEGCPjD+54IYqOQIlVXGTJYAj5ZD+5ntF
-        wTkfjNcgtqPjhpTPDpAmPpCP
-X-Google-Smtp-Source: ABdhPJxZc/BTEAuj9x5C2k3riOwaVUIb+L9Tl/2fOVKyvK7OzISMCizxK35I4A9itytUYdU8quoSgQ==
-X-Received: by 2002:a17:902:ead1:b0:14f:a8e2:4005 with SMTP id p17-20020a170902ead100b0014fa8e24005mr18736546pld.10.1646026332549;
-        Sun, 27 Feb 2022 21:32:12 -0800 (PST)
+        bh=4FGVyqcRhA3FOHpBtjYMfLTMY/AEpBQwbSy9bJblggI=;
+        b=vPV4U7a9w8yw37GlRVwvYd8/sGR6LkQH/fjIU6nQJJe29TioGVESXhZT1zpjeE7vO8
+         B++SimtcreuI98QQrMiit4+Z9XGmnnODX8iKKUKWc8JuLoLZ2GIiYUjxD/1ZE9mE5O+7
+         Ymd/eIMjQXzb/oXS5MT/sE4OM6j94JfmNfsn8LhBXsvURRVK6c5pl41HV7KpbEZ4qZ86
+         rpj68KYWQzWkicbttIIE+PjzstLz9xicUfk7+rX6qdb99juhJxI8eKTW6nGPc/VmB8by
+         VQLKAHvGJIjluzcWQvBs3Ev38krVMI+MSWL8FcbL2jE9+PDwLraGChF3REHKawIh56Q+
+         vzeA==
+X-Gm-Message-State: AOAM530B9pkx4YNwRq2EX+P6WE4LFdWUSnztgyq1YghOY3isSMfbzHk5
+        PqJeM6U/KOJELTcKN/bOodaW
+X-Google-Smtp-Source: ABdhPJwFoRlHY3Zz7LvDla501/Ax2UTABJkTUcPDmAvq7T5FJDh2bDtG/0+erKzsCm+aTmibOX8h9g==
+X-Received: by 2002:a17:902:9a4c:b0:14d:b0c0:1f7a with SMTP id x12-20020a1709029a4c00b0014db0c01f7amr18521618plv.57.1646027569344;
+        Sun, 27 Feb 2022 21:52:49 -0800 (PST)
 Received: from localhost.localdomain ([117.207.25.37])
-        by smtp.gmail.com with ESMTPSA id u5-20020a056a00158500b004f0f12b320asm12102353pfk.6.2022.02.27.21.32.03
+        by smtp.gmail.com with ESMTPSA id l17-20020a056a0016d100b004c34686e322sm12291191pfc.182.2022.02.27.21.52.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Feb 2022 21:32:12 -0800 (PST)
+        Sun, 27 Feb 2022 21:52:49 -0800 (PST)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     kishon@ti.com, lorenzo.pieralisi@arm.com
 Cc:     kw@linux.com, bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
         dmitry.baryshkov@linaro.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] PCI: endpoint: Use blocking notifier instead of atomic
-Date:   Mon, 28 Feb 2022 11:01:59 +0530
-Message-Id: <20220228053159.4946-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2] PCI: endpoint: Use blocking notifier instead of atomic
+Date:   Mon, 28 Feb 2022 11:22:40 +0530
+Message-Id: <20220228055240.24774-1-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,12 +79,17 @@ non-atomic context and allows sleeping in notifier chain.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/endpoint/pci-epc-core.c | 10 +++++-----
- include/linux/pci-epc.h             |  6 +++---
- 2 files changed, 8 insertions(+), 8 deletions(-)
+
+Changes in v2:
+
+* Removed the changes related to non-upstreamed patches
+
+ drivers/pci/endpoint/pci-epc-core.c | 6 +++---
+ include/linux/pci-epc.h             | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 6120d99bff73..6ad9b38b63a9 100644
+index 3bc9273d0a08..c4347f472618 100644
 --- a/drivers/pci/endpoint/pci-epc-core.c
 +++ b/drivers/pci/endpoint/pci-epc-core.c
 @@ -693,7 +693,7 @@ void pci_epc_linkup(struct pci_epc *epc)
@@ -96,16 +101,7 @@ index 6120d99bff73..6ad9b38b63a9 100644
  }
  EXPORT_SYMBOL_GPL(pci_epc_linkup);
  
-@@ -710,7 +710,7 @@ void pci_epc_linkdown(struct pci_epc *epc)
- 	if (!epc || IS_ERR(epc))
- 		return;
- 
--	atomic_notifier_call_chain(&epc->notifier, LINK_DOWN, NULL);
-+	blocking_notifier_call_chain(&epc->notifier, LINK_DOWN, NULL);
- }
- EXPORT_SYMBOL_GPL(pci_epc_linkdown);
- 
-@@ -727,7 +727,7 @@ void pci_epc_init_notify(struct pci_epc *epc)
+@@ -710,7 +710,7 @@ void pci_epc_init_notify(struct pci_epc *epc)
  	if (!epc || IS_ERR(epc))
  		return;
  
@@ -114,16 +110,7 @@ index 6120d99bff73..6ad9b38b63a9 100644
  }
  EXPORT_SYMBOL_GPL(pci_epc_init_notify);
  
-@@ -744,7 +744,7 @@ void pci_epc_bme_notify(struct pci_epc *epc)
- 	if (!epc || IS_ERR(epc))
- 		return;
- 
--	atomic_notifier_call_chain(&epc->notifier, BME, NULL);
-+	blocking_notifier_call_chain(&epc->notifier, BME, NULL);
- }
- EXPORT_SYMBOL_GPL(pci_epc_bme_notify);
- 
-@@ -808,7 +808,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
+@@ -774,7 +774,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
  
  	mutex_init(&epc->lock);
  	INIT_LIST_HEAD(&epc->pci_epf);
@@ -133,7 +120,7 @@ index 6120d99bff73..6ad9b38b63a9 100644
  	device_initialize(&epc->dev);
  	epc->dev.class = pci_epc_class;
 diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 8454610df4c3..7a5c7705f86f 100644
+index a48778e1a4ee..04a2e74aed63 100644
 --- a/include/linux/pci-epc.h
 +++ b/include/linux/pci-epc.h
 @@ -149,7 +149,7 @@ struct pci_epc {
@@ -145,19 +132,12 @@ index 8454610df4c3..7a5c7705f86f 100644
  };
  
  /**
-@@ -195,13 +195,13 @@ static inline void *epc_get_drvdata(struct pci_epc *epc)
+@@ -195,7 +195,7 @@ static inline void *epc_get_drvdata(struct pci_epc *epc)
  static inline int
  pci_epc_register_notifier(struct pci_epc *epc, struct notifier_block *nb)
  {
 -	return atomic_notifier_chain_register(&epc->notifier, nb);
 +	return blocking_notifier_chain_register(&epc->notifier, nb);
- }
- 
- static inline int
- pci_epc_unregister_notifier(struct pci_epc *epc, struct notifier_block *nb)
- {
--	return atomic_notifier_chain_unregister(&epc->notifier, nb);
-+	return blocking_notifier_chain_unregister(&epc->notifier, nb);
  }
  
  struct pci_epc *
