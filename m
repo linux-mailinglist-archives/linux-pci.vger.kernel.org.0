@@ -2,181 +2,266 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C20054C5E02
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Feb 2022 19:15:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7CD84C6046
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 01:52:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230196AbiB0SQF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Feb 2022 13:16:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60800 "EHLO
+        id S232153AbiB1Axb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Feb 2022 19:53:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230078AbiB0SQE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Feb 2022 13:16:04 -0500
-Received: from FRA01-MR2-obe.outbound.protection.outlook.com (mail-eopbgr90085.outbound.protection.outlook.com [40.107.9.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A066548C;
-        Sun, 27 Feb 2022 10:15:26 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FqadLqcfGYl+WrjDxSTsDZ1Soph6sd5RiRO2Z6bfCcXgBtp/iLFx43WGLTFm+vqvKXbXlf0WHRmlPnaE5g0LnA6tu4taDnfdTpcgHpike1I4oOZjVT2ZkOgcCqK6goFQ8iNX7SreP/7giqb/kEP/wPWTT/dRhUA2O19CobuQu3C9FhulUqpZsmOgWpHc2Ic0SGFI+SVkBswga+RAQFAVbn3cWpR/lb+kDY4Zi76moC0D4N4J3/9iqlFtag2LA/QLf5PvfU/QxExMsuL1h072WAhbQ5I+CrOKVz5lsbynhwEnQZPCZqzD0s3e7NEK3XymaP6RSnVNQI/+O0OIvRPkKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZYeagP1ThBsatQ9DwHFI+wzQF/so3h8AME1EtCEpcHE=;
- b=A6ITEBqxj9nVZEfiySjQ2+I83Xc5drYGmwh5ryhGE/UH7hksKu28oMFTaAJzT/J7ukmqbSvzhR09TDN2j6zQdPbfT9d+tVmZXzPef/Shohr3iiPox62tWdBaPhWrXj2OJdAS0f5cXE8QPqz45eoAME2pIbvn9ADy8ibbEwTK7ugv+V/Knl0TXauLeMvzACr7UnghXrLiD+tvrlCHas9nMDDiJue7Ns8u4QBSy0cnQ+1STnvmYce26raTf28k/d7rgZnR0zO8oQexsWux3njqbpoOj+plNlOM1g6A77C/ixqT8r3VqREKzarSzico4dBscUr/zurrK1rDlx3eXNPNwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
- dkim=pass header.d=csgroup.eu; arc=none
-Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
- by MR1P264MB2739.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:38::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.21; Sun, 27 Feb
- 2022 18:15:23 +0000
-Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
- ([fe80::8142:2e6f:219b:646d]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
- ([fe80::8142:2e6f:219b:646d%5]) with mapi id 15.20.5017.026; Sun, 27 Feb 2022
- 18:15:23 +0000
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-To:     Christoph Hellwig <hch@lst.de>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-CC:     Juergen Gross <jgross@suse.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Robin Murphy <robin.murphy@arm.com>,
+        with ESMTP id S230159AbiB1Axa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Feb 2022 19:53:30 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6CC43485;
+        Sun, 27 Feb 2022 16:52:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646009572; x=1677545572;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eZwnn8RZ63gsEe9exnfWBU+DOMb2/VyBCSiOP1fNJc4=;
+  b=V/Aecb+jyDY8ZQu+LyUtJPpxz82OnfW7QTEgfxpDXs2k1qYhOkdCRugB
+   LRcyTM6Fh10ivZTyx/D+QwdUcHzXH0WU3nKuSVbNRluAjEEbYz4RYZ1dw
+   7SKLRpsvUwMAWPbeJIx9IuviHBPaSH604BoAV6FuORoxXV01yysurv0kE
+   DHFMddVwgcVzOPm+BT4HSvtxnj8JFnYHWbRTyyp8azxJIE8ROeYXFY/3Y
+   23Dw3uWfoc8kvZFXXb1gn6r5XPYeyN277VTddLvaRfLwJ/Gly6Lw0a0zo
+   aAwPvCuh7VRmY7iF6Wgmd5N/oKTKczKmIPAEMV5oHDyQhIaZCL95MHkfj
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10271"; a="252966856"
+X-IronPort-AV: E=Sophos;i="5.90,142,1643702400"; 
+   d="scan'208";a="252966856"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2022 16:52:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,142,1643702400"; 
+   d="scan'208";a="550020112"
+Received: from allen-box.sh.intel.com ([10.239.159.118])
+  by orsmga008.jf.intel.com with ESMTP; 27 Feb 2022 16:52:30 -0800
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Joerg Roedel <joro@8bytes.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "tboot-devel@lists.sourceforge.net" 
-        <tboot-devel@lists.sourceforge.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH 08/11] swiotlb: make the swiotlb_init interface more
- useful
-Thread-Topic: [PATCH 08/11] swiotlb: make the swiotlb_init interface more
- useful
-Thread-Index: AQHYK+d7zyfGvpMeO0af+hVExH8R66yntCgA
-Date:   Sun, 27 Feb 2022 18:15:23 +0000
-Message-ID: <3f5c827f-8e91-baef-7114-784a0c65e298@csgroup.eu>
-References: <20220227143055.335596-1-hch@lst.de>
- <20220227143055.335596-9-hch@lst.de>
-In-Reply-To: <20220227143055.335596-9-hch@lst.de>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=csgroup.eu;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 56a95360-498d-45de-c58d-08d9fa1d1f28
-x-ms-traffictypediagnostic: MR1P264MB2739:EE_
-x-microsoft-antispam-prvs: <MR1P264MB2739A46884510C4D4AB0BAA4ED009@MR1P264MB2739.FRAP264.PROD.OUTLOOK.COM>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xxmOPUwaQx8LLpBnpnXVxQ9nSW575FipLBUYRNnsiQM/7xvGoPuo4q7W3FT50TX0JPsKpHrnWXqHFeCaA6hSNNvj4nRtRuIZ5kcQYzQ4CUFz16NbFveoqMnNUI7lCgTr3uKb8V+bUfFfu+YEBgCy5rV2RuF6udcUlEcq2ZTuj1UgVP3/0SRMahQCgn56flbgarqLLWKolrTi5ruvcjVj3tmTQw3DH1NBnDLqO1hkwwhBg7PqL0E3KeWz6yk/U+JGI7uqq1/jMI0vDkWSZa+HO9SPVhZq4E/UWy7qFjQehTtZ+ebOjUjvSBFE6KX34i6VBw+/c8RATZLaBVl0ZXkPATsa3v+4dtDzdysjgaOINCkaShgq3bansnOmYhaFZWKU6PFiayG6nXqNemEZPxM8BHnFhFYDCv+9XA/Y7E3a90ReiynkBLKsMSpYMtXmiS16xhAOc0Wkl2YuyITl5QqVmwOcPcuP6/EGvm5IaZWZz6HVOSelU9oYnjswWFUsu5nOfa2F8/5DS63ZYDvY+FRReTNxyyhUgzyahTgQBM+Y8i6NsGPkMA3zE8IVMCWyF2TA9XDyyn8+vH5OeqTRVBOHH/q7S1dqJ+x+eVUcn7h0C+Yqygg9IZWLJZNum3eqfsEpwUEznjxqEvroiCHDHCFAsxQBdTyGFArgm0S/5VRtlyZsG1TRMVdaJWTfGxrKX5urU1wH/oOL4V0642sOrqAAo6Xh4fvHd+Tl7Lp7skr7xgNkVPjCTAjPDmkAC5bBevPbqLz7zSQwWqfZldSy/WqhKw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(122000001)(26005)(8676002)(186003)(2616005)(110136005)(54906003)(508600001)(83380400001)(2906002)(6486002)(316002)(38070700005)(6512007)(5660300002)(4326008)(7416002)(8936002)(38100700002)(71200400001)(86362001)(6506007)(36756003)(31696002)(44832011)(31686004)(76116006)(64756008)(66946007)(91956017)(66476007)(66446008)(66556008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WENxQkFFMWlOQmxRWlFVY1FPWm4rT2VyOWJ6bUVJNW50QWcwZkVmWHZ6NjRT?=
- =?utf-8?B?S1QxWGIveEZJeG9oY1R3WnVacm5PYWVoZ1JRTTlwcG9tZTZBZldEQ0NNbElk?=
- =?utf-8?B?aEtMOStQam5LZC9aaXBSUXpCNmh1MmhMRW1lWmsybW8ybnBFQkNFSWZMb2hi?=
- =?utf-8?B?M0hJUFIrWmpEcjRSZ1g1dFhyYUwwWnkyK2lWb3U5L21GNHBKcThneE1VQStM?=
- =?utf-8?B?d3AwblVJS1EwTWl2eDRkVU1IcVlvSDVEQnF5bU5hOElpd29rTXJHMTVPVHB4?=
- =?utf-8?B?bE56SVJuZkJtRDI2b214NUZIOHJFanQ3NGFpZzc3M3h2cEJ5M29XZTlZN3Jz?=
- =?utf-8?B?SzFCYTR2a0lzdVRUL2VUZlpHTWlVTnVqOHJXcCtDWVFGUi80TGc0NEVhYTN4?=
- =?utf-8?B?RXU5L0lUb3JXWEIwTzhFRW53R3Q3Y2hiNUlwOUhCczZFeW5pbmF1azFMU2h5?=
- =?utf-8?B?azMxc1k2Y05KK1Nuc1FiVjdvc0tqOVRJam5xSmlPQjhvN05ZTjFmMGhaVkto?=
- =?utf-8?B?cThZYlp1Q3JkYmdLZXpWdUdmb1pQYVI1eHRLTHQyd25KQ1BIOXVpLzdZUlVx?=
- =?utf-8?B?TytNTTZYNXNzNTQ3RVdvOFVUeVJGVm9qMEg0QWFPVThmV3pvOXZraW9jbEl2?=
- =?utf-8?B?MDVKMHhSMjBrOEt4d1c3bTcyUzBaeWZobEVlVmlYaC9WZnA2Y01PVkg2c2ts?=
- =?utf-8?B?bWpodjFHbHVXNmkyOGFETmtJK29OYkxXMUtnM0ZQUHpDckU0S0RlcnkybUdy?=
- =?utf-8?B?MEtsRTNQeTgwc09uNGk4ZHpLNnNxS3czQzhsNU9pOFp5aG1NbzQ5TjJwbTZB?=
- =?utf-8?B?dlVhREI3Q2ozUXJsSlJESWRPU051TTFjR1VjMk0vbXNZRDJRV3d0aFdyOThR?=
- =?utf-8?B?YzlOZjhxaWVnK0ZGRE12YmJnc1VzQ0s0RStaYWFQa3d2aytnS3JreG1jViti?=
- =?utf-8?B?TTFoTkdSMGhrSWhTdTRCbnpjQWM5a2ViUGZzUVpZVnVUVWhPSFZTdktxVllZ?=
- =?utf-8?B?NEREaE9NNjh3RHdDWGprTkFKbHRuUGFnYUxVcVdvNUJoaWVKSkVmMDBPZlV4?=
- =?utf-8?B?QndkcUFHT09BV2lFdnU0ZWh4OEZGdm5ORVBQMGQ1MExyR2dSdUh4bUFiWHZj?=
- =?utf-8?B?dWlJVDcveGdmeDBqMHdQUTBNTW9JOUppbUtNTjVEblVhZk5FQVZibVJvQUlI?=
- =?utf-8?B?cndYY1ZCOHhIMW9aR1FwK3IzUVU1bXNMY214cEV1OVlLS0JwK3ZQU05uTFQ2?=
- =?utf-8?B?dUUxWmM3bjNoUy9uTFNYYnpBeERwWlllK1lGNzhFcEZWWm1xby90TU5WUTFi?=
- =?utf-8?B?bC8zRVFBZmdqbnd6ZnhqUldqTDJUVWljczRNRWw0dWlHSTRHWm1GT0dnQStM?=
- =?utf-8?B?UzZod0FWOFExWEdjMFgxQ3N4Zml4TkJkclVKK2Z0MkRFZUEyNEltQVVXSmZD?=
- =?utf-8?B?bXA3bktYYmMvNHQrQ1cyZ1ViMlhOV0o2eE9WUTVqZFRkaHZYc3ozRmQ5Vzg0?=
- =?utf-8?B?TjN4c0huYkJVUGhRRUxZakdjTFFHdDFDbVJSWEZIeTZxM3FhV0JPUW9RZjRV?=
- =?utf-8?B?T2ZmSjBxNmtENS9obTVuQ2Z0YkRGeDQzb0dRcWhwWm8xc0NvNmlpcEVXZ3N0?=
- =?utf-8?B?SUFSd0pPOXBJK2paTW9GaXlkS3BaSmVCMGd2QVdkejR6VkZ4L3F1TEN1MUxj?=
- =?utf-8?B?V0syYjVMc2lWNDRxRHgvYkp6Vmx1RS96OFJZeWlTa09ZR1lHd3ZuTXJUaUR5?=
- =?utf-8?B?WjlWNU9aQVQ4Z1J4Qm03TTJYcmc1aHd3K2kyRjkzcFhNZGdaR3pBWTBITk91?=
- =?utf-8?B?UmdNaTBOcURvbVZzT25LMHhtbnc4ZXgwSzY5c3lwWFI3c09FUk10eWcvUXI0?=
- =?utf-8?B?YW5lWUIwTHBqbUUvNjdkWW1QSExDdkFLbFQzVWVENlFBWW9rd2RZamNFRGt4?=
- =?utf-8?B?a3docll3N092cDluQU5yWUYzUkh3NWxTSjhiaFk2K3IrTVRpeFVoSEorbk1G?=
- =?utf-8?B?UklFTHFiNzZ2MnVQWVZQVTV0aHBHQjJtUUU4T1puTEdIRDRpMklwZ1IwS0h5?=
- =?utf-8?B?NjhRTGt3UFNMUTE1Qk1TUW1aZ3VtL0pGQ2hwamNKQjdlVGtVbGI5RStpcXM3?=
- =?utf-8?B?VnYrMGcxczRPUzNmd3ZIRnpVcVZDcDFvYzExdkNxQTQ3ZjNwYWs5UTRiMm92?=
- =?utf-8?B?SHVaemhaKzdIRkQzK3ZDNWJHSEtFRXlPWktreHFEMWYrd1dGMjBaM1lLTmhx?=
- =?utf-8?Q?Wl7cviTeVgjdbmGsZgp40TpeVnDMNNBet62fL335QU=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9FE742FE772C63498FDD057F606855F7@FRAP264.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+Subject: [PATCH v7 00/11] Fix BUG_ON in vfio_iommu_group_notifier()
+Date:   Mon, 28 Feb 2022 08:50:45 +0800
+Message-Id: <20220228005056.599595-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: csgroup.eu
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56a95360-498d-45de-c58d-08d9fa1d1f28
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2022 18:15:23.2616
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gXSMr13XVpww7GYaD/Ph/PhwcuDEoaMtD772s/Tdn5coknXaY0HeExMHE1599gZWn024x+s6+jPocxEPjmsR8BeloLsRDosVcorIF1UtvP0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MR1P264MB2739
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCkxlIDI3LzAyLzIwMjIgw6AgMTU6MzAsIENocmlzdG9waCBIZWxsd2lnIGEgw6ljcml0wqA6
-DQo+IFBhc3MgYSBib29sIHRvIHBhc3MgaWYgc3dpb3RsYiBuZWVkcyB0byBiZSBlbmFibGVkIGJh
-c2VkIG9uIHRoZQ0KPiBhZGRyZXNzaW5nIG5lZWRzIGFuZCByZXBsYWNlIHRoZSB2ZXJib3NlIGFy
-Z3VtZW50IHdpdGggYSBzZXQgb2YNCj4gZmxhZ3MsIGluY2x1ZGluZyBvbmUgdG8gZm9yY2UgZW5h
-YmxlIGJvdW5jZSBidWZmZXJpbmcuDQo+IA0KPiBOb3RlIHRoYXQgdGhpcyBwYXRjaCByZW1vdmVz
-IHRoZSBwb3NzaWJpbGl0eSB0byBmb3JjZSB4ZW4tc3dpb3RsYg0KPiB1c2UgdXNpbmcgc3dpb3Rs
-Yj1mb3JjZSBvbiB0aGUgY29tbWFuZCBsaW5lIG9uIHg4NiAoYXJtIGFuZCBhcm02NA0KPiBuZXZl
-ciBzdXBwb3J0ZWQgdGhhdCksIGJ1dCB0aGlzIGludGVyZmFjZSB3aWxsIGJlIHJlc3RvcmVkIHNo
-b3J0bHkuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDaHJpc3RvcGggSGVsbHdpZyA8aGNoQGxzdC5k
-ZT4NCj4gLS0tDQo+ICAgYXJjaC9hcm0vbW0vaW5pdC5jICAgICAgICAgICAgICAgICAgICAgfCAg
-NiArLS0tLQ0KPiAgIGFyY2gvYXJtNjQvbW0vaW5pdC5jICAgICAgICAgICAgICAgICAgIHwgIDYg
-Ky0tLS0NCj4gICBhcmNoL2lhNjQvbW0vaW5pdC5jICAgICAgICAgICAgICAgICAgICB8ICA0ICst
-LQ0KPiAgIGFyY2gvbWlwcy9jYXZpdW0tb2N0ZW9uL2RtYS1vY3Rlb24uYyAgIHwgIDIgKy0NCj4g
-ICBhcmNoL21pcHMvbG9vbmdzb242NC9kbWEuYyAgICAgICAgICAgICB8ICAyICstDQo+ICAgYXJj
-aC9taXBzL3NpYnl0ZS9jb21tb24vZG1hLmMgICAgICAgICAgfCAgMiArLQ0KPiAgIGFyY2gvcG93
-ZXJwYy9pbmNsdWRlL2FzbS9zd2lvdGxiLmggICAgIHwgIDEgKw0KPiAgIGFyY2gvcG93ZXJwYy9t
-bS9tZW0uYyAgICAgICAgICAgICAgICAgIHwgIDMgKystDQoNCmFyY2gvcG93ZXJwYy9tbS9tZW0u
-bzooLnRvYysweDApOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBwcGNfc3dpb3RsYl9mbGFncycN
-Cm1ha2VbMV06ICoqKiBbdm1saW51eF0gRXJyb3IgMQ0KL2xpbnV4L01ha2VmaWxlOjExNTU6IHJl
-Y2lwZSBmb3IgdGFyZ2V0ICd2bWxpbnV4JyBmYWlsZWQNCg0KDQo+ICAgYXJjaC9wb3dlcnBjL3Bs
-YXRmb3Jtcy9wc2VyaWVzL3NldHVwLmMgfCAgMyAtLS0NCj4gICBhcmNoL3Jpc2N2L21tL2luaXQu
-YyAgICAgICAgICAgICAgICAgICB8ICA4ICstLS0tLQ0KPiAgIGFyY2gvczM5MC9tbS9pbml0LmMg
-ICAgICAgICAgICAgICAgICAgIHwgIDMgKy0tDQo+ICAgYXJjaC94ODYva2VybmVsL2NwdS9tc2h5
-cGVydi5jICAgICAgICAgfCAgOCAtLS0tLS0NCj4gICBhcmNoL3g4Ni9rZXJuZWwvcGNpLWRtYS5j
-ICAgICAgICAgICAgICB8IDE1ICsrKysrKy0tLS0tDQo+ICAgYXJjaC94ODYvbW0vbWVtX2VuY3J5
-cHRfYW1kLmMgICAgICAgICAgfCAgMyAtLS0NCj4gICBkcml2ZXJzL3hlbi9zd2lvdGxiLXhlbi5j
-ICAgICAgICAgICAgICB8ICA0ICstLQ0KPiAgIGluY2x1ZGUvbGludXgvc3dpb3RsYi5oICAgICAg
-ICAgICAgICAgIHwgMTUgKysrKysrLS0tLS0NCj4gICBpbmNsdWRlL3RyYWNlL2V2ZW50cy9zd2lv
-dGxiLmggICAgICAgICB8IDI5ICsrKysrKysrLS0tLS0tLS0tLS0tLQ0KPiAgIGtlcm5lbC9kbWEv
-c3dpb3RsYi5jICAgICAgICAgICAgICAgICAgIHwgMzUgKysrKysrKysrKysrKystLS0tLS0tLS0t
-LS0NCj4gICAxOCBmaWxlcyBjaGFuZ2VkLCA1NiBpbnNlcnRpb25zKCspLCA5MyBkZWxldGlvbnMo
-LSkNCj4g
+Hi folks,
+
+The iommu group is the minimal isolation boundary for DMA. Devices in
+a group can access each other's MMIO registers via peer to peer DMA
+and also need share the same I/O address space.
+
+Once the I/O address space is assigned to user control it is no longer
+available to the dma_map* API, which effectively makes the DMA API
+non-working.
+
+Second, userspace can use DMA initiated by a device that it controls
+to access the MMIO spaces of other devices in the group. This allows
+userspace to indirectly attack any kernel owned device and it's driver.
+
+Therefore groups must either be entirely under kernel control or
+userspace control, never a mixture. Unfortunately some systems have
+problems with the granularity of groups and there are a couple of
+important exceptions:
+
+ - pci_stub allows the admin to block driver binding on a device and
+   make it permanently shared with userspace. Since PCI stub does not
+   do DMA it is safe, however the admin must understand that using
+   pci_stub allows userspace to attack whatever device it was bound
+   it.
+
+ - PCI bridges are sometimes included in groups. Typically PCI bridges
+   do not use DMA, and generally do not have MMIO regions.
+
+Generally any device that does not have any MMIO registers is a
+possible candidate for an exception.
+
+Currently vfio adopts a workaround to detect violations of the above
+restrictions by monitoring the driver core BOUND event, and hardwiring
+the above exceptions. Since there is no way for vfio to reject driver
+binding at this point, BUG_ON() is triggered if a violation is
+captured (kernel driver BOUND event on a group which already has some
+devices assigned to userspace). Aside from the bad user experience
+this opens a way for root userspace to crash the kernel, even in high
+integrity configurations, by manipulating the module binding and
+triggering the BUG_ON.
+
+This series solves this problem by making the user/kernel ownership a
+core concept at the IOMMU layer. The driver core enforces kernel
+ownership while drivers are bound and violations now result in a error
+codes during probe, not BUG_ON failures.
+
+Patch partitions:
+  [PATCH 1-4]: Detect DMA ownership conflicts during driver binding;
+  [PATCH 5-7]: Add security context management for assigned devices;
+  [PATCH 8-11]: Various cleanups.
+
+This is also part one of three initial series for IOMMUFD:
+ * Move IOMMU Group security into the iommu layer
+ - Generic IOMMUFD implementation
+ - VFIO ability to consume IOMMUFD
+
+Change log:
+v1: initial post
+  - https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/
+
+v2:
+  - https://lore.kernel.org/linux-iommu/20211128025051.355578-1-baolu.lu@linux.intel.com/
+
+  - Move kernel dma ownership auto-claiming from driver core to bus
+    callback. [Greg/Christoph/Robin/Jason]
+    https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#m153706912b770682cb12e3c28f57e171aa1f9d0c
+
+  - Code and interface refactoring for iommu_set/release_dma_owner()
+    interfaces. [Jason]
+    https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#mea70ed8e4e3665aedf32a5a0a7db095bf680325e
+
+  - [NEW]Add new iommu_attach/detach_device_shared() interfaces for
+    multiple devices group. [Robin/Jason]
+    https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#mea70ed8e4e3665aedf32a5a0a7db095bf680325e
+
+  - [NEW]Use iommu_attach/detach_device_shared() in drm/tegra drivers.
+
+  - Refactoring and description refinement.
+
+v3:
+  - https://lore.kernel.org/linux-iommu/20211206015903.88687-1-baolu.lu@linux.intel.com/
+
+  - Rename bus_type::dma_unconfigure to bus_type::dma_cleanup. [Greg]
+    https://lore.kernel.org/linux-iommu/c3230ace-c878-39db-1663-2b752ff5384e@linux.intel.com/T/#m6711e041e47cb0cbe3964fad0a3466f5ae4b3b9b
+
+  - Avoid _platform_dma_configure for platform_bus_type::dma_configure.
+    [Greg]
+    https://lore.kernel.org/linux-iommu/c3230ace-c878-39db-1663-2b752ff5384e@linux.intel.com/T/#m43fc46286611aa56a5c0eeaad99d539e5519f3f6
+
+  - Patch "0012-iommu-Add-iommu_at-de-tach_device_shared-for-mult.patch"
+    and "0018-drm-tegra-Use-the-iommu-dma_owner-mechanism.patch" have
+    been tested by Dmitry Osipenko <digetx@gmail.com>.
+
+v4:
+  - https://lore.kernel.org/linux-iommu/20211217063708.1740334-1-baolu.lu@linux.intel.com/
+  - Remove unnecessary tegra->domain chech in the tegra patch. (Jason)
+  - Remove DMA_OWNER_NONE. (Joerg)
+  - Change refcount to unsigned int. (Christoph)
+  - Move mutex lock into group set_dma_owner functions. (Christoph)
+  - Add kernel doc for iommu_attach/detach_domain_shared(). (Christoph)
+  - Move dma auto-claim into driver core. (Jason/Christoph)
+
+v5:
+  - https://lore.kernel.org/linux-iommu/20220104015644.2294354-1-baolu.lu@linux.intel.com/
+  - Move kernel dma ownership auto-claiming from driver core to bus
+    callback. (Greg)
+  - Refactor the iommu interfaces to make them more specific.
+    (Jason/Robin)
+  - Simplify the dma ownership implementation by removing the owner
+    type. (Jason)
+  - Commit message refactoring for PCI drivers. (Bjorn)
+  - Move iommu_attach/detach_device() improvement patches into another
+    series as there are a lot of code refactoring and cleanup staffs
+    in various device drivers.
+
+v6:
+  - https://lore.kernel.org/linux-iommu/20220218005521.172832-1-baolu.lu@linux.intel.com/
+  - Refine comments and commit mesages.
+  - Rename iommu_group_set_dma_owner() to iommu_group_claim_dma_owner().
+  - Rename iommu_device_use/unuse_kernel_dma() to
+    iommu_device_use/unuse_default_domain().
+  - Remove unnecessary EXPORT_SYMBOL_GPL.
+  - Change flag name from no_kernel_api_dma to driver_managed_dma.
+  - Merge 4 "Add driver dma ownership management" patches into single
+    one.
+
+v7:
+  - We discussed about adding some fields in driver structure and
+    intercepting it in the bus notifier for driver unbinding. We agreed
+    that the driver structure should not be used out of the driver core.
+  - As iommu_group_claim/release_dma_owner() are only used by the VFIO,
+    there're no use cases for multiple calls for a single group.
+  - Add some commit messages in "vfio: Set DMA ownership for
+    VFIO" to describe the intentional enhancement of unsafe bridge
+    drivers.
+  - Comments refinement.
+
+This is based on next branch of linux-iommu tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
+and also available on github:
+https://github.com/LuBaolu/intel-iommu/commits/iommu-dma-ownership-v7
+
+Best regards,
+baolu
+
+Jason Gunthorpe (1):
+  vfio: Delete the unbound_list
+
+Lu Baolu (10):
+  iommu: Add DMA ownership management interfaces
+  driver core: Add dma_cleanup callback in bus_type
+  amba: Stop sharing platform_dma_configure()
+  bus: platform,amba,fsl-mc,PCI: Add device DMA ownership management
+  PCI: pci_stub: Set driver_managed_dma
+  PCI: portdrv: Set driver_managed_dma
+  vfio: Set DMA ownership for VFIO devices
+  vfio: Remove use of vfio_group_viable()
+  vfio: Remove iommu group notifier
+  iommu: Remove iommu group changes notifier
+
+ include/linux/amba/bus.h              |   8 +
+ include/linux/device/bus.h            |   3 +
+ include/linux/fsl/mc.h                |   8 +
+ include/linux/iommu.h                 |  54 +++---
+ include/linux/pci.h                   |   8 +
+ include/linux/platform_device.h       |  10 +-
+ drivers/amba/bus.c                    |  39 +++-
+ drivers/base/dd.c                     |   5 +
+ drivers/base/platform.c               |  23 ++-
+ drivers/bus/fsl-mc/fsl-mc-bus.c       |  26 ++-
+ drivers/iommu/iommu.c                 | 228 ++++++++++++++++--------
+ drivers/pci/pci-driver.c              |  21 +++
+ drivers/pci/pci-stub.c                |   1 +
+ drivers/pci/pcie/portdrv_pci.c        |   2 +
+ drivers/vfio/fsl-mc/vfio_fsl_mc.c     |   1 +
+ drivers/vfio/pci/vfio_pci.c           |   1 +
+ drivers/vfio/platform/vfio_amba.c     |   1 +
+ drivers/vfio/platform/vfio_platform.c |   1 +
+ drivers/vfio/vfio.c                   | 245 ++------------------------
+ 19 files changed, 347 insertions(+), 338 deletions(-)
+
+-- 
+2.25.1
+
