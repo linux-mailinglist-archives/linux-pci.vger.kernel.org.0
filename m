@@ -2,68 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A07A94C7954
-	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 20:59:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE49B4C7976
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Feb 2022 21:09:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229881AbiB1T5O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Feb 2022 14:57:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56114 "EHLO
+        id S229964AbiB1UEL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Feb 2022 15:04:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229864AbiB1T5M (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 14:57:12 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 453A9140C4;
-        Mon, 28 Feb 2022 11:56:31 -0800 (PST)
+        with ESMTP id S229930AbiB1UEK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 15:04:10 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B714B255AE;
+        Mon, 28 Feb 2022 12:03:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D009D60A5B;
-        Mon, 28 Feb 2022 19:56:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E835BC340F1;
-        Mon, 28 Feb 2022 19:56:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5FC09B81642;
+        Mon, 28 Feb 2022 20:03:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8D75C340F2;
+        Mon, 28 Feb 2022 20:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646078190;
-        bh=0OOU4ypDKyXvi1uajjSPnUmhPXeaSTp6ukVsSrlQHcA=;
+        s=k20201202; t=1646078608;
+        bh=mHHh973hMePN9wmM/jcpBb22Q6OGomp4QlydWc1Dh6w=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=RTXisNBZzA45iz5I1nD1Q49iYcdgMwiouYVpm5sJdmQu/9H3Ov4Fq04ogI46PGsIA
-         oaBc37LVfwkKEZGCfFvr/j6nXxvPNIVuYPdJshypg2oWys6+aYhwo/oVHDZ0rhpKY+
-         +4mXh3fKy9RPjTyNheqYMVhvd9FlT6UZqMOgAL17c9ULCYs2cORvz/yNnrsPYMQQc0
-         UsPcu4z97fXmbKmf7hrkgc98uhwRfmsW9ncPZar9gWRTnnR+05/5gM/is7Mp1mvv7y
-         7xb/Zt2d7+4d+67ra8MyvoYhvG1UD37XJaFlwAMYuOJcjBzVy9IrI4UHnH5VWgi1+a
-         HJ04Qzzd6J+DA==
-Date:   Mon, 28 Feb 2022 13:56:28 -0600
+        b=aCeGMO5xD8fsEhRGr4+eOr9z8MstaRRDVGhQ2JFOj5VttTy3IwU/54lJ+oouIG28u
+         z81XCgIJowof9B0hR7N3AT4EL/cp1tR3vbL6RuXPasvJp4dShvWkyCbSLiUvoOUiy9
+         Ch40bfT8hyQmBKmOBWB/wdlu+kbLkxch8hnE1YJuMD+DqGmnrqOp1buDYyiFRg9zyZ
+         nZTjzG+1MPqyPE0xBXIt+SPfFuZFdVwk0yBkI7QA+0xdPnGZ8DjYwz0x7qT3uUHRRq
+         N8JYHkY9orf+PL5YgJkzP9kJWMETh9P7vFNG2d7Sp1HIFzdd8vaKYbZBnn3S5kUq8h
+         a4Caw+KYsuQwg==
+Date:   Mon, 28 Feb 2022 14:03:26 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
-        rafael@kernel.org, David Airlie <airlied@linux.ie>,
-        linux-pci@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Will Deacon <will@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Stuart Yoder <stuyoder@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        iommu@lists.linux-foundation.org,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v7 06/11] PCI: portdrv: Set driver_managed_dma
-Message-ID: <20220228195628.GA515785@bhelgaas>
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v3 01/11] driver: platform: Add helper for safer setting
+ of driver_override
+Message-ID: <20220228200326.GA516164@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220228005056.599595-7-baolu.lu@linux.intel.com>
+In-Reply-To: <20220227135214.145599-2-krzysztof.kozlowski@canonical.com>
 X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -74,52 +85,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 28, 2022 at 08:50:51AM +0800, Lu Baolu wrote:
-> If a switch lacks ACS P2P Request Redirect, a device below the switch can
-> bypass the IOMMU and DMA directly to other devices below the switch, so
-> all the downstream devices must be in the same IOMMU group as the switch
-> itself.
-> 
-> The existing VFIO framework allows the portdrv driver to be bound to the
-> bridge while its downstream devices are assigned to user space. The
-> pci_dma_configure() marks the IOMMU group as containing only devices
-> with kernel drivers that manage DMA. Avoid this default behavior for the
-> portdrv driver in order for compatibility with the current VFIO usage.
+On Sun, Feb 27, 2022 at 02:52:04PM +0100, Krzysztof Kozlowski wrote:
+> Several core drivers and buses expect that driver_override is a
+> dynamically allocated memory thus later they can kfree() it.
 
-It would be nice to explicitly say here how we can look at portdrv
-(and pci_stub) and conclude that ".driver_managed_dma = true" is safe.
-
-Otherwise I won't know what kind of future change to portdrv might
-make it unsafe.
-
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Suggested-by: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  drivers/pci/pcie/portdrv_pci.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 35eca6277a96..6b2adb678c21 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -202,6 +202,8 @@ static struct pci_driver pcie_portdriver = {
->  
->  	.err_handler	= &pcie_portdrv_err_handler,
->  
-> +	.driver_managed_dma = true,
+> +int driver_set_override(struct device *dev, const char **override,
+> +			const char *s, size_t len)
+> +{
+> +	const char *new, *old;
+> +	char *cp;
 > +
->  	.driver.pm	= PCIE_PORTDRV_PM_OPS,
->  };
->  
-> -- 
-> 2.25.1
-> 
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> +	if (!dev || !override || !s)
+> +		return -EINVAL;
+> +
+> +	/* We need to keep extra room for a newline */
+
+It would help a lot to extend this comment with a hint about where the
+room for a newline is needed.  It was confusing even before, but it's
+much more so now that the check is in a completely different file than
+the "show" functions that need the space.
+
+> +	if (len >= (PAGE_SIZE - 1))
+> +		return -EINVAL;
