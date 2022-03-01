@@ -2,229 +2,278 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0A354C822B
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 05:20:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A4774C836A
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 06:40:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232200AbiCAEU2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Feb 2022 23:20:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47364 "EHLO
+        id S229721AbiCAFlR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Mar 2022 00:41:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232251AbiCAEU1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 23:20:27 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728232B24F;
-        Mon, 28 Feb 2022 20:19:45 -0800 (PST)
+        with ESMTP id S229572AbiCAFlQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 00:41:16 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5FB1EC4A
+        for <linux-pci@vger.kernel.org>; Mon, 28 Feb 2022 21:40:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646108385; x=1677644385;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4t+PvdGlz2cLuHS96n7ALdgqcJnX7IA3lO1HM5B6eiM=;
-  b=Nj2NKC3EaLpQD3OCUtg+B0vv69naBb4uZxFd8F8R4rfxluMY+mdsGLwh
-   TFwM8Mz7N/gSyIOL7dz8FjZufpGgDn14zcdgriu7vOLZAUf/LVH2L6RgC
-   HMIaegnQa5bINWWW9u6l2BcLhYah9hYRJeQO3eTh7u3Q2CCvyyBZ5X2jN
-   EAzaAVw/lKj2Mu0CkUwRVHvE4u3XYtwl9F+/7+avTbhG/cmQixC76wnu4
-   YtCjjzEPhQiexBfi/9B4PFbqAIiQ2aO4ESdJ7sTG+SwJuBoAIktshOHtM
-   5Hg4neycUdb/KbzfC3if/Ms1knehXTQXVFCa8Hggx9DdhvWY6ssNfwEjs
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10272"; a="250634178"
+  t=1646113236; x=1677649236;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0oK9xtEuVsjHXWdfGgcV6Kd51bDGCnatG8lMd8Hf4C8=;
+  b=ONAof7bG+tt7WJ6ANBRBzqSRls8Zv21TYJqwBfS08AV15zl2CriLRvMF
+   M0gNc52Pxyg1dC+kR34JAZcsC2CQ9/d8ti89LSc/xW/NC431Ya5rmZk9t
+   pBf50BeoYdHq93OERLJl3wGKyiXUEHUEU1jRWzaf5GCne1+6pz9Vv+kwy
+   EXKUVwhtCY8PequlT8LyiOe1ZeHghnP9DdHBwxq7egTYEcrXhFXcz5HtL
+   Q04A4r5xqj5eV3JMgstNRrNlD9EsxujjLk+bNr88Gc/ksRstddCIJ+kDo
+   cQ5QVserXftDavDfkFTYbjJre09occlqWBuPVKBwVjmKPRi+M70z8beKo
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10272"; a="277724304"
 X-IronPort-AV: E=Sophos;i="5.90,144,1643702400"; 
-   d="scan'208";a="250634178"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2022 20:19:45 -0800
+   d="scan'208";a="277724304"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2022 21:37:52 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,144,1643702400"; 
-   d="scan'208";a="507667403"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 28 Feb 2022 20:19:44 -0800
-Received: from debox1-desk4.lan (unknown [10.251.9.202])
-        by linux.intel.com (Postfix) with ESMTP id 73195580C20;
-        Mon, 28 Feb 2022 20:19:44 -0800 (PST)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com, david.e.box@linux.intel.com,
-        michael.a.bottini@linux.intel.com, rafael@kernel.org,
-        me@adhityamohan.in
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V6 3/3] PCI: vmd: Configure PCIe ASPM and LTR
-Date:   Mon, 28 Feb 2022 20:19:43 -0800
-Message-Id: <20220301041943.2935892-4-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220301041943.2935892-1-david.e.box@linux.intel.com>
-References: <20220301041943.2935892-1-david.e.box@linux.intel.com>
+   d="scan'208";a="641138062"
+Received: from lkp-server01.sh.intel.com (HELO 788b1cd46f0d) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 28 Feb 2022 21:37:50 -0800
+Received: from kbuild by 788b1cd46f0d with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nOvCn-0008Cv-H0; Tue, 01 Mar 2022 05:37:49 +0000
+Date:   Tue, 01 Mar 2022 13:37:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/vga] BUILD SUCCESS
+ 617a8cdc7f6118248b8412e91ad1028ada080a98
+Message-ID: <621db112.FBxyh0mdC56tspXC%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe ports reserved for VMD use are not visible to BIOS and therefore not
-configured to enable PCIE ASPM. Additionally, PCIE LTR values may be left
-unset since BIOS will set a default maximum LTR value on endpoints to
-ensure that they don't block SoC power management. Lack of this programming
-results in high power consumption on laptops as reported in bugzilla [1].
-For currently affected products, use pci_enable_default_link_state to set
-the allowed link states for devices on the root ports. Also set the LTR
-value to the maximum value needed for the SoC. Per the VMD hardware team
-future products using VMD will enable BIOS configuration of these
-capabilities. This solution is a workaround for current products that
-mainly targets laptops. Support is not provided if a switch used nor for
-hotplug.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vga
+branch HEAD: 617a8cdc7f6118248b8412e91ad1028ada080a98  PCI/VGA: Replace full MIT license text with SPDX identifier
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=213717
+elapsed time: 766m
 
-Signed-off-by: Michael Bottini <michael.a.bottini@linux.intel.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+configs tested: 195
+configs skipped: 5
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+i386                 randconfig-c001-20220228
+arm                            lart_defconfig
+arm                         assabet_defconfig
+arm                          simpad_defconfig
+sh                           se7780_defconfig
+arc                 nsimosci_hs_smp_defconfig
+powerpc                        cell_defconfig
+s390                                defconfig
+mips                         db1xxx_defconfig
+sh                ecovec24-romimage_defconfig
+m68k                            mac_defconfig
+sh                     sh7710voipgw_defconfig
+powerpc                      bamboo_defconfig
+parisc                generic-32bit_defconfig
+powerpc                      tqm8xx_defconfig
+xtensa                    xip_kc705_defconfig
+sh                               alldefconfig
+mips                         tb0226_defconfig
+powerpc                  iss476-smp_defconfig
+nios2                         10m50_defconfig
+mips                        jmr3927_defconfig
+sh                           se7721_defconfig
+m68k                          atari_defconfig
+s390                             allyesconfig
+arm                       omap2plus_defconfig
+powerpc                     tqm8555_defconfig
+mips                         mpc30x_defconfig
+arm                        cerfcube_defconfig
+mips                       bmips_be_defconfig
+mips                         rt305x_defconfig
+sh                          rsk7269_defconfig
+sh                        sh7785lcr_defconfig
+sh                         ecovec24_defconfig
+arm                        multi_v7_defconfig
+arc                              allyesconfig
+arm                          badge4_defconfig
+arc                     nsimosci_hs_defconfig
+sh                          r7780mp_defconfig
+sh                           se7724_defconfig
+sh                          sdk7780_defconfig
+arm                            pleb_defconfig
+microblaze                      mmu_defconfig
+arm                          pxa3xx_defconfig
+m68k                        m5307c3_defconfig
+m68k                          multi_defconfig
+arm                          gemini_defconfig
+powerpc                      makalu_defconfig
+m68k                        mvme16x_defconfig
+sh                           se7619_defconfig
+sh                        sh7757lcr_defconfig
+powerpc                   motionpro_defconfig
+um                           x86_64_defconfig
+s390                       zfcpdump_defconfig
+ia64                                defconfig
+powerpc                     taishan_defconfig
+openrisc                    or1ksim_defconfig
+arm                         axm55xx_defconfig
+powerpc                     sequoia_defconfig
+m68k                       m5275evb_defconfig
+arm                        mini2440_defconfig
+sparc64                          alldefconfig
+openrisc                         alldefconfig
+sh                           se7751_defconfig
+powerpc                 linkstation_defconfig
+arm                            qcom_defconfig
+mips                     loongson1b_defconfig
+arm                       aspeed_g5_defconfig
+arc                        nsimosci_defconfig
+ia64                             allmodconfig
+arc                        vdk_hs38_defconfig
+m68k                         apollo_defconfig
+arm                        spear6xx_defconfig
+m68k                          amiga_defconfig
+arm                           viper_defconfig
+arm                  randconfig-c002-20220228
+arm                  randconfig-c002-20220227
+arm                  randconfig-c002-20220301
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allmodconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64               randconfig-a011-20220228
+x86_64               randconfig-a015-20220228
+x86_64               randconfig-a014-20220228
+x86_64               randconfig-a013-20220228
+x86_64               randconfig-a016-20220228
+x86_64               randconfig-a012-20220228
+i386                 randconfig-a016-20220228
+i386                 randconfig-a012-20220228
+i386                 randconfig-a015-20220228
+i386                 randconfig-a011-20220228
+i386                 randconfig-a013-20220228
+i386                 randconfig-a014-20220228
+arc                  randconfig-r043-20220228
+riscv                randconfig-r042-20220228
+s390                 randconfig-r044-20220228
+arc                  randconfig-r043-20220227
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+x86_64                         rhel-8.3-kunit
+
+clang tested configs:
+powerpc              randconfig-c003-20220227
+x86_64                        randconfig-c007
+arm                  randconfig-c002-20220227
+mips                 randconfig-c004-20220227
+s390                 randconfig-c005-20220227
+i386                          randconfig-c001
+riscv                randconfig-c006-20220227
+powerpc                    ge_imp3a_defconfig
+powerpc                     powernv_defconfig
+mips                           rs90_defconfig
+arm                         hackkit_defconfig
+arm                      pxa255-idp_defconfig
+powerpc                     tqm8540_defconfig
+mips                           mtx1_defconfig
+powerpc                     pseries_defconfig
+powerpc                     tqm8560_defconfig
+arm                       cns3420vb_defconfig
+arm                        neponset_defconfig
+arm                       imx_v4_v5_defconfig
+mips                      bmips_stb_defconfig
+powerpc                      pmac32_defconfig
+arm                    vt8500_v6_v7_defconfig
+powerpc                     mpc5200_defconfig
+arm                           sama7_defconfig
+mips                           ip28_defconfig
+arm                        mvebu_v5_defconfig
+arm                          imote2_defconfig
+x86_64               randconfig-a003-20220228
+x86_64               randconfig-a005-20220228
+x86_64               randconfig-a002-20220228
+x86_64               randconfig-a006-20220228
+x86_64               randconfig-a001-20220228
+x86_64               randconfig-a004-20220228
+i386                 randconfig-a002-20220228
+i386                 randconfig-a001-20220228
+i386                 randconfig-a005-20220228
+i386                 randconfig-a003-20220228
+i386                 randconfig-a006-20220228
+i386                 randconfig-a004-20220228
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r041-20220228
+hexagon              randconfig-r045-20220228
+hexagon              randconfig-r045-20220227
+hexagon              randconfig-r041-20220227
+riscv                randconfig-r042-20220227
+
 ---
- V6
-  - Set ASPM first before setting LTR. This is needed because some
-    devices may only have LTR set by BIOS and not ASPM
-  - Skip setting the LTR if the current LTR in non-zero.
- V5
-  - Provide the LTR value as driver data.
-  - Use DWORD for the config space write to avoid PCI WORD access bug.
-  - Set ASPM links firsts, enabling all link states, before setting a
-    default LTR if the capability is present
-  - Add kernel message that VMD is setting the device LTR.
- V4
-  - Refactor vmd_enable_apsm() to exit early, making the lines shorter
-    and more readable. Suggested by Christoph.
- V3
-  - No changes
- V2
-  - Use return status to print pci_info message if ASPM cannot be enabled.
-  - Add missing static declaration, caught by lkp@intel.com
-
- drivers/pci/controller/vmd.c | 66 +++++++++++++++++++++++++++++++++---
- 1 file changed, 62 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index cde6e2cba210..8525bb8312f2 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -67,10 +67,19 @@ enum vmd_features {
- 	 * interrupt handling.
- 	 */
- 	VMD_FEAT_CAN_BYPASS_MSI_REMAP		= (1 << 4),
-+
-+	/*
-+	 * Enable ASPM on the PCIE root ports and set the default LTR of the
-+	 * storage devices on platforms where these values are not configured by
-+	 * BIOS. This is needed for laptops, which require these settings for
-+	 * proper power management of the SoC.
-+	 */
-+	VMD_FEAT_BIOS_PM_QUIRK		= (1 << 5),
- };
- 
- struct vmd_device_data {
- 	enum vmd_features features;
-+	u16 ltr;
- };
- 
- static DEFINE_IDA(vmd_instance_ida);
-@@ -714,6 +723,45 @@ static void vmd_copy_host_bridge_flags(struct pci_host_bridge *root_bridge,
- 	vmd_bridge->native_dpc = root_bridge->native_dpc;
- }
- 
-+/*
-+ * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
-+ */
-+static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
-+{
-+	struct vmd_device_data *info = userdata;
-+	u32 ltr_reg;
-+	int pos;
-+
-+	if (!(info->features & VMD_FEAT_BIOS_PM_QUIRK))
-+		return 0;
-+
-+	pci_enable_default_link_state(pdev, PCIE_LINK_STATE_ALL);
-+
-+	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-+	if (!pos)
-+		return 0;
-+
-+	/*
-+	 * Skip if the max snoop LTR is non-zero, indicating BIOS has set it
-+	 * so the LTR quirk is not needed.
-+	 */
-+	pci_read_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, &ltr_reg);
-+	if (!!(ltr_reg & (PCI_LTR_VALUE_MASK | PCI_LTR_SCALE_MASK)))
-+		return 0;
-+
-+	/*
-+	 * Set the default values to the maximum required by the platform to
-+	 * allow the deepest power management savings. Write as a DWORD where
-+	 * the lower word is the max snoop latency and the upper word is the
-+	 * max non-snoop latency.
-+	 */
-+	ltr_reg = (info->ltr << 16) | info->ltr;
-+	pci_write_config_dword(pdev, pos + PCI_LTR_MAX_SNOOP_LAT, ltr_reg);
-+	pci_info(pdev, "VMD: Default LTR set\n");
-+
-+	return 0;
-+}
-+
- static int vmd_enable_domain(struct vmd_dev *vmd, struct vmd_device_data *info)
- {
- 	struct pci_sysdata *sd = &vmd->sysdata;
-@@ -867,6 +915,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, struct vmd_device_data *info)
- 		pci_reset_bus(child->self);
- 	pci_assign_unassigned_bus_resources(vmd->bus);
- 
-+	pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, info);
-+
- 	/*
- 	 * VMD root buses are virtual and don't return true on pci_is_pcie()
- 	 * and will fail pcie_bus_configure_settings() early. It can instead be
-@@ -1016,28 +1066,36 @@ static const struct pci_device_id vmd_ids[] = {
- 		(kernel_ulong_t)&(struct vmd_device_data) {
- 			.features = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
- 				    VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				    VMD_FEAT_OFFSET_FIRST_VECTOR,
-+				    VMD_FEAT_OFFSET_FIRST_VECTOR |
-+				    VMD_FEAT_BIOS_PM_QUIRK,
-+			.ltr = 0x1003, /* 3145728 ns */
- 		},
- 	},
- 	{ PCI_VDEVICE(INTEL, 0x4c3d),
- 		(kernel_ulong_t)&(struct vmd_device_data) {
- 			.features = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
- 				    VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				    VMD_FEAT_OFFSET_FIRST_VECTOR,
-+				    VMD_FEAT_OFFSET_FIRST_VECTOR |
-+				    VMD_FEAT_BIOS_PM_QUIRK,
-+			.ltr = 0x1003, /* 3145728 ns */
- 		},
- 	},
- 	{ PCI_VDEVICE(INTEL, 0xa77f),
- 		(kernel_ulong_t)&(struct vmd_device_data) {
- 			.features = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
- 				    VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				    VMD_FEAT_OFFSET_FIRST_VECTOR,
-+				    VMD_FEAT_OFFSET_FIRST_VECTOR |
-+				    VMD_FEAT_BIOS_PM_QUIRK,
-+			.ltr = 0x1003, /* 3145728 ns */
- 		},
- 	},
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B),
- 		(kernel_ulong_t)&(struct vmd_device_data) {
- 			.features = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
- 				    VMD_FEAT_HAS_BUS_RESTRICTIONS |
--				    VMD_FEAT_OFFSET_FIRST_VECTOR,
-+				    VMD_FEAT_OFFSET_FIRST_VECTOR |
-+				    VMD_FEAT_BIOS_PM_QUIRK,
-+			.ltr = 0x1003, /* 3145728 ns */
- 		},
- 	},
- 	{ }
--- 
-2.25.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
