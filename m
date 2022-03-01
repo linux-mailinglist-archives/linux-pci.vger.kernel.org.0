@@ -2,77 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E452E4C8450
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 07:47:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C71944C84A4
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 08:05:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232277AbiCAGsc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Mar 2022 01:48:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35650 "EHLO
+        id S229633AbiCAHFi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Mar 2022 02:05:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232555AbiCAGsb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 01:48:31 -0500
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71EF93BA79
-        for <linux-pci@vger.kernel.org>; Mon, 28 Feb 2022 22:47:49 -0800 (PST)
-Received: by mail-qt1-x82e.google.com with SMTP id e2so9182949qte.12
-        for <linux-pci@vger.kernel.org>; Mon, 28 Feb 2022 22:47:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a2XtpJx5sPnXKHV3JQK6M1BlpjabNjiFLBIJvQC2PrU=;
-        b=uucmstoPCZo1SZCKEB4vsyzCsYAdwpXrGNEPQfK7SPGbHagKhZOMoLRkfVPNuu5kzu
-         5JEdU41+YXnXWa5qL+jVM/3ZJngRVU57KuUA2mvTslRIsub7UZoGZ6lc2hhoTN+mW/dY
-         WLr+2fjFBT6d5KVS01Du+iXp1KZl7hAvIotjdaR9jv0E6CqXb5juVBsHlnfBlUjPFk3m
-         +JGq2iW/k9pGf6j+eHsOowm3cVwL6VJ6/DbR8weZmFqvLMu1pYD8ps8viyQ9RAA0oHy1
-         6Lp9o75pX5XoS/1qPgwthdd7VBxJvCOi+c6rOmqMK4pu0W/pGiOjoo7OeYVDW3tGeHbB
-         rM+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a2XtpJx5sPnXKHV3JQK6M1BlpjabNjiFLBIJvQC2PrU=;
-        b=wMYmYARiDhPi78yU4aY3lnHL9IpYlEj2jTKDEuOh6d4OUSkTPChUqYABAK861MmSfT
-         tajQkNdE1TmHNdawJhlsxo74nSJ6wFqt6r3HAinq15wvPeco3dWKPgcBVyab7wIPETxW
-         Kx6BE/vj3lv4ogObnG+EdZLFwupGo+LkGdfyx8LMhQGnjhB3ohJb9TQQnog9KZQUOGJ3
-         mCYEHLa/ZEKcW1Nnwg95gPsQkjUQAcMw5yaO+2PFZH5hAP/5LvuC6bVfaRe8IENCuWAu
-         tl/U+NkjLi6YECrv4i7GADgsOpod8h8gbXOEAI3fnUZ1h/QdQOj+cdRBG3lz4aFs6f2C
-         zhfA==
-X-Gm-Message-State: AOAM531rsbV++12Yf9vC3h/ZjcfV3uTmorhGEiTK9MY1hNcaxnyuwBI5
-        fpf0RzbCANwLarFy7e7iDtayt08B8AwypVRkHPJTmQ==
-X-Google-Smtp-Source: ABdhPJyRVGKv0JkoFnOwPsKQgHJZizIwqRm8ib+7cWMsmH2b49Mi4quFUx99BOcxQpFGklCN2Fw3oNzHP6QJT+PgSKQ=
-X-Received: by 2002:ac8:5cc9:0:b0:2de:8838:5888 with SMTP id
- s9-20020ac85cc9000000b002de88385888mr19521798qta.370.1646117268391; Mon, 28
- Feb 2022 22:47:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20220204144645.3016603-1-dmitry.baryshkov@linaro.org>
- <20220204144645.3016603-4-dmitry.baryshkov@linaro.org> <Yf2jRAf5UKYSMYxe@builder.lan>
- <f521a273-7250-ddca-0e56-b1b27bd75117@linaro.org> <3bc0461d-3a2e-f994-e712-dfc8be04c9b4@quicinc.com>
-In-Reply-To: <3bc0461d-3a2e-f994-e712-dfc8be04c9b4@quicinc.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Tue, 1 Mar 2022 09:47:37 +0300
-Message-ID: <CAA8EJpo8Abvfea8mYZo0opp=7RSpvp+WnC06tGgr1YeWzOFLPw@mail.gmail.com>
-Subject: Re: [PATCH v2 03/11] clk: qcom: gdsc: add support for clocks tied to
- the GDSC
-To:     Prasad Malisetty <quic_pmaliset@quicinc.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Wilczy??ski" <kw@linux.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <swboyd@chromium.org>,
+        with ESMTP id S230438AbiCAHFg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 02:05:36 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F9252E11;
+        Mon, 28 Feb 2022 23:04:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646118296; x=1677654296;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cNy2VhZ7uIfEAZ6OMEmFA5tBH3wtQ7ZLN6kAGMbwVEs=;
+  b=mYSJjN0gKehKuYKq5WJVAiuEgY2oQG56vZZzrpej9N28jyhrB6oVIZTq
+   LIkc7wWwoc/GRUZ1USteBGa3lBWxP1JUcXKoAdFat6uuu4ucmhUoe/d74
+   TlE+SjT+gLOIc7vUeKdYQqSikytCoTs8EMTDUwEiZLJksMNCYuVqX5ST5
+   XmfDQY5e1E/Ckp46ggpQzE4Wl9hedumSNEyEIZYAKMnM2FC9E7HUFwCUw
+   bcBRAo4o4Xl3hKq2JuL8FSQeFa/Dgxkzc4YP/rf676N3NPnh5o+ztQqyN
+   YMzr21NBtUGTDAhW2Q1F6ghgTLZZ3xUYDGlEM6iuCqhUWoUlw98qagowT
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10272"; a="316287788"
+X-IronPort-AV: E=Sophos;i="5.90,145,1643702400"; 
+   d="scan'208";a="316287788"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2022 23:04:54 -0800
+X-IronPort-AV: E=Sophos;i="5.90,145,1643702400"; 
+   d="scan'208";a="510405909"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2022 23:04:49 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 01 Mar 2022 09:04:47 +0200
+Date:   Tue, 1 Mar 2022 09:04:47 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:THUNDERBOLT DRIVER" <linux-usb@vger.kernel.org>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <pmaliset@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>
+Subject: Re: [PATCH v5 3/7] PCI: Drop the `is_thunderbolt` attribute from PCI
+ core
+Message-ID: <Yh3Fj8kA5mkbp8Hp@lahna>
+References: <BL1PR12MB5157004F38E3FEFF046D9BE4E2019@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <20220228221344.GA529289@bhelgaas>
+ <20220228223246.GA11428@wunner.de>
+ <BL1PR12MB5157D5E18AB8206E2085C952E2019@BL1PR12MB5157.namprd12.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL1PR12MB5157D5E18AB8206E2085C952E2019@BL1PR12MB5157.namprd12.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -81,176 +79,65 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi,
 
-On Tue, 1 Mar 2022 at 09:42, Prasad Malisetty <quic_pmaliset@quicinc.com> wrote:
-> I discussed with internal team. setting gcc_pcie_n_pipe_clk src in pcie
-> driver doesn't have any relation with gdsc.
->
-> But we are making sure that gcc_pcie_n_pipe_clk src is bi_tcxo before
-> enabling the clocks and switching to pipe_clk src after PHY is enalbe.
->
-> During suspend switching back to bi_tcxo as we enabling the clock as
-> part of resume.
+On Mon, Feb 28, 2022 at 10:36:59PM +0000, Limonciello, Mario wrote:
+> [AMD Official Use Only]
+> 
+> > -----Original Message-----
+> > From: Lukas Wunner <lukas@wunner.de>
+> > Sent: Monday, February 28, 2022 16:33
+> > To: Bjorn Helgaas <helgaas@kernel.org>
+> > Cc: Limonciello, Mario <Mario.Limonciello@amd.com>; Mika Westerberg
+> > <mika.westerberg@linux.intel.com>; Michael Jamet
+> > <michael.jamet@intel.com>; open list:PCI SUBSYSTEM <linux-
+> > pci@vger.kernel.org>; open list:THUNDERBOLT DRIVER <linux-
+> > usb@vger.kernel.org>; Yehezkel Bernat <YehezkelShB@gmail.com>; open
+> > list:DRM DRIVERS <dri-devel@lists.freedesktop.org>; open list:X86
+> > PLATFORM DRIVERS <platform-driver-x86@vger.kernel.org>; Andreas
+> > Noever <andreas.noever@gmail.com>; open list:RADEON and AMDGPU
+> > DRM DRIVERS <amd-gfx@lists.freedesktop.org>; open list:DRM DRIVER FOR
+> > NVIDIA GEFORCE/QUADRO GPUS <nouveau@lists.freedesktop.org>; Bjorn
+> > Helgaas <bhelgaas@google.com>; Deucher, Alexander
+> > <Alexander.Deucher@amd.com>
+> > Subject: Re: [PATCH v5 3/7] PCI: Drop the `is_thunderbolt` attribute from PCI
+> > core
+> > 
+> > On Mon, Feb 28, 2022 at 04:13:44PM -0600, Bjorn Helgaas wrote:
+> > > On Mon, Feb 28, 2022 at 03:33:13PM +0000, Limonciello, Mario wrote:
+> > > > > On Fri, Feb 25, 2022 at 11:42:24AM -0600, Bjorn Helgaas wrote:
+> > > > > > That would just leave the "PCI_VSEC_ID_INTEL_TBT implies external-
+> > > > > facing"
+> > > > > > assumption above.  Not having a Thunderbolt spec, I have no idea
+> > how
+> > > > > > you deal with that.
+> > > > >
+> > > > > You can download the spec here:
+> > [...]
+> > > > > Inside the archive there is also the DVSEC spec with name "USB4 DVSEC
+> > > > > Version 1.0.pdf".
+> > > >
+> > > > The spec has Host_Router_indication (bits 18-19) as meaning external
+> > facing.
+> > > > I'll respin the patch 3 for using that.
+> > >
+> > > Thanks, please include the spec citation when you do.  And probably
+> > > the URL, because it's not at all obvious how the casual reader would
+> > > get from "is_thunderbolt" to a recent add-on to the USB4 spec.
+> > 
+> > PCI_VSEC_ID_INTEL_TBT is not mentioned at all in the USB4 spec,
+> > hence there's no connection between "is_thunderbolt" and the USB4 spec.
+> > 
+> > It's a proprietary VSEC used by Intel and the only way to recognize
+> > pre-USB4 Thunderbolt devices that I know of.  Its ID is also
+> > different from the DVSEC IDs given in the above-mentioned spec.
+> > 
+> > Thanks,
+> 
+> The USB4 DVSEC spec makes comments about DVSEC_ID of 0x8086 and also
+> DVSEC VENDOR_ID of 0x8086.  Is that not also present on the Intel TBT3 controllers?
+> 
+> My interpretation of this (and Mika's comment) was that rather than
+> looking at the Intel VSEC we should look at the USB4 DVSEC to detect
+> the Intel TBT3 controllers.
 
-So... I assume that if we implement the enable/disable() ops in a way
-similar to clk_rcg2_shared_ops, we can drop all manual handling of
-pipe_clk sources.
-
-Bjorn, Taniya WDYT?
-
->
->   Hi Taniya,
->
-> Please provide your inputs.
->
-> Thanks
->
-> -Prasad
-> On 2/12/2022 1:22 AM, Dmitry Baryshkov wrote:
-> > On 05/02/2022 01:05, Bjorn Andersson wrote:
-> >> On Fri 04 Feb 08:46 CST 2022, Dmitry Baryshkov wrote:
-> >>
-> >>> On newer Qualcomm platforms GCC_PCIE_n_PIPE_CLK_SRC should be
-> >>> controlled
-> >>> together with the PCIE_n_GDSC. The clock should be fed from the TCXO
-> >>> before switching the GDSC off and can be fed from PCIE_n_PIPE_CLK once
-> >>> the GDSC is on.
-> >>>
-> >>> Since commit aa9c0df98c29 ("PCI: qcom: Switch pcie_1_pipe_clk_src after
-> >>> PHY init in SC7280") PCIe controller driver tries to manage this on
-> >>> it's
-> >>> own, resulting in the non-optimal code. Furthermore, if the any of the
-> >>> drivers will have the same requirements, the code would have to be
-> >>> dupliacted there.
-> >>>
-> >>> Move handling of such clocks to the GDSC code, providing special GDSC
-> >>> type.
-> >>>
-> >>
-> >> As discussed on IRC, I'm inclined not to take this, because looks to me
-> >> to be the same situation that we have with all GDSCs in SM8350 and
-> >> onwards - that some clocks must be parked on a safe parent before the
-> >> associated GDSC can be toggled.
-> >>
-> >> Prasad, please advice on what the actual requirements are wrt the
-> >> gcc_pipe_clk_src. When does it need to provide a valid signal and when
-> >> does it need to be parked?
-> >
-> > [Excuse me for the duplicate, Prasad's email was bouncing]
-> >
-> > Prasad, any comments?
-> >
-> >>
-> >> Regards,
-> >> Bjorn
-> >>
-> >>> Cc: Prasad Malisetty <pmaliset@codeaurora.org>
-> >>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >>> ---
-> >>>   drivers/clk/qcom/gdsc.c | 41
-> >>> +++++++++++++++++++++++++++++++++++++++++
-> >>>   drivers/clk/qcom/gdsc.h | 14 ++++++++++++++
-> >>>   2 files changed, 55 insertions(+)
-> >>>
-> >>> diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-> >>> index 7e1dd8ccfa38..9913d1b70947 100644
-> >>> --- a/drivers/clk/qcom/gdsc.c
-> >>> +++ b/drivers/clk/qcom/gdsc.c
-> >>> @@ -45,6 +45,7 @@
-> >>>   #define TIMEOUT_US        500
-> >>>     #define domain_to_gdsc(domain) container_of(domain, struct gdsc,
-> >>> pd)
-> >>> +#define domain_to_pipe_clk_gdsc(domain) container_of(domain, struct
-> >>> pipe_clk_gdsc, base.pd)
-> >>>     enum gdsc_status {
-> >>>       GDSC_OFF,
-> >>> @@ -549,3 +550,43 @@ int gdsc_gx_do_nothing_enable(struct
-> >>> generic_pm_domain *domain)
-> >>>       return 0;
-> >>>   }
-> >>>   EXPORT_SYMBOL_GPL(gdsc_gx_do_nothing_enable);
-> >>> +
-> >>> +/*
-> >>> + * Special operations for GDSCs with attached pipe clocks.
-> >>> + * The clock should be parked to safe source (tcxo) before turning
-> >>> off the GDSC
-> >>> + * and can be switched on as soon as the GDSC is on.
-> >>> + *
-> >>> + * We remove respective clock sources from clocks map and handle
-> >>> them manually.
-> >>> + */
-> >>> +int gdsc_pipe_enable(struct generic_pm_domain *domain)
-> >>> +{
-> >>> +    struct pipe_clk_gdsc *sc = domain_to_pipe_clk_gdsc(domain);
-> >>> +    int i, ret;
-> >>> +
-> >>> +    ret = gdsc_enable(domain);
-> >>> +    if (ret)
-> >>> +        return ret;
-> >>> +
-> >>> +    for (i = 0; i< sc->num_clocks; i++)
-> >>> +        regmap_update_bits(sc->base.regmap, sc->clocks[i].reg,
-> >>> +                BIT(sc->clocks[i].shift + sc->clocks[i].width) -
-> >>> BIT(sc->clocks[i].shift),
-> >>> +                sc->clocks[i].on_value << sc->clocks[i].shift);
-> >>> +
-> >>> +    return 0;
-> >>> +}
-> >>> +EXPORT_SYMBOL_GPL(gdsc_pipe_enable);
-> >>> +
-> >>> +int gdsc_pipe_disable(struct generic_pm_domain *domain)
-> >>> +{
-> >>> +    struct pipe_clk_gdsc *sc = domain_to_pipe_clk_gdsc(domain);
-> >>> +    int i;
-> >>> +
-> >>> +    for (i = sc->num_clocks - 1; i >= 0; i--)
-> >>> +        regmap_update_bits(sc->base.regmap, sc->clocks[i].reg,
-> >>> +                BIT(sc->clocks[i].shift + sc->clocks[i].width) -
-> >>> BIT(sc->clocks[i].shift),
-> >>> +                sc->clocks[i].off_value << sc->clocks[i].shift);
-> >>> +
-> >>> +    /* In case of an error do not try turning the clocks again. We
-> >>> can not be sure about the GDSC state. */
-> >>> +    return gdsc_disable(domain);
-> >>> +}
-> >>> +EXPORT_SYMBOL_GPL(gdsc_pipe_disable);
-> >>> diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
-> >>> index d7cc4c21a9d4..b1a2f0abe41c 100644
-> >>> --- a/drivers/clk/qcom/gdsc.h
-> >>> +++ b/drivers/clk/qcom/gdsc.h
-> >>> @@ -68,11 +68,25 @@ struct gdsc_desc {
-> >>>       size_t num;
-> >>>   };
-> >>>   +struct pipe_clk_gdsc {
-> >>> +    struct gdsc base;
-> >>> +    int num_clocks;
-> >>> +    struct {
-> >>> +        u32 reg;
-> >>> +        u32 shift;
-> >>> +        u32 width;
-> >>> +        u32 off_value;
-> >>> +        u32 on_value;
-> >>> +    } clocks[];
-> >>> +};
-> >>> +
-> >>>   #ifdef CONFIG_QCOM_GDSC
-> >>>   int gdsc_register(struct gdsc_desc *desc, struct
-> >>> reset_controller_dev *,
-> >>>             struct regmap *);
-> >>>   void gdsc_unregister(struct gdsc_desc *desc);
-> >>>   int gdsc_gx_do_nothing_enable(struct generic_pm_domain *domain);
-> >>> +int gdsc_pipe_enable(struct generic_pm_domain *domain);
-> >>> +int gdsc_pipe_disable(struct generic_pm_domain *domain);
-> >>>   #else
-> >>>   static inline int gdsc_register(struct gdsc_desc *desc,
-> >>>                   struct reset_controller_dev *rcdev,
-> >>> --
-> >>> 2.34.1
-> >>>
-> >
-> >
-
-
-
--- 
-With best wishes
-Dmitry
+For pre-USB4 controllers (TBT 1-3) we need to use the existing method
+(or a quirk based on device ID) as they don't have the USB4 DVSEC.
