@@ -2,54 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90AF54C91DB
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 18:39:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0357F4C9213
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 18:41:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234412AbiCARjm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Mar 2022 12:39:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46184 "EHLO
+        id S235503AbiCARmX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Mar 2022 12:42:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235202AbiCARjm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 12:39:42 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED241AF0F;
-        Tue,  1 Mar 2022 09:39:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5B0E5B81BE8;
-        Tue,  1 Mar 2022 17:38:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF433C340EE;
-        Tue,  1 Mar 2022 17:38:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646156338;
-        bh=ReB1AHIDSVDCmRMjQGBl11DT4sgFf0L/LuSK3Y+v9w8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dDgu84yJwqG2+6gzd9hDjEKwYgEr308ungqc4SZb3ZnxQqf3kh/fMbAKKcm1y5lkl
-         el1IlJzIVvIVMLZzUqbJO9B0F8GQXXb3IV/fW6Cs1Vqui1g1o3NGTUwBE6P7bsZFbP
-         gS5SewkmDb6rRF7tWbpAFHPC2J5vH2IC6tRxSQ7o0M+dohCgxo+6mFld8tRU0Bh1Vs
-         Lhewoo+Xq9EeNYra03QUScexi9RDVBf8cIgbhdqvXzwdOXr7mu1bLi9PHHVjaB5XC3
-         PqfhHnO1cBWA05UsJ7ysn8CLtxvtvaBIU2jK3qBta8sz56DChnNV8d0SmJmt4vs+Yk
-         rrArPmfOE4Ejw==
-Date:   Tue, 1 Mar 2022 11:38:56 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Surendrakumar Upadhyay, TejaskumarX" 
-        <tejaskumarx.surendrakumar.upadhyay@intel.com>,
-        "Meena, Mahesh" <mahesh.meena@intel.com>,
-        linux-pci@vger.kernel.org, Krzysztof Wilczynski <kw@linux.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH] PCI: vmd: Prevent recursive locking on interrupt
- allocation
-Message-ID: <20220301173856.GA633200@bhelgaas>
+        with ESMTP id S235361AbiCARmW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 12:42:22 -0500
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693DD5F4DD
+        for <linux-pci@vger.kernel.org>; Tue,  1 Mar 2022 09:41:40 -0800 (PST)
+Received: by mail-oi1-x229.google.com with SMTP id i5so16880891oih.1
+        for <linux-pci@vger.kernel.org>; Tue, 01 Mar 2022 09:41:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Dj9jClIeUnpps0dqvQJqNq3ULWQwNcCV3LH2BxUJGms=;
+        b=TcyAz5Y+hFUh8EDGKhQQp8PP/lNhvlR/qhCtRH4jyxwoU7jQ3m8JXa+y0XP6UOjfdx
+         JKEqBWZS73vw/zH2uo1wizbmjHTl+FS/iHyRafKXJxbsSEcAaH3sOt3RS2TynuB9OiRQ
+         SG+r9xDw98qwxF8CKQo6H3GFrt5g0wdkJrOd36a7kcevJds9YEelN3k7c61RzIBmtdB/
+         dgd7lDSrPEfviuPtmtu8WUD+8kRhDB3VBtlFwt98k2G0ZfA3LZSvAsTwmeLwbTFxEcDd
+         Px+1JhCvcaxTdpHUwJvqe9SGVl8vL+qpFC5SugNtKPijfpxC2/xkrQeV7zgnV3/JlQg3
+         4Z0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Dj9jClIeUnpps0dqvQJqNq3ULWQwNcCV3LH2BxUJGms=;
+        b=vg2urT9WVWWQYfJuspegJFT5x/FmnEu3vFWjDR2XolBc61ltOkw3/DqjSy9rlE4IMd
+         dHw6wBxLo9rUzC5mF+u0rgmdS9YU2o7K0RJD2vC4YpQ5t2NAZcvznb31Y+de7Kn2auQu
+         nehUrB7DDOiRomaGn9R9dICdFkrPSwshJvyM3spZmqPtiU8xhQy/gLew4KBJ3VcP1mxN
+         06N+R2FYv2xMG6xKNjSiuVEDbe3ABGnhUgDgEU+yz3+8AsWIZXTQsF7oSYf64wc7i2nY
+         El2OarQuGzqteuwHtweoDp3beV1hKgfjBARHiikgA8C7QDu7r3elcrmDp/WQt8grm0ad
+         L/wg==
+X-Gm-Message-State: AOAM532uUPCl65ro5tp/fjFDLpAOIPqfspLtmTiLTpKtMy0uIAD21G5N
+        wPaR7ZWcU/+uQhutn0s/MjTsDw==
+X-Google-Smtp-Source: ABdhPJw9T2ag+1PboNShZd97DGAbxwRAr1BkU149XaLa6NR+zTE37rZpaQ/gTvrxQfNxN5LqMQNR+w==
+X-Received: by 2002:a05:6808:188b:b0:2d4:70f2:3cfa with SMTP id bi11-20020a056808188b00b002d470f23cfamr15842992oib.168.1646156499704;
+        Tue, 01 Mar 2022 09:41:39 -0800 (PST)
+Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
+        by smtp.gmail.com with ESMTPSA id y6-20020a4a86c6000000b0031bf43a9212sm6441136ooh.11.2022.03.01.09.41.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Mar 2022 09:41:38 -0800 (PST)
+Date:   Tue, 1 Mar 2022 09:43:31 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Prasad Malisetty <pmaliset@codeaurora.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 03/11] clk: qcom: gdsc: add support for clocks tied to
+ the GDSC
+Message-ID: <Yh5bQ8FqwN7wOkb8@ripper>
+References: <20220204144645.3016603-1-dmitry.baryshkov@linaro.org>
+ <20220204144645.3016603-4-dmitry.baryshkov@linaro.org>
+ <Yf2jRAf5UKYSMYxe@builder.lan>
+ <f521a273-7250-ddca-0e56-b1b27bd75117@linaro.org>
+ <3bc0461d-3a2e-f994-e712-dfc8be04c9b4@quicinc.com>
+ <CAA8EJpo8Abvfea8mYZo0opp=7RSpvp+WnC06tGgr1YeWzOFLPw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yh5W9WHNH2FNu4hG@e123427-lin.cambridge.arm.com>
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <CAA8EJpo8Abvfea8mYZo0opp=7RSpvp+WnC06tGgr1YeWzOFLPw@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,116 +86,210 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 01, 2022 at 05:25:09PM +0000, Lorenzo Pieralisi wrote:
-> On Sun, Feb 13, 2022 at 02:54:05PM +0100, Thomas Gleixner wrote:
-> > Tejas reported the following recursive locking issue:
-> > 
-> >  swapper/0/1 is trying to acquire lock:
-> >  ffff8881074fd0a0 (&md->mutex){+.+.}-{3:3}, at: msi_get_virq+0x30/0xc0
-> >  
-> >  but task is already holding lock:
-> >  ffff8881017cd6a0 (&md->mutex){+.+.}-{3:3}, at: __pci_enable_msi_range+0xf2/0x290
-> >  
-> >  stack backtrace:
-> >   __mutex_lock+0x9d/0x920
-> >   msi_get_virq+0x30/0xc0
-> >   pci_irq_vector+0x26/0x30
-> >   vmd_msi_init+0xcc/0x210
-> >   msi_domain_alloc+0xbf/0x150
-> >   msi_domain_alloc_irqs_descs_locked+0x3e/0xb0
-> >   __pci_enable_msi_range+0x155/0x290
-> >   pci_alloc_irq_vectors_affinity+0xba/0x100
-> >   pcie_port_device_register+0x307/0x550
-> >   pcie_portdrv_probe+0x3c/0xd0
-> >   pci_device_probe+0x95/0x110
-> > 
-> > This is caused by the VMD MSI code which does a lookup of the Linux
-> > interrupt number for an VMD managed MSI[X] vector. The lookup function
-> > tries to acquire the already held mutex.
-> > 
-> > Avoid that by caching the Linux interrupt number at initialization time
-> > instead of looking it up over and over.
-> > 
-> > Fixes: 82ff8e6b78fc ("PCI/MSI: Use msi_get_virq() in pci_get_vector()")
-> > Reported-by: "Surendrakumar Upadhyay, TejaskumarX" <tejaskumarx.surendrakumar.upadhyay@intel.com>
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Mon 28 Feb 22:47 PST 2022, Dmitry Baryshkov wrote:
+
+> Hi,
 > 
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> On Tue, 1 Mar 2022 at 09:42, Prasad Malisetty <quic_pmaliset@quicinc.com> wrote:
+> > I discussed with internal team. setting gcc_pcie_n_pipe_clk src in pcie
+> > driver doesn't have any relation with gdsc.
+> >
+> > But we are making sure that gcc_pcie_n_pipe_clk src is bi_tcxo before
+> > enabling the clocks and switching to pipe_clk src after PHY is enalbe.
+> >
+> > During suspend switching back to bi_tcxo as we enabling the clock as
+> > part of resume.
 > 
-> Bjorn, this is a fix for a patch we merged in the last cycle,
-> if possible we should be sending it before v5.17 is released,
-> please.
+> So... I assume that if we implement the enable/disable() ops in a way
+> similar to clk_rcg2_shared_ops, we can drop all manual handling of
+> pipe_clk sources.
+> 
+> Bjorn, Taniya WDYT?
+> 
 
-Agreed.  I think Thomas merged 82ff8e6b78fc, and it looks like he's
-just merged this fix to irq/urgent of tip, so I think this should be
-already taken care of:
+To me it really sounds like the need here is to "park" the pipe clock
+source on bi_tcxo while the PHY isn't providing a valid clock signal
+into GCC. If so "parking" the clock the same way as the rcg2_shared_ops
+seems reasonable in that case.
 
-  https://lore.kernel.org/r/164542867635.16921.13795049956787158926.tip-bot2@tip-bot2
+Also, looking at downstream, the USB pipe clock seems to be handled in a
+similar fashion.
 
-> >  drivers/pci/controller/vmd.c |   14 +++++++-------
-> >  1 file changed, 7 insertions(+), 7 deletions(-)
-> > 
-> > --- a/drivers/pci/controller/vmd.c
-> > +++ b/drivers/pci/controller/vmd.c
-> > @@ -99,11 +99,13 @@ struct vmd_irq {
-> >   * @srcu:	SRCU struct for local synchronization.
-> >   * @count:	number of child IRQs assigned to this vector; used to track
-> >   *		sharing.
-> > + * @virq:	The underlying VMD Linux interrupt number
-> >   */
-> >  struct vmd_irq_list {
-> >  	struct list_head	irq_list;
-> >  	struct srcu_struct	srcu;
-> >  	unsigned int		count;
-> > +	unsigned int		virq;
-> >  };
-> >  
-> >  struct vmd_dev {
-> > @@ -253,7 +255,6 @@ static int vmd_msi_init(struct irq_domai
-> >  	struct msi_desc *desc = arg->desc;
-> >  	struct vmd_dev *vmd = vmd_from_bus(msi_desc_to_pci_dev(desc)->bus);
-> >  	struct vmd_irq *vmdirq = kzalloc(sizeof(*vmdirq), GFP_KERNEL);
-> > -	unsigned int index, vector;
-> >  
-> >  	if (!vmdirq)
-> >  		return -ENOMEM;
-> > @@ -261,10 +262,8 @@ static int vmd_msi_init(struct irq_domai
-> >  	INIT_LIST_HEAD(&vmdirq->node);
-> >  	vmdirq->irq = vmd_next_irq(vmd, desc);
-> >  	vmdirq->virq = virq;
-> > -	index = index_from_irqs(vmd, vmdirq->irq);
-> > -	vector = pci_irq_vector(vmd->dev, index);
-> >  
-> > -	irq_domain_set_info(domain, virq, vector, info->chip, vmdirq,
-> > +	irq_domain_set_info(domain, virq, vmdirq->irq->virq, info->chip, vmdirq,
-> >  			    handle_untracked_irq, vmd, NULL);
-> >  	return 0;
-> >  }
-> > @@ -685,7 +684,8 @@ static int vmd_alloc_irqs(struct vmd_dev
-> >  			return err;
-> >  
-> >  		INIT_LIST_HEAD(&vmd->irqs[i].irq_list);
-> > -		err = devm_request_irq(&dev->dev, pci_irq_vector(dev, i),
-> > +		vmd->irqs[i].virq = pci_irq_vector(dev, i);
-> > +		err = devm_request_irq(&dev->dev, vmd->irqs[i].virq,
-> >  				       vmd_irq, IRQF_NO_THREAD,
-> >  				       vmd->name, &vmd->irqs[i]);
-> >  		if (err)
-> > @@ -969,7 +969,7 @@ static int vmd_suspend(struct device *de
-> >  	int i;
-> >  
-> >  	for (i = 0; i < vmd->msix_count; i++)
-> > -		devm_free_irq(dev, pci_irq_vector(pdev, i), &vmd->irqs[i]);
-> > +		devm_free_irq(dev, vmd->irqs[i].virq, &vmd->irqs[i]);
-> >  
-> >  	return 0;
-> >  }
-> > @@ -981,7 +981,7 @@ static int vmd_resume(struct device *dev
-> >  	int err, i;
-> >  
-> >  	for (i = 0; i < vmd->msix_count; i++) {
-> > -		err = devm_request_irq(dev, pci_irq_vector(pdev, i),
-> > +		err = devm_request_irq(dev, vmd->irqs[i].virq,
-> >  				       vmd_irq, IRQF_NO_THREAD,
-> >  				       vmd->name, &vmd->irqs[i]);
-> >  		if (err)
+
+But I'm still wondering what the actual requirement for the pipe clock
+is. Per your description Prasad, it seems that the PHY doesn't need the
+pipe clock coming back from GCC during initialization - and the PCIe
+controller driver enables the pipe_clk after powering on the phy.
+
+On platforms prior to there being a mux involved (e.g. SDM845) we have a
+branch that is marked BRANCH_HALT_SKIP. But do we have that because we
+incorrectly enable the gcc_pipe_clk before we power on the PHY?
+
+I thought we did this because gcc_pipe_clk was part of some feedback
+loop when calibrating the PHY PLL, but if sc7280 can feed tcxo that
+doesn't make sense. Is the incoming pipe_clk part of the PHY
+initialization or not?
+
+Can we move the enablement of gcc_pipe_clk to be done after we bring up
+the PHY and thereby drop the BRANCH_HALT_SKIP on these platforms?
+
+Regards,
+Bjorn
+
+> >
+> >   Hi Taniya,
+> >
+> > Please provide your inputs.
+> >
+> > Thanks
+> >
+> > -Prasad
+> > On 2/12/2022 1:22 AM, Dmitry Baryshkov wrote:
+> > > On 05/02/2022 01:05, Bjorn Andersson wrote:
+> > >> On Fri 04 Feb 08:46 CST 2022, Dmitry Baryshkov wrote:
+> > >>
+> > >>> On newer Qualcomm platforms GCC_PCIE_n_PIPE_CLK_SRC should be
+> > >>> controlled
+> > >>> together with the PCIE_n_GDSC. The clock should be fed from the TCXO
+> > >>> before switching the GDSC off and can be fed from PCIE_n_PIPE_CLK once
+> > >>> the GDSC is on.
+> > >>>
+> > >>> Since commit aa9c0df98c29 ("PCI: qcom: Switch pcie_1_pipe_clk_src after
+> > >>> PHY init in SC7280") PCIe controller driver tries to manage this on
+> > >>> it's
+> > >>> own, resulting in the non-optimal code. Furthermore, if the any of the
+> > >>> drivers will have the same requirements, the code would have to be
+> > >>> dupliacted there.
+> > >>>
+> > >>> Move handling of such clocks to the GDSC code, providing special GDSC
+> > >>> type.
+> > >>>
+> > >>
+> > >> As discussed on IRC, I'm inclined not to take this, because looks to me
+> > >> to be the same situation that we have with all GDSCs in SM8350 and
+> > >> onwards - that some clocks must be parked on a safe parent before the
+> > >> associated GDSC can be toggled.
+> > >>
+> > >> Prasad, please advice on what the actual requirements are wrt the
+> > >> gcc_pipe_clk_src. When does it need to provide a valid signal and when
+> > >> does it need to be parked?
+> > >
+> > > [Excuse me for the duplicate, Prasad's email was bouncing]
+> > >
+> > > Prasad, any comments?
+> > >
+> > >>
+> > >> Regards,
+> > >> Bjorn
+> > >>
+> > >>> Cc: Prasad Malisetty <pmaliset@codeaurora.org>
+> > >>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > >>> ---
+> > >>>   drivers/clk/qcom/gdsc.c | 41
+> > >>> +++++++++++++++++++++++++++++++++++++++++
+> > >>>   drivers/clk/qcom/gdsc.h | 14 ++++++++++++++
+> > >>>   2 files changed, 55 insertions(+)
+> > >>>
+> > >>> diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
+> > >>> index 7e1dd8ccfa38..9913d1b70947 100644
+> > >>> --- a/drivers/clk/qcom/gdsc.c
+> > >>> +++ b/drivers/clk/qcom/gdsc.c
+> > >>> @@ -45,6 +45,7 @@
+> > >>>   #define TIMEOUT_US        500
+> > >>>     #define domain_to_gdsc(domain) container_of(domain, struct gdsc,
+> > >>> pd)
+> > >>> +#define domain_to_pipe_clk_gdsc(domain) container_of(domain, struct
+> > >>> pipe_clk_gdsc, base.pd)
+> > >>>     enum gdsc_status {
+> > >>>       GDSC_OFF,
+> > >>> @@ -549,3 +550,43 @@ int gdsc_gx_do_nothing_enable(struct
+> > >>> generic_pm_domain *domain)
+> > >>>       return 0;
+> > >>>   }
+> > >>>   EXPORT_SYMBOL_GPL(gdsc_gx_do_nothing_enable);
+> > >>> +
+> > >>> +/*
+> > >>> + * Special operations for GDSCs with attached pipe clocks.
+> > >>> + * The clock should be parked to safe source (tcxo) before turning
+> > >>> off the GDSC
+> > >>> + * and can be switched on as soon as the GDSC is on.
+> > >>> + *
+> > >>> + * We remove respective clock sources from clocks map and handle
+> > >>> them manually.
+> > >>> + */
+> > >>> +int gdsc_pipe_enable(struct generic_pm_domain *domain)
+> > >>> +{
+> > >>> +    struct pipe_clk_gdsc *sc = domain_to_pipe_clk_gdsc(domain);
+> > >>> +    int i, ret;
+> > >>> +
+> > >>> +    ret = gdsc_enable(domain);
+> > >>> +    if (ret)
+> > >>> +        return ret;
+> > >>> +
+> > >>> +    for (i = 0; i< sc->num_clocks; i++)
+> > >>> +        regmap_update_bits(sc->base.regmap, sc->clocks[i].reg,
+> > >>> +                BIT(sc->clocks[i].shift + sc->clocks[i].width) -
+> > >>> BIT(sc->clocks[i].shift),
+> > >>> +                sc->clocks[i].on_value << sc->clocks[i].shift);
+> > >>> +
+> > >>> +    return 0;
+> > >>> +}
+> > >>> +EXPORT_SYMBOL_GPL(gdsc_pipe_enable);
+> > >>> +
+> > >>> +int gdsc_pipe_disable(struct generic_pm_domain *domain)
+> > >>> +{
+> > >>> +    struct pipe_clk_gdsc *sc = domain_to_pipe_clk_gdsc(domain);
+> > >>> +    int i;
+> > >>> +
+> > >>> +    for (i = sc->num_clocks - 1; i >= 0; i--)
+> > >>> +        regmap_update_bits(sc->base.regmap, sc->clocks[i].reg,
+> > >>> +                BIT(sc->clocks[i].shift + sc->clocks[i].width) -
+> > >>> BIT(sc->clocks[i].shift),
+> > >>> +                sc->clocks[i].off_value << sc->clocks[i].shift);
+> > >>> +
+> > >>> +    /* In case of an error do not try turning the clocks again. We
+> > >>> can not be sure about the GDSC state. */
+> > >>> +    return gdsc_disable(domain);
+> > >>> +}
+> > >>> +EXPORT_SYMBOL_GPL(gdsc_pipe_disable);
+> > >>> diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
+> > >>> index d7cc4c21a9d4..b1a2f0abe41c 100644
+> > >>> --- a/drivers/clk/qcom/gdsc.h
+> > >>> +++ b/drivers/clk/qcom/gdsc.h
+> > >>> @@ -68,11 +68,25 @@ struct gdsc_desc {
+> > >>>       size_t num;
+> > >>>   };
+> > >>>   +struct pipe_clk_gdsc {
+> > >>> +    struct gdsc base;
+> > >>> +    int num_clocks;
+> > >>> +    struct {
+> > >>> +        u32 reg;
+> > >>> +        u32 shift;
+> > >>> +        u32 width;
+> > >>> +        u32 off_value;
+> > >>> +        u32 on_value;
+> > >>> +    } clocks[];
+> > >>> +};
+> > >>> +
+> > >>>   #ifdef CONFIG_QCOM_GDSC
+> > >>>   int gdsc_register(struct gdsc_desc *desc, struct
+> > >>> reset_controller_dev *,
+> > >>>             struct regmap *);
+> > >>>   void gdsc_unregister(struct gdsc_desc *desc);
+> > >>>   int gdsc_gx_do_nothing_enable(struct generic_pm_domain *domain);
+> > >>> +int gdsc_pipe_enable(struct generic_pm_domain *domain);
+> > >>> +int gdsc_pipe_disable(struct generic_pm_domain *domain);
+> > >>>   #else
+> > >>>   static inline int gdsc_register(struct gdsc_desc *desc,
+> > >>>                   struct reset_controller_dev *rcdev,
+> > >>> --
+> > >>> 2.34.1
+> > >>>
+> > >
+> > >
+> 
+> 
+> 
+> -- 
+> With best wishes
+> Dmitry
