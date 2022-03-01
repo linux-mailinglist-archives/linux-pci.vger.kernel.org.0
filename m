@@ -2,53 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B97FF4C942E
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 20:24:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99EA44C9489
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 20:41:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232744AbiCATYx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Mar 2022 14:24:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
+        id S237192AbiCATl7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Mar 2022 14:41:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229980AbiCATYx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 14:24:53 -0500
-Received: from out2.migadu.com (out2.migadu.com [IPv6:2001:41d0:2:aacc::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E7E6140CC;
-        Tue,  1 Mar 2022 11:24:10 -0800 (PST)
-Message-ID: <d96528a9-ae1e-d09c-f3e2-1cba0a88c483@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1646162648;
+        with ESMTP id S235982AbiCATl6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 14:41:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E5033654BC
+        for <linux-pci@vger.kernel.org>; Tue,  1 Mar 2022 11:41:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646163676;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fso8h5lyoc1XbXbWlpMD5KMQHPxcp2kQ/qyBvjy+VZA=;
-        b=AEPe+60dmQl601WU8/W2rlDSJBjC/nwgZyxPkL2X8lcz65hlirA02vIrqiuuu/HQLNWud1
-        VNmK12Frz3n7FdQoKktQaR+PFZwM6240540CQUjFTpb2ySjWo6urgtGa6x/KIoi4uxmzzG
-        4ZUSNB538s0A/FkOd7rZDNEQaZlZ99A=
-Date:   Tue, 1 Mar 2022 12:24:06 -0700
+        bh=z8aoFAHDyCvrmmG3m5O00aIMo9cy+HOZ0s5XKRgwMVM=;
+        b=MKFx8n+ygk3Go0pZfK2BD9ij8EC5+ecWIcNxbcUeeHH1v7Mpi6hGzkd0JCUKkwl7+OPYGD
+        pR/5yb3o36jNXjpjOnecNZWeOYsEW/Sj9YD99eBkdOI5RmpliGwVx9m4Ddb06hhzXpatPJ
+        dLvz7E8NvqYt7ytl6U0RYOphqjTPpMY=
+Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
+ [209.85.161.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-519-G9FnlPLuPS-xZazwPfr7Vw-1; Tue, 01 Mar 2022 14:41:15 -0500
+X-MC-Unique: G9FnlPLuPS-xZazwPfr7Vw-1
+Received: by mail-oo1-f69.google.com with SMTP id m11-20020a4add0b000000b0031c5a1611b0so11001849oou.7
+        for <linux-pci@vger.kernel.org>; Tue, 01 Mar 2022 11:41:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=z8aoFAHDyCvrmmG3m5O00aIMo9cy+HOZ0s5XKRgwMVM=;
+        b=ZwY5rURQL6D8fURDbKmMZUT0WEoJQiD0lIQCOEtC5T7cJdR2NUz+2yH8nmEEk/IXqO
+         aDzDjiPeSxKEwrVYTprHABU48J8lH4jM/CFqSgXnv5QZgJ4yWBeyPd8QzbvuNlHlWqI7
+         hNTRMn1UFi2qWGlYm/o6ZXiZdnOg0b07ICGOf66NDfcBCaq1kRAMPtlOie8uBOeJwWgs
+         FglAk+S9IEocw/OuUdH2DKbZIxmw8gO5CD3wN6oSjZ1EsvIpYhZcpbYzba10Nh1iK5Wh
+         3lMomMZz50mxakEHLF+MgxU2xD7G76qe1BBWc7LHL2Y4nT7iRcCHKrdkw6r4ZXPCHPvk
+         iC0g==
+X-Gm-Message-State: AOAM530yB3/kA0yWGIFb1oe2GmXaTkI0aUbLoGl26iSyqVyS1jeLsAIN
+        lNDDx0uQftJf65xWSvt4eo5p6nA2jIod8LnQT/84yLi+4jQONZpI99XPE0NYE/Ml5BWgljFbJY5
+        WEuAnNvwQdZBwkmVJo5nl
+X-Received: by 2002:aca:1306:0:b0:2d4:62a5:44a8 with SMTP id e6-20020aca1306000000b002d462a544a8mr14449852oii.38.1646163674210;
+        Tue, 01 Mar 2022 11:41:14 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzNiL70nrDv61YRdGiqJzXuVzW8jjuHCVlqM9f4meP7eGkVuTIW4KacN5FDKjwJRNplLIUkwg==
+X-Received: by 2002:aca:1306:0:b0:2d4:62a5:44a8 with SMTP id e6-20020aca1306000000b002d462a544a8mr14449833oii.38.1646163673952;
+        Tue, 01 Mar 2022 11:41:13 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id y19-20020a056830209300b005afb1e59e0fsm6701622otq.55.2022.03.01.11.41.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Mar 2022 11:41:13 -0800 (PST)
+Date:   Tue, 1 Mar 2022 12:41:12 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Yishai Hadas <yishaih@nvidia.com>, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
+        cohuck@redhat.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        shameerali.kolothum.thodi@huawei.com
+Subject: Re: [GIT PULL] Add mlx5 live migration driver and v2 migration
+ protocol
+Message-ID: <20220301124112.477ab6fc.alex.williamson@redhat.com>
+In-Reply-To: <20220228123934.812807-1-leon@kernel.org>
+References: <20220228123934.812807-1-leon@kernel.org>
+Organization: Red Hat
 MIME-Version: 1.0
-Subject: Re: [PATCH] PCI: vmd: Prevent recursive locking on interrupt
- allocation
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     "Surendrakumar Upadhyay, TejaskumarX" 
-        <tejaskumarx.surendrakumar.upadhyay@intel.com>,
-        "Meena, Mahesh" <mahesh.meena@intel.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Marc Zyngier <maz@kernel.org>
-References: <87a6euub2a.ffs@tglx>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Jonathan Derrick <jonathan.derrick@linux.dev>
-In-Reply-To: <87a6euub2a.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-X-Migadu-Auth-User: linux.dev
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,111 +84,147 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is how it used to be before I removed the member to better
-cache align the vmd_irq_list struct, but then the scru_struct grew
-to negate that benefit.
+On Mon, 28 Feb 2022 14:39:34 +0200
+Leon Romanovsky <leon@kernel.org> wrote:
 
-So this is good
-Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> Hi Alex,
+> 
+> This pull request contains the v9 version of recently submitted mlx5 live migration
+> driver from Yishai and Jason.
+> 
+> In addition to changes in VFIO, this series extended the ethernet part of mlx5 driver.
+> Such changes have all chances to create merge conflicts between VFIO, netdev and RDMA
+> subsystems, which are eliminated with this PR.
 
-On 2/13/2022 6:54 AM, Thomas Gleixner wrote:
-> Tejas reported the following recursive locking issue:
+I know that Connie and perhaps others have spent a good deal of time
+reviewing this, so I'd at least like to give them an opportunity to
+chime in with their Reviewed-by before merging a PR.  For me please add
+my
+
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+
+to patches 8-15 in Yishai's v9 posting.  If it's easier, I can adjust
+the commits from this PR manually, I see there are just a few minor
+commit log differences versus the v9 post.  Let's give this one more
+day to collect any further outstanding comments or reviews.  Thanks,
+
+Alex
+
+> ------------------------------------------------------------------------------------
 > 
->   swapper/0/1 is trying to acquire lock:
->   ffff8881074fd0a0 (&md->mutex){+.+.}-{3:3}, at: msi_get_virq+0x30/0xc0
->   
->   but task is already holding lock:
->   ffff8881017cd6a0 (&md->mutex){+.+.}-{3:3}, at: __pci_enable_msi_range+0xf2/0x290
->   
->   stack backtrace:
->    __mutex_lock+0x9d/0x920
->    msi_get_virq+0x30/0xc0
->    pci_irq_vector+0x26/0x30
->    vmd_msi_init+0xcc/0x210
->    msi_domain_alloc+0xbf/0x150
->    msi_domain_alloc_irqs_descs_locked+0x3e/0xb0
->    __pci_enable_msi_range+0x155/0x290
->    pci_alloc_irq_vectors_affinity+0xba/0x100
->    pcie_port_device_register+0x307/0x550
->    pcie_portdrv_probe+0x3c/0xd0
->    pci_device_probe+0x95/0x110
+> The following changes since commit cfb92440ee71adcc2105b0890bb01ac3cddb8507:
 > 
-> This is caused by the VMD MSI code which does a lookup of the Linux
-> interrupt number for an VMD managed MSI[X] vector. The lookup function
-> tries to acquire the already held mutex.
+>   Linux 5.17-rc5 (2022-02-20 13:07:20 -0800)
 > 
-> Avoid that by caching the Linux interrupt number at initialization time
-> instead of looking it up over and over.
+> are available in the Git repository at:
 > 
-> Fixes: 82ff8e6b78fc ("PCI/MSI: Use msi_get_virq() in pci_get_vector()")
-> Reported-by: "Surendrakumar Upadhyay, TejaskumarX" <tejaskumarx.surendrakumar.upadhyay@intel.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git tags/mlx5-vfio-v9
 > 
-> ---
->   drivers/pci/controller/vmd.c |   14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
+> for you to fetch changes up to d18f3ba69448b8f68caf8592a9abb39e75c76e8d:
 > 
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -99,11 +99,13 @@ struct vmd_irq {
->    * @srcu:	SRCU struct for local synchronization.
->    * @count:	number of child IRQs assigned to this vector; used to track
->    *		sharing.
-> + * @virq:	The underlying VMD Linux interrupt number
->    */
->   struct vmd_irq_list {
->   	struct list_head	irq_list;
->   	struct srcu_struct	srcu;
->   	unsigned int		count;
-> +	unsigned int		virq;
->   };
->   
->   struct vmd_dev {
-> @@ -253,7 +255,6 @@ static int vmd_msi_init(struct irq_domai
->   	struct msi_desc *desc = arg->desc;
->   	struct vmd_dev *vmd = vmd_from_bus(msi_desc_to_pci_dev(desc)->bus);
->   	struct vmd_irq *vmdirq = kzalloc(sizeof(*vmdirq), GFP_KERNEL);
-> -	unsigned int index, vector;
->   
->   	if (!vmdirq)
->   		return -ENOMEM;
-> @@ -261,10 +262,8 @@ static int vmd_msi_init(struct irq_domai
->   	INIT_LIST_HEAD(&vmdirq->node);
->   	vmdirq->irq = vmd_next_irq(vmd, desc);
->   	vmdirq->virq = virq;
-> -	index = index_from_irqs(vmd, vmdirq->irq);
-> -	vector = pci_irq_vector(vmd->dev, index);
->   
-> -	irq_domain_set_info(domain, virq, vector, info->chip, vmdirq,
-> +	irq_domain_set_info(domain, virq, vmdirq->irq->virq, info->chip, vmdirq,
->   			    handle_untracked_irq, vmd, NULL);
->   	return 0;
->   }
-> @@ -685,7 +684,8 @@ static int vmd_alloc_irqs(struct vmd_dev
->   			return err;
->   
->   		INIT_LIST_HEAD(&vmd->irqs[i].irq_list);
-> -		err = devm_request_irq(&dev->dev, pci_irq_vector(dev, i),
-> +		vmd->irqs[i].virq = pci_irq_vector(dev, i);
-> +		err = devm_request_irq(&dev->dev, vmd->irqs[i].virq,
->   				       vmd_irq, IRQF_NO_THREAD,
->   				       vmd->name, &vmd->irqs[i]);
->   		if (err)
-> @@ -969,7 +969,7 @@ static int vmd_suspend(struct device *de
->   	int i;
->   
->   	for (i = 0; i < vmd->msix_count; i++)
-> -		devm_free_irq(dev, pci_irq_vector(pdev, i), &vmd->irqs[i]);
-> +		devm_free_irq(dev, vmd->irqs[i].virq, &vmd->irqs[i]);
->   
->   	return 0;
->   }
-> @@ -981,7 +981,7 @@ static int vmd_resume(struct device *dev
->   	int err, i;
->   
->   	for (i = 0; i < vmd->msix_count; i++) {
-> -		err = devm_request_irq(dev, pci_irq_vector(pdev, i),
-> +		err = devm_request_irq(dev, vmd->irqs[i].virq,
->   				       vmd_irq, IRQF_NO_THREAD,
->   				       vmd->name, &vmd->irqs[i]);
->   		if (err)
+>   vfio/mlx5: Use its own PCI reset_done error handler (2022-02-27 11:44:00 +0200)
+> 
+> ----------------------------------------------------------------
+> Add mlx5 live migration driver and v2 migration protocol
+> 
+> This series adds mlx5 live migration driver for VFs that are migration
+> capable and includes the v2 migration protocol definition and mlx5
+> implementation.
+> 
+> The mlx5 driver uses the vfio_pci_core split to create a specific VFIO
+> PCI driver that matches the mlx5 virtual functions. The driver provides
+> the same experience as normal vfio-pci with the addition of migration
+> support.
+> 
+> In HW the migration is controlled by the PF function, using its
+> mlx5_core driver, and the VFIO PCI VF driver co-ordinates with the PF to
+> execute the migration actions.
+> 
+> The bulk of the v2 migration protocol is semantically the same v1,
+> however it has been recast into a FSM for the device_state and the
+> actual syscall interface uses normal ioctl(), read() and write() instead
+> of building a syscall interface using the region.
+> 
+> Several bits of infrastructure work are included here:
+>  - pci_iov_vf_id() to help drivers like mlx5 figure out the VF index from
+>    a BDF
+>  - pci_iov_get_pf_drvdata() to clarify the tricky locking protocol when a
+>    VF reaches into its PF's driver
+>  - mlx5_core uses the normal SRIOV lifecycle and disables SRIOV before
+>    driver remove, to be compatible with pci_iov_get_pf_drvdata()
+>  - Lifting VFIO_DEVICE_FEATURE into core VFIO code
+> 
+> This series comes after alot of discussion. Some major points:
+> - v1 ABI compatible migration defined using the same FSM approach:
+>    https://lore.kernel.org/all/0-v1-a4f7cab64938+3f-vfio_mig_states_jgg@nvidia.com/
+> - Attempts to clarify how the v1 API works:
+>    Alex's:
+>      https://lore.kernel.org/kvm/163909282574.728533.7460416142511440919.stgit@omen/
+>    Jason's:
+>      https://lore.kernel.org/all/0-v3-184b374ad0a8+24c-vfio_mig_doc_jgg@nvidia.com/
+> - Etherpad exploring the scope and questions of general VFIO migration:
+>      https://lore.kernel.org/kvm/87mtm2loml.fsf@redhat.com/
+> 
+> NOTE: As this series touched mlx5_core parts we need to send this in a
+> pull request format to VFIO to avoid conflicts.
+> 
+> Matching qemu changes can be previewed here:
+>  https://github.com/jgunthorpe/qemu/commits/vfio_migration_v2
+> 
+> Link: https://lore.kernel.org/all/20220224142024.147653-1-yishaih@nvidia.com
+> Signed-of-by: Leon Romanovsky <leonro@nvidia.com>
+> 
+> ----------------------------------------------------------------
+> Jason Gunthorpe (6):
+>       PCI/IOV: Add pci_iov_vf_id() to get VF index
+>       PCI/IOV: Add pci_iov_get_pf_drvdata() to allow VF reaching the drvdata of a PF
+>       vfio: Have the core code decode the VFIO_DEVICE_FEATURE ioctl
+>       vfio: Define device migration protocol v2
+>       vfio: Extend the device migration protocol with RUNNING_P2P
+>       vfio: Remove migration protocol v1 documentation
+> 
+> Leon Romanovsky (1):
+>       net/mlx5: Reuse exported virtfn index function call
+> 
+> Yishai Hadas (8):
+>       net/mlx5: Disable SRIOV before PF removal
+>       net/mlx5: Expose APIs to get/put the mlx5 core device
+>       net/mlx5: Introduce migration bits and structures
+>       net/mlx5: Add migration commands definitions
+>       vfio/mlx5: Expose migration commands over mlx5 device
+>       vfio/mlx5: Implement vfio_pci driver for mlx5 devices
+>       vfio/pci: Expose vfio_pci_core_aer_err_detected()
+>       vfio/mlx5: Use its own PCI reset_done error handler
+> 
+>  MAINTAINERS                                        |   6 +
+>  drivers/net/ethernet/mellanox/mlx5/core/cmd.c      |  10 +
+>  drivers/net/ethernet/mellanox/mlx5/core/main.c     |  45 ++
+>  .../net/ethernet/mellanox/mlx5/core/mlx5_core.h    |   1 +
+>  drivers/net/ethernet/mellanox/mlx5/core/sriov.c    |  17 +-
+>  drivers/pci/iov.c                                  |  43 ++
+>  drivers/vfio/pci/Kconfig                           |   3 +
+>  drivers/vfio/pci/Makefile                          |   2 +
+>  drivers/vfio/pci/mlx5/Kconfig                      |  10 +
+>  drivers/vfio/pci/mlx5/Makefile                     |   4 +
+>  drivers/vfio/pci/mlx5/cmd.c                        | 259 ++++++++
+>  drivers/vfio/pci/mlx5/cmd.h                        |  36 ++
+>  drivers/vfio/pci/mlx5/main.c                       | 676 +++++++++++++++++++++
+>  drivers/vfio/pci/vfio_pci.c                        |   1 +
+>  drivers/vfio/pci/vfio_pci_core.c                   | 101 ++-
+>  drivers/vfio/vfio.c                                | 295 ++++++++-
+>  include/linux/mlx5/driver.h                        |   3 +
+>  include/linux/mlx5/mlx5_ifc.h                      | 147 ++++-
+>  include/linux/pci.h                                |  15 +-
+>  include/linux/vfio.h                               |  53 ++
+>  include/linux/vfio_pci_core.h                      |   4 +
+>  include/uapi/linux/vfio.h                          | 406 ++++++-------
+>  22 files changed, 1846 insertions(+), 291 deletions(-)
+>  create mode 100644 drivers/vfio/pci/mlx5/Kconfig
+>  create mode 100644 drivers/vfio/pci/mlx5/Makefile
+>  create mode 100644 drivers/vfio/pci/mlx5/cmd.c
+>  create mode 100644 drivers/vfio/pci/mlx5/cmd.h
+>  create mode 100644 drivers/vfio/pci/mlx5/main.c
+> 
+
