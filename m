@@ -2,294 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0357F4C9213
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 18:41:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A35874C92D9
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 19:21:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235503AbiCARmX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Mar 2022 12:42:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
+        id S236903AbiCASWK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Mar 2022 13:22:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235361AbiCARmW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 12:42:22 -0500
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693DD5F4DD
-        for <linux-pci@vger.kernel.org>; Tue,  1 Mar 2022 09:41:40 -0800 (PST)
-Received: by mail-oi1-x229.google.com with SMTP id i5so16880891oih.1
-        for <linux-pci@vger.kernel.org>; Tue, 01 Mar 2022 09:41:40 -0800 (PST)
+        with ESMTP id S231707AbiCASWH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 13:22:07 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B8F4704C;
+        Tue,  1 Mar 2022 10:21:25 -0800 (PST)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 221GibBC021769;
+        Tue, 1 Mar 2022 18:20:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2021-07-09;
+ bh=uolvxQacXYmhg6H3oD0H5MVWhM/QphFrFeGOHREHM6k=;
+ b=xt7vB76B1jEYqBcWNxIQQ4P9qzlf8BEunkxJ0fLEEPaSz2GzMKYukPUvMBfXI3ojVWsl
+ lOL+Thi951bPUYwk6m9qcV4CHGuLip9WwL5L58eozoxuOXM18y9A/zWA3LI0fHjTovWI
+ gZgYxH6RvBGo7qrC/dUpLXuydn0HnugZTz2trCH/MzOPmcE7cNfrTOruFizMG1vh2QBD
+ VgvPK9SRD9s7p4TESSQ4S0gX+o1/cxEROfAwZJpgkroH9+lRyLkQbZZ+kMtgv8LN1Zn6
+ vhChsxWRfg2NzTFWxQi+zNuCNFPg+9fqqfilEtL6nC2YgMV3289FOj/9/dEgYSr30kWb BA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ehdaysxfj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Mar 2022 18:20:29 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 221I1JQc108032;
+        Tue, 1 Mar 2022 18:20:29 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2106.outbound.protection.outlook.com [104.47.58.106])
+        by aserp3030.oracle.com with ESMTP id 3efa8ehhee-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Mar 2022 18:20:28 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RTEkQ3+VW0KrT7/MofZKpdMQUN7WPAk3KY0OKVReLptjXfFUjz4TuQPnLxJVvDyHU1vzmfsejbdWUWz8yDRg5Aau4gwceJBdr4x2Hb2AAUtJmfA7eeLHnH5HWvIoaWir+GQKlWo3QAz+X6hQP+T3090iV94KG0gKdLnb91kUaS+iP+XP92LyWc1BnDmOBAbZo/0FmyxtMOD+Buk2jKrsTEB08+1medsg82zY3m+r4SrTYRJpth/OCjchimLOS7VXsMqmbXBo5R2qO+jHpCrVpQZ3ZGXotDuCdl6ZXMEqvX8BRRvwHyOZtgbQT6m7gBE/Ox180bqdSNEJPj2qPF0nyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uolvxQacXYmhg6H3oD0H5MVWhM/QphFrFeGOHREHM6k=;
+ b=ABUYj9cyWP8PCp2htP2NAZDrB/GO3uGXY6dKkHOdbPsf2gK99sCcHHyLLCkve+HYysqKYNyLXXlQo3bKdGNzN5nEcp40VIAR+KK1dPClJhay9/gqacJ7WwQgmGLNh0ulo1aoKzGirOmpJYYiFg8TKvYshXPQSH+lXlKp/zHJ5zgfjybFpm5rdtm+Fg5SoaI4Va30VtCH07mQQlrmWo6+WYNkJBWS5fIiI7pCnT6eWip0I8Q+nTR6C0dDI9t64JVkjY50PO+KDa6B8jtUwaftHqLhtC+JTVCxXot7f3PRu1bHkJ+d9GtFF+FVrNuMPvd5xl+eyXgeYMOU2jqALFCuBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Dj9jClIeUnpps0dqvQJqNq3ULWQwNcCV3LH2BxUJGms=;
-        b=TcyAz5Y+hFUh8EDGKhQQp8PP/lNhvlR/qhCtRH4jyxwoU7jQ3m8JXa+y0XP6UOjfdx
-         JKEqBWZS73vw/zH2uo1wizbmjHTl+FS/iHyRafKXJxbsSEcAaH3sOt3RS2TynuB9OiRQ
-         SG+r9xDw98qwxF8CKQo6H3GFrt5g0wdkJrOd36a7kcevJds9YEelN3k7c61RzIBmtdB/
-         dgd7lDSrPEfviuPtmtu8WUD+8kRhDB3VBtlFwt98k2G0ZfA3LZSvAsTwmeLwbTFxEcDd
-         Px+1JhCvcaxTdpHUwJvqe9SGVl8vL+qpFC5SugNtKPijfpxC2/xkrQeV7zgnV3/JlQg3
-         4Z0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Dj9jClIeUnpps0dqvQJqNq3ULWQwNcCV3LH2BxUJGms=;
-        b=vg2urT9WVWWQYfJuspegJFT5x/FmnEu3vFWjDR2XolBc61ltOkw3/DqjSy9rlE4IMd
-         dHw6wBxLo9rUzC5mF+u0rgmdS9YU2o7K0RJD2vC4YpQ5t2NAZcvznb31Y+de7Kn2auQu
-         nehUrB7DDOiRomaGn9R9dICdFkrPSwshJvyM3spZmqPtiU8xhQy/gLew4KBJ3VcP1mxN
-         06N+R2FYv2xMG6xKNjSiuVEDbe3ABGnhUgDgEU+yz3+8AsWIZXTQsF7oSYf64wc7i2nY
-         El2OarQuGzqteuwHtweoDp3beV1hKgfjBARHiikgA8C7QDu7r3elcrmDp/WQt8grm0ad
-         L/wg==
-X-Gm-Message-State: AOAM532uUPCl65ro5tp/fjFDLpAOIPqfspLtmTiLTpKtMy0uIAD21G5N
-        wPaR7ZWcU/+uQhutn0s/MjTsDw==
-X-Google-Smtp-Source: ABdhPJw9T2ag+1PboNShZd97DGAbxwRAr1BkU149XaLa6NR+zTE37rZpaQ/gTvrxQfNxN5LqMQNR+w==
-X-Received: by 2002:a05:6808:188b:b0:2d4:70f2:3cfa with SMTP id bi11-20020a056808188b00b002d470f23cfamr15842992oib.168.1646156499704;
-        Tue, 01 Mar 2022 09:41:39 -0800 (PST)
-Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
-        by smtp.gmail.com with ESMTPSA id y6-20020a4a86c6000000b0031bf43a9212sm6441136ooh.11.2022.03.01.09.41.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Mar 2022 09:41:38 -0800 (PST)
-Date:   Tue, 1 Mar 2022 09:43:31 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <pmaliset@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 03/11] clk: qcom: gdsc: add support for clocks tied to
- the GDSC
-Message-ID: <Yh5bQ8FqwN7wOkb8@ripper>
-References: <20220204144645.3016603-1-dmitry.baryshkov@linaro.org>
- <20220204144645.3016603-4-dmitry.baryshkov@linaro.org>
- <Yf2jRAf5UKYSMYxe@builder.lan>
- <f521a273-7250-ddca-0e56-b1b27bd75117@linaro.org>
- <3bc0461d-3a2e-f994-e712-dfc8be04c9b4@quicinc.com>
- <CAA8EJpo8Abvfea8mYZo0opp=7RSpvp+WnC06tGgr1YeWzOFLPw@mail.gmail.com>
-MIME-Version: 1.0
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uolvxQacXYmhg6H3oD0H5MVWhM/QphFrFeGOHREHM6k=;
+ b=xDglO4tWOiUv9F1nbCfdc6cvuc1CJyDdCfLuhlBPhDzmv0RN6mggAgilvV4rXkjUKJ23vXFuxdwvaltsD9xaBkjbqw1OytzEN8W4o5SDe+MxtYofbojHgB4cgVvTfMQO+gJdygPTkeWeMjktRvL3FAETDPhX5jjMjQksbWnJ90A=
+Received: from BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
+ by BN6PR1001MB2145.namprd10.prod.outlook.com (2603:10b6:405:2d::38) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.24; Tue, 1 Mar
+ 2022 18:20:27 +0000
+Received: from BYAPR10MB2999.namprd10.prod.outlook.com
+ ([fe80::d06b:5108:1d72:ac6c]) by BYAPR10MB2999.namprd10.prod.outlook.com
+ ([fe80::d06b:5108:1d72:ac6c%5]) with mapi id 15.20.5038.014; Tue, 1 Mar 2022
+ 18:20:27 +0000
+Date:   Tue, 1 Mar 2022 13:20:22 -0500
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, x86@kernel.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 07/11] x86: remove the IOMMU table infrastructure
+Message-ID: <Yh5j5q5n/GyU0/1n@0xbeefdead.lan>
+References: <20220227143055.335596-1-hch@lst.de>
+ <20220227143055.335596-8-hch@lst.de>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAA8EJpo8Abvfea8mYZo0opp=7RSpvp+WnC06tGgr1YeWzOFLPw@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220227143055.335596-8-hch@lst.de>
+X-ClientProxiedBy: BL1P223CA0009.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c4::14) To BYAPR10MB2999.namprd10.prod.outlook.com
+ (2603:10b6:a03:85::27)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e9d924ff-f2f5-4ebb-efcb-08d9fbb028f3
+X-MS-TrafficTypeDiagnostic: BN6PR1001MB2145:EE_
+X-Microsoft-Antispam-PRVS: <BN6PR1001MB2145D7E888BCDD1AEB014F7589029@BN6PR1001MB2145.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lFIez9K45UjxTdw10wtEbimJWr0rXFnLt/ECe7AxJSP92ZPCU9waRxNp6elQ2PCYJoAsEfhB/13zdpEYlo2kBmMY+ayIpbILRGF9jPuxTIon18MBm++qRVF7+7tni/ODB6zkJ6FlplNyEZnV4zacMhBjUOy93eobCEyehC0I76yzDqN5JbF6pEd5fpoScOWKYF2jSeo8ztRRL8peOiuCg2NMc5KddwxhBKp556AzjYzN+F9JZBSxn7D1Vjb9f6Qn64gr+Mo9s1IQS6xLdeS5Fk7GE7gJUp5cov+l0bAHwaqSLkGKw96ceoOPYT4Ws25RMr5pW87W0fXB9CvXhulFHD9DAHH0KYNFFHCd0q0l+D+Z0/rKuWOWUPMFeBSn1fsa2Uno9yBFNyr3Q0l2mlYcg6CeDo+9RveoVWfMrO3tZKYDhi1S1WOh4E6litI9IKN3jmBwF17hdTkHhPg+iFGOX8Cilmy7sFT3anFMZRR1rjVOU/agfYWqxwd+rVxQsp0vJWwp0EgNr/z7KcyywH+xwJbjdZFIw5ybYRJPC+wl0DEiEI+pRANk5HQ8QVnTTAGxFdI8L5BmBflmIaP0da0UmaQADrN9EGNSn++zejCfFH/YprZmqBZl41psnTxKCUHR+KoIqY/Qbh4pQKMTeSONCtlXkg1rVdgL9zFuUOIfJvKEGpgHFAvbmmuNM+AmnBfn9OLE0gKq6kRQ3GOTurBCjQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(26005)(6512007)(508600001)(7416002)(9686003)(8936002)(5660300002)(186003)(83380400001)(6486002)(4744005)(52116002)(86362001)(6916009)(54906003)(66946007)(2906002)(6506007)(38350700002)(316002)(6666004)(36756003)(66556008)(66476007)(38100700002)(4326008)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?z7srtht3IKXb5mVU5m92ELUiYvGhBogF9JhMOfxwcCeBRFJHpeXs1zxPP9qt?=
+ =?us-ascii?Q?AKL2LY9LVzBPhHu5V0T3WBj7Gay/MwLcXS2CAup+h2z4iR78ovr89+Dnm2Ld?=
+ =?us-ascii?Q?UrUnj//6W3vo3QZODXSxJEtSpSiFj3SX9iKeZ2Exe2TfCDONWUjIMHQdUbSC?=
+ =?us-ascii?Q?dPEMc7YiNoEZVAPrhazsupT/Mgkg9vNIZ4GkTTdt9st8obEOslwesXRwp7v+?=
+ =?us-ascii?Q?Ae51MH9W767t9gcwRGjn26j9l53B0nLzZSNWdlssi6h5fxLbLiOxaB3frNfV?=
+ =?us-ascii?Q?gI4rCv/p9VnifZ8HUkY5KJnEMSTvxKkCcXmlyTgFnOwcWg8i4I7Ltn5cSSks?=
+ =?us-ascii?Q?UqFdUyUuQCF0z899mJzCuyF0AhB0iuChSaHyhxA8uJ2i7N7Tohqzu5zyqKpu?=
+ =?us-ascii?Q?wkXzeu3MVB/q6xJqeg/UQq7G/5cedUN8Ul0FHKPeMYF3xSYo7QDheyaKbziU?=
+ =?us-ascii?Q?Kg+2Yy2lnS5q7XKEbwoMQ7XfuN6yl24DijBSte6N5zJZ+BM9x7M4VEZBGhT4?=
+ =?us-ascii?Q?UgJxbfnN+gW9kXlGXsOsEclVWmaimxjCsYrf96AqHDMGsIdqziU4LjNREDSQ?=
+ =?us-ascii?Q?bDdGNMAJEY43lVSR2Go7P/p6vGcp4C5DKkTA/2Y51VdiTTueU3ig7AjXqGIK?=
+ =?us-ascii?Q?V7xIDgg8eG9+ZClcis4Y+e36nBwNKqaattKL+GuEGvh1lOfRmg9b8hQwzeGS?=
+ =?us-ascii?Q?UEJaQGUVW3gLBIsBQeBZoTVo0MnHXYMI6uVak39zNk0OVDNoP8MeM8uWX0sj?=
+ =?us-ascii?Q?XBot+wVPWI6rE7d9MupXZI/FJKnPl38Z/mZpZrpB3FVHafMujOO7mCHZwO31?=
+ =?us-ascii?Q?oOi3uegaXOeuvbNSc1vyxfFz0zL9k+WLv+qpZPme6mv9/mmDa/MsEkSQe9xs?=
+ =?us-ascii?Q?wY26xnM5bKngOZ8YI8rYEHlKKR9etqCD7z+CMGbT4HOeefIY3ZuBu+4mkJvq?=
+ =?us-ascii?Q?PoGymggFXNwaQzw7SGMhF9y/vmP/niCoftXhnsrxJXlSObDM0UgtWeLjXGGu?=
+ =?us-ascii?Q?TxrqsnQRDWeifT/rwDUSR/daQgUfAbr9Jswki7o1NwLWjqTdUJUrz7fWudH5?=
+ =?us-ascii?Q?ySYhZzJHVemfam4PwUMoR9wShPO5kxTCsjKl++PjVuyvlFccMOqyRb9Tpw28?=
+ =?us-ascii?Q?JNbn/S1EidVmIVwnCNL1pwhoTpJ8Z1pKWXL1eG4FqCxghELuZogZL0KYtZj1?=
+ =?us-ascii?Q?iZVzjNOBHGQpu6gcJPHNU6zPpOIB/UgA4bdWOcCcw7XjJMY85rAHJPRQjx3p?=
+ =?us-ascii?Q?5DqKB1hOPvpeA49iESkLGGENz8Tm9fLZdC4lTfSvFp5qVZUKNdzROzZXbn3h?=
+ =?us-ascii?Q?Sy24x3GYe5tXWTevh4dE1aL705aMggtxKCE6/kc839b/Q9srD3JI8m3z/Shs?=
+ =?us-ascii?Q?H6f7P6hW8ImEvjOmxujqZ/aRcRYNLKZbBwZkUxjvguifoUoAJlcCWbVaodNG?=
+ =?us-ascii?Q?fxyoJW+TFkNCs8BUaNnrKU4fFtQLCjG0qDJMC4EEj7L0EZ6pkd3f5b3Gl6/T?=
+ =?us-ascii?Q?cZStqh8Gq5+ulKQSfHPFv9NK174GYE9vwRZoAMsFPs8Xo6Xgd9YIMAf66dOu?=
+ =?us-ascii?Q?WGD6hHk/QMzfp01L9PiSN9oLXkFb6ujEJMAQyIlIgdhMMrtz/DYf8TCl7LFH?=
+ =?us-ascii?Q?EWCj8xCGlCXK2x9JCfEVl3A=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9d924ff-f2f5-4ebb-efcb-08d9fbb028f3
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2999.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2022 18:20:27.1245
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nHKZJHL5Fd9+ay+RKT4Mc3Poar9CEw1upWk5crVmkMULgkWOMgZ3NUaCBjzcs/Yl3WKLXUK8gxejnIBgqEkSDA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1001MB2145
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10273 signatures=685966
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 suspectscore=0 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
+ definitions=main-2203010092
+X-Proofpoint-GUID: Wj3Br-e4L6ngZnnKtFr824BC2zi0-dGS
+X-Proofpoint-ORIG-GUID: Wj3Br-e4L6ngZnnKtFr824BC2zi0-dGS
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon 28 Feb 22:47 PST 2022, Dmitry Baryshkov wrote:
+> -#include <asm/swiotlb.h>
+> -
+> -/*
+> - * History lesson:
+> - * The execution chain of IOMMUs in 2.6.36 looks as so:
+> - *
+> - *            [xen-swiotlb]
+> - *                 |
+> - *         +----[swiotlb *]--+
+> - *        /         |         \
+> - *       /          |          \
+> - *    [GART]     [Calgary]  [Intel VT-d]
+> - *     /
+> - *    /
+> - * [AMD-Vi]
 
-> Hi,
-> 
-> On Tue, 1 Mar 2022 at 09:42, Prasad Malisetty <quic_pmaliset@quicinc.com> wrote:
-> > I discussed with internal team. setting gcc_pcie_n_pipe_clk src in pcie
-> > driver doesn't have any relation with gdsc.
-> >
-> > But we are making sure that gcc_pcie_n_pipe_clk src is bi_tcxo before
-> > enabling the clocks and switching to pipe_clk src after PHY is enalbe.
-> >
-> > During suspend switching back to bi_tcxo as we enabling the clock as
-> > part of resume.
-> 
-> So... I assume that if we implement the enable/disable() ops in a way
-> similar to clk_rcg2_shared_ops, we can drop all manual handling of
-> pipe_clk sources.
-> 
-> Bjorn, Taniya WDYT?
-> 
+.. snip..
+> - *
+>  void __init pci_iommu_alloc(void)
+>  {
+> -	struct iommu_table_entry *p;
+> -
+> -	sort_iommu_table(__iommu_table, __iommu_table_end);
+> -	check_iommu_entries(__iommu_table, __iommu_table_end);
+> -
+> -	for (p = __iommu_table; p < __iommu_table_end; p++) {
+> -		if (p && p->detect && p->detect() > 0) {
+> -			p->flags |= IOMMU_DETECTED;
+> -			if (p->early_init)
+> -				p->early_init();
+> -			if (p->flags & IOMMU_FINISH_IF_DETECTED)
+> -				break;
+> -		}
+> +	if (xen_pv_domain()) {
+> +		pci_xen_swiotlb_init();
+> +		return;
+>  	}
+> +	pci_swiotlb_detect_4gb();
 
-To me it really sounds like the need here is to "park" the pipe clock
-source on bi_tcxo while the PHY isn't providing a valid clock signal
-into GCC. If so "parking" the clock the same way as the rcg2_shared_ops
-seems reasonable in that case.
+I think you also need to check for IBM Calgary?
 
-Also, looking at downstream, the USB pipe clock seems to be handled in a
-similar fashion.
-
-
-But I'm still wondering what the actual requirement for the pipe clock
-is. Per your description Prasad, it seems that the PHY doesn't need the
-pipe clock coming back from GCC during initialization - and the PCIe
-controller driver enables the pipe_clk after powering on the phy.
-
-On platforms prior to there being a mux involved (e.g. SDM845) we have a
-branch that is marked BRANCH_HALT_SKIP. But do we have that because we
-incorrectly enable the gcc_pipe_clk before we power on the PHY?
-
-I thought we did this because gcc_pipe_clk was part of some feedback
-loop when calibrating the PHY PLL, but if sc7280 can feed tcxo that
-doesn't make sense. Is the incoming pipe_clk part of the PHY
-initialization or not?
-
-Can we move the enablement of gcc_pipe_clk to be done after we bring up
-the PHY and thereby drop the BRANCH_HALT_SKIP on these platforms?
-
-Regards,
-Bjorn
-
-> >
-> >   Hi Taniya,
-> >
-> > Please provide your inputs.
-> >
-> > Thanks
-> >
-> > -Prasad
-> > On 2/12/2022 1:22 AM, Dmitry Baryshkov wrote:
-> > > On 05/02/2022 01:05, Bjorn Andersson wrote:
-> > >> On Fri 04 Feb 08:46 CST 2022, Dmitry Baryshkov wrote:
-> > >>
-> > >>> On newer Qualcomm platforms GCC_PCIE_n_PIPE_CLK_SRC should be
-> > >>> controlled
-> > >>> together with the PCIE_n_GDSC. The clock should be fed from the TCXO
-> > >>> before switching the GDSC off and can be fed from PCIE_n_PIPE_CLK once
-> > >>> the GDSC is on.
-> > >>>
-> > >>> Since commit aa9c0df98c29 ("PCI: qcom: Switch pcie_1_pipe_clk_src after
-> > >>> PHY init in SC7280") PCIe controller driver tries to manage this on
-> > >>> it's
-> > >>> own, resulting in the non-optimal code. Furthermore, if the any of the
-> > >>> drivers will have the same requirements, the code would have to be
-> > >>> dupliacted there.
-> > >>>
-> > >>> Move handling of such clocks to the GDSC code, providing special GDSC
-> > >>> type.
-> > >>>
-> > >>
-> > >> As discussed on IRC, I'm inclined not to take this, because looks to me
-> > >> to be the same situation that we have with all GDSCs in SM8350 and
-> > >> onwards - that some clocks must be parked on a safe parent before the
-> > >> associated GDSC can be toggled.
-> > >>
-> > >> Prasad, please advice on what the actual requirements are wrt the
-> > >> gcc_pipe_clk_src. When does it need to provide a valid signal and when
-> > >> does it need to be parked?
-> > >
-> > > [Excuse me for the duplicate, Prasad's email was bouncing]
-> > >
-> > > Prasad, any comments?
-> > >
-> > >>
-> > >> Regards,
-> > >> Bjorn
-> > >>
-> > >>> Cc: Prasad Malisetty <pmaliset@codeaurora.org>
-> > >>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > >>> ---
-> > >>>   drivers/clk/qcom/gdsc.c | 41
-> > >>> +++++++++++++++++++++++++++++++++++++++++
-> > >>>   drivers/clk/qcom/gdsc.h | 14 ++++++++++++++
-> > >>>   2 files changed, 55 insertions(+)
-> > >>>
-> > >>> diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-> > >>> index 7e1dd8ccfa38..9913d1b70947 100644
-> > >>> --- a/drivers/clk/qcom/gdsc.c
-> > >>> +++ b/drivers/clk/qcom/gdsc.c
-> > >>> @@ -45,6 +45,7 @@
-> > >>>   #define TIMEOUT_US        500
-> > >>>     #define domain_to_gdsc(domain) container_of(domain, struct gdsc,
-> > >>> pd)
-> > >>> +#define domain_to_pipe_clk_gdsc(domain) container_of(domain, struct
-> > >>> pipe_clk_gdsc, base.pd)
-> > >>>     enum gdsc_status {
-> > >>>       GDSC_OFF,
-> > >>> @@ -549,3 +550,43 @@ int gdsc_gx_do_nothing_enable(struct
-> > >>> generic_pm_domain *domain)
-> > >>>       return 0;
-> > >>>   }
-> > >>>   EXPORT_SYMBOL_GPL(gdsc_gx_do_nothing_enable);
-> > >>> +
-> > >>> +/*
-> > >>> + * Special operations for GDSCs with attached pipe clocks.
-> > >>> + * The clock should be parked to safe source (tcxo) before turning
-> > >>> off the GDSC
-> > >>> + * and can be switched on as soon as the GDSC is on.
-> > >>> + *
-> > >>> + * We remove respective clock sources from clocks map and handle
-> > >>> them manually.
-> > >>> + */
-> > >>> +int gdsc_pipe_enable(struct generic_pm_domain *domain)
-> > >>> +{
-> > >>> +    struct pipe_clk_gdsc *sc = domain_to_pipe_clk_gdsc(domain);
-> > >>> +    int i, ret;
-> > >>> +
-> > >>> +    ret = gdsc_enable(domain);
-> > >>> +    if (ret)
-> > >>> +        return ret;
-> > >>> +
-> > >>> +    for (i = 0; i< sc->num_clocks; i++)
-> > >>> +        regmap_update_bits(sc->base.regmap, sc->clocks[i].reg,
-> > >>> +                BIT(sc->clocks[i].shift + sc->clocks[i].width) -
-> > >>> BIT(sc->clocks[i].shift),
-> > >>> +                sc->clocks[i].on_value << sc->clocks[i].shift);
-> > >>> +
-> > >>> +    return 0;
-> > >>> +}
-> > >>> +EXPORT_SYMBOL_GPL(gdsc_pipe_enable);
-> > >>> +
-> > >>> +int gdsc_pipe_disable(struct generic_pm_domain *domain)
-> > >>> +{
-> > >>> +    struct pipe_clk_gdsc *sc = domain_to_pipe_clk_gdsc(domain);
-> > >>> +    int i;
-> > >>> +
-> > >>> +    for (i = sc->num_clocks - 1; i >= 0; i--)
-> > >>> +        regmap_update_bits(sc->base.regmap, sc->clocks[i].reg,
-> > >>> +                BIT(sc->clocks[i].shift + sc->clocks[i].width) -
-> > >>> BIT(sc->clocks[i].shift),
-> > >>> +                sc->clocks[i].off_value << sc->clocks[i].shift);
-> > >>> +
-> > >>> +    /* In case of an error do not try turning the clocks again. We
-> > >>> can not be sure about the GDSC state. */
-> > >>> +    return gdsc_disable(domain);
-> > >>> +}
-> > >>> +EXPORT_SYMBOL_GPL(gdsc_pipe_disable);
-> > >>> diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
-> > >>> index d7cc4c21a9d4..b1a2f0abe41c 100644
-> > >>> --- a/drivers/clk/qcom/gdsc.h
-> > >>> +++ b/drivers/clk/qcom/gdsc.h
-> > >>> @@ -68,11 +68,25 @@ struct gdsc_desc {
-> > >>>       size_t num;
-> > >>>   };
-> > >>>   +struct pipe_clk_gdsc {
-> > >>> +    struct gdsc base;
-> > >>> +    int num_clocks;
-> > >>> +    struct {
-> > >>> +        u32 reg;
-> > >>> +        u32 shift;
-> > >>> +        u32 width;
-> > >>> +        u32 off_value;
-> > >>> +        u32 on_value;
-> > >>> +    } clocks[];
-> > >>> +};
-> > >>> +
-> > >>>   #ifdef CONFIG_QCOM_GDSC
-> > >>>   int gdsc_register(struct gdsc_desc *desc, struct
-> > >>> reset_controller_dev *,
-> > >>>             struct regmap *);
-> > >>>   void gdsc_unregister(struct gdsc_desc *desc);
-> > >>>   int gdsc_gx_do_nothing_enable(struct generic_pm_domain *domain);
-> > >>> +int gdsc_pipe_enable(struct generic_pm_domain *domain);
-> > >>> +int gdsc_pipe_disable(struct generic_pm_domain *domain);
-> > >>>   #else
-> > >>>   static inline int gdsc_register(struct gdsc_desc *desc,
-> > >>>                   struct reset_controller_dev *rcdev,
-> > >>> --
-> > >>> 2.34.1
-> > >>>
-> > >
-> > >
-> 
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
+> +	gart_iommu_hole_init();
+> +	amd_iommu_detect();
+> +	detect_intel_iommu();
+> +	if (x86_swiotlb_enable)
+> +		swiotlb_init(0);
