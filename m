@@ -2,143 +2,220 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F0D34C8710
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 09:49:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B714D4C887C
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 10:47:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233417AbiCAIua (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Mar 2022 03:50:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44590 "EHLO
+        id S231893AbiCAJr5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Mar 2022 04:47:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231737AbiCAIu3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 03:50:29 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C935189304
-        for <linux-pci@vger.kernel.org>; Tue,  1 Mar 2022 00:49:49 -0800 (PST)
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com [209.85.167.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S234119AbiCAJry (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 04:47:54 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5357B8BF47;
+        Tue,  1 Mar 2022 01:47:13 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 784023FCAA
-        for <linux-pci@vger.kernel.org>; Tue,  1 Mar 2022 08:49:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1646124588;
-        bh=i5oNvJtWT2nQMVMnHuzSOVOeJhkbSN882hqbqowwmW8=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=hAPDoKJkdI9ov0HfkFPeWTN9mV733EHTIkgwDtxCO0GE9OFp2MH9B6JhRS45U+Mex
-         ddtFQPoaurROokMYEkeUhvJeJKYFx2n/x3+B+VYcZtbaC94c4gUtt4JRPE+5vyQXFE
-         3KgDX6FZ5d+vF1rjy8n9tNNxMP/PsR5fdgAm/150K82k9junmHj/eaNuBsLXUz8adP
-         3Q7c0T+S076u/cJTGgIsjzBub9T5nAzkvYJ20j7SLDi9zQ+zGZp5YgAevtYJbF7/k0
-         PTeYx5ZaL5tEVZKKrjY4X7n3ibw+sXtqcUlYQ0o/Mh4S6iwGQ7JHe1TtOwzwtliv9u
-         +Iii2om+F+aWA==
-Received: by mail-lf1-f69.google.com with SMTP id g13-20020a056512118d00b00445ade9f7fbso268071lfr.2
-        for <linux-pci@vger.kernel.org>; Tue, 01 Mar 2022 00:49:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=i5oNvJtWT2nQMVMnHuzSOVOeJhkbSN882hqbqowwmW8=;
-        b=6o3DFv9cDiFwyNE5NzAKp/hJXgiv6e/8/RxkLoZckIDSdmfIck3YNA4wfTR0pmO1JL
-         oqIJsCxR573/TLUaSAcD+GfvKeOLn+DKLbAXAGeIICZZDdOJ1jFfZyRWCvO0uqaQ7HMN
-         VPrhCpX+u1Y2sI8DuGQu4HM1QwL32qT7CpOTfjuGdgBYOHF+Y3ORWbaaUUepMsEOac4l
-         hncGK7SU2g9nrwmkC6XUFxjbqMdnmKtXDtE3C5uvceE3Tb3MgU+dmbgKKZogExfh/NUt
-         xKZgHKNzFw/0btsiLvnFDLSSKYx+5V+9PnyLFNRAPfRiKm2+kvUKOJplkeRPouBcxlhQ
-         r1zQ==
-X-Gm-Message-State: AOAM530pJm0Vx8rKlO+zr4BZQ2wL0I7bFkKHBd2gbNOnX4JhHcwjVsw8
-        V0hvqrMXuaH2vPNfpkw/VW+308RqfUrM1yCGlHSgtrFCz+ulr9X9FTepOiZJg3ssvQqSTt8ey2d
-        NfBQrFv5a80DeYkIBz1OITFRxLU8pE4v1dvgKDg==
-X-Received: by 2002:aa7:db47:0:b0:413:7649:c2bb with SMTP id n7-20020aa7db47000000b004137649c2bbmr18696651edt.123.1646124577531;
-        Tue, 01 Mar 2022 00:49:37 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz0Ji57X8BPtLBdo02/7Aw5hrJyfazNqZcwT3ns08IlVBGD/uW7vhmHoqEKLaS5kqGFV7Hlhw==
-X-Received: by 2002:aa7:db47:0:b0:413:7649:c2bb with SMTP id n7-20020aa7db47000000b004137649c2bbmr18696608edt.123.1646124577357;
-        Tue, 01 Mar 2022 00:49:37 -0800 (PST)
-Received: from [192.168.0.136] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
-        by smtp.gmail.com with ESMTPSA id y14-20020a50eb8e000000b00410a2e7798dsm6893213edr.38.2022.03.01.00.49.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Mar 2022 00:49:36 -0800 (PST)
-Message-ID: <40d9b2ad-2f8a-42c8-54cf-b22e24d78538@canonical.com>
-Date:   Tue, 1 Mar 2022 09:49:35 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 01/11] driver: platform: Add helper for safer setting
- of driver_override
-Content-Language: en-US
+        by ams.source.kernel.org (Postfix) with ESMTPS id DF486B817CF;
+        Tue,  1 Mar 2022 09:47:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32853C340EE;
+        Tue,  1 Mar 2022 09:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646128030;
+        bh=bIEyEZCYsYHYD4lz+YBrbdVvQiVr4Nv4bmNiO9AhL4I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hQMMlXanjwsY0GvyqcfaeYDkD7UPWfXKsRh3SU34twWSptfTIm7Tv48s3LKORwKSE
+         aGw9cpI51eIW1iNYFG1IASAGOiT3V0vGDk1g3GHtp5t9gGTyv7g0T+C4a+KHz4imaq
+         Bua7vWOfr8KfPCfeobB0ionRCQR/lCLjiCzxxETMrGd8I0nTkOE4cugEimddghBWLF
+         HWibgvIVSMOOI/hhhcYULMAD6QNwwVd22+U4bi5csnO1KywIiGbSWAkfsULI7VpMdS
+         Ra6mHuQywp1ZrukDEZ9gYyhgITOLeYStx1VewEQX5AuTSI1J+HhoN8J/hTgv6wCkwS
+         tvIewl+GCmuwQ==
+Received: by pali.im (Postfix)
+        id 67CEAC77; Tue,  1 Mar 2022 10:47:07 +0100 (CET)
+Date:   Tue, 1 Mar 2022 10:47:07 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-References: <20220228200326.GA516164@bhelgaas>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220228200326.GA516164@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] PCI: mvebu: Add support for sending
+ Set_Slot_Power_Limit message
+Message-ID: <20220301094707.64jbqpoxhmana7ua@pali>
+References: <20220225125407.wglplhyisgges3zk@pali>
+ <20220225165731.GA359939@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220225165731.GA359939@bhelgaas>
+User-Agent: NeoMutt/20180716
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/02/2022 21:03, Bjorn Helgaas wrote:
-> On Sun, Feb 27, 2022 at 02:52:04PM +0100, Krzysztof Kozlowski wrote:
->> Several core drivers and buses expect that driver_override is a
->> dynamically allocated memory thus later they can kfree() it.
+On Friday 25 February 2022 10:57:31 Bjorn Helgaas wrote:
+> On Fri, Feb 25, 2022 at 01:54:07PM +0100, Pali Rohár wrote:
+> > On Thursday 24 February 2022 15:28:11 Bjorn Helgaas wrote:
+> > > On Tue, Feb 22, 2022 at 05:31:57PM +0100, Pali Rohár wrote:
+> > > > This PCIe message is sent automatically by mvebu HW when link changes
+> > > > status from down to up.
 > 
->> +int driver_set_override(struct device *dev, const char **override,
->> +			const char *s, size_t len)
->> +{
->> +	const char *new, *old;
->> +	char *cp;
->> +
->> +	if (!dev || !override || !s)
->> +		return -EINVAL;
->> +
->> +	/* We need to keep extra room for a newline */
+> > > > +	 * Program Root Complex to automatically sends Set Slot Power Limit
+> > > > +	 * PCIe Message when changing status from Dl-Down to Dl-Up and valid
+> > > > +	 * slot power limit was specified.
+> > > 
+> > > s/Root Complex/Root Port/, right?  AFAIK the message would be sent by
+> > > a Downstream Port, i.e., a Root Port in this case.
+> > 
+> > Yes!
+> > 
+> > I see that on more places that names "Root Port", "Root Bridge" and
+> > "Root Complex" used as the one thing.
+> > 
+> > It is probably because HW has only one Root Port and is integrated into
+> > same silicon as Root Complex and shares HW registers. And Root Port has
+> > PCI class code "PCI Bridge", hence Root Bridge.
+> > 
+> > But I agree that correct name is "Root Port".
+> > 
+> > Moreover in Armada 38x Functional Specification is this register named
+> > "Root Complex Set Slot Power Limit" and not Root "Port".
 > 
-> It would help a lot to extend this comment with a hint about where the
-> room for a newline is needed.  It was confusing even before, but it's
-> much more so now that the check is in a completely different file than
-> the "show" functions that need the space.
+> Haha, yes, sounds like this stems from the knowledge that "of course
+> this Root Complex only has one Root Port, so there's no real
+> difference between them."
 > 
+> So I think it makes sense for #defines for device-specific registers
+> like PCIE_SSPL_OFF to match the Armada spec, but I think it would be
+> better if the comments and code structure did not have the assumption
+> that there's only one Root Port baked into them.  For one thing, this
+> can help make the driver structure more uniform across all the
+> drivers.
 
-Indeed, this needs explanation.
+Ok!
 
+> > > s/sends/send/
+> > > s/Set Slot Power Limit/Set_Slot_Power_Limit/ to match spec usage (also
+> > > below)
+> > > s/Dl-Down/DL_Down/ to match spec usage
+> > > s/Dl-Up/DL_Up/ ditto
+> > 
+> > In Armada 38x Functional Specification spec it is called like I wrote
+> > and some people told me to use "naming" as written in SoC/HW
+> > specification to not confuse other people who are writing / developing
+> > drivers according to official SoC/HW specification.
+> > 
+> > I see that both has pro and cons. Usage of terminology from PCIe spec is
+> > what PCIe people expect and terminology from vendor SoC HW spec is what
+> > people who develop that SoC expect.
+> > 
+> > I can update and change comments without issue to any variant which you
+> > prefer. No problem with it. Just I wanted to write why I chose those
+> > names.
+> 
+> All these concepts are purely PCIe.  There is no Armada-specific
+> meaning because they have to behave as specified by the PCIe spec so
+> they work across the Link with non-Armada devices on the other end.
+> If the Armada spec spells them differently, I claim that's an editing
+> mistake in that spec.
+> 
+> My preference is to use the PCIe spec naming except for
+> Armada-specific things.  The Armada spellings don't appear in the PCIe
+> spec, so it's just an unnecessary irritant when trying to look them
+> up.
 
-Best regards,
-Krzysztof
+Ok!
+
+> > > > +	case PCI_EXP_SLTCTL:
+> > > > +		if ((mask & PCI_EXP_SLTCTL_ASPL_DISABLE) &&
+> > > > +		    port->slot_power_limit_value &&
+> > > > +		    port->slot_power_limit_scale) {
+> > > > +			u32 sspl = mvebu_readl(port, PCIE_SSPL_OFF);
+> > > > +			if (new & PCI_EXP_SLTCTL_ASPL_DISABLE)
+> > > > +				sspl &= ~PCIE_SSPL_ENABLE;
+> > > > +			else
+> > > > +				sspl |= PCIE_SSPL_ENABLE;
+> > > > +			mvebu_writel(port, sspl, PCIE_SSPL_OFF);
+> > > 
+> > > IIUC, the behavior of PCI_EXP_SLTCTL_ASPL_DISABLE as observed by
+> > > software that sets it and reads it back will depend on whether the DT
+> > > contains "slot-power-limit-milliwatt".
+> > > 
+> > > If there is no DT property, port->slot_power_limit_value will be zero
+> > > and PCIE_SSPL_ENABLE will never be set.  So if I clear
+> > > PCI_EXP_SLTCTL_ASPL_DISABLE, then read it back, it looks like it will
+> > > read as being set.
+> > 
+> > Yes.
+> > 
+> > > That's not what I would expect from the spec (PCIe r6.0, sec 7.5.3.10).
+> > 
+> > Ok. What you would expect here? That PCI_EXP_SLTCTL_ASPL_DISABLE is not
+> > set even when Set_Slot_Power_Limit was never sent and would be never
+> > sent (as it was not programmed by firmware = in DT)?
+> 
+> Per spec, I would expect PCI_EXP_SLTCTL_ASPL_DISABLE to be either:
+> 
+>   - Hardwired to 0, so writes have no effect and reads always return
+>     0, or
+> 
+>   - Writable, so a read always returns what was previously written.
+> 
+> Here's the relevant text from r6.0, sec 7.5.3.10:
+> 
+>   Auto Slot Power Limit Disable - When Set, this disables the
+>   automatic sending of a Set_Slot_Power_Limit Message when a Link
+>   transitions from a non-DL_Up status to a DL_Up status.
+> 
+>   Downstream ports that don’t support DPC are permitted to hardwire
+>   this bit to 0.
+> 
+>   Default value of this bit is implementation specific.
+> 
+> AFAICT, the Slot Power Control mechanism is required for all devices,
+> but without "slot-power-limit-milliwatt", we don't know what limit to
+> use.  Apparently the CEM specs specify minimum values, but they depend
+> on the form factor.
+> 
+> From r6.0, sec 6.9:
+> 
+>   For Adapters:
+> 
+>     - Until and unless a Set_Slot_Power_Limit Message is received
+>       indicating a Slot Power Limit value greater than the lowest
+>       value specified in the form factor specification for the
+>       adapter's form factor, the adapter must not consume more than
+>       the lowest value specified.
+> 
+>     - An adapter must never consume more power than what was specified
+>       in the most recently received Set_Slot_Power_Limit Message or
+>       the minimum value specified in the corresponding form factor
+>       specification, whichever is higher.
+> 
+> If PCIE_SSPL_ENABLE is never set, Set_Slot_Power_Limit will never be
+> sent, and the device is not allowed to consume more than the minimum
+> power specified by its form factor spec.
+> 
+> I'd say reading PCI_EXP_SLTCTL should return whatever
+> PCI_EXP_SLTCTL_ASPL_DISABLE value was most recently written, but we
+> should set PCIE_SSPL_ENABLE only when we have a
+> "slot-power-limit-milliwatt" property AND
+> PCI_EXP_SLTCTL_ASPL_DISABLE == 0.
+> 
+> Does that make sense?
+
+Yes!
