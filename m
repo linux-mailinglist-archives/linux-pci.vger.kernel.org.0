@@ -2,128 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCA614C7E35
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 00:22:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DB9F4C8150
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 03:55:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbiB1XWy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 28 Feb 2022 18:22:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55958 "EHLO
+        id S229943AbiCAC4c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 28 Feb 2022 21:56:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbiB1XWx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 18:22:53 -0500
-Received: from imap3.hz.codethink.co.uk (imap3.hz.codethink.co.uk [176.9.8.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD819A27A2;
-        Mon, 28 Feb 2022 15:22:10 -0800 (PST)
-Received: from cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net ([86.15.83.122] helo=rainbowdash)
-        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1nOpLD-000510-L9; Mon, 28 Feb 2022 23:22:07 +0000
-Received: from ben by rainbowdash with local (Exim 4.95)
-        (envelope-from <ben@rainbowdash>)
-        id 1nOpLD-00CHuf-3I;
-        Mon, 28 Feb 2022 23:22:07 +0000
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     helgaas@kernel.org, linux-pci@vger.kernel.org
-Cc:     paul.walmsley@sifive.com, greentime.hu@sifive.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        linux-kernel@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [RFC] PCI: fu740: Force Gen1 to fix initial device probing on some boards
-Date:   Mon, 28 Feb 2022 23:22:06 +0000
-Message-Id: <20220228232206.2928784-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229885AbiCAC4b (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 28 Feb 2022 21:56:31 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12F222F026;
+        Mon, 28 Feb 2022 18:55:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646103352; x=1677639352;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/z7xcV6dl5VH6iMxyI/FmOZYADVup3Kf2UPfn1iS7uU=;
+  b=WC7OMSMeOs4NLtfBcS/hP7TP9X4MgwzjjPwd/Vmlr5x3qRsg9TP5ONNp
+   GKQ8ejVVR9Wl72dCrroXGPXm9N64Icc6zaU+U6ciFOqKmS3CqYr6toikd
+   VQpTGzG+q0ZpvhRZ32hF8B8UI7tZr10ZBAdAEkYxT2/pzpqu4VobV4bY3
+   QPO3LdE1co+G4JMZEKSIOBanf2ULSKekfNxwxLMu0hA1g0rXEctcdtrQc
+   M1D++CQoy6SFU//ZhUtpj9DJT8KKgW8hsjiHJyrxqe5OGahPUyKAkFCiM
+   vPz36h1xC3/SaMJuZY/u6FpGaohE/IPnEWmCOhPhpDTB3iPRyuQej23GM
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10272"; a="253233751"
+X-IronPort-AV: E=Sophos;i="5.90,144,1643702400"; 
+   d="scan'208";a="253233751"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2022 18:55:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,144,1643702400"; 
+   d="scan'208";a="534724101"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.118]) ([10.239.159.118])
+  by orsmga007.jf.intel.com with ESMTP; 28 Feb 2022 18:55:43 -0800
+Message-ID: <80672557-59ab-8eb9-2fcf-d045ff52104b@linux.intel.com>
+Date:   Tue, 1 Mar 2022 10:54:09 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Cc:     baolu.lu@linux.intel.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        rafael@kernel.org, David Airlie <airlied@linux.ie>,
+        linux-pci@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        iommu@lists.linux-foundation.org,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v7 06/11] PCI: portdrv: Set driver_managed_dma
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20220228195628.GA515785@bhelgaas>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+In-Reply-To: <20220228195628.GA515785@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The fu740 PCIe core does not probe any devices on the SiFive Unmatched
-board without this fix (or having U-Boot explicitly start the PCIe via
-either boot-script or user command). The fix is to start the link at
-Gen1 speeds and once the link is up then change the speed back.
+Hi Bjorn,
 
-The U-Boot driver claims to set the link-speed to Gen1 to get the probe
-to work (and U-Boot does print link up at Gen1) in the following code:
-https://source.denx.de/u-boot/u-boot/-/blob/master/drivers/pci/pcie_dw_sifive.c?id=v2022.01#L271
+On 3/1/22 3:56 AM, Bjorn Helgaas wrote:
+> On Mon, Feb 28, 2022 at 08:50:51AM +0800, Lu Baolu wrote:
+>> If a switch lacks ACS P2P Request Redirect, a device below the switch can
+>> bypass the IOMMU and DMA directly to other devices below the switch, so
+>> all the downstream devices must be in the same IOMMU group as the switch
+>> itself.
+>>
+>> The existing VFIO framework allows the portdrv driver to be bound to the
+>> bridge while its downstream devices are assigned to user space. The
+>> pci_dma_configure() marks the IOMMU group as containing only devices
+>> with kernel drivers that manage DMA. Avoid this default behavior for the
+>> portdrv driver in order for compatibility with the current VFIO usage.
+> 
+> It would be nice to explicitly say here how we can look at portdrv
+> (and pci_stub) and conclude that ".driver_managed_dma = true" is safe.
+> 
+> Otherwise I won't know what kind of future change to portdrv might
+> make it unsafe.
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
---
-Note, this patch has had significant re-work since the previous 4
-sets, including trying to fix style, message, reliance on the U-Boot
-fix and the comments about usage of LINK_CAP and reserved fields.
----
- drivers/pci/controller/dwc/pcie-fu740.c | 51 ++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+Fair enough. We can add below words:
 
-diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
-index 842b7202b96e..16ad52f53490 100644
---- a/drivers/pci/controller/dwc/pcie-fu740.c
-+++ b/drivers/pci/controller/dwc/pcie-fu740.c
-@@ -181,10 +181,59 @@ static int fu740_pcie_start_link(struct dw_pcie *pci)
- {
- 	struct device *dev = pci->dev;
- 	struct fu740_pcie *afp = dev_get_drvdata(dev);
-+	u8 cap_exp = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	int ret;
-+	u32 orig, tmp;
-+
-+	/*
-+	 * Force Gen1 when starting link, due to some devices not
-+	 * probing at higher speeds. This happens with the PCIe switch
-+	 * on the Unmatched board. The fix in U-Boot is to force Gen1
-+	 * and hope later resets will clear this capaility.
-+	 */
-+
-+	dev_dbg(dev, "cap_exp at %x\n", cap_exp);
-+	dw_pcie_dbi_ro_wr_en(pci);
-+
-+	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-+	orig = tmp & PCI_EXP_LNKCAP_SLS;
-+	tmp &= ~PCI_EXP_LNKCAP_SLS;
-+	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-+	dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
- 
- 	/* Enable LTSSM */
- 	writel_relaxed(0x1, afp->mgmt_base + PCIEX8MGMT_APP_LTSSM_ENABLE);
--	return 0;
-+
-+	ret = dw_pcie_wait_for_link(pci);
-+	if (ret) {
-+		dev_err(dev, "error: link did not start\n");
-+		goto err;
-+	}
-+
-+	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-+	if ((tmp & PCI_EXP_LNKCAP_SLS) != orig) {
-+		dev_dbg(dev, "changing speed back to original\n");
-+
-+		tmp &= ~PCI_EXP_LNKCAP_SLS;
-+		tmp |= orig;
-+		dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
-+
-+		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-+		tmp |= PORT_LOGIC_SPEED_CHANGE;
-+		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
-+
-+		ret = dw_pcie_wait_for_link(pci);
-+		if (ret) {
-+			dev_err(dev, "error: link did not start at new speed\n");
-+			goto err;
-+		}
-+	}
-+
-+	ret = 0;
-+err:
-+	// todo - if we do have an unliekly error, what do we do here?
-+	dw_pcie_dbi_ro_wr_dis(pci);
-+	return ret;
- }
- 
- static int fu740_pcie_host_init(struct pcie_port *pp)
--- 
-2.34.1
+We achieve this by setting ".driver_managed_dma = true" in pci_driver
+structure. It is safe because the portdrv driver meets below criteria:
 
+- This driver doesn't use DMA, as you can't find any related calls like
+   pci_set_master() or any kernel DMA API (dma_map_*() and etc.).
+- It doesn't use MMIO as you can't find ioremap() or similar calls. It's
+   tolerant to userspace possibly also touching the same MMIO registers
+   via P2P DMA access.
+
+> 
+>> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+>> Suggested-by: Kevin Tian <kevin.tian@intel.com>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Thank you!
+
+Best regards,
+baolu
+
+> 
+>> ---
+>>   drivers/pci/pcie/portdrv_pci.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+>> index 35eca6277a96..6b2adb678c21 100644
+>> --- a/drivers/pci/pcie/portdrv_pci.c
+>> +++ b/drivers/pci/pcie/portdrv_pci.c
+>> @@ -202,6 +202,8 @@ static struct pci_driver pcie_portdriver = {
+>>   
+>>   	.err_handler	= &pcie_portdrv_err_handler,
+>>   
+>> +	.driver_managed_dma = true,
+>> +
+>>   	.driver.pm	= PCIE_PORTDRV_PM_OPS,
+>>   };
+>>   
+>> -- 
+>> 2.25.1
+>>
+>> _______________________________________________
+>> iommu mailing list
+>> iommu@lists.linux-foundation.org
+>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
