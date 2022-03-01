@@ -2,112 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 029334C8A02
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 11:54:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 472334C8AA5
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Mar 2022 12:26:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234441AbiCAKyy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Mar 2022 05:54:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43636 "EHLO
+        id S231944AbiCAL0n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Mar 2022 06:26:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234438AbiCAKyx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 05:54:53 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2F765175;
-        Tue,  1 Mar 2022 02:54:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=zCMW1Q+QCPXYuvBuEGOZUQKFwE9OwdLFtYhltvQ29K4=; b=IPppU23T/aMON7FLyMDFYzly4y
-        SrIr5mKWZClafJa3/LlRCgHqXwAUqRrn8YOMeVLdYaruBDCwVZ+oeA1TCJP01OphckLh7aW/Xh4aE
-        O+7A6N+iHQN61vqDHdCF4t6yTIgG5jpY3jGCH1A7IMaTqU+1RufnGYFZsg6ym2eXz6IbNS0Y3pwX8
-        UlH5YaicUs22JThgD0p9wjbHWFTvpyx++4eAJRbNQD6+RIciCW6RIaOv3nY2Arz6MwdIPsNH7bmDb
-        kXbZR8ThXJdmI6NGYJUBwyHX1Lh35aW0/peguiWu3/sXXcELyqiay0utedyq1KmsYI+SOZJb3UYfi
-        1suKWqMQ==;
-Received: from [2.53.44.23] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nP08m-00GDNp-DY; Tue, 01 Mar 2022 10:54:01 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org
-Cc:     x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 12/12] x86: remove cruft from <asm/dma-mapping.h>
-Date:   Tue,  1 Mar 2022 12:53:11 +0200
-Message-Id: <20220301105311.885699-13-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220301105311.885699-1-hch@lst.de>
-References: <20220301105311.885699-1-hch@lst.de>
+        with ESMTP id S229576AbiCAL0n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 06:26:43 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ACE4A91371
+        for <linux-pci@vger.kernel.org>; Tue,  1 Mar 2022 03:26:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646133961;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pFMGRfIAmrHrnLa3rzlWjdovVbrK0w7x/Azrkml2F4k=;
+        b=PN2J4tOpc148IaYCYaqi6+7lQhepBOAWtlPtv4X7chOJuGNmW1rwF3Zm6HWWxeMAyCEbPJ
+        MXjXNBk5Y2C1r9gDWPPpvDwAP1c/ksbAc98DPVswl1sdAMKvbZOVoPOlXwQFYgfujcmKw6
+        7yc6sQi6CGkMNNUDlep4jtP7WDxuCPs=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-33-J35lnMjFN0mLTG8Pe6O73Q-1; Tue, 01 Mar 2022 06:22:57 -0500
+X-MC-Unique: J35lnMjFN0mLTG8Pe6O73Q-1
+Received: by mail-ej1-f72.google.com with SMTP id k21-20020a1709063e1500b006d0777c06d6so6707160eji.1
+        for <linux-pci@vger.kernel.org>; Tue, 01 Mar 2022 03:22:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=pFMGRfIAmrHrnLa3rzlWjdovVbrK0w7x/Azrkml2F4k=;
+        b=u0778OwNkKOA9TeDCZhTCANSHW+N2JuKqGxCur5OWtCQ3U9iBLKOI9SY17VjAiVI0h
+         j5+sXhsvdebJmLcO8qtcy4vBvE4tvr37G+YQ2QNVdGFjxOl2O62lzHOSnfwZ6LCdMq1K
+         j+Nzn+FbTMSVggLGiHh/bae9uEnfAaxQGrf1kNL0/n0k0yBhKYzY+ENkk3vEyyBuj98d
+         Z4QyyIHNe3W/P48JiiQ0uEf2fObexqBVf0xLtK7L1SA0xnKkptlllNxZKsHPiNSY1c/d
+         Vt7UyH/QhbMhRKZaZA7I50ApsX6isuQtSDJ7lyzqTjEFGc4MBRj/R0EesA4qGh/xm3TW
+         Jg7A==
+X-Gm-Message-State: AOAM533jWxihMJxPLNmqHQD/TLZDZQGkackYUGMx/ascbA3yaQE/K24C
+        ZTDoDyva4KISkwL16EP7YVyCqc553NvNsRJEHY/TcOURj4Tt5/ezHnYSMW3NhT6zbQiOLwX8oXW
+        L/zCVxHskLOvccVdRRbRF
+X-Received: by 2002:a17:907:1de9:b0:6b9:e4f:25ec with SMTP id og41-20020a1709071de900b006b90e4f25ecmr18442056ejc.741.1646133771856;
+        Tue, 01 Mar 2022 03:22:51 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx+FvelUXqjUMkFgQlPbM4vmDcfG8aw+ARZ98e8mbNjb+ZEBkzBWNtvUDQB7qjysKVje2E3iA==
+X-Received: by 2002:a17:907:1de9:b0:6b9:e4f:25ec with SMTP id og41-20020a1709071de900b006b90e4f25ecmr18442036ejc.741.1646133771584;
+        Tue, 01 Mar 2022 03:22:51 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id et3-20020a170907294300b006d6534ef273sm4619085ejc.156.2022.03.01.03.22.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Mar 2022 03:22:50 -0800 (PST)
+Message-ID: <497da433-f300-cfed-33af-02b8e9f16426@redhat.com>
+Date:   Tue, 1 Mar 2022 12:22:50 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH] x86/PCI: Fix use after free in
+ pci_acpi_root_prepare_resources()
+Content-Language: en-US
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20220301081010.GA17375@kili>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220301081010.GA17375@kili>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-<asm/dma-mapping.h> gets pulled in by all drivers using the DMA API.
-Remove x86 internal variables and unnecessary includes from it.
+Hi,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/x86/include/asm/dma-mapping.h | 11 -----------
- arch/x86/include/asm/iommu.h       |  2 ++
- 2 files changed, 2 insertions(+), 11 deletions(-)
+On 3/1/22 09:10, Dan Carpenter wrote:
+> The resource_list_destroy_entry() function frees "entry", so move the
+> dereferences before the free.
+> 
+> Fixes: 62fabd56faaf ("x86/PCI: Disable exclusion of E820 reserved addresses in some cases")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  arch/x86/pci/acpi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/pci/acpi.c b/arch/x86/pci/acpi.c
+> index e4617df661a9..fa89ffba2e51 100644
+> --- a/arch/x86/pci/acpi.c
+> +++ b/arch/x86/pci/acpi.c
+> @@ -357,14 +357,14 @@ static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
+>  	status = acpi_pci_probe_root_resources(ci);
+>  	if (pci_use_crs) {
+>  		resource_list_for_each_entry_safe(entry, tmp, &ci->resources) {
+> -			if (resource_is_pcicfg_ioport(entry->res))
+> -				resource_list_destroy_entry(entry);
+>  			if (resource_is_efi_mmio_region(entry->res)) {
+>  				dev_info(&device->dev,
+>  					"host bridge window %pR is marked by EFI as MMIO\n",
+>  					entry->res);
+>  				pci_use_e820 = false;
+>  			}
+> +			if (resource_is_pcicfg_ioport(entry->res))
+> +				resource_list_destroy_entry(entry);
+>  		}
+>  		return status;
+>  	}
 
-diff --git a/arch/x86/include/asm/dma-mapping.h b/arch/x86/include/asm/dma-mapping.h
-index 256fd8115223d..1c66708e30623 100644
---- a/arch/x86/include/asm/dma-mapping.h
-+++ b/arch/x86/include/asm/dma-mapping.h
-@@ -2,17 +2,6 @@
- #ifndef _ASM_X86_DMA_MAPPING_H
- #define _ASM_X86_DMA_MAPPING_H
- 
--/*
-- * IOMMU interface. See Documentation/core-api/dma-api-howto.rst and
-- * Documentation/core-api/dma-api.rst for documentation.
-- */
--
--#include <linux/scatterlist.h>
--#include <asm/io.h>
--
--extern int iommu_merge;
--extern int panic_on_overflow;
--
- extern const struct dma_map_ops *dma_ops;
- 
- static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
-diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
-index dba89ed40d38d..0bef44d30a278 100644
---- a/arch/x86/include/asm/iommu.h
-+++ b/arch/x86/include/asm/iommu.h
-@@ -8,6 +8,8 @@
- 
- extern int force_iommu, no_iommu;
- extern int iommu_detected;
-+extern int iommu_merge;
-+extern int panic_on_overflow;
- 
- #ifdef CONFIG_SWIOTLB
- extern bool x86_swiotlb_enable;
--- 
-2.30.2
+
+Thank you, I actually send a new version of that commit to replace the original
+one also addressing some other issues:
+
+https://lore.kernel.org/linux-acpi/20220228105259.230903-1-hdegoede@redhat.com/
+
+I expect Rafael to pick up the new version, resolving this. But maybe
+Rafael prefers a follow up commit instead ?
+
+Regards,
+
+Hans
 
