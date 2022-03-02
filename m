@@ -2,41 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F397A4CA1FA
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 11:16:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BD3A4CA251
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 11:37:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233865AbiCBKRU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 05:17:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
+        id S241024AbiCBKiI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 05:38:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232069AbiCBKRU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 05:17:20 -0500
+        with ESMTP id S235525AbiCBKiH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 05:38:07 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4B3415F8D4;
-        Wed,  2 Mar 2022 02:16:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 54BE0517CC;
+        Wed,  2 Mar 2022 02:37:24 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1276D139F;
-        Wed,  2 Mar 2022 02:16:37 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BF4D139F;
+        Wed,  2 Mar 2022 02:37:24 -0800 (PST)
 Received: from e123427-lin.home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6BB53F70D;
-        Wed,  2 Mar 2022 02:16:33 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA33C3F70D;
+        Wed,  2 Mar 2022 02:37:22 -0800 (PST)
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Boqun Feng <boqun.feng@gmail.com>, Wei Liu <wei.liu@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
+To:     Rob Herring <robh@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-hyperv@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>
-Subject: Re: [RFC PATCH v2] PCI: hv: Avoid the retarget interrupt hypercall in irq_unmask() on ARM64
-Date:   Wed,  2 Mar 2022 10:16:25 +0000
-Message-Id: <164621616889.27346.10460850825594773169.b4-ty@arm.com>
+        Jisheng Zhang <jszhang@kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: Fix integrated MSI Receiver mask reg setting during resume
+Date:   Wed,  2 Mar 2022 10:37:08 +0000
+Message-Id: <164621741211.30934.17302961993458445211.b4-ty@arm.com>
 X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20220217034525.1687678-1-boqun.feng@gmail.com>
-References: <20220217034525.1687678-1-boqun.feng@gmail.com>
+In-Reply-To: <20211226074019.2556-1-jszhang@kernel.org>
+References: <20211226074019.2556-1-jszhang@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -49,22 +46,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 17 Feb 2022 11:45:19 +0800, Boqun Feng wrote:
-> On ARM64 Hyper-V guests, SPIs are used for the interrupts of virtual PCI
-> devices, and SPIs can be managed directly via GICD registers. Therefore
-> the retarget interrupt hypercall is not needed on ARM64.
+On Sun, 26 Dec 2021 15:40:19 +0800, Jisheng Zhang wrote:
+> If the host which makes use of the IP's integrated MSI Receiver losts
+> power during suspend, we call dw_pcie_setup_rc() to reinit the RC. But
+> dw_pcie_setup_rc() always set the pp->irq_mask[ctrl] as ~0, so the mask
+> register is always set as 0xffffffff incorrectly, thus the MSI can't
+> work after resume.
 > 
-> An arch-specific interface hv_arch_irq_unmask() is introduced to handle
-> the architecture level differences on this. For x86, the behavior
-> remains unchanged, while for ARM64 no hypercall is invoked when
-> unmasking an irq for virtual PCI devices.
+> Fix this issue by moving pp->irq_mask[ctrl] initialization to
+> dw_pcie_host_init(), so we can correctly set the mask reg during both
+> boot and resume.
 > 
 > [...]
 
-Applied to pci/hv, thanks!
+Applied to pci/dwc, thanks!
 
-[1/1] PCI: hv: Avoid the retarget interrupt hypercall in irq_unmask() on ARM64
-      https://git.kernel.org/lpieralisi/pci/c/d06957d7a6
+[1/1] PCI: dwc: Fix integrated MSI Receiver mask reg setting during resume
+      https://git.kernel.org/lpieralisi/pci/c/84edd0090e
 
 Thanks,
 Lorenzo
