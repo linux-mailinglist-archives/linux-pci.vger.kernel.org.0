@@ -2,156 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D5F34C9F08
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 09:18:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C98F14CA072
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 10:18:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234900AbiCBITG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 03:19:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48576 "EHLO
+        id S240395AbiCBJTX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 04:19:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235476AbiCBITE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 03:19:04 -0500
-Received: from imap3.hz.codethink.co.uk (imap3.hz.codethink.co.uk [176.9.8.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C9142B185;
-        Wed,  2 Mar 2022 00:18:21 -0800 (PST)
-Received: from [167.98.27.226] (helo=[10.35.6.178])
-        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1nPKBe-0005Nk-TK; Wed, 02 Mar 2022 08:18:18 +0000
-Message-ID: <3b29f372-bfe4-2527-d074-0e589442c3da@codethink.co.uk>
-Date:   Wed, 2 Mar 2022 08:18:18 +0000
+        with ESMTP id S240382AbiCBJTW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 04:19:22 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999ECB6D20;
+        Wed,  2 Mar 2022 01:18:39 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id qk11so2349937ejb.2;
+        Wed, 02 Mar 2022 01:18:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4LuLQynsRS5ZDdiypHmCRhWOSK0fPQgMoxmBubsA8FA=;
+        b=YwA2Tp9/WRHVf+AhpCscraLQ5YZMBIbTnjRD9qXALixvArniZHwws+D5eKFYJ4w9RG
+         r5YPECm/lP0oAUKfe9WRJhv6+FML2S+XIXHKeVDBXWzTRzpq8V5VyDtMBBLt+RgC4uif
+         rGbJjiYJ+RaebcdTWE+lgavU2sjB3KE2oYMSI2g0SnLEMM8BFRLk6tjS00Xev2qK5BZV
+         5Ssf9EZ0tsmaxYSBGN+JYRBhKcBJnRtyUIj9fj+nmKF1+vj7CNwKABPlCEiIkg4HqhVl
+         prjve+Nrt6ySEZf00Hzlz9gQ4nrt4ykYynGeggVTPypi2WOB4Q0/x8pbTwKWJmRWzNiw
+         F8UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4LuLQynsRS5ZDdiypHmCRhWOSK0fPQgMoxmBubsA8FA=;
+        b=huBWu5EfTXUybsEGeZcgjWlNixNwNuiJY+tXItpJvTbgIvXDwHaA8LW1jK79qxM0Ko
+         HQ82YSXzGmGMoGCfCxHwDxRa2XvYxavNBMpT/s8kZ4JNqEiiXy2lqFlFJKGWIdb9YEzZ
+         mef5GVnKkzx9R9SoLDu0f5uIQdqswIbrWZHEkoZgIF5Y57aKG4ZkJMlKBh/AZtWFPzrZ
+         Qk89y0beyZDKTKS+STa8QMM/b0XJ5NMq7fyV8zir/E+9Fq4m5D+ylk3Q+fGizqxZOGPF
+         mRFh5iZWif7A1DBfvFrR7vSfLCtItzX6U8BBwNZiuLc9qWFGFBJrljj1ivI8uIV1wi8R
+         Gktg==
+X-Gm-Message-State: AOAM531pTxpCoKHcpA4yvwZBU9gzFoUlhLHMMYs6JMIhlJk05M1p1XCj
+        uC4JsojZj0vtgKO7PObqUumtjZHgY7QXNAeUe0E=
+X-Google-Smtp-Source: ABdhPJxefZcxfzkkMgbjOK8FTIKDUrSjhwIhlbq76ukZRP/HPSQoF7TsleylqvSIE+LRhSKcwrjAT6lGtFvgDJjKhNk=
+X-Received: by 2002:a17:906:9f06:b0:6ce:36da:8247 with SMTP id
+ fy6-20020a1709069f0600b006ce36da8247mr21813101ejc.651.1646212718008; Wed, 02
+ Mar 2022 01:18:38 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [RFC] PCI: fu740: Force Gen1 to fix initial device probing on
- some boards
-Content-Language: en-GB
-To:     helgaas@kernel.org, linux-pci@vger.kernel.org
-Cc:     paul.walmsley@sifive.com, greentime.hu@sifive.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220228232206.2928784-1-ben.dooks@codethink.co.uk>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <20220228232206.2928784-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220227143055.335596-1-hch@lst.de> <20220227143055.335596-8-hch@lst.de>
+In-Reply-To: <20220227143055.335596-8-hch@lst.de>
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Wed, 2 Mar 2022 12:18:26 +0300
+Message-ID: <CADxRZqxrjp4erFNorH+XqubZWLRNjw2E14z7vOW537no1eKnhw@mail.gmail.com>
+Subject: Re: [PATCH 07/11] x86: remove the IOMMU table infrastructure
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, x86@kernel.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/02/2022 23:22, Ben Dooks wrote:
-> The fu740 PCIe core does not probe any devices on the SiFive Unmatched
-> board without this fix (or having U-Boot explicitly start the PCIe via
-> either boot-script or user command). The fix is to start the link at
-> Gen1 speeds and once the link is up then change the speed back.
-> 
-> The U-Boot driver claims to set the link-speed to Gen1 to get the probe
-> to work (and U-Boot does print link up at Gen1) in the following code:
-> https://source.denx.de/u-boot/u-boot/-/blob/master/drivers/pci/pcie_dw_sifive.c?id=v2022.01#L271
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> --
-> Note, this patch has had significant re-work since the previous 4
-> sets, including trying to fix style, message, reliance on the U-Boot
-> fix and the comments about usage of LINK_CAP and reserved fields.
+On Sun, Feb 27, 2022 at 7:31 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> The IOMMU table tries to separate the different IOMMUs into different
+> backends, but actually requires various cross calls.
+>
+> Rewrite the code to do the generic swiotlb/swiotlb-xen setup directly
+> in pci-dma.c and then just call into the IOMMU drivers.
+...
+> --- a/arch/x86/include/asm/iommu_table.h
+> +++ /dev/null
+> @@ -1,102 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef _ASM_X86_IOMMU_TABLE_H
+> -#define _ASM_X86_IOMMU_TABLE_H
+> -
+> -#include <asm/swiotlb.h>
+> -
+> -/*
+> - * History lesson:
+> - * The execution chain of IOMMUs in 2.6.36 looks as so:
+> - *
+> - *            [xen-swiotlb]
+> - *                 |
+> - *         +----[swiotlb *]--+
+> - *        /         |         \
+> - *       /          |          \
+> - *    [GART]     [Calgary]  [Intel VT-d]
+> - *     /
+> - *    /
+> - * [AMD-Vi]
+> - *
+> - * *: if SWIOTLB detected 'iommu=soft'/'swiotlb=force' it would skip
+> - * over the rest of IOMMUs and unconditionally initialize the SWIOTLB.
+> - * Also it would surreptitiously initialize set the swiotlb=1 if there were
+> - * more than 4GB and if the user did not pass in 'iommu=off'. The swiotlb
+> - * flag would be turned off by all IOMMUs except the Calgary one.
+> - *
+> - * The IOMMU_INIT* macros allow a similar tree (or more complex if desired)
+> - * to be built by defining who we depend on.
+> - *
+> - * And all that needs to be done is to use one of the macros in the IOMMU
+> - * and the pci-dma.c will take care of the rest.
+> - */
 
-So the pci-imx6.c driver does wait after the setting of
-PCIE_LINK_WIDTH_SPEED_CONTROL for the PCIE_LINK_WIDTH_SPEED_CONTROL
-to show PORT_LOGIC_SPEED_CHANGE. Not sure if this is needed in this
-case.
+Christoph,
 
-I have put this driver in to our CI and it so far seems to be working
-in our case. I'm not sure if there's anything we could do better to
-detect already initialised values from U-Boot and avoid this. Also I
-am questioning if we need some sort of hardware property to control
-the behaviour.
+Is it possible to keep documentation comments in source files? Or are
+they completely irrelevant now?
 
-Does anyone at SiFive have any more information about whether this fix
-is now correct? It is very annoying for us as we network boot and thus
-the PCIe does not come up without this fix in.
-
-Note, it is possible the pci-imx6.c driver does not build, could not
-find a field called linl in the struct dw_pcie. I will try and see if
-this driver is being built or not.
-
-> ---
->   drivers/pci/controller/dwc/pcie-fu740.c | 51 ++++++++++++++++++++++++-
->   1 file changed, 50 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
-> index 842b7202b96e..16ad52f53490 100644
-> --- a/drivers/pci/controller/dwc/pcie-fu740.c
-> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
-> @@ -181,10 +181,59 @@ static int fu740_pcie_start_link(struct dw_pcie *pci)
->   {
->   	struct device *dev = pci->dev;
->   	struct fu740_pcie *afp = dev_get_drvdata(dev);
-> +	u8 cap_exp = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	int ret;
-> +	u32 orig, tmp;
-> +
-> +	/*
-> +	 * Force Gen1 when starting link, due to some devices not
-> +	 * probing at higher speeds. This happens with the PCIe switch
-> +	 * on the Unmatched board. The fix in U-Boot is to force Gen1
-> +	 * and hope later resets will clear this capaility.
-> +	 */
-> +
-> +	dev_dbg(dev, "cap_exp at %x\n", cap_exp);
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +
-> +	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-> +	orig = tmp & PCI_EXP_LNKCAP_SLS;
-> +	tmp &= ~PCI_EXP_LNKCAP_SLS;
-> +	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-> +	dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
->   
->   	/* Enable LTSSM */
->   	writel_relaxed(0x1, afp->mgmt_base + PCIEX8MGMT_APP_LTSSM_ENABLE);
-> -	return 0;
-> +
-> +	ret = dw_pcie_wait_for_link(pci);
-> +	if (ret) {
-> +		dev_err(dev, "error: link did not start\n");
-> +		goto err;
-> +	}
-> +
-> +	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-> +	if ((tmp & PCI_EXP_LNKCAP_SLS) != orig) {
-> +		dev_dbg(dev, "changing speed back to original\n");
-> +
-> +		tmp &= ~PCI_EXP_LNKCAP_SLS;
-> +		tmp |= orig;
-> +		dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
-> +
-> +		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> +		tmp |= PORT_LOGIC_SPEED_CHANGE;
-> +		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
-> +
-> +		ret = dw_pcie_wait_for_link(pci);
-> +		if (ret) {
-> +			dev_err(dev, "error: link did not start at new speed\n");
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	ret = 0;
-> +err:
-> +	// todo - if we do have an unliekly error, what do we do here?
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +	return ret;
->   }
->   
->   static int fu740_pcie_host_init(struct pcie_port *pp)
-
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
-https://www.codethink.co.uk/privacy.html
+Thanks.
