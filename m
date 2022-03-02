@@ -2,140 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0090A4CA91E
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 16:34:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D40A64CA92C
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 16:37:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242867AbiCBPfa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 10:35:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51460 "EHLO
+        id S231868AbiCBPiQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 10:38:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240926AbiCBPf3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 10:35:29 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E8F33C4879
-        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 07:34:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646235285;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QGFEqUfF08Ay8YfxfHzxFFjx43+q2fu6XbpJ32ujXXg=;
-        b=cRPbjuz4ayzbKtaJBVHhnbELJXTakdKrWzGEeMDvnEtJjobm4eoNebAK2RsAHNslfFaXrF
-        18U0alctB7l4umai6WaLo72rbN/JeddlBsePiD5jqd6D36Yh7EJhgnd0r6FY8ayCci8my9
-        Rb84OH50116VJEc3/G6I4Xn4IYQpkDQ=
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
- [209.85.161.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-300-NdzBjb9mNL6v4R7eBnaRfA-1; Wed, 02 Mar 2022 10:34:44 -0500
-X-MC-Unique: NdzBjb9mNL6v4R7eBnaRfA-1
-Received: by mail-oo1-f72.google.com with SMTP id x130-20020a4a4188000000b0031b2e31acc7so1426858ooa.21
-        for <linux-pci@vger.kernel.org>; Wed, 02 Mar 2022 07:34:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=QGFEqUfF08Ay8YfxfHzxFFjx43+q2fu6XbpJ32ujXXg=;
-        b=MdI59It/pnOf0bI2rGSrmHc4hRx4JvvyIIwpOkqXRKAm/W4gEdLnionvFwBKYcCZi2
-         NWaMMeZ1cGr4XPgxCL6OqAmyEdDjHJa1uQfHzmKeGC4WonELxN3QbQFxywaWjZl1zwtI
-         CxnpRf9bIvyODBPmRT4on6lBUpuGMcAqE9jD9m6V8ZTnuHLyVHhgq9o+HmAAHOfP3TKn
-         CavwKT39hD90RQ6Ni2g424Q3k1bW6xlX9yqsgbQ6AScwOgLE6tLgkcuw1SnZPVUoe9ls
-         L7FoPhcMdw8N6sCtak61RwG7X4gvWao1vuPcIshvSBKR4bBPbIoy68KUH7ND/n0j+4Lh
-         5k/g==
-X-Gm-Message-State: AOAM532FrvoZ00/On+iuAr/xHrhA3YnMO4IrAYTMa/zlj4zi01u6o93o
-        PynZZ3nxkvsoR45pjJbgS1D9RAIG4zoOUzFeolEwydKnsLNBeBnyg24NfJMWdwfOT75P/iyGCVb
-        W6VhpAbIyLZrVRwoGemze
-X-Received: by 2002:a9d:64d2:0:b0:5a4:44c:1e76 with SMTP id n18-20020a9d64d2000000b005a4044c1e76mr16173661otl.324.1646235283223;
-        Wed, 02 Mar 2022 07:34:43 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwFL7AIz+XMoO0pSy0ljQcZTQYiU1hM7aen/H7PCgOUAQayBKEf+UxF/GZqjnBMxmMJL8tbTw==
-X-Received: by 2002:a9d:64d2:0:b0:5a4:44c:1e76 with SMTP id n18-20020a9d64d2000000b005a4044c1e76mr16173643otl.324.1646235283005;
-        Wed, 02 Mar 2022 07:34:43 -0800 (PST)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id l34-20020a9d1ca2000000b005acea92e8absm8053452ota.42.2022.03.02.07.34.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Mar 2022 07:34:42 -0800 (PST)
-Date:   Wed, 2 Mar 2022 08:34:40 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>, bhelgaas@google.com,
-        saeedm@nvidia.com, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, maorg@nvidia.com,
-        ashok.raj@intel.com, kevin.tian@intel.com,
-        shameerali.kolothum.thodi@huawei.com
-Subject: Re: [PATCH V9 mlx5-next 09/15] vfio: Define device migration
- protocol v2
-Message-ID: <20220302083440.539a1f33.alex.williamson@redhat.com>
-In-Reply-To: <20220302142732.GK219866@nvidia.com>
-References: <20220224142024.147653-1-yishaih@nvidia.com>
-        <20220224142024.147653-10-yishaih@nvidia.com>
-        <87tucgiouf.fsf@redhat.com>
-        <20220302142732.GK219866@nvidia.com>
-Organization: Red Hat
+        with ESMTP id S234434AbiCBPiQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 10:38:16 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C945B192AF;
+        Wed,  2 Mar 2022 07:37:30 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8823313D5;
+        Wed,  2 Mar 2022 07:37:30 -0800 (PST)
+Received: from lpieralisi (unknown [10.57.37.208])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A241E3F73D;
+        Wed,  2 Mar 2022 07:37:29 -0800 (PST)
+Date:   Wed, 2 Mar 2022 15:37:27 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, michals@xilinx.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: xilinx-cpm: Add Versal CPM5
+ Root Port
+Message-ID: <Yh+PN5ct8T87f6Ve@lpieralisi>
+References: <20220215124606.28627-1-bharat.kumar.gogada@xilinx.com>
+ <20220215124606.28627-2-bharat.kumar.gogada@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220215124606.28627-2-bharat.kumar.gogada@xilinx.com>
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2 Mar 2022 10:27:32 -0400
-Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Tue, Feb 15, 2022 at 06:16:05PM +0530, Bharat Kumar Gogada wrote:
+> Xilinx Versal Premium series has CPM5 block which supports Root Port
+> functioning at Gen5 speed.
+> 
+> Add support for YAML schemas documentation for Versal CPM5 Root Port driver.
+> 
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> ---
+>  .../bindings/pci/xilinx-versal-cpm.yaml       | 47 ++++++++++++++++---
+>  1 file changed, 40 insertions(+), 7 deletions(-)
 
-> On Wed, Mar 02, 2022 at 12:19:20PM +0100, Cornelia Huck wrote:
-> > > +/*
-> > > + * vfio_mig_get_next_state - Compute the next step in the FSM
-> > > + * @cur_fsm - The current state the device is in
-> > > + * @new_fsm - The target state to reach
-> > > + * @next_fsm - Pointer to the next step to get to new_fsm
-> > > + *
-> > > + * Return 0 upon success, otherwise -errno
-> > > + * Upon success the next step in the state progression between cur_fsm and
-> > > + * new_fsm will be set in next_fsm.  
-> > 
-> > What about non-success? Can the caller make any assumption about
-> > next_fsm in that case? Because...  
-> 
-> I checked both mlx5 and acc, both properly ignore the next_fsm value
-> on error. This oddness aros when Alex asked to return an errno instead
-> of the state value.
+https://docs.kernel.org/devicetree/bindings/submitting-patches.html
 
-Right, my assertion was that only the driver itself should be able to
-transition to the ERROR state.  vfio_mig_get_next_state() should never
-advise the driver to go to the error state, it can only report that a
-transition is invalid.  The driver may stay in the current state if an
-error occurs here, which is why we added the ability to get the device
-state.  Thanks,
+You have to CC the devicetree ML and DT maintainers.
 
-Alex
+Thanks,
+Lorenzo
 
-> > > + * any -> ERROR
-> > > + *   ERROR cannot be specified as a device state, however any transition request
-> > > + *   can be failed with an errno return and may then move the device_state into
-> > > + *   ERROR. In this case the device was unable to execute the requested arc and
-> > > + *   was also unable to restore the device to any valid device_state.
-> > > + *   To recover from ERROR VFIO_DEVICE_RESET must be used to return the
-> > > + *   device_state back to RUNNING.  
-> > 
-> > ...this seems to indicate that not moving into STATE_ERROR is an
-> > option anyway.   
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index 32f4641085bc..97c7229d7f91 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -14,17 +14,21 @@ allOf:
+>  
+>  properties:
+>    compatible:
+> -    const: xlnx,versal-cpm-host-1.00
+> +    contains:
+> +      enum:
+> +        - xlnx,versal-cpm-host-1.00
+> +        - xlnx,versal-cpm5-host-1.00
+>  
+>    reg:
+> -    items:
+> -      - description: Configuration space region and bridge registers.
+> -      - description: CPM system level control and status registers.
+> +    description: |
+> +      Should contain cpm_slcr, cfg registers location and length.
+> +      For xlnx,versal-cpm5-host-1.00, it should also contain cpm_csr.
+> +    minItems: 2
+> +    maxItems: 3
+>  
+>    reg-names:
+> -    items:
+> -      - const: cfg
+> -      - const: cpm_slcr
+> +    minItems: 2
+> +    maxItems: 3
+>  
+>    interrupts:
+>      maxItems: 1
+> @@ -95,4 +99,33 @@ examples:
+>                                 interrupt-controller;
+>                         };
+>                 };
+> +
+> +              cpm5_pcie: pcie@fcdd0000 {
+> +                       compatible = "xlnx,versal-cpm5-host-1.00";
+> +                       device_type = "pci";
+> +                       #address-cells = <3>;
+> +                       #interrupt-cells = <1>;
+> +                       #size-cells = <2>;
+> +                       interrupts = <0 72 4>;
+> +                       interrupt-parent = <&gic>;
+> +                       interrupt-map-mask = <0 0 0 7>;
+> +                       interrupt-map = <0 0 0 1 &pcie_intc_1 0>,
+> +                                       <0 0 0 2 &pcie_intc_1 1>,
+> +                                       <0 0 0 3 &pcie_intc_1 2>,
+> +                                       <0 0 0 4 &pcie_intc_1 3>;
+> +                       bus-range = <0x00 0xff>;
+> +                       ranges = <0x02000000 0x0 0xe0000000 0x0 0xe0000000 0x0 0x10000000>,
+> +                                <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
+> +                       msi-map = <0x0 &its_gic 0x0 0x10000>;
+> +                       reg = <0x00 0xfcdd0000 0x00 0x1000>,
+> +                             <0x06 0x00000000 0x00 0x1000000>,
+> +                             <0x00 0xfce20000 0x00 0x1000000>;
+> +                       reg-names = "cpm_slcr", "cfg", "cpm_csr";
+> +
+> +                       pcie_intc_1: interrupt-controller {
+> +                               #address-cells = <0>;
+> +                               #interrupt-cells = <1>;
+> +                               interrupt-controller;
+> +                       };
+> +               };
+>      };
+> -- 
+> 2.17.1
 > 
-> Yes, but it is never done by vfio_mig_get_next_state() it is only
-> directly triggered inside the driver.
-> 
-> > Do we need any extra guidance in the description for
-> > vfio_mig_get_next_state()?  
-> 
-> I think no, it is typical in linux that function failure means output
-> arguments are not valid
-> 
-> Jason
-> 
-
