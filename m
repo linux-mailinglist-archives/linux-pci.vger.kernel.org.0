@@ -2,199 +2,243 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10C5F4CB016
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 21:41:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26D5E4CB046
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 21:50:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244144AbiCBUl4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 15:41:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37174 "EHLO
+        id S234138AbiCBUuu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 15:50:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236431AbiCBUly (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 15:41:54 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D0CD5F72;
-        Wed,  2 Mar 2022 12:41:10 -0800 (PST)
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K85b3013fz67nQH;
-        Thu,  3 Mar 2022 04:39:59 +0800 (CST)
-Received: from lhreml711-chm.china.huawei.com (10.201.108.62) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Mar 2022 21:41:08 +0100
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml711-chm.china.huawei.com (10.201.108.62) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Mar 2022 20:41:08 +0000
-Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
- lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
- 15.01.2308.021; Wed, 2 Mar 2022 20:41:08 +0000
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     John Garry <john.garry@huawei.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "jgg@nvidia.com" <jgg@nvidia.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "yishaih@nvidia.com" <yishaih@nvidia.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        liulongfang <liulongfang@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        "Jonathan Cameron" <jonathan.cameron@huawei.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>
-Subject: RE: [PATCH v7 02/10] crypto: hisilicon/qm: Move few definitions to
- common header
-Thread-Topic: [PATCH v7 02/10] crypto: hisilicon/qm: Move few definitions to
- common header
-Thread-Index: AQHYLlsnDzCvtI9Dv0mgaWD21xAp4qyscWeAgAAdXCA=
-Date:   Wed, 2 Mar 2022 20:41:07 +0000
-Message-ID: <0c222fa133a4451abac6de506105eae9@huawei.com>
-References: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
- <20220302172903.1995-3-shameerali.kolothum.thodi@huawei.com>
- <fb7d9ad2-9767-3f6a-2859-4262c992cc76@huawei.com>
-In-Reply-To: <fb7d9ad2-9767-3f6a-2859-4262c992cc76@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.91.128]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S240153AbiCBUuq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 15:50:46 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91413DBD2E
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 12:49:58 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id qx21so6265489ejb.13
+        for <linux-pci@vger.kernel.org>; Wed, 02 Mar 2022 12:49:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xFEJyvKNrk0x243QAHZ6hHbi3fA5VKzYBTQg5puC4mM=;
+        b=eJHGZBpm9wGhGr/tBroUaNWaZ5TN4K7Vgx492MVO5Djvkbs/iI9GucwbfASdyzb8I3
+         MNjFxgIycKOvEOW09x8YHU+L2Szn7cJADhk3HgWppiPiuD9XPTU0uMjAbMSxaLRPjGR+
+         B8PbBRSwrSTsHvIYsXyqcN5viOtrYX5LQNk/rr6THIT4PkiqqE9UTEd6HLX+qNqYHG0k
+         IiAsTSKCB42kPSHX9sqWx9+QWqXh3xBIcnBzxqtGAwnXA1NwHZlGCbVgcnQpWFTxpFhg
+         PQpI7IF+F7613D66Tvq2y70qBzj62/Cti+upDvB6mO/uCHN0ml5NI162n6IHnrW1n7WW
+         SY/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xFEJyvKNrk0x243QAHZ6hHbi3fA5VKzYBTQg5puC4mM=;
+        b=J2GDDwaBAlMJP7Z6MSvyRIMeY/RsJGuZWo7HbRMpv8VSB2FMinGXR8P2YsjBL2Lj8M
+         5onmmToth23SteDBG7l5Khk7h2NEPpLM9suPoOR0MVwUye9phyxyAJDmFpI46V6/yocN
+         WTIoA1FIFXiNx0XL+el2MCFrvf2qu0MVVmEL8Uc3/Db0I/3rFBixVtnvzTYHGtDvtdJQ
+         67mtUNhV7QUqvQdsxnonr3CNG/wSKUTp6vajfo3yCDMcqaeUGZlrRGPemHztuJr9smfY
+         MOHg4MpqO+DE6kcExvWM9qD8EPJkacCB9NavwbhVj5cNo49juj+UwPjVbz1ugDmusMz9
+         vNZQ==
+X-Gm-Message-State: AOAM5332d45NZFPtSLxokjCdrvI3OOg60wv6Zrey32+Rvhq825Dfx7Fz
+        ypTtxrTwUKMeDejOtDSBxHklD5t2GbNSbRT0DOo=
+X-Google-Smtp-Source: ABdhPJw0qZWcW46bGqKzfi6dKlByATYjnFbvabTH7DbgThEnfEAeAn3xYRmt1DADUpqaHA8NTxxPgGQooxg4uTFqLPA=
+X-Received: by 2002:a17:906:8d8:b0:6d2:131d:be51 with SMTP id
+ o24-20020a17090608d800b006d2131dbe51mr24701886eje.564.1646254196801; Wed, 02
+ Mar 2022 12:49:56 -0800 (PST)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220302032646.3793-4-Frank.Li@nxp.com> <20220302201520.GA746237@bhelgaas>
+In-Reply-To: <20220302201520.GA746237@bhelgaas>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Wed, 2 Mar 2022 14:49:45 -0600
+Message-ID: <CAHrpEqR8ZwNVFqqRo0hAAt8aDDrduXnBRTTw3G868wkOP3EKYg@mail.gmail.com>
+Subject: Re: [PATCH 4/5] PCI: imx6: add PCIe embedded DMA support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        kw@linux.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSm9obiBHYXJyeQ0KPiBT
-ZW50OiAwMiBNYXJjaCAyMDIyIDE4OjU1DQo+IFRvOiBTaGFtZWVyYWxpIEtvbG90aHVtIFRob2Rp
-IDxzaGFtZWVyYWxpLmtvbG90aHVtLnRob2RpQGh1YXdlaS5jb20+Ow0KPiBrdm1Admdlci5rZXJu
-ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1jcnlwdG9Admdl
-ci5rZXJuZWwub3JnDQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBhbGV4LndpbGxp
-YW1zb25AcmVkaGF0LmNvbTsgamdnQG52aWRpYS5jb207DQo+IGNvaHVja0ByZWRoYXQuY29tOyBt
-Z3VydG92b3lAbnZpZGlhLmNvbTsgeWlzaGFpaEBudmlkaWEuY29tOyBMaW51eGFybQ0KPiA8bGlu
-dXhhcm1AaHVhd2VpLmNvbT47IGxpdWxvbmdmYW5nIDxsaXVsb25nZmFuZ0BodWF3ZWkuY29tPjsg
-WmVuZ3RhbyAoQikNCj4gPHByaW1lLnplbmdAaGlzaWxpY29uLmNvbT47IEpvbmF0aGFuIENhbWVy
-b24NCj4gPGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47IFdhbmd6aG91IChCKSA8d2FuZ3po
-b3UxQGhpc2lsaWNvbi5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjcgMDIvMTBdIGNyeXB0
-bzogaGlzaWxpY29uL3FtOiBNb3ZlIGZldyBkZWZpbml0aW9ucyB0bw0KPiBjb21tb24gaGVhZGVy
-DQo+IA0KPiBPbiAwMi8wMy8yMDIyIDE3OjI4LCBTaGFtZWVyIEtvbG90aHVtIHdyb3RlOg0KPiA+
-IEZyb206IExvbmdmYW5nIExpdSA8bGl1bG9uZ2ZhbmdAaHVhd2VpLmNvbT4NCj4gPg0KPiA+IE1v
-dmUgRG9vcmJlbGwgYW5kIE1haWxib3ggZGVmaW5pdGlvbnMgdG8gY29tbW9uIGhlYWRlcg0KPiA+
-IGZpbGUuIEFsc28gZXhwb3J0IFFNIG1haWxib3ggZnVuY3Rpb25zLg0KPiA+DQo+ID4gVGhpcyB3
-aWxsIGJlIHVzZWZ1bCB3aGVuIHdlIGludHJvZHVjZSBWRklPIFBDSSBIaVNpbGljb24NCj4gPiBB
-Q0MgbGl2ZSBtaWdyYXRpb24gZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTG9uZ2Zh
-bmcgTGl1IDxsaXVsb25nZmFuZ0BodWF3ZWkuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNoYW1l
-ZXIgS29sb3RodW0NCj4gPHNoYW1lZXJhbGkua29sb3RodW0udGhvZGlAaHVhd2VpLmNvbT4NCj4g
-PiAtLS0NCj4gPiAgIGRyaXZlcnMvY3J5cHRvL2hpc2lsaWNvbi9xbS5jIHwgMzIgKysrKystLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgIGluY2x1ZGUvbGludXgvaGlzaV9hY2NfcW0uaCAg
-IHwgMzgNCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgIDIgZmls
-ZXMgY2hhbmdlZCwgNDMgaW5zZXJ0aW9ucygrKSwgMjcgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9jcnlwdG8vaGlzaWxpY29uL3FtLmMgYi9kcml2ZXJzL2NyeXB0
-by9oaXNpbGljb24vcW0uYw0KPiA+IGluZGV4IGVkMjNlMWQzZmEyNy4uOGMyOWY5ZmJhNTczIDEw
-MDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY3J5cHRvL2hpc2lsaWNvbi9xbS5jDQo+ID4gKysrIGIv
-ZHJpdmVycy9jcnlwdG8vaGlzaWxpY29uL3FtLmMNCj4gPiBAQCAtMzMsMjMgKzMzLDYgQEANCj4g
-PiAgICNkZWZpbmUgUU1fQUJOT1JNQUxfRVZFTlRfSVJRX1ZFQ1RPUgkzDQo+ID4NCj4gPiAgIC8q
-IG1haWxib3ggKi8NCj4gPiAtI2RlZmluZSBRTV9NQl9DTURfU1FDCQkJMHgwDQo+ID4gLSNkZWZp
-bmUgUU1fTUJfQ01EX0NRQwkJCTB4MQ0KPiA+IC0jZGVmaW5lIFFNX01CX0NNRF9FUUMJCQkweDIN
-Cj4gPiAtI2RlZmluZSBRTV9NQl9DTURfQUVRQwkJCTB4Mw0KPiA+IC0jZGVmaW5lIFFNX01CX0NN
-RF9TUUNfQlQJCTB4NA0KPiA+IC0jZGVmaW5lIFFNX01CX0NNRF9DUUNfQlQJCTB4NQ0KPiA+IC0j
-ZGVmaW5lIFFNX01CX0NNRF9TUUNfVkZUX1YyCQkweDYNCj4gPiAtI2RlZmluZSBRTV9NQl9DTURf
-U1RPUF9RUAkJMHg4DQo+ID4gLSNkZWZpbmUgUU1fTUJfQ01EX1NSQwkJCTB4Yw0KPiA+IC0jZGVm
-aW5lIFFNX01CX0NNRF9EU1QJCQkweGQNCj4gPiAtDQo+ID4gLSNkZWZpbmUgUU1fTUJfQ01EX1NF
-TkRfQkFTRQkJMHgzMDANCj4gPiAtI2RlZmluZSBRTV9NQl9FVkVOVF9TSElGVAkJOA0KPiA+IC0j
-ZGVmaW5lIFFNX01CX0JVU1lfU0hJRlQJCTEzDQo+ID4gLSNkZWZpbmUgUU1fTUJfT1BfU0hJRlQJ
-CQkxNA0KPiA+IC0jZGVmaW5lIFFNX01CX0NNRF9EQVRBX0FERFJfTAkJMHgzMDQNCj4gPiAtI2Rl
-ZmluZSBRTV9NQl9DTURfREFUQV9BRERSX0gJCTB4MzA4DQo+ID4gICAjZGVmaW5lIFFNX01CX1BJ
-TkdfQUxMX1ZGUwkJMHhmZmZmDQo+ID4gICAjZGVmaW5lIFFNX01CX0NNRF9EQVRBX1NISUZUCQkz
-Mg0KPiA+ICAgI2RlZmluZSBRTV9NQl9DTURfREFUQV9NQVNLCQlHRU5NQVNLKDMxLCAwKQ0KPiA+
-IEBAIC0xMDMsMTkgKzg2LDEyIEBADQo+ID4gICAjZGVmaW5lIFFNX0RCX0NNRF9TSElGVF9WMQkJ
-MTYNCj4gPiAgICNkZWZpbmUgUU1fREJfSU5ERVhfU0hJRlRfVjEJCTMyDQo+ID4gICAjZGVmaW5l
-IFFNX0RCX1BSSU9SSVRZX1NISUZUX1YxCQk0OA0KPiA+IC0jZGVmaW5lIFFNX0RPT1JCRUxMX1NR
-X0NRX0JBU0VfVjIJMHgxMDAwDQo+ID4gLSNkZWZpbmUgUU1fRE9PUkJFTExfRVFfQUVRX0JBU0Vf
-VjIJMHgyMDAwDQo+ID4gICAjZGVmaW5lIFFNX1FVRV9JU09fQ0ZHX1YJCTB4MDAzMA0KPiA+ICAg
-I2RlZmluZSBRTV9QQUdFX1NJWkUJCQkweDAwMzQNCj4gPiAgICNkZWZpbmUgUU1fUVVFX0lTT19F
-TgkJCTB4MTAwMTU0DQo+ID4gICAjZGVmaW5lIFFNX0NBUEJJTElUWQkJCTB4MTAwMTU4DQo+ID4g
-ICAjZGVmaW5lIFFNX1FQX05VTl9NQVNLCQkJR0VOTUFTSygxMCwgMCkNCj4gPiAgICNkZWZpbmUg
-UU1fUVBfREJfSU5URVJWQUwJCTB4MTAwMDANCj4gPiAtI2RlZmluZSBRTV9RUF9NQVhfTlVNX1NI
-SUZUCQkxMQ0KPiA+IC0jZGVmaW5lIFFNX0RCX0NNRF9TSElGVF9WMgkJMTINCj4gPiAtI2RlZmlu
-ZSBRTV9EQl9SQU5EX1NISUZUX1YyCQkxNg0KPiA+IC0jZGVmaW5lIFFNX0RCX0lOREVYX1NISUZU
-X1YyCQkzMg0KPiA+IC0jZGVmaW5lIFFNX0RCX1BSSU9SSVRZX1NISUZUX1YyCQk0OA0KPiA+DQo+
-ID4gICAjZGVmaW5lIFFNX01FTV9TVEFSVF9JTklUCQkweDEwMDA0MA0KPiA+ICAgI2RlZmluZSBR
-TV9NRU1fSU5JVF9ET05FCQkweDEwMDA0NA0KPiA+IEBAIC02OTMsNyArNjY5LDcgQEAgc3RhdGlj
-IHZvaWQgcW1fbWJfcHJlX2luaXQoc3RydWN0IHFtX21haWxib3gNCj4gKm1haWxib3gsIHU4IGNt
-ZCwNCj4gPiAgIH0NCj4gPg0KPiA+ICAgLyogcmV0dXJuIDAgbWFpbGJveCByZWFkeSwgLUVUSU1F
-RE9VVCBoYXJkd2FyZSB0aW1lb3V0ICovDQo+ID4gLXN0YXRpYyBpbnQgcW1fd2FpdF9tYl9yZWFk
-eShzdHJ1Y3QgaGlzaV9xbSAqcW0pDQo+ID4gK2ludCBxbV93YWl0X21iX3JlYWR5KHN0cnVjdCBo
-aXNpX3FtICpxbSkNCj4gPiAgIHsNCj4gPiAgIAl1MzIgdmFsOw0KPiA+DQo+ID4gQEAgLTcwMSw2
-ICs2NzcsNyBAQCBzdGF0aWMgaW50IHFtX3dhaXRfbWJfcmVhZHkoc3RydWN0IGhpc2lfcW0gKnFt
-KQ0KPiA+ICAgCQkJCQkgIHZhbCwgISgodmFsID4+IFFNX01CX0JVU1lfU0hJRlQpICYNCj4gPiAg
-IAkJCQkJICAweDEpLCBQT0xMX1BFUklPRCwgUE9MTF9USU1FT1VUKTsNCj4gPiAgIH0NCj4gPiAr
-RVhQT1JUX1NZTUJPTF9HUEwocW1fd2FpdF9tYl9yZWFkeSk7DQo+IA0KPiBTaW5jZSB0aGVzZSB3
-aWxsIGJlIHB1YmxpYyB0aGV5IHJlcXVpcmUgYSBtb3JlIGRpc3RpbmN0aXZlIG5hbWUsIGxpa2UN
-Cj4gaGlzaV9xbV93YWl0X21iX3JlYWR5IG9yIGhpc2lfYWNjX3FtX3dhaXRfbWJfcmVhZHkNCj4g
-DQo+ID4NCj4gPiAgIC8qIDEyOCBiaXQgc2hvdWxkIGJlIHdyaXR0ZW4gdG8gaGFyZHdhcmUgYXQg
-b25lIHRpbWUgdG8gdHJpZ2dlciBhIG1haWxib3gNCj4gKi8NCj4gPiAgIHN0YXRpYyB2b2lkIHFt
-X21iX3dyaXRlKHN0cnVjdCBoaXNpX3FtICpxbSwgY29uc3Qgdm9pZCAqc3JjKQ0KPiA+IEBAIC03
-NDUsOCArNzIyLDggQEAgc3RhdGljIGludCBxbV9tYl9ub2xvY2soc3RydWN0IGhpc2lfcW0gKnFt
-LCBzdHJ1Y3QNCj4gcW1fbWFpbGJveCAqbWFpbGJveCkNCj4gPiAgIAlyZXR1cm4gLUVCVVNZOw0K
-PiA+ICAgfQ0KPiA+DQo+ID4gLXN0YXRpYyBpbnQgcW1fbWIoc3RydWN0IGhpc2lfcW0gKnFtLCB1
-OCBjbWQsIGRtYV9hZGRyX3QgZG1hX2FkZHIsIHUxNg0KPiBxdWV1ZSwNCj4gPiAtCQkgYm9vbCBv
-cCkNCj4gPiAraW50IHFtX21iKHN0cnVjdCBoaXNpX3FtICpxbSwgdTggY21kLCBkbWFfYWRkcl90
-IGRtYV9hZGRyLCB1MTYgcXVldWUsDQo+ID4gKwkgIGJvb2wgb3ApDQo+ID4gICB7DQo+ID4gICAJ
-c3RydWN0IHFtX21haWxib3ggbWFpbGJveDsNCj4gPiAgIAlpbnQgcmV0Ow0KPiA+IEBAIC03NjIs
-NiArNzM5LDcgQEAgc3RhdGljIGludCBxbV9tYihzdHJ1Y3QgaGlzaV9xbSAqcW0sIHU4IGNtZCwN
-Cj4gZG1hX2FkZHJfdCBkbWFfYWRkciwgdTE2IHF1ZXVlLA0KPiA+DQo+ID4gICAJcmV0dXJuIHJl
-dDsNCj4gPiAgIH0NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwocW1fbWIpOw0KPiA+DQo+ID4gICBz
-dGF0aWMgdm9pZCBxbV9kYl92MShzdHJ1Y3QgaGlzaV9xbSAqcW0sIHUxNiBxbiwgdTggY21kLCB1
-MTYgaW5kZXgsIHU4DQo+IHByaW9yaXR5KQ0KPiA+ICAgew0KPiA+IGRpZmYgLS1naXQgYS9pbmNs
-dWRlL2xpbnV4L2hpc2lfYWNjX3FtLmggYi9pbmNsdWRlL2xpbnV4L2hpc2lfYWNjX3FtLmgNCj4g
-PiBpbmRleCAzMDY4MDkzMjI5YTUuLjhiZWZiNTljNmZiMyAxMDA2NDQNCj4gPiAtLS0gYS9pbmNs
-dWRlL2xpbnV4L2hpc2lfYWNjX3FtLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2hpc2lfYWNj
-X3FtLmgNCj4gPiBAQCAtMzQsNiArMzQsNDAgQEANCj4gPiAgICNkZWZpbmUgUU1fV1VTRVJfTV9D
-RkdfRU5BQkxFCQkweDEwMDBhOA0KPiA+ICAgI2RlZmluZSBXVVNFUl9NX0NGR19FTkFCTEUJCTB4
-ZmZmZmZmZmYNCj4gPg0KPiA+ICsvKiBtYWlsYm94ICovDQo+ID4gKyNkZWZpbmUgUU1fTUJfQ01E
-X1NRQyAgICAgICAgICAgICAgICAgICAweDANCj4gPiArI2RlZmluZSBRTV9NQl9DTURfQ1FDICAg
-ICAgICAgICAgICAgICAgIDB4MQ0KPiA+ICsjZGVmaW5lIFFNX01CX0NNRF9FUUMgICAgICAgICAg
-ICAgICAgICAgMHgyDQo+ID4gKyNkZWZpbmUgUU1fTUJfQ01EX0FFUUMgICAgICAgICAgICAgICAg
-ICAweDMNCj4gPiArI2RlZmluZSBRTV9NQl9DTURfU1FDX0JUICAgICAgICAgICAgICAgIDB4NA0K
-PiA+ICsjZGVmaW5lIFFNX01CX0NNRF9DUUNfQlQgICAgICAgICAgICAgICAgMHg1DQo+ID4gKyNk
-ZWZpbmUgUU1fTUJfQ01EX1NRQ19WRlRfVjIgICAgICAgICAgICAweDYNCj4gPiArI2RlZmluZSBR
-TV9NQl9DTURfU1RPUF9RUCAgICAgICAgICAgICAgIDB4OA0KPiA+ICsjZGVmaW5lIFFNX01CX0NN
-RF9TUkMgICAgICAgICAgICAgICAgICAgMHhjDQo+ID4gKyNkZWZpbmUgUU1fTUJfQ01EX0RTVCAg
-ICAgICAgICAgICAgICAgICAweGQNCj4gPiArDQo+ID4gKyNkZWZpbmUgUU1fTUJfQ01EX1NFTkRf
-QkFTRQkJMHgzMDANCj4gPiArI2RlZmluZSBRTV9NQl9FVkVOVF9TSElGVCAgICAgICAgICAgICAg
-IDgNCj4gPiArI2RlZmluZSBRTV9NQl9CVVNZX1NISUZUCQkxMw0KPiA+ICsjZGVmaW5lIFFNX01C
-X09QX1NISUZUCQkJMTQNCj4gPiArI2RlZmluZSBRTV9NQl9DTURfREFUQV9BRERSX0wJCTB4MzA0
-DQo+ID4gKyNkZWZpbmUgUU1fTUJfQ01EX0RBVEFfQUREUl9ICQkweDMwOA0KPiA+ICsjZGVmaW5l
-IFFNX01CX01BWF9XQUlUX0NOVAkJNjAwMA0KPiA+ICsNCj4gPiArLyogZG9vcmJlbGwgKi8NCj4g
-PiArI2RlZmluZSBRTV9ET09SQkVMTF9DTURfU1EgICAgICAgICAgICAgIDANCj4gPiArI2RlZmlu
-ZSBRTV9ET09SQkVMTF9DTURfQ1EgICAgICAgICAgICAgIDENCj4gPiArI2RlZmluZSBRTV9ET09S
-QkVMTF9DTURfRVEgICAgICAgICAgICAgIDINCj4gPiArI2RlZmluZSBRTV9ET09SQkVMTF9DTURf
-QUVRICAgICAgICAgICAgIDMNCj4gPiArDQo+ID4gKyNkZWZpbmUgUU1fRE9PUkJFTExfU1FfQ1Ff
-QkFTRV9WMgkweDEwMDANCj4gPiArI2RlZmluZSBRTV9ET09SQkVMTF9FUV9BRVFfQkFTRV9WMgkw
-eDIwMDANCj4gPiArI2RlZmluZSBRTV9RUF9NQVhfTlVNX1NISUZUICAgICAgICAgICAgIDExDQo+
-ID4gKyNkZWZpbmUgUU1fREJfQ01EX1NISUZUX1YyCQkxMg0KPiA+ICsjZGVmaW5lIFFNX0RCX1JB
-TkRfU0hJRlRfVjIJCTE2DQo+ID4gKyNkZWZpbmUgUU1fREJfSU5ERVhfU0hJRlRfVjIJCTMyDQo+
-ID4gKyNkZWZpbmUgUU1fREJfUFJJT1JJVFlfU0hJRlRfVjIJCTQ4DQo+ID4gKw0KPiA+ICAgLyog
-cW0gY2FjaGUgKi8NCj4gPiAgICNkZWZpbmUgUU1fQ0FDSEVfQ1RMCQkJMHgxMDAwNTANCj4gPiAg
-ICNkZWZpbmUgU1FDX0NBQ0hFX0VOQUJMRQkJQklUKDApDQo+ID4gQEAgLTQxNCw2ICs0NDgsMTAg
-QEAgcGNpX2Vyc19yZXN1bHRfdCBoaXNpX3FtX2Rldl9zbG90X3Jlc2V0KHN0cnVjdA0KPiBwY2lf
-ZGV2ICpwZGV2KTsNCj4gPiAgIHZvaWQgaGlzaV9xbV9yZXNldF9wcmVwYXJlKHN0cnVjdCBwY2lf
-ZGV2ICpwZGV2KTsNCj4gPiAgIHZvaWQgaGlzaV9xbV9yZXNldF9kb25lKHN0cnVjdCBwY2lfZGV2
-ICpwZGV2KTsNCj4gPg0KPiA+ICtpbnQgcW1fd2FpdF9tYl9yZWFkeShzdHJ1Y3QgaGlzaV9xbSAq
-cW0pOw0KPiA+ICtpbnQgcW1fbWIoc3RydWN0IGhpc2lfcW0gKnFtLCB1OCBjbWQsIGRtYV9hZGRy
-X3QgZG1hX2FkZHIsIHUxNiBxdWV1ZSwNCj4gPiArCSAgYm9vbCBvcCk7DQo+IA0KPiBBcyBhYm92
-ZSwgcGxlYXNlIG5vdGljZSBob3cgZXZlcnl0aGluZyBlbHNlIGhhcyBhICJoaXNpIiBwcmVmaXgN
-Cg0KTWFrZSBzZW5zZS4gV2lsbCBkby4NCg0KVGhhbmtzLA0KU2hhbWVlcg0KDQo+IA0KPiA+ICsN
-Cj4gPiAgIHN0cnVjdCBoaXNpX2FjY19zZ2xfcG9vbDsNCj4gPiAgIHN0cnVjdCBoaXNpX2FjY19o
-d19zZ2wgKmhpc2lfYWNjX3NnX2J1Zl9tYXBfdG9faHdfc2dsKHN0cnVjdCBkZXZpY2UNCj4gKmRl
-diwNCj4gPiAgIAlzdHJ1Y3Qgc2NhdHRlcmxpc3QgKnNnbCwgc3RydWN0IGhpc2lfYWNjX3NnbF9w
-b29sICpwb29sLA0KDQo=
+On Wed, Mar 2, 2022 at 2:15 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Jingoo for DesignWare generic question]
+>
+> In subject:
+>
+>   PCI: imx6: Add embedded DMA support
+>
+> to match existing style.  "PCIe" seems superfluous here since we
+> already mentioned it earlier in the subject.
+
+Sorry, it is PCI when git log to check old history.
+
+>
+> On Tue, Mar 01, 2022 at 09:26:45PM -0600, Frank Li wrote:
+> > Designware PCIe control have embedded DMA controller.
+> > This enable the DMA controller support.
+>
+> Maybe:
+>
+>   Add support for the DMA controller in the DesignWare PCIe core.
+>
+> If this DMA controller is in the DesignWare core, is everything in
+> this patch specific to imx6?  Or could some of it be shared with other
+> dwc-based drivers?
+
+The DMA register base address,
+Irq number.
+Can't support 64bit register access.
+
+>
+> > The DMA can transfer data to any remote address location
+> > regardless PCI address space size.
+>
+> What is this sentence telling us?  Is it merely that the DMA "inbound
+> address space" may be larger than the MMIO "outbound address space"?
+> I think there's no necessary connection between them, and there's no
+> need to call it out as though it's something special.
+
+There are outbound address windows. such as 256M, but RC sides have more
+than 256M ddr memory, such as 16GB. If CPU or external DMA controller,
+only can access 256M
+address space.
+
+But if using an embedded DMA controller,  it can access the whole RC's
+16G address without
+changing iAtu mapping.
+
+I want to say why I need enable embedded DMA for EP.
+
+>
+> > Prepare struct dw_edma_chip and call dw_edma_probe
+>
+> "dw_edma_probe()" so it's obvious this is a function.
+>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  drivers/pci/controller/dwc/pci-imx6.c | 61 +++++++++++++++++++++++++++
+> >  1 file changed, 61 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> > index efa8b81711090..a588b848a1650 100644
+> > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > @@ -38,6 +38,7 @@
+> >  #include "../../pci.h"
+> >
+> >  #include "pcie-designware.h"
+> > +#include "linux/dma/edma.h"
+> >
+> >  #define IMX8MQ_PCIE_LINK_CAP_REG_OFFSET              0x7c
+> >  #define IMX8MQ_PCIE_LINK_CAP_L1EL_64US               GENMASK(18, 17)
+> > @@ -164,6 +165,8 @@ struct imx6_pcie {
+> >       const struct imx6_pcie_drvdata *drvdata;
+> >       struct regulator        *epdev_on;
+> >       struct phy              *phy;
+> > +
+> > +     struct dw_edma_chip     dma_chip;
+> >  };
+> >
+> >  /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
+> > @@ -2031,6 +2034,61 @@ static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> >       .get_features = imx_pcie_ep_get_features,
+> >  };
+> >
+> > +static int imx_dma_irq_vector(struct device *dev, unsigned int nr)
+>
+> Function names should match existing style in this driver, i.e., they
+> should start with "imx6", not "imx".
+>
+> > +{
+> > +     struct platform_device *pdev = to_platform_device(dev);
+> > +
+> > +     return platform_get_irq_byname(pdev, "dma");
+> > +}
+> > +
+> > +static struct dw_edma_core_ops dma_ops = {
+> > +     .irq_vector = imx_dma_irq_vector,
+> > +};
+> > +
+> > +static int imx_add_pcie_dma(struct imx6_pcie *imx6_pcie,
+> > +                         struct platform_device *pdev,
+>
+> You don't use "pdev" in this function, so no need to pass it in.
+>
+> > +                         struct resource *dbi_base)
+>
+> IIUC this is already in pci->dbi_base, so why not use that instead of
+> passing it in?  Passing both a struct and the contents of a member of
+> the struct is an opportunity for a mistake.
+
+pci->dbi_base just provides a virtual address.
+I can change dbi_base as dbi_res.
+
+>
+> > +{
+> > +     unsigned int pcie_dma_offset;
+> > +     struct dw_pcie *pci = imx6_pcie->pci;
+> > +     struct device *dev = pci->dev;
+> > +     struct dw_edma_chip *dma = &imx6_pcie->dma_chip;
+> > +     int i = 0;
+> > +     u64 pbase;
+> > +     void *vbase;
+> > +     int sz = PAGE_SIZE;
+> > +
+> > +     pcie_dma_offset = 0x970;
+> > +
+> > +     pbase = dbi_base->start + pcie_dma_offset;
+> > +     vbase = pci->dbi_base + pcie_dma_offset;
+> > +
+> > +     dma->dev = dev;
+> > +
+> > +     dma->rg_region.paddr = pbase;
+> > +     dma->rg_region.vaddr = vbase;
+> > +     dma->rg_region.sz = 0x424;
+> > +
+> > +     dma->wr_ch_cnt = dma->rd_ch_cnt = 1;
+> > +
+> > +     dma->ops = &dma_ops;
+> > +     dma->nr_irqs = 1;
+> > +
+> > +     dma->flags = DW_EDMA_CHIP_NO_MSI | DW_EDMA_CHIP_REG32BIT | DW_EDMA_CHIP_LOCAL_EP;
+> > +
+> > +     dma->ll_region_wr[0].sz = sz;
+> > +     dma->ll_region_wr[0].vaddr = dmam_alloc_coherent(dev, sz,
+> > +                                                      &dma->ll_region_wr[i].paddr,
+> > +                                                      GFP_KERNEL);
+> > +
+> > +     dma->ll_region_rd[0].sz = sz;
+> > +     dma->ll_region_rd[0].vaddr = dmam_alloc_coherent(dev, sz,
+> > +                                                      &dma->ll_region_rd[i].paddr,
+> > +                                                      GFP_KERNEL);
+> > +
+> > +     return dw_edma_probe(dma);
+> > +}
+> > +
+> >  static int imx_add_pcie_ep(struct imx6_pcie *imx6_pcie,
+> >                                       struct platform_device *pdev)
+> >  {
+> > @@ -2694,6 +2752,9 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+> >               goto err_ret;
+> >       }
+> >
+> > +     if (imx_add_pcie_dma(imx6_pcie, pdev, dbi_base))
+> > +             dev_info(dev, "pci edma probe failure\n");
+> > +
+> >       return 0;
+> >
+> >  err_ret:
+> > --
+> > 2.24.0.rc1
+> >
