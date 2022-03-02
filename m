@@ -2,103 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95EEA4CA1D7
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 11:10:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F397A4CA1FA
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 11:16:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239136AbiCBKKv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 05:10:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57610 "EHLO
+        id S233865AbiCBKRU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 05:17:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240886AbiCBKKt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 05:10:49 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 29DB526AE8
-        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 02:10:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646215806;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5oe0uhGT1oxcqFitX5hOxI+lyaZearD/CJbfdsAWIgE=;
-        b=IOH9FW7Fq4jf3v+Ug8MsNMPpht/eELUEfQb4EVIqkRe+UQFFS2weWbP/rzMAmu9QUeSo4L
-        hfgIA/azvm9f3EsCJipVcxF3vTAhRl7tapdLkgWLrosoEQILo10SRJYZ8qzsvrrQ2PU7pr
-        Z7v0g9ZfoRDk3S4KEsGjw0Ih3Ay3SyA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-498--SYOi-OoN2yQzTplSsSyLg-1; Wed, 02 Mar 2022 05:10:03 -0500
-X-MC-Unique: -SYOi-OoN2yQzTplSsSyLg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB489FC81;
-        Wed,  2 Mar 2022 10:10:00 +0000 (UTC)
-Received: from localhost (unknown [10.39.194.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4C3EE1042A56;
-        Wed,  2 Mar 2022 10:09:52 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
-        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com
-Cc:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
-        kwankhede@nvidia.com, mgurtovoy@nvidia.com, yishaih@nvidia.com,
-        maorg@nvidia.com, ashok.raj@intel.com, kevin.tian@intel.com,
-        shameerali.kolothum.thodi@huawei.com, qemu-devel@nongnu.org
-Subject: Re: [PATCH V9 mlx5-next 11/15] vfio: Remove migration protocol v1
- documentation
-In-Reply-To: <20220224142024.147653-12-yishaih@nvidia.com>
-Organization: Red Hat GmbH
-References: <20220224142024.147653-1-yishaih@nvidia.com>
- <20220224142024.147653-12-yishaih@nvidia.com>
-User-Agent: Notmuch/0.34 (https://notmuchmail.org)
-Date:   Wed, 02 Mar 2022 11:09:50 +0100
-Message-ID: <87wnhcis29.fsf@redhat.com>
+        with ESMTP id S232069AbiCBKRU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 05:17:20 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4B3415F8D4;
+        Wed,  2 Mar 2022 02:16:37 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1276D139F;
+        Wed,  2 Mar 2022 02:16:37 -0800 (PST)
+Received: from e123427-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6BB53F70D;
+        Wed,  2 Mar 2022 02:16:33 -0800 (PST)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Boqun Feng <boqun.feng@gmail.com>, Wei Liu <wei.liu@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-hyperv@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>
+Subject: Re: [RFC PATCH v2] PCI: hv: Avoid the retarget interrupt hypercall in irq_unmask() on ARM64
+Date:   Wed,  2 Mar 2022 10:16:25 +0000
+Message-Id: <164621616889.27346.10460850825594773169.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20220217034525.1687678-1-boqun.feng@gmail.com>
+References: <20220217034525.1687678-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 24 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
+On Thu, 17 Feb 2022 11:45:19 +0800, Boqun Feng wrote:
+> On ARM64 Hyper-V guests, SPIs are used for the interrupts of virtual PCI
+> devices, and SPIs can be managed directly via GICD registers. Therefore
+> the retarget interrupt hypercall is not needed on ARM64.
+> 
+> An arch-specific interface hv_arch_irq_unmask() is introduced to handle
+> the architecture level differences on this. For x86, the behavior
+> remains unchanged, while for ARM64 no hypercall is invoked when
+> unmasking an irq for virtual PCI devices.
+> 
+> [...]
 
-> From: Jason Gunthorpe <jgg@nvidia.com>
->
-> v1 was never implemented and is replaced by v2.
->
-> The old uAPI documentation is removed from the header file.
->
-> The old uAPI definitions are still kept in the header file to ease
-> transition for userspace copying these headers. They will be fully
-> removed down the road.
->
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Tested-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-> ---
->  include/uapi/linux/vfio.h | 200 +-------------------------------------
->  1 file changed, 2 insertions(+), 198 deletions(-)
->
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 26a66f68371d..fea86061b44e 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -323,7 +323,7 @@ struct vfio_region_info_cap_type {
->  #define VFIO_REGION_TYPE_PCI_VENDOR_MASK	(0xffff)
->  #define VFIO_REGION_TYPE_GFX                    (1)
->  #define VFIO_REGION_TYPE_CCW			(2)
-> -#define VFIO_REGION_TYPE_MIGRATION              (3)
-> +#define VFIO_REGION_TYPE_MIGRATION_DEPRECATED   (3)
+Applied to pci/hv, thanks!
 
-This means that QEMU will need to do a (simple) rename when it updates
-the headers, but that seems easy enough. (cc: to give a heads up.)
+[1/1] PCI: hv: Avoid the retarget interrupt hypercall in irq_unmask() on ARM64
+      https://git.kernel.org/lpieralisi/pci/c/d06957d7a6
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-
+Thanks,
+Lorenzo
