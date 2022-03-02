@@ -2,97 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70A714CA14B
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 10:51:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DF994CA19C
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 11:00:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240689AbiCBJvR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 04:51:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33020 "EHLO
+        id S236940AbiCBKBD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 05:01:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240699AbiCBJvO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 04:51:14 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 67ED8BA75B;
-        Wed,  2 Mar 2022 01:50:31 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08E4B1042;
-        Wed,  2 Mar 2022 01:50:31 -0800 (PST)
-Received: from lpieralisi (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 732AB3F66F;
-        Wed,  2 Mar 2022 01:50:28 -0800 (PST)
-Date:   Wed, 2 Mar 2022 09:50:21 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2] PCI: hv: Avoid the retarget interrupt hypercall
- in irq_unmask() on ARM64
-Message-ID: <Yh893bdBf7P2z+nY@lpieralisi>
-References: <20220217034525.1687678-1-boqun.feng@gmail.com>
- <MWHPR21MB1593A265118977A57FF3B329D7369@MWHPR21MB1593.namprd21.prod.outlook.com>
- <20220221175600.gxbphsnbytgytcpz@liuwe-devbox-debian-v2>
- <Yh7gwaAcfVvQzoND@boqun-archlinux>
+        with ESMTP id S233395AbiCBKBD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 05:01:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E7CE05D658
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 02:00:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646215219;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gd8QmYu+t8IWFQq3XAq6jOtogrY+DiY1h8TKTMSwibg=;
+        b=Qgn+ac8wpzKPt9JIgp4Q/EFiJ4S2OjKDW3xRrMTav8/WzHcCwwEwUqVYnANRpFREdInZrT
+        SJMWU20WZvDAs7Gkc/W9z0gbAYY51J3l39pb7UiPWVvjiZfHiHNIhq8bV2uEi2eokrAJV/
+        Wifz2TS5JZ2Dh0p+IWcpmkcPjFt/w+w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-581-rVJ7WQV9NbKRUvzULE3SRg-1; Wed, 02 Mar 2022 05:00:16 -0500
+X-MC-Unique: rVJ7WQV9NbKRUvzULE3SRg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3A1F81CD1F;
+        Wed,  2 Mar 2022 10:00:13 +0000 (UTC)
+Received: from localhost (unknown [10.39.194.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 39ADA6FB08;
+        Wed,  2 Mar 2022 10:00:10 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
+        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com
+Cc:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, yishaih@nvidia.com,
+        maorg@nvidia.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        shameerali.kolothum.thodi@huawei.com
+Subject: Re: [PATCH V9 mlx5-next 08/15] vfio: Have the core code decode the
+ VFIO_DEVICE_FEATURE ioctl
+In-Reply-To: <20220224142024.147653-9-yishaih@nvidia.com>
+Organization: Red Hat GmbH
+References: <20220224142024.147653-1-yishaih@nvidia.com>
+ <20220224142024.147653-9-yishaih@nvidia.com>
+User-Agent: Notmuch/0.34 (https://notmuchmail.org)
+Date:   Wed, 02 Mar 2022 11:00:08 +0100
+Message-ID: <87zgm8isif.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yh7gwaAcfVvQzoND@boqun-archlinux>
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 02, 2022 at 11:13:05AM +0800, Boqun Feng wrote:
-> On Mon, Feb 21, 2022 at 05:56:00PM +0000, Wei Liu wrote:
-> > On Thu, Feb 17, 2022 at 04:31:06PM +0000, Michael Kelley (LINUX) wrote:
-> > > From: Boqun Feng <boqun.feng@gmail.com> Sent: Wednesday, February 16, 2022 7:45 PM
-> > > > 
-> > > > On ARM64 Hyper-V guests, SPIs are used for the interrupts of virtual PCI
-> > > > devices, and SPIs can be managed directly via GICD registers. Therefore
-> > > > the retarget interrupt hypercall is not needed on ARM64.
-> > > > 
-> > > > An arch-specific interface hv_arch_irq_unmask() is introduced to handle
-> > > > the architecture level differences on this. For x86, the behavior
-> > > > remains unchanged, while for ARM64 no hypercall is invoked when
-> > > > unmasking an irq for virtual PCI devices.
-> > > > 
-> > > > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > > > ---
-> > > > v1 -> v2:
-> > > > 
-> > > > *	Introduce arch-specific interface hv_arch_irq_unmask() as
-> > > > 	suggested by Bjorn
-> > > > 
-> > > >  drivers/pci/controller/pci-hyperv.c | 233 +++++++++++++++-------------
-> > > >  1 file changed, 122 insertions(+), 111 deletions(-)
-> > > 
-> > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> > 
-> > I expect this to go through the PCI tree. Let me know if I should pick
-> > this up.
-> > 
-> 
-> I also expect the same.
-> 
-> Lorenzo, let me know if there is more work needed for this patch.
-> Thanks!
+On Thu, Feb 24 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
 
-It is tagged as an RFC that's why I have not considered it for v5.18,
-I will have a look shortly.
+> From: Jason Gunthorpe <jgg@nvidia.com>
+>
+> Invoke a new device op 'device_feature' to handle just the data array
+> portion of the command. This lifts the ioctl validation to the core code
+> and makes it simpler for either the core code, or layered drivers, to
+> implement their own feature values.
+>
+> Provide vfio_check_feature() to consolidate checking the flags/etc against
+> what the driver supports.
+>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Tested-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c      |  1 +
+>  drivers/vfio/pci/vfio_pci_core.c | 94 +++++++++++++-------------------
+>  drivers/vfio/vfio.c              | 46 ++++++++++++++--
+>  include/linux/vfio.h             | 32 +++++++++++
+>  include/linux/vfio_pci_core.h    |  2 +
+>  5 files changed, 114 insertions(+), 61 deletions(-)
 
-Thanks,
-Lorenzo
+(...)
+
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index 76191d7abed1..ca69516f869d 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -55,6 +55,7 @@ struct vfio_device {
+>   * @match: Optional device name match callback (return: 0 for no-match, >0 for
+>   *         match, -errno for abort (ex. match with insufficient or incorrect
+>   *         additional args)
+> + * @device_feature: Fill in the VFIO_DEVICE_FEATURE ioctl
+>   */
+>  struct vfio_device_ops {
+>  	char	*name;
+> @@ -69,8 +70,39 @@ struct vfio_device_ops {
+>  	int	(*mmap)(struct vfio_device *vdev, struct vm_area_struct *vma);
+>  	void	(*request)(struct vfio_device *vdev, unsigned int count);
+>  	int	(*match)(struct vfio_device *vdev, char *buf);
+> +	int	(*device_feature)(struct vfio_device *device, u32 flags,
+> +				  void __user *arg, size_t argsz);
+>  };
+
+Is the expectation that most drivers will eventually implement
+->device_feature()? Well, they will have to if they want to support
+migration; mostly asking because e.g. ->match() is explicitly marked as
+"optional". As the only callback every driver implements seems to be
+->ioctl() (if we also include the samples), "optional" or not does not
+seem to be particularly relevant anyway.
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
