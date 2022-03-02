@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1B934CAFDC
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 21:31:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A74084CAFE5
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 21:31:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243923AbiCBUc1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 15:32:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38032 "EHLO
+        id S243765AbiCBUc0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 15:32:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243938AbiCBUcU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 15:32:20 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64788DB847
-        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 12:31:31 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id 15-20020a17090a098f00b001bef0376d5cso2856178pjo.5
-        for <linux-pci@vger.kernel.org>; Wed, 02 Mar 2022 12:31:31 -0800 (PST)
+        with ESMTP id S243923AbiCBUcY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 15:32:24 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84598CE939
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 12:31:36 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id e2so2569419pls.10
+        for <linux-pci@vger.kernel.org>; Wed, 02 Mar 2022 12:31:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+ZB0wmcHb/vPxT3OXeuOvQMbxgsgyn+6ztoW0hvGJJA=;
-        b=J6aCv62JRv8pXKSN4faWU++P8+CfLEZhXxOFQNT7HfYNhIEB5EhOknuDcp7y90Wsam
-         PaVTrXj/fKbQE7u1oWbVQRx0RjvIBQvkTXECdtmEwjw9dzeCuBdIwFnydrP7xDtH/UFb
-         ED/xiCG1RhCOxuEu8ja7Zq7f08eL/Iyj4XoSBCaKZ2RJHHMsMHf1HI0quqXEDVyv0HMp
-         rtcvFN9IS+eEynrmaJRJZAc4tMD75bkdzDPMI31DWLb4bhPYdAgCCpjCAnymiSYDHmVq
-         bCETryp6zYTQRvFyP87TuGqfEv2chYjD+vxjB189GXg7wv3oF+qC3jrY2BW551ZwovjB
-         EFnA==
+        bh=6aVyDbY8mWFDs86ZSUd7TuJOdBkBFLjs80gN0LS4pVY=;
+        b=Tl7NEZvhUZpdTwcmNe+f/k3vBpnZvUbtaafcgnb2OUtQN33/NOBKA/oOQ83psaAVPk
+         ggqvLNZym/zESiPo+8EUetAQy/d9qUY7s2BiZt0LZkm0sKEeA5/D8/HwZvEckCcIEdrY
+         OQanc3Gn4bz62tkHmduupGz7wi+r28JZYuSuoQBa2yQRigViwFSMqIzy7JDPEbcoOms8
+         7eO7Nrxq3LZKUCFVQjdIrgMFoRgJQRgcTujW9CfhQ5Z4NZRH9Ylgnl8iamL1PuTHzPXz
+         iNpAIRTpPJKf57odccoTGvQgJMBzIzUUxAFP8IDV5dBcD90xXnj2fDLHZ1bq8MQvAzRK
+         Kjxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+ZB0wmcHb/vPxT3OXeuOvQMbxgsgyn+6ztoW0hvGJJA=;
-        b=er8Sf6wyZnALJXHdz26zM8+9yfRx0mpukDUAQ3uwFV/kOEJIWRswcas3pyEtzJi3w/
-         okdyz9oggvab+VHHk02LvuocC+Cm9SBKSAmG3+ohwwd5uiIG01zJPwDUctHYp7aJePlF
-         vUiTr7b45gV7J6tz8u+yNCda1uRFBvPcLnYwG0g78eG0jJUfqH7BRzpGMjoen+62+Kou
-         A69T7rs7PKtstLeWGghYnUoLRLDNyc/p6drPjzl7YWTo9nItV6RB+61DJzpxF5W7OYTZ
-         1hhBsQufxzax9SyH8en1EBQeLHSYW+hLhb5jIQV8xMNIMsYHJGI9INqeTG4JriHhSFdy
-         QNIA==
-X-Gm-Message-State: AOAM531aVZ0zlCMQ0yc8RqmIOkuDkRJGzr3iSWqJvQEJO1Li1LgZ8TRp
-        n2JrGZtYqUVfjrsfyTYBsCkxP9uVSMFgkA==
-X-Google-Smtp-Source: ABdhPJyYuh2Fbf8DNP4cMJhNZHLXeireD7xt0LcQmeEs6jt/bpr0UnDN0KyUO0ZDi7d88WtLnvTfOw==
-X-Received: by 2002:a17:90a:8582:b0:1b9:b0da:9ca9 with SMTP id m2-20020a17090a858200b001b9b0da9ca9mr1603031pjn.146.1646253090636;
-        Wed, 02 Mar 2022 12:31:30 -0800 (PST)
+        bh=6aVyDbY8mWFDs86ZSUd7TuJOdBkBFLjs80gN0LS4pVY=;
+        b=sU1/D91yVjLf1KzOQNdkynRO+ltI+0cXXYPPj4uHQerfeQ8b7VR07b+7DZFXaTI9gV
+         +wJMf9xqtDIoVATOYV6GIEwfhyW+JiCsyhlwpaay4DKkz6MIHjw4LYZCX3Y7sfkybABd
+         mKKEdB0CJ97BoKhZwXN5p+x2OTG/sQa6x+wSM1V6po0UjLsMuR9m83V0RQdKAExGa2cO
+         qoniAWmsI1mO9lkuGFTinB/egg5jgKJn3gDbxEIzhUu2VpAZAQUHEGXvCdEozASgnUIj
+         msuFHrAq9ZOBgJY6VKiyN8GAGZAWsRXpA7M7BDK9wQ7ZRhM/5FAxZj+5Ds2Ip34qNW/v
+         1Ulg==
+X-Gm-Message-State: AOAM531uv7NQlezfwmjIsyzwjP+5nsHRlg1DQ5VEhutSrwd7BweXoCRU
+        7qaq+jaq1JowyYUxwUNiU7vfow==
+X-Google-Smtp-Source: ABdhPJxMxp1gqbVtF9DFn3Tc3YJZqRD1Zo0skonvDO+wrA4GxmhhC4lZ0Rzrnob3c5L5q3wx3aE5MQ==
+X-Received: by 2002:a17:90b:f8a:b0:1be:dccd:e4f7 with SMTP id ft10-20020a17090b0f8a00b001bedccde4f7mr1627856pjb.92.1646253096058;
+        Wed, 02 Mar 2022 12:31:36 -0800 (PST)
 Received: from localhost.localdomain ([182.64.85.91])
-        by smtp.gmail.com with ESMTPSA id b1-20020a17090aa58100b001bcb7bad374sm5963410pjq.17.2022.03.02.12.31.25
+        by smtp.gmail.com with ESMTPSA id b1-20020a17090aa58100b001bcb7bad374sm5963410pjq.17.2022.03.02.12.31.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Mar 2022 12:31:30 -0800 (PST)
+        Wed, 02 Mar 2022 12:31:35 -0800 (PST)
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org
@@ -55,10 +55,10 @@ Cc:     bhupesh.sharma@linaro.org, bhupesh.linux@gmail.com,
         bjorn.andersson@linaro.org, svarbanov@mm-sol.com,
         bhelgaas@google.com, linux-kernel@vger.kernel.org,
         robh+dt@kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
-        linux-clk@vger.kernel.org
-Subject: [PATCH v3 6/7] arm64: dts: qcom: sm8150: Add PCIe nodes
-Date:   Thu,  3 Mar 2022 02:00:44 +0530
-Message-Id: <20220302203045.184500-7-bhupesh.sharma@linaro.org>
+        linux-clk@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v3 7/7] arm64: dts: qcom: sa8155: Enable PCIe nodes
+Date:   Thu,  3 Mar 2022 02:00:45 +0530
+Message-Id: <20220302203045.184500-8-bhupesh.sharma@linaro.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220302203045.184500-1-bhupesh.sharma@linaro.org>
 References: <20220302203045.184500-1-bhupesh.sharma@linaro.org>
@@ -66,7 +66,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,276 +74,73 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add nodes for the two PCIe controllers found on the SM8150 SoC.
+SA8155p ADP board supports the PCIe0 controller in the RC
+mode (only). So add the support for the same.
 
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>
 Cc: Rob Herring <robh+dt@kernel.org>
 Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 243 +++++++++++++++++++++++++++
- 1 file changed, 243 insertions(+)
+ arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 42 ++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 6012322a5984..598bc3d1ce69 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -1626,6 +1626,203 @@ system-cache-controller@9200000 {
- 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+index 8756c2b25c7e..3f6b3ee404f5 100644
+--- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
++++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+@@ -387,9 +387,51 @@ &usb_2_qmpphy {
+ 	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
+ };
  
-+		pcie0: pci@1c00000 {
-+			compatible = "qcom,pcie-sm8150", "snps,dw-pcie";
-+			reg = <0 0x01c00000 0 0x3000>,
-+			      <0 0x60000000 0 0xf1d>,
-+			      <0 0x60000f20 0 0xa8>,
-+			      <0 0x60001000 0 0x1000>,
-+			      <0 0x60100000 0 0x100000>;
-+			reg-names = "parf", "dbi", "elbi", "atu", "config";
-+			device_type = "pci";
-+			linux,pci-domain = <0>;
-+			bus-range = <0x00 0xff>;
-+			num-lanes = <1>;
++&pcie0 {
++	status = "okay";
++};
 +
-+			#address-cells = <3>;
-+			#size-cells = <2>;
++&pcie0_phy {
++	status = "okay";
++	vdda-phy-supply = <&vreg_l18c_0p88>;
++	vdda-pll-supply = <&vreg_l8c_1p2>;
++};
 +
-+			ranges = <0x01000000 0x0 0x60200000 0 0x60200000 0x0 0x100000>,
-+				 <0x02000000 0x0 0x60300000 0 0x60300000 0x0 0x3d00000>;
++&pcie1_phy {
++	vdda-phy-supply = <&vreg_l18c_0p88>;
++	vdda-pll-supply = <&vreg_l8c_1p2>;
++};
 +
-+			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi";
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+					<0 0 0 2 &intc 0 150 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+					<0 0 0 3 &intc 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+					<0 0 0 4 &intc 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+
-+			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
-+				 <&gcc GCC_PCIE_0_AUX_CLK>,
-+				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-+				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-+				 <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
-+				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
-+			clock-names = "pipe",
-+				      "aux",
-+				      "cfg",
-+				      "bus_master",
-+				      "bus_slave",
-+				      "slave_q2a",
-+				      "tbu";
-+
-+			iommus = <&apps_smmu 0x1d80 0x7f>;
-+			iommu-map = <0x0   &apps_smmu 0x1d80 0x1>,
-+				    <0x100 &apps_smmu 0x1d81 0x1>;
-+
-+			resets = <&gcc GCC_PCIE_0_BCR>;
-+			reset-names = "pci";
-+
-+			power-domains = <&gcc PCIE_0_GDSC>;
-+
-+			phys = <&pcie0_lane>;
-+			phy-names = "pciephy";
-+
-+			perst-gpio = <&tlmm 35 GPIO_ACTIVE_HIGH>;
-+			enable-gpio = <&tlmm 37 GPIO_ACTIVE_HIGH>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pcie0_default_state>;
-+
-+			status = "disabled";
-+		};
-+
-+		pcie0_phy: phy@1c06000 {
-+			compatible = "qcom,sm8150-qmp-gen3x1-pcie-phy";
-+			reg = <0 0x01c06000 0 0x1c0>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
-+				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE0_PHY_REFGEN_CLK>;
-+			clock-names = "aux", "cfg_ahb", "refgen";
-+
-+			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
-+			reset-names = "phy";
-+
-+			assigned-clocks = <&gcc GCC_PCIE0_PHY_REFGEN_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			status = "disabled";
-+
-+			pcie0_lane: phy@1c06200 {
-+				reg = <0 0x1c06200 0 0x170>, /* tx */
-+				      <0 0x1c06400 0 0x200>, /* rx */
-+				      <0 0x1c06800 0 0x1f0>, /* pcs */
-+				      <0 0x1c06c00 0 0xf4>; /* "pcs_lane" same as pcs_misc? */
-+				clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-+				clock-names = "pipe0";
-+
-+				#phy-cells = <0>;
-+				clock-output-names = "pcie_0_pipe_clk";
-+			};
-+		};
-+
-+		pcie1: pci@1c08000 {
-+			compatible = "qcom,pcie-sm8150", "snps,dw-pcie";
-+			reg = <0 0x01c08000 0 0x3000>,
-+			      <0 0x40000000 0 0xf1d>,
-+			      <0 0x40000f20 0 0xa8>,
-+			      <0 0x40001000 0 0x1000>,
-+			      <0 0x40100000 0 0x100000>;
-+			reg-names = "parf", "dbi", "elbi", "atu", "config";
-+			device_type = "pci";
-+			linux,pci-domain = <1>;
-+			bus-range = <0x00 0xff>;
-+			num-lanes = <2>;
-+
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			ranges = <0x01000000 0x0 0x40200000 0x0 0x40200000 0x0 0x100000>,
-+				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
-+
-+			interrupts = <GIC_SPI 307 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "msi";
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 434 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+					<0 0 0 2 &intc 0 435 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+					<0 0 0 3 &intc 0 438 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+					<0 0 0 4 &intc 0 439 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+
-+			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-+				 <&gcc GCC_PCIE_1_AUX_CLK>,
-+				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
-+				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-+				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
-+				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
-+			clock-names = "pipe",
-+				      "aux",
-+				      "cfg",
-+				      "bus_master",
-+				      "bus_slave",
-+				      "slave_q2a",
-+				      "tbu";
-+
-+			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
-+			assigned-clock-rates = <19200000>;
-+
-+			iommus = <&apps_smmu 0x1e00 0x7f>;
-+			iommu-map = <0x0   &apps_smmu 0x1e00 0x1>,
-+				    <0x100 &apps_smmu 0x1e01 0x1>;
-+
-+			resets = <&gcc GCC_PCIE_1_BCR>;
-+			reset-names = "pci";
-+
-+			power-domains = <&gcc PCIE_1_GDSC>;
-+
-+			phys = <&pcie1_lane>;
-+			phy-names = "pciephy";
-+
-+			perst-gpio = <&tlmm 102 GPIO_ACTIVE_HIGH>;
-+			enable-gpio = <&tlmm 104 GPIO_ACTIVE_HIGH>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pcie1_default_state>;
-+
-+			status = "disabled";
-+		};
-+
-+		pcie1_phy: phy@1c0e000 {
-+			compatible = "qcom,sm8150-qmp-gen3x2-pcie-phy";
-+			reg = <0 0x01c0e000 0 0x1c0>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
-+				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE1_PHY_REFGEN_CLK>;
-+			clock-names = "aux", "cfg_ahb", "refgen";
-+
-+			resets = <&gcc GCC_PCIE_1_PHY_BCR>;
-+			reset-names = "phy";
-+
-+			assigned-clocks = <&gcc GCC_PCIE1_PHY_REFGEN_CLK>;
-+			assigned-clock-rates = <100000000>;
-+
-+			status = "disabled";
-+
-+			pcie1_lane: phy@1c0e200 {
-+				reg = <0 0x1c0e200 0 0x170>, /* tx0 */
-+				      <0 0x1c0e400 0 0x200>, /* rx0 */
-+				      <0 0x1c0ea00 0 0x1f0>, /* pcs */
-+				      <0 0x1c0e600 0 0x170>, /* tx1 */
-+				      <0 0x1c0e800 0 0x200>, /* rx1 */
-+				      <0 0x1c0ee00 0 0xf4>; /* "pcs_com" same as pcs_misc? */
-+				clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
-+				clock-names = "pipe0";
-+
-+				#phy-cells = <0>;
-+				clock-output-names = "pcie_1_pipe_clk";
-+			};
-+		};
-+
- 		ufs_mem_hc: ufshc@1d84000 {
- 			compatible = "qcom,sm8150-ufshc", "qcom,ufshc",
- 				     "jedec,ufs-2.0";
-@@ -2327,6 +2524,52 @@ qup_spi19_default: qup-spi19-default {
- 				drive-strength = <6>;
- 				bias-disable;
- 			};
-+
-+			pcie0_default_state: pcie0-default {
-+				perst {
-+					pins = "gpio35";
-+					function = "gpio";
-+					drive-strength = <2>;
-+					bias-pull-down;
-+				};
-+
-+				clkreq {
-+					pins = "gpio36";
-+					function = "pci_e0";
-+					drive-strength = <2>;
-+					bias-pull-up;
-+				};
-+
-+				wake {
-+					pins = "gpio37";
-+					function = "gpio";
-+					drive-strength = <2>;
-+					bias-pull-up;
-+				};
-+			};
-+
-+			pcie1_default_state: pcie1-default {
-+				perst {
-+					pins = "gpio102";
-+					function = "gpio";
-+					drive-strength = <2>;
-+					bias-pull-down;
-+				};
-+
-+				clkreq {
-+					pins = "gpio103";
-+					function = "pci_e1";
-+					drive-strength = <2>;
-+					bias-pull-up;
-+				};
-+
-+				wake {
-+					pins = "gpio104";
-+					function = "gpio";
-+					drive-strength = <2>;
-+					bias-pull-up;
-+				};
-+			};
- 		};
+ &tlmm {
+ 	gpio-reserved-ranges = <0 4>;
  
- 		remoteproc_mpss: remoteproc@4080000 {
++	bt_en_default: bt_en_default {
++		mux {
++			pins = "gpio172";
++			function = "gpio";
++		};
++
++		config {
++			pins = "gpio172";
++			drive-strength = <2>;
++			bias-pull-down;
++		};
++	};
++
++	wlan_en_default: wlan_en_default {
++		mux {
++			pins = "gpio169";
++			function = "gpio";
++		};
++
++		config {
++			pins = "gpio169";
++			drive-strength = <16>;
++			output-high;
++			bias-pull-up;
++		};
++	};
++
+ 	usb2phy_ac_en1_default: usb2phy_ac_en1_default {
+ 		mux {
+ 			pins = "gpio113";
 -- 
 2.35.1
 
