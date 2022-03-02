@@ -2,134 +2,266 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 911804CA2A9
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 12:01:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C09F4CA370
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 12:20:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234836AbiCBLCK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 06:02:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48576 "EHLO
+        id S235098AbiCBLUw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 06:20:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241187AbiCBLCI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 06:02:08 -0500
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F516E793
-        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 03:01:25 -0800 (PST)
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S241350AbiCBLUm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 06:20:42 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7F74CDF66
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 03:19:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646219974;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oU9xsUH3KYvT9qc7F2Zj/zrvWJj+uZjGFINcg4AMqQg=;
+        b=MOIwvKcGv0vajVatBRD7RRBET1k7HVtWfMKbIp+yYcpjOAQw987ODk85KD9u2uy33maL6T
+        KClDXLpOr0b+fCpd/POms+HwWaMITE4il7PH1Dq8PoOKK/Hv64h9YjXA5qg7M/yt1i6ghM
+        E28vqDmZmuj6L+2H+yHWsnM59h/4DFY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-36-qOQrJP2YOWal2iQgFKzSHw-1; Wed, 02 Mar 2022 06:19:31 -0500
+X-MC-Unique: qOQrJP2YOWal2iQgFKzSHw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 3DF4D3F603
-        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 11:01:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1646218883;
-        bh=Si9sQ7yLz6JK6Nen6lACTBVX2ecHMiwS0ByLXYRxjJA=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=Otl600XWsN7VkMsCgZY6G3LVJR59D4DTJ9IdTj7JHfJfF2knbcQD2GVOlGdswAqty
-         0rJHBIdZNMj4rXg8PeEhwf6YF58puLckZ+qvM0I0YSls8Uv0epO2xr6IcTroEZTq7g
-         PmRRGuHZHOv3rIL3Xy+jH1yqSZcMXCFiD0rOhI/Y/4FTlFhnJSLfYt2cAdCMzetEom
-         y41TlUus1bCL7VJSOOlGqt4PqN4dTpKHGOkq7xcWxYZqEzFINJE4Lzi2pBz1L/64n2
-         o2sIM8YZo8HnRYKjIiiP90kKfxXHrBbjvIMxZ4MwIiZtZpY/PeeS7Hb5zo6GD8+ZhL
-         fabjnJAUklNEA==
-Received: by mail-ed1-f70.google.com with SMTP id h17-20020a05640250d100b004133863d836so812860edb.0
-        for <linux-pci@vger.kernel.org>; Wed, 02 Mar 2022 03:01:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Si9sQ7yLz6JK6Nen6lACTBVX2ecHMiwS0ByLXYRxjJA=;
-        b=m+q2O2gZUSpURhFniVGCS99Tdj70i96ET8Fab6XalKGhxDZVals6b4U2sSmQkbRFwL
-         vDASOq8awpuZC790NFLZOakRf+AvbK24onfIEVaSdPEIlauzqBPdw+bCDWaV2QGafaEE
-         bm6BJmIW7QxPXtlJrMHeAgwj12e06trFC+nLC7TusbKL/oM7fwm6yj5bbyM3ojGMYEfA
-         4alc0Uohw36d6HLUSE7XqJA7I7aOp4CCu9uTrDILAHKkpJKhBmdWBMIrmNFa69KFLOqL
-         EoXFlVOMaO8lH5vPksNve/Xd+HvzlVz2FkfnKDgGKZ0oWabM8HQtQX8L0qBRNRsbai5s
-         JfkA==
-X-Gm-Message-State: AOAM531L9od/kq3N/9k7vTG6gJVjcjRRXxzEhGQ/AtTUsRic/YOcZkuk
-        XtOhpxsM9+RllG6y2ZXatsfRhn07cMTVdJA17oCqrc36IHUttGmf2LmeBfZuPvNsjPKooW+w5Q6
-        HXIHEG3Uo7iCovFOA45zMpTGwIZ/FxEioVBnYCw==
-X-Received: by 2002:a05:6402:369a:b0:413:81b5:7b64 with SMTP id ej26-20020a056402369a00b0041381b57b64mr22935775edb.163.1646218881652;
-        Wed, 02 Mar 2022 03:01:21 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwaXIpVKlG8abGyix74I9rTqmFoJz7zygw3QnLROE8hwqkRWj9/wBCxZT5ACGsypW51MBpi7Q==
-X-Received: by 2002:a05:6402:369a:b0:413:81b5:7b64 with SMTP id ej26-20020a056402369a00b0041381b57b64mr22935729edb.163.1646218881424;
-        Wed, 02 Mar 2022 03:01:21 -0800 (PST)
-Received: from [192.168.0.136] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
-        by smtp.gmail.com with ESMTPSA id et3-20020a170907294300b006d6534ef273sm5617821ejc.156.2022.03.02.03.01.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Mar 2022 03:01:20 -0800 (PST)
-Message-ID: <22099da9-fad0-a5fb-f45a-484635ca485f@canonical.com>
-Date:   Wed, 2 Mar 2022 12:01:19 +0100
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 990E01006AA5;
+        Wed,  2 Mar 2022 11:19:29 +0000 (UTC)
+Received: from localhost (unknown [10.39.194.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E6E697554E;
+        Wed,  2 Mar 2022 11:19:21 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yishai Hadas <yishaih@nvidia.com>, alex.williamson@redhat.com,
+        bhelgaas@google.com, jgg@nvidia.com, saeedm@nvidia.com
+Cc:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, kuba@kernel.org, leonro@nvidia.com,
+        kwankhede@nvidia.com, mgurtovoy@nvidia.com, yishaih@nvidia.com,
+        maorg@nvidia.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        shameerali.kolothum.thodi@huawei.com
+Subject: Re: [PATCH V9 mlx5-next 09/15] vfio: Define device migration
+ protocol v2
+In-Reply-To: <20220224142024.147653-10-yishaih@nvidia.com>
+Organization: Red Hat GmbH
+References: <20220224142024.147653-1-yishaih@nvidia.com>
+ <20220224142024.147653-10-yishaih@nvidia.com>
+User-Agent: Notmuch/0.34 (https://notmuchmail.org)
+Date:   Wed, 02 Mar 2022 12:19:20 +0100
+Message-ID: <87tucgiouf.fsf@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 06/11] s390: cio: Use driver_set_override() instead of
- open-coding
-Content-Language: en-US
-To:     Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-References: <20220227135214.145599-1-krzysztof.kozlowski@canonical.com>
- <20220227135214.145599-7-krzysztof.kozlowski@canonical.com>
- <b2295eba-722a-67e2-baae-20dac9d72625@linux.ibm.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <b2295eba-722a-67e2-baae-20dac9d72625@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 01/03/2022 17:01, Vineeth Vijayan wrote:
-> 
-> On 2/27/22 14:52, Krzysztof Kozlowski wrote:
->> Use a helper for seting driver_override to reduce amount of duplicated
->> code. Make the driver_override field const char, because it is not
->> modified by the core and it matches other subsystems.
-> s/seting/setting/
-> 
-> Also could you please change the title to start with "s390/cio:"
-> instead of "s390 : cio"
-> 
+On Thu, Feb 24 2022, Yishai Hadas <yishaih@nvidia.com> wrote:
 
-Sure, thanks for review!
+> From: Jason Gunthorpe <jgg@nvidia.com>
+>
+> Replace the existing region based migration protocol with an ioctl based
+> protocol. The two protocols have the same general semantic behaviors, but
+> the way the data is transported is changed.
+>
+> This is the STOP_COPY portion of the new protocol, it defines the 5 states
+> for basic stop and copy migration and the protocol to move the migration
+> data in/out of the kernel.
+>
+> Compared to the clarification of the v1 protocol Alex proposed:
+>
+> https://lore.kernel.org/r/163909282574.728533.7460416142511440919.stgit@omen
+>
+> This has a few deliberate functional differences:
+>
+>  - ERROR arcs allow the device function to remain unchanged.
+>
+>  - The protocol is not required to return to the original state on
+>    transition failure. Instead userspace can execute an unwind back to
+>    the original state, reset, or do something else without needing kernel
+>    support. This simplifies the kernel design and should userspace choose
+>    a policy like always reset, avoids doing useless work in the kernel
+>    on error handling paths.
+>
+>  - PRE_COPY is made optional, userspace must discover it before using it.
+>    This reflects the fact that the majority of drivers we are aware of
+>    right now will not implement PRE_COPY.
+>
+>  - segmentation is not part of the data stream protocol, the receiver
+>    does not have to reproduce the framing boundaries.
+>
+> The hybrid FSM for the device_state is described as a Mealy machine by
+> documenting each of the arcs the driver is required to implement. Defining
+> the remaining set of old/new device_state transitions as 'combination
+> transitions' which are naturally defined as taking multiple FSM arcs along
+> the shortest path within the FSM's digraph allows a complete matrix of
+> transitions.
+>
+> A new VFIO_DEVICE_FEATURE of VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE is
+> defined to replace writing to the device_state field in the region. This
+> allows returning a brand new FD whenever the requested transition opens
+> a data transfer session.
+>
+> The VFIO core code implements the new feature and provides a helper
+> function to the driver. Using the helper the driver only has to
+> implement 6 of the FSM arcs and the other combination transitions are
+> elaborated consistently from those arcs.
+>
+> A new VFIO_DEVICE_FEATURE of VFIO_DEVICE_FEATURE_MIGRATION is defined to
+> report the capability for migration and indicate which set of states and
+> arcs are supported by the device. The FSM provides a lot of flexibility to
+> make backwards compatible extensions but the VFIO_DEVICE_FEATURE also
+> allows for future breaking extensions for scenarios that cannot support
+> even the basic STOP_COPY requirements.
+>
+> The VFIO_DEVICE_FEATURE_MIG_DEVICE_STATE with the GET option (i.e.
+> VFIO_DEVICE_FEATURE_GET) can be used to read the current migration state
+> of the VFIO device.
+>
+> Data transfer sessions are now carried over a file descriptor, instead of
+> the region. The FD functions for the lifetime of the data transfer
+> session. read() and write() transfer the data with normal Linux stream FD
+> semantics. This design allows future expansion to support poll(),
+> io_uring, and other performance optimizations.
+>
+> The complicated mmap mode for data transfer is discarded as current qemu
+> doesn't take meaningful advantage of it, and the new qemu implementation
+> avoids substantially all the performance penalty of using a read() on the
+> region.
+>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Tested-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
+> ---
+>  drivers/vfio/vfio.c       | 199 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/vfio.h      |  20 ++++
+>  include/uapi/linux/vfio.h | 174 ++++++++++++++++++++++++++++++---
+>  3 files changed, 380 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> index 71763e2ac561..b37ab27b511f 100644
+> --- a/drivers/vfio/vfio.c
+> +++ b/drivers/vfio/vfio.c
+> @@ -1557,6 +1557,197 @@ static int vfio_device_fops_release(struct inode *inode, struct file *filep)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * vfio_mig_get_next_state - Compute the next step in the FSM
+> + * @cur_fsm - The current state the device is in
+> + * @new_fsm - The target state to reach
+> + * @next_fsm - Pointer to the next step to get to new_fsm
+> + *
+> + * Return 0 upon success, otherwise -errno
+> + * Upon success the next step in the state progression between cur_fsm and
+> + * new_fsm will be set in next_fsm.
 
+What about non-success? Can the caller make any assumption about
+next_fsm in that case? Because...
 
-Best regards,
-Krzysztof
+> + *
+> + * This breaks down requests for combination transitions into smaller steps and
+> + * returns the next step to get to new_fsm. The function may need to be called
+> + * multiple times before reaching new_fsm.
+> + *
+> + */
+> +int vfio_mig_get_next_state(struct vfio_device *device,
+> +			    enum vfio_device_mig_state cur_fsm,
+> +			    enum vfio_device_mig_state new_fsm,
+> +			    enum vfio_device_mig_state *next_fsm)
+> +{
+> +	enum { VFIO_DEVICE_NUM_STATES = VFIO_DEVICE_STATE_RESUMING + 1 };
+> +	/*
+> +	 * The coding in this table requires the driver to implement 6
+> +	 * FSM arcs:
+> +	 *         RESUMING -> STOP
+> +	 *         RUNNING -> STOP
+> +	 *         STOP -> RESUMING
+> +	 *         STOP -> RUNNING
+> +	 *         STOP -> STOP_COPY
+> +	 *         STOP_COPY -> STOP
+> +	 *
+> +	 * The coding will step through multiple states for these combination
+> +	 * transitions:
+> +	 *         RESUMING -> STOP -> RUNNING
+> +	 *         RESUMING -> STOP -> STOP_COPY
+> +	 *         RUNNING -> STOP -> RESUMING
+> +	 *         RUNNING -> STOP -> STOP_COPY
+> +	 *         STOP_COPY -> STOP -> RESUMING
+> +	 *         STOP_COPY -> STOP -> RUNNING
+> +	 */
+> +	static const u8 vfio_from_fsm_table[VFIO_DEVICE_NUM_STATES][VFIO_DEVICE_NUM_STATES] = {
+> +		[VFIO_DEVICE_STATE_STOP] = {
+> +			[VFIO_DEVICE_STATE_STOP] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_RUNNING,
+> +			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_STOP_COPY,
+> +			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_RESUMING,
+> +			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+> +		},
+> +		[VFIO_DEVICE_STATE_RUNNING] = {
+> +			[VFIO_DEVICE_STATE_STOP] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_RUNNING,
+> +			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+> +		},
+> +		[VFIO_DEVICE_STATE_STOP_COPY] = {
+> +			[VFIO_DEVICE_STATE_STOP] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_STOP_COPY,
+> +			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+> +		},
+> +		[VFIO_DEVICE_STATE_RESUMING] = {
+> +			[VFIO_DEVICE_STATE_STOP] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_STOP,
+> +			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_RESUMING,
+> +			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+> +		},
+> +		[VFIO_DEVICE_STATE_ERROR] = {
+> +			[VFIO_DEVICE_STATE_STOP] = VFIO_DEVICE_STATE_ERROR,
+> +			[VFIO_DEVICE_STATE_RUNNING] = VFIO_DEVICE_STATE_ERROR,
+> +			[VFIO_DEVICE_STATE_STOP_COPY] = VFIO_DEVICE_STATE_ERROR,
+> +			[VFIO_DEVICE_STATE_RESUMING] = VFIO_DEVICE_STATE_ERROR,
+> +			[VFIO_DEVICE_STATE_ERROR] = VFIO_DEVICE_STATE_ERROR,
+> +		},
+> +	};
+> +
+> +	if (WARN_ON(cur_fsm >= ARRAY_SIZE(vfio_from_fsm_table)))
+> +		return -EINVAL;
+> +
+> +	if (new_fsm >= ARRAY_SIZE(vfio_from_fsm_table))
+> +		return -EINVAL;
+> +
+> +	*next_fsm = vfio_from_fsm_table[cur_fsm][new_fsm];
+> +	return (*next_fsm != VFIO_DEVICE_STATE_ERROR) ? 0 : -EINVAL;
+
+...next_fsm will contain STATE_ERROR if we try to transition from or to
+STATE_ERROR, but it remains unchanged if the input states are out of
+range, yet in both cases the return value is -EINVAL. Looking further, ...
+
+> + * any -> ERROR
+> + *   ERROR cannot be specified as a device state, however any transition request
+> + *   can be failed with an errno return and may then move the device_state into
+> + *   ERROR. In this case the device was unable to execute the requested arc and
+> + *   was also unable to restore the device to any valid device_state.
+> + *   To recover from ERROR VFIO_DEVICE_RESET must be used to return the
+> + *   device_state back to RUNNING.
+
+...this seems to indicate that not moving into STATE_ERROR is an
+option anyway. Do we need any extra guidance in the description for
+vfio_mig_get_next_state()?
+
