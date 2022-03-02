@@ -2,281 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACAB44CB158
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 22:34:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C2C94CB33F
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 01:34:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243550AbiCBVfS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 16:35:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39420 "EHLO
+        id S230166AbiCCAQO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 19:16:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235450AbiCBVfS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 16:35:18 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 862C44B40A;
-        Wed,  2 Mar 2022 13:34:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646256873; x=1677792873;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=uWKYkYNGFSCvs2AqC67ATOJPnSIh5p27qIVXXMKxU9c=;
-  b=JxTbtMansGqXBMg4AgKW+r6qOB/3Pa/+15UmDCY6T0D0xYqxq3UPdEKO
-   VsPAYgxA6xW0zbG9i6iG7B2/AHC8wBAmRDooAUsss4wAUeL6ry/GEO4BB
-   RSG0vWs/0Pj7meTf0cMUZjVXwstFYrcqfVIU0dpTWmveO+2JbLNEQ2cBt
-   UNFVGbmpjk8BNpZ6sE4SPl0JarcsRxHZcPA4ykk2I4BkVoofGGITM40De
-   kFIBbCc94rsTcFVOSCZYY2itHlRcQ48na5b7eUE2KefV/BECORCsyFAJh
-   wUxpjuog4JrUaeyH3tbVWwu9zBv+vwZFGEfTKNbz81ZOJAHRBUDX9CdmW
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10274"; a="253239205"
-X-IronPort-AV: E=Sophos;i="5.90,150,1643702400"; 
-   d="scan'208";a="253239205"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2022 13:34:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,150,1643702400"; 
-   d="scan'208";a="639932610"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Mar 2022 13:34:32 -0800
-Received: from jvillanu-mobl1.amr.corp.intel.com (unknown [10.209.29.178])
-        by linux.intel.com (Postfix) with ESMTP id CBE5A580BA0;
-        Wed,  2 Mar 2022 13:34:31 -0800 (PST)
-Message-ID: <3eca2aac539cb14ac5e515ad29c513c457419954.camel@linux.intel.com>
-Subject: Re: [RFC PATCH 2/4] spdm: Introduce a library for DMTF SPDM
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "open list:KEYS-TRUSTED" <keyrings@vger.kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>
-Date:   Wed, 02 Mar 2022 13:34:31 -0800
-In-Reply-To: <20220301095937.00002c5e@Huawei.com>
-References: <20210804161839.3492053-1-Jonathan.Cameron@huawei.com>
-         <20210804161839.3492053-3-Jonathan.Cameron@huawei.com>
-         <CAPcyv4iiZMd6GmyRG+SMcYF_5JEqj8zrti_gjffTvOE27srbUw@mail.gmail.com>
-         <MW3PR11MB452200EBA0E813A1A4E8D8C4A1019@MW3PR11MB4522.namprd11.prod.outlook.com>
-         <20220301095937.00002c5e@Huawei.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        with ESMTP id S230119AbiCCAQN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 19:16:13 -0500
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED4D1275CD
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 16:15:28 -0800 (PST)
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20220302225640epoutp02462da57d46567b995bc5e91a591c5f8a~YsmKf9rw-1310613106epoutp02P
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 22:56:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20220302225640epoutp02462da57d46567b995bc5e91a591c5f8a~YsmKf9rw-1310613106epoutp02P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1646261800;
+        bh=3iWbbqBJOFzWAOvgnsU3hKkcSQAKwiWkLuhIlSq681Y=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=uwRvZyP+4WCCQvaNmDPiejEK48NkRC4SHMONuIGqi1NoWEgdUtzlfq9+QY8xI5R7M
+         9+xI4/K/hoHMeL35g7raF9T0/qlYRSWYOOE0VhQ+LAYXpYo9WAvtZQNH5cEsFZhad/
+         8Dtp32qiEU50+zaZ1sAJXBcQqxJQcEOnsga1Qh1k=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220302225639epcas1p2a85a59e0acf2beadd05e27743e5cb7c9~YsmJ3g_AJ2430124301epcas1p2h;
+        Wed,  2 Mar 2022 22:56:39 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.38.241]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4K88ck1y66z4x9Px; Wed,  2 Mar
+        2022 22:56:38 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FC.E4.09592.626FF126; Thu,  3 Mar 2022 07:56:38 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20220302225637epcas1p11a0d9f404de6dc2701121ffbc7d412e4~YsmIDhjBt1098510985epcas1p1b;
+        Wed,  2 Mar 2022 22:56:37 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20220302225637epsmtrp2e5254885b64a554a7d19bc991a04ece6~YsmICsmnX0052300523epsmtrp2Q;
+        Wed,  2 Mar 2022 22:56:37 +0000 (GMT)
+X-AuditID: b6c32a37-2a5ff70000002578-00-621ff626ad30
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6A.74.29871.526FF126; Thu,  3 Mar 2022 07:56:37 +0900 (KST)
+Received: from yj84jang02 (unknown [10.88.97.211]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20220302225637epsmtip1abad9f4216e10a5d6043de269b6cd3e7~YsmHzktTf0949609496epsmtip1D;
+        Wed,  2 Mar 2022 22:56:37 +0000 (GMT)
+From:   =?utf-8?B?7J6l7JiB7KeEL1RWIFMvVyBMYWIoVkQpL1N0YWZmIEVuZ2luZWU=?=
+         =?utf-8?B?ci/sgrzshLHsoITsnpA=?= <yj84.jang@samsung.com>
+To:     "'Bjorn Helgaas'" <helgaas@kernel.org>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>
+Cc:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        "'Pavel Machek'" <pavel@ucw.cz>,
+        "'Len Brown'" <len.brown@intel.com>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <js07.lee@samsung.com>
+In-Reply-To: <20220302201600.GA746065@bhelgaas>
+Subject: RE: [PATCH] PM: Add device name to suspend_report_result()
+Date:   Thu, 3 Mar 2022 07:56:37 +0900
+Message-ID: <044701d82e88$c5edb6f0$51c924d0$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQEynvdJh8FuJQ7CWAlJZtNNGRQBBQHeIvO4rejfgPA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOJsWRmVeSWpSXmKPExsWy7bCmga7aN/kkg8OLOCyWNGVYNC9ez2bx
+        6sxaNotHN3+zWsyaspfJYvm+fkaLy7vmsFmcnXeczeJz7xFGi0XLWpkt7p46ymYx98tUZgce
+        jwWbSj0W73nJ5LFpVSebx/65a9g9+rasYvRYsfo7u8fnTXIB7FHZNhmpiSmpRQqpecn5KZl5
+        6bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2Si4+AbpumTlAdyoplCXmlAKFAhKLi5X07WyK8ktL
+        UhUy8otLbJVSC1JyCswK9IoTc4tL89L18lJLrAwNDIxMgQoTsjMmNneyFRxSrXg3cy5TA+N6
+        lS5GTg4JAROJd00vmbsYuTiEBHYwShyfupgVJCEk8IlR4s4fa4jEN0aJ+St2ssF0nH/znQmi
+        aC+jxI9bTBBFzxkl3r2ewgiSYBNoZJT4810BxBYRSJRYO7+ZBaSIWeASk8T1S1vAijgF9CXO
+        n+0AmyQs4Cyxd98RFhCbRUBF4sDVM8wgNq+ApcTiNSfZIWxBiZMzn4DVMAtoSyxb+JoZ4iIF
+        iZ9Pl7FCLLOSaFnSB1UjIjG7sw2q5giHxMZzYRC2i0TPwrusELawxKvjW9ghbCmJz+/2Qn2Z
+        LjHx8VuoeIHE38dLoOYYS7x7uxbI5gCarymxfpc+RFhRYufvuYwQa/kk3n3tYQUpkRDgleho
+        E4IoUZZ4fH411HRJifW/9zNNYFSaheSxWUgem4XkgVkIyxYwsqxiFEstKM5NTy02LDCGx3Vy
+        fu4mRnAK1jLfwTjt7Qe9Q4xMHIyHGCU4mJVEeMWt5ZOEeFMSK6tSi/Lji0pzUosPMZoCg3oi
+        s5Rocj4wC+SVxBuaWBqYmBmZWBhbGpspifOumnY6UUggPbEkNTs1tSC1CKaPiYNTqoHpunid
+        Q/RF7nWGV99tnsnyTfbFPf80zu8CC7cySl039FwoPa/9wDXBd11ZBf6+Z3f2ZvHo7G/w3Kln
+        MO9F/S5XaZOCVZZW/N8ZH69LCM8/97fBsPQgf0KWaPCZk3JL/Lz3ap7RYJ+yil3tS2SNzP3Y
+        F5rLt3GvWrHrrnxD1sYSv0wP2ReqDs+XJR40YjlpfuLlJt2ujRt4nkWl9Hg6HL1RvvZ1XdI1
+        Jo0jk76VLZ70TW+n5k6BdwJuAR8mZ31V00jbfyp9iahyZLTq9qN/8+VlHc6I39l/kOPutpmB
+        +mmVGRLG1zZI+DbM/HwjvHjLiZWH7A6VT2zizVy0q7r2ivIrXrkPapO5jP+eFL2b6y+txFKc
+        kWioxVxUnAgAG6TXeEoEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsWy7bCSnK7qN/kkg28PdCyWNGVYNC9ez2bx
+        6sxaNotHN3+zWsyaspfJYvm+fkaLy7vmsFmcnXeczeJz7xFGi0XLWpkt7p46ymYx98tUZgce
+        jwWbSj0W73nJ5LFpVSebx/65a9g9+rasYvRYsfo7u8fnTXIB7FFcNimpOZllqUX6dglcGSv2
+        32EsWCBV0fxrE1sD40zRLkZODgkBE4nzb74zdTFycQgJ7GaUeD7lNyNEQlLi66fPbF2MHEC2
+        sMThw8UQNU8ZJTbNu8cMUsMm0Mgo8ee7AogtIpAo0ft1BguIzSxwi0ni7yFniIYGRolVRzeA
+        JTgF9CXOn+1gArGFBZwl9u47AhZnEVCROHD1DNhQXgFLicVrTrJD2IISJ2c+gRqqLfH05lM4
+        e9nC18wQhypI/Hy6jBXiCCuJliV9UDUiErM725gnMArPQjJqFpJRs5CMmoWkZQEjyypGydSC
+        4tz03GLDAsO81HK94sTc4tK8dL3k/NxNjOCI1NLcwbh91Qe9Q4xMHIyHGCU4mJVEeMWt5ZOE
+        eFMSK6tSi/Lji0pzUosPMUpzsCiJ817oOhkvJJCeWJKanZpakFoEk2Xi4JRqYNoV9uXFt/Uy
+        RUovPXVa5Hyip3hEeO3teT/JKa7xmpKy5nLrIKEf9qZ81idKYm/dND7y8zvTphKPG7Nj425m
+        8E+5sdaoN/NS0fyvqT+nff1k3HKhwnP1tve7zefZOO3e7yXsqKK4ou05y+wda6P65Eyr3uvO
+        SRR0lT8s67luXSXjje2687ftF5zR8LJme7f+se5H/6aLR06xM4ot8mIp+lfxRnuXwR6Jxztb
+        fD/UXLho/6rpXeVB7Z9zwo48Snjv3dfp+1/pyQfj0kwldsfABxOce26kHf69SPbxWSUjL9tr
+        Xlm7Xh34zXVr7f7sB11n9d8lcGrOOTFn2TtbL9UVOVyrO2vMczgY+5eYcAQ92qbEUpyRaKjF
+        XFScCADf4E/lNwMAAA==
+X-CMS-MailID: 20220302225637epcas1p11a0d9f404de6dc2701121ffbc7d412e4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220302201609epcas1p4d2c0b15e8915f359e6744e21c27022a0
+References: <CGME20220302201609epcas1p4d2c0b15e8915f359e6744e21c27022a0@epcas1p4.samsung.com>
+        <20220302201600.GA746065@bhelgaas>
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2022-03-01 at 09:59 +0000, Jonathan Cameron wrote:
-> On Mon, 28 Feb 2022 18:13:27 +0000
-> "Box, David E" <david.e.box@intel.com> wrote:
-> 
-> > Hi Jonathan,
-> > 
-> > I'd like to test this patch with a custom transport but there's a
-> > reference to spdm.h that isn't here. Also, have you looked at
-> > measurement support yet? Thanks.
-> > 
-> 
-> Hi David,
-> 
-> I messed this up.
-> 
-> Some discussion of this took place on the linaro open discussions
-> list
-> and I posted a version there to enable some testing which has the
-> missing file.
-> Note I only did minimal testing against that tree and have had one
-> verbal report
-> of a minor bug (without details...)
-> 
-> https://op-lists.linaro.org/archives/list/linaro-open-discussions@op-lists.linaro.org/thread/5QU65B6Q74B3B4ESR7W5HER5HQ6WF4EQ/
-> 
-> It's rather dated now so I'll do a rebase and post this hopefully
-> later
-> this week given you are interested.
-> Note I haven't done any work on this for some time...
-> 
-> Curious though - what transport are people looking at?
-> I was planning to do MCTP over VDM at somepoint, but are we talking
-> something truely custom?  If so any plans to upstream as
-> I'd love a second transport to prove out the layering?
-
-Thanks for the link. Definitely interested so please do cc me on future
-patches. I'm particularly interested in the SPDM library since I'm
-looking at this for use with a device specific transport. I'll let you
-know if/when there's something to upstream. Thanks.
-
-David
-
-> 
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> 
-> 
-> > David
-> > 
-> > 
-> > > -----Original Message-----
-> > > From: Dan Williams <dan.j.williams@intel.com>
-> > > Sent: Friday, February 18, 2022 2:06 PM
-> > > To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Cc: linux-cxl@vger.kernel.org; Linux PCI <
-> > > linux-pci@vger.kernel.org>;
-> > > open list:KEYS-TRUSTED <keyrings@vger.kernel.org>; Chris Browy
-> > > <cbrowy@avery-design.com>; Linuxarm <linuxarm@huawei.com>;
-> > > Lorenzo
-> > > Pieralisi <lorenzo.pieralisi@arm.com>; Bjorn Helgaas
-> > > <bjorn@helgaas.com>; Jeremy Kerr <jk@codeconstruct.com.au>; Box,
-> > > David
-> > > E <david.e.box@intel.com>
-> > > Subject: Re: [RFC PATCH 2/4] spdm: Introduce a library for DMTF
-> > > SPDM
-> > > 
-> > > On Wed, Aug 4, 2021 at 9:23 AM Jonathan Cameron
-> > > <Jonathan.Cameron@huawei.com> wrote:  
-> > > > The Security Protocol and Data Model (SPDM) defines messages,
-> > > > data
-> > > > objects and sequences for performing message exchanges
-> > > > between  
-> > > devices  
-> > > > over various transports and physical media.
-> > > > 
-> > > > As the kernel supports several possible transports (mctp, PCI
-> > > > DOE)
-> > > > introduce a library than can in turn be used with all those  
-> > > transports.  
-> > > > There are a large number of open questions around how we do
-> > > > this that
-> > > > need to be resolved. These include:
-> > > > *  Key chain management
-> > > >    - Current approach is to use a keychain provide as part of
-> > > > per  
-> > > transport  
-> > > >      initialization for the root certificates which are assumed
-> > > > to be
-> > > >      loaded into that keychain, perhaps in an initrd script.
-> > > >    - Each SPDM instance then has its own keychain to manage its
-> > > >      certificates. It may make sense to drop this, but that
-> > > > looks  
-> > > like it  
-> > > >      will make a lot of the standard infrastructure harder to
-> > > > use.
-> > > >  *  ECC algorithms needing ASN1 encoded signatures.  I'm
-> > > > struggling  
-> > > to find  
-> > > >     any specification that actual 'requires' that choice vs raw
-> > > > data,  
-> > > so my  
-> > > >     guess is that this is a question of existing usecases (x509
-> > > > certs  
-> > > seem  
-> > > >     to use this form, but CHALLENGE_AUTH SPDM seems to use raw
-> > > > data).
-> > > >     I'm not sure whether we are better off just encoding the  
-> > > signature in  
-> > > >     ASN1 as currently done in this series, or if it is worth
-> > > > a  
-> > > tweaking  
-> > > >     things in the crypto layers.
-> > > >  *  Lots of options in actual implementation to look at.
-> > > > 
-> > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > ---
-> > > >  lib/Kconfig  |    3 +
-> > > >  lib/Makefile |    2 +
-> > > >  lib/spdm.c   | 1196  
-> > > ++++++++++++++++++++++++++++++++++++++++++++++++++  
-> > > >  3 files changed, 1201 insertions(+)
-> > > > 
-> > > > diff --git a/lib/Kconfig b/lib/Kconfig index
-> > > > ac3b30697b2b..0aa2fef6a592 100644
-> > > > --- a/lib/Kconfig
-> > > > +++ b/lib/Kconfig
-> > > > @@ -704,3 +704,6 @@ config PLDMFW
-> > > > 
-> > > >  config ASN1_ENCODER
-> > > >         tristate
-> > > > +
-> > > > +config SPDM
-> > > > +       tristate
-> > > > diff --git a/lib/Makefile b/lib/Makefile index
-> > > > 2cc359ec1fdd..566166d6936e 100644
-> > > > --- a/lib/Makefile
-> > > > +++ b/lib/Makefile
-> > > > @@ -282,6 +282,8 @@ obj-$(CONFIG_PERCPU_TEST) += percpu_test.o
-> > > >  obj-$(CONFIG_ASN1) += asn1_decoder.o
-> > > >  obj-$(CONFIG_ASN1_ENCODER) += asn1_encoder.o
-> > > > 
-> > > > +obj-$(CONFIG_SPDM) += spdm.o
-> > > > +
-> > > >  obj-$(CONFIG_FONT_SUPPORT) += fonts/
-> > > > 
-> > > >  hostprogs      := gen_crc32table
-> > > > diff --git a/lib/spdm.c b/lib/spdm.c
-> > > > new file mode 100644
-> > > > index 000000000000..3ce2341647f8
-> > > > --- /dev/null
-> > > > +++ b/lib/spdm.c
-> > > > @@ -0,0 +1,1196 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * DMTF Security Protocol and Data Model
-> > > > + *
-> > > > + * Copyright (C) 2021 Huawei
-> > > > + *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > + */
-> > > > +
-> > > > +#include <linux/asn1_encoder.h>
-> > > > +#include <linux/asn1_ber_bytecode.h>
-> > > > +#include <linux/bitfield.h>
-> > > > +#include <linux/cred.h>
-> > > > +#include <linux/dev_printk.h>
-> > > > +#include <linux/digsig.h>
-> > > > +#include <linux/idr.h>
-> > > > +#include <linux/key.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/random.h>
-> > > > +#include <linux/spdm.h>
-> > > > +
-> > > > +#include <crypto/akcipher.h>
-> > > > +#include <crypto/hash.h>
-> > > > +#include <crypto/public_key.h>
-> > > > +#include <keys/asymmetric-type.h>
-> > > > +#include <keys/user-type.h>
-> > > > +#include <asm/unaligned.h>
-> > > > +
-> > > > +/*
-> > > > + * Todo
-> > > > + * - Secure channel setup.
-> > > > + * - Multiple slot support.
-> > > > + * - Measurement support (over secure channel or within  
-> > > CHALLENGE_AUTH.  
-> > > > + * - Support more core algorithms (not CMA does not require
-> > > > them,  
-> > > but may use  
-> > > > + *   them if present.
-> > > > + * - Extended algorithm, support.
-> > > > + */
-> > > > +/*
-> > > > + * Discussions points
-> > > > + * 1. Worth adding an SPDM layer around a transport layer?  
-> > > 
-> > > I came here to say yes to this question. I am seeing interest in
-> > > SPDM
-> > > outside of a DOE transport.
-> > > 
-> > > Hope to find my way back to testing these bits out soon...  
-
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas=40kernel.org>
+> Sent: Thursday, March 3, 2022 5:16 AM
+> To: 'Greg Kroah-Hartman' <gregkh=40linuxfoundation.org>
+> Cc: =EF=BF=BD=E5=BF=B5=EF=BF=BD=EF=BF=BD/TV=20S/W=20Lab(VD)/Staff=20Engin=
+eer/=EF=BF=BD=EF=BC=BA=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=20<yj84.jang=40s=
+amsung.com>;=0D=0A>=20'Rafael=20J.=20Wysocki'=20<rafael=40kernel.org>;=20'P=
+avel=20Machek'=20<pavel=40ucw.cz>;=0D=0A>=20'Len=20Brown'=20<len.brown=40in=
+tel.com>;=20'Bjorn=20Helgaas'=20<bhelgaas=40google.com>;=0D=0A>=20linux-pm=
+=40vger.kernel.org;=20linux-kernel=40vger.kernel.org;=20linux-=0D=0A>=20pci=
+=40vger.kernel.org;=20linux-acpi=40vger.kernel.org;=20linux-usb=40vger.kern=
+el.org;=0D=0A>=20js07.lee=40samsung.com=0D=0A>=20Subject:=20Re:=20=5BPATCH=
+=5D=20PM:=20Add=20device=20name=20to=20suspend_report_result()=0D=0A>=20=0D=
+=0A>=20On=20Wed,=20Mar=2002,=202022=20at=2003:52:51PM=20+0100,=20'Greg=20Kr=
+oah-Hartman'=20wrote:=0D=0A>=20>=20On=20Wed,=20Mar=2002,=202022=20at=2008:0=
+0:14PM=20+0900,=20=20=E5=BF=B5=20=20/TV=20S/W=20Lab(VD)/Staff=0D=0A>=20Engi=
+neer/=20=EF=BC=BA=20=20=20=20=20wrote:=0D=0A>=20>=20>=20>=20-----Original=
+=20Message-----=0D=0A>=20>=20>=20>=20From:=20Greg=20Kroah-Hartman=20<gregkh=
+=40linuxfoundation.org>=0D=0A>=20>=20>=20>=20Sent:=20Wednesday,=20March=202=
+,=202022=204:58=20PM=0D=0A>=20>=20>=20>=20To:=20Youngjin=20Jang=20<yj84.jan=
+g=40samsung.com>=0D=0A>=20>=20>=20>=20Cc:=20Rafael=20J.=20Wysocki=20<rafael=
+=40kernel.org>;=20Pavel=20Machek=0D=0A>=20>=20>=20>=20<pavel=40ucw.cz>;=20L=
+en=20Brown=20<len.brown=40intel.com>;=20Bjorn=20Helgaas=0D=0A>=20>=20>=20>=
+=20<bhelgaas=40google.com>;=20linux-pm=40vger.kernel.org;=0D=0A>=20>=20>=20=
+>=20linux-kernel=40vger.kernel.org;=20linux-=20pci=40vger.kernel.org;=0D=0A=
+>=20>=20>=20>=20linux-acpi=40vger.kernel.org;=20linux-=0D=0A>=20>=20>=20usb=
+=40vger.kernel.org;=0D=0A>=20>=20>=20>=20js07.lee=40samsung.com=0D=0A>=20>=
+=20>=20>=20Subject:=20Re:=20=5BPATCH=5D=20PM:=20Add=20device=20name=20to=0D=
+=0A>=20>=20>=20>=20suspend_report_result()=0D=0A>=20>=20>=20>=0D=0A>=20>=20=
+>=20>=20On=20Wed,=20Mar=2002,=202022=20at=2003:49:17PM=20+0900,=20Youngjin=
+=20Jang=20wrote:=0D=0A>=20>=20>=20>=20>=20From:=20=22yj84.jang=22=20<yj84.j=
+ang=40samsung.com>=0D=0A>=20>=20>=20>=20>=0D=0A>=20>=20>=20>=20>=20currentl=
+y,=20suspend_report_result()=20prints=20only=20function=0D=0A>=20informatio=
+n.=0D=0A>=20>=20>=20>=20>=20If=20any=20driver=20uses=20common=20pm=20functi=
+on,=20nobody=20knows=20who=20called=0D=0A>=20>=20>=20>=20>=20failed=20funct=
+ion=20exactly.=0D=0A>=20>=20>=20>=20>=0D=0A>=20>=20>=20>=20>=20So,=20device=
+=20information=20is=20needed=20to=20recognize=20specific=20wrong=0D=0A>=20d=
+river.=0D=0A>=20>=20>=20>=20>=0D=0A>=20>=20>=20>=20>=20e.g.)=0D=0A>=20>=20>=
+=20>=20>=20PM:=20dpm_run_callback():=20pm_generic_suspend+0x0/0x48=20return=
+s=200=0D=0A>=20>=20>=20>=20>=20PM:=20dpm_run_callback():=20platform_pm_susp=
+end+0x0/0x68=20returns=200=0D=0A>=20>=20>=20>=20>=20after=20patch,=0D=0A>=
+=20>=20>=20>=20>=20PM:=20dpm_run_callback():=20pm_generic_suspend+0x0/0x48=
+=20(amba)=0D=0A>=20>=20>=20>=20>=20returns=200=0D=0A>=20>=20>=20>=20>=20PM:=
+=20dpm_run_callback():=20platform_pm_suspend+0x0/0x68=20(armv7-pmu)=0D=0A>=
+=20>=20>=20>=20>=20returns=200=0D=0A>=20=0D=0A>=20>=20>=20>=20>=20-=09=09pr=
+_err(=22%s():=20%pS=20returns=20%d=5Cn=22,=20function,=20fn,=20ret);=0D=0A>=
+=20>=20>=20>=20>=20+=09=09pr_err(=22%s():=20%pS=20(%s)=20returns=20%d=5Cn=
+=22,=20function,=20fn,=0D=0A>=20>=20>=20>=20>=20+dev_driver_string(dev),=20=
+ret);=0D=0A>=20>=20>=20>=0D=0A>=20>=20>=20>=20If=20you=20have=20a=20struct=
+=20device,=20please=20use=20dev_err().=0D=0A>=20>=20>=0D=0A>=20>=20>=20I=20=
+think=20dev_err()=20is=20nice=20option,=20but=20we=20can=20see=20a=20minor=
+=20issue.=0D=0A>=20>=20>=20Prefix=20log=20=22PM:=20=22=20would=20be=20lost,=
+=20If=20I=20use=20dev_err()=20in=20this=20context.=0D=0A>=20>=20>=20As=20yo=
+u=20know,=20all=20logs=20in=20power=20management=20include=20=22PM=20:=22=
+=20prefix.=0D=0A>=20>=0D=0A>=20>=20Why=20does=20that=20matter?=20=20Fix=20t=
+hem=20all=20to=20use=20the=20struct=20device=20pointer=0D=0A>=20>=20and=20t=
+hen=20they=20will=20be=20properly=20unified=20with=20the=20rest=20of=20the=
+=20kernel=20log=0D=0A>=20>=20infrastructure.=0D=0A>=20=0D=0A>=20You=20can=
+=20=23define=20dev_fmt=20if=20you=20need=20a=20prefix.=0D=0A=0D=0AI=20teste=
+d=20dev_fmt=20before,=20but=20I=20feel=20that=20not=20a=20good=20solution.=
+=0D=0ABecause=20the=20readability=20is=20not=20so=20great=20than=20I=20expe=
+cted.=0D=0AI=20didn't=20want=20to=20break=20the=20PM=20logging=20rules.=0D=
+=0A=0D=0AAnyway,=20I=20got=20you=20guys=20opinion.=0D=0ALet=20me=20try=20se=
+cond=20patch=20with=20dev_err().=0D=0A=0D=0A
