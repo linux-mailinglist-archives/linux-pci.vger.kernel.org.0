@@ -2,230 +2,319 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F30D54C9C51
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 04:45:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A58F34C9E03
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 07:49:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232055AbiCBDqY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Mar 2022 22:46:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36448 "EHLO
+        id S239768AbiCBGuL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 01:50:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231517AbiCBDqX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Mar 2022 22:46:23 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA3584D628
-        for <linux-pci@vger.kernel.org>; Tue,  1 Mar 2022 19:45:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646192740; x=1677728740;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Q/WVc0EIFWVoyZokhf5h4jcKxrjWtwyAFtOLeeF3CcI=;
-  b=QHPMLwXiXlJZXsWJEZSW3bfrwa4NTRFT/oSdK/f9BxBkL3OC4ayCZRh2
-   ahuo5HlY4hoeG/zvA6s2746WwaMe0PnzFmeu+hc0BzZcgIvsitlbrGSoI
-   S8MQCDXaGFEck9k6ZGfQ+MPunYW2LdIXGDjg2ZsaTXzX8BM7r3QjhIMVS
-   8hSv+tjwwg4jQryhAALiZZic/3H4GpQmm6LZoeaPiOWxBLKmcH66KWgzR
-   wcEn/nWYKoTbfkaRSKTywSPwObNaHt+5sH6xJNtPm0MEtB+EzoMyfOrZw
-   vXo/jy7UVldOkUn57ARj6MSYUuDnqr900wBwuxSMIZZTWHZH1nMx/b0Yo
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10273"; a="250880128"
-X-IronPort-AV: E=Sophos;i="5.90,148,1643702400"; 
-   d="scan'208";a="250880128"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2022 19:45:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,148,1643702400"; 
-   d="scan'208";a="510841614"
-Received: from lkp-server02.sh.intel.com (HELO e9605edfa585) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 01 Mar 2022 19:45:39 -0800
-Received: from kbuild by e9605edfa585 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nPFvm-00010o-6O; Wed, 02 Mar 2022 03:45:38 +0000
-Date:   Wed, 02 Mar 2022 11:45:20 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:next] BUILD SUCCESS
- 404bae20277a47a4f5421417a8cd515b0b2b3444
-Message-ID: <621ee850.O5M9XnfCwijxkd74%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S239755AbiCBGuL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 01:50:11 -0500
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1478B2D46
+        for <linux-pci@vger.kernel.org>; Tue,  1 Mar 2022 22:49:25 -0800 (PST)
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20220302064923epoutp03cc398c4b1386cfa85f9e4554c69edbda~YfZncMnzZ1365013650epoutp03z
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 06:49:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20220302064923epoutp03cc398c4b1386cfa85f9e4554c69edbda~YfZncMnzZ1365013650epoutp03z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1646203763;
+        bh=B4qCxed/o28MJol5/DTq0OXPi3dHOnWB4DtbGBqPK/U=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=k6rFHSElMgccv8Q5i8QWvpZjZyAsNtRj+YU4iPHrRGmvcKXbR0s7QDkVCYH5wforS
+         JePOKFL8PeKddBkvoAi6T3LeuO0QQ+FKV684TGv7OT8GFedvll2jzxkWaTkEETuKdi
+         /MairelJ0niik0wYnGx37vlFdwO9OytKTxEPcrMY=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20220302064922epcas1p47e04aa7214f39e1d3f4dc71c164c9707~YfZm4KJlM0962309623epcas1p4b;
+        Wed,  2 Mar 2022 06:49:22 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.36.223]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4K7l8d4L7tz4x9QG; Wed,  2 Mar
+        2022 06:49:21 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D4.68.09592.1731F126; Wed,  2 Mar 2022 15:49:21 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20220302064921epcas1p19fbe8c017d776657caa696a3cef10093~YfZlFNHTf1722917229epcas1p1m;
+        Wed,  2 Mar 2022 06:49:21 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20220302064921epsmtrp1fe0c2a4dbec0e9c85405858322fdbb03~YfZlEUxdo1059310593epsmtrp1K;
+        Wed,  2 Mar 2022 06:49:21 +0000 (GMT)
+X-AuditID: b6c32a37-28fff70000002578-c7-621f13716cdb
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DC.44.29871.0731F126; Wed,  2 Mar 2022 15:49:20 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.97.211]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20220302064920epsmtip225f76cd105373c3ce58278d67451dd18~YfZk0C_vY2473324733epsmtip2A;
+        Wed,  2 Mar 2022 06:49:20 +0000 (GMT)
+From:   Youngjin Jang <yj84.jang@samsung.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-usb@vger.kernel.org
+Cc:     "yj84.jang" <yj84.jang@samsung.com>, js07.lee@samsung.com
+Subject: [PATCH] PM: Add device name to suspend_report_result()
+Date:   Wed,  2 Mar 2022 15:49:17 +0900
+Message-Id: <20220302064917.64073-1-yj84.jang@samsung.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLJsWRmVeSWpSXmKPExsWy7bCmrm6hsHySwewJMhZLmjIsmhevZ7N4
+        dPM3q8WsKXuZLJbv62e0uLxrDpvF2XnH2Sw+9x5htFi0rJXZ4u6po2wWc79MZbboOrSY1YHH
+        Y8GmUo/Fe14yeWxa1cnmsX/uGnaPvi2rGD1WrP7O7vF5k1wAe1S2TUZqYkpqkUJqXnJ+SmZe
+        uq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QnUoKZYk5pUChgMTiYiV9O5ui/NKS
+        VIWM/OISW6XUgpScArMCveLE3OLSvHS9vNQSK0MDAyNToMKE7IxjL64wFTw1r7jYydrAuEOv
+        i5GTQ0LAROLZhWaWLkYuDiGBHYwS1xdfYwVJCAl8YpR43ZsOkfjGKPFn53OgKg6wjt7NQRDx
+        vYwSc9v2ITTMb6sDsdkEtCVWbZnHDlIkInCZSeLt9wnMIAlmAVuJHxe2sYIMEhawl3jSKAsS
+        ZhFQlfj6Yy3YHF4BK4mbnT3MENfJS8y89J0dIi4ocXLmExaIMfISzVtnM4PMlxBo5JD4f+A8
+        G0SDi8TpjrVQtrDEq+Nb2CFsKYmX/W1QdrrExMdvoewCib+Pl0AtM5Z493YtM8htzAKaEut3
+        6UOEFSV2/p7LCLGXT+Ld1x5WSDjwSnS0CUGUKEs8Pr8aaqukxPrf+5kgbA+JExO+s0CCJ1bi
+        4K15TBMY5Wch+WYWkm9mISxewMi8ilEstaA4Nz212LDAGB6jyfm5mxjB6VTLfAfjtLcf9A4x
+        MnEwHmKU4GBWEuG9+FMmSYg3JbGyKrUoP76oNCe1+BCjKTB8JzJLiSbnAxN6Xkm8oYmlgYmZ
+        kYmFsaWxmZI476pppxOFBNITS1KzU1MLUotg+pg4OKUamPadmOJykaNMTsh3b1wa/z+5rKC9
+        rx/UuN382KmzyeG9yE3zsqeb5odvVSjZF2YbKsf/98RUNzMXO9NYkUXrljH5feAJSvvoc1JY
+        85DK7jSJgtiEvLWKiZrfb4T03Ek7IR9888E0r7wItbyXi0NVX9lKBrpZ9AX4ay3005eN4fK5
+        cacoyOa5073s0680DGX4lNsmLfgyJ+tKTP5023pn8SRZgSuzcta2Jy2sSzn7durOyYFfu1d7
+        RLxgcU7IFOLjizkzUyGiO+r0/ZXl0/9/1au4OmXv0YkXn15ZZJjRlGHzvGbumaUG3B8bBSYH
+        O6Wd1Ojm1J+Q/G7/rO/s3HNq2291/41V75zN3nP3/NRzSizFGYmGWsxFxYkAPzMOXTAEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsWy7bCSvG6BsHySwcsTZhZLmjIsmhevZ7N4
+        dPM3q8WsKXuZLJbv62e0uLxrDpvF2XnH2Sw+9x5htFi0rJXZ4u6po2wWc79MZbboOrSY1YHH
+        Y8GmUo/Fe14yeWxa1cnmsX/uGnaPvi2rGD1WrP7O7vF5k1wAexSXTUpqTmZZapG+XQJXxrEX
+        V5gKnppXXOxkbWDcodfFyMEhIWAi0bs5qIuRi0NIYDejxKmbL1m6GDmB4pISXz99ZoOoEZY4
+        fLgYJCwk8IFR4uQcaRCbTUBbYtWWeewgvSICt5kkeh58YwJJMAvYS9ydPI0VpFcYyH7SKAsS
+        ZhFQlfj6Yy0riM0rYCVxs7OHGWKVvMTMS9/ZIeKCEidnPmGBGCMv0bx1NvMERr5ZSFKzkKQW
+        MDKtYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIDnAtzR2M21d90DvEyMTBeIhRgoNZ
+        SYT34k+ZJCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8F7pOxgsJpCeWpGanphakFsFkmTg4pRqY
+        +i/Mqko/KKtcUvkzM/rMwhWP8v6EsvDlB1utXSUfMpHxO8OTvC/bZLbPzpO8Zcp7VnTfixUV
+        L9anRP1rXjfj7VR/l1iN+U6vxVYtFxbu/vKQtcX+y9zACUZ5FUx/92+Rubr2qlqVcEmA+cGj
+        crtUDFT2+/XX+teeuO764A2HU6GSk6/lMi+rnt8/bb5EW9n+SH43mbE8d8fK/fnuDvtio0/v
+        bP3y2vWRcPwsya8soj4aW3p/al9jnKnNqn1Kf/fKJrfXljGzTms9sf3jXb37svWVT0qzWqpf
+        22xUU4w8172lwPbkxWzJ2cXMTRy6u/zme2xe4ZrZNPlC3oSOmztZBO6cnLos7XXQusmVvx6E
+        KbEUZyQaajEXFScCAIcQY1PfAgAA
+X-CMS-MailID: 20220302064921epcas1p19fbe8c017d776657caa696a3cef10093
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220302064921epcas1p19fbe8c017d776657caa696a3cef10093
+References: <CGME20220302064921epcas1p19fbe8c017d776657caa696a3cef10093@epcas1p1.samsung.com>
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 404bae20277a47a4f5421417a8cd515b0b2b3444  Merge branch 'remotes/lorenzo/pci/uniphier'
+From: "yj84.jang" <yj84.jang@samsung.com>
 
-elapsed time: 728m
+currently, suspend_report_result() prints only function information.
+If any driver uses common pm function, nobody knows who called
+failed function exactly.
 
-configs tested: 146
-configs skipped: 3
+So, device information is needed to recognize specific wrong driver.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+e.g.)
+PM: dpm_run_callback(): pm_generic_suspend+0x0/0x48 returns 0
+PM: dpm_run_callback(): platform_pm_suspend+0x0/0x68 returns 0
+after patch,
+PM: dpm_run_callback(): pm_generic_suspend+0x0/0x48 (amba) returns 0
+PM: dpm_run_callback(): platform_pm_suspend+0x0/0x68 (armv7-pmu) returns 0
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-powerpc                         ps3_defconfig
-arm                       multi_v4t_defconfig
-h8300                            allyesconfig
-m68k                          hp300_defconfig
-powerpc                 mpc834x_itx_defconfig
-arc                                 defconfig
-openrisc                  or1klitex_defconfig
-ia64                            zx1_defconfig
-arm                     eseries_pxa_defconfig
-powerpc                      mgcoge_defconfig
-arc                    vdk_hs38_smp_defconfig
-mips                        vocore2_defconfig
-powerpc                      tqm8xx_defconfig
-arm                         nhk8815_defconfig
-sh                           se7722_defconfig
-sh                               alldefconfig
-powerpc                     ep8248e_defconfig
-powerpc                mpc7448_hpc2_defconfig
-xtensa                              defconfig
-arm                        oxnas_v6_defconfig
-arc                           tb10x_defconfig
-arm                           h5000_defconfig
-xtensa                       common_defconfig
-mips                         db1xxx_defconfig
-xtensa                  audio_kc705_defconfig
-powerpc                        cell_defconfig
-arm                        trizeps4_defconfig
-sh                          polaris_defconfig
-sh                          urquell_defconfig
-arm                          gemini_defconfig
-sh                        sh7757lcr_defconfig
-mips                            ar7_defconfig
-powerpc                      arches_defconfig
-powerpc                        warp_defconfig
-mips                           ip32_defconfig
-sh                            hp6xx_defconfig
-mips                      maltasmvp_defconfig
-arm                            zeus_defconfig
-arm                         assabet_defconfig
-sh                           se7343_defconfig
-mips                  decstation_64_defconfig
-sh                            migor_defconfig
-m68k                        stmark2_defconfig
-i386                                defconfig
-powerpc                     taishan_defconfig
-mips                     decstation_defconfig
-arm                       imx_v6_v7_defconfig
-microblaze                          defconfig
-m68k                          multi_defconfig
-arm                         axm55xx_defconfig
-sh                         ecovec24_defconfig
-sh                           se7780_defconfig
-arm                  randconfig-c002-20220301
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a003
-i386                          randconfig-a001
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-arc                  randconfig-r043-20220301
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                                  kexec
-
-clang tested configs:
-x86_64                        randconfig-c007
-powerpc              randconfig-c003-20220301
-riscv                randconfig-c006-20220301
-i386                          randconfig-c001
-arm                  randconfig-c002-20220301
-mips                 randconfig-c004-20220301
-powerpc                     mpc5200_defconfig
-arm                                 defconfig
-powerpc                  mpc866_ads_defconfig
-arm                          imote2_defconfig
-mips                     cu1830-neo_defconfig
-mips                      pic32mzda_defconfig
-mips                           rs90_defconfig
-powerpc                      walnut_defconfig
-riscv                    nommu_virt_defconfig
-arm                         bcm2835_defconfig
-arm                         palmz72_defconfig
-arm                         orion5x_defconfig
-arm                        spear3xx_defconfig
-powerpc                     mpc512x_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220301
-hexagon              randconfig-r041-20220301
-riscv                randconfig-r042-20220301
-s390                 randconfig-r044-20220301
-
+Signed-off-by: yj84.jang <yj84.jang@samsung.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/base/power/main.c  | 10 +++++-----
+ drivers/pci/pci-driver.c   | 14 +++++++-------
+ drivers/pnp/driver.c       |  2 +-
+ drivers/usb/core/hcd-pci.c |  4 ++--
+ include/linux/pm.h         |  8 ++++----
+ 5 files changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index 04ea92c..a762fe8 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -485,7 +485,7 @@ static int dpm_run_callback(pm_callback_t cb, struct device *dev,
+ 	trace_device_pm_callback_start(dev, info, state.event);
+ 	error = cb(dev);
+ 	trace_device_pm_callback_end(dev, error);
+-	suspend_report_result(cb, error);
++	suspend_report_result(dev, cb, error);
+ 
+ 	initcall_debug_report(dev, calltime, cb, error);
+ 
+@@ -1568,7 +1568,7 @@ static int legacy_suspend(struct device *dev, pm_message_t state,
+ 	trace_device_pm_callback_start(dev, info, state.event);
+ 	error = cb(dev, state);
+ 	trace_device_pm_callback_end(dev, error);
+-	suspend_report_result(cb, error);
++	suspend_report_result(dev, cb, error);
+ 
+ 	initcall_debug_report(dev, calltime, cb, error);
+ 
+@@ -1855,7 +1855,7 @@ static int device_prepare(struct device *dev, pm_message_t state)
+ 	device_unlock(dev);
+ 
+ 	if (ret < 0) {
+-		suspend_report_result(callback, ret);
++		suspend_report_result(dev, callback, ret);
+ 		pm_runtime_put(dev);
+ 		return ret;
+ 	}
+@@ -1960,10 +1960,10 @@ int dpm_suspend_start(pm_message_t state)
+ }
+ EXPORT_SYMBOL_GPL(dpm_suspend_start);
+ 
+-void __suspend_report_result(const char *function, void *fn, int ret)
++void __suspend_report_result(const char *function, struct device *dev, void *fn, int ret)
+ {
+ 	if (ret)
+-		pr_err("%s(): %pS returns %d\n", function, fn, ret);
++		pr_err("%s(): %pS (%s) returns %d\n", function, fn, dev_driver_string(dev), ret);
+ }
+ EXPORT_SYMBOL_GPL(__suspend_report_result);
+ 
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 588588c..415f766 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -596,7 +596,7 @@ static int pci_legacy_suspend(struct device *dev, pm_message_t state)
+ 		int error;
+ 
+ 		error = drv->suspend(pci_dev, state);
+-		suspend_report_result(drv->suspend, error);
++		suspend_report_result(dev, drv->suspend, error);
+ 		if (error)
+ 			return error;
+ 
+@@ -775,7 +775,7 @@ static int pci_pm_suspend(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->suspend(dev);
+-		suspend_report_result(pm->suspend, error);
++		suspend_report_result(dev, pm->suspend, error);
+ 		if (error)
+ 			return error;
+ 
+@@ -821,7 +821,7 @@ static int pci_pm_suspend_noirq(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->suspend_noirq(dev);
+-		suspend_report_result(pm->suspend_noirq, error);
++		suspend_report_result(dev, pm->suspend_noirq, error);
+ 		if (error)
+ 			return error;
+ 
+@@ -1010,7 +1010,7 @@ static int pci_pm_freeze(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->freeze(dev);
+-		suspend_report_result(pm->freeze, error);
++		suspend_report_result(dev, pm->freeze, error);
+ 		if (error)
+ 			return error;
+ 	}
+@@ -1030,7 +1030,7 @@ static int pci_pm_freeze_noirq(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->freeze_noirq(dev);
+-		suspend_report_result(pm->freeze_noirq, error);
++		suspend_report_result(dev, pm->freeze_noirq, error);
+ 		if (error)
+ 			return error;
+ 	}
+@@ -1116,7 +1116,7 @@ static int pci_pm_poweroff(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->poweroff(dev);
+-		suspend_report_result(pm->poweroff, error);
++		suspend_report_result(dev, pm->poweroff, error);
+ 		if (error)
+ 			return error;
+ 	}
+@@ -1154,7 +1154,7 @@ static int pci_pm_poweroff_noirq(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->poweroff_noirq(dev);
+-		suspend_report_result(pm->poweroff_noirq, error);
++		suspend_report_result(dev, pm->poweroff_noirq, error);
+ 		if (error)
+ 			return error;
+ 	}
+diff --git a/drivers/pnp/driver.c b/drivers/pnp/driver.c
+index cc6757d..c02e7bf 100644
+--- a/drivers/pnp/driver.c
++++ b/drivers/pnp/driver.c
+@@ -171,7 +171,7 @@ static int __pnp_bus_suspend(struct device *dev, pm_message_t state)
+ 
+ 	if (pnp_drv->driver.pm && pnp_drv->driver.pm->suspend) {
+ 		error = pnp_drv->driver.pm->suspend(dev);
+-		suspend_report_result(pnp_drv->driver.pm->suspend, error);
++		suspend_report_result(dev, pnp_drv->driver.pm->suspend, error);
+ 		if (error)
+ 			return error;
+ 	}
+diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
+index d630ccc..dd44e37 100644
+--- a/drivers/usb/core/hcd-pci.c
++++ b/drivers/usb/core/hcd-pci.c
+@@ -446,7 +446,7 @@ static int suspend_common(struct device *dev, bool do_wakeup)
+ 				HCD_WAKEUP_PENDING(hcd->shared_hcd))
+ 			return -EBUSY;
+ 		retval = hcd->driver->pci_suspend(hcd, do_wakeup);
+-		suspend_report_result(hcd->driver->pci_suspend, retval);
++		suspend_report_result(dev, hcd->driver->pci_suspend, retval);
+ 
+ 		/* Check again in case wakeup raced with pci_suspend */
+ 		if ((retval == 0 && do_wakeup && HCD_WAKEUP_PENDING(hcd)) ||
+@@ -556,7 +556,7 @@ static int hcd_pci_suspend_noirq(struct device *dev)
+ 		dev_dbg(dev, "--> PCI %s\n",
+ 				pci_power_name(pci_dev->current_state));
+ 	} else {
+-		suspend_report_result(pci_prepare_to_sleep, retval);
++		suspend_report_result(dev, pci_prepare_to_sleep, retval);
+ 		return retval;
+ 	}
+ 
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+index e1e9402..cdccbb9 100644
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -745,11 +745,11 @@ extern int dpm_suspend_late(pm_message_t state);
+ extern int dpm_suspend(pm_message_t state);
+ extern int dpm_prepare(pm_message_t state);
+ 
+-extern void __suspend_report_result(const char *function, void *fn, int ret);
++extern void __suspend_report_result(const char *function, struct device *dev, void *fn, int ret);
+ 
+-#define suspend_report_result(fn, ret)					\
++#define suspend_report_result(dev, fn, ret)				\
+ 	do {								\
+-		__suspend_report_result(__func__, fn, ret);		\
++		__suspend_report_result(__func__, dev, fn, ret);	\
+ 	} while (0)
+ 
+ extern int device_pm_wait_for_dev(struct device *sub, struct device *dev);
+@@ -789,7 +789,7 @@ static inline int dpm_suspend_start(pm_message_t state)
+ 	return 0;
+ }
+ 
+-#define suspend_report_result(fn, ret)		do {} while (0)
++#define suspend_report_result(dev, fn, ret)	do {} while (0)
+ 
+ static inline int device_pm_wait_for_dev(struct device *a, struct device *b)
+ {
+-- 
+2.7.4
+
