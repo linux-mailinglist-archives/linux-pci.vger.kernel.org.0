@@ -2,204 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BD294CABF7
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 18:31:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CDAD4CAC4D
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 18:41:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240031AbiCBRca (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 12:32:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42802 "EHLO
+        id S242369AbiCBRmP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 12:42:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240686AbiCBRcY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 12:32:24 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F349D3ACA;
-        Wed,  2 Mar 2022 09:31:16 -0800 (PST)
-Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K81Mn2NY8z67tsp;
-        Thu,  3 Mar 2022 01:29:57 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Mar 2022 18:31:10 +0100
-Received: from A2006125610.china.huawei.com (10.47.91.128) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Wed, 2 Mar 2022 17:31:03 +0000
-From:   Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-To:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <alex.williamson@redhat.com>,
-        <jgg@nvidia.com>, <cohuck@redhat.com>, <mgurtovoy@nvidia.com>,
-        <yishaih@nvidia.com>, <linuxarm@huawei.com>,
-        <liulongfang@huawei.com>, <prime.zeng@hisilicon.com>,
-        <jonathan.cameron@huawei.com>, <wangzhou1@hisilicon.com>
-Subject: [PATCH v7 10/10] hisi_acc_vfio_pci: Use its own PCI reset_done error handler
-Date:   Wed, 2 Mar 2022 17:29:03 +0000
-Message-ID: <20220302172903.1995-11-shameerali.kolothum.thodi@huawei.com>
-X-Mailer: git-send-email 2.12.0.windows.1
-In-Reply-To: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
-References: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
+        with ESMTP id S244121AbiCBRmO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 12:42:14 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998E3D048D
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 09:41:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646242890; x=1677778890;
+  h=message-id:date:mime-version:subject:to:references:cc:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IYd4wKC0zAYvyCaUlSdz2tFpFRVunOLiqv4HHT1p6oI=;
+  b=AcvnvOmlugxXFAK08hk2hlVmdVuyDJriXQfw/qoir9gfRga9MHiH4lP1
+   Qcy0Rf/oZ7dSIbSeOb/voEVghgjWloC9FqL9qVJpIss8+GdrUHnun4KgR
+   +TLn9zCaDZ+sOLRbOvO8gNpRA43ojlqSRV4arXxHIMcSyFobwmlZnWmVQ
+   R+MJ3OH8QVV3eWCpWZAayLbu9URpy9lREH9l3ZUhYo+ssPdr72xiY3LUa
+   46tWAvbnkBVRl1hYXz8BhNlCZLpLMD0p2vnj/FanRUgzLsj5FPIWPVcmQ
+   W8EnCLBqwuAdcACwXK5MCvczcphdu+ejv7ivoSg79SWNuqOxsrHmF87WG
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10274"; a="316675779"
+X-IronPort-AV: E=Sophos;i="5.90,149,1643702400"; 
+   d="scan'208";a="316675779"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2022 09:41:28 -0800
+X-IronPort-AV: E=Sophos;i="5.90,149,1643702400"; 
+   d="scan'208";a="576187938"
+Received: from patelni-mobl1.amr.corp.intel.com (HELO [10.212.108.7]) ([10.212.108.7])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2022 09:41:28 -0800
+Message-ID: <358b0673-f90f-78ca-be66-51d5f76cc42b@linux.intel.com>
+Date:   Wed, 2 Mar 2022 10:41:27 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.47.91.128]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH] PCI: vmd: Assign vmd irq domain before enumeration
+Content-Language: en-US
+To:     Jonathan Derrick <jonathan.derrick@linux.dev>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20220223075245.17744-1-nirmal.patel@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nirmal Patel <nirmal.patel@linux.intel.com>
+From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
+In-Reply-To: <20220223075245.17744-1-nirmal.patel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Register private handler for pci_error_handlers.reset_done and update
-state accordingly.
+On 2/23/2022 12:52 AM, Nirmal Patel wrote:
+> vmd creates and assigns separate irq domain only when MSI remapping is
+> enabled. For example VMD-MSI. But vmd doesn't assign irq domain when
+> MSI remapping is disabled resulting child devices getting default
+> PCI-MSI irq domain. Now when Interrupt remapping is enabled all the
+> pci devices are assigned INTEL-IR-MSI domain including vmd endpoints.
+> But devices behind vmd gets PCI-MSI irq domain when vmd creates root
+> bus and configures child devices.
+>
+> As a result DMAR errors were observed when interrupt remapping was
+> enabled on Intel Icelake CPUs.
+> For instance:
+> DMAR: DRHD: handling fault status reg 2
+> DMAR: [INTR-REMAP] Request device [0xe2:0x00.0] fault index 0xa00
+> [fault reason 0x25] Blocked a compatibility format interrupt request
+>
+> So make sure vmd assigns proper irq domain. This patch also removes
+> a placeholder patch 2565e5b69c44 (PCI: vmd: Do not disable MSI-X
+> remapping if interrupt remapping is enabled by IOMMU.) MSI remapping
+> should be enabled or disabled with and without Interrupt remap.
+>
+> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> ---
+>  drivers/pci/controller/vmd.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index cc166c683638..c8d73d75a1c0 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -813,8 +813,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	 * acceptable because the guest is usually CPU-limited and MSI
+>  	 * remapping doesn't become a performance bottleneck.
+>  	 */
+> -	if (iommu_capable(vmd->dev->dev.bus, IOMMU_CAP_INTR_REMAP) ||
+> -	    !(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
+> +	if (!(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
+>  	    offset[0] || offset[1]) {
+>  		ret = vmd_alloc_irqs(vmd);
+>  		if (ret)
+> @@ -853,7 +852,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	vmd_attach_resources(vmd);
+>  	if (vmd->irq_domain)
+>  		dev_set_msi_domain(&vmd->bus->dev, vmd->irq_domain);
+> -
+> +	else
+> +		dev_set_msi_domain(&vmd->bus->dev, vmd->dev->dev.msi.domain);
+> +	
+>  	vmd_acpi_begin();
+>  
+>  	pci_scan_child_bus(vmd->bus);
 
-Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
----
- .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 61 +++++++++++++++++--
- .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |  4 +-
- 2 files changed, 59 insertions(+), 6 deletions(-)
+Gentle ping!
 
-diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-index f733aa0b1a5b..906690e57020 100644
---- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-+++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-@@ -515,6 +515,27 @@ static void hisi_acc_vf_disable_fds(struct hisi_acc_vf_core_device *hisi_acc_vde
- 	}
- }
- 
-+/*
-+ * This function is called in all state_mutex unlock cases to
-+ * handle a 'deferred_reset' if exists.
-+ */
-+static void
-+hisi_acc_vf_state_mutex_unlock(struct hisi_acc_vf_core_device *hisi_acc_vdev)
-+{
-+again:
-+	spin_lock(&hisi_acc_vdev->reset_lock);
-+	if (hisi_acc_vdev->deferred_reset) {
-+		hisi_acc_vdev->deferred_reset = false;
-+		spin_unlock(&hisi_acc_vdev->reset_lock);
-+		hisi_acc_vdev->vf_qm_state = QM_NOT_READY;
-+		hisi_acc_vdev->mig_state = VFIO_DEVICE_STATE_RUNNING;
-+		hisi_acc_vf_disable_fds(hisi_acc_vdev);
-+		goto again;
-+	}
-+	mutex_unlock(&hisi_acc_vdev->state_mutex);
-+	spin_unlock(&hisi_acc_vdev->reset_lock);
-+}
-+
- static int hisi_acc_vf_load_state(struct hisi_acc_vf_core_device *hisi_acc_vdev,
- 				  struct hisi_acc_vf_migration_file *migf)
- {
-@@ -750,7 +771,7 @@ static long hisi_acc_vf_save_unl_ioctl(struct file *filp,
- 
- 	mutex_lock(&hisi_acc_vdev->state_mutex);
- 	if (hisi_acc_vdev->mig_state != VFIO_DEVICE_STATE_PRE_COPY) {
--		mutex_unlock(&hisi_acc_vdev->state_mutex);
-+		hisi_acc_vf_state_mutex_unlock(hisi_acc_vdev);
- 		return -EINVAL;
- 	}
- 
-@@ -772,7 +793,7 @@ static long hisi_acc_vf_save_unl_ioctl(struct file *filp,
- 	ret = copy_to_user((void __user *)arg, &info, minsz) ? -EFAULT : 0;
- out:
- 	mutex_unlock(&migf->lock);
--	mutex_unlock(&hisi_acc_vdev->state_mutex);
-+	hisi_acc_vf_state_mutex_unlock(hisi_acc_vdev);
- 	return ret;
- }
- 
-@@ -967,7 +988,7 @@ hisi_acc_vfio_pci_set_device_state(struct vfio_device *vdev,
- 			break;
- 		}
- 	}
--	mutex_unlock(&hisi_acc_vdev->state_mutex);
-+	hisi_acc_vf_state_mutex_unlock(hisi_acc_vdev);
- 	return res;
- }
- 
-@@ -980,10 +1001,35 @@ hisi_acc_vfio_pci_get_device_state(struct vfio_device *vdev,
- 
- 	mutex_lock(&hisi_acc_vdev->state_mutex);
- 	*curr_state = hisi_acc_vdev->mig_state;
--	mutex_unlock(&hisi_acc_vdev->state_mutex);
-+	hisi_acc_vf_state_mutex_unlock(hisi_acc_vdev);
- 	return 0;
- }
- 
-+static void hisi_acc_vf_pci_aer_reset_done(struct pci_dev *pdev)
-+{
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = dev_get_drvdata(&pdev->dev);
-+
-+	if (hisi_acc_vdev->core_device.vdev.migration_flags !=
-+				VFIO_MIGRATION_STOP_COPY)
-+		return;
-+
-+	/*
-+	 * As the higher VFIO layers are holding locks across reset and using
-+	 * those same locks with the mm_lock we need to prevent ABBA deadlock
-+	 * with the state_mutex and mm_lock.
-+	 * In case the state_mutex was taken already we defer the cleanup work
-+	 * to the unlock flow of the other running context.
-+	 */
-+	spin_lock(&hisi_acc_vdev->reset_lock);
-+	hisi_acc_vdev->deferred_reset = true;
-+	if (!mutex_trylock(&hisi_acc_vdev->state_mutex)) {
-+		spin_unlock(&hisi_acc_vdev->reset_lock);
-+		return;
-+	}
-+	spin_unlock(&hisi_acc_vdev->reset_lock);
-+	hisi_acc_vf_state_mutex_unlock(hisi_acc_vdev);
-+}
-+
- static int hisi_acc_vf_qm_init(struct hisi_acc_vf_core_device *hisi_acc_vdev)
- {
- 	struct vfio_pci_core_device *vdev = &hisi_acc_vdev->core_device;
-@@ -1302,12 +1348,17 @@ static const struct pci_device_id hisi_acc_vfio_pci_table[] = {
- 
- MODULE_DEVICE_TABLE(pci, hisi_acc_vfio_pci_table);
- 
-+static const struct pci_error_handlers hisi_acc_vf_err_handlers = {
-+	.reset_done = hisi_acc_vf_pci_aer_reset_done,
-+	.error_detected = vfio_pci_core_aer_err_detected,
-+};
-+
- static struct pci_driver hisi_acc_vfio_pci_driver = {
- 	.name = KBUILD_MODNAME,
- 	.id_table = hisi_acc_vfio_pci_table,
- 	.probe = hisi_acc_vfio_pci_probe,
- 	.remove = hisi_acc_vfio_pci_remove,
--	.err_handler = &vfio_pci_core_err_handlers,
-+	.err_handler = &hisi_acc_vf_err_handlers,
- };
- 
- module_pci_driver(hisi_acc_vfio_pci_driver);
-diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
-index 51bc7e92a776..6c18f7c74f34 100644
---- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
-+++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
-@@ -96,6 +96,7 @@ struct hisi_acc_vf_migration_file {
- struct hisi_acc_vf_core_device {
- 	struct vfio_pci_core_device core_device;
- 	u8 match_done:1;
-+	u8 deferred_reset:1;
- 	/* for migration state */
- 	struct mutex state_mutex;
- 	enum vfio_device_mig_state mig_state;
-@@ -105,7 +106,8 @@ struct hisi_acc_vf_core_device {
- 	struct hisi_qm vf_qm;
- 	u32 vf_qm_state;
- 	int vf_id;
--
-+	/* for reset handler */
-+	spinlock_t reset_lock;
- 	struct hisi_acc_vf_migration_file resuming_migf;
- 	struct hisi_acc_vf_migration_file saving_migf;
- };
--- 
-2.25.1
+Thanks
+
+nirmal
 
