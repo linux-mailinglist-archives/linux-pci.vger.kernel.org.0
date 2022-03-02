@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADDFC4CAFBF
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 21:31:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84ED74CAFC4
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Mar 2022 21:31:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243401AbiCBUbm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 15:31:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36722 "EHLO
+        id S243546AbiCBUbv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 15:31:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243383AbiCBUbl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 15:31:41 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81651CE90B
-        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 12:30:57 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id b8so2805531pjb.4
-        for <linux-pci@vger.kernel.org>; Wed, 02 Mar 2022 12:30:57 -0800 (PST)
+        with ESMTP id S243444AbiCBUbs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 15:31:48 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8291ECE92E
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 12:31:03 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id m11-20020a17090a7f8b00b001beef6143a8so2856914pjl.4
+        for <linux-pci@vger.kernel.org>; Wed, 02 Mar 2022 12:31:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6sWy4/TaV/KEk/+p6c6dVcypbRzCQ7sFtzJvPWQsaOI=;
-        b=KkDF9fD1aWCQdGpFKtwwZbjnDIO8irQgmjEl86HZtZdrvvngBzTN4etG/0Ri6EF8W6
-         gMjaGwx6mPFE5tvqtCqNgypumEuw2QZAD1N1642E59+v5ByGHPhGH9lJ2zM90ouUK6cP
-         mk2zIxUhix+67Y2g2+1ne7sR8OZKJouX1rkVUKxSjKCsMdF82c3fkR6/9Zh7LfOzsQnX
-         DbNCC0SJOO7393Hbq8y+A1jATFLitQBiF6Qx6DQlGrEWo6fOf3wE2u/d4ao1OHl9bLR6
-         pQNuJIuZNbiUsmX5wNg4bIx7V17TyPm2TZ/aXgoUYSGzHg6dio+V6cOGs3i8dqWocvz/
-         VCxg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=g11sci1g7elBgDqwDkIww3iURlfsGrxIIuaKlSKDbrU=;
+        b=Rw3jcqSZCZ1vmJXAdgh/+bwdTkwGr9/04ntUuK/sbNkA55vJpVp5VBOj3qoKrcNCtb
+         6cwILjxtxfZCX36e3R9ifjIPNhZVQhq6uChZDHdPncGbxVecDSvG3/GoTC38muQ9jE50
+         AovKrawIGHmB5Wx8KZzo+rFN/r/tbbFuH1WWqf+2NBHHzCOu/bbuT12fvVbsMOfqXWHu
+         al2uF1+O8zpJt6a+pF4KW+diM+9QH6GZkXzn2XjHCjFQY4R4eP72Lz3vuV7e0raoe09F
+         1XkjaA/x9IVfhXs8rASx7mJGh/YTZTwH7RkI3YboV1JTSJAO9Ze+D1JbFEHuSK1x/BbD
+         KbAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6sWy4/TaV/KEk/+p6c6dVcypbRzCQ7sFtzJvPWQsaOI=;
-        b=oTI1zNmZTbZDjupuyt0xzVNHE7gVarkqKVQstEuVL8A7ho528P1RSGRTBOsSK5KolO
-         /+9e8J+/cUDh/6fBtqEtpFIGW3BRAk28BCTxuAV6ZZ4zB9KDVFSsHd+Q7poJnhit4TyM
-         BuM+aioEfuGdPyR7TiYxKT/aRXtYLQt47bvHmyOVK704g0wZYbV+tvJNPe1bYAxRaFXe
-         6VgJTkmNJpw0r3uJu+T0OS/ZaBvlLQI5aWccD7DKc7uI1R7KT3rcQvm56MCfSHwFKa2D
-         r7k7JS+psf6FlmUdkYX4RCwYuMQKo7Uy7UdPAEopo1xOu4ppFUKFJFo2dniJQ2L0NMZS
-         3euA==
-X-Gm-Message-State: AOAM530PsqniJORpnYlX742L7/Hc/2w1fGwqVxPExr78Ayr4esW2PUSb
-        u+RYENgTuXdGImiEo/vC90MOUA==
-X-Google-Smtp-Source: ABdhPJwTwrT5eJMRvTA9IudLJVLqPucmAFpRbgQ3mbKPzWCx3jJcKSGaUJR72m8GCOdOi3JHdtzcYw==
-X-Received: by 2002:a17:90a:d90b:b0:1bc:4ec7:d867 with SMTP id c11-20020a17090ad90b00b001bc4ec7d867mr1596549pjv.226.1646253056940;
-        Wed, 02 Mar 2022 12:30:56 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=g11sci1g7elBgDqwDkIww3iURlfsGrxIIuaKlSKDbrU=;
+        b=Q259KhsnUlX2v8b5hrjjT1svzTr0lJ8+Zz3LTQpfkmUaRdit2ldDnaZv/MJ9ZZos1H
+         1OALhOhcbSXqNxjeURfEUnM725eqkzejZxpY4qKi+qZxh1W3GRaCLlomj2W+jz4KgJmn
+         jgDsj50Gf7U4n9Xlv1+AHtqHbiRTI+cFM60NaiWoP03Gesl91hUDGOviM/U5Fli/GKsD
+         aKwQsuMhYvsn9g8mmuLDsEFXGfCURK9NK0LUGX8t4QMUIjgNUkfbx+sf1cE8vlwXSzJo
+         Wnoni/BnVXGuQsqR6rI7SwJgKbClcWZ2gYwDoMRO3h4YuKlgIFcJ6E5E8gsxDUEeTENF
+         D2LQ==
+X-Gm-Message-State: AOAM532fuGafS66xj/rJYIOdXEMRKLczXjhyJ6/XEAakT8dys6jKA8I3
+        QttK24pC762enVoJ8L5s18GpkQ==
+X-Google-Smtp-Source: ABdhPJyhjo4ntKrVS36JVnPPurPWA7B4mWW7sqgCoPxfKzyHqFGRQiUlyHUBokTrfvUDLiDHQ5E0gQ==
+X-Received: by 2002:a17:903:250:b0:151:6aef:b562 with SMTP id j16-20020a170903025000b001516aefb562mr16877585plh.30.1646253063011;
+        Wed, 02 Mar 2022 12:31:03 -0800 (PST)
 Received: from localhost.localdomain ([182.64.85.91])
-        by smtp.gmail.com with ESMTPSA id b1-20020a17090aa58100b001bcb7bad374sm5963410pjq.17.2022.03.02.12.30.52
+        by smtp.gmail.com with ESMTPSA id b1-20020a17090aa58100b001bcb7bad374sm5963410pjq.17.2022.03.02.12.30.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Mar 2022 12:30:56 -0800 (PST)
+        Wed, 02 Mar 2022 12:31:02 -0800 (PST)
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org
@@ -55,11 +55,13 @@ Cc:     bhupesh.sharma@linaro.org, bhupesh.linux@gmail.com,
         bjorn.andersson@linaro.org, svarbanov@mm-sol.com,
         bhelgaas@google.com, linux-kernel@vger.kernel.org,
         robh+dt@kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
-        linux-clk@vger.kernel.org
-Subject: [PATCH v3 0/7] Add PCIe support for SM8150 SoC
-Date:   Thu,  3 Mar 2022 02:00:38 +0530
-Message-Id: <20220302203045.184500-1-bhupesh.sharma@linaro.org>
+        linux-clk@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/7] dt-bindings: pci: qcom: Document PCIe bindings for SM8150 SoC
+Date:   Thu,  3 Mar 2022 02:00:39 +0530
+Message-Id: <20220302203045.184500-2-bhupesh.sharma@linaro.org>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220302203045.184500-1-bhupesh.sharma@linaro.org>
+References: <20220302203045.184500-1-bhupesh.sharma@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -72,60 +74,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Changes since v2:
------------------
-- v2 can be found here: https://lore.kernel.org/linux-arm-msm/20220301072511.117818-1-bhupesh.sharma@linaro.org/T/
-- Fixed review comments from Dmitry and Bjorn.
-- Modified [PATCH 3/7] from v1 to include gdsc driver structs and
-  support code for PCIe0 and PCIe1 (in addition to defines for the
-  same).
+Document the PCIe DT bindings for SM8150 SoC. The PCIe IP is similar to
+the one used on SM8250.
 
-Changes since v1:
------------------
-- v1 can be found here: https://lore.kernel.org/linux-arm-msm/20220223192946.473172-1-bhupesh.sharma@linaro.org/T/
-- Collected ACKs on [PATCH 1/7], [PATCH 2/7] and [PATCH 4/7] from Rob
-  and Dmitry.
-- Broke down another separately sent out PATCH (see [1]), into a 3 patches (one each for emac, pci
-  and ufs gdsc defines) - one of which is carried as [PATCH 3/7]
-  in this series, which fixes a compilation error.
-  The rest of the gdsc defines have been sent out as separate patch(es).
-[1]. https://patchwork.kernel.org/project/netdevbpf/patch/20220126221725.710167-4-bhupesh.sharma@linaro.org/
-- Rob's bot reported a number of 'dtbs_check' errors with the v1 series,
-  which are been fixed with a separate series now (see [2]), to ease the
-  review of this series.
-[2]. https://lore.kernel.org/linux-arm-msm/20220228123019.382037-1-bhupesh.sharma@linaro.org/T/
-
-
-This series adds PCIe support for Qualcomm SM8150 SoC with relevant PHYs.
-There are 2 PCIe instances on this SoC each with different PHYs. The PCIe
-controller and PHYs are mostly compatible with the ones found on SM8250
-SoC, hence the old drivers are modified to add the support.
-
-This series has been tested on SA8155p ADP board with QCA6696 chipset connected
-onboard.
-
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+---
+ Documentation/devicetree/bindings/pci/qcom,pcie.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Bhupesh Sharma (7):
-  dt-bindings: pci: qcom: Document PCIe bindings for SM8150 SoC
-  dt-bindings: phy: qcom,qmp: Add SM8150 PCIe PHY bindings
-  clk: qcom: gcc: Add PCIe0 and PCIe1 GDSC for SM8150
-  phy: qcom-qmp: Add SM8150 PCIe QMP PHYs
-  PCI: qcom: Add SM8150 SoC support
-  arm64: dts: qcom: sm8150: Add PCIe nodes
-  arm64: dts: qcom: sa8155: Enable PCIe nodes
-
- .../devicetree/bindings/pci/qcom,pcie.txt     |   5 +-
- .../devicetree/bindings/phy/qcom,qmp-phy.yaml |   4 +
- arch/arm64/boot/dts/qcom/sa8155p-adp.dts      |  42 +++
- arch/arm64/boot/dts/qcom/sm8150.dtsi          | 243 ++++++++++++++++++
- drivers/clk/qcom/gcc-sm8150.c                 |  20 ++
- drivers/pci/controller/dwc/pcie-qcom.c        |   8 +
- drivers/phy/qualcomm/phy-qcom-qmp.c           |  90 +++++++
- include/dt-bindings/clock/qcom,gcc-sm8150.h   |   2 +
- 8 files changed, 412 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+index a0ae024c2d0c..a023f97daf84 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+@@ -14,6 +14,7 @@
+ 			- "qcom,pcie-qcs404" for qcs404
+ 			- "qcom,pcie-sc8180x" for sc8180x
+ 			- "qcom,pcie-sdm845" for sdm845
++			- "qcom,pcie-sm8150" for sm8150
+ 			- "qcom,pcie-sm8250" for sm8250
+ 			- "qcom,pcie-ipq6018" for ipq6018
+ 
+@@ -157,7 +158,7 @@
+ 			- "pipe"	PIPE clock
+ 
+ - clock-names:
+-	Usage: required for sc8180x and sm8250
++	Usage: required for sc8180x, sm8150 and sm8250
+ 	Value type: <stringlist>
+ 	Definition: Should contain the following entries
+ 			- "aux"		Auxiliary clock
+@@ -246,7 +247,7 @@
+ 			- "ahb"			AHB reset
+ 
+ - reset-names:
+-	Usage: required for sc8180x, sdm845 and sm8250
++	Usage: required for sc8180x, sdm845, sm8150 and sm8250
+ 	Value type: <stringlist>
+ 	Definition: Should contain the following entries
+ 			- "pci"			PCIe core reset
 -- 
 2.35.1
 
