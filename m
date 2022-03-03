@@ -2,51 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C01F4CC447
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 18:48:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83C484CC474
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 18:57:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbiCCRtS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Mar 2022 12:49:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37722 "EHLO
+        id S234816AbiCCR63 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 12:58:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235245AbiCCRtR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 12:49:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F39A5643C
-        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 09:48:31 -0800 (PST)
+        with ESMTP id S229662AbiCCR63 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 12:58:29 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB686710D7;
+        Thu,  3 Mar 2022 09:57:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D4EFCB82506
-        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 17:48:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3959EC004E1;
-        Thu,  3 Mar 2022 17:48:28 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A6D9FB81DB8;
+        Thu,  3 Mar 2022 17:57:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26E72C340F0;
+        Thu,  3 Mar 2022 17:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646329708;
-        bh=i2VoLtDi+zvtNXtQqYZKxc5NfRFIEKh6hYssNBU92gw=;
+        s=k20201202; t=1646330260;
+        bh=hY8rAyb1zsetbVzg5OgbfUyuPVMG9GYiD0/OIrED5wE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=oe4RInrI0aCyPUASWkmvOH0cniycmaA3HI1uaqeBoYTMIdiLN06rqZ/nybbTXQspz
-         qx4Q12etD0xLgF/qd45DHeSbBQSCN5kidr+dN/Z95iP73joWBjl9t5SvZWUrP3AryJ
-         iI0ex1gavv49t3E7fs6DSk7jmbXb6PdFBq+BcPr9xqho+j47t11qEj4dndLBUfD38Y
-         mlZO+E/sXhWDAtYbz009SUfQrZKfKRDWWTNVuxCZyTqoOkSKuzOSq90RTmoMtFx7dc
-         lOzKuPNDPNFrJdG2oHUd2bXTikuCsyaFLad3FskuDyDvFpR1jueYQxnBZ1znNmX4P1
-         Jhy18oee9NWEg==
-Date:   Thu, 3 Mar 2022 11:48:26 -0600
+        b=MYtflfLlh9TiDIXibSAM3pECoM8IbJp/05QsspbsKvZKkl5j4EUgMmodgp2cjdhMF
+         JTZmmwKMzxtj93Qne9s/wvdqDNlzdXG3hCnWhvtR6nVLTrQPaNra7nV1f90JR7QWSu
+         7T1Zy72GRHqDvy5VKoVwueQpSXaAWRhn4Ua/a6QC0Xc6n1npHP9CFEe8JCH2CCH+2K
+         5KLkN1opATv48ZWhgJx4cK5ypHTH6OP8R8nuErFkIY8gi+mEPrre+XgjPXlFqBzCXx
+         CMelsAhubwzk4WOjMRd+12xrL1f5UMJWpla+zs15nXAbU5nLoizleMGTIYg+AqpWIs
+         4/20pPLfFu4yg==
+Date:   Thu, 3 Mar 2022 11:57:38 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhi Li <lznuaa@gmail.com>
-Cc:     Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        kw@linux.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>
-Subject: Re: [PATCH 4/5] PCI: imx6: add PCIe embedded DMA support
-Message-ID: <20220303174826.GA815663@bhelgaas>
+To:     =?utf-8?B?7J6l7JiB7KeEL1RWIFMvVyBMYWIoVkQpL1N0YWZmIEVuZ2luZWVyL+yCvA==?=
+         =?utf-8?B?7ISx7KCE7J6Q?= <yj84.jang@samsung.com>
+Cc:     'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
+        "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        'Pavel Machek' <pavel@ucw.cz>,
+        'Len Brown' <len.brown@intel.com>,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-usb@vger.kernel.org, js07.lee@samsung.com
+Subject: Re: [PATCH] PM: Add device name to suspend_report_result()
+Message-ID: <20220303175738.GA818511@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHrpEqSBLMU-RO8moqvSQUcP62N7xqpNyHfH1UERB_qAByK+2Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <044701d82e88$c5edb6f0$51c924d0$@samsung.com>
 X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -57,42 +60,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 02, 2022 at 03:28:48PM -0600, Zhi Li wrote:
-> On Wed, Mar 2, 2022 at 3:21 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Wed, Mar 02, 2022 at 02:49:45PM -0600, Zhi Li wrote:
-> > > On Wed, Mar 2, 2022 at 2:15 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Tue, Mar 01, 2022 at 09:26:45PM -0600, Frank Li wrote:
-> > > > > ...
+On Thu, Mar 03, 2022 at 07:56:37AM +0900, 장영진/TV S/W Lab(VD)/Staff Engineer/삼성전자 wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: Thursday, March 3, 2022 5:16 AM
+> > To: 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>
+> > Cc: �念��/TV S/W Lab(VD)/Staff Engineer/�Ｚ���� <yj84.jang@samsung.com>;
+> > 'Rafael J. Wysocki' <rafael@kernel.org>; 'Pavel Machek' <pavel@ucw.cz>;
+> > 'Len Brown' <len.brown@intel.com>; 'Bjorn Helgaas' <bhelgaas@google.com>;
+> > linux-pm@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > pci@vger.kernel.org; linux-acpi@vger.kernel.org; linux-usb@vger.kernel.org;
+> > js07.lee@samsung.com
+> > Subject: Re: [PATCH] PM: Add device name to suspend_report_result()
+> > 
+> > On Wed, Mar 02, 2022 at 03:52:51PM +0100, 'Greg Kroah-Hartman' wrote:
+> > > On Wed, Mar 02, 2022 at 08:00:14PM +0900,  念  /TV S/W Lab(VD)/Staff
+> > Engineer/ Ｚ     wrote:
+> > > > > -----Original Message-----
+> > > > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > Sent: Wednesday, March 2, 2022 4:58 PM
+> > > > > To: Youngjin Jang <yj84.jang@samsung.com>
+> > > > > Cc: Rafael J. Wysocki <rafael@kernel.org>; Pavel Machek
+> > > > > <pavel@ucw.cz>; Len Brown <len.brown@intel.com>; Bjorn Helgaas
+> > > > > <bhelgaas@google.com>; linux-pm@vger.kernel.org;
+> > > > > linux-kernel@vger.kernel.org; linux- pci@vger.kernel.org;
+> > > > > linux-acpi@vger.kernel.org; linux-
+> > > > usb@vger.kernel.org;
+> > > > > js07.lee@samsung.com
+> > > > > Subject: Re: [PATCH] PM: Add device name to
+> > > > > suspend_report_result()
+> > > > >
+> > > > > On Wed, Mar 02, 2022 at 03:49:17PM +0900, Youngjin Jang wrote:
+> > > > > > From: "yj84.jang" <yj84.jang@samsung.com>
 
-> > > > > The DMA can transfer data to any remote address location
-> > > > > regardless PCI address space size.
+> > > > > > -		pr_err("%s(): %pS returns %d\n", function, fn, ret);
+> > > > > > +		pr_err("%s(): %pS (%s) returns %d\n", function, fn,
+> > > > > > +dev_driver_string(dev), ret);
+> > > > >
+> > > > > If you have a struct device, please use dev_err().
 > > > >
-> > > > What is this sentence telling us?  Is it merely that the DMA "inbound
-> > > > address space" may be larger than the MMIO "outbound address space"?
-> > > > I think there's no necessary connection between them, and there's no
-> > > > need to call it out as though it's something special.
+> > > > I think dev_err() is nice option, but we can see a minor issue.
+> > > > Prefix log "PM: " would be lost, If I use dev_err() in this context.
+> > > > As you know, all logs in power management include "PM :" prefix.
 > > >
-> > > There are outbound address windows. such as 256M, but RC sides have more
-> > > than 256M ddr memory, such as 16GB. If CPU or external DMA controller,
-> > > only can access 256M
-> > > address space.
-> > >
-> > > But if using an embedded DMA controller,  it can access the whole RC's
-> > > 16G address without
-> > > changing iAtu mapping.
-> > >
-> > > I want to say why I need enable embedded DMA for EP.
-> >
-> > OK, so if IIUC, the DMA controller is embedded in the imx6 host bridge
-> > (of course; that's obvious from what you're doing here).  And unlike
-> > DMA from devices *below* the host bridge, DMAs from the embedded
-> > controller don't go through the iATU, so they are not subject to any
-> > of the iATU limitations.  Right?
+> > > Why does that matter?  Fix them all to use the struct device pointer
+> > > and then they will be properly unified with the rest of the kernel log
+> > > infrastructure.
+> > 
+> > You can #define dev_fmt if you need a prefix.
 > 
-> Yes!
+> I tested dev_fmt before, but I feel that not a good solution.
+> Because the readability is not so great than I expected.
+> I didn't want to break the PM logging rules.
 
-I guess that means the DMA controller is functionally and logically
-sort of a separate device from the PCI host bridge?  Sounds like the
-DMA controller doesn't receive or generate PCI transactions?
+I didn't catch your meaning here.  Some examples would probably help.
 
-Bjorn
+The patch above is from __suspend_report_result() in
+drivers/base/power/main.c.  That file already defines both pr_fmt and
+dev_fmt to be "PM: ", so I would expect dev_err() output to already
+include "PM: ".
