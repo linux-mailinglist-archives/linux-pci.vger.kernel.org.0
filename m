@@ -2,346 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 399E54CC56A
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 19:47:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7F854CC5A0
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 20:08:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229943AbiCCSr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Mar 2022 13:47:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44142 "EHLO
+        id S232457AbiCCTIt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 14:08:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231661AbiCCSr6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 13:47:58 -0500
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70058.outbound.protection.outlook.com [40.107.7.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4EE219F449
-        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 10:47:11 -0800 (PST)
+        with ESMTP id S229536AbiCCTIs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 14:08:48 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB981470FB;
+        Thu,  3 Mar 2022 11:08:00 -0800 (PST)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 223IOAVd031661;
+        Thu, 3 Mar 2022 19:06:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=P8oNb7HfKhhqHimy8j5x9hz0CtdsioYwtGSC7OY68zo=;
+ b=adzYkNLyJutENI9rww6Nyi4orTX2wSCUSnmxtFHplMRDUc0n3pMBPUyPDQnRLGLA7UPI
+ r+AqHa/cvmj9fNEEugp12NsdDoU5cnU6AFWwjfLDzaNUz74TBDF4DtArLo7LItR13hBh
+ 6Y/N4FMMOIRPOIH7DoHjE1b6sNIVXD1S9XCIrSUuJvMiK4SsSGPja5LDAcT2/me78DIw
+ 3/S0vxkUWzwB8cThIr/rHRG0CnsiXpGKe3YvhqD0k/dLiSxhbgNmYLBNgHKYzyn9YC95
+ X6UcpuvsBNLw/xSCajXjgCwzGAKpiG+pBfaS7z2hwBSfO7Il8UZ901vE0Q/kNugD8L9J yQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3eh14c1wwq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Mar 2022 19:06:58 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 223J1RPP123285;
+        Thu, 3 Mar 2022 19:06:57 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2044.outbound.protection.outlook.com [104.47.73.44])
+        by userp3020.oracle.com with ESMTP id 3efdnt9gt8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Mar 2022 19:06:57 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lSDRmRRbQVG8h6TwWjVj0FS2ukzhbRCWDWcxf4HmS9gwBL+aXbPTvRUgIN2Y/jSERPK+9SYTl2H6OdJfpXfDIX9qyESvGrAch+mBdxesZoa9bPmZftRInESKcTnbCgce1WPSb3QcCm2eyZmpwxCFIRjWYC7WVcyIfKuH6TUkSYs9IvtlIgR6osAjmaqWUa0ivBHQeiblxyOBbUf8q3AD06cFjuu/xHRe6eISg+w8QkxayFvxR/t5L0np+YoDQ20Wq26UsCfRocTSzuRTPdKs6fmAd29x3DcF4q2cYNBgdsePXUaXtuZrzKiYqTBP0QziwWKwVShOh77XX2Mt7NENTg==
+ b=K/DpUfdaXG1df0EIv4jmbU+ai9oEr5D2pSGUtVjZ+g9V9Jgc4JYDXKk3zqrGA2KLOXIxdMT/faMrN7EZFJFoKKe0GVUbrP0QMSryvA+29DkGWfcWg80z7INaD+muMc7i0P7p2fNE0loiMsdwqkm9bA1NoecmwKAr/+9hCPNZbEG14Ii5AZxyEabHZIL51ikWEY/dmhcxJXhv9QvJVPUwZ9t50B8r0qPrHmTF4LNyRCv6NqlxhoSNdLFxi9331SlWno/FUttinKq3ggkpvyxA3uJUjY8UFpMZGHEWkNTqpL+iXzo7kOYeUfP3oYshu3gltnyJytKsnStia1nHdFMGnQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UKu/5HrhConOV90+75WsEWjk/iJ6zwGVX611C+beSFE=;
- b=dYfxPRYuPogHVBrmGuq04BvUdx/dVByo/F4IjL1NKHjsnUGDQiOhVeZzLqPXjBI4RCcw6BtrCaeCKGQuQ66NbBTx/mNNUcdmpCet5RXJ8FHXc0sMYc3H4CPGMkILq1Bgw1ApJxbxPEZrfp6t2g/Srp7NAQJoA1pUiP17kEOhivYZ8NZf369nXv1WAgMqeCeg+irJuwprOwyaiFqpK2PCi8WsIi5Y9WJBMXo+YE/Kz+5RC/76P+HZ+J+u++S2eD2q7SHRR/tZ598UtXPxAt48FlmtLi4DbvbrL+7ue0EvvZUQAd6RGzTM0GA0NeyFi/fx2q4JeX2E7cBOywz2hGWqtg==
+ bh=P8oNb7HfKhhqHimy8j5x9hz0CtdsioYwtGSC7OY68zo=;
+ b=XDCJmReIClkImh3vIKD79uLIVF1B65WoTPDbq4yIgBSKk1nyReLI0KHAsaM8f+pRtqGMgUESlJ5Z+1L4DMcY51mJzoRtKhi1F9rWtEAjclRDZGj+G527hFqj8BW7dnHgwR6f8pN7TLPthlfJw4pmtJwSR+lwcd5QApu5ryYLKjrR5PGG40M4btaB5I171Qov67dGMBTn4OUziJ0cBlYo5qcPOnXHvKedxaeQB1NxMx8lVkWaoZCeQaD5B8KIufOZEy3R4YqA0DtoaHjziTFvHPOhVR5hbY2GAkl2+5iVRkmGT9FYOyvanZZYCo05jzoBDtcS3TwNWbsyq2c40OqyaQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UKu/5HrhConOV90+75WsEWjk/iJ6zwGVX611C+beSFE=;
- b=YnDJMV+O7UkkD1uWBoyfyw0X+u1dylfwz31g393aGw09UnDPWqDhWi6smdTXSJlDzyvh2Irb4QvUuLO8zaPa8zjnhHlMJ4SJQ2r6KNLis7ysBdK8UQfm0zWmEB/EZerF0pNwrmi21jrJTMqLuIz3wBxn/dJf5uaIo3caShByqfo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
- by AM8PR04MB7827.eurprd04.prod.outlook.com (2603:10a6:20b:247::14) with
+ bh=P8oNb7HfKhhqHimy8j5x9hz0CtdsioYwtGSC7OY68zo=;
+ b=Af0i/ypcPBm8/2wgHg/C/xTlIyxa0CLiuTNWNLQDtrNRBGGi4BnRFwIm0DLZSaST7eFV3cILIjuwEoSqDIj/4GeNphY8uEfofCx+YVn7lT/mp/HeEdG6Dfb1mX0okGYT9mxmJAMGJwSYNnTYdxzhzE1lMYe5GBJ5VkrdMDjPK5U=
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com (2603:10b6:208:321::10)
+ by BL0PR10MB2801.namprd10.prod.outlook.com (2603:10b6:208:74::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Thu, 3 Mar
- 2022 18:47:10 +0000
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::c897:1bdf:e643:aef8]) by PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::c897:1bdf:e643:aef8%7]) with mapi id 15.20.5038.014; Thu, 3 Mar 2022
- 18:47:10 +0000
-From:   Frank Li <Frank.Li@nxp.com>
-To:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, lznuaa@gmail.com
-Cc:     vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com, shawnguo@kernel.org,
-        manivannan.sadhasivam@linaro.org
-Subject: [PATCH v2 5/5] PCI: endpoint: functions/pci-epf-test: Support PCI controller DMA
-Date:   Thu,  3 Mar 2022 12:46:35 -0600
-Message-Id: <20220303184635.2603-5-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20220303184635.2603-1-Frank.Li@nxp.com>
-References: <20220303184635.2603-1-Frank.Li@nxp.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.26; Thu, 3 Mar
+ 2022 19:06:55 +0000
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::6d20:6694:a16:56f7]) by BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::6d20:6694:a16:56f7%3]) with mapi id 15.20.5038.015; Thu, 3 Mar 2022
+ 19:06:55 +0000
+Message-ID: <588b2378-cac4-79cb-e520-a535422cd04f@oracle.com>
+Date:   Thu, 3 Mar 2022 14:06:45 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.1
+Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
+ swiotlb
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        iommu@lists.linux-foundation.org, x86@kernel.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+References: <20220301105311.885699-1-hch@lst.de>
+ <20220301105311.885699-12-hch@lst.de>
+ <alpine.DEB.2.22.394.2203011720150.3261@ubuntu-linux-20-04-desktop>
+ <ca748512-12bb-7d75-13f1-8d5ec9703e26@oracle.com>
+ <20220303105714.GB15103@lst.de>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+In-Reply-To: <20220303105714.GB15103@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0223.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::18) To PAXPR04MB9186.eurprd04.prod.outlook.com
- (2603:10a6:102:232::18)
+X-ClientProxiedBy: BYAPR02CA0048.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::25) To BLAPR10MB5009.namprd10.prod.outlook.com
+ (2603:10b6:208:321::10)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 93491e18-1777-4e3d-9fc0-08d9fd46396c
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7827:EE_
-X-Microsoft-Antispam-PRVS: <AM8PR04MB7827CE249A715256B2970AD288049@AM8PR04MB7827.eurprd04.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 95efbe20-0874-42e5-dc4d-08d9fd48fb9a
+X-MS-TrafficTypeDiagnostic: BL0PR10MB2801:EE_
+X-Microsoft-Antispam-PRVS: <BL0PR10MB2801D4987DE53ACEC6E93EF58A049@BL0PR10MB2801.namprd10.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hCGEgMD+VCKFPMQ+Noe0MtsO2dGWMGW4v822BjivwtLUj6uML8ndJIoiZerFKTyW2NOi6auT/BhiuIgzcS9btk7o7USSNa7MuP3UKWjMiOnrii10DBSZjb55Y0pZR/L+u9oaPh68xzaDrtcZkqT8DQkjYumw1J8z796hcElrgN3TFY2tu64mutklnoHhEQnKm1Bv6Q7nfZOivZt7yyKssxTpMAhJJ2EhIjB+qemmTRQ5Ns7vq5214JYSR5CvfBV1i7l1Sm7dS+EX+2jh5fJdcepZK/doM72y8pIPkz7nnZb/V4ldhv5GdlIbaoozZY+9mobblUrQgNGg+yGm6EuvLj8tEXkcfrrKhJH1yBMewyuLAOpcNl/8p8mjRXYx5g7az39uGwg+S45sOJyjHVGEC+P7qxP9gM2tbX3VET8y86WeDaQaEunevHmjQeB/jSsdy0tkBuHbqeDJ33+mRIcGbjXiBqPp9RNSdRMPPWqmSBnE+QDQEmuqbPZV0cx8URHrbcCf/JTcNhRP0f5GFhOwxFY4F6SuhSae08K1seiX7t3WsCJZxflwwy7TIZW5utMTT5tjdZoiznerPIT5uP6s7HCAo78Zj54foONhfq3cpkUJ+k11/P9PjivhWuGkDTeQyW/QiHPTnxnS3v60QsiAnklokOYQAZIP5CkJmn7rCqxkttrhQxlok3Ijtoj+gnL2HEX4MCeUUh6F4/N6rrcceg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38100700002)(6486002)(4326008)(86362001)(36756003)(8936002)(6666004)(6506007)(26005)(5660300002)(498600001)(52116002)(83380400001)(8676002)(2906002)(66476007)(66946007)(66556008)(186003)(6512007)(1076003)(2616005)(38350700002)(7416002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: UEcJVw10SoExCuxyvNtEwRfpb7TgGnc5OvBpKkdljxHLPLW/Ec4VVERyTQ6GCLXum91K+vRt2JmDTSIf6ln+d1fyQCT+oj08+pA11Of8qy7Po0lOSBoxtv1THiu4LYTQX40KsOqlntwAIG1P+vIknLLkd9hB2sR5x5enlGmIIPW/xfcTSNWpoPwmVBVYx5s44ndhXudWF3XDFltaYQTS+dpo9/SnvC4/5dlEW5eWRV85AEGrFhW3vFKLhaFug6a6kdlkgIs+HcCaWV7kMhrSMxD3NGMTL20Osm5+CG1Fg2lJm5zXP3qBle6gCEEViw4+2dLNCavp4fICQsfBxxhISykWnwG3y01/9kMB4o6cRyp+MXesr8a3JUUtQjMHuTFwdQvHwfOm6xFdySVNwxLvyj7KpUGi84DILA9mG056+gxdNo87cEsrdLeczcMfo8c4B2HUmhC7QTJbu9efAd6OQO0XfCoS1oa3FUb0bmFKa2vy1fiKf9uOeBt9SjZJnPW7BoC4yYxdSbRtbIZTRWnSTRLo2rYZ5HSOOlaMrOe5WgUqpEjjUErZ7GXZXto1d8AufqGqy0G14HVnD8GKtpqwybrb7D6+4H1wkc8zuIEomjdimmudIqp8NoKwTuWc9AmvrUs/1CvuQQ3DIW7dPJfGGQBp+3FZhZBkULyIXo03KvUp2oJ3lkNOU5e1IvZf+bytaoQXeXvZcEI7Csg6VslkSsMJB/8Tjtogob6FlwtEB401FFRygTBqX3PEtj85QVGC
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5009.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(36756003)(66476007)(38100700002)(2906002)(86362001)(31696002)(6486002)(26005)(186003)(2616005)(508600001)(53546011)(31686004)(6512007)(6506007)(6666004)(8676002)(6916009)(7416002)(44832011)(8936002)(4326008)(66556008)(5660300002)(83380400001)(316002)(66946007)(54906003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?SW5W+8AATIWIObnFQIYCX+9VytFbEYIqQ61FqmTvHjOnHUWFucAfNBXd2QBQ?=
- =?us-ascii?Q?KjH6867frH3sDWO5jIZJBPoTxCYoCFzTELMuQYasV/Rh5SfzIXy05RB7ZmK9?=
- =?us-ascii?Q?iqKA6B/7kd5MfBbRgcGqxzSVfW0gO/hBzt+BcYQVYy/quoJgI2obsuoLZT1X?=
- =?us-ascii?Q?RgypX9I8/aRfLfHKH0di9xZ912oY104srd8fK7oyIlLLnmjQdaUgnQ25CDE2?=
- =?us-ascii?Q?w8kO7lvV6elTWtpTqZ7UVCAWbEed9WFBcSY0Wz38wEfwUcOD9jyf15MKmvJ/?=
- =?us-ascii?Q?5Q2xzKCmztlbIf5bUwmlDwkiHX73Wukev+oDmY5ZDinYfPqkuG3laJQrUdfH?=
- =?us-ascii?Q?/UGgoDIdoj75vEJO9dlXvgpb8v1Y7/pFpLDVVm3t51sjajU+PuSNoYwKCsE7?=
- =?us-ascii?Q?7PBpWFX6G/qAv/U9fRG6QYuxSe65jzX/FzE1sBgHrPLmGU1N/AgJB69J/sII?=
- =?us-ascii?Q?TBX/RczXfHBOlNrZZ5hlQy0og71tC/NcbyUpE4UZ8YMqH+Tq8fiu7sF20HgA?=
- =?us-ascii?Q?UR/WNiUMckzScIvaG4JYxn9Cr0hFkpBatXhpA0uJ41svwrEWIIo3fFzDa34E?=
- =?us-ascii?Q?XmCgyI48J1FmAxswjW2eBfnCg1qQegXnr2tXusYlMleyQGo8AGmZ3208jpGy?=
- =?us-ascii?Q?LdTu88TkoGokLTlhOXvZCEs2RU0xnpBmTKzY5YR4i8L7aBjF9dCvE7T9yxP1?=
- =?us-ascii?Q?Orvt6I3suVa8SO6j7A2t+2dxuMkJWkCFzl5Gg7P0r60Dwp5b0Dt3PqS2gQrb?=
- =?us-ascii?Q?O0R6gspQT2autycekkzijQ+f4SqGPzJ/sSbSTk/5dnORiANOk7ONkeDgMNt1?=
- =?us-ascii?Q?g3+/yuW80WXuAx7eqKHYm1gwDZHfmvNroT119ZkOggmISe9CMT4rbQkhalus?=
- =?us-ascii?Q?fQG+c825u0i/0Iaib7tyWOQzq+bHTiBkqwguHyyyiUPAguqHUPMMJOf2eCQT?=
- =?us-ascii?Q?yQgU5I7zaxCV+eR5lZ0i2uQlRJRuw8XvhmRGRizKgvGXWcFx8dvJo5xRSKCI?=
- =?us-ascii?Q?RpPPMxdIFb0ZGuqRaCOXj511+XsNK6XjAGlXTTiTIROnmi5zRfcqcq2FZxJB?=
- =?us-ascii?Q?GQ9BHY5xXEVH96lXwjMUQoA/vR/0ScKJ7eP8C8B4Q/+kwc1HVIHOdlnL1klU?=
- =?us-ascii?Q?ay19BHtbEuX6rWX1XLwvhcnzomtZrcut40gljup3UtJzboP0BBZKZPHjlWc2?=
- =?us-ascii?Q?4zpe2BqdAgHkqTIgqJX6zZ3vhDaYIu0I4VPJx1k2agkpGj6Ud6Mq4zTFdF2j?=
- =?us-ascii?Q?FsNcdNfYHZaL52jF2Wut48GA+Tc2LMaHoGvb3I67jZ/bD60A/C2EE5eZeBf1?=
- =?us-ascii?Q?qLdfRldz1VK4b6pEuJwXFQ7B5fT7+tTyZ3uMjaw+Aiq2KhWJ2uWyCvzRQfdh?=
- =?us-ascii?Q?Q2I97hGbac6bjFGBF7JK1SSeJ6B5wJP5aIIojM4cuEIyXFMHySOfeSpxdJIV?=
- =?us-ascii?Q?SlZg/QExvJoYD7r+uV6qKQLvfHUZSvAwDSsn9kJeS5Pficku9Ae8qsjCJ3oW?=
- =?us-ascii?Q?6n7uZjF214wefZSQrIU/3Le/llC+l+92aCPtDAi9cRp85ajT+vp3Zxw2exqG?=
- =?us-ascii?Q?xlTt5q3PGYRu9GFVvv9eXn6XpMXcEyyWMPdL8qqvLvVJAVlzwUwJSdtA7YN1?=
- =?us-ascii?Q?vpg7vOBeoNJj8nCTX7pOXCM=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93491e18-1777-4e3d-9fc0-08d9fd46396c
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UUVZclYwZlkwWURhWEIvUUZPMXhXa0d2bUhQY1d0Rk94em1tcnAySWhDZk5W?=
+ =?utf-8?B?QXpxSzg2YWRuRkR5RFFSV2xCbTFhRlVVaFNRVDJ0ZCtGTGZycU5DK05zT0o1?=
+ =?utf-8?B?S0JTZlhzcUV3dkJHWERBaXV5ek1xdmt1M2ZaZzV4YnZ0bGFMUVhiaFJQREM3?=
+ =?utf-8?B?Y1lFR1YwbzR2dFE0a2o2U0RDUTR4ZjdsVkVsSkZGL1BiVmlCR1lNNlA0YVRF?=
+ =?utf-8?B?VXpnci8weTdSNExVL2taY1IvdHZKazkzN0hEaW5mRTNUSFBZYmROM1h5SDVt?=
+ =?utf-8?B?S1BSRkNSbEFQbnk0My9IenBCMFNQMTZVMjUyK2lINzdJVGduYWJqRXE1N1p6?=
+ =?utf-8?B?d3RGMnZnVjZCbDhDUUtWRTBYRWhmQ1A1aEk5NEsvMXJHWjJtT2JvS3RVbmdD?=
+ =?utf-8?B?QVNZU092c1BUODVITVRpSUJFWWczME13NWJ4Y1RnL2VGVjRSdi9PY3FzMHpv?=
+ =?utf-8?B?dWRDZzFQQU9pemM2RXBIZU1wVFRjVmI1bjVMdmJGS0R0dE9RSUVSWW1qSHdB?=
+ =?utf-8?B?Z2ozRHhKZnQySUxTWmhBVTExcnc2RUtNeksvNEEzYUZwN3Brc1BRdVFma3Yz?=
+ =?utf-8?B?RVNRNkFYSEpLa3ZlZkhVQ3pDOHArakFUWnVMdUVIU2dkUHBLR3p4OWtiSkl4?=
+ =?utf-8?B?cHZ0WGZzbDN2Sy9JNEpoQ2U0RkgrSmVmTkkwUjFrTnQyNVMrUUp3T2x3ZXB4?=
+ =?utf-8?B?SUQ0UmpYbk1zU3ZJVGxwNTkxTmYvWm1kL0trZ2hWcVp6Vmt6cjduUk52dWlT?=
+ =?utf-8?B?VmpldjllRmx1aHBTWnBLaWVHTnV6TGJtNWg1di9NSDAxbERuSkpCdXBYdjVu?=
+ =?utf-8?B?bW5WZmlBUTJrSldISG9Jd2dUOUlhNG0wQ2NMK3d1azZ5NktYQ1ZEWlBWdjJo?=
+ =?utf-8?B?NDJrOVBNclM4aVk3NUNMbVBUWVZLWWZZVkhaTWdUU3NVSmt4UHJJYnYvWkly?=
+ =?utf-8?B?MVhKTytFRU0vV1BCTFZUQk0rVkFtNkVXNzR3VDR6cGh1VjdLMHZSOTRweVQx?=
+ =?utf-8?B?MFBwbmdHRXA1QjE2bGphY1BHTW5lODBpZHdFZTFTVTRNV2ZqeEpQQytoY3JW?=
+ =?utf-8?B?cUNFckRxZjdCZ2dkSWM5cmFkcWhVSVVObnhyS2dsdis2YUJxc0N2WTlRVmVN?=
+ =?utf-8?B?aG1iL2ZxQmRPZE81OEEwV1lYZ1o5Z1RRZTg4enR3VmVNZ3RaNFNQYk5QN0lF?=
+ =?utf-8?B?UG5DSkZmTjZxL0swSDZpWFNlYkwvZllIRUExWU9VczBGbWRKQ2NhYmlpazRa?=
+ =?utf-8?B?WDh3aUFmaFNCd0JSQ0tiWEdJU3ZRK0RaRHd6a0ZnWWhMRzhKRnA2Q3lvWUJQ?=
+ =?utf-8?B?K3h5TEJQMkpFaDc0bXJRUkNERzNncmxYbXRvVHZzWHJuOFlYUTU0ckNrcHZa?=
+ =?utf-8?B?WGwzc1QvUXNsREx5MXRldTBuWU5yZVpFTnJVQjBxMHN4aVd1VXFSaDlTNVhK?=
+ =?utf-8?B?ZWZxSm5aNlZIamc5S1JSdzk2WFVoOEYzK2VISEtTdEFUbDZLb2ZiSmlaQ0dO?=
+ =?utf-8?B?cFBRK2J0RVFxWUNVb3ZvczJBU2FFYnN2SURCMVE4MENBck9VL0F6ZmJZRkF0?=
+ =?utf-8?B?T0xOVWN5Y0F5VjNqNW52dkVqa3ZYUCtjWnJPbGF3YS9ta0Y1UjhEQUdiOHN0?=
+ =?utf-8?B?YnQ5YUNHOHVKT2pKS09RZk1zSUhaeW9abkg1b0lQSFZOZDRnejNsNHRWUTJH?=
+ =?utf-8?B?RzB0Wkw1Mk56cUZHUWVPQzVub2VnQ2VrMW5HcGF4WXJreHgvOWYrMC9SUmpU?=
+ =?utf-8?B?SGtYa0k4V2FkVVlmcFhZS1N3Zlc1ZnhwdmQ5RUhqb2dhOEhxS3pJZHlweG9n?=
+ =?utf-8?B?bDFVWGlyOHlzbDZ0a0ZpNnNVc1NuOFlpTk1LV3FxbU11TitVTzFXekRnMHg1?=
+ =?utf-8?B?L21LWW1uZGlpR1QzU2F1a2gxdVdxM2xMRmtUeXg2MmVZZGw1aC9NSUxUZUxw?=
+ =?utf-8?B?djByQlRyZ29HOEFNcnFhQmpxUVJpWVBSWWpsbTVYMStoWWZBd0w3aGp1QUV4?=
+ =?utf-8?B?eldvZ2FCbEplcU44WUR3NEcxclp2ZStzVDVMMEE3aS9YMVRXVU5kNTZYR2pl?=
+ =?utf-8?B?NTd1NVBMRjk0R1VKZ1p2emovUXlEYm11UDF1OGJkdnNrNFJJWVZLN0RFakV4?=
+ =?utf-8?B?QmxBWmFvR1RkQU5QS1l3RmxCenFzVkhYVVhCTkJQTFBGZXJwZXBYTVcrTmd2?=
+ =?utf-8?B?UUtVcFBpalhwdy9QbFdacFJwZ1hzQWMwUjBYQ0hBVG9GTUUxa1dOdUxJNVVa?=
+ =?utf-8?Q?Y1spidh/YprpH/MPhXXiGsKEk9w5vPQSqwsgvAFAA4=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 95efbe20-0874-42e5-dc4d-08d9fd48fb9a
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5009.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2022 18:47:10.7906
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2022 19:06:55.1744
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 19mt0mkRrX5O8IqDPYDlAT1SRaTMB/E9tuQn4ry4Ecg5ZcM83yScKWbJCBI2ciL1D9fkhvw8F8fcWXHDc6ZjOg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7827
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: /wq2I55WnEWJzPzZPikwGFw10oNM0tIUpqPNREFNUHH8jHRWO+PrJOuABArjfVDgsu9vNK+tjpK11JT0YNvGlmHX1pLDJP/Rp0gfavEZV4o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR10MB2801
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10275 signatures=686983
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
+ adultscore=0 phishscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2203030086
+X-Proofpoint-GUID: wMGNRfAWjzQls01j7dcE8rVGfqOA7VHH
+X-Proofpoint-ORIG-GUID: wMGNRfAWjzQls01j7dcE8rVGfqOA7VHH
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Designware provided DMA support in controller. This enabled use
-this DMA controller to transfer data.
 
-The whole flow align with standard DMA usage module
+On 3/3/22 5:57 AM, Christoph Hellwig wrote:
+> On Wed, Mar 02, 2022 at 08:15:03AM -0500, Boris Ostrovsky wrote:
+>> Not for me, I fail to boot with
+>>
+>> [   52.202000] bnxt_en 0000:31:00.0: swiotlb buffer is full (sz: 256 bytes), total 0 (slots), used 0 (slots)
+>>
+>> (this is iscsi root so I need the NIC).
+>>
+>>
+>> I bisected it to "x86: remove the IOMMU table infrastructure" but haven't actually looked at the code yet.
+> Thanks. Looks like the sizing is going wrong.  Just to confirm, this is
+> dom0 on x86 and no special command line options?
 
-1. Using dma_request_channel() and filter function to find correct
-RX and TX Channel.
-2. dmaengine_slave_config() config remote side physcial address.
-3. using dmaengine_prep_slave_single() create transfer descriptor
-4. tx_submit();
-5. dma_async_issue_pending();
 
-Tested at i.MX8DXL platform.
+Right.
 
-root@imx8qmmek:~# /usr/bin/pcitest -d -w
-WRITE ( 102400 bytes):          OKAY
-root@imx8qmmek:~# /usr/bin/pcitest -d -r
-READ ( 102400 bytes):           OKAY
 
-WRITE => Size: 102400 bytes DMA: YES  Time: 0.000180145 seconds Rate: 555108 KB/s
-READ => Size: 102400 bytes  DMA: YES  Time: 0.000194397 seconds Rate: 514411 KB/s
-
-READ => Size: 102400 bytes  DMA: NO   Time: 0.013532597 seconds Rate: 7389 KB/s
-WRITE => Size: 102400 bytes DMA: NO   Time: 0.000857090 seconds Rate: 116673 KB/s
-
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Change from v1 to v2
- - none
-
- drivers/pci/endpoint/functions/pci-epf-test.c | 106 ++++++++++++++++--
- 1 file changed, 96 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 90d84d3bc868f..22ae420c30693 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -52,9 +52,11 @@ struct pci_epf_test {
- 	enum pci_barno		test_reg_bar;
- 	size_t			msix_table_offset;
- 	struct delayed_work	cmd_handler;
--	struct dma_chan		*dma_chan;
-+	struct dma_chan		*dma_chan_tx;
-+	struct dma_chan		*dma_chan_rx;
- 	struct completion	transfer_complete;
- 	bool			dma_supported;
-+	bool			dma_private;
- 	const struct pci_epc_features *epc_features;
- };
- 
-@@ -105,14 +107,17 @@ static void pci_epf_test_dma_callback(void *param)
-  */
- static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
- 				      dma_addr_t dma_dst, dma_addr_t dma_src,
--				      size_t len)
-+				      size_t len, dma_addr_t remote,
-+				      enum dma_transfer_direction dir)
- {
- 	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
--	struct dma_chan *chan = epf_test->dma_chan;
-+	struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
- 	struct pci_epf *epf = epf_test->epf;
- 	struct dma_async_tx_descriptor *tx;
- 	struct device *dev = &epf->dev;
- 	dma_cookie_t cookie;
-+	struct dma_slave_config	sconf;
-+	dma_addr_t local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
- 	int ret;
- 
- 	if (IS_ERR_OR_NULL(chan)) {
-@@ -120,7 +125,20 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
- 		return -EINVAL;
- 	}
- 
--	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-+	if (epf_test->dma_private) {
-+		memset(&sconf, 0, sizeof(sconf));
-+		sconf.direction = dir;
-+		if (dir == DMA_MEM_TO_DEV)
-+			sconf.dst_addr = remote;
-+		else
-+			sconf.src_addr = remote;
-+
-+		dmaengine_slave_config(chan, &sconf);
-+		tx = dmaengine_prep_slave_single(chan, local, len, dir, flags);
-+	} else {
-+		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-+	}
-+
- 	if (!tx) {
- 		dev_err(dev, "Failed to prepare DMA memcpy\n");
- 		return -EIO;
-@@ -148,6 +166,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
- 	return 0;
- }
- 
-+struct epf_dma_filter {
-+	struct device *dev;
-+	u32 dma_mask;
-+};
-+
-+static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-+{
-+	struct epf_dma_filter *filter = node;
-+	struct dma_slave_caps caps;
-+
-+	memset(&caps, 0, sizeof(caps));
-+	dma_get_slave_caps(chan, &caps);
-+
-+	return chan->device->dev == filter->dev
-+		&& (filter->dma_mask & caps.directions);
-+}
-+
- /**
-  * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
-  * @epf_test: the EPF test device that performs data transfer operation
-@@ -160,8 +195,42 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
- 	struct device *dev = &epf->dev;
- 	struct dma_chan *dma_chan;
- 	dma_cap_mask_t mask;
-+	struct epf_dma_filter filter;
- 	int ret;
- 
-+	filter.dev = epf->epc->dev.parent;
-+	filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-+
-+	dma_cap_zero(mask);
-+	dma_cap_set(DMA_SLAVE, mask);
-+	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-+	if (IS_ERR(dma_chan)) {
-+		dev_info(dev, "Failure get built-in DMA channel, fail back to try allocate general DMA channel\n");
-+		goto fail_back_tx;
-+	}
-+
-+	epf_test->dma_chan_rx = dma_chan;
-+
-+	filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-+	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-+
-+	if (IS_ERR(dma_chan)) {
-+		dev_info(dev, "Failure get built-in DMA channel, fail back to try allocate general DMA channel\n");
-+		goto fail_back_rx;
-+	}
-+
-+	epf_test->dma_chan_tx = dma_chan;
-+	epf_test->dma_private = true;
-+
-+	init_completion(&epf_test->transfer_complete);
-+
-+	return 0;
-+
-+fail_back_rx:
-+	dma_release_channel(epf_test->dma_chan_rx);
-+	epf_test->dma_chan_tx = NULL;
-+
-+fail_back_tx:
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_MEMCPY, mask);
- 
-@@ -174,7 +243,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
- 	}
- 	init_completion(&epf_test->transfer_complete);
- 
--	epf_test->dma_chan = dma_chan;
-+	epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
- 
- 	return 0;
- }
-@@ -190,8 +259,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
- 	if (!epf_test->dma_supported)
- 		return;
- 
--	dma_release_channel(epf_test->dma_chan);
--	epf_test->dma_chan = NULL;
-+	dma_release_channel(epf_test->dma_chan_tx);
-+	if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-+		epf_test->dma_chan_tx = NULL;
-+		epf_test->dma_chan_rx = NULL;
-+		return;
-+	}
-+
-+	dma_release_channel(epf_test->dma_chan_rx);
-+	epf_test->dma_chan_rx = NULL;
-+
-+	return;
- }
- 
- static void pci_epf_test_print_rate(const char *ops, u64 size,
-@@ -280,8 +358,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
- 			goto err_map_addr;
- 		}
- 
-+		if (epf_test->dma_private) {
-+			dev_err(dev, "Cannot transfer data using DMA\n");
-+			ret = -EINVAL;
-+			goto err_map_addr;
-+		}
-+
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
--						 src_phys_addr, reg->size);
-+						 src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 	} else {
-@@ -363,7 +447,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 
- 		ktime_get_ts64(&start);
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
--						 phys_addr, reg->size);
-+						 phys_addr, reg->size,
-+						 reg->src_addr, DMA_DEV_TO_MEM);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 		ktime_get_ts64(&end);
-@@ -453,8 +538,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 		}
- 
- 		ktime_get_ts64(&start);
-+
- 		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
--						 src_phys_addr, reg->size);
-+						 src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 		ktime_get_ts64(&end);
--- 
-2.24.0.rc1
+module2 /boot/vmlinuz-5.17.0-rc6swiotlb placeholder root=UUID=dbef1262-8c8a-43db-8055-7d9bec7bece0 ro crashkernel=auto LANG=en_US.UTF-8 rd.luks=0 rd.lvm=0 rd.md=0 rd.dm=0 netroot=iscsi:169.254.0.2:::1:iqn.2015-02.oracle.boot:uefi iscsi_param=node.session.timeo.replacement_timeout=6000 net.ifnames=1 nvme_core.shutdown_timeout=10 ipmi_si.tryacpi=0 ipmi_si.trydmi=0 ipmi_si.trydefaults=0 libiscsi.debug_libiscsi_eh=1  panic=20 nokaslr earlyprintk=xen console=hvc0 loglevel=8 4
 
