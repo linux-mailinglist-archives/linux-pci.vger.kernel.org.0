@@ -2,231 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C4B04CB5EB
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 05:36:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C1154CB6AE
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 07:10:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbiCCEhf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 23:37:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35540 "EHLO
+        id S229780AbiCCGKn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 01:10:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229543AbiCCEhe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 23:37:34 -0500
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2043.outbound.protection.outlook.com [40.107.94.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A31119F21;
-        Wed,  2 Mar 2022 20:36:49 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R2jub99Cfd4jrTQ0x75Xjy8cCU3P1ycIXC2j06AVCRSJWeYZrypLLmdhnM8cgTI7/mNuXdhzPGsEaKWRV503bb4TmwoLWBVBcaFU5UqGaOo7iXR5iTSOaQPYtsFe9/NKc+a7Fm3HVatrrpDwq6rxuDuZZb6dRJLsQbBqpZEn2zRctVFfTlN6JsLFhxXAPyuhkUWbBVETvW0roO6lEydx4jobc3DBlyF/dWmNm9lYVkb0C4nc+GnqctCdfCk2YFR51n2nr5XZCD0NwPz+lJCEeuJ7SHUcz948uJC0L7dAssrFnQ74TTobEI28RNUPF83e+k3YOK5UDg3xtLSgWan/ZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SDZoenlV2g43knC6xd7p7SU0zNkAWrrPA5mn/Fx2/4g=;
- b=fsXQY8eSw0i2JdU68WPp0C3mIP7jNrTdyZO5USS1aaO8Yg1G12o6uAQh4scPIvXV8V/M75zGsXjVKoRmrTLHkG/vyzRKlNvw1rMdAylBZq4PuVHr27JtTCGrCWGp86Ri27T1xN+2bRyqT8GPxsovRjrvrGKqKuLnNFrjDC2kpUBw1aAeqvJEOJ4HuWhrNrfMdzatBYHAQSs6yidXTKOAcxefEBLKPntwBSF2KKNe06NWIGIS/2DHljvXPl39M9nnyukm3A2GYXTF0MyMPopQ/anvwuU1W9dzjRZ9TKvYSoWxcUy9xOvyp2HfUGJFizkrbToL2+FTYLfmteBVwJLPzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        with ESMTP id S229779AbiCCGKm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 01:10:42 -0500
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21B6615C9EB
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 22:09:58 -0800 (PST)
+Received: by mail-oi1-x236.google.com with SMTP id z7so3919967oid.4
+        for <linux-pci@vger.kernel.org>; Wed, 02 Mar 2022 22:09:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SDZoenlV2g43knC6xd7p7SU0zNkAWrrPA5mn/Fx2/4g=;
- b=JOpuHGxy8saDSTC9oZzSrbAP1AImNZ6y+iD082MCI+yeJO/WMeq/c0DALJ3O6SbCB4g8yzja14tF6Te4Q4zDK3GV7/6f+pqHYan/WYiTTG4pQz7be4H83wjl702WUt68ovSv/2iQB5R+tvYy1OwwSDU3H/iUcRKx5KN9LRWXbo8=
-Received: from BY5PR02MB6947.namprd02.prod.outlook.com (2603:10b6:a03:23e::12)
- by BL0PR02MB3873.namprd02.prod.outlook.com (2603:10b6:207:49::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Thu, 3 Mar
- 2022 04:36:45 +0000
-Received: from BY5PR02MB6947.namprd02.prod.outlook.com
- ([fe80::5898:b7fa:9930:10a0]) by BY5PR02MB6947.namprd02.prod.outlook.com
- ([fe80::5898:b7fa:9930:10a0%7]) with mapi id 15.20.5038.014; Thu, 3 Mar 2022
- 04:36:44 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Michal Simek <michals@xilinx.com>,
-        "robh@kernel.org" <robh@kernel.org>
-Subject: RE: [PATCH v2 1/2] dt-bindings: PCI: xilinx-cpm: Add Versal CPM5 Root
- Port
-Thread-Topic: [PATCH v2 1/2] dt-bindings: PCI: xilinx-cpm: Add Versal CPM5
- Root Port
-Thread-Index: AQHYImoJPPij8nnpzkK8c0Zef9GcHqysUgOAgADZKbA=
-Date:   Thu, 3 Mar 2022 04:36:44 +0000
-Message-ID: <BY5PR02MB694774FDF8E3AA9D3576BDFAA5049@BY5PR02MB6947.namprd02.prod.outlook.com>
-References: <20220215124606.28627-1-bharat.kumar.gogada@xilinx.com>
- <20220215124606.28627-2-bharat.kumar.gogada@xilinx.com>
- <Yh+PN5ct8T87f6Ve@lpieralisi>
-In-Reply-To: <Yh+PN5ct8T87f6Ve@lpieralisi>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=xilinx.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 34b09f39-d2c3-4e9f-4ae6-08d9fccf6bdb
-x-ms-traffictypediagnostic: BL0PR02MB3873:EE_
-x-microsoft-antispam-prvs: <BL0PR02MB387319FAA7DD9DE7D1FBABCEA5049@BL0PR02MB3873.namprd02.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q+1+kJBrrEgtPCmj46QhpaSYvfkgFrpasXddzGp0NNqMc9eHwBEjYqmuClBkUwShytigVozAy4sDzeIr+Aih/dk6jMSGMAaQp2S8wQ3NbY0odEvr7BYz8KK5HKLyFSOWtebee8wHdIlmm/cJ7i4drgJqisDIwTVTAShRVdDRlpFgev5Vw3OfilGYkGfUxAmHTEWGsa4FNXqltGw6ByRbpICzJBROx7Y6ZROEPwIaKTMMq1Pm8ifQkf6TdPzrc27t4MhVsmU9Lq9HXdq52Rnbkb2IhP4mLYWhWtLO0qHW6NycPJJWPxjZjz9eJ4SaDXeJeSnKtc3MCzW/DJMoyltmu6w4UGoMFw+RUgAkbhqw8VR9XmLL32VPNNCW7G0WYj1U8akAPjuI3x4b9HvB0PfLAZ2dWAToz/E8AgnqntIU7MXc0sRKN9n1xQrL9J5Ov878XUEqhs4xuPxra3zSnbxaw67IIOd3XLWxPFXqDTUGKdQ8SpkT7m8gh2rizvn/NuStJlHKGYFZNjMdaBRDCqu+AbrK2IGmdhhq+7xm9xrLZtcxDFqi15xgx0LxQ3H3LlHDSkjQ/CQrOMViu+bjqOfqtYXyZF+ige2vrKg3GoQwE0fPT7EHMkmiDiljKrSMgQej+TlnsCu6v7c03YfpAtLPh8CQbMEVWw+yWuRwjsuT4krsewHuu/JCOIe2eQOpYIbuv0z2DU+JXYzkuEK26z8v0Q8ld3MLADTz+a3qOnmblFdR0jqg4XJ29qzUY8Mn/7C1tNQh5USriOaVyYhY77G7VBgGkd3iSOG+7M2N8uQc4BU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR02MB6947.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66476007)(5660300002)(2906002)(33656002)(66556008)(64756008)(52536014)(66446008)(8676002)(4326008)(26005)(508600001)(53546011)(7696005)(38100700002)(9686003)(66946007)(186003)(71200400001)(6506007)(55016003)(54906003)(76116006)(966005)(122000001)(316002)(83380400001)(6916009)(86362001)(38070700005)(8936002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?OtoouE8v/W9w3KrrOby5APZlVbWTnH4CMRqhpSSxDJnlBrl+ocmYOMDdc9di?=
- =?us-ascii?Q?pIq1ahu+zU22hs8qesS6g+mfCWaMChCcpxJ2qcsgQn+6f5BzoauPU1jtljM0?=
- =?us-ascii?Q?Yx5B/wXGZGV+HrJI1OIzA8B/JSR8w4axQ69nHckqlvPP2CzS9AH9FuoqZOxa?=
- =?us-ascii?Q?7gxr2p63Vp/0FCq6UyxiYHLC0nu35J71Bm4QRToNhLivNOABufA/aiv2IUO0?=
- =?us-ascii?Q?cb8z6x2+6c7XHANZcrENrxkgKkLHBmjHh/fNk040nUU2ggE4osZzhQSKkIAI?=
- =?us-ascii?Q?WLHvzJHaiMirVUlVcHUW8uXyO1MawKk+d3sNprdduQ/Re2vMpR49vX5F1HpB?=
- =?us-ascii?Q?NvBjhyTG/sAIOIzTnENZYuugjaMcnvUxgTowiaMNiKj2T/lzg1qzwuuM+/4V?=
- =?us-ascii?Q?2zirICDQkJaGXStuSlahP1ItbswsGGliv27gO6FGBYAVsyaZINb+YimuDZEG?=
- =?us-ascii?Q?Ga93209aXLevWxavBJk8I5U0BC8uAJ01ftxgZ/aZ1Gt6ODIHjPfG+xwDviE7?=
- =?us-ascii?Q?Rq45HOyQhWIVqwtpltuoI9p70Wk2XccBM2VTMv5SjzL+4TK5osfEZa+2BJB/?=
- =?us-ascii?Q?vZeRJ6lXvXUXGQMMueW6D22VfebBfY1Hq5gQKwqEvZWtzQFcff581PTqcOUR?=
- =?us-ascii?Q?HamVXovnOpmhXgnx+Bpp6gCPmqScgzhqVVqjDRha/TheTjZKRQrX4zEeoosk?=
- =?us-ascii?Q?aMATCNtPGWk7djWydUq5XWMG1lEQZDHIdDC0y0YlhY4Ov5o54drlSs2dwN0f?=
- =?us-ascii?Q?m8EzRFpitN68OWiZI8k04N0zGxniOljO/hD9OyRjIlr8llozIEzi/XVXNZcQ?=
- =?us-ascii?Q?7x6Xgd2OErnzZx1arpKgAVmMFQVj6G/ilSi0S0Xq/qFB9ZE/pJpF+VnZYKsQ?=
- =?us-ascii?Q?+gCSVHojP0AyQrO9FAFnxvHeD3dewXBCghmd4qqP6HG1Fqn8eIyPHX8YncKO?=
- =?us-ascii?Q?zjk+Z5SCgsGPzb1hIAGSHWFsbK5lEkGADl1ME79IydwEEhlXonYl9LFmCdDp?=
- =?us-ascii?Q?AZJpgsNmUGmNSmhD27XVTENVMNzW4DQYYh5uTQBUwJ7g9Lz8s0Y9Whs9id17?=
- =?us-ascii?Q?nnjEdHpQcV4JH2hVZLr++n3RSqk9fXajOtaHdCrgbzdnN70aO8MhgsGPQ0W3?=
- =?us-ascii?Q?Lwe3FwgJfwHKxFYCi46juIkUxRKkDyWs/qw169E1GXXWTgeSP/iYG6g2HH/Z?=
- =?us-ascii?Q?GSljW1GoauZkkMdVSKOsRCz/F9/UNiaoUNEGLEjfKl5YW9ptM8I+KclSQxNF?=
- =?us-ascii?Q?3E0r6kP+zxGPKZP8BJXqbfcZhpOJrTQkA9J0RPrMn2X0hV4IaDtoswp6oIBb?=
- =?us-ascii?Q?0H1g7rpAiBG69G+TkkisdBnKp2m6m0gS2dA/KcHfp8VjyD1+/CAO2S2LKdgo?=
- =?us-ascii?Q?YvCl8CFbheP5x23JXN2DXqlpswf9a56eN6MvvpCwq2Xq388f7UFCeKMW+1rf?=
- =?us-ascii?Q?USQiYF0FNXE7iiUoQXvEbAUN79U07kvFw7VDFwRz6PF76qIyGPi5kSXFZham?=
- =?us-ascii?Q?mAfBB9OgZKpm4V3WlAm/1mrbsEB+RW6su5A/DX1Vy5F+ityeRh6QIbCNPaid?=
- =?us-ascii?Q?3+jww0RJwKkKQO3m+t5MCeWcV7J5gJ/WUPg2QHen7C2732ezclW8ipGerlnO?=
- =?us-ascii?Q?+55vn6a1OMJgV6J8Y17cygg=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F72bStix4IAs331NpnLfcvSkp3vRgdYM9D6jVxCO3QM=;
+        b=mSmOEmxrWvorEYk7gtgGW3K4iwExNWCdjz0ETKAOYeEVbyg/cDPlngL2s7hEPx4/2P
+         1Dt9/loXa7MYg3XY39YIedYAdXyh2s6Hk4RCByvFFECGsnrOjiVGJm746faqn75T/tCI
+         X8rLznuEa7mLlGd8AFgcWMzXYROccUbza3KAh4GXXEumgdBMSVHoGSMkl+kvg3mR0Ryh
+         iEo8o0H/db4NyunEi7Jz2O4SqoTcpOG9Q/ZOkIdFY5ZtxwJqwEffbHD+weHSDd9jLpyr
+         fps/FD6TN95wlMtVUiP7Xp+ghyc4DoM+drJSnhnp273OFM15OkQ1ydO4+BwAkJrpYO1R
+         h+Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F72bStix4IAs331NpnLfcvSkp3vRgdYM9D6jVxCO3QM=;
+        b=1yLOahINVNp/8saGT1G6VZEOliXOf2wVoSZsYWjnurEAkbagxILopp9VFuYLjQ8ADC
+         /nvheCei8E/EVxPApuy+8Xsf7pFnr+QjQdAR6mC/FgzQZtKCRTBDOfze4h5CajiKhLXy
+         kwZrHEQYDNzb2z2LypxNfK3kzXCLZ9atYJje5NDTgle7zwHcLb9nkeFJhI3v4ejMOf6s
+         NDE116XHoeGIj4puqq8HXcIo1Pns44luwPWqMNKI/z86JoDXZKLZKcZR7VhxF1hsRriU
+         BNxSWYIO5kfw1gb4G+1FMwJ8QjO+YyJLVzodPVpPTIMS2mBHdw2XvMVCLJzxWsA6o20d
+         3pBg==
+X-Gm-Message-State: AOAM531gzSgyaBwLTn3u3JuhDeIQgYZt+592sqA5QjuraJY9hwI6vzB7
+        QmPg9+lLRRDfvTM5kALntmvM2jCRUyt3vwmjFXhCGw==
+X-Google-Smtp-Source: ABdhPJxP3AtADN5GNByKE/AGLTv6cQU/7GcPF7zfBmZLYqoxmlu3/BeupgEkWEqQsweRc3052c5+h2eBjUrfS2FL/lY=
+X-Received: by 2002:a54:4494:0:b0:2d7:652b:287 with SMTP id
+ v20-20020a544494000000b002d7652b0287mr3236523oiv.126.1646287797432; Wed, 02
+ Mar 2022 22:09:57 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR02MB6947.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34b09f39-d2c3-4e9f-4ae6-08d9fccf6bdb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2022 04:36:44.6662
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EKtcFxYXvlwlJ9PMDZuU6vmXL83OnEl65jMTs6jjPsHZMhE8ptMZ1oI7vrPm5AaAOp17v/a4mW+aawWYOFlo9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB3873
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220302203045.184500-1-bhupesh.sharma@linaro.org>
+ <20220302203045.184500-8-bhupesh.sharma@linaro.org> <CAA8EJpqEy+669gpDsy-zGp2NpDP-d7ZxNf7RVo=OQZdvGdZOvQ@mail.gmail.com>
+In-Reply-To: <CAA8EJpqEy+669gpDsy-zGp2NpDP-d7ZxNf7RVo=OQZdvGdZOvQ@mail.gmail.com>
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Date:   Thu, 3 Mar 2022 11:39:46 +0530
+Message-ID: <CAH=2Ntz2=pgysEVSfSuGd12C-Am-qRZymaotCw-Lwp0_xaNcOg@mail.gmail.com>
+Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: sa8155: Enable PCIe nodes
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, bhupesh.linux@gmail.com,
+        lorenzo.pieralisi@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, svarbanov@mm-sol.com,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
+        linux-clk@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+Rob
+Hi Dmitry,
 
-> -----Original Message-----
-> From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Sent: Wednesday, March 2, 2022 9:07 PM
-> To: Bharat Kumar Gogada <bharatku@xilinx.com>
-> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
-> bhelgaas@google.com; Michal Simek <michals@xilinx.com>
-> Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: xilinx-cpm: Add Versal CPM5
-> Root Port
->=20
-> On Tue, Feb 15, 2022 at 06:16:05PM +0530, Bharat Kumar Gogada wrote:
-> > Xilinx Versal Premium series has CPM5 block which supports Root Port
-> > functioning at Gen5 speed.
+On Thu, 3 Mar 2022 at 02:29, Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> On Wed, 2 Mar 2022 at 23:31, Bhupesh Sharma <bhupesh.sharma@linaro.org> wrote:
 > >
-> > Add support for YAML schemas documentation for Versal CPM5 Root Port
-> driver.
+> > SA8155p ADP board supports the PCIe0 controller in the RC
+> > mode (only). So add the support for the same.
 > >
-> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Vinod Koul <vkoul@kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
 > > ---
-> >  .../bindings/pci/xilinx-versal-cpm.yaml       | 47 ++++++++++++++++---
-> >  1 file changed, 40 insertions(+), 7 deletions(-)
->=20
-> https://docs.kernel.org/devicetree/bindings/submitting-patches.html
->=20
-> You have to CC the devicetree ML and DT maintainers.
->=20
-> Thanks,
-> Lorenzo
->=20
-> > diff --git
-> > a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> > b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> > index 32f4641085bc..97c7229d7f91 100644
-> > --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> > @@ -14,17 +14,21 @@ allOf:
+> >  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 42 ++++++++++++++++++++++++
+> >  1 file changed, 42 insertions(+)
 > >
-> >  properties:
-> >    compatible:
-> > -    const: xlnx,versal-cpm-host-1.00
-> > +    contains:
-> > +      enum:
-> > +        - xlnx,versal-cpm-host-1.00
-> > +        - xlnx,versal-cpm5-host-1.00
+> > diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> > index 8756c2b25c7e..3f6b3ee404f5 100644
+> > --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> > @@ -387,9 +387,51 @@ &usb_2_qmpphy {
+> >         vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
+> >  };
 > >
-> >    reg:
-> > -    items:
-> > -      - description: Configuration space region and bridge registers.
-> > -      - description: CPM system level control and status registers.
-> > +    description: |
-> > +      Should contain cpm_slcr, cfg registers location and length.
-> > +      For xlnx,versal-cpm5-host-1.00, it should also contain cpm_csr.
-> > +    minItems: 2
-> > +    maxItems: 3
-> >
-> >    reg-names:
-> > -    items:
-> > -      - const: cfg
-> > -      - const: cpm_slcr
-> > +    minItems: 2
-> > +    maxItems: 3
-> >
-> >    interrupts:
-> >      maxItems: 1
-> > @@ -95,4 +99,33 @@ examples:
-> >                                 interrupt-controller;
-> >                         };
-> >                 };
+> > +&pcie0 {
+> > +       status = "okay";
+> > +};
 > > +
-> > +              cpm5_pcie: pcie@fcdd0000 {
-> > +                       compatible =3D "xlnx,versal-cpm5-host-1.00";
-> > +                       device_type =3D "pci";
-> > +                       #address-cells =3D <3>;
-> > +                       #interrupt-cells =3D <1>;
-> > +                       #size-cells =3D <2>;
-> > +                       interrupts =3D <0 72 4>;
-> > +                       interrupt-parent =3D <&gic>;
-> > +                       interrupt-map-mask =3D <0 0 0 7>;
-> > +                       interrupt-map =3D <0 0 0 1 &pcie_intc_1 0>,
-> > +                                       <0 0 0 2 &pcie_intc_1 1>,
-> > +                                       <0 0 0 3 &pcie_intc_1 2>,
-> > +                                       <0 0 0 4 &pcie_intc_1 3>;
-> > +                       bus-range =3D <0x00 0xff>;
-> > +                       ranges =3D <0x02000000 0x0 0xe0000000 0x0 0xe00=
-00000 0x0
-> 0x10000000>,
-> > +                                <0x43000000 0x80 0x00000000 0x80 0x000=
-00000 0x0
-> 0x80000000>;
-> > +                       msi-map =3D <0x0 &its_gic 0x0 0x10000>;
-> > +                       reg =3D <0x00 0xfcdd0000 0x00 0x1000>,
-> > +                             <0x06 0x00000000 0x00 0x1000000>,
-> > +                             <0x00 0xfce20000 0x00 0x1000000>;
-> > +                       reg-names =3D "cpm_slcr", "cfg", "cpm_csr";
+> > +&pcie0_phy {
+> > +       status = "okay";
+> > +       vdda-phy-supply = <&vreg_l18c_0p88>;
+> > +       vdda-pll-supply = <&vreg_l8c_1p2>;
+> > +};
 > > +
-> > +                       pcie_intc_1: interrupt-controller {
-> > +                               #address-cells =3D <0>;
-> > +                               #interrupt-cells =3D <1>;
-> > +                               interrupt-controller;
-> > +                       };
+> > +&pcie1_phy {
+> > +       vdda-phy-supply = <&vreg_l18c_0p88>;
+> > +       vdda-pll-supply = <&vreg_l8c_1p2>;
+> > +};
+> > +
+> >  &tlmm {
+> >         gpio-reserved-ranges = <0 4>;
+> >
+> > +       bt_en_default: bt_en_default {
+> > +               mux {
+> > +                       pins = "gpio172";
+> > +                       function = "gpio";
 > > +               };
-> >      };
+> > +
+> > +               config {
+> > +                       pins = "gpio172";
+> > +                       drive-strength = <2>;
+> > +                       bias-pull-down;
+> > +               };
+> > +       };
+> > +
+> > +       wlan_en_default: wlan_en_default {
+> > +               mux {
+> > +                       pins = "gpio169";
+> > +                       function = "gpio";
+> > +               };
+> > +
+> > +               config {
+> > +                       pins = "gpio169";
+> > +                       drive-strength = <16>;
+> > +                       output-high;
+> > +                       bias-pull-up;
+> > +               };
+> > +       };
+> > +
+>
+> Not related to PCIe
+
+Hmm.. I have no strong personal opinion on this, so let's see what
+Bjorn thinks about the same.
+My reasoning for keeping it here was to just capture that we have
+'bt_en' and 'wlan_en' related tlmm details here, so that when you send
+out the reworked QCAxxxx mfd series (see [1]) later, I can easily plug
+it in for SA8155p ADP dts as well with the 'bt' and 'wlan' constructs.
+
+[1]. https://lore.kernel.org/lkml/20210621223141.1638189-2-dmitry.baryshkov@linaro.org/T/
+
+Regards.
+Bhupesh
+
+> >         usb2phy_ac_en1_default: usb2phy_ac_en1_default {
+> >                 mux {
+> >                         pins = "gpio113";
 > > --
-> > 2.17.1
+> > 2.35.1
 > >
+>
+>
+> --
+> With best wishes
+> Dmitry
