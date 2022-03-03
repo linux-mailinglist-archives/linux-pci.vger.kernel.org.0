@@ -2,324 +2,247 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C9DB4CBA87
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 10:43:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62B434CBA7F
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 10:42:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231881AbiCCJoZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Mar 2022 04:44:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42744 "EHLO
+        id S230078AbiCCJnC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 04:43:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbiCCJoY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 04:44:24 -0500
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF140172889
-        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 01:43:38 -0800 (PST)
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20220303094336epoutp044527e68367f2da3f4d57e0b49b7f77a0~Y1bAiWCCv0468804688epoutp04c
-        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 09:43:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20220303094336epoutp044527e68367f2da3f4d57e0b49b7f77a0~Y1bAiWCCv0468804688epoutp04c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1646300616;
-        bh=JGt2SUFXN47lwLD6/OHx/URaET0Jb/5ljVf5ZET/LrU=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=awxpXq59SJiHvSLQdwKJ1TPT1BuLWGyVp+GRhxCkctHzWUKZpyezBX8hHN22q8rTv
-         OpZteJesIaym3T5WOdADApJX4b7iuHP7FjLhOhuAYOBq22FMQEgunAclp7pB815Ouv
-         J/RoD7a3i3ZcrOAzLfE44MViBph4f9blFyIc15l0=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20220303094335epcas1p2305ca1dc3507e47c1035e838144dc1b1~Y1bAFFo3q2074320743epcas1p2B;
-        Thu,  3 Mar 2022 09:43:35 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.36.224]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4K8QzB3GqZz4x9Q5; Thu,  3 Mar
-        2022 09:43:34 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        61.3A.64085.6CD80226; Thu,  3 Mar 2022 18:43:34 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20220303094334epcas1p256f56793abe1984803caf11ef76bfc0f~Y1a_cf1e81681416814epcas1p2J;
-        Thu,  3 Mar 2022 09:43:34 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20220303094334epsmtrp23ace0099c009a1b00d372eee173dce0f~Y1a_bhwdQ1563115631epsmtrp2_;
-        Thu,  3 Mar 2022 09:43:34 +0000 (GMT)
-X-AuditID: b6c32a35-9c3ff7000000fa55-e3-62208dc63715
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        29.C3.29871.5CD80226; Thu,  3 Mar 2022 18:43:33 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.88.97.211]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20220303094333epsmtip253dde6a648aadc01426a5f5bdf5d9f17~Y1a_QUQHN0753207532epsmtip2Y;
-        Thu,  3 Mar 2022 09:43:33 +0000 (GMT)
-From:   Youngjin Jang <yj84.jang@samsung.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-usb@vger.kernel.org
-Cc:     "Youngjin Jang" <yj84.jang@samsung.com>, js07.lee@samsung.com
-Subject: [PATCH v2] PM: Add device name to suspend_report_result()
-Date:   Thu,  3 Mar 2022 18:39:07 +0900
-Message-Id: <20220303093907.515129-1-yj84.jang@samsung.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S232075AbiCCJmz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 04:42:55 -0500
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFA4177D21
+        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 01:42:10 -0800 (PST)
+Received: by mail-pg1-x533.google.com with SMTP id o8so4037300pgf.9
+        for <linux-pci@vger.kernel.org>; Thu, 03 Mar 2022 01:42:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jFAtq+k5RhuCwjL3RHgwUp9mZpXZphx7ltJz88tnoU8=;
+        b=serKmkufRJlH3LtR3ZBOSJKKLWvicVpVwsCoLP+tYoeRBXrpmhxIJFLn/RVxpuASsD
+         RAK9uzlr8gcJREOYaP1gV1WvnDg8c8OQQoLfFiGT2029dBqVI8reyaxdW+X8f6uNCvIK
+         L0xJw/EUEt/tf2o3bm/izA8f4OGf7ByrriqMoC5J68KxHwY+3BwryEJdB5kxX051X5nu
+         fKxRXcywhljyv32tCVMy9+qRxtHEn9t9KCbg2S7pBylOgTv2Lmhc+/g3V81inSsCnny1
+         aw1IRTVF94/m4sri4CPrZ98YhL/W0ykWYy9X1o99fZJ9AmLUTggH7YOaoJn/r352BoT7
+         7E6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jFAtq+k5RhuCwjL3RHgwUp9mZpXZphx7ltJz88tnoU8=;
+        b=yDWvukuipwER9Gw7IFb4ATi2Wqj8DMeDpQDb698HgitTS8BbdUaBhaq5UrrgUj5ddo
+         zyx84B1VpOr7h36hdZPyddcH3fjKMWrWsXbbLzg6YS0Axfq4JGu3mjcgzbakJZxj/vCO
+         Mn7OuWOjp/RgLvwxDwtXtGJcWK7ZuZ1L/PcCY/WTfiWRLB/ixcnT1rn0RLH0atFWzvYZ
+         9Iqo8COKo3g6YYTEQy6fp3SSeYs/z3uFYqU7vzyC9womgbdiOtqv0UtlN+D9DJShefv6
+         G8Lo3yOUrTV91kx/kEXhKrmjHxigm0QfiX/cBGRg00uPImXnCqdDYuqat8PR3tJ/7kfZ
+         Yneg==
+X-Gm-Message-State: AOAM530hnAAZlGTUOOLTfq5wzvZnQV8WUrg+o/9zbhSNDRYc2o2oZiV6
+        EuMsjDAN1hV17nfkCuJQ21Cw
+X-Google-Smtp-Source: ABdhPJw4c/pxQHU8hTYB7OKoS6iA8g2gtLTj83vSF5NKJbUjLtBLb9FjNVZYmKI3fUotKOIkhSdkRg==
+X-Received: by 2002:a63:8f18:0:b0:372:eacf:e8da with SMTP id n24-20020a638f18000000b00372eacfe8damr29257241pgd.362.1646300529434;
+        Thu, 03 Mar 2022 01:42:09 -0800 (PST)
+Received: from workstation ([117.207.24.195])
+        by smtp.gmail.com with ESMTPSA id z14-20020aa7888e000000b004e5c2c0b9dcsm2004969pfe.30.2022.03.03.01.42.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 03 Mar 2022 01:42:09 -0800 (PST)
+Date:   Thu, 3 Mar 2022 15:12:04 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, lznuaa@gmail.com, vkoul@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, shawnguo@kernel.org
+Subject: Re: [PATCH 1/5] dmaengine: dw-edma: fix dw_edma_probe() can't be
+ call globally
+Message-ID: <20220303094204.GH12451@workstation>
+References: <20220302032646.3793-1-Frank.Li@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmge6xXoUkg90LRCyWNGVYNC9ez2bx
-        6OZvVotZU/YyWSzf189ocXnXHDaLs/OOs1l87j3CaLFoWSuzxd1TR9ks5n6ZymzRdWgxqwOP
-        x4JNpR6L97xk8ti0qpPNY//cNewefVtWMXqsWP2d3ePzJrkA9qhsm4zUxJTUIoXUvOT8lMy8
-        dFsl7+B453hTMwNDXUNLC3MlhbzE3FRbJRefAF23zBygO5UUyhJzSoFCAYnFxUr6djZF+aUl
-        qQoZ+cUltkqpBSk5BWYFesWJucWleel6eaklVoYGBkamQIUJ2Rk39l9hKnhjUdG4TbWBcbF+
-        FyMnh4SAicTXI4eYQGwhgR2MEldvS3UxcgHZnxglNp/Zww7hfGOU+L6qnx2m49vHp1CJvYwS
-        azbfYYFr2bf1MNgsNgFtiVVb5oFViQhcZpJ4+30CM0iCWcBR4sPBPawgtrCAk8T0vdvBxrII
-        qEr0vDoCFucVsJY4sf8bE8Q6eYmZl76zQ8QFJU7OfMICMUdeonnrbGaQBRICrRwSl7duhbrP
-        RWL57kWsELawxKvjW6DiUhKf3+1lg7DTJSY+fgsVL5D4+3gJM4RtLPHu7VogmwNogabE+l3Q
-        QFKU2Pl7LiPEXj6Jd197WEFKJAR4JTrahCBKlCUen18NNV1SYv3v/VDne0hsW7KLGRK+sRIX
-        fjUxTmCUn4Xkm1lIvpmFsHgBI/MqRrHUguLc9NRiwwJDeKQm5+duYgQnVS3THYwT337QO8TI
-        xMF4iFGCg1lJhNdSUyFJiDclsbIqtSg/vqg0J7X4EKMpMHwnMkuJJucD03peSbyhiaWBiZmR
-        iYWxpbGZkjjvqmmnE4UE0hNLUrNTUwtSi2D6mDg4pRqYDlzL3OO89Lri/Kt8gjzbpZp8p/Oc
-        LT/6f3K1x+/+5N5LqnXPNdwdv+69uiUsWKdbequrak7qox1FJq0TZhsYzLj374JMzt3w6ZX8
-        Nnv7QxauWd5856CTIbfvL5X4iY+T+yvPzg0+yv3jXM22n0o/I2w+efd03Eif+fCwQ1G3l7JO
-        79dkl50X9wv9nVdk56cqpW++Sk3ykt6ML0ny/N2t0y79iRTJ/t58wJHzZHLg50VmTlP/rJfd
-        U8ZX5Hs+3WLxq5W8ytEHl3O/DpzS9oZ11pS4yw0Nz67c4mv7dPaGdtwc3VT+0wevFq69VcSw
-        rig9sOjRZ7tdm7xfl8yqU/3x3Kvz+I/nGSlfVKWmFvruVmIpzkg01GIuKk4EAA4AizQzBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWy7bCSvO7RXoUkg8PbLC2WNGVYNC9ez2bx
-        6OZvVotZU/YyWSzf189ocXnXHDaLs/OOs1l87j3CaLFoWSuzxd1TR9ks5n6ZymzRdWgxqwOP
-        x4JNpR6L97xk8ti0qpPNY//cNewefVtWMXqsWP2d3ePzJrkA9igum5TUnMyy1CJ9uwSujBv7
-        rzAVvLGoaNym2sC4WL+LkZNDQsBE4tvHp+xdjFwcQgK7GSWmzvrBCJGQlPj66TNbFyMHkC0s
-        cfhwMUTNB0aJh9s+sIDUsAloS6zaMg+sWUTgNpNEz4NvTCAJZgFniXU7FoEVCQs4SUzfu50d
-        xGYRUJXoeXWEFcTmFbCWOLEfol5CQF5i5qXv7BBxQYmTM5+wQMyRl2jeOpt5AiPfLCSpWUhS
-        CxiZVjFKphYU56bnFhsWGOallusVJ+YWl+al6yXn525iBIe5luYOxu2rPugdYmTiYDzEKMHB
-        rCTCa6mpkCTEm5JYWZValB9fVJqTWnyIUZqDRUmc90LXyXghgfTEktTs1NSC1CKYLBMHp1QD
-        09WDYWrHVoZuNd2/43vN66++PHsea+wX+MyUEnRd6uPK4uOsl38+fqXV1z1/vuy7ksh7lVWd
-        y2ZWpoR9mmnhFBc/OenAoxkyJqxaF64HPe1aYZdkyct6qfJg6bTIPf9rfz42WffxqKpK/Foe
-        BTFNs/syWy+d2Xzu2AvDa9m/tlwO+8pxaf7x5m7W3km7DsfrvCjrXnVtYemlE02iXO9LJIOv
-        fJ23SCv55Ibaex7SikmRRp4Xo1J1quUPRMr3MDxbPK9xS4HHfOYVM1aH5fgZbNh2X0NW/d1n
-        Lyelv5M7My4efvl+Rl2V946pV+btfjA3bxu7u1ZE997qzVydDw2TZV7E6t/hSazJ8baf+9dy
-        Wr4SS3FGoqEWc1FxIgBM58VS4gIAAA==
-X-CMS-MailID: 20220303094334epcas1p256f56793abe1984803caf11ef76bfc0f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20220303094334epcas1p256f56793abe1984803caf11ef76bfc0f
-References: <CGME20220303094334epcas1p256f56793abe1984803caf11ef76bfc0f@epcas1p2.samsung.com>
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220302032646.3793-1-Frank.Li@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: "Youngjin Jang" <yj84.jang@samsung.com>
+On Tue, Mar 01, 2022 at 09:26:42PM -0600, Frank Li wrote:
+> API dw_edma_probe(struct dw_edma_chip *chip) defined at include/linux/dma,
+> but struct dw_edma_chip have a hidden internal struct dw_edma *dw,
+> supposed dw should be allocated in API dw_edma_probe().
+> 
+> 	@dw: struct dw_edma that is filed by dw_edma_probe()
+> 
+> but dw need allocate and fill chip related information  before call dw_edma_probe()
+> in current code. See ref
+> 	drivers/dma/dw-edma/dw-edma-pci.c
+> 
+> Move chip related information from dw-edma-core.h to edma.h
+> allocate memory inside dw_edma_probe()
 
-currently, suspend_report_result() prints only function information.
-If any driver uses common pm function, nobody knows who called
-failed function exactly.
+Commit message could be reworded a bit:
 
-So, device is needed to recognize specific wrong driver.
+"struct dw_edma_chip" contains an internal structure "struct dw_edma" that is
+used by the eDMA core internally. This structure should not be touched
+by the eDMA controller drivers themselves. But currently, the eDMA
+controller drivers like "dw-edma-pci" allocates and populates this
+internal structure then passes it on to eDMA core. The eDMA core further
+populates the structure and uses it. This is wrong!
 
-e.g.)
-PM: dpm_run_callback(): pm_generic_suspend+0x0/0x48 returns 0
-PM: dpm_run_callback(): platform_pm_suspend+0x0/0x68 returns 0
-after patch,
-amba 1740000.etm: dpm_run_callback(): pm_generic_suspend+0x0/0x48
-returns 0
-armv7-pmu soc:pmu: dpm_run_callback(): platform_pm_suspend+0x0/0x68
-returns 0
+Hence, move all the "struct dw_edma" specifics from controller drivers
+to the eDMA core.
 
-Signed-off-by: Youngjin Jang <yj84.jang@samsung.com>
----
-Changes since v1:
- - Use dev_err() to print out device name
- - Use real name on email sender
- 
- drivers/base/power/main.c  | 10 +++++-----
- drivers/pci/pci-driver.c   | 14 +++++++-------
- drivers/pnp/driver.c       |  2 +-
- drivers/usb/core/hcd-pci.c |  4 ++--
- include/linux/pm.h         |  8 ++++----
- 5 files changed, 19 insertions(+), 19 deletions(-)
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/dma/dw-edma/dw-edma-core.c       | 31 ++++++++++++---
+>  drivers/dma/dw-edma/dw-edma-core.h       | 28 +++-----------
+>  drivers/dma/dw-edma/dw-edma-v0-core.c    |  2 +-
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c |  2 +-
+>  include/linux/dma/edma.h                 | 48 +++++++++++++++++++++++-
+>  5 files changed, 78 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 53289927dd0d6..029085c035067 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -905,19 +905,32 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>  	if (!dev)
+>  		return -EINVAL;
+>  
+> -	dw = chip->dw;
+> -	if (!dw || !dw->irq || !dw->ops || !dw->ops->irq_vector)
+> +	dw = devm_kzalloc(dev, sizeof(*dw), GFP_KERNEL);
+> +	if (!dw)
+> +		return -ENOMEM;
+> +
+> +	chip->dw = dw;
+> +
+> +	if (!chip->nr_irqs || !chip->ops)
+>  		return -EINVAL;
+>  
+>  	raw_spin_lock_init(&dw->lock);
+>  
+> -	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt,
+> +	dw->rg_region = &chip->rg_region;
+> +	dw->ll_region_wr = chip->ll_region_wr;
+> +	dw->ll_region_rd = chip->ll_region_rd;
+> +	dw->dt_region_wr = chip->dt_region_wr;
+> +	dw->dt_region_rd = chip->dt_region_rd;
+> +
+> +	dw->mf = chip->mf;
+> +
 
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index 04ea92cbd9cf..41e17b8c2c20 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -485,7 +485,7 @@ static int dpm_run_callback(pm_callback_t cb, struct device *dev,
- 	trace_device_pm_callback_start(dev, info, state.event);
- 	error = cb(dev);
- 	trace_device_pm_callback_end(dev, error);
--	suspend_report_result(cb, error);
-+	suspend_report_result(dev, cb, error);
- 
- 	initcall_debug_report(dev, calltime, cb, error);
- 
-@@ -1568,7 +1568,7 @@ static int legacy_suspend(struct device *dev, pm_message_t state,
- 	trace_device_pm_callback_start(dev, info, state.event);
- 	error = cb(dev, state);
- 	trace_device_pm_callback_end(dev, error);
--	suspend_report_result(cb, error);
-+	suspend_report_result(dev, cb, error);
- 
- 	initcall_debug_report(dev, calltime, cb, error);
- 
-@@ -1855,7 +1855,7 @@ static int device_prepare(struct device *dev, pm_message_t state)
- 	device_unlock(dev);
- 
- 	if (ret < 0) {
--		suspend_report_result(callback, ret);
-+		suspend_report_result(dev, callback, ret);
- 		pm_runtime_put(dev);
- 		return ret;
- 	}
-@@ -1960,10 +1960,10 @@ int dpm_suspend_start(pm_message_t state)
- }
- EXPORT_SYMBOL_GPL(dpm_suspend_start);
- 
--void __suspend_report_result(const char *function, void *fn, int ret)
-+void __suspend_report_result(const char *function, struct device *dev, void *fn, int ret)
- {
- 	if (ret)
--		pr_err("%s(): %pS returns %d\n", function, fn, ret);
-+		dev_err(dev, "%s(): %pS returns %d\n", function, fn, ret);
- }
- EXPORT_SYMBOL_GPL(__suspend_report_result);
- 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 588588cfda48..415f7664b010 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -596,7 +596,7 @@ static int pci_legacy_suspend(struct device *dev, pm_message_t state)
- 		int error;
- 
- 		error = drv->suspend(pci_dev, state);
--		suspend_report_result(drv->suspend, error);
-+		suspend_report_result(dev, drv->suspend, error);
- 		if (error)
- 			return error;
- 
-@@ -775,7 +775,7 @@ static int pci_pm_suspend(struct device *dev)
- 		int error;
- 
- 		error = pm->suspend(dev);
--		suspend_report_result(pm->suspend, error);
-+		suspend_report_result(dev, pm->suspend, error);
- 		if (error)
- 			return error;
- 
-@@ -821,7 +821,7 @@ static int pci_pm_suspend_noirq(struct device *dev)
- 		int error;
- 
- 		error = pm->suspend_noirq(dev);
--		suspend_report_result(pm->suspend_noirq, error);
-+		suspend_report_result(dev, pm->suspend_noirq, error);
- 		if (error)
- 			return error;
- 
-@@ -1010,7 +1010,7 @@ static int pci_pm_freeze(struct device *dev)
- 		int error;
- 
- 		error = pm->freeze(dev);
--		suspend_report_result(pm->freeze, error);
-+		suspend_report_result(dev, pm->freeze, error);
- 		if (error)
- 			return error;
- 	}
-@@ -1030,7 +1030,7 @@ static int pci_pm_freeze_noirq(struct device *dev)
- 		int error;
- 
- 		error = pm->freeze_noirq(dev);
--		suspend_report_result(pm->freeze_noirq, error);
-+		suspend_report_result(dev, pm->freeze_noirq, error);
- 		if (error)
- 			return error;
- 	}
-@@ -1116,7 +1116,7 @@ static int pci_pm_poweroff(struct device *dev)
- 		int error;
- 
- 		error = pm->poweroff(dev);
--		suspend_report_result(pm->poweroff, error);
-+		suspend_report_result(dev, pm->poweroff, error);
- 		if (error)
- 			return error;
- 	}
-@@ -1154,7 +1154,7 @@ static int pci_pm_poweroff_noirq(struct device *dev)
- 		int error;
- 
- 		error = pm->poweroff_noirq(dev);
--		suspend_report_result(pm->poweroff_noirq, error);
-+		suspend_report_result(dev, pm->poweroff_noirq, error);
- 		if (error)
- 			return error;
- 	}
-diff --git a/drivers/pnp/driver.c b/drivers/pnp/driver.c
-index cc6757dfa3f1..c02e7bf643a6 100644
---- a/drivers/pnp/driver.c
-+++ b/drivers/pnp/driver.c
-@@ -171,7 +171,7 @@ static int __pnp_bus_suspend(struct device *dev, pm_message_t state)
- 
- 	if (pnp_drv->driver.pm && pnp_drv->driver.pm->suspend) {
- 		error = pnp_drv->driver.pm->suspend(dev);
--		suspend_report_result(pnp_drv->driver.pm->suspend, error);
-+		suspend_report_result(dev, pnp_drv->driver.pm->suspend, error);
- 		if (error)
- 			return error;
- 	}
-diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
-index d630cccd2e6e..dd44e37a454a 100644
---- a/drivers/usb/core/hcd-pci.c
-+++ b/drivers/usb/core/hcd-pci.c
-@@ -446,7 +446,7 @@ static int suspend_common(struct device *dev, bool do_wakeup)
- 				HCD_WAKEUP_PENDING(hcd->shared_hcd))
- 			return -EBUSY;
- 		retval = hcd->driver->pci_suspend(hcd, do_wakeup);
--		suspend_report_result(hcd->driver->pci_suspend, retval);
-+		suspend_report_result(dev, hcd->driver->pci_suspend, retval);
- 
- 		/* Check again in case wakeup raced with pci_suspend */
- 		if ((retval == 0 && do_wakeup && HCD_WAKEUP_PENDING(hcd)) ||
-@@ -556,7 +556,7 @@ static int hcd_pci_suspend_noirq(struct device *dev)
- 		dev_dbg(dev, "--> PCI %s\n",
- 				pci_power_name(pci_dev->current_state));
- 	} else {
--		suspend_report_result(pci_prepare_to_sleep, retval);
-+		suspend_report_result(dev, pci_prepare_to_sleep, retval);
- 		return retval;
- 	}
- 
-diff --git a/include/linux/pm.h b/include/linux/pm.h
-index e1e9402180b9..cdccbb9cef2c 100644
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -745,11 +745,11 @@ extern int dpm_suspend_late(pm_message_t state);
- extern int dpm_suspend(pm_message_t state);
- extern int dpm_prepare(pm_message_t state);
- 
--extern void __suspend_report_result(const char *function, void *fn, int ret);
-+extern void __suspend_report_result(const char *function, struct device *dev, void *fn, int ret);
- 
--#define suspend_report_result(fn, ret)					\
-+#define suspend_report_result(dev, fn, ret)				\
- 	do {								\
--		__suspend_report_result(__func__, fn, ret);		\
-+		__suspend_report_result(__func__, dev, fn, ret);	\
- 	} while (0)
- 
- extern int device_pm_wait_for_dev(struct device *sub, struct device *dev);
-@@ -789,7 +789,7 @@ static inline int dpm_suspend_start(pm_message_t state)
- 	return 0;
- }
- 
--#define suspend_report_result(fn, ret)		do {} while (0)
-+#define suspend_report_result(dev, fn, ret)	do {} while (0)
- 
- static inline int device_pm_wait_for_dev(struct device *a, struct device *b)
- {
--- 
-2.25.1
+The eDMA core should be able to reuse the existing fields from "dw_edma_chip".
+I don't think the duplication is needed here.
 
+> +	dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
+>  			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
+
+Eventhough this is an old code, I don't get the logic. Can the controller driver
+pass channel count that is beyond the range hardware actually supports?
+
+I think we should let the eDMA core to read the registers and populate
+these fields instead of relying on the controller drivers.
+
+> -	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
+> +	dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt, EDMA_MAX_WR_CH);
+>  
+> -	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt,
+> +	dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
+>  			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
+> -	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
+> +	dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt, EDMA_MAX_RD_CH);
+>  
+>  	if (!dw->wr_ch_cnt && !dw->rd_ch_cnt)
+>  		return -EINVAL;
+> @@ -936,6 +949,12 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>  	/* Disable eDMA, only to establish the ideal initial conditions */
+>  	dw_edma_v0_core_off(dw);
+>  
+> +	dw->nr_irqs = chip->nr_irqs;
+> +	dw->ops = chip->ops;
+> +	dw->irq = devm_kcalloc(dev, dw->nr_irqs, sizeof(*dw->irq), GFP_KERNEL);
+> +	if (!dw->irq)
+> +		return -ENOMEM;
+> +
+>  	/* Request IRQs */
+>  	err = dw_edma_irq_request(chip, &wr_alloc, &rd_alloc);
+>  	if (err)
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+> index 60316d408c3e0..8ca195814a878 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.h
+> +++ b/drivers/dma/dw-edma/dw-edma-core.h
+> @@ -15,20 +15,12 @@
+>  #include "../virt-dma.h"
+>  
+>  #define EDMA_LL_SZ					24
+> -#define EDMA_MAX_WR_CH					8
+> -#define EDMA_MAX_RD_CH					8
+>  
+>  enum dw_edma_dir {
+>  	EDMA_DIR_WRITE = 0,
+>  	EDMA_DIR_READ
+>  };
+>  
+> -enum dw_edma_map_format {
+> -	EDMA_MF_EDMA_LEGACY = 0x0,
+> -	EDMA_MF_EDMA_UNROLL = 0x1,
+> -	EDMA_MF_HDMA_COMPAT = 0x5
+> -};
+> -
+>  enum dw_edma_request {
+>  	EDMA_REQ_NONE = 0,
+>  	EDMA_REQ_STOP,
+> @@ -57,12 +49,6 @@ struct dw_edma_burst {
+>  	u32				sz;
+>  };
+>  
+> -struct dw_edma_region {
+> -	phys_addr_t			paddr;
+> -	void				__iomem *vaddr;
+> -	size_t				sz;
+> -};
+> -
+>  struct dw_edma_chunk {
+>  	struct list_head		list;
+>  	struct dw_edma_chan		*chan;
+> @@ -109,10 +95,6 @@ struct dw_edma_irq {
+>  	struct dw_edma			*dw;
+>  };
+>  
+> -struct dw_edma_core_ops {
+> -	int	(*irq_vector)(struct device *dev, unsigned int nr);
+> -};
+> -
+>  struct dw_edma {
+>  	char				name[20];
+>  
+> @@ -122,11 +104,11 @@ struct dw_edma {
+>  	struct dma_device		rd_edma;
+>  	u16				rd_ch_cnt;
+>  
+> -	struct dw_edma_region		rg_region;	/* Registers */
+> -	struct dw_edma_region		ll_region_wr[EDMA_MAX_WR_CH];
+> -	struct dw_edma_region		ll_region_rd[EDMA_MAX_RD_CH];
+> -	struct dw_edma_region		dt_region_wr[EDMA_MAX_WR_CH];
+> -	struct dw_edma_region		dt_region_rd[EDMA_MAX_RD_CH];
+> +	struct dw_edma_region		*rg_region;	/* Registers */
+> +	struct dw_edma_region		*ll_region_wr;
+> +	struct dw_edma_region		*ll_region_rd;
+> +	struct dw_edma_region		*dt_region_wr;
+> +	struct dw_edma_region		*dt_region_rd;
+>  
+
+As I said above, can we just reuse the existing fields from "dw_edma_chip"?
+
+Thanks,
+Mani
