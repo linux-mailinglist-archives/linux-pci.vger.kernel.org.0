@@ -2,281 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BBC34CBD18
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 12:48:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D30764CBE44
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 13:57:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232995AbiCCLtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Mar 2022 06:49:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37574 "EHLO
+        id S233487AbiCCM6V convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 3 Mar 2022 07:58:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232984AbiCCLtW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 06:49:22 -0500
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C60C4B60;
-        Thu,  3 Mar 2022 03:48:36 -0800 (PST)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-2d07ae0b1c4so52079717b3.11;
-        Thu, 03 Mar 2022 03:48:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hYl/mNf+w5fPQx4NW4yDU1ca51yy0LEnu1TE2GKOtJQ=;
-        b=74O0gYQV5QgA2LpKEbAxu6NIpRvvUsGaY7gVP5lTggXFZiP3yCRzn2Mi1EqXMi9tRa
-         7K+XOogKB+KWJUNCfgkTUghp01cST4DJ/Bir6eqYrf07kV6W4T5HPEL044v4O46GQDQo
-         FiM/eyb6MPkvxhv+cYy4NzMhO7+LT6K9evp5Wt1w5rmw7ZmSf1IDrBIe/vKbvmbZeq46
-         rjYB4tbrCiUSag/WPjv9a0OHEsqME0KdiG+2ITu5PfKRmpN5WyYtkDdMSOZ7u4HG3Qb7
-         oXnFtzrUFO8QlzC264y8exU0u1af/dWJkTOEOfY2P+PVsXW4bjwOHKiGGJp6HaiYI+/B
-         osIQ==
-X-Gm-Message-State: AOAM53117xrY/42FV5qlJupG9CpMkKDZFqh/LoUnxUld2Jd8cA8bNOnr
-        JxR5XnTh5fkWEiqy8onkbadAmhFZJRmw0qRMThA=
-X-Google-Smtp-Source: ABdhPJzUu+VrIeTC4i61kXqLHB5KJNa5hkcJuzhvLhKW30WmAONe7VQ86Py1AQ0vvVbpEUihjiQOraVrrT7M8RMge7o=
-X-Received: by 2002:a81:f008:0:b0:2d0:cd72:74e5 with SMTP id
- p8-20020a81f008000000b002d0cd7274e5mr35729505ywm.301.1646308115481; Thu, 03
- Mar 2022 03:48:35 -0800 (PST)
+        with ESMTP id S233492AbiCCM6T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 07:58:19 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B37AE1FA42;
+        Thu,  3 Mar 2022 04:57:32 -0800 (PST)
+Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K8WFW72w4z67GZK;
+        Thu,  3 Mar 2022 20:56:15 +0800 (CST)
+Received: from lhreml711-chm.china.huawei.com (10.201.108.62) by
+ fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Thu, 3 Mar 2022 13:57:30 +0100
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml711-chm.china.huawei.com (10.201.108.62) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Thu, 3 Mar 2022 12:57:29 +0000
+Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
+ lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
+ 15.01.2308.021; Thu, 3 Mar 2022 12:57:29 +0000
+From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
+        "yishaih@nvidia.com" <yishaih@nvidia.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        liulongfang <liulongfang@huawei.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>
+Subject: RE: [PATCH v7 09/10] hisi_acc_vfio_pci: Add support for VFIO live
+ migration
+Thread-Topic: [PATCH v7 09/10] hisi_acc_vfio_pci: Add support for VFIO live
+ migration
+Thread-Index: AQHYLltL2nbHr5hFZkexUhHVpQU6TqyszJkAgADNzBA=
+Date:   Thu, 3 Mar 2022 12:57:29 +0000
+Message-ID: <19e294814f284755b207be3ba7054ec2@huawei.com>
+References: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
+ <20220302172903.1995-10-shameerali.kolothum.thodi@huawei.com>
+ <20220303002142.GE1026713@nvidia.com>
+In-Reply-To: <20220303002142.GE1026713@nvidia.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.82.4]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <CGME20220303094334epcas1p256f56793abe1984803caf11ef76bfc0f@epcas1p2.samsung.com>
- <20220303093907.515129-1-yj84.jang@samsung.com>
-In-Reply-To: <20220303093907.515129-1-yj84.jang@samsung.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 3 Mar 2022 12:48:24 +0100
-Message-ID: <CAJZ5v0gYyarNWiERd_yf0DxmtukbsBCxX62h2TcUu5bPTn6SyA@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: Add device name to suspend_report_result()
-To:     Youngjin Jang <yj84.jang@samsung.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
-        <linux-usb@vger.kernel.org>, js07.lee@samsung.com,
-        Todd Brandt <todd.e.brandt@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-+Todd
 
-On Thu, Mar 3, 2022 at 10:43 AM Youngjin Jang <yj84.jang@samsung.com> wrote:
->
-> From: "Youngjin Jang" <yj84.jang@samsung.com>
->
-> currently, suspend_report_result() prints only function information.
-> If any driver uses common pm function, nobody knows who called
-> failed function exactly.
->
-> So, device is needed to recognize specific wrong driver.
->
-> e.g.)
-> PM: dpm_run_callback(): pm_generic_suspend+0x0/0x48 returns 0
-> PM: dpm_run_callback(): platform_pm_suspend+0x0/0x68 returns 0
-> after patch,
-> amba 1740000.etm: dpm_run_callback(): pm_generic_suspend+0x0/0x48
-> returns 0
-> armv7-pmu soc:pmu: dpm_run_callback(): platform_pm_suspend+0x0/0x68
-> returns 0
 
-The PM prefix would still be useful IMO.
+> -----Original Message-----
+> From: Jason Gunthorpe [mailto:jgg@nvidia.com]
+> Sent: 03 March 2022 00:22
+> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> linux-crypto@vger.kernel.org; linux-pci@vger.kernel.org;
+> alex.williamson@redhat.com; cohuck@redhat.com; mgurtovoy@nvidia.com;
+> yishaih@nvidia.com; Linuxarm <linuxarm@huawei.com>; liulongfang
+> <liulongfang@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>;
+> Jonathan Cameron <jonathan.cameron@huawei.com>; Wangzhou (B)
+> <wangzhou1@hisilicon.com>
+> Subject: Re: [PATCH v7 09/10] hisi_acc_vfio_pci: Add support for VFIO live
+> migration
+> 
+> On Wed, Mar 02, 2022 at 05:29:02PM +0000, Shameer Kolothum wrote:
+> > +static long hisi_acc_vf_save_unl_ioctl(struct file *filp,
+> > +				       unsigned int cmd, unsigned long arg)
+> > +{
+> > +	struct hisi_acc_vf_migration_file *migf = filp->private_data;
+> > +	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(migf,
+> > +			struct hisi_acc_vf_core_device, saving_migf);
+> > +	loff_t *pos = &filp->f_pos;
+> > +	struct vfio_precopy_info info;
+> > +	unsigned long minsz;
+> > +	int ret;
+> > +
+> > +	if (cmd != VFIO_MIG_GET_PRECOPY_INFO)
+> > +		return -ENOTTY;
+> > +
+> > +	minsz = offsetofend(struct vfio_precopy_info, dirty_bytes);
+> > +
+> > +	if (copy_from_user(&info, (void __user *)arg, minsz))
+> > +		return -EFAULT;
+> > +	if (info.argsz < minsz)
+> > +		return -EINVAL;
+> > +
+> > +	mutex_lock(&hisi_acc_vdev->state_mutex);
+> > +	if (hisi_acc_vdev->mig_state != VFIO_DEVICE_STATE_PRE_COPY) {
+> > +		mutex_unlock(&hisi_acc_vdev->state_mutex);
+> > +		return -EINVAL;
+> > +	}
+> 
+> IMHO it is easier just to check the total_length and not grab this
+> other lock
 
-@Todd: Would this change affect pm-graph in any way?
+The problem with checking the total_length here is that it is possible that
+in STOP_COPY the dev is not ready and there are no more data to be transferred 
+and the total_length remains at QM_MATCH_SIZE.
 
->
-> Signed-off-by: Youngjin Jang <yj84.jang@samsung.com>
-> ---
-> Changes since v1:
->  - Use dev_err() to print out device name
->  - Use real name on email sender
->
->  drivers/base/power/main.c  | 10 +++++-----
->  drivers/pci/pci-driver.c   | 14 +++++++-------
->  drivers/pnp/driver.c       |  2 +-
->  drivers/usb/core/hcd-pci.c |  4 ++--
->  include/linux/pm.h         |  8 ++++----
->  5 files changed, 19 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index 04ea92cbd9cf..41e17b8c2c20 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -485,7 +485,7 @@ static int dpm_run_callback(pm_callback_t cb, struct device *dev,
->         trace_device_pm_callback_start(dev, info, state.event);
->         error = cb(dev);
->         trace_device_pm_callback_end(dev, error);
-> -       suspend_report_result(cb, error);
-> +       suspend_report_result(dev, cb, error);
->
->         initcall_debug_report(dev, calltime, cb, error);
->
-> @@ -1568,7 +1568,7 @@ static int legacy_suspend(struct device *dev, pm_message_t state,
->         trace_device_pm_callback_start(dev, info, state.event);
->         error = cb(dev, state);
->         trace_device_pm_callback_end(dev, error);
-> -       suspend_report_result(cb, error);
-> +       suspend_report_result(dev, cb, error);
->
->         initcall_debug_report(dev, calltime, cb, error);
->
-> @@ -1855,7 +1855,7 @@ static int device_prepare(struct device *dev, pm_message_t state)
->         device_unlock(dev);
->
->         if (ret < 0) {
-> -               suspend_report_result(callback, ret);
-> +               suspend_report_result(dev, callback, ret);
->                 pm_runtime_put(dev);
->                 return ret;
->         }
-> @@ -1960,10 +1960,10 @@ int dpm_suspend_start(pm_message_t state)
->  }
->  EXPORT_SYMBOL_GPL(dpm_suspend_start);
->
-> -void __suspend_report_result(const char *function, void *fn, int ret)
-> +void __suspend_report_result(const char *function, struct device *dev, void *fn, int ret)
->  {
->         if (ret)
-> -               pr_err("%s(): %pS returns %d\n", function, fn, ret);
-> +               dev_err(dev, "%s(): %pS returns %d\n", function, fn, ret);
->  }
->  EXPORT_SYMBOL_GPL(__suspend_report_result);
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 588588cfda48..415f7664b010 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -596,7 +596,7 @@ static int pci_legacy_suspend(struct device *dev, pm_message_t state)
->                 int error;
->
->                 error = drv->suspend(pci_dev, state);
-> -               suspend_report_result(drv->suspend, error);
-> +               suspend_report_result(dev, drv->suspend, error);
->                 if (error)
->                         return error;
->
-> @@ -775,7 +775,7 @@ static int pci_pm_suspend(struct device *dev)
->                 int error;
->
->                 error = pm->suspend(dev);
-> -               suspend_report_result(pm->suspend, error);
-> +               suspend_report_result(dev, pm->suspend, error);
->                 if (error)
->                         return error;
->
-> @@ -821,7 +821,7 @@ static int pci_pm_suspend_noirq(struct device *dev)
->                 int error;
->
->                 error = pm->suspend_noirq(dev);
-> -               suspend_report_result(pm->suspend_noirq, error);
-> +               suspend_report_result(dev, pm->suspend_noirq, error);
->                 if (error)
->                         return error;
->
-> @@ -1010,7 +1010,7 @@ static int pci_pm_freeze(struct device *dev)
->                 int error;
->
->                 error = pm->freeze(dev);
-> -               suspend_report_result(pm->freeze, error);
-> +               suspend_report_result(dev, pm->freeze, error);
->                 if (error)
->                         return error;
->         }
-> @@ -1030,7 +1030,7 @@ static int pci_pm_freeze_noirq(struct device *dev)
->                 int error;
->
->                 error = pm->freeze_noirq(dev);
-> -               suspend_report_result(pm->freeze_noirq, error);
-> +               suspend_report_result(dev, pm->freeze_noirq, error);
->                 if (error)
->                         return error;
->         }
-> @@ -1116,7 +1116,7 @@ static int pci_pm_poweroff(struct device *dev)
->                 int error;
->
->                 error = pm->poweroff(dev);
-> -               suspend_report_result(pm->poweroff, error);
-> +               suspend_report_result(dev, pm->poweroff, error);
->                 if (error)
->                         return error;
->         }
-> @@ -1154,7 +1154,7 @@ static int pci_pm_poweroff_noirq(struct device *dev)
->                 int error;
->
->                 error = pm->poweroff_noirq(dev);
-> -               suspend_report_result(pm->poweroff_noirq, error);
-> +               suspend_report_result(dev, pm->poweroff_noirq, error);
->                 if (error)
->                         return error;
->         }
-> diff --git a/drivers/pnp/driver.c b/drivers/pnp/driver.c
-> index cc6757dfa3f1..c02e7bf643a6 100644
-> --- a/drivers/pnp/driver.c
-> +++ b/drivers/pnp/driver.c
-> @@ -171,7 +171,7 @@ static int __pnp_bus_suspend(struct device *dev, pm_message_t state)
->
->         if (pnp_drv->driver.pm && pnp_drv->driver.pm->suspend) {
->                 error = pnp_drv->driver.pm->suspend(dev);
-> -               suspend_report_result(pnp_drv->driver.pm->suspend, error);
-> +               suspend_report_result(dev, pnp_drv->driver.pm->suspend, error);
->                 if (error)
->                         return error;
->         }
-> diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
-> index d630cccd2e6e..dd44e37a454a 100644
-> --- a/drivers/usb/core/hcd-pci.c
-> +++ b/drivers/usb/core/hcd-pci.c
-> @@ -446,7 +446,7 @@ static int suspend_common(struct device *dev, bool do_wakeup)
->                                 HCD_WAKEUP_PENDING(hcd->shared_hcd))
->                         return -EBUSY;
->                 retval = hcd->driver->pci_suspend(hcd, do_wakeup);
-> -               suspend_report_result(hcd->driver->pci_suspend, retval);
-> +               suspend_report_result(dev, hcd->driver->pci_suspend, retval);
->
->                 /* Check again in case wakeup raced with pci_suspend */
->                 if ((retval == 0 && do_wakeup && HCD_WAKEUP_PENDING(hcd)) ||
-> @@ -556,7 +556,7 @@ static int hcd_pci_suspend_noirq(struct device *dev)
->                 dev_dbg(dev, "--> PCI %s\n",
->                                 pci_power_name(pci_dev->current_state));
->         } else {
-> -               suspend_report_result(pci_prepare_to_sleep, retval);
-> +               suspend_report_result(dev, pci_prepare_to_sleep, retval);
->                 return retval;
->         }
->
-> diff --git a/include/linux/pm.h b/include/linux/pm.h
-> index e1e9402180b9..cdccbb9cef2c 100644
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -745,11 +745,11 @@ extern int dpm_suspend_late(pm_message_t state);
->  extern int dpm_suspend(pm_message_t state);
->  extern int dpm_prepare(pm_message_t state);
->
-> -extern void __suspend_report_result(const char *function, void *fn, int ret);
-> +extern void __suspend_report_result(const char *function, struct device *dev, void *fn, int ret);
->
-> -#define suspend_report_result(fn, ret)                                 \
-> +#define suspend_report_result(dev, fn, ret)                            \
->         do {                                                            \
-> -               __suspend_report_result(__func__, fn, ret);             \
-> +               __suspend_report_result(__func__, dev, fn, ret);        \
->         } while (0)
->
->  extern int device_pm_wait_for_dev(struct device *sub, struct device *dev);
-> @@ -789,7 +789,7 @@ static inline int dpm_suspend_start(pm_message_t state)
->         return 0;
->  }
->
-> -#define suspend_report_result(fn, ret)         do {} while (0)
-> +#define suspend_report_result(dev, fn, ret)    do {} while (0)
->
->  static inline int device_pm_wait_for_dev(struct device *a, struct device *b)
->  {
-> --
-> 2.25.1
->
+This just reminded me that the -ENOMSG setting logic in save_read() is
+wrong now as it uses only the total_length to determine the PRE_COPY state. 
+
+I think either we need to get the curr state info at both places or in STOP_COPY,
+if there are no additional data, set the total_length = 0 and handle it in save_read().
+
+Looks like setting the total_length = 0 in STOP_COPY is a better solution(If there are
+no other issues with that) as it will avoid grabbing the state_mutex as you
+mentioned above.
+
+> > +struct acc_vf_data {
+> > +#define QM_MATCH_SIZE 32L
+> 
+> This should be
+> 
+> #define QM_MATCH_SIZE offsetofend(struct acc_vf_data, qm_rsv_state)
+
+Ok.
+
+> > +	/* QM match information */
+> 
+> You should probably put an 8 byte random magic number here just to
+> make the compatibility more unique.
+
+Ok. Will add one.
+
+> > +	u32 qp_num;
+> > +	u32 dev_id;
+> > +	u32 que_iso_cfg;
+> > +	u32 qp_base;
+> > +	/* QM reserved match information */
+> > +	u32 qm_rsv_state[4];
+> > +
+> > +	/* QM RW regs */
+> > +	u32 aeq_int_mask;
+> > +	u32 eq_int_mask;
+> > +	u32 ifc_int_source;
+> > +	u32 ifc_int_mask;
+> > +	u32 ifc_int_set;
+> > +	u32 page_size;
+> > +
+> > +	/* QM_EQC_DW has 7 regs */
+> > +	u32 qm_eqc_dw[7];
+> > +
+> > +	/* QM_AEQC_DW has 7 regs */
+> > +	u32 qm_aeqc_dw[7];
+> > +
+> > +	/* QM reserved 5 regs */
+> > +	u32 qm_rsv_regs[5];
+> > +
+> > +	/* qm memory init information */
+> > +	u64 eqe_dma;
+> 
+> Am I counting wrong or is there a padding before this? 7+7+5 is not a multiple
+> of 2. Be explicit about padding in a structure like this.
+
+That's right. It needs padding before 'eqe_dma'.
+
+Thanks,
+Shameer
