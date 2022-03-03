@@ -2,85 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 196E34CC973
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 23:49:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A60634CC99C
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Mar 2022 00:01:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236995AbiCCWuV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Mar 2022 17:50:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47934 "EHLO
+        id S231147AbiCCXCi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 18:02:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233243AbiCCWuU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 17:50:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFFEBF5413;
-        Thu,  3 Mar 2022 14:49:33 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EF3B7B826F4;
-        Thu,  3 Mar 2022 22:49:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF27C004E1;
-        Thu,  3 Mar 2022 22:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646347770;
-        bh=8T7CokGxWBKJfPW1pG0VCMscny/1l39AXb6Fw4feFiI=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=mDE8XGmJRPXC3FhUExxfC/Tg8r8q5kqje46aVpKcSpgATjCrTOmm8dyL5+N0ARFUl
-         igEkDLka8/5AR112e4UmftTK6LTw6MIVEq72/1WbVxD/BN6jvq1CQNSmYNX2eOZkoM
-         C7Y6r4k/M1DH2K4tAUOZ5dfMEE8n9On9bbDAQYejM/m/pVednlfOiQ+0ILLxk+xuq6
-         0Hivc3idTv5Og15E95hL8KOwRNZ6gfWfd8YTyoWKgbowpFGJ7UwyLwEnr/Ub/zQ8kx
-         OW2VcyhCSn0JN1ypiUZLYah5Kofhllw9xygmCFN3oPTfqf6bSdXRFiDe95KnoglrOU
-         yMQm9xneH86Yg==
-Date:   Thu, 3 Mar 2022 14:49:29 -0800 (PST)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        iommu@lists.linux-foundation.org, x86@kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
- swiotlb
-In-Reply-To: <20220303105931.GA15137@lst.de>
-Message-ID: <alpine.DEB.2.22.394.2203031447120.3261@ubuntu-linux-20-04-desktop>
-References: <20220301105311.885699-1-hch@lst.de> <20220301105311.885699-12-hch@lst.de> <alpine.DEB.2.22.394.2203011720150.3261@ubuntu-linux-20-04-desktop> <20220302081500.GB23075@lst.de> <alpine.DEB.2.22.394.2203021709470.3261@ubuntu-linux-20-04-desktop>
- <20220303105931.GA15137@lst.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        with ESMTP id S229984AbiCCXCi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 18:02:38 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13FFEF11B0;
+        Thu,  3 Mar 2022 15:01:51 -0800 (PST)
+Received: from fraeml710-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K8mfq4JNgz67M1q;
+        Fri,  4 Mar 2022 07:00:35 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml710-chm.china.huawei.com (10.206.15.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 4 Mar 2022 00:01:48 +0100
+Received: from A2006125610.china.huawei.com (10.47.82.4) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Thu, 3 Mar 2022 23:01:41 +0000
+From:   Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+To:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <alex.williamson@redhat.com>,
+        <jgg@nvidia.com>, <cohuck@redhat.com>, <mgurtovoy@nvidia.com>,
+        <yishaih@nvidia.com>, <linuxarm@huawei.com>,
+        <liulongfang@huawei.com>, <prime.zeng@hisilicon.com>,
+        <jonathan.cameron@huawei.com>, <wangzhou1@hisilicon.com>
+Subject: [PATCH v8 0/9] vfio/hisilicon: add ACC live migration driver
+Date:   Thu, 3 Mar 2022 23:01:22 +0000
+Message-ID: <20220303230131.2103-1-shameerali.kolothum.thodi@huawei.com>
+X-Mailer: git-send-email 2.12.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.82.4]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.2 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 3 Mar 2022, Christoph Hellwig wrote:
-> On Wed, Mar 02, 2022 at 05:25:10PM -0800, Stefano Stabellini wrote:
-> > Thinking more about it we actually need to drop the xen_initial_domain()
-> > check otherwise some cases won't be functional (Dom0 not 1:1 mapped, or
-> > DomU 1:1 mapped).
-> 
-> Hmm, but that would be the case even before this series, right?
+Hi,
 
-Before this series we only have the xen_swiotlb_detect() check in
-xen_mm_init, we don't have a second xen_initial_domain() check.
+This series attempts to add vfio live migration support for HiSilicon
+ACC VF devices based on the new v2 migration protocol definition and
+mlx5 v9 series discussed here[0].
 
-The issue is that this series is adding one more xen_initial_domain()
-check in xen_mm_init.
+v7 --> v8
+ - Dropped PRE_COPY support and early compatibility checking based on
+   the discussion here[1].
+ - Addressed comments from John, Jason & Alex (Thanks!).
+
+This is sanity tested on a HiSilicon platform using the Qemu branch
+provided here[2].
+
+Please take a look and let me know your feedback.
+
+Thanks,
+Shameer
+[0] https://lore.kernel.org/kvm/20220224142024.147653-1-yishaih@nvidia.com/
+[1] https://lore.kernel.org/kvm/20220302133159.3c803f56.alex.williamson@redhat.com/
+[2] https://github.com/jgunthorpe/qemu/commits/vfio_migration_v2
+
+v6 --> v7
+ -Renamed MIG_PRECOPY ioctl name and struct name. Updated ioctl descriptions
+  regarding ioctl validity (patch #7).
+- Adressed comments from Jason and Alex on PRE_COPY read() and ioctl() fns
+  (patch #9).
+- Moved only VF PCI ids to pci_ids.h(patch #3).
+
+v5 --> v6
+ -Report PRE_COPY support and use that for early compatibility check
+  between src and dst devices.
+ -For generic PRE_COPY support, included patch #7 from Jason(Thanks!).
+ -Addressed comments from Alex(Thanks!).
+ -Added the QM state register update to QM driver(patch #8) since that
+  is being used in migration driver to decide whether the device is
+  ready to save the state.
+
+RFCv4 --> v5
+  - Dropped RFC tag as v2 migration APIs are more stable now.
+  - Addressed review comments from Jason and Alex (Thanks!).
+
+v3 --> RFCv4
+-Based on migration v2 protocol and mlx5 v7 series.
+-Added RFC tag again as migration v2 protocol is still under discussion.
+-Added new patch #6 to retrieve the PF QM data.
+-PRE_COPY compatibility check is now done after the migration data
+ transfer. This is not ideal and needs discussion.
+
+RFC v2 --> v3
+ -Dropped RFC tag as the vfio_pci_core subsystem framework is now
+  part of 5.15-rc1.
+ -Added override methods for vfio_device_ops read/write/mmap calls
+  to limit the access within the functional register space.
+ -Patches 1 to 3 are code refactoring to move the common ACC QM
+  definitions and header around.
+
+RFCv1 --> RFCv2
+
+ -Adds a new vendor-specific vfio_pci driver(hisi-acc-vfio-pci)
+  for HiSilicon ACC VF devices based on the new vfio-pci-core
+  framework proposal.
+
+ -Since HiSilicon ACC VF device MMIO space contains both the
+  functional register space and migration control register space,
+  override the vfio_device_ops ioctl method to report only the
+  functional space to VMs.
+
+ -For a successful migration, we still need access to VF dev
+  functional register space mainly to read the status registers.
+  But accessing these while the Guest vCPUs are running may leave
+  a security hole. To avoid any potential security issues, we
+  map/unmap the MMIO regions on a need basis and is safe to do so.
+  (Please see hisi_acc_vf_ioremap/unmap() fns in patch #4).
+ 
+ -Dropped debugfs support for now.
+ -Uses common QM functions for mailbox access(patch #3).
+
+Longfang Liu (3):
+  crypto: hisilicon/qm: Move few definitions to common header
+  crypto: hisilicon/qm: Set the VF QM state register
+  hisi_acc_vfio_pci: Add support for VFIO live migration
+
+Shameer Kolothum (6):
+  crypto: hisilicon/qm: Move the QM header to include/linux
+  hisi_acc_qm: Move VF PCI device IDs to common header
+  hisi_acc_vfio_pci: add new vfio_pci driver for HiSilicon ACC devices
+  hisi_acc_vfio_pci: Restrict access to VF dev BAR2 migration region
+  hisi_acc_vfio_pci: Add helper to retrieve the struct pci_driver
+  hisi_acc_vfio_pci: Use its own PCI reset_done error handler
+
+ drivers/crypto/hisilicon/hpre/hpre.h          |    2 +-
+ drivers/crypto/hisilicon/hpre/hpre_main.c     |   19 +-
+ drivers/crypto/hisilicon/qm.c                 |   68 +-
+ drivers/crypto/hisilicon/sec2/sec.h           |    2 +-
+ drivers/crypto/hisilicon/sec2/sec_main.c      |   21 +-
+ drivers/crypto/hisilicon/sgl.c                |    2 +-
+ drivers/crypto/hisilicon/zip/zip.h            |    2 +-
+ drivers/crypto/hisilicon/zip/zip_main.c       |   17 +-
+ drivers/vfio/pci/Kconfig                      |    2 +
+ drivers/vfio/pci/Makefile                     |    2 +
+ drivers/vfio/pci/hisilicon/Kconfig            |   17 +
+ drivers/vfio/pci/hisilicon/Makefile           |    4 +
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 1319 +++++++++++++++++
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |  116 ++
+ .../qm.h => include/linux/hisi_acc_qm.h       |   49 +
+ include/linux/pci_ids.h                       |    3 +
+ 16 files changed, 1579 insertions(+), 66 deletions(-)
+ create mode 100644 drivers/vfio/pci/hisilicon/Kconfig
+ create mode 100644 drivers/vfio/pci/hisilicon/Makefile
+ create mode 100644 drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+ create mode 100644 drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+ rename drivers/crypto/hisilicon/qm.h => include/linux/hisi_acc_qm.h (87%)
+
+-- 
+2.25.1
+
