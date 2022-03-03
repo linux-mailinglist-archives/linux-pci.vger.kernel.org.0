@@ -2,285 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E51B74CC600
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 20:27:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FA604CC6AE
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 20:59:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234915AbiCCT2e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Mar 2022 14:28:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39392 "EHLO
+        id S235832AbiCCUAY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 15:00:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236072AbiCCT20 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 14:28:26 -0500
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E504AFD1D;
-        Thu,  3 Mar 2022 11:27:39 -0800 (PST)
-Received: by mail-yb1-f182.google.com with SMTP id g1so12357027ybe.4;
-        Thu, 03 Mar 2022 11:27:39 -0800 (PST)
+        with ESMTP id S235897AbiCCUAW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 15:00:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E47A91A39EB
+        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 11:59:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646337575;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KII+3wpRDYxBkpQXpVqXMzOFERtKv6nriOIaVlE+FgA=;
+        b=e4la4o4F/CjnnmOTc5nyzmdjBuqpUZ+5F6CatK2llCme4+kY09mVePKVS0/q8PWZpL9l/V
+        b6zCIwEduD9TJBD4JVuxJ/1/LCG4Ad5wrvy8t5o5JDSk0KBVxTcthzwcG/k2vNwqO2aFbk
+        UYqCcfjzhW7FZ9PWV2kzyPwvploMVlA=
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
+ [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-490-131pvtAFONSmwhIADl9q4g-1; Thu, 03 Mar 2022 14:59:33 -0500
+X-MC-Unique: 131pvtAFONSmwhIADl9q4g-1
+Received: by mail-ot1-f70.google.com with SMTP id s12-20020a056830438c00b005b03f4dcd5eso4270330otv.4
+        for <linux-pci@vger.kernel.org>; Thu, 03 Mar 2022 11:59:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HdHDMFF2kdVDaRtLqe4g+qzFPUAjMQZJkBGYq3TkeN8=;
-        b=4iN13Vo5sWjUiWuErSTUtW/d4LA9nAbD4nrfwGmgCEO/quI7xcG9xeiN1BUoR5QhqN
-         uZir3Nyeo57zxOVC0q6DYbjOZ20U8QmksoUldmu9vUWP7nqCWA1aFQek+NKU+ubtNDa3
-         /7HLnez7qzNjBfLWaQYorBohf54ZOip5ABCHVXhEpb9xTWJ+emwFmvA9BbkmLoXUq4z6
-         R+/MBndGsDuGTNPKtq493+b9kdKlFXAtHGTWu/gDWMbW3+zUOzk+YmlS+erTXNUoPrVo
-         Ee1egQ51L94uUO95B4Zrm87j3utIH0Z1bPS9oF5TyofFWVIwADkX1pdZRUZ5MQPaDI+J
-         p2dg==
-X-Gm-Message-State: AOAM533yWEK+TZYArThCCNZWTj4Ejb1krJiz6huPTWecBXSrQEXYTN0W
-        p9wu8oHSgnHx1THPioesRQk4thD5hB5Sn1oIt5T5cHe9
-X-Google-Smtp-Source: ABdhPJyidoUIHRrRRyGejEbhZFI+Vfca8OZiMi/yIw2X1RjdEdt/4m1HGkDFofV5Asc24uuNz9cy4RSxc/Ay3S1OCh8=
-X-Received: by 2002:a25:d7c2:0:b0:628:9d06:457b with SMTP id
- o185-20020a25d7c2000000b006289d06457bmr9396954ybg.137.1646335659111; Thu, 03
- Mar 2022 11:27:39 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=KII+3wpRDYxBkpQXpVqXMzOFERtKv6nriOIaVlE+FgA=;
+        b=DgXHwinnv+FxRo1xxZdO/pD+ZpnV0yeNNk18SfQ3DEgQtj4HZXOKXnnquDOYm4lYAg
+         J1hBbo9PzVZaDDYU/XeOOWHGZCMA/yk8LrKRpfLYbTPp+er40v5rQ9qJjnlx7Z1da/WQ
+         3rp7hemh+1Y9LdXCbuq5p6lEcNFoAyj57rvq8ptEoYyCBGjGfritnUK+q4lIXUk8Ss3P
+         k1e63BLjrLx6no7GxBIYGZypVUUvo9YG0ZDt+24s+NIZ7BwPsuUlPfg0WmFsDODha1Sn
+         g4HrMqoIQ9lT+xjaNh/0bYpxY6SD59F3C1+Xt40dxfXZ76pu2ANFsPTiYfsKYQjYyeMT
+         DC9g==
+X-Gm-Message-State: AOAM533j1/KcLX5Hsm2QxgdBs/kERBw+z0JsWgqL8W6xJxNPKE76qfVZ
+        xqAE83BZ+wzj1zvYE3H1hvHymDJs1xpqtBH9uJ0MWQOasY8UJZzWODya3on3X1ZwDjaSYDPxksT
+        odXTGY4/dthXGJBJJ0JrN
+X-Received: by 2002:a4a:c719:0:b0:2eb:c34a:2ba7 with SMTP id n25-20020a4ac719000000b002ebc34a2ba7mr19498057ooq.98.1646337573214;
+        Thu, 03 Mar 2022 11:59:33 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz6XTO+OhibXSv5NZahUVm0cq34tr89yXWaoMFB6Fqiab+SUFF3Phx50x9lVSIdc9AfUbbmhg==
+X-Received: by 2002:a4a:c719:0:b0:2eb:c34a:2ba7 with SMTP id n25-20020a4ac719000000b002ebc34a2ba7mr19498041ooq.98.1646337572985;
+        Thu, 03 Mar 2022 11:59:32 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id u21-20020a056870951500b000d9b9ac69cdsm901630oal.1.2022.03.03.11.59.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Mar 2022 11:59:32 -0800 (PST)
+Date:   Thu, 3 Mar 2022 12:59:30 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
+        "yishaih@nvidia.com" <yishaih@nvidia.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        liulongfang <liulongfang@huawei.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v7 07/10] vfio: Extend the device migration protocol
+ with PRE_COPY
+Message-ID: <20220303125930.43d9940b.alex.williamson@redhat.com>
+In-Reply-To: <0cee64d555624e669028ba17d04b8737@huawei.com>
+References: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
+        <20220302172903.1995-8-shameerali.kolothum.thodi@huawei.com>
+        <20220302133159.3c803f56.alex.williamson@redhat.com>
+        <20220303000528.GW219866@nvidia.com>
+        <20220302204752.71ea8b32.alex.williamson@redhat.com>
+        <20220303130124.GX219866@nvidia.com>
+        <20220303082040.1f88e24c.alex.williamson@redhat.com>
+        <0cee64d555624e669028ba17d04b8737@huawei.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20211126070422.73234-1-xueshuai@linux.alibaba.com> <20220227122546.43307-1-xueshuai@linux.alibaba.com>
-In-Reply-To: <20220227122546.43307-1-xueshuai@linux.alibaba.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 3 Mar 2022 20:27:28 +0100
-Message-ID: <CAJZ5v0jsPf=o9T0TpB85s0mqfB3Mr72y6BMxPf9ifvNm8XjNkA@mail.gmail.com>
-Subject: Re: [PATCH v8 1/2] ACPI: APEI: explicit init HEST and GHES in apci_init
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        luanshi <zhangliguang@linux.alibaba.com>,
-        zhuo.song@linux.alibaba.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Feb 27, 2022 at 1:26 PM Shuai Xue <xueshuai@linux.alibaba.com> wrote:
->
-> From commit e147133a42cb ("ACPI / APEI: Make hest.c manage the estatus
-> memory pool") was merged, ghes_init() relies on acpi_hest_init() to manage
-> the estatus memory pool. On the other hand, ghes_init() relies on
-> sdei_init() to detect the SDEI version and (un)register events. The
-> dependencies are as follows:
->
->     ghes_init() => acpi_hest_init() => acpi_bus_init() => acpi_init()
->     ghes_init() => sdei_init()
->
-> HEST is not PCI-specific and initcall ordering is implicit and not
-> well-defined within a level.
->
-> Based on above, remove acpi_hest_init() from acpi_pci_root_init() and
-> convert ghes_init() and sdei_init() from initcalls to explicit calls in the
-> following order:
->
->     acpi_hest_init()
->     ghes_init()
->         sdei_init()
->
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+On Thu, 3 Mar 2022 18:05:53 +0000
+Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com> wrote:
 
-Applied as 5.18 material along with the [2/2], thanks!
+> > -----Original Message-----
+> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
+> > Sent: 03 March 2022 15:21
+> > To: Jason Gunthorpe <jgg@nvidia.com>
+> > Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
+> > kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-crypto@vger.kernel.org; linux-pci@vger.kernel.org; cohuck@redhat.com;
+> > mgurtovoy@nvidia.com; yishaih@nvidia.com; Linuxarm
+> > <linuxarm@huawei.com>; liulongfang <liulongfang@huawei.com>; Zengtao (B)
+> > <prime.zeng@hisilicon.com>; Jonathan Cameron
+> > <jonathan.cameron@huawei.com>; Wangzhou (B) <wangzhou1@hisilicon.com>
+> > Subject: Re: [PATCH v7 07/10] vfio: Extend the device migration protocol with
+> > PRE_COPY
+> > 
+> > On Thu, 3 Mar 2022 09:01:24 -0400
+> > Jason Gunthorpe <jgg@nvidia.com> wrote:
+> >   
+> > > On Wed, Mar 02, 2022 at 08:47:52PM -0700, Alex Williamson wrote:  
+> > > > On Wed, 2 Mar 2022 20:05:28 -0400
+> > > > Jason Gunthorpe <jgg@nvidia.com> wrote:
+> > > >  
+> > > > > On Wed, Mar 02, 2022 at 01:31:59PM -0700, Alex Williamson wrote:  
+> > > > > > > + * initial_bytes reflects the estimated remaining size of any
+> > > > > > > + initial mandatory
+> > > > > > > + * precopy data transfer. When initial_bytes returns as zero
+> > > > > > > + then the initial
+> > > > > > > + * phase of the precopy data is completed. Generally initial_bytes  
+> > should start  
+> > > > > > > + * out as approximately the entire device state.  
+> > > > > >
+> > > > > > What is "mandatory" intended to mean here?  The user isn't required  
+> > to  
+> > > > > > collect any data from the device in the PRE_COPY states.  
+> > > > >
+> > > > > If the data is split into initial,dirty,trailer then mandatory
+> > > > > means that first chunk.  
+> > > >
+> > > > But there's no requirement to read anything in PRE_COPY, so initial
+> > > > becomes indistinguishable from trailer and dirty doesn't exist.  
+> > >
+> > > It is still mandatory to read that data out, it doesn't matter if it
+> > > is read during PRE_COPY or STOP_COPY.  
+> > 
+> > Not really, PRE_COPY -> RUNNING is a valid arc.
+> >   
+> > > > > > "The vfio_precopy_info data structure returned by this ioctl
+> > > > > > provides  estimates of data available from the device during the  
+> > PRE_COPY states.  
+> > > > > >  This estimate is split into two categories, initial_bytes and
+> > > > > > dirty_bytes.
+> > > > > >
+> > > > > >  The initial_bytes field indicates the amount of static data
+> > > > > > available  from the device.  This field should have a non-zero initial  
+> > value and  
+> > > > > >  decrease as migration data is read from the device.  
+> > > > >
+> > > > > static isn't great either, how about just say 'minimum data available'  
+> > > >
+> > > > 'initial precopy data-set'?  
+> > >
+> > > Sure
+> > >  
+> > > > We have no basis to make that assertion.  We've agreed that precopy
+> > > > can be used for nothing more than a compatibility test, so we could
+> > > > have a vGPU with a massive framebuffer and no ability to provide
+> > > > dirty tracking implement precopy only to include the entire
+> > > > framebuffer in the trailing STOP_COPY data set.  Per my
+> > > > understanding and the fact that we cannot enforce any heuristics
+> > > > regarding the size of the tailer relative to the pre-copy data set,
+> > > > I think the above strongly phrased sentence is necessary to
+> > > > understand the limitations of what this ioctl is meant to convey.
+> > > > Thanks,  
+> > >
+> > > This is why abusing precopy for compatability is not a great idea. It
+> > > is OK for acc because its total state is tiny, but I would not agree
+> > > to a vGPU driver being merged working like you describe. It distorts
+> > > the entire purpose of PRE_COPY and this whole estimation mechanism.
+> > >
+> > > The ioctl is intended to convey when to switch to STOP_COPY, and the
+> > > driver should provide a semantic where the closer the reported length
+> > > is to 0 then the faster the STOP_COPY will go.  
+> > 
+> > If it's an abuse, then let's not do it.  It was never my impression or intention
+> > that this was ok for acc only due to the minimal trailing data size.  My
+> > statement was that use of PRE_COPY for compatibility testing only had been a
+> > previously agreed valid use case of the original migration interface.
+> > 
+> > Furthermore the acc driver was explicitly directed not to indicate any degree
+> > of trailing data size in dirty_bytes, so while trailing data may be small for acc,
+> > this interface is explicitly not intended to provide any indication of trailing
+> > data size.  Thanks,  
+> 
+> Just to clarify, so the suggestion here is not to use PRE_COPY for compatibility
+> check at all and have a different proper infrastructure for that later as Jason
+> suggested?
+> 
+> If so, I will remove this patch from this series and go back to the old revision
+> where we only have STOP_COPY and do the compatibility check during the final
+> load data operation.
 
-> ---
->  drivers/acpi/apei/ghes.c    | 19 ++++++++-----------
->  drivers/acpi/bus.c          |  2 ++
->  drivers/acpi/pci_root.c     |  3 ---
->  drivers/firmware/Kconfig    |  1 +
->  drivers/firmware/arm_sdei.c | 13 ++-----------
->  include/acpi/apei.h         |  4 +++-
->  include/linux/arm_sdei.h    |  2 ++
->  7 files changed, 18 insertions(+), 26 deletions(-)
->
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 0c5c9acc6254..aadc0a972f18 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -1457,33 +1457,35 @@ static struct platform_driver ghes_platform_driver = {
->         .remove         = ghes_remove,
->  };
->
-> -static int __init ghes_init(void)
-> +void __init ghes_init(void)
->  {
->         int rc;
->
-> +       sdei_init();
-> +
->         if (acpi_disabled)
-> -               return -ENODEV;
-> +               return;
->
->         switch (hest_disable) {
->         case HEST_NOT_FOUND:
-> -               return -ENODEV;
-> +               return;
->         case HEST_DISABLED:
->                 pr_info(GHES_PFX "HEST is not enabled!\n");
-> -               return -EINVAL;
-> +               return;
->         default:
->                 break;
->         }
->
->         if (ghes_disable) {
->                 pr_info(GHES_PFX "GHES is not enabled!\n");
-> -               return -EINVAL;
-> +               return;
->         }
->
->         ghes_nmi_init_cxt();
->
->         rc = platform_driver_register(&ghes_platform_driver);
->         if (rc)
-> -               goto err;
-> +               return;
->
->         rc = apei_osc_setup();
->         if (rc == 0 && osc_sb_apei_support_acked)
-> @@ -1494,9 +1496,4 @@ static int __init ghes_init(void)
->                 pr_info(GHES_PFX "APEI firmware first mode is enabled by APEI bit.\n");
->         else
->                 pr_info(GHES_PFX "Failed to enable APEI firmware first mode.\n");
-> -
-> -       return 0;
-> -err:
-> -       return rc;
->  }
-> -device_initcall(ghes_init);
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index 07f604832fd6..3f403db20f69 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -1331,6 +1331,8 @@ static int __init acpi_init(void)
->
->         pci_mmcfg_late_init();
->         acpi_iort_init();
-> +       acpi_hest_init();
-> +       ghes_init();
->         acpi_scan_init();
->         acpi_ec_init();
->         acpi_debugfs_init();
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index b76db99cced3..6f9e75d14808 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -22,8 +22,6 @@
->  #include <linux/slab.h>
->  #include <linux/dmi.h>
->  #include <linux/platform_data/x86/apple.h>
-> -#include <acpi/apei.h> /* for acpi_hest_init() */
-> -
->  #include "internal.h"
->
->  #define ACPI_PCI_ROOT_CLASS            "pci_bridge"
-> @@ -943,7 +941,6 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
->
->  void __init acpi_pci_root_init(void)
->  {
-> -       acpi_hest_init();
->         if (acpi_pci_disabled)
->                 return;
->
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index 75cb91055c17..e5cfb01353d8 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -40,6 +40,7 @@ config ARM_SCPI_POWER_DOMAIN
->  config ARM_SDE_INTERFACE
->         bool "ARM Software Delegated Exception Interface (SDEI)"
->         depends on ARM64
-> +       depends on ACPI_APEI_GHES
->         help
->           The Software Delegated Exception Interface (SDEI) is an ARM
->           standard for registering callbacks from the platform firmware
-> diff --git a/drivers/firmware/arm_sdei.c b/drivers/firmware/arm_sdei.c
-> index a7e762c352f9..1e1a51510e83 100644
-> --- a/drivers/firmware/arm_sdei.c
-> +++ b/drivers/firmware/arm_sdei.c
-> @@ -1059,14 +1059,14 @@ static bool __init sdei_present_acpi(void)
->         return true;
->  }
->
-> -static int __init sdei_init(void)
-> +void __init sdei_init(void)
->  {
->         struct platform_device *pdev;
->         int ret;
->
->         ret = platform_driver_register(&sdei_driver);
->         if (ret || !sdei_present_acpi())
-> -               return ret;
-> +               return;
->
->         pdev = platform_device_register_simple(sdei_driver.driver.name,
->                                                0, NULL, 0);
-> @@ -1076,17 +1076,8 @@ static int __init sdei_init(void)
->                 pr_info("Failed to register ACPI:SDEI platform device %d\n",
->                         ret);
->         }
-> -
-> -       return ret;
->  }
->
-> -/*
-> - * On an ACPI system SDEI needs to be ready before HEST:GHES tries to register
-> - * its events. ACPI is initialised from a subsys_initcall(), GHES is initialised
-> - * by device_initcall(). We want to be called in the middle.
-> - */
-> -subsys_initcall_sync(sdei_init);
-> -
->  int sdei_event_handler(struct pt_regs *regs,
->                        struct sdei_registered_event *arg)
->  {
-> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
-> index ece0a8af2bae..4e60dd73c3bb 100644
-> --- a/include/acpi/apei.h
-> +++ b/include/acpi/apei.h
-> @@ -27,14 +27,16 @@ extern int hest_disable;
->  extern int erst_disable;
->  #ifdef CONFIG_ACPI_APEI_GHES
->  extern bool ghes_disable;
-> +void __init ghes_init(void);
->  #else
->  #define ghes_disable 1
-> +static inline void ghes_init(void) { }
->  #endif
->
->  #ifdef CONFIG_ACPI_APEI
->  void __init acpi_hest_init(void);
->  #else
-> -static inline void acpi_hest_init(void) { return; }
-> +static inline void acpi_hest_init(void) { }
->  #endif
->
->  int erst_write(const struct cper_record_header *record);
-> diff --git a/include/linux/arm_sdei.h b/include/linux/arm_sdei.h
-> index 0a241c5c911d..14dc461b0e82 100644
-> --- a/include/linux/arm_sdei.h
-> +++ b/include/linux/arm_sdei.h
-> @@ -46,9 +46,11 @@ int sdei_unregister_ghes(struct ghes *ghes);
->  /* For use by arch code when CPU hotplug notifiers are not appropriate. */
->  int sdei_mask_local_cpu(void);
->  int sdei_unmask_local_cpu(void);
-> +void __init sdei_init(void);
->  #else
->  static inline int sdei_mask_local_cpu(void) { return 0; }
->  static inline int sdei_unmask_local_cpu(void) { return 0; }
-> +static inline void sdei_init(void) { }
->  #endif /* CONFIG_ARM_SDE_INTERFACE */
->
->
-> --
-> 2.20.1.12.g72788fdb
->
+Hi Shameer,
+
+I think NVIDIA has a company long weekend, so I'm not sure how quickly
+we'll hear a rebuttal from Jason, but at this point I'd rather not move
+forward with using PRE_COPY exclusively for compatibility testing if
+that is seen as an abuse of the interface, regardless of the size of
+the remaining STOP_COPY data.  It might be most expedient to respin
+without PRE_COPY and we'll revisit methods to perform early
+compatibility testing in the future.  Thanks,
+
+Alex
+
