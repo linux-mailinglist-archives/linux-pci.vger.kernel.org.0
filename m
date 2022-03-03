@@ -2,152 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D87074CB456
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 02:35:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 381424CB584
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 04:48:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231321AbiCCBZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Mar 2022 20:25:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49546 "EHLO
+        id S229501AbiCCDsp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Mar 2022 22:48:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231249AbiCCBZ5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 20:25:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A921DA7B;
-        Wed,  2 Mar 2022 17:25:13 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C31C661150;
-        Thu,  3 Mar 2022 01:25:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2074AC340F2;
-        Thu,  3 Mar 2022 01:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646270712;
-        bh=OIWkR7Zp9BS5KcWgPGvH+7lGxsauASKPDzT5dWHRzcg=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=fyTcnY079RGVSWj1/bqnWf9UBPrXZmiZ32cJHGCuHKFrvhhlGSoeO8XnjyAULGbxy
-         xuEeYIRqhVQfty7l070VwdiiUBm+vhQMOyp1/UPCRCwJW1H8chwVFdTWSqF8JxQ7i6
-         pmngu4i/qw99iSRs7nF8V/KUQPfZMnX0OhdBfoyB3K0uXmVGkSCue1VhFC37hRyoHl
-         lqT9JrJPLf0sbQoGpagSmC+bBJdDfAOOQZXY1qQ2kFojarLkPJJigndyp3UGVx/CEp
-         1XnqlJ8dDyOAxVpGwUR+l8DwgqcaHVrJmCy/f+O96VijhpAG5o/2FbsTqBKQIZTLrT
-         qEo+TADXZ7B8A==
-Date:   Wed, 2 Mar 2022 17:25:10 -0800 (PST)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        iommu@lists.linux-foundation.org, x86@kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
- swiotlb
-In-Reply-To: <20220302081500.GB23075@lst.de>
-Message-ID: <alpine.DEB.2.22.394.2203021709470.3261@ubuntu-linux-20-04-desktop>
-References: <20220301105311.885699-1-hch@lst.de> <20220301105311.885699-12-hch@lst.de> <alpine.DEB.2.22.394.2203011720150.3261@ubuntu-linux-20-04-desktop> <20220302081500.GB23075@lst.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        with ESMTP id S229493AbiCCDso (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Mar 2022 22:48:44 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4AEEA136EE8
+        for <linux-pci@vger.kernel.org>; Wed,  2 Mar 2022 19:47:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646279277;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pYfgs3N+rvRxYqeQvpIVkVHYmOj1DCx1FHLabmoSbPc=;
+        b=KvJpShr88ONMsBnjnrPVjC9Q1KDptCaYzL7oiDLrZ9mGdNS+f0CN4idyJf/QT0hBolyTSM
+        9QW64+T16BzHGOMwx1NpMrZ/blfMl5EBBEDHUQNBl83b85DXgbonBTJQEHnbATlpln0M9v
+        twY6zCE8HLAYHunnvpWHxkxk+BBVpQQ=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-638-9xogjNhsMjyqxZIhusiDMg-1; Wed, 02 Mar 2022 22:47:56 -0500
+X-MC-Unique: 9xogjNhsMjyqxZIhusiDMg-1
+Received: by mail-ot1-f69.google.com with SMTP id l23-20020a056830239700b005ad40210ca2so2669199ots.3
+        for <linux-pci@vger.kernel.org>; Wed, 02 Mar 2022 19:47:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=pYfgs3N+rvRxYqeQvpIVkVHYmOj1DCx1FHLabmoSbPc=;
+        b=AvhUg8rbbmmCHibDr9IeLeFpuMGdtUaAp3ae8P60N65vNbrnGxWnf9X68eWNFT+jha
+         Zdr7pslvGUAme2jNfyYrtd/rEPY3DO2FLA4ExDUW8KVJL4tvxsFxlo+rlG9hZvWiqMmo
+         cstXI146evGDL4oJbOO1aOlq8CGppRWjyVNYfRo0kV63dlyKMTce4zFNEP3VdrppC1Gi
+         GcxkSwTx7hXtQVenk5S3E7rudm3P1GX39YyekY/4aVo4d5ZvTR08cVTRiyeqKZbESnHL
+         ieszuctqabypiZLxLvcgNJ0/cI2K8kgJYAYBn7f31x9uYvFIOZwer5ZghPo4M2SOPTOs
+         Mnaw==
+X-Gm-Message-State: AOAM5312+fzfzrnepjSIZV7blk0RqxVic8S/6f4mHnHJ8WaKPxRj0C6v
+        he4Ki7MdHlmh+CjRrixdmrN2DsA6gb601ARslqxbrZjQu09BR08j63UsAYsb92Zpp/ENftOIkUU
+        UDiZEUkblm6xxaJcuFZZ8
+X-Received: by 2002:a05:6870:c987:b0:d7:3d45:6692 with SMTP id hi7-20020a056870c98700b000d73d456692mr2568146oab.34.1646279275356;
+        Wed, 02 Mar 2022 19:47:55 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxqAqFU9eF4TGFq+ynpN8QYYtYZBW2wrihjy9F9oNP48aBIzOrqLfKZTtd7KLpmq/YSUxV4OA==
+X-Received: by 2002:a05:6870:c987:b0:d7:3d45:6692 with SMTP id hi7-20020a056870c98700b000d73d456692mr2568136oab.34.1646279275125;
+        Wed, 02 Mar 2022 19:47:55 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id x3-20020a056808144300b002d4dedfc1ebsm451545oiv.20.2022.03.02.19.47.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Mar 2022 19:47:54 -0800 (PST)
+Date:   Wed, 2 Mar 2022 20:47:52 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        cohuck@redhat.com, mgurtovoy@nvidia.com, yishaih@nvidia.com,
+        linuxarm@huawei.com, liulongfang@huawei.com,
+        prime.zeng@hisilicon.com, jonathan.cameron@huawei.com,
+        wangzhou1@hisilicon.com
+Subject: Re: [PATCH v7 07/10] vfio: Extend the device migration protocol
+ with PRE_COPY
+Message-ID: <20220302204752.71ea8b32.alex.williamson@redhat.com>
+In-Reply-To: <20220303000528.GW219866@nvidia.com>
+References: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
+        <20220302172903.1995-8-shameerali.kolothum.thodi@huawei.com>
+        <20220302133159.3c803f56.alex.williamson@redhat.com>
+        <20220303000528.GW219866@nvidia.com>
+Organization: Red Hat
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2 Mar 2022, Christoph Hellwig wrote:
-> On Tue, Mar 01, 2022 at 06:55:47PM -0800, Stefano Stabellini wrote:
-> > Unrelated to this specific patch series: now that I think about it, if
-> > io_tlb_default_mem.nslabs is already allocated by the time xen_mm_init
-> > is called, wouldn't we potentially have an issue with the GFP flags used
-> > for the earlier allocation (e.g. GFP_DMA32 not used)? Maybe something
-> > for another day.
-> 
-> swiotlb_init allocates low memory from meblock, which is roughly
-> equivalent to GFP_DMA allocations, so we'll be fine.
-> 
-> > > @@ -143,10 +141,15 @@ static int __init xen_mm_init(void)
-> > >  	if (!xen_swiotlb_detect())
-> > >  		return 0;
-> > >  
-> > > -	rc = xen_swiotlb_init();
-> > >  	/* we can work with the default swiotlb */
-> > > -	if (rc < 0 && rc != -EEXIST)
-> > > -		return rc;
-> > > +	if (!io_tlb_default_mem.nslabs) {
-> > > +		if (!xen_initial_domain())
-> > > +			return -EINVAL;
+On Wed, 2 Mar 2022 20:05:28 -0400
+Jason Gunthorpe <jgg@nvidia.com> wrote:
+
+> On Wed, Mar 02, 2022 at 01:31:59PM -0700, Alex Williamson wrote:
+> > > + * initial_bytes reflects the estimated remaining size of any initial mandatory
+> > > + * precopy data transfer. When initial_bytes returns as zero then the initial
+> > > + * phase of the precopy data is completed. Generally initial_bytes should start
+> > > + * out as approximately the entire device state.  
 > > 
-> > I don't think we need this xen_initial_domain() check. It is all
-> > already sorted out by the xen_swiotlb_detect() check above.
+> > What is "mandatory" intended to mean here?  The user isn't required to
+> > collect any data from the device in the PRE_COPY states.  
 > 
-> Is it?
+> If the data is split into initial,dirty,trailer then mandatory means
+> that first chunk.
+
+But there's no requirement to read anything in PRE_COPY, so initial
+becomes indistinguishable from trailer and dirty doesn't exist.
+
+> > "The vfio_precopy_info data structure returned by this ioctl provides
+> >  estimates of data available from the device during the PRE_COPY states.
+> >  This estimate is split into two categories, initial_bytes and
+> >  dirty_bytes.
+> > 
+> >  The initial_bytes field indicates the amount of static data available
+> >  from the device.  This field should have a non-zero initial value and
+> >  decrease as migration data is read from the device.  
 > 
-> static inline int xen_swiotlb_detect(void)
-> {
-> 	if (!xen_domain())
-> 		return 0;
-> 	if (xen_feature(XENFEAT_direct_mapped))
-> 		return 1;
-> 	/* legacy case */
-> 	if (!xen_feature(XENFEAT_not_direct_mapped) && xen_initial_domain())
-> 		return 1;
-> 	return 0;
-> }
+> static isn't great either, how about just say 'minimum data available'
 
-It used to be that we had a
+'initial precopy data-set'?
 
-  if (!xen_initial_domain())
-      return -EINVAL;
+> >  Userspace may use the combination of these fields to estimate the
+> >  potential data size available during the PRE_COPY phases, as well as
+> >  trends relative to the rate the device is dirtying it's internal
+> >  state, but these fields are not required to have any bearing relative
+> >  to the data size available during the STOP_COPY phase."  
+> 
+> That last is too strong. I would just drop starting at but.
+> 
+> The message to communicate is the device should allow dirty_bytes to
+> reach 0 during the PRE_COPY phases if everything is is idle. Which
+> tells alot about how to calculate it.
+> 
+> It is all better otherwise
+> 
+> > > + * Drivers should attempt to return estimates so that initial_bytes +
+> > > + * dirty_bytes matches the amount of data an immediate transition to STOP_COPY
+> > > + * will require to be streamed.  
+> >
+> > I think previous discussions have proven this false, we expect trailing
+> > data that is only available in STOP_COPY, we cannot bound the size of
+> > that data, and dirty_bytes is not intended to expose data that cannot
+> > be retrieved during the PRE_COPY phases.  Thanks,  
+> 
+> It was written assuming the stop_copy trailer is small.
 
-check in the initialization of swiotlb-xen on ARM. Then we replaced it
-with the more sophisticated xen_swiotlb_detect().
+We have no basis to make that assertion.  We've agreed that precopy can
+be used for nothing more than a compatibility test, so we could have a
+vGPU with a massive framebuffer and no ability to provide dirty
+tracking implement precopy only to include the entire framebuffer in
+the trailing STOP_COPY data set.  Per my understanding and the fact
+that we cannot enforce any heuristics regarding the size of the tailer
+relative to the pre-copy data set, I think the above strongly phrased
+sentence is necessary to understand the limitations of what this ioctl
+is meant to convey.  Thanks,
 
-The reason is that swiotlb-xen on ARM relies on Dom0 being 1:1 mapped
-(guest physical addresses == physical addresses). Recent changes in Xen
-allowed also DomUs to be 1:1 mapped. Changes still under discussion will
-allow Dom0 not to be 1:1 mapped.
+Alex
 
-So, before all the Xen-side changes, knowing what was going to happen, I
-introduced a clearer interface: XENFEAT_direct_mapped and
-XENFEAT_not_direct_mapped tell us whether the guest (Linux) is 1:1
-mapped or not. If it is 1:1 mapped then Linux can take advantage of
-swiotlb-xen. Now xen_swiotlb_detect() returns true if Linux is 1:1
-mapped.
-
-Then of course there is the legacy case. That's taken care of by:
-
- 	if (!xen_feature(XENFEAT_not_direct_mapped) && xen_initial_domain())
- 		return 1;
-
-The intention is to say that if
-XENFEAT_direct_mapped/XENFEAT_not_direct_mapped are not present, then
-use xen_initial_domain() like we did before.
-
-So if xen_swiotlb_detect() returns true we know that Linux is either
-dom0 (xen_initial_domain() == true) or we have very good reasons to
-think we should initialize swiotlb-xen anyway
-(xen_feature(XENFEAT_direct_mapped) == true).
-
-
-> I think I'd keep it as-is for now, as my planned next step would be to
-> fold xen-swiotlb into swiotlb entirely.
-
-Thinking more about it we actually need to drop the xen_initial_domain()
-check otherwise some cases won't be functional (Dom0 not 1:1 mapped, or
-DomU 1:1 mapped).
