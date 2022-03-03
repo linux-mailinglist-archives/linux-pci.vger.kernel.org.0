@@ -2,184 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43A714CC497
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 19:06:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C60B4CC4C1
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 19:11:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234116AbiCCSGn convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 3 Mar 2022 13:06:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34682 "EHLO
+        id S235636AbiCCSMg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 13:12:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230342AbiCCSGm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 13:06:42 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02BB1959FE;
-        Thu,  3 Mar 2022 10:05:56 -0800 (PST)
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K8f6Z6zwwz681Z4;
-        Fri,  4 Mar 2022 02:05:42 +0800 (CST)
-Received: from lhreml714-chm.china.huawei.com (10.201.108.65) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Thu, 3 Mar 2022 19:05:54 +0100
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml714-chm.china.huawei.com (10.201.108.65) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Thu, 3 Mar 2022 18:05:53 +0000
-Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
- lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
- 15.01.2308.021; Thu, 3 Mar 2022 18:05:53 +0000
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "yishaih@nvidia.com" <yishaih@nvidia.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        liulongfang <liulongfang@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>
-Subject: RE: [PATCH v7 07/10] vfio: Extend the device migration protocol with
- PRE_COPY
-Thread-Topic: [PATCH v7 07/10] vfio: Extend the device migration protocol with
- PRE_COPY
-Thread-Index: AQHYLltB55o0MLr0xUuA2wIPWDOs6KysjGuAgAA7pQCAAD4kAIAAmqcAgAAm6gCAACxRYA==
-Date:   Thu, 3 Mar 2022 18:05:53 +0000
-Message-ID: <0cee64d555624e669028ba17d04b8737@huawei.com>
-References: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
-        <20220302172903.1995-8-shameerali.kolothum.thodi@huawei.com>
-        <20220302133159.3c803f56.alex.williamson@redhat.com>
-        <20220303000528.GW219866@nvidia.com>
-        <20220302204752.71ea8b32.alex.williamson@redhat.com>
-        <20220303130124.GX219866@nvidia.com>
- <20220303082040.1f88e24c.alex.williamson@redhat.com>
-In-Reply-To: <20220303082040.1f88e24c.alex.williamson@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.82.4]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        with ESMTP id S235634AbiCCSMe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 13:12:34 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F4F1A3618
+        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 10:11:48 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 46791B824C9
+        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 18:11:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E2DC340EF;
+        Thu,  3 Mar 2022 18:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646331105;
+        bh=6kHNyAW28+qceLN/t4c1l4MsxbS0QQfdH4sCCGEqDmM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=GgEqJZW0Z5IfGdcxMBZsoQLZGAvv/saQ3soSQ8d6NKBwdVGpcLDz3sq1VYvG59l6B
+         UzS6AIY1RgW+/tDMWmTr9FS+b0rRuNOSLsqvQ5ygAg/enRUD4k+Voaejnat5tRHnVn
+         b0YNCWF7FvfqkuJQuA5g6+Oq8EH8XTDHEooi4srxhIiIbcU8jNMOSs1OE0WYIH1hQB
+         MXoVbUSRnK4e5x4uMA1PedodnN63V4uJaErNP/E4fvAYiLEiB79+Pu8CKcLyme+KM5
+         SNlmgG188mF5CoIduu7jLln8VmOYAg+hq7I+OVOok7XI/7zTVIgNo7dgfJ3hci+NOb
+         PLIAWfbqvxs8Q==
+Date:   Thu, 3 Mar 2022 12:11:44 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dongdong Liu <liudongdong3@huawei.com>
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Support BAR sizes up to 8TB
+Message-ID: <20220303181144.GA820025@bhelgaas>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220118092117.10089-1-liudongdong3@huawei.com>
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> Sent: 03 March 2022 15:21
-> To: Jason Gunthorpe <jgg@nvidia.com>
-> Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
-> kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> linux-crypto@vger.kernel.org; linux-pci@vger.kernel.org; cohuck@redhat.com;
-> mgurtovoy@nvidia.com; yishaih@nvidia.com; Linuxarm
-> <linuxarm@huawei.com>; liulongfang <liulongfang@huawei.com>; Zengtao (B)
-> <prime.zeng@hisilicon.com>; Jonathan Cameron
-> <jonathan.cameron@huawei.com>; Wangzhou (B) <wangzhou1@hisilicon.com>
-> Subject: Re: [PATCH v7 07/10] vfio: Extend the device migration protocol with
-> PRE_COPY
+On Tue, Jan 18, 2022 at 05:21:17PM +0800, Dongdong Liu wrote:
+> Current kernel reports disabling BAR if device with a 4TB BAR as it
+> only supports BAR size to 128GB.
 > 
-> On Thu, 3 Mar 2022 09:01:24 -0400
-> Jason Gunthorpe <jgg@nvidia.com> wrote:
+> pci 0000:01:00.0: disabling BAR 4:
+> [mem 0x00000000-0x3ffffffffff 64bit pref] (bad alignment 0x40000000000)
 > 
-> > On Wed, Mar 02, 2022 at 08:47:52PM -0700, Alex Williamson wrote:
-> > > On Wed, 2 Mar 2022 20:05:28 -0400
-> > > Jason Gunthorpe <jgg@nvidia.com> wrote:
-> > >
-> > > > On Wed, Mar 02, 2022 at 01:31:59PM -0700, Alex Williamson wrote:
-> > > > > > + * initial_bytes reflects the estimated remaining size of any
-> > > > > > + initial mandatory
-> > > > > > + * precopy data transfer. When initial_bytes returns as zero
-> > > > > > + then the initial
-> > > > > > + * phase of the precopy data is completed. Generally initial_bytes
-> should start
-> > > > > > + * out as approximately the entire device state.
-> > > > >
-> > > > > What is "mandatory" intended to mean here?  The user isn't required
-> to
-> > > > > collect any data from the device in the PRE_COPY states.
-> > > >
-> > > > If the data is split into initial,dirty,trailer then mandatory
-> > > > means that first chunk.
-> > >
-> > > But there's no requirement to read anything in PRE_COPY, so initial
-> > > becomes indistinguishable from trailer and dirty doesn't exist.
-> >
-> > It is still mandatory to read that data out, it doesn't matter if it
-> > is read during PRE_COPY or STOP_COPY.
+> Increase the maximum BAR size from 128GB to 8TB for future expansion.
 > 
-> Not really, PRE_COPY -> RUNNING is a valid arc.
+> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+
+Applied to pci/enumeration for v5.18, thanks!
+
+> ---
+>  drivers/pci/setup-bus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > > > > "The vfio_precopy_info data structure returned by this ioctl
-> > > > > provides  estimates of data available from the device during the
-> PRE_COPY states.
-> > > > >  This estimate is split into two categories, initial_bytes and
-> > > > > dirty_bytes.
-> > > > >
-> > > > >  The initial_bytes field indicates the amount of static data
-> > > > > available  from the device.  This field should have a non-zero initial
-> value and
-> > > > >  decrease as migration data is read from the device.
-> > > >
-> > > > static isn't great either, how about just say 'minimum data available'
-> > >
-> > > 'initial precopy data-set'?
-> >
-> > Sure
-> >
-> > > We have no basis to make that assertion.  We've agreed that precopy
-> > > can be used for nothing more than a compatibility test, so we could
-> > > have a vGPU with a massive framebuffer and no ability to provide
-> > > dirty tracking implement precopy only to include the entire
-> > > framebuffer in the trailing STOP_COPY data set.  Per my
-> > > understanding and the fact that we cannot enforce any heuristics
-> > > regarding the size of the tailer relative to the pre-copy data set,
-> > > I think the above strongly phrased sentence is necessary to
-> > > understand the limitations of what this ioctl is meant to convey.
-> > > Thanks,
-> >
-> > This is why abusing precopy for compatability is not a great idea. It
-> > is OK for acc because its total state is tiny, but I would not agree
-> > to a vGPU driver being merged working like you describe. It distorts
-> > the entire purpose of PRE_COPY and this whole estimation mechanism.
-> >
-> > The ioctl is intended to convey when to switch to STOP_COPY, and the
-> > driver should provide a semantic where the closer the reported length
-> > is to 0 then the faster the STOP_COPY will go.
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 547396ec50b5..a7893bf2f580 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -994,7 +994,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  {
+>  	struct pci_dev *dev;
+>  	resource_size_t min_align, align, size, size0, size1;
+> -	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
+> +	resource_size_t aligns[24]; /* Alignments from 1MB to 8TB */
+>  	int order, max_order;
+>  	struct resource *b_res = find_bus_resource_of_type(bus,
+>  					mask | IORESOURCE_PREFETCH, type);
+> -- 
+> 2.33.0
 > 
-> If it's an abuse, then let's not do it.  It was never my impression or intention
-> that this was ok for acc only due to the minimal trailing data size.  My
-> statement was that use of PRE_COPY for compatibility testing only had been a
-> previously agreed valid use case of the original migration interface.
-> 
-> Furthermore the acc driver was explicitly directed not to indicate any degree
-> of trailing data size in dirty_bytes, so while trailing data may be small for acc,
-> this interface is explicitly not intended to provide any indication of trailing
-> data size.  Thanks,
-
-Just to clarify, so the suggestion here is not to use PRE_COPY for compatibility
-check at all and have a different proper infrastructure for that later as Jason
-suggested?
-
-If so, I will remove this patch from this series and go back to the old revision
-where we only have STOP_COPY and do the compatibility check during the final
-load data operation.
-
-Please let me know.
-
-Thanks,
-Shameer
-
