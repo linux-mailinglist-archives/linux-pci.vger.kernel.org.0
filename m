@@ -2,212 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FA604CC6AE
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 20:59:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 196E34CC973
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 23:49:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235832AbiCCUAY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Mar 2022 15:00:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56556 "EHLO
+        id S236995AbiCCWuV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 17:50:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235897AbiCCUAW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 15:00:22 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E47A91A39EB
-        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 11:59:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646337575;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KII+3wpRDYxBkpQXpVqXMzOFERtKv6nriOIaVlE+FgA=;
-        b=e4la4o4F/CjnnmOTc5nyzmdjBuqpUZ+5F6CatK2llCme4+kY09mVePKVS0/q8PWZpL9l/V
-        b6zCIwEduD9TJBD4JVuxJ/1/LCG4Ad5wrvy8t5o5JDSk0KBVxTcthzwcG/k2vNwqO2aFbk
-        UYqCcfjzhW7FZ9PWV2kzyPwvploMVlA=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-490-131pvtAFONSmwhIADl9q4g-1; Thu, 03 Mar 2022 14:59:33 -0500
-X-MC-Unique: 131pvtAFONSmwhIADl9q4g-1
-Received: by mail-ot1-f70.google.com with SMTP id s12-20020a056830438c00b005b03f4dcd5eso4270330otv.4
-        for <linux-pci@vger.kernel.org>; Thu, 03 Mar 2022 11:59:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=KII+3wpRDYxBkpQXpVqXMzOFERtKv6nriOIaVlE+FgA=;
-        b=DgXHwinnv+FxRo1xxZdO/pD+ZpnV0yeNNk18SfQ3DEgQtj4HZXOKXnnquDOYm4lYAg
-         J1hBbo9PzVZaDDYU/XeOOWHGZCMA/yk8LrKRpfLYbTPp+er40v5rQ9qJjnlx7Z1da/WQ
-         3rp7hemh+1Y9LdXCbuq5p6lEcNFoAyj57rvq8ptEoYyCBGjGfritnUK+q4lIXUk8Ss3P
-         k1e63BLjrLx6no7GxBIYGZypVUUvo9YG0ZDt+24s+NIZ7BwPsuUlPfg0WmFsDODha1Sn
-         g4HrMqoIQ9lT+xjaNh/0bYpxY6SD59F3C1+Xt40dxfXZ76pu2ANFsPTiYfsKYQjYyeMT
-         DC9g==
-X-Gm-Message-State: AOAM533j1/KcLX5Hsm2QxgdBs/kERBw+z0JsWgqL8W6xJxNPKE76qfVZ
-        xqAE83BZ+wzj1zvYE3H1hvHymDJs1xpqtBH9uJ0MWQOasY8UJZzWODya3on3X1ZwDjaSYDPxksT
-        odXTGY4/dthXGJBJJ0JrN
-X-Received: by 2002:a4a:c719:0:b0:2eb:c34a:2ba7 with SMTP id n25-20020a4ac719000000b002ebc34a2ba7mr19498057ooq.98.1646337573214;
-        Thu, 03 Mar 2022 11:59:33 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz6XTO+OhibXSv5NZahUVm0cq34tr89yXWaoMFB6Fqiab+SUFF3Phx50x9lVSIdc9AfUbbmhg==
-X-Received: by 2002:a4a:c719:0:b0:2eb:c34a:2ba7 with SMTP id n25-20020a4ac719000000b002ebc34a2ba7mr19498041ooq.98.1646337572985;
-        Thu, 03 Mar 2022 11:59:32 -0800 (PST)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id u21-20020a056870951500b000d9b9ac69cdsm901630oal.1.2022.03.03.11.59.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Mar 2022 11:59:32 -0800 (PST)
-Date:   Thu, 3 Mar 2022 12:59:30 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "yishaih@nvidia.com" <yishaih@nvidia.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        liulongfang <liulongfang@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v7 07/10] vfio: Extend the device migration protocol
- with PRE_COPY
-Message-ID: <20220303125930.43d9940b.alex.williamson@redhat.com>
-In-Reply-To: <0cee64d555624e669028ba17d04b8737@huawei.com>
-References: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
-        <20220302172903.1995-8-shameerali.kolothum.thodi@huawei.com>
-        <20220302133159.3c803f56.alex.williamson@redhat.com>
-        <20220303000528.GW219866@nvidia.com>
-        <20220302204752.71ea8b32.alex.williamson@redhat.com>
-        <20220303130124.GX219866@nvidia.com>
-        <20220303082040.1f88e24c.alex.williamson@redhat.com>
-        <0cee64d555624e669028ba17d04b8737@huawei.com>
-Organization: Red Hat
+        with ESMTP id S233243AbiCCWuU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 17:50:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFFEBF5413;
+        Thu,  3 Mar 2022 14:49:33 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EF3B7B826F4;
+        Thu,  3 Mar 2022 22:49:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF27C004E1;
+        Thu,  3 Mar 2022 22:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646347770;
+        bh=8T7CokGxWBKJfPW1pG0VCMscny/1l39AXb6Fw4feFiI=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=mDE8XGmJRPXC3FhUExxfC/Tg8r8q5kqje46aVpKcSpgATjCrTOmm8dyL5+N0ARFUl
+         igEkDLka8/5AR112e4UmftTK6LTw6MIVEq72/1WbVxD/BN6jvq1CQNSmYNX2eOZkoM
+         C7Y6r4k/M1DH2K4tAUOZ5dfMEE8n9On9bbDAQYejM/m/pVednlfOiQ+0ILLxk+xuq6
+         0Hivc3idTv5Og15E95hL8KOwRNZ6gfWfd8YTyoWKgbowpFGJ7UwyLwEnr/Ub/zQ8kx
+         OW2VcyhCSn0JN1ypiUZLYah5Kofhllw9xygmCFN3oPTfqf6bSdXRFiDe95KnoglrOU
+         yMQm9xneH86Yg==
+Date:   Thu, 3 Mar 2022 14:49:29 -0800 (PST)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
+To:     Christoph Hellwig <hch@lst.de>
+cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        iommu@lists.linux-foundation.org, x86@kernel.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
+ swiotlb
+In-Reply-To: <20220303105931.GA15137@lst.de>
+Message-ID: <alpine.DEB.2.22.394.2203031447120.3261@ubuntu-linux-20-04-desktop>
+References: <20220301105311.885699-1-hch@lst.de> <20220301105311.885699-12-hch@lst.de> <alpine.DEB.2.22.394.2203011720150.3261@ubuntu-linux-20-04-desktop> <20220302081500.GB23075@lst.de> <alpine.DEB.2.22.394.2203021709470.3261@ubuntu-linux-20-04-desktop>
+ <20220303105931.GA15137@lst.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 3 Mar 2022 18:05:53 +0000
-Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com> wrote:
-
-> > -----Original Message-----
-> > From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> > Sent: 03 March 2022 15:21
-> > To: Jason Gunthorpe <jgg@nvidia.com>
-> > Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
-> > kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-crypto@vger.kernel.org; linux-pci@vger.kernel.org; cohuck@redhat.com;
-> > mgurtovoy@nvidia.com; yishaih@nvidia.com; Linuxarm
-> > <linuxarm@huawei.com>; liulongfang <liulongfang@huawei.com>; Zengtao (B)
-> > <prime.zeng@hisilicon.com>; Jonathan Cameron
-> > <jonathan.cameron@huawei.com>; Wangzhou (B) <wangzhou1@hisilicon.com>
-> > Subject: Re: [PATCH v7 07/10] vfio: Extend the device migration protocol with
-> > PRE_COPY
-> > 
-> > On Thu, 3 Mar 2022 09:01:24 -0400
-> > Jason Gunthorpe <jgg@nvidia.com> wrote:
-> >   
-> > > On Wed, Mar 02, 2022 at 08:47:52PM -0700, Alex Williamson wrote:  
-> > > > On Wed, 2 Mar 2022 20:05:28 -0400
-> > > > Jason Gunthorpe <jgg@nvidia.com> wrote:
-> > > >  
-> > > > > On Wed, Mar 02, 2022 at 01:31:59PM -0700, Alex Williamson wrote:  
-> > > > > > > + * initial_bytes reflects the estimated remaining size of any
-> > > > > > > + initial mandatory
-> > > > > > > + * precopy data transfer. When initial_bytes returns as zero
-> > > > > > > + then the initial
-> > > > > > > + * phase of the precopy data is completed. Generally initial_bytes  
-> > should start  
-> > > > > > > + * out as approximately the entire device state.  
-> > > > > >
-> > > > > > What is "mandatory" intended to mean here?  The user isn't required  
-> > to  
-> > > > > > collect any data from the device in the PRE_COPY states.  
-> > > > >
-> > > > > If the data is split into initial,dirty,trailer then mandatory
-> > > > > means that first chunk.  
-> > > >
-> > > > But there's no requirement to read anything in PRE_COPY, so initial
-> > > > becomes indistinguishable from trailer and dirty doesn't exist.  
-> > >
-> > > It is still mandatory to read that data out, it doesn't matter if it
-> > > is read during PRE_COPY or STOP_COPY.  
-> > 
-> > Not really, PRE_COPY -> RUNNING is a valid arc.
-> >   
-> > > > > > "The vfio_precopy_info data structure returned by this ioctl
-> > > > > > provides  estimates of data available from the device during the  
-> > PRE_COPY states.  
-> > > > > >  This estimate is split into two categories, initial_bytes and
-> > > > > > dirty_bytes.
-> > > > > >
-> > > > > >  The initial_bytes field indicates the amount of static data
-> > > > > > available  from the device.  This field should have a non-zero initial  
-> > value and  
-> > > > > >  decrease as migration data is read from the device.  
-> > > > >
-> > > > > static isn't great either, how about just say 'minimum data available'  
-> > > >
-> > > > 'initial precopy data-set'?  
-> > >
-> > > Sure
-> > >  
-> > > > We have no basis to make that assertion.  We've agreed that precopy
-> > > > can be used for nothing more than a compatibility test, so we could
-> > > > have a vGPU with a massive framebuffer and no ability to provide
-> > > > dirty tracking implement precopy only to include the entire
-> > > > framebuffer in the trailing STOP_COPY data set.  Per my
-> > > > understanding and the fact that we cannot enforce any heuristics
-> > > > regarding the size of the tailer relative to the pre-copy data set,
-> > > > I think the above strongly phrased sentence is necessary to
-> > > > understand the limitations of what this ioctl is meant to convey.
-> > > > Thanks,  
-> > >
-> > > This is why abusing precopy for compatability is not a great idea. It
-> > > is OK for acc because its total state is tiny, but I would not agree
-> > > to a vGPU driver being merged working like you describe. It distorts
-> > > the entire purpose of PRE_COPY and this whole estimation mechanism.
-> > >
-> > > The ioctl is intended to convey when to switch to STOP_COPY, and the
-> > > driver should provide a semantic where the closer the reported length
-> > > is to 0 then the faster the STOP_COPY will go.  
-> > 
-> > If it's an abuse, then let's not do it.  It was never my impression or intention
-> > that this was ok for acc only due to the minimal trailing data size.  My
-> > statement was that use of PRE_COPY for compatibility testing only had been a
-> > previously agreed valid use case of the original migration interface.
-> > 
-> > Furthermore the acc driver was explicitly directed not to indicate any degree
-> > of trailing data size in dirty_bytes, so while trailing data may be small for acc,
-> > this interface is explicitly not intended to provide any indication of trailing
-> > data size.  Thanks,  
+On Thu, 3 Mar 2022, Christoph Hellwig wrote:
+> On Wed, Mar 02, 2022 at 05:25:10PM -0800, Stefano Stabellini wrote:
+> > Thinking more about it we actually need to drop the xen_initial_domain()
+> > check otherwise some cases won't be functional (Dom0 not 1:1 mapped, or
+> > DomU 1:1 mapped).
 > 
-> Just to clarify, so the suggestion here is not to use PRE_COPY for compatibility
-> check at all and have a different proper infrastructure for that later as Jason
-> suggested?
-> 
-> If so, I will remove this patch from this series and go back to the old revision
-> where we only have STOP_COPY and do the compatibility check during the final
-> load data operation.
+> Hmm, but that would be the case even before this series, right?
 
-Hi Shameer,
+Before this series we only have the xen_swiotlb_detect() check in
+xen_mm_init, we don't have a second xen_initial_domain() check.
 
-I think NVIDIA has a company long weekend, so I'm not sure how quickly
-we'll hear a rebuttal from Jason, but at this point I'd rather not move
-forward with using PRE_COPY exclusively for compatibility testing if
-that is seen as an abuse of the interface, regardless of the size of
-the remaining STOP_COPY data.  It might be most expedient to respin
-without PRE_COPY and we'll revisit methods to perform early
-compatibility testing in the future.  Thanks,
-
-Alex
-
+The issue is that this series is adding one more xen_initial_domain()
+check in xen_mm_init.
