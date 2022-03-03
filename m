@@ -2,120 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45E274CBA27
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 10:26:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C9DB4CBA87
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 10:43:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231627AbiCCJ04 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Mar 2022 04:26:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49712 "EHLO
+        id S231881AbiCCJoZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 04:44:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231529AbiCCJ04 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 04:26:56 -0500
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam07on2070.outbound.protection.outlook.com [40.107.95.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606B81768CD;
-        Thu,  3 Mar 2022 01:26:09 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WGhDT+MU6nBV23GfbnnNL6EVBXF934aPZ4pdA2IBmS/OxgAOeC8ZcBfvfnI4uezaDZG0UoVNyDLODfBcBxmq1FGILnYLRvA8fjW/Llf9tZEWtZrNJp7Svw64VW2KlGZlaMgx4JljjIezTbv46WteZ6PClTermyESKAV6H8ApycaKTKAeDo/YWUXefOl03BzNg34wGz5ImhEHukvGLQgNySDfzX2A35Rj9SJihGhYpGU9vX+QyCKhrY65X2/zoaSYaK6038NwitE1GBJBMQrT+hIjKp/d4t4vV0ofvgcLrgxHWPZgn6V6H8loZXuUhqgYLs7KtMYyMUaoHIEqfCWIUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4J1lLUGI4p+AaItNgXjRHKWjul3kFgSsN5pNNjVmno4=;
- b=UrAGL2ST9Qyjtu2CWUBZkwU2d3temNW37J8JR9FfGEdad57D3DtQxcmYAGB3SaRZaEMg1sEAepfah8mpVxBLEe/k/8cxUQYGsVsemdQSXRLfTgn84Q2vrio69Wk12BAPvHUSwEUqlwj5AEuBxEUTjm2p65WxydL+BgIk3yQ5nnvDzrb2iXCY0ReZqPbiWwomWXcle5WPFBwzAmhtYk5skdYexd0ptwRWfZDCxszqoQLLUAiFl0Ukhlfw323u3p/Ti112Oq8s992/xkOZzKBp68Tvs4Jc5A9pluR11lT8tfZac1oR3guwtBOFnzRqpsFzgTswAo16BG8N6alOjVNEIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4J1lLUGI4p+AaItNgXjRHKWjul3kFgSsN5pNNjVmno4=;
- b=mrF8/L/TIjhHEI60VE3ca8iRF2BozxatuIroOP/gMk8ckAZlmF1YE26Qjq2Khu+XJi1BOTcSnGeEB+oTWknVi3YYLxSkGV9e3RYbmGnqy4vtGi/3a4LH5rKyU0GADlB7H/Yck0CDttRA9hW4CeFDuXt3sJYu4VLEBxNGp95T6fA=
-Received: from BY5PR02MB6947.namprd02.prod.outlook.com (2603:10b6:a03:23e::12)
- by BY5PR02MB6948.namprd02.prod.outlook.com (2603:10b6:a03:23f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Thu, 3 Mar
- 2022 09:26:07 +0000
-Received: from BY5PR02MB6947.namprd02.prod.outlook.com
- ([fe80::5898:b7fa:9930:10a0]) by BY5PR02MB6947.namprd02.prod.outlook.com
- ([fe80::5898:b7fa:9930:10a0%7]) with mapi id 15.20.5038.014; Thu, 3 Mar 2022
- 09:25:49 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Michal Simek <michals@xilinx.com>
-Subject: RE: [PATCH v2 2/2] PCI: xilinx-cpm: Add support for Versal CPM5 Root
- Port
-Thread-Topic: [PATCH v2 2/2] PCI: xilinx-cpm: Add support for Versal CPM5 Root
- Port
-Thread-Index: AQHYImoMDICxsHV+4UiuebIA65FIP6ysUPIAgAEkiuA=
-Date:   Thu, 3 Mar 2022 09:25:49 +0000
-Message-ID: <BY5PR02MB6947106331FBE73A7B04434DA5049@BY5PR02MB6947.namprd02.prod.outlook.com>
-References: <20220215124606.28627-1-bharat.kumar.gogada@xilinx.com>
- <20220215124606.28627-3-bharat.kumar.gogada@xilinx.com>
- <Yh+OUvLi56/H4l2z@lpieralisi>
-In-Reply-To: <Yh+OUvLi56/H4l2z@lpieralisi>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=xilinx.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: aacc9e0e-6b9d-4a7a-13d1-08d9fcf7ce0c
-x-ms-traffictypediagnostic: BY5PR02MB6948:EE_
-x-microsoft-antispam-prvs: <BY5PR02MB6948A057B8AC1893A7F85FCDA5049@BY5PR02MB6948.namprd02.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0InvXFHHsRBiwJxynztUtjQeeMbT7/Yztzet7yWHuD+uXnzuzS+1D5NBQI68m5aC89YP4/4YOcDDmVAsadeCI82MfETMOIcyD/148qf3bQsDgVNb28CrOJhiX8J+SuiYVc85lFFdymDCJpb7KWpnHLkth2T64/M1EdBH3q+ZQsIrMF2L0ihWtYwQv2+74cSowlMwmpsBPGTS7O4xpEepjxRkpaxg54T6ZXmGsPVpHrDGdUB56A9+PzsCFxerxLC7zEXI23cSafnQBtk21KkbnzD2YKeT/eY8yZ5F5wBn9nWLngX9jVXUrwHVMOEoFR8ins9ymqoOBUQ3I4TmZbEFC0g788+2yqwftsa0GUl4kyQ7Iq7SUuuVMNFaeSEGG37lNZ5k6s83tFl84mduq1746+3NtdzkqAqJYHpc6Zy8YLh9F9TSI/mPA5x1S1y7K8wgIRdETO9X8cVSyq9deqhlR7dwG3hKk9k8XRDLPSsIWV9qHOmXyFBjuw3TndKyvmPUUjXmVEh/lYyG+BsvyvEHhbdX4v8RWqNLnMZgiwIoSCLmlMcRoNpm3EafAo5C/MsRig1j5vNOAAb+3LdO6E2Bjp6EOeYtCkn4b2adSrm5/ISWZuLwi9NCfOoJyKq52ZcI18gNNsTuORRD/e+n9IkbkEZ/R38U9nD0AiS6QG9UbLevMPCeGPvQkgKZaw4r4sh43PtHQ0LoBM9pKt0cqvRGpw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR02MB6947.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(7696005)(6506007)(55016003)(66476007)(122000001)(64756008)(66446008)(66556008)(83380400001)(76116006)(316002)(9686003)(66946007)(54906003)(8676002)(4326008)(508600001)(86362001)(6916009)(52536014)(26005)(38070700005)(107886003)(186003)(8936002)(5660300002)(33656002)(38100700002)(2906002)(71200400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?aTa+947eIHN8XHjJwnLm17MvpKzDJ0M6/I1mZDAnVrLxsxyTmOZPncbKHUx4?=
- =?us-ascii?Q?AXcqoWPO1jHLQn8EIvFaUzDeZQbHKQ+Wa2m6Csw7myJEfQFK2k64VJd1BRrT?=
- =?us-ascii?Q?bUamKHOTPEb7KJTMKblJ9zYu0UpsnlflpyxN5kAMm26uVkuaI4qVolz3S0+f?=
- =?us-ascii?Q?64h7KMOt6fDK1x/NdHJEbPgqo8IQrQETP0uQOv9nXpso1ul8VtUYTvQ/B0Ym?=
- =?us-ascii?Q?Zge5EbqG8C0Re6AFzR0oG0izTn99+JC3Pi77Ub79zR41GS3T8jjQJNfElhZf?=
- =?us-ascii?Q?RvazhPpmo64OIFzfyRwIofRZu6zFpLToc31hXQ1QZymDhzcdxjC4xnmkL4zT?=
- =?us-ascii?Q?04I7j5AKR5hl/9+Q1tvB30I1IVLk1jOt0vcZk98JbfwBa7zPVDIsbhrLD9AI?=
- =?us-ascii?Q?IYg3j4MdNsXPqBFZbPdV0UboHq6uQgujn3WZBpGFSio/447EBEikkloR6VH2?=
- =?us-ascii?Q?jBQ8sXZ8EDtdACArl9G14Kj5xZwhP94GpO2lmgJesJe4z78lJZKflfIU3Qrq?=
- =?us-ascii?Q?0jNAxDZxeTNufA1/6gQ3/wbV4aAebNsOQkW5Z85r7m695T+/gEt6MlovA049?=
- =?us-ascii?Q?nDsmGNY8CBDqIAZC2pyBsg+tNA5raMpYr4+s3Tf4jodxfVlEHHOcnbslwdmi?=
- =?us-ascii?Q?KifPMZ160uoyqKlDBbyzw7he1yq7ErIBsZ2ZBsoPM/SA2YEMhZaA/ntnwiHW?=
- =?us-ascii?Q?uB/KhlWE5gLK1dzG3nc3mg2cgh9O+aNQ0v3VzYsHCOh+Oek+ckXe9DA7+XZn?=
- =?us-ascii?Q?wLDLUktXY+7ZvJwxOmBddQgGhKOrfF0Bj1aw8P9Uu37DDYgYGJEG4Ctb2cgU?=
- =?us-ascii?Q?wr0uwculKSUVKZhmphC18Qn5b7i//2GHbuXmDmETeE+JNMg1BszFG3hlco0Q?=
- =?us-ascii?Q?SKVuKokhRDO5jc6gnGcD9mxMbHD/1kek/zE+/F6aJ1Un7O3/HqH9ARvSq1TE?=
- =?us-ascii?Q?DcGfrL3yPtcmuaS9VSZoJEU0yPW252VXSUIrCR546DAAyZ6snX7mzTuTCb0W?=
- =?us-ascii?Q?uvgHbhPpiGtwpiRw5igIeVa9/iSSBq3jq4ivWScyWDyKUG7UjMdMQ0avyxrm?=
- =?us-ascii?Q?K289jVgoppKZF25GmD6SvWWjIreGhN4tVn8RkGk58O5KgxYvEPlUCekUKQTC?=
- =?us-ascii?Q?kg8tLYpQwmTJwrami7czSw3euhQkspeyygBbdZaURjjPJqNt1N8JX0VarT8C?=
- =?us-ascii?Q?tZRR/efGArU4oSZVJrYtCPef1NyYqFftMK3KJrT/mjg/iqEYQe0nLodGRGD8?=
- =?us-ascii?Q?rP2pusKN1mNkqHFhL8Am8d1AkV+fUzkSafrAHjFFzUMPMYcI8iX+I54/wo4o?=
- =?us-ascii?Q?XYRyUoPmtUi9zEb93m7NMqYJaEFfc7NRw+InkLs/cXz9cYX1Mua6tPQawcgP?=
- =?us-ascii?Q?00Ryv4X6MC1klMJDeu8eOSV2I3bj0o94JlboNl9DnnRS+L/qNslIxknc8j8j?=
- =?us-ascii?Q?LKjGBQw49EfjtHLdZEhULr37vMpL+NRPuorFCnhvRIKSOEwbW8y0pcEqfTbM?=
- =?us-ascii?Q?jEvlM63QVoLdZHqCWUsw/CfC9JyxmLMkhMNE2njNN3E7PxAC3kk1v+IdaOVd?=
- =?us-ascii?Q?2FFTP/WBEkkLZWGTlNKN6UJqo//g3omAnaHHm5n1XDTz7aNxcbn6vxHCMDaQ?=
- =?us-ascii?Q?KTIsqURpmgrkAC18ndB+LxE=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229867AbiCCJoY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 04:44:24 -0500
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF140172889
+        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 01:43:38 -0800 (PST)
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20220303094336epoutp044527e68367f2da3f4d57e0b49b7f77a0~Y1bAiWCCv0468804688epoutp04c
+        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 09:43:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20220303094336epoutp044527e68367f2da3f4d57e0b49b7f77a0~Y1bAiWCCv0468804688epoutp04c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1646300616;
+        bh=JGt2SUFXN47lwLD6/OHx/URaET0Jb/5ljVf5ZET/LrU=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=awxpXq59SJiHvSLQdwKJ1TPT1BuLWGyVp+GRhxCkctHzWUKZpyezBX8hHN22q8rTv
+         OpZteJesIaym3T5WOdADApJX4b7iuHP7FjLhOhuAYOBq22FMQEgunAclp7pB815Ouv
+         J/RoD7a3i3ZcrOAzLfE44MViBph4f9blFyIc15l0=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20220303094335epcas1p2305ca1dc3507e47c1035e838144dc1b1~Y1bAFFo3q2074320743epcas1p2B;
+        Thu,  3 Mar 2022 09:43:35 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.36.224]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4K8QzB3GqZz4x9Q5; Thu,  3 Mar
+        2022 09:43:34 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        61.3A.64085.6CD80226; Thu,  3 Mar 2022 18:43:34 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20220303094334epcas1p256f56793abe1984803caf11ef76bfc0f~Y1a_cf1e81681416814epcas1p2J;
+        Thu,  3 Mar 2022 09:43:34 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20220303094334epsmtrp23ace0099c009a1b00d372eee173dce0f~Y1a_bhwdQ1563115631epsmtrp2_;
+        Thu,  3 Mar 2022 09:43:34 +0000 (GMT)
+X-AuditID: b6c32a35-9c3ff7000000fa55-e3-62208dc63715
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        29.C3.29871.5CD80226; Thu,  3 Mar 2022 18:43:33 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.97.211]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20220303094333epsmtip253dde6a648aadc01426a5f5bdf5d9f17~Y1a_QUQHN0753207532epsmtip2Y;
+        Thu,  3 Mar 2022 09:43:33 +0000 (GMT)
+From:   Youngjin Jang <yj84.jang@samsung.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-usb@vger.kernel.org
+Cc:     "Youngjin Jang" <yj84.jang@samsung.com>, js07.lee@samsung.com
+Subject: [PATCH v2] PM: Add device name to suspend_report_result()
+Date:   Thu,  3 Mar 2022 18:39:07 +0900
+Message-Id: <20220303093907.515129-1-yj84.jang@samsung.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR02MB6947.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aacc9e0e-6b9d-4a7a-13d1-08d9fcf7ce0c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2022 09:25:49.2562
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NOqDiiGLnZK5/XpO1bAmsAAUoW2tMTLpRYExjcYUcUv+BKHbBkg02xsoZ0ECl6nB6Bj1clsE6z6IuECK1hfX6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6948
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmge6xXoUkg90LRCyWNGVYNC9ez2bx
+        6OZvVotZU/YyWSzf189ocXnXHDaLs/OOs1l87j3CaLFoWSuzxd1TR9ks5n6ZymzRdWgxqwOP
+        x4JNpR6L97xk8ti0qpPNY//cNewefVtWMXqsWP2d3ePzJrkA9qhsm4zUxJTUIoXUvOT8lMy8
+        dFsl7+B453hTMwNDXUNLC3MlhbzE3FRbJRefAF23zBygO5UUyhJzSoFCAYnFxUr6djZF+aUl
+        qQoZ+cUltkqpBSk5BWYFesWJucWleel6eaklVoYGBkamQIUJ2Rk39l9hKnhjUdG4TbWBcbF+
+        FyMnh4SAicTXI4eYQGwhgR2MEldvS3UxcgHZnxglNp/Zww7hfGOU+L6qnx2m49vHp1CJvYwS
+        azbfYYFr2bf1MNgsNgFtiVVb5oFViQhcZpJ4+30CM0iCWcBR4sPBPawgtrCAk8T0vdvBxrII
+        qEr0vDoCFucVsJY4sf8bE8Q6eYmZl76zQ8QFJU7OfMICMUdeonnrbGaQBRICrRwSl7duhbrP
+        RWL57kWsELawxKvjW6DiUhKf3+1lg7DTJSY+fgsVL5D4+3gJM4RtLPHu7VogmwNogabE+l3Q
+        QFKU2Pl7LiPEXj6Jd197WEFKJAR4JTrahCBKlCUen18NNV1SYv3v/VDne0hsW7KLGRK+sRIX
+        fjUxTmCUn4Xkm1lIvpmFsHgBI/MqRrHUguLc9NRiwwJDeKQm5+duYgQnVS3THYwT337QO8TI
+        xMF4iFGCg1lJhNdSUyFJiDclsbIqtSg/vqg0J7X4EKMpMHwnMkuJJucD03peSbyhiaWBiZmR
+        iYWxpbGZkjjvqmmnE4UE0hNLUrNTUwtSi2D6mDg4pRqYDlzL3OO89Lri/Kt8gjzbpZp8p/Oc
+        LT/6f3K1x+/+5N5LqnXPNdwdv+69uiUsWKdbequrak7qox1FJq0TZhsYzLj374JMzt3w6ZX8
+        Nnv7QxauWd5856CTIbfvL5X4iY+T+yvPzg0+yv3jXM22n0o/I2w+efd03Eif+fCwQ1G3l7JO
+        79dkl50X9wv9nVdk56cqpW++Sk3ykt6ML0ny/N2t0y79iRTJ/t58wJHzZHLg50VmTlP/rJfd
+        U8ZX5Hs+3WLxq5W8ytEHl3O/DpzS9oZ11pS4yw0Nz67c4mv7dPaGdtwc3VT+0wevFq69VcSw
+        rig9sOjRZ7tdm7xfl8yqU/3x3Kvz+I/nGSlfVKWmFvruVmIpzkg01GIuKk4EAA4AizQzBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWy7bCSvO7RXoUkg8PbLC2WNGVYNC9ez2bx
+        6OZvVotZU/YyWSzf189ocXnXHDaLs/OOs1l87j3CaLFoWSuzxd1TR9ks5n6ZymzRdWgxqwOP
+        x4JNpR6L97xk8ti0qpPNY//cNewefVtWMXqsWP2d3ePzJrkA9igum5TUnMyy1CJ9uwSujBv7
+        rzAVvLGoaNym2sC4WL+LkZNDQsBE4tvHp+xdjFwcQgK7GSWmzvrBCJGQlPj66TNbFyMHkC0s
+        cfhwMUTNB0aJh9s+sIDUsAloS6zaMg+sWUTgNpNEz4NvTCAJZgFniXU7FoEVCQs4SUzfu50d
+        xGYRUJXoeXWEFcTmFbCWOLEfol5CQF5i5qXv7BBxQYmTM5+wQMyRl2jeOpt5AiPfLCSpWUhS
+        CxiZVjFKphYU56bnFhsWGOallusVJ+YWl+al6yXn525iBIe5luYOxu2rPugdYmTiYDzEKMHB
+        rCTCa6mpkCTEm5JYWZValB9fVJqTWnyIUZqDRUmc90LXyXghgfTEktTs1NSC1CKYLBMHp1QD
+        09WDYWrHVoZuNd2/43vN66++PHsea+wX+MyUEnRd6uPK4uOsl38+fqXV1z1/vuy7ksh7lVWd
+        y2ZWpoR9mmnhFBc/OenAoxkyJqxaF64HPe1aYZdkyct6qfJg6bTIPf9rfz42WffxqKpK/Foe
+        BTFNs/syWy+d2Xzu2AvDa9m/tlwO+8pxaf7x5m7W3km7DsfrvCjrXnVtYemlE02iXO9LJIOv
+        fJ23SCv55Ibaex7SikmRRp4Xo1J1quUPRMr3MDxbPK9xS4HHfOYVM1aH5fgZbNh2X0NW/d1n
+        Lyelv5M7My4efvl+Rl2V946pV+btfjA3bxu7u1ZE997qzVydDw2TZV7E6t/hSazJ8baf+9dy
+        Wr4SS3FGoqEWc1FxIgBM58VS4gIAAA==
+X-CMS-MailID: 20220303094334epcas1p256f56793abe1984803caf11ef76bfc0f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20220303094334epcas1p256f56793abe1984803caf11ef76bfc0f
+References: <CGME20220303094334epcas1p256f56793abe1984803caf11ef76bfc0f@epcas1p2.samsung.com>
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -123,113 +116,210 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> On Tue, Feb 15, 2022 at 06:16:06PM +0530, Bharat Kumar Gogada wrote:
-> > Xilinx Versal Premium series has CPM5 block which supports Root Port
-> > functioning at Gen5 speed.
-> >
-> > Xilinx Versal CPM5 has few changes with existing CPM block.
-> > - CPM5 has dedicated register space for control and status registers.
-> > - CPM5 legacy interrupt handling needs additional register bit
-> >   to enable and handle legacy interrupts.
-> >
-> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-> > ---
-> >  drivers/pci/controller/pcie-xilinx-cpm.c | 33
-> > +++++++++++++++++++++++-
-> >  1 file changed, 32 insertions(+), 1 deletion(-)
->=20
-> Only a couple of very minor suggestions below.
->=20
-> > diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c
-> > b/drivers/pci/controller/pcie-xilinx-cpm.c
-> > index c7cd44ed4dfc..eb69f494571a 100644
-> > --- a/drivers/pci/controller/pcie-xilinx-cpm.c
-> > +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-> > @@ -35,6 +35,10 @@
-> >  #define XILINX_CPM_PCIE_MISC_IR_ENABLE	0x00000348
-> >  #define XILINX_CPM_PCIE_MISC_IR_LOCAL	BIT(1)
-> >
-> > +#define XILINX_CPM_PCIE_IR_STATUS       0x000002A0
-> > +#define XILINX_CPM_PCIE_IR_ENABLE       0x000002A8
-> > +#define XILINX_CPM_PCIE_IR_LOCAL        BIT(0)
-> > +
-> >  /* Interrupt registers definitions */
-> >  #define XILINX_CPM_PCIE_INTR_LINK_DOWN		0
-> >  #define XILINX_CPM_PCIE_INTR_HOT_RESET		3
-> > @@ -109,6 +113,7 @@
-> >   * @intx_irq: legacy interrupt number
-> >   * @irq: Error interrupt number
-> >   * @lock: lock protecting shared register access
-> > + * @is_cpm5: value to check cpm version
-> >   */
-> >  struct xilinx_cpm_pcie {
-> >  	struct device			*dev;
-> > @@ -120,6 +125,7 @@ struct xilinx_cpm_pcie {
-> >  	int				intx_irq;
-> >  	int				irq;
-> >  	raw_spinlock_t			lock;
-> > +	bool                            is_cpm5;
-> >  };
-> >
-> >  static u32 pcie_read(struct xilinx_cpm_pcie *port, u32 reg) @@ -285,6
-> > +291,14 @@ static void xilinx_cpm_pcie_event_flow(struct irq_desc *desc=
-)
-> >  		generic_handle_domain_irq(port->cpm_domain, i);
-> >  	pcie_write(port, val, XILINX_CPM_PCIE_REG_IDR);
-> >
-> > +	if (port->is_cpm5) {
-> > +		val =3D readl_relaxed(port->cpm_base +
-> XILINX_CPM_PCIE_IR_STATUS);
-> > +		if (val)
-> > +			writel_relaxed(val,
-> > +				       port->cpm_base +
-> > +				       XILINX_CPM_PCIE_IR_STATUS);
-> > +	}
-> > +
-> >  	/*
-> >  	 * XILINX_CPM_PCIE_MISC_IR_STATUS register is mapped to
-> >  	 * CPM SLCR block.
-> > @@ -484,6 +498,12 @@ static void xilinx_cpm_pcie_init_port(struct
-> xilinx_cpm_pcie *port)
-> >  	 */
-> >  	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
-> >  	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
-> > +
-> > +	if (port->is_cpm5) {
-> > +		writel(XILINX_CPM_PCIE_IR_LOCAL,
-> > +		       port->cpm_base + XILINX_CPM_PCIE_IR_ENABLE);
-> > +	}
-> > +
-> >  	/* Enable the Bridge enable bit */
-> >  	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
-> >  		   XILINX_CPM_PCIE_REG_RPSC_BEN,
-> > @@ -504,6 +524,9 @@ static int xilinx_cpm_pcie_parse_dt(struct
-> xilinx_cpm_pcie *port,
-> >  	struct platform_device *pdev =3D to_platform_device(dev);
-> >  	struct resource *res;
-> >
-> > +	if (of_device_is_compatible(dev->of_node, "xlnx,versal-cpm5-host-
-> 1.00"))
-> > +		port->is_cpm5 =3D true;
->=20
-> port->is_cpm5 =3D of_device_is_compatible(dev->of_node,
-> 					"xlnx,versal-cpm5-host-1.00");
->=20
-> ?
->=20
-> > +		port->is_cpm5 =3D true;
-> > +
-> >  	port->cpm_base =3D devm_platform_ioremap_resource_byname(pdev,
-> >  							       "cpm_slcr");
-> >  	if (IS_ERR(port->cpm_base))
-> > @@ -518,7 +541,14 @@ static int xilinx_cpm_pcie_parse_dt(struct
-> xilinx_cpm_pcie *port,
-> >  	if (IS_ERR(port->cfg))
-> >  		return PTR_ERR(port->cfg);
-> >
-> > -	port->reg_base =3D port->cfg->win;
-> > +	if (!port->is_cpm5) {
->=20
-> Nit: I'd keep the check as above for consistency but it is not really
-> important:
-Thanks Lorenzo, will fix these in next patch.
+From: "Youngjin Jang" <yj84.jang@samsung.com>
+
+currently, suspend_report_result() prints only function information.
+If any driver uses common pm function, nobody knows who called
+failed function exactly.
+
+So, device is needed to recognize specific wrong driver.
+
+e.g.)
+PM: dpm_run_callback(): pm_generic_suspend+0x0/0x48 returns 0
+PM: dpm_run_callback(): platform_pm_suspend+0x0/0x68 returns 0
+after patch,
+amba 1740000.etm: dpm_run_callback(): pm_generic_suspend+0x0/0x48
+returns 0
+armv7-pmu soc:pmu: dpm_run_callback(): platform_pm_suspend+0x0/0x68
+returns 0
+
+Signed-off-by: Youngjin Jang <yj84.jang@samsung.com>
+---
+Changes since v1:
+ - Use dev_err() to print out device name
+ - Use real name on email sender
+ 
+ drivers/base/power/main.c  | 10 +++++-----
+ drivers/pci/pci-driver.c   | 14 +++++++-------
+ drivers/pnp/driver.c       |  2 +-
+ drivers/usb/core/hcd-pci.c |  4 ++--
+ include/linux/pm.h         |  8 ++++----
+ 5 files changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index 04ea92cbd9cf..41e17b8c2c20 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -485,7 +485,7 @@ static int dpm_run_callback(pm_callback_t cb, struct device *dev,
+ 	trace_device_pm_callback_start(dev, info, state.event);
+ 	error = cb(dev);
+ 	trace_device_pm_callback_end(dev, error);
+-	suspend_report_result(cb, error);
++	suspend_report_result(dev, cb, error);
+ 
+ 	initcall_debug_report(dev, calltime, cb, error);
+ 
+@@ -1568,7 +1568,7 @@ static int legacy_suspend(struct device *dev, pm_message_t state,
+ 	trace_device_pm_callback_start(dev, info, state.event);
+ 	error = cb(dev, state);
+ 	trace_device_pm_callback_end(dev, error);
+-	suspend_report_result(cb, error);
++	suspend_report_result(dev, cb, error);
+ 
+ 	initcall_debug_report(dev, calltime, cb, error);
+ 
+@@ -1855,7 +1855,7 @@ static int device_prepare(struct device *dev, pm_message_t state)
+ 	device_unlock(dev);
+ 
+ 	if (ret < 0) {
+-		suspend_report_result(callback, ret);
++		suspend_report_result(dev, callback, ret);
+ 		pm_runtime_put(dev);
+ 		return ret;
+ 	}
+@@ -1960,10 +1960,10 @@ int dpm_suspend_start(pm_message_t state)
+ }
+ EXPORT_SYMBOL_GPL(dpm_suspend_start);
+ 
+-void __suspend_report_result(const char *function, void *fn, int ret)
++void __suspend_report_result(const char *function, struct device *dev, void *fn, int ret)
+ {
+ 	if (ret)
+-		pr_err("%s(): %pS returns %d\n", function, fn, ret);
++		dev_err(dev, "%s(): %pS returns %d\n", function, fn, ret);
+ }
+ EXPORT_SYMBOL_GPL(__suspend_report_result);
+ 
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 588588cfda48..415f7664b010 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -596,7 +596,7 @@ static int pci_legacy_suspend(struct device *dev, pm_message_t state)
+ 		int error;
+ 
+ 		error = drv->suspend(pci_dev, state);
+-		suspend_report_result(drv->suspend, error);
++		suspend_report_result(dev, drv->suspend, error);
+ 		if (error)
+ 			return error;
+ 
+@@ -775,7 +775,7 @@ static int pci_pm_suspend(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->suspend(dev);
+-		suspend_report_result(pm->suspend, error);
++		suspend_report_result(dev, pm->suspend, error);
+ 		if (error)
+ 			return error;
+ 
+@@ -821,7 +821,7 @@ static int pci_pm_suspend_noirq(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->suspend_noirq(dev);
+-		suspend_report_result(pm->suspend_noirq, error);
++		suspend_report_result(dev, pm->suspend_noirq, error);
+ 		if (error)
+ 			return error;
+ 
+@@ -1010,7 +1010,7 @@ static int pci_pm_freeze(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->freeze(dev);
+-		suspend_report_result(pm->freeze, error);
++		suspend_report_result(dev, pm->freeze, error);
+ 		if (error)
+ 			return error;
+ 	}
+@@ -1030,7 +1030,7 @@ static int pci_pm_freeze_noirq(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->freeze_noirq(dev);
+-		suspend_report_result(pm->freeze_noirq, error);
++		suspend_report_result(dev, pm->freeze_noirq, error);
+ 		if (error)
+ 			return error;
+ 	}
+@@ -1116,7 +1116,7 @@ static int pci_pm_poweroff(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->poweroff(dev);
+-		suspend_report_result(pm->poweroff, error);
++		suspend_report_result(dev, pm->poweroff, error);
+ 		if (error)
+ 			return error;
+ 	}
+@@ -1154,7 +1154,7 @@ static int pci_pm_poweroff_noirq(struct device *dev)
+ 		int error;
+ 
+ 		error = pm->poweroff_noirq(dev);
+-		suspend_report_result(pm->poweroff_noirq, error);
++		suspend_report_result(dev, pm->poweroff_noirq, error);
+ 		if (error)
+ 			return error;
+ 	}
+diff --git a/drivers/pnp/driver.c b/drivers/pnp/driver.c
+index cc6757dfa3f1..c02e7bf643a6 100644
+--- a/drivers/pnp/driver.c
++++ b/drivers/pnp/driver.c
+@@ -171,7 +171,7 @@ static int __pnp_bus_suspend(struct device *dev, pm_message_t state)
+ 
+ 	if (pnp_drv->driver.pm && pnp_drv->driver.pm->suspend) {
+ 		error = pnp_drv->driver.pm->suspend(dev);
+-		suspend_report_result(pnp_drv->driver.pm->suspend, error);
++		suspend_report_result(dev, pnp_drv->driver.pm->suspend, error);
+ 		if (error)
+ 			return error;
+ 	}
+diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
+index d630cccd2e6e..dd44e37a454a 100644
+--- a/drivers/usb/core/hcd-pci.c
++++ b/drivers/usb/core/hcd-pci.c
+@@ -446,7 +446,7 @@ static int suspend_common(struct device *dev, bool do_wakeup)
+ 				HCD_WAKEUP_PENDING(hcd->shared_hcd))
+ 			return -EBUSY;
+ 		retval = hcd->driver->pci_suspend(hcd, do_wakeup);
+-		suspend_report_result(hcd->driver->pci_suspend, retval);
++		suspend_report_result(dev, hcd->driver->pci_suspend, retval);
+ 
+ 		/* Check again in case wakeup raced with pci_suspend */
+ 		if ((retval == 0 && do_wakeup && HCD_WAKEUP_PENDING(hcd)) ||
+@@ -556,7 +556,7 @@ static int hcd_pci_suspend_noirq(struct device *dev)
+ 		dev_dbg(dev, "--> PCI %s\n",
+ 				pci_power_name(pci_dev->current_state));
+ 	} else {
+-		suspend_report_result(pci_prepare_to_sleep, retval);
++		suspend_report_result(dev, pci_prepare_to_sleep, retval);
+ 		return retval;
+ 	}
+ 
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+index e1e9402180b9..cdccbb9cef2c 100644
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -745,11 +745,11 @@ extern int dpm_suspend_late(pm_message_t state);
+ extern int dpm_suspend(pm_message_t state);
+ extern int dpm_prepare(pm_message_t state);
+ 
+-extern void __suspend_report_result(const char *function, void *fn, int ret);
++extern void __suspend_report_result(const char *function, struct device *dev, void *fn, int ret);
+ 
+-#define suspend_report_result(fn, ret)					\
++#define suspend_report_result(dev, fn, ret)				\
+ 	do {								\
+-		__suspend_report_result(__func__, fn, ret);		\
++		__suspend_report_result(__func__, dev, fn, ret);	\
+ 	} while (0)
+ 
+ extern int device_pm_wait_for_dev(struct device *sub, struct device *dev);
+@@ -789,7 +789,7 @@ static inline int dpm_suspend_start(pm_message_t state)
+ 	return 0;
+ }
+ 
+-#define suspend_report_result(fn, ret)		do {} while (0)
++#define suspend_report_result(dev, fn, ret)	do {} while (0)
+ 
+ static inline int device_pm_wait_for_dev(struct device *a, struct device *b)
+ {
+-- 
+2.25.1
+
