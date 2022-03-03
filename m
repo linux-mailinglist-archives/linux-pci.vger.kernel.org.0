@@ -2,169 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8B564CBEAC
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 14:17:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A4434CBEC1
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Mar 2022 14:19:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230181AbiCCNR4 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 3 Mar 2022 08:17:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38180 "EHLO
+        id S231213AbiCCNUI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 08:20:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbiCCNRz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 08:17:55 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D521704CD;
-        Thu,  3 Mar 2022 05:17:08 -0800 (PST)
-Received: from fraeml701-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K8Wh76J62z67r9d;
-        Thu,  3 Mar 2022 21:15:51 +0800 (CST)
-Received: from lhreml714-chm.china.huawei.com (10.201.108.65) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
+        with ESMTP id S233045AbiCCNUH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 08:20:07 -0500
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ABA0166E2B
+        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 05:19:19 -0800 (PST)
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4K8Wgy5M2XzrRwM;
+        Thu,  3 Mar 2022 21:15:42 +0800 (CST)
+Received: from [10.67.103.235] (10.67.103.235) by
+ dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Thu, 3 Mar 2022 14:17:05 +0100
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml714-chm.china.huawei.com (10.201.108.65) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Thu, 3 Mar 2022 13:17:05 +0000
-Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
- lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
- 15.01.2308.021; Thu, 3 Mar 2022 13:17:05 +0000
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "yishaih@nvidia.com" <yishaih@nvidia.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        liulongfang <liulongfang@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>
-Subject: RE: [PATCH v7 09/10] hisi_acc_vfio_pci: Add support for VFIO live
- migration
-Thread-Topic: [PATCH v7 09/10] hisi_acc_vfio_pci: Add support for VFIO live
- migration
-Thread-Index: AQHYLltL2nbHr5hFZkexUhHVpQU6TqyszJkAgADNzBCAAAc9gIAAApOw
-Date:   Thu, 3 Mar 2022 13:17:05 +0000
-Message-ID: <f2172fa9f84447699cb0973bec3ca0da@huawei.com>
-References: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
- <20220302172903.1995-10-shameerali.kolothum.thodi@huawei.com>
- <20220303002142.GE1026713@nvidia.com>
- <19e294814f284755b207be3ba7054ec2@huawei.com>
- <20220303130411.GY219866@nvidia.com>
-In-Reply-To: <20220303130411.GY219866@nvidia.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.82.4]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+ 15.1.2308.21; Thu, 3 Mar 2022 21:19:17 +0800
+Subject: Re: [PATCH] PCI: Support BAR sizes up to 8TB
+To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+References: <20220118092117.10089-1-liudongdong3@huawei.com>
+From:   Dongdong Liu <liudongdong3@huawei.com>
+Message-ID: <c1216b26-ea4a-34b9-9513-182be3cd0251@huawei.com>
+Date:   Thu, 3 Mar 2022 21:19:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
+In-Reply-To: <20220118092117.10089-1-liudongdong3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.103.235]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Bjorn
 
+Could you help to review this patch, I hope this patch can be applied
+for 5.18.
 
-> -----Original Message-----
-> From: Jason Gunthorpe [mailto:jgg@nvidia.com]
-> Sent: 03 March 2022 13:04
-> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> linux-crypto@vger.kernel.org; linux-pci@vger.kernel.org;
-> alex.williamson@redhat.com; cohuck@redhat.com; mgurtovoy@nvidia.com;
-> yishaih@nvidia.com; Linuxarm <linuxarm@huawei.com>; liulongfang
-> <liulongfang@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>;
-> Jonathan Cameron <jonathan.cameron@huawei.com>; Wangzhou (B)
-> <wangzhou1@hisilicon.com>
-> Subject: Re: [PATCH v7 09/10] hisi_acc_vfio_pci: Add support for VFIO live
-> migration
-> 
-> On Thu, Mar 03, 2022 at 12:57:29PM +0000, Shameerali Kolothum Thodi
-> wrote:
-> >
-> >
-> > > From: Jason Gunthorpe [mailto:jgg@nvidia.com]
-> > > Sent: 03 March 2022 00:22
-> > > To: Shameerali Kolothum Thodi
-> <shameerali.kolothum.thodi@huawei.com>
-> > > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > linux-crypto@vger.kernel.org; linux-pci@vger.kernel.org;
-> > > alex.williamson@redhat.com; cohuck@redhat.com;
-> mgurtovoy@nvidia.com;
-> > > yishaih@nvidia.com; Linuxarm <linuxarm@huawei.com>; liulongfang
-> > > <liulongfang@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>;
-> > > Jonathan Cameron <jonathan.cameron@huawei.com>; Wangzhou (B)
-> > > <wangzhou1@hisilicon.com>
-> > > Subject: Re: [PATCH v7 09/10] hisi_acc_vfio_pci: Add support for VFIO live
-> > > migration
-> > >
-> > > On Wed, Mar 02, 2022 at 05:29:02PM +0000, Shameer Kolothum wrote:
-> > > > +static long hisi_acc_vf_save_unl_ioctl(struct file *filp,
-> > > > +				       unsigned int cmd, unsigned long arg)
-> > > > +{
-> > > > +	struct hisi_acc_vf_migration_file *migf = filp->private_data;
-> > > > +	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(migf,
-> > > > +			struct hisi_acc_vf_core_device, saving_migf);
-> > > > +	loff_t *pos = &filp->f_pos;
-> > > > +	struct vfio_precopy_info info;
-> > > > +	unsigned long minsz;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (cmd != VFIO_MIG_GET_PRECOPY_INFO)
-> > > > +		return -ENOTTY;
-> > > > +
-> > > > +	minsz = offsetofend(struct vfio_precopy_info, dirty_bytes);
-> > > > +
-> > > > +	if (copy_from_user(&info, (void __user *)arg, minsz))
-> > > > +		return -EFAULT;
-> > > > +	if (info.argsz < minsz)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	mutex_lock(&hisi_acc_vdev->state_mutex);
-> > > > +	if (hisi_acc_vdev->mig_state != VFIO_DEVICE_STATE_PRE_COPY) {
-> > > > +		mutex_unlock(&hisi_acc_vdev->state_mutex);
-> > > > +		return -EINVAL;
-> > > > +	}
-> > >
-> > > IMHO it is easier just to check the total_length and not grab this
-> > > other lock
-> >
-> > The problem with checking the total_length here is that it is possible that
-> > in STOP_COPY the dev is not ready and there are no more data to be
-> transferred
-> > and the total_length remains at QM_MATCH_SIZE.
-> 
-> Tthere is a scenario that transfers only QM_MATCH_SIZE in stop_copy?
-> This doesn't seem like a good idea, I think you should transfer a
-> positive indication 'this device is not ready' instead of truncating
-> the stream. A truncated stream should not be a valid stream.
-> 
-> ie always transfer the whole struct.
-
-We could add a 'qm_state' and return the whole struct. But the rest
-of the struct is basically invalid if qm_state = QM_NOT_REDAY.
-
-> 
-> > Looks like setting the total_length = 0 in STOP_COPY is a better
-> > solution(If there are no other issues with that) as it will avoid
-> > grabbing the state_mutex as you mentioned above.
-> 
-> That seems really weird, I wouldn't recommend doing that..
-
-Does that mean we don't support a zero data transfer in STOP_COPY?
-The concern is if we always transfer the whole struct, we end up reading
-and writing the whole thing even if most of the data is invalid.
-
-Thanks,
-Shameer
+Thanks，
+Dongdong
+On 2022/1/18 17:21, Dongdong Liu wrote:
+> Current kernel reports disabling BAR if device with a 4TB BAR as it
+> only supports BAR size to 128GB.
+>
+> pci 0000:01:00.0: disabling BAR 4:
+> [mem 0x00000000-0x3ffffffffff 64bit pref] (bad alignment 0x40000000000)
+>
+> Increase the maximum BAR size from 128GB to 8TB for future expansion.
+>
+> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+> ---
+>  drivers/pci/setup-bus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 547396ec50b5..a7893bf2f580 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -994,7 +994,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+>  {
+>  	struct pci_dev *dev;
+>  	resource_size_t min_align, align, size, size0, size1;
+> -	resource_size_t aligns[18]; /* Alignments from 1MB to 128GB */
+> +	resource_size_t aligns[24]; /* Alignments from 1MB to 8TB */
+>  	int order, max_order;
+>  	struct resource *b_res = find_bus_resource_of_type(bus,
+>  					mask | IORESOURCE_PREFETCH, type);
+>
