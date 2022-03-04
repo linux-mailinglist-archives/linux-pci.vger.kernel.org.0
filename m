@@ -2,189 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B062D4CCA44
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Mar 2022 00:49:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 862274CCB4E
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Mar 2022 02:30:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237298AbiCCXum (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Mar 2022 18:50:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39920 "EHLO
+        id S235856AbiCDBbY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Mar 2022 20:31:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232005AbiCCXul (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 18:50:41 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455C2166A4D;
-        Thu,  3 Mar 2022 15:49:55 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GF8+yMwcaqaFFYq9drAdS/beo9u9syz9r63S+v2diHLfDXcJCZpylJQwrAHldqg2hXm3HkcVfLHR3WSC5bFVIy93M2tlQerjxUGLJAyCt/OfAY5nqAuLj166PPAuzxZpQZYyBHEimEFleVinpDkaB+PYbL29nypoihtf5nkI0I0iQjMSEdcbqBUwBa7alZ4VCBHLKD/ZcAhp4LOhiIKt/QHckof1ebV7sjMiZgRxbeTpKG2ys8KnKdmn7A3p7inPNjSnx55YS7xCiXYkUY+AXeVIyev70atdoTCQY6Fv9nRHt3iILI9J9D3/spaXMNcPH3LT/H3jpgPzsxPFmBtu5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YqQe1MvJwX2HKZJo8D25feA67gkw2eZaWBbECMkKil4=;
- b=k88dlq5tVY6xR2iLH+yHxlN8OcPwgJcWfy/nbSZcDR5WvNCdbAtdP5C0GoJ1gHD0tpbO465KUzSFSjqP4Oi5BCzGloG4PNgI0Jq+jWRBZ1jcDBgj8Tsg8bocPZCiGkuK6u1ozt+xzEE3haU3NUcsq1Ff7SEHxwqggEjP2GtHMZGtmv4cd6VMMqeTZHBunp5Qh+K2J5nSsjeXGKaBRn5wsqYln4DKkhMbHbmGf8F5V9HkNblei46Zjn1AVcfMEPdfkh/FkJMk0EKTliAUsILQyUDswqEZ3LjMqmPZA3Leu6hTbUbUg+i/j1VbLdcWAOkXMULQvwnk1fBkD+TCLXkg2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YqQe1MvJwX2HKZJo8D25feA67gkw2eZaWBbECMkKil4=;
- b=VmvNJugY0jvOdSwznfNzT5qxwAJRVCTCpuYztCLH6doE2kCKeuOIgEWGAzrKtE9fdAoYiMaap0NbinyFyxOTTRXxsbGfV9wh+imUQKKok+Hbj4ddY/hkQeNCNs6F3GYuVJ0zDKd8X3QzfXoLOY0zGZViS2xYD0vw/vA1wRYZuA0x3blh+XnDwBy4DD9A2pWVmDlN8d26BbXycP3rbDigL3a9QUu4AOOG2ObUG0NaVXvYORwTs0dJHbnbk6Fbv/6+1RcKo5vQI16gIs1ZuSJ+uP7zkx6SiVAbMP/5Heh4wqlx8NOriXmcUVYXxlhgllxSYLSEXIHi3QvtP/wOZYXJbQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by BN6PR12MB1281.namprd12.prod.outlook.com (2603:10b6:404:1b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.13; Thu, 3 Mar
- 2022 23:49:52 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::51a0:4aee:2b4c:ca28]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::51a0:4aee:2b4c:ca28%4]) with mapi id 15.20.5038.015; Thu, 3 Mar 2022
- 23:49:52 +0000
-Date:   Thu, 3 Mar 2022 19:49:51 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        with ESMTP id S234473AbiCDBbX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Mar 2022 20:31:23 -0500
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D86E4616E
+        for <linux-pci@vger.kernel.org>; Thu,  3 Mar 2022 17:30:36 -0800 (PST)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 15AB12C0B90;
+        Fri,  4 Mar 2022 01:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1646357430;
+        bh=WxWNOPjRdYh/JVu+ZBp7sF5khIVMCO6Kbl2Q4xhS05I=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=H/hL4xEraAETeTp3XP76WqXjt5cbu8Y6dcynjlOoSwP5GZ1CID+jTJlLBMmubTmq8
+         yXH6XRf5cBvqNIi9Yb8J/xAeOaY48h/diDQZgJeGRvYAGXSGJ/RzU97XwXRJyCxYg7
+         GbZnyBV9Ftiaz3Wkx8b5u+fB6ULERNP8lZjA0YjpPu23jhZrpuwGOxXhIksplkBPOj
+         62NBRduDnMBy0yIkuYG4fZWfnEr7MTKzVLwUiHfEUsz0XYrtEDrcfeBgkUd8fZ/5k7
+         rnt3uDwWOpeHLTYTlOoPm2RoDPi1H/CSNFwtdfRa/GUlKLtGneIO9GKjSeYj0+VBUf
+         kamMqNze3wX9A==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[2001:df5:b000:bc8::77]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+        id <B62216bb50001>; Fri, 04 Mar 2022 14:30:29 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.28; Fri, 4 Mar 2022 14:30:29 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.028; Fri, 4 Mar 2022 14:30:29 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>
+CC:     "ray.jui@broadcom.com" <ray.jui@broadcom.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "yishaih@nvidia.com" <yishaih@nvidia.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        liulongfang <liulongfang@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v7 07/10] vfio: Extend the device migration protocol with
- PRE_COPY
-Message-ID: <20220303234951.GB219866@nvidia.com>
-References: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
- <20220302172903.1995-8-shameerali.kolothum.thodi@huawei.com>
- <20220302133159.3c803f56.alex.williamson@redhat.com>
- <20220303000528.GW219866@nvidia.com>
- <20220302204752.71ea8b32.alex.williamson@redhat.com>
- <20220303130124.GX219866@nvidia.com>
- <20220303082040.1f88e24c.alex.williamson@redhat.com>
- <0cee64d555624e669028ba17d04b8737@huawei.com>
- <20220303125930.43d9940b.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220303125930.43d9940b.alex.williamson@redhat.com>
-X-ClientProxiedBy: MN2PR05CA0061.namprd05.prod.outlook.com
- (2603:10b6:208:236::30) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] PCI: Reduce warnings on possible RW1C corruption
+Thread-Topic: [PATCH v4] PCI: Reduce warnings on possible RW1C corruption
+Thread-Index: AQHYL2duvQH9Acig/EShRiGLv00N8w==
+Date:   Fri, 4 Mar 2022 01:30:29 +0000
+Message-ID: <679ac5f4-d6b7-5c94-39d5-441c68576911@alliedtelesis.co.nz>
+References: <20200820221142.GA1571008@bjorn-Precision-5520>
+In-Reply-To: <20200820221142.GA1571008@bjorn-Precision-5520>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8674ECF46E283A43A0823E9CE0923816@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: affe49b5-5f24-42f8-6271-08d9fd7082f4
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1281:EE_
-X-Microsoft-Antispam-PRVS: <BN6PR12MB1281F38EA42E2273BED5A934C2049@BN6PR12MB1281.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /3w2wpIqqEd1E8M244Vx/DP6HSdV/h8pK3qFz95rIY7rGUNlcYsHmynEMwRviFJgPC0Wk76tvT/Fv2S8XlrqjB4b7YcDisT2bUowj6wdW6svIXCn8weJ10c5mrDUxEy45/PvbaJ1p4SRrG8TTt3xXUs4QPDIv2i0gs/cc/3NGg8g/i+3P1F6FPBrLcAU6ATk6rSt8sDbaOZmy9sWRV+matot9fQTv45IqtzJJzexcRhXvn2kobxpZDCwBSN1UN/mFwkUUHt0/68iTFxJls89CZNfjTKrAwWNBW9yuuxS/XRd8QB1eQlCR8TC/bcZ3Qh4Cz7UPl4QkZ5i5VTKUHW+6Vg5Vz9EeBJo1JDkB0i1gWMObFgoVYw7VYdrKb9+rSHw8ebIi+OyXB7Ud15DRFfzXxnXSQ+1hQQ8HrNFoo8VKS0SDaN9Bi+0TmgaAyisGg/QEAzSHVDAbfLYlojou02E0NWO76Rolk0hPR5RlDNePOGuNUW6Fjdh2J3pMzuJOVh/X1nLWySjSrUMGZu+Wy/fTOepDUknHw3rULm8wMkKBFLB7OtHf1+fGReOA8NY70bai1eS7ZOXEOSQTYq2DN4eXp6tAqJoyFqHjqtgyWKDtUh5SdL9LZ2AEkocPfWFGDZ9LLb5+Xwd8wma5IRYrJ/4lhRWtf+tQZFzbbFjvaj+75uhYq4bet62rDjHSLOTk9u4nebTEoSv8DvTCkJkyBpzMA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2616005)(6512007)(6486002)(6506007)(508600001)(36756003)(1076003)(26005)(316002)(33656002)(54906003)(6916009)(8936002)(5660300002)(2906002)(8676002)(66556008)(66476007)(38100700002)(66946007)(4326008)(186003)(7416002)(86362001)(27376004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Ht4A5JCzQdMSjxG6tCM/m2wH+Csa5IVXDP1OB9ILkUynybbn0klVoqc8XJMR?=
- =?us-ascii?Q?If035buBDK8go2IdXAsA3eOkXzN7dgt15OAXjYIH/ytzRN0lILtyyYUpQNzc?=
- =?us-ascii?Q?buCNDRXe3feP60AzJwyDmu6v3yKAvjqZ1X1/NYqYl3I+zujYDX0TcowxCqmP?=
- =?us-ascii?Q?hBIKXLVuQ51OaZ8H7k+E/Toi8sz6wNvqejebQUaOlcvt3hyqGgvEsLBnlSTC?=
- =?us-ascii?Q?jYDvO4ZiiGLQLL7vA6rIrP7Q+0eUVblpAiC0Qws5AWXg7fdOJcTB+fLJ2Tdx?=
- =?us-ascii?Q?rZmlGZErnIN3wsnJTVCGlzfVMTZxJKDNNpRIiZO5jPQHUjWN0fSsgYwiDAV9?=
- =?us-ascii?Q?oRCad1nl/v65y+W+neUiDV9965rhwXimOXCiI7XvYsK0+Mu8OLYSGOgkYmQl?=
- =?us-ascii?Q?XPmgKpOHMKEgKitWEVyYEBk9ePqqNPOpidCANQP9yOnqNtW8zgDZRsiNPqjy?=
- =?us-ascii?Q?9rYcX2w0+wUePjWhuf8bbLI2ZX4wOPPhJmB3GrvX1Ev7r3567LfWaw4ZneT9?=
- =?us-ascii?Q?rwNaVbJ/0mTEason8m/6BYwKsfYUB/HayVrskMeYzM03+pRIf+60x7Ez1j26?=
- =?us-ascii?Q?4hmWdvYPb4uOd7JUH+CXJlYBQ0ar9kD8rCiNvTWIBom4/1ohcL9E/w98Oocu?=
- =?us-ascii?Q?BjVn0gzkou+l8eR7CTr1jezyUAG8I/BYfIXS2ZxiuoT3Ava+XZtZJM1q27Jq?=
- =?us-ascii?Q?55XMSKvOSNjpr7OmuqPifTLx430TNls295fkb4yidA36/qiEudEVIzwPOqv/?=
- =?us-ascii?Q?Mw7OoxwYBdaZZIPd/Lhv+y7YanD3XN9nGkMgsWowLl4rrH9mQAXaTyLWU+aC?=
- =?us-ascii?Q?45wX0fToi56d6YPJWXBEDMuoIrsVOcQ7dIJ9iJIz5V5EN/Xcu43iFnh3Nsqa?=
- =?us-ascii?Q?u5vzHHZkVg09xL4BvMhdS7R14R0bnlgjyW27BxZN96exhR+zFHlDyHptl5RK?=
- =?us-ascii?Q?ywttl51GeFz69c6B08SQG01kwz2mZ50v7c9ZTSouyAFgLYeUu2EE42ysBF+2?=
- =?us-ascii?Q?2i0jC9/37aVFn/PpCe0dBCb785ydqMrRVpsqu9ycV8Dbe6p7GCF1EUgbjRCU?=
- =?us-ascii?Q?FuQz1dC7WM++txu3RSzGDf300fdPSX+R16E4mcrTCChkeDNkVBzkYzH7QmiJ?=
- =?us-ascii?Q?cSphWlJAp6EoQ8ORF3T0L9b7eyCYt4R0IHHniWZDMsOuBom2FUH6scyXYexL?=
- =?us-ascii?Q?TH3szuanypcRQ7ZtjIegIplSUOJ9Pv8z5KHvTPRigQTpDlL//RvOzFFKS/eA?=
- =?us-ascii?Q?Wqy4M1te6KmVCKmvNWi3g/N8aC5ciyromRNx56v0cFBz1JphEBHEDhwasuC1?=
- =?us-ascii?Q?KCllUeehefgq5yWIdmlhsD0IbQgRswXIALHwBQKkDusyocgvs6ulzPczLA5P?=
- =?us-ascii?Q?BbStvVeOCdRp2emoDdTU2zpPOSuLUKwSwWXm4l+rC2r8jQ1Kokaj0CvPyKIe?=
- =?us-ascii?Q?rdJzlWMWbuWH32iV+Ea7K3cEb0TRZwfz4WTOvhDMQ1dWxZ99KxN7myTshqUS?=
- =?us-ascii?Q?SutJMM7o6NOhYfjNaCXaa/Z2bO/8qQlkAMUPNdyhiH8VDRRSFB9hpGTL5cCK?=
- =?us-ascii?Q?/wgwmQ0obQhrQhJwBh8=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: affe49b5-5f24-42f8-6271-08d9fd7082f4
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2022 23:49:52.6416
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1uJvXzCCamPMzY1eWWpLnU6QUseGuUCUiWFYLAfh9Bs4SrRYeO3dq3At4HSt4/QS
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1281
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=c43Vvi1l c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=oKJsc7D3gJEA:10 a=IkcTkHD0fZMA:10 a=o8Y5sQTvuykA:10 a=VwQbUJbxAAAA:8 a=73XRR-X3sCTW9Fgc-S8A:9 a=QEXdDO2ut3YA:10 a=XuX4-iSP0wQA:10 a=AjGcO6oz07-iQ99wixmX:22
+X-SEG-SpamProfiler-Score: 0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 03, 2022 at 12:59:30PM -0700, Alex Williamson wrote:
-
-> > > If it's an abuse, then let's not do it.  It was never my
-> > > impression or intention
-
-So maybe abuse is the wrong word, but I don't want to mess up this
-interface, which is intended to support real pre-copy devices, just
-because devices that don't actually implement true precopy might do
-silly things.
-
-The vGPU case you imagine will still work and qemu will switch to
-STOP_COPY with a huge trailer and be slow. That is unavoidable and I
-think it is fine.
-
-> > > Furthermore the acc driver was explicitly directed not to indicate any degree
-> > > of trailing data size in dirty_bytes, so while trailing data may be small for acc,
-> > > this interface is explicitly not intended to provide any indication of trailing
-> > > data size.  Thanks, 
-
-Yes, trailing data is not what this is for. This is only to help
-decide when to switch from PRE_COPY to STOP_COPY. If the device can
-execute STOP_COPY in the right time is a completely different
-discussion/interface.
-
-> > Just to clarify, so the suggestion here is not to use PRE_COPY for compatibility
-> > check at all and have a different proper infrastructure for that later as Jason
-> > suggested?
-> > 
-> > If so, I will remove this patch from this series and go back to the old revision
-> > where we only have STOP_COPY and do the compatibility check during the final
-> > load data operation.
-> 
-> Hi Shameer,
-> 
-> I think NVIDIA has a company long weekend, so I'm not sure how quickly
-> we'll hear a rebuttal from Jason, but at this point I'd rather not
-> move
-
-Yes, company long weekend.
-
-> forward with using PRE_COPY exclusively for compatibility testing if
-> that is seen as an abuse of the interface, regardless of the size of
-> the remaining STOP_COPY data.  It might be most expedient to respin
-> without PRE_COPY and we'll revisit methods to perform early
-> compatibility testing in the future.  Thanks,
-
-Shameerali has talked about wanting this compat check early from the
-start, and done all the work to implement it. I think it is pretty
-extreme to blow up his series over trailing_data.
-
-To me acc is fine to use it this way until we get a better solution
-for compatability. We all need this, but I expect it to be complicated
-to define.
-
-Jason
+SGkgQWxsLA0KDQpPbiAyMS8wOC8yMCAxMDoxMSwgQmpvcm4gSGVsZ2FhcyB3cm90ZToNCj4gT24g
+VGh1LCBBdWcgMDYsIDIwMjAgYXQgMDQ6MTQ6NTVQTSArMTIwMCwgTWFyayBUb21saW5zb24gd3Jv
+dGU6DQo+PiBGb3IgaGFyZHdhcmUgdGhhdCBvbmx5IHN1cHBvcnRzIDMyLWJpdCB3cml0ZXMgdG8g
+UENJIHRoZXJlIGlzIHRoZQ0KPj4gcG9zc2liaWxpdHkgb2YgY2xlYXJpbmcgUlcxQyAod3JpdGUt
+b25lLXRvLWNsZWFyKSBiaXRzLiBBIHJhdGUtbGltaXRlZA0KPj4gbWVzc2FnZXMgd2FzIGludHJv
+ZHVjZWQgYnkgZmIyNjU5MjMwMTIwLCBidXQgcmF0ZS1saW1pdGluZyBpcyBub3QgdGhlDQo+PiBi
+ZXN0IGNob2ljZSBoZXJlLiBTb21lIGRldmljZXMgbWF5IG5vdCBzaG93IHRoZSB3YXJuaW5ncyB0
+aGV5IHNob3VsZCBpZg0KPj4gYW5vdGhlciBkZXZpY2UgaGFzIGp1c3QgcHJvZHVjZWQgYSBidW5j
+aCBvZiB3YXJuaW5ncy4gQWxzbywgdGhlIG51bWJlcg0KPj4gb2YgbWVzc2FnZXMgY2FuIGJlIGEg
+bnVpc2FuY2Ugb24gZGV2aWNlcyB3aGljaCBhcmUgb3RoZXJ3aXNlIHdvcmtpbmcNCj4+IGZpbmUu
+DQo+Pg0KPj4gVGhpcyBwYXRjaCBjaGFuZ2VzIHRoZSByYXRlbGltaXQgdG8gYSBzaW5nbGUgd2Fy
+bmluZyBwZXIgYnVzLiBUaGlzDQo+PiBlbnN1cmVzIG5vIGJ1cyBpcyAnc3RhcnZlZCcgb2YgZW1p
+dHRpbmcgYSB3YXJuaW5nIGFuZCBhbHNvIHRoYXQgdGhlcmUNCj4+IGlzbid0IGEgY29udGludW91
+cyBzdHJlYW0gb2Ygd2FybmluZ3MuIEl0IHdvdWxkIGJlIHByZWZlcmFibGUgdG8gaGF2ZSBhDQo+
+PiB3YXJuaW5nIHBlciBkZXZpY2UsIGJ1dCB0aGUgcGNpX2RldiBzdHJ1Y3R1cmUgaXMgbm90IGF2
+YWlsYWJsZSBoZXJlLCBhbmQNCj4+IGEgbG9va3VwIGZyb20gZGV2Zm4gd291bGQgYmUgZmFyIHRv
+byBzbG93Lg0KPj4NCj4+IFN1Z2dlc3RlZC1ieTogQmpvcm4gSGVsZ2FhcyA8aGVsZ2Fhc0BrZXJu
+ZWwub3JnPg0KPj4gRml4ZXM6IGZiMjY1OTIzMDEyMCAoIlBDSTogV2FybiBvbiBwb3NzaWJsZSBS
+VzFDIGNvcnJ1cHRpb24gZm9yIHN1Yi0zMiBiaXQgY29uZmlnIHdyaXRlcyIpDQo+PiBTaWduZWQt
+b2ZmLWJ5OiBNYXJrIFRvbWxpbnNvbiA8bWFyay50b21saW5zb25AYWxsaWVkdGVsZXNpcy5jby5u
+ej4NCj4gQXBwbGllZCB3aXRoIGNvbGxlY3RlZCByZXZpZXdzL2Fja3MgdG8gcGNpL2VudW1lcmF0
+aW9uIGZvciB2NS4xMCwNCj4gdGhhbmtzIQ0KDQpXaGF0ZXZlciBoYXBwZW5lZCB0byB0aGlzIGNo
+YW5nZT8NCg0KSSdtIGp1c3QgZ29pbmcgdGhyb3VnaCBvdXIgcXVldWUgb2YgcGF0Y2hlcyB0aGF0
+IGhhdmUgYmVlbiBzZW50IHVwc3RyZWFtIA0KYW5kIGV4cGVjdGVkIHRoaXMgb25lIHRvIGJlIGdv
+bmUgYWZ0ZXIgd2UgcHVsbGVkIHY1LjEwLiBMb29raW5nIGF0IA0KTGludXMncyB0cmVlIEkgZG9u
+J3Qgc2VlIGl0IGV2ZXIgaGF2aW5nIGJlZW4gYXBwbGllZC4gSSBjb3VsZG4ndCBzZWUgDQphbnl0
+aGluZyBvbiB0aGUgcmVsZXZhbnQgbWFpbGluZyBsaXN0cyBzdWdnZXN0aW5nIHRoYXQgdGhlcmUg
+d2FzIGEgDQpwcm9ibGVtIHdpdGggdGhpcyBjaGFuZ2Ugc28gSSdtIGp1c3Qgd29uZGVyaW5nIHdo
+YXQncyBoYXBwZW5lZCB0byBpdD8NCg0KPj4gLS0tDQo+PiBjaGFuZ2VzIGluIHY0Og0KPj4gICAt
+IFVzZSBiaXRmaWVsZCByYXRoZXIgdGhhbiBib29sIHRvIHNhdmUgbWVtb3J5ICh3YXMgbWVhbnQg
+dG8gYmUgaW4gdjMpLg0KPj4NCj4+ICAgZHJpdmVycy9wY2kvYWNjZXNzLmMgfCA5ICsrKysrKy0t
+LQ0KPj4gICBpbmNsdWRlL2xpbnV4L3BjaS5oICB8IDEgKw0KPj4gICAyIGZpbGVzIGNoYW5nZWQs
+IDcgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9wY2kvYWNjZXNzLmMgYi9kcml2ZXJzL3BjaS9hY2Nlc3MuYw0KPj4gaW5kZXggNzljNGEy
+ZWYyNjlhLi5iNDUyNDY3ZmQxMzMgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL3BjaS9hY2Nlc3Mu
+Yw0KPj4gKysrIGIvZHJpdmVycy9wY2kvYWNjZXNzLmMNCj4+IEBAIC0xNjAsOSArMTYwLDEyIEBA
+IGludCBwY2lfZ2VuZXJpY19jb25maWdfd3JpdGUzMihzdHJ1Y3QgcGNpX2J1cyAqYnVzLCB1bnNp
+Z25lZCBpbnQgZGV2Zm4sDQo+PiAgIAkgKiB3cml0ZSBoYXBwZW4gdG8gaGF2ZSBhbnkgUlcxQyAo
+d3JpdGUtb25lLXRvLWNsZWFyKSBiaXRzIHNldCwgd2UNCj4+ICAgCSAqIGp1c3QgaW5hZHZlcnRl
+bnRseSBjbGVhcmVkIHNvbWV0aGluZyB3ZSBzaG91bGRuJ3QgaGF2ZS4NCj4+ICAgCSAqLw0KPj4g
+LQlkZXZfd2Fybl9yYXRlbGltaXRlZCgmYnVzLT5kZXYsICIlZC1ieXRlIGNvbmZpZyB3cml0ZSB0
+byAlMDR4OiUwMng6JTAyeC4lZCBvZmZzZXQgJSN4IG1heSBjb3JydXB0IGFkamFjZW50IFJXMUMg
+Yml0c1xuIiwNCj4+IC0JCQkgICAgIHNpemUsIHBjaV9kb21haW5fbnIoYnVzKSwgYnVzLT5udW1i
+ZXIsDQo+PiAtCQkJICAgICBQQ0lfU0xPVChkZXZmbiksIFBDSV9GVU5DKGRldmZuKSwgd2hlcmUp
+Ow0KPj4gKwlpZiAoIWJ1cy0+dW5zYWZlX3dhcm4pIHsNCj4+ICsJCWRldl93YXJuKCZidXMtPmRl
+diwgIiVkLWJ5dGUgY29uZmlnIHdyaXRlIHRvICUwNHg6JTAyeDolMDJ4LiVkIG9mZnNldCAlI3gg
+bWF5IGNvcnJ1cHQgYWRqYWNlbnQgUlcxQyBiaXRzXG4iLA0KPj4gKwkJCSBzaXplLCBwY2lfZG9t
+YWluX25yKGJ1cyksIGJ1cy0+bnVtYmVyLA0KPj4gKwkJCSBQQ0lfU0xPVChkZXZmbiksIFBDSV9G
+VU5DKGRldmZuKSwgd2hlcmUpOw0KPj4gKwkJYnVzLT51bnNhZmVfd2FybiA9IDE7DQo+PiArCX0N
+Cj4+ICAgDQo+PiAgIAltYXNrID0gfigoKDEgPDwgKHNpemUgKiA4KSkgLSAxKSA8PCAoKHdoZXJl
+ICYgMHgzKSAqIDgpKTsNCj4+ICAgCXRtcCA9IHJlYWRsKGFkZHIpICYgbWFzazsNCj4+IGRpZmYg
+LS1naXQgYS9pbmNsdWRlL2xpbnV4L3BjaS5oIGIvaW5jbHVkZS9saW51eC9wY2kuaA0KPj4gaW5k
+ZXggMzRjMWM0ZjQ1Mjg4Li44NTIxMWE3ODdmOGIgMTAwNjQ0DQo+PiAtLS0gYS9pbmNsdWRlL2xp
+bnV4L3BjaS5oDQo+PiArKysgYi9pbmNsdWRlL2xpbnV4L3BjaS5oDQo+PiBAQCAtNjI2LDYgKzYy
+Niw3IEBAIHN0cnVjdCBwY2lfYnVzIHsNCj4+ICAgCXN0cnVjdCBiaW5fYXR0cmlidXRlCSpsZWdh
+Y3lfaW87CS8qIExlZ2FjeSBJL08gZm9yIHRoaXMgYnVzICovDQo+PiAgIAlzdHJ1Y3QgYmluX2F0
+dHJpYnV0ZQkqbGVnYWN5X21lbTsJLyogTGVnYWN5IG1lbSAqLw0KPj4gICAJdW5zaWduZWQgaW50
+CQlpc19hZGRlZDoxOw0KPj4gKwl1bnNpZ25lZCBpbnQJCXVuc2FmZV93YXJuOjE7CS8qIHdhcm5l
+ZCBhYm91dCBSVzFDIGNvbmZpZyB3cml0ZSAqLw0KPj4gICB9Ow0KPj4gICANCj4+ICAgI2RlZmlu
+ZSB0b19wY2lfYnVzKG4pCWNvbnRhaW5lcl9vZihuLCBzdHJ1Y3QgcGNpX2J1cywgZGV2KQ0KPj4g
+LS0gDQo+PiAyLjI4LjANCj4+
