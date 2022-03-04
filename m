@@ -2,180 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C14204CD2AB
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Mar 2022 11:43:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7BCB4CD382
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Mar 2022 12:32:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237770AbiCDKoO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Mar 2022 05:44:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56294 "EHLO
+        id S230364AbiCDLcn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Mar 2022 06:32:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237800AbiCDKoM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Mar 2022 05:44:12 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B971AC2A0;
-        Fri,  4 Mar 2022 02:43:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646390604; x=1677926604;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=WgTGiC6INkrQSj9hdXkuWQiP89mzXyrTFpQnEljce20=;
-  b=JL1fwBeB/l/44gnNcwnUUooa8yfu7Iv+9Ve7HRrEcl1lsNDfRTM1DuDd
-   uW6VShIMnS1Cr3Su6HCID2MDjTr1Lomf7c8WEpr+PxjzEygNowMuSN+4u
-   5QhbM1MAJAp4mkv5jB/gxCMiERLtUXSQNCHJ4khjn7ED6td7GbCGySEtz
-   Kv5U2qZ2FnsggzTsClhsOexSxjrO8f8ceKZIQSPVjB8bab2BgTjyPS8GU
-   wDFRACEuJlSGfKx1QJuBn6Mi0hROozfsfY22yMoWVanxVPHG5KIyByk8H
-   xpvELoKRmL5cMXa3hqn7wp16rZyxH3Ifd31Q+av7pBMfZbW9Gsf2Uavo1
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10275"; a="340381192"
-X-IronPort-AV: E=Sophos;i="5.90,154,1643702400"; 
-   d="scan'208";a="340381192"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 02:43:23 -0800
-X-IronPort-AV: E=Sophos;i="5.90,154,1643702400"; 
-   d="scan'208";a="508948776"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.209.31]) ([10.254.209.31])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 02:43:13 -0800
-Message-ID: <7a3dc977-0c5f-6d88-6d3a-8e49bc717690@linux.intel.com>
-Date:   Fri, 4 Mar 2022 18:43:11 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Cc:     baolu.lu@linux.intel.com, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 01/11] iommu: Add DMA ownership management interfaces
+        with ESMTP id S237145AbiCDLcm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Mar 2022 06:32:42 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD17177D32;
+        Fri,  4 Mar 2022 03:31:54 -0800 (PST)
+Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4K95KR0QsPz6GD5J;
+        Fri,  4 Mar 2022 19:31:39 +0800 (CST)
+Received: from lhreml719-chm.china.huawei.com (10.201.108.70) by
+ fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 4 Mar 2022 12:31:52 +0100
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml719-chm.china.huawei.com (10.201.108.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 4 Mar 2022 11:31:51 +0000
+Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
+ lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
+ 15.01.2308.021; Fri, 4 Mar 2022 11:31:51 +0000
+From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To:     "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Xu Zaibo <xuzaibo@huawei.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "jgg@nvidia.com" <jgg@nvidia.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
+        "yishaih@nvidia.com" <yishaih@nvidia.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        liulongfang <liulongfang@huawei.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        "Jonathan Cameron" <jonathan.cameron@huawei.com>
+Subject: RE: [PATCH v8 6/9] hisi_acc_vfio_pci: Add helper to retrieve the
+ struct pci_driver
+Thread-Topic: [PATCH v8 6/9] hisi_acc_vfio_pci: Add helper to retrieve the
+ struct pci_driver
+Thread-Index: AQHYL1LKWZjK0hk+c061mSNBOxZn8ayu+SGAgAAerGA=
+Date:   Fri, 4 Mar 2022 11:31:51 +0000
+Message-ID: <5a7e722a526f46f1818a3113c81fc352@huawei.com>
+References: <20220303230131.2103-1-shameerali.kolothum.thodi@huawei.com>
+ <20220303230131.2103-7-shameerali.kolothum.thodi@huawei.com>
+ <a7d41c01-9032-14a1-b16f-a4a6a954addf@hisilicon.com>
+In-Reply-To: <a7d41c01-9032-14a1-b16f-a4a6a954addf@hisilicon.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-To:     eric.auger@redhat.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-References: <20220228005056.599595-1-baolu.lu@linux.intel.com>
- <20220228005056.599595-2-baolu.lu@linux.intel.com>
- <c75b6e04-bc1b-b9f6-1a44-bf1567a8c19d@redhat.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-In-Reply-To: <c75b6e04-bc1b-b9f6-1a44-bf1567a8c19d@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.88.247]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Eric,
-
-On 2022/3/4 18:34, Eric Auger wrote:
-> I hit a WARN_ON() when unbinding an e1000e driver just after boot:
-> 
-> sudo modprobe -v vfio-pci
-> echo vfio-pci | sudo tee -a
-> /sys/bus/pci/devices/0004:01:00.0/driver_override
-> vfio-pci
-> echo 0004:01:00.0 | sudo tee -a  /sys/bus/pci/drivers/e1000e/unbind
-> 
-> 
-> [  390.042811] ------------[ cut here ]------------
-> [  390.046468] WARNING: CPU: 42 PID: 5589 at drivers/iommu/iommu.c:3123
-> iommu_device_unuse_default_domain+0x68/0x100
-> [  390.056710] Modules linked in: vfio_pci vfio_pci_core vfio_virqfd
-> vfio_iommu_type1 vfio xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT
-> nf_reject_ipv4 nft_compat nft_chain_nat nf_nat nf_conntrack
-> nf_defrag_ipv6 nf_defrag_ipv4 nf_tables nfnetlink bridge stp llc rfkill
-> sunrpc vfat fat mlx5_ib ib_uverbs ib_core acpi_ipmi ipmi_ssif
-> ipmi_devintf ipmi_msghandler cppc_cpufreq drm xfs libcrc32c mlx5_core sg
-> mlxfw crct10dif_ce tls ghash_ce sha2_ce sha256_arm64 sha1_ce sbsa_gwdt
-> e1000e psample sdhci_acpi ahci_platform sdhci libahci_platform qcom_emac
-> mmc_core hdma hdma_mgmt dm_mirror dm_region_hash dm_log dm_mod fuse
-> [  390.110618] CPU: 42 PID: 5589 Comm: tee Kdump: loaded Not tainted
-> 5.17.0-rc4-lu-v7-official+ #24
-> [  390.119384] Hardware name: WIWYNN QDF2400 Reference Evaluation
-> Platform CV90-LA115-P120/QDF2400 Customer Reference Board, BIOS 0ACJA570
-> 11/05/2018
-> [  390.132492] pstate: a0400005 (NzCv daif +PAN -UAO -TCO -DIT -SSBS
-> BTYPE=--)
-> [  390.139436] pc : iommu_device_unuse_default_domain+0x68/0x100
-> [  390.145165] lr : iommu_device_unuse_default_domain+0x38/0x100
-> [  390.150894] sp : ffff80000fbb3bc0
-> [  390.154193] x29: ffff80000fbb3bc0 x28: ffff03c0cf6b2400 x27:
-> 0000000000000000
-> [  390.161311] x26: 0000000000000000 x25: 0000000000000000 x24:
-> ffff03c0c7cc5720
-> [  390.168429] x23: ffff03c0c2b9d150 x22: ffffb4e61df223f8 x21:
-> ffffb4e61df223f8
-> [  390.175547] x20: ffff03c7c03c3758 x19: ffff03c7c03c3700 x18:
-> 0000000000000000
-> [  390.182665] x17: 0000000000000000 x16: 0000000000000000 x15:
-> 0000000000000000
-> [  390.189783] x14: 0000000000000000 x13: 0000000000000030 x12:
-> ffff03c0d519cd80
-> [  390.196901] x11: 7f7f7f7f7f7f7f7f x10: 0000000000000dc0 x9 :
-> ffffb4e620b54f8c
-> [  390.204019] x8 : ffff03c0cf6b3220 x7 : ffff4ef132bba000 x6 :
-> 00000000000000ff
-> [  390.211137] x5 : ffff03c0c2b9f108 x4 : ffff03c0d51f6438 x3 :
-> 0000000000000000
-> [  390.218255] x2 : ffff03c0cf6b2400 x1 : 0000000000000000 x0 :
-> 0000000000000000
-> [  390.225374] Call trace:
-> [  390.227804]  iommu_device_unuse_default_domain+0x68/0x100
-> [  390.233187]  pci_dma_cleanup+0x38/0x44
-> [  390.236919]  __device_release_driver+0x1a8/0x260
-> [  390.241519]  device_driver_detach+0x50/0xd0
-> [  390.245686]  unbind_store+0xf8/0x120
-> [  390.249245]  drv_attr_store+0x30/0x44
-> [  390.252891]  sysfs_kf_write+0x50/0x60
-> [  390.256537]  kernfs_fop_write_iter+0x134/0x1cc
-> [  390.260964]  new_sync_write+0xf0/0x18c
-> [  390.264696]  vfs_write+0x230/0x2d0
-> [  390.268082]  ksys_write+0x74/0x100
-> [  390.271467]  __arm64_sys_write+0x28/0x3c
-> [  390.275373]  invoke_syscall.constprop.0+0x58/0xf0
-> [  390.280061]  el0_svc_common.constprop.0+0x160/0x164
-> [  390.284922]  do_el0_svc+0x34/0xcc
-> [  390.288221]  el0_svc+0x30/0x140
-> [  390.291346]  el0t_64_sync_handler+0xa4/0x130
-> [  390.295599]  el0t_64_sync+0x1a0/0x1a4
-> [  390.299245] ---[ end trace 0000000000000000 ]---
-> 
-> 
-> I put some traces in the code and I can see that iommu_device_use_default_domain() effectively is called on 0004:01:00.0 e1000e device on pci_dma_configure() but at that time the iommu group is NULL:
-> [   10.569427] e1000e 0004:01:00.0: ------ ENTRY pci_dma_configure driver_managed_area=0
-> [   10.569431] e1000e 0004:01:00.0: **** iommu_device_use_default_domain ENTRY
-> [   10.569433] e1000e 0004:01:00.0: **** iommu_device_use_default_domain no group
-> [   10.569435] e1000e 0004:01:00.0: pci_dma_configure iommu_device_use_default_domain returned 0
-> [   10.569492] e1000e 0004:01:00.0: Adding to iommu group 3
-> 
-> ^^^the group is added after the
-> iommu_device_use_default_domain() call
-> So the group->owner_cnt is not incremented as expected.
-
-Thank you for reporting this. Do you have any idea why the driver is
-loaded before iommu_probe_device()?
-
-Best regards,
-baolu
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdhbmd6aG91IChCKQ0KPiBT
+ZW50OiAwNCBNYXJjaCAyMDIyIDA5OjQxDQo+IFRvOiBTaGFtZWVyYWxpIEtvbG90aHVtIFRob2Rp
+IDxzaGFtZWVyYWxpLmtvbG90aHVtLnRob2RpQGh1YXdlaS5jb20+Ow0KPiBrdm1Admdlci5rZXJu
+ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1jcnlwdG9Admdl
+ci5rZXJuZWwub3JnDQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBhbGV4LndpbGxp
+YW1zb25AcmVkaGF0LmNvbTsgamdnQG52aWRpYS5jb207DQo+IGNvaHVja0ByZWRoYXQuY29tOyBt
+Z3VydG92b3lAbnZpZGlhLmNvbTsgeWlzaGFpaEBudmlkaWEuY29tOyBMaW51eGFybQ0KPiA8bGlu
+dXhhcm1AaHVhd2VpLmNvbT47IGxpdWxvbmdmYW5nIDxsaXVsb25nZmFuZ0BodWF3ZWkuY29tPjsg
+WmVuZ3RhbyAoQikNCj4gPHByaW1lLnplbmdAaGlzaWxpY29uLmNvbT47IEpvbmF0aGFuIENhbWVy
+b24NCj4gPGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRD
+SCB2OCA2LzldIGhpc2lfYWNjX3ZmaW9fcGNpOiBBZGQgaGVscGVyIHRvIHJldHJpZXZlIHRoZSBz
+dHJ1Y3QNCj4gcGNpX2RyaXZlcg0KPiANCj4gPiBzdHJ1Y3QgcGNpX2RyaXZlciBwb2ludGVyIGlz
+IGFuIGlucHV0IGludG8gdGhlIHBjaV9pb3ZfZ2V0X3BmX2RydmRhdGEoKS4+DQo+IEludHJvZHVj
+ZSBoZWxwZXJzIHRvIHJldHJpZXZlIHRoZSBBQ0MgUEYgZGV2IHN0cnVjdCBwY2lfZHJpdmVyIHBv
+aW50ZXJzDQo+ID4gYXMgd2UgdXNlIHRoaXMgaW4gQUNDIHZmaW8gbWlncmF0aW9uIGRyaXZlci4N
+Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNoYW1lZXIgS29sb3RodW0NCj4gPHNoYW1lZXJhbGku
+a29sb3RodW0udGhvZGlAaHVhd2VpLmNvbT4NCj4gDQo+IEFja2VkLWJ5OiBaaG91IFdhbmcgPHdh
+bmd6aG91MUBoaXNpbGljb24uY29tPg0KDQpUaGFua3MuDQoNClsrY2MgWmFpYm9dIGZvciBocHJl
+L3NlYyBwYXJ0DQoNCj4gDQo+IEJlc3QsDQo+IFpob3UNCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZl
+cnMvY3J5cHRvL2hpc2lsaWNvbi9ocHJlL2hwcmVfbWFpbi5jIHwgNiArKysrKysNCj4gPiAgZHJp
+dmVycy9jcnlwdG8vaGlzaWxpY29uL3NlYzIvc2VjX21haW4uYyAgfCA2ICsrKysrKw0KPiA+ICBk
+cml2ZXJzL2NyeXB0by9oaXNpbGljb24vemlwL3ppcF9tYWluLmMgICB8IDYgKysrKysrDQo+ID4g
+IGluY2x1ZGUvbGludXgvaGlzaV9hY2NfcW0uaCAgICAgICAgICAgICAgIHwgNSArKysrKw0KPiA+
+ICA0IGZpbGVzIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL2NyeXB0by9oaXNpbGljb24vaHByZS9ocHJlX21haW4uYw0KPiBiL2RyaXZlcnMv
+Y3J5cHRvL2hpc2lsaWNvbi9ocHJlL2hwcmVfbWFpbi5jDQo+ID4gaW5kZXggMzU4OWQ4ODc5YjVl
+Li4zNmFiMzBlOWU2NTQgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9jcnlwdG8vaGlzaWxpY29u
+L2hwcmUvaHByZV9tYWluLmMNCj4gPiArKysgYi9kcml2ZXJzL2NyeXB0by9oaXNpbGljb24vaHBy
+ZS9ocHJlX21haW4uYw0KPiA+IEBAIC0xMTkwLDYgKzExOTAsMTIgQEAgc3RhdGljIHN0cnVjdCBw
+Y2lfZHJpdmVyIGhwcmVfcGNpX2RyaXZlciA9IHsNCj4gPiAgCS5kcml2ZXIucG0JCT0gJmhwcmVf
+cG1fb3BzLA0KPiA+ICB9Ow0KPiA+DQo+ID4gK3N0cnVjdCBwY2lfZHJpdmVyICpoaXNpX2hwcmVf
+Z2V0X3BmX2RyaXZlcih2b2lkKQ0KPiA+ICt7DQo+ID4gKwlyZXR1cm4gJmhwcmVfcGNpX2RyaXZl
+cjsNCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChoaXNpX2hwcmVfZ2V0X3BmX2RyaXZl
+cik7DQo+ID4gKw0KPiA+ICBzdGF0aWMgdm9pZCBocHJlX3JlZ2lzdGVyX2RlYnVnZnModm9pZCkN
+Cj4gPiAgew0KPiA+ICAJaWYgKCFkZWJ1Z2ZzX2luaXRpYWxpemVkKCkpDQo+ID4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvY3J5cHRvL2hpc2lsaWNvbi9zZWMyL3NlY19tYWluLmMNCj4gYi9kcml2ZXJz
+L2NyeXB0by9oaXNpbGljb24vc2VjMi9zZWNfbWFpbi5jDQo+ID4gaW5kZXggMzExYTg3NDdiNWJm
+Li40MjFhNDA1Y2EzMzcgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9jcnlwdG8vaGlzaWxpY29u
+L3NlYzIvc2VjX21haW4uYw0KPiA+ICsrKyBiL2RyaXZlcnMvY3J5cHRvL2hpc2lsaWNvbi9zZWMy
+L3NlY19tYWluLmMNCj4gPiBAQCAtMTA4OCw2ICsxMDg4LDEyIEBAIHN0YXRpYyBzdHJ1Y3QgcGNp
+X2RyaXZlciBzZWNfcGNpX2RyaXZlciA9IHsNCj4gPiAgCS5kcml2ZXIucG0gPSAmc2VjX3BtX29w
+cywNCj4gPiAgfTsNCj4gPg0KPiA+ICtzdHJ1Y3QgcGNpX2RyaXZlciAqaGlzaV9zZWNfZ2V0X3Bm
+X2RyaXZlcih2b2lkKQ0KPiA+ICt7DQo+ID4gKwlyZXR1cm4gJnNlY19wY2lfZHJpdmVyOw0KPiA+
+ICt9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGhpc2lfc2VjX2dldF9wZl9kcml2ZXIpOw0KPiA+
+ICsNCj4gPiAgc3RhdGljIHZvaWQgc2VjX3JlZ2lzdGVyX2RlYnVnZnModm9pZCkNCj4gPiAgew0K
+PiA+ICAJaWYgKCFkZWJ1Z2ZzX2luaXRpYWxpemVkKCkpDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvY3J5cHRvL2hpc2lsaWNvbi96aXAvemlwX21haW4uYw0KPiBiL2RyaXZlcnMvY3J5cHRvL2hp
+c2lsaWNvbi96aXAvemlwX21haW4uYw0KPiA+IGluZGV4IDY2ZGVjZmUwNzI4Mi4uNDUzNGUxZTEw
+N2QxIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY3J5cHRvL2hpc2lsaWNvbi96aXAvemlwX21h
+aW4uYw0KPiA+ICsrKyBiL2RyaXZlcnMvY3J5cHRvL2hpc2lsaWNvbi96aXAvemlwX21haW4uYw0K
+PiA+IEBAIC0xMDEyLDYgKzEwMTIsMTIgQEAgc3RhdGljIHN0cnVjdCBwY2lfZHJpdmVyIGhpc2lf
+emlwX3BjaV9kcml2ZXIgPSB7DQo+ID4gIAkuZHJpdmVyLnBtCQk9ICZoaXNpX3ppcF9wbV9vcHMs
+DQo+ID4gIH07DQo+ID4NCj4gPiArc3RydWN0IHBjaV9kcml2ZXIgKmhpc2lfemlwX2dldF9wZl9k
+cml2ZXIodm9pZCkNCj4gPiArew0KPiA+ICsJcmV0dXJuICZoaXNpX3ppcF9wY2lfZHJpdmVyOw0K
+PiA+ICt9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGhpc2lfemlwX2dldF9wZl9kcml2ZXIpOw0K
+PiA+ICsNCj4gPiAgc3RhdGljIHZvaWQgaGlzaV96aXBfcmVnaXN0ZXJfZGVidWdmcyh2b2lkKQ0K
+PiA+ICB7DQo+ID4gIAlpZiAoIWRlYnVnZnNfaW5pdGlhbGl6ZWQoKSkNCj4gPiBkaWZmIC0tZ2l0
+IGEvaW5jbHVkZS9saW51eC9oaXNpX2FjY19xbS5oIGIvaW5jbHVkZS9saW51eC9oaXNpX2FjY19x
+bS5oDQo+ID4gaW5kZXggNmE2NDc3YzM0NjY2Li4wMGYyYTRkYjg3MjMgMTAwNjQ0DQo+ID4gLS0t
+IGEvaW5jbHVkZS9saW51eC9oaXNpX2FjY19xbS5oDQo+ID4gKysrIGIvaW5jbHVkZS9saW51eC9o
+aXNpX2FjY19xbS5oDQo+ID4gQEAgLTQ3Niw0ICs0NzYsOSBAQCB2b2lkIGhpc2lfcW1fcG1faW5p
+dChzdHJ1Y3QgaGlzaV9xbSAqcW0pOw0KPiA+ICBpbnQgaGlzaV9xbV9nZXRfZGZ4X2FjY2Vzcyhz
+dHJ1Y3QgaGlzaV9xbSAqcW0pOw0KPiA+ICB2b2lkIGhpc2lfcW1fcHV0X2RmeF9hY2Nlc3Moc3Ry
+dWN0IGhpc2lfcW0gKnFtKTsNCj4gPiAgdm9pZCBoaXNpX3FtX3JlZ3NfZHVtcChzdHJ1Y3Qgc2Vx
+X2ZpbGUgKnMsIHN0cnVjdCBkZWJ1Z2ZzX3JlZ3NldDMyDQo+ICpyZWdzZXQpOw0KPiA+ICsNCj4g
+PiArLyogVXNlZCBieSBWRklPIEFDQyBsaXZlIG1pZ3JhdGlvbiBkcml2ZXIgKi8NCj4gPiArc3Ry
+dWN0IHBjaV9kcml2ZXIgKmhpc2lfc2VjX2dldF9wZl9kcml2ZXIodm9pZCk7DQo+ID4gK3N0cnVj
+dCBwY2lfZHJpdmVyICpoaXNpX2hwcmVfZ2V0X3BmX2RyaXZlcih2b2lkKTsNCj4gPiArc3RydWN0
+IHBjaV9kcml2ZXIgKmhpc2lfemlwX2dldF9wZl9kcml2ZXIodm9pZCk7DQo+ID4gICNlbmRpZg0K
+PiA+DQo=
