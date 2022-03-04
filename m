@@ -2,197 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13D924CD5F6
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Mar 2022 15:11:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 732B04CD61B
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Mar 2022 15:15:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233545AbiCDOLu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Mar 2022 09:11:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36474 "EHLO
+        id S233995AbiCDOQK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Mar 2022 09:16:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231820AbiCDOLu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Mar 2022 09:11:50 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0CCB51BA917;
-        Fri,  4 Mar 2022 06:11:01 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEB871424;
-        Fri,  4 Mar 2022 06:11:00 -0800 (PST)
-Received: from [10.57.39.47] (unknown [10.57.39.47])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB4983F70D;
-        Fri,  4 Mar 2022 06:10:56 -0800 (PST)
-Message-ID: <e2698dbe-18e2-1a82-8a12-fe45bc9be534@arm.com>
-Date:   Fri, 4 Mar 2022 14:10:55 +0000
+        with ESMTP id S230479AbiCDOQK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Mar 2022 09:16:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C6C5D2DD9
+        for <linux-pci@vger.kernel.org>; Fri,  4 Mar 2022 06:15:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646403320;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/bGymhB6617r1a5UtR5SmVs04n4Hj/5Nxc0lgsmBP4E=;
+        b=H+raRbN+AMIsMdPwuxDAm48pRqQXjpeVnlsvm5ZIDsSMSqvyThkgxBCS31gNRCniUr7ro0
+        48aRGK0LQBE4B3kT4dNxAojKasR+PJNNqpXhNv4BcBBesdbChMcn0OMtCkP0ZbKR0dkeDO
+        WMGBrIZJMxyjTK5R38xn22Q82gWQhig=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-382-qv336blzOUiQ2mbPMfEYbQ-1; Fri, 04 Mar 2022 09:15:19 -0500
+X-MC-Unique: qv336blzOUiQ2mbPMfEYbQ-1
+Received: by mail-ej1-f70.google.com with SMTP id og24-20020a1709071dd800b006dab87bec4fso1017388ejc.0
+        for <linux-pci@vger.kernel.org>; Fri, 04 Mar 2022 06:15:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=/bGymhB6617r1a5UtR5SmVs04n4Hj/5Nxc0lgsmBP4E=;
+        b=Qncpc/Ks/mFZhQxps3r5LPo06SfYFphq8M5dE79smGrZNMLc391W2XhqewXkvi2EnS
+         YbSAbV46QwNJTip2sADS7EKQwBvDRjlQNM995XEupT5ck8ehBVdUPWVpdS7xe2QtR7qD
+         OvavWXgqhoZVgt9rt714JElVsgF9cS2uuibLS3wRC+dqBxQJLBXCHQHRzSJHZndAV1bT
+         i0PRd8yDkCxBuEE1M3D1lJfSPE9yI5QEgp8xsOOXn1rTE7hGfMbqnbIXUDxsdBOXlvIV
+         RN/AkVhZ/tywi2dHh1xlGqcc5+SyLJl6GcIqx1s0Ty+P+CjFka8gEVPSGi//ausVq2V0
+         xFxw==
+X-Gm-Message-State: AOAM533D+Xhf+wtnfJPhtQxuLU+/YC87uocMvflESa9/wvGTrpxptinp
+        PB27hUFX/Jdc30Pv5mCdy+diqMJBpV7fFo5orc8/uLH3QzAekP4775JNxeUTHwAKa52EkvEjwLf
+        ztwBHXeIzIrxxh7LLhisr
+X-Received: by 2002:a17:907:a0c9:b0:6da:9614:2626 with SMTP id hw9-20020a170907a0c900b006da96142626mr5831166ejc.100.1646403318292;
+        Fri, 04 Mar 2022 06:15:18 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzuq8suB3cekzKdmKk+8QL/Qxz4QVcdLRr5yO92DMAEEF4jcJL9bcL7SgOMYa4YtQzq1wpoMg==
+X-Received: by 2002:a17:907:a0c9:b0:6da:9614:2626 with SMTP id hw9-20020a170907a0c900b006da96142626mr5831141ejc.100.1646403317995;
+        Fri, 04 Mar 2022 06:15:17 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id da19-20020a056402177300b00413583e0996sm2124494edb.14.2022.03.04.06.15.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Mar 2022 06:15:17 -0800 (PST)
+Message-ID: <4836963c-7a1e-7452-eb88-454f2b75e407@redhat.com>
+Date:   Fri, 4 Mar 2022 15:15:16 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v7 01/11] iommu: Add DMA ownership management interfaces
-Content-Language: en-GB
-To:     eric.auger@redhat.com, Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Cc:     Chaitanya Kulkarni <kch@nvidia.com>, kvm@vger.kernel.org,
-        Stuart Yoder <stuyoder@gmail.com>, rafael@kernel.org,
-        David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        iommu@lists.linux-foundation.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Li Yang <leoyang.li@nxp.com>, Will Deacon <will@kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-References: <20220228005056.599595-1-baolu.lu@linux.intel.com>
- <20220228005056.599595-2-baolu.lu@linux.intel.com>
- <c75b6e04-bc1b-b9f6-1a44-bf1567a8c19d@redhat.com>
- <7a3dc977-0c5f-6d88-6d3a-8e49bc717690@linux.intel.com>
- <1648bc97-a0d3-4051-58d0-e24fa9e9d183@arm.com>
- <350a8e09-08a9-082b-3ad1-b711c7d98d73@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <350a8e09-08a9-082b-3ad1-b711c7d98d73@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH 0/3] x86/PCI: Clip only partial E820 overlaps
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20220304035110.988712-1-helgaas@kernel.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220304035110.988712-1-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022-03-04 13:55, Eric Auger wrote:
-> Hi Robin,
-> 
-> On 3/4/22 1:22 PM, Robin Murphy wrote:
->> On 2022-03-04 10:43, Lu Baolu wrote:
->>> Hi Eric,
->>>
->>> On 2022/3/4 18:34, Eric Auger wrote:
->>>> I hit a WARN_ON() when unbinding an e1000e driver just after boot:
->>>>
->>>> sudo modprobe -v vfio-pci
->>>> echo vfio-pci | sudo tee -a
->>>> /sys/bus/pci/devices/0004:01:00.0/driver_override
->>>> vfio-pci
->>>> echo 0004:01:00.0 | sudo tee -a  /sys/bus/pci/drivers/e1000e/unbind
->>>>
->>>>
->>>> [  390.042811] ------------[ cut here ]------------
->>>> [  390.046468] WARNING: CPU: 42 PID: 5589 at drivers/iommu/iommu.c:3123
->>>> iommu_device_unuse_default_domain+0x68/0x100
->>>> [  390.056710] Modules linked in: vfio_pci vfio_pci_core vfio_virqfd
->>>> vfio_iommu_type1 vfio xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT
->>>> nf_reject_ipv4 nft_compat nft_chain_nat nf_nat nf_conntrack
->>>> nf_defrag_ipv6 nf_defrag_ipv4 nf_tables nfnetlink bridge stp llc rfkill
->>>> sunrpc vfat fat mlx5_ib ib_uverbs ib_core acpi_ipmi ipmi_ssif
->>>> ipmi_devintf ipmi_msghandler cppc_cpufreq drm xfs libcrc32c
->>>> mlx5_core sg
->>>> mlxfw crct10dif_ce tls ghash_ce sha2_ce sha256_arm64 sha1_ce sbsa_gwdt
->>>> e1000e psample sdhci_acpi ahci_platform sdhci libahci_platform
->>>> qcom_emac
->>>> mmc_core hdma hdma_mgmt dm_mirror dm_region_hash dm_log dm_mod fuse
->>>> [  390.110618] CPU: 42 PID: 5589 Comm: tee Kdump: loaded Not tainted
->>>> 5.17.0-rc4-lu-v7-official+ #24
->>>> [  390.119384] Hardware name: WIWYNN QDF2400 Reference Evaluation
->>>> Platform CV90-LA115-P120/QDF2400 Customer Reference Board, BIOS
->>>> 0ACJA570
->>>> 11/05/2018
->>>> [  390.132492] pstate: a0400005 (NzCv daif +PAN -UAO -TCO -DIT -SSBS
->>>> BTYPE=--)
->>>> [  390.139436] pc : iommu_device_unuse_default_domain+0x68/0x100
->>>> [  390.145165] lr : iommu_device_unuse_default_domain+0x38/0x100
->>>> [  390.150894] sp : ffff80000fbb3bc0
->>>> [  390.154193] x29: ffff80000fbb3bc0 x28: ffff03c0cf6b2400 x27:
->>>> 0000000000000000
->>>> [  390.161311] x26: 0000000000000000 x25: 0000000000000000 x24:
->>>> ffff03c0c7cc5720
->>>> [  390.168429] x23: ffff03c0c2b9d150 x22: ffffb4e61df223f8 x21:
->>>> ffffb4e61df223f8
->>>> [  390.175547] x20: ffff03c7c03c3758 x19: ffff03c7c03c3700 x18:
->>>> 0000000000000000
->>>> [  390.182665] x17: 0000000000000000 x16: 0000000000000000 x15:
->>>> 0000000000000000
->>>> [  390.189783] x14: 0000000000000000 x13: 0000000000000030 x12:
->>>> ffff03c0d519cd80
->>>> [  390.196901] x11: 7f7f7f7f7f7f7f7f x10: 0000000000000dc0 x9 :
->>>> ffffb4e620b54f8c
->>>> [  390.204019] x8 : ffff03c0cf6b3220 x7 : ffff4ef132bba000 x6 :
->>>> 00000000000000ff
->>>> [  390.211137] x5 : ffff03c0c2b9f108 x4 : ffff03c0d51f6438 x3 :
->>>> 0000000000000000
->>>> [  390.218255] x2 : ffff03c0cf6b2400 x1 : 0000000000000000 x0 :
->>>> 0000000000000000
->>>> [  390.225374] Call trace:
->>>> [  390.227804]  iommu_device_unuse_default_domain+0x68/0x100
->>>> [  390.233187]  pci_dma_cleanup+0x38/0x44
->>>> [  390.236919]  __device_release_driver+0x1a8/0x260
->>>> [  390.241519]  device_driver_detach+0x50/0xd0
->>>> [  390.245686]  unbind_store+0xf8/0x120
->>>> [  390.249245]  drv_attr_store+0x30/0x44
->>>> [  390.252891]  sysfs_kf_write+0x50/0x60
->>>> [  390.256537]  kernfs_fop_write_iter+0x134/0x1cc
->>>> [  390.260964]  new_sync_write+0xf0/0x18c
->>>> [  390.264696]  vfs_write+0x230/0x2d0
->>>> [  390.268082]  ksys_write+0x74/0x100
->>>> [  390.271467]  __arm64_sys_write+0x28/0x3c
->>>> [  390.275373]  invoke_syscall.constprop.0+0x58/0xf0
->>>> [  390.280061]  el0_svc_common.constprop.0+0x160/0x164
->>>> [  390.284922]  do_el0_svc+0x34/0xcc
->>>> [  390.288221]  el0_svc+0x30/0x140
->>>> [  390.291346]  el0t_64_sync_handler+0xa4/0x130
->>>> [  390.295599]  el0t_64_sync+0x1a0/0x1a4
->>>> [  390.299245] ---[ end trace 0000000000000000 ]---
->>>>
->>>>
->>>> I put some traces in the code and I can see that
->>>> iommu_device_use_default_domain() effectively is called on
->>>> 0004:01:00.0 e1000e device on pci_dma_configure() but at that time
->>>> the iommu group is NULL:
->>>> [   10.569427] e1000e 0004:01:00.0: ------ ENTRY pci_dma_configure
->>>> driver_managed_area=0
->>>> [   10.569431] e1000e 0004:01:00.0: ****
->>>> iommu_device_use_default_domain ENTRY
->>>> [   10.569433] e1000e 0004:01:00.0: ****
->>>> iommu_device_use_default_domain no group
->>>> [   10.569435] e1000e 0004:01:00.0: pci_dma_configure
->>>> iommu_device_use_default_domain returned 0
->>>> [   10.569492] e1000e 0004:01:00.0: Adding to iommu group 3
->>>>
->>>> ^^^the group is added after the
->>>> iommu_device_use_default_domain() call
->>>> So the group->owner_cnt is not incremented as expected.
->>>
->>> Thank you for reporting this. Do you have any idea why the driver is
->>> loaded before iommu_probe_device()?
->>
->> Urgh, this is the horrible firmware-data-ordering thing again. The
->> stuff I've been saying about having to rework the whole .dma_configure
->> mechanism in the near future is to fix this properly.
->>
->> The summary is that in patch #4, calling
->> iommu_device_use_default_domain() *before* {of,acpi}_dma_configure is
->> currently a problem. As things stand, the IOMMU driver ignored the
->> initial iommu_probe_device() call when the device was added, since at
->> that point it had no fwspec yet. In this situation,
->> {of,acpi}_iommu_configure() are retriggering iommu_probe_device()
->> after the IOMMU driver has seen the firmware data via .of_xlate to
->> learn that it it actually responsible for the given device.
-> 
-> thank you for providing the info. Hope this is something Lu can work around.
+Hi Bjorn,
 
-Hopefully it's just a case of flipping the calls around, so that 
-iommu_use_default_domain() goes at the end, and calls 
-arch_teardown_dma_ops() if it fails. From a quick skim I *think* that 
-should still work out to the desired behaviour (or at least close enough 
-that we can move forward without a circular dependency between fixes...)
+On 3/4/22 04:51, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> This is based on Hans' extensive debugging and patch at
+> https://lore.kernel.org/r/20220228105259.230903-1-hdegoede@redhat.com
+> and applies on 7e57714cd0ad ("Linux 5.17-rc6").
+> 
+> This is basically the same idea (applying the 4dc2287c1805 workaround only
+> when an E820 region *partially* overlaps a host bridge window), but I think
+> it's a little simpler.
+> 
+> This also adds a little dmesg output when clipping, which should make
+> future debugging easier.
+> 
+> I bcc'd several folks who didn't have public email addresses in the RedHat
+> bugzilla or Launchpad.  If you review or test this, I'd be happy to
+> acknowledge that.
+> 
+> Bjorn Helgaas (3):
+>   x86/PCI: Eliminate remove_e820_regions() common subexpressions
+>   x86/PCI: Log host bridge window clipping for E820 regions
+>   x86/PCI: Preserve host bridge windows completely covered by E820
 
-Robin.
+Thanks, I agree that this is better then my fix I also like the logging
+added to 2/3 which lets us know if the commit 4dc2287c1805 workaround
+is active.
+
+I have one small remark on 3/3. Regardless of that getting addressed
+the entire series is:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+I've done a Fedora test kernel build of 5.16.12 with these 3 patches
+added and asked the reporters of:
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+(ideapad touchpad bug)
+
+and:
+
+https://bugzilla.redhat.com/show_bug.cgi?id=2029207
+(Lenovo x1 carbon gen 2 regression with my bios-data based fix_
+
+to test the rpms and to collect dmesg. On the X1C2 this should show
+the new logging from 2/3 "in action" and on the ideapad the touchpad
+should still work...
+
+Regards,
+
+Hans
+
+
