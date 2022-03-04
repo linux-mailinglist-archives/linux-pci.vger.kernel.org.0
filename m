@@ -2,176 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDFB94CDDD6
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Mar 2022 21:25:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B374D4CDEAE
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Mar 2022 21:26:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbiCDUCC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Mar 2022 15:02:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38178 "EHLO
+        id S229752AbiCDUUU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Mar 2022 15:20:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230047AbiCDUBs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Mar 2022 15:01:48 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5A34728672D
-        for <linux-pci@vger.kernel.org>; Fri,  4 Mar 2022 11:56:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646423775;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P9DhVtnRsmc3RlPCIzZyvuWYNlBf0BRlzJacAYcnL5k=;
-        b=dOlX/8D3oBAnQOcGa6KKoVokU+mEDdVIzLWEShKe0ms+pcG7/6R3nrprkYRUSI+V5Tg6Tx
-        cNqr9cVPNXo7gwW2FW5wjbNEmmCKY+ez8880uPr7/hOJ4T97oPe75qXzfk8XtJiOLss644
-        ROU48G/x7emhwgAvDWbNslGlpYG51Do=
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
- [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-327-6ntw1aX-Nc2jnFn5DWO3XA-1; Fri, 04 Mar 2022 14:56:14 -0500
-X-MC-Unique: 6ntw1aX-Nc2jnFn5DWO3XA-1
-Received: by mail-oo1-f71.google.com with SMTP id r10-20020a4a700a000000b0031bf70c4866so6462568ooc.12
-        for <linux-pci@vger.kernel.org>; Fri, 04 Mar 2022 11:56:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=P9DhVtnRsmc3RlPCIzZyvuWYNlBf0BRlzJacAYcnL5k=;
-        b=Gm5lzqW09hWCqDjvc8Pm9hfatIeNz5iFzyoToABnhE68idk4Zy5Bzic5fqIJQfOIWH
-         rdvPizUwCSns3q1y5bpNgZn+fbNscmysqB0T8UPTFPkNeVshodifrCDRxbDfmYch6hDL
-         Y8G6jHjJUYEB2nbqTTzoNQLxo2R69hrrzoKci6bqqffRi3MYmTCqGp0Ha+665LHo2m79
-         tAuxIExztweM+qjIIVj9v/U4CsnpK3E45j6lfgFSk4U4ZkPsvMm+V92jbK9uLZJz3ibx
-         xCLPfE9gBPhupt7DWoSOic+V3jHQomMqCT9gMpwgvbAmaUT6rpzbOXSR/ItR49vRDFwp
-         L6/w==
-X-Gm-Message-State: AOAM532jqYw4JvI5YDiNPOwoQ/kr4Y52bqQ7HrVAlmqY51p7d4kdLmBK
-        VDsQNlgwU/wAFs/AA1cHBetD1vq9ffoqU+ZbayssTXWUSuMBy9hO17malrqFn7swak4n5Ycy3Z5
-        6Tpn2Jp7Rt/x9bNGC4pjl
-X-Received: by 2002:aca:aa4e:0:b0:2d4:eabf:6c9e with SMTP id t75-20020acaaa4e000000b002d4eabf6c9emr102340oie.45.1646423773347;
-        Fri, 04 Mar 2022 11:56:13 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxaDyZjmGDO18UlrzMqzMCLrub8I+E0Ci/YjgAOICgYNLJHKHnp9ckx1d9BYSV5FmaGmN0opw==
-X-Received: by 2002:aca:aa4e:0:b0:2d4:eabf:6c9e with SMTP id t75-20020acaaa4e000000b002d4eabf6c9emr102326oie.45.1646423773090;
-        Fri, 04 Mar 2022 11:56:13 -0800 (PST)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id m26-20020a05680806da00b002d797266870sm2981345oih.9.2022.03.04.11.56.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Mar 2022 11:56:12 -0800 (PST)
-Date:   Fri, 4 Mar 2022 12:56:11 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "yishaih@nvidia.com" <yishaih@nvidia.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        liulongfang <liulongfang@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v7 07/10] vfio: Extend the device migration protocol
- with PRE_COPY
-Message-ID: <20220304125611.7659eccb.alex.williamson@redhat.com>
-In-Reply-To: <20220303234951.GB219866@nvidia.com>
-References: <20220302172903.1995-1-shameerali.kolothum.thodi@huawei.com>
-        <20220302172903.1995-8-shameerali.kolothum.thodi@huawei.com>
-        <20220302133159.3c803f56.alex.williamson@redhat.com>
-        <20220303000528.GW219866@nvidia.com>
-        <20220302204752.71ea8b32.alex.williamson@redhat.com>
-        <20220303130124.GX219866@nvidia.com>
-        <20220303082040.1f88e24c.alex.williamson@redhat.com>
-        <0cee64d555624e669028ba17d04b8737@huawei.com>
-        <20220303125930.43d9940b.alex.williamson@redhat.com>
-        <20220303234951.GB219866@nvidia.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        with ESMTP id S229468AbiCDUUT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Mar 2022 15:20:19 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEBFF10E079;
+        Fri,  4 Mar 2022 12:19:30 -0800 (PST)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 224HFvRS019110;
+        Fri, 4 Mar 2022 20:18:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=g1zl/jtSQUcv6zq5IH8TsnBi6aRZ+imTi1+joGXQAjg=;
+ b=X67tZTA/uVEO4CnS81ENaHWi3A7hafrQn4IZcb+uWh7Adspl7Uyq9ezdqYNszdSqAvE8
+ S33Qx0lx3EZtxt9qdgPtgA+lvoT3/pprjdJiaQTO6lh5IQOOKAPiZZsJxg5L3BF1O+7A
+ ZF6lIBlNBEmybXxN22J6r7hd7rVP490gx70yeVBKC7yXcQoXJK5qXCqphvXKkHCk7nnY
+ D/7W5/5lj6TCxTLQEh3O50NP/2k+fkdua7I+Gk1kz+L92GrwZR0Ni/A6di5Nlt3stnxY
+ KCa6zTNvhQFrEpje7SsUNdbfc9dkIvekI2yeS4sFQMtZKIW1arYvBh0PLoqg+dvwzqFs uA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ek4hvar45-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Mar 2022 20:18:34 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 224KBTqf043959;
+        Fri, 4 Mar 2022 20:18:33 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2105.outbound.protection.outlook.com [104.47.55.105])
+        by userp3020.oracle.com with ESMTP id 3ek4jhcggj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Mar 2022 20:18:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OhGarKdRSorgd/CEDvE1i2bAtbM6QhxahtIAy3DZCcJWfUcdlz1lKSu+KVGSSTi6ETYg2DbHsaxEudu37OePhs/kfYUY/f+qpFCPLB8NqErO82r95sf0buZKEFWmQZuU9EUuhEQEyRuLIqBQarsJTD087W8WyCQxg8MXJnkgHHE/ENEB8ZsPD6tnEgIVCVmYUVcbUcbzk6nxGiG5kZGTyf77H5ZZBxqCSG3E2Q7boGtVTxSq7Qm6V6yj2b5LhcsMrScFk9S4ctqnWbQTlxAYMXsokcuKNqfUrNwymZr7t5XM/uOtBKs82YRBOvzc/MAg6801FOmlKIw9B+DweOHnSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g1zl/jtSQUcv6zq5IH8TsnBi6aRZ+imTi1+joGXQAjg=;
+ b=PtvWc7g9PEdMkY7/88sO2XzUd3hhiS8fkVbr4Z4W8KXNfwRymBm+UO/OYPEr5uIkcjarU4IYcEMLcWZYPobe3tmOjD5JqOSQMaaDvvs0ax/1ccmOKBrxWvng4L868qJGjSg3QuEGrYBM6Z89ldiP7YmzmeDZ+Q25AuousH6lcvviQIeUHSmbpQaTsyf720o6n+JYTuFmwWBQElHs521x1nMgh7OO4JVY2W3udr4mV8EB2Gm7heE/Fu40WvqP7/So352v9hfWojeVDz00DVPI+jEmIhbcpjchEJfw5tUdScyipuIsFvC6AF+FREon/5ZWHCesH8qtsJgOnpkmcqDoqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g1zl/jtSQUcv6zq5IH8TsnBi6aRZ+imTi1+joGXQAjg=;
+ b=vfDSotFZI8+Of/YHYjFPFb8zoiBL0WfcJPGV5JvJw8mXUV8e8D6amRRR5eOAQR4cXvXh58eU8Du/SBCVmVHDKO/fAPV/LFoeWK8RKTvR0e/+J2y7Bkcd3B5UBDHlcfZ3fjTvFGLCYp73N4ZMVZWdG/QtOvJMiq2iZtlK4GKcAak=
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com (2603:10b6:208:321::10)
+ by BN7PR10MB2418.namprd10.prod.outlook.com (2603:10b6:406:cb::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Fri, 4 Mar
+ 2022 20:18:30 +0000
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::6d20:6694:a16:56f7]) by BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::6d20:6694:a16:56f7%3]) with mapi id 15.20.5038.017; Fri, 4 Mar 2022
+ 20:18:30 +0000
+Message-ID: <75cb15b5-d861-1b88-5413-df326c3f1144@oracle.com>
+Date:   Fri, 4 Mar 2022 15:18:23 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.1
+Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
+ swiotlb
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        iommu@lists.linux-foundation.org, x86@kernel.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+References: <20220301105311.885699-1-hch@lst.de>
+ <20220301105311.885699-12-hch@lst.de>
+ <alpine.DEB.2.22.394.2203011720150.3261@ubuntu-linux-20-04-desktop>
+ <ca748512-12bb-7d75-13f1-8d5ec9703e26@oracle.com>
+ <20220304172859.GA12860@lst.de>
+ <fc3992a8-896b-f0fc-e500-9010ec085c57@oracle.com>
+ <20220304174308.GA13515@lst.de>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+In-Reply-To: <20220304174308.GA13515@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+X-ClientProxiedBy: SJ0PR13CA0218.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c1::13) To BLAPR10MB5009.namprd10.prod.outlook.com
+ (2603:10b6:208:321::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 30b5e278-3965-457b-18f6-08d9fe1c262e
+X-MS-TrafficTypeDiagnostic: BN7PR10MB2418:EE_
+X-Microsoft-Antispam-PRVS: <BN7PR10MB241890FD23B08A445411034E8A059@BN7PR10MB2418.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Nocj07XcbmJrvdPiYW/qSck1N32eVRKcrdh6rTaclqIVJHPZSnzlefVkdJMIw50PFKxiBmlyPrDIV0osUmX3pB2Ofm3oL0RjbZ1zfamE4PR5OQL1umoasZfbyMmo4gjdEfesSb83V+qXlieDfDWY3Hzd0koHSEQxDUWxH2+6YL/+iFA2MxVOBSr5fRpjSaScip6tbhYdLNE7zFm81/daimeempItWRi294b4OU/2mlE4f2xGyCX8qkKUKycBTMJZJ7YLRIrsKYT+Yx30cPGDH8Gta5ARuUfrXKc+IUPqKx91vpn633HRjfXRL63/6M+yPA+GErmVjynuEyGvDFLmMdr45g1zhNPAKrUbUgwlZ4SlM1PxYWFVcTMasiry3H1jhAZcbJgV4tBgDlZCkjLTNCmb3kBuwkuW38UIFVXmg2fAjcfk0fXSOG++ZnFKjZE20LMzK5MBgusm9s+CtPOkzXbNhyxJGZVltnVRimU8Zti/oDITM8uRwEGemxxfU+IgXD+WYwbw7zpjdTz3FuDrpRqU8zrnCoJzoZe1CDjgqdoXhEl1hGBmUiMjCrOUGViZXOd43DUyzjzwMGxYhUbQXPry4ZuLDNyZoXvRi4ZevKE5eJAJjUTfK0WQ+K8qS5QEUhotZLzr9Eoy7UbiEtcjIzMzLyh9BVm0Us8RiRsdWGpuRLdPgrL6mWTw0ZldPvmvRL2Rk2sSlMG094psobP64RK/mB+rR+wexLYTpo1MC/E=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5009.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6506007)(8936002)(31686004)(316002)(36756003)(66946007)(66476007)(6666004)(2616005)(66556008)(6486002)(53546011)(54906003)(508600001)(6512007)(6916009)(31696002)(8676002)(4326008)(83380400001)(86362001)(186003)(26005)(44832011)(4744005)(7416002)(38100700002)(2906002)(5660300002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YUFZUnV5Z0R1TFFPcTlhdm5BMWx1Z3dkczJWc3Q3Sjh0aWJFTk1OeHRIa0ll?=
+ =?utf-8?B?eGZIc05ua3gvVmZESXAxWlJiU2QzWGlCNDcwRWt4eEQ1RWFDako1ZU41UHBv?=
+ =?utf-8?B?MkF4K2R2RUJkUWtHTGxDaXdLcE1UWXQ4OFlWd1NyRlV1UmtxTllLTUkralJn?=
+ =?utf-8?B?enJaVU9Mbjd3d3NKLzN4aU5sMkdGMjF6K2Y2RWU5S3NLMVZMZjltL1Y1U1JV?=
+ =?utf-8?B?b2daeG14SlFNcHd2QUxGVUJtZzVjUE1pNnh4VEZiemYwYURzMTBVc21BTTZS?=
+ =?utf-8?B?Qm9tRTVjRUFFZzcrUTJQNXI0YnFkY1FSUHA0MjZXcFJWSWg3L1g3Sjl5K3I5?=
+ =?utf-8?B?dEZXQjU1ZGJkc3dFdnNmMXNIMW5JT3FHYzlseWxTVUppRTV6aDRSM1hOdXp1?=
+ =?utf-8?B?a1lpZzdVNU0xN1NMeU81bCtPeE1CbkVJd1R5VnNBT0xYVXplN3FUVmkzYVIz?=
+ =?utf-8?B?SXU3aEJYclg1dnN0SlgyeGlpaDk1YlRvWTE2YlJoaGdzelZld1lFSXZla1U2?=
+ =?utf-8?B?dUNTVzZ0NnZYcHhyRGYyYVMxYVFrbVk1UU43cElBejluY3dPdlkwL3E1TG0v?=
+ =?utf-8?B?a2FKL0NUeWpwNGZWRFBDbzVYMXJBbHZzdWU4WjFmMVlOT0JpK1ZtbHRFVXgv?=
+ =?utf-8?B?TXJyeHBSOGJuV1l0SDRxMUROaUZCejNSaFhXVjczV3JRU1F5QW5qc241VDgx?=
+ =?utf-8?B?R24yNEJVRVFQR3JBeFlRVkowL09IZkhidHdUUXdKSUMxTTNOMVJIeHlOMGI1?=
+ =?utf-8?B?ZzBFVmx5TUtWM0IvSGdqUkhCQzZBZ1lVelk1Y2tRRE1jVTl3UEo3QUpmZW4x?=
+ =?utf-8?B?bHlOeGliNHVJREhIbkZhL0RiQjM4Mzh1eHlSQkU3RTFOMXl3K29Ick9jdXdS?=
+ =?utf-8?B?TDhKZGFQRlB5UTZVWkNQSHl2OW9pUmRJdS9lQk5wRzRYWHNMYk01RlJwVTdC?=
+ =?utf-8?B?NUcyZ1p0UmpGVmdqTzg4VXowbGg3THhOb21ESU1XZVNDZVAvTFJIQm5aYTRk?=
+ =?utf-8?B?cDRkWlFORG9NTlNhVSs5M2RrV0VmdTJERU9TU2RWVXpGM1RuU3REby9iUXda?=
+ =?utf-8?B?cEh0allyRXBzMUVqek5YanJVS3pLR2dva2RLL1RkcW91K1FSR0h2U1RtblY2?=
+ =?utf-8?B?Z0JVTWtCaUN6ZXNXcTdhNzk2Q3VkVndTSHBwMS9iL29pTnBBOXVNd24vNCsz?=
+ =?utf-8?B?YkRrSjg5MGpBcFhMbUgrY01sVnhraHVDU28wV3ZiakRyL282WEw2Rm12Wmoz?=
+ =?utf-8?B?TmtZbXFyN1BPRVdQWEI0OStUZjlldmFnVDFrTHBhS3ZzdEl5UmVnSEZFemRU?=
+ =?utf-8?B?TjJTdnMycmZDSzlqL2daU1ZXUXBQdVRUaWc5QThJemlGcUNzVDBlallrR2VS?=
+ =?utf-8?B?SHRma25mdFBKdWE5QzBJc0RRN2hMblJkV3pndjdtckF1UFkzMzFCQWRTZ3FU?=
+ =?utf-8?B?cGVKaWx5eGlLVm5TN05CQTVYdW1WRmVyc3lXdFhmSGg0bGwvQmZSSVFrTGtM?=
+ =?utf-8?B?V3JuUGNwSXAxVzN0QlliRFREVkwrRHFmUEpEbnFGKzdlWFllTGpOa0VqVHBa?=
+ =?utf-8?B?OU1GUy9tdUw4Q0RTdlZlSnZZTllJenBZRGhJcTBKZkpUYlE5MDZoZmNzRWFD?=
+ =?utf-8?B?c2l2OXp5T2NySHY3NHZEc0VpRldYVnA3bnZ5N1ZrUno0ODBmZURrOXNwK0xj?=
+ =?utf-8?B?aGpYZ24xMDIvZ0dRc0pIQzhNYmxpc2ptSVJFY1c2WitUSTVLWkpPUldVSHdo?=
+ =?utf-8?B?WnJnSGVqWk9JWFE3akdEZ3Boci8xYS95NmN2bEhET0lsK0lPL29QTjltRG96?=
+ =?utf-8?B?ak1CVzF6OTRCbnNuZDR5NnZaU3oxNGFhSjZFMXZXNXBXcGIrQ09TTXIrNDZM?=
+ =?utf-8?B?WmtDRXZZdFNMbVlZUjZnWkxrVGVUWHhZK2ZxT2tsWkc2dGVua3dybmMvUTJH?=
+ =?utf-8?B?Rms4czZGUVpzUUtmMlBXN1NkclYyczdOa2l4a1BGM2dCR2paT2w4L2JlNDJW?=
+ =?utf-8?B?dGxOSUhSR1BNVDZsNk01cURUZWVXUEtIblpDYXBLaGlQSDF3bVN4Zlg0QVI5?=
+ =?utf-8?B?ZG84VkFnNE1rS0RNbHFkdEVsZzA1NDBjeXNJVnRaeHcyOHBLZ0ltZXR1bnlH?=
+ =?utf-8?B?Qmsxd1ByQ1hvZVdDVmNWL05PakQ5RTF1S0dZdDBUaXV3MEFxWlNhTTk4UERU?=
+ =?utf-8?B?Mk14OG9xZG5xZGI1OE1QSEUvaUJuOWVpQzREVDZzNi9rZ1BKZUl5OGF6RWd2?=
+ =?utf-8?Q?7TtBsC9N4JQqfrX++FXqcxmF06UPoaqPsyQClstjWE=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30b5e278-3965-457b-18f6-08d9fe1c262e
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5009.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2022 20:18:30.5230
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mV48hjgWHi6Pbqx447K51UJ+OGtJbfpJe9pSO8+HAKAEtv/1bzJFBKyy5we1zMg7V9o3tXqkdgD6bnD8ytxaTZM4SUSjr4v+bRwGlIY7Qoc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR10MB2418
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10276 signatures=690470
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=823
+ adultscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2203040101
+X-Proofpoint-GUID: 8hJhYIJeTbw-Nq1Sqvvk0fd9jQeRkrHK
+X-Proofpoint-ORIG-GUID: 8hJhYIJeTbw-Nq1Sqvvk0fd9jQeRkrHK
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 3 Mar 2022 19:49:51 -0400
-Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-> On Thu, Mar 03, 2022 at 12:59:30PM -0700, Alex Williamson wrote:
-> 
-> > > > If it's an abuse, then let's not do it.  It was never my
-> > > > impression or intention  
-> 
-> So maybe abuse is the wrong word, but I don't want to mess up this
-> interface, which is intended to support real pre-copy devices, just
-> because devices that don't actually implement true precopy might do
-> silly things.
+On 3/4/22 12:43 PM, Christoph Hellwig wrote:
+> On Fri, Mar 04, 2022 at 12:36:17PM -0500, Boris Ostrovsky wrote:
+>>>> I bisected it to "x86: remove the IOMMU table infrastructure" but haven't actually looked at the code yet.
+>>> That looks like the swiotlb buffer did not get initialized at all, but I
+>>> can't really explain why.
+>>>
+>>> Can you stick in a printk and see if xen_swiotlb_init_early gets called
+>>> at all?
+>>
+>>
+>> Actually, that's the only thing I did do so far and yes, it does get called.
+> So, specifically for "x86: remove the IOMMU table infrastructure" I
+> think we need the one-liner below so that swiotlb_exit doesn't get called
+> for the Xen case.  But that should have been fixed up by the next
+> patch already.
 
-Abuse... silly... either way, you're clearly not comfortable misusing
-PRE_COPY for this purpose.  
 
-> The vGPU case you imagine will still work and qemu will switch to
-> STOP_COPY with a huge trailer and be slow. That is unavoidable and I
-> think it is fine.
+This indeed allows dom0 to boot. Not sure I see where in the next patch this would have been fixed?
 
-It's not really fine, but I think it will require some better defined
-interfaces and userspace support to give a clear picture of how data is
-partitioned.
 
-> > > > Furthermore the acc driver was explicitly directed not to indicate any degree
-> > > > of trailing data size in dirty_bytes, so while trailing data may be small for acc,
-> > > > this interface is explicitly not intended to provide any indication of trailing
-> > > > data size.  Thanks,   
-> 
-> Yes, trailing data is not what this is for. This is only to help
-> decide when to switch from PRE_COPY to STOP_COPY. If the device can
-> execute STOP_COPY in the right time is a completely different
-> discussion/interface.
-> 
-> > > Just to clarify, so the suggestion here is not to use PRE_COPY for compatibility
-> > > check at all and have a different proper infrastructure for that later as Jason
-> > > suggested?
-> > > 
-> > > If so, I will remove this patch from this series and go back to the old revision
-> > > where we only have STOP_COPY and do the compatibility check during the final
-> > > load data operation.  
-> > 
-> > Hi Shameer,
-> > 
-> > I think NVIDIA has a company long weekend, so I'm not sure how quickly
-> > we'll hear a rebuttal from Jason, but at this point I'd rather not
-> > move  
-> 
-> Yes, company long weekend.
-> 
-> > forward with using PRE_COPY exclusively for compatibility testing if
-> > that is seen as an abuse of the interface, regardless of the size of
-> > the remaining STOP_COPY data.  It might be most expedient to respin
-> > without PRE_COPY and we'll revisit methods to perform early
-> > compatibility testing in the future.  Thanks,  
-> 
-> Shameerali has talked about wanting this compat check early from the
-> start, and done all the work to implement it. I think it is pretty
-> extreme to blow up his series over trailing_data.
-> 
-> To me acc is fine to use it this way until we get a better solution
-> for compatability. We all need this, but I expect it to be complicated
-> to define.
+(BTW, just noticed in iommu_setup() you set this variable to 1. Should be 'true')
 
-It was only in v7 that we made this switch to use PRE_COPY for this
-purpose, I wouldn't call it blowing up his series to step back and
-decide that was a poor choice and clearly v8 exists without this.  This
-isn't the end of the discussion regarding early compatibility testing,
-but I'm not going to rush a PRE_COPY interface to support that early
-compatibility testing if we're not agreed that it's a valid use case,
-and not just a marginally acceptable one due to the trailing data being
-inconsequential.  Let's focus on v8 and we can talk about further
-extensions later.  Thanks,
 
-Alex
+-boris
 
