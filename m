@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB5AD4CE2CC
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Mar 2022 06:23:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 963814CE2D5
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Mar 2022 06:24:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231228AbiCEFYQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Mar 2022 00:24:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40890 "EHLO
+        id S231262AbiCEFYz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Mar 2022 00:24:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230077AbiCEFYQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Mar 2022 00:24:16 -0500
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam07on2077.outbound.protection.outlook.com [40.107.95.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82104162000;
-        Fri,  4 Mar 2022 21:23:26 -0800 (PST)
+        with ESMTP id S230121AbiCEFYy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Mar 2022 00:24:54 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2050.outbound.protection.outlook.com [40.107.236.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D99AC19E70C;
+        Fri,  4 Mar 2022 21:24:02 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SWjBcEQg3CaG6xasRYSpAak9G2SlMC+8pdEFGj+Vy7YvRiouW/tOVPrE4/C+PCA3y0xm7I+w/nmhtXf3MQTdR5mNRTQuAt8Tt4LyzsJCmsYkka+B293tf13+D5KJyJCzf48WI1ZMbl/LSJ9iD1BHL9T6U2MOwSnEktPv6ZbUtTnc2mmzClQ5j5IhzOUrSz91f6G/CvLDhh847bDHgpEC3M8rm2IfJXGu3Yan3M9VjU7MRGoP7EFovsVTS2NYAONFdG6l+qovBgBUt5y8dICUJ0svZLt/lYuoEA6SIG4Gh3Oz6hyCARkaSJVqjsNdcxK1xRvbVliD0lFufXDIFAUIcA==
+ b=MDkjsRhwzWI7sD40zi3az/wj3RIYHsdECaCB3eEIWKnYMLdB3+m0iQsaQsKbi9RfM8sYYP6THo7fncxtcB3o9toeqvlcCSAo6mpVIgkK/AIKkLLF7aZoghVsOxtfwxqJOqgrGz8XmGqJfmMQA8K0RDE7hSbL6loLyjTyqpGECakF52Nu6VvT1lBZTMvYx/ad0PUeWCQD0ltIe2vAo3SWGgIjTKwji8P4ixdT6izkm++7oL/aDWopWTjcIkex5UWQ/6iua3GiLZkaOWwKETjOwQtx3UVx/lQtgZzbQFDfKoTYqqY4DIYA5pk2IRG/jqZ1gUNI1Qjp1pdOZMJ7fSe1Hw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F+LJXBmaDbKZVsVzVqhgP5YWio/nOvHhdeAjOWMBEy0=;
- b=KofJA+cecRHBROGLCfuIq5JeohANZeTHJnxpOlXCw/eERyIX7xNrBiHJAH6uXXpNZFC4Wf3VxmiUXlq067dDT/WkE+usV/dBAdxyD25nH6qMI9V2fVlOaEYbuK8rkHVVZKdjBNkZrrNnBKEK3Gg8SJ2qbx3/PB5ySJvlfkEwj8PXpXi3ig3/jgRz/WHkzhZPa+dyvgDL/uB4bqH40g0C9qxGug32P5ib/1DG2GFa4VBZkPi9fo7N2HBq+/ynrp4i/8iqjHilDk3d84SYgU+NXUmh088V4orV4GVgIydQz8ugrMwETlJI6o5SFCRapgCslBaI1RZSeVJS6yBSjV2mUg==
+ bh=Gc0SpTpdIrx0OGld9RoOfkU9CGjX+wp30x6rP3/Av+Q=;
+ b=QSc5w4bae0OrQ+CnDLNyeOawjpbJPKveQ6X74orQbFUZn0IzEvj94XMOYjQK0yUvHcNMRbH8FRMMzjh57TQwMVRPHNZNM8mAYR8rAN+zOwp6ZZF/41sD1kmgzyf0DLn2BYnuRQ6kotXw8KbC/zcax9u5wUffzAPgRgH5m5p7fFu3bc2IvXGFn4ZfSwvujO2WJg9B9KFAeYEUJLrkQoozZS+EZIbYcaa5tYVZQ8kggJv5501yKOeX6soArO8MoY7aDWUwHfAEMyw+xv/E7iHw7M0X4vRSxTgdVi9SgS09Fu9TiRzI9RcMCQEk+FDYGfflxyUIOQcA59IH+Jdt4AKi6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.62.198) smtp.rcpttodomain=infradead.org smtp.mailfrom=xilinx.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
@@ -28,18 +28,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F+LJXBmaDbKZVsVzVqhgP5YWio/nOvHhdeAjOWMBEy0=;
- b=jfSvIQ0qKWz/FK/QSh444wAp/eS/4XGFP/+ihjDL5j7dPec/Js5hq0BXY5Nd55RiNwYFrzWRNkX+0XpDRDzdK89MF2UI+SzQjc8ElUS0Yauoeb3GSR0/+PfiDSLbsAYyQo6ePEDmBU/oP64wOHbL3zNOm8JYrHtdJlto+TT1YqU=
-Received: from SA0PR11CA0014.namprd11.prod.outlook.com (2603:10b6:806:d3::19)
- by BN8PR02MB5906.namprd02.prod.outlook.com (2603:10b6:408:ba::30) with
+ bh=Gc0SpTpdIrx0OGld9RoOfkU9CGjX+wp30x6rP3/Av+Q=;
+ b=T4Bg29nn0xEIBW/FW4JZj4lAJZnmrz8FucmHuHo06GcfkpRC6O+kp2Ft+PNZlntkgqd4cqDiNFDD4VTHZI76wzsVOsq8UzYRdN+u/NZt8VkIS6abauOZcvec7pNwXYoFRpDoxRNn+8U7m5tWmeFYa0fhtgzzwbCbrArIR3uFKiE=
+Received: from SN7P222CA0001.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:124::28)
+ by SA0PR02MB7355.namprd02.prod.outlook.com (2603:10b6:806:d8::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Sat, 5 Mar
- 2022 05:23:23 +0000
-Received: from SN1NAM02FT0064.eop-nam02.prod.protection.outlook.com
- (2603:10b6:806:d3:cafe::4f) by SA0PR11CA0014.outlook.office365.com
- (2603:10b6:806:d3::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14 via Frontend
- Transport; Sat, 5 Mar 2022 05:23:23 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.15; Sat, 5 Mar
+ 2022 05:24:00 +0000
+Received: from SN1NAM02FT0057.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:806:124:cafe::62) by SN7P222CA0001.outlook.office365.com
+ (2603:10b6:806:124::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.13 via Frontend
+ Transport; Sat, 5 Mar 2022 05:24:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
  smtp.mailfrom=xilinx.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=xilinx.com;
@@ -47,16 +47,16 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.62.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
 Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT0064.mail.protection.outlook.com (10.97.4.66) with Microsoft SMTP
+ SN1NAM02FT0057.mail.protection.outlook.com (10.97.4.123) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5038.14 via Frontend Transport; Sat, 5 Mar 2022 05:23:23 +0000
+ 15.20.5038.14 via Frontend Transport; Sat, 5 Mar 2022 05:23:59 +0000
 Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
  xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Fri, 4 Mar 2022 21:23:22 -0800
-Received: from smtp.xilinx.com (172.19.127.95) by
+ 15.1.2176.14; Fri, 4 Mar 2022 21:23:58 -0800
+Received: from smtp.xilinx.com (172.19.127.96) by
  xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Fri, 4 Mar 2022 21:23:22 -0800
+ 15.1.2176.14 via Frontend Transport; Fri, 4 Mar 2022 21:23:58 -0800
 Envelope-to: dwmw2@infradead.org,
  yilun.xu@intel.com,
  mdf@kernel.org,
@@ -65,12 +65,12 @@ Envelope-to: dwmw2@infradead.org,
  devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org,
  linux-pci@vger.kernel.org
-Received: from [172.19.72.93] (port=44428 helo=xsj-xw9400.xilinx.com)
+Received: from [172.19.72.93] (port=44434 helo=xsj-xw9400.xilinx.com)
         by smtp.xilinx.com with esmtp (Exim 4.90)
         (envelope-from <lizhi.hou@xilinx.com>)
-        id 1nQMt0-000BYJ-DR; Fri, 04 Mar 2022 21:23:22 -0800
+        id 1nQMta-0002ZR-NK; Fri, 04 Mar 2022 21:23:58 -0800
 Received: by xsj-xw9400.xilinx.com (Postfix, from userid 21952)
-        id 08BB0600131; Fri,  4 Mar 2022 21:23:09 -0800 (PST)
+        id 53C11600199; Fri,  4 Mar 2022 21:23:10 -0800 (PST)
 From:   Lizhi Hou <lizhi.hou@xilinx.com>
 To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <robh@kernel.org>
@@ -79,9 +79,9 @@ CC:     Lizhi Hou <lizhi.hou@xilinx.com>, <yilun.xu@intel.com>,
         <michal.simek@xilinx.com>, <stefanos@xilinx.com>,
         <trix@redhat.com>, <mdf@kernel.org>, <dwmw2@infradead.org>,
         <linux-kernel@vger.kernel.org>, Max Zhen <max.zhen@xilinx.com>
-Subject: [PATCH V1 RESEND 2/4] Documentation: devicetree: bindings: add binding for PCIe endpoint bus
-Date:   Fri, 4 Mar 2022 21:23:02 -0800
-Message-ID: <20220305052304.726050-3-lizhi.hou@xilinx.com>
+Subject: [PATCH V1 RESEND 3/4] fpga: xrt: management physical function driver
+Date:   Fri, 4 Mar 2022 21:23:03 -0800
+Message-ID: <20220305052304.726050-4-lizhi.hou@xilinx.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220305052304.726050-1-lizhi.hou@xilinx.com>
 References: <20220305052304.726050-1-lizhi.hou@xilinx.com>
@@ -90,24 +90,24 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e5a47673-2634-41f9-466c-08d9fe6844b3
-X-MS-TrafficTypeDiagnostic: BN8PR02MB5906:EE_
-X-Microsoft-Antispam-PRVS: <BN8PR02MB5906907D55971A33108842C7A1069@BN8PR02MB5906.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 814fe4ef-8ad1-42e5-264d-08d9fe685aa0
+X-MS-TrafficTypeDiagnostic: SA0PR02MB7355:EE_
+X-Microsoft-Antispam-PRVS: <SA0PR02MB7355E800CE4F986EA4663F4CA1069@SA0PR02MB7355.namprd02.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nj8c0R4+gafCeAD4nIcAAfohLbpMAjVVG3aiau3z+yv1VzfL+vCQRkSefkiPDdSuaBdpkb3y2FW0/y1XDgZhD2d9qZqm8BvDWVz2SSTtG/6b1GUnmfeROCxg5myICXR96HWIhuGo2+X0NcHXbCwMCxcTkwudVwnuRAkNK5QF9Bbxyz45l8W+KVmvm/lolitBLdAswa0/zIWCQi2mAF3jEcfx/itqio1aRA4uxYy6iX+bgs0DIwGHqhWx0SuYeMx78AS/ENJ4Hd5UES6PL6BxUZ0MMJJtrYbH03X1g+wsrdE3AAouKuDTy2DQn6X6W7cCUlcoPiTPjkwwrkN4MRGXrlIx9MMM3ODaNJwMbEL5E+Qo5kxc8wgSxuR0Ns9Z2cfGDIywjROKG4FoI8f5f+eb899So18B+GH6P2FtwdSv/oNHNU67wrLDZVw6h2RiB42EhQ8zXR8fFlKfUf4kQBDeWlVJVf/enK8HftlcRvVegd/hOzMsw8FiE/Kt+bjo9nuMC8NS049TnJJ/gDRKkNDmmqhshjtdvaCmVK8G3rZJNxrUyl9GWaWgZY6LB0YXiep5ghl5mleU5SH0C55hmDsbvYebfUO+oLuNzk7T2NnGlNkvc4psubaB3a+CDfjMmItei7zPst0n2ue3ko33PAh6fdt76esCn9azBf1iRr0cmFn+QuzyIRlqng3HW5eGCfNgeczx0Q6BL64Td123ZR7qHWzolN9dY+137/RyJGgqJXtZKyax41eS9G/jqkGiO1VAmjEHH59foyST2+qbKwOAdg==
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(82310400004)(2906002)(36860700001)(70586007)(966005)(47076005)(508600001)(4326008)(8676002)(26005)(186003)(6266002)(8936002)(356005)(107886003)(42186006)(36756003)(7636003)(70206006)(110136005)(44832011)(54906003)(2616005)(1076003)(426003)(5660300002)(6666004)(336012)(316002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: y0ctQehkbL5Xlbj6PiYTsruluX4MYQMPArqoULIx3GTPF2XpZK4s+BfDQFhwbWQe3krUj2p6hPY66dJjfduyPh6hyCn9Hk9y/b9AnlIyTmlZaPMi6qeWGtosTXGC0fI7vxkYWKLlJuc7uoLeD33m3L+YzeJQyb23P+nx0LXhHap9BPCUvgPtd+awUeYAzOnEQsMBiW1q+pDXhS4XJq2XIhkz9j9IeMIb4a3VOCrAkxM5RpInJOXKSdUvfqx5/vEv75QaHD8g4Obn2WM+z3qzfSFDeIvuQr7wb4+OclBGzdlC8IP6I83W6QzSRk/SOgkEP8F3KDn46t1L92FPZRwQs0dXlMsXlI8OHJUUQ1Wh2dANVGOlgGYJKfcoD63ab4FbjCgI+JNpWF4ZnrVldbk6dsStQim4WYmZ0QUbNa40ZtICifHmzUgKdRkm2M8WFyNrbgW0nJcgSYlwazHxmT9DUuf6I04iSFFMH3x7/B5tfuysT46fyLwZmzR1U7xDleoTrWhHX3Rjlnxc5oFzUv4HbO/5pxgmDSrW/utfciDHyUm6j7GpEyqvwx91ajj/stbFmiIj0lylWidW/63vwcfMG29l9PbXDUt3+cnT+qQ67sYv9JXVhy4Ka+3ZaiRA6+nkX1tpqhA6jtXI6lxuo5OeCQ==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(42186006)(110136005)(54906003)(2616005)(6266002)(26005)(186003)(426003)(336012)(1076003)(107886003)(36756003)(36860700001)(508600001)(47076005)(6666004)(82310400004)(44832011)(8676002)(70586007)(356005)(4326008)(5660300002)(7636003)(70206006)(83380400001)(8936002)(2906002)(316002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2022 05:23:23.1351
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2022 05:23:59.9041
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5a47673-2634-41f9-466c-08d9fe6844b3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 814fe4ef-8ad1-42e5-264d-08d9fe685aa0
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0064.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0057.eop-nam02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR02MB5906
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR02MB7355
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -117,94 +117,180 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Create device tree binding document for PCIe endpoint bus.
+The PCIe device driver which attaches to management function on Alveo
+devices. The first version of this driver demonstrates calling PCIe
+interface to create device tree node.
 
 Signed-off-by: Sonal Santan <sonal.santan@xilinx.com>
 Signed-off-by: Max Zhen <max.zhen@xilinx.com>
 Signed-off-by: Lizhi Hou <lizhi.hou@xilinx.com>
 ---
- .../devicetree/bindings/bus/pci-ep-bus.yaml   | 72 +++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
+ drivers/fpga/Kconfig              |  3 ++
+ drivers/fpga/Makefile             |  3 ++
+ drivers/fpga/xrt/Kconfig          | 24 ++++++++++++
+ drivers/fpga/xrt/Makefile         |  8 ++++
+ drivers/fpga/xrt/mgmt/Makefile    | 12 ++++++
+ drivers/fpga/xrt/mgmt/xmgmt-drv.c | 63 +++++++++++++++++++++++++++++++
+ 6 files changed, 113 insertions(+)
+ create mode 100644 drivers/fpga/xrt/Kconfig
+ create mode 100644 drivers/fpga/xrt/Makefile
+ create mode 100644 drivers/fpga/xrt/mgmt/Makefile
+ create mode 100644 drivers/fpga/xrt/mgmt/xmgmt-drv.c
 
-diff --git a/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml b/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index 991b3f361ec9..93ae387c97c5 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -243,4 +243,7 @@ config FPGA_MGR_VERSAL_FPGA
+ 	  configure the programmable logic(PL).
+ 
+ 	  To compile this as a module, choose M here.
++
++source "drivers/fpga/xrt/Kconfig"
++
+ endif # FPGA
+diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+index 0bff783d1b61..81ea43c40c64 100644
+--- a/drivers/fpga/Makefile
++++ b/drivers/fpga/Makefile
+@@ -49,3 +49,6 @@ obj-$(CONFIG_FPGA_DFL_NIOS_INTEL_PAC_N3000)	+= dfl-n3000-nios.o
+ 
+ # Drivers for FPGAs which implement DFL
+ obj-$(CONFIG_FPGA_DFL_PCI)		+= dfl-pci.o
++
++# XRT drivers for Xilinx Alveo platforms
++obj-$(CONFIG_FPGA_XRT)		+= xrt/
+diff --git a/drivers/fpga/xrt/Kconfig b/drivers/fpga/xrt/Kconfig
 new file mode 100644
-index 000000000000..0ca96298db6f
+index 000000000000..47efc8f71cec
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/pci-ep-bus.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/fpga/xrt/Kconfig
+@@ -0,0 +1,24 @@
 +
-+title: PCIe Endpoint Bus binding
++# XRT Alveo FPGA device configuration
++#
 +
-+description: |
-+  PCIe device may use flattened device tree to describe apertures in its
-+  PCIe BARs. The Bus PCIe endpoint node is created and attached under the
-+  device tree root node for this kind of device. Then the flatten device
-+  tree overlay for this device is attached under the endpoint node.
++config FPGA_XRT
++	tristate "XRT Alveo Drivers"
++	depends on OF
++	select OF_EMPTY_ROOT
++	select OF_OVERLAY
++	help
++	  Select this option to enable Xilinx XRT Alveo drivers. Xilinx Alveo
++	  card is PCIe device and has two PCIe functions. The first function
++	  performs board manangement and XRT management driver will be attached
++	  to it. The second function performs data movement, compute unit
++	  scheduling etc. And an XRT user driver will be attached to it.
 +
-+  The aperture address which is under the endpoint node consists of BAR
-+  index and offset. It uses the following encoding:
++config FPGA_XRT_XMGMT
++	tristate "Xilinx Alveo Management Driver"
++	depends on FPGA_XRT
++	help
++	  Select this option to enable XRT PCIe driver for Xilinx Alveo FPGA.
++	  This driver provides interfaces for userspace application to access
++	  Alveo FPGA device, such as: downloading FPGA bitstream, query card
++	  information, hot reset card etc.
+diff --git a/drivers/fpga/xrt/Makefile b/drivers/fpga/xrt/Makefile
+new file mode 100644
+index 000000000000..2d251b5653bb
+--- /dev/null
++++ b/drivers/fpga/xrt/Makefile
+@@ -0,0 +1,8 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright (C) 2020-2022 Xilinx, Inc. All rights reserved.
++#
++# Authors: Lizhi.Hou@xilinx.com
++#
 +
-+    0xIooooooo 0xoooooooo
++obj-$(CONFIG_FPGA_XRT_XMGMT) += mgmt/
+diff --git a/drivers/fpga/xrt/mgmt/Makefile b/drivers/fpga/xrt/mgmt/Makefile
+new file mode 100644
+index 000000000000..b893c7293d70
+--- /dev/null
++++ b/drivers/fpga/xrt/mgmt/Makefile
+@@ -0,0 +1,12 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright (C) 2020-2022 Xilinx, Inc. All rights reserved.
++#
++# Authors: Sonal.Santan@xilinx.com
++#          Lizhi.Hou@xilinx.com
++#
 +
-+  Where:
++obj-$(CONFIG_FPGA_XRT_XMGMT) += xrt-mgmt.o
 +
-+    I = BAR index
-+    oooooo oooooooo = BAR offset
++xrt-mgmt-objs :=		\
++	xmgmt-drv.o
+diff --git a/drivers/fpga/xrt/mgmt/xmgmt-drv.c b/drivers/fpga/xrt/mgmt/xmgmt-drv.c
+new file mode 100644
+index 000000000000..60742a478a43
+--- /dev/null
++++ b/drivers/fpga/xrt/mgmt/xmgmt-drv.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Xilinx Alveo Management Function Driver
++ *
++ * Copyright (C) 2020-2022 Xilinx, Inc.
++ *
++ * Authors:
++ *     Cheng Zhen <maxz@xilinx.com>
++ *     Lizhi Hou <lizhih@xilinx.com>
++ */
 +
-+  The endpoint is compatible with 'simple-bus' and contains 'ranges'
-+  property for translating aperture address to CPU address.
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/aer.h>
++#include <linux/vmalloc.h>
++#include <linux/delay.h>
++#include <linux/of_pci.h>
 +
-+allOf:
-+  - $ref: /schemas/simple-bus.yaml#
++#define XMGMT_MODULE_NAME	"xrt-mgmt"
 +
-+maintainers:
-+  - Lizhi Hou <lizhi.hou@xilinx.com>
++/* PCI Device IDs */
++#define PCI_DEVICE_ID_U50	0x5020
++static const struct pci_device_id xmgmt_pci_ids[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_XILINX, PCI_DEVICE_ID_U50), }, /* Alveo U50 */
++	{ 0, }
++};
 +
-+properties:
-+  compatible:
-+    contains:
-+      const: pci-ep-bus
++static int xmgmt_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++{
++	devm_of_pci_create_bus_endpoint(pdev);
 +
-+  "#address-cells":
-+    const: 2
++	return 0;
++}
 +
-+  "#size-cells":
-+    const: 2
++static struct pci_driver xmgmt_driver = {
++	.name = XMGMT_MODULE_NAME,
++	.id_table = xmgmt_pci_ids,
++	.probe = xmgmt_probe,
++};
 +
-+  ranges: true
++static int __init xmgmt_init(void)
++{
++	int res;
 +
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    description: hardware apertures belong to this device.
-+    type: object
++	res = pci_register_driver(&xmgmt_driver);
++	if (res)
++		return res;
 +
-+required:
-+  - compatible
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
++	return 0;
++}
 +
-+additionalProperties: false
++static __exit void xmgmt_exit(void)
++{
++	pci_unregister_driver(&xmgmt_driver);
++}
 +
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        pci-ep-bus@e0000000 {
-+            compatible = "pci-ep-bus", "simple-bus";
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            ranges = <0x0 0x0 0x0 0xe0000000 0x0 0x2000000
-+                      0x20000000 0x0 0x0 0xe4200000 0x0 0x40000>;
-+        };
-+    };
++module_init(xmgmt_init);
++module_exit(xmgmt_exit);
++
++MODULE_DEVICE_TABLE(pci, xmgmt_pci_ids);
++MODULE_AUTHOR("XRT Team <runtime@xilinx.com>");
++MODULE_DESCRIPTION("Xilinx Alveo management function driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.27.0
 
