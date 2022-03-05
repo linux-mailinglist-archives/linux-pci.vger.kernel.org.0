@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 417364CE2D0
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Mar 2022 06:23:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB5AD4CE2CC
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Mar 2022 06:23:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231249AbiCEFYa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Mar 2022 00:24:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41862 "EHLO
+        id S231228AbiCEFYQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Mar 2022 00:24:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230077AbiCEFY3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Mar 2022 00:24:29 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2072.outbound.protection.outlook.com [40.107.243.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23983177D37;
-        Fri,  4 Mar 2022 21:23:39 -0800 (PST)
+        with ESMTP id S230077AbiCEFYQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 5 Mar 2022 00:24:16 -0500
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam07on2077.outbound.protection.outlook.com [40.107.95.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82104162000;
+        Fri,  4 Mar 2022 21:23:26 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bttdaXIcjL65w1ROwszhINJT0QV8VW4pf79YwGTbOI3FIxcSskIrhMICiXSRviY7HA3bdXGsVRRO+lVpDbz54eW3Lm+xajCEDc5LxYdkWYYB5sVSa7hS+UJbDHigkR2LAwalSPOD/ZBcjER5zH07WqkMALBhftgW5oR5wk+P101Oy3TFdQEYVCxGW9s2l++w1Oy7z/7Jkbmw7uqREhx0uAcV2Zwnue2yzJYfngnrUGFQH2jk65nQIVemqCHYSn/R8pC3SeB0mbcuTBQjkClQZrVAsn2UIlQ7eUTnyxVErMfzTp1ztfvf4Y+ijevlEUGkQkvUuvDB4hkAoh9LKLzmyA==
+ b=SWjBcEQg3CaG6xasRYSpAak9G2SlMC+8pdEFGj+Vy7YvRiouW/tOVPrE4/C+PCA3y0xm7I+w/nmhtXf3MQTdR5mNRTQuAt8Tt4LyzsJCmsYkka+B293tf13+D5KJyJCzf48WI1ZMbl/LSJ9iD1BHL9T6U2MOwSnEktPv6ZbUtTnc2mmzClQ5j5IhzOUrSz91f6G/CvLDhh847bDHgpEC3M8rm2IfJXGu3Yan3M9VjU7MRGoP7EFovsVTS2NYAONFdG6l+qovBgBUt5y8dICUJ0svZLt/lYuoEA6SIG4Gh3Oz6hyCARkaSJVqjsNdcxK1xRvbVliD0lFufXDIFAUIcA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9YaIMcnkqkA7VrLiz5PDiYFwijwL2DpD7MCfhu9ZTGc=;
- b=Ttxpd7ul+F4owJFMvEy9Mu49xrS0W4dVfwxPsN+ksV/GI6EeCcD1rAp13ukbHblQpUWtzeae5vHiIyYzpWYBN4xwjCE54j7cN+XR3KDxRV+Bem7ahuLy33Qcu+6ZpA2Gxg322flc2wk1Ls8surphmCvLJXE89aEQ38Q8G1IxkLaKGSmHyTqr8oLaMID79OBRBuH4ISfrbjkwfJnOpUBsYtO9as4Hwq5wR71D+BqPwsC6RQg09WKGEpOT4eJtkdQNhNjYY96bHSioUFRE87afbZkhSriYBENLRJXuC2iEA8SWnjXf3ssNH8h+z+4c+nN1DP8OgQTlvY8QLZ6BNs2esw==
+ bh=F+LJXBmaDbKZVsVzVqhgP5YWio/nOvHhdeAjOWMBEy0=;
+ b=KofJA+cecRHBROGLCfuIq5JeohANZeTHJnxpOlXCw/eERyIX7xNrBiHJAH6uXXpNZFC4Wf3VxmiUXlq067dDT/WkE+usV/dBAdxyD25nH6qMI9V2fVlOaEYbuK8rkHVVZKdjBNkZrrNnBKEK3Gg8SJ2qbx3/PB5ySJvlfkEwj8PXpXi3ig3/jgRz/WHkzhZPa+dyvgDL/uB4bqH40g0C9qxGug32P5ib/1DG2GFa4VBZkPi9fo7N2HBq+/ynrp4i/8iqjHilDk3d84SYgU+NXUmh088V4orV4GVgIydQz8ugrMwETlJI6o5SFCRapgCslBaI1RZSeVJS6yBSjV2mUg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.62.198) smtp.rcpttodomain=infradead.org smtp.mailfrom=xilinx.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
@@ -28,35 +28,35 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9YaIMcnkqkA7VrLiz5PDiYFwijwL2DpD7MCfhu9ZTGc=;
- b=L9j39z0eD6ko2SlYmcGhq9xF9wrBG9KkZGceeD6jZQPhEpw7xihG9SMFJ3MiihJsULRAzuGOuicj4/9Ohpf2e4Y0kiUeMVjKOFmih+PL6YFcJIzmYEd1cjTj2jFMjTv5sRPhl0hlTYV7LOkIYLX3wK2u+pMLuKsR1ouHYbwtmIg=
-Received: from SA9PR13CA0006.namprd13.prod.outlook.com (2603:10b6:806:21::11)
- by DM6PR02MB4731.namprd02.prod.outlook.com (2603:10b6:5:fa::14) with
+ bh=F+LJXBmaDbKZVsVzVqhgP5YWio/nOvHhdeAjOWMBEy0=;
+ b=jfSvIQ0qKWz/FK/QSh444wAp/eS/4XGFP/+ihjDL5j7dPec/Js5hq0BXY5Nd55RiNwYFrzWRNkX+0XpDRDzdK89MF2UI+SzQjc8ElUS0Yauoeb3GSR0/+PfiDSLbsAYyQo6ePEDmBU/oP64wOHbL3zNOm8JYrHtdJlto+TT1YqU=
+Received: from SA0PR11CA0014.namprd11.prod.outlook.com (2603:10b6:806:d3::19)
+ by BN8PR02MB5906.namprd02.prod.outlook.com (2603:10b6:408:ba::30) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.26; Sat, 5 Mar
- 2022 05:23:35 +0000
-Received: from SN1NAM02FT0011.eop-nam02.prod.protection.outlook.com
- (2603:10b6:806:21:cafe::b) by SA9PR13CA0006.outlook.office365.com
- (2603:10b6:806:21::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.8 via Frontend
- Transport; Sat, 5 Mar 2022 05:23:35 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Sat, 5 Mar
+ 2022 05:23:23 +0000
+Received: from SN1NAM02FT0064.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:806:d3:cafe::4f) by SA0PR11CA0014.outlook.office365.com
+ (2603:10b6:806:d3::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14 via Frontend
+ Transport; Sat, 5 Mar 2022 05:23:23 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
  smtp.mailfrom=xilinx.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=xilinx.com;
 Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT0011.mail.protection.outlook.com (10.97.5.171) with Microsoft SMTP
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ SN1NAM02FT0064.mail.protection.outlook.com (10.97.4.66) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5038.14 via Frontend Transport; Sat, 5 Mar 2022 05:23:35 +0000
+ 15.20.5038.14 via Frontend Transport; Sat, 5 Mar 2022 05:23:23 +0000
 Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Fri, 4 Mar 2022 21:23:34 -0800
+ 15.1.2176.14; Fri, 4 Mar 2022 21:23:22 -0800
 Received: from smtp.xilinx.com (172.19.127.95) by
  xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Fri, 4 Mar 2022 21:23:34 -0800
+ 15.1.2176.14 via Frontend Transport; Fri, 4 Mar 2022 21:23:22 -0800
 Envelope-to: dwmw2@infradead.org,
  yilun.xu@intel.com,
  mdf@kernel.org,
@@ -65,12 +65,12 @@ Envelope-to: dwmw2@infradead.org,
  devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org,
  linux-pci@vger.kernel.org
-Received: from [172.19.72.93] (port=44430 helo=xsj-xw9400.xilinx.com)
+Received: from [172.19.72.93] (port=44428 helo=xsj-xw9400.xilinx.com)
         by smtp.xilinx.com with esmtp (Exim 4.90)
         (envelope-from <lizhi.hou@xilinx.com>)
-        id 1nQMtC-000BYk-KM; Fri, 04 Mar 2022 21:23:34 -0800
+        id 1nQMt0-000BYJ-DR; Fri, 04 Mar 2022 21:23:22 -0800
 Received: by xsj-xw9400.xilinx.com (Postfix, from userid 21952)
-        id 23376600197; Fri,  4 Mar 2022 21:23:09 -0800 (PST)
+        id 08BB0600131; Fri,  4 Mar 2022 21:23:09 -0800 (PST)
 From:   Lizhi Hou <lizhi.hou@xilinx.com>
 To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <robh@kernel.org>
@@ -79,9 +79,9 @@ CC:     Lizhi Hou <lizhi.hou@xilinx.com>, <yilun.xu@intel.com>,
         <michal.simek@xilinx.com>, <stefanos@xilinx.com>,
         <trix@redhat.com>, <mdf@kernel.org>, <dwmw2@infradead.org>,
         <linux-kernel@vger.kernel.org>, Max Zhen <max.zhen@xilinx.com>
-Subject: [PATCH V1 RESEND 1/4] pci: add interface to create pci-ep device tree node
-Date:   Fri, 4 Mar 2022 21:23:01 -0800
-Message-ID: <20220305052304.726050-2-lizhi.hou@xilinx.com>
+Subject: [PATCH V1 RESEND 2/4] Documentation: devicetree: bindings: add binding for PCIe endpoint bus
+Date:   Fri, 4 Mar 2022 21:23:02 -0800
+Message-ID: <20220305052304.726050-3-lizhi.hou@xilinx.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220305052304.726050-1-lizhi.hou@xilinx.com>
 References: <20220305052304.726050-1-lizhi.hou@xilinx.com>
@@ -90,24 +90,24 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a0816dcd-ad84-4245-edd5-08d9fe684be3
-X-MS-TrafficTypeDiagnostic: DM6PR02MB4731:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR02MB4731E7F222F418C5CFD17800A1069@DM6PR02MB4731.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: e5a47673-2634-41f9-466c-08d9fe6844b3
+X-MS-TrafficTypeDiagnostic: BN8PR02MB5906:EE_
+X-Microsoft-Antispam-PRVS: <BN8PR02MB5906907D55971A33108842C7A1069@BN8PR02MB5906.namprd02.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oqwIPOQcFcXoakUoM86cdwmj0Gg3ACsGMyB1GutBAdAN9OF5rUt8dXFem1NsWtlzbol4gE+UuQviEzW+oWpsGP9Fi8EBiHNIontZp1zQz+0K34FnnUxe1ZrImdCSRZlfD6ljX8vWErAuTjqYoSnB+PCpQWHYP1mpDXwMJZjeU/2j4MHmsv0HqDddA/u42ExyKSdJKeWloDHWEnL9nNkpj7yhpQpiW1cBNzjYSBgz7cjbnxj/LIMloUK8jyN2UynIEbouWj5dInnUqG45aaa2s+aa97YpKUgLoLC2eeAzz3GopsQa8cDw1X7fkcqpb1ejcXcCVwapl0WEP2LI81Ejd96+YXcBbDl4zPqorCPcotUjiv14RUww4yTKiTJMV5OGaAdKl/JUpqOE3KY5WhkKFPTzZGEISScCq9I27mu5L62Vr7BhCktHhmI+TsPRhFAgmTxCdYzQMK8Bhrlhtf1kxmmGjrvGB8TNwJQRp/kbHqn3xFXjtj+VPUNb4rdqTrBUnxx87q0hF92HdvVa9mKHF+d/IhTHElspMC5exhAGXimVaVy2wDSsx4mdTW9Bf4zO4SKCYoH1lPOffmdkDtXBTy/bxTzi1S2ZA9/tY2iGFFt0e3YfPJhP3obs8CGeCd/UgiBGTx4+/+pynf7GRc3R5g==
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(26005)(54906003)(508600001)(1076003)(186003)(316002)(8676002)(107886003)(5660300002)(42186006)(110136005)(8936002)(70586007)(4326008)(6666004)(82310400004)(2616005)(36756003)(83380400001)(6266002)(426003)(2906002)(44832011)(356005)(336012)(7636003)(36860700001)(47076005)(70206006);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: nj8c0R4+gafCeAD4nIcAAfohLbpMAjVVG3aiau3z+yv1VzfL+vCQRkSefkiPDdSuaBdpkb3y2FW0/y1XDgZhD2d9qZqm8BvDWVz2SSTtG/6b1GUnmfeROCxg5myICXR96HWIhuGo2+X0NcHXbCwMCxcTkwudVwnuRAkNK5QF9Bbxyz45l8W+KVmvm/lolitBLdAswa0/zIWCQi2mAF3jEcfx/itqio1aRA4uxYy6iX+bgs0DIwGHqhWx0SuYeMx78AS/ENJ4Hd5UES6PL6BxUZ0MMJJtrYbH03X1g+wsrdE3AAouKuDTy2DQn6X6W7cCUlcoPiTPjkwwrkN4MRGXrlIx9MMM3ODaNJwMbEL5E+Qo5kxc8wgSxuR0Ns9Z2cfGDIywjROKG4FoI8f5f+eb899So18B+GH6P2FtwdSv/oNHNU67wrLDZVw6h2RiB42EhQ8zXR8fFlKfUf4kQBDeWlVJVf/enK8HftlcRvVegd/hOzMsw8FiE/Kt+bjo9nuMC8NS049TnJJ/gDRKkNDmmqhshjtdvaCmVK8G3rZJNxrUyl9GWaWgZY6LB0YXiep5ghl5mleU5SH0C55hmDsbvYebfUO+oLuNzk7T2NnGlNkvc4psubaB3a+CDfjMmItei7zPst0n2ue3ko33PAh6fdt76esCn9azBf1iRr0cmFn+QuzyIRlqng3HW5eGCfNgeczx0Q6BL64Td123ZR7qHWzolN9dY+137/RyJGgqJXtZKyax41eS9G/jqkGiO1VAmjEHH59foyST2+qbKwOAdg==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(82310400004)(2906002)(36860700001)(70586007)(966005)(47076005)(508600001)(4326008)(8676002)(26005)(186003)(6266002)(8936002)(356005)(107886003)(42186006)(36756003)(7636003)(70206006)(110136005)(44832011)(54906003)(2616005)(1076003)(426003)(5660300002)(6666004)(336012)(316002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2022 05:23:35.2137
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2022 05:23:23.1351
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0816dcd-ad84-4245-edd5-08d9fe684be3
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5a47673-2634-41f9-466c-08d9fe6844b3
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0011.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0064.eop-nam02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4731
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR02MB5906
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -117,240 +117,94 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch enables PCIe device to uses flattened device tree to describe
-apertures in its PCIe BARs. The aperture address consists of PCIe BAR index
-and offset.
-
-For this kind of device, the driver probe routine calls the new added
-interface to create a device tree node. This device tree node is attached
-under system device tree root. Then the driver may load the flatten device
-tree overlay and attach it under this node. And the node also contains
-'ranges' property which is used to translate aperture address(BAR index
-and offset) to CPU address.
+Create device tree binding document for PCIe endpoint bus.
 
 Signed-off-by: Sonal Santan <sonal.santan@xilinx.com>
 Signed-off-by: Max Zhen <max.zhen@xilinx.com>
 Signed-off-by: Lizhi Hou <lizhi.hou@xilinx.com>
 ---
- drivers/pci/of.c       | 180 +++++++++++++++++++++++++++++++++++++++++
- include/linux/of_pci.h |  15 ++++
- 2 files changed, 195 insertions(+)
+ .../devicetree/bindings/bus/pci-ep-bus.yaml   | 72 +++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index cb2e8351c2cc..198f08351070 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -605,6 +605,186 @@ int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
- 	return pci_parse_request_of_pci_ranges(dev, bridge);
- }
- 
-+#if IS_ENABLED(CONFIG_OF_DYNAMIC)
+diff --git a/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml b/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
+new file mode 100644
+index 000000000000..0ca96298db6f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bus/pci-ep-bus.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static void devm_of_pci_destroy_bus_endpoint(struct device *dev, void *res)
-+{
-+	struct device_node *node = res;
++title: PCIe Endpoint Bus binding
 +
-+	of_detach_node(node);
-+}
++description: |
++  PCIe device may use flattened device tree to describe apertures in its
++  PCIe BARs. The Bus PCIe endpoint node is created and attached under the
++  device tree root node for this kind of device. Then the flatten device
++  tree overlay for this device is attached under the endpoint node.
 +
-+static int of_ep_add_property(struct device *dev, struct property **proplist, const char *name,
-+			      const int length, void *value)
-+{
-+	struct property *new;
++  The aperture address which is under the endpoint node consists of BAR
++  index and offset. It uses the following encoding:
 +
-+	new = devm_kzalloc(dev, sizeof(*new), GFP_KERNEL);
-+	if (!new)
-+		return -ENOMEM;
++    0xIooooooo 0xoooooooo
 +
-+	new->name = devm_kstrdup(dev, name, GFP_KERNEL);
-+	if (!new->name)
-+		return -ENOMEM;
++  Where:
 +
-+	new->value = devm_kmalloc(dev, length, GFP_KERNEL);
-+	if (!new->value)
-+		return -ENOMEM;
++    I = BAR index
++    oooooo oooooooo = BAR offset
 +
-+	memcpy(new->value, value, length);
-+	new->length = length;
-+	new->next = *proplist;
-+	*proplist = new;
++  The endpoint is compatible with 'simple-bus' and contains 'ranges'
++  property for translating aperture address to CPU address.
 +
-+	return 0;
-+}
++allOf:
++  - $ref: /schemas/simple-bus.yaml#
 +
-+static struct device_node *of_ep_alloc_node(struct pci_dev *pdev, const char *name)
-+{
-+	struct device_node *node;
-+	char *full_name;
++maintainers:
++  - Lizhi Hou <lizhi.hou@xilinx.com>
 +
-+	node = devres_alloc(devm_of_pci_destroy_bus_endpoint, sizeof(*node), GFP_KERNEL);
-+	if (!node)
-+		return NULL;
++properties:
++  compatible:
++    contains:
++      const: pci-ep-bus
 +
-+	full_name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "/%s@%llx", name,
-+				   (u64)pci_resource_start(pdev, 0));
-+	if (!full_name)
-+		return NULL;
++  "#address-cells":
++    const: 2
 +
-+	node->parent = of_root;
-+	node->full_name = full_name;
-+	of_node_set_flag(node, OF_DYNAMIC);
-+	of_node_init(node);
++  "#size-cells":
++    const: 2
 +
-+	return node;
-+}
++  ranges: true
 +
-+/**
-+ * devm_of_pci_create_bus_endpoint - Create a device node for the given pci device.
-+ * @pdev: PCI device pointer.
-+ *
-+ * For PCI device which uses flattened device tree to describe apertures in its BARs,
-+ * a device node for the given pci device is required. Then the flattened device tree
-+ * overlay from the device can be applied to the base tree.
-+ * The device node is under root node and act like bus node. It contains a "ranges"
-+ * property which is used for address translation of its children. Each child node
-+ * corresponds an aperture and use BAR index and offset as its address.
++patternProperties:
++  "^.*@[0-9a-f]+$":
++    description: hardware apertures belong to this device.
++    type: object
 +
-+ * Returns 0 on success or a negative error-code on failure.
-+ */
-+int devm_of_pci_create_bus_endpoint(struct pci_dev *pdev)
-+{
-+	struct property *proplist = NULL;
-+	struct device *dev = &pdev->dev;
-+	int range_ncells, addr_ncells;
-+	struct device_node *node;
-+	void *prop = NULL;
-+	u32 *range_cell;
-+	__be32 val;
-+	int i, ret;
++required:
++  - compatible
++  - "#address-cells"
++  - "#size-cells"
++  - ranges
 +
-+	node = of_ep_alloc_node(pdev, "pci-ep-bus");
-+	if (!node)
-+		return -ENOMEM;
++additionalProperties: false
 +
-+	/* the endpoint node works as 'simple-bus' to translate aperture addresses. */
-+	prop = "simple-bus";
-+	ret = of_ep_add_property(dev, &proplist, "compatible", strlen(prop) + 1, prop);
-+	if (ret)
-+		goto cleanup;
-+
-+	/* The address and size cells of nodes underneath are 2 */
-+	val = cpu_to_be32(2);
-+	ret = of_ep_add_property(dev, &proplist, "#address-cells", sizeof(u32), &val);
-+	if (ret)
-+		goto cleanup;
-+
-+	ret = of_ep_add_property(dev, &proplist, "#size-cells", sizeof(u32), &val);
-+	if (ret)
-+		goto cleanup;
-+
-+	/* child address format: 0xIooooooo oooooooo, I = bar index, o = offset on bar */
-+	addr_ncells = of_n_addr_cells(node);
-+	if (addr_ncells > 2) {
-+		/* does not support number of address cells greater than 2 */
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	/* range cells include <node addr cells> <child addr cells> <child size cells> */
-+	range_ncells = addr_ncells + 4;
-+	prop = kzalloc(range_ncells * sizeof(u32) * PCI_STD_NUM_BARS, GFP_KERNEL);
-+	if (!prop) {
-+		ret = -ENOMEM;
-+		goto cleanup;
-+	}
-+
-+	range_cell = prop;
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-+		if (!pci_resource_len(pdev, i))
-+			continue;
-+		/* highest 4 bits of address are bar index */
-+		*(__be64 *)range_cell = cpu_to_be64((u64)i << 60);
-+		range_cell += 2;
-+		if (addr_ncells == 2)
-+			*(__be64 *)range_cell = cpu_to_be64((u64)pci_resource_start(pdev, i));
-+		else
-+			*(__be32 *)range_cell = cpu_to_be32((u32)pci_resource_start(pdev, i));
-+
-+		range_cell += addr_ncells;
-+		*(__be64 *)range_cell = cpu_to_be64((u64)pci_resource_len(pdev, i));
-+		range_cell += 2;
-+	}
-+
-+	/* error out if there is not PCI BAR been found */
-+	if ((void *)range_cell == prop) {
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+
-+	ret = of_ep_add_property(dev, &proplist, "ranges", (void *)range_cell - prop, prop);
-+	kfree(prop);
-+	if (ret)
-+		goto cleanup;
-+
-+	node->properties = proplist;
-+	ret = of_attach_node(node);
-+	if (ret)
-+		goto cleanup;
-+
-+	devres_add(dev, node);
-+
-+	return 0;
-+
-+cleanup:
-+	kfree(prop);
-+	if (node)
-+		devres_free(node);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(devm_of_pci_create_bus_endpoint);
-+
-+struct device_node *of_pci_find_bus_endpoint(struct pci_dev *pdev)
-+{
-+	struct device_node *dn;
-+	char *path;
-+
-+	path = kasprintf(GFP_KERNEL, "/pci-ep-bus@%llx",
-+			 (u64)pci_resource_start(pdev, 0));
-+	if (!path)
-+		return NULL;
-+
-+	dn = of_find_node_by_path(path);
-+	kfree(path);
-+
-+	return dn;
-+}
-+EXPORT_SYMBOL_GPL(of_pci_find_bus_endpoint);
-+#endif /* CONFIG_OF_DYNAMIC */
-+
- #endif /* CONFIG_PCI */
- 
- /**
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index 29658c0ee71f..c1d86be321b2 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -38,4 +38,19 @@ of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
- }
- #endif
- 
-+#if IS_ENABLED(CONFIG_OF_DYNAMIC) && IS_ENABLED(CONFIG_PCI)
-+int devm_of_pci_create_bus_endpoint(struct pci_dev *pdev);
-+struct device_node *of_pci_find_bus_endpoint(struct pci_dev *pdev);
-+#else
-+static inline int devm_of_pci_create_bus_endpoint(struct pci_dev *pdev)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline struct device_node *of_pci_find_bus_endpoint(struct pci_dev *pdev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- #endif
++examples:
++  - |
++    bus {
++        #address-cells = <2>;
++        #size-cells = <2>;
++        pci-ep-bus@e0000000 {
++            compatible = "pci-ep-bus", "simple-bus";
++            #address-cells = <2>;
++            #size-cells = <2>;
++            ranges = <0x0 0x0 0x0 0xe0000000 0x0 0x2000000
++                      0x20000000 0x0 0x0 0xe4200000 0x0 0x40000>;
++        };
++    };
 -- 
 2.27.0
 
