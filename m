@@ -2,127 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9A5A4CF29B
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 08:32:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 947324CF321
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 09:03:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235331AbiCGHc5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Mar 2022 02:32:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47544 "EHLO
+        id S234229AbiCGIEA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Mar 2022 03:04:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234444AbiCGHc4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 02:32:56 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2212C2559E;
-        Sun,  6 Mar 2022 23:32:02 -0800 (PST)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1nR7qZ-0006vu-C1; Mon, 07 Mar 2022 08:31:59 +0100
-Message-ID: <4a28b83b-37ef-1533-563a-39b66c5ff158@leemhuis.info>
-Date:   Mon, 7 Mar 2022 08:31:57 +0100
+        with ESMTP id S233973AbiCGID7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 03:03:59 -0500
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB66D2BB29;
+        Mon,  7 Mar 2022 00:03:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1646640184; x=1678176184;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=XwvBg13gYha3GKzUexcw4i2Qs97JLoPQKDu0q5vkeoU=;
+  b=p4ZMYeqIyA7m4N4mlj53NtnU1Qjy26k2Td2EGvE9d9JBYE59GWzklCDy
+   JpG+JxacLuYtPCWKCZC9EQ6SDyLSKClTgQ+UpVV2kJ11QfS5tgAcN6xjt
+   lGeIzLdWQrTQMzUcrCaW/jjQQp/91ezdYywJd4nEbVFW7aJejHo8d0FBS
+   vCyJSL956+jv/7ilyn/waG1JBbRhRloVYQjMvxA/KEDLid0CjNvSnAV4c
+   LVTkjWaBDgF1UWtsiWmhcZ+VoauXY7ZBy9cjr+HESnslMq20KN+e50Bav
+   CGmuwYIW4orgkh0KRuMapb5RDVFcnYHwEKVlCahXfTEPtdbeCLBXfYsrA
+   w==;
+X-IronPort-AV: E=Sophos;i="5.90,161,1643670000"; 
+   d="scan'208";a="22482837"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 07 Mar 2022 09:03:00 +0100
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Mon, 07 Mar 2022 09:03:00 +0100
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Mon, 07 Mar 2022 09:03:00 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1646640180; x=1678176180;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=XwvBg13gYha3GKzUexcw4i2Qs97JLoPQKDu0q5vkeoU=;
+  b=MJfcm0OOYbqBM6snxtJdUUdtEdNVdEpTFmOMMdgauHUkO9CFPPg0dl4j
+   sf7Ra6s/URzXAjeo9RVfMvBrg2qXVOGybTLwDWwda3PnsURD9R+EZmfcB
+   9L8XvyXVm0b//tC4ouMWGv6lr3ZAQ14IXea3mZ5qoOD2vSQNoMkUl4Ob6
+   1gIPfVcxo3rpZJlqx63dj3RJzFBLTbiZJcpE9hC3bnbz7g3Q6yUilVrCs
+   oCBc7AsBRHlbr+Nwt6UXe9W4f8tLhh1HK4QaKMU4ESLaeCLfF/VJFQ3TV
+   gFrw2/HCsya527QclKgCDfrrHP3a5EBJoZP2rDyhA7zu4077AUsYfjl67
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.90,161,1643670000"; 
+   d="scan'208";a="22482836"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 07 Mar 2022 09:03:00 +0100
+Received: from steina-w.localnet (unknown [10.123.49.12])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 7069B280065;
+        Mon,  7 Mar 2022 09:03:00 +0100 (CET)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Richard Zhu <hongxing.zhu@nxp.com>
+Cc:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-imx@nxp.com,
+        Richard Zhu <hongxing.zhu@nxp.com>
+Subject: Re: (EXT) [PATCH v1 4/7] dt-bindings: imx6q-pcie: Add iMX8MP PCIe compatible string
+Date:   Mon, 07 Mar 2022 09:02:58 +0100
+Message-ID: <11939148.O9o76ZdvQC@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <1646634556-23779-5-git-send-email-hongxing.zhu@nxp.com>
+References: <1646634556-23779-1-git-send-email-hongxing.zhu@nxp.com> <1646634556-23779-5-git-send-email-hongxing.zhu@nxp.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: Linux regressions report for mainline [2022-03-06]
-Content-Language: en-US
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux regressions mailing list <regressions@lists.linux.dev>,
-        Netdev <netdev@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-References: <164659571791.547857.13375280613389065406@leemhuis.info>
- <CAHk-=wgYjH_GMvdnNdVOn8m81eBXVykMAZvv_nfh8v_qdyQNvA@mail.gmail.com>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAHk-=wgYjH_GMvdnNdVOn8m81eBXVykMAZvv_nfh8v_qdyQNvA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646638322;c6fcc38d;
-X-HE-SMSGID: 1nR7qZ-0006vu-C1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06.03.22 22:33, Linus Torvalds wrote:
-> On Sun, Mar 6, 2022 at 11:58 AM Regzbot (on behalf of Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> ========================================================
->> current cycle (v5.16.. aka v5.17-rc), culprit identified
->> ========================================================
->>
->> Follow-up error for the commit fixing "PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization"
->> ---------------------------------------------------------------------------------------------------------------------------
->> https://linux-regtracking.leemhuis.info/regzbot/regression/Yf2wTLjmcRj+AbDv@xps13.dannf/
->> https://lore.kernel.org/stable/Yf2wTLjmcRj%2BAbDv@xps13.dannf/
->>
->> By dann frazier, 29 days ago; 7 activities, latest 23 days ago; poked 13 days ago.
->> Introduced in c7a75d07827a (v5.17-rc1)
-> 
-> Hmm. The culprit may be identified, but it looks like we don't have a
-> fix for it, so this may be one of those "left for later" things. It
-> being Xgene, there's a limited number of people who care, I'm afraid.
-> 
-> Alternatively, maybe 6dce5aa59e0b ("PCI: xgene: Use inbound resources
-> for setup") should just be reverted as broken?
+Hi Richard,
 
-I don't care much, I just hope someone once again will look into this,
-as this (and the previous) regression are on my list for quite a while
-already and process once again seems to have slowed down. :-/
+thanks for providing a patch supporting PCie on iMX8MP.
 
->> ====================================================
->> current cycle (v5.16.. aka v5.17-rc), unknown culprit
->> ====================================================
->>
->>
->> net: bluetooth: qualcom and intel adapters, unable to reliably connect to bluetooth devices
->> -------------------------------------------------------------------------------------------
->> https://linux-regtracking.leemhuis.info/regzbot/regression/CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com/
->> https://lore.kernel.org/linux-bluetooth/CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i%2BRE%2BL2FTXSA@mail.gmail.com/
->>
->> By Chris Murphy, 23 days ago; 47 activities, latest 3 days ago.
->> Introduced in v5.16..f1baf68e1383 (v5.16..v5.17-rc4)
->>
->> Fix incoming:
->> * https://lore.kernel.org/regressions/1686eb5f-7484-8ec2-8564-84fe04bf6a70@leemhuis.info/
-> 
-> That's a recent fix, it seems to be only in the bluetooth tree right
-> now, and won't be in rc7. I'm hoping that I'll get it in next week's
-> networking dump.
+Am Montag, 7. M=E4rz 2022, 07:29:13 CET schrieb Richard Zhu:
+> Add i.MX8MP PCIe compatible string.
+>=20
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml index
+> 36c8a06d17a0..252e5b72aee0 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> @@ -26,6 +26,7 @@ properties:
+>        - fsl,imx7d-pcie
+>        - fsl,imx8mq-pcie
+>        - fsl,imx8mm-pcie
+> +      - fsl,imx8mp-pcie
+>=20
+>    reg:
+>      items:
 
-You will, it afaics already got merged into the right branch already:
-https://lore.kernel.org/all/164637060982.7623.2431046217416492091.git-patchwork-notify@kernel.org/
+Which branch is this based on? I don't have 'fsl,imx8mm-pcie' entry in my=20
+tree. Another patch 7 also doesn't apply cleanly.
 
-It just came slightly too late for the last pull into the net. The same
-had happened a week earlier with regression fixes, that's why I already
-brought this up:
+Regards
+Alexander
 
-https://lore.kernel.org/netdev/37349299-c47b-1f67-2229-78ae9b9b4488@leemhuis.info/
 
-Short story: things should hopefully improve soon.
-
-BTW: @bluetooth maintainers, I noticed your -next branch is in next, but
-your -fixes branch
-git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git is
-not. Is that on purpose? Some (many?) of the other trees downstream to
-the net tree have both their -fixes and their -next branches included
-there regularly.
-
-> Cc'ing the right people just to prod them, since we've had much too
-> many "Oh, I didn't even realize it was a regression" issues this time
-> around.
-
-Yeah, since I started regression tracking again I noticed that quite a
-few regressions fixes are merged quite slowly because maintainers put
-them in their -next branches instead of sending them towards mainline
-within a few days. I always try to make the maintainers aware of this
-when I noticed it. That already helped a little afaics, but there is
-more work ahead of me afaics...
-
-Ciao, Thorsten
