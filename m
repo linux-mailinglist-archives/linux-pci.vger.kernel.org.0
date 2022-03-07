@@ -2,67 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24F974D00B7
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 15:08:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E6A64D012A
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 15:26:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235329AbiCGOJJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Mar 2022 09:09:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42188 "EHLO
+        id S243168AbiCGO1e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Mar 2022 09:27:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233551AbiCGOJH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 09:09:07 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53CA64F9F9;
-        Mon,  7 Mar 2022 06:08:12 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 08ED9B81597;
-        Mon,  7 Mar 2022 14:08:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69539C340F6;
-        Mon,  7 Mar 2022 14:08:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646662089;
-        bh=xwPfd4oUhK0TVFJjZo+icYnrwgPQRppqm/ixqy4gIXI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m0rwrj7qlWY/EyMdyBJDNDEXDikR7zso2HjNnW2bUT9o1A26Z6NnUbCPYSVY1RmPf
-         mGLDda0SKzo3lVxS7xagvMe2G1eaiWjq2BhjmBPcGekL8DLRK7IJhXYVgBXgFLt9Ck
-         R9wqRIsgMmZkxmZkfjt6rADhYIiG7lg9XJcEWOHIAW7ryAoeX1DBuSCa3qM3MIN3xm
-         I/joxteK4oZIZKHgO1MOXDCAK3E4ASHeK3vTzy0pIecSTGa4hFGS/te+bynMH4/D64
-         eLY3+8pz/lNH8B3i8y3RZLki77q3sGh6go+bkBa4nW/1D96msiY+BEy58B+mWbU3b4
-         p8In8A0fCdEIA==
-Received: by mail-ej1-f47.google.com with SMTP id gb39so32160956ejc.1;
-        Mon, 07 Mar 2022 06:08:09 -0800 (PST)
-X-Gm-Message-State: AOAM531JljW453JfrmNmnVLPB0//iT+fzdc1Vopd3m7/ZBVQK++j3vcT
-        xzgNGhVETwIP9bGuG18mjJprEBd7VjOeXCs7gA==
-X-Google-Smtp-Source: ABdhPJzMof6nh2tIW5O1gtyTBMRNuW0EC9U2ehitf8RLTVsZTMRoiK03mrkYD78lkZPwnTij7Nwt3mVGPNKa945XkG4=
-X-Received: by 2002:a17:906:a38e:b0:6da:a1f9:f9ee with SMTP id
- k14-20020a170906a38e00b006daa1f9f9eemr8781198ejz.27.1646662087585; Mon, 07
- Mar 2022 06:08:07 -0800 (PST)
+        with ESMTP id S243161AbiCGO1a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 09:27:30 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9CC8BE1F;
+        Mon,  7 Mar 2022 06:26:36 -0800 (PST)
+Received: from [77.20.72.149] (helo=[192.168.66.200]); authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1nREJk-0002Tm-M3; Mon, 07 Mar 2022 15:26:32 +0100
+Message-ID: <0011724c-655b-a667-9ff7-0e18c2a8c3f5@leemhuis.info>
+Date:   Mon, 7 Mar 2022 15:26:31 +0100
 MIME-Version: 1.0
-References: <20220305052304.726050-1-lizhi.hou@xilinx.com> <20220305052304.726050-3-lizhi.hou@xilinx.com>
- <e4c058e9-6549-4ce2-be05-d09d5b1a9fc9@redhat.com>
-In-Reply-To: <e4c058e9-6549-4ce2-be05-d09d5b1a9fc9@redhat.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 7 Mar 2022 08:07:55 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKzxq8T=obPQwXeNyqedQOKkmm8hwHdfVgKr15EyAgBnQ@mail.gmail.com>
-Message-ID: <CAL_JsqKzxq8T=obPQwXeNyqedQOKkmm8hwHdfVgKr15EyAgBnQ@mail.gmail.com>
-Subject: Re: [PATCH V1 RESEND 2/4] Documentation: devicetree: bindings: add
- binding for PCIe endpoint bus
-To:     Tom Rix <trix@redhat.com>, Lizhi Hou <lizhi.hou@xilinx.com>
-Cc:     PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        Xu Yilun <yilun.xu@intel.com>, Max Zhen <maxz@xilinx.com>,
-        Sonal Santan <sonal.santan@xilinx.com>,
-        Yu Liu <yliu@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Stefano Stabellini <stefanos@xilinx.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Max Zhen <max.zhen@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Linux regressions report for mainline [2022-03-06]
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        Netdev <netdev@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+References: <164659571791.547857.13375280613389065406@leemhuis.info>
+ <CAHk-=wgYjH_GMvdnNdVOn8m81eBXVykMAZvv_nfh8v_qdyQNvA@mail.gmail.com>
+ <4a28b83b-37ef-1533-563a-39b66c5ff158@leemhuis.info>
+ <CAL_JsqLHun+X4jMwTbVMmjjETfbP73j52XCwWBj9MJCkpQ41mA@mail.gmail.com>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAL_JsqLHun+X4jMwTbVMmjjETfbP73j52XCwWBj9MJCkpQ41mA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646663196;db28dbbe;
+X-HE-SMSGID: 1nREJk-0002Tm-M3
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -71,85 +51,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Mar 6, 2022 at 9:37 AM Tom Rix <trix@redhat.com> wrote:
->
-> Lizhi,
->
-> Sorry for the delay, I am fighting with checking this with 'make
-> dt_binding_check'
->
-> There is a recent failure in linux-next around display/mediatek,*
-> between next-20220301 and next-20220302 that I am bisecting.
+On 07.03.22 14:34, Rob Herring wrote:
+> On Mon, Mar 7, 2022 at 1:32 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+>>
+>> On 06.03.22 22:33, Linus Torvalds wrote:
+>>> On Sun, Mar 6, 2022 at 11:58 AM Regzbot (on behalf of Thorsten
+>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>
+>>>> ========================================================
+>>>> current cycle (v5.16.. aka v5.17-rc), culprit identified
+>>>> ========================================================
+>>>>
+>>>> Follow-up error for the commit fixing "PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization"
+>>>> ---------------------------------------------------------------------------------------------------------------------------
+>>>> https://linux-regtracking.leemhuis.info/regzbot/regression/Yf2wTLjmcRj+AbDv@xps13.dannf/
+>>>> https://lore.kernel.org/stable/Yf2wTLjmcRj%2BAbDv@xps13.dannf/
+>>>>
+>>>> By dann frazier, 29 days ago; 7 activities, latest 23 days ago; poked 13 days ago.
+>>>> Introduced in c7a75d07827a (v5.17-rc1)
+> Actually, it was introduced over a year ago in 6dce5aa59e0b. It was
+> fixed in c7a75d07827a for XGene2, but that *further* broke XGene1
+> which was just reported this cycle.
 
-There's already patches for that posted.
+Many thx for the clarification, I'll update the regzbot entry
+accordingly and..
 
-Just use 'make -k'.
+>>> Hmm. The culprit may be identified, but it looks like we don't have a
+>>> fix for it, so this may be one of those "left for later" things. It
+>>> being Xgene, there's a limited number of people who care, I'm afraid.
+>>>
+>>> Alternatively, maybe 6dce5aa59e0b ("PCI: xgene: Use inbound resources
+>>> for setup") should just be reverted as broken?
+>>
+>> I don't care much, I just hope someone once again will look into this,
+>> as this (and the previous) regression are on my list for quite a while
+>> already and process once again seems to have slowed down. :-/
+> 
+> It's going to take some more debug patches from me as what's been
+> tried so far didn't work and I'm not ready to give up and revert this
+> cleanup.
 
->
-> There are a couple of checkpatch --strict warnings for this set, the
-> obvious one is adding to the MAINTAINERS for new files.
->
-> Tom
->
-> On 3/4/22 9:23 PM, Lizhi Hou wrote:
-> > Create device tree binding document for PCIe endpoint bus.
-> >
-> > Signed-off-by: Sonal Santan <sonal.santan@xilinx.com>
-> > Signed-off-by: Max Zhen <max.zhen@xilinx.com>
-> > Signed-off-by: Lizhi Hou <lizhi.hou@xilinx.com>
-> > ---
-> >   .../devicetree/bindings/bus/pci-ep-bus.yaml   | 72 +++++++++++++++++++
-> >   1 file changed, 72 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml b/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
-> > new file mode 100644
-> > index 000000000000..0ca96298db6f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/bus/pci-ep-bus.yaml
-> > @@ -0,0 +1,72 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/bus/pci-ep-bus.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: PCIe Endpoint Bus binding
-> > +
-> > +description: |
-> > +  PCIe device may use flattened device tree to describe apertures in its
-> > +  PCIe BARs. The Bus PCIe endpoint node is created and attached under the
-> > +  device tree root node for this kind of device. Then the flatten device
-> > +  tree overlay for this device is attached under the endpoint node.
-> > +
-> > +  The aperture address which is under the endpoint node consists of BAR
-> > +  index and offset. It uses the following encoding:
-> > +
-> > +    0xIooooooo 0xoooooooo
-> > +
-> > +  Where:
-> > +
-> > +    I = BAR index
-> > +    oooooo oooooooo = BAR offset
-> > +
-> > +  The endpoint is compatible with 'simple-bus' and contains 'ranges'
-> > +  property for translating aperture address to CPU address.
+...will mark it as "on backburner" then, which stands for "get it out of
+sight, but don't forget about this completely".
 
-
-This binding is completely confusing because 'PCIe endpoint' is
-generally used (in context of bindings and Linux) for describing the
-endpoint's system (i.e. the internal structure of a PCIe device (e.g.
-add-in card) from the view of its own processor (not the host
-system)). This binding seems to be describing the host system's view
-of a PCIe device. We already have that! That's just the PCI bus
-binding[1] which has existed for ~25 years.
-
-For a non-DT system, what you are going to need here is some way to
-create DT nodes of the PCI bus hierarchy or at least from your device
-back up to the host bridge. I would suggest you solve that problem
-separately from implementing the FPGA driver by making it work first
-on a DT based system.
-
-Rob
-
-[1] https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+Ciao, Thorsten
