@@ -2,90 +2,270 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44CCE4CFD07
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 12:34:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B0D84CFEFC
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 13:42:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234657AbiCGLfD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Mar 2022 06:35:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58862 "EHLO
+        id S234508AbiCGMnN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Mar 2022 07:43:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242109AbiCGLe5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 06:34:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82D832B27C;
-        Mon,  7 Mar 2022 03:33:43 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1F9F1B8111C;
-        Mon,  7 Mar 2022 11:33:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A50C340F4;
-        Mon,  7 Mar 2022 11:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646652820;
-        bh=oJjvQRlXDIORZ45BctpR1F4Q9zXJHSu07f6PG8R9taY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YL23wSNCGKMk5wn4HZrbDDSDjOVT1fPgNXsaQVR0vMwzO8H6gtd65SL8Wcb+5vuh/
-         E+py4FJwPp+KKw63KpETlZWT3RQu5fRTPV8xWS7rWqqPzgykq1KymBRx3amAZC2H7b
-         DMqXm7MdEcp9v8AXA/XJz3WdgRkENdEEuWNVLqiQ/zNMDx0PMJBB1rpkU0cIM89AR/
-         eCk0dcr6nDP2YBEr7uuIQAG4TKqHr/cquxz79GcbcmR6YmYroMmg4za5icivXxoJcP
-         Y0QWtjW3f42g1I5R5yv1FbfyKhOjwaS0VnGQvfLKKqdu9wqv0u0i4vEgUJytSMvWFM
-         rCAhTLh9gGqvQ==
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
+        with ESMTP id S231961AbiCGMnM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 07:43:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B078C4A3FF
+        for <linux-pci@vger.kernel.org>; Mon,  7 Mar 2022 04:42:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646656937;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6eeNwR4loaBjjEP8RdScYzxO+RCd7H+nxGYKGNuzU6E=;
+        b=QiLrZYU689r2pwazuEPbfY2rIHinJFTIaDcmeAQFaOop8sAEME3GqnGJKzW5VpVZqoWqDA
+        hK9IWdpYnwy36y7a2GuisqnTfwJUYkcp7nm2WJ9i5eShRo8sM23OhZS9glx/tsikGuustB
+        t8ddUqQO0EZh4KU8eIgepyo1tDp2ZQE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-82-4b5ko9fbNOaLxyirkX4mQA-1; Mon, 07 Mar 2022 07:42:16 -0500
+X-MC-Unique: 4b5ko9fbNOaLxyirkX4mQA-1
+Received: by mail-wr1-f71.google.com with SMTP id f9-20020a5d58e9000000b001f0247e5e96so4512604wrd.15
+        for <linux-pci@vger.kernel.org>; Mon, 07 Mar 2022 04:42:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language;
+        bh=6eeNwR4loaBjjEP8RdScYzxO+RCd7H+nxGYKGNuzU6E=;
+        b=yAkreqaE70xoazpnzoYD54VZQCPnvpFXS8jrg1QrnNpGcKhXlohENQjCv678KsEiHf
+         8Nz/A7CMonBDO0U4+bAkzM+XprW5oRNgchvVF8ym21wgbrE/twA1QkAsqWHi2ZPysTvT
+         yW2pfPeLHsUaG1/VBbagWkWjThh9/OmqV5fwoLfDlm3QIlV7FJ3J7/fiaBqAM2ffbRyc
+         jZtxUyY94PPwsyxa8m5NyS4+s6f8s7JCrdij/sgg7DF0yio6mP8ymQ7LBFCe/FCXmZCB
+         yWoG3yvB4rnr2gnf1eb0G9Qy8ZR3CncO2EDl7vYfpzoKKzYkv8kvDPx2wKrG+f639hJW
+         2wvQ==
+X-Gm-Message-State: AOAM531U4WyYnWCANpMquXEc8enbny1lrepxnOjcv8/qjSI2lR9qww39
+        TRUHeIGAn4qOQ7mWC+9cojZZmgLEYyq50whIc9jXAKUInpmnhKGmDG6ItcIjPj4zW0vbcyyi0dq
+        zXFcmbwyWO4h0891mLLsd
+X-Received: by 2002:adf:dcc2:0:b0:1f0:4c38:d6be with SMTP id x2-20020adfdcc2000000b001f04c38d6bemr8115725wrm.79.1646656935522;
+        Mon, 07 Mar 2022 04:42:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJypym0PVHFx9W4v/f24ImuL8HFKfTAheoICss9sCuocVDFJFJoyHsNopW+2XcaueuxzLmWzTA==
+X-Received: by 2002:adf:dcc2:0:b0:1f0:4c38:d6be with SMTP id x2-20020adfdcc2000000b001f04c38d6bemr8115695wrm.79.1646656935224;
+        Mon, 07 Mar 2022 04:42:15 -0800 (PST)
+Received: from ?IPv6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id v124-20020a1cac82000000b0037c3d08e0e7sm19689931wme.29.2022.03.07.04.42.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Mar 2022 04:42:14 -0800 (PST)
+Reply-To: eric.auger@redhat.com
+Subject: Re: [PATCH v7 01/11] iommu: Add DMA ownership management interfaces
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Jason Gunthorpe <jgg@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH vfio-next] PCI/IOV: Fix wrong kernel-doc identifier
-Date:   Mon,  7 Mar 2022 13:33:25 +0200
-Message-Id: <8cecf7df45948a256dc56148cf9e87b2f2bb4198.1646652504.git.leonro@nvidia.com>
-X-Mailer: git-send-email 2.35.1
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Cc:     Chaitanya Kulkarni <kch@nvidia.com>, kvm@vger.kernel.org,
+        Stuart Yoder <stuyoder@gmail.com>, rafael@kernel.org,
+        David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        iommu@lists.linux-foundation.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Li Yang <leoyang.li@nxp.com>, Will Deacon <will@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+References: <20220228005056.599595-1-baolu.lu@linux.intel.com>
+ <20220228005056.599595-2-baolu.lu@linux.intel.com>
+ <c75b6e04-bc1b-b9f6-1a44-bf1567a8c19d@redhat.com>
+ <7a3dc977-0c5f-6d88-6d3a-8e49bc717690@linux.intel.com>
+ <1648bc97-a0d3-4051-58d0-e24fa9e9d183@arm.com>
+ <350a8e09-08a9-082b-3ad1-b711c7d98d73@redhat.com>
+ <e2698dbe-18e2-1a82-8a12-fe45bc9be534@arm.com>
+ <b1a5db0a-0373-5ca0-6256-85a96d029ec9@linux.intel.com>
+From:   Eric Auger <eric.auger@redhat.com>
+Message-ID: <ac75c521-fb13-8414-a81b-9178cbed3471@redhat.com>
+Date:   Mon, 7 Mar 2022 13:42:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
+In-Reply-To: <b1a5db0a-0373-5ca0-6256-85a96d029ec9@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Language: en-US
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+Hi Lu,
 
-Replace "-" to be ":" in comment section to be aligned with
-kernel-doc format.
+On 3/7/22 4:27 AM, Lu Baolu wrote:
+> Hi Robin,
+>
+> On 3/4/22 10:10 PM, Robin Murphy wrote:
+>> On 2022-03-04 13:55, Eric Auger wrote:
+>>> Hi Robin,
+>>>
+>>> On 3/4/22 1:22 PM, Robin Murphy wrote:
+>>>> On 2022-03-04 10:43, Lu Baolu wrote:
+>>>>> Hi Eric,
+>>>>>
+>>>>> On 2022/3/4 18:34, Eric Auger wrote:
+>>>>>> I hit a WARN_ON() when unbinding an e1000e driver just after boot:
+>>>>>>
+>>>>>> sudo modprobe -v vfio-pci
+>>>>>> echo vfio-pci | sudo tee -a
+>>>>>> /sys/bus/pci/devices/0004:01:00.0/driver_override
+>>>>>> vfio-pci
+>>>>>> echo 0004:01:00.0 | sudo tee -a  /sys/bus/pci/drivers/e1000e/unbind
+>>>>>>
+>>>>>>
+>>>>>> [  390.042811] ------------[ cut here ]------------
+>>>>>> [  390.046468] WARNING: CPU: 42 PID: 5589 at
+>>>>>> drivers/iommu/iommu.c:3123
+>>>>>> iommu_device_unuse_default_domain+0x68/0x100
+>>>>>> [  390.056710] Modules linked in: vfio_pci vfio_pci_core vfio_virqfd
+>>>>>> vfio_iommu_type1 vfio xt_CHECKSUM xt_MASQUERADE xt_conntrack
+>>>>>> ipt_REJECT
+>>>>>> nf_reject_ipv4 nft_compat nft_chain_nat nf_nat nf_conntrack
+>>>>>> nf_defrag_ipv6 nf_defrag_ipv4 nf_tables nfnetlink bridge stp llc
+>>>>>> rfkill
+>>>>>> sunrpc vfat fat mlx5_ib ib_uverbs ib_core acpi_ipmi ipmi_ssif
+>>>>>> ipmi_devintf ipmi_msghandler cppc_cpufreq drm xfs libcrc32c
+>>>>>> mlx5_core sg
+>>>>>> mlxfw crct10dif_ce tls ghash_ce sha2_ce sha256_arm64 sha1_ce
+>>>>>> sbsa_gwdt
+>>>>>> e1000e psample sdhci_acpi ahci_platform sdhci libahci_platform
+>>>>>> qcom_emac
+>>>>>> mmc_core hdma hdma_mgmt dm_mirror dm_region_hash dm_log dm_mod fuse
+>>>>>> [  390.110618] CPU: 42 PID: 5589 Comm: tee Kdump: loaded Not tainted
+>>>>>> 5.17.0-rc4-lu-v7-official+ #24
+>>>>>> [  390.119384] Hardware name: WIWYNN QDF2400 Reference Evaluation
+>>>>>> Platform CV90-LA115-P120/QDF2400 Customer Reference Board, BIOS
+>>>>>> 0ACJA570
+>>>>>> 11/05/2018
+>>>>>> [  390.132492] pstate: a0400005 (NzCv daif +PAN -UAO -TCO -DIT -SSBS
+>>>>>> BTYPE=--)
+>>>>>> [  390.139436] pc : iommu_device_unuse_default_domain+0x68/0x100
+>>>>>> [  390.145165] lr : iommu_device_unuse_default_domain+0x38/0x100
+>>>>>> [  390.150894] sp : ffff80000fbb3bc0
+>>>>>> [  390.154193] x29: ffff80000fbb3bc0 x28: ffff03c0cf6b2400 x27:
+>>>>>> 0000000000000000
+>>>>>> [  390.161311] x26: 0000000000000000 x25: 0000000000000000 x24:
+>>>>>> ffff03c0c7cc5720
+>>>>>> [  390.168429] x23: ffff03c0c2b9d150 x22: ffffb4e61df223f8 x21:
+>>>>>> ffffb4e61df223f8
+>>>>>> [  390.175547] x20: ffff03c7c03c3758 x19: ffff03c7c03c3700 x18:
+>>>>>> 0000000000000000
+>>>>>> [  390.182665] x17: 0000000000000000 x16: 0000000000000000 x15:
+>>>>>> 0000000000000000
+>>>>>> [  390.189783] x14: 0000000000000000 x13: 0000000000000030 x12:
+>>>>>> ffff03c0d519cd80
+>>>>>> [  390.196901] x11: 7f7f7f7f7f7f7f7f x10: 0000000000000dc0 x9 :
+>>>>>> ffffb4e620b54f8c
+>>>>>> [  390.204019] x8 : ffff03c0cf6b3220 x7 : ffff4ef132bba000 x6 :
+>>>>>> 00000000000000ff
+>>>>>> [  390.211137] x5 : ffff03c0c2b9f108 x4 : ffff03c0d51f6438 x3 :
+>>>>>> 0000000000000000
+>>>>>> [  390.218255] x2 : ffff03c0cf6b2400 x1 : 0000000000000000 x0 :
+>>>>>> 0000000000000000
+>>>>>> [  390.225374] Call trace:
+>>>>>> [  390.227804]  iommu_device_unuse_default_domain+0x68/0x100
+>>>>>> [  390.233187]  pci_dma_cleanup+0x38/0x44
+>>>>>> [  390.236919]  __device_release_driver+0x1a8/0x260
+>>>>>> [  390.241519]  device_driver_detach+0x50/0xd0
+>>>>>> [  390.245686]  unbind_store+0xf8/0x120
+>>>>>> [  390.249245]  drv_attr_store+0x30/0x44
+>>>>>> [  390.252891]  sysfs_kf_write+0x50/0x60
+>>>>>> [  390.256537]  kernfs_fop_write_iter+0x134/0x1cc
+>>>>>> [  390.260964]  new_sync_write+0xf0/0x18c
+>>>>>> [  390.264696]  vfs_write+0x230/0x2d0
+>>>>>> [  390.268082]  ksys_write+0x74/0x100
+>>>>>> [  390.271467]  __arm64_sys_write+0x28/0x3c
+>>>>>> [  390.275373]  invoke_syscall.constprop.0+0x58/0xf0
+>>>>>> [  390.280061]  el0_svc_common.constprop.0+0x160/0x164
+>>>>>> [  390.284922]  do_el0_svc+0x34/0xcc
+>>>>>> [  390.288221]  el0_svc+0x30/0x140
+>>>>>> [  390.291346]  el0t_64_sync_handler+0xa4/0x130
+>>>>>> [  390.295599]  el0t_64_sync+0x1a0/0x1a4
+>>>>>> [  390.299245] ---[ end trace 0000000000000000 ]---
+>>>>>>
+>>>>>>
+>>>>>> I put some traces in the code and I can see that
+>>>>>> iommu_device_use_default_domain() effectively is called on
+>>>>>> 0004:01:00.0 e1000e device on pci_dma_configure() but at that time
+>>>>>> the iommu group is NULL:
+>>>>>> [   10.569427] e1000e 0004:01:00.0: ------ ENTRY pci_dma_configure
+>>>>>> driver_managed_area=0
+>>>>>> [   10.569431] e1000e 0004:01:00.0: ****
+>>>>>> iommu_device_use_default_domain ENTRY
+>>>>>> [   10.569433] e1000e 0004:01:00.0: ****
+>>>>>> iommu_device_use_default_domain no group
+>>>>>> [   10.569435] e1000e 0004:01:00.0: pci_dma_configure
+>>>>>> iommu_device_use_default_domain returned 0
+>>>>>> [   10.569492] e1000e 0004:01:00.0: Adding to iommu group 3
+>>>>>>
+>>>>>> ^^^the group is added after the
+>>>>>> iommu_device_use_default_domain() call
+>>>>>> So the group->owner_cnt is not incremented as expected.
+>>>>>
+>>>>> Thank you for reporting this. Do you have any idea why the driver is
+>>>>> loaded before iommu_probe_device()?
+>>>>
+>>>> Urgh, this is the horrible firmware-data-ordering thing again. The
+>>>> stuff I've been saying about having to rework the whole .dma_configure
+>>>> mechanism in the near future is to fix this properly.
+>>>>
+>>>> The summary is that in patch #4, calling
+>>>> iommu_device_use_default_domain() *before* {of,acpi}_dma_configure is
+>>>> currently a problem. As things stand, the IOMMU driver ignored the
+>>>> initial iommu_probe_device() call when the device was added, since at
+>>>> that point it had no fwspec yet. In this situation,
+>>>> {of,acpi}_iommu_configure() are retriggering iommu_probe_device()
+>>>> after the IOMMU driver has seen the firmware data via .of_xlate to
+>>>> learn that it it actually responsible for the given device.
+>>>
+>>> thank you for providing the info. Hope this is something Lu can work
+>>> around.
+>>
+>> Hopefully it's just a case of flipping the calls around, so that
+>> iommu_use_default_domain() goes at the end, and calls
+>> arch_teardown_dma_ops() if it fails. From a quick skim I *think* that
+>> should still work out to the desired behaviour (or at least close
+>> enough that we can move forward without a circular dependency between
+>> fixes...)
+>
+> This is a reasonable solution to me. Thank you for the information and
+> suggestion.
+>
+> Eric, I have updated the patch #4 and uploaded a new version here:
+>
+> https://github.com/LuBaolu/intel-iommu/commits/iommu-dma-ownership-v8
 
-drivers/pci/iov.c:67: warning: Function parameter or member 'dev' not described in 'pci_iov_get_pf_drvdata'
-drivers/pci/iov.c:67: warning: Function parameter or member 'pf_driver' not described in 'pci_iov_get_pf_drvdata'
+with v8 I do not hit the warning anymore and the owner accounting seems
+to work as expected.
 
-Fixes: a7e9f240c0da ("PCI/IOV: Add pci_iov_get_pf_drvdata() to allow VF reaching the drvdata of a PF")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- drivers/pci/iov.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 28ec952e1221..952217572113 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -49,8 +49,8 @@ EXPORT_SYMBOL_GPL(pci_iov_vf_id);
- 
- /**
-  * pci_iov_get_pf_drvdata - Return the drvdata of a PF
-- * @dev - VF pci_dev
-- * @pf_driver - Device driver required to own the PF
-+ * @dev: VF pci_dev
-+ * @pf_driver: Device driver required to own the PF
-  *
-  * This must be called from a context that ensures that a VF driver is attached.
-  * The value returned is invalid once the VF driver completes its remove()
--- 
-2.35.1
+Eric
+>
+> Can you please give it a try?
+>
+> Best regards,
+> baolu
+>
 
