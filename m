@@ -2,200 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8965E4CF3D9
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 09:42:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6145C4CF46D
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 10:16:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232206AbiCGInF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Mar 2022 03:43:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43470 "EHLO
+        id S236296AbiCGJR1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Mar 2022 04:17:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236225AbiCGIm7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 03:42:59 -0500
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A6754F88;
-        Mon,  7 Mar 2022 00:42:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1646642525; x=1678178525;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CYDp9LwY8E/w662Qpkpqpqip6bbcmYnqEj5DmkGb4wM=;
-  b=oRhqUzCiOdjF6yNFfqoquLHZyZWaF2Fp7E7GKimLrU6TvJlpNhbeja0+
-   yfIAosqyubI/T/Q8GesV4WsSdW2NOoO2WeGIcYgTWHCc1ovaR6QV0FG9f
-   uhevzcESzgIeQVbvzwWGWZcWpkHPqM8m1XcEGr5IxyfFLqi7VtLAgz8ER
-   lb7hjz+S1gQhDqAV3xOwwLAxUdN62uJOzfjMLcSFm8nW7TMpTrr8Usld1
-   rS6SEP/F3BicsCmHJStBWFt0IM2wLGoORriliRThFuWbNPtjm34H1PN8U
-   vikS9j9G5b1s1LzMqoPQfkMhymR8iYlLbQcM1Bgf/tulx7dFfBYQESrs1
-   g==;
-X-IronPort-AV: E=Sophos;i="5.90,161,1643670000"; 
-   d="scan'208";a="22485416"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 07 Mar 2022 09:42:02 +0100
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 07 Mar 2022 09:42:02 +0100
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 07 Mar 2022 09:42:02 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1646642522; x=1678178522;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=CYDp9LwY8E/w662Qpkpqpqip6bbcmYnqEj5DmkGb4wM=;
-  b=XsUPiSpIxXBaHYHnEX5+oduK7QnMuBHScuscsvGLdy+NF6BI4tbyKwZv
-   FKYD5pVJ5BZ8H0unWq8nNX1NSNKCNsGlg1EoQLkIJt1GHbdBn86svbP6a
-   Q/o2N/OkifvcP1HVfq47+ynB8gyS2WH+11obCky4pP882FCBoE3VwgQOI
-   zQ5QjBsx4DTOx/19guWn9XFxiCn8vQ+l5bfvLc1Ewvb96DomeRYTY1X0b
-   ZMMyrXAPfwVmyC+nZ4RT+RljKlhuv5LGIjDo/PV5VUY6PTe37yNnzCYWo
-   47XjUlTm00gzYPdaIFkXwz1V+o2HV1UeZV4v4wL5DthqBvP2flUc/u8SU
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.90,161,1643670000"; 
-   d="scan'208";a="22485415"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 07 Mar 2022 09:42:02 +0100
-Received: from steina-w.localnet (unknown [10.123.49.12])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 83C39280065;
-        Mon,  7 Mar 2022 09:42:02 +0100 (CET)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc:     "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: (EXT) RE: (EXT) [PATCH v1 4/7] dt-bindings: imx6q-pcie: Add iMX8MP PCIe compatible string
-Date:   Mon, 07 Mar 2022 09:42:02 +0100
-Message-ID: <4386341.LvFx2qVVIh@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <AS8PR04MB8676905699E85011E625BFE68C089@AS8PR04MB8676.eurprd04.prod.outlook.com>
-References: <1646634556-23779-1-git-send-email-hongxing.zhu@nxp.com> <11939148.O9o76ZdvQC@steina-w> <AS8PR04MB8676905699E85011E625BFE68C089@AS8PR04MB8676.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S236297AbiCGJR1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 04:17:27 -0500
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72FA86515F;
+        Mon,  7 Mar 2022 01:16:32 -0800 (PST)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0D7011A21DF;
+        Mon,  7 Mar 2022 10:16:31 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B80421A005F;
+        Mon,  7 Mar 2022 10:16:30 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id BF67B183AD67;
+        Mon,  7 Mar 2022 17:16:28 +0800 (+08)
+From:   Richard Zhu <hongxing.zhu@nxp.com>
+To:     p.zabel@pengutronix.de, l.stach@pengutronix.de,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        shawnguo@kernel.org, vkoul@kernel.org,
+        alexander.stein@ew.tq-group.com
+Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: [PATCH v2 0/7] Add the iMX8MP PCIe support
+Date:   Mon,  7 Mar 2022 17:07:27 +0800
+Message-Id: <1646644054-24421-1-git-send-email-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Richard,
+Based on the i.MX8MP GPC and blk-ctrl patch-set[1] issued by Lucas and the
+following commits.
+  - one codes refine patch-set[5].
+  - two Fixes[2],[3].
+  - one binding commit[4].
+  - some dts changes in Shawn's git if you want to test PCIe on i.MX8MM EVK.
+    b4d36c10bf17 arm64: dts: imx8mm-evk: Add the pcie support on imx8mm evk board
+    aaeba6a8e226 arm64: dts: imx8mm: Add the pcie support
+    cfc5078432ca arm64: dts: imx8mm: Add the pcie phy support
 
-Am Montag, 7. M=C3=A4rz 2022, 09:19:52 CET schrieb Hongxing Zhu:
-> > -----Original Message-----
-> > From: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > Sent: 2022=E5=B9=B43=E6=9C=887=E6=97=A5 16:03
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: p.zabel@pengutronix.de; l.stach@pengutronix.de; bhelgaas@google.com;
-> > lorenzo.pieralisi@arm.com; robh@kernel.org; shawnguo@kernel.org;
-> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > linux-kernel@vger.kernel.org; kernel@pengutronix.de; dl-linux-imx
-> > <linux-imx@nxp.com>; Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Subject: Re: (EXT) [PATCH v1 4/7] dt-bindings: imx6q-pcie: Add iMX8MP
-> > PCIe
-> > compatible string
-> >=20
-> > Hi Richard,
-> >=20
-> > thanks for providing a patch supporting PCie on iMX8MP.
-> >=20
-> > Am Montag, 7. M=C3=A4rz 2022, 07:29:13 CET schrieb Richard Zhu:
-> >=20
-> > > Add i.MX8MP PCIe compatible string.
-> > >
-> > >
-> > >
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > ---
-> > >=20
-> > >  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > >
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> > > b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml index
-> > > 36c8a06d17a0..252e5b72aee0 100644
-> > > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> > > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> > > @@ -26,6 +26,7 @@ properties:
-> > >=20
-> > >        - fsl,imx7d-pcie
-> > >        - fsl,imx8mq-pcie
-> > >        - fsl,imx8mm-pcie
-> > >=20
-> > > +      - fsl,imx8mp-pcie
-> > >
-> > >
-> > >
-> > >    reg:
-> > >   =20
-> > >      items:
-> >=20
-> >=20
-> > Which branch is this based on? I don't have 'fsl,imx8mm-pcie' entry in =
-my
-> > tree.
- Another patch 7 also doesn't apply cleanly.
-> >=20
->=20
-> Hi Alexander:
-> Thanks for your quick reply.
+Sorry about that there may be some conflictions when do the codes merge.
+I'm waiting for the ack now, and will re-base them in a proper sequence later.
 
-Thanks for your fast response. I just wanted to give it a try on our own=20
-custom iMX8MP board. I did see the PCIe RC, but not EP (yet), no link up fo=
-r=20
-now.
+This series patches add the i.MX8MP PCIe support and tested on i.MX8MM EVK and
+i.MX8MP EVk boards. The PCIe NVME works fine on both boards.
 
-> In the past days, I had summit some patches, and wait for ack or reviewed
-> tags.
- But they might have some conflictions when do the codes merge.
-> I'm waiting for the ack, and will re-base them in a proper sequence later.
->=20
-> About the #4 patch apply, it's better to pick the following commit, since=
- it
-> had
- Lucas' Reviewed-by tag, and wait for merge.
-> https://patchwork.ozlabs.org/project/linux-pci/patch/1646293805-18248-1-g=
-it-> send-email-hongxing.zhu@nxp.com/
-=20
-> About the #7 patch, I do the changes based on the following patch-set.
-> https://patchwork.ozlabs.org/project/linux-pci/cover/1645760667-10510-1-g=
-it-> send-email-hongxing.zhu@nxp.com/
-=20
-> I would add the dependency patch-set later in the cover-letter later.
-> Sorry to bring in-conveniency to you.
+- i.MX8MP PCIe PHY has two resets refer to the i.MX8MM PCIe PHY.
+  Add one more PHY reset for i.MX8MP PCIe PHY accordingly.
+- Add the i.MX8MP PCIe PHY support in the i.MX8M PCIe PHY driver.
+  And share as much as possible codes with i.MX8MM PCIe PHY.
+- Add the i.MX8MP PCIe support in binding document, DTS files, and PCIe
+  driver.
 
-Thanks I'll retry with the dependencies updated, so I hopefully won't miss=
-=20
-something.
+Main changes v1-->v2:
+- It's my fault forget including Vinod, re-send v2 after include Vinod
+  and linux-phy@lists.infradead.org.
+- List the basements of this patch-set. The branch, codes changes and so on.
+- Clean up some useless register and bit definitions in #3 patch.
 
-> BTW, If you want to tests PCIe on i.MX8MM EVK board too, the following dts
-> changes should be cherry-picked from Shawn's git.
-> b4d36c10bf17 arm64: dts: imx8mm-evk: Add the pcie support on imx8mm evk
-> board
- aaeba6a8e226 arm64: dts: imx8mm: Add the pcie support
-> cfc5078432ca arm64: dts: imx8mm: Add the pcie phy support
+[1]https://patchwork.kernel.org/project/linux-arm-kernel/cover/20220228201731.3330192-1-l.stach@pengutronix.de/
+[2]https://patchwork.ozlabs.org/project/linux-pci/patch/1646289275-17813-1-git-send-email-hongxing.zhu@nxp.com/
+[3]https://patchwork.ozlabs.org/project/linux-pci/patch/1645672013-8949-1-git-send-email-hongxing.zhu@nxp.com/
+[4]https://patchwork.ozlabs.org/project/linux-pci/patch/1646293805-18248-1-git-send-email-hongxing.zhu@nxp.com/
+[5]https://patchwork.ozlabs.org/project/linux-pci/cover/1645760667-10510-1-git-send-email-hongxing.zhu@nxp.com/
 
-Thanks I'll keep the imx8mm support in mind.
+NOTE:
+Based git <git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git>
+Based branch <pci/imx6>
 
-Best regards
-Alexander
+Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml    |   1 +
+Documentation/devicetree/bindings/phy/fsl,imx8-pcie-phy.yaml |   4 +-
+arch/arm64/boot/dts/freescale/imx8mp-evk.dts                 |  55 ++++++++++++++++++++++
+arch/arm64/boot/dts/freescale/imx8mp.dtsi                    |  46 ++++++++++++++++++-
+drivers/pci/controller/dwc/pci-imx6.c                        |  19 +++++++-
+drivers/phy/freescale/phy-fsl-imx8m-pcie.c                   | 205 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
+drivers/reset/reset-imx7.c                                   |   1 +
+7 files changed, 286 insertions(+), 45 deletions(-)
 
-
-
+[PATCH v2 1/7] reset: imx7: Add the iMX8MP PCIe PHY PERST support
+[PATCH v2 2/7] dt-binding: phy: Add iMX8MP PCIe PHY binding
+[PATCH v2 3/7] phy: freescale: imx8m-pcie: Add iMX8MP PCIe PHY
+[PATCH v2 4/7] dt-bindings: imx6q-pcie: Add iMX8MP PCIe compatible
+[PATCH v2 5/7] arm64: dts: imx8mp: add the iMX8MP PCIe support
+[PATCH v2 6/7] arm64: dts: imx8mp-evk: Add PCIe support
+[PATCH v2 7/7] PCI: imx6: Add the iMX8MP PCIe support
