@@ -2,222 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 167424CF1B4
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 07:16:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C56AC4CF1A5
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 07:08:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235437AbiCGGRe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Mar 2022 01:17:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45608 "EHLO
+        id S232991AbiCGGJh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Mar 2022 01:09:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234977AbiCGGRd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 01:17:33 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94255520F
-        for <linux-pci@vger.kernel.org>; Sun,  6 Mar 2022 22:16:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646633799; x=1678169799;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=l1VOJlOQuBtkbeMYqp+/Ig7Df7KMwq9jqwibYdunWNc=;
-  b=V2x2jECHO4hPAyXJxy0vp/van4aZLZSYVaHS0XJZSqe9u8SPiDEREZGL
-   aBLcQDXoZCaR9dhHLnTHX4lCJo6Onrj9Bj+6rnFIy8V3BN7CIUE1gAL7f
-   ZEavv/OmTg72btkP74ysuKMPSc555z5OCNmnd2NeGqp5BamiGu592mtkW
-   /gil2ma8EOibhl4VhKy0lVMtmeoTjiBI+yb5HNP2NeVHCB9em7jlh6coi
-   1Y2neTGuKErYe0MHita/pRl72BuZzUXYM/vsOZDPkxa3kRLYUfIxxBfyw
-   ZJfn6Vcjq/fIJ5AoGw+w54zy0TbAktFkpduXvwt2aTOc+72cKPiIaeR8R
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10278"; a="253142426"
-X-IronPort-AV: E=Sophos;i="5.90,161,1643702400"; 
-   d="scan'208";a="253142426"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2022 22:16:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,161,1643702400"; 
-   d="scan'208";a="509600897"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 06 Mar 2022 22:16:37 -0800
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nR6fY-00001Y-4Z; Mon, 07 Mar 2022 06:16:32 +0000
-Date:   Mon, 07 Mar 2022 13:42:23 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/enumeration] BUILD SUCCESS
- 3dc8a1f6f64481a8a5a669633e880f26dae0d752
-Message-ID: <62259b3f.LaIimarQIYbiOzMD%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S231317AbiCGGJg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 01:09:36 -0500
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393601CFC9
+        for <linux-pci@vger.kernel.org>; Sun,  6 Mar 2022 22:08:38 -0800 (PST)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-2db2add4516so151881787b3.1
+        for <linux-pci@vger.kernel.org>; Sun, 06 Mar 2022 22:08:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=7Im1JG6q3q15hqSa7NWQHVGGERLfnPf1iBbuaSTqgJQ=;
+        b=evDudyk1tDXb81pex6vJKwDwf7TzSv3FSF0X34O7haGMiWKa14f6GfYAIN1+I6G/oP
+         TvuBbmX+WlMqv3v2k6OhsarobVDQVgnT2v/Q/9b34YVvkm4qnEEesBHIdcth3x8O8Xvt
+         yi92PGAmHo+MwmddvP3R4gqpZ701MJv0iUkzydzITks0plJqJOyJSguoLB7UmIsGSf4d
+         csOTcZrvWfF0e5u8sgz5RMazJ2afpFTquwbWuSb/laUAFGkrnVYinQjFMRIe0GAAqoCQ
+         zRaL+aWHxUJkSQTBGow56EErkgsvxVoEfGMUJXScU/PQED/hLZCUPUI2Svq/xco+eVes
+         l2lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=7Im1JG6q3q15hqSa7NWQHVGGERLfnPf1iBbuaSTqgJQ=;
+        b=0KCsoUTCL4ut8RMhZZ2LYxBJBqMyc+haN1YGGBZX/bUfSePOZnFqe/0HWx8xsnT95a
+         InxWTdcCmIR2BwkMmeRnozXKbVSGY67zSJpx4uzd8DHBv8U+hV/EM7QRWUOZdwC2OYwl
+         3zPnC9lDyqC3VXCXIl/Sz10FZv91Z13CAKP08xrXhB/LdiiJrN1RPjzJym/WXwaYUQLK
+         B/ucOTA+8HA0amB07gUSEut2C/OS2FBnGM/vN9RFlfwgZIi9Xmu/fLpVQ1LCn40131Jx
+         90QXXpkAGtaKRx0Rf3a8ZH+gc/4iAyoMX/UIr6Ni5Xf0rJok9Y9MLFjAt8bI80x+edie
+         Q+BQ==
+X-Gm-Message-State: AOAM533hzYlAjUe0MYtkNBhsCzThMmJn2irODy0il0S+KTNQGPSU1Kzn
+        hpCGyEpUiWNty4vOyXbLbFTxYkZ1x3u8Lz+YURw=
+X-Google-Smtp-Source: ABdhPJykU5NGOcB06qcHYyeCRi8uBLZ9CDzUWJ6NCkOEllpZJ4pWuxBTPZIjD1dAKi+1laOtItGcpdHh8KIE0S1wDG4=
+X-Received: by 2002:a81:1392:0:b0:2dc:5a38:95e1 with SMTP id
+ 140-20020a811392000000b002dc5a3895e1mr7246428ywt.225.1646633317216; Sun, 06
+ Mar 2022 22:08:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6918:b986:b0:a4:b698:78d9 with HTTP; Sun, 6 Mar 2022
+ 22:08:36 -0800 (PST)
+Reply-To: markwillima00@gmail.com
+From:   Mark <markpeterdavid@gmail.com>
+Date:   Sun, 6 Mar 2022 22:08:36 -0800
+Message-ID: <CAC_St28fBJ5hnUyejwW8K6MC0x8FYPz-CUfOJPQ35iRPXEZUag@mail.gmail.com>
+Subject: Re: Greetings!
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:1129 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [markwillima00[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [markpeterdavid[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.6 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
-branch HEAD: 3dc8a1f6f64481a8a5a669633e880f26dae0d752  PCI: Support BAR sizes up to 8TB
+Hello,
+Good day,
 
-elapsed time: 4820m
+The HSBC Bank is a financial institution in United Kingdom. We
+promotes long-term,sustainable and broad-based economic growth in
+developing and emerging countries by providing financial support like
+loans and investment to large, small and
+medium-sized companies (SMEs) as well as fast-growing enterprises
+which in turn helps to create secure and permanent jobs and reduce
+poverty.
 
-configs tested: 138
-configs skipped: 3
+If you need fund to promotes your business, project(Project Funding),
+Loan, planning, budgeting and expansion of your business(s) , do not
+hesitate to indicate your interest as we are here to serve you better
+by granting your request.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-sh                            migor_defconfig
-arm                           sunxi_defconfig
-arm                         axm55xx_defconfig
-arm                        mvebu_v7_defconfig
-arm                        cerfcube_defconfig
-h8300                            alldefconfig
-powerpc                  iss476-smp_defconfig
-sh                             sh03_defconfig
-m68k                       m5275evb_defconfig
-sh                           se7751_defconfig
-riscv                            allmodconfig
-sh                 kfr2r09-romimage_defconfig
-sh                               alldefconfig
-sh                          sdk7780_defconfig
-sh                            titan_defconfig
-sh                          lboxre2_defconfig
-sh                          kfr2r09_defconfig
-sh                          r7780mp_defconfig
-arm                           sama5_defconfig
-arm                         lubbock_defconfig
-sparc                       sparc64_defconfig
-riscv             nommu_k210_sdcard_defconfig
-xtensa                generic_kc705_defconfig
-sh                          urquell_defconfig
-powerpc                     ep8248e_defconfig
-arm                         vf610m4_defconfig
-m68k                          multi_defconfig
-nds32                            alldefconfig
-arm                            qcom_defconfig
-um                             i386_defconfig
-sh                        sh7757lcr_defconfig
-sh                           se7722_defconfig
-um                           x86_64_defconfig
-sparc64                          alldefconfig
-arm                          badge4_defconfig
-sh                ecovec24-romimage_defconfig
-sh                   secureedge5410_defconfig
-arm                           u8500_defconfig
-m68k                          sun3x_defconfig
-powerpc                        cell_defconfig
-arm                       omap2plus_defconfig
-s390                          debug_defconfig
-arm                           h5000_defconfig
-arm                            mps2_defconfig
-arm                        clps711x_defconfig
-m68k                        m5407c3_defconfig
-sh                           se7712_defconfig
-sh                         microdev_defconfig
-parisc                generic-64bit_defconfig
-parisc                           allyesconfig
-powerpc                           allnoconfig
-h8300                     edosk2674_defconfig
-arc                        vdk_hs38_defconfig
-arm                            hisi_defconfig
-arm                  randconfig-c002-20220303
-arm                  randconfig-c002-20220304
-arm                  randconfig-c002-20220302
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc64                            defconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                                  kexec
-
-clang tested configs:
-x86_64                        randconfig-c007
-powerpc              randconfig-c003-20220303
-riscv                randconfig-c006-20220303
-i386                          randconfig-c001
-arm                  randconfig-c002-20220303
-mips                 randconfig-c004-20220303
-powerpc              randconfig-c003-20220302
-riscv                randconfig-c006-20220302
-arm                  randconfig-c002-20220302
-mips                 randconfig-c004-20220302
-arm                  colibri_pxa270_defconfig
-mips                     cu1000-neo_defconfig
-i386                             allyesconfig
-powerpc                      ppc64e_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220304
-hexagon              randconfig-r041-20220304
-hexagon              randconfig-r045-20220303
-riscv                randconfig-r042-20220303
-hexagon              randconfig-r041-20220303
-hexagon              randconfig-r045-20220302
-hexagon              randconfig-r041-20220302
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Thank you
+Mr:Mark
