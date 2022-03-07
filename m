@@ -2,96 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C67B4D05CA
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 18:58:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22F844D065A
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 19:22:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244614AbiCGR7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Mar 2022 12:59:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43536 "EHLO
+        id S236604AbiCGSXT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Mar 2022 13:23:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244597AbiCGR7J (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 12:59:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E349A24096;
-        Mon,  7 Mar 2022 09:58:14 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 810E7612B9;
-        Mon,  7 Mar 2022 17:58:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB57CC340EF;
-        Mon,  7 Mar 2022 17:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646675893;
-        bh=gazcKZzgOMmSP34WtlNhqLux7k7BCtkMMXddlVmZA+s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=M29FFm2tsdbuQ710xXUgckm9HhFuiy2BNyfWugbQYKZIp+XdMoC5jTGX980bSY8w7
-         lu7VXxBAqTXjUlwNbhyZKGIjnaE40l3gknIui8Zw7SQ86tpGGc17mUDPkfmH8bUFkT
-         KeMmUpJ1T13xfCc6kECLsNSORtPehRhU+cUJ1AtvwagN8KuGLZaUrd4tGSrwNRcoKt
-         nvP2eqHJs9a/B9v8arCE3/BprnWzE/COXMGxT7qYElXSSsZmONK/XCqI6Z3HMEPnxQ
-         Z889NSzkTwhv2FK7nG2HY51ox6doVxGTEjuBZv6EHixEuYrZHHsjbzIuL6X9hPPYKT
-         BL/9rylULXNeQ==
-Date:   Mon, 7 Mar 2022 11:58:12 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH vfio-next] PCI/IOV: Fix wrong kernel-doc identifier
-Message-ID: <20220307175812.GA1275204@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8cecf7df45948a256dc56148cf9e87b2f2bb4198.1646652504.git.leonro@nvidia.com>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S244792AbiCGSW7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 13:22:59 -0500
+Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16F2F8300D;
+        Mon,  7 Mar 2022 10:22:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1646677320; x=1678213320;
+  h=from:to:cc:subject:date:message-id;
+  bh=X6DiltQgtmgZijWZ4q1Ek4ipVF95KdQa5L+5uhVz/jY=;
+  b=TYK5GEW9BgSepXubTjHp8EwMNPrmLANIG6dvV+Q0O6PFzCLkPSK9p1/i
+   MgFsFz2ddJ9SJ4xQrV5bWDLYJpIfEX8WkUhzrXxSXAer+v5682vG3PvVK
+   nCUUYZMaf9rkdYu6AagKyNZ/JBYP856Giwi7TeXC8MWAgrtYINkRmCWkl
+   U=;
+Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
+  by alexa-out.qualcomm.com with ESMTP; 07 Mar 2022 10:22:00 -0800
+X-QCInternal: smtphost
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 Mar 2022 10:21:59 -0800
+X-QCInternal: smtphost
+Received: from pmaliset-linux.qualcomm.com ([10.206.64.233])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 07 Mar 2022 23:51:38 +0530
+Received: by pmaliset-linux.qualcomm.com (Postfix, from userid 3848298)
+        id 7A578213E0; Mon,  7 Mar 2022 23:51:37 +0530 (IST)
+From:   Prasad Malisetty <quic_pmaliset@quicinc.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rajatja@google.com, refactormyself@gmail.com
+Cc:     quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+        manivannan.sadhasivam@linaro.org, swboyd@chromium.org,
+        Prasad Malisetty <quic_pmaliset@quicinc.com>
+Subject: [PATCH v1] [RFC PATCH] PCI: Update LTR threshold based on LTRME bit
+Date:   Mon,  7 Mar 2022 23:51:35 +0530
+Message-Id: <1646677295-32733-1-git-send-email-quic_pmaliset@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 07, 2022 at 01:33:25PM +0200, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
-> 
-> Replace "-" to be ":" in comment section to be aligned with
-> kernel-doc format.
-> 
-> drivers/pci/iov.c:67: warning: Function parameter or member 'dev' not described in 'pci_iov_get_pf_drvdata'
-> drivers/pci/iov.c:67: warning: Function parameter or member 'pf_driver' not described in 'pci_iov_get_pf_drvdata'
-> 
-> Fixes: a7e9f240c0da ("PCI/IOV: Add pci_iov_get_pf_drvdata() to allow VF reaching the drvdata of a PF")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Update LTR threshold scale and value based on LTRME (Latency
+Tolenrance Reporting Mechanism) from device capabilities.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+In ASPM driver, LTR threshold scale and value is updating
+based on tcommon_mode and t_poweron values. In kioxia NVMe,
+L1.2 is failing due to LTR threshold scale and value is
+greater values than max snoop/non snoop value.
 
-> ---
->  drivers/pci/iov.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 28ec952e1221..952217572113 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -49,8 +49,8 @@ EXPORT_SYMBOL_GPL(pci_iov_vf_id);
->  
->  /**
->   * pci_iov_get_pf_drvdata - Return the drvdata of a PF
-> - * @dev - VF pci_dev
-> - * @pf_driver - Device driver required to own the PF
-> + * @dev: VF pci_dev
-> + * @pf_driver: Device driver required to own the PF
->   *
->   * This must be called from a context that ensures that a VF driver is attached.
->   * The value returned is invalid once the VF driver completes its remove()
-> -- 
-> 2.35.1
-> 
+In general, updated LTR threshold scale and value should be
+less than max snoop/non snoop value to enter the device
+into L1.2 state.
+
+Signed-off-by: Prasad Malisetty <quic_pmaliset@quicinc.com>
+---
+ drivers/pci/pcie/aspm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index a96b742..9822bd7 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -499,9 +499,14 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+ 	 * Table 5-11.  T(POWER_OFF) is at most 2us and T(L1.2) is at
+ 	 * least 4us.
+ 	 */
+-	l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
+-	encode_l12_threshold(l1_2_threshold, &scale, &value);
+-	ctl1 |= t_common_mode << 8 | scale << 29 | value << 16;
++	pcie_capability_read_dword(child, PCI_EXP_DEVCAP2, &cap);
++	if (!(cap & PCI_EXP_DEVCAP2_LTR)) {
++		l1_2_threshold = 2 + 4 + t_common_mode + t_power_on;
++		encode_l12_threshold(l1_2_threshold, &scale, &value);
++		ctl1 |= scale << 29 | value << 16;
++	}
++
++	ctl1 | = t_common_mode;
+ 
+ 	/* Some broken devices only support dword access to L1 SS */
+ 	pci_read_config_dword(parent, parent->l1ss + PCI_L1SS_CTL1, &pctl1);
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
