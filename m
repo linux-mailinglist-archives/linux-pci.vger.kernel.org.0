@@ -2,349 +2,243 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E6EC4D0B68
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Mar 2022 23:48:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F8484D0CCC
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 01:31:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343883AbiCGWt2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Mar 2022 17:49:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57122 "EHLO
+        id S236159AbiCHAcV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Mar 2022 19:32:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343874AbiCGWt2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 17:49:28 -0500
-Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-eopbgr30057.outbound.protection.outlook.com [40.107.3.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA44512758;
-        Mon,  7 Mar 2022 14:48:32 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cb0vmAjMuJEheB4uJk2eqWaZNJmRbyg2mX0r60CUCpiIHKUOdXfL/klR03taH7daX6hnw/+d11u3vDuauVMpUKOu6ihNhzVpX/MgoYqeawlU6rUZu6ia5im6JbuzcosbL52naBW8exg1o3DDNT/Z281TPMhItsD40Ou4EIth9HNNi6JzSd9r2w/yzB4sQ1yLpFRrFTiA/aE/P9tAjasOZm4i/pDCsOnmkRX4Em8nZegg6dLRmyLKCIwSsN9RDzuzAg4gFYtDmKP+w8UYhxKprkmzz37qliyiwY6kq9oM8EYvQT8hc4fVs06eq4tLFcgG7kh6cv1GeFGDhXCdkRbIow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JJsK8o8oPKxVJur6QrbRbhKIRvsRU4Om1INrgQTBMOc=;
- b=cODQtFGQn/BHGWhlX7eqwpnIIrxhwdvGFEH6gz0mkozo6GBVSDWa+5gpftButa3PIw58bsa1jygsxVlWl0JAJSHiPGHCyJiJvjwJ6+0KeirVrdq0B45aLO61aP2jbg9aaMeX4XLMOyE/S0qSxCB4heFMmughaKU/6YVanbhUErnuNSwgPF0hfzbFCBCtEjhUEV8D4LHGgxNYX/G73NfZyvUBMO7EENGtK6T+VHTz8JnXND+4+wKDE35fPpC2XnONgzDBHjUJjX7ktwx8WAz9wfRK76fSw4AHrM/TJUtzOjIT9HHOE20G825TCkf1VtC/Q5xyZO30lmsGdZZOx+smEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JJsK8o8oPKxVJur6QrbRbhKIRvsRU4Om1INrgQTBMOc=;
- b=LldicASiZhaKbqLKZPNo/idjW4PDXgFjnclxRB4qzgJqfH2KvujRyAPhVDVIwsgrVCvl3BLKjdAncRsy+JoJpSofPsPA16NDwY4cqiMFJqFybZH5YPnQlN2IO3zTWNBoB435vNi8Guf84/yU7tz4QKhO7JfxAXPp/NRuUn2v844=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
- by AM0PR04MB4946.eurprd04.prod.outlook.com (2603:10a6:208:c0::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.17; Mon, 7 Mar
- 2022 22:48:30 +0000
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::c897:1bdf:e643:aef8]) by PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::c897:1bdf:e643:aef8%7]) with mapi id 15.20.5038.027; Mon, 7 Mar 2022
- 22:48:30 +0000
-From:   Frank Li <Frank.Li@nxp.com>
-To:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com
-Cc:     vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com, shawnguo@kernel.org,
-        manivannan.sadhasivam@linaro.org
-Subject: [PATCH v3 6/6] PCI: endpoint: functions/pci-epf-test: Support PCI controller DMA
-Date:   Mon,  7 Mar 2022 16:47:50 -0600
-Message-Id: <20220307224750.18055-6-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20220307224750.18055-1-Frank.Li@nxp.com>
-References: <20220307224750.18055-1-Frank.Li@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0019.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::24) To PAXPR04MB9186.eurprd04.prod.outlook.com
- (2603:10a6:102:232::18)
+        with ESMTP id S230263AbiCHAcT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Mar 2022 19:32:19 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3AB112ADA;
+        Mon,  7 Mar 2022 16:31:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646699483; x=1678235483;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=oSu0Z2jGUkfhbuVOaedzXc4LteEqQxU2xU+auVYA8/8=;
+  b=J/D3yqrMTipJDADD0loQoVIfJnWEePK9vKs2mESF8VeGelRWLWv0S3yC
+   VyU94kbCuC+og0HV5nYYvfGwVRr3Gceie3RhPJxB1YWh09CKrlngG09CT
+   MSVUDCF/vxuQSHknRfNDjYJRMPN7eO0qN3w9nZsd6n+9ldZ5xZHhiAFAd
+   xGwu0KG0fvjkWYfZnms0I17ugdiqfdL5BM/Pq1Ex9x7beyCbINASL3Zin
+   mYgOjOUiwaw6zI3JtPEsg9HXh+f/O1UXyKpK3KSc28srjnPl5OYyITci+
+   znHh/S0KVGrrOvUJG0/yk94kkXkPjNVmqUxi/in///ieoabcBd91ip3S5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10279"; a="235154024"
+X-IronPort-AV: E=Sophos;i="5.90,163,1643702400"; 
+   d="scan'208";a="235154024"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2022 16:31:23 -0800
+X-IronPort-AV: E=Sophos;i="5.90,163,1643702400"; 
+   d="scan'208";a="711324392"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.209.195]) ([10.254.209.195])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2022 16:31:16 -0800
+Message-ID: <5fb85230-466c-9615-0867-bb17cab34be5@linux.intel.com>
+Date:   Tue, 8 Mar 2022 08:31:14 +0800
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 45e7cd7c-24b4-4762-52f5-08da008c9991
-X-MS-TrafficTypeDiagnostic: AM0PR04MB4946:EE_
-X-Microsoft-Antispam-PRVS: <AM0PR04MB4946E3209B749F46BCDA939688089@AM0PR04MB4946.eurprd04.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rBl0Gt4lsPfdV8wh6LkGt2tKSQUMTplsJq6yqZ5a+m+nV/0y8GIVI0IviXkCuFg32Zp8ZHfs2yMDPdonvJHJMGnjgfojTx9Ip1VRT3NSRViSTpBRbLNx1/zhMLwt8UyZSfBX9xeUquErP72CjexoT1YBrio+w7vFzYNpmHq0yVxFcIOv7UUlRwHq8JAtniJyEjEyg0i94f0LoFQZmw3SIm3ED+KRrWzNKakgQSQy/dnbrAJt4lzEqVXUU7UPNcsvTSkJt33h2y3E2Y24DtoSqTUIAVmA1pdfYT/m6afc2xS93C0qTgz7/+F9Zl4suiY9kEun6ywwHbZCWDpJ0qFFhquwqdp2YMGn3kMzPF4JaKcI0aPzex1t7TgRqBBw+v3D7E3VjuLv+kch3ChniS23uZ8vtJowrcYlLJFGHOgQpGuALmwCo1bLfa4BAtFZ2A56Ik5Y60mD7hIKrPNyReH3bNfZ/0tK4mJ1OGv3a2OHPwQOSYOQuZOGzXa6AGHkES8tzbp5gepJqk5voMfD1mGiqfOqJdnPJQCe3klNtoA1oEbgBi0EFGTrKFEg97R50o440mYvg4HywHQ9mi6D4ac2tS13I+MFdHUHXBs/RfRAygwxMCzTAuWgBM4R3n1TEW8s2uL626b9ZY7uKFGzh1AlGcrVwQGcYdX1v6wwrOKHyQKRQx+ml3hE+pksRFJuZlhkd6zd6IMzlNnHyTZFpLdv4w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2906002)(5660300002)(86362001)(8676002)(508600001)(7416002)(66476007)(66946007)(66556008)(4326008)(6512007)(8936002)(6486002)(6666004)(6506007)(52116002)(83380400001)(38350700002)(1076003)(186003)(26005)(36756003)(316002)(2616005)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AUbzKksp7jb1JJ59YMdibeSgz4+hkpDdha0Rpv61im5SMoyuTnXfX/WDsYOb?=
- =?us-ascii?Q?Gd3Hcf9uOuUazbzU+s8PtGC0pnDfQtoRKHcQf8OmhLJMO4qf7uq6xPMtO0OV?=
- =?us-ascii?Q?ZWRUeYEl9PIyJMTQAKjoxNI1Z4Xmf/V3SZBT2yj9s/7Mar6aGKP+1zHONAjt?=
- =?us-ascii?Q?3X4jHcgYGbCQWwz0rRlBK6/o3cLwCLbo/q8p4a3lLkgUH3YMbnZp8TJF13UA?=
- =?us-ascii?Q?XPUAyNmni6GRVtTFso0VsMGwV36nYYoRIqB6y9Go3VyIk1gDwSBpsugDUyUU?=
- =?us-ascii?Q?VZx3KnGaBs9HxlpnLHGl0WTRZY8BNMP3kOWfVucG9fBIjth2Vynsi+WAfO7i?=
- =?us-ascii?Q?OdTq8ZPljbmzHSQ2POx7kUb10dI77xyk/AFfxu/VdWJY/2jhiAnx3WGIzU/U?=
- =?us-ascii?Q?XF7Ef9JME4vjAavK8DGFxglvIIN2x1phDJm66e+l1+1UrhdrvxLBJaRnSBC4?=
- =?us-ascii?Q?3CO5XMpBOwa01cdZcIlGU9yQTgeTsQzOMBykSG1MrDMMt24zHrBnei4kj6ou?=
- =?us-ascii?Q?QDtFinckXnujdw1u4RZvdauXyZPs1YOQ5yK84JSNZ76Bpmrn/GR+zqCMriMW?=
- =?us-ascii?Q?TGO/fxb7DyMOrQKRTq3KAZVDepd19KtuZlrTv0lqM7HgXaBxV5+Xx2GmMfMY?=
- =?us-ascii?Q?IXx7oMvl2hcZYfwn6vKhRP/G2JnUmXryqqApOkIyfTcnECzAj8n1CSW9EKuk?=
- =?us-ascii?Q?CeRtEGPk+YtiiTk1+8Q1QNncLvN+bwrQLmTSkcIcfnKm3WgHxgqGuIGhrG74?=
- =?us-ascii?Q?BTrBk2t0fVqHIOwaklxQBOqo9ZKKG+PNUceIxtY4s7VbakEf9+qp/icuhkzh?=
- =?us-ascii?Q?qP0v+8Vy2o/KCR68nIeX0EUVb7iKQB/hQogfgjrcCPruq5lTIsVJpQOT7wky?=
- =?us-ascii?Q?0q1vZmG91A0d9FW2PVCVXjPf325z3FVuU0cA11TqOt49UlIMWPFkndL/LSZI?=
- =?us-ascii?Q?H3+usRWKd3KxohonzoKjOmVnH04FB9ePNeCKJunzOufclLKiGfkRSjoozb7J?=
- =?us-ascii?Q?2B1R0ey+GAtYcLzpeG3O+nnDPlUmt0j1T+1U7cRtfH7r2fyI4EdBpjMlE/b/?=
- =?us-ascii?Q?DZ77xYNwI0jHqv72LizVDpxM3LyyizMnRC4LGn0t29z1AaY6+l2E4E15OWx7?=
- =?us-ascii?Q?7UKi2P9/x4OoObAKn9GHk5Hn0w5yFOOrCTexvJPVuFFZ0yCbwa5oZBdfiNew?=
- =?us-ascii?Q?HhVusdl+3CjoiCJiWfG6nEL7mN7dDORGeTXbfWKs4CRkKajeNsOZybeidcXW?=
- =?us-ascii?Q?ehvwhd7x3QgH1Zs9QU2Oi1ymg9pUt+Noz3JsmTH/gCi8uKhEqE8D0HJKTZ6Z?=
- =?us-ascii?Q?xMTm45mnC6xYkk+9A7tfIpqzMJ87cAw2NZ0PEvG9MeLpVts0IwgPvz97CyoF?=
- =?us-ascii?Q?Fb8CWI7yhZRKBIfGg4EySdkiktlqr/ze7BWDfyRct6Ia6eE2la19fCnoa8w+?=
- =?us-ascii?Q?o/ZLcPgBuQT1vCfw/6ZZVvNAcAn3tFAOyDlRQ7fe9WQDhMZei5s93sIKjlG9?=
- =?us-ascii?Q?wJuw2BCkdLzA0+ARBgsZEuy6Hi0KvdpuKg7Dx3H/5LOi2PVYrT8s0DF/rogR?=
- =?us-ascii?Q?LPVFsbVMIDFrKuGJTTkCZDWAoKqB8xiiadCYhvJopMBFBkNUtd7WjE2b3NAX?=
- =?us-ascii?Q?EWNuXGDXa/oInoOiWK2lhLw=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45e7cd7c-24b4-4762-52f5-08da008c9991
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 22:48:30.1186
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lJ4dx+lWl91OqB0kBQPbuMrDhaHXqdf6bvNJoMJZ2K+tV0uc6VtJulttUJKYbmC4bNG8LnTgLRuwuwT7kkmzKA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4946
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.2
+Cc:     baolu.lu@linux.intel.com, Chaitanya Kulkarni <kch@nvidia.com>,
+        kvm@vger.kernel.org, Stuart Yoder <stuyoder@gmail.com>,
+        rafael@kernel.org, David Airlie <airlied@linux.ie>,
+        linux-pci@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        iommu@lists.linux-foundation.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Li Yang <leoyang.li@nxp.com>, Will Deacon <will@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v7 01/11] iommu: Add DMA ownership management interfaces
+Content-Language: en-US
+To:     eric.auger@redhat.com, Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+References: <20220228005056.599595-1-baolu.lu@linux.intel.com>
+ <20220228005056.599595-2-baolu.lu@linux.intel.com>
+ <c75b6e04-bc1b-b9f6-1a44-bf1567a8c19d@redhat.com>
+ <7a3dc977-0c5f-6d88-6d3a-8e49bc717690@linux.intel.com>
+ <1648bc97-a0d3-4051-58d0-e24fa9e9d183@arm.com>
+ <350a8e09-08a9-082b-3ad1-b711c7d98d73@redhat.com>
+ <e2698dbe-18e2-1a82-8a12-fe45bc9be534@arm.com>
+ <b1a5db0a-0373-5ca0-6256-85a96d029ec9@linux.intel.com>
+ <ac75c521-fb13-8414-a81b-9178cbed3471@redhat.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+In-Reply-To: <ac75c521-fb13-8414-a81b-9178cbed3471@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Designware provided DMA support in controller. This enabled use
-this DMA controller to transfer data.
+On 2022/3/7 20:42, Eric Auger wrote:
+> Hi Lu,
+> 
+> On 3/7/22 4:27 AM, Lu Baolu wrote:
+>> Hi Robin,
+>>
+>> On 3/4/22 10:10 PM, Robin Murphy wrote:
+>>> On 2022-03-04 13:55, Eric Auger wrote:
+>>>> Hi Robin,
+>>>>
+>>>> On 3/4/22 1:22 PM, Robin Murphy wrote:
+>>>>> On 2022-03-04 10:43, Lu Baolu wrote:
+>>>>>> Hi Eric,
+>>>>>>
+>>>>>> On 2022/3/4 18:34, Eric Auger wrote:
+>>>>>>> I hit a WARN_ON() when unbinding an e1000e driver just after boot:
+>>>>>>>
+>>>>>>> sudo modprobe -v vfio-pci
+>>>>>>> echo vfio-pci | sudo tee -a
+>>>>>>> /sys/bus/pci/devices/0004:01:00.0/driver_override
+>>>>>>> vfio-pci
+>>>>>>> echo 0004:01:00.0 | sudo tee -a  /sys/bus/pci/drivers/e1000e/unbind
+>>>>>>>
+>>>>>>>
+>>>>>>> [  390.042811] ------------[ cut here ]------------
+>>>>>>> [  390.046468] WARNING: CPU: 42 PID: 5589 at
+>>>>>>> drivers/iommu/iommu.c:3123
+>>>>>>> iommu_device_unuse_default_domain+0x68/0x100
+>>>>>>> [  390.056710] Modules linked in: vfio_pci vfio_pci_core vfio_virqfd
+>>>>>>> vfio_iommu_type1 vfio xt_CHECKSUM xt_MASQUERADE xt_conntrack
+>>>>>>> ipt_REJECT
+>>>>>>> nf_reject_ipv4 nft_compat nft_chain_nat nf_nat nf_conntrack
+>>>>>>> nf_defrag_ipv6 nf_defrag_ipv4 nf_tables nfnetlink bridge stp llc
+>>>>>>> rfkill
+>>>>>>> sunrpc vfat fat mlx5_ib ib_uverbs ib_core acpi_ipmi ipmi_ssif
+>>>>>>> ipmi_devintf ipmi_msghandler cppc_cpufreq drm xfs libcrc32c
+>>>>>>> mlx5_core sg
+>>>>>>> mlxfw crct10dif_ce tls ghash_ce sha2_ce sha256_arm64 sha1_ce
+>>>>>>> sbsa_gwdt
+>>>>>>> e1000e psample sdhci_acpi ahci_platform sdhci libahci_platform
+>>>>>>> qcom_emac
+>>>>>>> mmc_core hdma hdma_mgmt dm_mirror dm_region_hash dm_log dm_mod fuse
+>>>>>>> [  390.110618] CPU: 42 PID: 5589 Comm: tee Kdump: loaded Not tainted
+>>>>>>> 5.17.0-rc4-lu-v7-official+ #24
+>>>>>>> [  390.119384] Hardware name: WIWYNN QDF2400 Reference Evaluation
+>>>>>>> Platform CV90-LA115-P120/QDF2400 Customer Reference Board, BIOS
+>>>>>>> 0ACJA570
+>>>>>>> 11/05/2018
+>>>>>>> [  390.132492] pstate: a0400005 (NzCv daif +PAN -UAO -TCO -DIT -SSBS
+>>>>>>> BTYPE=--)
+>>>>>>> [  390.139436] pc : iommu_device_unuse_default_domain+0x68/0x100
+>>>>>>> [  390.145165] lr : iommu_device_unuse_default_domain+0x38/0x100
+>>>>>>> [  390.150894] sp : ffff80000fbb3bc0
+>>>>>>> [  390.154193] x29: ffff80000fbb3bc0 x28: ffff03c0cf6b2400 x27:
+>>>>>>> 0000000000000000
+>>>>>>> [  390.161311] x26: 0000000000000000 x25: 0000000000000000 x24:
+>>>>>>> ffff03c0c7cc5720
+>>>>>>> [  390.168429] x23: ffff03c0c2b9d150 x22: ffffb4e61df223f8 x21:
+>>>>>>> ffffb4e61df223f8
+>>>>>>> [  390.175547] x20: ffff03c7c03c3758 x19: ffff03c7c03c3700 x18:
+>>>>>>> 0000000000000000
+>>>>>>> [  390.182665] x17: 0000000000000000 x16: 0000000000000000 x15:
+>>>>>>> 0000000000000000
+>>>>>>> [  390.189783] x14: 0000000000000000 x13: 0000000000000030 x12:
+>>>>>>> ffff03c0d519cd80
+>>>>>>> [  390.196901] x11: 7f7f7f7f7f7f7f7f x10: 0000000000000dc0 x9 :
+>>>>>>> ffffb4e620b54f8c
+>>>>>>> [  390.204019] x8 : ffff03c0cf6b3220 x7 : ffff4ef132bba000 x6 :
+>>>>>>> 00000000000000ff
+>>>>>>> [  390.211137] x5 : ffff03c0c2b9f108 x4 : ffff03c0d51f6438 x3 :
+>>>>>>> 0000000000000000
+>>>>>>> [  390.218255] x2 : ffff03c0cf6b2400 x1 : 0000000000000000 x0 :
+>>>>>>> 0000000000000000
+>>>>>>> [  390.225374] Call trace:
+>>>>>>> [  390.227804]  iommu_device_unuse_default_domain+0x68/0x100
+>>>>>>> [  390.233187]  pci_dma_cleanup+0x38/0x44
+>>>>>>> [  390.236919]  __device_release_driver+0x1a8/0x260
+>>>>>>> [  390.241519]  device_driver_detach+0x50/0xd0
+>>>>>>> [  390.245686]  unbind_store+0xf8/0x120
+>>>>>>> [  390.249245]  drv_attr_store+0x30/0x44
+>>>>>>> [  390.252891]  sysfs_kf_write+0x50/0x60
+>>>>>>> [  390.256537]  kernfs_fop_write_iter+0x134/0x1cc
+>>>>>>> [  390.260964]  new_sync_write+0xf0/0x18c
+>>>>>>> [  390.264696]  vfs_write+0x230/0x2d0
+>>>>>>> [  390.268082]  ksys_write+0x74/0x100
+>>>>>>> [  390.271467]  __arm64_sys_write+0x28/0x3c
+>>>>>>> [  390.275373]  invoke_syscall.constprop.0+0x58/0xf0
+>>>>>>> [  390.280061]  el0_svc_common.constprop.0+0x160/0x164
+>>>>>>> [  390.284922]  do_el0_svc+0x34/0xcc
+>>>>>>> [  390.288221]  el0_svc+0x30/0x140
+>>>>>>> [  390.291346]  el0t_64_sync_handler+0xa4/0x130
+>>>>>>> [  390.295599]  el0t_64_sync+0x1a0/0x1a4
+>>>>>>> [  390.299245] ---[ end trace 0000000000000000 ]---
+>>>>>>>
+>>>>>>>
+>>>>>>> I put some traces in the code and I can see that
+>>>>>>> iommu_device_use_default_domain() effectively is called on
+>>>>>>> 0004:01:00.0 e1000e device on pci_dma_configure() but at that time
+>>>>>>> the iommu group is NULL:
+>>>>>>> [   10.569427] e1000e 0004:01:00.0: ------ ENTRY pci_dma_configure
+>>>>>>> driver_managed_area=0
+>>>>>>> [   10.569431] e1000e 0004:01:00.0: ****
+>>>>>>> iommu_device_use_default_domain ENTRY
+>>>>>>> [   10.569433] e1000e 0004:01:00.0: ****
+>>>>>>> iommu_device_use_default_domain no group
+>>>>>>> [   10.569435] e1000e 0004:01:00.0: pci_dma_configure
+>>>>>>> iommu_device_use_default_domain returned 0
+>>>>>>> [   10.569492] e1000e 0004:01:00.0: Adding to iommu group 3
+>>>>>>>
+>>>>>>> ^^^the group is added after the
+>>>>>>> iommu_device_use_default_domain() call
+>>>>>>> So the group->owner_cnt is not incremented as expected.
+>>>>>>
+>>>>>> Thank you for reporting this. Do you have any idea why the driver is
+>>>>>> loaded before iommu_probe_device()?
+>>>>>
+>>>>> Urgh, this is the horrible firmware-data-ordering thing again. The
+>>>>> stuff I've been saying about having to rework the whole .dma_configure
+>>>>> mechanism in the near future is to fix this properly.
+>>>>>
+>>>>> The summary is that in patch #4, calling
+>>>>> iommu_device_use_default_domain() *before* {of,acpi}_dma_configure is
+>>>>> currently a problem. As things stand, the IOMMU driver ignored the
+>>>>> initial iommu_probe_device() call when the device was added, since at
+>>>>> that point it had no fwspec yet. In this situation,
+>>>>> {of,acpi}_iommu_configure() are retriggering iommu_probe_device()
+>>>>> after the IOMMU driver has seen the firmware data via .of_xlate to
+>>>>> learn that it it actually responsible for the given device.
+>>>>
+>>>> thank you for providing the info. Hope this is something Lu can work
+>>>> around.
+>>>
+>>> Hopefully it's just a case of flipping the calls around, so that
+>>> iommu_use_default_domain() goes at the end, and calls
+>>> arch_teardown_dma_ops() if it fails. From a quick skim I *think* that
+>>> should still work out to the desired behaviour (or at least close
+>>> enough that we can move forward without a circular dependency between
+>>> fixes...)
+>>
+>> This is a reasonable solution to me. Thank you for the information and
+>> suggestion.
+>>
+>> Eric, I have updated the patch #4 and uploaded a new version here:
+>>
+>> https://github.com/LuBaolu/intel-iommu/commits/iommu-dma-ownership-v8
+> 
+> with v8 I do not hit the warning anymore and the owner accounting seems
+> to work as expected.
 
-The whole flow align with standard DMA usage module
+Thank you, Eric! I will post the v8 soon.
 
-1. Using dma_request_channel() and filter function to find correct
-RX and TX Channel.
-2. dmaengine_slave_config() config remote side physcial address.
-3. using dmaengine_prep_slave_single() create transfer descriptor
-4. tx_submit();
-5. dma_async_issue_pending();
-
-Tested at i.MX8DXL platform.
-
-root@imx8qmmek:~# /usr/bin/pcitest -d -w
-WRITE ( 102400 bytes):          OKAY
-root@imx8qmmek:~# /usr/bin/pcitest -d -r
-READ ( 102400 bytes):           OKAY
-
-WRITE => Size: 102400 bytes DMA: YES  Time: 0.000180145 seconds Rate: 555108 KB/s
-READ => Size: 102400 bytes  DMA: YES  Time: 0.000194397 seconds Rate: 514411 KB/s
-
-READ => Size: 102400 bytes  DMA: NO   Time: 0.013532597 seconds Rate: 7389 KB/s
-WRITE => Size: 102400 bytes DMA: NO   Time: 0.000857090 seconds Rate: 116673 KB/s
-
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Resend added dmaengine@vger.kernel.org
-
-Change from v1 to v3
- - none
-
- drivers/pci/endpoint/functions/pci-epf-test.c | 106 ++++++++++++++++--
- 1 file changed, 96 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 90d84d3bc868f..22ae420c30693 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -52,9 +52,11 @@ struct pci_epf_test {
- 	enum pci_barno		test_reg_bar;
- 	size_t			msix_table_offset;
- 	struct delayed_work	cmd_handler;
--	struct dma_chan		*dma_chan;
-+	struct dma_chan		*dma_chan_tx;
-+	struct dma_chan		*dma_chan_rx;
- 	struct completion	transfer_complete;
- 	bool			dma_supported;
-+	bool			dma_private;
- 	const struct pci_epc_features *epc_features;
- };
- 
-@@ -105,14 +107,17 @@ static void pci_epf_test_dma_callback(void *param)
-  */
- static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
- 				      dma_addr_t dma_dst, dma_addr_t dma_src,
--				      size_t len)
-+				      size_t len, dma_addr_t remote,
-+				      enum dma_transfer_direction dir)
- {
- 	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
--	struct dma_chan *chan = epf_test->dma_chan;
-+	struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
- 	struct pci_epf *epf = epf_test->epf;
- 	struct dma_async_tx_descriptor *tx;
- 	struct device *dev = &epf->dev;
- 	dma_cookie_t cookie;
-+	struct dma_slave_config	sconf;
-+	dma_addr_t local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
- 	int ret;
- 
- 	if (IS_ERR_OR_NULL(chan)) {
-@@ -120,7 +125,20 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
- 		return -EINVAL;
- 	}
- 
--	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-+	if (epf_test->dma_private) {
-+		memset(&sconf, 0, sizeof(sconf));
-+		sconf.direction = dir;
-+		if (dir == DMA_MEM_TO_DEV)
-+			sconf.dst_addr = remote;
-+		else
-+			sconf.src_addr = remote;
-+
-+		dmaengine_slave_config(chan, &sconf);
-+		tx = dmaengine_prep_slave_single(chan, local, len, dir, flags);
-+	} else {
-+		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-+	}
-+
- 	if (!tx) {
- 		dev_err(dev, "Failed to prepare DMA memcpy\n");
- 		return -EIO;
-@@ -148,6 +166,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
- 	return 0;
- }
- 
-+struct epf_dma_filter {
-+	struct device *dev;
-+	u32 dma_mask;
-+};
-+
-+static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-+{
-+	struct epf_dma_filter *filter = node;
-+	struct dma_slave_caps caps;
-+
-+	memset(&caps, 0, sizeof(caps));
-+	dma_get_slave_caps(chan, &caps);
-+
-+	return chan->device->dev == filter->dev
-+		&& (filter->dma_mask & caps.directions);
-+}
-+
- /**
-  * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
-  * @epf_test: the EPF test device that performs data transfer operation
-@@ -160,8 +195,42 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
- 	struct device *dev = &epf->dev;
- 	struct dma_chan *dma_chan;
- 	dma_cap_mask_t mask;
-+	struct epf_dma_filter filter;
- 	int ret;
- 
-+	filter.dev = epf->epc->dev.parent;
-+	filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-+
-+	dma_cap_zero(mask);
-+	dma_cap_set(DMA_SLAVE, mask);
-+	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-+	if (IS_ERR(dma_chan)) {
-+		dev_info(dev, "Failure get built-in DMA channel, fail back to try allocate general DMA channel\n");
-+		goto fail_back_tx;
-+	}
-+
-+	epf_test->dma_chan_rx = dma_chan;
-+
-+	filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-+	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-+
-+	if (IS_ERR(dma_chan)) {
-+		dev_info(dev, "Failure get built-in DMA channel, fail back to try allocate general DMA channel\n");
-+		goto fail_back_rx;
-+	}
-+
-+	epf_test->dma_chan_tx = dma_chan;
-+	epf_test->dma_private = true;
-+
-+	init_completion(&epf_test->transfer_complete);
-+
-+	return 0;
-+
-+fail_back_rx:
-+	dma_release_channel(epf_test->dma_chan_rx);
-+	epf_test->dma_chan_tx = NULL;
-+
-+fail_back_tx:
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_MEMCPY, mask);
- 
-@@ -174,7 +243,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
- 	}
- 	init_completion(&epf_test->transfer_complete);
- 
--	epf_test->dma_chan = dma_chan;
-+	epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
- 
- 	return 0;
- }
-@@ -190,8 +259,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
- 	if (!epf_test->dma_supported)
- 		return;
- 
--	dma_release_channel(epf_test->dma_chan);
--	epf_test->dma_chan = NULL;
-+	dma_release_channel(epf_test->dma_chan_tx);
-+	if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-+		epf_test->dma_chan_tx = NULL;
-+		epf_test->dma_chan_rx = NULL;
-+		return;
-+	}
-+
-+	dma_release_channel(epf_test->dma_chan_rx);
-+	epf_test->dma_chan_rx = NULL;
-+
-+	return;
- }
- 
- static void pci_epf_test_print_rate(const char *ops, u64 size,
-@@ -280,8 +358,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
- 			goto err_map_addr;
- 		}
- 
-+		if (epf_test->dma_private) {
-+			dev_err(dev, "Cannot transfer data using DMA\n");
-+			ret = -EINVAL;
-+			goto err_map_addr;
-+		}
-+
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
--						 src_phys_addr, reg->size);
-+						 src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 	} else {
-@@ -363,7 +447,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 
- 		ktime_get_ts64(&start);
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
--						 phys_addr, reg->size);
-+						 phys_addr, reg->size,
-+						 reg->src_addr, DMA_DEV_TO_MEM);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 		ktime_get_ts64(&end);
-@@ -453,8 +538,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 		}
- 
- 		ktime_get_ts64(&start);
-+
- 		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
--						 src_phys_addr, reg->size);
-+						 src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 		ktime_get_ts64(&end);
--- 
-2.24.0.rc1
-
+Best regards,
+baolu
