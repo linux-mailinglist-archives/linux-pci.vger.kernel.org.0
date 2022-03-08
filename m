@@ -2,144 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34B124D16C6
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 13:02:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 134E44D16D0
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 13:06:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346577AbiCHMDd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Mar 2022 07:03:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35622 "EHLO
+        id S233504AbiCHMHg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Mar 2022 07:07:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233849AbiCHMDc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 07:03:32 -0500
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6DC8AE69;
-        Tue,  8 Mar 2022 04:02:34 -0800 (PST)
-Received: from kwepemi500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KCYjh6Clnz1GCDT;
-        Tue,  8 Mar 2022 19:57:44 +0800 (CST)
-Received: from kwepemm600005.china.huawei.com (7.193.23.191) by
- kwepemi500009.china.huawei.com (7.221.188.199) with Microsoft SMTP Server
+        with ESMTP id S230381AbiCHMHf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 07:07:35 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0494028E02;
+        Tue,  8 Mar 2022 04:06:38 -0800 (PST)
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KCYtx4Wm1z6801q;
+        Tue,  8 Mar 2022 20:05:45 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 8 Mar 2022 20:02:32 +0800
-Received: from [10.67.102.118] (10.67.102.118) by
- kwepemm600005.china.huawei.com (7.193.23.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 8 Mar 2022 20:02:31 +0800
-Subject: Re: [PATCH v8 6/9] hisi_acc_vfio_pci: Add helper to retrieve the
- struct pci_driver
-To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <alex.williamson@redhat.com>,
-        <jgg@nvidia.com>, <cohuck@redhat.com>, <mgurtovoy@nvidia.com>,
-        <yishaih@nvidia.com>, <linuxarm@huawei.com>,
-        <prime.zeng@hisilicon.com>, <jonathan.cameron@huawei.com>,
-        <wangzhou1@hisilicon.com>
-References: <20220303230131.2103-1-shameerali.kolothum.thodi@huawei.com>
- <20220303230131.2103-7-shameerali.kolothum.thodi@huawei.com>
-From:   liulongfang <liulongfang@huawei.com>
-Message-ID: <553bf6f3-b473-d72c-f120-230d02f9a74a@huawei.com>
-Date:   Tue, 8 Mar 2022 20:02:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ 15.1.2308.21; Tue, 8 Mar 2022 13:06:10 +0100
+Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Tue, 8 Mar
+ 2022 12:06:08 +0000
+Date:   Tue, 8 Mar 2022 12:06:07 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Yicong Yang <yangyicong@huawei.com>
+CC:     Yicong Yang <yangyicong@hisilicon.com>,
+        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
+        <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <daniel.thompson@linaro.org>, <joro@8bytes.org>,
+        <john.garry@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>, <prime.zeng@huawei.com>,
+        <liuqi115@huawei.com>, <zhangshaokun@hisilicon.com>,
+        <linuxarm@huawei.com>, <song.bao.hua@hisilicon.com>
+Subject: Re: [PATCH v5 3/8] hisi_ptt: Register PMU device for PTT trace
+Message-ID: <20220308120607.000064e6@Huawei.com>
+In-Reply-To: <d3b555c1-ed7e-f668-7d81-9cc2dbe6ffba@huawei.com>
+References: <20220308084930.5142-1-yangyicong@hisilicon.com>
+        <20220308084930.5142-4-yangyicong@hisilicon.com>
+        <20220308102157.00003725@Huawei.com>
+        <d3b555c1-ed7e-f668-7d81-9cc2dbe6ffba@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20220303230131.2103-7-shameerali.kolothum.thodi@huawei.com>
-Content-Type: text/plain; charset="gbk"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.118]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600005.china.huawei.com (7.193.23.191)
+X-Originating-IP: [10.202.226.41]
+X-ClientProxiedBy: lhreml740-chm.china.huawei.com (10.201.108.190) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/3/4 7:01, Shameer Kolothum wrote:
-> struct pci_driver pointer is an input into the pci_iov_get_pf_drvdata().
-> Introduce helpers to retrieve the ACC PF dev struct pci_driver pointers
-> as we use this in ACC vfio migration driver.
-> 
-> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> ---
->  drivers/crypto/hisilicon/hpre/hpre_main.c | 6 ++++++
->  drivers/crypto/hisilicon/sec2/sec_main.c  | 6 ++++++
->  drivers/crypto/hisilicon/zip/zip_main.c   | 6 ++++++
->  include/linux/hisi_acc_qm.h               | 5 +++++
->  4 files changed, 23 insertions(+)
-> 
-Acked-by: Longfang Liu <liulongfang@huawei.com>
+On Tue, 8 Mar 2022 19:13:08 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
 
-Thanks,
-Longfang.
-> diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
-> index 3589d8879b5e..36ab30e9e654 100644
-> --- a/drivers/crypto/hisilicon/hpre/hpre_main.c
-> +++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
-> @@ -1190,6 +1190,12 @@ static struct pci_driver hpre_pci_driver = {
->  	.driver.pm		= &hpre_pm_ops,
->  };
->  
-> +struct pci_driver *hisi_hpre_get_pf_driver(void)
-> +{
-> +	return &hpre_pci_driver;
-> +}
-> +EXPORT_SYMBOL_GPL(hisi_hpre_get_pf_driver);
-> +
->  static void hpre_register_debugfs(void)
->  {
->  	if (!debugfs_initialized())
-> diff --git a/drivers/crypto/hisilicon/sec2/sec_main.c b/drivers/crypto/hisilicon/sec2/sec_main.c
-> index 311a8747b5bf..421a405ca337 100644
-> --- a/drivers/crypto/hisilicon/sec2/sec_main.c
-> +++ b/drivers/crypto/hisilicon/sec2/sec_main.c
-> @@ -1088,6 +1088,12 @@ static struct pci_driver sec_pci_driver = {
->  	.driver.pm = &sec_pm_ops,
->  };
->  
-> +struct pci_driver *hisi_sec_get_pf_driver(void)
-> +{
-> +	return &sec_pci_driver;
-> +}
-> +EXPORT_SYMBOL_GPL(hisi_sec_get_pf_driver);
-> +
->  static void sec_register_debugfs(void)
->  {
->  	if (!debugfs_initialized())
-> diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-> index 66decfe07282..4534e1e107d1 100644
-> --- a/drivers/crypto/hisilicon/zip/zip_main.c
-> +++ b/drivers/crypto/hisilicon/zip/zip_main.c
-> @@ -1012,6 +1012,12 @@ static struct pci_driver hisi_zip_pci_driver = {
->  	.driver.pm		= &hisi_zip_pm_ops,
->  };
->  
-> +struct pci_driver *hisi_zip_get_pf_driver(void)
-> +{
-> +	return &hisi_zip_pci_driver;
-> +}
-> +EXPORT_SYMBOL_GPL(hisi_zip_get_pf_driver);
-> +
->  static void hisi_zip_register_debugfs(void)
->  {
->  	if (!debugfs_initialized())
-> diff --git a/include/linux/hisi_acc_qm.h b/include/linux/hisi_acc_qm.h
-> index 6a6477c34666..00f2a4db8723 100644
-> --- a/include/linux/hisi_acc_qm.h
-> +++ b/include/linux/hisi_acc_qm.h
-> @@ -476,4 +476,9 @@ void hisi_qm_pm_init(struct hisi_qm *qm);
->  int hisi_qm_get_dfx_access(struct hisi_qm *qm);
->  void hisi_qm_put_dfx_access(struct hisi_qm *qm);
->  void hisi_qm_regs_dump(struct seq_file *s, struct debugfs_regset32 *regset);
-> +
-> +/* Used by VFIO ACC live migration driver */
-> +struct pci_driver *hisi_sec_get_pf_driver(void);
-> +struct pci_driver *hisi_hpre_get_pf_driver(void);
-> +struct pci_driver *hisi_zip_get_pf_driver(void);
->  #endif
+> On 2022/3/8 18:21, Jonathan Cameron wrote:
+> > On Tue, 8 Mar 2022 16:49:25 +0800
+> > Yicong Yang <yangyicong@hisilicon.com> wrote:
+> >   
+> >> Register PMU device of PTT trace, then users can use trace through perf
+> >> command. The driver makes use of perf AUX trace and support following
+> >> events to configure the trace:
+> >>
+> >> - filter: select Root port or Endpoint to trace
+> >> - type: select the type of traced TLP headers
+> >> - direction: select the direction of traced TLP headers
+> >> - format: select the data format of the traced TLP headers
+> >>
+> >> This patch adds the PMU driver part of PTT trace. The perf command support
+> >> of PTT trace is added in the following patch.
+> >>
+> >> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>  
+> > 
+> > It seems to me that you ended up doing both suggestions for
+> > how to clean up the remove order when it was meant to be
+> > a question of picking one or the other.
+> > 
+> > Otherwise this looks good to me - so with that tidied up
+> >   
 > 
+> Hi Jonathan,
+> 
+> Thanks for the comments. I'd like to illustrate the reason why I decide to
+> manually unregister the PMU device.
+> 
+> The DMA buffers are devm allocated when necessary. They're only allocated
+> when user is going to use the PTT in the first time after the driver's probe,
+> so when driver removal the buffers are released prior to the PMU device's
+> unregistration. I think there's a race condition.
+> 
+> IIUC, The PMU device(as the user interface) should be unregistered first then
+> we're safe to free the DMA buffers. But unregister the PMU device by devm
+> cannot keep that order.
+
+Ok. Please add a comment in the remove() giving this reasoning.
+
+Jonathan
+
+> 
+> Thanks,
+> Yicong
+> 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >   
+> >> ---  
+> >   
+> >> +
+> >> +static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
+> >> +{
+> >> +	u16 core_id, sicl_id;
+> >> +	char *pmu_name;
+> >> +	u32 reg;
+> >> +
+> >> +	hisi_ptt->hisi_ptt_pmu = (struct pmu) {
+> >> +		.module		= THIS_MODULE,
+> >> +		.capabilities	= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE,
+> >> +		.task_ctx_nr	= perf_sw_context,
+> >> +		.attr_groups	= hisi_ptt_pmu_groups,
+> >> +		.event_init	= hisi_ptt_pmu_event_init,
+> >> +		.setup_aux	= hisi_ptt_pmu_setup_aux,
+> >> +		.free_aux	= hisi_ptt_pmu_free_aux,
+> >> +		.start		= hisi_ptt_pmu_start,
+> >> +		.stop		= hisi_ptt_pmu_stop,
+> >> +		.add		= hisi_ptt_pmu_add,
+> >> +		.del		= hisi_ptt_pmu_del,
+> >> +	};
+> >> +
+> >> +	reg = readl(hisi_ptt->iobase + HISI_PTT_LOCATION);
+> >> +	core_id = FIELD_GET(HISI_PTT_CORE_ID, reg);
+> >> +	sicl_id = FIELD_GET(HISI_PTT_SICL_ID, reg);
+> >> +
+> >> +	pmu_name = devm_kasprintf(&hisi_ptt->pdev->dev, GFP_KERNEL, "hisi_ptt%u_%u",
+> >> +				  sicl_id, core_id);
+> >> +	if (!pmu_name)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	return perf_pmu_register(&hisi_ptt->hisi_ptt_pmu, pmu_name, -1);  
+> > 
+> > As below, you can put back the devm cleanup that you had in v4 now you
+> > have modified how the filter cleanup is done to also be devm managed.
+> >   
+> >> +}
+> >> +
+> >>  /*
+> >>   * The DMA of PTT trace can only use direct mapping, due to some
+> >>   * hardware restriction. Check whether there is an IOMMU or the
+> >> @@ -303,15 +825,32 @@ static int hisi_ptt_probe(struct pci_dev *pdev,
+> >>  
+> >>  	pci_set_master(pdev);
+> >>  
+> >> +	ret = hisi_ptt_register_irq(hisi_ptt);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >>  	ret = hisi_ptt_init_ctrls(hisi_ptt);
+> >>  	if (ret) {
+> >>  		pci_err(pdev, "failed to init controls, ret = %d.\n", ret);
+> >>  		return ret;
+> >>  	}
+> >>  
+> >> +	ret = hisi_ptt_register_pmu(hisi_ptt);
+> >> +	if (ret) {
+> >> +		pci_err(pdev, "failed to register pmu device, ret = %d", ret);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +void hisi_ptt_remove(struct pci_dev *pdev)
+> >> +{
+> >> +	struct hisi_ptt *hisi_ptt = pci_get_drvdata(pdev);
+> >> +
+> >> +	perf_pmu_unregister(&hisi_ptt->hisi_ptt_pmu);  
+> > 
+> > Now you have the filter cleanup occurring using a devm_add_action_or_reset()
+> > there is no need to have a manual cleanup of this - you can
+> > use the approach of a devm_add_action_or_reset like you had in v4.
+> > 
+> > As it is the last call in the probe() order it will be the first one
+> > called in the device managed cleanup.
+> >   
+> >> +}
+> >> +  
+> > 
+> > 
+> > .
+> >   
+
