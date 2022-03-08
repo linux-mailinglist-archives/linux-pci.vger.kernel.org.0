@@ -2,126 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C56FC4D124A
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 09:33:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C04464D12AC
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 09:48:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241954AbiCHIeR convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 8 Mar 2022 03:34:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34454 "EHLO
+        id S1345123AbiCHItv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Mar 2022 03:49:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241170AbiCHIeQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 03:34:16 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C06424F06;
-        Tue,  8 Mar 2022 00:33:20 -0800 (PST)
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KCT870WDgz67NB8;
-        Tue,  8 Mar 2022 16:31:51 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.21; Tue, 8 Mar 2022 09:33:17 +0100
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 8 Mar 2022 08:33:17 +0000
-Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
- lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
- 15.01.2308.021; Tue, 8 Mar 2022 08:33:17 +0000
-From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "jgg@nvidia.com" <jgg@nvidia.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "yishaih@nvidia.com" <yishaih@nvidia.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        liulongfang <liulongfang@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        "Jonathan Cameron" <jonathan.cameron@huawei.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>
-Subject: RE: [PATCH v8 5/9] hisi_acc_vfio_pci: Restrict access to VF dev BAR2
- migration region
-Thread-Topic: [PATCH v8 5/9] hisi_acc_vfio_pci: Restrict access to VF dev BAR2
- migration region
-Thread-Index: AQHYL1LES66RK6Gs/kmsjFJ+eUfqqKy1C2eAgAAh4CA=
-Date:   Tue, 8 Mar 2022 08:33:16 +0000
-Message-ID: <21c1ddd171df45bdb62220cf997e58e6@huawei.com>
-References: <20220303230131.2103-1-shameerali.kolothum.thodi@huawei.com>
- <20220303230131.2103-6-shameerali.kolothum.thodi@huawei.com>
- <BN9PR11MB527681F9F6B0906596A77A178C099@BN9PR11MB5276.namprd11.prod.outlook.com>
-In-Reply-To: <BN9PR11MB527681F9F6B0906596A77A178C099@BN9PR11MB5276.namprd11.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.27.151]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        with ESMTP id S1345120AbiCHItv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 03:49:51 -0500
+Received: from mail.olerise.pl (mail.olerise.pl [46.183.184.59])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E4FC37A35
+        for <linux-pci@vger.kernel.org>; Tue,  8 Mar 2022 00:48:55 -0800 (PST)
+Received: by mail.olerise.pl (Postfix, from userid 1001)
+        id 42C2A443E8; Tue,  8 Mar 2022 09:46:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=olerise.pl; s=mail;
+        t=1646729225; bh=ZNYiuZLXlxCdAPtstEG/gwJieB5RBwA/cHj1SZ3Mpl0=;
+        h=Date:From:To:Subject:From;
+        b=pxfu5aYAyAKUUdemT8yjY/bhLzazpDOAy08htuHVR0+dndQZTBqvz0u/AevYZuMIN
+         7OANF1QNLcFUAbny8NNdU1yltxT4Not9BoEfAA8YONOLP63WgRvseeS342JvxDga3A
+         Ws2Qs3lrTcWFFZ7B5cBhuAo7VvedmkYzVfvz2d9cYKf/tpsgvW5Tm6KAYMoO5gaaUL
+         aLNRKjK3eqeiY7YtbYjjBQOGbah4FRZ9h3MCnnJOnEvgThRCxv0OrS6cCbJHbwT+lq
+         CFCWifDKYVTSn5+LGcCGH0rEUadwl06NW81sHyiDNHYlHdvJOXYw1STlFRdTaKlIV+
+         rsyD4d9a4129w==
+Received: by mail.olerise.pl for <linux-pci@vger.kernel.org>; Tue,  8 Mar 2022 08:45:41 GMT
+Message-ID: <20220308084500-0.1.26.mtik.0.jc91cebfrl@olerise.pl>
+Date:   Tue,  8 Mar 2022 08:45:41 GMT
+From:   =?UTF-8?Q? "Miko=C5=82aj_Rudzik" ?= <mikolaj.rudzik@olerise.pl>
+To:     <linux-pci@vger.kernel.org>
+Subject: =?UTF-8?Q?Nap=C5=82yw_Klient=C3=B3w_ze_strony?=
+X-Mailer: mail.olerise.pl
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_BL,
+        RCVD_IN_MSPIKE_L3,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kevin,
+Dzie=C5=84 dobry,
 
-> -----Original Message-----
-> From: Tian, Kevin [mailto:kevin.tian@intel.com]
-> Sent: 08 March 2022 06:23
-> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
-> kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> linux-crypto@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org; alex.williamson@redhat.com; jgg@nvidia.com;
-> cohuck@redhat.com; mgurtovoy@nvidia.com; yishaih@nvidia.com; Linuxarm
-> <linuxarm@huawei.com>; liulongfang <liulongfang@huawei.com>; Zengtao (B)
-> <prime.zeng@hisilicon.com>; Jonathan Cameron
-> <jonathan.cameron@huawei.com>; Wangzhou (B) <wangzhou1@hisilicon.com>
-> Subject: RE: [PATCH v8 5/9] hisi_acc_vfio_pci: Restrict access to VF dev BAR2
-> migration region
-> 
-> Hi, Shameer,
-> 
-> > From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> > Sent: Friday, March 4, 2022 7:01 AM
-> >
-> > HiSilicon ACC VF device BAR2 region consists of both functional
-> > register space and migration control register space. From a
-> > security point of view, it's not advisable to export the migration
-> > control region to Guest.
-> >
-> > Hence, introduce a separate struct vfio_device_ops for migration
-> > support which will override the ioctl/read/write/mmap methods to
-> > hide the migration region and limit the access only to the
-> > functional register space.
-> >
-> > This will be used in subsequent patches when we add migration
-> > support to the driver.
-> 
-> As a security concern the migration control region should be always
-> disabled regardless of whether migration support is added to the
-> driver for such device... It sounds like we should first fix this security
-> hole for acc device assignment and then add the migration support
-> atop (at least organize the series in this way).
+chcia=C5=82bym poinformowa=C4=87 Pa=C5=84stwa o mo=C5=BCliwo=C5=9Bci pozy=
+skania nowych zlece=C5=84 ze strony www.
 
-By exposing the migration BAR region, there is a possibility that a malicious
-Guest can prevent migration from happening by manipulating the migration
-BAR region. I don't think there are any other security concerns now especially
-since we only support the STOP_COPY state.  And the approach has been that
-we only restrict this if migration support is enabled. I think I can change the
-above "security concern" description to "malicious Guest can prevent migration"
-to make it more clear.
+Widzimy zainteresowanie potencjalnych Klient=C3=B3w Pa=C5=84stwa firm=C4=85=
+, dlatego ch=C4=99tnie pomo=C5=BCemy Pa=C5=84stwu dotrze=C4=87 z ofert=C4=
+=85 do wi=C4=99kszego grona odbiorc=C3=B3w poprzez efektywne metody pozyc=
+jonowania strony w Google.
 
-Hope this is fine.
+Czy m=C3=B3g=C5=82bym liczy=C4=87 na kontakt zwrotny?
 
-Thanks,
-Shameer
+
+Pozdrawiam
+Miko=C5=82aj Rudzik
