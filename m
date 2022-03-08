@@ -2,200 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2423A4D2371
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 22:39:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F36C4D244F
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 23:32:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346820AbiCHVk2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Mar 2022 16:40:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34502 "EHLO
+        id S1350827AbiCHWdE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Mar 2022 17:33:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245516AbiCHVk2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 16:40:28 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2F894CD4D;
-        Tue,  8 Mar 2022 13:39:30 -0800 (PST)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 228LDuVo027923;
-        Tue, 8 Mar 2022 21:38:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=DhFtv67WuVLsRFNLT222tZVmBbgE3btJpR6JDsNZ8QI=;
- b=F7g+Ykh4y2SAP+9SwGCDIwemS8we9hH5tG+VkEC9K3yRz2WB9SfQ6ZzmfDJ+SQ6pt35p
- 7PTEbFF8xivElUrKRDWDlmc6AamyVC8WJNyu3qzb1epAV96jHU0ZpzwX5SqUzlALettP
- K3vStBpQTfZfODZzReCRi/G9SpNT5MQUkiBork64AIOBBPKOQuj47TrbpZv+T/nKeeEK
- fbnsrRovHQLjS/3Vlu0F61lJcCncYN+SzsKStVmZaRJTfLVbDjbEJ/R5uUUZhf6c16af
- b34sWpT5W0aZzdfX5Dg+wJYA/4nX5zN2mircGRKSOsfeMX/V6o0G6f5FY1kAhhQRKLQR Cg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3ekxn2gc2b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Mar 2022 21:38:36 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 228LaPoO120217;
-        Tue, 8 Mar 2022 21:38:35 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
-        by userp3030.oracle.com with ESMTP id 3ekvyv9uh4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Mar 2022 21:38:35 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B4eUYEiuVLxfAIFoLTUKkT6HBej2c7szDrRteYJhwqZG7ul4gy2G8IWCtOgy5wYYJTSPsdwiW52UIjvk7Y/Vww7s0fEicgrl/S27DIWHzrTUEf8fhL6tBbG54R4zmozFWb3UPdQKpo/Y25/1tV5l1aahmaGw2MgsjU9RtFlI9MZiXpQuPjsalG1ykwa67flbHKLtBfXFkIozcVAeki6Q6cvBZRuqoC7ntJJMvjqhd/1YvCqyOE2Qe3SQpi/3jFb9e5v1SHObU4K7q8fQEvA5SDuz/Uuo108jEkYwkntjVN0P3s66aFE464dNVSbwDlZvNLwUiRVMTK0hLvlYHcUhVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DhFtv67WuVLsRFNLT222tZVmBbgE3btJpR6JDsNZ8QI=;
- b=ORl8TmJJ5gQ34Fw4sklC1lmnScrYpHAAZGpfhSKsUme+lYH6isd7FKfBi8j/iDnlZHGc/HqX071HUBS04NUPYITMVo9JlwyV/CEvc3KJFPc/oOpJrPUeWQMlPxFp/AsEaH8F642DgkgLSXNdmBtS8/d66iUwyFU8KqFnhiz6j6W8A6HrFocvjmbyzKFPT8rzhAc9GmaYQp5yt4316miKX+/kZebFtbYj85vHMVCrtVyg2ypSH3HWoETHqZkw2UntUQKmLFWfCmFjYAE6vusjKy96mjajBLFOyxEppW2o30pXDP81983MjvtCrbwln1yezuGpgBHeveEVKa6zplp7cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        with ESMTP id S1350751AbiCHWcu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 17:32:50 -0500
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D0E5A097
+        for <linux-pci@vger.kernel.org>; Tue,  8 Mar 2022 14:31:51 -0800 (PST)
+Received: by mail-ot1-x32f.google.com with SMTP id t8-20020a0568301e2800b005b235a56f2dso405161otr.9
+        for <linux-pci@vger.kernel.org>; Tue, 08 Mar 2022 14:31:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DhFtv67WuVLsRFNLT222tZVmBbgE3btJpR6JDsNZ8QI=;
- b=dweFUTWPrTn8YHb6QoS3/Czf8M9GYhX8dEH8+GYE7n/9g4TDEDKfJS08X6Ki8oBC7iDsxStZtBpeKd1O1fwcBGgTsB4fPbh3q4nGJ7FtV/WJj0fVhTd/KVNoxw6PEE/Kea6MwCrf/dlzZJy9EwuP5SBuJ8IZSmup7uZaIA3HybA=
-Received: from BLAPR10MB5009.namprd10.prod.outlook.com (2603:10b6:208:321::10)
- by BYAPR10MB2710.namprd10.prod.outlook.com (2603:10b6:a02:b5::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.19; Tue, 8 Mar
- 2022 21:38:31 +0000
-Received: from BLAPR10MB5009.namprd10.prod.outlook.com
- ([fe80::6d20:6694:a16:56f7]) by BLAPR10MB5009.namprd10.prod.outlook.com
- ([fe80::6d20:6694:a16:56f7%3]) with mapi id 15.20.5038.027; Tue, 8 Mar 2022
- 21:38:31 +0000
-Message-ID: <6a22ea1e-4823-5c3b-97ee-a29155404a0d@oracle.com>
-Date:   Tue, 8 Mar 2022 16:38:21 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
- swiotlb
-Content-Language: en-US
-To:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org
-Cc:     x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org
-References: <20220301105311.885699-1-hch@lst.de>
- <20220301105311.885699-12-hch@lst.de>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-In-Reply-To: <20220301105311.885699-12-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR01CA0036.prod.exchangelabs.com (2603:10b6:a02:80::49)
- To BLAPR10MB5009.namprd10.prod.outlook.com (2603:10b6:208:321::10)
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yu1THqTGD6F10/7zLdE8sY/7tnkCw2lQhVUm7kdi5Vs=;
+        b=zM6yJDkCXVr46DAoZEfhO1+xZLGgCRwLMK9TAYUYZVTFi0U5oPxRtHIVQ7xmtlSpMI
+         3E8Zq03Dbu+RxrYTIpq2jMcfSFLBmdtuyeiOFn/NaomcmAli5diS6gEyBm1jpZM1t5jT
+         dvkq6b9VKQvyrK819bjV/z5ga84NAouXrIchc3cnFe7J9Ph8ty8CSO3Ls09pu0+6JQg4
+         VO1vBoP7KH5b9CkJBeYwxPKJXC3oPsEvKV0yYGtVOBrM4mUQkExaBH8vhc00KjKA2ynY
+         cEENkWVocmJAKULBG2HXLq6f/fRoupJS9KM8zXL5ixYiW3CKIG8xeNpQA2JR1DtiyMEz
+         uhpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yu1THqTGD6F10/7zLdE8sY/7tnkCw2lQhVUm7kdi5Vs=;
+        b=UPw0CsblE1iHTR4oAz3vEa4nFva2rFktMSIzkgFabdYfq1LcfFxGeGFugOtrP7Z8cZ
+         IsW4TP8e+T+WkN1xa+n62rSj+dW1M61FF3a7/EcU0eoDcYVu4kamp31sJ+EbfvMds7vB
+         bl5HfPS91XuCKUNzM6GBix3ZSBzTTBU5Kr9+UBSd1d7x+yWX4TxFix8T9t5KXXoS98cE
+         VG9Xerb9Ji9viossBz22m2bLlAiuE1dshyAIidkqHxTUiF4MoYKPr9waVq0MbDjv765g
+         oycPTz2s/gnn6sGrJYlY5oNVBkp/TkWNohqwoPx9T7Syfn5F9tCzpjW6hDYwkpjOq4nJ
+         ywCg==
+X-Gm-Message-State: AOAM532Tm7NqlOos5r+zh0eL4EI2lbXn9ZFfZ/F7b5o+SjHN2VqVthNC
+        svndk4ZXhrTVxELturEw+oy/Jg==
+X-Google-Smtp-Source: ABdhPJzj4SI3aBtkqXo6gIsiBBn8CcMdnLEkOtQN5+H1BR7bbwBxT7uH7KUFlOg2LT41M+Vsy/RXfQ==
+X-Received: by 2002:a05:6830:43a0:b0:5af:e328:6bc7 with SMTP id s32-20020a05683043a000b005afe3286bc7mr9495407otv.62.1646778710427;
+        Tue, 08 Mar 2022 14:31:50 -0800 (PST)
+Received: from builder.lan ([2600:1700:a0:3dc8:3697:f6ff:fe85:aac9])
+        by smtp.gmail.com with ESMTPSA id f4-20020a056870d30400b000da71ab35e0sm78779oag.44.2022.03.08.14.31.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Mar 2022 14:31:49 -0800 (PST)
+Date:   Tue, 8 Mar 2022 16:31:46 -0600
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, bhupesh.linux@gmail.com,
+        lorenzo.pieralisi@arm.com, agross@kernel.org, svarbanov@mm-sol.com,
+        bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
+        linux-clk@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: sa8155: Enable PCIe nodes
+Message-ID: <YifZUtH8hbelcB8L@builder.lan>
+References: <20220302203045.184500-1-bhupesh.sharma@linaro.org>
+ <20220302203045.184500-8-bhupesh.sharma@linaro.org>
+ <CAA8EJpqEy+669gpDsy-zGp2NpDP-d7ZxNf7RVo=OQZdvGdZOvQ@mail.gmail.com>
+ <CAH=2Ntz2=pgysEVSfSuGd12C-Am-qRZymaotCw-Lwp0_xaNcOg@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a5497499-5231-4669-a72e-08da014bfd50
-X-MS-TrafficTypeDiagnostic: BYAPR10MB2710:EE_
-X-Microsoft-Antispam-PRVS: <BYAPR10MB2710B19FF89408863850F5508A099@BYAPR10MB2710.namprd10.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zpm3AbzfYsLIS6+hWgb7lSGWLoUo1jjusiM9Dxdnt2alpTe5MIqdooOVzcypscvRXFXYT5XvkVs3wjlfX8hhxILJMcSS8pm5Kbi1R5FemDfmpAN6Xt+QJ//J/vl0uDqPkDJ8kQ1IkxkRJFDlYaeluUj5V/uFX1LHh1OpF1iyPyuShjZAbF9H1sbjPb5uls0L0On2QoC6iygNOMQCxjrPzUrnXJ2O5NLibqo6pfYfLyEtDfaWHjFof6mL9pbkromai8bcBVKXMEAneJh1KbrD45unTbaU2sWJFHe4S+lZZzEeWT2Mrd72MbqQW8moZNh2r60f2RUMSHiBJJ+ic7vwOrexl46la5NDWu7D40kVJBpIPJyIMznXbaqx3HvnPqQlAIkLM8okwfc+TY8X7KsgyJNtqIDpLL3Ku0sqY8P6qJ0ijhwpMIeStG7rNqvMvXAN01s9BDB49ewXQzvzDsl9IOE832NuBxHz13uyjrUnSomOats+erEGFDSwalj/49/X0IbdfNFWlGUE1EkjL8nAQMhTjSiY1Lt94AJ35ARg+hrImBVFWSZhgFRdm5t5Kae8uZM7mMWxqP6AJ/XqhBCPOjzBpza2eNtz1qhgB/KwGU2RUCQkECiJjeBG9YAQo0N76fJJ03npK3D1ZvUhOlyDU/yTxjIwfr5SgdLoqjpS3+zpGsvepOBGT6HA29aYoGHPeU1Z/WZvlbtVsyW4ZsdOKnqtFG5kQxcVOxyz8ETljFU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5009.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(53546011)(54906003)(31696002)(6666004)(86362001)(8676002)(66946007)(66476007)(66556008)(5660300002)(508600001)(7416002)(4326008)(6512007)(44832011)(316002)(8936002)(6506007)(6486002)(38100700002)(2616005)(26005)(31686004)(186003)(36756003)(83380400001)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZEs5MDBsbXY4eU9GSCtNNmRhaFNsK05lM1BCVEpNMmI2KzkyUUdKY2RWRWUv?=
- =?utf-8?B?Z01DaVc5UG4vWWNiSzBXK2VEVnZvU2k2OEZjOCsrRFJUL2g3NkFKdjFGcVdC?=
- =?utf-8?B?ZFd5Q3VNWUxaMHlyenVkNk1oU0Nrb3RqVUlwaGpTYlZOd2wwR1liYW5abmlz?=
- =?utf-8?B?cHlKYUxzNFNteVFjZkl2OG1sVXl2VlpuZmplRDYyTWZ2V1dZNmkvNVlsWDBa?=
- =?utf-8?B?SE5qSnNzZTFRMFdpajdTWUtGSk9RNzJPOTdOcitQQzc4dzNVelNJY000RW15?=
- =?utf-8?B?ZndjdmJ5Z2l4RjhzemVwRWM0RHNkY0o5c0FXRnJhS25jVlJZbzhVNUxPT2E4?=
- =?utf-8?B?ZjFyTkxLN21mTTJESFBLWnA3UzA4MnZMdjBhdEpIMUxNLy90WDZ2ZUNja3VW?=
- =?utf-8?B?M1h0eWNpbnU0bXBaNGVFK2Z0TUNnSklUZXRER2huLzZWb0ZqelZrVFBGZHVo?=
- =?utf-8?B?T1kxWjNmZ3V1SUIzUmptNmZXVDFBeG9hNzlvUW9VdXZzV2oxcy9Nck1UZElL?=
- =?utf-8?B?aVh5VTlhVHJLUGtYUVhoQVpMRVV4NmpDaHp3dktXRlRZcUxISnY0eEFiQUl1?=
- =?utf-8?B?QlBFSWN5VGg1ZUhxVEtwNEhtSGNtOUlSaVhNakZjNDYwRGpMSkRVMXlKSTZH?=
- =?utf-8?B?YVk1MHVmRHhZSWZDSTdLcXdRdDkxNklWTUlQeURkQWRReDRuNERCTGh2ejVp?=
- =?utf-8?B?RUcwckQvdTdsZXdaTDJJanExMFZCaWRHcVh1bjVVcCs3VVFzZitablpBQ1RM?=
- =?utf-8?B?WFRKN01EcWtEK3dHWklROU85OWJjcEhTMUNnejJ4U2JMRXJPUnJjUFJnL2Ju?=
- =?utf-8?B?aEw1ekhvbHJpYy9kckVHbTBITHQ1RFFzQTczM1JFTFluSlpEeHBRa1l6emJ5?=
- =?utf-8?B?MHFJYVVKYUEyODVVZEFmTHRjZCtOVkxWRUNoRUdldGF6ZXVRL1dJODVEcVpq?=
- =?utf-8?B?cklUK3R4K2w2U24vd04vVEJlVlplblhYZHNRL1FwRm9aaXpGR09mT1FnSUZ3?=
- =?utf-8?B?SENxZVZkRWw2bFJMbHFEYVJzSTBLbkZGTU9KOWdPbU4xc0o1dUxkOHgrcXpw?=
- =?utf-8?B?bEFLRm8vRk81SFMyem1USkZUUERoaGVodldicXl1VHc2UG9ISUNtMUJSRDBE?=
- =?utf-8?B?UnBiWjZjWU1qeXJyYmZiZHdieGQvZktCOFc2Sko5ZWtra1U0cWZwQUYwQUd0?=
- =?utf-8?B?eHZtaWJmbUdyRFR4c2FuZmt5NTN3TkVNcnM4SG53OXFQOHZSQWxKWjRGZFdZ?=
- =?utf-8?B?bE9RbXdnUEJXZWM3RkMvQU9RWDRXaTFDeWlKaFE5TTVDc0dIU05UTHN3YnNX?=
- =?utf-8?B?NmQ2NExrL0swUTlsWDZPbWFPbEROREZ2ekk3cGt6T1RWakl0K0NSejYvQlJq?=
- =?utf-8?B?THBCU0s3VXgvOW1QR1kzTzVIN29NTGZjWERaKzV5dGJ2SHE4VDk0VzBrS1d0?=
- =?utf-8?B?SWVFYmhHblVvdys5OGM1dkhETTdBOHJOVzZrSFgxREQ5b0V3NFJBb1Z4dnIy?=
- =?utf-8?B?dlFBTHZYZ0JaS0xQbE1IT0l1OTVDUlM2Z3NDRkJ4QmROTjEvcDdrNlk5UC8r?=
- =?utf-8?B?MGFLWmthOHJrR21BVnRWTTJqclR6eUFXMjh5Q3d1NG40d2FyZmFwOFRMYkYz?=
- =?utf-8?B?NS81ZHgxNkU4bEFjWHlPZzZhbnFNNUZuV1pzL09RQm5mbG9mZzdXUXVSL3ZI?=
- =?utf-8?B?bDVWRkZJQWVsMXM3NVNUd0lGbzQzc1RtaXZXUlpCZmhRRGd6VCtCMVZNR3Vk?=
- =?utf-8?B?SHl3WmRUbjM2ZVNndlB4MnQyelJMRVpwL0tQY1pPa0VqTTFWdStNdXQ2UTh0?=
- =?utf-8?B?RE9KMVlHVGJqWkpSTjkxbmdYS1o1bmJHbnU1TUg5bnBMbWVuek5MMWlXOUQ2?=
- =?utf-8?B?aFcycHpoYmNaQ0dQdllwb05YM3c5QTNsZy9YcmRpdlZDanZNMCswUUV3dFJM?=
- =?utf-8?B?a1BDZXdSRE1DY25IR0ZLb0xyRTJRQmVTNHBRSkphalU1KzJIei8reUxMZVM2?=
- =?utf-8?B?bGszTVpxY2xsMXVmcURFdWxUdENCUHlxSEVucGh3V1JxbFNBak56QmVQbkJI?=
- =?utf-8?B?Z1hQKzRhNGJkdmR2eGErQzBWZGpFYUkzYU81RHlhZFhmWnByanIvbkRoTU9p?=
- =?utf-8?B?dnE2SWFldGdRYkJVNStmR2pFMys2cllGQytMRkd5NTZpQUxHZnVUaXdINkhU?=
- =?utf-8?B?V0R4ajlSMW5tMUZjeEdpdklGb1ZXWi82dXFYSDUwcytUdUpHcS9MRnpwRzd1?=
- =?utf-8?B?T242c2tIcmZ5WkNkNXpNUitWNS9RPT0=?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5497499-5231-4669-a72e-08da014bfd50
-X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5009.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2022 21:38:31.2786
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vb92VElZb1vD5AEwKvnEjGDwvHfwNocegSuRX2xflLeDODXD1huAuFsmO0Pa3qhKq4HDCzfnKvJCrt0pwrw1AeQHidhPaPQDQ0TN3abVtA8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2710
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10280 signatures=690848
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- suspectscore=0 bulkscore=0 mlxlogscore=769 adultscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203080110
-X-Proofpoint-ORIG-GUID: IPRsMW4fSjoQvfjcYGaso-sG-LdxRZL7
-X-Proofpoint-GUID: IPRsMW4fSjoQvfjcYGaso-sG-LdxRZL7
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH=2Ntz2=pgysEVSfSuGd12C-Am-qRZymaotCw-Lwp0_xaNcOg@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu 03 Mar 00:09 CST 2022, Bhupesh Sharma wrote:
 
-On 3/1/22 5:53 AM, Christoph Hellwig wrote:
-> Allow to pass a remap argument to the swiotlb initialization functions
-> to handle the Xen/x86 remap case.  ARM/ARM64 never did any remapping
-> from xen_swiotlb_fixup, so we don't even need that quirk.
+> Hi Dmitry,
+> 
+> On Thu, 3 Mar 2022 at 02:29, Dmitry Baryshkov
+> <dmitry.baryshkov@linaro.org> wrote:
+> >
+> > On Wed, 2 Mar 2022 at 23:31, Bhupesh Sharma <bhupesh.sharma@linaro.org> wrote:
+> > >
+> > > SA8155p ADP board supports the PCIe0 controller in the RC
+> > > mode (only). So add the support for the same.
+> > >
+> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Cc: Vinod Koul <vkoul@kernel.org>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 42 ++++++++++++++++++++++++
+> > >  1 file changed, 42 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> > > index 8756c2b25c7e..3f6b3ee404f5 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> > > +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> > > @@ -387,9 +387,51 @@ &usb_2_qmpphy {
+> > >         vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
+> > >  };
+> > >
+> > > +&pcie0 {
+> > > +       status = "okay";
+> > > +};
+> > > +
+> > > +&pcie0_phy {
+> > > +       status = "okay";
+> > > +       vdda-phy-supply = <&vreg_l18c_0p88>;
+> > > +       vdda-pll-supply = <&vreg_l8c_1p2>;
+> > > +};
+> > > +
+> > > +&pcie1_phy {
+> > > +       vdda-phy-supply = <&vreg_l18c_0p88>;
+> > > +       vdda-pll-supply = <&vreg_l8c_1p2>;
+> > > +};
+> > > +
+> > >  &tlmm {
+> > >         gpio-reserved-ranges = <0 4>;
+> > >
+> > > +       bt_en_default: bt_en_default {
 
+'_' is not a valid character in the node name (it is in the label).
 
-Any chance this patch could be split? Lots of things are happening here and it's somewhat hard to review. (Patch 7 too BTW but I think I managed to get through it)
+> > > +               mux {
 
+Please flatten this, you can omit the mux and config subnodes and put
+the properties directly in the state node.
 
-> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-> index e0def4b1c3181..2f2c468acb955 100644
-> --- a/arch/x86/kernel/pci-dma.c
-> +++ b/arch/x86/kernel/pci-dma.c
-> @@ -71,15 +71,12 @@ static inline void __init pci_swiotlb_detect(void)
->   #endif /* CONFIG_SWIOTLB */
->   
->   #ifdef CONFIG_SWIOTLB_XEN
-> -static bool xen_swiotlb;
-> -
->   static void __init pci_xen_swiotlb_init(void)
->   {
->   	if (!xen_initial_domain() && !x86_swiotlb_enable)
->   		return;
+> > > +                       pins = "gpio172";
+> > > +                       function = "gpio";
+> > > +               };
+> > > +
+> > > +               config {
+> > > +                       pins = "gpio172";
+> > > +                       drive-strength = <2>;
+> > > +                       bias-pull-down;
+> > > +               };
+> > > +       };
+> > > +
+> > > +       wlan_en_default: wlan_en_default {
+> > > +               mux {
+> > > +                       pins = "gpio169";
+> > > +                       function = "gpio";
+> > > +               };
+> > > +
+> > > +               config {
+> > > +                       pins = "gpio169";
+> > > +                       drive-strength = <16>;
+> > > +                       output-high;
+> > > +                       bias-pull-up;
+> > > +               };
+> > > +       };
+> > > +
+> >
+> > Not related to PCIe
+> 
+> Hmm.. I have no strong personal opinion on this, so let's see what
+> Bjorn thinks about the same.
+> My reasoning for keeping it here was to just capture that we have
+> 'bt_en' and 'wlan_en' related tlmm details here, so that when you send
+> out the reworked QCAxxxx mfd series (see [1]) later, I can easily plug
+> it in for SA8155p ADP dts as well with the 'bt' and 'wlan' constructs.
+> 
 
+The BT_EN is unrelated to PCIe, and I'm not able to see where you select
+the wlan_en_default state, so this would be dangling.
 
-Now that there is a single call site for this routine I think this check can be dropped. We are only called here for xen_initial_domain()==true.
+So the bt_en should come in a patch together with a bluetooth node and
+the wlan_en_default should come with something that ensures that the
+WiFi portion of the chip is powered and the gpio enabled.
 
+Regards,
+Bjorn
 
--boris
+> [1]. https://lore.kernel.org/lkml/20210621223141.1638189-2-dmitry.baryshkov@linaro.org/T/
+> 
+> Regards.
+> Bhupesh
+> 
+> > >         usb2phy_ac_en1_default: usb2phy_ac_en1_default {
+> > >                 mux {
+> > >                         pins = "gpio113";
+> > > --
+> > > 2.35.1
+> > >
+> >
+> >
+> > --
+> > With best wishes
+> > Dmitry
