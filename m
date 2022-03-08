@@ -2,142 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12B9A4D13A7
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 10:45:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9878A4D13B5
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 10:47:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345126AbiCHJqb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Mar 2022 04:46:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47074 "EHLO
+        id S239359AbiCHJs2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Mar 2022 04:48:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236177AbiCHJq3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 04:46:29 -0500
-Received: from imap2.colo.codethink.co.uk (imap2.colo.codethink.co.uk [78.40.148.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B72BC3E5C9;
-        Tue,  8 Mar 2022 01:45:32 -0800 (PST)
-Received: from cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net ([86.15.83.122] helo=[192.168.0.21])
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1nRVyL-0005VG-99; Tue, 08 Mar 2022 09:17:37 +0000
-Message-ID: <10794ea9-95ff-2cde-5851-b757a73b00ee@codethink.co.uk>
-Date:   Tue, 8 Mar 2022 09:45:36 +0000
+        with ESMTP id S1345547AbiCHJry (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 04:47:54 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF124198E;
+        Tue,  8 Mar 2022 01:46:58 -0800 (PST)
+Received: from kwepemi100002.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KCVnB5SHxzdZn9;
+        Tue,  8 Mar 2022 17:45:34 +0800 (CST)
+Received: from kwepemm600005.china.huawei.com (7.193.23.191) by
+ kwepemi100002.china.huawei.com (7.221.188.188) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Tue, 8 Mar 2022 17:46:56 +0800
+Received: from [10.67.102.118] (10.67.102.118) by
+ kwepemm600005.china.huawei.com (7.193.23.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Tue, 8 Mar 2022 17:46:55 +0800
+Subject: Re: [PATCH v8 8/9] hisi_acc_vfio_pci: Add support for VFIO live
+ migration
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>
+CC:     Jason Gunthorpe <jgg@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
+        "yishaih@nvidia.com" <yishaih@nvidia.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        Xu Zaibo <xuzaibo@huawei.com>
+References: <20220303230131.2103-1-shameerali.kolothum.thodi@huawei.com>
+ <20220303230131.2103-9-shameerali.kolothum.thodi@huawei.com>
+ <20220304205720.GE219866@nvidia.com>
+ <20220307120513.74743f17.alex.williamson@redhat.com>
+ <aac9a26dc27140d9a1ce56ebdec393a6@huawei.com>
+ <20220307125239.7261c97d.alex.williamson@redhat.com>
+From:   liulongfang <liulongfang@huawei.com>
+Message-ID: <e69d8246-79ba-fa37-fecf-c9f28db692f8@huawei.com>
+Date:   Tue, 8 Mar 2022 17:46:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [RFC] PCI: fu740: Force Gen1 to fix initial device probing on
- some boards
-Content-Language: en-GB
-To:     helgaas@kernel.org, linux-pci@vger.kernel.org
-Cc:     paul.walmsley@sifive.com, greentime.hu@sifive.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220228232206.2928784-1-ben.dooks@codethink.co.uk>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <20220228232206.2928784-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20220307125239.7261c97d.alex.williamson@redhat.com>
+Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Originating-IP: [10.67.102.118]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600005.china.huawei.com (7.193.23.191)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/02/2022 23:22, Ben Dooks wrote:
-> The fu740 PCIe core does not probe any devices on the SiFive Unmatched
-> board without this fix (or having U-Boot explicitly start the PCIe via
-> either boot-script or user command). The fix is to start the link at
-> Gen1 speeds and once the link is up then change the speed back.
+On 2022/3/8 3:52, Alex Williamson wrote:
+> On Mon, 7 Mar 2022 19:29:06 +0000
+> Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com> wrote:
 > 
-> The U-Boot driver claims to set the link-speed to Gen1 to get the probe
-> to work (and U-Boot does print link up at Gen1) in the following code:
-> https://source.denx.de/u-boot/u-boot/-/blob/master/drivers/pci/pcie_dw_sifive.c?id=v2022.01#L271
+>>> -----Original Message-----
+>>> From: Alex Williamson [mailto:alex.williamson@redhat.com]
+>>> Sent: 07 March 2022 19:05
+>>> To: Jason Gunthorpe <jgg@nvidia.com>
+>>> Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
+>>> kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>> linux-crypto@vger.kernel.org; linux-pci@vger.kernel.org; cohuck@redhat.com;
+>>> mgurtovoy@nvidia.com; yishaih@nvidia.com; Linuxarm
+>>> <linuxarm@huawei.com>; liulongfang <liulongfang@huawei.com>; Zengtao (B)
+>>> <prime.zeng@hisilicon.com>; Jonathan Cameron
+>>> <jonathan.cameron@huawei.com>; Wangzhou (B) <wangzhou1@hisilicon.com>
+>>> Subject: Re: [PATCH v8 8/9] hisi_acc_vfio_pci: Add support for VFIO live
+>>> migration
+>>>
+>>> On Fri, 4 Mar 2022 16:57:20 -0400
+>>> Jason Gunthorpe <jgg@nvidia.com> wrote:
+>>>   
+>>>> On Thu, Mar 03, 2022 at 11:01:30PM +0000, Shameer Kolothum wrote:  
+>>>>> From: Longfang Liu <liulongfang@huawei.com>
+>>>>>
+>>>>> VMs assigned with HiSilicon ACC VF devices can now perform live  
+>>> migration  
+>>>>> if the VF devices are bind to the hisi_acc_vfio_pci driver.
+>>>>>
+>>>>> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+>>>>> Signed-off-by: Shameer Kolothum  
+>>> <shameerali.kolothum.thodi@huawei.com>  
+>>>>> ---
+>>>>>  drivers/vfio/pci/hisilicon/Kconfig            |    7 +
+>>>>>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 1078 ++++++++++++++++-
+>>>>>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |  114 ++
+>>>>>  3 files changed, 1181 insertions(+), 18 deletions(-)
+>>>>>  create mode 100644 drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+>>>>>
+>>>>> diff --git a/drivers/vfio/pci/hisilicon/Kconfig  
+>>> b/drivers/vfio/pci/hisilicon/Kconfig  
+>>>>> index dc723bad05c2..2a68d39f339f 100644
+>>>>> --- a/drivers/vfio/pci/hisilicon/Kconfig
+>>>>> +++ b/drivers/vfio/pci/hisilicon/Kconfig
+>>>>> @@ -3,6 +3,13 @@ config HISI_ACC_VFIO_PCI
+>>>>>  	tristate "VFIO PCI support for HiSilicon ACC devices"
+>>>>>  	depends on ARM64 || (COMPILE_TEST && 64BIT)
+>>>>>  	depends on VFIO_PCI_CORE
+>>>>> +	depends on PCI && PCI_MSI  
+>>>>
+>>>> PCI is already in the depends from the 2nd line in
+>>>> drivers/vfio/pci/Kconfig, but it is harmless
+>>>>  
+>>>>> +	depends on UACCE || UACCE=n
+>>>>> +	depends on ACPI  
+>>>>
+>>>> Scratching my head a bit on why we have these  
+>>>
+>>> Same curiosity from me, each of the CRYPTO_DEV_HISI_* options selected
+>>> also depend on these so they seem redundant.  
+>>
+>> Yes, they are redundant now since we have added CRYPTO_DEV_HISI_ drivers
+>> as "depends" now. I will remove that.
+>>  
+>>> I think we still require acks from Bjorn and Zaibo for select patches
+>>> in this series.  
+>>
+>> I checked with Ziabo. He moved projects and is no longer looking into crypto stuff.
+>> Wangzhou and LiuLongfang now take care of this. Received acks from Wangzhou
+>> already and I will request Longfang to provide his. Hope that's ok.
 > 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> --
-> Note, this patch has had significant re-work since the previous 4
-> sets, including trying to fix style, message, reliance on the U-Boot
-> fix and the comments about usage of LINK_CAP and reserved fields.
-
-The internal feedback is this version is passing on our CI.
-
-If there are no comments on this soon, I will post this as either the
-v5 of the original or as a new patch.
-
-> ---
->   drivers/pci/controller/dwc/pcie-fu740.c | 51 ++++++++++++++++++++++++-
->   1 file changed, 50 insertions(+), 1 deletion(-)
+> Maybe a good time to have them update MAINTAINERS as well.  Thanks,
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
-> index 842b7202b96e..16ad52f53490 100644
-> --- a/drivers/pci/controller/dwc/pcie-fu740.c
-> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
-> @@ -181,10 +181,59 @@ static int fu740_pcie_start_link(struct dw_pcie *pci)
->   {
->   	struct device *dev = pci->dev;
->   	struct fu740_pcie *afp = dev_get_drvdata(dev);
-> +	u8 cap_exp = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	int ret;
-> +	u32 orig, tmp;
-> +
-> +	/*
-> +	 * Force Gen1 when starting link, due to some devices not
-> +	 * probing at higher speeds. This happens with the PCIe switch
-> +	 * on the Unmatched board. The fix in U-Boot is to force Gen1
-> +	 * and hope later resets will clear this capaility.
-> +	 */
-> +
-> +	dev_dbg(dev, "cap_exp at %x\n", cap_exp);
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +
-> +	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-> +	orig = tmp & PCI_EXP_LNKCAP_SLS;
-> +	tmp &= ~PCI_EXP_LNKCAP_SLS;
-> +	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-> +	dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
->   
->   	/* Enable LTSSM */
->   	writel_relaxed(0x1, afp->mgmt_base + PCIEX8MGMT_APP_LTSSM_ENABLE);
-> -	return 0;
-> +
-> +	ret = dw_pcie_wait_for_link(pci);
-> +	if (ret) {
-> +		dev_err(dev, "error: link did not start\n");
-> +		goto err;
-> +	}
-> +
-> +	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-> +	if ((tmp & PCI_EXP_LNKCAP_SLS) != orig) {
-> +		dev_dbg(dev, "changing speed back to original\n");
-> +
-> +		tmp &= ~PCI_EXP_LNKCAP_SLS;
-> +		tmp |= orig;
-> +		dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
-> +
-> +		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> +		tmp |= PORT_LOGIC_SPEED_CHANGE;
-> +		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
-> +
-> +		ret = dw_pcie_wait_for_link(pci);
-> +		if (ret) {
-> +			dev_err(dev, "error: link did not start at new speed\n");
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	ret = 0;
-> +err:
-> +	// todo - if we do have an unliekly error, what do we do here?
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +	return ret;
->   }
->   
->   static int fu740_pcie_host_init(struct pcie_port *pp)
-
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
-https://www.codethink.co.uk/privacy.html
+> Alex
+> 
+OK, we have discussed it internally, I will send a patch to update
+MAINTAINERS of crypto stuff.
+Thanks.
+Longfang
+> .
+> 
