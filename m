@@ -2,153 +2,375 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9878A4D13B5
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 10:47:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C01204D142A
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 11:05:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239359AbiCHJs2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Mar 2022 04:48:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48910 "EHLO
+        id S229559AbiCHKGA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Mar 2022 05:06:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345547AbiCHJry (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 04:47:54 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF124198E;
-        Tue,  8 Mar 2022 01:46:58 -0800 (PST)
-Received: from kwepemi100002.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KCVnB5SHxzdZn9;
-        Tue,  8 Mar 2022 17:45:34 +0800 (CST)
-Received: from kwepemm600005.china.huawei.com (7.193.23.191) by
- kwepemi100002.china.huawei.com (7.221.188.188) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 8 Mar 2022 17:46:56 +0800
-Received: from [10.67.102.118] (10.67.102.118) by
- kwepemm600005.china.huawei.com (7.193.23.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 8 Mar 2022 17:46:55 +0800
-Subject: Re: [PATCH v8 8/9] hisi_acc_vfio_pci: Add support for VFIO live
- migration
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>
-CC:     Jason Gunthorpe <jgg@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "yishaih@nvidia.com" <yishaih@nvidia.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
-        Xu Zaibo <xuzaibo@huawei.com>
-References: <20220303230131.2103-1-shameerali.kolothum.thodi@huawei.com>
- <20220303230131.2103-9-shameerali.kolothum.thodi@huawei.com>
- <20220304205720.GE219866@nvidia.com>
- <20220307120513.74743f17.alex.williamson@redhat.com>
- <aac9a26dc27140d9a1ce56ebdec393a6@huawei.com>
- <20220307125239.7261c97d.alex.williamson@redhat.com>
-From:   liulongfang <liulongfang@huawei.com>
-Message-ID: <e69d8246-79ba-fa37-fecf-c9f28db692f8@huawei.com>
-Date:   Tue, 8 Mar 2022 17:46:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        with ESMTP id S238179AbiCHKGA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 05:06:00 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA1D3FDAC
+        for <linux-pci@vger.kernel.org>; Tue,  8 Mar 2022 02:05:03 -0800 (PST)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1nRWi0-00088q-RU; Tue, 08 Mar 2022 11:04:48 +0100
+Message-ID: <74995646cc0e2157d012e148f581d73b6b338e14.camel@pengutronix.de>
+Subject: Re: [PATCH v2 3/7] phy: freescale: imx8m-pcie: Add iMX8MP PCIe PHY
+ support
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Richard Zhu <hongxing.zhu@nxp.com>, p.zabel@pengutronix.de,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        shawnguo@kernel.org, vkoul@kernel.org,
+        alexander.stein@ew.tq-group.com
+Cc:     linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Date:   Tue, 08 Mar 2022 11:04:46 +0100
+In-Reply-To: <1646644054-24421-4-git-send-email-hongxing.zhu@nxp.com>
+References: <1646644054-24421-1-git-send-email-hongxing.zhu@nxp.com>
+         <1646644054-24421-4-git-send-email-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
 MIME-Version: 1.0
-In-Reply-To: <20220307125239.7261c97d.alex.williamson@redhat.com>
-Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.118]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600005.china.huawei.com (7.193.23.191)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022/3/8 3:52, Alex Williamson wrote:
-> On Mon, 7 Mar 2022 19:29:06 +0000
-> Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com> wrote:
+Hi Richard,
+
+Am Montag, dem 07.03.2022 um 17:07 +0800 schrieb Richard Zhu:
+> Add the i.MX8MP PCIe PHY support
 > 
->>> -----Original Message-----
->>> From: Alex Williamson [mailto:alex.williamson@redhat.com]
->>> Sent: 07 March 2022 19:05
->>> To: Jason Gunthorpe <jgg@nvidia.com>
->>> Cc: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>;
->>> kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
->>> linux-crypto@vger.kernel.org; linux-pci@vger.kernel.org; cohuck@redhat.com;
->>> mgurtovoy@nvidia.com; yishaih@nvidia.com; Linuxarm
->>> <linuxarm@huawei.com>; liulongfang <liulongfang@huawei.com>; Zengtao (B)
->>> <prime.zeng@hisilicon.com>; Jonathan Cameron
->>> <jonathan.cameron@huawei.com>; Wangzhou (B) <wangzhou1@hisilicon.com>
->>> Subject: Re: [PATCH v8 8/9] hisi_acc_vfio_pci: Add support for VFIO live
->>> migration
->>>
->>> On Fri, 4 Mar 2022 16:57:20 -0400
->>> Jason Gunthorpe <jgg@nvidia.com> wrote:
->>>   
->>>> On Thu, Mar 03, 2022 at 11:01:30PM +0000, Shameer Kolothum wrote:  
->>>>> From: Longfang Liu <liulongfang@huawei.com>
->>>>>
->>>>> VMs assigned with HiSilicon ACC VF devices can now perform live  
->>> migration  
->>>>> if the VF devices are bind to the hisi_acc_vfio_pci driver.
->>>>>
->>>>> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
->>>>> Signed-off-by: Shameer Kolothum  
->>> <shameerali.kolothum.thodi@huawei.com>  
->>>>> ---
->>>>>  drivers/vfio/pci/hisilicon/Kconfig            |    7 +
->>>>>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 1078 ++++++++++++++++-
->>>>>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |  114 ++
->>>>>  3 files changed, 1181 insertions(+), 18 deletions(-)
->>>>>  create mode 100644 drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
->>>>>
->>>>> diff --git a/drivers/vfio/pci/hisilicon/Kconfig  
->>> b/drivers/vfio/pci/hisilicon/Kconfig  
->>>>> index dc723bad05c2..2a68d39f339f 100644
->>>>> --- a/drivers/vfio/pci/hisilicon/Kconfig
->>>>> +++ b/drivers/vfio/pci/hisilicon/Kconfig
->>>>> @@ -3,6 +3,13 @@ config HISI_ACC_VFIO_PCI
->>>>>  	tristate "VFIO PCI support for HiSilicon ACC devices"
->>>>>  	depends on ARM64 || (COMPILE_TEST && 64BIT)
->>>>>  	depends on VFIO_PCI_CORE
->>>>> +	depends on PCI && PCI_MSI  
->>>>
->>>> PCI is already in the depends from the 2nd line in
->>>> drivers/vfio/pci/Kconfig, but it is harmless
->>>>  
->>>>> +	depends on UACCE || UACCE=n
->>>>> +	depends on ACPI  
->>>>
->>>> Scratching my head a bit on why we have these  
->>>
->>> Same curiosity from me, each of the CRYPTO_DEV_HISI_* options selected
->>> also depend on these so they seem redundant.  
->>
->> Yes, they are redundant now since we have added CRYPTO_DEV_HISI_ drivers
->> as "depends" now. I will remove that.
->>  
->>> I think we still require acks from Bjorn and Zaibo for select patches
->>> in this series.  
->>
->> I checked with Ziabo. He moved projects and is no longer looking into crypto stuff.
->> Wangzhou and LiuLongfang now take care of this. Received acks from Wangzhou
->> already and I will request Longfang to provide his. Hope that's ok.
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 205 ++++++++++++++++-----
+>  1 file changed, 163 insertions(+), 42 deletions(-)
 > 
-> Maybe a good time to have them update MAINTAINERS as well.  Thanks,
-> 
-> Alex
-> 
-OK, we have discussed it internally, I will send a patch to update
-MAINTAINERS of crypto stuff.
-Thanks.
-Longfang
-> .
-> 
+> diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+> index 04b1aafb29f4..3d01da4323a6 100644
+> --- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+> +++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+> @@ -11,6 +11,8 @@
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
+>  #include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+> @@ -30,12 +32,10 @@
+>  #define IMX8MM_PCIE_PHY_CMN_REG065	0x194
+>  #define  ANA_AUX_RX_TERM		(BIT(7) | BIT(4))
+>  #define  ANA_AUX_TX_LVL			GENMASK(3, 0)
+> -#define IMX8MM_PCIE_PHY_CMN_REG75	0x1D4
+> -#define  PCIE_PHY_CMN_REG75_PLL_DONE	0x3
+> +#define IMX8MM_PCIE_PHY_CMN_REG075	0x1D4
+> +#define  ANA_PLL_DONE			0x3
+>  #define PCIE_PHY_TRSV_REG5		0x414
+> -#define  PCIE_PHY_TRSV_REG5_GEN1_DEEMP	0x2D
+>  #define PCIE_PHY_TRSV_REG6		0x418
+> -#define  PCIE_PHY_TRSV_REG6_GEN2_DEEMP	0xF
+>  
+>  #define IMX8MM_GPR_PCIE_REF_CLK_SEL	GENMASK(25, 24)
+>  #define IMX8MM_GPR_PCIE_REF_CLK_PLL	FIELD_PREP(IMX8MM_GPR_PCIE_REF_CLK_SEL, 0x3)
+> @@ -46,16 +46,43 @@
+>  #define IMX8MM_GPR_PCIE_SSC_EN		BIT(16)
+>  #define IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE	BIT(9)
+>  
+> +#define IMX8MP_GPR_REG0			0x0
+> +#define IMX8MP_GPR_CLK_MOD_EN		BIT(0)
+> +#define IMX8MP_GPR_PHY_APB_RST		BIT(4)
+> +#define IMX8MP_GPR_PHY_INIT_RST		BIT(5)
+> +#define IMX8MP_GPR_REG1			0x4
+> +#define IMX8MP_GPR_PM_EN_CORE_CLK	BIT(0)
+> +#define IMX8MP_GPR_PLL_LOCK		BIT(13)
+> +#define IMX8MP_GPR_REG2			0x8
+> +#define IMX8MP_GPR_P_PLL_MASK		GENMASK(5, 0)
+> +#define IMX8MP_GPR_M_PLL_MASK		GENMASK(15, 6)
+> +#define IMX8MP_GPR_S_PLL_MASK		GENMASK(18, 16)
+> +#define IMX8MP_GPR_P_PLL		(0xc << 0)
+> +#define IMX8MP_GPR_M_PLL		(0x320 << 6)
+> +#define IMX8MP_GPR_S_PLL		(0x4 << 16)
+> +#define IMX8MP_GPR_REG3			0xc
+> +#define IMX8MP_GPR_PLL_CKE		BIT(17)
+> +#define IMX8MP_GPR_PLL_RST		BIT(31)
+> +
+> +enum imx8_pcie_phy_type {
+> +	IMX8MM,
+> +	IMX8MP,
+> +};
+> +
+>  struct imx8_pcie_phy {
+>  	void __iomem		*base;
+> +	struct device		*dev;
+>  	struct clk		*clk;
+>  	struct phy		*phy;
+> +	struct regmap		*hsio_blk_ctrl;
+>  	struct regmap		*iomuxc_gpr;
+>  	struct reset_control	*reset;
+> +	struct reset_control	*perst;
+>  	u32			refclk_pad_mode;
+>  	u32			tx_deemph_gen1;
+>  	u32			tx_deemph_gen2;
+>  	bool			clkreq_unused;
+> +	enum imx8_pcie_phy_type	variant;
+>  };
+>  
+>  static int imx8_pcie_phy_init(struct phy *phy)
+> @@ -67,6 +94,87 @@ static int imx8_pcie_phy_init(struct phy *phy)
+>  	reset_control_assert(imx8_phy->reset);
+>  
+>  	pad_mode = imx8_phy->refclk_pad_mode;
+> +	switch (imx8_phy->variant) {
+> +	case IMX8MM:
+> +		/* Tune PHY de-emphasis setting to pass PCIe compliance. */
+> +		if (imx8_phy->tx_deemph_gen1)
+> +			writel(imx8_phy->tx_deemph_gen1,
+> +			       imx8_phy->base + PCIE_PHY_TRSV_REG5);
+> +		if (imx8_phy->tx_deemph_gen2)
+> +			writel(imx8_phy->tx_deemph_gen2,
+> +			       imx8_phy->base + PCIE_PHY_TRSV_REG6);
+> +		break;
+> +	case IMX8MP:
+> +		reset_control_assert(imx8_phy->perst);
+> +		/* Set P=12,M=800,S=4 and must set ICP=2'b01. */
+> +		regmap_update_bits(imx8_phy->hsio_blk_ctrl, IMX8MP_GPR_REG2,
+> +				   IMX8MP_GPR_P_PLL_MASK |
+> +				   IMX8MP_GPR_M_PLL_MASK |
+> +				   IMX8MP_GPR_S_PLL_MASK,
+> +				   IMX8MP_GPR_P_PLL |
+> +				   IMX8MP_GPR_M_PLL |
+> +				   IMX8MP_GPR_S_PLL);
+> +		/* wait greater than 1/F_FREF =1/2MHZ=0.5us */
+> +		udelay(1);
+> +
+> +		regmap_update_bits(imx8_phy->hsio_blk_ctrl, IMX8MP_GPR_REG3,
+> +				   IMX8MP_GPR_PLL_RST,
+> +				   IMX8MP_GPR_PLL_RST);
+> +		udelay(10);
+> +
+> +		/* Set 1 to pll_cke of GPR_REG3 */
+> +		regmap_update_bits(imx8_phy->hsio_blk_ctrl, IMX8MP_GPR_REG3,
+> +				   IMX8MP_GPR_PLL_CKE,
+> +				   IMX8MP_GPR_PLL_CKE);
+> +
+> +		/* Lock time should be greater than 300cycle=300*0.5us=150us */
+> +		ret = regmap_read_poll_timeout(imx8_phy->hsio_blk_ctrl,
+> +					     IMX8MP_GPR_REG1, val,
+> +					     val & IMX8MP_GPR_PLL_LOCK,
+> +					     10, 1000);
+> +		if (ret) {
+> +			dev_err(imx8_phy->dev, "PCIe PLL lock timeout\n");
+> +			return ret;
+> +		}
+
+As far as I understand the reference manual, this PLL is not exclusive
+to the PCIe core, but can be used as a alternate reference clock for
+the USB PHYs. I think we should not poke the PLL registers from the
+PCIe PHY driver, but should make this PLL a real clock provided by the
+HSIO blk-ctrl.
+
+It's probably a good prove of concept for other clocks that need to be
+provided by the blk-ctrls, as the audio blk-ctrl has much more of this
+secondary clock controller functionality.
+
+Do you want to give it a shot at integrating this into the blk-ctrl
+driver, or should I take a look?
+
+Regards,
+Lucas
+
+> +
+> +		/* pcie_clock_module_en */
+> +		regmap_update_bits(imx8_phy->hsio_blk_ctrl, IMX8MP_GPR_REG0,
+> +				   IMX8MP_GPR_CLK_MOD_EN,
+> +				   IMX8MP_GPR_CLK_MOD_EN);
+> +		udelay(10);
+> +
+> +		reset_control_deassert(imx8_phy->reset);
+> +		reset_control_deassert(imx8_phy->perst);
+> +
+> +		/* release pcie_phy_apb_reset and pcie_phy_init_resetn */
+> +		regmap_update_bits(imx8_phy->hsio_blk_ctrl, IMX8MP_GPR_REG0,
+> +				   IMX8MP_GPR_PHY_APB_RST |
+> +				   IMX8MP_GPR_PHY_INIT_RST,
+> +				   IMX8MP_GPR_PHY_APB_RST |
+> +				   IMX8MP_GPR_PHY_INIT_RST);
+> +		break;
+> +	}
+> +
+> +	if (pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT) {
+> +		/* Configure the pad as input */
+> +		val = readl(imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG061);
+> +		writel(val & ~ANA_PLL_CLK_OUT_TO_EXT_IO_EN,
+> +		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG061);
+> +	} else if (pad_mode == IMX8_PCIE_REFCLK_PAD_OUTPUT) {
+> +		/* Configure the PHY to output the refclock via pad */
+> +		writel(ANA_PLL_CLK_OUT_TO_EXT_IO_EN,
+> +		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG061);
+> +		writel(ANA_PLL_CLK_OUT_TO_EXT_IO_SEL,
+> +		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG062);
+> +		writel(AUX_PLL_REFCLK_SEL_SYS_PLL,
+> +		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG063);
+> +		val = ANA_AUX_RX_TX_SEL_TX | ANA_AUX_TX_TERM;
+> +		writel(val | ANA_AUX_RX_TERM_GND_EN,
+> +		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG064);
+> +		writel(ANA_AUX_RX_TERM | ANA_AUX_TX_LVL,
+> +		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG065);
+> +	}
+> +
+>  	/* Set AUX_EN_OVERRIDE 1'b0, when the CLKREQ# isn't hooked */
+>  	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
+>  			   IMX8MM_GPR_PCIE_AUX_EN_OVERRIDE,
+> @@ -91,42 +199,30 @@ static int imx8_pcie_phy_init(struct phy *phy)
+>  	regmap_update_bits(imx8_phy->iomuxc_gpr, IOMUXC_GPR14,
+>  			   IMX8MM_GPR_PCIE_CMN_RST,
+>  			   IMX8MM_GPR_PCIE_CMN_RST);
+> -	usleep_range(200, 500);
+>  
+> -	if (pad_mode == IMX8_PCIE_REFCLK_PAD_INPUT) {
+> -		/* Configure the pad as input */
+> -		val = readl(imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG061);
+> -		writel(val & ~ANA_PLL_CLK_OUT_TO_EXT_IO_EN,
+> -		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG061);
+> -	} else if (pad_mode == IMX8_PCIE_REFCLK_PAD_OUTPUT) {
+> -		/* Configure the PHY to output the refclock via pad */
+> -		writel(ANA_PLL_CLK_OUT_TO_EXT_IO_EN,
+> -		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG061);
+> -		writel(ANA_PLL_CLK_OUT_TO_EXT_IO_SEL,
+> -		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG062);
+> -		writel(AUX_PLL_REFCLK_SEL_SYS_PLL,
+> -		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG063);
+> -		val = ANA_AUX_RX_TX_SEL_TX | ANA_AUX_TX_TERM;
+> -		writel(val | ANA_AUX_RX_TERM_GND_EN,
+> -		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG064);
+> -		writel(ANA_AUX_RX_TERM | ANA_AUX_TX_LVL,
+> -		       imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG065);
+> +	switch (imx8_phy->variant) {
+> +	case IMX8MM:
+> +		reset_control_deassert(imx8_phy->reset);
+> +		usleep_range(200, 500);
+> +		break;
+> +
+> +	case IMX8MP:
+> +		/* wait for core_clk enabled */
+> +		ret = regmap_read_poll_timeout(imx8_phy->hsio_blk_ctrl,
+> +					     IMX8MP_GPR_REG1, val,
+> +					     val & IMX8MP_GPR_PM_EN_CORE_CLK,
+> +					     10, 20000);
+> +		if (ret) {
+> +			dev_err(imx8_phy->dev, "PCIe CORE CLK enable failed\n");
+> +			return ret;
+> +		}
+> +
+> +		break;
+>  	}
+>  
+> -	/* Tune PHY de-emphasis setting to pass PCIe compliance. */
+> -	if (imx8_phy->tx_deemph_gen1)
+> -		writel(imx8_phy->tx_deemph_gen1,
+> -		       imx8_phy->base + PCIE_PHY_TRSV_REG5);
+> -	if (imx8_phy->tx_deemph_gen2)
+> -		writel(imx8_phy->tx_deemph_gen2,
+> -		       imx8_phy->base + PCIE_PHY_TRSV_REG6);
+> -
+> -	reset_control_deassert(imx8_phy->reset);
+> -
+>  	/* Polling to check the phy is ready or not. */
+> -	ret = readl_poll_timeout(imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG75,
+> -				 val, val == PCIE_PHY_CMN_REG75_PLL_DONE,
+> -				 10, 20000);
+> +	ret = readl_poll_timeout(imx8_phy->base + IMX8MM_PCIE_PHY_CMN_REG075,
+> +				 val, val == ANA_PLL_DONE, 10, 20000);
+>  	return ret;
+>  }
+>  
+> @@ -153,18 +249,33 @@ static const struct phy_ops imx8_pcie_phy_ops = {
+>  	.owner		= THIS_MODULE,
+>  };
+>  
+> +static const struct of_device_id imx8_pcie_phy_of_match[] = {
+> +	{.compatible = "fsl,imx8mm-pcie-phy", .data = (void *)IMX8MM},
+> +	{.compatible = "fsl,imx8mp-pcie-phy", .data = (void *)IMX8MP},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, imx8_pcie_phy_of_match);
+> +
+>  static int imx8_pcie_phy_probe(struct platform_device *pdev)
+>  {
+>  	struct phy_provider *phy_provider;
+>  	struct device *dev = &pdev->dev;
+> +	const struct of_device_id *of_id;
+>  	struct device_node *np = dev->of_node;
+>  	struct imx8_pcie_phy *imx8_phy;
+>  	struct resource *res;
+>  
+> +	of_id = of_match_device(imx8_pcie_phy_of_match, dev);
+> +	if (!of_id)
+> +		return -EINVAL;
+> +
+>  	imx8_phy = devm_kzalloc(dev, sizeof(*imx8_phy), GFP_KERNEL);
+>  	if (!imx8_phy)
+>  		return -ENOMEM;
+>  
+> +	imx8_phy->dev = dev;
+> +	imx8_phy->variant = (enum imx8_pcie_phy_type)of_id->data;
+> +
+>  	/* get PHY refclk pad mode */
+>  	of_property_read_u32(np, "fsl,refclk-pad-mode",
+>  			     &imx8_phy->refclk_pad_mode);
+> @@ -201,6 +312,22 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
+>  		dev_err(dev, "Failed to get PCIEPHY reset control\n");
+>  		return PTR_ERR(imx8_phy->reset);
+>  	}
+> +	if (imx8_phy->variant == IMX8MP) {
+> +		/* Grab HSIO MIX config register range */
+> +		imx8_phy->hsio_blk_ctrl =
+> +			 syscon_regmap_lookup_by_compatible("fsl,imx8mp-hsio-blk-ctrl");
+> +		if (IS_ERR(imx8_phy->hsio_blk_ctrl)) {
+> +			dev_err(dev, "unable to find hsio mix registers\n");
+> +			return PTR_ERR(imx8_phy->hsio_blk_ctrl);
+> +		}
+> +
+> +		imx8_phy->perst =
+> +			devm_reset_control_get_exclusive(dev, "perst");
+> +		if (IS_ERR(imx8_phy->perst)) {
+> +			dev_err(dev, "Failed to get PCIEPHY perst control\n");
+> +			return PTR_ERR(imx8_phy->perst);
+> +		}
+> +	}
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	imx8_phy->base = devm_ioremap_resource(dev, res);
+> @@ -218,12 +345,6 @@ static int imx8_pcie_phy_probe(struct platform_device *pdev)
+>  	return PTR_ERR_OR_ZERO(phy_provider);
+>  }
+>  
+> -static const struct of_device_id imx8_pcie_phy_of_match[] = {
+> -	{.compatible = "fsl,imx8mm-pcie-phy",},
+> -	{ },
+> -};
+> -MODULE_DEVICE_TABLE(of, imx8_pcie_phy_of_match);
+> -
+>  static struct platform_driver imx8_pcie_phy_driver = {
+>  	.probe	= imx8_pcie_phy_probe,
+>  	.driver = {
+
+
