@@ -2,273 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A25C4D20D4
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 20:01:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 895944D2198
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 20:33:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344847AbiCHTB6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Mar 2022 14:01:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39238 "EHLO
+        id S1349947AbiCHTeR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Mar 2022 14:34:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245656AbiCHTB6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 14:01:58 -0500
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93311C92A;
-        Tue,  8 Mar 2022 11:01:00 -0800 (PST)
-Received: by mail-yb1-f178.google.com with SMTP id u61so39675397ybi.11;
-        Tue, 08 Mar 2022 11:01:00 -0800 (PST)
+        with ESMTP id S1349612AbiCHTeQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 14:34:16 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CA52F53B67
+        for <linux-pci@vger.kernel.org>; Tue,  8 Mar 2022 11:33:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646767997;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bmFvlno7qSph5d/HcceOLIPkKssn1EWwfPpWF2drkf8=;
+        b=UD5qHH96lfvSSr1C6bXNDWeIpIrPW4bGiTIocBD+Dfg8Uw/ejoWznyfRdmwDaX7YuhbcJ1
+        9avAuWiFtx0NTBJTvQvlIuMQSYlm80gvVrbw3WyfEHN1Ul8Qe9EfV0Ah+lLJ4H8M1dHz3r
+        54U4oV/XxiQwwT+UIlqaztFNtNXWhtw=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-248-n1ZSiRolMp6lRe96jwZBdQ-1; Tue, 08 Mar 2022 14:33:16 -0500
+X-MC-Unique: n1ZSiRolMp6lRe96jwZBdQ-1
+Received: by mail-io1-f70.google.com with SMTP id u25-20020a5d8199000000b006421bd641bbso160531ion.11
+        for <linux-pci@vger.kernel.org>; Tue, 08 Mar 2022 11:33:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0oaRF+2jtSH5e366hIY41lYOEykMsMYfwzxuymEf7WI=;
-        b=GDskdiJeoR800Db8KFcVnDZEICBRyNDJZMncV8Hl4YZayTTqmkHZY4zliAyS+GU3pU
-         Q0GNiHST5ivOieiekef9FmByGW6EJzmyZjYpSATf/KImgDqCzGPGNBKW9ZC8OEN+w2eV
-         FvFHX5xcwqnVn4LH8jLAPODyFWxru/8Lv6spUw3xCXuIDoHqp1H2iYL5OUjUA8CNjmAD
-         Z0Ogc0GrgcWkIInfnbrZCW2TSbS8cQTITNtWeyUM49mQ9A7VzJbMItuYAZj/jL8w+f93
-         slXEM316eHm087ryqhXhWJt0MiRqIeHg8M2yyFUd6oVRpLHKz0AS54h4F+sBRFCcPDIu
-         kh8g==
-X-Gm-Message-State: AOAM531AKJJsfDshxU7gR6rVGtlVon3ruKV1y6e4SOtNuqRNBYHw5MkA
-        FKTblUTSQxrW2Yy5rhbWDtloo8/TI3Prtq8x15U=
-X-Google-Smtp-Source: ABdhPJwqUjHyO1CqvKF5O4a8CsMYw7VMzDiXPK9Roc8x+67VaP3fclGs2XQAWtlYxXLKfQqp2SwlCUmz0MRIJI1mR4w=
-X-Received: by 2002:a25:fe10:0:b0:625:262f:e792 with SMTP id
- k16-20020a25fe10000000b00625262fe792mr12845747ybe.365.1646766060001; Tue, 08
- Mar 2022 11:01:00 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=bmFvlno7qSph5d/HcceOLIPkKssn1EWwfPpWF2drkf8=;
+        b=DxolbUUBnSqhzwpNOglQgAB5MpYcHrGzwl2rwfWR8xOzXsO1tTbmdov/pbAtrGH1np
+         gw14TmNzGBW5cTJe/QgINXzJEchd4k6e3GlIh/EW6OBTSkFFhpOZ6Bo31jcBBiitFn+n
+         LqWKd7ncKioM/SHNbkZCc+dz39Ighj2/8xC3/7Wrq+Y+a9idczRSF+5nREadzmf43mRj
+         9heXfEMCDQtjTivMAcRBcaErW4l3TTLX8FCBZCelQjkabLqcL85fjYbjH6mFEKf3lgKv
+         D1xdQzulzpL8OAMmVgo6jUllGHUBpkfVuPjgR3Sjam5JDtLWkwuT9Mi88ja0W+laLnqk
+         V5mA==
+X-Gm-Message-State: AOAM530vMHvTLnjh0uPjxPGeoPpl1+gSDQh8E747xjYnCu0AFPLaxfRn
+        2gCcLZMoUuAB2JoDLrCM2/kLQ7OK07+ulQCRARB+5AOb0pJVrSS4qv8cRPt2wWp2HDau6+rng4B
+        cWgZCJjONEgjy8ragtQMX
+X-Received: by 2002:a05:6638:3014:b0:317:9daf:c42c with SMTP id r20-20020a056638301400b003179dafc42cmr16033245jak.10.1646767995263;
+        Tue, 08 Mar 2022 11:33:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxDpYCevcieEIuPGlNXODXoatrNQxiFQEvGtMSUMx1SJ+hhy7jWFeUDPSTwNXSqLKnEDsZnrQ==
+X-Received: by 2002:a05:6638:3014:b0:317:9daf:c42c with SMTP id r20-20020a056638301400b003179dafc42cmr16033227jak.10.1646767995008;
+        Tue, 08 Mar 2022 11:33:15 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id k5-20020a5d97c5000000b006412c791f90sm10607942ios.31.2022.03.08.11.33.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Mar 2022 11:33:14 -0800 (PST)
+Date:   Tue, 8 Mar 2022 12:33:12 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
+        "yishaih@nvidia.com" <yishaih@nvidia.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        liulongfang <liulongfang@huawei.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        "Jonathan Cameron" <jonathan.cameron@huawei.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        Xu Zaibo <xuzaibo@huawei.com>
+Subject: Re: [PATCH v8 8/9] hisi_acc_vfio_pci: Add support for VFIO live
+ migration
+Message-ID: <20220308123312.1f4ba768.alex.williamson@redhat.com>
+In-Reply-To: <BN9PR11MB5276EBE887402EBE22630BAB8C099@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20220303230131.2103-1-shameerali.kolothum.thodi@huawei.com>
+ <20220303230131.2103-9-shameerali.kolothum.thodi@huawei.com>
+ <20220304205720.GE219866@nvidia.com>
+ <20220307120513.74743f17.alex.williamson@redhat.com>
+ <aac9a26dc27140d9a1ce56ebdec393a6@huawei.com>
+ <20220307125239.7261c97d.alex.williamson@redhat.com>
+ <BN9PR11MB5276EBE887402EBE22630BAB8C099@BN9PR11MB5276.namprd11.prod.outlook.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <CGME20220308104013epcas1p4c096ed0065700f2f1f8b5ea1ae4ed994@epcas1p4.samsung.com>
- <20220307190739.659955-1-yj84.jang@samsung.com>
-In-Reply-To: <20220307190739.659955-1-yj84.jang@samsung.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 8 Mar 2022 20:00:48 +0100
-Message-ID: <CAJZ5v0jtSHyqR9HFcKxi_Ze-0UD9X_nkFy6xJiZfgqieZmTRbQ@mail.gmail.com>
-Subject: Re: [PATCH v3] PM: Add device name to suspend_report_result()
-To:     Youngjin Jang <yj84.jang@samsung.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
-        <linux-usb@vger.kernel.org>,
-        Todd Brandt <todd.e.brandt@linux.intel.com>,
-        js07.lee@samsung.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 8, 2022 at 11:40 AM Youngjin Jang <yj84.jang@samsung.com> wrote:
->
-> currently, suspend_report_result() prints only function information.
-> If any driver uses common pm function, nobody knows who called
-> failed function exactly.
->
-> So, device is needed to recognize specific wrong driver.
->
-> e.g.)
-> PM: dpm_run_callback(): pnp_bus_suspend+0x0/0x10 returns 0
-> PM: dpm_run_callback(): pci_pm_suspend+0x0/0x150 returns 0
-> after patch,
-> serial 00:05: PM: dpm_run_callback(): pnp_bus_suspend+0x0/0x10 returns 0
-> pci 0000:00:01.3: PM: dpm_run_callback(): pci_pm_suspend+0x0/0x150 returns 0
->
-> Signed-off-by: Youngjin Jang <yj84.jang@samsung.com>
-> ---
-> Changes since v2:
->  - Update commit message, example logs
-> Changes since v1:
->  - Use dev_err() to print out device name
->  - Use real name on email sender
->
->  drivers/base/power/main.c  | 10 +++++-----
->  drivers/pci/pci-driver.c   | 14 +++++++-------
->  drivers/pnp/driver.c       |  2 +-
->  drivers/usb/core/hcd-pci.c |  4 ++--
->  include/linux/pm.h         |  8 ++++----
->  5 files changed, 19 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index 04ea92cbd9cf..41e17b8c2c20 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -485,7 +485,7 @@ static int dpm_run_callback(pm_callback_t cb, struct device *dev,
->         trace_device_pm_callback_start(dev, info, state.event);
->         error = cb(dev);
->         trace_device_pm_callback_end(dev, error);
-> -       suspend_report_result(cb, error);
-> +       suspend_report_result(dev, cb, error);
->
->         initcall_debug_report(dev, calltime, cb, error);
->
-> @@ -1568,7 +1568,7 @@ static int legacy_suspend(struct device *dev, pm_message_t state,
->         trace_device_pm_callback_start(dev, info, state.event);
->         error = cb(dev, state);
->         trace_device_pm_callback_end(dev, error);
-> -       suspend_report_result(cb, error);
-> +       suspend_report_result(dev, cb, error);
->
->         initcall_debug_report(dev, calltime, cb, error);
->
-> @@ -1855,7 +1855,7 @@ static int device_prepare(struct device *dev, pm_message_t state)
->         device_unlock(dev);
->
->         if (ret < 0) {
-> -               suspend_report_result(callback, ret);
-> +               suspend_report_result(dev, callback, ret);
->                 pm_runtime_put(dev);
->                 return ret;
->         }
-> @@ -1960,10 +1960,10 @@ int dpm_suspend_start(pm_message_t state)
->  }
->  EXPORT_SYMBOL_GPL(dpm_suspend_start);
->
-> -void __suspend_report_result(const char *function, void *fn, int ret)
-> +void __suspend_report_result(const char *function, struct device *dev, void *fn, int ret)
->  {
->         if (ret)
-> -               pr_err("%s(): %pS returns %d\n", function, fn, ret);
-> +               dev_err(dev, "%s(): %pS returns %d\n", function, fn, ret);
->  }
->  EXPORT_SYMBOL_GPL(__suspend_report_result);
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index f61c40a47891..4ceeb75fc899 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -607,7 +607,7 @@ static int pci_legacy_suspend(struct device *dev, pm_message_t state)
->                 int error;
->
->                 error = drv->suspend(pci_dev, state);
-> -               suspend_report_result(drv->suspend, error);
-> +               suspend_report_result(dev, drv->suspend, error);
->                 if (error)
->                         return error;
->
-> @@ -786,7 +786,7 @@ static int pci_pm_suspend(struct device *dev)
->                 int error;
->
->                 error = pm->suspend(dev);
-> -               suspend_report_result(pm->suspend, error);
-> +               suspend_report_result(dev, pm->suspend, error);
->                 if (error)
->                         return error;
->
-> @@ -832,7 +832,7 @@ static int pci_pm_suspend_noirq(struct device *dev)
->                 int error;
->
->                 error = pm->suspend_noirq(dev);
-> -               suspend_report_result(pm->suspend_noirq, error);
-> +               suspend_report_result(dev, pm->suspend_noirq, error);
->                 if (error)
->                         return error;
->
-> @@ -1021,7 +1021,7 @@ static int pci_pm_freeze(struct device *dev)
->                 int error;
->
->                 error = pm->freeze(dev);
-> -               suspend_report_result(pm->freeze, error);
-> +               suspend_report_result(dev, pm->freeze, error);
->                 if (error)
->                         return error;
->         }
-> @@ -1041,7 +1041,7 @@ static int pci_pm_freeze_noirq(struct device *dev)
->                 int error;
->
->                 error = pm->freeze_noirq(dev);
-> -               suspend_report_result(pm->freeze_noirq, error);
-> +               suspend_report_result(dev, pm->freeze_noirq, error);
->                 if (error)
->                         return error;
->         }
-> @@ -1127,7 +1127,7 @@ static int pci_pm_poweroff(struct device *dev)
->                 int error;
->
->                 error = pm->poweroff(dev);
-> -               suspend_report_result(pm->poweroff, error);
-> +               suspend_report_result(dev, pm->poweroff, error);
->                 if (error)
->                         return error;
->         }
-> @@ -1165,7 +1165,7 @@ static int pci_pm_poweroff_noirq(struct device *dev)
->                 int error;
->
->                 error = pm->poweroff_noirq(dev);
-> -               suspend_report_result(pm->poweroff_noirq, error);
-> +               suspend_report_result(dev, pm->poweroff_noirq, error);
->                 if (error)
->                         return error;
->         }
-> diff --git a/drivers/pnp/driver.c b/drivers/pnp/driver.c
-> index cc6757dfa3f1..c02e7bf643a6 100644
-> --- a/drivers/pnp/driver.c
-> +++ b/drivers/pnp/driver.c
-> @@ -171,7 +171,7 @@ static int __pnp_bus_suspend(struct device *dev, pm_message_t state)
->
->         if (pnp_drv->driver.pm && pnp_drv->driver.pm->suspend) {
->                 error = pnp_drv->driver.pm->suspend(dev);
-> -               suspend_report_result(pnp_drv->driver.pm->suspend, error);
-> +               suspend_report_result(dev, pnp_drv->driver.pm->suspend, error);
->                 if (error)
->                         return error;
->         }
-> diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
-> index 784466117c92..8176bc81a635 100644
-> --- a/drivers/usb/core/hcd-pci.c
-> +++ b/drivers/usb/core/hcd-pci.c
-> @@ -446,7 +446,7 @@ static int suspend_common(struct device *dev, bool do_wakeup)
->                                 HCD_WAKEUP_PENDING(hcd->shared_hcd))
->                         return -EBUSY;
->                 retval = hcd->driver->pci_suspend(hcd, do_wakeup);
-> -               suspend_report_result(hcd->driver->pci_suspend, retval);
-> +               suspend_report_result(dev, hcd->driver->pci_suspend, retval);
->
->                 /* Check again in case wakeup raced with pci_suspend */
->                 if ((retval == 0 && do_wakeup && HCD_WAKEUP_PENDING(hcd)) ||
-> @@ -556,7 +556,7 @@ static int hcd_pci_suspend_noirq(struct device *dev)
->                 dev_dbg(dev, "--> PCI %s\n",
->                                 pci_power_name(pci_dev->current_state));
->         } else {
-> -               suspend_report_result(pci_prepare_to_sleep, retval);
-> +               suspend_report_result(dev, pci_prepare_to_sleep, retval);
->                 return retval;
->         }
->
-> diff --git a/include/linux/pm.h b/include/linux/pm.h
-> index f7d2be686359..e65b3ab28377 100644
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -770,11 +770,11 @@ extern int dpm_suspend_late(pm_message_t state);
->  extern int dpm_suspend(pm_message_t state);
->  extern int dpm_prepare(pm_message_t state);
->
-> -extern void __suspend_report_result(const char *function, void *fn, int ret);
-> +extern void __suspend_report_result(const char *function, struct device *dev, void *fn, int ret);
->
-> -#define suspend_report_result(fn, ret)                                 \
-> +#define suspend_report_result(dev, fn, ret)                            \
->         do {                                                            \
-> -               __suspend_report_result(__func__, fn, ret);             \
-> +               __suspend_report_result(__func__, dev, fn, ret);        \
->         } while (0)
->
->  extern int device_pm_wait_for_dev(struct device *sub, struct device *dev);
-> @@ -814,7 +814,7 @@ static inline int dpm_suspend_start(pm_message_t state)
->         return 0;
->  }
->
-> -#define suspend_report_result(fn, ret)         do {} while (0)
-> +#define suspend_report_result(dev, fn, ret)    do {} while (0)
->
->  static inline int device_pm_wait_for_dev(struct device *a, struct device *b)
->  {
-> --
+On Tue, 8 Mar 2022 08:11:11 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-Applied as 5.18 material, thanks!
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Tuesday, March 8, 2022 3:53 AM =20
+> > > =20
+> > > > I think we still require acks from Bjorn and Zaibo for select patch=
+es
+> > > > in this series. =20
+> > >
+> > > I checked with Ziabo. He moved projects and is no longer looking into=
+ =20
+> > crypto stuff. =20
+> > > Wangzhou and LiuLongfang now take care of this. Received acks from =20
+> > Wangzhou =20
+> > > already and I will request Longfang to provide his. Hope that's ok. =
+=20
+> >=20
+> > Maybe a good time to have them update MAINTAINERS as well.  Thanks,
+> >  =20
+>=20
+> I have one question here (similar to what we discussed for mdev before).
+>=20
+> Now we are adding vendor specific drivers under /drivers/vfio. Two drivers
+> on radar and more will come. Then what would be the criteria for=20
+> accepting such a driver? Do we prefer to a model in which the author shou=
+ld
+> provide enough background for vfio community to understand how it works=20
+> or as done here just rely on the PF driver owner to cover device specific
+> code?
+>=20
+> If the former we may need document some process for what information
+> is necessary and also need secure increased review bandwidth from key
+> reviewers in vfio community.
+>=20
+> If the latter then how can we guarantee no corner case overlooked by both
+> sides (i.e. how to know the coverage of total reviews)? Another open is w=
+ho
+> from the PF driver sub-system should be considered as the one to give the
+> green signal. If the sub-system maintainer trusts the PF driver owner and
+> just pulls commits from him then having the r-b from the PF driver owner =
+is
+> sufficient. But if the sub-system maintainer wants to review detail change
+> in every underlying driver then we probably also want to get the ack from
+> the maintainer.
+>=20
+> Overall I didn't mean to slow down the progress of this series. But above
+> does be some puzzle occurred in my review. =F0=9F=98=8A
+
+Hi Kevin,
+
+Good questions, I'd like a better understanding of expectations as
+well.  I think the intentions are the same as any other sub-system, the
+drivers make use of shared interfaces and extensions and the role of
+the sub-system should be to make sure those interfaces are used
+correctly and extensions fit well within the overall design.  However,
+just as the network maintainer isn't expected to fully understand every
+NIC driver, I think/hope we have the same expectations here.  It's
+certainly a benefit to the community and perceived trustworthiness if
+each driver outlines its operating model and security nuances, but
+those are only ever going to be the nuances identified by the people
+who have the access and energy to evaluate the device.
+
+It's going to be up to the community to try to determine that any new
+drivers are seriously considering security and not opening any new gaps
+relative to behavior using the base vfio-pci driver.  For the driver
+examples we have, this seems a bit easier than evaluating an entire
+mdev device because they're largely providing direct access to the
+device rather than trying to multiplex a shared physical device.  We
+can therefore focus on incremental functionality, as both drivers have
+done, implementing a boilerplate vendor driver, then adding migration
+support.  I imagine this won't always be the case though and some
+drivers will re-implement much of the core to support further emulation
+and shared resources.
+
+So how do we as a community want to handle this?  I wouldn't mind, I'd
+actually welcome, some sort of review requirement for new vfio vendor
+driver variants.  Is that reasonable?  What would be the criteria?
+Approval from the PF driver owner, if different/necessary, and at least
+one unaffiliated reviewer (preferably an active vfio reviewer or
+existing vfio variant driver owner/contributor)?  Ideas welcome.
+Thanks,
+
+Alex
+
