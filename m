@@ -2,1337 +2,214 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16B644D3018
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Mar 2022 14:40:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC9384D31A4
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Mar 2022 16:20:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231193AbiCINkv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Mar 2022 08:40:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49626 "EHLO
+        id S233809AbiCIPVF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Mar 2022 10:21:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233237AbiCINkt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Mar 2022 08:40:49 -0500
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E4E34C79F;
-        Wed,  9 Mar 2022 05:39:47 -0800 (PST)
-Received: by mail-lj1-x22e.google.com with SMTP id s25so3136798lji.5;
-        Wed, 09 Mar 2022 05:39:46 -0800 (PST)
+        with ESMTP id S230054AbiCIPVE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Mar 2022 10:21:04 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C27DEA2F28;
+        Wed,  9 Mar 2022 07:20:04 -0800 (PST)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 229EcPTq016927;
+        Wed, 9 Mar 2022 15:19:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=Dx641JSVlBiQrD+zJH2H/HezAIOHGVb03Y0nL/kDJBw=;
+ b=PABVro5jJvRfd7cJQOORPeuJQTAk5yGtVHq1Ikm/p3PCK3Pl1meH5CZiCA5YsmDnbFYv
+ 4+1IqW+8ImIAUAcQ7wS+P/ipv6p1YRaeCmeIE8BpefbFml6gWnlll9fyJNIu5hPGNslO
+ F5HA/XpWAt+HAWDxzMP+kS1C/KExNtaVyyo8EsMQ2kT6algAbYmpglcV8g7V0yvPnPRz
+ XJVzEFS3wTK206fGz/AcvpufD+jE6o99RjUZMpyApp54GsliBzBy6EBlBlUh8ELPk4lK
+ Q6aNx4CiUW7a6XmwEBpQg5FM/8Tfd9FdScxwerUUBY/vqiaOoG95QLfJysI1SVq+7h1m 9w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ekx9cj9sb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Mar 2022 15:19:08 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 229FBk5O159973;
+        Wed, 9 Mar 2022 15:19:07 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2174.outbound.protection.outlook.com [104.47.59.174])
+        by aserp3030.oracle.com with ESMTP id 3ekwwcv4df-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Mar 2022 15:19:07 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HEHPyjSwOBD3pR0mcIfAdUxRXe3UhUKlabQ0+C2C7Ob0ptn01/CPHsVmGZD9VZrZuAx0pPEQqyvlT6b3wCz/yvqRm4s2VL9ed76YO5PMMOW2+NBS9+t1bALedcJr/69K6yqGyiTI0bbAY/h5D3ZbMf9Jma1oIa1iTT3zqSjZflju37nhnixOQ8J2PARJTggDNYEvM+40WCkntw70diTB4mNw7tSBoYULHav2GoLJqsPx3d6TRjTkJ0f6fTjxGF7Pj8QJiB3f0KmntsqyZob8IRg8+9tj+BC5N4iHafcjpVTuZCMotCHkBDmmrwP8c4IvRsYzvlB2Rk794L72FKFgoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Dx641JSVlBiQrD+zJH2H/HezAIOHGVb03Y0nL/kDJBw=;
+ b=IIEjjqZ6k0gmWray/FUYEshYIpfu54ofKRN/JTPTJsUylaVanCTekZ0wY/FZZb5LZmMO3H25LLwyGsrdMO4ymwf8/e7avW04kKQryaBx3lNTKRBuS0BIm6/DGB+fSgoipAVNlpAopKMUgAJfu8YpyWAsoEKhHW4b/yzIcV8hUrIj1LjAbBsmwqp9LtVUPGjj+2QYrIaX8BX2zOOZZdHPnnk4UyNOBwoMk+F8VzSHwWfKb3gFKeOg21IgJ+IjcB2pHL5vuWdEGan5NXh12xRz+GMBvu75aeZaD1J8yqSOk2g3dXT2XlCAaQrc/R3PI+NBJMbEU11TkijJZ5hQxWPwQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2CeC9JjjZQaUHTPnF6JFOkyfrab64Y0SLf4Aq6gMc/Q=;
-        b=cwEqMxRgfggKBikvobkkHc0YNGLiDZYwVm5iw+WilAmNAZspCc2ChdM0LorMdvXbyC
-         0ZZszzvvizDZYif2BRtasOPqT1lcexu6gtsGlsf0x4cgAMDNXAEYZlobN4sQaw46u8v6
-         dKwQRBqln+wpww99xC2j5lZNZRgVsnT/4U4F7JnSMJ9gk20RTdURV3DjzlwyQw2U+WJ+
-         ICQFaybXqkHkLV2gEBCUlve/LpmbtTBdYS3kBuXuo64xXuLTOmOLMLhgC4U3u3TAk/qn
-         7xk2Sqw83oMszo5GelS3tvIH3VvW1CKPOD4bbHM3Gke8a2lumCctYRdAPeTB04vQ5uqN
-         5rAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2CeC9JjjZQaUHTPnF6JFOkyfrab64Y0SLf4Aq6gMc/Q=;
-        b=x7OpiD17OzvmOHsk+9CJ/diK36la4A0JC4fY1aYPX0DbHEcESGlxEVK9scnlTNwxxx
-         wX+jhzXxR8FNoh3WnQcJKZAFdX2G/ATRL+aiP3Di4zx0KU7globsUdctGNrSKu1litI+
-         4BH/9A6TXX8q2SWcca5/+oaxan9q80nRtNq+IWGzzfD+rj8YE/YSmw0YUE9OaCPtfs0M
-         NQll+dfzY71dhJ/53WqhkEy8FwQHOfXDprpYXEGwQgRcUUQpYhMM0ajP4ahcf/IUDS0b
-         qU1zHBLvZrkCYTaGVPHfdyxag/GffIAWhXd2ZeA/+JQ1IcOd7d0QDmNPZfGIcfgYwkgm
-         LtHA==
-X-Gm-Message-State: AOAM530TykF2OWJfEY7H/lYv85mXnNMPBuH7/YpOXqYNU30WtK1Fhygz
-        NZR0recPnl5h3HMKFv+pGKw=
-X-Google-Smtp-Source: ABdhPJzojOANzpG8dC0P8nY1vyV7JmnfbcNbJXSDjjb3M8mq9IDXr2o/CfVGbb+S5Gjc41A1/aT/aA==
-X-Received: by 2002:a05:651c:1797:b0:23a:18d7:1d39 with SMTP id bn23-20020a05651c179700b0023a18d71d39mr13925724ljb.470.1646833182854;
-        Wed, 09 Mar 2022 05:39:42 -0800 (PST)
-Received: from mobilestation ([95.79.188.22])
-        by smtp.gmail.com with ESMTPSA id h1-20020a056512054100b0044847b32426sm400074lfl.156.2022.03.09.05.39.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Mar 2022 05:39:42 -0800 (PST)
-Date:   Wed, 9 Mar 2022 16:39:40 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        shawnguo@kernel.org, manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH v3 1/6] dmaengine: dw-edma: fix dw_edma_probe() can't be
- call globally
-Message-ID: <20220309133940.3le2ma24aqlhips4@mobilestation>
-References: <20220307224750.18055-1-Frank.Li@nxp.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dx641JSVlBiQrD+zJH2H/HezAIOHGVb03Y0nL/kDJBw=;
+ b=0Kqty1EG5d/PfM9n7JZzkSJpKBgadK3l78TdLjrx7xB+Q26Cta1VcTum7/JDuIzqDbCABLzQUDHGbr2Qhwa6OQuA9CiXHU9XqMVY5Al2kydKbzTL7GYLFcLHzvDyak17ubJmtmhuxN7V1fTxo+K4b4jJfrDeN9uNS2QfhFViDNM=
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com (2603:10b6:208:321::10)
+ by BN8PR10MB3393.namprd10.prod.outlook.com (2603:10b6:408:ca::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.15; Wed, 9 Mar
+ 2022 15:19:05 +0000
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::1b2:b41c:b2f0:c755]) by BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::1b2:b41c:b2f0:c755%7]) with mapi id 15.20.5061.021; Wed, 9 Mar 2022
+ 15:19:05 +0000
+Message-ID: <9fd239df-b066-36da-f27a-5d3231de82ee@oracle.com>
+Date:   Wed, 9 Mar 2022 10:18:57 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.2
+Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
+ swiotlb
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, x86@kernel.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+References: <20220301105311.885699-1-hch@lst.de>
+ <20220301105311.885699-12-hch@lst.de>
+ <6a22ea1e-4823-5c3b-97ee-a29155404a0d@oracle.com>
+ <20220309061840.GA31435@lst.de>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+In-Reply-To: <20220309061840.GA31435@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0212.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::7) To BLAPR10MB5009.namprd10.prod.outlook.com
+ (2603:10b6:208:321::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220307224750.18055-1-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: fb6a8038-0539-4d83-b05f-08da01e025e6
+X-MS-TrafficTypeDiagnostic: BN8PR10MB3393:EE_
+X-Microsoft-Antispam-PRVS: <BN8PR10MB3393E2CBCCE5ABC49F18CFAD8A0A9@BN8PR10MB3393.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1QNkRX/p+GG8mKkn8Q1NVDgS5QikrhZ7/BtpBtCwMk3hMRq+eMVn15qyq6tjn2phAWHBw64SMmlo66fMV2+4i6+KfGMtJIG8i4MTHPQzYOpAVrszRojK0l5Py2NZwg1gwWN7lFX5k8+zJ25kXP6dozz86HngLcvWeK2wdiMhkvh2ucKlYxwzgr3HDt5FjLT+xu7Z+ckaT9YeS4CZb980XBDIsfwVdDFnD0NH9PMufTGCb7EOqdI/jg6RrfBlt0VcopKD4sYTRtU83/HezczZrHK7/VKPVyvKsrrr6DoUHgxOSDyortYfOJ4TNcBzgD+orZ8o9Vo/oSL6ZJ6cDD3F5Ywjj8+2RytHzroj5ABqhWOmb9AiK2zS0nKalQPuuOzx+7CAqoAfjlpdidwJOsrssB9Scmh8ViIadgnOm7QUD18EZzwAkGXGXwDHEM2gXW9qEwRd9UWDgVpU+mYzbxPBDdX4XuzorZInUFmMZjNzRbsvH7hedSMGDtgtObRXEQ5kS6X11JtFI2Ew2IEDLs36mfq/8qegstfwbGBLKDni7JDqq/i7un54GBfLqR5TcvEzdUhVrOy8NHHp/qwQhjtzPDJGecHPF1zNZrNoA15eKjwBrVICWTUEuIy1irzNzKxdSVGm9EqzgALTeAw4GXtKPoqjBYc/TF2PD+Nd8+ewko95XnkHmq+QcMFR5sl5lEB1XJzthUc2wiEhbJq4qWRqA67EdAwO1xMeZDsgkAsiqV85kpQA/SGrG1W0DLcQvNVh
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5009.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(26005)(36756003)(53546011)(6486002)(31696002)(38100700002)(83380400001)(508600001)(6666004)(2906002)(2616005)(6506007)(6512007)(31686004)(186003)(6916009)(86362001)(316002)(66946007)(66476007)(66556008)(54906003)(7416002)(5660300002)(8936002)(4326008)(8676002)(44832011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b0s5cGhaWkl6Sk5LZDhqS1RBK3Y0YWtzREh0bUY4cXJCeVBkcUo3K0pSNzZi?=
+ =?utf-8?B?dVd5QVJsTXhRYWpGamtMbXRCNnN4czFmQmlpZDArUHpaNHdWdEJ5dDlDVTdw?=
+ =?utf-8?B?c2tGbjBTemZ6NFh4ZDJlR3orODZicllhdmx3Mk5XaXFtTkNmVmlDTkJaVVN3?=
+ =?utf-8?B?UmVlUU4veEt0dWRoS1UvZjQrazN5Q0dzbFlUSUV1b2Y1bFQ4VFVMNmVIL2wx?=
+ =?utf-8?B?NVZwVExFTnpRbVBpeDJCcjFJdDZZNFZaVFJ6NGJrKzlkWlN3THNDQ0dnU25o?=
+ =?utf-8?B?aDh2dUE5ZTltMlM5WDBiZld3K1FiT01iUUxROS83UDNad2YyU0Z5QVlOOEl0?=
+ =?utf-8?B?bTNqTDVxTTBpczlYR0RGRW4vTmlqWmpFbTQwZ2t6SUdpS0ZrRnZ1aEwyalBn?=
+ =?utf-8?B?S1l1ZUhhZUNINTV0ekQwL2s4aFVucVRBb2JmaHRlZzlpcS9mUGM3dG9zZFo3?=
+ =?utf-8?B?NEUyUVFXdnFLZmhET2d4b056WHhUWHRmeVptVWt1U0RxaTBvNGFmTDVWUzR1?=
+ =?utf-8?B?NnpKbTBVTHpjRS9LNVJ5dVFTR0l1K1JaTFN0VWhudTFHMkRhRU1oVmtrQ1pz?=
+ =?utf-8?B?OGplak5QZ2F2Y0FyVS9NcDRxaHR1M3hPU3UzRWZRLzZPczhvd3FxcWNXdXJa?=
+ =?utf-8?B?V0dwcVl3cXZPdThmcG5nRGxqZy82MGF6M1dPZTVDdjFXdG5XZjNaU3VDd0tS?=
+ =?utf-8?B?aGVMOFBmZEVQdVFydCtBVk52YmpYenpnVFRhRkxPSWZjY1NJYVIwNHNSeGlR?=
+ =?utf-8?B?OGlhS1BNODBTL1NWTzd1MnBlc2lpVEFGSWR5STFTbHlVNHcwZkhhWXNvaTdx?=
+ =?utf-8?B?SzBMRkprZEx2RXF3c3psSHZKOGxSN0pxbk9hMmFsWUxmUlFLczRMVytKcXM4?=
+ =?utf-8?B?ejc2VFRLZkRoUDZqSlR4M1hLMk1MZzVqeFpJU0FpeUUxRlJ0dVA3enJ5T2xM?=
+ =?utf-8?B?RjZUOE5MelNpVDg4TlFjQ3QxSzVBNStmVGVRQndDLzkrVWVNa3J4SFFRcWlS?=
+ =?utf-8?B?cUtGKzl5eUMwcG5wQ0hIeExsT245eEVaZzg4UDBCRHFLQTlwZkJNQTFDVUtX?=
+ =?utf-8?B?OERQc3h1K0Q0M3p4Y1ZUUHdpcDAybGpnVWJhZDJDNm9yeGs3bUxvaFNFRUZJ?=
+ =?utf-8?B?eVB5bW9BaEx4OFNtM2JMN3lTd0k3S2tYakUxL1lrMTFlY0xpRGg4QnZLUHRO?=
+ =?utf-8?B?cThBS2F5SnVRVHROM09sYnFDUWgyVzFTNkNVZWFtRnMzdkRkdDB2ZUFPeUUv?=
+ =?utf-8?B?MHN6cXUrQUUxQWlrZG05U0RTRlI5NUtjK1FodUxDU0tYbzQ2VEkvWEhiQWRP?=
+ =?utf-8?B?bU9SM05CL3VLZjVlZTRMZUJTUHl0c3VRbzZ0WFZOT3h6SXNndzh6cUF5c3Zu?=
+ =?utf-8?B?dUxtU21meXV6ZmswVmx3VDkwOWk5Y2VKWHpabzJsdGdTcjJYeFFlaWo2SWFI?=
+ =?utf-8?B?eUgzVkp3TEl3d1BtbldyalNwVytIdUg1blJWbndEL1l2cDUzTUROSTFlVWlB?=
+ =?utf-8?B?OTFvYU50bUc4c3BpZTVpcXhNVWdTS1g1N2VZOWR4SmJIWU8xWU00dXBSYVdO?=
+ =?utf-8?B?NHl5ZUZ6UnBRcTFkK0tkVkxzN0J6SWRqMDBjMUNkTWJJSjVFSXZiRnYxUEg5?=
+ =?utf-8?B?RjlMam9Vb3E1T2tFMmJZaUdWL0ZkaEFHWWQxcVVCSHQvNjBLeWUra24xOWpi?=
+ =?utf-8?B?VFVCKzUxY0haU1RYbFJPa2hxZkg2cUhxRjBKekdGWDRLUlR1Mzh1WkVSV0tR?=
+ =?utf-8?B?M2U5WEp2N3RtZ2tVc3VEeU1oT3ZDR3VhbERSWE5vUExqZXBZdlVob1F5VENJ?=
+ =?utf-8?B?ekRaV2hSU3ljN0Nhd1h2MHJVUXJ5RjhhczlRYWJEUnYyM1cwdjNxdWRPTzZ1?=
+ =?utf-8?B?ZVBLS2gycVVLOGEya0M2V1gvVnJUL3JMdDVuV0N5OHpvUTRvdVMzOUdtOEIw?=
+ =?utf-8?B?UU9Ud2M3bWRwVlR5ejVwSXRCSHdqOEh1dmMrOTJ0QkY1UllsQkxYMEFMT2hV?=
+ =?utf-8?B?eTViWTdzWmZNd2FmTnF4QTdhR3NLQnJneEhiaUNGWE9WQkJ1aFN5MXN6cHcx?=
+ =?utf-8?B?S1N5R2JrWWU3Sk1COFhCNCsrUHFsaHFIZWpoV3I0SWcwWWRRWUE4ZzR6K1BX?=
+ =?utf-8?B?V0luYnZZVTBlVys1YytxRjVKQXlwR1gxRWdKVllZVWtVZzlzendBUDZxOTlD?=
+ =?utf-8?B?VGFNa1BadDZMR2xLeTZ0ejJOanlackc5UXFqcUxWNWtOK3NLZzJqdWVQRUV3?=
+ =?utf-8?Q?TugvA2MvwI39/l2rQ9CjmMwL0j3PMNKFcFquqwWvcM=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb6a8038-0539-4d83-b05f-08da01e025e6
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5009.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2022 15:19:04.9325
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C+DD9S6tdroI373tssDi2EgvnipQGchDK8a5RzpziOozDroVU4+ycD29E1J8y8PmXwyoU0Aj37uOG+9iOO2DZ/AizdjyTMty/uj3n+/YBJU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3393
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10281 signatures=692062
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=670 spamscore=0
+ phishscore=0 bulkscore=0 adultscore=0 malwarescore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2203090085
+X-Proofpoint-ORIG-GUID: WIi58lydhaEBuwimINUF8pWYN2lXAfqV
+X-Proofpoint-GUID: WIi58lydhaEBuwimINUF8pWYN2lXAfqV
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Frank
 
-On Mon, Mar 07, 2022 at 04:47:45PM -0600, Frank Li wrote:
-> "struct dw_edma_chip" contains an internal structure "struct dw_edma" that is
-> used by the eDMA core internally. This structure should not be touched
-> by the eDMA controller drivers themselves. But currently, the eDMA
-> controller drivers like "dw-edma-pci" allocates and populates this
-> internal structure then passes it on to eDMA core. The eDMA core further
-> populates the structure and uses it. This is wrong!
-> 
-> Hence, move all the "struct dw_edma" specifics from controller drivers
-> to the eDMA core.
+On 3/9/22 1:18 AM, Christoph Hellwig wrote:
+> On Tue, Mar 08, 2022 at 04:38:21PM -0500, Boris Ostrovsky wrote:
+>> On 3/1/22 5:53 AM, Christoph Hellwig wrote:
+>>> Allow to pass a remap argument to the swiotlb initialization functions
+>>> to handle the Xen/x86 remap case.  ARM/ARM64 never did any remapping
+>>> from xen_swiotlb_fixup, so we don't even need that quirk.
+>>
+>> Any chance this patch could be split? Lots of things are happening here and it's somewhat hard to review. (Patch 7 too BTW but I think I managed to get through it)
+> What would be your preferred split?
 
-Thanks for the patchset. Alas it has just drawn my attention on v3
-stage, otherwise I would have given to you my thoughts stright away on
-v1. Anyway first of all a cover letter would be very much appropriate
-to have a general notion about all the changes introduced in the set.
 
-Secondly I've just been working on adding the eDMA platform support
-myself, so you have been just about a week ahead of me submitting my
-changes.  My work contains some of the modifications done by you (but
-have some additional fixes too) so I'll need to rebase it on top of
-your patchset when it's finished. Anyway am I understand correctly,
-that you've also been working on the DW PCIe driver alteration so one
-would properly initialize the eDMA-chip data structure? If so have you
-sent the patchset already?  Could you give me a link and add me to Cc
-in the emailing thread? (That's where the cover letter with all the
-info and related patchsets would be very helpful.)
+swiotlb_init() rework to be done separately?
 
-Thirdly regarding this patch. Your modification is mainly correct, but
-I would suggest to change the concept. Instead of needlessly converting
-the code to using the dw_edma_chip structure pointer within the DW eDMA
-driver, it would be much easier in modification and more logical to
-keep using the struct dw_edma pointer. Especially seeing dw_edma
-structure is going to be a pure private data. So to speak what I would
-suggest is to have the next pointers setup:
 
-include/linux/dma/edma.h:
-struct dw_edma_chip {
-	/* drop struct dw_edma *dw; */
-};
+>
+>>> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
+>>> index e0def4b1c3181..2f2c468acb955 100644
+>>> --- a/arch/x86/kernel/pci-dma.c
+>>> +++ b/arch/x86/kernel/pci-dma.c
+>>> @@ -71,15 +71,12 @@ static inline void __init pci_swiotlb_detect(void)
+>>>    #endif /* CONFIG_SWIOTLB */
+>>>      #ifdef CONFIG_SWIOTLB_XEN
+>>> -static bool xen_swiotlb;
+>>> -
+>>>    static void __init pci_xen_swiotlb_init(void)
+>>>    {
+>>>    	if (!xen_initial_domain() && !x86_swiotlb_enable)
+>>>    		return;
+>>
+>> Now that there is a single call site for this routine I think this check can be dropped. We are only called here for xen_initial_domain()==true.
+> The callsite just checks xen_pv_domain() and itself is called
+> unconditionally during initialization.
 
-drivers/dma/dw-edma/dw-edma-core.h:
-struct dw_edma {
-	const struct dw_edma_chip *chip;
-};
 
-struct dw_edma_chan {
-	struct dw_edma *dw;
-};
+Oh, right, nevermind. *pv* domain.
 
-Thus we'll have a cleaner concept here:
-struct dw_edma_chip - DW eDMA controller descriptor, defined and
-initialized in the client platform drivers. Can be static and const in
-general (which in your approach is impossible).
-struct dw_edma - pure DW eDMA driver private data. It will be used
-the within the local driver only and won't be seen outside.
 
-Thus you won't need an almost a half of the modifications below,
-would provide a cleaner interface, would support the const
-static DW eDMA chip info objects.
+-boris
 
-More comments regarding the suggested approach and some additional
-notes are below.
-
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> 
-> Resend added dmaengine@vger.kernel.org
-> 
-> Change from v2 to v3
->  - none
-> Change from v1 to v2
->  - rework commit message
->  - remove duplicate field in struct dw_edma
-> 
->  drivers/dma/dw-edma/dw-edma-core.c       |  91 +++++-----
->  drivers/dma/dw-edma/dw-edma-core.h       |  30 +---
->  drivers/dma/dw-edma/dw-edma-v0-core.c    | 206 ++++++++++++-----------
->  drivers/dma/dw-edma/dw-edma-v0-core.h    |   8 +-
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c |  37 ++--
->  include/linux/dma/edma.h                 |  47 +++++-
->  6 files changed, 230 insertions(+), 189 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index 53289927dd0d6..0cb66434f9e14 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -65,7 +65,7 @@ static struct dw_edma_burst *dw_edma_alloc_burst(struct dw_edma_chunk *chunk)
->  static struct dw_edma_chunk *dw_edma_alloc_chunk(struct dw_edma_desc *desc)
->  {
->  	struct dw_edma_chan *chan = desc->chan;
-
-> -	struct dw_edma *dw = chan->chip->dw;
-> +	struct dw_edma_chip *chip = chan->chip;
-
-If you do as I suggest you won't need to modify this part.
-
->  	struct dw_edma_chunk *chunk;
->  
->  	chunk = kzalloc(sizeof(*chunk), GFP_NOWAIT);
-> @@ -82,11 +82,11 @@ static struct dw_edma_chunk *dw_edma_alloc_chunk(struct dw_edma_desc *desc)
->  	 */
->  	chunk->cb = !(desc->chunks_alloc % 2);
->  	if (chan->dir == EDMA_DIR_WRITE) {
-
-> -		chunk->ll_region.paddr = dw->ll_region_wr[chan->id].paddr;
-> -		chunk->ll_region.vaddr = dw->ll_region_wr[chan->id].vaddr;
-> +		chunk->ll_region.paddr = chip->ll_region_wr[chan->id].paddr;
-> +		chunk->ll_region.vaddr = chip->ll_region_wr[chan->id].vaddr;
->  	} else {
-> -		chunk->ll_region.paddr = dw->ll_region_rd[chan->id].paddr;
-> -		chunk->ll_region.vaddr = dw->ll_region_rd[chan->id].vaddr;
-> +		chunk->ll_region.paddr = chip->ll_region_rd[chan->id].paddr;
-> +		chunk->ll_region.vaddr = chip->ll_region_rd[chan->id].vaddr;
->  	}
-
-Here you would just need to change the pointers "sandwich" to
-"dw->chip->...".
-
->  
->  	if (desc->chunk) {
-> @@ -601,7 +601,8 @@ static void dw_edma_abort_interrupt(struct dw_edma_chan *chan)
->  static irqreturn_t dw_edma_interrupt(int irq, void *data, bool write)
->  {
->  	struct dw_edma_irq *dw_irq = data;
-
-> -	struct dw_edma *dw = dw_irq->dw;
-> +	struct dw_edma_chip *chip = dw_irq->chip;
-> +	struct dw_edma *dw = chip->dw;
-
-This also would have been unneeded, since the method relies on the data
-from the dw_edma structure.
-
->  	unsigned long total, pos, val;
->  	unsigned long off;
->  	u32 mask;
-> @@ -616,7 +617,7 @@ static irqreturn_t dw_edma_interrupt(int irq, void *data, bool write)
->  		mask = dw_irq->rd_mask;
->  	}
->  
-
-> -	val = dw_edma_v0_core_status_done_int(dw, write ?
-> +	val = dw_edma_v0_core_status_done_int(chip, write ?
->  							  EDMA_DIR_WRITE :
->  							  EDMA_DIR_READ);
->  	val &= mask;
-> @@ -626,7 +627,7 @@ static irqreturn_t dw_edma_interrupt(int irq, void *data, bool write)
->  		dw_edma_done_interrupt(chan);
->  	}
->  
-> -	val = dw_edma_v0_core_status_abort_int(dw, write ?
-> +	val = dw_edma_v0_core_status_abort_int(chip, write ?
->  							   EDMA_DIR_WRITE :
->  							   EDMA_DIR_READ);
-
-This won't be needed.
-
->  	val &= mask;
-> @@ -718,7 +719,7 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
->  	}
->  
->  	INIT_LIST_HEAD(&dma->channels);
-
-> -	for (j = 0; (alloc || dw->nr_irqs == 1) && j < cnt; j++, i++) {
-> +	for (j = 0; (alloc || chip->nr_irqs == 1) && j < cnt; j++, i++) {
->  		chan = &dw->chan[i];
->  
->  		dt_region = devm_kzalloc(dev, sizeof(*dt_region), GFP_KERNEL);
-> @@ -735,15 +736,15 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
->  		chan->status = EDMA_ST_IDLE;
->  
->  		if (write)
-> -			chan->ll_max = (dw->ll_region_wr[j].sz / EDMA_LL_SZ);
-> +			chan->ll_max = (chip->ll_region_wr[j].sz / EDMA_LL_SZ);
->  		else
-> -			chan->ll_max = (dw->ll_region_rd[j].sz / EDMA_LL_SZ);
-> +			chan->ll_max = (chip->ll_region_rd[j].sz / EDMA_LL_SZ);
->  		chan->ll_max -= 1;
->  
->  		dev_vdbg(dev, "L. List:\tChannel %s[%u] max_cnt=%u\n",
->  			 write ? "write" : "read", j, chan->ll_max);
->  
-> -		if (dw->nr_irqs == 1)
-> +		if (chip->nr_irqs == 1)
-
-This would have been changed to using the "dw->chip->..." pattern.
-
->  			pos = 0;
->  		else
->  			pos = off_alloc + (j % alloc);
-> @@ -755,7 +756,7 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
->  		else
->  			irq->rd_mask |= BIT(j);
->  
-
-> -		irq->dw = dw;
-> +		irq->chip = chip;
-
-Won't be needed.
-
->  		memcpy(&chan->msi, &irq->msi, sizeof(chan->msi));
->  
->  		dev_vdbg(dev, "MSI:\t\tChannel %s[%u] addr=0x%.8x%.8x, data=0x%.8x\n",
-> @@ -767,13 +768,13 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
->  		vchan_init(&chan->vc, dma);
->  
->  		if (write) {
-
-> -			dt_region->paddr = dw->dt_region_wr[j].paddr;
-> -			dt_region->vaddr = dw->dt_region_wr[j].vaddr;
-> -			dt_region->sz = dw->dt_region_wr[j].sz;
-> +			dt_region->paddr = chip->dt_region_wr[j].paddr;
-> +			dt_region->vaddr = chip->dt_region_wr[j].vaddr;
-> +			dt_region->sz = chip->dt_region_wr[j].sz;
->  		} else {
-> -			dt_region->paddr = dw->dt_region_rd[j].paddr;
-> -			dt_region->vaddr = dw->dt_region_rd[j].vaddr;
-> -			dt_region->sz = dw->dt_region_rd[j].sz;
-> +			dt_region->paddr = chip->dt_region_rd[j].paddr;
-> +			dt_region->vaddr = chip->dt_region_rd[j].vaddr;
-> +			dt_region->sz = chip->dt_region_rd[j].sz;
-
-Just replace with "dw->chip->..."
-
->  		}
->  
->  		dw_edma_v0_core_device_config(chan);
-> @@ -840,16 +841,16 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
->  
->  	ch_cnt = dw->wr_ch_cnt + dw->rd_ch_cnt;
->  
-
-> -	if (dw->nr_irqs < 1)
-> +	if (chip->nr_irqs < 1)
->  		return -EINVAL;
->  
-> -	if (dw->nr_irqs == 1) {
-> +	if (chip->nr_irqs == 1) {
->  		/* Common IRQ shared among all channels */
-> -		irq = dw->ops->irq_vector(dev, 0);
-> +		irq = chip->ops->irq_vector(dev, 0);
->  		err = request_irq(irq, dw_edma_interrupt_common,
->  				  IRQF_SHARED, dw->name, &dw->irq[0]);
->  		if (err) {
-> -			dw->nr_irqs = 0;
-> +			chip->nr_irqs = 0;
->  			return err;
->  		}
->  
-> @@ -857,7 +858,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
->  			get_cached_msi_msg(irq, &dw->irq[0].msi);
->  	} else {
->  		/* Distribute IRQs equally among all channels */
-> -		int tmp = dw->nr_irqs;
-> +		int tmp = chip->nr_irqs;
->  
->  		while (tmp && (*wr_alloc + *rd_alloc) < ch_cnt) {
->  			dw_edma_dec_irq_alloc(&tmp, wr_alloc, dw->wr_ch_cnt);
-> @@ -868,7 +869,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
->  		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
->  
->  		for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
-> -			irq = dw->ops->irq_vector(dev, i);
-> +			irq = chip->ops->irq_vector(dev, i);
->  			err = request_irq(irq,
->  					  i < *wr_alloc ?
->  						dw_edma_interrupt_write :
-> @@ -876,7 +877,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
->  					  IRQF_SHARED, dw->name,
->  					  &dw->irq[i]);
->  			if (err) {
-> -				dw->nr_irqs = i;
-> +				chip->nr_irqs = i;
->  				return err;
->  			}
->  
-> @@ -884,7 +885,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
->  				get_cached_msi_msg(irq, &dw->irq[i].msi);
->  		}
->  
-> -		dw->nr_irqs = i;
-> +		chip->nr_irqs = i;
-
-ditto
-
->  	}
->  
->  	return err;
-> @@ -905,18 +906,24 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  	if (!dev)
->  		return -EINVAL;
->  
-> -	dw = chip->dw;
-> -	if (!dw || !dw->irq || !dw->ops || !dw->ops->irq_vector)
-> +	dw = devm_kzalloc(dev, sizeof(*dw), GFP_KERNEL);
-> +	if (!dw)
-> +		return -ENOMEM;
-> +
-
-> +	chip->dw = dw;
-
-Convert this to "dw->chip = chip".
-
-> +
-> +	if (!chip->nr_irqs || !chip->ops)
->  		return -EINVAL;
-
-Move this to be performed before the pointer initialization, since
-it's pointless to initialize anything if invalid data is passed.
-You can join it in with the "if (!dev)" statement.
-
->  
->  	raw_spin_lock_init(&dw->lock);
->  
-> -	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt,
-> -			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
-> +
-
-> +	dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
-> +			      dw_edma_v0_core_ch_count(chip, EDMA_DIR_WRITE));
->  	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
->  
-> -	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt,
-> -			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
-> +	dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
-
-Regarding the field naming please see my comment to the dw_edma_chip
-structure.
-
-> +			      dw_edma_v0_core_ch_count(chip, EDMA_DIR_READ));
->  	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
->  
->  	if (!dw->wr_ch_cnt && !dw->rd_ch_cnt)
-> @@ -934,7 +941,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%d", chip->id);
->  
->  	/* Disable eDMA, only to establish the ideal initial conditions */
-
-> -	dw_edma_v0_core_off(dw);
-> +	dw_edma_v0_core_off(chip);
-> +
-> +	dw->irq = devm_kcalloc(dev, chip->nr_irqs, sizeof(*dw->irq), GFP_KERNEL);
-> +	if (!dw->irq)
-> +		return -ENOMEM;
-
-ditto
-
->  
->  	/* Request IRQs */
->  	err = dw_edma_irq_request(chip, &wr_alloc, &rd_alloc);
-> @@ -960,10 +971,10 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  	return 0;
->  
->  err_irq_free:
-
-> -	for (i = (dw->nr_irqs - 1); i >= 0; i--)
-> -		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
-> +	for (i = (chip->nr_irqs - 1); i >= 0; i--)
-> +		free_irq(chip->ops->irq_vector(dev, i), &dw->irq[i]);
->  
-> -	dw->nr_irqs = 0;
-> +	chip->nr_irqs = 0;
-
-dw->chip->...
-
->  
->  	return err;
->  }
-> @@ -977,11 +988,11 @@ int dw_edma_remove(struct dw_edma_chip *chip)
->  	int i;
->  
->  	/* Disable eDMA */
-
-> -	dw_edma_v0_core_off(dw);
-> +	dw_edma_v0_core_off(chip);
-
-Won't need this.
-
->  
->  	/* Free irqs */
-> -	for (i = (dw->nr_irqs - 1); i >= 0; i--)
-> -		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
-> +	for (i = (chip->nr_irqs - 1); i >= 0; i--)
-> +		free_irq(chip->ops->irq_vector(dev, i), &dw->irq[i]);
-
-Use "dw->chip->..."
-
->  
->  	/* Power management */
->  	pm_runtime_disable(dev);
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> index 60316d408c3e0..885f6719c9462 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> @@ -15,20 +15,12 @@
->  #include "../virt-dma.h"
->  
->  #define EDMA_LL_SZ					24
-> -#define EDMA_MAX_WR_CH					8
-> -#define EDMA_MAX_RD_CH					8
->  
->  enum dw_edma_dir {
->  	EDMA_DIR_WRITE = 0,
->  	EDMA_DIR_READ
->  };
->  
-> -enum dw_edma_map_format {
-> -	EDMA_MF_EDMA_LEGACY = 0x0,
-> -	EDMA_MF_EDMA_UNROLL = 0x1,
-> -	EDMA_MF_HDMA_COMPAT = 0x5
-> -};
-> -
->  enum dw_edma_request {
->  	EDMA_REQ_NONE = 0,
->  	EDMA_REQ_STOP,
-> @@ -57,12 +49,6 @@ struct dw_edma_burst {
->  	u32				sz;
->  };
->  
-> -struct dw_edma_region {
-> -	phys_addr_t			paddr;
-> -	void				__iomem *vaddr;
-> -	size_t				sz;
-> -};
-> -
->  struct dw_edma_chunk {
->  	struct list_head		list;
->  	struct dw_edma_chan		*chan;
-> @@ -106,11 +92,7 @@ struct dw_edma_irq {
->  	struct msi_msg                  msi;
->  	u32				wr_mask;
->  	u32				rd_mask;
-> -	struct dw_edma			*dw;
-> -};
-> -
-> -struct dw_edma_core_ops {
-> -	int	(*irq_vector)(struct device *dev, unsigned int nr);
-> +	struct dw_edma_chip		*chip;
->  };
->  
->  struct dw_edma {
-> @@ -122,19 +104,9 @@ struct dw_edma {
->  	struct dma_device		rd_edma;
->  	u16				rd_ch_cnt;
->  
-
-> -	struct dw_edma_region		rg_region;	/* Registers */
-
-AFAICS you replaced this with void __iomem *reg_base further in the
-dw_edma_chip structure. Even though I do agree with this modification,
-it's conceptually right, but the alteration is unrelated to the patch
-topic. So please unpin it to a dedicated patch placed before this one
-in the series.
-
-> -	struct dw_edma_region		ll_region_wr[EDMA_MAX_WR_CH];
-> -	struct dw_edma_region		ll_region_rd[EDMA_MAX_RD_CH];
-> -	struct dw_edma_region		dt_region_wr[EDMA_MAX_WR_CH];
-> -	struct dw_edma_region		dt_region_rd[EDMA_MAX_RD_CH];
-> -
->  	struct dw_edma_irq		*irq;
-> -	int				nr_irqs;
-> -
-> -	enum dw_edma_map_format		mf;
->  
->  	struct dw_edma_chan		*chan;
-> -	const struct dw_edma_core_ops	*ops;
->  
->  	raw_spinlock_t			lock;		/* Only for legacy */
->  #ifdef CONFIG_DEBUG_FS
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> index 329fc2e57b703..6e2f83e31a03a 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> @@ -23,92 +23,94 @@ enum dw_edma_control {
->  	DW_EDMA_V0_LLE					= BIT(9),
->  };
->  
-
-> -static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
-> +static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma_chip *chip)
->  {
-> -	return dw->rg_region.vaddr;
-> +	return chip->reg_base;
->  }
-
-Just use "dw->chip->reg_base" here and you won't need to introduce the
-most of the modifications below, since all of the them is connected
-with the __dw_regs() function prototype change.
-
->  
-> -#define SET_32(dw, name, value)				\
-> -	writel(value, &(__dw_regs(dw)->name))
-> +#define SET_32(chip, name, value)				\
-> +	writel(value, &(__dw_regs(chip)->name))
->  
-> -#define GET_32(dw, name)				\
-> -	readl(&(__dw_regs(dw)->name))
-> +#define GET_32(chip, name)				\
-> +	readl(&(__dw_regs(chip)->name))
->  
-> -#define SET_RW_32(dw, dir, name, value)			\
-> +#define SET_RW_32(chip, dir, name, value)			\
->  	do {						\
->  		if ((dir) == EDMA_DIR_WRITE)		\
-> -			SET_32(dw, wr_##name, value);	\
-> +			SET_32(chip, wr_##name, value);	\
->  		else					\
-> -			SET_32(dw, rd_##name, value);	\
-> +			SET_32(chip, rd_##name, value);	\
->  	} while (0)
->  
-> -#define GET_RW_32(dw, dir, name)			\
-> +#define GET_RW_32(chip, dir, name)			\
->  	((dir) == EDMA_DIR_WRITE			\
-> -	  ? GET_32(dw, wr_##name)			\
-> -	  : GET_32(dw, rd_##name))
-> +	  ? GET_32(chip, wr_##name)			\
-> +	  : GET_32(chip, rd_##name))
->  
-> -#define SET_BOTH_32(dw, name, value)			\
-> +#define SET_BOTH_32(chip, name, value)			\
->  	do {						\
-> -		SET_32(dw, wr_##name, value);		\
-> -		SET_32(dw, rd_##name, value);		\
-> +		SET_32(chip, wr_##name, value);		\
-> +		SET_32(chip, rd_##name, value);		\
->  	} while (0)
->  
->  #ifdef CONFIG_64BIT
->  
-> -#define SET_64(dw, name, value)				\
-> -	writeq(value, &(__dw_regs(dw)->name))
-> +#define SET_64(chip, name, value)				\
-> +	writeq(value, &(__dw_regs(chip)->name))
->  
-> -#define GET_64(dw, name)				\
-> -	readq(&(__dw_regs(dw)->name))
-> +#define GET_64(chip, name)				\
-> +	readq(&(__dw_regs(chip)->name))
->  
-> -#define SET_RW_64(dw, dir, name, value)			\
-> +#define SET_RW_64(chip, dir, name, value)			\
->  	do {						\
->  		if ((dir) == EDMA_DIR_WRITE)		\
-> -			SET_64(dw, wr_##name, value);	\
-> +			SET_64(chip, wr_##name, value);	\
->  		else					\
-> -			SET_64(dw, rd_##name, value);	\
-> +			SET_64(chip, rd_##name, value);	\
->  	} while (0)
->  
-> -#define GET_RW_64(dw, dir, name)			\
-> +#define GET_RW_64(chip, dir, name)			\
->  	((dir) == EDMA_DIR_WRITE			\
-> -	  ? GET_64(dw, wr_##name)			\
-> -	  : GET_64(dw, rd_##name))
-> +	  ? GET_64(chip, wr_##name)			\
-> +	  : GET_64(chip, rd_##name))
->  
-> -#define SET_BOTH_64(dw, name, value)			\
-> +#define SET_BOTH_64(chip, name, value)			\
->  	do {						\
-> -		SET_64(dw, wr_##name, value);		\
-> -		SET_64(dw, rd_##name, value);		\
-> +		SET_64(chip, wr_##name, value);		\
-> +		SET_64(chip, rd_##name, value);		\
->  	} while (0)
->  
->  #endif /* CONFIG_64BIT */
->  
-> -#define SET_COMPAT(dw, name, value)			\
-> -	writel(value, &(__dw_regs(dw)->type.unroll.name))
-> +#define SET_COMPAT(chip, name, value)			\
-> +	writel(value, &(__dw_regs(chip)->type.unroll.name))
->  
-> -#define SET_RW_COMPAT(dw, dir, name, value)		\
-> +#define SET_RW_COMPAT(chip, dir, name, value)		\
->  	do {						\
->  		if ((dir) == EDMA_DIR_WRITE)		\
-> -			SET_COMPAT(dw, wr_##name, value); \
-> +			SET_COMPAT(chip, wr_##name, value); \
->  		else					\
-> -			SET_COMPAT(dw, rd_##name, value); \
-> +			SET_COMPAT(chip, rd_##name, value); \
->  	} while (0)
->  
->  static inline struct dw_edma_v0_ch_regs __iomem *
-> -__dw_ch_regs(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch)
-> +__dw_ch_regs(struct dw_edma_chip *chip, enum dw_edma_dir dir, u16 ch)
->  {
-> -	if (dw->mf == EDMA_MF_EDMA_LEGACY)
-> -		return &(__dw_regs(dw)->type.legacy.ch);
-> +	if (chip->mf == EDMA_MF_EDMA_LEGACY)
-> +		return &(__dw_regs(chip)->type.legacy.ch);
->  
->  	if (dir == EDMA_DIR_WRITE)
-> -		return &__dw_regs(dw)->type.unroll.ch[ch].wr;
-> +		return &__dw_regs(chip)->type.unroll.ch[ch].wr;
->  
-> -	return &__dw_regs(dw)->type.unroll.ch[ch].rd;
-> +	return &__dw_regs(chip)->type.unroll.ch[ch].rd;
->  }
->  
-> -static inline void writel_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
-> +static inline void writel_ch(struct dw_edma_chip *chip, enum dw_edma_dir dir, u16 ch,
->  			     u32 value, void __iomem *addr)
->  {
-> -	if (dw->mf == EDMA_MF_EDMA_LEGACY) {
-> +	struct dw_edma *dw = chip->dw;
-> +
-> +	if (chip->mf == EDMA_MF_EDMA_LEGACY) {
->  		u32 viewport_sel;
->  		unsigned long flags;
->  
-> @@ -119,7 +121,7 @@ static inline void writel_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  			viewport_sel |= BIT(31);
->  
->  		writel(viewport_sel,
-> -		       &(__dw_regs(dw)->type.legacy.viewport_sel));
-> +		       &(__dw_regs(chip)->type.legacy.viewport_sel));
->  		writel(value, addr);
->  
->  		raw_spin_unlock_irqrestore(&dw->lock, flags);
-> @@ -128,12 +130,13 @@ static inline void writel_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  	}
->  }
->  
-> -static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
-> +static inline u32 readl_ch(struct dw_edma_chip *chip, enum dw_edma_dir dir, u16 ch,
->  			   const void __iomem *addr)
->  {
-> +	struct dw_edma *dw = chip->dw;
->  	u32 value;
->  
-> -	if (dw->mf == EDMA_MF_EDMA_LEGACY) {
-> +	if (chip->mf == EDMA_MF_EDMA_LEGACY) {
->  		u32 viewport_sel;
->  		unsigned long flags;
->  
-> @@ -144,7 +147,7 @@ static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  			viewport_sel |= BIT(31);
->  
->  		writel(viewport_sel,
-> -		       &(__dw_regs(dw)->type.legacy.viewport_sel));
-> +		       &(__dw_regs(chip)->type.legacy.viewport_sel));
->  		value = readl(addr);
->  
->  		raw_spin_unlock_irqrestore(&dw->lock, flags);
-> @@ -166,10 +169,12 @@ static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  
->  #ifdef CONFIG_64BIT
->  
-> -static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
-> +static inline void writeq_ch(struct dw_edma_chip *chip, enum dw_edma_dir dir, u16 ch,
->  			     u64 value, void __iomem *addr)
->  {
-> -	if (dw->mf == EDMA_MF_EDMA_LEGACY) {
-> +	struct dw_edma *dw = chip->dw;
-> +
-> +	if (chip->mf == EDMA_MF_EDMA_LEGACY) {
->  		u32 viewport_sel;
->  		unsigned long flags;
->  
-> @@ -180,7 +185,7 @@ static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  			viewport_sel |= BIT(31);
->  
->  		writel(viewport_sel,
-> -		       &(__dw_regs(dw)->type.legacy.viewport_sel));
-> +		       &(__dw_regs(chip)->type.legacy.viewport_sel));
->  		writeq(value, addr);
->  
->  		raw_spin_unlock_irqrestore(&dw->lock, flags);
-> @@ -189,12 +194,13 @@ static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  	}
->  }
->  
-> -static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
-> +static inline u64 readq_ch(struct dw_edma_chip *chip, enum dw_edma_dir dir, u16 ch,
->  			   const void __iomem *addr)
->  {
-> +	struct dw_edma *dw = chip->dw;
->  	u32 value;
->  
-> -	if (dw->mf == EDMA_MF_EDMA_LEGACY) {
-> +	if (chip->mf == EDMA_MF_EDMA_LEGACY) {
->  		u32 viewport_sel;
->  		unsigned long flags;
->  
-> @@ -205,7 +211,7 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  			viewport_sel |= BIT(31);
->  
->  		writel(viewport_sel,
-> -		       &(__dw_regs(dw)->type.legacy.viewport_sel));
-> +		       &(__dw_regs(chip)->type.legacy.viewport_sel));
->  		value = readq(addr);
->  
->  		raw_spin_unlock_irqrestore(&dw->lock, flags);
-> @@ -228,25 +234,25 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  #endif /* CONFIG_64BIT */
->  
->  /* eDMA management callbacks */
-> -void dw_edma_v0_core_off(struct dw_edma *dw)
-> +void dw_edma_v0_core_off(struct dw_edma_chip *chip)
->  {
-> -	SET_BOTH_32(dw, int_mask,
-> +	SET_BOTH_32(chip, int_mask,
->  		    EDMA_V0_DONE_INT_MASK | EDMA_V0_ABORT_INT_MASK);
-> -	SET_BOTH_32(dw, int_clear,
-> +	SET_BOTH_32(chip, int_clear,
->  		    EDMA_V0_DONE_INT_MASK | EDMA_V0_ABORT_INT_MASK);
-> -	SET_BOTH_32(dw, engine_en, 0);
-> +	SET_BOTH_32(chip, engine_en, 0);
->  }
->  
-> -u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
-> +u16 dw_edma_v0_core_ch_count(struct dw_edma_chip *chip, enum dw_edma_dir dir)
->  {
->  	u32 num_ch;
->  
->  	if (dir == EDMA_DIR_WRITE)
->  		num_ch = FIELD_GET(EDMA_V0_WRITE_CH_COUNT_MASK,
-> -				   GET_32(dw, ctrl));
-> +				   GET_32(chip, ctrl));
->  	else
->  		num_ch = FIELD_GET(EDMA_V0_READ_CH_COUNT_MASK,
-> -				   GET_32(dw, ctrl));
-> +				   GET_32(chip, ctrl));
->  
->  	if (num_ch > EDMA_V0_MAX_NR_CH)
->  		num_ch = EDMA_V0_MAX_NR_CH;
-> @@ -256,11 +262,11 @@ u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
-
-So can omit most of the changes from the comment above and up to this
-comment and use "dw->chip->..." where it's required.
-
->  
->  enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
->  {
-
-> -	struct dw_edma *dw = chan->chip->dw;
-> +	struct dw_edma_chip *chip = chan->chip;
-
-Just use "dw = chan->dw" here or directly use "chan->dw" in the
-method.
-
->  	u32 tmp;
->  
->  	tmp = FIELD_GET(EDMA_V0_CH_STATUS_MASK,
-> -			GET_CH_32(dw, chan->dir, chan->id, ch_control1));
-> +			GET_CH_32(chip, chan->dir, chan->id, ch_control1));
->  
->  	if (tmp == 1)
->  		return DMA_IN_PROGRESS;
-> @@ -272,30 +278,30 @@ enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
->  
->  void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan)
->  {
-
-> -	struct dw_edma *dw = chan->chip->dw;
-> +	struct dw_edma_chip *chip = chan->chip;
-
-ditto
-
->  
-> -	SET_RW_32(dw, chan->dir, int_clear,
-> +	SET_RW_32(chip, chan->dir, int_clear,
->  		  FIELD_PREP(EDMA_V0_DONE_INT_MASK, BIT(chan->id)));
->  }
->  
->  void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
->  {
-
-> -	struct dw_edma *dw = chan->chip->dw;
-> +	struct dw_edma_chip *chip = chan->chip;
-
-ditto
-
->  
-
-> -	SET_RW_32(dw, chan->dir, int_clear,
-> +	SET_RW_32(chip, chan->dir, int_clear,
->  		  FIELD_PREP(EDMA_V0_ABORT_INT_MASK, BIT(chan->id)));
->  }
->  
-> -u32 dw_edma_v0_core_status_done_int(struct dw_edma *dw, enum dw_edma_dir dir)
-> +u32 dw_edma_v0_core_status_done_int(struct dw_edma_chip *chip, enum dw_edma_dir dir)
->  {
->  	return FIELD_GET(EDMA_V0_DONE_INT_MASK,
-> -			 GET_RW_32(dw, dir, int_status));
-> +			 GET_RW_32(chip, dir, int_status));
->  }
->  
-> -u32 dw_edma_v0_core_status_abort_int(struct dw_edma *dw, enum dw_edma_dir dir)
-> +u32 dw_edma_v0_core_status_abort_int(struct dw_edma_chip *chip, enum dw_edma_dir dir)
->  {
->  	return FIELD_GET(EDMA_V0_ABORT_INT_MASK,
-> -			 GET_RW_32(dw, dir, int_status));
-> +			 GET_RW_32(chip, dir, int_status));
-
-Won't be needed
-
->  }
->  
->  static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
-> @@ -357,109 +363,109 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
->  void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
->  {
->  	struct dw_edma_chan *chan = chunk->chan;
-
-> -	struct dw_edma *dw = chan->chip->dw;
-> +	struct dw_edma_chip *chip = chan->chip;
-
-Just replace with "dw = chan->dw" or directly use "chan->dw" in the
-method. Thus you can omit the alterations below.
-
->  	u32 tmp;
->  
->  	dw_edma_v0_core_write_chunk(chunk);
->  
->  	if (first) {
->  		/* Enable engine */
-> -		SET_RW_32(dw, chan->dir, engine_en, BIT(0));
-> -		if (dw->mf == EDMA_MF_HDMA_COMPAT) {
-> +		SET_RW_32(chip, chan->dir, engine_en, BIT(0));
-> +		if (chip->mf == EDMA_MF_HDMA_COMPAT) {
->  			switch (chan->id) {
->  			case 0:
-> -				SET_RW_COMPAT(dw, chan->dir, ch0_pwr_en,
-> +				SET_RW_COMPAT(chip, chan->dir, ch0_pwr_en,
->  					      BIT(0));
->  				break;
->  			case 1:
-> -				SET_RW_COMPAT(dw, chan->dir, ch1_pwr_en,
-> +				SET_RW_COMPAT(chip, chan->dir, ch1_pwr_en,
->  					      BIT(0));
->  				break;
->  			case 2:
-> -				SET_RW_COMPAT(dw, chan->dir, ch2_pwr_en,
-> +				SET_RW_COMPAT(chip, chan->dir, ch2_pwr_en,
->  					      BIT(0));
->  				break;
->  			case 3:
-> -				SET_RW_COMPAT(dw, chan->dir, ch3_pwr_en,
-> +				SET_RW_COMPAT(chip, chan->dir, ch3_pwr_en,
->  					      BIT(0));
->  				break;
->  			case 4:
-> -				SET_RW_COMPAT(dw, chan->dir, ch4_pwr_en,
-> +				SET_RW_COMPAT(chip, chan->dir, ch4_pwr_en,
->  					      BIT(0));
->  				break;
->  			case 5:
-> -				SET_RW_COMPAT(dw, chan->dir, ch5_pwr_en,
-> +				SET_RW_COMPAT(chip, chan->dir, ch5_pwr_en,
->  					      BIT(0));
->  				break;
->  			case 6:
-> -				SET_RW_COMPAT(dw, chan->dir, ch6_pwr_en,
-> +				SET_RW_COMPAT(chip, chan->dir, ch6_pwr_en,
->  					      BIT(0));
->  				break;
->  			case 7:
-> -				SET_RW_COMPAT(dw, chan->dir, ch7_pwr_en,
-> +				SET_RW_COMPAT(chip, chan->dir, ch7_pwr_en,
->  					      BIT(0));
->  				break;
->  			}
->  		}
->  		/* Interrupt unmask - done, abort */
-> -		tmp = GET_RW_32(dw, chan->dir, int_mask);
-> +		tmp = GET_RW_32(chip, chan->dir, int_mask);
->  		tmp &= ~FIELD_PREP(EDMA_V0_DONE_INT_MASK, BIT(chan->id));
->  		tmp &= ~FIELD_PREP(EDMA_V0_ABORT_INT_MASK, BIT(chan->id));
-> -		SET_RW_32(dw, chan->dir, int_mask, tmp);
-> +		SET_RW_32(chip, chan->dir, int_mask, tmp);
->  		/* Linked list error */
-> -		tmp = GET_RW_32(dw, chan->dir, linked_list_err_en);
-> +		tmp = GET_RW_32(chip, chan->dir, linked_list_err_en);
->  		tmp |= FIELD_PREP(EDMA_V0_LINKED_LIST_ERR_MASK, BIT(chan->id));
-> -		SET_RW_32(dw, chan->dir, linked_list_err_en, tmp);
-> +		SET_RW_32(chip, chan->dir, linked_list_err_en, tmp);
->  		/* Channel control */
-> -		SET_CH_32(dw, chan->dir, chan->id, ch_control1,
-> +		SET_CH_32(chip, chan->dir, chan->id, ch_control1,
->  			  (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
->  		/* Linked list */
->  		#ifdef CONFIG_64BIT
-> -			SET_CH_64(dw, chan->dir, chan->id, llp.reg,
-> +			SET_CH_64(chip, chan->dir, chan->id, llp.reg,
->  				  chunk->ll_region.paddr);
->  		#else /* CONFIG_64BIT */
-> -			SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
-> +			SET_CH_32(chip, chan->dir, chan->id, llp.lsb,
->  				  lower_32_bits(chunk->ll_region.paddr));
-> -			SET_CH_32(dw, chan->dir, chan->id, llp.msb,
-> +			SET_CH_32(chip, chan->dir, chan->id, llp.msb,
->  				  upper_32_bits(chunk->ll_region.paddr));
->  		#endif /* CONFIG_64BIT */
->  	}
->  	/* Doorbell */
-> -	SET_RW_32(dw, chan->dir, doorbell,
-> +	SET_RW_32(chip, chan->dir, doorbell,
->  		  FIELD_PREP(EDMA_V0_DOORBELL_CH_MASK, chan->id));
->  }
-
-You can drop the changes from the previous comment up to this one.
-
->  
->  int dw_edma_v0_core_device_config(struct dw_edma_chan *chan)
->  {
-
-> -	struct dw_edma *dw = chan->chip->dw;
-> +	struct dw_edma_chip *chip = chan->chip;
-
-Use "chan->dw" here.
-
->  	u32 tmp = 0;
->  
->  	/* MSI done addr - low, high */
-> -	SET_RW_32(dw, chan->dir, done_imwr.lsb, chan->msi.address_lo);
-> -	SET_RW_32(dw, chan->dir, done_imwr.msb, chan->msi.address_hi);
-> +	SET_RW_32(chip, chan->dir, done_imwr.lsb, chan->msi.address_lo);
-> +	SET_RW_32(chip, chan->dir, done_imwr.msb, chan->msi.address_hi);
->  	/* MSI abort addr - low, high */
-> -	SET_RW_32(dw, chan->dir, abort_imwr.lsb, chan->msi.address_lo);
-> -	SET_RW_32(dw, chan->dir, abort_imwr.msb, chan->msi.address_hi);
-> +	SET_RW_32(chip, chan->dir, abort_imwr.lsb, chan->msi.address_lo);
-> +	SET_RW_32(chip, chan->dir, abort_imwr.msb, chan->msi.address_hi);
->  	/* MSI data - low, high */
->  	switch (chan->id) {
->  	case 0:
->  	case 1:
-> -		tmp = GET_RW_32(dw, chan->dir, ch01_imwr_data);
-> +		tmp = GET_RW_32(chip, chan->dir, ch01_imwr_data);
->  		break;
->  
->  	case 2:
->  	case 3:
-> -		tmp = GET_RW_32(dw, chan->dir, ch23_imwr_data);
-> +		tmp = GET_RW_32(chip, chan->dir, ch23_imwr_data);
->  		break;
->  
->  	case 4:
->  	case 5:
-> -		tmp = GET_RW_32(dw, chan->dir, ch45_imwr_data);
-> +		tmp = GET_RW_32(chip, chan->dir, ch45_imwr_data);
->  		break;
->  
->  	case 6:
->  	case 7:
-> -		tmp = GET_RW_32(dw, chan->dir, ch67_imwr_data);
-> +		tmp = GET_RW_32(chip, chan->dir, ch67_imwr_data);
->  		break;
->  	}
->  
-> @@ -478,22 +484,22 @@ int dw_edma_v0_core_device_config(struct dw_edma_chan *chan)
->  	switch (chan->id) {
->  	case 0:
->  	case 1:
-> -		SET_RW_32(dw, chan->dir, ch01_imwr_data, tmp);
-> +		SET_RW_32(chip, chan->dir, ch01_imwr_data, tmp);
->  		break;
->  
->  	case 2:
->  	case 3:
-> -		SET_RW_32(dw, chan->dir, ch23_imwr_data, tmp);
-> +		SET_RW_32(chip, chan->dir, ch23_imwr_data, tmp);
->  		break;
->  
->  	case 4:
->  	case 5:
-> -		SET_RW_32(dw, chan->dir, ch45_imwr_data, tmp);
-> +		SET_RW_32(chip, chan->dir, ch45_imwr_data, tmp);
->  		break;
->  
->  	case 6:
->  	case 7:
-> -		SET_RW_32(dw, chan->dir, ch67_imwr_data, tmp);
-> +		SET_RW_32(chip, chan->dir, ch67_imwr_data, tmp);
->  		break;
-
-The changes above won't be needed if you keep using the dw pointer
-here as I suggest.
-
->  	}
->  
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.h b/drivers/dma/dw-edma/dw-edma-v0-core.h
-> index 2afa626b8300c..01a29c74c0c43 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.h
-> @@ -12,13 +12,13 @@
->  #include <linux/dma/edma.h>
->  
->  /* eDMA management callbacks */
-
-> -void dw_edma_v0_core_off(struct dw_edma *chan);
-> -u16 dw_edma_v0_core_ch_count(struct dw_edma *chan, enum dw_edma_dir dir);
-> +void dw_edma_v0_core_off(struct dw_edma_chip *chip);
-> +u16 dw_edma_v0_core_ch_count(struct dw_edma_chip *chip, enum dw_edma_dir dir);
->  enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan);
->  void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan);
->  void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan);
-> -u32 dw_edma_v0_core_status_done_int(struct dw_edma *chan, enum dw_edma_dir dir);
-> -u32 dw_edma_v0_core_status_abort_int(struct dw_edma *chan, enum dw_edma_dir dir);
-> +u32 dw_edma_v0_core_status_done_int(struct dw_edma_chip *chip, enum dw_edma_dir dir);
-> +u32 dw_edma_v0_core_status_abort_int(struct dw_edma_chip *chip, enum dw_edma_dir dir);
-
-This modification won't be needed.
-
->  void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first);
->  int dw_edma_v0_core_device_config(struct dw_edma_chan *chan);
->  /* eDMA debug fs callbacks */
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> index 4b3bcffd15ef1..5819a64aceb0f 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> @@ -38,7 +38,7 @@
->  #define CHANNEL_STR				"channel"
->  #define REGISTERS_STR				"registers"
->  
-
-> -static struct dw_edma				*dw;
-> +static struct dw_edma_chip			*chip;
-
-Hmmm, why on Earth is this static and global?.. What if we have more
-than one host/EP controller with eDMA?.. Nice. I'll think on fixing
-this if you don't want to bother...
-
->  static struct dw_edma_v0_regs			__iomem *regs;
->  
->  static struct {
-> @@ -53,8 +53,10 @@ struct debugfs_entries {
->  
->  static int dw_edma_debugfs_u32_get(void *data, u64 *val)
->  {
-> +	struct dw_edma *dw = chip->dw;
-> +
->  	void __iomem *reg = (void __force __iomem *)data;
-
-> -	if (dw->mf == EDMA_MF_EDMA_LEGACY &&
-> +	if (chip->mf == EDMA_MF_EDMA_LEGACY &&
-
-Use "dw->chip-> ..." here
-
->  	    reg >= (void __iomem *)&regs->type.legacy.ch) {
->  		void __iomem *ptr = &regs->type.legacy.ch;
->  		u32 viewport_sel = 0;
-> @@ -127,6 +129,8 @@ static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs __iomem *regs,
->  
->  static void dw_edma_debugfs_regs_wr(struct dentry *dir)
->  {
-> +	struct dw_edma *dw = chip->dw;
-> +
->  	const struct debugfs_entries debugfs_regs[] = {
->  		/* eDMA global registers */
->  		WR_REGISTER(engine_en),
-> @@ -173,7 +177,7 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
->  	nr_entries = ARRAY_SIZE(debugfs_regs);
->  	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
->  
-
-> -	if (dw->mf == EDMA_MF_HDMA_COMPAT) {
-> +	if (chip->mf == EDMA_MF_HDMA_COMPAT) {
-
-ditto
-
->  		nr_entries = ARRAY_SIZE(debugfs_unroll_regs);
->  		dw_edma_debugfs_create_x32(debugfs_unroll_regs, nr_entries,
->  					   regs_dir);
-> @@ -195,6 +199,8 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
->  
->  static void dw_edma_debugfs_regs_rd(struct dentry *dir)
->  {
-> +	struct dw_edma *dw = chip->dw;
-> +
->  	const struct debugfs_entries debugfs_regs[] = {
->  		/* eDMA global registers */
->  		RD_REGISTER(engine_en),
-> @@ -242,7 +248,7 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
->  	nr_entries = ARRAY_SIZE(debugfs_regs);
->  	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
->  
-
-> -	if (dw->mf == EDMA_MF_HDMA_COMPAT) {
-> +	if (chip->mf == EDMA_MF_HDMA_COMPAT) {
-
-ditto
-
->  		nr_entries = ARRAY_SIZE(debugfs_unroll_regs);
->  		dw_edma_debugfs_create_x32(debugfs_unroll_regs, nr_entries,
->  					   regs_dir);
-> @@ -264,6 +270,7 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
->  
->  static void dw_edma_debugfs_regs(void)
->  {
-> +	struct dw_edma *dw = chip->dw;
->  	const struct debugfs_entries debugfs_regs[] = {
->  		REGISTER(ctrl_data_arb_prior),
->  		REGISTER(ctrl),
-> @@ -282,13 +289,15 @@ static void dw_edma_debugfs_regs(void)
->  	dw_edma_debugfs_regs_rd(regs_dir);
->  }
->  
-
-> -void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
-> +void dw_edma_v0_debugfs_on(struct dw_edma_chip *p)
->  {
-> -	dw = chip->dw;
-> -	if (!dw)
-> +	struct dw_edma *dw;
-> +	chip = p;
-> +	if (!chip)
->  		return;
->  
-> -	regs = dw->rg_region.vaddr;
-> +	dw = chip->dw;
-> +	regs = chip->reg_base;
-
-As I said this is unrelated change. Please unpin to another patch.
-
->  	if (!regs)
->  		return;
->  
-> @@ -296,19 +305,19 @@ void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
->  	if (!dw->debugfs)
->  		return;
->  
-
-> -	debugfs_create_u32("mf", 0444, dw->debugfs, &dw->mf);
-> +	debugfs_create_u32("mf", 0444, dw->debugfs, &chip->mf);
-
-"dw->chip->..."
-
->  	debugfs_create_u16("wr_ch_cnt", 0444, dw->debugfs, &dw->wr_ch_cnt);
->  	debugfs_create_u16("rd_ch_cnt", 0444, dw->debugfs, &dw->rd_ch_cnt);
->  
->  	dw_edma_debugfs_regs();
->  }
->  
-> -void dw_edma_v0_debugfs_off(struct dw_edma_chip *chip)
-> +void dw_edma_v0_debugfs_off(struct dw_edma_chip *p)
->  {
-> -	dw = chip->dw;
-> -	if (!dw)
-> +	chip = p;
-> +	if (!chip)
->  		return;
->  
-> -	debugfs_remove_recursive(dw->debugfs);
-> -	dw->debugfs = NULL;
-> +	debugfs_remove_recursive(chip->dw->debugfs);
-
-This won't be needed.
-
-> +	chip->dw->debugfs = NULL;
->  }
-> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> index cab6e18773dad..fcfbc0f47f83d 100644
-> --- a/include/linux/dma/edma.h
-> +++ b/include/linux/dma/edma.h
-> @@ -12,19 +12,62 @@
->  #include <linux/device.h>
->  #include <linux/dmaengine.h>
->  
-> +#define EDMA_MAX_WR_CH                                  8
-> +#define EDMA_MAX_RD_CH                                  8
-> +
-
->  struct dw_edma;
-
-This could be dropped.
-
->  
-> +struct dw_edma_region {
-> +	phys_addr_t	paddr;
-> +	void __iomem	*vaddr;
-> +	size_t		sz;
-> +};
-> +
-> +struct dw_edma_core_ops {
-> +	int (*irq_vector)(struct device *dev, unsigned int nr);
-> +};
-> +
-> +enum dw_edma_map_format {
-> +	EDMA_MF_EDMA_LEGACY = 0x0,
-> +	EDMA_MF_EDMA_UNROLL = 0x1,
-> +	EDMA_MF_HDMA_COMPAT = 0x5
-> +};
-> +
->  /**
->   * struct dw_edma_chip - representation of DesignWare eDMA controller hardware
->   * @dev:		 struct device of the eDMA controller
->   * @id:			 instance ID
-
-> - * @irq:		 irq line
-> + * @nr_irqs:		 total dma irq number
-
-Indeed, dw_edma_chip->irq field has been unused anyway...
-
-> + * reg64bit		 if support 64bit write to register
-
-Do you have this field in the structure below? I don't see it there.
-Drop this line then.
-
-> + * @ops			 DMA channel to IRQ number mapping
-> + * @wr_ch_cnt		 DMA write channel number
-> + * @rd_ch_cnt		 DMA read channel number
-
-> + * @rg_region		 DMA register region
-
-You changed this to reg_base in the structure below, but the doc has
-been left with the old name and field type. Please unpin the modification
-to a dedicated patch as I suggested before.
-
-> + * @ll_region_wr	 DMA descriptor link list memory for write channel
-> + * @ll_region_rd	 DMA descriptor link list memory for read channel
-> + * @mf			 DMA register map format
->   * @dw:			 struct dw_edma that is filed by dw_edma_probe()
->   */
->  struct dw_edma_chip {
->  	struct device		*dev;
->  	int			id;
-> -	int			irq;
-> +	int			nr_irqs;
-> +	const struct dw_edma_core_ops   *ops;
-> +
-> +	void __iomem		*reg_base;
-> +
-> +	u16			ll_wr_cnt;
-> +	u16			ll_rd_cnt;
-
-Why did you name these fields with "ll_" prefix? These are the number of
-read/write channels. Moreover the structure doc above have them named as
-"wr_ch_cnt" and "rd_ch_cnt". So if you want to change the fields names
-please add an addition patch and justify why it's needed.
-
-> +	/* link list address */
-> +	struct dw_edma_region	ll_region_wr[EDMA_MAX_WR_CH];
-> +	struct dw_edma_region	ll_region_rd[EDMA_MAX_RD_CH];
-> +
-> +	/* data region */
-> +	struct dw_edma_region	dt_region_wr[EDMA_MAX_WR_CH];
-> +	struct dw_edma_region	dt_region_rd[EDMA_MAX_RD_CH];
-> +
-> +	enum dw_edma_map_format	mf;
-> +
-
->  	struct dw_edma		*dw;
-
-Finally this could be dropped. Thus the dw_edma_chip structure will
-be just the chip info data.
-
--Sergey
-
->  };
->  
-> -- 
-> 2.24.0.rc1
-> 
