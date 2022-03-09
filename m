@@ -2,195 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F36C4D244F
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Mar 2022 23:32:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A79454D27E7
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Mar 2022 05:38:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350827AbiCHWdE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Mar 2022 17:33:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43476 "EHLO
+        id S229458AbiCIEjA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Mar 2022 23:39:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350751AbiCHWcu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 17:32:50 -0500
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D0E5A097
-        for <linux-pci@vger.kernel.org>; Tue,  8 Mar 2022 14:31:51 -0800 (PST)
-Received: by mail-ot1-x32f.google.com with SMTP id t8-20020a0568301e2800b005b235a56f2dso405161otr.9
-        for <linux-pci@vger.kernel.org>; Tue, 08 Mar 2022 14:31:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yu1THqTGD6F10/7zLdE8sY/7tnkCw2lQhVUm7kdi5Vs=;
-        b=zM6yJDkCXVr46DAoZEfhO1+xZLGgCRwLMK9TAYUYZVTFi0U5oPxRtHIVQ7xmtlSpMI
-         3E8Zq03Dbu+RxrYTIpq2jMcfSFLBmdtuyeiOFn/NaomcmAli5diS6gEyBm1jpZM1t5jT
-         dvkq6b9VKQvyrK819bjV/z5ga84NAouXrIchc3cnFe7J9Ph8ty8CSO3Ls09pu0+6JQg4
-         VO1vBoP7KH5b9CkJBeYwxPKJXC3oPsEvKV0yYGtVOBrM4mUQkExaBH8vhc00KjKA2ynY
-         cEENkWVocmJAKULBG2HXLq6f/fRoupJS9KM8zXL5ixYiW3CKIG8xeNpQA2JR1DtiyMEz
-         uhpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yu1THqTGD6F10/7zLdE8sY/7tnkCw2lQhVUm7kdi5Vs=;
-        b=UPw0CsblE1iHTR4oAz3vEa4nFva2rFktMSIzkgFabdYfq1LcfFxGeGFugOtrP7Z8cZ
-         IsW4TP8e+T+WkN1xa+n62rSj+dW1M61FF3a7/EcU0eoDcYVu4kamp31sJ+EbfvMds7vB
-         bl5HfPS91XuCKUNzM6GBix3ZSBzTTBU5Kr9+UBSd1d7x+yWX4TxFix8T9t5KXXoS98cE
-         VG9Xerb9Ji9viossBz22m2bLlAiuE1dshyAIidkqHxTUiF4MoYKPr9waVq0MbDjv765g
-         oycPTz2s/gnn6sGrJYlY5oNVBkp/TkWNohqwoPx9T7Syfn5F9tCzpjW6hDYwkpjOq4nJ
-         ywCg==
-X-Gm-Message-State: AOAM532Tm7NqlOos5r+zh0eL4EI2lbXn9ZFfZ/F7b5o+SjHN2VqVthNC
-        svndk4ZXhrTVxELturEw+oy/Jg==
-X-Google-Smtp-Source: ABdhPJzj4SI3aBtkqXo6gIsiBBn8CcMdnLEkOtQN5+H1BR7bbwBxT7uH7KUFlOg2LT41M+Vsy/RXfQ==
-X-Received: by 2002:a05:6830:43a0:b0:5af:e328:6bc7 with SMTP id s32-20020a05683043a000b005afe3286bc7mr9495407otv.62.1646778710427;
-        Tue, 08 Mar 2022 14:31:50 -0800 (PST)
-Received: from builder.lan ([2600:1700:a0:3dc8:3697:f6ff:fe85:aac9])
-        by smtp.gmail.com with ESMTPSA id f4-20020a056870d30400b000da71ab35e0sm78779oag.44.2022.03.08.14.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 14:31:49 -0800 (PST)
-Date:   Tue, 8 Mar 2022 16:31:46 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, bhupesh.linux@gmail.com,
-        lorenzo.pieralisi@arm.com, agross@kernel.org, svarbanov@mm-sol.com,
-        bhelgaas@google.com, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
-        linux-clk@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: sa8155: Enable PCIe nodes
-Message-ID: <YifZUtH8hbelcB8L@builder.lan>
-References: <20220302203045.184500-1-bhupesh.sharma@linaro.org>
- <20220302203045.184500-8-bhupesh.sharma@linaro.org>
- <CAA8EJpqEy+669gpDsy-zGp2NpDP-d7ZxNf7RVo=OQZdvGdZOvQ@mail.gmail.com>
- <CAH=2Ntz2=pgysEVSfSuGd12C-Am-qRZymaotCw-Lwp0_xaNcOg@mail.gmail.com>
+        with ESMTP id S229445AbiCIEjA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Mar 2022 23:39:00 -0500
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 659B35AA41;
+        Tue,  8 Mar 2022 20:38:01 -0800 (PST)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2294bqpv118071;
+        Tue, 8 Mar 2022 22:37:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1646800672;
+        bh=WGbku9FUkxZtK/LL7SBY1MK//mVyianmQOGT9iKKMuI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rHJpyuhC3g2VBKvgRHkBuQZ/z7ElJq0HHBpvbMs39cMZGwaozC0w5fLbwIyrEbUmP
+         +MZWb4vx6ly5jJQojtOQwJp8uITCdXO4sA6kycPt2YM1DTJtXoj/dXR6ch/6DPveI+
+         Ouz4lAJpCdxjf7iMFRS/BUgHwjuIG6BFkhDk3mH0=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2294bqXF041740
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 8 Mar 2022 22:37:52 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Tue, 8
+ Mar 2022 22:37:52 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Tue, 8 Mar 2022 22:37:52 -0600
+Received: from [10.250.233.186] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2294bmIh017591;
+        Tue, 8 Mar 2022 22:37:49 -0600
+Subject: Re: [PATCH v2] PCI: endpoint: Use blocking notifier instead of atomic
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC:     <lorenzo.pieralisi@arm.com>, Vidya Sagar <vidyas@nvidia.com>,
+        <kw@linux.com>, <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bjorn.andersson@linaro.org>,
+        <dmitry.baryshkov@linaro.org>
+References: <20220228055240.24774-1-manivannan.sadhasivam@linaro.org>
+ <e151083b-c15a-7baa-3423-84bd1881105a@ti.com>
+ <20220228062830.GA37219@thinkpad>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <a66ccea3-b854-75d7-dc3d-6c9bb2057a0d@ti.com>
+Date:   Wed, 9 Mar 2022 10:07:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH=2Ntz2=pgysEVSfSuGd12C-Am-qRZymaotCw-Lwp0_xaNcOg@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220228062830.GA37219@thinkpad>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu 03 Mar 00:09 CST 2022, Bhupesh Sharma wrote:
+Hi Mani,
 
-> Hi Dmitry,
+On 28/02/22 11:58 am, Manivannan Sadhasivam wrote:
+> Hi,
 > 
-> On Thu, 3 Mar 2022 at 02:29, Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
-> >
-> > On Wed, 2 Mar 2022 at 23:31, Bhupesh Sharma <bhupesh.sharma@linaro.org> wrote:
-> > >
-> > > SA8155p ADP board supports the PCIe0 controller in the RC
-> > > mode (only). So add the support for the same.
-> > >
-> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > Cc: Vinod Koul <vkoul@kernel.org>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 42 ++++++++++++++++++++++++
-> > >  1 file changed, 42 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-> > > index 8756c2b25c7e..3f6b3ee404f5 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-> > > +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-> > > @@ -387,9 +387,51 @@ &usb_2_qmpphy {
-> > >         vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
-> > >  };
-> > >
-> > > +&pcie0 {
-> > > +       status = "okay";
-> > > +};
-> > > +
-> > > +&pcie0_phy {
-> > > +       status = "okay";
-> > > +       vdda-phy-supply = <&vreg_l18c_0p88>;
-> > > +       vdda-pll-supply = <&vreg_l8c_1p2>;
-> > > +};
-> > > +
-> > > +&pcie1_phy {
-> > > +       vdda-phy-supply = <&vreg_l18c_0p88>;
-> > > +       vdda-pll-supply = <&vreg_l8c_1p2>;
-> > > +};
-> > > +
-> > >  &tlmm {
-> > >         gpio-reserved-ranges = <0 4>;
-> > >
-> > > +       bt_en_default: bt_en_default {
-
-'_' is not a valid character in the node name (it is in the label).
-
-> > > +               mux {
-
-Please flatten this, you can omit the mux and config subnodes and put
-the properties directly in the state node.
-
-> > > +                       pins = "gpio172";
-> > > +                       function = "gpio";
-> > > +               };
-> > > +
-> > > +               config {
-> > > +                       pins = "gpio172";
-> > > +                       drive-strength = <2>;
-> > > +                       bias-pull-down;
-> > > +               };
-> > > +       };
-> > > +
-> > > +       wlan_en_default: wlan_en_default {
-> > > +               mux {
-> > > +                       pins = "gpio169";
-> > > +                       function = "gpio";
-> > > +               };
-> > > +
-> > > +               config {
-> > > +                       pins = "gpio169";
-> > > +                       drive-strength = <16>;
-> > > +                       output-high;
-> > > +                       bias-pull-up;
-> > > +               };
-> > > +       };
-> > > +
-> >
-> > Not related to PCIe
+> On Mon, Feb 28, 2022 at 11:46:52AM +0530, Kishon Vijay Abraham I wrote:
+>> Hi Manivannan,
+>>
+>> On 28/02/22 11:22 am, Manivannan Sadhasivam wrote:
+>>> The use of atomic notifier causes sleeping in atomic context bug when
+>>> the EPC core functions are used in the notifier chain. This is due to the
+>>> use of epc->lock (mutex) in core functions protecting the concurrent use of
+>>> EPC.
+>>
+>> The notification from the controller to the function driver is used for
+>> propagating interrupts to function driver and should be in interrupt context.
+>> How it should be handled maybe left to the function driver. I don't prefer
+>> moving everything to blocking notifier.
+>>
 > 
-> Hmm.. I have no strong personal opinion on this, so let's see what
-> Bjorn thinks about the same.
-> My reasoning for keeping it here was to just capture that we have
-> 'bt_en' and 'wlan_en' related tlmm details here, so that when you send
-> out the reworked QCAxxxx mfd series (see [1]) later, I can easily plug
-> it in for SA8155p ADP dts as well with the 'bt' and 'wlan' constructs.
+> I agree that we need to handle it quick enough but I don't see any other valid
+> options to get rid of the issue. EPF driver may use a non-atomic notifier but
+> that seems to be an overkill workaround for something that could be fixed in the
+> EPC core.
 > 
+> And propagating interrupts is not going to work or needed all the time. Do you
+> forsee any issue with blocking notifier?
 
-The BT_EN is unrelated to PCIe, and I'm not able to see where you select
-the wlan_en_default state, so this would be dangling.
+I think any interrupt to the EP should be delivered to the function driver in
+interrupt context, it could be function level reset interrupt, hot reset
+interrupt, link state interrupt etc., These are right now not supported but it
+will use the same notification mechanism to propagate interrupt from controller
+driver to function driver.
 
-So the bt_en should come in a patch together with a bluetooth node and
-the wlan_en_default should come with something that ensures that the
-WiFi portion of the chip is powered and the gpio enabled.
+Thanks,
+Kishon
 
-Regards,
-Bjorn
-
-> [1]. https://lore.kernel.org/lkml/20210621223141.1638189-2-dmitry.baryshkov@linaro.org/T/
 > 
-> Regards.
-> Bhupesh
+>> I'm wondering how other users for CORE_INIT didn't see this issue.
 > 
-> > >         usb2phy_ac_en1_default: usb2phy_ac_en1_default {
-> > >                 mux {
-> > >                         pins = "gpio113";
-> > > --
-> > > 2.35.1
-> > >
-> >
-> >
-> > --
-> > With best wishes
-> > Dmitry
+> This can be triggered with EPF test or NTB if CONFIG_DEBUG_ATOMIC_SLEEP is
+> enabled.
+> 
+> Thanks,
+> Mani
+> 
+>>
+>> Thanks,
+>> Kishon
+>>
+>>>
+>>> So switch to blocking notifier for getting rid of the bug as it runs in
+>>> non-atomic context and allows sleeping in notifier chain.
+>>>
+>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>> ---
+>>>
+>>> Changes in v2:
+>>>
+>>> * Removed the changes related to non-upstreamed patches
+>>>
+>>>  drivers/pci/endpoint/pci-epc-core.c | 6 +++---
+>>>  include/linux/pci-epc.h             | 4 ++--
+>>>  2 files changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+>>> index 3bc9273d0a08..c4347f472618 100644
+>>> --- a/drivers/pci/endpoint/pci-epc-core.c
+>>> +++ b/drivers/pci/endpoint/pci-epc-core.c
+>>> @@ -693,7 +693,7 @@ void pci_epc_linkup(struct pci_epc *epc)
+>>>  	if (!epc || IS_ERR(epc))
+>>>  		return;
+>>>  
+>>> -	atomic_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
+>>> +	blocking_notifier_call_chain(&epc->notifier, LINK_UP, NULL);
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(pci_epc_linkup);
+>>>  
+>>> @@ -710,7 +710,7 @@ void pci_epc_init_notify(struct pci_epc *epc)
+>>>  	if (!epc || IS_ERR(epc))
+>>>  		return;
+>>>  
+>>> -	atomic_notifier_call_chain(&epc->notifier, CORE_INIT, NULL);
+>>> +	blocking_notifier_call_chain(&epc->notifier, CORE_INIT, NULL);
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(pci_epc_init_notify);
+>>>  
+>>> @@ -774,7 +774,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
+>>>  
+>>>  	mutex_init(&epc->lock);
+>>>  	INIT_LIST_HEAD(&epc->pci_epf);
+>>> -	ATOMIC_INIT_NOTIFIER_HEAD(&epc->notifier);
+>>> +	BLOCKING_INIT_NOTIFIER_HEAD(&epc->notifier);
+>>>  
+>>>  	device_initialize(&epc->dev);
+>>>  	epc->dev.class = pci_epc_class;
+>>> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+>>> index a48778e1a4ee..04a2e74aed63 100644
+>>> --- a/include/linux/pci-epc.h
+>>> +++ b/include/linux/pci-epc.h
+>>> @@ -149,7 +149,7 @@ struct pci_epc {
+>>>  	/* mutex to protect against concurrent access of EP controller */
+>>>  	struct mutex			lock;
+>>>  	unsigned long			function_num_map;
+>>> -	struct atomic_notifier_head	notifier;
+>>> +	struct blocking_notifier_head	notifier;
+>>>  };
+>>>  
+>>>  /**
+>>> @@ -195,7 +195,7 @@ static inline void *epc_get_drvdata(struct pci_epc *epc)
+>>>  static inline int
+>>>  pci_epc_register_notifier(struct pci_epc *epc, struct notifier_block *nb)
+>>>  {
+>>> -	return atomic_notifier_chain_register(&epc->notifier, nb);
+>>> +	return blocking_notifier_chain_register(&epc->notifier, nb);
+>>>  }
+>>>  
+>>>  struct pci_epc *
+>>>
