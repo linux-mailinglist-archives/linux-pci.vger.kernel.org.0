@@ -2,120 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AD844D388E
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Mar 2022 19:16:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB1F44D38DC
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Mar 2022 19:32:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235410AbiCISQV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Mar 2022 13:16:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40370 "EHLO
+        id S233702AbiCISdN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Mar 2022 13:33:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235106AbiCISQU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Mar 2022 13:16:20 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7DE4128DD7;
-        Wed,  9 Mar 2022 10:15:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F124861607;
-        Wed,  9 Mar 2022 18:15:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 148A6C340E8;
-        Wed,  9 Mar 2022 18:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646849720;
-        bh=klcC1qku76fYEhGINiDMx4XkazS43HCSZUi7qfC3JBY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CepSo++WWIGwTuVJKKTM7HLAiWkZg5mzQV4zyG9GeFtbyyeFy1UVtOkuIp4lUmG03
-         KK8NirWLnZm0gn43tASPP4JB8KPKiuKU9jRSZSUy2fYqV81BrsL5Js9BlBnlHM1G8c
-         IQIDeJhaitcFZBkRatn8tAViKBVF/ISjA3p0msAX2+arHZ/fCQjpKMd+qCe4JtWByu
-         1iC7C3xYplktvT+K2Wj8+X6wJ1h4+EkBbMEJGwOaOWWHlCASJEOoUa5C91q3nCxPX6
-         byvkcdtth4XtnQHvX8PvFmOAAkqsm5BQ4Gmo4D/kZfZzP04aagW+hcl7g0e9y6ZAeC
-         erBQmBbiBEC2w==
-Date:   Wed, 9 Mar 2022 12:15:18 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, wse@tuxedocomputers.com
-Subject: Re: [PATCH 3/3] x86/PCI: Preserve host bridge windows completely
- covered by E820
-Message-ID: <20220309181518.GA63422@bhelgaas>
+        with ESMTP id S237280AbiCISdJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Mar 2022 13:33:09 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8596B16EAAD
+        for <linux-pci@vger.kernel.org>; Wed,  9 Mar 2022 10:32:10 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id a8so7038040ejc.8
+        for <linux-pci@vger.kernel.org>; Wed, 09 Mar 2022 10:32:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nR41bUPcuwy6Qifo1Zradwrcnsu6ZjuPm5NpG4APOjU=;
+        b=l/XiIGc4D0PBZqrdFmqz7Zhck6G3E58YsUyojjM3wdTL4HZ1co/DqTO+nT8V+6w/6K
+         a/ejUTUkZ58LISLLEIsxjOcZondBRj4Q3/XipFSbsUqKCr5L9xrD6dm4svRR3mFzqY+f
+         Er/KuwzV6YFlQeRb41xt5zub/05Ukz8YdZWo/mwxnf9hc6CsnooJ0ov/HxeP4oQ3NU1D
+         EVUZ6c1SkmJj8cnZmhB/X0VmliiZ1ehNpNv8OJkct5I7817nC6aE9B2KtwyNglSmXDtX
+         mwD0hTKvOgfvvVyd5llI0pKjQKkapnsAE39f2+lyRbXK1Ds+gm8nfvZlSDlsBnpHA5pC
+         aVqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nR41bUPcuwy6Qifo1Zradwrcnsu6ZjuPm5NpG4APOjU=;
+        b=yIFV4+yWyHLLi5HBr1lDPBL1lQugZhaTCYpev6DH4ayUFqIwfDyUhoOobbfSvjSdHr
+         BFJ56ZOx6k7PIhhNljD9XJCYbebeFuFrDDBe1ThzbZ585L2VtGjnjJWfPhMWp0Pig4Ha
+         VAAVWSZYc+A7w6BId1cNQnC7TY8L7sylhZdLEO1S9lXkY6W+Wgwa84SUe154GICtfDaH
+         N/tnqL/p1bwrWSAejwewkkKsszvnbi6eIe8oU7+OnIUMQL7NrM6bDZGlguPLFOp3FMc+
+         rXw6wuVlUvOMBSjsjROyhdYmPXEtg4m4lCA1GU+J15NMaf+/pcgN065ZD9uCZUdKVTa1
+         XNmg==
+X-Gm-Message-State: AOAM530HtojeC/FntrBHyfqfz6ZcQ3v+HoDaSJLxKuR8Odnd8DBqol46
+        OAXuw+qM9m16VrMWqq9vywZLHSwu6GP2kahPJ7dauLUoi6yd1w==
+X-Google-Smtp-Source: ABdhPJwmcFJicN/fRV7xokwqdBfXbIcxZ4Nhgz8A4PoxN1wOGrGF4JOFm653wXojRYmMPQvlzqZDt+KPaeOR2rj1M90=
+X-Received: by 2002:a17:907:9956:b0:6cf:cd25:c5a7 with SMTP id
+ kl22-20020a170907995600b006cfcd25c5a7mr974633ejc.635.1646850728809; Wed, 09
+ Mar 2022 10:32:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bfdb214d-b6e7-f0e7-60de-f30204b0aa90@redhat.com>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220303184635.2603-1-Frank.Li@nxp.com> <20220303184635.2603-4-Frank.Li@nxp.com>
+ <20220309120149.GB134091@thinkpad>
+In-Reply-To: <20220309120149.GB134091@thinkpad>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Wed, 9 Mar 2022 12:31:57 -0600
+Message-ID: <CAHrpEqSikfyfoqb_Zjivc3QjwPrw55+aS2UKPqcYwjNCV=UfZg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] PCI: imx6: add PCIe embedded DMA support
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        kw@linux.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 05, 2022 at 11:37:23AM +0100, Hans de Goede wrote:
-> On 3/4/22 16:46, Hans de Goede wrote:
-> > On 3/4/22 16:32, Bjorn Helgaas wrote:
-> >> On Fri, Mar 04, 2022 at 03:16:42PM +0100, Hans de Goede wrote:
-> >>> On 3/4/22 04:51, Bjorn Helgaas wrote:
-> >>>> From: Bjorn Helgaas <bhelgaas@google.com>
-> >>>>
-> >>>> Many folks have reported PCI devices not working.  It could affect any
-> >>>> device, but most reports are for Thunderbolt controllers on Lenovo Yoga and
-> >>>> Clevo Barebone laptops and the touchpad on Lenovo IdeaPads.
-> >>>> ...
+On Wed, Mar 9, 2022 at 6:02 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Thu, Mar 03, 2022 at 12:46:34PM -0600, Frank Li wrote:
+> > Add support for the DMA controller in the DesignWare PCIe core
+> >
+> > The DMA can transfer data to any remote address location
+> > regardless PCI address space size.
+> >
+> > Prepare struct dw_edma_chip() and call dw_edma_probe()
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> >
+> > This patch depended on some ep enable patch for imx.
+> >
+> > Change from v1 to v2
+> > - rework commit message
+> > - align dw_edma_chip change
+> >
+> >  drivers/pci/controller/dwc/pci-imx6.c | 51 +++++++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> > index efa8b81711090..7dc55986c947d 100644
+> > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > @@ -38,6 +38,7 @@
+> >  #include "../../pci.h"
+> >
+> >  #include "pcie-designware.h"
+> > +#include "linux/dma/edma.h"
+> >
+> >  #define IMX8MQ_PCIE_LINK_CAP_REG_OFFSET              0x7c
+> >  #define IMX8MQ_PCIE_LINK_CAP_L1EL_64US               GENMASK(18, 17)
+> > @@ -164,6 +165,8 @@ struct imx6_pcie {
+> >       const struct imx6_pcie_drvdata *drvdata;
+> >       struct regulator        *epdev_on;
+> >       struct phy              *phy;
+> > +
+> > +     struct dw_edma_chip     dma_chip;
+> >  };
+> >
+> >  /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
+> > @@ -2031,6 +2034,51 @@ static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> >       .get_features = imx_pcie_ep_get_features,
+> >  };
+> >
+> > +static int imx_dma_irq_vector(struct device *dev, unsigned int nr)
+> > +{
+> > +     struct platform_device *pdev = to_platform_device(dev);
+> > +
+> > +     return platform_get_irq_byname(pdev, "dma");
+> > +}
+> > +
+> > +static struct dw_edma_core_ops dma_ops = {
+> > +     .irq_vector = imx_dma_irq_vector,
+> > +};
+> > +
+> > +static int imx_add_pcie_dma(struct imx6_pcie *imx6_pcie)
+> > +{
+> > +     unsigned int pcie_dma_offset;
+> > +     struct dw_pcie *pci = imx6_pcie->pci;
+> > +     struct device *dev = pci->dev;
+> > +     struct dw_edma_chip *dma = &imx6_pcie->dma_chip;
+> > +     int i = 0;
+>
+> Unused?
+>
+> > +     int sz = PAGE_SIZE;
+> > +
+> > +     pcie_dma_offset = 0x970;
+>
+> Can you get this offset from the devicetree node of ep?
+>
+> > +
+> > +     dma->dev = dev;
+> > +
+> > +     dma->reg_base = pci->dbi_base + pcie_dma_offset;
+> > +
+> > +     dma->ops = &dma_ops;
+> > +     dma->nr_irqs = 1;
+> > +
+> > +     dma->flags = DW_EDMA_CHIP_NO_MSI | DW_EDMA_CHIP_REG32BIT | DW_EDMA_CHIP_LOCAL_EP;
+> > +
+> > +     dma->ll_wr_cnt = dma->ll_rd_cnt=1;
+>
+> Is this a hard limitation of the eDMA implementation or because of difficulties
+> in requesting the correct channel from client driver?
+>
+> If it's the latter, you could use my patch:
 
-> >>>> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-> >>>> index 7378ea146976..405f0af53e3d 100644
-> >>>> --- a/arch/x86/kernel/resource.c
-> >>>> +++ b/arch/x86/kernel/resource.c
-> >>>> @@ -39,6 +39,17 @@ void remove_e820_regions(struct device *dev, struct resource *avail)
-> >>>>  		e820_start = entry->addr;
-> >>>>  		e820_end = entry->addr + entry->size - 1;
-> >>>>  
-> >>>> +		/*
-> >>>> +		 * If an E820 entry covers just part of the resource, we
-> >>>> +		 * assume E820 is telling us about something like host
-> >>>> +		 * bridge register space that is unavailable for PCI
-> >>>> +		 * devices.  But if it covers the *entire* resource, it's
-> >>>> +		 * more likely just telling us that this is MMIO space, and
-> >>>> +		 * that doesn't need to be removed.
-> >>>> +		 */
-> >>>> +		if (e820_start <= avail->start && avail->end <= e820_end)
-> >>>> +			continue;
-> >>>> +
-> >>>
-> >>> IMHO it would be good to add some logging here, since hitting this is
-> >>> somewhat of a special case. For the Fedora test kernels I did I changed
-> >>> this to:
-> >>>
-> >>> 		if (e820_start <= avail->start && avail->end <= e820_end) {
-> >>> 			dev_info(dev, "resource %pR fully covered by e820 entry [mem %#010Lx-%#010Lx]\n",
-> >>> 				 avail, e820_start, e820_end);
-> >>> 			continue;
-> >>> 		}
-> >>>
-> >>> And I expect/hope to see this new info message on the ideapad with the
-> >>> touchpad issue.
+It is  because our hardware only has 1 channel.
 
-I added this logging.
+>
+> https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/commit/?h=tracking-qcomlt-sdx55-drivers&id=c77ad9d929372b1ff495709714b24486d266a810
 
-> So I just got the first report back from the Fedora test 5.16.12 kernel
-> with this series added. Good news on the ideapad this wotks fine to
-> fix the touchpad issue (as expected).
+My problem is
+in   dw_edma_channel_setup()
+dma->directions = BIT(write ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV);
 
-Any "Tested-by" I could add?  If we can, I'd really like to give some
-credit to the folks who suffered through this and helped resolve it.
+Already set direction.  why need overwrite default device_caps?
 
-Bjorn
+>
+> > +     dma->ll_region_wr[0].sz = sz;
+> > +     dma->ll_region_wr[0].vaddr = dmam_alloc_coherent(dev, sz,
+> > +                                                      &dma->ll_region_wr[i].paddr,
+> > +                                                      GFP_KERNEL);
+>
+> Allocation could fail. Please add error checking here and below.
+>
+> Thanks,
+> Mani
+>
+> > +
+> > +     dma->ll_region_rd[0].sz = sz;
+> > +     dma->ll_region_rd[0].vaddr = dmam_alloc_coherent(dev, sz,
+> > +                                                      &dma->ll_region_rd[i].paddr,
+> > +                                                      GFP_KERNEL);
+> > +
+> > +     return dw_edma_probe(dma);
+> > +}
+> > +
+> >  static int imx_add_pcie_ep(struct imx6_pcie *imx6_pcie,
+> >                                       struct platform_device *pdev)
+> >  {
+> > @@ -2694,6 +2742,9 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+> >               goto err_ret;
+> >       }
+> >
+> > +     if (imx_add_pcie_dma(imx6_pcie))
+> > +             dev_info(dev, "pci edma probe failure\n");
+> > +
+> >       return 0;
+> >
+> >  err_ret:
+> > --
+> > 2.24.0.rc1
+> >
