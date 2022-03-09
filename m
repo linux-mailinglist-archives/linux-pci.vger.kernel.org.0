@@ -2,73 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17C894D3880
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Mar 2022 19:12:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AD844D388E
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Mar 2022 19:16:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235019AbiCISNl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Mar 2022 13:13:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59298 "EHLO
+        id S235410AbiCISQV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Mar 2022 13:16:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234580AbiCISNl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Mar 2022 13:13:41 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2253E4B870
-        for <linux-pci@vger.kernel.org>; Wed,  9 Mar 2022 10:12:42 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id w4so2637644ply.13
-        for <linux-pci@vger.kernel.org>; Wed, 09 Mar 2022 10:12:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=56BGe+3+cU6Bx05+BBTn6trXu9jVThBX8iDC4LtGob8=;
-        b=Ym73uBzzXEBL/lEnILGlTjS7DuXYCXJ+VhZcuOog5OCA9Cp7u+PsFvY9nUlu4d1PJu
-         YNXky+jjsFWbpLB/w2s0iUG75v9sgzoo0JufQlVh7DADuhhLJsGmnQY7Klt9cdZKnEJT
-         dJD7NGkhg9lJYltPv5BVUXayEr+8Z8wworBt5imAtP8/E58yUb8Weo7dVLsiOrBd0ENx
-         r0pBOiUvpQflZmYgIEZlnjHK35HoIecLl62DeQfhvDkQ4CcopqCkOhLkS8o3NeDTyLKZ
-         BI+yq2kPygnSKZEleilI6kHdGNx6hTzU1IW3SjvkVnPJIqkkt4gYDd3JfKFqI3ZATHAd
-         GmAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=56BGe+3+cU6Bx05+BBTn6trXu9jVThBX8iDC4LtGob8=;
-        b=4dXdJVaMHq7LuYtKOqlqEyL7O8q3tCY3D6uAKekjp2z4VRammjxYxDehGeEjy0APwg
-         ZnBzglnqtMEuY6T4CSbTCrPgVijzHyzcJ6nMvIg8TRgarbJJSeANf14/Ob1BUv+LOhyx
-         ZZ5wAfuuTLZ1w5QkqdcNV7m0EriEH/W9gdFMNK3+wep3w+n4T5utlmacXYxfsPTPe6lE
-         dvYmejjU69DHUppY2RcmJ4aiL2l+XGhpIniRiGNJ6SMGxFIInyjNrjInh1YzYf5ru0Be
-         wnmBiLH+UAkzHdxGGGFR7k8NCeJd1J6STX9gbv+kx+7SmBf1hrXI4B2OOzwvpmbzIa45
-         Gb9g==
-X-Gm-Message-State: AOAM532Fxd23NpplIGYhXQIVFk2nktV1xmb6oarmwwxFLeVrCuvenDjn
-        oDsZyqPsyIhReMhKq3hvsV+2
-X-Google-Smtp-Source: ABdhPJw/YiDUnk46iNcQP6vteSOf61VCBGPPbu1GCFtPtzLJhtGqs+AcKGfoeAyaF+01dRzOD7Yyag==
-X-Received: by 2002:a17:902:ec8e:b0:152:939:ac4a with SMTP id x14-20020a170902ec8e00b001520939ac4amr888412plg.5.1646849561525;
-        Wed, 09 Mar 2022 10:12:41 -0800 (PST)
-Received: from thinkpad ([117.193.208.22])
-        by smtp.gmail.com with ESMTPSA id lb1-20020a17090b4a4100b001bfb76e56d1sm2182220pjb.36.2022.03.09.10.12.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Mar 2022 10:12:41 -0800 (PST)
-Date:   Wed, 9 Mar 2022 23:42:33 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        shawnguo@kernel.org
-Subject: Re: [PATCH v3 1/6] dmaengine: dw-edma: fix dw_edma_probe() can't be
- call globally
-Message-ID: <20220309181233.GC134091@thinkpad>
-References: <20220307224750.18055-1-Frank.Li@nxp.com>
- <20220309133940.3le2ma24aqlhips4@mobilestation>
+        with ESMTP id S235106AbiCISQU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Mar 2022 13:16:20 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7DE4128DD7;
+        Wed,  9 Mar 2022 10:15:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F124861607;
+        Wed,  9 Mar 2022 18:15:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 148A6C340E8;
+        Wed,  9 Mar 2022 18:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646849720;
+        bh=klcC1qku76fYEhGINiDMx4XkazS43HCSZUi7qfC3JBY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CepSo++WWIGwTuVJKKTM7HLAiWkZg5mzQV4zyG9GeFtbyyeFy1UVtOkuIp4lUmG03
+         KK8NirWLnZm0gn43tASPP4JB8KPKiuKU9jRSZSUy2fYqV81BrsL5Js9BlBnlHM1G8c
+         IQIDeJhaitcFZBkRatn8tAViKBVF/ISjA3p0msAX2+arHZ/fCQjpKMd+qCe4JtWByu
+         1iC7C3xYplktvT+K2Wj8+X6wJ1h4+EkBbMEJGwOaOWWHlCASJEOoUa5C91q3nCxPX6
+         byvkcdtth4XtnQHvX8PvFmOAAkqsm5BQ4Gmo4D/kZfZzP04aagW+hcl7g0e9y6ZAeC
+         erBQmBbiBEC2w==
+Date:   Wed, 9 Mar 2022 12:15:18 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        Hui Wang <hui.wang@canonical.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, wse@tuxedocomputers.com
+Subject: Re: [PATCH 3/3] x86/PCI: Preserve host bridge windows completely
+ covered by E820
+Message-ID: <20220309181518.GA63422@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220309133940.3le2ma24aqlhips4@mobilestation>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <bfdb214d-b6e7-f0e7-60de-f30204b0aa90@redhat.com>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -77,68 +64,58 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hey,
+On Sat, Mar 05, 2022 at 11:37:23AM +0100, Hans de Goede wrote:
+> On 3/4/22 16:46, Hans de Goede wrote:
+> > On 3/4/22 16:32, Bjorn Helgaas wrote:
+> >> On Fri, Mar 04, 2022 at 03:16:42PM +0100, Hans de Goede wrote:
+> >>> On 3/4/22 04:51, Bjorn Helgaas wrote:
+> >>>> From: Bjorn Helgaas <bhelgaas@google.com>
+> >>>>
+> >>>> Many folks have reported PCI devices not working.  It could affect any
+> >>>> device, but most reports are for Thunderbolt controllers on Lenovo Yoga and
+> >>>> Clevo Barebone laptops and the touchpad on Lenovo IdeaPads.
+> >>>> ...
 
-On Wed, Mar 09, 2022 at 04:39:40PM +0300, Serge Semin wrote:
-> Hello Frank
-> 
-> On Mon, Mar 07, 2022 at 04:47:45PM -0600, Frank Li wrote:
-> > "struct dw_edma_chip" contains an internal structure "struct dw_edma" that is
-> > used by the eDMA core internally. This structure should not be touched
-> > by the eDMA controller drivers themselves. But currently, the eDMA
-> > controller drivers like "dw-edma-pci" allocates and populates this
-> > internal structure then passes it on to eDMA core. The eDMA core further
-> > populates the structure and uses it. This is wrong!
-> > 
-> > Hence, move all the "struct dw_edma" specifics from controller drivers
-> > to the eDMA core.
-> 
-> Thanks for the patchset. Alas it has just drawn my attention on v3
-> stage, otherwise I would have given to you my thoughts stright away on
-> v1. Anyway first of all a cover letter would be very much appropriate
-> to have a general notion about all the changes introduced in the set.
-> 
+> >>>> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
+> >>>> index 7378ea146976..405f0af53e3d 100644
+> >>>> --- a/arch/x86/kernel/resource.c
+> >>>> +++ b/arch/x86/kernel/resource.c
+> >>>> @@ -39,6 +39,17 @@ void remove_e820_regions(struct device *dev, struct resource *avail)
+> >>>>  		e820_start = entry->addr;
+> >>>>  		e820_end = entry->addr + entry->size - 1;
+> >>>>  
+> >>>> +		/*
+> >>>> +		 * If an E820 entry covers just part of the resource, we
+> >>>> +		 * assume E820 is telling us about something like host
+> >>>> +		 * bridge register space that is unavailable for PCI
+> >>>> +		 * devices.  But if it covers the *entire* resource, it's
+> >>>> +		 * more likely just telling us that this is MMIO space, and
+> >>>> +		 * that doesn't need to be removed.
+> >>>> +		 */
+> >>>> +		if (e820_start <= avail->start && avail->end <= e820_end)
+> >>>> +			continue;
+> >>>> +
+> >>>
+> >>> IMHO it would be good to add some logging here, since hitting this is
+> >>> somewhat of a special case. For the Fedora test kernels I did I changed
+> >>> this to:
+> >>>
+> >>> 		if (e820_start <= avail->start && avail->end <= e820_end) {
+> >>> 			dev_info(dev, "resource %pR fully covered by e820 entry [mem %#010Lx-%#010Lx]\n",
+> >>> 				 avail, e820_start, e820_end);
+> >>> 			continue;
+> >>> 		}
+> >>>
+> >>> And I expect/hope to see this new info message on the ideapad with the
+> >>> touchpad issue.
 
-+1 for cover letter.
+I added this logging.
 
-> Secondly I've just been working on adding the eDMA platform support
-> myself, so you have been just about a week ahead of me submitting my
-> changes.
+> So I just got the first report back from the Fedora test 5.16.12 kernel
+> with this series added. Good news on the ideapad this wotks fine to
+> fix the touchpad issue (as expected).
 
-Welcome to the ship :) We (me and my colleague) were also working on eDMA
-support for Qcom platform, so jumped in.
+Any "Tested-by" I could add?  If we can, I'd really like to give some
+credit to the folks who suffered through this and helped resolve it.
 
->  My work contains some of the modifications done by you (but
-> have some additional fixes too) so I'll need to rebase it on top of
-> your patchset when it's finished. Anyway am I understand correctly,
-> that you've also been working on the DW PCIe driver alteration so one
-> would properly initialize the eDMA-chip data structure? If so have you
-> sent the patchset already?  Could you give me a link and add me to Cc
-> in the emailing thread? (That's where the cover letter with all the
-> info and related patchsets would be very helpful.)
-> 
-
-https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
-
-But this patch got dropped in v3 as the ep support for imx driver has not landed
-yet.
-
-> Thirdly regarding this patch. Your modification is mainly correct, but
-> I would suggest to change the concept. Instead of needlessly converting
-> the code to using the dw_edma_chip structure pointer within the DW eDMA
-> driver, it would be much easier in modification and more logical to
-> keep using the struct dw_edma pointer. Especially seeing dw_edma
-> structure is going to be a pure private data. So to speak what I would
-> suggest is to have the next pointers setup:
-> 
-
-I'm afraid that this will not work for all cases (unless I miss something). As
-Zhi Li pointed out, there are places where only chip pointer will be passed and
-we'd need to extract the private data (dw_edma) from it.
-
-Tbh I also considered your idea but because of the above mentioned issue and
-also referring to other implementations like gpiochip, I settled with Frank's
-idea of copying the fields.
-
-Thanks,
-Mani
+Bjorn
