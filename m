@@ -2,354 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE1BA4D2E59
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Mar 2022 12:44:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D28064D2E94
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Mar 2022 13:00:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230041AbiCILpg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Mar 2022 06:45:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58948 "EHLO
+        id S232563AbiCIMBg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Mar 2022 07:01:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229738AbiCILpf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Mar 2022 06:45:35 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6246D1712AF
-        for <linux-pci@vger.kernel.org>; Wed,  9 Mar 2022 03:44:36 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id s42so2078953pfg.0
-        for <linux-pci@vger.kernel.org>; Wed, 09 Mar 2022 03:44:36 -0800 (PST)
+        with ESMTP id S232504AbiCIMBf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Mar 2022 07:01:35 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47089129BB8;
+        Wed,  9 Mar 2022 04:00:37 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N0wcd6lrtnbs5UHAWc0k8PQfDcmT9tB7FX3qGsBgF9NPeKdSuJyw+faKl6PFQMBztZSrQ02EX8qncauh0b7eAVq9QEgxvi+kKjXwCqKzpBbNXNlqyOyBJqRwYJGo5CEI/pQNae5HgcVveDXtnE0QCQKrHBX1nN0003PaXVUGBc0IOAeu4xie1Q2nfSXC/njvtDlLd/zIBfx7s+40qFw60h306dZF/iVETGPOhvzqBgdJIo7pu2HKbgizaKnR519XbVZyl8I0d5m0279NeD9lVuaiFrHMDliwbduhxYP470YmFfxpZjObvvCCKaI/H+cGoaQtJcwM945fifLrFtr4Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Njh2e3nlm6g5RknyE5sAnGc59k2MyJk3XaPDLw1CZC8=;
+ b=iSTE54piiSgJUAHVnh9nmIEnKN30We+pyg6r6zLbBVVv7Ilqe7xeyIeU/4FK3jNIPgeYsK0j1fGDf2GdxHZ029bLPMHmS+swzZ7P1wKyviDW/mb8lAozjonnFsEVY3/IBfxrRjXGaI2SSC6rKppKvKcILLNNlbycm0Z1bx49hAFuQpJaaQXkTH/SgoK6s/MYGcHqga4EEWH1d2PizXp61KudHLwrJrhpT8byrM3uNLIQFW93sZ8yhNm50qsXNqNfIL3nb5nfh8sy59eRuj9JnySMmzZepIsLD52BFJpOivHDvjbPkyl1RyRzuCVjKGddBjZHsvRwOgo0019WeI8MGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KZV9hj/uC7GrTorz0uQ7uU0D7Wa2F3RBS3FqLpxbuA4=;
-        b=nMESCidNg6Rt/5yLxXvf4nacebtrCAEEfxcxiI0lQfNDyYTKoJ2XgYYwB78CFUXrmH
-         yZgVZFcuOfCHH6iVtq4JUVP0gljgpSplwh6ljyCuChebrzXQwxIAMZlAG7MpZfy0OCLC
-         ZiR4voiVmBiFsYnfYt9W+vm7vZ+2YlDWXA/xKCHlDycehMHAjtjPNfbTOgbRd9LktgEQ
-         Z7CvDRGNt22jbZdOFKZnWIieUEEbTpakMSqWavsPUG/6Nr40hmjHG1BtuFUsFZ6+/lw7
-         EtcczTwzWomlfRc3ZgAFUJ8y9EHRRnFXy8zPu8dc6zn6wqZvp5qVwe1AOtC4M6B8Zmb6
-         s9AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KZV9hj/uC7GrTorz0uQ7uU0D7Wa2F3RBS3FqLpxbuA4=;
-        b=NrJMcT2grVWgnZ6t7zuOyL4FHN1xGtADdbGnmXaGT5Sp9/IuguhmW+0+IrBZKdJqK3
-         ye4tdSwGaDriXwcfUW7ZgX9zS5AmRvN+E9n3fnsfRlReKTUd3tkIRVp1vQcjjC6qiUQw
-         1x9YQhO2/QejXLZ1ptQ6cN4pH0HXsqV6ak9CChj6ljCEXdJRUnZ9XlNINDWKJtpBYhQj
-         piMToGQlfBPEs3O6uX+S0/eIepehLhkEM23uS8Qh3CvjvsFeQTuvn4BEb3dGudDuH4yC
-         JCBKbol6Bf4k4Nf2RmJYg9GvV3EyT7fbRuzNbtJpPN+/mO+VYauM/UT4c5wvnOYh9CWQ
-         MORg==
-X-Gm-Message-State: AOAM533pmMIWwZrkmiIitZNHw54LTZuz+7/Bq6ksmTszr9uohlzFgkIl
-        XhKcSfP9O/92JE7dWqx9q53U
-X-Google-Smtp-Source: ABdhPJzoCE9sQGEFODPIDDJ3kRF3MoLegAEK2W0U/V0767L0lXYxDy8X9J0GubS2HCNVMxU68SB/dg==
-X-Received: by 2002:a05:6a00:1a8b:b0:4f7:595c:b900 with SMTP id e11-20020a056a001a8b00b004f7595cb900mr1685104pfv.62.1646826275661;
-        Wed, 09 Mar 2022 03:44:35 -0800 (PST)
-Received: from thinkpad ([117.193.208.22])
-        by smtp.gmail.com with ESMTPSA id 2-20020a620502000000b004f6d2975cbesm2500269pff.116.2022.03.09.03.44.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Mar 2022 03:44:35 -0800 (PST)
-Date:   Wed, 9 Mar 2022 17:14:28 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        shawnguo@kernel.org
-Subject: Re: [PATCH v3 6/6] PCI: endpoint: functions/pci-epf-test: Support
- PCI controller DMA
-Message-ID: <20220309114428.GA134091@thinkpad>
-References: <20220307224750.18055-1-Frank.Li@nxp.com>
- <20220307224750.18055-6-Frank.Li@nxp.com>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Njh2e3nlm6g5RknyE5sAnGc59k2MyJk3XaPDLw1CZC8=;
+ b=YwsMKth1M4GwX0SOJ269eMyCxXwwgF+W5w+9iNTofMe5eureXaUHl7udnGJt2B9Uunbm2bkxb2pwzHleIF9X6gsc85E5ThgvuJXqZ3yxEMMXz54OjEjbX6u1str1KhmIkZ6hx8htqG0m7AtGhM+X8dxXV67IQ+kw9U4oLWVCy1k=
+Received: from SN6PR01CA0031.prod.exchangelabs.com (2603:10b6:805:b6::44) by
+ SA2PR02MB7562.namprd02.prod.outlook.com (2603:10b6:806:147::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.16; Wed, 9 Mar
+ 2022 12:00:35 +0000
+Received: from SN1NAM02FT0033.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:805:b6:cafe::91) by SN6PR01CA0031.outlook.office365.com
+ (2603:10b6:805:b6::44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14 via Frontend
+ Transport; Wed, 9 Mar 2022 12:00:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ SN1NAM02FT0033.mail.protection.outlook.com (10.97.5.40) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5038.14 via Frontend Transport; Wed, 9 Mar 2022 12:00:34 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Wed, 9 Mar 2022 04:00:29 -0800
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Wed, 9 Mar 2022 04:00:29 -0800
+Envelope-to: linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org,
+ lorenzo.pieralisi@arm.com,
+ bhelgaas@google.com,
+ robh@kernel.org
+Received: from [10.140.9.2] (port=47618 helo=xhdbharatku40.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1nRuzV-0008Ca-Be; Wed, 09 Mar 2022 04:00:29 -0800
+From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <michals@xilinx.com>, <robh@kernel.org>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH v3 0/2] Add support for Xilinx Versal CPM5 Root Port
+Date:   Wed, 9 Mar 2022 17:30:23 +0530
+Message-ID: <20220309120025.6721-1-bharat.kumar.gogada@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220307224750.18055-6-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 99e6a699-0c3d-4789-2300-08da01c46b32
+X-MS-TrafficTypeDiagnostic: SA2PR02MB7562:EE_
+X-Microsoft-Antispam-PRVS: <SA2PR02MB75629796DA7BA4FD8956CB60A50A9@SA2PR02MB7562.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ONqyR3gRO8kjOf1mcofUOIxvPguKy9AkkfCrcLhgvHYRry08go++Cx+lD3BKEZH0vQn6AeNkdZkLM5aLtLfICYBrBnvqDTVzdKcA6S0UIod+LKnCMlHetUVne7lIj413qDbW0aYWKThY8tWfQ6NnPG2vScpoWwsbvMeno8WaAgcwGXL804ftCEqjsFQD5K1CD3YpUrY+u4UtHETvdydoSZEKWzLMXiusNUm/AMTcBL993UqPw/G7BY2A5xIZZ5VbO1nEXYnSps8xV03KZwPzUXWFEIfYAzETUrYbXhqlkY855l6OafVdzoCmesQBa7RAknpZj2322fhrHoP3bDPhPars3Dbsfm+If5BLeSgShhyj+kaXjl8tQUlFosjPRxUpQCKQwIED8gi/QXqIadR5iuWLmikvQcQlNR/SCJIpTPNdy+9NQDS8eqCCpb96b7By7x+aHQ0uaiwD5CsyKXhJY7q5g9JAbWdmfM3Psbq7MpIsjRUrhpb2zW4aT0B0+cWmzHvtxlUSy71t5nwTHIlUsk+fZDCnzaoCvWAa6tisOnxszosP/KJ0x8uELVD9GCXZg6cn/PWu0r0CvBsuhqa5+yoq0P7uPVBFKr4N8SFsTc48kPLP70Ruj1flvLphyDwQ7insrOOdgU6cCUIxCl601cVWobgysonomTUvOkF9zxmBFjfgeDvQPPvYO4UlimmsH4rcV+ayRJ8EpwJvxcNzuA==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(36840700001)(46966006)(8676002)(70206006)(36756003)(83380400001)(40460700003)(103116003)(5660300002)(82310400004)(70586007)(4326008)(9786002)(4744005)(2906002)(110136005)(316002)(54906003)(8936002)(6666004)(7696005)(426003)(26005)(2616005)(186003)(107886003)(336012)(1076003)(7636003)(356005)(47076005)(36860700001)(508600001)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2022 12:00:34.9230
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99e6a699-0c3d-4789-2300-08da01c46b32
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0033.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR02MB7562
+X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIM_SIGNED,DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 07, 2022 at 04:47:50PM -0600, Frank Li wrote:
-> Designware provided DMA support in controller. This enabled use
-> this DMA controller to transfer data.
-> 
+Xilinx Versal Premium series has CPM5 block which supports Root Port
+functioning at Gen5 speed.
 
-Please use the term "eDMA (embedded DMA)"
+Xilinx Versal CPM5 has few changes with existing CPM block.
+- CPM5 has dedicated register space for control and status registers.
+- CPM5 legacy interrupt handling needs additonal register bit
+  to enable and handle legacy interrupts.
 
-> The whole flow align with standard DMA usage module
-> 
-> 1. Using dma_request_channel() and filter function to find correct
-> RX and TX Channel.
-> 2. dmaengine_slave_config() config remote side physcial address.
-> 3. using dmaengine_prep_slave_single() create transfer descriptor
-> 4. tx_submit();
-> 5. dma_async_issue_pending();
-> 
-> Tested at i.MX8DXL platform.
-> 
-> root@imx8qmmek:~# /usr/bin/pcitest -d -w
-> WRITE ( 102400 bytes):          OKAY
-> root@imx8qmmek:~# /usr/bin/pcitest -d -r
-> READ ( 102400 bytes):           OKAY
-> 
-> WRITE => Size: 102400 bytes DMA: YES  Time: 0.000180145 seconds Rate: 555108 KB/s
-> READ => Size: 102400 bytes  DMA: YES  Time: 0.000194397 seconds Rate: 514411 KB/s
-> 
-> READ => Size: 102400 bytes  DMA: NO   Time: 0.013532597 seconds Rate: 7389 KB/s
-> WRITE => Size: 102400 bytes DMA: NO   Time: 0.000857090 seconds Rate: 116673 KB/s
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Resend added dmaengine@vger.kernel.org
-> 
-> Change from v1 to v3
->  - none
-> 
->  drivers/pci/endpoint/functions/pci-epf-test.c | 106 ++++++++++++++++--
->  1 file changed, 96 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 90d84d3bc868f..22ae420c30693 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -52,9 +52,11 @@ struct pci_epf_test {
->  	enum pci_barno		test_reg_bar;
->  	size_t			msix_table_offset;
->  	struct delayed_work	cmd_handler;
-> -	struct dma_chan		*dma_chan;
-> +	struct dma_chan		*dma_chan_tx;
-> +	struct dma_chan		*dma_chan_rx;
->  	struct completion	transfer_complete;
->  	bool			dma_supported;
-> +	bool			dma_private;
->  	const struct pci_epc_features *epc_features;
->  };
->  
-> @@ -105,14 +107,17 @@ static void pci_epf_test_dma_callback(void *param)
->   */
->  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  				      dma_addr_t dma_dst, dma_addr_t dma_src,
-> -				      size_t len)
-> +				      size_t len, dma_addr_t remote,
+Changes in v3:
+- consistency in is_cpm5 flag check expression.
 
-dma_remote to align with other parameters
+Bharat Kumar Gogada (2):
+  dt-bindings: PCI: xilinx-cpm: Add Versal CPM5 Root Port
+  PCI: xilinx-cpm: Add support for Versal CPM5 Root Port
 
-> +				      enum dma_transfer_direction dir)
->  {
->  	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> -	struct dma_chan *chan = epf_test->dma_chan;
-> +	struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
+ .../bindings/pci/xilinx-versal-cpm.yaml       | 47 ++++++++++++++++---
+ drivers/pci/controller/pcie-xilinx-cpm.c      | 33 ++++++++++++-
+ 2 files changed, 72 insertions(+), 8 deletions(-)
 
-Move this to top for reverse Xmas tree order
+-- 
+2.17.1
 
->  	struct pci_epf *epf = epf_test->epf;
->  	struct dma_async_tx_descriptor *tx;
->  	struct device *dev = &epf->dev;
->  	dma_cookie_t cookie;
-> +	struct dma_slave_config	sconf;
-
-struct dma_slave_config sconf = {}
-
-This can save one memset() below
-
-> +	dma_addr_t local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
-
-dma_local?
-
->  	int ret;
->  
->  	if (IS_ERR_OR_NULL(chan)) {
-> @@ -120,7 +125,20 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  		return -EINVAL;
->  	}
->  
-> -	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> +	if (epf_test->dma_private) {
-> +		memset(&sconf, 0, sizeof(sconf));
-> +		sconf.direction = dir;
-> +		if (dir == DMA_MEM_TO_DEV)
-> +			sconf.dst_addr = remote;
-> +		else
-> +			sconf.src_addr = remote;
-> +
-> +		dmaengine_slave_config(chan, &sconf);
-
-This could fail
-
-> +		tx = dmaengine_prep_slave_single(chan, local, len, dir, flags);
-> +	} else {
-> +		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> +	}
-> +
->  	if (!tx) {
->  		dev_err(dev, "Failed to prepare DMA memcpy\n");
->  		return -EIO;
-> @@ -148,6 +166,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  	return 0;
->  }
->  
-> +struct epf_dma_filter {
-> +	struct device *dev;
-> +	u32 dma_mask;
-> +};
-> +
-> +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-> +{
-> +	struct epf_dma_filter *filter = node;
-> +	struct dma_slave_caps caps;
-> +
-> +	memset(&caps, 0, sizeof(caps));
-> +	dma_get_slave_caps(chan, &caps);
-> +
-> +	return chan->device->dev == filter->dev
-> +		&& (filter->dma_mask & caps.directions);
-
-This will not work when read/write channel counts are greater than 1. You would
-need this patch:
-
-https://git.linaro.org/landing-teams/working/qualcomm/kernel.git/commit/?h=tracking-qcomlt-sdx55-drivers&id=c77ad9d929372b1ff495709714b24486d266a810
-
-Feel free to pick it up in next iteration
-
-> +}
-> +
->  /**
->   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
->   * @epf_test: the EPF test device that performs data transfer operation
-> @@ -160,8 +195,42 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
->  	struct device *dev = &epf->dev;
->  	struct dma_chan *dma_chan;
->  	dma_cap_mask_t mask;
-> +	struct epf_dma_filter filter;
-
-Please preserve the reverse Xmas tree order
-
->  	int ret;
->  
-> +	filter.dev = epf->epc->dev.parent;
-> +	filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-> +
-> +	dma_cap_zero(mask);
-> +	dma_cap_set(DMA_SLAVE, mask);
-> +	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> +	if (IS_ERR(dma_chan)) {
-
-dma_request_channel() can return NULL also. So use IS_ERR_OR_NULL() for error
-check
-
-> +		dev_info(dev, "Failure get built-in DMA channel, fail back to try allocate general DMA channel\n");
-
-"Failed to get private DMA channel. Falling back to generic one"
-
-> +		goto fail_back_tx;
-> +	}
-> +
-> +	epf_test->dma_chan_rx = dma_chan;
-> +
-> +	filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-> +	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> +
-> +	if (IS_ERR(dma_chan)) {
-> +		dev_info(dev, "Failure get built-in DMA channel, fail back to try allocate general DMA channel\n");
-
-"Failed to get private DMA channel. Falling back to generic one"
-
-> +		goto fail_back_rx;
-> +	}
-> +
-> +	epf_test->dma_chan_tx = dma_chan;
-> +	epf_test->dma_private = true;
-> +
-> +	init_completion(&epf_test->transfer_complete);
-
-You could use DECLARE_COMPLETION_ONSTACK() for simplifying the completion handling.
-
-Thanks,
-Mani
-
-> +
-> +	return 0;
-> +
-> +fail_back_rx:
-> +	dma_release_channel(epf_test->dma_chan_rx);
-> +	epf_test->dma_chan_tx = NULL;
-> +
-> +fail_back_tx:
->  	dma_cap_zero(mask);
->  	dma_cap_set(DMA_MEMCPY, mask);
->  
-> @@ -174,7 +243,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
->  	}
->  	init_completion(&epf_test->transfer_complete);
->  
-> -	epf_test->dma_chan = dma_chan;
-> +	epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
->  
->  	return 0;
->  }
-> @@ -190,8 +259,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
->  	if (!epf_test->dma_supported)
->  		return;
->  
-> -	dma_release_channel(epf_test->dma_chan);
-> -	epf_test->dma_chan = NULL;
-> +	dma_release_channel(epf_test->dma_chan_tx);
-> +	if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> +		epf_test->dma_chan_tx = NULL;
-> +		epf_test->dma_chan_rx = NULL;
-> +		return;
-> +	}
-> +
-> +	dma_release_channel(epf_test->dma_chan_rx);
-> +	epf_test->dma_chan_rx = NULL;
-> +
-> +	return;
->  }
->  
->  static void pci_epf_test_print_rate(const char *ops, u64 size,
-> @@ -280,8 +358,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
->  			goto err_map_addr;
->  		}
->  
-> +		if (epf_test->dma_private) {
-> +			dev_err(dev, "Cannot transfer data using DMA\n");
-> +			ret = -EINVAL;
-> +			goto err_map_addr;
-> +		}
-> +
->  		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> -						 src_phys_addr, reg->size);
-> +						 src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  	} else {
-> @@ -363,7 +447,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
->  
->  		ktime_get_ts64(&start);
->  		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> -						 phys_addr, reg->size);
-> +						 phys_addr, reg->size,
-> +						 reg->src_addr, DMA_DEV_TO_MEM);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  		ktime_get_ts64(&end);
-> @@ -453,8 +538,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
->  		}
->  
->  		ktime_get_ts64(&start);
-> +
->  		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
-> -						 src_phys_addr, reg->size);
-> +						 src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  		ktime_get_ts64(&end);
-> -- 
-> 2.24.0.rc1
-> 
