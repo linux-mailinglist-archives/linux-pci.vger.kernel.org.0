@@ -2,309 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F19CE4D5341
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 21:50:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C6E34D5415
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 23:01:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245684AbiCJUvC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 15:51:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35286 "EHLO
+        id S240275AbiCJWC1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 17:02:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236624AbiCJUvB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 15:51:01 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 775C7188844
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 12:49:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646945397;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/wHyperqVD6yT4MZyOSDrCItm0ScJpHPiGZO3nX6coc=;
-        b=dme5Spj3BzzmWYzkmx+4hVXJm3vJNXtajhD3vUv9xHvg9kh0tV61kxIm7RmiuzwaCkz8+C
-        2+LuCi6po277se54UUIv8OV4yDOF+14aNMGs5GrEhZWPq18RwwQLtCelIq21SZDOaBAQr9
-        jyv6vmH1Z+qgu+CKS9QEJEOfMgwm7Qc=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-524-a1qWzkWONqyyhlKh9iUMXA-1; Thu, 10 Mar 2022 15:49:56 -0500
-X-MC-Unique: a1qWzkWONqyyhlKh9iUMXA-1
-Received: by mail-io1-f72.google.com with SMTP id s14-20020a0566022bce00b00645e9bc9773so4785501iov.20
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 12:49:56 -0800 (PST)
+        with ESMTP id S230445AbiCJWC0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 17:02:26 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDA8194A9C
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 14:01:24 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id qa43so14982663ejc.12
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 14:01:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BWdFMs6xgab+RuaIxJQnFK+7CxewzPCWBuyRE87cDO4=;
+        b=otiQWDzQurWmWt5KZVMP5vALvcUFZRL5Lyy5u7rGXyvjUA/UE5OAyT77WxhZXrOUfW
+         F2yUEbg/0Hvvr4e8iilpZoxL9SWKjEMqW7pKDYqNSI2va+zH1Sys6lQiBD+jRp7Hsrsx
+         F+21VUjzUbSP6m9zqBBRAXpwbQq3iVPhI39IN6L1tkENuwXCz9W/78ykKA0K1C3s/ZCG
+         8E84h5H7FG0nBwDvrYdmCxKstcL1hBmRvkONV1tHwMzNuWNb08IcyigrKpZotXgn9qBt
+         n4Z6EAWzJ8EwActpYWMlp6sQxmfrFUGZVqN+Ns5Jo6WwonKfVwhY8XLPwYTdGASJCWUH
+         8k1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=/wHyperqVD6yT4MZyOSDrCItm0ScJpHPiGZO3nX6coc=;
-        b=7Bak02nd3w8xTsHGGL9GAx+bEtOD9CUHAbKuG6zKh2d1JRjjl27YhKfhZxt/YZ+aCb
-         6j6hk+AOPPC45Pk/GkEKh5TNGQIuuAJaBnTEdxMFVl+jFNx2EIvavd1UjcsKrO3RIDlo
-         GNW9oB7Jkmfr8Bd7mMtlUQXXO3yyvJXRlHU+8HIT8EbrOODYe1l1iXG0469/UvUH2B9A
-         iqG3RKAhHKw9xmlfvHankzUh6bAGNcK8vzwPAKBRpSiAkV+DcFQk0R0eK4a0FjFwMiJh
-         y15edKBGOxz3dTHarMh8fXQfXyfhWNiXrJRT/ld6IOdnUf8YKJ45JB8jccO8o10wLwDQ
-         8BpA==
-X-Gm-Message-State: AOAM533H13wNKNzHo1IVCjcFmRWoLL1ATaBAZsSP9rxEtjLdtOY8SE1e
-        TQT6L6YR2cujDPySdThx6Awxr/O8XcGFDTD7eKykkgO1iOdLt6NHh6bhX1W8sgsTvSJkR+DbJQX
-        rZF+q6CsZOlIdi8XZrTWQ
-X-Received: by 2002:a05:6e02:180d:b0:2c7:733a:f11d with SMTP id a13-20020a056e02180d00b002c7733af11dmr710114ilv.23.1646945395830;
-        Thu, 10 Mar 2022 12:49:55 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzdGHIOmSFlUA27ptxSyyRFHgWYtRYdyaS5HXsHLwYYnrbDuYuHO7OCWr0eIL08JCnOU3b0MA==
-X-Received: by 2002:a05:6e02:180d:b0:2c7:733a:f11d with SMTP id a13-20020a056e02180d00b002c7733af11dmr710078ilv.23.1646945395433;
-        Thu, 10 Mar 2022 12:49:55 -0800 (PST)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id b11-20020a056e02184b00b002c66e75d5f7sm3455113ilv.39.2022.03.10.12.49.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 12:49:55 -0800 (PST)
-Date:   Thu, 10 Mar 2022 13:49:54 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        "Jason Gunthorpe" <jgg@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "yishaih@nvidia.com" <yishaih@nvidia.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        liulongfang <liulongfang@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
-        Xu Zaibo <xuzaibo@huawei.com>
-Subject: Re: [PATCH v8 8/9] hisi_acc_vfio_pci: Add support for VFIO live
- migration
-Message-ID: <20220310134954.0df4bb12.alex.williamson@redhat.com>
-In-Reply-To: <BN9PR11MB527634CCF86829E0680E5E678C0A9@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20220303230131.2103-1-shameerali.kolothum.thodi@huawei.com>
-        <20220303230131.2103-9-shameerali.kolothum.thodi@huawei.com>
-        <20220304205720.GE219866@nvidia.com>
-        <20220307120513.74743f17.alex.williamson@redhat.com>
-        <aac9a26dc27140d9a1ce56ebdec393a6@huawei.com>
-        <20220307125239.7261c97d.alex.williamson@redhat.com>
-        <BN9PR11MB5276EBE887402EBE22630BAB8C099@BN9PR11MB5276.namprd11.prod.outlook.com>
-        <20220308123312.1f4ba768.alex.williamson@redhat.com>
-        <BN9PR11MB527634CCF86829E0680E5E678C0A9@BN9PR11MB5276.namprd11.prod.outlook.com>
-Organization: Red Hat
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BWdFMs6xgab+RuaIxJQnFK+7CxewzPCWBuyRE87cDO4=;
+        b=tlhw//Ajvuk4hx/rk7Jn9wsvUQ1sAVYLPy5CLcLeAd8s9XcM1AXne5s4ElfA1cNWKM
+         34QI6PGYJnXyaWJEox5kUifSSu9rz8z17v0uvV9FCNh762ZpI7Vx/SM8jpIHedB9LG4i
+         YnYNAyQ7XTq+7BLQFJEhIFpwTmjN5o9bF4G88ocW3/FobH+GctYMayEujgp+l/59mzcX
+         71Mhs6IIamqtQAI2ZhxH3n23pu2X6Ew/1UeeLfYme6TKSTq9m75zBRwbv0wQa2o8vSmv
+         L561jU6z8HpeVNr+Yl2FC60eACbgYusIOsFnQQec2CUdGH3DvW21cryQueLQKFZEACAt
+         92Ng==
+X-Gm-Message-State: AOAM530iFNp75+T4/xaY14ATamY9LdkAy7ntu5w9hd2E10W1kIAUmeYJ
+        Xwr+furhDt8xcNOlYyIYxEwF3IpWCZoHHA+xI4Y=
+X-Google-Smtp-Source: ABdhPJwDvBt+Xjrv8DtelJF2p4vr5AqojWBHkWMILgD+gLEB2T9xhhNI9I/QaEgvnbsAFOCgK7gYRiMN/qaUMsdaB+U=
+X-Received: by 2002:a17:906:dc90:b0:6da:a5b1:7879 with SMTP id
+ cs16-20020a170906dc9000b006daa5b17879mr5960086ejc.433.1646949683234; Thu, 10
+ Mar 2022 14:01:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220222162355.32369-1-Frank.Li@nxp.com>
+In-Reply-To: <20220222162355.32369-1-Frank.Li@nxp.com>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Thu, 10 Mar 2022 16:01:11 -0600
+Message-ID: <CAHrpEqTFP7SUgoTFq5Dn2-rOrAL_DCX97nRww7o_xnDJ+zDmtw@mail.gmail.com>
+Subject: Re: [PATCH V2 0/4] NTB function for PCIe RC to EP connection
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, kishon@ti.com,
+        lorenzo.pieralisi@arm.com, kw@linux.com,
+        Jingoo Han <jingoohan1@gmail.com>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 9 Mar 2022 10:11:06 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
-
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Wednesday, March 9, 2022 3:33 AM
-> >=20
-> > On Tue, 8 Mar 2022 08:11:11 +0000
-> > "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> >  =20
-> > > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > > Sent: Tuesday, March 8, 2022 3:53 AM =20
-> > > > > =20
-> > > > > > I think we still require acks from Bjorn and Zaibo for select p=
-atches
-> > > > > > in this series. =20
-> > > > >
-> > > > > I checked with Ziabo. He moved projects and is no longer looking =
-into =20
-> > > > crypto stuff. =20
-> > > > > Wangzhou and LiuLongfang now take care of this. Received acks fro=
-m =20
-> > > > Wangzhou =20
-> > > > > already and I will request Longfang to provide his. Hope that's o=
-k. =20
-> > > >
-> > > > Maybe a good time to have them update MAINTAINERS as well.  Thanks,
-> > > > =20
-> > >
-> > > I have one question here (similar to what we discussed for mdev befor=
-e).
-> > >
-> > > Now we are adding vendor specific drivers under /drivers/vfio. Two dr=
-ivers
-> > > on radar and more will come. Then what would be the criteria for
-> > > accepting such a driver? Do we prefer to a model in which the author =
-=20
-> > should =20
-> > > provide enough background for vfio community to understand how it =20
-> > works =20
-> > > or as done here just rely on the PF driver owner to cover device spec=
-ific
-> > > code?
-> > >
-> > > If the former we may need document some process for what information
-> > > is necessary and also need secure increased review bandwidth from key
-> > > reviewers in vfio community.
-> > >
-> > > If the latter then how can we guarantee no corner case overlooked by =
-both
-> > > sides (i.e. how to know the coverage of total reviews)? Another open =
-is =20
-> > who =20
-> > > from the PF driver sub-system should be considered as the one to give=
- the
-> > > green signal. If the sub-system maintainer trusts the PF driver owner=
- and
-> > > just pulls commits from him then having the r-b from the PF driver ow=
-ner is
-> > > sufficient. But if the sub-system maintainer wants to review detail c=
-hange
-> > > in every underlying driver then we probably also want to get the ack =
-from
-> > > the maintainer.
-> > >
-> > > Overall I didn't mean to slow down the progress of this series. But a=
-bove
-> > > does be some puzzle occurred in my review. =F0=9F=98=8A =20
-> >=20
-> > Hi Kevin,
-> >=20
-> > Good questions, I'd like a better understanding of expectations as
-> > well.  I think the intentions are the same as any other sub-system, the
-> > drivers make use of shared interfaces and extensions and the role of
-> > the sub-system should be to make sure those interfaces are used
-> > correctly and extensions fit well within the overall design.  However,
-> > just as the network maintainer isn't expected to fully understand every
-> > NIC driver, I think/hope we have the same expectations here.  It's
-> > certainly a benefit to the community and perceived trustworthiness if
-> > each driver outlines its operating model and security nuances, but
-> > those are only ever going to be the nuances identified by the people
-> > who have the access and energy to evaluate the device.
-> >=20
-> > It's going to be up to the community to try to determine that any new
-> > drivers are seriously considering security and not opening any new gaps
-> > relative to behavior using the base vfio-pci driver.  For the driver
-> > examples we have, this seems a bit easier than evaluating an entire
-> > mdev device because they're largely providing direct access to the
-> > device rather than trying to multiplex a shared physical device.  We
-> > can therefore focus on incremental functionality, as both drivers have
-> > done, implementing a boilerplate vendor driver, then adding migration
-> > support.  I imagine this won't always be the case though and some
-> > drivers will re-implement much of the core to support further emulation
-> > and shared resources.
-> >=20
-> > So how do we as a community want to handle this?  I wouldn't mind, I'd
-> > actually welcome, some sort of review requirement for new vfio vendor
-> > driver variants.  Is that reasonable?  What would be the criteria?
-> > Approval from the PF driver owner, if different/necessary, and at least
-> > one unaffiliated reviewer (preferably an active vfio reviewer or
-> > existing vfio variant driver owner/contributor)?  Ideas welcome.
-> > Thanks,
-> >  =20
->=20
-> Yes, and the criteria is the hard part. In the end it largely depend on=20
-> the expectations of the reviewers. =20
->=20
-> If the unaffiliated reviewer only cares about the usage of shared=20
-> interfaces or extensions as you said then what this series does is
-> just fine. Such type of review can be easily done via reading code=20
-> and doesn't require detail device knowledge.
->=20
-> On the other hand if the reviewer wants to do a full functional
-> review of how migration is actually supported for such device,=20
-> whatever information (patch description, code comment, kdoc,
-> etc.) necessary to build a standalone migration story would be
-> appreciated, e.g.:
->=20
->   - What composes the device state?
->   - Which portion of the device state is exposed to and managed
->     by the user and which is hidden from the user (i.e. controlled
->     by the PF driver)?
->   - Interface between the vfio driver and the device (and/or PF
->     driver) to manage the device state;
->   - Rich functional-level comments for the reviewer to dive into
->     the migration flow;
->   - ...
->=20
-> I guess we don't want to force one model over the other. Just
-> from my impression the more information the driver can=20
-> provide the more time I'd like to spend on the review. Otherwise
-> it has to trend to the minimal form i.e. the first model.
->=20
-> and currently I don't have a concrete idea how the 2nd model will
-> work. maybe it will get clear only when a future driver attracts=20
-> people to do thorough review...
-
-Do you think we should go so far as to formalize this via a MAINTAINERS
-entry, for example:
-
-diff --git a/Documentation/vfio/vfio-pci-vendor-driver-acceptance.rst b/Doc=
-umentation/vfio/vfio-pci-vendor-driver-acceptance.rst
-new file mode 100644
-index 000000000000..54ebafcdd735
---- /dev/null
-+++ b/Documentation/vfio/vfio-pci-vendor-driver-acceptance.rst
-@@ -0,0 +1,35 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Acceptance criteria for vfio-pci device specific driver variants
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+Overview
-+--------
-+The vfio-pci driver exists as a device agnostic driver using the
-+system IOMMU and relying on the robustness of platform fault
-+handling to provide isolated device access to userspace.  While the
-+vfio-pci driver does include some device specific support, further
-+extensions for yet more advanced device specific features are not
-+sustainable.  The vfio-pci driver has therefore split out
-+vfio-pci-core as a library that may be reused to implement features
-+requiring device specific knowledge, ex. saving and loading device
-+state for the purposes of supporting migration.
-+
-+In support of such features, it's expected that some device specific
-+variants may interact with parent devices (ex. SR-IOV PF in support of
-+a user assigned VF) or other extensions that may not be otherwise
-+accessible via the vfio-pci base driver.  Authors of such drivers
-+should be diligent not to create exploitable interfaces via such
-+interactions or allow unchecked userspace data to have an effect
-+beyond the scope of the assigned device.
-+
-+New driver submissions are therefore requested to have approval via
-+Sign-off for any interactions with parent drivers.  Additionally,
-+drivers should make an attempt to provide sufficient documentation
-+for reviewers to understand the device specific extensions, for
-+example in the case of migration data, how is the device state
-+composed and consumed, which portions are not otherwise available to
-+the user via vfio-pci, what safeguards exist to validate the data,
-+etc.  To that extent, authors should additionally expect to require
-+reviews from at least one of the listed reviewers, in addition to the
-+overall vfio maintainer.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4322b5321891..4f7d26f9aac6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20314,6 +20314,13 @@ F:	drivers/vfio/mdev/
- F:	include/linux/mdev.h
- F:	samples/vfio-mdev/
-=20
-+VFIO PCI VENDOR DRIVERS
-+R:	Your Name <your.name@here.com>
-+L:	kvm@vger.kernel.org
-+S:	Maintained
-+P:	Documentation/vfio/vfio-pci-vendor-driver-acceptance.rst
-+F:	drivers/vfio/pci/*/
-+
- VFIO PLATFORM DRIVER
- M:	Eric Auger <eric.auger@redhat.com>
- L:	kvm@vger.kernel.org
-
-Ideally we'd have at least Yishai, Shameer, Jason, and yourself listed
-as reviewers (Connie and I are included via the higher level entry).
-Thoughts from anyone?  Volunteers for reviewers if we want to press
-forward with this as formal acceptance criteria?  Thanks,
-
-Alex
-
+T24gVHVlLCBGZWIgMjIsIDIwMjIgYXQgMTA6MjQgQU0gRnJhbmsgTGkgPEZyYW5rLkxpQG54cC5j
+b20+IHdyb3RlOg0KPg0KPiBUaGlzIGltcGxlbWVudCBOVEIgZnVuY3Rpb24gZm9yIFBDSWUgRVAg
+dG8gUkMgY29ubmVjdGlvbnMuDQo+IFRoZSBleGlzdGVkIG50YiBlcGYgbmVlZCB0d28gUENJIEVQ
+cyBhbmQgdHdvIFBDSSBIb3N0Lg0KPg0KPiBUaGlzIGp1c3QgbmVlZCBFUCB0byBSQyBjb25uZWN0
+aW9ucy4NCj4NCj4gICAgIOKUjOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+kCAgICAgICAgIOKUjOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUkA0KPiAgICAg4pSCICAgICAgICAgICAg4pSCICAgICAgICAg4pSCICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIOKUgg0KPiAgICAg4pSc4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSkICAgICAgICAg4pSCICAgICAgICAgICAgICAgICAg
+ICAgIOKUjOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpA0KPiAg
+ICAg4pSCIE5UQiAgICAgICAg4pSCICAgICAgICAg4pSCICAgICAgICAgICAgICAgICAgICAgIOKU
+giBOVEIgICAgICAgICAg4pSCDQo+ICAgICDilIIgTmV0RGV2ICAgICDilIIgICAgICAgICDilIIg
+ICAgICAgICAgICAgICAgICAgICAg4pSCIE5ldERldiAgICAgICDilIINCj4gICAgIOKUnOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpCAgICAgICAgIOKUgiAgICAgICAgICAg
+ICAgICAgICAgICDilJzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lKQNCj4gICAgIOKUgiBOVEIgICAgICAgIOKUgiAgICAgICAgIOKUgiAgICAgICAgICAgICAgICAg
+ICAgICDilIIgTlRCICAgICAgICAgIOKUgg0KPiAgICAg4pSCIFRyYW5zZmVyICAg4pSCICAgICAg
+ICAg4pSCICAgICAgICAgICAgICAgICAgICAgIOKUgiBUcmFuc2ZlciAgICAg4pSCDQo+ICAgICDi
+lJzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilKQgICAgICAgICDilIIgICAg
+ICAgICAgICAgICAgICAgICAg4pSc4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSkDQo+ICAgICDilIIgICAgICAgICAgICDilIIgICAgICAgICDilIIgICAgICAgICAg
+ICAgICAgICAgICAg4pSCICAgICAgICAgICAgICDilIINCj4gICAgIOKUgiAgUENJIE5UQiAgIOKU
+giAgICAgICAgIOKUgiAgICAgICAgICAgICAgICAgICAgICDilIIgICAgICAgICAgICAgIOKUgg0K
+PiAgICAg4pSCICAgIEVQRiAgICAg4pSCICAgICAgICAg4pSCICAgICAgICAgICAgICAgICAgICAg
+IOKUgiAgICAgICAgICAgICAg4pSCDQo+ICAgICDilIIgICBEcml2ZXIgICDilIIgICAgICAgICDi
+lIIgICAgICAgICAgICAgICAgICAgICAg4pSCIFBDSSBWaXJ0dWFsICDilIINCj4gICAgIOKUgiAg
+ICAgICAgICAgIOKUgiAgICAgICAgIOKUnOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUkCAgICAgIOKUgiBOVEIgRHJpdmVyICAg4pSCDQo+ICAgICDilIIgICAg
+ICAgICAgICDilIIgICAgICAgICDilIIgUENJIEVQIE5UQiAgICDilILil4TilIDilIDilIDilIDi
+lrrilIIgICAgICAgICAgICAgIOKUgg0KPiAgICAg4pSCICAgICAgICAgICAg4pSCICAgICAgICAg
+4pSCICBGTiBEcml2ZXIgICAg4pSCICAgICAg4pSCICAgICAgICAgICAgICDilIINCj4gICAgIOKU
+nOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpCAgICAgICAgIOKUnOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpCAgICAgIOKUnOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUpA0KPiAgICAg4pSCICAgICAg
+ICAgICAg4pSCICAgICAgICAg4pSCICAgICAgICAgICAgICAg4pSCICAgICAg4pSCICAgICAgICAg
+ICAgICDilIINCj4gICAgIOKUgiAgUENJIEJVUyAgIOKUgiDil4TilIDilIDilIDilIDilIDilrog
+4pSCICBQQ0kgRVAgQlVTICAg4pSCICAgICAg4pSCICBWaXJ0dWFsIFBDSSDilIINCj4gICAgIOKU
+giAgICAgICAgICAgIOKUgiAgUENJICAgIOKUgiAgICAgICAgICAgICAgIOKUgiAgICAgIOKUgiAg
+ICAgQlVTICAgICAg4pSCDQo+ICAgICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilJggICAgICAgICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilLTilIDilIDilIDilIDilIDilIDilLTilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilJgNCj4gICAgICAgICBQQ0kgUkMgICAgICAgICAgICAgICAgICAg
+ICAgICBQQ0kgRVANCj4NCj4NCj4NCj4gRnJhbmsgTGkgKDQpOg0KPiAgIFBDSTogZGVzaWdud2Fy
+ZS1lcDogQWxsb3cgcGNpX2VwY19zZXRfYmFyKCkgdXBkYXRlIGluYm91bmQgbWFwIGFkZHJlc3MN
+Cj4gICBOVEI6IGVwZjogQWxsb3cgbW9yZSBmbGV4aWJpbGl0eSBpbiB0aGUgbWVtb3J5IEJBUiBt
+YXAgbWV0aG9kDQo+ICAgUENJOiBlbmRwb2ludDogU3VwcG9ydCBOVEIgdHJhbnNmZXIgYmV0d2Vl
+biBSQyBhbmQgRVANCj4gICBEb2N1bWVudGF0aW9uOiBQQ0k6IEFkZCBzcGVjaWZpY2F0aW9uIGZv
+ciB0aGUgUENJIHZOVEIgZnVuY3Rpb24gZGV2aWNlDQo+DQoNClBpbmcNCg0KPiAgRG9jdW1lbnRh
+dGlvbi9QQ0kvZW5kcG9pbnQvaW5kZXgucnN0ICAgICAgICAgIHwgICAgMiArDQo+ICAuLi4vUENJ
+L2VuZHBvaW50L3BjaS12bnRiLWZ1bmN0aW9uLnJzdCAgICAgICAgfCAgMTI2ICsrDQo+ICBEb2N1
+bWVudGF0aW9uL1BDSS9lbmRwb2ludC9wY2ktdm50Yi1ob3d0by5yc3QgfCAgMTY3ICsrDQo+ICBk
+cml2ZXJzL250Yi9ody9lcGYvbnRiX2h3X2VwZi5jICAgICAgICAgICAgICAgfCAgIDQ4ICstDQo+
+ICAuLi4vcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1lcC5jICAgfCAgIDEwICst
+DQo+ICBkcml2ZXJzL3BjaS9lbmRwb2ludC9mdW5jdGlvbnMvS2NvbmZpZyAgICAgICAgfCAgIDEx
+ICsNCj4gIGRyaXZlcnMvcGNpL2VuZHBvaW50L2Z1bmN0aW9ucy9NYWtlZmlsZSAgICAgICB8ICAg
+IDEgKw0KPiAgZHJpdmVycy9wY2kvZW5kcG9pbnQvZnVuY3Rpb25zL3BjaS1lcGYtdm50Yi5jIHwg
+MTQyNCArKysrKysrKysrKysrKysrKw0KPiAgOCBmaWxlcyBjaGFuZ2VkLCAxNzc1IGluc2VydGlv
+bnMoKyksIDE0IGRlbGV0aW9ucygtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
+b24vUENJL2VuZHBvaW50L3BjaS12bnRiLWZ1bmN0aW9uLnJzdA0KPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vUENJL2VuZHBvaW50L3BjaS12bnRiLWhvd3RvLnJzdA0KPiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGNpL2VuZHBvaW50L2Z1bmN0aW9ucy9wY2ktZXBmLXZu
+dGIuYw0KPg0KPiAtLQ0KPiAyLjI0LjAucmMxDQo+DQo=
