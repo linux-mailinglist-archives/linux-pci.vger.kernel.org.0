@@ -2,110 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF7FA4D5186
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 20:43:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 282F94D5229
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 20:44:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238641AbiCJSXA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 13:23:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37144 "EHLO
+        id S238792AbiCJS0R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 13:26:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243906AbiCJSWt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 13:22:49 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C87014F28A;
-        Thu, 10 Mar 2022 10:21:48 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E51AEB82793;
-        Thu, 10 Mar 2022 18:21:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 415CAC340E8;
-        Thu, 10 Mar 2022 18:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646936505;
-        bh=W4sOM9+B6L0c9LMgUrEbfgUrd76UKZTBgCwuqk0HzAE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=S/ra8oHP+rm+AWgS1iMavypZJ1MSEHgYve723Y7dEigN2WLgCCN+A2331kYtctj0n
-         YkE+1KXYooU4r8d8lWLN5i8XR3sLJymAvzVQu7f+8HzKMwU3xQ/lT4IB00NRC9YGEw
-         RzylTbxWCH1RDLP36ULbTaY65VJXT8ZErq0ksK6pEPUsk02M9rK0zgn1435HMbrzfE
-         YPVnb0BREfPf0KsQzHb7tqiWomCWyaI2gJYyqoEUljMGHLayed5glbj+kMp1Sa/DUK
-         QtmdEjPj9RgCtZ20P6/2SdaJBUkqBhkuxQrC4d/V5a+OyEGT+ANVadV9x2/3ewKtA4
-         wrXWoY8VR3G/A==
-Date:   Thu, 10 Mar 2022 12:21:43 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "alex@ghiti.fr" <alex@ghiti.fr>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v8 01/14] sizes.h: Add SZ_1T macro
-Message-ID: <20220310182143.GA170924@bhelgaas>
+        with ESMTP id S233999AbiCJS0Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 13:26:16 -0500
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 560B7158799;
+        Thu, 10 Mar 2022 10:25:15 -0800 (PST)
+Received: by mail-yb1-f174.google.com with SMTP id z30so12616341ybi.2;
+        Thu, 10 Mar 2022 10:25:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1VMWWhuvSRJCu8S6y70I3FDZGBYa2h8ntijs+vWLbu4=;
+        b=KuehBEAPUdfC1Iq3KRwmMpKo3f9o+hTiwu6yWrWSgOY7wVVLejLg8XclvzUcNXgqK4
+         b2I9ztz8XaxeXg0m7Wu/FdHcH51dWCjWwSqMdl85KOgp34v7ORzWTQN3Q1O7ysmksG9M
+         YSCxmNNlVsfWA27JxGabBD85qMMswLgAaqYCSGVMPl6UT5/MRCJ0gJlVtFV9m68ftFcP
+         dncQnGA8BgNaDFggFUq8Rn3ueRNO0zhj1ikiI2C/HpzN+MjiY+HBqSxZOuyghLO2Zcpr
+         tbCYMt6bobSx6g8E5Gh8H+vsYQd5KQEQvGc08jI+ARfvT6B7QXW78qO4Bu5OIpdO++2c
+         12KA==
+X-Gm-Message-State: AOAM533t3e47sliiAGoeggXGMRh2Pnqk9P/W3PYR9RppCQ1L6OlJqaTN
+        1bb+mwWpCKMftv/V/J0tuXpdK5PjLiSahn+FMcQ=
+X-Google-Smtp-Source: ABdhPJwB6Xxzp9s0UkiJxcaCeTNWvc1OlizyzvM4l2ll06Ao/S+XgEdT0oPnlC+fKmSYsLJQgpV1zDEjsta6pYpBJaI=
+X-Received: by 2002:a25:3a41:0:b0:628:86a2:dbc with SMTP id
+ h62-20020a253a41000000b0062886a20dbcmr4814757yba.633.1646936714464; Thu, 10
+ Mar 2022 10:25:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <969d885d-dcff-61b9-50cd-cdaf511505ab@csgroup.eu>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220310175832.1259-1-mario.limonciello@amd.com>
+In-Reply-To: <20220310175832.1259-1-mario.limonciello@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 10 Mar 2022 19:25:03 +0100
+Message-ID: <CAJZ5v0gjPwEcq2dEE+wRr3D+w7=MTEKJoQ+x9muh_R4W-DawVw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: ACPI: Don't blindly trust `HotPlugSupportInD3`
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>, Sanju.Mehta@amd.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 06:09:51PM +0000, Christophe Leroy wrote:
-> 
-> 
-> Le 10/03/2022 à 17:52, Bjorn Helgaas a écrit :
-> > On Wed, Mar 09, 2022 at 06:44:35PM +0100, Christophe Leroy wrote:
-> >> Today drivers/pci/controller/pci-xgene.c defines SZ_1T
-> >>
-> >> Move it into linux/sizes.h so that it can be re-used elsewhere.
-> >>
-> >> Link: https://lore.kernel.org/r/575cb7164cf124c75df7cb9242ea7374733942bf.1642752946.git.christophe.leroy@csgroup.eu
-> >> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> >> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> >> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-> >> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> >> Cc: Toan Le <toan@os.amperecomputing.com>
-> >> Cc: linux-pci@vger.kernel.org
-> >> ---
-> >>   This patch is already in linux-next but not in Linus' tree yet
-> > 
-> > What would you like me to do about this?  It's in linux-next, which
-> > means it will go to Linus' tree during the next merge window.
-> > 
-> > But this is 01/14; are there other patches that I should be looking
-> > at?  Do I need to coordinate this with other patches that depend on
-> > it?
-> 
-> Yes sorry I should have said it. Patch 14/14 depends on it.
-> 
-> Don't know yet what's the merge strategy for this series, there as not 
-> been any changes since v6 mid December and core parts are acked/reviewed 
-> so I would be happy if at least core mm parts could go this cycle. I 
-> sent a question to Michael and Andrew about it.
+On Thu, Mar 10, 2022 at 6:58 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> The `_DSD` `HotPlugSupportInD3` is supposed to indicate the ability for a
+> bridge to be able to wakeup from D3.
+>
+> This however is static information in the ACPI table at BIOS compilation
+> time and on some platforms it's possible to configure the firmware at boot
+> up such that `_S0W` will not return "0" indicating the inability to wake
+> up the device from D3.
 
-Since PCI is only minimally affected in this series, it would probably
-make more sense for it to be merged along with the rest of the series
-via a non-PCI tree.
+To be precise, _S0W returning 0 means that the device cannot generate
+wakeup signals from any D-states other than D0 while the system as a
+whole is in S0.
 
-It has my ack, so this can certainly happen.  If it does, I can easily
-drop it from the PCI tree.
+> To fix these situations explicitly check that the ACPI device has a GPE
+> allowing the device to generate wakeup signals handled by the platform
+> in `acpi_pci_bridge_d3`.
 
-Bjorn
+Which may be orthogonal to the _S0W return value mentioned above.
+
+Also, I'm not quite sure why acpi_pci_bridge_d3() should require the
+root port to have a wake GPE associated with it as an indication that
+the hierarchy below it can be put into D3cold.
+
+> This changes aligns the handling of the situation the same as Windows 10
+> and Windows 11 both do as well.
+>
+> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
+> Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
+> Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v1->v2:
+>  * Add Mika's tag
+>  * Update commit message for Rafael's suggestions
+>  drivers/pci/pci-acpi.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index a42dbf448860..9f8f55ed09d9 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -999,6 +999,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>         if (!adev)
+>                 return false;
+>
+> +       if (!adev->wakeup.flags.valid)
+> +               return false;
+
+Minor nit: the two checks above could be combined.
+
+Also I would add a comment explaining why exactly wakeup.flags.valid
+is checked here, because I can imagine a case in which the wakeup
+signaling capability is irrelevant for whether or not the given port
+can handle D3cold.
+
+> +
+>         if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
+>                                    ACPI_TYPE_INTEGER, &obj) < 0)
+>                 return false;
+> --
