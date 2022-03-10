@@ -2,164 +2,219 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A1424D46ED
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 13:28:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A42154D4721
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 13:37:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241999AbiCJM3p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 07:29:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47302 "EHLO
+        id S241923AbiCJMiW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 07:38:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241997AbiCJM3o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 07:29:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 209538189D
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 04:28:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646915322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/VafedsefDAeccwtNNOU8Qnj3l5Nry7zWypwpz3i1HM=;
-        b=EEACC+tmW0IjLpkmLW6wP8niLRjizn/LSTt6KHLxuN5xHFgvGTo0cPzVYmjDph3XJvJnKE
-        iDmGjHJovFUFTs2hLDLSCfch/FIbwJttBXla2B9NvEvrBruTm8uUXZNc/AQdvbOsS/aLU+
-        GKOlQj9I6nubZuYf1P5SUCdd2XiLCgU=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-127-C86I3ocwPfKkWZZYUOwJIg-1; Thu, 10 Mar 2022 07:28:41 -0500
-X-MC-Unique: C86I3ocwPfKkWZZYUOwJIg-1
-Received: by mail-ej1-f70.google.com with SMTP id lf15-20020a170906ae4f00b006da86a43346so3012165ejb.14
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 04:28:41 -0800 (PST)
+        with ESMTP id S234943AbiCJMiW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 07:38:22 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA23148667;
+        Thu, 10 Mar 2022 04:37:20 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id h14so9132251lfk.11;
+        Thu, 10 Mar 2022 04:37:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RobMDDfWnOz5yZ1PGRtJSSc4jJfiehWVeo3eirprMYY=;
+        b=ct8mM04AZqcYsxCik7J35JjhMHpThFjyOpv7I+XBSR+hom58EvLYQ3otdLNeqa47MP
+         lKEBdnAU3ro7zBi+/HRtJyANhGw/jYLsBklwcLMj//UqIXK+DUdqE5UA0wMyYQmVaP3n
+         uXqHNPIwX3Xj4n7NCdHA3Jw4YvuWFLmXEbOqVLjiBAdN5be/hbepaUdVskHK4SdQFXOC
+         yIyby5c6PuUEGQx7E0R9KtEBN5WgRgidiIQLH+IIORkhkdcAMzt2L2tOxKInx8ES4Czo
+         /TKgl38dF+qFWY/ESKgSn3lkEoXvqL3d2HqK1JFXCrTKEHdnRbE0LEu89hKHpAD3swB7
+         lnRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=/VafedsefDAeccwtNNOU8Qnj3l5Nry7zWypwpz3i1HM=;
-        b=0QfZdBOF8jpSR/1udJI3Mx0SsbDdIEXpdQFNvXnhC3nbvV35GG9NWoNje4dXOA7Uvn
-         oPsHOQKA8qJdJfRa2p5Rdh6Z0V5R7dek707armcxwzON5fz803VnXBtqIgVyKNGAlzPD
-         6tVJQIMz2BZDvP2+xKy7dQ5K+a1J5W1p9bjcC2DtIoCyJXa90t0DuuJSojc7AQpxgQCK
-         UZI682M3jz0+jMj2m3TCuqAVKDVlR1IgCdae+ObW4SQk/dzgAzXEHcBhgHElBtkalLLP
-         o38auIjPuRlA+VLkRMLFOKVyezVGTwLQG3ymZtTUBj6SlA+o8a5zUqGYPzdkUq92atpe
-         UWHw==
-X-Gm-Message-State: AOAM530YE4bb/dY+U/s0mDo17EkGyNuVUEyXO6hyCSEBmP4AvsEug9j4
-        2mkJTAk5xsQWixcclDF8LuOBiZ+gQNjQIpm1i1olb1nwQ33zRrw4G40z50wgckKR8hEFw4fj6HM
-        /Bzj8U2dMkgxp2hcoVbmS
-X-Received: by 2002:a17:907:d03:b0:6da:9618:7ddd with SMTP id gn3-20020a1709070d0300b006da96187dddmr4042985ejc.341.1646915319856;
-        Thu, 10 Mar 2022 04:28:39 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyeXf6u9l7+3+snGK+VBlx3Qlyb60nhABu8yvzpWxOMJf6ZWsZGZlrftndTf4/C7nBxoCi4gQ==
-X-Received: by 2002:a17:907:d03:b0:6da:9618:7ddd with SMTP id gn3-20020a1709070d0300b006da96187dddmr4042967ejc.341.1646915319596;
-        Thu, 10 Mar 2022 04:28:39 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id k3-20020a05640212c300b0041605b2d9c1sm1871774edx.58.2022.03.10.04.28.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Mar 2022 04:28:39 -0800 (PST)
-Message-ID: <b41cfd4d-3f55-168a-e96c-cf2d11d50f28@redhat.com>
-Date:   Thu, 10 Mar 2022 13:28:38 +0100
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RobMDDfWnOz5yZ1PGRtJSSc4jJfiehWVeo3eirprMYY=;
+        b=aTnTIkFdJBgG9BJ8EFkXhXrD2RDe2FrqyjsPt4pNf41diktC8jLuPJ0fJ84CX6GiKM
+         gCadysN5x3Tz+SWg6CLyYAX3iJOfj5r3ixbelcfH60S+Dui0LxVYlv83xJN7RaG4Upvx
+         BGCicjKTXor/abc+DAUnaLXzS7j/SeRmYBavIwXi2E8iy32XYSnabL41jUCQJkEEu8v+
+         w6BCtN5iW+bS2qIyz6WfCcuVYP/32iI0aESlmb+ZWvLy6x+RLLKIaZZDpJvvl5WFeUND
+         eD3cGh3I0vFJRzJ9W8hQgZfZ+JFbKXVv+vCJCA1cFwIY76sLYR0yXTpGJaeTyJvoFvIY
+         Jt9Q==
+X-Gm-Message-State: AOAM533mAgfMek9fL4nFFLVsYa2JihTacN9Lk+Qds1k6i6C+RFWSDo39
+        C1pNGPxPhrWKMmhGL7FxSvk=
+X-Google-Smtp-Source: ABdhPJxCodS5d3x300XwibiSnbD5ZFWN9D3hPoAyqRtPGga8kWk8xT9KIdBCp3HikQHLTI1VBpALBw==
+X-Received: by 2002:a05:6512:104a:b0:448:46f1:776c with SMTP id c10-20020a056512104a00b0044846f1776cmr2979259lfb.473.1646915839003;
+        Thu, 10 Mar 2022 04:37:19 -0800 (PST)
+Received: from mobilestation ([95.79.188.22])
+        by smtp.gmail.com with ESMTPSA id y17-20020a2e95d1000000b002463d2595f0sm1036534ljh.135.2022.03.10.04.37.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Mar 2022 04:37:18 -0800 (PST)
+Date:   Thu, 10 Mar 2022 15:37:16 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org, manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v4 4/8] dmaengine: dw-edma: rename wr(rd)_ch_cnt to
+ ll_wr(rd)_cnt in struct dw_edma_chip
+Message-ID: <20220310123716.z6zh72ybevze3nk2@mobilestation>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-5-Frank.Li@nxp.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH 3/3] x86/PCI: Preserve host bridge windows completely
- covered by E820
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
-        =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
-        Hui Wang <hui.wang@canonical.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, wse@tuxedocomputers.com
-References: <20220309181518.GA63422@bhelgaas>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220309181518.GA63422@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220309211204.26050-5-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Wed, Mar 09, 2022 at 03:12:00PM -0600, Frank Li wrote:
+> There are same name wr(rd)_ch_cnt in struct dw_edma. EDMA driver get
+> write(read) channel number from register, then save these into dw_edma.
+> Old wr(rd)_ch_cnt in dw_edma_chip actuall means how many link list memory
+> are avaiable in ll_region_wr(rd)[EDMA_MAX_WR_CH]. So rename it to
+> ll_wr(rd)_cnt to indicate actual usage.
 
-On 3/9/22 19:15, Bjorn Helgaas wrote:
-> On Sat, Mar 05, 2022 at 11:37:23AM +0100, Hans de Goede wrote:
->> On 3/4/22 16:46, Hans de Goede wrote:
->>> On 3/4/22 16:32, Bjorn Helgaas wrote:
->>>> On Fri, Mar 04, 2022 at 03:16:42PM +0100, Hans de Goede wrote:
->>>>> On 3/4/22 04:51, Bjorn Helgaas wrote:
->>>>>> From: Bjorn Helgaas <bhelgaas@google.com>
->>>>>>
->>>>>> Many folks have reported PCI devices not working.  It could affect any
->>>>>> device, but most reports are for Thunderbolt controllers on Lenovo Yoga and
->>>>>> Clevo Barebone laptops and the touchpad on Lenovo IdeaPads.
->>>>>> ...
+Hmm, I am not sure you are right here. AFAICS the
+drivers/dma/dw-edma/dw-edma-pcie.c driver either uses a statically
+defined number or Rd/Wr channels or just gets the number from the
+specific vsec PCIe capability. Then based on that the driver just
+redistributes the BARs memory amongst all the detected channels in
+accordance with the statically defined snps_edda_data structure.
+Basically the BARs memory serves as the Local/CPU/Application memory
+for the case if the controller is embedded into the PCIe Host/EP
+controller. See the patches which implicitly prove that:
+31fb8c1ff962 ("dmaengine: dw-edma: Improve the linked list and data blocks definition")
+da6e0dd54135 ("dmaengine: dw-edma: Change linked list and data blocks offset and sizes")
+
+(That's why the logic of the DEV_TO_MEM/MEM_TO_DEV is inverted for the
+the drivers/dma/dw-edma/dw-edma-pcie.c platform.)
+
+So basically the wr_ch_cnt/rd_ch_cnt fields have been and is used as
+the number of actually available channels, not linked-list. While the
+notation suggested by you can be confusing, since the ll-memory allocated for
+each channel can be split up and initialized with numerous linked lists
+each of which is used one after another.
+
+I don't really see a well justified reason to additionally have the
+@wr_ch_cnt and @rd_ch_cnt fields in the dw_edma_chip seeing the number
+of channels can be auto-detected from the corresponding registers, except
+that to workaround a bogus hardware. So we can keep it, but please no
+renaming. It will only cause additional confusion.
+
+-Sergey
+
 > 
->>>>>> diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
->>>>>> index 7378ea146976..405f0af53e3d 100644
->>>>>> --- a/arch/x86/kernel/resource.c
->>>>>> +++ b/arch/x86/kernel/resource.c
->>>>>> @@ -39,6 +39,17 @@ void remove_e820_regions(struct device *dev, struct resource *avail)
->>>>>>  		e820_start = entry->addr;
->>>>>>  		e820_end = entry->addr + entry->size - 1;
->>>>>>  
->>>>>> +		/*
->>>>>> +		 * If an E820 entry covers just part of the resource, we
->>>>>> +		 * assume E820 is telling us about something like host
->>>>>> +		 * bridge register space that is unavailable for PCI
->>>>>> +		 * devices.  But if it covers the *entire* resource, it's
->>>>>> +		 * more likely just telling us that this is MMIO space, and
->>>>>> +		 * that doesn't need to be removed.
->>>>>> +		 */
->>>>>> +		if (e820_start <= avail->start && avail->end <= e820_end)
->>>>>> +			continue;
->>>>>> +
->>>>>
->>>>> IMHO it would be good to add some logging here, since hitting this is
->>>>> somewhat of a special case. For the Fedora test kernels I did I changed
->>>>> this to:
->>>>>
->>>>> 		if (e820_start <= avail->start && avail->end <= e820_end) {
->>>>> 			dev_info(dev, "resource %pR fully covered by e820 entry [mem %#010Lx-%#010Lx]\n",
->>>>> 				 avail, e820_start, e820_end);
->>>>> 			continue;
->>>>> 		}
->>>>>
->>>>> And I expect/hope to see this new info message on the ideapad with the
->>>>> touchpad issue.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> new patch at v4
 > 
-> I added this logging.
+>  drivers/dma/dw-edma/dw-edma-core.c |  4 ++--
+>  drivers/dma/dw-edma/dw-edma-pcie.c | 12 ++++++------
+>  include/linux/dma/edma.h           |  8 ++++----
+>  3 files changed, 12 insertions(+), 12 deletions(-)
 > 
->> So I just got the first report back from the Fedora test 5.16.12 kernel
->> with this series added. Good news on the ideapad this wotks fine to
->> fix the touchpad issue (as expected).
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 1abf41d49f75b..66dc650577919 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -918,11 +918,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>  	raw_spin_lock_init(&dw->lock);
+>  
+>  
+> -	dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
+> +	dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
+>  			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
+>  	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
+>  
+> -	dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
+> +	dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
+>  			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
+>  	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
+>  
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index ae42bad24dd5a..7732537f96086 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -230,14 +230,14 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	chip->nr_irqs = nr_irqs;
+>  	chip->ops = &dw_edma_pcie_core_ops;
+>  
+> -	chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
+> -	chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
+> +	chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
+> +	chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
+>  
+>  	chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
+>  	if (!chip->reg_base)
+>  		return -ENOMEM;
+>  
+> -	for (i = 0; i < chip->wr_ch_cnt; i++) {
+> +	for (i = 0; i < chip->ll_wr_cnt; i++) {
+>  		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+>  		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+>  		struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
+> @@ -262,7 +262,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  		dt_region->sz = dt_block->sz;
+>  	}
+>  
+> -	for (i = 0; i < chip->rd_ch_cnt; i++) {
+> +	for (i = 0; i < chip->ll_rd_cnt; i++) {
+>  		struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
+>  		struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
+>  		struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
+> @@ -302,7 +302,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  		chip->reg_base);
+>  
+>  
+> -	for (i = 0; i < chip->wr_ch_cnt; i++) {
+> +	for (i = 0; i < chip->ll_wr_cnt; i++) {
+>  		pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+>  			i, vsec_data.ll_wr[i].bar,
+>  			vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
+> @@ -314,7 +314,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  			chip->dt_region_wr[i].vaddr, &chip->dt_region_wr[i].paddr);
+>  	}
+>  
+> -	for (i = 0; i < chip->rd_ch_cnt; i++) {
+> +	for (i = 0; i < chip->ll_rd_cnt; i++) {
+>  		pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+>  			i, vsec_data.ll_rd[i].bar,
+>  			vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
+> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> index e9ce652b88233..c2039246fc08c 100644
+> --- a/include/linux/dma/edma.h
+> +++ b/include/linux/dma/edma.h
+> @@ -40,8 +40,8 @@ enum dw_edma_map_format {
+>   * @nr_irqs:		 total dma irq number
+>   * @ops			 DMA channel to IRQ number mapping
+>   * @reg_base		 DMA register base address
+> - * @wr_ch_cnt		 DMA write channel number
+> - * @rd_ch_cnt		 DMA read channel number
+> + * @ll_wr_cnt		 DMA write link list number
+> + * @ll_rd_cnt		 DMA read link list number
+>   * @rg_region		 DMA register region
+>   * @ll_region_wr	 DMA descriptor link list memory for write channel
+>   * @ll_region_rd	 DMA descriptor link list memory for read channel
+> @@ -56,8 +56,8 @@ struct dw_edma_chip {
+>  
+>  	void __iomem		*reg_base;
+>  
+> -	u16			wr_ch_cnt;
+> -	u16			rd_ch_cnt;
+> +	u16			ll_wr_cnt;
+> +	u16			ll_rd_cnt;
+>  	/* link list address */
+>  	struct dw_edma_region	ll_region_wr[EDMA_MAX_WR_CH];
+>  	struct dw_edma_region	ll_region_rd[EDMA_MAX_RD_CH];
+> -- 
+> 2.24.0.rc1
 > 
-> Any "Tested-by" I could add?  If we can, I'd really like to give some
-> credit to the folks who suffered through this and helped resolve it.
-
-Good point, the reporter of:
-https://bugzilla.redhat.com/show_bug.cgi?id=1868899
-
-has done most of the ideapad with touchpad issues testing for me
-and has been very helpful. I agree he deserves credit for this.
-
-I've asked him if he is ok with adding a Tested-by tag and if yes,
-which email we should use.
-
-Regards,
-
-Hans
-
