@@ -2,173 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC8C74D4773
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 13:56:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B5DB4D4802
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 14:25:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233472AbiCJM5s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 07:57:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59374 "EHLO
+        id S242386AbiCJNZu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 08:25:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231575AbiCJM5r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 07:57:47 -0500
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98656149B93;
-        Thu, 10 Mar 2022 04:56:46 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id z11so9192779lfh.13;
-        Thu, 10 Mar 2022 04:56:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=y+6UK50+1RtnrOaVu7w4moimbhX5SN6HBffXgHYQxds=;
-        b=QZ6lt/CqliDwvDrEgteLdMcVfXaHWcl3F8jMxL6fyl8W0El2WE+Sczfp16suFOTkmy
-         KlCEzj3C1ZS81NAt6DzahEY6EuI+LYRgvCEr2OpI6XaiTyw/gGzAl/N3IPP7M78ERdhT
-         B8K7aGPw65WvQHgFr412EtxUkOzSrWHf02lwCGdtz4mbS/mea/iwhz2jm6zg/r6I0RzS
-         f6YmWTMfIgxlPhuJQnNlCifgQeexhzAm6oxJPbU2aELwGSS09W2qT+s+YP7Yq81RO6Zy
-         zsdhUPr+LhJ1krGNDypWE1G+4cB7SvpVpU4h6SDzz9E5hPCU4Rg0GwL8ycWQTQ4hiNTV
-         2d4w==
+        with ESMTP id S242362AbiCJNZt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 08:25:49 -0500
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83EBD64EC
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 05:24:48 -0800 (PST)
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 31A403F60B
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 13:24:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1646918687;
+        bh=AC2QV+BOHtvgXwOifEM5ca7aMnsr4tiE4ebM/MHFh6A=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=qyHJdoGNlIK0srWqi4VrDXjZsdZ9cWdy7a87s78PZy32tSo2ZAktOA2rI8z+fMNm+
+         +saeeae/TAO2ttLDHFHqzUu/9aphnYtcsgypfsBP7sxGcuAaKO8NmfVwKVYSigYByf
+         Sshb7APxwH4ydWUVWyt0TUtm4SdFxJJjvjlSlBOXBDHJzazFY6uaOmjV2hhSMGMvHl
+         x0rW+PoOurcjywDK+1XQg82Hae0rDxfYB8BGsdtlIfaOYAyczU2lzIuwlheDrLdCSp
+         CLKYIwDlPhubJQYkW8oDPdm7jjqqCiV7D+R2PdBH+hmkn0WeTYAxH59Rk/hFV4zG+c
+         v714aKTmfD1PQ==
+Received: by mail-ej1-f70.google.com with SMTP id h22-20020a1709060f5600b006b11a2d3dcfso3109449ejj.4
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 05:24:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y+6UK50+1RtnrOaVu7w4moimbhX5SN6HBffXgHYQxds=;
-        b=WkBY4AfONYD+6n1OYe2UDbnAXcb1INan3NJ86GHXwxC/26JRqSQd8vo6QyuYM/hfIR
-         pHuVv8dyPgSIO6ICuaoOjJtuMFrSY5XE9EBfuRutEqStc47YKZ3QOeTA97dxVBQOhHf1
-         QByYxu2P5/89W9wL6qyo76Eg9rJQ4vwaD/q+ylxjqc2xjMSqcgZPHvMmGfg+83TE6Nha
-         mechGbmyDj2f4F5Mw0O0XZr1lCMOlxyEyBfZGgMgt3+TkStRrKJCu/AAUDC8iUnkArAq
-         s+0at8eC62j2WUHcJjMua6A6rkXDOb7wPef0vnRLfgNlWUmEhtPjrNQ3xyDQ+dDfQKqP
-         0O1A==
-X-Gm-Message-State: AOAM531dWCgetc3NgRTUhsXBqSJ4zTFLEQ/HLAMe9zGaB8INTRcIPy3l
-        lAY6S4T2/7yPHFrOLZPgiHQ=
-X-Google-Smtp-Source: ABdhPJwBx+lYh8FGKBTqTmszuDN3N2+oYz8vAb2TWLvuBgs6SyMC3FXFWkwGPGWds1sbWFbEF+MArw==
-X-Received: by 2002:a05:6512:1322:b0:448:410d:a85a with SMTP id x34-20020a056512132200b00448410da85amr2898663lfu.67.1646917004978;
-        Thu, 10 Mar 2022 04:56:44 -0800 (PST)
-Received: from mobilestation ([95.79.188.22])
-        by smtp.gmail.com with ESMTPSA id m20-20020a194354000000b0044829b151b2sm964422lfj.222.2022.03.10.04.56.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 04:56:44 -0800 (PST)
-Date:   Thu, 10 Mar 2022 15:56:42 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        shawnguo@kernel.org, manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH v4 3/8] dmaengine: dw-edma: change rg_region to reg_base
- in struct dw_edma_chip
-Message-ID: <20220310125642.lcmwt3ojulk7cc43@mobilestation>
-References: <20220309211204.26050-1-Frank.Li@nxp.com>
- <20220309211204.26050-4-Frank.Li@nxp.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=AC2QV+BOHtvgXwOifEM5ca7aMnsr4tiE4ebM/MHFh6A=;
+        b=BdCQek+JJZAikHS0aBy8PbbdxwbVfHkFjt0bk3n5yaHf7aG5tK4NdQ9lzPAWAskFPK
+         sWpckWsyGq/f/0HLoUUfsbpRbHn3BfwerkAUF9YlvAYpEs6hPq4GjB2WJ+39whz8A/bL
+         Z0fuRzo8B7t4P2f/hBFaesFMM+7kiWABhAOCbCQ3CbTFCipjHoLXJyDB0Rch+f4CPbqZ
+         A7DGB7u6DlHpLMDIT7R0OdAUI8GXGPDXd/ufN3BdGvwc1yJdrN1Q0MGpDMTVLZO0dvyH
+         bA5qax07VogkgfpL36zoWgCWsM4dzm1ldTvIEbBI+xMyBNoJX7SG+Cxts9RAjwXG9GeV
+         /Pfg==
+X-Gm-Message-State: AOAM530ib4xWi5xN8/JaqbVexrzPYV+0sHg7Pvt1QjeRpL5x+vgW5+Ch
+        IZ7h5Cm/DB3W2vtTpqqUwUXjRTbgF0dy6xUYfizPeAFhdwnohFN3hTgnDjrCyHoAVKoRfZPrpvC
+        qcSzPNp6i0fVLRDdsNtCipeberpyJaEBHY4DXZA==
+X-Received: by 2002:a17:907:c16:b0:6db:682:c8c9 with SMTP id ga22-20020a1709070c1600b006db0682c8c9mr4311066ejc.153.1646918686618;
+        Thu, 10 Mar 2022 05:24:46 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxh96pIcaZjepw8fDG5gEIFBY3lCXTrIeHF6wSWe/4lVWb3KtEgtjp2SDkTN4L1ahVqkj5lJg==
+X-Received: by 2002:a17:907:c16:b0:6db:682:c8c9 with SMTP id ga22-20020a1709070c1600b006db0682c8c9mr4311039ejc.153.1646918686230;
+        Thu, 10 Mar 2022 05:24:46 -0800 (PST)
+Received: from [192.168.0.144] (xdsl-188-155-174-239.adslplus.ch. [188.155.174.239])
+        by smtp.gmail.com with ESMTPSA id m24-20020a170906161800b006d420027b63sm1780101ejd.18.2022.03.10.05.24.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Mar 2022 05:24:45 -0800 (PST)
+Message-ID: <6f34f80e-da06-337d-167e-2410309e0f4d@canonical.com>
+Date:   Thu, 10 Mar 2022 14:24:45 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220309211204.26050-4-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: xilinx-cpm: Add Versal CPM5 Root
+ Port
+Content-Language: en-US
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, michals@xilinx.com,
+        robh@kernel.org
+References: <20220309120025.6721-1-bharat.kumar.gogada@xilinx.com>
+ <20220309120025.6721-2-bharat.kumar.gogada@xilinx.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220309120025.6721-2-bharat.kumar.gogada@xilinx.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 09, 2022 at 03:11:59PM -0600, Frank Li wrote:
-> struct dw_edma_region rg_region included virtual address, physical
-> address and size informaiton. But only virtual address is used by EDMA
-> driver. Change it to void __iomem *reg_base to clean up code.
-
-Right, the driver doesn't use neither physical address nor size of the
-CSRs MMIO region, and most likely will never start using it. They are
-just redundant for the CSR space.
-
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-
+On 09/03/2022 13:00, Bharat Kumar Gogada wrote:
+> Xilinx Versal Premium series has CPM5 block which supports Root Port
+> functioning at Gen5 speed.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> Add support for YAML schemas documentation for Versal CPM5 Root Port driver.
+> 
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
 > ---
-> New patch at v4
+>  .../bindings/pci/xilinx-versal-cpm.yaml       | 47 ++++++++++++++++---
+>  1 file changed, 40 insertions(+), 7 deletions(-)
 > 
->  drivers/dma/dw-edma/dw-edma-pcie.c       | 6 +++---
->  drivers/dma/dw-edma/dw-edma-v0-core.c    | 2 +-
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 2 +-
->  include/linux/dma/edma.h                 | 3 ++-
->  4 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 2c1c5fa4e9f28..ae42bad24dd5a 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -233,8 +233,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
->  	chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index 32f4641085bc..97c7229d7f91 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -14,17 +14,21 @@ allOf:
 >  
-> -	chip->rg_region.vaddr = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-> -	if (!chip->rg_region.vaddr)
-> +	chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-> +	if (!chip->reg_base)
->  		return -ENOMEM;
+>  properties:
+>    compatible:
+> -    const: xlnx,versal-cpm-host-1.00
+> +    contains:
+> +      enum:
+> +        - xlnx,versal-cpm-host-1.00
+> +        - xlnx,versal-cpm5-host-1.00
 >  
->  	for (i = 0; i < chip->wr_ch_cnt; i++) {
-> @@ -299,7 +299,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>    reg:
+> -    items:
+> -      - description: Configuration space region and bridge registers.
+> -      - description: CPM system level control and status registers.
+> +    description: |
+> +      Should contain cpm_slcr, cfg registers location and length.
+> +      For xlnx,versal-cpm5-host-1.00, it should also contain cpm_csr.
+> +    minItems: 2
+> +    maxItems: 3
+
+You removed here list of items, which should stay. See also
+https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/example-schema.yaml#L91
+how to do it.
+
 >  
->  	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p)\n",
->  		vsec_data.rg.bar, vsec_data.rg.off, vsec_data.rg.sz,
-> -		chip->rg_region.vaddr);
-> +		chip->reg_base);
->  
->  
->  	for (i = 0; i < chip->wr_ch_cnt; i++) {
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> index e507e076fad16..35f2adac93e46 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> @@ -25,7 +25,7 @@ enum dw_edma_control {
->  
->  static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
->  {
-> -	return dw->chip->rg_region.vaddr;
-> +	return dw->chip->reg_base;
->  }
->  
->  #define SET_32(dw, name, value)				\
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> index edb7e137cb35a..3a899f7f4e8d8 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> @@ -288,7 +288,7 @@ void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
->  	if (!dw)
->  		return;
->  
-> -	regs = dw->chip->rg_region.vaddr;
-> +	regs = dw->chip->reg_base;
->  	if (!regs)
->  		return;
->  
-> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> index 6fd374cc72c8e..e9ce652b88233 100644
-> --- a/include/linux/dma/edma.h
-> +++ b/include/linux/dma/edma.h
-> @@ -39,6 +39,7 @@ enum dw_edma_map_format {
->   * @id:			 instance ID
->   * @nr_irqs:		 total dma irq number
->   * @ops			 DMA channel to IRQ number mapping
-> + * @reg_base		 DMA register base address
->   * @wr_ch_cnt		 DMA write channel number
->   * @rd_ch_cnt		 DMA read channel number
->   * @rg_region		 DMA register region
-> @@ -53,7 +54,7 @@ struct dw_edma_chip {
->  	int			nr_irqs;
->  	const struct dw_edma_core_ops   *ops;
->  
-> -	struct dw_edma_region	rg_region;
-> +	void __iomem		*reg_base;
->  
->  	u16			wr_ch_cnt;
->  	u16			rd_ch_cnt;
-> -- 
-> 2.24.0.rc1
-> 
+>    reg-names:
+> -    items:
+> -      - const: cfg
+> -      - const: cpm_slcr
+> +    minItems: 2
+> +    maxItems: 3
+
+The same.
+
+
+Best regards,
+Krzysztof
