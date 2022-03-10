@@ -2,49 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D91614D509A
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 18:33:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C2C94D50C4
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 18:42:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240442AbiCJRb3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 12:31:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52758 "EHLO
+        id S242835AbiCJRnP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 12:43:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233084AbiCJRb2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 12:31:28 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA9EF11A1;
-        Thu, 10 Mar 2022 09:30:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CA225B8270A;
-        Thu, 10 Mar 2022 17:30:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204F6C340E8;
-        Thu, 10 Mar 2022 17:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646933424;
-        bh=Xm6HxslQ4JAAUO3tzolqj+8HYytM0C3tyab+DDDGYzg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=TGzEeayaGIUwsWouUcKF4SWChC2LR5w0YVUpr8d3xaYNHng/Bd0l08mgnGB2R822O
-         Jmc4gUuF7I9hroi9OZThClOmK9qmySYqdokWAue55JV3dhBP5mrMadkx6u6gkfyN9v
-         nD1YroODIFl1Ojivnta16dWkGrqJ89I/pvhDd1aRe3TnWKAbZJL+B06a6QgNm/U6/F
-         wDdgs5h+RG+73MHHGPTpW2WGcIBj5CQOmlCD9EfEVJG3N0DSstQwwkFpQ7vrkr+c/3
-         LWiGseBi/6ieqQtFZwur+ikH10P49H5YjdTeylxCWCsLnJJRpHcKSG5TGQDRPHrwHo
-         4jG6yh2V2fvxg==
-Date:   Thu, 10 Mar 2022 11:30:22 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     bhelgaas@google.com, arnd@arndb.de, hch@infradead.org,
-        akpm@linux-foundation.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: Remove the deprecated "pci-dma-compat.h" API
-Message-ID: <20220310173022.GA166412@bhelgaas>
+        with ESMTP id S245344AbiCJRnK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 12:43:10 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D3213C9D4
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 09:42:07 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id t14so5327470pgr.3
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 09:42:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PPQrHzg1RDdeLhtFhdnuQYSIQ6hbxsQcozaEjk0rKTc=;
+        b=NT4G4OhHf0pNzBrjWY22EwZ+334hXYIAdDA3szv3lOp+Mv1TCwUd+8gwFSO+/gf7mG
+         SVLygApkB1LZG3lo30ntnbPKFt4gemd5X+zmLmxhiCM7VT+9j+fnYRaD8cA4MBSJP8dy
+         ihwAQHksyh00aYS7NjjCMEY5Uaj+WepWILaggX89XeXYlyuTURIWqUV9aa9yReYB/6MV
+         6deooqP+5v+kYLyWE0WgJO5IpbthDaBxAIKKU71T2obDABC4mtVR0970LfnS6PHHxN95
+         vLKhQrn4YoskOWmmLPcnGnBk/JQhji8JBypEY9abCNV51Jwj4Wy5OjEr13eL42RF0pB6
+         1RBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PPQrHzg1RDdeLhtFhdnuQYSIQ6hbxsQcozaEjk0rKTc=;
+        b=3qawk5F+S6kZ8Q1RDmoZdj5vTl5zcaadQVERurYzRCzguvakA/LlDuvn9MYmDPAmeh
+         UnHRfjiEGLHDrerGpNlrhzn3lmKen81v3QbO+/zwBd62jS8zI0+FNOWR04QUK0Bx3Ani
+         fL0YlxyV11QfDN422zXrckf8G5WkUVVl3bEHFYsc4gg94LvX2+f6Su4fvGyBOESmLR8Q
+         RQWwanU6yQYW0xpZnZe/CLRFxGwCPLStqEyLacqCpAPJKisx2NwglhMbfUATvxMyBkTH
+         Ap+nGsS8yE9TLWjGDHAukGoOVSzcFyLlHURG4TeE0tvUgG3E0Ihb5dq3wvoSy5Y8W9iv
+         Xwxw==
+X-Gm-Message-State: AOAM530uHKwl4DvmmbraBIZxZCaHrUSorYt/92Cy/MWDNtLvu75r0Hbg
+        Z5YcUFF1dAZiifX5/4S/zmgV
+X-Google-Smtp-Source: ABdhPJxgmOVLg5W51riJwemoiqEV4yFlNNx7wZNqDsX+5ixCNLw0gGHal4UZaOCNmIRiT4fCTUsk7Q==
+X-Received: by 2002:a63:7e44:0:b0:378:5645:90f6 with SMTP id o4-20020a637e44000000b00378564590f6mr4899912pgn.505.1646934126932;
+        Thu, 10 Mar 2022 09:42:06 -0800 (PST)
+Received: from thinkpad ([117.207.29.167])
+        by smtp.gmail.com with ESMTPSA id t7-20020a056a0021c700b004f737480bb8sm7539431pfj.4.2022.03.10.09.42.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Mar 2022 09:42:06 -0800 (PST)
+Date:   Thu, 10 Mar 2022 23:11:59 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org
+Subject: Re: [PATCH v4 6/8] dmaengine: dw-edma: Don't rely on the deprecated
+ "direction" member
+Message-ID: <20220310174159.GF4869@thinkpad>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-7-Frank.Li@nxp.com>
+ <20220310172930.g7xq3txjkbwtdmbw@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220310170445.GA163749@bhelgaas>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <20220310172930.g7xq3txjkbwtdmbw@mobilestation>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -53,32 +78,73 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 11:04:45AM -0600, Bjorn Helgaas wrote:
-> On Wed, Mar 09, 2022 at 08:50:39PM +0100, Christophe JAILLET wrote:
-> > Now that all usages of the functions defined in "pci-dma-compat.h" have
-> > been removed, it is time to remove this file as well.
+On Thu, Mar 10, 2022 at 08:29:30PM +0300, Serge Semin wrote:
+> On Wed, Mar 09, 2022 at 03:12:02PM -0600, Frank Li wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > The "direction" member of the "dma_slave_config" structure is deprecated.
+> > The clients no longer use this field to specify the direction of the slave
+> > channel. But in the eDMA core, this field is used to differentiate between the
+> > Root complex (remote) and Endpoint (local) DMA accesses.
+> > 
+> > Nevertheless, we can't differentiate between local and remote accesses without
+> > a dedicated flag. So let's get rid of the old check and add a new check for
+> > verifying the DMA operation between local and remote memory instead.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> > no chang between v1 to v4
+> >  drivers/dma/dw-edma/dw-edma-core.c | 17 ++---------------
+> >  1 file changed, 2 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index 507f08db1aad3..47c6a52929fcd 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -341,22 +341,9 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+> >  	if (!chan->configured)
+> >  		return NULL;
+> >  
+> > -	switch (chan->config.direction) {
+> > -	case DMA_DEV_TO_MEM: /* local DMA */
+> > -		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ)
+> > -			break;
+> > -		return NULL;
+> > -	case DMA_MEM_TO_DEV: /* local DMA */
+> > -		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE)
+> > -			break;
 > 
-> As of 1db333d9a51f ("Merge tag 'spi-fix-v5.17-rc7' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi"), all the
-> following still appear to be used:
+> > +	/* eDMA supports only read and write between local and remote memory */
 > 
->   git grep -E "\<PCI_DMA_(BIDIRECTIONAL|TODEVICE|FROMDEVICE|NONE)"
->   git grep -E "pci_(alloc|zalloc|free)_consistent"
->   git grep -E "pci_(map|unmap)_single"
->   git grep -E "\<pci_(map|unmap)_page"
->   git grep -E "pci_(map|unmap)_sg"
->   git grep -E "pci_dma_sync_"
->   git grep pci_dma_mapping_error
->   git grep -E "pci_set_.*dma_mask"
+> The comment is a bit confusing because both cases are named as
+> "memory" while the permitted directions contains DEV-part, which
+> means "device". What I would suggest to write here is something like:
+> "DW eDMA supports transferring data from/to the CPU/Application memory
+> to/from the PCIe link partner device by injecting the PCIe MWr/MRd TLPs."
+> 
 
-Christoph mentioned several other trees that this depends on, and
-those would likely be in linux-next, but not yet in Linus' tree.  The
-above poking around is from the tip of Linus' tree, which was the
-wrong place for me to look.
+End of the day, you'd be transferring data between remote and local memory
+only and the terms (local and remote) are also used in the databook. So I think
+the comment is fine.
 
-But I did the same in current linux-next, 71941773e143 ("Add
-linux-next specific files for 20220310"), and still found quite a few
-uses.  Some are in comments, printks, coccinelle scripts, etc.  I
-would assume we'd want to remove them all?
+Thanks,
+Mani
 
-Bjorn
+> -Sergey
+> 
+> > +	if (dir != DMA_DEV_TO_MEM && dir != DMA_MEM_TO_DEV)
+> >  		return NULL;
+> > -	default: /* remote DMA */
+> > -		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_READ)
+> > -			break;
+> > -		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE)
+> > -			break;
+> > -		return NULL;
+> > -	}
+> >  
+> >  	if (xfer->type == EDMA_XFER_CYCLIC) {
+> >  		if (!xfer->xfer.cyclic.len || !xfer->xfer.cyclic.cnt)
+> > -- 
+> > 2.24.0.rc1
+> > 
