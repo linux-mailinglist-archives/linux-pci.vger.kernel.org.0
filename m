@@ -2,58 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC9414D42DB
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 09:51:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EBE824D42E9
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 09:56:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237013AbiCJIwY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 03:52:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51668 "EHLO
+        id S234989AbiCJI5o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 03:57:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231153AbiCJIwX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 03:52:23 -0500
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F33137582
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 00:51:22 -0800 (PST)
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-        by localhost (Postfix) with ESMTP id 4KDjTh6gGcz9sRr;
-        Thu, 10 Mar 2022 09:51:20 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-        by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KN9tQPs5Z3VJ; Thu, 10 Mar 2022 09:51:20 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase2.c-s.fr (Postfix) with ESMTP id 4KDjTX53tRz9sS1;
-        Thu, 10 Mar 2022 09:51:12 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9CB5C8B780;
-        Thu, 10 Mar 2022 09:51:12 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 9ky5aI1uLoWU; Thu, 10 Mar 2022 09:51:12 +0100 (CET)
-Received: from [192.168.202.40] (unknown [192.168.202.40])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 15CFE8B763;
-        Thu, 10 Mar 2022 09:51:12 +0100 (CET)
-Message-ID: <f55dba9c-f00f-3aa9-d84d-1cda2b660dcb@csgroup.eu>
-Date:   Thu, 10 Mar 2022 09:51:13 +0100
+        with ESMTP id S233910AbiCJI5n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 03:57:43 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D72137589
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 00:56:40 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id m11-20020a17090a7f8b00b001beef6143a8so4620589pjl.4
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 00:56:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NstX+8MhKuPX15Q3Cn5v2S4ksEEmS5rE+lUKfrbEsw8=;
+        b=ufeSvo1sQx1GrTcOvT9d/3N9WKIDvvcuLEVv1XMrqvjhNBOsb3S/D/ywRVvLpDZ1gx
+         VjEh9QwiiHECtppmL9I+hOaTMzJh3wxJjQPkW+VJp5YH26L1iTXBmdntDz71yum+n6OJ
+         RxUVf5/0+z24LAy6r63oQ625LtXWdR8udDYJ5KrYgyskXkigkfZ8+x9ZzNdaqF7ZcQI0
+         VIE1/S63xfQeOsXDnjLhyXCAX2N/NfRoh72LuaGt/m9Bg2OgGG14487eBvFnY+EzFBuX
+         hLXo2J6rDiipQjbyobC+TjSea1ee2FTtHySmQ8DJcD7+7sbpIWlG4L1kTC7evymD/aYR
+         WLTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NstX+8MhKuPX15Q3Cn5v2S4ksEEmS5rE+lUKfrbEsw8=;
+        b=FT+QgLmvGo8LLsz80xDBAa2IiPr+FFO/gqxrLQoxuQcWl0wA6mbPioNcohLbWzsyr/
+         Wq0Nrwa49MfWEwBv0f6Mpb8622pYMVhRb8AkPqhS02OrvF6BHij6fdM8JXkxZ7vfTbcI
+         PeOWKox+LRLLnH+dpoGTm3waGB2cw60PXKpkb2waOQMA4jblxMzT36131aTVFdBuPsLQ
+         5iqTQm4bW055EjvxCFBU45E+lJ/aviKBGgnjAR8PKV0+4ik145z+huj33xhDp11zA8qc
+         hh2X8uoDWKcX0H02f5OX2rUipLiqCB/Xwe+jUFh00eRmuA6HL0Ma/oVKqZpc2kfBcsAR
+         Lguw==
+X-Gm-Message-State: AOAM531O1ZRU3qiTWu1Lxt7Ypmhcp98rQYG9H3/Sc9hXvhJd3QeYCKag
+        0UST+bK1bvESWhHh77dPITab
+X-Google-Smtp-Source: ABdhPJzpvBqjItWH6Y5efU0r6nSLlA/IznpzdKlRZVZXLRVaXJg0uUl5/M6ZsuV1UbrxfGvYcDzjcw==
+X-Received: by 2002:a17:903:22cd:b0:151:a884:d444 with SMTP id y13-20020a17090322cd00b00151a884d444mr3855855plg.141.1646902600187;
+        Thu, 10 Mar 2022 00:56:40 -0800 (PST)
+Received: from thinkpad ([117.193.208.22])
+        by smtp.gmail.com with ESMTPSA id rm8-20020a17090b3ec800b001bcd57956desm5149383pjb.51.2022.03.10.00.56.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Mar 2022 00:56:39 -0800 (PST)
+Date:   Thu, 10 Mar 2022 14:26:32 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org
+Subject: Re: [PATCH v3 1/6] dmaengine: dw-edma: fix dw_edma_probe() can't be
+ call globally
+Message-ID: <20220310085632.GE4869@thinkpad>
+References: <20220307224750.18055-1-Frank.Li@nxp.com>
+ <20220309133940.3le2ma24aqlhips4@mobilestation>
+ <20220309181233.GC134091@thinkpad>
+ <20220309190123.dnivojpqhl52o5vc@mobilestation>
+ <20220310062242.GB4869@thinkpad>
+ <20220310084112.2vhvvnl6pmlkfg36@mobilestation>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 2/2] powerpc/eeh: Use pcie_reset_state_t type in function
- arguments
-Content-Language: fr-FR
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, Oliver O'Halloran <oohall@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20210713002525.203840-1-kw@linux.com>
- <20210713002525.203840-2-kw@linux.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20210713002525.203840-2-kw@linux.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220310084112.2vhvvnl6pmlkfg36@mobilestation>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -62,52 +81,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-Le 13/07/2021 à 02:25, Krzysztof Wilczyński a écrit :
-> The pcie_reset_state_t type has been introduced in the commit
-> f7bdd12d234d ("pci: New PCI-E reset API") along with the enum
-> pcie_reset_state, but it has never been used for anything else
-> other than to define the members of the enumeration set in the
-> enum pcie_reset_state.
+On Thu, Mar 10, 2022 at 11:41:12AM +0300, Serge Semin wrote:
+> On Thu, Mar 10, 2022 at 11:52:42AM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Mar 09, 2022 at 10:01:23PM +0300, Serge Semin wrote:
+> > 
+> > [...]
+> > 
+> > > > I'm afraid that this will not work for all cases (unless I miss something). As
+> > > > Zhi Li pointed out, there are places where only chip pointer will be passed and
+> > > > we'd need to extract the private data (dw_edma) from it.
+> > > > 
+> > > > Tbh I also considered your idea but because of the above mentioned issue and
+> > > > also referring to other implementations like gpiochip, I settled with Frank's
+> > > > idea of copying the fields.
+> > > 
+> > > What places are these? I see the only obstacle is the dw_edma_remove()
+> > > method. But it's easily fixable.
+> > 
+> > Yeah, right. I overlooked that part.
+> > 
+> > > Except that, everything else is more
+> > > or less straightforward (just a few methods need to have prototypes
+> > > converted to accepting dw_edma instead dw_edma_chip).
+> > > 
+> > > In order to make the code design more coherent, we need to split up
+> > > private data and device/platform info. As I see it dw_edma_chip is
+> > > nothing but a chip info data. The eDMA driver is supposed to mainly
+> > > use and pass it's private data, not the platform info. It will greatly
+> > > improve the code readability and maintainability. Such approach will
+> > > also prevent a temptation of adding new private data fields into the
+> > > dw_edma_chip structure since reaching the pointer to dw_edma will be
+> > > much easier that getting the dw_edma_chip data. In this case
+> > > dw_edma_chip will be something like i2c_board_info in i2c.
+> > > 
+> > > Ideally dw_edma_chip could be a temporarily defined device info, which
+> > > memory after the dw_edma_probe() method invocation could be freed. But
+> > > in order to implement that we'd need a bit more modifications
+> > > introduced.
+> > > 
+> > 
 > 
-> Thus, replace the direct use of enum pcie_reset_state in function
-> arguments and replace it with pcie_reset_state_t type so that the
-> argument type matches the type used in enum pcie_reset_state.
+> > While at it, we should also consider adding an ops structure for passing the
+> > callbacks from controller drivers. Currently the eDMA driver has the callbacks
+> > defined in v0-core.c but it is used directly instead of as a callback.
 > 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-
-I don't understand the purpose of this change. Does any tool like sparse 
-of so reports an error here ?
-
-My feeling is that by doing this you loose the added value of using an 
-enumerate.
-
-state is used in a switch/case, that's exactly what we expect from an enum.
-
-By the way, I think you can't change the prototype of a weak function in 
-a patch and not change it at the same time for the overloading function.
-
-So should you still think this change is necessary, I think patch 1 and 
-2 should be squashed together in one.
-
-Christophe
-
-
-> ---
->   arch/powerpc/kernel/eeh.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> Are you saying about DBI/Native IOs? If so seems reasonable. Though in
+> my case it isn't required.) The only problem was a dword-aligned access,
+> which has been created in the DW eDMA driver by default.
 > 
-> diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
-> index 3bbdcc86d01b..15485abb89ff 100644
-> --- a/arch/powerpc/kernel/eeh.c
-> +++ b/arch/powerpc/kernel/eeh.c
-> @@ -714,7 +714,7 @@ static void eeh_restore_dev_state(struct eeh_dev *edev, void *userdata)
->    * Return value:
->    * 	0 if success
->    */
-> -int pcibios_set_pcie_reset_state(struct pci_dev *dev, enum pcie_reset_state state)
-> +int pcibios_set_pcie_reset_state(struct pci_dev *dev, pcie_reset_state_t state)
->   {
->   	struct eeh_dev *edev = pci_dev_to_eeh_dev(dev);
->   	struct eeh_pe *pe = eeh_dev_to_pe(edev);
+
+It is not causing any problem but it doesn't look correct to me.
+
+Btw, do you have a patch for DWORD access? If so, please share. We are also
+facing the problem and like to see how to are handling it.
+
+Thanks,
+Mani
+
+> -Sergey
+> 
+> > 
+> > This should anyway needs to be fixed when another version of the IP get's added.
+> > 
+> > Thanks,
+> > Mani
