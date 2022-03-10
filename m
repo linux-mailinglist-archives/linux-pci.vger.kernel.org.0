@@ -2,234 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A17944D4FDD
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 18:04:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A4464D5087
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 18:29:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243509AbiCJRFx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 12:05:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
+        id S244939AbiCJRai (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 12:30:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238115AbiCJRFx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 12:05:53 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E702514CC90;
-        Thu, 10 Mar 2022 09:04:49 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A3193B82663;
-        Thu, 10 Mar 2022 17:04:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDB68C340E8;
-        Thu, 10 Mar 2022 17:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646931887;
-        bh=8mz7SJOvO9ILlkAo2lQX6lQ8PtHaY5yoaUCXExSLZOc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AUKhOpc7XaL8Bg9JPja3EQdUjEGre1tVxspOloh9beJ74U7HtPmOfOyWIOeiNlALF
-         8PjubTGELAeiryOaT6KxY8q2JAzr+pqeoNw7+nesGLtoWgPjs6p0cDNozUXiA3W1/0
-         Eg9Jxt2GdNxmXoBWnQWX4dDealkLYXusrtPZ37DakCe/HUcK6Wsf/TiYtW/BQ4qqQU
-         khw5FZQOYQCsb21a+8Bg6agP6Jn9VsMdpkOFG8OOyzpcPXMbdjIsvH+5RT2zG52DX2
-         hkLoGedQNYhVCpj9okmuY8+ab9dtXcHje1CT4VKRoN7xkRg1Ri0tY0ZT4ec/Ia5mu8
-         BUSB1sbpkgLlQ==
-Date:   Thu, 10 Mar 2022 11:04:45 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     bhelgaas@google.com, arnd@arndb.de, hch@infradead.org,
-        akpm@linux-foundation.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: Remove the deprecated "pci-dma-compat.h" API
-Message-ID: <20220310170445.GA163749@bhelgaas>
+        with ESMTP id S244759AbiCJRag (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 12:30:36 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D6CBD31FB;
+        Thu, 10 Mar 2022 09:29:35 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id z11so10590586lfh.13;
+        Thu, 10 Mar 2022 09:29:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eCcJQMSaPqi5zt8beLRmZW0zLGixAnNgDgtiWNv73Rs=;
+        b=ISQq8THvz/51DUMhVJ3UFf3Ho63QuDN/kRcpTlugmvqKPEbqM1q/rMng0POdpiQH7+
+         eHWgM0UgfucUKetTOrVEjA4VheUOp3CwSu03WI1z3e8VRMUeORi80qXAHEAxWWo3HNeg
+         oF2QPEr3K7f9otkKTOMhHdq3ESlicBx3CDQorgMikF3dnWIbKsqQZ4VQLZ/gTJZNA9eO
+         nxovBAXQ5JYSh7J1FsmL9uaPNdImv4jRpIxeRbVo/Bg03xFdEvG1+CThPYrdgTMv+zFB
+         5aSa/F+djggaJR6GXqBnWuttYazanYuB1UYfNfiN4oqivTQ1sUSJ/rqXOU4+dci7cmxi
+         ZKug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eCcJQMSaPqi5zt8beLRmZW0zLGixAnNgDgtiWNv73Rs=;
+        b=VMWQwQVxQslP39x/WQgOgwbu/cQ0T4cQ4hHto1fox+Rwnv+ww+7h3HesyeibyHnwOQ
+         pUtnsXIE6He4ijeugIDJ2RkOO4hijvlTRb89WWAtIX7OAp9RsjWqSEhIe+GTsQlZ5AtT
+         u/84s2EjMtZUH+KUj+GdcckyLk1YVWbNdWJOEBhKaQsV0jJhEH9GLO4bXDus08xzWv5F
+         JYa+MBM3gAfEBltt3C6YKccOViKbPJWVR7zp/TpGRxl+kZzzqYY6kUD6v2wMFZZlEOwp
+         bfaBcj+2SUI3FLcqXa859ISf0OOuQArjoTt9J7k7hnK/la1/7og+bBpdTPx/pw11R17U
+         GhDA==
+X-Gm-Message-State: AOAM532y68NcI6Z8LdujEptwOj39OC6NBpV14tL40lh4OdvfvA3wPffI
+        pttXesLPj+juP87uZ3U5MHcm1pG2Bir0uw==
+X-Google-Smtp-Source: ABdhPJy1JXlSLyEoN59U7UXV5OXbjbLlUYc1uwaDWO3g8d3m7WcrHEIflElLRjuyqx08dJxQSxDuYQ==
+X-Received: by 2002:ac2:4c52:0:b0:448:27b1:8668 with SMTP id o18-20020ac24c52000000b0044827b18668mr3642876lfk.308.1646933373961;
+        Thu, 10 Mar 2022 09:29:33 -0800 (PST)
+Received: from mobilestation ([95.79.188.22])
+        by smtp.gmail.com with ESMTPSA id f8-20020a2eb5a8000000b00247eb1b937csm1181649ljn.127.2022.03.10.09.29.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Mar 2022 09:29:33 -0800 (PST)
+Date:   Thu, 10 Mar 2022 20:29:30 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org, manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v4 6/8] dmaengine: dw-edma: Don't rely on the deprecated
+ "direction" member
+Message-ID: <20220310172930.g7xq3txjkbwtdmbw@mobilestation>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-7-Frank.Li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <25d93797bd5a5bae5c7613ec42c01ecd7c69cd17.1646855282.git.christophe.jaillet@wanadoo.fr>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220309211204.26050-7-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 09, 2022 at 08:50:39PM +0100, Christophe JAILLET wrote:
-> Now that all usages of the functions defined in "pci-dma-compat.h" have
-> been removed, it is time to remove this file as well.
-
-As of 1db333d9a51f ("Merge tag 'spi-fix-v5.17-rc7' of
-git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi"), all the
-following still appear to be used:
-
-  git grep -E "\<PCI_DMA_(BIDIRECTIONAL|TODEVICE|FROMDEVICE|NONE)"
-  git grep -E "pci_(alloc|zalloc|free)_consistent"
-  git grep -E "pci_(map|unmap)_single"
-  git grep -E "\<pci_(map|unmap)_page"
-  git grep -E "pci_(map|unmap)_sg"
-  git grep -E "pci_dma_sync_"
-  git grep pci_dma_mapping_error
-  git grep -E "pci_set_.*dma_mask"
-
-> In order not to break builds, move the "#include <linux/dma-mapping.h>"
-> that was in "pci-dma-compat.h" into "include/linux/pci.h"
+On Wed, Mar 09, 2022 at 03:12:02PM -0600, Frank Li wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->
+> The "direction" member of the "dma_slave_config" structure is deprecated.
+> The clients no longer use this field to specify the direction of the slave
+> channel. But in the eDMA core, this field is used to differentiate between the
+> Root complex (remote) and Endpoint (local) DMA accesses.
+> 
+> Nevertheless, we can't differentiate between local and remote accesses without
+> a dedicated flag. So let's get rid of the old check and add a new check for
+> verifying the DMA operation between local and remote memory instead.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  include/linux/pci-dma-compat.h | 129 ---------------------------------
->  include/linux/pci.h            |   3 +-
->  2 files changed, 1 insertion(+), 131 deletions(-)
->  delete mode 100644 include/linux/pci-dma-compat.h
+> no chang between v1 to v4
+>  drivers/dma/dw-edma/dw-edma-core.c | 17 ++---------------
+>  1 file changed, 2 insertions(+), 15 deletions(-)
 > 
-> diff --git a/include/linux/pci-dma-compat.h b/include/linux/pci-dma-compat.h
-> deleted file mode 100644
-> index 249d4d7fbf18..000000000000
-> --- a/include/linux/pci-dma-compat.h
-> +++ /dev/null
-> @@ -1,129 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> -/* include this file if the platform implements the dma_ DMA Mapping API
-> - * and wants to provide the pci_ DMA Mapping API in terms of it */
-> -
-> -#ifndef _ASM_GENERIC_PCI_DMA_COMPAT_H
-> -#define _ASM_GENERIC_PCI_DMA_COMPAT_H
-> -
-> -#include <linux/dma-mapping.h>
-> -
-> -/* This defines the direction arg to the DMA mapping routines. */
-> -#define PCI_DMA_BIDIRECTIONAL	DMA_BIDIRECTIONAL
-> -#define PCI_DMA_TODEVICE	DMA_TO_DEVICE
-> -#define PCI_DMA_FROMDEVICE	DMA_FROM_DEVICE
-> -#define PCI_DMA_NONE		DMA_NONE
-> -
-> -static inline void *
-> -pci_alloc_consistent(struct pci_dev *hwdev, size_t size,
-> -		     dma_addr_t *dma_handle)
-> -{
-> -	return dma_alloc_coherent(&hwdev->dev, size, dma_handle, GFP_ATOMIC);
-> -}
-> -
-> -static inline void *
-> -pci_zalloc_consistent(struct pci_dev *hwdev, size_t size,
-> -		      dma_addr_t *dma_handle)
-> -{
-> -	return dma_alloc_coherent(&hwdev->dev, size, dma_handle, GFP_ATOMIC);
-> -}
-> -
-> -static inline void
-> -pci_free_consistent(struct pci_dev *hwdev, size_t size,
-> -		    void *vaddr, dma_addr_t dma_handle)
-> -{
-> -	dma_free_coherent(&hwdev->dev, size, vaddr, dma_handle);
-> -}
-> -
-> -static inline dma_addr_t
-> -pci_map_single(struct pci_dev *hwdev, void *ptr, size_t size, int direction)
-> -{
-> -	return dma_map_single(&hwdev->dev, ptr, size, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline void
-> -pci_unmap_single(struct pci_dev *hwdev, dma_addr_t dma_addr,
-> -		 size_t size, int direction)
-> -{
-> -	dma_unmap_single(&hwdev->dev, dma_addr, size, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline dma_addr_t
-> -pci_map_page(struct pci_dev *hwdev, struct page *page,
-> -	     unsigned long offset, size_t size, int direction)
-> -{
-> -	return dma_map_page(&hwdev->dev, page, offset, size, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline void
-> -pci_unmap_page(struct pci_dev *hwdev, dma_addr_t dma_address,
-> -	       size_t size, int direction)
-> -{
-> -	dma_unmap_page(&hwdev->dev, dma_address, size, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline int
-> -pci_map_sg(struct pci_dev *hwdev, struct scatterlist *sg,
-> -	   int nents, int direction)
-> -{
-> -	return dma_map_sg(&hwdev->dev, sg, nents, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline void
-> -pci_unmap_sg(struct pci_dev *hwdev, struct scatterlist *sg,
-> -	     int nents, int direction)
-> -{
-> -	dma_unmap_sg(&hwdev->dev, sg, nents, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline void
-> -pci_dma_sync_single_for_cpu(struct pci_dev *hwdev, dma_addr_t dma_handle,
-> -		    size_t size, int direction)
-> -{
-> -	dma_sync_single_for_cpu(&hwdev->dev, dma_handle, size, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline void
-> -pci_dma_sync_single_for_device(struct pci_dev *hwdev, dma_addr_t dma_handle,
-> -		    size_t size, int direction)
-> -{
-> -	dma_sync_single_for_device(&hwdev->dev, dma_handle, size, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline void
-> -pci_dma_sync_sg_for_cpu(struct pci_dev *hwdev, struct scatterlist *sg,
-> -		int nelems, int direction)
-> -{
-> -	dma_sync_sg_for_cpu(&hwdev->dev, sg, nelems, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline void
-> -pci_dma_sync_sg_for_device(struct pci_dev *hwdev, struct scatterlist *sg,
-> -		int nelems, int direction)
-> -{
-> -	dma_sync_sg_for_device(&hwdev->dev, sg, nelems, (enum dma_data_direction)direction);
-> -}
-> -
-> -static inline int
-> -pci_dma_mapping_error(struct pci_dev *pdev, dma_addr_t dma_addr)
-> -{
-> -	return dma_mapping_error(&pdev->dev, dma_addr);
-> -}
-> -
-> -#ifdef CONFIG_PCI
-> -static inline int pci_set_dma_mask(struct pci_dev *dev, u64 mask)
-> -{
-> -	return dma_set_mask(&dev->dev, mask);
-> -}
-> -
-> -static inline int pci_set_consistent_dma_mask(struct pci_dev *dev, u64 mask)
-> -{
-> -	return dma_set_coherent_mask(&dev->dev, mask);
-> -}
-> -#else
-> -static inline int pci_set_dma_mask(struct pci_dev *dev, u64 mask)
-> -{ return -EIO; }
-> -static inline int pci_set_consistent_dma_mask(struct pci_dev *dev, u64 mask)
-> -{ return -EIO; }
-> -#endif
-> -
-> -#endif
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 60d423d8f0c4..7f924b5edd1d 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2472,8 +2472,7 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
->  void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
->  #endif
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 507f08db1aad3..47c6a52929fcd 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -341,22 +341,9 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+>  	if (!chan->configured)
+>  		return NULL;
 >  
-> -/* Provide the legacy pci_dma_* API */
-> -#include <linux/pci-dma-compat.h>
-> +#include <linux/dma-mapping.h>
+> -	switch (chan->config.direction) {
+> -	case DMA_DEV_TO_MEM: /* local DMA */
+> -		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ)
+> -			break;
+> -		return NULL;
+> -	case DMA_MEM_TO_DEV: /* local DMA */
+> -		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE)
+> -			break;
+
+> +	/* eDMA supports only read and write between local and remote memory */
+
+The comment is a bit confusing because both cases are named as
+"memory" while the permitted directions contains DEV-part, which
+means "device". What I would suggest to write here is something like:
+"DW eDMA supports transferring data from/to the CPU/Application memory
+to/from the PCIe link partner device by injecting the PCIe MWr/MRd TLPs."
+
+-Sergey
+
+> +	if (dir != DMA_DEV_TO_MEM && dir != DMA_MEM_TO_DEV)
+>  		return NULL;
+> -	default: /* remote DMA */
+> -		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_READ)
+> -			break;
+> -		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE)
+> -			break;
+> -		return NULL;
+> -	}
 >  
->  #define pci_printk(level, pdev, fmt, arg...) \
->  	dev_printk(level, &(pdev)->dev, fmt, ##arg)
+>  	if (xfer->type == EDMA_XFER_CYCLIC) {
+>  		if (!xfer->xfer.cyclic.len || !xfer->xfer.cyclic.cnt)
 > -- 
-> 2.32.0
+> 2.24.0.rc1
 > 
