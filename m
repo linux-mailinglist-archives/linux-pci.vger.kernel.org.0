@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 354804D4D4D
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 16:43:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62AAA4D4D0E
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 16:43:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239142AbiCJPib (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S239162AbiCJPib (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 10 Mar 2022 10:38:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58082 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239162AbiCJPia (ORCPT
+        with ESMTP id S239225AbiCJPia (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 10:38:30 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99474BBA
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8BD32BE5
         for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 07:37:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1646926648; x=1678462648;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=80sXWyDCDvGiThmLJ6x0ZV/xOUxTVrQf0duEoaQpub0=;
-  b=M5s4aiIc8OVvIXBX/4UTZpYBZGTBv4R8JghTb4IucPI3bJkYWnOVEeUA
-   Bx0U9+lkQ1bqD2bs1O+DrVhSwLctjE1qVaeOUMUzkJ2KD9TfBkUeWf2pg
-   PzhmFEgJ+VjQpMjEmwK2CWjJhQTZbqPqCHOtoAqDh4461DD7PXDmo4jC9
-   YLOzNFMtfIN7yFh7nsLd0yVpSXzlE67TwAQIzMOFniOFaglFaUkIM9DL7
-   q1BuA39gKg1stjBBp7Klhw9dMWwpCCJHZickMKEwb6Ol8z0cOrpnXwhbS
-   oeL1b2LVD3HNbDcmUumL+yp8rb5HAVHE9IOicDJt3q5PHLJHj28DfPBLg
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="235885079"
+  bh=oxzSGvICL7Xo32n705++Z34j6I7f3ZrKv9VM1Xf97VQ=;
+  b=dvDz7NZiHV1ng9VWPvNzutEQWLW5/NVZ2tYpDjvwiS7vZXWu71CZkS36
+   yh4Oq32/Yn0ymn08eWcYw7aI3R6fbyBaPPA4FzVleTrZ3VIp18rTyxNEk
+   UbySedWPKdz8Xy8yD7C/zkUHEGKeBQGmMpGYty6eirJyfhXjSaRIAWl46
+   yilucxa/YvYda1odcHqJ5gcszzV8U6ME9i1wikdalEByGA3iEwErtHrXL
+   /DobBVFgZ5iGHwTxMgZcqtf4vAoqwhRhEZrhVu6DNR97zJhGxuvOrUXue
+   8uXRrMRmL3zye+D9dJkvqhcupSSC1WFIyXePT1cIsVkgSWhJncGe264uw
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="254108534"
 X-IronPort-AV: E=Sophos;i="5.90,171,1643702400"; 
-   d="scan'208";a="235885079"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 07:37:28 -0800
+   d="scan'208";a="254108534"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 07:37:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,171,1643702400"; 
-   d="scan'208";a="510939403"
+   d="scan'208";a="548047031"
 Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 10 Mar 2022 07:37:26 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 10 Mar 2022 07:37:27 -0800
 Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1nSKr0-000557-6D; Thu, 10 Mar 2022 15:37:26 +0000
-Date:   Thu, 10 Mar 2022 23:36:23 +0800
+        id 1nSKr0-00055R-J7; Thu, 10 Mar 2022 15:37:26 +0000
+Date:   Thu, 10 Mar 2022 23:36:48 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/host/rcar] BUILD SUCCESS
- e2502d3a7d35825478e8ced97ccbf34b20c6691f
-Message-ID: <622a1af7.UI3C5hQpUGhJBR9P%lkp@intel.com>
+Subject: [helgaas-pci:pci/vga] BUILD SUCCESS
+ f321c35feaee8dbde551775210ae3d41534b7a20
+Message-ID: <622a1b10.cuG5Ihnc6Y3MoDnZ%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -61,12 +61,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/rcar
-branch HEAD: e2502d3a7d35825478e8ced97ccbf34b20c6691f  PCI: rcar: Finish transition to L1 state in rcar_pcie_config_access()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/vga
+branch HEAD: f321c35feaee8dbde551775210ae3d41534b7a20  PCI/VGA: Replace full MIT license text with SPDX identifier
 
 elapsed time: 731m
 
-configs tested: 128
+configs tested: 129
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -121,8 +121,8 @@ sh                          r7785rp_defconfig
 arm                             ezx_defconfig
 arm                  randconfig-c002-20220310
 ia64                             allmodconfig
-ia64                             allyesconfig
 ia64                                defconfig
+ia64                             allyesconfig
 m68k                             allmodconfig
 nios2                               defconfig
 arc                              allyesconfig
@@ -148,14 +148,13 @@ i386                   debian-10.3-kselftests
 i386                              debian-10.3
 mips                             allyesconfig
 mips                             allmodconfig
-powerpc                          allmodconfig
 powerpc                          allyesconfig
+powerpc                          allmodconfig
 powerpc                           allnoconfig
 x86_64                        randconfig-a006
 x86_64                        randconfig-a004
 x86_64                        randconfig-a002
 i386                          randconfig-a003
-x86_64                        randconfig-a015
 i386                          randconfig-a016
 arc                  randconfig-r043-20220310
 riscv                    nommu_k210_defconfig
@@ -165,8 +164,8 @@ riscv                             allnoconfig
 riscv                               defconfig
 riscv                          rv32_defconfig
 x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
 um                           x86_64_defconfig
+um                             i386_defconfig
 x86_64                           allyesconfig
 x86_64                              defconfig
 x86_64                               rhel-8.3
@@ -194,6 +193,9 @@ arm                     am200epdkit_defconfig
 powerpc               mpc834x_itxgp_defconfig
 mips                          rm200_defconfig
 powerpc                     ksi8560_defconfig
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
 i386                          randconfig-a002
 i386                          randconfig-a006
 i386                          randconfig-a004
@@ -206,7 +208,6 @@ i386                          randconfig-a015
 hexagon              randconfig-r045-20220310
 hexagon              randconfig-r041-20220310
 riscv                randconfig-r042-20220310
-s390                 randconfig-r044-20220310
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
