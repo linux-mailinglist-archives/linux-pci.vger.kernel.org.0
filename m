@@ -2,103 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D8F24D43B5
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 10:47:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE4E74D4414
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 10:58:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240867AbiCJJsB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 04:48:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45978 "EHLO
+        id S235836AbiCJJ7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 04:59:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240920AbiCJJsA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 04:48:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BA4DC13AA0C
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 01:46:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646905617;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BJj1yH1VXfhLvRJ8+zGrbpkPmlf5E1ndVM90qQ671Jg=;
-        b=QiHgXUxjP8Ctmgkg+xqVBK9dpIWDEVjU/ZP3izrwbo8U18h3sfvKHMVXuI9XDZNvM/peMM
-        mYy7WW9o0Eh8XQsXswPA/qzqGvTxMzONPPQMOOKPQtIqycuK0rls3ug0r7h/Rp6RoI1MoW
-        khEVD+6flNzTGAYGQqe/tpIDRtwavqM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-339-SRooJZ4wMIGakgGRU8x_cw-1; Thu, 10 Mar 2022 04:46:56 -0500
-X-MC-Unique: SRooJZ4wMIGakgGRU8x_cw-1
-Received: by mail-wm1-f72.google.com with SMTP id f24-20020a1c6a18000000b00388874b17a8so2081690wmc.3
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 01:46:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=BJj1yH1VXfhLvRJ8+zGrbpkPmlf5E1ndVM90qQ671Jg=;
-        b=CVyv4D5KAkHVM+5l7t4cWVQrp2weQP0JiZ1R/EJ/JztihujheBdQYn2EipIFP8cHIq
-         QP6DNBOtdEZ0LZ2CS0fURxuINhmaK3Gk1WdyOgPYny2gj5oGvHX6QbzxX0USKO0dmz+M
-         Pr61mhKQw2R9acvkIh9Pw6RtZ1QpxQxx4ka/rdM9NCLAL29uQq2AS/qJC7/J0fBAEdGq
-         FKAdoapIXn95zrrN4hg02VfCO2qYTYm1CKLMc1cmIOm/jlvtlUTvy2G3xmOVkA4XM9bI
-         /mbjEb6Tf3nFAtubYcl7XwghhW5OxqcBauT9VRnH1QvBSDg5p22zDogkNRu3thHcz/Mn
-         l6NQ==
-X-Gm-Message-State: AOAM533QqKpSfuGfOTsrv6WEJQ+bIp2vhyUfxgmHV3eMfGGq0HmLl377
-        7k+lv1K1wIXyEv+Woy94Z14013TpcbNwT6V85jTDLk1q6VCSnC1a4FdnpaICYBhn22BVC5AIFep
-        0Gr2KQjuXaZB3wU703VWg
-X-Received: by 2002:a5d:5009:0:b0:1f1:f87e:2e26 with SMTP id e9-20020a5d5009000000b001f1f87e2e26mr2912976wrt.404.1646905614811;
-        Thu, 10 Mar 2022 01:46:54 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz7wzT+XTVpeEzBUmQvpXc+eICuFzdxvcvXTNLQwGJIuVjVygEpg34U15LBeet6UiFJhxQ4/g==
-X-Received: by 2002:a5d:5009:0:b0:1f1:f87e:2e26 with SMTP id e9-20020a5d5009000000b001f1f87e2e26mr2912935wrt.404.1646905614477;
-        Thu, 10 Mar 2022 01:46:54 -0800 (PST)
-Received: from ?IPv6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id p12-20020a056000018c00b001f079518150sm3776956wrx.93.2022.03.10.01.46.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Mar 2022 01:46:53 -0800 (PST)
-Reply-To: eric.auger@redhat.com
-Subject: Re: [PATCH v8 00/11] Fix BUG_ON in vfio_iommu_group_notifier()
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>, rafael@kernel.org,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220308054421.847385-1-baolu.lu@linux.intel.com>
-From:   Eric Auger <eric.auger@redhat.com>
-Message-ID: <fb386c59-2359-0230-6340-3f8c8710b0f1@redhat.com>
-Date:   Thu, 10 Mar 2022 10:46:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        with ESMTP id S229889AbiCJJ7Z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 04:59:25 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3480F94DB
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 01:58:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646906304; x=1678442304;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QXLE0VNpdfwl4ckIdvfJ729llKp52AAOXcdFCoL8WVE=;
+  b=BFwVBPNjfyQdaxilsFKAoMqbgkKen208/2zZYKBAa+HfMHUUicbbp3Y/
+   QVYJz5cfK2CSRGhxIVQvfauYzoh17MvPYIS29ae9OifB5KicWoT2WKwHI
+   mGE/QqYSa2Uqs7tAjWiVI7oUCT3gLxFz3Vbw/8OxoH8Lgkn3W6jDxZpbc
+   qMwkmnXbzjWKXvjVJrPBEYmK3LwJPEzeoRokSCX1sUevLUoZSBNJn56MK
+   ZRtgm9MKxDMN2W5sXglwB5J768iX8OrcF+OE+fNcBlsThP826bv/yZ1W+
+   CNcf6lMOsHDc+QOU+f21EvigzhaEIQmOmda4YM+omYnb5BkGzltm2VL5J
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="255400349"
+X-IronPort-AV: E=Sophos;i="5.90,170,1643702400"; 
+   d="scan'208";a="255400349"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 01:58:24 -0800
+X-IronPort-AV: E=Sophos;i="5.90,170,1643702400"; 
+   d="scan'208";a="510834816"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 01:57:13 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 10 Mar 2022 11:56:06 +0200
+Date:   Thu, 10 Mar 2022 11:56:06 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        Sanju.Mehta@amd.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH] PCI: ACPI: Don't blindly trust `HotPlugSupportInD3`
+Message-ID: <YinLNvaH7+yv88QX@lahna>
+References: <20220309224302.2625343-1-mario.limonciello@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20220308054421.847385-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220309224302.2625343-1-mario.limonciello@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -106,201 +62,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lu,
++Rafael
 
-On 3/8/22 6:44 AM, Lu Baolu wrote:
-> Hi folks,
->
-> The iommu group is the minimal isolation boundary for DMA. Devices in
-> a group can access each other's MMIO registers via peer to peer DMA
-> and also need share the same I/O address space.
->
-> Once the I/O address space is assigned to user control it is no longer
-> available to the dma_map* API, which effectively makes the DMA API
-> non-working.
->
-> Second, userspace can use DMA initiated by a device that it controls
-> to access the MMIO spaces of other devices in the group. This allows
-> userspace to indirectly attack any kernel owned device and it's driver.
->
-> Therefore groups must either be entirely under kernel control or
-> userspace control, never a mixture. Unfortunately some systems have
-> problems with the granularity of groups and there are a couple of
-> important exceptions:
->
->  - pci_stub allows the admin to block driver binding on a device and
->    make it permanently shared with userspace. Since PCI stub does not
->    do DMA it is safe, however the admin must understand that using
->    pci_stub allows userspace to attack whatever device it was bound
->    it.
->
->  - PCI bridges are sometimes included in groups. Typically PCI bridges
->    do not use DMA, and generally do not have MMIO regions.
->
-> Generally any device that does not have any MMIO registers is a
-> possible candidate for an exception.
->
-> Currently vfio adopts a workaround to detect violations of the above
-> restrictions by monitoring the driver core BOUND event, and hardwiring
-> the above exceptions. Since there is no way for vfio to reject driver
-> binding at this point, BUG_ON() is triggered if a violation is
-> captured (kernel driver BOUND event on a group which already has some
-> devices assigned to userspace). Aside from the bad user experience
-> this opens a way for root userspace to crash the kernel, even in high
-> integrity configurations, by manipulating the module binding and
-> triggering the BUG_ON.
->
-> This series solves this problem by making the user/kernel ownership a
-> core concept at the IOMMU layer. The driver core enforces kernel
-> ownership while drivers are bound and violations now result in a error
-> codes during probe, not BUG_ON failures.
->
-> Patch partitions:
->   [PATCH 1-4]: Detect DMA ownership conflicts during driver binding;
->   [PATCH 5-7]: Add security context management for assigned devices;
->   [PATCH 8-11]: Various cleanups.
->
-> This is also part one of three initial series for IOMMUFD:
->  * Move IOMMU Group security into the iommu layer
->  - Generic IOMMUFD implementation
->  - VFIO ability to consume IOMMUFD
->
-> Change log:
-> v1: initial post
->   - https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/
->
-> v2:
->   - https://lore.kernel.org/linux-iommu/20211128025051.355578-1-baolu.lu@linux.intel.com/
->
->   - Move kernel dma ownership auto-claiming from driver core to bus
->     callback. [Greg/Christoph/Robin/Jason]
->     https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#m153706912b770682cb12e3c28f57e171aa1f9d0c
->
->   - Code and interface refactoring for iommu_set/release_dma_owner()
->     interfaces. [Jason]
->     https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#mea70ed8e4e3665aedf32a5a0a7db095bf680325e
->
->   - [NEW]Add new iommu_attach/detach_device_shared() interfaces for
->     multiple devices group. [Robin/Jason]
->     https://lore.kernel.org/linux-iommu/20211115020552.2378167-1-baolu.lu@linux.intel.com/T/#mea70ed8e4e3665aedf32a5a0a7db095bf680325e
->
->   - [NEW]Use iommu_attach/detach_device_shared() in drm/tegra drivers.
->
->   - Refactoring and description refinement.
->
-> v3:
->   - https://lore.kernel.org/linux-iommu/20211206015903.88687-1-baolu.lu@linux.intel.com/
->
->   - Rename bus_type::dma_unconfigure to bus_type::dma_cleanup. [Greg]
->     https://lore.kernel.org/linux-iommu/c3230ace-c878-39db-1663-2b752ff5384e@linux.intel.com/T/#m6711e041e47cb0cbe3964fad0a3466f5ae4b3b9b
->
->   - Avoid _platform_dma_configure for platform_bus_type::dma_configure.
->     [Greg]
->     https://lore.kernel.org/linux-iommu/c3230ace-c878-39db-1663-2b752ff5384e@linux.intel.com/T/#m43fc46286611aa56a5c0eeaad99d539e5519f3f6
->
->   - Patch "0012-iommu-Add-iommu_at-de-tach_device_shared-for-mult.patch"
->     and "0018-drm-tegra-Use-the-iommu-dma_owner-mechanism.patch" have
->     been tested by Dmitry Osipenko <digetx@gmail.com>.
->
-> v4:
->   - https://lore.kernel.org/linux-iommu/20211217063708.1740334-1-baolu.lu@linux.intel.com/
->   - Remove unnecessary tegra->domain chech in the tegra patch. (Jason)
->   - Remove DMA_OWNER_NONE. (Joerg)
->   - Change refcount to unsigned int. (Christoph)
->   - Move mutex lock into group set_dma_owner functions. (Christoph)
->   - Add kernel doc for iommu_attach/detach_domain_shared(). (Christoph)
->   - Move dma auto-claim into driver core. (Jason/Christoph)
->
-> v5:
->   - https://lore.kernel.org/linux-iommu/20220104015644.2294354-1-baolu.lu@linux.intel.com/
->   - Move kernel dma ownership auto-claiming from driver core to bus
->     callback. (Greg)
->   - Refactor the iommu interfaces to make them more specific.
->     (Jason/Robin)
->   - Simplify the dma ownership implementation by removing the owner
->     type. (Jason)
->   - Commit message refactoring for PCI drivers. (Bjorn)
->   - Move iommu_attach/detach_device() improvement patches into another
->     series as there are a lot of code refactoring and cleanup staffs
->     in various device drivers.
->
-> v6:
->   - https://lore.kernel.org/linux-iommu/20220218005521.172832-1-baolu.lu@linux.intel.com/
->   - Refine comments and commit mesages.
->   - Rename iommu_group_set_dma_owner() to iommu_group_claim_dma_owner().
->   - Rename iommu_device_use/unuse_kernel_dma() to
->     iommu_device_use/unuse_default_domain().
->   - Remove unnecessary EXPORT_SYMBOL_GPL.
->   - Change flag name from no_kernel_api_dma to driver_managed_dma.
->   - Merge 4 "Add driver dma ownership management" patches into single
->     one.
->
-> v7:
->   - We discussed about adding some fields in driver structure and
->     intercepting it in the bus notifier for driver unbinding. We agreed
->     that the driver structure should not be used out of the driver core.
->   - As iommu_group_claim/release_dma_owner() are only used by the VFIO,
->     there're no use cases for multiple calls for a single group.
->   - Add some commit messages in "vfio: Set DMA ownership for
->     VFIO" to describe the intentional enhancement of unsafe bridge
->     drivers.
->   - Comments refinement.
->
-> v8:
->   - Move iommu_use_default_domain() to the end of .dma_configure
->     callback to avoid firmware-data-ordering thing.
->     Link: https://lore.kernel.org/linux-iommu/e2698dbe-18e2-1a82-8a12-fe45bc9be534@arm.com/
+On Wed, Mar 09, 2022 at 04:43:02PM -0600, Mario Limonciello wrote:
+> The `_DSD` `HotPlugSupportInD3` is supposed to indicate the ability for a
+> bridge to be able to wakeup from D3.
+> 
+> This however is static information in the ACPI table at BIOS compilation
+> time and on some platforms it's possible to configure the firmware at boot
+> up such that `_S0W` will not return "0" indicating the inability to wake
+> up the system from D3.
 
-Feel free to add my T-b
-Tested-by: Eric Auger <eric.auger@redhat.com>
+Ideally the BIOS should not allow this to happen in the first place but
+yeah we've seen all kinds of weird behaviour in the past so just need
+to deal with it :/
 
-Thanks
+I wonder if it makes sense to log this situation?
 
-Eric
->   - Add Acked-by from PCI and VFIO maintainers.
->
-> This is based on next branch of linux-iommu tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
-> and also available on github:
-> https://github.com/LuBaolu/intel-iommu/commits/iommu-dma-ownership-v8
->
-> Best regards,
-> baolu
->
-> Jason Gunthorpe (1):
->   vfio: Delete the unbound_list
->
-> Lu Baolu (10):
->   iommu: Add DMA ownership management interfaces
->   driver core: Add dma_cleanup callback in bus_type
->   amba: Stop sharing platform_dma_configure()
->   bus: platform,amba,fsl-mc,PCI: Add device DMA ownership management
->   PCI: pci_stub: Set driver_managed_dma
->   PCI: portdrv: Set driver_managed_dma
->   vfio: Set DMA ownership for VFIO devices
->   vfio: Remove use of vfio_group_viable()
->   vfio: Remove iommu group notifier
->   iommu: Remove iommu group changes notifier
->
->  include/linux/amba/bus.h              |   8 +
->  include/linux/device/bus.h            |   3 +
->  include/linux/fsl/mc.h                |   8 +
->  include/linux/iommu.h                 |  54 +++---
->  include/linux/pci.h                   |   8 +
->  include/linux/platform_device.h       |  10 +-
->  drivers/amba/bus.c                    |  37 +++-
->  drivers/base/dd.c                     |   5 +
->  drivers/base/platform.c               |  21 ++-
->  drivers/bus/fsl-mc/fsl-mc-bus.c       |  24 ++-
->  drivers/iommu/iommu.c                 | 228 ++++++++++++++++--------
->  drivers/pci/pci-driver.c              |  18 ++
->  drivers/pci/pci-stub.c                |   1 +
->  drivers/pci/pcie/portdrv_pci.c        |   2 +
->  drivers/vfio/fsl-mc/vfio_fsl_mc.c     |   1 +
->  drivers/vfio/pci/vfio_pci.c           |   1 +
->  drivers/vfio/platform/vfio_amba.c     |   1 +
->  drivers/vfio/platform/vfio_platform.c |   1 +
->  drivers/vfio/vfio.c                   | 245 ++------------------------
->  19 files changed, 338 insertions(+), 338 deletions(-)
->
+> To fix these situations explicitly check that the ACPI device claims the
+> system can be awoken in `acpi_pci_bridge_d3`.
+> 
+> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
+> Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
+> Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+> ---
+>  drivers/pci/pci-acpi.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index a42dbf448860..9f8f55ed09d9 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -999,6 +999,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>  	if (!adev)
+>  		return false;
+>  
+> +	if (!adev->wakeup.flags.valid)
+> +		return false;
+> +
+>  	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
+>  				   ACPI_TYPE_INTEGER, &obj) < 0)
+>  		return false;
+> -- 
+> 2.34.1
