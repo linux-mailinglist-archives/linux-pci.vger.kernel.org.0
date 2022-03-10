@@ -2,172 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E094F4D3DF4
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 01:15:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D456A4D3E91
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 02:07:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238941AbiCJAQn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Mar 2022 19:16:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46908 "EHLO
+        id S237556AbiCJBIW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Mar 2022 20:08:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238437AbiCJAQm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Mar 2022 19:16:42 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5810C122F44;
-        Wed,  9 Mar 2022 16:15:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D84CA60BAA;
-        Thu, 10 Mar 2022 00:15:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06BCEC340E8;
-        Thu, 10 Mar 2022 00:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646871341;
-        bh=eCcD3HnBX/oFbLfrBWyYiQjjKNmgnOH2XtVmeNjv88Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gbIsWkSE0eX4PUjx2rjWlKRvWZgm8yOf5j3mY8DCbHtacbW8NkHpY4MP05/vMqXyh
-         ipy5jPRvf5Y8BJn/O+SHygq7IhHbXxAt1/ZN56iIYi1SZzS/fmhsqoXpuHbqXhsFIF
-         n1S5gRyAD0SbzuakLRArZCEiP/FRLJdgwWahcH5rck3RtmnoP33JzkcpUk1l5V5Y/F
-         +RMy+twBqZNlPDPx6lj/NuvtXza2Ifb6L00gPv+JAsnPcIvQRsc0rlKAi1R6o7jEqC
-         RI0hhZkRUXAy2QsTG3MSBQkRzqr9GkhfKWnwtNJlgrpiV4tkXD/pAqgcDk+inoneTs
-         iz3+e7Ehy/MHw==
-Date:   Wed, 9 Mar 2022 18:15:39 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     linux-pci@vger.kernel.org, paul.walmsley@sifive.com,
-        greentime.hu@sifive.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] PCI: fu740: Force Gen1 to fix initial device probing on
- some boards
-Message-ID: <20220310001539.GA94315@bhelgaas>
+        with ESMTP id S229604AbiCJBIV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Mar 2022 20:08:21 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E1D121520;
+        Wed,  9 Mar 2022 17:07:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646874441; x=1678410441;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jezaHxZzZDCmR0O0c9KCwG+hrjjtSh7P8g2DNYqEJT0=;
+  b=IjO8VcmtD8VphCLpZgB/6E3Vzf9CZiGJj/WSVjFEtqji2z+FbWQqH+0X
+   dlrmGxB6FOyqbkM7MAqBzmQflfueTn2kQZz4PVnGfcLWCdnVWgz2rPV7J
+   4Ry/rOvbx4IsVVFM1QlaKwjfQGkF4DOWKeRxcXEBXDEEYII2ugkgynXZ8
+   MM5cKg3Ba6bnESaipWCh/AG7AFbCPH5c28U38ljAVj4k5JkjrZF+dMn4E
+   FhoXSyuoUmLTxC+WtP3SsrRNNJVmIAly+FGrjLKJxuMLrBB72Ti045quX
+   ITYygoaBJxRxAQ8isn63lFSSOyQXA6twHKAjC51dCmdmFXYTJRzQ6XMQO
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="252699115"
+X-IronPort-AV: E=Sophos;i="5.90,169,1643702400"; 
+   d="scan'208";a="252699115"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2022 17:07:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,169,1643702400"; 
+   d="scan'208";a="510706070"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 09 Mar 2022 17:07:16 -0800
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nS7Gt-00046M-Vs; Thu, 10 Mar 2022 01:07:15 +0000
+Date:   Thu, 10 Mar 2022 09:07:01 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        fancer.lancer@gmail.com, lznuaa@gmail.com
+Cc:     kbuild-all@lists.01.org, vkoul@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, shawnguo@kernel.org,
+        manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v4 7/8] dmaengine: dw-edma: add flags at struct
+ dw_edma_chip
+Message-ID: <202203100843.qzRV56ko-lkp@intel.com>
+References: <20220309211204.26050-8-Frank.Li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <10794ea9-95ff-2cde-5851-b757a73b00ee@codethink.co.uk>
+In-Reply-To: <20220309211204.26050-8-Frank.Li@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 08, 2022 at 09:45:36AM +0000, Ben Dooks wrote:
-> On 28/02/2022 23:22, Ben Dooks wrote:
-> > The fu740 PCIe core does not probe any devices on the SiFive Unmatched
-> > board without this fix (or having U-Boot explicitly start the PCIe via
-> > either boot-script or user command). The fix is to start the link at
-> > Gen1 speeds and once the link is up then change the speed back.
-> > 
-> > The U-Boot driver claims to set the link-speed to Gen1 to get the probe
-> > to work (and U-Boot does print link up at Gen1) in the following code:
-> > https://source.denx.de/u-boot/u-boot/-/blob/master/drivers/pci/pcie_dw_sifive.c?id=v2022.01#L271
-> > 
-> > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> > --
-> > Note, this patch has had significant re-work since the previous 4
-> > sets, including trying to fix style, message, reliance on the U-Boot
-> > fix and the comments about usage of LINK_CAP and reserved fields.
-> 
-> The internal feedback is this version is passing on our CI.
-> 
-> If there are no comments on this soon, I will post this as either the
-> v5 of the original or as a new patch.
+Hi Frank,
 
-Seems like this isn't quite baked yet.  Lorenzo has the v4 of this on
-his pci/fu740 branch, but I'm going to drop that for now because (a)
-this one is better and (b) it'd be nice to have an ack from a FU740
-maintainer (Paul or Greentime).
+I love your patch! Yet something to improve:
 
-I'm also not clear on whether this works around a general FU740 defect
-or something specific to the Unmatched board or the ASMedia ASM2824
-switch.  This patch currently limits to 2.5GT/s on *all* FU740
-devices.
+[auto build test ERROR on vkoul-dmaengine/next]
+[also build test ERROR on helgaas-pci/next linus/master v5.17-rc7 next-20220309]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-I'd prefer to use "2.5GT/s" instead of "Gen1" in the subject, commit
-log, and comments because it's more specific and matches the
-PCI_EXP_LNKCAP_SLS_2_5GB in the code.
+url:    https://github.com/0day-ci/linux/commits/Frank-Li/Enable-designware-PCI-EP-EDMA-locally/20220310-051510
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+config: csky-buildonly-randconfig-r004-20220309 (https://download.01.org/0day-ci/archive/20220310/202203100843.qzRV56ko-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/f7947d784b0fe089bdaef2fee8e57f84e390d3f2
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Frank-Li/Enable-designware-PCI-EP-EDMA-locally/20220310-051510
+        git checkout f7947d784b0fe089bdaef2fee8e57f84e390d3f2
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=csky SHELL=/bin/bash drivers/dma/dw-edma/
 
-> > ---
-> >   drivers/pci/controller/dwc/pcie-fu740.c | 51 ++++++++++++++++++++++++-
-> >   1 file changed, 50 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
-> > index 842b7202b96e..16ad52f53490 100644
-> > --- a/drivers/pci/controller/dwc/pcie-fu740.c
-> > +++ b/drivers/pci/controller/dwc/pcie-fu740.c
-> > @@ -181,10 +181,59 @@ static int fu740_pcie_start_link(struct dw_pcie *pci)
-> >   {
-> >   	struct device *dev = pci->dev;
-> >   	struct fu740_pcie *afp = dev_get_drvdata(dev);
-> > +	u8 cap_exp = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> > +	int ret;
-> > +	u32 orig, tmp;
-> > +
-> > +	/*
-> > +	 * Force Gen1 when starting link, due to some devices not
-> > +	 * probing at higher speeds. This happens with the PCIe switch
-> > +	 * on the Unmatched board. The fix in U-Boot is to force Gen1
-> > +	 * and hope later resets will clear this capaility.
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-s/capaility/capability/
+All errors (new ones prefixed by >>):
 
-But the sentence still doesn't quite make sense.  Are you saying that
-if we bring the link up at 2.5GT/s, it will stay there?
+   drivers/dma/dw-edma/dw-edma-v0-core.c: In function 'dw_edma_v0_core_start':
+>> drivers/dma/dw-edma/dw-edma-v0-core.c:427:25: error: implicit declaration of function 'SET_CH_64'; did you mean 'SET_CH_32'? [-Werror=implicit-function-declaration]
+     427 |                         SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+         |                         ^~~~~~~~~
+         |                         SET_CH_32
+>> drivers/dma/dw-edma/dw-edma-v0-core.c:427:60: error: 'llp' undeclared (first use in this function)
+     427 |                         SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+         |                                                            ^~~
+   drivers/dma/dw-edma/dw-edma-v0-core.c:427:60: note: each undeclared identifier is reported only once for each function it appears in
+   cc1: some warnings being treated as errors
 
-And that a future reset may clear Link Capabilities?  Actually, I
-guess you don't want it *cleared*, you would just want it to
-accurately reflect the real max link speed, which would not be 0000b
-in the register (since that's not even a defined encoding).
 
-And the reset would also cause link retrain that would then use the
-real max link speed?
+vim +427 drivers/dma/dw-edma/dw-edma-v0-core.c
 
-> > +	dev_dbg(dev, "cap_exp at %x\n", cap_exp);
-> > +	dw_pcie_dbi_ro_wr_en(pci);
-> > +
-> > +	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-> > +	orig = tmp & PCI_EXP_LNKCAP_SLS;
-> > +	tmp &= ~PCI_EXP_LNKCAP_SLS;
-> > +	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-> > +	dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
-> >   	/* Enable LTSSM */
-> >   	writel_relaxed(0x1, afp->mgmt_base + PCIEX8MGMT_APP_LTSSM_ENABLE);
-> > -	return 0;
-> > +
-> > +	ret = dw_pcie_wait_for_link(pci);
-> > +	if (ret) {
-> > +		dev_err(dev, "error: link did not start\n");
-> > +		goto err;
-> > +	}
-> > +
-> > +	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-> > +	if ((tmp & PCI_EXP_LNKCAP_SLS) != orig) {
-> > +		dev_dbg(dev, "changing speed back to original\n");
-> > +
-> > +		tmp &= ~PCI_EXP_LNKCAP_SLS;
-> > +		tmp |= orig;
-> > +		dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
-> > +
-> > +		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> > +		tmp |= PORT_LOGIC_SPEED_CHANGE;
-> > +		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
-> > +
-> > +		ret = dw_pcie_wait_for_link(pci);
-> > +		if (ret) {
-> > +			dev_err(dev, "error: link did not start at new speed\n");
-> > +			goto err;
-> > +		}
-> > +	}
-> > +
-> > +	ret = 0;
-> > +err:
-> > +	// todo - if we do have an unliekly error, what do we do here?
+   359	
+   360	void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+   361	{
+   362		struct dw_edma_chan *chan = chunk->chan;
+   363		struct dw_edma *dw = chan->dw;
+   364		u32 tmp;
+   365	
+   366		dw_edma_v0_core_write_chunk(chunk);
+   367	
+   368		if (first) {
+   369			/* Enable engine */
+   370			SET_RW_32(dw, chan->dir, engine_en, BIT(0));
+   371			if (dw->chip->mf == EDMA_MF_HDMA_COMPAT) {
+   372				switch (chan->id) {
+   373				case 0:
+   374					SET_RW_COMPAT(dw, chan->dir, ch0_pwr_en,
+   375						      BIT(0));
+   376					break;
+   377				case 1:
+   378					SET_RW_COMPAT(dw, chan->dir, ch1_pwr_en,
+   379						      BIT(0));
+   380					break;
+   381				case 2:
+   382					SET_RW_COMPAT(dw, chan->dir, ch2_pwr_en,
+   383						      BIT(0));
+   384					break;
+   385				case 3:
+   386					SET_RW_COMPAT(dw, chan->dir, ch3_pwr_en,
+   387						      BIT(0));
+   388					break;
+   389				case 4:
+   390					SET_RW_COMPAT(dw, chan->dir, ch4_pwr_en,
+   391						      BIT(0));
+   392					break;
+   393				case 5:
+   394					SET_RW_COMPAT(dw, chan->dir, ch5_pwr_en,
+   395						      BIT(0));
+   396					break;
+   397				case 6:
+   398					SET_RW_COMPAT(dw, chan->dir, ch6_pwr_en,
+   399						      BIT(0));
+   400					break;
+   401				case 7:
+   402					SET_RW_COMPAT(dw, chan->dir, ch7_pwr_en,
+   403						      BIT(0));
+   404					break;
+   405				}
+   406			}
+   407			/* Interrupt unmask - done, abort */
+   408			tmp = GET_RW_32(dw, chan->dir, int_mask);
+   409			tmp &= ~FIELD_PREP(EDMA_V0_DONE_INT_MASK, BIT(chan->id));
+   410			tmp &= ~FIELD_PREP(EDMA_V0_ABORT_INT_MASK, BIT(chan->id));
+   411			SET_RW_32(dw, chan->dir, int_mask, tmp);
+   412			/* Linked list error */
+   413			tmp = GET_RW_32(dw, chan->dir, linked_list_err_en);
+   414			tmp |= FIELD_PREP(EDMA_V0_LINKED_LIST_ERR_MASK, BIT(chan->id));
+   415			SET_RW_32(dw, chan->dir, linked_list_err_en, tmp);
+   416			/* Channel control */
+   417			SET_CH_32(dw, chan->dir, chan->id, ch_control1,
+   418				  (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
+   419			/* Linked list */
+   420			if ((chan->dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI) ||
+   421			    !IS_ENABLED(CONFIG_64BIT)) {
+   422				SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+   423					  lower_32_bits(chunk->ll_region.paddr));
+   424				SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+   425					  upper_32_bits(chunk->ll_region.paddr));
+   426			} else {
+ > 427				SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+   428					  chunk->ll_region.paddr);
+   429			}
+   430		}
+   431		/* Doorbell */
+   432		SET_RW_32(dw, chan->dir, doorbell,
+   433			  FIELD_PREP(EDMA_V0_DOORBELL_CH_MASK, chan->id));
+   434	}
+   435	
 
-Wrong comment style (use /* */, not //), and s/unliekly/unlikely/
-
-> > +	dw_pcie_dbi_ro_wr_dis(pci);
-> > +	return ret;
-> >   }
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
