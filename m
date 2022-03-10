@@ -2,142 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE31A4D5284
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 20:47:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FEA34D528E
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 20:50:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239037AbiCJTqd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 14:46:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35536 "EHLO
+        id S244004AbiCJTvb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 14:51:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233230AbiCJTq3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 14:46:29 -0500
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 135E4194AA9;
-        Thu, 10 Mar 2022 11:45:28 -0800 (PST)
-Received: by mail-lj1-x234.google.com with SMTP id v28so9223759ljv.9;
-        Thu, 10 Mar 2022 11:45:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=elBDpnkZgvTqqmpB5TnahezV/zWR7nYFd2WS1+9K4n8=;
-        b=FiBlIxp7G1h+TOnQWyJpcth4syj4CxuV3z8OnrtH/ReOnFb0Qq78tuXHniUfPL9NtB
-         MqpgCRzC29GWpI34cAaZ0HU1JFNEKzMdmXVBvW+YxJsL+Cb3oQR0jlSBdH/IQ9sx2VSj
-         acdvoyz3hR+G5XqcwxQGRBXQ5CZQ9LLwFIyD3s2q96+9VEZgjY3gOXdNfv2dwWoZMwUY
-         P7UQS71txpdy6wyXq/YlI8IVl1XWfKBRZGk+o6TYpW3RkZ4qxKsQTrjvfTzt4qeNmg03
-         qZfbl5KXgdxw9YGNb+0z9kas8+K9cUMz9a9L/pjWjod5C8HIDRdhTIOcvsuFufQLITfY
-         iepQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=elBDpnkZgvTqqmpB5TnahezV/zWR7nYFd2WS1+9K4n8=;
-        b=hBYB2NpNz4FfzC7K5DwNwRdOh7tUx46ML5r4zvd5o7bEjANHvMBLbQnR7oTt4aKVH6
-         SKFN5daKVzvb5md6Vv751ExzgfQgvhTEUTmJ2gmW7McR0FRgUfIaU9RRytkrEKe5NJ8M
-         OBAeSy7wvXPE00YTyptg4uQQYlbZ4mPCJtrkStAAz3glhOcVpgrIHoarZHU9SzcEAxR+
-         8q/QE2dXotsrMCyLJS+B9kehNlV8aGlcVUgNVIUckCSmuBkbgLrFyiz+qf/Hpj0A8bZv
-         4NmUu8xqEuSHQ1jM9tpbYWjVfylX0RvVDXl9uNaJA4DSFjL1cJMzTGQnJZoZGZ+mtNve
-         c63A==
-X-Gm-Message-State: AOAM532IyG7vCaKwMcqTLT8BBUZmozMptvQb2vkzM2yS+4mbKk3Soe6X
-        qVglSyfRC3fv8jLzT1oowyk=
-X-Google-Smtp-Source: ABdhPJwvrW2TFj32PSk5S2XDLp7kBhWnqzZQm1m+qgdiaT/FwIZ7XHmyIT1ibAwEjDEJD/QVqHsslg==
-X-Received: by 2002:a05:651c:1797:b0:23a:18d7:1d39 with SMTP id bn23-20020a05651c179700b0023a18d71d39mr3946049ljb.470.1646941526389;
-        Thu, 10 Mar 2022 11:45:26 -0800 (PST)
-Received: from mobilestation ([95.79.188.22])
-        by smtp.gmail.com with ESMTPSA id w27-20020ac2599b000000b004481e254f08sm1142550lfn.240.2022.03.10.11.45.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 11:45:24 -0800 (PST)
-Date:   Thu, 10 Mar 2022 22:45:21 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        shawnguo@kernel.org, manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH v5 0/9] Enable designware PCI EP EDMA locally
-Message-ID: <20220310194521.g6emg63bparbjic2@mobilestation>
-References: <20220310192457.3090-1-Frank.Li@nxp.com>
+        with ESMTP id S243919AbiCJTv3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 14:51:29 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43AC21390DD;
+        Thu, 10 Mar 2022 11:50:28 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 01ABDB8276F;
+        Thu, 10 Mar 2022 19:50:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A6ADC340E9;
+        Thu, 10 Mar 2022 19:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646941825;
+        bh=hw2Lwu8uiGlVaaRZU6xCEXkOOb6VGkkDy0670anUTD8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Kh3KjQIKFqV/UT649PJd/Gf+X+4Oj073YPak/CQ8NMX/jJ8s+OOAAXMI7IUCUtIGE
+         NVd9c0QwEKmhrS4w35LvSxVjY3ZgD0YSx9phON4bF92iD/ZJ4i8bIH7cHqn/haWBJB
+         soVKrDlOtZV5ZblBlobBQ5j7Utjhjdq1gZRPhJsBsEkAFJyvOBiAOWC5MCz/KhI+zc
+         y0BuqmRz6+1xX2DAKBc9Bt4CYt9e4JX9j+jqtsjIa2sjBocs+cG48FyJWAx/Z19mWY
+         U7a6b/AJw3gkovbMmCynKdDo0j20GVcaitqyjcrvUIgqFsvLDsozWTQTG7RIsaCQGZ
+         NL7i3N4gZBjlw==
+Date:   Thu, 10 Mar 2022 13:50:24 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-pci@vger.kernel.org, paul.walmsley@sifive.com,
+        greentime.hu@sifive.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] PCI: fu740: Force Gen1 to fix initial device probing on
+ some boards
+Message-ID: <20220310195023.GA177539@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220310192457.3090-1-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <53bccf99-c183-78f9-f6cb-2921228ced48@codethink.co.uk>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Frank,
+On Thu, Mar 10, 2022 at 09:06:08AM +0000, Ben Dooks wrote:
+> On 10/03/2022 00:15, Bjorn Helgaas wrote:
 
-Please don't re-send patch so quickly. We haven't finished discussing
-and reviewing v4 yet, but you've already sent out v5 with possibly some of
-the comments missed. In addition you haven't addressed all my comments
-in the v4. Please get back there and let's finish all the discussions
-first. Regarding the resibmitting procedure see [1].
+> > Seems like this isn't quite baked yet.  Lorenzo has the v4 of this on
+> > his pci/fu740 branch, but I'm going to drop that for now because (a)
+> > this one is better and (b) it'd be nice to have an ack from a FU740
+> > maintainer (Paul or Greentime).
+> 
+> Yes. I'll fix the comments up and try and get this out later in the
+> week. I hope the GPIO patch is easier and can be merged on its own.
 
-[1] Documentation/process/submitting-patches.rst: "Don't get discouraged - or impatient"
-
--Sergey
-
-On Thu, Mar 10, 2022 at 01:24:48PM -0600, Frank Li wrote:
-> Default Designware EDMA just probe remotely at host side.
-> This patch allow EDMA driver can probe at EP side.
-> 
-> 1. Clean up patch
->    dmaengine: dw-edma: Detach the private data and chip info structures
->    dmaengine: dw-edma: remove unused field irq in struct dw_edma_chip
->    dmaengine: dw-edma: change rg_region to reg_base in struct
->    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> 
-> 2. Enhance EDMA driver to allow prode eDMA at EP side
->    dmaengine: dw-edma: Add support for chip specific flags   
->    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
-> 
-> 3. Bugs fix at EDMA driver when probe eDMA at EP side
->    dmaengine: dw-edma: Fix programming the source & dest addresses for ep
->    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> 
-> 4. change pci-epf-test to use EDMA driver to transfer data.
->    PCI: endpoint: functions/pci-epf-test: Support PCI controller DMA
-> 
-> 5. Using imx8dxl to do test, but some EP functions still have not
-> upstream yet. So below patch show how probe eDMA driver at EP
-> controller driver.
-> https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
-> 
-> 
-> 
-> Frank Li (7):
->   dmaengine: dw-edma: Detach the private data and chip info structures
->   dmaengine: dw-edma: remove unused field irq in struct dw_edma_chip
->   dmaengine: dw-edma: change rg_region to reg_base in struct
->     dw_edma_chip
->   dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
->     dw_edma_chip
->   dmaengine: dw-edma: Add support for chip specific flags
->   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
->   PCI: endpoint: functions/pci-epf-test: Support PCI controller DMA
-> 
-> Manivannan Sadhasivam (2):
->   dmaengine: dw-edma: Fix programming the source & dest addresses for ep
->   dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> 
->  drivers/dma/dw-edma/dw-edma-core.c            | 131 +++++++++++-------
->  drivers/dma/dw-edma/dw-edma-core.h            |  32 +----
->  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
->  drivers/dma/dw-edma/dw-edma-v0-core.c         |  46 +++---
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  10 +-
->  drivers/pci/endpoint/functions/pci-epf-test.c | 108 +++++++++++++--
->  include/linux/dma/edma.h                      |  56 +++++++-
->  7 files changed, 298 insertions(+), 168 deletions(-)
-> 
-> -- 
-> 2.24.0.rc1
-> 
+Yes, it's in -next now.
