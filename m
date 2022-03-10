@@ -2,63 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B5DB4D4802
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 14:25:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8925B4D4819
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 14:33:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242386AbiCJNZu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 08:25:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46954 "EHLO
+        id S230148AbiCJNe1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 08:34:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242362AbiCJNZt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 08:25:49 -0500
+        with ESMTP id S237910AbiCJNe0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 08:34:26 -0500
 Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83EBD64EC
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 05:24:48 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F5E14E958
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 05:33:25 -0800 (PST)
 Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 31A403F60B
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 13:24:47 +0000 (UTC)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 0241E3F1AF
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 13:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1646918687;
-        bh=AC2QV+BOHtvgXwOifEM5ca7aMnsr4tiE4ebM/MHFh6A=;
+        s=20210705; t=1646919202;
+        bh=pf7ItnfaW7ig7cvFz3o50P7qA0KQs4HS2dTOLYB9BVI=;
         h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
          In-Reply-To:Content-Type;
-        b=qyHJdoGNlIK0srWqi4VrDXjZsdZ9cWdy7a87s78PZy32tSo2ZAktOA2rI8z+fMNm+
-         +saeeae/TAO2ttLDHFHqzUu/9aphnYtcsgypfsBP7sxGcuAaKO8NmfVwKVYSigYByf
-         Sshb7APxwH4ydWUVWyt0TUtm4SdFxJJjvjlSlBOXBDHJzazFY6uaOmjV2hhSMGMvHl
-         x0rW+PoOurcjywDK+1XQg82Hae0rDxfYB8BGsdtlIfaOYAyczU2lzIuwlheDrLdCSp
-         CLKYIwDlPhubJQYkW8oDPdm7jjqqCiV7D+R2PdBH+hmkn0WeTYAxH59Rk/hFV4zG+c
-         v714aKTmfD1PQ==
-Received: by mail-ej1-f70.google.com with SMTP id h22-20020a1709060f5600b006b11a2d3dcfso3109449ejj.4
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 05:24:47 -0800 (PST)
+        b=Vo69Rhny5iDE0DvEP60/qpvNNvLF/YEp68NEpgqEiTseF/PyoZuecjkouDpXsHkMz
+         JvezpAWAEqqXRDI3mlBCV2hX3y3I2m3W/Um1LTie93x330kI5o+YeyW3+Y0kkVCqvI
+         TN9Hm2BqWilGv8miFqDNkjH0gPvFBQLOT/Sc2e8VHIBWh4NPpQr+lHMA+1FOWIgb2S
+         6rLXFSveE1Ubz4IaWCImJETmV26dEuEqArlxjTFQ6guzdWNBa3ohC2fPjMVG+HIKHt
+         MoY5dDMsrE0NZRjjb1Y44ZIoY6/5fk2xjCef2kpjaqm6hx1kNHN48rOghg0SjMyCbR
+         WHxEAEFIcoH1A==
+Received: by mail-ej1-f70.google.com with SMTP id r18-20020a17090609d200b006a6e943d09eso3092258eje.20
+        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 05:33:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=AC2QV+BOHtvgXwOifEM5ca7aMnsr4tiE4ebM/MHFh6A=;
-        b=BdCQek+JJZAikHS0aBy8PbbdxwbVfHkFjt0bk3n5yaHf7aG5tK4NdQ9lzPAWAskFPK
-         sWpckWsyGq/f/0HLoUUfsbpRbHn3BfwerkAUF9YlvAYpEs6hPq4GjB2WJ+39whz8A/bL
-         Z0fuRzo8B7t4P2f/hBFaesFMM+7kiWABhAOCbCQ3CbTFCipjHoLXJyDB0Rch+f4CPbqZ
-         A7DGB7u6DlHpLMDIT7R0OdAUI8GXGPDXd/ufN3BdGvwc1yJdrN1Q0MGpDMTVLZO0dvyH
-         bA5qax07VogkgfpL36zoWgCWsM4dzm1ldTvIEbBI+xMyBNoJX7SG+Cxts9RAjwXG9GeV
-         /Pfg==
-X-Gm-Message-State: AOAM530ib4xWi5xN8/JaqbVexrzPYV+0sHg7Pvt1QjeRpL5x+vgW5+Ch
-        IZ7h5Cm/DB3W2vtTpqqUwUXjRTbgF0dy6xUYfizPeAFhdwnohFN3hTgnDjrCyHoAVKoRfZPrpvC
-        qcSzPNp6i0fVLRDdsNtCipeberpyJaEBHY4DXZA==
-X-Received: by 2002:a17:907:c16:b0:6db:682:c8c9 with SMTP id ga22-20020a1709070c1600b006db0682c8c9mr4311066ejc.153.1646918686618;
-        Thu, 10 Mar 2022 05:24:46 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxh96pIcaZjepw8fDG5gEIFBY3lCXTrIeHF6wSWe/4lVWb3KtEgtjp2SDkTN4L1ahVqkj5lJg==
-X-Received: by 2002:a17:907:c16:b0:6db:682:c8c9 with SMTP id ga22-20020a1709070c1600b006db0682c8c9mr4311039ejc.153.1646918686230;
-        Thu, 10 Mar 2022 05:24:46 -0800 (PST)
+        bh=pf7ItnfaW7ig7cvFz3o50P7qA0KQs4HS2dTOLYB9BVI=;
+        b=QfOXrd6pWz4ZcCkBKdy3/RoTDqZVkho5vSDItNxGq6b6E8fCP5o+tq8L+bGq6YE5j7
+         lw7XDCUjlAj+a9ay33tEaitZYFhqaZjTo9Bkg7Zpm6hcSbqDL9gi+5cfLkZ1lpb8/4L+
+         U+D/fp18QGVS0AJbXdS8XVTU5xmIPSM6JQy5k2Vz+yl2WyXbbYZdugocvhsIDod5UC4B
+         lzaD8pF5+WhqIULtn91snSINdNb3KYPE2wWZcst5u19ZdZmtS1K5a62DLAxf1tsYg49g
+         0WwuP0eXjfv2Q1yhVtBscpwK6CN29tfIqTeW7KsE2LBzrKWyRkDKVWgdcwj5pH7O96oh
+         7ZHw==
+X-Gm-Message-State: AOAM531xdcoCLgjE3iq3TAJrrAnoWU/QxYyItBtrDotAD4iAgy75vWul
+        Ee80EUREijy9ddZnFpdmJLdsISG5abLlXZacSSrNf7hSjuSGxB3OxJaX2cBP5pimj6ZlhRKTLXI
+        lQqoqGgAcxEvM10OgJMhMP095bKocxy1himm/og==
+X-Received: by 2002:a17:906:74c3:b0:6da:be6d:d64b with SMTP id z3-20020a17090674c300b006dabe6dd64bmr4324837ejl.695.1646919201542;
+        Thu, 10 Mar 2022 05:33:21 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzCCnILWS6O8NF0QccmUIZKB7piFBemuWv5RosCsexSn5KFanUN3loK37T97Thy/V43ongQTg==
+X-Received: by 2002:a17:906:74c3:b0:6da:be6d:d64b with SMTP id z3-20020a17090674c300b006dabe6dd64bmr4324818ejl.695.1646919201311;
+        Thu, 10 Mar 2022 05:33:21 -0800 (PST)
 Received: from [192.168.0.144] (xdsl-188-155-174-239.adslplus.ch. [188.155.174.239])
-        by smtp.gmail.com with ESMTPSA id m24-20020a170906161800b006d420027b63sm1780101ejd.18.2022.03.10.05.24.45
+        by smtp.gmail.com with ESMTPSA id fx3-20020a170906b74300b006daecedee44sm1821076ejb.220.2022.03.10.05.33.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Mar 2022 05:24:45 -0800 (PST)
-Message-ID: <6f34f80e-da06-337d-167e-2410309e0f4d@canonical.com>
-Date:   Thu, 10 Mar 2022 14:24:45 +0100
+        Thu, 10 Mar 2022 05:33:20 -0800 (PST)
+Message-ID: <75695818-3d74-b809-bd40-ffbf4724df47@canonical.com>
+Date:   Thu, 10 Mar 2022 14:33:19 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
@@ -120,11 +120,6 @@ On 09/03/2022 13:00, Bharat Kumar Gogada wrote:
 > +      For xlnx,versal-cpm5-host-1.00, it should also contain cpm_csr.
 > +    minItems: 2
 > +    maxItems: 3
-
-You removed here list of items, which should stay. See also
-https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/example-schema.yaml#L91
-how to do it.
-
 >  
 >    reg-names:
 > -    items:
@@ -132,9 +127,10 @@ how to do it.
 > -      - const: cpm_slcr
 > +    minItems: 2
 > +    maxItems: 3
+>  
 
-The same.
-
+One more thought - it seems three items are required on cpm5, so you
+miss later proper allOf-if: which enforces this.
 
 Best regards,
 Krzysztof
