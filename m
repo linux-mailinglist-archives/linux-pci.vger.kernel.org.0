@@ -2,58 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B01C54D4CF5
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 16:43:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC84B4D4F48
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 17:29:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239182AbiCJPic (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 10:38:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58112 "EHLO
+        id S240136AbiCJQ31 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 11:29:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239427AbiCJPib (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 10:38:31 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E40546642
-        for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 07:37:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646926649; x=1678462649;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=icc9IxbY9JEKxYotmfM+UChTdtehmTa5KgmMFbfwJ14=;
-  b=RP7swPAsyHlt1KbyZDfNdpFKpM44aCWtaL3DeM1ZjLRuhmjoxZ/BJo42
-   IksgXEMwWUYyWU+wkDV/m9BbnBZSdqiScGSZZrmee9kBjyzuOz9yWP7uo
-   vOuYx0md4hhYJCvWp1OJlVo3MKItE4kKx03vkgpq7EJqoh/Vjkk+/+VYr
-   +1c4SwE+JKXRV7zvVwao0csoB1/0Jedriso4xIT9Gf4NZ3VBcktOGdKIk
-   kGl8kQ9NEzo9xLdMoemhesn2k2c6b9zYGVMrVKh9548bxLUausw5kNP/g
-   hv+el1xpYAUCNkvWNGh0XiXsCVtkMAo67ZWun0Whe9l6LOgSR1JRl/Q8m
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="235228281"
-X-IronPort-AV: E=Sophos;i="5.90,171,1643702400"; 
-   d="scan'208";a="235228281"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 07:37:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,171,1643702400"; 
-   d="scan'208";a="554692539"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 10 Mar 2022 07:37:27 -0800
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nSKr0-00055X-NZ; Thu, 10 Mar 2022 15:37:26 +0000
-Date:   Thu, 10 Mar 2022 23:36:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/host/fu740] BUILD SUCCESS
- 548d805b65574e2c71884265ff4c752983d18822
-Message-ID: <622a1b13.QE8mv1KkmRjOJdiu%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S243897AbiCJQ2I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 11:28:08 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F29F1EEEA;
+        Thu, 10 Mar 2022 08:27:06 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id hw13so12727404ejc.9;
+        Thu, 10 Mar 2022 08:27:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3wPJa1hUAbgZSIzeJTAud0xZ3vRUz2xuwzEonWnr3LY=;
+        b=ogOI7G/rHeETioQmcRgRFHuR+jiyuRpAGdjubNFz+ysXoWjXRC+DbSF66RZswvyfhq
+         rGCcvVMhEnlsEgX4YAlR+tTQt0/h3eSNMNKO9+HCgm1ALB422JcS8/+a1GQSVTqm2Ku3
+         GCF53ojruB3aTnJ2/+7N9RbdUPjtI1M45VeMkUHzIG1+qkwG3kyUxDi8mgKnDBmSlKEb
+         MeOgTsAUKVRTVr+NsGUpkpWlPCwukSv/TUG3YMqj34HlJWMP74Z+yvOe6I+BPE7tOOC3
+         YS8aJE171GIQG+zp0Gz/pqv1XwzGm/MLAcLRhjHi4toNtOBbD2r1Q9owplqlzWC4Rj7H
+         8Lmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3wPJa1hUAbgZSIzeJTAud0xZ3vRUz2xuwzEonWnr3LY=;
+        b=O2mH5Cj6AK7G4ctNPF0wiu2bd8wi4HFVsDkIE9Oi2worzwnQn2PyLCmbPI5GNtFNUa
+         5oPwGxrItO1DfeBE2hUo2UJSpnBSSao/ilRXJkFTdl6ZQZGj7q8xcVj7hYKPlpmnpW8o
+         u9KB1Wu6EMnWepg/AsUyk4LvWlEiqZk5ZJmwcR40UsfAH51jM6G5B7KJjyi3lJc+8ssV
+         R5zT68rXOgDBPw82HhSk5n7nbxOsvlbr8jG4wq333HfBfFG9IIWV4clDPN9y34NRyy3T
+         /pCFQVfDZQhfEoS6e2FClQNsKIZZXabHwhScliv7Sh/oTY57cZPhG4k2Uf5IU6PKIIvg
+         iLOw==
+X-Gm-Message-State: AOAM531FquPWI5OC1Y/1e5Q6U+wAPFn0uoMCk8Pr5saaybwNJ4fyBjDF
+        WQYrQe7NoB43MYdklOcUTaNdFPikMUJ/hFO1Dgo=
+X-Google-Smtp-Source: ABdhPJzY9Vs2Gxwygh0ujoXT64t5XSgNWpoxjMXMh4kuREtLO+dnFZskDmzFYD0T7XBkVvs9DfgYZOTBFDcGniLydkU=
+X-Received: by 2002:a17:906:7245:b0:6cf:d3c6:8c63 with SMTP id
+ n5-20020a170906724500b006cfd3c68c63mr4690707ejk.677.1646929624067; Thu, 10
+ Mar 2022 08:27:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
+References: <20220309211204.26050-1-Frank.Li@nxp.com> <20220309211204.26050-5-Frank.Li@nxp.com>
+ <20220310123716.z6zh72ybevze3nk2@mobilestation>
+In-Reply-To: <20220310123716.z6zh72ybevze3nk2@mobilestation>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Thu, 10 Mar 2022 10:26:51 -0600
+Message-ID: <CAHrpEqRXx8aTMCRj3PZCJiX9UC=PPfuky8Se_-21a4H11V-WdA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/8] dmaengine: dw-edma: rename wr(rd)_ch_cnt to
+ ll_wr(rd)_cnt in struct dw_edma_chip
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, vkoul@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,156 +75,158 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/fu740
-branch HEAD: 548d805b65574e2c71884265ff4c752983d18822  PCI: fu740: Drop redundant '-gpios' from DT GPIO lookup
+On Thu, Mar 10, 2022 at 6:37 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+>
+> On Wed, Mar 09, 2022 at 03:12:00PM -0600, Frank Li wrote:
+> > There are same name wr(rd)_ch_cnt in struct dw_edma. EDMA driver get
+> > write(read) channel number from register, then save these into dw_edma.
+> > Old wr(rd)_ch_cnt in dw_edma_chip actuall means how many link list memory
+> > are avaiable in ll_region_wr(rd)[EDMA_MAX_WR_CH]. So rename it to
+> > ll_wr(rd)_cnt to indicate actual usage.
+>
+> Hmm, I am not sure you are right here. AFAICS the
+> drivers/dma/dw-edma/dw-edma-pcie.c driver either uses a statically
+> defined number or Rd/Wr channels or just gets the number from the
+> specific vsec PCIe capability. Then based on that the driver just
+> redistributes the BARs memory amongst all the detected channels in
+> accordance with the statically defined snps_edda_data structure.
+> Basically the BARs memory serves as the Local/CPU/Application memory
+> for the case if the controller is embedded into the PCIe Host/EP
+> controller. See the patches which implicitly prove that:
+> 31fb8c1ff962 ("dmaengine: dw-edma: Improve the linked list and data blocks definition")
+> da6e0dd54135 ("dmaengine: dw-edma: Change linked list and data blocks offset and sizes")
+>
+> (That's why the logic of the DEV_TO_MEM/MEM_TO_DEV is inverted for the
+> the drivers/dma/dw-edma/dw-edma-pcie.c platform.)
+>
+> So basically the wr_ch_cnt/rd_ch_cnt fields have been and is used as
+> the number of actually available channels, not linked-list. While the
+> notation suggested by you can be confusing, since the ll-memory allocated for
+> each channel can be split up and initialized with numerous linked lists
+> each of which is used one after another.
+>
+> I don't really see a well justified reason to additionally have the
+> @wr_ch_cnt and @rd_ch_cnt fields in the dw_edma_chip seeing the number
+> of channels can be auto-detected from the corresponding registers, except
+> that to workaround a bogus hardware. So we can keep it, but please no
+> renaming. It will only cause additional confusion.
 
-elapsed time: 732m
+I agree that channel numbers can be obtained from the register.
+but Caller don't know the channel number before calling dw_edma_probe.
 
-configs tested: 131
-configs skipped: 3
+Caller may not init all ll_region_wr[EDMA_MAX_WR_CH],
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+That's the reason I need a field to indicate how many ll_region_w
+actually initialized.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-mips                 randconfig-c004-20220310
-sh                               j2_defconfig
-m68k                       m5249evb_defconfig
-m68k                             allyesconfig
-m68k                         apollo_defconfig
-arm                            lart_defconfig
-sparc                            alldefconfig
-sh                        apsh4ad0a_defconfig
-h8300                       h8s-sim_defconfig
-mips                            gpr_defconfig
-mips                 decstation_r4k_defconfig
-sh                          rsk7203_defconfig
-sh                ecovec24-romimage_defconfig
-arm                          lpd270_defconfig
-sh                          lboxre2_defconfig
-mips                     loongson1b_defconfig
-sparc                               defconfig
-m68k                        mvme16x_defconfig
-arm                           h5000_defconfig
-um                               alldefconfig
-xtensa                    xip_kc705_defconfig
-sh                     magicpanelr2_defconfig
-m68k                                defconfig
-arm                           corgi_defconfig
-powerpc                 linkstation_defconfig
-m68k                        m5407c3_defconfig
-sh                            titan_defconfig
-mips                           ci20_defconfig
-sh                           se7780_defconfig
-h8300                               defconfig
-riscv                            allmodconfig
-csky                                defconfig
-powerpc                        warp_defconfig
-ia64                         bigsur_defconfig
-arm                        oxnas_v6_defconfig
-sh                         ap325rxa_defconfig
-sh                          kfr2r09_defconfig
-sh                        edosk7760_defconfig
-sh                          r7785rp_defconfig
-arm                             ezx_defconfig
-arm                  randconfig-c002-20220310
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                                defconfig
-parisc64                            defconfig
-s390                             allmodconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a003
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-arc                  randconfig-r043-20220310
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                                  kexec
+old wr_ch_cnt just plays the same role.
 
-clang tested configs:
-powerpc              randconfig-c003-20220310
-riscv                randconfig-c006-20220310
-arm                  randconfig-c002-20220310
-x86_64                        randconfig-c007
-mips                 randconfig-c004-20220310
-i386                          randconfig-c001
-arm                         socfpga_defconfig
-arm                    vt8500_v6_v7_defconfig
-arm                        multi_v5_defconfig
-powerpc                      ppc44x_defconfig
-mips                     loongson2k_defconfig
-powerpc                     akebono_defconfig
-mips                      malta_kvm_defconfig
-mips                          ath79_defconfig
-riscv                    nommu_virt_defconfig
-arm                     am200epdkit_defconfig
-powerpc               mpc834x_itxgp_defconfig
-mips                          rm200_defconfig
-powerpc                     ksi8560_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-x86_64                        randconfig-a014
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-hexagon              randconfig-r045-20220310
-hexagon              randconfig-r041-20220310
-riscv                randconfig-r042-20220310
-s390                 randconfig-r044-20220310
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>
+> -Sergey
+>
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> > new patch at v4
+> >
+> >  drivers/dma/dw-edma/dw-edma-core.c |  4 ++--
+> >  drivers/dma/dw-edma/dw-edma-pcie.c | 12 ++++++------
+> >  include/linux/dma/edma.h           |  8 ++++----
+> >  3 files changed, 12 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index 1abf41d49f75b..66dc650577919 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -918,11 +918,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+> >       raw_spin_lock_init(&dw->lock);
+> >
+> >
+> > -     dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
+> > +     dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
+> >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
+> >       dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
+> >
+> > -     dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
+> > +     dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
+> >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
+> >       dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > index ae42bad24dd5a..7732537f96086 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > @@ -230,14 +230,14 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >       chip->nr_irqs = nr_irqs;
+> >       chip->ops = &dw_edma_pcie_core_ops;
+> >
+> > -     chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
+> > -     chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
+> > +     chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
+> > +     chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
+> >
+> >       chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
+> >       if (!chip->reg_base)
+> >               return -ENOMEM;
+> >
+> > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
+> > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
+> >               struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+> >               struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+> >               struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
+> > @@ -262,7 +262,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >               dt_region->sz = dt_block->sz;
+> >       }
+> >
+> > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
+> > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
+> >               struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
+> >               struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
+> >               struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
+> > @@ -302,7 +302,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >               chip->reg_base);
+> >
+> >
+> > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
+> > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
+> >               pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> >                       i, vsec_data.ll_wr[i].bar,
+> >                       vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
+> > @@ -314,7 +314,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >                       chip->dt_region_wr[i].vaddr, &chip->dt_region_wr[i].paddr);
+> >       }
+> >
+> > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
+> > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
+> >               pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> >                       i, vsec_data.ll_rd[i].bar,
+> >                       vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
+> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> > index e9ce652b88233..c2039246fc08c 100644
+> > --- a/include/linux/dma/edma.h
+> > +++ b/include/linux/dma/edma.h
+> > @@ -40,8 +40,8 @@ enum dw_edma_map_format {
+> >   * @nr_irqs:          total dma irq number
+> >   * @ops                       DMA channel to IRQ number mapping
+> >   * @reg_base          DMA register base address
+> > - * @wr_ch_cnt                 DMA write channel number
+> > - * @rd_ch_cnt                 DMA read channel number
+> > + * @ll_wr_cnt                 DMA write link list number
+> > + * @ll_rd_cnt                 DMA read link list number
+> >   * @rg_region                 DMA register region
+> >   * @ll_region_wr      DMA descriptor link list memory for write channel
+> >   * @ll_region_rd      DMA descriptor link list memory for read channel
+> > @@ -56,8 +56,8 @@ struct dw_edma_chip {
+> >
+> >       void __iomem            *reg_base;
+> >
+> > -     u16                     wr_ch_cnt;
+> > -     u16                     rd_ch_cnt;
+> > +     u16                     ll_wr_cnt;
+> > +     u16                     ll_rd_cnt;
+> >       /* link list address */
+> >       struct dw_edma_region   ll_region_wr[EDMA_MAX_WR_CH];
+> >       struct dw_edma_region   ll_region_rd[EDMA_MAX_RD_CH];
+> > --
+> > 2.24.0.rc1
+> >
