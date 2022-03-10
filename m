@@ -2,71 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F19D44D5102
+	by mail.lfdr.de (Postfix) with ESMTP id A6A614D5101
 	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 18:59:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238675AbiCJRzr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 12:55:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51580 "EHLO
+        id S245230AbiCJR7m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 12:59:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237064AbiCJRzq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 12:55:46 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFEECEAC8A;
-        Thu, 10 Mar 2022 09:54:44 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id gb39so13761265ejc.1;
-        Thu, 10 Mar 2022 09:54:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H/+7f43jzNRtohcBff0vjdWTynRZSOEhV46lWGpyiRQ=;
-        b=j58OvalBzU2IMagBwOAgvkVrcHm/+Mz2e8BUztCXFvmvKTO2+DJZD6+JWhXd36XMQD
-         M+wnyMRKUXXPYeJ58YXDuoF/297YXa0rKDq67dynABZfT8n9OsVGT4Qou706mSbJfzBZ
-         kX53xAuTT4AmebNNGkInbatJ4IIl8ubD7aBzSMFtom56/UA24ghQAGtTvxlwKSGv4VBB
-         Ds8o9XUE0cq4jS1iK64Ax/PbGNY7uzNQ+OxtlyKvrnX+JTsTcRLEDXtgjNnhlnh9VHla
-         rVnGnLlulFSoLkaRZ8EoZ268omLOPlHPZKfEm4X6yIMXXIdOLzBhNNSANH16dKL/qxGc
-         06bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H/+7f43jzNRtohcBff0vjdWTynRZSOEhV46lWGpyiRQ=;
-        b=itebzgDzjsUqcuaUohX959YmBy3R+x3LZxElQuM6r+j3w23tx0JxG2Jeh9D8BQCUgw
-         Chd2Upltc8C015FMrTevZXM1oXPrDo7M8qtnatkKMRjnq7GgX33txCSzIcP7iHFbrThr
-         DzMdWly8stUZnMPYddfFYDkDWk+OZyr3s+/o9pkV25zaXJ/s+Qvum0W9Fq0o6bL3n7IJ
-         03q4lHRi15VWqGbFzRGbCLHweWXLLu9JaHUSTVrUEN3dRkzoSGHdFeZ9AKONjEP/wXqr
-         dreMZmFW2u97qVOec+VCqyN+auHK0UvkJrzRECDNEX59BYI4umzWd2ZwyPnnZ45gEePR
-         g8BA==
-X-Gm-Message-State: AOAM530V/qd6erfaVbgitv4ZhOG7IsgiKKZcnMySv0ev8NYlum/wRiTD
-        9WNZx/tn/txk2Ld1LMF2p+nFlvTvck9DSa1V3UQ=
-X-Google-Smtp-Source: ABdhPJwNMARDh0nBHvjUH/MmsAWgNv/dDgfGet7KYOBEE0+Kt4HbuZkTDhse/Ij4z9AGtWwtHyXWMVWUZBqIcpZ4Ew4=
-X-Received: by 2002:a17:907:60cc:b0:6da:9616:ecec with SMTP id
- hv12-20020a17090760cc00b006da9616ececmr5662902ejc.298.1646934882936; Thu, 10
- Mar 2022 09:54:42 -0800 (PST)
+        with ESMTP id S241138AbiCJR7l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 12:59:41 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2087.outbound.protection.outlook.com [40.107.236.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93554166E0C;
+        Thu, 10 Mar 2022 09:58:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Blk97fQUEeq45ytR48MglP4L/WTlcF2qOUU3fR+ia+xXhJLw8CaFfFMEUuEayFsDlk9TWxGHEVI49B80INMI/bxZCMK8raV+J7eeav4rcveswBOz0Mf2gKloXomflrcu7N8Fm9prXyL0yp1E5wKV4vLa2OMYTvg0eWu8uuovlNxunheypJazZHGrChOseLxuZbqkfZaIBiOgGiHfQifWU7wrQ4ic84I3+cT6REEhX+PgACGAN5vgg1W7YnAzW7O96tdW2HWHgJsJgNRi7fUoT3H0Xjz8gN70HtRs5B9uBe4sjSH75CxC4PjLimhXeTxvaTZGJntsLg+hVBi1TmO8hg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HFecLuFmddS3zhEIG0OHrcLwWn5JT/47mMwT70dFwkQ=;
+ b=a2Ed5U5k34CfDphfGllUG6Yj7zljtFzyp+feUMxfdaiE3s3RD/f4Ia1KUh21gx9Z6mi8ezNNvvj/ACmkA6oGHzErD9PZwZflPOJVzv2r7THHqa4/CNeKXMbmuUdeKZjevyZF8+SzMe1hMOTQQVrHcjbTefuIeTKikfQXG1b7Lz0nGP4ml8uybvCkepK5aYr7vshYZvzjakb1+1qNNNFxEJjRJp96TdEn4kctxog/aTaqz0FuuHk+V3kwglc6wzQWpqffTeZeCAjriP1gbZ9JorCeTZXm13VLXYy3KYc+1cxqwUByTWa3Dgy8GbgNgi+d+kwpPnYAF1eT0sKWIxi8Bg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HFecLuFmddS3zhEIG0OHrcLwWn5JT/47mMwT70dFwkQ=;
+ b=IOJitR0jwb1qw4drogzaovCCFyTv2xJYcN5qovRtXJQUEnEdggeRATFHklU/tYrcUzTcHdz0OzvrKma2Keeg3D5kYvXLdE5W5i40ZvamaWGWedTfen/dVG9YqR4EiKSqE8zHdrqiCGNRQQyiXI5CRI/XRYYkNF4i90CAj1w9SBw=
+Received: from DM3PR12CA0053.namprd12.prod.outlook.com (2603:10b6:0:56::21) by
+ BL0PR12MB2420.namprd12.prod.outlook.com (2603:10b6:207:4c::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5061.22; Thu, 10 Mar 2022 17:58:36 +0000
+Received: from DM6NAM11FT014.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:0:56:cafe::59) by DM3PR12CA0053.outlook.office365.com
+ (2603:10b6:0:56::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.22 via Frontend
+ Transport; Thu, 10 Mar 2022 17:58:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT014.mail.protection.outlook.com (10.13.173.132) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5061.22 via Frontend Transport; Thu, 10 Mar 2022 17:58:35 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 10 Mar
+ 2022 11:58:34 -0600
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <Sanju.Mehta@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v2] PCI: ACPI: Don't blindly trust `HotPlugSupportInD3`
+Date:   Thu, 10 Mar 2022 11:58:32 -0600
+Message-ID: <20220310175832.1259-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220309211204.26050-1-Frank.Li@nxp.com> <20220309211204.26050-8-Frank.Li@nxp.com>
- <20220310174643.gxtmg373dgqqocpk@mobilestation>
-In-Reply-To: <20220310174643.gxtmg373dgqqocpk@mobilestation>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Thu, 10 Mar 2022 11:54:30 -0600
-Message-ID: <CAHrpEqSZjZvA4RE8hw_kJgw535SHNOWziZfQU_HsQT2DJArpcA@mail.gmail.com>
-Subject: Re: [PATCH v4 7/8] dmaengine: dw-edma: add flags at struct dw_edma_chip
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, vkoul@kernel.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d4aff9d6-bcdb-4373-1f9b-08da02bf9936
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2420:EE_
+X-Microsoft-Antispam-PRVS: <BL0PR12MB24204BDBFA27DF794769F2CDE20B9@BL0PR12MB2420.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XtvFiVwPUTuQo0euVWfRFwNveuiwGDFAeuDBgCropOs6i+OLtXHtWqTudbxiOjxz0aztUhn9QmJiKccgWROxCLcS3g2byvJXhukA9d7xbrbAVVlsD5qxaBdcvMuIvxTOvaay/7e+584pcVrhjX4OWnAflknnaCCXmBJ3UGvL4fN61G8hA73deQkc7BjG7mBDkpZLbki8kufLxylvNRkTMNI0opOxSz8/Mr3rOpk3FgCIAsEBCC5bllPtq/Sq77IQh4ao1zheZjB2eYgtdA2bqy3NB9pWncZMM24SHVLQF1hEd7gZYMQw/DNiHRHca8Pn6Q0W2nJWMZhVmxizaljKkmlhkMT/6u3rugftruuI/q6vggiwzX8UkPp5moBlOjLKuGCVgcr9mMv7tMDcSeSUjezrYr0h7+Yn/JGOcxZJBWCjChoDmB3kcXJ2/VtmfQMFuInsKsfm3R7Wi0AQYSr0QISAgebirntETm4tgA/LKGtakP8D7MxxiRxeQGnvb0pm/ekZxFk/FxBeFNo0fn+859llQWca34ZaP3rtR+huMaJhBZplpcNFlCT5qaibeL2nONvnETJyFNDvTdL/AG7k8nxqMuhmpA7XPac8CZhVy52e4xMLosYeuXkftbJH8uMVAm0gN/096289xhG4NDbvhvg3fyJFVKZH2xXW31Zkzt7S5+qhDrycLmGsu1U85B24dIDBJ6Jqb5qHvKNezFUJqqeiJjzcfI7ywBMZ9e72NQ2FmyztBbz4Dqq6UHnclaDT8YNOgk0dSgs4NzfnBwWn/U4yaHjOSin4SJOZ/LWYdImPhbFrY14yV3O/BD7Uupos0BVbOG/Rtew8HbGiNU1BG7qMcZbM+DNCvZpfVwxEM6U=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(6029001)(4636009)(40470700004)(46966006)(36840700001)(5660300002)(8936002)(82310400004)(83380400001)(2906002)(36860700001)(44832011)(47076005)(36756003)(316002)(7696005)(508600001)(966005)(54906003)(110136005)(40460700003)(26005)(186003)(1076003)(336012)(426003)(2616005)(70586007)(70206006)(8676002)(4326008)(81166007)(86362001)(356005)(16526019)(81973001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2022 17:58:35.7722
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4aff9d6-bcdb-4373-1f9b-08da02bf9936
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT014.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2420
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,142 +98,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 11:47 AM Serge Semin <fancer.lancer@gmail.com> wrote:
->
-> On Wed, Mar 09, 2022 at 03:12:03PM -0600, Frank Li wrote:
-> > Allow PCI EP probe DMA locally and prevent use of remote MSI
-> > to remote PCI host.
-> >
-> > Add option to force 32bit DBI register access even on
-> > 64-bit systems. i.MX8 hardware only allowed 32bit register
-> > access.
->
-> Could you please split this patch up into two? These flags are
-> unrelated thus adding them is two unrelated changes. That can be
-> implicitly inferred from your commit log and the patch title.
+The `_DSD` `HotPlugSupportInD3` is supposed to indicate the ability for a
+bridge to be able to wakeup from D3.
 
-I don't think it needs to be separated.  It also show why need 32bit mask to
-control features and reserved futured extension capability .
+This however is static information in the ACPI table at BIOS compilation
+time and on some platforms it's possible to configure the firmware at boot
+up such that `_S0W` will not return "0" indicating the inability to wake
+up the device from D3.
 
-The two flags were descriptions for EDMA chip features.
+To fix these situations explicitly check that the ACPI device has a GPE
+allowing the device to generate wakeup signals handled by the platform
+in `acpi_pci_bridge_d3`.
 
->
-> -Sergey
->
-> >
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > Change from v3 to v4
-> >  - None
-> > Change from v2 to v3
-> >  - rework commit message
-> >  - Change to DW_EDMA_CHIP_32BIT_DBI
-> >  - using DW_EDMA_CHIP_LOCAL control msi
-> >  - Apply Bjorn's comments,
-> >         if (!j) {
-> >                control |= DW_EDMA_V0_LIE;
-> >                if (!(chan->chip->flags & DW_EDMA_CHIP_LOCAL))
-> >                                control |= DW_EDMA_V0_RIE;
-> >         }
-> >
-> >         if ((chan->chip->flags & DW_EDMA_CHIP_REG32BIT) ||
-> >               !IS_ENABLED(CONFIG_64BIT)) {
-> >           SET_CH_32(...);
-> >           SET_CH_32(...);
-> >        } else {
-> >           SET_CH_64(...);
-> >        }
-> >
-> >
-> > Change from v1 to v2
-> > - none
-> >  drivers/dma/dw-edma/dw-edma-v0-core.c | 20 ++++++++++++--------
-> >  include/linux/dma/edma.h              |  9 +++++++++
-> >  2 files changed, 21 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > index 35f2adac93e46..00a00d68d44e7 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > @@ -301,6 +301,7 @@ u32 dw_edma_v0_core_status_abort_int(struct dw_edma *dw, enum dw_edma_dir dir)
-> >  static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
-> >  {
-> >       struct dw_edma_burst *child;
-> > +     struct dw_edma_chan *chan = chunk->chan;
-> >       struct dw_edma_v0_lli __iomem *lli;
-> >       struct dw_edma_v0_llp __iomem *llp;
-> >       u32 control = 0, i = 0;
-> > @@ -314,9 +315,11 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
-> >       j = chunk->bursts_alloc;
-> >       list_for_each_entry(child, &chunk->burst->list, list) {
-> >               j--;
-> > -             if (!j)
-> > -                     control |= (DW_EDMA_V0_LIE | DW_EDMA_V0_RIE);
-> > -
-> > +             if (!j) {
-> > +                     control |= DW_EDMA_V0_LIE;
-> > +                     if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-> > +                             control |= DW_EDMA_V0_RIE;
-> > +             }
-> >               /* Channel control */
-> >               SET_LL_32(&lli[i].control, control);
-> >               /* Transfer size */
-> > @@ -414,15 +417,16 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> >               SET_CH_32(dw, chan->dir, chan->id, ch_control1,
-> >                         (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
-> >               /* Linked list */
-> > -             #ifdef CONFIG_64BIT
-> > -                     SET_CH_64(dw, chan->dir, chan->id, llp.reg,
-> > -                               chunk->ll_region.paddr);
-> > -             #else /* CONFIG_64BIT */
-> > +             if ((chan->dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI) ||
-> > +                 !IS_ENABLED(CONFIG_64BIT)) {
-> >                       SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
-> >                                 lower_32_bits(chunk->ll_region.paddr));
-> >                       SET_CH_32(dw, chan->dir, chan->id, llp.msb,
-> >                                 upper_32_bits(chunk->ll_region.paddr));
-> > -             #endif /* CONFIG_64BIT */
-> > +             } else {
-> > +                     SET_CH_64(dw, chan->dir, chan->id, llp.reg,
-> > +                               chunk->ll_region.paddr);
-> > +             }
-> >       }
-> >       /* Doorbell */
-> >       SET_RW_32(dw, chan->dir, doorbell,
-> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> > index c2039246fc08c..eea11b1d9e688 100644
-> > --- a/include/linux/dma/edma.h
-> > +++ b/include/linux/dma/edma.h
-> > @@ -33,6 +33,12 @@ enum dw_edma_map_format {
-> >       EDMA_MF_HDMA_COMPAT = 0x5
-> >  };
-> >
-> > +/* Probe EDMA engine locally and prevent generate MSI to host side*/
-> > +#define DW_EDMA_CHIP_LOCAL   BIT(0)
-> > +
-> > +/* Only support 32bit DBI register access */
-> > +#define DW_EDMA_CHIP_32BIT_DBI       BIT(1)
-> > +
-> >  /**
-> >   * struct dw_edma_chip - representation of DesignWare eDMA controller hardware
-> >   * @dev:              struct device of the eDMA controller
-> > @@ -40,6 +46,8 @@ enum dw_edma_map_format {
-> >   * @nr_irqs:          total dma irq number
-> >   * @ops                       DMA channel to IRQ number mapping
-> >   * @reg_base          DMA register base address
-> > + * @flags               - DW_EDMA_CHIP_LOCAL
-> > + *                      - DW_EDMA_CHIP_32BIT_DBI
-> >   * @ll_wr_cnt                 DMA write link list number
-> >   * @ll_rd_cnt                 DMA read link list number
-> >   * @rg_region                 DMA register region
-> > @@ -53,6 +61,7 @@ struct dw_edma_chip {
-> >       int                     id;
-> >       int                     nr_irqs;
-> >       const struct dw_edma_core_ops   *ops;
-> > +     u32                     flags;
-> >
-> >       void __iomem            *reg_base;
-> >
-> > --
-> > 2.24.0.rc1
-> >
+This changes aligns the handling of the situation the same as Windows 10
+and Windows 11 both do as well.
+
+Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
+Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
+Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+v1->v2:
+ * Add Mika's tag
+ * Update commit message for Rafael's suggestions
+ drivers/pci/pci-acpi.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index a42dbf448860..9f8f55ed09d9 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -999,6 +999,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	if (!adev)
+ 		return false;
+ 
++	if (!adev->wakeup.flags.valid)
++		return false;
++
+ 	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
+ 				   ACPI_TYPE_INTEGER, &obj) < 0)
+ 		return false;
+-- 
+2.34.1
+
