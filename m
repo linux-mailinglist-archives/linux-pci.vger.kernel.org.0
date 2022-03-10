@@ -2,253 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17EA14D526E
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 20:44:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C287E4D5253
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Mar 2022 20:44:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245561AbiCJSrG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Mar 2022 13:47:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47346 "EHLO
+        id S239491AbiCJTHb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Mar 2022 14:07:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236161AbiCJSrG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 13:47:06 -0500
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9FF19D74B;
-        Thu, 10 Mar 2022 10:46:04 -0800 (PST)
-Received: by mail-lj1-x235.google.com with SMTP id o6so9046920ljp.3;
-        Thu, 10 Mar 2022 10:46:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KBoHDSTkq3X20nnOOU3JC1aKT2hlawy43zccNCLSQ84=;
-        b=qTvgzXIcpvsM4l1z58BRR+9jcwy/HX3hw4Ht4080qpBcOqUcwpS30GqMU2v8ZgtOc8
-         JT0McWoSRPCHCSIZlCAI4QMUDLVgGdbmj9VYUI0EQSy250YgjBFt5icjTPn09zMuspli
-         gwCrPCaBlbT9CZsrWnTv4d9OA6EwmXiVjTVMpt5bXsoYeMHJxBhkyeWhJ6coT8JoPbRR
-         XcJvpf0rkeGhGchIqyEohjkhlBbGMF0YQqDfRpLfiMmVZ2EN7qhkJohj/xX+n/xHy6l3
-         U/5w+0sMBLftF7ZaadtJyLVOd5oqg2/vOSYwzcJOj/pxI4C0l//Vwe2TFLXxBqzet6wJ
-         gAgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KBoHDSTkq3X20nnOOU3JC1aKT2hlawy43zccNCLSQ84=;
-        b=kMlnwXRW6xXwRHGUJoEfjUm+ZO8e89DZ8UlDSCLDBBmxWcfJnt6v3QO773exmim+of
-         idmGZdmhJ7NR2FlhaP/Yw/Q0Pwe+l+ZX1IERC/6uSzbbWkWHJ8tjUpoCqLvxxto74BC6
-         MXRn1kFn89cH/w/c9USze/zD0P5sFV/GBqYuvOabVoqSRgcssWk1TzvRomPU6J6hzb6x
-         sjR8PiZSS7JRqjAzdev/jF+5uO/V3XVxcaUUzJn2nj/3cNrkKIi9LKRO+1WoVJN4/Mci
-         qVgDILPIu+o+BfmaZ9R5lgI8LzGIrGdYSyAX55JIsf6+8io0FCUYoSJlkoJm2fc5whMH
-         wjaw==
-X-Gm-Message-State: AOAM531Wnxzo+tw6ukbiffFMdccJk41tlu2BoDTI8BB7bIyMsVPRMomu
-        S4XqLO5jGEv01ImG+Xu+q0g=
-X-Google-Smtp-Source: ABdhPJzZgtSJ0ZtnstrqNPebyd/BYAmYTN6NGE8B3ecYCstC3YGtDohANEtMp1hdGemfyvy0H7OrfQ==
-X-Received: by 2002:a05:651c:2ca:b0:23e:6a81:9591 with SMTP id f10-20020a05651c02ca00b0023e6a819591mr3878350ljo.54.1646937962372;
-        Thu, 10 Mar 2022 10:46:02 -0800 (PST)
-Received: from mobilestation ([95.79.188.22])
-        by smtp.gmail.com with ESMTPSA id m25-20020a195219000000b0044846bbda49sm1113571lfb.121.2022.03.10.10.46.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 10:46:01 -0800 (PST)
-Date:   Thu, 10 Mar 2022 21:45:59 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Zhi Li <lznuaa@gmail.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        with ESMTP id S231898AbiCJTHb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Mar 2022 14:07:31 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C0B15AF17;
+        Thu, 10 Mar 2022 11:06:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 69CA060F59;
+        Thu, 10 Mar 2022 19:06:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1815C36AE3;
+        Thu, 10 Mar 2022 19:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646939188;
+        bh=DZWH3bwZ375xFmQ0OwIjh3CQzxRg1q4WJtf3n5K59+o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XUYS3GRPZyu3YowNax3qy3tUrF9gl1hqNJyL6hiyYGHyX+y9YxccY63b3wW94iUte
+         6c4yXuAmbX9BIRaws+z+pElTpfVPlHH/bU1n6AgT4xSVnkGnEdGf8Uk4RYw2GyqJ4z
+         rrZDvnQbgbnemz23jS2gTRcK67mheTwcWZCEZSQ0c9iVgplw44RIuKJ97GOhV6tIR3
+         JP7j06V0TFYS2Qd6vn79s08YRKpHIfU64mPcPLvdnuCejO1X3pMZJtNJlOxI5WXK8t
+         q/pqqkNkS8u6o9J/ps142V1BJV6savWZml0At9sjxeod2dXixw13pUM2mhxdG6wuBF
+         h8LoZZf5DSJsQ==
+Received: by mail-ed1-f52.google.com with SMTP id w4so8218355edc.7;
+        Thu, 10 Mar 2022 11:06:28 -0800 (PST)
+X-Gm-Message-State: AOAM5338YelDBcI44oHlVWttmdQk15sumpfywXr5R+gYllnTZ/z1R1oY
+        OLRm8n2kBd9+PDLv2qZPue4awtZMpYSztBCoIA==
+X-Google-Smtp-Source: ABdhPJxGVHRPqEZhL7PMUHhMt2Tffj/wF8PrGVgg0dXSJH+g2KbYq3NU8HU6vY44+Nqq0g+blMf+tpB8rKnB/lUjh1k=
+X-Received: by 2002:a05:6402:5256:b0:416:97d1:a6a2 with SMTP id
+ t22-20020a056402525600b0041697d1a6a2mr5777352edd.280.1646939187055; Thu, 10
+ Mar 2022 11:06:27 -0800 (PST)
+MIME-Version: 1.0
+References: <20220308022929.30002-1-linmq006@gmail.com>
+In-Reply-To: <20220308022929.30002-1-linmq006@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 10 Mar 2022 13:06:15 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKpr9ksR2gse4fHPHbNfv9+TtSu99+Ofz1mZ16WNjswYA@mail.gmail.com>
+Message-ID: <CAL_JsqKpr9ksR2gse4fHPHbNfv9+TtSu99+Ofz1mZ16WNjswYA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: imx6: Add missing of_node_put() in imx6_pcie_probe
+To:     Miaoqian Lin <linmq006@gmail.com>
+Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
         Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, vkoul@kernel.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Shawn Guo <shawnguo@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v4 4/8] dmaengine: dw-edma: rename wr(rd)_ch_cnt to
- ll_wr(rd)_cnt in struct dw_edma_chip
-Message-ID: <20220310184559.bdch4rzxavid7lnn@mobilestation>
-References: <20220309211204.26050-1-Frank.Li@nxp.com>
- <20220309211204.26050-5-Frank.Li@nxp.com>
- <20220310123716.z6zh72ybevze3nk2@mobilestation>
- <CAHrpEqRXx8aTMCRj3PZCJiX9UC=PPfuky8Se_-21a4H11V-WdA@mail.gmail.com>
- <CAHrpEqRFP1i-O6EXH31Gb1Z+2Jd=ghjpgVnLu4KyNK0ZJgenqg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHrpEqRFP1i-O6EXH31Gb1Z+2Jd=ghjpgVnLu4KyNK0ZJgenqg@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Trent Piepho <tpiepho@impinj.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 10:51:51AM -0600, Zhi Li wrote:
-> On Thu, Mar 10, 2022 at 10:26 AM Zhi Li <lznuaa@gmail.com> wrote:
-> >
-> > On Thu, Mar 10, 2022 at 6:37 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > >
-> > > On Wed, Mar 09, 2022 at 03:12:00PM -0600, Frank Li wrote:
-> > > > There are same name wr(rd)_ch_cnt in struct dw_edma. EDMA driver get
-> > > > write(read) channel number from register, then save these into dw_edma.
-> > > > Old wr(rd)_ch_cnt in dw_edma_chip actuall means how many link list memory
-> > > > are avaiable in ll_region_wr(rd)[EDMA_MAX_WR_CH]. So rename it to
-> > > > ll_wr(rd)_cnt to indicate actual usage.
-> > >
-> > > Hmm, I am not sure you are right here. AFAICS the
-> > > drivers/dma/dw-edma/dw-edma-pcie.c driver either uses a statically
-> > > defined number or Rd/Wr channels or just gets the number from the
-> > > specific vsec PCIe capability. Then based on that the driver just
-> > > redistributes the BARs memory amongst all the detected channels in
-> > > accordance with the statically defined snps_edda_data structure.
-> > > Basically the BARs memory serves as the Local/CPU/Application memory
-> > > for the case if the controller is embedded into the PCIe Host/EP
-> > > controller. See the patches which implicitly prove that:
-> > > 31fb8c1ff962 ("dmaengine: dw-edma: Improve the linked list and data blocks definition")
-> > > da6e0dd54135 ("dmaengine: dw-edma: Change linked list and data blocks offset and sizes")
-> > >
-> > > (That's why the logic of the DEV_TO_MEM/MEM_TO_DEV is inverted for the
-> > > the drivers/dma/dw-edma/dw-edma-pcie.c platform.)
-> > >
-> > > So basically the wr_ch_cnt/rd_ch_cnt fields have been and is used as
-> > > the number of actually available channels, not linked-list. While the
-> > > notation suggested by you can be confusing, since the ll-memory allocated for
-> > > each channel can be split up and initialized with numerous linked lists
-> > > each of which is used one after another.
-> > >
-> > > I don't really see a well justified reason to additionally have the
-> > > @wr_ch_cnt and @rd_ch_cnt fields in the dw_edma_chip seeing the number
-> > > of channels can be auto-detected from the corresponding registers, except
-> > > that to workaround a bogus hardware. So we can keep it, but please no
-> > > renaming. It will only cause additional confusion.
-> >
+On Mon, Mar 7, 2022 at 8:29 PM Miaoqian Lin <linmq006@gmail.com> wrote:
+>
+> The device_node pointer is returned by of_parse_phandle()  with refcount
+> incremented. We should use of_node_put() on it when done.
+>
+> Fixes: 1df82ec46600 ("PCI: imx: Add workaround for e10728, IMX7d PCIe PLL failure")
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 6974bd5aa116..bcc338ab6c11 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1050,6 +1050,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>                 struct resource res;
+>
+>                 ret = of_address_to_resource(np, 0, &res);
+> +               of_node_put(np);
 
-> > I agree that channel numbers can be obtained from the register.
-> > but Caller don't know the channel number before calling dw_edma_probe.
-> >
-> > Caller may not init all ll_region_wr[EDMA_MAX_WR_CH],
-> >
-> > That's the reason I need a field to indicate how many ll_region_w
-> > actually initialized.
-> >
-> > old wr_ch_cnt just plays the same role.
-> 
-> Anyway, it is not a big deal. I can skip this patch.
+So now you are using the phy within the driver, but not holding a
+reference to its node? That is wrong. Though if a struct device was
+created for the phy's node, it would hold a reference. There are a
+bunch of error paths where the reference should be dropped. But
+really, this driver is a big mess with the phy binding and framework
+not used and your nodes probably aren't going to be disappearing on
+you anyways.
 
-Ah, finally I see what you mean here. The patch seems reasonable now. No
-objection against it then.
-
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-
--Sergey
-
-> 
-> >
-> > >
-> > > -Sergey
-> > >
-> > > >
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > > new patch at v4
-> > > >
-> > > >  drivers/dma/dw-edma/dw-edma-core.c |  4 ++--
-> > > >  drivers/dma/dw-edma/dw-edma-pcie.c | 12 ++++++------
-> > > >  include/linux/dma/edma.h           |  8 ++++----
-> > > >  3 files changed, 12 insertions(+), 12 deletions(-)
-> > > >
-> > > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > > > index 1abf41d49f75b..66dc650577919 100644
-> > > > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > > > @@ -918,11 +918,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
-> > > >       raw_spin_lock_init(&dw->lock);
-> > > >
-> > > >
-> > > > -     dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
-> > > > +     dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
-> > > >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
-> > > >       dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
-> > > >
-> > > > -     dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
-> > > > +     dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
-> > > >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
-> > > >       dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
-> > > >
-> > > > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > > > index ae42bad24dd5a..7732537f96086 100644
-> > > > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> > > > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > > > @@ -230,14 +230,14 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > > >       chip->nr_irqs = nr_irqs;
-> > > >       chip->ops = &dw_edma_pcie_core_ops;
-> > > >
-> > > > -     chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
-> > > > -     chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
-> > > > +     chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
-> > > > +     chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
-> > > >
-> > > >       chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-> > > >       if (!chip->reg_base)
-> > > >               return -ENOMEM;
-> > > >
-> > > > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
-> > > > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
-> > > >               struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
-> > > >               struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
-> > > >               struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
-> > > > @@ -262,7 +262,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > > >               dt_region->sz = dt_block->sz;
-> > > >       }
-> > > >
-> > > > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
-> > > > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
-> > > >               struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
-> > > >               struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
-> > > >               struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
-> > > > @@ -302,7 +302,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > > >               chip->reg_base);
-> > > >
-> > > >
-> > > > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
-> > > > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
-> > > >               pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> > > >                       i, vsec_data.ll_wr[i].bar,
-> > > >                       vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
-> > > > @@ -314,7 +314,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> > > >                       chip->dt_region_wr[i].vaddr, &chip->dt_region_wr[i].paddr);
-> > > >       }
-> > > >
-> > > > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
-> > > > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
-> > > >               pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
-> > > >                       i, vsec_data.ll_rd[i].bar,
-> > > >                       vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
-> > > > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> > > > index e9ce652b88233..c2039246fc08c 100644
-> > > > --- a/include/linux/dma/edma.h
-> > > > +++ b/include/linux/dma/edma.h
-> > > > @@ -40,8 +40,8 @@ enum dw_edma_map_format {
-> > > >   * @nr_irqs:          total dma irq number
-> > > >   * @ops                       DMA channel to IRQ number mapping
-> > > >   * @reg_base          DMA register base address
-> > > > - * @wr_ch_cnt                 DMA write channel number
-> > > > - * @rd_ch_cnt                 DMA read channel number
-> > > > + * @ll_wr_cnt                 DMA write link list number
-> > > > + * @ll_rd_cnt                 DMA read link list number
-> > > >   * @rg_region                 DMA register region
-> > > >   * @ll_region_wr      DMA descriptor link list memory for write channel
-> > > >   * @ll_region_rd      DMA descriptor link list memory for read channel
-> > > > @@ -56,8 +56,8 @@ struct dw_edma_chip {
-> > > >
-> > > >       void __iomem            *reg_base;
-> > > >
-> > > > -     u16                     wr_ch_cnt;
-> > > > -     u16                     rd_ch_cnt;
-> > > > +     u16                     ll_wr_cnt;
-> > > > +     u16                     ll_rd_cnt;
-> > > >       /* link list address */
-> > > >       struct dw_edma_region   ll_region_wr[EDMA_MAX_WR_CH];
-> > > >       struct dw_edma_region   ll_region_rd[EDMA_MAX_RD_CH];
-> > > > --
-> > > > 2.24.0.rc1
-> > > >
+Rob
