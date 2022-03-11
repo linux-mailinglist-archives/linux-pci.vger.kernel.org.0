@@ -2,153 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E5424D6887
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 19:38:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C0B24D68BF
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 19:51:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236367AbiCKSjb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 13:39:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48966 "EHLO
+        id S243182AbiCKSw7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 13:52:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239316AbiCKSja (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 13:39:30 -0500
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57F43766B;
-        Fri, 11 Mar 2022 10:38:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647023906; x=1678559906;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4KMmcZq9iYcm7zU+PV1ghcFmoDOgXCkCmuwpZ208LLQ=;
-  b=WH+htBUCAb+nOS8iGeBJEgJ9AZrkxYh1Z/aDTTEQfQeQ2UHRoCK+C9u4
-   7qbGUZD6KLr5SafOXRoa7Hxeuh8T8nH6Lfgxagalr6dIBwuSmBTf6QXv/
-   UfBLP2O4v2TXI3hUc6l0SlvDcyzVXpvZxdF5sM4dlWnonlcm4ggC5+1Qu
-   WuMbTtqf9tvOow88EBY/kaiOHKXVLNTQT5X14xsdybIX674Woh5FfHt/8
-   e4NcWNGQjU38Rc7EXKpoGTcGSjS0cmb67+uU74vs0N6HrJk3FfQabA61p
-   tvfibQQJg5jiizjwCCgiINoE0pyKiBHckmiXTJ5iIsGFc3OHcXe/pYx0d
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10283"; a="316352189"
-X-IronPort-AV: E=Sophos;i="5.90,174,1643702400"; 
-   d="scan'208";a="316352189"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2022 10:38:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,174,1643702400"; 
-   d="scan'208";a="689146712"
-Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
-  by fmsmga001.fm.intel.com with ESMTP; 11 Mar 2022 10:38:25 -0800
-Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
- ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 11 Mar 2022 10:38:25 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21 via Frontend Transport; Fri, 11 Mar 2022 10:38:25 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.21; Fri, 11 Mar 2022 10:38:24 -0800
+        with ESMTP id S243689AbiCKSw6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 13:52:58 -0500
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2058.outbound.protection.outlook.com [40.107.220.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FEF71C60C9;
+        Fri, 11 Mar 2022 10:51:54 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jTnTF1luehlYfJkhirjdCDF6oZ0CAmakw+bHziYRgke452KgY3tEnoWEkbVYqAiUkCWssyY2yiwdBxGlFgsldhNCsWbN7Nomv7RZcNAXtNUxHTDhDyKPytx0YgzTepkzJSxelqlbcE9gXkvsH51UHR/cI64i0e43k7JccT03itVbTmoVI4lD9pwyvsHaidie5DvDYdUkPgF5nWzS//7N7qUBwLTfKi7QtB+UlIfoA1UJ8ZajA3fMBCPqSi7BpfVnHSp1LaVN/nStEOYy/SD5Ummu2QoOFbH9VB69RN01CUHxP3TQncxCwD1VgD4dELag+eSumTV4+Yq7cKq2uezkEw==
+ b=POIeZAGFFBvbyCJ7IMPLWy/b7pLzqHGFzu3MPeRkPH/SP3lzH0I0ZXbtdR7nhjSfUxBlhiRw5I7WgWUoRtHbJCbRgRaJ/MgYoWVNgorafd9RE2seUWLdK3++oHqNiPwbDFjr4MpLaCncof317vNml28Lr4sCm1pveIflhiOc8LTqXq77lAk5NU3jg1x67pWIafdWY5Awk4X/PnA0CNvCM8hERVWl7A12p11RwQwGQwdoTFqPX6l7GKmTlXEegmhqtfQMRIqEu7HCFT9uJLB7eG/vJHrACkMFSI3XQYo6KPqH8IdmE2iPxJqTnUqpDMdTpRE9OQxfLDu9JYUfPCJYQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3DkNFdnd3TaJpqBDJKs6LfeFPcTHhYitNB0dRz582/g=;
- b=J4z7fFtw56ncychazaT1pB2R1GRVB7ZTKRTnXA+PwKbYzhx2AhGJ2+eB8of13OqtOA+fGUmkKWy6xB+ixCbjsonm7jYDr/za91hk9nCGgJRubqUGjI2i1IH8kcvgLYghw8MCjtTpNLWJOwEH2wkduAg8OeDcO8B9PFsYt/5LIqTzk73xv3w1JdLxtiUeIjWW2vwHH5xa9ztUJY1VRG/5VQteMWVdSLBY40sf6BmUTM39yDUYnNR5hvP6KGau7PvFGoAY6/ksQBrV/2Hjbqzp4Xf2Spuob9aaPFcG+PxxcFq0klH9TPi4qsug10y0//v4BNAGT79tM/A+JBp4EbK98g==
+ bh=pi2LyeKl+5vn7MCTTOmyHRP3mnili9WnozYcr7nn6Xg=;
+ b=kqrKy9vqqLBFom01d9Oz5Mwx+g3pc3ZOGHW+UE4cDm65Jxotn1kgK8kIYKAP6a8nafks/w1v73MEEZQNWVnH7d1iuK5PQVduSQFYnBkdDI/F0Jn956hPZWoSv9xa0NSxf5iK5YUpkp7/jrOnpgKWJHvz1eU5Lq5kznkbzj4tf5cf12TKdfquHhvbe6d9DDAxd5pbhawBLfJd05+J6zMq9nQM9fmsewirarAV/BahqMFJxOryDcsjErMYHKZJfovZj2+7jUZ26Dh34tw1vJvSQVGmR74Lib9q/+1IXissf+PANkBuF2RVmOPAM7Nx4H+3N+yfsbzPcYFBydjTEmLKGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pi2LyeKl+5vn7MCTTOmyHRP3mnili9WnozYcr7nn6Xg=;
+ b=tA9Fg93SvInSqbpVdHFSZarqaey9ONbxowZUyDuJn7xs2XpW/yNalZXxVbDYmKXv22yWYplOmXo8iSUbL81wpXXc3e+COG2xPqSm69guO+cih/5iiiGGx2rr5O/f4AWyjvNDmGOVnCGcC8//cEeXffVwdnSSwRwby+dsZO9Ta+8=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MW5PR11MB5810.namprd11.prod.outlook.com (2603:10b6:303:192::22)
- by SA2PR11MB5034.namprd11.prod.outlook.com (2603:10b6:806:f8::15) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
+ by MWHPR1201MB2526.namprd12.prod.outlook.com (2603:10b6:300:ec::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.22; Fri, 11 Mar
- 2022 18:38:23 +0000
-Received: from MW5PR11MB5810.namprd11.prod.outlook.com
- ([fe80::dda5:a04:f265:68ad]) by MW5PR11MB5810.namprd11.prod.outlook.com
- ([fe80::dda5:a04:f265:68ad%3]) with mapi id 15.20.5038.027; Fri, 11 Mar 2022
- 18:38:23 +0000
-Message-ID: <7d5de631-3ebc-01ee-69b8-ae105408cb59@intel.com>
-Date:   Fri, 11 Mar 2022 19:38:15 +0100
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.16; Fri, 11 Mar
+ 2022 18:51:51 +0000
+Received: from BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::692d:9532:906b:2b08]) by BL1PR12MB5157.namprd12.prod.outlook.com
+ ([fe80::692d:9532:906b:2b08%5]) with mapi id 15.20.5061.022; Fri, 11 Mar 2022
+ 18:51:51 +0000
+Message-ID: <adcd2748-effb-25da-8021-cc1532308983@amd.com>
+Date:   Fri, 11 Mar 2022 12:51:45 -0600
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.7.0
-Subject: Re: [PATCH 2/2] PCI/PM: Fix pci_pm_suspend_noirq() to disable PTM
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v2] PCI: ACPI: Don't blindly trust `HotPlugSupportInD3`
 Content-Language: en-US
-To:     Rajvi Jingar <rajvi.jingar@intel.com>, <bhelgaas@google.com>
-CC:     <david.e.box@linux.intel.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20220224202937.2414867-1-rajvi.jingar@intel.com>
- <20220224202937.2414867-2-rajvi.jingar@intel.com>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-In-Reply-To: <20220224202937.2414867-2-rajvi.jingar@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Sanju.Mehta@amd.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20220311182305.GA311200@bhelgaas>
+From:   "Limonciello, Mario" <mario.limonciello@amd.com>
+In-Reply-To: <20220311182305.GA311200@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR3P281CA0077.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:1f::10) To MW5PR11MB5810.namprd11.prod.outlook.com
- (2603:10b6:303:192::22)
+X-ClientProxiedBy: SN4PR0501CA0019.namprd05.prod.outlook.com
+ (2603:10b6:803:40::32) To BL1PR12MB5157.namprd12.prod.outlook.com
+ (2603:10b6:208:308::15)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 576b9929-96a7-4b05-49cb-08da038e5250
-X-MS-TrafficTypeDiagnostic: SA2PR11MB5034:EE_
-X-Microsoft-Antispam-PRVS: <SA2PR11MB5034102E883EEC496C9198ECCB0C9@SA2PR11MB5034.namprd11.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 21238d7a-0ddd-4bc7-b56d-08da03903460
+X-MS-TrafficTypeDiagnostic: MWHPR1201MB2526:EE_
+X-Microsoft-Antispam-PRVS: <MWHPR1201MB2526FBA379A8F31F32954AC4E20C9@MWHPR1201MB2526.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vkHa/EODCHjbs7Rb4k990dnq509cKisDT8Bdjyb5YWNnh9R6q1gF5wyZ/S/JqVZqzFLZpLwydcYdxz+PjRc671goISM5Och18FHzDhLx5h8j7mFIIpbz3vXE7yqFid2svQKCI22MgqoTVPYQ4qvSc7m1CydqhGzGX1zk25fug74cVOyjZGt0YBSkZC8PaLIa5UCFT7VZMOObe7heLt3rK0g1Ws8TN06dRZsJoUI+LWIZitk0vROKSdVVBglSDHKBQx/vIs49/TwLQ4Nfpk/Ra99ZybW7Y5j3A3CIY6TpELBMVTf4dkcXq2V8ehMZPR/0/8KWwcDEKpudhidcvYaETa8UDW4ljETyfwY6C00Y/sigavqhP6UFeQ2TQzyeR6hFBXWlrT2zGg/uuzhloMIbHi7UagqAsaIdAVjsbGbB1LxF1leTpsOnnpNdOnYJoTUpkKrmUUMZKPr2C1pjNrrHXwLxoMDaORLbt6GKtUiJPu0FGXHtJRLMVajrlleH0E59+1Pk3Y9sCt9GsCNtymDQUr4MBrU1goFlbmQXnOWa4ZWhb4h1PaEykxVRmLTHMmulHHXYJu49Dtwnws9YteozkyKZZkcedoXgucivtCPUAFYfgsRGPX7OSpTjQiquSPTcnvLjsDUNeQsw/XdwtX4tftjVXIdWRXIEymOJk71XNuIVKZkpibcfK3B9oWV3y+Xsj4wliDLZEJUp59n726Mu0zYl2PQ9c3ArC0a6J+9CVto=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR11MB5810.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(38100700002)(66946007)(82960400001)(31686004)(6666004)(53546011)(186003)(36916002)(8676002)(66556008)(86362001)(2616005)(36756003)(6506007)(5660300002)(83380400001)(26005)(4326008)(508600001)(316002)(2906002)(8936002)(6486002)(6512007)(66476007)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: HfD6NgH2RzOtgI+1RQnTPylE8OmQmA8d7aZ8+eZbk1DzlZZNbSn8jLfzpQ6AmLu66lxHho8LBHp3kSc529ttD4/VNDnWPRAnAGABkrBCZQWe93GIpDyzIzS09x7BkWZveKiCm+FL63hjhDe7K8yuH7MQAz4p+MymP00rk7Ya0MEsYXJX37b9BHHdivkGXcIHcYszUBke6kPorzF1hVBYyB4PKn50NaHmx7oXWaZrSIxpzjimxyUhUdNKFxeJuG722/BT98+9FQBg57SmzszUjq/DPAN4VAcU3SUdiZZ0T9P8pGEVFazK9/Q4D/anZ6Thqb4P2JAtXAhcCYc+Pb8PeKcn0zAiVVnjtUzr+BJyHsMRgB6ATUazxiwFdPAVZnEcQiQC43UtRHtccIF/Sm6yyLhF5fCkGRQnkjsbOMx502uAKa7yAdpYH2diun4sCbZAfJQuGd5T0U8cfrWrESW3IO1iH69gBNRQpxL8Os/NaL6rTrJQHnkYaUDGzM1sDFibvmKHAMZLNMpKch7NalNS86KXwqHTFfq+OpcwVzizTf3SNpbfnag43A58x06RvpcTCCjDtDXXn7Hc7DdFOotJ0f/YDE0PbUy670PA8XOfAh9G63NMJD3W5qTD7wWrp/dZY1blm3DPFNwQ6n3Mm39jIygTnql7Ls9/pNugWyC9lWutD7hrXMc2CXuzu58Uxu1j02ZMr6FOr4HkVd6skqaLBcB4RUDbjnT814nHFyRTmahcV1OKrFrNmg1uvOguivIq1kh3kyNI5T+JVX3OP/WbmeCCbwMdG3h44AQkmp1ZL9xzPOZLNMyVujx3Rrst6+FDQBB1eb12wh86v4ign5Wz8IcqvaMocrn+eTAe6hRhqEd5OS2QGnWqB+F9tm2nUyES
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(6029001)(4636009)(366004)(66556008)(86362001)(6666004)(66946007)(66476007)(186003)(6506007)(6512007)(54906003)(31696002)(4326008)(83380400001)(45080400002)(966005)(508600001)(53546011)(6486002)(31686004)(8676002)(38100700002)(6916009)(316002)(2906002)(19627235002)(2616005)(36756003)(8936002)(5660300002)(81973001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MllqUThYS2hpTmE4TGlTZE5IVTc2NmQzM1dCeFQ0WHVlMGk3eXdJL0hJSVlC?=
- =?utf-8?B?K2VjRjF1d3VvRFJjZWRiWVo1bnV3endBMm9TZDRNYVlKMXVqdTE5anJ2Mm9P?=
- =?utf-8?B?T00yN3NOQit6NVJNOXRHbWpsVW4ySHc3T0NlekRiMTJCUGZOeGgzb3J1R2g1?=
- =?utf-8?B?RWdOeGN5RjRhd0NVcndvOEM1eUNWY3JRMGRibThQdGNaSUFlRTRBTE1yWk1O?=
- =?utf-8?B?d21nZ3k5aklmMWVqdnpjQ0xRMjIrMGZsNmd4dnJrdFAxNXM3Njhwb1dPMnZ0?=
- =?utf-8?B?QWcxUUloSXlGQXhZTnFxaDNCT29ZK2RsOWJ0ZE1lYTFUME5DNGpCTFFJUktn?=
- =?utf-8?B?Q3A0UUhneTZMNjlGSjNGWHNVSVluZTRQblF5eHBzUW5NMjc4NXVZbjg4S3g3?=
- =?utf-8?B?L2hiV1RITDUvQ3o2dUZhRkl4bFpjZlNORTFqdUo5WTNFd3JIQTVjVDRma2lX?=
- =?utf-8?B?d21EOFFjR1h1aUhLRTl3Tyt1NnVLZkhPaXhrWitUOXBXYkhpRFhlR01WV2Ns?=
- =?utf-8?B?NmRobHBya0pONTV2N0huSWdRNTJrQmJidGM5dUo1OXNlaXpvdUVoekNXK0Zj?=
- =?utf-8?B?THBtYXRqTVFWdkVWQWpQNks2UGdUY09FY2hINCs0QllTM2NpRXVKS09vRFFi?=
- =?utf-8?B?ZHBxamFObjBrSnVOTzB4NFZUUC9QQ2FUZHpwdkxCMVJaMFNRdGFuRlpSMFd3?=
- =?utf-8?B?OGlReFVrU1MwZmpGM3praTJlTkE5VWZlYVlsQUQzaitxRzdCL05NajFMSzVT?=
- =?utf-8?B?RlhwWXBNTXV4eGV0aHM2eVBYL1psTFoyQzh4Z2M3RTZPdmdLeCt3cTBHblBE?=
- =?utf-8?B?bjhteldyMlBMUXFqYW5yeUFoL2Z6OE9BTWhuRVZLMVQ4dzFmL2hnTVRWYS9G?=
- =?utf-8?B?TUdYeUZyNUJLZHU4ekg5ZUduK0IwWGpOTHpneENuYURKMTR0b0FlQlNmNjZs?=
- =?utf-8?B?UUxnODFTTnFheEsrMGRhZ3Zoa3VjMEJCTDhkWHVpMlQ5QU5mT1NHUnBWM01m?=
- =?utf-8?B?Ync1c1NUVWx4ekcyckhHRHpxcGk5RWNYY0RJbTlYU2Q4SFF3bjJLUFNpTTlD?=
- =?utf-8?B?NG95ZUNsT0tJZWd0U0gxTXhqK1c3NGgzZ1A0K2JvOWRKNmhjRW1XREZyNWN3?=
- =?utf-8?B?NlpmMUJENmxVTkxDZDhlVHpIaUMwWlpONkgreUE4NStaUEcrUFFhOWxmMVF3?=
- =?utf-8?B?OWxJK2Z2TzZyNFRSWTNPeWdLcHBOQlhpaDBVS1dWd2lHbzRSMGJ2ZjNrK3NT?=
- =?utf-8?B?OTk3cW9HMmJ5d0VpK3ZVbkJEUUhFVVpMMHlnd0owYjd4OVdCeEhWRGRYaHlm?=
- =?utf-8?B?M21IdFFvMGtndlZEOE9Ca3graTNPMGhZclYxVGJhMU9XUmVrVmxNSFhGYUpq?=
- =?utf-8?B?L2EwMHpucjcwZ0cvZVA0RVFzN1VTYk9WOVBQMWlLS1FaU2ZmWHpCZnMxczBG?=
- =?utf-8?B?eWdYWXpsOGViUWlBYzg4dEtKQkc1QUVhTUt4YXZMOUEzOWZ6d0hRSTM5R01N?=
- =?utf-8?B?dU1qbUJtVU9TSlRWWUJLQklJdk9PWi9WbDdVQjZYc2lIRFRtNnVPdEZma3F5?=
- =?utf-8?B?ZjVsWC94Zzh0TmdNdGlJMFlHOFJ2ZVo0T1puRE5TZ3VhZ2h3NlpSdDZ1YjUr?=
- =?utf-8?B?azdIWjVpYm1raUt0ZU4xd3pMTnZNWVlDVVE0ci9vTUpxbnVoNnlRd1RPWU9B?=
- =?utf-8?B?ZlFkUnFMTCt4S0Z6YWJoMUNxT0NKd0JpY0JxVjFtSUVqRTJjeWpURVlGajAv?=
- =?utf-8?B?L3lGdVZ3UWNualNTTk16S0NnVmNjN1JoanJhNXlISlJmejlIZU1paUlPWkgv?=
- =?utf-8?B?cXRWK0tKb2VOblhTS3FoZTA4K092eExGcmxMQjQyYTZ1SWJ2VXdxL3FTeFhm?=
- =?utf-8?B?RGMxbU1Yb1N5c2V3eHRjOUt0Y2J5WERQeDVNbVZwcXFKbnkxemJMVnMvSVdE?=
- =?utf-8?B?OFpDWDhzYzhwaG9uamJuYU1yaER0SVppZk80dmg1MnZLdGV6Z3llZmlBMisx?=
- =?utf-8?B?OEZnUFBaeE1BPT0=?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 576b9929-96a7-4b05-49cb-08da038e5250
-X-MS-Exchange-CrossTenant-AuthSource: MW5PR11MB5810.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eFVseG8wbFRNaExtOXlOMVdVdDhWSjEzVUphM2NueGJ2K3Jza0ZLNitsOHN3?=
+ =?utf-8?B?bmdxNFB5KzkxbWtsVXlHc01LS0krSHhqa3RYZCtYQjN5S0ZEVkFoRUJHYmpU?=
+ =?utf-8?B?aG5CYmxhWlhIN281VUFjQ29YLzRLR0tuWFVLS1lJa2p5aVd6eCtBbDNoSklv?=
+ =?utf-8?B?VUhsckNRUWZENnJNYkMwL1NWcnptQnZnVFAwelE2eGFtb00rcGlkamI0WlA2?=
+ =?utf-8?B?L1ZCbTBYdGo5TUFTcWgwc1RpVzZwb3FUQlVQbTFxTXN6dHN6d2Z1QnVIK2RP?=
+ =?utf-8?B?VnNjL1JDaHBrNWxKbkd5a1NTNTBSb1M4MytZWlprcEoyeTIzOWdpQUtjN0lq?=
+ =?utf-8?B?Sm9ZNHNFamR0OGx2ckE2NXVEQlpXTURINzdmblFUMDQzQ0o1MHNKNVEzRjBs?=
+ =?utf-8?B?VGFVVXVUeFhQcXp5aWkvdHZkL0ZzNEFPOWhkcStCYitBVklOOGVlUzEyNzBY?=
+ =?utf-8?B?bjVFU1JpVTJ4aFlDSnUxR3N4QUV1NFpnMGZ5c2RkdjhuU0RZditCdTZXamlV?=
+ =?utf-8?B?TElsOHNMN0tLWnY3WlRRalBDVGhqV0g3V3VpeXpidUFDNFJzOUVnZkhST2xw?=
+ =?utf-8?B?akJja2cyWWFmU0pHZlVsMjliU2prRGt6cS84RVpxanpCeWd1ZURjaGN6RzFi?=
+ =?utf-8?B?TEFYbElFdG5TUENDaHlWWEt5bFBBZ3dhWHpLTkFJaFhwTHRYaXpiR25LUEJD?=
+ =?utf-8?B?aFZ1aXcvZlFCdExoNkdqUk15U3hBMEphMXJOV1FaSTNCSXZBNHRuc3pYcXFI?=
+ =?utf-8?B?YXNRNUZoazU4YklkWGJ4WXM4Z3JLbnREaHJPdVVMRzc1N2ZGNkJXZENLeVVK?=
+ =?utf-8?B?VzdteGYxakc3eVh5cTJCY0tQMURKaVY4QnpsT2NKckpWaTY4Snh0TGhrSDVy?=
+ =?utf-8?B?cFNtQTFleXE5MmpNY3VZeUUzNFJQblgybFJlM0Q0QmtLN3JNTzBZdjhFUFVO?=
+ =?utf-8?B?TFptR3REOXg2NHBldWExeEMwMjFKeDh2NTJUY0x6UWZEbFZSeG9NdUtnVnN1?=
+ =?utf-8?B?UEFqNjZmSERQSFhOOGZnZUJwRDZWTHUwU0cycDc2dFJmVXlwWVFqN2ZEZ2M4?=
+ =?utf-8?B?dlloaGZTS2pxeExOdTJTNFNiVU1CRFM3Z3JLNTU5VmpYMEZDTm9vTHJKcHlR?=
+ =?utf-8?B?WUY5VnhoNWMyOUtGT1VoVXdieVk4WmxsU0lzT0todjVMUTFxMlk2ZlUyeEtp?=
+ =?utf-8?B?eHZFSVpXc0FSRy92NXNFUktYUllWL0lITDIwTjBPR1hiVm1ZbEt1UkpOM0Rq?=
+ =?utf-8?B?Q0VUR0FOeHdKMTBEVU9hakE1TlBCNlZkenZlRm90dlhlY1BYR2k1ZEVxUnFE?=
+ =?utf-8?B?WDRhQk0zY2RheHFFK1ZSNlVpMzhMWnZacnE1S0o0UVh0U3BGa21idjBBb25y?=
+ =?utf-8?B?dTZnK3l1d2hTb2VNMzdJUVdTcjZxRnVjNytWajZQRzYxcXBnVjNvN1V1U0M5?=
+ =?utf-8?B?TnR1eXMvMmV3MXpVYU9scWxrQ0kwRmVzcVNrckc2UHVtRys5K1Z2eEFMRWd0?=
+ =?utf-8?B?VG1XVUdNNWRxdXo5UzZpeGlVS0VKOXUySUVoSUlubUMzMDBBZ0U0OVdvbllp?=
+ =?utf-8?B?a2MvMEVZQTBmS3FxdnVsRVAyNlljM0ozUkI0NURPMlpvaDlZdWN3dTlHUmVL?=
+ =?utf-8?B?ZitibnIvTC9TcEE5Q3ZWWlpBSXNISVBXMlV0M3VBTHE5UFNBUmtxenZWY2xm?=
+ =?utf-8?B?bitXYnNOZWZNSURMekl3NEhXVzRONzFCeXFNRUFuUkxuZ3Q1ZVBGL29yUk11?=
+ =?utf-8?B?SVJuemxrTDc1VFFIakZFOXlMa29TVm1wVnBPbS9ZVGlUOHBMN002R05udC84?=
+ =?utf-8?B?SjBRM2ZGVjhGVUNzYUNIdXJPT3RmUnhKdjluOUR4dDVhM0hHYXhLQTF3RHdq?=
+ =?utf-8?B?ZDRlbUk4TlVLOGFHZ2c1QmdIR2hub0hGVERlMUFaYS9TUE42MUVYTThmUXdo?=
+ =?utf-8?B?b2ZLQWc4SjZJK05ya2JKTjFjcURqV0hxRWZkVlEraU01SkdMVG1oL2RMaXRi?=
+ =?utf-8?B?QXAwSFZ4UG55M2o4MmlnUm0zTmsra05iUmt6ejkrU3hlOFFoTjhwKzBqSVRw?=
+ =?utf-8?B?S0tHRllqWmdvbVFUdmIxNTgrZld3S2pic01SN3Z5ZHN6RVdxMGlOUjZTcVUw?=
+ =?utf-8?B?ZUkvZkdQelQ5aGJucTFwU1grOGVCVkcyajFDb0IrdFBqdEZkdXZrWGhGYTl4?=
+ =?utf-8?B?ZUVvNFFZMld4S2xRMzQ2d1hNL240bTNhS3RjNE84Um10Q0M0a2FadklIcVRB?=
+ =?utf-8?Q?ThBYmswyJP6zBpyet/CYpGQk/HyOwakIMVX9on6rbY=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21238d7a-0ddd-4bc7-b56d-08da03903460
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2022 18:38:22.9939
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2022 18:51:51.7752
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AQSmfMqRndh9U1a8xrPQWlSv5FqpGaBvex6Njv/jxa6TSSY7fgUwu85owM4AcdLhqaouhFO61HmOrGtGglBf3JIFJfJzOBS05fVfZFw6uyM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5034
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+X-MS-Exchange-CrossTenant-UserPrincipalName: rgvEXxxEJNnq2/oxwX1qYOKpGMV1VKV8HYZbWErAj6UYCrbJ3ZgvIyBRHCozWj1Y47N8gFbhUr9+lauLKQzXtQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1201MB2526
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -156,73 +129,116 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/24/2022 9:29 PM, Rajvi Jingar wrote:
-> For the PCIe devices (like nvme) that do not go into D3 state still need to
-> disable PTM on PCIe root ports to allow the port to enter a lower-power PM
-> state and the SoC to reach a lower-power idle state as a whole. Move the
-> pci_disable_ptm() out of pci_prepare_to_sleep() as this code path is not
-> followed for devices that do not go into D3. This patch fixes the issue
-> seen on Dell XPS 9300 with Ice Lake CPU and Dell Precision 5530 with Coffee
-> Lake CPU platforms to get improved residency in low power idle states.
->
-> Signed-off-by: Rajvi Jingar <rajvi.jingar@intel.com>
-> Suggested-by: David E. Box <david.e.box@linux.intel.com>
+Hi, Bjorn,
 
-I would add a Fixes tag pointing to the commit that introduced 
-pci_disable_ptm().
+On 3/11/2022 12:23, Bjorn Helgaas wrote:
+> The subject convention in drivers/pci would be "PCI/ACPI:"
+> 
+> But more importantly, please turn the subject from a non-specific
+> negative ("Don't blindly trust") into a more specific *positive*,
+> e.g.,
+> 
+>    PCI/ACPI: Assume HotPlugSupportInD3 only if device can wake from D3
+> 
+> On Thu, Mar 10, 2022 at 11:58:32AM -0600, Mario Limonciello wrote:
+>> The `_DSD` `HotPlugSupportInD3` is supposed to indicate the ability for a
+>> bridge to be able to wakeup from D3.
+> 
+> Thanks for the Microsoft URL.  To make this commit log self-contained
+> and guard against the link becoming stale, can you quote the relevant
+> text here, since it's not long:
+> 
+>    This ACPI object [HotPlugSupportInD3] enables the operating system
+>    to identify and power manage PCIe Root Ports that are capable of
+>    handling hot plug events while in D3 state.
+> 
+>> This however is static information in the ACPI table at BIOS compilation
+>> time and on some platforms it's possible to configure the firmware at boot
+>> up such that `_S0W` will not return "0" indicating the inability to wake
+>> up the device from D3.
+> 
+> Please include the spec reference (ACPI v6.4, sec 7.3.20) in case the
+> URL below becomes stale, and again, the relevant text is barely longer
+> than the URL and could be included:
+> 
+>    7.3.20 _S0W (S0 Device Wake State)
+> 
+>    This object evaluates to an integer that conveys to OSPM the deepest
+>    D-state supported by this device in the S0 system sleeping state
+>    where the device can wake itself.
+> 
+> I guess the argument is that we can put a Root Port into D3 only if
+> _S0W indicates that it can wake from D3 *and* it has the
+> HotPlugSupportInD3 property?
+> 
+> I'm naive about ACPI sleep/wake, but that does sound plausible.
 
-Otherwise I agree with this change:
+Yes, thanks I will clarify the commit message to your suggestions in v3.
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> But the patch doesn't say anything about _S0W, so we need to somehow
+> connect the dots there.
 
+Yes, per Rafael's suggestions I will be adding a comment about this 
+situation inline with the code for v3.
 
-> ---
->   drivers/pci/pci-driver.c | 11 +++++++++++
->   drivers/pci/pci.c        | 10 ----------
->   2 files changed, 11 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index ac3f7e1676a9..8be3f81afdf6 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -836,6 +836,17 @@ static int pci_pm_suspend_noirq(struct device *dev)
->   
->   	if (!pci_dev->state_saved) {
->   		pci_save_state(pci_dev);
-> +
-> +		/*
-> +		 * There are systems (for example, Intel mobile chips since Coffee
-> +		 * Lake) where the power drawn while suspended can be significantly
-> +		 * reduced by disabling PTM on PCIe root ports as this allows the
-> +		 * port to enter a lower-power PM state and the SoC to reach a
-> +		 * lower-power idle state as a whole.
-> +		 */
-> +		if (pci_pcie_type(pci_dev) == PCI_EXP_TYPE_ROOT_PORT)
-> +			pci_disable_ptm(pci_dev);
-> +
->   		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
->   			pci_prepare_to_sleep(pci_dev);
->   	}
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9ecce435fb3f..f8768672c064 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2660,16 +2660,6 @@ int pci_prepare_to_sleep(struct pci_dev *dev)
->   	if (target_state == PCI_POWER_ERROR)
->   		return -EIO;
->   
-> -	/*
-> -	 * There are systems (for example, Intel mobile chips since Coffee
-> -	 * Lake) where the power drawn while suspended can be significantly
-> -	 * reduced by disabling PTM on PCIe root ports as this allows the
-> -	 * port to enter a lower-power PM state and the SoC to reach a
-> -	 * lower-power idle state as a whole.
-> -	 */
-> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT)
-> -		pci_disable_ptm(dev);
-> -
->   	pci_enable_wake(dev, target_state, wakeup);
->   
->   	error = pci_set_power_state(dev, target_state);
+> 
+>> To fix these situations explicitly check that the ACPI device has a GPE
+>> allowing the device to generate wakeup signals handled by the platform
+>> in `acpi_pci_bridge_d3`.
+> 
+> acpi_pci_bridge_d3()
+> 
+> Would be good to say what "these situations" are.  I guess this fixes
+> a bug, so let's outline what that bug is, what the symptoms are, who
+> reported and tested it, etc.
+> 
+>> This changes aligns the handling of the situation the same as Windows 10
+>> and Windows 11 both do as well.
+> 
+> s/changes/change/
+> 
+> Sentence also needs a little polishing: "aligns ... both do as well"
+> doesn't quite flow.
 
+OK
+> 
+> Does this make things work like Windows 10/11 from a user's point of
+> view, or have you somehow confirmed that Windows actually checks _S0W
+> and HotPlugSupportInD3 in the same way?
+
+We checked with BIOS debug logs and Windows does evaluate _S0W during 
+startup and specifically modifying _S0W return value alone will cause 
+Windows to not let the port into D3.
+
+> 
+>> Link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fuefi.org%2Fhtmlspecs%2FACPI_Spec_6_4_html%2F07_Power_and_Performance_Mgmt%2Fdevice-power-management-objects.html%3Fhighlight%3Ds0w%23s0w-s0-device-wake-state&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7C94e638619b754591688b08da038c323e%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637826197941955260%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=sKq3X70W1mmKprMKD6oueDQVET2OMNosWmSddjS1Cho%3D&amp;reserved=0
+>> Link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.microsoft.com%2Fen-us%2Fwindows-hardware%2Fdrivers%2Fpci%2Fdsd-for-pcie-root-ports%23identifying-pcie-root-ports-supporting-hot-plug-in-d3&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7C94e638619b754591688b08da038c323e%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637826197941955260%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=oKvNC3MOVNehzpR0O7Jg2bTfJeYHu5GX2v%2FQ%2B0dvKlg%3D&amp;reserved=0
+>> Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+>> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> v1->v2:
+>>   * Add Mika's tag
+>>   * Update commit message for Rafael's suggestions
+>>   drivers/pci/pci-acpi.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+>> index a42dbf448860..9f8f55ed09d9 100644
+>> --- a/drivers/pci/pci-acpi.c
+>> +++ b/drivers/pci/pci-acpi.c
+>> @@ -999,6 +999,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>>   	if (!adev)
+>>   		return false;
+>>   
+>> +	if (!adev->wakeup.flags.valid)
+>> +		return false;
+>> +
+>>   	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
+>>   				   ACPI_TYPE_INTEGER, &obj) < 0)
+>>   		return false;
+>> -- 
+>> 2.34.1
+>>
 
