@@ -2,332 +2,262 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC8844D61AF
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 13:39:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F12654D624A
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 14:21:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348617AbiCKMkH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 07:40:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58238 "EHLO
+        id S1348871AbiCKNW2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 08:22:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236082AbiCKMkF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 07:40:05 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167A51680B2;
-        Fri, 11 Mar 2022 04:39:02 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id s25so14789558lfs.10;
-        Fri, 11 Mar 2022 04:39:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Hab7devEkd5ACbFsrtNWdltgp1aHGVrfd3TafuTwUSs=;
-        b=CxYYWXpZ0OQUPqON+j9E97rXAZ5jOM8BtHFPJVHYz7jw9gDKhYceWKTqZqBWT0mWW0
-         TDT/zbkxT3AkptlxT8U7v8Cspx87DaI+c5uj1y2RnyjUS6wwm17RyWKzE+jMD1eNoZbL
-         qjWATgGjVTVX05F5gCK6rdw9LgJvv4JhYItKSLQAhXSilxtqPaoHqtHvnkNhKxIiW9tF
-         hoLmU8saeWhE6BAS/z5R44wBlH5LdzPWVp2QYtCNDDX+AzYX+DpIdNOElswetIOZB+KI
-         BesN+eM5ikOIdoY2u7to7Iray9yOPXwMiT9hbhYFI+MjmzRUy1A9bGEsPmtc55l5lptS
-         oVMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Hab7devEkd5ACbFsrtNWdltgp1aHGVrfd3TafuTwUSs=;
-        b=ZtxAycSbTsnozQIBGJWdX27JxklcKgq9JENdeoLFhd/VLIXkJ//YMJPwAC2paFD4EU
-         neoV222eHSKu0r3ytaFZbTR1a5W/QUG+5UCgDsON1yvSU4IHLQiPj7PYTalYVM1rKcnn
-         i6F/jRd4z05f207KMFAizqI2FF+fjHea/cHBf7rtdxnJnVH8/ORxOOVnXHYyu3lfCzBZ
-         DDC+Fr7BwecH2LUOTa5xHuYwH1w1HUScR0mHmHecAGDFPGjTjSLqnvdnT0cxJr67Z7tv
-         2Dnntgu/qjVBSaZ3/ZUIt6TZ3ZJdOXlI3IZjT0oeLvDZ92m4rDo1WqbkkYYEdeQn5hc6
-         Tqaw==
-X-Gm-Message-State: AOAM533l6AF4pd/+cJNIaIymQlDthJ3m999o7sRNXwv9SXqXcovu4KG6
-        x5C16AMEgacV+QqgSL+MnXE=
-X-Google-Smtp-Source: ABdhPJx3RnKZicgdkmNpHs0CPLYB6csQ97P4TMtUOYEly1RMItJwm7hXnVeW6kGkXKOn7R7A7V8B1g==
-X-Received: by 2002:a05:6512:1595:b0:448:479c:93d with SMTP id bp21-20020a056512159500b00448479c093dmr5977167lfb.446.1647002340136;
-        Fri, 11 Mar 2022 04:39:00 -0800 (PST)
-Received: from mobilestation ([95.79.188.22])
-        by smtp.gmail.com with ESMTPSA id c27-20020a2ebf1b000000b00247eba13667sm1689113ljr.16.2022.03.11.04.38.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Mar 2022 04:38:59 -0800 (PST)
-Date:   Fri, 11 Mar 2022 15:38:57 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Zhi Li <lznuaa@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, vkoul@kernel.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
- dest addresses for ep
-Message-ID: <20220311123857.jgm745md4vjyaldu@mobilestation>
-References: <20220309211204.26050-1-Frank.Li@nxp.com>
- <20220309211204.26050-6-Frank.Li@nxp.com>
- <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
- <CAHrpEqSrdEegSAKw42T8qsN_BC24LS7r5a_+jKa3ZvGu5w9W1g@mail.gmail.com>
- <20220310193759.lkwqz5avlvznn5w3@mobilestation>
- <CAHrpEqTNTiCVdyBpS06pj=TE_YoYF8k8y6BDPJWtwR9ydAwubQ@mail.gmail.com>
+        with ESMTP id S1348862AbiCKNW2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 08:22:28 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350281C3D18;
+        Fri, 11 Mar 2022 05:21:24 -0800 (PST)
+Received: from fraeml704-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KFRNx0l1Kz67PyM;
+        Fri, 11 Mar 2022 21:19:45 +0800 (CST)
+Received: from lhreml721-chm.china.huawei.com (10.201.108.72) by
+ fraeml704-chm.china.huawei.com (10.206.15.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.21; Fri, 11 Mar 2022 14:21:21 +0100
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml721-chm.china.huawei.com (10.201.108.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 11 Mar 2022 13:21:20 +0000
+Received: from lhreml710-chm.china.huawei.com ([169.254.81.184]) by
+ lhreml710-chm.china.huawei.com ([169.254.81.184]) with mapi id
+ 15.01.2308.021; Fri, 11 Mar 2022 13:21:20 +0000
+From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+CC:     Jason Gunthorpe <jgg@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
+        "yishaih@nvidia.com" <yishaih@nvidia.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        liulongfang <liulongfang@huawei.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        "Jonathan Cameron" <jonathan.cameron@huawei.com>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
+        Xu Zaibo <xuzaibo@huawei.com>
+Subject: RE: [PATCH v8 8/9] hisi_acc_vfio_pci: Add support for VFIO live
+ migration
+Thread-Topic: [PATCH v8 8/9] hisi_acc_vfio_pci: Add support for VFIO live
+ migration
+Thread-Index: AQHYL1LUtVDDY2S/e06nk5NDxfriXKyvtjsAgASXq4CAAAQkEIAACRyAgADOWYCAAL6NAIAA9UgAgAJE0ACAARRg8A==
+Date:   Fri, 11 Mar 2022 13:21:20 +0000
+Message-ID: <a12078a6ff344417b75907217f2575fb@huawei.com>
+References: <20220303230131.2103-1-shameerali.kolothum.thodi@huawei.com>
+        <20220303230131.2103-9-shameerali.kolothum.thodi@huawei.com>
+        <20220304205720.GE219866@nvidia.com>
+        <20220307120513.74743f17.alex.williamson@redhat.com>
+        <aac9a26dc27140d9a1ce56ebdec393a6@huawei.com>
+        <20220307125239.7261c97d.alex.williamson@redhat.com>
+        <BN9PR11MB5276EBE887402EBE22630BAB8C099@BN9PR11MB5276.namprd11.prod.outlook.com>
+        <20220308123312.1f4ba768.alex.williamson@redhat.com>
+        <BN9PR11MB527634CCF86829E0680E5E678C0A9@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20220310134954.0df4bb12.alex.williamson@redhat.com>
+In-Reply-To: <20220310134954.0df4bb12.alex.williamson@redhat.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.88.223]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHrpEqTNTiCVdyBpS06pj=TE_YoYF8k8y6BDPJWtwR9ydAwubQ@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-@Manivannan could you join the discussion?
-
-On Thu, Mar 10, 2022 at 02:16:17PM -0600, Zhi Li wrote:
-> On Thu, Mar 10, 2022 at 1:38 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> >
-> > On Thu, Mar 10, 2022 at 10:50:14AM -0600, Zhi Li wrote:
-> > > On Thu, Mar 10, 2022 at 10:32 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > > >
-> > > > On Wed, Mar 09, 2022 at 03:12:01PM -0600, Frank Li wrote:
-> > > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > >
-> > > > > When eDMA is controlled by the Endpoint (EP), the current logic incorrectly
-> > > > > programs the source and destination addresses for read and write. Since the
-> > > > > Root complex and Endpoint uses the opposite channels for read/write, fix the
-> > > > > issue by finding out the read operation first and program the eDMA accordingly.
-> > > > >
-> > > > > Cc: stable@vger.kernel.org
-> > > > > Fixes: bd96f1b2f43a ("dmaengine: dw-edma: support local dma device transfer semantics")
-> > > > > Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
-> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > ---
-> > > > > No change between v1 to v4
-> > > > >
-> > > > >  drivers/dma/dw-edma/dw-edma-core.c | 32 +++++++++++++++++++++++++++++-
-> > > > >  1 file changed, 31 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > > > > index 66dc650577919..507f08db1aad3 100644
-> > > > > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > > > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > > > > @@ -334,6 +334,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
-> > > > >       struct dw_edma_chunk *chunk;
-> > > > >       struct dw_edma_burst *burst;
-> > > > >       struct dw_edma_desc *desc;
-> > > > > +     bool read = false;
-> > > > >       u32 cnt = 0;
-> > > > >       int i;
-> > > > >
-> > > > > @@ -424,7 +425,36 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
-> > > > >               chunk->ll_region.sz += burst->sz;
-> > > > >               desc->alloc_sz += burst->sz;
-> > > > >
-> > > > > -             if (chan->dir == EDMA_DIR_WRITE) {
-> > > > > +             /****************************************************************
-> > > > > +              *
-> > > >
-> > > > > +              *        Root Complex                           Endpoint
-> > > > > +              * +-----------------------+             +----------------------+
-> > > > > +              * |                       |    TX CH    |                      |
-> > > > > +              * |                       |             |                      |
-> > > > > +              * |      DEV_TO_MEM       <-------------+     MEM_TO_DEV       |
-> > > > > +              * |                       |             |                      |
-> > > > > +              * |                       |             |                      |
-> > > > > +              * |      MEM_TO_DEV       +------------->     DEV_TO_MEM       |
-> > > > > +              * |                       |             |                      |
-> > > > > +              * |                       |    RX CH    |                      |
-> > > > > +              * +-----------------------+             +----------------------+
-> > > > > +              *
-> > > > > +              * If eDMA is controlled by the Root complex, TX channel
-> > > > > +              * (EDMA_DIR_WRITE) is used for memory read (DEV_TO_MEM) and RX
-> > > > > +              * channel (EDMA_DIR_READ) is used for memory write (MEM_TO_DEV).
-> > > > > +              *
-> > > > > +              * If eDMA is controlled by the endpoint, RX channel
-> > > > > +              * (EDMA_DIR_READ) is used for memory read (DEV_TO_MEM) and TX
-> > > > > +              * channel (EDMA_DIR_WRITE) is used for memory write (MEM_TO_DEV).
-> > > >
-> > > > Either I have some wrong notion about this issue, or something wrong
-> > > > with the explanation above and with this fix below.
-> > > >
-> > > > From my understanding of the possible DW eDMA IP-core setups the
-> > > > scatch above and the text below it are incorrect. Here is the way the
-> > > > DW eDMA can be used:
-> > > > 1) Embedded into the DW PCIe Host/EP controller. In this case
-> > > > CPU/Application Memory is the memory of the CPU attached to the
-> > > > host/EP controller, while the remote (link partner) memory is the PCIe
-> > > > bus memory. In this case MEM_TO_DEV operation is supposed to be
-> > > > performed by the Tx/Write channels, while the DEV_TO_MEM operation -
-> > > > by the Rx/Read channels.
-> > > >
-> > > > Note it's applicable for both Host and End-point case, when Linux is
-> > > > running on the CPU-side of the eDMA controller. So if it's DW PCIe
-> > > > end-point, then MEM_TO_DEV means copying data from the local CPU
-> > > > memory into the remote memory. In general the remote memory can be
-> > > > either some PCIe device on the bus or the Root Complex' CPU memory,
-> > > > each of which is some remote device anyway from the Local CPU
-> > > > perspective.
-> > > >
-> > > > 2) Embedded into the PCIe EP. This case is implemented in the
-> > > > drivers/dma/dw-edma/dw-edma-pcie.c driver. AFAICS from the commits log
-> > > > and from the driver code, that device is a Synopsys PCIe EndPoint IP
-> > > > prototype kit. It is a normal PCIe peripheral device with eDMA
-> > > > embedded, which CPU/Application interface is connected to some
-> > > > embedded SRAM while remote (link partner) interface is directed
-> > > > towards the PCIe bus. At the same time the device is setup and handled
-> > > > by the code running on a CPU connected to the PCIe Host controller.  I
-> > > > think that in order to preserve the normal DMA operations semantics we
-> > > > still need to consider the MEM_TO_DEV/DEV_TO_MEM operations from the
-> > > > host CPU perspective, since that's the side the DMA controller is
-> > > > supposed to be setup from.  In this MEM_TO_DEV is supposed to be used
-> > > > to copy data from the host CPU memory into the remote device memory.
-> > > > It means to allocate Rx/Read channel on the eDMA controller, so one
-> > > > would be read data from the Local CPU memory and copied it to the PCIe
-> > > > device SRAM. The logic of the DEV_TO_MEM direction would be just
-> > > > flipped. The eDMA PCIe device shall use Tx/Write channel to copy data
-> > > > from it's SRAM into the Host CPU memory.
-> > > >
-> > > > Please note as I understand the case 2) describes the Synopsys PCIe
-> > > > EndPoint IP prototype kit, which is based on some FPGA code. It's just
-> > > > a test setup with no real application, while the case 1) is a real setup
-> > > > available on our SoC and I guess on yours.
-> > >
-> >
-> > > I think yes. But Remote EP also is a one kind of usage module. Just no one
-> > > writes an EP functional driver for it yet.  Even pci-epf-test was just
-> > > a test function.
-> > > I previously sent vNTB patches to implement a virtual network between
-> > > RC and EP,
-> > > you can look if you have interest.
-> >
-> > AFAIU the remote EP case is the same as 1) anyway. The remote EP is
-> > handled by its own CPU, which sets up the DW PCIe EP controller
-> > together with eDMA synthesized into the CPU' SoC. Am I right? While
-> > the case 2) doesn't have any CPU attached on the PCIe EP. It's just an
-> > FPGA with PCIe interface and eDMA IP-core installed. In that case all
-> > the setups are performed by the PCIe Host CPU. That's the root problem
-> > that causes having all the DEV_TO_MEM/MEM_TO_DEV complications.
-> >
-> > So to speak I would suggest for at least to have the scatch fixed in
-> > accordance with the logic explained in my message.
-> >
-> > >
-> > > >
-> > > > So what I suggest in the framework of this patch is just to implement
-> > > > the case 1) only. While the case 2) as it's an artificial one can be
-> > > > manually handled by the DMA client drivers. BTW There aren't ones available
-> > > > in the kernel anyway. The only exception is an old-time attempt to get
-> > > > an eDMA IP test-driver mainlined into the kernel:
-> > > > https://patchwork.kernel.org/project/linux-pci/patch/cc195ac53839b318764c8f6502002cd6d933a923.1547230339.git.gustavo.pimentel@synopsys.com/
-> > > > But it was long time ago. So it's unlikely to be accepted at all.
-> > > >
-> > > > What do you think?
-> > > >
-> > > > -Sergey
-> > > >
-> > > > > +              *
-> > > > > +              ****************************************************************/
-> > > > > +
-> > > >
-> > > > > +             if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
-> > > > > +                 (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
-> > > > > +                     read = true;
-> > > >
-> >
-> > > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
-> > > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
-> > > > redundant.
-> >
-> > Am I getting a response on this comment? In accordance with that
-> > conditional statement having dir == DMA_DEV_TO_MEM means performing
-> > read operation. If dir equals DMA_MEM_TO_DEV then a write operation
-> > will be performed. The code path doesn't depend on the chan->dir
-> > value.
-> 
-
-> Only dir is enough.
-
-Right, in this case the fix is much simpler than suggested here. There
-is no need in additional local variable and complex conditional
-statement. It's supposed to be like this:
-
--             if (chan->dir == edma_dir_write) {
-+             if (dir == DMA_DEV_TO_MEM) {
-
-See my next comment for a detailed explanation.
-
-> Remote Read,  DMA_DEV_TO_MEM, it is a write channel.
-> SAR is the continual address at EP Side, DAR is a scatter list. RC side
-> 
-> Local Read,  DMA_DEV_TO_MEM, it is a reading channel.
-> SAR is the continual address at RC side,  DAR is a scatter list at EP side
-
-Right, it's a caller responsibility to use a right channel for the
-operation (by flipping the channel the caller will invert the whole
-logic). But As I see it what you explain and my notion don't match to what
-is depicted on the scatch and written in the text below it. Don't you see?
-
--              *        Root Complex                           Endpoint
-+              * Linux Root Port/End-point                  PCIe End-point
-               * +-----------------------+             +----------------------+
--              * |                       |    TX CH    |                      |
--              * |                       |             |                      |
--              * |      DEV_TO_MEM       <-------------+     MEM_TO_DEV       |
-+              * |                       |             |                      |
-+              * |                       |             |                      |
-+              * |    DEV_TO_MEM   Rx Ch <-------------+ Tx Ch  DEV_TO_MEM    |
-               * |                       |             |                      |
-               * |                       |             |                      |
--              * |      MEM_TO_DEV       +------------->     DEV_TO_MEM       |
--              * |                       |             |                      |
--              * |                       |    RX CH    |                      |
-+              * |    MEM_TO_DEV   Tx Ch +-------------> Rx Ch  MEM_TO_DEV    |
-+              * |                       |             |                      |
-+              * |                       |             |                      |
-               * +-----------------------+             +----------------------+
-               *
--              * If eDMA is controlled by the Root complex, TX channel
--              * (EDMA_DIR_WRITE) is used for memory read (DEV_TO_MEM) and RX
--              * channel (EDMA_DIR_READ) is used for memory write (MEM_TO_DEV).
-+              * If eDMA is controlled by the RP/EP, Rx channel
-+              * (EDMA_DIR_READ) is used for device read (DEV_TO_MEM) and Tx
-+              * channel (EDMA_DIR_WRITE) is used for device write (MEM_TO_DEV).
-+              * (Straightforward case.)
-               *
--              * If eDMA is controlled by the endpoint, RX channel
--              * (EDMA_DIR_READ) is used for memory read (DEV_TO_MEM) and TX
--              * channel (EDMA_DIR_WRITE) is used for memory write (MEM_TO_DEV).
-+              * If eDMA is embedded into an independent PCIe EP, Tx channel
-+              * (EDMA_DIR_WRITE) is used for device read (DEV_TO_MEM) and Rx
-+              * channel (EDMA_DIR_READ) is used for device write (MEM_TO_DEV).
-
-I think what was suggested above explains well the semantics you are
-trying to implement here in the framework of this patch.
-
-> 
-> Actually,  both sides should support a scatter list. Like
-> device_prep_dma_memcpy_sg
-> but it is beyond this patch series.
-
-Right, it's beyond your series too, because that feature requires
-additional modifications. I am not asking about that.
-
--Sergey
-
-> 
-> >
-> > -Sergey
-> >
-> > > >
-> > > > > +
-> > > > > +             /* Program the source and destination addresses for DMA read/write */
-> > > > > +             if (read) {
-> > > > >                       burst->sar = src_addr;
-> > > > >                       if (xfer->type == EDMA_XFER_CYCLIC) {
-> > > > >                               burst->dar = xfer->xfer.cyclic.paddr;
-> > > > > --
-> > > > > 2.24.0.rc1
-> > > > >
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWxleCBXaWxsaWFtc29u
+IFttYWlsdG86YWxleC53aWxsaWFtc29uQHJlZGhhdC5jb21dDQo+IFNlbnQ6IDEwIE1hcmNoIDIw
+MjIgMjA6NTANCj4gVG86IFRpYW4sIEtldmluIDxrZXZpbi50aWFuQGludGVsLmNvbT4NCj4gQ2M6
+IFNoYW1lZXJhbGkgS29sb3RodW0gVGhvZGkgPHNoYW1lZXJhbGkua29sb3RodW0udGhvZGlAaHVh
+d2VpLmNvbT47DQo+IEphc29uIEd1bnRob3JwZSA8amdnQG52aWRpYS5jb20+OyBrdm1Admdlci5r
+ZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1jcnlwdG9A
+dmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBjb2h1Y2tAcmVk
+aGF0LmNvbTsgbWd1cnRvdm95QG52aWRpYS5jb207DQo+IHlpc2hhaWhAbnZpZGlhLmNvbTsgTGlu
+dXhhcm0gPGxpbnV4YXJtQGh1YXdlaS5jb20+OyBsaXVsb25nZmFuZw0KPiA8bGl1bG9uZ2ZhbmdA
+aHVhd2VpLmNvbT47IFplbmd0YW8gKEIpIDxwcmltZS56ZW5nQGhpc2lsaWNvbi5jb20+Ow0KPiBK
+b25hdGhhbiBDYW1lcm9uIDxqb25hdGhhbi5jYW1lcm9uQGh1YXdlaS5jb20+OyBXYW5nemhvdSAo
+QikNCj4gPHdhbmd6aG91MUBoaXNpbGljb24uY29tPjsgWHUgWmFpYm8gPHh1emFpYm9AaHVhd2Vp
+LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2OCA4LzldIGhpc2lfYWNjX3ZmaW9fcGNpOiBB
+ZGQgc3VwcG9ydCBmb3IgVkZJTyBsaXZlDQo+IG1pZ3JhdGlvbg0KPiANCj4gT24gV2VkLCA5IE1h
+ciAyMDIyIDEwOjExOjA2ICswMDAwDQo+ICJUaWFuLCBLZXZpbiIgPGtldmluLnRpYW5AaW50ZWwu
+Y29tPiB3cm90ZToNCj4gDQo+ID4gPiBGcm9tOiBBbGV4IFdpbGxpYW1zb24gPGFsZXgud2lsbGlh
+bXNvbkByZWRoYXQuY29tPg0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBNYXJjaCA5LCAyMDIyIDM6
+MzMgQU0NCj4gPiA+DQo+ID4gPiBPbiBUdWUsIDggTWFyIDIwMjIgMDg6MTE6MTEgKzAwMDANCj4g
+PiA+ICJUaWFuLCBLZXZpbiIgPGtldmluLnRpYW5AaW50ZWwuY29tPiB3cm90ZToNCj4gPiA+DQo+
+ID4gPiA+ID4gRnJvbTogQWxleCBXaWxsaWFtc29uIDxhbGV4LndpbGxpYW1zb25AcmVkaGF0LmNv
+bT4NCj4gPiA+ID4gPiBTZW50OiBUdWVzZGF5LCBNYXJjaCA4LCAyMDIyIDM6NTMgQU0NCj4gPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gPiA+IEkgdGhpbmsgd2Ugc3RpbGwgcmVxdWlyZSBhY2tzIGZyb20g
+Qmpvcm4gYW5kIFphaWJvIGZvciBzZWxlY3QgcGF0Y2hlcw0KPiA+ID4gPiA+ID4gPiBpbiB0aGlz
+IHNlcmllcy4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBJIGNoZWNrZWQgd2l0aCBaaWFiby4g
+SGUgbW92ZWQgcHJvamVjdHMgYW5kIGlzIG5vIGxvbmdlciBsb29raW5nIGludG8NCj4gPiA+ID4g
+PiBjcnlwdG8gc3R1ZmYuDQo+ID4gPiA+ID4gPiBXYW5nemhvdSBhbmQgTGl1TG9uZ2Zhbmcgbm93
+IHRha2UgY2FyZSBvZiB0aGlzLiBSZWNlaXZlZCBhY2tzIGZyb20NCj4gPiA+ID4gPiBXYW5nemhv
+dQ0KPiA+ID4gPiA+ID4gYWxyZWFkeSBhbmQgSSB3aWxsIHJlcXVlc3QgTG9uZ2ZhbmcgdG8gcHJv
+dmlkZSBoaXMuIEhvcGUgdGhhdCdzIG9rLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gTWF5YmUgYSBn
+b29kIHRpbWUgdG8gaGF2ZSB0aGVtIHVwZGF0ZSBNQUlOVEFJTkVSUyBhcyB3ZWxsLg0KPiBUaGFu
+a3MsDQo+ID4gPiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4gSSBoYXZlIG9uZSBxdWVzdGlvbiBoZXJl
+IChzaW1pbGFyIHRvIHdoYXQgd2UgZGlzY3Vzc2VkIGZvciBtZGV2IGJlZm9yZSkuDQo+ID4gPiA+
+DQo+ID4gPiA+IE5vdyB3ZSBhcmUgYWRkaW5nIHZlbmRvciBzcGVjaWZpYyBkcml2ZXJzIHVuZGVy
+IC9kcml2ZXJzL3ZmaW8uIFR3bw0KPiBkcml2ZXJzDQo+ID4gPiA+IG9uIHJhZGFyIGFuZCBtb3Jl
+IHdpbGwgY29tZS4gVGhlbiB3aGF0IHdvdWxkIGJlIHRoZSBjcml0ZXJpYSBmb3INCj4gPiA+ID4g
+YWNjZXB0aW5nIHN1Y2ggYSBkcml2ZXI/IERvIHdlIHByZWZlciB0byBhIG1vZGVsIGluIHdoaWNo
+IHRoZSBhdXRob3INCj4gPiA+IHNob3VsZA0KPiA+ID4gPiBwcm92aWRlIGVub3VnaCBiYWNrZ3Jv
+dW5kIGZvciB2ZmlvIGNvbW11bml0eSB0byB1bmRlcnN0YW5kIGhvdyBpdA0KPiA+ID4gd29ya3MN
+Cj4gPiA+ID4gb3IgYXMgZG9uZSBoZXJlIGp1c3QgcmVseSBvbiB0aGUgUEYgZHJpdmVyIG93bmVy
+IHRvIGNvdmVyIGRldmljZSBzcGVjaWZpYw0KPiA+ID4gPiBjb2RlPw0KPiA+ID4gPg0KPiA+ID4g
+PiBJZiB0aGUgZm9ybWVyIHdlIG1heSBuZWVkIGRvY3VtZW50IHNvbWUgcHJvY2VzcyBmb3Igd2hh
+dCBpbmZvcm1hdGlvbg0KPiA+ID4gPiBpcyBuZWNlc3NhcnkgYW5kIGFsc28gbmVlZCBzZWN1cmUg
+aW5jcmVhc2VkIHJldmlldyBiYW5kd2lkdGggZnJvbSBrZXkNCj4gPiA+ID4gcmV2aWV3ZXJzIGlu
+IHZmaW8gY29tbXVuaXR5Lg0KPiA+ID4gPg0KPiA+ID4gPiBJZiB0aGUgbGF0dGVyIHRoZW4gaG93
+IGNhbiB3ZSBndWFyYW50ZWUgbm8gY29ybmVyIGNhc2Ugb3Zlcmxvb2tlZCBieQ0KPiBib3RoDQo+
+ID4gPiA+IHNpZGVzIChpLmUuIGhvdyB0byBrbm93IHRoZSBjb3ZlcmFnZSBvZiB0b3RhbCByZXZp
+ZXdzKT8gQW5vdGhlciBvcGVuIGlzDQo+ID4gPiB3aG8NCj4gPiA+ID4gZnJvbSB0aGUgUEYgZHJp
+dmVyIHN1Yi1zeXN0ZW0gc2hvdWxkIGJlIGNvbnNpZGVyZWQgYXMgdGhlIG9uZSB0byBnaXZlDQo+
+IHRoZQ0KPiA+ID4gPiBncmVlbiBzaWduYWwuIElmIHRoZSBzdWItc3lzdGVtIG1haW50YWluZXIg
+dHJ1c3RzIHRoZSBQRiBkcml2ZXIgb3duZXIgYW5kDQo+ID4gPiA+IGp1c3QgcHVsbHMgY29tbWl0
+cyBmcm9tIGhpbSB0aGVuIGhhdmluZyB0aGUgci1iIGZyb20gdGhlIFBGIGRyaXZlciBvd25lcg0K
+PiBpcw0KPiA+ID4gPiBzdWZmaWNpZW50LiBCdXQgaWYgdGhlIHN1Yi1zeXN0ZW0gbWFpbnRhaW5l
+ciB3YW50cyB0byByZXZpZXcgZGV0YWlsIGNoYW5nZQ0KPiA+ID4gPiBpbiBldmVyeSB1bmRlcmx5
+aW5nIGRyaXZlciB0aGVuIHdlIHByb2JhYmx5IGFsc28gd2FudCB0byBnZXQgdGhlIGFjaw0KPiBm
+cm9tDQo+ID4gPiA+IHRoZSBtYWludGFpbmVyLg0KPiA+ID4gPg0KPiA+ID4gPiBPdmVyYWxsIEkg
+ZGlkbid0IG1lYW4gdG8gc2xvdyBkb3duIHRoZSBwcm9ncmVzcyBvZiB0aGlzIHNlcmllcy4gQnV0
+IGFib3ZlDQo+ID4gPiA+IGRvZXMgYmUgc29tZSBwdXp6bGUgb2NjdXJyZWQgaW4gbXkgcmV2aWV3
+LiDwn5iKDQo+ID4gPg0KPiA+ID4gSGkgS2V2aW4sDQo+ID4gPg0KPiA+ID4gR29vZCBxdWVzdGlv
+bnMsIEknZCBsaWtlIGEgYmV0dGVyIHVuZGVyc3RhbmRpbmcgb2YgZXhwZWN0YXRpb25zIGFzDQo+
+ID4gPiB3ZWxsLiAgSSB0aGluayB0aGUgaW50ZW50aW9ucyBhcmUgdGhlIHNhbWUgYXMgYW55IG90
+aGVyIHN1Yi1zeXN0ZW0sIHRoZQ0KPiA+ID4gZHJpdmVycyBtYWtlIHVzZSBvZiBzaGFyZWQgaW50
+ZXJmYWNlcyBhbmQgZXh0ZW5zaW9ucyBhbmQgdGhlIHJvbGUgb2YNCj4gPiA+IHRoZSBzdWItc3lz
+dGVtIHNob3VsZCBiZSB0byBtYWtlIHN1cmUgdGhvc2UgaW50ZXJmYWNlcyBhcmUgdXNlZA0KPiA+
+ID4gY29ycmVjdGx5IGFuZCBleHRlbnNpb25zIGZpdCB3ZWxsIHdpdGhpbiB0aGUgb3ZlcmFsbCBk
+ZXNpZ24uICBIb3dldmVyLA0KPiA+ID4ganVzdCBhcyB0aGUgbmV0d29yayBtYWludGFpbmVyIGlz
+bid0IGV4cGVjdGVkIHRvIGZ1bGx5IHVuZGVyc3RhbmQgZXZlcnkNCj4gPiA+IE5JQyBkcml2ZXIs
+IEkgdGhpbmsvaG9wZSB3ZSBoYXZlIHRoZSBzYW1lIGV4cGVjdGF0aW9ucyBoZXJlLiAgSXQncw0K
+PiA+ID4gY2VydGFpbmx5IGEgYmVuZWZpdCB0byB0aGUgY29tbXVuaXR5IGFuZCBwZXJjZWl2ZWQg
+dHJ1c3R3b3J0aGluZXNzIGlmDQo+ID4gPiBlYWNoIGRyaXZlciBvdXRsaW5lcyBpdHMgb3BlcmF0
+aW5nIG1vZGVsIGFuZCBzZWN1cml0eSBudWFuY2VzLCBidXQNCj4gPiA+IHRob3NlIGFyZSBvbmx5
+IGV2ZXIgZ29pbmcgdG8gYmUgdGhlIG51YW5jZXMgaWRlbnRpZmllZCBieSB0aGUgcGVvcGxlDQo+
+ID4gPiB3aG8gaGF2ZSB0aGUgYWNjZXNzIGFuZCBlbmVyZ3kgdG8gZXZhbHVhdGUgdGhlIGRldmlj
+ZS4NCj4gPiA+DQo+ID4gPiBJdCdzIGdvaW5nIHRvIGJlIHVwIHRvIHRoZSBjb21tdW5pdHkgdG8g
+dHJ5IHRvIGRldGVybWluZSB0aGF0IGFueSBuZXcNCj4gPiA+IGRyaXZlcnMgYXJlIHNlcmlvdXNs
+eSBjb25zaWRlcmluZyBzZWN1cml0eSBhbmQgbm90IG9wZW5pbmcgYW55IG5ldyBnYXBzDQo+ID4g
+PiByZWxhdGl2ZSB0byBiZWhhdmlvciB1c2luZyB0aGUgYmFzZSB2ZmlvLXBjaSBkcml2ZXIuICBG
+b3IgdGhlIGRyaXZlcg0KPiA+ID4gZXhhbXBsZXMgd2UgaGF2ZSwgdGhpcyBzZWVtcyBhIGJpdCBl
+YXNpZXIgdGhhbiBldmFsdWF0aW5nIGFuIGVudGlyZQ0KPiA+ID4gbWRldiBkZXZpY2UgYmVjYXVz
+ZSB0aGV5J3JlIGxhcmdlbHkgcHJvdmlkaW5nIGRpcmVjdCBhY2Nlc3MgdG8gdGhlDQo+ID4gPiBk
+ZXZpY2UgcmF0aGVyIHRoYW4gdHJ5aW5nIHRvIG11bHRpcGxleCBhIHNoYXJlZCBwaHlzaWNhbCBk
+ZXZpY2UuICBXZQ0KPiA+ID4gY2FuIHRoZXJlZm9yZSBmb2N1cyBvbiBpbmNyZW1lbnRhbCBmdW5j
+dGlvbmFsaXR5LCBhcyBib3RoIGRyaXZlcnMgaGF2ZQ0KPiA+ID4gZG9uZSwgaW1wbGVtZW50aW5n
+IGEgYm9pbGVycGxhdGUgdmVuZG9yIGRyaXZlciwgdGhlbiBhZGRpbmcgbWlncmF0aW9uDQo+ID4g
+PiBzdXBwb3J0LiAgSSBpbWFnaW5lIHRoaXMgd29uJ3QgYWx3YXlzIGJlIHRoZSBjYXNlIHRob3Vn
+aCBhbmQgc29tZQ0KPiA+ID4gZHJpdmVycyB3aWxsIHJlLWltcGxlbWVudCBtdWNoIG9mIHRoZSBj
+b3JlIHRvIHN1cHBvcnQgZnVydGhlciBlbXVsYXRpb24NCj4gPiA+IGFuZCBzaGFyZWQgcmVzb3Vy
+Y2VzLg0KPiA+ID4NCj4gPiA+IFNvIGhvdyBkbyB3ZSBhcyBhIGNvbW11bml0eSB3YW50IHRvIGhh
+bmRsZSB0aGlzPyAgSSB3b3VsZG4ndCBtaW5kLCBJJ2QNCj4gPiA+IGFjdHVhbGx5IHdlbGNvbWUs
+IHNvbWUgc29ydCBvZiByZXZpZXcgcmVxdWlyZW1lbnQgZm9yIG5ldyB2ZmlvIHZlbmRvcg0KPiA+
+ID4gZHJpdmVyIHZhcmlhbnRzLiAgSXMgdGhhdCByZWFzb25hYmxlPyAgV2hhdCB3b3VsZCBiZSB0
+aGUgY3JpdGVyaWE/DQo+ID4gPiBBcHByb3ZhbCBmcm9tIHRoZSBQRiBkcml2ZXIgb3duZXIsIGlm
+IGRpZmZlcmVudC9uZWNlc3NhcnksIGFuZCBhdCBsZWFzdA0KPiA+ID4gb25lIHVuYWZmaWxpYXRl
+ZCByZXZpZXdlciAocHJlZmVyYWJseSBhbiBhY3RpdmUgdmZpbyByZXZpZXdlciBvcg0KPiA+ID4g
+ZXhpc3RpbmcgdmZpbyB2YXJpYW50IGRyaXZlciBvd25lci9jb250cmlidXRvcik/ICBJZGVhcyB3
+ZWxjb21lLg0KPiA+ID4gVGhhbmtzLA0KPiA+ID4NCj4gPg0KPiA+IFllcywgYW5kIHRoZSBjcml0
+ZXJpYSBpcyB0aGUgaGFyZCBwYXJ0LiBJbiB0aGUgZW5kIGl0IGxhcmdlbHkgZGVwZW5kIG9uDQo+
+ID4gdGhlIGV4cGVjdGF0aW9ucyBvZiB0aGUgcmV2aWV3ZXJzLg0KPiA+DQo+ID4gSWYgdGhlIHVu
+YWZmaWxpYXRlZCByZXZpZXdlciBvbmx5IGNhcmVzIGFib3V0IHRoZSB1c2FnZSBvZiBzaGFyZWQN
+Cj4gPiBpbnRlcmZhY2VzIG9yIGV4dGVuc2lvbnMgYXMgeW91IHNhaWQgdGhlbiB3aGF0IHRoaXMg
+c2VyaWVzIGRvZXMgaXMNCj4gPiBqdXN0IGZpbmUuIFN1Y2ggdHlwZSBvZiByZXZpZXcgY2FuIGJl
+IGVhc2lseSBkb25lIHZpYSByZWFkaW5nIGNvZGUNCj4gPiBhbmQgZG9lc24ndCByZXF1aXJlIGRl
+dGFpbCBkZXZpY2Uga25vd2xlZGdlLg0KPiA+DQo+ID4gT24gdGhlIG90aGVyIGhhbmQgaWYgdGhl
+IHJldmlld2VyIHdhbnRzIHRvIGRvIGEgZnVsbCBmdW5jdGlvbmFsDQo+ID4gcmV2aWV3IG9mIGhv
+dyBtaWdyYXRpb24gaXMgYWN0dWFsbHkgc3VwcG9ydGVkIGZvciBzdWNoIGRldmljZSwNCj4gPiB3
+aGF0ZXZlciBpbmZvcm1hdGlvbiAocGF0Y2ggZGVzY3JpcHRpb24sIGNvZGUgY29tbWVudCwga2Rv
+YywNCj4gPiBldGMuKSBuZWNlc3NhcnkgdG8gYnVpbGQgYSBzdGFuZGFsb25lIG1pZ3JhdGlvbiBz
+dG9yeSB3b3VsZCBiZQ0KPiA+IGFwcHJlY2lhdGVkLCBlLmcuOg0KPiA+DQo+ID4gICAtIFdoYXQg
+Y29tcG9zZXMgdGhlIGRldmljZSBzdGF0ZT8NCj4gPiAgIC0gV2hpY2ggcG9ydGlvbiBvZiB0aGUg
+ZGV2aWNlIHN0YXRlIGlzIGV4cG9zZWQgdG8gYW5kIG1hbmFnZWQNCj4gPiAgICAgYnkgdGhlIHVz
+ZXIgYW5kIHdoaWNoIGlzIGhpZGRlbiBmcm9tIHRoZSB1c2VyIChpLmUuIGNvbnRyb2xsZWQNCj4g
+PiAgICAgYnkgdGhlIFBGIGRyaXZlcik/DQo+ID4gICAtIEludGVyZmFjZSBiZXR3ZWVuIHRoZSB2
+ZmlvIGRyaXZlciBhbmQgdGhlIGRldmljZSAoYW5kL29yIFBGDQo+ID4gICAgIGRyaXZlcikgdG8g
+bWFuYWdlIHRoZSBkZXZpY2Ugc3RhdGU7DQo+ID4gICAtIFJpY2ggZnVuY3Rpb25hbC1sZXZlbCBj
+b21tZW50cyBmb3IgdGhlIHJldmlld2VyIHRvIGRpdmUgaW50bw0KPiA+ICAgICB0aGUgbWlncmF0
+aW9uIGZsb3c7DQo+ID4gICAtIC4uLg0KPiA+DQo+ID4gSSBndWVzcyB3ZSBkb24ndCB3YW50IHRv
+IGZvcmNlIG9uZSBtb2RlbCBvdmVyIHRoZSBvdGhlci4gSnVzdA0KPiA+IGZyb20gbXkgaW1wcmVz
+c2lvbiB0aGUgbW9yZSBpbmZvcm1hdGlvbiB0aGUgZHJpdmVyIGNhbg0KPiA+IHByb3ZpZGUgdGhl
+IG1vcmUgdGltZSBJJ2QgbGlrZSB0byBzcGVuZCBvbiB0aGUgcmV2aWV3LiBPdGhlcndpc2UNCj4g
+PiBpdCBoYXMgdG8gdHJlbmQgdG8gdGhlIG1pbmltYWwgZm9ybSBpLmUuIHRoZSBmaXJzdCBtb2Rl
+bC4NCj4gPg0KPiA+IGFuZCBjdXJyZW50bHkgSSBkb24ndCBoYXZlIGEgY29uY3JldGUgaWRlYSBo
+b3cgdGhlIDJuZCBtb2RlbCB3aWxsDQo+ID4gd29yay4gbWF5YmUgaXQgd2lsbCBnZXQgY2xlYXIg
+b25seSB3aGVuIGEgZnV0dXJlIGRyaXZlciBhdHRyYWN0cw0KPiA+IHBlb3BsZSB0byBkbyB0aG9y
+b3VnaCByZXZpZXcuLi4NCj4gDQo+IERvIHlvdSB0aGluayB3ZSBzaG91bGQgZ28gc28gZmFyIGFz
+IHRvIGZvcm1hbGl6ZSB0aGlzIHZpYSBhIE1BSU5UQUlORVJTDQo+IGVudHJ5LCBmb3IgZXhhbXBs
+ZToNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3ZmaW8vdmZpby1wY2ktdmVuZG9y
+LWRyaXZlci1hY2NlcHRhbmNlLnJzdA0KPiBiL0RvY3VtZW50YXRpb24vdmZpby92ZmlvLXBjaS12
+ZW5kb3ItZHJpdmVyLWFjY2VwdGFuY2UucnN0DQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGlu
+ZGV4IDAwMDAwMDAwMDAwMC4uNTRlYmFmY2RkNzM1DQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIv
+RG9jdW1lbnRhdGlvbi92ZmlvL3ZmaW8tcGNpLXZlbmRvci1kcml2ZXItYWNjZXB0YW5jZS5yc3QN
+Cj4gQEAgLTAsMCArMSwzNSBAQA0KPiArLi4gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0y
+LjANCj4gKw0KPiArQWNjZXB0YW5jZSBjcml0ZXJpYSBmb3IgdmZpby1wY2kgZGV2aWNlIHNwZWNp
+ZmljIGRyaXZlciB2YXJpYW50cw0KPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiArDQo+ICtPdmVydmlldw0KPiArLS0t
+LS0tLS0NCj4gK1RoZSB2ZmlvLXBjaSBkcml2ZXIgZXhpc3RzIGFzIGEgZGV2aWNlIGFnbm9zdGlj
+IGRyaXZlciB1c2luZyB0aGUNCj4gK3N5c3RlbSBJT01NVSBhbmQgcmVseWluZyBvbiB0aGUgcm9i
+dXN0bmVzcyBvZiBwbGF0Zm9ybSBmYXVsdA0KPiAraGFuZGxpbmcgdG8gcHJvdmlkZSBpc29sYXRl
+ZCBkZXZpY2UgYWNjZXNzIHRvIHVzZXJzcGFjZS4gIFdoaWxlIHRoZQ0KPiArdmZpby1wY2kgZHJp
+dmVyIGRvZXMgaW5jbHVkZSBzb21lIGRldmljZSBzcGVjaWZpYyBzdXBwb3J0LCBmdXJ0aGVyDQo+
+ICtleHRlbnNpb25zIGZvciB5ZXQgbW9yZSBhZHZhbmNlZCBkZXZpY2Ugc3BlY2lmaWMgZmVhdHVy
+ZXMgYXJlIG5vdA0KPiArc3VzdGFpbmFibGUuICBUaGUgdmZpby1wY2kgZHJpdmVyIGhhcyB0aGVy
+ZWZvcmUgc3BsaXQgb3V0DQo+ICt2ZmlvLXBjaS1jb3JlIGFzIGEgbGlicmFyeSB0aGF0IG1heSBi
+ZSByZXVzZWQgdG8gaW1wbGVtZW50IGZlYXR1cmVzDQo+ICtyZXF1aXJpbmcgZGV2aWNlIHNwZWNp
+ZmljIGtub3dsZWRnZSwgZXguIHNhdmluZyBhbmQgbG9hZGluZyBkZXZpY2UNCj4gK3N0YXRlIGZv
+ciB0aGUgcHVycG9zZXMgb2Ygc3VwcG9ydGluZyBtaWdyYXRpb24uDQo+ICsNCj4gK0luIHN1cHBv
+cnQgb2Ygc3VjaCBmZWF0dXJlcywgaXQncyBleHBlY3RlZCB0aGF0IHNvbWUgZGV2aWNlIHNwZWNp
+ZmljDQo+ICt2YXJpYW50cyBtYXkgaW50ZXJhY3Qgd2l0aCBwYXJlbnQgZGV2aWNlcyAoZXguIFNS
+LUlPViBQRiBpbiBzdXBwb3J0IG9mDQo+ICthIHVzZXIgYXNzaWduZWQgVkYpIG9yIG90aGVyIGV4
+dGVuc2lvbnMgdGhhdCBtYXkgbm90IGJlIG90aGVyd2lzZQ0KPiArYWNjZXNzaWJsZSB2aWEgdGhl
+IHZmaW8tcGNpIGJhc2UgZHJpdmVyLiAgQXV0aG9ycyBvZiBzdWNoIGRyaXZlcnMNCj4gK3Nob3Vs
+ZCBiZSBkaWxpZ2VudCBub3QgdG8gY3JlYXRlIGV4cGxvaXRhYmxlIGludGVyZmFjZXMgdmlhIHN1
+Y2gNCj4gK2ludGVyYWN0aW9ucyBvciBhbGxvdyB1bmNoZWNrZWQgdXNlcnNwYWNlIGRhdGEgdG8g
+aGF2ZSBhbiBlZmZlY3QNCj4gK2JleW9uZCB0aGUgc2NvcGUgb2YgdGhlIGFzc2lnbmVkIGRldmlj
+ZS4NCj4gKw0KPiArTmV3IGRyaXZlciBzdWJtaXNzaW9ucyBhcmUgdGhlcmVmb3JlIHJlcXVlc3Rl
+ZCB0byBoYXZlIGFwcHJvdmFsIHZpYQ0KPiArU2lnbi1vZmYgZm9yIGFueSBpbnRlcmFjdGlvbnMg
+d2l0aCBwYXJlbnQgZHJpdmVycy4gIEFkZGl0aW9uYWxseSwNCj4gK2RyaXZlcnMgc2hvdWxkIG1h
+a2UgYW4gYXR0ZW1wdCB0byBwcm92aWRlIHN1ZmZpY2llbnQgZG9jdW1lbnRhdGlvbg0KPiArZm9y
+IHJldmlld2VycyB0byB1bmRlcnN0YW5kIHRoZSBkZXZpY2Ugc3BlY2lmaWMgZXh0ZW5zaW9ucywg
+Zm9yDQo+ICtleGFtcGxlIGluIHRoZSBjYXNlIG9mIG1pZ3JhdGlvbiBkYXRhLCBob3cgaXMgdGhl
+IGRldmljZSBzdGF0ZQ0KPiArY29tcG9zZWQgYW5kIGNvbnN1bWVkLCB3aGljaCBwb3J0aW9ucyBh
+cmUgbm90IG90aGVyd2lzZSBhdmFpbGFibGUgdG8NCj4gK3RoZSB1c2VyIHZpYSB2ZmlvLXBjaSwg
+d2hhdCBzYWZlZ3VhcmRzIGV4aXN0IHRvIHZhbGlkYXRlIHRoZSBkYXRhLA0KPiArZXRjLiAgVG8g
+dGhhdCBleHRlbnQsIGF1dGhvcnMgc2hvdWxkIGFkZGl0aW9uYWxseSBleHBlY3QgdG8gcmVxdWly
+ZQ0KPiArcmV2aWV3cyBmcm9tIGF0IGxlYXN0IG9uZSBvZiB0aGUgbGlzdGVkIHJldmlld2Vycywg
+aW4gYWRkaXRpb24gdG8gdGhlDQo+ICtvdmVyYWxsIHZmaW8gbWFpbnRhaW5lci4NCj4gZGlmZiAt
+LWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMNCj4gaW5kZXggNDMyMmI1MzIxODkxLi40
+ZjdkMjZmOWFhYzYgMTAwNjQ0DQo+IC0tLSBhL01BSU5UQUlORVJTDQo+ICsrKyBiL01BSU5UQUlO
+RVJTDQo+IEBAIC0yMDMxNCw2ICsyMDMxNCwxMyBAQCBGOglkcml2ZXJzL3ZmaW8vbWRldi8NCj4g
+IEY6CWluY2x1ZGUvbGludXgvbWRldi5oDQo+ICBGOglzYW1wbGVzL3ZmaW8tbWRldi8NCj4gDQo+
+ICtWRklPIFBDSSBWRU5ET1IgRFJJVkVSUw0KPiArUjoJWW91ciBOYW1lIDx5b3VyLm5hbWVAaGVy
+ZS5jb20+DQo+ICtMOglrdm1Admdlci5rZXJuZWwub3JnDQo+ICtTOglNYWludGFpbmVkDQo+ICtQ
+OglEb2N1bWVudGF0aW9uL3ZmaW8vdmZpby1wY2ktdmVuZG9yLWRyaXZlci1hY2NlcHRhbmNlLnJz
+dA0KPiArRjoJZHJpdmVycy92ZmlvL3BjaS8qLw0KPiArDQo+ICBWRklPIFBMQVRGT1JNIERSSVZF
+Ug0KPiAgTToJRXJpYyBBdWdlciA8ZXJpYy5hdWdlckByZWRoYXQuY29tPg0KPiAgTDoJa3ZtQHZn
+ZXIua2VybmVsLm9yZw0KPiANCj4gSWRlYWxseSB3ZSdkIGhhdmUgYXQgbGVhc3QgWWlzaGFpLCBT
+aGFtZWVyLCBKYXNvbiwgYW5kIHlvdXJzZWxmIGxpc3RlZA0KPiBhcyByZXZpZXdlcnMgKENvbm5p
+ZSBhbmQgSSBhcmUgaW5jbHVkZWQgdmlhIHRoZSBoaWdoZXIgbGV2ZWwgZW50cnkpLg0KPiBUaG91
+Z2h0cyBmcm9tIGFueW9uZT8gIFZvbHVudGVlcnMgZm9yIHJldmlld2VycyBpZiB3ZSB3YW50IHRv
+IHByZXNzDQo+IGZvcndhcmQgd2l0aCB0aGlzIGFzIGZvcm1hbCBhY2NlcHRhbmNlIGNyaXRlcmlh
+PyAgVGhhbmtzLA0KPiANCg0KU3VyZS4gSGFwcHkgdG8gaGVscCB3aXRoIHJldmlld3MsIHZlcmlm
+aWNhdGlvbnMgZXRjLg0KDQpUaGFua3MsDQpTaGFtZWVyDQo=
