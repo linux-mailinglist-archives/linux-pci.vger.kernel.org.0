@@ -2,446 +2,344 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A73914D6813
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 18:55:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5594A4D6817
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 18:56:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241446AbiCKR46 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 12:56:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46100 "EHLO
+        id S1346814AbiCKR5J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 12:57:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233755AbiCKR46 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 12:56:58 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6385D18C7B2;
-        Fri, 11 Mar 2022 09:55:53 -0800 (PST)
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KFYVr5r0jz67sTc;
-        Sat, 12 Mar 2022 01:55:16 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 11 Mar 2022 18:55:50 +0100
-Received: from [10.47.87.13] (10.47.87.13) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.21; Fri, 11 Mar
- 2022 17:55:49 +0000
-Message-ID: <2049e270-7cf4-84c5-eb84-5bb1a425e897@huawei.com>
-Date:   Fri, 11 Mar 2022 17:55:48 +0000
+        with ESMTP id S1345347AbiCKR5I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 12:57:08 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE4331C1EF2
+        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 09:56:04 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id z12-20020a17090ad78c00b001bf022b69d6so8825001pju.2
+        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 09:56:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2pQpz+mEg4fNdh1/Go/4TVEaUeQKW6havfD4adY9jDg=;
+        b=GnD+r9np+auxNrszszJYNCoY5LL9j1sFN7rzro+ifKPP2xKrj7JFOaYfAHgkZADes3
+         dNKQS2dd+5FJHPvrcqP3S0TGRHxLOWX1Mas003cSwWCxGsHK08y59pwSom2lC40SAgrz
+         bBMP60sVtKCDM8avzaWqznsyKEgvy/hli/YLCz7MJfVY3u5/KQ7AKJU/YpPpx9aVBAhr
+         81rSkcQgpKGr8sQcAZceEgHeYDIxNyEPfZQee/Do3aUuJIQXLfQkZ66dVyiCmjtgoiKU
+         k/9M1JAAVupJwl3heC40VXWmfwg/xwSQ/PIYBNKEptjP1I9g9mE93fiRI3guM0G+k2vs
+         c4Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2pQpz+mEg4fNdh1/Go/4TVEaUeQKW6havfD4adY9jDg=;
+        b=pl/wkFiz6IAGY1BKRN/3PuZCl9IyQhqGXrA8WCizGz5ViiEktGV8UE/MI1AayM9saX
+         wooBk7klCQbweCiFR3c9Btp4xDhtJktdgfpbwWmFdhHLZEFA1EnvxD7wLuQFjunFYQcJ
+         ghepxLopPhcTnWSCTcWgOiyGtJRqORN03AaqvhlYC7NZq7PWRbV+aBfEbys0gVPpN/Js
+         DxJL3tsPduf7wivtsdm7EyqC1r2KYvEADU7byHsSD7oggxtZ+YFYrn/XUhmJWp3DPvC1
+         ZXmG0CSy5rVYFUYPUk0YRjdG003q4OE3KMHzxL3ce5cBgOpV8xSniMQLkoSjRJqmwNZD
+         +9pQ==
+X-Gm-Message-State: AOAM530LNlBln2bME2HiudbRgxPF0+3c4sSmuc2km/6WqR4JNL7WDcsk
+        Z+P940Yxb39WWrCIQgwfGyot
+X-Google-Smtp-Source: ABdhPJzVTAfHTU3/zzSPKA90wc6SVlxvR3s1cq0y4tCG7JQVj8bbjXg2GCWTGIASNfmfnfILDLRXbA==
+X-Received: by 2002:a17:902:7fc1:b0:150:1ae7:94c5 with SMTP id t1-20020a1709027fc100b001501ae794c5mr11402635plb.45.1647021363993;
+        Fri, 11 Mar 2022 09:56:03 -0800 (PST)
+Received: from thinkpad ([117.202.191.144])
+        by smtp.gmail.com with ESMTPSA id f4-20020aa782c4000000b004f6f0334a51sm10578097pfn.126.2022.03.11.09.55.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Mar 2022 09:56:03 -0800 (PST)
+Date:   Fri, 11 Mar 2022 23:25:56 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Zhi Li <lznuaa@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, vkoul@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
+ dest addresses for ep
+Message-ID: <20220311175556.GC3966@thinkpad>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-6-Frank.Li@nxp.com>
+ <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
+ <CAHrpEqSrdEegSAKw42T8qsN_BC24LS7r5a_+jKa3ZvGu5w9W1g@mail.gmail.com>
+ <20220310193759.lkwqz5avlvznn5w3@mobilestation>
+ <CAHrpEqTNTiCVdyBpS06pj=TE_YoYF8k8y6BDPJWtwR9ydAwubQ@mail.gmail.com>
+ <20220311123857.jgm745md4vjyaldu@mobilestation>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v5 2/8] hwtracing: Add trace function support for
- HiSilicon PCIe Tune and Trace device
-To:     Yicong Yang <yangyicong@hisilicon.com>,
-        <gregkh@linuxfoundation.org>, <helgaas@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <lorenzo.pieralisi@arm.com>,
-        <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <jonathan.cameron@huawei.com>, <daniel.thompson@linaro.org>,
-        <joro@8bytes.org>, <shameerali.kolothum.thodi@huawei.com>,
-        <robin.murphy@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <coresight@lists.linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>
-CC:     <prime.zeng@huawei.com>, <liuqi115@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <linuxarm@huawei.com>,
-        <song.bao.hua@hisilicon.com>
-References: <20220308084930.5142-1-yangyicong@hisilicon.com>
- <20220308084930.5142-3-yangyicong@hisilicon.com>
-From:   John Garry <john.garry@huawei.com>
-In-Reply-To: <20220308084930.5142-3-yangyicong@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.87.13]
-X-ClientProxiedBy: lhreml707-chm.china.huawei.com (10.201.108.56) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220311123857.jgm745md4vjyaldu@mobilestation>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Mar 11, 2022 at 03:38:57PM +0300, Serge Semin wrote:
+> @Manivannan could you join the discussion?
+> 
+> On Thu, Mar 10, 2022 at 02:16:17PM -0600, Zhi Li wrote:
+> > On Thu, Mar 10, 2022 at 1:38 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > >
+> > > On Thu, Mar 10, 2022 at 10:50:14AM -0600, Zhi Li wrote:
+> > > > On Thu, Mar 10, 2022 at 10:32 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > > > >
+> > > > > On Wed, Mar 09, 2022 at 03:12:01PM -0600, Frank Li wrote:
+> > > > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > >
+> > > > > > When eDMA is controlled by the Endpoint (EP), the current logic incorrectly
+> > > > > > programs the source and destination addresses for read and write. Since the
+> > > > > > Root complex and Endpoint uses the opposite channels for read/write, fix the
+> > > > > > issue by finding out the read operation first and program the eDMA accordingly.
+> > > > > >
+> > > > > > Cc: stable@vger.kernel.org
+> > > > > > Fixes: bd96f1b2f43a ("dmaengine: dw-edma: support local dma device transfer semantics")
+> > > > > > Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
+> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > > > > ---
+> > > > > > No change between v1 to v4
+> > > > > >
+> > > > > >  drivers/dma/dw-edma/dw-edma-core.c | 32 +++++++++++++++++++++++++++++-
+> > > > > >  1 file changed, 31 insertions(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > > > > > index 66dc650577919..507f08db1aad3 100644
+> > > > > > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > > > > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > > > > @@ -334,6 +334,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+> > > > > >       struct dw_edma_chunk *chunk;
+> > > > > >       struct dw_edma_burst *burst;
+> > > > > >       struct dw_edma_desc *desc;
+> > > > > > +     bool read = false;
+> > > > > >       u32 cnt = 0;
+> > > > > >       int i;
+> > > > > >
+> > > > > > @@ -424,7 +425,36 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+> > > > > >               chunk->ll_region.sz += burst->sz;
+> > > > > >               desc->alloc_sz += burst->sz;
+> > > > > >
+> > > > > > -             if (chan->dir == EDMA_DIR_WRITE) {
+> > > > > > +             /****************************************************************
+> > > > > > +              *
+> > > > >
+> > > > > > +              *        Root Complex                           Endpoint
+> > > > > > +              * +-----------------------+             +----------------------+
+> > > > > > +              * |                       |    TX CH    |                      |
+> > > > > > +              * |                       |             |                      |
+> > > > > > +              * |      DEV_TO_MEM       <-------------+     MEM_TO_DEV       |
+> > > > > > +              * |                       |             |                      |
+> > > > > > +              * |                       |             |                      |
+> > > > > > +              * |      MEM_TO_DEV       +------------->     DEV_TO_MEM       |
+> > > > > > +              * |                       |             |                      |
+> > > > > > +              * |                       |    RX CH    |                      |
+> > > > > > +              * +-----------------------+             +----------------------+
+> > > > > > +              *
+> > > > > > +              * If eDMA is controlled by the Root complex, TX channel
+> > > > > > +              * (EDMA_DIR_WRITE) is used for memory read (DEV_TO_MEM) and RX
+> > > > > > +              * channel (EDMA_DIR_READ) is used for memory write (MEM_TO_DEV).
+> > > > > > +              *
+> > > > > > +              * If eDMA is controlled by the endpoint, RX channel
+> > > > > > +              * (EDMA_DIR_READ) is used for memory read (DEV_TO_MEM) and TX
+> > > > > > +              * channel (EDMA_DIR_WRITE) is used for memory write (MEM_TO_DEV).
+> > > > >
+> > > > > Either I have some wrong notion about this issue, or something wrong
+> > > > > with the explanation above and with this fix below.
+> > > > >
+> > > > > From my understanding of the possible DW eDMA IP-core setups the
+> > > > > scatch above and the text below it are incorrect. Here is the way the
+> > > > > DW eDMA can be used:
+> > > > > 1) Embedded into the DW PCIe Host/EP controller. In this case
+> > > > > CPU/Application Memory is the memory of the CPU attached to the
+> > > > > host/EP controller, while the remote (link partner) memory is the PCIe
+> > > > > bus memory. In this case MEM_TO_DEV operation is supposed to be
+> > > > > performed by the Tx/Write channels, while the DEV_TO_MEM operation -
+> > > > > by the Rx/Read channels.
+> > > > >
+> > > > > Note it's applicable for both Host and End-point case, when Linux is
+> > > > > running on the CPU-side of the eDMA controller. So if it's DW PCIe
+> > > > > end-point, then MEM_TO_DEV means copying data from the local CPU
+> > > > > memory into the remote memory. In general the remote memory can be
+> > > > > either some PCIe device on the bus or the Root Complex' CPU memory,
+> > > > > each of which is some remote device anyway from the Local CPU
+> > > > > perspective.
+> > > > >
+> > > > > 2) Embedded into the PCIe EP. This case is implemented in the
+> > > > > drivers/dma/dw-edma/dw-edma-pcie.c driver. AFAICS from the commits log
+> > > > > and from the driver code, that device is a Synopsys PCIe EndPoint IP
+> > > > > prototype kit. It is a normal PCIe peripheral device with eDMA
+> > > > > embedded, which CPU/Application interface is connected to some
+> > > > > embedded SRAM while remote (link partner) interface is directed
+> > > > > towards the PCIe bus. At the same time the device is setup and handled
+> > > > > by the code running on a CPU connected to the PCIe Host controller.  I
+> > > > > think that in order to preserve the normal DMA operations semantics we
+> > > > > still need to consider the MEM_TO_DEV/DEV_TO_MEM operations from the
+> > > > > host CPU perspective, since that's the side the DMA controller is
+> > > > > supposed to be setup from.  In this MEM_TO_DEV is supposed to be used
+> > > > > to copy data from the host CPU memory into the remote device memory.
+> > > > > It means to allocate Rx/Read channel on the eDMA controller, so one
+> > > > > would be read data from the Local CPU memory and copied it to the PCIe
+> > > > > device SRAM. The logic of the DEV_TO_MEM direction would be just
+> > > > > flipped. The eDMA PCIe device shall use Tx/Write channel to copy data
+> > > > > from it's SRAM into the Host CPU memory.
+> > > > >
+> > > > > Please note as I understand the case 2) describes the Synopsys PCIe
+> > > > > EndPoint IP prototype kit, which is based on some FPGA code. It's just
+> > > > > a test setup with no real application, while the case 1) is a real setup
+> > > > > available on our SoC and I guess on yours.
+> > > >
+> > >
+> > > > I think yes. But Remote EP also is a one kind of usage module. Just no one
+> > > > writes an EP functional driver for it yet.  Even pci-epf-test was just
+> > > > a test function.
+> > > > I previously sent vNTB patches to implement a virtual network between
+> > > > RC and EP,
+> > > > you can look if you have interest.
+> > >
+> > > AFAIU the remote EP case is the same as 1) anyway. The remote EP is
+> > > handled by its own CPU, which sets up the DW PCIe EP controller
+> > > together with eDMA synthesized into the CPU' SoC. Am I right? While
+> > > the case 2) doesn't have any CPU attached on the PCIe EP. It's just an
+> > > FPGA with PCIe interface and eDMA IP-core installed. In that case all
+> > > the setups are performed by the PCIe Host CPU. That's the root problem
+> > > that causes having all the DEV_TO_MEM/MEM_TO_DEV complications.
+> > >
+> > > So to speak I would suggest for at least to have the scatch fixed in
+> > > accordance with the logic explained in my message.
+> > >
+> > > >
+> > > > >
+> > > > > So what I suggest in the framework of this patch is just to implement
+> > > > > the case 1) only. While the case 2) as it's an artificial one can be
+> > > > > manually handled by the DMA client drivers. BTW There aren't ones available
+> > > > > in the kernel anyway. The only exception is an old-time attempt to get
+> > > > > an eDMA IP test-driver mainlined into the kernel:
+> > > > > https://patchwork.kernel.org/project/linux-pci/patch/cc195ac53839b318764c8f6502002cd6d933a923.1547230339.git.gustavo.pimentel@synopsys.com/
+> > > > > But it was long time ago. So it's unlikely to be accepted at all.
+> > > > >
+> > > > > What do you think?
+> > > > >
+> > > > > -Sergey
+> > > > >
+> > > > > > +              *
+> > > > > > +              ****************************************************************/
+> > > > > > +
+> > > > >
+> > > > > > +             if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
+> > > > > > +                 (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
+> > > > > > +                     read = true;
+> > > > >
+> > >
+> > > > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
+> > > > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
+> > > > > redundant.
+> > >
+> > > Am I getting a response on this comment? In accordance with that
+> > > conditional statement having dir == DMA_DEV_TO_MEM means performing
+> > > read operation. If dir equals DMA_MEM_TO_DEV then a write operation
+> > > will be performed. The code path doesn't depend on the chan->dir
+> > > value.
+> > 
+> 
+> > Only dir is enough.
+> 
+> Right, in this case the fix is much simpler than suggested here. There
+> is no need in additional local variable and complex conditional
+> statement. It's supposed to be like this:
+> 
+> -             if (chan->dir == edma_dir_write) {
+> +             if (dir == DMA_DEV_TO_MEM) {
+> 
+> See my next comment for a detailed explanation.
+> 
+> > Remote Read,  DMA_DEV_TO_MEM, it is a write channel.
+> > SAR is the continual address at EP Side, DAR is a scatter list. RC side
+> > 
+> > Local Read,  DMA_DEV_TO_MEM, it is a reading channel.
+> > SAR is the continual address at RC side,  DAR is a scatter list at EP side
+> 
+> Right, it's a caller responsibility to use a right channel for the
+> operation (by flipping the channel the caller will invert the whole
+> logic). But As I see it what you explain and my notion don't match to what
+> is depicted on the scatch and written in the text below it. Don't you see?
+> 
+> -              *        Root Complex                           Endpoint
+> +              * Linux Root Port/End-point                  PCIe End-point
+>                * +-----------------------+             +----------------------+
+> -              * |                       |    TX CH    |                      |
+> -              * |                       |             |                      |
+> -              * |      DEV_TO_MEM       <-------------+     MEM_TO_DEV       |
+> +              * |                       |             |                      |
+> +              * |                       |             |                      |
+> +              * |    DEV_TO_MEM   Rx Ch <-------------+ Tx Ch  DEV_TO_MEM    |
+>                * |                       |             |                      |
+>                * |                       |             |                      |
+> -              * |      MEM_TO_DEV       +------------->     DEV_TO_MEM       |
+> -              * |                       |             |                      |
+> -              * |                       |    RX CH    |                      |
+> +              * |    MEM_TO_DEV   Tx Ch +-------------> Rx Ch  MEM_TO_DEV    |
+> +              * |                       |             |                      |
+> +              * |                       |             |                      |
+>                * +-----------------------+             +----------------------+
+>                *
+> -              * If eDMA is controlled by the Root complex, TX channel
+> -              * (EDMA_DIR_WRITE) is used for memory read (DEV_TO_MEM) and RX
+> -              * channel (EDMA_DIR_READ) is used for memory write (MEM_TO_DEV).
+> +              * If eDMA is controlled by the RP/EP, Rx channel
+> +              * (EDMA_DIR_READ) is used for device read (DEV_TO_MEM) and Tx
+> +              * channel (EDMA_DIR_WRITE) is used for device write (MEM_TO_DEV).
+> +              * (Straightforward case.)
+>                *
+> -              * If eDMA is controlled by the endpoint, RX channel
+> -              * (EDMA_DIR_READ) is used for memory read (DEV_TO_MEM) and TX
+> -              * channel (EDMA_DIR_WRITE) is used for memory write (MEM_TO_DEV).
+> +              * If eDMA is embedded into an independent PCIe EP, Tx channel
+> +              * (EDMA_DIR_WRITE) is used for device read (DEV_TO_MEM) and Rx
+> +              * channel (EDMA_DIR_READ) is used for device write (MEM_TO_DEV).
+> 
+> I think what was suggested above explains well the semantics you are
+> trying to implement here in the framework of this patch.
+> 
+> > 
+> > Actually,  both sides should support a scatter list. Like
+> > device_prep_dma_memcpy_sg
+> > but it is beyond this patch series.
+> 
 
-> +
->   endmenu
-> diff --git a/drivers/hwtracing/ptt/Kconfig b/drivers/hwtracing/ptt/Kconfig
-> new file mode 100644
-> index 000000000000..8902a6f27563
-> --- /dev/null
-> +++ b/drivers/hwtracing/ptt/Kconfig
-> @@ -0,0 +1,12 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config HISI_PTT
-> +	tristate "HiSilicon PCIe Tune and Trace Device"
-> +	depends on ARM64 || (COMPILE_TEST && 64BIT)
-> +	depends on PCI && HAS_DMA && HAS_IOMEM && PERF_EVENTS
-> +	help
-> +	  HiSilicon PCIe Tune and Trace Device exists as a PCIe RCiEP
-> +	  device, and it provides support for PCIe traffic tuning and
-> +	  tracing TLP headers to the memory.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called hisi_ptt.
-> diff --git a/drivers/hwtracing/ptt/Makefile b/drivers/hwtracing/ptt/Makefile
-> new file mode 100644
-> index 000000000000..908c09a98161
-> --- /dev/null
-> +++ b/drivers/hwtracing/ptt/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_HISI_PTT) += hisi_ptt.o
-> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-> new file mode 100644
-> index 000000000000..935dc9b44a54
-> --- /dev/null
-> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
-> @@ -0,0 +1,330 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Driver for HiSilicon PCIe tune and trace device
-> + *
-> + * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
-> + * Author: Yicong Yang <yangyicong@hisilicon.com>
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/delay.h>
-> +#include <linux/dma-iommu.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/iommu.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/sysfs.h>
-> +
-> +#include "hisi_ptt.h"
-> +
-> +static u16 hisi_ptt_get_filter_val(struct pci_dev *pdev)
-> +{
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
-> +		return BIT(HISI_PCIE_CORE_PORT_ID(PCI_SLOT(pdev->devfn)));
-> +
-> +	return PCI_DEVID(pdev->bus->number, pdev->devfn);
-> +}
-> +
-> +static bool hisi_ptt_wait_trace_hw_idle(struct hisi_ptt *hisi_ptt)
-> +{
-> +	u32 val;
-> +
-> +	return !readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_STS,
-> +					  val, val & HISI_PTT_TRACE_IDLE,
-> +					  HISI_PTT_WAIT_POLL_INTERVAL_US,
-> +					  HISI_PTT_WAIT_TRACE_TIMEOUT_US);
-> +}
-> +
-> +static bool hisi_ptt_wait_dma_reset_done(struct hisi_ptt *hisi_ptt)
-> +{
-> +	u32 val;
-> +
-> +	return !readl_poll_timeout_atomic(hisi_ptt->iobase + HISI_PTT_TRACE_WR_STS,
-> +					  val, !val, HISI_PTT_RESET_POLL_INTERVAL_US,
-> +					  HISI_PTT_RESET_TIMEOUT_US);
-> +}
-> +
-> +static void hisi_ptt_free_trace_buf(struct hisi_ptt *hisi_ptt)
-> +{
-> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
-> +	struct device *dev = &hisi_ptt->pdev->dev;
-> +	int i;
-> +
-> +	if (!ctrl->trace_buf)
-> +		return;
-> +
-> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
-> +		if (ctrl->trace_buf[i].addr)
-> +			dmam_free_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
-> +					   ctrl->trace_buf[i].addr,
-> +					   ctrl->trace_buf[i].dma);
-> +	}
-> +
-> +	devm_kfree(dev, ctrl->trace_buf);
-> +	ctrl->trace_buf = NULL;
-> +}
-> +
-> +static int hisi_ptt_alloc_trace_buf(struct hisi_ptt *hisi_ptt)
+As I said in other reply, my reasoning was entirely based on the eDMA test
+application. Since it came from Synopsys, I went with that logic of channel
+configuration.
 
-no caller
+But if someone from Synopsys confirms that your logic is correct, I'm fine with
+reworking my commit.
 
-> +{
-> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
-> +	struct device *dev = &hisi_ptt->pdev->dev;
-> +	int i;
-> +
-> +	hisi_ptt->trace_ctrl.buf_index = 0;
-> +
-> +	/* If the trace buffer has already been allocated, zero it. */
-> +	if (ctrl->trace_buf) {
-> +		for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++)
-> +			memset(ctrl->trace_buf[i].addr, 0, HISI_PTT_TRACE_BUF_SIZE);
-> +		return 0;
-> +	}
-> +
-> +	ctrl->trace_buf = devm_kcalloc(dev, HISI_PTT_TRACE_BUF_CNT,
-> +				       sizeof(struct hisi_ptt_dma_buffer), GFP_KERNEL);
-> +	if (!ctrl->trace_buf)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; ++i) {
-> +		ctrl->trace_buf[i].addr = dmam_alloc_coherent(dev, HISI_PTT_TRACE_BUF_SIZE,
-> +							     &ctrl->trace_buf[i].dma,
-> +							     GFP_KERNEL);
-> +		if (!ctrl->trace_buf[i].addr) {
-> +			hisi_ptt_free_trace_buf(hisi_ptt);
-> +			return -ENOMEM;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void hisi_ptt_trace_end(struct hisi_ptt *hisi_ptt)
-> +{
-> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
-> +	hisi_ptt->trace_ctrl.started = false;
-> +}
-> +
-> +static int hisi_ptt_trace_start(struct hisi_ptt *hisi_ptt)
+Thanks,
+Mani
 
-again this function has no caller, so I assume a warn is generated if we 
-only apply up to this patch (when compiling)
-
-please only add code per-patch which is actually referenced
-
-> +{
-> +	struct hisi_ptt_trace_ctrl *ctrl = &hisi_ptt->trace_ctrl;
-> +	u32 val;
-> +	int i;
-> +
-> +	/* Check device idle before start trace */
-> +	if (!hisi_ptt_wait_trace_hw_idle(hisi_ptt)) {
-> +		pci_err(hisi_ptt->pdev, "Failed to start trace, the device is still busy.\n");
-
-Are we already going to have a "device busy" message? I just wonder if 
-we need this at all
-
-> +		return -EBUSY;
-> +	}
-> +
-> +	ctrl->started = true;
-> +
-> +	/* Reset the DMA before start tracing */
-> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
-> +	val |= HISI_PTT_TRACE_CTRL_RST;
-> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
-> +
-> +	hisi_ptt_wait_dma_reset_done(hisi_ptt);
-> +
-> +	val = readl(hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
-> +	val &= ~HISI_PTT_TRACE_CTRL_RST;
-> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
-> +
-> +	/* Clear the interrupt status */
-> +	writel(HISI_PTT_TRACE_INT_STAT_MASK, hisi_ptt->iobase + HISI_PTT_TRACE_INT_STAT);
-> +	writel(0, hisi_ptt->iobase + HISI_PTT_TRACE_INT_MASK);
-> +
-> +	/* Configure the trace DMA buffer */
-> +	for (i = 0; i < HISI_PTT_TRACE_BUF_CNT; i++) {
-> +		writel(lower_32_bits(ctrl->trace_buf[i].dma),
-> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_LO_0 +
-> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
-> +		writel(upper_32_bits(ctrl->trace_buf[i].dma),
-> +		       hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_BASE_HI_0 +
-> +		       i * HISI_PTT_TRACE_ADDR_STRIDE);
-> +	}
-> +	writel(HISI_PTT_TRACE_BUF_SIZE, hisi_ptt->iobase + HISI_PTT_TRACE_ADDR_SIZE);
-> +
-> +	/* Set the trace control register */
-> +	val = FIELD_PREP(HISI_PTT_TRACE_CTRL_TYPE_SEL, ctrl->type);
-> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_RXTX_SEL, ctrl->direction);
-> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_DATA_FORMAT, ctrl->format);
-> +	val |= FIELD_PREP(HISI_PTT_TRACE_CTRL_TARGET_SEL, hisi_ptt->trace_ctrl.filter);
-> +	if (!hisi_ptt->trace_ctrl.is_port)
-> +		val |= HISI_PTT_TRACE_CTRL_FILTER_MODE;
-> +
-> +	/* Start the Trace */
-> +	val |= HISI_PTT_TRACE_CTRL_EN;
-> +	writel(val, hisi_ptt->iobase + HISI_PTT_TRACE_CTRL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
-> +{
-> +	struct hisi_ptt_filter_desc *filter;
-> +	struct hisi_ptt *hisi_ptt = data;
-> +	struct list_head *target_list;
-> +
-> +	target_list = pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT ?
-> +		      &hisi_ptt->port_filters : &hisi_ptt->req_filters;
-> +
-> +	filter = kzalloc(sizeof(*filter), GFP_KERNEL);
-> +	if (!filter)
-> +		return -ENOMEM;
-> +
-> +	filter->pdev = pdev;
-> +	list_add_tail(&filter->list, target_list);
-> +
-> +	/* Update the available port mask */
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT)
-> +		hisi_ptt->port_mask |= hisi_ptt_get_filter_val(pdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static void hisi_ptt_release_filters(void *data)
-> +{
-> +	struct hisi_ptt_filter_desc *filter, *tfilter;
-> +	struct hisi_ptt *hisi_ptt = data;
-> +
-> +	list_for_each_entry_safe(filter, tfilter, &hisi_ptt->req_filters, list) {
-> +		list_del(&filter->list);
-> +		kfree(filter);
-> +	}
-> +
-> +	list_for_each_entry_safe(filter, tfilter, &hisi_ptt->port_filters, list) {
-> +		list_del(&filter->list);
-> +		kfree(filter);
-> +	}
-> +}
-> +
-> +static int hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
-> +{
-> +	struct pci_dev *pdev = hisi_ptt->pdev;
-> +	struct pci_bus *bus;
-> +	int ret;
-> +	u32 reg;
-> +
-> +	INIT_LIST_HEAD(&hisi_ptt->port_filters);
-> +	INIT_LIST_HEAD(&hisi_ptt->req_filters);
-> +
-> +	/*
-> +	 * The device range register provides the information about the
-> +	 * root ports which the RCiEP can control and trace. The RCiEP
-> +	 * and the root ports it support are on the same PCIe core, with
-> +	 * same domain number but maybe different bus number. The device
-> +	 * range register will tell us which root ports we can support,
-> +	 * Bit[31:16] indicates the upper BDF numbers of the root port,
-> +	 * while Bit[15:0] indicates the lower.
-> +	 */
-> +	reg = readl(hisi_ptt->iobase + HISI_PTT_DEVICE_RANGE);
-> +	hisi_ptt->upper = FIELD_GET(HISI_PTT_DEVICE_RANGE_UPPER, reg);
-> +	hisi_ptt->lower = FIELD_GET(HISI_PTT_DEVICE_RANGE_LOWER, reg);
-> +
-> +	/*
-> +	 * hisi_ptt_init_filters() only fails when the memory allocation failed.
-> +	 * We don't check the failure here as it won't fail after adding the
-> +	 * support of dynamically updating the filters in the following patch.
-
-please structure the series such that we don't need to talk about how we 
-will fix it later
-
-> +	 */
-> +	bus = pci_find_bus(pci_domain_nr(pdev->bus), PCI_BUS_NUM(hisi_ptt->upper));
-> +	if (bus)
-> +		pci_walk_bus(bus, hisi_ptt_init_filters, hisi_ptt);
-> +
-> +	ret = devm_add_action_or_reset(&pdev->dev, hisi_ptt_release_filters, hisi_ptt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	hisi_ptt->trace_ctrl.default_cpu = cpumask_first(cpumask_of_node(dev_to_node(&pdev->dev)));
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * The DMA of PTT trace can only use direct mapping, due to some
-> + * hardware restriction. Check whether there is an IOMMU or the
-> + * policy of the IOMMU domain is passthrough, otherwise the trace
-> + * cannot work.
-> + *
-> + * The PTT device is supposed to behind the ARM SMMUv3, which
-> + * should have passthrough the device by a quirk.
-> + */
-> +static int hisi_ptt_check_iommu_mapping(struct pci_dev *pdev)
-> +{
-> +	struct iommu_domain *iommu_domain;
-> +
-> +	iommu_domain = iommu_get_domain_for_dev(&pdev->dev);
-> +	if (!iommu_domain || iommu_domain->type == IOMMU_DOMAIN_IDENTITY)
-> +		return 0;
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static int hisi_ptt_probe(struct pci_dev *pdev,
-> +			  const struct pci_device_id *id)
-> +{
-> +	struct hisi_ptt *hisi_ptt;
-> +	int ret;
-> +
-> +	ret = hisi_ptt_check_iommu_mapping(pdev);
-> +	if (ret) {
-> +		pci_err(pdev, "cannot work with non-direct DMA mapping.\n");
-
-please no double-negatives like this, so maybe "requires direct DMA 
-mappings"
-
-> +		return ret;
-> +	}
-> +
-> +	hisi_ptt = devm_kzalloc(&pdev->dev, sizeof(*hisi_ptt), GFP_KERNEL);
-> +	if (!hisi_ptt)
-> +		return -ENOMEM;
-> +
-> +	mutex_init(&hisi_ptt->mutex);
-> +	hisi_ptt->pdev = pdev;
-> +	pci_set_drvdata(pdev, hisi_ptt);
-> +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret) {
-> +		pci_err(pdev, "failed to enable device, ret = %d.\n", ret);
-
-nit: no '.' at end of any messages
-
-> +		return ret;
-> +	}
-> +
-> +	ret = pcim_iomap_regions(pdev, BIT(2), DRV_NAME);
-> +	if (ret) {
-> +		pci_err(pdev, "failed to remap io memory, ret = %d.\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	hisi_ptt->iobase = pcim_iomap_table(pdev)[2];
-> +
-> +	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
-> +	if (ret) {
-> +		pci_err(pdev, "failed to set 64 bit dma mask, ret = %d.\n", ret);
-
-I do doubt that this message is any use
-
-> +		return ret;
-> +	}
-> +
-> +	pci_set_master(pdev);
-> +
-> +	ret = hisi_ptt_init_ctrls(hisi_ptt);
-> +	if (ret) {
-> +		pci_err(pdev, "failed to init controls, ret = %d.\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
+> Right, it's beyond your series too, because that feature requires
+> additional modifications. I am not asking about that.
+> 
+> -Sergey
+> 
+> > 
+> > >
+> > > -Sergey
+> > >
+> > > > >
+> > > > > > +
+> > > > > > +             /* Program the source and destination addresses for DMA read/write */
+> > > > > > +             if (read) {
+> > > > > >                       burst->sar = src_addr;
+> > > > > >                       if (xfer->type == EDMA_XFER_CYCLIC) {
+> > > > > >                               burst->dar = xfer->xfer.cyclic.paddr;
+> > > > > > --
+> > > > > > 2.24.0.rc1
+> > > > > >
