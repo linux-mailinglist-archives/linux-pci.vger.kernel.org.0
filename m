@@ -2,100 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D2914D6956
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 21:19:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97C074D6A32
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Mar 2022 00:26:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351186AbiCKUUK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 15:20:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53264 "EHLO
+        id S230003AbiCKXDh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 18:03:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351182AbiCKUUJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 15:20:09 -0500
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852341AC2A8
-        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 12:19:04 -0800 (PST)
-Received: by mail-oi1-x229.google.com with SMTP id q189so10577002oia.9
-        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 12:19:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=byy3khpUB/C66OcuZpBogrh1vBdJYZWOahv4ARsAqeU=;
-        b=JsI+MgGwcNWNo5mFTmDhFQFX43IPSGP8AHmpadTTq1/jegWXkSYGxRbyYSNd2GGAfZ
-         QJL9ePsqy1+pQCjIkYOKeRZF/4ou56BLTl43xcIPQgKVuLYTvOOSpWVMBXvPzi3iVcEE
-         M9OokvdpojzL0W3mpYKQGxN00uuF3MValP5LkZwv7tBK8MbHNCEdcUSp8EyQgNvmdObM
-         dV8uEHfL0A+kbdg4/kBwvllnMdB0q6LY78GBq99WSqCsQB+n/5bFK7oLoh//RzZWPskK
-         DuBKl43ZqA2bbLdc1tjjtMkwJymKeQrW5rKztLf0fnJNsCRRE5EUHhDiGz2DbwyIRrvz
-         mrcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=byy3khpUB/C66OcuZpBogrh1vBdJYZWOahv4ARsAqeU=;
-        b=XhsnhKVsRKghMwRrm6Tx1NpIN4tOQs334h12zBPi5sEfpiIsotvlJ+FM5ufJ/os7VL
-         9EXhc6Gp9gHvDasiNjLAFhEVruW5ldh7Gglq3qwg7Zeytc93V5iPA5L5rqcq8+6nNPTK
-         uZrY2XsV+M1zHxF82jkC9l40aTlGV69eB2nmW3zvxIfbpBYfc4jfh1+QgptM+Jdv80yW
-         +dX8AVZvpS6VQ39AuXTtuYidq3/QJdrltU1Gr9QaC1NHy/WB2D/kJxMmtOb2z6l83t/w
-         DZpR0+ry26yhjk9mjuZZlnXvjpZWGWTghyQ1WewsHnk2CQy8x2NHCzJS89XINe9jbE0d
-         dGOw==
-X-Gm-Message-State: AOAM5304rj7UbNEN8xJldjekO/+8jXrN8oJpMeyYZ/bS9ZIYltFt4juo
-        f54MzQbqKFrkySe7QKcCLYKzqA==
-X-Google-Smtp-Source: ABdhPJwiCKmAYCnvMQUHkha6DRmgbP0TH7H+cC730Evh2nxJN9gacFfI6shVehimGVsKyYdMWq24uQ==
-X-Received: by 2002:a05:6808:1406:b0:2d9:a01a:4bcb with SMTP id w6-20020a056808140600b002d9a01a4bcbmr7858798oiv.242.1647029943809;
-        Fri, 11 Mar 2022 12:19:03 -0800 (PST)
-Received: from builder.lan ([2600:1700:a0:3dc8:3697:f6ff:fe85:aac9])
-        by smtp.gmail.com with ESMTPSA id r41-20020a056870582900b000d6cbaf589esm3887680oap.40.2022.03.11.12.19.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Mar 2022 12:19:02 -0800 (PST)
-Date:   Fri, 11 Mar 2022 14:19:00 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v3 11/11] rpmsg: Fix kfree() of static memory on setting
- driver_override
-Message-ID: <YiuutCsuf4j192cJ@builder.lan>
-References: <20220227135214.145599-1-krzysztof.kozlowski@canonical.com>
- <20220227135329.145862-5-krzysztof.kozlowski@canonical.com>
+        with ESMTP id S230318AbiCKXDV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 18:03:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 823054C417;
+        Fri, 11 Mar 2022 14:58:50 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2EBFCB82B70;
+        Fri, 11 Mar 2022 22:58:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DC98C340E9;
+        Fri, 11 Mar 2022 22:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647039527;
+        bh=0jub9hYC7U636c/1gwv/XIn7E8RVj0QvzIboV92Ufyg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZKfwSfeTyDsePoj+6I9lRMSz1t5x7z4QQtc1zBKo420OA2HqJfRXGK+ZxLkZnhfO8
+         qUlepla4Uzndr7TEJMo/tkNKByqVKjav6ExNilODFvBzS/quqyDvoujCgenzpfg0C0
+         isH+CeYVms2YIFGmFziGMENJpgmCW+bh5UGmuZMkNP7PR10aDZY1YjtucvDZd7OeDn
+         HTNPi/RjdTRFwkL9vj7XX6a6e4UAWfLq2XuATZfbVnhZgn8GWKZqdvHJ3z1bBgzslS
+         6dtwi89fqLIIc+F2xjHwU85y38wXBXh9z1n0pJFN71jjIUlffjd4+bFbwuOrd1zNKZ
+         e70h6cxoYGUjw==
+Date:   Fri, 11 Mar 2022 16:58:46 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        fancer.lancer@gmail.com, lznuaa@gmail.com, vkoul@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, shawnguo@kernel.org,
+        manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v5 0/9] Enable designware PCI EP EDMA locally
+Message-ID: <20220311225846.GA334303@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220227135329.145862-5-krzysztof.kozlowski@canonical.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+In-Reply-To: <20220310192457.3090-1-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -103,124 +57,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun 27 Feb 07:53 CST 2022, Krzysztof Kozlowski wrote:
-
-> The driver_override field from platform driver should not be initialized
-> from static memory (string literal) because the core later kfree() it,
-> for example when driver_override is set via sysfs.
+On Thu, Mar 10, 2022 at 01:24:48PM -0600, Frank Li wrote:
+> Default Designware EDMA just probe remotely at host side.
+> This patch allow EDMA driver can probe at EP side.
 > 
-> Use dedicated helper to set driver_override properly.
+> 1. Clean up patch
+>    dmaengine: dw-edma: Detach the private data and chip info structures
+>    dmaengine: dw-edma: remove unused field irq in struct dw_edma_chip
+>    dmaengine: dw-edma: change rg_region to reg_base in struct
+>    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
 > 
-> Fixes: 950a7388f02b ("rpmsg: Turn name service into a stand alone driver")
-> Fixes: c0cdc19f84a4 ("rpmsg: Driver for user space endpoint interface")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
->  drivers/rpmsg/rpmsg_core.c     |  3 ++-
->  drivers/rpmsg/rpmsg_internal.h | 13 +++++++++++--
->  drivers/rpmsg/rpmsg_ns.c       | 14 ++++++++++++--
->  include/linux/rpmsg.h          |  6 ++++--
->  4 files changed, 29 insertions(+), 7 deletions(-)
+> 2. Enhance EDMA driver to allow prode eDMA at EP side
+>    dmaengine: dw-edma: Add support for chip specific flags   
+>    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
 > 
-> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-> index d9e612f4f0f2..6e2bf2742973 100644
-> --- a/drivers/rpmsg/rpmsg_core.c
-> +++ b/drivers/rpmsg/rpmsg_core.c
-> @@ -397,7 +397,8 @@ field##_store(struct device *dev, struct device_attribute *attr,	\
->  	      const char *buf, size_t sz)				\
->  {									\
->  	struct rpmsg_device *rpdev = to_rpmsg_device(dev);		\
-> -	char *new, *old;						\
-> +	const char *old;						\
-> +	char *new;							\
->  									\
->  	new = kstrndup(buf, sz, GFP_KERNEL);				\
->  	if (!new)							\
-> diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
-> index b1245d3ed7c6..31345d6e9a7e 100644
-> --- a/drivers/rpmsg/rpmsg_internal.h
-> +++ b/drivers/rpmsg/rpmsg_internal.h
-> @@ -92,10 +92,19 @@ int rpmsg_release_channel(struct rpmsg_device *rpdev,
->   */
->  static inline int rpmsg_chrdev_register_device(struct rpmsg_device *rpdev)
->  {
-> +	int ret;
-> +
->  	strcpy(rpdev->id.name, "rpmsg_chrdev");
-> -	rpdev->driver_override = "rpmsg_chrdev";
-> +	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
-> +				  "rpmsg_chrdev", strlen("rpmsg_chrdev"));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = rpmsg_register_device(rpdev);
-> +	if (ret)
-> +		kfree(rpdev->driver_override);
->  
-> -	return rpmsg_register_device(rpdev);
-> +	return ret;
->  }
->  
->  #endif
-> diff --git a/drivers/rpmsg/rpmsg_ns.c b/drivers/rpmsg/rpmsg_ns.c
-> index 762ff1ae279f..95a51543f5ad 100644
-> --- a/drivers/rpmsg/rpmsg_ns.c
-> +++ b/drivers/rpmsg/rpmsg_ns.c
-> @@ -20,12 +20,22 @@
->   */
->  int rpmsg_ns_register_device(struct rpmsg_device *rpdev)
->  {
-> +	int ret;
-> +
->  	strcpy(rpdev->id.name, "rpmsg_ns");
-> -	rpdev->driver_override = "rpmsg_ns";
-> +	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
-> +				  "rpmsg_ns", strlen("rpmsg_ns"));
-> +	if (ret)
-> +		return ret;
-> +
->  	rpdev->src = RPMSG_NS_ADDR;
->  	rpdev->dst = RPMSG_NS_ADDR;
->  
-> -	return rpmsg_register_device(rpdev);
-> +	ret = rpmsg_register_device(rpdev);
-> +	if (ret)
-> +		kfree(rpdev->driver_override);
-> +
-> +	return ret;
->  }
->  EXPORT_SYMBOL(rpmsg_ns_register_device);
->  
-> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-> index 02fa9116cd60..20c8cd1cde21 100644
-> --- a/include/linux/rpmsg.h
-> +++ b/include/linux/rpmsg.h
-> @@ -41,7 +41,9 @@ struct rpmsg_channel_info {
->   * rpmsg_device - device that belong to the rpmsg bus
->   * @dev: the device struct
->   * @id: device id (used to match between rpmsg drivers and devices)
-> - * @driver_override: driver name to force a match
-> + * @driver_override: driver name to force a match; do not set directly,
-> + *                   because core frees it; use driver_set_override() to
-> + *                   set or clear it.
->   * @src: local address
->   * @dst: destination address
->   * @ept: the rpmsg endpoint of this channel
-> @@ -51,7 +53,7 @@ struct rpmsg_channel_info {
->  struct rpmsg_device {
->  	struct device dev;
->  	struct rpmsg_device_id id;
-> -	char *driver_override;
-> +	const char *driver_override;
->  	u32 src;
->  	u32 dst;
->  	struct rpmsg_endpoint *ept;
+> 3. Bugs fix at EDMA driver when probe eDMA at EP side
+>    dmaengine: dw-edma: Fix programming the source & dest addresses for ep
+>    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> 
+> 4. change pci-epf-test to use EDMA driver to transfer data.
+>    PCI: endpoint: functions/pci-epf-test: Support PCI controller DMA
+> 
+> 5. Using imx8dxl to do test, but some EP functions still have not
+> upstream yet. So below patch show how probe eDMA driver at EP
+> controller driver.
+> https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
+> 
+> 
+> 
+> Frank Li (7):
+>   dmaengine: dw-edma: Detach the private data and chip info structures
+>   dmaengine: dw-edma: remove unused field irq in struct dw_edma_chip
+>   dmaengine: dw-edma: change rg_region to reg_base in struct
+>     dw_edma_chip
+>   dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+>     dw_edma_chip
+
+These should be consistently capitalized to match previous commits
+(and the rest of your own commits :)):
+
+s/remove unused/Remove unused/
+s/change rg_region/Change rg_region/
+s/rename wr/Rename wr/
+
+>   dmaengine: dw-edma: Add support for chip specific flags
+>   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
+>   PCI: endpoint: functions/pci-epf-test: Support PCI controller DMA
+
+There are a couple commits that use the whole "PCI: endpoint:
+functions/pci-epf-test:" prefix, but IMO it's a bit of overkill to use
+so much space just for the prefix.
+
+Maybe something like this would be enough?
+
+  PCI: endpoint: Add embedded DMA controller test
+
+> Manivannan Sadhasivam (2):
+>   dmaengine: dw-edma: Fix programming the source & dest addresses for ep
+>   dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> 
+>  drivers/dma/dw-edma/dw-edma-core.c            | 131 +++++++++++-------
+>  drivers/dma/dw-edma/dw-edma-core.h            |  32 +----
+>  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
+>  drivers/dma/dw-edma/dw-edma-v0-core.c         |  46 +++---
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  10 +-
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 108 +++++++++++++--
+>  include/linux/dma/edma.h                      |  56 +++++++-
+>  7 files changed, 298 insertions(+), 168 deletions(-)
+> 
 > -- 
-> 2.32.0
+> 2.24.0.rc1
 > 
