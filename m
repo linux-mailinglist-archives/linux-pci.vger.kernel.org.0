@@ -2,166 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DEFA04D5DEA
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 09:52:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 810C84D5F1E
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 11:07:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241401AbiCKIx1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 03:53:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36980 "EHLO
+        id S232675AbiCKKIJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 05:08:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240110AbiCKIx1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 03:53:27 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4BA911BAF38
-        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 00:52:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646988743;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/479Pk+vprXDZIn8pdu3Nkd2rq1k38blx/MzMekbdF8=;
-        b=YPLrxT0Bt5T3A1FYksS3CfBLGJoAVn0/uLrwq/u2dOHxmh5aRxC+u118HAna6Tqivb6qvj
-        tese6q57+6f8OzU0r8q+qTV3DDIZueO/VGspUZF1g+WEy45lp4DOPBOZ3KM0BQAV4b0I4s
-        SkIRo+YijWghW5W8YVQ8DCQmdoEtF7U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-68-0SfKBHKbMTqm_PjtgjAZ2Q-1; Fri, 11 Mar 2022 03:52:19 -0500
-X-MC-Unique: 0SfKBHKbMTqm_PjtgjAZ2Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 786A5801DDC;
-        Fri, 11 Mar 2022 08:52:17 +0000 (UTC)
-Received: from localhost (unknown [10.39.194.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7987D7369C;
-        Fri, 11 Mar 2022 08:52:06 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mgurtovoy@nvidia.com" <mgurtovoy@nvidia.com>,
-        "yishaih@nvidia.com" <yishaih@nvidia.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        liulongfang <liulongfang@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
-        Xu Zaibo <xuzaibo@huawei.com>
-Subject: Re: [PATCH v8 8/9] hisi_acc_vfio_pci: Add support for VFIO live
- migration
-In-Reply-To: <20220310134954.0df4bb12.alex.williamson@redhat.com>
-Organization: Red Hat GmbH
-References: <20220303230131.2103-1-shameerali.kolothum.thodi@huawei.com>
- <20220303230131.2103-9-shameerali.kolothum.thodi@huawei.com>
- <20220304205720.GE219866@nvidia.com>
- <20220307120513.74743f17.alex.williamson@redhat.com>
- <aac9a26dc27140d9a1ce56ebdec393a6@huawei.com>
- <20220307125239.7261c97d.alex.williamson@redhat.com>
- <BN9PR11MB5276EBE887402EBE22630BAB8C099@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20220308123312.1f4ba768.alex.williamson@redhat.com>
- <BN9PR11MB527634CCF86829E0680E5E678C0A9@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20220310134954.0df4bb12.alex.williamson@redhat.com>
-User-Agent: Notmuch/0.34 (https://notmuchmail.org)
-Date:   Fri, 11 Mar 2022 09:52:05 +0100
-Message-ID: <87tuc4hnwq.fsf@redhat.com>
+        with ESMTP id S1347571AbiCKKHv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 05:07:51 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C72431BF910
+        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 02:06:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646993208; x=1678529208;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tcb0awIFqKevEQXb7Bu45BtCNoGl1aqkIfpE0YCMK60=;
+  b=W7FVYzhik+drYNHVQ6kpGCFfneYMhMs4rOKoJcWqtdBSv9QWA4UOuY54
+   8sySEq346EBurSgIDQxl/SBtvkyEDdjxPh97ZMTnXBJIfOfWaWHuZ6gie
+   BgF0CxQgUHYxSkzk11wGYf56J680okXuJv6GVygQuYfy7imphfu6Gg9oB
+   Ri0jFw1ejpHyDNlCrCYbA1kKfiX6eSk2gvQpV/RChvc7dDZ1516HwnP75
+   FTbkQkkLGgtQa7Cy0+++AuHA5ecZ9ov7sB1eoemgFaCAFN7wGL2rEmbRt
+   5x+I8QF1cqZwToJ2PEG3ZlC7lcAU0z0GAHxQfltLe52Io16cGzxEhBG4k
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10282"; a="253107516"
+X-IronPort-AV: E=Sophos;i="5.90,173,1643702400"; 
+   d="scan'208";a="253107516"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2022 02:06:48 -0800
+X-IronPort-AV: E=Sophos;i="5.90,173,1643702400"; 
+   d="scan'208";a="555245657"
+Received: from cchitora-mobl.ger.corp.intel.com (HELO localhost) ([10.252.46.187])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2022 02:06:46 -0800
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     intel-gfx@lists.freedesktop.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        x86@kernel.org, jani.nikula@intel.com
+Subject: [PATCH 1/2] x86/gpu: include drm/i915_pciids.h directly in early quirks
+Date:   Fri, 11 Mar 2022 12:06:38 +0200
+Message-Id: <20220311100639.114685-1-jani.nikula@intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 10 2022, Alex Williamson <alex.williamson@redhat.com> wrote:
+early-quirks.c is the only user of drm/i915_drm.h that also needs
+drm/i915_pciids.h. Include the masses of PCI ID macros only where
+needed.
 
-> Do you think we should go so far as to formalize this via a MAINTAINERS
-> entry, for example:
->
-> diff --git a/Documentation/vfio/vfio-pci-vendor-driver-acceptance.rst b/Documentation/vfio/vfio-pci-vendor-driver-acceptance.rst
-> new file mode 100644
-> index 000000000000..54ebafcdd735
-> --- /dev/null
-> +++ b/Documentation/vfio/vfio-pci-vendor-driver-acceptance.rst
-> @@ -0,0 +1,35 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +Acceptance criteria for vfio-pci device specific driver variants
-> +================================================================
-> +
-> +Overview
-> +--------
-> +The vfio-pci driver exists as a device agnostic driver using the
-> +system IOMMU and relying on the robustness of platform fault
-> +handling to provide isolated device access to userspace.  While the
-> +vfio-pci driver does include some device specific support, further
-> +extensions for yet more advanced device specific features are not
-> +sustainable.  The vfio-pci driver has therefore split out
-> +vfio-pci-core as a library that may be reused to implement features
-> +requiring device specific knowledge, ex. saving and loading device
-> +state for the purposes of supporting migration.
-> +
-> +In support of such features, it's expected that some device specific
-> +variants may interact with parent devices (ex. SR-IOV PF in support of
-> +a user assigned VF) or other extensions that may not be otherwise
-> +accessible via the vfio-pci base driver.  Authors of such drivers
-> +should be diligent not to create exploitable interfaces via such
-> +interactions or allow unchecked userspace data to have an effect
-> +beyond the scope of the assigned device.
-> +
-> +New driver submissions are therefore requested to have approval via
-> +Sign-off for any interactions with parent drivers.  Additionally,
-> +drivers should make an attempt to provide sufficient documentation
-> +for reviewers to understand the device specific extensions, for
-> +example in the case of migration data, how is the device state
-> +composed and consumed, which portions are not otherwise available to
-> +the user via vfio-pci, what safeguards exist to validate the data,
-> +etc.  To that extent, authors should additionally expect to require
-> +reviews from at least one of the listed reviewers, in addition to the
-> +overall vfio maintainer.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4322b5321891..4f7d26f9aac6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20314,6 +20314,13 @@ F:	drivers/vfio/mdev/
->  F:	include/linux/mdev.h
->  F:	samples/vfio-mdev/
->  
-> +VFIO PCI VENDOR DRIVERS
-> +R:	Your Name <your.name@here.com>
-> +L:	kvm@vger.kernel.org
-> +S:	Maintained
-> +P:	Documentation/vfio/vfio-pci-vendor-driver-acceptance.rst
-> +F:	drivers/vfio/pci/*/
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Cc: x86@kernel.org
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 
-This works as long as the only subdirectories are for vendor drivers;
-should something else come up, we'd need to add an exclude statement, so
-no biggie.
+---
 
-> +
->  VFIO PLATFORM DRIVER
->  M:	Eric Auger <eric.auger@redhat.com>
->  L:	kvm@vger.kernel.org
->
-> Ideally we'd have at least Yishai, Shameer, Jason, and yourself listed
-> as reviewers (Connie and I are included via the higher level entry).
-> Thoughts from anyone?  Volunteers for reviewers if we want to press
-> forward with this as formal acceptance criteria?  Thanks,
->
-> Alex
+I'm hoping to merge this via drm-intel with the other patch.
+---
+ arch/x86/kernel/early-quirks.c | 1 +
+ include/drm/i915_drm.h         | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-I like having this formalized. More eyeballs are good (especially as
-getting good review is one of the worst bottlenecks), and I'd trust
-people having worked on other vendor drivers having a better grip on
-issues that have not been my priority.
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index bd6dad83c65b..805596736e20 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -18,6 +18,7 @@
+ #include <linux/bcma/bcma_regs.h>
+ #include <linux/platform_data/x86/apple.h>
+ #include <drm/i915_drm.h>
++#include <drm/i915_pciids.h>
+ #include <asm/pci-direct.h>
+ #include <asm/dma.h>
+ #include <asm/io_apic.h>
+diff --git a/include/drm/i915_drm.h b/include/drm/i915_drm.h
+index 6722005884db..afbf3ef5643e 100644
+--- a/include/drm/i915_drm.h
++++ b/include/drm/i915_drm.h
+@@ -26,7 +26,6 @@
+ #ifndef _I915_DRM_H_
+ #define _I915_DRM_H_
+ 
+-#include <drm/i915_pciids.h>
+ #include <uapi/drm/i915_drm.h>
+ 
+ /* For use by IPS driver */
+-- 
+2.30.2
 
