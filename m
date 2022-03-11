@@ -2,156 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C36D24D5F21
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 11:07:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA9924D5F9B
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 11:34:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345416AbiCKKIK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 05:08:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58936 "EHLO
+        id S236781AbiCKKfl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 05:35:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347753AbiCKKH4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 05:07:56 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE101BE4E9
-        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 02:06:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646993213; x=1678529213;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hGdzBQspiIW+290EEsn33TDuZWp7ZpdyjMsUCgHyjG8=;
-  b=NjrK2WT/Aohh0YPBAMfcSZyH3f7x+blC1IYo+XkCocy0NRjpduMyFyrg
-   XUduyPoVgAFETeCfcvAg+FjZctG9F1glPZELRhOvDZ82frzffRfXJkc/k
-   5F6N4HtTDeNdBl/U/bdRpBPQH0tAMMPqP2mJ16L6NplMePMsu3GsOphMc
-   NcvXwHNNnn9YjPCG/vz+wCOASu/Rzb9zix5/zj5dT79D3WIDzpBxtbnJe
-   MK48qbsr3pNtL3P1WbONMYElPfhUiXghMoAdydHxUC6GdDdYoJRzsG7Da
-   Or0LworBIkY+lLHMDGw8lTmEuTTsz8dDviQT9jNUR0QjJFJEKdLg2gTz4
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10282"; a="280287487"
-X-IronPort-AV: E=Sophos;i="5.90,173,1643702400"; 
-   d="scan'208";a="280287487"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2022 02:06:53 -0800
-X-IronPort-AV: E=Sophos;i="5.90,173,1643702400"; 
-   d="scan'208";a="538949814"
-Received: from cchitora-mobl.ger.corp.intel.com (HELO localhost) ([10.252.46.187])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2022 02:06:51 -0800
-From:   Jani Nikula <jani.nikula@intel.com>
-To:     intel-gfx@lists.freedesktop.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        x86@kernel.org, jani.nikula@intel.com
-Subject: [PATCH 2/2] drm/i915: include uapi/drm/i915_drm.h directly where needed
-Date:   Fri, 11 Mar 2022 12:06:39 +0200
-Message-Id: <20220311100639.114685-2-jani.nikula@intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220311100639.114685-1-jani.nikula@intel.com>
-References: <20220311100639.114685-1-jani.nikula@intel.com>
+        with ESMTP id S1347969AbiCKKfj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 05:35:39 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404141052A7;
+        Fri, 11 Mar 2022 02:34:35 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 79D72210FB;
+        Fri, 11 Mar 2022 10:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1646994873; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=wxQGvXlNGe5HCBbR63oBE/kK35uYM5cAEXtsbUcwkZQ=;
+        b=iNIvX7qiHCHs8as2v0+a/C6Wf9AM41VW8O+o2xwFxi1cw2QRDGGMgZ/U+wVya50NqXLinC
+        i0LxZhXeNa6Kvoq6FYdE1Rn7t/eAOn4geBVM9tpVaCf3Bq2EMzIQrENQGGyoxOfZbZapRr
+        hZujw3UMlrZhO11g0/T3KzHa4Umc+Jk=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A827013A85;
+        Fri, 11 Mar 2022 10:34:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id Kh3tJ7glK2LxdQAAMHmgww
+        (envelope-from <jgross@suse.com>); Fri, 11 Mar 2022 10:34:32 +0000
+From:   Juergen Gross <jgross@suse.com>
+To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-integrity@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net
+Cc:     Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Jens Axboe <axboe@kernel.dk>, Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Subject: [PATCH 0/2] xen/grant-table: do some cleanup
+Date:   Fri, 11 Mar 2022 11:34:27 +0100
+Message-Id: <20220311103429.12845-1-jgross@suse.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove the uapi/drm/i915_drm.h include from drm/i915_drm.h, and stop
-being a proxy for uapi/drm/i915_drm.h. Include uapi/drm/i915_drm.h and
-drm/i915_drm.h only where needed.
+Cleanup grant table code by removing unused functionality.
 
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
----
- drivers/gpu/drm/i915/gem/i915_gem_lmem.c     | 2 ++
- drivers/gpu/drm/i915/gem/i915_gem_region.c   | 2 ++
- drivers/gpu/drm/i915/intel_memory_region.c   | 2 ++
- drivers/gpu/drm/i915/intel_memory_region.h   | 2 +-
- drivers/gpu/drm/i915/pxp/intel_pxp_session.c | 2 --
- include/drm/i915_drm.h                       | 2 +-
- 6 files changed, 8 insertions(+), 4 deletions(-)
+Juergen Gross (2):
+  xen/grant-table: remove gnttab_*transfer*() functions
+  xen/grant-table: remove readonly parameter from functions
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_lmem.c b/drivers/gpu/drm/i915/gem/i915_gem_lmem.c
-index 444f8268b9c5..ede084f36ca9 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_lmem.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_lmem.c
-@@ -3,6 +3,8 @@
-  * Copyright © 2019 Intel Corporation
-  */
- 
-+#include <uapi/drm/i915_drm.h>
-+
- #include "intel_memory_region.h"
- #include "gem/i915_gem_region.h"
- #include "gem/i915_gem_lmem.h"
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_region.c b/drivers/gpu/drm/i915/gem/i915_gem_region.c
-index c9b2e8b91053..f4fbae2f9dcc 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_region.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_region.c
-@@ -3,6 +3,8 @@
-  * Copyright © 2019 Intel Corporation
-  */
- 
-+#include <uapi/drm/i915_drm.h>
-+
- #include "intel_memory_region.h"
- #include "i915_gem_region.h"
- #include "i915_drv.h"
-diff --git a/drivers/gpu/drm/i915/intel_memory_region.c b/drivers/gpu/drm/i915/intel_memory_region.c
-index 1c841f68169a..ded78b83e0b5 100644
---- a/drivers/gpu/drm/i915/intel_memory_region.c
-+++ b/drivers/gpu/drm/i915/intel_memory_region.c
-@@ -5,6 +5,8 @@
- 
- #include <linux/prandom.h>
- 
-+#include <uapi/drm/i915_drm.h>
-+
- #include "intel_memory_region.h"
- #include "i915_drv.h"
- #include "i915_ttm_buddy_manager.h"
-diff --git a/drivers/gpu/drm/i915/intel_memory_region.h b/drivers/gpu/drm/i915/intel_memory_region.h
-index 21dcbd620758..bbc35ec5c090 100644
---- a/drivers/gpu/drm/i915/intel_memory_region.h
-+++ b/drivers/gpu/drm/i915/intel_memory_region.h
-@@ -10,7 +10,7 @@
- #include <linux/mutex.h>
- #include <linux/io-mapping.h>
- #include <drm/drm_mm.h>
--#include <drm/i915_drm.h>
-+#include <uapi/drm/i915_drm.h>
- 
- struct drm_i915_private;
- struct drm_i915_gem_object;
-diff --git a/drivers/gpu/drm/i915/pxp/intel_pxp_session.c b/drivers/gpu/drm/i915/pxp/intel_pxp_session.c
-index 598840b73dfa..92b00b4de240 100644
---- a/drivers/gpu/drm/i915/pxp/intel_pxp_session.c
-+++ b/drivers/gpu/drm/i915/pxp/intel_pxp_session.c
-@@ -3,8 +3,6 @@
-  * Copyright(c) 2020, Intel Corporation. All rights reserved.
-  */
- 
--#include <drm/i915_drm.h>
--
- #include "i915_drv.h"
- 
- #include "intel_pxp.h"
-diff --git a/include/drm/i915_drm.h b/include/drm/i915_drm.h
-index afbf3ef5643e..7adce327c1c2 100644
---- a/include/drm/i915_drm.h
-+++ b/include/drm/i915_drm.h
-@@ -26,7 +26,7 @@
- #ifndef _I915_DRM_H_
- #define _I915_DRM_H_
- 
--#include <uapi/drm/i915_drm.h>
-+#include <linux/types.h>
- 
- /* For use by IPS driver */
- unsigned long i915_read_mch_val(void);
+ drivers/block/xen-blkfront.c                |   8 +-
+ drivers/char/tpm/xen-tpmfront.c             |   2 +-
+ drivers/gpu/drm/xen/xen_drm_front_evtchnl.c |   2 +-
+ drivers/input/misc/xen-kbdfront.c           |   4 +-
+ drivers/net/xen-netfront.c                  |  13 +-
+ drivers/pci/xen-pcifront.c                  |   2 +-
+ drivers/scsi/xen-scsifront.c                |   4 +-
+ drivers/usb/host/xen-hcd.c                  |   4 +-
+ drivers/xen/gntalloc.c                      |   2 +-
+ drivers/xen/gntdev-dmabuf.c                 |   2 +-
+ drivers/xen/grant-table.c                   | 151 +++-----------------
+ drivers/xen/pvcalls-front.c                 |   6 +-
+ drivers/xen/xen-front-pgdir-shbuf.c         |   3 +-
+ include/xen/grant_table.h                   |  13 +-
+ net/9p/trans_xen.c                          |   8 +-
+ sound/xen/xen_snd_front_evtchnl.c           |   2 +-
+ 16 files changed, 50 insertions(+), 176 deletions(-)
+
 -- 
-2.30.2
+2.34.1
 
