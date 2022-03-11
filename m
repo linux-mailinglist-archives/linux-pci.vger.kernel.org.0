@@ -2,54 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE16B4D5F9F
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 11:34:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4DF74D600F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 11:48:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347976AbiCKKfm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 05:35:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38034 "EHLO
+        id S234938AbiCKKtQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 05:49:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347792AbiCKKfk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 05:35:40 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B129106101;
-        Fri, 11 Mar 2022 02:34:36 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 81E8C218FC;
-        Fri, 11 Mar 2022 10:34:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1646994874; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
+        with ESMTP id S1345061AbiCKKtL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 05:49:11 -0500
+Received: from de-smtp-delivery-102.mimecast.com (de-smtp-delivery-102.mimecast.com [194.104.111.102])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA295A1458
+        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 02:48:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+        t=1646995684;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nZEvYyMBPYN1QtFdkQaMVNyj0XKkJ4elnymAYBJb21k=;
-        b=ZS6ZRpLJmnmpCiKN0CZ3r86ITAr5TZ7YKuw20us0lnF3osuVpL90xTJ/v+NK4SyU7YdkWm
-        IKGkavbso0o8v5YIWB4LbFnLFO0l6XfR2mgPKYmHMWY5Cy2lw8zalAj6pmwD3qWibMhSUP
-        bdsJRB8vS66pgMEPsIct9gEAqhPkRqo=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AE25F13A85;
-        Fri, 11 Mar 2022 10:34:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id sN5lKbklK2LxdQAAMHmgww
-        (envelope-from <jgross@suse.com>); Fri, 11 Mar 2022 10:34:33 +0000
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net
-Cc:     Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        bh=DIbxokGLfszPWvvBfF32ODiQ346zEr4gzjmkYm4XMII=;
+        b=VsamcDbHG/jJ6IivEXDi5MUDn/miNyE4vstxlWUV0mDDR6vsAgHTv5b7nlpZltFbb7vHX/
+        plT2Jn0PQrG21z/0Q+UwtSraBb6pVTE1AOeB/pOAYlGA86oXtC/3QNI1TVxqtfKcfAb7BE
+        udAzyPp07uVkBN7/qLfzNXYR4T8YlAg=
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com
+ (mail-db5eur01lp2059.outbound.protection.outlook.com [104.47.2.59]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ de-mta-14-faktBsoIM8225rnSx08a9Q-2; Fri, 11 Mar 2022 11:48:02 +0100
+X-MC-Unique: faktBsoIM8225rnSx08a9Q-2
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FR2VKUxNgT3Z9x14b5fQqWvKkDEFnT10+S/OucuL7GO1Un0Pb8UPrtP5iV1O0lQZHhyfjsdQDKXKzFKWNnfSw7xfKigxecQwNvkMfGYc10JM4M67Pr+Bo5hdJO7gP3qNaFtm/hoAmxYDGhMYeDx0ugU8yeMcEvQO6RoPuL6UtNUhNGAI+Uv92iQBVFjohYC0raDz6Vt+uwrjgpuI1kEfDaxyBUS9DILvsmxCmik1vvGf7lBDfs/ilGbTEp6jW5VTKYZ3G/1jkqrKqT/LfbKnueEqDqSlDujPK9ge0r8hmIdgVFfERksmxIq+hxAkb7eZkWQXzC2hFColtMNT1QuJhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DIbxokGLfszPWvvBfF32ODiQ346zEr4gzjmkYm4XMII=;
+ b=OtRQwmpRDYOdDviFOSX93y67sNGFZxkWrDJgfLeWu/MPilo8Klxlh8Nah0GPTWJJ9hOfXZWWgS9KhdQAylEpypIen1doofglwZPEEEee/E0mFSL8sKB2ILXzfK9qTBAyJJ0M5koVG2wUM31wHZ1udLrBJoyGebxskCQa3NMBSCbR26SDfROAUV9tZkPXcGXxC0nNesvQZRwX1PD+ARdlSSiyFJw4Kmx4WYMa2Caai2Rd56YFdvnF4eJITowd/bFnFMWfPaqkFXSVBXkr/UKXyOMWqbVzN1eQX1pMoiektv4sYTW8tbrkNjsXe2soST/DDCu8NmmsovZh7CJkx/GZ3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from VI1PR04MB5600.eurprd04.prod.outlook.com (2603:10a6:803:e7::16)
+ by AM0PR0402MB3489.eurprd04.prod.outlook.com (2603:10a6:208:16::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.22; Fri, 11 Mar
+ 2022 10:47:59 +0000
+Received: from VI1PR04MB5600.eurprd04.prod.outlook.com
+ ([fe80::e8ce:db1c:5bb0:af0]) by VI1PR04MB5600.eurprd04.prod.outlook.com
+ ([fe80::e8ce:db1c:5bb0:af0%6]) with mapi id 15.20.5061.022; Fri, 11 Mar 2022
+ 10:47:59 +0000
+Message-ID: <5276ee7f-22b5-0223-72b6-ca71ae82c3f6@suse.com>
+Date:   Fri, 11 Mar 2022 11:47:54 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.2
+Subject: Re: [PATCH 2/2] xen/grant-table: remove readonly parameter from
+ functions
+Content-Language: en-US
+To:     Juergen Gross <jgross@suse.com>
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
         Jens Axboe <axboe@kernel.dk>, Peter Huewe <peterhuewe@gmx.de>,
         Jarkko Sakkinen <jarkko@kernel.org>,
         Jason Gunthorpe <jgg@ziepe.ca>,
@@ -68,18 +80,82 @@ Cc:     Juergen Gross <jgross@suse.com>,
         Dominique Martinet <asmadeus@codewreck.org>,
         Christian Schoenebeck <linux_oss@crudebyte.com>,
         Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
-Subject: [PATCH 2/2] xen/grant-table: remove readonly parameter from functions
-Date:   Fri, 11 Mar 2022 11:34:29 +0100
-Message-Id: <20220311103429.12845-3-jgross@suse.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220311103429.12845-1-jgross@suse.com>
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-input@vger.kernel.org,
+        netdev@vger.kernel.org, linux-block@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net
 References: <20220311103429.12845-1-jgross@suse.com>
+ <20220311103429.12845-3-jgross@suse.com>
+From:   Jan Beulich <jbeulich@suse.com>
+In-Reply-To: <20220311103429.12845-3-jgross@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM6P191CA0039.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:209:7f::16) To VI1PR04MB5600.eurprd04.prod.outlook.com
+ (2603:10a6:803:e7::16)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ccf1c0e1-d7e0-4cbd-f674-08da034c9b62
+X-MS-TrafficTypeDiagnostic: AM0PR0402MB3489:EE_
+X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
+X-Microsoft-Antispam-PRVS: <AM0PR0402MB348967F264AD215F3C597051B30C9@AM0PR0402MB3489.eurprd04.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HBMNmKesdLinpyu2mMehi5dmgmoclLxVC2xMy7QuXudxKXlloOixKRcuvOgivv2U3VypJiT9ryhYGveOHRJhAaHpxeD3DIWFCAGdbZR0qogdUXE24T1P9Xk/M73Lb20yBTsWWUOaePrpbhmagm5W9B/+klndJtI5Rh6w7bVD4m949efPf1PNOHIjYQCZQNhaQ67B8nXyo9m9bhGbY1DeYSLsz6JCXO5P/NJRC3f+eKlFOLm/xm2Vb/rdHdHmDbHooN4+lYOrUjl/GWXDptuT3BwcD0pZCAXN/WWHzXqH13A9FGmIUBPWeIJvqssmyqCv8iascSSYu5B+Q+8ceOAXbnpRi4zP9e9fpH9H2TUPSU1LLW117dw4MenOhGYm12j08UNjexpdXIv2HGKGg62msEBNyjr5hkkfLgQEAslos+dgEs+/6pstIslhxiRUbVGclI7IK4/U85gE6hajdsZUZfTDXt7a0oa5YD4e3Nmwhi5zwnsUekX2m0V38dltix6aYCK5fnSAL56fL2DL1XU5Wo/U8MnRHhDH+j8nOKan1RNxLMuuU/F3mh0qUjc+25vBcwcAkZCMsLyAwsg2iL8tRpdcHrsqht8kSgAjyf0Yo73VL9263Lwr6KgeBP2wn5HoHUs6XC6+O4OKBoDCKwE7NTmfF8+zxt3ldP0xf4ho/MghzCZ4qIvfCcmLyqpIShZKIxTnTyekVFy2LFPX9qydywyEAY4ANkr03zdU5BHk2Qo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5600.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(66476007)(66556008)(7416002)(8936002)(7406005)(6666004)(6512007)(6506007)(66946007)(558084003)(31696002)(4326008)(8676002)(6862004)(86362001)(5660300002)(53546011)(26005)(31686004)(37006003)(316002)(186003)(83380400001)(2616005)(508600001)(38100700002)(6486002)(54906003)(2906002)(36756003)(6636002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NFNjM0pWMnY3Y2lPcW85V3RyZmdQcStqbElsTnZLb3ZFNnV3UFBqQVEwN3Bs?=
+ =?utf-8?B?eTZ4VEJtQkk0bHVYV1F2SWlSNGRXOTF1SVB3WkZZcEdoMW9OTVZ5aXh3allm?=
+ =?utf-8?B?ZTRudEFmdnJuVitUMUFPTTNsZ1NicENKUVJ4QzZ0RFgxSmhHbTIwZm93QTBi?=
+ =?utf-8?B?QVhoNTkvdHZ5bjkwLzVKZFV1RkJPcThUUlZQb3FzSTcyTHRDbUpVMzdsRnFF?=
+ =?utf-8?B?NDlIUUNTRGlzS3VqWnhSc1pUYURjN0lzTHQ4OHh6dnZXcnVFM1pwbGhwYXd4?=
+ =?utf-8?B?K0JGRUF2UGNtS0psT003YXo3OXQ2anpXZ1RzazdBd2Z4cnZqVXJHbThXdnQ2?=
+ =?utf-8?B?ZndxZGsxeWxzME9wT1ZWM29VdHhmaXBhODZhelZpZ0IvTDFCbGFSTXdLMUNj?=
+ =?utf-8?B?bEVRN2JsRVV1OUliVVNLQlBxTTA4dlNxREtYK013d2NieThLbWtvc2FwMWYz?=
+ =?utf-8?B?RlJLYlNpV1E5cWRKamRodWx4cTdyQStLTWpMZlJ0UVNId1BndGxHdnkvTEZN?=
+ =?utf-8?B?d09PQkYrS29zU0Z2QkFJRTNXNGI3a1FwR0pReGZDQUZOLzdGMmZWYWlUYzVE?=
+ =?utf-8?B?aGkzSVdnWUpiUkVVVjBVYUd4UzhTWFZBM2V4Y3R3OVNVR2c0Z25Nd2UrSFYx?=
+ =?utf-8?B?UFlPZURmVUxSZXIrZkpqeDBxSE14QUJMUTlsT3ZRcUs5RHNOT0kwTE0rVWVl?=
+ =?utf-8?B?SXh0ck1ic3RlSytaWDVEN1ViZTJPM3JMbmhxUHlvZFNPOFdmd1FuaU11TS9m?=
+ =?utf-8?B?SVpMczg4RC9mK0VVY1hreTB2WDNTM3NtVWYzaVJzVDVuN2JUN2pxQ0tVTWNy?=
+ =?utf-8?B?eFVUNE8xaWtEKzNrNkNhN0dBMXBpQm1IS3JmT3J6ZElaSjMyZUdGUUl4ejFH?=
+ =?utf-8?B?RTI1TThVQ1BldVBZVHBrMGdsNE1aTE51bnA0enJjT1NQekZ0dTZ6eHR4Tkox?=
+ =?utf-8?B?UmQxQkpTUytUZVFjNmNsWFlISjE4YnQvVGxSL0hvcTVRbFd3UFBhUUJHNkxO?=
+ =?utf-8?B?amh2cllJWmFpQnJsQ3ZESVV4UTVqQUN5dURScDFoRmpNM1VrVjU3U1pFbnNU?=
+ =?utf-8?B?U3NkQ2k3WUVNVnpGeXdsRGtIZGJRT1RQd05DZkZpb2RxYzlLNXhTUFYvZHp2?=
+ =?utf-8?B?djRucEczYnlpWm42eDM1UmN5dFdFVzYrdlpEKzN2SW1vUGtkNUR6R01zdEho?=
+ =?utf-8?B?V3ByeDMrbUdoc0UwTmp3UmxRTjRicWpRc0QvMVN0TzlibitDQjRXWktPNmRU?=
+ =?utf-8?B?d1I3R3VFcW13SFQzc25DTCtSUVZOeEpQRUM0dGhwcndoUzR0eEtHamlheXJC?=
+ =?utf-8?B?N0tuSkVjWTFRcVZKc2dGN3AxVkpBNWkzQXRZTkR0dWxBNGZMdlZtYldnSmg5?=
+ =?utf-8?B?ZnU3TFprVnZuZE1vNFB3MVFJVWYwR2dLM041QnBuUEExUDNuVUszdHE2OUk0?=
+ =?utf-8?B?cXFYZGs1Tks5RFJ2RmdDYWJscXhLN2krWDNwc3hpQkxmTnQxcG1WcVk0OWhj?=
+ =?utf-8?B?THA1WUMwMFlhRmE4T2U3TzRSQTNYVHJlQUJnb1F3VEtSSFRoMk8yeGVvUUp2?=
+ =?utf-8?B?ZDQ0ZldjRWNtQmtQTlBZZ2c3NWJzMTBqanJ4aUlDdUNBbUFqVnZYY0JMbWsz?=
+ =?utf-8?B?K2pOY2NCaTU0bTRtOVVKOEFXcVI5NXRvVVFwbW0wWTlXRUVPWW1BTkdFNFk2?=
+ =?utf-8?B?TGZwOU5SWTFqR00wV1Z3TE5EUVhNMmdlbm9OU2d6ZloxUUg5RU9rendrUXFQ?=
+ =?utf-8?B?VzZzQXhmWnpiK0dMekNvc3ZJaStQUDV1ZytYTUZsQ2hhVUpKRFgvb1Bsc0Ji?=
+ =?utf-8?B?dTZDSm4rYXBzMUJDdXZQdFlXM3RPUFNrbkFzeHJjTVVkV05FblRpcUdpVVlI?=
+ =?utf-8?B?S2tHRHNLZmlJbG0xUHZ0REU2dVBzWGloNWhzU1BXeHRvM242SEpxYmZUZFU3?=
+ =?utf-8?Q?j968dqETLSwE3RJRtkntiRqD+PcCrqNF?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccf1c0e1-d7e0-4cbd-f674-08da034c9b62
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5600.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2022 10:47:59.3510
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uZx5z2nctVZyeUeUEhFpfh0eeSk4mMu0ciTMoVUfZfltieVRWuKSmxYEnyiF0c1qSXgLVgCrGjrwux4em2gWyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3489
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,494 +163,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The gnttab_end_foreign_access() family of functions is taking a
-"readonly" parameter, which isn't used. Remove it from the function
-parameters.
+On 11.03.2022 11:34, Juergen Gross wrote:
+> The gnttab_end_foreign_access() family of functions is taking a
+> "readonly" parameter, which isn't used. Remove it from the function
+> parameters.
+> 
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- drivers/block/xen-blkfront.c                |  8 ++---
- drivers/char/tpm/xen-tpmfront.c             |  2 +-
- drivers/gpu/drm/xen/xen_drm_front_evtchnl.c |  2 +-
- drivers/input/misc/xen-kbdfront.c           |  4 +--
- drivers/net/xen-netfront.c                  | 13 ++++---
- drivers/pci/xen-pcifront.c                  |  2 +-
- drivers/scsi/xen-scsifront.c                |  4 +--
- drivers/usb/host/xen-hcd.c                  |  4 +--
- drivers/xen/gntalloc.c                      |  2 +-
- drivers/xen/gntdev-dmabuf.c                 |  2 +-
- drivers/xen/grant-table.c                   | 38 +++++++++------------
- drivers/xen/pvcalls-front.c                 |  6 ++--
- drivers/xen/xen-front-pgdir-shbuf.c         |  3 +-
- include/xen/grant_table.h                   |  5 ++-
- net/9p/trans_xen.c                          |  8 ++---
- sound/xen/xen_snd_front_evtchnl.c           |  2 +-
- 16 files changed, 48 insertions(+), 57 deletions(-)
-
-diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-index 03b5fb341e58..aa996b637d0b 100644
---- a/drivers/block/xen-blkfront.c
-+++ b/drivers/block/xen-blkfront.c
-@@ -1223,7 +1223,7 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
- 			list_del(&persistent_gnt->node);
- 			if (persistent_gnt->gref != GRANT_INVALID_REF) {
- 				gnttab_end_foreign_access(persistent_gnt->gref,
--							  0, 0UL);
-+							  0UL);
- 				rinfo->persistent_gnts_c--;
- 			}
- 			if (info->feature_persistent)
-@@ -1246,7 +1246,7 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
- 		       rinfo->shadow[i].req.u.rw.nr_segments;
- 		for (j = 0; j < segs; j++) {
- 			persistent_gnt = rinfo->shadow[i].grants_used[j];
--			gnttab_end_foreign_access(persistent_gnt->gref, 0, 0UL);
-+			gnttab_end_foreign_access(persistent_gnt->gref, 0UL);
- 			if (info->feature_persistent)
- 				__free_page(persistent_gnt->page);
- 			kfree(persistent_gnt);
-@@ -1261,7 +1261,7 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
- 
- 		for (j = 0; j < INDIRECT_GREFS(segs); j++) {
- 			persistent_gnt = rinfo->shadow[i].indirect_grants[j];
--			gnttab_end_foreign_access(persistent_gnt->gref, 0, 0UL);
-+			gnttab_end_foreign_access(persistent_gnt->gref, 0UL);
- 			__free_page(persistent_gnt->page);
- 			kfree(persistent_gnt);
- 		}
-@@ -1284,7 +1284,7 @@ static void blkif_free_ring(struct blkfront_ring_info *rinfo)
- 	/* Free resources associated with old device channel. */
- 	for (i = 0; i < info->nr_ring_pages; i++) {
- 		if (rinfo->ring_ref[i] != GRANT_INVALID_REF) {
--			gnttab_end_foreign_access(rinfo->ring_ref[i], 0, 0);
-+			gnttab_end_foreign_access(rinfo->ring_ref[i], 0);
- 			rinfo->ring_ref[i] = GRANT_INVALID_REF;
- 		}
- 	}
-diff --git a/drivers/char/tpm/xen-tpmfront.c b/drivers/char/tpm/xen-tpmfront.c
-index da5b30771418..ad0675f23e6e 100644
---- a/drivers/char/tpm/xen-tpmfront.c
-+++ b/drivers/char/tpm/xen-tpmfront.c
-@@ -332,7 +332,7 @@ static void ring_free(struct tpm_private *priv)
- 		return;
- 
- 	if (priv->ring_ref)
--		gnttab_end_foreign_access(priv->ring_ref, 0,
-+		gnttab_end_foreign_access(priv->ring_ref,
- 				(unsigned long)priv->shr);
- 	else
- 		free_page((unsigned long)priv->shr);
-diff --git a/drivers/gpu/drm/xen/xen_drm_front_evtchnl.c b/drivers/gpu/drm/xen/xen_drm_front_evtchnl.c
-index e10d95dddb99..08b526eeec16 100644
---- a/drivers/gpu/drm/xen/xen_drm_front_evtchnl.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front_evtchnl.c
-@@ -148,7 +148,7 @@ static void evtchnl_free(struct xen_drm_front_info *front_info,
- 
- 	/* end access and free the page */
- 	if (evtchnl->gref != GRANT_INVALID_REF)
--		gnttab_end_foreign_access(evtchnl->gref, 0, page);
-+		gnttab_end_foreign_access(evtchnl->gref, page);
- 
- 	memset(evtchnl, 0, sizeof(*evtchnl));
- }
-diff --git a/drivers/input/misc/xen-kbdfront.c b/drivers/input/misc/xen-kbdfront.c
-index 3d17a0b3fe51..1fc9b3e7007f 100644
---- a/drivers/input/misc/xen-kbdfront.c
-+++ b/drivers/input/misc/xen-kbdfront.c
-@@ -481,7 +481,7 @@ static int xenkbd_connect_backend(struct xenbus_device *dev,
-  error_evtchan:
- 	xenbus_free_evtchn(dev, evtchn);
-  error_grant:
--	gnttab_end_foreign_access(info->gref, 0, 0UL);
-+	gnttab_end_foreign_access(info->gref, 0UL);
- 	info->gref = -1;
- 	return ret;
- }
-@@ -492,7 +492,7 @@ static void xenkbd_disconnect_backend(struct xenkbd_info *info)
- 		unbind_from_irqhandler(info->irq, info);
- 	info->irq = -1;
- 	if (info->gref >= 0)
--		gnttab_end_foreign_access(info->gref, 0, 0UL);
-+		gnttab_end_foreign_access(info->gref, 0UL);
- 	info->gref = -1;
- }
- 
-diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
-index daa4e6106aac..e2b4a1893a13 100644
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -425,7 +425,7 @@ static bool xennet_tx_buf_gc(struct netfront_queue *queue)
- 			skb = queue->tx_skbs[id];
- 			queue->tx_skbs[id] = NULL;
- 			if (unlikely(!gnttab_end_foreign_access_ref(
--				queue->grant_tx_ref[id], GNTMAP_readonly))) {
-+				queue->grant_tx_ref[id]))) {
- 				dev_alert(dev,
- 					  "Grant still in use by backend domain\n");
- 				goto err;
-@@ -1029,7 +1029,7 @@ static int xennet_get_responses(struct netfront_queue *queue,
- 			goto next;
- 		}
- 
--		if (!gnttab_end_foreign_access_ref(ref, 0)) {
-+		if (!gnttab_end_foreign_access_ref(ref)) {
- 			dev_alert(dev,
- 				  "Grant still in use by backend domain\n");
- 			queue->info->broken = true;
-@@ -1388,7 +1388,6 @@ static void xennet_release_tx_bufs(struct netfront_queue *queue)
- 		queue->tx_skbs[i] = NULL;
- 		get_page(queue->grant_tx_page[i]);
- 		gnttab_end_foreign_access(queue->grant_tx_ref[i],
--					  GNTMAP_readonly,
- 					  (unsigned long)page_address(queue->grant_tx_page[i]));
- 		queue->grant_tx_page[i] = NULL;
- 		queue->grant_tx_ref[i] = GRANT_INVALID_REF;
-@@ -1421,7 +1420,7 @@ static void xennet_release_rx_bufs(struct netfront_queue *queue)
- 		 * foreign access is ended (which may be deferred).
- 		 */
- 		get_page(page);
--		gnttab_end_foreign_access(ref, 0,
-+		gnttab_end_foreign_access(ref,
- 					  (unsigned long)page_address(page));
- 		queue->grant_rx_ref[id] = GRANT_INVALID_REF;
- 
-@@ -1763,7 +1762,7 @@ static void xennet_end_access(int ref, void *page)
- {
- 	/* This frees the page as a side-effect */
- 	if (ref != GRANT_INVALID_REF)
--		gnttab_end_foreign_access(ref, 0, (unsigned long)page);
-+		gnttab_end_foreign_access(ref, (unsigned long)page);
- }
- 
- static void xennet_disconnect_backend(struct netfront_info *info)
-@@ -1980,14 +1979,14 @@ static int setup_netfront(struct xenbus_device *dev,
- 	 */
-  fail:
- 	if (queue->rx_ring_ref != GRANT_INVALID_REF) {
--		gnttab_end_foreign_access(queue->rx_ring_ref, 0,
-+		gnttab_end_foreign_access(queue->rx_ring_ref,
- 					  (unsigned long)rxs);
- 		queue->rx_ring_ref = GRANT_INVALID_REF;
- 	} else {
- 		free_page((unsigned long)rxs);
- 	}
- 	if (queue->tx_ring_ref != GRANT_INVALID_REF) {
--		gnttab_end_foreign_access(queue->tx_ring_ref, 0,
-+		gnttab_end_foreign_access(queue->tx_ring_ref,
- 					  (unsigned long)txs);
- 		queue->tx_ring_ref = GRANT_INVALID_REF;
- 	} else {
-diff --git a/drivers/pci/xen-pcifront.c b/drivers/pci/xen-pcifront.c
-index d2a7b9fd678b..3edc1565a27c 100644
---- a/drivers/pci/xen-pcifront.c
-+++ b/drivers/pci/xen-pcifront.c
-@@ -755,7 +755,7 @@ static void free_pdev(struct pcifront_device *pdev)
- 		xenbus_free_evtchn(pdev->xdev, pdev->evtchn);
- 
- 	if (pdev->gnt_ref != INVALID_GRANT_REF)
--		gnttab_end_foreign_access(pdev->gnt_ref, 0 /* r/w page */,
-+		gnttab_end_foreign_access(pdev->gnt_ref,
- 					  (unsigned long)pdev->sh_info);
- 	else
- 		free_page((unsigned long)pdev->sh_info);
-diff --git a/drivers/scsi/xen-scsifront.c b/drivers/scsi/xen-scsifront.c
-index 7f421600cb66..12109e4c73d4 100644
---- a/drivers/scsi/xen-scsifront.c
-+++ b/drivers/scsi/xen-scsifront.c
-@@ -757,7 +757,7 @@ static int scsifront_alloc_ring(struct vscsifrnt_info *info)
- free_irq:
- 	unbind_from_irqhandler(info->irq, info);
- free_gnttab:
--	gnttab_end_foreign_access(info->ring_ref, 0,
-+	gnttab_end_foreign_access(info->ring_ref,
- 				  (unsigned long)info->ring.sring);
- 
- 	return err;
-@@ -766,7 +766,7 @@ static int scsifront_alloc_ring(struct vscsifrnt_info *info)
- static void scsifront_free_ring(struct vscsifrnt_info *info)
- {
- 	unbind_from_irqhandler(info->irq, info);
--	gnttab_end_foreign_access(info->ring_ref, 0,
-+	gnttab_end_foreign_access(info->ring_ref,
- 				  (unsigned long)info->ring.sring);
- }
- 
-diff --git a/drivers/usb/host/xen-hcd.c b/drivers/usb/host/xen-hcd.c
-index 19b8c7ed74cb..5f4a00df4f1c 100644
---- a/drivers/usb/host/xen-hcd.c
-+++ b/drivers/usb/host/xen-hcd.c
-@@ -1075,14 +1075,14 @@ static void xenhcd_destroy_rings(struct xenhcd_info *info)
- 	info->irq = 0;
- 
- 	if (info->urb_ring_ref != GRANT_INVALID_REF) {
--		gnttab_end_foreign_access(info->urb_ring_ref, 0,
-+		gnttab_end_foreign_access(info->urb_ring_ref,
- 					  (unsigned long)info->urb_ring.sring);
- 		info->urb_ring_ref = GRANT_INVALID_REF;
- 	}
- 	info->urb_ring.sring = NULL;
- 
- 	if (info->conn_ring_ref != GRANT_INVALID_REF) {
--		gnttab_end_foreign_access(info->conn_ring_ref, 0,
-+		gnttab_end_foreign_access(info->conn_ring_ref,
- 					  (unsigned long)info->conn_ring.sring);
- 		info->conn_ring_ref = GRANT_INVALID_REF;
- 	}
-diff --git a/drivers/xen/gntalloc.c b/drivers/xen/gntalloc.c
-index edb0acd0b832..4849f94372a4 100644
---- a/drivers/xen/gntalloc.c
-+++ b/drivers/xen/gntalloc.c
-@@ -192,7 +192,7 @@ static void __del_gref(struct gntalloc_gref *gref)
- 	if (gref->gref_id) {
- 		if (gref->page) {
- 			addr = (unsigned long)page_to_virt(gref->page);
--			gnttab_end_foreign_access(gref->gref_id, 0, addr);
-+			gnttab_end_foreign_access(gref->gref_id, addr);
- 		} else
- 			gnttab_free_grant_reference(gref->gref_id);
- 	}
-diff --git a/drivers/xen/gntdev-dmabuf.c b/drivers/xen/gntdev-dmabuf.c
-index 12e380db7f55..d5bfd7b867fc 100644
---- a/drivers/xen/gntdev-dmabuf.c
-+++ b/drivers/xen/gntdev-dmabuf.c
-@@ -533,7 +533,7 @@ static void dmabuf_imp_end_foreign_access(u32 *refs, int count)
- 
- 	for (i = 0; i < count; i++)
- 		if (refs[i] != GRANT_INVALID_REF)
--			gnttab_end_foreign_access(refs[i], 0, 0UL);
-+			gnttab_end_foreign_access(refs[i], 0UL);
- }
- 
- static void dmabuf_imp_free_storage(struct gntdev_dmabuf *gntdev_dmabuf)
-diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
-index 8963af8ec764..8ccccace2a4f 100644
---- a/drivers/xen/grant-table.c
-+++ b/drivers/xen/grant-table.c
-@@ -118,13 +118,12 @@ struct gnttab_ops {
- 			     unsigned long frame, unsigned flags);
- 	/*
- 	 * Stop granting a grant entry to domain for accessing. Ref parameter is
--	 * reference of a grant entry whose grant access will be stopped,
--	 * readonly is not in use in this function. If the grant entry is
--	 * currently mapped for reading or writing, just return failure(==0)
--	 * directly and don't tear down the grant access. Otherwise, stop grant
--	 * access for this entry and return success(==1).
-+	 * reference of a grant entry whose grant access will be stopped.
-+	 * If the grant entry is currently mapped for reading or writing, just
-+	 * return failure(==0) directly and don't tear down the grant access.
-+	 * Otherwise, stop grant access for this entry and return success(==1).
- 	 */
--	int (*end_foreign_access_ref)(grant_ref_t ref, int readonly);
-+	int (*end_foreign_access_ref)(grant_ref_t ref);
- 	/*
- 	 * Read the frame number related to a given grant reference.
- 	 */
-@@ -270,7 +269,7 @@ int gnttab_grant_foreign_access(domid_t domid, unsigned long frame,
- }
- EXPORT_SYMBOL_GPL(gnttab_grant_foreign_access);
- 
--static int gnttab_end_foreign_access_ref_v1(grant_ref_t ref, int readonly)
-+static int gnttab_end_foreign_access_ref_v1(grant_ref_t ref)
- {
- 	u16 flags, nflags;
- 	u16 *pflags;
-@@ -286,7 +285,7 @@ static int gnttab_end_foreign_access_ref_v1(grant_ref_t ref, int readonly)
- 	return 1;
- }
- 
--static int gnttab_end_foreign_access_ref_v2(grant_ref_t ref, int readonly)
-+static int gnttab_end_foreign_access_ref_v2(grant_ref_t ref)
- {
- 	gnttab_shared.v2[ref].hdr.flags = 0;
- 	mb();	/* Concurrent access by hypervisor. */
-@@ -309,14 +308,14 @@ static int gnttab_end_foreign_access_ref_v2(grant_ref_t ref, int readonly)
- 	return 1;
- }
- 
--static inline int _gnttab_end_foreign_access_ref(grant_ref_t ref, int readonly)
-+static inline int _gnttab_end_foreign_access_ref(grant_ref_t ref)
- {
--	return gnttab_interface->end_foreign_access_ref(ref, readonly);
-+	return gnttab_interface->end_foreign_access_ref(ref);
- }
- 
--int gnttab_end_foreign_access_ref(grant_ref_t ref, int readonly)
-+int gnttab_end_foreign_access_ref(grant_ref_t ref)
- {
--	if (_gnttab_end_foreign_access_ref(ref, readonly))
-+	if (_gnttab_end_foreign_access_ref(ref))
- 		return 1;
- 	pr_warn("WARNING: g.e. %#x still in use!\n", ref);
- 	return 0;
-@@ -336,7 +335,6 @@ static unsigned long gnttab_read_frame_v2(grant_ref_t ref)
- struct deferred_entry {
- 	struct list_head list;
- 	grant_ref_t ref;
--	bool ro;
- 	uint16_t warn_delay;
- 	struct page *page;
- };
-@@ -360,7 +358,7 @@ static void gnttab_handle_deferred(struct timer_list *unused)
- 			break;
- 		list_del(&entry->list);
- 		spin_unlock_irqrestore(&gnttab_list_lock, flags);
--		if (_gnttab_end_foreign_access_ref(entry->ref, entry->ro)) {
-+		if (_gnttab_end_foreign_access_ref(entry->ref)) {
- 			put_free_entry(entry->ref);
- 			pr_debug("freeing g.e. %#x (pfn %#lx)\n",
- 				 entry->ref, page_to_pfn(entry->page));
-@@ -386,8 +384,7 @@ static void gnttab_handle_deferred(struct timer_list *unused)
- 	spin_unlock_irqrestore(&gnttab_list_lock, flags);
- }
- 
--static void gnttab_add_deferred(grant_ref_t ref, bool readonly,
--				struct page *page)
-+static void gnttab_add_deferred(grant_ref_t ref, struct page *page)
- {
- 	struct deferred_entry *entry;
- 	gfp_t gfp = (in_atomic() || irqs_disabled()) ? GFP_ATOMIC : GFP_KERNEL;
-@@ -405,7 +402,6 @@ static void gnttab_add_deferred(grant_ref_t ref, bool readonly,
- 		unsigned long flags;
- 
- 		entry->ref = ref;
--		entry->ro = readonly;
- 		entry->page = page;
- 		entry->warn_delay = 60;
- 		spin_lock_irqsave(&gnttab_list_lock, flags);
-@@ -423,7 +419,7 @@ static void gnttab_add_deferred(grant_ref_t ref, bool readonly,
- 
- int gnttab_try_end_foreign_access(grant_ref_t ref)
- {
--	int ret = _gnttab_end_foreign_access_ref(ref, 0);
-+	int ret = _gnttab_end_foreign_access_ref(ref);
- 
- 	if (ret)
- 		put_free_entry(ref);
-@@ -432,15 +428,13 @@ int gnttab_try_end_foreign_access(grant_ref_t ref)
- }
- EXPORT_SYMBOL_GPL(gnttab_try_end_foreign_access);
- 
--void gnttab_end_foreign_access(grant_ref_t ref, int readonly,
--			       unsigned long page)
-+void gnttab_end_foreign_access(grant_ref_t ref, unsigned long page)
- {
- 	if (gnttab_try_end_foreign_access(ref)) {
- 		if (page != 0)
- 			put_page(virt_to_page(page));
- 	} else
--		gnttab_add_deferred(ref, readonly,
--				    page ? virt_to_page(page) : NULL);
-+		gnttab_add_deferred(ref, page ? virt_to_page(page) : NULL);
- }
- EXPORT_SYMBOL_GPL(gnttab_end_foreign_access);
- 
-diff --git a/drivers/xen/pvcalls-front.c b/drivers/xen/pvcalls-front.c
-index 0ca351f30a6d..e254ed19488f 100644
---- a/drivers/xen/pvcalls-front.c
-+++ b/drivers/xen/pvcalls-front.c
-@@ -238,8 +238,8 @@ static void pvcalls_front_free_map(struct pvcalls_bedata *bedata,
- 	spin_unlock(&bedata->socket_lock);
- 
- 	for (i = 0; i < (1 << PVCALLS_RING_ORDER); i++)
--		gnttab_end_foreign_access(map->active.ring->ref[i], 0, 0);
--	gnttab_end_foreign_access(map->active.ref, 0, 0);
-+		gnttab_end_foreign_access(map->active.ring->ref[i], 0);
-+	gnttab_end_foreign_access(map->active.ref, 0);
- 	free_page((unsigned long)map->active.ring);
- 
- 	kfree(map);
-@@ -1117,7 +1117,7 @@ static int pvcalls_front_remove(struct xenbus_device *dev)
- 		}
- 	}
- 	if (bedata->ref != -1)
--		gnttab_end_foreign_access(bedata->ref, 0, 0);
-+		gnttab_end_foreign_access(bedata->ref, 0);
- 	kfree(bedata->ring.sring);
- 	kfree(bedata);
- 	xenbus_switch_state(dev, XenbusStateClosed);
-diff --git a/drivers/xen/xen-front-pgdir-shbuf.c b/drivers/xen/xen-front-pgdir-shbuf.c
-index 81b6e13fa5ec..a959dee21134 100644
---- a/drivers/xen/xen-front-pgdir-shbuf.c
-+++ b/drivers/xen/xen-front-pgdir-shbuf.c
-@@ -143,8 +143,7 @@ void xen_front_pgdir_shbuf_free(struct xen_front_pgdir_shbuf *buf)
- 
- 		for (i = 0; i < buf->num_grefs; i++)
- 			if (buf->grefs[i] != GRANT_INVALID_REF)
--				gnttab_end_foreign_access(buf->grefs[i],
--							  0, 0UL);
-+				gnttab_end_foreign_access(buf->grefs[i], 0UL);
- 	}
- 	kfree(buf->grefs);
- 	kfree(buf->directory);
-diff --git a/include/xen/grant_table.h b/include/xen/grant_table.h
-index 9f9b1a297f0d..dfd5bf31cfb9 100644
---- a/include/xen/grant_table.h
-+++ b/include/xen/grant_table.h
-@@ -97,7 +97,7 @@ int gnttab_grant_foreign_access(domid_t domid, unsigned long frame,
-  * longer in use.  Return 1 if the grant entry was freed, 0 if it is still in
-  * use.
-  */
--int gnttab_end_foreign_access_ref(grant_ref_t ref, int readonly);
-+int gnttab_end_foreign_access_ref(grant_ref_t ref);
- 
- /*
-  * Eventually end access through the given grant reference, and once that
-@@ -114,8 +114,7 @@ int gnttab_end_foreign_access_ref(grant_ref_t ref, int readonly);
-  * gnttab_end_foreign_access() are done via alloc_pages_exact() (and freeing
-  * via free_pages_exact()) in order to avoid high order pages.
-  */
--void gnttab_end_foreign_access(grant_ref_t ref, int readonly,
--			       unsigned long page);
-+void gnttab_end_foreign_access(grant_ref_t ref, unsigned long page);
- 
- /*
-  * End access through the given grant reference, iff the grant entry is
-diff --git a/net/9p/trans_xen.c b/net/9p/trans_xen.c
-index 01f8067994d6..77883b6788cd 100644
---- a/net/9p/trans_xen.c
-+++ b/net/9p/trans_xen.c
-@@ -279,13 +279,13 @@ static void xen_9pfs_front_free(struct xen_9pfs_front_priv *priv)
- 				grant_ref_t ref;
- 
- 				ref = priv->rings[i].intf->ref[j];
--				gnttab_end_foreign_access(ref, 0, 0);
-+				gnttab_end_foreign_access(ref, 0);
- 			}
- 			free_pages_exact(priv->rings[i].data.in,
- 				   1UL << (priv->rings[i].intf->ring_order +
- 					   XEN_PAGE_SHIFT));
- 		}
--		gnttab_end_foreign_access(priv->rings[i].ref, 0, 0);
-+		gnttab_end_foreign_access(priv->rings[i].ref, 0);
- 		free_page((unsigned long)priv->rings[i].intf);
- 	}
- 	kfree(priv->rings);
-@@ -353,10 +353,10 @@ static int xen_9pfs_front_alloc_dataring(struct xenbus_device *dev,
- out:
- 	if (bytes) {
- 		for (i--; i >= 0; i--)
--			gnttab_end_foreign_access(ring->intf->ref[i], 0, 0);
-+			gnttab_end_foreign_access(ring->intf->ref[i], 0);
- 		free_pages_exact(bytes, 1UL << (order + XEN_PAGE_SHIFT));
- 	}
--	gnttab_end_foreign_access(ring->ref, 0, 0);
-+	gnttab_end_foreign_access(ring->ref, 0);
- 	free_page((unsigned long)ring->intf);
- 	return ret;
- }
-diff --git a/sound/xen/xen_snd_front_evtchnl.c b/sound/xen/xen_snd_front_evtchnl.c
-index 29e0f0ea67eb..ecbc294fc59a 100644
---- a/sound/xen/xen_snd_front_evtchnl.c
-+++ b/sound/xen/xen_snd_front_evtchnl.c
-@@ -168,7 +168,7 @@ static void evtchnl_free(struct xen_snd_front_info *front_info,
- 
- 	/* End access and free the page. */
- 	if (channel->gref != GRANT_INVALID_REF)
--		gnttab_end_foreign_access(channel->gref, 0, page);
-+		gnttab_end_foreign_access(channel->gref, page);
- 	else
- 		free_page(page);
- 
--- 
-2.34.1
+Reviewed-by: Jan Beulich <jbeulich@suse.com>
 
