@@ -2,123 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C0B24D68BF
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 19:51:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 469A04D68C2
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 19:52:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243182AbiCKSw7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 13:52:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50084 "EHLO
+        id S1350999AbiCKSxx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 13:53:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243689AbiCKSw6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 13:52:58 -0500
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2058.outbound.protection.outlook.com [40.107.220.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FEF71C60C9;
-        Fri, 11 Mar 2022 10:51:54 -0800 (PST)
+        with ESMTP id S1350246AbiCKSxw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 13:53:52 -0500
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61C7C48E7E;
+        Fri, 11 Mar 2022 10:52:48 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=POIeZAGFFBvbyCJ7IMPLWy/b7pLzqHGFzu3MPeRkPH/SP3lzH0I0ZXbtdR7nhjSfUxBlhiRw5I7WgWUoRtHbJCbRgRaJ/MgYoWVNgorafd9RE2seUWLdK3++oHqNiPwbDFjr4MpLaCncof317vNml28Lr4sCm1pveIflhiOc8LTqXq77lAk5NU3jg1x67pWIafdWY5Awk4X/PnA0CNvCM8hERVWl7A12p11RwQwGQwdoTFqPX6l7GKmTlXEegmhqtfQMRIqEu7HCFT9uJLB7eG/vJHrACkMFSI3XQYo6KPqH8IdmE2iPxJqTnUqpDMdTpRE9OQxfLDu9JYUfPCJYQg==
+ b=muHvN0I2dFsW/qy/1fFz3dzLsvBqyAUW7FprjeqFih0gBO912MQqGs+I9y3JbD5Kk17VQqzXeX4Z+ucbNN3WKEfqO0hvAKrKgHN5109xpbMH88W5nNRX4YhmWhXsRrEcf2dIJYEK1cPaiu8MSJjDTQLS8cDaT+rSMtANFHbqO9ysDO0VWZJcBv8qX76AhCVcWOiiGZLq4NXq4cryFYTpwl6AAVkmSvW4nsGxYWYMKnGdaKxho0h/9P8czhrZZVewlNrH6rIQ2RiitnM1SO37DhDicaTReL8Xuo2y0BSXhC0cjHBDjMdUgRMtr2nYPGO/w0I7YfDPMq128LhP+phWXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pi2LyeKl+5vn7MCTTOmyHRP3mnili9WnozYcr7nn6Xg=;
- b=kqrKy9vqqLBFom01d9Oz5Mwx+g3pc3ZOGHW+UE4cDm65Jxotn1kgK8kIYKAP6a8nafks/w1v73MEEZQNWVnH7d1iuK5PQVduSQFYnBkdDI/F0Jn956hPZWoSv9xa0NSxf5iK5YUpkp7/jrOnpgKWJHvz1eU5Lq5kznkbzj4tf5cf12TKdfquHhvbe6d9DDAxd5pbhawBLfJd05+J6zMq9nQM9fmsewirarAV/BahqMFJxOryDcsjErMYHKZJfovZj2+7jUZ26Dh34tw1vJvSQVGmR74Lib9q/+1IXissf+PANkBuF2RVmOPAM7Nx4H+3N+yfsbzPcYFBydjTEmLKGQ==
+ bh=x59Hcv/8fwUXPprsbiC88KLNo1Y1gdEhqkagFzQto0E=;
+ b=MSDgW56JcMOSBKnOuZDpYugl5KTPLesq3aGyxs0Q5bQWaWICLpJoOBMlWHSy0O2ENr2/wGkIYenlqAlQJUos7+0MjpxQzY0tyLVn4ruEHUAqFQozsoQ26ten2MeaEi6y3jmSJcU4FerkMdkurVkcJgidDVuQbl/FLrV8X75bxVm6Tech9+KQcH+qhrCv0CvlpiSxQfs19eAIcFgH1jBukRpmQ/p5nxynCIKZI2vwrJniN+LU4fyCKrFkH52IKjAhjCeEkJelxM9GRSCUOfPCSwt40D95NMLomGjjQle3SJ4rC46ZuIt9puf30Fyt7OGC4LC7V0U2JOpQpZ5fZpXmbw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pi2LyeKl+5vn7MCTTOmyHRP3mnili9WnozYcr7nn6Xg=;
- b=tA9Fg93SvInSqbpVdHFSZarqaey9ONbxowZUyDuJn7xs2XpW/yNalZXxVbDYmKXv22yWYplOmXo8iSUbL81wpXXc3e+COG2xPqSm69guO+cih/5iiiGGx2rr5O/f4AWyjvNDmGOVnCGcC8//cEeXffVwdnSSwRwby+dsZO9Ta+8=
+ bh=x59Hcv/8fwUXPprsbiC88KLNo1Y1gdEhqkagFzQto0E=;
+ b=TidJ1VG4dcJ2XjdBE3U4KWY/IvAK51obPBaLAT2Rgkqet00XVXHLPa2yRJrcxiuG4h//HqoKu8bXXFL4/dCuLZQr5PtkTo05RSTb2/APxYXtJJbR7cZnNRXkcqQjYYG3kVtxzmiGKnLE1CYGmPaineH4vM65b/xyEe9EVYFUDUU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
- by MWHPR1201MB2526.namprd12.prod.outlook.com (2603:10b6:300:ec::7) with
+ by CH2PR12MB5564.namprd12.prod.outlook.com (2603:10b6:610:65::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.16; Fri, 11 Mar
- 2022 18:51:51 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.15; Fri, 11 Mar
+ 2022 18:52:46 +0000
 Received: from BL1PR12MB5157.namprd12.prod.outlook.com
  ([fe80::692d:9532:906b:2b08]) by BL1PR12MB5157.namprd12.prod.outlook.com
  ([fe80::692d:9532:906b:2b08%5]) with mapi id 15.20.5061.022; Fri, 11 Mar 2022
- 18:51:51 +0000
-Message-ID: <adcd2748-effb-25da-8021-cc1532308983@amd.com>
-Date:   Fri, 11 Mar 2022 12:51:45 -0600
+ 18:52:44 +0000
+Message-ID: <07e31fd8-ac26-f181-f848-290c130e5313@amd.com>
+Date:   Fri, 11 Mar 2022 12:52:37 -0600
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.6.1
 Subject: Re: [PATCH v2] PCI: ACPI: Don't blindly trust `HotPlugSupportInD3`
 Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        linux-pm@vger.kernel.org, Sanju.Mehta@amd.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20220311182305.GA311200@bhelgaas>
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Mehta, Sanju" <Sanju.Mehta@amd.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <20220310175832.1259-1-mario.limonciello@amd.com>
+ <CAJZ5v0gjPwEcq2dEE+wRr3D+w7=MTEKJoQ+x9muh_R4W-DawVw@mail.gmail.com>
+ <BL1PR12MB5157D9FDDD0FC829CDD8CFB2E20B9@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <CAJZ5v0grj=vE1wGJpMxh-Hy7=ommfFUh5hw++nmQdLVxVtCSWw@mail.gmail.com>
 From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <20220311182305.GA311200@bhelgaas>
+In-Reply-To: <CAJZ5v0grj=vE1wGJpMxh-Hy7=ommfFUh5hw++nmQdLVxVtCSWw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0019.namprd05.prod.outlook.com
- (2603:10b6:803:40::32) To BL1PR12MB5157.namprd12.prod.outlook.com
+X-ClientProxiedBy: SN4PR0501CA0025.namprd05.prod.outlook.com
+ (2603:10b6:803:40::38) To BL1PR12MB5157.namprd12.prod.outlook.com
  (2603:10b6:208:308::15)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 21238d7a-0ddd-4bc7-b56d-08da03903460
-X-MS-TrafficTypeDiagnostic: MWHPR1201MB2526:EE_
-X-Microsoft-Antispam-PRVS: <MWHPR1201MB2526FBA379A8F31F32954AC4E20C9@MWHPR1201MB2526.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 50cf1fa4-0b73-42e5-91d6-08da03905410
+X-MS-TrafficTypeDiagnostic: CH2PR12MB5564:EE_
+X-Microsoft-Antispam-PRVS: <CH2PR12MB5564FB103CB76A9697DEE929E20C9@CH2PR12MB5564.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HfD6NgH2RzOtgI+1RQnTPylE8OmQmA8d7aZ8+eZbk1DzlZZNbSn8jLfzpQ6AmLu66lxHho8LBHp3kSc529ttD4/VNDnWPRAnAGABkrBCZQWe93GIpDyzIzS09x7BkWZveKiCm+FL63hjhDe7K8yuH7MQAz4p+MymP00rk7Ya0MEsYXJX37b9BHHdivkGXcIHcYszUBke6kPorzF1hVBYyB4PKn50NaHmx7oXWaZrSIxpzjimxyUhUdNKFxeJuG722/BT98+9FQBg57SmzszUjq/DPAN4VAcU3SUdiZZ0T9P8pGEVFazK9/Q4D/anZ6Thqb4P2JAtXAhcCYc+Pb8PeKcn0zAiVVnjtUzr+BJyHsMRgB6ATUazxiwFdPAVZnEcQiQC43UtRHtccIF/Sm6yyLhF5fCkGRQnkjsbOMx502uAKa7yAdpYH2diun4sCbZAfJQuGd5T0U8cfrWrESW3IO1iH69gBNRQpxL8Os/NaL6rTrJQHnkYaUDGzM1sDFibvmKHAMZLNMpKch7NalNS86KXwqHTFfq+OpcwVzizTf3SNpbfnag43A58x06RvpcTCCjDtDXXn7Hc7DdFOotJ0f/YDE0PbUy670PA8XOfAh9G63NMJD3W5qTD7wWrp/dZY1blm3DPFNwQ6n3Mm39jIygTnql7Ls9/pNugWyC9lWutD7hrXMc2CXuzu58Uxu1j02ZMr6FOr4HkVd6skqaLBcB4RUDbjnT814nHFyRTmahcV1OKrFrNmg1uvOguivIq1kh3kyNI5T+JVX3OP/WbmeCCbwMdG3h44AQkmp1ZL9xzPOZLNMyVujx3Rrst6+FDQBB1eb12wh86v4ign5Wz8IcqvaMocrn+eTAe6hRhqEd5OS2QGnWqB+F9tm2nUyES
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(6029001)(4636009)(366004)(66556008)(86362001)(6666004)(66946007)(66476007)(186003)(6506007)(6512007)(54906003)(31696002)(4326008)(83380400001)(45080400002)(966005)(508600001)(53546011)(6486002)(31686004)(8676002)(38100700002)(6916009)(316002)(2906002)(19627235002)(2616005)(36756003)(8936002)(5660300002)(81973001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: PMPZ4zrbPlQffgGi4kVoIQlYikMsf4RhWy3LZKubP1VXjGaYUwTskxDL6Ew3fY9jglAQ9l1GV5FbTMtW4ACqtOGq2LEHBQPhkEBNxYkshPOQTlifAVEFFxcQHkkDfTd78wF0KYxlSKLbMLMnN0sG7JrHfqeq22YyWasp9qEzntQ8NT13QjiLlE48yyYJd2QHDPF1vMDmwpoq9SGBvxdx4mIozZP+RGiwjKzpJQHJc4gKUr33mMBOXfzSU4/MKLHidPB7zQlGFNSPu7Zq21i9/5/msl2V4UrFXaC/orNS0PBLevzXz0iqCWDKk9Rk7AGKLa0wTlhL3kBF2x+WajcqXX/78pc1StK8WWylg6a8paQSYTEvNnOQERORovlb4N8soWWMtEbYO8yjGYecdLDPPTQEVolBZo5UCnD3vsEB+Q4mRyvZShFUPSONN4FDK+5x/CTX3wzMWnvQZIld7ko5hM+wQ/u86/mZs7uc8FHQxQm8jvYrreZ+61b+GF/Js6ejtM9RqEfmqDZXXziJyYgDYRJlw8Puo81mNXinGszLM4VcQ0ARYUsykdAk6dFhYDfvaEkwW4hJM8lprNv/CNe4qM2/wWcyoh3wOP2qnVIeVZ5wjDoMJTSW6y13rt6/dC56ILGryKPRKd0u+yJosaMigIO5v1G55VWqrwdVwcG1AD7YPFDvP0UIUSRXJsiSXovM7dOG/YSGrvy34mgJo99xfYmzY0LOOODvurZdZ0PeAe1Yba37wE2UV/xBwP+6QA/28F43D/wDXN5PQj8RiXiEWg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(6029001)(4636009)(366004)(6916009)(5660300002)(6512007)(19627235002)(83380400001)(54906003)(6486002)(316002)(66556008)(53546011)(6506007)(4326008)(66476007)(66946007)(8676002)(6666004)(8936002)(508600001)(31696002)(86362001)(38100700002)(36756003)(186003)(2906002)(31686004)(2616005)(81973001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eFVseG8wbFRNaExtOXlOMVdVdDhWSjEzVUphM2NueGJ2K3Jza0ZLNitsOHN3?=
- =?utf-8?B?bmdxNFB5KzkxbWtsVXlHc01LS0krSHhqa3RYZCtYQjN5S0ZEVkFoRUJHYmpU?=
- =?utf-8?B?aG5CYmxhWlhIN281VUFjQ29YLzRLR0tuWFVLS1lJa2p5aVd6eCtBbDNoSklv?=
- =?utf-8?B?VUhsckNRUWZENnJNYkMwL1NWcnptQnZnVFAwelE2eGFtb00rcGlkamI0WlA2?=
- =?utf-8?B?L1ZCbTBYdGo5TUFTcWgwc1RpVzZwb3FUQlVQbTFxTXN6dHN6d2Z1QnVIK2RP?=
- =?utf-8?B?VnNjL1JDaHBrNWxKbkd5a1NTNTBSb1M4MytZWlprcEoyeTIzOWdpQUtjN0lq?=
- =?utf-8?B?Sm9ZNHNFamR0OGx2ckE2NXVEQlpXTURINzdmblFUMDQzQ0o1MHNKNVEzRjBs?=
- =?utf-8?B?VGFVVXVUeFhQcXp5aWkvdHZkL0ZzNEFPOWhkcStCYitBVklOOGVlUzEyNzBY?=
- =?utf-8?B?bjVFU1JpVTJ4aFlDSnUxR3N4QUV1NFpnMGZ5c2RkdjhuU0RZditCdTZXamlV?=
- =?utf-8?B?TElsOHNMN0tLWnY3WlRRalBDVGhqV0g3V3VpeXpidUFDNFJzOUVnZkhST2xw?=
- =?utf-8?B?akJja2cyWWFmU0pHZlVsMjliU2prRGt6cS84RVpxanpCeWd1ZURjaGN6RzFi?=
- =?utf-8?B?TEFYbElFdG5TUENDaHlWWEt5bFBBZ3dhWHpLTkFJaFhwTHRYaXpiR25LUEJD?=
- =?utf-8?B?aFZ1aXcvZlFCdExoNkdqUk15U3hBMEphMXJOV1FaSTNCSXZBNHRuc3pYcXFI?=
- =?utf-8?B?YXNRNUZoazU4YklkWGJ4WXM4Z3JLbnREaHJPdVVMRzc1N2ZGNkJXZENLeVVK?=
- =?utf-8?B?VzdteGYxakc3eVh5cTJCY0tQMURKaVY4QnpsT2NKckpWaTY4Snh0TGhrSDVy?=
- =?utf-8?B?cFNtQTFleXE5MmpNY3VZeUUzNFJQblgybFJlM0Q0QmtLN3JNTzBZdjhFUFVO?=
- =?utf-8?B?TFptR3REOXg2NHBldWExeEMwMjFKeDh2NTJUY0x6UWZEbFZSeG9NdUtnVnN1?=
- =?utf-8?B?UEFqNjZmSERQSFhOOGZnZUJwRDZWTHUwU0cycDc2dFJmVXlwWVFqN2ZEZ2M4?=
- =?utf-8?B?dlloaGZTS2pxeExOdTJTNFNiVU1CRFM3Z3JLNTU5VmpYMEZDTm9vTHJKcHlR?=
- =?utf-8?B?WUY5VnhoNWMyOUtGT1VoVXdieVk4WmxsU0lzT0todjVMUTFxMlk2ZlUyeEtp?=
- =?utf-8?B?eHZFSVpXc0FSRy92NXNFUktYUllWL0lITDIwTjBPR1hiVm1ZbEt1UkpOM0Rq?=
- =?utf-8?B?Q0VUR0FOeHdKMTBEVU9hakE1TlBCNlZkenZlRm90dlhlY1BYR2k1ZEVxUnFE?=
- =?utf-8?B?WDRhQk0zY2RheHFFK1ZSNlVpMzhMWnZacnE1S0o0UVh0U3BGa21idjBBb25y?=
- =?utf-8?B?dTZnK3l1d2hTb2VNMzdJUVdTcjZxRnVjNytWajZQRzYxcXBnVjNvN1V1U0M5?=
- =?utf-8?B?TnR1eXMvMmV3MXpVYU9scWxrQ0kwRmVzcVNrckc2UHVtRys5K1Z2eEFMRWd0?=
- =?utf-8?B?VG1XVUdNNWRxdXo5UzZpeGlVS0VKOXUySUVoSUlubUMzMDBBZ0U0OVdvbllp?=
- =?utf-8?B?a2MvMEVZQTBmS3FxdnVsRVAyNlljM0ozUkI0NURPMlpvaDlZdWN3dTlHUmVL?=
- =?utf-8?B?ZitibnIvTC9TcEE5Q3ZWWlpBSXNISVBXMlV0M3VBTHE5UFNBUmtxenZWY2xm?=
- =?utf-8?B?bitXYnNOZWZNSURMekl3NEhXVzRONzFCeXFNRUFuUkxuZ3Q1ZVBGL29yUk11?=
- =?utf-8?B?SVJuemxrTDc1VFFIakZFOXlMa29TVm1wVnBPbS9ZVGlUOHBMN002R05udC84?=
- =?utf-8?B?SjBRM2ZGVjhGVUNzYUNIdXJPT3RmUnhKdjluOUR4dDVhM0hHYXhLQTF3RHdq?=
- =?utf-8?B?ZDRlbUk4TlVLOGFHZ2c1QmdIR2hub0hGVERlMUFaYS9TUE42MUVYTThmUXdo?=
- =?utf-8?B?b2ZLQWc4SjZJK05ya2JKTjFjcURqV0hxRWZkVlEraU01SkdMVG1oL2RMaXRi?=
- =?utf-8?B?QXAwSFZ4UG55M2o4MmlnUm0zTmsra05iUmt6ejkrU3hlOFFoTjhwKzBqSVRw?=
- =?utf-8?B?S0tHRllqWmdvbVFUdmIxNTgrZld3S2pic01SN3Z5ZHN6RVdxMGlOUjZTcVUw?=
- =?utf-8?B?ZUkvZkdQelQ5aGJucTFwU1grOGVCVkcyajFDb0IrdFBqdEZkdXZrWGhGYTl4?=
- =?utf-8?B?ZUVvNFFZMld4S2xRMzQ2d1hNL240bTNhS3RjNE84Um10Q0M0a2FadklIcVRB?=
- =?utf-8?Q?ThBYmswyJP6zBpyet/CYpGQk/HyOwakIMVX9on6rbY=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WlFTQ3dvQ25xNThlNElYZjcvY1BMR1BXOURVZGYxQTJSS20rZmViQ0ZockVh?=
+ =?utf-8?B?NHl1YVZrVVp2djAzTkxEU1hXM28xV1JMRFlOcCtrZHdNcmtsUlFhQnhMdFB6?=
+ =?utf-8?B?bVVaU1oveVkrWHV2VUUvSEliaVpJNDBoVkx6UzJSN1BydGhoWUNvOWtNQmd5?=
+ =?utf-8?B?Y00wSzZUcDRTQWMwV2ViUW40RUtnSlk0a2RLZGpqUUw1cVQ1WFZtKzJiSnk0?=
+ =?utf-8?B?WjBrNTV6SXNaMG1WdDlocnV6YkM0cVhyZ0lGTmdqWUl0dzNjald1cmdpSE9R?=
+ =?utf-8?B?TmZUNE1rdTVvNCtQSTFSWnJrRi9FdTBlZXRuOFIydkZ3ZEtGWEw4WFFSc2pP?=
+ =?utf-8?B?SC9TQWxFZjRvUFRnYjlHM25VM1FHdkpOWUUyRzY5TlhCZmJweld0NmJLNFZQ?=
+ =?utf-8?B?Vk53RnZlY2VkOVQyNEtBSVJ5V0VSWHVsZkZPQXJYK2hoTWEwTVhRc0lTUlJY?=
+ =?utf-8?B?MUtkYkduZWI1R2Z5cjNhaTRFekp6YTZrUU4vTDdxdTc0REc5OUFhNEx3TGQ2?=
+ =?utf-8?B?Zlc1Tk0wYXQ5YXdMS3J5RnZQN2sxd1lXd3pMclBHY0w1M0NvK2pXNlpnMENM?=
+ =?utf-8?B?V1JpcVAvQ1N0ZWtIbE0xM0l4d2xOa3YyT2RXd0ZLOWZXRTVIV3NpMWl0d3VE?=
+ =?utf-8?B?aGU2a3BDV3BwVUV2K0xnUFRNclM0cTJWWmt5dW1aUkF4TEg2aGo0SlVYQnF2?=
+ =?utf-8?B?bFFrVDJIQ21xM0I0enA0aWJrZXBldzJ5WmVIWG9aWmlKalVUR1VMSVBNZ1pT?=
+ =?utf-8?B?bDY3NUdXSXpoNTN0Tk1uMFZzYTNBZ0xwazFuR1pPbzBwSTBzUmJxRVVzSlJT?=
+ =?utf-8?B?dTNBcTV2V3RtRDA1U1VVamIxTy9haEw1dERFbVVER0tyaXE1RzRUTHkxaW1I?=
+ =?utf-8?B?b1BQUWg1ZkNlZFZuUDVYeGZKcGliQnhWd3dRYlZxbzVtZDd3RFFPU2JBSC9z?=
+ =?utf-8?B?azNUZEU5K1dDWXZGZlBXRUNwYW02anZuSStjNDkxTkFsSUJraGxxSGRnb2tx?=
+ =?utf-8?B?aGlxckhiSHN6SE9RdWg3UVgvL21BVm8yUkdaZnZXQm1TRnBiSmJLVlJXN09E?=
+ =?utf-8?B?d2t6QmE4Tk1FakVZNzNyY1JYcW41ZkcxRllPTzA3TzhUWXlwWUxpVUhQRWNi?=
+ =?utf-8?B?ZU5IUzFRUDZpOVNOZ3Q1OHdxMjl6c3RhM0ZqQTR3R3JsaFg2R3RLUFFhWlFW?=
+ =?utf-8?B?ZkozU0I1NEhmMVNnb0h1a0lqV3B2MFdTVi90RjcwYUtNSjZmNkxVNm9tWmtk?=
+ =?utf-8?B?MHFiNUlBdlFOVUlqQUxUaEU2dVZETTdYSGdqdjhWeTRaVUE3RVcxLzZtaFht?=
+ =?utf-8?B?VTA3NHcycEFkcTdhV1c4di83M015SGdtNXJLQzFjMFhnZHVnNFNuRnN4Ky9X?=
+ =?utf-8?B?WDJ2MVdTT2VBbHhsZDhmNEFvMnExeW1YNnMvTjBOaUh3dkNxenhldUE1Q2xF?=
+ =?utf-8?B?bUQ0ZFNjbytDRmZGYWp0VXArZTRibWVSQkwrbzI1WUFzZ04vOTFRNjQwRkRK?=
+ =?utf-8?B?Uml3cTBNVmtLYVhtN0xNNWZtelFXSWJ1RGdKU05SL1pwRnk3Y1Fpd3UrMDZB?=
+ =?utf-8?B?bjhpWFFoVHFma3lVVTJWN2JDdmRya210dDZTOTJYV3A0ZVU3RDJ0elZ3L1hF?=
+ =?utf-8?B?eEZkK2JQYmVYUXZRZGdmWUo0dXJWUFduRUxNd3BJUEkrN1J5eElwaDh5OVp1?=
+ =?utf-8?B?V0tMMFM5cElBWTB2aTNoZ2tpR0poMjNvdzRvUU1wMllDOXdqZEsraW54UHk4?=
+ =?utf-8?B?Y1Vmbi9uM0gxMXhTTXR5RVdid29USkFrbXQ1MmJoWk16bGRiV2x3Tmt3ZzV4?=
+ =?utf-8?B?UXBWa0V4MGh1cmNGWUpzZGpvd1A0TEl4Z1pPM0Y5eUNLRDE4VGs5R1FVMGlj?=
+ =?utf-8?B?YU9RQytiUGdWdk5WR3g5bGk5a1hKWmRIa1d5dVh3TWdYTUkvZ0FKUExWMUpZ?=
+ =?utf-8?B?Q1ZrVmlMUHBySUhzdnA0S0h2RUZOYm96MzV1NzYycHB6a2p3c3dOcG9FaGJ6?=
+ =?utf-8?B?VDY5dkxBUktzNjRaOTBHckRYT2pOMFRVSHBSaHNCN2tpN1E1TnNxaFR0K1Na?=
+ =?utf-8?B?UXBBN1pzejZzRWl1RWxDcFU2a2hzUFJOZTdhS1YyTzB0TmlFL3BKMFRRTUw5?=
+ =?utf-8?B?S1d3b0hndnV6RW9zTWNSVlVwSzdIWGpEc3BHS0JWRkh2RVBNd3FZTjYvVzNh?=
+ =?utf-8?B?Z1IzV0VMOGNteUEzOHgxYTk4YkxneUxzVGhRT3hwZy82c1ltaWxlaTdqdy93?=
+ =?utf-8?Q?v37MFtVEdWogBX5KpSg30W+oUgTgdegjNhiz/VWtd8=3D?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21238d7a-0ddd-4bc7-b56d-08da03903460
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50cf1fa4-0b73-42e5-91d6-08da03905410
 X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2022 18:51:51.7752
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2022 18:52:44.8298
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rgvEXxxEJNnq2/oxwX1qYOKpGMV1VKV8HYZbWErAj6UYCrbJ3ZgvIyBRHCozWj1Y47N8gFbhUr9+lauLKQzXtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1201MB2526
+X-MS-Exchange-CrossTenant-UserPrincipalName: Lrlwf459qrkZNdFxM1emZgzvs1SdxWJ52zUJIYr+iXgCJnUvNQm10xazuvP+wZPjoSUTGWPgr9YsZ5Wmw6WiPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB5564
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -129,116 +132,79 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
-
-On 3/11/2022 12:23, Bjorn Helgaas wrote:
-> The subject convention in drivers/pci would be "PCI/ACPI:"
-> 
-> But more importantly, please turn the subject from a non-specific
-> negative ("Don't blindly trust") into a more specific *positive*,
-> e.g.,
-> 
->    PCI/ACPI: Assume HotPlugSupportInD3 only if device can wake from D3
-> 
-> On Thu, Mar 10, 2022 at 11:58:32AM -0600, Mario Limonciello wrote:
->> The `_DSD` `HotPlugSupportInD3` is supposed to indicate the ability for a
->> bridge to be able to wakeup from D3.
-> 
-> Thanks for the Microsoft URL.  To make this commit log self-contained
-> and guard against the link becoming stale, can you quote the relevant
-> text here, since it's not long:
-> 
->    This ACPI object [HotPlugSupportInD3] enables the operating system
->    to identify and power manage PCIe Root Ports that are capable of
->    handling hot plug events while in D3 state.
-> 
->> This however is static information in the ACPI table at BIOS compilation
->> time and on some platforms it's possible to configure the firmware at boot
->> up such that `_S0W` will not return "0" indicating the inability to wake
->> up the device from D3.
-> 
-> Please include the spec reference (ACPI v6.4, sec 7.3.20) in case the
-> URL below becomes stale, and again, the relevant text is barely longer
-> than the URL and could be included:
-> 
->    7.3.20 _S0W (S0 Device Wake State)
-> 
->    This object evaluates to an integer that conveys to OSPM the deepest
->    D-state supported by this device in the S0 system sleeping state
->    where the device can wake itself.
-> 
-> I guess the argument is that we can put a Root Port into D3 only if
-> _S0W indicates that it can wake from D3 *and* it has the
-> HotPlugSupportInD3 property?
-> 
-> I'm naive about ACPI sleep/wake, but that does sound plausible.
-
-Yes, thanks I will clarify the commit message to your suggestions in v3.
-
-> 
-> But the patch doesn't say anything about _S0W, so we need to somehow
-> connect the dots there.
-
-Yes, per Rafael's suggestions I will be adding a comment about this 
-situation inline with the code for v3.
-
-> 
->> To fix these situations explicitly check that the ACPI device has a GPE
->> allowing the device to generate wakeup signals handled by the platform
->> in `acpi_pci_bridge_d3`.
-> 
-> acpi_pci_bridge_d3()
-> 
-> Would be good to say what "these situations" are.  I guess this fixes
-> a bug, so let's outline what that bug is, what the symptoms are, who
-> reported and tested it, etc.
-> 
->> This changes aligns the handling of the situation the same as Windows 10
->> and Windows 11 both do as well.
-> 
-> s/changes/change/
-> 
-> Sentence also needs a little polishing: "aligns ... both do as well"
-> doesn't quite flow.
-
-OK
-> 
-> Does this make things work like Windows 10/11 from a user's point of
-> view, or have you somehow confirmed that Windows actually checks _S0W
-> and HotPlugSupportInD3 in the same way?
-
-We checked with BIOS debug logs and Windows does evaluate _S0W during 
-startup and specifically modifying _S0W return value alone will cause 
-Windows to not let the port into D3.
-
-> 
->> Link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fuefi.org%2Fhtmlspecs%2FACPI_Spec_6_4_html%2F07_Power_and_Performance_Mgmt%2Fdevice-power-management-objects.html%3Fhighlight%3Ds0w%23s0w-s0-device-wake-state&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7C94e638619b754591688b08da038c323e%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637826197941955260%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=sKq3X70W1mmKprMKD6oueDQVET2OMNosWmSddjS1Cho%3D&amp;reserved=0
->> Link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.microsoft.com%2Fen-us%2Fwindows-hardware%2Fdrivers%2Fpci%2Fdsd-for-pcie-root-ports%23identifying-pcie-root-ports-supporting-hot-plug-in-d3&amp;data=04%7C01%7Cmario.limonciello%40amd.com%7C94e638619b754591688b08da038c323e%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637826197941955260%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=oKvNC3MOVNehzpR0O7Jg2bTfJeYHu5GX2v%2FQ%2B0dvKlg%3D&amp;reserved=0
->> Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
->> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->> v1->v2:
->>   * Add Mika's tag
->>   * Update commit message for Rafael's suggestions
->>   drivers/pci/pci-acpi.c | 3 +++
->>   1 file changed, 3 insertions(+)
+On 3/11/2022 10:05, Rafael J. Wysocki wrote:
+> On Thu, Mar 10, 2022 at 9:13 PM Limonciello, Mario
+> <Mario.Limonciello@amd.com> wrote:
 >>
->> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
->> index a42dbf448860..9f8f55ed09d9 100644
->> --- a/drivers/pci/pci-acpi.c
->> +++ b/drivers/pci/pci-acpi.c
->> @@ -999,6 +999,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->>   	if (!adev)
->>   		return false;
->>   
->> +	if (!adev->wakeup.flags.valid)
->> +		return false;
->> +
->>   	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
->>   				   ACPI_TYPE_INTEGER, &obj) < 0)
->>   		return false;
->> -- 
->> 2.34.1
+>> [Public]
 >>
+>>>> To fix these situations explicitly check that the ACPI device has a GPE
+>>>> allowing the device to generate wakeup signals handled by the platform
+>>>> in `acpi_pci_bridge_d3`.
+>>>
+>>> Which may be orthogonal to the _S0W return value mentioned above.
+>>>
+>>> Also, I'm not quite sure why acpi_pci_bridge_d3() should require the
+>>> root port to have a wake GPE associated with it as an indication that
+>>> the hierarchy below it can be put into D3cold.
+>>
+>> The reason that brought me down the path in this patch was actually
+>> acpi_dev_pm_get_state.  _S0W isn't actually evaluated unless
+>> adev->wakeup.flags.valid is set.
+> 
+> That's true, but it is unclear how this is related to whether or not a
+> given PCIe port can handle D3cold.  But see below.
+> 
+>>
+>>>
+>>>>
+>>>> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+>>>> index a42dbf448860..9f8f55ed09d9 100644
+>>>> --- a/drivers/pci/pci-acpi.c
+>>>> +++ b/drivers/pci/pci-acpi.c
+>>>> @@ -999,6 +999,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>>>>          if (!adev)
+>>>>                  return false;
+>>>>
+>>>> +       if (!adev->wakeup.flags.valid)
+>>>> +               return false;
+>>>
+>>> Minor nit: the two checks above could be combined.
+>>
+>> OK if we stick to this approach I'll do that.
+>>
+>>>
+>>> Also I would add a comment explaining why exactly wakeup.flags.valid
+>>> is checked here, because I can imagine a case in which the wakeup
+>>> signaling capability is irrelevant for whether or not the given port
+>>> can handle D3cold.
+>>
+>> Specifically a case that it's a hotplug bridge that has HotPlugSupportInD3
+>> though?  In practice I've only seen that in use on USB4 and Thunderbolt
+>> bridges "so far".
+>>
+>> I haven't tried yet but I would think directly evaluating _S0W at this time
+>> seems it should also work and would match closer to my original intent
+>> of the patch.  Would you prefer that?
+> 
+> I guess, but I'm not sure, that you are trying to kind of validate
+> HotPlugSupportInD3 by checking if the root port in question actually
+> can signal wakeup via ACPI and if it cannot, assume that the flag was
+> set by mistake and so the bridge should not be assumed to be able to
+> handle D3cold.
+> 
+> That is not unreasonable, but in that case you need to check
+> wakeup.flags.valid first and then _S0W too, because it can return 0
+> even if the "valid" flag is set.  And explain in a comment why this is
+> done.
+
+OK I'll make these changes and check the situation again.
+
+> 
+>>>
+>>>> +
+>>>>          if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
+>>>>                                     ACPI_TYPE_INTEGER, &obj) < 0)
+>>>>                  return false;
+>>>> --
 
