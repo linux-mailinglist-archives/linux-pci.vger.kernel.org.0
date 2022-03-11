@@ -2,75 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F24624D6832
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 18:58:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FE534D6866
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 19:23:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350481AbiCKR7q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 12:59:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
+        id S240239AbiCKSYN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 13:24:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343712AbiCKR7p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 12:59:45 -0500
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E28154D27
-        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 09:58:39 -0800 (PST)
-Received: by mail-pg1-x535.google.com with SMTP id z4so8038555pgh.12
-        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 09:58:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Dm1vOpXvIp9l8e+VkjRPvyaqUaFEE0HBNnHCWOy95E8=;
-        b=pSZA0K1AzBAfbo+/3joVYCkvXL11i7b8wOqI7fIv3y2s5l7cnC49HUacRa4MitX6Jq
-         2EVFDYRKLYkIk8RVFSU+OT/VXpEYk7CsNwmbm0OqIbfbx9bfV5LrAHWKViNxNFvr2VZt
-         JgdCvdTKhF6GiYDsBW4HnQy8ZyduZooYm5V4IJdvdTugTBhsPJVhaGvLobMBM3c8zvOH
-         IcG9XzFAdrfAYnbb4NSw/gpqSmfF5+wd2GkatLcA6uxEzP7w/Ere4P/b0HG1BGp+VIa/
-         VXwq9NWPVKMmAyKZPSvr9DCoBBFE/FcLftYr7+w8UXbUh/mefqomGMfAlfejTonGvK1N
-         EheQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Dm1vOpXvIp9l8e+VkjRPvyaqUaFEE0HBNnHCWOy95E8=;
-        b=V0oQHPmxEr6Q79FQwSVS0BUDmBg1T/k6yQPMwU4h/+ufP7UwDFaxa6vdrb3pFwnX42
-         /qY4/ASj415v8HTd+f6agQfsx7qTpppsD2BjzrTrv0TX5ywb5KJmLNuPdMreEGn2gAJ1
-         vuynkhBh/B0zJUYCcF0tBywnQ0HVSlft/JM/lO0cBNjv5OT35vp8z9rNDJqhYvhjSseE
-         ByXuxTeYRRfKQ8e9tkCuYXPy7KwzOHFfqkoPruosndgwtPz/BzYhlYHkkUQcGnmrIyG6
-         hR/v7rEG7y46S2Qi26hlzwi/njxc7YY0+Xpq5U4OpL+Ib4YXWw68RPD+sKpsAUY0iTlS
-         31ow==
-X-Gm-Message-State: AOAM532zs/8dx2dIptVpJa7hTM3DGSMsByVLJHoEnQv61xU5SqtM9pnf
-        SgJipZLHT+oU5hQ6XeFPzeSM
-X-Google-Smtp-Source: ABdhPJzK4djpG2HG2wyuzPHVx/oJ73jhDH9QkIC8r7cYdaraSIufmd+sWxI5qW+0cygCxGy2q9yLIQ==
-X-Received: by 2002:a05:6a00:ccd:b0:4f6:f6fb:d2b with SMTP id b13-20020a056a000ccd00b004f6f6fb0d2bmr11372721pfv.59.1647021518627;
-        Fri, 11 Mar 2022 09:58:38 -0800 (PST)
-Received: from thinkpad ([117.202.191.144])
-        by smtp.gmail.com with ESMTPSA id k20-20020a056a00135400b004ecc81067b8sm12212185pfu.144.2022.03.11.09.58.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Mar 2022 09:58:38 -0800 (PST)
-Date:   Fri, 11 Mar 2022 23:28:31 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
-        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        shawnguo@kernel.org
-Subject: Re: [PATCH v4 6/8] dmaengine: dw-edma: Don't rely on the deprecated
- "direction" member
-Message-ID: <20220311175831.GD3966@thinkpad>
-References: <20220309211204.26050-1-Frank.Li@nxp.com>
- <20220309211204.26050-7-Frank.Li@nxp.com>
- <20220310172930.g7xq3txjkbwtdmbw@mobilestation>
- <20220310174159.GF4869@thinkpad>
- <20220310175225.66k6cor4afjlybew@mobilestation>
+        with ESMTP id S232605AbiCKSYN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 13:24:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6839C6812;
+        Fri, 11 Mar 2022 10:23:09 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6179661E88;
+        Fri, 11 Mar 2022 18:23:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73AFFC340E9;
+        Fri, 11 Mar 2022 18:23:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647022988;
+        bh=fZ47RO3FWjQg0fkPbefYcV7U3D5vHA7T+eWND8FfqNg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TY9T+WxPlnqPsJlkwlrFU08Z5Re9291zXUcwuq+sUIecJhSjvn0JowCYJb1s25+Ch
+         zI3I3eyL4f0+lv1pYxjgarf1Gjn6mkweAJEJlFYlmYQQr11ZduxWrdv8dLkqA9UicW
+         ly1h9XWp9qVYJLz8J3XUE6zPKqOJ35SD7uC/USypPS5afXNW5OzfCloyTss3T8Kr6j
+         SroUUMOqSoyZyE9oh9JBhLjvw++Zen6JPYXg8APn4zu2q4NwnYuj+Bqj1mmnfgrDHh
+         TG6cwpdZsC9U6cVmhtYM8QbjkglmeDlSdAw/FjYFIcgzCI75OFKfVZVxBeG+5ClRxo
+         ygLvVrhgE8ADQ==
+Date:   Fri, 11 Mar 2022 12:23:05 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        linux-pm@vger.kernel.org, Sanju.Mehta@amd.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2] PCI: ACPI: Don't blindly trust `HotPlugSupportInD3`
+Message-ID: <20220311182305.GA311200@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220310175225.66k6cor4afjlybew@mobilestation>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <20220310175832.1259-1-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -79,95 +55,98 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 08:52:25PM +0300, Serge Semin wrote:
-> On Thu, Mar 10, 2022 at 11:11:59PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Mar 10, 2022 at 08:29:30PM +0300, Serge Semin wrote:
-> > > On Wed, Mar 09, 2022 at 03:12:02PM -0600, Frank Li wrote:
-> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > 
-> > > > The "direction" member of the "dma_slave_config" structure is deprecated.
-> > > > The clients no longer use this field to specify the direction of the slave
-> > > > channel. But in the eDMA core, this field is used to differentiate between the
-> > > > Root complex (remote) and Endpoint (local) DMA accesses.
-> > > > 
-> > > > Nevertheless, we can't differentiate between local and remote accesses without
-> > > > a dedicated flag. So let's get rid of the old check and add a new check for
-> > > > verifying the DMA operation between local and remote memory instead.
-> > > > 
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > > no chang between v1 to v4
-> > > >  drivers/dma/dw-edma/dw-edma-core.c | 17 ++---------------
-> > > >  1 file changed, 2 insertions(+), 15 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > > > index 507f08db1aad3..47c6a52929fcd 100644
-> > > > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > > > @@ -341,22 +341,9 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
-> > > >  	if (!chan->configured)
-> > > >  		return NULL;
-> > > >  
-> > > > -	switch (chan->config.direction) {
-> > > > -	case DMA_DEV_TO_MEM: /* local DMA */
-> > > > -		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ)
-> > > > -			break;
-> > > > -		return NULL;
-> > > > -	case DMA_MEM_TO_DEV: /* local DMA */
-> > > > -		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE)
-> > > > -			break;
-> > > 
-> > > > +	/* eDMA supports only read and write between local and remote memory */
-> > > 
-> > > The comment is a bit confusing because both cases are named as
-> > > "memory" while the permitted directions contains DEV-part, which
-> > > means "device". What I would suggest to write here is something like:
-> > > "DW eDMA supports transferring data from/to the CPU/Application memory
-> > > to/from the PCIe link partner device by injecting the PCIe MWr/MRd TLPs."
-> > > 
-> > 
-> 
-> > End of the day, you'd be transferring data between remote and local memory
-> > only and the terms (local and remote) are also used in the databook. So I think
-> > the comment is fine.
-> 
-> Yes, but the databook either adds a note regarding what memory it is
-> or it can be inferred from the text context. So at least it would be
-> appropriate to preserve the notes here two:
-> "eDMA supports only read and write between local (CPU/application) and
-> remote (PCIe/link partner) memory." Otherwise it's hard to understand
-> what memory the comment states about.
-> 
+The subject convention in drivers/pci would be "PCI/ACPI:"
 
-Okay, I'm fine with this.
+But more importantly, please turn the subject from a non-specific
+negative ("Don't blindly trust") into a more specific *positive*,
+e.g.,
 
-"eDMA supports only read and write between local (CPU/application) and
-remote (PCIe/link partner) memory."
+  PCI/ACPI: Assume HotPlugSupportInD3 only if device can wake from D3
 
-Thanks,
-Mani
+On Thu, Mar 10, 2022 at 11:58:32AM -0600, Mario Limonciello wrote:
+> The `_DSD` `HotPlugSupportInD3` is supposed to indicate the ability for a
+> bridge to be able to wakeup from D3.
 
-> -Sergey
+Thanks for the Microsoft URL.  To make this commit log self-contained
+and guard against the link becoming stale, can you quote the relevant
+text here, since it's not long:
+
+  This ACPI object [HotPlugSupportInD3] enables the operating system
+  to identify and power manage PCIe Root Ports that are capable of
+  handling hot plug events while in D3 state.
+
+> This however is static information in the ACPI table at BIOS compilation
+> time and on some platforms it's possible to configure the firmware at boot
+> up such that `_S0W` will not return "0" indicating the inability to wake
+> up the device from D3.
+
+Please include the spec reference (ACPI v6.4, sec 7.3.20) in case the
+URL below becomes stale, and again, the relevant text is barely longer
+than the URL and could be included:
+
+  7.3.20 _S0W (S0 Device Wake State)
+
+  This object evaluates to an integer that conveys to OSPM the deepest
+  D-state supported by this device in the S0 system sleeping state
+  where the device can wake itself.
+
+I guess the argument is that we can put a Root Port into D3 only if
+_S0W indicates that it can wake from D3 *and* it has the
+HotPlugSupportInD3 property?
+
+I'm naive about ACPI sleep/wake, but that does sound plausible.
+
+But the patch doesn't say anything about _S0W, so we need to somehow
+connect the dots there.
+
+> To fix these situations explicitly check that the ACPI device has a GPE
+> allowing the device to generate wakeup signals handled by the platform
+> in `acpi_pci_bridge_d3`.
+
+acpi_pci_bridge_d3()
+
+Would be good to say what "these situations" are.  I guess this fixes
+a bug, so let's outline what that bug is, what the symptoms are, who
+reported and tested it, etc.
+
+> This changes aligns the handling of the situation the same as Windows 10
+> and Windows 11 both do as well.
+
+s/changes/change/
+
+Sentence also needs a little polishing: "aligns ... both do as well"
+doesn't quite flow.
+
+Does this make things work like Windows 10/11 from a user's point of
+view, or have you somehow confirmed that Windows actually checks _S0W
+and HotPlugSupportInD3 in the same way?
+
+> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
+> Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
+> Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v1->v2:
+>  * Add Mika's tag
+>  * Update commit message for Rafael's suggestions
+>  drivers/pci/pci-acpi.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > > -Sergey
-> > > 
-> > > > +	if (dir != DMA_DEV_TO_MEM && dir != DMA_MEM_TO_DEV)
-> > > >  		return NULL;
-> > > > -	default: /* remote DMA */
-> > > > -		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_READ)
-> > > > -			break;
-> > > > -		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE)
-> > > > -			break;
-> > > > -		return NULL;
-> > > > -	}
-> > > >  
-> > > >  	if (xfer->type == EDMA_XFER_CYCLIC) {
-> > > >  		if (!xfer->xfer.cyclic.len || !xfer->xfer.cyclic.cnt)
-> > > > -- 
-> > > > 2.24.0.rc1
-> > > > 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index a42dbf448860..9f8f55ed09d9 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -999,6 +999,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>  	if (!adev)
+>  		return false;
+>  
+> +	if (!adev->wakeup.flags.valid)
+> +		return false;
+> +
+>  	if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
+>  				   ACPI_TYPE_INTEGER, &obj) < 0)
+>  		return false;
+> -- 
+> 2.34.1
+> 
