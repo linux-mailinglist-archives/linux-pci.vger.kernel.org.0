@@ -2,69 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27D0E4D5C10
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 08:13:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D00C94D5C0F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 08:13:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233144AbiCKHOk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 02:14:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50224 "EHLO
+        id S1344316AbiCKHOj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 02:14:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343834AbiCKHOj (ORCPT
+        with ESMTP id S233144AbiCKHOj (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 02:14:39 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E564E114FF1
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8C23113DA2
         for <linux-pci@vger.kernel.org>; Thu, 10 Mar 2022 23:13:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1646982815; x=1678518815;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=a4s3TRiQEVTKweymue/FyWu27/VFomsgRNc5KO6QaF8=;
-  b=loD3su4atI1FW0V/nnCwmeiH2gM6KOfp/+s7ipcqUavXjssoWvOGVHEE
-   +Mcxz+TBMwi7gH7ZeNHrxFD7ZI1mFWc2Q5+ma7vqI8JAv8UwK77YrffWA
-   XX47VttDME2WiWRzhAxLnrF+TlrFl0TBDJTheElqFQ/ViLwMfaZmEZBhN
-   2JTY1IUfYRQu7GqCAezYxY+ruCUBYipiWTr2hd3ciCqBdgMisaKd6/IWC
-   qYISKftDs7HFp10J8oxBDVAigeMdDiskuJbIVV03gqVP2Pq8a4wKRvmwu
-   vF8Li+uItPf8buEtN2ahq0cZnpx+r6+IA/d4U6T/q1vFAospdCIFViPFg
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10282"; a="242965499"
+  bh=h3jsbdK933DvKwiUmiqwoc59xG9nVz0i0jqwI23NqDk=;
+  b=Y2mcLX/Kdz+hPE5boglElaboVpRJ3RUfPFH7BlAma9gqRboZ8arZQitH
+   hO4YGalw59vMb3ofIJCFthpb1Gggdjxgu/82vRtBKujVVkkgI0gp9baXp
+   FbcBBLpKIpJT1wDK54BiHZaw+35j42Q/KVGjNo7k+a1XZ7cJnFoWc+Xra
+   R+iWZUXOb+G24dT0K45axXIyw7eozBivFJMUl+gQo6qaI7p6SyMnbHzvX
+   Njk9PIcuzGH8TRx2zGHqVvKqmcuXuPsPEeHkIHo5b6FX6mw2k5cUP27oI
+   bdT+RNYlbicb0tp0HXyh7JpB18ATWZW4Uw3aUfPk4sAu9BoTGy+LNR0ec
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10282"; a="318740972"
 X-IronPort-AV: E=Sophos;i="5.90,173,1643702400"; 
-   d="scan'208";a="242965499"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 23:13:35 -0800
+   d="scan'208";a="318740972"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 23:13:35 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,173,1643702400"; 
-   d="scan'208";a="496678078"
+   d="scan'208";a="514410115"
 Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 10 Mar 2022 23:13:34 -0800
+  by orsmga006.jf.intel.com with ESMTP; 10 Mar 2022 23:13:34 -0800
 Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1nSZSv-00061G-LP; Fri, 11 Mar 2022 07:13:33 +0000
-Date:   Fri, 11 Mar 2022 15:12:50 +0800
+        id 1nSZSv-000617-H6; Fri, 11 Mar 2022 07:13:33 +0000
+Date:   Fri, 11 Mar 2022 15:12:59 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/host/rcar] BUILD SUCCESS
- e14f0af749b9e786ad39af1470036b0a515cd8a5
-Message-ID: <622af672.oYMxslm+XuJXYn67%lkp@intel.com>
+Subject: [helgaas-pci:pci/host/fu740] BUILD SUCCESS
+ cf18fce4ed5c87def7d95554bfc864951b793e4c
+Message-ID: <622af67b.Pw9f5I52GPkeRgfa%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/rcar
-branch HEAD: e14f0af749b9e786ad39af1470036b0a515cd8a5  PCI: rcar: Finish transition to L1 state in rcar_pcie_config_access()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host/fu740
+branch HEAD: cf18fce4ed5c87def7d95554bfc864951b793e4c  PCI: fu740: Drop redundant '-gpios' from DT GPIO lookup
 
-elapsed time: 724m
+elapsed time: 725m
 
 configs tested: 135
 configs skipped: 3
