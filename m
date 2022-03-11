@@ -2,129 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 469A04D68C2
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 19:52:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72FF44D68DC
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Mar 2022 20:01:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350999AbiCKSxx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 13:53:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51374 "EHLO
+        id S242878AbiCKTC5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Mar 2022 14:02:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350246AbiCKSxw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 13:53:52 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61C7C48E7E;
-        Fri, 11 Mar 2022 10:52:48 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=muHvN0I2dFsW/qy/1fFz3dzLsvBqyAUW7FprjeqFih0gBO912MQqGs+I9y3JbD5Kk17VQqzXeX4Z+ucbNN3WKEfqO0hvAKrKgHN5109xpbMH88W5nNRX4YhmWhXsRrEcf2dIJYEK1cPaiu8MSJjDTQLS8cDaT+rSMtANFHbqO9ysDO0VWZJcBv8qX76AhCVcWOiiGZLq4NXq4cryFYTpwl6AAVkmSvW4nsGxYWYMKnGdaKxho0h/9P8czhrZZVewlNrH6rIQ2RiitnM1SO37DhDicaTReL8Xuo2y0BSXhC0cjHBDjMdUgRMtr2nYPGO/w0I7YfDPMq128LhP+phWXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x59Hcv/8fwUXPprsbiC88KLNo1Y1gdEhqkagFzQto0E=;
- b=MSDgW56JcMOSBKnOuZDpYugl5KTPLesq3aGyxs0Q5bQWaWICLpJoOBMlWHSy0O2ENr2/wGkIYenlqAlQJUos7+0MjpxQzY0tyLVn4ruEHUAqFQozsoQ26ten2MeaEi6y3jmSJcU4FerkMdkurVkcJgidDVuQbl/FLrV8X75bxVm6Tech9+KQcH+qhrCv0CvlpiSxQfs19eAIcFgH1jBukRpmQ/p5nxynCIKZI2vwrJniN+LU4fyCKrFkH52IKjAhjCeEkJelxM9GRSCUOfPCSwt40D95NMLomGjjQle3SJ4rC46ZuIt9puf30Fyt7OGC4LC7V0U2JOpQpZ5fZpXmbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x59Hcv/8fwUXPprsbiC88KLNo1Y1gdEhqkagFzQto0E=;
- b=TidJ1VG4dcJ2XjdBE3U4KWY/IvAK51obPBaLAT2Rgkqet00XVXHLPa2yRJrcxiuG4h//HqoKu8bXXFL4/dCuLZQr5PtkTo05RSTb2/APxYXtJJbR7cZnNRXkcqQjYYG3kVtxzmiGKnLE1CYGmPaineH4vM65b/xyEe9EVYFUDUU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
- by CH2PR12MB5564.namprd12.prod.outlook.com (2603:10b6:610:65::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.15; Fri, 11 Mar
- 2022 18:52:46 +0000
-Received: from BL1PR12MB5157.namprd12.prod.outlook.com
- ([fe80::692d:9532:906b:2b08]) by BL1PR12MB5157.namprd12.prod.outlook.com
- ([fe80::692d:9532:906b:2b08%5]) with mapi id 15.20.5061.022; Fri, 11 Mar 2022
- 18:52:44 +0000
-Message-ID: <07e31fd8-ac26-f181-f848-290c130e5313@amd.com>
-Date:   Fri, 11 Mar 2022 12:52:37 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v2] PCI: ACPI: Don't blindly trust `HotPlugSupportInD3`
-Content-Language: en-US
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Mehta, Sanju" <Sanju.Mehta@amd.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-References: <20220310175832.1259-1-mario.limonciello@amd.com>
- <CAJZ5v0gjPwEcq2dEE+wRr3D+w7=MTEKJoQ+x9muh_R4W-DawVw@mail.gmail.com>
- <BL1PR12MB5157D9FDDD0FC829CDD8CFB2E20B9@BL1PR12MB5157.namprd12.prod.outlook.com>
- <CAJZ5v0grj=vE1wGJpMxh-Hy7=ommfFUh5hw++nmQdLVxVtCSWw@mail.gmail.com>
-From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <CAJZ5v0grj=vE1wGJpMxh-Hy7=ommfFUh5hw++nmQdLVxVtCSWw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0025.namprd05.prod.outlook.com
- (2603:10b6:803:40::38) To BL1PR12MB5157.namprd12.prod.outlook.com
- (2603:10b6:208:308::15)
+        with ESMTP id S232654AbiCKTC4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 14:02:56 -0500
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C581B3A64;
+        Fri, 11 Mar 2022 11:01:52 -0800 (PST)
+Received: by mail-lj1-x22f.google.com with SMTP id q5so13249120ljb.11;
+        Fri, 11 Mar 2022 11:01:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VnrBejOhyT5C0jAW86TjsRhNvZo6bsHC7jAzqYVrGgM=;
+        b=EGCjwfJxUeVFJP+MWkXAXfrsX/AfeBCimQQNvjL16LzzZvSg7kdxdOvbVijGCCcjzQ
+         3VCtxwitpxcaiA2uthqVgyFfevzk0JWtLHoU3jIaNyiCiYNyX9c3w/eaR87LKs1I1/WL
+         Cs20EqcTZ/WSRQstIromtPCCXxrJMIrbnvYqD67ASPyZ3SWatGaDtGyroDKDPOt8KlIZ
+         Ynv4jdvYIm4ArgT3lXugBLGQXppAD1ogEyPhsK6lJLOtir0QGpv+gyyPScjbmwrPq8Xo
+         dX4teznr/GKez9mlwaIcG3WkvhGM4pLFlkA0b3bJEjwl8D8yJRjgJJEjO5j0u8tjHE6T
+         tF6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VnrBejOhyT5C0jAW86TjsRhNvZo6bsHC7jAzqYVrGgM=;
+        b=ALPd64hNqeY727MKEiabJga0Sf+jdIAzRU3U3MWtdXqWbQGaG+2Qkpz6uFytH4nSZA
+         XYrTPd4bCnU9zki/35WgA8ar92fuiYIz3iBf1ZVx9s//OiELrDz1AFbyRFdViawiM6yv
+         CQMvT8htfMCpSY6NftqiOYikoaXR7WTmNEj9qcN0WDips2yV2iIjFEsMlAy1VxtrOVQB
+         499NHTJ7lcWnZDgO5HdbWZcMU7lbihOox8dPfLN5DdWuJ7zgBqH0DfFXBD/buAaWNwBR
+         qoS7d39WLyivBetFrWA2DtAGj/f4rzZsM2tsM8cu6k+3iJlancX9kHKWtoLDZv34vN0X
+         x/mw==
+X-Gm-Message-State: AOAM530/kOv/gXcubQVRevZUeh2MO/Z7F0bRZhclqeG2Xsw/Jk5+mrV7
+        HdoQqVgukqOPlSji/LH/N8o=
+X-Google-Smtp-Source: ABdhPJwEqAUPpnXseZSO/W0+NticzuW+88isJmtl4dH9GKXbI6QPr/mR9ngU+esVbjNcyEf0OuZdFQ==
+X-Received: by 2002:a05:651c:386:b0:246:c7e:bb1e with SMTP id e6-20020a05651c038600b002460c7ebb1emr6877807ljp.161.1647025310927;
+        Fri, 11 Mar 2022 11:01:50 -0800 (PST)
+Received: from mobilestation ([95.79.188.22])
+        by smtp.gmail.com with ESMTPSA id a12-20020a05651c010c00b002485f6a9a03sm1183519ljb.87.2022.03.11.11.01.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Mar 2022 11:01:50 -0800 (PST)
+Date:   Fri, 11 Mar 2022 22:01:47 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org
+Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
+ dest addresses for ep
+Message-ID: <20220311190147.pvjp6v7whjgyeuey@mobilestation>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-6-Frank.Li@nxp.com>
+ <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
+ <20220311174134.GA3966@thinkpad>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 50cf1fa4-0b73-42e5-91d6-08da03905410
-X-MS-TrafficTypeDiagnostic: CH2PR12MB5564:EE_
-X-Microsoft-Antispam-PRVS: <CH2PR12MB5564FB103CB76A9697DEE929E20C9@CH2PR12MB5564.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PMPZ4zrbPlQffgGi4kVoIQlYikMsf4RhWy3LZKubP1VXjGaYUwTskxDL6Ew3fY9jglAQ9l1GV5FbTMtW4ACqtOGq2LEHBQPhkEBNxYkshPOQTlifAVEFFxcQHkkDfTd78wF0KYxlSKLbMLMnN0sG7JrHfqeq22YyWasp9qEzntQ8NT13QjiLlE48yyYJd2QHDPF1vMDmwpoq9SGBvxdx4mIozZP+RGiwjKzpJQHJc4gKUr33mMBOXfzSU4/MKLHidPB7zQlGFNSPu7Zq21i9/5/msl2V4UrFXaC/orNS0PBLevzXz0iqCWDKk9Rk7AGKLa0wTlhL3kBF2x+WajcqXX/78pc1StK8WWylg6a8paQSYTEvNnOQERORovlb4N8soWWMtEbYO8yjGYecdLDPPTQEVolBZo5UCnD3vsEB+Q4mRyvZShFUPSONN4FDK+5x/CTX3wzMWnvQZIld7ko5hM+wQ/u86/mZs7uc8FHQxQm8jvYrreZ+61b+GF/Js6ejtM9RqEfmqDZXXziJyYgDYRJlw8Puo81mNXinGszLM4VcQ0ARYUsykdAk6dFhYDfvaEkwW4hJM8lprNv/CNe4qM2/wWcyoh3wOP2qnVIeVZ5wjDoMJTSW6y13rt6/dC56ILGryKPRKd0u+yJosaMigIO5v1G55VWqrwdVwcG1AD7YPFDvP0UIUSRXJsiSXovM7dOG/YSGrvy34mgJo99xfYmzY0LOOODvurZdZ0PeAe1Yba37wE2UV/xBwP+6QA/28F43D/wDXN5PQj8RiXiEWg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(6029001)(4636009)(366004)(6916009)(5660300002)(6512007)(19627235002)(83380400001)(54906003)(6486002)(316002)(66556008)(53546011)(6506007)(4326008)(66476007)(66946007)(8676002)(6666004)(8936002)(508600001)(31696002)(86362001)(38100700002)(36756003)(186003)(2906002)(31686004)(2616005)(81973001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WlFTQ3dvQ25xNThlNElYZjcvY1BMR1BXOURVZGYxQTJSS20rZmViQ0ZockVh?=
- =?utf-8?B?NHl1YVZrVVp2djAzTkxEU1hXM28xV1JMRFlOcCtrZHdNcmtsUlFhQnhMdFB6?=
- =?utf-8?B?bVVaU1oveVkrWHV2VUUvSEliaVpJNDBoVkx6UzJSN1BydGhoWUNvOWtNQmd5?=
- =?utf-8?B?Y00wSzZUcDRTQWMwV2ViUW40RUtnSlk0a2RLZGpqUUw1cVQ1WFZtKzJiSnk0?=
- =?utf-8?B?WjBrNTV6SXNaMG1WdDlocnV6YkM0cVhyZ0lGTmdqWUl0dzNjald1cmdpSE9R?=
- =?utf-8?B?TmZUNE1rdTVvNCtQSTFSWnJrRi9FdTBlZXRuOFIydkZ3ZEtGWEw4WFFSc2pP?=
- =?utf-8?B?SC9TQWxFZjRvUFRnYjlHM25VM1FHdkpOWUUyRzY5TlhCZmJweld0NmJLNFZQ?=
- =?utf-8?B?Vk53RnZlY2VkOVQyNEtBSVJ5V0VSWHVsZkZPQXJYK2hoTWEwTVhRc0lTUlJY?=
- =?utf-8?B?MUtkYkduZWI1R2Z5cjNhaTRFekp6YTZrUU4vTDdxdTc0REc5OUFhNEx3TGQ2?=
- =?utf-8?B?Zlc1Tk0wYXQ5YXdMS3J5RnZQN2sxd1lXd3pMclBHY0w1M0NvK2pXNlpnMENM?=
- =?utf-8?B?V1JpcVAvQ1N0ZWtIbE0xM0l4d2xOa3YyT2RXd0ZLOWZXRTVIV3NpMWl0d3VE?=
- =?utf-8?B?aGU2a3BDV3BwVUV2K0xnUFRNclM0cTJWWmt5dW1aUkF4TEg2aGo0SlVYQnF2?=
- =?utf-8?B?bFFrVDJIQ21xM0I0enA0aWJrZXBldzJ5WmVIWG9aWmlKalVUR1VMSVBNZ1pT?=
- =?utf-8?B?bDY3NUdXSXpoNTN0Tk1uMFZzYTNBZ0xwazFuR1pPbzBwSTBzUmJxRVVzSlJT?=
- =?utf-8?B?dTNBcTV2V3RtRDA1U1VVamIxTy9haEw1dERFbVVER0tyaXE1RzRUTHkxaW1I?=
- =?utf-8?B?b1BQUWg1ZkNlZFZuUDVYeGZKcGliQnhWd3dRYlZxbzVtZDd3RFFPU2JBSC9z?=
- =?utf-8?B?azNUZEU5K1dDWXZGZlBXRUNwYW02anZuSStjNDkxTkFsSUJraGxxSGRnb2tx?=
- =?utf-8?B?aGlxckhiSHN6SE9RdWg3UVgvL21BVm8yUkdaZnZXQm1TRnBiSmJLVlJXN09E?=
- =?utf-8?B?d2t6QmE4Tk1FakVZNzNyY1JYcW41ZkcxRllPTzA3TzhUWXlwWUxpVUhQRWNi?=
- =?utf-8?B?ZU5IUzFRUDZpOVNOZ3Q1OHdxMjl6c3RhM0ZqQTR3R3JsaFg2R3RLUFFhWlFW?=
- =?utf-8?B?ZkozU0I1NEhmMVNnb0h1a0lqV3B2MFdTVi90RjcwYUtNSjZmNkxVNm9tWmtk?=
- =?utf-8?B?MHFiNUlBdlFOVUlqQUxUaEU2dVZETTdYSGdqdjhWeTRaVUE3RVcxLzZtaFht?=
- =?utf-8?B?VTA3NHcycEFkcTdhV1c4di83M015SGdtNXJLQzFjMFhnZHVnNFNuRnN4Ky9X?=
- =?utf-8?B?WDJ2MVdTT2VBbHhsZDhmNEFvMnExeW1YNnMvTjBOaUh3dkNxenhldUE1Q2xF?=
- =?utf-8?B?bUQ0ZFNjbytDRmZGYWp0VXArZTRibWVSQkwrbzI1WUFzZ04vOTFRNjQwRkRK?=
- =?utf-8?B?Uml3cTBNVmtLYVhtN0xNNWZtelFXSWJ1RGdKU05SL1pwRnk3Y1Fpd3UrMDZB?=
- =?utf-8?B?bjhpWFFoVHFma3lVVTJWN2JDdmRya210dDZTOTJYV3A0ZVU3RDJ0elZ3L1hF?=
- =?utf-8?B?eEZkK2JQYmVYUXZRZGdmWUo0dXJWUFduRUxNd3BJUEkrN1J5eElwaDh5OVp1?=
- =?utf-8?B?V0tMMFM5cElBWTB2aTNoZ2tpR0poMjNvdzRvUU1wMllDOXdqZEsraW54UHk4?=
- =?utf-8?B?Y1Vmbi9uM0gxMXhTTXR5RVdid29USkFrbXQ1MmJoWk16bGRiV2x3Tmt3ZzV4?=
- =?utf-8?B?UXBWa0V4MGh1cmNGWUpzZGpvd1A0TEl4Z1pPM0Y5eUNLRDE4VGs5R1FVMGlj?=
- =?utf-8?B?YU9RQytiUGdWdk5WR3g5bGk5a1hKWmRIa1d5dVh3TWdYTUkvZ0FKUExWMUpZ?=
- =?utf-8?B?Q1ZrVmlMUHBySUhzdnA0S0h2RUZOYm96MzV1NzYycHB6a2p3c3dOcG9FaGJ6?=
- =?utf-8?B?VDY5dkxBUktzNjRaOTBHckRYT2pOMFRVSHBSaHNCN2tpN1E1TnNxaFR0K1Na?=
- =?utf-8?B?UXBBN1pzejZzRWl1RWxDcFU2a2hzUFJOZTdhS1YyTzB0TmlFL3BKMFRRTUw5?=
- =?utf-8?B?S1d3b0hndnV6RW9zTWNSVlVwSzdIWGpEc3BHS0JWRkh2RVBNd3FZTjYvVzNh?=
- =?utf-8?B?Z1IzV0VMOGNteUEzOHgxYTk4YkxneUxzVGhRT3hwZy82c1ltaWxlaTdqdy93?=
- =?utf-8?Q?v37MFtVEdWogBX5KpSg30W+oUgTgdegjNhiz/VWtd8=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50cf1fa4-0b73-42e5-91d6-08da03905410
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2022 18:52:44.8298
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Lrlwf459qrkZNdFxM1emZgzvs1SdxWJ52zUJIYr+iXgCJnUvNQm10xazuvP+wZPjoSUTGWPgr9YsZ5Wmw6WiPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB5564
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220311174134.GA3966@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -132,79 +78,190 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/11/2022 10:05, Rafael J. Wysocki wrote:
-> On Thu, Mar 10, 2022 at 9:13 PM Limonciello, Mario
-> <Mario.Limonciello@amd.com> wrote:
->>
->> [Public]
->>
->>>> To fix these situations explicitly check that the ACPI device has a GPE
->>>> allowing the device to generate wakeup signals handled by the platform
->>>> in `acpi_pci_bridge_d3`.
->>>
->>> Which may be orthogonal to the _S0W return value mentioned above.
->>>
->>> Also, I'm not quite sure why acpi_pci_bridge_d3() should require the
->>> root port to have a wake GPE associated with it as an indication that
->>> the hierarchy below it can be put into D3cold.
->>
->> The reason that brought me down the path in this patch was actually
->> acpi_dev_pm_get_state.  _S0W isn't actually evaluated unless
->> adev->wakeup.flags.valid is set.
+On Fri, Mar 11, 2022 at 11:11:34PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Mar 10, 2022 at 07:31:23PM +0300, Serge Semin wrote:
+> > On Wed, Mar 09, 2022 at 03:12:01PM -0600, Frank Li wrote:
+> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > 
+> > > When eDMA is controlled by the Endpoint (EP), the current logic incorrectly
+> > > programs the source and destination addresses for read and write. Since the
+> > > Root complex and Endpoint uses the opposite channels for read/write, fix the
+> > > issue by finding out the read operation first and program the eDMA accordingly.
+> > > 
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: bd96f1b2f43a ("dmaengine: dw-edma: support local dma device transfer semantics")
+> > > Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > No change between v1 to v4
+> > > 
+> > >  drivers/dma/dw-edma/dw-edma-core.c | 32 +++++++++++++++++++++++++++++-
+> > >  1 file changed, 31 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > > index 66dc650577919..507f08db1aad3 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > @@ -334,6 +334,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+> > >  	struct dw_edma_chunk *chunk;
+> > >  	struct dw_edma_burst *burst;
+> > >  	struct dw_edma_desc *desc;
+> > > +	bool read = false;
+> > >  	u32 cnt = 0;
+> > >  	int i;
+> > >  
+> > > @@ -424,7 +425,36 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+> > >  		chunk->ll_region.sz += burst->sz;
+> > >  		desc->alloc_sz += burst->sz;
+> > >  
+> > > -		if (chan->dir == EDMA_DIR_WRITE) {
+> > > +		/****************************************************************
+> > > +		 *
+> > 
+> > > +		 *        Root Complex                           Endpoint
+> > > +		 * +-----------------------+             +----------------------+
+> > > +		 * |                       |    TX CH    |                      |
+> > > +		 * |                       |             |                      |
+> > > +		 * |      DEV_TO_MEM       <-------------+     MEM_TO_DEV       |
+> > > +		 * |                       |             |                      |
+> > > +		 * |                       |             |                      |
+> > > +		 * |      MEM_TO_DEV       +------------->     DEV_TO_MEM       |
+> > > +		 * |                       |             |                      |
+> > > +		 * |                       |    RX CH    |                      |
+> > > +		 * +-----------------------+             +----------------------+
+> > > +		 *
+> > > +		 * If eDMA is controlled by the Root complex, TX channel
+> > > +		 * (EDMA_DIR_WRITE) is used for memory read (DEV_TO_MEM) and RX
+> > > +		 * channel (EDMA_DIR_READ) is used for memory write (MEM_TO_DEV).
+> > > +		 *
+> > > +		 * If eDMA is controlled by the endpoint, RX channel
+> > > +		 * (EDMA_DIR_READ) is used for memory read (DEV_TO_MEM) and TX
+> > > +		 * channel (EDMA_DIR_WRITE) is used for memory write (MEM_TO_DEV).
+> > 
+> > Either I have some wrong notion about this issue, or something wrong
+> > with the explanation above and with this fix below.
+> > 
+> > From my understanding of the possible DW eDMA IP-core setups the
+> > scatch above and the text below it are incorrect. Here is the way the
+> > DW eDMA can be used:
+> > 1) Embedded into the DW PCIe Host/EP controller. In this case
+> > CPU/Application Memory is the memory of the CPU attached to the
+> > host/EP controller, while the remote (link partner) memory is the PCIe
+> > bus memory. In this case MEM_TO_DEV operation is supposed to be
+> > performed by the Tx/Write channels, while the DEV_TO_MEM operation -
+> > by the Rx/Read channels.
+> > 
 > 
-> That's true, but it is unclear how this is related to whether or not a
-> given PCIe port can handle D3cold.  But see below.
-> 
->>
->>>
->>>>
->>>> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
->>>> index a42dbf448860..9f8f55ed09d9 100644
->>>> --- a/drivers/pci/pci-acpi.c
->>>> +++ b/drivers/pci/pci-acpi.c
->>>> @@ -999,6 +999,9 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
->>>>          if (!adev)
->>>>                  return false;
->>>>
->>>> +       if (!adev->wakeup.flags.valid)
->>>> +               return false;
->>>
->>> Minor nit: the two checks above could be combined.
->>
->> OK if we stick to this approach I'll do that.
->>
->>>
->>> Also I would add a comment explaining why exactly wakeup.flags.valid
->>> is checked here, because I can imagine a case in which the wakeup
->>> signaling capability is irrelevant for whether or not the given port
->>> can handle D3cold.
->>
->> Specifically a case that it's a hotplug bridge that has HotPlugSupportInD3
->> though?  In practice I've only seen that in use on USB4 and Thunderbolt
->> bridges "so far".
->>
->> I haven't tried yet but I would think directly evaluating _S0W at this time
->> seems it should also work and would match closer to my original intent
->> of the patch.  Would you prefer that?
-> 
-> I guess, but I'm not sure, that you are trying to kind of validate
-> HotPlugSupportInD3 by checking if the root port in question actually
-> can signal wakeup via ACPI and if it cannot, assume that the flag was
-> set by mistake and so the bridge should not be assumed to be able to
-> handle D3cold.
-> 
-> That is not unreasonable, but in that case you need to check
-> wakeup.flags.valid first and then _S0W too, because it can return 0
-> even if the "valid" flag is set.  And explain in a comment why this is
-> done.
 
-OK I'll make these changes and check the situation again.
+> I'm not aware or even not sure about the use of eDMA in the PCIe host.
+> If that's the case, how the endpoint can access it from remote perspective?
+> Do you have a usecase or an example where used or even documented?
+
+I am aware. I've got SoC with DW PCIe Host v4.60/v4.70 and eDMA
+enabled for each of them. I also poses several manuals of the DW PCIe
+Host and End-points of various versions. Both Host and End-points can
+have eDMA enabled. But it's possible to have the eDMA accessed via the
+PCIe wire only for the End-points and only if the IP-core is
+accordingly synthesized. Other than that the eDMA is configurable from
+the Local CPU only.
 
 > 
->>>
->>>> +
->>>>          if (acpi_dev_get_property(adev, "HotPlugSupportInD3",
->>>>                                     ACPI_TYPE_INTEGER, &obj) < 0)
->>>>                  return false;
->>>> --
+> > Note it's applicable for both Host and End-point case, when Linux is
+> > running on the CPU-side of the eDMA controller. So if it's DW PCIe
+> > end-point, then MEM_TO_DEV means copying data from the local CPU
+> > memory into the remote memory. In general the remote memory can be
+> > either some PCIe device on the bus or the Root Complex' CPU memory,
+> > each of which is some remote device anyway from the Local CPU
+> > perspective.
+> > 
+> > 2) Embedded into the PCIe EP. This case is implemented in the
+> > drivers/dma/dw-edma/dw-edma-pcie.c driver. AFAICS from the commits log
+> > and from the driver code, that device is a Synopsys PCIe EndPoint IP
+> > prototype kit. It is a normal PCIe peripheral device with eDMA
+> > embedded, which CPU/Application interface is connected to some
+> > embedded SRAM while remote (link partner) interface is directed
+> > towards the PCIe bus. At the same time the device is setup and handled
+> > by the code running on a CPU connected to the PCIe Host controller.  I
+> > think that in order to preserve the normal DMA operations semantics we
+> > still need to consider the MEM_TO_DEV/DEV_TO_MEM operations from the
+> > host CPU perspective, since that's the side the DMA controller is
+> > supposed to be setup from.  In this MEM_TO_DEV is supposed to be used
+> > to copy data from the host CPU memory into the remote device memory.
+> > It means to allocate Rx/Read channel on the eDMA controller, so one
+> > would be read data from the Local CPU memory and copied it to the PCIe
+> > device SRAM. The logic of the DEV_TO_MEM direction would be just
+> > flipped. The eDMA PCIe device shall use Tx/Write channel to copy data
+> > from it's SRAM into the Host CPU memory.
+> > 
+> > Please note as I understand the case 2) describes the Synopsys PCIe
+> > EndPoint IP prototype kit, which is based on some FPGA code. It's just
+> > a test setup with no real application, while the case 1) is a real setup
+> > available on our SoC and I guess on yours.
+> > 
+> > So what I suggest in the framework of this patch is just to implement
+> > the case 1) only. While the case 2) as it's an artificial one can be
+> > manually handled by the DMA client drivers. BTW There aren't ones available
+> > in the kernel anyway. The only exception is an old-time attempt to get
+> > an eDMA IP test-driver mainlined into the kernel:
+> > https://patchwork.kernel.org/project/linux-pci/patch/cc195ac53839b318764c8f6502002cd6d933a923.1547230339.git.gustavo.pimentel@synopsys.com/
+> > But it was long time ago. So it's unlikely to be accepted at all.
+> > 
+> > What do you think?
+> > 
+> 
 
+> As per my understanding, the eDMA is solely used in the PCIe endpoint. And the
+> access to it happens over PCIe bus or by the local CPU.
+
+Not fully correct. Root Ports can also have eDMA embedded. In that
+case the eDMA can be only accessible from the local CPU. At the same
+time the DW PCIe End-point case is the IP-core synthesize parameters
+specific. It's always possible to access the eDMA CSRs from local
+CPU, but a particular End-point BAR can be pre-synthesize to map
+either Port Logic, or eDMA or iATU CSRs. Thus a PCIe root port can
+perform a full End-point configuration. Anyway the case if the eDMA
+functionality being accessible over the PCIe wire doesn't really make
+much sense with no info regarding the application logic hidden behind
+the PCIe End-point interface since SAR/DAR LLP is supposed to be
+initialized with an address from the local (application) memory space.
+
+So AFAICS the main usecase of the controller is 1) - when eDMA is a
+part of the Root Port/End-point and only local CPU is supposed to have
+it accessed and configured.
+
+I can resend this patch with my fix to the problem. What do you think?
+
+-Sergey
+
+> 
+> The commit from Alan Mikhak is what I took as a reference since the patch was
+> already merged:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/dw-edma?id=bd96f1b2f43a39310cc576bb4faf2ea24317a4c9
+> 
+> Thanks,
+> Mani
+> 
+> > -Sergey
+> > 
+> > > +		 *
+> > > +		 ****************************************************************/
+> > > +
+> > 
+> > > +		if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
+> > > +		    (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
+> > > +			read = true;
+> > 
+> > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
+> > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
+> > redundant.
+> > 
+> > > +
+> > > +		/* Program the source and destination addresses for DMA read/write */
+> > > +		if (read) {
+> > >  			burst->sar = src_addr;
+> > >  			if (xfer->type == EDMA_XFER_CYCLIC) {
+> > >  				burst->dar = xfer->xfer.cyclic.paddr;
+> > > -- 
+> > > 2.24.0.rc1
+> > > 
