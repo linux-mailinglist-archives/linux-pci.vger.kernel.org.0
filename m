@@ -2,168 +2,281 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 815EA4D6C19
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Mar 2022 03:48:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7C7D4D6CC8
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Mar 2022 06:37:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbiCLCtO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Mar 2022 21:49:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52732 "EHLO
+        id S230297AbiCLFig (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Mar 2022 00:38:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbiCLCtN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Mar 2022 21:49:13 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0982274DD
-        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 18:48:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647053289; x=1678589289;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SkMPeFXDMOBSBNECnsOUr2BauZIu4cyCY92m8ybYLfM=;
-  b=MUcGuYX9lydKU6f7Qu7qIyxejB9EwZqwYJvdEc8bqgghCVi08AG2usXs
-   wRr175A8VEm+Ehej4GL4mw52Cm4SGpZiiho0H9zz1Y6ulzn+vSArcq9d1
-   /OLlEi/gk+J/IIGDuGc6qhG9w7AsBUgGF6Wa1SCJ0ZftVoY4adH5hFbbA
-   j9d5Zf0CnZ/zI/cO4AfsO8tFfY16yEjAVL9hhW48sGY5vz7FE/8vkvei2
-   1/Sg2XYmIvnV0FCEcbtindFxaw+dpyLtMIpVuPUo0RK+6MO6KVr1gmZ2W
-   ZhzD9IdlGw2O3UfPD0/ajT5UR21rj5zyhM5+vF3fWBFj034hsJ0w7Gfl6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10283"; a="280471179"
-X-IronPort-AV: E=Sophos;i="5.90,175,1643702400"; 
-   d="scan'208";a="280471179"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2022 18:48:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,175,1643702400"; 
-   d="scan'208";a="713078177"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 11 Mar 2022 18:48:07 -0800
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nSrna-0007QR-U0; Sat, 12 Mar 2022 02:48:06 +0000
-Date:   Sat, 12 Mar 2022 10:48:01 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:for-linus] BUILD SUCCESS
- 5949965ec9340cfc0e65f7d8a576b660b26e2535
-Message-ID: <622c09e1.0oo98CLnV2QKfMyH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229570AbiCLFif (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Mar 2022 00:38:35 -0500
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E2C25ABF9
+        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 21:37:30 -0800 (PST)
+Received: by mail-pg1-x52c.google.com with SMTP id t187so9198334pgb.1
+        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 21:37:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Sim/PAq/udpdmB+n5RfIVMSElm8ijtbqSgozajQvpkc=;
+        b=eRVyOj4INoXJa0eCpoTA8z2C/Jp0sCU/gG/3kHzt3V8L6BBIZDicwRnJVaDRPjn4VR
+         R0AkfbZtbW0R2qXzCVXekN0AZKoAIF70raXcCuFP06C0I1YkLFyckeqNjZ7bGx780yrD
+         ykMCLoPiPYLYs1MyQ/2alPRff1SN6Cnr+9/Y1USGcq/YSqp8/Z0/csmhtSvLJ8vlN4EI
+         idQdedJ6NDD3c0uk6aCyTlAcL26I7WyXSj1o8DZ5mEZhfL490FLTVQuhLbjie33VuIsj
+         KOJoJ4SFnWELh//65smR/i3S5QdpTmxn/UacfuKhBcvrcv87+/nw68XVz4ti6riu0x/G
+         3yRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Sim/PAq/udpdmB+n5RfIVMSElm8ijtbqSgozajQvpkc=;
+        b=V1FIhizJC5TQQgcRmWX6C6rImtCzEYpdtp5cbwYlqNlRsGmBxuQmscDv49tM9+nsow
+         ehwmfkYH3TOuxq9qA6Vvh/cvKlFREAsoOV1I7CP08+RHU5hvtSoFJ6Ium114i0aD1ONw
+         WqHYpjHTKEiLfuJgeUjNIxo60lg6HrY5VxdSjZb62Y/58hO5UQBVvmzul+Y0dd1u8cJJ
+         qnIVzZRY9O4mQTfECqUJVrFzCm9zv6iQkJXYb4B4s3Rlvf6MJoRavFKKwc4Fghdy9K6h
+         wdVrFqXxErejpXjiH7KP50IjVBOXlCPwdOqfDhGxU8pyIUs9nsIVi9Gm6q9pO0jQ9FkP
+         bGbQ==
+X-Gm-Message-State: AOAM530Y0FLxHyZdpWSCRdFPBMQlZKX7pv2HsJrkkoKl/xcrcMPpk1bC
+        iK36ZhLBbAsKBEX3JpwVDmpb
+X-Google-Smtp-Source: ABdhPJyQRv2A4Z3OBWw2AWJfZAbdIOB0eUyFLzE7vfXWbfjYn1NFJRgxMyKKIa0KNj/Y6VhU5ZSAVg==
+X-Received: by 2002:a62:1a43:0:b0:4f6:ce73:d572 with SMTP id a64-20020a621a43000000b004f6ce73d572mr13765938pfa.69.1647063448682;
+        Fri, 11 Mar 2022 21:37:28 -0800 (PST)
+Received: from thinkpad ([117.202.191.144])
+        by smtp.gmail.com with ESMTPSA id 16-20020a056a00073000b004dfe2217090sm12736160pfm.200.2022.03.11.21.37.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Mar 2022 21:37:28 -0800 (PST)
+Date:   Sat, 12 Mar 2022 11:07:20 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org
+Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
+ dest addresses for ep
+Message-ID: <20220312053720.GA4356@thinkpad>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-6-Frank.Li@nxp.com>
+ <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
+ <20220311174134.GA3966@thinkpad>
+ <20220311190147.pvjp6v7whjgyeuey@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20220311190147.pvjp6v7whjgyeuey@mobilestation>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: 5949965ec9340cfc0e65f7d8a576b660b26e2535  x86/PCI: Preserve host bridge windows completely covered by E820
+On Fri, Mar 11, 2022 at 10:01:47PM +0300, Serge Semin wrote:
+> On Fri, Mar 11, 2022 at 11:11:34PM +0530, Manivannan Sadhasivam wrote:
+> > On Thu, Mar 10, 2022 at 07:31:23PM +0300, Serge Semin wrote:
+> > > On Wed, Mar 09, 2022 at 03:12:01PM -0600, Frank Li wrote:
+> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > 
+> > > > When eDMA is controlled by the Endpoint (EP), the current logic incorrectly
+> > > > programs the source and destination addresses for read and write. Since the
+> > > > Root complex and Endpoint uses the opposite channels for read/write, fix the
+> > > > issue by finding out the read operation first and program the eDMA accordingly.
+> > > > 
+> > > > Cc: stable@vger.kernel.org
+> > > > Fixes: bd96f1b2f43a ("dmaengine: dw-edma: support local dma device transfer semantics")
+> > > > Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
+> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > > ---
+> > > > No change between v1 to v4
+> > > > 
+> > > >  drivers/dma/dw-edma/dw-edma-core.c | 32 +++++++++++++++++++++++++++++-
+> > > >  1 file changed, 31 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > > > index 66dc650577919..507f08db1aad3 100644
+> > > > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > > @@ -334,6 +334,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+> > > >  	struct dw_edma_chunk *chunk;
+> > > >  	struct dw_edma_burst *burst;
+> > > >  	struct dw_edma_desc *desc;
+> > > > +	bool read = false;
+> > > >  	u32 cnt = 0;
+> > > >  	int i;
+> > > >  
+> > > > @@ -424,7 +425,36 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+> > > >  		chunk->ll_region.sz += burst->sz;
+> > > >  		desc->alloc_sz += burst->sz;
+> > > >  
+> > > > -		if (chan->dir == EDMA_DIR_WRITE) {
+> > > > +		/****************************************************************
+> > > > +		 *
+> > > 
+> > > > +		 *        Root Complex                           Endpoint
+> > > > +		 * +-----------------------+             +----------------------+
+> > > > +		 * |                       |    TX CH    |                      |
+> > > > +		 * |                       |             |                      |
+> > > > +		 * |      DEV_TO_MEM       <-------------+     MEM_TO_DEV       |
+> > > > +		 * |                       |             |                      |
+> > > > +		 * |                       |             |                      |
+> > > > +		 * |      MEM_TO_DEV       +------------->     DEV_TO_MEM       |
+> > > > +		 * |                       |             |                      |
+> > > > +		 * |                       |    RX CH    |                      |
+> > > > +		 * +-----------------------+             +----------------------+
+> > > > +		 *
+> > > > +		 * If eDMA is controlled by the Root complex, TX channel
+> > > > +		 * (EDMA_DIR_WRITE) is used for memory read (DEV_TO_MEM) and RX
+> > > > +		 * channel (EDMA_DIR_READ) is used for memory write (MEM_TO_DEV).
+> > > > +		 *
+> > > > +		 * If eDMA is controlled by the endpoint, RX channel
+> > > > +		 * (EDMA_DIR_READ) is used for memory read (DEV_TO_MEM) and TX
+> > > > +		 * channel (EDMA_DIR_WRITE) is used for memory write (MEM_TO_DEV).
+> > > 
+> > > Either I have some wrong notion about this issue, or something wrong
+> > > with the explanation above and with this fix below.
+> > > 
+> > > From my understanding of the possible DW eDMA IP-core setups the
+> > > scatch above and the text below it are incorrect. Here is the way the
+> > > DW eDMA can be used:
+> > > 1) Embedded into the DW PCIe Host/EP controller. In this case
+> > > CPU/Application Memory is the memory of the CPU attached to the
+> > > host/EP controller, while the remote (link partner) memory is the PCIe
+> > > bus memory. In this case MEM_TO_DEV operation is supposed to be
+> > > performed by the Tx/Write channels, while the DEV_TO_MEM operation -
+> > > by the Rx/Read channels.
+> > > 
+> > 
+> 
+> > I'm not aware or even not sure about the use of eDMA in the PCIe host.
+> > If that's the case, how the endpoint can access it from remote perspective?
+> > Do you have a usecase or an example where used or even documented?
+> 
+> I am aware. I've got SoC with DW PCIe Host v4.60/v4.70 and eDMA
+> enabled for each of them. I also poses several manuals of the DW PCIe
+> Host and End-points of various versions. Both Host and End-points can
+> have eDMA enabled. But it's possible to have the eDMA accessed via the
+> PCIe wire only for the End-points and only if the IP-core is
+> accordingly synthesized. Other than that the eDMA is configurable from
+> the Local CPU only.
+> 
 
-elapsed time: 720m
+Interesting!
 
-configs tested: 85
-configs skipped: 66
+> > 
+> > > Note it's applicable for both Host and End-point case, when Linux is
+> > > running on the CPU-side of the eDMA controller. So if it's DW PCIe
+> > > end-point, then MEM_TO_DEV means copying data from the local CPU
+> > > memory into the remote memory. In general the remote memory can be
+> > > either some PCIe device on the bus or the Root Complex' CPU memory,
+> > > each of which is some remote device anyway from the Local CPU
+> > > perspective.
+> > > 
+> > > 2) Embedded into the PCIe EP. This case is implemented in the
+> > > drivers/dma/dw-edma/dw-edma-pcie.c driver. AFAICS from the commits log
+> > > and from the driver code, that device is a Synopsys PCIe EndPoint IP
+> > > prototype kit. It is a normal PCIe peripheral device with eDMA
+> > > embedded, which CPU/Application interface is connected to some
+> > > embedded SRAM while remote (link partner) interface is directed
+> > > towards the PCIe bus. At the same time the device is setup and handled
+> > > by the code running on a CPU connected to the PCIe Host controller.  I
+> > > think that in order to preserve the normal DMA operations semantics we
+> > > still need to consider the MEM_TO_DEV/DEV_TO_MEM operations from the
+> > > host CPU perspective, since that's the side the DMA controller is
+> > > supposed to be setup from.  In this MEM_TO_DEV is supposed to be used
+> > > to copy data from the host CPU memory into the remote device memory.
+> > > It means to allocate Rx/Read channel on the eDMA controller, so one
+> > > would be read data from the Local CPU memory and copied it to the PCIe
+> > > device SRAM. The logic of the DEV_TO_MEM direction would be just
+> > > flipped. The eDMA PCIe device shall use Tx/Write channel to copy data
+> > > from it's SRAM into the Host CPU memory.
+> > > 
+> > > Please note as I understand the case 2) describes the Synopsys PCIe
+> > > EndPoint IP prototype kit, which is based on some FPGA code. It's just
+> > > a test setup with no real application, while the case 1) is a real setup
+> > > available on our SoC and I guess on yours.
+> > > 
+> > > So what I suggest in the framework of this patch is just to implement
+> > > the case 1) only. While the case 2) as it's an artificial one can be
+> > > manually handled by the DMA client drivers. BTW There aren't ones available
+> > > in the kernel anyway. The only exception is an old-time attempt to get
+> > > an eDMA IP test-driver mainlined into the kernel:
+> > > https://patchwork.kernel.org/project/linux-pci/patch/cc195ac53839b318764c8f6502002cd6d933a923.1547230339.git.gustavo.pimentel@synopsys.com/
+> > > But it was long time ago. So it's unlikely to be accepted at all.
+> > > 
+> > > What do you think?
+> > > 
+> > 
+> 
+> > As per my understanding, the eDMA is solely used in the PCIe endpoint. And the
+> > access to it happens over PCIe bus or by the local CPU.
+> 
+> Not fully correct. Root Ports can also have eDMA embedded. In that
+> case the eDMA can be only accessible from the local CPU. At the same
+> time the DW PCIe End-point case is the IP-core synthesize parameters
+> specific. It's always possible to access the eDMA CSRs from local
+> CPU, but a particular End-point BAR can be pre-synthesize to map
+> either Port Logic, or eDMA or iATU CSRs. Thus a PCIe root port can
+> perform a full End-point configuration. Anyway the case if the eDMA
+> functionality being accessible over the PCIe wire doesn't really make
+> much sense with no info regarding the application logic hidden behind
+> the PCIe End-point interface since SAR/DAR LLP is supposed to be
+> initialized with an address from the local (application) memory space.
+> 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks for the explanation, it clarifies my doubt. I got misleaded by the
+earlier commits...
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-arm                           h3600_defconfig
-riscv                            allmodconfig
-powerpc                 mpc85xx_cds_defconfig
-mips                           gcw0_defconfig
-sh                        apsh4ad0a_defconfig
-m68k                           sun3_defconfig
-powerpc                 mpc834x_mds_defconfig
-sh                   sh7724_generic_defconfig
-m68k                          amiga_defconfig
-sh                            migor_defconfig
-m68k                        mvme16x_defconfig
-arc                           tb10x_defconfig
-arm                           viper_defconfig
-powerpc                       ppc64_defconfig
-ia64                      gensparse_defconfig
-mips                      fuloong2e_defconfig
-arm                  randconfig-c002-20220310
-arm                  randconfig-c002-20220312
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                                  kexec
+> So AFAICS the main usecase of the controller is 1) - when eDMA is a
+> part of the Root Port/End-point and only local CPU is supposed to have
+> it accessed and configured.
+> 
+> I can resend this patch with my fix to the problem. What do you think?
+> 
 
-clang tested configs:
-arm                  randconfig-c002-20220310
-x86_64                        randconfig-c007
-powerpc              randconfig-c003-20220310
-riscv                randconfig-c006-20220310
-mips                 randconfig-c004-20220310
-i386                          randconfig-c001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220310
-hexagon              randconfig-r041-20220310
-riscv                randconfig-r042-20220310
+Yes, please do.
 
----
-0-DAY CI Kernel Test Service
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Thanks,
+Mani
+
+> -Sergey
+> 
+> > 
+> > The commit from Alan Mikhak is what I took as a reference since the patch was
+> > already merged:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/dw-edma?id=bd96f1b2f43a39310cc576bb4faf2ea24317a4c9
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > -Sergey
+> > > 
+> > > > +		 *
+> > > > +		 ****************************************************************/
+> > > > +
+> > > 
+> > > > +		if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
+> > > > +		    (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
+> > > > +			read = true;
+> > > 
+> > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
+> > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
+> > > redundant.
+> > > 
+> > > > +
+> > > > +		/* Program the source and destination addresses for DMA read/write */
+> > > > +		if (read) {
+> > > >  			burst->sar = src_addr;
+> > > >  			if (xfer->type == EDMA_XFER_CYCLIC) {
+> > > >  				burst->dar = xfer->xfer.cyclic.paddr;
+> > > > -- 
+> > > > 2.24.0.rc1
+> > > > 
