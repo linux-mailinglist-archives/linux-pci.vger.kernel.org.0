@@ -2,75 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7C7D4D6CC8
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Mar 2022 06:37:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C418D4D6EE2
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Mar 2022 14:29:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230297AbiCLFig (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Mar 2022 00:38:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58576 "EHLO
+        id S231863AbiCLNab (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Mar 2022 08:30:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbiCLFif (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Mar 2022 00:38:35 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E2C25ABF9
-        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 21:37:30 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id t187so9198334pgb.1
-        for <linux-pci@vger.kernel.org>; Fri, 11 Mar 2022 21:37:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Sim/PAq/udpdmB+n5RfIVMSElm8ijtbqSgozajQvpkc=;
-        b=eRVyOj4INoXJa0eCpoTA8z2C/Jp0sCU/gG/3kHzt3V8L6BBIZDicwRnJVaDRPjn4VR
-         R0AkfbZtbW0R2qXzCVXekN0AZKoAIF70raXcCuFP06C0I1YkLFyckeqNjZ7bGx780yrD
-         ykMCLoPiPYLYs1MyQ/2alPRff1SN6Cnr+9/Y1USGcq/YSqp8/Z0/csmhtSvLJ8vlN4EI
-         idQdedJ6NDD3c0uk6aCyTlAcL26I7WyXSj1o8DZ5mEZhfL490FLTVQuhLbjie33VuIsj
-         KOJoJ4SFnWELh//65smR/i3S5QdpTmxn/UacfuKhBcvrcv87+/nw68XVz4ti6riu0x/G
-         3yRA==
+        with ESMTP id S231853AbiCLNaa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Mar 2022 08:30:30 -0500
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCAB5E14B
+        for <linux-pci@vger.kernel.org>; Sat, 12 Mar 2022 05:29:25 -0800 (PST)
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 53B153FDC7
+        for <linux-pci@vger.kernel.org>; Sat, 12 Mar 2022 13:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1647091764;
+        bh=OCrj2Lr7nKg3/D4n6AH2mK+/SAYpiHPGeQpPG1FkFdg=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=C5a/Lc+fEWU0XFHELFPTtnYIQ+axiWWdgD2ikjA6y/WsHB5AJeMHCOJnxlUDkU8xE
+         yyQTzpYZm6FXHFS8PEAnz7mBIws/1NXe8Z7yeLI2Ir/TRrI4g+n8DOXyGVFrPP9pXI
+         idU5ojneO0B+NcfSkKamfJaZeRKrLDxGDGBMU0X77aHJbWB0OVF5I0AsNDnH819Uyu
+         N7QZCkxlbHrEJDkWUCsu6OXQXhZHkEP3RnXKSWuPAmasmV9Rym3bPCuvbTRmFnUmKn
+         AOzE1CnftYGixqFmbULqEvKgtEXwGE6n4lmtIhtLhMYQX/zxWqHRYqoxryvd5eA/RS
+         DorYJVLIrpDjg==
+Received: by mail-ed1-f70.google.com with SMTP id l8-20020a056402028800b0041636072ef0so6089481edv.13
+        for <linux-pci@vger.kernel.org>; Sat, 12 Mar 2022 05:29:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Sim/PAq/udpdmB+n5RfIVMSElm8ijtbqSgozajQvpkc=;
-        b=V1FIhizJC5TQQgcRmWX6C6rImtCzEYpdtp5cbwYlqNlRsGmBxuQmscDv49tM9+nsow
-         ehwmfkYH3TOuxq9qA6Vvh/cvKlFREAsoOV1I7CP08+RHU5hvtSoFJ6Ium114i0aD1ONw
-         WqHYpjHTKEiLfuJgeUjNIxo60lg6HrY5VxdSjZb62Y/58hO5UQBVvmzul+Y0dd1u8cJJ
-         qnIVzZRY9O4mQTfECqUJVrFzCm9zv6iQkJXYb4B4s3Rlvf6MJoRavFKKwc4Fghdy9K6h
-         wdVrFqXxErejpXjiH7KP50IjVBOXlCPwdOqfDhGxU8pyIUs9nsIVi9Gm6q9pO0jQ9FkP
-         bGbQ==
-X-Gm-Message-State: AOAM530Y0FLxHyZdpWSCRdFPBMQlZKX7pv2HsJrkkoKl/xcrcMPpk1bC
-        iK36ZhLBbAsKBEX3JpwVDmpb
-X-Google-Smtp-Source: ABdhPJyQRv2A4Z3OBWw2AWJfZAbdIOB0eUyFLzE7vfXWbfjYn1NFJRgxMyKKIa0KNj/Y6VhU5ZSAVg==
-X-Received: by 2002:a62:1a43:0:b0:4f6:ce73:d572 with SMTP id a64-20020a621a43000000b004f6ce73d572mr13765938pfa.69.1647063448682;
-        Fri, 11 Mar 2022 21:37:28 -0800 (PST)
-Received: from thinkpad ([117.202.191.144])
-        by smtp.gmail.com with ESMTPSA id 16-20020a056a00073000b004dfe2217090sm12736160pfm.200.2022.03.11.21.37.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OCrj2Lr7nKg3/D4n6AH2mK+/SAYpiHPGeQpPG1FkFdg=;
+        b=2pT76kpO9FD8HqkwCPW2USS6+Zi07zKGZNi9hyE148FqCpOwQgMJ3CgZB0Dqlktoiv
+         LmTYFWQ1fdWoXoRDybOfu2sO08ugAzBoQBKa1pALzXn9Qw4BceU16ymUwFcfsJErwFRo
+         qvd7IiDo4BXSZc5syzymIszItNa496Zr5ZNkEv9YQ4pZnyUQa6/zaRxTIwY7ALhlN2Bw
+         d5FW9RTmUZDrBwjAYcJZO86Afgp197LO4bMMM9VTujO1/hPwSIeZ7VYVN361dVwf67gq
+         R57A+qdZCKJAZOEj4OR5riNNZpJ2qWEWJrSY/ko6J0QbcpR7xSJEexvYUP0+XKiXbZiT
+         DXMw==
+X-Gm-Message-State: AOAM532xa0BEwFPOcU6o/8jt5Ju4bgm3KiiOqZRIcxEOPIHI+g39Y9QM
+        mrju79Gl2WFIoskc8WgagmqwuIgIgpOY89pIk/YduKNu+vwxq0AqKsdPlVefuqH2D1GoNMl5CaW
+        ZqpiPk4mvWIesPMTYlNJ1jtDuyLQ89jrpd2/FXw==
+X-Received: by 2002:a5d:4dca:0:b0:1f0:2543:e10e with SMTP id f10-20020a5d4dca000000b001f02543e10emr10689877wru.60.1647091753541;
+        Sat, 12 Mar 2022 05:29:13 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx08jwnIztDnOLiXVDOEbPcafrm/CtfYrKe3rhTTULaSTSBSgqOJ8fo2V1YMqeSSpK6UdbZbQ==
+X-Received: by 2002:a5d:4dca:0:b0:1f0:2543:e10e with SMTP id f10-20020a5d4dca000000b001f02543e10emr10689827wru.60.1647091753256;
+        Sat, 12 Mar 2022 05:29:13 -0800 (PST)
+Received: from localhost.localdomain (xdsl-188-155-174-239.adslplus.ch. [188.155.174.239])
+        by smtp.gmail.com with ESMTPSA id p22-20020a1c5456000000b00389e7e62800sm5751550wmi.8.2022.03.12.05.29.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Mar 2022 21:37:28 -0800 (PST)
-Date:   Sat, 12 Mar 2022 11:07:20 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
-        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        shawnguo@kernel.org
-Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
- dest addresses for ep
-Message-ID: <20220312053720.GA4356@thinkpad>
-References: <20220309211204.26050-1-Frank.Li@nxp.com>
- <20220309211204.26050-6-Frank.Li@nxp.com>
- <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
- <20220311174134.GA3966@thinkpad>
- <20220311190147.pvjp6v7whjgyeuey@mobilestation>
+        Sat, 12 Mar 2022 05:29:12 -0800 (PST)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Subject: [PATCH v4 00/11] Fix broken usage of driver_override (and kfree of static memory)
+Date:   Sat, 12 Mar 2022 14:28:45 +0100
+Message-Id: <20220312132856.65163-1-krzysztof.kozlowski@canonical.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220311190147.pvjp6v7whjgyeuey@mobilestation>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -79,204 +107,92 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 11, 2022 at 10:01:47PM +0300, Serge Semin wrote:
-> On Fri, Mar 11, 2022 at 11:11:34PM +0530, Manivannan Sadhasivam wrote:
-> > On Thu, Mar 10, 2022 at 07:31:23PM +0300, Serge Semin wrote:
-> > > On Wed, Mar 09, 2022 at 03:12:01PM -0600, Frank Li wrote:
-> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > 
-> > > > When eDMA is controlled by the Endpoint (EP), the current logic incorrectly
-> > > > programs the source and destination addresses for read and write. Since the
-> > > > Root complex and Endpoint uses the opposite channels for read/write, fix the
-> > > > issue by finding out the read operation first and program the eDMA accordingly.
-> > > > 
-> > > > Cc: stable@vger.kernel.org
-> > > > Fixes: bd96f1b2f43a ("dmaengine: dw-edma: support local dma device transfer semantics")
-> > > > Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > > No change between v1 to v4
-> > > > 
-> > > >  drivers/dma/dw-edma/dw-edma-core.c | 32 +++++++++++++++++++++++++++++-
-> > > >  1 file changed, 31 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > > > index 66dc650577919..507f08db1aad3 100644
-> > > > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > > > @@ -334,6 +334,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
-> > > >  	struct dw_edma_chunk *chunk;
-> > > >  	struct dw_edma_burst *burst;
-> > > >  	struct dw_edma_desc *desc;
-> > > > +	bool read = false;
-> > > >  	u32 cnt = 0;
-> > > >  	int i;
-> > > >  
-> > > > @@ -424,7 +425,36 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
-> > > >  		chunk->ll_region.sz += burst->sz;
-> > > >  		desc->alloc_sz += burst->sz;
-> > > >  
-> > > > -		if (chan->dir == EDMA_DIR_WRITE) {
-> > > > +		/****************************************************************
-> > > > +		 *
-> > > 
-> > > > +		 *        Root Complex                           Endpoint
-> > > > +		 * +-----------------------+             +----------------------+
-> > > > +		 * |                       |    TX CH    |                      |
-> > > > +		 * |                       |             |                      |
-> > > > +		 * |      DEV_TO_MEM       <-------------+     MEM_TO_DEV       |
-> > > > +		 * |                       |             |                      |
-> > > > +		 * |                       |             |                      |
-> > > > +		 * |      MEM_TO_DEV       +------------->     DEV_TO_MEM       |
-> > > > +		 * |                       |             |                      |
-> > > > +		 * |                       |    RX CH    |                      |
-> > > > +		 * +-----------------------+             +----------------------+
-> > > > +		 *
-> > > > +		 * If eDMA is controlled by the Root complex, TX channel
-> > > > +		 * (EDMA_DIR_WRITE) is used for memory read (DEV_TO_MEM) and RX
-> > > > +		 * channel (EDMA_DIR_READ) is used for memory write (MEM_TO_DEV).
-> > > > +		 *
-> > > > +		 * If eDMA is controlled by the endpoint, RX channel
-> > > > +		 * (EDMA_DIR_READ) is used for memory read (DEV_TO_MEM) and TX
-> > > > +		 * channel (EDMA_DIR_WRITE) is used for memory write (MEM_TO_DEV).
-> > > 
-> > > Either I have some wrong notion about this issue, or something wrong
-> > > with the explanation above and with this fix below.
-> > > 
-> > > From my understanding of the possible DW eDMA IP-core setups the
-> > > scatch above and the text below it are incorrect. Here is the way the
-> > > DW eDMA can be used:
-> > > 1) Embedded into the DW PCIe Host/EP controller. In this case
-> > > CPU/Application Memory is the memory of the CPU attached to the
-> > > host/EP controller, while the remote (link partner) memory is the PCIe
-> > > bus memory. In this case MEM_TO_DEV operation is supposed to be
-> > > performed by the Tx/Write channels, while the DEV_TO_MEM operation -
-> > > by the Rx/Read channels.
-> > > 
-> > 
-> 
-> > I'm not aware or even not sure about the use of eDMA in the PCIe host.
-> > If that's the case, how the endpoint can access it from remote perspective?
-> > Do you have a usecase or an example where used or even documented?
-> 
-> I am aware. I've got SoC with DW PCIe Host v4.60/v4.70 and eDMA
-> enabled for each of them. I also poses several manuals of the DW PCIe
-> Host and End-points of various versions. Both Host and End-points can
-> have eDMA enabled. But it's possible to have the eDMA accessed via the
-> PCIe wire only for the End-points and only if the IP-core is
-> accordingly synthesized. Other than that the eDMA is configurable from
-> the Local CPU only.
-> 
+Hi,
 
-Interesting!
+This is a continuation of my old patchset from 2019. [1]
+Back then, few drivers set driver_override wrong. I fixed Exynos
+in a different way after discussions. QCOM NGD was not fixed
+and a new user appeared - IMX SCU.
 
-> > 
-> > > Note it's applicable for both Host and End-point case, when Linux is
-> > > running on the CPU-side of the eDMA controller. So if it's DW PCIe
-> > > end-point, then MEM_TO_DEV means copying data from the local CPU
-> > > memory into the remote memory. In general the remote memory can be
-> > > either some PCIe device on the bus or the Root Complex' CPU memory,
-> > > each of which is some remote device anyway from the Local CPU
-> > > perspective.
-> > > 
-> > > 2) Embedded into the PCIe EP. This case is implemented in the
-> > > drivers/dma/dw-edma/dw-edma-pcie.c driver. AFAICS from the commits log
-> > > and from the driver code, that device is a Synopsys PCIe EndPoint IP
-> > > prototype kit. It is a normal PCIe peripheral device with eDMA
-> > > embedded, which CPU/Application interface is connected to some
-> > > embedded SRAM while remote (link partner) interface is directed
-> > > towards the PCIe bus. At the same time the device is setup and handled
-> > > by the code running on a CPU connected to the PCIe Host controller.  I
-> > > think that in order to preserve the normal DMA operations semantics we
-> > > still need to consider the MEM_TO_DEV/DEV_TO_MEM operations from the
-> > > host CPU perspective, since that's the side the DMA controller is
-> > > supposed to be setup from.  In this MEM_TO_DEV is supposed to be used
-> > > to copy data from the host CPU memory into the remote device memory.
-> > > It means to allocate Rx/Read channel on the eDMA controller, so one
-> > > would be read data from the Local CPU memory and copied it to the PCIe
-> > > device SRAM. The logic of the DEV_TO_MEM direction would be just
-> > > flipped. The eDMA PCIe device shall use Tx/Write channel to copy data
-> > > from it's SRAM into the Host CPU memory.
-> > > 
-> > > Please note as I understand the case 2) describes the Synopsys PCIe
-> > > EndPoint IP prototype kit, which is based on some FPGA code. It's just
-> > > a test setup with no real application, while the case 1) is a real setup
-> > > available on our SoC and I guess on yours.
-> > > 
-> > > So what I suggest in the framework of this patch is just to implement
-> > > the case 1) only. While the case 2) as it's an artificial one can be
-> > > manually handled by the DMA client drivers. BTW There aren't ones available
-> > > in the kernel anyway. The only exception is an old-time attempt to get
-> > > an eDMA IP test-driver mainlined into the kernel:
-> > > https://patchwork.kernel.org/project/linux-pci/patch/cc195ac53839b318764c8f6502002cd6d933a923.1547230339.git.gustavo.pimentel@synopsys.com/
-> > > But it was long time ago. So it's unlikely to be accepted at all.
-> > > 
-> > > What do you think?
-> > > 
-> > 
-> 
-> > As per my understanding, the eDMA is solely used in the PCIe endpoint. And the
-> > access to it happens over PCIe bus or by the local CPU.
-> 
-> Not fully correct. Root Ports can also have eDMA embedded. In that
-> case the eDMA can be only accessible from the local CPU. At the same
-> time the DW PCIe End-point case is the IP-core synthesize parameters
-> specific. It's always possible to access the eDMA CSRs from local
-> CPU, but a particular End-point BAR can be pre-synthesize to map
-> either Port Logic, or eDMA or iATU CSRs. Thus a PCIe root port can
-> perform a full End-point configuration. Anyway the case if the eDMA
-> functionality being accessible over the PCIe wire doesn't really make
-> much sense with no info regarding the application logic hidden behind
-> the PCIe End-point interface since SAR/DAR LLP is supposed to be
-> initialized with an address from the local (application) memory space.
-> 
+It seems "char *" in driver_override looks too consty, so we
+tend to make a mistake of storing there string literals.
 
-Thanks for the explanation, it clarifies my doubt. I got misleaded by the
-earlier commits...
+Changes since latest v3
+=======================
+1. Wrap comments, extend comment in driver_set_override() about newline.
+2. Minor commit msg fixes.
+3. Add tags.
 
-> So AFAICS the main usecase of the controller is 1) - when eDMA is a
-> part of the Root Port/End-point and only local CPU is supposed to have
-> it accessed and configured.
-> 
-> I can resend this patch with my fix to the problem. What do you think?
-> 
+Changes since latest v2
+=======================
+1. Make all driver_override fields as "const char *", just like SPI
+   and VDPA. (Mark)
+2. Move "count" check to the new helper and add "count" argument. (Michael)
+3. Fix typos in docs, patch subject. Extend doc. (Michael, Bjorn)
+4. Compare pointers to reduce number of string readings in the helper.
+5. Fix clk-imx return value.
 
-Yes, please do.
+Changes since latest v1 (not the old 2019 solution):
+====================================================
+https://lore.kernel.org/all/708eabb1-7b35-d525-d4c3-451d4a3de84f@rasmusvillemoes.dk/
+1. Add helper for setting driver_override.
+2. Use the helper.
 
-Thanks,
-Mani
+Dependencies, merging and stable
+================================
+1. All patches, including last three fixes, depend on the first patch
+   introducing the helper.
+2. Merging idea: everything via driver core (Greg KH?).
+2. The last three commits - fixes - are probably not backportable
+   directly, because of this dependency. I don't know how to express
+   this dependency here, since stable-kernel-rules.rst mentions only commits as
+   possible dependencies.
 
-> -Sergey
-> 
-> > 
-> > The commit from Alan Mikhak is what I took as a reference since the patch was
-> > already merged:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/dw-edma?id=bd96f1b2f43a39310cc576bb4faf2ea24317a4c9
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > > -Sergey
-> > > 
-> > > > +		 *
-> > > > +		 ****************************************************************/
-> > > > +
-> > > 
-> > > > +		if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
-> > > > +		    (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
-> > > > +			read = true;
-> > > 
-> > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
-> > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
-> > > redundant.
-> > > 
-> > > > +
-> > > > +		/* Program the source and destination addresses for DMA read/write */
-> > > > +		if (read) {
-> > > >  			burst->sar = src_addr;
-> > > >  			if (xfer->type == EDMA_XFER_CYCLIC) {
-> > > >  				burst->dar = xfer->xfer.cyclic.paddr;
-> > > > -- 
-> > > > 2.24.0.rc1
-> > > > 
+[1] https://lore.kernel.org/all/1550484960-2392-3-git-send-email-krzk@kernel.org/
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (11):
+  driver: platform: Add helper for safer setting of driver_override
+  amba: Use driver_set_override() instead of open-coding
+  fsl-mc: Use driver_set_override() instead of open-coding
+  hv: Use driver_set_override() instead of open-coding
+  PCI: Use driver_set_override() instead of open-coding
+  s390/cio: Use driver_set_override() instead of open-coding
+  spi: Use helper for safer setting of driver_override
+  vdpa: Use helper for safer setting of driver_override
+  clk: imx: scu: Fix kfree() of static memory on setting driver_override
+  slimbus: qcom-ngd: Fix kfree() of static memory on setting
+    driver_override
+  rpmsg: Fix kfree() of static memory on setting driver_override
+
+ drivers/amba/bus.c              | 28 +++--------------
+ drivers/base/driver.c           | 56 +++++++++++++++++++++++++++++++++
+ drivers/base/platform.c         | 28 +++--------------
+ drivers/bus/fsl-mc/fsl-mc-bus.c | 25 +++------------
+ drivers/clk/imx/clk-scu.c       |  7 ++++-
+ drivers/hv/vmbus_drv.c          | 28 +++--------------
+ drivers/pci/pci-sysfs.c         | 28 +++--------------
+ drivers/rpmsg/rpmsg_core.c      |  3 +-
+ drivers/rpmsg/rpmsg_internal.h  | 13 ++++++--
+ drivers/rpmsg/rpmsg_ns.c        | 14 +++++++--
+ drivers/s390/cio/cio.h          |  6 +++-
+ drivers/s390/cio/css.c          | 28 +++--------------
+ drivers/slimbus/qcom-ngd-ctrl.c | 13 +++++++-
+ drivers/spi/spi.c               | 26 +++------------
+ drivers/vdpa/vdpa.c             | 29 +++--------------
+ include/linux/amba/bus.h        |  6 +++-
+ include/linux/device/driver.h   |  2 ++
+ include/linux/fsl/mc.h          |  6 ++--
+ include/linux/hyperv.h          |  6 +++-
+ include/linux/pci.h             |  6 +++-
+ include/linux/platform_device.h |  6 +++-
+ include/linux/rpmsg.h           |  6 ++--
+ include/linux/spi/spi.h         |  2 ++
+ include/linux/vdpa.h            |  4 ++-
+ 24 files changed, 171 insertions(+), 205 deletions(-)
+
+-- 
+2.32.0
+
