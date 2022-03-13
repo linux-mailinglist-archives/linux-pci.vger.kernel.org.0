@@ -2,207 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B8CE4D73EB
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Mar 2022 10:16:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF63A4D76D5
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Mar 2022 17:35:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233251AbiCMJRF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 13 Mar 2022 05:17:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33304 "EHLO
+        id S235031AbiCMQgZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Mar 2022 12:36:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233162AbiCMJRE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Mar 2022 05:17:04 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 616886005B
-        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 01:15:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647162956; x=1678698956;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=TxHCRookVYy5NtdCdmvvZjPXrdpMyVB1FG34d2DOg0I=;
-  b=BurkYdI47nD6M+/bwVgn4N51h7roLIcgT/wHnNaFE+vpHu4smEPTmmeQ
-   Np+orEHwxz8SEBPiDFdwMZlNacAUouZ7IFvOb4SWhxDEyRnAjd+zt/1Jq
-   4whOZgUSqcYtoVAyumVuy7umgxPosFiaZ77vpCwdde18QB4BLHASAPqPQ
-   kazcENf1rYKiD+8i1nxR91dN4Dxy6DP/axQYo1MNeTUEsZ8mb69Xh1s9z
-   7Ty74H6THBa94WgqGuKUSesaUrXwchkyCt+nchLa3CPQuDswkhhHQYdEB
-   W6fVMbEIn3h853TU2swO9WX+TX4qnrHHPCk22ITDPgCcQb9OEPoyuJwWy
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10284"; a="256040341"
-X-IronPort-AV: E=Sophos;i="5.90,178,1643702400"; 
-   d="scan'208";a="256040341"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2022 01:15:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,178,1643702400"; 
-   d="scan'208";a="515056110"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 13 Mar 2022 01:15:54 -0800
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nTKKP-0008nV-LB; Sun, 13 Mar 2022 09:15:53 +0000
-Date:   Sun, 13 Mar 2022 17:15:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/misc] BUILD SUCCESS
- 721af1346bbdc5b35ea73bbb12ba46c821f95155
-Message-ID: <622db647.18rB7KkfALcI2k+D%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S235029AbiCMQgY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Mar 2022 12:36:24 -0400
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E5E2CC9E
+        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 09:35:13 -0700 (PDT)
+Received: by mail-oi1-x232.google.com with SMTP id w2so6926992oie.2
+        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 09:35:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ob4h2d72COnkU3FY3eI+a2UFXuCW1/ScRGHi/UryDqA=;
+        b=TushXGzzRAzyI9MGE9XPNO4vBoxXifNjIKjCnoUkI+mEzZl6CZhW5uEBUDRGoJGHaD
+         yQBQqhTD3jqe3Itl2ih/VYfS2AVqG46q374zGDDL6gBW9JTc2T4zamHj1VeOliVF2mVe
+         Mqmi1px5JxbR15ozq99jBei8hZ++gA42ZIUv22DaY3YHKN7MSH1i0dMTim51IysvPyWn
+         +Gq7wMLMPYLJus5ZwQeaEpMbCZ2JUARUML+mTdMXf95/FsrZn42VmhERTaicPLLP/owq
+         ciqGfh1nxr0ORhDiIRQdbTxVCt0nq6AhVdIEdvPLp0OXeiH7hklifcXG8UdDVkB7o7r7
+         6HBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ob4h2d72COnkU3FY3eI+a2UFXuCW1/ScRGHi/UryDqA=;
+        b=Kt2b/1Rl8SQhFkvMzyP2sl95y4jD2w8o+seJIreSAqPTDQWbB6KHRQgQK3F7wbg5fw
+         E+TxXHaSe+76FwfCErRj3roUUk5lQ6z7ePloyPFo84LhGO8+P/37ZuvEcgNz/R6y3Iup
+         KcTQZnifVx9SFrXbQuwY1+QxtYDCHXlnVCKnpGc1Lb8G8levmFwegkDmk+EWZdSeBIbv
+         aya0Q+LBghuxWJb3ZV8UcdQWUQ0uP7IHICCQ/vv5yBjta9Zt/AHDBVbgcIhWQGxpVPj+
+         F+UKUAyivJc8qIPum0dyG+KA9XYzE8S8FJ0+wFfSb0vbgy1qy72as7GoiQgSTKPepiNl
+         y3+A==
+X-Gm-Message-State: AOAM531RVopKf0EUYCsGsla4KrlA5nWVhGMBHSuFNz8S3sWgXtUESYnm
+        xIn1MD61J6oGs3qojTHRv0LW8g==
+X-Google-Smtp-Source: ABdhPJyf3k5XJ/dltTqtkT8q4cm/xQn+rQVTI2+AHnpPI0GfXenHJMCY3JJm9uRIMdQCmtTZS4KxuA==
+X-Received: by 2002:a54:4e81:0:b0:2ec:ae99:e02d with SMTP id c1-20020a544e81000000b002ecae99e02dmr5435442oiy.261.1647189311060;
+        Sun, 13 Mar 2022 09:35:11 -0700 (PDT)
+Received: from builder.lan ([2600:1700:a0:3dc8:3697:f6ff:fe85:aac9])
+        by smtp.gmail.com with ESMTPSA id e3-20020a056870450300b000da5424e4b0sm5514643oao.50.2022.03.13.09.35.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Mar 2022 09:35:10 -0700 (PDT)
+Date:   Sun, 13 Mar 2022 11:35:07 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v4 11/11] rpmsg: Fix kfree() of static memory on setting
+ driver_override
+Message-ID: <Yi4dOxArKLNyMFZy@builder.lan>
+References: <20220312132856.65163-1-krzysztof.kozlowski@canonical.com>
+ <20220312132856.65163-12-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20220312132856.65163-12-krzysztof.kozlowski@canonical.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
-branch HEAD: 721af1346bbdc5b35ea73bbb12ba46c821f95155  PCI: Declare pci_filp_private only when HAVE_PCI_MMAP
+On Sat 12 Mar 07:28 CST 2022, Krzysztof Kozlowski wrote:
 
-elapsed time: 722m
+> The driver_override field from platform driver should not be initialized
+> from static memory (string literal) because the core later kfree() it,
+> for example when driver_override is set via sysfs.
+> 
+> Use dedicated helper to set driver_override properly.
+> 
+> Fixes: 950a7388f02b ("rpmsg: Turn name service into a stand alone driver")
+> Fixes: c0cdc19f84a4 ("rpmsg: Driver for user space endpoint interface")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 
-configs tested: 123
-configs skipped: 4
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Regards,
+Bjorn
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-mips                 randconfig-c004-20220313
-i386                          randconfig-c001
-nios2                               defconfig
-sh                          polaris_defconfig
-sh                         microdev_defconfig
-powerpc                     tqm8555_defconfig
-powerpc                         wii_defconfig
-parisc                generic-32bit_defconfig
-sh                           sh2007_defconfig
-openrisc                 simple_smp_defconfig
-mips                        vocore2_defconfig
-arc                        vdk_hs38_defconfig
-m68k                          atari_defconfig
-arc                            hsdk_defconfig
-sh                        sh7785lcr_defconfig
-xtensa                  cadence_csp_defconfig
-sh                   sh7724_generic_defconfig
-m68k                       bvme6000_defconfig
-s390                             allmodconfig
-powerpc                 mpc837x_rdb_defconfig
-mips                       capcella_defconfig
-ia64                            zx1_defconfig
-arm                            mps2_defconfig
-mips                  maltasmvp_eva_defconfig
-sh                          sdk7780_defconfig
-arm                        oxnas_v6_defconfig
-mips                             allyesconfig
-powerpc                     taishan_defconfig
-arm                       multi_v4t_defconfig
-ia64                             allmodconfig
-arm                           corgi_defconfig
-mips                     loongson1b_defconfig
-m68k                           sun3_defconfig
-s390                                defconfig
-h8300                     edosk2674_defconfig
-arm                      footbridge_defconfig
-parisc64                            defconfig
-arm                          lpd270_defconfig
-m68k                          hp300_defconfig
-nios2                            alldefconfig
-sh                          rsk7269_defconfig
-sh                          r7785rp_defconfig
-mips                         tb0226_defconfig
-powerpc                        cell_defconfig
-arm                  randconfig-c002-20220313
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-arc                  randconfig-r043-20220313
-riscv                randconfig-r042-20220313
-s390                 randconfig-r044-20220313
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                         rhel-8.3-kunit
-x86_64                                  kexec
-
-clang tested configs:
-arm                  randconfig-c002-20220313
-x86_64                        randconfig-c007
-powerpc              randconfig-c003-20220313
-riscv                randconfig-c006-20220313
-mips                 randconfig-c004-20220313
-i386                          randconfig-c001
-arm                        mvebu_v5_defconfig
-mips                       rbtx49xx_defconfig
-powerpc                     kmeter1_defconfig
-arm                        spear3xx_defconfig
-arm                       aspeed_g4_defconfig
-riscv                             allnoconfig
-powerpc               mpc834x_itxgp_defconfig
-arm                          pcm027_defconfig
-arm                           spitz_defconfig
-powerpc                      pmac32_defconfig
-mips                           ip28_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-
----
-0-DAY CI Kernel Test Service
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> ---
+>  drivers/rpmsg/rpmsg_core.c     |  3 ++-
+>  drivers/rpmsg/rpmsg_internal.h | 13 +++++++++++--
+>  drivers/rpmsg/rpmsg_ns.c       | 14 ++++++++++++--
+>  include/linux/rpmsg.h          |  6 ++++--
+>  4 files changed, 29 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+> index d9e612f4f0f2..6e2bf2742973 100644
+> --- a/drivers/rpmsg/rpmsg_core.c
+> +++ b/drivers/rpmsg/rpmsg_core.c
+> @@ -397,7 +397,8 @@ field##_store(struct device *dev, struct device_attribute *attr,	\
+>  	      const char *buf, size_t sz)				\
+>  {									\
+>  	struct rpmsg_device *rpdev = to_rpmsg_device(dev);		\
+> -	char *new, *old;						\
+> +	const char *old;						\
+> +	char *new;							\
+>  									\
+>  	new = kstrndup(buf, sz, GFP_KERNEL);				\
+>  	if (!new)							\
+> diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+> index b1245d3ed7c6..31345d6e9a7e 100644
+> --- a/drivers/rpmsg/rpmsg_internal.h
+> +++ b/drivers/rpmsg/rpmsg_internal.h
+> @@ -92,10 +92,19 @@ int rpmsg_release_channel(struct rpmsg_device *rpdev,
+>   */
+>  static inline int rpmsg_chrdev_register_device(struct rpmsg_device *rpdev)
+>  {
+> +	int ret;
+> +
+>  	strcpy(rpdev->id.name, "rpmsg_chrdev");
+> -	rpdev->driver_override = "rpmsg_chrdev";
+> +	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
+> +				  "rpmsg_chrdev", strlen("rpmsg_chrdev"));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = rpmsg_register_device(rpdev);
+> +	if (ret)
+> +		kfree(rpdev->driver_override);
+>  
+> -	return rpmsg_register_device(rpdev);
+> +	return ret;
+>  }
+>  
+>  #endif
+> diff --git a/drivers/rpmsg/rpmsg_ns.c b/drivers/rpmsg/rpmsg_ns.c
+> index 762ff1ae279f..95a51543f5ad 100644
+> --- a/drivers/rpmsg/rpmsg_ns.c
+> +++ b/drivers/rpmsg/rpmsg_ns.c
+> @@ -20,12 +20,22 @@
+>   */
+>  int rpmsg_ns_register_device(struct rpmsg_device *rpdev)
+>  {
+> +	int ret;
+> +
+>  	strcpy(rpdev->id.name, "rpmsg_ns");
+> -	rpdev->driver_override = "rpmsg_ns";
+> +	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
+> +				  "rpmsg_ns", strlen("rpmsg_ns"));
+> +	if (ret)
+> +		return ret;
+> +
+>  	rpdev->src = RPMSG_NS_ADDR;
+>  	rpdev->dst = RPMSG_NS_ADDR;
+>  
+> -	return rpmsg_register_device(rpdev);
+> +	ret = rpmsg_register_device(rpdev);
+> +	if (ret)
+> +		kfree(rpdev->driver_override);
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(rpmsg_ns_register_device);
+>  
+> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+> index 02fa9116cd60..20c8cd1cde21 100644
+> --- a/include/linux/rpmsg.h
+> +++ b/include/linux/rpmsg.h
+> @@ -41,7 +41,9 @@ struct rpmsg_channel_info {
+>   * rpmsg_device - device that belong to the rpmsg bus
+>   * @dev: the device struct
+>   * @id: device id (used to match between rpmsg drivers and devices)
+> - * @driver_override: driver name to force a match
+> + * @driver_override: driver name to force a match; do not set directly,
+> + *                   because core frees it; use driver_set_override() to
+> + *                   set or clear it.
+>   * @src: local address
+>   * @dst: destination address
+>   * @ept: the rpmsg endpoint of this channel
+> @@ -51,7 +53,7 @@ struct rpmsg_channel_info {
+>  struct rpmsg_device {
+>  	struct device dev;
+>  	struct rpmsg_device_id id;
+> -	char *driver_override;
+> +	const char *driver_override;
+>  	u32 src;
+>  	u32 dst;
+>  	struct rpmsg_endpoint *ept;
+> -- 
+> 2.32.0
+> 
