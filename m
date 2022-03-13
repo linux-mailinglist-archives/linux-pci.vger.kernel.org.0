@@ -2,74 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 717CE4D7737
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Mar 2022 18:14:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9489A4D77F1
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Mar 2022 20:29:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbiCMRP1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 13 Mar 2022 13:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38258 "EHLO
+        id S233844AbiCMTat (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Mar 2022 15:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232827AbiCMRP0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Mar 2022 13:15:26 -0400
-Received: from mail-oo1-xc2f.google.com (mail-oo1-xc2f.google.com [IPv6:2607:f8b0:4864:20::c2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D022E1BE9B
-        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 10:14:13 -0700 (PDT)
-Received: by mail-oo1-xc2f.google.com with SMTP id g5-20020a4ae885000000b003240bc9b2afso4789387ooe.10
-        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 10:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7JUbXPWavocTrxHfrM8Ljwj1RqbA1g9o14Z+OZzAewE=;
-        b=KLsa6jti1VlDy1yfj527yRPcynATQNAV38Mar46MEPPGxmoL5AA4I1s3vIsQC/1jSB
-         1gRaZQqDv2VCzPmsuEpyu4kPajhJ+P99liIk73KCWqCb7Ta3JfXHBEFaywuGCtKnA4DV
-         R6M5emMwhh416JKZqHgI+RLavRPm1u8U2bKejRTTKM3NIU9UZ7rgQV0E/GjNUt7KJuG6
-         fT4O71lKczFy7RFiQawHVmrMn7M/nMKxdCwjQa4jt+6rHMmSaQHO2XFiNibcmMLUU/Rc
-         bX/ujwtHkoEAX9gmm008mcipc6IE+rx42AzaDh0iNwjzDi49m5B02eQ+yHfYmdudA2Mu
-         3cTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7JUbXPWavocTrxHfrM8Ljwj1RqbA1g9o14Z+OZzAewE=;
-        b=h0dBueQH6L+ivmkapxq9+sXLe8OIoTc4gMai30+GWNGlnvIQ1CPavcGnhHakPFiSgc
-         nLMdCbx9eZ56Akk9WgEk3MqsSEXD39adc6ArWRi/zbqMg8SAE0kuzNMnizsXaqudI6sa
-         6v/Ylu8/rYrTNZNFRXxvgTB5RyhnjLLxK9jbIvGXCqVcHXbRGCEQYsKuhgIPR6IfgInT
-         Iubo2JZmaSlObmpbFcOtjT05wKuCpXoWGFRYtfYNQlbvGgEbO5Qzw8T9sXGGGlbEtPnR
-         JNVhTgArA8+Xh67VUR7qMjdMQNc2guCyDoPMVtLmb2OdYRU185c0a9oRqgmAJ7+nTfnM
-         EYsA==
-X-Gm-Message-State: AOAM533qIG8jja0JL4qgITPH7jU9i876+mGvXPYD7URZESnKF6VK8uES
-        YgSY7874uiGAvdpFPHEyt2vKUQ==
-X-Google-Smtp-Source: ABdhPJzNe5yoZ1PZT7tStcscdhSTkdy1tXd5jWXSCI51FpWnrwIiIWmAMguJrx3QSRKYonFxwTJSCg==
-X-Received: by 2002:a05:6870:c88a:b0:da:cdc2:282c with SMTP id er10-20020a056870c88a00b000dacdc2282cmr6856120oab.115.1647191653069;
-        Sun, 13 Mar 2022 10:14:13 -0700 (PDT)
-Received: from builder.lan ([2600:1700:a0:3dc8:3697:f6ff:fe85:aac9])
-        by smtp.gmail.com with ESMTPSA id q62-20020a4a3341000000b00320f8a179d0sm6191967ooq.30.2022.03.13.10.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Mar 2022 10:14:12 -0700 (PDT)
-Date:   Sun, 13 Mar 2022 12:14:10 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>,
+        with ESMTP id S230155AbiCMTas (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Mar 2022 15:30:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0E5F4D274
+        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 12:29:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 47DAC60A57
+        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 19:29:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61B68C340E8;
+        Sun, 13 Mar 2022 19:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647199779;
+        bh=yr+bK9DWvodmf8ksvjXWdfROscACYUqNUBVvmWQ4yVM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=E3FwoxIUACH9HHeXLHH1pFs5SNCuafvztR9Du3WOUBQMobnRUjaQTuth0zTE3z0UQ
+         8EduOZU7nMW2uaIeeq2sqTYjfNPZb/RGeh/mXpQp2YHu8XmwlISbQFDPV+bLShDQqu
+         df/tILdHvdBHo0e8BTLFD7t475Po8R/T/CdAqin7Tmj1o7EqCTsN6N/DRdyn2V2Vqs
+         nq0llpQcKten9ySX2Tp1hRC4CZPBfxv+nPpoWKbmzHQfbk//8pDrqwePGkKtExD6AC
+         KGPoNsWIfTdzsIVkgqErkzZLLeMgvGL+6KAeHCpyW2b7i4LlXMhCvMhYsdQr98R5Dn
+         VHLwh3KtOPNzQ==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Prasad Malisetty <quic_pmaliset@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH 1/5] clk: qcom: regmap-mux: add pipe clk
- implementation
-Message-ID: <Yi4mYqEaWIIav5rg@builder.lan>
-References: <20220313000824.229405-1-dmitry.baryshkov@linaro.org>
- <20220313000824.229405-2-dmitry.baryshkov@linaro.org>
+        Rob Herring <robh@kernel.org>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/5] PCI: Remove unused assignments
+Date:   Sun, 13 Mar 2022 14:29:28 -0500
+Message-Id: <20220313192933.434746-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220313000824.229405-2-dmitry.baryshkov@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -78,145 +58,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat 12 Mar 18:08 CST 2022, Dmitry Baryshkov wrote:
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-> PCIe PIPE clk (and some other clocks) must be parked to the "safe"
+Krzysztof pointed out several unused variables and unnecessary assignments.
+Clean up some of them.
 
-How about changing this to:
+Bjorn Helgaas (5):
+  PCI: Remove unused assignments
+  PCI: kirin: Remove unused assignments
+  PCI: fu740: Remove unused assignments
+  PCI: cpqphp: Remove unused assignments
+  PCI: ibmphp: Remove unused assignments
 
-"On recent Qualcomm platforms the QMP PIPE clocks feed into a set of
-muxes which must be parked..."
+ drivers/pci/controller/dwc/pcie-fu740.c |  2 +-
+ drivers/pci/controller/dwc/pcie-kirin.c |  3 ---
+ drivers/pci/hotplug/cpqphp_core.c       |  2 +-
+ drivers/pci/hotplug/cpqphp_ctrl.c       | 22 +++++-----------------
+ drivers/pci/hotplug/cpqphp_pci.c        |  2 +-
+ drivers/pci/hotplug/ibmphp_hpc.c        |  2 --
+ drivers/pci/hotplug/ibmphp_res.c        |  3 +--
+ drivers/pci/pci-sysfs.c                 |  7 +------
+ drivers/pci/proc.c                      |  4 ----
+ drivers/pci/setup-bus.c                 |  2 +-
+ 10 files changed, 11 insertions(+), 38 deletions(-)
 
-To cover the fact that the design changed recently and that it relates
-to (at least) USB as well.
+-- 
+2.25.1
 
-> source (bi_tcxo) when corresponding GDSC is turned off and on again.
-> Currently this is handcoded in the PCIe driver, reparenting the
-> gcc_pipe_N_clk_src clock. However the same code sequence should be
-> applied in the pcie-qcom-ep, USB3 and UFS drivers.
-> 
-> Rather than copying this sequence over and over again, follow the
-> example of clk_rcg2_shared_ops and implement this parking in the
-> enable() and disable() clock operations. As we are changing the parent
-> behind the back of the clock framework, also implement custom
-> set_parent() and get_parent() operations behaving accroding to the clock
-> framework expectations (cache the new parent if the clock is in disabled
-> state, return cached parent).
-> 
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/clk/qcom/clk-regmap-mux.c | 70 +++++++++++++++++++++++++++++++
->  drivers/clk/qcom/clk-regmap-mux.h |  3 ++
->  2 files changed, 73 insertions(+)
-> 
-> diff --git a/drivers/clk/qcom/clk-regmap-mux.c b/drivers/clk/qcom/clk-regmap-mux.c
-> index 45d9cca28064..024412b070c5 100644
-> --- a/drivers/clk/qcom/clk-regmap-mux.c
-> +++ b/drivers/clk/qcom/clk-regmap-mux.c
-> @@ -49,9 +49,79 @@ static int mux_set_parent(struct clk_hw *hw, u8 index)
->  	return regmap_update_bits(clkr->regmap, mux->reg, mask, val);
->  }
->  
-> +static u8 mux_safe_get_parent(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap_mux *mux = to_clk_regmap_mux(hw);
-> +	unsigned int val;
-> +
-> +	if (clk_hw_is_enabled(hw))
-> +		return mux_get_parent(hw);
-> +
-> +	val = mux->stored_parent;
-> +
-> +	if (mux->parent_map)
-> +		return qcom_find_cfg_index(hw, mux->parent_map, val);
-> +
-> +	return val;
-> +}
-> +
-> +static int mux_safe_set_parent(struct clk_hw *hw, u8 index)
-> +{
-> +	struct clk_regmap_mux *mux = to_clk_regmap_mux(hw);
-> +
-> +	if (clk_hw_is_enabled(hw))
-> +		return mux_set_parent(hw, index);
-> +
-> +	if (mux->parent_map)
-> +		index = mux->parent_map[index].cfg;
-> +
-> +	mux->stored_parent = index;
-> +
-> +	return 0;
-> +}
-> +
-> +static void mux_safe_disable(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap_mux *mux = to_clk_regmap_mux(hw);
-> +	struct clk_regmap *clkr = to_clk_regmap(hw);
-> +	unsigned int mask = GENMASK(mux->width + mux->shift - 1, mux->shift);
-> +	unsigned int val;
-> +
-> +	regmap_read(clkr->regmap, mux->reg, &val);
-> +
-> +	mux->stored_parent = (val & mask) >> mux->shift;
-> +
-> +	val = mux->safe_src_index;
-> +	val <<= mux->shift;
-> +
-> +	regmap_update_bits(clkr->regmap, mux->reg, mask, val);
-> +}
-> +
-> +static int mux_safe_enable(struct clk_hw *hw)
-> +{
-> +	struct clk_regmap_mux *mux = to_clk_regmap_mux(hw);
-> +	struct clk_regmap *clkr = to_clk_regmap(hw);
-> +	unsigned int mask = GENMASK(mux->width + mux->shift - 1, mux->shift);
-> +	unsigned int val;
-> +
-> +	val = mux->stored_parent;
-> +	val <<= mux->shift;
-> +
-> +	return regmap_update_bits(clkr->regmap, mux->reg, mask, val);
-> +}
-> +
->  const struct clk_ops clk_regmap_mux_closest_ops = {
->  	.get_parent = mux_get_parent,
->  	.set_parent = mux_set_parent,
->  	.determine_rate = __clk_mux_determine_rate_closest,
->  };
->  EXPORT_SYMBOL_GPL(clk_regmap_mux_closest_ops);
-> +
-> +const struct clk_ops clk_regmap_mux_safe_ops = {
-> +	.enable = mux_safe_enable,
-> +	.disable = mux_safe_disable,
-> +	.get_parent = mux_safe_get_parent,
-> +	.set_parent = mux_safe_set_parent,
-> +	.determine_rate = __clk_mux_determine_rate_closest,
-> +};
-> +EXPORT_SYMBOL_GPL(clk_regmap_mux_safe_ops);
-> diff --git a/drivers/clk/qcom/clk-regmap-mux.h b/drivers/clk/qcom/clk-regmap-mux.h
-> index db6f4cdd9586..ab8ab25d79bd 100644
-> --- a/drivers/clk/qcom/clk-regmap-mux.h
-> +++ b/drivers/clk/qcom/clk-regmap-mux.h
-> @@ -14,10 +14,13 @@ struct clk_regmap_mux {
->  	u32			reg;
->  	u32			shift;
->  	u32			width;
-> +	u8			safe_src_index;
-> +	u8			stored_parent;
->  	const struct parent_map	*parent_map;
->  	struct clk_regmap	clkr;
->  };
->  
->  extern const struct clk_ops clk_regmap_mux_closest_ops;
-> +extern const struct clk_ops clk_regmap_mux_safe_ops;
->  
->  #endif
-> -- 
-> 2.34.1
-> 
