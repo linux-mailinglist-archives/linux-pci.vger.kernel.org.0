@@ -2,97 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF63A4D76D5
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Mar 2022 17:35:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FDFA4D7708
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Mar 2022 18:06:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235031AbiCMQgZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 13 Mar 2022 12:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
+        id S234978AbiCMRH4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Mar 2022 13:07:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235029AbiCMQgY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Mar 2022 12:36:24 -0400
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E5E2CC9E
-        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 09:35:13 -0700 (PDT)
-Received: by mail-oi1-x232.google.com with SMTP id w2so6926992oie.2
-        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 09:35:13 -0700 (PDT)
+        with ESMTP id S232917AbiCMRHu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Mar 2022 13:07:50 -0400
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77DFC124C3D
+        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 10:06:41 -0700 (PDT)
+Received: by mail-oi1-x22b.google.com with SMTP id ay7so15043740oib.8
+        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 10:06:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ob4h2d72COnkU3FY3eI+a2UFXuCW1/ScRGHi/UryDqA=;
-        b=TushXGzzRAzyI9MGE9XPNO4vBoxXifNjIKjCnoUkI+mEzZl6CZhW5uEBUDRGoJGHaD
-         yQBQqhTD3jqe3Itl2ih/VYfS2AVqG46q374zGDDL6gBW9JTc2T4zamHj1VeOliVF2mVe
-         Mqmi1px5JxbR15ozq99jBei8hZ++gA42ZIUv22DaY3YHKN7MSH1i0dMTim51IysvPyWn
-         +Gq7wMLMPYLJus5ZwQeaEpMbCZ2JUARUML+mTdMXf95/FsrZn42VmhERTaicPLLP/owq
-         ciqGfh1nxr0ORhDiIRQdbTxVCt0nq6AhVdIEdvPLp0OXeiH7hklifcXG8UdDVkB7o7r7
-         6HBg==
+        bh=cyExqYFUEED5RxJ99VQKUU0rLaGLpZw8O5MJtPofWqo=;
+        b=w0Zd/RiiIOHdkRMkNSHeSi7eso9IcO5PohoAwSu0/ePmEVjXZx7pd8qmedqbbsq2kq
+         VxYETFae1jP3hcDDUmIHfjrAiTBnZRRNKX2G0rVlaHch2lQSmjPbqXG6MlREyrLYs4X5
+         DigFmENvrrR7sdIj3vajOPr6ibNrIxptpUPu0zbMWMkNRv0L/0JpYOExjSL89KC2iQwu
+         daAeomawJ4/Qi5oCbmOCdJjYtZIh/D4gvoFhCfgu0Unt7ewcgmXAtv3py3ftLA2yJ4xH
+         N8qxutTqkM71uogDWlleVGGJUw2ewvmn5emiUNOmqJWGUEF1snsBeMP/iJAruM2tUG9T
+         lYtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ob4h2d72COnkU3FY3eI+a2UFXuCW1/ScRGHi/UryDqA=;
-        b=Kt2b/1Rl8SQhFkvMzyP2sl95y4jD2w8o+seJIreSAqPTDQWbB6KHRQgQK3F7wbg5fw
-         E+TxXHaSe+76FwfCErRj3roUUk5lQ6z7ePloyPFo84LhGO8+P/37ZuvEcgNz/R6y3Iup
-         KcTQZnifVx9SFrXbQuwY1+QxtYDCHXlnVCKnpGc1Lb8G8levmFwegkDmk+EWZdSeBIbv
-         aya0Q+LBghuxWJb3ZV8UcdQWUQ0uP7IHICCQ/vv5yBjta9Zt/AHDBVbgcIhWQGxpVPj+
-         F+UKUAyivJc8qIPum0dyG+KA9XYzE8S8FJ0+wFfSb0vbgy1qy72as7GoiQgSTKPepiNl
-         y3+A==
-X-Gm-Message-State: AOAM531RVopKf0EUYCsGsla4KrlA5nWVhGMBHSuFNz8S3sWgXtUESYnm
-        xIn1MD61J6oGs3qojTHRv0LW8g==
-X-Google-Smtp-Source: ABdhPJyf3k5XJ/dltTqtkT8q4cm/xQn+rQVTI2+AHnpPI0GfXenHJMCY3JJm9uRIMdQCmtTZS4KxuA==
-X-Received: by 2002:a54:4e81:0:b0:2ec:ae99:e02d with SMTP id c1-20020a544e81000000b002ecae99e02dmr5435442oiy.261.1647189311060;
-        Sun, 13 Mar 2022 09:35:11 -0700 (PDT)
+        bh=cyExqYFUEED5RxJ99VQKUU0rLaGLpZw8O5MJtPofWqo=;
+        b=b9naI7Gy879Y7guKmYzcpOHEhaklw69jm81l/26VklCYIdhxgxWa1Cw8EgsXsdoTt3
+         ryf0SFHeEbcU2wmX5ha+tUpR7ujC/pwhY0WgcbzZvz9qppWCTBK5KX+yQq57rgqMhfC3
+         oIiXAfog8q2vg2CYQT+LV33MjGc8mB71iqWd2QcLNPhtKoWRgT85ZpuI+f0hy9WIV4O0
+         RyM59+mNJA9kvOy4p3VfSCrx17MyOeG02Dn9I4mc+S+QGtIvUHbwgCBPWmwgKV39QHSc
+         +U0Sg9joz6WDeo3Wp3LnoaR6rp+a7dajPgL0eA9bjWYd9oeHuCRlrs8fSGxOLAMDN3Uf
+         ZQSQ==
+X-Gm-Message-State: AOAM5323YbAQDv6qH7zuvrwkISlAe61ZrB/7c8sSqb3RCfM5PPAZQ1yd
+        5AA37shXrZ4Kkq+aZ8CQlJM3Jg==
+X-Google-Smtp-Source: ABdhPJygdsYZgzeuWh6Zt/A4twhiG0Fc/WetWlZMXaohY5Zh2Oq9OJ8S7pwu1gFMTdBX7izRarxTtw==
+X-Received: by 2002:a05:6808:302b:b0:2cb:2fea:cf9 with SMTP id ay43-20020a056808302b00b002cb2fea0cf9mr12430643oib.117.1647191200773;
+        Sun, 13 Mar 2022 10:06:40 -0700 (PDT)
 Received: from builder.lan ([2600:1700:a0:3dc8:3697:f6ff:fe85:aac9])
-        by smtp.gmail.com with ESMTPSA id e3-20020a056870450300b000da5424e4b0sm5514643oao.50.2022.03.13.09.35.09
+        by smtp.gmail.com with ESMTPSA id p21-20020a4a2f15000000b00320fca09b74sm6326576oop.1.2022.03.13.10.06.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Mar 2022 09:35:10 -0700 (PDT)
-Date:   Sun, 13 Mar 2022 11:35:07 -0500
+        Sun, 13 Mar 2022 10:06:40 -0700 (PDT)
+Date:   Sun, 13 Mar 2022 12:06:38 -0500
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v4 11/11] rpmsg: Fix kfree() of static memory on setting
- driver_override
-Message-ID: <Yi4dOxArKLNyMFZy@builder.lan>
-References: <20220312132856.65163-1-krzysztof.kozlowski@canonical.com>
- <20220312132856.65163-12-krzysztof.kozlowski@canonical.com>
+        Prasad Malisetty <quic_pmaliset@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [RFC PATCH 4/5] PCI: qcom: Remove unnecessary pipe_clk handling
+Message-ID: <Yi4knsfVrEmEEzKM@builder.lan>
+References: <20220313000824.229405-1-dmitry.baryshkov@linaro.org>
+ <20220313000824.229405-5-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220312132856.65163-12-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220313000824.229405-5-dmitry.baryshkov@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -103,18 +77,15 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat 12 Mar 07:28 CST 2022, Krzysztof Kozlowski wrote:
+On Sat 12 Mar 18:08 CST 2022, Dmitry Baryshkov wrote:
 
-> The driver_override field from platform driver should not be initialized
-> from static memory (string literal) because the core later kfree() it,
-> for example when driver_override is set via sysfs.
+> QMP PHY driver already does clk_prepare_enable()/_disable() pipe_clk.
+> Remove extra calls to enable/disable this clock from the PCIe driver, so
+> that the PHY driver can manage the clock on its own.
 > 
-> Use dedicated helper to set driver_override properly.
-> 
-> Fixes: 950a7388f02b ("rpmsg: Turn name service into a stand alone driver")
-> Fixes: c0cdc19f84a4 ("rpmsg: Driver for user space endpoint interface")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> Fixes: aa9c0df98c29 ("PCI: qcom: Switch pcie_1_pipe_clk_src after PHY init in SC7280")
+> Cc: Prasad Malisetty <quic_pmaliset@quicinc.com>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
@@ -122,105 +93,141 @@ Regards,
 Bjorn
 
 > ---
->  drivers/rpmsg/rpmsg_core.c     |  3 ++-
->  drivers/rpmsg/rpmsg_internal.h | 13 +++++++++++--
->  drivers/rpmsg/rpmsg_ns.c       | 14 ++++++++++++--
->  include/linux/rpmsg.h          |  6 ++++--
->  4 files changed, 29 insertions(+), 7 deletions(-)
+>  drivers/pci/controller/dwc/pcie-qcom.c | 50 ++------------------------
+>  1 file changed, 3 insertions(+), 47 deletions(-)
 > 
-> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-> index d9e612f4f0f2..6e2bf2742973 100644
-> --- a/drivers/rpmsg/rpmsg_core.c
-> +++ b/drivers/rpmsg/rpmsg_core.c
-> @@ -397,7 +397,8 @@ field##_store(struct device *dev, struct device_attribute *attr,	\
->  	      const char *buf, size_t sz)				\
->  {									\
->  	struct rpmsg_device *rpdev = to_rpmsg_device(dev);		\
-> -	char *new, *old;						\
-> +	const char *old;						\
-> +	char *new;							\
->  									\
->  	new = kstrndup(buf, sz, GFP_KERNEL);				\
->  	if (!new)							\
-> diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
-> index b1245d3ed7c6..31345d6e9a7e 100644
-> --- a/drivers/rpmsg/rpmsg_internal.h
-> +++ b/drivers/rpmsg/rpmsg_internal.h
-> @@ -92,10 +92,19 @@ int rpmsg_release_channel(struct rpmsg_device *rpdev,
->   */
->  static inline int rpmsg_chrdev_register_device(struct rpmsg_device *rpdev)
->  {
-> +	int ret;
-> +
->  	strcpy(rpdev->id.name, "rpmsg_chrdev");
-> -	rpdev->driver_override = "rpmsg_chrdev";
-> +	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
-> +				  "rpmsg_chrdev", strlen("rpmsg_chrdev"));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = rpmsg_register_device(rpdev);
-> +	if (ret)
-> +		kfree(rpdev->driver_override);
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 6ab90891801d..a6becafb6a77 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -128,7 +128,6 @@ struct qcom_pcie_resources_2_3_2 {
+>  	struct clk *master_clk;
+>  	struct clk *slave_clk;
+>  	struct clk *cfg_clk;
+> -	struct clk *pipe_clk;
+>  	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
+>  };
 >  
-> -	return rpmsg_register_device(rpdev);
-> +	return ret;
+> @@ -165,7 +164,6 @@ struct qcom_pcie_resources_2_7_0 {
+>  	int num_clks;
+>  	struct regulator_bulk_data supplies[2];
+>  	struct reset_control *pci_reset;
+> -	struct clk *pipe_clk;
+>  	struct clk *pipe_clk_src;
+>  	struct clk *phy_pipe_clk;
+>  	struct clk *ref_clk_src;
+> @@ -597,8 +595,7 @@ static int qcom_pcie_get_resources_2_3_2(struct qcom_pcie *pcie)
+>  	if (IS_ERR(res->slave_clk))
+>  		return PTR_ERR(res->slave_clk);
+>  
+> -	res->pipe_clk = devm_clk_get(dev, "pipe");
+> -	return PTR_ERR_OR_ZERO(res->pipe_clk);
+> +	return 0;
 >  }
 >  
->  #endif
-> diff --git a/drivers/rpmsg/rpmsg_ns.c b/drivers/rpmsg/rpmsg_ns.c
-> index 762ff1ae279f..95a51543f5ad 100644
-> --- a/drivers/rpmsg/rpmsg_ns.c
-> +++ b/drivers/rpmsg/rpmsg_ns.c
-> @@ -20,12 +20,22 @@
->   */
->  int rpmsg_ns_register_device(struct rpmsg_device *rpdev)
->  {
-> +	int ret;
-> +
->  	strcpy(rpdev->id.name, "rpmsg_ns");
-> -	rpdev->driver_override = "rpmsg_ns";
-> +	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
-> +				  "rpmsg_ns", strlen("rpmsg_ns"));
-> +	if (ret)
-> +		return ret;
-> +
->  	rpdev->src = RPMSG_NS_ADDR;
->  	rpdev->dst = RPMSG_NS_ADDR;
->  
-> -	return rpmsg_register_device(rpdev);
-> +	ret = rpmsg_register_device(rpdev);
-> +	if (ret)
-> +		kfree(rpdev->driver_override);
-> +
-> +	return ret;
+>  static void qcom_pcie_deinit_2_3_2(struct qcom_pcie *pcie)
+> @@ -613,13 +610,6 @@ static void qcom_pcie_deinit_2_3_2(struct qcom_pcie *pcie)
+>  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
 >  }
->  EXPORT_SYMBOL(rpmsg_ns_register_device);
 >  
-> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-> index 02fa9116cd60..20c8cd1cde21 100644
-> --- a/include/linux/rpmsg.h
-> +++ b/include/linux/rpmsg.h
-> @@ -41,7 +41,9 @@ struct rpmsg_channel_info {
->   * rpmsg_device - device that belong to the rpmsg bus
->   * @dev: the device struct
->   * @id: device id (used to match between rpmsg drivers and devices)
-> - * @driver_override: driver name to force a match
-> + * @driver_override: driver name to force a match; do not set directly,
-> + *                   because core frees it; use driver_set_override() to
-> + *                   set or clear it.
->   * @src: local address
->   * @dst: destination address
->   * @ept: the rpmsg endpoint of this channel
-> @@ -51,7 +53,7 @@ struct rpmsg_channel_info {
->  struct rpmsg_device {
->  	struct device dev;
->  	struct rpmsg_device_id id;
-> -	char *driver_override;
-> +	const char *driver_override;
->  	u32 src;
->  	u32 dst;
->  	struct rpmsg_endpoint *ept;
+> -static void qcom_pcie_post_deinit_2_3_2(struct qcom_pcie *pcie)
+> -{
+> -	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+> -
+> -	clk_disable_unprepare(res->pipe_clk);
+> -}
+> -
+>  static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+>  {
+>  	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+> @@ -694,22 +684,6 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+>  	return ret;
+>  }
+>  
+> -static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+> -{
+> -	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+> -	struct dw_pcie *pci = pcie->pci;
+> -	struct device *dev = pci->dev;
+> -	int ret;
+> -
+> -	ret = clk_prepare_enable(res->pipe_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable pipe clock\n");
+> -		return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+>  {
+>  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+> @@ -1198,8 +1172,7 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
+>  			return PTR_ERR(res->ref_clk_src);
+>  	}
+>  
+> -	res->pipe_clk = devm_clk_get(dev, "pipe");
+> -	return PTR_ERR_OR_ZERO(res->pipe_clk);
+> +	return 0;
+>  }
+>  
+>  static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> @@ -1238,12 +1211,6 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+>  		goto err_disable_clocks;
+>  	}
+>  
+> -	ret = clk_prepare_enable(res->pipe_clk);
+> -	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable pipe clock\n");
+> -		goto err_disable_clocks;
+> -	}
+> -
+>  	/* Wait for reset to complete, required on SM8450 */
+>  	usleep_range(1000, 1500);
+>  
+> @@ -1298,14 +1265,7 @@ static int qcom_pcie_post_init_2_7_0(struct qcom_pcie *pcie)
+>  	if (pcie->cfg->pipe_clk_need_muxing)
+>  		clk_set_parent(res->pipe_clk_src, res->phy_pipe_clk);
+>  
+> -	return clk_prepare_enable(res->pipe_clk);
+> -}
+> -
+> -static void qcom_pcie_post_deinit_2_7_0(struct qcom_pcie *pcie)
+> -{
+> -	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> -
+> -	clk_disable_unprepare(res->pipe_clk);
+> +	return 0;
+>  }
+>  
+>  static int qcom_pcie_link_up(struct dw_pcie *pci)
+> @@ -1455,9 +1415,7 @@ static const struct qcom_pcie_ops ops_1_0_0 = {
+>  static const struct qcom_pcie_ops ops_2_3_2 = {
+>  	.get_resources = qcom_pcie_get_resources_2_3_2,
+>  	.init = qcom_pcie_init_2_3_2,
+> -	.post_init = qcom_pcie_post_init_2_3_2,
+>  	.deinit = qcom_pcie_deinit_2_3_2,
+> -	.post_deinit = qcom_pcie_post_deinit_2_3_2,
+>  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+>  };
+>  
+> @@ -1484,7 +1442,6 @@ static const struct qcom_pcie_ops ops_2_7_0 = {
+>  	.deinit = qcom_pcie_deinit_2_7_0,
+>  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+>  	.post_init = qcom_pcie_post_init_2_7_0,
+> -	.post_deinit = qcom_pcie_post_deinit_2_7_0,
+>  };
+>  
+>  /* Qcom IP rev.: 1.9.0 */
+> @@ -1494,7 +1451,6 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
+>  	.deinit = qcom_pcie_deinit_2_7_0,
+>  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+>  	.post_init = qcom_pcie_post_init_2_7_0,
+> -	.post_deinit = qcom_pcie_post_deinit_2_7_0,
+>  	.config_sid = qcom_pcie_config_sid_sm8250,
+>  };
+>  
 > -- 
-> 2.32.0
+> 2.34.1
 > 
