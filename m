@@ -2,180 +2,207 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C1584D71C8
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Mar 2022 01:19:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B8CE4D73EB
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Mar 2022 10:16:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233144AbiCMAUG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Mar 2022 19:20:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47888 "EHLO
+        id S233251AbiCMJRF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Mar 2022 05:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231424AbiCMAUF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Mar 2022 19:20:05 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9A90F22BDE
-        for <linux-pci@vger.kernel.org>; Sat, 12 Mar 2022 16:18:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647130736;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aU12aXI0nEauDVlqXZUcV1/rWNx8riFMg5QnGWUSeY8=;
-        b=avC/y0665Wx36JYC8DrhqNBdSKx0ySM5D0Oe3jsWuVsOaOfL5a4WR1a8YKYUEhfz5u5f/C
-        EKKIQSa9pOkurvp6LoFp+nHKz/6YMSs/bD+cm2/OG/esc0COWEn5BJDwBq9kuFwXHbWJP1
-        h56Gs/HRjYgC24UuwEQO/BkrPlT/zE8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-197-WnXp96mmOOOJjNKZ0UtxdA-1; Sat, 12 Mar 2022 19:18:55 -0500
-X-MC-Unique: WnXp96mmOOOJjNKZ0UtxdA-1
-Received: by mail-ej1-f72.google.com with SMTP id y5-20020a1709060a8500b006da9258a34cso6673189ejf.21
-        for <linux-pci@vger.kernel.org>; Sat, 12 Mar 2022 16:18:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aU12aXI0nEauDVlqXZUcV1/rWNx8riFMg5QnGWUSeY8=;
-        b=MYgPsLzmIiNxPLqF1NPcqiy7KQRtGMkl6pWBbCpHQhj7AM/RMY9e0u/OOCArPwag24
-         6ScdxQxh+8wMrFprDSzQ76B1fGfTiQAw0F3sXmyKkBNRazExpYJpGBy4pFV42nnj/C4K
-         Ygl/f0c7M+LHEpIG+MlRtR+cQ6zaCElVLzpz4g0sxrbQo1ASAF6WHVUQjz8bry3sBBpx
-         oJuxcw7EKJfETjh5JbYCcVwHU/uf0TvY5QhIDKPLj81GCnGDZWAfwmdCHbIRyO1MzRor
-         JXkwF/X5ZAEAXr8UXSp08koZkY4ydiQYWodmoEY6C5LvS93xJNxYaZDEawn2z6Srd/jl
-         9WAg==
-X-Gm-Message-State: AOAM531fFhRa8La0qVdQd0Mw9T9mWrvz7AKHSnuWzUZhndgzta/qBKmD
-        2wUry1hfI6ctUEe6sqi0wx0ycJmr4SmX50e1Fi0ifCpEmuiH1hgUxLPaip/mCSOQIBcNF2ngi7r
-        sX3joRBvBJLToKYM7EBxD
-X-Received: by 2002:a17:906:7953:b0:6da:951c:1173 with SMTP id l19-20020a170906795300b006da951c1173mr14006403ejo.465.1647130734303;
-        Sat, 12 Mar 2022 16:18:54 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyTW7jukeffXPd44IwM8ULWjAAjUUSeFWDf/jK+F/hKS8czFPnDNsmp7ccs5WfZmNdxPvzdXQ==
-X-Received: by 2002:a17:906:7953:b0:6da:951c:1173 with SMTP id l19-20020a170906795300b006da951c1173mr14006363ejo.465.1647130734008;
-        Sat, 12 Mar 2022 16:18:54 -0800 (PST)
-Received: from redhat.com ([2a03:c5c0:207e:97fa:8a98:fc0d:1935:f619])
-        by smtp.gmail.com with ESMTPSA id j11-20020a05640211cb00b00418572a3638sm2097646edw.38.2022.03.12.16.18.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Mar 2022 16:18:52 -0800 (PST)
-Date:   Sat, 12 Mar 2022 19:18:42 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v4 08/11] vdpa: Use helper for safer setting of
- driver_override
-Message-ID: <20220312191834-mutt-send-email-mst@kernel.org>
-References: <20220312132856.65163-1-krzysztof.kozlowski@canonical.com>
- <20220312132856.65163-9-krzysztof.kozlowski@canonical.com>
+        with ESMTP id S233162AbiCMJRE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Mar 2022 05:17:04 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 616886005B
+        for <linux-pci@vger.kernel.org>; Sun, 13 Mar 2022 01:15:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647162956; x=1678698956;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TxHCRookVYy5NtdCdmvvZjPXrdpMyVB1FG34d2DOg0I=;
+  b=BurkYdI47nD6M+/bwVgn4N51h7roLIcgT/wHnNaFE+vpHu4smEPTmmeQ
+   Np+orEHwxz8SEBPiDFdwMZlNacAUouZ7IFvOb4SWhxDEyRnAjd+zt/1Jq
+   4whOZgUSqcYtoVAyumVuy7umgxPosFiaZ77vpCwdde18QB4BLHASAPqPQ
+   kazcENf1rYKiD+8i1nxR91dN4Dxy6DP/axQYo1MNeTUEsZ8mb69Xh1s9z
+   7Ty74H6THBa94WgqGuKUSesaUrXwchkyCt+nchLa3CPQuDswkhhHQYdEB
+   W6fVMbEIn3h853TU2swO9WX+TX4qnrHHPCk22ITDPgCcQb9OEPoyuJwWy
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10284"; a="256040341"
+X-IronPort-AV: E=Sophos;i="5.90,178,1643702400"; 
+   d="scan'208";a="256040341"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2022 01:15:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,178,1643702400"; 
+   d="scan'208";a="515056110"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 13 Mar 2022 01:15:54 -0800
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nTKKP-0008nV-LB; Sun, 13 Mar 2022 09:15:53 +0000
+Date:   Sun, 13 Mar 2022 17:15:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/misc] BUILD SUCCESS
+ 721af1346bbdc5b35ea73bbb12ba46c821f95155
+Message-ID: <622db647.18rB7KkfALcI2k+D%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220312132856.65163-9-krzysztof.kozlowski@canonical.com>
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 12, 2022 at 02:28:53PM +0100, Krzysztof Kozlowski wrote:
-> Use a helper to set driver_override to reduce amount of duplicated code.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
+branch HEAD: 721af1346bbdc5b35ea73bbb12ba46c821f95155  PCI: Declare pci_filp_private only when HAVE_PCI_MMAP
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+elapsed time: 722m
 
-> ---
->  drivers/vdpa/vdpa.c  | 29 ++++-------------------------
->  include/linux/vdpa.h |  4 +++-
->  2 files changed, 7 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/vdpa/vdpa.c b/drivers/vdpa/vdpa.c
-> index 1ea525433a5c..2dabed1df35c 100644
-> --- a/drivers/vdpa/vdpa.c
-> +++ b/drivers/vdpa/vdpa.c
-> @@ -77,32 +77,11 @@ static ssize_t driver_override_store(struct device *dev,
->  				     const char *buf, size_t count)
->  {
->  	struct vdpa_device *vdev = dev_to_vdpa(dev);
-> -	const char *driver_override, *old;
-> -	char *cp;
-> +	int ret;
->  
-> -	/* We need to keep extra room for a newline */
-> -	if (count >= (PAGE_SIZE - 1))
-> -		return -EINVAL;
-> -
-> -	driver_override = kstrndup(buf, count, GFP_KERNEL);
-> -	if (!driver_override)
-> -		return -ENOMEM;
-> -
-> -	cp = strchr(driver_override, '\n');
-> -	if (cp)
-> -		*cp = '\0';
-> -
-> -	device_lock(dev);
-> -	old = vdev->driver_override;
-> -	if (strlen(driver_override)) {
-> -		vdev->driver_override = driver_override;
-> -	} else {
-> -		kfree(driver_override);
-> -		vdev->driver_override = NULL;
-> -	}
-> -	device_unlock(dev);
-> -
-> -	kfree(old);
-> +	ret = driver_set_override(dev, &vdev->driver_override, buf, count);
-> +	if (ret)
-> +		return ret;
->  
->  	return count;
->  }
-> diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
-> index 721089bb4c84..37117404660e 100644
-> --- a/include/linux/vdpa.h
-> +++ b/include/linux/vdpa.h
-> @@ -64,7 +64,9 @@ struct vdpa_mgmt_dev;
->   * struct vdpa_device - representation of a vDPA device
->   * @dev: underlying device
->   * @dma_dev: the actual device that is performing DMA
-> - * @driver_override: driver name to force a match
-> + * @driver_override: driver name to force a match; do not set directly,
-> + *                   because core frees it; use driver_set_override() to
-> + *                   set or clear it.
->   * @config: the configuration ops for this device.
->   * @cf_mutex: Protects get and set access to configuration layout.
->   * @index: device index
-> -- 
-> 2.32.0
+configs tested: 123
+configs skipped: 4
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+mips                 randconfig-c004-20220313
+i386                          randconfig-c001
+nios2                               defconfig
+sh                          polaris_defconfig
+sh                         microdev_defconfig
+powerpc                     tqm8555_defconfig
+powerpc                         wii_defconfig
+parisc                generic-32bit_defconfig
+sh                           sh2007_defconfig
+openrisc                 simple_smp_defconfig
+mips                        vocore2_defconfig
+arc                        vdk_hs38_defconfig
+m68k                          atari_defconfig
+arc                            hsdk_defconfig
+sh                        sh7785lcr_defconfig
+xtensa                  cadence_csp_defconfig
+sh                   sh7724_generic_defconfig
+m68k                       bvme6000_defconfig
+s390                             allmodconfig
+powerpc                 mpc837x_rdb_defconfig
+mips                       capcella_defconfig
+ia64                            zx1_defconfig
+arm                            mps2_defconfig
+mips                  maltasmvp_eva_defconfig
+sh                          sdk7780_defconfig
+arm                        oxnas_v6_defconfig
+mips                             allyesconfig
+powerpc                     taishan_defconfig
+arm                       multi_v4t_defconfig
+ia64                             allmodconfig
+arm                           corgi_defconfig
+mips                     loongson1b_defconfig
+m68k                           sun3_defconfig
+s390                                defconfig
+h8300                     edosk2674_defconfig
+arm                      footbridge_defconfig
+parisc64                            defconfig
+arm                          lpd270_defconfig
+m68k                          hp300_defconfig
+nios2                            alldefconfig
+sh                          rsk7269_defconfig
+sh                          r7785rp_defconfig
+mips                         tb0226_defconfig
+powerpc                        cell_defconfig
+arm                  randconfig-c002-20220313
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+arc                  randconfig-r043-20220313
+riscv                randconfig-r042-20220313
+s390                 randconfig-r044-20220313
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+x86_64                                  kexec
+
+clang tested configs:
+arm                  randconfig-c002-20220313
+x86_64                        randconfig-c007
+powerpc              randconfig-c003-20220313
+riscv                randconfig-c006-20220313
+mips                 randconfig-c004-20220313
+i386                          randconfig-c001
+arm                        mvebu_v5_defconfig
+mips                       rbtx49xx_defconfig
+powerpc                     kmeter1_defconfig
+arm                        spear3xx_defconfig
+arm                       aspeed_g4_defconfig
+riscv                             allnoconfig
+powerpc               mpc834x_itxgp_defconfig
+arm                          pcm027_defconfig
+arm                           spitz_defconfig
+powerpc                      pmac32_defconfig
+mips                           ip28_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+
+---
+0-DAY CI Kernel Test Service
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
