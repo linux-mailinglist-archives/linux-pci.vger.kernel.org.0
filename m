@@ -2,61 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23A304D7BF2
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Mar 2022 08:33:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 292474D7D9F
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Mar 2022 09:33:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236753AbiCNHeI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Mar 2022 03:34:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47816 "EHLO
+        id S231250AbiCNIez (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Mar 2022 04:34:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236676AbiCNHdn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Mar 2022 03:33:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE7140A38;
-        Mon, 14 Mar 2022 00:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=zCMW1Q+QCPXYuvBuEGOZUQKFwE9OwdLFtYhltvQ29K4=; b=vIJ2oE33+/DMOwDU/JixqH774f
-        4HcyxfW75FjmmRylwNxtYUZ/EQtjckE6WUtJCk9FMmZ9UiNrJUQNReUkRYB9gehR9d8FPU1StVV25
-        mDZAU61IRRH6aevchvran8PrU1UUMctkO1s07C1dw7LyB44+FDPejkmKQZWLyMHg5oTrChOy5x3wo
-        MfT4/jWOnm16vvedpWLshlHmUjvCe5TTKasktRFAsL18gH/ZI5fWAS0KZoTBRUiVEpg29wVYcYU1M
-        9OpeHj+MXwuceM9FZp/nCmHAVa7rGsk1e3aB6Qq0bvLlVR46azzHlVR3oWpheK6+ceqEjGSc2s8WB
-        kPKhfqNA==;
-Received: from [46.140.54.162] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nTfBi-0044wm-QZ; Mon, 14 Mar 2022 07:32:19 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org
-Cc:     x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 15/15] x86: remove cruft from <asm/dma-mapping.h>
-Date:   Mon, 14 Mar 2022 08:31:29 +0100
-Message-Id: <20220314073129.1862284-16-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220314073129.1862284-1-hch@lst.de>
-References: <20220314073129.1862284-1-hch@lst.de>
+        with ESMTP id S229772AbiCNIey (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Mar 2022 04:34:54 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E2F165C8;
+        Mon, 14 Mar 2022 01:33:44 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id 25so20692123ljv.10;
+        Mon, 14 Mar 2022 01:33:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/lxC0RZgyTNm5IJy+tApWTULFN2ZbIloTBHcLX3Txa4=;
+        b=RK1LKmtrCEPcKEW6DR+Kh77VUky4SPt3P8QAMyVY/JtAio5EA/nG/jmmqBTTKvhp+e
+         VdcVLcD7wlOJBVF6I04e2Zp6nfUMy37StwrwoOijqhqJ596yykKCRG+uSgXkGihbs3qS
+         tyKic8dMUEIaxjRwF5djptDQQljsTgw2qV2wp6eZLt8N6FgUxZVknBlJrJrUOvU/P/Tk
+         823A2HgaGgTJsEkWbVLeqZn8OAfH++SZC9sfSO878Rj/YT4PYAaafT9hZRTypt8p7yFX
+         skSdhXFgfTzmTUXuIsGwKgcJ2C/CN5ADv8AzDOwQ68wIhN74oYw2w7nkwQZ/Qq4JV1bO
+         J+Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/lxC0RZgyTNm5IJy+tApWTULFN2ZbIloTBHcLX3Txa4=;
+        b=PuLzBu/mn7ATOnxHltgnp9QXnEGJ4RSQjprjQzuekME5gBKxwHsgXJ/tkpuxd6FwSt
+         T0t8qinlbkOQ/5XWw5nttTl1+vAgUrQlA8PAqQVHM4u0yxC9PpGagwELQcvk28KlhHay
+         8Obhr+Wuj8YxhUkcN705g+r5I3yQ2HRZXYmqcie4VTyoCFs01lrDksrRtHuoLpWHppMV
+         WVp6L/WiL9Vd/TJVDwTzAlfZUiTq7q2IcyXUgmtko+EJCmNSr2vyJ+Qoa1rO3PCRAh1D
+         ORfD3oNQWT/UP1w/pf9+aLPhHKKqBD4ci8mr4anHeia7xJoXdiB+W0e1zZJ82aV/D07U
+         59iw==
+X-Gm-Message-State: AOAM533sA1uNlXwuM7OMM2ywoP25kfy8+lODMb2al6rvkN6muVBnR883
+        OMbjc7Wh1fUWSYXM2Nbtu2A=
+X-Google-Smtp-Source: ABdhPJzRKpeLltrQrE8DFtgLrrgPbOU9E2Y8LQXYmZRIlYR70Grus7D6/LJRPq+BfmZP88rPYoCTeQ==
+X-Received: by 2002:a05:651c:12c7:b0:23e:b8f9:15b2 with SMTP id 7-20020a05651c12c700b0023eb8f915b2mr13323382lje.382.1647246822824;
+        Mon, 14 Mar 2022 01:33:42 -0700 (PDT)
+Received: from mobilestation ([95.79.188.22])
+        by smtp.gmail.com with ESMTPSA id n13-20020a056512388d00b00443d9064160sm3127921lft.125.2022.03.14.01.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Mar 2022 01:33:42 -0700 (PDT)
+Date:   Mon, 14 Mar 2022 11:33:40 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org
+Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
+ dest addresses for ep
+Message-ID: <20220314083340.244dfwo4v3uuhkkm@mobilestation>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-6-Frank.Li@nxp.com>
+ <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
+ <20220311174134.GA3966@thinkpad>
+ <20220311190147.pvjp6v7whjgyeuey@mobilestation>
+ <20220312053720.GA4356@thinkpad>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220312053720.GA4356@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,50 +80,83 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-<asm/dma-mapping.h> gets pulled in by all drivers using the DMA API.
-Remove x86 internal variables and unnecessary includes from it.
+On Sat, Mar 12, 2022 at 11:07:20AM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Mar 11, 2022 at 10:01:47PM +0300, Serge Semin wrote:
+> > On Fri, Mar 11, 2022 at 11:11:34PM +0530, Manivannan Sadhasivam wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/x86/include/asm/dma-mapping.h | 11 -----------
- arch/x86/include/asm/iommu.h       |  2 ++
- 2 files changed, 2 insertions(+), 11 deletions(-)
+[nip]
 
-diff --git a/arch/x86/include/asm/dma-mapping.h b/arch/x86/include/asm/dma-mapping.h
-index 256fd8115223d..1c66708e30623 100644
---- a/arch/x86/include/asm/dma-mapping.h
-+++ b/arch/x86/include/asm/dma-mapping.h
-@@ -2,17 +2,6 @@
- #ifndef _ASM_X86_DMA_MAPPING_H
- #define _ASM_X86_DMA_MAPPING_H
- 
--/*
-- * IOMMU interface. See Documentation/core-api/dma-api-howto.rst and
-- * Documentation/core-api/dma-api.rst for documentation.
-- */
--
--#include <linux/scatterlist.h>
--#include <asm/io.h>
--
--extern int iommu_merge;
--extern int panic_on_overflow;
--
- extern const struct dma_map_ops *dma_ops;
- 
- static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
-diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
-index dba89ed40d38d..0bef44d30a278 100644
---- a/arch/x86/include/asm/iommu.h
-+++ b/arch/x86/include/asm/iommu.h
-@@ -8,6 +8,8 @@
- 
- extern int force_iommu, no_iommu;
- extern int iommu_detected;
-+extern int iommu_merge;
-+extern int panic_on_overflow;
- 
- #ifdef CONFIG_SWIOTLB
- extern bool x86_swiotlb_enable;
--- 
-2.30.2
+> > 
+> > > As per my understanding, the eDMA is solely used in the PCIe endpoint. And the
+> > > access to it happens over PCIe bus or by the local CPU.
+> > 
+> > Not fully correct. Root Ports can also have eDMA embedded. In that
+> > case the eDMA can be only accessible from the local CPU. At the same
+> > time the DW PCIe End-point case is the IP-core synthesize parameters
+> > specific. It's always possible to access the eDMA CSRs from local
+> > CPU, but a particular End-point BAR can be pre-synthesize to map
+> > either Port Logic, or eDMA or iATU CSRs. Thus a PCIe root port can
+> > perform a full End-point configuration. Anyway the case if the eDMA
+> > functionality being accessible over the PCIe wire doesn't really make
+> > much sense with no info regarding the application logic hidden behind
+> > the PCIe End-point interface since SAR/DAR LLP is supposed to be
+> > initialized with an address from the local (application) memory space.
+> > 
+> 
+> Thanks for the explanation, it clarifies my doubt. I got misleaded by the
+> earlier commits...
+> 
+> > So AFAICS the main usecase of the controller is 1) - when eDMA is a
+> > part of the Root Port/End-point and only local CPU is supposed to have
+> > it accessed and configured.
+> > 
+> > I can resend this patch with my fix to the problem. What do you think?
+> > 
+> 
 
+> Yes, please do.
+
+Ok. I'll be AFK today, but will send my patches tomorrow.  @Frank,
+Could you please hold on with respinning the series for a few days?
+I'll send out some of my patches then with a note which one of them
+could be picked up by you and merged into this series.
+
+-Sergey
+
+> 
+> Thanks,
+> Mani
+> 
+> > -Sergey
+> > 
+> > > 
+> > > The commit from Alan Mikhak is what I took as a reference since the patch was
+> > > already merged:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/dw-edma?id=bd96f1b2f43a39310cc576bb4faf2ea24317a4c9
+> > > 
+> > > Thanks,
+> > > Mani
+> > > 
+> > > > -Sergey
+> > > > 
+> > > > > +		 *
+> > > > > +		 ****************************************************************/
+> > > > > +
+> > > > 
+> > > > > +		if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
+> > > > > +		    (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
+> > > > > +			read = true;
+> > > > 
+> > > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
+> > > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
+> > > > redundant.
+> > > > 
+> > > > > +
+> > > > > +		/* Program the source and destination addresses for DMA read/write */
+> > > > > +		if (read) {
+> > > > >  			burst->sar = src_addr;
+> > > > >  			if (xfer->type == EDMA_XFER_CYCLIC) {
+> > > > >  				burst->dar = xfer->xfer.cyclic.paddr;
+> > > > > -- 
+> > > > > 2.24.0.rc1
+> > > > > 
