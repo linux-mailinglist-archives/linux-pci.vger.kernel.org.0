@@ -2,214 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAB1D4D88F9
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Mar 2022 17:21:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C0BD4D89F4
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Mar 2022 17:44:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242889AbiCNQXC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Mar 2022 12:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42310 "EHLO
+        id S237595AbiCNQl4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Mar 2022 12:41:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241710AbiCNQXC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Mar 2022 12:23:02 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC6B17E23
-        for <linux-pci@vger.kernel.org>; Mon, 14 Mar 2022 09:21:50 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id o8so14281926pgf.9
-        for <linux-pci@vger.kernel.org>; Mon, 14 Mar 2022 09:21:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qALLnaCSSKUHcfprNAAItch631Ge5KfRQPx2pUNLQTQ=;
-        b=H7D/n0JbKj9EjOt8JtzKTXMQH0CNTpYB4I8wApB4Rmv61PHXEWj9mIPqgO05ZTyBRV
-         gGQOTLYfGzzw1FdftrzkIh6XmORv26rbqjicyHqSgwyZQEb8kvdu+uMfyc1qS98htKOL
-         qldzP/g9QTFXumZOPLV1iMBVFyiv24zQIs4wc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qALLnaCSSKUHcfprNAAItch631Ge5KfRQPx2pUNLQTQ=;
-        b=zAupPxu9oMS2NEa39RTXtnoQ/j4hYPNpI+P5fF+1FwRtmqeCVk6+1GElGVo6N/vUQX
-         ZuqOBpSkR5INgazkgOGrTPBw6FnT9dwIA/oKVgVt3ENyxu1IxVr3LlKD6i6PedznbI+6
-         1/lsTdwKUHQCvOe53I1pyoSqLaSMiVJ/NWMn9SGIRxzYlT/2dGVQ2BJERwk+OyoAne4s
-         uyujnm9BqWfHr2oG4z0UNgmCscHzDxLFYAh6x5Drw4B8N/Ii0WW2rPLl8fOYyhZVHPlk
-         etoYhuTmwgFL5tXI6Q8dLl2pT182+ajefdpwFdS8salykQyVilxS+i7VsZAE7NmxSJol
-         ubzw==
-X-Gm-Message-State: AOAM533B97Z7ekJUbTFoFrp6D6xiFWwPzyrgNBo81Mj5t2McmEAjAWaW
-        AditkVeopZxrYNTQjanSPFzY3w==
-X-Google-Smtp-Source: ABdhPJywlNfTDHCbCn7W5tk/3WvfHJOH4isiXUJsYK3fHzRwOBGDMLdgv9KHuQlVH/xNrUex2nFbYw==
-X-Received: by 2002:a65:6091:0:b0:35e:d274:5f54 with SMTP id t17-20020a656091000000b0035ed2745f54mr20676714pgu.200.1647274910285;
-        Mon, 14 Mar 2022 09:21:50 -0700 (PDT)
-Received: from ebps (cpe-75-80-179-40.san.res.rr.com. [75.80.179.40])
-        by smtp.gmail.com with ESMTPSA id c3-20020a056a00248300b004f6f729e485sm21916449pfv.127.2022.03.14.09.21.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Mar 2022 09:21:49 -0700 (PDT)
-Date:   Mon, 14 Mar 2022 09:21:46 -0700
-From:   Eric Badger <ebadger@purestorage.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v1] PCI/AER: Handle Multi UnCorrectable/Correctable
- errors properly
-Message-ID: <20220314162146.GA1439451@ebps>
-References: <20220311025807.14664-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20220313195220.GA436941@bhelgaas>
- <20220313214314.GD182809@otc-nc-03>
+        with ESMTP id S243880AbiCNQi0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Mar 2022 12:38:26 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5D3F31EEFE;
+        Mon, 14 Mar 2022 09:37:00 -0700 (PDT)
+Received: from jpiotrowski-Surface-Book-3 (ip-037-201-215-233.um10.pools.vodafone-ip.de [37.201.215.233])
+        by linux.microsoft.com (Postfix) with ESMTPSA id E9FF5205836A;
+        Mon, 14 Mar 2022 09:36:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E9FF5205836A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1647275819;
+        bh=TANwhXsmvSoowjz9fhb6c0Fd/b7jlbQ0LayQhJAe704=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sevBVUwN9Njy9W0lVbgHuO2iFIH/DCQJx1beCuQ7p+2YNcsvNvvz46MV/SD+9K7pn
+         Z9Ri9xz0mGzKuEhEq6Ckh1+omZu0Xfe8RyB6C2LP3PC5S4UUksvWV9rruh2E6+R1ai
+         I3A+Nq17RUIJ/6JsU/zMDjZyGn4bssEvg0s1egxE=
+Date:   Mon, 14 Mar 2022 17:36:47 +0100
+From:   Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Stefan Roese <sr@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Marek Vasut <marex@denx.de>, stable@vger.kernel.org,
+        x86@kernel.org, maz@kernel.org
+Subject: Re: [tip: irq/urgent] PCI/MSI: Mask MSI-X vectors only on success
+Message-ID: <Yi9vH2F2OBDprwd8@jpiotrowski-Surface-Book-3>
+References: <20211210161025.3287927-1-sr@denx.de>
+ <163948488617.23020.3934435568065766936.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220313214314.GD182809@otc-nc-03>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <163948488617.23020.3934435568065766936.tip-bot2@tip-bot2>
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Mar 13, 2022 at 02:43:14PM -0700, Raj, Ashok wrote:
-> On Sun, Mar 13, 2022 at 02:52:20PM -0500, Bjorn Helgaas wrote:
-> > On Fri, Mar 11, 2022 at 02:58:07AM +0000, Kuppuswamy Sathyanarayanan wrote:
-> > > Currently the aer_irq() handler returns IRQ_NONE for cases without bits
-> > > PCI_ERR_ROOT_UNCOR_RCV or PCI_ERR_ROOT_COR_RCV are set. But this
-> > > assumption is incorrect.
-> > > 
-> > > Consider a scenario where aer_irq() is triggered for a correctable
-> > > error, and while we process the error and before we clear the error
-> > > status in "Root Error Status" register, if the same kind of error
-> > > is triggered again, since aer_irq() only clears events it saw, the
-> > > multi-bit error is left in tact. This will cause the interrupt to fire
-> > > again, resulting in entering aer_irq() with just the multi-bit error
-> > > logged in the "Root Error Status" register.
-> > > 
-> > > Repeated AER recovery test has revealed this condition does happen
-> > > and this prevents any new interrupt from being triggered. Allow to
-> > > process interrupt even if only multi-correctable (BIT 1) or
-> > > multi-uncorrectable bit (BIT 3) is set.
-> > > 
-> > > Reported-by: Eric Badger <ebadger@purestorage.com>
-> > 
-> > Is there a bug report with any concrete details (dmesg, lspci, etc)
-> > that we can include here?
+Hi Thomas, Hi Stefan,
+
+On Tue, Dec 14, 2021 at 12:28:06PM -0000, tip-bot2 for Stefan Roese wrote:
+> The following commit has been merged into the irq/urgent branch of tip:
 > 
-> Eric might have more details to add when he collected numerous logs to get
-> to the timeline of the problem. The test was to stress the links with an
-> automated power off, this will result in some eDPC UC error followed by
-> link down. The recovery worked fine for several cycles and suddenly there
-> were no more interrupts. A manual rescan on pci would probe and device is
-> operational again.
+> Commit-ID:     83dbf898a2d45289be875deb580e93050ba67529
+> Gitweb:        https://git.kernel.org/tip/83dbf898a2d45289be875deb580e93050ba67529
+> Author:        Stefan Roese <sr@denx.de>
+> AuthorDate:    Tue, 14 Dec 2021 12:49:32 +01:00
+> Committer:     Thomas Gleixner <tglx@linutronix.de>
+> CommitterDate: Tue, 14 Dec 2021 13:23:32 +01:00
+> 
+> PCI/MSI: Mask MSI-X vectors only on success
+> 
+> Masking all unused MSI-X entries is done to ensure that a crash kernel
+> starts from a clean slate, which correponds to the reset state of the
+> device as defined in the PCI-E specificion 3.0 and later:
+> 
+>  Vector Control for MSI-X Table Entries
+>  --------------------------------------
+> 
+>  "00: Mask bit:  When this bit is set, the function is prohibited from
+>                  sending a message using this MSI-X Table entry.
+>                  ...
+>                  This bit’s state after reset is 1 (entry is masked)."
+> 
+> A Marvell NVME device fails to deliver MSI interrupts after trying to
+> enable MSI-X interrupts due to that masking. It seems to take the MSI-X
+> mask bits into account even when MSI-X is disabled.
+> 
+> While not specification compliant, this can be cured by moving the masking
+> into the success path, so that the MSI-X table entries stay in device reset
+> state when the MSI-X setup fails.
+> 
+> [ tglx: Move it into the success path, add comment and amend changelog ]
+> 
+> Fixes: aa8092c1d1f1 ("PCI/MSI: Mask all unused MSI-X entries")                                                                                                                                                                                                                 
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-pci@vger.kernel.org
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: Marek Vasut <marex@denx.de>
+> Cc: stable@vger.kernel.org
+> Link: https://lore.kernel.org/r/20211210161025.3287927-1-sr@denx.de
+> ---
+>  drivers/pci/msi.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 48e3f4e..6748cf9 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -722,9 +722,6 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+>  		goto out_disable;
+>  	}
+>  
+> -	/* Ensure that all table entries are masked. */
+> -	msix_mask_all(base, tsize);
+> -
+>  	ret = msix_setup_entries(dev, base, entries, nvec, affd);
+>  	if (ret)
+>  		goto out_disable;
+> @@ -751,6 +748,16 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+>  	/* Set MSI-X enabled bits and unmask the function */
+>  	pci_intx_for_msi(dev, 0);
+>  	dev->msix_enabled = 1;
+> +
+> +	/*
+> +	 * Ensure that all table entries are masked to prevent
+> +	 * stale entries from firing in a crash kernel.
+> +	 *
+> +	 * Done late to deal with a broken Marvell NVME device
+> +	 * which takes the MSI-X mask bits into account even
+> +	 * when MSI-X is disabled, which prevents MSI delivery.
+> +	 */
+> +	msix_mask_all(base, tsize);
+>  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+>  
+>  	pcibios_free_irq(dev);
 
-The problem was originally discovered while performing a looping hot plug
-test. At hot remove time, one or more corrected errors usually appeared:
+We've had reports of issues with AWS m4 instances, which use Intel 82559 VFs
+for networking (ixgbevf) with MSI-X interrupts, which I've bisected down to
+this commit. Since this commit these VMs no longer have any network connectivity
+and so fail to boot. This occurs with both 5.15 and 5.10 kernels, reverting the
+backport of this commit restores networking.
 
-[256236.078151] pcieport 0000:89:02.0: AER: Corrected error received: 0000:89:02.0
-[256236.078154] pcieport 0000:89:02.0: AER: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-[256236.088606] pcieport 0000:89:02.0: AER:   device [8086:347a] error status/mask=00000001/00000000
-[256236.097857] pcieport 0000:89:02.0: AER:    [ 0] RxErr                 
-[256236.152622] pcieport 0000:89:02.0: pciehp: Slot(400): Link Down
-[256236.152623] pcieport 0000:89:02.0: pciehp: Slot(400): Card not present
-[256236.152631] pcieport 0000:89:02.0: DPC: containment event, status:0x1f01 source:0x0000
-[256236.152632] pcieport 0000:89:02.0: DPC: unmasked uncorrectable error detected reason 0 ext_reason 0
-[256236.152634] pcieport 0000:89:02.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
-[256236.164207] pcieport 0000:89:02.0: AER:   device [8086:347a] error status/mask=00000020/00100000
-[256236.173464] pcieport 0000:89:02.0: AER:    [ 5] SDES                   (First)
-[256236.278407] pci 0000:8a:00.0: Removing from iommu group 32
-[256237.500837] pcieport 0000:89:02.0: Data Link Layer Link Active not set in 1000 msec
-[256237.500842] pcieport 0000:89:02.0: link reset at upstream device 0000:89:02.0 failed
-[256237.500865] pcieport 0000:89:02.0: AER: Device recovery failed
+Do you have any suggestions of how this can be resolved other than a revert?
 
-The problematic case arose when 2 corrected errors arrived in a sequence like this:
+Here's the full bisect log:
 
-1. Correctable error triggered, bit 0 (ERR_COR) set in Root Error Status,
-   which now has value 0x1.
-2. aer_irq() triggered, reads Root Error Status, finds value 0x1.
-3. Second correctable error triggered, bit 1 (multiple ERR_COR) set in Root
-   Error Status, which now has value 0x3.
-4. aer_irq() writes back 0x1 to Root Error Status, which now has value 0x2.
-5. aer_irq() triggered again due to the second error, but, finding value 0x2
-   in Root Error Status, takes no action. Future interrupts are now inhibited.
-  
-My observation on Intel Icelake is that a new AER interrupt will be generated
-when one writes to Root Error Status but other bits remain set. I concluded
-this based on testing with ACPI EINJ and a hack like this:
+$ git bisect log
+git bisect start
+# good: [4e8c680af6d51ba9315e31bd4f7599e080561a2d] Linux 5.15.7
+git bisect good 4e8c680af6d51ba9315e31bd4f7599e080561a2d
+# bad: [efe3167e52a5833ec20ee6214be9b99b378564a8] Linux 5.15.27
+git bisect bad efe3167e52a5833ec20ee6214be9b99b378564a8
+# bad: [63dcc388662c3562de94d69bfa771ae4cd29b79f] Linux 5.15.16
+git bisect bad 63dcc388662c3562de94d69bfa771ae4cd29b79f
+# good: [57dcae4a8b93271c4e370920ea0dbb94a0215d30] Linux 5.15.10
+git bisect good 57dcae4a8b93271c4e370920ea0dbb94a0215d30
+# bad: [25960cafa06e6fcd830e6c792e6a7de68c1e25ed] Linux 5.15.12
+git bisect bad 25960cafa06e6fcd830e6c792e6a7de68c1e25ed
+# bad: [fb6ad5cb3b6745e7bffc5fe19b130f3594375634] Linux 5.15.11
+git bisect bad fb6ad5cb3b6745e7bffc5fe19b130f3594375634
+# good: [257b3bb16634fd936129fe2f57a91594a75b8751] drm/amd/pm: fix a potential gpu_metrics_table memory leak
+git bisect good 257b3bb16634fd936129fe2f57a91594a75b8751
+# bad: [bbdaa7a48f465a2ee76d65839caeda08af1ef3b2] btrfs: fix double free of anon_dev after failure to create subvolume
+git bisect bad bbdaa7a48f465a2ee76d65839caeda08af1ef3b2
+# good: [c8e8e6f4108e4c133b09f31f6cc7557ee6df3bb6] bpf, selftests: Fix racing issue in btf_skc_cls_ingress test
+git bisect good c8e8e6f4108e4c133b09f31f6cc7557ee6df3bb6
+# bad: [5cb5c3e1b184da9f49e46119a0e506519fc58185] usb: xhci: Extend support for runtime power management for AMD's Yellow carp.
+git bisect bad 5cb5c3e1b184da9f49e46119a0e506519fc58185
+# good: [e7a8a261bab07ec1ed5f5bb990aacc4de9c08eb4] tty: n_hdlc: make n_hdlc_tty_wakeup() asynchronous
+git bisect good e7a8a261bab07ec1ed5f5bb990aacc4de9c08eb4
+# good: [4df1af29930b03d61fb774bfaa5100dbdb964628] PCI/MSI: Clear PCI_MSIX_FLAGS_MASKALL on error
+git bisect good 4df1af29930b03d61fb774bfaa5100dbdb964628
+# bad: [d8888cdabedf353ab9b5a6af75f70bf341a3e7df] PCI/MSI: Mask MSI-X vectors only on success
+git bisect bad d8888cdabedf353ab9b5a6af75f70bf341a3e7df
+# first bad commit: [d8888cdabedf353ab9b5a6af75f70bf341a3e7df] PCI/MSI: Mask MSI-X vectors only on success
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 9fa1f97e5b27..5c9bbbe7887b 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1196,6 +1196,10 @@ static irqreturn_t aer_irq(int irq, void *context)
- 	struct aer_err_source e_src = {};
- 
- 	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS, &e_src.status);
-+
-+	pci_dbg(pdev->port, "Root Error Status: %04x\n", e_src.status);
-+	return IRQ_NONE;
-+
- 	if (!(e_src.status & (PCI_ERR_ROOT_UNCOR_RCV|PCI_ERR_ROOT_COR_RCV)))
- 		return IRQ_NONE;
- 
-And then running these commands:
-
-    # Prep injection data for a correctable error.
-    $ cd /sys/kernel/debug/apei/einj
-    $ echo 0x00000040 > error_type
-    $ echo 0x4 > flags
-    $ echo 0x891000 > param4
-    
-    # Root Error Status is initially clear
-    $ setpci -s 89:02.0 ECAP0001+0x30.w
-    0000
-    
-    # Inject one error
-    $ echo 1 > error_inject
-    
-    # Interrupt received
-    [  285.526275] pcieport 0000:89:02.0: AER: Root Error Status 0001
-    
-    # Inject another error
-    $ echo 1 > error_inject
-    
-    # No interrupt received, but "multiple ERR_COR" is now set
-    $ setpci -s 89:02.0 ECAP0001+0x30.w
-    0003
-    
-    # Wait for a while, then clear ERR_COR. A new interrupt immediately fires.
-    $ setpci -s 89:02.0 ECAP0001+0x30.w=0x1
-    [  354.596748] pcieport 0000:89:02.0: AER: Root Error Status 0002
-
-
-I've tried to track down some different hardware to confirm this behavior, but
-haven't found any that can run this test.
-
-My reading of the PCIe 5.0 spec, section "6.2.4.1.2 Interrupt Generation"
-doesn't seem to describe the behavior I saw on Icelake.
-
-	If a Root Port or Root Complex Event Collector is enabled for
-	edge-triggered interrupt signaling using MSI or MSI-X, an interrupt
-	message must be sent every time the logical AND of the following
-	conditions transitions from FALSE to TRUE:
-	...
-    At least one Error Reporting Enable bit in the Root Error Command
-    register and its associated error Messages Received bit in the Root
-    Error Status register are both set to 1b.
-
-This section of the spec seems to say that, if Root Error Status sees the
-sequence of values described above (0x1->0x3->0x2), only one interrupt would
-be generated, since there was no FALSE to TRUE transition at 0x3->0x2.  So you
-would need something analogous to:
-
-8edf5332c3934 ("PCI: pciehp: Fix MSI interrupt race")
-
-However, this seems not to be the case for Icelake.
-
-Cheers,
-Eric
+Bests,
+Jeremi
