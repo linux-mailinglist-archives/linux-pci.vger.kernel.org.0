@@ -2,60 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B60864D7FB1
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Mar 2022 11:18:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72E014D7FEC
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Mar 2022 11:34:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237238AbiCNKTe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Mar 2022 06:19:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39630 "EHLO
+        id S238585AbiCNKfc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Mar 2022 06:35:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238487AbiCNKTe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Mar 2022 06:19:34 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B1733A0A
-        for <linux-pci@vger.kernel.org>; Mon, 14 Mar 2022 03:18:23 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id g26so29647297ybj.10
-        for <linux-pci@vger.kernel.org>; Mon, 14 Mar 2022 03:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=wDGDeehEZPGpze0RO6FQvp0IceNJoA8QmK4KQwTNeLI=;
-        b=XB0hyhTUjLV57hBJO7gtymm36NYBUxu8UTErl31LbAmygBTfvoqRAd0cZItho7Y9qE
-         r2rT7LRTjtpLEFFSRZ48lcUdYK7HB6Iun+AFIh0D9jHTcfBpHKRrn6ZFx9OCinTfdcSZ
-         Co0JzLHP8WfwBwGLfCP5QN/S4Q96Uw+bj+ZlOaUoGPkpAqeG5XxaosrSERFFUfD3W3iL
-         yOc0KkwT1brnLQhv7OMUOpQC+xzxt2f1pEPtFuW2FDw6eaKeZPShVjLzDdIs0EN1G1RD
-         nBsm68xuRkJ3QsQYeA9hc3LJiLCiovX/lqWhivrrKy9PdsqDr7nQUJXHrB24DLFwYiVJ
-         YOrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=wDGDeehEZPGpze0RO6FQvp0IceNJoA8QmK4KQwTNeLI=;
-        b=DsWRYkKSbG3sTD7XXXXFyL2Etrc7Ixca8x/idZTcvWfiVZ0tbFjkycC9e/1ogXqxAQ
-         9elNOw1XuUQbxdtZdr4PC0VAjNeHecFcuee8MKun1yF2ZIM2UQWeEMJPyXhpPb075zz3
-         qceXkYAsm/RHU6dmBrOmitqs1Mq87XhR3UZ0oNn7rcvKb5DuHqE6zZJlPtF5GFoOw6Pe
-         EM46FY3STcZIiGXqEdOhSlGL/6dTElBCsJnlRtDJRHof1KHqkQb7deH5/HOqqTqXX67L
-         lBsjbIdFmnUAaPJphkkLhP40/EbkHQEHy229nLdrwGGX8QbsY8DAJ2wuRsofrtEAAxsX
-         XUfA==
-X-Gm-Message-State: AOAM530sx9l6B+BJiuezB/MdQ9LTPsuvROku0/cNak42lVcyWJR5qbJJ
-        MoO57n9OHAi5E8M5OPkWUki6MkLAoYMg5Fv/Lj7bOp/2ezfmq5fN
-X-Google-Smtp-Source: ABdhPJx37yGfdMLVDH3YVC2JGDsN3FPzTfyd52eymvP0wDjULht1ChFDKmjqIKQb1l3NsJkbdMVYDM/z+Q1SIHZxs/w=
-X-Received: by 2002:a25:5090:0:b0:628:b76b:b9d3 with SMTP id
- e138-20020a255090000000b00628b76bb9d3mr17135646ybb.128.1647253103104; Mon, 14
- Mar 2022 03:18:23 -0700 (PDT)
+        with ESMTP id S238591AbiCNKfa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Mar 2022 06:35:30 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1CC08434A0;
+        Mon, 14 Mar 2022 03:34:21 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D21EB1042;
+        Mon, 14 Mar 2022 03:34:20 -0700 (PDT)
+Received: from e123427-lin.arm.com (unknown [10.57.42.155])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A7323F99C;
+        Mon, 14 Mar 2022 03:34:19 -0700 (PDT)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     linux-pci@vger.kernel.org, marek.vasut@gmail.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+Subject: Re: [PATCH v6 1/2] PCI: rcar: Finish transition to L1 state in rcar_pcie_config_access()
+Date:   Mon, 14 Mar 2022 10:34:12 +0000
+Message-Id: <164725399057.13052.7405723522140650308.b4-ty@arm.com>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20220312212349.781799-1-marek.vasut@gmail.com>
+References: <20220312212349.781799-1-marek.vasut@gmail.com>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 14 Mar 2022 15:48:12 +0530
-Message-ID: <CA+G9fYtX3RzYbpZRAktPNfbP51obcBi=_PJZ6RT-x+BnE-9ESQ@mail.gmail.com>
-Subject: [next] pci_x86.h:105:8: error: unknown type name 'raw_spinlock_t'
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     PCI <linux-pci@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -64,52 +48,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Linux next-20220310 i386 build failed due to below warnings / errors.
+On Sat, 12 Mar 2022 22:23:48 +0100, marek.vasut@gmail.com wrote:
+> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+> 
+> In case the controller is transitioning to L1 in rcar_pcie_config_access(),
+> any read/write access to PCIECDR triggers asynchronous external abort. This
+> is because the transition to L1 link state must be manually finished by the
+> driver. The PCIe IP can transition back from L1 state to L0 on its own.
+> 
+> [...]
 
-  CC      arch/x86/kernel/resource.o
-In file included from arch/x86/kernel/resource.c:4:0:
-arch/x86/include/asm/pci_x86.h:105:8: error: unknown type name 'raw_spinlock_t'
- extern raw_spinlock_t pci_config_lock;
-        ^~~~~~~~~~~~~~
-arch/x86/include/asm/pci_x86.h:141:20: error: expected '=', ',', ';',
-'asm' or '__attribute__' before 'dmi_check_pciprobe'
- extern void __init dmi_check_pciprobe(void);
-                    ^~~~~~~~~~~~~~~~~~
-arch/x86/include/asm/pci_x86.h:142:20: error: expected '=', ',', ';',
-'asm' or '__attribute__' before 'dmi_check_skip_isa_align'
- extern void __init dmi_check_skip_isa_align(void);
-                    ^~~~~~~~~~~~~~~~~~~~~~~~
-arch/x86/include/asm/pci_x86.h:146:19: error: expected '=', ',', ';',
-'asm' or '__attribute__' before 'pci_acpi_init'
- extern int __init pci_acpi_init(void);
-                   ^~~~~~~~~~~~~
-arch/x86/include/asm/pci_x86.h:153:20: error: expected '=', ',', ';',
-'asm' or '__attribute__' before 'pcibios_irq_init'
- extern void __init pcibios_irq_init(void);
-                    ^~~~~~~~~~~~~~~~
-arch/x86/include/asm/pci_x86.h:154:19: error: expected '=', ',', ';',
-'asm' or '__attribute__' before 'pcibios_init'
- extern int __init pcibios_init(void);
-                   ^~~~~~~~~~~~
-arch/x86/include/asm/pci_x86.h:174:19: error: expected '=', ',', ';',
-'asm' or '__attribute__' before 'pci_mmcfg_arch_init'
- extern int __init pci_mmcfg_arch_init(void);
-                   ^~~~~~~~~~~~~~~~~~~
-arch/x86/include/asm/pci_x86.h:175:20: error: expected '=', ',', ';',
-'asm' or '__attribute__' before 'pci_mmcfg_arch_free'
- extern void __init pci_mmcfg_arch_free(void);
-                    ^~~~~~~~~~~~~~~~~~~
-arch/x86/include/asm/pci_x86.h:182:40: error: expected '=', ',', ';',
-'asm' or '__attribute__' before 'pci_mmconfig_add'
- extern struct pci_mmcfg_region *__init pci_mmconfig_add(int segment, int start,
-                                        ^~~~~~~~~~~~~~~~
-  CC      net/core/filter.o
-make[2]: *** [scripts/Makefile.build:288: arch/x86/kernel/resource.o] Error 1
+Re-built pci/rcar with this series, I shall ask Bjorn to pull it
+again, we should be in time for v5.18.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+[1/2] PCI: rcar: Finish transition to L1 state in rcar_pcie_config_access()
+      https://git.kernel.org/lpieralisi/pci/c/84b5761462
+[2/2] PCI: rcar: Use PCI_SET_ERROR_RESPONSE after read which triggered an exception
+      https://git.kernel.org/lpieralisi/pci/c/6e36203bc1
 
-
---
-Linaro LKFT
-https://lkft.linaro.org
-[1]  https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=intel-core2-32,label=docker-buster-lkft/1207/consoleText
+Thanks,
+Lorenzo
