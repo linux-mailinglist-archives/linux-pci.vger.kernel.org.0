@@ -2,150 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECBC24DA032
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Mar 2022 17:36:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E409B4DA0F5
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Mar 2022 18:14:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241669AbiCOQiC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Mar 2022 12:38:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59934 "EHLO
+        id S1350503AbiCORPn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Mar 2022 13:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236332AbiCOQiB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Mar 2022 12:38:01 -0400
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B9AC25E90;
-        Tue, 15 Mar 2022 09:36:49 -0700 (PDT)
-Received: by mail-yb1-f178.google.com with SMTP id y142so4123112ybe.11;
-        Tue, 15 Mar 2022 09:36:49 -0700 (PDT)
+        with ESMTP id S241638AbiCORPm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Mar 2022 13:15:42 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B490325C65
+        for <linux-pci@vger.kernel.org>; Tue, 15 Mar 2022 10:14:29 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id w8so854325pll.10
+        for <linux-pci@vger.kernel.org>; Tue, 15 Mar 2022 10:14:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Xgus+7qmbSJ9nJIqIcIxl/J+AKyxRbFiTCWjU46hP/c=;
+        b=hQkHI/A3LRXnPnAlt7EGrixwAoVxbfQnxHbS174svfz/cEFEWbHmIrVQ+n9av6Z9lF
+         CxmZ6608U+o2fZKbzJ0PpnteN5mTfDaXyRii/kkF4qaoKtqPYuAs6wtQiDmOBt/2ZAM5
+         WBJt87LUxcPe/6tI2cP92k7ist6mx/DTYf5Iw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3nFRu2fKR6Mv1eEPxkkcMlbdYCWw8b7Bcxs+GkGM7Y0=;
-        b=CFpSLK/rR7NshRN0v6R4lnLfMOU46PQ4XaKCdywMqR4TZM/seThWEejMN1CnP+BgOm
-         zVXh5SWCxJZFvmYAVUh6bDll6zP0Wzk+CjI1XVdHLdcB8XRB+2KMjHTY4yOrh7Cqp/dm
-         4clt9twik/Lxk99JXFFQ4PvPiu1ZNUJqaUGjb06H023/RjUNIlIMIPUbW+z5YyhEtA9Y
-         PstlS4I4l7twN72gDoMjDJICM2DOxGBHyRN5OjEtOuCJvNeQUEFevkdo0lkEu0Qp3DK9
-         wpv0KLHBcZBhZmKq3+5uNtwABSlOcKotpWa5t/oTt0UBUxHLFo6CVFPjnj67Bd9s6aBi
-         x0uQ==
-X-Gm-Message-State: AOAM533u+9MHyUyt7eNe96wqL5LBopzwKzP0YNvJP1HhOIXfjOjVbZFR
-        lC9qh9ahRYN4Bs3gHjlNoqrxgckfq1Gpo8TO9lgBbLVN
-X-Google-Smtp-Source: ABdhPJz1PjrpiSacJRhqQNDuEZVrktPLHdgCQxKr/6T2ZUKWx0BPtC/JPakcJANyCunVnwHOBcCQlXV3q9ebVp62T+Y=
-X-Received: by 2002:a25:fe10:0:b0:625:262f:e792 with SMTP id
- k16-20020a25fe10000000b00625262fe792mr23286184ybe.365.1647362208693; Tue, 15
- Mar 2022 09:36:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Xgus+7qmbSJ9nJIqIcIxl/J+AKyxRbFiTCWjU46hP/c=;
+        b=4ztz/s7TlZvYFkds6iilMVgIeNUWuPykfru/HIzsnBeyAOkWF4wnOMPM88HEbqel0/
+         XgWpz7iZkV3F34CBxKyqN3ocwqaQksSRBA6LwwgFAlWJ+SySC/hp6oscrALhMu8NhFtt
+         DJnVhPESzyID7q71DyQUshALdt0jHGFvhbS87/btR7+8Jf08tEBg/3DzVWW+EVnN2Pgf
+         9+EMupJ2Amq/bIVdgJUTRF9+MkGJLp3X0ajMAbTLOWdiIpk+CZMUt8cCZxKHb61+Tdur
+         WcHcAtXD9VzWdLFCstBjUnENoN3tgZkmXshvN/+eo+oOWWNecDOi/SswWeFwUqv4m6g+
+         fiuw==
+X-Gm-Message-State: AOAM532Pg0P1JSts9e7YbI5xU8vr/HMh1fhfPOwZDdQNxhGwXGKuQ54F
+        c4r33W6AKl6B3ta9mIJy8xbqwg==
+X-Google-Smtp-Source: ABdhPJyLaWXVpyvW4Mh3z0KkiQQ80MjXoNmNJlknK49fD5o3TURQH1gKAkjamZe2Af4tq/7vXjdNFQ==
+X-Received: by 2002:a17:902:cccf:b0:14e:eb44:40a1 with SMTP id z15-20020a170902cccf00b0014eeb4440a1mr29427014ple.111.1647364469225;
+        Tue, 15 Mar 2022 10:14:29 -0700 (PDT)
+Received: from ebps (cpe-75-80-179-40.san.res.rr.com. [75.80.179.40])
+        by smtp.gmail.com with ESMTPSA id mw7-20020a17090b4d0700b001b8baf6b6f5sm3909768pjb.50.2022.03.15.10.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Mar 2022 10:14:28 -0700 (PDT)
+Date:   Tue, 15 Mar 2022 10:14:25 -0700
+From:   Eric Badger <ebadger@purestorage.com>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Oliver OHalloran <oohall@gmail.com>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        ebadger@purestorage.com
+Subject: Re: [PATCH v2] PCI/AER: Handle Multi UnCorrectable/Correctable
+ errors properly
+Message-ID: <20220315171425.GA1521135@ebps>
+References: <20220315050842.120063-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-References: <20220315153252.4880-1-mario.limonciello@amd.com> <CAJZ5v0hFGjGYeAbA93joobgw1RMSbBD77=3mAExLPQX-dn=xKg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0hFGjGYeAbA93joobgw1RMSbBD77=3mAExLPQX-dn=xKg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 15 Mar 2022 17:36:37 +0100
-Message-ID: <CAJZ5v0jc5Wjap0qY9pqvkxCxbRFy10mZdq+JMtuWAY-v1Mk_Zw@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI / ACPI: Assume `HotPlugSupportInD3` only if device
- can wake from D3
-To:     Mario Limonciello <mario.limonciello@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Mehta, Sanju" <Sanju.Mehta@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220315050842.120063-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 5:35 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Mar 15, 2022 at 4:33 PM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
-> >
-> > According to the Microsoft spec the _DSD `HotPlugSupportInD3` is
-> > indicates the ability for a bridge to be able to wakeup from D3:
-> >
-> >   This ACPI object [HotPlugSupportInD3] enables the operating system
-> >   to identify and power manage PCIe Root Ports that are capable of
-> >   handling hot plug events while in D3 state.
-> >
-> > This however is static information in the ACPI table at BIOS compilation
-> > time and on some platforms it's possible to configure the firmware at boot
-> > up such that _S0W returns "0" indicating the inability to wake up the
-> > device from D3 as explained in the ACPI specification:
-> >
-> >   7.3.20 _S0W (S0 Device Wake State)
-> >
-> >   This object evaluates to an integer that conveys to OSPM the deepest
-> >   D-state supported by this device in the S0 system sleeping state
-> >   where the device can wake itself.
-> >
-> > This mismatch may lead to being unable to enumerate devices behind the
-> > hotplug bridge when a device is plugged in. To remedy these situations
-> > that `HotPlugSupportInD3` is specified by _S0W returns 0, explicitly
-> > check that the ACPI companion has returned _S0W greater than or equal
-> > to 3 and the device has a GPE allowing the device to generate wakeup
-> > signals handled by the platform in `acpi_pci_bridge_d3`.
-> >
-> > Windows 10 and Windows 11 both will prevent the bridge from going in D3
-> > when the firmware is configured this way and this changes aligns the
-> > handling of the situation to be the same.
-> >
-> > Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/07_Power_and_Performance_Mgmt/device-power-management-objects.html?highlight=s0w#s0w-s0-device-wake-state
-> > Link: https://docs.microsoft.com/en-us/windows-hardware/drivers/pci/dsd-for-pcie-root-ports#identifying-pcie-root-ports-supporting-hot-plug-in-d3
-> > Fixes: 26ad34d510a87 ("PCI / ACPI: Whitelist D3 for more PCIe hotplug ports")
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->
-> No more comments from me:
->
-> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, Mar 15, 2022 at 05:08:42AM +0000, Kuppuswamy Sathyanarayanan wrote:
+> This error can be reproduced by making following changes to the
+> aer_irq() function and by executing the given test commands.
+> 
+>  static irqreturn_t aer_irq(int irq, void *context)
+>          struct aer_err_source e_src = {};
+> 
+>          pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS,
+> 				&e_src.status);
+>  +       pci_dbg(pdev->port, "Root Error Status: %04x\n",
+>  +		e_src.status);
+>          if (!(e_src.status & AER_ERR_STATUS_MASK))
+>                  return IRQ_NONE;
+> 
+>  +       mdelay(5000);
+> 
+>  # Prep injection data for a correctable error.
+>  $ cd /sys/kernel/debug/apei/einj
+>  $ echo 0x00000040 > error_type
+>  $ echo 0x4 > flags
+>  $ echo 0x891000 > param4
+> 
+>  # Root Error Status is initially clear
+>  $ setpci -s <Dev ID> ECAP0001+0x30.w
+>  0000
+> 
+>  # Inject one error
+>  $ echo 1 > error_inject
+> 
+>  # Interrupt received
+>  pcieport <Dev ID>: AER: Root Error Status 0001
+> 
+>  # Inject another error (within 5 seconds)
+>  $ echo 1 > error_inject
+> 
+>  # No interrupt received, but "multiple ERR_COR" is now set
+>  $ setpci -s <Dev ID> ECAP0001+0x30.w
+>  0003
+> 
+>  # Wait for a while, then clear ERR_COR. A new interrupt immediately
+>    fires.
+>  $ setpci -s <Dev ID> ECAP0001+0x30.w=0x1
+>  pcieport <Dev ID>: AER: Root Error Status 0002
+> 
+> Currently, the above issue has been only reproduced in the ICL server
+> platform.
+> 
+> [Eric: proposed reproducing steps]
 
-Or please let me know if I should pick it up.
+Hmm, this differs from the procedure I described on v1, and I don't
+think will work as described here.
 
-> > ---
-> > changes from v3->v4:
-> >  * rework comment
-> >  * only evaluate _S0W if necessary
-> >  * drop static function with only one caller
-> >
-> >  drivers/pci/pci-acpi.c | 17 ++++++++++++++++-
-> >  1 file changed, 16 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index a42dbf448860..e535dab2c888 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -977,6 +977,7 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
-> >         const union acpi_object *obj;
-> >         struct acpi_device *adev;
-> >         struct pci_dev *rpdev;
-> > +       unsigned long long ret;
-> >
-> >         if (acpi_pci_disabled || !dev->is_hotplug_bridge)
-> >                 return false;
-> > @@ -1003,7 +1004,21 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
-> >                                    ACPI_TYPE_INTEGER, &obj) < 0)
-> >                 return false;
-> >
-> > -       return obj->integer.value == 1;
-> > +       if (!obj->integer.value)
-> > +               return false;
-> > +
-> > +       /*
-> > +        * If 'HotPlugSupportInD3' is set, but wakeup is not actually supported,
-> > +        * the former cannot be trusted anyway, so validate it by verifying the
-> > +        * latter.
-> > +        */
-> > +       if (!adev->wakeup.flags.valid)
-> > +               return false;
-> > +
-> > +       if (ACPI_FAILURE(acpi_evaluate_integer(adev->handle, "_S0W", NULL, &ret)))
-> > +               return false;
-> > +
-> > +       return ret >= ACPI_STATE_D3_HOT;
-> >  }
-> >
-> >  int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
-> > --
-> > 2.34.1
-> >
+Eric
