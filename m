@@ -2,57 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1109A4D938A
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Mar 2022 06:09:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CC784D94A9
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Mar 2022 07:36:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344809AbiCOFKJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Mar 2022 01:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45338 "EHLO
+        id S1344499AbiCOGhg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Mar 2022 02:37:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344813AbiCOFKI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Mar 2022 01:10:08 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F9645ACE;
-        Mon, 14 Mar 2022 22:08:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647320937; x=1678856937;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=oJuv0Z8dvZxqgVY1+X5D78/R17rRg7H8XXZJ/5nQQ3A=;
-  b=XYo7iZfLk/t91ZJu5cLak395/UVXlaDrecuqsBD32+9SNeu92zSgY+P2
-   WLkKgXLxmovLTZ7zH9tfxhx3U8xDr5HQnEJ4pCvGqc2Ce3OVFbjeiSNng
-   jI61tYzweN4W9+yTsOybrBeXK2AJqirPxxl80SfAhhbx99xdvXSWFENc7
-   IEeRSX5G6yNiVt78bULuWimxYwkdvlSmquLkiGU+naT/6Dp3RRatPAwHG
-   xLgZis33RASBC9yGAH0guLp4yCyYbtUfkhN60F6jL/6Ahj4lyjZO5YzXW
-   9nI379GHGV1LYcVEO4bao/yKXeyDpEC/j5Wv6xg4gIJBfHRhqgN7Ywo4A
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="253774485"
-X-IronPort-AV: E=Sophos;i="5.90,182,1643702400"; 
-   d="scan'208";a="253774485"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 22:08:55 -0700
-X-IronPort-AV: E=Sophos;i="5.90,182,1643702400"; 
-   d="scan'208";a="580384681"
-Received: from skuppusw-desk2.jf.intel.com ([10.165.154.101])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 22:08:55 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver OHalloran <oohall@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH v2] PCI/AER: Handle Multi UnCorrectable/Correctable errors properly
-Date:   Tue, 15 Mar 2022 05:08:42 +0000
-Message-Id: <20220315050842.120063-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S235433AbiCOGhf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Mar 2022 02:37:35 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9AD4A3F9;
+        Mon, 14 Mar 2022 23:36:24 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2BC5468AFE; Tue, 15 Mar 2022 07:36:18 +0100 (CET)
+Date:   Tue, 15 Mar 2022 07:36:18 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 12/15] swiotlb: provide swiotlb_init variants that
+ remap the buffer
+Message-ID: <20220315063618.GA1244@lst.de>
+References: <20220314073129.1862284-1-hch@lst.de> <20220314073129.1862284-13-hch@lst.de> <4d800aa8-5e38-1ad9-284f-1754c83d0f8a@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-8.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4d800aa8-5e38-1ad9-284f-1754c83d0f8a@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -61,108 +53,149 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently the aer_irq() handler returns IRQ_NONE for cases without bits
-PCI_ERR_ROOT_UNCOR_RCV or PCI_ERR_ROOT_COR_RCV are set. But this
-assumption is incorrect.
+On Mon, Mar 14, 2022 at 06:39:21PM -0400, Boris Ostrovsky wrote:
+> This is IO_TLB_MIN_SLABS, isn't it? (Xen code didn't say so but that's what it meant to say I believe)
 
-Consider a scenario where aer_irq() is triggered for a correctable
-error, and while we process the error and before we clear the error
-status in "Root Error Status" register, if the same kind of error
-is triggered again, since aer_irq() only clears events it saw, the
-multi-bit error is left in tact. This will cause the interrupt to fire
-again, resulting in entering aer_irq() with just the multi-bit error
-logged in the "Root Error Status" register.
+Yes, that makes much more sense.  I've switched the patch to use
+IO_TLB_MIN_SLABS and drop the 2MB comment in both places.
 
-Repeated AER recovery test has revealed this condition does happen
-and this prevents any new interrupt from being triggered. Allow to
-process interrupt even if only multi-correctable (BIT 1) or
-multi-uncorrectable bit (BIT 3) is set.
+Can I get a review with that fixed up?
 
-This error can be reproduced by making following changes to the
-aer_irq() function and by executing the given test commands.
-
- static irqreturn_t aer_irq(int irq, void *context)
-         struct aer_err_source e_src = {};
-
-         pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS,
-				&e_src.status);
- +       pci_dbg(pdev->port, "Root Error Status: %04x\n",
- +		e_src.status);
-         if (!(e_src.status & AER_ERR_STATUS_MASK))
-                 return IRQ_NONE;
-
- +       mdelay(5000);
-
- # Prep injection data for a correctable error.
- $ cd /sys/kernel/debug/apei/einj
- $ echo 0x00000040 > error_type
- $ echo 0x4 > flags
- $ echo 0x891000 > param4
-
- # Root Error Status is initially clear
- $ setpci -s <Dev ID> ECAP0001+0x30.w
- 0000
-
- # Inject one error
- $ echo 1 > error_inject
-
- # Interrupt received
- pcieport <Dev ID>: AER: Root Error Status 0001
-
- # Inject another error (within 5 seconds)
- $ echo 1 > error_inject
-
- # No interrupt received, but "multiple ERR_COR" is now set
- $ setpci -s <Dev ID> ECAP0001+0x30.w
- 0003
-
- # Wait for a while, then clear ERR_COR. A new interrupt immediately
-   fires.
- $ setpci -s <Dev ID> ECAP0001+0x30.w=0x1
- pcieport <Dev ID>: AER: Root Error Status 0002
-
-Currently, the above issue has been only reproduced in the ICL server
-platform.
-
-[Eric: proposed reproducing steps]
-Fixes: 4696b828ca37 ("PCI/AER: Hoist aerdrv.c, aer_inject.c up to drivers/pci/pcie/")
-Reported-by: Eric Badger <ebadger@purestorage.com>
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
+From 153085bf3e6e69d676bef0fb96395a86fb8122f5 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Mon, 14 Mar 2022 08:02:57 +0100
+Subject: swiotlb: provide swiotlb_init variants that remap the buffer
 
-Changes since v1:
- * Added Fixes tag.
- * Included reproducing steps proposed by Eric.
+To shared more code between swiotlb and xen-swiotlb, offer a
+swiotlb_init_remap interface and add a remap callback to
+swiotlb_init_late that will allow Xen to remap the buffer the
+buffer without duplicating much of the logic.
 
- drivers/pci/pcie/aer.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/x86/pci/sta2x11-fixup.c |  2 +-
+ include/linux/swiotlb.h      |  5 ++++-
+ kernel/dma/swiotlb.c         | 36 +++++++++++++++++++++++++++++++++---
+ 3 files changed, 38 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 9fa1f97e5b27..7952e5efd6cf 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -101,6 +101,11 @@ struct aer_stats {
- #define ERR_COR_ID(d)			(d & 0xffff)
- #define ERR_UNCOR_ID(d)			(d >> 16)
+diff --git a/arch/x86/pci/sta2x11-fixup.c b/arch/x86/pci/sta2x11-fixup.c
+index c7e6faf59a861..7368afc039987 100644
+--- a/arch/x86/pci/sta2x11-fixup.c
++++ b/arch/x86/pci/sta2x11-fixup.c
+@@ -57,7 +57,7 @@ static void sta2x11_new_instance(struct pci_dev *pdev)
+ 		int size = STA2X11_SWIOTLB_SIZE;
+ 		/* First instance: register your own swiotlb area */
+ 		dev_info(&pdev->dev, "Using SWIOTLB (size %i)\n", size);
+-		if (swiotlb_init_late(size, GFP_DMA))
++		if (swiotlb_init_late(size, GFP_DMA, NULL))
+ 			dev_emerg(&pdev->dev, "init swiotlb failed\n");
+ 	}
+ 	list_add(&instance->list, &sta2x11_instance_list);
+diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+index ee655f2e4d28b..7b50c82f84ce9 100644
+--- a/include/linux/swiotlb.h
++++ b/include/linux/swiotlb.h
+@@ -36,8 +36,11 @@ struct scatterlist;
  
-+#define AER_ERR_STATUS_MASK		(PCI_ERR_ROOT_UNCOR_RCV |	\
-+					PCI_ERR_ROOT_COR_RCV |		\
-+					PCI_ERR_ROOT_MULTI_COR_RCV |	\
-+					PCI_ERR_ROOT_MULTI_UNCOR_RCV)
+ int swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, unsigned int flags);
+ unsigned long swiotlb_size_or_default(void);
++void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
++	int (*remap)(void *tlb, unsigned long nslabs));
++int swiotlb_init_late(size_t size, gfp_t gfp_mask,
++	int (*remap)(void *tlb, unsigned long nslabs));
+ extern int swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs);
+-int swiotlb_init_late(size_t size, gfp_t gfp_mask);
+ extern void __init swiotlb_update_mem_attributes(void);
+ 
+ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev, phys_addr_t phys,
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 79641c446d284..b3d4f24fb5f5e 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -256,9 +256,11 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs,
+  * Statically reserve bounce buffer space and initialize bounce buffer data
+  * structures for the software IO TLB used to implement the DMA API.
+  */
+-void __init swiotlb_init(bool addressing_limit, unsigned int flags)
++void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
++		int (*remap)(void *tlb, unsigned long nslabs))
+ {
+-	size_t bytes = PAGE_ALIGN(default_nslabs << IO_TLB_SHIFT);
++	unsigned long nslabs = default_nslabs;
++	size_t bytes;
+ 	void *tlb;
+ 
+ 	if (!addressing_limit && !swiotlb_force_bounce)
+@@ -271,12 +273,23 @@ void __init swiotlb_init(bool addressing_limit, unsigned int flags)
+ 	 * allow to pick a location everywhere for hypervisors with guest
+ 	 * memory encryption.
+ 	 */
++retry:
++	bytes = PAGE_ALIGN(default_nslabs << IO_TLB_SHIFT);
+ 	if (flags & SWIOTLB_ANY)
+ 		tlb = memblock_alloc(bytes, PAGE_SIZE);
+ 	else
+ 		tlb = memblock_alloc_low(bytes, PAGE_SIZE);
+ 	if (!tlb)
+ 		goto fail;
++	if (remap && remap(tlb, nslabs) < 0) {
++		memblock_free(tlb, PAGE_ALIGN(bytes));
 +
- static int pcie_aer_disable;
- static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
++		if (nslabs <= IO_TLB_MIN_SLABS)
++			panic("%s: Failed to remap %zu bytes\n",
++			      __func__, bytes);
++		nslabs = max(1024UL, ALIGN(nslabs >> 1, IO_TLB_SEGSIZE));
++		goto retry;
++	}
+ 	if (swiotlb_init_with_tbl(tlb, default_nslabs, flags))
+ 		goto fail_free_mem;
+ 	return;
+@@ -287,12 +300,18 @@ void __init swiotlb_init(bool addressing_limit, unsigned int flags)
+ 	pr_warn("Cannot allocate buffer");
+ }
  
-@@ -1196,7 +1201,7 @@ static irqreturn_t aer_irq(int irq, void *context)
- 	struct aer_err_source e_src = {};
++void __init swiotlb_init(bool addressing_limit, unsigned int flags)
++{
++	return swiotlb_init_remap(addressing_limit, flags, NULL);
++}
++
+ /*
+  * Systems with larger DMA zones (those that don't support ISA) can
+  * initialize the swiotlb later using the slab allocator if needed.
+  * This should be just like above, but with some error catching.
+  */
+-int swiotlb_init_late(size_t size, gfp_t gfp_mask)
++int swiotlb_init_late(size_t size, gfp_t gfp_mask,
++		int (*remap)(void *tlb, unsigned long nslabs))
+ {
+ 	unsigned long nslabs = ALIGN(size >> IO_TLB_SHIFT, IO_TLB_SEGSIZE);
+ 	unsigned long bytes;
+@@ -303,6 +322,7 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask)
+ 	if (swiotlb_force_disable)
+ 		return 0;
  
- 	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_STATUS, &e_src.status);
--	if (!(e_src.status & (PCI_ERR_ROOT_UNCOR_RCV|PCI_ERR_ROOT_COR_RCV)))
-+	if (!(e_src.status & AER_ERR_STATUS_MASK))
- 		return IRQ_NONE;
++retry:
+ 	order = get_order(nslabs << IO_TLB_SHIFT);
+ 	nslabs = SLABS_PER_PAGE << order;
+ 	bytes = nslabs << IO_TLB_SHIFT;
+@@ -317,6 +337,16 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask)
  
- 	pci_read_config_dword(rp, aer + PCI_ERR_ROOT_ERR_SRC, &e_src.id);
+ 	if (!vstart)
+ 		return -ENOMEM;
++	if (remap)
++		rc = remap(vstart, nslabs);
++	if (rc) {
++		free_pages((unsigned long)vstart, order);
++ 
++		if (IO_TLB_MIN_SLABS <= 1024)
++			return rc;
++		nslabs = max(1024UL, ALIGN(nslabs >> 1, IO_TLB_SEGSIZE));
++		goto retry;
++	}
+ 
+ 	if (order != get_order(bytes)) {
+ 		pr_warn("only able to allocate %ld MB\n",
 -- 
-2.25.1
+2.30.2
 
