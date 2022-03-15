@@ -2,191 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 812A74DA1D1
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Mar 2022 19:02:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB5804DA261
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Mar 2022 19:27:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350886AbiCOSDr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Mar 2022 14:03:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41920 "EHLO
+        id S230052AbiCOS1p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Mar 2022 14:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350834AbiCOSDp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Mar 2022 14:03:45 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40235593B8;
-        Tue, 15 Mar 2022 11:02:33 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id bi12so43283565ejb.3;
-        Tue, 15 Mar 2022 11:02:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lEC/nkhZWgafnlNYWqRvQ8T9pwDdv1X4bS+vmmN1SPI=;
-        b=TlfZFBpL4ZxfH1h0A4azfOpuLuqRtduCM9W127vgQdbSX84AaRxquI24AZvaA/0Mhu
-         W5o4xZkQR752Hf126heU6U/BBocdrE6/a2Ihx8NnsX9drwO5lACiezAZxvUZP3XJP8CY
-         RgL/YsUwucofJYAR5HTDtSgiXc/8GSxvQKtINLDlNNpQhcJWsrikOyezbu8mRlY3gTlv
-         rEOGgvjWGrYlDAjMi05/fTIC1jrV0GVsW+UEpEd1os1ZbL3wwjfaDDRl0voUi4hHNHYk
-         rJABGDMHxUmjB3eeAevsUeKUu16sJWDZhY2h8sMc8S1ej06qZ5FAgZCqYTXYxZQxhKT7
-         g/Lg==
+        with ESMTP id S1351057AbiCOS1n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Mar 2022 14:27:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4B7925A0B0
+        for <linux-pci@vger.kernel.org>; Tue, 15 Mar 2022 11:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1647368789;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XzGpzSPPvF6IztwMBCoGf9CULdIDvsRovEHMwfBSZBM=;
+        b=cEJyWcoQzS21r5rH/cC3iS6ofmh/8meRcb7L5k5J8Q6v92HCfFl09Dh1OkjhKupr2EAzoW
+        3nDPsAa2d7FGTYLbp48O903vkKS1OsujrJnhGeUzVuj9lJnBNg0UPtfFY70PskU9Z/4oaC
+        Dg6Eb1XG/U9RcR5aet7qfHfrqodeXBQ=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-626-e5gVqkCgOfWVuGgcK4wC8g-1; Tue, 15 Mar 2022 14:26:27 -0400
+X-MC-Unique: e5gVqkCgOfWVuGgcK4wC8g-1
+Received: by mail-ot1-f69.google.com with SMTP id t26-20020a0568301e3a00b005af6b88cf12so14473940otr.12
+        for <linux-pci@vger.kernel.org>; Tue, 15 Mar 2022 11:26:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lEC/nkhZWgafnlNYWqRvQ8T9pwDdv1X4bS+vmmN1SPI=;
-        b=VPQYYS9KNUCyH1mUYRqrjpmKhQuRjkVTzpakjmzslZbInPw+bval+CVvfkbHSX7VRE
-         H5+VS3PO8ppfBwYH3uLBVITN9+5K2xggz7Sg0esvMtt6j6SRwYnLSGjnzmQE106WcPIN
-         J9X7G0tiTwlRzyjh8HBctbVqbXl/EFrT7kH18uqRMqhoKMN2jE5tX4BUgJB0j878W2W8
-         Jl+bMY8G1sBbUF3mTwt8MHkZhLhAJpjNNtmls2CRKv06hDYY41JACeBcl5W+6tBoV3jM
-         xTvwm7BBjiKjKPe7bFcRrBMdIpdWiuuJonrjePRRl1NUWFwlXuqIyBgWnARSjWjyYge9
-         zEmA==
-X-Gm-Message-State: AOAM532nDQGhrvCtU3GBL2tRwBuNrfXyq6F2ka4cS2W3fRfA7UeTfboH
-        P+R7RuXE6CBbonfso3uOGvVb19KiaMR3cj0BXHE=
-X-Google-Smtp-Source: ABdhPJwQNXcLkTGaCJKCgGEQ39fH/f9rG+zOEFi6wUHEyZIylN9K230wh3LynYxeoxVpwJTKYSVD3SjkIYeMUl1wmGU=
-X-Received: by 2002:a17:907:6e01:b0:6d0:562c:e389 with SMTP id
- sd1-20020a1709076e0100b006d0562ce389mr23976723ejc.497.1647367351540; Tue, 15
- Mar 2022 11:02:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=XzGpzSPPvF6IztwMBCoGf9CULdIDvsRovEHMwfBSZBM=;
+        b=dPOv0mI6XKMrN8eYb/j+vzF7Roz19L9cw1a1g5PC/cO/V3Bm9X/zpegQxp0sdc1NQJ
+         lXY27PGOHZNC1tWoZhtWRTkU6YcI+YROLOPzTdrvysF5ofiOAfGsKVNdfQcNvXOAbqJr
+         /cmx5XM+2+XXCTHWshI/6IOPlNZ2uzVUL02UaAU8QmBc1DvbGD0wyWtoFOY1fB163n8u
+         jdCmVNKQcoUgHln6RpyKfC4CWSFiLpH4p3VOCMw3QIFGpn08tW0MEdKEg6LXEYH0OhuO
+         XVsyGCoGintWjtokxz+4tYTUGJ/OgyPHgS/hlJRG9SibAqSMvnqEAaoXdJIqucprYNfa
+         HhYg==
+X-Gm-Message-State: AOAM531D9AmuwRadjf4ze7DWMwZYClPQUV91KkM+mTvHlIzTVlVeABVT
+        1kVrRdQ6oCGhEGxSb1lkxnxYprpVdwwwAavcOHaHWzXT8h6pijO9pY2lMPrLMf8WWCQjZyqPkR6
+        DF5Tto0JXuakotjXI1dhi
+X-Received: by 2002:a05:6808:318:b0:2ec:b689:dceb with SMTP id i24-20020a056808031800b002ecb689dcebmr2257281oie.103.1647368787087;
+        Tue, 15 Mar 2022 11:26:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyl2HKKYQyELHU9U7fpC71zcgGaaZdRFZKPKQmxedgdSk7TVfmp5oz3+3myxBDN2yFrKXIHeA==
+X-Received: by 2002:a05:6808:318:b0:2ec:b689:dceb with SMTP id i24-20020a056808031800b002ecb689dcebmr2257269oie.103.1647368786856;
+        Tue, 15 Mar 2022 11:26:26 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id 96-20020a9d0469000000b005c959dd643csm3717144otc.3.2022.03.15.11.26.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Mar 2022 11:26:26 -0700 (PDT)
+Date:   Tue, 15 Mar 2022 12:26:25 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Cc:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <jgg@nvidia.com>, <cohuck@redhat.com>, <mgurtovoy@nvidia.com>,
+        <yishaih@nvidia.com>, <kevin.tian@intel.com>,
+        <linuxarm@huawei.com>, <liulongfang@huawei.com>,
+        <prime.zeng@hisilicon.com>, <jonathan.cameron@huawei.com>,
+        <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v9 0/9] vfio/hisilicon: add ACC live migration driver
+Message-ID: <20220315122625.4ec21622.alex.williamson@redhat.com>
+In-Reply-To: <20220308184902.2242-1-shameerali.kolothum.thodi@huawei.com>
+References: <20220308184902.2242-1-shameerali.kolothum.thodi@huawei.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20220312132856.65163-1-krzysztof.kozlowski@canonical.com> <20220312132856.65163-6-krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220312132856.65163-6-krzysztof.kozlowski@canonical.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Mar 2022 20:01:18 +0200
-Message-ID: <CAHp75VfLtjfrB4Zj9ncOg3VYQrX58chEL+6g31_5fwuMUuURPg@mail.gmail.com>
-Subject: Re: [PATCH v4 05/11] PCI: Use driver_set_override() instead of open-coding
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 12, 2022 at 4:09 PM Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
->
-> Use a helper to set driver_override to reduce amount of duplicated code.
+On Tue, 8 Mar 2022 18:48:53 +0000
+Shameer Kolothum <shameerali.kolothum.thodi@huawei.com> wrote:
 
-the amount
+> Hi,
+>=20
+> This series attempts to add vfio live migration support for HiSilicon
+> ACC VF devices based on the new v2 migration protocol definition and
+> mlx5 v9 series discussed here[0].
+>=20
+> v8 --> v9
+> =C2=A0- Added acks by Wangzhou/Longfang/Yekai
+> =C2=A0- Added R-by tags by Jason.
+> =C2=A0- Addressed comments=C2=A0by Alex on v8.
+> =C2=A0- Fixed the pf_queue pointer assignment error in patch #8.
+> =C2=A0- Addressed=C2=A0comments from Kevin,
+>  =C2=A0 =C2=A0-Updated patch #5 commit log msg with a clarification that =
+VF
+> =C2=A0 =C2=A0 =C2=A0migration BAR assignment is fine if migration support=
+ is not there.
+>  =C2=A0 =C2=A0-Added QM description to patch #8 commit msg.
+>=20
+> This is sanity tested on a HiSilicon platform using the Qemu branch
+> provided here[1].
+>=20
+> Please take a look and let me know your feedback.
+>=20
+> Thanks,
+> Shameer
+> [0] https://lore.kernel.org/kvm/20220224142024.147653-1-yishaih@nvidia.co=
+m/
+> [1] https://github.com/jgunthorpe/qemu/commits/vfio_migration_v2
+>=20
+> v7 --> v8
+> =C2=A0- Dropped PRE_COPY support and early=C2=A0compatibility checking ba=
+sed on
+>    the discussion here[1].
+> =C2=A0- Addressed=C2=A0comments=C2=A0from John, Jason & Alex (Thanks!).
+>=20
+> v6 --> v7
+> =C2=A0-Renamed MIG_PRECOPY ioctl name and struct name. Updated ioctl desc=
+riptions
+> =C2=A0 regarding ioctl validity (patch #7).
+> - Adressed comments from Jason and Alex on PRE_COPY read() and ioctl() fns
+>   (patch #9).
+> - Moved only VF PCI ids to pci_ids.h(patch #3).
+>=20
+> v5 --> v6
+>  -Report PRE_COPY support and use that for early compatibility check
+>   between src and dst devices.
+>  -For generic PRE_COPY support, included patch #7 from Jason(Thanks!).
+>  -Addressed comments from Alex(Thanks!).
+>  -Added the QM state register update to QM driver(patch #8) since that
+>   is being used in migration driver to decide whether the device is
+>   ready to save the state.
+>=20
+> RFCv4 --> v5
+>   - Dropped RFC tag as v2 migration APIs are more stable now.
+>   - Addressed review comments from Jason and Alex (Thanks!).
+>=20
+> v3 --> RFCv4
+> -Based on migration v2 protocol and mlx5 v7 series.
+> -Added RFC tag again as migration v2 protocol is still under discussion.
+> -Added new patch #6 to retrieve the PF QM data.
+> -PRE_COPY compatibility check is now done after the migration data
+> =C2=A0transfer. This is not ideal and needs discussion.
+>=20
+> RFC v2 --> v3
+> =C2=A0-Dropped RFC tag as the vfio_pci_core subsystem framework is now
+> =C2=A0 part of 5.15-rc1.
+> =C2=A0-Added override methods for vfio_device_ops read/write/mmap calls
+> =C2=A0 to limit the access within the functional register space.
+> =C2=A0-Patches 1 to 3 are code refactoring to move the common ACC QM
+> =C2=A0 definitions and header around.
+>=20
+> RFCv1 --> RFCv2
+>=20
+> =C2=A0-Adds a new vendor-specific vfio_pci driver(hisi-acc-vfio-pci)
+> =C2=A0 for HiSilicon ACC VF devices based on the new vfio-pci-core
+> =C2=A0 framework proposal.
+>=20
+> =C2=A0-Since HiSilicon ACC VF device MMIO space contains both the
+> =C2=A0 functional register space and migration control register space,
+> =C2=A0 override the vfio_device_ops ioctl method to report only the
+> =C2=A0 functional space to VMs.
+>=20
+> =C2=A0-For a successful migration, we still need access to VF dev
+> =C2=A0 functional register space mainly to read the status registers.
+> =C2=A0 But accessing these while the Guest vCPUs are running may leave
+> =C2=A0 a security hole. To avoid any potential security issues, we
+> =C2=A0 map/unmap the MMIO regions on a need basis and is safe to do so.
+> =C2=A0 (Please see hisi_acc_vf_ioremap/unmap() fns in patch #4).
+> =C2=A0
+> =C2=A0-Dropped debugfs support for now.
+> =C2=A0-Uses common QM functions for mailbox access(patch #3).
+>=20
+> Longfang Liu (3):
+>   crypto: hisilicon/qm: Move few definitions to common header
+>   crypto: hisilicon/qm: Set the VF QM state register
+>   hisi_acc_vfio_pci: Add support for VFIO live migration
+>=20
+> Shameer Kolothum (6):
+>   crypto: hisilicon/qm: Move the QM header to include/linux
+>   hisi_acc_qm: Move VF PCI device IDs to common header
+>   hisi_acc_vfio_pci: add new vfio_pci driver for HiSilicon ACC devices
+>   hisi_acc_vfio_pci: Restrict access to VF dev BAR2 migration region
+>   hisi_acc_vfio_pci: Add helper to retrieve the struct pci_driver
+>   hisi_acc_vfio_pci: Use its own PCI reset_done error handler
+>=20
+>  MAINTAINERS                                   |    7 +
+>  drivers/crypto/hisilicon/hpre/hpre.h          |    2 +-
+>  drivers/crypto/hisilicon/hpre/hpre_main.c     |   19 +-
+>  drivers/crypto/hisilicon/qm.c                 |   68 +-
+>  drivers/crypto/hisilicon/sec2/sec.h           |    2 +-
+>  drivers/crypto/hisilicon/sec2/sec_main.c      |   21 +-
+>  drivers/crypto/hisilicon/sgl.c                |    2 +-
+>  drivers/crypto/hisilicon/zip/zip.h            |    2 +-
+>  drivers/crypto/hisilicon/zip/zip_main.c       |   17 +-
+>  drivers/vfio/pci/Kconfig                      |    2 +
+>  drivers/vfio/pci/Makefile                     |    2 +
+>  drivers/vfio/pci/hisilicon/Kconfig            |   15 +
+>  drivers/vfio/pci/hisilicon/Makefile           |    4 +
+>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 1326 +++++++++++++++++
+>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |  116 ++
+>  .../qm.h =3D> include/linux/hisi_acc_qm.h       |   49 +
+>  include/linux/pci_ids.h                       |    3 +
+>  17 files changed, 1591 insertions(+), 66 deletions(-)
+>  create mode 100644 drivers/vfio/pci/hisilicon/Kconfig
+>  create mode 100644 drivers/vfio/pci/hisilicon/Makefile
+>  create mode 100644 drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>  create mode 100644 drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+>  rename drivers/crypto/hisilicon/qm.h =3D> include/linux/hisi_acc_qm.h (8=
+7%)
+>=20
 
-> Make the driver_override field const char, because it is not modified by
-> the core and it matches other subsystems.
+Applied to vfio next branch for v5.18 with reviews/acks from Kevin and
+Bjorn.  Thanks,
 
+Alex
 
-Seems like mine #4 here
-https://gist.github.com/andy-shev/a2cb1ee4767d6d2f5d20db53ecb9aabc :-)
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Thanks!
-
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/pci-sysfs.c | 28 ++++------------------------
->  include/linux/pci.h     |  6 +++++-
->  2 files changed, 9 insertions(+), 25 deletions(-)
->
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 602f0fb0b007..5c42965c32c2 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -567,31 +567,11 @@ static ssize_t driver_override_store(struct device *dev,
->                                      const char *buf, size_t count)
->  {
->         struct pci_dev *pdev = to_pci_dev(dev);
-> -       char *driver_override, *old, *cp;
-> -
-> -       /* We need to keep extra room for a newline */
-> -       if (count >= (PAGE_SIZE - 1))
-> -               return -EINVAL;
-> -
-> -       driver_override = kstrndup(buf, count, GFP_KERNEL);
-> -       if (!driver_override)
-> -               return -ENOMEM;
-> -
-> -       cp = strchr(driver_override, '\n');
-> -       if (cp)
-> -               *cp = '\0';
-> -
-> -       device_lock(dev);
-> -       old = pdev->driver_override;
-> -       if (strlen(driver_override)) {
-> -               pdev->driver_override = driver_override;
-> -       } else {
-> -               kfree(driver_override);
-> -               pdev->driver_override = NULL;
-> -       }
-> -       device_unlock(dev);
-> +       int ret;
->
-> -       kfree(old);
-> +       ret = driver_set_override(dev, &pdev->driver_override, buf, count);
-> +       if (ret)
-> +               return ret;
->
->         return count;
->  }
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 60d423d8f0c4..415491fb85f4 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -516,7 +516,11 @@ struct pci_dev {
->         u16             acs_cap;        /* ACS Capability offset */
->         phys_addr_t     rom;            /* Physical address if not from BAR */
->         size_t          romlen;         /* Length if not from BAR */
-> -       char            *driver_override; /* Driver name to force a match */
-> +       /*
-> +        * Driver name to force a match.  Do not set directly, because core
-> +        * frees it.  Use driver_set_override() to set or clear it.
-> +        */
-> +       const char      *driver_override;
->
->         unsigned long   priv_flags;     /* Private flags for the PCI driver */
->
-> --
-> 2.32.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
