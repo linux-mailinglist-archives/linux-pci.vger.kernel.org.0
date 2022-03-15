@@ -2,94 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88F624DA3E6
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Mar 2022 21:22:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92BEC4DA499
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Mar 2022 22:29:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244786AbiCOUXr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Mar 2022 16:23:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41844 "EHLO
+        id S244178AbiCOVah (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Mar 2022 17:30:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241737AbiCOUXq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Mar 2022 16:23:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2341138BF4;
-        Tue, 15 Mar 2022 13:22:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B41FA60ADC;
-        Tue, 15 Mar 2022 20:22:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB780C340EE;
-        Tue, 15 Mar 2022 20:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647375753;
-        bh=0ut9v8Mofhd/tDzKnf+CcR23DD7IKhRDy7v5nmBCQRs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QSX4VnegdduIPQ4gZD4KPnc7tYVCALT6gbLR4n2oxiLXu8TC0gn3fNF2mjlEaaNPU
-         PFNwEFFoB6RoHY7prjq/OeRY+Xym5US9MnVzdmfY8u7uLVVSr5VAXcm6JW8wklQagU
-         oQC8VrspRe1pVoHw8opM6drZhiOLb/eCIPbOHh7HXZdB0wl1aQNHEW/DndgeULJINr
-         6ipaC17b9LCDSVTSOErcvcUqjUQq0kci9XdrXbon7/q/IVkS0AqS6xwXDuwNOV/UBY
-         1imP6DMySbw3eDWF7z2q79RDZuHnWJTmBAtRJmqWELwBt+seMzAVZ9P7fN3DDjbaUk
-         wLSStbBQ4Bn9w==
-Date:   Tue, 15 Mar 2022 15:22:31 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, micklorain@protonmail.com
-Subject: Re: [PATCH v1 1/1] PCI: Enable INTx quirk for ATI PCIe-USB adapter
-Message-ID: <20220315202231.GA629970@bhelgaas>
+        with ESMTP id S233018AbiCOVah (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Mar 2022 17:30:37 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8CF31BEB1;
+        Tue, 15 Mar 2022 14:29:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647379764; x=1678915764;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=A7BNzJil5UVOdacWFDYWEMOTLH+DuBVapnx31WlTQXY=;
+  b=ElKfy/Iu4/s7abPLQTIeEQBXsrWkgyh6N8XY1/dvQjCfwSdJwth58+Np
+   VRb/ifXZ9FnCKUqmTvQGybKv7uWlA+aXFtD7RQeCXuHMjWNOiKL3TiYMM
+   LTt95iszkV0yFIHpwPiWDkJaL/Yv/WdqhGIijKegPhBOUjyvfA/+PGX3q
+   bOf2KPq2MbibTq2wS/U9xEXLeYlrGS1VicSnh87t1LvBrFQSGarxT1WaO
+   qgoc7odbymN4mgMuKLUyxJXC52NVk51V38Vgt7MkaXcAU1xxXvLGijk+y
+   F7KnmAoIdP1quq1KPwJZ+R1Dsqd8K4srNJIqsEwlAeZRlpN6cqCX0gcdg
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="255256380"
+X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
+   d="scan'208";a="255256380"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 14:29:24 -0700
+X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
+   d="scan'208";a="512767160"
+Received: from rariley-mobl.amr.corp.intel.com (HELO [10.209.120.225]) ([10.209.120.225])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 14:29:23 -0700
+Message-ID: <f794a3fb-4d3a-7e3d-1600-27ee831526fd@linux.intel.com>
+Date:   Tue, 15 Mar 2022 14:29:23 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YjBlxOi0ljZVUb/D@smile.fi.intel.com>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.5.0
+Subject: Re: [PATCH v2] PCI/AER: Handle Multi UnCorrectable/Correctable errors
+ properly
+Content-Language: en-US
+To:     Eric Badger <ebadger@purestorage.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Oliver OHalloran <oohall@gmail.com>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20220315050842.120063-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20220315171425.GA1521135@ebps>
+ <2d4e8811-dce6-c891-e92d-e3746434685e@linux.intel.com>
+ <20220315195255.GA1523195@ebps>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20220315195255.GA1523195@ebps>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 12:09:08PM +0200, Andy Shevchenko wrote:
-> On Mon, Mar 14, 2022 at 02:42:53PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Mar 14, 2022 at 12:14:48PM +0200, Andy Shevchenko wrote:
-> > > ATI PCIe-USB adapter advertises MSI, but it doesn't work if INTx is disabled.
-> > > Enable the respective quirk as it's done for other ATI devices on this chipset,
-> > > 
-> > > Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI devices")
-> > 
-> > This is interesting because there must be a TON of these AMD/ATI SB600
-> > USB devices in the field, and 306c54d0edb6 was merged in July 2020 and
-> > appeared in v5.9.
-> > 
-> > So why would we only get a report now, in February 2022?  Is there
-> > some change more recent than 306c54d0edb6 that exposed this problem?
+
+
+On 3/15/22 12:52 PM, Eric Badger wrote:
+> On Tue, Mar 15, 2022 at 10:26:46AM -0700, Sathyanarayanan Kuppuswamy wrote:
+>> On 3/15/22 10:14 AM, Eric Badger wrote:
+>>>>    # Prep injection data for a correctable error.
+>>>>    $ cd /sys/kernel/debug/apei/einj
+>>>>    $ echo 0x00000040 > error_type
+>>>>    $ echo 0x4 > flags
+>>>>    $ echo 0x891000 > param4
+>>>>
+>>>>    # Root Error Status is initially clear
+>>>>    $ setpci -s <Dev ID> ECAP0001+0x30.w
+>>>>    0000
+>>>>
+>>>>    # Inject one error
+>>>>    $ echo 1 > error_inject
+>>>>
+>>>>    # Interrupt received
+>>>>    pcieport <Dev ID>: AER: Root Error Status 0001
+>>>>
+>>>>    # Inject another error (within 5 seconds)
+>>>>    $ echo 1 > error_inject
+>>>>
+>>>>    # No interrupt received, but "multiple ERR_COR" is now set
+>>>>    $ setpci -s <Dev ID> ECAP0001+0x30.w
+>>>>    0003
+>>>>
+>>>>    # Wait for a while, then clear ERR_COR. A new interrupt immediately
+>>>>      fires.
+>>>>    $ setpci -s <Dev ID> ECAP0001+0x30.w=0x1
+>>>>    pcieport <Dev ID>: AER: Root Error Status 0002
+>>>>
+>>>> Currently, the above issue has been only reproduced in the ICL server
+>>>> platform.
+>>>>
+>>>> [Eric: proposed reproducing steps]
+>>> Hmm, this differs from the procedure I described on v1, and I don't
+>>> think will work as described here.
+>>
+>> I have attempted to modify the steps to reproduce it without returning
+>> IRQ_NONE for all cases (which will break the functionality). But I
+>> think I did not correct the last few steps.
 > 
-> I think it's a rhetorical question. To me it's as simple as the latency
-> between getting the change into the kernel.
+> Well, the thinking in always returning IRQ_NONE was so that only setpci
+> modified the register and we could clearly see how writes to the
+> register affect interrupt generation.
+
+Got it. Makes sense.
+
 > 
-> However, I'm a bit worried that in case of ATI there are not so many
-> platforms that are kept up-to-dated.
+>> How about replacing the last 3 steps with following?
+>>
+>>   # Inject another error (within 5 seconds)
+>>   $ echo 1 > error_inject
+>>
+>>   # You will get a new IRQ with only multiple ERR_COR bit set
+>>   pcieport <Dev ID>: AER: Root Error Status 0002
+> 
+> This seems accurate. Though it does muddy a detail that I think was
+> clearer in the original procedure: was the second interrupt triggered by
+> the second error, or by the write of 0x1 to Root Error Status?
 
-This would be a rhetorical question if I were not interested in the
-answer but asking only to make a point.  That's not the case at all.
+I think you are talking about the following command, right?
 
-If these SB600 USB devices stopped working in v5.9 (October 2020),
-that would affect lots of keyboards and mice, and I would be surprised
-if we didn't hear about it until February, 2022.
+setpci -s <Dev ID> ECAP0001+0x30.w=0x1
 
-I looked through https://github.com/linuxhw/Dmesg, and there are at
-least 40 dmesg logs from v5.9 or later with SB600 USB, so I'm
-still a little skeptical that 306c54d0edb6 by itself is enough to
-explain this.
+If yes, my previously modified instructions already removed it. So
+no confusion.
 
-Anyway, I applied this to pci/msi for v5.18 with the following commit
-log:
+To summarize,
 
-    PCI: Disable broken MSI on ATI SB600 USB adapters
+In your case, you have controlled both register read/write of Root
+error status register to simulate the interrupt with only multi
+ERR_COR bit set.
 
-    Some ATI SB600 USB adapters advertise MSI, but MSI doesn't work if INTx is
-    disabled.  Disable MSI on these adapters.
+In my case, I have attempted to simulate it without changing the
+default behavior of aer_irq() in the kernel.
 
+Both seem ok to me. Although my personal preference is to trigger
+the error without changing the code behavior, if both you and Bjorn
+prefer to revert to old instructions, I will fix this in the next version.
+
+
+> 
+> Cheers,
+> Eric
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
