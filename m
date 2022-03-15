@@ -2,254 +2,226 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E89744DA12D
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Mar 2022 18:30:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 470944DA1CD
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Mar 2022 19:02:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350575AbiCORcC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Mar 2022 13:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34476 "EHLO
+        id S1350191AbiCOSCY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Mar 2022 14:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236042AbiCORcB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Mar 2022 13:32:01 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D1B156771;
-        Tue, 15 Mar 2022 10:30:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 878D5CE1C2F;
-        Tue, 15 Mar 2022 17:30:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C02BBC340F5;
-        Tue, 15 Mar 2022 17:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647365444;
-        bh=MKZ1FBnWhRw3+Onsjj47uEyG6R09YKLOHaysX/LnFdg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=N+OqYB7MuOEUBiVT15o4Tr0iC3sYRIHqOphPQKOZFhJo/8Ltw4R/8ViEAwJTfKaty
-         6C9gCzkdb+GHTqTamqskahfWgxxIXqVXHwS8mNyJ/DGjgSCOWY5QyhIznRcAfP1Cx8
-         ZlL/ATSy7Atr/ZdNyxdLFUAG3O7gqrCnDvCSsnyyQcyfuVpd8v0wxf1sSq6uZJMVu0
-         PwsnDSmmWqLHUAkiNhpCIu+/Y1KCO04K+A0GQyVMwVmtwHoda9MbheUDPkDghaaKzf
-         50G3n+EHMJRiIamf4mcgVxBdZo4dHMM9nop2CrjHkXmxq658zxaFALxVHr55mt9J5r
-         Sscw74nS/6mPw==
-Date:   Tue, 15 Mar 2022 12:30:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-        alex.williamson@redhat.com, jgg@nvidia.com, cohuck@redhat.com,
-        mgurtovoy@nvidia.com, yishaih@nvidia.com, kevin.tian@intel.com,
-        linuxarm@huawei.com, liulongfang@huawei.com,
-        prime.zeng@hisilicon.com, jonathan.cameron@huawei.com,
-        wangzhou1@hisilicon.com, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v9 3/9] hisi_acc_qm: Move VF PCI device IDs to common
- header
-Message-ID: <20220315173042.GA636129@bhelgaas>
+        with ESMTP id S243063AbiCOSCY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Mar 2022 14:02:24 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A329D58E6E;
+        Tue, 15 Mar 2022 11:01:11 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id h13so25237638ede.5;
+        Tue, 15 Mar 2022 11:01:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9egEby/kGDQx/H2AywacJdMEq9UWb27T57iBP6MKY/M=;
+        b=X459zaz8rBpHmz1eWRM/nXKPoCcWwgv93mgo1kUIqKJmmrFSVbFmtlBkSyc7oZbqEA
+         9iE/wpN2ldzWFyDARevE8q4aWwftUcTWrj/hZGCp5c/nWOErfTWiotj502O2E3wRub8x
+         fAvwgbWwEpPPMZKlHleAIZ5b3NuCDHQaUCu3o6zMz3Pk9oBOWUhxp7FqU8z4OYlvff33
+         vjwTCIZda48THwgM2za8HjIs/dPh3/+wx8u7uUvYGGau/xbCmqh8QSdYU72RKq3dM+TV
+         7s/9EfIhX6BorS0N3xa1MT7AdVO4JDq0rPwvec+a1/gkrmCnUuEgVF5WsgvwobwSbCSf
+         ZFuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9egEby/kGDQx/H2AywacJdMEq9UWb27T57iBP6MKY/M=;
+        b=XzfM2y1/piwXOHyvUJCRTcLMyV5F25NwyAJ3OpzE3GPeEYCL6U9QtqD23JMPJV0Dlm
+         7Cd9roX0kyKTR3QEyPNBz7P1CTQQdguanEMw4FSfhmX7UWjfUgLeQiCFa+zIQZPXBRbP
+         fVruSaKpdK9Nj2pQUqrEVlgMh/AZYNyEU8/ABFX10M8ukj2vAlNcIGthtma/HVPMpqFG
+         eqHaWFywtWxx7W7kKn/3gr//Ca7cgl6MKQVOIjdnR0sT7WwYJmwA+p+LxEmrnryMr8zr
+         3zGqTbm/cgWVzJypTcsv1YoAaYPodndYKENU1w65gMnmadBR4NPRWrr/poSTTz9kAVwH
+         +/lQ==
+X-Gm-Message-State: AOAM530LkyqLKpknuIcsqFSJWgP9d+kI2fTmX20AJM3dDQJS36PD0aSm
+        M3ETKmWVYbHCuaFa4FQN0K7Dpq3rsDCIzIWhgY0=
+X-Google-Smtp-Source: ABdhPJz09b9Fm75ixFJtzUGUkS6dUid3EAUCrWF+jfN6zd2zyejpSwybW8/2BkPFf2PjWP6mgqXTNKVgn2eTNF92NTk=
+X-Received: by 2002:a05:6402:3589:b0:416:7de7:cdde with SMTP id
+ y9-20020a056402358900b004167de7cddemr26440456edc.218.1647367269998; Tue, 15
+ Mar 2022 11:01:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220308184902.2242-4-shameerali.kolothum.thodi@huawei.com>
-X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220312132856.65163-1-krzysztof.kozlowski@canonical.com> <20220312132856.65163-2-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220312132856.65163-2-krzysztof.kozlowski@canonical.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 15 Mar 2022 19:59:56 +0200
+Message-ID: <CAHp75Vd6yu0OA6wYvPVs8J1wRDPyb6tCYXOjp9poweJd0sfPcw@mail.gmail.com>
+Subject: Re: [PATCH v4 01/11] driver: platform: Add helper for safer setting
+ of driver_override
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 08, 2022 at 06:48:56PM +0000, Shameer Kolothum wrote:
-> Move the PCI Device IDs of HiSilicon ACC VF devices to a common header
-> and also use a uniform naming convention.
-> 
-> This will be useful when we introduce the vfio PCI HiSilicon ACC live
-> migration driver in subsequent patches.
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Acked-by: Zhou Wang <wangzhou1@hisilicon.com>
-> Acked-by: Longfang Liu <liulongfang@huawei.com>
-> Acked-by: Kai Ye <yekai13@huawei.com>
-> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+On Sat, Mar 12, 2022 at 5:16 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@canonical.com> wrote:
+>
+> Several core drivers and buses expect that driver_override is a
+> dynamically allocated memory thus later they can kfree() it.
+>
+> However such assumption is not documented, there were in the past and
+> there are already users setting it to a string literal. This leads to
+> kfree() of static memory during device release (e.g. in error paths or
+> during unbind):
+>
+>     kernel BUG at ../mm/slub.c:3960!
+>     Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
+>     ...
+>     (kfree) from [<c058da50>] (platform_device_release+0x88/0xb4)
+>     (platform_device_release) from [<c0585be0>] (device_release+0x2c/0x90)
+>     (device_release) from [<c0a69050>] (kobject_put+0xec/0x20c)
+>     (kobject_put) from [<c0f2f120>] (exynos5_clk_probe+0x154/0x18c)
+>     (exynos5_clk_probe) from [<c058de70>] (platform_drv_probe+0x6c/0xa4)
+>     (platform_drv_probe) from [<c058b7ac>] (really_probe+0x280/0x414)
+>     (really_probe) from [<c058baf4>] (driver_probe_device+0x78/0x1c4)
+>     (driver_probe_device) from [<c0589854>] (bus_for_each_drv+0x74/0xb8)
+>     (bus_for_each_drv) from [<c058b48c>] (__device_attach+0xd4/0x16c)
+>     (__device_attach) from [<c058a638>] (bus_probe_device+0x88/0x90)
+>     (bus_probe_device) from [<c05871fc>] (device_add+0x3dc/0x62c)
+>     (device_add) from [<c075ff10>] (of_platform_device_create_pdata+0x94/0xbc)
+>     (of_platform_device_create_pdata) from [<c07600ec>] (of_platform_bus_create+0x1a8/0x4fc)
+>     (of_platform_bus_create) from [<c0760150>] (of_platform_bus_create+0x20c/0x4fc)
+>     (of_platform_bus_create) from [<c07605f0>] (of_platform_populate+0x84/0x118)
+>     (of_platform_populate) from [<c0f3c964>] (of_platform_default_populate_init+0xa0/0xb8)
+>     (of_platform_default_populate_init) from [<c01031f8>] (do_one_initcall+0x8c/0x404)
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci_ids.h
+>     (do_one_initcall) from [<c0f012c0>] (kernel_init_freeable+0x3d0/0x4d8)
+>     (kernel_init_freeable) from [<c0a7def0>] (kernel_init+0x8/0x114)
+>     (kernel_init) from [<c01010b4>] (ret_from_fork+0x14/0x20)
 
-> ---
->  drivers/crypto/hisilicon/hpre/hpre_main.c | 13 ++++++-------
->  drivers/crypto/hisilicon/sec2/sec_main.c  | 15 +++++++--------
->  drivers/crypto/hisilicon/zip/zip_main.c   | 11 +++++------
->  include/linux/pci_ids.h                   |  3 +++
->  4 files changed, 21 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
-> index ebfab3e14499..3589d8879b5e 100644
-> --- a/drivers/crypto/hisilicon/hpre/hpre_main.c
-> +++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
-> @@ -68,8 +68,7 @@
->  #define HPRE_REG_RD_INTVRL_US		10
->  #define HPRE_REG_RD_TMOUT_US		1000
->  #define HPRE_DBGFS_VAL_MAX_LEN		20
-> -#define HPRE_PCI_DEVICE_ID		0xa258
-> -#define HPRE_PCI_VF_DEVICE_ID		0xa259
-> +#define PCI_DEVICE_ID_HUAWEI_HPRE_PF	0xa258
->  #define HPRE_QM_USR_CFG_MASK		GENMASK(31, 1)
->  #define HPRE_QM_AXI_CFG_MASK		GENMASK(15, 0)
->  #define HPRE_QM_VFG_AX_MASK		GENMASK(7, 0)
-> @@ -111,8 +110,8 @@
->  static const char hpre_name[] = "hisi_hpre";
->  static struct dentry *hpre_debugfs_root;
->  static const struct pci_device_id hpre_dev_ids[] = {
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, HPRE_PCI_DEVICE_ID) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, HPRE_PCI_VF_DEVICE_ID) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_HPRE_PF) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_HPRE_VF) },
->  	{ 0, }
->  };
->  
-> @@ -242,7 +241,7 @@ MODULE_PARM_DESC(uacce_mode, UACCE_MODE_DESC);
->  
->  static int pf_q_num_set(const char *val, const struct kernel_param *kp)
->  {
-> -	return q_num_set(val, kp, HPRE_PCI_DEVICE_ID);
-> +	return q_num_set(val, kp, PCI_DEVICE_ID_HUAWEI_HPRE_PF);
->  }
->  
->  static const struct kernel_param_ops hpre_pf_q_num_ops = {
-> @@ -921,7 +920,7 @@ static int hpre_debugfs_init(struct hisi_qm *qm)
->  	qm->debug.sqe_mask_len = HPRE_SQE_MASK_LEN;
->  	hisi_qm_debug_init(qm);
->  
-> -	if (qm->pdev->device == HPRE_PCI_DEVICE_ID) {
-> +	if (qm->pdev->device == PCI_DEVICE_ID_HUAWEI_HPRE_PF) {
->  		ret = hpre_ctrl_debug_init(qm);
->  		if (ret)
->  			goto failed_to_create;
-> @@ -958,7 +957,7 @@ static int hpre_qm_init(struct hisi_qm *qm, struct pci_dev *pdev)
->  	qm->sqe_size = HPRE_SQE_SIZE;
->  	qm->dev_name = hpre_name;
->  
-> -	qm->fun_type = (pdev->device == HPRE_PCI_DEVICE_ID) ?
-> +	qm->fun_type = (pdev->device == PCI_DEVICE_ID_HUAWEI_HPRE_PF) ?
->  			QM_HW_PF : QM_HW_VF;
->  	if (qm->fun_type == QM_HW_PF) {
->  		qm->qp_base = HPRE_PF_DEF_Q_BASE;
-> diff --git a/drivers/crypto/hisilicon/sec2/sec_main.c b/drivers/crypto/hisilicon/sec2/sec_main.c
-> index 26d3ab1d308b..311a8747b5bf 100644
-> --- a/drivers/crypto/hisilicon/sec2/sec_main.c
-> +++ b/drivers/crypto/hisilicon/sec2/sec_main.c
-> @@ -20,8 +20,7 @@
->  
->  #define SEC_VF_NUM			63
->  #define SEC_QUEUE_NUM_V1		4096
-> -#define SEC_PF_PCI_DEVICE_ID		0xa255
-> -#define SEC_VF_PCI_DEVICE_ID		0xa256
-> +#define PCI_DEVICE_ID_HUAWEI_SEC_PF	0xa255
->  
->  #define SEC_BD_ERR_CHK_EN0		0xEFFFFFFF
->  #define SEC_BD_ERR_CHK_EN1		0x7ffff7fd
-> @@ -225,7 +224,7 @@ static const struct debugfs_reg32 sec_dfx_regs[] = {
->  
->  static int sec_pf_q_num_set(const char *val, const struct kernel_param *kp)
->  {
-> -	return q_num_set(val, kp, SEC_PF_PCI_DEVICE_ID);
-> +	return q_num_set(val, kp, PCI_DEVICE_ID_HUAWEI_SEC_PF);
->  }
->  
->  static const struct kernel_param_ops sec_pf_q_num_ops = {
-> @@ -313,8 +312,8 @@ module_param_cb(uacce_mode, &sec_uacce_mode_ops, &uacce_mode, 0444);
->  MODULE_PARM_DESC(uacce_mode, UACCE_MODE_DESC);
->  
->  static const struct pci_device_id sec_dev_ids[] = {
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, SEC_PF_PCI_DEVICE_ID) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, SEC_VF_PCI_DEVICE_ID) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_SEC_PF) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_SEC_VF) },
->  	{ 0, }
->  };
->  MODULE_DEVICE_TABLE(pci, sec_dev_ids);
-> @@ -717,7 +716,7 @@ static int sec_core_debug_init(struct hisi_qm *qm)
->  	regset->base = qm->io_base;
->  	regset->dev = dev;
->  
-> -	if (qm->pdev->device == SEC_PF_PCI_DEVICE_ID)
-> +	if (qm->pdev->device == PCI_DEVICE_ID_HUAWEI_SEC_PF)
->  		debugfs_create_file("regs", 0444, tmp_d, regset, &sec_regs_fops);
->  
->  	for (i = 0; i < ARRAY_SIZE(sec_dfx_labels); i++) {
-> @@ -735,7 +734,7 @@ static int sec_debug_init(struct hisi_qm *qm)
->  	struct sec_dev *sec = container_of(qm, struct sec_dev, qm);
->  	int i;
->  
-> -	if (qm->pdev->device == SEC_PF_PCI_DEVICE_ID) {
-> +	if (qm->pdev->device == PCI_DEVICE_ID_HUAWEI_SEC_PF) {
->  		for (i = SEC_CLEAR_ENABLE; i < SEC_DEBUG_FILE_NUM; i++) {
->  			spin_lock_init(&sec->debug.files[i].lock);
->  			sec->debug.files[i].index = i;
-> @@ -877,7 +876,7 @@ static int sec_qm_init(struct hisi_qm *qm, struct pci_dev *pdev)
->  	qm->sqe_size = SEC_SQE_SIZE;
->  	qm->dev_name = sec_name;
->  
-> -	qm->fun_type = (pdev->device == SEC_PF_PCI_DEVICE_ID) ?
-> +	qm->fun_type = (pdev->device == PCI_DEVICE_ID_HUAWEI_SEC_PF) ?
->  			QM_HW_PF : QM_HW_VF;
->  	if (qm->fun_type == QM_HW_PF) {
->  		qm->qp_base = SEC_PF_DEF_Q_BASE;
-> diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-> index 678f8b58ec42..66decfe07282 100644
-> --- a/drivers/crypto/hisilicon/zip/zip_main.c
-> +++ b/drivers/crypto/hisilicon/zip/zip_main.c
-> @@ -15,8 +15,7 @@
->  #include <linux/uacce.h>
->  #include "zip.h"
->  
-> -#define PCI_DEVICE_ID_ZIP_PF		0xa250
-> -#define PCI_DEVICE_ID_ZIP_VF		0xa251
-> +#define PCI_DEVICE_ID_HUAWEI_ZIP_PF	0xa250
->  
->  #define HZIP_QUEUE_NUM_V1		4096
->  
-> @@ -246,7 +245,7 @@ MODULE_PARM_DESC(uacce_mode, UACCE_MODE_DESC);
->  
->  static int pf_q_num_set(const char *val, const struct kernel_param *kp)
->  {
-> -	return q_num_set(val, kp, PCI_DEVICE_ID_ZIP_PF);
-> +	return q_num_set(val, kp, PCI_DEVICE_ID_HUAWEI_ZIP_PF);
->  }
->  
->  static const struct kernel_param_ops pf_q_num_ops = {
-> @@ -268,8 +267,8 @@ module_param_cb(vfs_num, &vfs_num_ops, &vfs_num, 0444);
->  MODULE_PARM_DESC(vfs_num, "Number of VFs to enable(1-63), 0(default)");
->  
->  static const struct pci_device_id hisi_zip_dev_ids[] = {
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_ZIP_PF) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_ZIP_VF) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_ZIP_PF) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HUAWEI_ZIP_VF) },
->  	{ 0, }
->  };
->  MODULE_DEVICE_TABLE(pci, hisi_zip_dev_ids);
-> @@ -838,7 +837,7 @@ static int hisi_zip_qm_init(struct hisi_qm *qm, struct pci_dev *pdev)
->  	qm->sqe_size = HZIP_SQE_SIZE;
->  	qm->dev_name = hisi_zip_name;
->  
-> -	qm->fun_type = (pdev->device == PCI_DEVICE_ID_ZIP_PF) ?
-> +	qm->fun_type = (pdev->device == PCI_DEVICE_ID_HUAWEI_ZIP_PF) ?
->  			QM_HW_PF : QM_HW_VF;
->  	if (qm->fun_type == QM_HW_PF) {
->  		qm->qp_base = HZIP_PF_DEF_Q_BASE;
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index aad54c666407..31dee2b65a62 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2529,6 +2529,9 @@
->  #define PCI_DEVICE_ID_KORENIX_JETCARDF3	0x17ff
->  
->  #define PCI_VENDOR_ID_HUAWEI		0x19e5
-> +#define PCI_DEVICE_ID_HUAWEI_ZIP_VF	0xa251
-> +#define PCI_DEVICE_ID_HUAWEI_SEC_VF	0xa256
-> +#define PCI_DEVICE_ID_HUAWEI_HPRE_VF	0xa259
->  
->  #define PCI_VENDOR_ID_NETRONOME		0x19ee
->  #define PCI_DEVICE_ID_NETRONOME_NFP4000	0x4000
-> -- 
-> 2.25.1
-> 
+I believe you may remove these three.
+
+> Provide a helper which clearly documents the usage of driver_override.
+> This will allow later to reuse the helper and reduce amount of
+
+the amount
+
+> duplicated code.
+
+> Convert the platform driver to use new helper and make the
+
+a new
+
+> driver_override field const char (it is not modified by the core).
+
+...
+
+> +/**
+> + * driver_set_override() - Helper to set or clear driver override.
+> + * @dev: Device to change
+> + * @override: Address of string to change (e.g. &device->driver_override);
+> + *            The contents will be freed and hold newly allocated override.
+> + * @s: NUL terminated string, new driver name to force a match, pass empty
+
+NUL-terminated? (44 vs 115 occurrences)
+
+> + *     string to clear it
+> + * @len: length of @s
+> + *
+> + * Helper to set or clear driver override in a device, intended for the cases
+> + * when the driver_override field is allocated by driver/bus code.
+> + *
+> + * Returns: 0 on success or a negative error code on failure.
+> + */
+> +int driver_set_override(struct device *dev, const char **override,
+> +                       const char *s, size_t len)
+> +{
+> +       const char *new, *old;
+> +       char *cp;
+> +
+> +       if (!dev || !override || !s)
+> +               return -EINVAL;
+> +
+> +       /*
+> +        * The stored value will be used in sysfs show callback (sysfs_emit()),
+> +        * which has a length limit of PAGE_SIZE and adds a trailing newline.
+> +        * Thus we can store one character less to avoid truncation during sysfs
+> +        * show.
+> +        */
+> +       if (len >= (PAGE_SIZE - 1))
+> +               return -EINVAL;
+> +
+> +       new = kstrndup(s, len, GFP_KERNEL);
+> +       if (!new)
+> +               return -ENOMEM;
+> +
+> +       cp = strchr(new, '\n');
+> +       if (cp)
+> +               *cp = '\0';
+
+AFAIU you may reduce memory footprint by
+
+cp = strnchr(new, len, '\n');
+if (cp)
+  len = s - cp;
+
+new = kstrndup(...);
+
+> +       device_lock(dev);
+> +       old = *override;
+> +       if (cp != new) {
+> +               *override = new;
+> +       } else {
+> +               kfree(new);
+> +               *override = NULL;
+> +       }
+> +       device_unlock(dev);
+> +
+> +       kfree(old);
+> +
+> +       return 0;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
