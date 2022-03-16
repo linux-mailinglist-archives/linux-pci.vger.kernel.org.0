@@ -2,137 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 934C74DA931
+	by mail.lfdr.de (Postfix) with ESMTP id 4777E4DA930
 	for <lists+linux-pci@lfdr.de>; Wed, 16 Mar 2022 05:14:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346678AbiCPEPI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Mar 2022 00:15:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41078 "EHLO
+        id S1347897AbiCPEPN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Mar 2022 00:15:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347719AbiCPEPG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Mar 2022 00:15:06 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B32340C7;
-        Tue, 15 Mar 2022 21:13:53 -0700 (PDT)
+        with ESMTP id S1350184AbiCPEPL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Mar 2022 00:15:11 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14B734662;
+        Tue, 15 Mar 2022 21:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647404033; x=1678940033;
+  t=1647404038; x=1678940038;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=53vzMOHjErR4dbS2Kgy3GzvXTkOvQUidDmgDE3n4p1k=;
-  b=HuAShqTxWyqHtXyZXH7WbLSoBoXWwQVAkEQl9acELMHLf9FsjGr28r0P
-   zfAmzcf2mcnYP6BAhdEEeDvjMBCgcvkSKCo/UEiVMc5L4S6g10nr/PVa0
-   wfibZpkOrzbDrLWarRxM7YGPs389aO6YguQKXiTzOtSmu6uL6tJ9pqoCB
-   YPhbqxqubuLrRywZcr8OCcjSYygRtGBrvS9CUK47iVRNatdYT+91s1HcK
-   Rn1ogkK/gzBd5U/vFDgiQ3qxuNTFpgcIJI7Gs9Wf9SdY0ZYNSmVnxqD63
-   kvXg4/IuPwB3IKooX4KQKrPOKxtQ+huyaM/EsFrh+kj9qYfGduu5hJPph
+  bh=S6z3Dqt2+Gnw13+ORdVS1nQd9F97flyxW1Nnt/toTGE=;
+  b=adtfe+3DHW0a8f7EfYTkUk7TMMrVylwUHPmbqgj2Y42hPSLu5jApVs1p
+   po/nnn++TFlL9qEX9KlU5QdGXdsL7yQf5ftu5PvKPuB4tH3drGlHsieWf
+   9CwTE8a8yR665w9Foluq+qV8aFrj2Bucn6NwMnmEkMbOfdFDCC5maYhEd
+   tc3kttxBnLjN7P9QykDfhhGQiNRvpYllEJUZ/vTuZYNLKiXbbKn9j2uhb
+   BdMLgG0hZ+peAFT2uJmmScm6c76aMUoldGSCk40ObW+E7U/JgCFQrDoVg
+   Ng7pCB/dY1xNmu32YW2aYlrrr17yMlHAOfoNOHHhaQwIzX/W0H9ncHdsZ
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="238655216"
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="281265839"
 X-IronPort-AV: E=Sophos;i="5.90,185,1643702400"; 
-   d="scan'208";a="238655216"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 21:13:52 -0700
+   d="scan'208";a="281265839"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 21:13:58 -0700
 X-IronPort-AV: E=Sophos;i="5.90,185,1643702400"; 
-   d="scan'208";a="516166395"
+   d="scan'208";a="644514748"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 21:13:52 -0700
-Subject: [PATCH 2/8] cxl/pci: Cleanup cxl_map_device_regs()
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 21:13:58 -0700
+Subject: [PATCH 3/8] cxl/pci: Kill cxl_map_regs()
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     ben.widawsky@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
         ira.weiny@intel.com, linux-pci@vger.kernel.org
-Date:   Tue, 15 Mar 2022 21:13:52 -0700
-Message-ID: <164740403286.3912056.2514975283929305856.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Tue, 15 Mar 2022 21:13:58 -0700
+Message-ID: <164740403796.3912056.13648238900454640514.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Use a loop to reduce the duplicated code in cxl_map_device_regs(). This
-is in preparation for deleting cxl_map_regs().
+The component registers are currently unused by the cxl_pci driver.
+Only the physical address base of the component registers is conveyed to
+the cxl_mem driver. Just call cxl_map_device_registers() directly.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/regs.c |   51 ++++++++++++++++++-----------------------------
- 1 file changed, 20 insertions(+), 31 deletions(-)
+ drivers/cxl/pci.c |   23 +----------------------
+ 1 file changed, 1 insertion(+), 22 deletions(-)
 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index bd6ae14b679e..bd766e461f7d 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -211,42 +211,31 @@ int cxl_map_device_regs(struct pci_dev *pdev,
- 			struct cxl_device_regs *regs,
- 			struct cxl_register_map *map)
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 994c79bf6afd..0efbb356cce0 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -346,27 +346,6 @@ static int cxl_probe_regs(struct pci_dev *pdev, struct cxl_register_map *map)
+ 	return 0;
+ }
+ 
+-static int cxl_map_regs(struct cxl_dev_state *cxlds, struct cxl_register_map *map)
+-{
+-	struct device *dev = cxlds->dev;
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-
+-	switch (map->reg_type) {
+-	case CXL_REGLOC_RBI_COMPONENT:
+-		cxl_map_component_regs(pdev, &cxlds->regs.component, map);
+-		dev_dbg(dev, "Mapping component registers...\n");
+-		break;
+-	case CXL_REGLOC_RBI_MEMDEV:
+-		cxl_map_device_regs(pdev, &cxlds->regs.device_regs, map);
+-		dev_dbg(dev, "Probing device registers...\n");
+-		break;
+-	default:
+-		break;
+-	}
+-
+-	return 0;
+-}
+-
+ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 			  struct cxl_register_map *map)
  {
-+	resource_size_t phys_addr =
-+		pci_resource_start(pdev, map->barno) + map->block_offset;
- 	struct device *dev = &pdev->dev;
--	resource_size_t phys_addr;
--
--	phys_addr = pci_resource_start(pdev, map->barno);
--	phys_addr += map->block_offset;
--
--	if (map->device_map.status.valid) {
--		resource_size_t addr;
-+	struct mapinfo {
-+		struct cxl_reg_map *rmap;
-+		void __iomem **addr;
-+	} mapinfo[] = {
-+		{ .rmap = &map->device_map.status, &regs->status, },
-+		{ .rmap = &map->device_map.mbox, &regs->mbox, },
-+		{ .rmap = &map->device_map.memdev, &regs->memdev, },
-+	};
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
-+		struct mapinfo *mi = &mapinfo[i];
- 		resource_size_t length;
--
--		addr = phys_addr + map->device_map.status.offset;
--		length = map->device_map.status.size;
--		regs->status = devm_cxl_iomap_block(dev, addr, length);
--		if (!regs->status)
--			return -ENOMEM;
--	}
--
--	if (map->device_map.mbox.valid) {
- 		resource_size_t addr;
--		resource_size_t length;
+@@ -599,7 +578,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
  
--		addr = phys_addr + map->device_map.mbox.offset;
--		length = map->device_map.mbox.size;
--		regs->mbox = devm_cxl_iomap_block(dev, addr, length);
--		if (!regs->mbox)
--			return -ENOMEM;
--	}
--
--	if (map->device_map.memdev.valid) {
--		resource_size_t addr;
--		resource_size_t length;
-+		if (!mi->rmap->valid)
-+			continue;
- 
--		addr = phys_addr + map->device_map.memdev.offset;
--		length = map->device_map.memdev.size;
--		regs->memdev = devm_cxl_iomap_block(dev, addr, length);
--		if (!regs->memdev)
-+		addr = phys_addr + mi->rmap->offset;
-+		length = mi->rmap->size;
-+		*(mi->addr) = devm_cxl_iomap_block(dev, addr, length);
-+		if (!*(mi->addr))
- 			return -ENOMEM;
- 	}
+-	rc = cxl_map_regs(cxlds, &map);
++	rc = cxl_map_device_regs(pdev, &cxlds->regs.device_regs, &map);
+ 	if (rc)
+ 		return rc;
  
 
