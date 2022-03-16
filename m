@@ -2,56 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6C034DA935
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Mar 2022 05:14:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E1E64DA937
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Mar 2022 05:14:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353484AbiCPEPg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Mar 2022 00:15:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42426 "EHLO
+        id S1353501AbiCPEPk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Mar 2022 00:15:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353477AbiCPEPe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Mar 2022 00:15:34 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15C1C47045;
-        Tue, 15 Mar 2022 21:14:20 -0700 (PDT)
+        with ESMTP id S1353508AbiCPEPj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Mar 2022 00:15:39 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A35BB4B1D5;
+        Tue, 15 Mar 2022 21:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647404060; x=1678940060;
+  t=1647404065; x=1678940065;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RgvwNLJ5RGE63N7kLq/0oqLCZvNK+5TbxTMBDlodL0Y=;
-  b=GZjZ7DQYGjcSNS8VKSp+YdNjL3QZZKHGIFPm6/DgRBNLWXwNYDJa1/7p
-   3ccFJHdjvgUKRoMqGk4pNVU6dvswocmxow4264aLQ+ybA7j4tWfxtHK7V
-   q9Dn6X017w+Pg3pehsQBogG2XPHN1ddIt50nCDKcKtAIt33noY3BmB5An
-   eeutrVWh0q4FJxvaR5qQecIcU9dLXeTLtGpYvLrhlDgpbwcAFh5Or8GiQ
-   7XWe/+5fBoq3NBCmapevnyIiL3lw85/l2zqJxVNZCd2cXWCtx/v9ErGGj
-   fwwNX9TFY8TAzrf7mnfjOQk2yusn1s4e0hNjn6UNddV3aXMEJmWpT6Jv2
+  bh=XFiGcPS1f/T7+aDldvpmz0ApwwO2zws4MBb9vsb4Vi0=;
+  b=cuqReaVvVMd1KCZLBxdCTUGW7ZgTySYn72pqcA9cem4/ENTa+ViqPBF8
+   xTtOMR8wRO43UxAfznndVub4rbedjRTlwRXPOCDV4HMFshmDDcz03Be06
+   b+glgDUsQPUw+bTzrfSF40kZyFa0Yntgp1sVuYAqBFgDpdIMw+Zq6Avcd
+   n6N5u30hRGVuFad0WFADtlrUudhAQQlMwsG4Lzf5wXyzULVAn/EpKPyn/
+   Rv05l0Ks06CiuqAM86psJWGxWZY2UncE1S/OAq4V3xBoaM+oyBE84l7Tq
+   eh4uDF4W53EbNvHmxmiQbD+LwENwINwNAiiPr1RMQiQN6EJbbwHLyHbcW
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="342918431"
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="256678782"
 X-IronPort-AV: E=Sophos;i="5.90,185,1643702400"; 
-   d="scan'208";a="342918431"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 21:14:19 -0700
+   d="scan'208";a="256678782"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 21:14:25 -0700
 X-IronPort-AV: E=Sophos;i="5.90,185,1643702400"; 
-   d="scan'208";a="549842148"
+   d="scan'208";a="540739866"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.25])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 21:14:19 -0700
-Subject: [PATCH 7/8] cxl/pci: Find and map the RAS Capability Structure
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 21:14:24 -0700
+Subject: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     ben.widawsky@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
         ira.weiny@intel.com, linux-pci@vger.kernel.org
-Date:   Tue, 15 Mar 2022 21:14:19 -0700
-Message-ID: <164740405921.3912056.7575762163944798747.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Tue, 15 Mar 2022 21:14:24 -0700
+Message-ID: <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -60,121 +60,206 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The RAS Capability Structure has some ancillary information that may be
-relevant with respect to AER events, link and protcol error status
-registers. Map the RAS Capability Registers in support of defining a
-'struct pci_error_handlers' instance for the cxl_pci driver.
+Add nominal error handling that tears down CXL.mem in response to error
+notifications that imply a device reset. Given some CXL.mem may be
+operating as System RAM, there is a high likelihood that these error
+events are fatal. However, if the system survives the notification the
+expectation is that the driver behavior is equivalent to a hot-unplug
+and re-plug of an endpoint.
+
+Note that this does not change the mask values from the default. That
+awaits CXL _OSC support to determine whether platform firmware is in
+control of the mask registers.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/regs.c |    7 +++++++
- drivers/cxl/cxl.h       |   19 +++++++++++++++++++
- drivers/cxl/pci.c       |    8 ++++++++
- 3 files changed, 34 insertions(+)
+ drivers/cxl/core/memdev.c |    1 
+ drivers/cxl/cxlmem.h      |    2 +
+ drivers/cxl/pci.c         |  109 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 112 insertions(+)
 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index c022c8937dfc..53aac68b9ce4 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -83,6 +83,12 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
- 			rmap = &map->hdm_decoder;
- 			break;
- 		}
-+		case CXL_CM_CAP_CAP_ID_RAS:
-+			dev_dbg(dev, "found RAS capability (0x%x)\n",
-+				offset);
-+			length = CXL_RAS_CAPABILITY_LENGTH;
-+			rmap = &map->ras;
-+			break;
- 		default:
- 			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
- 				offset);
-@@ -196,6 +202,7 @@ int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
- 		void __iomem **addr;
- 	} mapinfo[] = {
- 		{ .rmap = &map->component_map.hdm_decoder, &regs->hdm_decoder },
-+		{ .rmap = &map->component_map.ras, &regs->ras },
- 	};
- 	int i;
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 52bd77d8e22a..cf3d8d0aaf22 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -32,6 +32,7 @@
- #define   CXL_CM_CAP_HDR_ARRAY_SIZE_MASK GENMASK(31, 24)
- #define CXL_CM_CAP_PTR_MASK GENMASK(31, 20)
- 
-+#define   CXL_CM_CAP_CAP_ID_RAS 0x2
- #define   CXL_CM_CAP_CAP_ID_HDM 0x5
- #define   CXL_CM_CAP_CAP_HDM_VERSION 1
- 
-@@ -64,6 +65,21 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
- 	return val ? val * 2 : 1;
- }
- 
-+/* RAS Registers CXL 2.0 8.2.5.9 CXL RAS Capability Structure */
-+#define CXL_RAS_UNCORRECTABLE_STATUS_OFFSET 0x0
-+#define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
-+#define CXL_RAS_UNCORRECTABLE_MASK_OFFSET 0x4
-+#define   CXL_RAS_UNCORRECTABLE_MASK_MASK (GENMASK(16, 14) | GENMASK(11, 0))
-+#define CXL_RAS_UNCORRECTABLE_SEVERITY_OFFSET 0x8
-+#define   CXL_RAS_UNCORRECTABLE_SEVERITY_MASK (GENMASK(16, 14) | GENMASK(11, 0))
-+#define CXL_RAS_CORRECTABLE_STATUS_OFFSET 0xC
-+#define   CXL_RAS_CORRECTABLE_STATUS_MASK GENMASK(6, 0)
-+#define CXL_RAS_CORRECTABLE_MASK_OFFSET 0x10
-+#define   CXL_RAS_CORRECTABLE_MASK_MASK GENMASK(6, 0)
-+#define CXL_RAS_CAP_CONTROL_OFFSET 0x14
-+#define CXL_RAS_HEADER_LOG_OFFSET 0x18
-+#define CXL_RAS_CAPABILITY_LENGTH 0x58
-+
- /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
- #define CXLDEV_CAP_ARRAY_OFFSET 0x0
- #define   CXLDEV_CAP_ARRAY_CAP_ID 0
-@@ -98,9 +114,11 @@ struct cxl_regs {
- 	/*
- 	 * Common set of CXL Component register block base pointers
- 	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
-+	 * @ras: CXL 2.0 8.2.5.9 CXL RAS Capability Structure
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 1f76b28f9826..223d512790e1 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -341,6 +341,7 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+ 	 * needed as this is ordered with cdev_add() publishing the device.
  	 */
- 	struct_group_tagged(cxl_component_regs, component,
- 		void __iomem *hdm_decoder;
-+		void __iomem *ras;
- 	);
- 	/*
- 	 * Common set of CXL Device register block base pointers
-@@ -122,6 +140,7 @@ struct cxl_reg_map {
+ 	cxlmd->cxlds = cxlds;
++	cxlds->cxlmd = cxlmd;
  
- struct cxl_component_reg_map {
- 	struct cxl_reg_map hdm_decoder;
-+	struct cxl_reg_map ras;
- };
+ 	cdev = &cxlmd->cdev;
+ 	rc = cdev_device_add(cdev, dev);
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 5d33ce24fe09..f58e16951414 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -117,6 +117,7 @@ struct cxl_endpoint_dvsec_info {
+  * Currently only memory devices are represented.
+  *
+  * @dev: The device associated with this CXL state
++ * @cxlmd: The device representing the CXL.mem capabilities of @dev
+  * @regs: Parsed register blocks
+  * @cxl_dvsec: Offset to the PCIe device DVSEC
+  * @payload_size: Size of space for payload
+@@ -148,6 +149,7 @@ struct cxl_endpoint_dvsec_info {
+  */
+ struct cxl_dev_state {
+ 	struct device *dev;
++	struct cxl_memdev *cxlmd;
  
- struct cxl_device_reg_map {
+ 	struct cxl_regs regs;
+ 	int cxl_dvsec;
 diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index d8361331a013..bde8929450f0 100644
+index bde8929450f0..823cbfa093fa 100644
 --- a/drivers/cxl/pci.c
 +++ b/drivers/cxl/pci.c
-@@ -310,6 +310,9 @@ static int cxl_probe_regs(struct pci_dev *pdev, struct cxl_register_map *map)
- 			return -ENXIO;
- 		}
+@@ -8,6 +8,7 @@
+ #include <linux/mutex.h>
+ #include <linux/list.h>
+ #include <linux/pci.h>
++#include <linux/aer.h>
+ #include <linux/io.h>
+ #include "cxlmem.h"
+ #include "cxlpci.h"
+@@ -533,6 +534,11 @@ static void cxl_dvsec_ranges(struct cxl_dev_state *cxlds)
+ 	info->ranges = __cxl_dvsec_ranges(cxlds, info);
+ }
  
-+		if (!comp_map->ras.valid)
-+			dev_dbg(dev, "RAS registers not found\n");
++static void disable_aer(void *pdev)
++{
++	pci_disable_pcie_error_reporting(pdev);
++}
 +
- 		dev_dbg(dev, "Set up component registers\n");
- 		break;
- 	case CXL_REGLOC_RBI_MEMDEV:
-@@ -580,6 +583,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+ 	struct cxl_register_map map;
+@@ -554,6 +560,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	cxlds = cxl_dev_state_create(&pdev->dev);
+ 	if (IS_ERR(cxlds))
+ 		return PTR_ERR(cxlds);
++	pci_set_drvdata(pdev, cxlds);
  
- 	cxlds->component_reg_phys = map.resource;
+ 	cxlds->serial = pci_get_dsn(pdev);
+ 	cxlds->cxl_dvsec = pci_find_dvsec_capability(
+@@ -610,6 +617,14 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (IS_ERR(cxlmd))
+ 		return PTR_ERR(cxlmd);
  
-+	rc = cxl_map_component_regs(&pdev->dev, &cxlds->regs.component,
-+				    &map, BIT(CXL_CM_CAP_CAP_ID_RAS));
-+	if (rc)
-+		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
++	if (cxlds->regs.ras) {
++		pci_enable_pcie_error_reporting(pdev);
++		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
++		if (rc)
++			return rc;
++	}
++	pci_save_state(pdev);
 +
- 	rc = cxl_pci_setup_mailbox(cxlds);
- 	if (rc)
- 		return rc;
+ 	if (range_len(&cxlds->pmem_range) && IS_ENABLED(CONFIG_CXL_PMEM))
+ 		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
+ 
+@@ -623,10 +638,104 @@ static const struct pci_device_id cxl_mem_pci_tbl[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
+ 
++/*
++ * Log the state of the RAS status registers and prepare them to log the
++ * next error status.
++ */
++static void cxl_report_and_clear(struct cxl_dev_state *cxlds)
++{
++	struct cxl_memdev *cxlmd = cxlds->cxlmd;
++	struct device *dev = &cxlmd->dev;
++	void __iomem *addr;
++	u32 status;
++
++	if (!cxlds->regs.ras)
++		return;
++
++	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
++	status = readl(addr);
++	if (status & CXL_RAS_UNCORRECTABLE_STATUS_MASK) {
++		dev_warn(cxlds->dev, "%s: uncorrectable status: %#08x\n",
++			 dev_name(dev), status);
++		writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
++	}
++
++	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
++	status = readl(addr);
++	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
++		dev_warn(cxlds->dev, "%s: correctable status: %#08x\n",
++			 dev_name(dev), status);
++		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
++	}
++}
++
++static pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
++					   pci_channel_state_t state)
++{
++	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
++	struct cxl_memdev *cxlmd = cxlds->cxlmd;
++	struct device *dev = &cxlmd->dev;
++
++	/*
++	 * A frozen channel indicates an impending reset which is fatal to
++	 * CXL.mem operation, and will likely crash the system. On the off
++	 * chance the situation is recoverable dump the status of the RAS
++	 * capability registers and bounce the active state of the memdev.
++	 */
++	cxl_report_and_clear(cxlds);
++
++	switch (state) {
++	case pci_channel_io_normal:
++		return PCI_ERS_RESULT_CAN_RECOVER;
++	case pci_channel_io_frozen:
++		dev_warn(&pdev->dev,
++			 "%s: frozen state error detected, disable CXL.mem\n",
++			 dev_name(dev));
++		device_release_driver(dev);
++		return PCI_ERS_RESULT_NEED_RESET;
++	case pci_channel_io_perm_failure:
++		dev_warn(&pdev->dev,
++			 "failure state error detected, request disconnect\n");
++		return PCI_ERS_RESULT_DISCONNECT;
++	}
++	return PCI_ERS_RESULT_NEED_RESET;
++}
++
++static pci_ers_result_t cxl_slot_reset(struct pci_dev *pdev)
++{
++	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
++	struct cxl_memdev *cxlmd = cxlds->cxlmd;
++	struct device *dev = &cxlmd->dev;
++
++	dev_info(&pdev->dev, "%s: restart CXL.mem after slot reset\n",
++		 dev_name(dev));
++	pci_restore_state(pdev);
++	if (device_attach(dev) <= 0)
++		return PCI_ERS_RESULT_DISCONNECT;
++	return PCI_ERS_RESULT_RECOVERED;
++}
++
++static void cxl_error_resume(struct pci_dev *pdev)
++{
++	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
++	struct cxl_memdev *cxlmd = cxlds->cxlmd;
++	struct device *dev = &cxlmd->dev;
++
++	dev_info(&pdev->dev, "%s: error resume %s\n", dev_name(dev),
++		 dev->driver ? "successful" : "failed");
++}
++
++static const struct pci_error_handlers cxl_error_handlers = {
++	.error_detected	= cxl_error_detected,
++	.slot_reset	= cxl_slot_reset,
++	.resume		= cxl_error_resume,
++};
++
+ static struct pci_driver cxl_pci_driver = {
+ 	.name			= KBUILD_MODNAME,
+ 	.id_table		= cxl_mem_pci_tbl,
+ 	.probe			= cxl_pci_probe,
++	.err_handler		= &cxl_error_handlers,
+ 	.driver	= {
+ 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
+ 	},
 
