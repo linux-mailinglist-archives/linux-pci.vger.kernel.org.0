@@ -2,171 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 318D84DB621
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Mar 2022 17:27:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F24C84DB7C7
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Mar 2022 19:09:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243014AbiCPQ3F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Mar 2022 12:29:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48660 "EHLO
+        id S1346985AbiCPSKz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Mar 2022 14:10:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244805AbiCPQ3E (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Mar 2022 12:29:04 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 965F39FD4
-        for <linux-pci@vger.kernel.org>; Wed, 16 Mar 2022 09:27:48 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id a5so4467166pfv.2
-        for <linux-pci@vger.kernel.org>; Wed, 16 Mar 2022 09:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YdfDwLcCxjBdFThwwHos9x013CjhNXUSI2ePOCAUr0A=;
-        b=iIS9XuZtPG0W5Be9kuSTERIiint31DBY4mh3ylmZoH9Dg3HorEwyYM9h/pjdpx5yX3
-         fgMnEdo7U7Wyr2osuRjdEQBgoEgAuiqHSPJ9lIxbUaP+h+2tiylVp7bvWSvcnIuTd/6F
-         I27AW6cl8/e0TlxzfCTZtE9O4Y+oX4c/otCS4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YdfDwLcCxjBdFThwwHos9x013CjhNXUSI2ePOCAUr0A=;
-        b=k7CqWvlZ9CnBIphDeOkXBs0kjkIyDoLzKa/Pqu2tdsYp3mAVC0tpzCUcuCJtRfTIog
-         SkPcQdnO8+5tMYo06eTkFxBQBvXzdYSwDq3+FKXXbuftNMq+TvxmXZ5Mn4/8M1pk0lmy
-         w7GX2mtLN2+KzXuwvelhoKPnZsCJbRfb/o1mWfiAfVwNlAg20Q72peT3PTl8qhaSJV15
-         6FrDMnRtZ7MMUBhHC2FSnvpnAa55zRmTzdnL6MLogCFlRZWzLx8agy/WXYF0sBx2E9+7
-         ptdt0Vk0VDKZWvO4lkWInVa8HtaY2CcdN6qCk8ccNqdObJrG50ng1VvEp6fAby0HByTZ
-         oFwg==
-X-Gm-Message-State: AOAM530TT+g6bIQ4kIJnD2MdG/GRto6MwSygAL0dF1QmbdCWHtsTCweM
-        DyiJbQPi10ncLV4gUtI9y6o3SAZ9ILCf0g==
-X-Google-Smtp-Source: ABdhPJxva7xZsTK7pkGECCA5lVC+ON1Nrx1iA73AnmCG359irVs9MLBTBJMXbSo6A+5jYzRqoELU/A==
-X-Received: by 2002:aa7:9ad8:0:b0:4f7:78d4:de8c with SMTP id x24-20020aa79ad8000000b004f778d4de8cmr121241pfp.38.1647448068048;
-        Wed, 16 Mar 2022 09:27:48 -0700 (PDT)
-Received: from ebps (vpn.purestorage.com. [192.30.189.1])
-        by smtp.gmail.com with ESMTPSA id n14-20020a17090a394e00b001c670d67b8esm847798pjf.32.2022.03.16.09.27.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Mar 2022 09:27:47 -0700 (PDT)
-Date:   Wed, 16 Mar 2022 09:27:44 -0700
-From:   Eric Badger <ebadger@purestorage.com>
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver OHalloran <oohall@gmail.com>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        ebadger@purestorage.com
-Subject: Re: [PATCH v2] PCI/AER: Handle Multi UnCorrectable/Correctable
- errors properly
-Message-ID: <20220316162744.GA1585319@ebps>
-References: <20220315050842.120063-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20220315171425.GA1521135@ebps>
- <2d4e8811-dce6-c891-e92d-e3746434685e@linux.intel.com>
- <20220315195255.GA1523195@ebps>
- <f794a3fb-4d3a-7e3d-1600-27ee831526fd@linux.intel.com>
+        with ESMTP id S239661AbiCPSKz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Mar 2022 14:10:55 -0400
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 307D3527E0;
+        Wed, 16 Mar 2022 11:09:40 -0700 (PDT)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 382DE92009C; Wed, 16 Mar 2022 19:09:38 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 30B8992009B;
+        Wed, 16 Mar 2022 18:09:38 +0000 (GMT)
+Date:   Wed, 16 Mar 2022 18:09:38 +0000 (GMT)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Dmitry Osipenko <dmitry.osipenko@collabora.com>
+cc:     Nikolai Zhubr <zhubr.2@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@kernel.org>,
+        Michal Necasek <mnecasek@yahoo.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] x86/PCI: Add $IRT PIRQ routing table support
+In-Reply-To: <a2791312-2957-27e6-43af-c805bbb90266@collabora.com>
+Message-ID: <alpine.DEB.2.21.2203161740350.24248@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2201021821480.56863@angie.orcam.me.uk> <alpine.DEB.2.21.2201022058050.56863@angie.orcam.me.uk> <a2791312-2957-27e6-43af-c805bbb90266@collabora.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f794a3fb-4d3a-7e3d-1600-27ee831526fd@linux.intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 02:29:23PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 3/15/22 12:52 PM, Eric Badger wrote:
-> > On Tue, Mar 15, 2022 at 10:26:46AM -0700, Sathyanarayanan Kuppuswamy wrote:
-> > > On 3/15/22 10:14 AM, Eric Badger wrote:
-> > > > >    # Prep injection data for a correctable error.
-> > > > >    $ cd /sys/kernel/debug/apei/einj
-> > > > >    $ echo 0x00000040 > error_type
-> > > > >    $ echo 0x4 > flags
-> > > > >    $ echo 0x891000 > param4
-> > > > > 
-> > > > >    # Root Error Status is initially clear
-> > > > >    $ setpci -s <Dev ID> ECAP0001+0x30.w
-> > > > >    0000
-> > > > > 
-> > > > >    # Inject one error
-> > > > >    $ echo 1 > error_inject
-> > > > > 
-> > > > >    # Interrupt received
-> > > > >    pcieport <Dev ID>: AER: Root Error Status 0001
-> > > > > 
-> > > > >    # Inject another error (within 5 seconds)
-> > > > >    $ echo 1 > error_inject
-> > > > > 
-> > > > >    # No interrupt received, but "multiple ERR_COR" is now set
-> > > > >    $ setpci -s <Dev ID> ECAP0001+0x30.w
-> > > > >    0003
-> > > > > 
-> > > > >    # Wait for a while, then clear ERR_COR. A new interrupt immediately
-> > > > >      fires.
-> > > > >    $ setpci -s <Dev ID> ECAP0001+0x30.w=0x1
-> > > > >    pcieport <Dev ID>: AER: Root Error Status 0002
-> > > > > 
-> > > > > Currently, the above issue has been only reproduced in the ICL server
-> > > > > platform.
-> > > > > 
-> > > > > [Eric: proposed reproducing steps]
-> > > > Hmm, this differs from the procedure I described on v1, and I don't
-> > > > think will work as described here.
-> > > 
-> > > I have attempted to modify the steps to reproduce it without returning
-> > > IRQ_NONE for all cases (which will break the functionality). But I
-> > > think I did not correct the last few steps.
+On Tue, 15 Mar 2022, Dmitry Osipenko wrote:
+
+> > Handle the $IRT PCI IRQ Routing Table format used by AMI for its BCP 
+> > (BIOS Configuration Program) external tool meant for tweaking BIOS 
+> > structures without the need to rebuild it from sources[1].
 > > 
-> > Well, the thinking in always returning IRQ_NONE was so that only setpci
-> > modified the register and we could clearly see how writes to the
-> > register affect interrupt generation.
-> 
-> Got it. Makes sense.
-> 
+> > The $IRT format has been invented by AMI before Microsoft has come up 
+> > with its $PIR format and a $IRT table is therefore there in some systems 
+> > that lack a $PIR table, such as the DataExpert EXP8449 mainboard based 
+> > on the ALi FinALi 486 chipset (M1489/M1487), which predates DMI 2.0 and 
+> > cannot therefore be easily identified at run time.
 > > 
-> > > How about replacing the last 3 steps with following?
-> > > 
-> > >   # Inject another error (within 5 seconds)
-> > >   $ echo 1 > error_inject
-> > > 
-> > >   # You will get a new IRQ with only multiple ERR_COR bit set
-> > >   pcieport <Dev ID>: AER: Root Error Status 0002
-> > 
-> > This seems accurate. Though it does muddy a detail that I think was
-> > clearer in the original procedure: was the second interrupt triggered by
-> > the second error, or by the write of 0x1 to Root Error Status?
-> 
-> I think you are talking about the following command, right?
-> 
-> setpci -s <Dev ID> ECAP0001+0x30.w=0x1
-> 
-> If yes, my previously modified instructions already removed it. So
-> no confusion.
+> > Unlike with the $PIR format there is no alignment guarantee as to the 
+> > placement of the $IRT table, so scan the whole BIOS area bytewise.
+[...]
+> This patch broke crosvm using recent linux-next. The "ir = (struct
+> irt_routing_table *)addr;" contains invalid pointer. Any ideas why?
 
-The confusion I mention is: "what actually triggers the second
-interrupt?" Since I can't find a description of the observed behavior in
-the PCIe spec, I find it interesting to know what's actually happening.
-Since the procedure we've discussed in this thread stalls in aer_irq(),
-you can't distinguish clearly which event causes the second interrupt.
+ This specific pointer refers to the BIOS area being iterated over:
 
-> 
-> To summarize,
-> 
-> In your case, you have controlled both register read/write of Root
-> error status register to simulate the interrupt with only multi
-> ERR_COR bit set.
-> 
-> In my case, I have attempted to simulate it without changing the
-> default behavior of aer_irq() in the kernel.
-> 
-> Both seem ok to me. Although my personal preference is to trigger
-> the error without changing the code behavior, if both you and Bjorn
-> prefer to revert to old instructions, I will fix this in the next version.
+	for (addr = (u8 *)__va(0xf0000);
+	     addr < (u8 *)__va(0x100000);
+	     addr++) {
 
-I think the amended procedure from this thread is fine to demonstrate
-how to play with the patch. The other procedure is available on the list
-if anyone has a need for it.
+and it is conceptually not new code in that a similar piece as below:
 
-Cheers,
-Eric
+	for (addr = (u8 *)__va(0xf0000);
+	     addr < (u8 *)__va(0x100000);
+	     addr += 16) {
+
+used to be there before my change and even now it is executed earlier on 
+in `pirq_find_routing_table'.
+
+> PCI: Probing PCI hardware
+> BUG: unable to handle page fault for address: ffffed1000020000
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 12fff4067 P4D 12fff4067 PUD 12fff3067 PMD 12fff2067 PTE 0
+> Oops: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.17.0-rc7-next-20220310+ #226
+> Hardware name: ChromiumOS crosvm, BIOS 0
+> RIP: 0010:kasan_check_range+0xe6/0x1a0
+> Code: 00 74 ee 48 89 c2 b8 01 00 00 00 48 85 d2 75 5d 5b 41 5c 41 5d 5d
+> c3 48 85 d2 74 63 4c 01 e2 eb 09 48 83 c0 01 48 39 d0 74 55 <80> 38 00
+> 74 f2 eb d2 41 bd 08 00 00 00 45 29 dd 4b 8d 54 25 00 eb
+
+ Thank you for your report and apologies for the trouble.
+
+ I don't know what a "ChromiumOS crosvm" is, but the mention of "Chromium" 
+indicates to me it is something reasonably recent that should be using 
+ACPI rather than legacy PCI IRQ routing, and even then it should be using 
+the standardised $PIR format rather than AMI's proprietary $IRT one.  I am 
+more than surprised this code is active for x86-64 even, as this is solely 
+i386 legacy.
+
+ In any case we need to debug this and possibly work around somehow as 
+this BIOS is likely giving us rubbish information.  Unfortunately without 
+access to your Linux build tree along with debug information I can do very 
+little.  The faulting piece of code is as follows:
+
+  21:	48 83 c0 01          	add    $0x1,%rax
+  25:	48 39 d0             	cmp    %rdx,%rax
+  28:	74 55                	je     7f <foo+0x7f>
+  2a:	80 38 00             	cmpb   $0x0,(%rax)
+  2d:	74 f2                	je     21 <foo+0x21>
+
+-- with the CMPB at 2a being the offender and further information required 
+as to what RAX holds at the moment.
+
+ So as the first approximation I would like to see what your BIOS actually 
+tells Linux.  Would you therefore please try the following debug patch, 
+boot with the `debug' kernel parameter and send me the resulting bootstrap 
+log?
+
+  Maciej
+
+---
+ arch/x86/include/asm/pci_x86.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+linux-x86-pci-debug.diff
+Index: linux-macro/arch/x86/include/asm/pci_x86.h
+===================================================================
+--- linux-macro.orig/arch/x86/include/asm/pci_x86.h
++++ linux-macro/arch/x86/include/asm/pci_x86.h
+@@ -7,7 +7,7 @@
+ 
+ #include <linux/ioport.h>
+ 
+-#undef DEBUG
++#define DEBUG 1
+ 
+ #ifdef DEBUG
+ #define DBG(fmt, ...) printk(fmt, ##__VA_ARGS__)
