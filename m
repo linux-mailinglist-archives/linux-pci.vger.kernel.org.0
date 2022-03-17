@@ -2,61 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8372D4DC1B1
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 09:45:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C90F4DC1E8
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 09:51:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231449AbiCQIp4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Mar 2022 04:45:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33928 "EHLO
+        id S231596AbiCQIxD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Mar 2022 04:53:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231455AbiCQIp4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 04:45:56 -0400
-Received: from mail.olerise.pl (mail.olerise.pl [46.183.184.59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2481C947D
-        for <linux-pci@vger.kernel.org>; Thu, 17 Mar 2022 01:44:40 -0700 (PDT)
-Received: by mail.olerise.pl (Postfix, from userid 1001)
-        id 0DC20464D8; Thu, 17 Mar 2022 09:41:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=olerise.pl; s=mail;
-        t=1647506622; bh=ZNYiuZLXlxCdAPtstEG/gwJieB5RBwA/cHj1SZ3Mpl0=;
-        h=Date:From:To:Subject:From;
-        b=jq4xJ7WHLqamMhBi7hplXKbylcB5cQuxkQLXLDGNNmy5qnhE1TOSqgaBEVwh+ghoU
-         SxaxOJeEB29r6zTbqGZohNRshGEmhk0kXG1uU9ubD6DiHABRb+fNgmntYOWps/FtkF
-         T7mtubJ3Nr1qYf6qN35Q2IC6oj1sZC4UNk7zQY/0zhRV+AsM/aK4I2Pn1fPfLHDYtG
-         tfcXJRfMSNW5rJPMr3vWgJvFQLWyet45AXSxNCrP3jj/MqzJW+tBSJA32TSyYVjya/
-         V2eMysaf/cQ0MPaaWQ8OvhiNGxENd+vUVytbCy650/QFNOiQMwdYnCiJwsz/YGhdMz
-         UXpzpa33an5YA==
-Received: by mail.olerise.pl for <linux-pci@vger.kernel.org>; Thu, 17 Mar 2022 08:40:21 GMT
-Message-ID: <20220317084500-0.1.2d.rvk6.0.08xcqm7l7b@olerise.pl>
-Date:   Thu, 17 Mar 2022 08:40:21 GMT
-From:   =?UTF-8?Q? "Miko=C5=82aj_Rudzik" ?= <mikolaj.rudzik@olerise.pl>
-To:     <linux-pci@vger.kernel.org>
-Subject: =?UTF-8?Q?Nap=C5=82yw_Klient=C3=B3w_ze_strony?=
-X-Mailer: mail.olerise.pl
+        with ESMTP id S231537AbiCQIwv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 04:52:51 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B0F9F6E7;
+        Thu, 17 Mar 2022 01:51:35 -0700 (PDT)
+Received: from canpemm500007.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KK1711QT5zfZ2D;
+        Thu, 17 Mar 2022 16:50:05 +0800 (CST)
+Received: from localhost (10.174.179.215) by canpemm500007.china.huawei.com
+ (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 17 Mar
+ 2022 16:51:33 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
+        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
+        <decui@microsoft.com>, <lorenzo.pieralisi@arm.com>,
+        <robh@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <boqun.feng@gmail.com>
+CC:     <linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] PCI: hv: Remove unused function hv_set_msi_entry_from_desc()
+Date:   Thu, 17 Mar 2022 16:51:30 +0800
+Message-ID: <20220317085130.36388-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_BL,
-        RCVD_IN_MSPIKE_L3,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.215]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500007.china.huawei.com (7.192.104.62)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dzie=C5=84 dobry,
+This patch fix the following build error:
 
-chcia=C5=82bym poinformowa=C4=87 Pa=C5=84stwa o mo=C5=BCliwo=C5=9Bci pozy=
-skania nowych zlece=C5=84 ze strony www.
+drivers/pci/controller/pci-hyperv.c:769:13: error: ‘hv_set_msi_entry_from_desc’ defined but not used [-Werror=unused-function]
+  769 | static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
 
-Widzimy zainteresowanie potencjalnych Klient=C3=B3w Pa=C5=84stwa firm=C4=85=
-, dlatego ch=C4=99tnie pomo=C5=BCemy Pa=C5=84stwu dotrze=C4=87 z ofert=C4=
-=85 do wi=C4=99kszego grona odbiorc=C3=B3w poprzez efektywne metody pozyc=
-jonowania strony w Google.
+On arm64 hv_set_msi_entry_from_desc() is not used anymore since
+commit d06957d7a692 ("PCI: hv: Avoid the retarget interrupt hypercall in irq_unmask() on ARM64").
 
-Czy m=C3=B3g=C5=82bym liczy=C4=87 na kontakt zwrotny?
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index df84d221e3de..558b35aba610 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -766,14 +766,6 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *irqd)
+ 	return irqd->parent_data->hwirq;
+ }
+ 
+-static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+-				       struct msi_desc *msi_desc)
+-{
+-	msi_entry->address = ((u64)msi_desc->msg.address_hi << 32) |
+-			      msi_desc->msg.address_lo;
+-	msi_entry->data = msi_desc->msg.data;
+-}
+-
+ /*
+  * @nr_bm_irqs:		Indicates the number of IRQs that were allocated from
+  *			the bitmap.
+-- 
+2.17.1
 
-Pozdrawiam
-Miko=C5=82aj Rudzik
