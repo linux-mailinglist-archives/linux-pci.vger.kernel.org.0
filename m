@@ -2,56 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1285D4DCC86
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 18:32:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53B7E4DCCE4
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 18:50:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232422AbiCQReB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Mar 2022 13:34:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42016 "EHLO
+        id S237050AbiCQRvi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Mar 2022 13:51:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236923AbiCQReB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 13:34:01 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0BF92156C7;
-        Thu, 17 Mar 2022 10:32:44 -0700 (PDT)
+        with ESMTP id S235536AbiCQRvi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 13:51:38 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B4E31F6356
+        for <linux-pci@vger.kernel.org>; Thu, 17 Mar 2022 10:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647538364; x=1679074364;
+  t=1647539421; x=1679075421;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+HAWrZsfheXDVLPHx4rCRyJeP+W33AP9BKwAIeOEOhA=;
-  b=B5Bamhg3b1IGeYRKR1pwrTCV51JUst1Lh3cg4/YJ1lHxmVdiAeAUvnbj
-   6LjbfQRN5SoheGMAR/ULVv9Pz1W9f3mV0Huwie5flcTOlxUQ+oYf46mb6
-   kj4SpnQ7P2H2UYhGC2BNO/3YvaPAEwXvvAVR0NNFH0Tsi4FQuPeh5RJTZ
-   mImzGksNw8UM2xsGaaXAZSFnbv7xzUcHix0UPLUZnYW00MZQ1cTBWJDg0
-   fATpNZ9BEDU7hrwNKO/TfDpo83X4pXkFDBdXKcS3dtgU+EpoLyk0gectr
-   cr9Krk6UltUIUaCY4YyqTk/60CtgaKhAXjddPNytQk+ndyNKiQU70lF5V
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="239090755"
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=y0gbt+gWtYyS4i13ONHal6pzWNEopf5NIGAIsSvrzDg=;
+  b=hDjklJ0Qlacrqq73T9a/CbNj8rkWoH36R7B4xe9hw40SO2ky5MF09zJd
+   HP+fkm8gpra1STDvTM369ya45nw1l9mBbn6ZSrdvQQn/HOc3u2ljZ+XZH
+   eaQ9G0Z7pWOa8uzJ2rOzT9X6kbjy5z/hgWIgp6KyRsCQNpZEm4vH8SvDO
+   Orc0p245JZQ3e9PfPpc/Mp+XjIAgceInLz+vAcW5MIpSCjaET1Ft8Ubl2
+   6ydyk5IWIodClioyVSQivkHRT4kUoQUOJaIDgzrWMptTZjOKwMVYqAHGA
+   O/24OIX2NZcc6973twXIZabw3bth7Em1eFOq9z5VRbNRt+J2UwJxR7ntc
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="237551359"
 X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="239090755"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:32:40 -0700
+   d="scan'208";a="237551359"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:50:21 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="691014559"
-Received: from dshkut-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.132.229])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:32:40 -0700
-Date:   Thu, 17 Mar 2022 10:32:33 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, Jonathan.Cameron@huawei.com,
-        ira.weiny@intel.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 6/8] cxl/pci: Prepare for mapping RAS Capability Structure
-Message-ID: <20220317173233.w76rkwyd2tzunltd@intel.com>
-References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164740405408.3912056.16337643017370667205.stgit@dwillia2-desk3.amr.corp.intel.com>
+   d="scan'208";a="513513093"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.151])
+  by orsmga002.jf.intel.com with SMTP; 17 Mar 2022 10:50:17 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 17 Mar 2022 19:50:17 +0200
+Date:   Thu, 17 Mar 2022 19:50:17 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Jani Nikula <jani.nikula@intel.com>
+Cc:     intel-gfx@lists.freedesktop.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [Intel-gfx] [PATCH 2/2] drm/i915: include uapi/drm/i915_drm.h
+ directly where needed
+Message-ID: <YjN02ff81NR8EPFI@intel.com>
+References: <20220311100639.114685-1-jani.nikula@intel.com>
+ <20220311100639.114685-2-jani.nikula@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <164740405408.3912056.16337643017370667205.stgit@dwillia2-desk3.amr.corp.intel.com>
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220311100639.114685-2-jani.nikula@intel.com>
+X-Patchwork-Hint: comment
+X-Spam-Status: No, score=-5.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -60,129 +65,106 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22-03-15 21:14:14, Dan Williams wrote:
-> The RAS Capabilitiy Structure is a CXL Component register capability
-> block. Unlike the HDM Decoder Capability, it will be referenced by the
-> cxl_pci driver in response to PCIe AER events. Due to this it is no
-> longer the case that cxl_map_component_regs() can assume that it should
-> map all component registers. Plumb a bitmask of capability ids to map
-> through cxl_map_component_regs().
+On Fri, Mar 11, 2022 at 12:06:39PM +0200, Jani Nikula wrote:
+> Remove the uapi/drm/i915_drm.h include from drm/i915_drm.h, and stop
+> being a proxy for uapi/drm/i915_drm.h. Include uapi/drm/i915_drm.h and
+> drm/i915_drm.h only where needed.
 > 
-> For symmetry cxl_probe_device_regs() is updated to populate @id in
-> 'struct cxl_reg_map' even though cxl_map_device_regs() does not have a
-> need to map a subset of the device registers per caller.
+> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 
-This seems weird to me. You spent the first 4 or so patches consolidating the
-mapping into a nice loop only to break out an ID to do individual mappings
-again. Are you sure this is such a win over having discrete mapping functions?
+Looks sensible to me. Series is 
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  drivers/cxl/core/hdm.c  |    3 ++-
->  drivers/cxl/core/regs.c |   36 ++++++++++++++++++++++++++----------
->  drivers/cxl/cxl.h       |    7 ++++---
->  3 files changed, 32 insertions(+), 14 deletions(-)
+>  drivers/gpu/drm/i915/gem/i915_gem_lmem.c     | 2 ++
+>  drivers/gpu/drm/i915/gem/i915_gem_region.c   | 2 ++
+>  drivers/gpu/drm/i915/intel_memory_region.c   | 2 ++
+>  drivers/gpu/drm/i915/intel_memory_region.h   | 2 +-
+>  drivers/gpu/drm/i915/pxp/intel_pxp_session.c | 2 --
+>  include/drm/i915_drm.h                       | 2 +-
+>  6 files changed, 8 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 09221afca309..b348217ab704 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -92,7 +92,8 @@ static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
->  		return -ENXIO;
->  	}
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_lmem.c b/drivers/gpu/drm/i915/gem/i915_gem_lmem.c
+> index 444f8268b9c5..ede084f36ca9 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_lmem.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_lmem.c
+> @@ -3,6 +3,8 @@
+>   * Copyright © 2019 Intel Corporation
+>   */
 >  
-> -	return cxl_map_component_regs(&port->dev, regs, &map);
-> +	return cxl_map_component_regs(&port->dev, regs, &map,
-> +				      BIT(CXL_CM_CAP_CAP_ID_HDM));
->  }
+> +#include <uapi/drm/i915_drm.h>
+> +
+>  #include "intel_memory_region.h"
+>  #include "gem/i915_gem_region.h"
+>  #include "gem/i915_gem_lmem.h"
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_region.c b/drivers/gpu/drm/i915/gem/i915_gem_region.c
+> index c9b2e8b91053..f4fbae2f9dcc 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_region.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_region.c
+> @@ -3,6 +3,8 @@
+>   * Copyright © 2019 Intel Corporation
+>   */
 >  
->  /**
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 219c7d0e43e2..c022c8937dfc 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -92,6 +92,7 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->  		if (!rmap)
->  			continue;
->  		rmap->valid = true;
-> +		rmap->id = cap_id;
->  		rmap->offset = CXL_CM_OFFSET + offset;
->  		rmap->size = length;
->  	}
-> @@ -159,6 +160,7 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
->  		if (!rmap)
->  			continue;
->  		rmap->valid = true;
-> +		rmap->id = cap_id;
->  		rmap->offset = offset;
->  		rmap->size = length;
->  	}
-> @@ -187,17 +189,31 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->  }
+> +#include <uapi/drm/i915_drm.h>
+> +
+>  #include "intel_memory_region.h"
+>  #include "i915_gem_region.h"
+>  #include "i915_drv.h"
+> diff --git a/drivers/gpu/drm/i915/intel_memory_region.c b/drivers/gpu/drm/i915/intel_memory_region.c
+> index 1c841f68169a..ded78b83e0b5 100644
+> --- a/drivers/gpu/drm/i915/intel_memory_region.c
+> +++ b/drivers/gpu/drm/i915/intel_memory_region.c
+> @@ -5,6 +5,8 @@
 >  
->  int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
-> -			   struct cxl_register_map *map)
-> +			   struct cxl_register_map *map, unsigned long map_mask)
->  {
-> -	resource_size_t phys_addr;
-> -	resource_size_t length;
+>  #include <linux/prandom.h>
+>  
+> +#include <uapi/drm/i915_drm.h>
+> +
+>  #include "intel_memory_region.h"
+>  #include "i915_drv.h"
+>  #include "i915_ttm_buddy_manager.h"
+> diff --git a/drivers/gpu/drm/i915/intel_memory_region.h b/drivers/gpu/drm/i915/intel_memory_region.h
+> index 21dcbd620758..bbc35ec5c090 100644
+> --- a/drivers/gpu/drm/i915/intel_memory_region.h
+> +++ b/drivers/gpu/drm/i915/intel_memory_region.h
+> @@ -10,7 +10,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/io-mapping.h>
+>  #include <drm/drm_mm.h>
+> -#include <drm/i915_drm.h>
+> +#include <uapi/drm/i915_drm.h>
+>  
+>  struct drm_i915_private;
+>  struct drm_i915_gem_object;
+> diff --git a/drivers/gpu/drm/i915/pxp/intel_pxp_session.c b/drivers/gpu/drm/i915/pxp/intel_pxp_session.c
+> index 598840b73dfa..92b00b4de240 100644
+> --- a/drivers/gpu/drm/i915/pxp/intel_pxp_session.c
+> +++ b/drivers/gpu/drm/i915/pxp/intel_pxp_session.c
+> @@ -3,8 +3,6 @@
+>   * Copyright(c) 2020, Intel Corporation. All rights reserved.
+>   */
+>  
+> -#include <drm/i915_drm.h>
 > -
-> -	phys_addr = map->resource;
-> -	phys_addr += map->component_map.hdm_decoder.offset;
-> -	length = map->component_map.hdm_decoder.size;
-> -	regs->hdm_decoder = devm_cxl_iomap_block(dev, phys_addr, length);
-> -	if (!regs->hdm_decoder)
-> -		return -ENOMEM;
-> +	struct mapinfo {
-> +		struct cxl_reg_map *rmap;
-> +		void __iomem **addr;
-> +	} mapinfo[] = {
-> +		{ .rmap = &map->component_map.hdm_decoder, &regs->hdm_decoder },
-> +	};
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
-> +		struct mapinfo *mi = &mapinfo[i];
-> +		resource_size_t phys_addr;
-> +		resource_size_t length;
-> +
-> +		if (!mi->rmap->valid)
-> +			continue;
-> +		if (!test_bit(mi->rmap->id, &map_mask))
-> +			continue;
-> +		phys_addr = map->resource + mi->rmap->offset;
-> +		length = mi->rmap->size;
-> +		*(mi->addr) = devm_cxl_iomap_block(dev, phys_addr, length);
-> +		if (!*(mi->addr))
-> +			return -ENOMEM;
-> +	}
+>  #include "i915_drv.h"
 >  
->  	return 0;
->  }
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 2080a75c61fe..52bd77d8e22a 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -115,6 +115,7 @@ struct cxl_regs {
+>  #include "intel_pxp.h"
+> diff --git a/include/drm/i915_drm.h b/include/drm/i915_drm.h
+> index afbf3ef5643e..7adce327c1c2 100644
+> --- a/include/drm/i915_drm.h
+> +++ b/include/drm/i915_drm.h
+> @@ -26,7 +26,7 @@
+>  #ifndef _I915_DRM_H_
+>  #define _I915_DRM_H_
 >  
->  struct cxl_reg_map {
->  	bool valid;
-> +	int id;
->  	unsigned long offset;
->  	unsigned long size;
->  };
-> @@ -153,9 +154,9 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->  			      struct cxl_component_reg_map *map);
->  void cxl_probe_device_regs(struct device *dev, void __iomem *base,
->  			   struct cxl_device_reg_map *map);
-> -int cxl_map_component_regs(struct device *dev,
-> -			   struct cxl_component_regs *regs,
-> -			   struct cxl_register_map *map);
-> +int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
-> +			   struct cxl_register_map *map,
-> +			   unsigned long map_mask);
->  int cxl_map_device_regs(struct device *dev,
->  			struct cxl_device_regs *regs,
->  			struct cxl_register_map *map);
-> 
+> -#include <uapi/drm/i915_drm.h>
+> +#include <linux/types.h>
+>  
+>  /* For use by IPS driver */
+>  unsigned long i915_read_mch_val(void);
+> -- 
+> 2.30.2
+
+-- 
+Ville Syrjälä
+Intel
