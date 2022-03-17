@@ -2,144 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8674E4DC84E
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 15:04:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8DF94DC9A5
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 16:11:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233851AbiCQOFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Mar 2022 10:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
+        id S235612AbiCQPM0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Mar 2022 11:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233413AbiCQOFu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 10:05:50 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84BECBCAB;
-        Thu, 17 Mar 2022 07:04:34 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id j21so4449332qta.0;
-        Thu, 17 Mar 2022 07:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=FL38fgvsvawpITDbC9x4Hhdt+mogk5h23hg/e1hTAsg=;
-        b=qUgi3dijFX91rXXgftDNfUYEzWuN2MlBVV/5I0nr+NxMuH19Rp30Sta9udsLgUGPYJ
-         wu/RIss1Sl3lgW3eCnGa0ZiEO9BEPRKervXIVp1+DwGuNX3e/wX/u9CpX/yQVUovDY2S
-         FLCpKBgYGBWtg/FTyxaNJsrc+7f7uw2l6q8vTtAGURNYNCG6MXzfMtNl7/FjtEFeeqwq
-         S0YTSXxUIUUXEXZF//wrtvWcEq0BUo/J/OWgx8mgRPvarUw8OGMhr7gFlg/SnjbFfJUn
-         f0z3ePFUjgWyV3xxof2MRdyZLbTUhw0DvPkvPPxJYw6keJvuwVOgQL/RB6ATDvEwweUF
-         FBGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=FL38fgvsvawpITDbC9x4Hhdt+mogk5h23hg/e1hTAsg=;
-        b=U3vr77fXodTsmD8pJzvbHiozdd5o1q/4p0OnHIB/HE4NzPDYJzZLNRPhtouV//za2+
-         +anzWRWfzEsEoUjgqYAcHIHpO/wq1RAXCwO5/jMHobzhRtZZwne6YFCAAGEbyR1MwrD0
-         gh7D+XePZNQGNZPgkXbQS08p+oh1DBF46xF6uDc1gZqu5W/7ZXZDYKLEKYaadgik/ivx
-         pMb4y17HJ76mzi7iGFW+3MBUcHOTNBfdFTdIXnmFJ8uhN97M9ESZqtIPuyUKhcuKsuIh
-         8y9VBWN3yVVp85HXZNlaFexHZlhLbviyFTJEyjX/md1PwIvPJGJgksNsUOnhu6O7ZqkT
-         nY6A==
-X-Gm-Message-State: AOAM530Qnc3DzXAvuP9hCRJcVug9LcY0L/9tKdDDteR4+QcVTKwhDn+r
-        HG4L/TAxoC03NRm37UIoHA0=
-X-Google-Smtp-Source: ABdhPJzxoaeAL+NryPJhrxknqODcVoYAVObjeqyZn7qk7WeVe42H5tavc1HD90UMV5DZDZr+HlNl+Q==
-X-Received: by 2002:ac8:5703:0:b0:2e1:edc3:cee1 with SMTP id 3-20020ac85703000000b002e1edc3cee1mr3806343qtw.645.1647525873618;
-        Thu, 17 Mar 2022 07:04:33 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id g5-20020ac87f45000000b002e125ef0ba3sm3595329qtk.82.2022.03.17.07.04.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Mar 2022 07:04:32 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 1187827C005A;
-        Thu, 17 Mar 2022 10:04:32 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 17 Mar 2022 10:04:32 -0400
-X-ME-Sender: <xms:6T8zYu4uu-GNUQDC2S3yRUFqdYa4GvQOHM_3uNFmTtiQsBXJJEkCjQ>
-    <xme:6T8zYn7rOjj_paIRL1uuurIJxOFOyNKglxDMRsMMChLcXQqfOUCWPBQvjwBf5gSVE
-    EEbmERvhoGRvveCqA>
-X-ME-Received: <xmr:6T8zYtfQMTTh482VhShqDIR63v9YB756e4SsVg2IvOlQdsJxHxqQ8wxiy8Bmnw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudefgedgheekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggugfgjsehtke
-    ertddttdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghes
-    ghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhepvddvkefhleetudejueehvedtfe
-    eufeehheefueektdehudefffelteeujedvjeeunecuvehluhhsthgvrhfuihiivgeptden
-    ucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrh
-    hsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgv
-    nhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:6j8zYrKB7jeA6fmdyQk80dDKggggeS4pFT1zW_WVfjv_aj7LMRqV-w>
-    <xmx:6j8zYiLpbkEYvybjlORHVG6PobvtU5tF_GoHdp9baGj_i6XlSkVFyg>
-    <xmx:6j8zYsxr7Gljzs6BQJmjNh4NgTWC42BwJAmWdwaJ6H0_sIuklNZrzQ>
-    <xmx:8D8zYkBc8wmOsGKQzmRBAaBxy86gwvj7I9kFBC-WI7rjQyGMeFpbMg>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 17 Mar 2022 10:04:25 -0400 (EDT)
-Date:   Thu, 17 Mar 2022 22:03:59 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: hv: Remove unused function
- hv_set_msi_entry_from_desc()
-Message-ID: <YjM/z4vlPlVhdfMu@boqun-archlinux>
-References: <20220317085130.36388-1-yuehaibing@huawei.com>
+        with ESMTP id S231846AbiCQPMZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 11:12:25 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5CC2042B8;
+        Thu, 17 Mar 2022 08:11:04 -0700 (PDT)
+Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KK9XL4xXPz67NRr;
+        Thu, 17 Mar 2022 23:09:06 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 17 Mar 2022 16:11:02 +0100
+Received: from localhost (10.47.67.100) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.21; Thu, 17 Mar
+ 2022 15:11:01 +0000
+Date:   Thu, 17 Mar 2022 15:10:57 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <ben.widawsky@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <ira.weiny@intel.com>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 7/8] cxl/pci: Find and map the RAS Capability Structure
+Message-ID: <20220317151057.00000f16@Huawei.com>
+In-Reply-To: <164740405921.3912056.7575762163944798747.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <164740405921.3912056.7575762163944798747.stgit@dwillia2-desk3.amr.corp.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220317085130.36388-1-yuehaibing@huawei.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.67.100]
+X-ClientProxiedBy: lhreml735-chm.china.huawei.com (10.201.108.86) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 17, 2022 at 04:51:30PM +0800, YueHaibing wrote:
-> This patch fix the following build error:
-> 
-> drivers/pci/controller/pci-hyperv.c:769:13: error: ‘hv_set_msi_entry_from_desc’ defined but not used [-Werror=unused-function]
->   769 | static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
-> 
-> On arm64 hv_set_msi_entry_from_desc() is not used anymore since
-> commit d06957d7a692 ("PCI: hv: Avoid the retarget interrupt hypercall in irq_unmask() on ARM64").
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Tue, 15 Mar 2022 21:14:19 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Good catch!
+> The RAS Capability Structure has some ancillary information that may be
+> relevant with respect to AER events, link and protcol error status
+> registers. Map the RAS Capability Registers in support of defining a
+> 'struct pci_error_handlers' instance for the cxl_pci driver.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Looks right to me.
 
-Acked-by: Boqun Feng <boqun.feng@gmail.com>
-
-Regards,
-Boqun
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  drivers/pci/controller/pci-hyperv.c | 8 --------
->  1 file changed, 8 deletions(-)
+>  drivers/cxl/core/regs.c |    7 +++++++
+>  drivers/cxl/cxl.h       |   19 +++++++++++++++++++
+>  drivers/cxl/pci.c       |    8 ++++++++
+>  3 files changed, 34 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index df84d221e3de..558b35aba610 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -766,14 +766,6 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *irqd)
->  	return irqd->parent_data->hwirq;
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index c022c8937dfc..53aac68b9ce4 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -83,6 +83,12 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  			rmap = &map->hdm_decoder;
+>  			break;
+>  		}
+> +		case CXL_CM_CAP_CAP_ID_RAS:
+> +			dev_dbg(dev, "found RAS capability (0x%x)\n",
+> +				offset);
+> +			length = CXL_RAS_CAPABILITY_LENGTH;
+> +			rmap = &map->ras;
+> +			break;
+>  		default:
+>  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
+>  				offset);
+> @@ -196,6 +202,7 @@ int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
+>  		void __iomem **addr;
+>  	} mapinfo[] = {
+>  		{ .rmap = &map->component_map.hdm_decoder, &regs->hdm_decoder },
+> +		{ .rmap = &map->component_map.ras, &regs->ras },
+>  	};
+>  	int i;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 52bd77d8e22a..cf3d8d0aaf22 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -32,6 +32,7 @@
+>  #define   CXL_CM_CAP_HDR_ARRAY_SIZE_MASK GENMASK(31, 24)
+>  #define CXL_CM_CAP_PTR_MASK GENMASK(31, 20)
+>  
+> +#define   CXL_CM_CAP_CAP_ID_RAS 0x2
+>  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
+>  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
+>  
+> @@ -64,6 +65,21 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+>  	return val ? val * 2 : 1;
 >  }
 >  
-> -static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
-> -				       struct msi_desc *msi_desc)
-> -{
-> -	msi_entry->address = ((u64)msi_desc->msg.address_hi << 32) |
-> -			      msi_desc->msg.address_lo;
-> -	msi_entry->data = msi_desc->msg.data;
-> -}
-> -
->  /*
->   * @nr_bm_irqs:		Indicates the number of IRQs that were allocated from
->   *			the bitmap.
-> -- 
-> 2.17.1
+> +/* RAS Registers CXL 2.0 8.2.5.9 CXL RAS Capability Structure */
+> +#define CXL_RAS_UNCORRECTABLE_STATUS_OFFSET 0x0
+> +#define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+> +#define CXL_RAS_UNCORRECTABLE_MASK_OFFSET 0x4
+> +#define   CXL_RAS_UNCORRECTABLE_MASK_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+> +#define CXL_RAS_UNCORRECTABLE_SEVERITY_OFFSET 0x8
+> +#define   CXL_RAS_UNCORRECTABLE_SEVERITY_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+> +#define CXL_RAS_CORRECTABLE_STATUS_OFFSET 0xC
+> +#define   CXL_RAS_CORRECTABLE_STATUS_MASK GENMASK(6, 0)
+> +#define CXL_RAS_CORRECTABLE_MASK_OFFSET 0x10
+> +#define   CXL_RAS_CORRECTABLE_MASK_MASK GENMASK(6, 0)
+> +#define CXL_RAS_CAP_CONTROL_OFFSET 0x14
+> +#define CXL_RAS_HEADER_LOG_OFFSET 0x18
+> +#define CXL_RAS_CAPABILITY_LENGTH 0x58
+> +
+>  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+>  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+>  #define   CXLDEV_CAP_ARRAY_CAP_ID 0
+> @@ -98,9 +114,11 @@ struct cxl_regs {
+>  	/*
+>  	 * Common set of CXL Component register block base pointers
+>  	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
+> +	 * @ras: CXL 2.0 8.2.5.9 CXL RAS Capability Structure
+>  	 */
+>  	struct_group_tagged(cxl_component_regs, component,
+>  		void __iomem *hdm_decoder;
+> +		void __iomem *ras;
+>  	);
+>  	/*
+>  	 * Common set of CXL Device register block base pointers
+> @@ -122,6 +140,7 @@ struct cxl_reg_map {
+>  
+>  struct cxl_component_reg_map {
+>  	struct cxl_reg_map hdm_decoder;
+> +	struct cxl_reg_map ras;
+>  };
+>  
+>  struct cxl_device_reg_map {
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index d8361331a013..bde8929450f0 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -310,6 +310,9 @@ static int cxl_probe_regs(struct pci_dev *pdev, struct cxl_register_map *map)
+>  			return -ENXIO;
+>  		}
+>  
+> +		if (!comp_map->ras.valid)
+> +			dev_dbg(dev, "RAS registers not found\n");
+> +
+>  		dev_dbg(dev, "Set up component registers\n");
+>  		break;
+>  	case CXL_REGLOC_RBI_MEMDEV:
+> @@ -580,6 +583,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  
+>  	cxlds->component_reg_phys = map.resource;
+>  
+> +	rc = cxl_map_component_regs(&pdev->dev, &cxlds->regs.component,
+> +				    &map, BIT(CXL_CM_CAP_CAP_ID_RAS));
+> +	if (rc)
+> +		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
+> +
+>  	rc = cxl_pci_setup_mailbox(cxlds);
+>  	if (rc)
+>  		return rc;
 > 
+
