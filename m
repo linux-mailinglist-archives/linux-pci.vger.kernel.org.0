@@ -2,609 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C71664DBAC3
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Mar 2022 23:51:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAF734DBBCB
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 01:31:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233286AbiCPWwN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Mar 2022 18:52:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40046 "EHLO
+        id S1354476AbiCQAbP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Mar 2022 20:31:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbiCPWwM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Mar 2022 18:52:12 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9D41D31F;
-        Wed, 16 Mar 2022 15:50:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647471056; x=1679007056;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4CXDSI61WyAyZ2s6eVhb+R26vQx8nQPq8x+h9eOUlHk=;
-  b=nvHPPHF7v/bSytx4NpO+JafSur5Uq4ozJ3h5qJ3qRB9/HDMryi/UjtpQ
-   c9q7qtbvEcIHtUScR5DKh9I9ZFMPByolv4RK1SgIOl6jEIAOWI8Tmu1yb
-   QKQa+OqWp5e4fiirlyJDdbgQQBdiK4Z89XXHa93Y28MIFOmKfDl/YHVq4
-   jvjZClk9l42H6DBIU4F+G2ClqVd5Dm3+p57IKBEobuVn/LbpO84ey7Tql
-   wu/vxVtGKnJuhKjrkqaOZG5BHOk3LrN9O7dJCBh9FIXzrCQdRGnb9oA/k
-   yjnt3SA5+StBn/Fvyf0g58XohwNC2zg4S6tPwrLTd36c+9fUR5tiuJFva
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10288"; a="256457444"
-X-IronPort-AV: E=Sophos;i="5.90,187,1643702400"; 
-   d="scan'208";a="256457444"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 15:50:56 -0700
-X-IronPort-AV: E=Sophos;i="5.90,187,1643702400"; 
-   d="scan'208";a="516528785"
-Received: from mbhanuva-mobl.amr.corp.intel.com (HELO localhost) ([10.212.30.158])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 15:50:55 -0700
-Date:   Wed, 16 Mar 2022 15:50:55 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-cxl@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH V6 03/10] PCI/DOE: Add Data Object Exchange Aux Driver
-Message-ID: <YjJpzzKAtV4vgM+H@iweiny-desk3>
-References: <20220201071952.900068-1-ira.weiny@intel.com>
- <20220201071952.900068-4-ira.weiny@intel.com>
- <CAPcyv4hYAgyf-WcArGvbWHAJgc5+p=OO_6ah_dXJhNM5cXcVTw@mail.gmail.com>
+        with ESMTP id S237889AbiCQAbO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Mar 2022 20:31:14 -0400
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-eopbgr130082.outbound.protection.outlook.com [40.107.13.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87F891CB08;
+        Wed, 16 Mar 2022 17:29:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZGK10qNDwHgYq99UoFfg/5B9oOjGS3QAI6M1fuxO418fX9Krbu9ujlAvFWrIydXGUsccc03n6IFE41HKR+TqHqBhNzKqiivhy4AUgoZtxEkYTkBeyNUt3ZqaIfLGQ6pHNfkV96W2RooBIVHZ92ficpLepeAR942XMAOeGIxRLq+bTMInKZoEk5iumjtYATgRvihsWfFTvllP1JtszWGsTDZaIvmcZmwszWGZf1f/vgyLusDQs/aCclpDiBbjIqxEfYKeFPqjz8MubSf0UZkhNqw/f+9A28zXQGcAamYlXv0OVZtIxlpFzU69AJv4L9WD4aW/mtB8TSfTsi4in0W+eQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SBL54WwwKUevTElnw7rruh9QHblyRn+NZ6IJw6H0NB4=;
+ b=l2I/0BsMmSchJXFK5ghN5Jz1xtweBdGpem7RPV43GpKBiWqGCbjfbdIabYVvJfrhx0kQh0jF4rjXxrnkXcBPTOnQaB1VSe1i0DmEG/1sKkMqw8EnloOR4r/CXbeRhf2+ZuPL8/006pUI+lABDSbAxLnfttKQJ78MRXg9pCXUwtOFAG3Tv5+jTwYjg3TPkrHHmuTrq/5K8HVI1xVevoxCeAK4L3WCuzzB4o+Ulg7ZKt90UJRZJ2DJGPHG9sIxF6QICVKinSmt+3A/XgsWmXvH6CZKfGzmtvr8aRVy0CoAU1QxmVAGq+zueaBvH+YJZpR7lPT4epghGWMa9RuFJCN44Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SBL54WwwKUevTElnw7rruh9QHblyRn+NZ6IJw6H0NB4=;
+ b=XRNQBYKSUlu61V7MLNHJhkRSr+1G4v4jxbQo88XkACZf24+Dvsh8gpugOOgPIQNkVWwkBWJ/fXe02miVovz5asWz/mzFbiNzRbtqyEXOYEx6sRl8cM/+r+h941xtoNOmDzesE/le5rNiSlzQmR0WdJoGr48gn0WJfMZ34mgVDQQ=
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by AM9PR04MB8113.eurprd04.prod.outlook.com (2603:10a6:20b:3b5::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.17; Thu, 17 Mar
+ 2022 00:29:55 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::f4f1:fe49:d19e:4770]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::f4f1:fe49:d19e:4770%9]) with mapi id 15.20.5081.017; Thu, 17 Mar 2022
+ 00:29:55 +0000
+From:   Hongxing Zhu <hongxing.zhu@nxp.com>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] PCI: imx6: Invoke the PHY exit function after PHY power
+ off
+Thread-Topic: [PATCH] PCI: imx6: Invoke the PHY exit function after PHY power
+ off
+Thread-Index: AQHYLsn7WwIs+ObiHUuj0vitQkpm3KzB1XKAgAD2A8A=
+Date:   Thu, 17 Mar 2022 00:29:55 +0000
+Message-ID: <AS8PR04MB86761853B899882338FCE8678C129@AS8PR04MB8676.eurprd04.prod.outlook.com>
+References: <1646289275-17813-1-git-send-email-hongxing.zhu@nxp.com>
+ <cf0943a1144e91048fc88fe9b11660bafe1a2d8d.camel@pengutronix.de>
+In-Reply-To: <cf0943a1144e91048fc88fe9b11660bafe1a2d8d.camel@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 90d70ed2-011e-4982-f8f2-08da07ad42b4
+x-ms-traffictypediagnostic: AM9PR04MB8113:EE_
+x-microsoft-antispam-prvs: <AM9PR04MB8113B63230CB28C1DE1D77FF8C129@AM9PR04MB8113.eurprd04.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KXjEw4FEoXrrk2KaJ9GO0qZfaup7WA/JrxYN1/z5np51tU4ksJ5E0lTjzJS+JHyi2RA3wtRxrhVD+srU3s7CIndxMdVXCu8xODnjUkZwnUu0xfLPKQnbq+OqH2ycBDQQElfh26vmc8/uAjbY5OdPU+z9dgd2kADHQ93eE8SvQfxwNNYpwHT/EWJApdGoP9NSYuKbeMel/u0yvhV1aDgl8LUp5RC/b4uPru+A0urgr1TVs78Ig5mavI9+zlHI7itFBWCAnmwULwES5daXk/9lTw4//I7JcM3X1vf3POdG9Q3ZvSJAbXa5v0fjpBHHXDMYVc5I9MB+rjDHmmEgT2mjGf81BpFOiKKk5OIb0/Ddkg19vgaKVLAyOU23slJ+aBGJ+nHbEswYabpnSBcRF+ZhoEDIslNYjyw2yaQrMJoLBdzGGZlA03QdvxSxTpb6MdeKIKnR7ihBGoEQlRO1QFThUMW1S/sQGVvQkAIQQV3rApELgif7rc3wY4lpqmztk1iW2uUFUqvjaybSGmXSqBGpACb78LmUYF77p2ima9CQLa9HIOlEfAF7S7HEcMSl5xv8pKmD7exHQdekrruUkbMFSK+D763gSx8kGnk6Src/AqH8lJVdL84F3HQ+0PI7Qx3gY6HpcRmkxOyLynd2aZdQ9+/twnNM3klhe81I2SesRcc0DlHrAjl8rmeT95r4NdjytOjFrZCGhWFX6ZTW4tqvfw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(122000001)(8676002)(5660300002)(4326008)(2906002)(55016003)(38070700005)(508600001)(53546011)(76116006)(8936002)(66946007)(52536014)(66556008)(66476007)(64756008)(6506007)(66446008)(7696005)(44832011)(38100700002)(71200400001)(33656002)(86362001)(26005)(186003)(316002)(9686003)(54906003)(110136005)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TklCblJ3SWRVMlAzdUFOTUtNYlhvUUFiT2VUNklHYVFpYXVCN0hoZ2dTdVc3?=
+ =?utf-8?B?Q2tUVVdtRnYwSVFFcGh5M1ZuTWJZRDdKb2dJVmVjMWt2UVlJZWk2UXJaY1Vk?=
+ =?utf-8?B?bVhQWStKVDhON1N5ZllMMDdHc1Z3T3FFWmE5YmJQaXRyWU85ZklRRTVuQ3pK?=
+ =?utf-8?B?NjNIWmR6L1Vhd2RRcUhMa1JhQWZXbUh1M1RyU05sNVo3K25tZTNpck5RS043?=
+ =?utf-8?B?TzRXb1N1QzNZaFZ0OFpRak40aEYxbHMwYXZUdmQxNm51MHlhOW5NNE5OMlcz?=
+ =?utf-8?B?WUJmYWxSU3o5TjhVc1hCdEVUSmhYdm82WkQyYzhQa3V6RkRjM05wNDdLTjZT?=
+ =?utf-8?B?RklLb3JUamdFVDQzY2h5anhOSlN1UWxBMllnWUpvb1hjemE1c3FsWUE2N0dP?=
+ =?utf-8?B?ZUZobnBoZEp3NE5DdkdhYUNRM2NRV0dlWE9hRVZRQTlobjhaemx3MVZTT2Z0?=
+ =?utf-8?B?TEJ6d2VMZXI5Sk5TeWU2bXRZZHpsL09LYmtpekVlMTJUZjI3UnA5MnFlKy9o?=
+ =?utf-8?B?NnVjMFR4cDA5Uy9WWUV6VVU2azdXZ3psOFVGQVVNUFBQWGdMNFlVcmszNnd1?=
+ =?utf-8?B?VjBHakFsa1huWFQ0MzNocmdyTHBxMkdJbmh0SGtvNWRHU1QzOWl4bFQ1a3ht?=
+ =?utf-8?B?TktuMGNLNzFqUTZJU0lwQ0VwZlVpUkU5WCt2cksyeHNRNS9pV1pKbEg0RmN2?=
+ =?utf-8?B?NVhJSlRCRXN1V3VScFpselhnb1hWQ0E0T3VkallYc096RzNmTHdjNi9KV3Bs?=
+ =?utf-8?B?Q3dVTXJncmRlSktlQW9CUHBzLzNqSGRWb1J2eEFpamNPOG56Q3RGTVQ2TnRr?=
+ =?utf-8?B?U1ZCVTlDMmd5NW5jQkFlSGx4RC9WelJpVDVlbzVtbXBneUVOSi9zMEo1ZS9s?=
+ =?utf-8?B?TkdXZEVzbHJ1K2tRR3RxWnFQV1NLa2RVbFp4dWRnKzdGZjEwOFNzYzRjMVdt?=
+ =?utf-8?B?Qk1qTHgxaXdnQnRITUpHSTE1c054cmY4TDAxdHA0S3MyeEpCakdZSDJnZlIz?=
+ =?utf-8?B?eUJrb2FZN3pvTUlQR01idE42OU9HZGhHLzFJR2E2UUlaa1o5cjZqNTVXaDEz?=
+ =?utf-8?B?MEpFY0p1T3l3TXRXc2tkS3FFT2t4TmdJRFk3THQxZFQ3WnhhNUNpU2t0d1Zj?=
+ =?utf-8?B?bEpXcDBWdVVvV1dlWFY3ZW9MbTYwTDVmZjAzQ2tDNllMbUhvZUJSeldvcFNH?=
+ =?utf-8?B?OUxoUmFtTVlRc3pOeE15TnhoVHRGcXQva1ZvenE3MHdEbVpKZ0orc3FmTjlq?=
+ =?utf-8?B?UE5CTURibzFuMUpvRmFsYVF3UENsRFAySWFUUlNxQmdFMVRURDJzS09YdC9t?=
+ =?utf-8?B?NkdOc29zeldoT3dYNjZCTlFUdU96bk0vUkgrWDFGT1FqVU5DSXpxbkpyc1N4?=
+ =?utf-8?B?Lys0d3AwYzRLZEdtNDd2L2dHU0JlWldnM25zbFpia0VtbDNFcU1ycWtnVlI0?=
+ =?utf-8?B?di84ZDZ2aHB0L2lSSVczV011cWc5NC9mL0loVi9aQXVBTnVpRnkyRVRCZjNx?=
+ =?utf-8?B?VEw0SXZGK2dRN3dUZ0hhWkZWRjNjWnFaeVU2L1pFMlE0SGJKeEZnb2hURkpz?=
+ =?utf-8?B?ZFFrQVV0cE5rZS9kUW5KYW03ZE9tWFdiMkpPN1MrV3hyUTVNbWRsSTE2RmhD?=
+ =?utf-8?B?SzBtUm55N2xlWHM0a0ViZ3hnLzk2cVFNcjNSTG8xd1c3SnBJemJ0RFdreFI0?=
+ =?utf-8?B?L3c0aFAxRHUxb2h5cURiVlBTUWpnTjRydFNmdU5UaVFTVW5HRDU1MUhnR0tx?=
+ =?utf-8?B?MXhYQlpMM2dveXVPZCthTjV6TEZ6OGN3dU1mRXVEQWxpM2t3SjRDeitSb1Rh?=
+ =?utf-8?B?azd6ZHRXdW42MjlSdTNoalVEeGFiSWs2UFZVZnIzWEV2Sm9NNTgzRHR4UTlG?=
+ =?utf-8?B?ZlNlZFpUSnZlWkZnbmdkN0s3alhKR2FQR01YUTA3QVZuUzdBVUwyUmNoeUhX?=
+ =?utf-8?Q?BKKGtW2KkpUgCmJuruwSiWL2C9mzp7wn?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hYAgyf-WcArGvbWHAJgc5+p=OO_6ah_dXJhNM5cXcVTw@mail.gmail.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90d70ed2-011e-4982-f8f2-08da07ad42b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2022 00:29:55.5302
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LaXsGGd7VF7G0HrosqzuOLaiScEiuvew/0md4Poy2mmV6KciUD8UOwLdfl6G06FN1TDz5PoBvcVbosQEPBoGWw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8113
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 08, 2022 at 04:59:39PM -0800, Dan Williams wrote:
-> On Mon, Jan 31, 2022 at 11:20 PM <ira.weiny@intel.com> wrote:
-> >
-> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >
-> > Introduced in a PCI ECN [1], DOE provides a config space based mailbox
-> > with standard protocol discovery.  Each mailbox is accessed through a
-> > DOE Extended Capability.
-> >
-> > Define an auxiliary device driver which control DOE auxiliary devices
-> 
-> s/control/controls/
-
-Done.
-
-[snip]
-
-> >
-> > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> > index 43e615aa12ff..8de51b64067c 100644
-> > --- a/drivers/pci/Kconfig
-> > +++ b/drivers/pci/Kconfig
-> > @@ -118,6 +118,16 @@ config XEN_PCIDEV_FRONTEND
-> >           The PCI device frontend driver allows the kernel to import arbitrary
-> >           PCI devices from a PCI backend to support PCI driver domains.
-> >
-> > +config PCI_DOE_DRIVER
-> > +       tristate "PCI Data Object Exchange (DOE) driver"
-> > +       select AUXILIARY_BUS
-> 
-> See below near the comment about the odd usage of MODULE_DEVICE_TABLE,
-> perhaps the auxiliary device / driver should be registered by the
-> client of this core code, not the core itself.
-
-I'll look into it more.
-
-> > +
-> > +/**
-> > + * struct pci_doe_task - description of a query / response task
-> > + * @ex: The details of the task to be done
-> > + * @rv: Return value.  Length of received response or error
-> > + * @cb: Callback for completion of task
-> > + * @private: Private data passed to callback on completion
-> > + */
-> > +struct pci_doe_task {
-> > +       struct pci_doe_exchange *ex;
-> > +       int rv;
-> > +       void (*cb)(void *private);
-> 
-> s/cb/end_task/?
-
-Sounds good.
-
-> 
-> Why does this need to abandon all semblance of type safety?
-> 
-> I would expect:
-> 
-> void (*end_task)(struct pci_doe_task *task);
-> 
-> ...and let the caller attach any follow on data to task->private if necessary.
-
-I kind of like this too.  But to be fair the code pattern is likely going
-to be the caller only using pivate in end_task() which remains opaque.
-
-I'll change it.
-
-> 
-> > +       void *private;
-> > +};
-> > +
-> > +/**
-> > + * struct pci_doe - A single DOE mailbox driver
-> 
-> This is driver *state*, right? I.e. not something that wraps "struct
-> device_driver" which is what I would expect something claiming to be a
-> "driver" would do.
-
-Yes.
-
-> 
-> > + *
-> > + * @doe_dev: The DOE Auxiliary device being driven
-> > + * @abort_c: Completion used for initial abort handling
-> > + * @irq: Interrupt used for signaling DOE ready or abort
-> > + * @irq_name: Name used to identify the irq for a particular DOE
-> > + * @prots: Array of identifiers for protocols supported
-> 
-> "prot" already has a meaning in the kernel, just spell out
-> "protocols". This also looks like something that can be allocated
-> inline rather than out of line i.e.:
-> 
-> struct pci_doe {
-> ...
->     int nr_protocols
->     struct pci_doe_protocol protocols[];
-> }
-> 
-> ...and then use struct_size() to allocate it.
-
-As Jonathan said this needs to be more dynamic than that.  I'll add a comment.
-
-[snip]
-
-> > +
-> > +/*
-> > + * Only call when safe to directly access the DOE, either because no tasks yet
-> > + * queued, or called from doe_statemachine_work() which has exclusive access to
-> > + * the DOE config space.
-> 
-> It doesn't have exclusive access unless the patch to lock out
-> userspace config writes are revived. Instead, I like Bjorn's idea of
-> tracking and warning / tainting, but not blocking conflicting
-> userspace access to sensitive configuration registers.
-> 
-> Yes, it was somewhat of a throw-away comment from Bjorn in that
-> thread, "(and IMO should taint the kernel)", but DOE can do so much
-> subtle damage (compliance test modes, link-encryption / disruption,
-> vendor private who-knows-what...) that I think it behooves us as
-> kernel developers to know when we are debugging system behavior that
-> may be the result of non-kernel mitigated DOE access. The proposal is
-> that when kernel lockdown is not enabled, use the approach from the
-> exclusive config access patch [2] to trap, warn (once per device?),
-> and taint when userspace writes to DOE registers that have been
-> claimed by the kernel. This lets strict environments use
-> kernel-lockdown to block userspace DOE access altogether, in
-> non-strict environment it discourages userspace from clobbering DOE
-> driver state, and it allows a warn-free path if userspace takes the
-> step of at least unbinding the kernel DOE driver before running
-> userspace DOE cycles.
-> 
-> [1]: https://lore.kernel.org/r/20211203235617.GA3036259@bhelgaas
-> [2]: https://lore.kernel.org/all/161663543465.1867664.5674061943008380442.stgit@dwillia2-desk3.amr.corp.intel.com/
-> 
-
-Reading through the threads there seems to be a number
-of ways to deal with this.  Let me try to numerate them:
-
-1) Use pci_cfg_access_lock() to block user space access while the kernel DOE
-   state machine is working
-   	issue - how to ensure the kernel does not interrupt an in progress user
-	space transaction.
-
-2) Develop a user space interface to marshal the transactions through with the
-   kernel transactions
-   	issue - requires new user space APIs
-
-3) Add Dan's patch [2] above which allows for exclusive claim of the resource.
-   Require user space to unload driver for the device which then allows user
-   space access without worry of conflict with kernel space.
-
-I'm going in the direction of #3 via the use of the auxiliary bus.
-
-To that end I'm going to pull [2] into this series and use it within the DOE
-driver.
-
-> > + */
-> > +static void pci_doe_abort_start(struct pci_doe *doe)
-> > +{
-> > +       struct pci_dev *pdev = doe->doe_dev->pdev;
-> > +       int offset = doe->doe_dev->cap_offset;
-> > +       u32 val;
-> > +
-> > +       val = PCI_DOE_CTRL_ABORT;
-> > +       if (doe->irq)
-> > +               val |= PCI_DOE_CTRL_INT_EN;
-> > +       pci_write_config_dword(pdev, offset + PCI_DOE_CTRL, val);
-> > +
-> > +       doe->timeout_jiffies = jiffies + HZ;
-> > +       schedule_delayed_work(&doe->statemachine, HZ);
-> 
-> Given the spec timeout is 1 second and the device clock might be
-> slightly off from the host clock how about make this a more generous
-> 1.5 or 2 seconds?
-
-Also I wonder why this was not using the PCI_DOE_TIMEOUT?
-
-> 
-> > +}
-> > +
-> > +static int pci_doe_send_req(struct pci_doe *doe, struct pci_doe_exchange *ex)
-> 
-> The relationship between tasks, requests, responses, and exchanges is
-> not immediately clear to me. For example, can this helper be renamed
-> in terms of its relationship to a task? A theory of operation document
-> would help, but it seems there is also room for the implementation to
-> be more self documenting.
-
-Ok yea.  The difference between exchange and task was rather vague when I
-looked at this with fresher eyes...
-
-I've merged pci_doe_exchange and pci_doe_task into pci_doe_task and eliminated
-pci_doe_exchange_sync() in favor of a pci_doe_submit_task() call per Dan's
-suggestion above.
-
-> 
-> > +{
-> > +       struct pci_dev *pdev = doe->doe_dev->pdev;
-> > +       int offset = doe->doe_dev->cap_offset;
-> > +       u32 val;
-> > +       int i;
-> > +
-> > +       /*
-> > +        * Check the DOE busy bit is not set. If it is set, this could indicate
-> > +        * someone other than Linux (e.g. firmware) is using the mailbox. Note
-> > +        * it is expected that firmware and OS will negotiate access rights via
-> > +        * an, as yet to be defined method.
-> > +        */
-> > +       pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > +       if (FIELD_GET(PCI_DOE_STATUS_BUSY, val))
-> > +               return -EBUSY;
-> > +
-> > +       if (FIELD_GET(PCI_DOE_STATUS_ERROR, val))
-> > +               return -EIO;
-> > +
-> > +       /* Write DOE Header */
-> > +       val = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID, ex->prot.vid) |
-> > +               FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, ex->prot.type);
-> > +       pci_write_config_dword(pdev, offset + PCI_DOE_WRITE, val);
-> > +       /* Length is 2 DW of header + length of payload in DW */
-> > +       pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
-> > +                              FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
-> > +                                         2 + ex->request_pl_sz /
-> > +                                               sizeof(u32)));
-> > +       for (i = 0; i < ex->request_pl_sz / sizeof(u32); i++)
-> > +               pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
-> > +                                      ex->request_pl[i]);
-> > +
-> > +       val = PCI_DOE_CTRL_GO;
-> > +       if (doe->irq)
-> > +               val |= PCI_DOE_CTRL_INT_EN;
-> > +
-> > +       pci_write_config_dword(pdev, offset + PCI_DOE_CTRL, val);
-> > +       /* Request is sent - now wait for poll or IRQ */
-> > +       return 0;
-> > +}
-> > +
-> > +static int pci_doe_recv_resp(struct pci_doe *doe, struct pci_doe_exchange *ex)
-> > +{
-> > +       struct pci_dev *pdev = doe->doe_dev->pdev;
-> > +       int offset = doe->doe_dev->cap_offset;
-> > +       size_t length;
-> > +       u32 val;
-> > +       int i;
-> > +
-> > +       /* Read the first dword to get the protocol */
-> > +       pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
-> > +       if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != ex->prot.vid) ||
-> > +           (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != ex->prot.type)) {
-> > +               pci_err(pdev,
-> > +                       "Expected [VID, Protocol] = [%#x, %#x], got [%#x, %#x]\n",
-> > +                       ex->prot.vid, ex->prot.type,
-> > +                       FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
-> > +                       FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
-> > +               return -EIO;
-> > +       }
-> > +
-> > +       pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> > +       /* Read the second dword to get the length */
-> > +       pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
-> > +       pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> > +
-> > +       length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, val);
-> > +       if (length > SZ_1M || length < 2)
-> > +               return -EIO;
-> > +
-> > +       /* First 2 dwords have already been read */
-> > +       length -= 2;
-> > +       /* Read the rest of the response payload */
-> > +       for (i = 0; i < min(length, ex->response_pl_sz / sizeof(u32)); i++) {
-> > +               pci_read_config_dword(pdev, offset + PCI_DOE_READ,
-> > +                                     &ex->response_pl[i]);
-> > +               pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> > +       }
-> > +
-> > +       /* Flush excess length */
-> > +       for (; i < length; i++) {
-> > +               pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
-> > +               pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> > +       }
-> > +       /* Final error check to pick up on any since Data Object Ready */
-> > +       pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > +       if (FIELD_GET(PCI_DOE_STATUS_ERROR, val))
-> > +               return -EIO;
-> > +
-> > +       return min(length, ex->response_pl_sz / sizeof(u32)) * sizeof(u32);
-> > +}
-> > +
-> > +static void doe_statemachine_work(struct work_struct *work)
-> > +{
-> > +       struct delayed_work *w = to_delayed_work(work);
-> > +       struct pci_doe *doe = container_of(w, struct pci_doe, statemachine);
-> > +       struct pci_dev *pdev = doe->doe_dev->pdev;
-> > +       int offset = doe->doe_dev->cap_offset;
-> > +       struct pci_doe_task *task;
-> > +       bool abort;
-> > +       u32 val;
-> > +       int rc;
-> > +
-> > +       mutex_lock(&doe->state_lock);
-> > +       task = doe->cur_task;
-> > +       abort = doe->abort;
-> > +       doe->abort = false;
-> > +       mutex_unlock(&doe->state_lock);
-> > +
-> > +       if (abort) {
-> > +               /*
-> > +                * Currently only used during init - care needed if
-> > +                * pci_doe_abort() is generally exposed as it would impact
-> > +                * queries in flight.
-> > +                */
-> > +               WARN_ON(task);
-> 
-> Why is it worth potentially crashing the kernel here? Is this purely a
-> situation that will only happen during development  and refactoring of
-> the driver? Otherwise I would expect handling the error without WARN.
-
-I think currently this is only something which may happen during development.
-But I think it would be worth throwing a pr_err() and we need to completing the
-task when the state machine finally resets.
-
-As I work on this I'm seeing a number of ways to simplify the state machine.
-If Jonathan does not mind I'm going to send a series of small patches to the
-state machine directly to him for review before I squash them into this patch.
-
-I think that will be easier to review the changes I'm making and hopefully
-verify correctness.
-
-[snip]
-
-> > +
-> > +       case DOE_WAIT_ABORT:
-> > +       case DOE_WAIT_ABORT_ON_ERR:
-> > +               pci_read_config_dword(pdev, offset + PCI_DOE_STATUS, &val);
-> > +
-> > +               if (!FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
-> > +                   !FIELD_GET(PCI_DOE_STATUS_BUSY, val)) {
-> > +                       /* Back to normal state - carry on */
-> > +                       mutex_lock(&doe->state_lock);
-> > +                       doe->cur_task = NULL;
-> > +                       mutex_unlock(&doe->state_lock);
-> > +                       wake_up_interruptible(&doe->wq);
-> > +
-> > +                       /*
-> > +                        * For deliberately triggered abort, someone is
-> > +                        * waiting.
-> > +                        */
-> > +                       if (doe->state == DOE_WAIT_ABORT)
-> > +                               complete(&doe->abort_c);
-> 
-> Why is a completion and waitqueue needed? I.e. a waiter could simply
-> look for an abort completion flag to be set instead.
-
-I agree with Dan here regarding the reduction of machinery but it seems that a
-call to abort could come from someone not waiting on the current task?  Is that
-true?
-
-This is why their is a separate completion AFAICS.  But I don't follow the use
-case for that?
-
-What is currently done is for the DOE mailbox to signal an abort without a task
-running.  Therefore there is nothing waiting on the wait queue.
-
-We could flag a special task called 'abort' but this will not support a thread
-calling abort separate from the task queue.  Essentially there would not be a
-way to abort a queue of waiters.  But again I don't see that use case
-currently.
-
-[snip]
-
-> > +
-> > +/**
-> > + * pci_doe_exchange_sync() - Send a request, then wait for and receive a
-> > + *                          response
-> > + * @doe_dev: DOE mailbox state structure
-> > + * @ex: Description of the buffers and Vendor ID + type used in this
-> > + *      request/response pair
-> > + *
-> > + * Excess data will be discarded.
-> > + *
-> > + * RETURNS: payload in bytes on success, < 0 on error
-> > + */
-> > +int pci_doe_exchange_sync(struct pci_doe_dev *doe_dev,
-> > +                         struct pci_doe_exchange *ex)
-> > +{
-> > +       struct pci_doe *doe = dev_get_drvdata(&doe_dev->adev.dev);
-> > +       struct pci_doe_task task;
-> > +       DECLARE_COMPLETION_ONSTACK(c);
-> > +
-> > +       if (!doe)
-> > +               return -EAGAIN;
-> > +
-> > +       /* DOE requests must be a whole number of DW */
-> > +       if (ex->request_pl_sz % sizeof(u32))
-> > +               return -EINVAL;
-> > +
-> > +       task.ex = ex;
-> > +       task.cb = pci_doe_task_complete;
-> > +       task.private = &c;
-> > +
-> > +again:
-> > +       mutex_lock(&doe->state_lock);
-> > +       if (doe->cur_task) {
-> > +               mutex_unlock(&doe->state_lock);
-> > +               wait_event_interruptible(doe->wq, doe->cur_task == NULL);
-> > +               goto again;
-> > +       }
-> > +
-> > +       if (doe->dead) {
-> > +               mutex_unlock(&doe->state_lock);
-> > +               return -EIO;
-> > +       }
-> > +       doe->cur_task = &task;
-> > +       schedule_delayed_work(&doe->statemachine, 0);
-> > +       mutex_unlock(&doe->state_lock);
-> > +
-> > +       wait_for_completion(&c);
-> 
-> I would expect that the caller of this routine would want to specify
-> the task and end_task() callback and use that as the completion
-> signal. It may also want "no wait" behavior where it is prepared for
-> the DOE result to come back sometime later. With that change the
-> exchange fields can move into the task directly.
-
-Yep done.
-
-[snip]
-
-> > +
-> > +static int pci_doe_abort(struct pci_doe *doe)
-> > +{
-> > +       reinit_completion(&doe->abort_c);
-> > +       mutex_lock(&doe->state_lock);
-> > +       doe->abort = true;
-> 
-> Why not a flags field where atomic bitops can be used without need for a mutex.
-
-At first I agreed with Jonathan however, after some refactoring I think the
-atomics would be nice.
-
-> 
-> > +       mutex_unlock(&doe->state_lock);
-> > +       schedule_delayed_work(&doe->statemachine, 0);
-> > +       wait_for_completion(&doe->abort_c);
-> > +
-> > +       if (doe->dead)
-> 
-> dead could also be another atomic flag.
-
-Yep.
-
-I've also changed state_lock to be task_lock as that clarifies what is being
-protected.
-
-[snip]
-
-> > +static int pci_doe_probe(struct auxiliary_device *aux_dev,
-> > +                        const struct auxiliary_device_id *id)
-> > +{
-> > +       struct pci_doe_dev *doe_dev = container_of(aux_dev,
-> > +                                       struct pci_doe_dev,
-> > +                                       adev);
-> > +       struct pci_doe *doe;
-> > +       int rc;
-> > +
-> > +       doe = devm_kzalloc(&aux_dev->dev, sizeof(*doe), GFP_KERNEL);
-> > +       if (!doe)
-> > +               return -ENOMEM;
-> > +
-> > +       mutex_init(&doe->state_lock);
-> > +       init_completion(&doe->abort_c);
-> > +       doe->doe_dev = doe_dev;
-> > +       init_waitqueue_head(&doe->wq);
-> > +       INIT_DELAYED_WORK(&doe->statemachine, doe_statemachine_work);
-> > +       dev_set_drvdata(&aux_dev->dev, doe);
-> > +
-> > +       rc = pci_doe_reg_irq(doe);
-> > +       if (rc)
-> > +               return rc;
-> > +
-> > +       /* Reset the mailbox by issuing an abort */
-> > +       rc = pci_doe_abort(doe);
-> > +       if (rc)
-> > +               return rc;
-> > +
-> > +       rc = pci_doe_cache_protocols(doe);
-> > +       if (rc)
-> > +               return rc;
-> 
-> This can just be:
-> 
->  return pci_doe_cache_protocols(doe);
-
-Already suggested by Bjorn and done.
-
-> 
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static void pci_doe_remove(struct auxiliary_device *aux_dev)
-> > +{
-> > +       struct pci_doe *doe = dev_get_drvdata(&aux_dev->dev);
-> > +
-> > +       /* First halt the state machine */
-> > +       cancel_delayed_work_sync(&doe->statemachine);
-> > +}
-> > +
-> > +static const struct auxiliary_device_id pci_doe_auxiliary_id_table[] = {
-> > +       {},
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(auxiliary, pci_doe_auxiliary_id_table);
-> 
-> Why is this empty table here?
-
-Filling the id table was done in the next patch.
-
-The split of the patches may have been a bit arbitrary here.  This patch was
-focused on the state machine and probing of the mailboxes.  The next patch
-provided the helper function to create all the DOE devices for a given
-PCI device; pci_doe_create_doe_devices()
-
-> 
-> > +
-> > +struct auxiliary_driver pci_doe_auxiliary_drv = {
-> > +       .name = "pci_doe",
-> > +       .id_table = pci_doe_auxiliary_id_table,
-> > +       .probe = pci_doe_probe,
-> > +       .remove = pci_doe_remove
-> > +};
-> 
-> I expect that these helpers would be provided by the PCI core, but
-> then a subsystem like CXL would have code to register their auxiliary
-> devices and drivers that mostly just wrap the PCI core DOE
-> implementation.
-
-Ah ok, I think I see what you are saying.  That is not quite as straight
-forward a use of the auxiliary bus but I _think_ it will work.  I'll also
-attempt to clarify with documentation how the above probe/remove functions are
-to be used by those defining their own drivers.
-
-Ira
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCA8bC5zdGFj
+aEBwZW5ndXRyb25peC5kZT4NCj4gU2VudDogMjAyMuW5tDPmnIgxNuaXpSAxNzozOA0KPiBUbzog
+SG9uZ3hpbmcgWmh1IDxob25neGluZy56aHVAbnhwLmNvbT47IGJoZWxnYWFzQGdvb2dsZS5jb207
+DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZzsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBkbC1saW51eC1pbXgN
+Cj4gPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBQQ0k6IGlteDY6
+IEludm9rZSB0aGUgUEhZIGV4aXQgZnVuY3Rpb24gYWZ0ZXIgUEhZIHBvd2VyDQo+IG9mZg0KPiAN
+Cj4gQW0gRG9ubmVyc3RhZywgZGVtIDAzLjAzLjIwMjIgdW0gMTQ6MzQgKzA4MDAgc2NocmllYiBS
+aWNoYXJkIFpodToNCj4gPiBUbyBiYWxhbmNlIHBoeS0+aW5pdF9jb3VudCwgaW52b2tlIHRoZSBw
+aHlfZXhpdCgpIGFmdGVyIHBoeV9wb3dlcl9vZmYoKS4NCj4gPg0KPiBUaGlzIGxvb2tzIG9rYXkg
+YXMgYSBmaXgsIGJ1dCBvdmVyYWxsIEkgZG9uJ3QgbGlrZSB0aGF0IHdlIG5lZWQgdG8gaGF2ZSBz
+cGVjaWFsIFBIWQ0KPiBoYW5kbGluZyBpbiB0aGUgc3VzcGVuZCBwYXRoIGFuZCBQSFkgaW5pdCBo
+aWRkZW4gaW4NCj4gaW14Nl9wY2llX2Fzc2VydF9jb3JlX3Jlc2V0KCkgaW4gdGhlIHJlc3VtZSBw
+YXRoLiBNYXliZSB3ZSBjYW4gbWFrZSB0aGlzDQo+IFBIWSBoYW5kbGluZyBhIGJpdCBtb3JlIG9i
+dmlvdXMgYnkgc3BsaXR0aW5nIGl0IG91dCBvZiB0aGUgY29yZSByZXNldCBzZXF1ZW5jZS4gSQ0K
+PiBkb24ndCBzZWUgdGhlIGZ1bGwgaW1wbGljYXRpb25zIG9mIHN1Y2ggYSBjaGFuZ2UgeWV0LCBi
+dXQgSSB0aGluayB3ZSBzaG91bGQgYXQNCj4gbGVhc3QgZ2l2ZSBpdCBhIHRyeS4NCj4gDQo+IEZv
+ciBub3csIHRoaXMgcGF0Y2ggaXM6DQo+IFJldmlld2VkLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFj
+aEBwZW5ndXRyb25peC5kZT4NCkhpIEx1Y2FzOg0KVGhhbmtzIGZvciB5b3VyIHJldmlldyBjb21t
+ZW50Lg0KQWdyZWUgd2l0aCB5b3UsIHRoZSBQSFkgaGFuZGxpbmcgc2hvdWxkbid0IGJlIGluY2x1
+ZGUgaW4gdGhlIHJlc2V0IGZ1bmN0aW9uLg0KSSB3b3VsZCBwbGFuIHRvIHJlZmluZSB0aGUgUEhZ
+IGhhbmRsaW5nIGFmdGVyIHRoaXMgZml4Lg0KDQpCZXN0IFJlZ2FyZHMNClJpY2hhcmQgWmh1DQoN
+Cj4gDQo+ID4gRml4ZXM6IDE3OGUyNDRjYjZlMiAoIlBDSTogaW14OiBBZGQgdGhlIGlteDhtbSBw
+Y2llIHN1cHBvcnQiKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFJpY2hhcmQgWmh1IDxob25neGluZy56
+aHVAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNp
+LWlteDYuYyB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktaW14Ni5jDQo+
+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktaW14Ni5jDQo+ID4gaW5kZXggMzMx
+NDkwNjE0ZDU1Li4zNDNmZTE0MjllM2MgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvcGNpLWlteDYuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+ZHdjL3BjaS1pbXg2LmMNCj4gPiBAQCAtOTczLDYgKzk3Myw3IEBAIHN0YXRpYyBpbnQgaW14Nl9w
+Y2llX3N1c3BlbmRfbm9pcnEoc3RydWN0IGRldmljZQ0KPiAqZGV2KQ0KPiA+ICAJY2FzZSBJTVg4
+TU06DQo+ID4gIAkJaWYgKHBoeV9wb3dlcl9vZmYoaW14Nl9wY2llLT5waHkpKQ0KPiA+ICAJCQlk
+ZXZfZXJyKGRldiwgInVuYWJsZSB0byBwb3dlciBvZmYgUEhZXG4iKTsNCj4gPiArCQlwaHlfZXhp
+dChpbXg2X3BjaWUtPnBoeSk7DQo+ID4gIAkJYnJlYWs7DQo+ID4gIAlkZWZhdWx0Og0KPiA+ICAJ
+CWJyZWFrOw0KPiANCg0K
