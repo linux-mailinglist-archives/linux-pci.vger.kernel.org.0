@@ -2,50 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EA124DCF99
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 21:43:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24A9D4DD081
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 23:07:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbiCQUnw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Mar 2022 16:43:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34436 "EHLO
+        id S229587AbiCQWJK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Mar 2022 18:09:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbiCQUmz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 16:42:55 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C8CF3FA1;
-        Thu, 17 Mar 2022 13:41:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8AF37B8200C;
-        Thu, 17 Mar 2022 20:41:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB6BFC340E9;
-        Thu, 17 Mar 2022 20:41:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647549688;
-        bh=dppT/88vVyC0bQdMfnQJBCBFZtwfaRmALNXImiosTTQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Zf3Yq1ElOsy81XsXb+1Pjuzc3hlu26tRvg5iiktVjH6+qydmUYRs5qb0acCs54nUY
-         aCFErppAgWbXrD7u/b5WI5REnzTWc911OFTwlc6PhcLyfySjvivqODkXrXWsiBU3nz
-         iRHllCGl60zMBNo6kUGJ44BQ4d55JoyIEg1g3RjPElrglvW/6Nbl3CxdDMjrYO8H3R
-         KyUr2nSyOFK+l/SGhn+tMfk4DJcY1Dpe3/B0bWg+9PQcr11i/+fsSBs2MXoMKNr5JF
-         xv2v3QxbjmApnZtcU45YSmKyHFfT7pu9U20B4xIQ0L+yJBUddhv0i/dekBUCvtv2be
-         TLbCCZrAPoNJQ==
-Date:   Thu, 17 Mar 2022 15:41:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, micklorain@protonmail.com,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH v1 1/1] PCI: Enable INTx quirk for ATI PCIe-USB adapter
-Message-ID: <20220317204126.GA723808@bhelgaas>
+        with ESMTP id S229567AbiCQWJK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 18:09:10 -0400
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9CFE1C9B52
+        for <linux-pci@vger.kernel.org>; Thu, 17 Mar 2022 15:07:50 -0700 (PDT)
+Received: by mail-oi1-x22f.google.com with SMTP id w127so7066101oig.10
+        for <linux-pci@vger.kernel.org>; Thu, 17 Mar 2022 15:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
+         :subject:to:cc;
+        bh=7a705il38wQNIgcW74B99Zg1pH09khmZyWTP/+DOfM8=;
+        b=h98yCe7fgQnBGQkCGLi0Th0UZFhv6CJewtkHxfhJIcJJR+xNQ4UXReJDQWkxfXP1T6
+         1CdqqeRoZi2c8hKnTWD6RKwM8tV0cnhlOGJu+E3pKLugZctBxNAdUzs6QkKImXJr1zQR
+         EJeq/FgutrCMZxSG0GtafUys5JAOdPHWuOrY8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from
+         :user-agent:date:message-id:subject:to:cc;
+        bh=7a705il38wQNIgcW74B99Zg1pH09khmZyWTP/+DOfM8=;
+        b=r07uZ4PaBIEMC/lW201mXpeXL8Nx+bawzol135HExG60vr/+OvxtHTGg2D7MUm/DpB
+         iU7QXg8faeY95G1DKIdcozQB3SZT0T/XOt094WdGWvc0ZBc7YD/vJ6J9Xw5lqfMi9jWj
+         aK4TblhW28e9SFSCNub4zdoUwkRQxZjeILnFMxH9jRCzeYIsPRFEtD+P9KDgnjIicN6P
+         9/hVlUoW/4K4+DKCMwmAtmEZbJPw67TE7MY/deVQPo3ZjW7sFff7T7QdiQiA1Jg/NNFe
+         SvDth2aKn7bjqp/frk+EasjUi7IRzj/AA1yZSki0+QGipPggX8V0pe7PFAYv1kn1XKIr
+         I2Ew==
+X-Gm-Message-State: AOAM5334nR2SRh6EsL2KYL1gzj5gt225X3kyVOv2IE0mPQm82RYpruJx
+        BK81DrWGClcHDQCWddh3L1ZUronTyuRLlgo4hAqUuA==
+X-Google-Smtp-Source: ABdhPJxlC9t8V6GWGBtqrmmClx1K/3NEFoCCbtSDgVtIUee7kJy+HObJw/OmhCKEfZkzWuP4slkYsLLcOKcGIdk9EYk=
+X-Received: by 2002:aca:bd41:0:b0:2ec:ff42:814f with SMTP id
+ n62-20020acabd41000000b002ecff42814fmr3089735oif.63.1647554870183; Thu, 17
+ Mar 2022 15:07:50 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 17 Mar 2022 18:07:49 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YjL4cEBXCQ1eSy48@smile.fi.intel.com>
-X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <1646679306-4768-1-git-send-email-quic_pmaliset@quicinc.com>
+References: <1646679306-4768-1-git-send-email-quic_pmaliset@quicinc.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date:   Thu, 17 Mar 2022 18:07:49 -0400
+Message-ID: <CAE-0n53ho2DX2rqQMvvKAuDCfsWW62TceTaNPzv5Mn_NQ-U6dA@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: qcom: Add system PM support
+To:     Prasad Malisetty <quic_pmaliset@quicinc.com>, agross@kernel.org,
+        bhelgaas@google.com, bjorn.andersson@linaro.org, kw@linux.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, lorenzo.pieralisi@arm.com,
+        rajatja@google.com, refactormyself@gmail.com, robh@kernel.org
+Cc:     quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+        manivannan.sadhasivam@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,126 +69,176 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 17, 2022 at 10:59:28AM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 16, 2022 at 04:15:48PM -0500, Bjorn Helgaas wrote:
-> > On Wed, Mar 16, 2022 at 06:12:19PM +0200, Andy Shevchenko wrote:
-> > > On Wed, Mar 16, 2022 at 06:52:09AM -0500, Bjorn Helgaas wrote:
-> > > > On Wed, Mar 16, 2022 at 12:27:57PM +0200, Andy Shevchenko wrote:
-> > > > > On Tue, Mar 15, 2022 at 03:22:31PM -0500, Bjorn Helgaas wrote:
-> > > > > > On Tue, Mar 15, 2022 at 12:09:08PM +0200, Andy Shevchenko wrote:
-> > > > > > > On Mon, Mar 14, 2022 at 02:42:53PM -0500, Bjorn Helgaas wrote:
-> > > > > > > > On Mon, Mar 14, 2022 at 12:14:48PM +0200, Andy Shevchenko wrote:
-> > > > > > > > > ATI PCIe-USB adapter advertises MSI, but it doesn't work
-> > > > > > > > > if INTx is disabled.  Enable the respective quirk as
-> > > > > > > > > it's done for other ATI devices on this chipset,
-> > > > > > > > > 
-> > > > > > > > > Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on
-> > > > > > > > > PCI devices")
-> > 
-> > > > > > Anyway, I applied this to pci/msi for v5.18 with the following
-> > > > > > commit log:
-> > > > > > 
-> > > > > >     PCI: Disable broken MSI on ATI SB600 USB adapters
-> > > > > > 
-> > > > > >     Some ATI SB600 USB adapters advertise MSI, but MSI doesn't
-> > > > > >     work if INTx is disabled.  Disable MSI on these adapters.
-> > > > > 
-> > > > > But IIUC MSI is _not_ disabled. That's why I have issued this
-> > > > > version of the patch with different commit message. Did I
-> > > > > misunderstand something?
-> > > > 
-> > > > Oh, right, of course.  Sorry, I was asleep at the wheel.
-> > > 
-> > > Are you going to fix that?
-> > 
-> > Yes, of course, I'll do something with the commit message after we
-> > figure out how to handle PCI_COMMAND_INTX_DISABLE.
-> > 
-> > > > I guess it's just that for these devices, we don't disable INTx
-> > > > when enabling MSI.  I can't remember why we disable INTx when
-> > > > enabling MSI, but it raises the question of whether it's better to
-> > > > leave INTx enabled or to just disable use of MSI completely.
-> > > 
-> > > It's required by specification to disable INTx if I read 6.1.4.3
-> > > Enabling Operation correctly.
-> > 
-> > Thanks for the reference; I was looking for something like that.  But
-> > I don't think this section requires us to set
-> > PCI_COMMAND_INTX_DISABLE.  For the benefit of folks without the spec,
-> > PCIe r6.0, sec 6.1.4.3 says:
-> > 
-> >   To maintain backward compatibility, the MSI Enable bit in the
-> >   Message Control Register for MSI and the MSI-X Enable bit in the
-> >   Message Control Register for MSI-X are each Clear by default (MSI
-> >   and MSI-X are both disabled). System configuration software Sets one
-> >   of these bits to enable either MSI or MSI-X, but never both
-> >   simultaneously. Behavior is undefined if both MSI and MSI-X are
-> >   enabled simultaneously. Software disabling either mechanism during
-> >   active operation may result in the Function dropping pending
-> >   interrupt conditions or failing to recognize new interrupt
-> >   conditions. While enabled for MSI or MSI-X operation, a Function is
-> >   prohibited from using INTx interrupts (if implemented) to request
-> >   service (MSI, MSI-X, and INTx are mutually exclusive).
-> > 
-> > The only *software* constraints I see are (1) software must never
-> > enable both MSI and MSI-X simultaneously, and (2) if software disables
-> > MSI or MSI-X during active operation, the Function may fail to
-> > generate an interrupt when it should.
-> > 
-> > I read the last sentence as a constraint on the *hardware*: if either
-> > MSI or MSI-X is enabled, the Function is not allowed to use INTx,
-> > regardless of the state of PCI_COMMAND_INTX_DISABLE.
-> > 
-> > I searched the spec for "Interrupt Disable", looking for situations
-> > where software might be *required* to set it, but I didn't see
-> > anything.
-> > 
-> > I suspect "Interrupt Disable" was intended to help the OS stop all
-> > activity from a device during hot-plug or reconfiguration, as hinted
-> > at in sec 6.4, "Device Synchronization":
-> > 
-> >   The ability of the driver and/or system software to block new
-> >   Requests from the device is supported by the Bus Master Enable,
-> >   SERR# Enable, and Interrupt Disable bits in the Command register
-> >   (Section 7.5.1.1.3) of each device Function, and other such control
-> >   bits.
-> > 
-> > So I'm trying to figure out why when enabling MSI we need to set
-> > PCI_COMMAND_INTX_DISABLE for most devices, but it's safe to skip that
-> > for these quirked devices.
-> 
-> I guess it's wrong wording in the last paragraph. It's not safe, but it's
-> _required_ since HW doesn't follow PCI specification that clearly says:
-> "MSI, MSI-X, and INTx are mutually exclusive".
+Quoting Prasad Malisetty (2022-03-07 10:55:06)
+> Add suspend_noirq and resume_noirq callbacks to handle
 
-I agree there's a defect in these SB600 devices.  My guess is that
-PCI_COMMAND_INTX_DISABLE actually disables both INTx and MSI, when
-it's only supposed to disable INTx.
+Nitpick: They're no longer noirq so this should say "Add suspend and
+resume callbacks"
 
-I'm pretty sure the spec doesn't actually require software to set
-Interrupt Disable when enabling MSI, since MSI was added in PCI r2.2,
-which included this text in sec 6.8.2:
+> system suspend and resume in dwc PCIe controller driver.
+>
+> When system suspends, send PME turnoff message to enter
+> link into L2 state. Along with powerdown the PHY, disable
+> pipe clock, switch gcc_pcie_1_pipe_clk_src to XO if mux is
+> supported and disable the pcie clocks, regulators.
 
-  System configuration software sets [the MSI Enable] bit to enable
-  MSI. ...  Once enabled, a function is prohibited from using its
-  INTx# pin (if implemented) to request service (MSI and INTx# are
-  mutually exclusive).
+I think Bjorn A. and Dmitry are trying to avoid this whole parking thing
+in another series? Can you take a look at that?
 
-and Interrupt Disable was added later, in PCI r2.3, with no mention of
-a connection with MSI.  All the specs from PCI r2.2 to PCIe r6.0
-include the text above about not using INTx# if MSI or MSI-X is
-enabled, but that's not the same as requiring software to set
-Interrupt Disable.  Linux has set Interrupt Disable when enabling MSI
-ever since MSI support was added [1], so I would hesitate to change
-that even though I don't think it's required.
+>
+> When system resumes, PCIe link will be re-established and
+> setup rc settings.
+>
+> Signed-off-by: Prasad Malisetty <quic_pmaliset@quicinc.com>
+>
+> ---
+> Changes since v3:
+>         - Replaced noirq hooks with normal suspend/resume hooks.
+>         - Removed local variable and placed in function itself.
+>
+> Changes since v2:
+>         - Removed unnecessary variable initializations and comments.
+>         - Removed platform specific variables declarations.
+>         - Added MACRO names for the BIT shiftings.
+>
+> Changes since v1:
+>         - Removed unnecessary logs and modified log level suggested by Manivannan.
+>         - Removed platform specific callbacks as PM support is generic.
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 97 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 6ab9089..4d29c80 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -48,6 +48,7 @@
+>  #define PCIE20_PARF_PHY_REFCLK                 0x4C
+>  #define PHY_REFCLK_SSP_EN                      BIT(16)
+>  #define PHY_REFCLK_USE_PAD                     BIT(12)
+> +#define PHY_POWER_DOWN                         0x1
+>
+>  #define PCIE20_PARF_DBI_BASE_ADDR              0x168
+>  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE                0x16C
+> @@ -62,6 +63,8 @@
+>
+>  #define PCIE20_ELBI_SYS_CTRL                   0x04
+>  #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE         BIT(0)
+> +#define PCIE_PME_TURNOFF_MSG                   BIT(4)
+> +#define PCIE_PM_LINKST_IN_L2                   BIT(5)
+>
+>  #define PCIE20_AXI_MSTR_RESP_COMP_CTRL0                0x818
+>  #define CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K       0x4
+> @@ -73,6 +76,8 @@
+>
+>  #define PCIE20_PARF_Q2A_FLUSH                  0x1AC
+>
+> +#define PCIE20_PARF_PM_STTS                    0x24
+> +
+>  #define PCIE20_MISC_CONTROL_1_REG              0x8BC
+>  #define DBI_RO_WR_EN                           1
+>
+> @@ -1645,6 +1650,97 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>         return ret;
+>  }
+>
+> +static int qcom_pcie_send_pme_turnoff_msg(struct qcom_pcie *pcie)
+> +{
+> +       int ret;
+> +       u32 val, poll_val;
+> +       struct dw_pcie *pci = pcie->pci;
+> +       struct device *dev = pci->dev;
+> +
+> +       val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
+> +       val |= PCIE_PME_TURNOFF_MSG;
+> +       writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
+> +
+> +       ret = readl_poll_timeout((pcie->parf + PCIE20_PARF_PM_STTS), poll_val,
+> +                       (poll_val & PCIE_PM_LINKST_IN_L2),
+> +                       10000, 100000);
+> +       if (!ret)
+> +               dev_dbg(dev, "Device entered L23_Ready state\n");
+> +       else
+> +               dev_err(dev, "Device failed to enter L23_Ready. PM_STTS 0x%x\n",
+> +                       readl_relaxed(pcie->parf + PCIE20_PARF_PM_STTS));
+> +
+> +       return ret;
+> +}
+> +
+> +static void qcom_pcie_host_disable(struct qcom_pcie *pcie)
+> +{
+> +       qcom_ep_reset_assert(pcie);
+> +
+> +       /* Put PHY into POWER DOWN state */
+> +       phy_power_off(pcie->phy);
+> +
+> +       writel(PHY_POWER_DOWN, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +
+> +       if (pcie->cfg->ops->post_deinit)
+> +               pcie->cfg->ops->post_deinit(pcie);
+> +
+> +       /* Disable PCIe clocks and regulators */
+> +       pcie->cfg->ops->deinit(pcie);
+> +}
+> +
+> +static int __maybe_unused qcom_pcie_pm_suspend(struct device *dev)
+> +{
+> +       int ret;
+> +       struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> +       struct dw_pcie *pci = pcie->pci;
+> +
+> +       if (!dw_pcie_link_up(pci)) {
+> +               dev_dbg(dev, "Power has been turned off already\n");
+> +               return 0;
+> +       }
+> +
+> +       ret = qcom_pcie_send_pme_turnoff_msg(pcie);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Power down the PHY, disable clock and regulators */
+> +       qcom_pcie_host_disable(pcie);
+> +
+> +       return 0;
+> +}
+> +
+> +/* Resume the PCIe link */
+> +static int __maybe_unused qcom_pcie_pm_resume(struct device *dev)
+> +{
+> +       int ret;
+> +       struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> +       struct dw_pcie *pci = pcie->pci;
+> +       struct pcie_port *pp = &pci->pp;
+> +
+> +       ret = qcom_pcie_host_init(pp);
+> +       if (ret) {
+> +               dev_err(dev, "cannot initialize host\n");
 
-What I don't like about PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG is that it
-changes the generic code path in a sort of random way, i.e., this
-device becomes yet another special case in how we handle Interrupt
-Disable.
+Capitalize cannot?
 
-What would you think about just setting pdev->no_msi instead, so we
-don't try to use MSI at all on these devices?  I think that's what we
-did before 306c54d0edb6.
+> +               return ret;
+> +       }
+> +
+> +       dw_pcie_setup_rc(pp);
+> +
+> +       qcom_pcie_start_link(pci);
+> +
+> +       ret = dw_pcie_wait_for_link(pci);
+> +       if (ret) {
+> +               dev_err(dev, "Link never came up, Resume failed\n");
+> +               return ret;
 
-[1] https://lore.kernel.org/all/200310032215.h93MFnjT005788@snoqualmie.dp.intel.com/ (search for PCI_COMMAND_INTX_DISABLE)
+Drop return and braces.
+
+> +       }
+> +
+> +       return 0;
+
+return ret;
+
+> +}
+> +
+> +static const struct dev_pm_ops qcom_pcie_pm_ops = {
+> +       SET_SYSTEM_SLEEP_PM_OPS(qcom_pcie_pm_suspend, qcom_pcie_pm_resume)
+> +};
+> +
