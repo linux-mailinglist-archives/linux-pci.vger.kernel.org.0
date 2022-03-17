@@ -2,103 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C80C4DCBC7
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 17:52:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C24274DCBE0
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 17:58:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235131AbiCQQyF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Mar 2022 12:54:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43082 "EHLO
+        id S236703AbiCQQ7m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Mar 2022 12:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231928AbiCQQyE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 12:54:04 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 345B5217950;
-        Thu, 17 Mar 2022 09:52:48 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB4591682;
-        Thu, 17 Mar 2022 09:52:47 -0700 (PDT)
-Received: from [10.57.42.204] (unknown [10.57.42.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23B8C3F7B4;
-        Thu, 17 Mar 2022 09:52:44 -0700 (PDT)
-Message-ID: <e2ceb902-6fe2-bcb9-259a-f120901672b6@arm.com>
-Date:   Thu, 17 Mar 2022 16:52:37 +0000
+        with ESMTP id S236697AbiCQQ7l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 12:59:41 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF214C414;
+        Thu, 17 Mar 2022 09:58:22 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 17B805C017F;
+        Thu, 17 Mar 2022 12:58:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 17 Mar 2022 12:58:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm1; bh=q/O4oWCbOCxInkyu4qYV95RiqyU/wps554Da5a
+        nLtKg=; b=ZxzY3SyVYFxDVKwqKYS+JKuj2Pb0snRyTIEnFh+A5cdJ9c3ndJye5P
+        OREBIgjHI+Jv9HmCh56/UOuhVMTQ3P9jM19p7ocDbGMjb/1QoB2hNnC5TajumV34
+        yGlTCLhLw2CE9ijQAbg6025udnVhbMojznGCM8ZOa6Fa8qUHpEruKcnvJsROSxiO
+        O56L0v6bASvwyMPxxAU6SFTmgs8PnGZ0vwJOM+6KqagOZlYc/3VvqxL4kZOWD/Hb
+        jTmyBHiX+mJ6GUpRcR5DLnMJcgNF4S5JMhqyhfKhDrnDJO1OpO8Lgk6raWSyaDaI
+        umxd4vKgY0l4ZapdsL36aF9kU0dQYKqQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=q/O4oWCbOCxInkyu4
+        qYV95RiqyU/wps554Da5anLtKg=; b=U88Rzc+LaCzMghYa8HODqlkkj5evepbcC
+        +r4XfyaPAGIASFv0UKnpgUR4qpEAHDHMGDnLQXmEsfArhGwYzAcPtfsR837DeNu4
+        Y8OuFKNbKLTDnrFQCTeZdrjViyBCPKo4ynn4EzfFl8Trbp27tO9kTHmVYcDcC4C3
+        cnTmwFqh5ZiqoLpo1OBk/mS80IoSG6nEauDLXYXtT1wrHOSNMin7UgWmDm3CRyM6
+        iYMI11zs/kWag+F3R1D4fLIq35Ccck6hcVfrsSMgz6N3ZsGwWPW3nRx6P4RQAmDt
+        QozpabU0qZr715IR+Lr6e2gIDozo+HKsu5eo5FFx5meAQnnkkp5bw==
+X-ME-Sender: <xms:rWgzYgl8uI1N5aZ3zELULYDhVLYa2jFakvdJc7s0VG-PD0wZjuBuMg>
+    <xme:rWgzYv0BP4WJU8FjBFs7CF5V1tfWSk_-VKsa-WlGEvvQWISnJjBkW5ymntgbrxgT5
+    KrQrKWOp3wsgg>
+X-ME-Received: <xmr:rWgzYup-OYqzHNWV6RLW6oyLoAs6_03V3I9uK_T0n33rLQnsWzrfkjo7b4wpgPm0n1k1aliwoM1BfgHSOBOpWu4nwC-QxVed>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudefgedgleefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeeuleeltd
+    ehkeeltefhleduuddvhfffuedvffduveegheekgeeiffevheegfeetgfenucffohhmrghi
+    nhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:rWgzYsmxHLPdqz8BBqoQFCuHMO-93cVWIMDhFtwnCxJGycTX-Q8mKA>
+    <xmx:rWgzYu0MgnonLHvL-UY4kLWe8xwCpDCGxNA2Q-_wTRfjWEZqbZW80A>
+    <xmx:rWgzYjsLX_KbyNEwugWA-MOKCjN_n2IBf0BTlvDcQ1Y0OiCtSJimog>
+    <xmx:rmgzYluaxMoZDZ9sZbHhT5cpHdQHYJ48wyWPdNB2uqEJc2C-3eyyQA>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 17 Mar 2022 12:58:21 -0400 (EDT)
+Date:   Thu, 17 Mar 2022 17:58:18 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     andreas.noever@gmail.com, michael.jamet@intel.com,
+        mika.westerberg@linux.intel.com, YehezkelShB@gmail.com,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        mario.limonciello@amd.com
+Subject: Re: [PATCH] thunderbolt: Make iommu_dma_protection more accurate
+Message-ID: <YjNoquzvN7CdFIyl@kroah.com>
+References: <2d01fa50c2650c730b0244929097737918e302e7.1647533152.git.robin.murphy@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [PATCH 3/4 RESEND] Drivers: hv: vmbus: Propagate VMbus coherence
- to each VMbus device
-Content-Language: en-GB
-To:     Michael Kelley <mikelley@microsoft.com>, sthemmin@microsoft.com,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, rafael@kernel.org, lenb@kernel.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, hch@lst.de, m.szyprowski@samsung.com,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-References: <1647534311-2349-1-git-send-email-mikelley@microsoft.com>
- <1647534311-2349-4-git-send-email-mikelley@microsoft.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <1647534311-2349-4-git-send-email-mikelley@microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d01fa50c2650c730b0244929097737918e302e7.1647533152.git.robin.murphy@arm.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2022-03-17 16:25, Michael Kelley via iommu wrote:
-> VMbus synthetic devices are not represented in the ACPI DSDT -- only
-> the top level VMbus device is represented. As a result, on ARM64
-> coherence information in the _CCA method is not specified for
-> synthetic devices, so they default to not hardware coherent.
-> Drivers for some of these synthetic devices have been recently
-> updated to use the standard DMA APIs, and they are incurring extra
-> overhead of unneeded software coherence management.
+On Thu, Mar 17, 2022 at 04:17:07PM +0000, Robin Murphy wrote:
+> Between me trying to get rid of iommu_present() and Mario wanting to
+> support the AMD equivalent of DMAR_PLATFORM_OPT_IN, scrutiny has shown
+> that the iommu_dma_protection attribute is being far too optimistic.
+> Even if an IOMMU might be present for some PCI segment in the system,
+> that doesn't necessarily mean it provides translation for the device(s)
+> we care about. Furthermore, all that DMAR_PLATFORM_OPT_IN really does
+> is tell us that memory was protected before the kernel was loaded, and
+> prevent the user from disabling the intel-iommu driver entirely. What
+> actually matters is whether we trust individual devices, based on the
+> "external facing" property that we expect firmware to describe for
+> Thunderbolt ports.
 > 
-> Fix this by propagating coherence information from the VMbus node
-> in ACPI to the individual synthetic devices. There's no effect on
-> x86/x64 where devices are always hardware coherent.
+> Avoid false positives by looking as close as possible to the same PCI
+> topology that the IOMMU layer will consider once a Thunderbolt endpoint
+> appears. Crucially, we can't assume that IOMMU translation being enabled
+> for any reason is sufficient on its own; full (expensive) DMA protection
+> will still only be imposed on untrusted devices.
 > 
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> CC: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 > ---
->   drivers/hv/vmbus_drv.c | 15 +++++++++++++++
->   1 file changed, 15 insertions(+)
 > 
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 12a2b37..c0e993ad 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -904,6 +904,21 @@ static int vmbus_probe(struct device *child_device)
->   			drv_to_hv_drv(child_device->driver);
->   	struct hv_device *dev = device_to_hv_device(child_device);
->   	const struct hv_vmbus_device_id *dev_id;
-> +	enum dev_dma_attr coherent;
+> This supersedes my previous attempt just trying to replace
+> iommu_present() at [1], further to the original discussion at [2].
+> 
+> [1] https://lore.kernel.org/linux-iommu/BL1PR12MB515799C0BE396377DBBEF055E2119@BL1PR12MB5157.namprd12.prod.outlook.com/T/
+> [2] https://lore.kernel.org/linux-iommu/202203160844.lKviWR1Q-lkp@intel.com/T/
+> 
+>  drivers/thunderbolt/domain.c | 12 +++---------
+>  drivers/thunderbolt/nhi.c    | 35 +++++++++++++++++++++++++++++++++++
+>  include/linux/thunderbolt.h  |  2 ++
+>  3 files changed, 40 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/thunderbolt/domain.c b/drivers/thunderbolt/domain.c
+> index 7018d959f775..d5c825e84ac8 100644
+> --- a/drivers/thunderbolt/domain.c
+> +++ b/drivers/thunderbolt/domain.c
+> @@ -7,9 +7,7 @@
+>   */
+>  
+>  #include <linux/device.h>
+> -#include <linux/dmar.h>
+>  #include <linux/idr.h>
+> -#include <linux/iommu.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/slab.h>
+> @@ -257,13 +255,9 @@ static ssize_t iommu_dma_protection_show(struct device *dev,
+>  					 struct device_attribute *attr,
+>  					 char *buf)
+>  {
+> -	/*
+> -	 * Kernel DMA protection is a feature where Thunderbolt security is
+> -	 * handled natively using IOMMU. It is enabled when IOMMU is
+> -	 * enabled and ACPI DMAR table has DMAR_PLATFORM_OPT_IN set.
+> -	 */
+> -	return sprintf(buf, "%d\n",
+> -		       iommu_present(&pci_bus_type) && dmar_platform_optin());
+> +	struct tb *tb = container_of(dev, struct tb, dev);
 > +
-> +	/*
-> +	 * On ARM64, propagate the DMA coherence setting from the top level
-> +	 * VMbus ACPI device to the child VMbus device being added here.
-> +	 * Older Hyper-V ARM64 versions don't set the _CCA method on the
-> +	 * top level VMbus ACPI device as they should.  Treat these cases
-> +	 * as DMA coherent since that's the assumption made by Hyper-V.
-> +	 *
-> +	 * On x86/x64 these calls assume coherence and have no effect.
-> +	 */
-> +	coherent = acpi_get_dma_attr(hv_acpi_dev);
-> +	if (coherent == DEV_DMA_NOT_SUPPORTED)
-> +		coherent = DEV_DMA_COHERENT;
-> +	acpi_dma_configure(child_device, coherent);
+> +	return sprintf(buf, "%d\n", tb->nhi->iommu_dma_protection);
 
-acpi_dma_configure is for devices represented in ACPI. The commit 
-message implies that these VMBus devices aren't represented in ACPI. 
-What gives?
+sysfs_emit() please.
 
-Robin.
+thanks,
 
->   
->   	dev_id = hv_vmbus_get_id(drv, dev);
->   	if (drv->probe) {
+greg k-h
