@@ -2,206 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D48C4DCD7F
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 19:23:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04BF94DCE3F
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 19:57:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237357AbiCQSY7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Mar 2022 14:24:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46030 "EHLO
+        id S236763AbiCQS61 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Mar 2022 14:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236363AbiCQSY7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 14:24:59 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DBF9DCAB0
-        for <linux-pci@vger.kernel.org>; Thu, 17 Mar 2022 11:23:41 -0700 (PDT)
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id DFAE03F221
-        for <linux-pci@vger.kernel.org>; Thu, 17 Mar 2022 18:23:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1647541418;
-        bh=mAdVcJhToSrCB/a7t8Sh+35WYqrUG3pwc0slS8rIHHU=;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-         Content-Type:In-Reply-To;
-        b=nYNzwzs0EG1a39Yp6tbpDyEeG/DgC06ulQEGkx5zGuFUG6OLmLPsClTClxQ8HAgpE
-         PVtcdU/yYLEsQljfE5xfnXdzSyd5ILkyGi2SctNHaqRanXoTYIhTqFXNQnq1WZiQSS
-         fqbYREk6ZwP1uruwGlLjGHVMDLEN5auYy5JBB3lBHKtuBsPB+5N+3xw/UPxS3aFW+W
-         FcOF1y1IQaJxYmlKgyzIITfYC/jP6MVN2hlwulGOMdfKMGWoDRst1a3U2RGZRzq84G
-         qBoQUfF6GBtUCntzQHtNv1fQf5DHC5fSynecxlz8lkV+lzaN8tU0v6TrSL/XQj+14C
-         PQBfIXFUYl11A==
-Received: by mail-il1-f198.google.com with SMTP id 3-20020a056e020ca300b002c2cf74037cso3539310ilg.6
-        for <linux-pci@vger.kernel.org>; Thu, 17 Mar 2022 11:23:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mAdVcJhToSrCB/a7t8Sh+35WYqrUG3pwc0slS8rIHHU=;
-        b=BduWXKjD6Np2dQDHfJHuuDJlTBuCenDcwJrhn8YPXVnpq4Q4c+UuyvJPCBYBhirwGv
-         ogXXepw/fdk34AuglL7sVmYguTXcf7yBfYRV8UHApZ+jxmnYIPtiUEMG9+2UeiPqWkrK
-         YSCV/Eqo9sPd9eyk3+XLAUpGW8Ze2AWfdsfaOrVb/A1HxEGlxS7Orn+1TSI5Xati6/Ak
-         vvNeY1HlA7Qfn6V5UFTj4mIR5zco+3kFR8/nA62vOG99e3irVd4fkQuef0w8fP7lCPSO
-         TDUqDV4WdLr5oOgWnBB8F1x993x2bo6UWGdsa19wINcmYe9EpxfQu4Ntce7Z/928brIo
-         uARA==
-X-Gm-Message-State: AOAM530hgOUSX47112X2wena9i9dJL2ESSHnuaeQXgk9i8vx7XApkOlL
-        HGNtACzYAtmODaNZdlxBQ9R/voy2hHgpsj18gtyw2DvZzCa3VZBcP0EAvX6a1MvcnP/G5+Rv+37
-        bqdkmW+4Hb2yER4xUHoYtcXk4MOswfOpzjE6xBQ==
-X-Received: by 2002:a05:6638:14c1:b0:319:dd1c:e179 with SMTP id l1-20020a05663814c100b00319dd1ce179mr2953220jak.64.1647541417552;
-        Thu, 17 Mar 2022 11:23:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJydmsovQdnsv6/vsumr0R6jzDnWMQIUt88oHLcsHXh5GhykfJlRwpHtRjlwxttQFLYXvPCreQ==
-X-Received: by 2002:a05:6638:14c1:b0:319:dd1c:e179 with SMTP id l1-20020a05663814c100b00319dd1ce179mr2953204jak.64.1647541417263;
-        Thu, 17 Mar 2022 11:23:37 -0700 (PDT)
-Received: from xps13.dannf (c-73-14-97-161.hsd1.co.comcast.net. [73.14.97.161])
-        by smtp.gmail.com with ESMTPSA id n5-20020a056e02148500b002c7aa9c389csm3840370ilk.32.2022.03.17.11.23.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Mar 2022 11:23:35 -0700 (PDT)
-Date:   Thu, 17 Mar 2022 12:23:33 -0600
-From:   dann frazier <dann.frazier@canonical.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, robh@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, Toan Le <toan@os.amperecomputing.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [PATCH] PCI: xgene: Revert "PCI: xgene: Use inbound resources
- for setup"
-Message-ID: <YjN8pT5e6/8cRohQ@xps13.dannf>
-References: <20220314144429.1947610-1-maz@kernel.org>
- <YjL8P0zkle2foxbk@lpieralisi>
+        with ESMTP id S237797AbiCQS6H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 14:58:07 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-eus2azon11021016.outbound.protection.outlook.com [52.101.57.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ECB7165A8F;
+        Thu, 17 Mar 2022 11:56:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WMiOIKv4VIDtrn1ttY0I1O0a6mh+7QE5RyZDmh1noUed4NprOULGJozuGK8e4571UFBWWOFd58ro8b/FIs1/peJnuTjXnIEtU32B4cOETE7qoktj5zjARdhhwaK7UuYZpkj+JljrMPEbzPyWp3pyXLI/2jRSj97dBX2m3JU9EN9GLqNbqntUyxF9JGI0p8dH2E3PH47Gb4nB6PZGtCIIhuY9bQ/rPBE49VtKf0s9FSIb9HKn1K5xL4rNIbw++Kwq2m0vpm2UzEgQTb8mRUG6NKK6VjeWh2fEYp+YsJiI4nVHpjVmi/Y0nholnPvN//TR9p92TFMFVxc+jcBVnruMXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ffu29KJY9fIgvSoo/bNxnM1qDvx0qGr2msJgxbK/BXk=;
+ b=CVsZmhvrRA9Enq/E8GtyT1/Cjtl/TEs0jkHV2/ZgopmSZnvqGNrOAEZBgGdEENKflkq7u2RZUlU40JwJjmvjsGDmbHdKfVjpA0L5WmXgoXK0LZBnoRSFlOwHGr99xoAYQL5/LyGC5AopXoklE2M+JW3Z/5NpZDrMWO9JLdEM4scISq8vMiUxvDXxk1t1O6o28yZS6h9fUVoChQY9NHX7OkYUFF3C2/LbVwH9sBLnesZK1zgz1jrQHGnt/SpjCIihS8yPp69juahS14CAdJjmaT5VvXoM8t9GUyHyxwXCri8ZJbwp5cmsk0fQWL2x25lF4o+3d7rVfjyWm7vu3WsJ9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ffu29KJY9fIgvSoo/bNxnM1qDvx0qGr2msJgxbK/BXk=;
+ b=ep9Ip8SpGvBbkKfpIrgXo/E3ME6WfOi+nFIcsaea1pF0TOlfzP/MK6wBqSBCeDbsZHt1r1CESocl57yRmNl142Jouqi+uF4qXQmid9qxZG20vm+2J0RZL4cL5lKTH5rgnOYI26W40tmJk7AcYwVRFYL0rroyYKDRTP/g2E1+Y8M=
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
+ by DM6PR21MB1436.namprd21.prod.outlook.com (2603:10b6:5:25c::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.7; Thu, 17 Mar
+ 2022 18:56:46 +0000
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::44a2:4767:f55:7f2b]) by PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::44a2:4767:f55:7f2b%5]) with mapi id 15.20.5081.013; Thu, 17 Mar 2022
+ 18:56:46 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: RE: [PATCH 1/4 RESEND] ACPI: scan: Export acpi_get_dma_attr()
+Thread-Topic: [PATCH 1/4 RESEND] ACPI: scan: Export acpi_get_dma_attr()
+Thread-Index: AQHYOhumuW5iP23iyEiwCHfZIloepqzDxKCAgAAoc0A=
+Date:   Thu, 17 Mar 2022 18:56:46 +0000
+Message-ID: <PH0PR21MB3025F5D00F7261283396FEDDD7129@PH0PR21MB3025.namprd21.prod.outlook.com>
+References: <1647534311-2349-1-git-send-email-mikelley@microsoft.com>
+ <1647534311-2349-2-git-send-email-mikelley@microsoft.com>
+ <59aa0151-a51d-0def-6d5d-4788c1fbc21c@arm.com>
+In-Reply-To: <59aa0151-a51d-0def-6d5d-4788c1fbc21c@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9184c307-f85f-4f33-af74-d2cc36c5f672;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-03-17T18:56:01Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e147cef1-0e22-480c-f840-08da0847e2e0
+x-ms-traffictypediagnostic: DM6PR21MB1436:EE_
+x-ms-exchange-atpmessageproperties: SA|SL
+x-microsoft-antispam-prvs: <DM6PR21MB14360A6473FAB920E8090CFAD7129@DM6PR21MB1436.namprd21.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EN3rNWU1zSjrd1NMniViIVXO/Qi80aaKN1NIWL93HPDBXKsEjK425Kr1wfJPKdFtul/g/JZ2UAfl7iGz/TBwMFCKVjAI37lylKpl+/rapV4FsjgJfrzEuiSaI+lNAU/C7FaofAc+5dfWU8lgcc27ePCQ2V7ypLxQeDb+HbA4LpfwDR8OYFFCa7VAb2eSe2k60UuDJShH81hHWszmXwddHHuVjQkin3R8+REfnp2pIOJzKBHlginjPFc9OG0Lr4Ly1FdU9+iUF3opLyxAryNsTEyCQbzDStnIIxRPHGHg79ZVNdEZ2FPvBppcyLpJP4Wy24bIdC1hXBc60+3CAEM6VoPiWvkXCYdGSIUrCe7t1Bo7RcLXTVl9x4KufyKKxby96PyDr5zeWaCF+UN7pKwOFKfYoOvqCMHZjJrJPxM3fRis6tKZQ6KAo3YMZgCn6bBuS4UNde9ziP5fcrtzVIPMAdA5SZHiCclW19ihCvNPDzD69dZ7tJafLvrRI6KdCIZGqcUfCw1jSwb0SmHJgh4s+T5Goip9+nx5bWN2XhREY/OB4FLS9FkA+cn/gDNKAdyZVp2FSHYVBiDW3gBWSx50f1DJ5SGMB/GNYl1pW41VeUg5OX0WP+sCwqx65/x7e5nNwLvqKFfq9uaIYoqS1k11TCsbbPv8q7lAWEUcKACeP+cRnJ2yMDUaWhDG69Eywc8TxEBZGHYwtTw8wHwJgxoTk5Z+cmlUjot/IednaeBv07QGNehtHQ8BTtWfY9FiECLxgMlefrj0LDo0xWk3O0T8yg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(52536014)(508600001)(10290500003)(7416002)(5660300002)(8936002)(53546011)(7696005)(38070700005)(6506007)(55016003)(64756008)(66446008)(66476007)(66556008)(8676002)(66946007)(26005)(76116006)(316002)(186003)(71200400001)(8990500004)(86362001)(2906002)(33656002)(110136005)(82960400001)(82950400001)(9686003)(4744005)(921005)(122000001)(38100700002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dzlvcVNqVnQ0UDN4Vm5DMjVlYjQwb0xlaW40QkNhdXJMRFVEaFcvNFJWWVd5?=
+ =?utf-8?B?Rmw1RnFha1RVZ2wrV1FWOU0xQWx5ZGFaNlRqREs0M0J0eUZBWTJWbVRXZGxj?=
+ =?utf-8?B?Uk9iUkNMcUpBU2R3VnNrKzZ6Z3U1bzdaWGlKZ2lRNEhhT29lelFwTUZWQ0lD?=
+ =?utf-8?B?dWpIVDNpSmtoMlhmeFcwekcwK2Rza3VKNWZWRVVZdWxndWZzRG9pQ1dTZWRx?=
+ =?utf-8?B?d3Z0b3NZMzltQllZMjlsV3d2Q1JYdEE5TjlWWUtlZWVzcytOUTE5QktONFUz?=
+ =?utf-8?B?eFF4T1ZwT1NqRmZDS0RIUEp1TVpySHphNUEvV0JEVXRKSi9heCs5YWNleUNE?=
+ =?utf-8?B?clNFR1RrQ3FnYjEwZkovM0JrQXRVQ0U1ZnFZeHNJN2IreXhQZ3kxVnlRNGZQ?=
+ =?utf-8?B?aHdZbTVMdklPd1owdDJObWRxYy9jTHBoNkxka1FWaWt6VWgxMEhTSzlmYWk3?=
+ =?utf-8?B?Q2g2eHIrSzIyRGZYQU1BOEREWHFBWWRveWNoWEk4ZVZhSWIyUnhldkFvRXVZ?=
+ =?utf-8?B?VENNWit1ZkxpUk9Ja09Lb3FseHp2eVVUV2NBMldmT3ExdkY2dnkzWkxqUUdR?=
+ =?utf-8?B?eThGRlFINVRvRnlYRGdkODVpQnRQZDlUdXowZ20vY2pOMy9nWjcyT1JLL3hX?=
+ =?utf-8?B?NlZHczVoeTRUaVF4ZVM5T2YzekVRMFgrKzVjTEFWWXZDZGoyOTRZTlROMUVR?=
+ =?utf-8?B?WDJHMTc4VVBONGoyTFI2WGc2eWdKM2NYZnJRYWcwWXJEVSs5ZGtqV3MvSm8w?=
+ =?utf-8?B?YW10VDV2NmdwV3lEVWlDa0hqNlM2d1dhQTJLNkFCOU1BWkM3cThXN2l1ZTZW?=
+ =?utf-8?B?alQ4VFhtc1QzVTN6ZUowZjRncnBaY1ZSNmZNNFVzRjJQUjh5L0FwcUY4cjdY?=
+ =?utf-8?B?cSs5Yk9HT2tCdmFIblA2SE1iZTlBLzQ5VEEvdEliaWw1UHNhNzVpSU1OeENm?=
+ =?utf-8?B?TUxibWJyTjdGaWxRalh0SG1KRnpVUmxobklKbEtRWERyQzUycThrWlRIWXZ1?=
+ =?utf-8?B?UjdDNmFmZlpSNXUzRDJpLzRDeDIweWxqYUtkTi9WNWdNSEk0M1V6ZkNhMjZz?=
+ =?utf-8?B?a3ViM1hvcm5aWmZJNlhtc0NaZDFyQkhmVkNld3oxZHQ2RzVZazdUUGYwWEVO?=
+ =?utf-8?B?QTlBS0JaWHNFY3krZUJOcXExeE1XTDRRYTdOeEQ1Y2JNQnE0MzZvWG1uSnZ5?=
+ =?utf-8?B?cFcyUjF6Uk1aQjY3TVRlaC81T2czRzJvdTFIOFF5YnVYOVZSVEhaSDJlM3ZX?=
+ =?utf-8?B?OTUrYjZPd1ZoZklGcFFTRWNvQUJkK2g2QlJKaGJrTlJrb0pxSDF5akJPbW5Y?=
+ =?utf-8?B?UWtab25ZQ2lNUVZGYWNiOElpQ3c1ZU1DbWt0aW9PSjd5akQ2WENzNE4wSDFW?=
+ =?utf-8?B?RzliQ3FzTVBueEJ0M3FoUzlmSE9YY2dqR3IvclpsT00xNlh5STZkOG9zdU9h?=
+ =?utf-8?B?dFVaK1hNYitLeno0SXd2eFBTbFIwN1FEOXNVOFI3UXBwOWlrSnM1b1BpNnJO?=
+ =?utf-8?B?dk9XK3NXVmU2ZHg4b25sZzBhME1NNVRuYncyMlVUL1EzTFQzZUVmakV5MHBU?=
+ =?utf-8?B?UmZKQWpJV3NDN2pUMnU3MGZQTW5lNWJhSjhLalRUM3MweDJ2M2MvWnpBNmJY?=
+ =?utf-8?B?TXIvTEJaTjBGYlF6Qkw0S0F0K3pNcHZhb2N2YXg1c2gxNUViL2JCUzVvUVJO?=
+ =?utf-8?B?TEhYSjdWS3hwbTB4bVkxc1YxUkRyTHNHdGU4dzluQk8xTFRlZmFtSDBVTERZ?=
+ =?utf-8?B?Y1gvOG14Tmxqb1Z4SVg1NENmcWNoUDU3RnNGUklHMTQ2cVNnYWpOaFpmdGVG?=
+ =?utf-8?B?K0RMajlDT3NDTXRDZFdCc3U2RXdxdTgzU21WMCthamo2VUprU1AwK0RtcW5E?=
+ =?utf-8?B?SXZ5VjlONG00eXZxMGJUTDF0WEpzbmRyQ1Z6b01FZkJFc1ZkT1lHamZkUjV4?=
+ =?utf-8?B?WnBEd1NnMWdZV3B2ODJ6QXhzbkF0WkNzT3J2a2xMOW9QRFg1OEZ2RjFGRkFp?=
+ =?utf-8?B?SE5TMHJjUyt3PT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YjL8P0zkle2foxbk@lpieralisi>
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e147cef1-0e22-480c-f840-08da0847e2e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2022 18:56:46.6441
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yjRqwSkjRmTQ0qEA/fJmBx2O4kuwUmUzPrKNPzeD1pgj47pzbZtKwWpM9Xv9742dOFWz85WWjM9Cr3kDUl+SaMGQpK17rL8OAKFx2wbxyN8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1436
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 17, 2022 at 09:15:43AM +0000, Lorenzo Pieralisi wrote:
-> [removed CC stable]
-> 
-> On Mon, Mar 14, 2022 at 02:44:29PM +0000, Marc Zyngier wrote:
-> > Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
-> > killed PCIe on my XGene-1 box (a Mustang board). The machine itself
-> > is still alive, but half of its storage (over NVMe) is gone, and the
-> > NVMe driver just times out.
-> > 
-> > Note that this machine boots with a device tree provided by the
-> > UEFI firmware (2016 vintage), which could well be non conformant
-> > with the spec, hence the breakage.
-> > 
-> > With the patch reverted, the box boots 5.17-rc8 with flying colors.
-> > 
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Toan Le <toan@os.amperecomputing.com>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Krzysztof Wilczyński <kw@linux.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Stéphane Graber <stgraber@ubuntu.com>
-> > Cc: dann frazier <dann.frazier@canonical.com>
-> > Cc: Thorsten Leemhuis <regressions@leemhuis.info>
-> > Cc: stable@vger.kernel.org>
-> > ---
-> >  drivers/pci/controller/pci-xgene.c | 33 ++++++++++++++++++++----------
-> >  1 file changed, 22 insertions(+), 11 deletions(-)
-> 
-> Dann, Rob,
-> 
-> does this fix the regression debated here:
-> 
-> https://lore.kernel.org/all/Yf2wTLjmcRj+AbDv@xps13.dannf
-> 
-> It is unclear in that thread what the conclusion reached was.
-
-Thanks for checking in Lorenzo! Reverting that patch is required but
-not sufficient to get our m400s working. In addition, we'd also need
-to revert commit c7a75d07827a ("PCI: xgene: Fix IB window setup").
-
-I believe if we revert both then it should return us to a state where
-Marc's Mustang, Stéphane's Merlins and our m400s all work again.
-
-  -dann
-
-> Thanks,
-> Lorenzo
-> 
-> > diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-> > index 0d5acbfc7143..aa41ceaf031f 100644
-> > --- a/drivers/pci/controller/pci-xgene.c
-> > +++ b/drivers/pci/controller/pci-xgene.c
-> > @@ -479,28 +479,27 @@ static int xgene_pcie_select_ib_reg(u8 *ib_reg_mask, u64 size)
-> >  }
-> >  
-> >  static void xgene_pcie_setup_ib_reg(struct xgene_pcie *port,
-> > -				    struct resource_entry *entry,
-> > -				    u8 *ib_reg_mask)
-> > +				    struct of_pci_range *range, u8 *ib_reg_mask)
-> >  {
-> >  	void __iomem *cfg_base = port->cfg_base;
-> >  	struct device *dev = port->dev;
-> >  	void __iomem *bar_addr;
-> >  	u32 pim_reg;
-> > -	u64 cpu_addr = entry->res->start;
-> > -	u64 pci_addr = cpu_addr - entry->offset;
-> > -	u64 size = resource_size(entry->res);
-> > +	u64 cpu_addr = range->cpu_addr;
-> > +	u64 pci_addr = range->pci_addr;
-> > +	u64 size = range->size;
-> >  	u64 mask = ~(size - 1) | EN_REG;
-> >  	u32 flags = PCI_BASE_ADDRESS_MEM_TYPE_64;
-> >  	u32 bar_low;
-> >  	int region;
-> >  
-> > -	region = xgene_pcie_select_ib_reg(ib_reg_mask, size);
-> > +	region = xgene_pcie_select_ib_reg(ib_reg_mask, range->size);
-> >  	if (region < 0) {
-> >  		dev_warn(dev, "invalid pcie dma-range config\n");
-> >  		return;
-> >  	}
-> >  
-> > -	if (entry->res->flags & IORESOURCE_PREFETCH)
-> > +	if (range->flags & IORESOURCE_PREFETCH)
-> >  		flags |= PCI_BASE_ADDRESS_MEM_PREFETCH;
-> >  
-> >  	bar_low = pcie_bar_low_val((u32)cpu_addr, flags);
-> > @@ -531,13 +530,25 @@ static void xgene_pcie_setup_ib_reg(struct xgene_pcie *port,
-> >  
-> >  static int xgene_pcie_parse_map_dma_ranges(struct xgene_pcie *port)
-> >  {
-> > -	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(port);
-> > -	struct resource_entry *entry;
-> > +	struct device_node *np = port->node;
-> > +	struct of_pci_range range;
-> > +	struct of_pci_range_parser parser;
-> > +	struct device *dev = port->dev;
-> >  	u8 ib_reg_mask = 0;
-> >  
-> > -	resource_list_for_each_entry(entry, &bridge->dma_ranges)
-> > -		xgene_pcie_setup_ib_reg(port, entry, &ib_reg_mask);
-> > +	if (of_pci_dma_range_parser_init(&parser, np)) {
-> > +		dev_err(dev, "missing dma-ranges property\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* Get the dma-ranges from DT */
-> > +	for_each_of_pci_range(&parser, &range) {
-> > +		u64 end = range.cpu_addr + range.size - 1;
-> >  
-> > +		dev_dbg(dev, "0x%08x 0x%016llx..0x%016llx -> 0x%016llx\n",
-> > +			range.flags, range.cpu_addr, end, range.pci_addr);
-> > +		xgene_pcie_setup_ib_reg(port, &range, &ib_reg_mask);
-> > +	}
-> >  	return 0;
-> >  }
-> >  
+RnJvbTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4gU2VudDogVGh1cnNkYXks
+IE1hcmNoIDE3LCAyMDIyIDk6MzEgQU0NCj4gDQo+IE9uIDIwMjItMDMtMTcgMTY6MjUsIE1pY2hh
+ZWwgS2VsbGV5IHdyb3RlOg0KPiA+IEV4cG9ydCBhY3BpX2dldF9kbWFfYXR0cigpIHNvIHRoYXQg
+aXQgY2FuIGJlIHVzZWQgYnkgdGhlIEh5cGVyLVYNCj4gPiBWTWJ1cyBkcml2ZXIsIHdoaWNoIG1h
+eSBiZSBidWlsdCBhcyBhIG1vZHVsZS4gVGhlIHJlbGF0ZWQgZnVuY3Rpb24NCj4gPiBhY3BpX2Rt
+YV9jb25maWd1cmVfaWQoKSBpcyBhbHJlYWR5IGV4cG9ydGVkLg0KPiANCj4gTm8uIFVzZSBkZXZp
+Y2VfZ2V0X2RtYV9hdHRyKCkgbGlrZSBldmVyeW9uZSBlbHNlLCBwbGVhc2UuDQo+DQoNCkdvdCBp
+dC4gIFRoYXQgd29ya3MuDQoNCk1pY2hhZWwNCg0K
