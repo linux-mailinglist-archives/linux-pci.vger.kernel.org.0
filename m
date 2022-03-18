@@ -2,78 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC6794DE0BB
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 19:06:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EE1E4DE0C3
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 19:07:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240005AbiCRSHc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Mar 2022 14:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45654 "EHLO
+        id S240023AbiCRSIo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Mar 2022 14:08:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240007AbiCRSHc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 14:07:32 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D98A2F09DD
-        for <linux-pci@vger.kernel.org>; Fri, 18 Mar 2022 11:06:13 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id mr5-20020a17090b238500b001c67366ae93so6516000pjb.4
-        for <linux-pci@vger.kernel.org>; Fri, 18 Mar 2022 11:06:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=at/qdqR1ufuVhvfs+HZINxZ4vyB2x/I4NQXo9PMyViY=;
-        b=i/U/HnoMhWTp2rNT4FSmtLYc/qUKqRDkx9BmsA2b4M1ZHGu8Ds0789v/Cs7jnquFQ5
-         58Xa2LoWucVNdw+fSAmdeqalSDfAhW1xSicd5kzFD7pxJZXeKoWtjwqrL2GCQQEVDWr3
-         gW5mx/DmLMcwSF01odDRbeFpsER3rBKqgr50LCknJzjsqprOBAjDQQdIAqUQTEuHs0Op
-         yVPyLNZ0woDMqH/G9fSQaCu6gyv4Z0TSVIxnLLsew5BrWquCx3APA2Y77ffJ7xi+eCXq
-         edGd3YgFP0o4QZsZeS6q907ThHUyijK/CYNKt9AV6+umv5UNeGeAiD3Vhi3qS//zC11k
-         Vnig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=at/qdqR1ufuVhvfs+HZINxZ4vyB2x/I4NQXo9PMyViY=;
-        b=Na/pi3wy2pZ8LnKI0KdiS75pSJSu7ME7BI0RD+Po0k1XXTKuZ2oe1yxGLM5/7ZQjj+
-         jUnv2m9cx/KAs2PlAZgPDNtNuUtEXC83Ij9EqVsDafV6tNJmHdNBZbL7oVsBnYGdK9wJ
-         bY8IRMrTyj5wCo78oxMV8wkcSjVf2/bub5ifI76Yu/M8+Io/l1aHCL7cHQh5X+kDgW+0
-         2XHZ3sfWixLnBKCqZXT4xyWKrF0GvWMexfuZbSNtuH4Rk3XuEswPES1wNEvpumXpJX3D
-         hQGmWWAi+LGokhH2Qob4zYTmSvUYwu0IHu93Xr23/sD7ZEFYv8tPWAQulL76x4tGKUS2
-         zfEw==
-X-Gm-Message-State: AOAM5319H6getTQZBs3Fih3I1IgaBYfguk83IQmyk7PrNDl0xlkWRVKS
-        L/YOIwNkDGFji0vLRDQEypFv
-X-Google-Smtp-Source: ABdhPJygmbgM89gK6740niy0LTKS9rKowmghWeK+nrA2LTDXHdw7BwmRuVM1kwCQGoY7NNTvMRXw0Q==
-X-Received: by 2002:a17:90b:3b4c:b0:1c5:df79:906f with SMTP id ot12-20020a17090b3b4c00b001c5df79906fmr23390670pjb.222.1647626772619;
-        Fri, 18 Mar 2022 11:06:12 -0700 (PDT)
-Received: from thinkpad ([117.217.178.61])
-        by smtp.gmail.com with ESMTPSA id lp13-20020a17090b4a8d00b001c18b1114c8sm12850245pjb.10.2022.03.18.11.06.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Mar 2022 11:06:12 -0700 (PDT)
-Date:   Fri, 18 Mar 2022 23:36:05 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
-        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        shawnguo@kernel.org
-Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
- dest addresses for ep
-Message-ID: <20220318180605.GB4922@thinkpad>
-References: <20220309211204.26050-1-Frank.Li@nxp.com>
- <20220309211204.26050-6-Frank.Li@nxp.com>
- <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
- <20220311174134.GA3966@thinkpad>
- <20220311190147.pvjp6v7whjgyeuey@mobilestation>
- <20220312053720.GA4356@thinkpad>
- <20220314083340.244dfwo4v3uuhkkm@mobilestation>
+        with ESMTP id S239969AbiCRSIm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 14:08:42 -0400
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C1542F09E0;
+        Fri, 18 Mar 2022 11:07:20 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6200,9189,10290"; a="317907845"
+X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
+   d="scan'208";a="317907845"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 11:06:56 -0700
+X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
+   d="scan'208";a="499341353"
+Received: from smile.fi.intel.com ([10.237.72.59])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 11:06:54 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1nVGzP-002Nl3-Ro;
+        Fri, 18 Mar 2022 20:06:15 +0200
+Date:   Fri, 18 Mar 2022 20:06:15 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        micklorain@protonmail.com,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH v1 1/1] PCI: Enable INTx quirk for ATI PCIe-USB adapter
+Message-ID: <YjTKFym+3+S5sgvV@smile.fi.intel.com>
+References: <CAHp75Veb4BqcGW=sCXEfrJ2ksvnXmjN-XZ5L6ttcQ8SJneg27w@mail.gmail.com>
+ <20220318164740.GA816988@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220314083340.244dfwo4v3uuhkkm@mobilestation>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20220318164740.GA816988@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-0.0 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,99 +54,186 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 14, 2022 at 11:33:40AM +0300, Serge Semin wrote:
-> On Sat, Mar 12, 2022 at 11:07:20AM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Mar 11, 2022 at 10:01:47PM +0300, Serge Semin wrote:
-> > > On Fri, Mar 11, 2022 at 11:11:34PM +0530, Manivannan Sadhasivam wrote:
-> 
-> [nip]
-> 
-> > > 
-> > > > As per my understanding, the eDMA is solely used in the PCIe endpoint. And the
-> > > > access to it happens over PCIe bus or by the local CPU.
-> > > 
-> > > Not fully correct. Root Ports can also have eDMA embedded. In that
-> > > case the eDMA can be only accessible from the local CPU. At the same
-> > > time the DW PCIe End-point case is the IP-core synthesize parameters
-> > > specific. It's always possible to access the eDMA CSRs from local
-> > > CPU, but a particular End-point BAR can be pre-synthesize to map
-> > > either Port Logic, or eDMA or iATU CSRs. Thus a PCIe root port can
-> > > perform a full End-point configuration. Anyway the case if the eDMA
-> > > functionality being accessible over the PCIe wire doesn't really make
-> > > much sense with no info regarding the application logic hidden behind
-> > > the PCIe End-point interface since SAR/DAR LLP is supposed to be
-> > > initialized with an address from the local (application) memory space.
-> > > 
+On Fri, Mar 18, 2022 at 11:47:40AM -0500, Bjorn Helgaas wrote:
+> On Fri, Mar 18, 2022 at 12:42:18PM +0200, Andy Shevchenko wrote:
+> > On Thu, Mar 17, 2022 at 11:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Thu, Mar 17, 2022 at 10:59:28AM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Mar 16, 2022 at 04:15:48PM -0500, Bjorn Helgaas wrote:
+> > > > > On Wed, Mar 16, 2022 at 06:12:19PM +0200, Andy Shevchenko wrote:
+> > > > > > On Wed, Mar 16, 2022 at 06:52:09AM -0500, Bjorn Helgaas wrote:
+> > > > > > > On Wed, Mar 16, 2022 at 12:27:57PM +0200, Andy Shevchenko wrote:
+> > > > > > > > On Tue, Mar 15, 2022 at 03:22:31PM -0500, Bjorn Helgaas wrote:
+> > > > > > > > > On Tue, Mar 15, 2022 at 12:09:08PM +0200, Andy Shevchenko wrote:
+> > > > > > > > > > On Mon, Mar 14, 2022 at 02:42:53PM -0500, Bjorn Helgaas wrote:
+> > > > > > > > > > > On Mon, Mar 14, 2022 at 12:14:48PM +0200, Andy Shevchenko wrote:
+> > > > > > > > > > > > ATI PCIe-USB adapter advertises MSI, but it doesn't work
+> > > > > > > > > > > > if INTx is disabled.  Enable the respective quirk as
+> > > > > > > > > > > > it's done for other ATI devices on this chipset,
+> > > > > > > > > > > >
+> > > > > > > > > > > > Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on
+> > > > > > > > > > > > PCI devices")
+> > > > >
+> > > > > > > > > Anyway, I applied this to pci/msi for v5.18 with the following
+> > > > > > > > > commit log:
+> > > > > > > > >
+> > > > > > > > >     PCI: Disable broken MSI on ATI SB600 USB adapters
+> > > > > > > > >
+> > > > > > > > >     Some ATI SB600 USB adapters advertise MSI, but MSI doesn't
+> > > > > > > > >     work if INTx is disabled.  Disable MSI on these adapters.
+> > > > > > > >
+> > > > > > > > But IIUC MSI is _not_ disabled. That's why I have issued this
+> > > > > > > > version of the patch with different commit message. Did I
+> > > > > > > > misunderstand something?
+> > > > > > >
+> > > > > > > Oh, right, of course.  Sorry, I was asleep at the wheel.
+> > > > > >
+> > > > > > Are you going to fix that?
+> > > > >
+> > > > > Yes, of course, I'll do something with the commit message after we
+> > > > > figure out how to handle PCI_COMMAND_INTX_DISABLE.
+> > > > >
+> > > > > > > I guess it's just that for these devices, we don't disable INTx
+> > > > > > > when enabling MSI.  I can't remember why we disable INTx when
+> > > > > > > enabling MSI, but it raises the question of whether it's better to
+> > > > > > > leave INTx enabled or to just disable use of MSI completely.
+> > > > > >
+> > > > > > It's required by specification to disable INTx if I read 6.1.4.3
+> > > > > > Enabling Operation correctly.
+> > > > >
+> > > > > Thanks for the reference; I was looking for something like that.  But
+> > > > > I don't think this section requires us to set
+> > > > > PCI_COMMAND_INTX_DISABLE.  For the benefit of folks without the spec,
+> > > > > PCIe r6.0, sec 6.1.4.3 says:
+> > > > >
+> > > > >   To maintain backward compatibility, the MSI Enable bit in the
+> > > > >   Message Control Register for MSI and the MSI-X Enable bit in the
+> > > > >   Message Control Register for MSI-X are each Clear by default (MSI
+> > > > >   and MSI-X are both disabled). System configuration software Sets one
+> > > > >   of these bits to enable either MSI or MSI-X, but never both
+> > > > >   simultaneously. Behavior is undefined if both MSI and MSI-X are
+> > > > >   enabled simultaneously. Software disabling either mechanism during
+> > > > >   active operation may result in the Function dropping pending
+> > > > >   interrupt conditions or failing to recognize new interrupt
+> > > > >   conditions. While enabled for MSI or MSI-X operation, a Function is
+> > > > >   prohibited from using INTx interrupts (if implemented) to request
+> > > > >   service (MSI, MSI-X, and INTx are mutually exclusive).
+> > > > >
+> > > > > The only *software* constraints I see are (1) software must never
+> > > > > enable both MSI and MSI-X simultaneously, and (2) if software disables
+> > > > > MSI or MSI-X during active operation, the Function may fail to
+> > > > > generate an interrupt when it should.
+> > > > >
+> > > > > I read the last sentence as a constraint on the *hardware*: if either
+> > > > > MSI or MSI-X is enabled, the Function is not allowed to use INTx,
+> > > > > regardless of the state of PCI_COMMAND_INTX_DISABLE.
+> > > > >
+> > > > > I searched the spec for "Interrupt Disable", looking for situations
+> > > > > where software might be *required* to set it, but I didn't see
+> > > > > anything.
+> > > > >
+> > > > > I suspect "Interrupt Disable" was intended to help the OS stop all
+> > > > > activity from a device during hot-plug or reconfiguration, as hinted
+> > > > > at in sec 6.4, "Device Synchronization":
+> > > > >
+> > > > >   The ability of the driver and/or system software to block new
+> > > > >   Requests from the device is supported by the Bus Master Enable,
+> > > > >   SERR# Enable, and Interrupt Disable bits in the Command register
+> > > > >   (Section 7.5.1.1.3) of each device Function, and other such control
+> > > > >   bits.
+> > > > >
+> > > > > So I'm trying to figure out why when enabling MSI we need to set
+> > > > > PCI_COMMAND_INTX_DISABLE for most devices, but it's safe to skip that
+> > > > > for these quirked devices.
+> > > >
+> > > > I guess it's wrong wording in the last paragraph. It's not safe, but it's
+> > > > _required_ since HW doesn't follow PCI specification that clearly says:
+> > > > "MSI, MSI-X, and INTx are mutually exclusive".
+> > >
+> > > I agree there's a defect in these SB600 devices.  My guess is that
+> > > PCI_COMMAND_INTX_DISABLE actually disables both INTx and MSI, when
+> > > it's only supposed to disable INTx.
+> > >
+> > > I'm pretty sure the spec doesn't actually require software to set
+> > > Interrupt Disable when enabling MSI, since MSI was added in PCI r2.2,
+> > > which included this text in sec 6.8.2:
+> > >
+> > >   System configuration software sets [the MSI Enable] bit to enable
+> > >   MSI. ...  Once enabled, a function is prohibited from using its
+> > >   INTx# pin (if implemented) to request service (MSI and INTx# are
+> > >   mutually exclusive).
+> > >
+> > > and Interrupt Disable was added later, in PCI r2.3, with no mention of
+> > > a connection with MSI.  All the specs from PCI r2.2 to PCIe r6.0
+> > > include the text above about not using INTx# if MSI or MSI-X is
+> > > enabled, but that's not the same as requiring software to set
+> > > Interrupt Disable.  Linux has set Interrupt Disable when enabling MSI
+> > > ever since MSI support was added [1], so I would hesitate to change
+> > > that even though I don't think it's required.
 > > 
-> > Thanks for the explanation, it clarifies my doubt. I got misleaded by the
-> > earlier commits...
+> > Thanks for diving into the history of the specification. What I learnt
+> > about any of the specifications is that it usually has a lot of
+> > implications that are only understandable (known) to the specification
+> > author(s). This gives a room of misinterpretation. In any case I
+> > usually apply my common sense denominator, so I try to go with the
+> > straight logic. In this case it seems to me that keeping both enabled
+> > is illogical and Linux does the right thing (means the author of the
+> > Linux kernel implementation is on the same page with me).
 > > 
-> > > So AFAICS the main usecase of the controller is 1) - when eDMA is a
-> > > part of the Root Port/End-point and only local CPU is supposed to have
-> > > it accessed and configured.
-> > > 
-> > > I can resend this patch with my fix to the problem. What do you think?
-> > > 
+> > > What I don't like about PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG is that it
+> > > changes the generic code path in a sort of random way, i.e., this
+> > > device becomes yet another special case in how we handle Interrupt
+> > > Disable.
+> > >
+> > > What would you think about just setting pdev->no_msi instead, so we
+> > > don't try to use MSI at all on these devices?  I think that's what we
+> > > did before 306c54d0edb6.
 > > 
+> > Yes, we did. But why should we go this way if it already established a
+> > special case disregarding my patch(es)? If you want to do that you
+> > need to explain why other devices on the same chipset should enable
+> > MSI and what's wrong with enabling MSI on the USB devices. My
+> > understanding is that the MSI is a good thing to have due to
+> > performance benefits and taking into account other devices that have
+> > already been using it on the other devices of the same chipset tells
+> > me that's okay. Moreover, the reporter of the bug confirmed that MSI
+> > works for them after applying this quirk fix.
 > 
-> > Yes, please do.
-> 
-> Ok. I'll be AFK today, but will send my patches tomorrow.  @Frank,
-> Could you please hold on with respinning the series for a few days?
-> I'll send out some of my patches then with a note which one of them
-> could be picked up by you and merged into this series.
-> 
+> I agree that MSI is generally to be preferred over INTx.  In this
+> case, it's an old USB device and I don't think there's any real
+> performance benefit.
 
-Any update on your patches?
+I tend to disagree. There are not only USB devices involved but other
+devices that may share the same INTx line(s). This is the case, for
+example, on EG20T. Dunno if ATI is one of them, but if so, it will
+support the idea of MSI.
 
-Btw, my colleage worked on merging the two dma devices used by the eDMA core
-for read & write channels into one. Initially I thought that was not needed as
-he did that for devicetree integration, but looking deeply I think that patch is
-necessary irrespective of DT.
+> The problem with enabling MSI on these USB devices is that the generic
+> MSI code doesn't work correctly.
 
-One standout problem is, we can't register debugfs directory under "dmaengine"
-properly because, both read and write dma devices share the same parent
-chip->dev.
+Can you elaborate this, please? Where is that code that doesn't work correctly?
 
-Thanks,
-Mani
+> Since we've been using them without
+> MSI in the past, and they have some defect that makes MSI not work
+> correctly, it seems like the simplest solution is to avoid using MSI,
+> something like the patch below.
 
-> -Sergey
-> 
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > > -Sergey
-> > > 
-> > > > 
-> > > > The commit from Alan Mikhak is what I took as a reference since the patch was
-> > > > already merged:
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/dw-edma?id=bd96f1b2f43a39310cc576bb4faf2ea24317a4c9
-> > > > 
-> > > > Thanks,
-> > > > Mani
-> > > > 
-> > > > > -Sergey
-> > > > > 
-> > > > > > +		 *
-> > > > > > +		 ****************************************************************/
-> > > > > > +
-> > > > > 
-> > > > > > +		if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
-> > > > > > +		    (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
-> > > > > > +			read = true;
-> > > > > 
-> > > > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
-> > > > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
-> > > > > redundant.
-> > > > > 
-> > > > > > +
-> > > > > > +		/* Program the source and destination addresses for DMA read/write */
-> > > > > > +		if (read) {
-> > > > > >  			burst->sar = src_addr;
-> > > > > >  			if (xfer->type == EDMA_XFER_CYCLIC) {
-> > > > > >  				burst->dar = xfer->xfer.cyclic.paddr;
-> > > > > > -- 
-> > > > > > 2.24.0.rc1
-> > > > > > 
+I tend to disagree.
+
+> Would I prefer the same for all the other existing users of
+> PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG?  Yes.  Enough to change the status
+> quo, which would be a performance regression, and potentially break
+> something?  Probably not.
+
+Why? What is the point of deliberate degrading of performance?
+
+...
+
+Let do it simple: Apply my patch since it fixes the regression and
+move on with whatever solution you may propose latter on. It's really
+not good for the end-user who was so kind to report and test all this.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
