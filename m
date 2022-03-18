@@ -2,90 +2,223 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96DFB4DDC2F
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 15:51:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA12B4DDC42
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 15:54:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230412AbiCROwn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Mar 2022 10:52:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50812 "EHLO
+        id S236821AbiCRO4O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Mar 2022 10:56:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230257AbiCROwm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 10:52:42 -0400
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ef0:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D4F261B;
-        Fri, 18 Mar 2022 07:51:22 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 385E128042B86;
-        Fri, 18 Mar 2022 15:51:21 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 2CB204ADE5; Fri, 18 Mar 2022 15:51:21 +0100 (CET)
-Date:   Fri, 18 Mar 2022 15:51:21 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Limonciello, Mario" <Mario.Limonciello@amd.com>,
-        "andreas.noever@gmail.com" <andreas.noever@gmail.com>,
-        "michael.jamet@intel.com" <michael.jamet@intel.com>,
-        "YehezkelShB@gmail.com" <YehezkelShB@gmail.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] thunderbolt: Make iommu_dma_protection more accurate
-Message-ID: <20220318145121.GA11127@wunner.de>
-References: <2d01fa50c2650c730b0244929097737918e302e7.1647533152.git.robin.murphy@arm.com>
- <BL1PR12MB515783C0F998169D49D92A55E2129@BL1PR12MB5157.namprd12.prod.outlook.com>
- <BL1PR12MB51573F55B3C2B3922BAAA7F1E2129@BL1PR12MB5157.namprd12.prod.outlook.com>
- <YjRvMk1kcbMwJvx+@lahna>
- <65207fdf-c4ab-5165-dbda-8ab55b51adb7@arm.com>
- <YjSCWaq7Ej/2iJPp@lahna>
- <78fc0426-c22a-ec62-f92b-0019bea5947e@arm.com>
+        with ESMTP id S234666AbiCRO4O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 10:56:14 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60DB6A1463
+        for <linux-pci@vger.kernel.org>; Fri, 18 Mar 2022 07:54:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647615295; x=1679151295;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=27x370P+7SOsyFEjptX1adqJo6ovQ4nfiW0rBminpt8=;
+  b=Z9HCaWc8iL6LHX4OgmCLgeqi99YRnUD2ZElpelPTcMGiXZVXyEPyfzse
+   6p8AUCQ3nsvktropw8/4PxHVGGCdAMVb+OFo4WEvsdxW+5J8FBMhH2tsQ
+   Cgcb5Q+6B7Ayid9N1M9aaStFwLoUlca6tKHlIsYYa+C0HILJ16u7uMSZH
+   rbnq+Ds/CHPsc4shsn1dc7AP40OQ0mn/IE5+kReSEJv8SElPUITfadJwv
+   xCQeYcAfeGUfX14Y3gReTH0Mwj6pQnUW9osU8zDSIAGQGvBAe230Xj/le
+   gsQxn05OiiRLDJsjnDUtK78sV7kEhxUG3skb4jvMTUOYa+Zi00FzR1hLu
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="343583620"
+X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
+   d="scan'208";a="343583620"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 07:54:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
+   d="scan'208";a="513896262"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 18 Mar 2022 07:54:41 -0700
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nVE01-000Eq7-8o; Fri, 18 Mar 2022 14:54:41 +0000
+Date:   Fri, 18 Mar 2022 22:54:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:next] BUILD SUCCESS
+ d79e394c7ba5149b242467d29c9a539633b4c0ee
+Message-ID: <62349d1e.J5oH6nTYNIHZfX/C%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78fc0426-c22a-ec62-f92b-0019bea5947e@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 18, 2022 at 02:08:16PM +0000, Robin Murphy wrote:
-> OK, so do we have any realistic options for identifying the correct PCI
-> devices, if USB4 PCIe adapters might be anywhere relative to their
-> associated NHI? Short of maintaining a list of known IDs, the only thought I
-> have left is that if we walk the whole PCI segment looking specifically for
-> hotplug-capable Gen1 ports, any system modern enough to have Thunderbolt is
-> *probably* not going to have any real PCIe Gen1 hotplug slots, so maybe
-> false negatives might be tolerable, but it still feels like a bit of a
-> sketchy heuristic.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: d79e394c7ba5149b242467d29c9a539633b4c0ee  Merge branch 'remotes/lorenzo/pci/uniphier'
 
-The Thunderbolt Device ROM contains the PCI slot number, so you can
-correlate the Thunderbolt switch ports with PCIe downstream ports
-and know exactly where PCIe tunnels are terminated.
+elapsed time: 728m
 
-Code is here:
-* thunderbolt: Obtain PCI slot number from DROM
-  https://github.com/l1k/linux/commit/756f7148bc10
-* thunderbolt: Move upstream_port to struct tb
-  https://github.com/l1k/linux/commit/58f16e7dd431
-* thunderbolt: Correlate PCI devices with Thunderbolt ports
-  https://github.com/l1k/linux/commit/f53ea40a7487
+configs tested: 140
+configs skipped: 4
 
-I implemented that in 2018, so it won't apply cleanly to current
-mainline.  But I kept forward-porting it on my private branch and
-could push that to GitHub if anyone is interested.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I don't know if this will work out-of-the-box for SoC-integrated
-Thunderbolt controllers.  It was developed with the discrete
-controllers in mind, which was the only thing available back then.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+mips                           gcw0_defconfig
+m68k                          atari_defconfig
+sh                        edosk7705_defconfig
+arm                             pxa_defconfig
+sh                               alldefconfig
+nios2                         10m50_defconfig
+sh                   rts7751r2dplus_defconfig
+powerpc                     tqm8548_defconfig
+xtensa                              defconfig
+arm                           corgi_defconfig
+sh                           se7724_defconfig
+s390                             allyesconfig
+powerpc                      bamboo_defconfig
+sh                              ul2_defconfig
+um                             i386_defconfig
+arc                              allyesconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                      maltasmvp_defconfig
+openrisc                  or1klitex_defconfig
+alpha                            alldefconfig
+powerpc                     tqm8555_defconfig
+powerpc                      pcm030_defconfig
+sh                ecovec24-romimage_defconfig
+sparc                            alldefconfig
+powerpc                       holly_defconfig
+mips                       capcella_defconfig
+arm                            qcom_defconfig
+arc                      axs103_smp_defconfig
+powerpc                mpc7448_hpc2_defconfig
+m68k                       m5208evb_defconfig
+sparc64                             defconfig
+powerpc                        warp_defconfig
+powerpc64                           defconfig
+mips                           jazz_defconfig
+x86_64                              defconfig
+arm                        clps711x_defconfig
+riscv                               defconfig
+sh                          rsk7201_defconfig
+powerpc                      pasemi_defconfig
+powerpc                      mgcoge_defconfig
+powerpc                     ep8248e_defconfig
+sh                            titan_defconfig
+powerpc                     sequoia_defconfig
+mips                         tb0226_defconfig
+sparc                               defconfig
+sh                   sh7770_generic_defconfig
+m68k                            q40_defconfig
+mips                     decstation_defconfig
+mips                           xway_defconfig
+sh                            migor_defconfig
+arm                  randconfig-c002-20220318
+arm                  randconfig-c002-20220317
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allmodconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+x86_64                                  kexec
 
-Thanks,
+clang tested configs:
+arm                  randconfig-c002-20220318
+s390                 randconfig-c005-20220318
+x86_64                        randconfig-c007
+powerpc              randconfig-c003-20220318
+riscv                randconfig-c006-20220318
+mips                 randconfig-c004-20220318
+i386                          randconfig-c001
+arm                  randconfig-c002-20220317
+riscv                randconfig-c006-20220317
+powerpc              randconfig-c003-20220317
+mips                 randconfig-c004-20220317
+s390                 randconfig-c005-20220317
+powerpc                      ppc44x_defconfig
+powerpc                     mpc512x_defconfig
+riscv                            alldefconfig
+mips                      maltaaprp_defconfig
+mips                     loongson1c_defconfig
+powerpc                 mpc836x_mds_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220318
+hexagon              randconfig-r045-20220317
+hexagon              randconfig-r041-20220318
+riscv                randconfig-r042-20220318
+hexagon              randconfig-r041-20220317
+s390                 randconfig-r044-20220318
 
-Lukas
+---
+0-DAY CI Kernel Test Service
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
