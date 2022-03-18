@@ -2,288 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D23B14DDBBE
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 15:34:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46A4B4DDC1D
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 15:48:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237337AbiCROf6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Mar 2022 10:35:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51866 "EHLO
+        id S237541AbiCROtw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Mar 2022 10:49:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237328AbiCROf5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 10:35:57 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31D62D4D4A
-        for <linux-pci@vger.kernel.org>; Fri, 18 Mar 2022 07:34:37 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id l4-20020a17090a49c400b001c6840df4a3so4672863pjm.0
-        for <linux-pci@vger.kernel.org>; Fri, 18 Mar 2022 07:34:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=An29DlOhwyywWM/0aNvAUk8ND1vXD1la3RvLhYP8lEQ=;
-        b=UVb5VWQS5BSfYyR2Prb8yeaH36dZnLfCYyT+KtIS2wpMhv3oFxfjmRgyzXq2ZaDakG
-         PBFk757tKQnvNgN0H1TQEpkxcqP2rmFegKXLB+g0ToEwhv2mFlGIn+EZmE9cD2njB8s7
-         s9RF3K+yE+rabFL/pc/IAUggeGEa86oN3m16lh/u/hX4lNlap+h5vIEHsgKlNf+p6GK0
-         221PF4Pt/1rOccpYVkCjvjkzbAAop/6zV1KZOGxzeJya/IJhOnWU3NiWpI/RvGC2Vz6q
-         GPyF8wz1aaifCohB49+1rPgj04/9ymFt8LhVIkQdAmude92xN3ljzboGAMUxxdlAnAcF
-         YU8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=An29DlOhwyywWM/0aNvAUk8ND1vXD1la3RvLhYP8lEQ=;
-        b=g/YD5tg6GQ6tYyvyYkNedl8N7Aqv9eg7bXy5uejffX8oYl/i9znysLgXeAG1rvD14r
-         ai8I4EoPT5x5pBLEuXfk7iqse3MFXNdTNOnvw9uiGhbCrSq9BamrixYXSD9S2sZwXzNc
-         roopicD/EdeFHzoZcrjr1y3u+UjGDts4zqIPi3cmhIwCfingGrrjoIVQYWFXzYtW3ylk
-         YMwDsXtHF21rVxqDkxohZJMkLYK3ePtyrGl03b9cfL12H5D5kTQnhXZAKWSAUe4YpChe
-         KWx4gtSQ71Ne5QSmDa+B8H3QnIJoxy482t/OXU57NpI+XfKNlzuW+Zzx4GeiLcbCf43L
-         yIZw==
-X-Gm-Message-State: AOAM532fn1NXZWY3okWNkkTp0vkVTwCjymjxPN5tADAMi6kqFIQ7TJwc
-        m7PWnAIzV3hKtPLJw+nXsmlw
-X-Google-Smtp-Source: ABdhPJzfxVLDqnthtDOksvI+hE2Tf0NlsqP5P+fJ3tV3tm7eSkq/8uDtWyFCI7zL5buvoDRqjA0Ypg==
-X-Received: by 2002:a17:90b:4b8d:b0:1bf:1301:2514 with SMTP id lr13-20020a17090b4b8d00b001bf13012514mr11485632pjb.19.1647614077029;
-        Fri, 18 Mar 2022 07:34:37 -0700 (PDT)
-Received: from thinkpad ([117.217.178.61])
-        by smtp.gmail.com with ESMTPSA id a24-20020a637f18000000b003821e17819csm2956095pgd.61.2022.03.18.07.34.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Mar 2022 07:34:36 -0700 (PDT)
-Date:   Fri, 18 Mar 2022 20:04:30 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Prasad Malisetty <quic_pmaliset@quicinc.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rajatja@google.com, refactormyself@gmail.com,
-        quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-        swboyd@chromium.org
-Subject: Re: [PATCH v4] PCI: qcom: Add system PM support
-Message-ID: <20220318143430.GA4922@thinkpad>
-References: <1646679306-4768-1-git-send-email-quic_pmaliset@quicinc.com>
+        with ESMTP id S237735AbiCROtQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 10:49:16 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A61832EA917;
+        Fri, 18 Mar 2022 07:47:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647614870; x=1679150870;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NoF7DUUBnepgXUQfSAA2zocvCsU667YxNsq4hF4qw40=;
+  b=llzB9zc+Ly0E691IWjQ6Wnfx79r2qWKqgsWA2EVtsNzsANmNqq72cEmy
+   /RZDwO8RDrnPHC4wJ7X/jFTEBC6Ar1YQ1UH6UguwsUgMmkIzLdMWggF/t
+   VBFaa4bhXefQyEtH6AlcC2Ixnfj3zjs+NqDE9jLhvljmx0YJntq3gPnSR
+   fVftSZM2ApQKpiIYKZTc0I9rFZfBajpD51nrLGXit4jJ+jLpGc8zOiY5c
+   jJewnXM2QXz3hWBfFVlAEcyxUm5kTC1F+P7TFobq2AddGMfDFUmc74Srq
+   83DqgE6h8cSa6GMj1RC/Fubl/LmiMq/r4xGeNq05hwFVqIlQK6eBKf3hb
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="255974221"
+X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
+   d="scan'208";a="255974221"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 07:47:32 -0700
+X-IronPort-AV: E=Sophos;i="5.90,192,1643702400"; 
+   d="scan'208";a="647486665"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2022 07:47:28 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 18 Mar 2022 16:47:25 +0200
+Date:   Fri, 18 Mar 2022 16:47:25 +0200
+From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        "andreas.noever@gmail.com" <andreas.noever@gmail.com>,
+        "michael.jamet@intel.com" <michael.jamet@intel.com>,
+        "YehezkelShB@gmail.com" <YehezkelShB@gmail.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] thunderbolt: Make iommu_dma_protection more accurate
+Message-ID: <YjSbfScU0Ssuca3y@lahna>
+References: <2d01fa50c2650c730b0244929097737918e302e7.1647533152.git.robin.murphy@arm.com>
+ <BL1PR12MB515783C0F998169D49D92A55E2129@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <BL1PR12MB51573F55B3C2B3922BAAA7F1E2129@BL1PR12MB5157.namprd12.prod.outlook.com>
+ <YjRvMk1kcbMwJvx+@lahna>
+ <65207fdf-c4ab-5165-dbda-8ab55b51adb7@arm.com>
+ <YjSCWaq7Ej/2iJPp@lahna>
+ <78fc0426-c22a-ec62-f92b-0019bea5947e@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1646679306-4768-1-git-send-email-quic_pmaliset@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <78fc0426-c22a-ec62-f92b-0019bea5947e@arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-5.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 08, 2022 at 12:25:06AM +0530, Prasad Malisetty wrote:
-> Add suspend_noirq and resume_noirq callbacks to handle
-> system suspend and resume in dwc PCIe controller driver.
+On Fri, Mar 18, 2022 at 02:08:16PM +0000, Robin Murphy wrote:
+> On 2022-03-18 13:25, mika.westerberg@linux.intel.com wrote:
+> > Hi Robin,
+> > 
+> > On Fri, Mar 18, 2022 at 12:01:42PM +0000, Robin Murphy wrote:
+> > > > This adds quite a lot code and complexity, and honestly I would like to
+> > > > keep it as simple as possible (and this is not enough because we need to
+> > > > make sure the DMAR bit is there so that none of the possible connected
+> > > > devices were able to overwrite our memory already).
+> > > 
+> > > Shall we forget the standalone sibling check and just make the
+> > > pdev->untrusted check directly in tb_acpi_add_link() then?
+> > 
+> > I think we should leave tb_acpi_add_link() untouched if possible ;-)
+> > This is because it is used to add the device links from firmware
+> > description that we need for proper power management of the tunneled
+> > devices. It has little to do with the identification of the external
+> > facing DMA-capable PCIe ports.
+> > 
+> > Furthermore these links only exists in USB4 software connection manager
+> > systems so we do not have those in the existing Thunderbolt 3/4 systems
+> > that use firmware based connection manager (pretty much all out there).
+> > 
+> > > On reflection I guess the DMAR bit makes iommu_dma_protection
+> > > functionally dependent on ACPI already, so we don't actually lose
+> > > anything (and anyone can come back and revisit firmware-agnostic
+> > > methods later if a need appears).
+> > 
+> > I agree.
 > 
-> When system suspends, send PME turnoff message to enter
-> link into L2 state. Along with powerdown the PHY, disable
-> pipe clock, switch gcc_pcie_1_pipe_clk_src to XO if mux is
-> supported and disable the pcie clocks, regulators.
-> 
-> When system resumes, PCIe link will be re-established and
-> setup rc settings.
-> 
-> Signed-off-by: Prasad Malisetty <quic_pmaliset@quicinc.com>
-> 
-> ---
-> Changes since v3:
-> 	- Replaced noirq hooks with normal suspend/resume hooks.
-> 	- Removed local variable and placed in function itself.
-> 
-> Changes since v2:
-> 	- Removed unnecessary variable initializations and comments.
-> 	- Removed platform specific variables declarations.
-> 	- Added MACRO names for the BIT shiftings.
-> 
-> Changes since v1:
-> 	- Removed unnecessary logs and modified log level suggested by Manivannan.
-> 	- Removed platform specific callbacks as PM support is generic.
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 97 ++++++++++++++++++++++++++++++++++
->  1 file changed, 97 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 6ab9089..4d29c80 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -48,6 +48,7 @@
->  #define PCIE20_PARF_PHY_REFCLK			0x4C
->  #define PHY_REFCLK_SSP_EN			BIT(16)
->  #define PHY_REFCLK_USE_PAD			BIT(12)
-> +#define PHY_POWER_DOWN				0x1
+> OK, so do we have any realistic options for identifying the correct PCI
+> devices, if USB4 PCIe adapters might be anywhere relative to their
+> associated NHI? Short of maintaining a list of known IDs, the only thought I
+> have left is that if we walk the whole PCI segment looking specifically for
+> hotplug-capable Gen1 ports, any system modern enough to have Thunderbolt is
+> *probably* not going to have any real PCIe Gen1 hotplug slots, so maybe
+> false negatives might be tolerable, but it still feels like a bit of a
+> sketchy heuristic.
 
-BIT(0)
+Indeed.
 
->  
->  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
->  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
-> @@ -62,6 +63,8 @@
->  
->  #define PCIE20_ELBI_SYS_CTRL			0x04
->  #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
-> +#define PCIE_PME_TURNOFF_MSG			BIT(4)
-> +#define PCIE_PM_LINKST_IN_L2			BIT(5)
->  
->  #define PCIE20_AXI_MSTR_RESP_COMP_CTRL0		0x818
->  #define CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K	0x4
-> @@ -73,6 +76,8 @@
->  
->  #define PCIE20_PARF_Q2A_FLUSH			0x1AC
->  
-> +#define PCIE20_PARF_PM_STTS			0x24
-> +
->  #define PCIE20_MISC_CONTROL_1_REG		0x8BC
->  #define DBI_RO_WR_EN				1
->  
-> @@ -1645,6 +1650,97 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static int qcom_pcie_send_pme_turnoff_msg(struct qcom_pcie *pcie)
-> +{
-> +	int ret;
-> +	u32 val, poll_val;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +
-> +	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +	val |= PCIE_PME_TURNOFF_MSG;
-> +	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-> +
-> +	ret = readl_poll_timeout((pcie->parf + PCIE20_PARF_PM_STTS), poll_val,
-> +			(poll_val & PCIE_PM_LINKST_IN_L2),
-> +			10000, 100000);
-> +	if (!ret)
-> +		dev_dbg(dev, "Device entered L23_Ready state\n");
-> +	else
-> +		dev_err(dev, "Device failed to enter L23_Ready. PM_STTS 0x%x\n",
-> +			readl_relaxed(pcie->parf + PCIE20_PARF_PM_STTS));
-> +
-> +	return ret;
-> +}
-> +
-> +static void qcom_pcie_host_disable(struct qcom_pcie *pcie)
-> +{
-> +	qcom_ep_reset_assert(pcie);
-> +
+> I suppose we could just look to see if any device anywhere is marked as
+> external-facing, and hope that if firmware's done that much then it's done
+> everything right. That's still at least slightly better than what we have
+> today, but AFAICS still carries significant risk of a false positive for an
+> add-in card that firmware didn't recognise.
 
-In the modem usecase, the endpoint uses the LINK_DOWN event for freeing up the
-resources. If PERST# gets asserted before turing off the PHY, the LINK_DOWN
-event will be missed in the endpoint. And moreover, modem cannot free up the
-resources in PERST# handler as it is a hard IRQ handler and the cleanup action
-might sleep. The deferring also doesn't work because, once PERST# event get's
-handled, the host will turn off the refclk and the access to DBI region will
-not be allowed.
+The port in this case, that is marked as external facing, is the PCIe
+root port that the add-in-card is connected to and that is known for the
+firmware in advance. 
 
-For this reason, I'd prefer to move this PERST# assertion to the end of the
-funtion.
+> I'm satisfied that we've come round to the right conclusion on the DMAR
+> opt-in - I'm in the middle or writing up patches for that now - but even
+> Microsoft's spec gives that as a separate requirement from the flagging of
+> external ports, with both being necessary for Kernel DMA Protection.
 
-> +	/* Put PHY into POWER DOWN state */
-> +	phy_power_off(pcie->phy);
-> +
-> +	writel(PHY_POWER_DOWN, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
-> +	if (pcie->cfg->ops->post_deinit)
-> +		pcie->cfg->ops->post_deinit(pcie);
-> +
-> +	/* Disable PCIe clocks and regulators */
-> +	pcie->cfg->ops->deinit(pcie);
+Is the problem that we are here trying to solve the fact that user can
+disable the IOMMU protection from the command line? Or the fact that the
+firmware might not declare all the ports properly so we may end up in a
+situation that some of the ports do not get the full IOMMU protection.
 
-It is also required to add a 100ms delay here as PERST# reaches quickly before
-LINK_DOWN.
+These are Microsoft requirements for the OEMs in order to pass their
+firmware test suite so here I would not expect to have issues. Otherwise
+they simply cannot ship the thing with Windows installed.
 
-
-	/*
-	 * Allow the LINK_DOWN event to reach the endpoint before PERST# assert.
-	 * This is required for resource cleanup in the endpoint for modem usecase.
-	 */
-	usleep_range(50000, 100000);
-	qcom_ep_reset_assert(pcie);
-
-> +}
-> +
-> +static int __maybe_unused qcom_pcie_pm_suspend(struct device *dev)
-> +{
-> +	int ret;
-> +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
-> +	struct dw_pcie *pci = pcie->pci;
-> +
-> +	if (!dw_pcie_link_up(pci)) {
-> +		dev_dbg(dev, "Power has been turned off already\n");
-
-I think this debug message doesn't add any value, so just skip it.
-
-> +		return 0;
-> +	}
-> +
-> +	ret = qcom_pcie_send_pme_turnoff_msg(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Power down the PHY, disable clock and regulators */
-
-You are also asserting PERST#.
-
-> +	qcom_pcie_host_disable(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +/* Resume the PCIe link */
-> +static int __maybe_unused qcom_pcie_pm_resume(struct device *dev)
-> +{
-> +	int ret;
-> +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct pcie_port *pp = &pci->pp;
-> +
-> +	ret = qcom_pcie_host_init(pp);
-> +	if (ret) {
-> +		dev_err(dev, "cannot initialize host\n");
-> +		return ret;
-> +	}
-> +
-> +	dw_pcie_setup_rc(pp);
-> +
-> +	qcom_pcie_start_link(pci);
-> +
-> +	ret = dw_pcie_wait_for_link(pci);
-> +	if (ret) {
-> +		dev_err(dev, "Link never came up, Resume failed\n");
-
-dw_pcie_wait_for_link() itself prints the error in failure case. So just return
-directly.
-
-	return dw_pcie_wait_for_link(pci);
-
-Thanks,
-Mani
-
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops qcom_pcie_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(qcom_pcie_pm_suspend, qcom_pcie_pm_resume)
-> +};
-> +
->  static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8084", .data = &apq8084_cfg },
->  	{ .compatible = "qcom,pcie-ipq8064", .data = &ipq8064_cfg },
-> @@ -1679,6 +1775,7 @@ static struct platform_driver qcom_pcie_driver = {
->  	.probe = qcom_pcie_probe,
->  	.driver = {
->  		.name = "qcom-pcie",
-> +		.pm = &qcom_pcie_pm_ops,
->  		.suppress_bind_attrs = true,
->  		.of_match_table = qcom_pcie_match,
->  	},
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+IMHO we should just trust the firmare provided information here
+(otherwise we are screwed anyway as there is no way to tell if the
+devices connected prior the OS can still do DMA), and use the external
+facing port indicator to idenfity the ports that need DMA protection.
