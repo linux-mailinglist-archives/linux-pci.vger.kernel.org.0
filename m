@@ -2,167 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FECF4DE047
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 18:49:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC6794DE0BB
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 19:06:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239776AbiCRRub (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Mar 2022 13:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34912 "EHLO
+        id S240005AbiCRSHc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Mar 2022 14:07:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239781AbiCRRu3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 13:50:29 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1303E17AD91;
-        Fri, 18 Mar 2022 10:49:07 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id pv16so18539339ejb.0;
-        Fri, 18 Mar 2022 10:49:06 -0700 (PDT)
+        with ESMTP id S240007AbiCRSHc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 14:07:32 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D98A2F09DD
+        for <linux-pci@vger.kernel.org>; Fri, 18 Mar 2022 11:06:13 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id mr5-20020a17090b238500b001c67366ae93so6516000pjb.4
+        for <linux-pci@vger.kernel.org>; Fri, 18 Mar 2022 11:06:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4hOptq36EIaU+7q/z3r7gSJIR1VIBf62WxlBwqnGeHM=;
-        b=Q9Zp/bmNqbsb5ocpQ4GYdoBy7Ut80KfaLQ7f0GnovInyg/48dKi+BhbPuNvCz/O00p
-         z+T6CdHE9GxTyAawJ0YYONT7DC1pH0ELKIweetFnYE1NzRJ+fWBJps7mNE2x6dy7lqIr
-         kx/bLIFg7HR6SSQgsxVWKcmoAWX40gYxu7qelAp0/C66YEDozKDF4RLsJAjJnxIIwmFq
-         RVcUOUy5c83eK+351qQVy8d5K3cMPDjfBkyFSF3MYY5hrOoHTSQrbrBY6KRka0JYvmFi
-         DUVLqaUtUF/emCQydwgkYET7QODfIfbJCtJbwRxYHIzLmcgOwoBHsW0IgX1Eb1UHesVr
-         aZfw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=at/qdqR1ufuVhvfs+HZINxZ4vyB2x/I4NQXo9PMyViY=;
+        b=i/U/HnoMhWTp2rNT4FSmtLYc/qUKqRDkx9BmsA2b4M1ZHGu8Ds0789v/Cs7jnquFQ5
+         58Xa2LoWucVNdw+fSAmdeqalSDfAhW1xSicd5kzFD7pxJZXeKoWtjwqrL2GCQQEVDWr3
+         gW5mx/DmLMcwSF01odDRbeFpsER3rBKqgr50LCknJzjsqprOBAjDQQdIAqUQTEuHs0Op
+         yVPyLNZ0woDMqH/G9fSQaCu6gyv4Z0TSVIxnLLsew5BrWquCx3APA2Y77ffJ7xi+eCXq
+         edGd3YgFP0o4QZsZeS6q907ThHUyijK/CYNKt9AV6+umv5UNeGeAiD3Vhi3qS//zC11k
+         Vnig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4hOptq36EIaU+7q/z3r7gSJIR1VIBf62WxlBwqnGeHM=;
-        b=JNHXDrSMvljkThj7PknZF+J5Dklp9L2kBYRPjGJesFrWB6Lt6iyuKMmdYZlaaDi1Jt
-         nrwyiKzwIO8Ig+cBgD56yIgIEVuLH11wh5shwhhqRT0WWlFMQW79vKYEvPIrofiE2TdF
-         wFR6ij6PyMcyWbKY8kUYa8ikVwIo5ZtXXc2nEdJWuEyl5xVde7yVpZ0qZrQ7Q3NCvvl7
-         6BB/qn2RSOPAusGM9H9tOb4rv4dUw50bne99rggUrCBAKqC1UcMIk3FtyegIxXybX6I8
-         Z5NLQwJJ5+MpOlHt9AXfT8bPRm7WOIF1unIY+nFd3m6Q+p6uYhnVdZEGR4yA98SQv+/q
-         L9pw==
-X-Gm-Message-State: AOAM533eopgZPJwT2c8SQ1O/dPCgIgPglCcwBIYSROP4LbW33jNxeYq7
-        GmB/Ta9pUrQFpuDiOfAVEL0=
-X-Google-Smtp-Source: ABdhPJx1eh824v53InGX+pX0Ffn435EWSbrG8usub1KO5A2ZNV/rdTimyy5ESNEFnVXGCHPrWuec/A==
-X-Received: by 2002:a17:906:3a15:b0:6cf:ea4e:a1cc with SMTP id z21-20020a1709063a1500b006cfea4ea1ccmr10241365eje.753.1647625745510;
-        Fri, 18 Mar 2022 10:49:05 -0700 (PDT)
-Received: from anparri.mshome.net (host-82-59-4-232.retail.telecomitalia.it. [82.59.4.232])
-        by smtp.gmail.com with ESMTPSA id y15-20020a170906518f00b006df87a2bb16sm3218730ejk.89.2022.03.18.10.49.04
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=at/qdqR1ufuVhvfs+HZINxZ4vyB2x/I4NQXo9PMyViY=;
+        b=Na/pi3wy2pZ8LnKI0KdiS75pSJSu7ME7BI0RD+Po0k1XXTKuZ2oe1yxGLM5/7ZQjj+
+         jUnv2m9cx/KAs2PlAZgPDNtNuUtEXC83Ij9EqVsDafV6tNJmHdNBZbL7oVsBnYGdK9wJ
+         bY8IRMrTyj5wCo78oxMV8wkcSjVf2/bub5ifI76Yu/M8+Io/l1aHCL7cHQh5X+kDgW+0
+         2XHZ3sfWixLnBKCqZXT4xyWKrF0GvWMexfuZbSNtuH4Rk3XuEswPES1wNEvpumXpJX3D
+         hQGmWWAi+LGokhH2Qob4zYTmSvUYwu0IHu93Xr23/sD7ZEFYv8tPWAQulL76x4tGKUS2
+         zfEw==
+X-Gm-Message-State: AOAM5319H6getTQZBs3Fih3I1IgaBYfguk83IQmyk7PrNDl0xlkWRVKS
+        L/YOIwNkDGFji0vLRDQEypFv
+X-Google-Smtp-Source: ABdhPJygmbgM89gK6740niy0LTKS9rKowmghWeK+nrA2LTDXHdw7BwmRuVM1kwCQGoY7NNTvMRXw0Q==
+X-Received: by 2002:a17:90b:3b4c:b0:1c5:df79:906f with SMTP id ot12-20020a17090b3b4c00b001c5df79906fmr23390670pjb.222.1647626772619;
+        Fri, 18 Mar 2022 11:06:12 -0700 (PDT)
+Received: from thinkpad ([117.217.178.61])
+        by smtp.gmail.com with ESMTPSA id lp13-20020a17090b4a8d00b001c18b1114c8sm12850245pjb.10.2022.03.18.11.06.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Mar 2022 10:49:05 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Hu <weh@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 2/2] PCI: hv: Fix synchronization between channel callback and hv_compose_msi_msg()
-Date:   Fri, 18 Mar 2022 18:48:48 +0100
-Message-Id: <20220318174848.290621-3-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220318174848.290621-1-parri.andrea@gmail.com>
-References: <20220318174848.290621-1-parri.andrea@gmail.com>
+        Fri, 18 Mar 2022 11:06:12 -0700 (PDT)
+Date:   Fri, 18 Mar 2022 23:36:05 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org
+Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
+ dest addresses for ep
+Message-ID: <20220318180605.GB4922@thinkpad>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-6-Frank.Li@nxp.com>
+ <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
+ <20220311174134.GA3966@thinkpad>
+ <20220311190147.pvjp6v7whjgyeuey@mobilestation>
+ <20220312053720.GA4356@thinkpad>
+ <20220314083340.244dfwo4v3uuhkkm@mobilestation>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220314083340.244dfwo4v3uuhkkm@mobilestation>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dexuan wrote:
+On Mon, Mar 14, 2022 at 11:33:40AM +0300, Serge Semin wrote:
+> On Sat, Mar 12, 2022 at 11:07:20AM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, Mar 11, 2022 at 10:01:47PM +0300, Serge Semin wrote:
+> > > On Fri, Mar 11, 2022 at 11:11:34PM +0530, Manivannan Sadhasivam wrote:
+> 
+> [nip]
+> 
+> > > 
+> > > > As per my understanding, the eDMA is solely used in the PCIe endpoint. And the
+> > > > access to it happens over PCIe bus or by the local CPU.
+> > > 
+> > > Not fully correct. Root Ports can also have eDMA embedded. In that
+> > > case the eDMA can be only accessible from the local CPU. At the same
+> > > time the DW PCIe End-point case is the IP-core synthesize parameters
+> > > specific. It's always possible to access the eDMA CSRs from local
+> > > CPU, but a particular End-point BAR can be pre-synthesize to map
+> > > either Port Logic, or eDMA or iATU CSRs. Thus a PCIe root port can
+> > > perform a full End-point configuration. Anyway the case if the eDMA
+> > > functionality being accessible over the PCIe wire doesn't really make
+> > > much sense with no info regarding the application logic hidden behind
+> > > the PCIe End-point interface since SAR/DAR LLP is supposed to be
+> > > initialized with an address from the local (application) memory space.
+> > > 
+> > 
+> > Thanks for the explanation, it clarifies my doubt. I got misleaded by the
+> > earlier commits...
+> > 
+> > > So AFAICS the main usecase of the controller is 1) - when eDMA is a
+> > > part of the Root Port/End-point and only local CPU is supposed to have
+> > > it accessed and configured.
+> > > 
+> > > I can resend this patch with my fix to the problem. What do you think?
+> > > 
+> > 
+> 
+> > Yes, please do.
+> 
+> Ok. I'll be AFK today, but will send my patches tomorrow.  @Frank,
+> Could you please hold on with respinning the series for a few days?
+> I'll send out some of my patches then with a note which one of them
+> could be picked up by you and merged into this series.
+> 
 
-  "[...]  when we disable AccelNet, the host PCI VSP driver sends a
-   PCI_EJECT message first, and the channel callback may set
-   hpdev->state to hv_pcichild_ejecting on a different CPU.  This can
-   cause hv_compose_msi_msg() to exit from the loop and 'return', and
-   the on-stack variable 'ctxt' is invalid.  Now, if the response
-   message from the host arrives, the channel callback will try to
-   access the invalid 'ctxt' variable, and this may cause a crash."
+Any update on your patches?
 
-Schematically:
+Btw, my colleage worked on merging the two dma devices used by the eDMA core
+for read & write channels into one. Initially I thought that was not needed as
+he did that for devicetree integration, but looking deeply I think that patch is
+necessary irrespective of DT.
 
-  Hyper-V sends PCI_EJECT msg
-    hv_pci_onchannelcallback()
-      state = hv_pcichild_ejecting
-                                       hv_compose_msi_msg()
-                                         alloc and init comp_pkt
-                                         state == hv_pcichild_ejecting
-  Hyper-V sends VM_PKT_COMP msg
-    hv_pci_onchannelcallback()
-      retrieve address of comp_pkt
-                                         'free' comp_pkt and return
-      comp_pkt->completion_func()
+One standout problem is, we can't register debugfs directory under "dmaengine"
+properly because, both read and write dma devices share the same parent
+chip->dev.
 
-Dexuan also showed how the crash can be triggered after introducing
-suitable delays in the driver code, thus validating the 'assumption'
-that the host can still normally respond to the guest's compose_msi
-request after the host has started to eject the PCI device.
+Thanks,
+Mani
 
-Fix the synchronization by leveraging the IDR lock.  Retrieve the
-address of the completion packet *and call the completion function
-within a same critical section: if an address (request ID) is found
-in the channel callback, the critical section precedes the removal
-of the address in hv_compose_msi_msg().
-
-Fixes: de0aa7b2f97d3 ("PCI: hv: Fix 2 hang issues in hv_compose_msi_msg()")
-Reported-by: Wei Hu <weh@microsoft.com>
-Reported-by: Dexuan Cui <decui@microsoft.com>
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index fbc62aab08fdc..dddd7e4d0352d 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -495,7 +495,8 @@ struct hv_pcibus_device {
- 	spinlock_t device_list_lock;	/* Protect lists below */
- 	void __iomem *cfg_addr;
- 
--	spinlock_t idr_lock; /* Serialize accesses to the IDR */
-+	/* Serialize accesses to the IDR; see also hv_pci_onchannelcallback(). */
-+	spinlock_t idr_lock;
- 	struct idr idr; /* Map guest memory addresses */
- 
- 	struct list_head children;
-@@ -2797,16 +2798,24 @@ static void hv_pci_onchannelcallback(void *context)
- 			}
- 			spin_lock_irqsave(&hbus->idr_lock, flags);
- 			comp_packet = (struct pci_packet *)idr_find(&hbus->idr, req_id);
--			spin_unlock_irqrestore(&hbus->idr_lock, flags);
- 			if (!comp_packet) {
-+				spin_unlock_irqrestore(&hbus->idr_lock, flags);
- 				dev_warn_ratelimited(&hbus->hdev->device,
- 						     "Request ID not found\n");
- 				break;
- 			}
- 			response = (struct pci_response *)buffer;
-+			/*
-+			 * Call ->completion_func() within the critical section to make
-+			 * sure that the packet pointer is still valid during the call:
-+			 * here 'valid' means that there's a task still waiting for the
-+			 * completion, and that the packet data is still on the waiting
-+			 * task's stack/has not already been freed by the waiting task.
-+			 */
- 			comp_packet->completion_func(comp_packet->compl_ctxt,
- 						     response,
- 						     bytes_recvd);
-+			spin_unlock_irqrestore(&hbus->idr_lock, flags);
- 			break;
- 
- 		case VM_PKT_DATA_INBAND:
--- 
-2.25.1
-
+> -Sergey
+> 
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > -Sergey
+> > > 
+> > > > 
+> > > > The commit from Alan Mikhak is what I took as a reference since the patch was
+> > > > already merged:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/dw-edma?id=bd96f1b2f43a39310cc576bb4faf2ea24317a4c9
+> > > > 
+> > > > Thanks,
+> > > > Mani
+> > > > 
+> > > > > -Sergey
+> > > > > 
+> > > > > > +		 *
+> > > > > > +		 ****************************************************************/
+> > > > > > +
+> > > > > 
+> > > > > > +		if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
+> > > > > > +		    (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
+> > > > > > +			read = true;
+> > > > > 
+> > > > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
+> > > > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
+> > > > > redundant.
+> > > > > 
+> > > > > > +
+> > > > > > +		/* Program the source and destination addresses for DMA read/write */
+> > > > > > +		if (read) {
+> > > > > >  			burst->sar = src_addr;
+> > > > > >  			if (xfer->type == EDMA_XFER_CYCLIC) {
+> > > > > >  				burst->dar = xfer->xfer.cyclic.paddr;
+> > > > > > -- 
+> > > > > > 2.24.0.rc1
+> > > > > > 
