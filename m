@@ -2,58 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3BF94DD4E3
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 07:51:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D1284DD73F
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 10:42:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232785AbiCRGui (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Mar 2022 02:50:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55424 "EHLO
+        id S234418AbiCRJnS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Mar 2022 05:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230046AbiCRGuh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 02:50:37 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B66D917586B;
-        Thu, 17 Mar 2022 23:49:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647586158; x=1679122158;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vYf7H+zfZsWDggOzPC1KjFaiFOBNQv1b5Be/sCd1Hl8=;
-  b=emNnLO4Ox0tOJOCCeBN7arfEL/1RgKXC3fxI/ARsW9tfVgqdPz7oeoHY
-   uCIRy3gxgv1KrrMsk/onIl+Ig0e+1MNpg77GI3NOJtbJ/+9SV5PCB9I+/
-   t2uXPMLZHxuzxWVVixkBqxFhJvwMcNwMnC4M3jvEZ3arlT/rLUnyxOSN3
-   AKvoxBUXIYXTJ2DoIxORrCKv20zJbIjaik7BarAVI3uEzehizDHU8TLAB
-   vhFrwjyJaa21Y2TdnAtytP00KcR5l2GyGqGibMeYTt7pfpDRCxDG5dLc2
-   pZr2EFzlaV7zLc975rWzOdmdfakUNCjnNW04fmPUkyWHYIK+4FdtKFhwD
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="239233969"
-X-IronPort-AV: E=Sophos;i="5.90,191,1643702400"; 
-   d="scan'208";a="239233969"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 23:49:18 -0700
-X-IronPort-AV: E=Sophos;i="5.90,191,1643702400"; 
-   d="scan'208";a="499128327"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 23:49:14 -0700
-Received: by lahna (sSMTP sendmail emulation); Fri, 18 Mar 2022 08:44:51 +0200
-Date:   Fri, 18 Mar 2022 08:44:51 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     andreas.noever@gmail.com, michael.jamet@intel.com,
-        YehezkelShB@gmail.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-pci@vger.kernel.org, mario.limonciello@amd.com
-Subject: Re: [PATCH] thunderbolt: Make iommu_dma_protection more accurate
-Message-ID: <YjQqY/Nq0pgpcAaI@lahna>
-References: <2d01fa50c2650c730b0244929097737918e302e7.1647533152.git.robin.murphy@arm.com>
+        with ESMTP id S232891AbiCRJnR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 05:43:17 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE7D02C3DEB;
+        Fri, 18 Mar 2022 02:41:58 -0700 (PDT)
+Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KKfBX5tJVz67xNR;
+        Fri, 18 Mar 2022 17:40:20 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 18 Mar 2022 10:41:56 +0100
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 18 Mar 2022 09:41:55 +0000
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.2308.021;
+ Fri, 18 Mar 2022 09:41:55 +0000
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+CC:     "ben.widawsky@intel.com" <ben.widawsky@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
+Thread-Topic: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
+Thread-Index: AQHYOOxc1v/bQA0COUCrd4PXNU5KpqzE3y+A
+Date:   Fri, 18 Mar 2022 09:41:55 +0000
+Message-ID: <e9de480061ad425e9603cf71db5c610d@huawei.com>
+References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.70.222]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d01fa50c2650c730b0244929097737918e302e7.1647533152.git.robin.murphy@arm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,166 +63,149 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Robin,
-
-Thanks for working on this!
-
-On Thu, Mar 17, 2022 at 04:17:07PM +0000, Robin Murphy wrote:
-> Between me trying to get rid of iommu_present() and Mario wanting to
-> support the AMD equivalent of DMAR_PLATFORM_OPT_IN, scrutiny has shown
-> that the iommu_dma_protection attribute is being far too optimistic.
-> Even if an IOMMU might be present for some PCI segment in the system,
-> that doesn't necessarily mean it provides translation for the device(s)
-> we care about. Furthermore, all that DMAR_PLATFORM_OPT_IN really does
-> is tell us that memory was protected before the kernel was loaded, and
-> prevent the user from disabling the intel-iommu driver entirely. What
-> actually matters is whether we trust individual devices, based on the
-> "external facing" property that we expect firmware to describe for
-> Thunderbolt ports.
-
-We still want to know that DMAR_PLATFORM_OPT_IN is set by the firmware
-because that tells us that none of the devices connected before OS got
-control had the ability to perform DMA outside of the RMRR regions. If
-they did then all this is pointless because they could have modified the
-system memory as they wished.
-
-> Avoid false positives by looking as close as possible to the same PCI
-> topology that the IOMMU layer will consider once a Thunderbolt endpoint
-> appears. Crucially, we can't assume that IOMMU translation being enabled
-> for any reason is sufficient on its own; full (expensive) DMA protection
-> will still only be imposed on untrusted devices.
-> 
-> CC: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
-> 
-> This supersedes my previous attempt just trying to replace
-> iommu_present() at [1], further to the original discussion at [2].
-> 
-> [1] https://lore.kernel.org/linux-iommu/BL1PR12MB515799C0BE396377DBBEF055E2119@BL1PR12MB5157.namprd12.prod.outlook.com/T/
-> [2] https://lore.kernel.org/linux-iommu/202203160844.lKviWR1Q-lkp@intel.com/T/
-> 
->  drivers/thunderbolt/domain.c | 12 +++---------
->  drivers/thunderbolt/nhi.c    | 35 +++++++++++++++++++++++++++++++++++
->  include/linux/thunderbolt.h  |  2 ++
->  3 files changed, 40 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/thunderbolt/domain.c b/drivers/thunderbolt/domain.c
-> index 7018d959f775..d5c825e84ac8 100644
-> --- a/drivers/thunderbolt/domain.c
-> +++ b/drivers/thunderbolt/domain.c
-> @@ -7,9 +7,7 @@
->   */
->  
->  #include <linux/device.h>
-> -#include <linux/dmar.h>
->  #include <linux/idr.h>
-> -#include <linux/iommu.h>
->  #include <linux/module.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
-> @@ -257,13 +255,9 @@ static ssize_t iommu_dma_protection_show(struct device *dev,
->  					 struct device_attribute *attr,
->  					 char *buf)
->  {
-> -	/*
-> -	 * Kernel DMA protection is a feature where Thunderbolt security is
-> -	 * handled natively using IOMMU. It is enabled when IOMMU is
-> -	 * enabled and ACPI DMAR table has DMAR_PLATFORM_OPT_IN set.
-> -	 */
-> -	return sprintf(buf, "%d\n",
-> -		       iommu_present(&pci_bus_type) && dmar_platform_optin());
-> +	struct tb *tb = container_of(dev, struct tb, dev);
-> +
-> +	return sprintf(buf, "%d\n", tb->nhi->iommu_dma_protection);
->  }
->  static DEVICE_ATTR_RO(iommu_dma_protection);
->  
-> diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
-> index c73da0532be4..e12c2e266741 100644
-> --- a/drivers/thunderbolt/nhi.c
-> +++ b/drivers/thunderbolt/nhi.c
-> @@ -14,6 +14,7 @@
->  #include <linux/errno.h>
->  #include <linux/pci.h>
->  #include <linux/interrupt.h>
-> +#include <linux/iommu.h>
->  #include <linux/module.h>
->  #include <linux/delay.h>
->  #include <linux/property.h>
-> @@ -1102,6 +1103,39 @@ static void nhi_check_quirks(struct tb_nhi *nhi)
->  		nhi->quirks |= QUIRK_AUTO_CLEAR_INT;
->  }
->  
-> +static void nhi_check_iommu(struct tb_nhi *nhi)
-> +{
-> +	struct pci_dev *pdev;
-> +	bool port_ok = false;
-
-
-So for here somewhere we should call dmar_platform_optin() first. I
-think this is something we want to move inside the IOMMU API (alongside
-with the below checks).
-
-> +
-> +	/*
-> +	 * Check for sibling devices that look like they should be our
-> +	 * tunnelled ports. We can reasonably assume that if an IOMMU is
-> +	 * managing the bridge it will manage any future devices beyond it
-> +	 * too. If firmware has described a port as external-facing as
-> +	 * expected then we can trust the IOMMU layer to enforce isolation;
-> +	 * otherwise even if translation is enabled for existing devices it
-> +	 * may potentially be overridden for a future tunnelled endpoint.
-> +	 */
-> +	for_each_pci_bridge(pdev, nhi->pdev->bus) {
-> +		if (!pci_is_pcie(pdev) ||
-> +		    !(pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT ||
-> +		      pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM))
-> +			continue;
-> +
-> +		if (!device_iommu_mapped(&pdev->dev))
-> +			return;
-> +
-> +		if (!pdev->untrusted) {
-> +			dev_info(&nhi->pdev->dev,
-> +				 "Assuming unreliable Kernel DMA protection\n");
-> +			return;
-> +		}
-> +		port_ok = true;
-> +	}
-> +	nhi->iommu_dma_protection = port_ok;
-> +}
-> +
->  static int nhi_init_msi(struct tb_nhi *nhi)
->  {
->  	struct pci_dev *pdev = nhi->pdev;
-> @@ -1219,6 +1253,7 @@ static int nhi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  		return -ENOMEM;
->  
->  	nhi_check_quirks(nhi);
-> +	nhi_check_iommu(nhi);
->  
->  	res = nhi_init_msi(nhi);
->  	if (res) {
-> diff --git a/include/linux/thunderbolt.h b/include/linux/thunderbolt.h
-> index 124e13cb1469..7a8ad984e651 100644
-> --- a/include/linux/thunderbolt.h
-> +++ b/include/linux/thunderbolt.h
-> @@ -465,6 +465,7 @@ static inline struct tb_xdomain *tb_service_parent(struct tb_service *svc)
->   * @msix_ida: Used to allocate MSI-X vectors for rings
->   * @going_away: The host controller device is about to disappear so when
->   *		this flag is set, avoid touching the hardware anymore.
-> + * @iommu_dma_protection: An IOMMU will isolate external-facing ports.
->   * @interrupt_work: Work scheduled to handle ring interrupt when no
->   *		    MSI-X is used.
->   * @hop_count: Number of rings (end point hops) supported by NHI.
-> @@ -479,6 +480,7 @@ struct tb_nhi {
->  	struct tb_ring **rx_rings;
->  	struct ida msix_ida;
->  	bool going_away;
-> +	bool iommu_dma_protection;
->  	struct work_struct interrupt_work;
->  	u32 hop_count;
->  	unsigned long quirks;
-> -- 
-> 2.28.0.dirty
+SGkgRGFuLA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBEYW4gV2lsbGlh
+bXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT4NCj5TZW50OiAxNiBNYXJjaCAyMDIyIDA0OjE0
+DQo+VG86IGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmcNCj5DYzogYmVuLndpZGF3c2t5QGludGVs
+LmNvbTsgdmlzaGFsLmwudmVybWFAaW50ZWwuY29tOw0KPmFsaXNvbi5zY2hvZmllbGRAaW50ZWwu
+Y29tOyBKb25hdGhhbiBDYW1lcm9uDQo+PGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47IGly
+YS53ZWlueUBpbnRlbC5jb207IGxpbnV4LQ0KPnBjaUB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0
+OiBbUEFUQ0ggOC84XSBjeGwvcGNpOiBBZGQgKGhvcGVmdWwpIGVycm9yIGhhbmRsaW5nIHN1cHBv
+cnQNCj4NCj5BZGQgbm9taW5hbCBlcnJvciBoYW5kbGluZyB0aGF0IHRlYXJzIGRvd24gQ1hMLm1l
+bSBpbiByZXNwb25zZSB0byBlcnJvcg0KPm5vdGlmaWNhdGlvbnMgdGhhdCBpbXBseSBhIGRldmlj
+ZSByZXNldC4gR2l2ZW4gc29tZSBDWEwubWVtIG1heSBiZQ0KPm9wZXJhdGluZyBhcyBTeXN0ZW0g
+UkFNLCB0aGVyZSBpcyBhIGhpZ2ggbGlrZWxpaG9vZCB0aGF0IHRoZXNlIGVycm9yIGV2ZW50cw0K
+PmFyZSBmYXRhbC4gSG93ZXZlciwgaWYgdGhlIHN5c3RlbSBzdXJ2aXZlcyB0aGUgbm90aWZpY2F0
+aW9uIHRoZSBleHBlY3RhdGlvbiBpcw0KPnRoYXQgdGhlIGRyaXZlciBiZWhhdmlvciBpcyBlcXVp
+dmFsZW50IHRvIGEgaG90LXVucGx1ZyBhbmQgcmUtcGx1ZyBvZiBhbg0KPmVuZHBvaW50Lg0KPg0K
+Pk5vdGUgdGhhdCB0aGlzIGRvZXMgbm90IGNoYW5nZSB0aGUgbWFzayB2YWx1ZXMgZnJvbSB0aGUg
+ZGVmYXVsdC4gVGhhdCBhd2FpdHMNCj5DWEwgX09TQyBzdXBwb3J0IHRvIGRldGVybWluZSB3aGV0
+aGVyIHBsYXRmb3JtIGZpcm13YXJlIGlzIGluIGNvbnRyb2wgb2YgdGhlDQo+bWFzayByZWdpc3Rl
+cnMuDQo+DQo+U2lnbmVkLW9mZi1ieTogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRl
+bC5jb20+DQo+LS0tDQo+IGRyaXZlcnMvY3hsL2NvcmUvbWVtZGV2LmMgfCAgICAxDQo+IGRyaXZl
+cnMvY3hsL2N4bG1lbS5oICAgICAgfCAgICAyICsNCj4gZHJpdmVycy9jeGwvcGNpLmMgICAgICAg
+ICB8ICAxMDkNCj4rKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysN
+Cj4gMyBmaWxlcyBjaGFuZ2VkLCAxMTIgaW5zZXJ0aW9ucygrKQ0KPg0KPmRpZmYgLS1naXQgYS9k
+cml2ZXJzL2N4bC9jb3JlL21lbWRldi5jIGIvZHJpdmVycy9jeGwvY29yZS9tZW1kZXYuYyBpbmRl
+eA0KPjFmNzZiMjhmOTgyNi4uMjIzZDUxMjc5MGUxIDEwMDY0NA0KPi0tLSBhL2RyaXZlcnMvY3hs
+L2NvcmUvbWVtZGV2LmMNCj4rKysgYi9kcml2ZXJzL2N4bC9jb3JlL21lbWRldi5jDQo+QEAgLTM0
+MSw2ICszNDEsNyBAQCBzdHJ1Y3QgY3hsX21lbWRldiAqZGV2bV9jeGxfYWRkX21lbWRldihzdHJ1
+Y3QNCj5jeGxfZGV2X3N0YXRlICpjeGxkcykNCj4gCSAqIG5lZWRlZCBhcyB0aGlzIGlzIG9yZGVy
+ZWQgd2l0aCBjZGV2X2FkZCgpIHB1Ymxpc2hpbmcgdGhlIGRldmljZS4NCj4gCSAqLw0KPiAJY3hs
+bWQtPmN4bGRzID0gY3hsZHM7DQo+KwljeGxkcy0+Y3hsbWQgPSBjeGxtZDsNCj4NCj4gCWNkZXYg
+PSAmY3hsbWQtPmNkZXY7DQo+IAlyYyA9IGNkZXZfZGV2aWNlX2FkZChjZGV2LCBkZXYpOw0KPmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2N4bC9jeGxtZW0uaCBiL2RyaXZlcnMvY3hsL2N4bG1lbS5oIGlu
+ZGV4DQo+NWQzM2NlMjRmZTA5Li5mNThlMTY5NTE0MTQgMTAwNjQ0DQo+LS0tIGEvZHJpdmVycy9j
+eGwvY3hsbWVtLmgNCj4rKysgYi9kcml2ZXJzL2N4bC9jeGxtZW0uaA0KPkBAIC0xMTcsNiArMTE3
+LDcgQEAgc3RydWN0IGN4bF9lbmRwb2ludF9kdnNlY19pbmZvIHsNCj4gICogQ3VycmVudGx5IG9u
+bHkgbWVtb3J5IGRldmljZXMgYXJlIHJlcHJlc2VudGVkLg0KPiAgKg0KPiAgKiBAZGV2OiBUaGUg
+ZGV2aWNlIGFzc29jaWF0ZWQgd2l0aCB0aGlzIENYTCBzdGF0ZQ0KPisgKiBAY3hsbWQ6IFRoZSBk
+ZXZpY2UgcmVwcmVzZW50aW5nIHRoZSBDWEwubWVtIGNhcGFiaWxpdGllcyBvZiBAZGV2DQo+ICAq
+IEByZWdzOiBQYXJzZWQgcmVnaXN0ZXIgYmxvY2tzDQo+ICAqIEBjeGxfZHZzZWM6IE9mZnNldCB0
+byB0aGUgUENJZSBkZXZpY2UgRFZTRUMNCj4gICogQHBheWxvYWRfc2l6ZTogU2l6ZSBvZiBzcGFj
+ZSBmb3IgcGF5bG9hZCBAQCAtMTQ4LDYgKzE0OSw3IEBAIHN0cnVjdA0KPmN4bF9lbmRwb2ludF9k
+dnNlY19pbmZvIHsNCj4gICovDQo+IHN0cnVjdCBjeGxfZGV2X3N0YXRlIHsNCj4gCXN0cnVjdCBk
+ZXZpY2UgKmRldjsNCj4rCXN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZDsNCj4NCj4gCXN0cnVjdCBj
+eGxfcmVncyByZWdzOw0KPiAJaW50IGN4bF9kdnNlYzsNCj5kaWZmIC0tZ2l0IGEvZHJpdmVycy9j
+eGwvcGNpLmMgYi9kcml2ZXJzL2N4bC9wY2kuYyBpbmRleA0KPmJkZTg5Mjk0NTBmMC4uODIzY2Jm
+YTA5M2ZhIDEwMDY0NA0KPi0tLSBhL2RyaXZlcnMvY3hsL3BjaS5jDQo+KysrIGIvZHJpdmVycy9j
+eGwvcGNpLmMNCj5AQCAtOCw2ICs4LDcgQEANCj4gI2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+DQo+
+ICNpbmNsdWRlIDxsaW51eC9saXN0Lmg+DQo+ICNpbmNsdWRlIDxsaW51eC9wY2kuaD4NCj4rI2lu
+Y2x1ZGUgPGxpbnV4L2Flci5oPg0KPiAjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4gI2luY2x1ZGUg
+ImN4bG1lbS5oIg0KPiAjaW5jbHVkZSAiY3hscGNpLmgiDQo+QEAgLTUzMyw2ICs1MzQsMTEgQEAg
+c3RhdGljIHZvaWQgY3hsX2R2c2VjX3JhbmdlcyhzdHJ1Y3QgY3hsX2Rldl9zdGF0ZQ0KPipjeGxk
+cykNCj4gCWluZm8tPnJhbmdlcyA9IF9fY3hsX2R2c2VjX3JhbmdlcyhjeGxkcywgaW5mbyk7ICB9
+DQo+DQo+K3N0YXRpYyB2b2lkIGRpc2FibGVfYWVyKHZvaWQgKnBkZXYpDQo+K3sNCj4rCXBjaV9k
+aXNhYmxlX3BjaWVfZXJyb3JfcmVwb3J0aW5nKHBkZXYpOw0KPit9DQo+Kw0KPiBzdGF0aWMgaW50
+IGN4bF9wY2lfcHJvYmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGNvbnN0IHN0cnVjdCBwY2lfZGV2
+aWNlX2lkICppZCkNCj57DQo+IAlzdHJ1Y3QgY3hsX3JlZ2lzdGVyX21hcCBtYXA7DQo+QEAgLTU1
+NCw2ICs1NjAsNyBAQCBzdGF0aWMgaW50IGN4bF9wY2lfcHJvYmUoc3RydWN0IHBjaV9kZXYgKnBk
+ZXYsIGNvbnN0DQo+c3RydWN0IHBjaV9kZXZpY2VfaWQgKmlkKQ0KPiAJY3hsZHMgPSBjeGxfZGV2
+X3N0YXRlX2NyZWF0ZSgmcGRldi0+ZGV2KTsNCj4gCWlmIChJU19FUlIoY3hsZHMpKQ0KPiAJCXJl
+dHVybiBQVFJfRVJSKGN4bGRzKTsNCj4rCXBjaV9zZXRfZHJ2ZGF0YShwZGV2LCBjeGxkcyk7DQo+
+DQo+IAljeGxkcy0+c2VyaWFsID0gcGNpX2dldF9kc24ocGRldik7DQo+IAljeGxkcy0+Y3hsX2R2
+c2VjID0gcGNpX2ZpbmRfZHZzZWNfY2FwYWJpbGl0eSggQEAgLTYxMCw2ICs2MTcsMTQgQEANCj5z
+dGF0aWMgaW50IGN4bF9wY2lfcHJvYmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGNvbnN0IHN0cnVj
+dCBwY2lfZGV2aWNlX2lkICppZCkNCj4gCWlmIChJU19FUlIoY3hsbWQpKQ0KPiAJCXJldHVybiBQ
+VFJfRVJSKGN4bG1kKTsNCj4NCj4rCWlmIChjeGxkcy0+cmVncy5yYXMpIHsNCj4rCQlwY2lfZW5h
+YmxlX3BjaWVfZXJyb3JfcmVwb3J0aW5nKHBkZXYpOw0KPisJCXJjID0gZGV2bV9hZGRfYWN0aW9u
+X29yX3Jlc2V0KCZwZGV2LT5kZXYsIGRpc2FibGVfYWVyLA0KPnBkZXYpOw0KPisJCWlmIChyYykN
+Cj4rCQkJcmV0dXJuIHJjOw0KPisJfQ0KPisJcGNpX3NhdmVfc3RhdGUocGRldik7DQo+Kw0KPiAJ
+aWYgKHJhbmdlX2xlbigmY3hsZHMtPnBtZW1fcmFuZ2UpICYmDQo+SVNfRU5BQkxFRChDT05GSUdf
+Q1hMX1BNRU0pKQ0KPiAJCXJjID0gZGV2bV9jeGxfYWRkX252ZGltbSgmcGRldi0+ZGV2LCBjeGxt
+ZCk7DQo+DQo+QEAgLTYyMywxMCArNjM4LDEwNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9k
+ZXZpY2VfaWQgY3hsX21lbV9wY2lfdGJsW10NCj49IHsgIH07ICBNT0RVTEVfREVWSUNFX1RBQkxF
+KHBjaSwgY3hsX21lbV9wY2lfdGJsKTsNCj4NCj4rLyoNCj4rICogTG9nIHRoZSBzdGF0ZSBvZiB0
+aGUgUkFTIHN0YXR1cyByZWdpc3RlcnMgYW5kIHByZXBhcmUgdGhlbSB0byBsb2cNCj4rdGhlDQo+
+KyAqIG5leHQgZXJyb3Igc3RhdHVzLg0KPisgKi8NCj4rc3RhdGljIHZvaWQgY3hsX3JlcG9ydF9h
+bmRfY2xlYXIoc3RydWN0IGN4bF9kZXZfc3RhdGUgKmN4bGRzKSB7DQo+KwlzdHJ1Y3QgY3hsX21l
+bWRldiAqY3hsbWQgPSBjeGxkcy0+Y3hsbWQ7DQo+KwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmY3hs
+bWQtPmRldjsNCj4rCXZvaWQgX19pb21lbSAqYWRkcjsNCj4rCXUzMiBzdGF0dXM7DQo+Kw0KPisJ
+aWYgKCFjeGxkcy0+cmVncy5yYXMpDQo+KwkJcmV0dXJuOw0KSW4gdGhlIGN4bF9lcnJvcl9kZXRl
+Y3RlZCAoKSBtYXkgbmVlZCB0byByZXR1cm4gUENJX0VSU19SRVNVTFRfTk9ORQ0KZm9yIHRoZSBm
+b2xsb3dpbmcgY2FzZXMsIGlmIGV4aXN0LA0KMS4gaWYgKCFjeGxkcy0+cmVncy5yYXMpLA0KMi4g
+aWYgYW55IGVycm9ycyB3b3VsZCBiZSByZXBvcnRlZCBkdXJpbmcgdGhlIGRldiBpbml0aWFsaXph
+dGlvbi4gDQoNCj4rDQo+KwlhZGRyID0gY3hsZHMtPnJlZ3MucmFzICsgQ1hMX1JBU19VTkNPUlJF
+Q1RBQkxFX1NUQVRVU19PRkZTRVQ7DQo+KwlzdGF0dXMgPSByZWFkbChhZGRyKTsNCj4rCWlmIChz
+dGF0dXMgJiBDWExfUkFTX1VOQ09SUkVDVEFCTEVfU1RBVFVTX01BU0spIHsNCj4rCQlkZXZfd2Fy
+bihjeGxkcy0+ZGV2LCAiJXM6IHVuY29ycmVjdGFibGUgc3RhdHVzOiAlIzA4eFxuIiwNCj4rCQkJ
+IGRldl9uYW1lKGRldiksIHN0YXR1cyk7DQo+KwkJd3JpdGVsKHN0YXR1cyAmIENYTF9SQVNfVU5D
+T1JSRUNUQUJMRV9TVEFUVVNfTUFTSywNCj5hZGRyKTsNCj4rCX0NCkZvciB0aGUgdW5jb3JyZWN0
+YWJsZSBub24tZmF0YWwgZXJyb3JzLCBpZiBhbnksIG1heSBuZWVkIHRvIHJldHVybiBQQ0lfRVJT
+X1JFU1VMVF9ORUVEX1JFU0VUDQp0byB0cmlnZ2VyIHRoZSBzbG90IHJlc2V0IHRvIHByZXZlbnQg
+bW9yZSBzZXJpb3VzIGlzc3VlcyBsYXRlci4gRm9yIHRoaXMgY2FzZSB0aGUgc3RhdGUgd291bGQg
+YmUNCiJwY2lfY2hhbm5lbF9pb19ub3JtYWwiLg0KIA0KPisNCj4rCWFkZHIgPSBjeGxkcy0+cmVn
+cy5yYXMgKyBDWExfUkFTX0NPUlJFQ1RBQkxFX1NUQVRVU19PRkZTRVQ7DQo+KwlzdGF0dXMgPSBy
+ZWFkbChhZGRyKTsNCj4rCWlmIChzdGF0dXMgJiBDWExfUkFTX0NPUlJFQ1RBQkxFX1NUQVRVU19N
+QVNLKSB7DQo+KwkJZGV2X3dhcm4oY3hsZHMtPmRldiwgIiVzOiBjb3JyZWN0YWJsZSBzdGF0dXM6
+ICUjMDh4XG4iLA0KPisJCQkgZGV2X25hbWUoZGV2KSwgc3RhdHVzKTsNCj4rCQl3cml0ZWwoc3Rh
+dHVzICYgQ1hMX1JBU19DT1JSRUNUQUJMRV9TVEFUVVNfTUFTSywNCj5hZGRyKTsNCj4rCX0NCj4r
+fQ0KPisNCj4rc3RhdGljIHBjaV9lcnNfcmVzdWx0X3QgY3hsX2Vycm9yX2RldGVjdGVkKHN0cnVj
+dCBwY2lfZGV2ICpwZGV2LA0KPisJCQkJCSAgIHBjaV9jaGFubmVsX3N0YXRlX3Qgc3RhdGUpDQo+
+K3sNCj4rCXN0cnVjdCBjeGxfZGV2X3N0YXRlICpjeGxkcyA9IHBjaV9nZXRfZHJ2ZGF0YShwZGV2
+KTsNCj4rCXN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZCA9IGN4bGRzLT5jeGxtZDsNCj4rCXN0cnVj
+dCBkZXZpY2UgKmRldiA9ICZjeGxtZC0+ZGV2Ow0KPisNCj4rCS8qDQo+KwkgKiBBIGZyb3plbiBj
+aGFubmVsIGluZGljYXRlcyBhbiBpbXBlbmRpbmcgcmVzZXQgd2hpY2ggaXMgZmF0YWwgdG8NCj4r
+CSAqIENYTC5tZW0gb3BlcmF0aW9uLCBhbmQgd2lsbCBsaWtlbHkgY3Jhc2ggdGhlIHN5c3RlbS4g
+T24gdGhlIG9mZg0KPisJICogY2hhbmNlIHRoZSBzaXR1YXRpb24gaXMgcmVjb3ZlcmFibGUgZHVt
+cCB0aGUgc3RhdHVzIG9mIHRoZSBSQVMNCj4rCSAqIGNhcGFiaWxpdHkgcmVnaXN0ZXJzIGFuZCBi
+b3VuY2UgdGhlIGFjdGl2ZSBzdGF0ZSBvZiB0aGUgbWVtZGV2Lg0KPisJICovDQo+KwljeGxfcmVw
+b3J0X2FuZF9jbGVhcihjeGxkcyk7DQo+Kw0KPisJc3dpdGNoIChzdGF0ZSkgew0KPisJY2FzZSBw
+Y2lfY2hhbm5lbF9pb19ub3JtYWw6DQo+KwkJcmV0dXJuIFBDSV9FUlNfUkVTVUxUX0NBTl9SRUNP
+VkVSOw0KPisJY2FzZSBwY2lfY2hhbm5lbF9pb19mcm96ZW46DQo+KwkJZGV2X3dhcm4oJnBkZXYt
+PmRldiwNCj4rCQkJICIlczogZnJvemVuIHN0YXRlIGVycm9yIGRldGVjdGVkLCBkaXNhYmxlDQo+
+Q1hMLm1lbVxuIiwNCj4rCQkJIGRldl9uYW1lKGRldikpOw0KPisJCWRldmljZV9yZWxlYXNlX2Ry
+aXZlcihkZXYpOw0KPisJCXJldHVybiBQQ0lfRVJTX1JFU1VMVF9ORUVEX1JFU0VUOw0KPisJY2Fz
+ZSBwY2lfY2hhbm5lbF9pb19wZXJtX2ZhaWx1cmU6DQo+KwkJZGV2X3dhcm4oJnBkZXYtPmRldiwN
+Cj4rCQkJICJmYWlsdXJlIHN0YXRlIGVycm9yIGRldGVjdGVkLCByZXF1ZXN0IGRpc2Nvbm5lY3Rc
+biIpOw0KPisJCXJldHVybiBQQ0lfRVJTX1JFU1VMVF9ESVNDT05ORUNUOw0KPisJfQ0KPisJcmV0
+dXJuIFBDSV9FUlNfUkVTVUxUX05FRURfUkVTRVQ7DQo+K30NCj4rDQo+K3N0YXRpYyBwY2lfZXJz
+X3Jlc3VsdF90IGN4bF9zbG90X3Jlc2V0KHN0cnVjdCBwY2lfZGV2ICpwZGV2KSB7DQo+KwlzdHJ1
+Y3QgY3hsX2Rldl9zdGF0ZSAqY3hsZHMgPSBwY2lfZ2V0X2RydmRhdGEocGRldik7DQo+KwlzdHJ1
+Y3QgY3hsX21lbWRldiAqY3hsbWQgPSBjeGxkcy0+Y3hsbWQ7DQo+KwlzdHJ1Y3QgZGV2aWNlICpk
+ZXYgPSAmY3hsbWQtPmRldjsNCj4rDQo+KwlkZXZfaW5mbygmcGRldi0+ZGV2LCAiJXM6IHJlc3Rh
+cnQgQ1hMLm1lbSBhZnRlciBzbG90IHJlc2V0XG4iLA0KPisJCSBkZXZfbmFtZShkZXYpKTsNCj4r
+CXBjaV9yZXN0b3JlX3N0YXRlKHBkZXYpOw0KMS4gRG8gd2UgbmVlZCB0byBjYWxsIHBjaV9zYXZl
+X3N0YXRlKHBkZXYpIGhlcmUgYWZ0ZXIgdGhlIHJlc2V0PyB0aG91Z2ggcGNpX3NhdmVfc3RhdGUo
+cGRldikgaXMgYmVpbmcgaW52b2tlZCBpbiB0aGUgIA0KY3hsX3BjaV9wcm9iZSgpLg0KDQo+Kwlp
+ZiAoZGV2aWNlX2F0dGFjaChkZXYpIDw9IDApDQo+KwkJcmV0dXJuIFBDSV9FUlNfUkVTVUxUX0RJ
+U0NPTk5FQ1Q7DQpNeSB1bmRlcnN0YW5kaW5nIGlzIHRoYXQgcGNpX2Rpc2FibGVfcGNpZV9lcnJv
+cl9yZXBvcnRpbmcocGRldikgd291bGQgYmUgY2FsbGVkDQppbiB0aGUgZGlzYWJsZV9hZXIgKCkg
+aW4gdGhlIHJlc2V0LCANCnBjaV9lbmFibGVfcGNpZV9lcnJvcl9yZXBvcnRpbmcocGRldikgbWF5
+IG5lZWQgdG8gY2FsbCBoZXJlIGFmdGVyIHRoZSByZXNldD8NCiANCj4rCXJldHVybiBQQ0lfRVJT
+X1JFU1VMVF9SRUNPVkVSRUQ7DQo+K30NCj4rDQo+K3N0YXRpYyB2b2lkIGN4bF9lcnJvcl9yZXN1
+bWUoc3RydWN0IHBjaV9kZXYgKnBkZXYpIHsNCj4rCXN0cnVjdCBjeGxfZGV2X3N0YXRlICpjeGxk
+cyA9IHBjaV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4rCXN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZCA9
+IGN4bGRzLT5jeGxtZDsNCj4rCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZjeGxtZC0+ZGV2Ow0KPisN
+Cj4rCWRldl9pbmZvKCZwZGV2LT5kZXYsICIlczogZXJyb3IgcmVzdW1lICVzXG4iLCBkZXZfbmFt
+ZShkZXYpLA0KPisJCSBkZXYtPmRyaXZlciA/ICJzdWNjZXNzZnVsIiA6ICJmYWlsZWQiKTsgfQ0K
+PisNCj4rc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZXJyb3JfaGFuZGxlcnMgY3hsX2Vycm9yX2hh
+bmRsZXJzID0gew0KPisJLmVycm9yX2RldGVjdGVkCT0gY3hsX2Vycm9yX2RldGVjdGVkLA0KPisJ
+LnNsb3RfcmVzZXQJPSBjeGxfc2xvdF9yZXNldCwNCj4rCS5yZXN1bWUJCT0gY3hsX2Vycm9yX3Jl
+c3VtZSwNCklmIHRoZSBGTFIgKEZ1bmN0aW9uIGxldmVsIHJlc2V0KSBzdXBwb3J0ZWQsIHBsZWFz
+ZSBhZGQgdGhlIGNvcnJlc3BvbmRpbmcgY2FsbGJhY2sgZnVuY3Rpb25zDQpyZXNldF9wcmVwYXJl
+KC4uKSBhbmQgcmVzZXRfZG9uZSguLikuDQoNCj4rfTsNCj4rDQo+IHN0YXRpYyBzdHJ1Y3QgcGNp
+X2RyaXZlciBjeGxfcGNpX2RyaXZlciA9IHsNCj4gCS5uYW1lCQkJPSBLQlVJTERfTU9ETkFNRSwN
+Cj4gCS5pZF90YWJsZQkJPSBjeGxfbWVtX3BjaV90YmwsDQo+IAkucHJvYmUJCQk9IGN4bF9wY2lf
+cHJvYmUsDQo+KwkuZXJyX2hhbmRsZXIJCT0gJmN4bF9lcnJvcl9oYW5kbGVycywNCj4gCS5kcml2
+ZXIJPSB7DQo+IAkJLnByb2JlX3R5cGUJPSBQUk9CRV9QUkVGRVJfQVNZTkNIUk9OT1VTLA0KPiAJ
+fSwNCg0KDQpUaGFua3MsDQpTaGlqdQ0K
