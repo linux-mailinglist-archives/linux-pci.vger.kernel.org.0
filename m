@@ -2,131 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8643F4DDFAA
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 18:13:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B1614DE03E
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 18:49:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239532AbiCRRPE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Mar 2022 13:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51996 "EHLO
+        id S236763AbiCRRuU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Mar 2022 13:50:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239160AbiCRRPD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 13:15:03 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B1D2BC7
-        for <linux-pci@vger.kernel.org>; Fri, 18 Mar 2022 10:13:43 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id z16so10025078pfh.3
-        for <linux-pci@vger.kernel.org>; Fri, 18 Mar 2022 10:13:43 -0700 (PDT)
+        with ESMTP id S239763AbiCRRuT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 13:50:19 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F84D169B0A;
+        Fri, 18 Mar 2022 10:49:00 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id u23so8846175ejt.1;
+        Fri, 18 Mar 2022 10:49:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g/GutwBJVZBDT4ZVpQlKfjM8i6ASlMzT8ih0C1p3e3k=;
-        b=blpcAdIPW3F08OxKyQJJrpHUC2s+UYBMU5vzcrkGgac39jt6Ud4Hk0Gt5irraCU6ob
-         w8GN4C9ctPWo10eE1jofVkgGgZSTFoCGzJAREiw6AKRL9NnqseojQwCTh1gjfqizOP7f
-         abpIDzqYsILDAFuGO5DKl2u8kFDLfS1lcmwrkaBdh+1ZTnLu8St7Kj8GYQXd2KGn7beJ
-         LbGAUzJpfilO6hobiI5OAuokwNI0YCQFafSOHO8A732+gkZ6aj0hC7lzKskHTneuCxpn
-         XYt+j+fUIwnkhFge1DotlDdIcQPkO9TcZ7M8yAakzw0t719UzI247KdN36stiqYsa0ye
-         40KQ==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rGjB7GqWMynjIA0+/6xQ+uE8T6CCVvUTw43NpwNkZK0=;
+        b=QR545lb7SAR4EZIGE3+S8kVIWFYqa/uw6jt9zzx70lDVNFQFPC30kX5SQjzRt2kFSN
+         l0VGp+O7X4QTc8qSqGQx/iDrnfL0paX/uWjhSzzPfvX1yvCIO2hhfBm+LwDUMA9ELKIp
+         vBwWLsoQAmzgEOv3uPAGayhzr3Rndxwkh5lYEDN5jBVAFnuh5yfwSuT/n6duxYsMr48s
+         sB9dY+F2xrtNUgmFi+8Xj6zNM8Y0kuVLTtjudMhQ9v+hjKqKt44rGyEX1UTdmcB1saEV
+         7CqKwQ39GZ1ScGYENFrv8RJJzsqtbKfigUe7MG4fSY2oEUISK5HsAJyM7DMnF00atm88
+         1/3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g/GutwBJVZBDT4ZVpQlKfjM8i6ASlMzT8ih0C1p3e3k=;
-        b=WzYhasGO0mk7GtMsN1hFx8vZam4QgGpsRIA5UE+IfV79ybNMLFDXDthWGSi9JHfmlU
-         EOhskuky8mpmn+5wZbOrUezCBjQg70sQ4LcXA70Vfc0y5XFKKaxuVTGLFadQ39zs3i4A
-         4OZJB+d2POxd3fHC/c2TQHCP7dXkc59KwS0qXE+ngfCb+8LB/fmDcIaQsgtzB6CoPoHh
-         hhEWak4iprsSP0txe/VpXLsgTPvf1eqID73Jhsi/4yeulgvz2hOhG+y94ObPFWg7nAWs
-         myWMyuWpdOLreuSiYbUZVasvs+Fj0MwtWMa55yfCFXs0ra4brkaKCAmrP/7YRIhrdhU4
-         SotA==
-X-Gm-Message-State: AOAM532r8vnhKqD77tjOycLuxIZBowyaWM/9/B3LtCMm6qDIhwUjz8uc
-        3eo4IpCespIAddXkZcY3Mpx50jecDUac+3kTWcHEKQ==
-X-Google-Smtp-Source: ABdhPJxH0FGfFKt283r5GUdkvrdhnVUMzxTWmOGe9MV0ft0KmCjPEMJnALJmM7RuLWZAjhy5nyVCk5mYcOk9jMhNEkc=
-X-Received: by 2002:a63:5c53:0:b0:381:309e:e72c with SMTP id
- n19-20020a635c53000000b00381309ee72cmr8673934pgm.40.1647623623502; Fri, 18
- Mar 2022 10:13:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rGjB7GqWMynjIA0+/6xQ+uE8T6CCVvUTw43NpwNkZK0=;
+        b=Lm9TaZ6xwGC0qaqJ1AIWH7BGsiJYnjOasMWLRiDfpWDW/Gij0UoO5FwlPWfr8OuVrd
+         JjRXP6fAECal0AwZf8QOt+UPnWkZ1fO45nu30V4Exjim7KqMcDbl1F9tfqpOc90uKYzx
+         cMe89q+/xEQ0bF9oL0oOt0eE9e/pOqJ8b/Stcfv+z3w0W19UV5aipkxCAmmVpWNW47g3
+         5GLYzLWAHoMQp3yIuK1oBsWfmOY0XppTEqNbRRCZqB/M65wCKyePHW1NmQV2/wDRRYsh
+         3muqR7C2B2pjGX1vxTIJC5wNA+wlvajuv43DSXIAfn5ziZ1zvs9jAXsd7BqPSvKIEPML
+         iOUA==
+X-Gm-Message-State: AOAM53233p0qv819s96fpO1SbMwt+G9jXwc2BRfcBjoa0pH6BVOLYwtB
+        gMlBYCoQ2nR1GVCEo1cCdj4=
+X-Google-Smtp-Source: ABdhPJw9SvvLNSoXkEOZhN6kaI6NkYjOIMQn0VfoJ9rQkuBQfJm9/eKHSJ+Ti/1002viW91DmdPfpg==
+X-Received: by 2002:a17:907:3e19:b0:6da:86b9:acc with SMTP id hp25-20020a1709073e1900b006da86b90accmr10352798ejc.655.1647625739000;
+        Fri, 18 Mar 2022 10:48:59 -0700 (PDT)
+Received: from anparri.mshome.net (host-82-59-4-232.retail.telecomitalia.it. [82.59.4.232])
+        by smtp.gmail.com with ESMTPSA id y15-20020a170906518f00b006df87a2bb16sm3218730ejk.89.2022.03.18.10.48.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Mar 2022 10:48:58 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Wei Hu <weh@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH 0/2] PCI: hv: Miscellaneous changes
+Date:   Fri, 18 Mar 2022 18:48:46 +0100
+Message-Id: <20220318174848.290621-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164740403286.3912056.2514975283929305856.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20220317100757.00005f2b@Huawei.com>
-In-Reply-To: <20220317100757.00005f2b@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 18 Mar 2022 10:13:33 -0700
-Message-ID: <CAPcyv4iEMw7pd2ZdYEK48Pj-Er72thkcKCUmCoBOTzcg_rZrcw@mail.gmail.com>
-Subject: Re: [PATCH 2/8] cxl/pci: Cleanup cxl_map_device_regs()
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 17, 2022 at 3:08 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Tue, 15 Mar 2022 21:13:52 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > Use a loop to reduce the duplicated code in cxl_map_device_regs(). This
-> > is in preparation for deleting cxl_map_regs().
-> >
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Trivial style comments inline.  Otherwise LGTM
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
-> > ---
-> >  drivers/cxl/core/regs.c |   51 ++++++++++++++++++-----------------------------
-> >  1 file changed, 20 insertions(+), 31 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> > index bd6ae14b679e..bd766e461f7d 100644
-> > --- a/drivers/cxl/core/regs.c
-> > +++ b/drivers/cxl/core/regs.c
-> > @@ -211,42 +211,31 @@ int cxl_map_device_regs(struct pci_dev *pdev,
-> >                       struct cxl_device_regs *regs,
-> >                       struct cxl_register_map *map)
-> >  {
-> > +     resource_size_t phys_addr =
-> > +             pci_resource_start(pdev, map->barno) + map->block_offset;
->
-> I'm not totally convinced by this refactoring as it's ugly either
-> way...  Still your code, and I don't care that strongly ;)
+Andrea Parri (Microsoft) (2):
+  PCI: hv: Use IDR to generate transaction IDs for VMBus hardening
+  PCI: hv: Fix synchronization between channel callback and
+    hv_compose_msi_msg()
 
-Fair enough, but isn't there intrinsic beauty in a diff that deletes
-more code than it adds?
+ drivers/pci/controller/pci-hyperv.c | 197 ++++++++++++++++++++--------
+ 1 file changed, 143 insertions(+), 54 deletions(-)
 
-The cleaner aspect to me is that the RAS Capability Structure support
-can be added with a one line change rather than a new if block in
-cxl_map_component_regs().
+-- 
+2.25.1
 
->
-> >       struct device *dev = &pdev->dev;
-> > -     resource_size_t phys_addr;
-> > -
-> > -     phys_addr = pci_resource_start(pdev, map->barno);
-> > -     phys_addr += map->block_offset;
-> > -
-> > -     if (map->device_map.status.valid) {
-> > -             resource_size_t addr;
-> > +     struct mapinfo {
-> > +             struct cxl_reg_map *rmap;
-> > +             void __iomem **addr;
-> > +     } mapinfo[] = {
-> > +             { .rmap = &map->device_map.status, &regs->status, },
->
-> Combining c99 style .rmap for first parameter and then not doing it
-> for the second is a bit odd looking.  Was there a strong reason for
-> doing this?  I'd just drop the ".rmap =" as it's not as though
-> we need to look far to see what it's setting.
-
-Good catch, yeah, not sure why I typed it that way, will fix.
