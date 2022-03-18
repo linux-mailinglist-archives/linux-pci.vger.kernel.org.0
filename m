@@ -2,210 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D1284DD73F
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 10:42:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED18F4DD85A
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 11:45:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234418AbiCRJnS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Mar 2022 05:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60734 "EHLO
+        id S233396AbiCRKoy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Mar 2022 06:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232891AbiCRJnR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 05:43:17 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE7D02C3DEB;
-        Fri, 18 Mar 2022 02:41:58 -0700 (PDT)
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4KKfBX5tJVz67xNR;
-        Fri, 18 Mar 2022 17:40:20 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 18 Mar 2022 10:41:56 +0100
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 18 Mar 2022 09:41:55 +0000
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.2308.021;
- Fri, 18 Mar 2022 09:41:55 +0000
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-CC:     "ben.widawsky@intel.com" <ben.widawsky@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: RE: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
-Thread-Topic: [PATCH 8/8] cxl/pci: Add (hopeful) error handling support
-Thread-Index: AQHYOOxc1v/bQA0COUCrd4PXNU5KpqzE3y+A
-Date:   Fri, 18 Mar 2022 09:41:55 +0000
-Message-ID: <e9de480061ad425e9603cf71db5c610d@huawei.com>
-References: <164740402242.3912056.8303625392871313860.stgit@dwillia2-desk3.amr.corp.intel.com>
- <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <164740406489.3912056.8334546166826246693.stgit@dwillia2-desk3.amr.corp.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.70.222]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S233394AbiCRKox (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Mar 2022 06:44:53 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 044F39D4F5;
+        Fri, 18 Mar 2022 03:43:33 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id yy13so16229669ejb.2;
+        Fri, 18 Mar 2022 03:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+HJIH4AwD9mhOZx7mjtxfMP8PmXBGjgqbEfN/JeaejY=;
+        b=TZUTV/njW04HfdKUw7yc2OkbI6DNz7WXuRwtMDbUtS70fgPJFfvPeqyXM/AKIjKE5F
+         e/+mAatjqeIKdQFBGTk56f7yEF+se+uKKer0lytEW1p8bf14fiMWNOFYa3uOfCPb3uGj
+         q3KtvvqP/shZzOZ+SiQufDqLvYwIVp46X8FCyBYLT1tAi1koVzfmHyyVPt3N+prW+1Wj
+         /kPX/JBpR3WoosTD18t7Xbb19ZuUEQLjgcwu73cEAWZdXVsNxibHpwJTW++OVNvM4qnt
+         riBWRRR3D0EhV9cn+2ZGLSzyk8Apv1JXyH4XwgFaZqFyUmsR4NvDhVgU1rjuuGwVPYg1
+         N2Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+HJIH4AwD9mhOZx7mjtxfMP8PmXBGjgqbEfN/JeaejY=;
+        b=qsttq3wX/tyEkDAChYgALvjzbxYmAqOoJ094SYOT3Tini5nRUtmMYWKgTWQHDPMm21
+         cbRNJAp5wGR5OhvzurydTpoEiLgr//nV9ChhvGDgy0hmltASga6/iY3fW1aIUOJPX9Rk
+         uC6+qDEk5VHzzOhRpUaKQ4/GMyMxCDpQbc+JmFpLA5tS/CSRBQ1TKTe/cha8GMVsB/MR
+         VoWSlsF0iyohBA+6ctr1t1N2f6QQJVBG2TdfNXN4qFKjJD7wUDDHa3u5j9PwozDXmphg
+         OnkO+3SggQEKvndGmznIgCT2xR4glfaLXIUCq5D6r3SIEwGAaDKwdD1JFVOZ+r+l/Wt7
+         X1SA==
+X-Gm-Message-State: AOAM533iJ9cPzkfKSTLKNLmPJG5vGPF2NDb5c3duqX8dOGcmlIbdJTJG
+        E77coFviGG+VqAQOqJO9lAgAcfJ9cfwboam9f6Q=
+X-Google-Smtp-Source: ABdhPJxZJqxItgMA2zu+j+BAAmm9H1YkRPxFlE9tV3eghTdZ2GMv9Q9AawPTB/6VPWasa8lt1A17VvEgmlAcBrryISs=
+X-Received: by 2002:a17:907:968e:b0:6db:aed5:43c8 with SMTP id
+ hd14-20020a170907968e00b006dbaed543c8mr8188137ejc.636.1647600211292; Fri, 18
+ Mar 2022 03:43:31 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <YjL4cEBXCQ1eSy48@smile.fi.intel.com> <20220317204126.GA723808@bhelgaas>
+In-Reply-To: <20220317204126.GA723808@bhelgaas>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 18 Mar 2022 12:42:18 +0200
+Message-ID: <CAHp75Veb4BqcGW=sCXEfrJ2ksvnXmjN-XZ5L6ttcQ8SJneg27w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] PCI: Enable INTx quirk for ATI PCIe-USB adapter
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        micklorain@protonmail.com,
+        Alex Williamson <alex.williamson@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgRGFuLA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBEYW4gV2lsbGlh
-bXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT4NCj5TZW50OiAxNiBNYXJjaCAyMDIyIDA0OjE0
-DQo+VG86IGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmcNCj5DYzogYmVuLndpZGF3c2t5QGludGVs
-LmNvbTsgdmlzaGFsLmwudmVybWFAaW50ZWwuY29tOw0KPmFsaXNvbi5zY2hvZmllbGRAaW50ZWwu
-Y29tOyBKb25hdGhhbiBDYW1lcm9uDQo+PGpvbmF0aGFuLmNhbWVyb25AaHVhd2VpLmNvbT47IGly
-YS53ZWlueUBpbnRlbC5jb207IGxpbnV4LQ0KPnBjaUB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0
-OiBbUEFUQ0ggOC84XSBjeGwvcGNpOiBBZGQgKGhvcGVmdWwpIGVycm9yIGhhbmRsaW5nIHN1cHBv
-cnQNCj4NCj5BZGQgbm9taW5hbCBlcnJvciBoYW5kbGluZyB0aGF0IHRlYXJzIGRvd24gQ1hMLm1l
-bSBpbiByZXNwb25zZSB0byBlcnJvcg0KPm5vdGlmaWNhdGlvbnMgdGhhdCBpbXBseSBhIGRldmlj
-ZSByZXNldC4gR2l2ZW4gc29tZSBDWEwubWVtIG1heSBiZQ0KPm9wZXJhdGluZyBhcyBTeXN0ZW0g
-UkFNLCB0aGVyZSBpcyBhIGhpZ2ggbGlrZWxpaG9vZCB0aGF0IHRoZXNlIGVycm9yIGV2ZW50cw0K
-PmFyZSBmYXRhbC4gSG93ZXZlciwgaWYgdGhlIHN5c3RlbSBzdXJ2aXZlcyB0aGUgbm90aWZpY2F0
-aW9uIHRoZSBleHBlY3RhdGlvbiBpcw0KPnRoYXQgdGhlIGRyaXZlciBiZWhhdmlvciBpcyBlcXVp
-dmFsZW50IHRvIGEgaG90LXVucGx1ZyBhbmQgcmUtcGx1ZyBvZiBhbg0KPmVuZHBvaW50Lg0KPg0K
-Pk5vdGUgdGhhdCB0aGlzIGRvZXMgbm90IGNoYW5nZSB0aGUgbWFzayB2YWx1ZXMgZnJvbSB0aGUg
-ZGVmYXVsdC4gVGhhdCBhd2FpdHMNCj5DWEwgX09TQyBzdXBwb3J0IHRvIGRldGVybWluZSB3aGV0
-aGVyIHBsYXRmb3JtIGZpcm13YXJlIGlzIGluIGNvbnRyb2wgb2YgdGhlDQo+bWFzayByZWdpc3Rl
-cnMuDQo+DQo+U2lnbmVkLW9mZi1ieTogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRl
-bC5jb20+DQo+LS0tDQo+IGRyaXZlcnMvY3hsL2NvcmUvbWVtZGV2LmMgfCAgICAxDQo+IGRyaXZl
-cnMvY3hsL2N4bG1lbS5oICAgICAgfCAgICAyICsNCj4gZHJpdmVycy9jeGwvcGNpLmMgICAgICAg
-ICB8ICAxMDkNCj4rKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysN
-Cj4gMyBmaWxlcyBjaGFuZ2VkLCAxMTIgaW5zZXJ0aW9ucygrKQ0KPg0KPmRpZmYgLS1naXQgYS9k
-cml2ZXJzL2N4bC9jb3JlL21lbWRldi5jIGIvZHJpdmVycy9jeGwvY29yZS9tZW1kZXYuYyBpbmRl
-eA0KPjFmNzZiMjhmOTgyNi4uMjIzZDUxMjc5MGUxIDEwMDY0NA0KPi0tLSBhL2RyaXZlcnMvY3hs
-L2NvcmUvbWVtZGV2LmMNCj4rKysgYi9kcml2ZXJzL2N4bC9jb3JlL21lbWRldi5jDQo+QEAgLTM0
-MSw2ICszNDEsNyBAQCBzdHJ1Y3QgY3hsX21lbWRldiAqZGV2bV9jeGxfYWRkX21lbWRldihzdHJ1
-Y3QNCj5jeGxfZGV2X3N0YXRlICpjeGxkcykNCj4gCSAqIG5lZWRlZCBhcyB0aGlzIGlzIG9yZGVy
-ZWQgd2l0aCBjZGV2X2FkZCgpIHB1Ymxpc2hpbmcgdGhlIGRldmljZS4NCj4gCSAqLw0KPiAJY3hs
-bWQtPmN4bGRzID0gY3hsZHM7DQo+KwljeGxkcy0+Y3hsbWQgPSBjeGxtZDsNCj4NCj4gCWNkZXYg
-PSAmY3hsbWQtPmNkZXY7DQo+IAlyYyA9IGNkZXZfZGV2aWNlX2FkZChjZGV2LCBkZXYpOw0KPmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2N4bC9jeGxtZW0uaCBiL2RyaXZlcnMvY3hsL2N4bG1lbS5oIGlu
-ZGV4DQo+NWQzM2NlMjRmZTA5Li5mNThlMTY5NTE0MTQgMTAwNjQ0DQo+LS0tIGEvZHJpdmVycy9j
-eGwvY3hsbWVtLmgNCj4rKysgYi9kcml2ZXJzL2N4bC9jeGxtZW0uaA0KPkBAIC0xMTcsNiArMTE3
-LDcgQEAgc3RydWN0IGN4bF9lbmRwb2ludF9kdnNlY19pbmZvIHsNCj4gICogQ3VycmVudGx5IG9u
-bHkgbWVtb3J5IGRldmljZXMgYXJlIHJlcHJlc2VudGVkLg0KPiAgKg0KPiAgKiBAZGV2OiBUaGUg
-ZGV2aWNlIGFzc29jaWF0ZWQgd2l0aCB0aGlzIENYTCBzdGF0ZQ0KPisgKiBAY3hsbWQ6IFRoZSBk
-ZXZpY2UgcmVwcmVzZW50aW5nIHRoZSBDWEwubWVtIGNhcGFiaWxpdGllcyBvZiBAZGV2DQo+ICAq
-IEByZWdzOiBQYXJzZWQgcmVnaXN0ZXIgYmxvY2tzDQo+ICAqIEBjeGxfZHZzZWM6IE9mZnNldCB0
-byB0aGUgUENJZSBkZXZpY2UgRFZTRUMNCj4gICogQHBheWxvYWRfc2l6ZTogU2l6ZSBvZiBzcGFj
-ZSBmb3IgcGF5bG9hZCBAQCAtMTQ4LDYgKzE0OSw3IEBAIHN0cnVjdA0KPmN4bF9lbmRwb2ludF9k
-dnNlY19pbmZvIHsNCj4gICovDQo+IHN0cnVjdCBjeGxfZGV2X3N0YXRlIHsNCj4gCXN0cnVjdCBk
-ZXZpY2UgKmRldjsNCj4rCXN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZDsNCj4NCj4gCXN0cnVjdCBj
-eGxfcmVncyByZWdzOw0KPiAJaW50IGN4bF9kdnNlYzsNCj5kaWZmIC0tZ2l0IGEvZHJpdmVycy9j
-eGwvcGNpLmMgYi9kcml2ZXJzL2N4bC9wY2kuYyBpbmRleA0KPmJkZTg5Mjk0NTBmMC4uODIzY2Jm
-YTA5M2ZhIDEwMDY0NA0KPi0tLSBhL2RyaXZlcnMvY3hsL3BjaS5jDQo+KysrIGIvZHJpdmVycy9j
-eGwvcGNpLmMNCj5AQCAtOCw2ICs4LDcgQEANCj4gI2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+DQo+
-ICNpbmNsdWRlIDxsaW51eC9saXN0Lmg+DQo+ICNpbmNsdWRlIDxsaW51eC9wY2kuaD4NCj4rI2lu
-Y2x1ZGUgPGxpbnV4L2Flci5oPg0KPiAjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4gI2luY2x1ZGUg
-ImN4bG1lbS5oIg0KPiAjaW5jbHVkZSAiY3hscGNpLmgiDQo+QEAgLTUzMyw2ICs1MzQsMTEgQEAg
-c3RhdGljIHZvaWQgY3hsX2R2c2VjX3JhbmdlcyhzdHJ1Y3QgY3hsX2Rldl9zdGF0ZQ0KPipjeGxk
-cykNCj4gCWluZm8tPnJhbmdlcyA9IF9fY3hsX2R2c2VjX3JhbmdlcyhjeGxkcywgaW5mbyk7ICB9
-DQo+DQo+K3N0YXRpYyB2b2lkIGRpc2FibGVfYWVyKHZvaWQgKnBkZXYpDQo+K3sNCj4rCXBjaV9k
-aXNhYmxlX3BjaWVfZXJyb3JfcmVwb3J0aW5nKHBkZXYpOw0KPit9DQo+Kw0KPiBzdGF0aWMgaW50
-IGN4bF9wY2lfcHJvYmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGNvbnN0IHN0cnVjdCBwY2lfZGV2
-aWNlX2lkICppZCkNCj57DQo+IAlzdHJ1Y3QgY3hsX3JlZ2lzdGVyX21hcCBtYXA7DQo+QEAgLTU1
-NCw2ICs1NjAsNyBAQCBzdGF0aWMgaW50IGN4bF9wY2lfcHJvYmUoc3RydWN0IHBjaV9kZXYgKnBk
-ZXYsIGNvbnN0DQo+c3RydWN0IHBjaV9kZXZpY2VfaWQgKmlkKQ0KPiAJY3hsZHMgPSBjeGxfZGV2
-X3N0YXRlX2NyZWF0ZSgmcGRldi0+ZGV2KTsNCj4gCWlmIChJU19FUlIoY3hsZHMpKQ0KPiAJCXJl
-dHVybiBQVFJfRVJSKGN4bGRzKTsNCj4rCXBjaV9zZXRfZHJ2ZGF0YShwZGV2LCBjeGxkcyk7DQo+
-DQo+IAljeGxkcy0+c2VyaWFsID0gcGNpX2dldF9kc24ocGRldik7DQo+IAljeGxkcy0+Y3hsX2R2
-c2VjID0gcGNpX2ZpbmRfZHZzZWNfY2FwYWJpbGl0eSggQEAgLTYxMCw2ICs2MTcsMTQgQEANCj5z
-dGF0aWMgaW50IGN4bF9wY2lfcHJvYmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGNvbnN0IHN0cnVj
-dCBwY2lfZGV2aWNlX2lkICppZCkNCj4gCWlmIChJU19FUlIoY3hsbWQpKQ0KPiAJCXJldHVybiBQ
-VFJfRVJSKGN4bG1kKTsNCj4NCj4rCWlmIChjeGxkcy0+cmVncy5yYXMpIHsNCj4rCQlwY2lfZW5h
-YmxlX3BjaWVfZXJyb3JfcmVwb3J0aW5nKHBkZXYpOw0KPisJCXJjID0gZGV2bV9hZGRfYWN0aW9u
-X29yX3Jlc2V0KCZwZGV2LT5kZXYsIGRpc2FibGVfYWVyLA0KPnBkZXYpOw0KPisJCWlmIChyYykN
-Cj4rCQkJcmV0dXJuIHJjOw0KPisJfQ0KPisJcGNpX3NhdmVfc3RhdGUocGRldik7DQo+Kw0KPiAJ
-aWYgKHJhbmdlX2xlbigmY3hsZHMtPnBtZW1fcmFuZ2UpICYmDQo+SVNfRU5BQkxFRChDT05GSUdf
-Q1hMX1BNRU0pKQ0KPiAJCXJjID0gZGV2bV9jeGxfYWRkX252ZGltbSgmcGRldi0+ZGV2LCBjeGxt
-ZCk7DQo+DQo+QEAgLTYyMywxMCArNjM4LDEwNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9k
-ZXZpY2VfaWQgY3hsX21lbV9wY2lfdGJsW10NCj49IHsgIH07ICBNT0RVTEVfREVWSUNFX1RBQkxF
-KHBjaSwgY3hsX21lbV9wY2lfdGJsKTsNCj4NCj4rLyoNCj4rICogTG9nIHRoZSBzdGF0ZSBvZiB0
-aGUgUkFTIHN0YXR1cyByZWdpc3RlcnMgYW5kIHByZXBhcmUgdGhlbSB0byBsb2cNCj4rdGhlDQo+
-KyAqIG5leHQgZXJyb3Igc3RhdHVzLg0KPisgKi8NCj4rc3RhdGljIHZvaWQgY3hsX3JlcG9ydF9h
-bmRfY2xlYXIoc3RydWN0IGN4bF9kZXZfc3RhdGUgKmN4bGRzKSB7DQo+KwlzdHJ1Y3QgY3hsX21l
-bWRldiAqY3hsbWQgPSBjeGxkcy0+Y3hsbWQ7DQo+KwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmY3hs
-bWQtPmRldjsNCj4rCXZvaWQgX19pb21lbSAqYWRkcjsNCj4rCXUzMiBzdGF0dXM7DQo+Kw0KPisJ
-aWYgKCFjeGxkcy0+cmVncy5yYXMpDQo+KwkJcmV0dXJuOw0KSW4gdGhlIGN4bF9lcnJvcl9kZXRl
-Y3RlZCAoKSBtYXkgbmVlZCB0byByZXR1cm4gUENJX0VSU19SRVNVTFRfTk9ORQ0KZm9yIHRoZSBm
-b2xsb3dpbmcgY2FzZXMsIGlmIGV4aXN0LA0KMS4gaWYgKCFjeGxkcy0+cmVncy5yYXMpLA0KMi4g
-aWYgYW55IGVycm9ycyB3b3VsZCBiZSByZXBvcnRlZCBkdXJpbmcgdGhlIGRldiBpbml0aWFsaXph
-dGlvbi4gDQoNCj4rDQo+KwlhZGRyID0gY3hsZHMtPnJlZ3MucmFzICsgQ1hMX1JBU19VTkNPUlJF
-Q1RBQkxFX1NUQVRVU19PRkZTRVQ7DQo+KwlzdGF0dXMgPSByZWFkbChhZGRyKTsNCj4rCWlmIChz
-dGF0dXMgJiBDWExfUkFTX1VOQ09SUkVDVEFCTEVfU1RBVFVTX01BU0spIHsNCj4rCQlkZXZfd2Fy
-bihjeGxkcy0+ZGV2LCAiJXM6IHVuY29ycmVjdGFibGUgc3RhdHVzOiAlIzA4eFxuIiwNCj4rCQkJ
-IGRldl9uYW1lKGRldiksIHN0YXR1cyk7DQo+KwkJd3JpdGVsKHN0YXR1cyAmIENYTF9SQVNfVU5D
-T1JSRUNUQUJMRV9TVEFUVVNfTUFTSywNCj5hZGRyKTsNCj4rCX0NCkZvciB0aGUgdW5jb3JyZWN0
-YWJsZSBub24tZmF0YWwgZXJyb3JzLCBpZiBhbnksIG1heSBuZWVkIHRvIHJldHVybiBQQ0lfRVJT
-X1JFU1VMVF9ORUVEX1JFU0VUDQp0byB0cmlnZ2VyIHRoZSBzbG90IHJlc2V0IHRvIHByZXZlbnQg
-bW9yZSBzZXJpb3VzIGlzc3VlcyBsYXRlci4gRm9yIHRoaXMgY2FzZSB0aGUgc3RhdGUgd291bGQg
-YmUNCiJwY2lfY2hhbm5lbF9pb19ub3JtYWwiLg0KIA0KPisNCj4rCWFkZHIgPSBjeGxkcy0+cmVn
-cy5yYXMgKyBDWExfUkFTX0NPUlJFQ1RBQkxFX1NUQVRVU19PRkZTRVQ7DQo+KwlzdGF0dXMgPSBy
-ZWFkbChhZGRyKTsNCj4rCWlmIChzdGF0dXMgJiBDWExfUkFTX0NPUlJFQ1RBQkxFX1NUQVRVU19N
-QVNLKSB7DQo+KwkJZGV2X3dhcm4oY3hsZHMtPmRldiwgIiVzOiBjb3JyZWN0YWJsZSBzdGF0dXM6
-ICUjMDh4XG4iLA0KPisJCQkgZGV2X25hbWUoZGV2KSwgc3RhdHVzKTsNCj4rCQl3cml0ZWwoc3Rh
-dHVzICYgQ1hMX1JBU19DT1JSRUNUQUJMRV9TVEFUVVNfTUFTSywNCj5hZGRyKTsNCj4rCX0NCj4r
-fQ0KPisNCj4rc3RhdGljIHBjaV9lcnNfcmVzdWx0X3QgY3hsX2Vycm9yX2RldGVjdGVkKHN0cnVj
-dCBwY2lfZGV2ICpwZGV2LA0KPisJCQkJCSAgIHBjaV9jaGFubmVsX3N0YXRlX3Qgc3RhdGUpDQo+
-K3sNCj4rCXN0cnVjdCBjeGxfZGV2X3N0YXRlICpjeGxkcyA9IHBjaV9nZXRfZHJ2ZGF0YShwZGV2
-KTsNCj4rCXN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZCA9IGN4bGRzLT5jeGxtZDsNCj4rCXN0cnVj
-dCBkZXZpY2UgKmRldiA9ICZjeGxtZC0+ZGV2Ow0KPisNCj4rCS8qDQo+KwkgKiBBIGZyb3plbiBj
-aGFubmVsIGluZGljYXRlcyBhbiBpbXBlbmRpbmcgcmVzZXQgd2hpY2ggaXMgZmF0YWwgdG8NCj4r
-CSAqIENYTC5tZW0gb3BlcmF0aW9uLCBhbmQgd2lsbCBsaWtlbHkgY3Jhc2ggdGhlIHN5c3RlbS4g
-T24gdGhlIG9mZg0KPisJICogY2hhbmNlIHRoZSBzaXR1YXRpb24gaXMgcmVjb3ZlcmFibGUgZHVt
-cCB0aGUgc3RhdHVzIG9mIHRoZSBSQVMNCj4rCSAqIGNhcGFiaWxpdHkgcmVnaXN0ZXJzIGFuZCBi
-b3VuY2UgdGhlIGFjdGl2ZSBzdGF0ZSBvZiB0aGUgbWVtZGV2Lg0KPisJICovDQo+KwljeGxfcmVw
-b3J0X2FuZF9jbGVhcihjeGxkcyk7DQo+Kw0KPisJc3dpdGNoIChzdGF0ZSkgew0KPisJY2FzZSBw
-Y2lfY2hhbm5lbF9pb19ub3JtYWw6DQo+KwkJcmV0dXJuIFBDSV9FUlNfUkVTVUxUX0NBTl9SRUNP
-VkVSOw0KPisJY2FzZSBwY2lfY2hhbm5lbF9pb19mcm96ZW46DQo+KwkJZGV2X3dhcm4oJnBkZXYt
-PmRldiwNCj4rCQkJICIlczogZnJvemVuIHN0YXRlIGVycm9yIGRldGVjdGVkLCBkaXNhYmxlDQo+
-Q1hMLm1lbVxuIiwNCj4rCQkJIGRldl9uYW1lKGRldikpOw0KPisJCWRldmljZV9yZWxlYXNlX2Ry
-aXZlcihkZXYpOw0KPisJCXJldHVybiBQQ0lfRVJTX1JFU1VMVF9ORUVEX1JFU0VUOw0KPisJY2Fz
-ZSBwY2lfY2hhbm5lbF9pb19wZXJtX2ZhaWx1cmU6DQo+KwkJZGV2X3dhcm4oJnBkZXYtPmRldiwN
-Cj4rCQkJICJmYWlsdXJlIHN0YXRlIGVycm9yIGRldGVjdGVkLCByZXF1ZXN0IGRpc2Nvbm5lY3Rc
-biIpOw0KPisJCXJldHVybiBQQ0lfRVJTX1JFU1VMVF9ESVNDT05ORUNUOw0KPisJfQ0KPisJcmV0
-dXJuIFBDSV9FUlNfUkVTVUxUX05FRURfUkVTRVQ7DQo+K30NCj4rDQo+K3N0YXRpYyBwY2lfZXJz
-X3Jlc3VsdF90IGN4bF9zbG90X3Jlc2V0KHN0cnVjdCBwY2lfZGV2ICpwZGV2KSB7DQo+KwlzdHJ1
-Y3QgY3hsX2Rldl9zdGF0ZSAqY3hsZHMgPSBwY2lfZ2V0X2RydmRhdGEocGRldik7DQo+KwlzdHJ1
-Y3QgY3hsX21lbWRldiAqY3hsbWQgPSBjeGxkcy0+Y3hsbWQ7DQo+KwlzdHJ1Y3QgZGV2aWNlICpk
-ZXYgPSAmY3hsbWQtPmRldjsNCj4rDQo+KwlkZXZfaW5mbygmcGRldi0+ZGV2LCAiJXM6IHJlc3Rh
-cnQgQ1hMLm1lbSBhZnRlciBzbG90IHJlc2V0XG4iLA0KPisJCSBkZXZfbmFtZShkZXYpKTsNCj4r
-CXBjaV9yZXN0b3JlX3N0YXRlKHBkZXYpOw0KMS4gRG8gd2UgbmVlZCB0byBjYWxsIHBjaV9zYXZl
-X3N0YXRlKHBkZXYpIGhlcmUgYWZ0ZXIgdGhlIHJlc2V0PyB0aG91Z2ggcGNpX3NhdmVfc3RhdGUo
-cGRldikgaXMgYmVpbmcgaW52b2tlZCBpbiB0aGUgIA0KY3hsX3BjaV9wcm9iZSgpLg0KDQo+Kwlp
-ZiAoZGV2aWNlX2F0dGFjaChkZXYpIDw9IDApDQo+KwkJcmV0dXJuIFBDSV9FUlNfUkVTVUxUX0RJ
-U0NPTk5FQ1Q7DQpNeSB1bmRlcnN0YW5kaW5nIGlzIHRoYXQgcGNpX2Rpc2FibGVfcGNpZV9lcnJv
-cl9yZXBvcnRpbmcocGRldikgd291bGQgYmUgY2FsbGVkDQppbiB0aGUgZGlzYWJsZV9hZXIgKCkg
-aW4gdGhlIHJlc2V0LCANCnBjaV9lbmFibGVfcGNpZV9lcnJvcl9yZXBvcnRpbmcocGRldikgbWF5
-IG5lZWQgdG8gY2FsbCBoZXJlIGFmdGVyIHRoZSByZXNldD8NCiANCj4rCXJldHVybiBQQ0lfRVJT
-X1JFU1VMVF9SRUNPVkVSRUQ7DQo+K30NCj4rDQo+K3N0YXRpYyB2b2lkIGN4bF9lcnJvcl9yZXN1
-bWUoc3RydWN0IHBjaV9kZXYgKnBkZXYpIHsNCj4rCXN0cnVjdCBjeGxfZGV2X3N0YXRlICpjeGxk
-cyA9IHBjaV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4rCXN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZCA9
-IGN4bGRzLT5jeGxtZDsNCj4rCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZjeGxtZC0+ZGV2Ow0KPisN
-Cj4rCWRldl9pbmZvKCZwZGV2LT5kZXYsICIlczogZXJyb3IgcmVzdW1lICVzXG4iLCBkZXZfbmFt
-ZShkZXYpLA0KPisJCSBkZXYtPmRyaXZlciA/ICJzdWNjZXNzZnVsIiA6ICJmYWlsZWQiKTsgfQ0K
-PisNCj4rc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZXJyb3JfaGFuZGxlcnMgY3hsX2Vycm9yX2hh
-bmRsZXJzID0gew0KPisJLmVycm9yX2RldGVjdGVkCT0gY3hsX2Vycm9yX2RldGVjdGVkLA0KPisJ
-LnNsb3RfcmVzZXQJPSBjeGxfc2xvdF9yZXNldCwNCj4rCS5yZXN1bWUJCT0gY3hsX2Vycm9yX3Jl
-c3VtZSwNCklmIHRoZSBGTFIgKEZ1bmN0aW9uIGxldmVsIHJlc2V0KSBzdXBwb3J0ZWQsIHBsZWFz
-ZSBhZGQgdGhlIGNvcnJlc3BvbmRpbmcgY2FsbGJhY2sgZnVuY3Rpb25zDQpyZXNldF9wcmVwYXJl
-KC4uKSBhbmQgcmVzZXRfZG9uZSguLikuDQoNCj4rfTsNCj4rDQo+IHN0YXRpYyBzdHJ1Y3QgcGNp
-X2RyaXZlciBjeGxfcGNpX2RyaXZlciA9IHsNCj4gCS5uYW1lCQkJPSBLQlVJTERfTU9ETkFNRSwN
-Cj4gCS5pZF90YWJsZQkJPSBjeGxfbWVtX3BjaV90YmwsDQo+IAkucHJvYmUJCQk9IGN4bF9wY2lf
-cHJvYmUsDQo+KwkuZXJyX2hhbmRsZXIJCT0gJmN4bF9lcnJvcl9oYW5kbGVycywNCj4gCS5kcml2
-ZXIJPSB7DQo+IAkJLnByb2JlX3R5cGUJPSBQUk9CRV9QUkVGRVJfQVNZTkNIUk9OT1VTLA0KPiAJ
-fSwNCg0KDQpUaGFua3MsDQpTaGlqdQ0K
+On Thu, Mar 17, 2022 at 11:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Thu, Mar 17, 2022 at 10:59:28AM +0200, Andy Shevchenko wrote:
+> > On Wed, Mar 16, 2022 at 04:15:48PM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Mar 16, 2022 at 06:12:19PM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Mar 16, 2022 at 06:52:09AM -0500, Bjorn Helgaas wrote:
+> > > > > On Wed, Mar 16, 2022 at 12:27:57PM +0200, Andy Shevchenko wrote:
+> > > > > > On Tue, Mar 15, 2022 at 03:22:31PM -0500, Bjorn Helgaas wrote:
+> > > > > > > On Tue, Mar 15, 2022 at 12:09:08PM +0200, Andy Shevchenko wrote:
+> > > > > > > > On Mon, Mar 14, 2022 at 02:42:53PM -0500, Bjorn Helgaas wrote:
+> > > > > > > > > On Mon, Mar 14, 2022 at 12:14:48PM +0200, Andy Shevchenko wrote:
+> > > > > > > > > > ATI PCIe-USB adapter advertises MSI, but it doesn't work
+> > > > > > > > > > if INTx is disabled.  Enable the respective quirk as
+> > > > > > > > > > it's done for other ATI devices on this chipset,
+> > > > > > > > > >
+> > > > > > > > > > Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on
+> > > > > > > > > > PCI devices")
+> > >
+> > > > > > > Anyway, I applied this to pci/msi for v5.18 with the following
+> > > > > > > commit log:
+> > > > > > >
+> > > > > > >     PCI: Disable broken MSI on ATI SB600 USB adapters
+> > > > > > >
+> > > > > > >     Some ATI SB600 USB adapters advertise MSI, but MSI doesn't
+> > > > > > >     work if INTx is disabled.  Disable MSI on these adapters.
+> > > > > >
+> > > > > > But IIUC MSI is _not_ disabled. That's why I have issued this
+> > > > > > version of the patch with different commit message. Did I
+> > > > > > misunderstand something?
+> > > > >
+> > > > > Oh, right, of course.  Sorry, I was asleep at the wheel.
+> > > >
+> > > > Are you going to fix that?
+> > >
+> > > Yes, of course, I'll do something with the commit message after we
+> > > figure out how to handle PCI_COMMAND_INTX_DISABLE.
+> > >
+> > > > > I guess it's just that for these devices, we don't disable INTx
+> > > > > when enabling MSI.  I can't remember why we disable INTx when
+> > > > > enabling MSI, but it raises the question of whether it's better to
+> > > > > leave INTx enabled or to just disable use of MSI completely.
+> > > >
+> > > > It's required by specification to disable INTx if I read 6.1.4.3
+> > > > Enabling Operation correctly.
+> > >
+> > > Thanks for the reference; I was looking for something like that.  But
+> > > I don't think this section requires us to set
+> > > PCI_COMMAND_INTX_DISABLE.  For the benefit of folks without the spec,
+> > > PCIe r6.0, sec 6.1.4.3 says:
+> > >
+> > >   To maintain backward compatibility, the MSI Enable bit in the
+> > >   Message Control Register for MSI and the MSI-X Enable bit in the
+> > >   Message Control Register for MSI-X are each Clear by default (MSI
+> > >   and MSI-X are both disabled). System configuration software Sets one
+> > >   of these bits to enable either MSI or MSI-X, but never both
+> > >   simultaneously. Behavior is undefined if both MSI and MSI-X are
+> > >   enabled simultaneously. Software disabling either mechanism during
+> > >   active operation may result in the Function dropping pending
+> > >   interrupt conditions or failing to recognize new interrupt
+> > >   conditions. While enabled for MSI or MSI-X operation, a Function is
+> > >   prohibited from using INTx interrupts (if implemented) to request
+> > >   service (MSI, MSI-X, and INTx are mutually exclusive).
+> > >
+> > > The only *software* constraints I see are (1) software must never
+> > > enable both MSI and MSI-X simultaneously, and (2) if software disables
+> > > MSI or MSI-X during active operation, the Function may fail to
+> > > generate an interrupt when it should.
+> > >
+> > > I read the last sentence as a constraint on the *hardware*: if either
+> > > MSI or MSI-X is enabled, the Function is not allowed to use INTx,
+> > > regardless of the state of PCI_COMMAND_INTX_DISABLE.
+> > >
+> > > I searched the spec for "Interrupt Disable", looking for situations
+> > > where software might be *required* to set it, but I didn't see
+> > > anything.
+> > >
+> > > I suspect "Interrupt Disable" was intended to help the OS stop all
+> > > activity from a device during hot-plug or reconfiguration, as hinted
+> > > at in sec 6.4, "Device Synchronization":
+> > >
+> > >   The ability of the driver and/or system software to block new
+> > >   Requests from the device is supported by the Bus Master Enable,
+> > >   SERR# Enable, and Interrupt Disable bits in the Command register
+> > >   (Section 7.5.1.1.3) of each device Function, and other such control
+> > >   bits.
+> > >
+> > > So I'm trying to figure out why when enabling MSI we need to set
+> > > PCI_COMMAND_INTX_DISABLE for most devices, but it's safe to skip that
+> > > for these quirked devices.
+> >
+> > I guess it's wrong wording in the last paragraph. It's not safe, but it's
+> > _required_ since HW doesn't follow PCI specification that clearly says:
+> > "MSI, MSI-X, and INTx are mutually exclusive".
+>
+> I agree there's a defect in these SB600 devices.  My guess is that
+> PCI_COMMAND_INTX_DISABLE actually disables both INTx and MSI, when
+> it's only supposed to disable INTx.
+>
+> I'm pretty sure the spec doesn't actually require software to set
+> Interrupt Disable when enabling MSI, since MSI was added in PCI r2.2,
+> which included this text in sec 6.8.2:
+>
+>   System configuration software sets [the MSI Enable] bit to enable
+>   MSI. ...  Once enabled, a function is prohibited from using its
+>   INTx# pin (if implemented) to request service (MSI and INTx# are
+>   mutually exclusive).
+>
+> and Interrupt Disable was added later, in PCI r2.3, with no mention of
+> a connection with MSI.  All the specs from PCI r2.2 to PCIe r6.0
+> include the text above about not using INTx# if MSI or MSI-X is
+> enabled, but that's not the same as requiring software to set
+> Interrupt Disable.  Linux has set Interrupt Disable when enabling MSI
+> ever since MSI support was added [1], so I would hesitate to change
+> that even though I don't think it's required.
+
+Thanks for diving into the history of the specification. What I learnt
+about any of the specifications is that it usually has a lot of
+implications that are only understandable (known) to the specification
+author(s). This gives a room of misinterpretation. In any case I
+usually apply my common sense denominator, so I try to go with the
+straight logic. In this case it seems to me that keeping both enabled
+is illogical and Linux does the right thing (means the author of the
+Linux kernel implementation is on the same page with me).
+
+> What I don't like about PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG is that it
+> changes the generic code path in a sort of random way, i.e., this
+> device becomes yet another special case in how we handle Interrupt
+> Disable.
+>
+> What would you think about just setting pdev->no_msi instead, so we
+> don't try to use MSI at all on these devices?  I think that's what we
+> did before 306c54d0edb6.
+
+Yes, we did. But why should we go this way if it already established a
+special case disregarding my patch(es)? If you want to do that you
+need to explain why other devices on the same chipset should enable
+MSI and what's wrong with enabling MSI on the USB devices. My
+understanding is that the MSI is a good thing to have due to
+performance benefits and taking into account other devices that have
+already been using it on the other devices of the same chipset tells
+me that's okay. Moreover, the reporter of the bug confirmed that MSI
+works for them after applying this quirk fix.
+
+> [1] https://lore.kernel.org/all/200310032215.h93MFnjT005788@snoqualmie.dp.intel.com/ (search for PCI_COMMAND_INTX_DISABLE)
+
+-- 
+With Best Regards,
+Andy Shevchenko
