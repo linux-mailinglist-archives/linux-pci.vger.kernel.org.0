@@ -2,144 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D45664DD0F2
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Mar 2022 23:59:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB13B4DD2CE
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Mar 2022 03:09:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230019AbiCQXBE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Mar 2022 19:01:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49974 "EHLO
+        id S231707AbiCRCK7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Mar 2022 22:10:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229920AbiCQXBE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 19:01:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6765147AFD;
-        Thu, 17 Mar 2022 15:59:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7043B60C08;
-        Thu, 17 Mar 2022 22:59:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F259C340E9;
-        Thu, 17 Mar 2022 22:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647557985;
-        bh=WmyZCuaCEYPAzapDteGAR71HmkgSsiNLVajfhzeK3y0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LQd7ccDVCEtSrtgwJz6IwR3Kuza3NKOinSxpu9Rg2THGrskaF13gYU+sBhpmK45Hi
-         t9RS2HSz9pvvBv3yhzlPYzc/6JDNW6kFtj0nWW1Tmd2BnIS+rCaAmUmsWi8nzwbc3/
-         qwXINzv7ewA7VKOmoCSGvSx49c/iCB6CVN/b5GbXKtkdY0+lkD7UHaTpMsbclcBeMB
-         19cM3j6fltE8rHrL+IH1aUXQWqL88urmj0lh88wwvEXt+Ml11IgggZP4/gibrhYKIc
-         Z32de3VbOXPfIpr3v7rWgpaCkPHSUj6EcPOmw58K1f6FS9IiR8SrFoGqFxRALTEHyW
-         7mhA98rSr/LFw==
-Date:   Thu, 17 Mar 2022 17:59:44 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Eric Badger <ebadger@purestorage.com>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver OHalloran <oohall@gmail.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v1] PCI/AER: Handle Multi UnCorrectable/Correctable
- errors properly
-Message-ID: <20220317225944.GA765564@bhelgaas>
+        with ESMTP id S230202AbiCRCK7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Mar 2022 22:10:59 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1427625F66B;
+        Thu, 17 Mar 2022 19:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647569382; x=1679105382;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=bcvdTm8vTC17tTtaKL6TbtagXdFa7r13SD1OdJ96w6M=;
+  b=meuZUM6a2CSYrm7VW+WrI585lKBNNW8HcQWtf+aSOp5r8/EPf/fWMw1k
+   5zOYKseYyod3t0SYFwiE18dbufEJPYJALTaN7LhMmdWqtHWLV75usxe6n
+   p8sV2XtX0X/mohvU6sJroXmFkwkRYmtExQwX4WFxr+LU1FK74HkOU9vbA
+   svEe/4kdFpdg2HgsRj0HFwS+WcbJCR3tVUc2Z1+lObdRYKfJjds85XmzT
+   65S88g//vwRo81CAD62e7VN1jCCjNJuBQW0191rmUQSMDiM3cVPvHYZWX
+   yhHAl44dMIVidBBeUTYfzD7tJeF13dPjSdOdPj8PFq9muYZQmXLgVokPi
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="239191312"
+X-IronPort-AV: E=Sophos;i="5.90,190,1643702400"; 
+   d="scan'208";a="239191312"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 19:09:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,190,1643702400"; 
+   d="scan'208";a="691143655"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Mar 2022 19:09:41 -0700
+Received: from mzaid-MOBL1.amr.corp.intel.com (mzaid-MOBL1.amr.corp.intel.com [10.255.228.81])
+        by linux.intel.com (Postfix) with ESMTP id F1664580A5D;
+        Thu, 17 Mar 2022 19:09:40 -0700 (PDT)
+Message-ID: <117f781f5bf8d1c3cee5f8580fb0c9bf8d049cc7.camel@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] PCI/PM: refactor pci_pm_suspend_noirq()
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Rajvi Jingar <rajvi.jingar@intel.com>, rafael.j.wysocki@intel.com,
+        bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Date:   Thu, 17 Mar 2022 19:09:40 -0700
+In-Reply-To: <20220317233153.2617938-1-rajvi.jingar@intel.com>
+References: <20220317233153.2617938-1-rajvi.jingar@intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220314162146.GA1439451@ebps>
-X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 14, 2022 at 09:21:46AM -0700, Eric Badger wrote:
-> On Sun, Mar 13, 2022 at 02:43:14PM -0700, Raj, Ashok wrote:
-> > On Sun, Mar 13, 2022 at 02:52:20PM -0500, Bjorn Helgaas wrote:
-> > > On Fri, Mar 11, 2022 at 02:58:07AM +0000, Kuppuswamy Sathyanarayanan wrote:
-> > > > Currently the aer_irq() handler returns IRQ_NONE for cases without bits
-> > > > PCI_ERR_ROOT_UNCOR_RCV or PCI_ERR_ROOT_COR_RCV are set. But this
-> > > > assumption is incorrect.
-> > > > 
-> > > > Consider a scenario where aer_irq() is triggered for a correctable
-> > > > error, and while we process the error and before we clear the error
-> > > > status in "Root Error Status" register, if the same kind of error
-> > > > is triggered again, since aer_irq() only clears events it saw, the
-> > > > multi-bit error is left in tact. This will cause the interrupt to fire
-> > > > again, resulting in entering aer_irq() with just the multi-bit error
-> > > > logged in the "Root Error Status" register.
-> > > > 
-> > > > Repeated AER recovery test has revealed this condition does happen
-> > > > and this prevents any new interrupt from being triggered. Allow to
-> > > > process interrupt even if only multi-correctable (BIT 1) or
-> > > > multi-uncorrectable bit (BIT 3) is set.
-> > > > 
-> > > > Reported-by: Eric Badger <ebadger@purestorage.com>
-> > > 
-> > > Is there a bug report with any concrete details (dmesg, lspci, etc)
-> > > that we can include here?
-> > 
-> > Eric might have more details to add when he collected numerous logs to get
-> > to the timeline of the problem. The test was to stress the links with an
-> > automated power off, this will result in some eDPC UC error followed by
-> > link down. The recovery worked fine for several cycles and suddenly there
-> > were no more interrupts. A manual rescan on pci would probe and device is
-> > operational again.
+Hi Rajvi,
+
+On Thu, 2022-03-17 at 16:31 -0700, Rajvi Jingar wrote:
+> The state of the device is saved during pci_pm_suspend_noirq(), if it
+> has not already been saved, regardless of the skip_bus_pm flag value. So
+> skip_bus_pm check is removed before saving the device state.
 > 
-> The problem was originally discovered while performing a looping hot plug
-> test. At hot remove time, one or more corrected errors usually appeared:
+> v2: add comments to the changes
+
+...
+
 > 
-> [256236.078151] pcieport 0000:89:02.0: AER: Corrected error received: 0000:89:02.0
-> [256236.078154] pcieport 0000:89:02.0: AER: PCIe Bus Error: severity=Corrected, type=Physical Layer, (Receiver ID)
-> [256236.088606] pcieport 0000:89:02.0: AER:   device [8086:347a] error status/mask=00000001/00000000
-> [256236.097857] pcieport 0000:89:02.0: AER:    [ 0] RxErr                 
-> [256236.152622] pcieport 0000:89:02.0: pciehp: Slot(400): Link Down
-> [256236.152623] pcieport 0000:89:02.0: pciehp: Slot(400): Card not present
-> [256236.152631] pcieport 0000:89:02.0: DPC: containment event, status:0x1f01 source:0x0000
-> [256236.152632] pcieport 0000:89:02.0: DPC: unmasked uncorrectable error detected reason 0 ext_reason 0
-> [256236.152634] pcieport 0000:89:02.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
-> [256236.164207] pcieport 0000:89:02.0: AER:   device [8086:347a] error status/mask=00000020/00100000
-> [256236.173464] pcieport 0000:89:02.0: AER:    [ 5] SDES                   (First)
-> [256236.278407] pci 0000:8a:00.0: Removing from iommu group 32
-> [256237.500837] pcieport 0000:89:02.0: Data Link Layer Link Active not set in 1000 msec
-> [256237.500842] pcieport 0000:89:02.0: link reset at upstream device 0000:89:02.0 failed
-> [256237.500865] pcieport 0000:89:02.0: AER: Device recovery failed
+> Signed-off-by: Rajvi Jingar <rajvi.jingar@intel.com>
+> Suggested-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+
+Patch changelogs aren't kept in the commit message. Place them here after the
+"---" line. In this location, it won't affect applying the patch.
+
+David
+
+>  drivers/pci/pci-driver.c | 18 ++++++------------
+>  1 file changed, 6 insertions(+), 12 deletions(-)
 > 
-> The problematic case arose when 2 corrected errors arrived in a sequence like this:
-> 
-> 1. Correctable error triggered, bit 0 (ERR_COR) set in Root Error Status,
->    which now has value 0x1.
-> 2. aer_irq() triggered, reads Root Error Status, finds value 0x1.
-> 3. Second correctable error triggered, bit 1 (multiple ERR_COR) set in Root
->    Error Status, which now has value 0x3.
-> 4. aer_irq() writes back 0x1 to Root Error Status, which now has value 0x2.
-> 5. aer_irq() triggered again due to the second error, but, finding value 0x2
->    in Root Error Status, takes no action. Future interrupts are now inhibited.
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 588588cfda48..ffe76f238d7e 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -834,20 +834,14 @@ static int pci_pm_suspend_noirq(struct device *dev)
+>  		}
+>  	}
+>  
+> -	if (pci_dev->skip_bus_pm) {
+> +	if (!pci_dev->state_saved) {
+> +		pci_save_state(pci_dev);
+>  		/*
+> -		 * Either the device is a bridge with a child in D0 below it, or
+> -		 * the function is running for the second time in a row without
+> -		 * going through full resume, which is possible only during
+> -		 * suspend-to-idle in a spurious wakeup case.  The device should
+> -		 * be in D0 at this point, but if it is a bridge, it may be
+> -		 * necessary to save its state.
+> +		 * If the device is a bridge with a child in D0 below it, it
+> needs to
+> +		 * stay in D0, so check skip_bus_pm to avoid putting it into a
+> +		 * low-power state in that case.
+>  		 */
+> -		if (!pci_dev->state_saved)
+> -			pci_save_state(pci_dev);
+> -	} else if (!pci_dev->state_saved) {
+> -		pci_save_state(pci_dev);
+> -		if (pci_power_manageable(pci_dev))
+> +		if (!pci_dev->skip_bus_pm && pci_power_manageable(pci_dev))
+>  			pci_prepare_to_sleep(pci_dev);
+>  	}
+>  
 
-Thanks for the additional details!
-
-After this patch, I guess aer_irq() still reads 0x2
-(PCI_ERR_ROOT_MULTI_COR_RCV), but now it writes 0x2 back which clears
-PCI_ERR_ROOT_MULTI_COR_RCV.
-
-In addition, aer_irq() will continue on to read PCI_ERR_ROOT_ERR_SRC,
-which probably contains either 0 or junk left over from being captured
-when PCI_ERR_ROOT_COR_RCV was set.
-
-And aer_irq() will queue an e_src record with status ==
-PCI_ERR_ROOT_MULTI_COR_RCV.  But since PCI_ERR_ROOT_COR_RCV is not set
-in status, aer_isr_one_error() will do nothing, right?
-
-That might not be *terrible* and is definitely better than not being
-able to handle future interrupts.  But we basically threw away the
-information that multiple errors occurred, and we queued an e_src
-record that occupies space without being used for anything.
-
-Bjorn
