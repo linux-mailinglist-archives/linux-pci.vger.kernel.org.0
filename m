@@ -2,119 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 108614DE7E7
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Mar 2022 13:40:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AAEBF4DE927
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Mar 2022 16:59:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242908AbiCSMlg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Mar 2022 08:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34884 "EHLO
+        id S238683AbiCSQBA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Mar 2022 12:01:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234790AbiCSMlg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Mar 2022 08:41:36 -0400
-Received: from imap2.colo.codethink.co.uk (imap2.colo.codethink.co.uk [78.40.148.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE444338D;
-        Sat, 19 Mar 2022 05:40:15 -0700 (PDT)
-Received: from cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net ([86.15.83.122] helo=[192.168.0.21])
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1nVYNP-0001Oy-P6; Sat, 19 Mar 2022 12:40:11 +0000
-Message-ID: <9cc22be4-abba-ef75-a340-af7afb08f480@codethink.co.uk>
-Date:   Sat, 19 Mar 2022 12:40:10 +0000
+        with ESMTP id S232547AbiCSQBA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Mar 2022 12:01:00 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B47219A561;
+        Sat, 19 Mar 2022 08:59:38 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id d10so22212355eje.10;
+        Sat, 19 Mar 2022 08:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8GTIMWQve+g7wKIIsMEJALGjWCTbDmifDv5C0pWR1mM=;
+        b=a5xvYHlvl3R8AQ0C3wjzNthnrBkCQ64fZ3NdgDvpeo2sYFWR7vVKJxfoSVjIaUbb91
+         LjBEAxQ5S5Tv6q3nZpqzXHad4YPtjl/t2UFLepYBbYvx6KKq/jfa0jZzxNllid6J/SjI
+         oadBNva70xUediy4wrvv4SZAm67TaFAT5ngoanjGKCa8N+j7mBIaJyoMtA/oS+Or62vG
+         siGcZpt6qslVh0wqMBcxmxvWwOVbHiORwiRgTUKDYTR+SUjKEp5JGKIBecSxrvwnefh3
+         t8Mbf2q8dHMSa9Vb1gqWG3vMSqxzl6y7eUu8oIwgeL2Y3hrPFhef1F9eH39mhMw69Cdu
+         SXDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8GTIMWQve+g7wKIIsMEJALGjWCTbDmifDv5C0pWR1mM=;
+        b=PmfmicZePT/7YpKtaJAAXMYeLuCatQWcvrwqx3jYz482lHeE3fN5n98amcRZ25cw1U
+         ikkXNekxrRg8I9/psiYSqNmnrBgCAXFZBbJ/M5CB1Lh51dVM+mRgh0ocAtwsI/Kvy0LT
+         8QyO9mngaJ/4UkP+/ocqXY/jTiSw1nIt/ZhUQAU7vOIg1tA4BQrtx3ot0Nz5bojQikQA
+         13WUzIMsvanIQHSTPbcRhsVvmwqF3+rejdp2L2QHAuQB8WojpFOh9XiyePSyzFtsr+Gw
+         itUVP/KFnnlFqHlhwcDGwPra0fIPv9coUCKaqasMinJygQqbEEhg24H7S3ncIF36vTFX
+         4BvQ==
+X-Gm-Message-State: AOAM5300M98Ngui8pjbNkbJgwr5sYFUM8cLUPtgV+zfbTPLRj7/upqhO
+        8+aSBUrvdlX1ZffiPJVCSvE=
+X-Google-Smtp-Source: ABdhPJwnka6fXpm7aOvyQf5QPKnfzcNr+LOOu0fmSGTuddcAPR24PWqME2x4vz2NG03ZCY5yOnmjOg==
+X-Received: by 2002:a17:906:6886:b0:6df:8b7b:499e with SMTP id n6-20020a170906688600b006df8b7b499emr13801188ejr.289.1647705576710;
+        Sat, 19 Mar 2022 08:59:36 -0700 (PDT)
+Received: from anparri (host-82-59-4-232.retail.telecomitalia.it. [82.59.4.232])
+        by smtp.gmail.com with ESMTPSA id l9-20020a1709060cc900b006ce04bb8668sm4902499ejh.184.2022.03.19.08.59.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Mar 2022 08:59:36 -0700 (PDT)
+Date:   Sat, 19 Mar 2022 16:59:28 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Saurabh Singh Sengar <ssengar@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Wei Hu <weh@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXTERNAL] [PATCH 1/2] PCI: hv: Use IDR to generate transaction
+ IDs for VMBus hardening
+Message-ID: <20220319155928.GA2951@anparri>
+References: <20220318174848.290621-1-parri.andrea@gmail.com>
+ <20220318174848.290621-2-parri.andrea@gmail.com>
+ <KL1P15301MB0295879FF28B67F3C521FFB3BE149@KL1P15301MB0295.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [V3] PCI: fu740: Drop to 2.5GT/s to fix initial device probing on
- some boards
-Content-Language: en-GB
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, bhelgaas@google.com,
-        robh@kernel.org, lorenzo.pieralisi@arm.com,
-        greentime.hu@sifive.com, Paul Walmsley <paul.walmsley@sifive.com>
-References: <mhng-0c8e7e26-5480-4573-b7f6-27b09f06de59@palmer-ri-x1c9>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <mhng-0c8e7e26-5480-4573-b7f6-27b09f06de59@palmer-ri-x1c9>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <KL1P15301MB0295879FF28B67F3C521FFB3BE149@KL1P15301MB0295.APCP153.PROD.OUTLOOK.COM>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18/03/2022 23:03, Palmer Dabbelt wrote:
-> On Fri, 18 Mar 2022 08:24:30 PDT (-0700), ben.dooks@codethink.co.uk wrote:
->> The fu740 PCIe core does not probe any devices on the SiFive Unmatched
->> board without this fix (or having U-Boot explicitly start the PCIe via
->> either boot-script or user command). The fix is to start the link at
->> 2.5GT/s speeds and once the link is up then change the maximum speed back
->> to the default.
->>
->> The U-Boot driver claims to set the link-speed to 2.5GT/s to get the 
->> probe
->> to work (and U-Boot does print link up at 2.5GT/s) in the following code:
->> https://source.denx.de/u-boot/u-boot/-/blob/master/drivers/pci/pcie_dw_sifive.c?id=v2022.01#L271 
->>
->>
->> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->> -- 
+> > @@ -1208,6 +1211,27 @@ static void hv_pci_read_config_compl(void
+> > *context, struct pci_response *resp,
+> >  	complete(&comp->comp_pkt.host_event);
+> >  }
+> > 
+> > +static inline int alloc_request_id(struct hv_pcibus_device *hbus,
+> > +				   void *ptr, gfp_t gfp)
+> > +{
+> > +	unsigned long flags;
+> > +	int req_id;
+> > +
+> > +	spin_lock_irqsave(&hbus->idr_lock, flags);
+> > +	req_id = idr_alloc(&hbus->idr, ptr, 1, 0, gfp);
 > 
-> A "--" triggers some mail handles to think the rest of this is a 
-> signature, git folks usually use a "---" to indicate a comment that 
-> shouldn't be part of what's eventually merged (like this changelog stuff).
-> 
->> Note, this patch has had significant re-work since the previous 4
->> sets, including trying to fix style, message, reliance on the U-Boot
->> fix and the comments about usage of LINK_CAP and reserved fields.
->>
->> v2:
->> - fix issues with Gen1/2.5GTs
->> - updated comment on the initial probe
->> - run tests with both uninitialised and initialsed pcie from uboot
->> ---
->>  drivers/pci/controller/dwc/pcie-fu740.c | 52 ++++++++++++++++++++++++-
->>  1 file changed, 51 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c 
->> b/drivers/pci/controller/dwc/pcie-fu740.c
->> index 842b7202b96e..ecac0364178a 100644
->> --- a/drivers/pci/controller/dwc/pcie-fu740.c
->> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
->> @@ -181,10 +181,60 @@ static int fu740_pcie_start_link(struct dw_pcie 
->> *pci)
-> 
-> Is there an errata?  IIUC this will trigger the workaround on all 
-> FU740s, but from the description it seems like more of a board bug than 
-> a chip bug.  The distinction doesn't really matter, as there's only one 
-> board for this chip (and I'm assuming that'll always be the case), but 
-> if there's an errata (or any way this is documented) it might make 
-> things a bit easier to sort out if we end up with another similar 
-> chip/board.
-> 
-> Either way
-> 
-> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-> 
-> I'm assuming you, or someone else, has tested this on the board?  I'm 
-> pretty sure I've got one lying around somewhere, but I don't regularly 
-> use it.  I can dust it off if nobody else has tried this, but happy to 
-> avoid the need to do so.
+> [Saurabh Singh Sengar] Many a place we are using alloc_request_id with GFP_KERNEL, which results this allocation inside of spin lock with GFP_KERNEL.
+
+That's a bug.
 
 
-I've been trying this on my own Unmatched board, where I often use
-network boot. We have also tested with a new-ish U-Boot (2022.01 I
-think) with both "pci enum" and not. It has been on our test board
-for over a week without an issue.
+> Is this a good opportunity to use idr_preload ?
 
-I will have a look for v4 about changing the WARN_ON() to something
-more useful.
+I'd rather fix (and 'simplify' a bit the interface) by doing:
 
+static inline int alloc_request_id(struct hv_pcibus_device *hbus, void *ptr)
+{
+	unsigned long flags;
+	int req_id;
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+	spin_lock_irqsave(&hbus->idr_lock, flags);
+	req_id = idr_alloc(&hbus->idr, ptr, 1, 0, GFP_ATOMIC);
+	spin_unlock_irqrestore(&hbus->idr_lock, flags);
+	return req_id;
+}
 
-https://www.codethink.co.uk/privacy.html
+Thoughts?
+
+Thanks,
+  Andrea
