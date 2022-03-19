@@ -2,64 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCBBE4DEAAE
-	for <lists+linux-pci@lfdr.de>; Sat, 19 Mar 2022 21:38:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52D5B4DEAB1
+	for <lists+linux-pci@lfdr.de>; Sat, 19 Mar 2022 21:40:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232685AbiCSUkE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 19 Mar 2022 16:40:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48702 "EHLO
+        id S237007AbiCSUln (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 19 Mar 2022 16:41:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243902AbiCSUkD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Mar 2022 16:40:03 -0400
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2F6919CCEC;
-        Sat, 19 Mar 2022 13:38:41 -0700 (PDT)
+        with ESMTP id S234183AbiCSUln (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 19 Mar 2022 16:41:43 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 624F71C8A9E;
+        Sat, 19 Mar 2022 13:40:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647722321; x=1679258321;
+  t=1647722421; x=1679258421;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=SNTO9SP31MJ3IfcBEllmZc0kH+tF2DmXOvnp/cl1uDA=;
-  b=N0PA+XgM5XIhJXRwCLk+f6Xlg+Uh5EutyI0HEEtSdqWISfXZgfPWSO/y
-   /a9QEWexImu2lxcVjfwpxmbpvriNCE1JIFCw3hOaqq6ROAgp39lKbag6w
-   TYZdiPMOIJYPDXzXD12p/DroPgqBXsSLHwIiauT42k94wWOJqsOfRkR7A
-   mdnkr9S+UPpu7PBJai0IuRiWoQFgBNbDuSIlK9ATpZtHd96BBL4QjPlVs
-   vtALKQm+rLHuhUd/dyYZJ36ftQ78H9emlritIC9hMf4iIv4XH1+k5m4ys
-   SJH83Chu4Dm8NfAqlcqC0kvgn8M6MgEdKKYlLQqs2+4/MvHxm6mi2ZsT2
+  bh=Nd8cTOZCZJMffvQJDvB7Hp7HuDrz3fS77J4g0WJHxjQ=;
+  b=Dn6/KzYRQYyPshx2VVa7zg9pEHenDXmuUV9DxBANaos/z+H79nWNdGqA
+   YT6j/C3FJYxs0yxqdfrDVyTmJeCaMlRyTkFACowFarblZymId+jltf9SY
+   2cSfyWhpt7KGXrM0cpGxXeo/HbRp7P/nX1xMtqvKpX0KvR8X+KutAqc6e
+   jjbV24AslkSUcmCnqdYsYvgtNHybJx8oDwwxtssoeBMRuNRTP4nWk8kBt
+   QJDu4yc9ZgcL2EtzO70fCiAPQWwsmDniIdPuJCRoSRLQEYMfbd8vDCHsa
+   m3vbyvR+TlkT7STrjiSOldeDxqxPbqZlajQ023uJ4fq+RNDpDJ3+XCCM3
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10291"; a="318034798"
+X-IronPort-AV: E=McAfee;i="6200,9189,10291"; a="254894997"
 X-IronPort-AV: E=Sophos;i="5.90,195,1643702400"; 
-   d="scan'208";a="318034798"
+   d="scan'208";a="254894997"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2022 13:38:41 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2022 13:40:21 -0700
 X-IronPort-AV: E=Sophos;i="5.90,195,1643702400"; 
-   d="scan'208";a="542656723"
+   d="scan'208";a="542657573"
 Received: from llscottx-mobl1.amr.corp.intel.com (HELO [10.209.82.139]) ([10.209.82.139])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2022 13:38:39 -0700
-Message-ID: <427f19c6-32f0-684e-5fdd-2e5ed192b71d@linux.intel.com>
-Date:   Sat, 19 Mar 2022 13:38:39 -0700
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2022 13:40:20 -0700
+Message-ID: <aa810b71-89b2-f18e-5564-d65ed421b8d9@linux.intel.com>
+Date:   Sat, 19 Mar 2022 13:40:20 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Firefox/91.0 Thunderbird/91.5.0
-Subject: Re: [PATCH v2 1/2] PCI/AER: Disable AER service when link is in L2/L3
+Subject: Re: [PATCH v2 2/2] PCI/DPC: Disable DPC service when link is in L2/L3
  ready, L2 and L3 state
 Content-Language: en-US
 To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
 Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
         Russell Currey <ruscur@russell.cc>,
         Oliver O'Halloran <oohall@gmail.com>,
-        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 References: <20220127025418.1989642-1-kai.heng.feng@canonical.com>
+ <20220127025418.1989642-2-kai.heng.feng@canonical.com>
 From:   Sathyanarayanan Kuppuswamy 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20220127025418.1989642-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20220127025418.1989642-2-kai.heng.feng@canonical.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+X-Spam-Status: No, score=-8.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -71,103 +70,120 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 On 1/26/22 6:54 PM, Kai-Heng Feng wrote:
-> Commit 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in
-> hint") enables ACS, and some platforms lose its NVMe after resume from
+> Since TLP and DLLP transmission is disabled for a Link in L2/L3 Ready,
+> L2 and L3 (i.e. device in D3hot and D3cold), and DPC depends on AER, so
 
-Why enabling ACS makes platform lose NVMe? Can you add more details
-about the problem?
+Better description about the problem would be helpful. I know you
+have included a log in AER patch. But a quick summary of the problem
+in this patch will make it easier to read the patch.
 
-> S3:
-> [   50.947816] pcieport 0000:00:1b.0: DPC: containment event, status:0x1f01 source:0x0000
-> [   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
-> [   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
-> [   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error status/mask=00200000/00010000
-> [   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
-> [   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
-> [   50.947843] nvme nvme0: frozen state error detected, reset controller
+> also disable DPC here.
 > 
-> It happens right after ACS gets enabled during resume.
-> 
-> There's another case, when Thunderbolt reaches D3cold:
-> [   30.100211] pcieport 0000:00:1d.0: AER: Uncorrected (Non-Fatal) error received: 0000:00:1d.0
-> [   30.100251] pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-> [   30.100256] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
-> [   30.100262] pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-> [   30.100267] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 08000052 00000000 00000000
-> [   30.100372] thunderbolt 0000:0a:00.0: AER: can't recover (no error_detected callback)
-
-no callback message means one or more devices in the given port does not
-support error handler. How is this related to ACS?
-
-> [   30.100401] xhci_hcd 0000:3e:00.0: AER: can't recover (no error_detected callback)
-> [   30.100427] pcieport 0000:00:1d.0: AER: device recovery failed
-> 
-> So disable AER service to avoid the noises from turning power rails
-> on/off when the device is in low power states (D3hot and D3cold), as
-> PCIe spec "5.2 Link State Power Management" states that TLP and DLLP
-> transmission is disabled for a Link in L2/L3 Ready (D3hot), L2 (D3cold
-> with aux power) and L3 (D3cold).
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=209149
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215453
-> Fixes: 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in hint")
 > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
 > v2:
 >   - Wording change.
+>   - Empty line dropped.
 > 
->   drivers/pci/pcie/aer.c | 31 +++++++++++++++++++++++++------
->   1 file changed, 25 insertions(+), 6 deletions(-)
+>   drivers/pci/pcie/dpc.c | 60 +++++++++++++++++++++++++++++++-----------
+>   1 file changed, 44 insertions(+), 16 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 9fa1f97e5b270..e4e9d4a3098d7 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1367,6 +1367,22 @@ static int aer_probe(struct pcie_device *dev)
->   	return 0;
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 3e9afee02e8d1..414258967f08e 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -343,13 +343,33 @@ void pci_dpc_init(struct pci_dev *pdev)
+>   	}
 >   }
 >   
-> +static int aer_suspend(struct pcie_device *dev)
+> +static void dpc_enable(struct pcie_device *dev)
 > +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
+> +	struct pci_dev *pdev = dev->port;
+> +	u16 ctl;
 > +
-> +	aer_disable_rootport(rpc);
-> +	return 0;
+> +	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+> +	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+> +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
 > +}
 > +
-> +static int aer_resume(struct pcie_device *dev)
+> +static void dpc_disable(struct pcie_device *dev)
 > +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
+> +	struct pci_dev *pdev = dev->port;
+> +	u16 ctl;
 > +
-> +	aer_enable_rootport(rpc);
-> +	return 0;
+> +	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+> +	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
+> +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
 > +}
 > +
->   /**
->    * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
->    * @dev: pointer to Root Port, RCEC, or RCiEP
-> @@ -1433,12 +1449,15 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->   }
+>   #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
+>   static int dpc_probe(struct pcie_device *dev)
+>   {
+>   	struct pci_dev *pdev = dev->port;
+>   	struct device *device = &dev->device;
+>   	int status;
+> -	u16 ctl, cap;
+> +	u16 cap;
 >   
->   static struct pcie_port_service_driver aerdriver = {
-> -	.name		= "aer",
-> -	.port_type	= PCIE_ANY_PORT,
-> -	.service	= PCIE_PORT_SERVICE_AER,
+>   	if (!pcie_aer_is_native(pdev) && !pcie_ports_dpc_native)
+>   		return -ENOTSUPP;
+> @@ -364,10 +384,7 @@ static int dpc_probe(struct pcie_device *dev)
+>   	}
+>   
+>   	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
+> -	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
 > -
-> -	.probe		= aer_probe,
-> -	.remove		= aer_remove,
-> +	.name			= "aer",
+> -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+> -	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+> +	dpc_enable(dev);
+>   	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
+>   
+>   	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
+> @@ -380,22 +397,33 @@ static int dpc_probe(struct pcie_device *dev)
+>   	return status;
+>   }
+>   
+> -static void dpc_remove(struct pcie_device *dev)
+> +static int dpc_suspend(struct pcie_device *dev)
+>   {
+> -	struct pci_dev *pdev = dev->port;
+> -	u16 ctl;
+> +	dpc_disable(dev);
+> +	return 0;
+> +}
+>   
+> -	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+> -	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
+> -	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+> +static int dpc_resume(struct pcie_device *dev)
+> +{
+> +	dpc_enable(dev);
+> +	return 0;
+> +}
+> +
+> +static void dpc_remove(struct pcie_device *dev)
+> +{
+> +	dpc_disable(dev);
+>   }
+>   
+>   static struct pcie_port_service_driver dpcdriver = {
+> -	.name		= "dpc",
+> -	.port_type	= PCIE_ANY_PORT,
+> -	.service	= PCIE_PORT_SERVICE_DPC,
+> -	.probe		= dpc_probe,
+> -	.remove		= dpc_remove,
+> +	.name			= "dpc",
 > +	.port_type		= PCIE_ANY_PORT,
-> +	.service		= PCIE_PORT_SERVICE_AER,
-> +	.probe			= aer_probe,
-> +	.suspend		= aer_suspend,
-> +	.resume			= aer_resume,
-> +	.runtime_suspend	= aer_suspend,
-> +	.runtime_resume		= aer_resume,
-> +	.remove			= aer_remove,
+> +	.service		= PCIE_PORT_SERVICE_DPC,
+> +	.probe			= dpc_probe,
+> +	.suspend		= dpc_suspend,
+> +	.resume			= dpc_resume,
+> +	.runtime_suspend	= dpc_suspend,
+> +	.runtime_resume		= dpc_resume,
+> +	.remove			= dpc_remove,
 >   };
 >   
->   /**
+>   int __init pcie_dpc_init(void)
 
 -- 
 Sathyanarayanan Kuppuswamy
