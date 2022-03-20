@@ -2,341 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C3704E1B4D
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Mar 2022 12:24:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8FC04E1C21
+	for <lists+linux-pci@lfdr.de>; Sun, 20 Mar 2022 15:58:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244649AbiCTLZi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 20 Mar 2022 07:25:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42830 "EHLO
+        id S239096AbiCTPAI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 20 Mar 2022 11:00:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244615AbiCTLZh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Mar 2022 07:25:37 -0400
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AFB95F44
-        for <linux-pci@vger.kernel.org>; Sun, 20 Mar 2022 04:24:11 -0700 (PDT)
-Received: (wp-smtpd smtp.tlen.pl 4765 invoked from network); 20 Mar 2022 12:24:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1647775448; bh=Mb6YQxTeiTCQKbvPvBuct/l1eebjez49QX7SC8v5on4=;
-          h=Subject:To:Cc:From;
-          b=EQ5A6wSTjYgEv/ckwHhvAAM/p1k6sV+kzgLdeBmpByHIKzWTDh3RoAG83GClN+O50
-           wBrfdVKykhEa6pe75pYRB3Uo2TDyre03q1t4D8lKlePPky9iEQOzIfgva+wkAw5Irw
-           tU9fH2IEQRnzVXCLWf2sYUUjnrzGWFl6/Zp73gPA=
-Received: from aafe9.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.134.9])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <helgaas@kernel.org>; 20 Mar 2022 12:24:08 +0100
-Message-ID: <633193c1-3ffd-9568-6e2b-9e73997a9d8a@o2.pl>
-Date:   Sun, 20 Mar 2022 12:23:56 +0100
+        with ESMTP id S234277AbiCTPAH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Mar 2022 11:00:07 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA277252A7;
+        Sun, 20 Mar 2022 07:58:42 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id h13so15317967ede.5;
+        Sun, 20 Mar 2022 07:58:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6CWKYqtc6RNurgp1Shg9+uzBqze9ab4UhblI0+K5cmI=;
+        b=PGK/WAiBLLLv1ANzctUPJNhTeChLRPH2mcx474dFIyf1wx2B8stuR5QqcZEQXSLDwR
+         KNTM4ry7OcNw2kw8PzF42T6fV7U/fV4rji78zUg6qU96Y/sXtkMYvPeBkQMA39kLOxbp
+         dUkDomsawh1vzNFC8eIUcbMXfv3EBky41qugGgJBpX0CJkGTE3OMrGv7MFY/cWF37Lei
+         dsK7VC8UjIN3bfIjzBGQK3+dJe9tjgDYGIe1RY+ikUJDnmkimleBl3IayqxR7k+Xq+Rr
+         YItqBLDFCLdxEtpzoSZxx7vZzZ07pJx1NVArgDSWElQ1o28pQocK0f3h2geYSspU2vBO
+         Tedw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6CWKYqtc6RNurgp1Shg9+uzBqze9ab4UhblI0+K5cmI=;
+        b=iC8Qdyu3IYCkjZjFTv7LqxAz/7NE5OHvEkYfnFkpsIS9swG0LWaqXlpqqFjRyK+rm1
+         Eqf2AmlvKuvnVrp5SQLnsFNZs5AtGqUooXEui25UXub7QeNxV8Avg1SmAOso8bZUQbt1
+         q2RXta7YZ95y43FEpYGAh5Z+a8BkVL8eku9KuiS7+TOZn1+92kPe3i7EhlV24gjpeDew
+         bt6RcAwjNC4gyayuPFpZC3OBu75QQw8hm+fid3ubdm9cWn4J1xYF+koL1xw6CJxX83uv
+         2HfaQRxwBmBww9VjdqEXGIzuGyq79YIS0BTQXL/EywxNMIdiPChCBg0/UCtTEoXYODoi
+         0+WQ==
+X-Gm-Message-State: AOAM531OmT2rQ6PsEmDgE9/KhbiTZwNRN8gJy4ejBr1mwOzvsIrK9cuy
+        Y73N49LRwGI0wnmilbNEklI=
+X-Google-Smtp-Source: ABdhPJwGPSVhIpLvxJg/c2edQLm4kUKv1BOGx7QLgyAAd7cNW2pLWB5MBPiQAAFD3IVIrqOPbr4qPQ==
+X-Received: by 2002:a05:6402:4248:b0:416:9c69:4f80 with SMTP id g8-20020a056402424800b004169c694f80mr18798105edb.83.1647788320960;
+        Sun, 20 Mar 2022 07:58:40 -0700 (PDT)
+Received: from anparri (host-82-59-4-232.retail.telecomitalia.it. [82.59.4.232])
+        by smtp.gmail.com with ESMTPSA id g11-20020a170906538b00b006ae38eb0561sm5970408ejo.195.2022.03.20.07.58.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Mar 2022 07:58:40 -0700 (PDT)
+Date:   Sun, 20 Mar 2022 15:58:33 +0100
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Wei Hu <weh@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] PCI: hv: Use IDR to generate transaction IDs for
+ VMBus hardening
+Message-ID: <20220320145833.GA1393@anparri>
+References: <20220318174848.290621-1-parri.andrea@gmail.com>
+ <20220318174848.290621-2-parri.andrea@gmail.com>
+ <PH0PR21MB3025016203AAB9AB6ECB6A3ED7149@PH0PR21MB3025.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] x86/pci: drop ServerWorks / Broadcom CNB20LE PCI host
- bridge driver
-Content-Language: en-GB
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Ira W . Snyder" <ira.snyder@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20220318165535.GA840063@bhelgaas>
-From:   =?UTF-8?Q?Mateusz_Jo=c5=84czyk?= <mat.jonczyk@o2.pl>
-In-Reply-To: <20220318165535.GA840063@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: 5a29b842077e77491d24652796bff7ff
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [gcO0]                               
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH0PR21MB3025016203AAB9AB6ECB6A3ED7149@PH0PR21MB3025.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-W dniu 18.03.2022 o 17:55, Bjorn Helgaas pisze:
-> On Thu, Mar 10, 2022 at 08:34:19PM +0100, Mateusz Jończyk wrote:
->> The ServerWorks / Broadcom CNB20LE chipset was probably designed
->> for Intel Pentium III processors only. The dedicated driver for it
->> (implemented in arch/x86/pci/broadcom_bus.c) reads PCI windows
->> from this chipset, which is (if I understand correctly) needed mostly
->> for PCI hotplug and "option ROM mapping" [2]. This driver was written
->> without access to the documentation of CNB20LE and caused problems on
->> some servers, so it was soon disabled for all systems with ACPI enabled.
->> It appears that most systems with CNB20LE support ACPI and it is not
->> known whether the driver works correctly on most of those that don't.
->>
->> On such old platforms, PCI hotplug is typically not used and
->> "reliability" (i.e. that the system boots at all) is more important.
->> So, delete this driver as it can cause more harm then good and there is
->> little benefit in keeping it in the kernel.
->>
->> Details:
->>
->> I was unable to find a description of this chipset. However, it was
->> almost exclusively used with the Pentium III processor (this CPU model
->> was used in all references to it that I examined where the CPU model
->> was provided: dmesgs in [1] and [2]; [3] page 2; [4]-[7]).
->>
->> The CNB20LE driver was added to the kernel in 2010 (many years after
->> the introduction of Pentium III) in Linux 2.6.35 in
->> commit 3f6ea84a3035 ("PCI: read memory ranges out of Broadcom CNB20LE host bridge")
->> Soon, it caused problems on some Compaq Proliant DL320 servers [2] and
->> it was decided to disable the driver on all systems with ACPI enabled.
->> This went in
->> commit 30e664afb5cb ("x86/PCI: don't use native Broadcom CNB20LE driver when ACPI is available")
->>
->> However, most of these systems mentioned (all except for [3], where it is not
->> known and [7]) support ACPI. I think that dmesg from the original system
->> on which the driver was developed can be found in [7]. It is possible
->> that CNB30LE used the same PCI ID and was also detected by this driver
->> [7], but it probably also was used with Pentium III.
-[snip]
->>
->> Signed-off-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->> Cc: x86@kernel.org
->> Cc: linux-pci@vger.kernel.org
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: Ira W. Snyder <ira.snyder@gmail.com>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->>
->> ---
->>
->> Hello,
->>
->> When trying to document CONFIG_PCI_CNB20LE_QUIRK for Kconfig I realised
->> that this driver probably may be removed from the kernel.
->>
->> I am not sure what exactly the drawbacks of missing PCI bus window
->> information for this chipset are. In [2] there is a comment by Mr Bjorn
->> Helgaas:
->>         I think the possibilities are:
->>         [...]
->>         2) Ignore _CRS and make broadcom_bus.c do nothing.  This gets us
->>         back to the working situation of F13 [Fedora 13].  Since we
->>         don't have any host bridge information, things like PCI hotplug
->>         and option ROM mapping may not work, but that's the way it's
->>         always been on these boxes.
->>
->> I understand how host bridge windows are required for PCI hotplug, but I
->> don't know why they may be necessary for option ROM mapping.
-> The windows are required for management of PCI MMIO space, i.e., we
-> can't assign space to PCI BARs unless we know what space is available
-> to be assigned.  Mapping option ROMs is one instance where we may
-> need to assign space for a BAR.
->
-> Presumably 3f6ea84a3035 ("PCI: read memory ranges out of Broadcom
-> CNB20LE host bridge") was added because it fixed a problem. 
+On Sat, Mar 19, 2022 at 04:20:13PM +0000, Michael Kelley (LINUX) wrote:
+> From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Friday, March 18, 2022 10:49 AM
+> > 
+> > Currently, pointers to guest memory are passed to Hyper-V as transaction
+> > IDs in hv_pci.  In the face of errors or malicious behavior in Hyper-V,
+> > hv_pci should not expose or trust the transaction IDs returned by
+> > Hyper-V to be valid guest memory addresses.  Instead, use small integers
+> > generated by IDR as request (transaction) IDs.
+> 
+> I had expected that this code would use the next_request_id_callback
+> mechanism because of the race conditions that mechanism solves.  And
+> to protect against a malicious Hyper-V sending a bogus second message
+> with the same requestID, the requestID needs to be freed in the
+> onchannelcallback function as is done with vmbus_request_addr().
 
-The main advertised feature of this driver is PCI hotplug support.
-It is the only benefit mentioned in Kconfig and the description of this commit,
-so I think it was the primary motivation for writing this driver.
+I think I should elaborate on the design underlying this submission;
+roughly, the present solution diverges from the 'generic' requestor
+mechanism you mentioned above in two main aspects:
 
-> Would we
-> also fix a problem by removing this? I hesitate to remove it on the
-> grounds of "it might cause more harm than good" unless we have actual
-> reports of problems.
+  A) it 'moves' the ID removal into hv_compose_msi_msg() and other
+     functions,
 
-This driver looks unused and broken, and was designed for very old hardware.
-It is probably unnecessary to keep it in the kernel as PCI hotplug is typically
-not used for hardware that is so old. There are no actual problem reports, though.
+  B) it adopts some ad-hoc locking scheme in the channel callback.
 
-If this driver will not be removed or marked BROKEN yet, I think that
-PCI_CNB20LE_QUIRK could be made to depend on X86_32.
-I have pretty good data that this chipset works only with 32-bit processors.
+AFAICT, such changes preserve the 'confidentiality' and correctness
+guarantees of the generic approach (modulo the issue discussed here
+with Saurabh).
 
-Greetings,
+These changes are justified by the bug/fix discussed in 2/2.  For
+concreteness, consider a solution based on the VMbus requestor as
+reported at the end of this email.
 
-Mateusz
+AFAICT, this solution can't fix the bug discussed in 2/2.  Moreover
+(and looking back at (A-B)), we observe that:
 
-> Bjorn
->
->> ---
->>  arch/x86/Kconfig            |  13 -----
->>  arch/x86/pci/Makefile       |   1 -
->>  arch/x86/pci/broadcom_bus.c | 112 ------------------------------------
->>  arch/x86/pci/bus_numa.c     |   2 +-
->>  4 files changed, 1 insertion(+), 127 deletions(-)
->>  delete mode 100644 arch/x86/pci/broadcom_bus.c
->>
->> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> index 9f5bd41bf660..577a588fe1ae 100644
->> --- a/arch/x86/Kconfig
->> +++ b/arch/x86/Kconfig
->> @@ -2656,19 +2656,6 @@ config MMCONF_FAM10H
->>  	def_bool y
->>  	depends on X86_64 && PCI_MMCONFIG && ACPI
->>  
->> -config PCI_CNB20LE_QUIRK
->> -	bool "Read CNB20LE Host Bridge Windows" if EXPERT
->> -	depends on PCI
->> -	help
->> -	  Read the PCI windows out of the CNB20LE host bridge. This allows
->> -	  PCI hotplug to work on systems with the CNB20LE chipset which do
->> -	  not have ACPI.
->> -
->> -	  There's no public spec for this chipset, and this functionality
->> -	  is known to be incomplete.
->> -
->> -	  You should say N unless you know you need this.
->> -
->>  config ISA_BUS
->>  	bool "ISA bus support on modern systems" if EXPERT
->>  	help
->> diff --git a/arch/x86/pci/Makefile b/arch/x86/pci/Makefile
->> index 48bcada5cabe..ca343d8c7964 100644
->> --- a/arch/x86/pci/Makefile
->> +++ b/arch/x86/pci/Makefile
->> @@ -22,6 +22,5 @@ obj-y				+= common.o early.o
->>  obj-y				+= bus_numa.o
->>  
->>  obj-$(CONFIG_AMD_NB)		+= amd_bus.o
->> -obj-$(CONFIG_PCI_CNB20LE_QUIRK)	+= broadcom_bus.o
->>  
->>  ccflags-$(CONFIG_PCI_DEBUG)	+= -DDEBUG
->> diff --git a/arch/x86/pci/broadcom_bus.c b/arch/x86/pci/broadcom_bus.c
->> deleted file mode 100644
->> index 2db73613cada..000000000000
->> --- a/arch/x86/pci/broadcom_bus.c
->> +++ /dev/null
->> @@ -1,112 +0,0 @@
->> -// SPDX-License-Identifier: GPL-2.0-or-later
->> -/*
->> - * Read address ranges from a Broadcom CNB20LE Host Bridge
->> - *
->> - * Copyright (c) 2010 Ira W. Snyder <iws@ovro.caltech.edu>
->> - */
->> -
->> -#include <linux/acpi.h>
->> -#include <linux/delay.h>
->> -#include <linux/dmi.h>
->> -#include <linux/pci.h>
->> -#include <linux/init.h>
->> -#include <asm/pci_x86.h>
->> -#include <asm/pci-direct.h>
->> -
->> -#include "bus_numa.h"
->> -
->> -static void __init cnb20le_res(u8 bus, u8 slot, u8 func)
->> -{
->> -	struct pci_root_info *info;
->> -	struct pci_root_res *root_res;
->> -	struct resource res;
->> -	u16 word1, word2;
->> -	u8 fbus, lbus;
->> -
->> -	/* read the PCI bus numbers */
->> -	fbus = read_pci_config_byte(bus, slot, func, 0x44);
->> -	lbus = read_pci_config_byte(bus, slot, func, 0x45);
->> -	info = alloc_pci_root_info(fbus, lbus, 0, 0);
->> -
->> -	/*
->> -	 * Add the legacy IDE ports on bus 0
->> -	 *
->> -	 * These do not exist anywhere in the bridge registers, AFAICT. I do
->> -	 * not have the datasheet, so this is the best I can do.
->> -	 */
->> -	if (fbus == 0) {
->> -		update_res(info, 0x01f0, 0x01f7, IORESOURCE_IO, 0);
->> -		update_res(info, 0x03f6, 0x03f6, IORESOURCE_IO, 0);
->> -		update_res(info, 0x0170, 0x0177, IORESOURCE_IO, 0);
->> -		update_res(info, 0x0376, 0x0376, IORESOURCE_IO, 0);
->> -		update_res(info, 0xffa0, 0xffaf, IORESOURCE_IO, 0);
->> -	}
->> -
->> -	/* read the non-prefetchable memory window */
->> -	word1 = read_pci_config_16(bus, slot, func, 0xc0);
->> -	word2 = read_pci_config_16(bus, slot, func, 0xc2);
->> -	if (word1 != word2) {
->> -		res.start = ((resource_size_t) word1 << 16) | 0x0000;
->> -		res.end   = ((resource_size_t) word2 << 16) | 0xffff;
->> -		res.flags = IORESOURCE_MEM;
->> -		update_res(info, res.start, res.end, res.flags, 0);
->> -	}
->> -
->> -	/* read the prefetchable memory window */
->> -	word1 = read_pci_config_16(bus, slot, func, 0xc4);
->> -	word2 = read_pci_config_16(bus, slot, func, 0xc6);
->> -	if (word1 != word2) {
->> -		res.start = ((resource_size_t) word1 << 16) | 0x0000;
->> -		res.end   = ((resource_size_t) word2 << 16) | 0xffff;
->> -		res.flags = IORESOURCE_MEM | IORESOURCE_PREFETCH;
->> -		update_res(info, res.start, res.end, res.flags, 0);
->> -	}
->> -
->> -	/* read the IO port window */
->> -	word1 = read_pci_config_16(bus, slot, func, 0xd0);
->> -	word2 = read_pci_config_16(bus, slot, func, 0xd2);
->> -	if (word1 != word2) {
->> -		res.start = word1;
->> -		res.end   = word2;
->> -		res.flags = IORESOURCE_IO;
->> -		update_res(info, res.start, res.end, res.flags, 0);
->> -	}
->> -
->> -	/* print information about this host bridge */
->> -	res.start = fbus;
->> -	res.end   = lbus;
->> -	res.flags = IORESOURCE_BUS;
->> -	printk(KERN_INFO "CNB20LE PCI Host Bridge (domain 0000 %pR)\n", &res);
->> -
->> -	list_for_each_entry(root_res, &info->resources, list)
->> -		printk(KERN_INFO "host bridge window %pR\n", &root_res->res);
->> -}
->> -
->> -static int __init broadcom_postcore_init(void)
->> -{
->> -	u8 bus = 0, slot = 0;
->> -	u32 id;
->> -	u16 vendor, device;
->> -
->> -#ifdef CONFIG_ACPI
->> -	/*
->> -	 * We should get host bridge information from ACPI unless the BIOS
->> -	 * doesn't support it.
->> -	 */
->> -	if (!acpi_disabled && acpi_os_get_root_pointer())
->> -		return 0;
->> -#endif
->> -
->> -	id = read_pci_config(bus, slot, 0, PCI_VENDOR_ID);
->> -	vendor = id & 0xffff;
->> -	device = (id >> 16) & 0xffff;
->> -
->> -	if (vendor == PCI_VENDOR_ID_SERVERWORKS &&
->> -	    device == PCI_DEVICE_ID_SERVERWORKS_LE) {
->> -		cnb20le_res(bus, slot, 0);
->> -		cnb20le_res(bus, slot, 1);
->> -	}
->> -	return 0;
->> -}
->> -
->> -postcore_initcall(broadcom_postcore_init);
->> diff --git a/arch/x86/pci/bus_numa.c b/arch/x86/pci/bus_numa.c
->> index 2752c02e3f0e..b4f5e668812e 100644
->> --- a/arch/x86/pci/bus_numa.c
->> +++ b/arch/x86/pci/bus_numa.c
->> @@ -59,7 +59,7 @@ void x86_pci_root_bus_resources(int bus, struct list_head *resources)
->>  default_resources:
->>  	/*
->>  	 * We don't have any host bridge aperture information from the
->> -	 * "native host bridge drivers," e.g., amd_bus or broadcom_bus,
->> +	 * "native host bridge drivers", e.g. amd_bus,
->>  	 * so fall back to the defaults historically used by pci_create_bus().
->>  	 */
->>  	printk(KERN_DEBUG "PCI: root bus %02x: using default resources\n", bus);
->>
->> base-commit: ffb217a13a2eaf6d5bd974fc83036a53ca69f1e2
->> -- 
->> 2.25.1
->>
+  1) locking in the channel callback is not quite as desired: we'd
+     want a request_addr_callback_nolock() say and 'protected' it
+     together with ->completion_func();
 
+  2) hv_compose_msi_msg() doesn't know the value of the request ID
+     it has allocated (hv_compose_msi_msg() -> vmbus_sendpacket();
+     cf. also remove_request_id() in the current submission).
+
+Hope this helps clarify the problems at stake, and move fortward to a
+'final' solution...
+
+Thanks,
+  Andrea
+
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index ae0bc2fee4ca8..bd99dd12d367b 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -91,6 +91,9 @@ static enum pci_protocol_version_t pci_protocol_versions[] = {
+ /* space for 32bit serial number as string */
+ #define SLOT_NAME_SIZE 11
+ 
++/* Size of requestor for VMbus */
++#define HV_PCI_RQSTOR_SIZE 64
++
+ /*
+  * Message Types
+  */
+@@ -1407,7 +1410,7 @@ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+ 	int_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+ 	int_pkt->int_desc = *int_desc;
+ 	vmbus_sendpacket(hpdev->hbus->hdev->channel, int_pkt, sizeof(*int_pkt),
+-			 (unsigned long)&ctxt.pkt, VM_PKT_DATA_INBAND, 0);
++			 0, VM_PKT_DATA_INBAND, 0);
+ 	kfree(int_desc);
+ }
+ 
+@@ -2649,7 +2652,7 @@ static void hv_eject_device_work(struct work_struct *work)
+ 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
+ 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+ 	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+-			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
++			 sizeof(*ejct_pkt), 0,
+ 			 VM_PKT_DATA_INBAND, 0);
+ 
+ 	/* For the get_pcichild() in hv_pci_eject_device() */
+@@ -2696,8 +2699,9 @@ static void hv_pci_onchannelcallback(void *context)
+ 	const int packet_size = 0x100;
+ 	int ret;
+ 	struct hv_pcibus_device *hbus = context;
++	struct vmbus_channel *chan = hbus->hdev->channel;
+ 	u32 bytes_recvd;
+-	u64 req_id;
++	u64 req_id, req_addr;
+ 	struct vmpacket_descriptor *desc;
+ 	unsigned char *buffer;
+ 	int bufferlen = packet_size;
+@@ -2743,11 +2747,13 @@ static void hv_pci_onchannelcallback(void *context)
+ 		switch (desc->type) {
+ 		case VM_PKT_COMP:
+ 
+-			/*
+-			 * The host is trusted, and thus it's safe to interpret
+-			 * this transaction ID as a pointer.
+-			 */
+-			comp_packet = (struct pci_packet *)req_id;
++			req_addr = chan->request_addr_callback(chan, req_id);
++			if (!req_addr || req_addr == VMBUS_RQST_ERROR) {
++				dev_warn_ratelimited(&hbus->hdev->device,
++						     "Invalid request ID\n");
++				break;
++			}
++			comp_packet = (struct pci_packet *)req_addr;
+ 			response = (struct pci_response *)buffer;
+ 			comp_packet->completion_func(comp_packet->compl_ctxt,
+ 						     response,
+@@ -3419,6 +3425,10 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 		goto free_dom;
+ 	}
+ 
++	hdev->channel->next_request_id_callback = vmbus_next_request_id;
++	hdev->channel->request_addr_callback = vmbus_request_addr;
++	hdev->channel->rqstor_size = HV_PCI_RQSTOR_SIZE;
++
+ 	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+ 			 hv_pci_onchannelcallback, hbus);
+ 	if (ret)
+@@ -3749,6 +3759,10 @@ static int hv_pci_resume(struct hv_device *hdev)
+ 
+ 	hbus->state = hv_pcibus_init;
+ 
++	hdev->channel->next_request_id_callback = vmbus_next_request_id;
++	hdev->channel->request_addr_callback = vmbus_request_addr;
++	hdev->channel->rqstor_size = HV_PCI_RQSTOR_SIZE;
++
+ 	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+ 			 hv_pci_onchannelcallback, hbus);
+ 	if (ret)
