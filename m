@@ -2,76 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8FC04E1C21
-	for <lists+linux-pci@lfdr.de>; Sun, 20 Mar 2022 15:58:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2772D4E1E39
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Mar 2022 00:16:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239096AbiCTPAI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 20 Mar 2022 11:00:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51148 "EHLO
+        id S239904AbiCTXSI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 20 Mar 2022 19:18:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234277AbiCTPAH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Mar 2022 11:00:07 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA277252A7;
-        Sun, 20 Mar 2022 07:58:42 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id h13so15317967ede.5;
-        Sun, 20 Mar 2022 07:58:42 -0700 (PDT)
+        with ESMTP id S237876AbiCTXSH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 20 Mar 2022 19:18:07 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0344F329C;
+        Sun, 20 Mar 2022 16:16:43 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id w27so22125408lfa.5;
+        Sun, 20 Mar 2022 16:16:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=6CWKYqtc6RNurgp1Shg9+uzBqze9ab4UhblI0+K5cmI=;
-        b=PGK/WAiBLLLv1ANzctUPJNhTeChLRPH2mcx474dFIyf1wx2B8stuR5QqcZEQXSLDwR
-         KNTM4ry7OcNw2kw8PzF42T6fV7U/fV4rji78zUg6qU96Y/sXtkMYvPeBkQMA39kLOxbp
-         dUkDomsawh1vzNFC8eIUcbMXfv3EBky41qugGgJBpX0CJkGTE3OMrGv7MFY/cWF37Lei
-         dsK7VC8UjIN3bfIjzBGQK3+dJe9tjgDYGIe1RY+ikUJDnmkimleBl3IayqxR7k+Xq+Rr
-         YItqBLDFCLdxEtpzoSZxx7vZzZ07pJx1NVArgDSWElQ1o28pQocK0f3h2geYSspU2vBO
-         Tedw==
+        bh=3qf4U37WdvGH1xot8tLXiIVPtYvjsXskqDgkPybObY8=;
+        b=ZES6Oh5q8WZ83K+9K0ggVX7E5epnJd79t3/QuYINzbk1S8g5yX7J6F6BAYPT3a6DzF
+         pfBlzfDZeaG7f3h+yq5nox6/ET71uRDHQrq7+M/trhbtcX4P/aeBvxxN21rq8BB+cinH
+         S+GUx6Wjl9B+m3+YSGiUFhczbRTLYX884l2zOI+pPKRwc015KL6yIvJ8tjQXWVTLskMH
+         ngUGXKJqxZ6iqFPvqAbWR4wRg5gXOdEPb8qxwX8fTVZL9G4+qqubn/s3TfNDayEVJcCN
+         y+0CasJz4u4zrNiwDGtPhLhG5hRFL8Bzt4ThO9JyyDrXtmMBBTlGKXR3SQlmdmf38tRB
+         pMLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6CWKYqtc6RNurgp1Shg9+uzBqze9ab4UhblI0+K5cmI=;
-        b=iC8Qdyu3IYCkjZjFTv7LqxAz/7NE5OHvEkYfnFkpsIS9swG0LWaqXlpqqFjRyK+rm1
-         Eqf2AmlvKuvnVrp5SQLnsFNZs5AtGqUooXEui25UXub7QeNxV8Avg1SmAOso8bZUQbt1
-         q2RXta7YZ95y43FEpYGAh5Z+a8BkVL8eku9KuiS7+TOZn1+92kPe3i7EhlV24gjpeDew
-         bt6RcAwjNC4gyayuPFpZC3OBu75QQw8hm+fid3ubdm9cWn4J1xYF+koL1xw6CJxX83uv
-         2HfaQRxwBmBww9VjdqEXGIzuGyq79YIS0BTQXL/EywxNMIdiPChCBg0/UCtTEoXYODoi
-         0+WQ==
-X-Gm-Message-State: AOAM531OmT2rQ6PsEmDgE9/KhbiTZwNRN8gJy4ejBr1mwOzvsIrK9cuy
-        Y73N49LRwGI0wnmilbNEklI=
-X-Google-Smtp-Source: ABdhPJwGPSVhIpLvxJg/c2edQLm4kUKv1BOGx7QLgyAAd7cNW2pLWB5MBPiQAAFD3IVIrqOPbr4qPQ==
-X-Received: by 2002:a05:6402:4248:b0:416:9c69:4f80 with SMTP id g8-20020a056402424800b004169c694f80mr18798105edb.83.1647788320960;
-        Sun, 20 Mar 2022 07:58:40 -0700 (PDT)
-Received: from anparri (host-82-59-4-232.retail.telecomitalia.it. [82.59.4.232])
-        by smtp.gmail.com with ESMTPSA id g11-20020a170906538b00b006ae38eb0561sm5970408ejo.195.2022.03.20.07.58.38
+        bh=3qf4U37WdvGH1xot8tLXiIVPtYvjsXskqDgkPybObY8=;
+        b=iMoIapO3CHqxE1weCXdN6h7NGeUAlE1YVitjlMzNVCTAlDksXObMcNtNRECDy/Pe9w
+         N5MuzwXW6P+jlRff2rxxjJPyI0JHBcnNS4pYZyqOZs1dA+JTJ7dtu+JCf0Npnf/SnBMT
+         ZKNyGLFZmid+Ih7fOSK99xCSaWJrIueIHgSPxjBo52f6m1PqRe1cHqMfOIh5fhaoJ3yt
+         +kJBOcU6bf1c85leJOlDMf/6zQSCR+eCX8eW+pTU1vhpWYaOCvOw6WzS+aFhte2h0AS3
+         j6yO712A+Swvqm5KXMmjI2p6/8auqbvc94i3sVKJP+a+uerksPTte5VlwukyGs0S/HVB
+         e2MQ==
+X-Gm-Message-State: AOAM531o56rKaQoZZMALHLzqj6aoUq5weJXnt1r3W2b3B28VCZwFih/X
+        W6sf7C8jUkWkKUGRRee5fs6Su5QHebNcfA==
+X-Google-Smtp-Source: ABdhPJyvEhODkaO2Nn4vQltCYU9EVNLvK0feR2ihXEV6/87cRQ9nP96upKUHvLNLOnW1SgxDKzO5YA==
+X-Received: by 2002:a05:6512:a88:b0:445:ce77:33d1 with SMTP id m8-20020a0565120a8800b00445ce7733d1mr12507438lfu.389.1647818201674;
+        Sun, 20 Mar 2022 16:16:41 -0700 (PDT)
+Received: from mobilestation ([95.79.188.22])
+        by smtp.gmail.com with ESMTPSA id m24-20020a197118000000b00448bb0df9ffsm1598365lfc.140.2022.03.20.16.16.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Mar 2022 07:58:40 -0700 (PDT)
-Date:   Sun, 20 Mar 2022 15:58:33 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Wei Hu <weh@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] PCI: hv: Use IDR to generate transaction IDs for
- VMBus hardening
-Message-ID: <20220320145833.GA1393@anparri>
-References: <20220318174848.290621-1-parri.andrea@gmail.com>
- <20220318174848.290621-2-parri.andrea@gmail.com>
- <PH0PR21MB3025016203AAB9AB6ECB6A3ED7149@PH0PR21MB3025.namprd21.prod.outlook.com>
+        Sun, 20 Mar 2022 16:16:41 -0700 (PDT)
+Date:   Mon, 21 Mar 2022 02:16:39 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org
+Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
+ dest addresses for ep
+Message-ID: <20220320231639.ymfdhy2pkjy7jmbq@mobilestation>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-6-Frank.Li@nxp.com>
+ <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
+ <20220311174134.GA3966@thinkpad>
+ <20220311190147.pvjp6v7whjgyeuey@mobilestation>
+ <20220312053720.GA4356@thinkpad>
+ <20220314083340.244dfwo4v3uuhkkm@mobilestation>
+ <20220318180605.GB4922@thinkpad>
+ <20220318181911.7dujoioqc7iqwtsz@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PH0PR21MB3025016203AAB9AB6ECB6A3ED7149@PH0PR21MB3025.namprd21.prod.outlook.com>
+In-Reply-To: <20220318181911.7dujoioqc7iqwtsz@mobilestation>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -82,137 +83,125 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 19, 2022 at 04:20:13PM +0000, Michael Kelley (LINUX) wrote:
-> From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Friday, March 18, 2022 10:49 AM
+On Fri, Mar 18, 2022 at 09:19:13PM +0300, Serge Semin wrote:
+> On Fri, Mar 18, 2022 at 11:36:05PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Mar 14, 2022 at 11:33:40AM +0300, Serge Semin wrote:
+> > > On Sat, Mar 12, 2022 at 11:07:20AM +0530, Manivannan Sadhasivam wrote:
+> > > > On Fri, Mar 11, 2022 at 10:01:47PM +0300, Serge Semin wrote:
+> > > > > On Fri, Mar 11, 2022 at 11:11:34PM +0530, Manivannan Sadhasivam wrote:
+> > > 
+> > > [nip]
+> > > 
+> > > > > 
+> > > > > > As per my understanding, the eDMA is solely used in the PCIe endpoint. And the
+> > > > > > access to it happens over PCIe bus or by the local CPU.
+> > > > > 
+> > > > > Not fully correct. Root Ports can also have eDMA embedded. In that
+> > > > > case the eDMA can be only accessible from the local CPU. At the same
+> > > > > time the DW PCIe End-point case is the IP-core synthesize parameters
+> > > > > specific. It's always possible to access the eDMA CSRs from local
+> > > > > CPU, but a particular End-point BAR can be pre-synthesize to map
+> > > > > either Port Logic, or eDMA or iATU CSRs. Thus a PCIe root port can
+> > > > > perform a full End-point configuration. Anyway the case if the eDMA
+> > > > > functionality being accessible over the PCIe wire doesn't really make
+> > > > > much sense with no info regarding the application logic hidden behind
+> > > > > the PCIe End-point interface since SAR/DAR LLP is supposed to be
+> > > > > initialized with an address from the local (application) memory space.
+> > > > > 
+> > > > 
+> > > > Thanks for the explanation, it clarifies my doubt. I got misleaded by the
+> > > > earlier commits...
+> > > > 
+> > > > > So AFAICS the main usecase of the controller is 1) - when eDMA is a
+> > > > > part of the Root Port/End-point and only local CPU is supposed to have
+> > > > > it accessed and configured.
+> > > > > 
+> > > > > I can resend this patch with my fix to the problem. What do you think?
+> > > > > 
+> > > > 
+> > > 
+> > > > Yes, please do.
+> > > 
+> > > Ok. I'll be AFK today, but will send my patches tomorrow.  @Frank,
+> > > Could you please hold on with respinning the series for a few days?
+> > > I'll send out some of my patches then with a note which one of them
+> > > could be picked up by you and merged into this series.
+> > > 
 > > 
-> > Currently, pointers to guest memory are passed to Hyper-V as transaction
-> > IDs in hv_pci.  In the face of errors or malicious behavior in Hyper-V,
-> > hv_pci should not expose or trust the transaction IDs returned by
-> > Hyper-V to be valid guest memory addresses.  Instead, use small integers
-> > generated by IDR as request (transaction) IDs.
 > 
-> I had expected that this code would use the next_request_id_callback
-> mechanism because of the race conditions that mechanism solves.  And
-> to protect against a malicious Hyper-V sending a bogus second message
-> with the same requestID, the requestID needs to be freed in the
-> onchannelcallback function as is done with vmbus_request_addr().
 
-I think I should elaborate on the design underlying this submission;
-roughly, the present solution diverges from the 'generic' requestor
-mechanism you mentioned above in two main aspects:
+> > Any update on your patches?
+> 
+> No worries. The patches are ready. But since Frank was on vacation I
+> decided to rebase all of my work on top of his series. I'll finish it
+> up shortly and send out my patchset till Monday for review. Then Frank
+> will be able to pick up two patches from there so to close up his
+> patchset (I'll give a note which one of them is of Frank' interes).
+> My series will be able to be merged in after Frank's series is reviewed
+> and accepted.
 
-  A) it 'moves' the ID removal into hv_compose_msi_msg() and other
-     functions,
+Folks, couldn't make it this weekend. Too much sidework to do. Terribly
+sorry about that. Will send out the series tomorrow or at most in a day
+after tomorrow. Sorry for the inconvenience.
 
-  B) it adopts some ad-hoc locking scheme in the channel callback.
+-Sergey
 
-AFAICT, such changes preserve the 'confidentiality' and correctness
-guarantees of the generic approach (modulo the issue discussed here
-with Saurabh).
-
-These changes are justified by the bug/fix discussed in 2/2.  For
-concreteness, consider a solution based on the VMbus requestor as
-reported at the end of this email.
-
-AFAICT, this solution can't fix the bug discussed in 2/2.  Moreover
-(and looking back at (A-B)), we observe that:
-
-  1) locking in the channel callback is not quite as desired: we'd
-     want a request_addr_callback_nolock() say and 'protected' it
-     together with ->completion_func();
-
-  2) hv_compose_msi_msg() doesn't know the value of the request ID
-     it has allocated (hv_compose_msi_msg() -> vmbus_sendpacket();
-     cf. also remove_request_id() in the current submission).
-
-Hope this helps clarify the problems at stake, and move fortward to a
-'final' solution...
-
-Thanks,
-  Andrea
-
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index ae0bc2fee4ca8..bd99dd12d367b 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -91,6 +91,9 @@ static enum pci_protocol_version_t pci_protocol_versions[] = {
- /* space for 32bit serial number as string */
- #define SLOT_NAME_SIZE 11
- 
-+/* Size of requestor for VMbus */
-+#define HV_PCI_RQSTOR_SIZE 64
-+
- /*
-  * Message Types
-  */
-@@ -1407,7 +1410,7 @@ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
- 	int_pkt->wslot.slot = hpdev->desc.win_slot.slot;
- 	int_pkt->int_desc = *int_desc;
- 	vmbus_sendpacket(hpdev->hbus->hdev->channel, int_pkt, sizeof(*int_pkt),
--			 (unsigned long)&ctxt.pkt, VM_PKT_DATA_INBAND, 0);
-+			 0, VM_PKT_DATA_INBAND, 0);
- 	kfree(int_desc);
- }
- 
-@@ -2649,7 +2652,7 @@ static void hv_eject_device_work(struct work_struct *work)
- 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
- 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
- 	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
--			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
-+			 sizeof(*ejct_pkt), 0,
- 			 VM_PKT_DATA_INBAND, 0);
- 
- 	/* For the get_pcichild() in hv_pci_eject_device() */
-@@ -2696,8 +2699,9 @@ static void hv_pci_onchannelcallback(void *context)
- 	const int packet_size = 0x100;
- 	int ret;
- 	struct hv_pcibus_device *hbus = context;
-+	struct vmbus_channel *chan = hbus->hdev->channel;
- 	u32 bytes_recvd;
--	u64 req_id;
-+	u64 req_id, req_addr;
- 	struct vmpacket_descriptor *desc;
- 	unsigned char *buffer;
- 	int bufferlen = packet_size;
-@@ -2743,11 +2747,13 @@ static void hv_pci_onchannelcallback(void *context)
- 		switch (desc->type) {
- 		case VM_PKT_COMP:
- 
--			/*
--			 * The host is trusted, and thus it's safe to interpret
--			 * this transaction ID as a pointer.
--			 */
--			comp_packet = (struct pci_packet *)req_id;
-+			req_addr = chan->request_addr_callback(chan, req_id);
-+			if (!req_addr || req_addr == VMBUS_RQST_ERROR) {
-+				dev_warn_ratelimited(&hbus->hdev->device,
-+						     "Invalid request ID\n");
-+				break;
-+			}
-+			comp_packet = (struct pci_packet *)req_addr;
- 			response = (struct pci_response *)buffer;
- 			comp_packet->completion_func(comp_packet->compl_ctxt,
- 						     response,
-@@ -3419,6 +3425,10 @@ static int hv_pci_probe(struct hv_device *hdev,
- 		goto free_dom;
- 	}
- 
-+	hdev->channel->next_request_id_callback = vmbus_next_request_id;
-+	hdev->channel->request_addr_callback = vmbus_request_addr;
-+	hdev->channel->rqstor_size = HV_PCI_RQSTOR_SIZE;
-+
- 	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
- 			 hv_pci_onchannelcallback, hbus);
- 	if (ret)
-@@ -3749,6 +3759,10 @@ static int hv_pci_resume(struct hv_device *hdev)
- 
- 	hbus->state = hv_pcibus_init;
- 
-+	hdev->channel->next_request_id_callback = vmbus_next_request_id;
-+	hdev->channel->request_addr_callback = vmbus_request_addr;
-+	hdev->channel->rqstor_size = HV_PCI_RQSTOR_SIZE;
-+
- 	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
- 			 hv_pci_onchannelcallback, hbus);
- 	if (ret)
+> 
+> > 
+> > Btw, my colleage worked on merging the two dma devices used by the eDMA core
+> > for read & write channels into one. Initially I thought that was not needed as
+> > he did that for devicetree integration, but looking deeply I think that patch is
+> > necessary irrespective of DT.
+> > 
+> > One standout problem is, we can't register debugfs directory under "dmaengine"
+> > properly because, both read and write dma devices share the same parent
+> > chip->dev.
+> 
+> Right, my series fixes that and some other problems too. So please be
+> patient for a few more days.
+> 
+> -Sergey
+> 
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > -Sergey
+> > > 
+> > > > 
+> > > > Thanks,
+> > > > Mani
+> > > > 
+> > > > > -Sergey
+> > > > > 
+> > > > > > 
+> > > > > > The commit from Alan Mikhak is what I took as a reference since the patch was
+> > > > > > already merged:
+> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/dw-edma?id=bd96f1b2f43a39310cc576bb4faf2ea24317a4c9
+> > > > > > 
+> > > > > > Thanks,
+> > > > > > Mani
+> > > > > > 
+> > > > > > > -Sergey
+> > > > > > > 
+> > > > > > > > +		 *
+> > > > > > > > +		 ****************************************************************/
+> > > > > > > > +
+> > > > > > > 
+> > > > > > > > +		if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
+> > > > > > > > +		    (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
+> > > > > > > > +			read = true;
+> > > > > > > 
+> > > > > > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
+> > > > > > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
+> > > > > > > redundant.
+> > > > > > > 
+> > > > > > > > +
+> > > > > > > > +		/* Program the source and destination addresses for DMA read/write */
+> > > > > > > > +		if (read) {
+> > > > > > > >  			burst->sar = src_addr;
+> > > > > > > >  			if (xfer->type == EDMA_XFER_CYCLIC) {
+> > > > > > > >  				burst->dar = xfer->xfer.cyclic.paddr;
+> > > > > > > > -- 
+> > > > > > > > 2.24.0.rc1
+> > > > > > > > 
