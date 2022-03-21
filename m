@@ -2,158 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E82504E2ADD
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Mar 2022 15:33:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB4C34E2BBA
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Mar 2022 16:17:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243302AbiCUOeN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Mar 2022 10:34:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57744 "EHLO
+        id S1349952AbiCUPTT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Mar 2022 11:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349950AbiCUOdS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Mar 2022 10:33:18 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3492B1B3;
-        Mon, 21 Mar 2022 07:31:27 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id b19so20934795wrh.11;
-        Mon, 21 Mar 2022 07:31:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=PL5VEgEzpRTaebf6MQD/gbU8LyaK1T1vt9TheGPUarY=;
-        b=j3c8qHAGhF1qQPZdeWuuohBdUEySVAEMABRs2gdKgm3doGNx1gKATdthnPaJBX3BpX
-         jeRRyN0C9/hNtU5SzUukIaU30TCHNTOGHqT3ZtnnCT0cbkuEhy/ori7TlnEXuoiLivEs
-         sHVx9YG2jG/o+fuLUx6Hk2PxzYgIE7HEMuJDe9WNPeomdgK7tL7qnwekiL6rYU73Nxkz
-         F0EjAt7He9AgQ33S3yOwmX+SsbNIOEDUs6/XyA18+5jaAQSrRwQlVniNQsccjMq/Rplo
-         6UsVdx55Gk7Kl9OGX7Qs6M9pODvgAlQQf3ZsoqX7oiE9wi2z7sABPj9u00EdD0tfK9in
-         3swg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PL5VEgEzpRTaebf6MQD/gbU8LyaK1T1vt9TheGPUarY=;
-        b=cHM3UaE236ksYhU8foZS2gmhodu+hQeH3kgVjvx24tmkSWkDG6+Nv7jO7qpUy9Qi0R
-         Nb3BjD/gdZFXc7+AAgHbPMq79DZiWMqzOPny7f04Mpyqs90irhNeAi7LETXnerGEkPQm
-         LfI1Cakw2QQ2C4vnqatEqo/wx2KbipLT2tZGDWDE0wRRa4FXwHjOrFAPhum08c2fbMGU
-         y9BnhvPM0WB6x6rB5DUU/FNT1sj7BERksssLHORtaQardByVJ3kbLlc5mO6f6q4yCyBH
-         GX3YfQfPv6XBmtPZVzzsSdG0qyPvmGcBBaF6ShkOqwNcsQwFLsKrLRALFAZMfoSxtv4x
-         4pIQ==
-X-Gm-Message-State: AOAM531m2ov9+wWjVh6EUh9SHL8LG3MNupWfqdzTL94462FoTS8e7WKm
-        ZrIioq8oqY3K0uN9Zb9uUbuCy/sVWOV20w==
-X-Google-Smtp-Source: ABdhPJzXcOMIJxRPFJWA9Yn4sR96mVXIJ5BXUGKsWiI8p1XCN6py4aI67N8Arj2ZFMLE4NlSI9GPtg==
-X-Received: by 2002:adf:816b:0:b0:203:7fae:a245 with SMTP id 98-20020adf816b000000b002037faea245mr18743143wrm.619.1647873085475;
-        Mon, 21 Mar 2022 07:31:25 -0700 (PDT)
-Received: from Dev-shlomop.pliops.ent (bzq-219-32-62.isdn.bezeqint.net. [62.219.32.62])
-        by smtp.googlemail.com with ESMTPSA id f7-20020a05600c154700b0038c85aade39sm10642703wmg.47.2022.03.21.07.31.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Mar 2022 07:31:25 -0700 (PDT)
-From:   Shlomo Pongratz <shlomopongratz@gmail.com>
-X-Google-Original-From: Shlomo Pongratz <shlomop@pliops.com>
-To:     linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andrew.maier@eideticom.com,
-        logang@deltatee.com, bhelgaas@google.com,
-        Shlomo Pongratz <shlomop@pliops.com>
-Subject: [PATCH v1] Intel Sky Lake-E host root ports check.
-Date:   Mon, 21 Mar 2022 16:31:20 +0200
-Message-Id: <20220321143120.12191-1-shlomop@pliops.com>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1349933AbiCUPTP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Mar 2022 11:19:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2C411174C;
+        Mon, 21 Mar 2022 08:17:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E7AB2B8175E;
+        Mon, 21 Mar 2022 15:17:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8CB8C340F4;
+        Mon, 21 Mar 2022 15:17:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647875867;
+        bh=9+FB8FqiPz2INA3LHeEMbXtjaqxdTmkp1xc/rbUvb8g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iY2kM+kk/k9XRIJpOweLDdoV0Qbbb9Le27cicZiqsTWHGuaubJxgJKDF3p7i1Lepy
+         FYDMrEVtCCOqmoUNxkbqmfdx5AiTxkKnBIkQk6jzKZs9e9c60k0BWEr+nsvrJHumw3
+         SxACHAsrR+7s8jr6tN77OthE9W4ckwlNz898NvR0mYagooAamWfywmFEZMetc7qdD2
+         dyjCNBNWdbMZxup0DHanVr8Zw/Mhb+fo52hkPUfVWdHUTUDF7OUxwJcZCwFHSzAqfB
+         ssLoyytLEYPe+jy6osPEQVJl6nezkF8xixnZaUIbnwR7xPDdIxNHWawg4zNJnGq2Fs
+         vNSK5qRXUR2SA==
+Received: by mail-ed1-f42.google.com with SMTP id b24so18220954edu.10;
+        Mon, 21 Mar 2022 08:17:47 -0700 (PDT)
+X-Gm-Message-State: AOAM530whwR1lYN3L7Ddk6yN4+veqJmt4fcslavZRsLEU6AB8XjqYxrw
+        MsuGad9tbPxR2w6ok5zNYX7SfSOLRxYKGtscLA==
+X-Google-Smtp-Source: ABdhPJzVOekr/XRMAYz6o3vgNpt77YLnLfN20A1NcI85VtDGlaILC4gRTvIJUrbrtw7CiwFutMg/Nb4GAJ585vY9D/0=
+X-Received: by 2002:a05:6402:1d51:b0:418:bd81:78b3 with SMTP id
+ dz17-20020a0564021d5100b00418bd8178b3mr22893313edb.46.1647875865787; Mon, 21
+ Mar 2022 08:17:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220321104843.949645-1-maz@kernel.org>
+In-Reply-To: <20220321104843.949645-1-maz@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 21 Mar 2022 10:17:34 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJacC6GbNebTfYyUEScROCFN4+Fg2v1_iYFfqAvW4E9Vw@mail.gmail.com>
+Message-ID: <CAL_JsqJacC6GbNebTfYyUEScROCFN4+Fg2v1_iYFfqAvW4E9Vw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] PCI: xgene: Restore working PCIe functionnality
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
+        dann frazier <dann.frazier@canonical.com>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On commit 7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
-Andrew Maier added the Sky Lake-E additional devices
-2031, 2032 and 2033 root ports to the already existing 2030 device.
-Note that the Intel devices 2030, 2031, 2032 and 2033 are ports A, B, C and D.
-Consider on a bus X only port C is connected downstream so in the PCI scan only
-device 8086:2032 on 0000:X:02.0 will be found as bridges that have no children are ignored.
-As a result the routine pci_host_bridge_dev will return NULL for devices under slot C.
-In the proposed patch port field is added to the whitelist which is 0 for 2030, 1 for 2031,
-2 for 2032 3 for 2033 and 0 for all other devices.
+On Mon, Mar 21, 2022 at 5:49 AM Marc Zyngier <maz@kernel.org> wrote:
+>
+> Since 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup") was
+> merged in the 5.5 time frame, PCIe on the venerable XGene platform has
+> been unusable: 6dce5aa59e0b broke both XGene-1 (Mustang and m400) and
+> XGene-2 (Merlin), while the addition of c7a75d07827a ("PCI: xgene: Fix
+> IB window setup") fixed XGene-2, but left the rest of the zoo
+> unusable.
+>
+> It is understood that this systems come with "creative" DTs that don't
+> match the expectations of modern kernels. However, there is little to
+> be gained by forcing these changes on users -- the firmware is not
+> upgradable, and the current owner of the IP will deny that these
+> machines have ever existed.
 
-Signed-off-by: Shlomo Pongratz <shlomop@pliops.com>
----
- drivers/pci/p2pdma.c | 35 +++++++++++++++++++++++++----------
- 1 file changed, 25 insertions(+), 10 deletions(-)
+The gain for fixing this properly is not having drivers do their own
+dma-ranges parsing. We've seen what happens when drivers do their own
+parsing of standard properties (e.g. interrupt-map). Currently, we
+don't have any drivers doing their own parsing:
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index 1015274bd2fe..86f6594a0b8a 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -305,22 +305,23 @@ static bool cpu_supports_p2pdma(void)
- static const struct pci_p2pdma_whitelist_entry {
- 	unsigned short vendor;
- 	unsigned short device;
-+	unsigned short port;
- 	enum {
- 		REQ_SAME_HOST_BRIDGE	= 1 << 0,
- 	} flags;
- } pci_p2pdma_whitelist[] = {
- 	/* Intel Xeon E5/Core i7 */
--	{PCI_VENDOR_ID_INTEL,	0x3c00, REQ_SAME_HOST_BRIDGE},
--	{PCI_VENDOR_ID_INTEL,	0x3c01, REQ_SAME_HOST_BRIDGE},
-+	{PCI_VENDOR_ID_INTEL,	0x3c00, 0, REQ_SAME_HOST_BRIDGE},
-+	{PCI_VENDOR_ID_INTEL,	0x3c01, 0, REQ_SAME_HOST_BRIDGE},
- 	/* Intel Xeon E7 v3/Xeon E5 v3/Core i7 */
--	{PCI_VENDOR_ID_INTEL,	0x2f00, REQ_SAME_HOST_BRIDGE},
--	{PCI_VENDOR_ID_INTEL,	0x2f01, REQ_SAME_HOST_BRIDGE},
-+	{PCI_VENDOR_ID_INTEL,	0x2f00, 0, REQ_SAME_HOST_BRIDGE},
-+	{PCI_VENDOR_ID_INTEL,	0x2f01, 0, REQ_SAME_HOST_BRIDGE},
- 	/* Intel SkyLake-E */
--	{PCI_VENDOR_ID_INTEL,	0x2030, 0},
--	{PCI_VENDOR_ID_INTEL,	0x2031, 0},
--	{PCI_VENDOR_ID_INTEL,	0x2032, 0},
--	{PCI_VENDOR_ID_INTEL,	0x2033, 0},
--	{PCI_VENDOR_ID_INTEL,	0x2020, 0},
-+	{PCI_VENDOR_ID_INTEL,	0x2030, 0, 0},
-+	{PCI_VENDOR_ID_INTEL,	0x2031, 1, 0},
-+	{PCI_VENDOR_ID_INTEL,	0x2032, 2, 0},
-+	{PCI_VENDOR_ID_INTEL,	0x2033, 3, 0},
-+	{PCI_VENDOR_ID_INTEL,	0x2020, 0, 0},
- 	{}
- };
- 
-@@ -332,6 +333,11 @@ static const struct pci_p2pdma_whitelist_entry {
-  * bus->devices list and that the devfn is 00.0. These assumptions should hold
-  * for all the devices in the whitelist above.
-  *
-+ * The method above will work in most cases but not for all.
-+ * Note that the Intel devices 2030, 2031, 2032 and 2033 are ports A, B, C and D.
-+ * Consider on a bus X only port C is connected downstream so in the PCI scan only
-+ * device 8086:2032 on 0000:X:02.0 will be found as birdges with no children are ignored
-+ *
-  * This function is equivalent to pci_get_slot(host->bus, 0), however it does
-  * not take the pci_bus_sem lock seeing __host_bridge_whitelist() must not
-  * sleep.
-@@ -349,7 +355,10 @@ static struct pci_dev *pci_host_bridge_dev(struct pci_host_bridge *host)
- 
- 	if (!root)
- 		return NULL;
--	if (root->devfn != PCI_DEVFN(0, 0))
-+	/* Here just check that the function is 0
-+	 * The slot number will be checked later
-+	 */
-+	if (PCI_FUNC(root->devfn) != 0)
- 		return NULL;
- 
- 	return root;
-@@ -371,6 +380,12 @@ static bool __host_bridge_whitelist(struct pci_host_bridge *host,
- 	for (entry = pci_p2pdma_whitelist; entry->vendor; entry++) {
- 		if (vendor != entry->vendor || device != entry->device)
- 			continue;
-+		/* For Intel Sky Lake-E host root ports check the port is
-+		 * Identical to the slot number.
-+		 * For other devices continue to inssist on slot 0
-+		 */
-+		if (PCI_SLOT(root->devfn) != entry->port)
-+			return false;
- 		if (entry->flags & REQ_SAME_HOST_BRIDGE && !same_host_bridge)
- 			return false;
- 
--- 
-2.17.1
+$ git grep of_pci_dma_range_parser_init
+drivers/of/address.c:int of_pci_dma_range_parser_init(struct
+of_pci_range_parser *parser,
+drivers/of/address.c:EXPORT_SYMBOL_GPL(of_pci_dma_range_parser_init);
+drivers/of/address.c:#define of_dma_range_parser_init
+of_pci_dma_range_parser_init
+drivers/of/unittest.c:  if (of_pci_dma_range_parser_init(&parser, np)) {
+drivers/pci/of.c:       err = of_pci_dma_range_parser_init(&parser, dev_node);
+include/linux/of_address.h:extern int
+of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+include/linux/of_address.h:static inline int
+of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
 
+And we can probably further refactor this to be private to drivers/pci/of.c.
+
+For XGene-2 the issue is simply that the driver depends on the order
+of dma-ranges entries.
+
+For XGene-1, I'd still like to understand what the issue is. Reverting
+the first fix and fixing 'dma-ranges' should have fixed it. I need a
+dump of how the IB registers are initialized in both cases. I'm not
+saying changing 'dma-ranges' in the firmware is going to be required
+here. There's a couple of other ways we could fix that without a
+firmware change, but first I need to understand why it broke.
+
+Rob
+
+P.S. We're carrying ACPI and DT support for these platforms. It seems
+the few users are using DT, so can we drop the ACPI support? Or do I
+need to break it first and wait a year? ;)
