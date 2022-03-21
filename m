@@ -2,55 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C16B14E31C5
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Mar 2022 21:29:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E26984E3223
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Mar 2022 22:06:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353333AbiCUUan (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Mar 2022 16:30:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34064 "EHLO
+        id S229484AbiCUVIG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Mar 2022 17:08:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232223AbiCUUan (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Mar 2022 16:30:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918D5340CE;
-        Mon, 21 Mar 2022 13:29:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S231950AbiCUVIB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Mar 2022 17:08:01 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E00F19CCDB
+        for <linux-pci@vger.kernel.org>; Mon, 21 Mar 2022 14:06:35 -0700 (PDT)
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4E476B819D5;
-        Mon, 21 Mar 2022 20:29:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D08E6C36AE5;
-        Mon, 21 Mar 2022 20:29:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647894554;
-        bh=0t3di4frHw4wef47Rc5l5X8PkzcS5T+5paso1xex7hs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ptM/44lFY5Xmt/PQ4iD4vJ6Xn1vhW/pwoPjQPSaBTDmnnKqih2lNfjkUsqWB5FMLt
-         PvjW3onauXv6V9oi3raECGxU7o7OrNA0R7RuRvNa2YoQg8UPDKMrt0Ql+U/a8EKptH
-         hE3dM1xl8s/6oPs+zSvtKmMGNHhM3V00FZInZO3juH9OXLwo07uD/2DJVsR2q0ZvZa
-         2UWZdMKgeuxhsWjO/Zr5JRjQ045fUAP9I+Yymuiuguq6THcKS6Vl2MFrzaDY9hqcs1
-         wDsJH2sxFZv93XOgd0V3o5oHuzlljP8Wg9dLhXaGcSLCq7k3ceC3gKfeJ4gnXG4fRW
-         V5lzDyAtxVgRg==
-Date:   Mon, 21 Mar 2022 15:29:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Rob Herring <robh@kernel.org>,
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 7E3363F1C9
+        for <linux-pci@vger.kernel.org>; Mon, 21 Mar 2022 21:06:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1647896793;
+        bh=PH1bVwJW+65ZSg7ht8UKbv2/JhG2Jc27AqWMKxMcUUs=;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+         Content-Type:In-Reply-To;
+        b=v2Pf/TMp2Bx/d966rcN7a3d+na287rj4pBvLDWaD8Xi6eU4klRJIWqdLxFhZ6WZGY
+         MI5dKZlE5O5hdHLSuJfoFsroLDmAvcPN5jxLR/rkkSLb4uBGG0p37gOQqWMkVPlOdV
+         MU+MwleWHIY0VI8FvXZVjGPB4lHa4Wmf7ec2zmducEMQ6JB7IC/9kh87ZSGQN0LnHu
+         DF4VvEVvu7McCYAO4XX/WNnG6j5x5GywjF69N/5Yo+nzonSvXX3Yzs/jTUKE8aLnrd
+         CvI5tF9+OEXeYzZ0HLiJfVEWg0FgJYQGY+wH6suo/WPSJ0ECVqyflYazq5wivkRebG
+         NEFfU5TkdKy+g==
+Received: by mail-il1-f200.google.com with SMTP id j25-20020a056e02219900b002c81019b2fdso2729165ila.16
+        for <linux-pci@vger.kernel.org>; Mon, 21 Mar 2022 14:06:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PH1bVwJW+65ZSg7ht8UKbv2/JhG2Jc27AqWMKxMcUUs=;
+        b=YlocF9PMq17BrOw0kC9e+jqhKA1v6StWNrSDZg1xVi/+sN4sTqjdOjh4/6nty9MKvV
+         YndqS5eWcLVxmi+sUOpfdrErpx84OozP94CZbMU0ehBMJmzR0ZzL6mqGQFeq4RY4/Ghx
+         sC7UXVEWhZ1dbmwRqsQdw03qx2Sg/3gcneYrBLbJgtx4mjVrxUYD6C50thzNJMfbNF6D
+         ZFr36COilgrVQ/YfEykUDKqz4LQJ85urcf5m4cXgGnulJoUBifHSCOgdQFcH5hB10Iid
+         eKBepHSVOQzWpa5tz1jlNsYnhNRRSRnBKfYhAFRiTMcAKyOROY02rY8dTjlFa2I4rQu/
+         kglg==
+X-Gm-Message-State: AOAM5322ilErp7yTUVP/5i0Kfg5+d2UOUR6S08sPVhAx+iFbpZSVM7r7
+        2Olbqm43VXGviUR160+Lsp2HRjRmGchQLI/Go16qA2JCiYSsoer+Gh7UlvW/vk84YgORvis/cmy
+        BRmKRc/zSRrGTRk5sJy8YvNwj8SR/+ibJmiYkQA==
+X-Received: by 2002:a05:6638:dd3:b0:317:c9aa:b38f with SMTP id m19-20020a0566380dd300b00317c9aab38fmr12574952jaj.9.1647896792318;
+        Mon, 21 Mar 2022 14:06:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzdCB1f1uWvBZbayneSeyhrKeKVm216UoVjGHBb0qaQFHuwW3HlwiAEwvBUMRl9d0SpCqZ5Gw==
+X-Received: by 2002:a05:6638:dd3:b0:317:c9aa:b38f with SMTP id m19-20020a0566380dd300b00317c9aab38fmr12574930jaj.9.1647896792018;
+        Mon, 21 Mar 2022 14:06:32 -0700 (PDT)
+Received: from xps13.dannf (c-73-14-97-161.hsd1.co.comcast.net. [73.14.97.161])
+        by smtp.gmail.com with ESMTPSA id m2-20020a056e021c2200b002c837530587sm1069585ilh.60.2022.03.21.14.06.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Mar 2022 14:06:31 -0700 (PDT)
+Date:   Mon, 21 Mar 2022 15:06:29 -0600
+From:   dann frazier <dann.frazier@canonical.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Toan Le <toan@os.amperecomputing.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [V3] PCI: fu740: Drop to 2.5GT/s to fix initial device probing
- on some boards
-Message-ID: <20220321202912.GA1120443@bhelgaas>
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v2 0/2] PCI: xgene: Restore working PCIe functionnality
+Message-ID: <Yjjo1emkGKPpaYY2@xps13.dannf>
+References: <20220321104843.949645-1-maz@kernel.org>
+ <CAL_JsqJacC6GbNebTfYyUEScROCFN4+Fg2v1_iYFfqAvW4E9Vw@mail.gmail.com>
+ <87h77rxnyl.wl-maz@kernel.org>
+ <CAL_JsqK57KpZmzCE=86dLcHK4Ws_0w0ga4_qoYUe2GwFNpDzRw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220318152430.526320-1-ben.dooks@codethink.co.uk>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <CAL_JsqK57KpZmzCE=86dLcHK4Ws_0w0ga4_qoYUe2GwFNpDzRw@mail.gmail.com>
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -59,108 +89,96 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 18, 2022 at 03:24:30PM +0000, Ben Dooks wrote:
-> The fu740 PCIe core does not probe any devices on the SiFive Unmatched
-> board without this fix (or having U-Boot explicitly start the PCIe via
-> either boot-script or user command). The fix is to start the link at
-> 2.5GT/s speeds and once the link is up then change the maximum speed back
-> to the default.
+On Mon, Mar 21, 2022 at 01:03:27PM -0500, Rob Herring wrote:
+> On Mon, Mar 21, 2022 at 11:36 AM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Mon, 21 Mar 2022 15:17:34 +0000,
+> > Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Mon, Mar 21, 2022 at 5:49 AM Marc Zyngier <maz@kernel.org> wrote:
+> > > >
+> > > > Since 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup") was
+> > > > merged in the 5.5 time frame, PCIe on the venerable XGene platform has
+> > > > been unusable: 6dce5aa59e0b broke both XGene-1 (Mustang and m400) and
+> > > > XGene-2 (Merlin), while the addition of c7a75d07827a ("PCI: xgene: Fix
+> > > > IB window setup") fixed XGene-2, but left the rest of the zoo
+> > > > unusable.
+> > > >
+> > > > It is understood that this systems come with "creative" DTs that don't
+> > > > match the expectations of modern kernels. However, there is little to
+> > > > be gained by forcing these changes on users -- the firmware is not
+> > > > upgradable, and the current owner of the IP will deny that these
+> > > > machines have ever existed.
+> > >
+> > > The gain for fixing this properly is not having drivers do their own
+> > > dma-ranges parsing. We've seen what happens when drivers do their own
+> > > parsing of standard properties (e.g. interrupt-map).
+> >
+> > We have, and we added the required exceptions for the legacy platforms
+> > that the code base supported until then. We didn't leave things broken
+> > just because we didn't like the way things were done a long time ago.
+> >
+> > > Currently, we don't have any drivers doing their own parsing:
+> > >
+> > > $ git grep of_pci_dma_range_parser_init
+> > > drivers/of/address.c:int of_pci_dma_range_parser_init(struct
+> > > of_pci_range_parser *parser,
+> > > drivers/of/address.c:EXPORT_SYMBOL_GPL(of_pci_dma_range_parser_init);
+> > > drivers/of/address.c:#define of_dma_range_parser_init
+> > > of_pci_dma_range_parser_init
+> > > drivers/of/unittest.c:  if (of_pci_dma_range_parser_init(&parser, np)) {
+> > > drivers/pci/of.c:       err = of_pci_dma_range_parser_init(&parser, dev_node);
+> > > include/linux/of_address.h:extern int
+> > > of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+> > > include/linux/of_address.h:static inline int
+> > > of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+> > >
+> > > And we can probably further refactor this to be private to drivers/pci/of.c.
+> > >
+> > > For XGene-2 the issue is simply that the driver depends on the order
+> > > of dma-ranges entries.
+> > >
+> > > For XGene-1, I'd still like to understand what the issue is. Reverting
+> > > the first fix and fixing 'dma-ranges' should have fixed it. I need a
+> > > dump of how the IB registers are initialized in both cases. I'm not
+> > > saying changing 'dma-ranges' in the firmware is going to be required
+> > > here. There's a couple of other ways we could fix that without a
+> > > firmware change, but first I need to understand why it broke.
+> >
+> > Reverting 6dce5aa59e0b was enough for me, without changing anything
+> > else.
 > 
-> The U-Boot driver claims to set the link-speed to 2.5GT/s to get the probe
-> to work (and U-Boot does print link up at 2.5GT/s) in the following code:
-> https://source.denx.de/u-boot/u-boot/-/blob/master/drivers/pci/pcie_dw_sifive.c?id=v2022.01#L271
+> Meaning c7a75d07827a didn't matter for you. I'm not sure that it would.
 > 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> Can you tell me what 'dma-ranges' contains on your system?
+> 
+> > m400 probably uses an even older firmware (AFAIR, it was stuck
+> > with an ancient version of u-boot that HP never updated, while Mustang
+> > had a few updates). In any case, that DT cannot be changed.
+> 
+> How is Dann changing it then? I assume he's not changing the firmware,
+> but overriding it. That could be a possible solution.
 
-Lorenzo has an old version of this patch on his pci/fu740 branch.
+Correct, I'm just overriding it for testing. I'm using the pxelinux
+emulation provided by the m400's u-boot, which supports an FDT field:
 
-Since we're now in the merge window, I applied this V3 patch to my
-pci/host/fu740 branch so we can try to get this in for v5.18.
+---------
+$ cat /srv/tftp/pxelinux.cfg/default
+DEFAULT default
 
-> --
-> Note, this patch has had significant re-work since the previous 4
-> sets, including trying to fix style, message, reliance on the U-Boot
-> fix and the comments about usage of LINK_CAP and reserved fields.
-> 
-> v2:
-> - fix issues with Gen1/2.5GTs
-> - updated comment on the initial probe
-> - run tests with both uninitialised and initialsed pcie from uboot
-> ---
->  drivers/pci/controller/dwc/pcie-fu740.c | 52 ++++++++++++++++++++++++-
->  1 file changed, 51 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
-> index 842b7202b96e..ecac0364178a 100644
-> --- a/drivers/pci/controller/dwc/pcie-fu740.c
-> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
-> @@ -181,10 +181,60 @@ static int fu740_pcie_start_link(struct dw_pcie *pci)
->  {
->  	struct device *dev = pci->dev;
->  	struct fu740_pcie *afp = dev_get_drvdata(dev);
-> +	u8 cap_exp = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	int ret;
-> +	u32 orig, tmp;
-> +
-> +	/*
-> +	 * Force 2.5GT/s when starting the link, due to some devices not
-> +	 * probing at higher speeds. This happens with the PCIe switch
-> +	 * on the Unmatched board when U-Boot has not initialised the PCIe.
-> +	 * The fix in U-Boot is to force 2.5GT/s, which then gets cleared
-> +	 * by the soft reset does by this driver.
-> +	 */
-> +
-> +	dev_dbg(dev, "cap_exp at %x\n", cap_exp);
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +
-> +	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-> +	orig = tmp & PCI_EXP_LNKCAP_SLS;
-> +	tmp &= ~PCI_EXP_LNKCAP_SLS;
-> +	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-> +	dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
->  
->  	/* Enable LTSSM */
->  	writel_relaxed(0x1, afp->mgmt_base + PCIEX8MGMT_APP_LTSSM_ENABLE);
-> -	return 0;
-> +
-> +	ret = dw_pcie_wait_for_link(pci);
-> +	if (ret) {
-> +		dev_err(dev, "error: link did not start\n");
-> +		goto err;
-> +	}
-> +
-> +	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-> +	if ((tmp & PCI_EXP_LNKCAP_SLS) != orig) {
-> +		dev_dbg(dev, "changing speed back to original\n");
-> +
-> +		tmp &= ~PCI_EXP_LNKCAP_SLS;
-> +		tmp |= orig;
-> +		dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
-> +
-> +		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> +		tmp |= PORT_LOGIC_SPEED_CHANGE;
-> +		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
-> +
-> +		ret = dw_pcie_wait_for_link(pci);
-> +		if (ret) {
-> +			dev_err(dev, "error: link did not start at new speed\n");
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	ret = 0;
-> +err:
-> +	WARN_ON(ret);	/* we assume that errors will be very rare */
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +	return ret;
->  }
->  
->  static int fu740_pcie_host_init(struct pcie_port *pp)
-> -- 
-> 2.35.1
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+LABEL default
+  KERNEL uImage
+  APPEND initrd=uInitrd console=ttyS0,9600n8r ro root=LABEL=cloudimg-rootfs
+  FDT m400.dtb
+---------
+
+This loads the specified file into ${fdt_addr_r}, overriding the blob
+that the firmware had already loaded there.
+
+> Do the DT's in the kernel tree correspond to anything anyone is
+> using?
+
+Upstream apm-mustang.dtb is what Ubuntu uses for Mustang boards w/
+u-boot firmware. That used to work fine, but I haven't tried lately.
+
+  -dann
