@@ -2,158 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 251B54E2841
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Mar 2022 14:54:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E82504E2ADD
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Mar 2022 15:33:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348247AbiCUNzj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Mar 2022 09:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38338 "EHLO
+        id S243302AbiCUOeN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Mar 2022 10:34:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348285AbiCUNzC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Mar 2022 09:55:02 -0400
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 503DC10FC1
-        for <linux-pci@vger.kernel.org>; Mon, 21 Mar 2022 06:53:00 -0700 (PDT)
-Received: from relay6-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::226])
-        by mslow1.mail.gandi.net (Postfix) with ESMTP id 0FBEDC2E31
-        for <linux-pci@vger.kernel.org>; Mon, 21 Mar 2022 13:50:00 +0000 (UTC)
-Received: (Authenticated sender: alex@ghiti.fr)
-        by mail.gandi.net (Postfix) with ESMTPSA id 4D8E6C000F;
-        Mon, 21 Mar 2022 13:49:42 +0000 (UTC)
-Message-ID: <2442936e-a53e-59bf-488f-95eac26d1252@ghiti.fr>
-Date:   Mon, 21 Mar 2022 14:49:41 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [V3] PCI: fu740: Drop to 2.5GT/s to fix initial device probing on
- some boards
-Content-Language: en-US
-To:     Ben Dooks <ben.dooks@codethink.co.uk>, linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>
-References: <20220318152430.526320-1-ben.dooks@codethink.co.uk>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20220318152430.526320-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S1349950AbiCUOdS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Mar 2022 10:33:18 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3492B1B3;
+        Mon, 21 Mar 2022 07:31:27 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id b19so20934795wrh.11;
+        Mon, 21 Mar 2022 07:31:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=PL5VEgEzpRTaebf6MQD/gbU8LyaK1T1vt9TheGPUarY=;
+        b=j3c8qHAGhF1qQPZdeWuuohBdUEySVAEMABRs2gdKgm3doGNx1gKATdthnPaJBX3BpX
+         jeRRyN0C9/hNtU5SzUukIaU30TCHNTOGHqT3ZtnnCT0cbkuEhy/ori7TlnEXuoiLivEs
+         sHVx9YG2jG/o+fuLUx6Hk2PxzYgIE7HEMuJDe9WNPeomdgK7tL7qnwekiL6rYU73Nxkz
+         F0EjAt7He9AgQ33S3yOwmX+SsbNIOEDUs6/XyA18+5jaAQSrRwQlVniNQsccjMq/Rplo
+         6UsVdx55Gk7Kl9OGX7Qs6M9pODvgAlQQf3ZsoqX7oiE9wi2z7sABPj9u00EdD0tfK9in
+         3swg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PL5VEgEzpRTaebf6MQD/gbU8LyaK1T1vt9TheGPUarY=;
+        b=cHM3UaE236ksYhU8foZS2gmhodu+hQeH3kgVjvx24tmkSWkDG6+Nv7jO7qpUy9Qi0R
+         Nb3BjD/gdZFXc7+AAgHbPMq79DZiWMqzOPny7f04Mpyqs90irhNeAi7LETXnerGEkPQm
+         LfI1Cakw2QQ2C4vnqatEqo/wx2KbipLT2tZGDWDE0wRRa4FXwHjOrFAPhum08c2fbMGU
+         y9BnhvPM0WB6x6rB5DUU/FNT1sj7BERksssLHORtaQardByVJ3kbLlc5mO6f6q4yCyBH
+         GX3YfQfPv6XBmtPZVzzsSdG0qyPvmGcBBaF6ShkOqwNcsQwFLsKrLRALFAZMfoSxtv4x
+         4pIQ==
+X-Gm-Message-State: AOAM531m2ov9+wWjVh6EUh9SHL8LG3MNupWfqdzTL94462FoTS8e7WKm
+        ZrIioq8oqY3K0uN9Zb9uUbuCy/sVWOV20w==
+X-Google-Smtp-Source: ABdhPJzXcOMIJxRPFJWA9Yn4sR96mVXIJ5BXUGKsWiI8p1XCN6py4aI67N8Arj2ZFMLE4NlSI9GPtg==
+X-Received: by 2002:adf:816b:0:b0:203:7fae:a245 with SMTP id 98-20020adf816b000000b002037faea245mr18743143wrm.619.1647873085475;
+        Mon, 21 Mar 2022 07:31:25 -0700 (PDT)
+Received: from Dev-shlomop.pliops.ent (bzq-219-32-62.isdn.bezeqint.net. [62.219.32.62])
+        by smtp.googlemail.com with ESMTPSA id f7-20020a05600c154700b0038c85aade39sm10642703wmg.47.2022.03.21.07.31.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Mar 2022 07:31:25 -0700 (PDT)
+From:   Shlomo Pongratz <shlomopongratz@gmail.com>
+X-Google-Original-From: Shlomo Pongratz <shlomop@pliops.com>
+To:     linux-pci@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andrew.maier@eideticom.com,
+        logang@deltatee.com, bhelgaas@google.com,
+        Shlomo Pongratz <shlomop@pliops.com>
+Subject: [PATCH v1] Intel Sky Lake-E host root ports check.
+Date:   Mon, 21 Mar 2022 16:31:20 +0200
+Message-Id: <20220321143120.12191-1-shlomop@pliops.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ben,
+On commit 7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
+Andrew Maier added the Sky Lake-E additional devices
+2031, 2032 and 2033 root ports to the already existing 2030 device.
+Note that the Intel devices 2030, 2031, 2032 and 2033 are ports A, B, C and D.
+Consider on a bus X only port C is connected downstream so in the PCI scan only
+device 8086:2032 on 0000:X:02.0 will be found as bridges that have no children are ignored.
+As a result the routine pci_host_bridge_dev will return NULL for devices under slot C.
+In the proposed patch port field is added to the whitelist which is 0 for 2030, 1 for 2031,
+2 for 2032 3 for 2033 and 0 for all other devices.
 
-On 3/18/22 16:24, Ben Dooks wrote:
-> The fu740 PCIe core does not probe any devices on the SiFive Unmatched
-> board without this fix (or having U-Boot explicitly start the PCIe via
-> either boot-script or user command). The fix is to start the link at
-> 2.5GT/s speeds and once the link is up then change the maximum speed back
-> to the default.
->
-> The U-Boot driver claims to set the link-speed to 2.5GT/s to get the probe
-> to work (and U-Boot does print link up at 2.5GT/s) in the following code:
-> https://source.denx.de/u-boot/u-boot/-/blob/master/drivers/pci/pcie_dw_sifive.c?id=v2022.01#L271
->
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> --
-> Note, this patch has had significant re-work since the previous 4
-> sets, including trying to fix style, message, reliance on the U-Boot
-> fix and the comments about usage of LINK_CAP and reserved fields.
->
-> v2:
-> - fix issues with Gen1/2.5GTs
-> - updated comment on the initial probe
-> - run tests with both uninitialised and initialsed pcie from uboot
-> ---
->   drivers/pci/controller/dwc/pcie-fu740.c | 52 ++++++++++++++++++++++++-
->   1 file changed, 51 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-fu740.c b/drivers/pci/controller/dwc/pcie-fu740.c
-> index 842b7202b96e..ecac0364178a 100644
-> --- a/drivers/pci/controller/dwc/pcie-fu740.c
-> +++ b/drivers/pci/controller/dwc/pcie-fu740.c
-> @@ -181,10 +181,60 @@ static int fu740_pcie_start_link(struct dw_pcie *pci)
->   {
->   	struct device *dev = pci->dev;
->   	struct fu740_pcie *afp = dev_get_drvdata(dev);
-> +	u8 cap_exp = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	int ret;
-> +	u32 orig, tmp;
-> +
-> +	/*
-> +	 * Force 2.5GT/s when starting the link, due to some devices not
-> +	 * probing at higher speeds. This happens with the PCIe switch
-> +	 * on the Unmatched board when U-Boot has not initialised the PCIe.
-> +	 * The fix in U-Boot is to force 2.5GT/s, which then gets cleared
-> +	 * by the soft reset does by this driver.
-> +	 */
-> +
-> +	dev_dbg(dev, "cap_exp at %x\n", cap_exp);
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +
-> +	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-> +	orig = tmp & PCI_EXP_LNKCAP_SLS;
-> +	tmp &= ~PCI_EXP_LNKCAP_SLS;
-> +	tmp |= PCI_EXP_LNKCAP_SLS_2_5GB;
-> +	dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
->   
->   	/* Enable LTSSM */
->   	writel_relaxed(0x1, afp->mgmt_base + PCIEX8MGMT_APP_LTSSM_ENABLE);
-> -	return 0;
-> +
-> +	ret = dw_pcie_wait_for_link(pci);
-> +	if (ret) {
-> +		dev_err(dev, "error: link did not start\n");
-> +		goto err;
-> +	}
-> +
-> +	tmp = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCAP);
-> +	if ((tmp & PCI_EXP_LNKCAP_SLS) != orig) {
-> +		dev_dbg(dev, "changing speed back to original\n");
-> +
-> +		tmp &= ~PCI_EXP_LNKCAP_SLS;
-> +		tmp |= orig;
-> +		dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCAP, tmp);
-> +
-> +		tmp = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> +		tmp |= PORT_LOGIC_SPEED_CHANGE;
-> +		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, tmp);
-> +
-> +		ret = dw_pcie_wait_for_link(pci);
-> +		if (ret) {
-> +			dev_err(dev, "error: link did not start at new speed\n");
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	ret = 0;
-> +err:
-> +	WARN_ON(ret);	/* we assume that errors will be very rare */
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +	return ret;
->   }
->   
->   static int fu740_pcie_host_init(struct pcie_port *pp)
+Signed-off-by: Shlomo Pongratz <shlomop@pliops.com>
+---
+ drivers/pci/p2pdma.c | 35 +++++++++++++++++++++++++----------
+ 1 file changed, 25 insertions(+), 10 deletions(-)
 
-+cc Maciej and David as there is this other fix that seems to do the 
-same but differently, it's been under review for some time now: 
-https://lore.kernel.org/all/20220302000043.GA662523@bhelgaas/t/
-
-I fell onto this issue recently, I'll give your patch and the above a 
-try soon.
-
-Thanks
-
-Alex
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 1015274bd2fe..86f6594a0b8a 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -305,22 +305,23 @@ static bool cpu_supports_p2pdma(void)
+ static const struct pci_p2pdma_whitelist_entry {
+ 	unsigned short vendor;
+ 	unsigned short device;
++	unsigned short port;
+ 	enum {
+ 		REQ_SAME_HOST_BRIDGE	= 1 << 0,
+ 	} flags;
+ } pci_p2pdma_whitelist[] = {
+ 	/* Intel Xeon E5/Core i7 */
+-	{PCI_VENDOR_ID_INTEL,	0x3c00, REQ_SAME_HOST_BRIDGE},
+-	{PCI_VENDOR_ID_INTEL,	0x3c01, REQ_SAME_HOST_BRIDGE},
++	{PCI_VENDOR_ID_INTEL,	0x3c00, 0, REQ_SAME_HOST_BRIDGE},
++	{PCI_VENDOR_ID_INTEL,	0x3c01, 0, REQ_SAME_HOST_BRIDGE},
+ 	/* Intel Xeon E7 v3/Xeon E5 v3/Core i7 */
+-	{PCI_VENDOR_ID_INTEL,	0x2f00, REQ_SAME_HOST_BRIDGE},
+-	{PCI_VENDOR_ID_INTEL,	0x2f01, REQ_SAME_HOST_BRIDGE},
++	{PCI_VENDOR_ID_INTEL,	0x2f00, 0, REQ_SAME_HOST_BRIDGE},
++	{PCI_VENDOR_ID_INTEL,	0x2f01, 0, REQ_SAME_HOST_BRIDGE},
+ 	/* Intel SkyLake-E */
+-	{PCI_VENDOR_ID_INTEL,	0x2030, 0},
+-	{PCI_VENDOR_ID_INTEL,	0x2031, 0},
+-	{PCI_VENDOR_ID_INTEL,	0x2032, 0},
+-	{PCI_VENDOR_ID_INTEL,	0x2033, 0},
+-	{PCI_VENDOR_ID_INTEL,	0x2020, 0},
++	{PCI_VENDOR_ID_INTEL,	0x2030, 0, 0},
++	{PCI_VENDOR_ID_INTEL,	0x2031, 1, 0},
++	{PCI_VENDOR_ID_INTEL,	0x2032, 2, 0},
++	{PCI_VENDOR_ID_INTEL,	0x2033, 3, 0},
++	{PCI_VENDOR_ID_INTEL,	0x2020, 0, 0},
+ 	{}
+ };
+ 
+@@ -332,6 +333,11 @@ static const struct pci_p2pdma_whitelist_entry {
+  * bus->devices list and that the devfn is 00.0. These assumptions should hold
+  * for all the devices in the whitelist above.
+  *
++ * The method above will work in most cases but not for all.
++ * Note that the Intel devices 2030, 2031, 2032 and 2033 are ports A, B, C and D.
++ * Consider on a bus X only port C is connected downstream so in the PCI scan only
++ * device 8086:2032 on 0000:X:02.0 will be found as birdges with no children are ignored
++ *
+  * This function is equivalent to pci_get_slot(host->bus, 0), however it does
+  * not take the pci_bus_sem lock seeing __host_bridge_whitelist() must not
+  * sleep.
+@@ -349,7 +355,10 @@ static struct pci_dev *pci_host_bridge_dev(struct pci_host_bridge *host)
+ 
+ 	if (!root)
+ 		return NULL;
+-	if (root->devfn != PCI_DEVFN(0, 0))
++	/* Here just check that the function is 0
++	 * The slot number will be checked later
++	 */
++	if (PCI_FUNC(root->devfn) != 0)
+ 		return NULL;
+ 
+ 	return root;
+@@ -371,6 +380,12 @@ static bool __host_bridge_whitelist(struct pci_host_bridge *host,
+ 	for (entry = pci_p2pdma_whitelist; entry->vendor; entry++) {
+ 		if (vendor != entry->vendor || device != entry->device)
+ 			continue;
++		/* For Intel Sky Lake-E host root ports check the port is
++		 * Identical to the slot number.
++		 * For other devices continue to inssist on slot 0
++		 */
++		if (PCI_SLOT(root->devfn) != entry->port)
++			return false;
+ 		if (entry->flags & REQ_SAME_HOST_BRIDGE && !same_host_bridge)
+ 			return false;
+ 
+-- 
+2.17.1
 
