@@ -2,113 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB5554E2E14
-	for <lists+linux-pci@lfdr.de>; Mon, 21 Mar 2022 17:32:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 588334E2E26
+	for <lists+linux-pci@lfdr.de>; Mon, 21 Mar 2022 17:37:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346096AbiCUQcT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 21 Mar 2022 12:32:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60992 "EHLO
+        id S243126AbiCUQhi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 21 Mar 2022 12:37:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351252AbiCUQby (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Mar 2022 12:31:54 -0400
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD6B251590;
-        Mon, 21 Mar 2022 09:30:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-        MIME-Version:Date:Message-ID:content-disposition;
-        bh=s3lcHJdrwD/PP8Ft4hyr0+q/Au2xCLskRoPRksjWMDg=; b=UwUD9IU51AOICt2I/+sVTjvxII
-        wZYBfeMssjoQe2T0qlG1+L0eYZ4LbVhcubFCRO/2OS6wOLtS9+XiopbD1EkH+toG9GKQoClCJUVBv
-        IXGJGpStTl5+srDQmYp1xbkjL/b8dXXVh3kbHOW/QgabccEOt3Q/SGd3CbmUdfTlPH7Cc9yKpvFJm
-        XnNtNmvFPHvcnaLjr27SJuHOEcXm/aLsMTjQzMLS13rRqckIbHhKxCJ9met+H609042RTJShHnwRq
-        WDfUEL7aLMgguvqD6o9STcOThPCqp5XPPdV+nNmO8bywSRkP+xXRIhBZG4mhAEBPQRE/5mi0B8P3A
-        jpCtmouQ==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        with ESMTP id S1351234AbiCUQhh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 21 Mar 2022 12:37:37 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 540094A3F4;
+        Mon, 21 Mar 2022 09:36:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F0090B8184C;
+        Mon, 21 Mar 2022 16:36:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0963C340E8;
+        Mon, 21 Mar 2022 16:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647880565;
+        bh=dBXNJk4k4ynl1kpfdDo3ulLplUYqQLK5nh1qo/Cjtgc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XQbsZBRpCWaVUaP1+gpARV4ZRo3gXV3mQipEsvt+A03/5xmRsAvcD4zbzC+sfMepO
+         WTA8tRsDWPenBbBMwstq36LswmoJG7n5D6lIkSoic2BJfYQudrNUGl/sJBD1orR6I+
+         ByHzhkMtLTVA5mY8yfM55Z7N2GMXWU+vZcuz3uYkwuSHaaEx+11YRI7SrO/JiXw6F1
+         9GIPTNntglLkodVk4eOgqp7Z6gT5Wciluy5a3/4m38ZI2mMZgrHTgCbnN51qjB5BsA
+         rJ7Rd47fC3UY6Q83pTaDJSieOyBSmKAaoiuxssQdae5ntYaMo+IWY/K+nJs/4zuSks
+         xFw1fxzVJiFsA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
-        (envelope-from <logang@deltatee.com>)
-        id 1nWKvE-005YHB-DD; Mon, 21 Mar 2022 10:30:20 -0600
-Message-ID: <026bf48f-caf1-2d1e-b4de-553a6625a51b@deltatee.com>
-Date:   Mon, 21 Mar 2022 10:30:19 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Content-Language: en-CA
-To:     Shlomo Pongratz <shlomopongratz@gmail.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrew.maier@eideticom.com, bhelgaas@google.com,
-        Shlomo Pongratz <shlomop@pliops.com>
-References: <20220321143120.12191-1-shlomop@pliops.com>
- <981016a7-f994-f0dd-422e-66ac909371c7@deltatee.com>
- <302CF9D7-ACBD-49D6-AE56-4830B746CE1F@gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <302CF9D7-ACBD-49D6-AE56-4830B746CE1F@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: shlomopongratz@gmail.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, andrew.maier@eideticom.com, bhelgaas@google.com, shlomop@pliops.com
-X-SA-Exim-Mail-From: logang@deltatee.com
+        (envelope-from <maz@kernel.org>)
+        id 1nWL0l-00G0ji-4p; Mon, 21 Mar 2022 16:36:03 +0000
+Date:   Mon, 21 Mar 2022 16:36:02 +0000
+Message-ID: <87h77rxnyl.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRz?= =?UTF-8?B?a2k=?= 
+        <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
+        dann frazier <dann.frazier@canonical.com>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v2 0/2] PCI: xgene: Restore working PCIe functionnality
+In-Reply-To: <CAL_JsqJacC6GbNebTfYyUEScROCFN4+Fg2v1_iYFfqAvW4E9Vw@mail.gmail.com>
+References: <20220321104843.949645-1-maz@kernel.org>
+        <CAL_JsqJacC6GbNebTfYyUEScROCFN4+Fg2v1_iYFfqAvW4E9Vw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: robh@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, toan@os.amperecomputing.com, lorenzo.pieralisi@arm.com, kw@linux.com, bhelgaas@google.com, stgraber@ubuntu.com, dann.frazier@canonical.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
-Subject: Re: [PATCH v1] Intel Sky Lake-E host root ports check.
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2022-03-21 10:21, Shlomo Pongratz wrote:
-> See inline
+On Mon, 21 Mar 2022 15:17:34 +0000,
+Rob Herring <robh@kernel.org> wrote:
 > 
-> Shlomo.
+> On Mon, Mar 21, 2022 at 5:49 AM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > Since 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup") was
+> > merged in the 5.5 time frame, PCIe on the venerable XGene platform has
+> > been unusable: 6dce5aa59e0b broke both XGene-1 (Mustang and m400) and
+> > XGene-2 (Merlin), while the addition of c7a75d07827a ("PCI: xgene: Fix
+> > IB window setup") fixed XGene-2, but left the rest of the zoo
+> > unusable.
+> >
+> > It is understood that this systems come with "creative" DTs that don't
+> > match the expectations of modern kernels. However, there is little to
+> > be gained by forcing these changes on users -- the firmware is not
+> > upgradable, and the current owner of the IP will deny that these
+> > machines have ever existed.
 > 
->> On 21 Mar 2022, at 17:46, Logan Gunthorpe <logang@deltatee.com
->> <mailto:logang@deltatee.com>> wrote:
->>
->>
->>
->> On 2022-03-21 08:31, Shlomo Pongratz wrote:
->>> On commit 7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports
->>> B, C, D to the whitelist")
->>> Andrew Maier added the Sky Lake-E additional devices
->>> 2031, 2032 and 2033 root ports to the already existing 2030 device.
->>> Note that the Intel devices 2030, 2031, 2032 and 2033 are ports A, B,
->>> C and D.
->>> Consider on a bus X only port C is connected downstream so in the PCI
->>> scan only
->>> device 8086:2032 on 0000:X:02.0 will be found as bridges that have no
->>> children are ignored.
->>> As a result the routine pci_host_bridge_dev will return NULL for
->>> devices under slot C.
->>> In the proposed patch port field is added to the whitelist which is 0
->>> for 2030, 1 for 2031,
->>> 2 for 2032 3 for 2033 and 0 for all other devices.
->>
->> The patch looks largely ok, but I'm not sure I follow this description.
->>
->> It sounds like in practice the host bridges B, C and D are not addressed
->> at function 0 as was assumed. But what does it mean that only C is
->> connected downstream? How can a bridge not be connected downstream?
->>
-> Maybe it is wrong usage of words.
-> I mean three are no devices behind port A and B, it is possible if there
-> if one has empty PCI slots.
-> I my case I had only on NVMe SSD connected to port C.
+> The gain for fixing this properly is not having drivers do their own
+> dma-ranges parsing. We've seen what happens when drivers do their own
+> parsing of standard properties (e.g. interrupt-map).
 
-If a bridge has no devices behind it, it's not ever going to get into
-the p2pdma code; so I'm not sure how that's relevant. And just because
-one user doesn't have any device behind a bridge, doesn't mean that all
-users have no devices under that bridge.
+We have, and we added the required exceptions for the legacy platforms
+that the code base supported until then. We didn't leave things broken
+just because we didn't like the way things were done a long time ago.
 
-Sounds like the commit description and comments just neeed to change to
-note that the function of each of the bridge is not always zero, as
-originally assumed.
+> Currently, we don't have any drivers doing their own parsing:
+> 
+> $ git grep of_pci_dma_range_parser_init
+> drivers/of/address.c:int of_pci_dma_range_parser_init(struct
+> of_pci_range_parser *parser,
+> drivers/of/address.c:EXPORT_SYMBOL_GPL(of_pci_dma_range_parser_init);
+> drivers/of/address.c:#define of_dma_range_parser_init
+> of_pci_dma_range_parser_init
+> drivers/of/unittest.c:  if (of_pci_dma_range_parser_init(&parser, np)) {
+> drivers/pci/of.c:       err = of_pci_dma_range_parser_init(&parser, dev_node);
+> include/linux/of_address.h:extern int
+> of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+> include/linux/of_address.h:static inline int
+> of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+> 
+> And we can probably further refactor this to be private to drivers/pci/of.c.
+> 
+> For XGene-2 the issue is simply that the driver depends on the order
+> of dma-ranges entries.
+> 
+> For XGene-1, I'd still like to understand what the issue is. Reverting
+> the first fix and fixing 'dma-ranges' should have fixed it. I need a
+> dump of how the IB registers are initialized in both cases. I'm not
+> saying changing 'dma-ranges' in the firmware is going to be required
+> here. There's a couple of other ways we could fix that without a
+> firmware change, but first I need to understand why it broke.
 
-Logan
+Reverting 6dce5aa59e0b was enough for me, without changing anything
+else. m400 probably uses an even older firmware (AFAIR, it was stuck
+with an ancient version of u-boot that HP never updated, while Mustang
+had a few updates). In any case, that DT cannot be changed.
+
+> 
+> Rob
+> 
+> P.S. We're carrying ACPI and DT support for these platforms. It seems
+> the few users are using DT, so can we drop the ACPI support? Or do I
+> need to break it first and wait a year? ;)
+
+I'm not sure people on the list are representative of all the users,
+and I didn't realise the plan was "let's break everything we don't
+like and see if someone wakes up" either. That definitely puts things
+in a different perspective.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
