@@ -2,65 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D01054E3F61
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Mar 2022 14:20:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4A194E3FE9
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Mar 2022 14:56:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235361AbiCVNV5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Mar 2022 09:21:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40994 "EHLO
+        id S235961AbiCVN5c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Mar 2022 09:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235381AbiCVNVz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Mar 2022 09:21:55 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15696A028;
-        Tue, 22 Mar 2022 06:20:27 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id p15so36143720ejc.7;
-        Tue, 22 Mar 2022 06:20:27 -0700 (PDT)
+        with ESMTP id S235955AbiCVN5b (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Mar 2022 09:57:31 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6734186F4;
+        Tue, 22 Mar 2022 06:56:02 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id o10so17615485ejd.1;
+        Tue, 22 Mar 2022 06:56:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eDfM6Q9oZjJwK8y7VoDq/V92eKRqzakAI7cbs7aB55g=;
-        b=EJo/OvVx4FAubMDazS9cSiX1m+BgpQxQFd+JZjhjGiIOi09oLUO0SAmjQ1vvzbWJRC
-         fsd1lUlKpnPncc0nZk8UUKpW8xQGbyekrEhlPtaoUi2nhFXUqHnwK7Zk92GSb/ehxcVn
-         ERTq6DOIcr/wbxgNq8T+QnJzz1sEsqtFybk/1iB/qOnzeaby5ZqUY367rAy/e/xMAoTb
-         mfUSDyLo1Jv360NcUVVUqcQQwIu2hjz/Khvv7oVWB3UEl40THHcQTeWfZ6+i83IT/i6b
-         I7dkTmtrL0foFrOjaihJNSW592VmAoTrzbE+eKU+84f67PLB9C3K9N5HHU7G9p7pQEO9
-         X6zg==
+         :cc;
+        bh=m64q3hTcapImMubOd29PORSwjMosMvdpyxO3AbNue3A=;
+        b=XNWh3vpFWmSVhMxuG+J7wOR9z+GfOrocxYG8KjWFpWqURde0uuJZAY9bz729tkzGJ3
+         gzDM4dmnYnXJgu4qciZZoGcfPwwQ1MNxNfPAHuNwGITdXkji7EpD+8J4386Ho/Sqw2VW
+         R0yZj2wMdOwIckmuOMa7RiCunX+gvGCezWws7nGVuub/8bQPLJAvo1q+tUbNqwTRDhWU
+         xg8LuYEY16IJb8tmbz6y8PEO3VB4CnegWEp6pn48yjhMB1/HDFjoFdv3SDY+X6fyBzMO
+         hTUtpmiuroWa/RP1g+J2+FZrbAiLeQ+ynHMfZynXTJpvm4rOYz3Fx2o+sHGVAw7IAyiD
+         70qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eDfM6Q9oZjJwK8y7VoDq/V92eKRqzakAI7cbs7aB55g=;
-        b=ylH2mP2m7VF/Ez9bmDFz9MhvCra+S6xHpLNQCOiNlwTidHrCpuXlvFkI0Lcyeey8o1
-         esLI43gusnlJeCJPKgqD+KOLzVtRa7NmJiGhxraAtNQyuqFdBVv/+oS+vbGrtao0IdwH
-         OZ7313tE2mJnU6Om3eF+5LXE/m679Czm+I7jo7ur5Gi/rCWXQQnDLj0kYqDfAgDEsgN0
-         QGXdGce0aqvkgEc9aFKYmQD/e/Jn2n4RGYvB7ri+VI+JlWyZQJYi6JVBAxAV4Y4NZ4NL
-         ry9Idf9VlGqkD29YuMholbGKb8TqOd5fB/sK9dk40okVF1p9R96wEuyhQksULWC/VBjM
-         zfNg==
-X-Gm-Message-State: AOAM5319JYvWVyXmFU799CcOyD99/JqDo9kxTlfXxCWzrflT08OWYCKC
-        urOwmqZfFuNCp4kdrpR7yGpwaIZVPWXM+b28LkZ1NPUm
-X-Google-Smtp-Source: ABdhPJxb5ANsjWbNR8ToNX6eU9m7/RTX+9CUZOkJsfhJAh2EYqflwh6spCB+NBGQPdksCYrlH3+Ho9OiHXNYrCI3pmU=
-X-Received: by 2002:a17:907:1ca7:b0:6e0:346:ca6 with SMTP id
- nb39-20020a1709071ca700b006e003460ca6mr9823732ejc.311.1647955226097; Tue, 22
- Mar 2022 06:20:26 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=m64q3hTcapImMubOd29PORSwjMosMvdpyxO3AbNue3A=;
+        b=8GnHIfcpTQkafldOf4CllQ5ptBROwWYQrvgcgIxNZksTUqHAYP9KsD42MCqy2XkqP3
+         UpiyHv4QU7AbPrlp6GBmi3suYCliHSBPTOXDrMPgfq/q8UYunSovS0rdZTrLMpoiDVtj
+         QFFDW6j8NiOmPz+hnjyvUfMWl4QMApr154E1/Yx+nMBgF8383qhvSorZgLG7BhnZgLYw
+         ZybADDmVumYRP2YJVTDQI79AFoyJKQggbz55ngnyA6tOdQ142VvvQPv3QdJ0PneGraXs
+         NrjsrGbFejQe8lvhhkk5NgKVG2N86Aw+ytBx1XlKXqOuDlpeXEtdA+5hClEdgvar9rzZ
+         Ijag==
+X-Gm-Message-State: AOAM5330cSwG5W6Cfkd23mZ8zEsx/CQKfVjRMP9BWlKOsUIYTpc05pi2
+        aRh2j2agigwo1FsSOq0y+rOjkdL0Zy1l/zouvoI=
+X-Google-Smtp-Source: ABdhPJw+GWdoldErHGr1In18Rt1XcSg3UdqjeT0Tfa2PJm9kltQ6KlelcVRbu06mgDIb8TNYTiJ5VXVMwYeEBLVZ9T8=
+X-Received: by 2002:a17:907:1606:b0:6df:f528:4033 with SMTP id
+ hb6-20020a170907160600b006dff5284033mr12731653ejc.433.1647957361078; Tue, 22
+ Mar 2022 06:56:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220222162619.14645-1-christian.gmeiner@gmail.com> <CAH9NwWebh9QJ0VevG5b7pnaRnzJ6XcEmeKYgZ=NPPt9ZxTXUfA@mail.gmail.com>
-In-Reply-To: <CAH9NwWebh9QJ0VevG5b7pnaRnzJ6XcEmeKYgZ=NPPt9ZxTXUfA@mail.gmail.com>
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-Date:   Tue, 22 Mar 2022 14:20:14 +0100
-Message-ID: <CAH9NwWec6ovS1xQbuPsB5duskJdmK_qv4t+URTK6thCvGNST7w@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: cadence: Enable Controller to respond to received
- PTM Requests
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+References: <20220309211204.26050-1-Frank.Li@nxp.com> <20220309211204.26050-6-Frank.Li@nxp.com>
+ <20220310163123.h2zqdx5tkn2czmbm@mobilestation> <20220311174134.GA3966@thinkpad>
+ <20220311190147.pvjp6v7whjgyeuey@mobilestation> <20220312053720.GA4356@thinkpad>
+ <20220314083340.244dfwo4v3uuhkkm@mobilestation> <20220318180605.GB4922@thinkpad>
+ <20220318181911.7dujoioqc7iqwtsz@mobilestation> <20220320231639.ymfdhy2pkjy7jmbq@mobilestation>
+In-Reply-To: <20220320231639.ymfdhy2pkjy7jmbq@mobilestation>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Tue, 22 Mar 2022 08:55:49 -0500
+Message-ID: <CAHrpEqQ+TFkx5u=TKydT5uQ1V4P7w1dDYkp9dEksu-nxM65jYw@mail.gmail.com>
+Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
+ dest addresses for ep
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, vkoul@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -71,82 +77,133 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Do., 10. M=C3=A4rz 2022 um 13:14 Uhr schrieb Christian Gmeiner
-<christian.gmeiner@gmail.com>:
+On Sun, Mar 20, 2022 at 6:16 PM Serge Semin <fancer.lancer@gmail.com> wrote:
 >
-> Hi all
->
-> > This enables the Controller [RP] to automatically respond with
-> > Response/ResponseD messages if CDNS_PCIE_LM_TPM_CTRL_PTMRSEN
-> > and PCI_PTM_CTRL_ENABLE bits are both set.
-> >
-> > Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> > ---
-> >  drivers/pci/controller/cadence/pcie-cadence-host.c | 10 ++++++++++
-> >  drivers/pci/controller/cadence/pcie-cadence.h      |  4 ++++
-> >  2 files changed, 14 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drive=
-rs/pci/controller/cadence/pcie-cadence-host.c
-> > index fb96d37a135c..940c7dd701d6 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> > @@ -123,6 +123,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pci=
-e)
-> >         return ret;
-> >  }
-> >
-> > +static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
-> > +{
-> > +       u32 val;
-> > +
-> > +       val =3D cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
-> > +       cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val | CDNS_PCIE_L=
-M_TPM_CTRL_PTMRSEN);
-> > +}
-> > +
-> >  static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
-> >  {
-> >         struct cdns_pcie *pcie =3D &rc->pcie;
-> > @@ -501,6 +509,8 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
-> >         if (rc->quirk_detect_quiet_flag)
-> >                 cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
-> >
-> > +       cdns_pcie_host_enable_ptm_response(pcie);
-> > +
-> >         ret =3D cdns_pcie_start_link(pcie);
-> >         if (ret) {
-> >                 dev_err(dev, "Failed to start link\n");
-> > diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pc=
-i/controller/cadence/pcie-cadence.h
-> > index c8a27b6290ce..1ffa8fa77a8a 100644
-> > --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> > +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> > @@ -116,6 +116,10 @@
-> >  #define LM_RC_BAR_CFG_APERTURE(bar, aperture)          \
-> >                                         (((aperture) - 2) << ((bar) * 8=
-))
-> >
-> > +/* PTM Control Register */
-> > +#define CDNS_PCIE_LM_PTM_CTRL  (CDNS_PCIE_LM_BASE + 0x0da8)
-> > +#define CDNS_PCIE_LM_TPM_CTRL_PTMRSEN  BIT(17)
-> > +
-> >  /*
-> >   * Endpoint Function Registers (PCI configuration space for endpoint f=
-unctions)
-> >   */
-> > --
-> > 2.35.1
+> On Fri, Mar 18, 2022 at 09:19:13PM +0300, Serge Semin wrote:
+> > On Fri, Mar 18, 2022 at 11:36:05PM +0530, Manivannan Sadhasivam wrote:
+> > > On Mon, Mar 14, 2022 at 11:33:40AM +0300, Serge Semin wrote:
+> > > > On Sat, Mar 12, 2022 at 11:07:20AM +0530, Manivannan Sadhasivam wrote:
+> > > > > On Fri, Mar 11, 2022 at 10:01:47PM +0300, Serge Semin wrote:
+> > > > > > On Fri, Mar 11, 2022 at 11:11:34PM +0530, Manivannan Sadhasivam wrote:
+> > > >
+> > > > [nip]
+> > > >
+> > > > > >
+> > > > > > > As per my understanding, the eDMA is solely used in the PCIe endpoint. And the
+> > > > > > > access to it happens over PCIe bus or by the local CPU.
+> > > > > >
+> > > > > > Not fully correct. Root Ports can also have eDMA embedded. In that
+> > > > > > case the eDMA can be only accessible from the local CPU. At the same
+> > > > > > time the DW PCIe End-point case is the IP-core synthesize parameters
+> > > > > > specific. It's always possible to access the eDMA CSRs from local
+> > > > > > CPU, but a particular End-point BAR can be pre-synthesize to map
+> > > > > > either Port Logic, or eDMA or iATU CSRs. Thus a PCIe root port can
+> > > > > > perform a full End-point configuration. Anyway the case if the eDMA
+> > > > > > functionality being accessible over the PCIe wire doesn't really make
+> > > > > > much sense with no info regarding the application logic hidden behind
+> > > > > > the PCIe End-point interface since SAR/DAR LLP is supposed to be
+> > > > > > initialized with an address from the local (application) memory space.
+> > > > > >
+> > > > >
+> > > > > Thanks for the explanation, it clarifies my doubt. I got misleaded by the
+> > > > > earlier commits...
+> > > > >
+> > > > > > So AFAICS the main usecase of the controller is 1) - when eDMA is a
+> > > > > > part of the Root Port/End-point and only local CPU is supposed to have
+> > > > > > it accessed and configured.
+> > > > > >
+> > > > > > I can resend this patch with my fix to the problem. What do you think?
+> > > > > >
+> > > > >
+> > > >
+> > > > > Yes, please do.
+> > > >
+> > > > Ok. I'll be AFK today, but will send my patches tomorrow.  @Frank,
+> > > > Could you please hold on with respinning the series for a few days?
+> > > > I'll send out some of my patches then with a note which one of them
+> > > > could be picked up by you and merged into this series.
+> > > >
+> > >
 > >
 >
-> This patch should be ready to land - or is anything missing?
+> > > Any update on your patches?
+> >
+> > No worries. The patches are ready. But since Frank was on vacation I
+> > decided to rebase all of my work on top of his series. I'll finish it
+> > up shortly and send out my patchset till Monday for review. Then Frank
+> > will be able to pick up two patches from there so to close up his
+> > patchset (I'll give a note which one of them is of Frank' interes).
+> > My series will be able to be merged in after Frank's series is reviewed
+> > and accepted.
 >
+> Folks, couldn't make it this weekend. Too much sidework to do. Terribly
+> sorry about that. Will send out the series tomorrow or at most in a day
+> after tomorrow. Sorry for the inconvenience.
 
-Gentle ping.
+Any update on your patches?
 
---=20
-greets
---
-Christian Gmeiner, MSc
+best regards
+Frank Li
 
-https://christian-gmeiner.info/privacypolicy
+>
+> -Sergey
+>
+> >
+> > >
+> > > Btw, my colleage worked on merging the two dma devices used by the eDMA core
+> > > for read & write channels into one. Initially I thought that was not needed as
+> > > he did that for devicetree integration, but looking deeply I think that patch is
+> > > necessary irrespective of DT.
+> > >
+> > > One standout problem is, we can't register debugfs directory under "dmaengine"
+> > > properly because, both read and write dma devices share the same parent
+> > > chip->dev.
+> >
+> > Right, my series fixes that and some other problems too. So please be
+> > patient for a few more days.
+> >
+> > -Sergey
+> >
+> > >
+> > > Thanks,
+> > > Mani
+> > >
+> > > > -Sergey
+> > > >
+> > > > >
+> > > > > Thanks,
+> > > > > Mani
+> > > > >
+> > > > > > -Sergey
+> > > > > >
+> > > > > > >
+> > > > > > > The commit from Alan Mikhak is what I took as a reference since the patch was
+> > > > > > > already merged:
+> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/dw-edma?id=bd96f1b2f43a39310cc576bb4faf2ea24317a4c9
+> > > > > > >
+> > > > > > > Thanks,
+> > > > > > > Mani
+> > > > > > >
+> > > > > > > > -Sergey
+> > > > > > > >
+> > > > > > > > > +                *
+> > > > > > > > > +                ****************************************************************/
+> > > > > > > > > +
+> > > > > > > >
+> > > > > > > > > +               if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
+> > > > > > > > > +                   (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
+> > > > > > > > > +                       read = true;
+> > > > > > > >
+> > > > > > > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
+> > > > > > > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
+> > > > > > > > redundant.
+> > > > > > > >
+> > > > > > > > > +
+> > > > > > > > > +               /* Program the source and destination addresses for DMA read/write */
+> > > > > > > > > +               if (read) {
+> > > > > > > > >                         burst->sar = src_addr;
+> > > > > > > > >                         if (xfer->type == EDMA_XFER_CYCLIC) {
+> > > > > > > > >                                 burst->dar = xfer->xfer.cyclic.paddr;
+> > > > > > > > > --
+> > > > > > > > > 2.24.0.rc1
+> > > > > > > > >
