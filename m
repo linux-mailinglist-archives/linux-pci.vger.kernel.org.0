@@ -2,225 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AA704E4002
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Mar 2022 15:03:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB5204E4188
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Mar 2022 15:39:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236027AbiCVOEw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Mar 2022 10:04:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50802 "EHLO
+        id S234389AbiCVOlP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Mar 2022 10:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236057AbiCVOEu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Mar 2022 10:04:50 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3476E25E8C;
-        Tue, 22 Mar 2022 07:03:15 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id m3so17991931lfj.11;
-        Tue, 22 Mar 2022 07:03:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PDa0+lmRqQyn3y9UD7SBBFCvq5AF8778Gd9CGISsBNw=;
-        b=cow1jFfFIP1UUFfBpm6t1scKWUDz04PIRIZ8F547J8tYvltYSKhItt6xpnyHjfzx8q
-         IV+mGLPHmhYnX8oY2+BiiOkAjhinOSOR/fliSSZbdnb+WtrouXWra41j2LEJxSjx9ZrC
-         Kgr3LdTAW5PLZbqcVaGwBs/kKggWwYy+zAVfGuQtx1z6P1EZAOJKNdeEd/Fh8Yq4/JqO
-         RbLsFDsD581O/gvv4+idXUlilVes7FzP9xO+SZKJQ6DwHB+rjq1VpPVw6XdkW3XFuw3D
-         I4QOTT2Oj0inO+/IM/AzZJpjZwCMt61kBP2mP09+NnB2CC1Vs0VKlNjbZzwocv9ibR3S
-         BlwQ==
+        with ESMTP id S236750AbiCVOlO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Mar 2022 10:41:14 -0400
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A4412AC8;
+        Tue, 22 Mar 2022 07:39:47 -0700 (PDT)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-d6e29fb3d7so1881600fac.7;
+        Tue, 22 Mar 2022 07:39:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PDa0+lmRqQyn3y9UD7SBBFCvq5AF8778Gd9CGISsBNw=;
-        b=uZJh2LH9GU1PsJWePGEBHSbNaq9TBEGm2lyvvWu1ARJAsax4qkTyuFmQgXH4VZXfZN
-         H9lLXzb4oHJ+QvAVoTCVB2ATtpAFIpbhBkPbLX4Om96WUHDi8RD7lVBODYNlm1oQM+6a
-         dyVwlbqznTALD47i32PIrGRmHHNHAwnqL/zgfaWWPTvlfC0wpUEBWlBmjCpLzgbT10nN
-         fKHnETblTm92bnYjiFeDw/o3p3cCNNSPwna0eO5h9QL0hs34pX8GOoFCv9zIaaB1PDNd
-         8Zxf4yZkJfQxwAkD3Oggy4yD0o+ya2gbZU1Zc/Ma4RaoN3wEj6KQ/Nzc8fDr9p4XLe7U
-         b5nQ==
-X-Gm-Message-State: AOAM53135b8Z0J9IRsp1mwTIKbO9NYQpt6/uxi6IboQi+Xlf62RPukOJ
-        UOpJ2fwbClV70wI8XGc4eZk=
-X-Google-Smtp-Source: ABdhPJyVLm8AE4ueSba++zWYXsGTpwGOyb0d622nQFIQBKifsBEPTJ78ILaoL3NZmEOs+ksniLfdGA==
-X-Received: by 2002:a05:6512:158e:b0:44a:12b5:7fea with SMTP id bp14-20020a056512158e00b0044a12b57feamr12159730lfb.411.1647957793321;
-        Tue, 22 Mar 2022 07:03:13 -0700 (PDT)
-Received: from mobilestation ([95.79.188.22])
-        by smtp.gmail.com with ESMTPSA id i6-20020a2ea366000000b00248073ae9a2sm2486720ljn.84.2022.03.22.07.03.11
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=WxMgpeiQYhggSsVLRZ+q7Wz7Ufhtg8Nvw1FX59uyKIM=;
+        b=pfUofWc5YccH3Zbnj4KCFOAV8I71L318nWLCeKLpHUTKvd+BXMv9tEOu3iId6f7wED
+         jMyBo3MYsQS1NQ+tbu9yOkxRdREFIO0UlLmN7BZfZ/ybxAVP7CyViK75qZ+b60G2mkeb
+         x3gX7uel7QkZk0x6xUGDfo235NbPim1dmc9Tn1igxU5qO5qSWaFk7eQQ8PbXyHwqJZFE
+         vs/lST17/LBmjp0opMEm0qpf8q6VKYO0KA92dRCsQ4zDXwYxFY7RlloXJuVL+7HtiVQZ
+         UTg0anqQIRVWznllxg0NPsbxRXXWh3nrqVarepD0x8YDZFRpTDdsSEOoekQ+tID+f653
+         07HQ==
+X-Gm-Message-State: AOAM531oISgT7pVj6AvSSxAfuEuRlhgjvcWfsg72xf90zyj+EAbLmzjE
+        4q06Cb6rqemmYlqE9Vyxbg==
+X-Google-Smtp-Source: ABdhPJxPcgHGhDH2C+e7WOOnw416Mg/sQWc1cDtvNNEnB3Z8MzHF5ZBtTXUWtbYsyVbA1huXzoN4QQ==
+X-Received: by 2002:a05:6870:6108:b0:dd:ca26:f135 with SMTP id s8-20020a056870610800b000ddca26f135mr1818123oae.22.1647959986324;
+        Tue, 22 Mar 2022 07:39:46 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id f8-20020a4a8908000000b0032472938f95sm4241174ooi.17.2022.03.22.07.39.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Mar 2022 07:03:12 -0700 (PDT)
-Date:   Tue, 22 Mar 2022 17:03:10 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Zhi Li <lznuaa@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, vkoul@kernel.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        Tue, 22 Mar 2022 07:39:45 -0700 (PDT)
+Received: (nullmailer pid 1981681 invoked by uid 1000);
+        Tue, 22 Mar 2022 14:39:43 -0000
+Date:   Tue, 22 Mar 2022 09:39:43 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>, Marc Zyngier <maz@kernel.org>
+Cc:     dann frazier <dann.frazier@canonical.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
- dest addresses for ep
-Message-ID: <20220322140310.micuffgksnst67cv@mobilestation>
-References: <20220309211204.26050-6-Frank.Li@nxp.com>
- <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
- <20220311174134.GA3966@thinkpad>
- <20220311190147.pvjp6v7whjgyeuey@mobilestation>
- <20220312053720.GA4356@thinkpad>
- <20220314083340.244dfwo4v3uuhkkm@mobilestation>
- <20220318180605.GB4922@thinkpad>
- <20220318181911.7dujoioqc7iqwtsz@mobilestation>
- <20220320231639.ymfdhy2pkjy7jmbq@mobilestation>
- <CAHrpEqQ+TFkx5u=TKydT5uQ1V4P7w1dDYkp9dEksu-nxM65jYw@mail.gmail.com>
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v2 0/2] PCI: xgene: Restore working PCIe functionnality
+Message-ID: <Yjnfr7V6egc1sewb@robh.at.kernel.org>
+References: <20220321104843.949645-1-maz@kernel.org>
+ <CAL_JsqJacC6GbNebTfYyUEScROCFN4+Fg2v1_iYFfqAvW4E9Vw@mail.gmail.com>
+ <87h77rxnyl.wl-maz@kernel.org>
+ <CAL_JsqK57KpZmzCE=86dLcHK4Ws_0w0ga4_qoYUe2GwFNpDzRw@mail.gmail.com>
+ <87fsnbxgau.wl-maz@kernel.org>
+ <e52c8cbd-031b-848f-3d78-dff8b93bd416@arm.com>
+ <61809b8f-acaa-bae2-ac5e-aa47c55eea23@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAHrpEqQ+TFkx5u=TKydT5uQ1V4P7w1dDYkp9dEksu-nxM65jYw@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <61809b8f-acaa-bae2-ac5e-aa47c55eea23@arm.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 22, 2022 at 08:55:49AM -0500, Zhi Li wrote:
-> On Sun, Mar 20, 2022 at 6:16 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> >
-> > On Fri, Mar 18, 2022 at 09:19:13PM +0300, Serge Semin wrote:
-> > > On Fri, Mar 18, 2022 at 11:36:05PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Mon, Mar 14, 2022 at 11:33:40AM +0300, Serge Semin wrote:
-> > > > > On Sat, Mar 12, 2022 at 11:07:20AM +0530, Manivannan Sadhasivam wrote:
-> > > > > > On Fri, Mar 11, 2022 at 10:01:47PM +0300, Serge Semin wrote:
-> > > > > > > On Fri, Mar 11, 2022 at 11:11:34PM +0530, Manivannan Sadhasivam wrote:
-> > > > >
-> > > > > [nip]
-> > > > >
-> > > > > > >
-> > > > > > > > As per my understanding, the eDMA is solely used in the PCIe endpoint. And the
-> > > > > > > > access to it happens over PCIe bus or by the local CPU.
-> > > > > > >
-> > > > > > > Not fully correct. Root Ports can also have eDMA embedded. In that
-> > > > > > > case the eDMA can be only accessible from the local CPU. At the same
-> > > > > > > time the DW PCIe End-point case is the IP-core synthesize parameters
-> > > > > > > specific. It's always possible to access the eDMA CSRs from local
-> > > > > > > CPU, but a particular End-point BAR can be pre-synthesize to map
-> > > > > > > either Port Logic, or eDMA or iATU CSRs. Thus a PCIe root port can
-> > > > > > > perform a full End-point configuration. Anyway the case if the eDMA
-> > > > > > > functionality being accessible over the PCIe wire doesn't really make
-> > > > > > > much sense with no info regarding the application logic hidden behind
-> > > > > > > the PCIe End-point interface since SAR/DAR LLP is supposed to be
-> > > > > > > initialized with an address from the local (application) memory space.
-> > > > > > >
-> > > > > >
-> > > > > > Thanks for the explanation, it clarifies my doubt. I got misleaded by the
-> > > > > > earlier commits...
-> > > > > >
-> > > > > > > So AFAICS the main usecase of the controller is 1) - when eDMA is a
-> > > > > > > part of the Root Port/End-point and only local CPU is supposed to have
-> > > > > > > it accessed and configured.
-> > > > > > >
-> > > > > > > I can resend this patch with my fix to the problem. What do you think?
-> > > > > > >
-> > > > > >
-> > > > >
-> > > > > > Yes, please do.
-> > > > >
-> > > > > Ok. I'll be AFK today, but will send my patches tomorrow.  @Frank,
-> > > > > Could you please hold on with respinning the series for a few days?
-> > > > > I'll send out some of my patches then with a note which one of them
-> > > > > could be picked up by you and merged into this series.
-> > > > >
-> > > >
-> > >
-> >
-> > > > Any update on your patches?
-> > >
-> > > No worries. The patches are ready. But since Frank was on vacation I
-> > > decided to rebase all of my work on top of his series. I'll finish it
-> > > up shortly and send out my patchset till Monday for review. Then Frank
-> > > will be able to pick up two patches from there so to close up his
-> > > patchset (I'll give a note which one of them is of Frank' interes).
-> > > My series will be able to be merged in after Frank's series is reviewed
-> > > and accepted.
-> >
-> > Folks, couldn't make it this weekend. Too much sidework to do. Terribly
-> > sorry about that. Will send out the series tomorrow or at most in a day
-> > after tomorrow. Sorry for the inconvenience.
+On Tue, Mar 22, 2022 at 01:16:35PM +0000, Robin Murphy wrote:
+> On 2022-03-21 20:06, Robin Murphy wrote:
+> > On 2022-03-21 19:21, Marc Zyngier wrote:
+> > > On Mon, 21 Mar 2022 18:03:27 +0000,
+> > > Rob Herring <robh@kernel.org> wrote:
+> > > > 
+> > > > On Mon, Mar 21, 2022 at 11:36 AM Marc Zyngier <maz@kernel.org> wrote:
+> > > > > 
+> > > > > On Mon, 21 Mar 2022 15:17:34 +0000,
+> > > > > Rob Herring <robh@kernel.org> wrote:
+> > > > > > 
+> > > > > > On Mon, Mar 21, 2022 at 5:49 AM Marc Zyngier <maz@kernel.org> wrote:
+> > > > > > > 
+> > > > > > For XGene-1, I'd still like to understand what the issue is. Reverting
+> > > > > > the first fix and fixing 'dma-ranges' should have fixed it. I need a
+> > > > > > dump of how the IB registers are initialized in both cases. I'm not
+> > > > > > saying changing 'dma-ranges' in the firmware is going to be required
+> > > > > > here. There's a couple of other ways we could fix that without a
+> > > > > > firmware change, but first I need to understand why it broke.
+> > > > > 
+> > > > > Reverting 6dce5aa59e0b was enough for me, without changing anything
+> > > > > else.
+> > > > 
+> > > > Meaning c7a75d07827a didn't matter for you. I'm not sure that it would.
+> > > > 
+> > > > Can you tell me what 'dma-ranges' contains on your system?
+> > > 
+> > > Each pcie node (all 5 of them) has:
+> > > 
+> > > dma-ranges = <0x42000000 0x80 0x00 0x80 0x00 0x00 0x80000000
+> > >                0x42000000 0x00 0x00 0x00 0x00 0x80 0x00>;
+
+This is the same as what Stéphane has for Merlin. So c7a75d07827a ("PCI: 
+xgene: Fix IB window setup") should have fixed Mustang.
+
+> > 
+> > Hmm, is there anyone other than iommu-dma who actually depends on the
+> > resource list being sorted in ascending order of bus address? I recall
+> > at the time I pushed for creating the list in sorted order as it was the
+> > simplest and most efficient option, but there's no technical reason we
+> > couldn't create it in as-found order and defer the sorting until
+> > iova_reserve_pci_windows() (at worst that could even operate on a
+> > temporary copy if need be). It's just more code, which didn't need to
+> > exist without a good reason, but if this is one then exist it certainly
+> > may.
 > 
+> Taking a closer look, the Cadence driver is already re-sorting the list
+> for its own setup, so iommu-dma can't assume the initial sort is
+> preserved and needs to do its own anyway. Does the (untested) diff below
+> end up helping X-Gene also?
 
-> Any update on your patches?
+There's no IOMMU on X-Gene 1 or 2 based on the upstream dts files, so 
+how would this matter?
 
-The patches are ready. Writing cover-letters and sending them out this
-night. Sorry for the delay.
-
--Sergey
-
-> 
-> best regards
-> Frank Li
-> 
-> >
-> > -Sergey
-> >
-> > >
-> > > >
-> > > > Btw, my colleage worked on merging the two dma devices used by the eDMA core
-> > > > for read & write channels into one. Initially I thought that was not needed as
-> > > > he did that for devicetree integration, but looking deeply I think that patch is
-> > > > necessary irrespective of DT.
-> > > >
-> > > > One standout problem is, we can't register debugfs directory under "dmaengine"
-> > > > properly because, both read and write dma devices share the same parent
-> > > > chip->dev.
-> > >
-> > > Right, my series fixes that and some other problems too. So please be
-> > > patient for a few more days.
-> > >
-> > > -Sergey
-> > >
-> > > >
-> > > > Thanks,
-> > > > Mani
-> > > >
-> > > > > -Sergey
-> > > > >
-> > > > > >
-> > > > > > Thanks,
-> > > > > > Mani
-> > > > > >
-> > > > > > > -Sergey
-> > > > > > >
-> > > > > > > >
-> > > > > > > > The commit from Alan Mikhak is what I took as a reference since the patch was
-> > > > > > > > already merged:
-> > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/dw-edma?id=bd96f1b2f43a39310cc576bb4faf2ea24317a4c9
-> > > > > > > >
-> > > > > > > > Thanks,
-> > > > > > > > Mani
-> > > > > > > >
-> > > > > > > > > -Sergey
-> > > > > > > > >
-> > > > > > > > > > +                *
-> > > > > > > > > > +                ****************************************************************/
-> > > > > > > > > > +
-> > > > > > > > >
-> > > > > > > > > > +               if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
-> > > > > > > > > > +                   (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
-> > > > > > > > > > +                       read = true;
-> > > > > > > > >
-> > > > > > > > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
-> > > > > > > > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
-> > > > > > > > > redundant.
-> > > > > > > > >
-> > > > > > > > > > +
-> > > > > > > > > > +               /* Program the source and destination addresses for DMA read/write */
-> > > > > > > > > > +               if (read) {
-> > > > > > > > > >                         burst->sar = src_addr;
-> > > > > > > > > >                         if (xfer->type == EDMA_XFER_CYCLIC) {
-> > > > > > > > > >                                 burst->dar = xfer->xfer.cyclic.paddr;
-> > > > > > > > > > --
-> > > > > > > > > > 2.24.0.rc1
-> > > > > > > > > >
+Rob
